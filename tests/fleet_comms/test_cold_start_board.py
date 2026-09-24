@@ -717,6 +717,11 @@ def test_board_sheds_bloated_optional_probe_before_fallback(
     # The bloated optional probe was shed to its minimal form.
     assert "data" not in board["probes"]["gh_pr_list"]
     assert board["probes"]["gh_pr_list"]["status"] == "ok"
+    # Shedding is selective and largest-first: the small optional
+    # bottleneck_slice probe keeps its data once the bloated gh_pr_list is
+    # shed, because no further shedding is needed to fit the cap.
+    assert board["probes"]["bottleneck_slice"].get("data") is not None
+    assert board["probes"]["bottleneck_slice"]["status"] == "ok"
     assert len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES
 
 

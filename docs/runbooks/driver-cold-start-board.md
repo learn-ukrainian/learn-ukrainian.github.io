@@ -1,7 +1,7 @@
 # Driver Cold Start Board & Handoff Runbook
 
-**Status:** Sol PR-2 / WP-A + WP-D operational
-**Authority:** `scripts/fleet_comms/cold_start_board.py` · `scripts/fleet_comms/cli.py`
+**Status:** Sol PR-2 / WP-A + WP-D operational\
+**Authority:** `scripts/fleet_comms/cold_start_board.py` · `scripts/fleet_comms/cli.py`\
 **Binding doctrine:** `agents_extensions/shared/rules/fleet-comms-coordination.md`
 
 ## Purpose
