@@ -596,8 +596,11 @@ def _run_refresh_worker(run_id: str) -> int:
         _release_lock(fd)
 
 
-def load_registry(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
-    """Return {stream_key: [epic_numbers]}."""
+def load_registry(path: Path = REGISTRY_PATH, *, audit_only: bool = False) -> dict[str, list[int]]:
+    """Return registered epics, optionally excluding retired audit roots.
+
+    The default preserves the full registry for launcher and session consumers.
+    """
     doc = yaml.safe_load(path.read_text(encoding="utf-8"))
     streams = doc.get("streams") or {}
     registry: dict[str, list[int]] = {}
@@ -605,7 +608,16 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
         epics = [int(n) for n in (spec.get("epics") or [])]
         if not epics:
             raise ValueError(f"stream {key!r} has no epics")
-        registry[key] = epics
+        retired = spec.get("retired", False)
+        if not isinstance(retired, bool):
+            raise ValueError(f"stream {key!r} has invalid retired marker")
+        closed = [int(n) for n in (spec.get("closed_epics") or [])]
+        if not set(closed) <= set(epics):
+            raise ValueError(f"stream {key!r} has closed epics outside its epic list")
+        if not audit_only or not retired:
+            active_epics = [n for n in epics if n not in closed] if audit_only else epics
+            if active_epics:
+                registry[key] = active_epics
     if not registry:
         raise ValueError("issue_streams.yaml defines no streams")
     return registry
@@ -1149,7 +1161,7 @@ def run_audit(
     module's own repo instead.
     """
     root = repo_root.resolve() if repo_root is not None else ROOT
-    registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml")
+    registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml", audit_only=True)
     open_issues = fetch_open_issues(root)
     traversal_warnings: list[dict] = []
     membership = fetch_tree_membership(
@@ -1370,7 +1382,7 @@ def migrate(report: dict) -> int:
     (codex F2): GitHub's single-parent constraint would otherwise make the
     winner order-dependent instead of deliberate. Resolve them manually.
     """
-    registry = load_registry()
+    registry = load_registry(audit_only=True)
     ambiguous = {m["number"] for m in report.get("multi_homed", [])}
     if ambiguous:
         print(

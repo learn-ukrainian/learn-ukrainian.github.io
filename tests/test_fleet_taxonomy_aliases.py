@@ -215,6 +215,7 @@ def test_inventory_session_streams_wiring() -> None:
         ("bio", "bio", "epic:4431"),
         ("seminars-bio", "bio", "epic:4431"),
         ("curriculum-upgrade", "curriculum-upgrade", "epic:7994"),
+        ("a1-upgrade", "a1-upgrade", "epic:7995"),
         ("core-quality", "core-quality", "epic:4274"),
         ("corpus", "corpus", "epic:4706"),
         ("corpus-channels", "corpus", "epic:4706"),
