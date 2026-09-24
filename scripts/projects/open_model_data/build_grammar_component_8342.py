@@ -402,7 +402,7 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # Reject spaced dashes in compounds/particles
     if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+\s+[—–-]\s+(?:от|таки|будь|небудь|бо|но|то)\b", text, re.IGNORECASE):
         return False
-    if re.search(r"\b(?:будь|хто|що|як|де|куди|коли)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+\b", text, re.IGNORECASE):
+    if re.search(r"\bбудь\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+\b", text, re.IGNORECASE):
         return False
     # Reject mixed dashes (both en-dash and em-dash in same text)
     if "–" in text and "—" in text:
@@ -560,6 +560,23 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     # #30: зі перед одинарним свистячим/шиплячим + голосна
     if re.search(r"\bзі\s+загроз\w*\b", text, re.IGNORECASE) or re.search(r"\bзі\s+[зсшщ][аеєиіїоуюя][а-яіїєґ]*\b", text, re.IGNORECASE):
+        return False
+
+    # Claude R19 control defects
+    # #85: по благодаті -> за благодаттю / з благодаті
+    if re.search(r"\bпо\s+благодат\w*\b", text, re.IGNORECASE):
+        return False
+    # #86: впевнені отримати -> впевнені, що отримають
+    if re.search(r"\bвпевнен\w*\s+отрима\w*\b", text, re.IGNORECASE):
+        return False
+    # #42 vs #70: на фоні -> на тлі (eliminate mixed signals)
+    if re.search(r"\bна\s+(?:[а-яіїєґ]+\s+)?фоні\b", text, re.IGNORECASE) or re.search(r"\bна\s+фоні\b", text, re.IGNORECASE):
+        return False
+    # #191: Правопис 2019 проєкт, not проект
+    if re.search(r"\bпроект\w*\b", text, re.IGNORECASE):
+        return False
+    # Single-н останній typos
+    if re.search(r"\bостан[а-яіїєґ]", text, re.IGNORECASE) and not re.search(r"\bостанн", text, re.IGNORECASE):
         return False
 
     # Reject 'їх' before nouns as possessive
@@ -2066,6 +2083,60 @@ def is_valid_candidate(
     if re.search(r"\bбільшість\s+авторів\s+реформ\b", c_low):
         return False
 
+    # 20. Claude R19 Blockers (residual errors in corrected_text)
+    # #265: Останій (leftover typo, single н in останній)
+    if (re.search(r"\bостан[а-яіїєґ]", c_low) and not re.search(r"\bостанн", c_low)) or \
+       (re.search(r"\bостан[а-яіїєґ]", o_low) and not re.search(r"\bостанн", o_low)) or \
+       re.search(r"\bостаній\b", c_low) or re.search(r"\bносогрійк\w*\b", c_low):
+        return False
+    # #235: похолов .... (punctuation artifact: space before dots or 4+ dots)
+    if re.search(r"\s+\.{2,}", c_low) or re.search(r"\.{4,}", c_low) or re.search(r"\bпохолов\b", c_low) or re.search(r"\bобчиччя\b", o_low):
+        return False
+    # #264: принудженно -> примусово (distorts meaning: stiffly/strainedly vs by compulsion)
+    if re.search(r"\bпринуджен\w*\b", o_low) or re.search(r"\bпримусово\s+та\s+сухо\b", c_low):
+        return False
+    # #253: старого іржавого замка (inanimate accusative left as genitive)
+    if re.search(r"\bстарого\s+іржавого\s+замка\b", c_low) or re.search(r"\bвідчинивши\s+старого\b", c_low):
+        return False
+    # #257: чи красна ціна (garbled leftover "чи" + calqued "красна ціна")
+    if re.search(r"\bкрасна\s+ціна\b", c_low) or re.search(r"\bчи\s+красна\s+ціна\b", c_low) or re.search(r"\bшапці,\s+якщо\s+хочете\s+знати\b", c_low):
+        return False
+    # #77: вирости до ступеня болючої, пів чарки
+    if re.search(r"\bвирости\s+до\s+ступеня\b", c_low) or re.search(r"\bдо\s+ступеня\s+болючої\b", c_low) or re.search(r"\bпів\s+чарки\b", c_low) or re.search(r"\bпів'стопки\b", o_low):
+        return False
+
+    # 21. Claude R19 Ungrounded swaps and meaning changes
+    # #12: обширну клієнтську базу -> містку
+    if re.search(r"\bобширн\w*\s+клієнтськ\w*\b", o_low) or re.search(r"\bмістк\w*\s+клієнтськ\w*\b", c_low):
+        return False
+    # #165: якийсь час тому -> якийсь час (lost "тому", shifts meaning)
+    if (re.search(r"\bякийсь\s+час\s+тому\b", o_low) and not re.search(r"\bякийсь\s+час\s+тому\b", c_low)) or re.search(r"\bякийсь\s+час\s+вважався\s+нормальним\b", c_low):
+        return False
+    # #67: хижинки мольфара -> хатинки
+    if re.search(r"\bхижинк\w*\b", o_low) or re.search(r"\bхижинк\w*\s+мольфар\w*\b", o_low):
+        return False
+    # #143: в принципі -> зрештою, це
+    if re.search(r"\bзрештою,\s+це\s+для\s+будь-кого\b", c_low):
+        return False
+    # #10: Візьмемо -> Візьмімо
+    if re.search(r"\bвізьмемо\b", o_low) and re.search(r"\bвізьмімо\b", c_low):
+        return False
+    # #49: під час своєї похоронної процесії -> у своїй
+    if re.search(r"\bпохоронн\w*\s+процесі\w*\b", c_low):
+        return False
+    # #62: предметної області -> предметної галузі
+    if re.search(r"\bпредметної\s+галузі\b", c_low) or (re.search(r"\bпредметної\s+області\b", o_low) and re.search(r"\bгалузі\b", c_low)):
+        return False
+    # #191: Правопис 2019 проєкт, not проект
+    if re.search(r"\bпроект\w*\b", c_low):
+        return False
+    # #223: жести запрошення
+    if re.search(r"\bжести\s+запрошення\b", c_low) or re.search(r"\bзапрошення\s+жести\b", o_low):
+        return False
+    # Also drop "на фоні" from corrections
+    if re.search(r"\bна\s+(?:[а-яіїєґ]+\s+)?фоні\b", c_low):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -2150,8 +2221,17 @@ def is_valid_candidate(
             return False
 
         words_c = re.findall(r"\b[\w'-]+\b", corr_text)
-        for w in words_c:
-            if "-" in w or w.isupper() or w[0].isupper() or len(w) <= 2 or any(c.isdigit() for c in w) or w.lower() in {"поцокалася", "зеєловських", "в'язей"}:
+        for i_w, w in enumerate(words_c):
+            if "-" in w or w.isupper() or len(w) <= 2 or any(c.isdigit() for c in w) or w.lower() in {"поцокалася", "зеєловських", "в'язей"}:
+                continue
+            if w[0].isupper():
+                if i_w == 0:
+                    row = vesum_cur.execute(
+                        "SELECT 1 FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
+                        (w.lower(), w, w.capitalize()),
+                    ).fetchone()
+                    if not row:
+                        return False
                 continue
             row = vesum_cur.execute(
                 "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
