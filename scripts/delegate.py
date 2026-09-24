@@ -5797,12 +5797,13 @@ def _classify_final_status(
 
 
 def _worker_run_incomplete(stderr_excerpt: str | None) -> bool:
-    """True when the adapter reported that the CLI cut the worker off mid-work.
+    """True when the adapter could not prove the worker's run finished its work.
 
-    AGY print mode kills the agent's still-running background commands at its
-    wait deadline and exits 0 anyway (#8502/#8503); the adapter then leads
-    ``stderr_excerpt`` with a reason code. Whatever that worker left in its
-    worktree is unfinished, so it must never be auto-finalized as ``done``.
+    AGY print mode can exit 0 while the agent's backgrounded commands are still
+    running or were killed (#8502/#8503); the adapter then leads
+    ``stderr_excerpt`` with a reason code — including when no transcript bound
+    to this run exists to prove completion. Whatever that worker left in its
+    worktree is unconfirmed, so it must never be auto-finalized as ``done``.
     """
     from agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
 

@@ -16,8 +16,9 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
   ``mode="danger"`` for headless dispatch (mirrors the codex protection).
 - Print-mode stdout is the final answer only. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
-  ``--log-file`` path for each invocation (fallback: the recent brain
-  conversation whose ``USER_INPUT`` opens with this invocation's prompt).
+  ``--log-file`` path for each invocation (fallback: the one brain
+  conversation opened after this invocation's spawn whose ``USER_INPUT`` opens
+  with its prompt).
   Tool results are ``type: GENERIC`` events (agy 2026-09) or legacy
   ``MCP_TOOL`` events; both shapes are paired with planner intents.
 - Per-invocation model is ``--model "<Display Name>"`` where the display name
@@ -73,6 +74,7 @@ import time
 import urllib.parse
 import uuid
 from collections.abc import Mapping
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -106,19 +108,29 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # The adapter therefore (1) refuses to invoke an agy older than
 # ``_AGY_MIN_BACKGROUND_WAIT_VERSION`` — that build cannot finish a long command
 # headlessly, so detection alone would only turn every such run into a failure
-# — and (2) accepts a run that went idle on background work only with positive
-# completion evidence: the transcript records every task as finished and a
-# model reply after the last finish. Otherwise the run fails with a reason code
-# leading ``stderr_excerpt`` (the dispatch's machine-readable ``last_error``);
-# ``delegate.py`` keys on these codes to refuse auto-finalizing it as ``done``.
+# — and (2) accepts an exit-0 run only with positive completion evidence from
+# THIS run's own transcript: every background task it started has a finish
+# event and the model replied after the last one. The evidence is read from the
+# transcript bound to this invocation (see ``_transcript_path_from_plan``) and
+# never from stderr alone: agy prints its idle-wait diagnostic only on some
+# paths, so its absence proves nothing (#8502 r3). A run whose transcript cannot
+# be bound has no evidence and fails as unconfirmed. Failures lead
+# ``stderr_excerpt`` with a reason code (the dispatch's machine-readable
+# ``last_error``); ``delegate.py`` keys on these codes to refuse auto-finalizing
+# the run as ``done``.
 AGY_BACKGROUND_TASK_ABANDONED = "agy_background_task_abandoned"
 AGY_BACKGROUND_TASK_UNCONFIRMED = "agy_background_task_unconfirmed"
 AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
+AGY_TRANSCRIPT_UNBOUND = "agy_transcript_unbound"
 AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_BACKGROUND_TASK_ABANDONED,
     AGY_BACKGROUND_TASK_UNCONFIRMED,
     AGY_PRINT_TIMEOUT_PARTIAL,
+    AGY_TRANSCRIPT_UNBOUND,
 )
+# Wall-clock time recorded in the plan just before spawn. A transcript located
+# without the runtime log's conversation id must have been opened at or after it.
+_SPAWN_WALL_TIME_KEY = "agy_spawn_wall_time"
 _AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
 _AGY_VERSION_RE = re.compile(r"\b(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\b")
 _AGY_VERSION_PROBE_TIMEOUT_S = 15
@@ -139,7 +151,6 @@ _AGY_CONVERSATION_RE = re.compile(
 _LEGACY_MCP_RESULT_TYPE = "MCP_TOOL"
 _GENERIC_RESULT_TYPE = "GENERIC"
 _PROMPT_MATCH_CHARS = 200
-_BRAIN_FALLBACK_MAX_AGE_S = 6 * 60 * 60
 _STDOUT_MARKER_RE = re.compile(r"^\s*●\s+(?P<tool>mcp_sources_[A-Za-z0-9_]+)\((?P<args>.*)\)\s*$")
 _STDOUT_RESULT_PREFIX = "⎿"
 _SAVED_OUTPUT_POINTER_RE = re.compile(
@@ -420,6 +431,7 @@ class AgyAdapter:
             liveness_paths=(log_path,),
             metadata={
                 **schema_metadata(output_schema),
+                _SPAWN_WALL_TIME_KEY: time.time(),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -466,7 +478,11 @@ class AgyAdapter:
 
         stdout_response = (stdout or "").strip()
         stderr_text = (stderr or "").strip()
-        incomplete_reason = _incomplete_run_reason(stderr_text) or _background_completion_gap(stderr_text, plan)
+        incomplete_reason = _incomplete_run_reason(stderr_text)
+        if incomplete_reason is None and returncode == 0:
+            # A non-zero exit already fails the run; only an apparent success
+            # needs proof that the work actually finished.
+            incomplete_reason = _completion_gap(stderr_text, plan)
         if incomplete_reason is not None:
             # A reply written before the agent's own command finished is an
             # interim status, never a result — even when agy exits 0.
@@ -475,7 +491,8 @@ class AgyAdapter:
                 response="",
                 stderr_excerpt=f"{incomplete_reason}\n{stderr_text or stdout_response}"[:500],
                 rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stderr_text}")),
-                tool_calls=_parse_transcript_tool_calls(plan),
+                tool_calls=_parse_transcript_tool_calls(plan)
+                or _parse_stdout_marker_tool_calls(f"{stdout_response}\n{stderr_text}"),
             )
         output_schema = plan_output_schema(plan)
         if output_schema is not None:
@@ -550,19 +567,21 @@ def _incomplete_run_reason(stderr_text: str) -> str | None:
     return None
 
 
-def _background_completion_gap(stderr_text: str, plan: InvocationPlan | None) -> str | None:
-    """Return a reason code unless background work the agent waited on provably finished.
+def _completion_gap(stderr_text: str, plan: InvocationPlan | None) -> str | None:
+    """Return a reason code unless this run's own transcript proves its work finished.
 
-    agy prints "root agent idle; waiting up to … for N background task(s)" when
-    the agent ends its turn on unfinished background work. Such a run is only a
-    success when the transcript shows every background task finished and the
-    model replied after the last one; an exit-0 run whose last word is "Waiting
-    for task-220 to complete." has none of that evidence.
+    The transcript is the only positive evidence: every background task it
+    started must have a "Task id … finished" system message, and a model reply
+    must follow the last one — an exit-0 run whose final word is "Waiting for
+    task-220 to complete." has neither. stderr cannot stand in for it: agy's
+    "root agent idle; waiting up to … for N background task(s)" line is absent
+    on some paths, so it can only add doubt (a claimed wait with no task in the
+    transcript), never remove it.
     """
-    if not any(int(match.group("count")) > 0 for match in _IDLE_BACKGROUND_WAIT_RE.finditer(stderr_text)):
-        return None
     transcript_path = _transcript_path_from_plan(plan)
     events = _read_transcript_events(transcript_path) if transcript_path is not None else []
+    if not events:
+        return AGY_TRANSCRIPT_UNBOUND
     started: set[str] = set()
     finished: set[str] = set()
     last_finish = -1
@@ -579,7 +598,12 @@ def _background_completion_gap(stderr_text: str, plan: InvocationPlan | None) ->
                 last_finish = max(last_finish, order)
         elif event.get("type") == "PLANNER_RESPONSE" and content.strip():
             last_reply = max(last_reply, order)
-    if not started or not started <= finished or last_reply <= last_finish:
+    idle_wait_claimed = any(
+        int(match.group("count")) > 0 for match in _IDLE_BACKGROUND_WAIT_RE.finditer(stderr_text)
+    )
+    if idle_wait_claimed and not started:
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    if started and (not started <= finished or last_reply <= last_finish):
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     return None
 
@@ -925,6 +949,14 @@ def _pair_transcript_generic_results(
 
 
 def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
+    """Return the transcript of THIS invocation's conversation, or ``None``.
+
+    The per-invocation runtime log names the conversation agy opened for this
+    run; when it does, only that conversation's transcript counts — a missing
+    file is ``None``, never a lookalike. Otherwise the prompt fallback may only
+    pick a conversation opened after this invocation's spawn (#8502 r3: an
+    earlier run with the same prompt must never lend its evidence).
+    """
     if plan is None:
         return None
     app_data = Path(
@@ -937,16 +969,14 @@ def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
     conversation_id = _conversation_id_from_log(Path(log_file)) if log_file else None
     if conversation_id:
         transcript = _brain_transcript_path(app_data, conversation_id)
-        if transcript.exists():
-            return transcript
+        return transcript if transcript.exists() else None
     fallback = _transcript_path_from_brain(plan, app_data)
     if fallback is not None:
         _logger.warning(
             "agy runtime log did not identify the conversation; matched brain transcript %s by prompt",
             fallback,
         )
-        return fallback
-    return _brain_transcript_path(app_data, conversation_id) if conversation_id else None
+    return fallback
 
 
 def _brain_transcript_path(app_data: Path, conversation_id: str) -> Path:
@@ -963,36 +993,39 @@ def _prompt_from_plan(plan: InvocationPlan) -> str:
 def _transcript_path_from_brain(plan: InvocationPlan, app_data: Path) -> Path | None:
     """Find this invocation's transcript when the runtime log names no conversation.
 
-    Only a recent conversation whose first ``USER_INPUT`` opens with this
-    invocation's own prompt qualifies, so an unrelated conversation is never
-    credited. Identical prompts (a retry) resolve to the newest transcript, which
-    is the one that just finished.
+    A conversation qualifies only when its first ``USER_INPUT`` opens with this
+    invocation's own prompt AND was created at or after the spawn time recorded
+    in the plan, so neither an unrelated conversation nor an earlier run of the
+    same prompt is ever credited. No recorded spawn time, no match, or more than
+    one match (concurrent identical prompts) all resolve to ``None``.
     """
     prompt_head = _prompt_from_plan(plan).strip()[:_PROMPT_MATCH_CHARS]
-    if not prompt_head:
+    spawn_time = plan.metadata.get(_SPAWN_WALL_TIME_KEY)
+    if not prompt_head or not isinstance(spawn_time, (int, float)):
         return None
+    # ``created_at`` has whole-second precision; compare against the spawn second.
+    not_before = int(spawn_time)
     needle = "<USER_REQUEST>\n" + prompt_head
-    cutoff = time.time() - _BRAIN_FALLBACK_MAX_AGE_S
-    candidates: list[tuple[float, Path]] = []
     try:
         conversation_dirs = list((app_data / "brain").iterdir())
     except OSError:
         return None
+    matches: list[Path] = []
     for conversation_dir in conversation_dirs:
         transcript = _brain_transcript_path(app_data, conversation_dir.name)
         try:
-            mtime = transcript.stat().st_mtime
+            if transcript.stat().st_mtime < not_before:
+                continue
         except OSError:
             continue
-        if mtime >= cutoff:
-            candidates.append((mtime, transcript))
-    for _, transcript in sorted(candidates, reverse=True):
-        if _transcript_opens_with(transcript, needle):
-            return transcript
-    return None
+        opened_at = _transcript_opening_time(transcript, needle)
+        if opened_at is not None and opened_at >= not_before:
+            matches.append(transcript)
+    return matches[0] if len(matches) == 1 else None
 
 
-def _transcript_opens_with(transcript: Path, needle: str) -> bool:
+def _transcript_opening_time(transcript: Path, needle: str) -> float | None:
+    """Return the epoch ``created_at`` of the first ``USER_INPUT`` when it opens with ``needle``."""
     try:
         with transcript.open(encoding="utf-8", errors="replace") as handle:
             for raw_line in handle:
@@ -1000,10 +1033,24 @@ def _transcript_opens_with(transcript: Path, needle: str) -> bool:
                     continue
                 event = json.loads(raw_line)
                 if isinstance(event, dict) and event.get("type") == "USER_INPUT":
-                    return str(event.get("content") or "").lstrip().startswith(needle)
+                    if not str(event.get("content") or "").lstrip().startswith(needle):
+                        return None
+                    return _parse_created_at(event.get("created_at"))
     except (OSError, json.JSONDecodeError):
-        return False
-    return False
+        return None
+    return None
+
+
+def _parse_created_at(value: Any) -> float | None:
+    if not isinstance(value, str) or not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return None
+    return parsed.timestamp()
 
 
 def _conversation_id_from_log(log_file: Path) -> str | None:

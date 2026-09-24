@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -13,9 +15,16 @@ FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "agy"
 CONVERSATION_ID = "7cd3ba85-817f-4a03-8223-1ff39ca42419"
 
 
-def _plan(tmp_path: Path, *, log_file: Path, app_data: Path) -> InvocationPlan:
+def _plan(
+    tmp_path: Path,
+    *,
+    log_file: Path,
+    app_data: Path,
+    cmd: list[str] | None = None,
+    spawn_time: float | None = None,
+) -> InvocationPlan:
     return InvocationPlan(
-        cmd=["agy"],
+        cmd=cmd or ["agy"],
         cwd=tmp_path,
         stdin_payload="",
         output_file=None,
@@ -25,6 +34,7 @@ def _plan(tmp_path: Path, *, log_file: Path, app_data: Path) -> InvocationPlan:
         },
         env_unsets=(),
         liveness_paths=(log_file,),
+        metadata={} if spawn_time is None else {agy_module._SPAWN_WALL_TIME_KEY: spawn_time},
     )
 
 
@@ -480,23 +490,23 @@ def _write_generic_transcript(app_data: Path, conversation_id: str = GENERIC_CON
     return transcript
 
 
-def _parse_generic(tmp_path: Path, *, log_text: str | None, cmd: list[str] | None = None):
+# ``created_at`` of the first USER_INPUT in generic_results_transcript.jsonl.
+GENERIC_OPENED_AT = datetime(2026, 9, 19, 19, 58, 11, tzinfo=UTC).timestamp()
+
+
+def _parse_generic(
+    tmp_path: Path,
+    *,
+    log_text: str | None,
+    cmd: list[str] | None = None,
+    spawn_time: float | None = GENERIC_OPENED_AT,
+):
     app_data = tmp_path / "antigravity-cli"
     log_file = tmp_path / "agy.log"
     if log_text is not None:
         log_file.write_text(log_text, encoding="utf-8")
     _write_generic_transcript(app_data)
-    plan = _plan(tmp_path, log_file=log_file, app_data=app_data)
-    if cmd is not None:
-        plan = InvocationPlan(
-            cmd=cmd,
-            cwd=plan.cwd,
-            stdin_payload="",
-            output_file=None,
-            env_overrides=plan.env_overrides,
-            env_unsets=(),
-            liveness_paths=plan.liveness_paths,
-        )
+    plan = _plan(tmp_path, log_file=log_file, app_data=app_data, cmd=cmd, spawn_time=spawn_time)
     return AgyAdapter().parse_response(
         stdout="module text", stderr="", returncode=0, output_file=None, plan=plan
     )
@@ -584,6 +594,34 @@ def test_prompt_fallback_never_credits_unrelated_conversation(tmp_path: Path) ->
         tmp_path, log_text=None, cmd=["agy", "-p", "Review this pull request for bugs."]
     )
     assert result.tool_calls == []
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
+
+
+@pytest.mark.parametrize("spawn_time", [GENERIC_OPENED_AT + 60, None])
+def test_prompt_fallback_never_credits_conversation_opened_before_spawn(
+    tmp_path: Path, spawn_time: float | None
+) -> None:
+    # Same prompt, but that conversation belongs to an earlier run (or the plan
+    # recorded no spawn time to bind against): it must not lend its evidence.
+    result = _parse_generic(tmp_path, log_text=None, cmd=["agy", "-p", GENERIC_PROMPT], spawn_time=spawn_time)
+    assert result.tool_calls == []
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
+
+
+def test_prompt_fallback_refuses_ambiguous_concurrent_matches(tmp_path: Path) -> None:
+    app_data = tmp_path / "antigravity-cli"
+    _write_generic_transcript(app_data)
+    _write_generic_transcript(app_data, conversation_id="00000000-aaaa-4bbb-8ccc-000000000002")
+    plan = _plan(
+        tmp_path,
+        log_file=tmp_path / "agy.log",
+        app_data=app_data,
+        cmd=["agy", "-p", GENERIC_PROMPT],
+        spawn_time=GENERIC_OPENED_AT,
+    )
+    assert agy_module._transcript_path_from_plan(plan) is None
 
 
 def test_generic_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> None:
@@ -702,13 +740,15 @@ def test_parse_response_fails_run_cut_off_mid_work(stderr: str, reason: str) -> 
     assert result.stderr_excerpt.splitlines()[0] == reason
 
 
-def test_parse_response_keeps_run_whose_only_stop_was_a_daemon() -> None:
+def test_parse_response_keeps_run_whose_only_stop_was_a_daemon(tmp_path: Path) -> None:
+    plan = _background_plan(tmp_path, CONVERSATION_ID, _fixture_lines("verify_words_transcript.jsonl"))
+
     result = AgyAdapter().parse_response(
         stdout="RESULT=CANARY_DONE_8502",
         stderr="terminating 0 background task(s) and 1 daemon task(s) on exit",
         returncode=0,
         output_file=None,
-        plan=None,
+        plan=plan,
     )
 
     assert result.ok is True
@@ -752,12 +792,14 @@ def test_parse_response_accepts_background_work_with_completion_evidence(tmp_pat
     assert result.response == stdout
 
 
-def test_parse_response_rejects_interim_waiting_reply_without_completion_evidence() -> None:
+@pytest.mark.parametrize("stderr", ["root agent idle; waiting up to 5s for 1 background task(s)", ""])
+def test_parse_response_rejects_interim_waiting_reply_without_transcript(stderr: str) -> None:
     # Reviewer reproduction (#8502 r2): exit 0, the agent's interim reply and
-    # only the idle-wait diagnostic previously parsed as ok=True.
+    # at most the idle-wait diagnostic previously parsed as ok=True. With no
+    # transcript bound to the run there is no evidence at all.
     result = AgyAdapter().parse_response(
         stdout="Waiting for task-220 to complete.",
-        stderr="root agent idle; waiting up to 5s for 1 background task(s)",
+        stderr=stderr,
         returncode=0,
         output_file=None,
         plan=None,
@@ -765,6 +807,64 @@ def test_parse_response_rejects_interim_waiting_reply_without_completion_evidenc
 
     assert result.ok is False
     assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
+
+
+def test_parse_response_rejects_unfinished_task_even_with_empty_stderr(tmp_path: Path) -> None:
+    # Reviewer reproduction (#8502 r3): the abandoned transcript with EMPTY
+    # stderr parsed as ok=True because the check keyed on the idle-wait line.
+    plan = _background_plan(
+        tmp_path, _ABANDONED_CONVERSATION_ID, _fixture_lines("background_task_abandoned_transcript.jsonl")
+    )
+
+    result = AgyAdapter().parse_response(
+        stdout="I have started the command and will wait for it to finish.",
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+def test_parse_response_never_borrows_earlier_same_prompt_run(tmp_path: Path) -> None:
+    # Reviewer reproduction (#8502 r3): this run's log names its conversation,
+    # but that transcript is missing; an EARLIER finished run with the same
+    # prompt sits in brain/. Its evidence must not settle this run.
+    app_data = tmp_path / "antigravity-cli"
+    earlier = agy_module._brain_transcript_path(app_data, _FINISHED_CONVERSATION_ID)
+    earlier.parent.mkdir(parents=True)
+    earlier.write_text(
+        "\n".join(_fixture_lines("background_task_finished_transcript.jsonl")) + "\n", encoding="utf-8"
+    )
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"I0924 server.go:1185] Created conversation {_ABANDONED_CONVERSATION_ID}\n", encoding="utf-8")
+    prompt = "Run this exact shell command: `sleep 45 && echo PROBE_DONE_7731`."
+    plan = _plan(tmp_path, log_file=log_file, app_data=app_data, cmd=["agy", "-p", prompt], spawn_time=0.0)
+
+    result = AgyAdapter().parse_response(
+        stdout="Waiting for task-220 to complete.", stderr="", returncode=0, output_file=None, plan=plan
+    )
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
+
+
+def test_parse_response_rejects_claimed_wait_with_no_task_in_transcript(tmp_path: Path) -> None:
+    plan = _background_plan(tmp_path, CONVERSATION_ID, _fixture_lines("verify_words_transcript.jsonl"))
+
+    result = AgyAdapter().parse_response(
+        stdout="Waiting for task-220 to complete.",
+        stderr=_IDLE_WAIT_STDERR,
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert result.ok is False
     assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
 
 
@@ -795,6 +895,45 @@ def test_parse_response_rejects_finished_task_with_no_reply_after_it(tmp_path: P
         returncode=0,
         output_file=None,
         plan=plan,
+    )
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+# Live write canary, agy 1.2.10 (2026-09-24, #8502 r3), run through
+# ``runner.invoke("agy", mode="danger")`` with this adapter: the 60s
+# ``sleep 60 && echo CANARY_8502_R3_DONE > canary.txt`` was backgrounded as
+# task-18, the agent replied "Waiting 60 seconds…", the task-finished message
+# arrived at step 20, and the agent then committed (b4d19d2) and replied. The
+# runtime returned ok=True with stderr "root agent idle; waiting up to 2h0m0s
+# for 1 background task(s)". Transcript saved verbatim except /home/<user> and
+# the read-only output of steps 1-14 (the agent listing unrelated local repos).
+_CANARY_CONVERSATION_ID = "01a753b2-d67a-4b03-99cc-358e6493e70b"
+_CANARY_FIXTURE = f"background_task_write_canary_{_CANARY_CONVERSATION_ID}.jsonl"
+_CANARY_STDOUT = "Waiting 60 seconds for the command to finish...\nb4d19d2 (HEAD -> main) canary 8502-r3\nCANARY_8502_R3_DONE"
+
+
+@pytest.mark.parametrize("stderr", [_IDLE_WAIT_STDERR, ""])
+def test_parse_response_accepts_live_write_canary(tmp_path: Path, stderr: str) -> None:
+    plan = _background_plan(tmp_path, _CANARY_CONVERSATION_ID, _fixture_lines(_CANARY_FIXTURE))
+
+    result = AgyAdapter().parse_response(
+        stdout=_CANARY_STDOUT, stderr=stderr, returncode=0, output_file=None, plan=plan
+    )
+
+    assert result.ok is True
+    assert result.response == _CANARY_STDOUT
+
+
+def test_parse_response_rejects_live_write_canary_cut_before_task_finished(tmp_path: Path) -> None:
+    # The same run truncated right after the interim reply (step 19): the task
+    # never finished, whatever stderr says.
+    lines = [line for line in _fixture_lines(_CANARY_FIXTURE) if int(json.loads(line)["step_index"]) <= 19]
+    plan = _background_plan(tmp_path, _CANARY_CONVERSATION_ID, lines)
+
+    result = AgyAdapter().parse_response(
+        stdout="Waiting 60 seconds for the command to finish...", stderr="", returncode=0, output_file=None, plan=plan
     )
 
     assert result.ok is False
