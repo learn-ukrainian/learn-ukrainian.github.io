@@ -4223,6 +4223,116 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     assert "X-Agent: agy/auto-finalize-test" in message
 
 
+def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
+    """Git worktree on its own branch, tracking a bare origin, one base commit."""
+    origin = tmp_path / "origin.git"
+    worktree = tmp_path / "worktree"
+
+    def git(*args: str, cwd: Path = worktree) -> None:
+        subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, timeout=30)
+
+    git("init", "--bare", str(origin), cwd=tmp_path)
+    git("init", "--initial-branch=main", str(worktree), cwd=tmp_path)
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "test")
+    (worktree / "README.md").write_text("base\n", encoding="utf-8")
+    git("add", "README.md")
+    git("commit", "-m", "base")
+    git("remote", "add", "origin", str(origin))
+    git("push", "-u", "origin", "main")
+    git("checkout", "-b", branch)
+    return worktree
+
+
+@pytest.mark.parametrize("pushed_commit_first", [False, True])
+def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    pushed_commit_first,
+):
+    """#8502/#8503: agy killed the worker's backgrounded pytest and exited 0.
+
+    The unfinished edits must surface as ``needs_finalize`` with the adapter's
+    reason as ``last_error`` — never be auto-committed and settled ``done``,
+    and never read as ``done`` just because an earlier commit was pushed.
+    """
+    from agent_runtime.adapters.agy import AGY_BACKGROUND_TASK_ABANDONED
+
+    _sanitize_git_env_for_test(monkeypatch)
+    branch = "agy/cut-off-test"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    if pushed_commit_first:
+        (worktree / "wip.txt").write_text("wip\n", encoding="utf-8")
+        for args in (["add", "wip.txt"], ["commit", "-m", "wip"], ["push", "-u", "origin", branch]):
+            subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
+
+    state_path = delegate._state_path("agy-cut-off-test")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "agy-cut-off-test",
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+        },
+    )
+    (worktree / "half_done.py").write_text("# unfinished\n", encoding="utf-8")
+
+    # Record rather than raise: settle swallows exceptions from this block.
+    publish_calls: list[str] = []
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda *_a, **_k: publish_calls.append("push"))
+    monkeypatch.setattr(
+        delegate,
+        "_create_auto_finalize_pr",
+        lambda *_a, **_k: publish_calls.append("pr") or "https://example.invalid/pr/1",
+    )
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": False,
+            "response": "",
+            "stderr_excerpt": (
+                f"{AGY_BACKGROUND_TASK_ABANDONED}\n"
+                "root agent idle; waiting up to 5s for 1 background task(s)\n"
+                "terminating 1 background task(s) on exit"
+            ),
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gemini-3.8-flash-high",
+            "effort": "unknown",
+            "cli_version": "1.2.8",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="agy-cut-off-test",
+            agent="agy",
+            prompt="hi",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        )
+
+    assert rc == 1
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "needs_finalize"
+    assert state["needs_finalize"] is True
+    assert state["worktree_dirty_on_exit"] is True
+    assert state["commits_ahead"] == (1 if pushed_commit_first else 0)
+    assert state.get("auto_finalize") is None
+    assert state.get("finalize_error") is None
+    assert publish_calls == []
+    assert state["last_error"] == AGY_BACKGROUND_TASK_ABANDONED
+    assert (worktree / "half_done.py").exists()
+
+
 @pytest.mark.parametrize(
     ("path", "expected"),
     [

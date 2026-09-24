@@ -664,3 +664,84 @@ def test_transcript_path_defaults_to_real_home_without_override(
     finally:
         log_file.unlink(missing_ok=True)
     assert found == agy_module._brain_transcript_path(real_home / ".gemini" / "antigravity-cli", CONVERSATION_ID)
+
+
+# #8502/#8503: stderr verbatim from dispatch ``ci-select-quickwin`` (agy 1.2.8,
+# 2026-09-22) — agy killed the agent's backgrounded pytest and exited 0.
+_ABANDONED_STDERR = (
+    "root agent idle; waiting up to 5s for 1 background task(s)\nterminating 1 background task(s) on exit"
+)
+
+
+@pytest.mark.parametrize(
+    ("stderr", "reason"),
+    [
+        (_ABANDONED_STDERR, agy_module.AGY_BACKGROUND_TASK_ABANDONED),
+        (
+            "terminating 2 background task(s) and 1 daemon task(s) on exit",
+            agy_module.AGY_BACKGROUND_TASK_ABANDONED,
+        ),
+        (
+            "[agy] print timeout after 2h0m0s with turn in progress; returning partial output",
+            agy_module.AGY_PRINT_TIMEOUT_PARTIAL,
+        ),
+    ],
+)
+def test_parse_response_fails_run_cut_off_mid_work(stderr: str, reason: str) -> None:
+    result = AgyAdapter().parse_response(
+        stdout="Waiting for task-220 to complete.",
+        stderr=stderr,
+        returncode=0,
+        output_file=None,
+        plan=None,
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt is not None
+    assert result.stderr_excerpt.splitlines()[0] == reason
+
+
+@pytest.mark.parametrize(
+    "stderr",
+    [
+        # agy 1.2.10 live canary (2026-09-24): the run waited, the agent resumed
+        # after the 60s command finished and replied with the real result.
+        "root agent idle; waiting up to 2h0m0s for 1 background task(s)",
+        # Only a daemon (dev server) was stopped; no unfinished work was lost.
+        "terminating 0 background task(s) and 1 daemon task(s) on exit",
+    ],
+)
+def test_parse_response_keeps_run_that_finished_its_background_work(stderr: str) -> None:
+    result = AgyAdapter().parse_response(
+        stdout="RESULT=CANARY_DONE_8502",
+        stderr=stderr,
+        returncode=0,
+        output_file=None,
+        plan=None,
+    )
+
+    assert result.ok is True
+    assert result.response == "RESULT=CANARY_DONE_8502"
+
+
+def test_parse_response_fails_structured_run_cut_off_mid_work(tmp_path: Path) -> None:
+    schema = {"type": "object", "properties": {"verdict": {"type": "string"}}, "required": ["verdict"]}
+    plan = InvocationPlan(
+        cmd=["agy"],
+        cwd=tmp_path,
+        stdin_payload="",
+        output_file=None,
+        env_overrides={},
+        env_unsets=(),
+        liveness_paths=(),
+        metadata={"output_schema": schema},
+    )
+    envelope = '{"status": "SUCCESS", "structured_output": {"verdict": "APPROVE"}}'
+
+    result = AgyAdapter().parse_response(
+        stdout=envelope, stderr=_ABANDONED_STDERR, returncode=0, output_file=None, plan=plan
+    )
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_ABANDONED

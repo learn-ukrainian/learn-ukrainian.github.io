@@ -90,6 +90,24 @@ _RATE_LIMIT_PATTERNS = (
     r"daily.{0,10}limit.{0,10}exceeded",
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
+
+# Incomplete-run detection (#8502/#8503). AGY's ``run_command`` tool caps
+# ``WaitMsBeforeAsync`` at 10000 ms, so any command running longer than ten
+# seconds is moved to a background task — no flag or prompt can force it into
+# the foreground. Since agy 1.2.9 print mode keeps the run alive while those
+# tasks finish (bounded by ``--print-timeout``) and the agent resumes when they
+# complete; earlier builds waited only 5s. When the wait budget runs out, agy
+# kills the tasks and still exits 0 with whatever the agent last said
+# ("Waiting for task-220 to complete."). Both stderr lines below are that
+# terminal signal; the benign "root agent idle; waiting up to …" line is not.
+# The reason code leads ``stderr_excerpt`` so it becomes the dispatch's
+# machine-readable ``last_error``; ``delegate.py`` keys on these codes to refuse
+# auto-finalizing an interrupted run as ``done``.
+AGY_BACKGROUND_TASK_ABANDONED = "agy_background_task_abandoned"
+AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
+AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (AGY_BACKGROUND_TASK_ABANDONED, AGY_PRINT_TIMEOUT_PARTIAL)
+_BACKGROUND_TERMINATED_RE = re.compile(r"terminating (?P<count>\d+) background task\(s\)")
+_PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in progress")
 _AGY_LOG_ENV = "AGY_RUNTIME_LOG_FILE"
 _AGY_APP_DATA_ENV = "AGY_APP_DATA_DIR"
 _AGY_UUID = r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
@@ -111,10 +129,11 @@ _SAVED_OUTPUT_POINTER_RE = re.compile(
     re.IGNORECASE,
 )
 _MAX_INLINE_TOOL_RESULT_BYTES = 1_000_000
-# Delegate's default hard_timeout is 7200s. Agy's print-mode default is 5m0s,
-# which is tighter than the runner guards; keep the CLI's own print wait aligned
-# with the delegate default until build_invocation can receive the actual
-# per-dispatch hard_timeout. TODO(#4441): plumb hard_timeout through the adapter
+# Delegate's default hard_timeout is 7200s. Keep the CLI's own print wait —
+# which also bounds how long print mode waits for backgrounded commands
+# (stderr: "root agent idle; waiting up to 2h0m0s …", live probe 2026-09-24,
+# agy 1.2.10) — aligned with the delegate default until build_invocation can
+# receive the actual per-dispatch hard_timeout. TODO(#4441): plumb hard_timeout through the adapter
 # ABI if a future shared contract revision carries runner guard values.
 _AGY_PRINT_TIMEOUT = "120m"
 
@@ -426,6 +445,18 @@ class AgyAdapter:
         _ = call_start_time
 
         stdout_response = (stdout or "").strip()
+        stderr_text = (stderr or "").strip()
+        incomplete_reason = _incomplete_run_reason(stderr_text)
+        if incomplete_reason is not None:
+            # A reply written before agy killed the agent's own command is an
+            # interim status, never a result — even when agy exits 0.
+            return ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt=f"{incomplete_reason}\n{stderr_text or stdout_response}"[:500],
+                rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stderr_text}")),
+                tool_calls=_parse_transcript_tool_calls(plan),
+            )
         output_schema = plan_output_schema(plan)
         if output_schema is not None:
             # https://antigravity.google/docs/cli/headless/ specifies the
@@ -439,7 +470,6 @@ class AgyAdapter:
                 session_id=envelope.get("conversation_id"),
                 tool_calls=_parse_transcript_tool_calls(plan),
             )
-        stderr_text = (stderr or "").strip()
         combined = f"{stdout_response}\n{stderr_text}"
         hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
         call_failed = returncode != 0 or not bool(stdout_response)
@@ -488,6 +518,16 @@ class AgyAdapter:
             return
         with contextlib.suppress(FileNotFoundError):
             path.unlink()
+
+
+def _incomplete_run_reason(stderr_text: str) -> str | None:
+    """Return the reason code when agy ended the run before its work finished."""
+    for match in _BACKGROUND_TERMINATED_RE.finditer(stderr_text):
+        if int(match.group("count")) > 0:
+            return AGY_BACKGROUND_TASK_ABANDONED
+    if _PRINT_TIMEOUT_PARTIAL_RE.search(stderr_text):
+        return AGY_PRINT_TIMEOUT_PARTIAL
+    return None
 
 
 def _build_log_path(task_id: str | None) -> Path:
