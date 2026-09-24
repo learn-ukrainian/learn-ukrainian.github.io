@@ -112,6 +112,26 @@ def test_all_legacy_routes_and_validation_failures_are_counted(
     assert telemetry_db.exists()
 
 
+def test_route_writes_land_in_the_serving_context_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A fixture-built app must not write the process-wide checkout's store (#8542)."""
+    process_default = tmp_path / "process-checkout" / "data" / "telemetry" / "legacy_comms_routes.db"
+    monkeypatch.setattr(legacy_comms, "_default_db_path", lambda: process_default)
+    legacy_comms._reset_initialized_paths_for_tests()
+    ctx_root = tmp_path / "ctx-root"
+    app = FastAPI()
+    app.state.ctx = fixture_context(ctx_root)
+    app.include_router(comms_router.router, prefix="/api/comms")
+    app.include_router(telemetry_router.router)
+
+    with TestClient(app, raise_server_exceptions=False) as test_client:
+        assert test_client.post("/api/comms/acknowledge/1").status_code == 410
+        summary = test_client.get("/api/telemetry/legacy-comms-routes?window=1h").json()
+
+    assert summary["total"] == 1
+    assert _rows(legacy_comms.db_path_for_root(ctx_root.resolve()))[0][1] == "acknowledge"
+    assert not process_default.exists()
+
+
 def test_telemetry_never_persists_paths_queries_bodies_credentials_or_raw_headers(
     client: TestClient,
     telemetry_db: Path,

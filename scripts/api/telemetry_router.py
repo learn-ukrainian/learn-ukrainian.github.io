@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field
 from scripts.telemetry.legacy_bridge import bridge_usage_summary
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
+from .telemetry.legacy_comms import db_path_for_root as legacy_comms_db_path_for_root
 from .telemetry.legacy_comms import legacy_comms_summary
 
 router = APIRouter(prefix="/api/telemetry", tags=["telemetry"])
@@ -90,7 +91,7 @@ def _module_build_db_path(ctx: MonitorContext | None = None) -> Path:
 
 
 def _legacy_comms_db_path(ctx: MonitorContext | None = None) -> Path:
-    return resolve_context(ctx).roots.project_root / "data" / "telemetry" / "legacy_comms_routes.db"
+    return legacy_comms_db_path_for_root(resolve_context(ctx).roots.project_root)
 
 
 def _open_telemetry_db(ctx: MonitorContext, path: Path) -> sqlite3.Connection:
