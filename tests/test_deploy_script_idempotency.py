@@ -17,23 +17,36 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_shared_conftest_imports_without_bridge_runtime() -> None:
-    """The rules workflow has only pytest and PyYAML when it loads conftest."""
+    """The rules workflow has only pytest and PyYAML when it loads conftest.
+
+    An allowlist (not a denylist of known heavy packages) so any new
+    third-party or bridge import in conftest fails here, not in CI.
+    """
     probe = """
 import importlib.abc
 import runpy
 import sys
 
-class RejectHeavyBridgeImports(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname.startswith((
-            "scripts.ai_agent_bridge", "scripts.fleet_comms",
-            "agent_runtime", "learn_ukrainian_v4_runtime",
-        )):
-            raise ImportError(f"conftest imported optional runtime: {fullname}")
-        return None
+import pytest  # noqa: F401  (installed in the rules workflow venv)
+import yaml  # noqa: F401
 
-sys.meta_path.insert(0, RejectHeavyBridgeImports())
+ALLOWED_PREFIXES = ("pytest", "_pytest", "pluggy", "yaml", "_yaml", "tests")
+ALLOWED_SCRIPTS = ("scripts", "scripts.common")
+rejected = []
+
+class AllowlistOnly(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        top = fullname.partition(".")[0]
+        if top in sys.stdlib_module_names or top in ALLOWED_PREFIXES:
+            return None
+        if fullname in ALLOWED_SCRIPTS or fullname.startswith("scripts.common."):
+            return None
+        rejected.append(fullname)
+        raise ImportError(f"conftest imported outside the allowlist: {fullname}")
+
+sys.meta_path.insert(0, AllowlistOnly())
 runpy.run_path("tests/conftest.py")
+assert not rejected, rejected
 assert "scripts.ai_agent_bridge" not in sys.modules
 """
     result = subprocess.run(

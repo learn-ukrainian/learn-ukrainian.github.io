@@ -6,6 +6,8 @@ from typing import Any
 
 import yaml
 
+from scripts.common.bridge_paths import configured_bridge_db_path
+
 # Project root is the immutable code snapshot when the API is release-served.
 # Mutable data remains reachable through the release's explicit symlinks.
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -31,12 +33,7 @@ LIVE_REPO_ROOT = _live_repo_root()
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
 # Message broker database
-MESSAGE_DB = Path(
-    os.environ.get(
-        "AB_DB_PATH",
-        str(PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"),
-    )
-)
+MESSAGE_DB = configured_bridge_db_path(PROJECT_ROOT)
 
 # Dashboards directory (for static file serving)
 DASHBOARDS_DIR = PROJECT_ROOT / "dashboards"
@@ -131,4 +128,3 @@ BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"
 # Server settings
 API_HOST = "127.0.0.1"  # nosec B104 — bind to localhost only
 API_PORT = 8765
-

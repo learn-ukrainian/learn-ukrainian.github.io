@@ -2075,10 +2075,13 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
     aimed at any other repo, including a test's own ``git init`` primary,
     still run the real helper.
     """
-    # Deployment-only suites do not import the bridge or install its runtime.
-    # Bridge tests import this module during collection, before fixtures run.
-    acp_mod = sys.modules.get("scripts.ai_agent_bridge._acp_execution")
-    if acp_mod is None:
+    # Import eagerly: production imports this module function-locally, so it
+    # may not be loaded yet, and skipping would run the real helper against the
+    # primary checkout. Only a missing bridge runtime (the rules workflow venv
+    # has just pytest + PyYAML) may skip the redirect.
+    try:
+        from scripts.ai_agent_bridge import _acp_execution as acp_mod
+    except ImportError:
         return
 
     real_checkout = Path(_init_real_worktrees_dir()).parent.resolve()
