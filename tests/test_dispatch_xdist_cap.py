@@ -37,8 +37,10 @@ def _write_probe(directory: Path) -> None:
             def pytest_configure(config):
                 if hasattr(config, "workerinput"):
                     return
+                from ci.pytest_dispatch_cap import tx_spec_worker_count
+
                 tx = list(getattr(config.option, "tx", None) or [])
-                print(f"OBSERVED_WORKERS={len(tx)}", flush=True)
+                print(f"OBSERVED_WORKERS={tx_spec_worker_count(tx)}", flush=True)
                 config.option.tx = []
                 config.option.numprocesses = 0
                 config.option.dist = "no"
@@ -127,6 +129,87 @@ def test_marker_and_n1_stays_one_worker(tmp_path: Path) -> None:
         tmp_path, ["-n", "1", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
     )
     _assert_workers(completed, 1)
+
+
+def test_override_ini_addopts_still_caps_when_pytest_plugins_is_set(tmp_path: Path) -> None:
+    _write_probe(tmp_path)
+    env = _child_env(tmp_path, marker="impl-8645-b")
+    env["PYTEST_PLUGINS"] = "ci.pytest_dispatch_cap"
+    completed = _run_pytest(
+        tmp_path,
+        ["-n", "8", "-q", "tests/test_sample.py", "--override-ini", "addopts=-v"],
+        env,
+    )
+    _assert_workers(completed, 2)
+
+
+def test_plugin_loaded_from_addopts_and_pytest_plugins_is_idempotent(tmp_path: Path) -> None:
+    _write_probe(tmp_path)
+    env = _child_env(tmp_path, marker="impl-8645-b")
+    env["PYTEST_PLUGINS"] = "ci.pytest_dispatch_cap"
+    completed = _run_pytest(tmp_path, ["-n", "8", "-q", "tests/test_sample.py"], env)
+    _assert_workers(completed, 2)
+    assert completed.stdout.count(CAP_LINE) == 1
+
+
+def test_oversized_tx_is_rejected_before_workers_start(tmp_path: Path) -> None:
+    _write_probe(tmp_path)
+    env = _child_env(tmp_path, marker="impl-8645-b")
+    oversized = (
+        ["--tx", "3*popen", "--dist=load", "-q", "tests/test_sample.py"],
+        ["--tx", "popen", "--tx", "popen", "--tx", "popen", "--dist=load", "-q", "tests/test_sample.py"],
+    )
+    for args in oversized:
+        completed = _run_pytest(tmp_path, args, env)
+        combined = completed.stderr + completed.stdout
+        assert completed.returncode != 0, combined
+        assert "dispatch xdist cap: --tx specifies 3 workers" in combined
+        assert "OBSERVED_WORKERS" not in completed.stdout
+    allowed = _run_pytest(
+        tmp_path, ["--tx", "2*popen", "--dist=load", "-q", "tests/test_sample.py"], env
+    )
+    assert allowed.returncode == 0, allowed.stderr
+    assert _observed_workers(allowed) == 2
+
+
+def test_nested_pytest_main_does_not_release_the_outer_lock(tmp_path: Path) -> None:
+    _write_probe(tmp_path)
+    (tmp_path / "tests" / "test_inner.py").write_text("def test_inner():\n    assert True\n", encoding="utf-8")
+    (tmp_path / "tests" / "test_sample.py").write_text(
+        textwrap.dedent(
+            """\
+            import fcntl
+            import os
+
+            import pytest
+
+            def _held() -> bool:
+                fd = os.open(os.environ["LU_PYTEST_FULL_SUITE_LOCK"], os.O_RDWR)
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except BlockingIOError:
+                    return True
+                else:
+                    fcntl.flock(fd, fcntl.LOCK_UN)
+                    return False
+                finally:
+                    os.close(fd)
+
+            def test_ok():
+                before = _held()
+                rc = pytest.main(["-q", "tests/test_inner.py", "-p", "no:cacheprovider"])
+                after = _held()
+                print(f"LOCK_BEFORE_NESTED {before} LOCK_AFTER_NESTED {after} EXITS {rc}", flush=True)
+            """
+        ),
+        encoding="utf-8",
+    )
+    env = _child_env(tmp_path, marker="impl-8645-b")
+    env[LOCK_ENV] = str(tmp_path / "pytest-full-suite.lock")
+    completed = _run_pytest(tmp_path, ["-q", "-s", "-p", "no:cacheprovider"], env)
+    combined = completed.stdout + completed.stderr
+    assert completed.returncode == 0, combined
+    assert "LOCK_BEFORE_NESTED True LOCK_AFTER_NESTED True EXITS 0" in completed.stdout
 
 
 def test_without_marker_explicit_n_is_unchanged(tmp_path: Path) -> None:

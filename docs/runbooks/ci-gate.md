@@ -95,15 +95,29 @@ candidate set into unused buckets.
 thread method terminates the process, and replacing it can leave xdist
 hanging until the job limit.
 
-Dispatch workers are a separate host from these runners. When
-`LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `scripts/ci/pytest_dispatch_cap.py`
-(loaded by `pyproject.toml` `addopts` `-p ci.pytest_dispatch_cap`) clamps xdist with `--maxprocesses=2` for
-`-n auto`, `-n logical`, and an explicit `-n`, and a full-suite invocation
-takes one non-blocking lock under `/var/tmp/lu/learn-ukrainian/`
-(`LU_PYTEST_FULL_SUITE_LOCK` overrides that path). CI does
-not set that variable (see `.github/workflows/`), so shard `-n logical` is
-unchanged. A second full-suite run on a dispatch host fails immediately
-and tells the worker to run targeted tests.
+Dispatch workers are a separate host from these runners. SCOPE for #8645
+part B: this guards workers against accidental xdist fan-out and concurrent
+full suites. It is not a sandbox against deliberate evasion; parts A (memory
+admission) and C (per-worker cgroup) are the hard limits.
+
+When `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `scripts/ci/pytest_dispatch_cap.py`
+clamps xdist to two workers. `pyproject.toml` `addopts` still passes
+`-p ci.pytest_dispatch_cap`, and `scripts/delegate.py` also sets
+`PYTEST_PLUGINS=ci.pytest_dispatch_cap` (appended when the variable is already
+set) so a worker that copies CI's `--override-ini addopts=-v` does not drop
+the plugin. The `pythonpath` ini key is separate from `addopts` and still
+makes `ci.pytest_dispatch_cap` importable. The plugin is idempotent when both
+registrations load it. `-n auto`, `-n logical`, and an explicit `-n` use
+`--maxprocesses=2`. A `--tx` spec whose expanded worker count is greater than
+2 (for example `--tx 3*popen`) is a usage error before configuration; the cap
+does not rewrite the spec. A full-suite invocation takes one non-blocking lock
+under `/var/tmp/lu/learn-ukrainian/` (`LU_PYTEST_FULL_SUITE_LOCK` overrides
+that path). The fd is stored on the pytest config that acquired it and
+released only in that run's `pytest_unconfigure`, so a nested `pytest.main()`
+does not drop the outer run's lock. CI does not set the dispatch variable
+(see `.github/workflows/`), so shard `-n logical` is unchanged. A second
+full-suite run on a dispatch host fails immediately and tells the worker to
+run targeted tests.
 
 **Collection — allowlist hook.** `tests/conftest.py` implements
 `pytest_ignore_collect`, gated on env var `LU_PYTEST_SHARD_FILES`: unset,

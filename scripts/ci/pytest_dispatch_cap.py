@@ -1,8 +1,15 @@
 """Cap pytest-xdist fan-out for dispatch workers (#8645 part B).
 
+SCOPE: part B guards dispatch workers against accidental xdist fan-out and
+concurrent full suites. It is not a sandbox against deliberate evasion; parts
+A (memory admission) and C (per-worker cgroup) are the hard limits.
+
 When ``LEARN_UKRAINIAN_DISPATCH_TASK_ID`` is set, a worker never starts more
 than two xdist processes, and a full-suite run takes one host-wide lock.
-Operator shells and CI leave the variable unset, so they are unchanged.
+``delegate.py`` also sets ``PYTEST_PLUGINS`` so the cap still loads when a
+worker copies CI's ``--override-ini addopts=-v`` and drops the ``addopts``
+``-p`` registration. Operator shells and CI leave the dispatch variable unset,
+so they are unchanged.
 """
 
 from __future__ import annotations
@@ -22,9 +29,11 @@ LOCK_DIR = Path("/var/tmp/lu/learn-ukrainian")
 LOCK_PATH = LOCK_DIR / "pytest-full-suite.lock"
 FULL_SUITE_BUSY = "full suite already running on this host; run targeted tests — CI runs the full suite"
 CAP_LINE = f"dispatch xdist cap: maxprocesses={MAX_PROCESSES}"
+TX_TOO_MANY = "dispatch xdist cap: --tx specifies {count} workers; at most {max} are allowed"
+_LOCK_ATTR = "_lu_dispatch_full_suite_lock_fd"
+_CLAMP_ATTR = "_lu_dispatch_cap_clamped"
 
 _lock_fd: int | None = None
-_clamp_applied = False
 
 
 def dispatch_marker_set(environ: Mapping[str, str] | None = None) -> bool:
@@ -117,12 +126,22 @@ def configured_lock_path(environ: Mapping[str, str] | None = None) -> Path:
     return Path(override) if override else LOCK_PATH
 
 
-def acquire_full_suite_lock(lock_path: Path | None = None) -> None:
-    """Take a non-blocking exclusive lock. Fail immediately when it is held."""
-    global _lock_fd
-    if _lock_fd is not None:
-        return
-    path = configured_lock_path() if lock_path is None else lock_path
+def tx_spec_worker_count(specs: list[str]) -> int:
+    """Workers an xdist ``--tx`` list will start, including ``N*popen`` forms."""
+    total = 0
+    for spec in specs:
+        star = spec.find("*")
+        if star == -1:
+            total += 1
+            continue
+        try:
+            total += int(spec[:star])
+        except ValueError:
+            total += 1
+    return total
+
+
+def _lock_file(path: Path) -> int:
     path.parent.mkdir(parents=True, exist_ok=True)
     fd = os.open(path, os.O_CREAT | os.O_RDWR, 0o644)
     try:
@@ -130,7 +149,27 @@ def acquire_full_suite_lock(lock_path: Path | None = None) -> None:
     except BlockingIOError:
         os.close(fd)
         raise pytest.UsageError(FULL_SUITE_BUSY) from None
-    _lock_fd = fd
+    return fd
+
+
+def _release_fd(fd: int) -> None:
+    try:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+    finally:
+        os.close(fd)
+
+
+def acquire_full_suite_lock(lock_path: Path | None = None) -> None:
+    """Take a non-blocking exclusive lock. Fail immediately when it is held.
+
+    This module-level holder is for callers outside a pytest session. A pytest
+    run stores its own fd on the config and releases only that fd.
+    """
+    global _lock_fd
+    if _lock_fd is not None:
+        return
+    path = configured_lock_path() if lock_path is None else lock_path
+    _lock_fd = _lock_file(path)
 
 
 def release_full_suite_lock() -> None:
@@ -139,10 +178,22 @@ def release_full_suite_lock() -> None:
         return
     fd = _lock_fd
     _lock_fd = None
-    try:
-        fcntl.flock(fd, fcntl.LOCK_UN)
-    finally:
-        os.close(fd)
+    _release_fd(fd)
+
+
+def _acquire_for_config(config: pytest.Config) -> None:
+    """Lock for this run only. A second call on the same config is a no-op."""
+    if getattr(config, _LOCK_ATTR, None) is not None:
+        return
+    setattr(config, _LOCK_ATTR, _lock_file(configured_lock_path()))
+
+
+def _release_for_config(config: pytest.Config) -> None:
+    fd = getattr(config, _LOCK_ATTR, None)
+    if fd is None:
+        return
+    setattr(config, _LOCK_ATTR, None)
+    _release_fd(fd)
 
 
 atexit.register(release_full_suite_lock)
@@ -150,13 +201,12 @@ atexit.register(release_full_suite_lock)
 
 def _arm_maxprocesses(config: pytest.Config) -> None:
     """Set the cap before xdist turns ``-n`` into a ``tx`` list."""
-    global _clamp_applied
     numprocesses = config.option.numprocesses
     if not numprocesses:
         return
     current = config.option.maxprocesses
     config.option.maxprocesses = MAX_PROCESSES if current is None else min(int(current), MAX_PROCESSES)
-    _clamp_applied = True
+    setattr(config, _CLAMP_ATTR, True)
 
 
 def _shrink_tx(config: pytest.Config) -> None:
@@ -166,7 +216,6 @@ def _shrink_tx(config: pytest.Config) -> None:
     first. A wrapper that runs after that hook still has to shrink ``tx`` when
     this plugin was registered earlier than xdist.
     """
-    global _clamp_applied
     tx = list(config.option.tx or [])
     numprocesses = config.option.numprocesses
     if not tx and not numprocesses:
@@ -175,7 +224,26 @@ def _shrink_tx(config: pytest.Config) -> None:
         config.option.numprocesses = MAX_PROCESSES
         config.option.maxprocesses = MAX_PROCESSES
         config.option.tx = ["popen"] * MAX_PROCESSES
-        _clamp_applied = True
+        setattr(config, _CLAMP_ATTR, True)
+
+
+def _reject_oversized_tx(early_config: pytest.Config) -> None:
+    """Refuse a ``--tx`` list that would start more than the cap.
+
+    ``N*popen`` is one option value and expands only after configuration, and
+    it does not set ``-n``. Count the expanded workers and fail before then.
+    """
+    if _is_xdist_worker(early_config) or not dispatch_marker_set():
+        return
+    specs = list(getattr(early_config.known_args_namespace, "tx", None) or [])
+    count = tx_spec_worker_count(specs)
+    if count > MAX_PROCESSES:
+        raise pytest.UsageError(TX_TOO_MANY.format(count=count, max=MAX_PROCESSES))
+
+
+def pytest_load_initial_conftests(early_config: pytest.Config, parser: pytest.Parser, args: list[str]) -> None:
+    del parser, args
+    _reject_oversized_tx(early_config)
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -191,7 +259,7 @@ def pytest_cmdline_main(config: pytest.Config) -> object:
     if armed:
         _arm_maxprocesses(config)
         if is_full_suite(config):
-            acquire_full_suite_lock()
+            _acquire_for_config(config)
     outcome = yield
     outcome.get_result()
     if not armed:
@@ -200,7 +268,7 @@ def pytest_cmdline_main(config: pytest.Config) -> object:
 
 
 def pytest_sessionstart(session: pytest.Session) -> None:
-    if _is_xdist_worker(session.config) or not _clamp_applied:
+    if _is_xdist_worker(session.config) or not getattr(session.config, _CLAMP_ATTR, False):
         return
     reporter = session.config.pluginmanager.get_plugin("terminalreporter")
     if reporter is not None:
@@ -210,5 +278,4 @@ def pytest_sessionstart(session: pytest.Session) -> None:
 
 
 def pytest_unconfigure(config: pytest.Config) -> None:
-    del config
-    release_full_suite_lock()
+    _release_for_config(config)
