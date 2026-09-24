@@ -262,7 +262,7 @@ def test_ask_gemini_default_model_is_none_so_registry_pin_applies() -> None:
 
 
 def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
-    """Rotating the registry pin moves every legacy default with it (#6894)."""
+    """Rotating the registry pin updates the accepted pin and its display alias."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     monkeypatch.setitem(
@@ -271,10 +271,10 @@ def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
         {"seat": "acpx-agy-shadow", "agent": "agy", "model": "gemini-9.9-flash-high"},
     )
     assert registered_participant_model("agy") == "gemini-9.9-flash-high"
-    assert resolve_compat_model("gemini", "gemini-3-flash-preview") == "gemini-9.9-flash-high"
+    assert resolve_compat_model("gemini", "Gemini 9.9 Flash (High)") == "gemini-9.9-flash-high"
     assert resolve_compat_model("gemini", "gemini-3.7-flash") == "gemini-9.9-flash-high"
-    # Non-legacy slugs pass through for the route resolver to judge loudly.
-    assert resolve_compat_model("gemini", "not-a-gemini-model") == "not-a-gemini-model"
+    # Non-Gemini model ids pass through for the route resolver to judge loudly.
+    assert resolve_compat_model("gemini", "custom-provider/model-x") == "custom-provider/model-x"
     # Non-agy seats never get rewritten.
     assert resolve_compat_model("cursor", "composer-2") == "composer-2"
 
@@ -322,8 +322,9 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
     converse_gemini("hello", "t-1")
     assert captured["model"] == "gemini-9.9-flash-high"
 
-    converse_gemini("hello", "t-1", model="gemini-3.1-pro-preview")
-    assert captured["model"] == "gemini-9.9-flash-high"
+    import pytest
+    with pytest.raises(ValueError, match=r"delegate\.py dispatch --agent agy"):
+        converse_gemini("hello", "t-1", model="gemini-3.1-pro-preview")
 
     converse_gemini("hello", "t-1", model="not-a-gemini-model")
     assert captured["model"] == "not-a-gemini-model"
@@ -412,7 +413,7 @@ def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> No
     ask_gemini("hello", task_id="t-1")
     assert captured["model"] == "gemini-9.9-flash-high"
 
-    # 2. Legacy slug remaps to rotated pin
+    # 2. A legacy Flash alias keeps following the registry pin.
     ask_gemini("hello", task_id="t-1", model="gemini-2.0-flash")
     assert captured["model"] == "gemini-9.9-flash-high"
 

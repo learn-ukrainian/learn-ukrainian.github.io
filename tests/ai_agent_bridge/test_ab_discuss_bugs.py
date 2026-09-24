@@ -179,16 +179,19 @@ def test_ask_codex_infers_from_claude_agent_name(
     assert captured["from_llm"] == "claude"
 
 
-def test_legacy_gemini_model_slugs_map_to_live_agy_pin() -> None:
-    """Legacy gemini* slugs resolve to the AGY seat's live registry pin (#6894)."""
+def test_only_registered_agy_pin_alias_resolves_and_other_gemini_fails() -> None:
+    """The AGY compatibility route never silently downgrades an explicit model."""
+    import pytest
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
 
     pin = ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
-    assert resolve_compat_model("gemini", "gemini-3.1-pro-preview") == pin
-    assert resolve_compat_model("gemini", "gemini-3.0-flash-preview") == pin
-    assert resolve_compat_model("gemini", "Gemini 3.1 Pro (High)") == pin
+    assert resolve_compat_model("gemini", pin) == pin
+    assert resolve_compat_model("gemini", "Gemini 3.8 Flash (High)") == pin
+    with pytest.raises(ValueError, match="registered model pin") as exc_info:
+        resolve_compat_model("gemini", "gemini-3.1-pro-high")
+    assert "delegate.py dispatch --agent agy --model gemini-3.1-pro-high" in str(exc_info.value)
     # No explicit model → None, so the route resolver applies the pin itself.
     assert resolve_compat_model("gemini", None) is None
 
@@ -211,7 +214,7 @@ def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
             "--task-id",
             "task-1",
             "--model",
-            "gemini-3.1-pro-preview",
+            "gemini-3.8-flash-high",
             "--stdout-only",
             "--from",
             "codex",
@@ -219,12 +222,31 @@ def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
     )
 
     assert _cli._dispatch_command(args) is True
+    assert captured["target"] == "gemini"
+    assert captured["stdout_only"] is True
     assert captured["content"] == "hello"
     assert captured["task_id"] == "task-1"
     assert captured["source"] == "codex"
-    # Legacy slugs map to the AGY seat's live registry pin, not a static slug.
+    # The registered AGY pin is passed through without a stale static alias.
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     assert captured["model"] == ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
-    assert captured["target"] == "gemini"
-    assert captured["stdout_only"] is True
+
+
+def test_ask_gemini_command_surfaces_unsupported_model() -> None:
+    import pytest
+
+    parser = _cli._build_parser()
+    args = parser.parse_args(
+        [
+            "ask-gemini",
+            "hello",
+            "--task-id",
+            "task-unsupported-model",
+            "--model",
+            "gemini-3.1-pro-high",
+        ]
+    )
+
+    with pytest.raises(ValueError, match=r"delegate\.py dispatch --agent agy --model"):
+        _cli._dispatch_command(args)

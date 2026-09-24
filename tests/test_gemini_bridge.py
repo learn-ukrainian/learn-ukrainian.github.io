@@ -342,8 +342,8 @@ def test_converse_gemini_default_tracks_pin_rotation(monkeypatch) -> None:
     converse_gemini("hello", "t-1")
     assert captured["model"] == "gemini-9.9-flash-high"
 
-    converse_gemini("hello", "t-1", model="gemini-3.1-pro-preview")
-    assert captured["model"] == "gemini-9.9-flash-high"
+    with pytest.raises(ValueError, match=r"--model gemini-3\.1-pro-high"):
+        converse_gemini("hello", "t-1", model="gemini-3.1-pro-preview")
 
     converse_gemini("hello", "t-1", model="not-a-gemini-model")
     assert captured["model"] == "not-a-gemini-model"
