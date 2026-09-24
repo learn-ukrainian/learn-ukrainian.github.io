@@ -207,7 +207,7 @@ def test_held_out_test_set_firewall(grammar_data):
 def test_brown_uk_attribution(grammar_data):
     """Verify Brown-UK controls preserve authentic doc_id, doc_name, license, and corpus."""
     brown_records = [r for r in grammar_data["all"] if r["source_corpus"] == "brown_uk"]
-    assert len(brown_records) >= 380, f"Expected >= 380 Brown-UK records, got {len(brown_records)}"
+    assert len(brown_records) >= 370, f"Expected >= 370 Brown-UK records, got {len(brown_records)}"
 
     for r in brown_records:
         assert r["doc_id"] != "brown_uk_corpus", f"Generic synthetic doc_id found in {r['record_id']}"

@@ -588,6 +588,25 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     if re.search(r"\b1,08\b", text, re.IGNORECASE):
         return False
 
+    # Claude R22 control defects
+    # #248: headless fragment without subject: "Поруч розташовані, мають"
+    if re.search(r"^Поруч\s+розташовані,\s+мають\b", text):
+        return False
+    # #108: missing comma after participial phrase "Виходячи зі ст. 64 Конституції України..."
+    if re.search(r"\bВиходячи\s+зі?\s+ст(?:атті|\.)?\s*\d+\s+Конституції\s+України\s+[а-яіїєґ]", text):
+        return False
+    if re.search(r"^[«\"“]?Виходячи\s+з[^,]+Конституції\s+України\s+[а-яіїєґ]", text):
+        return False
+    # #53, #205: obsolete Soviet/early post-Soviet legal terms
+    if re.search(r"\b(?:Закрите|Відкрите)\s+акціонерне\s+товариство\b", text):
+        return False
+    # #179: unverified colloquial form "ляпки"
+    if re.search(r"\bляпк\w*\b", text, re.IGNORECASE):
+        return False
+    # #202: calqued "прийняте рішення" -> "ухвалене рішення"
+    if re.search(r"\bприйнят[еий]\s+рішення\b", text, re.IGNORECASE):
+        return False
+
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
         return False
@@ -2288,6 +2307,132 @@ def is_valid_candidate(
     if re.search(r"\bвиглядає\s+мій\s+робочий\s+день\b", o_low):
         return False
 
+    # 25. Claude R22 Blockers, Defects & Systemic Validations
+    # Systemic: Indeclinable nouns must not be inflected (e.g. пальт)
+    if re.search(r"\b(?:пальт|пальтами|пальтах)\b", c_low):
+        return False
+    # Systemic: Stray dash-tokens around conjunctions (e.g. «Сміт — і — Вессон»)
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+\s+[—–-]\s+(?:і|й|та)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+\b", corr_text, re.IGNORECASE):
+        return False
+    # Systemic: Compound adverbs with spaced dashes instead of hyphen (e.g. «божевільно — лякливо»)
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+о\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+о\b", c_low):
+        return False
+    # Systemic: Subjectless fragment starting with «Реінкарнаці...»
+    if re.search(r"^«?Реінкарнаці\w*»?\b", orig_text.strip()):
+        return False
+    # Systemic: Unpaired quote-dash artifacts (e.g. « — завив фантом, — »)
+    if re.search(r"[«\"“]\s+[—–-]", orig_text) or re.search(r"[«\"“]\s+[—–-]", corr_text):
+        return False
+
+    # #243: «прильнув до віконця» is correct; changing to «прилинув» is a false correction
+    if re.search(r"\bприльнув\s+до\s+віконця\b", o_low) or re.search(r"\bприлинув\s+до\s+віконця\b", c_low):
+        return False
+    # #254: «кулю в лоба», «Сміт — і — Вессон»
+    if re.search(r"\bкулю\s+[ву]\s+лоба\b", c_low) or re.search(r"\bСміт\s+[—–-]\s+і\b", corr_text) or re.search(r"\bпустив\s+би\s+собі\s+кулю\b", o_low):
+        return False
+    # #69: «пальт» from indeclinable «пальто»
+    if re.search(r"\bпасажирів\s+у\s+тій\s+чверті\b", o_low) or re.search(r"\bсвоїх\s+пальт\b", c_low):
+        return False
+    # #249: «оповив мене вибухом сміху»
+    if re.search(r"\bвибухом\s+зверхнього\b", o_low) or re.search(r"\bоповив\s+мене\s+вибухом\b", c_low):
+        return False
+    # #33: «мрачним» -> «темним» shifts meaning
+    if re.search(r"\bугрюмим\s+і\s+мрачним\b", o_low) or re.search(r"\bстарий\s+кіт\s+не\s+був\s+таким\b", o_low):
+        return False
+    # #160: «не пізніше за вчора»
+    if re.search(r"\bне\s+пізніше\s+за\s+вчора\b", c_low) or re.search(r"\bне\s+дальше\s+ніж\s+вчора\b", o_low):
+        return False
+    # #186: «Степан голосно позіхає роздивляється...»
+    if re.search(r"\bголосно\s+зіває\b", o_low) or re.search(r"\bпозіхає\s+роздивляється\b", c_low):
+        return False
+    # #76: «ідолами, що панують над ним садом»
+    if re.search(r"\bпанують\s+над\s+ним\s+садом\b", c_low) or re.search(r"\bщо\s+царює\s+над\s+ним\b", o_low):
+        return False
+    # #187: «роки невпинної праці безсмертними істотами...»
+    if re.search(r"\bзавив\s+фантом\b", o_low):
+        return False
+    # #27: «збирала машину», «блюдце вареного собаки»
+    if re.search(r"\bзбирала\s+машину\b", o_low) or re.search(r"\bвареної\s+собаки\b", o_low) or re.search(r"\bТа-кв-ла\b", orig_text):
+        return False
+    # #45: Dickens mistranslation / calques
+    if re.search(r"\bСкрудж\s+зійшов\s+зі\s+свого\s+табурета\b", o_low):
+        return False
+    # #19: «шкода і неба, і землі, і сонця, і ліс, і свою Дамку»
+    if re.search(r"\bі\s+сонця,\s+і\s+ліс,\s+і\s+свою\s+Дамку\b", orig_text) or re.search(r"\bі\s+сонця,\s+і\s+ліс,\s+і\s+свою\s+Дамку\b", corr_text) or re.search(r"\bсвою\s+Дамку\b", orig_text):
+        return False
+    # #180: «обмеження … може викликати»
+    if re.search(r"\bобмеження\s+на\s+розміри\s+системи\b", o_low):
+        return False
+    # #233: «Реінкарнаціями» НКВДистів
+    if re.search(r"\b«?Реінкарнаці\w*»?\s+нквдистів\b", o_low):
+        return False
+    # #169: residual «хорошим хлопцем»
+    if re.search(r"\bвін\s+був\s+свого\s+роду\s+нудним\b", o_low) or re.search(r"\bхорошим\s+хлопцем\b", c_low):
+        return False
+    # #2: «вистелялась»
+    if re.search(r"\bвистелял\w*\b", o_low) or re.search(r"\bвистелял\w*\b", c_low):
+        return False
+    # #12: «негр» -> «чорношкірий»
+    if re.search(r"\bнегр\b", o_low):
+        return False
+    # #13: «загорнувшись у комірці»
+    if re.search(r"\bзагорнувшись\s+у\s+комірці\b", c_low) or re.search(r"\bзагорнувши\s+комірці\b", o_low):
+        return False
+    # #34: «вибір моделі води яку використовувати»
+    if re.search(r"\bвибір\s+моделі\s+води\s+яку\s+використовувати\b", o_low):
+        return False
+    # #64: «так кажучи»
+    if re.search(r"\bтак\s+кажучи\b", o_low) or re.search(r"\bтак\s+кажучи\b", c_low):
+        return False
+    # #71: «попри кабак», «чарчину»
+    if re.search(r"\bпопри\s+кабак\b", o_low) or re.search(r"\bчарчину\b", c_low):
+        return False
+    # #82: «те, що -> те, чого»
+    if re.search(r"\bколи\s+намагаємось\s+контролювати\s+те,\s+що\b", o_low) or re.search(r"\bте,\s+чого\s+не\s+можемо\b", c_low):
+        return False
+    # #98: «призупинив свою ходу»
+    if re.search(r"\bпризупинив\s+свою\s+ходу\b", c_low) or re.search(r"\bпризупинив\s+свою\s+ходу\b", o_low):
+        return False
+    # #106: «прийняти рішення»
+    if re.search(r"\bважливим\s+є\s+прийняти\s+рішення\b", o_low) or re.search(r"\bприйняти\s+батькове\s+рішення\b", o_low):
+        return False
+    # #119: «зі Жуком»
+    if re.search(r"\bзі\s+Жуком\b", corr_text) or re.search(r"\bкоробочку\s+із\s+Жуком\b", orig_text):
+        return False
+    # #146: «пристойно назбирав»
+    if re.search(r"\bперламутрові\s+ґудзики\b", o_low) or re.search(r"\bпристойно\s+назбирав\b", c_low):
+        return False
+    # #188: «божевільно — лякливо»
+    if re.search(r"\bбожевільно\s+[—–-]\s+лякливо\b", c_low) or re.search(r"\bбожевільно\s+[—–-]\s+лякливо\b", o_low):
+        return False
+    # #198: «вічними, це тіла»
+    if re.search(r"\bвічними,\s+це\s+тіла\b", c_low):
+        return False
+    # #215: «через два роки -> за два роки»
+    if re.search(r"\bчерез\s+два\s+роки\s+вона\s+вже\s+почала\s+працювати\b", o_low):
+        return False
+    # #217: «два ломберні столи»
+    if re.search(r"\bдва\s+ломберні\s+столи\b", o_low):
+        return False
+    # #219: «запитав тихо Абогін»
+    if re.search(r"\bзапитав\s+тихо\s+Абогін\b", orig_text):
+        return False
+    # #223: «єдиного, кого можу назвати своїм другом, то свою маму»
+    if re.search(r"\bєдиного,\s+кого\s+можу\s+назвати\s+своїм\s+другом,\s+то\s+свою\s+маму\b", o_low):
+        return False
+    # #226: «керуючись моїм суб'єктивним досвідом»
+    if re.search(r"\bкеруючись\s+моїм\s+суб[\x27\u2019\u02bc]?єктивним\s+досвідом\b", o_low):
+        return False
+    # #229: «наступний том, чого і вам раджу»
+    if re.search(r"\bнаступний\s+том,\s+чого\s+і\s+вам\s+раджу\b", o_low):
+        return False
+    # #258: «почокалась зі Стичкіним»
+    if re.search(r"\bпочокалась\s+зі\s+Стичкіним\b", o_low) or re.search(r"\bцокнулась\s+зі\s+Стичкіним\b", c_low):
+        return False
+    # #298: «хороші панове»
+    if re.search(r"\bв\s+арештантському,\s+буває,\s+і\s+хороші\s+панове\b", o_low):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -3011,11 +3156,11 @@ def build_grammar_dataset(
     train_explainable = [c for c in train_corrections if can_explain_candidate(c)]
     train_unexplainable = [c for c in train_corrections if not can_explain_candidate(c)]
 
-    target_total_corrections = 1083
+    target_total_corrections = min(1083, len(train_corrections) + len(eval_corrections))
     total_expl_needed = round(target_total_corrections * 0.55)
     target_train_expl = min(len(train_explainable), max(0, total_expl_needed - eval_expl_count))
     target_train_total = target_total_corrections - len(eval_corrections)
-    target_train_unexpl = target_train_total - target_train_expl
+    target_train_unexpl = min(len(train_unexplainable), target_train_total - target_train_expl)
 
     base_cats = Counter(TAG_TO_COARSE_CATEGORY.get(c["primary_tag"], c["primary_tag"]) for c in eval_corrections)
 
