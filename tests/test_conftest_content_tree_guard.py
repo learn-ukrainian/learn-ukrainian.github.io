@@ -14,6 +14,8 @@ import pytest
 
 import tests.conftest as guard
 
+pytestmark = pytest.mark.reads_content
+
 
 def _git(root: Path, *args: str) -> None:
     subprocess.run(
