@@ -3307,6 +3307,26 @@ def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
     return sha or None
 
 
+def _record_final_branch_head(state: dict[str, Any]) -> None:
+    """Capture the current HEAD when a terminal task still owns a worktree."""
+    raw_path = state.get("worktree_path")
+    if isinstance(raw_path, str) and Path(raw_path).is_dir():
+        state["final_branch_head_commit"] = _resolve_sha(Path(raw_path))
+
+
+def _mark_crashed_task(state_path: Path, state: dict[str, Any], *, source: str) -> None:
+    """Persist a zombie correction with the worktree's final branch head."""
+    prior_status = state.get("status")
+    pid = state.get("pid")
+    state["status"] = "crashed"
+    state["finished_at"] = datetime.now(UTC).isoformat()
+    state["stderr_excerpt"] = (
+        f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by {source} probe"
+    )
+    _record_final_branch_head(state)
+    _write_state_atomic(state_path, state)
+
+
 def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
     """Return the configured upstream remote for the checked-out branch.
 
@@ -4252,21 +4272,21 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
     try:
         from scripts.orchestration import reap_worktrees
 
-        if reap_worktrees._task_pid_alive(state):
-            row["reason"] = "task process alive"
-            return row
-        active_ids = reap_worktrees._active_task_ids()
-        live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
-        if active_ids is None or live_cwds is None:
-            row["reason"] = "activity probe unavailable"
-            return row
-        if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
-            row["reason"] = "worktree active"
-            return row
         with worktree_lock(worktree) if apply else contextlib.nullcontext():
             current = _read_state(state_path)
             if current != state:
                 row["reason"] = "task state changed"
+                return row
+            if reap_worktrees._task_pid_alive(state):
+                row["reason"] = "task process alive"
+                return row
+            active_ids = reap_worktrees._active_task_ids()
+            live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
+            if active_ids is None or live_cwds is None:
+                row["reason"] = "activity probe unavailable"
+                return row
+            if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
+                row["reason"] = "worktree active"
                 return row
             current_branch = _current_branch(worktree)
             recorded_branch = state.get("worktree_branch")
@@ -4308,14 +4328,17 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
             if head is None:
                 row["reason"] = "HEAD unavailable"
                 return row
+            if not dirty and state.get("rescue_status") == "rescued" and state.get("rescue_head_commit") == head:
+                row["reason"] = "already rescued at HEAD"
+                return row
             if not dirty:
                 ahead = _count_commits_ahead(
                     worktree, _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main"))
                 )
-                if (
-                    ahead in (0, None)
-                    or _count_unpushed_commits(worktree, str(state.get("worktree_branch") or "")) == 0
-                ):
+                if ahead is None:
+                    row["reason"] = "ahead count unavailable"
+                    return row
+                if ahead == 0 or _count_unpushed_commits(worktree, str(state.get("worktree_branch") or "")) == 0:
                     row["action"] = "cleaned" if cleaned_junk else "skipped"
                     row["reason"] = "disposable residue removed" if cleaned_junk else "no provable unpushed work"
                     return row
@@ -8171,6 +8194,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     runtime_tmp_namespace_root,
                 )
             )
+            _record_final_branch_head(failed_state)
             _write_state_atomic(state_path, failed_state)
             print(
                 f"❌ failed to spawn worker for {task_id!r}: {type(exc).__name__}: {exc}",
@@ -8265,12 +8289,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     if prior_status in ("running", "spawning"):
         pid = state.get("pid")
         if pid and not _pid_alive(int(pid)):
-            state["status"] = "crashed"
-            state["finished_at"] = datetime.now(UTC).isoformat()
-            state["stderr_excerpt"] = (
-                f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by status probe"
-            )
-            _write_state_atomic(state_path, state)
+            _mark_crashed_task(state_path, state, source="status")
 
     # Elapsed time for still-running tasks
     if state.get("status") == "running" and state.get("started_at"):
@@ -9060,12 +9079,7 @@ def cmd_wait(args: argparse.Namespace) -> int:
         if prior_status in ("running", "spawning"):
             pid = state.get("pid")
             if pid and not _pid_alive(int(pid)):
-                state["status"] = "crashed"
-                state["finished_at"] = datetime.now(UTC).isoformat()
-                state["stderr_excerpt"] = (
-                    f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by wait probe"
-                )
-                _write_state_atomic(state_path, state)
+                _mark_crashed_task(state_path, state, source="wait")
 
         status = state.get("status")
         if status in _TERMINAL_STATUSES:
@@ -9184,7 +9198,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         if state.get("status") in ("running", "spawning"):
             pid = state.get("pid")
             if pid and not _pid_alive(int(pid)):
-                state["status"] = "crashed"
+                _mark_crashed_task(state_file, state, source="list")
         if args.status and state.get("status") != args.status:
             continue
         # Fix 4 (#1476): classify worktree layout so operators can see at

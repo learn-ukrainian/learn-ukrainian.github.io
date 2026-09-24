@@ -1282,6 +1282,70 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     assert "failed to spawn" in captured.err
 
 
+def test_dispatch_popen_failure_records_worktree_head(tmp_tasks_dir, tmp_path, monkeypatch):
+    _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="popen-head")
+    monkeypatch.setattr(
+        delegate,
+        "_resolve_verified_worktree_path",
+        lambda path: worktree if Path(path).resolve() == worktree else None,
+    )
+    expected_head = delegate._resolve_sha(worktree)
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="popen-head",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=str(worktree),
+        worktree=None,
+        hard_timeout=3600,
+    )
+
+    real_popen = subprocess.Popen
+
+    def fail_worker_popen(command, *args, **kwargs):
+        if command[0] == "git":
+            return real_popen(command, *args, **kwargs)
+        raise FileNotFoundError("no such file")
+
+    with patch("delegate.subprocess.Popen", side_effect=fail_worker_popen):
+        assert delegate.cmd_dispatch(args) == 1
+
+    state = delegate._read_state(delegate._state_path("popen-head"))
+    assert state["status"] == "failed"
+    assert state["final_branch_head_commit"] == expected_head
+
+
+@pytest.mark.parametrize("probe", ["status", "wait", "list"])
+def test_zombie_probes_record_final_worktree_head(tmp_tasks_dir, tmp_path, monkeypatch, capsys, probe):
+    _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=f"{probe}-head")
+    state_path = delegate._state_path(f"{probe}-head")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": f"{probe}-head",
+            "agent": "codex",
+            "status": "running",
+            "pid": 999_999_998,
+            "worktree_path": str(worktree),
+        },
+    )
+    expected_head = delegate._resolve_sha(worktree)
+
+    if probe == "status":
+        assert delegate.cmd_status(argparse.Namespace(task_id=f"{probe}-head")) == 0
+    elif probe == "wait":
+        assert delegate.cmd_wait(argparse.Namespace(task_id=f"{probe}-head", timeout=1, poll_interval=0.5)) == 1
+    else:
+        assert delegate.cmd_list(argparse.Namespace(status=None)) == 0
+
+    state = delegate._read_state(state_path)
+    assert state["status"] == "crashed"
+    assert state["final_branch_head_commit"] == expected_head
+    assert state["finished_at"]
+
+
 def test_dispatch_parses_max_budget_usd_flag():
     parser = delegate.build_parser()
     args = parser.parse_args(
@@ -9028,6 +9092,19 @@ def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tas
     ).stdout
     assert remote.startswith(result["head"])
     assert worktree.exists()
+    if not dirty:
+        repeated = delegate._rescue_task(state_path, apply=True)
+        assert repeated == {"task_id": "rescue-test", "action": "skipped", "reason": "already rescued at HEAD"}
+
+
+def test_rescue_unknown_ahead_count_is_reported(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, _worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    monkeypatch.setattr(delegate, "_count_commits_ahead", lambda *_args: None)
+
+    result = delegate._rescue_task(state_path, apply=False)
+
+    assert result["action"] == "skipped"
+    assert result["reason"] == "ahead count unavailable"
 
 
 def test_rescue_push_failure_keeps_worktree(tmp_path, monkeypatch, tmp_tasks_dir):
@@ -9156,7 +9233,7 @@ def test_exit_flags_dirty_committed_unpushed_without_auto_push(tmp_path, monkeyp
     state = delegate._read_state(state_path)
     assert rc == 1
     assert state["status"] == "needs_finalize"
-    assert state["rescue_status"] == "unpushed work - needs rescue"
+    assert state["rescue_status"] == "unpushed state unknown - needs rescue"
     assert state["auto_finalize"] is None
     assert (worktree / "later.txt").exists()
 

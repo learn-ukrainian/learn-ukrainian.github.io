@@ -36,16 +36,24 @@ Cleanup is fail-closed. A worktree is preserved when any of these is true:
 - it encountered filesystem permission errors during evaluation or removal (`permission_error`), which are retained as exceptions;
 - it is outside the repository's `.worktrees/` directory or not a registered worktree (`foreign`).
 
-The scheduled job first rescues terminal non-success dispatches older than six
-hours. It commits dirty work on `rescue/<task-id>`, pushes it, and verifies the
-remote head with `git ls-remote`. A clean tree with unpushed commits is also
-eligible for rescue after six hours; at task exit it is only flagged
-`unpushed work - needs rescue` and is never pushed automatically. A failed
-push, unverified remote head, or changed file over 5 MB leaves the worktree in
-place. To inspect candidates without writing:
+The scheduled job reports terminal non-success dispatches older than six hours
+as rescue candidates in its result and status; it does not commit or push them.
+A clean tree with unpushed commits is flagged at task exit as
+`unpushed work - needs rescue` when the upstream count is known, or
+`unpushed state unknown - needs rescue` otherwise. The driver inspects the
+report and explicitly runs rescue when appropriate. Rescue commits dirty work
+on `rescue/<task-id>`, pushes it, and verifies the remote head with
+`git ls-remote`. A failed push, unverified remote head, or changed file over
+5 MB leaves the worktree in place. To inspect candidates without writing:
 
 ```bash
 "$PRIMARY_REPO/.venv/bin/python" scripts/delegate.py rescue --all-stale --older-than 6h
+```
+
+To preserve a reviewed candidate explicitly, run:
+
+```bash
+"$PRIMARY_REPO/.venv/bin/python" scripts/delegate.py rescue TASK_ID --apply
 ```
 
 After the driver has inspected a rescue, use `git log origin/rescue/<task-id>`

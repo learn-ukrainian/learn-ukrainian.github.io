@@ -439,6 +439,55 @@ def test_recorded_final_head_classifies_orphaned_work(tasks_dir, repo, head_fiel
     assert row["evidence"]["recorded_commits"] == ([] if head_field == "neither" else [sha])
 
 
+def test_zero_commit_final_head_is_not_work(tasks_dir, repo):
+    base = _git(repo, "rev-parse", "HEAD")
+    _record(tasks_dir, "no-work-head", worktree_base_sha=base, final_branch_head_commit=base)
+
+    report = _settle(tasks_dir, repo, [], apply=True)
+    row = _by_file(report)["no-work-head.json"]
+
+    assert row["class"] == "C"
+    assert row["outcome"] == "no_deliverable"
+    assert row["evidence"]["recorded_commits"] == []
+    assert json.loads((tasks_dir / "no-work-head.json").read_text())["status"] == "no_deliverable"
+
+
+def test_final_head_differs_from_base_with_zero_ahead_count(tasks_dir, repo):
+    base = _git(repo, "rev-parse", "HEAD")
+    work_head = _orphan_commit(repo, "different-head")
+    _record(
+        tasks_dir,
+        "different-head",
+        worktree_base_sha=base,
+        final_branch_head_commit=work_head,
+    )
+
+    row = _by_file(_settle(tasks_dir, repo, []))["different-head.json"]
+
+    assert row["class"] == "C"
+    assert row["evidence"]["recorded_commits"] == [work_head]
+    assert row["outcome"] == "failed"
+
+
+def test_soft_reset_final_base_head_keeps_legacy_work_commit(tasks_dir, repo):
+    base = _git(repo, "rev-parse", "HEAD")
+    reset_commit = _orphan_commit(repo, "reset-work")
+    _record(
+        tasks_dir,
+        "reset-work",
+        returncode=1,
+        worktree_base_sha=base,
+        final_branch_head_commit=base,
+        auto_finalize=_auto_finalized(reset_commit),
+    )
+
+    row = _by_file(_settle(tasks_dir, repo, []))["reset-work.json"]
+
+    assert row["class"] == "C"
+    assert row["evidence"]["recorded_commits"] == [reset_commit]
+    assert row["outcome"] == "failed"
+
+
 def test_renamed_branch_keeps_its_record_out_of_class_c(tasks_dir, repo):
     """Sol's probe: the recorded branch name is gone because the branch was renamed, not deleted."""
     _git(repo, "checkout", "-b", "codex/renamed")

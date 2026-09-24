@@ -114,7 +114,7 @@ def test_scheduled_terminal_dispatch_class_can_be_disabled(tmp_path: Path, monke
     assert captured["include_terminal_dispatches"] is False
 
 
-def test_scheduled_apply_rescues_before_reaper(tmp_path: Path, monkeypatch) -> None:
+def test_scheduled_apply_reports_rescue_candidates_before_reaper(tmp_path: Path, monkeypatch) -> None:
     repo = _repo(tmp_path)
     script = repo / "scripts" / "delegate.py"
     script.parent.mkdir()
@@ -125,8 +125,14 @@ def test_scheduled_apply_rescues_before_reaper(tmp_path: Path, monkeypatch) -> N
     def capture_run(command, **kwargs):
         if isinstance(command, list) and str(script) in command:
             calls.append("rescue")
-            assert command[-4:] == ["--all-stale", "--older-than", "6h", "--apply"]
-            return subprocess.CompletedProcess(command, 0, '{"summary":{"rescued":1}}', "")
+            assert command[-3:] == ["--all-stale", "--older-than", "6h"]
+            assert "--apply" not in command
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                '{"summary":{"candidate":1},"tasks":[{"task_id":"rescue-test","action":"candidate"}]}',
+                "",
+            )
         return original_run(command, **kwargs)
 
     monkeypatch.setattr(cleanup.subprocess, "run", capture_run)
@@ -143,7 +149,12 @@ def test_scheduled_apply_rescues_before_reaper(tmp_path: Path, monkeypatch) -> N
 
     result = cleanup._repo_result(repo, apply=True)
     assert calls[:2] == ["rescue", "reaper"]
-    assert result["rescue"] == {"rescued": 1}
+    assert result["rescue"] == {
+        "summary": {"candidate": 1},
+        "tasks": [{"task_id": "rescue-test", "action": "candidate"}],
+    }
+    public = cleanup.build_public_summary({"repositories": [result], "summary": {}}, None)
+    assert public["repositories"]["repo"]["rescue_candidates"] == 1
 
 
 def test_orphaned_broken_gitdir_is_reported_not_deleted(tmp_path: Path) -> None:

@@ -1015,13 +1015,13 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         result["errors"].append("process-CWD activity probe unavailable; apply skipped")
         return result
 
-    # Rescue terminal work first. The delegate command never removes a tree;
-    # the unchanged P0 reaper still decides whether it is safe to reap.
+    # Report terminal rescue candidates before reaping. Only an explicit
+    # driver-invoked rescue may commit or push their work.
     delegate_script = repo_root / "scripts" / "delegate.py"
     if apply and delegate_script.is_file() and os.environ.get("LU_REAPER_DISABLED") != "1":
         try:
             rescue_proc = subprocess.run(
-                [sys.executable, str(delegate_script), "rescue", "--all-stale", "--older-than", "6h", "--apply"],
+                [sys.executable, str(delegate_script), "rescue", "--all-stale", "--older-than", "6h"],
                 cwd=repo_root,
                 capture_output=True,
                 text=True,
@@ -1030,7 +1030,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 env=reap_worktrees.sanitized_git_env(),
             )
             payload = json.loads(rescue_proc.stdout)
-            result["rescue"] = payload.get("summary")
+            result["rescue"] = {"summary": payload.get("summary"), "tasks": payload.get("tasks")}
             if rescue_proc.returncode != 0:
                 result["errors"].append("terminal rescue reported errors")
         except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError):
@@ -1284,6 +1284,7 @@ def build_public_summary(
             "by_owner": repo_dict.get("by_owner", {}),
             "orphans_reported": len(repo_dict.get("orphans", [])),
             "errors": len(repo_dict.get("errors", [])),
+            "rescue_candidates": ((repo_dict.get("rescue") or {}).get("summary") or {}).get("candidate", 0),
             "branches_deleted": (
                 sum(1 for row in repo_dict.get("branches", []) if row.get("action") == "deleted")
                 + sum(1 for row in repo_dict.get("results", []) if row.get("branch_pruned") is True)

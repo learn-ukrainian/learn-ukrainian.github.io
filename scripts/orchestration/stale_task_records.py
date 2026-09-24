@@ -384,7 +384,16 @@ def recorded_work_commits(record: Mapping[str, Any]) -> list[str]:
     """
     auto_finalize = record.get("auto_finalize")
     old_head = auto_finalize.get("commit_sha") if isinstance(auto_finalize, dict) else None
-    for raw in (record.get("final_branch_head_commit"), old_head):
+    final_head = record.get("final_branch_head_commit")
+    base_sha = record.get("worktree_base_sha")
+    ahead = record.get("commits_ahead")
+    final_is_work = (type(ahead) is int and ahead != 0) or (
+        isinstance(final_head, str)
+        and isinstance(base_sha, str)
+        and _SHA_RE.fullmatch(base_sha.strip().lower())
+        and final_head.strip().lower() != base_sha.strip().lower()
+    )
+    for raw in (final_head if final_is_work else None, old_head):
         if isinstance(raw, str) and _SHA_RE.fullmatch(raw.strip().lower()):
             return [raw.strip().lower()]
     return []
