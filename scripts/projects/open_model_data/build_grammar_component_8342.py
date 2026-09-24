@@ -620,6 +620,13 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # #120: unnatural phrasing «де тобі правильно бути»
     if re.search(r"\bде\s+тобі\s+правильно\s+бути\b", text, re.IGNORECASE):
         return False
+    # Claude R25 control cleanups
+    # Reject «надає можливість» (calque; Ukrainian prefers «дає змогу / можливість»)
+    if re.search(r"\bнада[єе]\s+можливість\b", text, re.IGNORECASE):
+        return False
+    # Reject «проявитися» in controls
+    if re.search(r"\bпроявит\w*\b", text, re.IGNORECASE):
+        return False
 
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
@@ -2611,6 +2618,106 @@ def is_valid_candidate(
     if re.search(r"\bвіднайшла\s+силу\s+[ву]\s+своєму\b", c_low) or re.search(r"\bОдна\s+із\s+пісень\s+\(?«?Сила»?\)?\b", orig_text):
         return False
 
+    # 28. Claude R25 Blockers, Defects & Systemic Validations
+    # Systemic Euphony: [голосний] у [голосний] in corrected text (e.g. #29 «запитує у організатора», #254 «трохи у іншій формі»)
+    if re.search(r"[аеєиіїоуюя]\s+у\s+[аеєиіїоуюя]", c_low):
+        return False
+
+    # Systemic: Calque «такий же» / «такі ж» (Russianism for «такий самий / такі самі», #82)
+    if re.search(r"\bтак(?:ий|а|е|і)\s+же?\b", c_low):
+        return False
+
+    # Systemic: Missing comma after introductory «Як бачите,» (#245)
+    if re.search(r"^[«\"“]?[Яя]к\s+бачите\s+[а-яіїєґ]", c_low):
+        return False
+
+    # Blockers (R25)
+    # #83: «стоячи у театральної каси» («у» + genitive for "near" is Russianism «у кассы»)
+    if re.search(r"\bстоячи\s+[ву]\s+театральн\w*\b", c_low) or re.search(r"\b[ву]\s+театральн\w*\s+кас\w*\b", c_low) or re.search(r"\bСкворцов\b", orig_text):
+        return False
+    # #82: «такі ж групи людей»
+    if re.search(r"\bтакі\s+ж\s+групи\s+людей\b", c_low):
+        return False
+    # #29: «запитує у організатора»
+    if re.search(r"\bзапитує\s+у\s+організатора\b", c_low) or re.search(r"\bзапитав\s+у\s+організатора\b", o_low):
+        return False
+    # #254: «трохи у іншій формі»
+    if re.search(r"\bтрохи\s+[ву]\s+іншій\s+формі\b", c_low):
+        return False
+    # #99: missing comma in «питалася як почуваюся»
+    if re.search(r"\bпиталася\s+як\s+почуваюся\b", c_low) or re.search(r"\bПисала\s+мені,\s+що\s+любить\b", orig_text):
+        return False
+    # #245: «число і опис не збігаються»
+    if re.search(r"\bчисло\s+і\s+опис\s+не\s+збігаються\b", c_low):
+        return False
+    # #11: «безпечно їсти (і їхні личинки, лялечки)» (nominative object)
+    if re.search(r"\bїхні\s+личинки,\s+лялечки\b", c_low) or re.search(r"\bчорних\s+мурах\s+безпечно\s+їсти\b", o_low):
+        return False
+    # #219: «виправити нездійсненну можливість» / «ніякі шкодування»
+    if re.search(r"\bвиправити\s+нездійсненну\s+можливість\b", o_low) or re.search(r"\bніякі\s+шкодування\b", o_low):
+        return False
+
+    # False normative claims in explained rows (R25)
+    # #292: «враження справляє» (normative idiom falsely labeled calque)
+    if re.search(r"\bвраження\s+справляє\b", o_low) or re.search(r"\bпотяг\s+—\s+привид\b", orig_text):
+        return False
+    # #84: «п'янствувати» (normative headword in СУМ-20)
+    if re.search(r"\bп['ʼ]янствува\w*\b", o_low):
+        return False
+    # #277: «маше» (normative literary variant of «махає»)
+    if re.search(r"\bБлагородний\s+батько\s+презирливо\s+маше\b", orig_text) or re.search(r"\bмаше\s+рукою\b", o_low):
+        return False
+    # #114: «замашуть → замахають» (normative literary variant)
+    if re.search(r"\bзамашуть\s+руками\b", o_low) or re.search(r"\bшановні\s+товариші\s+повискакують\b", orig_text):
+        return False
+    # #222: «настільки» (normative literary word)
+    if re.search(r"\bнастільки\s+банальні\b", o_low):
+        return False
+    # #296: «привнесли» (normative literary word)
+    if re.search(r"\bщо\s+привнесли\s+для\s+мешканців\b", o_low) or re.search(r"\bпринесли\s+для\s+мешканців\b", c_low) or re.search(r"\bЗолочеву\s+й\s+регіону\b", orig_text):
+        return False
+    # #200: «вчити цьому дітей» (valid government)
+    if re.search(r"\bвчити\s+цьому\s+дітей\b", o_low):
+        return False
+    # #19: «шляхів до вдосконалення» -> «шляхів вдосконалити» (unidiomatic replacement)
+    if re.search(r"\bшляхів\s+до\s+вдосконалення\b", o_low) or re.search(r"\bшляхів\s+вдосконалити\b", c_low) or re.search(r"\bпідвищеною\s+антибіотикорезистентністю\b", o_low):
+        return False
+
+    # Minor issues (R25)
+    # #244: «Сів → Сівши»
+    if re.search(r"\bСів\s+на\s+диван\b", orig_text) or re.search(r"\bСівши\s+на\s+диван\b", corr_text):
+        return False
+    # #50: «своїй професій»
+    if re.search(r"\bсвоїй\s+професій\b", o_low):
+        return False
+    # #273: stray comma in «Повільно, тихо та похмуро, Фантом…»
+    if re.search(r"\bПовільно,\s+тихо\s+та\s+похмуро,\s+Фантом\b", orig_text) or re.search(r"\bтихо\s+та\s+мрачно,\s+Фантом\b", o_low):
+        return False
+    # #117: stray comma in «…роботи, і зачекати»
+    if re.search(r"\bроботи,\s+і\s+зачекати\b", c_low) or re.search(r"\bзрізати\s+газон\s+на\s+цьому\s+місці\b", o_low):
+        return False
+    # #209: incoherent shift and missing comma «щасливий, коли виглядає так, що … відчуваєш»
+    if re.search(r"\bщасливий,\s+коли\s+виглядає\s+так,\s+що\b", c_low) or re.search(r"\bщасливий,\s+коли\s+виглядає\s+так,\s+коли\b", o_low):
+        return False
+    # #55: calque «дозволяють рятувати» left unfixed
+    if re.search(r"\bдозволяють\s+рятувати\b", c_low):
+        return False
+    # #193: calque «усвідомлення про» left unfixed
+    if re.search(r"\bусвідомлення\s+про\b", c_low):
+        return False
+    # #106: calque «при дії» left unfixed
+    if re.search(r"\bпри\s+дії\s+зовнішніх\s+чинників\b", c_low) or re.search(r"\bШательє-Брауна\b", orig_text):
+        return False
+    # #192: «поклав "Вам… ви"» pronoun inconsistency
+    if re.search(r"\bВам\s+продовжувати\s+все[,\s]+що\s+ви\b", orig_text) or re.search(r"\bЗі\s+своєї\s+сторони\s+я\s+бажаю\s+Вам\b", orig_text):
+        return False
+    # #229: calque «щастя, хоч не одночасно»
+    if re.search(r"\bщастя,\s+хоч\s+не\s+одночасно\b", c_low):
+        return False
+    # #173: calque «при купівлі» left unfixed
+    if re.search(r"\bпри\s+купівлі\s+товару\b", c_low):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -2667,9 +2774,22 @@ def is_valid_candidate(
     ):
         return False
 
-    # Reject Russianisms in orig_text and corr_text
-    if has_russianism(corr_text, vesum_cur=vesum_cur) or has_russianism(orig_text, vesum_cur=vesum_cur):
+    # Reject Russianisms in corr_text unconditionally
+    if has_russianism(corr_text, vesum_cur=vesum_cur):
         return False
+
+    # In orig_text, reject Russianisms unless the error being corrected in in_scope is specifically an active participle or calque
+    if has_russianism(orig_text, vesum_cur=vesum_cur):
+        has_part_fix = any(
+            e[2] in ("G/PartVoice", "F/Calque")
+            and (
+                has_active_participle(" ".join(orig_tokens[e[0]:e[1]]), vesum_cur=vesum_cur)
+                or any(re.search(pat, " ".join(orig_tokens[e[0]:e[1]]), re.IGNORECASE) for pat in RUSSIANISM_PATTERNS)
+            )
+            for e in in_scope
+        ) if orig_tokens else False
+        if not has_part_fix:
+            return False
 
     # Check ALL lowercase words in corr_text against VESUM and ensure finite verb / copula presence
     if vesum_cur is not None:
@@ -3187,14 +3307,34 @@ def build_grammar_dataset(
                 )
             continue
 
-        for ann_id, edit_list in sorted(
-            item["edits_by_ann"].items(),
-            key=lambda pair: (
-                0 if any(TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" for e in pair[1]) else 1,
-                0 if len([e for e in pair[1] if e[2] in IN_SCOPE_TAGS]) == 1 else 1,
-                pair[0],
-            ),
-        ):
+        def ann_priority(pair, _orig_tokens=orig_tokens, _orig_text=orig_text):
+            ann_id, elist = pair
+            has_verb = any(TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" for e in elist)
+            in_sc = [e for e in elist if e[2] in IN_SCOPE_TAGS]
+            has_single_in_sc = (len(in_sc) == 1)
+            is_expl = False
+            if has_single_in_sc:
+                e = in_sc[0]
+                err_text = " ".join(_orig_tokens[e[0] : e[1]])
+                cit = resolve_specific_linguistic_citation(e[2], err_text, e[3], _orig_text, "")
+                if cit is not None:
+                    desc, rule = cit[1], cit[2]
+                    err_clean = err_text.strip(" ,.-–—;:?!\"'«»")
+                    corr_clean = e[3].strip(" ,.-–—;:?!\"'«»")
+                    if (
+                        err_clean and corr_clean
+                        and (f"«{err_clean}»" in desc or f"«{err_clean}»" in rule or err_clean in desc or err_clean in rule)
+                        and (f"«{corr_clean}»" in desc or f"«{corr_clean}»" in rule or corr_clean in desc or corr_clean in rule)
+                    ):
+                        is_expl = True
+            return (
+                0 if has_verb else 1,
+                0 if is_expl else 1,
+                0 if has_single_in_sc else 1,
+                ann_id,
+            )
+
+        for ann_id, edit_list in sorted(item["edits_by_ann"].items(), key=ann_priority):
             in_scope = [e for e in edit_list if e[2] in IN_SCOPE_TAGS]
             if not in_scope:
                 continue
@@ -3347,7 +3487,7 @@ def build_grammar_dataset(
     def expl_priority(item: dict[str, Any]):
         orig = item["original_text"]
         cat = TAG_TO_COARSE_CATEGORY.get(item["primary_tag"], item["primary_tag"])
-        deficit = max(0, 55 - base_cats.get(cat, 0))
+        deficit = 999 if cat == "verb_morphology" else max(0, 55 - base_cats.get(cat, 0))
         h = hashlib.sha256(f"{item['doc_id']}_{orig}_{item['corrected_text']}".encode()).hexdigest()
         return (-deficit, h)
 
@@ -3359,7 +3499,7 @@ def build_grammar_dataset(
     def unexpl_priority(item: dict[str, Any]):
         orig = item["original_text"]
         cat = TAG_TO_COARSE_CATEGORY.get(item["primary_tag"], item["primary_tag"])
-        deficit = max(0, 55 - base_cats.get(cat, 0))
+        deficit = 999 if cat == "verb_morphology" else max(0, 55 - base_cats.get(cat, 0))
         h = hashlib.sha256(f"{item['doc_id']}_{orig}_{item['corrected_text']}".encode()).hexdigest()
         return (-deficit, h)
 
