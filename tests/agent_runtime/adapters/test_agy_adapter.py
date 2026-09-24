@@ -387,8 +387,27 @@ def test_build_invocation_accepts_display_string(tmp_path: Path) -> None:
 
 
 def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> None:
-    with pytest.raises(ValueError, match="Unsupported AGY model"):
+    with pytest.raises(ValueError, match="Unsupported AGY model") as error:
         _build(tmp_path, model="gemini-9.9-pro-preview")
+    assert "gemini-3.8-flash-high" not in str(error.value)
+
+
+@pytest.mark.parametrize(
+    ("model", "expected"),
+    [
+        ("gemini-9.9-pro-preview", "For Gemini Pro, use `gemini-3.1-pro-high`."),
+        (
+            "gemini-9.9-flash-preview",
+            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_MODEL_SLUGS) + ".",
+        ),
+        (
+            "unknown-local-model",
+            "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_MODEL_SLUGS) + ".",
+        ),
+    ],
+)
+def test_unknown_model_suggestion(model: str, expected: str) -> None:
+    assert agy_module.unknown_model_suggestion(model) == expected
 
 
 def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, capsys) -> None:
@@ -420,7 +439,9 @@ def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, 
     result = delegate.cmd_dispatch(args)
 
     assert result == 2
-    assert "gemini-3.8-flash-high" in capsys.readouterr().err
+    err = capsys.readouterr().err
+    assert "For Gemini Pro, use `gemini-3.1-pro-high`." in err
+    assert "gemini-3.8-flash-high" not in err
 
 
 def test_build_invocation_none_model_falls_back_to_default(tmp_path: Path) -> None:

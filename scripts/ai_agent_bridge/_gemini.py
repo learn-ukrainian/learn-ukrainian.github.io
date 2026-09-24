@@ -413,9 +413,6 @@ def _run_gemini_sync(
                 auth_mode,
                 allow_write,
             )
-            if isinstance(result, dict) and result.get("action") == "fallback":
-                current_model = str(result["model"])
-                continue
             if isinstance(result, dict) and result.get("action") == "retry_same_model":
                 continue
             if result is None:
