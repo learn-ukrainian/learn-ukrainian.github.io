@@ -592,6 +592,125 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
 
 
+# =============================================================================
+# DISPATCH TASK STORE ISOLATION (#8654)
+# =============================================================================
+# ``delegate._TASKS_DIR`` is a module constant. Helpers compute the record,
+# result, archive, snapshot, log, and admission-lock paths from it at call
+# time. Tests that forget to patch the constant write into the live store
+# the Monitor API and the work board read. Sibling modules keep their own
+# copy of the same directory; retarget those too when they are already
+# imported. The ownership ledger above is a different seam (env override).
+
+_REAL_TASKS_DIR = (resolve_repo_root(Path(__file__), 1) / "batch_state" / "tasks").resolve()
+_TASK_STORE_DIR_ATTRS = ("_TASKS_DIR", "DEFAULT_TASKS_DIR", "DEFAULT_TASK_STATE_DIR")
+_TASK_STORE_WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
+_TASK_STORE_MUTATION_EVENTS = {
+    "os.chmod": (0,),
+    "os.chown": (0,),
+    "os.link": (0, 1),
+    "os.mkdir": (0,),
+    "os.remove": (0,),
+    "os.rename": (0, 1),
+    "os.rmdir": (0,),
+    "os.symlink": (0, 1),
+    "os.truncate": (0,),
+    "os.unlink": (0,),
+    "os.utime": (0,),
+    "shutil.copyfile": (1,),
+    "shutil.copytree": (1,),
+    "shutil.move": (0, 1),
+    "shutil.rmtree": (0,),
+}
+
+
+def _path_under_real_tasks(path: object) -> bool:
+    """True when ``path`` is the live task store or a file inside it."""
+    if isinstance(path, int) or path is None:
+        return False
+    try:
+        resolved = Path(os.fsdecode(path)).resolve()
+    except (TypeError, ValueError, OSError):
+        return False
+    return resolved == _REAL_TASKS_DIR or _REAL_TASKS_DIR in resolved.parents
+
+
+def _sqlite_path_under_real_tasks(database: object) -> bool:
+    path, read_only = _sqlite_database_path(database)
+    return path is not None and not read_only and _path_under_real_tasks(path)
+
+
+def _refuse_real_task_store_write(kind: str, path: object) -> None:
+    node = os.environ.get("PYTEST_CURRENT_TEST", "<unknown>")
+    pytest.fail(
+        f"{node} attempted to {kind} the real dispatch task store at {path} "
+        f"({_REAL_TASKS_DIR}); isolate delegate._TASKS_DIR",
+        pytrace=False,
+    )
+
+
+def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
+    """Fail a writable open, rename, or sqlite connect under the live task store.
+
+    Installed once with ``sys.addaudithook`` (#8640): a monkeypatch of ``open``
+    misses ``Path.write_text`` aliases and ``os.open`` captured before the
+    fixture ran. The hook cannot be removed, so it stays installed and only
+    refuses paths inside ``_REAL_TASKS_DIR``.
+    """
+    if event == "open" and len(args) >= 3:
+        path, mode, flags = args[0], args[1], args[2]
+        writing = isinstance(mode, str) and any(char in mode for char in "wax+")
+        if (writing or (isinstance(flags, int) and flags & _TASK_STORE_WRITE_FLAGS)) and _path_under_real_tasks(path):
+            _refuse_real_task_store_write("write", path)
+        return
+    indexes = _TASK_STORE_MUTATION_EVENTS.get(event)
+    if indexes is not None:
+        for index in indexes:
+            if index < len(args) and _path_under_real_tasks(args[index]):
+                _refuse_real_task_store_write(event, args[index])
+        return
+    if event == "sqlite3.connect" and args and _sqlite_path_under_real_tasks(args[0]):
+        _refuse_real_task_store_write("open a database in", args[0])
+
+
+sys.addaudithook(_task_store_write_hook)
+
+
+def _retarget_loaded_task_dirs(monkeypatch: pytest.MonkeyPatch, isolated: Path) -> None:
+    """Point already-imported task-store constants at ``isolated``."""
+    for module in tuple(sys.modules.values()):
+        if module is None:
+            continue
+        for attr in _TASK_STORE_DIR_ATTRS:
+            value = getattr(module, attr, None)
+            if not isinstance(value, Path):
+                continue
+            try:
+                resolved = value.resolve()
+            except OSError:
+                continue
+            if resolved == _REAL_TASKS_DIR:
+                monkeypatch.setattr(module, attr, isolated)
+
+
+@pytest.fixture(autouse=True)
+def _isolate_dispatch_task_store(tmp_path_factory: pytest.TempPathFactory, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Point the dispatch task store at a session-temp directory (#8654).
+
+    The directory comes from ``tmp_path_factory``, not the test's ``tmp_path``:
+    an autouse fixture that creates a subdirectory of ``tmp_path`` breaks tests
+    that assert their tmp dir starts empty (see ``_isolate_write_ownership_ledger``).
+    Nothing is copied out of the live store. A test that sets ``_TASKS_DIR``
+    itself runs after this autouse fixture, so that override wins.
+    """
+    isolated = tmp_path_factory.mktemp("dispatch-tasks")
+    import scripts.delegate as delegate_mod
+
+    monkeypatch.setattr(delegate_mod, "_TASKS_DIR", isolated)
+    _retarget_loaded_task_dirs(monkeypatch, isolated)
+    return isolated
+
+
 class SocketBlockedError(RuntimeError):
     """Raised when a unit test attempts an un-opted outbound network connection (#6968)."""
 
