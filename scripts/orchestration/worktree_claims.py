@@ -230,9 +230,11 @@ def active_worktree_claim_refusal(
     whose ``worktree_path`` resolves to the same checkout blocks removal.
     Claims are resolved relative to ``repo_root``, exactly as dispatch
     resolves ``--worktree``. The owner's canonical record is exempt only after
-    its embedded task ID and non-empty run nonce establish the run identity;
-    another record with the same task ID remains a claim. ``None`` exempts
-    nothing. Only candidate records (:func:`record_may_claim_worktree`)
+    its embedded task ID and non-empty run nonce establish the run identity.
+    If that proof is absent, the owner receives no exemption and the regular
+    scan decides whether its record is an unfinished claim. Another record
+    with the same task ID remains a claim. ``None`` exempts nothing. Only
+    candidate records (:func:`record_may_claim_worktree`)
     are parsed, so an unrelated finished corrupt record never blocks removal,
     while a candidate that cannot be read, parsed, or resolved does. Every
     failure is a skip reason, never an exception. Returns ``None`` when
@@ -253,16 +255,15 @@ def active_worktree_claim_refusal(
         try:
             owner = json.loads(owner_path.read_bytes())
         except (OSError, ValueError, RecursionError):
-            return f"owner task {owner_task_id} record unreadable; refusing worktree removal"
+            owner = None
         nonce = owner.get("run_nonce") if isinstance(owner, dict) else None
         if (
-            not isinstance(owner, dict)
-            or owner.get("task_id") != owner_task_id
-            or not isinstance(nonce, str)
-            or not nonce.strip()
+            isinstance(owner, dict)
+            and owner.get("task_id") == owner_task_id
+            and isinstance(nonce, str)
+            and nonce.strip()
         ):
-            return f"owner task {owner_task_id} has no valid run_nonce; refusing worktree removal"
-        owner_identity = (owner_path, nonce)
+            owner_identity = (owner_path, nonce)
     try:
         state_files = sorted(tasks_dir.glob("*.json"))
     except OSError as exc:

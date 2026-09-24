@@ -629,7 +629,12 @@ def _rb2_cleanup_fixture(tmp_path: Path, *, owner: dict[str, Any]) -> tuple[Path
     python.chmod(0o755)
     tasks = tmp_path / "batch_state/tasks"
     tasks.mkdir(parents=True)
-    record = {"task_id": "impl-8610", "worktree_path": str(worktree), **owner}
+    record = {
+        "task_id": "impl-8610",
+        "run_nonce": "fixture-run-nonce",
+        "worktree_path": str(worktree),
+        **owner,
+    }
     (tasks / "impl-8610.json").write_text(json.dumps(record), encoding="utf-8")
     return worktree, {"TASK_ID": "impl-8610", "LANE": "grok"}
 
