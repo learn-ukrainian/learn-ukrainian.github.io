@@ -14,6 +14,7 @@ from learn_ukrainian_v4_runtime import child_runtime as child
 from learn_ukrainian_v4_runtime import readiness, resources, stage_policy
 from learn_ukrainian_v4_runtime import v4_trust_authority as trust
 from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, digest
+from learn_ukrainian_v4_runtime.provenance import verify_current_identity
 from test_v4_installed_release import REPO_ROOT
 
 pytest_plugins = ("test_v4_installed_release",)
@@ -153,5 +154,12 @@ def test_exact_wheel_active_resources_outside_checkout(isolated_install, externa
     assert result.returncode == 0, result.stderr
     proof = json.loads(result.stdout)
     assert proof["profile"] == PROFILE_RAW_SHA256
-    assert proof["public_commit"] == subprocess.check_output(["git", "rev-parse", "HEAD"], text=True, timeout=10).strip()
+    stamped = proof["public_commit"]
+    # The shared wheel fixture stamps the installed runtime commit, which must be HEAD or an ancestor.
+    assert stamped == verify_current_identity()["public_commit"]
+    assert subprocess.run(
+        ["git", "merge-base", "--is-ancestor", stamped, "HEAD"],
+        check=False,
+        timeout=10,
+    ).returncode == 0
     print(result.stdout.strip())
