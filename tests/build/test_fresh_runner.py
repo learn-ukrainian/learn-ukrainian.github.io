@@ -270,9 +270,11 @@ def _run_contract(
     render_check=None,
     manifest_writer=None,
     level=None,
+    observed_writer=None,
+    gloss_ids=frozenset(),
 ):
     lvl = level or plan.get("level") or "a1"
-    allowlist = Allowlist.from_records(words["words"], words_lock="f" * 64)
+    allowlist = Allowlist.from_records(words["words"], gloss_ids=gloss_ids, words_lock="f" * 64)
     monkeypatch.setattr(
         assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})()
     )
@@ -314,7 +316,7 @@ def _run_contract(
         allowlist=allowlist,
         site_dir=tmp_path / "site",
         inventory_gate=inventory_gate or (lambda *a, **kw: GateReport(lvl, "sample-slug", 1, ())),
-        observed_writer=lambda *a, **kw: None,
+        observed_writer=observed_writer or (lambda *a, **kw: None),
         expected_inputs=expected_inputs,
         render_check=render_check
         or (

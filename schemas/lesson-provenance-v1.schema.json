@@ -91,15 +91,18 @@
         },
         "span": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "description": "Index of this span within its unit (tab, step, activity, item, block), in rendered order."
         },
         "start": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "description": "Start offset (characters) in the unit's final rendered text. Spans of a unit partition it: contiguous from 0."
         },
         "end": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "description": "End offset (exclusive) in the unit's final rendered text; end - start == len(text)."
         },
         "source": {
           "enum": [
@@ -113,8 +116,26 @@
             "null"
           ]
         },
+        "role": {
+          "description": "Resolver role of the span's expanded unit; the digest reproduces receipt tokens per span from it.",
+          "enum": [
+            "quoted_term",
+            "narration",
+            "dialogue_line",
+            "instruction",
+            "item_prompt",
+            "item_answer",
+            "record_print",
+            "error_text",
+            "item_option",
+            "vesum_exempt",
+            "gloss_ref",
+            "phonetics"
+          ]
+        },
         "text": {
-          "type": "string"
+          "type": "string",
+          "description": "The rendered text of this span, byte for byte what the page shows at the unit's location."
         },
         "record_kind": {
           "oneOf": [
@@ -179,6 +200,7 @@
         "end",
         "source",
         "ref",
+        "role",
         "text",
         "record_kind",
         "record_side",

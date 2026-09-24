@@ -10,9 +10,35 @@ comes from records (pack, word store) or the writer's resolved draft.
 Rule 4 (R-11) compliance: No forbidden paths.
 
 Provenance Contract (E3c-1 / ADR-011 / Review Contract #8430):
+
+Units and spans (r3 invariant):
+- A provenance *unit* is the locator (tab, step, activity, item, block) — the same `unit` a
+  resolution receipt names. Its final rendered text is what the renderer emits at that
+  location (after stress and print substitution, with `{{uk:...}}` unwrapped and
+  `{{gloss:W-n}}` replaced).
+- Every expanded-document unit (one resolver unit) becomes exactly one span, in document
+  order. `span` is the span's index within its unit; `start`/`end` are character offsets in
+  the unit's final rendered text. Spans partition their unit: sorted by `start` they are
+  contiguous, start at 0, and their texts concatenate byte for byte to the unit's rendered
+  text (no trimming, no whitespace tolerance).
+- `role` is the resolver role of the span's expanded unit (`narration`, `quoted_term`,
+  `gloss_ref`, `record_print`, `error_text`, `item_option`, ...). Digest alignment uses it
+  to reproduce the receipt token sequence per span (see scripts/review/digest/generator.py).
+- Receipt offsets are relative to the plain (unstressed) text of the resolver unit, i.e. of
+  the span; the digest converts them to unit-relative rendered offsets in one named function
+  (`align_receipt_tokens`) before matching `[start, end)`.
+- The renderer reports a rendered piece per expanded unit. A unit the renderer did not emit
+  fails check 9 closed (`span_location_unrendered`); a rendered piece whose letters differ
+  from the stressed unit text fails closed (`span_text_not_in_rendered_output`). No global
+  search of the page string is used anywhere.
+- Slovnyk entries print the record's own lemma stress (never the resolver's selection), and
+  Resursy titles print unstressed; those two tabs are compared accent-stripped against the
+  stressed unit text, every other tab must match exactly.
+
 Every span in the final lesson-<n>.provenance.yaml carries:
 1. `record_kind` — for `source: record` spans, one of a closed set with its review fix layer:
-   - "word"          -> "word_store" (W- prefix: word store records, paradigms, slovnyk entries, store form options)
+   - "word"          -> "word_store" (W- prefix: word store records, paradigms, slovnyk entries, store form options,
+                                      and `{{gloss:W-n}}` references, which print the record's lemma and gloss)
    - "quote"         -> "pack"       (T- prefix: textbook / literary quotes in urok)
    - "example"       -> "pack"       (EX- prefix: textbook / literary examples in urok)
    - "exercise_text" -> "pack"       (X- prefix: pack exercise records)
@@ -83,8 +109,9 @@ select              options          option.correct is True on option dict      
 ---------------------------------------------------------------------------------------------------------
 
 Item 4 Implementation Choice (Rendered Text in Provenance):
-The final lesson-<n>.provenance.yaml rewrites span text in-place from the printable/rendered
-substitutions (e.g. stressed form options from form_options). Rationale:
+The final lesson-<n>.provenance.yaml rewrites span text in-place from the renderer's own
+per-unit rendered pieces (stressed text, printable form options, unwrapped `{{uk:...}}`,
+replaced `{{gloss:W-n}}`, the Slovnyk lemma and the Resursy title). Rationale:
 1. Single canonical source of truth for text across all spans.
 2. Reviewer quote matching: findings quote directly from the rendered page with stress, so
    exact substring matching against span text is simple and consistent.
@@ -113,7 +140,6 @@ from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_band
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.curriculum.resolver import codes as resolver_codes
-from scripts.curriculum.resolver.classify import GLOSS_ID_RE
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import resolve
 from scripts.generate_mdx.atlas_links import atlas_href_for
@@ -233,6 +259,46 @@ def _resolve_single_quiz_key(item: dict[str, Any], opts: list[Any]) -> int | Non
 def strip_accents(text: str) -> str:
     """Strip combining grave (U+0300) and combining acute (U+0301) accents."""
     return text.replace("\u0300", "").replace("\u0301", "")
+
+
+_UK_MARKUP_RE = re.compile(r"\{\{uk:([^{}\u0300\u0301]+)\}\}")
+_GLOSS_MARKUP_RE = re.compile(r"^\{\{gloss:(W-[0-9]+)\}\}$")
+_GLOSS_INLINE_RE = re.compile(r"\{\{gloss:(W-[0-9]+)\}\}")
+
+# Check 9 failure codes for the provenance/render agreement (fail closed, engine layer).
+SPAN_LOCATION_UNRENDERED = "span_location_unrendered"
+SPAN_TEXT_NOT_IN_RENDERED_OUTPUT = "span_text_not_in_rendered_output"
+PROVENANCE_UNIT_COUNT_MISMATCH = "provenance_unit_count_mismatch"
+
+
+def gloss_replacer(words_store: dict[str, Any]) -> Any:
+    """Return the renderer's `{{gloss:W-n}}` -> "lemma (gloss)" substitution for one word store.
+
+    The returned callable takes a `_GLOSS_INLINE_RE` match (group 1 is the W- id) and prints the
+    record's lemma with its sense gloss; the whole marker is consumed.
+    """
+    words_by_id = {w["id"]: w for w in words_store.get("words", []) if isinstance(w, dict) and "id" in w}
+
+    def replace_gloss(match: re.Match[str]) -> str:
+        wid = match.group(1)
+        w_rec = words_by_id.get(wid)
+        if w_rec:
+            lem = w_rec.get("lemma", "")
+            gl = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
+            return f"{lem} ({gl})" if gl else lem
+        return wid
+
+    return replace_gloss
+
+
+def render_unit_piece(text: str, replace_gloss: Any) -> str:
+    """The renderer's output for one expanded unit's (stressed) text.
+
+    Unwraps `{{uk:...}}` and replaces `{{gloss:W-n}}`; applied per unit so a block's output
+    is by construction the concatenation of its units' pieces (the unit->output mapping the
+    provenance file is verified against).
+    """
+    return _GLOSS_INLINE_RE.sub(replace_gloss, _UK_MARKUP_RE.sub(r"\1", text))
 
 
 @dataclass(frozen=True)
@@ -370,6 +436,13 @@ def assemble_expanded_document(
         option_origin: str | None = None,
         is_key: bool | None = None,
     ) -> None:
+        if role == "gloss_ref":
+            # The page prints the word record's lemma and gloss here; the writer only typed the id.
+            gloss_match = _GLOSS_MARKUP_RE.match(text)
+            if gloss_match is None:
+                raise AssemblerError("gloss_ref_malformed", f"gloss reference {text!r} is not {{{{gloss:W-n}}}}")
+            source = "record"
+            ref = gloss_match.group(1)
         clean = strip_accents(text) if source != "writer_prose" else text
         loc_key = (tab, step, activity, item, block)
         span_idx = block_span_counts.get(loc_key, 0)
@@ -402,6 +475,7 @@ def assemble_expanded_document(
                 "end": end_off,
                 "source": source,
                 "ref": ref,
+                "role": role,
                 "text": clean,
                 "record_kind": record_kind,
                 "record_side": record_side,
@@ -655,8 +729,8 @@ def assemble_expanded_document(
             prompt = None
             for key in ("prompt", "sentence", "question", "cue", "statement"):
                 val = item.get(key)
-                if val is not None and not isinstance(val, bool) and str(val).strip():
-                    prompt = str(val)
+                if isinstance(val, str) and val.strip():
+                    prompt = val
                     break
             if prompt:
                 if act_type == "error-correction":
@@ -695,22 +769,19 @@ def assemble_expanded_document(
                     for role, span_text in _split_inline_spans(prompt, "item_prompt"):
                         add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
 
-            # Answer-like candidate fields: exclude any boolean value (e.g. true/false activities
-            # where answer, correct, is_true, isTrue are boolean flags, not text to resolve/stress).
+            # Answer-like candidate fields: only string values are answer text. Booleans
+            # (true/false activities) and integers (`correct` as an option index in quiz and
+            # odd-one-out items) are keys, not text to resolve, stress or render.
             # For error-correction, use the field validated by check 4 (correction, falling back to answer).
             if act_type == "error-correction":
                 corr_val = item.get("correction") if item.get("correction") is not None else item.get("answer")
-                answer = (
-                    str(corr_val)
-                    if corr_val is not None and not isinstance(corr_val, bool) and str(corr_val).strip()
-                    else None
-                )
+                answer = corr_val if isinstance(corr_val, str) and corr_val.strip() else None
             else:
                 answer = None
                 for key in ("answer", "correction", "target", "correct", "is_true", "isTrue"):
                     val = item.get(key)
-                    if val is not None and not isinstance(val, bool) and str(val).strip():
-                        answer = str(val)
+                    if isinstance(val, str) and val.strip():
+                        answer = val
                         break
             if answer:
                 for role, span_text in _split_inline_spans(answer, "item_answer"):
@@ -771,8 +842,16 @@ def assemble_expanded_document(
                         )
             else:
                 opts = item.get("options") or item.get("choices") or item.get("distractors") or []
-                if act_type == "fill-in" and item.get("mode") == "form-choice" and item.get("record"):
+                if act_type == "fill-in" and item.get("mode") == "form-choice":
                     word_ref = item.get("record")
+                    if not isinstance(word_ref, str) or not word_ref:
+                        # Same named reason as check 4: a form-choice item without its word record is
+                        # invalid, never a set of writer-typed options.
+                        raise AssemblerError(
+                            "form_choice_options_invalid",
+                            f"form-choice item {item_idx} of {act_id} names no word record",
+                            layer="writer",
+                        )
                     ans_text = item.get("answer")
                     for opt_idx, opt in enumerate(opts):
                         if isinstance(opt, bool):
@@ -1015,169 +1094,103 @@ def write_expanded_document(
     return exp_path, prov_path
 
 
+def rendered_units_for_tabs(
+    stressed_doc: dict[str, Any],
+    *,
+    slovnyk_entries: list[tuple[str, dict[str, Any]]],
+    resursy_entries: list[tuple[str, str, dict[str, Any]]],
+) -> dict[int, str]:
+    """Per-unit rendered pieces for the Slovnyk and Resursy tabs.
+
+    Those tabs are built from records, not from units; the unit's location is the entry the
+    tab builder produced for the same record id (block `core_<id>` / `inc_<id>` -> the vocab
+    entry's lemma, block `res_<id>` -> the resource title). A unit without an entry stays
+    unmapped and fails closed in finalize_provenance_from_stressed_units.
+    """
+    vocab_by_id = {wid: entry for wid, entry in slovnyk_entries}
+    resources_by_id = {rid: entry for rid, _section, entry in resursy_entries}
+    pieces: dict[int, str] = {}
+    for idx, unit in enumerate(stressed_doc.get("units", [])):
+        tab = unit.get("tab")
+        block = str(unit.get("block", ""))
+        if tab == "slovnyk":
+            for prefix in ("core_", "inc_"):
+                if block.startswith(prefix) and block[len(prefix) :] in vocab_by_id:
+                    pieces[idx] = str(vocab_by_id[block[len(prefix) :]].get("lemma", ""))
+        elif tab == "resursy" and block.startswith("res_") and block[4:] in resources_by_id:
+            pieces[idx] = str(resources_by_id[block[4:]].get("title", ""))
+    return pieces
+
+
 def finalize_provenance_from_stressed_units(
     provenance_doc: dict[str, Any],
     stressed_doc: dict[str, Any],
-    rendered_mdx: str,
+    rendered_by_unit: dict[int, str],
     *,
-    converted_activities: list[Any] | None = None,
-    urok_md: str | None = None,
-    vocab_items: list[dict[str, Any]] | None = None,
-    external_resources: list[dict[str, Any]] | None = None,
+    words_store: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Rewrite provenance document from final stressed units and verify against rendered output."""
+    """Rebuild the provenance spans from the renderer's per-unit pieces.
+
+    `rendered_by_unit` maps an expanded-unit index to the text the renderer emitted for it
+    (the renderer's own unit->output mapping). Every unit must be present; each piece must
+    carry the stressed unit's letters (exactly for urok/vpravy, accent-stripped for the
+    Slovnyk lemma and Resursy title, see the module docstring). Span text, `span`, `start`
+    and `end` are then recomputed so that each unit's spans partition its rendered text.
+    """
     updated = copy.deepcopy(provenance_doc)
     spans = updated.get("spans", [])
     stressed_units = stressed_doc.get("units", [])
     if len(spans) != len(stressed_units):
         raise AssemblerError(
-            "provenance_unit_count_mismatch",
+            PROVENANCE_UNIT_COUNT_MISMATCH,
             f"provenance span count ({len(spans)}) does not match stressed unit count ({len(stressed_units)})",
             layer="engine",
         )
+    replace_gloss = gloss_replacer(words_store or {})
 
-    # 1. Update each span's text from the final stressed unit
-    for span, unit in zip(spans, stressed_units, strict=True):
-        span["text"] = unit["text"]
-
-    # 2. Recompute character offsets for each block
-    block_offsets: dict[tuple[Any, ...], int] = {}
-    for span in spans:
-        loc_key = (span.get("tab"), span.get("step"), span.get("activity"), span.get("item"), span.get("block"))
-        start_off = block_offsets.get(loc_key, 0)
-        end_off = start_off + len(span["text"])
+    unit_offsets: dict[tuple[Any, ...], int] = {}
+    unit_span_counts: dict[tuple[Any, ...], int] = {}
+    for idx, (span, unit) in enumerate(zip(spans, stressed_units, strict=True)):
+        loc_key = (unit.get("tab"), unit.get("step"), unit.get("activity"), unit.get("item"), unit.get("block"))
+        span_loc = (span.get("tab"), span.get("step"), span.get("activity"), span.get("item"), span.get("block"))
+        if span_loc != loc_key or span.get("role") != unit.get("role"):
+            raise AssemblerError(
+                PROVENANCE_UNIT_COUNT_MISMATCH,
+                f"provenance span {idx} {span_loc} does not describe stressed unit {idx} {loc_key}",
+                layer="engine",
+            )
+        piece = rendered_by_unit.get(idx)
+        if piece is None:
+            raise AssemblerError(
+                SPAN_LOCATION_UNRENDERED,
+                f"the renderer emitted nothing for unit {idx} at {loc_key} ({unit.get('text')!r})",
+                layer="engine",
+            )
+        expected = render_unit_piece(str(unit.get("text", "")), replace_gloss)
+        if unit.get("tab") in ("slovnyk", "resursy"):
+            # Record-printed tabs: the page carries the record's own stress (or none), see docstring.
+            agrees = strip_accents(piece) == strip_accents(expected)
+        else:
+            agrees = piece == expected
+        if not agrees:
+            raise AssemblerError(
+                SPAN_TEXT_NOT_IN_RENDERED_OUTPUT,
+                f"unit {idx} at {loc_key} renders as {piece!r}, stressed unit text is {expected!r}",
+                layer="engine",
+            )
+        span_idx = unit_span_counts.get(loc_key, 0)
+        start_off = unit_offsets.get(loc_key, 0)
+        end_off = start_off + len(piece)
+        unit_span_counts[loc_key] = span_idx + 1
+        unit_offsets[loc_key] = end_off
+        span["span"] = span_idx
         span["start"] = start_off
         span["end"] = end_off
-        block_offsets[loc_key] = end_off
-
-    # 3. Verify every span's text occurs in the rendered output at its unit
-    activities_by_id = {act.id: act for act in (converted_activities or []) if hasattr(act, "id")}
-    for span in spans:
-        text = span.get("text")
-        if not text:
-            continue
-        text_strip = text.strip() or text
-        tab = span.get("tab")
-        if tab == "urok":
-            if (
-                urok_md is not None
-                and text not in urok_md
-                and text_strip not in urok_md
-                and text not in rendered_mdx
-                and text_strip not in rendered_mdx
-            ):
-                raise AssemblerError(
-                    "span_text_not_in_rendered_output",
-                    f"span text {text!r} not found in rendered urok MD at step {span.get('step')}",
-                    layer="writer",
-                )
-        elif tab == "vpravy":
-            act_id = span.get("activity")
-            act = activities_by_id.get(act_id)
-            act_str = str(getattr(act, "__dict__", act)) if act else ""
-            if (
-                act
-                and text not in act_str
-                and text_strip not in act_str
-                and text not in rendered_mdx
-                and text_strip not in rendered_mdx
-            ):
-                raise AssemblerError(
-                    "span_text_not_in_rendered_output",
-                    f"span text {text!r} not found in rendered activity {act_id}",
-                    layer="writer",
-                )
-            elif not act and text not in rendered_mdx and text_strip not in rendered_mdx:
-                raise AssemblerError(
-                    "span_text_not_in_rendered_output",
-                    f"span text {text!r} not found in rendered output for activity {act_id}",
-                    layer="writer",
-                )
-        elif tab == "slovnyk":
-            v_str = str(vocab_items) if vocab_items else ""
-            if (
-                text not in v_str
-                and text_strip not in v_str
-                and text not in rendered_mdx
-                and text_strip not in rendered_mdx
-            ):
-                raise AssemblerError(
-                    "span_text_not_in_rendered_output",
-                    f"span text {text!r} not found in rendered Slovnyk",
-                    layer="writer",
-                )
-        elif tab == "resursy":
-            r_str = str(external_resources) if external_resources else ""
-            if (
-                text not in r_str
-                and text_strip not in r_str
-                and text not in rendered_mdx
-                and text_strip not in rendered_mdx
-            ):
-                raise AssemblerError(
-                    "span_text_not_in_rendered_output",
-                    f"span text {text!r} not found in rendered Resursy",
-                    layer="writer",
-                )
-        elif text not in rendered_mdx and text_strip not in rendered_mdx:
-            raise AssemblerError(
-                "span_text_not_in_rendered_output",
-                f"span text {text!r} not found in rendered MDX",
-                layer="writer",
-            )
+        span["text"] = piece
 
     validator = get_provenance_validator()
     validator.validate(updated)
     return updated
-
-
-def rewrite_printable_provenance(
-    output_dir: Path,
-    lesson_n: int,
-    provenance_doc: dict[str, Any],
-    form_options: dict[tuple[str, int], list[dict[str, Any]]],
-) -> tuple[dict[str, Any], Path]:
-    """Rewrite provenance document with rendered/printable forms and atomically write it.
-
-    Item 4: The final lesson-<n>.provenance.yaml matches what the learner sees and
-    the reviewer quotes. For store-generated form options (form-choice items),
-    the span text is updated to the stressed form printed in the lesson.
-    """
-    updated_doc = copy.deepcopy(provenance_doc)
-    for span in updated_doc.get("spans", []):
-        if span.get("tab") != "vpravy" or not isinstance(span.get("item"), int):
-            continue
-        key = (span.get("activity"), span.get("item"))
-        forms = form_options.get(key)
-        if forms is None:
-            continue
-        block = span.get("block")
-        if isinstance(block, str) and block.startswith("opt_"):
-            try:
-                idx = int(block[4:])
-                if 0 <= idx < len(forms):
-                    span["text"] = forms[idx]["stressed"]
-            except ValueError:
-                pass
-        elif block == "answer":
-            matched = next(
-                (f for f in forms if f.get("form") == span.get("text") or f.get("stressed") == span.get("text")),
-                None,
-            )
-            if matched is None and span.get("is_key"):
-                matched = next((f for f in forms if f.get("form") == forms[0].get("form")), None)
-            if matched:
-                span["text"] = matched["stressed"]
-
-    validator = get_provenance_validator()
-    validator.validate(updated_doc)
-
-    output_dir.mkdir(parents=True, exist_ok=True)
-    prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
-    prov_bytes = lock.yaml_bytes(updated_doc)
-    lock.write(prov_path, prov_bytes)
-
-    return updated_doc, prov_path
 
 
 def check_5_assembly(
@@ -1297,12 +1310,12 @@ def write_stressed_document(stressed_doc: dict[str, Any], output_dir: Path, less
     return stressed_path
 
 
-def build_slovnyk_tab(
+def build_slovnyk_entries(
     lesson_plan: dict[str, Any],
     words_store: dict[str, Any],
     stream: Any = None,
-) -> list[dict[str, Any]]:
-    """Build Slovnyk vocabulary items (core and incidental) for this lesson."""
+) -> list[tuple[str, dict[str, Any]]]:
+    """Build Slovnyk vocabulary entries (core then incidental) as (word record id, item)."""
     vocab_inv = lesson_plan.get("inventory", {}).get("vocabulary", {})
     core_items = vocab_inv.get("core", [])
     incidental_items = vocab_inv.get("incidental", [])
@@ -1325,7 +1338,7 @@ def build_slovnyk_tab(
                     if gloss:
                         selected_senses[rec] = str(gloss)
 
-    vocab_items: list[dict[str, Any]] = []
+    entries: list[tuple[str, dict[str, Any]]] = []
 
     def process_item(wid: str, forms_list: list[str]) -> None:
         if wid not in words_by_id:
@@ -1372,7 +1385,7 @@ def build_slovnyk_tab(
         }
         if taught_forms:
             item_entry["forms"] = taught_forms
-        vocab_items.append(item_entry)
+        entries.append((wid, item_entry))
 
     for c in core_items:
         if isinstance(c, dict):
@@ -1385,16 +1398,24 @@ def build_slovnyk_tab(
         if isinstance(wid, str):
             process_item(wid, [])
 
-    return vocab_items
+    return entries
 
 
-def build_resursy_tab(
+def build_slovnyk_tab(
+    lesson_plan: dict[str, Any],
+    words_store: dict[str, Any],
+    stream: Any = None,
+) -> list[dict[str, Any]]:
+    """Build Slovnyk vocabulary items (core and incidental) for this lesson."""
+    return [item for _wid, item in build_slovnyk_entries(lesson_plan, words_store, stream)]
+
+
+def build_resursy_entries(
     lesson_plan: dict[str, Any],
     pack: dict[str, Any],
-) -> dict[str, list[dict[str, Any]]]:
-    """Build Resursy external resources dictionary from cited pack records only."""
-    books: list[dict[str, Any]] = []
-    youtube: list[dict[str, Any]] = []
+) -> list[tuple[str, str, dict[str, Any]]]:
+    """Build Resursy entries from cited pack records only, as (record id, section, entry)."""
+    entries: list[tuple[str, str, dict[str, Any]]] = []
 
     texts_by_id: dict[str, dict[str, Any]] = {}
     for t in pack.get("texts", []):
@@ -1429,15 +1450,19 @@ def build_resursy_tab(
             title = str(src.get("work") or src.get("file") or src.get("author") or cid)
             author = str(src.get("author") or "")
             page = str(src.get("page") or "")
-            books.append(
-                {
-                    "title": title,
-                    "author": author,
-                    "pages": page,
-                    "url": "",
-                    "source": cid,
-                    "description": str(t_rec.get("supports") or ""),
-                }
+            entries.append(
+                (
+                    cid,
+                    "books",
+                    {
+                        "title": title,
+                        "author": author,
+                        "pages": page,
+                        "url": "",
+                        "source": cid,
+                        "description": str(t_rec.get("supports") or ""),
+                    },
+                )
             )
 
     plan_video_uses: dict[str, str] = {}
@@ -1451,20 +1476,30 @@ def build_resursy_tab(
         vid = videos_by_id.get(vid_id)
         if vid:
             chan = str(vid.get("channel") or vid_id)
-            youtube.append(
-                {
-                    "title": chan,
-                    "url": str(vid.get("url") or ""),
-                    "channel": chan,
-                    "description": plan_video_uses.get(vid_id) or str(vid.get("use") or ""),
-                }
+            entries.append(
+                (
+                    vid_id,
+                    "youtube",
+                    {
+                        "title": chan,
+                        "url": str(vid.get("url") or ""),
+                        "channel": chan,
+                        "description": plan_video_uses.get(vid_id) or str(vid.get("use") or ""),
+                    },
+                )
             )
 
+    return entries
+
+
+def build_resursy_tab(
+    lesson_plan: dict[str, Any],
+    pack: dict[str, Any],
+) -> dict[str, list[dict[str, Any]]]:
+    """Build Resursy external resources dictionary from cited pack records only."""
     result: dict[str, list[dict[str, Any]]] = {}
-    if books:
-        result["books"] = books
-    if youtube:
-        result["youtube"] = youtube
+    for _rid, section, entry in build_resursy_entries(lesson_plan, pack):
+        result.setdefault(section, []).append(entry)
     return result
 
 
@@ -1473,23 +1508,21 @@ def _render_urok_markdown(
     stressed_doc: dict[str, Any],
     pack: dict[str, Any],
     words_store: dict[str, Any],
-) -> str:
+) -> tuple[str, dict[int, str]]:
     """Render Tab 1 (Urok) markdown from draft and stressed units.
 
-    Keys stressed text by unit index and reassembles every block from all its spans in order.
+    Returns the markdown and the renderer's unit->output mapping: the rendered piece of every
+    expanded unit it consumed, keyed by unit index. Every block is the concatenation of its
+    units' pieces in order.
     """
     stressed_units = stressed_doc.get("units", [])
-    stressed_text_by_unit_idx: dict[int, str] = {i: u["text"] for i, u in enumerate(stressed_units)}
+    replace_gloss = gloss_replacer(words_store)
+    rendered_by_unit: dict[int, str] = {}
 
     unit_indices_by_block: dict[tuple[str | None, str | None, int | str], list[int]] = {}
     for i, u in enumerate(stressed_units):
         key = (u.get("tab"), u.get("step"), u.get("block"))
         unit_indices_by_block.setdefault(key, []).append(i)
-
-    words_by_id: dict[str, dict[str, Any]] = {}
-    for w in words_store.get("words", []):
-        if isinstance(w, dict) and "id" in w:
-            words_by_id[w["id"]] = w
 
     texts_by_id: dict[str, dict[str, Any]] = {}
     for t in pack.get("texts", []):
@@ -1506,21 +1539,19 @@ def _render_urok_markdown(
         if isinstance(v, dict) and "id" in v:
             videos_by_id[v["id"]] = v
 
-    def replace_gloss(match: re.Match[str]) -> str:
-        wid = match.group(1)
-        w_rec = words_by_id.get(wid)
-        if w_rec:
-            lem = w_rec.get("lemma", "")
-            gl = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
-            return f"{lem} ({gl})" if gl else lem
-        return wid
+    def render_units(indices: list[int]) -> str:
+        pieces = []
+        for i in indices:
+            piece = render_unit_piece(stressed_units[i]["text"], replace_gloss)
+            rendered_by_unit[i] = piece
+            pieces.append(piece)
+        return "".join(pieces)
 
     def format_block_text(step_id: str | None, block_key: int | str, fallback: str = "") -> str:
         indices = unit_indices_by_block.get(("urok", step_id, block_key))
-        val = "".join(stressed_text_by_unit_idx[i] for i in indices) if indices else fallback
-        val = re.sub(r"\{\{uk:([^{}\u0300\u0301]+)\}\}", r"\1", val)
-        val = GLOSS_ID_RE.sub(replace_gloss, val)
-        return val
+        if indices:
+            return render_units(indices)
+        return render_unit_piece(fallback, replace_gloss)
 
     lines: list[str] = []
 
@@ -1573,7 +1604,6 @@ def _render_urok_markdown(
                     lines.append("")
 
             elif kind == "paradigm":
-                ref_id = block.get("ref", "")
                 indices = [
                     i
                     for i, u in enumerate(stressed_units)
@@ -1584,9 +1614,7 @@ def _render_urok_markdown(
                 lines.append("| | |")
                 lines.append("| --- | --- |")
                 for u_idx in indices:
-                    u_text = stressed_text_by_unit_idx[u_idx]
-                    u_text = re.sub(r"\{\{uk:([^{}\u0300\u0301]+)\}\}", r"\1", u_text)
-                    lines.append(f"| {u_text} |")
+                    lines.append(f"| {render_units([u_idx])} |")
                 lines.append("")
 
             elif kind == "table":
@@ -1675,16 +1703,22 @@ def _render_urok_markdown(
         lines.append(format_block_text(None, "consolidation_lead_in", consol_lead))
         lines.append("")
 
-    return "\n".join(lines).strip()
+    return "\n".join(lines).strip(), rendered_by_unit
 
 
 def apply_stress_to_activities(
     draft_activities: list[dict[str, Any]],
     stressed_doc: dict[str, Any],
     replace_gloss_fn: Any,
-) -> list[dict[str, Any]]:
-    """Apply stress from stream/stressed units to draft activity fields."""
+) -> tuple[list[dict[str, Any]], dict[int, str]]:
+    """Apply stress from stressed units to draft activity fields.
+
+    Returns the stressed activity payloads (the engine's input to the component renderer)
+    and the renderer's unit->output mapping: the rendered piece of every expanded unit it
+    consumed, keyed by unit index.
+    """
     stressed_units = stressed_doc.get("units", [])
+    rendered_by_unit: dict[int, str] = {}
     vpravy_indices: dict[tuple[str | None, int | None, int | str], list[int]] = {}
     for i, u in enumerate(stressed_units):
         if u.get("tab") == "vpravy":
@@ -1693,10 +1727,27 @@ def apply_stress_to_activities(
 
     def format_act_text(act_id: str | None, item_idx: int | None, block_key: int | str, fallback: str) -> str:
         indices = vpravy_indices.get((act_id, item_idx, block_key))
-        val = "".join(stressed_units[i]["text"] for i in indices) if indices else fallback
-        val = re.sub(r"\{\{uk:([^{}\u0300\u0301]+)\}\}", r"\1", val)
-        val = GLOSS_ID_RE.sub(replace_gloss_fn, val)
-        return val
+        if not indices:
+            return render_unit_piece(fallback, replace_gloss_fn)
+        pieces = []
+        for i in indices:
+            piece = render_unit_piece(stressed_units[i]["text"], replace_gloss_fn)
+            rendered_by_unit[i] = piece
+            pieces.append(piece)
+        return "".join(pieces)
+
+    def format_options(act_id: str | None, item_idx: int | None, opts: list[Any]) -> list[Any]:
+        new_opts = []
+        for opt_idx, opt in enumerate(opts):
+            if isinstance(opt, dict) and "text" in opt:
+                opt_copy = dict(opt)
+                opt_copy["text"] = format_act_text(act_id, item_idx, f"opt_{opt_idx}", opt["text"])
+                new_opts.append(opt_copy)
+            elif isinstance(opt, str):
+                new_opts.append(format_act_text(act_id, item_idx, f"opt_{opt_idx}", opt))
+            else:
+                new_opts.append(opt)
+        return new_opts
 
     stressed_activities = copy.deepcopy(draft_activities)
     for act in stressed_activities:
@@ -1705,13 +1756,17 @@ def apply_stress_to_activities(
         act_id = act.get("id")
         if "instruction" in act:
             act["instruction"] = format_act_text(act_id, None, "instruction", act["instruction"])
+        if isinstance(act.get("syllables"), list):
+            act["syllables"] = format_options(act_id, None, act["syllables"])
+        if isinstance(act.get("explanation"), str):
+            act["explanation"] = format_act_text(act_id, None, "explanation", act["explanation"])
         for item_idx, item in enumerate(act.get("items", [])):
             if not isinstance(item, dict):
                 continue
             for prompt_key in ("prompt", "sentence", "question", "cue", "statement"):
                 if prompt_key in item and isinstance(item[prompt_key], str):
                     item[prompt_key] = format_act_text(act_id, item_idx, "prompt", item[prompt_key])
-            for ans_key in ("answer", "correct", "target", "is_true", "isTrue"):
+            for ans_key in ("answer", "correction", "correct", "target", "is_true", "isTrue"):
                 if ans_key in item and isinstance(item[ans_key], str):
                     item[ans_key] = format_act_text(act_id, item_idx, "answer", item[ans_key])
             for err_key in ("error", "incorrect"):
@@ -1719,19 +1774,9 @@ def apply_stress_to_activities(
                     item[err_key] = format_act_text(act_id, item_idx, "error", item[err_key])
             if "explanation" in item and isinstance(item["explanation"], str):
                 item["explanation"] = format_act_text(act_id, item_idx, "explanation", item["explanation"])
-            for opt_key in ("options", "choices", "distractors"):
+            for opt_key in ("options", "choices", "distractors", "words", "syllables"):
                 if opt_key in item and isinstance(item[opt_key], list):
-                    new_opts = []
-                    for opt_idx, opt in enumerate(item[opt_key]):
-                        if isinstance(opt, dict) and "text" in opt:
-                            opt_copy = dict(opt)
-                            opt_copy["text"] = format_act_text(act_id, item_idx, f"opt_{opt_idx}", opt["text"])
-                            new_opts.append(opt_copy)
-                        elif isinstance(opt, str):
-                            new_opts.append(format_act_text(act_id, item_idx, f"opt_{opt_idx}", opt))
-                        else:
-                            new_opts.append(opt)
-                    item[opt_key] = new_opts
+                    item[opt_key] = format_options(act_id, item_idx, item[opt_key])
             if "pairs" in item and isinstance(item["pairs"], list):
                 for p_idx, pair in enumerate(item["pairs"]):
                     if isinstance(pair, dict):
@@ -1741,7 +1786,7 @@ def apply_stress_to_activities(
                         for right_key in ("right", "answer"):
                             if right_key in pair:
                                 pair[right_key] = format_act_text(act_id, item_idx, f"pair_r_{p_idx}", pair[right_key])
-    return stressed_activities
+    return stressed_activities, rendered_by_unit
 
 
 def check_9_stress_and_render(
@@ -1773,10 +1818,13 @@ def check_9_stress_and_render(
         if isinstance(tok, dict):
             klass = str(tok.get("class", ""))
             sel = tok.get("selected")
+            # A resolved `{{gloss:W-n}}` reference carries no stress of its own (the page prints
+            # the record's lemma), so its null `stressed` is not a pending stress.
             if klass == "pending_stress" or (
                 isinstance(sel, dict)
                 and (sel.get("stressed") is None or sel.get("stressed") == "pending")
                 and not klass.startswith("skipped")
+                and tok.get("surface") != "gloss_ref"
             ):
                 return CheckResult(
                     check=9,
@@ -1794,8 +1842,12 @@ def check_9_stress_and_render(
     if not lesson_entry:
         return CheckResult(check=9, passed=False, reason=f"lesson {lesson_n} not found in plan", layer="plan")
 
-    vocab_items = build_slovnyk_tab(lesson_entry, words_store, stream)
-    external_resources = build_resursy_tab(lesson_entry, pack)
+    slovnyk_entries = build_slovnyk_entries(lesson_entry, words_store, stream)
+    vocab_items = [item for _wid, item in slovnyk_entries]
+    resursy_entries = build_resursy_entries(lesson_entry, pack)
+    external_resources: dict[str, list[dict[str, Any]]] = {}
+    for _rid, section, entry in resursy_entries:
+        external_resources.setdefault(section, []).append(entry)
 
     # Check on-disk lesson lock
     lock_ok, lock_diff = lesson_lock.check_lesson_lock(
@@ -1917,18 +1969,8 @@ def check_9_stress_and_render(
         "module_slug": slug,
     }
 
-    urok_md = _render_urok_markdown(draft, stressed_doc, pack, words_store)
-
-    words_by_id = {w["id"]: w for w in words_store.get("words", []) if isinstance(w, dict) and "id" in w}
-
-    def replace_gloss(match: re.Match[str]) -> str:
-        wid = match.group(1)
-        w_rec = words_by_id.get(wid)
-        if w_rec:
-            lem = w_rec.get("lemma", "")
-            gl = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
-            return f"{lem} ({gl})" if gl else lem
-        return wid
+    urok_md, rendered_by_unit = _render_urok_markdown(draft, stressed_doc, pack, words_store)
+    replace_gloss = gloss_replacer(words_store)
 
     plan_acts_by_id = {
         act["id"]: act for act in lesson_entry.get("activities", []) if isinstance(act, dict) and "id" in act
@@ -1945,7 +1987,13 @@ def check_9_stress_and_render(
                     layer="plan",
                 )
 
-    stressed_activities = apply_stress_to_activities(draft.get("activities", []), stressed_doc, replace_gloss)
+    stressed_activities, activity_pieces = apply_stress_to_activities(
+        draft.get("activities", []), stressed_doc, replace_gloss
+    )
+    rendered_by_unit.update(activity_pieces)
+    rendered_by_unit.update(
+        rendered_units_for_tabs(stressed_doc, slovnyk_entries=slovnyk_entries, resursy_entries=resursy_entries)
+    )
 
     from scripts.yaml_activities import ActivityParser
 
@@ -2018,11 +2066,8 @@ def check_9_stress_and_render(
             final_prov_doc = finalize_provenance_from_stressed_units(
                 source_prov,
                 stressed_doc,
-                mdx_content,
-                converted_activities=converted_activities,
-                urok_md=urok_md,
-                vocab_items=vocab_items,
-                external_resources=external_resources,
+                rendered_by_unit,
+                words_store=words_store,
             )
             if output_dir is not None:
                 prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"

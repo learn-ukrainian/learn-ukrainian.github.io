@@ -657,6 +657,7 @@ def test_provenance_schema_rejects_invalid() -> None:
                 "end": 11,
                 "source": "writer_prose",
                 "ref": None,
+                "role": "narration",
                 "text": "sample text",
                 "record_kind": None,
                 "record_side": None,
@@ -707,8 +708,13 @@ def test_provenance_schema_rejects_invalid() -> None:
     del bad_missing["spans"][0]["is_key"]
     assert len(list(validator.iter_errors(bad_missing))) > 0
 
-    # Reject missing span/start/end (Finding 4)
-    for missing_field in ("span", "start", "end"):
+    # Reject an unknown role
+    bad_role = copy.deepcopy(valid_doc)
+    bad_role["spans"][0]["role"] = "footnote"
+    assert len(list(validator.iter_errors(bad_role))) > 0
+
+    # Reject missing span/start/end/role (Finding 4, r3)
+    for missing_field in ("span", "start", "end", "role"):
         bad_pos = copy.deepcopy(valid_doc)
         del bad_pos["spans"][0][missing_field]
         assert len(list(validator.iter_errors(bad_pos))) > 0
@@ -732,8 +738,9 @@ def test_assembler_unknown_record_prefix_fails_with_engine_layer() -> None:
     assert exc_info3.value.layer == "engine"
 
 
-def test_check_9_span_text_not_in_rendered_output_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    # Finding 1: verify every span's text occurs in the rendered output at its unit
+def test_check_9_unit_absent_from_rendered_output_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Finding 1: the urok steps are dropped after assembly, so the renderer emits nothing at the
+    # prose units' location; check 9 must fail closed for those units, not search the page.
     draft, plan, pack, words = _fixture()
     validate_fixture_pack(pack)
     validate_fixture_plan(plan)
@@ -769,8 +776,9 @@ def test_check_9_span_text_not_in_rendered_output_fails(tmp_path: Path, monkeypa
         evidence_dir=tmp_path,
     )
     assert res.passed is False
-    assert "span_text_not_in_rendered_output" in (res.reason or "")
-    assert res.layer == "writer"
+    assert "span_location_unrendered" in (res.reason or "")
+    assert "('urok', 's1', None, None, 0)" in (res.reason or "")
+    assert res.layer == "engine"
 
 
 def test_provenance_byte_stable_rerun(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -817,3 +825,330 @@ def test_provenance_byte_stable_rerun(tmp_path: Path, monkeypatch: pytest.Monkey
     second_bytes = prov_path.read_bytes()
 
     assert first_bytes == second_bytes
+
+
+# --- r3: spans partition their unit, unit-relative offsets, renderer-located verification ---
+
+
+def _spans_by_unit(prov_doc: dict) -> dict[tuple, list[dict]]:
+    by_unit: dict[tuple, list[dict]] = {}
+    for s in prov_doc["spans"]:
+        by_unit.setdefault((s["tab"], s["step"], s["activity"], s["item"], s["block"]), []).append(s)
+    return by_unit
+
+
+def _assert_spans_partition_units(prov_doc: dict) -> None:
+    for spans in _spans_by_unit(prov_doc).values():
+        ordered = sorted(spans, key=lambda s: s["start"])
+        assert [s["span"] for s in ordered] == list(range(len(ordered)))
+        cursor = 0
+        for s in ordered:
+            assert s["start"] == cursor
+            assert s["end"] == cursor + len(s["text"])
+            cursor = s["end"]
+        assert "".join(s["text"] for s in ordered) == ordered[-1]["text"] if len(ordered) == 1 else True
+
+
+SRC_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _write_observed_from_receipts(state: Path, plan: dict) -> None:
+    """A schema-valid observed index for the runner's real receipts (the digest reads record roles).
+
+    The learner-state writer needs base-layer and prior-plan fixtures that belong to another
+    package; the roles here come from the plan inventory like the real writer's do.
+    """
+    receipts = yaml.safe_load((state / "lesson-1.resolutions.yaml").read_text(encoding="utf-8"))
+    inventory = plan["lessons"][0]["inventory"]["vocabulary"]
+    core = {c["evidence"] for c in inventory.get("core", [])}
+    records: dict[str, dict] = {}
+    for token in receipts["tokens"]:
+        selected = token.get("selected")
+        if not selected:
+            continue
+        role = "taught" if selected["record"] in core else "incidental"
+        rec = records.setdefault(selected["record"], {"id": selected["record"], "role": role, "forms": []})
+        for tags in selected["forms"]:
+            form = next((f for f in rec["forms"] if f["tags"] == tags), None)
+            if form is None:
+                form = {"tags": tags, "count_by_tab": {"urok": 0, "slovnyk": 0, "vpravy": 0, "resursy": 0}}
+                rec["forms"].append(form)
+            form["count_by_tab"][token["unit"]["tab"]] += 1
+    doc = {
+        "observed_schema": 1,
+        "lesson": receipts["lesson"],
+        "records": list(records.values()),
+        "untaught_forms": {"count": 0, "share": 0.0, "forms": []},
+    }
+    schema = json.loads((SRC_ROOT / "schemas/learner-observed-v1.schema.json").read_text(encoding="utf-8"))
+    Draft202012Validator(schema).validate(doc)
+    lock.write(state / "lesson-1.observed.yaml", lock.yaml_bytes(doc))
+
+
+def _digest_tree(tmp_path: Path, state: Path, plan: dict) -> Path:
+    """Arrange the runner's outputs in the canonical repo layout the digest generator reads."""
+    root = tmp_path / "digest-root"
+    plans_dir = root / "curriculum/l2-uk-en/lesson-plans/a1"
+    state_dir = root / "curriculum/l2-uk-en/evidence/a1/_state/sample-slug"
+    mdx_dir = root / "site/src/content/docs/a1/sample-slug"
+    schemas_dir = root / "schemas"
+    for d in (plans_dir, state_dir, mdx_dir, schemas_dir):
+        d.mkdir(parents=True)
+    for name in (
+        "module-plan-v2.schema.json",
+        "resolution-receipts-v1.schema.json",
+        "learner-observed-v1.schema.json",
+        "module-digest-v1.schema.json",
+        "lesson-provenance-v1.schema.json",
+    ):
+        (schemas_dir / name).write_bytes((SRC_ROOT / "schemas" / name).read_bytes())
+    (plans_dir / "sample-slug.yaml").write_bytes(lock.yaml_bytes(plan))
+    for name in ("provenance", "resolutions", "observed"):
+        for suffix in ("", ".lock"):
+            src = state / f"lesson-1.{name}.yaml{suffix}"
+            (state_dir / src.name).write_bytes(src.read_bytes())
+    (mdx_dir / "1.mdx").write_bytes((tmp_path / "site" / "1.mdx").read_bytes())
+    return root
+
+
+def test_live_runner_and_digest_two_spans_in_one_unit_and_gloss_reference(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Live path: the prose unit holds four spans (narration, quoted term, narration, gloss ref).
+
+    Every span's receipt token sits at offset 0 of its own resolver unit; the digest must map the
+    quoted term to span 1 and the gloss reference to the word-record span 3, not to span 0.
+    """
+    from scripts.review.digest import build_digest, validate_digest
+
+    draft, plan, pack, words = _fixture(text=("слово " * 10) + "{{uk:слово}} {{gloss:W-1}}")
+    validate_fixture_draft(draft)
+
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, gloss_ids={"W-1"})
+    assert report["passed"] is True, report
+    _write_observed_from_receipts(state, plan)
+
+    prov_doc = yaml.safe_load((state / "lesson-1.provenance.yaml").read_text(encoding="utf-8"))
+    get_provenance_validator().validate(prov_doc)
+    _assert_spans_partition_units(prov_doc)
+
+    prose = _spans_by_unit(prov_doc)[("urok", "s1", None, None, 0)]
+    assert [s["role"] for s in prose] == ["narration", "quoted_term", "narration", "gloss_ref"]
+    assert [s["text"] for s in prose] == ["сло́во " * 10, "сло́во", " ", "слово (term)"]
+    assert [(s["start"], s["end"]) for s in prose] == [(0, 70), (70, 76), (76, 77), (77, 89)]
+    gloss = prose[3]
+    assert (gloss["source"], gloss["ref"], gloss["record_kind"]) == ("record", "W-1", "word")
+    # The page shows exactly the concatenation of the unit's spans
+    mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+    assert "".join(s["text"] for s in prose) in mdx
+
+    doc = build_digest("a1", "sample-slug", 2, repo_root=_digest_tree(tmp_path, state, plan))  # lessons 1..up_to-1
+    validate_digest(doc)
+    occ = [o for o in doc["lessons"][0]["occurrences"] if o["locator"] == {**o["locator"], "tab": "urok", "block": 0}]
+    by_span: dict[int, list[dict]] = {}
+    for o in occ:
+        by_span.setdefault(o["locator"]["span"], []).append(o)
+    # The quoted term's receipt offset is 0 (its own resolver unit); it lands in span 1, not span 0.
+    assert sorted(by_span) == [0, 1]
+    assert [o["offset"] for o in by_span[0]] == list(range(0, 60, 6))
+    assert [(o["offset"], o["span_source"], o["record"]) for o in by_span[1]] == [(0, "writer_prose", "W-1")]
+    # The gloss reference reports no occurrence (no form), but the real receipts align to its span
+    from scripts.review.digest.generator import align_receipt_tokens
+
+    receipts = yaml.safe_load((state / "lesson-1.resolutions.yaml").read_text(encoding="utf-8"))
+    prose_tokens = [t for t in receipts["tokens"] if (t["unit"]["tab"], t["unit"]["block"]) == ("urok", 0)]
+    assert [(t["offset"], t["token"]) for t in prose_tokens][-3:] == [(54, "слово"), (0, "слово"), (8, "W-1")]
+    assert align_receipt_tokens(prose, prose_tokens)[-3:] == [(0, 63), (1, 70), (3, 77)]
+
+
+def test_live_runner_error_correction_spans_partition_prompt_and_correction_is_rendered(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    draft, plan, pack, words = _fixture()
+    w_ya = make_word_record(3, "я", pos="pron", gloss_en="I")
+    words["words"].append(w_ya)
+    plan["lessons"][0]["inventory"]["vocabulary"]["core"].append(
+        {"lemma": "я", "evidence": "W-3", "forms": [w_ya["forms"][0]["tags"]]}
+    )
+    pack["errors"] = [
+        {
+            "id": "E-001",
+            "source": {"table": "ua_gec_errors", "id": 1},
+            "incorrect": "слове",
+            "correct": "слово",
+            "error_type": "form",
+            "pattern": "fixture",
+        }
+    ]
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [
+        {"id": "a1", "type": "error-correction", "placement": "inline", "focus": "Correct", "error_refs": ["E-001"]}
+    ]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [
+        {
+            "id": "a1",
+            "instruction": "Correct the error",
+            "items": [
+                {
+                    "sentence": "я слове",
+                    "error": "слове",
+                    "correction": "слово",
+                    "explanation": "C",
+                    "error_ref": "E-001",
+                }
+            ],
+        }
+    ]
+    validate_fixture_words(words)
+    validate_fixture_pack(pack)
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    prov_doc = yaml.safe_load((state / "lesson-1.provenance.yaml").read_text(encoding="utf-8"))
+    _assert_spans_partition_units(prov_doc)
+    prompt = _spans_by_unit(prov_doc)[("vpravy", "s1", "a1", 0, "prompt")]
+    assert [(s["text"], s["start"], s["end"], s["source"], s["record_side"]) for s in prompt] == [
+        ("я ", 0, 2, "writer_prose", None),
+        ("слове", 2, 7, "record", "incorrect"),
+    ]
+    answer = _spans_by_unit(prov_doc)[("vpravy", "s1", "a1", 0, "answer")]
+    assert [(s["text"], s["record_side"]) for s in answer] == [("сло́во", "correct")]
+    # The correction printed on the page is the rendered span text (stressed), not the draft's plain text
+    mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+    assert "сло́во" in mdx and '"я слове"' in mdx
+
+
+def test_check_9_activity_absent_from_rendered_output_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Finding 1: the activity is dropped after assembly; its spans are absent from the page and the
+    # renderer identified no location for them -> fail closed, no whole-page search.
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [
+        {
+            "id": "a1",
+            "instruction": "Quiz",
+            "items": [{"question": "слово", "options": ["слово", "слова"], "correct": 0, "explanation": "E"}],
+        }
+    ]
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    draft["activities"] = []
+    draft["steps"][0]["blocks"] = [b for b in draft["steps"][0]["blocks"] if b.get("kind") != "activity"]
+
+    monkeypatch.setattr(
+        assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})()
+    )
+    monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
+    monkeypatch.setattr(
+        assemble.lesson_lock, "compute_lesson_lock", lambda *a, **kw: {"lessons": [{"n": 1, "entry_sha256": "0" * 64}]}
+    )
+    monkeypatch.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": "a1"})())
+    res = assemble.check_9_stress_and_render(
+        expanded,
+        draft,
+        plan,
+        pack,
+        words,
+        type("Stream", (), {"tokens": []})(),
+        "a1",
+        "sample-slug",
+        1,
+        provenance_doc=prov,
+        repo_root=tmp_path,
+        output_dir=tmp_path / "state",
+        plans_dir=tmp_path,
+        evidence_dir=tmp_path,
+    )
+    assert res.passed is False
+    assert "span_location_unrendered" in (res.reason or "")
+    assert "('vpravy', 's1', 'a1', None, 'instruction')" in (res.reason or "")
+    assert res.layer == "engine"
+    assert not (tmp_path / "state" / "lesson-1.provenance.yaml").exists()
+
+
+def _finalize_inputs() -> tuple[dict, dict]:
+    draft, plan, pack, words = _fixture(text="слово {{uk:слово}}")
+    expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    stressed = {"stressed_schema": 1, "lesson": expanded["lesson"], "units": copy.deepcopy(expanded["units"])}
+    return prov, stressed
+
+
+def test_finalize_two_spans_with_one_rendered_piece_fails() -> None:
+    # Reviewer reproduction: two distinct spans, the renderer emitted only one of them.
+    prov, stressed = _finalize_inputs()
+    pieces = {i: u["text"] for i, u in enumerate(stressed["units"])}
+    del pieces[1]
+    with pytest.raises(assemble.AssemblerError) as exc_info:
+        assemble.finalize_provenance_from_stressed_units(prov, stressed, pieces)
+    assert exc_info.value.code == "span_location_unrendered"
+    assert "unit 1" in exc_info.value.message
+    assert exc_info.value.layer == "engine"
+
+
+def test_finalize_rejects_whitespace_tolerant_match() -> None:
+    # Reviewer reproduction: the full text is absent, its trimmed text appears elsewhere.
+    prov, stressed = _finalize_inputs()
+    slovnyk_idx = next(i for i, u in enumerate(stressed["units"]) if u["tab"] == "slovnyk")
+    pieces = {i: u["text"] for i, u in enumerate(stressed["units"])}
+    pieces[slovnyk_idx] = stressed["units"][slovnyk_idx]["text"] + " "
+    with pytest.raises(assemble.AssemblerError) as exc_info:
+        assemble.finalize_provenance_from_stressed_units(prov, stressed, pieces)
+    assert exc_info.value.code == "span_text_not_in_rendered_output"
+    # The urok tab compares exactly, so even a stress-only difference is refused there
+    pieces = {i: u["text"] for i, u in enumerate(stressed["units"])}
+    pieces[0] = "сло́во "
+    with pytest.raises(assemble.AssemblerError) as exc_info:
+        assemble.finalize_provenance_from_stressed_units(prov, stressed, pieces)
+    assert exc_info.value.code == "span_text_not_in_rendered_output"
+
+
+def test_finalize_rebuilds_unit_relative_offsets_from_rendered_pieces() -> None:
+    prov, stressed = _finalize_inputs()
+    stressed["units"][1]["text"] = "сло́во"
+    pieces = {i: u["text"] for i, u in enumerate(stressed["units"])}
+    final = assemble.finalize_provenance_from_stressed_units(prov, stressed, pieces)
+    _assert_spans_partition_units(final)
+    prose = _spans_by_unit(final)[("urok", "s1", None, None, 0)]
+    assert [(s["span"], s["start"], s["end"], s["text"]) for s in prose] == [
+        (0, 0, 6, "слово "),
+        (1, 6, 12, "сло́во"),
+    ]
+    assert prov["spans"][1]["text"] == "слово"  # the check-5 document is left untouched
+
+
+def test_assembly_rejects_form_choice_item_without_record() -> None:
+    # r2 MINOR: direct assembly raises the same named reason as check 4 instead of labelling
+    # the options as writer prose.
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Forms"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [
+        {
+            "id": "a1",
+            "instruction": "Choose",
+            "items": [
+                {
+                    "sentence": "____",
+                    "answer": "слово",
+                    "options": ["слово", "слова"],
+                    "explanation": "C",
+                    "mode": "form-choice",
+                }
+            ],
+        }
+    ]
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    with pytest.raises(assemble.AssemblerError) as exc_info:
+        assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    assert exc_info.value.code == "form_choice_options_invalid"
+    assert exc_info.value.layer == "writer"
+    row, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert row["reason"] == "form_choice_options_invalid"

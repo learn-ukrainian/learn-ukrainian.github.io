@@ -728,10 +728,12 @@ def test_whole_sentence_rendered_with_inline_markup():
     )()
 
     stressed_doc = apply_stress(exp_doc, mock_stream)
-    urok_md = _render_urok_markdown(draft, stressed_doc, pack, words_store)
+    urok_md, rendered_by_unit = _render_urok_markdown(draft, stressed_doc, pack, words_store)
 
     # Assert whole sentence is rendered, NOT truncated to ' when you greet a friend.'
     assert "Say приві́т when you greet a friend." in urok_md
+    # The renderer reports its unit->output mapping: one rendered piece per consumed unit
+    assert [rendered_by_unit[i] for i in range(3)] == ["Say ", "приві́т", " when you greet a friend."]
 
     # Assert table rendered with {{uk:...}} stripped
     assert "| Header | Column |" in urok_md
@@ -799,10 +801,14 @@ def test_activities_stress_applied_from_stream():
     def fake_replace_gloss(match: re.Match) -> str:
         return "word"
 
-    stressed_acts = apply_stress_to_activities(draft["activities"], stressed_doc, fake_replace_gloss)
+    stressed_acts, act_pieces = apply_stress_to_activities(draft["activities"], stressed_doc, fake_replace_gloss)
     assert "Say сло́во please" in stressed_acts[0]["instruction"]
     assert "What is сло́во?" in stressed_acts[0]["items"][0]["question"]
     assert "word" in stressed_acts[0]["items"][0]["explanation"]
+    # Every vpravy unit of the quiz was consumed by the renderer, glosses replaced per unit
+    vpravy_units = [i for i, u in enumerate(exp_doc["units"]) if u["tab"] == "vpravy"]
+    assert sorted(act_pieces) == vpravy_units
+    assert "word" in act_pieces[max(vpravy_units)]
 
 
 def test_immersion_band_key_matches_function(monkeypatch):
@@ -1801,6 +1807,8 @@ def test_fill_in_modes_appear_in_assembler_fill_in_props(tmp_path, monkeypatch):
                 "options": ["гарне", "гарна"],
                 "explanation": "Виберіть форму.",
                 "mode": "form-choice",
+                "record": "W-1",
+                "answer_tags": "adj:n:v_naz",
             },
             {
                 "sentence": "Це м____ясо.",
@@ -1932,8 +1940,20 @@ def test_true_false_statement_resolved_and_stressed_in_true_false_output(tmp_pat
         (),
         {
             "tokens": [
-                {"unit_index": 0, "offset": 0, "token": "слово", "class": "resolved", "selected": {"stressed": "сло́во"}},
-                {"unit_index": stmt_idx, "offset": 3, "token": "слово", "class": "resolved", "selected": {"stressed": "сло́во"}},
+                {
+                    "unit_index": 0,
+                    "offset": 0,
+                    "token": "слово",
+                    "class": "resolved",
+                    "selected": {"stressed": "сло́во"},
+                },
+                {
+                    "unit_index": stmt_idx,
+                    "offset": 3,
+                    "token": "слово",
+                    "class": "resolved",
+                    "selected": {"stressed": "сло́во"},
+                },
             ],
             "failures": [],
         },

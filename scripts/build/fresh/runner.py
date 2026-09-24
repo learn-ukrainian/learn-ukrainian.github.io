@@ -19,7 +19,8 @@ Per-Type Key Rule Table (Check 4):
 |                    |                        |                       | both specified.                       |
 | pick-syllables     | act.syllables          | correctIndices (list) | Non-empty list of unique int indices; |
 |                    | (or items[].syllables) |                       | all indices within bounds.            |
-| select             | items[].options        | opt.correct == true   | >= max(2, min_correct) correct opts.  |
+| select             | items[].options        | opt.correct == true   | >= max(floor, min_correct) correct    |
+|                    |                        |                       | opts; floor is 1 at A2/B1, else 2.    |
 +--------------------+------------------------+-----------------------+---------------------------------------+
 
 Named Failure Reasons for Check 4:
