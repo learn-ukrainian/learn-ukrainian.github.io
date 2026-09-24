@@ -20,7 +20,7 @@ export function ArcScopeCount({ kind, count }: { kind: ArcScopeKind; count: numb
 export default function ArcModule({ level, position }: ArcModuleProps): ReactNode {
   const { scope } = position;
   return (
-    <div className={layout.container}>
+    <div className={layout.container} data-arc-module={position.slug}>
       <header className={styles.header}>
         <h1 className={styles.title}>
           {position.title_uk
