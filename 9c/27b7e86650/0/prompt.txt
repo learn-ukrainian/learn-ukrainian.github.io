@@ -1,0 +1,41 @@
+"[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8522-g1
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these trees are NOT present: curriculum, data/lexicon, data/projects, wiki. To materialize one inside this worktree, run `git sparse-checkout add curriculum` `git sparse-checkout add data/lexicon` `git sparse-checkout add data/projects` `git sparse-checkout add wiki` (for example `git sparse-checkout add data/projects`). Do not invent content for missing paths.
+
+[write-mode closeout]
+Commit your work.
+`git push -u origin HEAD`
+Leave `git status --porcelain` empty (commit or delete scratch files).
+Do not open or merge PRs unless the brief says so; report the pushed head SHA and clean status.
+
+[optional delivery signal]
+If you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {\"outcome\":\"no_change\",\"reason\":\"why no changes are required\"}`. This line is optional — its absence never fails the dispatch.
+
+# impl-8522-g1 — dead-code sweep group 1: remove scripts/agent_runtime/probe_stall_failover.py (issue #8522)
+
+Commit trailer, literal, one line: `X-Agent: deepseek/impl-8522-g1`
+Work in your dispatch worktree on a new branch from origin/main. Commit, push. Do NOT open a PR.
+
+## #M-4 evidence (driver, 2026-09-24 ~16:35Z)
+- `git grep -n -E \"probe_stall|stall_failover\" -- . ':!scripts/agent_runtime/probe_stall_failover.py'` → no output (zero references).
+- The file is 609 lines, last touched by cffc9e1746 (#4735).
+- Issue #8522 (read `gh issue view 8522`) wants one PR per group, each with an evidence table in the PR body. This task is group 1 only.
+
+## Build
+1. Re-run the grep above in your worktree and also search for dynamic references: string module paths
+   (`\"scripts.agent_runtime.probe_stall_failover\"`, `agent_runtime.probe_stall_failover`), `importlib`, entry points in
+   `pyproject.toml`, systemd units in `packaging/`, cron or launcher scripts under `scripts/` and `agents_extensions/`, and docs
+   (`docs/`, `agents_extensions/shared/`). Quote every command and its output.
+2. If and only if every search is empty, delete the file. If anything references it, stop without deleting and report what you found.
+3. Write `batch_state/tasks/impl-8522-g1.evidence.md` containing the evidence table (search → command → result) for the PR body.
+4. Verify and quote: `.venv/bin/python -m pytest tests -k \"agent_runtime\" -n 2 -q` (targeted collection only, no full suite) and
+   `.venv/bin/python -c \"import scripts.agent_runtime\"` succeeds.
+
+RESOURCE LIMIT (binding): targeted tests only, `-n 2` at most, foreground, never the full suite, no load generation.
+Out of scope: the other #8522 groups (hermes-cron router, dashboards, API routes, module_dashboard, ask-gemini shim).
+"
