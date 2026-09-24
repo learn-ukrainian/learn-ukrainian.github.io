@@ -7325,9 +7325,35 @@ def test_classify_worktree_layout_distinguishes_flat_and_dispatch(tmp_path):
     )
 
 
-def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, monkeypatch, capsys):
+def _redirect_delegate_worktree_root(monkeypatch, tmp_path: Path) -> Path:
+    """Point auto worktree paths at ``tmp_path`` via ``delegate._REPO_ROOT``.
+
+    ``_auto_worktree_path`` joins ``.worktrees/dispatch/<agent>/<task>`` onto
+    that constant. The cross-repo guard compares the constant to the invocation
+    git root, so the stubbed root has to agree or a bare ``--worktree`` is
+    refused before the path is built.
+    A ``.git`` directory plus the local source dirs let the dirty-primary probe
+    and ``_provision_data_symlinks`` run against the throwaway root. The
+    symlink sources are what used to mkdir the husk (``data/``, ``site/``,
+    ``node_modules``) under the real checkout when git itself was stubbed.
+    """
+    repo = tmp_path / "delegate-repo"
+    repo.mkdir()
+    (repo / ".git").mkdir()
+    (repo / "data").mkdir()
+    (repo / "data" / "vesum.db").write_text("", encoding="utf-8")
+    (repo / "data" / "sources.db").write_text("", encoding="utf-8")
+    (repo / "node_modules").mkdir()
+    (repo / "site" / "node_modules").mkdir(parents=True)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
+    monkeypatch.setattr(delegate, "_resolve_invocation_git_root", lambda _start=None: repo)
+    return repo
+
+
+def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     """Fix 4 (#1476): a fresh dispatch with `--worktree` (bare — no path)
     lands in `.worktrees/dispatch/{agent}/{task}/`, the new default."""
+    repo = _redirect_delegate_worktree_root(monkeypatch, tmp_path)
     import argparse
 
     class _FakeStdin:
@@ -7365,7 +7391,11 @@ def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, monkeypatch, capsys):
     state = delegate._read_state(delegate._state_path("codex-1476-auto-path"))
     assert state is not None
     wt = Path(state["worktree_path"])
+    assert wt.is_relative_to(repo)
     assert wt.parts[-4:] == (".worktrees", "dispatch", "codex", "1476-auto-path")
+    assert (wt / "data").is_dir()
+    assert (wt / "site").is_dir()
+    assert (wt / "node_modules").is_symlink()
     assert state["worktree_branch"] == "codex/1476-auto-path"
     assert state["worktree_layout"] == "dispatch"
 
@@ -8155,8 +8185,10 @@ def test_dispatch_accepts_workspace_write_cwd_added_worktree(
 
 def test_dispatch_accepts_bare_worktree_for_workspace_write(
     tmp_tasks_dir,
+    tmp_path,
     monkeypatch,
 ):
+    repo = _redirect_delegate_worktree_root(monkeypatch, tmp_path)
     _, fake_run = _make_run_stub()
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
@@ -8173,7 +8205,11 @@ def test_dispatch_accepts_bare_worktree_for_workspace_write(
     state = delegate._read_state(delegate._state_path("ww-bare"))
     assert state is not None
     wt = Path(state["worktree_path"])
+    assert wt.is_relative_to(repo)
     assert wt.parts[-4:] == (".worktrees", "dispatch", "codex", "ww-bare")
+    assert (wt / "data").is_dir()
+    assert (wt / "site").is_dir()
+    assert (wt / "node_modules").is_symlink()
 
 
 def test_dispatch_accepts_explicit_added_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
