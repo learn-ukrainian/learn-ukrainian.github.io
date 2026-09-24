@@ -38,7 +38,7 @@ _DETAIL_TTL_S = 900.0
 _DETAIL_URL = re.compile(
     r"(?:^|https://api\.github\.com/)repos/[^/]+/[^/]+/"
     r"(?:pulls/\d+(?:/reviews)?|issues/\d+(?:/comments)?|"
-    r"commits/[^/?]+(?:/(?:check-runs|status))?)"
+    r"commits/[^/?]+(?:/(?:check-runs|status))?|actions/runs)"
     r"(?:\?|$)"
 )
 _REQUEST_SEQ: contextvars.ContextVar[int] = contextvars.ContextVar("github_rest_request_seq", default=0)
@@ -516,15 +516,52 @@ def derive_review_decision(reviews: list[dict[str, Any]], requested_reviewers: A
     return None
 
 
-def _project_check_run(run: dict[str, Any]) -> dict[str, Any]:
+def _suite_id(run: dict[str, Any]) -> int | None:
+    suite = run.get("check_suite")
+    if not isinstance(suite, dict):
+        return None
+    suite_id = suite.get("id")
+    if isinstance(suite_id, int) and not isinstance(suite_id, bool):
+        return suite_id
+    return None
+
+
+def _app_slug(run: dict[str, Any]) -> str | None:
+    app = run.get("app")
+    if not isinstance(app, dict):
+        return None
+    slug = app.get("slug")
+    if isinstance(slug, str) and slug.strip() and slug.strip() != "github-actions":
+        return slug.strip()
+    return None
+
+
+def _project_check_run(run: dict[str, Any], workflow_names: dict[int, str] | None) -> dict[str, Any]:
+    """Project one check run, including the identity Work collapse requires.
+
+    ``workflow_names`` maps ``check_suite.id`` to the workflow ``name`` from
+    one ``actions/runs?head_sha=`` list. A missing or incomplete map leaves
+    Actions rows without ``workflowName`` so collapse keeps every generation.
+    A non-Actions app slug is its own identity; ``github-actions`` is not,
+    because every workflow shares that slug.
+    """
     conclusion = run.get("conclusion")
-    return {
+    projected: dict[str, Any] = {
         "name": run.get("name"),
         "status": str(run.get("status") or "").upper(),
         "conclusion": str(conclusion).upper() if isinstance(conclusion, str) and conclusion else None,
         "startedAt": run.get("started_at"),
         "completedAt": run.get("completed_at"),
     }
+    suite_id = _suite_id(run)
+    workflow = workflow_names.get(suite_id) if workflow_names is not None and suite_id is not None else None
+    if isinstance(workflow, str) and workflow.strip():
+        projected["workflowName"] = workflow.strip()
+    else:
+        slug = _app_slug(run)
+        if slug is not None:
+            projected["appSlug"] = slug
+    return projected
 
 
 def _project_status(status: dict[str, Any]) -> dict[str, Any]:
@@ -562,6 +599,7 @@ def project_pull_request(
     reviews_complete: bool = True,
     checks_complete: bool = True,
     comments_complete: bool = True,
+    workflow_names: dict[int, str] | None = None,
 ) -> dict[str, Any]:
     """REST pull + conditional detail → the fields Work and idle-PR orient read.
 
@@ -580,7 +618,9 @@ def project_pull_request(
     facts = review_facts(review_rows)
     facts["complete"] = reviews_complete
     if checks_complete:
-        rollup: list[dict[str, Any]] | None = [_project_check_run(run) for run in check_runs if isinstance(run, dict)]
+        rollup: list[dict[str, Any]] | None = [
+            _project_check_run(run, workflow_names) for run in check_runs if isinstance(run, dict)
+        ]
         rollup.extend(_project_status(status) for status in statuses if isinstance(status, dict))
     else:
         rollup = None
@@ -685,6 +725,60 @@ def _check_runs(
     return runs, False
 
 
+def _workflow_names_by_suite(
+    cache: GitHubRestCache,
+    repo: str,
+    sha: str,
+    *,
+    deadline: float,
+    timeout: float,
+) -> dict[int, str] | None:
+    """Workflow ``name`` keyed by ``check_suite_id`` for one commit.
+
+    One paginated ``actions/runs?head_sha=`` read, reused from the ETag cache.
+    ``None`` when the list is incomplete or the read fails: callers then leave
+    Actions checks without a workflow name and collapse keeps every generation.
+    """
+    runs: list[dict[str, Any]] = []
+    url: str | None = f"repos/{repo}/actions/runs?head_sha={sha}&per_page=100"
+    pages = 0
+    total: int | None = None
+    while url:
+        pages += 1
+        if pages > _MAX_PAGES:
+            return None
+        try:
+            result = cache.get_json(url, timeout=_time_left(deadline, timeout))
+        except (GitHubRestError, GitHubRestTimeout):
+            return None
+        if result.status == 404 or not isinstance(result.body, dict):
+            return None
+        chunk = result.body.get("workflow_runs")
+        if not isinstance(chunk, list):
+            return None
+        runs.extend(item for item in chunk if isinstance(item, dict))
+        page_total = result.body.get("total_count")
+        if isinstance(page_total, int) and not isinstance(page_total, bool):
+            total = page_total
+        if not result.link_next:
+            if total is None or len(runs) != total:
+                return None
+            break
+        url = result.link_next
+    names: dict[int, str] = {}
+    for run in runs:
+        suite_id = run.get("check_suite_id")
+        name = run.get("name")
+        if (
+            isinstance(suite_id, int)
+            and not isinstance(suite_id, bool)
+            and isinstance(name, str)
+            and name.strip()
+        ):
+            names[suite_id] = name.strip()
+    return names
+
+
 def _detail_one(
     cache: GitHubRestCache,
     repo: str,
@@ -703,6 +797,9 @@ def _detail_one(
     if pull.status not in {200, 304} or not isinstance(pull.body, dict):
         raise GitHubRestError(f"pull request {number} detail unavailable", status=pull.status)
     runs, checks_complete = _check_runs(cache, repo, sha, deadline=deadline, timeout=timeout)
+    workflow_names = (
+        _workflow_names_by_suite(cache, repo, sha, deadline=deadline, timeout=timeout) if checks_complete else None
+    )
     status = cache.get_json(f"repos/{repo}/commits/{sha}/status", timeout=_time_left(deadline, timeout))
     if status.status not in {200, 304} or not isinstance(status.body, dict):
         raise GitHubRestError(f"commit status unavailable for {sha}", status=status.status)
@@ -738,6 +835,7 @@ def _detail_one(
         reviews_complete=reviews_complete,
         checks_complete=checks_complete,
         comments_complete=comments_complete,
+        workflow_names=workflow_names,
     )
 
 

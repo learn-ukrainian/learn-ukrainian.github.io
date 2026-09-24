@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from scripts.github_check_rollup import collapse_status_rollup
+
 HEALTH_RANK = {
     "OFF_TRACK": 0,
     "AT_RISK": 1,
@@ -45,11 +47,8 @@ def _pr_check_state(pr: dict[str, Any] | None) -> str:
         return "unknown"
     states: list[str] = []
     if isinstance(rollup, list):
-        for entry in rollup:
+        for entry in collapse_status_rollup(rollup):
             if isinstance(entry, dict):
-                # Cancelled runs can leave an unexpanded matrix parent, not a real check.
-                if "${{" in str(entry.get("name") or ""):
-                    continue
                 states.append(str(entry.get("state") or entry.get("conclusion") or "").upper())
             else:
                 states.append(str(entry).upper())

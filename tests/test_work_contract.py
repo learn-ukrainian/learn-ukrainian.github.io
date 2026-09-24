@@ -73,6 +73,83 @@ def test_pr_check_state_unexpanded_only_is_unknown(state):
     assert _pr_check_state({"statusCheckRollup": checks}) == "unknown"
 
 
+def _check(name, conclusion, started_at, *, workflow="CI", completed_at=None):
+    row = {
+        "name": name,
+        "conclusion": conclusion,
+        "workflowName": workflow,
+        "startedAt": started_at,
+    }
+    if completed_at is not None:
+        row["completedAt"] = completed_at
+    return row
+
+
+def test_pr_check_state_superseded_cancelled_then_success_is_passing():
+    rollup = [
+        _check("Ruff", "CANCELLED", "2026-09-19T02:49:59Z"),
+        _check("Ruff", "SUCCESS", "2026-09-19T02:50:11Z"),
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "passing"
+
+
+def test_pr_check_state_success_then_later_cancelled_is_failing():
+    rollup = [
+        _check("Ruff", "SUCCESS", "2026-09-19T02:49:59Z"),
+        _check("Ruff", "CANCELLED", "2026-09-19T02:50:11Z"),
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "failing"
+
+
+def test_pr_check_state_cancelled_without_sibling_is_failing():
+    rollup = [_check("CI Gate", "CANCELLED", "2026-09-19T02:49:59Z")]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "failing"
+
+
+def test_pr_check_state_missing_timestamps_keeps_every_row():
+    rollup = [
+        {"name": "Ruff", "conclusion": "CANCELLED", "workflowName": "CI"},
+        {"name": "Ruff", "conclusion": "SUCCESS", "workflowName": "CI"},
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "failing"
+
+
+def test_pr_check_state_status_context_still_classifies():
+    passing = [{"context": "ci/circleci", "state": "SUCCESS"}]
+    failing = [{"context": "ci/circleci", "state": "FAILURE"}]
+    assert _pr_check_state({"statusCheckRollup": passing}) == "passing"
+    assert _pr_check_state({"statusCheckRollup": failing}) == "failing"
+
+
+def test_pr_check_state_status_context_keeps_latest_started_at():
+    rollup = [
+        {"context": "ci/circleci", "state": "FAILURE", "startedAt": "2026-09-19T02:49:59Z"},
+        {"context": "ci/circleci", "state": "SUCCESS", "startedAt": "2026-09-19T02:50:11Z"},
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "passing"
+
+
+def test_pr_check_state_timestamp_tie_keeps_both():
+    rollup = [
+        _check("Ruff", "CANCELLED", "2026-09-19T02:50:11Z"),
+        _check("Ruff", "SUCCESS", "2026-09-19T02:50:11Z"),
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "failing"
+
+
+def test_pr_check_state_falls_back_to_completed_at():
+    rollup = [
+        _check("Ruff", "CANCELLED", None, completed_at="2026-09-19T02:49:59Z"),
+        _check("Ruff", "SUCCESS", None, completed_at="2026-09-19T02:50:11Z"),
+    ]
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "passing"
+
+
+def test_pr_check_state_pr_8264_rollup_is_passing():
+    rollup = json.loads((ROOT / "tests" / "fixtures" / "work" / "pr_8264_status_check_rollup.json").read_text())
+    assert _pr_check_state({"statusCheckRollup": rollup}) == "passing"
+
+
 @pytest.mark.parametrize(
     ("decision", "health", "action"),
     [("REVIEW_REQUIRED", "AT_RISK", "REQUEST_CF_REVIEW"), ("APPROVED", "ON_TRACK", "MERGE_WHEN_READY")],
