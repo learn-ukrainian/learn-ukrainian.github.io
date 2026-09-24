@@ -1,0 +1,2 @@
+{"v":1,"agent":"opencode","cli_version":"0.8.42","type":"user","ts":"2026-09-24T10:35:50.89Z","content":[{"id":"prt_0d2fc62f7001S01we5CLkU8ZTN","text":"\"reply OK\""}]}
+{"v":1,"agent":"opencode","cli_version":"0.8.42","type":"assistant","ts":"2026-09-24T10:35:53.964Z","id":"msg_0d2fc6eec001QLPKUwrq84rhjb","input_tokens":15344,"output_tokens":2,"content":[{"text":"OK","type":"text"}]}

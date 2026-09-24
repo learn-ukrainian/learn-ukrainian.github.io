@@ -1,0 +1,84 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2c37a7c100cb",
+  "session_id": "ses_f2d039d76ffe2p70Qk4op3k3Pp",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-24T10:53:01.377814674Z",
+  "branch": "kimi/impl-8514-deepseek-start",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/agent_runtime/adapters/deepseek.py",
+    "scripts/agent_runtime/routes.py",
+    "scripts/api/lane_health.py",
+    "scripts/api/state_router.py",
+    "scripts/config/model_catalog.yaml",
+    "scripts/fleet/capacity_pick.py",
+    "tests/agent_runtime/adapters/test_deepseek_adapter.py",
+    "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/api/test_lane_health.py",
+    "tests/test_model_catalog.py"
+  ],
+  "agent": "OpenCode",
+  "model": "deepseek-flash",
+  "turn_id": "dc811f0bf8e6",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 15344,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5888,
+    "output_tokens": 2,
+    "api_call_count": 1
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-24T10:53:01.372920361Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 155,
+    "human_modified": 50,
+    "human_removed": 0,
+    "total_committed": 155,
+    "total_lines_changed": 209,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 171,
+      "user_lines_removed": 37,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "scripts/agent_runtime/adapters/acpx.py": 10,
+        "scripts/agent_runtime/adapters/deepseek.py": 20,
+        "scripts/agent_runtime/routes.py": 3,
+        "scripts/api/lane_health.py": 25,
+        "scripts/api/state_router.py": 8,
+        "scripts/config/model_catalog.yaml": 2,
+        "scripts/fleet/capacity_pick.py": 9,
+        "tests/agent_runtime/adapters/test_deepseek_adapter.py": 7,
+        "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py": 2,
+        "tests/agent_runtime/test_acpx_adapter.py": 2,
+        "tests/api/test_lane_health.py": 81,
+        "tests/test_model_catalog.py": 2
+      },
+      "user_removed_per_file": {
+        "scripts/agent_runtime/adapters/acpx.py": 8,
+        "scripts/agent_runtime/adapters/deepseek.py": 13,
+        "scripts/agent_runtime/routes.py": 2,
+        "scripts/api/state_router.py": 1,
+        "scripts/config/model_catalog.yaml": 2,
+        "tests/agent_runtime/adapters/test_deepseek_adapter.py": 6,
+        "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py": 1,
+        "tests/agent_runtime/test_acpx_adapter.py": 2,
+        "tests/test_model_catalog.py": 2
+      }
+    }
+  ]
+}

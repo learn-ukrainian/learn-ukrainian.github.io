@@ -1,0 +1,155 @@
+{
+  "info": {
+    "id": "ses_f2d039d76ffe2p70Qk4op3k3Pp",
+    "slug": "brave-engine",
+    "projectID": "c4cb20568b49f5c34ee7abdc0cd296fbd941fbd2",
+    "directory": "/home/ops/learn-ukrainian/.worktrees/dispatch/kimi/impl-8514-deepseek-start",
+    "path": "",
+    "title": "OK reply request",
+    "agent": "build",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "high"
+    },
+    "version": "1.18.32",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0.002320464,
+    "tokens": {
+      "input": 15344,
+      "output": 2,
+      "reasoning": 0,
+      "cache": {
+        "read": 5888,
+        "write": 0
+      }
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1790246150793,
+      "updated": 1790246154470
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1790246150890
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "deepseek",
+          "modelID": "deepseek-flash",
+          "variant": "high"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_0d2fc62e9001npA7kmmTK1JuNK",
+        "sessionID": "ses_f2d039d76ffe2p70Qk4op3k3Pp"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"reply OK\"",
+          "id": "prt_0d2fc62f7001S01we5CLkU8ZTN",
+          "sessionID": "ses_f2d039d76ffe2p70Qk4op3k3Pp",
+          "messageID": "msg_0d2fc62e9001npA7kmmTK1JuNK"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d2fc62e9001npA7kmmTK1JuNK",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/kimi/impl-8514-deepseek-start",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/kimi/impl-8514-deepseek-start"
+        },
+        "cost": 0.002320464,
+        "tokens": {
+          "total": 21234,
+          "input": 15344,
+          "output": 2,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 5888
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790246153964,
+          "completed": 1790246157305
+        },
+        "finish": "stop",
+        "id": "msg_0d2fc6eec001QLPKUwrq84rhjb",
+        "sessionID": "ses_f2d039d76ffe2p70Qk4op3k3Pp"
+      },
+      "parts": [
+        {
+          "snapshot": "65858c7a49cba0327d98bbf58c864a2bba466686",
+          "type": "step-start",
+          "id": "prt_0d2fc78b2001rxMTPP0kglbyKf",
+          "sessionID": "ses_f2d039d76ffe2p70Qk4op3k3Pp",
+          "messageID": "msg_0d2fc6eec001QLPKUwrq84rhjb"
+        },
+        {
+          "type": "text",
+          "text": "OK",
+          "time": {
+            "start": 1790246157075,
+            "end": 1790246157091
+          },
+          "id": "prt_0d2fc7b130016jO3n3fgVwZMzU",
+          "sessionID": "ses_f2d039d76ffe2p70Qk4op3k3Pp",
+          "messageID": "msg_0d2fc6eec001QLPKUwrq84rhjb"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "65858c7a49cba0327d98bbf58c864a2bba466686",
+          "type": "step-finish",
+          "tokens": {
+            "total": 21234,
+            "input": 15344,
+            "output": 2,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 5888
+            }
+          },
+          "cost": 0.002320464,
+          "id": "prt_0d2fc7b89001FFN73cepjvsz4U",
+          "sessionID": "ses_f2d039d76ffe2p70Qk4op3k3Pp",
+          "messageID": "msg_0d2fc6eec001QLPKUwrq84rhjb"
+        }
+      ]
+    }
+  ]
+}

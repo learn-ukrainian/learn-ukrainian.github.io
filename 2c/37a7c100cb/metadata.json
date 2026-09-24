@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "2c37a7c100cb",
+  "strategy": "manual-commit",
+  "branch": "kimi/impl-8514-deepseek-start",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/agent_runtime/adapters/deepseek.py",
+    "scripts/agent_runtime/routes.py",
+    "scripts/api/lane_health.py",
+    "scripts/api/state_router.py",
+    "scripts/config/model_catalog.yaml",
+    "scripts/fleet/capacity_pick.py",
+    "tests/agent_runtime/adapters/test_deepseek_adapter.py",
+    "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/api/test_lane_health.py",
+    "tests/test_model_catalog.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/2c/37a7c100cb/0/metadata.json",
+      "transcript": "/2c/37a7c100cb/0/full.jsonl",
+      "compact_transcript": "/2c/37a7c100cb/0/transcript.jsonl",
+      "content_hash": "/2c/37a7c100cb/0/content_hash.txt",
+      "prompt": "/2c/37a7c100cb/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 15344,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5888,
+    "output_tokens": 2,
+    "api_call_count": 1
+  }
+}
