@@ -79,7 +79,11 @@ def _default_fake_github_cli(
     """Resolve ordinary test GitHub CLI lookups to a failing local stub."""
     if request.node.get_closest_marker("live_github") is not None:
         return
-    monkeypatch.setenv("PATH", f"{_fake_github_bin}{os.pathsep}{os.environ.get('PATH', '')}")
+    # An empty PATH entry means "the current directory". Drop unset, empty,
+    # and blank inherited entries so the stub is prepended without putting
+    # cwd on PATH.
+    inherited = [entry for entry in os.environ.get("PATH", "").split(os.pathsep) if entry]
+    monkeypatch.setenv("PATH", os.pathsep.join([os.fspath(_fake_github_bin), *inherited]))
 
 
 @pytest.fixture(scope="session")
@@ -1923,6 +1927,9 @@ def _popen_cwd(pos: tuple[object, ...], kwargs: dict[str, object]) -> object:
 
 def _guarded_popen_init(self, args, *pos, **kwargs):
     _guard_live_github_spawn(args, kwargs)
+    if not _worktree_guard_enabled():
+        _ORIGINAL_POPEN_INIT(self, args, *pos, **kwargs)
+        return
     dest: str | None = None
     absent_before = False
     try:
@@ -1953,6 +1960,10 @@ def _guard_live_github_spawn(args: object, kwargs: dict[str, object]) -> None:
     """Reject a process spawn that resolves to the installed GitHub CLI."""
     if _LIVE_GITHUB_ALLOWED or not _gh_guard_enabled() or not _REAL_GH_BINARY:
         return
+    # Limits: a string argv is not inspected, so ``shell=True`` (the command
+    # is a string) is unguarded. A positional ``executable`` is ignored; only
+    # ``kwargs["executable"]`` is read. ``os.system`` and
+    # ``asyncio.create_subprocess_shell`` never reach this hook.
     if isinstance(args, (str, bytes)) or not isinstance(args, (list, tuple)) or not args:
         return
     argv = _decode_argv(args)

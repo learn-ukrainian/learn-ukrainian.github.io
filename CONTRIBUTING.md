@@ -113,6 +113,8 @@ Every non-trivial change needs a GH issue. Before starting: find or create an is
 .venv/bin/pytest --cov=scripts --cov-report=term-missing tests/ -q  # per-file coverage with missing lines
 ```
 
+The suite blocks a spawn of the installed `gh` unless the test is marked `@pytest.mark.live_github` (real GitHub CLI and network; it does not skip the test in CI). `LU_GH_GUARD=0` turns that spawn guard off. `LU_WORKTREE_GUARD=0` turns the real-worktree creation hooks off independently.
+
 ### Lint
 
 ```bash
