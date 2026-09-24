@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 import os
 import shlex
 import signal
@@ -2475,15 +2476,13 @@ def test_quiet_mode_emits_rate_limited_progress_not_per_request_heartbeats(tmp_p
         assert "requests=" in line
         assert "rate=" in line
         assert "eta=" in line
-    liveness = (state_dir / "liveness").read_text(encoding="utf-8").strip()
-    assert liveness
+    assert not (state_dir / "liveness").exists()
     assert "=== ULIF Homonym Fetch Runner ===" in err
     assert "=== ULIF Fetch Stop Summary ===" in err
 
 
-def test_progress_line_is_rate_limited_on_a_fake_clock(tmp_path, capsys):
+def test_progress_line_is_rate_limited_on_a_fake_clock(capsys):
     sim = [0.0]
-    touches: list[str] = []
 
     def clock() -> float:
         return sim[0]
@@ -2492,9 +2491,7 @@ def test_progress_line_is_rate_limited_on_a_fake_clock(tmp_path, capsys):
     gate = OperatorProgress(
         interval=60.0,
         clock=clock,
-        state_dir=tmp_path,
         emit=lambda: emitted.append(sim[0]),
-        touch=lambda stamp: touches.append(stamp),
     )
     for second in range(180):
         sim[0] = float(second)
@@ -2504,42 +2501,19 @@ def test_progress_line_is_rate_limited_on_a_fake_clock(tmp_path, capsys):
     assert "heartbeat:" not in err
     assert "waiting for response" not in err
     assert emitted == [60.0, 120.0]
-    assert len(touches) == 180
-    assert touches[0] == "0.000"
-    assert touches[-1] == "179.000"
 
 
-def test_silent_liveness_file_updates_without_printing(tmp_path, capsys):
-    sim = [10.0]
-    gate = OperatorProgress(
-        interval=60.0,
-        clock=lambda: sim[0],
-        state_dir=tmp_path,
-        emit=lambda: None,
-    )
-    gate("waiting for response")
-    sim[0] = 20.0
-    gate("waiting for response")
-    err = capsys.readouterr().err
-    assert err == ""
-    assert (tmp_path / "liveness").read_text(encoding="utf-8") == "20.000\n"
-
-
-def test_backoff_and_error_messages_print_immediately(tmp_path, capsys):
+def test_backoff_messages_print_immediately(capsys):
     sim = [0.0]
     gate = OperatorProgress(
         interval=60.0,
         clock=lambda: sim[0],
-        state_dir=tmp_path,
         emit=lambda: (_ for _ in ()).throw(AssertionError("progress must wait")),
     )
     due = gate("waiting for back-off: 150s remaining (attempt 1)")
-    due_error = gate("error: transport_error")
     err = capsys.readouterr().err
     assert due == 60.0
-    assert due_error == 60.0
     assert "heartbeat: waiting for back-off: 150s remaining (attempt 1)" in err
-    assert "heartbeat: error: transport_error" in err
     assert "progress:" not in err
 
 
@@ -2549,13 +2523,153 @@ def test_progress_interval_flag_overrides_env(monkeypatch):
     assert resolve_progress_interval(90.0) == 90.0
 
 
+def test_progress_interval_rejects_non_finite(monkeypatch):
+    for bad in (float("nan"), float("inf"), float("-inf")):
+        with pytest.raises(ValueError, match="finite"):
+            resolve_progress_interval(bad)
+    monkeypatch.setenv("ULIF_PROGRESS_INTERVAL_SECONDS", "nan")
+    with pytest.raises(ValueError, match="finite"):
+        resolve_progress_interval(None)
+
+
 def test_periodic_progress_line_includes_pages_requests_rate_and_eta():
     line = format_periodic_progress(
         kind="pages",
         done=1409,
         total=10513,
         requests_made=46508,
-        elapsed_seconds=1000.0,
+        process_requests=20,
+        elapsed_seconds=60.0,
         eta_seconds=308066.0,
     )
-    assert line == "progress: pages=1409/10513 requests=46508 rate=46.508/s eta=308066s"
+    assert line == "progress: pages=1409/10513 requests=46508 rate=0.333/s eta=308066s"
+
+
+def test_resumed_progress_rate_uses_this_process_requests(tmp_path, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.set_requests_made(30000)
+    ledger.close()
+
+    spellings = [f"слово{i}" for i in range(8)]
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+    cur_time = [0.0]
+
+    def fake_clock():
+        cur_time[0] += 5.0
+        return cur_time[0]
+
+    seen: list[dict[str, object]] = []
+    real = format_periodic_progress
+
+    def spy(**kwargs):
+        seen.append(kwargs)
+        return real(**kwargs)
+
+    monkeypatch.setattr(
+        "scripts.lexicon.runner.fetch_ulif_homonyms.format_periodic_progress",
+        spy,
+    )
+
+    code = run_fetch(
+        spellings=spellings,
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        quiet=True,
+        transport=handler,
+        sleep=_noop_sleep,
+        clock=fake_clock,
+        scanner=lambda: False,
+        progress_interval=60.0,
+    )
+    assert code == EXIT_OK
+    assert seen
+    assert any(int(row["process_requests"]) > 0 for row in seen)
+    for row in seen:
+        requests_made = int(row["requests_made"])
+        process_requests = int(row["process_requests"])
+        elapsed = float(row["elapsed_seconds"])
+        assert requests_made == 30000 + process_requests
+        assert elapsed > 0
+        line = real(**row)
+        assert f"requests={requests_made}" in line
+        assert f"rate={process_requests / elapsed:.3f}/s" in line
+        assert f"rate={requests_made / elapsed:.3f}/s" not in line
+
+
+def test_progress_ledger_error_warns_once_per_interval(tmp_path, capsys, monkeypatch):
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+
+    def locked(self):
+        raise sqlite3.OperationalError("database is locked")
+
+    monkeypatch.setattr(SpellingLedger, "walk_counts", locked)
+    sim = [0.0]
+
+    def emit() -> None:
+        ledger.walk_counts()
+
+    gate = OperatorProgress(interval=60.0, clock=lambda: sim[0], emit=emit)
+    gate("waiting for response")
+    for stamp in (60.0, 61.0, 90.0, 120.0, 121.0):
+        sim[0] = stamp
+        gate("waiting for response")
+
+    err = capsys.readouterr().err
+    warnings = [line for line in err.splitlines() if line.startswith("warning: progress line failed:")]
+    assert warnings == [
+        "warning: progress line failed: database is locked",
+        "warning: progress line failed: database is locked",
+    ]
+    ledger.close()
+
+
+def test_progress_ledger_error_warns_once_per_interval_and_continues(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.close()
+
+    orig_counts = SpellingLedger.counts
+
+    def locked_during_progress(self):
+        if any(frame.function == "_emit_fetch_progress" for frame in inspect.stack()):
+            raise sqlite3.OperationalError("database is locked")
+        return orig_counts(self)
+
+    monkeypatch.setattr(SpellingLedger, "counts", locked_during_progress)
+
+    spellings = [f"слово{i}" for i in range(6)]
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+    sim = [0.0]
+
+    def clock() -> float:
+        sim[0] += 30.0
+        return sim[0]
+
+    code = run_fetch(
+        spellings=spellings,
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        quiet=True,
+        transport=handler,
+        sleep=_noop_sleep,
+        clock=clock,
+        scanner=lambda: False,
+        progress_interval=60.0,
+    )
+    assert code == EXIT_OK
+
+    err = capsys.readouterr().err
+    warnings = [line for line in err.splitlines() if line.startswith("warning: progress line failed:")]
+    assert warnings
+    assert all("database is locked" in line for line in warnings)
+    assert "Traceback" not in err
+    opened = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert int(opened.meta("requests_made", "0") or "0") == len(handler.calls)
+    finally:
+        opened.close()

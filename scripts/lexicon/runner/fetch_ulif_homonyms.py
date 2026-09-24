@@ -20,6 +20,7 @@ import contextlib
 import hashlib
 import itertools
 import json
+import math
 import os
 import shlex
 import signal
@@ -53,7 +54,6 @@ MAX_UNIT_RESEEDS = 3
 CONSECUTIVE_RETRY_STOP = 3
 REGISTER_PAGE_SIZE = 25
 LOCK_NAME = "runner.lock"
-LIVENESS_NAME = "liveness"
 PROGRESS_INTERVAL_ENV = "ULIF_PROGRESS_INTERVAL_SECONDS"
 DEFAULT_PROGRESS_INTERVAL_SECONDS = 60.0
 
@@ -1584,9 +1584,6 @@ def _requests_transport(user_agent: str) -> Transport:
     return send
 
 
-HEARTBEAT_INTERVAL_SECONDS = DEFAULT_PROGRESS_INTERVAL_SECONDS
-
-
 def resolve_progress_interval(explicit: float | None = None) -> float:
     """Flag wins. Otherwise ``ULIF_PROGRESS_INTERVAL_SECONDS``, else 60s."""
     if explicit is None:
@@ -1596,20 +1593,18 @@ def resolve_progress_interval(explicit: float | None = None) -> float:
         try:
             explicit = float(raw)
         except ValueError as exc:
-            raise ValueError(f"{PROGRESS_INTERVAL_ENV} must be a positive number, got {raw!r}") from exc
-    if explicit <= 0:
-        raise ValueError(f"progress interval must be > 0, got {explicit}")
+            raise ValueError(f"{PROGRESS_INTERVAL_ENV} must be a positive finite number, got {raw!r}") from exc
+    if not math.isfinite(explicit) or explicit <= 0:
+        raise ValueError(f"progress interval must be a finite number > 0, got {explicit}")
     return explicit
 
 
 def _immediate_operator_message(what: str) -> bool:
-    """Back-off and error text bypass the progress rate limit."""
-    return what.startswith("waiting for back-off") or what.startswith("error") or what.startswith("stopping")
+    """Back-off text bypasses the progress rate limit.
 
-
-def _touch_liveness(state_dir: Path, stamp: str) -> None:
-    path = state_dir / LIVENESS_NAME
-    path.write_text(f"{stamp}\n", encoding="utf-8")
+    ``PoliteClient`` only sends ``waiting for back-off`` and ``waiting for response``.
+    """
+    return what.startswith("waiting for back-off")
 
 
 def format_periodic_progress(
@@ -1618,10 +1613,12 @@ def format_periodic_progress(
     done: int,
     total: int,
     requests_made: int,
+    process_requests: int,
     elapsed_seconds: float,
     eta_seconds: float | None,
 ) -> str:
-    rate = (requests_made / elapsed_seconds) if elapsed_seconds > 0 else 0.0
+    """``requests=`` is the cumulative ledger count. ``rate=`` is this process only."""
+    rate = (process_requests / elapsed_seconds) if elapsed_seconds > 0 else 0.0
     eta = "unknown" if eta_seconds is None else f"{eta_seconds:.0f}s"
     return f"progress: {kind}={done}/{total} requests={requests_made} rate={rate:.3f}/s eta={eta}"
 
@@ -1635,8 +1632,9 @@ def _eta_seconds(remaining: int, timed_units: int, wall_seconds: float) -> float
 
 
 class OperatorProgress:
-    """Silent per-request liveness, with at most one progress line per interval.
+    """At most one progress line per interval. A failed line never aborts the walk.
 
+    Liveness is the ledger's per-request ``requests_made`` update and ``updated_at``.
     The callback return value is still the delay until the next wake, which
     ``PoliteClient._sleep_with_heartbeat`` uses to slice long waits.
     """
@@ -1646,30 +1644,30 @@ class OperatorProgress:
         *,
         interval: float,
         clock: ClockFn,
-        state_dir: Path,
         emit: Callable[[], None],
-        touch: Callable[[str], None] | None = None,
     ) -> None:
         self.interval = interval
         self.clock = clock
-        self.state_dir = state_dir
         self.emit = emit
-        self.touch = touch or (lambda stamp: _touch_liveness(state_dir, stamp))
         self._last_emit = clock()
+        self._warned_at = -(interval)
 
     def note_progress(self) -> None:
         self._last_emit = self.clock()
 
     def __call__(self, what: str) -> float:
         now = self.clock()
-        with contextlib.suppress(Exception):
-            self.touch(f"{now:.3f}")
         if _immediate_operator_message(what):
             print(f"heartbeat: {what}", file=sys.stderr, flush=True)
             return self.interval
         due_in = self.interval - (now - self._last_emit)
         if due_in <= 0.0:
-            self.emit()
+            try:
+                self.emit()
+            except Exception as exc:
+                if now - self._warned_at >= self.interval:
+                    print(f"warning: progress line failed: {exc}", file=sys.stderr, flush=True)
+                    self._warned_at = now
             self._last_emit = now
             return self.interval
         return due_in
@@ -2094,7 +2092,8 @@ def run_fetch(
             return
         counts = ledger.counts()
         finished = counts["stored"] + counts["absent_from_ulif"] + counts["retry_scheduled"] + counts["error"]
-        requests_made = base_requests + (client.requests_made if client is not None else 0)
+        process_requests = client.requests_made if client is not None else 0
+        requests_made = base_requests + process_requests
         timed = int(ledger.meta("cumulative_timed_units", "0") or "0")
         wall = float(ledger.meta("cumulative_wall_seconds", "0.0") or "0.0")
         remaining = counts["pending"] + counts["retry_scheduled"] + counts["error"]
@@ -2103,6 +2102,7 @@ def run_fetch(
             done=finished,
             total=counts["spellings_total"],
             requests_made=requests_made,
+            process_requests=process_requests,
             elapsed_seconds=clock() - start_time,
             eta_seconds=_eta_seconds(remaining, timed, wall),
         )
@@ -2111,7 +2111,6 @@ def run_fetch(
     on_heartbeat = OperatorProgress(
         interval=progress_every,
         clock=clock,
-        state_dir=state_dir,
         emit=_emit_fetch_progress,
     )
 
@@ -3164,7 +3163,8 @@ def run_walk(
         if ledger is None:
             return
         counts = ledger.walk_counts()
-        requests_made = base_requests + (client.requests_made if client is not None else 0)
+        process_requests = client.requests_made if client is not None else 0
+        requests_made = base_requests + process_requests
         timed = int(ledger.meta("cumulative_timed_pages", "0") or "0")
         wall = float(ledger.meta("cumulative_page_wall_seconds", "0.0") or "0.0")
         remaining = max(0, counts["pages_total"] - counts["pages_done"])
@@ -3173,6 +3173,7 @@ def run_walk(
             done=counts["pages_done"],
             total=counts["pages_total"],
             requests_made=requests_made,
+            process_requests=process_requests,
             elapsed_seconds=clock() - start_time,
             eta_seconds=_eta_seconds(remaining, timed, wall),
         )
@@ -3181,7 +3182,6 @@ def run_walk(
     on_heartbeat = OperatorProgress(
         interval=progress_every,
         clock=clock,
-        state_dir=state_dir,
         emit=_emit_walk_progress,
     )
 
