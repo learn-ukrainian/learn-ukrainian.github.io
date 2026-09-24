@@ -33,6 +33,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.task_scratch import recover_orphans as recover_task_scratch
 from scripts.hygiene import fetch_refspecs, home_session_retention_check
 from scripts.orchestration import reap_worktrees
 from scripts.orchestration.tmp_leak_sweep import sweep_tmp_leaks
@@ -1108,6 +1109,8 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 "bytes_freed": leak_res.get("bytes_freed", 0),
                 "candidates": leak_res.get("candidates", 0),
                 "skipped_live": leak_res.get("skipped_live", 0),
+                "inventory_only": leak_res.get("inventory_only", 0),
+                "inventory_bytes": leak_res.get("inventory_bytes", 0),
                 "errors": leak_res.get("errors", 0),
                 "disk_pressure": leak_res.get("disk_pressure"),
             }
@@ -1115,6 +1118,23 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 result["errors"].append(f"tmp leak sweep encountered {leak_res['errors']} error(s)")
         except Exception as exc:
             result["errors"].append(f"tmp leak sweep failed: {exc}")
+        # #8738: task-owned scratch leases whose owner and child group are
+        # provably dead. Counts only — never paths — reach the receipt.
+        try:
+            scratch_res = recover_task_scratch(apply=apply)
+            result["task_scratch_recovery"] = {
+                "candidates": scratch_res.get("candidates", 0),
+                "reaped": scratch_res.get("reaped", 0),
+                "bytes_freed": scratch_res.get("bytes_freed", 0),
+                "preserved": scratch_res.get("preserved", 0),
+                "preserved_by_reason": dict(scratch_res.get("preserved_by_reason") or {}),
+                "errors": scratch_res.get("errors", 0),
+                "disk_pressure": scratch_res.get("disk_pressure"),
+            }
+            if scratch_res.get("errors"):
+                result["errors"].append(f"task scratch recovery encountered {scratch_res['errors']} error(s)")
+        except Exception as exc:
+            result["errors"].append(f"task scratch recovery failed: {exc}")
 
         result["needs_finalize_worktrees"] = reap_worktrees.find_needs_finalize_worktrees(repo_root)
         counts = classify_repo_results(result["results"])
@@ -1175,6 +1195,15 @@ def build_receipt(
         for repository in repositories
         if repository.get("review_temp_sweep")
     )
+    task_scratch_reaped = sum(
+        (repository.get("task_scratch_recovery") or {}).get("reaped", 0) for repository in repositories
+    )
+    task_scratch_bytes_freed = sum(
+        (repository.get("task_scratch_recovery") or {}).get("bytes_freed", 0) for repository in repositories
+    )
+    task_scratch_preserved = sum(
+        (repository.get("task_scratch_recovery") or {}).get("preserved", 0) for repository in repositories
+    )
     needs_finalize_worktrees = [
         item for repository in repositories for item in repository.get("needs_finalize_worktrees", [])
     ]
@@ -1198,6 +1227,9 @@ def build_receipt(
             "errors": errors,
             "review_temp_reaped": review_temp_reaped,
             "review_temp_bytes_freed": review_temp_bytes_freed,
+            "task_scratch_reaped": task_scratch_reaped,
+            "task_scratch_bytes_freed": task_scratch_bytes_freed,
+            "task_scratch_preserved": task_scratch_preserved,
             "needs_finalize_worktrees": needs_finalize_worktrees,
         },
         "repositories": repositories,
@@ -1309,6 +1341,9 @@ def build_public_summary(
             "errors": summary.get("errors", 0),
             "review_temp_reaped": summary.get("review_temp_reaped", 0),
             "review_temp_bytes_freed": summary.get("review_temp_bytes_freed", 0),
+            "task_scratch_reaped": summary.get("task_scratch_reaped", 0),
+            "task_scratch_bytes_freed": summary.get("task_scratch_bytes_freed", 0),
+            "task_scratch_preserved": summary.get("task_scratch_preserved", 0),
         },
         "repositories": repos_summary,
     }
