@@ -1,0 +1,166 @@
+{
+  "info": {
+    "id": "ses_f2d04da3bffeoz9ejMhNVoMsCl",
+    "slug": "jolly-garden",
+    "projectID": "c4cb20568b49f5c34ee7abdc0cd296fbd941fbd2",
+    "directory": "/home/ops/learn-ukrainian/.worktrees/dispatch/kimi/impl-8514-deepseek-start",
+    "path": "",
+    "title": "Reply OK request",
+    "agent": "build",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "high"
+    },
+    "version": "1.18.32",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0.002949042,
+    "tokens": {
+      "input": 19567,
+      "output": 2,
+      "reasoning": 13,
+      "cache": {
+        "read": 1664,
+        "write": 0
+      }
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1790246069700,
+      "updated": 1790246088965
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1790246069817
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "deepseek",
+          "modelID": "deepseek-flash",
+          "variant": "high"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_0d2fb2639001xonX7q0T0ggwcv",
+        "sessionID": "ses_f2d04da3bffeoz9ejMhNVoMsCl"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"reply OK\"",
+          "id": "prt_0d2fb2647001pgu6jbcBQw7cUL",
+          "sessionID": "ses_f2d04da3bffeoz9ejMhNVoMsCl",
+          "messageID": "msg_0d2fb2639001xonX7q0T0ggwcv"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d2fb2639001xonX7q0T0ggwcv",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/kimi/impl-8514-deepseek-start",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/kimi/impl-8514-deepseek-start"
+        },
+        "cost": 0.002949042,
+        "tokens": {
+          "total": 21246,
+          "input": 19567,
+          "output": 2,
+          "reasoning": 13,
+          "cache": {
+            "write": 0,
+            "read": 1664
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790246072725,
+          "completed": 1790246091550
+        },
+        "finish": "stop",
+        "id": "msg_0d2fb3195001Se8lsWbP2lJhrn",
+        "sessionID": "ses_f2d04da3bffeoz9ejMhNVoMsCl"
+      },
+      "parts": [
+        {
+          "snapshot": "65858c7a49cba0327d98bbf58c864a2bba466686",
+          "type": "step-start",
+          "id": "prt_0d2fb778d0019W7DseMdIUij50",
+          "sessionID": "ses_f2d04da3bffeoz9ejMhNVoMsCl",
+          "messageID": "msg_0d2fb3195001Se8lsWbP2lJhrn"
+        },
+        {
+          "type": "reasoning",
+          "text": "The user says \"reply OK\". Simple. Just reply OK.",
+          "time": {
+            "start": 1790246091143,
+            "end": 1790246091282
+          },
+          "id": "prt_0d2fb7987001W7AtRj4MWNWvsj",
+          "sessionID": "ses_f2d04da3bffeoz9ejMhNVoMsCl",
+          "messageID": "msg_0d2fb3195001Se8lsWbP2lJhrn"
+        },
+        {
+          "type": "text",
+          "text": "OK",
+          "time": {
+            "start": 1790246091286,
+            "end": 1790246091291
+          },
+          "id": "prt_0d2fb7a16001YsfTv7MoDK34TZ",
+          "sessionID": "ses_f2d04da3bffeoz9ejMhNVoMsCl",
+          "messageID": "msg_0d2fb3195001Se8lsWbP2lJhrn"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "65858c7a49cba0327d98bbf58c864a2bba466686",
+          "type": "step-finish",
+          "tokens": {
+            "total": 21246,
+            "input": 19567,
+            "output": 2,
+            "reasoning": 13,
+            "cache": {
+              "write": 0,
+              "read": 1664
+            }
+          },
+          "cost": 0.002949042,
+          "id": "prt_0d2fb7aab001nno1QTLLyEE8vO",
+          "sessionID": "ses_f2d04da3bffeoz9ejMhNVoMsCl",
+          "messageID": "msg_0d2fb3195001Se8lsWbP2lJhrn"
+        }
+      ]
+    }
+  ]
+}
