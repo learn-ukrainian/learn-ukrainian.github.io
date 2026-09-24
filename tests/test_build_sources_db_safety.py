@@ -617,3 +617,68 @@ class TestCliParse:
         assert exc_info.value.code == 0
         captured = capsys.readouterr()
         assert "usage:" in captured.out
+
+
+class TestJournalModeAfterRebuild:
+    """#8527: the live path is WAL again after the atomic swap, so evidence readers that pin a
+    snapshot never block the ULIF walk's commits."""
+
+    def _rebuild(self, tmp_path: Path) -> Path:
+        p = tmp_path / "populated.db"
+        _make_populated_db(p)
+        with patch.object(bs, "_ingest_jsonl", return_value=0):
+            empty_gd = tmp_path / "empty_gd"
+            empty_gd.mkdir()
+            (empty_gd / "textbook_chunks").mkdir()
+            (empty_gd / "literary_texts").mkdir()
+            empty_ext = tmp_path / "empty_ext"
+            empty_ext.mkdir()
+            with patch.object(bs, "GDRIVE_DATA", empty_gd), patch.object(bs, "EXTERNAL_DIR", empty_ext):
+                bs.build(db_path=p, force=True)
+        return p
+
+    def test_rebuild_leaves_wal_and_a_pinned_reader_never_blocks_a_writer(self, tmp_path, capsys):
+        from scripts.curriculum.evidence import sources
+
+        p = self._rebuild(tmp_path)
+        assert "journal_mode=wal declared" in capsys.readouterr().out
+
+        # PRAGMA on a fresh connection and the file header both say WAL.
+        conn = sqlite3.connect(str(p))
+        try:
+            assert conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+        finally:
+            conn.close()
+        assert p.read_bytes()[18:20] == b"\x02\x02"
+        assert sources.journal_mode_from_header(p) == "wal"
+
+        # A pinned evidence snapshot on the rebuilt file …
+        with sources.Sources(sources_db=p) as api:
+            assert api.get_textbook_file_chunks("after-rebuild") == []
+            assert api.journal_mode == "wal"
+            # … while a second connection commits a write, promptly and without "database is locked".
+            writer = sqlite3.connect(str(p), timeout=2.0)
+            try:
+                with writer:
+                    writer.execute(
+                        "INSERT INTO textbooks (chunk_id, title, text, source_file) VALUES (?, ?, ?, ?)",
+                        ("c-new", "t", "text written past a pinned reader", "after-rebuild"),
+                    )
+            finally:
+                writer.close()
+            assert api.get_textbook_file_chunks("after-rebuild") == []  # the snapshot is unchanged
+        fresh = sqlite3.connect(str(p))
+        try:
+            assert fresh.execute("SELECT COUNT(*) FROM textbooks WHERE source_file='after-rebuild'").fetchone()[0] == 1
+        finally:
+            fresh.close()
+
+    def test_declare_wal_fails_loudly_when_sqlite_declines(self, tmp_path):
+        p = tmp_path / "plain.db"
+        _make_populated_db(p)
+        fake = type("FakeConn", (), {})()
+        fake.execute = lambda sql: type("Cur", (), {"fetchone": staticmethod(lambda: ("delete",))})()
+        fake.close = lambda: None
+        with patch.object(bs.sqlite3, "connect", return_value=fake):
+            with pytest.raises(RuntimeError, match="expected 'wal'"):
+                bs.declare_wal(p)

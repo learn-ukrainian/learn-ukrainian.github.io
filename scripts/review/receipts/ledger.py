@@ -8,9 +8,14 @@ jsonl path; the review id is the parent directory name and must equal the
 attempt id's sibling stem.
 
 Writes replace the whole file atomically and only by appending one JSON
-line. File mode is 0o600. Snapshot hashes come from
-``Sources._fingerprint`` (sources.db), ``Sources._vesum_identity`` (VESUM
-build metadata), and ``stress.source_info`` (the trie digest).
+line. File mode is 0o600. Snapshot identities come from
+``Sources._sources_db_meta_identity`` (sources.db file metadata: size, mtime,
+journal mode, WAL size and mtime; scheme ``file-meta-v1``, never a body hash,
+because hashing the multi-gigabyte file per process raced the ULIF walk,
+#8527), ``Sources._vesum_identity`` (VESUM build metadata), and
+``stress.source_info`` (the trie digest). The content evidence of a
+sources.db read is the receipt's full, untruncated stored result, not the
+snapshot entry.
 """
 
 from __future__ import annotations
@@ -253,7 +258,7 @@ def collect_snapshots(*, sources: Any = None, trie_digest: str | None = None) ->
         return json.loads(dumps(_DEFAULT_SNAPSHOTS))
     if sources is None:
         sources = _default_sources()
-    db_digest, db_meta = sources._fingerprint(sources.sources_db)
+    db_digest, db_meta = sources._sources_db_meta_identity()
     vesum_digest, vesum_meta = sources._vesum_identity()
     if trie_digest is None:
         from scripts.verification.stress import source_info
