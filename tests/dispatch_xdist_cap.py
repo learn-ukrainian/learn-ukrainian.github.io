@@ -16,6 +16,7 @@ from pathlib import Path
 import pytest
 
 DISPATCH_TASK_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
+LOCK_ENV = "LU_PYTEST_FULL_SUITE_LOCK"
 MAX_PROCESSES = 2
 LOCK_DIR = Path("/var/tmp/lu/learn-ukrainian")
 LOCK_PATH = LOCK_DIR / "pytest-full-suite.lock"
@@ -54,24 +55,54 @@ def is_tests_root(raw: str, *, invocation_dir: Path, rootpath: Path) -> bool:
     return resolved == tests_root
 
 
+def path_covers_full_suite(raw: str, *, invocation_dir: Path, rootpath: Path) -> bool:
+    """True when ``raw`` is the repo root, the tests root, or an ancestor of the tests root.
+
+    ``.``, ``./``, ``tests``, ``tests/``, and absolute forms all resolve before the
+    comparison. ``--rootdir`` is ``rootpath``. A node id is never the whole suite.
+    """
+    if "::" in raw:
+        return False
+    candidate = Path(raw)
+    if not candidate.is_absolute():
+        candidate = invocation_dir / candidate
+    try:
+        resolved = _resolved(candidate)
+        root = _resolved(rootpath)
+        tests_root = _resolved(rootpath / "tests")
+    except OSError:
+        return False
+    if resolved in (root, tests_root):
+        return True
+    try:
+        tests_root.relative_to(resolved)
+    except ValueError:
+        return False
+    return True
+
+
 def is_full_suite(config: pytest.Config) -> bool:
-    """No explicit test paths, or an explicit ``tests/`` root, is a full-suite run."""
+    """No path args, or any path that covers the tests tree, is a full-suite run.
+
+    ``-k`` and ``-m`` are not path args, so a filtered full tree stays locked.
+    """
     invocation_dir = Path(config.invocation_params.dir)
     rootpath = Path(config.rootpath)
-    if config.args_source != config.ArgsSource.ARGS:
-        if config.args_source == config.ArgsSource.TESTPATHS:
-            return True
-        try:
-            invocation = _resolved(invocation_dir)
-            root = _resolved(rootpath)
-            tests_root = _resolved(rootpath / "tests")
-        except OSError:
-            return False
-        return invocation in (root, tests_root)
+    if config.args_source == config.ArgsSource.TESTPATHS:
+        return True
     paths = list(config.getoption("file_or_dir") or [])
     if not paths:
-        return True
-    return any(is_tests_root(path, invocation_dir=invocation_dir, rootpath=rootpath) for path in paths)
+        if config.args_source == config.ArgsSource.ARGS:
+            return True
+        paths = [str(invocation_dir)]
+    return any(path_covers_full_suite(path, invocation_dir=invocation_dir, rootpath=rootpath) for path in paths)
+
+
+def configured_lock_path(environ: Mapping[str, str] | None = None) -> Path:
+    """Host lock, unless ``LU_PYTEST_FULL_SUITE_LOCK`` names another file."""
+    env = os.environ if environ is None else environ
+    override = env.get(LOCK_ENV, "").strip()
+    return Path(override) if override else LOCK_PATH
 
 
 def acquire_full_suite_lock(lock_path: Path | None = None) -> None:
@@ -79,7 +110,7 @@ def acquire_full_suite_lock(lock_path: Path | None = None) -> None:
     global _lock_fd
     if _lock_fd is not None:
         return
-    path = lock_path if lock_path is not None else LOCK_PATH
+    path = configured_lock_path() if lock_path is None else lock_path
     path.parent.mkdir(parents=True, exist_ok=True)
     fd = os.open(path, os.O_CREAT | os.O_RDWR, 0o644)
     try:
