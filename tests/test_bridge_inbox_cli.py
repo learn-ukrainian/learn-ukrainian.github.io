@@ -852,14 +852,19 @@ def test_explicit_from_mismatch_with_handoff_agent_is_warning_tagged(monkeypatch
     assert "[SENDER_IDENTITY_MISMATCH]" in capsys.readouterr().err
 
 
-def test_detect_caller_identity_unknown_handoff_falls_through(monkeypatch):
-    # Clear GROK_AGENT etc. first: when this suite runs under the native grok
-    # CLI (export GROK_AGENT=1), the sentinel would otherwise win over the soft
-    # CLAUDE_PROJECT_DIR heuristic and false-fail the fall-through assertion.
+def test_detect_caller_identity_uses_valid_handoff_even_if_unregistered(monkeypatch):
     _clear_identity_env(monkeypatch)
-    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "not-a-real-agent")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude-curriculum-upgrade")
     monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
 
+    assert _cli._detect_caller_identity_from_env() == "claude-curriculum-upgrade"
+    assert _cli._resolve_from_llm(SimpleNamespace(from_llm=None)) == "claude-curriculum-upgrade"
+
+
+def test_detect_caller_identity_rejects_invalid_handoff(monkeypatch):
+    _clear_identity_env(monkeypatch)
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "invalid sender with spaces")
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
     assert _cli._detect_caller_identity_from_env() == "claude"
 
 

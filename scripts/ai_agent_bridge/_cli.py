@@ -8,7 +8,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from agent_runtime import usage as runtime_usage
+from agent_runtime.attribution import resolve_invocation_attribution
 from agent_runtime.errors import AgentTimeoutError
+from agent_runtime.runner import InterAgentTransportError
 
 from ._ask_contract import EFFORT_CHOICES
 from ._ask_lifecycle import _process_target, maybe_print_timeout_notice, print_asks, process_background_ask
@@ -74,9 +76,12 @@ def _detect_caller_identity_from_env() -> str | None:
         # pre-#7597 launchers, e.g. grok-open-model-data) resolve to the
         # provider so the explicit handoff marker still beats the GROK_AGENT /
         # CLAUDE_PROJECT_DIR heuristics below.
-        normalized = _channels.resolve_recipient_alias(handoff_agent.strip().lower())
-        if normalized in _channels.get_valid_agents():
-            return normalized
+        resolved = resolve_invocation_attribution(env={"SESSION_HANDOFF_AGENT": handoff_agent})
+        if resolved.source == "session_env":
+            normalized = _channels.resolve_recipient_alias(resolved.initiator)
+            if normalized in _channels.get_valid_agents():
+                return normalized
+            return resolved.initiator
     claude_name = os.environ.get("CLAUDE_AGENT_NAME")
     if claude_name:
         return claude_name.strip().lower()
@@ -1564,7 +1569,7 @@ def _handle_acp_compat(args, target: str) -> None:
             raise SystemExit(
                 getattr(result, "stderr_excerpt", None) or "ACP ask failed without a diagnostic"
             )
-    except ValueError as exc:
+    except (ValueError, InterAgentTransportError) as exc:
         raise SystemExit(str(exc)) from exc
     except AgentTimeoutError as exc:
         raise SystemExit(
