@@ -114,7 +114,9 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # is read in one order — file position — and every piece of work it started
 # (a background command, a timer, a tool step still RUNNING, a subagent) needs
 # its own finish event positioned before the final reply, which must be the
-# last model event (see ``_slice_completion_gap``). What the reply SAYS never
+# last model event (see ``_slice_completion_gap``). A task that ends any other
+# way — canceled, and by the same rule timed out or failed — never finished its
+# command, so the run fails as ``AGY_BACKGROUND_TASK_CANCELED`` (#8502 r10). What the reply SAYS never
 # decides the run (#8502 r9): pending-work wording in a structurally complete
 # run is recorded as a warning, not a failure. Ambiguous evidence is unconfirmed
 # (#8502 r7): a slice line that does not parse fails the run, it is never
@@ -129,12 +131,14 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # ``AGY_INTERIM_LANGUAGE_WARNING`` instead — a diagnostic, never a failure.
 AGY_BACKGROUND_TASK_ABANDONED = "agy_background_task_abandoned"
 AGY_BACKGROUND_TASK_UNCONFIRMED = "agy_background_task_unconfirmed"
+AGY_BACKGROUND_TASK_CANCELED = "agy_background_task_canceled"
 AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
 AGY_TRANSCRIPT_UNBOUND = "agy_transcript_unbound"
 AGY_TRANSCRIPT_UNREADABLE = "agy_transcript_unreadable"
 AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_BACKGROUND_TASK_ABANDONED,
     AGY_BACKGROUND_TASK_UNCONFIRMED,
+    AGY_BACKGROUND_TASK_CANCELED,
     AGY_PRINT_TIMEOUT_PARTIAL,
     AGY_TRANSCRIPT_UNBOUND,
     AGY_TRANSCRIPT_UNREADABLE,
@@ -153,8 +157,12 @@ _IDLE_BACKGROUND_WAIT_RE = re.compile(r"root agent idle; waiting up to \S+ for (
 # background-task start line (748) or is an interim "Step is still running"
 # event followed by a start for the same step (2). Every per-task system
 # message came from a task whose start is in the same conversation. A command
-# task ends with a ``Task id "<id>" finished`` or ``was canceled`` message from
-# ``sender=<id>``; a ``schedule`` timer (``Task Description: Timer:``) ends
+# task ends with a ``Task id "<id>" <outcome> with result:`` message from
+# ``sender=<id>``; the only outcomes on the host are ``finished`` (2,375, each
+# with the command's exit code) and ``was canceled`` (338, "Tool execution was
+# canceled"). Only ``finished`` is a finish: any other outcome — canceled, or a
+# timeout or error agy may report the same way — ends the task without its
+# command completing (#8502 r10). A ``schedule`` timer (``Task Description: Timer:``) ends
 # when it fires, as a message from its sender carrying its prompt. A subagent
 # (``invoke_subagent``) has no structured finish: its messages to the parent
 # are free text, so a slice that invokes one is never confirmed.
@@ -164,7 +172,8 @@ _BACKGROUND_STARTED_RE = re.compile(r"Tool is running as a background task with 
 _BACKGROUND_START_LINE_RE = re.compile(r"^Tool is running as a background task with task id: (?P<id>\S+)", re.MULTILINE)
 _TIMER_TASK_RE = re.compile(r"^Task Description: Timer:", re.MULTILINE)
 _TASK_MESSAGE_RE = re.compile(r"\bsender=(?P<sender>\S+) priority=\S+ content=(?P<body>[^\n]*)")
-_TASK_ENDED_RE = re.compile(r'^Task id "(?P<id>[^"]+)" (?:finished|was canceled)\b')
+_TASK_ENDED_RE = re.compile(r'^Task id "(?P<id>[^"]+)" (?P<outcome>[^\n]*?) with result:')
+_TASK_FINISHED_OUTCOME = "finished"
 _SUBAGENT_TOOL = "invoke_subagent"
 _MODEL_EVENT_TYPES = frozenset({"PLANNER_RESPONSE", "GENERIC", "MCP_TOOL"})
 # DIAGNOSTIC ONLY, NEVER A GATE (#8502 r9). Natural language is unbounded, so
@@ -691,7 +700,10 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     PLANNER_RESPONSE with text and no tool calls: the final reply. Everything
     the run started before that reply must be closed by its own finish event,
     also positioned before it (``_open_work``); a finish written after the
-    reply means the reply was written while the work still ran. This is the
+    reply means the reply was written while the work still ran. A task that
+    ended without finishing (canceled, timed out, failed) never completed its
+    command, whatever the reply says next: ``AGY_BACKGROUND_TASK_CANCELED``
+    (#8502 r10), a reason that never auto-finalizes the run. This is the
     whole gate: what the reply says is never consulted (#8502 r9). stderr
     cannot stand in for the transcript: agy's "root agent idle; waiting up to
     … for N background task(s)" line is absent on some paths, so it can only
@@ -708,7 +720,9 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     final_reply = work[model_events[-1]]
     if final_reply.get("tool_calls") or not str(final_reply.get("content") or "").strip():
         return AGY_BACKGROUND_TASK_UNCONFIRMED
-    started, _finished, still_open = _open_work(work[: model_events[-1]])
+    started, _finished, unfinished, still_open = _open_work(work[: model_events[-1]])
+    if unfinished:
+        return AGY_BACKGROUND_TASK_CANCELED
     if still_open:
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     idle_wait_claimed = any(int(match.group("count")) > 0 for match in _IDLE_BACKGROUND_WAIT_RE.finditer(stderr_text))
@@ -721,20 +735,23 @@ def _is_model_event(event: Mapping[str, Any]) -> bool:
     return event.get("type") in _MODEL_EVENT_TYPES or event.get("source") == "MODEL"
 
 
-def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[str]]:
-    """Walk ``events`` in file order; return (tasks started, tasks ended, work still open).
+def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[str], set[str]]:
+    """Walk ``events`` in file order; return (tasks started, finished, ended unfinished, work still open).
 
     Work opens with a background-task start (a command, or a ``schedule``
     timer), a RUNNING tool result that names no task (agy's interim "Step is
     still running"), or an ``invoke_subagent`` call. It closes only with its
-    own finish event: a command with a ``Task id "<id>" finished`` or ``was
-    canceled`` message from ``sender=<id>``; a timer with any message from its
+    own end event: a command or timer with a ``Task id "<id>" <outcome> with
+    result:`` message from ``sender=<id>`` — a finish when the outcome is
+    ``finished``, otherwise (``was canceled``, a timeout, an error) an end
+    without finishing; a timer also finishes with any other message from its
     sender (it fires once); an interim step with a later event of the same
     tool step. A subagent never closes — agy writes no structured subagent
     finish — and neither does an interim step that names no step.
     """
     started: set[str] = set()
-    ended: set[str] = set()
+    finished: set[str] = set()
+    unfinished: set[str] = set()
     open_work: dict[str, str] = {}
     for position, event in enumerate(events):
         content = str(event.get("content") or "")
@@ -743,9 +760,11 @@ def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[st
                 sender = message.group("sender")
                 kind = open_work.get(sender)
                 ended_match = _TASK_ENDED_RE.match(message.group("body"))
-                if kind == "timer" or (kind == "command" and ended_match and ended_match.group("id") == sender):
+                own_end = ended_match is not None and ended_match.group("id") == sender
+                if kind == "timer" or (kind == "command" and own_end):
                     del open_work[sender]
-                    ended.add(sender)
+                    finishes = not own_end or ended_match.group("outcome") == _TASK_FINISHED_OUTCOME
+                    (finished if finishes else unfinished).add(sender)
             continue
         raw_calls = event.get("tool_calls")
         if isinstance(raw_calls, list) and any(
@@ -763,7 +782,7 @@ def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[st
             open_work[task_id] = "timer" if _TIMER_TASK_RE.search(content) else "command"
         if running and not task_ids:
             open_work[f"step:{step}" if step is not None else f"step@{position}"] = "step"
-    return started, ended, set(open_work)
+    return started, finished, unfinished, set(open_work)
 
 
 def _interim_language(events: list[dict[str, Any]]) -> str | None:
@@ -781,7 +800,7 @@ def _interim_language(events: list[dict[str, Any]]) -> str | None:
     work = events[prompt + 1 :]
     reply_position = max(position for position, event in enumerate(work) if _is_model_event(event))
     content = str(work[reply_position].get("content") or "")
-    started, finished, _still_open = _open_work(work[:reply_position])
+    started, finished, _unfinished, _still_open = _open_work(work[:reply_position])
     if pending := _PENDING_WORK_RE.search(content):
         return f"pending-work wording: {pending.group(0).strip()!r}"
     if not started and (background := _BACKGROUND_LANGUAGE_RE.search(content)):

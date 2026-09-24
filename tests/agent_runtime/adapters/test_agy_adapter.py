@@ -1572,12 +1572,52 @@ def test_a_finish_closes_only_the_task_that_sent_it(tmp_path: Path) -> None:
     _assert_unconfirmed(_judge(tmp_path, lines))
 
 
-def test_a_canceled_command_task_is_closed(tmp_path: Path) -> None:
+def _assert_canceled(result: object) -> None:
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_CANCELED
+    assert agy_module.AGY_BACKGROUND_TASK_CANCELED in agy_module.AGY_INCOMPLETE_RUN_REASONS
+
+
+# Reviewer probe (#8502 r10): "cancel, then a final reply" was accepted because
+# a cancellation closed the task like a finish. Only ``finished`` finishes; the
+# host's 338 cancellations read "was canceled with result:\nTool execution was
+# canceled", and a timeout or error reported the same way is no finish either.
+@pytest.mark.parametrize(
+    "outcome",
+    ["was canceled", "timed out", "failed", "errored"],
+    ids=["canceled", "timeout", "failed", "error"],
+)
+def test_a_command_task_that_ends_without_finishing_is_rejected(tmp_path: Path, outcome: str) -> None:
+    ended = _task_message(_TASK_2, f'Task id "{_TASK_2}" {outcome} with result:\nTool execution was canceled')
+
+    _assert_canceled(_judge(tmp_path, [_prompt(), _start(_TASK_2), ended, _reply("PROBE_DONE_7731")]))
+
+
+def test_a_canceled_task_is_rejected_even_when_a_rerun_finishes(tmp_path: Path) -> None:
+    # The terminal event of task-2 is its cancellation; task-3 finishing is
+    # another command's finish and says nothing about task-2's.
     canceled = _task_message(_TASK_2, f'Task id "{_TASK_2}" was canceled with result:')
+    lines = [_prompt(), _start(_TASK_2), canceled, _start(_TASK_3), _finish(_TASK_3), _reply("PROBE_DONE_7731")]
 
-    result = _judge(tmp_path, [_prompt(), _start(_TASK_2), canceled, _reply("PROBE_DONE_7731")])
+    _assert_canceled(_judge(tmp_path, lines))
 
-    assert result.ok is True
+
+def test_a_canceled_timer_task_is_rejected(tmp_path: Path) -> None:
+    timer = _start(_TASK_3, description="Timer: 30s, Prompt: Check task-2")
+    canceled = _task_message(_TASK_3, f'Task id "{_TASK_3}" was canceled with result:')
+    lines = [_prompt(), _start(_TASK_2), timer, _finish(_TASK_2), canceled, _reply("PROBE_DONE_7731")]
+
+    _assert_canceled(_judge(tmp_path, lines))
+
+
+def test_a_cancellation_quoted_by_another_task_is_not_its_end(tmp_path: Path) -> None:
+    # task-3's message quoting task-2's cancellation neither ends task-2 nor
+    # counts as a cancellation: task-2 stays open, so the run is unconfirmed.
+    quoted = _task_message(_TASK_3, f'Task id "{_TASK_2}" was canceled with result:')
+    lines = [_prompt(), _start(_TASK_2), _start(_TASK_3), _finish(_TASK_3), quoted, _reply("PROBE_DONE_7731")]
+
+    _assert_unconfirmed(_judge(tmp_path, lines))
 
 
 def test_a_progress_message_does_not_close_a_command_task(tmp_path: Path) -> None:

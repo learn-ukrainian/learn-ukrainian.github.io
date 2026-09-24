@@ -4249,6 +4249,7 @@ def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
     [
         "agy_background_task_abandoned",
         "agy_background_task_unconfirmed",
+        "agy_background_task_canceled",
         "agy_transcript_unbound",
         "agy_transcript_unreadable",
     ],
