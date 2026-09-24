@@ -14,6 +14,7 @@ import sqlite3
 import subprocess
 import sys
 import threading
+import weakref
 from collections.abc import Collection, Generator
 from pathlib import Path
 
@@ -1303,19 +1304,41 @@ _WORKTREE_ENTRIES_AT_START: set[str] = set()
 _CREATED_WORKTREE_ENTRIES: set[str] = set()
 # path -> "PYTEST_CURRENT_TEST=... caller=file:line" for each recorded creation.
 _CREATED_WORKTREE_ATTRIBUTION: dict[str, str] = {}
-# git worktree add destinations seen at Popen construction:
-# path -> (existed immediately before, attribution). Teardown reports a
-# candidate that was absent then and present now, whether or not the
-# process was waited or polled.
-_POPEN_WORKTREE_CANDIDATES: dict[str, tuple[bool, str]] = {}
-# mkdir / symlink observations of the same path. True means every attempt so
-# far saw the path already present. A later attempt that saw it absent clears
-# the flag (absent before if any attempt saw it absent).
-_PATH_EXISTED_BEFORE: dict[str, bool] = {}
+# How long teardown waits for a still-running ``git worktree add``.
+_POPEN_CLASSIFY_TIMEOUT_SECONDS = 30
 # Bookkeeping bugs are reported once at teardown. They must not raise out of
 # os.mkdir / Popen and change the call the test actually made.
 _GUARD_CLASSIFY_FAILURES: list[str] = []
 _GUARD_CLASSIFY_FAILURE_LIMIT = 8
+
+
+class _PopenWorktreeCall:
+    """One ``git worktree add`` observed at ``Popen`` construction.
+
+    Calls are not merged: each stores that call's own absent-before flag.
+    ``proc`` stays reachable so teardown can poll or wait after the caller
+    drops the object. ``token`` is a weakref so the call is not keyed by a
+    bare ``id()`` a later Popen can reuse.
+    """
+
+    __slots__ = ("absent_before", "attribution", "destination", "proc", "token")
+
+    def __init__(
+        self,
+        proc: subprocess.Popen,
+        destination: str,
+        absent_before: bool,
+        attribution: str,
+    ) -> None:
+        self.token = weakref.ref(proc)
+        self.proc = proc
+        self.destination = destination
+        self.absent_before = absent_before
+        self.attribution = attribution
+
+
+# One record per ``git worktree add`` Popen.
+_POPEN_WORKTREE_CALLS: list[_PopenWorktreeCall] = []
 
 
 def _init_real_worktrees_dir() -> str:
@@ -1469,34 +1492,21 @@ def _creation_attribution() -> str:
     return f"PYTEST_CURRENT_TEST={node} caller={_caller_outside_conftest()}"
 
 
-def _merged_existed_before(previous: bool, current: bool) -> bool:
-    """Absent before if any attempt saw the path absent."""
-    return previous and current
-
-
 def _remember_if_created(key: str, existed_before: bool) -> None:
-    """Record ``key`` only when this call is what created it.
+    """Record ``key`` only when this call both found it absent and created it.
 
-    Callers observe ``os.path.lexists`` immediately before the original call
-    (``existed_before``). This checks again afterwards. A path that already
-    existed — including ``os.makedirs(..., exist_ok=True)`` on a directory
-    another process owns — is not recorded.
+    The caller observed ``os.path.lexists`` immediately before the original
+    call and that call returned without raising. This checks again afterwards.
+    A path that already existed — including ``os.makedirs(..., exist_ok=True)``
+    on a directory another process owns — is not recorded. A call that raises
+    records nothing, and an earlier absent observation is not reused.
 
-    A repeated observation of the same path keeps the absent-before result
-    when any attempt saw the path absent. An earlier ``exist_ok`` hit must
-    not hide a later call that creates the path after it was removed.
-
-    A tiny race remains: another process can create the path between those
-    two checks, and ``exist_ok=True`` then returns success. We accept that
+    A tiny race remains: another process can create the path between the
+    before-check and a successful ``exist_ok=True`` return. We accept that
     window. Locking the real ``.worktrees`` tree would stall every other
     agent on the host.
     """
-    previous = _PATH_EXISTED_BEFORE.get(key)
-    merged = (
-        existed_before if previous is None else _merged_existed_before(previous, existed_before)
-    )
-    _PATH_EXISTED_BEFORE[key] = merged
-    if merged or key in _WORKTREE_ENTRIES_AT_START:
+    if existed_before or key in _WORKTREE_ENTRIES_AT_START:
         return
     if os.path.lexists(key):
         _CREATED_WORKTREE_ENTRIES.add(key)
@@ -1516,27 +1526,25 @@ def _remember_quietly(classified: list[tuple[str, bool]] | None) -> None:
 
 def _guarded_mkdir(path: object, *args: object, **kwargs: object):
     classified = _classify_quietly(_classify_created_path, path)
-    try:
-        return _ORIGINAL_OS_MKDIR(path, *args, **kwargs)
-    finally:
-        _remember_quietly(classified)
+    result = _ORIGINAL_OS_MKDIR(path, *args, **kwargs)
+    # A raised call never reaches here, so a failure records nothing.
+    _remember_quietly(classified)
+    return result
 
 
 def _guarded_makedirs(name: object, *args: object, **kwargs: object):
     classified = _classify_quietly(_classify_makedirs_path, name)
-    try:
-        return _ORIGINAL_OS_MAKEDIRS(name, *args, **kwargs)
-    finally:
-        _remember_quietly(classified)
+    result = _ORIGINAL_OS_MAKEDIRS(name, *args, **kwargs)
+    _remember_quietly(classified)
+    return result
 
 
 def _guarded_symlink(src: object, dst: object, *args: object, **kwargs: object):
     # The link path is the second argument. The target may live anywhere.
     classified = _classify_quietly(_classify_created_path, dst)
-    try:
-        return _ORIGINAL_OS_SYMLINK(src, dst, *args, **kwargs)
-    finally:
-        _remember_quietly(classified)
+    result = _ORIGINAL_OS_SYMLINK(src, dst, *args, **kwargs)
+    _remember_quietly(classified)
+    return result
 
 
 def _decode_argv(argv: list | tuple) -> list[str] | None:
@@ -1655,36 +1663,40 @@ def _popen_cwd(pos: tuple[object, ...], kwargs: dict[str, object]) -> object:
 
 def _guarded_popen_init(self, args, *pos, **kwargs):
     dest: str | None = None
-    existed = True
+    absent_before = False
     try:
         found = _git_worktree_add_destination(args, _popen_cwd(pos, kwargs))
         if found is not None:
             dest = found
-            existed = found in _WORKTREE_ENTRIES_AT_START or os.path.lexists(found)
+            absent_before = (
+                found not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(found)
+            )
     except Exception as exc:
         # A guard bug must not replace the original call.
         _record_classify_failure(exc)
         dest = None
     _ORIGINAL_POPEN_INIT(self, args, *pos, **kwargs)
-    # The process may exit without wait or poll. Remember the candidate now;
-    # teardown reports it if it was absent before and is present then.
+    # The process may exit without wait or poll. Remember this call only;
+    # teardown decides from its own absent-before flag and its exit status.
     if dest is None:
         return
     try:
-        previous = _POPEN_WORKTREE_CANDIDATES.get(dest)
-        attribution = _creation_attribution()
-        if previous is None:
-            _POPEN_WORKTREE_CANDIDATES[dest] = (existed, attribution)
-        else:
-            old_existed, old_attribution = previous
-            # Keep the caller that saw the path absent; that attempt can create it.
-            kept = attribution if old_existed and not existed else old_attribution
-            _POPEN_WORKTREE_CANDIDATES[dest] = (
-                _merged_existed_before(old_existed, existed),
-                kept,
-            )
+        _POPEN_WORKTREE_CALLS.append(
+            _PopenWorktreeCall(self, dest, absent_before, _creation_attribution())
+        )
     except Exception as exc:
         _record_classify_failure(exc)
+
+
+def _popen_exit_status(proc: subprocess.Popen) -> int | None:
+    """Exit code of ``proc``, or None when it is still running after the wait."""
+    code = proc.poll()
+    if code is not None:
+        return code
+    try:
+        return proc.wait(timeout=_POPEN_CLASSIFY_TIMEOUT_SECONDS)
+    except subprocess.TimeoutExpired:
+        return None
 
 
 def _snapshot_worktree_entries() -> set[str]:
@@ -1740,18 +1752,31 @@ _ORIGINAL_POPEN_INIT = subprocess.Popen.__init__
 
 def _worktree_guard_teardown_message() -> str | None:
     """Leftovers and classify failures for this process, or None when clean."""
+    listed = _snapshot_worktree_entries()
+    suspected = set(_CREATED_WORKTREE_ENTRIES)
+    for call in _POPEN_WORKTREE_CALLS:
+        path = call.destination
+        if not call.absent_before or path in _WORKTREE_ENTRIES_AT_START:
+            continue
+        try:
+            code = _popen_exit_status(call.proc)
+        except Exception as exc:
+            _record_classify_failure(exc)
+            continue
+        if code is None:
+            _record_classify_failure(
+                TimeoutError(
+                    f"git worktree add {path}: timed out waiting for exit status"
+                )
+            )
+            continue
+        if code == 0 and (os.path.lexists(path) or path in listed):
+            suspected.add(path)
+            _CREATED_WORKTREE_ATTRIBUTION.setdefault(path, call.attribution)
     lines: list[str] = []
     if _GUARD_CLASSIFY_FAILURES:
         detail = "; ".join(_GUARD_CLASSIFY_FAILURES)
         lines.append(f"guard could not classify: {detail}")
-    listed = _snapshot_worktree_entries()
-    suspected = set(_CREATED_WORKTREE_ENTRIES)
-    for path, (existed_before, attribution) in _POPEN_WORKTREE_CANDIDATES.items():
-        if existed_before or path in _WORKTREE_ENTRIES_AT_START:
-            continue
-        if os.path.lexists(path) or path in listed:
-            suspected.add(path)
-            _CREATED_WORKTREE_ATTRIBUTION.setdefault(path, attribution)
     leftovers = sorted(
         path
         for path in suspected
@@ -1794,18 +1819,19 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
     worker included) are ignored. Paths already present when the worker
     started are snapshotted and ignored even if a test touches them.
 
-    mkdir and symlink record a path only when it did not exist immediately
-    before the call and does exist after the call returns. ``Popen`` of
-    ``git worktree add`` records the destination as a candidate at
-    construction, including whether it existed beforehand. A repeated
-    observation of the same path is absent-before when any attempt saw it
-    absent, so an earlier hit on a path that already existed cannot hide a
-    later attempt that creates it. Teardown reports a candidate that was
-    absent then and is present now, whether or not the process was waited
-    or polled. Each record stores ``PYTEST_CURRENT_TEST``
-    and the first calling frame outside this file (``file:line`` under the
-    repo). Bookkeeping errors are not raised from the hooked call; teardown
-    reports them as "guard could not classify".
+    mkdir, makedirs, and symlink record a path only when that same call saw
+    it absent immediately beforehand and returned without raising. A failed
+    call records nothing. There is no cross-call memory: an earlier absent
+    observation does not attach to a later ``FileExistsError``. ``Popen`` of
+    ``git worktree add`` records that call's destination and whether it was
+    absent beforehand. Teardown obtains the exit status with ``poll`` and,
+    if the process is still running, ``wait``. Creation is attributed only
+    when that call's return code is 0 and the destination exists. A timeout
+    is reported as "guard could not classify", not as a creation. Each
+    record stores ``PYTEST_CURRENT_TEST`` and the first calling frame outside
+    this file (``file:line`` under the repo). Bookkeeping errors are not
+    raised from the hooked call; teardown reports them as "guard could not
+    classify".
 
     Set ``LU_WORKTREE_GUARD=0`` to skip the hooks for an overhead measurement.
     Under xdist each worker is its own process, so the hook and the teardown
@@ -1817,8 +1843,7 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
     _WORKTREE_ENTRIES_AT_START.clear()
     _CREATED_WORKTREE_ENTRIES.clear()
     _CREATED_WORKTREE_ATTRIBUTION.clear()
-    _POPEN_WORKTREE_CANDIDATES.clear()
-    _PATH_EXISTED_BEFORE.clear()
+    _POPEN_WORKTREE_CALLS.clear()
     _GUARD_CLASSIFY_FAILURES.clear()
     _WORKTREE_ENTRIES_AT_START.update(_snapshot_worktree_entries())
     with pytest.MonkeyPatch.context() as patcher:

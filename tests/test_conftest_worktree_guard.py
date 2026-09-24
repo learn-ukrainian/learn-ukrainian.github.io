@@ -30,8 +30,7 @@ def guarded_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.setattr(worktree_guard, "_WORKTREE_ENTRIES_AT_START", set())
     monkeypatch.setattr(worktree_guard, "_CREATED_WORKTREE_ENTRIES", set())
     monkeypatch.setattr(worktree_guard, "_CREATED_WORKTREE_ATTRIBUTION", {})
-    monkeypatch.setattr(worktree_guard, "_POPEN_WORKTREE_CANDIDATES", {})
-    monkeypatch.setattr(worktree_guard, "_PATH_EXISTED_BEFORE", {})
+    monkeypatch.setattr(worktree_guard, "_POPEN_WORKTREE_CALLS", [])
     monkeypatch.setattr(worktree_guard, "_GUARD_CLASSIFY_FAILURES", [])
     return Path(real)
 
@@ -135,7 +134,7 @@ def test_popen_git_worktree_add_with_config_and_cd_is_recorded_after_success(
         env=_git_env(dest),
     )
     try:
-        assert key in worktree_guard._POPEN_WORKTREE_CANDIDATES
+        assert any(call.destination == key and call.absent_before for call in worktree_guard._POPEN_WORKTREE_CALLS)
         assert proc.wait(timeout=30) == 0
     finally:
         if proc.poll() is None:
@@ -188,12 +187,41 @@ def test_popen_never_waited_is_reported_when_the_destination_appears(
         assert message is not None
         assert key in message
     finally:
-        os.waitpid(proc.pid, 0)
+        if proc.poll() is None:
+            proc.wait(timeout=30)
 
 
-def test_failed_git_worktree_add_is_reported_when_the_directory_remains(
+def test_unfinished_worktree_add_is_unclassified_not_created(
+    tmp_path: Path, guarded_root: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A still-running add is not reported as created, even if the path appears."""
+    monkeypatch.setattr(worktree_guard, "_POPEN_CLASSIFY_TIMEOUT_SECONDS", 0.05)
+    parent = guarded_root / "dispatch" / "cursor"
+    worktree_guard._ORIGINAL_OS_MKDIR(guarded_root / "dispatch")
+    worktree_guard._ORIGINAL_OS_MKDIR(parent)
+    dest = parent / "still-running"
+    git = tmp_path / "git"
+    git.write_text("#!/bin/sh\nsleep 30\n")
+    git.chmod(0o755)
+    key = worktree_guard._worktree_entry_key(dest)
+    proc = subprocess.Popen([str(git), "worktree", "add", str(dest)], cwd=tmp_path)
+    try:
+        worktree_guard._ORIGINAL_OS_MKDIR(dest)
+        message = worktree_guard._worktree_guard_teardown_message()
+        assert message is not None
+        assert message.startswith("guard could not classify")
+        assert "this pytest process created" not in message
+        assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+        proc.wait(timeout=30)
+
+
+def test_failed_git_worktree_add_is_not_attributed_when_the_directory_remains(
     tmp_path: Path, guarded_root: Path
 ) -> None:
+    """A non-zero exit is not this process creating the worktree."""
     dest = _scaffold(guarded_root, "failed-add")
     git = _fake_git(tmp_path / "bin", status=1)
     with pytest.raises(subprocess.CalledProcessError):
@@ -205,9 +233,9 @@ def test_failed_git_worktree_add_is_reported_when_the_directory_remains(
         )
     assert dest.is_dir()
     key = worktree_guard._worktree_entry_key(dest)
+    assert key is not None
     message = worktree_guard._worktree_guard_teardown_message()
-    assert message is not None
-    assert key in message
+    assert message is None or key not in message
 
 
 def test_later_worktree_add_is_reported_after_an_earlier_existing_destination(
@@ -225,32 +253,54 @@ def test_later_worktree_add_is_reported_after_an_earlier_existing_destination(
     subprocess.run(argv, cwd=tmp_path, env=_git_env(dest), timeout=30, check=True)
     key = worktree_guard._worktree_entry_key(dest)
     assert key is not None
-    assert worktree_guard._POPEN_WORKTREE_CANDIDATES[key][0] is True
+    calls = [call for call in worktree_guard._POPEN_WORKTREE_CALLS if call.destination == key]
+    assert [call.absent_before for call in calls] == [False]
     dest.rmdir()
     subprocess.run(argv, cwd=tmp_path, env=_git_env(dest), timeout=30, check=True)
     assert dest.is_dir()
-    assert worktree_guard._POPEN_WORKTREE_CANDIDATES[key][0] is False
+    calls = [call for call in worktree_guard._POPEN_WORKTREE_CALLS if call.destination == key]
+    assert [call.absent_before for call in calls] == [False, True]
     message = worktree_guard._worktree_guard_teardown_message()
     assert message is not None
     assert key in message
 
 
-def test_later_mkdir_is_recorded_after_an_earlier_existing_path(guarded_root: Path) -> None:
-    """mkdir/symlink observations use the same absent-before merge as Popen."""
+def test_later_mkdir_is_recorded_from_the_call_that_created_it(guarded_root: Path) -> None:
+    """An earlier hit on an existing path does not decide a later mkdir."""
     dest = _scaffold(guarded_root, "mkdir-again")
     worktree_guard._ORIGINAL_OS_MKDIR(dest)
     os.makedirs(dest, exist_ok=True)
     key = worktree_guard._worktree_entry_key(dest)
     assert key is not None
     assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
-    assert worktree_guard._PATH_EXISTED_BEFORE[key] is True
     os.rmdir(dest)
     os.mkdir(dest)
-    assert worktree_guard._PATH_EXISTED_BEFORE[key] is False
     assert key in worktree_guard._CREATED_WORKTREE_ENTRIES
 
 
-def test_later_symlink_is_recorded_after_an_earlier_existing_path(
+def test_failed_mkdir_after_external_create_is_not_attributed(guarded_root: Path) -> None:
+    """Sol r5: a failed mkdir must not inherit an earlier absent observation.
+
+    mkdir fails because the parent is missing. An external actor creates the
+    path. A second mkdir fails with FileExistsError. Neither call created it.
+    """
+    dest = guarded_root / "dispatch" / "cursor" / "external-actor"
+    with pytest.raises(FileNotFoundError):
+        os.mkdir(dest)
+    key = worktree_guard._worktree_entry_key(dest)
+    assert key is not None
+    assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
+    # The real mkdir, not os.makedirs: makedirs calls the hooked mkdir.
+    worktree_guard._ORIGINAL_OS_MKDIR(guarded_root / "dispatch")
+    worktree_guard._ORIGINAL_OS_MKDIR(guarded_root / "dispatch" / "cursor")
+    worktree_guard._ORIGINAL_OS_MKDIR(dest)
+    with pytest.raises(FileExistsError):
+        os.mkdir(dest)
+    assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
+    assert worktree_guard._worktree_guard_teardown_message() is None
+
+
+def test_later_symlink_is_recorded_from_the_call_that_created_it(
     tmp_path: Path, guarded_root: Path
 ) -> None:
     dest = _scaffold(guarded_root, "link-again")
@@ -262,10 +312,8 @@ def test_later_symlink_is_recorded_after_an_earlier_existing_path(
     key = worktree_guard._worktree_entry_key(dest)
     assert key is not None
     assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
-    assert worktree_guard._PATH_EXISTED_BEFORE[key] is True
     os.unlink(dest)
     os.symlink(target, dest)
-    assert worktree_guard._PATH_EXISTED_BEFORE[key] is False
     assert key in worktree_guard._CREATED_WORKTREE_ENTRIES
 
 
@@ -290,7 +338,6 @@ def test_makedirs_records_a_new_entry_and_skips_exist_ok(guarded_root: Path) -> 
     existing = _scaffold(guarded_root, "kept")
     worktree_guard._ORIGINAL_OS_MKDIR(existing)
     worktree_guard._CREATED_WORKTREE_ENTRIES.clear()
-    worktree_guard._PATH_EXISTED_BEFORE.clear()
     os.makedirs(existing, exist_ok=True)
     os.makedirs(created, exist_ok=True)
     assert not worktree_guard._CREATED_WORKTREE_ENTRIES
