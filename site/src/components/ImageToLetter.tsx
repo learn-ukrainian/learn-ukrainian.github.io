@@ -24,6 +24,11 @@ interface ImageToLetterItem {
    * @ukrainianText false
    */
   note?: string;
+  /**
+   * @schemaDescription Teaching feedback shown after the correct answer.
+   * @ukrainianText false
+   */
+  explanation?: string;
 }
 
 interface ImageToLetterProps {
@@ -38,6 +43,11 @@ interface ImageToLetterProps {
    */
   title?: string;
   /**
+   * @schemaDescription Task instruction shown under the header.
+   * @ukrainianText false
+   */
+  instruction?: string;
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
@@ -47,6 +57,7 @@ interface ImageToLetterProps {
 export default function ImageToLetter({
   items,
   title,
+  instruction,
   isUkrainian = true,
 }: ImageToLetterProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -71,24 +82,31 @@ export default function ImageToLetter({
     title || (isUkrainian ? 'Яка перша буква?' : 'Which first letter?');
   const doneLabel = isUkrainian ? 'Вправу завершено!' : 'Exercise complete!';
 
+  const isLast = currentIndex >= total - 1;
+  const nextLabel = isLast
+    ? isUkrainian ? 'Завершити' : 'Finish'
+    : isUkrainian ? 'Далі →' : 'Next →';
+
+  const handleNext = () => {
+    setCompletedCount((c) => c + 1);
+    if (!isLast) {
+      setCurrentIndex((i) => i + 1);
+      setAnswered(false);
+      setSelectedAnswer(null);
+      setWrongCount(0);
+      setShowHint(false);
+    }
+  };
+
   const handleOptionClick = (option: string) => {
     if (answered) return;
 
     setSelectedAnswer(option);
 
     if (option === item.answer) {
+      // Stay on the card so the learner reads the note/explanation; the
+      // explicit Next/Finish button advances or completes.
       setAnswered(true);
-      setCompletedCount((c) => c + 1);
-      // Auto-advance after 1s
-      setTimeout(() => {
-        if (currentIndex < total - 1) {
-          setCurrentIndex((i) => i + 1);
-          setAnswered(false);
-          setSelectedAnswer(null);
-          setWrongCount(0);
-          setShowHint(false);
-        }
-      }, 1000);
     } else {
       const newWrong = wrongCount + 1;
       setWrongCount(newWrong);
@@ -123,6 +141,12 @@ export default function ImageToLetter({
         <span className={styles.activityIcon}>🖼️</span>
         <span>{headerLabel}</span>
       </div>
+
+      {instruction && (
+        <p className={styles.instruction}>
+          <strong>{instruction}</strong>
+        </p>
+      )}
 
       {/* Progress bar */}
       <div className={directStyles.warProgress}>
@@ -172,9 +196,17 @@ export default function ImageToLetter({
           })}
         </div>
 
-        {/* Note shown after correct answer */}
+        {/* Note and explanation shown after correct answer */}
         {answered && item.note && (
           <p className={directStyles.warNote}>{item.note}</p>
+        )}
+        {answered && item.explanation && (
+          <p className={directStyles.warNote}>{item.explanation}</p>
+        )}
+        {answered && (
+          <button className={styles.submitButton} onClick={handleNext}>
+            {nextLabel}
+          </button>
         )}
       </div>
     </div>

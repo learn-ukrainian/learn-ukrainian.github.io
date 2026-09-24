@@ -66,6 +66,36 @@ flags without opening file bodies. To free SSD space after SMB is verified:
 Do not invent eviction CLIs, delete cloud objects, or delete the SMB mirror as
 part of routine cache reclaim.
 
+## Journal mode (WAL) — declared by writers, relied on by readers
+
+`data/sources.db` runs in **WAL** journal mode, and that is a declared invariant, not
+an accident of whichever ingest last touched the file (#8527):
+
+- **Why.** The evidence tools (`build-words`, `words-verify`, `build-pack`,
+  `pack-verify`) pin **one SQLite snapshot per session**: a read-only connection with an
+  explicit deferred `BEGIN` whose first read fixes the read mark, held until the tool
+  closes. In WAL a writer keeps committing past a pinned reader and the reader keeps
+  seeing the rows it started with. In **DELETE (rollback-journal) mode the same pinned
+  read holds a SHARED lock**: the ULIF walk's commit waits `busy_timeout` (30 s) and then
+  raises `database is locked` — a snapshot reader would stall the writer.
+- **Who declares it.** `scripts/wiki/build_sources_db.py` folds the temp DB back to
+  DELETE mode (one self-contained file to swap) and re-enables WAL on the live path
+  immediately after the atomic rename (`declare_wal`). `scripts/lexicon/runner/fetch_ulif_homonyms.py`
+  `prepare_database` sets `PRAGMA journal_mode=WAL` on every walk start. Both assert the
+  PRAGMA **returns** `wal` and fail loudly otherwise. WAL is a persistent file property,
+  so these are no-ops on a file that is already WAL.
+- **Cost of a pinned reader.** The WAL cannot be checkpointed past the reader's mark, so
+  `sources.db-wal` grows for the minutes a build or verify runs (steady state ≈16 MB).
+  Readers print `journal_mode`, WAL size at start and end, and the snapshot duration in
+  their progress output, and abort with `snapshot_limit` before the next read if the WAL
+  exceeds 4 GiB or free disk on the data volume falls below 10 GiB
+  (`scripts/curriculum/evidence/config.py`).
+- **Check it.** `.venv/bin/python -m scripts.storage status` prints `journal_mode: wal`
+  from the SQLite header (bytes 18–19 = `2 2`) without opening a connection; the same
+  fact by hand: `od -A d -t u1 -j 18 -N 2 data/sources.db` → `2 2`.
+- **Never** run a long-lived read transaction against a DELETE-mode `sources.db` while
+  the walk runs, and never switch the live file back to DELETE mode.
+
 ## Outage posture
 
 | Failure | Expected behavior |

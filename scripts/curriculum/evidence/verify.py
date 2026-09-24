@@ -18,10 +18,35 @@ from jsonschema import Draft202012Validator
 
 from scripts.verification import stress
 
-from . import codes, lock, registry, sources
-from .words import count_vowels, extract_ulif_paradigm_forms, find_plans_citing, load_schema
+from . import codes, lock, pack, registry, sources
+from .words import (
+    cefr_field,
+    cited_rows,
+    count_vowels,
+    extract_ulif_paradigm_forms,
+    find_plans_citing,
+    load_schema,
+    store_scheme,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def _without_identity(value: Any, *, legacy: bool) -> Any:
+    """Value part of a cited record: drop row_sha256 (and row_id for legacy stores, which never had it)."""
+    if not isinstance(value, dict):
+        return value
+    dropped = {"row_sha256", "row_id"} if legacy else {"row_sha256"}
+    return {key: item for key, item in value.items() if key not in dropped}
+
+
+def _drift(strict: bool, errors: list[str], warnings: list[str], message: str) -> None:
+    """SOURCE_CHANGED is an error under --strict and a warning otherwise; never silent."""
+    line = f"{codes.SOURCE_CHANGED}: {message}"
+    if strict:
+        errors.append(line)
+    else:
+        warnings.append(line)
 
 
 def verify_words_store(
@@ -111,6 +136,29 @@ def verify_words_store(
         current_trie = stress.source_info()["digest"]
         source_version_changed = built_with.get("vesum") != current_vesum or built_with.get("trie") != current_trie
 
+        # 4b. sources.db identity scheme (rows-v2: cited rows; file-v1: retired file digest)
+        scheme = store_scheme(store_doc)
+        legacy = scheme != sources.SOURCES_DB_SCHEME
+        if legacy:
+            msg = (
+                f"{codes.LEGACY_IDENTITY}: built_with.sources_db is a file digest ({scheme}); "
+                f"rebuild the store for {sources.SOURCES_DB_SCHEME}"
+            )
+            if strict:
+                errors.append(msg)
+            else:
+                warnings.append(msg)
+        else:
+            recorded_aggregate = sources.aggregate_digest(
+                pair for word in store_doc.get("words", []) for pair in cited_rows(word)
+            )
+            if recorded_aggregate != built_with.get("sources_db"):
+                errors.append(
+                    f"{codes.LOCK_MISMATCH}: built_with.sources_db {str(built_with.get('sources_db'))[:12]}... "
+                    f"does not aggregate the recorded row_sha256 values ({recorded_aggregate[:12]}...)"
+                )
+        rows_drifted_total = 0
+
         pending_forms_count = 0
         override_forms_count = 0
         unresolved_uncited_count = 0
@@ -132,18 +180,49 @@ def verify_words_store(
             pos = word["pos"]
             entry = word.get("entry")
 
+            word_rows_drifted = False
+
+            def cited_row_check(
+                label: str, stored: Any, expected: Any, *, word_id: str = word_id, lemma: str = lemma
+            ) -> None:
+                """rows-v2 per-record identity: missing → FORM_MISMATCH; drift → SOURCE_CHANGED."""
+                nonlocal word_rows_drifted
+                if legacy or not isinstance(stored, dict):
+                    return
+                recorded = stored.get("row_sha256")
+                if not recorded:
+                    errors.append(f"{codes.FORM_MISMATCH}: {label} of {word_id} ({lemma}) has no row_sha256")
+                    return
+                current = expected.get("row_sha256") if isinstance(expected, dict) else None
+                if current is None:
+                    word_rows_drifted = True
+                    _drift(
+                        strict, errors, warnings, f"{label} of {word_id} ({lemma}): cited row missing at its locator"
+                    )
+                elif current != recorded:
+                    word_rows_drifted = True
+                    _drift(
+                        strict,
+                        errors,
+                        warnings,
+                        f"{label} of {word_id} ({lemma}): cited row changed "
+                        f"(recorded {recorded[:12]}..., current {current[:12]}...)",
+                    )
+
             # Check CEFR against source
             cefr_hits = sources_instance.cefr_levels([lemma]).raw.get(lemma, [])
             exact_cefr = next((h for h in cefr_hits if sources.normalize_spelling(h.get("word", "")) == lemma), None)
             expected_cefr = None
             if exact_cefr and exact_cefr.get("level") in {"A1", "A2", "B1", "B2", "C1", "C2"}:
-                expected_cefr = {"level": exact_cefr["level"], "source": "puls"}
+                expected_cefr = cefr_field(exact_cefr)
 
             stored_cefr = word.get("cefr")
-            if stored_cefr != expected_cefr:
+            if _without_identity(stored_cefr, legacy=legacy) != _without_identity(expected_cefr, legacy=legacy):
                 errors.append(
-                    f"{codes.CEFR_MISMATCH}: stored CEFR {stored_cefr} differs from source {expected_cefr} for {word_id} ({lemma})"
+                    f"{codes.CEFR_MISMATCH}: stored CEFR {_without_identity(stored_cefr, legacy=legacy)} differs from "
+                    f"source {_without_identity(expected_cefr, legacy=legacy)} for {word_id} ({lemma})"
                 )
+            cited_row_check("cefr", stored_cefr, expected_cefr)
 
             # Check Gloss against source
             gloss_rows = sources_instance.gloss_rows([(lemma, pos)]).raw.get((lemma, pos), [])
@@ -163,15 +242,53 @@ def verify_words_store(
                     first_str = str(parsed_trans[0])
                     if first_str:
                         expected_gloss = first_str
-                        expected_gloss_source = {"table": "dmklinger_uk_en", "id": first_row["id"]}
+                        expected_gloss_source = {
+                            "table": "dmklinger_uk_en",
+                            "id": first_row["id"],
+                            "row_sha256": sources.row_digest(first_row),
+                        }
 
             stored_gloss = word.get("gloss_en")
             stored_gloss_source = word.get("gloss_source")
-            if stored_gloss != expected_gloss or stored_gloss_source != expected_gloss_source:
+            if stored_gloss != expected_gloss or _without_identity(stored_gloss_source, legacy=legacy) != (
+                _without_identity(expected_gloss_source, legacy=legacy)
+            ):
                 errors.append(
-                    f"{codes.GLOSS_MISMATCH}: stored gloss ({stored_gloss!r}, {stored_gloss_source}) "
-                    f"differs from source ({expected_gloss!r}, {expected_gloss_source}) for {word_id} ({lemma})"
+                    f"{codes.GLOSS_MISMATCH}: stored gloss ({stored_gloss!r}, "
+                    f"{_without_identity(stored_gloss_source, legacy=legacy)}) differs from source "
+                    f"({expected_gloss!r}, {_without_identity(expected_gloss_source, legacy=legacy)}) "
+                    f"for {word_id} ({lemma})"
                 )
+            cited_row_check("gloss_source", stored_gloss_source, expected_gloss_source)
+
+            # Heritage hits are copied by value; each carries the identity of the rows it was read from.
+            stored_heritage = word.get("heritage")
+            if isinstance(stored_heritage, list) and stored_heritage and not legacy:
+                current_hits = sources_instance.heritage([lemma]).raw.get(lemma, [])
+                current_digests = [hit.get("row_sha256") for hit in current_hits]
+                recorded_digests = []
+                for index, hit in enumerate(stored_heritage):
+                    recorded = hit.get("row_sha256") if isinstance(hit, dict) else None
+                    if not recorded:
+                        errors.append(
+                            f"{codes.FORM_MISMATCH}: heritage[{index}] of {word_id} ({lemma}) has no row_sha256"
+                        )
+                        continue
+                    if sources.heritage_hit_digest(hit) != recorded:
+                        errors.append(
+                            f"{codes.LOCK_MISMATCH}: heritage[{index}] of {word_id} ({lemma}) "
+                            f"does not match its own row_sha256"
+                        )
+                    recorded_digests.append(recorded)
+                if recorded_digests and recorded_digests != current_digests:
+                    word_rows_drifted = True
+                    _drift(
+                        strict,
+                        errors,
+                        warnings,
+                        f"heritage of {word_id} ({lemma}): cited rows changed "
+                        f"({len(recorded_digests)} recorded, {len(current_digests)} current)",
+                    )
 
             if entry == "unresolved":
                 cites = find_plans_citing(word_id, plans_base)
@@ -179,6 +296,7 @@ def verify_words_store(
                     errors.append(f"{codes.UNRESOLVED_CITED}: unresolved word {word_id} ({lemma}) is cited by {cites}")
                 else:
                     unresolved_uncited_count += 1
+                rows_drifted_total += int(word_rows_drifted)
                 continue
 
             # Resolved entry
@@ -236,6 +354,17 @@ def verify_words_store(
                     matching_entry = ulif_group[0]
 
             ulif_forms = extract_ulif_paradigm_forms(matching_entry) if (ulif_checked and matching_entry) else {}
+
+            # The stored ulif object cites one entry row (with its ordered sections).
+            stored_ulif = word.get("ulif")
+            if isinstance(stored_ulif, dict):
+                expected_ulif = None
+                if matching_entry is not None:
+                    expected_ulif = {"row_sha256": sources.row_digest(matching_entry)}
+                cited_row_check("ulif", stored_ulif, expected_ulif)
+            rows_drifted_total += int(word_rows_drifted)
+            # A stress mismatch is SOURCE_CHANGED only when a source this word copies from moved.
+            word_source_changed = source_version_changed or word_rows_drifted
 
             for idx, (sf, vf) in enumerate(zip(stored_forms, vesum_forms, strict=False)):
                 form_str = sf.get("form")
@@ -307,11 +436,8 @@ def verify_words_store(
                         f"form {form_str!r} ({word_id}): stored ({stored_stress_source}, {stored_stressed}) "
                         f"!= current ({expected_source}, {expected_stressed})"
                     )
-                    if source_version_changed:
-                        if strict:
-                            errors.append(f"{codes.SOURCE_CHANGED}: {msg}")
-                        else:
-                            warnings.append(f"{codes.SOURCE_CHANGED}: {msg}")
+                    if word_source_changed:
+                        _drift(strict, errors, warnings, msg)
                     else:
                         errors.append(f"{codes.STRESS_MISMATCH}: {msg}")
 
@@ -336,6 +462,9 @@ def verify_words_store(
             "override_forms_count": override_forms_count,
             "unresolved_uncited_count": unresolved_uncited_count,
             "source_version_changed": source_version_changed,
+            "sources_db_scheme": scheme,
+            "cited_rows_drifted_words": rows_drifted_total,
+            "snapshot": sources_instance.snapshot_report(),
             "errors": errors,
             "warnings": warnings,
         }
@@ -360,7 +489,7 @@ def main(argv: list[str] | None = None) -> int:
             "Outputs:\n"
             "  None (read-only verification check)\n\n"
             "Exit codes:\n"
-            "  0: Store verified cleanly (or source_changed under non-strict)\n"
+            "  0: Store verified cleanly (or source_changed/legacy_identity under non-strict)\n"
             "  1: Lock mismatch, registry disagreement, corruption, or source_changed under --strict\n\n"
             "Outcome Codes:\n"
             f"{codes.help_text()}\n"
@@ -392,6 +521,12 @@ def main(argv: list[str] | None = None) -> int:
             strict=args.strict,
             report=report,
         )
+    except Exception as exc:
+        if args.json:
+            print(json.dumps({"status": "failed", "error": str(exc)}, indent=2))
+        else:
+            print(f"Error: {exc}", file=sys.stderr)
+        return 1
     finally:
         if explicit_sources is not None:
             explicit_sources.close()
@@ -512,25 +647,61 @@ def verify_pack(
         owns_sources = True
 
     try:
-        # 3. Source DB fingerprint check
-        cur_db_hash = sources_instance._fingerprint(sources_instance.sources_db)[0]
-        recorded_db_hash = pack_doc.get("built_with", {}).get("sources_db")
-        if recorded_db_hash and cur_db_hash != recorded_db_hash:
-            msg = f"{codes.SOURCE_CHANGED}: sources DB changed (recorded {recorded_db_hash[:12]}..., current {cur_db_hash[:12]}...)"
+        # 3. sources.db identity scheme: rows-v2 verifies each cited row below;
+        #    file-v1 recorded a file digest, which only the retired file hash could check.
+        built_with = pack_doc.get("built_with", {})
+        scheme = pack.pack_scheme(pack_doc)
+        legacy = scheme != sources.SOURCES_DB_SCHEME
+        rows_drifted: list[str] = []
+        if legacy:
+            msg = (
+                f"{codes.LEGACY_IDENTITY}: built_with.sources_db is a file digest ({scheme}); "
+                f"rebuild the pack for {sources.SOURCES_DB_SCHEME}"
+            )
             if strict:
                 errors.append(msg)
             else:
                 warnings.append(msg)
+        else:
+            recorded_aggregate = sources.aggregate_digest(pack.cited_rows(pack_doc))
+            if recorded_aggregate != built_with.get("sources_db"):
+                errors.append(
+                    f"{codes.LOCK_MISMATCH}: built_with.sources_db {str(built_with.get('sources_db'))[:12]}... "
+                    f"does not aggregate the recorded row_sha256 values ({recorded_aggregate[:12]}...)"
+                )
+
+        def cited_row_check(item_id: str, source: dict[str, Any], row: dict[str, Any] | None) -> None:
+            """rows-v2: a cited row must exist at its locator and still digest to what the pack recorded."""
+            if legacy:
+                return
+            recorded = source.get("row_sha256") if isinstance(source, dict) else None
+            if not recorded:
+                errors.append(f"{codes.FORM_MISMATCH}: {item_id} source has no row_sha256")
+                return
+            if row is None:
+                rows_drifted.append(item_id)
+                _drift(strict, errors, warnings, f"{item_id} cited row missing at its locator {pack.locator(source)}")
+                return
+            current = sources.row_digest(row)
+            if current != recorded:
+                rows_drifted.append(item_id)
+                _drift(
+                    strict,
+                    errors,
+                    warnings,
+                    f"{item_id} cited row changed (recorded {recorded[:12]}..., current {current[:12]}...)",
+                )
 
         # Helper to verify quotes against chunk and source_file
         def verify_quote(
             item_id: str,
             quote: str,
             recorded_sha: str,
-            source_file: str,
-            chunk_id: str | int,
+            source: dict[str, Any],
             table: str = "textbooks",
         ) -> None:
+            source_file = source["file"]
+            chunk_id = source["chunk_id"]
             actual_sha = hashlib.sha256(quote.encode("utf-8")).hexdigest()
             if actual_sha != recorded_sha:
                 errors.append(
@@ -542,6 +713,11 @@ def verify_pack(
                 chunk = sources_instance.get_textbook_chunk(chunk_id)
             else:
                 chunk = sources_instance.get_literary_chunk(chunk_id)
+
+            # The cited row's identity is judged on its own, before any file-level
+            # quote fallback: a missing or changed row is drift even when the quote
+            # survives elsewhere in the file (chunk_id_moved stays an extra report).
+            cited_row_check(item_id, source, chunk)
 
             found_in_chunk = False
             if chunk is not None:
@@ -568,38 +744,17 @@ def verify_pack(
 
         # 4. Texts
         for t in pack_doc.get("texts", []):
-            verify_quote(
-                t["id"],
-                t["quote"],
-                t["sha256"],
-                t["source"]["file"],
-                t["source"]["chunk_id"],
-                table="textbooks",
-            )
+            verify_quote(t["id"], t["quote"], t["sha256"], t["source"], table="textbooks")
 
         # 5. Exercises
         for x in pack_doc.get("exercises", []):
-            verify_quote(
-                x["id"],
-                x["quote"],
-                x["sha256"],
-                x["source"]["file"],
-                x["source"]["chunk_id"],
-                table="textbooks",
-            )
+            verify_quote(x["id"], x["quote"], x["sha256"], x["source"], table="textbooks")
 
         # 6. Examples
         for ex in pack_doc.get("examples", []):
             kind = ex["source"].get("kind")
             table = "literary_texts" if kind == "literary" else "textbooks"
-            verify_quote(
-                ex["id"],
-                ex["text"],
-                ex["sha256"],
-                ex["source"]["file"],
-                ex["source"]["chunk_id"],
-                table=table,
-            )
+            verify_quote(ex["id"], ex["text"], ex["sha256"], ex["source"], table=table)
 
         # 7. Errors
         for err_rec in pack_doc.get("errors", []):
@@ -613,6 +768,7 @@ def verify_pack(
                     f"expected ({err_rec['incorrect']!r}, {err_rec['correct']!r}), "
                     f"got ({row['error']!r}, {row['correct']!r})"
                 )
+            cited_row_check(err_rec["id"], err_rec["source"], row)
 
         # 8. Notes
         for note_rec in pack_doc.get("notes", []):
@@ -626,6 +782,7 @@ def verify_pack(
                     f"expected word={note_rec['word']!r}, text={note_rec['text'][:40]!r}, "
                     f"got word={row['word']!r}, text={row['text'][:40]!r}"
                 )
+            cited_row_check(note_rec["id"], note_rec["source"], row)
 
         # 9. Standard
         for std_rec in pack_doc.get("standard", []):
@@ -677,7 +834,10 @@ def verify_pack(
             if strict:
                 errors.append(msg)
 
-        status = "failed" if errors else "ok"
+        if rows_drifted:
+            reports.append(f"{codes.SOURCE_CHANGED}: {len(rows_drifted)} cited rows drifted: {rows_drifted}")
+
+        status = "failed" if errors else ("warning" if warnings else "ok")
 
         return {
             "status": status,
@@ -693,8 +853,11 @@ def verify_pack(
             "standard_count": len(pack_doc.get("standard", [])),
             "unsupported_open_count": len(open_unsupported),
             "unsupported_resolved_count": len(resolved_unsupported),
+            "sources_db_scheme": scheme,
+            "cited_rows_drifted": rows_drifted,
             "chunk_id_moved": chunk_id_moved,
             "not_checked": not_checked,
+            "snapshot": sources_instance.snapshot_report(),
             "reports": reports,
             "warnings": warnings,
             "errors": errors,
@@ -721,7 +884,7 @@ def main_pack(argv: list[str] | None = None) -> int:
             "Outputs:\n"
             "  None (read-only verification check)\n\n"
             "Exit codes:\n"
-            "  0: Pack verified cleanly (or source_changed/open_unsupported under non-strict)\n"
+            "  0: Pack verified cleanly (or source_changed/legacy_identity/open_unsupported under non-strict)\n"
             "  1: Lock mismatch, quote mismatch, error mismatch, standard mismatch, open unsupported under --strict, or refused --strict --offline\n\n"
             "Outcome Codes:\n"
             f"{codes.help_text()}\n"
@@ -764,6 +927,12 @@ def main_pack(argv: list[str] | None = None) -> int:
             strict=args.strict,
             report=report,
         )
+    except Exception as exc:
+        if args.json:
+            print(json.dumps({"status": "failed", "error": str(exc)}, indent=2))
+        else:
+            print(f"Error: {exc}", file=sys.stderr)
+        return 1
     finally:
         if explicit_sources is not None:
             explicit_sources.close()
