@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a537a4eec344",
+  "session_id": "ses_f2b16db6affeXBoAt6nlGxykrz",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-24T19:47:17.177733086Z",
+  "branch": "deepseek/impl-8707",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_repo_wide_marker_invariant.py",
+    "tests/test_hooks_executable.py",
+    "tests/test_session_state_retired.py",
+    "tests/build/test_fresh_style_cards.py",
+    "tests/audit/test_post_build_review.py",
+    "tests/test_skill_instruction_routes.py",
+    "docs/runbooks/ci-gate.md"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "734b28bf9d6d",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 77767,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5647488,
+    "output_tokens": 17034,
+    "api_call_count": 70
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-24T19:47:15.202018519Z",
+    "agent_lines": 252,
+    "agent_removed": 28,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 252,
+    "total_lines_changed": 280,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

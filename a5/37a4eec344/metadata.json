@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a537a4eec344",
+  "strategy": "manual-commit",
+  "branch": "deepseek/impl-8707",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/ci-gate.md",
+    "tests/audit/test_post_build_review.py",
+    "tests/build/test_fresh_style_cards.py",
+    "tests/test_hooks_executable.py",
+    "tests/test_repo_wide_marker_invariant.py",
+    "tests/test_session_state_retired.py",
+    "tests/test_skill_instruction_routes.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a5/37a4eec344/0/metadata.json",
+      "transcript": "/a5/37a4eec344/0/full.jsonl",
+      "compact_transcript": "/a5/37a4eec344/0/transcript.jsonl",
+      "content_hash": "/a5/37a4eec344/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 77767,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 5647488,
+    "output_tokens": 17034,
+    "api_call_count": 70
+  }
+}
