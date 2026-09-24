@@ -229,9 +229,10 @@ def active_worktree_claim_refusal(
     A task record whose status is not in :data:`RELEASED_TASK_STATUSES` and
     whose ``worktree_path`` resolves to the same checkout blocks removal.
     Claims are resolved relative to ``repo_root``, exactly as dispatch
-    resolves ``--worktree``. The record of ``owner_task_id`` (the task
-    settling its own checkout) and ``owner_state_file`` are exempt; ``None``
-    exempts nothing. Only candidate records (:func:`record_may_claim_worktree`)
+    resolves ``--worktree``. The owner's canonical record is exempt only after
+    its embedded task ID and non-empty run nonce establish the run identity;
+    another record with the same task ID remains a claim. ``None`` exempts
+    nothing. Only candidate records (:func:`record_may_claim_worktree`)
     are parsed, so an unrelated finished corrupt record never blocks removal,
     while a candidate that cannot be read, parsed, or resolved does. Every
     failure is a skip reason, never an exception. Returns ``None`` when
@@ -246,13 +247,27 @@ def active_worktree_claim_refusal(
     except (OSError, RuntimeError, ValueError) as exc:
         return f"worktree path unresolvable ({type(exc).__name__}); refusing worktree removal"
     needles = worktree_claim_needles(worktree, target)
+    owner_identity: tuple[Path, str] | None = None
+    if owner_task_id is not None:
+        owner_path = owner_state_file or task_record_path(tasks_dir, owner_task_id)
+        try:
+            owner = json.loads(owner_path.read_bytes())
+        except (OSError, ValueError, RecursionError):
+            return f"owner task {owner_task_id} record unreadable; refusing worktree removal"
+        nonce = owner.get("run_nonce") if isinstance(owner, dict) else None
+        if (
+            not isinstance(owner, dict)
+            or owner.get("task_id") != owner_task_id
+            or not isinstance(nonce, str)
+            or not nonce.strip()
+        ):
+            return f"owner task {owner_task_id} has no valid run_nonce; refusing worktree removal"
+        owner_identity = (owner_path, nonce)
     try:
         state_files = sorted(tasks_dir.glob("*.json"))
     except OSError as exc:
         return f"task claims unreadable ({type(exc).__name__}); refusing worktree removal"
     for state_file in state_files:
-        if owner_state_file is not None and state_file == owner_state_file:
-            continue
         try:
             raw = state_file.read_bytes()
         except FileNotFoundError:
@@ -269,7 +284,14 @@ def active_worktree_claim_refusal(
         claimed_path = record.get("worktree_path") if isinstance(record, dict) else None
         if not isinstance(record, dict) or not isinstance(claimed_path, str | None):
             return refused(state_file, "unreadable")
-        if not claimed_path or (owner_task_id is not None and record.get("task_id") == owner_task_id):
+        if (
+            owner_identity is not None
+            and state_file == owner_identity[0]
+            and record.get("task_id") == owner_task_id
+            and record.get("run_nonce") == owner_identity[1]
+        ):
+            continue
+        if not claimed_path:
             continue
         status = record.get("status")
         if isinstance(status, str) and status in RELEASED_TASK_STATUSES:
@@ -493,7 +515,8 @@ def remove_unclaimed_worktree(
 def owner_release_refusal(worktree: Path, *, owner_task_id: str, tasks_dir: Path, repo_root: Path) -> str | None:
     """Return why ``owner_task_id`` may not release ``worktree``, or ``None`` when it may.
 
-    The owner's record must be finished (its status is in
+    The owner's record must identify the requested task and run with a
+    non-empty ``run_nonce``, be finished (its status is in
     :data:`RELEASED_TASK_STATUSES`), name ``worktree`` as its
     ``worktree_path``, and record ``worktree_reused: false``, the proof that
     its dispatch created the checkout. A reused checkout belongs to its
@@ -508,6 +531,11 @@ def owner_release_refusal(worktree: Path, *, owner_task_id: str, tasks_dir: Path
         return f"owner task record {record_path.name} unreadable; refusing worktree removal"
     if not isinstance(record, dict):
         return f"owner task record {record_path.name} unreadable; refusing worktree removal"
+    if record.get("task_id") != owner_task_id:
+        return f"owner task {owner_task_id} identity mismatch; refusing worktree removal"
+    nonce = record.get("run_nonce")
+    if not isinstance(nonce, str) or not nonce.strip():
+        return f"owner task {owner_task_id} has no valid run_nonce; refusing worktree removal"
     status = record.get("status")
     if not isinstance(status, str) or status not in RELEASED_TASK_STATUSES:
         return f"owner task {owner_task_id} is not finished (status {status!r}); refusing worktree removal"

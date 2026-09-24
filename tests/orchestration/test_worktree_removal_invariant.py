@@ -51,7 +51,7 @@ ALLOWLIST: dict[tuple[str, str | None], str] = {
 # historical. A reference outside the allowlist is a bypass.
 LOW_LEVEL_REMOVERS = frozenset({"git_worktree_remove", "_git_worktree_remove", "remove_worktree", "_remove_worktree"})
 
-_SHELL_PHRASE = re.compile(r"\bworktree\s+remove\b")
+_SHELL_PHRASE = re.compile(r'''(?:\bworktree\b|["']worktree["'])\s+(?:\bremove\b|["']remove["'])''')
 _QUOTED_ARGV_PAIR = re.compile(r"""["']worktree["']\s*,\s*["']remove["']""")
 _SHELL_SCRIPT_FLAG = re.compile(r"^-[A-Za-z]*c$")
 _SHELL_CALLS = frozenset({"system", "popen", "getoutput", "getstatusoutput"})
@@ -60,6 +60,7 @@ _LINE_COMMENT = {
     ".sh": "#",
     ".bash": "#",
     ".ps1": "#",
+    ".zsh": "#",
     ".js": "//",
     ".mjs": "//",
     ".ts": "//",
@@ -86,6 +87,13 @@ def _literal_text(node: ast.AST) -> str | None:
 
 def _has_argv_pair(words: list[str | None]) -> bool:
     return any(words[index : index + 2] == ["worktree", "remove"] for index in range(len(words) - 1))
+
+
+def _has_dynamic_git_worktree_action(words: list[str | None]) -> bool:
+    """Catch a literal git/worktree argv whose action is supplied dynamically."""
+    return words[:1] == ["git"] and any(
+        words[index : index + 2] == ["worktree", None] for index in range(len(words) - 1)
+    )
 
 
 def _nested_literals(nodes: list[ast.expr]) -> list[str]:
@@ -118,7 +126,7 @@ def python_sites(source: str, relpath: str) -> list[Site]:
     for node in ast.walk(tree):
         if isinstance(node, ast.List | ast.Tuple):
             words = [_literal_text(element) for element in node.elts]
-            if _has_argv_pair(words):
+            if _has_argv_pair(words) or _has_dynamic_git_worktree_action(words):
                 add(node, "argv")
             flag_seen = False
             for word in words:
@@ -171,7 +179,7 @@ def yaml_sites(source: str, relpath: str) -> list[Site]:
     return sites
 
 
-def text_sites(source: str, relpath: str, comment: str) -> list[Site]:
+def text_sites(source: str, relpath: str, comment: str | None) -> list[Site]:
     """Return the removal call sites in one shell or other code source."""
     sites: list[Site] = []
     lines = source.splitlines()
@@ -182,7 +190,7 @@ def text_sites(source: str, relpath: str, comment: str) -> list[Site]:
         while logical.endswith("\\") and following < len(lines):
             logical = logical[:-1] + " " + lines[following]
             following += 1
-        if logical.lstrip().startswith(comment):
+        if comment is not None and logical.lstrip().startswith(comment):
             continue
         if _SHELL_PHRASE.search(logical) or _QUOTED_ARGV_PAIR.search(logical):
             sites.append(Site(relpath, None, number, "command line"))
@@ -193,27 +201,30 @@ def production_sites(project_root: Path = PROJECT_ROOT) -> list[Site]:
     """Scan every production source under ``scripts/``.
 
     Every call-site shape contains both ``worktree`` and ``remove``: the argv
-    pair, the shell phrase, and each low-level remover name. A source lacking
-    either word is skipped unparsed, which keeps the scan to a few seconds.
+    pair, the shell phrase, and each low-level remover name. All UTF-8 source
+    files are scanned regardless of suffix; documentation, bytecode, and
+    notebooks are excluded. A source lacking either word is skipped unparsed,
+    which keeps the scan to a few seconds.
     """
     sites: list[Site] = []
     for source_path in sorted((project_root / "scripts").rglob("*")):
         suffix = source_path.suffix
-        if not source_path.is_file() or (
-            suffix != ".py" and suffix not in _YAML_SUFFIXES and suffix not in _LINE_COMMENT
-        ):
+        if not source_path.is_file() or suffix in {".md", ".txt", ".pyc", ".ipynb"}:
             continue
         raw = source_path.read_bytes()
         if b"worktree" not in raw or b"remove" not in raw:
             continue
         relpath = source_path.relative_to(project_root).as_posix()
-        source = raw.decode("utf-8", errors="replace")
-        if suffix == ".py":
+        try:
+            source = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            continue
+        if suffix in {".py", ".pyi"}:
             sites.extend(python_sites(source, relpath))
         elif suffix in _YAML_SUFFIXES:
             sites.extend(yaml_sites(source, relpath))
         else:
-            sites.extend(text_sites(source, relpath, _LINE_COMMENT[suffix]))
+            sites.extend(text_sites(source, relpath, _LINE_COMMENT.get(suffix)))
     return sites
 
 
@@ -236,7 +247,9 @@ def test_every_worktree_removal_goes_through_the_guarded_chokepoint() -> None:
         ('run_git(["worktree", "remove", "--force", str(path)], cwd=root)', "argv"),
         ('_run_git(root, "worktree", "remove", str(path))', "argv"),
         ('subprocess.run([git, "-C", str(root), "worktree", "remove", p])', "argv"),
+        ('subprocess.run(["git", "worktree", action, path])', "argv"),
         ('subprocess.run(f"git worktree remove {path}", shell=True)', "shell string"),
+        ('subprocess.run("git \\"worktree\\" \\"remove\\" x", shell=True)', "shell string"),
         ('os.system("git -C repo worktree remove x")', "shell string"),
         ('subprocess.run(["sh", "-c", f"git worktree remove {path}"])', "shell -c script"),
         ('subprocess.run(["bash", "-lc", "git worktree remove x && echo ok"])', "shell -c script"),
@@ -289,6 +302,17 @@ def test_scanner_flags_shell_and_code_command_lines(source: str, suffix: str, fl
     sites = text_sites(source, f"scripts/example{suffix}", _LINE_COMMENT[suffix])
 
     assert bool(sites) is flagged
+
+
+def test_scanner_checks_source_files_with_unknown_suffixes(tmp_path: Path) -> None:
+    """The inventory scans source files even when their suffix is unfamiliar."""
+    path = tmp_path / "scripts" / "cleanup.unknown"
+    path.parent.mkdir()
+    path.write_text('git "worktree" "remove" "$target"\n', encoding="utf-8")
+
+    sites = production_sites(tmp_path)
+
+    assert [(site.path, site.kind) for site in sites] == [("scripts/cleanup.unknown", "command line")]
 
 
 @pytest.mark.parametrize(

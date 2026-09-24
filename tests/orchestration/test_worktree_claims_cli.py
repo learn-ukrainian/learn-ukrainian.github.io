@@ -82,7 +82,7 @@ def test_refuses_while_an_unfinished_task_claims_the_worktree(tmp_path, capsys):
 def test_owner_exemption_covers_only_the_owner_record(tmp_path, capsys):
     primary = _primary(tmp_path)
     worktree = _linked(primary, "codex/impl-3")
-    _record(primary, "impl-3", status="failed", worktree_path=str(worktree), worktree_reused=False)
+    _record(primary, "impl-3", status="failed", run_nonce="owner-run-3", worktree_path=str(worktree), worktree_reused=False)
 
     code, out, _err = _remove(capsys, str(worktree), "--owner-task-id", "impl-3", "--reason", "rb2 cleanup")
 
@@ -104,12 +104,59 @@ def test_owner_proof_refuses_a_missing_live_reused_or_foreign_record(tmp_path, c
     primary = _primary(tmp_path)
     worktree = _linked(primary, "codex/impl-4")
     if owner is not None:
-        _record(primary, "impl-4", **{"worktree_path": str(worktree), **owner})
+        _record(
+            primary,
+            "impl-4",
+            **{"run_nonce": "owner-run-4", "worktree_path": str(worktree), **owner},
+        )
 
     code, _out, err = _remove(capsys, str(worktree), "--owner-task-id", "impl-4")
 
     assert code == worktree_claims.EXIT_REFUSED
     assert refusal in err
+    assert worktree.exists()
+
+
+def test_owner_exemption_uses_run_nonce_and_keeps_duplicate_task_id_claim(tmp_path, capsys):
+    primary = _primary(tmp_path)
+    worktree = _linked(primary, "codex/impl-4-duplicate")
+    _record(
+        primary,
+        "impl-4",
+        status="failed",
+        run_nonce="owner-run-4",
+        worktree_path=str(worktree),
+        worktree_reused=False,
+    )
+    duplicate = primary / "batch_state" / "tasks" / "duplicate-record.json"
+    duplicate.write_text(
+        json.dumps(
+            {
+                "task_id": "impl-4",
+                "status": "running",
+                "run_nonce": "different-run-4",
+                "worktree_path": str(worktree),
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    code, _out, err = _remove(capsys, str(worktree), "--owner-task-id", "impl-4")
+
+    assert code == worktree_claims.EXIT_REFUSED
+    assert "worktree claimed by active task impl-4" in err
+    assert worktree.exists()
+
+
+def test_owner_exemption_fails_closed_without_run_nonce(tmp_path, capsys):
+    primary = _primary(tmp_path)
+    worktree = _linked(primary, "codex/impl-4-no-nonce")
+    _record(primary, "impl-4", status="failed", worktree_path=str(worktree), worktree_reused=False)
+
+    code, _out, err = _remove(capsys, str(worktree), "--owner-task-id", "impl-4")
+
+    assert code == worktree_claims.EXIT_REFUSED
+    assert "owner task impl-4 has no valid run_nonce" in err
     assert worktree.exists()
 
 
@@ -263,3 +310,33 @@ def test_wt_sh_clean_refuses_a_claimed_worktree_and_keeps_its_branch(tmp_path):
     assert "Worktree not removed" in proc.stdout
     assert worktree.exists()
     assert _git(primary, "branch", "--list", "fix/817-issue-817")
+
+
+def test_wt_sh_create_from_linked_worktree_targets_primary_sibling(tmp_path):
+    primary = _primary(tmp_path)
+    worktree = _linked(
+        primary,
+        "codex/linked-wt-helper",
+        primary / ".worktrees" / "dispatch" / "codex" / "linked",
+    )
+    python = primary / ".venv" / "bin" / "python"
+    python.parent.mkdir(parents=True)
+    python.write_text(f'#!/bin/sh\nPYTHONPATH="{PROJECT_ROOT}" exec "{sys.executable}" "$@"\n', encoding="utf-8")
+    python.chmod(0o755)
+    linked_script = worktree / "scripts" / "wt.sh"
+    linked_script.parent.mkdir()
+    shutil.copy2(PROJECT_ROOT / "scripts" / "wt.sh", linked_script)
+
+    proc = subprocess.run(
+        ["bash", str(linked_script), "create", "818", "linked invocation"],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=120,
+    )
+
+    target = primary.parent / "learn-ukrainian-wt-818"
+    assert proc.returncode == 0, proc.stderr
+    assert target.is_dir()
+    assert not (worktree / "learn-ukrainian-wt-818").exists()
