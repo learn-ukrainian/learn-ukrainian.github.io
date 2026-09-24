@@ -400,11 +400,16 @@ def _reap_main_worktree(
         }
 
     lock_reason = _git_worktree_lock_reason(bound_path, repo_root)
-    if lock_reason == "initializing" and state.get("pid", False) is None:
-        # #8663: this task's ``git worktree add`` never finished and no worker
-        # was spawned. The partial checkout is dirty by construction, so the
-        # canonical P0 reaper's half-built class, not the clean-tree checks
-        # below, decides it.
+    if (
+        lock_reason == "initializing"
+        and state.get("pid", False) is None
+        and isinstance(state.get("worktree_prep"), dict)
+    ):
+        # #8663: this task reserved the path, its ``git worktree add`` never
+        # finished, and no worker was spawned. The partial checkout is dirty
+        # by construction, so the canonical P0 reaper's half-built class,
+        # which re-proves the reservation, not the clean-tree checks below,
+        # decides it.
         row = _reap_via_canonical(
             repo_root=repo_root,
             bound_path=bound_path,

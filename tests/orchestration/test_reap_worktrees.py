@@ -3833,6 +3833,24 @@ def add_half_built_dispatch(repo: Path, task_id: str) -> Path:
     return worktree
 
 
+def _reserved_record(worktree: Path, *, run_nonce: str = "nonce-8663", **fields: Any) -> dict[str, Any]:
+    """The failed record dispatch writes after reserving ``worktree`` and losing its add."""
+    record: dict[str, Any] = {
+        "status": "failed",
+        "pid": None,
+        "run_nonce": run_nonce,
+        "worktree_path": str(worktree),
+        "worktree_prep": {
+            "path": str(worktree),
+            "run_nonce": run_nonce,
+            "reserved_by_mkdir": True,
+            "reserved_at": "2026-09-24T00:00:00+00:00",
+        },
+    }
+    record.update(fields)
+    return record
+
+
 def test_half_built_dispatch_worktree_reaped_with_branch_kept(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -3840,7 +3858,7 @@ def test_half_built_dispatch_worktree_reaped_with_branch_kept(
     repo = init_repo(tmp_path)
     worktree = add_half_built_dispatch(repo, "impl-8663-r5")
     head = git(repo, "rev-parse", "refs/heads/claude/impl-8663-r5")
-    _write_task_record(repo, "impl-8663-r5", status="failed", pid=None, worktree_path=str(worktree))
+    _write_task_record(repo, "impl-8663-r5", **_reserved_record(worktree))
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
 
@@ -3856,13 +3874,44 @@ def test_half_built_dispatch_worktree_reaped_with_branch_kept(
     assert_main_checkout_unchanged(repo)
 
 
+def test_failed_reuse_of_an_existing_locked_worktree_is_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A failed attempt to reuse a worktree someone else made never proves ownership."""
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-reuse")
+    (worktree / "uncommitted-human-work.txt").write_text("keep me\n", encoding="utf-8")
+    # Exactly what _record_worktree_prep_failure writes when attaching to the
+    # existing path fails: terminal, pid null, the path, and no reservation.
+    _write_task_record(
+        repo,
+        "impl-8663-reuse",
+        status="failed",
+        pid=None,
+        run_nonce="nonce-reuse",
+        worktree_path=str(worktree),
+        worktree_reused=False,
+        returncode_reason="worktree preparation failed",
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
+
+    assert result.action != "removed"
+    assert not result.reason.startswith("half-built dispatch worktree")
+    assert (worktree / "uncommitted-human-work.txt").read_text(encoding="utf-8") == "keep me\n"
+    assert worktree.resolve() in {info.path.resolve() for info in rw.list_git_worktrees(repo)}
+
+
 def test_half_built_dispatch_worktree_kept_while_its_task_runs(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo = init_repo(tmp_path)
     worktree = add_half_built_dispatch(repo, "impl-8663-live")
-    _write_task_record(repo, "impl-8663-live", status="running", pid=os.getpid(), worktree_path=str(worktree))
+    _write_task_record(repo, "impl-8663-live", **_reserved_record(worktree, status="running", pid=os.getpid()))
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
@@ -3872,25 +3921,57 @@ def test_half_built_dispatch_worktree_kept_while_its_task_runs(
     assert worktree.exists()
 
 
+def _without(record: dict[str, Any], key: str) -> dict[str, Any]:
+    return {name: value for name, value in record.items() if name != key}
+
+
 @pytest.mark.parametrize(
-    ("record", "live_cwd_inside"),
+    ("mutate", "live_cwd_inside"),
     [
-        pytest.param({"status": "failed", "pid": 424242}, False, id="worker-was-spawned"),
-        pytest.param({"status": "failed"}, False, id="pid-not-recorded"),
-        pytest.param({"status": "failed", "pid": None}, True, id="live-process-cwd-inside"),
+        pytest.param(lambda record: {**record, "pid": 424242}, False, id="worker-was-spawned"),
+        pytest.param(lambda record: _without(record, "pid"), False, id="pid-not-recorded"),
+        pytest.param(lambda record: record, True, id="live-process-cwd-inside"),
+        pytest.param(lambda record: {**record, "status": "spawning"}, False, id="still-spawning"),
+        pytest.param(lambda record: _without(record, "worktree_prep"), False, id="no-reservation"),
+        pytest.param(
+            lambda record: {**record, "worktree_prep": {**record["worktree_prep"], "reserved_by_mkdir": False}},
+            False,
+            id="not-reserved-by-mkdir",
+        ),
+        pytest.param(lambda record: {**record, "run_nonce": "another-run"}, False, id="run-nonce-mismatch"),
+        pytest.param(lambda record: _without(record, "run_nonce"), False, id="run-nonce-missing"),
+        pytest.param(
+            lambda record: {**record, "worktree_prep": {**record["worktree_prep"], "path": "/elsewhere"}},
+            False,
+            id="reservation-for-another-path",
+        ),
     ],
 )
-def test_half_built_class_requires_pid_none_and_no_live_cwd(
+def test_half_built_class_requires_full_ownership_proof(
     tmp_path: Path,
-    record: dict[str, Any],
+    mutate: Any,
     live_cwd_inside: bool,
 ) -> None:
     repo = init_repo(tmp_path)
     worktree = add_half_built_dispatch(repo, "impl-8663-guard")
-    _write_task_record(repo, "impl-8663-guard", worktree_path=str(worktree), **record)
     info = next(item for item in rw.list_git_worktrees(repo) if item.path.resolve() == worktree.resolve())
     assert info.locked_reason == "initializing"
+    _write_task_record(repo, "impl-8663-guard", **_reserved_record(worktree))
+    assert rw._half_built_dispatch_reason(repo_root=repo, info=info, live_cwds=set()) is not None
+
+    _write_task_record(repo, "impl-8663-guard", **mutate(_reserved_record(worktree)))
 
     live_cwds = {worktree.resolve()} if live_cwd_inside else set()
     assert rw._half_built_dispatch_reason(repo_root=repo, info=info, live_cwds=live_cwds) is None
     assert rw._half_built_dispatch_reason(repo_root=repo, info=info, live_cwds=None) is None
+
+
+def test_half_built_class_requires_the_initializing_lock(tmp_path: Path) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-lock")
+    git(repo, "worktree", "unlock", str(worktree))
+    git(repo, "worktree", "lock", "--reason", "kept by a human", str(worktree))
+    _write_task_record(repo, "impl-8663-lock", **_reserved_record(worktree))
+    info = next(item for item in rw.list_git_worktrees(repo) if item.path.resolve() == worktree.resolve())
+
+    assert rw._half_built_dispatch_reason(repo_root=repo, info=info, live_cwds=set()) is None

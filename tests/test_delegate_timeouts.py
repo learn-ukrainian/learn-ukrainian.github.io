@@ -471,7 +471,8 @@ def test_ensure_worktree_timeouts(tmp_path: Path) -> None:
             _ensure_worktree(
                 agent="agy",
                 task_id="task-123",
-                raw_path=str(tmp_path / "wt"),
+                # A stopped add not confirmed exited keeps its reservation at "wt".
+                raw_path=str(tmp_path / "wt-upstream"),
                 base="main",
                 branch="feature-branch",
                 resolved_base_sha="sha123",

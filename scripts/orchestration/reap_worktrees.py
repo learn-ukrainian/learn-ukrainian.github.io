@@ -1125,6 +1125,16 @@ def _acp_runtime_cleanup_recheck(repo_root: Path, info: WorktreeInfo) -> str | N
     return None
 
 
+def _names_path(claimed: object, path: Path) -> bool:
+    """True when ``claimed`` is a non-empty path string resolving to ``path``."""
+    if not isinstance(claimed, str) or not claimed:
+        return False
+    try:
+        return Path(claimed).resolve() == path.resolve()
+    except (OSError, RuntimeError):
+        return False
+
+
 def _half_built_dispatch_reason(
     *,
     repo_root: Path,
@@ -1135,11 +1145,16 @@ def _half_built_dispatch_reason(
 
     A dispatch whose add was killed leaves a registered worktree that git
     still locks with reason ``initializing`` and a partial checkout that no
-    clean-tree class accepts. It qualifies only when its dispatch task record
-    names this path, is terminal, and records ``pid: null`` (no worker was
-    ever spawned), git has already written a resolvable HEAD, and a
-    conclusive probe finds no live process cwd inside. Like the ACP class it
-    never consults PR state, so it stays available under --safe-only.
+    clean-tree class accepts. It qualifies only on positive proof that the
+    dispatch created the path: its task record names this path, is terminal,
+    records ``pid: null`` (no worker was ever spawned), and carries the
+    ``worktree_prep`` reservation dispatch wrote before running git
+    (``reserved_by_mkdir`` for exactly this path, under the record's own
+    ``run_nonce``). A record without that reservation, such as a failed
+    attempt to reuse an existing worktree, never qualifies. Git must also have
+    written a resolvable HEAD, and a conclusive probe must find no live
+    process cwd inside. Like the ACP class it never consults PR state, so it
+    stays available under --safe-only.
     """
     if info.locked_reason != _GIT_INITIALIZING_LOCK_REASON or not info.head:
         return None
@@ -1152,13 +1167,15 @@ def _half_built_dispatch_reason(
         return None
     if "pid" not in payload or payload["pid"] is not None:
         return None
-    claimed = payload.get("worktree_path")
-    if not isinstance(claimed, str) or not claimed:
+    if not _names_path(payload.get("worktree_path"), info.path):
         return None
-    try:
-        if Path(claimed).resolve() != info.path.resolve():
-            return None
-    except (OSError, RuntimeError):
+    prep = payload.get("worktree_prep")
+    run_nonce = payload.get("run_nonce")
+    if not isinstance(prep, dict) or prep.get("reserved_by_mkdir") is not True:
+        return None
+    if not isinstance(run_nonce, str) or not run_nonce or prep.get("run_nonce") != run_nonce:
+        return None
+    if not _names_path(prep.get("path"), info.path):
         return None
     if live_cwds is None:
         return None
@@ -1167,7 +1184,8 @@ def _half_built_dispatch_reason(
         return None
     return (
         f"{_HALF_BUILT_REASON_PREFIX}task-id={task_id} status={status}; "
-        "git lock 'initializing'; worker never spawned (pid=None); no live process cwd"
+        "path reserved by this dispatch run; git lock 'initializing'; worker never spawned (pid=None); "
+        "no live process cwd"
     )
 
 

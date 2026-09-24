@@ -44,7 +44,9 @@ from scripts.path_safety import assert_delete_target
 LOCK_DIR_NAME = "lu-worktree-locks"
 DEFAULT_LOCK_TIMEOUT_S = 30.0
 _LOCK_POLL_S = 0.05
-# (lock key, thread ident) pairs this process holds; see worktree_lock.
+# (lock file, thread ident) pairs this process holds; see worktree_lock. The
+# lock file is the resolved ``<lock_dir>/<key>.lock``, so holding a path's lock
+# in one lock directory never counts as holding it in another (#8663).
 _HELD_LOCKS: set[tuple[str, int]] = set()
 
 # Every status a finished task persists. Any other value, including
@@ -90,6 +92,11 @@ def lock_path(path: Path | str, *, lock_dir: Path) -> tuple[str, Path]:
     return canonical, lock_dir / f"{key}.lock"
 
 
+def _held_lock_key(lock_file: Path) -> tuple[str, int]:
+    """Return this thread's :data:`_HELD_LOCKS` entry for ``lock_file``."""
+    return str(lock_file.parent.resolve() / lock_file.name), threading.get_ident()
+
+
 @contextlib.contextmanager
 def worktree_lock(path: Path | str, *, lock_dir: Path, timeout_s: float | None = None) -> Iterator[None]:
     """Hold an exclusive ``flock`` advisory lock for one worktree path.
@@ -105,7 +112,10 @@ def worktree_lock(path: Path | str, *, lock_dir: Path, timeout_s: float | None =
     :class:`WorktreeLockReentry` instead of waiting on itself.
     """
     canonical, lock_file = lock_path(path, lock_dir=lock_dir)
-    holder = (lock_file.stem, threading.get_ident())
+    try:
+        holder = _held_lock_key(lock_file)
+    except (OSError, RuntimeError) as exc:
+        raise WorktreeLockError(f"worktree lock dir {lock_dir} unresolvable: {type(exc).__name__}: {exc}") from exc
     if holder in _HELD_LOCKS:
         raise WorktreeLockReentry(f"worktree lock for {canonical} is already held by this thread")
     if timeout_s is None:
@@ -142,12 +152,12 @@ def worktree_lock(path: Path | str, *, lock_dir: Path, timeout_s: float | None =
 
 
 def holds_worktree_lock(path: Path | str, *, lock_dir: Path) -> bool:
-    """Return True when this thread holds :func:`worktree_lock` for ``path``."""
+    """Return True when this thread holds :func:`worktree_lock` for ``path`` in ``lock_dir``."""
     try:
         _, lock_file = lock_path(path, lock_dir=lock_dir)
-    except WorktreeLockError:
+        return _held_lock_key(lock_file) in _HELD_LOCKS
+    except (WorktreeLockError, OSError, RuntimeError):
         return False
-    return (lock_file.stem, threading.get_ident()) in _HELD_LOCKS
 
 
 LOCK_BUSY = "worktree lock busy"
@@ -525,10 +535,11 @@ def remove_unclaimed_worktree(
     ``<control_root>/batch_state/tasks`` and ``lock_dir`` to
     :func:`repository_lock_dir` of ``control_root``. ``reason`` is the
     caller's purpose, recorded on success. ``reuse_held_lock`` lets a caller
-    that already holds the lock on this thread, such as dispatch undoing its
-    own failed ``git worktree add`` (#8663), run every step under that lock
-    instead of refusing as a reentry; a lock this thread does not hold is
-    still acquired. This never raises.
+    that already holds the lock in ``lock_dir`` on this thread, such as
+    dispatch undoing its own failed ``git worktree add`` (#8663), run every
+    step under that lock instead of refusing as a reentry; any other lock,
+    including this path's lock in another directory, is still acquired. This
+    never raises.
     """
     branch: str | None = None
     dirty: bool | None = None
