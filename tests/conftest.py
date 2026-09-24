@@ -200,11 +200,83 @@ def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[i
     return size, False
 
 
+# =============================================================================
+# CONTENT-TREE POLLUTION GUARD (#8631)
+# =============================================================================
+# A test that drives a build/promote writer against the real repo root leaves
+# files under ``curriculum/`` (e.g. ``a1/my-morning/wiki_completeness_gate.json``).
+# That makes the checkout dirty, and ``curriculum/`` changes read as content
+# drift. The controller snapshots ``git status`` for the content trees at
+# session start and fails the session if it differs at session end.
+
+_CONTENT_TREE_PATHSPECS = ("curriculum/", "site/src/content/")
+_CONTENT_TREE_GIT_TIMEOUT_S = 60
+_CONTENT_TREE_SNAPSHOT_KEY = "_content_tree_snapshot"
+
+
+def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
+    """``git status --porcelain`` lines for the content trees, or None outside git."""
+    git_args = ["git", "-C", str(root)]
+    try:
+        top = subprocess.run(
+            [*git_args, "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            text=True,
+            timeout=_CONTENT_TREE_GIT_TIMEOUT_S,
+            check=False,
+        )
+        if top.returncode != 0 or Path(top.stdout.strip()).resolve() != root.resolve():
+            return None
+        status = subprocess.run(
+            [*git_args, "status", "--porcelain", "--untracked-files=all", "--", *_CONTENT_TREE_PATHSPECS],
+            capture_output=True,
+            text=True,
+            timeout=_CONTENT_TREE_GIT_TIMEOUT_S,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if status.returncode != 0:
+        return None
+    return frozenset(line for line in status.stdout.splitlines() if line.strip())
+
+
+def _content_tree_changes(before: frozenset[str] | None, after: frozenset[str] | None) -> list[str]:
+    """Status lines present after the session but not before it, sorted."""
+    if before is None or after is None:
+        return []
+    return sorted(after - before)
+
+
+def pytest_sessionstart(session: pytest.Session) -> None:
+    config = session.config
+    if hasattr(config, "workerinput"):
+        return
+    setattr(config, _CONTENT_TREE_SNAPSHOT_KEY, _content_tree_snapshot(_REPO_ROOT))
+
+
+def _enforce_content_tree_clean(session: pytest.Session) -> None:
+    before = getattr(session.config, _CONTENT_TREE_SNAPSHOT_KEY, None)
+    changes = _content_tree_changes(before, _content_tree_snapshot(_REPO_ROOT))
+    if not changes:
+        return
+    print(
+        "content-tree guard: the test session changed files under "
+        f"{', '.join(_CONTENT_TREE_PATHSPECS)} (a test wrote into the real checkout; "
+        "point its writer at tmp_path):"
+    )
+    for line in changes:
+        print(f"  {line}")
+    if session.exitstatus == pytest.ExitCode.OK:
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     """Report this session's temp usage and optionally enforce a CI budget."""
     config = session.config
     if hasattr(config, "workerinput"):
         return
+    _enforce_content_tree_clean(session)
 
     tmp_path_factory = getattr(config, "_tmp_path_factory", None)
     if tmp_path_factory is None:
