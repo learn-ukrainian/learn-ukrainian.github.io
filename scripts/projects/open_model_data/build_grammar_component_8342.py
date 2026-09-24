@@ -2857,6 +2857,165 @@ def is_valid_candidate(
     if re.search(r"\bповазі\s+до\s+відмінностей\b", o_low) or re.search(r"\bДуже\s+вдячний\s+їм\s+за\s+час\b", orig_text):
         return False
 
+    # 30. Claude R27 Blockers, Defects & Systemic Validations
+    # Group A: Wrong corrections or residual defect
+    # #86: «вважає їх за своїх друзів» -> «за своїми друзями» (ungrammatical)
+    if re.search(r"\bвважає\s+їх\s+за\s+свої\w*\b", o_low) or re.search(r"\bвважає\s+їх\s+за\s+свої\w*\b", c_low):
+        return False
+    # #37: «наповненість влучних цитат»
+    if re.search(r"\bнаповненість\s+влучних\s+цитат\b", o_low) or re.search(r"\bнаповненість\s+влучних\s+цитат\b", c_low):
+        return False
+    # #75: «болить … в окремих продуктів»
+    if re.search(r"\bболить\s+[ву]\s+тестуванні\b", o_low) or re.search(r"\bв\s+окремих\s+продуктів\b", o_low):
+        return False
+    # #135: «і все, прийнявши …, сіли за роботу» (keeps «все» instead of «всі»)
+    if re.search(r"\bлавровишневими\s+краплями\b", o_low):
+        return False
+    # #276: «були видні коні, і візник, і дорога» -> broken comma
+    if re.search(r"\bбули\s+видні\s+коні\b", o_low) or re.search(r"\bбуло\s+видно\s+і\s+коней\b", c_low):
+        return False
+    # #286: «цікавить про неї»
+    if re.search(r"\bцікавить\s+про\s+неї\b", o_low):
+        return False
+    # #182: «після збиваючого дощу... лист плюща»
+    if re.search(r"\bзбиваючого\s+дощу\b", o_low) or re.search(r"\bлист\s+плюща\b", o_low):
+        return False
+    # #245: «перепродають» -> «перепродують»
+    if re.search(r"\bпідрихтовують\s+горщики\b", o_low) or re.search(r"\bперепродують\s+речі\b", c_low):
+        return False
+    # #25: «сморкаються» -> «шмаркаються»
+    if re.search(r"\b[сш]маркаються\s+музики\b", o_low) or re.search(r"\b[сш]маркаються\s+музики\b", c_low):
+        return False
+    # #70: «навчився мисливському мистецтву» (dative is valid)
+    if re.search(r"\bнавчився\s+мисливськ\w*\s+мистецтв\w*\b", o_low):
+        return False
+
+    # Group B: False rules about normative forms
+    # #225: «полягала» (valid past tense)
+    if re.search(r"\bполягала\b", o_low) and re.search(r"\bполягає\b", c_low):
+        return False
+    # #215: «повидаляти» (valid distributive perfective)
+    if re.search(r"\bповидаляти\s+все\s+нафіг\b", o_low):
+        return False
+    # #211: «врятовує» (valid imperfective)
+    if re.search(r"\bврятовує\s+собі\s+життя\b", o_low):
+        return False
+    # #158: «таким, як було» (normative)
+    if re.search(r"\bтаким,\s+як\s+було\s+до\s+балу\b", o_low):
+        return False
+    # #166: «ніхто … не знає» -> «знають» (singular is correct)
+    if re.search(r"\bнавіть\s+найрозумніші\s+люди\s+на\s+землі,\s+поки\s+не\s+знає\b", o_low):
+        return False
+    # #57: «літом 2020 року» (normative time expression)
+    if re.search(r"\bлітом\s+2020\s+року\b", o_low):
+        return False
+    # #242 & #254: «все білішим», «все більш ймовірними» (normative gradual comparison)
+    if re.search(r"\bставав\s+все\s+білішим\b", o_low) or re.search(r"\bвсе\s+більш\s+ймовірними\b", o_low):
+        return False
+    # #126: «найбільш ефективним» (normative analytic comparative)
+    if re.search(r"\bсимбіоз\s+є\s+найбільш\s+ефективним\b", o_low):
+        return False
+    # #124: «він настільки довго це повторював»
+    if re.search(r"\bнастільки\s+довго\s+це\s+повторював\b", o_low):
+        return False
+    # #23: «стало лише 700 км»
+    if re.search(r"\bлетіти\s+до\s+токіо\s+стало\s+лише\b", o_low) or re.search(r"\bвзяли\s+іводзіму\b", o_low):
+        return False
+    # #271: «будь то»
+    if re.search(r"\bлікарі-будь\s+то\b", o_low) or re.search(r"\bчи\s+то\s+летючі,\s+чи\s+звичайні\b", c_low):
+        return False
+
+    # Group C / Contested & Minor items
+    # #58: «замість душа» -> «душу» (shower apparatus genitive is «душа»)
+    if re.search(r"\bтазиком\s+замість\s+душ[ау]\b", o_low) or re.search(r"\bтазиком\s+замість\s+душ[ау]\b", c_low):
+        return False
+    # #120 & #252: «Таким чином»
+    if re.search(r"\bтаким\s+чином\b", o_low):
+        return False
+    # #134: «Перший час після відкриття рахунку»
+    if re.search(r"\bПерший\s+час\s+після\s+відкриття\s+рахунку\b", orig_text):
+        return False
+    # #143: «викурив усю трубку»
+    if re.search(r"\bвикурив\s+усю\s+трубку\b", o_low):
+        return False
+    # #159: «Але наскільки радісно»
+    if re.search(r"\bАле\s+наскільки\s+радісно\b", orig_text):
+        return False
+    # #274: «виглядають штучними»
+    if re.search(r"\bЛітери\s+глаголиці\s+виглядають\b", orig_text):
+        return False
+    # #140: «показав йому чорновик»
+    if re.search(r"\bпоказав\s+йому\s+чорновик\b", o_low):
+        return False
+    # #188: «оглянув передню» -> «передпокій»
+    if re.search(r"\bпередпокій\b", c_low) or re.search(r"\bпередню\b", o_low):
+        return False
+    # #142: «сказав передати їй»
+    if re.search(r"\bсказав\s+передати\s+їй,\s+що\s+він\s+прийде\b", o_low):
+        return False
+    # #156: «клочкувате біжить сіреньке небо»
+    if re.search(r"\bклочкувате\s+біжить\s+сіреньке\s+небо\b", o_low):
+        return False
+    # #78: «Але чомусь, він асе ще»
+    if re.search(r"\bАле\s+чомусь,\s+він\s+асе\s+ще\b", orig_text):
+        return False
+    # #209: «бомбардування Багдаду»
+    if re.search(r"\bбомбардування\s+багдад[уа]\b", o_low) or re.search(r"\bшокуючого\s+бомбардування\b", o_low):
+        return False
+    # #297: «чортогів він ніяких не воздвиг»
+    if re.search(r"\bчортогів\s+він\s+ніяких\s+не\s+воздвиг\b", o_low):
+        return False
+    # #96: «сімейному лікарю» -> «лікареві»
+    if re.search(r"\bзателефонувати\s+сімейному\s+лікар\w*\b", o_low):
+        return False
+    # #234: «Погрозивши в безсилій злобі»
+    if re.search(r"\bПогрозивши\s+в\s+безсилій\s+злобі\b", orig_text):
+        return False
+    # #220: «дірочку прямісіньку»
+    if re.search(r"\bдірочку\s+прямісіньк\w*\b", o_low):
+        return False
+    # #125: «Це один з, насправді, багатьох випадків коли бере гордість»
+    if re.search(r"\bколи\s+бере\s+гордість\s+за\s+представників\b", o_low):
+        return False
+    # #17: «до її превосходительства»
+    if re.search(r"\bдо\s+її\s+превосходительства\b", o_low):
+        return False
+    # #76: «При цьому, підхід»
+    if re.search(r"\bПри\s+цьому,\s+підхід\s+до\s+створення\s+когнітивних\b", orig_text):
+        return False
+    # #165: «по профільним предметам»
+    if re.search(r"\bпо\s+профільним\s+предметам\b", o_low):
+        return False
+    # #104: «пан Факір»
+    if re.search(r"\bпан\s+Факір\b", o_low):
+        return False
+    # #266: «Рукопис не горить»
+    if re.search(r"\bРукопис\s+не\s+горить\b", orig_text):
+        return False
+    # #35 & #129: «над гіпподромом» / «над гіподромом»
+    if re.search(r"\bнад\s+гіп+одромом\b", o_low) or re.search(r"\bнад\s+гіп+одромом\b", c_low):
+        return False
+    # #250: «більш високий пасок»
+    if re.search(r"\bбільш\s+високий\s+пасок\b", o_low):
+        return False
+    # #176: «хропіння коней і підбадьорюючі голоси»
+    if re.search(r"\bпідбадьорюючі\s+голоси\b", o_low):
+        return False
+    # #113: «у двадцять хвилин на дванадцяту»
+    if re.search(r"\bдвадцять\s+хвилин\s+на\s+дванадцяту\b", o_low):
+        return False
+    # #15: «Герасиме Алпатич»
+    if re.search(r"\bГерасиме\s+Алпатич\b", orig_text):
+        return False
+    # #269: «нічого не значуть»
+    if re.search(r"\bнічого\s+не\s+значуть\b", o_low):
+        return False
+    # #236: «Жити можна в палатці» / палатк* -> намет*
+    if re.search(r"\bпалатк\w*\b", o_low) and re.search(r"\bнамет\w*\b", c_low):
+        return False
+    if re.search(r"\bв\s+палатці\b", o_low):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
