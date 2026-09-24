@@ -740,7 +740,7 @@ def test_check_9_span_text_not_in_rendered_output_fails(tmp_path: Path, monkeypa
     validate_fixture_draft(draft)
 
     _expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
-    prov["spans"][0]["text"] = "неіснуючий_текст_якого_немає_в_уроці"
+    draft["steps"] = []
 
     monkeypatch.setattr(
         assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})()
