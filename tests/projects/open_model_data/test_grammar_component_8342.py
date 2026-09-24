@@ -14,12 +14,14 @@ Verifies:
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import re
 import sys
 from collections import Counter
 from pathlib import Path
+from unittest import mock
 
 import pytest
 
@@ -35,6 +37,9 @@ from scripts.projects.open_model_data.audit_dataset_acceptance import (
 )
 from scripts.projects.open_model_data.build_grammar_component_8342 import (
     build_jaccard_firewall_matcher,
+)
+from scripts.projects.open_model_data.generate_grammar_signoff_8342 import (
+    generate_signoff_and_receipt,
 )
 from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     IN_SCOPE_TAGS,
@@ -500,11 +505,6 @@ def test_acceptance_review_sample_receipt_and_signoff():
 
 def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
     """Verify generate_grammar_signoff_8342 rejects extra keys, index mismatch, and flags false criteria."""
-    import copy
-    from unittest import mock
-
-    from scripts.projects.open_model_data.generate_grammar_signoff_8342 import generate_signoff_and_receipt
-
     findings_file = GRAMMAR_DIR / "claude_review_findings.json"
     raw_findings = json.loads(findings_file.read_text(encoding="utf-8"))
 
@@ -579,6 +579,55 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
     with pytest.raises(ValueError, match="non-canonical sample index key"):
         generate_signoff_and_receipt(
             findings_file=f_path4,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 5. Duplicate JSON key rejected during parsing
+    raw_text = findings_file.read_text(encoding="utf-8")
+    dup_text = '{"1": {"sample_index": 1, "verdict": "CHANGES_REQUESTED", "status": "FAIL", "reviewer_assessment": "x", "criteria": {"pedagogical_soundness": true, "morphology_vesum": true, "pravopys_2019": true, "zero_russianisms": true, "zero_soviet_sum11": true}}, ' + raw_text[1:]
+    f_path5 = tmp_path / "dup_key.json"
+    f_path5.write_text(dup_text, encoding="utf-8")
+    with pytest.raises(ValueError, match="duplicate key '1' in JSON object"):
+        generate_signoff_and_receipt(
+            findings_file=f_path5,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 6. Explicit reviewer rejection ("REJECTED") produces adverse defect
+    rejected_findings = copy.deepcopy(raw_findings)
+    rejected_findings["1"]["verdict"] = "REJECTED"
+    rejected_findings["1"]["status"] = "FAIL"
+    f_path6 = tmp_path / "rejected_verdict.json"
+    f_path6.write_text(json.dumps(rejected_findings), encoding="utf-8")
+    tmp_receipt6 = tmp_path / "test6.receipt.json"
+    tmp_signoff6 = tmp_path / "test6.signoff.json"
+    with mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.RECEIPT_FILE", tmp_receipt6), \
+         mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.SIGNOFF_FILE", tmp_signoff6):
+        generate_signoff_and_receipt(
+            findings_file=f_path6,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+    receipt_data6 = json.loads(tmp_receipt6.read_text(encoding="utf-8"))
+    assert receipt_data6["verdict"] == "CHANGES_REQUESTED"
+    assert receipt_data6["blocker_defect_count"] >= 1
+    item1 = receipt_data6["reviewed_sample_items"][0]
+    assert item1["status"] == "FAIL"
+    assert item1["verdict"] == "CHANGES_REQUESTED"
+
+    # 7. Unknown verdict string rejected
+    unknown_findings = copy.deepcopy(raw_findings)
+    unknown_findings["1"]["verdict"] = "CUSTOM_NON_APPROVAL"
+    f_path7 = tmp_path / "unknown_verdict.json"
+    f_path7.write_text(json.dumps(unknown_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="unknown verdict 'CUSTOM_NON_APPROVAL'"):
+        generate_signoff_and_receipt(
+            findings_file=f_path7,
             write_signoff=True,
             reviewer_id="claude_blue_team_ling_review",
             reviewer_family="claude",

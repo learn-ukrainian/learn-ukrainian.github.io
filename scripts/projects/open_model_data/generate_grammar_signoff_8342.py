@@ -38,6 +38,18 @@ SIGNOFF_TEMPLATE = COMPONENT_DIR / "acceptance_review_sample.signoff_template.js
 RECEIPT_FILE = COMPONENT_DIR / "acceptance_review_sample.receipt.json"
 SIGNOFF_FILE = COMPONENT_DIR / "acceptance_review_sample.signoff.json"
 VESUM_DB = VESUM_DB_PATH
+ALLOWED_REVIEWER_VERDICTS = {"APPROVED", "CHANGES_REQUESTED", "REJECTED"}
+ALLOWED_REVIEWER_STATUSES = {"PASS", "FAIL"}
+
+
+def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    """Strict JSON object parser that rejects duplicate keys (Provenance invariant)."""
+    d: dict[str, Any] = {}
+    for k, v in pairs:
+        if k in d:
+            raise ValueError(f"Provenance violation: duplicate key {k!r} in JSON object")
+        d[k] = v
+    return d
 
 
 def _inspect_span_in_vesum(span: str, cur: sqlite3.Cursor) -> dict[str, Any]:
@@ -164,7 +176,7 @@ def generate_signoff_and_receipt(
     raw_findings: dict[str, Any] = {}
     if findings_file and findings_file.is_file():
         with findings_file.open("r", encoding="utf-8") as f:
-            raw_findings = json.load(f)
+            raw_findings = json.load(f, object_pairs_hook=_reject_duplicate_json_keys)
             if not isinstance(raw_findings, dict):
                 raise ValueError(
                     "Provenance violation: findings file must contain a JSON object mapping sample indices to evaluations"
@@ -252,6 +264,18 @@ def generate_signoff_and_receipt(
             if embedded_s_idx != s_idx:
                 raise ValueError(
                     f"Provenance violation: findings entry key {s_idx} does not match embedded sample_index ({embedded_s_idx})"
+                )
+            r_verdict = f_entry.get("verdict")
+            if r_verdict is not None and r_verdict not in ALLOWED_REVIEWER_VERDICTS:
+                raise ValueError(
+                    f"Provenance violation: findings entry for sample index {s_idx} has unknown verdict {r_verdict!r} "
+                    f"(allowed: {sorted(ALLOWED_REVIEWER_VERDICTS)})"
+                )
+            r_status = f_entry.get("status")
+            if r_status is not None and r_status not in ALLOWED_REVIEWER_STATUSES:
+                raise ValueError(
+                    f"Provenance violation: findings entry for sample index {s_idx} has unknown status {r_status!r} "
+                    f"(allowed: {sorted(ALLOWED_REVIEWER_STATUSES)})"
                 )
             assessment = f_entry.get("reviewer_assessment") or f_entry.get("evaluation")
             if not assessment or not isinstance(assessment, str) or not assessment.strip():
@@ -469,13 +493,29 @@ def generate_signoff_and_receipt(
         if sample_idx in findings:
             f_entry = findings[sample_idx]
             if isinstance(f_entry, dict):
+                r_verdict = f_entry.get("verdict")
+                r_status = f_entry.get("status")
+                if r_verdict is not None and r_verdict not in ALLOWED_REVIEWER_VERDICTS:
+                    raise ValueError(
+                        f"Provenance violation: item {sample_idx} has unknown verdict {r_verdict!r} (allowed: {sorted(ALLOWED_REVIEWER_VERDICTS)})"
+                    )
+                if r_status is not None and r_status not in ALLOWED_REVIEWER_STATUSES:
+                    raise ValueError(
+                        f"Provenance violation: item {sample_idx} has unknown status {r_status!r} (allowed: {sorted(ALLOWED_REVIEWER_STATUSES)})"
+                    )
                 has_defect = (
-                    f_entry.get("verdict") == "CHANGES_REQUESTED"
-                    or f_entry.get("status") == "FAIL"
+                    r_verdict in ("CHANGES_REQUESTED", "REJECTED")
+                    or (r_verdict is not None and r_verdict != "APPROVED")
+                    or r_status == "FAIL"
+                    or (r_status is not None and r_status != "PASS")
                     or bool(f_entry.get("defect"))
                 )
                 if has_defect:
-                    defect_desc = f_entry.get("defect") or f_entry.get("comment") or "Дефект виявлено рецензентом"
+                    defect_desc = (
+                        f_entry.get("defect")
+                        or f_entry.get("comment")
+                        or f"Негативний вердикт рецензента ({r_verdict or r_status})"
+                    )
                     item_defects.append(defect_desc)
                 reviewer_assessment = (
                     f_entry.get("reviewer_assessment")
