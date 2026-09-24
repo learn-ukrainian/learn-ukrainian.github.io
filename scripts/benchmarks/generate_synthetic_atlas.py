@@ -36,8 +36,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import random
 import sqlite3
+import tempfile
 import time
 from pathlib import Path
 
@@ -119,6 +121,28 @@ def _rewrite_payload_slug(payload_json: str, old_slug: str, new_slug: str) -> st
     return json.dumps(payload, ensure_ascii=False)
 
 
+def _validate_output_path(source_db: Path, out: Path) -> None:
+    """Refuse aliases of the source and any existing non-synthetic output."""
+    if out.resolve() == source_db.resolve() or (out.exists() and source_db.exists() and out.samefile(source_db)):
+        raise ValueError("output must not be the source DB")
+    if out.is_symlink():
+        raise ValueError("output must not be a symlink")
+    if not out.exists():
+        return
+    if not out.is_file():
+        raise ValueError("output must be a regular file")
+    try:
+        conn = _open_readonly(out)
+        try:
+            row = conn.execute("SELECT value_json FROM manifest_metadata WHERE key = 'dataset_kind'").fetchone()
+            if row is None or json.loads(row[0]) != "synthetic-resample":
+                raise ValueError("refusing to overwrite a non-synthetic output")
+        finally:
+            conn.close()
+    except (sqlite3.DatabaseError, json.JSONDecodeError) as exc:
+        raise ValueError("refusing to overwrite an unrecognized output") from exc
+
+
 def build_synthetic_db(
     *,
     source_db: Path,
@@ -126,12 +150,35 @@ def build_synthetic_db(
     seed: int,
     target_articles: int,
 ) -> dict[str, object]:
+    _validate_output_path(source_db, out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(prefix=f".{out.name}.", suffix=".tmp", dir=out.parent)
+    os.close(fd)
+    temp_out = Path(temp_name)
+    try:
+        summary = _build_synthetic_db_unchecked(
+            source_db=source_db, out=temp_out, seed=seed, target_articles=target_articles
+        )
+        _validate_output_path(source_db, out)
+        os.replace(temp_out, out)
+        summary["out"] = str(out)
+        return summary
+    finally:
+        for path in (temp_out, Path(f"{temp_out}-wal"), Path(f"{temp_out}-shm")):
+            path.unlink(missing_ok=True)
+
+
+def _build_synthetic_db_unchecked(
+    *, source_db: Path, out: Path, seed: int, target_articles: int
+) -> dict[str, object]:
     started = time.monotonic()
     snapshot = SourceSnapshot(source_db)
     article_slugs = sorted(snapshot.articles)
     source_article_count = len(article_slugs)
     if target_articles < 1:
         raise ValueError(f"target_articles must be >= 1, got {target_articles}")
+    if source_article_count == 0:
+        raise ValueError("source DB has no articles")
 
     rng = random.Random(seed)
     if target_articles >= source_article_count:
@@ -140,6 +187,7 @@ def build_synthetic_db(
     else:
         base_slugs = sorted(rng.sample(article_slugs, target_articles))
         copy_sources = []
+    base_slug_set = set(base_slugs)
 
     # Form-of route payloads (no articles row) scale at their natural ratio.
     form_slugs = snapshot.form_route_slugs
@@ -155,12 +203,15 @@ def build_synthetic_db(
             else []
         )
 
-    if out.exists():
-        out.unlink()
-    out.parent.mkdir(parents=True, exist_ok=True)
+    out.unlink()
     conn = sqlite3.connect(out)
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript(SCHEMA)
+    # related_entries rows can reference articles inserted later in the load;
+    # defer FK enforcement to COMMIT (the whole dataset is present by then).
+    conn.isolation_level = None
+    conn.execute("BEGIN")
+    conn.execute("PRAGMA defer_foreign_keys = ON")
     cur = conn.cursor()
 
     stats: dict[str, int] = {
@@ -214,6 +265,8 @@ def build_synthetic_db(
             )
             stats["provenance"] += 1
         for rel in snapshot.related.get(src_slug, []):
+            if rel[0] not in base_slug_set:
+                continue
             cur.execute(
                 "INSERT INTO related_entries(slug, related_slug, entry_type, relation, component_role, provenance)"
                 " VALUES (?,?,?,?,?,?)",
@@ -258,7 +311,7 @@ def build_synthetic_db(
                   COALESCE((SELECT group_concat(al.alias, ' ') FROM aliases al WHERE al.target_slug = a.slug), '')
            FROM articles a"""
     )
-    conn.commit()
+    conn.execute("COMMIT")
     conn.close()
 
     digest = hashlib.sha256(out.read_bytes()).hexdigest()
@@ -281,21 +334,39 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "data/atlas.db entries up to a target article count (default: the "
             "current VESUM distinct-lemma count). Same seed + same source DB "
             "produces a byte-identical output. The dataset is synthetic and "
-            "must never be published."
-        )
+            "must never be published. Use only for local scale tests."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples (from a checkout with its project interpreter):\n"
+            "  .venv/bin/python -m scripts.benchmarks.generate_synthetic_atlas --help\n"
+            "  .venv/bin/python -m scripts.benchmarks.generate_synthetic_atlas "
+            "--source-db data/atlas.db --out /tmp/atlas-synthetic.db --seed 8307 --target 1000\n"
+            "Outputs: a locally marked synthetic SQLite DB and a JSON summary; "
+            "never uploads data.\n"
+            "Exit codes: 0 on success; nonzero on invalid input or DB failure.\n"
+            "Related: GitHub issue #8307 and scripts/atlas/export_runtime_shards.py."
+        ),
     )
     parser.add_argument(
-        "--source-db", type=Path, default=DEFAULT_SOURCE_DB, help="real Atlas DB to resample from (read-only)"
+        "--source-db", type=Path, default=DEFAULT_SOURCE_DB,
+        help="real Atlas SQLite DB to resample from, read-only (default: data/atlas.db)",
     )
-    parser.add_argument("--out", type=Path, default=DEFAULT_OUT, help="output path for the synthetic DB (overwritten)")
-    parser.add_argument("--seed", type=int, default=DEFAULT_SEED, help="RNG seed; same seed => byte-identical dataset")
+    parser.add_argument(
+        "--out", type=Path, default=DEFAULT_OUT,
+        help="local synthetic DB path; only an existing synthetic DB may be replaced (default: data/atlas-synthetic.db)",
+    )
+    parser.add_argument("--seed", type=int, default=DEFAULT_SEED, help="integer RNG seed (default: 8307)")
     parser.add_argument(
         "--target",
         type=int,
         default=None,
-        help="target article count; default = DISTINCT lemma count in --vesum-db",
+        help="positive target article count (default: DISTINCT lemma count in --vesum-db)",
     )
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="VESUM DB used for the default target")
+    parser.add_argument(
+        "--vesum-db", type=Path, default=DEFAULT_VESUM_DB,
+        help="VESUM SQLite DB used for the default target (default: data/vesum.db)",
+    )
     return parser.parse_args(argv)
 
 

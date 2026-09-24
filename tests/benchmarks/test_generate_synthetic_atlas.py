@@ -4,17 +4,30 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import sqlite3
 from pathlib import Path
 
 import pytest
 
 from scripts.atlas.atlas_db import SCHEMA
+from scripts.atlas.export_runtime_shards import export_runtime_shards
 from scripts.benchmarks.generate_synthetic_atlas import build_synthetic_db, main, parse_args
 
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _sampled_slugs(path: Path) -> list[str]:
+    """Compare the chosen copy sequence, independently of seed metadata."""
+    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    try:
+        return [row[0] for row in conn.execute(
+            "SELECT slug FROM articles WHERE slug LIKE '%--syn%' ORDER BY substr(slug, -7)"
+        )]
+    finally:
+        conn.close()
 
 
 def _make_source_db(path: Path, article_count: int = 24) -> Path:
@@ -75,6 +88,12 @@ def _make_source_db(path: Path, article_count: int = 24) -> Path:
             "INSERT INTO article_provenance(slug, source_family, source_locator, extraction_mode) VALUES (?,?,?,?)",
             (slug, "test", "fixture", "test_fixture"),
         )
+    # A forward relation exercises deferred FK enforcement during generation.
+    cur.execute(
+        "INSERT INTO related_entries(slug, related_slug, entry_type, relation, component_role, provenance)"
+        " VALUES (?,?,?,?,?,?)",
+        ("слово-000", f"слово-{article_count - 1:03d}", "lemma", "related", None, "verified"),
+    )
     # one form-of route payload: a public route with no articles row
     form_payload = {"lemma": "словеса", "url_slug": "словеса", "gloss": "words", "pos": "noun"}
     cur.execute(
@@ -130,6 +149,7 @@ def test_same_seed_produces_byte_identical_dataset(tmp_path: Path) -> None:
     summary_b = build_synthetic_db(source_db=source, out=out_b, seed=8307, target_articles=200)
     assert _sha256(out_a) == _sha256(out_b)
     assert summary_a["sha256"] == summary_b["sha256"]
+    assert _sampled_slugs(out_a) == _sampled_slugs(out_b)
 
 
 def test_different_seeds_produce_different_datasets(tmp_path: Path) -> None:
@@ -138,7 +158,7 @@ def test_different_seeds_produce_different_datasets(tmp_path: Path) -> None:
     out_b = tmp_path / "seed-b.db"
     build_synthetic_db(source_db=source, out=out_a, seed=1, target_articles=500)
     build_synthetic_db(source_db=source, out=out_b, seed=2, target_articles=500)
-    assert _sha256(out_a) != _sha256(out_b)
+    assert _sampled_slugs(out_a) != _sampled_slugs(out_b)
 
 
 def test_synthetic_db_hits_target_and_satisfies_export_gates(tmp_path: Path) -> None:
@@ -151,6 +171,14 @@ def test_synthetic_db_hits_target_and_satisfies_export_gates(tmp_path: Path) -> 
     assert gates["reviewed"] == gates["public_routes"] - gates["form_of"]
     assert gates["invalid_aliases"] == 0
     assert gates["form_of"] >= 1  # natural-ratio form-of route copies preserved
+    conn = sqlite3.connect(out)
+    try:
+        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+        assert conn.execute("SELECT COUNT(*) FROM related_entries").fetchone()[0] > 0
+    finally:
+        conn.close()
+    report = export_runtime_shards(db_path=out, out_dir=tmp_path / "runtime", include_decks=False, verify=True)
+    assert report["counts"]["articles"] == 137
 
 
 def test_dataset_is_marked_synthetic(tmp_path: Path) -> None:
@@ -185,6 +213,59 @@ def test_downscale_target_below_source(tmp_path: Path) -> None:
     gates = _export_gate_counts(out)
     assert gates["reviewed"] == gates["public_routes"] - gates["form_of"]
     assert gates["invalid_aliases"] == 0
+    conn = sqlite3.connect(out)
+    try:
+        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+    finally:
+        conn.close()
+
+
+@pytest.mark.parametrize("valid_sqlite", [True, False])
+def test_existing_non_synthetic_output_is_preserved(tmp_path: Path, valid_sqlite: bool) -> None:
+    source = _make_source_db(tmp_path / "source.db")
+    out = tmp_path / "public.db"
+    if valid_sqlite:
+        shutil.copyfile(source, out)
+    else:
+        out.write_bytes(b"public dataset")
+    before = out.read_bytes()
+    with pytest.raises(ValueError, match="refusing to overwrite"):
+        build_synthetic_db(source_db=source, out=out, seed=1, target_articles=30)
+    assert out.read_bytes() == before
+
+
+@pytest.mark.parametrize("alias_kind", ["same", "normalized", "symlink", "hardlink"])
+def test_source_alias_output_is_refused_and_preserved(tmp_path: Path, alias_kind: str) -> None:
+    source = _make_source_db(tmp_path / "source.db")
+    before = _sha256(source)
+    if alias_kind == "same":
+        out = source
+    elif alias_kind == "normalized":
+        (tmp_path / "nested").mkdir()
+        out = tmp_path / "nested" / ".." / "source.db"
+    else:
+        out = tmp_path / f"{alias_kind}.db"
+        if alias_kind == "symlink":
+            out.symlink_to(source)
+        else:
+            out.hardlink_to(source)
+    with pytest.raises(ValueError, match="output must not be the source DB"):
+        build_synthetic_db(source_db=source, out=out, seed=1, target_articles=30)
+    assert _sha256(source) == before
+    assert _sha256(out) == before
+
+
+def test_existing_synthetic_output_can_be_replaced_atomically(tmp_path: Path) -> None:
+    source = _make_source_db(tmp_path / "source.db")
+    out = tmp_path / "synthetic.db"
+    build_synthetic_db(source_db=source, out=out, seed=1, target_articles=30)
+    before = _sha256(out)
+    with pytest.raises(ValueError, match="target_articles"):
+        build_synthetic_db(source_db=source, out=out, seed=2, target_articles=0)
+    assert _sha256(out) == before
+    assert list(tmp_path.glob(".synthetic.db.*")) == []
+    build_synthetic_db(source_db=source, out=out, seed=2, target_articles=30)
+    assert _sha256(out) != before
 
 
 def test_cli_help_and_parse() -> None:
