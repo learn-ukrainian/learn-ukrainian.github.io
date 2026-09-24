@@ -377,7 +377,7 @@ def classify(
 
 
 def current_pr_labels(repo: str, number: int) -> list[str]:
-    """Current PR labels from the API; a rerun keeps the original payload."""
+    """Current PR labels from the API; a manual rerun keeps the original payload."""
     if number < 1:
         raise ValueError("invalid pull request number")
     raw = subprocess.check_output(
@@ -427,11 +427,11 @@ def main() -> None:
             payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
             labels = [label["name"] for label in payload["pull_request"]["labels"]]
             if "full-ci" not in labels:
-                # ci.yml no longer subscribes to `labeled` (#8505): applying
-                # the full-ci label reruns the latest ci.yml run, and a rerun
-                # reuses the ORIGINAL event payload, so payload labels can be
-                # stale. Read the current labels from the API; any failure
-                # raises into the except below and fails closed to full.
+                # The `full-ci` labeled event carries the label in its payload,
+                # but a manual "Re-run jobs" reuses the ORIGINAL event payload
+                # (#8505), so payload labels can be stale. Read the current
+                # labels from the API; any failure raises into the except
+                # below and fails closed to full.
                 labels = current_pr_labels(
                     os.environ["REPO"], payload["pull_request"]["number"],
                 )

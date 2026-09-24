@@ -13,7 +13,12 @@ concurrency:
   # (docs.github.com troubleshooting-required-status-checks
   # #handling-skipped-but-required-checks). merge_group and schedule keep the
   # ref-keyed group and never cancel.
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  #
+  # A label other than `full-ci` is a no-op run (see `on:`). It gets its own
+  # `-label-noop` group so it can never cancel a real in-flight run for the PR.
+  # A `full-ci` label is a real run in the PR group: it cancels a lighter run
+  # that is still in flight.
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}${{ (github.event.action == 'labeled' && github.event.label.name != 'full-ci') && '-label-noop' || '' }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
@@ -27,13 +32,23 @@ env:
   PYTEST_SHARD_COUNT: '4'
 
 on:
-  # No `edited`/`labeled` (#8505): a PR-body edit or a label change must not
-  # restart the full CI on an unchanged commit. The negated-closing-reference
-  # body guard moved to pr-body-guard.yml (runs on `edited`); the `full-ci`
-  # label is served by full-ci-label.yml (reruns this workflow; the Changes
-  # job reads current labels via the API and fails closed to the full tier).
+  # No `edited` (#8505): a PR-body edit must not restart the full CI on an
+  # unchanged commit. The negated-closing-reference body guard lives in
+  # pr-body-guard.yml, which runs on `edited`.
+  #
+  # `labeled` stays, split by label (#8505):
+  # - `full-ci` is an ordinary full-tier run on the head SHA (the payload
+  #   carries the label; fork PRs work because nothing here needs a write
+  #   token). full-ci-pending marks "CI Gate" failed at once, so an earlier
+  #   lighter-tier green Gate on this SHA stops satisfying branch protection
+  #   until this run's own Gate reports.
+  # - Any other label is a no-op: every job is skipped and the gate job is
+  #   renamed, so the run reports no "CI Gate" check at all. The latest real
+  #   run's Gate stays the one branch protection reads.
+  # Every condition below repeats the same predicate; tests/test_ci_pr_triggers.py
+  # evaluates each one against every event shape.
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, labeled]
   merge_group:
   workflow_dispatch:
   # Full PR-tier floor; slow tests remain in pytest-slow-nightly.yml.
@@ -43,13 +58,16 @@ on:
 jobs:
   changes:
     name: Changes
+    # Skipped on a non-full-ci label (no-op run); every job that needs Changes
+    # is then skipped too.
+    if: github.event.action != 'labeled' || github.event.label.name == 'full-ci'
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions:
       contents: read
       # classify_changes.py reads current PR labels via the API because a
-      # workflow rerun reuses the original (stale) event payload (#8505); a
-      # lookup error fails closed to the full tier.
+      # manual "Re-run jobs" reuses the original (stale) event payload
+      # (#8505); a lookup error fails closed to the full tier.
       pull-requests: read
     outputs:
       docs_only: ${{ steps.classify.outputs.docs_only }}
@@ -100,6 +118,8 @@ jobs:
 
   secret-scan:
     name: Secret scan
+    # Needs no Changes output, so it carries the no-op skip itself.
+    if: github.event.action != 'labeled' || github.event.label.name == 'full-ci'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -133,7 +153,7 @@ jobs:
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
       # The negated-closing-reference PR-body guard moved to
       # pr-body-guard.yml (#8505): it must rerun on `edited`, which this
-      # workflow no longer subscribes to.
+      # workflow does not subscribe to.
       - uses: trufflesecurity/trufflehog@363923b901c911a9164f50b6c423f47c15372b1c # v3.97.4
         with:
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
@@ -668,15 +688,37 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 -m scripts.ci.typesafe_pr_triage
 
+  full-ci-pending:
+    # Runs only on the `full-ci` labeled event. It reports a FAILED "CI Gate"
+    # at once. Branch protection reads the newest check run of a required name
+    # on the commit, so an earlier lighter-tier green Gate on this SHA stops
+    # counting now, not 15 minutes later. This run's real Gate starts after
+    # the full tier and supersedes the marker.
+    # On every other event the job is skipped under a different name. A
+    # skipped job reports success, so it must never be named "CI Gate" then.
+    name: ${{ (github.event.action == 'labeled' && github.event.label.name == 'full-ci') && 'CI Gate' || 'full-ci pending marker (not a gate)' }}
+    if: github.event.action == 'labeled' && github.event.label.name == 'full-ci'
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    permissions: {}
+    steps:
+      - name: Hold CI Gate red until the full tier reports
+        run: |
+          echo "::error::full-ci was applied. This placeholder CI Gate fails so an earlier lighter-tier Gate on this commit no longer satisfies branch protection. This run's full-tier CI Gate reports later and supersedes it. Use 'Re-run all jobs', not 'Re-run failed jobs': re-running only this placeholder makes it the newest CI Gate again."
+          exit 1
+
   ci-gate:
-    name: CI Gate
+    # On a no-op label run this job is skipped AND renamed, so that run
+    # reports no "CI Gate" check: a skipped "CI Gate" would count as success
+    # and mask a red Gate from the real run on the same SHA.
+    name: ${{ (github.event.action == 'labeled' && github.event.label.name != 'full-ci') && 'CI label no-op (not a gate)' || 'CI Gate' }}
     # always(), not `always() && !cancelled()` (#8505). A concurrency cancel
     # that lands before this job starts would otherwise skip it, and GitHub
     # treats a skipped required check as success. The step below fails the
     # job when a required dependency was cancelled or skipped unexpectedly,
     # and re-reads PR labels so a full-ci label applied after Changes
     # classified cannot leave a lighter tier green.
-    if: always()
+    if: always() && (github.event.action != 'labeled' || github.event.label.name == 'full-ci')
     needs: [changes, ruff, secret-scan, pytest, contracts, frontend, typesafe-triage, plan-validate]
     runs-on: ubuntu-latest
     timeout-minutes: 2
