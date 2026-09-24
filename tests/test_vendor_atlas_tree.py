@@ -261,6 +261,162 @@ def test_missing_prior_generation_fails(tmp_path: Path) -> None:
         vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
 
 
+TRANSPORT_HEX = "ab" * 32
+
+
+def _with_transport_current(
+    tmp: Path,
+    *,
+    prior: str | None = "v-prior",
+    current: str = "v-current",
+    manifest_url: str | None = None,
+    data_version: str | None = None,
+) -> Path:
+    """Tree whose current.json points at ``<current>-transport-<hex>`` beside canonical."""
+    tree_root = tmp / "tree"
+    if prior is not None:
+        _mini_generation(tree_root, prior, payload=b"prior-shard-bytes")
+    _mini_generation(tree_root, current, payload=b"canonical-shard-bytes")
+    alternate = f"{current}-transport-{TRANSPORT_HEX}"
+    _mini_generation(tree_root, alternate, payload=b"alternate-shard-bytes")
+    # The exporter's alternate carries the canonical dataVersion inside its manifest.
+    alt_manifest = tree_root / "atlas" / "versions" / alternate / "manifest.json"
+    doc = json.loads(alt_manifest.read_text(encoding="utf-8"))
+    doc["dataVersion"] = current
+    _write(alt_manifest, json.dumps(doc, indent=2) + "\n")
+    _write(
+        tree_root / "atlas" / "current.json",
+        json.dumps(
+            {
+                "schema": "atlas-current",
+                "schemaVersion": 1,
+                "dataVersion": data_version or current,
+                "generatedAt": "2026-07-17T00:00:00+00:00",
+                "manifestUrl": manifest_url or f"versions/{alternate}/manifest.json",
+            }
+        )
+        + "\n",
+    )
+    return tree_root
+
+
+def test_transport_suffixed_current_vendors_both_trees_byte_for_byte(tmp_path: Path) -> None:
+    tree_root = _with_transport_current(tmp_path)
+    archive, digest = _archive_for(tree_root, tmp_path)
+    dist = tmp_path / "dist"
+
+    metrics = vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+
+    alternate = f"v-current-transport-{TRANSPORT_HEX}"
+    assert metrics.data_version == "v-current"
+    # The canonical sibling is the same logical generation, never a PRIOR.
+    assert "v-current" not in metrics.prior_versions
+    assert "v-prior" in metrics.prior_versions
+    for name in ("v-current", alternate, "v-prior"):
+        src = tree_root / "atlas" / "versions" / name
+        for path in src.rglob("*"):
+            if path.is_file():
+                installed = dist / "atlas" / "versions" / name / path.relative_to(src)
+                assert installed.read_bytes() == path.read_bytes()
+
+
+def test_transport_current_with_only_canonical_sibling_fails_retention(tmp_path: Path) -> None:
+    tree_root = _with_transport_current(tmp_path, prior=None)
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="PRIOR generation"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+def test_prior_transport_sibling_does_not_count_as_extra_prior(tmp_path: Path) -> None:
+    tree_root = _with_transport_current(tmp_path, prior=None)
+    # Another transport sibling of the SAME current generation is still not a prior.
+    _mini_generation(
+        tree_root, f"v-current-transport-{'cd' * 32}", payload=b"other-alternate"
+    )
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="PRIOR generation"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+def test_canonical_current_ignores_transport_sibling_as_prior(tmp_path: Path) -> None:
+    tree_root = _with_transport_current(
+        tmp_path, prior=None, manifest_url="versions/v-current/manifest.json"
+    )
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="PRIOR generation"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+@pytest.mark.parametrize(
+    "manifest_url",
+    [
+        f"versions/v-current-transport-{'AB' * 32}/manifest.json",  # uppercase hex
+        f"versions/v-current-transport-{'ab' * 31}/manifest.json",  # short digest
+        f"versions/v-current-transport-{'ab' * 33}/manifest.json",  # long digest
+        f"versions/v-current-transport-{'ab' * 32}x/manifest.json",  # trailing junk
+        "versions/v-current-transport-/manifest.json",  # empty digest
+        f"versions/v-current-{'ab' * 32}/manifest.json",  # missing marker
+        f"versions/v-current-transport-{'ab' * 32}/../v-prior/manifest.json",
+        f"versions/../versions/v-current-transport-{'ab' * 32}/manifest.json",
+        f"versions//v-current-transport-{'ab' * 32}/manifest.json",
+        f"versions/v-current-transport-{'ab' * 32}//manifest.json",
+        f"versions/v-current-transport-{'ab' * 32}/manifest.json/",
+        f"versions/v-current-transport-{'ab' * 32}/other.json",
+        f"versions\\v-current-transport-{'ab' * 32}\\manifest.json",
+        f"/versions/v-current-transport-{'ab' * 32}/manifest.json",
+        "versions/v-prior/manifest.json",  # a different dataVersion's directory
+        "versions/v-current/extra/manifest.json",
+        "versions/v-current",
+    ],
+)
+def test_malformed_transport_manifest_url_fails(tmp_path: Path, manifest_url: str) -> None:
+    tree_root = _with_transport_current(tmp_path, manifest_url=manifest_url)
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="manifestUrl"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+@pytest.mark.parametrize(
+    "data_version",
+    ["..", ".", "a/b", "a\\b", "../v-current", "/abs", " v-current", f"v-current-transport-{'ab' * 32}"],
+)
+def test_unsafe_data_version_fails(tmp_path: Path, data_version: str) -> None:
+    tree_root = _with_transport_current(tmp_path, data_version=data_version)
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+def test_transport_manifest_with_wrong_data_version_fails(tmp_path: Path) -> None:
+    tree_root = _with_transport_current(tmp_path)
+    alt_manifest = (
+        tree_root / "atlas" / "versions" / f"v-current-transport-{TRANSPORT_HEX}" / "manifest.json"
+    )
+    doc = json.loads(alt_manifest.read_text(encoding="utf-8"))
+    doc["dataVersion"] = "v-prior"
+    _write(alt_manifest, json.dumps(doc, indent=2) + "\n")
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="does not carry dataVersion"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+def test_transport_manifest_missing_from_archive_fails(tmp_path: Path) -> None:
+    tree_root = _with_transport_current(tmp_path)
+    (
+        tree_root / "atlas" / "versions" / f"v-current-transport-{TRANSPORT_HEX}" / "manifest.json"
+    ).unlink()
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="manifestUrl missing on disk"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
 def test_current_json_pointing_outside_vendored_set_fails(tmp_path: Path) -> None:
     tree_root = _build_two_gen_tree(tmp_path)
     # Point current at a generation that is not present under versions/.

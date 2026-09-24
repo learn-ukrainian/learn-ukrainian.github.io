@@ -27,6 +27,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -55,6 +56,9 @@ TREE_MANIFEST_SCHEMA_VERSION = 1
 TREE_MANIFEST_REL = "atlas/tree-manifest.json"
 CURRENT_REL = "atlas/current.json"
 VERSIONS_REL = "atlas/versions"
+# The exporter re-publishes a byte-different tree for an already-published
+# dataVersion beside the canonical one at ``<dataVersion>-transport-<tree sha256>``.
+TRANSPORT_SUFFIX_RE = re.compile(r"-transport-[0-9a-f]{64}")
 
 SKIP_MESSAGE = "atlas vendoring: no pin configured, skipping"
 
@@ -324,10 +328,56 @@ def list_version_dirs(extract_root: Path) -> list[str]:
     return sorted(names)
 
 
+def _logical_version(dir_name: str) -> str:
+    """Map a ``versions/`` directory name to its logical dataVersion."""
+    match = TRANSPORT_SUFFIX_RE.search(dir_name)
+    if match and match.end() == len(dir_name):
+        return dir_name[: match.start()]
+    return dir_name
+
+
+def _validate_data_version(data_version: str) -> None:
+    """A dataVersion must be one safe path component that is not itself suffixed."""
+    if (
+        data_version in {".", ".."}
+        or data_version != data_version.strip()
+        or any(ch in data_version for ch in "/\\")
+        or any(ord(ch) < 0x20 or ord(ch) == 0x7F for ch in data_version)
+    ):
+        raise VendorError(f"current.json dataVersion is not a safe path component: {data_version!r}")
+    if TRANSPORT_SUFFIX_RE.search(data_version):
+        raise VendorError(
+            f"current.json dataVersion must not carry a transport suffix: {data_version!r}"
+        )
+
+
+def _pointed_version_dir(manifest_url: str, data_version: str) -> str:
+    """Return the ``versions/`` directory named by ``manifestUrl``.
+
+    Accepts exactly ``versions/<dataVersion>/manifest.json`` or the exporter's
+    ``versions/<dataVersion>-transport-<64 lowercase hex>/manifest.json``.
+    """
+    parts = manifest_url.split("/")
+    if len(parts) == 3 and parts[0] == "versions" and parts[2] == "manifest.json":
+        dir_name = parts[1]
+        suffix = dir_name[len(data_version) :]
+        if dir_name == data_version or (
+            dir_name.startswith(data_version) and TRANSPORT_SUFFIX_RE.fullmatch(suffix)
+        ):
+            return dir_name
+    raise VendorError(
+        f"current.json manifestUrl {manifest_url!r} does not match dataVersion "
+        f"{data_version!r} (expected versions/{data_version}[-transport-<sha256>]/manifest.json)"
+    )
+
+
 def verify_generation_retention(extract_root: Path) -> tuple[str, list[str]]:
     """R1: CURRENT + ≥1 PRIOR generation; current.json must point at a vendored dir.
 
-    Returns ``(current_data_version, prior_versions)``.
+    A transport-suffixed current tree and its canonical same-dataVersion tree are
+    one logical generation; only a distinct dataVersion counts as PRIOR.
+
+    Returns ``(current_data_version, prior_versions)`` (prior directory names).
     """
     current_path = extract_root / CURRENT_REL
     if not current_path.is_file():
@@ -343,12 +393,14 @@ def verify_generation_retention(extract_root: Path) -> tuple[str, list[str]]:
     data_version = current.get("dataVersion")
     if not isinstance(data_version, str) or not data_version.strip():
         raise VendorError("current.json missing dataVersion")
+    _validate_data_version(data_version)
     manifest_url = current.get("manifestUrl")
     if not isinstance(manifest_url, str) or not manifest_url.startswith("versions/"):
         raise VendorError("current.json.manifestUrl must start with versions/")
+    current_dir = _pointed_version_dir(manifest_url, data_version)
 
     version_dirs = list_version_dirs(extract_root)
-    if data_version not in version_dirs:
+    if current_dir not in version_dirs:
         raise VendorError(
             f"current.json points at non-vendored generation {data_version!r}; "
             f"vendored: {version_dirs}"
@@ -356,17 +408,16 @@ def verify_generation_retention(extract_root: Path) -> tuple[str, list[str]]:
     expected_manifest = extract_root / "atlas" / manifest_url
     if not expected_manifest.is_file():
         raise VendorError(f"current.json manifestUrl missing on disk: {manifest_url}")
-
-    # Path inside versions/<dataVersion>/ must match the pointer's dataVersion.
-    # manifestUrl form: versions/<dataVersion>/manifest.json
-    parts = Path(manifest_url).parts
-    if len(parts) < 3 or parts[0] != "versions" or parts[1] != data_version:
+    try:
+        pointed = json.loads(expected_manifest.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise VendorError(f"current.json manifestUrl target unreadable: {exc}") from exc
+    if not isinstance(pointed, dict) or pointed.get("dataVersion") != data_version:
         raise VendorError(
-            f"current.json manifestUrl {manifest_url!r} does not match "
-            f"dataVersion {data_version!r}"
+            f"manifest at {manifest_url!r} does not carry dataVersion {data_version!r}"
         )
 
-    priors = [name for name in version_dirs if name != data_version]
+    priors = [name for name in version_dirs if _logical_version(name) != data_version]
     if not priors:
         raise VendorError(
             "generation retention failed: archive must vendor CURRENT and at least "
