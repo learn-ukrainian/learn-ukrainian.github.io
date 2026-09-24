@@ -154,6 +154,22 @@ def test_named_check_without_workflow_keeps_a_red_row():
     assert api_main._idle_pr_checks_green(pr) is False
 
 
+def test_cross_workflow_in_progress_is_not_green():
+    """Nightly still running must not read green beside a SUCCESS of the same name."""
+    running = {
+        "name": "CI Gate",
+        "status": "IN_PROGRESS",
+        "workflowName": "Nightly",
+        "startedAt": _iso(NOW - timedelta(hours=1)),
+    }
+    pr = _pr(
+        114,
+        updated_at=NOW - timedelta(hours=2),
+        statusCheckRollup=[running, _gate_run("SUCCESS", NOW - timedelta(hours=2), "CI")],
+    )
+    assert api_main._idle_pr_checks_green(pr) is False
+
+
 def test_8264_rollup_stays_green_for_idle_eligibility():
     import json
     from pathlib import Path

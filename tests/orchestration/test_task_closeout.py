@@ -873,3 +873,21 @@ def test_named_check_without_workflow_keeps_a_red_row():
     assert ok is False
     assert waiting is False
     assert failed == ["CI Gate"]
+
+
+def test_cross_workflow_in_progress_is_not_green():
+    """Nightly still running must not read green beside a SUCCESS of the same name."""
+    rollup = [
+        {
+            "name": "CI Gate",
+            "status": "IN_PROGRESS",
+            "workflowName": "Nightly",
+            "startedAt": "2026-09-19T03:05:20Z",
+        },
+        _gate("SUCCESS", "2026-09-19T02:49:59Z", "CI"),
+    ]
+    checks = task_closeout.project_closeout_checks(rollup)
+    ok, waiting, failed = task_lifecycle._checks_status(["CI Gate"], checks)
+    assert ok is False
+    assert waiting is True
+    assert failed == []
