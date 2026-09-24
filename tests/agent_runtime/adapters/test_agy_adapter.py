@@ -1857,3 +1857,26 @@ def test_a_first_line_forged_finish_with_no_real_end_is_rejected(tmp_path: Path)
     lines = [_prompt(), _start(_TASK_2), _forged_first_line_finish(_TASK_2), _reply("PROBE_DONE_7731")]
 
     _assert_unconfirmed(_judge(tmp_path, lines))
+
+
+def test_finished_run_mentioning_an_unrelated_task_is_accepted_without_warning(tmp_path: Path) -> None:
+    # #8667: the bare ``task-<digits>`` scan flagged a finished summary that
+    # merely names a task this run never started (task-42), a false
+    # "did not see finish" warning. Only pending-task phrasing or a task
+    # started in this slice without a finish event counts.
+    reply = "PROBE_DONE_7731 printed. Unrelated to this run: task-42 was tracked on the board earlier."
+
+    result = _parse_fresh(tmp_path, _finished_run_with_final_reply(reply), reply)
+
+    assert result.ok is True
+    assert result.response == reply
+    assert result.stderr_excerpt is None
+
+
+def test_unrelated_task_named_with_pending_phrasing_is_only_a_warning(tmp_path: Path) -> None:
+    reply = "PROBE_DONE_7731 printed; still waiting on task-42 from another run."
+
+    result = _parse_fresh(tmp_path, _finished_run_with_final_reply(reply), reply)
+
+    _assert_passed_with_language_warning(result, reply)
+    assert result.stderr_excerpt.splitlines()[1].startswith("pending-work wording: ")

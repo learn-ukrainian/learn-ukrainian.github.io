@@ -4999,7 +4999,7 @@ def test_confirm_replacement_stream_uploads_with_parser_monitor_base_url(
                 "--rollover-id",
                 packet["rollover_id"],
                 "--stream",
-                "epic:8643",
+                "epic:4700",
             ]
         )
         == 0
