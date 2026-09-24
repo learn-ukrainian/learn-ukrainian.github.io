@@ -528,16 +528,26 @@ class ClassifierTests(unittest.TestCase):
 
     def _run_main_merge_group(
         self, head_ref, *, api_labels, queue_refs=None, paths=None, compare_error=None,
+        base=None, on_main=(_MAIN_SHA,), branch_error=None, refs_error=None,
     ):
-        """Run main() for a merge_group event with every API call mocked."""
+        """Run main() for a merge_group event with every API call mocked.
+
+        ``BASE`` defaults to the ref's trailing SHA, exactly as GitHub sends
+        ``merge_group.base_sha``: the head of the group ahead, or the base
+        branch commit for the first group. ``queue_refs`` defaults to the
+        entry's own live ref, as matching-refs returns it.
+        """
+        parent = head_ref.rpartition("-")[2] if base is None else base
+        own_head = "f" * 40
         env = {
             "PYTEST_SHARD_COUNT": "4",
             "EVENT_NAME": "merge_group",
-            "BASE": _MAIN_SHA,
-            "HEAD": "f" * 40,
+            "BASE": parent,
+            "HEAD": own_head,
             "HEAD_REF": head_ref,
             "REPO": "owner/repo",
         }
+        refs = {own_head: head_ref} if queue_refs is None else queue_refs
 
         def labels(repo, number):
             self.assertEqual(repo, "owner/repo")
@@ -546,90 +556,154 @@ class ClassifierTests(unittest.TestCase):
                 raise found
             return found
 
+        def branch(repo, base_branch, sha):
+            self.assertEqual((repo, base_branch), ("owner/repo", "main"))
+            if branch_error is not None:
+                raise branch_error
+            return sha in on_main
+
         compare_kwargs = (
             {"side_effect": compare_error} if compare_error else {"return_value": paths or []}
         )
+        refs_kwargs = {"side_effect": refs_error} if refs_error else {"return_value": refs}
         with patch.dict(os.environ, env, clear=True), \
              patch.object(scope, "compare_paths", **compare_kwargs) as compare, \
              patch.object(scope, "current_pr_labels", side_effect=labels) as labels_api, \
-             patch.object(scope, "queue_refs_by_sha", return_value=queue_refs or {}) as refs_api, \
+             patch.object(scope, "queue_refs_by_sha", **refs_kwargs) as refs_api, \
+             patch.object(scope, "on_base_branch", side_effect=branch) as branch_api, \
              patch.object(scope, "git_tree_paths", return_value=set()), \
              contextlib.redirect_stdout(io.StringIO()) as stdout:
             scope.main()
         called = [call.args[1] for call in labels_api.call_args_list]
-        return stdout, compare, (called, refs_api)
+        ends = [call.args[2] for call in branch_api.call_args_list]
+        return stdout, compare, (called, refs_api, ends)
+
+    @staticmethod
+    def _live_queue(count):
+        """The live queue shape of 2026-09-24 (run 35990749894), ``count`` entries deep.
+
+        pr-8656's group sits on main, pr-8657's group on pr-8656's head, and
+        pr-8650's group on pr-8657's head. Returns every live queue ref, keyed
+        by group head SHA, and the last entry's ref.
+        """
+        heads = ["1" * 40, "2" * 40, "3" * 40]
+        numbers = [8656, 8657, 8650]
+        refs, parent = {}, _MAIN_SHA
+        for number, head in zip(numbers[:count], heads[:count], strict=True):
+            refs[head] = _queue_ref(number, parent)
+            parent = head
+        return refs, refs[heads[count - 1]]
 
     def test_merge_group_single_pr_reads_its_labels(self):
-        # First group in the queue: the ref's parent SHA is the base branch head.
-        stdout, compare, (called, refs_api) = self._run_main_merge_group(
-            _queue_ref(8656, _MAIN_SHA), api_labels={8656: ["full-ci"]}, paths=["docs/guide.md"],
+        # First group in the queue: BASE is the base branch commit.
+        refs, ref = self._live_queue(1)
+        stdout, compare, (called, refs_api, ends) = self._run_main_merge_group(
+            ref, api_labels={8656: ["full-ci"]}, queue_refs=refs, paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8656])
-        refs_api.assert_not_called()
+        refs_api.assert_called_once_with("owner/repo", "main")
+        self.assertEqual(ends, [_MAIN_SHA])
         compare.assert_not_called()
         self.assertIn("pytest_mode=full", stdout.getvalue())
         # Without the label the group keeps its path-classified tier.
-        stdout, compare, (called, _) = self._run_main_merge_group(
-            _queue_ref(8656, _MAIN_SHA), api_labels={8656: ["bug"]}, paths=["docs/guide.md"],
+        stdout, compare, (called, _, _) = self._run_main_merge_group(
+            ref, api_labels={8656: ["bug"]}, queue_refs=refs, paths=["docs/guide.md"],
         )
         self.assertEqual(called, [8656])
         compare.assert_called_once()
+        self.assertEqual(compare.call_args.args[:2], (_MAIN_SHA, "f" * 40))
         self.assertIn("pytest_mode=docs", stdout.getvalue())
 
-    def test_merge_group_with_several_prs_checks_every_pr(self):
-        # Live shape (2026-09-24): pr-8656's parent is pr-8655's group head,
-        # whose parent is pr-8644's group head, whose parent is main.
-        head_8644, head_8655 = "1" * 40, "2" * 40
-        refs = {
-            head_8644: _queue_ref(8644, _MAIN_SHA),
-            head_8655: _queue_ref(8655, head_8644),
-            "3" * 40: _queue_ref(8656, head_8655),
-        }
-        ref = _queue_ref(8656, head_8655)
-        stdout, compare, (called, refs_api) = self._run_main_merge_group(
+    def test_merge_group_with_two_prs_checks_both(self):
+        # BASE is pr-8656's group head, not main (the #8505 r4 blocker).
+        refs, ref = self._live_queue(2)
+        stdout, compare, (called, _, ends) = self._run_main_merge_group(
+            ref, api_labels={8657: [], 8656: ["full-ci"]}, queue_refs=refs, paths=["docs/guide.md"],
+        )
+        self.assertEqual(called, [8657, 8656])
+        self.assertEqual(ends, [_MAIN_SHA])
+        compare.assert_not_called()
+        self.assertIn("pytest_mode=full", stdout.getvalue())
+
+    def test_merge_group_with_three_prs_honours_the_first_prs_label(self):
+        refs, ref = self._live_queue(3)
+        self.assertEqual(ref, _queue_ref(8650, "2" * 40))
+        stdout, compare, (called, _, ends) = self._run_main_merge_group(
             ref,
-            api_labels={8656: [], 8655: [], 8644: ["Full-CI"]},
+            api_labels={8650: [], 8657: [], 8656: ["Full-CI"]},
             queue_refs=refs,
             paths=["docs/guide.md"],
         )
-        self.assertEqual(called, [8656, 8655, 8644])
-        refs_api.assert_called_once_with("owner/repo", "main")
+        self.assertEqual(called, [8650, 8657, 8656])
+        self.assertEqual(ends, [_MAIN_SHA])
         compare.assert_not_called()
         self.assertIn("pytest_mode=full", stdout.getvalue())
         # No PR in the group carries full-ci: path classification applies.
-        stdout, compare, (called, _) = self._run_main_merge_group(
-            ref, api_labels={8656: [], 8655: [], 8644: []}, queue_refs=refs, paths=["docs/guide.md"],
+        stdout, compare, (called, _, _) = self._run_main_merge_group(
+            ref, api_labels={8650: [], 8657: [], 8656: []}, queue_refs=refs, paths=["docs/guide.md"],
         )
-        self.assertEqual(called, [8656, 8655, 8644])
+        self.assertEqual(called, [8650, 8657, 8656])
+        self.assertEqual(compare.call_args.args[:2], ("2" * 40, "f" * 40))
+        self.assertIn("pytest_mode=docs", stdout.getvalue())
+
+    def test_merge_group_stops_at_a_group_ahead_that_already_merged(self):
+        # pr-8656 merged between queue events: its ref is gone and its head
+        # is on main, so only the PRs still queued need checking.
+        refs, ref = self._live_queue(3)
+        del refs["1" * 40]
+        stdout, _, (called, _, ends) = self._run_main_merge_group(
+            ref,
+            api_labels={8650: [], 8657: []},
+            queue_refs=refs,
+            paths=["docs/guide.md"],
+            on_main=(_MAIN_SHA, "1" * 40),
+        )
+        self.assertEqual(called, [8650, 8657])
+        self.assertEqual(ends, ["1" * 40])
         self.assertIn("pytest_mode=docs", stdout.getvalue())
 
     def test_merge_group_lookup_failures_fail_closed(self):
-        broken_chain = _queue_ref(8656, "2" * 40)
+        refs, ref = self._live_queue(3)
+        dequeued = dict(refs)
+        del dequeued["1" * 40]
+        other_base = dict(refs)
+        other_base["1" * 40] = _queue_ref(8656, _MAIN_SHA, base="release")
+        cycle = dict(refs)
+        cycle["1" * 40] = _queue_ref(8656, "3" * 40)
+        repeated_pr = dict(refs)
+        repeated_pr["1" * 40] = _queue_ref(8650, _MAIN_SHA)
+        no_labels = {8650: [], 8657: [], 8656: []}
         cases = {
-            "label api error": (
-                _queue_ref(8656, _MAIN_SHA),
-                {8656: subprocess.CalledProcessError(1, "gh")},
-                {},
-            ),
+            "label api error": (ref, {8650: subprocess.CalledProcessError(1, "gh")}, {}),
             "missing ref": ("", {}, {}),
             "not a queue ref": ("refs/heads/main", {}, {}),
             "short sha": ("refs/heads/gh-readonly-queue/main/pr-7-abc", {}, {}),
-            "group ahead already gone": (broken_chain, {8656: []}, {}),
-            "group ahead on another base": (
-                broken_chain,
-                {8656: []},
-                {"2" * 40: "refs/heads/gh-readonly-queue/release/pr-9-" + _MAIN_SHA},
+            "ref parent is not base_sha": (ref, no_labels, {"base": _MAIN_SHA}),
+            "group ahead left the queue unmerged": (ref, no_labels, {"queue_refs": dequeued}),
+            "group ahead on another base": (ref, no_labels, {"queue_refs": other_base}),
+            "chain cycle": (ref, no_labels, {"queue_refs": cycle}),
+            "repeated pr": (ref, no_labels, {"queue_refs": repeated_pr}),
+            "chain ends off main": (ref, no_labels, {"queue_refs": refs, "on_main": ()}),
+            "branch check api error": (
+                ref, no_labels, {"queue_refs": refs, "branch_error": subprocess.CalledProcessError(1, "gh")},
             ),
-            "chain cycle": (broken_chain, {8656: [], 8655: []}, {"2" * 40: broken_chain.replace("8656", "8655")}),
+            "queue refs api error": (ref, no_labels, {"refs_error": subprocess.CalledProcessError(1, "gh")}),
         }
-        for name, (ref, labels, refs) in cases.items():
+        for name, (head_ref, labels, extra) in cases.items():
             with self.subTest(case=name):
                 stdout, compare, _ = self._run_main_merge_group(
-                    ref, api_labels=labels, queue_refs=refs, paths=["docs/guide.md"],
+                    head_ref, api_labels=labels, paths=["docs/guide.md"], **{"queue_refs": refs, **extra},
                 )
                 compare.assert_not_called()
                 self.assertIn("files=0", stdout.getvalue())
                 self.assertIn("pytest_mode=full", stdout.getvalue())
+
+    def test_on_base_branch_reads_compare_status(self):
+        for status, expected in {"identical": True, "behind": True, "ahead": False, "diverged": False}.items():
+            with self.subTest(status=status), \
+                 patch.object(scope.subprocess, "check_output", return_value=f"{status}\n") as command:
+                self.assertIs(scope.on_base_branch("owner/repo", "main", "1" * 40), expected)
+                self.assertIn(f"repos/owner/repo/compare/main...{'1' * 40}", command.call_args.args[0])
 
     def test_queue_refs_by_sha_parses_matching_refs(self):
         line = f"{'1' * 40} {_queue_ref(8644, _MAIN_SHA)}\n"

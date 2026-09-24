@@ -423,30 +423,55 @@ def queue_refs_by_sha(repo: str, base_branch: str) -> dict[str, str]:
     return refs
 
 
+def on_base_branch(repo: str, base_branch: str, sha: str) -> bool:
+    """True when ``sha`` is the head of ``base_branch`` or one of its ancestors."""
+    spec = urllib.parse.quote(f"{base_branch}...{sha}", safe="/.")
+    raw = subprocess.check_output(
+        ["gh", "api", f"repos/{repo}/compare/{spec}", "--jq", ".status"],
+        text=True,
+        timeout=60,
+    )
+    return raw.strip() in {"identical", "behind"}
+
+
 def merge_group_pr_numbers(head_ref: str, base_sha: str, repo: str) -> list[int]:
     """Every PR in a merge group: the queue ref's PR plus each PR ahead of it.
 
     A group holds its own PR plus the PRs ahead of it in the queue, and its ref
-    names only its own PR. The ref's trailing SHA is the head of the group ahead
-    (or ``base_sha`` for the first group), so follow that chain through the
-    live queue refs until it reaches ``base_sha``. A malformed ref or a broken
-    chain raises, and the caller fails closed to full.
+    names only its own PR. GitHub sends ``merge_group.base_sha`` as the group's
+    parent commit, which is the ref's trailing SHA: the head of the group ahead,
+    or the base branch commit for the first group (live runs 35989980156 and
+    35990749894). So ``base_sha`` cannot mark the end of the queue. Follow the
+    parent chain through the live queue refs until it leaves the queue, then
+    require that commit to be on the base branch. A malformed ref, a parent
+    that differs from ``base_sha``, or a chain that ends off the base branch
+    raises, and the caller fails closed to full.
     """
     match = _QUEUE_REF.match(head_ref)
     if match is None:
         raise ValueError(f"unrecognised merge-queue ref: {head_ref!r}")
+    if match["parent"] != base_sha:
+        raise ValueError(f"merge-queue ref parent {match['parent']} is not base_sha {base_sha!r}")
     base_branch = match["base"]
     numbers = [int(match["number"])]
     parent = match["parent"]
-    refs: dict[str, str] | None = None
-    while parent != base_sha:
-        if refs is None:
-            refs = queue_refs_by_sha(repo, base_branch)
-        ahead = _QUEUE_REF.match(refs.get(parent, ""))
-        if ahead is None or ahead["base"] != base_branch or len(numbers) >= _MAX_QUEUE_DEPTH:
+    refs = queue_refs_by_sha(repo, base_branch)
+    while parent in refs:
+        ahead = _QUEUE_REF.match(refs[parent])
+        if (
+            ahead is None
+            or ahead["base"] != base_branch
+            or int(ahead["number"]) in numbers
+            or len(numbers) >= _MAX_QUEUE_DEPTH
+        ):
             raise ValueError(f"cannot resolve merge-queue group ahead at {parent}")
         numbers.append(int(ahead["number"]))
         parent = ahead["parent"]
+    # A group ahead that already merged is on the base branch, so its PR no
+    # longer needs checking. A group ahead that left the queue unmerged is not,
+    # and GitHub rebuilds this group anyway.
+    if not on_base_branch(repo, base_branch, parent):
+        raise ValueError(f"merge-queue chain ends at {parent}, which is not on {base_branch}")
     return numbers
 
 
@@ -501,8 +526,11 @@ def main() -> None:
         if event in _PATH_CLASSIFIED_EVENTS and not has_full_ci(labels):
             # pull_request and merge_group both classify by changed paths;
             # the workflow maps pull_request.base/head or merge_group
-            # .base_sha/.head_sha (group union) into BASE/HEAD. Any failure
-            # here leaves paths empty → fail closed to full.
+            # .base_sha/.head_sha into BASE/HEAD. For a merge group that is
+            # this queue entry's own diff: base_sha is the head of the group
+            # ahead, and each entry runs its own required CI (the ruleset's
+            # ALLGREEN grouping). Any failure here leaves paths empty → fail
+            # closed to full.
             denominator = load_denominator()["paths"]
             paths = compare_paths(
                 os.environ.get("BASE", ""),
