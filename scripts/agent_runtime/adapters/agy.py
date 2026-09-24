@@ -16,8 +16,8 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
   ``mode="danger"`` for headless dispatch (mirrors the codex protection).
 - Print-mode stdout is the final answer only. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
-  ``--log-file`` path for each invocation (fallback: the recent brain
-  conversation whose ``USER_INPUT`` opens with this invocation's prompt).
+  ``--log-file`` path for each invocation: the conversation id that log names
+  is the only binding (no fallback; see ``_transcript_path_from_plan``).
   Tool results are ``type: GENERIC`` events (agy 2026-09) or legacy
   ``MCP_TOOL`` events; both shapes are paired with planner intents.
 - Per-invocation model is ``--model "<Display Name>"`` where the display name
@@ -51,6 +51,25 @@ The CLI then loads the scoped ``config/mcp_config.json`` (one stdio ``sources``
 server) and the transcript reader follows ``AGY_APP_DATA_DIR`` to the scoped app
 data. Without the key nothing changes.
 
+Threat model for background-task completion (#8502 r12): the completion gate
+defends against agy and its agents behaving honestly, and against accidental
+text — a command's output, a viewed log or a grepped transcript that quotes a
+lifecycle header anywhere after agy's own header of its event. agy's transcript
+has no structural field that separates a task's lifecycle messages from its
+other messages: all 3,496 system messages on the operator host (560
+conversations) carry the same ``type`` (``SYSTEM_MESSAGE``), ``source``
+(``SYSTEM``) and ``status`` (``DONE``),
+and ``priority`` does not track the kind (finishes and progress messages are both
+``MESSAGE_PRIORITY_HIGH``). A lifecycle event is therefore read from the one-line
+header agy writes at the start of its own event (see ``_TASK_MESSAGE_HEADER_RE``).
+Out of scope: a message whose first content line — the line agy writes itself
+on every real message — byte-for-byte reproduces agy's ``Task id "<id>"
+finished with result:`` header for its own sender. That needs agy to hand a
+task's own text the first line of its message, or a deliberate forgery; the
+gate does not claim to stop it (pinned as an ``xfail`` test). Every real
+terminal event still counts: a task's LAST terminal event in the slice decides
+it, so a genuine cancellation after such a header is not lost.
+
 Differences from the kubedojo source:
 
 - ``effort: str | None = None`` parameter added on ``build_invocation``
@@ -61,18 +80,20 @@ Differences from the kubedojo source:
 from __future__ import annotations
 
 import contextlib
+import dataclasses
+import functools
 import json
 import logging
 import os
 import re
 import shutil
+import subprocess
 import tempfile
-import time
 import urllib.parse
 import uuid
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
@@ -90,6 +111,164 @@ _RATE_LIMIT_PATTERNS = (
     r"daily.{0,10}limit.{0,10}exceeded",
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
+
+# Background-task handling (#8502/#8503). AGY's ``run_command`` tool caps
+# ``WaitMsBeforeAsync`` at 10000 ms, so any command running longer than ten
+# seconds is moved to a background task — no flag or prompt can force it into
+# the foreground. agy <= 1.2.8 cancelled those tasks about 5s after the agent
+# went idle and exited 0 with the agent's interim "Waiting for task-220 to
+# complete." reply. agy 1.2.9 fixed that upstream (changelog: "runs now wait for
+# background tasks until the --print-timeout deadline"), and the agent resumes
+# when the task-finished system message arrives (live probe, agy 1.2.10,
+# 2026-09-24: a 45s command finished, the agent replied with its output).
+#
+# The adapter therefore (1) refuses to invoke an agy older than
+# ``_AGY_MIN_BACKGROUND_WAIT_VERSION`` — that build cannot finish a long command
+# headlessly, so detection alone would only turn every such run into a failure
+# — and (2) accepts an exit-0 run only with positive completion evidence from
+# THIS invocation's slice of its conversation transcript: the events appended
+# after the transcript size recorded at build time (0 for a fresh
+# conversation), so a resumed conversation never credits an earlier run's
+# finish or reply (#8502 r5). The guarantee is STRUCTURAL (#8502 r8): the slice
+# is read in one order — file position — and every piece of work it started
+# (a background command, a timer, a tool step still RUNNING, a subagent) needs
+# its own finish event positioned before the final reply, which must be the
+# last model event (see ``_slice_completion_gap``). A task that ends any other
+# way — canceled, and by the same rule timed out or failed — never finished its
+# command, so the run fails as ``AGY_BACKGROUND_TASK_CANCELED`` (#8502 r10). What the reply SAYS never
+# decides the run (#8502 r9): pending-work wording in a structurally complete
+# run is recorded as a warning, not a failure. Ambiguous evidence is unconfirmed
+# (#8502 r7): a slice line that does not parse fails the run, it is never
+# skipped. The evidence is read from the transcript bound to this invocation
+# (see ``_transcript_path_from_plan``) and never from stderr alone: agy prints
+# its idle-wait diagnostic only on some paths, so its absence proves nothing
+# (#8502 r3). A run whose transcript cannot be bound has no evidence and fails
+# as unconfirmed. Failures lead ``stderr_excerpt`` with a reason code (the
+# dispatch's machine-readable ``last_error``); ``delegate.py`` keys on these
+# codes to refuse auto-finalizing the run as ``done``. A passing run whose
+# final reply still reads as pending leads ``stderr_excerpt`` with
+# ``AGY_INTERIM_LANGUAGE_WARNING`` instead — a diagnostic, never a failure.
+AGY_BACKGROUND_TASK_ABANDONED = "agy_background_task_abandoned"
+AGY_BACKGROUND_TASK_UNCONFIRMED = "agy_background_task_unconfirmed"
+AGY_BACKGROUND_TASK_CANCELED = "agy_background_task_canceled"
+AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
+AGY_TRANSCRIPT_UNBOUND = "agy_transcript_unbound"
+AGY_TRANSCRIPT_UNREADABLE = "agy_transcript_unreadable"
+AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
+    AGY_BACKGROUND_TASK_ABANDONED,
+    AGY_BACKGROUND_TASK_UNCONFIRMED,
+    AGY_BACKGROUND_TASK_CANCELED,
+    AGY_PRINT_TIMEOUT_PARTIAL,
+    AGY_TRANSCRIPT_UNBOUND,
+    AGY_TRANSCRIPT_UNREADABLE,
+)
+AGY_INTERIM_LANGUAGE_WARNING = "agy_interim_language_warning"
+_AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
+_AGY_VERSION_RE = re.compile(r"\b(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\b")
+_AGY_VERSION_PROBE_TIMEOUT_S = 15
+_BACKGROUND_TERMINATED_RE = re.compile(r"terminating (?P<count>\d+) background task\(s\)")
+_PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in progress")
+_IDLE_BACKGROUND_WAIT_RE = re.compile(r"root agent idle; waiting up to \S+ for (?P<count>\d+) background task\(s\)")
+# Structural transcript evidence (#8502 r8). Surveyed on every AGY transcript
+# on the operator host (560 conversations; 87 with events from agy >= 1.2.9,
+# 11,543 tool calls): every tool result is either DONE/ERROR/INVALID
+# (synchronous) or RUNNING, and every RUNNING result either carries the
+# background-task start line (748) or is an interim "Step is still running"
+# event followed by a start for the same step (2). Every per-task system
+# message came from a task whose start is in the same conversation. A command
+# task ends with a ``Task id "<id>" <outcome> with result:`` message from
+# ``sender=<id>``; the only outcomes on the host are ``finished`` (2,375, each
+# with the command's exit code) and ``was canceled`` (338, "Tool execution was
+# canceled"). Only ``finished`` is a finish: any other outcome — canceled, or a
+# timeout or error agy may report the same way — ends the task without its
+# command completing (#8502 r10). A ``schedule`` timer (``Task Description: Timer:``) ends
+# when it fires, as a message from its sender carrying its prompt. A subagent
+# (``invoke_subagent``) has no structured finish: its messages to the parent
+# are free text, so a slice that invokes one is never confirmed.
+#
+# A lifecycle event is read ONLY from the header agy writes at the start of its
+# own event, never from text a task produced (#8502 r11): a command's output,
+# a viewed log or a grepped transcript can quote any header verbatim. On the
+# host, all 3,491 per-task system messages open with agy's one-line preamble, a
+# blank line, ``<SYSTEM_MESSAGE>`` and one ``[Message] timestamp=… sender=<id>
+# priority=… content=`` line; everything after ``content=`` is the task's text
+# and is opaque, apart from its first line, which on a task's end is exactly
+# ``Task id "<sender>" <outcome> with result:`` (2,715 of 2,715). All 3,671
+# background-task starts are a RUNNING tool result whose second line is the
+# start line and whose third is ``Task Description:`` (``Timer:`` for the 895
+# timers); the rest is the command text. A RUNNING result without that header
+# stays open work (a "Step is still running" step), so a header this pattern
+# misses fails the run closed instead of hiding a task.
+#
+# A task's LAST terminal event in the slice decides it (#8502 r12): a
+# cancellation, timeout or error after a finish ends the task unfinished, and
+# any later message from a command task whose end was already recorded — a
+# progress message, or an end written after the final reply — reopens it. On
+# the host no task sends anything after its end (0 of 2,716 ends), so this
+# costs no real run; it keeps a genuine later end from being overridden by an
+# earlier header (see the threat model in the module docstring).
+_BACKGROUND_START_HEADER_RE = re.compile(
+    r"\ACreated At: [^\n]*\nTool is running as a background task with task id: (?P<id>\S+)"
+    r"(?:\nTask Description: (?P<timer>Timer:))?"
+)
+_TASK_MESSAGE_HEADER_RE = re.compile(
+    r"\A[^\n]*\n\n<SYSTEM_MESSAGE>\n\[Message\] timestamp=\S+ sender=(?P<sender>\S+) priority=\S+ "
+    r"content=(?P<first_line>[^\n]*)"
+)
+_TASK_ENDED_RE = re.compile(r'\ATask id "(?P<id>[^"]+)" (?P<outcome>[^\n]*?) with result:\Z')
+_TASK_FINISHED_OUTCOME = "finished"
+_SUBAGENT_TOOL = "invoke_subagent"
+_MODEL_EVENT_TYPES = frozenset({"PLANNER_RESPONSE", "GENERIC", "MCP_TOOL"})
+# DIAGNOSTIC ONLY, NEVER A GATE (#8502 r9). Natural language is unbounded, so
+# no vocabulary can prove a run finished or unfinished; the structural check in
+# ``_slice_completion_gap`` is the whole gate. The survey above makes it
+# complete on supported builds (agy >= 1.2.9: 87 conversations, 11,543 tool
+# calls): 748 of 750 RUNNING results carry the background-task start line and
+# the other 2 are followed by one for the same step, and every task message came
+# from a task started in the same conversation. Background work therefore
+# always leaves a start event in the slice, so a reply that speaks of async or
+# background work while the slice started no task describes work that is not
+# running — no start event, no background work. As a rejection rule this vocabulary failed 10 of the 76
+# real single-prompt runs (~13%) that passed the structural check, almost all
+# finished reviews ("VERDICT: APPROVE" … "PR awaiting CI", "Spec pending")
+# that then returned an empty result, with no safety gain. A match on a
+# structurally complete run is therefore only recorded as
+# ``AGY_INTERIM_LANGUAGE_WARNING`` (see ``_interim_language``). Each
+# alternative is one way agy's models phrase pending work; every one is pinned
+# by a test. Past-tense reports ("the background job finished", "I waited for
+# it") do not match.
+_APOSTROPHE = "['\u2019]"
+_PENDING_WORK_RE = re.compile(
+    "|".join(
+        (
+            r"^\W*wait\b",  # "Wait for task-220."
+            r"\bwaiting\b",  # "I am waiting for it", "still waiting on task-2"
+            rf"(?:\bwill|{_APOSTROPHE}ll|\bgoing to|\blet me|\bneed to)\s+(?:now\s+|then\s+)?wait\b",
+            r"\b(?:still|currently)\s+(?:running|executing|in progress|working)\b",
+            r"\b(?:is|are)\s+(?:now\s+)?(?:running|executing|in progress)\b",
+            r"\b(?:launched|started|kicked off|running|spawned)\b[^.!?\n]*\bin the background\b",
+            r"\b(?:once|when|until|after)\s+(?:it|they|this|that|the\s+(?:\w+\s+)?(?:command|tests?|suite|run|job|task"
+            r"|build|process))\s+(?:finish(?:es)?|complete[sd]?|ends?|exits?|(?:is|are)\s+(?:done|finished|complete))\b",
+            rf"\b(?:has|have|is|are)(?:n{_APOSTROPHE}t|\s+not)\s+(?:yet\s+)?(?:finished|completed|complete|done)\b",
+            rf"(?:\bwill|{_APOSTROPHE}ll)\s+(?:report back|check back|follow up|let you know|update you)\b",
+            r"\basynchronously\b",  # "I started pytest asynchronously" (#8502 r8)
+            r"\bawaiting\b",  # "awaiting results"
+            r"\bin progress\b",  # "the run is in progress"
+            r"\bpending\b",  # "results pending"
+        )
+    ),
+    re.IGNORECASE,
+)
+# A reply that speaks of background work although the slice recorded no task
+# start (warned, not failed: see above).
+_BACKGROUND_LANGUAGE_RE = re.compile(
+    r"\bbackground(?:ed)?\s+(?:tasks?|jobs?|process(?:es)?|commands?|runs?)\b|\bin the background\b|\bbackgrounded\b",
+    re.IGNORECASE,
+)
+_REPLY_TASK_REF_RE = re.compile(r"\btask-\d+\b")
+# Plan metadata: this invocation's conversation and the size its transcript had
+# when the invocation was built (see ``_transcript_baseline``).
+_TRANSCRIPT_BASELINE_KEY = "agy_transcript_baseline"
 _AGY_LOG_ENV = "AGY_RUNTIME_LOG_FILE"
 _AGY_APP_DATA_ENV = "AGY_APP_DATA_DIR"
 _AGY_UUID = r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
@@ -101,8 +280,6 @@ _AGY_CONVERSATION_RE = re.compile(
 # older builds used the dedicated ``MCP_TOOL`` type.
 _LEGACY_MCP_RESULT_TYPE = "MCP_TOOL"
 _GENERIC_RESULT_TYPE = "GENERIC"
-_PROMPT_MATCH_CHARS = 200
-_BRAIN_FALLBACK_MAX_AGE_S = 6 * 60 * 60
 _STDOUT_MARKER_RE = re.compile(r"^\s*●\s+(?P<tool>mcp_sources_[A-Za-z0-9_]+)\((?P<args>.*)\)\s*$")
 _STDOUT_RESULT_PREFIX = "⎿"
 _SAVED_OUTPUT_POINTER_RE = re.compile(
@@ -111,10 +288,11 @@ _SAVED_OUTPUT_POINTER_RE = re.compile(
     re.IGNORECASE,
 )
 _MAX_INLINE_TOOL_RESULT_BYTES = 1_000_000
-# Delegate's default hard_timeout is 7200s. Agy's print-mode default is 5m0s,
-# which is tighter than the runner guards; keep the CLI's own print wait aligned
-# with the delegate default until build_invocation can receive the actual
-# per-dispatch hard_timeout. TODO(#4441): plumb hard_timeout through the adapter
+# Delegate's default hard_timeout is 7200s. Keep the CLI's own print wait —
+# which also bounds how long print mode waits for backgrounded commands
+# (stderr: "root agent idle; waiting up to 2h0m0s …", live probe 2026-09-24,
+# agy 1.2.10) — aligned with the delegate default until build_invocation can
+# receive the actual per-dispatch hard_timeout. TODO(#4441): plumb hard_timeout through the adapter
 # ABI if a future shared contract revision carries runner guard values.
 _AGY_PRINT_TIMEOUT = "120m"
 
@@ -300,6 +478,7 @@ class AgyAdapter:
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
         with contextlib.suppress(OSError):
             agy_bin = str(Path(agy_bin).resolve())
+        _require_background_wait_support(agy_bin)
         if review_isolation and tc.get("review_write_root"):
             log_dir = Path(str(tc["review_write_root"])) / "tmp"
             log_dir.mkdir(parents=True, exist_ok=True)
@@ -370,6 +549,11 @@ class AgyAdapter:
             # $HOME/.gemini/config and keeps transcripts under AGY_APP_DATA_DIR.
             env_overrides["HOME"] = str(agy_home)
             env_overrides[_AGY_APP_DATA_ENV] = str(Path(agy_home) / ".gemini" / "antigravity-cli")
+        baseline = (
+            {_TRANSCRIPT_BASELINE_KEY: _transcript_baseline(_agy_app_data(env_overrides), session_id)}
+            if session_id and not review_isolation
+            else {}
+        )
 
         return InvocationPlan(
             cmd=cmd,
@@ -381,6 +565,7 @@ class AgyAdapter:
             liveness_paths=(log_path,),
             metadata={
                 **schema_metadata(output_schema),
+                **baseline,
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -426,20 +611,42 @@ class AgyAdapter:
         _ = call_start_time
 
         stdout_response = (stdout or "").strip()
+        stderr_text = (stderr or "").strip()
+        incomplete_reason = _incomplete_run_reason(stderr_text)
+        language_warning: str | None = None
+        if incomplete_reason is None and returncode == 0:
+            # A non-zero exit already fails the run; only an apparent success
+            # needs proof that the work actually finished.
+            incomplete_reason, language_warning = _completion_gap(stderr_text, plan)
+        if incomplete_reason is not None:
+            # A reply written before the agent's own command finished is an
+            # interim status, never a result — even when agy exits 0.
+            return ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt=f"{incomplete_reason}\n{stderr_text or stdout_response}"[:500],
+                rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stderr_text}")),
+                tool_calls=_parse_transcript_tool_calls(plan)
+                or _parse_stdout_marker_tool_calls(f"{stdout_response}\n{stderr_text}"),
+            )
         output_schema = plan_output_schema(plan)
         if output_schema is not None:
             # https://antigravity.google/docs/cli/headless/ specifies the
             # terminal JSON envelope. Free-text response is never a substitute.
             envelope = json_value(stdout_response)
             envelope = envelope if isinstance(envelope, dict) else {}
-            return structured_result(
+            structured = structured_result(
                 envelope.get("structured_output"), output_schema, returncode=returncode,
                 terminal_ok=("structured_output" in envelope and envelope.get("status") == "SUCCESS"
                              and not envelope.get("error")),
                 session_id=envelope.get("conversation_id"),
                 tool_calls=_parse_transcript_tool_calls(plan),
             )
-        stderr_text = (stderr or "").strip()
+            if structured.ok and language_warning is not None:
+                structured = dataclasses.replace(
+                    structured, stderr_excerpt=_with_language_warning(language_warning, structured.stderr_excerpt)
+                )
+            return structured
         combined = f"{stdout_response}\n{stderr_text}"
         hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
         call_failed = returncode != 0 or not bool(stdout_response)
@@ -459,6 +666,8 @@ class AgyAdapter:
             stderr_excerpt = excerpt_source[:500] or None
         elif stderr_text:
             stderr_excerpt = stderr_text[:500]
+        if ok and language_warning is not None:
+            stderr_excerpt = _with_language_warning(language_warning, stderr_text)
 
         tool_calls = _parse_transcript_tool_calls(plan)
         if not tool_calls:
@@ -488,6 +697,242 @@ class AgyAdapter:
             return
         with contextlib.suppress(FileNotFoundError):
             path.unlink()
+
+
+def _incomplete_run_reason(stderr_text: str) -> str | None:
+    """Return the reason code when agy ended the run before its work finished."""
+    for match in _BACKGROUND_TERMINATED_RE.finditer(stderr_text):
+        if int(match.group("count")) > 0:
+            return AGY_BACKGROUND_TASK_ABANDONED
+    if _PRINT_TIMEOUT_PARTIAL_RE.search(stderr_text):
+        return AGY_PRINT_TIMEOUT_PARTIAL
+    return None
+
+
+def _completion_gap(stderr_text: str, plan: InvocationPlan | None) -> tuple[str | None, str | None]:
+    """Return (reason code unless THIS invocation's slice proves its work finished, language warning).
+
+    Only the events this invocation appended count (``_invocation_transcript``):
+    a resumed conversation already holds earlier runs' finishes and replies,
+    which prove nothing about this one (#8502 r5). Ambiguous evidence is
+    unconfirmed: a slice line that does not parse may be the very finish or
+    reply in question, so it fails the run as unreadable rather than being
+    skipped. The readable slice is judged by ``_slice_completion_gap``; only a
+    slice that passes is checked for pending-work wording (``_interim_language``),
+    which is a diagnostic and never turns a pass into a failure (#8502 r9).
+    """
+    bound = _invocation_transcript(plan)
+    if bound is None:
+        return AGY_TRANSCRIPT_UNBOUND, None
+    if bound.unreadable_lines:
+        return AGY_TRANSCRIPT_UNREADABLE, None
+    gap = _slice_completion_gap(bound.events, stderr_text)
+    if gap is not None:
+        return gap, None
+    return None, _interim_language(bound.events)
+
+
+def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str | None:
+    """Return a reason code unless the slice structurally proves its work finished (#8502 r8).
+
+    The slice is read in ONE order, its file position; ``step_index`` never
+    orders anything (it only names the tool step an interim RUNNING event
+    belongs to). It must hold exactly one USER_INPUT — this invocation's
+    prompt; none means the run never reached the model, several mean the slice
+    reaches into an earlier run. The last model event after it must be a
+    PLANNER_RESPONSE with text and no tool calls: the final reply. Everything
+    the run started before that reply must be closed by its own finish event,
+    also positioned before it (``_open_work``); a finish written after the
+    reply means the reply was written while the work still ran. A task that
+    ended without finishing (canceled, timed out, failed) never completed its
+    command, whatever the reply says next: ``AGY_BACKGROUND_TASK_CANCELED``
+    (#8502 r10), a reason that never auto-finalizes the run. This is the
+    whole gate: what the reply says is never consulted (#8502 r9). stderr
+    cannot stand in for the transcript: agy's "root agent idle; waiting up to
+    … for N background task(s)" line is absent on some paths, so it can only
+    add doubt (agy itself waited on a task the slice never started), never
+    remove it.
+    """
+    prompts = [position for position, event in enumerate(events) if event.get("type") == "USER_INPUT"]
+    if len(prompts) != 1:
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    work = events[prompts[0] + 1 :]
+    model_events = [position for position, event in enumerate(work) if _is_model_event(event)]
+    if not model_events or work[model_events[-1]].get("type") != "PLANNER_RESPONSE":
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    final_reply = work[model_events[-1]]
+    if final_reply.get("tool_calls") or not str(final_reply.get("content") or "").strip():
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    started, _finished, unfinished, still_open = _open_work(work, reply=model_events[-1])
+    if unfinished:
+        return AGY_BACKGROUND_TASK_CANCELED
+    if still_open:
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    idle_wait_claimed = any(int(match.group("count")) > 0 for match in _IDLE_BACKGROUND_WAIT_RE.finditer(stderr_text))
+    if idle_wait_claimed and not started:
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    return None
+
+
+def _is_model_event(event: Mapping[str, Any]) -> bool:
+    return event.get("type") in _MODEL_EVENT_TYPES or event.get("source") == "MODEL"
+
+
+def _open_work(
+    events: list[dict[str, Any]], *, reply: int | None = None
+) -> tuple[set[str], set[str], set[str], set[str]]:
+    """Walk ``events`` in file order; return (tasks started, finished, ended unfinished, work still open).
+
+    ``reply`` is the position of the final reply in ``events``; work must be
+    closed before it. Events after it can only reopen or end a task, never
+    finish one. Without ``reply`` every event counts as before the reply.
+
+    Events are read only by the header agy wrote for them (#8502 r11): a start
+    only from a RUNNING result's header, a task message only from its own
+    ``[Message]`` header line; a task's output quoting either is text.
+
+    Work opens with a background-task start (a command, or a ``schedule``
+    timer), any other RUNNING tool result (agy's interim "Step is still
+    running"), or an ``invoke_subagent`` call. It closes only with its
+    own end event: a command or timer with a ``Task id "<id>" <outcome> with
+    result:`` message from ``sender=<id>`` — a finish when the outcome is
+    ``finished``, otherwise (``was canceled``, a timeout, an error) an end
+    without finishing; a timer also finishes with any other message from its
+    sender (it fires once); an interim step with a later event of the same
+    tool step. A subagent never closes — agy writes no structured subagent
+    finish — and neither does an interim step that names no step.
+
+    A task's LAST terminal event decides it (#8502 r12): a later end replaces
+    an earlier one, so a cancellation after a finish leaves the task
+    unfinished. A command's non-terminal message after its end, or a finish
+    after the reply, reopens it: the task was still running.
+    """
+    started: set[str] = set()
+    task_kinds: dict[str, str] = {}
+    ended: dict[str, bool] = {}
+    open_work: dict[str, str] = {}
+    for position, event in enumerate(events):
+        after_reply = reply is not None and position > reply
+        content = str(event.get("content") or "")
+        if event.get("type") == "SYSTEM_MESSAGE":
+            if message := _TASK_MESSAGE_HEADER_RE.match(content):
+                sender = message.group("sender")
+                kind = task_kinds.get(sender)
+                ended_match = _TASK_ENDED_RE.match(message.group("first_line"))
+                own_end = ended_match is not None and ended_match.group("id") == sender
+                if kind == "timer" or (kind == "command" and own_end):
+                    finishes = not own_end or ended_match.group("outcome") == _TASK_FINISHED_OUTCOME
+                    if finishes and after_reply:
+                        ended.pop(sender, None)
+                        open_work[sender] = kind
+                    else:
+                        open_work.pop(sender, None)
+                        ended[sender] = finishes
+                elif kind == "command" and sender in ended:
+                    del ended[sender]
+                    open_work[sender] = kind
+            continue
+        if after_reply:
+            continue
+        raw_calls = event.get("tool_calls")
+        if isinstance(raw_calls, list) and any(
+            isinstance(call, Mapping) and call.get("name") == _SUBAGENT_TOOL for call in raw_calls
+        ):
+            open_work[f"subagent@{position}"] = "subagent"
+        step = _event_step_index(event)
+        if step is not None:
+            open_work.pop(f"step:{step}", None)
+        if event.get("status") != "RUNNING":
+            continue
+        if start := _BACKGROUND_START_HEADER_RE.match(content):
+            task_id = start.group("id")
+            started.add(task_id)
+            task_kinds[task_id] = open_work[task_id] = "timer" if start.group("timer") else "command"
+        else:
+            open_work[f"step:{step}" if step is not None else f"step@{position}"] = "step"
+    finished = {task for task, finishes in ended.items() if finishes}
+    unfinished = {task for task, finishes in ended.items() if not finishes}
+    return started, finished, unfinished, set(open_work)
+
+
+def _interim_language(events: list[dict[str, Any]]) -> str | None:
+    """Describe pending-work wording in a structurally complete slice's final reply, if any.
+
+    DIAGNOSTIC ONLY (#8502 r9): the caller has already accepted the slice, so
+    this never fails a run. It flags a final reply that says work is still
+    pending (``_PENDING_WORK_RE``), speaks of background work although the
+    slice started no task, or names a task this invocation did not see finish
+    (``task-2`` of an earlier run of a resumed conversation). With no start
+    event there was no background work (see ``_BACKGROUND_START_HEADER_RE``), so
+    such a reply is odd wording worth a look, not unfinished work.
+    """
+    prompt = next(position for position, event in enumerate(events) if event.get("type") == "USER_INPUT")
+    work = events[prompt + 1 :]
+    reply_position = max(position for position, event in enumerate(work) if _is_model_event(event))
+    content = str(work[reply_position].get("content") or "")
+    started, finished, _unfinished, _still_open = _open_work(work, reply=reply_position)
+    if pending := _PENDING_WORK_RE.search(content):
+        return f"pending-work wording: {pending.group(0).strip()!r}"
+    if not started and (background := _BACKGROUND_LANGUAGE_RE.search(content)):
+        return f"background wording with no task started: {background.group(0)!r}"
+    finished_tasks = {task_id.rsplit("/", 1)[-1] for task_id in finished}
+    unfinished = [ref for ref in _REPLY_TASK_REF_RE.findall(content) if ref not in finished_tasks]
+    if unfinished:
+        return f"names a task this run did not see finish: {unfinished[0]!r}"
+    return None
+
+
+def _with_language_warning(detail: str, stderr_text: str | None) -> str:
+    """Lead a PASSING run's ``stderr_excerpt`` with the interim-language warning.
+
+    The code sits alone on the first line, like the failure reason codes, so
+    task records and usage rows carry it; it is not in
+    ``AGY_INCOMPLETE_RUN_REASONS``, so ``delegate.py`` still settles the run.
+    """
+    _logger.warning("%s: %s", AGY_INTERIM_LANGUAGE_WARNING, detail)
+    return "\n".join(part for part in (AGY_INTERIM_LANGUAGE_WARNING, detail, stderr_text) if part)[:500]
+
+
+@functools.lru_cache(maxsize=8)
+def _agy_version(agy_bin: str) -> tuple[int, int, int] | None:
+    """Return the ``agy --version`` triple, or ``None`` when it cannot be read."""
+    try:
+        completed = subprocess.run(
+            [agy_bin, "--version"],
+            capture_output=True,
+            text=True,
+            timeout=_AGY_VERSION_PROBE_TIMEOUT_S,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    match = _AGY_VERSION_RE.search(completed.stdout or "")
+    if completed.returncode != 0 or match is None:
+        return None
+    return (int(match.group("major")), int(match.group("minor")), int(match.group("patch")))
+
+
+def _require_background_wait_support(agy_bin: str) -> None:
+    """Fail closed on an agy build that cannot finish a long command headlessly.
+
+    A missing binary is left to the spawn, which reports it as unavailable.
+    """
+    if not Path(agy_bin).is_file():
+        return
+    version = _agy_version(agy_bin)
+    minimum = ".".join(map(str, _AGY_MIN_BACKGROUND_WAIT_VERSION))
+    if version is None:
+        raise ValueError(
+            f"agy_version_unverified: `{agy_bin} --version` did not report a version; "
+            f"agy >= {minimum} is required so headless runs wait for backgrounded commands (#8502)"
+        )
+    if version < _AGY_MIN_BACKGROUND_WAIT_VERSION:
+        found = ".".join(map(str, version))
+        raise ValueError(
+            f"agy_version_unsupported: agy {found} at {agy_bin} cancels backgrounded commands about 5s "
+            f"after the agent goes idle, so long tests never finish (#8502); run `agy update` "
+            f"to reach >= {minimum}"
+        )
 
 
 def _build_log_path(task_id: str | None) -> Path:
@@ -545,28 +990,10 @@ def _parse_stdout_marker_tool_calls(text: str) -> list[dict[str, Any]]:
 
 
 def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, Any]]:
-    transcript_path = _transcript_path_from_plan(plan)
-    if transcript_path is None or not transcript_path.exists():
+    bound = _invocation_transcript(plan)
+    if bound is None:
         return []
-
-    try:
-        lines = transcript_path.read_text(encoding="utf-8").splitlines()
-    except OSError:
-        return []
-
-    events: list[dict[str, Any]] = []
-    for raw_line in lines:
-        if not raw_line.strip():
-            continue
-        try:
-            event = json.loads(raw_line)
-        except json.JSONDecodeError:
-            continue
-        if isinstance(event, dict):
-            events.append(event)
-
-    if not events:
-        return []
+    transcript_path, events = bound.path, bound.events
 
     has_step_index = any(_event_step_index(event) is not None for event in events)
     if not any(event.get("type") == _LEGACY_MCP_RESULT_TYPE for event in events):
@@ -574,6 +1001,44 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
     if has_step_index:
         return _pair_transcript_by_step_index(events, transcript_path=transcript_path)
     return _pair_transcript_fifo(events, transcript_path=transcript_path)
+
+
+class _TranscriptSlice(NamedTuple):
+    path: Path
+    events: list[dict[str, Any]]
+    unreadable_lines: int
+
+
+def _read_transcript_events(transcript_path: Path, *, offset: int = 0) -> tuple[list[dict[str, Any]], int] | None:
+    """Parse the transcript's JSONL events from byte ``offset`` onward.
+
+    Returns the events and the count of non-blank lines that are not a JSON
+    object (invalid UTF-8, truncated or corrupt JSON, a bare scalar), or
+    ``None`` when the file cannot be read. Callers decide what an unreadable
+    line means; nothing is silently dropped.
+    """
+    try:
+        with transcript_path.open("rb") as handle:
+            handle.seek(offset)
+            raw_lines = handle.read().splitlines()
+    except OSError:
+        return None
+
+    events: list[dict[str, Any]] = []
+    unreadable = 0
+    for raw_line in raw_lines:
+        if not raw_line.strip():
+            continue
+        try:
+            event = json.loads(raw_line.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            unreadable += 1
+            continue
+        if isinstance(event, dict):
+            events.append(event)
+        else:
+            unreadable += 1
+    return events, unreadable
 
 
 def _event_step_index(event: Mapping[str, Any]) -> int | None:
@@ -786,85 +1251,91 @@ def _pair_transcript_generic_results(
 
 
 def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
+    """Return the transcript of THIS invocation's conversation, or ``None``.
+
+    The per-invocation runtime log is the only binding: agy truncates it on
+    open and logs the conversation it created or resumed before the first
+    model turn (``Created conversation <id>`` / ``found conversation <id>``;
+    every log from agy 1.1.24 through 1.2.10 names one, #8502 r4). A log that
+    names no conversation, or names one whose transcript is missing, binds
+    nothing — matching brain/ by prompt and timestamp could credit an earlier
+    run of the same prompt opened within the same second, so there is no
+    fallback.
+    """
+    bound = _bound_conversation(plan)
+    return bound[1] if bound is not None else None
+
+
+def _bound_conversation(plan: InvocationPlan | None) -> tuple[str, Path] | None:
+    """Return (conversation id, transcript path) the invocation's log binds."""
     if plan is None:
         return None
-    app_data = Path(
-        plan.env_overrides.get(
-            _AGY_APP_DATA_ENV,
-            str(Path.home() / ".gemini" / "antigravity-cli"),
-        )
-    )
     log_file = plan.env_overrides.get(_AGY_LOG_ENV)
     conversation_id = _conversation_id_from_log(Path(log_file)) if log_file else None
-    if conversation_id:
-        transcript = _brain_transcript_path(app_data, conversation_id)
-        if transcript.exists():
-            return transcript
-    fallback = _transcript_path_from_brain(plan, app_data)
-    if fallback is not None:
-        _logger.warning(
-            "agy runtime log did not identify the conversation; matched brain transcript %s by prompt",
-            fallback,
-        )
-        return fallback
-    return _brain_transcript_path(app_data, conversation_id) if conversation_id else None
+    if not conversation_id:
+        return None
+    transcript = _brain_transcript_path(_agy_app_data(plan.env_overrides), conversation_id)
+    return (conversation_id, transcript) if transcript.exists() else None
+
+
+def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | None:
+    """Return the bound transcript and only the events THIS invocation appended.
+
+    A resumed conversation starts at the size recorded in the plan when the
+    invocation was built; any other conversation the log names was not resumed
+    on purpose, so it is read from the start and ``_slice_completion_gap``'s single
+    USER_INPUT rule rejects it if it holds an earlier run. An unknown or no
+    longer valid baseline (unreadable at build time, or a transcript shorter
+    than it now) binds nothing.
+    """
+    bound = _bound_conversation(plan)
+    if bound is None:
+        return None
+    conversation_id, transcript = bound
+    offset: int | None = 0
+    baseline = plan.metadata.get(_TRANSCRIPT_BASELINE_KEY) if plan is not None else None
+    if isinstance(baseline, Mapping) and baseline.get("conversation_id") == conversation_id:
+        raw_offset = baseline.get("offset")
+        offset = raw_offset if isinstance(raw_offset, int) and raw_offset >= 0 else None
+    if offset is None:
+        return None
+    try:
+        if transcript.stat().st_size < offset:
+            return None
+    except OSError:
+        return None
+    parsed = _read_transcript_events(transcript, offset=offset)
+    if parsed is None:
+        return None
+    events, unreadable = parsed
+    return _TranscriptSlice(transcript, events, unreadable) if events or unreadable else None
+
+
+def _transcript_baseline(app_data: Path, session_id: str) -> dict[str, Any]:
+    """Record where a resumed conversation's transcript ends before this invocation.
+
+    A fresh conversation records nothing (nothing precedes this run). An absent
+    transcript is offset 0; one that cannot be sized, or a session id that is
+    not a conversation UUID, records ``offset: None`` so the run binds nothing
+    rather than crediting earlier events.
+    """
+    offset: int | None = None
+    if re.fullmatch(_AGY_UUID, session_id):
+        try:
+            offset = _brain_transcript_path(app_data, session_id).stat().st_size
+        except FileNotFoundError:
+            offset = 0
+        except OSError:
+            offset = None
+    return {"conversation_id": session_id, "offset": offset}
+
+
+def _agy_app_data(env_overrides: Mapping[str, str]) -> Path:
+    return Path(env_overrides.get(_AGY_APP_DATA_ENV, str(Path.home() / ".gemini" / "antigravity-cli")))
 
 
 def _brain_transcript_path(app_data: Path, conversation_id: str) -> Path:
     return app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
-
-
-def _prompt_from_plan(plan: InvocationPlan) -> str:
-    cmd = list(plan.cmd)
-    with contextlib.suppress(ValueError, IndexError):
-        return str(cmd[cmd.index("-p") + 1])
-    return ""
-
-
-def _transcript_path_from_brain(plan: InvocationPlan, app_data: Path) -> Path | None:
-    """Find this invocation's transcript when the runtime log names no conversation.
-
-    Only a recent conversation whose first ``USER_INPUT`` opens with this
-    invocation's own prompt qualifies, so an unrelated conversation is never
-    credited. Identical prompts (a retry) resolve to the newest transcript, which
-    is the one that just finished.
-    """
-    prompt_head = _prompt_from_plan(plan).strip()[:_PROMPT_MATCH_CHARS]
-    if not prompt_head:
-        return None
-    needle = "<USER_REQUEST>\n" + prompt_head
-    cutoff = time.time() - _BRAIN_FALLBACK_MAX_AGE_S
-    candidates: list[tuple[float, Path]] = []
-    try:
-        conversation_dirs = list((app_data / "brain").iterdir())
-    except OSError:
-        return None
-    for conversation_dir in conversation_dirs:
-        transcript = _brain_transcript_path(app_data, conversation_dir.name)
-        try:
-            mtime = transcript.stat().st_mtime
-        except OSError:
-            continue
-        if mtime >= cutoff:
-            candidates.append((mtime, transcript))
-    for _, transcript in sorted(candidates, reverse=True):
-        if _transcript_opens_with(transcript, needle):
-            return transcript
-    return None
-
-
-def _transcript_opens_with(transcript: Path, needle: str) -> bool:
-    try:
-        with transcript.open(encoding="utf-8", errors="replace") as handle:
-            for raw_line in handle:
-                if not raw_line.strip():
-                    continue
-                event = json.loads(raw_line)
-                if isinstance(event, dict) and event.get("type") == "USER_INPUT":
-                    return str(event.get("content") or "").lstrip().startswith(needle)
-    except (OSError, json.JSONDecodeError):
-        return False
-    return False
 
 
 def _conversation_id_from_log(log_file: Path) -> str | None:

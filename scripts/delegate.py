@@ -5796,6 +5796,20 @@ def _classify_final_status(
     return "failed"
 
 
+def _worker_run_incomplete(stderr_excerpt: str | None) -> bool:
+    """True when the adapter could not prove the worker's run finished its work.
+
+    AGY print mode can exit 0 while the agent's backgrounded commands are still
+    running or were killed (#8502/#8503); the adapter then leads
+    ``stderr_excerpt`` with a reason code — including when no transcript bound
+    to this run exists to prove completion. Whatever that worker left in its
+    worktree is unconfirmed, so it must never be auto-finalized as ``done``.
+    """
+    from agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+
+    return _first_error_line(stderr_excerpt) in AGY_INCOMPLETE_RUN_REASONS
+
+
 def _first_error_line(stderr_excerpt: str | None) -> str | None:
     """Return the first non-blank captured stderr line for task summaries."""
     if not stderr_excerpt:
@@ -6339,7 +6353,10 @@ def _run_worker(
                 #
                 # Neither unknown can prove the work was committed, so either one surfaces
                 # the task for finalization rather than letting it settle as ``done``.
-                if dirty_on_exit in (True, None) and commits_ahead in (0, None):
+                # A worker cut off mid-work (#8502) leaves unfinished edits even
+                # when it had pushed earlier commits: surface them, never ``done``.
+                run_incomplete = _worker_run_incomplete(stderr_excerpt)
+                if dirty_on_exit in (True, None) and (commits_ahead in (0, None) or run_incomplete):
                     needs_finalize = True
 
                 # Catch committed-but-unpushed write dispatches (#7311):
@@ -6370,7 +6387,13 @@ def _run_worker(
                             if rescue_status:
                                 finalize_error = rescue_status
 
-                if needs_finalize and rescue_status is None and returncode == 0 and mode == "danger":
+                if (
+                    needs_finalize
+                    and rescue_status is None
+                    and returncode == 0
+                    and mode == "danger"
+                    and not run_incomplete
+                ):
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
