@@ -236,6 +236,79 @@ def test_pull_projection_matches_work_and_idle_consumers():
     assert health != "ON_TRACK"
 
 
+def test_non_actions_app_slug_collapses_and_actions_without_workflow_does_not():
+    updated = "2026-08-13T08:00:00Z"
+    earlier = "2026-08-13T07:00:00Z"
+    raw = {
+        "number": 77,
+        "title": "Ship it",
+        "state": "open",
+        "draft": False,
+        "head": {"ref": "cursor/example", "sha": SHA},
+        "updated_at": updated,
+        "created_at": "2026-08-01T00:00:00Z",
+        "html_url": f"https://github.com/{REPO}/pull/77",
+    }
+    codeql = github_rest.project_pull_request(
+        raw,
+        pull={"mergeable_state": "clean", "requested_reviewers": []},
+        check_runs=[
+            {
+                "name": "Analyze (python)",
+                "status": "completed",
+                "conclusion": "cancelled",
+                "started_at": earlier,
+                "completed_at": earlier,
+                "app": {"slug": "github-code-scanning"},
+            },
+            {
+                "name": "Analyze (python)",
+                "status": "completed",
+                "conclusion": "success",
+                "started_at": updated,
+                "completed_at": updated,
+                "app": {"slug": "github-code-scanning"},
+            },
+        ],
+        statuses=[],
+        reviews=[],
+        comments=None,
+        workflow_names={},
+    )
+    assert codeql["statusCheckRollup"][0]["appSlug"] == "github-code-scanning"
+    assert _pr_check_state(codeql) == "passing"
+
+    actions = github_rest.project_pull_request(
+        raw,
+        pull={"mergeable_state": "clean", "requested_reviewers": []},
+        check_runs=[
+            {
+                "name": "Ruff",
+                "status": "completed",
+                "conclusion": "cancelled",
+                "started_at": earlier,
+                "completed_at": earlier,
+                "app": {"slug": "github-actions"},
+            },
+            {
+                "name": "Ruff",
+                "status": "completed",
+                "conclusion": "success",
+                "started_at": updated,
+                "completed_at": updated,
+                "app": {"slug": "github-actions"},
+            },
+        ],
+        statuses=[],
+        reviews=[],
+        comments=None,
+        workflow_names=None,
+    )
+    assert "workflowName" not in actions["statusCheckRollup"][0]
+    assert "appSlug" not in actions["statusCheckRollup"][0]
+    assert _pr_check_state(actions) == "failing"
+
+
 def test_changes_requested_beats_a_later_approval_from_someone_else():
     reviews = [
         {"user": {"login": "a"}, "state": "APPROVED"},
@@ -299,15 +372,36 @@ def _scripted_repo():
         f"repos/{REPO}/commits/{SHA}/check-runs?per_page=100&page=1": (
             '"checks"',
             {
-                "total_count": 1,
+                "total_count": 2,
                 "check_runs": [
+                    {
+                        "name": "CI Gate",
+                        "status": "completed",
+                        "conclusion": "cancelled",
+                        "started_at": "2026-08-13T07:00:00Z",
+                        "completed_at": "2026-08-13T07:01:00Z",
+                        "check_suite": {"id": 11},
+                        "app": {"slug": "github-actions"},
+                    },
                     {
                         "name": "CI Gate",
                         "status": "completed",
                         "conclusion": "success",
                         "started_at": updated,
                         "completed_at": updated,
-                    }
+                        "check_suite": {"id": 12},
+                        "app": {"slug": "github-actions"},
+                    },
+                ],
+            },
+        ),
+        f"repos/{REPO}/actions/runs?head_sha={SHA}&per_page=100": (
+            '"runs"',
+            {
+                "total_count": 2,
+                "workflow_runs": [
+                    {"name": "CI", "check_suite_id": 11},
+                    {"name": "CI", "check_suite_id": 12},
                 ],
             },
         ),
@@ -343,9 +437,10 @@ def test_open_pr_detail_is_conditional_and_bounded_to_open_pulls():
     assert first[0]["number"] == 77
     assert first[0]["reviewDecision"] is None
     assert _pr_check_state(first[0]) == "passing"
-    assert len(calls) == 12
+    assert [row.get("workflowName") for row in first[0]["statusCheckRollup"]] == ["CI", "CI"]
+    assert len(calls) == 14
     assert calls[0][1] is None
-    assert all(etag for _, etag in calls[6:])
+    assert all(etag for _, etag in calls[7:])
 
 
 def test_check_run_error_is_not_cached_as_a_successful_pr_list():
@@ -749,6 +844,11 @@ def test_pagination_follows_next_and_a_page_cap_is_truncated(monkeypatch):
                     }
                 ],
             },
+            None,
+        ),
+        f"repos/{REPO}/actions/runs?head_sha={SHA}&per_page=100": (
+            '"runs"',
+            {"total_count": 0, "workflow_runs": []},
             None,
         ),
         f"repos/{REPO}/commits/{SHA}/status": ('"status"', {"statuses": [], "total_count": 0}, None),

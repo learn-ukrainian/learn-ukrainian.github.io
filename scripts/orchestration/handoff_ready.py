@@ -31,6 +31,8 @@ import subprocess
 import urllib.request
 from pathlib import Path
 
+from scripts.github_check_rollup import collapse_status_rollup
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DELEGATE_ACTIVE_URL = "http://127.0.0.1:8765/api/delegate/active"
 
@@ -110,15 +112,9 @@ def check_branch_pushed(branch: str) -> tuple[str, str]:
     return OK, f"{branch} pushed (local==origin @ {local[:9]})"
 
 
-def _blocking_state(pr: int) -> tuple[str, str]:
-    rc, data = _gh_json(
-        "pr", "view", str(pr), "--json", "statusCheckRollup,mergeStateStatus,state"
-    )
-    if rc != 0 or not isinstance(data, dict):
-        return UNKNOWN, f"gh pr view failed: {str(data)[:120]}"
-    if data.get("state") == "MERGED":
-        return OK, "PR already merged"
-    rollup = data.get("statusCheckRollup") or []
+def _rollup_blocking(rollup: list) -> tuple[str, str]:
+    """Green/red/unknown from a rollup after the shared latest-run collapse."""
+    rollup = collapse_status_rollup(rollup)
     if not rollup:
         # No checks at all ⇒ cannot confirm green. UNKNOWN ⇒ not ready (never
         # report "all 0 checks green" as READY — anti-fabrication, #M-4).
@@ -139,13 +135,28 @@ def _blocking_state(pr: int) -> tuple[str, str]:
         return RED, f"failing checks: {', '.join(failing[:6])}"
     if pending:
         return RED, f"checks still pending: {', '.join(pending[:6])}"
+    return OK, f"all {len(rollup)} checks green"
+
+
+def _blocking_state(pr: int) -> tuple[str, str]:
+    rc, data = _gh_json(
+        "pr", "view", str(pr), "--json", "statusCheckRollup,mergeStateStatus,state"
+    )
+    if rc != 0 or not isinstance(data, dict):
+        return UNKNOWN, f"gh pr view failed: {str(data)[:120]}"
+    if data.get("state") == "MERGED":
+        return OK, "PR already merged"
+    rollup = data.get("statusCheckRollup") or []
+    status, detail = _rollup_blocking(rollup)
+    if status != OK:
+        return status, detail
     # Checks green is necessary but not sufficient — enforce the merge state too:
     # a PR can be all-green yet BLOCKED (required review), DIRTY (conflict), or
     # BEHIND (needs update from base) and is NOT ready to hand off.
     merge_state = (data.get("mergeStateStatus") or "").upper()
     if merge_state in ("BLOCKED", "DIRTY", "BEHIND"):
         return RED, f"checks green but mergeStateStatus={merge_state} (not mergeable)"
-    return OK, f"all {len(rollup)} checks green ({merge_state or '?'})"
+    return OK, f"{detail} ({merge_state or '?'})"
 
 
 def check_pr_checks(pr: int | None) -> tuple[str, str]:

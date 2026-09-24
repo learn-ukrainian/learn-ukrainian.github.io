@@ -105,6 +105,34 @@ def test_merge_state_blocked_is_red(monkeypatch):
         assert hr.check_pr_checks(5)[0] == hr.RED, state
 
 
+def test_superseded_cancelled_check_is_ok(monkeypatch):
+    rollup = [
+        {"name": "Ruff", "conclusion": "CANCELLED", "workflowName": "CI", "startedAt": "2026-09-19T02:49:59Z"},
+        {"name": "Ruff", "conclusion": "SUCCESS", "workflowName": "CI", "startedAt": "2026-09-19T02:50:11Z"},
+    ]
+    monkeypatch.setattr(
+        hr,
+        "_gh_json",
+        lambda *a: (0, {"statusCheckRollup": rollup, "state": "OPEN", "mergeStateStatus": "CLEAN"}),
+    )
+    status, detail = hr.check_pr_checks(8264)
+    assert status == hr.OK
+    assert "CANCELLED" not in detail
+
+
+def test_cancelled_without_workflow_identity_stays_red(monkeypatch):
+    rollup = [
+        {"name": "Ruff", "conclusion": "CANCELLED", "startedAt": "2026-09-19T02:49:59Z"},
+        {"name": "Ruff", "conclusion": "SUCCESS", "startedAt": "2026-09-19T02:50:11Z"},
+    ]
+    monkeypatch.setattr(
+        hr,
+        "_gh_json",
+        lambda *a: (0, {"statusCheckRollup": rollup, "state": "OPEN", "mergeStateStatus": "CLEAN"}),
+    )
+    assert hr.check_pr_checks(8264)[0] == hr.RED
+
+
 def test_merge_state_clean_is_ok(monkeypatch):
     monkeypatch.setattr(
         hr,
