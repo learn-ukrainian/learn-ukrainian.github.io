@@ -103,6 +103,47 @@ def test_wrong_task_id_rejected_locally(
     assert "X-Agent: codex/impl-8638-r2" in captured.out
 
 
+def test_cwd_dispatch_worktree_resolves_primary_tasks_dir(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """A dispatch-worktree cwd anchors batch_state/tasks to the primary checkout without --tasks-dir."""
+    primary = tmp_path / "primary"
+    primary_git = primary / ".git"
+    primary_git.mkdir(parents=True)
+    primary_tasks = primary / "batch_state" / "tasks"
+    primary_tasks.mkdir(parents=True)
+    _write_task_record(primary_tasks, "task-target", agent="codex")
+
+    worktree_git_meta = primary_git / "worktrees" / "wt-target"
+    worktree_git_meta.mkdir(parents=True)
+    worktree = tmp_path / ".worktrees" / "dispatch" / "codex" / "task-target"
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {worktree_git_meta}\n")
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "task-target")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+
+    # Pass cwd=worktree WITHOUT tasks_dir=
+    provenance = resolve_provenance_context(cwd=worktree)
+    assert provenance.active is True
+    assert provenance.tasks_dir == primary_tasks.resolve()
+    assert provenance.expected_trailer == "X-Agent: codex/task-target"
+
+    # Wrong-task trailer fails
+    _mock_commit(monkeypatch, "feat: wrong trailer\n\nX-Agent: codex/wrong-task")
+    verdict, reason = _check_commit("fake-sha", provenance=provenance, cwd=worktree)
+    assert verdict == "FAIL"
+    assert "task record 'wrong-task' not found" in reason
+    assert "expected literal trailer: 'X-Agent: codex/task-target'" in reason
+
+    # Also test via main() with --cwd and without --tasks-dir
+    rc = main(["HEAD~1..HEAD", "--cwd", str(worktree)])
+    assert rc == 1
+    captured = capsys.readouterr()
+    assert "FAIL" in captured.out
+    assert "X-Agent: codex/task-target" in captured.out
+
+
 def test_correct_id_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
@@ -411,9 +452,11 @@ def test_grok_build_alias_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     assert verdict == "PASS"
 
 
-def test_worker_env_carries_lu_x_agent_trailer() -> None:
+def test_worker_env_carries_lu_x_agent_trailer(monkeypatch: pytest.MonkeyPatch) -> None:
     """delegate.py exports LU_X_AGENT_TRAILER into worker_env via _build_worker_env and _x_agent_trailer."""
     from scripts import delegate
+
+    monkeypatch.setattr(delegate, "_resolve_github_token", lambda: None)
 
     # Direct helper verification
     assert delegate._x_agent_trailer("codex", "dispatch-trailer-test") == "X-Agent: codex/dispatch-trailer-test"

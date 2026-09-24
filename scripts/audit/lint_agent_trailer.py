@@ -79,7 +79,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import main_checkout_root, resolve_repo_root
 from scripts.orchestration.task_record_store import locate_task_record
 
 _TRAILER_RE = re.compile(
@@ -109,7 +109,7 @@ def _git(*args: str, cwd: Path | None = None) -> str:
 
 def _default_tasks_dir(repo_root: Path | None = None) -> Path:
     """Return the default tasks directory under batch_state/tasks."""
-    root = repo_root or resolve_repo_root(Path(__file__), 2)
+    root = main_checkout_root(Path(repo_root)) if repo_root else resolve_repo_root(Path(__file__), 2)
     return (root / "batch_state" / "tasks").resolve()
 
 
@@ -232,7 +232,7 @@ def resolve_provenance_context(
         )
 
     # 3. Check tasks directory
-    default_dir = _default_tasks_dir(repo_root=resolve_repo_root(cwd, 2) if cwd else None)
+    default_dir = _default_tasks_dir(repo_root=main_checkout_root(Path(cwd)) if cwd else None)
     effective_tasks_dir = (tasks_dir or default_dir).resolve()
     if not effective_tasks_dir.is_dir():
         return ProvenanceContext(
@@ -340,7 +340,9 @@ def _check_commit(
     if provenance.expected_trailer and trailer_str == provenance.expected_trailer:
         return "PASS", trailer_str
 
-    tasks_dir = provenance.tasks_dir or _default_tasks_dir()
+    tasks_dir = provenance.tasks_dir or _default_tasks_dir(
+        repo_root=main_checkout_root(Path(cwd)) if cwd else None
+    )
     expected = (
         provenance.expected_trailer
         or f"X-Agent: {provenance.expected_agent or agent}/{provenance.expected_task_id or task}"
