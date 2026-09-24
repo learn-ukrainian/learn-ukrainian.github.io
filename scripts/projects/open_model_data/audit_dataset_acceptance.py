@@ -1321,24 +1321,109 @@ def audit_check_7_sample_drawer(
                         try:
                             receipt_data = json.loads(receipt_path.read_text(encoding="utf-8"))
                             items = receipt_data.get("reviewed_sample_items", [])
-                            if len(items) < actual_drawn_count:
+                            if len(items) != actual_drawn_count:
                                 failures.append(
-                                    f"Receipt item count ({len(items)}) is less than sample size drawn ({actual_drawn_count})"
+                                    f"Receipt item count ({len(items)}) does not match sample size drawn ({actual_drawn_count})"
                                 )
                             receipt_blockers = receipt_data.get("blocker_defect_count", 0)
                             if receipt_blockers > 0:
                                 failures.append(f"Receipt reports {receipt_blockers} blocker defect(s)")
-                            if require_receipt:
-                                unassessed = sum(
-                                    1
-                                    for it in items
-                                    if not it.get("reviewer_assessment")
-                                    or not isinstance(it.get("criteria"), dict)
-                                    or not it.get("criteria")
+                            receipt_verdict = receipt_data.get("verdict")
+                            if receipt_verdict != "APPROVED":
+                                failures.append(f"Receipt verdict is {receipt_verdict!r}, expected 'APPROVED'")
+
+                            receipt_ds_hash = receipt_data.get("dataset_sha256")
+                            if receipt_ds_hash != dataset_sha256:
+                                failures.append(
+                                    f"Receipt dataset_sha256 ({receipt_ds_hash}) does not match dataset hash ({dataset_sha256})"
                                 )
-                                if unassessed > 0:
+                            receipt_seed = receipt_data.get("sample_seed")
+                            if receipt_seed != seed_hash:
+                                failures.append(
+                                    f"Receipt sample_seed ({receipt_seed}) does not match sample seed ({seed_hash})"
+                                )
+                            receipt_prof = receipt_data.get("profile_sha256")
+                            if receipt_prof and receipt_prof != profile_sha256:
+                                failures.append(
+                                    f"Receipt profile_sha256 ({receipt_prof}) does not match profile hash ({profile_sha256})"
+                                )
+
+                            receipt_items_by_idx = {it.get("sample_index"): it for it in items}
+                            expected_indices = set(range(1, actual_drawn_count + 1))
+                            receipt_indices = set(receipt_items_by_idx.keys())
+                            missing_in_receipt = expected_indices - receipt_indices
+                            extra_in_receipt = receipt_indices - expected_indices
+                            if missing_in_receipt:
+                                failures.append(
+                                    f"Receipt missing {len(missing_in_receipt)} sampled indices: {sorted(missing_in_receipt)[:5]}"
+                                )
+                            if extra_in_receipt:
+                                failures.append(
+                                    f"Receipt contains {len(extra_in_receipt)} unexpected sampled indices: {sorted(extra_in_receipt)[:5]}"
+                                )
+
+                            for s_idx, r in enumerate(all_sampled, start=1):
+                                r_it = receipt_items_by_idx.get(s_idx)
+                                if not r_it:
+                                    continue
+                                if r_it.get("content_hash") != r.content_hash:
                                     failures.append(
-                                        f"Receipt has {unassessed} item(s) lacking authentic reviewer assessment or criteria"
+                                        f"Receipt item {s_idx} content_hash mismatch: receipt={r_it.get('content_hash')} vs sample={r.content_hash}"
+                                    )
+                                    break
+
+                            required_criteria_keys = {
+                                "pedagogical_soundness",
+                                "morphology_vesum",
+                                "pravopys_2019",
+                                "zero_russianisms",
+                                "zero_soviet_sum11",
+                            }
+                            for r_it in items:
+                                s_idx = r_it.get("sample_index")
+                                crit = r_it.get("criteria")
+                                if not isinstance(crit, dict) or not required_criteria_keys.issubset(crit.keys()):
+                                    failures.append(
+                                        f"Receipt item {s_idx} missing required 5 criteria keys"
+                                    )
+                                    break
+                                if any(not isinstance(crit[k], bool) for k in required_criteria_keys):
+                                    failures.append(
+                                        f"Receipt item {s_idx} has non-boolean criteria value"
+                                    )
+                                    break
+                                if any(crit[k] is False for k in required_criteria_keys) and (
+                                    r_it.get("verdict") == "APPROVED" or r_it.get("status") == "PASS"
+                                ):
+                                    failures.append(
+                                        f"Receipt item {s_idx} has failed criteria (False) but received APPROVED verdict"
+                                    )
+                                    break
+
+                            unassessed = [
+                                r_it.get("sample_index")
+                                for r_it in items
+                                if not r_it.get("reviewer_assessment")
+                                or not isinstance(r_it.get("reviewer_assessment"), str)
+                                or not r_it.get("reviewer_assessment").strip()
+                            ]
+                            if unassessed:
+                                failures.append(
+                                    f"Receipt has {len(unassessed)} item(s) lacking non-empty reviewer_assessment: {unassessed[:5]}"
+                                )
+
+                            if signoff_data:
+                                if signoff_data.get("blocker_defect_count") != receipt_blockers:
+                                    failures.append(
+                                        f"Signoff blocker_defect_count ({signoff_data.get('blocker_defect_count')}) does not match receipt blocker_defect_count ({receipt_blockers})"
+                                    )
+                                if signoff_data.get("reviewer_id") != receipt_data.get("reviewer_id"):
+                                    failures.append(
+                                        f"Signoff reviewer_id ({signoff_data.get('reviewer_id')}) does not match receipt reviewer_id ({receipt_data.get('reviewer_id')})"
+                                    )
+                                if signoff_data.get("reviewer_family") != receipt_data.get("reviewer_family"):
+                                    failures.append(
+                                        f"Signoff reviewer_family ({signoff_data.get('reviewer_family')}) does not match receipt reviewer_family ({receipt_data.get('reviewer_family')})"
                                     )
                         except Exception as e:
                             failures.append(f"Error parsing review receipt: {e}")

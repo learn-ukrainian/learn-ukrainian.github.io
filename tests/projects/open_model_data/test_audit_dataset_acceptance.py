@@ -603,6 +603,145 @@ def test_check7_signoff_verification_lifecycle(tmp_path, default_thresholds):
     assert any("must be a non-negative integer" in f for f in res_bad_type.failures)
 
 
+def test_check7_receipt_validation_schema_and_criteria_integrity(tmp_path, default_thresholds):
+    """Verify check 7 validates review receipt schema, criteria, hashes, and assessments."""
+    records = [
+        parse_dataset_record({"query": f"q_{i}", "final_response": f"a_{i}"}, Path("shard.jsonl"), i) for i in range(5)
+    ]
+    sample_md = tmp_path / "sample.md"
+    thresholds = dict(default_thresholds)
+    thresholds["sample_size"] = 5
+    thresholds["require_review_receipt"] = True
+
+    _, _, seed = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md
+    )
+    drawn_sample = json.loads(sample_md.with_suffix(".json").read_text(encoding="utf-8"))
+    signoff_file = tmp_path / "valid_signoff.json"
+    signoff_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_123",
+                "sample_seed": seed,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    receipt_file = tmp_path / "acceptance_review_sample.receipt.json"
+
+    def _make_receipt_items(criteria_override=None, assessment_override=None, hash_override=None):
+        items = []
+        for s in drawn_sample:
+            i = s["sample_index"]
+            crit = {
+                "pedagogical_soundness": True,
+                "morphology_vesum": True,
+                "pravopys_2019": True,
+                "zero_russianisms": True,
+                "zero_soviet_sum11": True,
+            }
+            if criteria_override and i in criteria_override:
+                crit = criteria_override[i]
+            assessment = "Автентична оцінка рецензента"
+            if assessment_override and i in assessment_override:
+                assessment = assessment_override[i]
+            c_hash = s["content_hash"]
+            if hash_override and i in hash_override:
+                c_hash = hash_override[i]
+            items.append(
+                {
+                    "sample_index": i,
+                    "content_hash": c_hash,
+                    "verdict": "APPROVED",
+                    "status": "PASS",
+                    "criteria": crit,
+                    "reviewer_assessment": assessment,
+                }
+            )
+        return items
+
+    def _write_receipt(items, dataset_sha="dataset_hash_123", sample_seed=seed, verdict="APPROVED", blockers=0):
+        receipt_file.write_text(
+            json.dumps(
+                {
+                    "dataset_sha256": dataset_sha,
+                    "sample_seed": sample_seed,
+                    "profile_sha256": "profile_hash_456",
+                    "sample_size_drawn": 5,
+                    "sample_size_reviewed": 5,
+                    "blocker_defect_count": blockers,
+                    "minor_defect_count": 0,
+                    "reviewer_id": "linguist_1",
+                    "reviewer_family": "independent_human",
+                    "verdict": verdict,
+                    "reviewed_sample_items": items,
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    # 1. Valid receipt passes
+    _write_receipt(_make_receipt_items())
+    res, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res.status == "PASS"
+    assert res.metrics["signoff_verified"] is True
+
+    # 2. Missing criterion key fails
+    bad_items = _make_receipt_items(criteria_override={1: {"pedagogical_soundness": True}})
+    _write_receipt(bad_items)
+    res_bad_crit, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_bad_crit.status == "FAIL"
+    assert any("missing required 5 criteria keys" in f for f in res_bad_crit.failures)
+
+    # 3. False criterion with APPROVED verdict fails
+    failed_crit_items = _make_receipt_items(
+        criteria_override={
+            2: {
+                "pedagogical_soundness": False,
+                "morphology_vesum": True,
+                "pravopys_2019": True,
+                "zero_russianisms": True,
+                "zero_soviet_sum11": True,
+            }
+        }
+    )
+    _write_receipt(failed_crit_items)
+    res_false_crit, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_false_crit.status == "FAIL"
+    assert any("has failed criteria (False) but received APPROVED verdict" in f for f in res_false_crit.failures)
+
+    # 4. Empty reviewer_assessment fails
+    empty_assess_items = _make_receipt_items(assessment_override={3: "   "})
+    _write_receipt(empty_assess_items)
+    res_empty_assess, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_empty_assess.status == "FAIL"
+    assert any("lacking non-empty reviewer_assessment" in f for f in res_empty_assess.failures)
+
+    # 5. Content hash mismatch fails
+    mismatch_items = _make_receipt_items(hash_override={1: "tampered_content_hash"})
+    _write_receipt(mismatch_items)
+    res_mismatch, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_mismatch.status == "FAIL"
+    assert any("content_hash mismatch" in f for f in res_mismatch.failures)
+
+
 # ── Full Audit Runner & Fail-Closed Tests ───────────────────────────────────
 
 

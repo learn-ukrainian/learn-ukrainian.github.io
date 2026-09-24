@@ -187,11 +187,21 @@ def generate_signoff_and_receipt(
                 "Synthesizing item verdicts without complete reviewer input is strictly forbidden."
             )
         expected_indices = {item["sample_index"] for item in samples}
-        missing_indices = expected_indices - set(findings.keys())
-        if missing_indices:
+        finding_indices = set(findings.keys())
+        if finding_indices != expected_indices:
+            missing_indices = expected_indices - finding_indices
+            extra_indices = finding_indices - expected_indices
+            err_parts = []
+            if missing_indices:
+                err_parts.append(
+                    f"missing {len(missing_indices)} sample indices: {sorted(missing_indices)[:10]}"
+                )
+            if extra_indices:
+                err_parts.append(
+                    f"unexpected extra {len(extra_indices)} sample indices: {sorted(extra_indices)[:10]}"
+                )
             raise ValueError(
-                f"Provenance violation: findings file is missing evaluations for {len(missing_indices)} sample indices: "
-                f"{sorted(missing_indices)[:10]}..."
+                f"Provenance violation: findings indices do not match expected sample indices ({'; '.join(err_parts)})"
             )
         required_criteria = {
             "pedagogical_soundness",
@@ -205,6 +215,11 @@ def generate_signoff_and_receipt(
             if not isinstance(f_entry, dict):
                 raise ValueError(
                     f"Provenance violation: findings entry for sample index {s_idx} must be a JSON object, got {type(f_entry).__name__}"
+                )
+            embedded_s_idx = f_entry.get("sample_index")
+            if embedded_s_idx != s_idx:
+                raise ValueError(
+                    f"Provenance violation: findings entry key {s_idx} does not match embedded sample_index ({embedded_s_idx})"
                 )
             assessment = f_entry.get("reviewer_assessment") or f_entry.get("evaluation")
             if not assessment or not isinstance(assessment, str) or not assessment.strip():
@@ -437,6 +452,10 @@ def generate_signoff_and_receipt(
                     or ""
                 )
                 item_criteria = f_entry.get("criteria", {})
+                if isinstance(item_criteria, dict):
+                    failed_criteria = [k for k, v in item_criteria.items() if v is False]
+                    if failed_criteria:
+                        item_defects.append(f"Порушення критеріїв оцінювання: {', '.join(failed_criteria)}")
             elif isinstance(f_entry, str):
                 item_defects.append(f_entry)
 

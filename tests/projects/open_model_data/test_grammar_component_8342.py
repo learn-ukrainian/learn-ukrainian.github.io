@@ -476,6 +476,18 @@ def test_acceptance_review_sample_receipt_and_signoff():
         assert audit.get("chosen_rejected_pair_verified") is True
         assert audit.get("zero_soviet_sum11_influence") is True
         assert audit.get("held_out_firewall_verified") is True
+        crit = item.get("criteria", {})
+        assert set(crit.keys()) == {
+            "pedagogical_soundness",
+            "morphology_vesum",
+            "pravopys_2019",
+            "zero_russianisms",
+            "zero_soviet_sum11",
+        }
+        assert all(isinstance(v, bool) and v is True for v in crit.values())
+        assert item.get("reviewer_assessment") and isinstance(item["reviewer_assessment"], str)
+        assert item.get("verdict") == "APPROVED"
+        assert item.get("status") == "PASS"
 
     assert signoff["dataset_sha256"] == tmpl["dataset_sha256"]
     assert signoff["sample_seed"] == tmpl["sample_seed"]
@@ -484,3 +496,76 @@ def test_acceptance_review_sample_receipt_and_signoff():
     assert signoff["blocker_defect_count"] == 0
     assert signoff["reviewer_id"] == "claude_blue_team_ling_review"
     assert signoff["reviewer_family"] == "claude"
+
+
+def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
+    """Verify generate_grammar_signoff_8342 rejects extra keys, index mismatch, and flags false criteria."""
+    import copy
+    from unittest import mock
+
+    from scripts.projects.open_model_data.generate_grammar_signoff_8342 import generate_signoff_and_receipt
+
+    findings_file = GRAMMAR_DIR / "claude_review_findings.json"
+    raw_findings = json.loads(findings_file.read_text(encoding="utf-8"))
+
+    # 1. Extra key rejected
+    bad_findings = copy.deepcopy(raw_findings)
+    bad_findings["9999"] = {
+        "sample_index": 9999,
+        "verdict": "APPROVED",
+        "status": "PASS",
+        "defect": None,
+        "reviewer_assessment": "зайвий ключ",
+        "criteria": {
+            "pedagogical_soundness": True,
+            "morphology_vesum": True,
+            "pravopys_2019": True,
+            "zero_russianisms": True,
+            "zero_soviet_sum11": True,
+        },
+    }
+    f_path = tmp_path / "extra_keys.json"
+    f_path.write_text(json.dumps(bad_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="unexpected extra 1 sample indices"):
+        generate_signoff_and_receipt(
+            findings_file=f_path,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 2. Embedded sample_index mismatch rejected
+    bad_index_findings = copy.deepcopy(raw_findings)
+    bad_index_findings["1"]["sample_index"] = 999
+    f_path2 = tmp_path / "bad_index.json"
+    f_path2.write_text(json.dumps(bad_index_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="does not match embedded sample_index"):
+        generate_signoff_and_receipt(
+            findings_file=f_path2,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 3. False criteria flips item to FAIL / CHANGES_REQUESTED
+    false_crit_findings = copy.deepcopy(raw_findings)
+    false_crit_findings["1"]["criteria"]["pedagogical_soundness"] = False
+    f_path3 = tmp_path / "false_crit.json"
+    f_path3.write_text(json.dumps(false_crit_findings), encoding="utf-8")
+    tmp_receipt = tmp_path / "test.receipt.json"
+    tmp_signoff = tmp_path / "test.signoff.json"
+    with mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.RECEIPT_FILE", tmp_receipt), \
+         mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.SIGNOFF_FILE", tmp_signoff):
+        generate_signoff_and_receipt(
+            findings_file=f_path3,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+    receipt_data = json.loads(tmp_receipt.read_text(encoding="utf-8"))
+    assert receipt_data["verdict"] == "CHANGES_REQUESTED"
+    assert receipt_data["blocker_defect_count"] >= 1
+    item1 = receipt_data["reviewed_sample_items"][0]
+    assert item1["status"] == "FAIL"
+    assert item1["verdict"] == "CHANGES_REQUESTED"
+    assert any("Порушення критеріїв оцінювання: pedagogical_soundness" in d for d in item1["defects"])
