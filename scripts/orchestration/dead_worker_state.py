@@ -11,6 +11,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from scripts.orchestration.worktree_prep import ORPHANED_PREP_REASON
+
 
 @contextmanager
 def task_state_lock(path: Path) -> Iterator[None]:
@@ -76,5 +78,44 @@ def mark_dead_worker_terminal(
             current["stderr_excerpt"] = (
                 f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by {source} probe"
             )
+        write_state_unlocked(path, current)
+        return current, True
+
+
+def mark_orphaned_worktree_prep_crashed(
+    path: Path,
+    observed: dict[str, Any],
+    *,
+    source: str,
+    is_orphaned: Callable[[dict[str, Any]], bool],
+) -> tuple[dict[str, Any], bool]:
+    """Mark a provisional ``worktree_prep`` record ``crashed`` once its dispatcher is gone (#8663).
+
+    ``is_orphaned`` (normally ``worktree_prep.is_orphaned_prep_record``) is
+    re-proved under the writer lock against the record as it is now, and the
+    record must still be the observed run. ``worktree_prep`` is kept: it is
+    the reaper's evidence for any worktree the dispatcher's add left behind.
+    """
+    with task_state_lock(path):
+        try:
+            current = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return observed, False
+        if (
+            not isinstance(current, dict)
+            or current.get("run_nonce") != observed.get("run_nonce")
+            or current.get("started_at") != observed.get("started_at")
+            or not is_orphaned(current)
+        ):
+            return current if isinstance(current, dict) else observed, False
+        prior_status = current["status"]
+        owner = current["worktree_prep"].get("owner_pid")
+        current["status"] = "crashed"
+        current["finished_at"] = datetime.now(UTC).isoformat()
+        current["returncode_reason"] = ORPHANED_PREP_REASON
+        current["stderr_excerpt"] = (
+            f"dispatcher pid {owner} died while preparing the worktree (state said {prior_status!r}, "
+            f"no worker spawned); marked crashed by {source} probe"
+        )
         write_state_unlocked(path, current)
         return current, True
