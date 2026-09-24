@@ -19,6 +19,7 @@ _LAUNCHER_FILES = (
     Path("start-codex-driver.sh"),
     Path("scripts/config/context_profiles.yaml"),
     Path("scripts/config/issue_streams.yaml"),
+    Path("scripts/config/launcher_stream_aliases.tsv"),
     Path("scripts/lib/context_profiles.py"),
     Path("scripts/lib/deploy_extensions.sh"),
     Path("scripts/lib/fleet_comms_cold_start.sh"),

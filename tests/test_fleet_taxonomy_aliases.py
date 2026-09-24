@@ -27,6 +27,7 @@ from scripts.orchestration.fleet_taxonomy import (
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HANDOFF_IDENTITY_SH = _REPO_ROOT / "scripts" / "lib" / "handoff_identity.sh"
 _ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
+_LAUNCHER_ALIASES = _REPO_ROOT / "scripts" / "config" / "launcher_stream_aliases.tsv"
 
 
 def _infra_harness_stream_id() -> str:
@@ -273,6 +274,26 @@ def test_handoff_identity_shell_resolver_unknown_selector_fails_closed(
     assert result.stdout.strip() == ""
 
 
+def test_handoff_identity_shell_resolver_fails_closed_without_alias_map(tmp_path: Path) -> None:
+    """A missing alias map must reject `atlas`, not resolve it as a raw registry key."""
+    lib = tmp_path / "scripts" / "lib"
+    lib.mkdir(parents=True)
+    shutil.copy2(_HANDOFF_IDENTITY_SH, lib / "handoff_identity.sh")
+    config = tmp_path / "scripts" / "config"
+    config.mkdir()
+    shutil.copy2(_ISSUE_STREAMS, config / "issue_streams.yaml")
+    result = subprocess.run(
+        ["bash", "-c", 'source "$1"; launcher_selector_resolve atlas', "bash", str(lib / "handoff_identity.sh")],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 1
+    assert result.stdout == ""
+    assert "launcher alias map missing or malformed" in result.stderr
+
+
 @pytest.mark.parametrize(
     "launcher",
     [
@@ -389,6 +410,7 @@ def test_session_setup_hook_epic_validation_contract(
     registry = project_dir / "scripts" / "config" / "issue_streams.yaml"
     registry.parent.mkdir(parents=True)
     shutil.copy2(_ISSUE_STREAMS, registry)
+    shutil.copy2(_LAUNCHER_ALIASES, registry.with_name("launcher_stream_aliases.tsv"))
 
     env = {
         "CLAUDE_PROJECT_DIR": str(project_dir),

@@ -23,12 +23,15 @@
 
 _HANDOFF_IDENTITY_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-# Read the same compatibility map used by /api/work/v1/next. Unknown selectors
-# still fall through to registry-key resolution below.
+# Read the same compatibility map used by /api/work/v1/next. Print
+# "<stream-key><TAB><lane>" and return 0 on a hit; return 1 for a selector that
+# is not in the map (callers fall through to registry-key resolution); return 2
+# when the map is missing or malformed so callers fail closed instead of
+# silently resolving a compatibility alias like `atlas` as a raw registry key.
 _launcher_compat_alias() {
   local selector="${1:-}"
   local aliases="$_HANDOFF_IDENTITY_DIR/../config/launcher_stream_aliases.tsv"
-  [ -f "$aliases" ] || return 1
+  [ -f "$aliases" ] || return 2
   awk -F '\t' -v wanted="$selector" '
     /^#/ || NF == 0 { next }
     NF != 3 { invalid = 1; next }
@@ -38,7 +41,8 @@ _launcher_compat_alias() {
       lane = $3
     }
     END {
-      if (invalid || !found) exit 1
+      if (invalid) exit 2
+      if (!found) exit 1
       printf "%s\t%s\n", key, lane
     }
   ' "$aliases"
@@ -146,6 +150,7 @@ launcher_selector_resolve() {
   local lane=""
   local epic=""
   local mapped=""
+  local alias_rc=0
 
   # Retired selectors fail before alias and generic registry resolution.
   case "$selector" in
@@ -155,17 +160,23 @@ launcher_selector_resolve() {
       ;;
   esac
 
-  if mapped="$(_launcher_compat_alias "$selector")"; then
-    IFS=$'\t' read -r key lane <<< "$mapped"
-  else
-    # Generic selectors are intentionally absent from the compatibility map:
-    # a new registry row must work without a launcher edit.
-    case "$selector" in
-      infra.*) key="${selector#infra.}" ;;
-      *) key="$selector" ;;
-    esac
-    lane="$key"
-  fi
+  mapped="$(_launcher_compat_alias "$selector")" && alias_rc=0 || alias_rc=$?
+  case "$alias_rc" in
+    0) IFS=$'\t' read -r key lane <<< "$mapped" ;;
+    1)
+      # Generic selectors are intentionally absent from the compatibility map:
+      # a new registry row must work without a launcher edit.
+      case "$selector" in
+        infra.*) key="${selector#infra.}" ;;
+        *) key="$selector" ;;
+      esac
+      lane="$key"
+      ;;
+    *)
+      printf 'launcher alias map missing or malformed: scripts/config/launcher_stream_aliases.tsv\n' >&2
+      return 1
+      ;;
+  esac
 
   epic="$(_launcher_stream_anchor_epic "$key")" || return 1
   case "$epic" in

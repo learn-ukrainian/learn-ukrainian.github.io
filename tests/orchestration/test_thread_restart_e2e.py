@@ -140,6 +140,7 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
                 "scripts/lib/profile_resolver.sh",
                 "scripts/lib/session_supervisor.sh",
                 "scripts/config/issue_streams.yaml",
+                "scripts/config/launcher_stream_aliases.tsv",
                 "agents_extensions/codex/hooks.json",
                 "agents_extensions/shared/hooks/session-setup.sh",
                 # Deploy status breadcrumbs (PR #5814 r6): deploy_prompts.sh now
