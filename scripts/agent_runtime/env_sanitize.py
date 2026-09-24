@@ -165,6 +165,13 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "codex": {
         "CODEX_HOME",
     },
+    # AGY_APP_DATA_DIR must reach the agy subprocess so a receipt-recording
+    # review attempt (#8617) keeps its app data (OAuth token link, transcripts)
+    # in the per-attempt scoped home. It is a directory path, never a
+    # credential; `HOME` already passes the global safe-name allowlist.
+    "agy": {
+        "AGY_APP_DATA_DIR",
+    },
     "deepseek": {
         "HERMES_HOME",
     },
@@ -381,6 +388,11 @@ def build_agent_env(
     The runner applies explicit ``InvocationPlan.env_unsets`` after this call.
     """
     raw = dict(os.environ)
+    if _normalized_provider(provider) == "agy":
+        # Only a receipt-recording review attempt's adapter override may carry
+        # AGY_APP_DATA_DIR (#8617); an ambient export must not leak into an
+        # ordinary dispatch.
+        raw.pop("AGY_APP_DATA_DIR", None)
     raw.update(overrides or {})
 
     env: dict[str, str] = {}

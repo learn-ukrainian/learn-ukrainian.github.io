@@ -5679,6 +5679,31 @@ def _run_worker(
                     task_id=task_id,
                     tool_config=tool_config,
                 )
+            if (
+                strict_mcp_config
+                and review_id is not None
+                and attempt_id is not None
+                and mcp_config_path is not None
+                and agent == "agy"
+            ):
+                # agy has no per-invocation MCP flag and reads its servers from
+                # $HOME/.gemini/config, so the attempt runs under its scoped home (sibling
+                # of the .mcp.json) and is gated on the effective MCP set (#8617).
+                from scripts.agent_runtime.review_mcp import (
+                    agy_review_home_path,
+                    verify_agy_review_launch,
+                )
+
+                tool_config["agy_home_override"] = str(agy_review_home_path(mcp_config_path))
+                verify_agy_review_launch(
+                    config_path=mcp_config_path,
+                    cwd=cwd,
+                    mode=mode,
+                    model=model,
+                    effort=effort,
+                    task_id=task_id,
+                    tool_config=tool_config,
+                )
             if strict_mcp_config and agent == "cursor":
                 cursor_mcp_path = cwd / ".cursor" / "mcp.json"
                 if cursor_mcp_path.is_file():
@@ -5819,6 +5844,24 @@ def _run_worker(
         final_state = _read_state(state_path) or {}
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
+
+        if (
+            strict_mcp_config
+            and review_id is not None
+            and attempt_id is not None
+            and mcp_config_path is not None
+            and agent == "agy"
+        ):
+            from scripts.agent_runtime.review_mcp import agy_oauth_link_problem
+
+            link_problem = agy_oauth_link_problem(mcp_config_path)
+            if link_problem is not None:
+                # Never copy credentials back automatically: both files stay as they
+                # are for the operator, and the attempt cannot settle as done (#8617).
+                final_state["agy_oauth_link_error"] = "agy_oauth_link_replaced"
+                stderr_excerpt = f"agy_oauth_link_replaced: {link_problem}\n{stderr_excerpt or ''}".strip()[:500]
+                final_status = "failed"
+                ok_outcome = False
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)

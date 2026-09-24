@@ -32,8 +32,9 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
   ``enable``, ``disable``. There is no plugin-marketplace browse surface,
   and ``import gemini`` is a no-op in a default install.
 
-MCP enablement is managed by agy's global Antigravity configuration
-(``~/.gemini/config/mcp_config.json``, the file ``agy mcp add`` writes). The
+MCP enablement is managed by agy's Antigravity configuration under ``$HOME``
+(``~/.gemini/config/mcp_config.json``, the file ``agy mcp add`` writes; ``agy -p``
+does not load ``~/.gemini/antigravity-cli/mcp_config.json``). The
 CLI's HTTP field is ``serverUrl``; a Claude-format ``httpUrl`` entry is listed
 by ``agy mcp list`` as a dead ``stdio`` server and ``agy -p`` then sees no
 ``mcp__sources__*`` tools (#7994, 2026-09-19 — this supersedes the 2026-06-13
@@ -41,6 +42,14 @@ note that ``httpUrl`` was sufficient). The adapter does not pass a
 per-invocation MCP flag because agy has none; ``tool_config["mcp_server_names"]``
 is accepted for API parity and observability. Writer dispatch registers and
 verifies the catalog via ``tool_config.ensure_agy_mcp_catalog`` before spawning.
+
+A receipt-recording review attempt (#8617) is the one exception to "global config
+only": ``tool_config["agy_home_override"]`` points at a per-attempt scoped home
+(built by ``review_mcp.prepare_review_attempt``) and the invocation's env overrides
+set ``HOME`` to it and ``AGY_APP_DATA_DIR`` to ``<home>/.gemini/antigravity-cli``.
+The CLI then loads the scoped ``config/mcp_config.json`` (one stdio ``sources``
+server) and the transcript reader follows ``AGY_APP_DATA_DIR`` to the scoped app
+data. Without the key nothing changes.
 
 Differences from the kubedojo source:
 
@@ -317,12 +326,20 @@ class AgyAdapter:
         if output_schema is not None:
             cmd.extend(["--output-format", "json", "--json-schema", json.dumps(output_schema, separators=(",", ":"))])
 
+        env_overrides = {_AGY_LOG_ENV: str(log_path)}
+        agy_home = tc.get("agy_home_override")
+        if agy_home:
+            # Per-attempt scoped home (#8617): agy reads its MCP config from
+            # $HOME/.gemini/config and keeps transcripts under AGY_APP_DATA_DIR.
+            env_overrides["HOME"] = str(agy_home)
+            env_overrides[_AGY_APP_DATA_ENV] = str(Path(agy_home) / ".gemini" / "antigravity-cli")
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
             stdin_payload="",
             output_file=None,
-            env_overrides={_AGY_LOG_ENV: str(log_path)},
+            env_overrides=env_overrides,
             env_unsets=(),
             liveness_paths=(log_path,),
             metadata={

@@ -21,6 +21,16 @@ of the attempt's ``.mcp.json``) holding a ``config.toml`` that registers only th
 still add servers, the worker runs ``verify_codex_review_effective_mcp`` before launch
 and refuses the attempt unless the effective server set is exactly that one server.
 
+AGY has no per-invocation MCP flag either, and reads its MCP servers from
+``$HOME/.gemini/config/mcp_config.json`` (proven by the #8617 spike: ``agy -p`` does
+not load ``antigravity-cli/mcp_config.json``). An AGY attempt therefore gets a scoped
+home (``<attempt_id>.agy-home/``, sibling of the attempt's ``.mcp.json``) whose
+``.gemini/config/mcp_config.json`` holds only the stdio ``sources`` server, plus a
+symlink to the OAuth token (the only credential ``agy -p`` needs). The launch runs with
+``HOME`` and ``AGY_APP_DATA_DIR`` pointing into it, and ``verify_agy_review_launch``
+refuses the attempt unless ``agy mcp list`` under that same environment shows exactly
+that one server.
+
 Note: Ledger creation and sidecar management will be consolidated once R1
 (cursor/impl-review-r1-schema-ledger) merges to main.
 """
@@ -34,7 +44,7 @@ import os
 import re
 import shutil
 import subprocess
-from collections.abc import Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -47,10 +57,9 @@ ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
 ENV_LEDGER_PATH = "LU_REVIEW_LEDGER_PATH"
 ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 
-SUPPORTED_HARNESSES: frozenset[str] = frozenset({"claude", "codex", "cursor"})
+SUPPORTED_HARNESSES: frozenset[str] = frozenset({"agy", "claude", "codex", "cursor"})
 
 UNSUPPORTED_HARNESS_REASONS: dict[str, str] = {
-    "agy": "AGY has one global MCP config (~/.gemini/config/mcp_config.json) without per-invocation MCP config support",
     "gemini": "Gemini has one global MCP config without per-invocation MCP config support",
     "grok": "not yet proven",
     "grok-build": "not yet proven",
@@ -66,10 +75,18 @@ _EMPTY_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b85
 _MCP_CONFIG_SUFFIX = ".mcp.json"
 _CODEX_HOME_SUFFIX = ".codex-home"
 _CODEX_MCP_LIST_TIMEOUT_S = 60.0
+_AGY_HOME_SUFFIX = ".agy-home"
+_AGY_MCP_LIST_TIMEOUT_S = 60.0
+_AGY_TOKEN_NAME = "antigravity-oauth-token"
+_AGY_MCP_LIST_COLUMNS = ("NAME", "TYPE", "STATUS", "COMMAND/URL")
 
 
 class CodexReviewMcpGateError(ValueError):
     """The effective Codex MCP server set for a review attempt is not exactly ``sources``."""
+
+
+class AgyReviewMcpGateError(ValueError):
+    """The effective AGY MCP server set for a review attempt is not exactly ``sources``."""
 
 
 @dataclass(frozen=True)
@@ -85,6 +102,7 @@ class ReviewMcpPlan:
     attempt_id: str
     harness: str
     codex_home: Path | None = None
+    agy_home: Path | None = None
 
     @property
     def mcp_config_path(self) -> Path:
@@ -108,6 +126,24 @@ def codex_review_home_path(config_path: Path | str) -> Path:
     if not config.name.endswith(_MCP_CONFIG_SUFFIX):
         raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config}")
     return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _CODEX_HOME_SUFFIX)
+
+
+def agy_review_home_path(config_path: Path | str) -> Path:
+    """Return the scoped AGY ``HOME`` directory that pairs with an attempt's ``.mcp.json``."""
+    config = Path(config_path)
+    if not config.name.endswith(_MCP_CONFIG_SUFFIX):
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config}")
+    return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _AGY_HOME_SUFFIX)
+
+
+def agy_review_app_data_dir(agy_home: Path | str) -> Path:
+    """Return the ``AGY_APP_DATA_DIR`` inside a scoped AGY home."""
+    return Path(agy_home) / ".gemini" / "antigravity-cli"
+
+
+def agy_review_mcp_config_path(agy_home: Path | str) -> Path:
+    """Return the one MCP config file ``agy -p`` loads from a home (#8617 spike)."""
+    return Path(agy_home) / ".gemini" / "config" / "mcp_config.json"
 
 
 def _toml_string(value: str) -> str:
@@ -138,6 +174,54 @@ def _link_codex_auth(codex_home: Path) -> None:
     real_auth = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex") / "auth.json"
     if real_auth.exists():
         (codex_home / "auth.json").symlink_to(real_auth)
+
+
+def _real_agy_token() -> Path:
+    """The user's AGY OAuth token, honoring an ``AGY_APP_DATA_DIR`` export like ``_link_codex_auth``."""
+    app_data = os.environ.get("AGY_APP_DATA_DIR") or Path.home() / ".gemini" / "antigravity-cli"
+    return Path(app_data) / _AGY_TOKEN_NAME
+
+
+def _populate_agy_review_home(agy_home: Path, real_token: Path, config_bytes: bytes) -> None:
+    """Fill a freshly created scoped AGY home: the sources-only MCP config and a linked OAuth token.
+
+    Only the OAuth token is linked (never copied): the #8617 spike proved it is the
+    sole credential ``agy -p`` needs. Everything else agy wants it creates itself.
+    """
+    app_data = agy_review_app_data_dir(agy_home)
+    mcp_config = agy_review_mcp_config_path(agy_home)
+    for directory in (agy_home / ".gemini", mcp_config.parent, app_data):
+        os.mkdir(directory, 0o700)
+    fd_config = os.open(mcp_config, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd_config, "wb") as handle:
+        handle.write(config_bytes)
+    # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
+    # token) must land in the real token file. A refreshed copy would leave the real
+    # token stale or invalidated and break every other AGY lane. "Nothing written to the
+    # real ~/.gemini" means configuration; agy_oauth_link_problem() guards the link itself.
+    (app_data / _AGY_TOKEN_NAME).symlink_to(real_token)
+
+
+def agy_oauth_link_problem(config_path: Path | str) -> str | None:
+    """Describe how a scoped AGY home's OAuth link deviates from the real token, or ``None`` if intact.
+
+    Intact means ``antigravity-oauth-token`` in the scoped app-data dir is still a symlink
+    whose target resolves to the original real token path. Credentials are never copied
+    or repaired here; a deviation is left untouched for the operator.
+    """
+    agy_home = agy_review_home_path(config_path)
+    link = agy_review_app_data_dir(agy_home) / _AGY_TOKEN_NAME
+    real_token = _real_agy_token()
+    # The message lands in task state and stderr logs that get quoted into issues and PRs, so it
+    # names the scoped link relative to the attempt directory and the real token only by a label:
+    # no absolute path (which would expose the operator's home directory) is ever included.
+    link_label = link.relative_to(agy_home.parent)
+    if not link.is_symlink():
+        kind = "a regular file" if link.exists() else "missing"
+        return f"{link_label} is {kind}, not a symlink to the real AGY OAuth token"
+    if os.path.realpath(link) != os.path.realpath(real_token):
+        return f"{link_label} points elsewhere, not to the real AGY OAuth token"
+    return None
 
 
 def prepare_review_attempt(
@@ -198,6 +282,10 @@ def prepare_review_attempt(
     sidecar_path = review_dir / f"{attempt_id}.jsonl.sha256"
     config_path = review_dir / f"{attempt_id}.mcp.json"
     codex_home = codex_review_home_path(config_path) if canonical_harness == "codex" else None
+    agy_home = agy_review_home_path(config_path) if canonical_harness == "agy" else None
+    real_agy_token = _real_agy_token() if agy_home is not None else None
+    if real_agy_token is not None and not real_agy_token.exists():
+        raise ValueError(f"AGY OAuth token not found for the scoped review home: {real_agy_token} (#8617)")
 
     # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
     if (
@@ -205,6 +293,7 @@ def prepare_review_attempt(
         or sidecar_path.exists()
         or config_path.exists()
         or (codex_home is not None and (codex_home.exists() or codex_home.is_symlink()))
+        or (agy_home is not None and (agy_home.exists() or agy_home.is_symlink()))
     ):
         raise FileExistsError(f"review attempt {attempt_id!r} already exists for review {review_id!r}")
 
@@ -268,6 +357,12 @@ def prepare_review_attempt(
                     )
                 )
             _link_codex_auth(codex_home)
+
+        if agy_home is not None and real_agy_token is not None:
+            # Exclusive mkdir: refuses a pre-existing (or pre-planted) home.
+            os.mkdir(agy_home, 0o700)
+            created_paths.append(agy_home)
+            _populate_agy_review_home(agy_home, real_agy_token, config_bytes)
     except FileExistsError as exc:
         _rollback()
         raise FileExistsError(f"review attempt {attempt_id!r} already exists for review {review_id!r}") from exc
@@ -285,6 +380,8 @@ def prepare_review_attempt(
         adapter_options["allowed_tools"] = allowed_tools
     if codex_home is not None:
         adapter_options["codex_home_override"] = str(codex_home)
+    if agy_home is not None:
+        adapter_options["agy_home_override"] = str(agy_home)
 
     return ReviewMcpPlan(
         config_path=config_path,
@@ -296,6 +393,7 @@ def prepare_review_attempt(
         attempt_id=attempt_id,
         harness=canonical_harness,
         codex_home=codex_home,
+        agy_home=agy_home,
     )
 
 
@@ -409,3 +507,179 @@ def verify_codex_review_launch(
     finally:
         with contextlib.suppress(OSError):
             Path(plan.output_file).unlink(missing_ok=True)
+
+
+def _agy_mcp_list_rows(stdout: str, refuse: Callable[[str], AgyReviewMcpGateError]) -> list[dict[str, str]]:
+    """Strictly parse ``agy mcp list`` (a padded text table with no JSON mode).
+
+    The header must be exactly ``NAME TYPE STATUS COMMAND/URL``; every other non-empty
+    line must be a data row whose cells start at the header's column offsets. Anything
+    short, misaligned, blank-celled or repeated is a refusal, never a skipped line.
+    """
+    lines = [line.rstrip() for line in stdout.splitlines() if line.strip()]
+    if not lines:
+        raise refuse("`agy mcp list` printed no table")
+    header = re.fullmatch(r"(NAME)(\s+)(TYPE)(\s+)(STATUS)(\s+)(COMMAND/URL)", lines[0])
+    if header is None:
+        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {lines[0]!r}")
+    offsets = [header.start(group) for group in (1, 3, 5, 7)]
+    if offsets[0] != 0:
+        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {lines[0]!r}")
+
+    rows: list[dict[str, str]] = []
+    for line in lines[1:]:
+        if len(line) <= offsets[3] or any(line[offset - 1] != " " or line[offset] == " " for offset in offsets[1:]):
+            raise refuse(f"`agy mcp list` row is truncated or misaligned: {line!r}")
+        name = line[offsets[0] : offsets[1]].strip()
+        kind = line[offsets[1] : offsets[2]].strip()
+        status = line[offsets[2] : offsets[3]].strip()
+        target = line[offsets[3] :].strip()
+        if any(not cell or any(ch.isspace() for ch in cell) for cell in (name, kind, status)):
+            raise refuse(f"`agy mcp list` row cannot be parsed: {line!r}")
+        rows.append({"name": name, "type": kind, "status": status, "target": target})
+    names = [row["name"] for row in rows]
+    if len(set(names)) != len(names):
+        raise refuse(f"`agy mcp list` repeats a server name: {names!r}")
+    return rows
+
+
+def _strict_json_object(text: str) -> Any:
+    def no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        keys = [key for key, _ in pairs]
+        if len(set(keys)) != len(keys):
+            raise ValueError(f"duplicate JSON keys: {keys!r}")
+        return dict(pairs)
+
+    return json.loads(text, object_pairs_hook=no_duplicates)
+
+
+def verify_agy_review_effective_mcp(
+    *,
+    config_path: Path | str,
+    cwd: Path | str,
+    env: Mapping[str, str],
+    agy_bin: str,
+    timeout: float = _AGY_MCP_LIST_TIMEOUT_S,
+) -> None:
+    """Refuse an AGY review attempt unless its effective MCP set is exactly ``sources``.
+
+    ``agy mcp list`` (run under ``env``, the environment the launch will get) proves the
+    server set, name, transport, enabled state and command line; it does not show ``env``,
+    so the one config file ``agy -p`` loads is read back and compared as well. Fails
+    closed: a failed probe is a refusal, never a pass.
+
+    Raises:
+        AgyReviewMcpGateError: on any deviation, naming #8617.
+    """
+    config = Path(config_path)
+
+    def refuse(reason: str) -> AgyReviewMcpGateError:
+        return AgyReviewMcpGateError(f"agy review attempt refused: {reason} (#8617)")
+
+    try:
+        expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
+        command = expected["command"]
+        args = list(expected["args"])
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        raise refuse(f"cannot read the attempt MCP config {config}: {exc}") from exc
+    if not isinstance(expected.get("env"), dict) or set(expected["env"]) != set(ENV_KEYS):
+        raise refuse("the attempt MCP config does not carry exactly the three LU_REVIEW_* variables")
+
+    agy_home = agy_review_home_path(config)
+    app_data = agy_review_app_data_dir(agy_home)
+    if env.get("HOME") != str(agy_home) or env.get("AGY_APP_DATA_DIR") != str(app_data):
+        raise refuse(
+            "the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR "
+            f"(HOME={env.get('HOME')!r}, AGY_APP_DATA_DIR={env.get('AGY_APP_DATA_DIR')!r})"
+        )
+    if (app_data / "mcp_config.json").exists() or (app_data / "mcp_config.json").is_symlink():
+        raise refuse(f"the scoped home has an unexpected {app_data / 'mcp_config.json'}")
+
+    parts = [command, *args]
+    if any(not isinstance(part, str) or not part or any(ch.isspace() for ch in part) for part in parts):
+        raise refuse(
+            "the attempt command or args contain whitespace or an empty part, so the flat "
+            "`agy mcp list` COMMAND/URL text cannot identify them uniquely"
+        )
+    expected_target = " ".join(parts)
+
+    try:
+        proc = subprocess.run(
+            [agy_bin, "mcp", "list"],
+            cwd=str(cwd),
+            env=dict(env),
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise refuse(f"could not compute the effective MCP set ({type(exc).__name__}: {exc})") from exc
+    if proc.returncode != 0:
+        raise refuse(f"`agy mcp list` exited {proc.returncode}: {proc.stderr.strip()[:200]}")
+
+    rows = _agy_mcp_list_rows(proc.stdout, refuse)
+    if [row["name"] for row in rows] != ["sources"]:
+        raise refuse(f"effective MCP servers are {[row['name'] for row in rows]!r}; exactly ['sources'] is allowed")
+    row = rows[0]
+    if row["type"] != "stdio":
+        raise refuse(f"the sources server type is {row['type']!r}, not stdio")
+    if row["status"] != "enabled":
+        raise refuse(f"the sources server status is {row['status']!r}, not enabled")
+    if row["target"] != expected_target:
+        raise refuse("the sources server command/args differ from the attempt's .mcp.json")
+
+    scoped_config = agy_review_mcp_config_path(agy_home)
+    try:
+        loaded = _strict_json_object(scoped_config.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise refuse(f"cannot read the scoped agy MCP config {scoped_config}: {exc}") from exc
+    if not isinstance(loaded, dict) or set(loaded) != {"mcpServers"}:
+        raise refuse("the scoped agy MCP config has keys other than mcpServers")
+    servers = loaded["mcpServers"]
+    if not isinstance(servers, dict) or set(servers) != {"sources"}:
+        raise refuse("the scoped agy MCP config does not hold exactly the one sources server")
+    if servers["sources"] != expected:
+        raise refuse(
+            "the scoped agy MCP config's sources server (command/args/env) differs from the attempt's .mcp.json"
+        )
+
+
+def verify_agy_review_launch(
+    *,
+    config_path: Path | str,
+    cwd: Path,
+    mode: str,
+    model: str | None,
+    effort: str | None,
+    task_id: str,
+    tool_config: dict[str, Any],
+) -> None:
+    """Run the effective-config gate under the exact environment the AGY launch will get."""
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.env_sanitize import build_agent_env
+
+    link_problem = agy_oauth_link_problem(config_path)
+    if link_problem is not None:
+        raise AgyReviewMcpGateError(f"agy review attempt refused: OAuth link not intact: {link_problem} (#8617)")
+
+    plan = AgyAdapter().build_invocation(
+        prompt="",
+        mode=mode,
+        cwd=cwd,
+        model=model,
+        task_id=task_id,
+        session_id=None,
+        tool_config=dict(tool_config),
+        effort=effort,
+    )
+    env = build_agent_env(provider="agy", overrides=plan.env_overrides)
+    try:
+        for key in plan.env_unsets:
+            env.pop(key, None)
+        verify_agy_review_effective_mcp(config_path=config_path, cwd=plan.cwd, env=env, agy_bin=plan.cmd[0])
+    finally:
+        # build_agent_env leaves a throwaway git-config sandbox; the gate has no use for it.
+        sandbox = Path(env.get("GIT_CONFIG_GLOBAL", "")).parent
+        if sandbox.name.startswith("lu-agent-runtime-git-"):
+            shutil.rmtree(sandbox, ignore_errors=True)
