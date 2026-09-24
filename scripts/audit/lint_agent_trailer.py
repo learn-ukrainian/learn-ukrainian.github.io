@@ -45,15 +45,16 @@ Trailer format
 
 Where ``agent`` ∈ {``claude-inline``, ``claude``, ``codex``, ``gemini``,
 ``agy-inline``, ``agy``, ``grok``, ``grok-build``, ``grok-hermes``,
-``deepseek-v4-pro``, ``cursor``, ``glm``, ``kimi``, ``dependabot``} and ``task-id`` is the
+``deepseek``, ``deepseek-v4-pro``, ``cursor``, ``glm``, ``kimi``, ``dependabot``} and ``task-id`` is the
 dispatch task identifier or the ``inline`` literal for orchestrator commits.
 ``grok-build`` is a permanent alias of the native ``grok`` seat (historical
-trailers must keep validating). Examples::
+trailers must keep validating). ``gemini`` is an alias of ``agy``. Examples::
 
     X-Agent: claude-inline/orchestrator
     X-Agent: codex/1879-fix-ci-and-wikipedia
     X-Agent: claude/1657-adr-010
     X-Agent: gemini/1787-15-handoff-verifier
+    X-Agent: deepseek/8642-some-task
 
 Related
 =======
@@ -74,17 +75,15 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+_REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-try:
-    from scripts.orchestration.task_record_store import iter_task_records, locate_task_record
-except ImportError:  # pragma: no cover
-    from orchestration.task_record_store import iter_task_records, locate_task_record
+from scripts.common.repo_root import resolve_repo_root
+from scripts.orchestration.task_record_store import locate_task_record
 
 _TRAILER_RE = re.compile(
-    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek-v4-pro|cursor|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
+    r"^X-Agent:\s+(?P<agent>claude-inline|claude|codex|gemini|agy-inline|agy|grok|grok-build|grok-hermes|deepseek|deepseek-v4-pro|cursor|glm|kimi|dependabot)/(?P<task>[A-Za-z0-9._-]+)\s*$",
     re.MULTILINE,
 )
 
@@ -108,36 +107,55 @@ def _git(*args: str, cwd: Path | None = None) -> str:
     ).strip()
 
 
-def _resolve_repo_root(cwd: Path | None = None) -> Path:
-    """Resolve repository primary root from git-common-dir."""
-    try:
-        raw = _git("rev-parse", "--git-common-dir", cwd=cwd)
-        p = Path(raw)
-        p = ((cwd or Path.cwd()) / p).resolve() if not p.is_absolute() else p.resolve()
-        if p.name == ".git":
-            return p.parent
-        return p
-    except Exception:
-        return (cwd or Path.cwd()).resolve()
-
-
-def _resolve_worktree_dir(cwd: Path | None = None) -> Path:
-    """Resolve current worktree directory."""
-    try:
-        raw = _git("rev-parse", "--show-toplevel", cwd=cwd)
-        return Path(raw).resolve()
-    except Exception:
-        return (cwd or Path.cwd()).resolve()
-
-
 def _default_tasks_dir(repo_root: Path | None = None) -> Path:
-    """Return the default tasks directory."""
-    env_dir = os.environ.get("LU_TASKS_DIR") or os.environ.get("LEARN_UKRAINIAN_TASKS_DIR")
-    if env_dir:
-        return Path(env_dir).resolve()
-    if repo_root is None:
-        repo_root = _resolve_repo_root()
-    return (repo_root / "batch_state" / "tasks").resolve()
+    """Return the default tasks directory under batch_state/tasks."""
+    root = repo_root or resolve_repo_root(Path(__file__), 2)
+    return (root / "batch_state" / "tasks").resolve()
+
+
+def _agents_match(a: str, b: str) -> bool:
+    """Return True if two agent names match directly or via known aliases."""
+    if a == b:
+        return True
+    pair = {a, b}
+    return pair <= {"grok", "grok-build"} or pair <= {"gemini", "agy"} or pair <= {"deepseek", "deepseek-v4-pro"}
+
+
+def locate_record_for_trailer(tasks_dir: Path, agent: str, task: str) -> tuple[Path | None, str | None]:
+    """Locate task record for a trailer agent/task, normalization-aware.
+
+    For trailer ``agent/task``, accepts a record named ``task`` or ``{agent}-task``
+    (the inverse of ``_x_agent_task_id`` in delegate.py).
+    """
+    candidates = [task, f"{agent}-{task}"]
+    if agent in ("gemini", "agy"):
+        other = "agy" if agent == "gemini" else "gemini"
+        candidates.append(f"{other}-{task}")
+    elif agent in ("grok", "grok-build"):
+        other = "grok-build" if agent == "grok" else "grok"
+        candidates.append(f"{other}-{task}")
+    elif agent in ("deepseek", "deepseek-v4-pro"):
+        other = "deepseek" if agent == "deepseek-v4-pro" else "deepseek-v4-pro"
+        candidates.append(f"{other}-{task}")
+
+    for candidate in candidates:
+        rec_path = locate_task_record(tasks_dir, candidate)
+        if rec_path is not None:
+            return rec_path, candidate
+    return None, None
+
+
+def _is_exempt_trailer(agent: str, task: str) -> bool:
+    """Return True if the trailer represents a non-dispatched inline or bot commit.
+
+    These trailers are shape-checked only:
+    - *-inline/* (e.g. claude-inline/orchestrator, agy-inline/fix)
+    - */inline (e.g. codex/inline, agy/inline)
+    - dependabot/*
+    """
+    if agent.endswith("-inline") or agent == "dependabot":
+        return True
+    return task == "inline"
 
 
 @dataclass(frozen=True)
@@ -151,7 +169,12 @@ class ProvenanceContext:
     @property
     def expected_trailer(self) -> str | None:
         if self.expected_agent and self.expected_task_id:
-            return f"X-Agent: {self.expected_agent}/{self.expected_task_id}"
+            task = self.expected_task_id
+            for prefix in (f"{self.expected_agent}-", f"{self.expected_agent}/"):
+                if task.startswith(prefix):
+                    task = task[len(prefix) :]
+                    break
+            return f"X-Agent: {self.expected_agent}/{task}"
         return None
 
 
@@ -169,8 +192,17 @@ def resolve_provenance_context(
             tasks_dir=tasks_dir,
         )
 
-    # 2. Detect missing tasks directory or no records present
-    effective_tasks_dir = (tasks_dir or _default_tasks_dir(repo_root=_resolve_repo_root(cwd))).resolve()
+    # 2. Check dispatch env marker
+    env_task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID")
+    if not env_task_id:
+        return ProvenanceContext(
+            active=False,
+            skip_reason="dispatch task environment marker not set (LEARN_UKRAINIAN_DISPATCH_TASK_ID)",
+            tasks_dir=tasks_dir,
+        )
+
+    # 3. Check tasks directory
+    effective_tasks_dir = (tasks_dir or _default_tasks_dir()).resolve()
     if not effective_tasks_dir.is_dir():
         return ProvenanceContext(
             active=False,
@@ -178,91 +210,34 @@ def resolve_provenance_context(
             tasks_dir=effective_tasks_dir,
         )
 
-    has_records = any(iter_task_records(effective_tasks_dir, include_archive=True))
-    if not has_records:
-        return ProvenanceContext(
-            active=False,
-            skip_reason=f"no task records present in {effective_tasks_dir}",
-            tasks_dir=effective_tasks_dir,
-        )
-
-    # 3. Detect if we are inside a dispatch worktree whose task record is known
-    repo_root = _resolve_repo_root(cwd)
-    worktree_dir = _resolve_worktree_dir(cwd)
-
-    known_task_id: str | None = None
-    known_agent: str | None = None
-
-    # Check environment markers first
-    env_task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID")
+    # 4. Check if that task's record is found
     env_agent = os.environ.get("LEARN_UKRAINIAN_DISPATCH_AGENT")
-    env_trailer = os.environ.get("LU_X_AGENT_TRAILER")
-    if env_trailer:
+    if not env_agent and (env_trailer := os.environ.get("LU_X_AGENT_TRAILER")):
         m = _TRAILER_RE.match(env_trailer.strip())
         if m:
-            env_agent = env_agent or m.group("agent")
-            env_task_id = env_task_id or m.group("task")
+            env_agent = m.group("agent")
 
-    if env_task_id:
-        known_task_id = env_task_id
-        known_agent = env_agent
-
-    # Inspect path layout: .worktrees/dispatch/<agent>/<task>/
-    if not known_task_id:
-        dispatch_root = (repo_root / ".worktrees" / "dispatch").resolve()
-        try:
-            rel = worktree_dir.relative_to(dispatch_root)
-            if len(rel.parts) >= 2:
-                path_agent, path_task = rel.parts[0], rel.parts[1]
-                for candidate in (path_task, f"{path_agent}-{path_task}", f"{path_agent}/{path_task}"):
-                    rec_path = locate_task_record(effective_tasks_dir, candidate)
-                    if rec_path is not None:
-                        try:
-                            data = json.loads(rec_path.read_text(encoding="utf-8"))
-                            known_task_id = data.get("task_id") or candidate
-                            known_agent = data.get("agent") or path_agent
-                            break
-                        except Exception:
-                            continue
-                if not known_task_id:
-                    known_task_id = path_task
-                    known_agent = path_agent
-        except ValueError:
-            pass
-
-    # Inspect task records matching worktree_path
-    if not known_task_id:
-        for rec_file in iter_task_records(effective_tasks_dir, include_archive=True):
-            try:
-                data = json.loads(rec_file.read_text(encoding="utf-8"))
-                wt = data.get("worktree_path")
-                if wt and Path(wt).resolve() == worktree_dir:
-                    known_task_id = data.get("task_id")
-                    known_agent = data.get("agent")
-                    break
-            except Exception:
-                continue
-
-    if not known_task_id:
+    rec_path, _ = locate_record_for_trailer(effective_tasks_dir, env_agent or "", env_task_id)
+    if rec_path is None:
         return ProvenanceContext(
             active=False,
-            skip_reason="not inside a dispatch worktree with a known task record",
+            skip_reason=f"task record {env_task_id!r} not found in {effective_tasks_dir.name}",
             tasks_dir=effective_tasks_dir,
         )
 
-    if not known_agent:
-        rec_path = locate_task_record(effective_tasks_dir, known_task_id)
-        if rec_path is not None:
-            try:
-                data = json.loads(rec_path.read_text(encoding="utf-8"))
-                known_agent = data.get("agent")
-            except Exception:
-                pass
+    expected_agent = env_agent
+    expected_task_id = env_task_id
+    try:
+        data = json.loads(rec_path.read_text(encoding="utf-8"))
+        expected_agent = data.get("agent") or expected_agent
+        expected_task_id = data.get("task_id") or expected_task_id
+    except (OSError, json.JSONDecodeError):
+        pass
 
     return ProvenanceContext(
         active=True,
-        expected_task_id=known_task_id,
-        expected_agent=known_agent,
+        expected_task_id=expected_task_id,
+        expected_agent=expected_agent,
         tasks_dir=effective_tasks_dir,
     )
 
@@ -317,6 +292,9 @@ def _check_commit(
     task = match.group("task")
     trailer_str = f"X-Agent: {agent}/{task}"
 
+    if _is_exempt_trailer(agent, task):
+        return "PASS", trailer_str
+
     if provenance is None:
         provenance = resolve_provenance_context(cwd=cwd)
 
@@ -329,28 +307,26 @@ def _check_commit(
         or f"X-Agent: {provenance.expected_agent or agent}/{provenance.expected_task_id or task}"
     )
 
-    rec_path = locate_task_record(tasks_dir, task)
+    rec_path, _ = locate_record_for_trailer(tasks_dir, agent, task)
     if rec_path is None:
         return (
             "FAIL",
             f"task record {task!r} not found in {tasks_dir.name} (hot or archive); expected literal trailer: {expected!r}",
         )
 
-    if provenance.expected_task_id and task != provenance.expected_task_id:
+    rec_agent: str | None = None
+    try:
+        rec_data = json.loads(rec_path.read_text(encoding="utf-8"))
+        rec_agent = rec_data.get("agent")
+    except (OSError, json.JSONDecodeError):
+        pass
+
+    target_agent = rec_agent or provenance.expected_agent
+    if target_agent and not _agents_match(agent, target_agent):
         return (
             "FAIL",
-            f"trailer {trailer_str!r} names task {task!r} but dispatch worktree task is {provenance.expected_task_id!r}; expected literal trailer: {expected!r}",
+            f"trailer {trailer_str!r} names agent {agent!r} but dispatch worktree agent is {target_agent!r}; expected literal trailer: {expected!r}",
         )
-
-    if provenance.expected_agent:
-        matched_agent = (agent == provenance.expected_agent) or (
-            {agent, provenance.expected_agent} <= {"grok", "grok-build"}
-        )
-        if not matched_agent:
-            return (
-                "FAIL",
-                f"trailer {trailer_str!r} names agent {agent!r} but dispatch worktree agent is {provenance.expected_agent!r}; expected literal trailer: {expected!r}",
-            )
 
     return "PASS", trailer_str
 

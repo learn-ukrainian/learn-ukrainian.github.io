@@ -7,7 +7,36 @@ from pathlib import Path
 import pytest
 
 from scripts.audit import lint_agent_trailer as lat
-from scripts.audit.lint_agent_trailer import ProvenanceContext, _check_commit, main, resolve_provenance_context
+from scripts.audit.lint_agent_trailer import _check_commit, main, resolve_provenance_context
+
+
+@pytest.fixture(autouse=True)
+def _stub_primary_integrity_sweep(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep delegate tests hermetic from the ambient checkout (same as tests/test_delegate.py:59)."""
+    import scripts.audit.check_primary_integrity as cpi
+
+    monkeypatch.setattr(
+        cpi,
+        "check_primary_integrity",
+        lambda *_args, **_kwargs: (True, "primary on main (test stub)"),
+    )
+
+
+@pytest.fixture(autouse=True)
+def _isolate_dispatch_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Isolate tests from ambient dispatch environment variables."""
+    for var in (
+        "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
+        "LEARN_UKRAINIAN_DISPATCH_AGENT",
+        "LU_X_AGENT_TRAILER",
+        "CI",
+        "GITHUB_ACTIONS",
+        "GITLAB_CI",
+        "BUILDKITE",
+        "JENKINS_URL",
+        "PYTEST_PLUGINS",
+    ):
+        monkeypatch.delenv(var, raising=False)
 
 
 def _write_task_record(
@@ -52,12 +81,12 @@ def test_wrong_task_id_rejected_locally(
     tasks_dir.mkdir()
     _write_task_record(tasks_dir, "impl-8638-r2", agent="codex")
 
-    provenance = ProvenanceContext(
-        active=True,
-        expected_task_id="impl-8638-r2",
-        expected_agent="codex",
-        tasks_dir=tasks_dir,
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "impl-8638-r2")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
+    assert provenance.expected_trailer == "X-Agent: codex/impl-8638-r2"
 
     _mock_commit(monkeypatch, "fix: wrong trailer\n\nX-Agent: codex/8638-r2")
 
@@ -67,7 +96,6 @@ def test_wrong_task_id_rejected_locally(
     assert "expected literal trailer: 'X-Agent: codex/impl-8638-r2'" in reason
 
     # Also test via main
-    monkeypatch.setattr(lat, "resolve_provenance_context", lambda tasks_dir=None, cwd=None: provenance)
     rc = main(["HEAD~1..HEAD", "--tasks-dir", str(tasks_dir)])
     assert rc == 1
     captured = capsys.readouterr()
@@ -80,12 +108,11 @@ def test_correct_id_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ca
     tasks_dir.mkdir()
     _write_task_record(tasks_dir, "impl-8642", agent="agy")
 
-    provenance = ProvenanceContext(
-        active=True,
-        expected_task_id="impl-8642",
-        expected_agent="agy",
-        tasks_dir=tasks_dir,
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "impl-8642")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "agy")
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
 
     _mock_commit(monkeypatch, "fix: trailer lint\n\nX-Agent: agy/impl-8642")
 
@@ -93,7 +120,6 @@ def test_correct_id_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, ca
     assert verdict == "PASS"
     assert reason == "X-Agent: agy/impl-8642"
 
-    monkeypatch.setattr(lat, "resolve_provenance_context", lambda tasks_dir=None, cwd=None: provenance)
     rc = main(["HEAD~1..HEAD", "--tasks-dir", str(tasks_dir)])
     assert rc == 0
     captured = capsys.readouterr()
@@ -106,12 +132,11 @@ def test_archived_id_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, c
     tasks_dir.mkdir()
     _write_task_record(tasks_dir, "impl-8638-r1", agent="codex", archived=True)
 
-    provenance = ProvenanceContext(
-        active=True,
-        expected_task_id="impl-8638-r1",
-        expected_agent="codex",
-        tasks_dir=tasks_dir,
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "impl-8638-r1")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
 
     _mock_commit(monkeypatch, "fix: archived trailer\n\nX-Agent: codex/impl-8638-r1")
 
@@ -119,12 +144,196 @@ def test_archived_id_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, c
     assert verdict == "PASS"
     assert reason == "X-Agent: codex/impl-8638-r1"
 
-    monkeypatch.setattr(lat, "resolve_provenance_context", lambda tasks_dir=None, cwd=None: provenance)
     rc = main(["HEAD~1..HEAD", "--tasks-dir", str(tasks_dir)])
     assert rc == 0
     captured = capsys.readouterr()
     assert "PASS" in captured.out
     assert "All 1 non-skipped commit(s) carry an X-Agent trailer." in captured.out
+
+
+def test_blocker_1_agent_prefixed_task_id_normalization(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """Blocker 1: auto-finalize and worker trailer generation for tasks starting with agent name.
+
+    For task 'codex-1472-foo', finalize commits 'codex/1472-foo'.
+    The task record is 'codex-1472-foo.json'.
+    Normalization-aware record lookup accepts '1472-foo' when 'codex-1472-foo.json' exists.
+    """
+    from scripts import delegate
+
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task_record(tasks_dir, "codex-1472-foo", agent="codex")
+
+    # Both finalize and LU_X_AGENT_TRAILER use _x_agent_trailer:
+    trailer = delegate._x_agent_trailer("codex", "codex-1472-foo")
+    assert trailer == "X-Agent: codex/1472-foo"
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "codex-1472-foo")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+    monkeypatch.setenv("LU_X_AGENT_TRAILER", trailer)
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
+    assert provenance.expected_trailer == "X-Agent: codex/1472-foo"
+
+    _mock_commit(monkeypatch, f"chore(dispatch): finalize codex task 1472-foo\n\n{trailer}")
+
+    verdict, reason = _check_commit("fake-sha", provenance=provenance)
+    assert verdict == "PASS"
+    assert reason == "X-Agent: codex/1472-foo"
+
+    rc = main(["HEAD~1..HEAD", "--tasks-dir", str(tasks_dir)])
+    assert rc == 0
+    captured = capsys.readouterr()
+    assert "PASS" in captured.out
+
+
+def test_earlier_round_commits_on_same_branch_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Finding 2: Earlier-round commits on the same branch must pass.
+
+    Worktree is on round 2 (impl-8642-r2). An earlier commit on the branch
+    carries round 1's trailer (impl-8642), whose record exists in tasks_dir.
+    """
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task_record(tasks_dir, "impl-8642-r2", agent="agy")
+    _write_task_record(tasks_dir, "impl-8642", agent="agy", archived=True)
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "impl-8642-r2")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "agy")
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
+
+    # R1 commit passes
+    _mock_commit(monkeypatch, "feat: round 1 implementation\n\nX-Agent: agy/impl-8642")
+    verdict_r1, reason_r1 = _check_commit("sha-r1", provenance=provenance)
+    assert verdict_r1 == "PASS"
+    assert reason_r1 == "X-Agent: agy/impl-8642"
+
+    # R2 commit passes
+    _mock_commit(monkeypatch, "fix: round 2 review fixes\n\nX-Agent: agy/impl-8642-r2")
+    verdict_r2, reason_r2 = _check_commit("sha-r2", provenance=provenance)
+    assert verdict_r2 == "PASS"
+    assert reason_r2 == "X-Agent: agy/impl-8642-r2"
+
+
+def test_exemptions_shape_checked_only_when_provenance_active(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Finding 3: *-inline/*, */inline, and dependabot/* are shape-checked only."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task_record(tasks_dir, "task-active", agent="codex")
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "task-active")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
+
+    exempt_trailers = [
+        "X-Agent: claude-inline/orchestrator",
+        "X-Agent: agy-inline/fix-typo",
+        "X-Agent: codex/inline",
+        "X-Agent: agy/inline",
+        "X-Agent: dependabot/npm_and_yarn_deps",
+    ]
+
+    for trailer in exempt_trailers:
+        _mock_commit(monkeypatch, f"chore: some inline commit\n\n{trailer}")
+        verdict, reason = _check_commit("sha-exempt", provenance=provenance)
+        assert verdict == "PASS"
+        assert reason == trailer
+
+
+def test_gemini_agy_alias_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Finding 4: gemini and agy are treated as the same agent for record comparison."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task_record(tasks_dir, "impl-8642", agent="agy")
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "impl-8642")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "agy")
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
+
+    # Worker following GEMINI.md:76 writes gemini/<task-id>
+    _mock_commit(monkeypatch, "fix: gemini commit\n\nX-Agent: gemini/impl-8642")
+    verdict, reason = _check_commit("sha-gemini", provenance=provenance)
+    assert verdict == "PASS"
+    assert reason == "X-Agent: gemini/impl-8642"
+
+    # Reverse: record with "gemini" and trailer with "agy"
+    _write_task_record(tasks_dir, "old-task", agent="gemini")
+    _mock_commit(monkeypatch, "fix: agy commit\n\nX-Agent: agy/old-task")
+    verdict_rev, reason_rev = _check_commit("sha-agy", provenance=provenance)
+    assert verdict_rev == "PASS"
+    assert reason_rev == "X-Agent: agy/old-task"
+
+
+def test_deepseek_plain_trailer_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Finding 5: plain deepseek in _TRAILER_RE and LU_X_AGENT_TRAILER."""
+    from scripts import delegate
+
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task_record(tasks_dir, "1234-fix-parse", agent="deepseek")
+
+    trailer = delegate._x_agent_trailer("deepseek", "1234-fix-parse")
+    assert trailer == "X-Agent: deepseek/1234-fix-parse"
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "1234-fix-parse")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "deepseek")
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
+
+    _mock_commit(monkeypatch, f"feat: deepseek dispatch\n\n{trailer}")
+    verdict, reason = _check_commit("sha-deepseek", provenance=provenance)
+    assert verdict == "PASS"
+    assert reason == "X-Agent: deepseek/1234-fix-parse"
+
+
+def test_detection_requires_record_to_exist(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Finding 6: provenance check is active only when record is found; else shape-only."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "nonexistent-task")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+
+    ctx = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert ctx.active is False
+    assert "task record 'nonexistent-task' not found" in (ctx.skip_reason or "")
+
+    # Shape-valid commit passes because provenance check is skipped
+    _mock_commit(monkeypatch, "feat: commit\n\nX-Agent: codex/any-task")
+    verdict, _ = _check_commit("sha-shape", provenance=ctx)
+    assert verdict == "PASS"
+
+
+def test_resolve_provenance_no_env_marker_is_shape_only(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
+    """Detection without LEARN_UKRAINIAN_DISPATCH_TASK_ID is inactive (shape-only)."""
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+    _write_task_record(tasks_dir, "some-task", agent="codex")
+
+    ctx = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert ctx.active is False
+    assert "dispatch task environment marker not set" in (ctx.skip_reason or "")
+
+    _mock_commit(monkeypatch, "feat: operator commit\n\nX-Agent: codex/some-task")
+    verdict, _ = _check_commit("sha-op", provenance=ctx)
+    assert verdict == "PASS"
+
+    rc = main(["HEAD~1..HEAD", "--tasks-dir", str(tasks_dir)])
+    assert rc == 0
+    captured = capsys.readouterr()
+    assert "Task provenance check skipped: dispatch task environment marker not set" in captured.out
 
 
 def test_ci_mode_shape_only_with_skip_message(
@@ -134,8 +343,8 @@ def test_ci_mode_shape_only_with_skip_message(
     tasks_dir.mkdir()
 
     monkeypatch.setenv("CI", "true")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "ci-task")
 
-    # The task record does NOT exist in tasks_dir, but in CI it should stay shape-only
     _mock_commit(monkeypatch, "fix: commit in ci\n\nX-Agent: codex/impl-nonexistent")
 
     ctx = resolve_provenance_context(tasks_dir=tasks_dir)
@@ -153,31 +362,6 @@ def test_ci_mode_shape_only_with_skip_message(
     assert "PASS" in captured.out
 
 
-def test_no_records_shape_only_with_skip_message(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
-) -> None:
-    for var in lat._CI_ENV_VARS:
-        monkeypatch.delenv(var, raising=False)
-
-    empty_tasks_dir = tmp_path / "empty_tasks"
-    empty_tasks_dir.mkdir()
-
-    _mock_commit(monkeypatch, "fix: local commit without records\n\nX-Agent: codex/impl-1234")
-
-    ctx = resolve_provenance_context(tasks_dir=empty_tasks_dir)
-    assert ctx.active is False
-    assert "no task records present" in (ctx.skip_reason or "")
-
-    verdict, _reason = _check_commit("fake-sha", provenance=ctx)
-    assert verdict == "PASS"
-
-    rc = main(["HEAD~1..HEAD", "--tasks-dir", str(empty_tasks_dir)])
-    assert rc == 0
-    captured = capsys.readouterr()
-    assert "Task provenance check skipped: no task records present" in captured.out
-    assert "PASS" in captured.out
-
-
 def test_ci_mode_still_rejects_missing_or_malformed_trailer(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("CI", "true")
     tasks_dir = tmp_path / "tasks"
@@ -192,104 +376,67 @@ def test_ci_mode_still_rejects_missing_or_malformed_trailer(tmp_path: Path, monk
     assert "missing X-Agent trailer" in reason
 
 
-def test_trailer_task_mismatch_with_known_worktree_rejected(tmp_path: Path) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    _write_task_record(tasks_dir, "task-alpha", agent="codex")
-    _write_task_record(tasks_dir, "task-beta", agent="codex")
-
-    provenance = ProvenanceContext(
-        active=True,
-        expected_task_id="task-alpha",
-        expected_agent="codex",
-        tasks_dir=tasks_dir,
-    )
-
-    # Commit carries task-beta, but worktree is task-alpha
-    body = "feat: work on wrong task\n\nX-Agent: codex/task-beta"
-    meta = ("dev@example.com", "dev@example.com", "Dev", "feat: work")
-
-    class FakeGit:
-        pass
-
-    with pytest.MonkeyPatch.context() as mp:
-        mp.setattr(lat, "_commit_meta", lambda sha, cwd=None: meta)
-        mp.setattr(lat, "_commit_body", lambda sha, cwd=None: body)
-        verdict, reason = _check_commit("fake-sha", provenance=provenance)
-        assert verdict == "FAIL"
-        assert "dispatch worktree task is 'task-alpha'" in reason
-        assert "expected literal trailer: 'X-Agent: codex/task-alpha'" in reason
-
-
-def test_trailer_agent_mismatch_with_known_worktree_rejected(tmp_path: Path) -> None:
+def test_trailer_agent_mismatch_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
     _write_task_record(tasks_dir, "task-alpha", agent="codex")
 
-    provenance = ProvenanceContext(
-        active=True,
-        expected_task_id="task-alpha",
-        expected_agent="codex",
-        tasks_dir=tasks_dir,
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "task-alpha")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
 
-    meta = ("dev@example.com", "dev@example.com", "Dev", "feat: work")
-    body = "feat: work on right task wrong agent\n\nX-Agent: agy/task-alpha"
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
 
-    with pytest.MonkeyPatch.context() as mp:
-        mp.setattr(lat, "_commit_meta", lambda sha, cwd=None: meta)
-        mp.setattr(lat, "_commit_body", lambda sha, cwd=None: body)
-        verdict, reason = _check_commit("fake-sha", provenance=provenance)
-        assert verdict == "FAIL"
-        assert "dispatch worktree agent is 'codex'" in reason
-        assert "expected literal trailer: 'X-Agent: codex/task-alpha'" in reason
+    _mock_commit(monkeypatch, "feat: wrong agent\n\nX-Agent: agy/task-alpha")
+    verdict, reason = _check_commit("fake-sha", provenance=provenance)
+    assert verdict == "FAIL"
+    assert "trailer 'X-Agent: agy/task-alpha' names agent 'agy'" in reason
+    assert "dispatch worktree agent is 'codex'" in reason
+    assert "expected literal trailer: 'X-Agent: codex/task-alpha'" in reason
 
 
-def test_grok_build_alias_accepted(tmp_path: Path) -> None:
+def test_grok_build_alias_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
     _write_task_record(tasks_dir, "task-grok", agent="grok")
 
-    provenance = ProvenanceContext(
-        active=True,
-        expected_task_id="task-grok",
-        expected_agent="grok",
-        tasks_dir=tasks_dir,
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "task-grok")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "grok")
 
-    meta = ("dev@example.com", "dev@example.com", "Dev", "feat: work")
-    body = "feat: work with grok-build alias\n\nX-Agent: grok-build/task-grok"
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
 
-    with pytest.MonkeyPatch.context() as mp:
-        mp.setattr(lat, "_commit_meta", lambda sha, cwd=None: meta)
-        mp.setattr(lat, "_commit_body", lambda sha, cwd=None: body)
-        verdict, _reason = _check_commit("fake-sha", provenance=provenance)
-        assert verdict == "PASS"
+    _mock_commit(monkeypatch, "feat: work with grok-build alias\n\nX-Agent: grok-build/task-grok")
+    verdict, _reason = _check_commit("fake-sha", provenance=provenance)
+    assert verdict == "PASS"
 
 
 def test_worker_env_carries_lu_x_agent_trailer(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """delegate.py exports LU_X_AGENT_TRAILER into worker_env."""
+    """delegate.py exports LU_X_AGENT_TRAILER into worker_env, sharing _x_agent_trailer helper."""
     from scripts import delegate
+
+    # Direct helper verification
+    assert delegate._x_agent_trailer("codex", "dispatch-trailer-test") == "X-Agent: codex/dispatch-trailer-test"
+    assert delegate._x_agent_trailer("codex", "codex-1472-foo") == "X-Agent: codex/1472-foo"
 
     recorded: dict[str, object] = {}
 
     class _FakeStdin:
-        def write(self, _data):
+        def write(self, _data: object) -> None:
             pass
 
-        def close(self):
+        def close(self) -> None:
             pass
 
     class _FakeProc:
         pid = 12345
         stdin = _FakeStdin()
 
-    def fake_popen(*args, **kwargs):
+    def fake_popen(*args: object, **kwargs: object) -> _FakeProc:
         recorded["env"] = kwargs.get("env", {})
         return _FakeProc()
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    monkeypatch.delenv("PYTEST_PLUGINS", raising=False)
     fake_tasks = tmp_path / "batch_tasks"
     fake_tasks.mkdir()
     monkeypatch.setattr(delegate, "_TASKS_DIR", fake_tasks)
@@ -327,74 +474,9 @@ def test_prompt_preamble_mentions_lu_x_agent_trailer() -> None:
     assert "LU_X_AGENT_TRAILER" in text
     assert "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`)." in text
 
-    # Read-only prompt omits write-mode closeout
     read_only_text = delegate._augment_prompt_with_worktree(
         "inspect feature",
         Path("/tmp/dispatch-wt"),
         mode="read-only",
     )
     assert "LU_X_AGENT_TRAILER" not in read_only_text
-
-
-def test_resolve_provenance_from_env_vars(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    _write_task_record(tasks_dir, "task-env-123", agent="kimi")
-
-    for var in lat._CI_ENV_VARS:
-        monkeypatch.delenv(var, raising=False)
-
-    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "task-env-123")
-    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "kimi")
-
-    ctx = resolve_provenance_context(tasks_dir=tasks_dir)
-    assert ctx.active is True
-    assert ctx.expected_task_id == "task-env-123"
-    assert ctx.expected_agent == "kimi"
-    assert ctx.expected_trailer == "X-Agent: kimi/task-env-123"
-
-
-def test_resolve_provenance_from_worktree_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    repo_root = tmp_path / "repo"
-    wt_dir = repo_root / ".worktrees" / "dispatch" / "codex" / "task-wt-456"
-    wt_dir.mkdir(parents=True)
-
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    _write_task_record(tasks_dir, "task-wt-456", agent="codex", worktree_path=str(wt_dir))
-
-    for var in lat._CI_ENV_VARS:
-        monkeypatch.delenv(var, raising=False)
-    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
-    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_AGENT", raising=False)
-    monkeypatch.delenv("LU_X_AGENT_TRAILER", raising=False)
-
-    monkeypatch.setattr(lat, "_resolve_repo_root", lambda cwd=None: repo_root)
-    monkeypatch.setattr(lat, "_resolve_worktree_dir", lambda cwd=None: wt_dir)
-
-    ctx = resolve_provenance_context(tasks_dir=tasks_dir, cwd=wt_dir)
-    assert ctx.active is True
-    assert ctx.expected_task_id == "task-wt-456"
-    assert ctx.expected_agent == "codex"
-    assert ctx.expected_trailer == "X-Agent: codex/task-wt-456"
-
-
-def test_resolve_provenance_not_in_dispatch_worktree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    repo_root = tmp_path / "repo"
-    repo_root.mkdir()
-    tasks_dir = tmp_path / "tasks"
-    tasks_dir.mkdir()
-    _write_task_record(tasks_dir, "some-task", agent="codex")
-
-    for var in lat._CI_ENV_VARS:
-        monkeypatch.delenv(var, raising=False)
-    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
-    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_AGENT", raising=False)
-    monkeypatch.delenv("LU_X_AGENT_TRAILER", raising=False)
-
-    monkeypatch.setattr(lat, "_resolve_repo_root", lambda cwd=None: repo_root)
-    monkeypatch.setattr(lat, "_resolve_worktree_dir", lambda cwd=None: repo_root)
-
-    ctx = resolve_provenance_context(tasks_dir=tasks_dir, cwd=repo_root)
-    assert ctx.active is False
-    assert "not inside a dispatch worktree" in (ctx.skip_reason or "")

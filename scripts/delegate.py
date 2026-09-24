@@ -4006,6 +4006,10 @@ def _x_agent_task_id(agent: str, task_id: str) -> str:
     return safe or "task"
 
 
+def _x_agent_trailer(agent: str, task_id: str) -> str:
+    return f"X-Agent: {agent}/{_x_agent_task_id(agent, task_id)}"
+
+
 def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
     try:
         proc = subprocess.run(
@@ -4149,7 +4153,7 @@ def _auto_finalize_dirty_worktree(
                 "-m",
                 body,
                 "--trailer",
-                f"X-Agent: {agent}/{safe_task}",
+                _x_agent_trailer(agent, task_id),
             ],
             cwd=worktree,
             capture_output=True,
@@ -8198,7 +8202,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
         worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
         worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
-        worker_env["LU_X_AGENT_TRAILER"] = f"X-Agent: {dispatch_agent}/{task_id}"
+        worker_env["LU_X_AGENT_TRAILER"] = _x_agent_trailer(dispatch_agent, task_id)
         # #8645 part B: CI's `--override-ini addopts=-v` drops the pyproject
         # `-p ci.pytest_dispatch_cap`. Load it from the environment instead.
         _dispatch_cap_plugin = "ci.pytest_dispatch_cap"
