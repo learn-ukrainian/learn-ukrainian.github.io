@@ -692,6 +692,7 @@ def test_step13_core_router_isolation(tmp_path: Path) -> None:
         assert "First dispatcher log line" not in second_client.get("/api/batch/dispatcher/logs").json()["lines"]
 
 
+@pytest.mark.repo_wide
 def test_db_access_patterns_have_the_step_two_allowlist() -> None:
     assert len(DB_ACCESS_ALLOWLIST) == 10
     files = sorted((REPO_ROOT / "scripts/api").rglob("*.py"))

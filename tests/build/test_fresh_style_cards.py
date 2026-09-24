@@ -108,6 +108,7 @@ def test_card_exemplars_are_attested_in_the_corpus(band: str, requires_sources_d
         con.close()
 
 
+@pytest.mark.repo_wide
 def test_the_three_bands_and_nothing_else() -> None:
     names = sorted(p.name for p in CARDS.iterdir())
     assert names == sorted([f"{b}.md" for b in BANDS] + [f"{b}.sha256" for b in BANDS])

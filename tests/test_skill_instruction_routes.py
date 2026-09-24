@@ -3,10 +3,13 @@ import re
 import shlex
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT / "agents_extensions/shared/skills"
 
 
+@pytest.mark.repo_wide
 def test_split_skill_references_are_reachable_from_their_entrypoint() -> None:
     for name in ("entire-context", "task-family-manager", "thread-rollover", "track-completion"):
         entry = SKILLS / name / "SKILL.md"
@@ -19,6 +22,7 @@ def test_split_skill_references_are_reachable_from_their_entrypoint() -> None:
         assert set(links) == {str(p.relative_to(entry.parent)) for p in (entry.parent / "references").glob("*.md")}
 
 
+@pytest.mark.repo_wide
 def test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable() -> None:
     selector = ROOT / "agents_extensions/shared/rules/task-scoped-reading.md"
     text = selector.read_text()

@@ -42,7 +42,7 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
-from scripts.orchestration import reaper_lifecycle, worktree_claims
+from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -96,6 +96,9 @@ class ReapResult:
     branch_pruned: bool = False
     recovery_ref: str | None = None
     owner: str | None = None
+    # Report-only findings (#8663): kind, evidence, and a "verify first:"
+    # removal command a human runs; the reaper never acts on them.
+    needs_attention: dict[str, Any] | None = None
 
 
 def sanitized_git_env() -> dict[str, str]:
@@ -1037,6 +1040,7 @@ def _dispatch_owner(repo_root: Path, info: WorktreeInfo) -> str:
 
 _ACP_RUNTIME_REASON_PREFIX = "acp runtime "
 _ACP_LEGACY_LOCK_MIN_AGE_HOURS = 24.0
+_GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
 # Minimum age for a zero-file dispatch husk before it may be removed.
 # ``delegate.py`` creates the dispatch directory before ``git worktree add``
 # registers it, so an unregistered empty directory can be mid-creation; the
@@ -1120,6 +1124,71 @@ def _acp_runtime_cleanup_recheck(repo_root: Path, info: WorktreeInfo) -> str | N
     if not holds_only_git_pointer(info.path):
         return "acp runtime worktree gained files during cleanup"
     return None
+
+
+def _names_path(claimed: object, path: Path) -> bool:
+    """True when ``claimed`` is a non-empty path string resolving to ``path``."""
+    if not isinstance(claimed, str) or not claimed:
+        return False
+    try:
+        return Path(claimed).resolve() == path.resolve()
+    except (OSError, RuntimeError):
+        return False
+
+
+def _initializing_leftover_result(repo_root: Path, info: WorktreeInfo) -> ReapResult | None:
+    """Report-only class (#8663): a worktree dispatch's stopped ``git worktree add`` left.
+
+    Applies to a worktree git still locks ``initializing`` whose dispatch
+    task record carries the ``worktree_prep`` reservation for this path.
+    Such a worktree is never removed, unlocked or pruned automatically:
+    every ownership proof tried for that left a race in which a foreign or
+    completed worktree qualified. While the reserving dispatch may still be
+    running its add, the result says so; otherwise it is
+    ``needs_attention: initializing_leftover`` with the evidence and a
+    removal command marked "verify first:"; each pass journals it as a
+    ``needs_attention`` event. Returns ``None`` for any other worktree.
+    """
+    if info.locked_reason != _GIT_INITIALIZING_LOCK_REASON:
+        return None
+    task_id = _dispatch_task_id(repo_root, info)
+    payload = _task_record(repo_root, task_id)
+    prep = payload.get("worktree_prep") if payload is not None else None
+    if payload is None or not isinstance(prep, dict) or not _names_path(prep.get("path"), info.path):
+        return None
+    owner = _dispatch_owner(repo_root, info)
+    status = payload.get("status")
+    if status in ("running", "spawning") and not worktree_prep.is_orphaned_prep_record(payload):
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=f"active dispatch task-id={task_id} status={status}: git worktree add may still be running",
+            dirty=None,
+            owner=owner,
+        )
+    command = worktree_prep.verify_first_command(repo_root, info.path)
+    finding = {
+        "kind": worktree_prep.LEFTOVER_KIND,
+        "task_id": task_id,
+        "task_status": status,
+        "worktree_prep": prep,
+        "evidence": worktree_prep.leftover_evidence(prep, info.path),
+        "command": command,
+    }
+    reason = (
+        f"needs_attention: {worktree_prep.LEFTOVER_KIND}; task-id={task_id} status={status}; "
+        f"git worktree add left this worktree locked 'initializing'; never removed automatically; {command}"
+    )
+    return ReapResult(
+        path=str(info.path),
+        branch=info.branch,
+        action="skipped",
+        reason=reason,
+        dirty=None,
+        owner=owner,
+        needs_attention=finding,
+    )
 
 
 def _tree_has_any_file_or_symlink(root: Path) -> bool:
@@ -1340,7 +1409,7 @@ def classify_preservation(result: ReapResult) -> str:
             return "permission_error"
         return "error"
     reason = result.reason.lower()
-    if reason.startswith("needs_attention;"):
+    if result.needs_attention is not None or reason.startswith(("needs_attention;", "needs_attention:")):
         return "needs_attention"
     if "permission" in reason or "denied" in reason:
         return "permission_error"
@@ -2629,6 +2698,14 @@ def reap_worktrees(
                 qualified.append((info, acp_reason, False, None))
                 continue
 
+            # Report-only class (#8663): a dispatch worktree a stopped
+            # ``git worktree add`` left under git's ``initializing`` lock is
+            # reported for a human and never qualifies for removal.
+            leftover = _initializing_leftover_result(repo_root, info)
+            if leftover is not None:
+                results.append(leftover)
+                continue
+
             dirty_state = _worktree_clean(info.path)
             dirty = None if dirty_state is None else not dirty_state
 
@@ -2828,6 +2905,10 @@ def reap_worktrees(
 
     for result in results:
         event = "reap" if result.action in {"removed", "preserved_then_removed"} else "skip"
+        extra: dict[str, Any] = {}
+        if result.needs_attention is not None:
+            event = "needs_attention"
+            extra["needs_attention"] = result.needs_attention
         reaper_lifecycle.append_journal(
             repo_root,
             event,
@@ -2839,6 +2920,7 @@ def reap_worktrees(
             pr=result.pr,
             error=result.error,
             recovery_ref=result.recovery_ref,
+            **extra,
         )
     return results
 
@@ -2929,8 +3011,12 @@ def format_text_results(results: list[ReapResult], *, apply: bool) -> str:
     candidates = sum(1 for result in results if result.action in remove_actions)
     skipped = sum(1 for result in results if result.action == "skipped")
     errors = sum(1 for result in results if result.action == "error")
+    attention = sum(1 for result in results if result.needs_attention is not None)
     mode = "APPLY" if apply else "DRY RUN"
-    lines = [f"{mode}: {candidates} candidate(s), {skipped} skipped, {errors} error(s)"]
+    summary = f"{mode}: {candidates} candidate(s), {skipped} skipped, {errors} error(s)"
+    if attention:
+        summary = f"{summary}, {attention} need(s) attention"
+    lines = [summary]
     lines.extend(_format_result_line(result) for result in results)
     return "\n".join(lines)
 
@@ -2951,8 +3037,13 @@ def aggregate_counts(results: list[ReapResult]) -> dict[str, Any]:
     reaped = 0
     reaped_by_owner: dict[str, int] = {}
     retained_exceptions = 0
+    needs_attention: list[dict[str, Any]] = []
 
     for r in results:
+        if r.needs_attention is not None:
+            needs_attention.append(
+                {"path": r.path, "kind": r.needs_attention.get("kind"), "command": r.needs_attention.get("command")}
+            )
         owner = r.owner or "unattributed"
         by_owner[owner] = by_owner.get(owner, 0) + 1
         cls = classify_preservation(r)
@@ -2975,6 +3066,7 @@ def aggregate_counts(results: list[ReapResult]) -> dict[str, Any]:
         "by_preservation_class": preservation_classes,
         "by_owner": dict(sorted(by_owner.items())),
         "reaped_by_owner": dict(sorted(reaped_by_owner.items())),
+        "needs_attention": needs_attention,
     }
 
 
@@ -2992,6 +3084,12 @@ def format_aggregate_results(counts: dict[str, Any], *, apply: bool) -> str:
     lines.append("  By owner:")
     for owner, count in sorted(counts.get("by_owner", {}).items()):
         lines.append(f"    {owner}: {count}")
+    attention = counts.get("needs_attention") or []
+    if attention:
+        lines.append("  Needs attention (never removed automatically):")
+        for item in attention:
+            lines.append(f"    {item['kind']}: {item['path']}")
+            lines.append(f"      {item['command']}")
     return "\n".join(lines)
 
 

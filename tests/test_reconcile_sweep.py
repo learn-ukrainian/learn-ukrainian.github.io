@@ -504,3 +504,87 @@ def test_reconcile_sweep_systemd_exec_start_smoke(tmp_path: Path) -> None:
     )
     assert res_script_report.returncode == 0
     assert "reconcile-sweep: mode=dry_run scanned_tasks=0 zombie_tasks=0 stale_claims=0" in res_script_report.stdout
+
+
+# --- #8663: pid-less worktree-prep records --------------------------------------------------
+
+
+def _publish_prep_record(
+    task_dir: Path, monkeypatch: pytest.MonkeyPatch, task_id: str, owner: tuple[int, int | None]
+) -> Path:
+    """Write the provisional record dispatch publishes before ``git worktree add``."""
+    from scripts import delegate
+
+    monkeypatch.setattr(delegate, "_TASKS_DIR", task_dir)
+    prep = {
+        "path": str(task_dir / "wt" / task_id),
+        "run_nonce": f"nonce-{task_id}",
+        "reserved_by_mkdir": True,
+        "reserved_at": "2026-09-24T00:00:00+00:00",
+        "owner_pid": owner[0],
+        "owner_start": owner[1],
+    }
+    delegate._publish_worktree_prep(task_id, f"nonce-{task_id}", prep)
+    return task_dir / f"{task_id}.json"
+
+
+def test_reconcile_sweep_crashes_prep_record_whose_dispatcher_died(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Review blocker: an interrupted dispatch's provisional record is healed, not unparseable."""
+    from scripts.guardrails.delegate_ownership import _task_still_active
+    from tests.worktree_prep_helpers import exited_process_identity
+
+    task_dir = tmp_path / "tasks"
+    task_file = _publish_prep_record(task_dir, monkeypatch, "died-mid-prep", exited_process_identity())
+    ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
+    # The dead dispatcher's claim stops counting before any sweep runs.
+    assert _task_still_active("died-mid-prep", None, task_dir) is False
+
+    dry = reconcile_sweep.run_reconcile_sweep(apply=False, task_dir=task_dir, ledger=ledger)
+    assert dry.zombie_tasks == ["died-mid-prep"]
+    assert dry.unparseable_tasks == []
+    assert json.loads(task_file.read_text(encoding="utf-8"))["status"] == "spawning"
+
+    applied = reconcile_sweep.run_reconcile_sweep(apply=True, task_dir=task_dir, ledger=ledger)
+    assert applied.zombie_tasks == ["died-mid-prep"]
+    healed = json.loads(task_file.read_text(encoding="utf-8"))
+    assert healed["status"] == "crashed"
+    assert healed["returncode_reason"] == "dispatch_died_during_worktree_prep"
+    assert healed["pid"] is None
+    assert healed["finished_at"]
+    # The reservation stays: it is the evidence the reaper reports for any leftover.
+    assert healed["worktree_prep"]["reserved_by_mkdir"] is True
+
+
+@pytest.mark.parametrize(
+    "owner",
+    [
+        pytest.param("self", id="dispatcher-alive"),
+        pytest.param("unreadable-start", id="start-time-unknown"),
+    ],
+)
+def test_reconcile_sweep_keeps_prep_record_without_proof_its_dispatcher_died(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owner: str
+) -> None:
+    from scripts.guardrails.delegate_ownership import _task_still_active
+    from scripts.orchestration.worktree_prep import process_identity
+    from tests.worktree_prep_helpers import exited_process_identity
+
+    if owner == "self":
+        me = process_identity(os.getpid())
+        identity: tuple[int, int | None] = (me["pid"], me["start"])  # type: ignore[assignment]
+    else:
+        # A dead pid whose start time was never readable is not proof of death.
+        identity = (exited_process_identity()[0], None)
+    task_dir = tmp_path / "tasks"
+    task_file = _publish_prep_record(task_dir, monkeypatch, "preparing", identity)
+    ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
+
+    report = reconcile_sweep.run_reconcile_sweep(apply=True, task_dir=task_dir, ledger=ledger)
+
+    assert report.live_tasks == ["preparing"]
+    assert report.zombie_tasks == []
+    assert report.unparseable_tasks == []
+    assert json.loads(task_file.read_text(encoding="utf-8"))["status"] == "spawning"
+    assert _task_still_active("preparing", None, task_dir) is True

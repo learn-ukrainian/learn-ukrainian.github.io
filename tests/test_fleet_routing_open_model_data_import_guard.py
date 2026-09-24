@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-pytestmark = pytest.mark.repo_invariant
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
