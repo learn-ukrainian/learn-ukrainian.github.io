@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -58,8 +60,32 @@ def collect_assets(destination: Path) -> None:
     )
 
 
+def resolve_public_commit() -> str:
+    """Return the release commit, or reject a present override that is not a safe ancestor."""
+    commit_override = os.environ.get("LEARN_UKRAINIAN_V4_RUNTIME_COMMIT")
+    if commit_override is None:
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY, text=True).strip()
+    if re.fullmatch(r"[0-9a-f]{40}", commit_override) is None:
+        raise ValueError("LEARN_UKRAINIAN_V4_RUNTIME_COMMIT must be 40 lowercase hexadecimal characters")
+    exists = subprocess.run(
+        ["git", "cat-file", "-e", commit_override + "^{commit}"],
+        cwd=REPOSITORY,
+        capture_output=True,
+    )
+    if exists.returncode != 0:
+        raise ValueError("LEARN_UKRAINIAN_V4_RUNTIME_COMMIT does not name an existing commit")
+    ancestor = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", commit_override, "HEAD"],
+        cwd=REPOSITORY,
+        capture_output=True,
+    )
+    if ancestor.returncode != 0:
+        raise ValueError("LEARN_UKRAINIAN_V4_RUNTIME_COMMIT must equal HEAD or be an ancestor of HEAD")
+    return commit_override
+
+
 def write_manifest(destination: Path, *, development: bool = False) -> None:
-    sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY, text=True).strip()
+    sha = resolve_public_commit()
     # The build command is bound to real committed inputs, including assets,
     # package code, build hooks, license and frozen relationship specification.
     inputs = ["packages/v4-runtime", *json.loads((PACKAGE / "asset_allowlist.json").read_bytes())]
