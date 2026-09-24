@@ -126,15 +126,19 @@ that marker is enough:
   path lands on the **content lane**, which runs `reads_content`: scanners of
   that tree, for example `tests/test_site_links.py`, run here.
 - A PR touching only `curriculum/` or `wiki/` — no `site/src/content/docs/`
-  path — is docs-only and lands on the **docs lane**, which runs `docs_skills`
-  and `-m 'repo_wide and not slow and not atlas_release'` but **not**
-  `-m reads_content`. A scanner of a curriculum or wiki content root, or of the
-  skills tree the docs lane owns, therefore carries `repo_wide` so the docs lane
-  runs it: `tests/test_ohoiko_source_inventory_scope.py`,
+  path — is docs-only and lands on the **docs lane**. The docs lane runs
+  `docs_skills` and `-m 'repo_wide and not slow and not atlas_release'`, and
+  it does not run `-m reads_content`. A handful of curriculum and wiki
+  scanners are marked `repo_wide`, so those tests do run there:
+  `tests/test_ohoiko_source_inventory_scope.py`,
   `tests/test_prompt_template_render.py`, `tests/test_a1_review_scores.py`,
-  `tests/test_aggregate_findings.py`, `tests/test_schema_validation.py`, and the
-  reference checks in `tests/test_skill_instruction_routes.py` are marked that
-  way.
+  `tests/test_aggregate_findings.py`,
+  `tests/test_schema_validation.py`
+  (`test_a2_plans_match_module_schema`), and the reference checks in
+  `tests/test_skill_instruction_routes.py`. That list is not the set of tests
+  that read those trees. Most `reads_content` tests that read `curriculum/` or
+  `wiki/` are not `repo_wide`, so a curriculum- or wiki-only PR does not run
+  them. That gap is tracked in #8720.
 
 Repo-wide tests that read a content tree and must also run on the content lane
 carry `reads_content` as well: `tests/test_llm_reviewer_dispatch.py`,
