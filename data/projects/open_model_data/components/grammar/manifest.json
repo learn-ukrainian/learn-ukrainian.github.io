@@ -39,20 +39,20 @@
     "clean_control_share": 0.2597,
     "substantive_correction_share": 0.7403,
     "category_counts": {
-      "calque_lexical_grammatical": 382,
-      "case_government": 329,
+      "calque_lexical_grammatical": 380,
+      "case_government": 331,
       "protective_authentic_control": 380,
       "syntax_structure": 208,
       "verb_morphology": 50,
       "agreement_concord": 114
     },
     "source_corpus_counts": {
-      "ua_gec_2.0": 1087,
-      "brown_uk": 376
+      "ua_gec_2.0": 1090,
+      "brown_uk": 373
     },
     "license_counts": {
-      "CC BY 4.0": 1087,
-      "CC BY-NC-SA 4.0": 376
+      "CC BY 4.0": 1090,
+      "CC BY-NC-SA 4.0": 373
     }
   }
 }

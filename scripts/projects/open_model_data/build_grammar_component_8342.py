@@ -610,6 +610,16 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # #138: «розповсюдженість» -> «поширеність»
     if re.search(r"\bрозповсюдженість\b", text, re.IGNORECASE):
         return False
+    # Claude R24 control defects
+    # #86: comma between subject and predicate ("... її здійснення, є запорукою")
+    if re.search(r"\bїї\s+здійснення,\s+є\s+запорукою\b", text):
+        return False
+    # #219: calque «на швидкості»
+    if re.search(r"\bна\s+швидкості\b", text, re.IGNORECASE):
+        return False
+    # #120: unnatural phrasing «де тобі правильно бути»
+    if re.search(r"\bде\s+тобі\s+правильно\s+бути\b", text, re.IGNORECASE):
+        return False
 
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
@@ -2546,6 +2556,59 @@ def is_valid_candidate(
         return False
     # #204: «будинку у садочку»
     if re.search(r"\bбудинку\s+у\s+садочку\b", c_low) or re.search(r"\bВинайняв\s+у\s+забуд\w+\b", orig_text):
+        return False
+
+    # 27. Claude R24 Blockers, Defects & Systemic Validations
+    # Blockers (R24)
+    # #29: «на розпродажу» (incorrect locative; must be «на розпродажі»)
+    if re.search(r"\bна\s+розпродажу\b", c_low) or re.search(r"\bна\s+сейлі\b", o_low):
+        return False
+    # #231: systemic «якщо б» (calque; standard is «якби»)
+    if re.search(r"\bякщо\s+би?\b", c_low) or re.search(r"\bякщо\s+би?\b", o_low):
+        return False
+    # #245: false calque claim on «Через деякий час» -> «За деякий час»
+    if re.search(r"\bчерез\s+деякий\s+час\b", o_low) or re.search(r"\bза\s+деякий\s+час\b", c_low):
+        return False
+    # #277: «з-під круглих окулярів» -> «з-над круглих окулярів» (meaning change)
+    if re.search(r"\bкруглих\s+окулярів\b", o_low) or re.search(r"\bз-над\s+круглих\s+окулярів\b", c_low):
+        return False
+    # #20: «на вилозі плаща, походжав» (comma between subject and predicate)
+    if re.search(r"\bзначком\s+детектива\s+на\b", o_low) or re.search(r"\bна\s+вдвороті\s+плаща\b", o_low):
+        return False
+
+    # Minor issues (R24)
+    # #34: «і у знак своєї згоди, цокнулась» (unneeded comma)
+    if re.search(r"\bСваха\s+аж\s+проплакала\b", orig_text) or re.search(r"\bі\s+[ув]\s+знак\s+своєї\s+згоди,\s+цокнулась\b", c_low):
+        return False
+    # #88: «мати багато грошей, або» (unneeded comma before single «або»)
+    if re.search(r"\bмати\s+багато\s+грошей,\s+або\b", c_low) or re.search(r"\bфеноменально\s+винахід\w+\b", o_low):
+        return False
+    # #197: systemic stray comma after «при цьому,»
+    if re.search(r"\bпри\s+цьому,\s+[а-яіїєґ]", c_low):
+        return False
+    # #13: incoherent fragment «Сформований на тому, чи…»
+    if re.search(r"^«?Сформований\s+на\s+тому", orig_text) or re.search(r"\bпідглянути\s+і\s+скопіювати\s+з\s+іншої\b", o_low):
+        return False
+    # #85: «підважує кордони» (MT-ese calque of "push the boundaries")
+    if re.search(r"\bпідважує\s+кордони\b", o_low) or re.search(r"\bпідважує\s+кордони\b", c_low) or re.search(r"\bСтася\s+Мілоєвич\b", orig_text):
+        return False
+    # #115: bureaucratic calque «прийняття рішень» -> «ухвалення рішень»
+    if re.search(r"\bприйнятт[яі]\s+рішен\w*\b", c_low):
+        return False
+    # #141: MT-ese «транспортний засіб швидким темпом», stray «знову»
+    if re.search(r"\bтранспортний\s+засіб\s+швидким\s+темпом\b", o_low) or re.search(r"\bтранспортний\s+засіб\b", o_low):
+        return False
+    # #211: calque «при кожному пориві/нальоті вітру»
+    if re.search(r"\bпри\s+кожному\s+(?:нальоті|пориві)\s+вітру\b", o_low):
+        return False
+    # #223: colloquial preposition government «уточнити про»
+    if re.search(r"\bуточнити\s+про\b", c_low):
+        return False
+    # #196: non-standard spelling variant «корегувати» -> «коригувати»
+    if re.search(r"\bкорегув\w*\b", o_low) or re.search(r"\bкорегув\w*\b", c_low):
+        return False
+    # #57: corrector-introduced euphony flaw «силу в своєму»
+    if re.search(r"\bвіднайшла\s+силу\s+[ву]\s+своєму\b", c_low) or re.search(r"\bОдна\s+із\s+пісень\s+\(?«?Сила»?\)?\b", orig_text):
         return False
 
     # Reject unpaired comma after relative pronoun
