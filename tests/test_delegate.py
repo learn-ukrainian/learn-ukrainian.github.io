@@ -5626,6 +5626,7 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, mo
         return _FakeProc()
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    monkeypatch.delenv("PYTEST_PLUGINS", raising=False)
 
     args = argparse.Namespace(
         agent="codex",
@@ -5646,6 +5647,19 @@ def test_dispatch_worker_env_carries_dispatch_identity_markers(tmp_tasks_dir, mo
     env = recorded["env"]
     assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-marker-check"
     assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "codex"
+    assert env["PYTEST_PLUGINS"] == "ci.pytest_dispatch_cap"
+
+    monkeypatch.setenv("PYTEST_PLUGINS", "already.loaded,ci.pytest_dispatch_cap")
+    args.task_id = "dispatch-marker-plugins"
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 0
+    assert recorded["env"]["PYTEST_PLUGINS"] == "already.loaded,ci.pytest_dispatch_cap"
+
+    monkeypatch.setenv("PYTEST_PLUGINS", "already.loaded")
+    args.task_id = "dispatch-marker-plugins-append"
+    rc = delegate.cmd_dispatch(args)
+    assert rc == 0
+    assert recorded["env"]["PYTEST_PLUGINS"] == "already.loaded,ci.pytest_dispatch_cap"
 
 
 def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):

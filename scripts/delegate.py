@@ -8198,6 +8198,13 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
         worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
         worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
+        # #8645 part B: CI's `--override-ini addopts=-v` drops the pyproject
+        # `-p ci.pytest_dispatch_cap`. Load it from the environment instead.
+        _dispatch_cap_plugin = "ci.pytest_dispatch_cap"
+        _pytest_plugins = [part.strip() for part in worker_env.get("PYTEST_PLUGINS", "").split(",") if part.strip()]
+        if _dispatch_cap_plugin not in _pytest_plugins:
+            _pytest_plugins.append(_dispatch_cap_plugin)
+        worker_env["PYTEST_PLUGINS"] = ",".join(_pytest_plugins)
         _inject_gh_token_for_agent(worker_env, dispatch_agent)
         _scrub_unusable_gh_config_dir(worker_env)
         worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"

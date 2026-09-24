@@ -242,6 +242,28 @@ def _looks_sensitive_value(value: str) -> bool:
     return bool(_SENSITIVE_VALUE_RE.search(value))
 
 
+# #8645 part B: delegate.py exports PYTEST_PLUGINS so a worker that copies CI's
+# `--override-ini addopts=-v` still loads the xdist cap. The agent CLI env is
+# rebuilt here, so the variable must be re-applied — but only the known plugin,
+# and only inside a dispatch. Any other comma-separated entry is dropped.
+_DISPATCH_MARKER_ENV = "LEARN_UKRAINIAN_DISPATCH_TASK_ID"
+_DISPATCH_CAP_PLUGIN = "ci.pytest_dispatch_cap"
+
+
+def _dispatch_pytest_plugins(raw: Mapping[str, str]) -> str | None:
+    """Return the known cap plugin, or None when it must not reach the CLI.
+
+    The dispatch marker has to be present. Other plugin names are never
+    forwarded, so an inherited ``PYTEST_PLUGINS`` cannot inject arbitrary code.
+    """
+    if not raw.get(_DISPATCH_MARKER_ENV, "").strip():
+        return None
+    plugins = [part.strip() for part in raw.get("PYTEST_PLUGINS", "").split(",") if part.strip()]
+    if _DISPATCH_CAP_PLUGIN not in plugins:
+        return None
+    return _DISPATCH_CAP_PLUGIN
+
+
 def usable_host_gh_config_dir(path: str | None) -> str | None:
     """Return ``path`` only when it holds real gh auth material.
 
@@ -414,6 +436,12 @@ def build_agent_env(
             continue
         if _is_safe_name(name):
             env[name] = value
+
+    pytest_plugins = _dispatch_pytest_plugins(raw)
+    if pytest_plugins is None:
+        env.pop("PYTEST_PLUGINS", None)
+    else:
+        env["PYTEST_PLUGINS"] = pytest_plugins
 
     if "PATH" not in env and "PATH" in raw and not _looks_sensitive_value(raw["PATH"]):
         env["PATH"] = raw["PATH"]
