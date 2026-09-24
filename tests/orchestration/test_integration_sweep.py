@@ -124,6 +124,43 @@ def test_state_preserves_blockers_even_when_queued_or_armed():
     assert "CHANGES_REQUESTED" in armed.blockers
 
 
+def _gate(conclusion: str, started_at: str, workflow: str | None) -> dict:
+    row = {"name": "CI Gate", "status": "COMPLETED", "conclusion": conclusion, "startedAt": started_at}
+    if workflow is not None:
+        row["workflowName"] = workflow
+    return row
+
+
+def test_cross_workflow_failure_is_not_hidden_by_a_later_success():
+    item = pr(
+        statusCheckRollup=[
+            _gate("FAILURE", "2026-09-23T12:00:00Z", "CI"),
+            _gate("SUCCESS", "2026-09-23T13:00:00Z", "Nightly"),
+        ]
+    )
+    assert sweep._check_blockers(item) == ["CI red CI Gate"]
+
+
+def test_timestamp_tie_failure_is_not_hidden_by_list_order():
+    item = pr(
+        statusCheckRollup=[
+            _gate("FAILURE", "2026-09-23T13:00:00Z", "CI"),
+            _gate("SUCCESS", "2026-09-23T13:00:00Z", "CI"),
+        ]
+    )
+    assert sweep._check_blockers(item) == ["CI red CI Gate"]
+
+
+def test_named_check_without_workflow_keeps_a_red_row():
+    item = pr(
+        statusCheckRollup=[
+            _gate("FAILURE", "2026-09-23T12:00:00Z", None),
+            _gate("SUCCESS", "2026-09-23T13:00:00Z", None),
+        ]
+    )
+    assert sweep._check_blockers(item) == ["CI red CI Gate"]
+
+
 def test_ci_red_pending_and_ready():
     approved = sweep.Verdict("APPROVED")
     red = pr(

@@ -35,6 +35,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import scripts.github_rest_cache as github_rest
 from scripts.common.release_layout import is_release_root
+from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.guardrails import worktree_containment
 from scripts.research import registry as reg
 
@@ -538,20 +539,20 @@ def _collect_issues_orient_data(ctx: MonitorContext | None = None) -> dict:
     return {"issues": issues}
 
 
-def _pr_check_timestamp(check: dict[str, Any]) -> datetime | None:
-    for field in ("startedAt", "createdAt", "updatedAt", "completedAt"):
-        parsed = _parse_iso_datetime(check.get(field))
-        if parsed is not None:
-            return parsed
-    return None
+def _idle_check_row_green(check: dict[str, Any]) -> bool:
+    status = str(check.get("status") or "").upper()
+    if status and status not in {"COMPLETED", "SUCCESS"}:
+        return False
+    outcome = str(check.get("conclusion") or check.get("state") or "").upper()
+    return outcome in IDLE_PR_SUCCESSFUL_CONCLUSIONS
 
 
 def _idle_pr_checks_green(pr: dict[str, Any]) -> bool:
-    """Return whether every latest non-advisory check for a PR is green.
+    """Return whether every surviving non-advisory check for a PR is green.
 
-    ``statusCheckRollup`` contains historical runs when a check has been
-    restarted. Grouping by context and selecting the newest timestamp avoids
-    resurrecting an old green run after a newer run went red or pending.
+    Historical runs collapse through :func:`group_collapsed_by_name`. A name
+    stays red or pending when any surviving row is: a later success in another
+    workflow does not hide an earlier failure, and a timestamp tie keeps both.
     Missing or malformed status data fails closed. Explicitly advisory checks
     follow the repository merge-hook convention and do not block eligibility.
     """
@@ -559,28 +560,16 @@ def _idle_pr_checks_green(pr: dict[str, Any]) -> bool:
     if not isinstance(rollup, list) or not rollup:
         return False
 
-    latest: dict[str, tuple[datetime, dict[str, Any]]] = {}
-    for raw in rollup:
-        if not isinstance(raw, dict):
-            return False
-        name = raw.get("name") or raw.get("context")
-        timestamp = _pr_check_timestamp(raw)
-        if not isinstance(name, str) or not name.strip() or timestamp is None:
-            return False
-        current = latest.get(name)
-        if current is None or timestamp >= current[0]:
-            latest[name] = (timestamp, raw)
+    named, other = group_collapsed_by_name(rollup)
+    if other or not named:
+        return False
 
     blocking_count = 0
-    for name, (_timestamp, check) in latest.items():
+    for name, rows in named.items():
         if IDLE_PR_ADVISORY_MARKER in name.casefold():
             continue
         blocking_count += 1
-        status = str(check.get("status") or "").upper()
-        if status and status not in {"COMPLETED", "SUCCESS"}:
-            return False
-        outcome = str(check.get("conclusion") or check.get("state") or "").upper()
-        if outcome not in IDLE_PR_SUCCESSFUL_CONCLUSIONS:
+        if any(not _idle_check_row_green(row) for row in rows):
             return False
 
     return blocking_count > 0

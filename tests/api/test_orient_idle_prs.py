@@ -106,6 +106,63 @@ def test_one_head_approval_without_review_decision_is_not_eligible():
     assert api_main._eligible_idle_pr(pr, now=NOW) is None
 
 
+def _gate_run(conclusion: str, started_at: datetime, workflow: str | None) -> dict[str, str]:
+    row = {
+        "name": "CI Gate",
+        "status": "COMPLETED",
+        "conclusion": conclusion,
+        "startedAt": _iso(started_at),
+    }
+    if workflow is not None:
+        row["workflowName"] = workflow
+    return row
+
+
+def test_cross_workflow_failure_is_not_hidden_by_a_later_success():
+    pr = _pr(
+        110,
+        updated_at=NOW - timedelta(hours=2),
+        statusCheckRollup=[
+            _gate_run("FAILURE", NOW - timedelta(hours=2), "CI"),
+            _gate_run("SUCCESS", NOW - timedelta(hours=1), "Nightly"),
+        ],
+    )
+    assert api_main._idle_pr_checks_green(pr) is False
+
+
+def test_timestamp_tie_failure_is_not_hidden_by_list_order():
+    pr = _pr(
+        111,
+        updated_at=NOW - timedelta(hours=2),
+        statusCheckRollup=[
+            _gate_run("FAILURE", NOW - timedelta(hours=1), "CI"),
+            _gate_run("SUCCESS", NOW - timedelta(hours=1), "CI"),
+        ],
+    )
+    assert api_main._idle_pr_checks_green(pr) is False
+
+
+def test_named_check_without_workflow_keeps_a_red_row():
+    pr = _pr(
+        112,
+        updated_at=NOW - timedelta(hours=2),
+        statusCheckRollup=[
+            _gate_run("FAILURE", NOW - timedelta(hours=2), None),
+            _gate_run("SUCCESS", NOW - timedelta(hours=1), None),
+        ],
+    )
+    assert api_main._idle_pr_checks_green(pr) is False
+
+
+def test_8264_rollup_stays_green_for_idle_eligibility():
+    import json
+    from pathlib import Path
+
+    fixture = Path(__file__).resolve().parents[1] / "fixtures" / "work" / "pr_8264_status_check_rollup.json"
+    pr = _pr(113, updated_at=NOW - timedelta(hours=2), statusCheckRollup=json.loads(fixture.read_text()))
+    assert api_main._idle_pr_checks_green(pr) is True
+
+
 def test_latest_red_check_blocks_an_old_green_run():
     pr = _pr(
         106,

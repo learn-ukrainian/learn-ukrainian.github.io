@@ -825,3 +825,51 @@ def test_latest_cancelled_required_check_still_fails():
     assert ok is False
     assert waiting is False
     assert failed == ["CI Gate"]
+
+
+def _gate(conclusion: str, started_at: str, workflow: str | None) -> dict:
+    row = {
+        "name": "CI Gate",
+        "conclusion": conclusion,
+        "status": "COMPLETED",
+        "startedAt": started_at,
+    }
+    if workflow is not None:
+        row["workflowName"] = workflow
+    return row
+
+
+def test_cross_workflow_failure_is_not_hidden_by_a_later_success():
+    rollup = [
+        _gate("FAILURE", "2026-09-19T02:49:59Z", "CI"),
+        _gate("SUCCESS", "2026-09-19T03:05:20Z", "Nightly"),
+    ]
+    checks = task_closeout.project_closeout_checks(rollup)
+    ok, waiting, failed = task_lifecycle._checks_status(["CI Gate"], checks)
+    assert ok is False
+    assert waiting is False
+    assert failed == ["CI Gate"]
+
+
+def test_timestamp_tie_failure_is_not_hidden_by_list_order():
+    rollup = [
+        _gate("FAILURE", "2026-09-19T03:05:20Z", "CI"),
+        _gate("SUCCESS", "2026-09-19T03:05:20Z", "CI"),
+    ]
+    checks = task_closeout.project_closeout_checks(rollup)
+    ok, waiting, failed = task_lifecycle._checks_status(["CI Gate"], checks)
+    assert ok is False
+    assert waiting is False
+    assert failed == ["CI Gate"]
+
+
+def test_named_check_without_workflow_keeps_a_red_row():
+    rollup = [
+        _gate("FAILURE", "2026-09-19T02:49:59Z", None),
+        _gate("SUCCESS", "2026-09-19T03:05:20Z", None),
+    ]
+    checks = task_closeout.project_closeout_checks(rollup)
+    ok, waiting, failed = task_lifecycle._checks_status(["CI Gate"], checks)
+    assert ok is False
+    assert waiting is False
+    assert failed == ["CI Gate"]
