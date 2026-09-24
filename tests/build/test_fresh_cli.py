@@ -15,6 +15,7 @@ import pytest
 import yaml
 
 from scripts.build.fresh.cli import _build_parser, main
+from scripts.build.fresh.path_guard import checked_path
 from scripts.curriculum.evidence import lesson_lock, lock
 
 pytestmark = pytest.mark.reads_content
@@ -346,7 +347,7 @@ def test_cli_recap_fails_closed_when_built_lesson_missing(tmp_path, capsys):
     _build_synthetic_tree(tmp_path)
     output_prompt = tmp_path / "rendered_recap.md"
 
-    # Lesson 2 is recap, but lesson-1.draft.yaml does not exist
+    # Lesson 2 is recap, but lesson 1 has no built MDX, passing gates, or current manifest.
     code = main(
         [
             "render-prompt",
@@ -364,7 +365,8 @@ def test_cli_recap_fails_closed_when_built_lesson_missing(tmp_path, capsys):
     assert code == 1
 
     captured = capsys.readouterr()
-    assert "Built lesson 1 is missing" in captured.err
+    assert "recap_inputs_not_built: lesson 1" in captured.err
+    assert not output_prompt.exists()
 
 
 def test_cli_write_fails_preflight_writes_gap_report_atomically(tmp_path, capsys):
@@ -481,17 +483,17 @@ def test_cli_recap_render_prompt_and_write(tmp_path, capsys):
     state_dir = paths["state_dir"] / "synthetic-mod"
     state_dir.mkdir(parents=True, exist_ok=True)
 
-    # Write built lesson 1 draft with its lock sidecar (verifies lock.require)
-    l1_draft = state_dir / "lesson-1.draft.yaml"
-    l1_content = yaml.safe_dump(
-        {
-            "draft_schema": 1,
-            "lesson": {"module": "a1/synthetic-mod", "n": 1},
-            "status": "ok",
-            "steps": [{"id": "s1", "blocks": [{"kind": "example", "ref": "EX-001"}]}],
-        }
+    # Settlement 11 requires the real built page, passing gates, and a current manifest.
+    page = tmp_path / "site/src/content/docs/a1/synthetic-mod/1.mdx"
+    page.parent.mkdir(parents=True)
+    page.write_text("# Built lesson 1\n\nReal recap source.\n", encoding="utf-8")
+    (state_dir / "lesson-1.gates.yaml").write_text("passed: true\n", encoding="utf-8")
+    manifest = state_dir / "lesson-1.manifest.yaml"
+    manifest.write_text(yaml.safe_dump({"inputs": {"lesson": {"sha256": hashlib.sha256(page.read_bytes()).hexdigest()}}}),
+                        encoding="utf-8")
+    (state_dir / "lesson-1.manifest.sha256").write_text(
+        hashlib.sha256(manifest.read_bytes()).hexdigest() + "\n", encoding="ascii"
     )
-    lock.write(l1_draft, l1_content.encode("utf-8"))
 
     # 1. render-prompt on lesson 2 (which is kind: recap in plan)
     output_prompt = tmp_path / "recap_prompt.md"
@@ -511,7 +513,7 @@ def test_cli_recap_render_prompt_and_write(tmp_path, capsys):
     assert code == 0
     assert output_prompt.is_file()
     prompt_text = output_prompt.read_text(encoding="utf-8")
-    assert "Lesson 1" in prompt_text or "lesson-1" in prompt_text
+    assert "Built lesson 1" in prompt_text
 
     # 2. write on lesson 2 (kind: recap) reaches fake seat with recap prompt rendered
     valid_draft_template = yaml.safe_load(
@@ -606,3 +608,78 @@ def test_cli_recap_flag_disagreement_fails(tmp_path, capsys):
     assert code2 == 1
     captured2 = capsys.readouterr()
     assert "disagrees with plan lesson kind" in captured2.err
+
+
+@pytest.mark.parametrize("slug", ["../../plans/x", "nested/module", "/tmp/absolute"])
+@pytest.mark.parametrize(
+    "command,extra",
+    [
+        ("render-prompt", ["--lesson", "1"]),
+        ("preflight", ["--lesson", "1"]),
+        ("write", ["--lesson", "1", "--writer", "agy"]),
+        ("assemble", ["--lesson", "1"]),
+        ("build", ["--module"]),
+        ("closure", []),
+    ],
+)
+def test_cli_rejects_invalid_slug_before_read(tmp_path, capsys, slug, command, extra):
+    with patch("scripts.build.fresh.cli._load_lesson_data", side_effect=AssertionError("read attempted")):
+        assert main([command, "a1", slug, *extra, "--repo-root", str(tmp_path)]) == 1
+    assert "invalid_slug" in capsys.readouterr().err
+
+
+def test_cli_rejects_symlinked_level_before_read(tmp_path, capsys):
+    lesson_plans = tmp_path / "curriculum/l2-uk-en/lesson-plans"
+    forbidden = tmp_path / "curriculum/l2-uk-en/plans"
+    lesson_plans.mkdir(parents=True)
+    forbidden.mkdir(parents=True)
+    (lesson_plans / "a1").symlink_to(forbidden, target_is_directory=True)
+    with patch("scripts.build.fresh.cli._load_lesson_data", side_effect=AssertionError("read attempted")):
+        assert main(["render-prompt", "a1", "safe-slug", "--lesson", "1", "--repo-root", str(tmp_path)]) == 1
+    assert "path_outside_allowed_root" in capsys.readouterr().err
+
+
+def test_path_guard_rejects_symlinked_sidecar_and_schema(tmp_path):
+    forbidden = tmp_path / "curriculum/l2-uk-en/plans"
+    forbidden.mkdir(parents=True)
+    target = forbidden / "secret.yaml"
+    target.write_text("forbidden", encoding="utf-8")
+    evidence = tmp_path / "curriculum/l2-uk-en/evidence/a1"
+    evidence.mkdir(parents=True)
+    (evidence / "safe-slug.yaml.lock").symlink_to(target)
+    with pytest.raises(ValueError, match="path_outside_allowed_root"):
+        checked_path(tmp_path, "curriculum/l2-uk-en/evidence/a1/safe-slug.yaml.lock",
+                     "curriculum/l2-uk-en/evidence")
+    schemas = tmp_path / "schemas"
+    schemas.mkdir()
+    (schemas / "fresh-lesson-gates-v1.schema.json").symlink_to(target)
+    with pytest.raises(ValueError, match="path_outside_allowed_root"):
+        checked_path(tmp_path, "schemas/fresh-lesson-gates-v1.schema.json", "schemas")
+
+
+def test_cli_rejects_symlinked_pack_sidecar_before_read(tmp_path, capsys):
+    tree = _build_synthetic_tree(tmp_path)
+    forbidden = tmp_path / "curriculum/l2-uk-en/plans"
+    forbidden.mkdir(parents=True)
+    secret = forbidden / "private.lock"
+    secret.write_text("private", encoding="utf-8")
+    sidecar = Path(f"{tree['pack']}.lock")
+    sidecar.unlink()
+    sidecar.symlink_to(secret)
+    with patch("scripts.build.fresh.cli._load_lesson_data", side_effect=AssertionError("read attempted")):
+        assert main(["render-prompt", "a1", "synthetic-mod", "--lesson", "1",
+                     "--repo-root", str(tmp_path)]) == 1
+    assert "path_outside_allowed_root" in capsys.readouterr().err
+
+
+def test_cli_rejects_symlinked_draft_before_assemble(tmp_path, capsys):
+    state = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/safe-slug"
+    state.mkdir(parents=True)
+    forbidden = tmp_path / "curriculum/l2-uk-en/plans"
+    forbidden.mkdir(parents=True)
+    target = forbidden / "secret.yaml"
+    target.write_text("private", encoding="utf-8")
+    (state / "lesson-1.draft.yaml").symlink_to(target)
+    with patch("scripts.build.fresh.assemble.assemble_lesson", side_effect=AssertionError("read attempted")):
+        assert main(["assemble", "a1", "safe-slug", "--lesson", "1", "--repo-root", str(tmp_path)]) == 1
+    assert "path_outside_allowed_root" in capsys.readouterr().err

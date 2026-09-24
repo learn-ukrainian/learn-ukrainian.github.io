@@ -104,6 +104,11 @@ def style_card_info(level: str, cards_dir: Path | None = None) -> tuple[Path, st
     card_base = BAND_CARD_MAP.get(lvl, "b1plus")
     card_path = root / f"{card_base}.md"
     sidecar_path = root / f"{card_base}.sha256"
+    if root.name == "style-cards" and root.parent.name == "docs":
+        from scripts.build.fresh.path_guard import checked_existing_path
+
+        card_path = checked_existing_path(root.parent.parent, card_path, "docs/style-cards")
+        sidecar_path = checked_existing_path(root.parent.parent, sidecar_path, "docs/style-cards")
 
     if not card_path.is_file():
         raise FileNotFoundError(f"style card not found: {card_path}")

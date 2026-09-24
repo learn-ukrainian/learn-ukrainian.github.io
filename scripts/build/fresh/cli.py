@@ -22,6 +22,7 @@ import yaml
 
 from scripts.build.fresh.draft_schema import LEVELS
 from scripts.build.fresh.immersion import compute_immersion_payload
+from scripts.build.fresh.path_guard import checked_existing_path, checked_path, validate_module
 from scripts.build.fresh.preflight import preflight_lesson
 from scripts.build.fresh.prompt import (
     check_rendered_prompt,
@@ -59,7 +60,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.build.fresh.cli",
         description=(
-            "Fresh build engine — prompts, preflight, writer dispatch, and ordered builds.\n"
+            "Fresh build engine E2 — prompts, preflight, writer dispatch, and ordered builds.\n"
             "Use to render prompts, run preflights, write drafts, build lessons or modules, and recompute closure."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -316,11 +317,27 @@ def _build_parser() -> argparse.ArgumentParser:
 
     p_closure = subparsers.add_parser(
         "closure", help="Recompute stale lesson manifest dependencies",
-        description="Recompute module dependency closure from all immutable lesson manifests.",
+        description=(
+            "Recompute module dependency closure from immutable lesson manifests.\n"
+            "Use after building lessons to find stale upstream dependencies before review."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.build.fresh closure a1 sounds-letters-and-hello\n\n"
+            "Outputs:\n"
+            "  Writes module.closure.yaml under evidence/<level>/_state/<slug>/.\n\n"
+            "Exit codes:\n"
+            "  0: Closure recomputed successfully\n"
+            "  1: Input or path validation failed\n\n"
+            "Related:\n"
+            "  scripts/build/fresh/closure.py, fresh module build issue #8397"
+        ),
     )
-    p_closure.add_argument("level", choices=LEVELS, help="Curriculum level")
-    p_closure.add_argument("slug", help="Module slug")
-    p_closure.add_argument("--repo-root", type=Path, default=None, help="Repository root directory")
+    p_closure.add_argument("level", choices=LEVELS, help="Curriculum level (a1, a2, b1, or b2)")
+    p_closure.add_argument("slug", help="Module slug, e.g. sounds-letters-and-hello")
+    p_closure.add_argument("--repo-root", type=Path, default=None,
+                           help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)")
 
     return parser
 
@@ -346,6 +363,13 @@ def _load_lesson_data(
         evidence_dir=evidence_dir,
         repo_root=root,
     )
+    plan_root = Path("curriculum/l2-uk-en/lesson-plans")
+    evidence_root = Path("curriculum/l2-uk-en/evidence")
+    for name in ("plan", "pack", "words", "registry", "lock", "state_dir"):
+        allowed = plan_root if name == "plan" else evidence_root
+        paths[name] = checked_existing_path(root, paths[name], allowed)
+    for name in ("pack", "words", "registry"):
+        checked_existing_path(root, Path(f"{paths[name]}.lock"), evidence_root)
 
     # 1. Load plan via scripts.curriculum.validate.loader (Finding 1)
     if not paths["plan"].is_file():
@@ -461,13 +485,17 @@ def _load_recap_built_lessons(
 ) -> list[dict[str, Any]]:
     """Load built lessons 1..N-1 from real files; fail closed and name missing built lesson (#8431, Finding 1)."""
     built: list[dict[str, Any]] = []
-    module_state_dir = state_dir / slug
+    module_state_dir = checked_existing_path(repo_root, state_dir / slug, "curriculum/l2-uk-en/evidence")
 
     for prior_n in range(1, lesson_n):
-        found = repo_root / "site/src/content/docs" / level / slug / f"{prior_n}.mdx"
-        gates = module_state_dir / f"lesson-{prior_n}.gates.yaml"
-        manifest = module_state_dir / f"lesson-{prior_n}.manifest.yaml"
-        sidecar = module_state_dir / f"lesson-{prior_n}.manifest.sha256"
+        found = checked_path(repo_root, Path("site/src/content/docs") / level / slug / f"{prior_n}.mdx",
+                             "site/src/content/docs")
+        gates = checked_existing_path(repo_root, module_state_dir / f"lesson-{prior_n}.gates.yaml",
+                                      "curriculum/l2-uk-en/evidence")
+        manifest = checked_existing_path(repo_root, module_state_dir / f"lesson-{prior_n}.manifest.yaml",
+                                         "curriculum/l2-uk-en/evidence")
+        sidecar = checked_existing_path(repo_root, module_state_dir / f"lesson-{prior_n}.manifest.sha256",
+                                        "curriculum/l2-uk-en/evidence")
         try:
             gate_doc = yaml.safe_load(gates.read_text(encoding="utf-8")) if gates.is_file() else None
             manifest_doc = yaml.safe_load(manifest.read_text(encoding="utf-8")) if manifest.is_file() else None
@@ -492,6 +520,36 @@ def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
     repo_root = _resolve_repo_root(args)
+    try:
+        validate_module(args.level, args.slug)
+        plan_root = Path("curriculum/l2-uk-en/lesson-plans")
+        evidence_root = Path("curriculum/l2-uk-en/evidence")
+        plan = plan_root / args.level / f"{args.slug}.yaml"
+        evidence = evidence_root / args.level
+        pack = evidence / f"{args.slug}.yaml"
+        words = evidence / "_words.yaml"
+        registry = evidence / "_words.registry.yaml"
+        state = evidence / "_state" / args.slug
+        for rel, allowed in (
+            (plan_root / args.level, plan_root), (plan, plan_root),
+            (evidence, evidence_root), (pack, evidence_root), (words, evidence_root),
+            (registry, evidence_root), (state, evidence_root),
+            (state / "lessons.lock.yaml", evidence_root),
+            *[(Path(f"{item}.lock"), evidence_root) for item in (pack, words, registry)],
+        ):
+            checked_path(repo_root, rel, allowed)
+        checked_path(repo_root, "docs/style-cards", "docs/style-cards")
+        checked_path(repo_root, Path("site/src/content/docs") / args.level / args.slug,
+                     "site/src/content/docs")
+        for option in ("output", "output_dir", "site_dir", "gap_report", "fake_seat"):
+            value = getattr(args, option, None)
+            if value is not None:
+                setattr(args, option, checked_existing_path(
+                    repo_root, value if value.is_absolute() else repo_root / value, "."
+                ))
+    except ValueError as err:
+        print(f"{err}", file=sys.stderr)
+        return 1
     cards_dir = (repo_root / "docs" / "style-cards") if (repo_root / "docs" / "style-cards").is_dir() else None
 
     if args.command == "build":
@@ -800,6 +858,16 @@ def main(argv: list[str] | None = None) -> int:
     elif args.command == "assemble":
         from scripts.build.fresh.assemble import assemble_lesson
 
+        try:
+            state = args.output_dir or (repo_root / "curriculum/l2-uk-en/evidence" / args.level / "_state" / args.slug)
+            checked_existing_path(repo_root, state / f"lesson-{args.lesson}.draft.yaml", "." if args.output_dir
+                                  else "curriculum/l2-uk-en/evidence")
+            checked_existing_path(repo_root,
+                                  (args.site_dir or repo_root / "site/src/content/docs" / args.level / args.slug)
+                                  / f"{args.lesson}.mdx", "." if args.site_dir else "site/src/content/docs")
+        except ValueError as err:
+            print(f"{err}", file=sys.stderr)
+            return 1
         res = assemble_lesson(
             level=args.level,
             slug=args.slug,

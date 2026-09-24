@@ -11,6 +11,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import planned_state
 
@@ -44,6 +45,9 @@ def unlink_current(state_dir: Path, n: int) -> None:
 
 
 def _input(path: Path, repo_root: Path) -> dict[str, str]:
+    relative = path.relative_to(repo_root.resolve())
+    allowed = Path(*relative.parts[:3]) if relative.parts[:2] == ("curriculum", "l2-uk-en") else relative.parts[0]
+    path = checked_existing_path(repo_root, path, allowed)
     if not path.is_file():
         raise FileNotFoundError(str(path))
     relative = path.resolve().relative_to(repo_root.resolve()).as_posix()
@@ -56,15 +60,14 @@ def _activity_imports(mdx_path: Path, repo_root: Path) -> list[Path]:
     paths: set[Path] = set()
     for value in imports:
         if value.startswith("./") or value.startswith("../"):
-            target = (mdx_path.parent / value).resolve()
+            target = mdx_path.parent / value
         elif value.startswith("@site/"):
-            target = (repo_root / "site" / value.removeprefix("@site/")).resolve()
+            target = repo_root / "site" / value.removeprefix("@site/")
         elif value.startswith("/src/"):
-            target = (repo_root / "site" / value.lstrip("/")).resolve()
+            target = repo_root / "site" / value.lstrip("/")
         else:
             continue
-        if not target.is_relative_to(repo_root.resolve()):
-            raise ValueError(f"activity import outside repository: {value}")
+        target = checked_existing_path(repo_root, target, "site")
         if target.suffix.lower() in {".json", ".yaml", ".yml", ".csv"} or "data" in target.parts:
             paths.add(target)
     return sorted(paths)
@@ -83,13 +86,16 @@ def write_manifest(level: str, slug: str, n: int, *, lesson_kind: str, state_dir
     from scripts.build.fresh.prompt import BAND_CARD_MAP
 
     card_name = BAND_CARD_MAP.get(level.lower().split("-")[0], "b1plus")
-    card_path = root / "docs/style-cards" / f"{card_name}.md"
-    sidecar_path = root / "docs/style-cards" / f"{card_name}.sha256"
+    card_path = checked_existing_path(root, root / "docs/style-cards" / f"{card_name}.md",
+                                      "docs/style-cards")
+    sidecar_path = checked_existing_path(root, root / "docs/style-cards" / f"{card_name}.sha256",
+                                         "docs/style-cards")
     if not sidecar_path.is_file():
         raise ManifestInputError(sidecar_path, "style card sidecar missing", root)
     expected = sidecar_path.read_text(encoding="utf-8").strip().split()
     if not card_path.is_file() or not expected or expected[0] != sha256(card_path):
         raise ManifestInputError(sidecar_path, "style card sidecar mismatch", root)
+    lock_path = checked_existing_path(root, lock_path, "curriculum/l2-uk-en/evidence")
     lock_doc = yaml.safe_load(lock_path.read_text(encoding="utf-8"))
     entry = next((item for item in lock_doc["lessons"] if item["n"] == n), None)
     if not entry or not entry.get("entry_sha256"):
@@ -120,16 +126,21 @@ def write_manifest(level: str, slug: str, n: int, *, lesson_kind: str, state_dir
         "module_digest": None, "digest_generator_version": None,
         "upstream_lessons": upstream, "previous_attempt": None, "diff_sha256": None,
     }
-    Draft202012Validator(json.loads(SCHEMA.read_text(encoding="utf-8"))).validate(doc)
+    Draft202012Validator(json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(
+        encoding="utf-8"))).validate(doc)
     content = lock.yaml_bytes(doc)
     digest = hashlib.sha256(content).hexdigest()
-    history = state_dir / "manifests" / f"lesson-{n}" / f"{digest}.yaml"
+    history = checked_existing_path(root, state_dir / "manifests" / f"lesson-{n}" / f"{digest}.yaml",
+                                    "curriculum/l2-uk-en/evidence")
     if history.exists():
         if history.read_bytes() != content:
             raise ValueError(f"content-addressed manifest collision: {history}")
     else:
         lock.atomic_write(history, content)
     current, sidecar, error = current_paths(state_dir, n)
+    current = checked_existing_path(root, current, "curriculum/l2-uk-en/evidence")
+    sidecar = checked_existing_path(root, sidecar, "curriculum/l2-uk-en/evidence")
+    error = checked_existing_path(root, error, "curriculum/l2-uk-en/evidence")
     lock.atomic_write(current, content)
     lock.atomic_write(sidecar, f"{digest}\n".encode("ascii"))
     error.unlink(missing_ok=True)

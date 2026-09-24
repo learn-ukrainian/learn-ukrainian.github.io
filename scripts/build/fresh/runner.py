@@ -20,6 +20,7 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh.assemble import check_5_assembly, check_9_stress_and_render, check_11_render
 from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
+from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
 from scripts.build.fresh.writer import strip_markdown_fence
 from scripts.curriculum.evidence import lock
@@ -336,7 +337,8 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
         rows.sort(key=lambda prior: prior["check"])
         doc = {"level": level, "slug": slug, "n": n,
                "passed": all(r["status"] != "failed" for r in rows), "checks": rows}
-        Draft202012Validator(json.loads(SCHEMA.read_text(encoding="utf-8"))).validate(doc)
+        Draft202012Validator(json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(
+            encoding="utf-8"))).validate(doc)
         lock.write(gate_path, lock.yaml_bytes(doc))
         bad = next((r for r in rows if r["status"] == "failed"), None)
         if bad is not None:

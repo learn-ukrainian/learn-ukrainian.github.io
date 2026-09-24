@@ -23,6 +23,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lesson_lock, lock
 from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_band
@@ -68,7 +69,7 @@ class AssemblerError(Exception):
 def get_expanded_validator(schema_path: Path | None = None) -> Draft202012Validator:
     global _CACHED_EXPANDED_VALIDATOR
     if _CACHED_EXPANDED_VALIDATOR is None:
-        path = schema_path or EXPANDED_SCHEMA_PATH
+        path = schema_path or checked_existing_path(REPO_ROOT, EXPANDED_SCHEMA_PATH, "schemas")
         schema = json.loads(path.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
         _CACHED_EXPANDED_VALIDATOR = Draft202012Validator(schema)

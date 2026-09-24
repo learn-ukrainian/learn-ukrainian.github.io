@@ -10,6 +10,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lock
 
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-regeneration-ledger-v1.schema.json"
@@ -17,7 +18,7 @@ INPUT_KEYS = ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_s
 
 
 def _validate(doc: dict[str, Any]) -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    schema = json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(doc)
 
 

@@ -14,6 +14,7 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh.closure import compute_closure
 from scripts.build.fresh.immersion import compute_immersion_payload
 from scripts.build.fresh.manifest import unlink_current
+from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.build.fresh.preflight import preflight_lesson
 from scripts.build.fresh.prompt import BAND_CARD_MAP, check_rendered_prompt, render_lesson_prompt, render_recap_prompt
 from scripts.build.fresh.regeneration import load_ledger
@@ -54,7 +55,7 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
     )
 
     plan, _, _, _, paths = _load_lesson_data(level, slug, lesson_n or 1, repo_root=repo_root)
-    state_dir = paths["state_dir"] / slug
+    state_dir = checked_existing_path(repo_root, paths["state_dir"] / slug, "curriculum/l2-uk-en/evidence")
     state_dir.mkdir(parents=True, exist_ok=True)
     lessons = list(plan["lessons"])
     if lesson_n is not None:
@@ -72,7 +73,8 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                                     plans_dir=paths["plan"].parent, evidence_dir=paths["words"].parent)
             expected = _compute_input_hashes(paths, n, learner)
             card_name = BAND_CARD_MAP.get(level.lower().split("-")[0], "b1plus")
-            card_path = repo_root / "docs/style-cards" / f"{card_name}.md"
+            card_path = checked_existing_path(repo_root, repo_root / "docs/style-cards" / f"{card_name}.md",
+                                              "docs/style-cards")
             card_sha = hashlib.sha256(card_path.read_bytes()).hexdigest()
             expected["style_card_sha256"] = card_sha
             built = (_load_recap_built_lessons(paths["state_dir"], level, slug, n, repo_root)
@@ -91,14 +93,18 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                                              is_recap=entry.get("kind") == "recap", built_lessons=built)
             if not checked.passed:
                 raise ValueError(f"rendered_prompt_invalid: {checked.errors}")
-            prompt_path = state_dir / f"lesson-{n}.prompt.md"
+            prompt_path = checked_existing_path(repo_root, state_dir / f"lesson-{n}.prompt.md",
+                                                "curriculum/l2-uk-en/evidence")
             prompt_bytes = prompt.encode("utf-8")
             lock.atomic_write(prompt_path, prompt_bytes)
             prompt_sha = hashlib.sha256(prompt_bytes).hexdigest()
-            lock.atomic_write(state_dir / f"lesson-{n}.prompt.sha256", f"{prompt_sha}\n".encode("ascii"))
+            lock.atomic_write(checked_existing_path(repo_root, state_dir / f"lesson-{n}.prompt.sha256",
+                                                    "curriculum/l2-uk-en/evidence"), f"{prompt_sha}\n".encode("ascii"))
             expected["prompt_sha256"] = prompt_sha
-            draft_path = state_dir / f"lesson-{n}.draft.yaml"
-            ledger_path = state_dir / f"lesson-{n}.regeneration.yaml"
+            draft_path = checked_existing_path(repo_root, state_dir / f"lesson-{n}.draft.yaml",
+                                               "curriculum/l2-uk-en/evidence")
+            ledger_path = checked_existing_path(repo_root, state_dir / f"lesson-{n}.regeneration.yaml",
+                                                "curriculum/l2-uk-en/evidence")
             ledger = load_ledger(ledger_path, slug, n)
             current = {"plan_sha256": expected["plan_sha256"], "pack_lock": expected["pack_lock"],
                        "words_lock": expected["words_lock"], "card_sha256": card_sha,
@@ -137,7 +143,9 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                 report = runner(level, slug, n, draft=draft, plan=plan, pack=pack, words=words,
                                 state_dir=state_dir, repo_root=repo_root, plans_dir=paths["plan"].parent,
                                 evidence_dir=paths["words"].parent, question_seat=question_seat,
-                                site_dir=repo_root / "site/src/content/docs" / level / slug,
+                                site_dir=checked_existing_path(repo_root,
+                                                               repo_root / "site/src/content/docs" / level / slug,
+                                                               "site/src/content/docs"),
                                 expected_inputs=expected, **(runner_kwargs or {}))
                 ledger = load_ledger(ledger_path, slug, n)
                 if report["passed"] and report.get("manifest_sha256"):
@@ -167,8 +175,10 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
               "lessons": [{key: row[key] for key in ("n", "passed", "passed_through", "manifest_sha256",
                                                     "stopping_check", "reason", "regenerations", "terminal_layer", "layer")}
                           for row in results]}
-    Draft202012Validator(json.loads(SCHEMA.read_text(encoding="utf-8"))).validate(report)
-    lock.atomic_write(state_dir / "module.build.yaml", lock.yaml_bytes(report))
+    Draft202012Validator(json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(
+        encoding="utf-8"))).validate(report)
+    lock.atomic_write(checked_existing_path(repo_root, state_dir / "module.build.yaml",
+                                            "curriculum/l2-uk-en/evidence"), lock.yaml_bytes(report))
     if lesson_n is None:
         compute_closure(level, slug, list(plan["lessons"]), repo_root=repo_root, state_dir=state_dir)
     return report
