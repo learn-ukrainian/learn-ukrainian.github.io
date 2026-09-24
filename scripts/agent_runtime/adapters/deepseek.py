@@ -1,13 +1,18 @@
-"""DeepSeekAdapter — wraps opencode CLI for first-party DeepSeek (deepseek-direct).
+"""DeepSeekAdapter — wraps opencode CLI for first-party DeepSeek (deepseek).
 
 Operator 2026-08-13: DeepSeek dispatch routes through OpenCode to first-party
-``api.deepseek.com`` (``deepseek-direct/<model>``) with ``--variant high`` by
-default, replacing the Hermes dispatch default so runs get native Entire
-capture. ``deepseek-v4-flash`` is the default; ``deepseek-v4-pro`` is reachable
-via an explicit ``--model deepseek-v4-pro`` for hard implement tasks (complex
-multi-file, hard lookup) per the 2026-08-13 operator GO (canary #6703) — Pro is
-not the default and stays off the routine review ladder. The Hermes adapter
-(``hermes_deepseek.py``) stays available for ``ask-hermes`` only.
+``api.deepseek.com`` with ``--variant high`` by default, replacing the Hermes
+dispatch default so runs get native Entire capture. ``deepseek-v4-flash`` is
+the default; ``deepseek-v4-pro`` is reachable via an explicit ``--model
+deepseek-v4-pro`` for hard implement tasks (complex multi-file, hard lookup)
+per the 2026-08-13 operator GO (canary #6703) — Pro is not the default and
+stays off the routine review ladder. The Hermes adapter (``hermes_deepseek.py``)
+stays available for ``ask-hermes`` only.
+
+2026-09-24 (#8514): the opencode first-party provider id is ``deepseek``
+(models: ``deepseek-flash``, ``deepseek-v4-pro``); the original
+``deepseek-direct/*`` pin resolves to ``ProviderModelNotFoundError`` on
+opencode 1.18.x and failed every dispatch at start.
 
 LOCAL-ONLY: prompt data egresses to China — forbidden in CI (same guard as
 the Hermes route, via ``scripts.agent_runtime.routes``).
@@ -33,9 +38,11 @@ _logger = logging.getLogger(__name__)
 
 # Bare catalog model id → first-party opencode provider route. Flash is the
 # dispatch default; Pro stays reachable only via an explicit --model override.
-_OPENCODE_MODEL_ROUTES: dict[str, str] = {
-    "deepseek-v4-flash": "deepseek-direct/deepseek-v4-flash",
-    "deepseek-v4-pro": "deepseek-direct/deepseek-v4-pro",
+# Provider id ``deepseek`` is opencode's first-party api.deepseek.com provider
+# (#8514: ``deepseek-direct`` does not exist on opencode 1.18.x).
+DEEPSEEK_OPENCODE_MODEL_ROUTES: dict[str, str] = {
+    "deepseek-v4-flash": "deepseek/deepseek-flash",
+    "deepseek-v4-pro": "deepseek/deepseek-v4-pro",
 }
 
 _RATE_LIMIT_RE = re.compile(
@@ -74,9 +81,9 @@ class DeepSeekAdapter:
     """Adapter for the opencode CLI with first-party DeepSeek v4."""
 
     name: str = "deepseek"
-    # Fleet MODEL identity (bare catalog id). The deepseek-direct provider pin
+    # Fleet MODEL identity (bare catalog id). The ``deepseek`` provider pin
     # is an opencode INVOCATION detail — applied in build_invocation via
-    # _OPENCODE_MODEL_ROUTES, not stored as identity.
+    # DEEPSEEK_OPENCODE_MODEL_ROUTES, not stored as identity.
     default_model: str = "deepseek-v4-flash"
     # Operator 2026-08-13: omitted effort defaults to high (--variant high);
     # an explicit --effort always wins.
@@ -117,18 +124,18 @@ class DeepSeekAdapter:
         # "deepseek-v4-flash" would leave provider resolution to opencode and
         # can land off the api.deepseek.com account. Explicit provider-prefixed
         # ids pass through untouched.
-        invocation_model = _OPENCODE_MODEL_ROUTES.get(target_model, target_model)
+        invocation_model = DEEPSEEK_OPENCODE_MODEL_ROUTES.get(target_model, target_model)
 
-        if is_deepseek_first_party_forbidden_in_ci("deepseek-direct", invocation_model):
+        if is_deepseek_first_party_forbidden_in_ci("deepseek", invocation_model):
             raise ValueError(
                 deepseek_first_party_error(
-                    provider="deepseek-direct",
+                    provider="deepseek",
                     model=invocation_model,
                     source="opencode deepseek adapter",
                 )
             )
 
-        cmd: list[str] = [binary, "run", "--model", invocation_model]
+        cmd: list[str] = [binary, "run", "--model", invocation_model, "--format", "json"]
 
         if mode in ("workspace-write", "danger"):
             cmd.append("--auto")
@@ -169,12 +176,18 @@ class DeepSeekAdapter:
     ) -> ParseResult:
         _ = (output_file, call_start_time)
         rate_limited = bool(_RATE_LIMIT_RE.search(f"{stderr or ''}\n{stdout or ''}"))
-        text = _extract_text_from_stdout(stdout)
 
         try:
-            from scripts.ai_agent_bridge._opencode import read_opencode_turn_status
+            from scripts.ai_agent_bridge._opencode import _parse_opencode_stream, read_opencode_turn_status
         except ModuleNotFoundError:  # pragma: no cover - direct-script runs with only scripts/ on sys.path
-            from ai_agent_bridge._opencode import read_opencode_turn_status
+            from ai_agent_bridge._opencode import _parse_opencode_stream, read_opencode_turn_status
+
+        # Invocation pins --format json: stdout is an NDJSON event stream, so
+        # the reply is the LAST assistant text part (#8514 — under the runner's
+        # PTY, opencode 1.18.x writes the whole formatted transcript to stderr
+        # and leaves stdout empty; the plain-text extraction below only serves
+        # legacy/non-JSON output).
+        text = _extract_text_from_stdout(_parse_opencode_stream(stdout).text)
 
         cwd = plan.cwd if plan is not None else None
         turn_status = read_opencode_turn_status(stdout, cwd=cwd)

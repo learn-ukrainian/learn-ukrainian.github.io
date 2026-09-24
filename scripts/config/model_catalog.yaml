@@ -1025,7 +1025,7 @@ review_candidates:
     transport: opencode
     # Hard implement only (complex multi-file, hard lookup) — not default, not a
     # routine review-ladder rung (operator GO 2026-08-13, canary #6703).
-    invocation: opencode run --model deepseek-direct/deepseek-v4-pro --variant high
+    invocation: opencode run --model deepseek/deepseek-v4-pro --variant high
     review_profiles: [code, infra]
     capabilities: [code_review]
     requires_silence_timeout: true
@@ -1059,7 +1059,7 @@ review_candidates:
     model_id: deepseek-v4-flash
     route: deepseek
     transport: opencode
-    invocation: opencode run --model deepseek-direct/deepseek-v4-flash --variant high
+    invocation: opencode run --model deepseek/deepseek-flash --variant high
     review_profiles: [code, infra]
     capabilities: [code_review]
     domain_excluded_from: [folk_content]

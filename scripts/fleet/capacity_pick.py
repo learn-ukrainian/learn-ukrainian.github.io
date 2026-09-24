@@ -237,6 +237,11 @@ def build_lane_rows(
             account = (budget.get("api_accounts") or {}).get(lane) or {}
             status = api_lane_status_from_account(lane, account)
             info = {**info, "status": status, "probe_state": account.get("probe_state")}
+            # Prepaid balance probes stay green while the dispatch lane itself
+            # is down (e.g. opencode provider config loss, #8514) — carry the
+            # lane-health record so is_avoid_lane can demote it.
+            if isinstance(account.get("health"), dict):
+                info["health"] = account["health"]
             if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
                 info["eligible"] = False
         else:
@@ -260,6 +265,10 @@ def build_lane_rows(
             notes.append(f"reset reserve eligible ({reserve.get('remaining_resets')} remaining)")
         if avoid:
             notes.append("AVOID")
+            health_info = info.get("health") if isinstance(info.get("health"), dict) else {}
+            if health_info.get("healthy") is False:
+                last_error = str(health_info.get("last_error") or "").strip()
+                notes.append(f"unhealthy: {last_error}" if last_error else "unhealthy lane")
             if info.get("eligible") is False:
                 notes.append(str(info.get("health", {}).get("failure_code") or "ineligible"))
             if info.get("login_state") == "NEED_LOGIN" or info.get("probe_state") == "NEED_LOGIN":

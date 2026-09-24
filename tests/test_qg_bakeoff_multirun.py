@@ -229,10 +229,10 @@ def test_cell_artifact_path_round_trips_all_arms_and_mismatch_fails(tmp_path: Pa
         "openrouter-google-gemma-4-31b-it__vesnianky__bare__opencode__r3.json"
     )
     assert qg_bakeoff._cell_artifact_path(tmp_path, direct, fixture, qg_bakeoff.TOOLED_ARM).name == (
-        "deepseek-direct-deepseek-v4-flash__vesnianky.json"
+        "deepseek-deepseek-flash__vesnianky.json"
     )
     assert qg_bakeoff._cell_artifact_path(tmp_path, direct, fixture, qg_bakeoff.BARE_ARM, 3).name == (
-        "deepseek-direct-deepseek-v4-flash__vesnianky__bare__opencode__r3.json"
+        "deepseek-deepseek-flash__vesnianky__bare__opencode__r3.json"
     )
     assert qg_bakeoff._cell_artifact_path(tmp_path, subscription, fixture, qg_bakeoff.BARE_ARM, 2).name == (
         "gpt-6-astra__vesnianky__bare__runtime-codex__r2.json"

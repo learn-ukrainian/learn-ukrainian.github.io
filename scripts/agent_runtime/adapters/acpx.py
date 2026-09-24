@@ -91,6 +91,7 @@ from ..result import ParseResult
 from ..routes import deepseek_first_party_error, is_deepseek_first_party_forbidden_in_ci
 from .base import InvocationPlan
 from .cursor import _load_cursor_api_key_from_env_file
+from .deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES, DeepSeekAdapter
 from .glm import assert_glm_egress_allowed
 
 try:
@@ -173,8 +174,8 @@ GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
 # DeepSeek ACP seat (#6805): the bare catalog id remains fleet identity.
 # OpenCode's currently advertised first-party provider/model is the invocation
 # detail; the retired deepseek-direct provider alias is not advertised by ACP.
-DEEPSEEK_ACP_MODEL = "deepseek-v4-flash"
-DEEPSEEK_ACP_INVOCATION_MODEL = "deepseek/deepseek-flash"
+DEEPSEEK_ACP_MODEL = DeepSeekAdapter.default_model
+DEEPSEEK_ACP_INVOCATION_MODEL = DEEPSEEK_OPENCODE_MODEL_ROUTES[DEEPSEEK_ACP_MODEL]
 # $0 toolless Gemma seat (#6805): the canonical catalog id doubles as the
 # opencode invocation id on the Google AI Studio direct provider. Gemma has no
 # paid SKU on the Gemini API (pricing verified 2026-07-07) and runs toolless —

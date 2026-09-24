@@ -145,7 +145,7 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
     assert "https://arena.ai/leaderboard/code" in flash["sources"]
     assert candidate["transport"] == "opencode"
     assert candidate["invocation"].endswith(
-        "opencode run --model deepseek-direct/deepseek-v4-flash --variant high"
+        "opencode run --model deepseek/deepseek-flash --variant high"
     )
 
     practical = [rung[0] for rung in catalog["review_ladders"]["high"] if len(rung) == 1]
@@ -168,7 +168,7 @@ def test_deepseek_v4_flash_high_is_a_practical_code_seat_without_critical_priori
     pro_candidate = catalog["review_candidates"]["deepseek-v4-pro"]
     assert pro_candidate["transport"] == "opencode"
     assert pro_candidate["invocation"].endswith(
-        "opencode run --model deepseek-direct/deepseek-v4-pro --variant high"
+        "opencode run --model deepseek/deepseek-v4-pro --variant high"
     )
 
 

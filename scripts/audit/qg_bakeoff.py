@@ -33,6 +33,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.agent_runtime.adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
 from scripts.audit import llm_reviewer, llm_reviewer_dispatch, qg_factcheck_scoring, qg_schema
 from scripts.audit.qg_run_serializer import RUN_SCHEMA_VERSION, serialize_qg_run_v2
 from scripts.audit.runtime_tool_events import map_runtime_tool_calls
@@ -71,8 +72,8 @@ _ARM_CHOICES = (TOOLED_ARM, BARE_ARM, BOTH_ARM)
 OPENCODE_TRANSPORT = "opencode"
 OPENCODE_ENTRYPOINT = "qg_bakeoff_opencode"
 OPENCODE_MEASUREMENT_TIER = "opencode_bare_or_tooled"
-DEEPSEEK_DIRECT_FLASH_PIN = "deepseek-direct/deepseek-v4-flash"
-DEEPSEEK_DIRECT_PRO_PIN = "deepseek-direct/deepseek-v4-pro"
+DEEPSEEK_DIRECT_FLASH_PIN = DEEPSEEK_OPENCODE_MODEL_ROUTES["deepseek-v4-flash"]
+DEEPSEEK_DIRECT_PRO_PIN = DEEPSEEK_OPENCODE_MODEL_ROUTES["deepseek-v4-pro"]
 DEEPSEEK_DIRECT_PINS = (DEEPSEEK_DIRECT_FLASH_PIN, DEEPSEEK_DIRECT_PRO_PIN)
 DEEPSEEK_OPENROUTER_FLASH_PIN = "openrouter/deepseek/deepseek-v4-flash"
 DEEPSEEK_OPENROUTER_PRO_PIN = "openrouter/deepseek/deepseek-v4-pro"
@@ -2709,7 +2710,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         action="append",
         help=(
             "Comma-separated or repeated model pins. opencode provider/model pins "
-            "(including deepseek-direct/... and OpenRouter baselines) work for tooled/bare; "
+            "(including deepseek/... and OpenRouter baselines) work for tooled/bare; "
             "subscription native pins (claude-opus-4-8,gpt-6-astra,gemini-3.1-pro-high) are --arm bare only. "
             "LU_ROUTING_GUARD_OVERRIDE=1 is invalid for published scorecards."
         ),

@@ -240,7 +240,8 @@ def test_registry_lists_deepseek_with_opencode_adapter():
     """Registry dispatch default: OpenCode first-party adapter, Flash @ high.
 
     Operator 2026-08-13: dispatch routes through ``DeepSeekAdapter``
-    (opencode → deepseek-direct). The legacy ``hermes-deepseek`` seat stays
+    (opencode → deepseek first-party provider). The legacy ``hermes-deepseek``
+    seat stays
     registered for the ``_hermes.py`` review path; since the Hermes removal
     (operator order 2026-08-16) its invocations refuse at binary resolution
     with the documented opencode fallbacks (#6805).

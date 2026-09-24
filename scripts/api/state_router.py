@@ -1002,6 +1002,7 @@ def _api_lane_status_from_account(
 def _build_api_accounts_payload(
     *,
     fresh: bool = False,
+    health_records: dict[str, Any] | None = None,
 ) -> dict[str, dict[str, Any]]:
     refreshed: dict[str, dict[str, Any]] = {}
     if fresh:
@@ -1012,6 +1013,12 @@ def _build_api_accounts_payload(
             accounts[lane] = dict(refreshed[lane])
         else:
             accounts[lane] = dict(get_api_account_data(lane))
+        # API lanes live outside the subscription ``agents`` dict, so their
+        # lane-health record must be attached here or prepaid consumers
+        # (capacity_pick) never see spawn-phase failures (#8514).
+        accounts[lane]["health"] = (health_records or {}).get(
+            lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0, "last_error": None}
+        )
     return accounts
 
 
@@ -1091,7 +1098,7 @@ def _compute_dispatch_routing_budget(
         logging.getLogger("state_router").debug("Failed to compute lane health: %s", exc)
 
     in_flight_by_agent = _in_flight_by_agent(resolved_tasks_dir)
-    api_accounts = _build_api_accounts_payload(fresh=fresh_codexbar)
+    api_accounts = _build_api_accounts_payload(fresh=fresh_codexbar, health_records=health_records)
 
     # Empty config case: unknown statuses, suppressed rec (no confident pick from absent data)
     if not budgets:

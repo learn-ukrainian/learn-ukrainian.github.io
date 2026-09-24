@@ -12,6 +12,7 @@ from scripts.api.lane_health import (
     compute_lane_health,
     is_spawn_phase_failure,
     normalize_agent_name,
+    sanitize_error_excerpt,
 )
 from scripts.delegate import _resolve_agent_with_budget_guard
 
@@ -55,6 +56,7 @@ def _write_task(
     returncode: int | None,
     duration_s: float | None,
     started_at: datetime,
+    stderr_excerpt: str | None = None,
 ) -> None:
     task_file = tmp_path / f"{task_id}.json"
     data = {
@@ -65,7 +67,121 @@ def _write_task(
         "duration_s": duration_s,
         "started_at": started_at.isoformat().replace("+00:00", "Z"),
     }
+    if stderr_excerpt is not None:
+        data["stderr_excerpt"] = stderr_excerpt
     task_file.write_text(json.dumps(data), encoding="utf-8")
+
+
+def test_sanitize_error_excerpt():
+    assert sanitize_error_excerpt(None) is None
+    assert sanitize_error_excerpt(42) is None
+    assert sanitize_error_excerpt("   \n  ") is None
+    # ANSI color escapes (opencode's red Error banner) are stripped and
+    # whitespace collapsed to a single line (#8514).
+    raw = '\x1b[91m\x1b[1mError: \x1b[0m{\n  "name": "UnknownError",\n  "data": {"message": "Unexpected server error."}\n}'
+    assert (
+        sanitize_error_excerpt(raw)
+        == 'Error: { "name": "UnknownError", "data": {"message": "Unexpected server error."} }'
+    )
+    # Excerpts are capped so routing-budget payloads stay small.
+    long_raw = "x" * 500
+    assert len(sanitize_error_excerpt(long_raw)) == 200
+
+
+def test_compute_lane_health_carries_newest_error_text(tmp_path):
+    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
+    _write_task(
+        tmp_path,
+        "ds-1",
+        "deepseek",
+        "failed",
+        1,
+        16.0,
+        now - timedelta(minutes=30),
+        stderr_excerpt='\x1b[91mError:\x1b[0m {"name": "UnknownError", "ref": "err_old"}',
+    )
+    _write_task(
+        tmp_path,
+        "ds-2",
+        "deepseek",
+        "failed",
+        1,
+        11.0,
+        now - timedelta(minutes=5),
+        stderr_excerpt='\x1b[91mError:\x1b[0m {"name": "UnknownError", "ref": "err_new"}',
+    )
+
+    health = compute_lane_health(tmp_path, now=now)
+    record = health["deepseek"]
+    assert record["healthy"] is False
+    assert record["consecutive_failures"] == 2
+    # Newest streak failure wins; ANSI stripped; single line.
+    assert record["last_error"] == 'Error: {"name": "UnknownError", "ref": "err_new"}'
+
+
+def test_compute_lane_health_unhealthy_without_error_text(tmp_path):
+    # Edge case: spawn failures with no stderr_excerpt still mark the lane
+    # unhealthy; last_error degrades to None instead of breaking health.
+    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
+    _write_task(tmp_path, "ds-1", "deepseek", "failed", 1, 16.0, now - timedelta(minutes=30))
+    _write_task(tmp_path, "ds-2", "deepseek", "failed", 1, 11.0, now - timedelta(minutes=5))
+
+    health = compute_lane_health(tmp_path, now=now)
+    record = health["deepseek"]
+    assert record["healthy"] is False
+    assert record["consecutive_failures"] == 2
+    assert record["last_error"] is None
+
+
+def test_routing_budget_attaches_health_to_api_accounts(monkeypatch, tmp_path):
+    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
+
+    monkeypatch.setattr(state_router, "_load_agent_budgets", lambda budget_config_path=None, **_: ({}, []))
+    monkeypatch.setattr(
+        state_router, "compute_lane_health", lambda _tasks_dir, now=None: compute_lane_health(tmp_path, now=now)
+    )
+    monkeypatch.setattr(state_router, "load_cost_records", lambda **_kwargs: [])
+    monkeypatch.setattr(
+        state_router.delegate_api,
+        "list_delegate_tasks",
+        lambda **_kwargs: {"tasks": []},
+    )
+
+    _write_task(
+        tmp_path,
+        "ds-1",
+        "deepseek",
+        "failed",
+        1,
+        16.0,
+        now - timedelta(minutes=45),
+        stderr_excerpt="UnknownError Unexpected server error",
+    )
+    _write_task(
+        tmp_path,
+        "ds-2",
+        "deepseek",
+        "failed",
+        1,
+        11.0,
+        now - timedelta(minutes=15),
+        stderr_excerpt="UnknownError Unexpected server error",
+    )
+
+    budget = state_router.compute_routing_budget(
+        now,
+        tasks_dir=tmp_path,
+        project_root=tmp_path,
+        curriculum_root=tmp_path,
+        batch_state_dir=tmp_path,
+    )
+
+    # API lanes are not in the subscription ``agents`` dict — their health must
+    # ride the api_accounts payload so capacity_pick can demote them (#8514).
+    account = budget["api_accounts"]["deepseek"]
+    assert account["health"]["healthy"] is False
+    assert account["health"]["consecutive_failures"] == 2
+    assert account["health"]["last_error"] == "UnknownError Unexpected server error"
 
 
 def test_compute_lane_health_consecutive_failures(tmp_path):
