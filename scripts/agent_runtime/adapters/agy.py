@@ -166,13 +166,29 @@ _IDLE_BACKGROUND_WAIT_RE = re.compile(r"root agent idle; waiting up to \S+ for (
 # when it fires, as a message from its sender carrying its prompt. A subagent
 # (``invoke_subagent``) has no structured finish: its messages to the parent
 # are free text, so a slice that invokes one is never confirmed.
-_BACKGROUND_STARTED_RE = re.compile(r"Tool is running as a background task with task id: (?P<id>\S+)")
-# Outside a RUNNING result the start line counts only on a line of its own: a
-# viewed task log or transcript quotes it inside escaped JSON, not as a line.
-_BACKGROUND_START_LINE_RE = re.compile(r"^Tool is running as a background task with task id: (?P<id>\S+)", re.MULTILINE)
-_TIMER_TASK_RE = re.compile(r"^Task Description: Timer:", re.MULTILINE)
-_TASK_MESSAGE_RE = re.compile(r"\bsender=(?P<sender>\S+) priority=\S+ content=(?P<body>[^\n]*)")
-_TASK_ENDED_RE = re.compile(r'^Task id "(?P<id>[^"]+)" (?P<outcome>[^\n]*?) with result:')
+#
+# A lifecycle event is read ONLY from the header agy writes at the start of its
+# own event, never from text a task produced (#8502 r11): a command's output,
+# a viewed log or a grepped transcript can quote any header verbatim. On the
+# host, all 3,491 per-task system messages open with agy's one-line preamble, a
+# blank line, ``<SYSTEM_MESSAGE>`` and one ``[Message] timestamp=… sender=<id>
+# priority=… content=`` line; everything after ``content=`` is the task's text
+# and is opaque, apart from its first line, which on a task's end is exactly
+# ``Task id "<sender>" <outcome> with result:`` (2,715 of 2,715). All 3,671
+# background-task starts are a RUNNING tool result whose second line is the
+# start line and whose third is ``Task Description:`` (``Timer:`` for the 895
+# timers); the rest is the command text. A RUNNING result without that header
+# stays open work (a "Step is still running" step), so a header this pattern
+# misses fails the run closed instead of hiding a task.
+_BACKGROUND_START_HEADER_RE = re.compile(
+    r"\ACreated At: [^\n]*\nTool is running as a background task with task id: (?P<id>\S+)"
+    r"(?:\nTask Description: (?P<timer>Timer:))?"
+)
+_TASK_MESSAGE_HEADER_RE = re.compile(
+    r"\A[^\n]*\n\n<SYSTEM_MESSAGE>\n\[Message\] timestamp=\S+ sender=(?P<sender>\S+) priority=\S+ "
+    r"content=(?P<first_line>[^\n]*)"
+)
+_TASK_ENDED_RE = re.compile(r'\ATask id "(?P<id>[^"]+)" (?P<outcome>[^\n]*?) with result:\Z')
 _TASK_FINISHED_OUTCOME = "finished"
 _SUBAGENT_TOOL = "invoke_subagent"
 _MODEL_EVENT_TYPES = frozenset({"PLANNER_RESPONSE", "GENERIC", "MCP_TOOL"})
@@ -738,9 +754,13 @@ def _is_model_event(event: Mapping[str, Any]) -> bool:
 def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[str], set[str]]:
     """Walk ``events`` in file order; return (tasks started, finished, ended unfinished, work still open).
 
+    Events are read only by the header agy wrote for them (#8502 r11): a start
+    only from a RUNNING result's header, a task message only from its own
+    ``[Message]`` header line; a task's output quoting either is text.
+
     Work opens with a background-task start (a command, or a ``schedule``
-    timer), a RUNNING tool result that names no task (agy's interim "Step is
-    still running"), or an ``invoke_subagent`` call. It closes only with its
+    timer), any other RUNNING tool result (agy's interim "Step is still
+    running"), or an ``invoke_subagent`` call. It closes only with its
     own end event: a command or timer with a ``Task id "<id>" <outcome> with
     result:`` message from ``sender=<id>`` — a finish when the outcome is
     ``finished``, otherwise (``was canceled``, a timeout, an error) an end
@@ -756,10 +776,10 @@ def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[st
     for position, event in enumerate(events):
         content = str(event.get("content") or "")
         if event.get("type") == "SYSTEM_MESSAGE":
-            for message in _TASK_MESSAGE_RE.finditer(content):
+            if message := _TASK_MESSAGE_HEADER_RE.match(content):
                 sender = message.group("sender")
                 kind = open_work.get(sender)
-                ended_match = _TASK_ENDED_RE.match(message.group("body"))
+                ended_match = _TASK_ENDED_RE.match(message.group("first_line"))
                 own_end = ended_match is not None and ended_match.group("id") == sender
                 if kind == "timer" or (kind == "command" and own_end):
                     del open_work[sender]
@@ -774,13 +794,12 @@ def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[st
         step = _event_step_index(event)
         if step is not None:
             open_work.pop(f"step:{step}", None)
-        running = event.get("status") == "RUNNING"
-        pattern = _BACKGROUND_STARTED_RE if running else _BACKGROUND_START_LINE_RE
-        task_ids = {match.group("id") for match in pattern.finditer(content)}
-        for task_id in task_ids:
-            started.add(task_id)
-            open_work[task_id] = "timer" if _TIMER_TASK_RE.search(content) else "command"
-        if running and not task_ids:
+        if event.get("status") != "RUNNING":
+            continue
+        if start := _BACKGROUND_START_HEADER_RE.match(content):
+            started.add(start.group("id"))
+            open_work[start.group("id")] = "timer" if start.group("timer") else "command"
+        else:
             open_work[f"step:{step}" if step is not None else f"step@{position}"] = "step"
     return started, finished, unfinished, set(open_work)
 
@@ -793,7 +812,7 @@ def _interim_language(events: list[dict[str, Any]]) -> str | None:
     pending (``_PENDING_WORK_RE``), speaks of background work although the
     slice started no task, or names a task this invocation did not see finish
     (``task-2`` of an earlier run of a resumed conversation). With no start
-    event there was no background work (see ``_BACKGROUND_STARTED_RE``), so
+    event there was no background work (see ``_BACKGROUND_START_HEADER_RE``), so
     such a reply is odd wording worth a look, not unfinished work.
     """
     prompt = next(position for position, event in enumerate(events) if event.get("type") == "USER_INPUT")
