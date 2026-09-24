@@ -4,10 +4,11 @@
 # /api/state/issues-health. docs/WORKSTREAMS.md § Streams mirrors this table.
 #
 # Rules (binding, served via /api/rules → workflow.md § Work intake):
-# - Every OPEN issue must be a member of EXACTLY ONE stream (native sub-issue of a stream
-#   epic, or a #N reference in the epic body while migration is pending).
+# - Every OPEN issue must be a member of EXACTLY ONE stream (native descendant of a
+#   stream epic, or a #N reference in the epic body while migration is pending).
 # - New issues link their stream epic at creation time.
-# - Epics themselves (and their child drive boards) are exempt from membership.
+# - Active root epics themselves are exempt from membership. Retired streams and
+#   closed_epics stay registered for launcher/session consumers but are not audit roots.
 schema_version: 1
 streams:
   atlas-practice:
@@ -33,9 +34,11 @@ streams:
   eval-harness:
     title: "Internal UA quality machinery — QG gates, validators, product adapters"
     epics: [4913]
+    retired: true
   open-model-data:
     title: "Ukrainian open-model data infrastructure"
     epics: [6321, 7423]  # #6321 program epic + #7423 Cyrillic-Slavic dataset-delivery epic; completed Foundry epics #6164 and #6056 are historical
+    closed_epics: [7423]
   core-quality:
     title: "Core-track deterministic quality"
     epics: [4274]
@@ -45,6 +48,7 @@ streams:
   a1-upgrade:
     title: "A1 content rollout — 55 modules into 60-minute lessons under canonical a1"
     epics: [7995]
+    retired: true
   seminars-folk:
     title: "FOLK track re-research + rebuild"
     epics: [2836]

@@ -1,7 +1,7 @@
 """Issue-stream auditor — every open GH issue must belong to exactly one stream epic.
 
 Registry: scripts/config/issue_streams.yaml (streams → epic issue numbers).
-Membership: native GitHub sub-issue of a stream epic, OR (fallback while the
+Membership: native GitHub sub-issue descendant of a stream epic, OR (fallback while the
 native migration is pending) a ``#N`` reference in a stream epic's body.
 
 Usage:
@@ -596,8 +596,11 @@ def _run_refresh_worker(run_id: str) -> int:
         _release_lock(fd)
 
 
-def load_registry(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
-    """Return {stream_key: [epic_numbers]}."""
+def load_registry(path: Path = REGISTRY_PATH, *, audit_only: bool = False) -> dict[str, list[int]]:
+    """Return registered epics, optionally excluding retired audit roots.
+
+    The default preserves the full registry for launcher and session consumers.
+    """
     doc = yaml.safe_load(path.read_text(encoding="utf-8"))
     streams = doc.get("streams") or {}
     registry: dict[str, list[int]] = {}
@@ -605,7 +608,16 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
         epics = [int(n) for n in (spec.get("epics") or [])]
         if not epics:
             raise ValueError(f"stream {key!r} has no epics")
-        registry[key] = epics
+        retired = spec.get("retired", False)
+        if not isinstance(retired, bool):
+            raise ValueError(f"stream {key!r} has invalid retired marker")
+        closed = [int(n) for n in (spec.get("closed_epics") or [])]
+        if not set(closed) <= set(epics):
+            raise ValueError(f"stream {key!r} has closed epics outside its epic list")
+        if not audit_only or not retired:
+            active_epics = [n for n in epics if n not in closed] if audit_only else epics
+            if active_epics:
+                registry[key] = active_epics
     if not registry:
         raise ValueError("issue_streams.yaml defines no streams")
     return registry
@@ -837,6 +849,8 @@ _SUBISSUES_NEXT_PAGE_QUERY = (
 # buggy/adversarial API that always reports ``hasNextPage: true`` from looping
 # forever, while remaining far above any real epic's child count.
 _MAX_SUBISSUE_PAGES = 50
+_MAX_SUBISSUE_DEPTH = 8
+_SUBISSUE_BATCH_SIZE = 20
 
 
 def _fetch_subissues_page(epic: int, cursor: str | None, repo_root: Path = ROOT) -> dict:
@@ -901,6 +915,111 @@ def fetch_epic_membership(epic: int, repo_root: Path = ROOT) -> tuple[set[int], 
     )
     refs = {int(m) for m in ISSUE_REF_RE.findall(body)}
     return native, refs
+
+
+def _fetch_subissue_batch(
+    cursors: dict[int, str | None],
+    repo_root: Path = ROOT,
+    body_roots: set[int] | None = None,
+) -> dict[int, dict]:
+    """Fetch one page for each parent in a bounded GraphQL alias batch."""
+    owner, name = _repo_owner_name(repo_root)
+    fields = []
+    for number, cursor in cursors.items():
+        after = f",after:{json.dumps(cursor)}" if cursor is not None else ""
+        body = "body " if number in (body_roots or set()) and cursor is None else ""
+        fields.append(
+            f"i{number}:issue(number:{number}){{{body}subIssues(first:100{after})"
+            "{nodes{number subIssuesSummary{total}} pageInfo{hasNextPage endCursor}}}"
+        )
+    query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){" + " ".join(fields) + "}}"
+    data = _gh_json(
+        ["api", "graphql", "-f", f"owner={owner}", "-f", f"name={name}", "-f", f"query={query}"],
+        cwd=repo_root,
+    )
+    repository = (data.get("data") or {}).get("repository") or {}
+    return {number: repository.get(f"i{number}") or {} for number in cursors}
+
+
+def _tree_membership(
+    roots: set[int],
+    fetch_batch: Callable[[dict[int, str | None]], dict[int, dict]],
+    warnings: list[dict] | None = None,
+) -> dict[int, tuple[set[int], set[int]]]:
+    """Traverse native links by level, assigning descendants to their roots.
+
+    A parent is fetched once even when two roots reach it. Its adjacency is
+    retained so each root can independently claim a shared descendant, but
+    descent stops at another registered root's subtree.
+    """
+    children: dict[int, set[int]] = {}
+    child_totals: dict[int, int] = {}
+    bodies: dict[int, str] = {}
+    frontier = set(roots)
+    fetched: set[int] = set()
+    for _depth in range(_MAX_SUBISSUE_DEPTH):
+        parents = sorted(frontier - fetched)
+        if not parents:
+            break
+        frontier = set()
+        for start in range(0, len(parents), _SUBISSUE_BATCH_SIZE):
+            batch = parents[start : start + _SUBISSUE_BATCH_SIZE]
+            pending: dict[int, str | None] = dict.fromkeys(batch)
+            for page in range(_MAX_SUBISSUE_PAGES):
+                if not pending:
+                    break
+                issues = fetch_batch(pending)
+                next_pending = {}
+                for number, issue in issues.items():
+                    if page == 0 and number in roots:
+                        bodies[number] = issue.get("body") or ""
+                    sub_issues = issue.get("subIssues") or {}
+                    for node in sub_issues.get("nodes") or []:
+                        if isinstance(node, dict) and _is_positive_int(node.get("number")):
+                            total = (node.get("subIssuesSummary") or {}).get("total")
+                            if isinstance(total, int) and total >= 0:
+                                child_totals[node["number"]] = total
+                    children.setdefault(number, set()).update(
+                        node["number"]
+                        for node in sub_issues.get("nodes") or []
+                        if isinstance(node, dict) and _is_positive_int(node.get("number"))
+                    )
+                    page_info = sub_issues.get("pageInfo") or {}
+                    cursor = page_info.get("endCursor")
+                    if page_info.get("hasNextPage") and cursor:
+                        next_pending[number] = cursor
+                pending = next_pending
+        fetched.update(parents)
+        frontier = {
+            number
+            for parent in parents
+            for number in children[parent]
+            if number not in fetched and child_totals.get(number) != 0
+        }
+
+    if frontier and warnings is not None:
+        warnings.append({"code": "truncated_depth", "depth": _MAX_SUBISSUE_DEPTH, "frontier": sorted(frontier)})
+
+    membership = {}
+    for root in roots:
+        descendants: set[int] = set()
+        level = {root}
+        for _depth in range(_MAX_SUBISSUE_DEPTH):
+            level = set().union(*(children.get(parent, set()) for parent in level)) - roots
+            descendants.update(level)
+            if not level:
+                break
+        membership[root] = (
+            descendants,
+            {int(match) for match in ISSUE_REF_RE.findall(bodies.get(root, ""))},
+        )
+    return membership
+
+
+def fetch_tree_membership(
+    roots: set[int], repo_root: Path = ROOT, warnings: list[dict] | None = None
+) -> dict[int, tuple[set[int], set[int]]]:
+    return _tree_membership(roots, lambda batch: _fetch_subissue_batch(batch, repo_root, roots), warnings)
 
 
 def classify(
@@ -1042,13 +1161,12 @@ def run_audit(
     module's own repo instead.
     """
     root = repo_root.resolve() if repo_root is not None else ROOT
-    registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml")
+    registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml", audit_only=True)
     open_issues = fetch_open_issues(root)
-    membership = {
-        epic: fetch_epic_membership(epic, root)
-        for epics in registry.values()
-        for epic in epics
-    }
+    traversal_warnings: list[dict] = []
+    membership = fetch_tree_membership(
+        {epic for epics in registry.values() for epic in epics}, root, traversal_warnings
+    )
     report = classify(open_issues, registry, membership)
     milestone_rows = load_milestone_rows(root / "docs" / "WORKSTREAMS.md")
     milestone_numbers = {
@@ -1064,7 +1182,7 @@ def run_audit(
         root,
         known_open_issue_numbers=open_issue_numbers,
     )
-    report["warnings"] = milestone_warnings(
+    report["warnings"] = traversal_warnings + milestone_warnings(
         milestone_rows,
         issue_states,
         unavailable_issue_numbers=unavailable_numbers,
@@ -1264,7 +1382,7 @@ def migrate(report: dict) -> int:
     (codex F2): GitHub's single-parent constraint would otherwise make the
     winner order-dependent instead of deliberate. Resolve them manually.
     """
-    registry = load_registry()
+    registry = load_registry(audit_only=True)
     ambiguous = {m["number"] for m in report.get("multi_homed", [])}
     if ambiguous:
         print(
@@ -1324,7 +1442,12 @@ def human_summary(report: dict) -> str:
     if report["closed_or_missing_epics"]:
         lines.append(f"⚠️ stream epics not open: {report['closed_or_missing_epics']}")
     for warning in report.get("warnings") or []:
-        if warning["code"] == "milestone_row_marked":
+        if warning["code"] == "truncated_depth":
+            lines.append(
+                f"WARN: native sub-issue traversal truncated at depth {warning['depth']} "
+                f"with {len(warning['frontier'])} parents still to inspect"
+            )
+        elif warning["code"] == "milestone_row_marked":
             lines.append(
                 f"WARN: stream milestone {warning['stream']} marked {warning['marker']}"
             )

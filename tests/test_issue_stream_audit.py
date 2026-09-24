@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import textwrap
 import threading
 from datetime import date
@@ -13,6 +14,7 @@ from scripts.orchestration import issue_stream_audit
 from scripts.orchestration.issue_stream_audit import (
     _MAX_SUBISSUE_PAGES,
     _paginate_subissues,
+    _tree_membership,
     classify,
     fetch_issue_states,
     load_milestone_rows,
@@ -136,6 +138,190 @@ def test_native_link_wins_over_prose_mention(registry):
     )
     assert report["multi_homed"] == []
     assert report["orphans"] == []
+
+
+def test_nested_native_descendants_at_depth_two_and_three(registry):
+    edges = {100: [10], 10: [11], 11: [12]}
+    calls = []
+
+    def fetch_batch(cursors):
+        calls.append(set(cursors))
+        return {
+            number: _page(edges.get(number, []), False, body="see #13" if number == 100 else "") for number in cursors
+        }
+
+    membership = _tree_membership({100, 150, 200}, fetch_batch)
+    report = classify(_issues(100, 150, 200, 10, 11, 12, 13), registry, membership)
+    assert report["orphans"] == []
+    assert report["pending_native_link"] == [13]
+    assert membership[100][0] == {10, 11, 12}
+    assert calls[0] == {100, 150, 200}
+    assert calls[1] == {10}
+
+
+def test_nested_multi_home_keeps_both_root_epics(registry):
+    edges = {100: [10], 10: [12], 200: [20], 20: [12]}
+
+    def fetch_batch(cursors):
+        return {number: _page(edges.get(number, []), False) for number in cursors}
+
+    membership = _tree_membership({100, 150, 200}, fetch_batch)
+    report = classify(_issues(100, 150, 200, 10, 12, 20), registry, membership)
+    assert report["multi_homed"] == [{"number": 12, "title": "issue 12", "streams": ["infra", "product"]}]
+    assert report["effective_membership"]["12"]["epics"] == [100, 200]
+
+
+def test_nested_registered_root_owns_its_subtree(registry):
+    edges = {100: [150], 150: [10]}
+
+    def fetch_batch(cursors):
+        return {number: _page(edges.get(number, []), False) for number in cursors}
+
+    membership = _tree_membership({100, 150}, fetch_batch)
+    report = classify(_issues(100, 150, 10), {"product": [100, 150]}, membership)
+    assert membership[100][0] == set()
+    assert membership[150][0] == {10}
+    assert report["multi_homed"] == []
+    assert report["effective_membership"]["10"]["epics"] == [150]
+
+
+def test_nested_root_does_not_hide_independent_native_path():
+    edges = {100: [150, 10], 150: [10]}
+
+    def fetch_batch(cursors):
+        return {number: _page(edges.get(number, []), False) for number in cursors}
+
+    membership = _tree_membership({100, 150}, fetch_batch)
+    report = classify(_issues(100, 150, 10), {"product": [100, 150]}, membership)
+    assert report["effective_membership"]["10"]["epics"] == [100, 150]
+    assert [item["number"] for item in report["multi_homed"]] == [10]
+
+
+def test_known_leaf_children_are_not_queried():
+    calls = []
+
+    def fetch_batch(cursors):
+        calls.append(dict(cursors))
+        if 100 in cursors:
+            return {100: _page([10, 11], False, child_totals={10: 0, 11: 1})}
+        return {11: _page([12], False, child_totals={12: 0})}
+
+    membership = _tree_membership({100}, fetch_batch)
+    assert membership[100][0] == {10, 11, 12}
+    assert calls == [{100: None}, {11: None}]
+
+
+def test_tree_traversal_pages_parent_before_next_level():
+    calls = []
+
+    def fetch_batch(cursors):
+        calls.append(dict(cursors))
+        if cursors == {100: None}:
+            return {100: _page([10], True, "next", body="see #13")}
+        if cursors == {100: "next"}:
+            return {100: _page([11], False)}
+        return {number: _page([number + 10] if number in {10, 11} else [], False) for number in cursors}
+
+    membership = _tree_membership({100}, fetch_batch)
+    assert {10, 11, 20, 21} <= membership[100][0]
+    assert membership[100][1] == {13}
+    assert calls[:3] == [{100: None}, {100: "next"}, {10: None, 11: None}]
+
+
+def test_native_descent_stops_at_depth_eight(registry):
+    edges = {100: [1], **{number: [number + 1] for number in range(1, 9)}}
+    queried = []
+
+    def fetch_batch(cursors):
+        queried.extend(cursors)
+        return {number: _page(edges.get(number, []), False) for number in cursors}
+
+    warnings = []
+    membership = _tree_membership({100}, fetch_batch, warnings)
+    assert membership[100][0] == set(range(1, 9))
+    assert 8 not in queried
+    report = classify(_issues(100, *range(1, 10)), {"product": [100]}, membership)
+    assert [item["number"] for item in report["orphans"]] == [9]
+    assert warnings == [{"code": "truncated_depth", "depth": 8, "frontier": [8]}]
+    assert "WARN: native sub-issue traversal truncated at depth 8" in issue_stream_audit.human_summary(
+        {**report, "warnings": warnings}
+    )
+
+
+def test_depth_eight_known_leaf_does_not_warn():
+    edges = {100: [1], **{number: [number + 1] for number in range(1, 8)}}
+    warnings = []
+
+    def fetch_batch(cursors):
+        return {
+            number: _page(
+                edges.get(number, []),
+                False,
+                child_totals={child: 0 if child == 8 else 1 for child in edges.get(number, [])},
+            )
+            for number in cursors
+        }
+
+    membership = _tree_membership({100}, fetch_batch, warnings)
+    assert membership[100][0] == set(range(1, 9))
+    assert warnings == []
+
+
+def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
+    calls = []
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
+
+    def fake_gh_json(args, *, cwd):
+        calls.append((args, cwd))
+        return {"data": {"repository": {"i100": _page([10], False, body="see #13"), "i200": _page([20], False)}}}
+
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
+    pages = issue_stream_audit._fetch_subissue_batch({100: None, 200: "cursor"}, body_roots={100})
+    assert len(calls) == 1
+    query = calls[0][0][-1]
+    assert "i100:issue(number:100){body subIssues(first:100)" in query
+    assert 'i200:issue(number:200){subIssues(first:100,after:"cursor")' in query
+    assert "nodes{number subIssuesSummary{total}}" in query
+    assert {number: page["subIssues"]["nodes"][0]["number"] for number, page in pages.items()} == {100: 10, 200: 20}
+
+
+def test_retired_epics_remain_registered_but_are_not_audit_roots():
+    path = issue_stream_audit.REGISTRY_PATH
+    registry = load_registry(path)
+    assert registry["eval-harness"] == [4913]
+    assert registry["a1-upgrade"] == [7995]
+    assert registry["open-model-data"] == [6321, 7423]
+
+    audit_registry = load_registry(path, audit_only=True)
+    assert "eval-harness" not in audit_registry
+    assert "a1-upgrade" not in audit_registry
+    assert audit_registry["open-model-data"] == [6321]
+    assert {4913, 7423, 7995}.isdisjoint({n for epics in audit_registry.values() for n in epics})
+    report = classify(_issues(*[n for epics in audit_registry.values() for n in epics]), audit_registry, {})
+    assert report["closed_or_missing_epics"] == []
+    assert report["ok"] is True
+
+
+@pytest.mark.parametrize(
+    ("selector", "expected"),
+    [
+        ("a1-upgrade", "a1-upgrade\tepic:7995"),
+        ("eval-harness", "eval-harness\tepic:4913"),
+    ],
+)
+def test_retired_stream_launchers_still_resolve(selector, expected):
+    result = subprocess.run(
+        [
+            "bash", "-c", 'source "$1"; launcher_selector_resolve "$2"', "bash",
+            str(issue_stream_audit.ROOT / "scripts/lib/handoff_identity.sh"), selector,
+        ],
+        cwd=issue_stream_audit.ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    )
+    assert result.stdout.strip() == expected
 
 
 # --------------------------------------------------------------------------- #
@@ -590,11 +776,16 @@ def test_validate_membership_report_rejects_non_dict():
 # No network/gh subprocess: ``_paginate_subissues`` takes an injected page
 # fetcher, exactly as production wires it to ``_fetch_subissues_page``.
 # --------------------------------------------------------------------------- #
-def _page(nodes, has_next, end_cursor=None, body=""):
+def _page(nodes, has_next, end_cursor=None, body="", child_totals=None):
     return {
         "body": body,
         "subIssues": {
-            "nodes": [{"number": n} for n in nodes],
+            "nodes": [
+                {"number": n, "subIssuesSummary": {"total": child_totals[n]}}
+                if child_totals and n in child_totals
+                else {"number": n}
+                for n in nodes
+            ],
             "pageInfo": {"hasNextPage": has_next, "endCursor": end_cursor},
         },
     }
@@ -704,7 +895,7 @@ def _fake_gh_run(calls, *, owner: str, name: str, open_issues: list[dict]):
                     {
                         "data": {
                             "repository": {
-                                "issue": {
+                                "i100": {
                                     "body": "",
                                     "subIssues": {
                                         "nodes": [],
@@ -1050,4 +1241,3 @@ def test_private_cache_keys_includes_open_issue_titles():
         "open_issue_numbers",
         "open_issue_titles",
     )
-
