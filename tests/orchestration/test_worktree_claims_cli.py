@@ -120,6 +120,49 @@ def test_control_plane_root_raises_when_the_fleet_catalog_is_unreadable(tmp_path
         worktree_claims.control_plane_root(tmp_path / "learn-ukrainian-infra-private")
 
 
+def _malformed_catalog(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Point the real loader at a syntactically invalid ``fleet_repos.yaml`` (no mock of the loader)."""
+    from scripts.orchestration import fleet_repos
+
+    bad = tmp_path / "malformed_fleet_repos.yaml"
+    bad.write_text("repos: {infra-private: [unclosed\n", encoding="utf-8")
+    monkeypatch.setattr(fleet_repos, "_CONFIG_PATH", bad)
+
+
+def test_control_plane_root_raises_control_plane_error_on_malformed_catalog_yaml(tmp_path, monkeypatch):
+    _fleet(tmp_path, monkeypatch)
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    with pytest.raises(worktree_claims.ControlPlaneError, match="catalog unreadable"):
+        worktree_claims.control_plane_root(tmp_path / "learn-ukrainian-infra-private")
+
+
+def test_remove_unclaimed_worktree_never_raises_on_malformed_catalog_yaml(tmp_path, monkeypatch):
+    _public, sibling = _fleet(tmp_path, monkeypatch)
+    worktree = _linked(sibling, "codex/impl-sib-badyaml")
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    result = worktree_claims.remove_unclaimed_worktree(
+        worktree, repo_root=sibling, reason="test", owner_task_id=None
+    )
+
+    assert result.action == "skipped"
+    assert result.reason == worktree_claims.LOCK_UNAVAILABLE
+    assert worktree.exists()
+
+
+def test_malformed_catalog_yaml_refuses_cli_removal_cleanly(tmp_path, capsys, monkeypatch):
+    _public, sibling = _fleet(tmp_path, monkeypatch)
+    worktree = _linked(sibling, "codex/impl-sib-badyaml-cli")
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    code, _out, err = _remove(capsys, str(worktree))
+
+    assert code == worktree_claims.EXIT_REFUSED
+    assert "worktree lock unavailable" in err
+    assert worktree.exists()
+
+
 def test_owning_repo_root_follows_the_worktree_pointer_and_defaults_otherwise(tmp_path, monkeypatch):
     public, sibling = _fleet(tmp_path, monkeypatch)
     linked = _linked(sibling, "codex/impl-own")

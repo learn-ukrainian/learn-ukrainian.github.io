@@ -394,7 +394,7 @@ def control_plane_root(repo_root: Path) -> Path:
     repo = main_checkout_root(repo_root).resolve()
     try:
         catalog = load_fleet_repos()
-    except (FleetRepoError, OSError, ValueError) as exc:
+    except FleetRepoError as exc:
         raise ControlPlaneError(f"fleet repository catalog unreadable ({type(exc).__name__}: {exc})") from exc
     for fleet_repo in catalog.values():
         if not fleet_repo.default and (public.parent / fleet_repo.local_name).resolve() == repo:

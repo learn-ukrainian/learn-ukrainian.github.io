@@ -304,6 +304,43 @@ def test_sibling_repo_reap_refuses_when_the_fleet_catalog_is_unreadable(
     assert worktree.exists()
 
 
+def _malformed_catalog(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Point the real loader at a syntactically invalid ``fleet_repos.yaml`` (no mock of the loader)."""
+    from scripts.orchestration import fleet_repos
+
+    bad = tmp_path / "malformed_fleet_repos.yaml"
+    bad.write_text("repos: {infra-private: [unclosed\n", encoding="utf-8")
+    monkeypatch.setattr(fleet_repos, "_CONFIG_PATH", bad)
+
+
+def test_reap_control_plane_root_falls_back_to_primary_on_malformed_catalog_yaml(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The read-only probes keep working on a malformed catalog instead of crashing."""
+    _public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    assert rw.control_plane_root(sibling) == rw.primary_checkout_root(sibling)
+
+
+def test_sibling_repo_reap_refuses_cleanly_on_malformed_catalog_yaml(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The removal guard refuses (no crash) when the catalog YAML itself is malformed."""
+    _public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    worktree = add_worktree(sibling, "codex/private-badyaml")
+    patch_gh(monkeypatch, {"codex/private-badyaml": [{"number": 8624, "state": "MERGED"}]})
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    result = result_for(rw.reap_worktrees(repo_root=sibling, apply=True), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("worktree lock unavailable (fleet repository catalog unreadable")
+    assert worktree.exists()
+
+
 def test_merged_dispatch_worktree_owner_record_does_not_block_its_own_reap(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
