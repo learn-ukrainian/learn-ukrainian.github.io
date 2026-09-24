@@ -918,6 +918,263 @@ def test_check7_receipt_validation_schema_and_criteria_integrity(tmp_path, defau
     assert res_partial_ctrl.metrics["signoff_verified"] is False
     assert any("lacks full sentence-specific citation" in f for f in res_partial_ctrl.failures)
 
+    # 13. Omitting or mutating is_erroneous in receipt item fails
+    bad_is_err_items = copy.deepcopy(valid_ctrl_items)
+    bad_is_err_items[0]["is_erroneous"] = True
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": bad_is_err_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_bad_is_err, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_bad_is_err.status == "FAIL"
+    assert any("is_erroneous mismatch" in f for f in res_bad_is_err.failures)
+
+    # Omitting is_erroneous from receipt item also fails
+    del bad_is_err_items[0]["is_erroneous"]
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": bad_is_err_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_omit_is_err, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_omit_is_err.status == "FAIL"
+    assert any("is_erroneous mismatch" in f for f in res_omit_is_err.failures)
+
+    # 14. Shortening or mutating original_text in receipt item fails
+    short_orig_items = copy.deepcopy(valid_ctrl_items)
+    short_orig_items[0]["original_text"] = "Автентичне довге речення для"
+    # Even if reviewer assessment cites this shortened text, the check fails on mismatch
+    short_orig_items[0]["reviewer_assessment"] = (
+        "Контрольне речення #1 «Автентичне довге речення для» перевірено."
+    )
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": short_orig_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_short_orig, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_short_orig.status == "FAIL"
+    assert any("original_text mismatch" in f for f in res_short_orig.failures)
+    assert any("lacks full sentence-specific citation" in f for f in res_short_orig.failures)
+
+    # 15. Correction records require error_span / replacement_span and validate them against sample
+    corr_records = [
+        parse_dataset_record(
+            {
+                "query": f"Виправ помилку {i}",
+                "final_response": "Виправлено.",
+                "original_text": "Він приймав участь у заходах.",
+                "corrected_text": "Він брав участь у заходах.",
+                "is_erroneous": True,
+                "source_metadata": {
+                    "error_span": "приймав участь",
+                    "replacement_span": "брав участь",
+                },
+            },
+            Path("shard_corr.jsonl"),
+            i,
+        )
+        for i in range(5)
+    ]
+    sample_corr_md = tmp_path / "sample_corr.md"
+    _, _, seed_corr = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md
+    )
+    drawn_corr_sample = json.loads(sample_corr_md.with_suffix(".json").read_text(encoding="utf-8"))
+    signoff_corr_file = tmp_path / "corr_signoff.json"
+    signoff_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    receipt_corr_file = tmp_path / "acceptance_review_sample.receipt.json"
+
+    valid_corr_items = []
+    for s in drawn_corr_sample:
+        idx = s["sample_index"]
+        valid_corr_items.append(
+            {
+                "sample_index": idx,
+                "content_hash": s["content_hash"],
+                "original_text": s["original_text"],
+                "is_erroneous": True,
+                "error_span": "приймав участь",
+                "replacement_span": "брав участь",
+                "verdict": "APPROVED",
+                "status": "PASS",
+                "criteria": {
+                    "pedagogical_soundness": True,
+                    "morphology_vesum": True,
+                    "pravopys_2019": True,
+                    "zero_russianisms": True,
+                    "zero_soviet_sum11": True,
+                },
+                "reviewer_assessment": f"Виправлено дефект #{idx}: замінено «приймав участь» → «брав участь».",
+            }
+        )
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": valid_corr_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_corr_pass, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_corr_pass.status == "PASS"
+    assert res_corr_pass.metrics["signoff_verified"] is True
+
+    # 16. Missing edit spans in correction receipt item fails
+    no_spans_items = copy.deepcopy(valid_corr_items)
+    del no_spans_items[0]["error_span"]
+    del no_spans_items[0]["replacement_span"]
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": no_spans_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_no_spans, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_no_spans.status == "FAIL"
+    assert any("missing required correction edit spans" in f for f in res_no_spans.failures)
+    assert any("error_span mismatch" in f for f in res_no_spans.failures)
+
+    # 17. Mismatched edit span in correction receipt item fails
+    mismatched_span_items = copy.deepcopy(valid_corr_items)
+    mismatched_span_items[0]["error_span"] = "інша помилка"
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": mismatched_span_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_mismatched_span, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_mismatched_span.status == "FAIL"
+    assert any("error_span mismatch" in f for f in res_mismatched_span.failures)
+
+    # 18. Correction assessment omitting edit pair names fails
+    generic_corr_items = copy.deepcopy(valid_corr_items)
+    generic_corr_items[0]["reviewer_assessment"] = "Все чудово перевірено і виправлено без зауважень."
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": generic_corr_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_generic_corr, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_generic_corr.status == "FAIL"
+    assert any("assessment does not name edit pair" in f for f in res_generic_corr.failures)
+
 
 # ── Full Audit Runner & Fail-Closed Tests ───────────────────────────────────
 

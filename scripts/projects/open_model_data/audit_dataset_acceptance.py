@@ -1370,7 +1370,36 @@ def audit_check_7_sample_drawer(
                                     failures.append(
                                         f"Receipt item {s_idx} content_hash mismatch: receipt={r_it.get('content_hash')} vs sample={r.content_hash}"
                                     )
-                                    break
+                                if r.is_erroneous is not None and r_it.get("is_erroneous") != r.is_erroneous:
+                                    failures.append(
+                                        f"Receipt item {s_idx} is_erroneous mismatch: receipt={r_it.get('is_erroneous')!r} vs sample={r.is_erroneous!r}"
+                                    )
+                                if r.original_text is not None and r_it.get("original_text") != r.original_text:
+                                    failures.append(
+                                        f"Receipt item {s_idx} original_text mismatch: receipt={r_it.get('original_text')!r} vs sample={r.original_text!r}"
+                                    )
+                                if r.is_erroneous is True:
+                                    sm = (
+                                        r.source_metadata
+                                        if isinstance(r.source_metadata, dict)
+                                        else (r.raw.get("source_metadata") if isinstance(r.raw.get("source_metadata"), dict) else {})
+                                    )
+                                    expected_err = sm.get("error_span") or ""
+                                    expected_repl = sm.get("replacement_span") or ""
+                                    r_it_err = r_it.get("error_span") or ""
+                                    r_it_repl = r_it.get("replacement_span") or ""
+                                    if expected_err != r_it_err:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} error_span mismatch: receipt={r_it_err!r} vs sample={expected_err!r}"
+                                        )
+                                    if expected_repl != r_it_repl:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} replacement_span mismatch: receipt={r_it_repl!r} vs sample={expected_repl!r}"
+                                        )
+                                    if not r_it_err and not r_it_repl:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} missing required correction edit spans (error_span/replacement_span)"
+                                        )
 
                             required_criteria_keys = {
                                 "pedagogical_soundness",
@@ -1445,13 +1474,15 @@ def audit_check_7_sample_drawer(
                                 )
 
                             ctrl_assessments: list[str] = []
-                            for r_it in items:
-                                s_idx = r_it.get("sample_index")
+                            for s_idx, r in enumerate(all_sampled, start=1):
+                                r_it = receipt_items_by_idx.get(s_idx)
+                                if not r_it:
+                                    continue
                                 ass = r_it.get("reviewer_assessment")
                                 if not ass or not isinstance(ass, str) or not ass.strip():
                                     continue
-                                is_err = r_it.get("is_erroneous")
-                                orig_text = r_it.get("original_text") or ""
+                                is_err = r.is_erroneous if r.is_erroneous is not None else r_it.get("is_erroneous")
+                                orig_text = r.original_text if r.original_text is not None else (r_it.get("original_text") or "")
                                 if is_err is False and orig_text.strip():
                                     ctrl_assessments.append(ass)
                                     orig_tokens = " ".join(re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text.lower()))
@@ -1462,8 +1493,13 @@ def audit_check_7_sample_drawer(
                                             f"(expected full normalized sentence {orig_tokens!r})"
                                         )
                                 elif is_err is True:
-                                    err_span = r_it.get("error_span", "") or ""
-                                    repl_span = r_it.get("replacement_span", "") or ""
+                                    sm = (
+                                        r.source_metadata
+                                        if isinstance(r.source_metadata, dict)
+                                        else (r.raw.get("source_metadata") if isinstance(r.raw.get("source_metadata"), dict) else {})
+                                    )
+                                    err_span = sm.get("error_span") or r_it.get("error_span") or ""
+                                    repl_span = sm.get("replacement_span") or r_it.get("replacement_span") or ""
                                     lowered_ass = ass.lower()
                                     if err_span and repl_span:
                                         if err_span.lower() not in lowered_ass or repl_span.lower() not in lowered_ass:
