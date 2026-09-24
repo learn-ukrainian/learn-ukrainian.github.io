@@ -580,6 +580,12 @@ jobs:
               echo "level $level: no plans"
             fi
           done
+      - name: Check generated arc landing (a1 --check)
+        # The landing, module pages and site/src/data/arc-a1.json are generated from
+        # _arc.yaml, the plans, the scope sidecars and the build state (#8397); a stale
+        # file fails here. Unlike the validator step above, it always runs: it is cheap
+        # and its inputs (state files, site/src/content/docs) are not all under one path.
+        run: python -m scripts.build.build_arc_landing a1 --check
 
   frontend:
     name: Frontend

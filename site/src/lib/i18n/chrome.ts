@@ -396,6 +396,15 @@ const en = {
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Practice this word →',
   'atlas.practiceUnavailable': 'Not in the practice pool yet',
+
+  // Fresh-arc landing / module pages (#8397). The `planned` and `reviewed`
+  // states, the previous-edition link and the lessons heading reuse the
+  // existing keys `status.planned`, `status.reviewed`, `home.track.a1Previous`
+  // and `sidebar.lessons`. The Ukrainian values below wait for the language
+  // reviewer; until then they repeat the English, never a guess.
+  'arc.state.plan_reviewed': 'plan reviewed',
+  'arc.state.built': 'built',
+  'arc.checkpoint': 'Checkpoint',
 } as const;
 
 export type ChromeKey = keyof typeof en;
@@ -757,6 +766,9 @@ const uk: Record<ChromeKey, string> = {
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Практикувати це слово →',
   'atlas.practiceUnavailable': 'Ще немає в наборі практики',
+  'arc.state.plan_reviewed': 'план перевірено',
+  'arc.state.built': 'уроки підготовлено',
+  'arc.checkpoint': 'Контрольна точка',
 };
 
 export const CHROME_STRINGS = { en, uk } satisfies Record<ChromeLocale, Record<ChromeKey, string>>;
@@ -791,6 +803,50 @@ export function chromeDualHtml(enText: string, ukText: string): string {
 export function formatWotdWordCount(count: number): Record<ChromeLocale, string> {
   const enNoun = count === 1 ? 'word' : 'words';
   const ukNoun = pluralizeUk(count, ['слово', 'слова', 'слів']);
+  return {
+    en: `${count} ${enNoun}`,
+    uk: `${count} ${ukNoun}`,
+  };
+}
+
+/** Pluralized «N lesson(s) / урок|уроки|уроків» for module and lesson-list chrome. */
+export function formatLessonCount(count: number): Record<ChromeLocale, string> {
+  const enNoun = count === 1 ? 'lesson' : 'lessons';
+  const ukNoun = pluralizeUk(count, ['урок', 'уроки', 'уроків']);
+  return {
+    en: `${count} ${enNoun}`,
+    uk: `${count} ${ukNoun}`,
+  };
+}
+
+export type ArcScopeKind = 'letters' | 'grammarPoints' | 'coreLemmas';
+
+const ARC_SCOPE_FORMS: Record<
+  ArcScopeKind,
+  { en: [string, string]; uk: [string, string, string] }
+> = {
+  letters: {
+    en: ['letter', 'letters'],
+    uk: ['літера', 'літери', 'літер'],
+  },
+  grammarPoints: {
+    en: ['grammar point', 'grammar points'],
+    uk: ['граматична тема', 'граматичні теми', 'граматичних тем'],
+  },
+  coreLemmas: {
+    en: ['core word', 'core words'],
+    uk: ['базове слово', 'базові слова', 'базових слів'],
+  },
+};
+
+/** Pluralized scope counts for arc module chrome (#8397). */
+export function formatArcScopeCount(
+  kind: ArcScopeKind,
+  count: number,
+): Record<ChromeLocale, string> {
+  const forms = ARC_SCOPE_FORMS[kind];
+  const enNoun = count === 1 ? forms.en[0] : forms.en[1];
+  const ukNoun = pluralizeUk(count, forms.uk);
   return {
     en: `${count} ${enNoun}`,
     uk: `${count} ${ukNoun}`,

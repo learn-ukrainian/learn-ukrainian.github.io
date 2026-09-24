@@ -39,6 +39,8 @@ EXCLUSIONS = {
     "Sidebar",
     "Home",
     "LevelLanding",
+    "ArcLanding",
+    "ArcModule",
     "LiveStatus",
     "ActivityHelp",
     "ActivityPlaceholder",

@@ -116,21 +116,34 @@ describe('Astro build renders all pages', () => {
     }
   });
 
-  it('renders Starlight tabs for module pages instead of raw tab markers', () => {
-    const weatherPage = join(STARLIGHT_DIR, 'dist', 'a1', 'weather', 'index.html');
-    if (!existsSync(weatherPage)) {
-      // Module page deleted by #1577 Phase 1 Q3 curriculum reboot.
-      // Test self-restores when the a1/weather module is rebuilt and
-      // produces a Starlight build output. Same self-skip pattern that
-      // f0635c70ad applied to test_a1_1_sounds_letters_golden.
-      return;
-    }
+  it('renders Starlight tabs for lesson pages instead of raw tab markers', () => {
+    // /a1/<module>/ is an arc module page (no tabs); only lessons are tabbed.
+    // Prefer the first fresh lesson page (dist/a1/<module>/<n>/index.html);
+    // until fresh lessons are built, the tabbed a1-v1 `weather` lesson is the
+    // fixed fallback. Never skip: a build with no tabbed page is a failure.
+    const a1Dir = join(STARLIGHT_DIR, 'dist', 'a1');
+    const freshLesson = collectHtmlFiles(a1Dir)
+      .filter((file) => /[\\/]a1[\\/][^\\/]+[\\/]\d+[\\/]index\.html$/.test(file))
+      .sort()[0];
+    const lessonPage = freshLesson ?? join(STARLIGHT_DIR, 'dist', 'a1-v1', 'weather', 'index.html');
 
-    const html = readFileSync(weatherPage, 'utf-8');
+    expect(existsSync(lessonPage), `no tabbed lesson page found: ${lessonPage}`).toBe(true);
+    const html = readFileSync(lessonPage, 'utf-8');
 
     expect(html).not.toContain('starlight-tab-item');
     expect(html).toContain('role="tablist"');
     expect((html.match(/class="lu-tab-panel"/g) || []).length).toBeGreaterThan(0);
+  });
+
+  it('renders /a1/weather/ as an arc module page without raw tab markers', () => {
+    const weatherPage = join(STARLIGHT_DIR, 'dist', 'a1', 'weather', 'index.html');
+    expect(existsSync(weatherPage), `missing ${weatherPage}`).toBe(true);
+    const html = readFileSync(weatherPage, 'utf-8');
+
+    expect(html).toContain('data-arc-module="weather"');
+    expect(html).not.toContain('starlight-tab-item');
+    expect(html).not.toContain('role="tablist"');
+    expect(html).not.toContain('lu-tab-panel');
   });
 
   it('renders directive admonitions instead of raw directive markers', () => {
