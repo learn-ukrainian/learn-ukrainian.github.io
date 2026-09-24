@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a19e720ca94b",
+  "strategy": "manual-commit",
+  "branch": "deepseek/impl-8669",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_capacity_pick.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a1/9e720ca94b/0/metadata.json",
+      "transcript": "/a1/9e720ca94b/0/full.jsonl",
+      "compact_transcript": "/a1/9e720ca94b/0/transcript.jsonl",
+      "content_hash": "/a1/9e720ca94b/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 37066,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 444672,
+    "output_tokens": 2370,
+    "api_call_count": 14
+  }
+}

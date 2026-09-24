@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a19e720ca94b",
+  "session_id": "ses_f2aa0f630ffeM4ircF67lPOnAC",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-24T21:44:18.557900476Z",
+  "branch": "deepseek/impl-8669",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_capacity_pick.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "fd56985ca63c",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 37066,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 444672,
+    "output_tokens": 2370,
+    "api_call_count": 14
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-24T21:44:18.534410755Z",
+    "agent_lines": 26,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 26,
+    "total_lines_changed": 26,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
