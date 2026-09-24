@@ -423,10 +423,17 @@ def _build_parser() -> argparse.ArgumentParser:
     for sub in (p_plan_manifest, p_plan_promote, p_plan_status):
         sub.add_argument("level", choices=LEVELS, help="Curriculum level (a1, a2, b1, or b2)")
         sub.add_argument("slug", help="Module slug, e.g. sounds-letters-and-hello")
-        sub.add_argument("--repo-root", type=Path, default=None,
-                         help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)")
-    p_plan_status.add_argument("--require-promoted", action="store_true",
-                               help="Exit 1 unless the plan is promoted (a pending promotion is not enough)")
+        sub.add_argument(
+            "--repo-root",
+            type=Path,
+            default=None,
+            help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)",
+        )
+    p_plan_status.add_argument(
+        "--require-promoted",
+        action="store_true",
+        help="Exit 1 unless the plan is promoted (a pending promotion is not enough)",
+    )
 
     return parser
 
@@ -616,16 +623,18 @@ def _run_plan_review_command(args: argparse.Namespace, repo_root: Path) -> int:
             print(json.dumps({"manifest_sha256": digest, "manifest": manifest}, ensure_ascii=False, sort_keys=True))
             return 0
         if args.command == "plan-promote":
-            print(json.dumps(plan_promote.promote_plan(args.level, args.slug, repo_root=repo_root),
-                             ensure_ascii=False, sort_keys=True))
+            receipt = plan_promote.promote_plan(args.level, args.slug, repo_root=repo_root)
+            print(json.dumps(receipt, ensure_ascii=False, sort_keys=True))
             return 0
         status = plan_manifest.plan_review_status(args.level, args.slug, repo_root=repo_root)
         print(json.dumps(status, ensure_ascii=False, sort_keys=True))
-        reviewed = ("reviewed_promoted",) if args.require_promoted else ("reviewed_promoted", "reviewed_pending_promotion")
+        reviewed = {"reviewed_promoted"}
+        if not args.require_promoted:
+            reviewed.add("reviewed_pending_promotion")
         return 0 if status["state"] in reviewed else 1
     except plan_manifest.PlanReviewError as err:
-        print(json.dumps({"code": err.code, "reason": err.message, "paths": err.paths, "layer": "driver"},
-                         ensure_ascii=False, sort_keys=True), file=sys.stderr)
+        refusal = {"code": err.code, "reason": err.message, "paths": err.paths, "layer": "driver"}
+        print(json.dumps(refusal, ensure_ascii=False, sort_keys=True), file=sys.stderr)
         return 1
     except (OSError, ValueError) as err:
         print(json.dumps({"reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)
