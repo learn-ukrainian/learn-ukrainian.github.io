@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9c27b7e86650",
+  "session_id": "ses_f2bcc2075ffezejvvL7tQStOWT",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-24T16:23:01.090777935Z",
+  "branch": "deepseek/impl-8522-g1",
+  "checkpoints_count": 1,
+  "files_touched": [],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "83f5f9e75a47",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 55951,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1085568,
+    "output_tokens": 5970,
+    "api_call_count": 24
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

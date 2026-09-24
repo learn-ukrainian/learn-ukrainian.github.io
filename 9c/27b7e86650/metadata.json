@@ -1,0 +1,24 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9c27b7e86650",
+  "strategy": "manual-commit",
+  "branch": "deepseek/impl-8522-g1",
+  "checkpoints_count": 1,
+  "files_touched": null,
+  "sessions": [
+    {
+      "metadata": "/9c/27b7e86650/0/metadata.json",
+      "transcript": "/9c/27b7e86650/0/full.jsonl",
+      "compact_transcript": "/9c/27b7e86650/0/transcript.jsonl",
+      "content_hash": "/9c/27b7e86650/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 55951,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1085568,
+    "output_tokens": 5970,
+    "api_call_count": 24
+  }
+}
