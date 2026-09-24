@@ -148,6 +148,7 @@ from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threate
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.orchestration import reaper_lifecycle, task_record_store, worktree_claims
+from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, task_state_lock, write_state_unlocked
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
@@ -584,19 +585,12 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
     before writing — callers that bypass _state_path may not have
     created it yet.
 
-    Concurrency: each writer uses a PID-suffixed tmp filename so
-    multiple concurrent writers (e.g. two operators both running
-    status on the same zombie task) don't collide on a shared
-    ``.json.tmp`` scratch file. Without the PID suffix, one writer's
-    os.replace() would move the tmp file out from under another
-    writer that's still writing to it, causing FileNotFoundError on
-    the second os.replace. Fixed after Gemini review 2026-04-10.
+    Concurrency: a per-task lock serializes worker and probe writes. Each
+    writer also uses a PID-suffixed tmp filename before ``os.replace``.
     """
     state = _detach_read_only_checkout_snapshots(state)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
-    tmp.write_text(json.dumps(state, indent=2, default=str))
-    os.replace(tmp, path)
+    with task_state_lock(path):
+        write_state_unlocked(path, state)
 
 
 def _append_dispatch_event(event: str, **fields: Any) -> None:
@@ -1309,9 +1303,7 @@ def _ensure_sibling_repo_worktree(
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
-        raise ValueError(
-            f"sibling worktree path {worktree_path} is outside target repo {root}"
-        ) from exc
+        raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
     worktree_branch = _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -1334,8 +1326,7 @@ def _ensure_sibling_repo_worktree(
         return worktree_path, worktree_branch, telemetry
     if dry_run:
         raise ValueError(
-            f"sibling --repo dry-run found no worktree at {worktree_path}; "
-            "rerun without --dry-run to create one"
+            f"sibling --repo dry-run found no worktree at {worktree_path}; rerun without --dry-run to create one"
         )
     branch_name = _base_branch_name(base)
     origin_ref = f"origin/{branch_name}"
@@ -1355,9 +1346,7 @@ def _ensure_sibling_repo_worktree(
             env=_sanitized_git_env(),
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(
-            f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}"
-        ) from exc
+        raise RuntimeError(f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}") from exc
     if fetch_proc.returncode != 0:
         detail = (fetch_proc.stderr or fetch_proc.stdout or "git fetch failed").strip()
         raise RuntimeError(f"could not fetch {origin_ref} in sibling repo {root}: {detail}")
@@ -3312,6 +3301,28 @@ def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
     return sha or None
 
 
+def _record_final_branch_head(state: dict[str, Any]) -> None:
+    """Capture the current HEAD when a terminal task still owns a worktree."""
+    raw_path = state.get("worktree_path")
+    if isinstance(raw_path, str) and Path(raw_path).is_dir():
+        state["final_branch_head_commit"] = _resolve_sha(Path(raw_path))
+
+
+def _mark_crashed_task(state_path: Path, state: dict[str, Any], *, source: str) -> None:
+    """Persist a zombie correction with the worktree's final branch head."""
+    current, _changed = mark_dead_worker_terminal(
+        state_path,
+        state,
+        source=source,
+        terminal_status="crashed",
+        allowed_statuses=("running", "spawning"),
+        pid_alive=_pid_alive,
+        resolve_head=_resolve_sha,
+    )
+    state.clear()
+    state.update(_hydrate_read_only_checkout_snapshots(current))
+
+
 def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
     """Return the configured upstream remote for the checked-out branch.
 
@@ -3887,7 +3898,7 @@ def _read_only_mutation_paths(before: dict[str, str], after: dict[str, str]) -> 
 def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
     try:
         tracked = subprocess.run(
-            ["git", "diff", "--name-only", "HEAD", "--"],
+            ["git", "diff", "--name-only", "-z", "HEAD", "--"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -3896,7 +3907,7 @@ def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
         untracked = subprocess.run(
-            ["git", "ls-files", "--others", "--exclude-standard"],
+            ["git", "ls-files", "-z", "--others", "--exclude-standard"],
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -3908,7 +3919,7 @@ def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
         return ()
     if tracked.returncode != 0 or untracked.returncode != 0:
         return ()
-    changed = {path.strip() for path in (*tracked.stdout.splitlines(), *untracked.stdout.splitlines()) if path.strip()}
+    changed = {path for path in (*tracked.stdout.split("\0"), *untracked.stdout.split("\0")) if path}
     return tuple(sorted(changed))
 
 
@@ -4021,8 +4032,9 @@ def _auto_finalize_dirty_worktree(
     agent: str,
     branch: str | None,
     base_branch: str,
+    open_pr: bool = False,
 ) -> AutoFinalizeResult:
-    """Stage, commit, push, and draft-PR a cleanly exited dirty dispatch."""
+    """Stage, commit, and push a cleanly exited dirty dispatch."""
     changed_files = _auto_finalize_changed_files(worktree)
     try:
         worktree_proc = subprocess.run(
@@ -4128,18 +4140,6 @@ def _auto_finalize_dirty_worktree(
 
         commit_sha = _resolve_sha(worktree)
         _push_auto_finalize_branch(worktree, resolved_branch)
-        pr_url = _create_auto_finalize_pr(
-            worktree,
-            branch=resolved_branch,
-            base_branch=_base_branch_name(base_branch),
-            title=subject,
-            body=(
-                f"Auto-finalized delegate task `{task_id}` for `{agent}`.\n\n"
-                "The agent exited with `returncode=0`, left a dirty worktree, "
-                "and had made zero commits, so delegate.py staged the work, "
-                "created the commit, pushed the branch, and opened this draft PR."
-            ),
-        )
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         error = str(exc)
         if commit_sha is not None:
@@ -4167,12 +4167,282 @@ def _auto_finalize_dirty_worktree(
             changed_files=changed_files,
         )
 
+    pr_url = None
+    if open_pr:
+        try:
+            pr_url = _create_auto_finalize_pr(
+                worktree,
+                branch=resolved_branch,
+                base_branch=_base_branch_name(base_branch),
+                title=subject,
+                body=(
+                    f"Auto-finalized delegate task `{task_id}` for `{agent}`.\n\n"
+                    "The agent exited with `returncode=0`, left a dirty worktree, "
+                    "and had made zero commits, so delegate.py staged and pushed the work."
+                ),
+            )
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            # The commit is already pushed. Never soft-reset it after a PR error.
+            return AutoFinalizeResult(ok=False, commit_sha=commit_sha, error=str(exc), changed_files=changed_files)
+
     return AutoFinalizeResult(
         ok=True,
         commit_sha=commit_sha,
         pr_url=pr_url,
         changed_files=changed_files,
     )
+
+
+_RESCUE_TERMINAL_STATUSES = frozenset({"crashed", "timeout", "failed", "no_deliverable", "needs_finalize"})
+_RESCUE_MAX_FILE_BYTES = 5 * 1024 * 1024
+
+
+def _rescue_git(worktree: Path, *args: str, network: bool = False) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *args],
+        cwd=worktree,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+        timeout=DEFAULT_NETWORK_GIT_TIMEOUT_S if network else DEFAULT_GIT_TIMEOUT_S,
+    )
+
+
+def _rescue_remote_head(worktree: Path, branch: str) -> str | None:
+    proc = _rescue_git(worktree, "ls-remote", "--heads", "origin", branch, network=True)
+    if proc.returncode != 0:
+        raise RuntimeError("rescue remote proof unavailable")
+    lines = [line for line in proc.stdout.splitlines() if line.strip()]
+    if not lines:
+        return None
+    if len(lines) != 1 or lines[0].split("\t")[-1] != f"refs/heads/{branch}":
+        raise RuntimeError("rescue remote proof ambiguous")
+    return lines[0].split("\t", 1)[0]
+
+
+def _clean_rescue_junk(worktree: Path, changed: tuple[str, ...]) -> bool:
+    """Remove only the already classified disposable changes."""
+    index = _rescue_git(worktree, "ls-files", "-z", "--", *changed)
+    head = _rescue_git(worktree, "ls-tree", "-r", "-z", "--name-only", "HEAD", "--", *changed)
+    if index.returncode != 0 or head.returncode != 0:
+        return False
+    indexed_paths = set(index.stdout.split("\0"))
+    head_paths = set(head.stdout.split("\0"))
+    indexed = tuple(path for path in changed if path in indexed_paths)
+    restore = tuple(path for path in changed if path in head_paths)
+    remove = tuple(path for path in changed if path not in head_paths)
+    if indexed and _rescue_git(worktree, "restore", "--staged", "--", *indexed).returncode != 0:
+        return False
+    if restore and _rescue_git(worktree, "restore", "--source=HEAD", "--worktree", "--", *restore).returncode != 0:
+        return False
+    if remove and _rescue_git(worktree, "clean", "-fd", "--", *remove).returncode != 0:
+        return False
+    return _worktree_is_dirty(worktree) is False
+
+
+def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
+    """Preserve one terminal task on origin; never remove its worktree here."""
+    state = _read_state(state_path)
+    task_id = state.get("task_id") if state else None
+    row: dict[str, Any] = {"task_id": task_id, "action": "skipped"}
+    if not state or state.get("status") not in _RESCUE_TERMINAL_STATUSES:
+        row["reason"] = "task is not terminal non-success"
+        return row
+    raw_worktree = state.get("worktree_path")
+    if not isinstance(raw_worktree, str):
+        row["reason"] = "no recorded worktree"
+        return row
+    worktree = Path(raw_worktree).resolve()
+    dispatch_root = (_REPO_ROOT / ".worktrees" / "dispatch").resolve()
+    if not worktree.is_relative_to(dispatch_root) or _resolve_verified_worktree_path(worktree) != worktree:
+        row["reason"] = "not a registered dispatch worktree"
+        return row
+    if state.get("worktree_reused") is not False:
+        row["reason"] = "worktree ownership unknown or reused"
+        return row
+    lease = state.get("lease")
+    if (isinstance(lease, dict) and lease.get("state") == "active") or state.get("lease_state") == "active":
+        row["reason"] = "task lease active"
+        return row
+    try:
+        from scripts.orchestration import reap_worktrees
+
+        with worktree_lock(worktree) if apply else contextlib.nullcontext():
+            current = _read_state(state_path)
+            if current != state:
+                row["reason"] = "task state changed"
+                return row
+            if reap_worktrees._task_pid_alive(state):
+                row["reason"] = "task process alive"
+                return row
+            active_ids = reap_worktrees._active_task_ids()
+            live_cwds = reap_worktrees._live_cwd_paths(_REPO_ROOT)
+            if active_ids is None or live_cwds is None:
+                row["reason"] = "activity probe unavailable"
+                return row
+            if task_id in active_ids or any(cwd == worktree or cwd.is_relative_to(worktree) for cwd in live_cwds):
+                row["reason"] = "worktree active"
+                return row
+            current_branch = _current_branch(worktree)
+            recorded_branch = state.get("worktree_branch")
+            branch = f"rescue/{_x_agent_task_id(str(state.get('agent') or 'agent'), str(task_id))}"
+            if current_branch not in {recorded_branch, branch}:
+                row["reason"] = "worktree branch differs from task record"
+                return row
+            dirty = _worktree_is_dirty(worktree)
+            if dirty is None:
+                row["reason"] = "git status unavailable"
+                return row
+            changed = _auto_finalize_changed_files(worktree) if dirty else ()
+            if dirty and not changed:
+                row["reason"] = "changed files unavailable"
+                return row
+            large = [
+                name
+                for name in changed
+                if (worktree / name).is_file() and (worktree / name).stat().st_size > _RESCUE_MAX_FILE_BYTES
+            ]
+            if large:
+                row["reason"] = "files exceed 5 MB"
+                row["large_files"] = large
+                return row
+            cleaned_junk = False
+            if _auto_finalize_is_junk_only(changed):
+                if not apply:
+                    row["action"] = "candidate"
+                    row["reason"] = "clean disposable residue"
+                    return row
+                if not _clean_rescue_junk(worktree, changed):
+                    row["action"] = "error"
+                    row["reason"] = "could not clean disposable residue"
+                    return row
+                cleaned_junk = True
+                dirty = False
+                changed = ()
+            head = _resolve_sha(worktree)
+            if head is None:
+                row["reason"] = "HEAD unavailable"
+                return row
+            if not dirty and state.get("rescue_status") == "rescued" and state.get("rescue_head_commit") == head:
+                row["reason"] = "already rescued at HEAD"
+                return row
+            if not dirty:
+                ahead = _count_commits_ahead(
+                    worktree, _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main"))
+                )
+                if ahead is None:
+                    row["reason"] = "ahead count unavailable"
+                    return row
+                if ahead == 0 or _count_unpushed_commits(worktree, str(state.get("worktree_branch") or "")) == 0:
+                    row["action"] = "cleaned" if cleaned_junk else "skipped"
+                    row["reason"] = "disposable residue removed" if cleaned_junk else "no provable unpushed work"
+                    return row
+            existing_remote = _rescue_remote_head(worktree, branch)
+            if existing_remote is not None and existing_remote != head:
+                row["reason"] = "rescue remote branch already exists at another head"
+                return row
+            row.update({"action": "candidate", "rescue_ref": branch, "head": head})
+            if not apply:
+                return row
+            if dirty:
+                if current_branch != branch:
+                    proc = _rescue_git(worktree, "switch", "-c", branch)
+                    if proc.returncode != 0:
+                        raise RuntimeError("cannot create rescue branch")
+                proc = _rescue_git(worktree, "add", "-A")
+                if proc.returncode != 0:
+                    raise RuntimeError("cannot stage rescue work")
+                proc = _rescue_git(
+                    worktree,
+                    "commit",
+                    "-m",
+                    f"chore(dispatch): rescue {task_id}",
+                    "--trailer",
+                    f"X-Agent: {state.get('agent') or 'agent'}/{task_id}",
+                )
+                if proc.returncode != 0:
+                    raise RuntimeError("cannot commit rescue work")
+                head = _resolve_sha(worktree)
+                if head is None:
+                    raise RuntimeError("rescue commit HEAD unavailable")
+            proc = _rescue_git(worktree, "push", "origin", f"HEAD:refs/heads/{branch}", network=True)
+            if proc.returncode != 0:
+                raise RuntimeError("cannot push rescue branch")
+            if _rescue_remote_head(worktree, branch) != head:
+                raise RuntimeError("rescue remote verification failed")
+            proc = _rescue_git(
+                worktree,
+                "fetch",
+                "origin",
+                f"refs/heads/{branch}:refs/remotes/origin/{branch}",
+                network=True,
+            )
+            if proc.returncode != 0 or _resolve_sha(worktree, f"refs/remotes/origin/{branch}") != head:
+                raise RuntimeError("rescue tracking ref verification failed")
+            state.update({"rescue_ref": branch, "rescue_head_commit": head, "rescue_status": "rescued"})
+            _write_state_atomic(state_path, state)
+            row.update({"action": "rescued", "head": head})
+            return row
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        row.update({"action": "error", "reason": str(exc)})
+        return row
+
+
+def cmd_rescue(args: argparse.Namespace) -> int:
+    """Show or preserve terminal dispatch work before the P0 reaper runs."""
+    if args.all_stale:
+        try:
+            amount = str(args.older_than).removesuffix("h")
+            min_age_hours = float(amount)
+            if min_age_hours < 0:
+                raise ValueError
+        except (TypeError, ValueError):
+            print("--older-than must be a non-negative hour duration, such as 6h", file=sys.stderr)
+            return 2
+        paths = sorted(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else []
+    elif args.task_id:
+        paths = [_state_path(args.task_id)]
+        min_age_hours = 0
+    else:
+        print("provide a task ID or --all-stale", file=sys.stderr)
+        return 2
+
+    rows: list[dict[str, Any]] = []
+    now = datetime.now(UTC)
+    for path in paths:
+        state = _read_state(path)
+        if args.all_stale:
+            if state is None:
+                rows.append({"task_id": path.stem, "action": "skipped", "reason": "unreadable task state"})
+                continue
+            if state.get("status") not in _RESCUE_TERMINAL_STATUSES:
+                continue
+            try:
+                finished = datetime.fromisoformat(str(state["finished_at"]).replace("Z", "+00:00"))
+                age_hours = (now - finished).total_seconds() / 3600
+            except (KeyError, TypeError, ValueError, OverflowError):
+                rows.append(
+                    {
+                        "task_id": state.get("task_id"),
+                        "action": "skipped",
+                        "reason": "no finished_at" if not state.get("finished_at") else "invalid finished_at",
+                    }
+                )
+                continue
+            if age_hours < min_age_hours:
+                continue
+        rows.append(_rescue_task(path, apply=bool(args.apply or not args.all_stale)))
+    summary = {
+        action: sum(row["action"] == action for row in rows)
+        for action in ("candidate", "rescued", "cleaned", "skipped", "error")
+    }
+    print(
+        json.dumps(
+            {"mode": "apply" if args.apply or not args.all_stale else "dry_run", "summary": summary, "tasks": rows}
+        )
+    )
+    return 1 if summary["error"] else 0
 
 
 def _branch_ref_exists(repo_root: Path, branch: str) -> bool:
@@ -5586,6 +5856,7 @@ def _run_worker(
     attempt_id: str | None = None,
     mcp_config_path: str | None = None,
     strict_mcp_config: bool = False,
+    finalize_open_pr: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -5686,6 +5957,7 @@ def _run_worker(
     # read. A terminal status with no context is not an improvement over a stale
     # running one. (Cross-family review of #5807, round nine.)
     final_state: dict[str, Any] = _read_state(state_path) or {}
+    worktree_path = final_state.get("worktree_path")
     final_status = ""
     duration_s = time.monotonic() - start
     result_file: str | None = None
@@ -5699,6 +5971,7 @@ def _run_worker(
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     telemetry_settled = False
+    rescue_status: str | None = None
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
@@ -5974,7 +6247,6 @@ def _run_worker(
         # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
         # worktree exited dirty so follow-up reviewers can see at a glance
         # that the dispatched agent left uncommitted changes behind.
-        worktree_path = final_state.get("worktree_path")
         # Ownership is fixed at launch: only a worktree_path recorded with an
         # explicit ``worktree_reused: false`` was created by this dispatch. A
         # path derived from cwd below, or a legacy record without the flag,
@@ -6045,9 +6317,8 @@ def _run_worker(
                     if normalized_branch.startswith("origin/"):
                         normalized_branch = normalized_branch.removeprefix("origin/")
                     containment = _load_worktree_containment()
-                    if (
-                        normalized_branch not in containment.PROTECTED_BRANCHES
-                        and not (commits_ahead == 0 and dirty_on_exit is False)
+                    if normalized_branch not in containment.PROTECTED_BRANCHES and not (
+                        commits_ahead == 0 and dirty_on_exit is False
                     ):
                         unpushed_commits = _count_unpushed_commits(
                             Path(worktree_path),
@@ -6055,14 +6326,21 @@ def _run_worker(
                         )
                         if unpushed_commits is None or unpushed_commits > 0:
                             needs_finalize = True
+                            if unpushed_commits is not None and unpushed_commits > 0:
+                                rescue_status = "unpushed work - needs rescue"
+                            elif commits_ahead != 0:
+                                rescue_status = "unpushed state unknown - needs rescue"
+                            if rescue_status:
+                                finalize_error = rescue_status
 
-                if needs_finalize and returncode == 0 and mode == "danger":
+                if needs_finalize and rescue_status is None and returncode == 0 and mode == "danger":
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
                         agent=agent,
                         branch=final_state.get("worktree_branch"),
                         base_branch=base_branch,
+                        open_pr=finalize_open_pr,
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
                     commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
@@ -6180,6 +6458,8 @@ def _run_worker(
             finalize_error=finalize_error,
             last_error=last_error,
         )
+        final_state["final_branch_head_commit"] = _resolve_sha(Path(worktree_path)) if worktree_path else None
+        final_state["rescue_status"] = rescue_status
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
     except BaseException as interrupt_exc:
         # Defer SIGTERM across the ENTIRE handler, not just its write. A second
@@ -6215,6 +6495,8 @@ def _run_worker(
                     # final_state was read before the region, so this MERGES onto
                     # the real task record instead of replacing it...
                     **final_state,
+                    "final_branch_head_commit": _resolve_sha(Path(worktree_path)) if worktree_path else None,
+                    "rescue_status": rescue_status,
                     # ...and the outcome fields come from the same builder the
                     # checkpoint uses, so an interrupted run never persists a
                     # terminal status beside stale placeholder values.
@@ -6315,6 +6597,13 @@ def _run_worker(
         }
     )
     _write_state_atomic(state_path, final_state)
+    if worktree_path:
+        print(
+            f"[delegate] final branch={final_state.get('worktree_branch')} "
+            f"head={final_state.get('final_branch_head_commit') or 'unknown'} "
+            f"rescue_status={final_state.get('rescue_status') or 'none'}",
+            file=sys.stderr,
+        )
     _emit_terminal_dispatch_event(
         task_id=task_id,
         agent=agent,
@@ -6513,6 +6802,7 @@ def _record_worktree_prep_failure(
         "cwd": wt_path_str or str(_REPO_ROOT),
         "worktree_path": wt_path_str,
         "worktree_branch": worktree_branch,
+        "final_branch_head_commit": _resolve_sha(Path(worktree_path)) if worktree_path else None,
         "worktree_base_sha": worktree_base_sha,
         "worktree_base": worktree_base,
         "worktree_rebased": False,
@@ -7041,9 +7331,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         try:
             language_lane = _dispatch_is_language_lane(args)
             dispatch_agent = (
-                _resolve_agent_with_budget_guard(
-                    requested_agent, provider="openrouter", language_lane=language_lane
-                )
+                _resolve_agent_with_budget_guard(requested_agent, provider="openrouter", language_lane=language_lane)
                 if getattr(args, "provider", None) == "openrouter"
                 else _resolve_agent_with_budget_guard(requested_agent, language_lane=language_lane)
             )
@@ -7111,8 +7399,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         and _adapter_rejects_model(dispatch_agent, str(explicit_model))
     ):
         print(
-            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. "
-            "Using that lane's default.",
+            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. Using that lane's default.",
             file=sys.stderr,
         )
         args.model = None
@@ -7809,6 +8096,8 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             cmd.extend(["--harness", requested_harness])
         if keep_worktree:
             cmd.append("--keep-worktree")
+        if bool(getattr(args, "finalize_open_pr", False)):
+            cmd.append("--finalize-open-pr")
         if bool(getattr(args, "require_review_verdict", False)):
             cmd.append("--require-review-verdict")
         if max_budget_usd is not None:
@@ -7917,6 +8206,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     runtime_tmp_namespace_root,
                 )
             )
+            _record_final_branch_head(failed_state)
             _write_state_atomic(state_path, failed_state)
             print(
                 f"❌ failed to spawn worker for {task_id!r}: {type(exc).__name__}: {exc}",
@@ -8011,12 +8301,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     if prior_status in ("running", "spawning"):
         pid = state.get("pid")
         if pid and not _pid_alive(int(pid)):
-            state["status"] = "crashed"
-            state["finished_at"] = datetime.now(UTC).isoformat()
-            state["stderr_excerpt"] = (
-                f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by status probe"
-            )
-            _write_state_atomic(state_path, state)
+            _mark_crashed_task(state_path, state, source="status")
 
     # Elapsed time for still-running tasks
     if state.get("status") == "running" and state.get("started_at"):
@@ -8289,7 +8574,11 @@ def _resolve_agent_with_budget_guard(
         accounts = payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         status = _api_lane_status_from_account(prepaid, account)
-        if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
+        if (
+            status not in {"cool", "warm"}
+            or account.get("is_available") is False
+            or account.get("status") == "near_cap"
+        ):
             raise BudgetGuardRefuseError(
                 f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
                 f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
@@ -8373,8 +8662,15 @@ def _resolve_agent_with_budget_guard(
         else (agent_info.get("interactive") or {}).get("burn_pct_7d") or agent_info.get("burn_pct_7d")
     )
 
-    needs_action, reason = (False, "") if reserve_relaxes else _budget_needs_hard_capacity_action(
-        status=status, will_last=will_last, is_stale=is_stale, records_loaded=records_loaded,
+    needs_action, reason = (
+        (False, "")
+        if reserve_relaxes
+        else _budget_needs_hard_capacity_action(
+            status=status,
+            will_last=will_last,
+            is_stale=is_stale,
+            records_loaded=records_loaded,
+        )
     )
     if not needs_action:
         return requested
@@ -8441,15 +8737,17 @@ def _language_lane_substitute(
         reserve_relaxes = (
             seat == "codex"
             and _codex_is_threatened(info_dict)
-            and _codex_reset_reserve_eligible(
-                reset_reserve or {}, info_dict, snapshot_stale=is_stale
-            )
+            and _codex_reset_reserve_eligible(reset_reserve or {}, info_dict, snapshot_stale=is_stale)
         )
-        needs, why = (False, "") if reserve_relaxes else _budget_needs_hard_capacity_action(
-            status=status,
-            will_last=will_last,
-            is_stale=is_stale,
-            records_loaded=records_loaded,
+        needs, why = (
+            (False, "")
+            if reserve_relaxes
+            else _budget_needs_hard_capacity_action(
+                status=status,
+                will_last=will_last,
+                is_stale=is_stale,
+                records_loaded=records_loaded,
+            )
         )
         if not needs:
             return seat
@@ -8468,9 +8766,7 @@ def _language_lane_substitute(
         seen.add(nxt)
         seat = nxt
         if len(seen) > 4:
-            raise BudgetGuardRefuseError(
-                "ROUTING REFUSED: language-lane fallback chain did not reach a cool seat."
-            )
+            raise BudgetGuardRefuseError("ROUTING REFUSED: language-lane fallback chain did not reach a cool seat.")
 
 
 def _session_stream_store() -> Any:
@@ -8795,12 +9091,7 @@ def cmd_wait(args: argparse.Namespace) -> int:
         if prior_status in ("running", "spawning"):
             pid = state.get("pid")
             if pid and not _pid_alive(int(pid)):
-                state["status"] = "crashed"
-                state["finished_at"] = datetime.now(UTC).isoformat()
-                state["stderr_excerpt"] = (
-                    f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by wait probe"
-                )
-                _write_state_atomic(state_path, state)
+                _mark_crashed_task(state_path, state, source="wait")
 
         status = state.get("status")
         if status in _TERMINAL_STATUSES:
@@ -8919,7 +9210,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         if state.get("status") in ("running", "spawning"):
             pid = state.get("pid")
             if pid and not _pid_alive(int(pid)):
-                state["status"] = "crashed"
+                _mark_crashed_task(state_file, state, source="list")
         if args.status and state.get("status") != args.status:
             continue
         # Fix 4 (#1476): classify worktree layout so operators can see at
@@ -9069,6 +9360,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         attempt_id=getattr(args, "attempt_id", None),
         mcp_config_path=getattr(args, "mcp_config_path", None),
         strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
+        finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
     )
 
 
@@ -9117,6 +9409,32 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     sub = p.add_subparsers(dest="command", required=True)
+
+    rescue = sub.add_parser(
+        "rescue",
+        help="Inspect or preserve terminal dispatch work on rescue/<task>.",
+        description=(
+            "Preserve terminal non-success dispatch work on a verified rescue branch.\n"
+            "Use after a worker exits; --all-stale previews candidates unless --apply is set."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/delegate.py rescue impl-8508\n"
+            "  .venv/bin/python scripts/delegate.py rescue --all-stale --older-than 6h\n"
+            "  .venv/bin/python scripts/delegate.py rescue --all-stale --older-than 6h --apply\n\n"
+            "Outputs: JSON summary and task dispositions; apply may clean residue, commit, and push rescue refs.\n"
+            "Exit codes: 0 inspection or rescue completed; 1 rescue error; 2 invalid arguments.\n"
+            "Related: docs/runbooks/worktree-cleanup.md; issue #8508."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    rescue.add_argument("task_id", nargs="?", help="One terminal task ID, e.g. impl-8508; applies immediately.")
+    rescue.add_argument("--all-stale", action="store_true", help="Inspect all terminal tasks older than --older-than.")
+    rescue.add_argument("--older-than", default="6h", metavar="HOURS", help="Minimum terminal age (default: 6h).")
+    rescue.add_argument(
+        "--apply", action="store_true", help="Apply rescue to --all-stale candidates (default: dry-run)."
+    )
+    rescue.set_defaults(func=cmd_rescue)
 
     # dispatch
     def _dispatch_help_formatter(prog: str) -> argparse.HelpFormatter:
@@ -9196,9 +9514,7 @@ def build_parser() -> argparse.ArgumentParser:
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
-    d.add_argument(
-        "--model", default=None, help="Optional model override, e.g. gpt-6-sol or gemini-3.1-pro-preview."
-    )
+    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6-sol or gemini-3.1-pro-preview.")
     d.add_argument(
         "--provider",
         default=None,
@@ -9277,6 +9593,11 @@ def build_parser() -> argparse.ArgumentParser:
             "Keep a successful clean dispatch worktree instead of reaping it "
             "after the branch is recoverable from origin or PR state."
         ),
+    )
+    d.add_argument(
+        "--finalize-open-pr",
+        action="store_true",
+        help="Explicitly open a draft PR after a successful dirty-worktree auto-finalize push.",
     )
     d.add_argument(
         "--require-review-verdict",
@@ -9648,6 +9969,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     )
     wk.add_argument("--keep-worktree", action="store_true")
+    wk.add_argument("--finalize-open-pr", action="store_true")
     wk.add_argument("--require-review-verdict", action="store_true")
     wk.add_argument("--max-budget-usd", type=float, default=None)
     wk.add_argument("--output-schema", default=None)

@@ -365,8 +365,7 @@ def _stale_ref_delete_reason(
         )
     if closed_not_durable and exact_closed is not None and exact_closed.number is not None:
         return None, (
-            f"{kind} but CLOSED PR #{exact_closed.number} head is not durably "
-            f"on refs/pull/{exact_closed.number}/head"
+            f"{kind} but CLOSED PR #{exact_closed.number} head is not durably on refs/pull/{exact_closed.number}/head"
         )
     if not fetch_ok:
         return None, (
@@ -968,6 +967,7 @@ def _empty_repo_result(repo_root: Path) -> dict[str, Any]:
         "errors": [],
         "reaper_disabled": False,
         "needs_finalize_worktrees": [],
+        "rescue": None,
     }
 
 
@@ -1014,6 +1014,27 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
     if apply and live_cwds is None:
         result["errors"].append("process-CWD activity probe unavailable; apply skipped")
         return result
+
+    # Report terminal rescue candidates before reaping. Only an explicit
+    # driver-invoked rescue may commit or push their work.
+    delegate_script = repo_root / "scripts" / "delegate.py"
+    if apply and delegate_script.is_file() and os.environ.get("LU_REAPER_DISABLED") != "1":
+        try:
+            rescue_proc = subprocess.run(
+                [sys.executable, str(delegate_script), "rescue", "--all-stale", "--older-than", "6h"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=600,
+                env=reap_worktrees.sanitized_git_env(),
+            )
+            payload = json.loads(rescue_proc.stdout)
+            result["rescue"] = {"summary": payload.get("summary"), "tasks": payload.get("tasks")}
+            if rescue_proc.returncode != 0:
+                result["errors"].append("terminal rescue reported errors")
+        except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError):
+            result["errors"].append("terminal rescue unavailable")
 
     try:
         rows = reap_worktrees.reap_worktrees(
@@ -1255,9 +1276,7 @@ def build_public_summary(
         repo_name = Path(raw_root).name if raw_root else "unknown"
         repos_summary[repo_name] = {
             "reaped": sum(
-                1
-                for row in repo_dict.get("results", [])
-                if row.get("action") in {"removed", "preserved_then_removed"}
+                1 for row in repo_dict.get("results", []) if row.get("action") in {"removed", "preserved_then_removed"}
             ),
             "retained": repo_dict.get("retained", 0),
             "retained_exceptions": repo_dict.get("retained_exceptions", 0),
@@ -1265,6 +1284,7 @@ def build_public_summary(
             "by_owner": repo_dict.get("by_owner", {}),
             "orphans_reported": len(repo_dict.get("orphans", [])),
             "errors": len(repo_dict.get("errors", [])),
+            "rescue_candidates": ((repo_dict.get("rescue") or {}).get("summary") or {}).get("candidate", 0),
             "branches_deleted": (
                 sum(1 for row in repo_dict.get("branches", []) if row.get("action") == "deleted")
                 + sum(1 for row in repo_dict.get("results", []) if row.get("branch_pruned") is True)

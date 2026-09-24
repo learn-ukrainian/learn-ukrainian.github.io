@@ -225,14 +225,20 @@ def test_auto_finalize_changed_files_timeouts(tmp_path: Path) -> None:
 
     def fake_run(cmd, **kwargs):
         calls.append({"cmd": cmd, **kwargs})
-        return _completed(cmd, returncode=0, stdout="file.py\n")
+        return _completed(cmd, returncode=0, stdout="file.py\0")
 
     with patch("subprocess.run", side_effect=fake_run):
         assert _auto_finalize_changed_files(tmp_path) == ("file.py",)
 
     assert len(calls) == 2
+    assert "-z" in calls[0]["cmd"]
+    assert "-z" in calls[1]["cmd"]
     assert calls[0]["timeout"] == DEFAULT_GIT_TIMEOUT_S
     assert calls[1]["timeout"] == DEFAULT_GIT_TIMEOUT_S
+
+    # Newlines are valid filename characters with Git's NUL-delimited output.
+    with patch("subprocess.run", return_value=_completed(stdout="with\nnewline.py\0")):
+        assert _auto_finalize_changed_files(tmp_path) == ("with\nnewline.py",)
 
     with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "diff"], DEFAULT_GIT_TIMEOUT_S)):
         assert _auto_finalize_changed_files(tmp_path) == ()

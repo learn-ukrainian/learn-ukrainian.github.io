@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -98,6 +99,31 @@ def test_settle_task_reports_closeout(tmp_path: Path, monkeypatch: pytest.Monkey
     assert report.pr_url is None
     assert report.closeout["blocker"] == "commits_without_pr"
     assert report.closeout["branch"] == "codex/t1"
+
+
+@pytest.mark.parametrize("open_pr", [False, True])
+def test_settle_push_opens_pr_only_with_explicit_flag(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, open_pr: bool
+) -> None:
+    args = ["task", "--task-id", "t1", "--push"]
+    if open_pr:
+        args.append("--open-pr")
+    parsed = ds._build_parser().parse_args(args)
+    calls: list[list[str]] = []
+
+    def fake_run(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append(command)
+        return subprocess.CompletedProcess(command, 0, "https://example.invalid/pr/1", "")
+
+    monkeypatch.setattr(ds, "_run", fake_run)
+    monkeypatch.setattr(ds, "_find_pr", lambda *_args: (None, None))
+    actions = ds.push_and_maybe_open_pr(tmp_path, "codex/t1", open_pr=parsed.open_pr, title=None, body=None)
+
+    assert calls[0] == ["git", "push", "-u", "origin", "HEAD"]
+    assert [call[:3] for call in calls if call[:3] == ["gh", "pr", "create"]] == (
+        [["gh", "pr", "create"]] if open_pr else []
+    )
+    assert actions == (["pushed", "pr_created:https://example.invalid/pr/1"] if open_pr else ["pushed"])
 
 
 def test_attach_idle_reminder_requires_disposition_when_eligible(tmp_path: Path) -> None:
