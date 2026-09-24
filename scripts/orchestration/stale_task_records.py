@@ -9,17 +9,19 @@ finalized; they only inflate every scan and read as open attention items.
 ``--min-age-days``:
 
 * **A** report only: the dispatch branch, or a commit the record names, is
-  still on ``origin`` (no finalizer publishes a branch without its worktree);
+  still on ``origin`` under any branch (no finalizer publishes a branch
+  without its worktree);
 * **B** possible unpushed work (never modified): the local branch still exists,
   the worktree exists and is dirty, or a local ref (a renamed branch) or a
   worktree HEAD still holds a commit the record names;
 * **C** orphaned: the worktree path, the local branch and the remote branch are
   all gone, and so is the work. Either the record names a commit
-  (``auto_finalize.commit_sha``; records carry no other head id) that no local
-  ref, remote-tracking ref or ``origin`` head holds, or the task exited with no
+  (``auto_finalize.commit_sha``; records carry no other head id) that no ref
+  reaches, remote-tracking refs freshly fetched, or the task exited with no
   commits and a clean tree, leaving nothing to lose;
-* **D** anything else (never modified): evidence unavailable, commits or a
-  dirty exit without a recorded commit id (a renamed branch cannot be ruled
+* **D** anything else (never modified): evidence unavailable, a failed fetch
+  (``fetch_failed``: stale remote-tracking refs cannot prove the work gone),
+  commits or a dirty exit without a recorded commit id (a renamed branch cannot be ruled
   out), a recorded commit missing from the object store, or a merged pull
   request that shares the branch name but none of the record's commits.
 
@@ -28,10 +30,12 @@ by commit identity: its head or merge commit is a recorded commit, or its head
 descends from one. A pull request that only reuses the branch name may belong
 to a later task, so that record moves to D instead. A clean exit with no
 commits settles ``no_deliverable``; anything else settles ``failed``. Evidence
-comes from one ``git ls-remote --heads`` and one local branch listing per
-repository; one ``git cat-file --batch-check`` and one ``git rev-list --all``
-per repository when records name commits; worktree probes for checkouts that
-still exist; and one paged REST pull list per repository (never GraphQL, never
+comes from one ``git fetch --no-tags --prune origin`` (dry runs too: it changes
+only remote-tracking refs), one ``git ls-remote --heads`` and one local branch
+listing per repository; one ``git cat-file --batch-check`` and one
+``git rev-list --all`` per repository when records name commits (one walk into
+a set beats ~425 per-commit ``for-each-ref --contains`` walks); worktree probes
+for checkouts that still exist; and one paged REST pull list per repository (never GraphQL, never
 a per-record GitHub call). Per-record git calls happen only to name the refs
 holding a commit or to test a same-branch pull request head's ancestry.
 
@@ -51,9 +55,12 @@ publishes a record naming that checkout (a record naming no checkout locks its
 own file). The lock is taken even for a missing path, because dispatch takes it
 before it attaches a checkout. Under the lock the record is re-read; one whose
 mtime or status changed since selection is skipped, because a live writer
-touched it. Settle writes through ``delegate._write_state_atomic``; archive
-verifies that the file it renamed is the one it checked and puts it back if a
-writer replaced it in between.
+touched it. Settle writes through ``delegate._write_state_atomic``. Archive
+first renames the record to a private staging name, verifies that the file it
+took is the one it checked, and puts it back if a writer replaced it in
+between. No move ever replaces a file: archive, put-back and ``restore`` place
+each file with ``os.link`` (which fails if the name is taken) before unlinking
+the source, so a writer that created the destination first keeps its file.
 """
 
 from __future__ import annotations
@@ -65,6 +72,7 @@ import os
 import re
 import subprocess
 import sys
+import uuid
 from collections import Counter, defaultdict
 from collections.abc import Callable, Iterable, Mapping
 from datetime import UTC, datetime, timedelta
@@ -172,6 +180,9 @@ class RepoFacts:
     remote_heads: dict[str, str] | None = None
     local_branches: dict[str, str] | None = None
     error: str | None = None
+    # Set when ``git fetch`` failed: remote-tracking refs may be stale, so no
+    # record of this repository may be proven orphaned (class C).
+    fetch_error: str | None = None
 
 
 def default_repo_checkouts() -> dict[str, Path]:
@@ -186,12 +197,31 @@ def default_repo_checkouts() -> dict[str, Path]:
     return checkouts
 
 
+def _fetch_origin(checkout: Path) -> str | None:
+    """Refresh remote-tracking refs with one ``git fetch --no-tags --prune origin``.
+
+    Reachability from ``refs/remotes`` proves a commit is off ``origin`` only
+    when those refs are current: an unfetched remote branch may have advanced
+    past a recorded commit. Returns why the fetch failed, or ``None``.
+    """
+    proc = _git(
+        ["fetch", "--no-tags", "--prune", "origin"], cwd=checkout, timeout=delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S
+    )
+    if proc is None:
+        return f"git fetch origin did not finish within {delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S:g}s"
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "").strip().splitlines()
+        return f"git fetch origin failed: {detail[-1] if detail else proc.returncode}"[:300]
+    return None
+
+
 def collect_repo_facts(slug: str, checkout: Path | None) -> RepoFacts:
-    """One ``git ls-remote --heads origin`` plus one local branch listing."""
+    """One ``git fetch``, one ``git ls-remote --heads origin`` and one local branch listing."""
     facts = RepoFacts(slug=slug, checkout=checkout)
     if checkout is None:
         facts.error = f"no local checkout for repository {slug}"
         return facts
+    facts.fetch_error = _fetch_origin(checkout)
     remote = _git(["ls-remote", "--heads", "origin"], cwd=checkout, timeout=delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S)
     if remote is None or remote.returncode != 0:
         facts.error = "git ls-remote --heads origin failed"
@@ -269,7 +299,9 @@ def collect_commit_facts(checkout: Path, shas: Iterable[str]) -> CommitFacts:
 
     ``rev-list --all`` walks every ref (local branches, tags, remote-tracking
     refs, stash) plus the HEAD of every linked worktree, so a commit it does not
-    list is held by no local or remote-tracking ref under any name.
+    list is held by no local or remote-tracking ref under any name. Callers run
+    it only after :func:`_fetch_origin` succeeded, so ``refs/remotes`` is
+    current and a remote branch that descends from the commit is seen.
     """
     wanted = sorted(set(shas))
     facts = CommitFacts(resolved={}, reachable=set())
@@ -681,7 +713,12 @@ def classify(
         slug = candidate.record.get("repository")
         if isinstance(slug, str) and slug not in facts_by_slug:
             facts_by_slug[slug] = collect_repo_facts(slug, repo_checkouts.get(slug))
-        _classify_one(candidate, facts_by_slug.get(slug) if isinstance(slug, str) else None)
+        facts = facts_by_slug.get(slug) if isinstance(slug, str) else None
+        _classify_one(candidate, facts)
+        if candidate.klass == "C" and facts is not None and facts.fetch_error is not None:
+            candidate.klass = "D"
+            candidate.evidence["fetch_failed"] = facts.fetch_error
+            candidate.skip_reason = f"fetch_failed: {facts.fetch_error}; stale remote refs cannot prove the work gone"
 
     naming_commits: dict[str, list[Candidate]] = defaultdict(list)
     for candidate in candidates:
@@ -898,38 +935,83 @@ class _RecordReplaced(Exception):
     """A writer replaced the record between the final check and the move."""
 
 
-def _free_destination(dest_dir: Path, name: str, stamp: str) -> Path:
-    dest = dest_dir / name
-    if not dest.exists():
+def _move_no_replace(src: Path, dst: Path) -> list[Path]:
+    """Move ``src`` to ``dst`` without ever replacing what is at ``dst``.
+
+    ``src`` must be a path no writer replaces, since it is unlinked after the
+    copy lands: a staging name, or an archived file. A file is hard-linked to
+    ``dst`` (``os.link`` raises :class:`FileExistsError`, atomically, if the
+    name is taken) and then unlinked. A directory claims ``dst`` with
+    ``os.mkdir`` (same guarantee) and moves its entries the same way; an entry
+    whose name a writer already took inside it stays at ``src``. Returns the
+    paths left at ``src``.
+    """
+    if src.is_dir() and not src.is_symlink():
+        os.mkdir(dst)
+        kept: list[Path] = []
+        for child in sorted(src.iterdir()):
+            try:
+                kept.extend(_move_no_replace(child, dst / child.name))
+            except FileExistsError:
+                kept.append(child)
+        if not kept:
+            os.rmdir(src)
+        return kept
+    os.link(src, dst, follow_symlinks=False)
+    os.unlink(src)
+    return []
+
+
+def _stage(path: Path, staging_dir: Path) -> Path:
+    """Take whatever ``path`` holds right now to a private name nobody else writes."""
+    staged = staging_dir / f".{path.name}.{os.getpid()}.{uuid.uuid4().hex}.moving"
+    os.rename(path, staged)
+    return staged
+
+
+def _place(staged: Path, dest_dir: Path, name: str, stamp: str) -> Path:
+    """Move a staged file into ``dest_dir`` as ``name``, else its stamped name; never overwrite."""
+    first = dest_dir / name
+    for dest in (first, delegate._archived_artifact_path(first, stamp)):
+        try:
+            kept = _move_no_replace(staged, dest)
+        except FileExistsError:
+            continue
+        if kept:
+            raise OSError(f"{dest} was written during the move; {len(kept)} entries left at {staged}")
         return dest
-    return delegate._archived_artifact_path(dest, stamp)
+    raise OSError(f"archive already holds {name} and its stamped name; left at {staged}")
 
 
 def _move_group(record_path: Path, dest_dir: Path, stamp: str, *, checked: os.stat_result) -> list[str]:
     """Move a record then its sidecars; never overwrite a destination.
 
-    ``checked`` is the ``stat`` of the record as last verified. If the file
-    that moved is not that one, a writer replaced the record in between: it is
-    put back and :class:`_RecordReplaced` is raised before any sidecar moves.
+    Each file is first renamed to a private staging name, which takes it
+    atomically whatever a writer does next. ``checked`` is the ``stat`` of the
+    record as last verified. If the staged record is not that file, a writer
+    replaced it in between: it is put back (unless a writer created the record
+    again meanwhile) and :class:`_RecordReplaced` is raised before any sidecar
+    moves.
     """
     dest_dir.mkdir(parents=True, exist_ok=True)
-    moved: list[str] = []
-    record_dest = _free_destination(dest_dir, record_path.name, stamp)
-    # A renamed record takes its sidecars' names along, so they still pair up.
-    pairs = zip(_sidecar_names(record_path.stem), _sidecar_names(record_dest.stem), strict=True)
-    sidecars = [(record_path.with_name(src), dst) for src, dst in pairs if record_path.with_name(src).exists()]
-    os.rename(record_path, record_dest)
-    landed = os.lstat(record_dest)
+    sidecars = [record_path.with_name(name) for name in _sidecar_names(record_path.stem)]
+    staged = _stage(record_path, dest_dir)
+    landed = os.lstat(staged)
     if (landed.st_ino, landed.st_mtime_ns) != (checked.st_ino, checked.st_mtime_ns):
-        if os.path.lexists(record_path):
-            raise OSError(f"record replaced during the move and rewritten again; newer copy left at {record_dest}")
-        os.rename(record_dest, record_path)
+        try:
+            _move_no_replace(staged, record_path)
+        except FileExistsError:
+            raise OSError(f"record replaced during the move and rewritten again; newer copy left at {staged}") from None
         raise _RecordReplaced
-    moved.append(record_dest.name)
-    for sidecar, name in sidecars:
-        dest = _free_destination(dest_dir, name, stamp)
-        os.rename(sidecar, dest)
-        moved.append(dest.name)
+    record_dest = _place(staged, dest_dir, record_path.name, stamp)
+    moved = [record_dest.name]
+    # A renamed record takes its sidecars' names along, so they still pair up.
+    for sidecar, name in zip(sidecars, _sidecar_names(record_dest.stem), strict=True):
+        try:
+            staged = _stage(sidecar, dest_dir)
+        except FileNotFoundError:
+            continue
+        moved.append(_place(staged, dest_dir, name, stamp).name)
     return moved
 
 
@@ -1041,6 +1123,42 @@ def archive_terminal(
     }
 
 
+def _restore_group(group: list[Path], tasks_dir: Path, row: dict[str, Any]) -> None:
+    """Move an archived record, then its sidecars, back without replacing a hot file.
+
+    The clash check before this is advisory: a writer can create the hot record
+    after it. Every move is :func:`_move_no_replace`, so that writer's file is
+    kept and the archived copy stays where it is.
+    """
+    record_path, *sidecars = group
+    try:
+        _move_no_replace(record_path, tasks_dir / record_path.name)
+    except FileExistsError:
+        row["action"] = "skipped"
+        row["skip_reason"] = f"a writer created {record_path.name} in the hot directory first; archived copy kept"
+        return
+    except OSError as exc:
+        row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
+        return
+    kept: list[str] = []
+    try:
+        for sidecar in sidecars:
+            try:
+                kept.extend(
+                    str(path.relative_to(record_path.parent))
+                    for path in _move_no_replace(sidecar, tasks_dir / sidecar.name)
+                )
+            except FileExistsError:
+                kept.append(sidecar.name)
+    except OSError as exc:
+        row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
+        return
+    row["action"] = "restored"
+    if kept:
+        row["kept_in_archive"] = kept
+        row["note"] = "a writer created these in the hot directory first; archived copies kept"
+
+
 def restore_archived(tasks_dir: Path, names: Iterable[str], *, apply: bool = False) -> dict[str, Any]:
     """Move archived records (by task id or file name) and their sidecars back to the hot directory."""
     archive_dir = tasks_dir / ARCHIVE_DIR_NAME
@@ -1063,12 +1181,7 @@ def restore_archived(tasks_dir: Path, names: Iterable[str], *, apply: bool = Fal
             elif not apply:
                 row["action"] = "would_restore"
             else:
-                try:
-                    for path in group:
-                        os.rename(path, tasks_dir / path.name)
-                    row["action"] = "restored"
-                except OSError as exc:
-                    row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
+                _restore_group(group, tasks_dir, row)
             row["files"] = [path.name for path in group]
         rows.append(row)
     return {
@@ -1165,17 +1278,18 @@ def _build_parser() -> argparse.ArgumentParser:
             "Use it for records whose worktree, local branch and remote branch are all gone."
         ),
         epilog=(
-            "Classes (evidence: git ls-remote, a local branch list and, for records naming a commit,\n"
-            "one cat-file + one rev-list --all per repository; worktree probes; one paged REST pull\n"
-            "list per repository; never GraphQL or per-record GitHub calls):\n"
+            "Classes (evidence: git fetch --no-tags --prune origin (dry run too; it changes only\n"
+            "remote-tracking refs), git ls-remote, a local branch list and, for records naming a\n"
+            "commit, one cat-file + one rev-list --all per repository; worktree probes; one paged REST\n"
+            "pull list per repository; never GraphQL or per-record GitHub calls):\n"
             "  A  branch, or a recorded commit, still on origin          report only\n"
             "  B  local branch or a ref holding a recorded commit, or    never modified\n"
             "     worktree dirty\n"
             "  C  worktree, branches and the work all gone: a recorded   settled\n"
             "     commit no ref holds, or a clean exit with no commits\n"
-            "  D  anything else: evidence unavailable, commits or a      never modified\n"
-            "     dirty exit with no recorded commit, a PR that only\n"
-            "     reuses the branch name\n"
+            "  D  anything else: evidence unavailable, a failed fetch    never modified\n"
+            "     (fetch_failed), commits or a dirty exit with no\n"
+            "     recorded commit, a PR that only reuses the branch name\n"
             "Class C settles to: done (+merged_pr) when a merged same-repository PR carries a recorded\n"
             "commit (head, merge commit, or a head descending from it); no_deliverable for a clean exit\n"
             "with no commits; failed otherwise. Each write adds settled_by='settle-stale', settled_at,\n"

@@ -11,6 +11,7 @@ import json
 import os
 import subprocess
 import threading
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -452,6 +453,53 @@ def test_renamed_branch_keeps_its_record_out_of_class_c(tasks_dir, repo):
     assert _snapshot(tasks_dir) == before
 
 
+def test_unfetched_remote_branch_descending_from_the_recorded_commit_is_not_class_c(tasks_dir, repo):
+    """Sol r2: an origin branch this checkout never fetched has advanced past the recorded commit."""
+    work_sha = _orphan_commit(repo, "advanced")
+    _git(repo, "checkout", "-b", "tmp/descendant", work_sha)
+    (repo / "later.txt").write_text("later\n")
+    _git(repo, "add", "later.txt")
+    _git(repo, "commit", "-m", "later")
+    _git(repo, "push", "origin", "tmp/descendant:refs/heads/rescue/advanced")
+    _git(repo, "checkout", "main")
+    _git(repo, "branch", "-D", "tmp/descendant")
+    # The checkout has not fetched it: no local or remote-tracking ref holds the work.
+    _git(repo, "update-ref", "-d", "refs/remotes/origin/rescue/advanced")
+    assert work_sha not in _git(repo, "rev-list", "--all").split()
+    _record(tasks_dir, "advanced", worktree_dirty_on_exit=True, auto_finalize=_auto_finalized(work_sha))
+    before = _snapshot(tasks_dir)
+
+    row = _by_file(_settle(tasks_dir, repo, []))["advanced.json"]
+
+    assert row["class"] == "A"
+    assert row["evidence"]["refs_containing_commit"] == ["refs/remotes/origin/rescue/advanced"]
+    assert "rescue/advanced" in _git(repo, "for-each-ref", "refs/remotes/origin")
+    assert _snapshot(tasks_dir) == before
+
+
+def test_failed_fetch_keeps_every_record_of_the_repository_out_of_class_c(tasks_dir, mixed, monkeypatch):
+    real_git = str_mod._git
+
+    def offline_fetch(args, **kwargs):
+        if args[0] == "fetch":
+            return subprocess.CompletedProcess(["git", *args], 128, "", "fatal: unable to access origin\n")
+        return real_git(args, **kwargs)
+
+    monkeypatch.setattr(str_mod, "_git", offline_fetch)
+    before = _snapshot(tasks_dir)
+
+    report = _run(tasks_dir, mixed, apply=True)
+
+    rows = _by_file(report)
+    assert report["classes"] == {"A": 1, "B": 2, "C": 0, "D": 6}
+    for name in ("merged.json", "no-commits.json", "crashed.json", "stale-pr.json"):
+        assert rows[name]["class"] == "D"
+        assert rows[name]["skip_reason"].startswith("fetch_failed: git fetch origin failed: fatal: unable")
+    assert "settled" not in report["actions"]
+    assert mixed["pager"].calls == []
+    assert _snapshot(tasks_dir) == before
+
+
 @pytest.mark.parametrize(
     ("fields", "reason"),
     [
@@ -744,3 +792,79 @@ def test_archive_puts_back_a_record_replaced_during_the_move(tasks_dir, monkeypa
     assert json.loads(target.read_text())["status"] == "running"
     assert (tasks_dir / "raced.result").is_file()
     assert not list((tasks_dir / "archive").iterdir())
+
+
+def _link_after_writer(monkeypatch, target: Path, write: Callable[[], None]) -> list[bool]:
+    """Make a writer create ``target`` just before the tool links a file onto it."""
+    real_link = os.link
+    raced: list[bool] = []
+
+    def racing_link(src, dst, **kwargs):
+        if Path(dst) == target and not raced:
+            raced.append(True)
+            write()
+        return real_link(src, dst, **kwargs)
+
+    monkeypatch.setattr(str_mod.os, "link", racing_link)
+    return raced
+
+
+def test_restore_keeps_a_hot_record_a_writer_created_after_the_check(tasks_dir, monkeypatch):
+    _terminal(tasks_dir, "revived")
+    (tasks_dir / "revived.result").write_text("old reply\n")
+    str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    hot = tasks_dir / "revived.json"
+    raced = _link_after_writer(
+        monkeypatch, hot, lambda: delegate._write_state_atomic(hot, {"task_id": "revived", "status": "running"})
+    )
+
+    report = str_mod.restore_archived(tasks_dir, ["revived"], apply=True)
+
+    row = report["records"][0]
+    assert raced and row["action"] == "skipped"
+    assert "a writer created revived.json" in row["skip_reason"]
+    assert json.loads(hot.read_text())["status"] == "running"
+    assert json.loads((tasks_dir / "archive" / "revived.json").read_text())["status"] == "done"
+    assert (tasks_dir / "archive" / "revived.result").read_text() == "old reply\n"
+    assert not (tasks_dir / "revived.result").exists()
+
+
+@pytest.mark.parametrize("companion", ["revived.result", "revived.snapshots/read_only_checkout_post.json"])
+def test_restore_keeps_a_companion_a_writer_created_after_the_check(tasks_dir, monkeypatch, companion):
+    _terminal(tasks_dir, "revived")
+    (tasks_dir / "revived.result").write_text("old reply\n")
+    (tasks_dir / "revived.snapshots").mkdir()
+    for phase in ("pre", "post"):
+        (tasks_dir / "revived.snapshots" / f"read_only_checkout_{phase}.json").write_text(f'{{"old": "{phase}"}}')
+    str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    target = tasks_dir / companion
+    raced = _link_after_writer(monkeypatch, target, lambda: target.write_text("writer\n"))
+
+    report = str_mod.restore_archived(tasks_dir, ["revived"], apply=True)
+
+    row = report["records"][0]
+    assert raced and row["action"] == "restored"
+    assert row["kept_in_archive"] == [companion]
+    assert target.read_text() == "writer\n"
+    assert (tasks_dir / "archive" / companion).is_file()
+    assert json.loads((tasks_dir / "revived.json").read_text())["status"] == "done"
+    assert (tasks_dir / "revived.snapshots" / "read_only_checkout_pre.json").read_text() == '{"old": "pre"}'
+
+
+def test_archive_never_replaces_a_destination_created_during_the_move(tasks_dir, monkeypatch):
+    _terminal(tasks_dir, "clash")
+    (tasks_dir / "clash.result").write_text("reply\n")
+    foreign = tasks_dir / "archive" / "clash.json"
+    raced = _link_after_writer(monkeypatch, foreign, lambda: foreign.write_text("foreign\n"))
+
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+
+    row = report["records"][0]
+    assert raced and row["action"] == "archived"
+    assert foreign.read_text() == "foreign\n"
+    record_name, result_name = row["moved"]
+    assert record_name.endswith(".archived.json") and result_name == record_name.removesuffix(".json") + ".result"
+    assert json.loads((foreign.parent / record_name).read_text())["status"] == "done"
+    assert (foreign.parent / result_name).read_text() == "reply\n"
+    assert sorted(path.name for path in tasks_dir.iterdir()) == ["archive"]
+    assert not list(foreign.parent.glob(".*.moving"))

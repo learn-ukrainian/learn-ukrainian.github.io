@@ -777,7 +777,9 @@ For write-capable delegation, prefer `--worktree`. `delegate.py` creates the wor
 - `settle-stale` settles `needs_finalize` records older than 7 days once their worktree,
   local branch, remote branch **and work** are gone. The work counts as gone only when the
   record names a commit (`auto_finalize.commit_sha`) that no ref holds under any name, or
-  when the task exited clean with no commits. Settled records become `done`,
+  when the task exited clean with no commits. Each run (dry runs too) first does one
+  `git fetch --no-tags --prune origin` per repository, so remote branches are current; if
+  that fetch fails, no record of that repository is settled (class D, `fetch_failed`). Settled records become `done`,
   `no_deliverable` or `failed` and carry a `settled_by` receipt. `done` needs a merged PR
   that carries a recorded commit. A PR that only reuses the branch name leaves the record
   in class D. Classes A, B and D are reported and never changed. They cover a branch or
@@ -787,7 +789,9 @@ For write-capable delegation, prefer `--worktree`. `delegate.py` creates the wor
   sidecars, into `batch_state/tasks/archive/`. A record stays hot while its checkout path or
   an `acp_runtime_paths` entry still exists. Each move holds the record's lock, and it
   re-checks the record's mtime and status first.
-- `restore` moves an archived record back.
+- `restore` moves an archived record back. No move ever replaces a file: if a writer
+  created the hot record (or a sidecar) first, the writer's file stays and the archived
+  copy is kept and reported.
 
 Readers follow `scripts/orchestration/task_record_store.py`. Active views and the claim scan
 read the hot directory only. Lookups by task id fall back to the archive: `delegate.py
