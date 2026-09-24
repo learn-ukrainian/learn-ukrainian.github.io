@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 import time
 from collections.abc import Callable
 from pathlib import Path
@@ -364,6 +365,37 @@ def test_acp_redirect_is_only_the_primary_checkout_itself() -> None:
 
     with _acp_execution.acp_execution_cwd(dispatch, task_id="guard-8523-dispatch") as workspace:
         assert Path(workspace).resolve() == dispatch.resolve()
+
+
+def test_acp_redirect_is_active_when_module_was_not_preimported() -> None:
+    """Production imports ``_acp_execution`` function-locally (#8523).
+
+    The autouse fixture must import it itself; a fresh worker that has not
+    loaded the module must still get the redirect, not the real helper.
+    """
+    probe = """
+import sys
+import pytest
+
+class Check:
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_collection_finish(self, session):
+        assert "scripts.ai_agent_bridge._acp_execution" not in sys.modules
+
+raise SystemExit(pytest.main(
+    ["tests/test_conftest_worktree_guard.py::test_real_checkout_acp_execution_does_not_mkdir_dispatch",
+     "-q", "-n", "0", "-p", "no:cacheprovider"],
+    plugins=[Check()],
+))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", probe],
+        cwd=worktree_guard._REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
 
 
 def test_real_checkout_acp_execution_does_not_mkdir_dispatch() -> None:
