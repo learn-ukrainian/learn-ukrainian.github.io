@@ -91,7 +91,7 @@ def test_live_runner_error_correction_item_provenance(tmp_path: Path, monkeypatc
     assert inc_span["is_key"] is None
 
     corr_span = next(s for s in e_spans if s["record_side"] == "correct")
-    assert corr_span["text"] == "сло́во"
+    assert corr_span["text"] == "слово"  # record print: the pack's `correct` text, unstressed
     assert corr_span["source"] == "record"
     assert corr_span["record_kind"] == "error"
     assert corr_span["option_origin"] is None
@@ -384,7 +384,9 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
     }
     words["words"][0]["forms"].extend([form_a, form_e])
     plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["forms"].extend([form_a["tags"], form_e["tags"]])
-    draft["steps"][0]["blocks"][0]["text"] = ("слово " * 10) + "слове "
+    # Every taught form has a teaching position in the urok text: a string `answer` key is no
+    # longer a resolved unit (it is a key like the integer `correct`), so `слова` is taught here.
+    draft["steps"][0]["blocks"][0]["text"] = ("слово " * 9) + "слова слове "
 
     w_a = make_word_record(2, "а", pos="conj", gloss_en="and")
     w_ya = make_word_record(3, "я", pos="pron", gloss_en="I")
@@ -440,8 +442,8 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
         }
     ]
 
-    # 4. image-to-letter
-    img_items = [{"image": "image.png", "letter": "слово", "options": ["слово", "слова"], "explanation": "E"}]
+    # 4. image-to-letter: fails check 9 closed until #8716 (see
+    # test_live_runner_image_to_letter_fails_closed_until_8716), so it is not in this run.
 
     # 5. translate
     trans_items = [
@@ -465,13 +467,12 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
         "explanation": "E",
     }
 
-    act_ids = ["a1", "a2", "a3", "a4", "a5", "a6", "a7"]
+    act_ids = ["a1", "a2", "a3", "a5", "a6", "a7"]
     plan["lessons"][0]["steps"][0]["practice"] = act_ids
     plan["lessons"][0]["activities"] = [
         {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz"},
         {"id": "a2", "type": "fill-in", "placement": "inline", "focus": "Fill"},
         {"id": "a3", "type": "error-correction", "placement": "inline", "focus": "Err", "error_refs": ["E-001"]},
-        {"id": "a4", "type": "image-to-letter", "placement": "inline", "focus": "Img"},
         {"id": "a5", "type": "translate", "placement": "inline", "focus": "Trans"},
         {"id": "a6", "type": "odd-one-out", "placement": "inline", "focus": "Odd"},
         {"id": "a7", "type": "pick-syllables", "placement": "inline", "focus": "Pick"},
@@ -484,7 +485,6 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
         {"id": "a1", "instruction": "Quiz", "items": quiz_items},
         {"id": "a2", "instruction": "Fill", "items": fill_orth},
         {"id": "a3", "instruction": "Err", "items": err_items},
-        {"id": "a4", "instruction": "Img", "items": img_items},
         {"id": "a5", "instruction": "Trans", "items": trans_items},
         {"id": "a6", "instruction": "Odd", "items": odd_items},
         {**pick_act, "id": "a7"},
@@ -552,12 +552,6 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
     assert eo[0]["is_key"] is True and "слово" in eo[0]["text"]
     assert eo[1]["is_key"] is False and "слова" in eo[1]["text"]
 
-    # Image-to-letter
-    im = [s for s in spans if s.get("activity") == "a4" and str(s.get("block", "")).startswith("opt_")]
-    assert len(im) == 2
-    assert im[0]["is_key"] is True and "слово" in im[0]["text"]
-    assert im[1]["is_key"] is False and "слова" in im[1]["text"]
-
     # Translate
     tr = [s for s in spans if s.get("activity") == "a5" and str(s.get("block", "")).startswith("opt_")]
     assert len(tr) == 2
@@ -576,6 +570,18 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
     assert len(pk) == 2
     assert pk[0]["is_key"] is True and "слово" in pk[0]["text"]
     assert pk[1]["is_key"] is False and "слова" in pk[1]["text"]
+
+    # A string `answer` key (quiz item 1, odd-one-out) is no provenance unit: the page carries it
+    # only as the option flagged correct, and the check verifies that flag against is_key.
+    assert [s["block"] for s in spans if s.get("activity") == "a1" and s.get("item") == 1] == [
+        "prompt",
+        "opt_0",
+        "opt_1",
+        "explanation",
+    ]
+    assert not any(s.get("activity") == "a6" and s.get("block") == "answer" for s in spans)
+    mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+    assert '{"text": "слово", "correct": false}, {"text": "слова", "correct": true}' in mdx
 
 
 def test_live_runner_a2_select_provenance_and_key_assignment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1015,10 +1021,11 @@ def test_live_runner_error_correction_spans_partition_prompt_and_correction_is_r
         ("слове", 2, 7, "record", "incorrect"),
     ]
     answer = _spans_by_unit(prov_doc)[("vpravy", "s1", "a1", 0, "answer")]
-    assert [(s["text"], s["record_side"]) for s in answer] == [("сло́во", "correct")]
-    # The correction printed on the page is the rendered span text (stressed), not the draft's plain text
+    # The correction is a record print: the page shows the E- record's `correct` text as the pack
+    # has it (the ErrorCorrection component compares the unstressed option chips to it exactly).
+    assert [(s["text"], s["record_side"]) for s in answer] == [("слово", "correct")]
     mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
-    assert "сло́во" in mdx and '"я слове"' in mdx
+    assert '"correctForm": "слово"' in mdx and '"я слове"' in mdx
 
 
 def test_check_9_activity_absent_from_rendered_output_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1152,3 +1159,277 @@ def test_assembly_rejects_form_choice_item_without_record() -> None:
     assert exc_info.value.layer == "writer"
     row, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
     assert row["reason"] == "form_choice_options_invalid"
+
+
+# --- r4: verification runs against what the page receives ---
+
+
+def _check_9_direct(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    expanded: dict,
+    prov: dict,
+    draft: dict,
+    plan: dict,
+    pack: dict,
+    words: dict,
+) -> assemble.CheckResult:
+    monkeypatch.setattr(
+        assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})()
+    )
+    monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
+    monkeypatch.setattr(
+        assemble.lesson_lock, "compute_lesson_lock", lambda *a, **kw: {"lessons": [{"n": 1, "entry_sha256": "0" * 64}]}
+    )
+    monkeypatch.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": "a1"})())
+    return assemble.check_9_stress_and_render(
+        expanded,
+        draft,
+        plan,
+        pack,
+        words,
+        type("Stream", (), {"tokens": []})(),
+        "a1",
+        "sample-slug",
+        1,
+        provenance_doc=prov,
+        repo_root=tmp_path,
+        output_dir=tmp_path / "state",
+        site_dir=tmp_path / "site",
+        plans_dir=tmp_path,
+        evidence_dir=tmp_path,
+    )
+
+
+def _quiz_fixture(items: list[dict]) -> tuple[dict, dict, dict, dict]:
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Quiz", "items": items}]
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    return draft, plan, pack, words
+
+
+def test_component_props_from_jsx_round_trips_escaped_text() -> None:
+    # The props are read back exactly as the JS engine cooks the template literal `_dump_safe_json`
+    # escaped (backslashes, backticks, `${`) and as MDX decodes the string props.
+    from scripts.yaml_activities import ActivityParser
+
+    parser = ActivityParser()
+    question = 'сло́во `q` "d" \\ ${e}\nnl'
+    act = parser._parse_activity(
+        {
+            "type": "quiz",
+            "id": "a1",
+            "instruction": 'Say "hi" `x` ${y}',
+            "items": [{"question": question, "options": ["слово", "слова"], "correct": 0, "explanation": "E"}],
+        }
+    )
+    props = assemble.component_props_from_jsx(parser._activity_to_mdx(act, False))
+    assert props["instruction"] == 'Say "hi" `x` ${y}'
+    assert props["questions"][0]["question"] == question
+    assert assemble.page_field_text("quiz", props, 0, "opt_1") == "слова"
+    assert assemble.page_option_is_key("quiz", props, 0, 0) is True
+    assert assemble.page_option_is_key("quiz", props, 0, 1) is False
+    # An error-correction instruction is a JSX attribute string: `&quot;` is decoded, nothing else
+    ec = parser._parse_activity(
+        {
+            "type": "error-correction",
+            "id": "a3",
+            "instruction": 'Fix "it"',
+            "items": [{"sentence": "я слове", "error": "слове", "correction": "слово", "explanation": "E"}],
+        }
+    )
+    ec_props = assemble.component_props_from_jsx(parser._activity_to_mdx(ec, False))
+    assert ec_props["instruction"] == 'Fix "it"'
+    assert assemble.page_field_text("error-correction", ec_props, 0, "answer") == "слово"
+    assert assemble.page_field_text("error-correction", ec_props, 0, "error") == "слове"
+
+
+def test_check_9_parser_dropping_a_field_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # BLOCKER (r3): the mapping was taken before the activity parser ran. A parser that drops one
+    # field (here: the explanation of item 0) must fail check 9 at that unit's location, because
+    # the page component never receives the text the provenance describes.
+    from scripts.yaml_activities import ActivityParser
+
+    draft, plan, pack, words = _quiz_fixture(
+        [{"question": "слово", "options": ["слово", "слова"], "correct": 0, "explanation": "E"}]
+    )
+    expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    original = ActivityParser._parse_quiz
+
+    def dropping_parse_quiz(self, data):
+        act = original(self, data)
+        act.items[0].explanation = None
+        return act
+
+    monkeypatch.setattr(ActivityParser, "_parse_quiz", dropping_parse_quiz)
+    res = _check_9_direct(tmp_path, monkeypatch, expanded, prov, draft, plan, pack, words)
+    assert res.passed is False
+    assert res.layer == "engine"
+    assert (res.reason or "").startswith("span_location_unrendered: ")
+    assert "('vpravy', 's1', 'a1', 0, 'explanation')" in (res.reason or "")
+    assert "the quiz component receives '' in its 'explanation' field" in (res.reason or "")
+    assert not (tmp_path / "state" / "lesson-1.provenance.yaml").exists()
+    assert not (tmp_path / "site" / "1.mdx").exists()
+
+    # A parser that alters a field (option 1 text) fails the same way: the text is not in its field.
+    def altering_parse_quiz(self, data):
+        act = original(self, data)
+        act.items[0].options[1].text = act.items[0].options[1].text + " "
+        return act
+
+    monkeypatch.setattr(ActivityParser, "_parse_quiz", altering_parse_quiz)
+    res = _check_9_direct(tmp_path, monkeypatch, expanded, prov, draft, plan, pack, words)
+    assert res.passed is False
+    assert "span_location_unrendered" in (res.reason or "")
+    assert "('vpravy', 's1', 'a1', 0, 'opt_1')" in (res.reason or "")
+
+
+def test_check_9_page_key_disagreement_fails_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # The page's own key must be the provenance key: a component flagging another option correct
+    # would blame the wrong span (R2b) and mislead the learner.
+    from scripts.yaml_activities import ActivityParser
+
+    draft, plan, pack, words = _quiz_fixture(
+        [{"question": "слово", "options": ["слово", "слова"], "correct": 1, "explanation": "E"}]
+    )
+    expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    original = ActivityParser._parse_quiz
+
+    def flipping_parse_quiz(self, data):
+        act = original(self, data)
+        for opt in act.items[0].options:
+            opt.correct = not opt.correct
+        return act
+
+    monkeypatch.setattr(ActivityParser, "_parse_quiz", flipping_parse_quiz)
+    res = _check_9_direct(tmp_path, monkeypatch, expanded, prov, draft, plan, pack, words)
+    assert res.passed is False
+    assert res.layer == "engine"
+    assert (res.reason or "").startswith("span_key_not_on_page: ")
+    assert "('vpravy', 's1', 'a1', 0, 'opt_0')" in (res.reason or "")
+
+
+def test_live_runner_quiz_string_answer_key_follows_unstressed_option(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Options are never stressed (resolver SKIPPED_ROLES) but an `answer` unit was, so the page
+    # got a quiz with no correct option. The key is no unit; it follows the option it names.
+    draft, plan, pack, words = _quiz_fixture(
+        [{"question": "слово", "options": ["слово", "слова"], "answer": "слово", "explanation": "E"}]
+    )
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    prov_doc = yaml.safe_load((state / "lesson-1.provenance.yaml").read_text(encoding="utf-8"))
+    by_unit = _spans_by_unit(prov_doc)
+    assert ("vpravy", "s1", "a1", 0, "answer") not in by_unit
+    assert by_unit[("vpravy", "s1", "a1", 0, "prompt")][0]["text"] == "сло́во"
+    assert [(s["text"], s["is_key"]) for s in by_unit[("vpravy", "s1", "a1", 0, "opt_0")]] == [("слово", True)]
+    mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+    assert '{"text": "слово", "correct": true}, {"text": "слова", "correct": false}' in mdx
+
+
+def test_live_runner_translate_without_options_answer_is_the_single_page_option(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # No choices: the answer is text (a resolved, stressed unit) and the Translate component
+    # receives it as its one correct option, where the unit is located.
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a5"]
+    plan["lessons"][0]["activities"] = [{"id": "a5", "type": "translate", "placement": "inline", "focus": "Trans"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a5"})
+    draft["activities"] = [
+        {"id": "a5", "instruction": "Trans", "items": [{"source": "word", "answer": "слово", "explanation": "E"}]}
+    ]
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    prov_doc = yaml.safe_load((state / "lesson-1.provenance.yaml").read_text(encoding="utf-8"))
+    answer = _spans_by_unit(prov_doc)[("vpravy", "s1", "a5", 0, "answer")]
+    assert [(s["text"], s["role"]) for s in answer] == [("сло́во", "item_answer")]
+    mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+    assert '"options": [{"text": "сло́во", "correct": true}]' in mdx
+
+
+def _image_to_letter_fixture() -> tuple[dict, dict, dict, dict]:
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a4"]
+    plan["lessons"][0]["activities"] = [{"id": "a4", "type": "image-to-letter", "placement": "inline", "focus": "Img"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a4"})
+    draft["activities"] = [
+        {
+            "id": "a4",
+            "instruction": "Img",
+            "items": [{"image": "image.png", "letter": "слово", "options": ["слово", "слова"], "explanation": "E"}],
+        }
+    ]
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    return draft, plan, pack, words
+
+
+def test_live_runner_image_to_letter_fails_closed_until_8716(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Reviewer reproduction (r3 BLOCKER): a schema-valid image-to-letter item passed check 9 while
+    # the ActivityParser dropped image/letter/options. Now the unit's field is read from the page
+    # props and check 9 fails closed. Delete this test with the xfail marker below once #8716 lands.
+    draft, plan, pack, words = _image_to_letter_fixture()
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is False
+    c9 = next(c for c in report["checks"] if c["check"] == 9)
+    assert c9["status"] == "failed" and c9["layer"] == "engine"
+    assert c9["reason"].startswith("span_location_unrendered: ")
+    assert "'a4'" in c9["reason"]
+    # The provenance on disk is still check 5's document; nothing of check 9 reached disk
+    _expanded, check_5_prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    assert (state / "lesson-1.provenance.yaml").read_bytes() == lock.yaml_bytes(check_5_prov)
+    assert not (tmp_path / "site" / "1.mdx").exists()
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="#8716: ActivityParser reads emoji/answer/distractors, the A1 schema has image/letter/options",
+)
+def test_image_to_letter_options_reach_the_page() -> None:
+    # Starts failing loudly (XPASS) once #8716 makes the parser read the schema's fields: then
+    # remove the marker (and the fail-closed live test above).
+    from scripts.yaml_activities import ActivityParser
+
+    parser = ActivityParser()
+    act = parser._parse_activity(
+        {
+            "type": "image-to-letter",
+            "id": "a4",
+            "instruction": "Img",
+            "items": [{"image": "image.png", "letter": "слово", "options": ["слово", "слова"], "explanation": "E"}],
+        }
+    )
+    props = assemble.component_props_from_jsx(parser._activity_to_mdx(act))
+    assert assemble.page_field_text("image-to-letter", props, 0, "opt_0", key_index=0) == "слово"
+    assert assemble.page_field_text("image-to-letter", props, 0, "opt_1", key_index=0) == "слова"
+
+
+def test_urok_renderer_emits_mapped_bytes_without_final_strip() -> None:
+    # Reviewer reproduction (r3 BLOCKER b): the renderer's final `.strip()` removed whitespace the
+    # mapped piece kept. The mapping now describes exactly the bytes emitted.
+    draft, plan, pack, words = _fixture()
+    draft["consolidation"]["lead_in"] = "слово "
+    validate_fixture_draft(draft)
+    expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
+    stressed = {"stressed_schema": 1, "lesson": expanded["lesson"], "units": copy.deepcopy(expanded["units"])}
+    urok_md, pieces = assemble._render_urok_markdown(draft, stressed, pack, words)
+    lead_idx = next(i for i, u in enumerate(stressed["units"]) if u["block"] == "consolidation_lead_in")
+    assert pieces[lead_idx] == "слово "
+    assert urok_md.endswith("слово ")
+    assert not urok_md.endswith("\n")  # the renderer's own trailing separators are still dropped
+    final = assemble.finalize_provenance_from_stressed_units(prov, stressed, {**pieces, **_record_tab_pieces(stressed)})
+    lead = _spans_by_unit(final)[("urok", None, None, None, "consolidation_lead_in")]
+    assert [(s["text"], s["start"], s["end"]) for s in lead] == [("слово ", 0, 6)]
+    assert urok_md[-6:] == lead[0]["text"]
+
+
+def _record_tab_pieces(stressed: dict) -> dict[int, str]:
+    return {i: u["text"] for i, u in enumerate(stressed["units"]) if u["tab"] in ("slovnyk", "resursy")}

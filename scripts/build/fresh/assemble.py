@@ -31,9 +31,30 @@ Units and spans (r3 invariant):
   fails check 9 closed (`span_location_unrendered`); a rendered piece whose letters differ
   from the stressed unit text fails closed (`span_text_not_in_rendered_output`). No global
   search of the page string is used anywhere.
+- Verification runs against what the page receives. Urok pieces are the bytes the Urok
+  renderer emits (nothing is trimmed after the mapping is taken). Vpravy units are located
+  in the component props the page's React components consume: the activity payload is
+  parsed by `ActivityParser`, serialized by its `_activity_to_mdx` (the same call
+  `generate_mdx` makes for every `INJECT_ACTIVITY` marker and for the Vpravy tab), and the
+  `JSON.parse(...)`/string props are read back (`component_props_from_jsx`). Each unit group
+  (activity, item, block) must equal, byte for byte, the prop field that corresponds to its
+  role (`page_field_text`: prompt, option n, answer, error text, explanation, instruction).
+  A field the parser or serializer dropped or changed fails closed with
+  `span_location_unrendered` (engine layer). For every choice span with `is_key` the page's
+  own key (the option flagged `correct`, `answer`/`correctForm` equality, `correct` index,
+  `correctIndices`) must agree, else `span_key_not_on_page`.
+- A string `answer` on quiz / multiple-choice / select / translate / odd-one-out that names
+  one of the item's choices (check 4) is a key like the integer `correct`: it is no provenance
+  unit, and the payload key is rewritten to the rendered text of the option it names (options
+  are never stressed — resolver SKIPPED_ROLES — while an answer unit would be). A translate
+  item without options keeps its answer text as a unit; the page offers it as the single
+  correct option, where the unit is located.
 - Slovnyk entries print the record's own lemma stress (never the resolver's selection), and
   Resursy titles print unstressed; those two tabs are compared accent-stripped against the
-  stressed unit text, every other tab must match exactly.
+  stressed unit text, every other tab must match exactly. The one vpravy exception is the
+  error-correction correction (`record_side: correct`): it prints the E- record's `correct`
+  text as the pack has it (unstressed), because the ErrorCorrection component compares the
+  option chips — never stressed, resolver SKIPPED_ROLES — to `correctForm` byte for byte.
 
 Every span in the final lesson-<n>.provenance.yaml carries:
 1. `record_kind` — for `source: record` spans, one of a closed set with its review fix layer:
@@ -268,7 +289,24 @@ _GLOSS_INLINE_RE = re.compile(r"\{\{gloss:(W-[0-9]+)\}\}")
 # Check 9 failure codes for the provenance/render agreement (fail closed, engine layer).
 SPAN_LOCATION_UNRENDERED = "span_location_unrendered"
 SPAN_TEXT_NOT_IN_RENDERED_OUTPUT = "span_text_not_in_rendered_output"
+SPAN_KEY_NOT_ON_PAGE = "span_key_not_on_page"
 PROVENANCE_UNIT_COUNT_MISMATCH = "provenance_unit_count_mismatch"
+
+# Choice types whose string `answer` names one of the item's choices (check 4) — a key, never
+# printed text. A translate item may carry no options; its `answer` is then answer text.
+STRING_KEY_ANSWER_TYPES = frozenset({"quiz", "multiple-choice", "select", "translate", "odd-one-out"})
+
+
+def string_key_answer(act_type: str, item: dict[str, Any]) -> str | None:
+    """The item's string `answer` when it is a key naming one of its choices, else None."""
+    if act_type not in STRING_KEY_ANSWER_TYPES:
+        return None
+    answer = item.get("answer")
+    choices = item.get("words") if act_type == "odd-one-out" else item.get("options")
+    if not isinstance(answer, str) or not isinstance(choices, list):
+        return None
+    plain = [c.get("text") if isinstance(c, dict) else c for c in choices]
+    return answer if plain.count(answer) == 1 else None
 
 
 def gloss_replacer(words_store: dict[str, Any]) -> Any:
@@ -299,6 +337,284 @@ def render_unit_piece(text: str, replace_gloss: Any) -> str:
     provenance file is verified against).
     """
     return _GLOSS_INLINE_RE.sub(replace_gloss, _UK_MARKUP_RE.sub(r"\1", text))
+
+
+# A component prop as `_activity_to_mdx` emits it: `name={JSON.parse(`...`)}` (a JSON payload
+# escaped for a template literal by `_dump_safe_json`), `name={"..."}` (a `json.dumps` string)
+# or `name="..."` (an `_escape_jsx` string, whose only decoded entity is `&quot;`).
+_JSX_PROP_RE = re.compile(
+    r'([A-Za-z_][A-Za-z0-9_]*)=(?:\{JSON\.parse\(`((?:[^`\\]|\\.)*)`\)\}|\{("(?:[^"\\]|\\.)*")\}|"([^"]*)")',
+    re.DOTALL,
+)
+_TEMPLATE_ESCAPE_RE = re.compile(r"\\(.)", re.DOTALL)
+
+
+def component_props_from_jsx(jsx: str) -> dict[str, Any]:
+    """Read back the props of the component JSX one activity renders to.
+
+    This is the payload the page's React component receives: `_dump_safe_json` doubles
+    backslashes and escapes backticks and `${` for the template literal, which the JS engine
+    cooks back to the `json.dumps` text before `JSON.parse`; string props are `json.dumps`
+    strings or JSX attribute strings (`&quot;` decoded, no backslash escapes).
+    """
+    props: dict[str, Any] = {}
+    for match in _JSX_PROP_RE.finditer(jsx):
+        name, template, json_str, jsx_str = match.groups()
+        if template is not None:
+            props[name] = json.loads(_TEMPLATE_ESCAPE_RE.sub(r"\1", template))
+        elif json_str is not None:
+            props[name] = json.loads(json_str)
+        else:
+            props[name] = jsx_str.replace("&quot;", '"')
+    return props
+
+
+# Where each unit block lives in the component props, per activity type: the prop holding the
+# item list, then the item field per block role. `opt` names the list field of learner choices
+# and, for dict choices, the text key. Types absent here produce no vpravy units.
+_PAGE_ITEM_LIST: dict[str, str] = {
+    "quiz": "questions",
+    "multiple-choice": "questions",
+    "select": "questions",
+    "translate": "questions",
+    "true-false": "items",
+    "fill-in": "items",
+    "error-correction": "items",
+    "image-to-letter": "items",
+    "odd-one-out": "items",
+    "unjumble": "items",
+    "anagram": "items",
+    "divide-words": "items",
+}
+# An answer block whose text the page carries only as the single option it flags correct.
+_KEY_OPTION = "__key_option__"
+_PAGE_ITEM_FIELDS: dict[str, dict[str, Any]] = {
+    "quiz": {"prompt": "question", "explanation": "explanation", "opt": ("options", "text")},
+    "multiple-choice": {"prompt": "question", "explanation": "explanation", "opt": ("options", "text")},
+    "select": {"prompt": "question", "explanation": "explanation", "opt": ("options", "text")},
+    # A translate item without options: the parser offers the answer text as the one correct option.
+    "translate": {"prompt": "source", "answer": _KEY_OPTION, "explanation": "explanation", "opt": ("options", "text")},
+    "true-false": {"prompt": "statement", "explanation": "explanation"},
+    "fill-in": {"prompt": "sentence", "answer": "answer", "explanation": "explanation", "opt": ("options", None)},
+    "error-correction": {
+        "prompt": "sentence",
+        "error": "errorWord",
+        "answer": "correctForm",
+        "explanation": "explanation",
+        "opt": ("options", None),
+    },
+    "image-to-letter": {"explanation": "explanation", "opt": ("options", None)},
+    "odd-one-out": {"prompt": "prompt", "explanation": "explanation", "opt": ("words", None)},
+    "unjumble": {"prompt": "jumbled", "answer": "answer"},
+    "anagram": {"answer": "answer"},
+    "divide-words": {"answer": "answer"},
+}
+# Activity-level blocks (item is None): the prop of the same name; pick-syllables choices.
+_PAGE_ACTIVITY_FIELDS: dict[str, dict[str, Any]] = {
+    "pick-syllables": {"instruction": "instruction", "explanation": "explanation", "opt": ("syllables", None)},
+}
+_OPT_BLOCK_RE = re.compile(r"^opt_([0-9]+)$")
+
+
+def _prop_text(value: Any) -> str | None:
+    return value if isinstance(value, str) else None
+
+
+def _option_text(choices: Any, index: int, text_key: str | None) -> str | None:
+    if not isinstance(choices, list) or not 0 <= index < len(choices):
+        return None
+    choice = choices[index]
+    if text_key is not None:
+        return _prop_text(choice.get(text_key)) if isinstance(choice, dict) else None
+    return _prop_text(choice)
+
+
+def page_option_is_key(
+    act_type: str, props: dict[str, Any], item_idx: int | None, opt_idx: int, *, key_index: int | None = None
+) -> bool | None:
+    """Whether the page flags option `opt_idx` as a correct choice, or None when not derivable."""
+    if item_idx is None:
+        if act_type == "pick-syllables":
+            indices = props.get("correctIndices")
+            return opt_idx in indices if isinstance(indices, list) else None
+        return None
+    items = props.get(_PAGE_ITEM_LIST.get(act_type, ""))
+    if not isinstance(items, list) or not 0 <= item_idx < len(items) or not isinstance(items[item_idx], dict):
+        return None
+    item = items[item_idx]
+    if act_type in ("quiz", "multiple-choice", "select", "translate"):
+        choices = item.get("options")
+        if not isinstance(choices, list) or not 0 <= opt_idx < len(choices) or not isinstance(choices[opt_idx], dict):
+            return None
+        return choices[opt_idx].get("correct") is True
+    if act_type == "fill-in":
+        return _option_text(item.get("options"), opt_idx, None) == item.get("answer")
+    if act_type == "error-correction":
+        return _option_text(item.get("options"), opt_idx, None) == item.get("correctForm")
+    if act_type == "odd-one-out":
+        return item.get("correct") == opt_idx
+    if act_type == "image-to-letter" and isinstance(item.get("answer"), str) and "options" not in item:
+        # The component offers `[answer, *distractors]`; the located field already encodes the key.
+        return opt_idx == key_index
+    return None
+
+
+def page_field_text(
+    act_type: str,
+    props: dict[str, Any],
+    item_idx: int | None,
+    block: int | str,
+    *,
+    key_index: int | None = None,
+) -> str | None:
+    """The text the page component receives at the field a unit block describes, or None.
+
+    None means the component receives no such field (dropped by the parser or the serializer,
+    an out-of-range option, an unknown activity type); the caller fails closed. `key_index` is
+    the index of the item's key option per provenance (needed where the component splits the
+    choices into an answer and distractors).
+    """
+    block_key = str(block)
+    opt_match = _OPT_BLOCK_RE.match(block_key)
+    if item_idx is None:
+        if block_key == "instruction":
+            return _prop_text(props.get("instruction"))
+        fields = _PAGE_ACTIVITY_FIELDS.get(act_type, {})
+        if opt_match and "opt" in fields:
+            list_name, text_key = fields["opt"]
+            return _option_text(props.get(list_name), int(opt_match.group(1)), text_key)
+        prop_name = fields.get(block_key)
+        return _prop_text(props.get(prop_name)) if prop_name else None
+
+    list_name = _PAGE_ITEM_LIST.get(act_type)
+    fields = _PAGE_ITEM_FIELDS.get(act_type)
+    if list_name is None or fields is None:
+        return None
+    items = props.get(list_name)
+    if not isinstance(items, list) or not 0 <= item_idx < len(items) or not isinstance(items[item_idx], dict):
+        return None
+    item = items[item_idx]
+    if opt_match:
+        if "opt" not in fields:
+            return None
+        opt_idx = int(opt_match.group(1))
+        choices_name, text_key = fields["opt"]
+        located = _option_text(item.get(choices_name), opt_idx, text_key)
+        if located is None and act_type == "image-to-letter" and key_index is not None:
+            # The ImageToLetter component offers `[answer, *distractors]`: the key is the answer
+            # field, distractor n is the n-th non-key choice.
+            if opt_idx == key_index:
+                return _prop_text(item.get("answer"))
+            distractors = item.get("distractors")
+            distractor_idx = opt_idx - (1 if key_index < opt_idx else 0)
+            return _option_text(distractors, distractor_idx, None) if isinstance(distractors, list) else None
+        return located
+    prop_name = fields.get(block_key)
+    if prop_name == _KEY_OPTION:
+        choices_name, text_key = fields["opt"]
+        choices = item.get(choices_name)
+        keyed = (
+            [c for c in choices if isinstance(c, dict) and c.get("correct") is True]
+            if isinstance(choices, list)
+            else []
+        )
+        return _prop_text(keyed[0].get(text_key)) if len(keyed) == 1 else None
+    return _prop_text(item.get(prop_name)) if prop_name else None
+
+
+def locate_units_in_component_props(
+    stressed_doc: dict[str, Any],
+    engine_pieces: dict[int, str],
+    parsed_activities: dict[str, Any],
+    *,
+    spans: list[dict[str, Any]] | None = None,
+) -> dict[int, str]:
+    """Locate every vpravy unit in the props the page component receives.
+
+    `engine_pieces` is the engine's own unit->text mapping for the activity payload it handed
+    to the parser (`apply_stress_to_activities`); `parsed_activities` maps activity id to the
+    `ActivityParser` object `generate_mdx` serializes. For each unit group (activity, item,
+    block) the concatenation of its pieces must equal the corresponding prop field, byte for
+    byte; otherwise the group's first unit fails closed with `span_location_unrendered`.
+    Returns the located pieces keyed by unit index.
+    """
+    from scripts.yaml_activities import ActivityParser
+
+    serializer = ActivityParser()
+    props_by_activity: dict[str, dict[str, Any]] = {}
+    groups: dict[tuple[Any, ...], list[int]] = {}
+    for idx, unit in enumerate(stressed_doc.get("units", [])):
+        if unit.get("tab") == "vpravy":
+            loc_key = (unit.get("tab"), unit.get("step"), unit.get("activity"), unit.get("item"), unit.get("block"))
+            groups.setdefault(loc_key, []).append(idx)
+
+    # The provenance key per (activity, item): the option index whose spans carry is_key: true.
+    key_index_by_item: dict[tuple[Any, Any], int | None] = {}
+    if spans is not None:
+        keyed: dict[tuple[Any, Any], set[int]] = {}
+        for loc_key in groups:
+            _tab, _step, act_id, item_idx, block = loc_key
+            opt_match = _OPT_BLOCK_RE.match(str(block))
+            if opt_match and any(spans[i].get("is_key") is True for i in groups[loc_key] if i < len(spans)):
+                keyed.setdefault((act_id, item_idx), set()).add(int(opt_match.group(1)))
+        for item_key, indices_set in keyed.items():
+            key_index_by_item[item_key] = next(iter(indices_set)) if len(indices_set) == 1 else None
+
+    located: dict[int, str] = {}
+    for loc_key, indices in groups.items():
+        _tab, _step, act_id, item_idx, block = loc_key
+        first = indices[0]
+        act_obj = parsed_activities.get(act_id)
+        if act_obj is None:
+            raise AssemblerError(
+                SPAN_LOCATION_UNRENDERED,
+                f"the renderer emitted nothing for unit {first} at {loc_key}: activity {act_id!r} is not on the page",
+                layer="engine",
+            )
+        act_type = str(getattr(act_obj, "type", ""))
+        if act_id not in props_by_activity:
+            props_by_activity[act_id] = component_props_from_jsx(serializer._activity_to_mdx(act_obj))
+        pieces = []
+        for idx in indices:
+            if idx not in engine_pieces:
+                raise AssemblerError(
+                    SPAN_LOCATION_UNRENDERED,
+                    f"the renderer emitted nothing for unit {idx} at {loc_key}",
+                    layer="engine",
+                )
+            pieces.append(engine_pieces[idx])
+        expected = "".join(pieces)
+        key_index = key_index_by_item.get((act_id, item_idx))
+        props = props_by_activity[act_id]
+        field = page_field_text(act_type, props, item_idx, block, key_index=key_index)
+        if field is None:
+            raise AssemblerError(
+                SPAN_LOCATION_UNRENDERED,
+                f"unit {first} at {loc_key}: the {act_type} component receives no {block!r} field for item "
+                f"{item_idx} (expected {expected!r})",
+                layer="engine",
+            )
+        if field != expected:
+            raise AssemblerError(
+                SPAN_LOCATION_UNRENDERED,
+                f"unit {first} at {loc_key}: the {act_type} component receives {field!r} in its {block!r} field, "
+                f"not the unit text {expected!r}",
+                layer="engine",
+            )
+        opt_match = _OPT_BLOCK_RE.match(str(block))
+        span_is_key = spans[first].get("is_key") if spans is not None and first < len(spans) else None
+        if opt_match and isinstance(span_is_key, bool):
+            page_is_key = page_option_is_key(act_type, props, item_idx, int(opt_match.group(1)), key_index=key_index)
+            if page_is_key is not None and page_is_key != span_is_key:
+                raise AssemblerError(
+                    SPAN_KEY_NOT_ON_PAGE,
+                    f"unit {first} at {loc_key}: provenance marks is_key={span_is_key} but the {act_type} "
+                    f"component flags this choice {'correct' if page_is_key else 'not correct'}",
+                    layer="engine",
+                )
+        for idx, piece in zip(indices, pieces, strict=True):
+            located[idx] = piece
+    return located
 
 
 @dataclass(frozen=True)
@@ -771,11 +1087,16 @@ def assemble_expanded_document(
 
             # Answer-like candidate fields: only string values are answer text. Booleans
             # (true/false activities) and integers (`correct` as an option index in quiz and
-            # odd-one-out items) are keys, not text to resolve, stress or render.
+            # odd-one-out items) are keys, not text to resolve, stress or render. A string
+            # `answer` on a choice type names one of the options (check 4: answer_not_in_options)
+            # and is a key too: the page prints only the option it flags correct, so the option
+            # span (is_key: true) carries that text.
             # For error-correction, use the field validated by check 4 (correction, falling back to answer).
             if act_type == "error-correction":
                 corr_val = item.get("correction") if item.get("correction") is not None else item.get("answer")
                 answer = corr_val if isinstance(corr_val, str) and corr_val.strip() else None
+            elif string_key_answer(act_type, item) is not None:
+                answer = None
             else:
                 answer = None
                 for key in ("answer", "correction", "target", "correct", "is_true", "isTrue"):
@@ -1134,8 +1455,9 @@ def finalize_provenance_from_stressed_units(
     `rendered_by_unit` maps an expanded-unit index to the text the renderer emitted for it
     (the renderer's own unit->output mapping). Every unit must be present; each piece must
     carry the stressed unit's letters (exactly for urok/vpravy, accent-stripped for the
-    Slovnyk lemma and Resursy title, see the module docstring). Span text, `span`, `start`
-    and `end` are then recomputed so that each unit's spans partition its rendered text.
+    record prints: Slovnyk lemma, Resursy title, error-correction correction; see the module
+    docstring). Span text, `span`, `start` and `end` are then recomputed so that each unit's
+    spans partition its rendered text.
     """
     updated = copy.deepcopy(provenance_doc)
     spans = updated.get("spans", [])
@@ -1167,8 +1489,9 @@ def finalize_provenance_from_stressed_units(
                 layer="engine",
             )
         expected = render_unit_piece(str(unit.get("text", "")), replace_gloss)
-        if unit.get("tab") in ("slovnyk", "resursy"):
-            # Record-printed tabs: the page carries the record's own stress (or none), see docstring.
+        if unit.get("tab") in ("slovnyk", "resursy") or span.get("record_side") == "correct":
+            # Record prints (Slovnyk lemma, Resursy title, error-correction correction): the page
+            # carries the record's own stress (or none), see docstring.
             agrees = strip_accents(piece) == strip_accents(expected)
         else:
             agrees = piece == expected
@@ -1703,20 +2026,29 @@ def _render_urok_markdown(
         lines.append(format_block_text(None, "consolidation_lead_in", consol_lead))
         lines.append("")
 
-    return "\n".join(lines).strip(), rendered_by_unit
+    # Only the renderer's own trailing block separators are dropped; a unit's bytes (including
+    # edge whitespace) are emitted exactly as mapped, so the mapping describes the output.
+    while lines and lines[-1] == "":
+        lines.pop()
+    return "\n".join(lines), rendered_by_unit
 
 
 def apply_stress_to_activities(
     draft_activities: list[dict[str, Any]],
     stressed_doc: dict[str, Any],
     replace_gloss_fn: Any,
+    *,
+    activity_types: dict[str, str] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[int, str]]:
     """Apply stress from stressed units to draft activity fields.
 
     Returns the stressed activity payloads (the engine's input to the component renderer)
     and the renderer's unit->output mapping: the rendered piece of every expanded unit it
-    consumed, keyed by unit index.
+    consumed, keyed by unit index. `activity_types` maps activity id to its plan type; on a
+    string-key choice type (STRING_KEY_ANSWER_TYPES) the `answer` key is rewritten to the
+    rendered text of the option it names instead of being stressed on its own.
     """
+    activity_types = activity_types or {}
     stressed_units = stressed_doc.get("units", [])
     rendered_by_unit: dict[int, str] = {}
     vpravy_indices: dict[tuple[str | None, int | None, int | str], list[int]] = {}
@@ -1725,13 +2057,20 @@ def apply_stress_to_activities(
             key = (u.get("activity"), u.get("item"), u.get("block"))
             vpravy_indices.setdefault(key, []).append(i)
 
-    def format_act_text(act_id: str | None, item_idx: int | None, block_key: int | str, fallback: str) -> str:
+    def format_act_text(
+        act_id: str | None, item_idx: int | None, block_key: int | str, fallback: str, *, record_print: bool = False
+    ) -> str:
         indices = vpravy_indices.get((act_id, item_idx, block_key))
         if not indices:
-            return render_unit_piece(fallback, replace_gloss_fn)
+            piece = render_unit_piece(fallback, replace_gloss_fn)
+            return strip_accents(piece) if record_print else piece
         pieces = []
         for i in indices:
             piece = render_unit_piece(stressed_units[i]["text"], replace_gloss_fn)
+            if record_print:
+                # The page prints the record's own text (the pack carries no stress), like the
+                # Slovnyk lemma and the Resursy title; see the module docstring.
+                piece = strip_accents(piece)
             rendered_by_unit[i] = piece
             pieces.append(piece)
         return "".join(pieces)
@@ -1749,26 +2088,42 @@ def apply_stress_to_activities(
                 new_opts.append(opt)
         return new_opts
 
+    def option_plain_text(opt: Any) -> str | None:
+        if isinstance(opt, dict):
+            opt = opt.get("text")
+        return opt if isinstance(opt, str) else None
+
     stressed_activities = copy.deepcopy(draft_activities)
-    for act in stressed_activities:
+    for act, draft_act in zip(stressed_activities, draft_activities, strict=True):
         if not isinstance(act, dict):
             continue
         act_id = act.get("id")
+        act_type = str(activity_types.get(str(act_id), act.get("type") or ""))
         if "instruction" in act:
             act["instruction"] = format_act_text(act_id, None, "instruction", act["instruction"])
         if isinstance(act.get("syllables"), list):
             act["syllables"] = format_options(act_id, None, act["syllables"])
         if isinstance(act.get("explanation"), str):
             act["explanation"] = format_act_text(act_id, None, "explanation", act["explanation"])
+        draft_items = draft_act.get("items", []) if isinstance(draft_act, dict) else []
         for item_idx, item in enumerate(act.get("items", [])):
             if not isinstance(item, dict):
                 continue
             for prompt_key in ("prompt", "sentence", "question", "cue", "statement"):
                 if prompt_key in item and isinstance(item[prompt_key], str):
                     item[prompt_key] = format_act_text(act_id, item_idx, "prompt", item[prompt_key])
+            draft_item = draft_items[item_idx] if item_idx < len(draft_items) else {}
+            key_answer = string_key_answer(act_type, draft_item) if isinstance(draft_item, dict) else None
             for ans_key in ("answer", "correction", "correct", "target", "is_true", "isTrue"):
+                if ans_key == "answer" and isinstance(key_answer, str):
+                    continue
                 if ans_key in item and isinstance(item[ans_key], str):
-                    item[ans_key] = format_act_text(act_id, item_idx, "answer", item[ans_key])
+                    # An error-correction correction is the E- record's `correct` text: the
+                    # ErrorCorrection component compares the (never stressed) option chips to it
+                    # byte for byte, so it prints as the record has it.
+                    item[ans_key] = format_act_text(
+                        act_id, item_idx, "answer", item[ans_key], record_print=act_type == "error-correction"
+                    )
             for err_key in ("error", "incorrect"):
                 if err_key in item and isinstance(item[err_key], str):
                     item[err_key] = format_act_text(act_id, item_idx, "error", item[err_key])
@@ -1777,6 +2132,19 @@ def apply_stress_to_activities(
             for opt_key in ("options", "choices", "distractors", "words", "syllables"):
                 if opt_key in item and isinstance(item[opt_key], list):
                     item[opt_key] = format_options(act_id, item_idx, item[opt_key])
+            if isinstance(key_answer, str):
+                # The key names a draft option; on the page it must equal that option's rendered
+                # text (options are never stressed, see resolver SKIPPED_ROLES), or the component
+                # flags no option correct.
+                choices_key = "words" if act_type == "odd-one-out" else "options"
+                draft_choices = draft_item.get(choices_key)
+                rendered_choices = item.get(choices_key)
+                if isinstance(draft_choices, list) and isinstance(rendered_choices, list):
+                    key_indices = [i for i, opt in enumerate(draft_choices) if option_plain_text(opt) == key_answer]
+                    if len(key_indices) == 1 and key_indices[0] < len(rendered_choices):
+                        keyed = option_plain_text(rendered_choices[key_indices[0]])
+                        if keyed is not None:
+                            item["answer"] = keyed
             if "pairs" in item and isinstance(item["pairs"], list):
                 for p_idx, pair in enumerate(item["pairs"]):
                     if isinstance(pair, dict):
@@ -1988,9 +2356,11 @@ def check_9_stress_and_render(
                 )
 
     stressed_activities, activity_pieces = apply_stress_to_activities(
-        draft.get("activities", []), stressed_doc, replace_gloss
+        draft.get("activities", []),
+        stressed_doc,
+        replace_gloss,
+        activity_types={aid: str(act.get("type") or "") for aid, act in plan_acts_by_id.items()},
     )
-    rendered_by_unit.update(activity_pieces)
     rendered_by_unit.update(
         rendered_units_for_tabs(stressed_doc, slovnyk_entries=slovnyk_entries, resursy_entries=resursy_entries)
     )
@@ -1999,6 +2369,7 @@ def check_9_stress_and_render(
 
     activity_parser = ActivityParser()
     converted_activities = []
+    parsed_by_id: dict[str, Any] = {}
     for act_dict in stressed_activities:
         if not isinstance(act_dict, dict):
             continue
@@ -2021,6 +2392,7 @@ def check_9_stress_and_render(
             act_obj = activity_parser._parse_activity(act_payload)
             act_obj.placement = plan_act.get("placement")
             converted_activities.append(act_obj)
+            parsed_by_id[str(act_id)] = act_obj
         except Exception as exc:
             return CheckResult(
                 check=9,
@@ -2028,6 +2400,25 @@ def check_9_stress_and_render(
                 reason=f"activity parsing failed for {act_id}: {exc}",
                 layer="writer",
             )
+
+    # Provenance is verified against what the page receives: the engine's activity pieces
+    # count only where the parsed, serialized component props carry them in the unit's field.
+    source_prov = provenance_doc
+    if source_prov is None and output_dir is not None:
+        prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
+        if prov_path.is_file():
+            source_prov = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
+    try:
+        rendered_by_unit.update(
+            locate_units_in_component_props(
+                stressed_doc,
+                activity_pieces,
+                parsed_by_id,
+                spans=source_prov.get("spans") if isinstance(source_prov, dict) else None,
+            )
+        )
+    except AssemblerError as exc:
+        return CheckResult(check=9, passed=False, reason=f"{exc.code}: {exc.message}", layer=exc.layer)
 
     try:
         mdx_content = generate_mdx(
@@ -2048,19 +2439,9 @@ def check_9_stress_and_render(
     if output_dir is not None:
         write_stressed_document(stressed_doc, output_dir, lesson_n)
 
-    if site_dir is not None:
-        site_dir.mkdir(parents=True, exist_ok=True)
-        mdx_file = site_dir / f"{lesson_n}.mdx"
-        lock.atomic_write(mdx_file, mdx_content.encode("utf-8"))
-
-    # Finalize provenance from stressed units and write with lock sidecar
+    # Finalize provenance from stressed units and write with lock sidecar; the site is written
+    # only once the provenance describes the page.
     final_prov_doc = None
-    source_prov = provenance_doc
-    if source_prov is None and output_dir is not None:
-        prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
-        if prov_path.is_file():
-            source_prov = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
-
     if source_prov is not None:
         try:
             final_prov_doc = finalize_provenance_from_stressed_units(
@@ -2077,6 +2458,11 @@ def check_9_stress_and_render(
             return CheckResult(check=9, passed=False, reason=f"{exc.code}: {exc.message}", layer=exc.layer)
         except Exception as exc:
             return CheckResult(check=9, passed=False, reason=f"provenance finalization failed: {exc}", layer="writer")
+
+    if site_dir is not None:
+        site_dir.mkdir(parents=True, exist_ok=True)
+        mdx_file = site_dir / f"{lesson_n}.mdx"
+        lock.atomic_write(mdx_file, mdx_content.encode("utf-8"))
 
     artifacts: dict[str, Any] = {
         "stressed_doc": stressed_doc,
