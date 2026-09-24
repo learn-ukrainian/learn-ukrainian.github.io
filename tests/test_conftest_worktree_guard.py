@@ -28,6 +28,7 @@ def guarded_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.setattr(worktree_guard, "_REAL_WORKTREES_PREFIX", real + os.sep)
     monkeypatch.setattr(worktree_guard, "_WORKTREE_ENTRIES_AT_START", set())
     monkeypatch.setattr(worktree_guard, "_CREATED_WORKTREE_ENTRIES", set())
+    monkeypatch.setattr(worktree_guard, "_CREATED_WORKTREE_ATTRIBUTION", {})
     monkeypatch.setattr(worktree_guard, "_GUARD_CLASSIFY_FAILURES", [])
     return Path(real)
 
@@ -133,10 +134,10 @@ def test_popen_git_worktree_add_with_config_and_cd_is_recorded_after_success(
     try:
         # __init__ must not record. The process can already have exited.
         assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
-        assert proc.wait() == 0
+        assert proc.wait(timeout=30) == 0
     finally:
         if proc.poll() is None:
-            proc.wait()
+            proc.wait(timeout=30)
     assert dest.is_dir()
     assert key in worktree_guard._CREATED_WORKTREE_ENTRIES
 
@@ -146,7 +147,7 @@ def test_popen_helpers_record_git_worktree_add(tmp_path: Path, guarded_root: Pat
     dest = _scaffold(guarded_root, f"from-{invoke}")
     git = _fake_git(tmp_path / invoke, status=0)
     argv = [str(git), "-c", "k=v", "worktree", "add", str(dest)]
-    kwargs = {"cwd": tmp_path, "env": _git_env(dest)}
+    kwargs = {"cwd": tmp_path, "env": _git_env(dest), "timeout": 30}
     runners: dict[str, Callable[..., object]] = {
         "run": subprocess.run,
         "check_call": subprocess.check_call,
@@ -167,6 +168,7 @@ def test_failed_check_call_does_not_record_even_if_the_directory_appeared(
             [str(git), "-c", "k=v", "worktree", "add", str(dest)],
             cwd=tmp_path,
             env=_git_env(dest),
+            timeout=30,
         )
     assert dest.is_dir()
     assert worktree_guard._worktree_entry_key(dest) not in worktree_guard._CREATED_WORKTREE_ENTRIES
@@ -196,6 +198,32 @@ def test_makedirs_records_a_new_entry_and_skips_exist_ok(guarded_root: Path) -> 
     os.makedirs(existing, exist_ok=True)
     os.makedirs(created, exist_ok=True)
     assert not worktree_guard._CREATED_WORKTREE_ENTRIES
+
+
+def test_real_checkout_acp_execution_does_not_mkdir_dispatch() -> None:
+    """Discuss/ask tests must not leave ``.worktrees/dispatch`` on the real checkout."""
+    from scripts.ai_agent_bridge import _acp_execution
+    from scripts.common.repo_root import main_checkout_root
+
+    root = main_checkout_root(worktree_guard._REPO_ROOT).resolve()
+    dispatch = root / ".worktrees" / "dispatch"
+    existed = dispatch.exists()
+    with _acp_execution.acp_execution_cwd(root, task_id="guard-8523") as workspace:
+        assert Path(workspace).resolve().is_relative_to(root / ".worktrees") is False
+    if not existed:
+        assert not dispatch.exists()
+
+
+def test_recorded_creation_names_the_test_and_caller(guarded_root: Path) -> None:
+    dest = _scaffold(guarded_root, "attributed")
+    os.mkdir(dest)
+    message = worktree_guard._worktree_guard_teardown_message()
+    assert message is not None
+    assert "test_recorded_creation_names_the_test_and_caller" in message
+    assert "PYTEST_CURRENT_TEST=" in message
+    assert "(call)" in message
+    assert "tests/test_conftest_worktree_guard.py:" in message
+    assert "caller=" in message
 
 
 def test_nested_directory_inside_an_entry_is_ignored(guarded_root: Path) -> None:

@@ -1301,6 +1301,8 @@ _REAL_WORKTREES_DIR = ""
 _REAL_WORKTREES_PREFIX = ""
 _WORKTREE_ENTRIES_AT_START: set[str] = set()
 _CREATED_WORKTREE_ENTRIES: set[str] = set()
+# path -> "PYTEST_CURRENT_TEST=... caller=file:line" for each recorded creation.
+_CREATED_WORKTREE_ATTRIBUTION: dict[str, str] = {}
 # Bookkeeping bugs are reported once at teardown. They must not raise out of
 # os.mkdir / Popen and change the call the test actually made.
 _GUARD_CLASSIFY_FAILURES: list[str] = []
@@ -1418,6 +1420,41 @@ def _classify_quietly(classify, path: object) -> list[tuple[str, bool]] | None:
         return None
 
 
+def _caller_outside_conftest() -> str:
+    """First repo frame above this file, as ``path:line``."""
+    here = Path(__file__).resolve()
+    repo = _REPO_ROOT.resolve()
+    frame = sys._getframe()
+    fallback: str | None = None
+    while frame is not None:
+        frame = frame.f_back
+        if frame is None:
+            break
+        filename = frame.f_code.co_filename
+        if not filename or filename.startswith("<"):
+            continue
+        try:
+            resolved = Path(filename).resolve()
+        except OSError:
+            continue
+        if resolved == here:
+            continue
+        try:
+            relative = resolved.relative_to(repo).as_posix()
+        except ValueError:
+            if fallback is None:
+                fallback = f"{resolved}:{frame.f_lineno}"
+            continue
+        return f"{relative}:{frame.f_lineno}"
+    return fallback or "<no frame outside conftest>"
+
+
+def _creation_attribution() -> str:
+    """Node id plus the creating frame, captured when the entry appears."""
+    node = os.environ.get("PYTEST_CURRENT_TEST", "").strip() or "<no PYTEST_CURRENT_TEST>"
+    return f"PYTEST_CURRENT_TEST={node} caller={_caller_outside_conftest()}"
+
+
 def _remember_if_created(key: str, existed_before: bool) -> None:
     """Record ``key`` only when this call is what created it.
 
@@ -1435,6 +1472,7 @@ def _remember_if_created(key: str, existed_before: bool) -> None:
         return
     if os.path.lexists(key):
         _CREATED_WORKTREE_ENTRIES.add(key)
+        _CREATED_WORKTREE_ATTRIBUTION.setdefault(key, _creation_attribution())
 
 
 def _remember_quietly(classified: list[tuple[str, bool]] | None) -> None:
@@ -1699,7 +1737,17 @@ def _worktree_guard_teardown_message() -> str | None:
         if path not in _WORKTREE_ENTRIES_AT_START and (os.path.lexists(path) or path in listed)
     )
     if leftovers:
-        joined = "\n".join(f"  {path}" for path in leftovers)
+        rendered: list[str] = []
+        for path in leftovers:
+            rendered.append(f"  {path}")
+            rendered.append(
+                "    "
+                + _CREATED_WORKTREE_ATTRIBUTION.get(
+                    path,
+                    "PYTEST_CURRENT_TEST=<unknown> caller=<unknown>",
+                )
+            )
+        joined = "\n".join(rendered)
         lines.append(
             "this pytest process created entries under the real .worktrees/ "
             f"that are still present:\n{joined}\n"
@@ -1726,8 +1774,10 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
     even if a test touches them.
 
     A path is recorded only when it did not exist immediately before the call
-    and does exist after the call succeeds. Bookkeeping errors are not raised
-    from the hooked call; teardown reports them as "guard could not classify".
+    and does exist after the call succeeds. Each record stores
+    ``PYTEST_CURRENT_TEST`` and the first calling frame outside this file
+    (``file:line`` under the repo). Bookkeeping errors are not raised from the
+    hooked call; teardown reports them as "guard could not classify".
 
     Set ``LU_WORKTREE_GUARD=0`` to skip the hooks for an overhead measurement.
     Under xdist each worker is its own process, so the hook and the teardown
@@ -1738,6 +1788,7 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
         return
     _WORKTREE_ENTRIES_AT_START.clear()
     _CREATED_WORKTREE_ENTRIES.clear()
+    _CREATED_WORKTREE_ATTRIBUTION.clear()
     _GUARD_CLASSIFY_FAILURES.clear()
     _WORKTREE_ENTRIES_AT_START.update(_snapshot_worktree_entries())
     with pytest.MonkeyPatch.context() as patcher:
@@ -1751,3 +1802,38 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
     message = _worktree_guard_teardown_message()
     if message:
         pytest.fail(message)
+
+
+@pytest.fixture(autouse=True)
+def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep ACP execution off the real checkout's ``.worktrees/dispatch``.
+
+    ``acp_execution_cwd`` on a primary checkout mkdirs
+    ``.worktrees/dispatch/acp`` before ``git worktree add``. Discuss and ask
+    tests invoke that helper on this process's checkout. A dispatch worktree
+    already contains ``.worktrees/dispatch``, so the mkdir is a no-op there;
+    a primary checkout that has no ``.worktrees`` yet (CI) keeps the empty
+    parent after the runtime worktree is removed. Calls aimed at that real
+    checkout yield a tmp directory instead. Calls aimed at any other repo,
+    including a test's own ``git init`` primary, still run the real helper.
+    """
+    from scripts.ai_agent_bridge import _acp_execution as acp_mod
+
+    real_checkout = Path(_init_real_worktrees_dir()).parent
+    original = acp_mod.acp_execution_cwd
+
+    @contextlib.contextmanager
+    def scoped(repo_root, *, task_id):
+        try:
+            from scripts.guardrails.worktree_containment import resolve_main_root
+
+            main = Path(resolve_main_root(repo_root)).resolve()
+        except Exception:
+            main = Path(repo_root).resolve()
+        if main == real_checkout:
+            yield tmp_path_factory.mktemp("acp-execution")
+            return
+        with original(repo_root, task_id=task_id) as workspace:
+            yield workspace
+
+    monkeypatch.setattr(acp_mod, "acp_execution_cwd", scoped)
