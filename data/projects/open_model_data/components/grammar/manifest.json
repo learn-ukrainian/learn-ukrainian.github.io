@@ -38,28 +38,28 @@
     }
   },
   "statistics": {
-    "total_records": 1377,
-    "train_records": 1241,
+    "total_records": 1375,
+    "train_records": 1239,
     "eval_records": 136,
-    "substantive_corrections": 997,
+    "substantive_corrections": 995,
     "clean_controls": 380,
-    "clean_control_share": 0.276,
-    "substantive_correction_share": 0.724,
+    "clean_control_share": 0.2764,
+    "substantive_correction_share": 0.7236,
     "category_counts": {
       "protective_authentic_control": 380,
-      "case_government": 326,
-      "syntax_structure": 181,
+      "case_government": 325,
+      "syntax_structure": 180,
       "agreement_concord": 129,
       "verb_morphology": 56,
       "calque_lexical_grammatical": 305
     },
     "source_corpus_counts": {
       "brown_uk": 364,
-      "ua_gec_2.0": 1013
+      "ua_gec_2.0": 1011
     },
     "license_counts": {
       "CC BY-NC-SA 4.0": 364,
-      "CC BY 4.0": 1013
+      "CC BY 4.0": 1011
     }
   },
   "source_denominator_reconciliation": {
@@ -72,7 +72,7 @@
     "ua_gec_train_in_scope_annotator_edit_sets": 5252,
     "measured_categories_count": 51,
     "exclusions_by_policy": {
-      "unwarranted_valid_to_valid_lexical_swap": 860,
+      "unwarranted_valid_to_valid_lexical_swap": 862,
       "uncapitalized_or_fragment": 503,
       "sentence_length_floor_under_5_words": 287,
       "ungrammatical_gold_correction": 274,
@@ -124,18 +124,18 @@
       "unpaired_comma_after_relative_pronoun": 1,
       "eval_partition_firewall_target": 1
     },
-    "candidate_edit_sets_excluded_total": 4255,
-    "candidate_edit_sets_retained_in_pipeline": 997,
-    "delivered_substantive_corrections": 997,
-    "delivered_substantive_corrections_train": 911,
+    "candidate_edit_sets_excluded_total": 4257,
+    "candidate_edit_sets_retained_in_pipeline": 995,
+    "delivered_substantive_corrections": 995,
+    "delivered_substantive_corrections_train": 909,
     "delivered_substantive_corrections_eval": 86,
     "reserve_candidate_count": 0,
     "reserve_disposition": "0 in reserve. 100% of retained candidates (997) delivered across train (911) and eval (86).",
     "delivered_clean_controls": 380,
     "delivered_clean_controls_train": 330,
     "delivered_clean_controls_eval": 50,
-    "delivered_total_records": 1377,
-    "substantive_correction_share": 0.724,
-    "clean_control_share": 0.276
+    "delivered_total_records": 1375,
+    "substantive_correction_share": 0.7236,
+    "clean_control_share": 0.2764
   }
 }

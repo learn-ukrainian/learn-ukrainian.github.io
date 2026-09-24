@@ -2213,8 +2213,14 @@ def validate_candidate_rejection(
         return "ungrammatical_gold_correction"
     if re.search(r"\bвам\s+може\s+зайти\b", c_low):
         return "ungrammatical_gold_correction"
+    if re.search(r"\bпоряд\s+безголовим\b", c_low):
+        return "ungrammatical_gold_correction"
 
     # 6. Unneeded swaps and meaning changes
+    if (re.search(r"\bнадяг\w*\b", o_low) and re.search(r"\bодяг\w*\b", c_low)) or (
+        re.search(r"\bв\s+передній\b", o_low) and re.search(r"\b(?:в\s+)?передпоко\w*\b", c_low)
+    ):
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bповоди\w*\s+себе\b", o_low) and re.search(r"\bповоди\w*сь\b|\bповоди\w*ся\b", c_low):
         return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bкотр[иіаеоу]\w*\b", o_low) and re.search(r"\bяк[иіаеоу]\w*\b", c_low):

@@ -35,7 +35,7 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
 3. **Cross-Split Eval Partition Isolation:**
    - Sentences appearing in the evaluation partition are strictly quarantined from the training partition: **10** candidate matches excluded (9 sources [`eval_partition_firewall_source`], 1 target [`eval_partition_firewall_target`]).
 4. **Syntactic, Semantic & Valency Quality Filters:**
-   - Unwarranted valid-to-valid lexical swap (`unwarranted_valid_to_valid_lexical_swap`): **860** candidates excluded.
+   - Unwarranted valid-to-valid lexical swap (`unwarranted_valid_to_valid_lexical_swap`): **862** candidates excluded.
    - Sentence length floor (< 5 words) (`sentence_length_floor_under_5_words`): **287** candidates excluded.
    - Ungrammatical gold correction (`ungrammatical_gold_correction`): **274** candidates excluded.
    - Wholesale essay rewrite exceeding 30% of tokens (`wholesale_essay_rewrite_token_share_over_30_pct`): **196** candidates excluded.
@@ -86,17 +86,17 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
 7. **Cross-Document Pair Deduplication:**
    - Duplicate `(original_text, corrected_text)` pairs across multiple annotators or documents were deduplicated (`duplicate_sentence_pair`): **15** candidates excluded.
 8. **Funnel Summary & Zero Reserve:**
-   - Total exclusions: **4,255** candidate edit sets excluded across **51** measured criteria (3,891 train, 364 eval).
+   - Total exclusions: **4,257** candidate edit sets excluded across **51** measured criteria (3,893 train, 364 eval).
    - **Zero Catch-Alls:** Every single rejected candidate is mapped directly to its specific validator gate or firewall check; generic catch-all buckets (`adversarial_review_round_findings`) have a count of **0**.
-   - Retained candidate edit sets in pipeline: **997** (911 train candidates + 86 eval candidates).
-   - Delivered in final balanced component: **997** substantive corrections (911 train, 86 eval) — 100% of retained candidate edit sets delivered, with zero withheld and zero in reserve.
-   - Complete itemized candidate-level audit trail: 4,255 exclusion records in `candidate_exclusion_accounting.json`, each recording `candidate_id`, `doc_id`, `sent_idx`, `ann_id`, `split`, `primary_tag`, `rejection_gate`, and `original_snippet`.
+   - Retained candidate edit sets in pipeline: **995** (909 train candidates + 86 eval candidates).
+   - Delivered in final balanced component: **995** substantive corrections (909 train, 86 eval) — 100% of retained candidate edit sets delivered, with zero withheld and zero in reserve.
+   - Complete itemized candidate-level audit trail: 4,257 exclusion records in `candidate_exclusion_accounting.json`, each recording `candidate_id`, `doc_id`, `sent_idx`, `ann_id`, `split`, `primary_tag`, `rejection_gate`, and `original_snippet`.
    - *Reserve disposition:* The earlier reported figure of 1,096 retained / 99 in reserve was an unmeasured legacy placeholder prior to completing the structural, safety, and orthographic filter suite. Every single candidate is now tracked and measured in `candidate_exclusion_accounting.json`.
 
 ### 3. Delivered Dataset Composition
-- **Substantive Corrections:** **997 records** (911 train across 8 shards, 86 eval across 2 shards).
+- **Substantive Corrections:** **995 records** (909 train across 8 shards, 86 eval across 2 shards).
 - **Protective Clean Controls:** **380 records** (330 train from Brown-UK and gold UA-GEC, 50 eval from Brown-UK).
-- **Total Records:** **1,377 records** (1,241 train records, 136 eval records).
+- **Total Records:** **1,375 records** (1,239 train records, 136 eval records).
 - **Mixture Ratio:** **72.4% substantive corrections / 27.6% clean controls**, strictly adhering to the 70%–80% corrections and 20%–30% controls required by SPEC §2.2.
 
 ## Licensing & Upstream Attribution

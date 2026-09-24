@@ -7,20 +7,20 @@
     "train_partition_documents": 4802,
     "eval_partition_documents": 450
   },
-  "delivered_substantive_corrections": 997,
+  "delivered_substantive_corrections": 995,
   "delivered_by_split": {
-    "train": 911,
+    "train": 909,
     "eval": 86
   },
-  "total_excluded_candidate_edit_sets": 4255,
+  "total_excluded_candidate_edit_sets": 4257,
   "excluded_by_split": {
-    "train": 3891,
+    "train": 3893,
     "eval": 364
   },
   "reserve_candidate_count": 0,
   "reserve_disposition": "0 in reserve. 100% of all 997 eligible, deduplicated candidate edit sets extracted from UA-GEC train are delivered. The earlier reported figure of 1,096 retained / 99 in reserve was an unmeasured legacy placeholder prior to completing the structural, safety, and orthographic filter suite.",
   "measured_exclusions_total": {
-    "unwarranted_valid_to_valid_lexical_swap": 860,
+    "unwarranted_valid_to_valid_lexical_swap": 862,
     "uncapitalized_or_fragment": 503,
     "sentence_length_floor_under_5_words": 287,
     "ungrammatical_gold_correction": 274,
@@ -73,7 +73,7 @@
     "eval_partition_firewall_target": 1
   },
   "measured_exclusions_train": {
-    "unwarranted_valid_to_valid_lexical_swap": 797,
+    "unwarranted_valid_to_valid_lexical_swap": 799,
     "uncapitalized_or_fragment": 469,
     "sentence_length_floor_under_5_words": 256,
     "ungrammatical_gold_correction": 250,
@@ -28654,6 +28654,16 @@
       "original_snippet": "- А ти, Каштанка, — недоуміння."
     },
     {
+      "candidate_id": "uagec_1114_s3_a0",
+      "doc_id": "1114",
+      "sent_idx": 3,
+      "ann_id": 0,
+      "split": "train",
+      "primary_tag": "G/Case",
+      "rejection_gate": "ungrammatical_gold_correction",
+      "original_snippet": "Поряд безголового стояли: професор судової медицини, паталогоанатом і його прозе"
+    },
+    {
       "candidate_id": "uagec_1115_s6_a0",
       "doc_id": "1115",
       "sent_idx": 6,
@@ -30860,7 +30870,7 @@
       "ann_id": 0,
       "split": "train",
       "primary_tag": "G/Case",
-      "rejection_gate": "ungrammatical_gold_correction",
+      "rejection_gate": "unwarranted_valid_to_valid_lexical_swap",
       "original_snippet": "Після від'їзду його Олексій Миколайовичу послав Микиту за лавровишневими краплям"
     },
     {
@@ -39852,6 +39862,16 @@
       "primary_tag": "G/Prep",
       "rejection_gate": "morphology_or_agreement_defect",
       "original_snippet": "У цих дверей також була черга, але не надмірна, десь на сто п'ятдесят осіб."
+    },
+    {
+      "candidate_id": "uagec_1702_s2_a0",
+      "doc_id": "1702",
+      "sent_idx": 2,
+      "ann_id": 0,
+      "split": "train",
+      "primary_tag": "G/Particle",
+      "rejection_gate": "unwarranted_valid_to_valid_lexical_swap",
+      "original_snippet": "Надягши в передній пальто і взявши в руки тростину, він постояв, подумав і повер"
     },
     {
       "candidate_id": "uagec_1702_s3_a0",

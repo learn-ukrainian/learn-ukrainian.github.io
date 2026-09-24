@@ -117,9 +117,9 @@ def test_manifest_integrity(grammar_data):
     assert stats["eval_records"] == len(grammar_data["eval"])
 
     recon = manifest["source_denominator_reconciliation"]
-    assert recon["candidate_edit_sets_excluded_total"] == 4255
-    assert recon["candidate_edit_sets_retained_in_pipeline"] == 997
-    assert recon["delivered_substantive_corrections"] == 997
+    assert recon["candidate_edit_sets_excluded_total"] == 4257
+    assert recon["candidate_edit_sets_retained_in_pipeline"] == 995
+    assert recon["delivered_substantive_corrections"] == 995
     assert manifest["licenses"]["brown_uk"]["attribution_record"] == "BROWN_UK_ATTRIBUTION.md"
     assert (GRAMMAR_DIR / "BROWN_UK_ATTRIBUTION.md").is_file()
 
@@ -884,15 +884,15 @@ def test_source_denominator_reconciliation(grammar_data):
     assert recon["ua_gec_train_sentences_total"] == 31028
     assert recon["ua_gec_train_in_scope_candidate_sentences"] == 5138
     assert recon["ua_gec_train_in_scope_annotator_edit_sets"] == 5252
-    assert recon["delivered_substantive_corrections"] == 997
-    assert recon["delivered_substantive_corrections_train"] == 911
+    assert recon["delivered_substantive_corrections"] == 995
+    assert recon["delivered_substantive_corrections_train"] == 909
     assert recon["delivered_substantive_corrections_eval"] == 86
     assert recon["delivered_clean_controls"] == 380
     assert recon["delivered_clean_controls_train"] == 330
     assert recon["delivered_clean_controls_eval"] == 50
-    assert recon["delivered_total_records"] == 1377
-    assert recon["candidate_edit_sets_excluded_total"] == 4255
-    assert sum(recon["exclusions_by_policy"].values()) == 4255
+    assert recon["delivered_total_records"] == 1375
+    assert recon["candidate_edit_sets_excluded_total"] == 4257
+    assert sum(recon["exclusions_by_policy"].values()) == 4257
     assert recon["candidate_edit_sets_excluded_total"] + recon["delivered_substantive_corrections"] == 5252
     assert recon["reserve_candidate_count"] == 0
     assert "reserve_disposition" in recon
@@ -902,15 +902,15 @@ def test_source_denominator_reconciliation(grammar_data):
     assert accounting_path.is_file(), f"Missing candidate_exclusion_accounting.json at {accounting_path}"
     accounting_data = json.loads(accounting_path.read_text(encoding="utf-8"))
     assert accounting_data["total_candidate_annotator_edit_sets"] == 5252
-    assert accounting_data["delivered_substantive_corrections"] == 997
-    assert accounting_data["total_excluded_candidate_edit_sets"] == 4255
-    assert sum(accounting_data["measured_exclusions_total"].values()) == 4255
+    assert accounting_data["delivered_substantive_corrections"] == 995
+    assert accounting_data["total_excluded_candidate_edit_sets"] == 4257
+    assert sum(accounting_data["measured_exclusions_total"].values()) == 4257
     assert accounting_data["reserve_candidate_count"] == 0
     assert accounting_data["measured_categories_count"] == len(accounting_data["measured_exclusions_total"])
     assert accounting_data["measured_categories_count"] == 51
     assert recon["measured_categories_count"] == 51
     assert "adversarial_review_round_findings" not in accounting_data["measured_exclusions_total"]
-    assert len(accounting_data["candidate_exclusions"]) == 4255
+    assert len(accounting_data["candidate_exclusions"]) == 4257
 
     ce_map = {ce["candidate_id"]: ce for ce in accounting_data["candidate_exclusions"]}
     # Representative label accuracy assertions (addressing Codex R23 review)
@@ -918,6 +918,9 @@ def test_source_denominator_reconciliation(grammar_data):
     assert ce_map["uagec_1082_s91_a0"]["rejection_gate"] == "grammatical_aspect_tense_or_mood_change"
     assert ce_map["uagec_0249_s10_a0"]["rejection_gate"] == "claim_about_named_person"
     assert ce_map["uagec_0648_s31_a0"]["rejection_gate"] == "unsubstantiated_political_assertion"
+    # Representative label accuracy assertions (addressing Codex R25 review)
+    assert ce_map["uagec_1114_s3_a0"]["rejection_gate"] == "ungrammatical_gold_correction"
+    assert ce_map["uagec_1702_s2_a0"]["rejection_gate"] == "unwarranted_valid_to_valid_lexical_swap"
 
     for ce in accounting_data["candidate_exclusions"]:
         assert "candidate_id" in ce
@@ -938,8 +941,8 @@ def test_source_denominator_reconciliation(grammar_data):
     assert "8,266" in readme_text or "8266" in readme_text
     assert "1,608" in readme_text or "1608" in readme_text
     assert "31,028" in readme_text
-    assert "997" in readme_text
-    assert "911" in readme_text
+    assert "995" in readme_text
+    assert "909" in readme_text
     assert "86" in readme_text
     assert "380" in readme_text
     assert "330" in readme_text
