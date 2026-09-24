@@ -110,7 +110,7 @@ const demodule = (src) => src
 const source = fs.readFileSync('site/src/pages/[...slug].astro', 'utf8').split('---')[1];
 const tree = ts.createSourceFile('route.ts', source, ts.ScriptTarget.Latest, true);
 const wanted = new Set(['TRACKS', 'HIDDEN_DOCS', 'normalizeId', 'allDocs', 'visibleDocs',
- 'deployedDocsByTrack', 'landingDocsByTrack', 'plannedModuleGroups', 'A1_UNITS']);
+ 'deployedDocsByTrack', 'landingDocsByTrack', 'HIDDEN_LINK_TRACKS', 'hrefFromRoute', 'sidebar']);
 const selected = tree.statements.filter(statement => {
  if (ts.isFunctionDeclaration(statement)) return statement.name?.text === 'getStaticPaths';
  if (ts.isVariableStatement(statement)) {
@@ -123,15 +123,19 @@ const selected = tree.statements.filter(statement => {
  return false;
 }).map(statement => statement.getText(tree)).join('\n').replace('export async function', 'async function').replaceAll('import.meta.env.PROD', 'true');
 const helper = demodule(fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8'));
-const nav = demodule(fs.readFileSync('site/src/lib/a1-lesson-nav.ts', 'utf8'));
-const units = demodule(fs.readFileSync('site/src/data/a1-v1-modules.ts', 'utf8'));
-const compiled = ts.transpileModule(helper + '\n' + nav + '\n' + units + '\n' + selected, {
+const nav = demodule(fs.readFileSync('site/src/lib/doc-nav.ts', 'utf8'));
+const compiled = ts.transpileModule(helper + '\n' + nav + '\n' + selected, {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
 }).outputText.replace(/^\s*exports?\.[^\n]*\n/gm, '').replace(/^\s*export\s*\{\s*\}\s*;?\s*$/gm, '');
 const docs = JSON.parse(fs.readFileSync(0, 'utf8'));
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: await getStaticPaths(), groups: plannedModuleGroups("a1", TRACKS["a1"]), visible: [...deployedDocsByTrack.keys()]};')(
- async name => name === 'docs' ? docs : [], () => 0
+// `sidebar` reads the page-level `props`/`docRoute`/`docTrack`; bind them to one lesson page.
+const lessonId = 'a1/things-have-gender/2';
+const prelude = `const props = {kind: 'doc', entry: allDocs.find(e => normalizeId(e.id) === '${lessonId}')};
+const docRoute = '${lessonId}'; const docTrack = 'a1';`;
+const body = compiled.replace(/^const sidebar\b/m, prelude + '\nconst sidebar');
+new AsyncFunction('getCollection', 'moduleCount', 'formatLessonCount', body + '\nreturn {routes: (await getStaticPaths()).map(r => ({params: r.params, kind: r.props.kind})), sidebar, visible: [...deployedDocsByTrack.keys()]};')(
+ async name => name === 'docs' ? docs : [], () => 0, count => ({en: `${count} lessons`, uk: `${count} уроки`})
 ).then(result => process.stdout.write(JSON.stringify(result))).catch(error => {console.error(error); process.exitCode = 1;});
 '''
     module, plan = gold
@@ -140,20 +144,26 @@ new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: 
     docs.extend({"id": f"a1/things-have-gender/{name}", "data": yaml.safe_load(mdx.split("---", 2)[1])}
                 for name, mdx in pages.items())
     docs.append({"id": "a1/draft/index", "data": {"title": "Draft", "draft": True, "lessons": []}})
+    # The generated arc landing (`arc_kind: landing`) is the track's landing doc.
+    docs.append({"id": "a1", "data": {"title": "A1", "arc_kind": "landing", "arc_level": "a1"}})
     result = json.loads(subprocess.check_output(["node", "-e", probe], input=json.dumps(docs), text=True, timeout=30))
-    routes = {route["params"]["slug"] for route in result["routes"]}
+    kinds = {route["params"]["slug"]: route["kind"] for route in result["routes"]}
     assert {
         "a1-v1", "a1-v1/things-have-gender", "a1", "a1/things-have-gender",
         "a1/things-have-gender/1", "a1/things-have-gender/2", "a1/things-have-gender/3",
-    } <= routes
-    assert "a1/draft" not in routes
+    } <= kinds.keys()
+    assert kinds["a1"] == "landingDoc"
+    assert kinds["a1/things-have-gender"] == kinds["a1/things-have-gender/2"] == "doc"
+    assert "a1/draft" not in kinds
     assert "a1" in result["visible"]
-    assert result["groups"][0]["unit"].startswith("A1.1")
-    upgraded = next(
-        item for group in result["groups"] for item in group["items"]
-        if item["slug"] == "things-have-gender"
-    )
-    assert [item["n"] for item in upgraded["lessons"]] == [1, 2, 3]
+    sidebar = result["sidebar"]
+    assert sidebar["backHref"] == "/a1/"
+    assert [link["num"] for link in sidebar["links"]] == ["01", "02", "03"]
+    assert [link["active"] for link in sidebar["links"]] == [False, True, False]
+    assert [link["href"] for link in sidebar["links"]] == [
+        f"/a1/things-have-gender/{n}/" for n in (1, 2, 3)
+    ]
+    assert (sidebar["progressDone"], sidebar["progressTotal"]) == (2, 3)
 
 
 def test_a1_landing_uses_lesson_map_pitch_not_original_body(gold, tmp_path):
