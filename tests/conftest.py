@@ -25,7 +25,13 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from tests import dispatch_xdist_cap as _dispatch_xdist_cap
 from tests import sparse_trees
+
+# Re-export so this conftest plugin runs the dispatch xdist cap (#8645).
+pytest_cmdline_main = _dispatch_xdist_cap.pytest_cmdline_main
+pytest_sessionstart = _dispatch_xdist_cap.pytest_sessionstart
+pytest_unconfigure = _dispatch_xdist_cap.pytest_unconfigure
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -39,11 +45,7 @@ def _resolve_real_gh_binary() -> str | None:
     """Resolve gh behind agent-runtime shims using the runner's path rules."""
     candidates = [os.environ.get("AGENT_REAL_GH")]
     search_path = os.environ.get("AGENT_ORIGINAL_PATH", os.environ.get("PATH", os.defpath))
-    candidates.extend(
-        os.path.join(entry, "gh")
-        for entry in search_path.split(os.pathsep)
-        if entry
-    )
+    candidates.extend(os.path.join(entry, "gh") for entry in search_path.split(os.pathsep) if entry)
     for candidate in candidates:
         if not candidate or _is_agent_runtime_shim(candidate):
             continue
@@ -103,9 +105,7 @@ def _bridge_db_paths() -> tuple[Path, Path]:
 
 _REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH = _bridge_db_paths()
 _API_BRIDGE_DB_PATH = (_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db").resolve()
-_UNISOLATED_BRIDGE_DB_PATHS = frozenset(
-    {_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH}
-)
+_UNISOLATED_BRIDGE_DB_PATHS = frozenset({_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH})
 _BRIDGE_DB_SUFFIXES = tuple(sorted({path.name for path in _UNISOLATED_BRIDGE_DB_PATHS}))
 _BRIDGE_DB_BINDINGS_TO_REPLACE = set(_UNISOLATED_BRIDGE_DB_PATHS)
 
@@ -416,9 +416,7 @@ def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
     monkeypatch their own.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_DB", str(tmp_path / "llm_qg.db"))
-    monkeypatch.setenv(
-        "LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json")
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json"))
 
 
 @pytest.fixture(autouse=True)
@@ -673,10 +671,7 @@ def sparse_missing_tree_skip_reason(
     needed = _trees_needed_by_test(normalized, item_name)
     for tree in ("data/projects", "data/lexicon"):
         if tree in missing_trees and tree in needed:
-            return (
-                f"{tree} is absent from this sparse worktree; "
-                f"re-include it with --sparse-include {tree}"
-            )
+            return f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
     return None
 
 
@@ -876,11 +871,7 @@ def _is_fixture(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> tuple[bool, bool]
         autouse = False
         if call is not None:
             for keyword in call.keywords:
-                if (
-                    keyword.arg == "autouse"
-                    and isinstance(keyword.value, ast.Constant)
-                    and keyword.value.value is True
-                ):
+                if keyword.arg == "autouse" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True:
                     autouse = True
         return True, autouse
     return False, False
@@ -1032,9 +1023,7 @@ def _analyze_test_module(
         if autouse:
             module_trees.update(direct.get(name, ()))
 
-    function_trees = tuple(
-        (name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees
-    )
+    function_trees = tuple((name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees)
     return frozenset(module_trees), function_trees
 
 
@@ -1814,9 +1803,7 @@ def _guarded_popen_init(self, args, *pos, **kwargs):
         found = _git_worktree_add_destination(args, _popen_cwd(pos, kwargs))
         if found is not None:
             dest = found
-            absent_before = (
-                found not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(found)
-            )
+            absent_before = found not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(found)
     except Exception as exc:
         # A guard bug must not replace the original call.
         _record_classify_failure(exc)
@@ -1827,9 +1814,7 @@ def _guarded_popen_init(self, args, *pos, **kwargs):
     if dest is None:
         return
     try:
-        _POPEN_WORKTREE_CALLS.append(
-            _PopenWorktreeCall(self, dest, absent_before, _creation_attribution())
-        )
+        _POPEN_WORKTREE_CALLS.append(_PopenWorktreeCall(self, dest, absent_before, _creation_attribution()))
     except Exception as exc:
         _record_classify_failure(exc)
 
@@ -1958,11 +1943,7 @@ def _worktree_guard_teardown_message() -> str | None:
             _record_classify_failure(exc)
             continue
         if code is None:
-            _record_classify_failure(
-                TimeoutError(
-                    f"git worktree add {path}: timed out waiting for exit status"
-                )
-            )
+            _record_classify_failure(TimeoutError(f"git worktree add {path}: timed out waiting for exit status"))
             continue
         if code == 0 and (os.path.lexists(path) or path in listed):
             suspected.add(path)

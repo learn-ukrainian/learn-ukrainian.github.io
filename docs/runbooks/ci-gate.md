@@ -95,6 +95,15 @@ candidate set into unused buckets.
 thread method terminates the process, and replacing it can leave xdist
 hanging until the job limit.
 
+Dispatch workers are a separate host from these runners. When
+`LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `tests/dispatch_xdist_cap.py`
+(loaded by `tests/conftest.py`) clamps xdist with `--maxprocesses=2` for
+`-n auto`, `-n logical`, and an explicit `-n`, and a full-suite invocation
+takes one non-blocking lock under `/var/tmp/lu/learn-ukrainian/`. CI does
+not set that variable (see `.github/workflows/`), so shard `-n logical` is
+unchanged. A second full-suite run on a dispatch host fails immediately
+and tells the worker to run targeted tests.
+
 **Collection — allowlist hook.** `tests/conftest.py` implements
 `pytest_ignore_collect`, gated on env var `LU_PYTEST_SHARD_FILES`: unset,
 collection is completely unchanged (local dev, `docs_skills` lane); set, it
