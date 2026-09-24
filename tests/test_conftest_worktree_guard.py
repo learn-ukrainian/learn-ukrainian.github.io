@@ -551,9 +551,9 @@ def test_popen_hook_blocks_real_gh_and_path_stub_exits_127(
     monkeypatch.delenv("LU_GH_GUARD", raising=False)
 
     with pytest.raises(pytest.fail.Exception, match="spawned real gh"):
-        subprocess.run([os.path.realpath(real_gh)], check=False)
+        subprocess.run([os.path.realpath(real_gh)], check=False, timeout=30)
 
-    stub = subprocess.run(["gh"], check=False, capture_output=True, text=True)
+    stub = subprocess.run(["gh"], check=False, capture_output=True, text=True, timeout=30)
     assert stub.returncode == 127
 
 
