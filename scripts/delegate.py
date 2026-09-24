@@ -5845,6 +5845,24 @@ def _run_worker(
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
 
+        if (
+            strict_mcp_config
+            and review_id is not None
+            and attempt_id is not None
+            and mcp_config_path is not None
+            and agent == "agy"
+        ):
+            from scripts.agent_runtime.review_mcp import agy_oauth_link_problem
+
+            link_problem = agy_oauth_link_problem(mcp_config_path)
+            if link_problem is not None:
+                # Never copy credentials back automatically: both files stay as they
+                # are for the operator, and the attempt cannot settle as done (#8617).
+                final_state["agy_oauth_link_error"] = "agy_oauth_link_replaced"
+                stderr_excerpt = f"agy_oauth_link_replaced: {link_problem}\n{stderr_excerpt or ''}".strip()[:500]
+                final_status = "failed"
+                ok_outcome = False
+
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
             _write_read_only_snapshot_sidecar(task_id, "post", read_only_checkout_post)

@@ -388,6 +388,11 @@ def build_agent_env(
     The runner applies explicit ``InvocationPlan.env_unsets`` after this call.
     """
     raw = dict(os.environ)
+    if _normalized_provider(provider) == "agy":
+        # Only a receipt-recording review attempt's adapter override may carry
+        # AGY_APP_DATA_DIR (#8617); an ambient export must not leak into an
+        # ordinary dispatch.
+        raw.pop("AGY_APP_DATA_DIR", None)
     raw.update(overrides or {})
 
     env: dict[str, str] = {}

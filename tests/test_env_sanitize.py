@@ -317,3 +317,17 @@ def test_agy_app_data_dir_reaches_only_the_agy_provider() -> None:
         assert "AGY_APP_DATA_DIR" not in env, provider
     assert ordinary["HOME"] == "/Users/example"
     assert "AGY_APP_DATA_DIR" not in ordinary
+
+
+def test_ambient_agy_app_data_dir_is_stripped_unless_the_override_supplies_it() -> None:
+    """An inherited AGY_APP_DATA_DIR never reaches an ordinary dispatch; only the adapter override does."""
+    scoped_app_data = "/work/receipts/rev/att.agy-home/.gemini/antigravity-cli"
+    parent = {"PATH": "/usr/bin", "HOME": "/Users/example", "AGY_APP_DATA_DIR": "/tmp/x"}
+    with patch.dict("os.environ", parent, clear=True):
+        ordinary = build_agent_env(provider="agy")
+        ordinary_tools = build_agent_env(provider="agy-tools")
+        review = build_agent_env(provider="agy", overrides={"AGY_APP_DATA_DIR": scoped_app_data})
+
+    assert "AGY_APP_DATA_DIR" not in ordinary
+    assert "AGY_APP_DATA_DIR" not in ordinary_tools
+    assert review["AGY_APP_DATA_DIR"] == scoped_app_data

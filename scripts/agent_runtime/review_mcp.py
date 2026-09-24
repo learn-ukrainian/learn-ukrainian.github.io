@@ -195,7 +195,28 @@ def _populate_agy_review_home(agy_home: Path, real_token: Path, config_bytes: by
     fd_config = os.open(mcp_config, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(fd_config, "wb") as handle:
         handle.write(config_bytes)
+    # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
+    # token) must land in the real token file. A refreshed copy would leave the real
+    # token stale or invalidated and break every other AGY lane. "Nothing written to the
+    # real ~/.gemini" means configuration; agy_oauth_link_problem() guards the link itself.
     (app_data / _AGY_TOKEN_NAME).symlink_to(real_token)
+
+
+def agy_oauth_link_problem(config_path: Path | str) -> str | None:
+    """Describe how a scoped AGY home's OAuth link deviates from the real token, or ``None`` if intact.
+
+    Intact means ``antigravity-oauth-token`` in the scoped app-data dir is still a symlink
+    whose target resolves to the original real token path. Credentials are never copied
+    or repaired here; a deviation is left untouched for the operator.
+    """
+    link = agy_review_app_data_dir(agy_review_home_path(config_path)) / _AGY_TOKEN_NAME
+    real_token = _real_agy_token()
+    if not link.is_symlink():
+        kind = "a regular file" if link.exists() else "missing"
+        return f"{link} is {kind}, not a symlink to {real_token}"
+    if os.path.realpath(link) != os.path.realpath(real_token):
+        return f"{link} points to {os.path.realpath(link)}, not {os.path.realpath(real_token)}"
+    return None
 
 
 def prepare_review_attempt(
@@ -632,6 +653,10 @@ def verify_agy_review_launch(
     """Run the effective-config gate under the exact environment the AGY launch will get."""
     from scripts.agent_runtime.adapters.agy import AgyAdapter
     from scripts.agent_runtime.env_sanitize import build_agent_env
+
+    link_problem = agy_oauth_link_problem(config_path)
+    if link_problem is not None:
+        raise AgyReviewMcpGateError(f"agy review attempt refused: OAuth link not intact: {link_problem} (#8617)")
 
     plan = AgyAdapter().build_invocation(
         prompt="",

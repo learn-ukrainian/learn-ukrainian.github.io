@@ -4633,6 +4633,82 @@ def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, t
     assert env["AGY_APP_DATA_DIR"] == str(plan.agy_home / ".gemini" / "antigravity-cli")
 
 
+def _agy_token_link(plan):
+    return plan.agy_home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token"
+
+
+def test_run_worker_agy_review_intact_oauth_link_settles_done(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(tmp_path, monkeypatch)
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()):
+        rc = _run_agy_review_worker("worker-agy-link-ok", tmp_path, plan)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("worker-agy-link-ok"))
+    assert state["status"] == "done"
+    assert "agy_oauth_link_error" not in state
+
+
+def test_run_worker_agy_review_refuses_broken_oauth_link_before_launch(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(tmp_path, monkeypatch)
+    link = _agy_token_link(plan)
+    link.unlink()
+    link.write_text("{}\n", encoding="utf-8")
+    with patch("agent_runtime.runner.invoke") as mock_invoke:
+        rc = _run_agy_review_worker("worker-agy-link-pre", tmp_path, plan)
+
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    state = delegate._read_state(delegate._state_path("worker-agy-link-pre"))
+    assert "OAuth link not intact" in state["stderr_excerpt"]
+    assert link.read_text(encoding="utf-8") == "{}\n"
+
+
+def test_run_worker_agy_review_link_replaced_by_file_after_run_is_named_error(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(tmp_path, monkeypatch)
+    link = _agy_token_link(plan)
+    real_token = link.resolve()
+
+    def replace_with_file(*_args, **_kwargs):
+        link.unlink()
+        link.write_text('{"refreshed": true}\n', encoding="utf-8")
+        return _codex_worker_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=replace_with_file):
+        rc = _run_agy_review_worker("worker-agy-link-file", tmp_path, plan)
+
+    assert rc == 1
+    state = delegate._read_state(delegate._state_path("worker-agy-link-file"))
+    assert state["status"] != "done"
+    assert state["agy_oauth_link_error"] == "agy_oauth_link_replaced"
+    assert "agy_oauth_link_replaced" in state["stderr_excerpt"]
+    # Both files stay untouched for the operator: no credential is copied back.
+    assert link.read_text(encoding="utf-8") == '{"refreshed": true}\n'
+    assert real_token.read_text(encoding="utf-8") == "{}\n"
+
+
+def test_run_worker_agy_review_link_retargeted_after_run_is_named_error(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(tmp_path, monkeypatch)
+    link = _agy_token_link(plan)
+    other = tmp_path / "other-token"
+    other.write_text("{}\n", encoding="utf-8")
+
+    def retarget(*_args, **_kwargs):
+        link.unlink()
+        link.symlink_to(other)
+        return _codex_worker_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=retarget):
+        rc = _run_agy_review_worker("worker-agy-link-retarget", tmp_path, plan)
+
+    assert rc == 1
+    state = delegate._read_state(delegate._state_path("worker-agy-link-retarget"))
+    assert state["status"] != "done"
+    assert state["agy_oauth_link_error"] == "agy_oauth_link_replaced"
+    assert "agy_oauth_link_replaced" in state["stderr_excerpt"]
+    assert link.is_symlink()
+    assert link.resolve() == other.resolve()
+
+
 def test_run_worker_agy_review_refuses_extra_effective_server(tmp_tasks_dir, tmp_path, monkeypatch):
     plan, _log = _prepare_agy_review(
         tmp_path, monkeypatch, extra_rows=[("leak", "http", "enabled", "http://127.0.0.1:8766/mcp")]
