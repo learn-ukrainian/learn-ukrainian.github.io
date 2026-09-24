@@ -457,15 +457,17 @@ def test_acceptance_review_sample_receipt_and_signoff():
     assert receipt["dataset_sha256"] == tmpl["dataset_sha256"]
     assert receipt["sample_seed"] == tmpl["sample_seed"]
     assert receipt["profile_sha256"] == tmpl["profile_sha256"]
-    assert receipt["sample_size_drawn"] == 300
-    assert receipt["sample_size_reviewed"] == 300
-    assert len(receipt["reviewed_sample_items"]) == 300
+    assert receipt["sample_size_drawn"] == tmpl["sample_size_drawn"]
+    assert receipt["sample_size_reviewed"] == tmpl["sample_size_drawn"]
+    assert len(receipt["reviewed_sample_items"]) == tmpl["sample_size_drawn"]
     assert receipt["verdict"] == "APPROVED"
     assert receipt["blocker_defect_count"] == 0
 
-    # Verify all 300 reviewer rationales are completely distinct and authentic
+    # Verify all reviewer rationales are completely distinct and authentic
     rationales = [item["reviewer_rationale"] for item in receipt["reviewed_sample_items"]]
-    assert len(set(rationales)) == 300, f"Expected 300 distinct rationales, got {len(set(rationales))}"
+    assert len(set(rationales)) == tmpl["sample_size_drawn"], (
+        f"Expected {tmpl['sample_size_drawn']} distinct rationales, got {len(set(rationales))}"
+    )
 
     for item in receipt["reviewed_sample_items"]:
         audit = item.get("item_verification_audit", {})
@@ -479,7 +481,7 @@ def test_acceptance_review_sample_receipt_and_signoff():
     assert signoff["dataset_sha256"] == tmpl["dataset_sha256"]
     assert signoff["sample_seed"] == tmpl["sample_seed"]
     assert signoff["profile_sha256"] == tmpl["profile_sha256"]
-    assert signoff["sample_size_reviewed"] == 300
+    assert signoff["sample_size_reviewed"] == tmpl["sample_size_drawn"]
     assert signoff["blocker_defect_count"] == 0
     assert signoff["reviewer_id"] == "claude_blue_team_ling_review"
     assert signoff["reviewer_family"] == "claude"

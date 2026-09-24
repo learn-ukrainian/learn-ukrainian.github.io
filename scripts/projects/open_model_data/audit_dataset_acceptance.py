@@ -1109,36 +1109,25 @@ def audit_check_7_sample_drawer(
     scored_records.sort(key=lambda x: x[0])
     selected = [r for _, r in scored_records[:sample_size]]
 
-    # Ensure thin categories are included up to cap
-    thin_cap = thresholds.get("thin_category_sample_cap", 20)
+    # Ensure 100% of thin categories (<50 examples in UA-GEC/dataset) are included per SPEC §2.2 & §3
     min_cat = thresholds.get("min_examples_per_category", 50)
-    category_counts = Counter(r.category for r in records if r.category)
-    # Sort thin categories before iteration to be invariant to PYTHONHASHSEED (Fixes Blocker 4)
-    thin_categories = sorted([cat for cat, c in category_counts.items() if c < min_cat])
+    tag_counts = Counter(r.raw.get("tag") for r in records if r.is_erroneous and r.raw.get("tag"))
+    cat_counts = Counter(r.category for r in records if r.is_erroneous and r.category)
+    thin_tags = {tag for tag, c in tag_counts.items() if c < min_cat}
+    thin_cats = {cat for cat, c in cat_counts.items() if c < min_cat}
 
     selected_hashes = {r.content_hash for r in selected}
-    thin_by_cat: dict[str, list[DatasetRecord]] = {}
-    for cat in thin_categories:
-        cat_recs = [r for r in records if r.category == cat and r.content_hash not in selected_hashes]
-        # Sort additions by deterministic rank hash, never file order
-        cat_recs.sort(key=lambda r: hashlib.sha256(f"{seed_hash}:{r.content_hash}".encode()).hexdigest())
-        thin_by_cat[cat] = cat_recs[:thin_cap]
+    thin_records = [
+        r
+        for r in records
+        if r.is_erroneous
+        and r.content_hash not in selected_hashes
+        and (r.raw.get("tag") in thin_tags or r.category in thin_cats)
+    ]
+    # Sort deterministically by rank hash
+    thin_records.sort(key=lambda r: hashlib.sha256(f"{seed_hash}:{r.content_hash}".encode()).hexdigest())
 
-    # Fair round-robin allocation across thin categories up to 100 total
-    thin_additions: list[DatasetRecord] = []
-    max_round = thin_cap
-    max_total_thin = 100
-    for round_idx in range(max_round):
-        if len(thin_additions) >= max_total_thin:
-            break
-        for cat in thin_categories:
-            if len(thin_additions) >= max_total_thin:
-                break
-            recs = thin_by_cat[cat]
-            if round_idx < len(recs):
-                thin_additions.append(recs[round_idx])
-
-    all_sampled = selected + thin_additions
+    all_sampled = selected + thin_records
     actual_drawn_count = len(all_sampled)
 
     # Resolve output paths safely
@@ -1158,7 +1147,7 @@ def audit_check_7_sample_drawer(
         f"- **Dataset SHA-256:** `{dataset_sha256}`",
         f"- **Deterministic Sampling Seed Hash:** `{seed_hash}`",
         f"- **Profile SHA-256:** `{profile_sha256}`",
-        f"- **Sampled Rows:** {actual_drawn_count} (Base {len(selected)} + Thin Category Boost {len(thin_additions)})",
+        f"- **Sampled Rows:** {actual_drawn_count} (Base {len(selected)} + Thin Category Boost {len(thin_records)})",
         "",
         "## Reviewer Instructions & Rubric",
         "For each instance below, evaluate the text using authentic Ukrainian linguistic tools (СУМ-20, Правопис 2019, VESUM, Антоненко-Давидович).",
@@ -1322,6 +1311,24 @@ def audit_check_7_sample_drawer(
                         failures.append("Signoff missing valid reviewer_id")
                     if not reviewer_family or not isinstance(reviewer_family, str) or not reviewer_family.strip():
                         failures.append("Signoff missing valid reviewer_family")
+
+                    # Check for verified itemized receipt
+                    receipt_path = sample_out_path.parent / "acceptance_review_sample.receipt.json"
+                    if not receipt_path.is_file():
+                        failures.append(f"Missing itemized review receipt: {receipt_path}")
+                    else:
+                        try:
+                            receipt_data = json.loads(receipt_path.read_text(encoding="utf-8"))
+                            items = receipt_data.get("reviewed_sample_items", [])
+                            if len(items) < actual_drawn_count:
+                                failures.append(
+                                    f"Receipt item count ({len(items)}) is less than sample size drawn ({actual_drawn_count})"
+                                )
+                            receipt_blockers = receipt_data.get("blocker_defect_count", 0)
+                            if receipt_blockers > 0:
+                                failures.append(f"Receipt reports {receipt_blockers} blocker defect(s)")
+                        except Exception as e:
+                            failures.append(f"Error parsing review receipt: {e}")
 
                     if not failures:
                         signoff_verified = True

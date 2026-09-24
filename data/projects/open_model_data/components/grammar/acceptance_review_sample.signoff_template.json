@@ -1,8 +1,8 @@
 {
-  "dataset_sha256": "7e943361f4832489b1cb9ab060d6b2532b21802ef12be6de1f37db4f55cbd4b2",
-  "sample_seed": "42e693ce445eb624cae8f9805c7a6d146ef67f0030eb943fd70958a038bc51d7",
+  "dataset_sha256": "f0a14e66b8006c9276bd52a7e179e278297be4bc53b8fdefd22c8290a42e0e47",
+  "sample_seed": "13fc39644d35f29e9e66420e9e1e7e40dd7c588892de62bed24564f878e83317",
   "profile_sha256": "d1a431cfb07024d2b54d4325294b7fdc8d4e05a5fdf147812b2fb553262cc53a",
-  "sample_size_drawn": 300,
+  "sample_size_drawn": 372,
   "sample_size_reviewed": 0,
   "blocker_defect_count": 0,
   "minor_defect_count": 0,

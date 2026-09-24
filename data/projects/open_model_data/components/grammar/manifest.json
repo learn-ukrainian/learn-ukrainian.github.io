@@ -39,12 +39,12 @@
     "clean_control_share": 0.2776,
     "substantive_correction_share": 0.7224,
     "category_counts": {
-      "calque_lexical_grammatical": 331,
-      "case_government": 310,
+      "calque_lexical_grammatical": 306,
+      "case_government": 322,
       "protective_authentic_control": 380,
-      "syntax_structure": 176,
+      "syntax_structure": 180,
       "verb_morphology": 55,
-      "agreement_concord": 117
+      "agreement_concord": 126
     },
     "source_corpus_counts": {
       "ua_gec_2.0": 1005,
