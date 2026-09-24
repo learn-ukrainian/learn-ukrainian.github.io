@@ -677,16 +677,9 @@ def resolve_specific_linguistic_citation(
 
     # 7. Verb Voice (G/VerbVoice): support authentic passive-to-active reflexive replacements;
     # other heterogeneous voice errors fail closed to silent_rewrite.
+    # 7. Verb Voice (G/VerbVoice): heterogeneous tag covering reflexive usage, modal infinitives,
+    # and passives; fails closed to silent_rewrite to prevent overbroad voice explanations.
     if primary_tag == "G/VerbVoice":
-        if (
-            err_lower.endswith(("ється", "ються", "яться", "алося", "илося", "лося"))
-            and corr_lower.endswith(("ють", "ять", "али", "или", "ли"))
-        ):
-            return (
-                "Борис Антоненко-Давидович «Як ми говоримо» / Олександр Пономарів",
-                f"пасивну конструкцію з дієсловом на -ся «{err}» замінено на питому неозначено-особову форму «{corr}»",
-                f"Борис Антоненко-Давидович та Олександр Пономарів радять уникати невластивих українській мові пасивних конструкцій із дієсловами на -ся: замість «{err}» уживаємо дієслово активного стану «{corr}»."
-            )
         return None
 
     # 8. Verb Aspect Form / Imperative / Adverbial Participle (G/VerbAForm)
@@ -729,6 +722,15 @@ def resolve_specific_linguistic_citation(
                 "Олександр Пономарів «Культура слова» / Український правопис (2019) § 115",
                 f"нерекомендований активний дієприкметник «{err}» замінено на питому форму «{corr}»",
                 f"Олександр Пономарів та «Український правопис» (2019, § 115) зазначають, що активні дієприкметники минулого часу на «-ший» («{err}») в українській мові є ненормативними і замінюються формами на «-лий» або прикметниками («{corr}»)."
+            )
+        if (
+            (any(err_lower.endswith(s) for s in ("ний", "того", "тий", "та", "те", "ті")) or any(err_lower.endswith(s) for s in pv_pres + pv_past))
+            and any(corr_lower.endswith(s) for s in ("но", "то"))
+        ):
+            return (
+                "Борис Антоненко-Давидович «Як ми говоримо» / Олександр Пономарів",
+                f"дієприкметникову форму «{err}» замінено на питому безособову форму на -но/-то «{corr}»",
+                f"Борис Антоненко-Давидович та Олександр Пономарів радять у ролі присудка вживати незмінювані безособові дієслівні форми на -но/-то: вживаємо «{corr}» замість «{err}»."
             )
         return None
 
@@ -795,6 +797,9 @@ def resolve_specific_linguistic_citation(
             any(k in err_lower for k in comp_keywords)
             or any(err_lower.endswith(s) for s in comp_sufs)
             or any(any(w.endswith(s) for s in comp_sufs) for w in err_lower.split())
+            or any(corr_lower.endswith(s) for s in comp_sufs)
+            or any(any(w.endswith(s) for s in comp_sufs) for w in corr_lower.split())
+            or any(corr_lower.startswith(p) for p in ("най", "якнай", "щонай"))
         ):
             return (
                 "Український правопис (2019) § 111 / VESUM",
@@ -1008,6 +1013,22 @@ def resolve_specific_linguistic_citation(
                 "Український правопис (2019) / Олександр Пономарів «Культура слова»",
                 f"повтор слова «{err}» вилучено як механічну тавтологію",
                 f"Згідно з нормами редагування («Український правопис» 2019, Олександр Пономарів), випадкове дублювання або тавтологічний повтор слова «{err}» підлягає вилученню."
+            )
+
+        # Pleonastic / ungrammatical word or phrase deletion
+        if not corr and err:
+            return (
+                "Український правопис (2019) / Олександр Пономарів «Культура слова»",
+                f"зайвий вислів «{err}» вилучено для усунення синтаксичної надлишковості",
+                f"Згідно з нормами синтаксису («Український правопис» 2019, Олександр Пономарів), невластивий або надлишковий фрагмент «{err}» порушує граматичну структуру речення і підлягає вилученню."
+            )
+
+        # Redundant conditional mood marker (e.g. впізнавав би -> впізнав)
+        if (err_lower.endswith((" би", " б")) or " би " in err_lower or " б " in err_lower) and not (" би" in corr_lower or " б" in corr_lower):
+            return (
+                "Український правопис (2019) § 124 / Академічна граматика української мови",
+                f"надлишкову частку «би/б» у дієслівній конструкції «{err}» усунено на користь форми дійсного способу «{corr}»",
+                f"Згідно з нормами граматики («Український правопис» 2019, § 124), вживання частки «би/б» є недоречним у контексті констатації реальної дії: вживаємо дієслово дійсного способу «{corr}» замість «{err}»."
             )
 
         # Single-token word inflection verified by VESUM

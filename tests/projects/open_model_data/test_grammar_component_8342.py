@@ -220,8 +220,8 @@ def test_brown_uk_attribution(grammar_data):
         assert r["source_metadata"]["doc_name"] == r["doc_name"]
 
 
-def test_parallel_annotator_retention(grammar_data):
-    """Verify distinct parallel annotator corrections for the same sentence are preserved."""
+def test_source_sentence_uniqueness_across_corrections(grammar_data):
+    """Verify each source sentence across corrections has exactly one gold target (no conflicting/duplicate golds)."""
     corrections = [r for r in grammar_data["all"] if r["is_erroneous"]]
     orig_to_targets: dict[str, set[str]] = {}
     for r in corrections:
@@ -232,9 +232,9 @@ def test_parallel_annotator_retention(grammar_data):
         orig_to_targets[orig].add(corr)
 
     multi_target_sents = {orig: targets for orig, targets in orig_to_targets.items() if len(targets) > 1}
-    assert len(multi_target_sents) >= 12, (
-        f"Expected >= 12 sentences with retained distinct parallel annotator targets, "
-        f"got {len(multi_target_sents)}"
+    assert len(multi_target_sents) == 0, (
+        f"Expected 0 sentences with conflicting or duplicate parallel annotator targets, "
+        f"got {len(multi_target_sents)}: {multi_target_sents}"
     )
 
 

@@ -532,6 +532,19 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     if re.search(r"\bз\s+[шщ][а-яіїєґ]+\b", text, re.IGNORECASE):
         return False
+    # Claude R16 control defects: nominative complement after називати, calques таким чином and відношення до
+    if re.search(r"\bназива\w+\s+родове\s+поселення\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bвідношенн\w*\s+до\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bтаким\s+чином\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bстендов[іе]\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bспівпад\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bбаньк\w*\b", text, re.IGNORECASE):
+        return False
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
         return False
@@ -1747,6 +1760,111 @@ def is_valid_candidate(
     if re.search(r"\bбільшість\s+[а-яіїєґ]+\s+(?:втрачає|не\s+задумується)\b", c_low):
         return False
 
+    # Claude R16 Blockers & Linguistic Precision
+    # 1. Quantifier + genitive government: reject replacing genitive with nominative after більше/менше/понад
+    if re.search(r"\b(?:більше|менше|понад)\s+тисячі\b", o_low) and re.search(r"\b(?:більше|менше|понад)\s+тисяча\b", c_low):
+        return False
+    if re.search(r"\b(?:більше|менше|понад)\s+[а-яіїєґ]+[аяі]\b", o_low) and re.search(r"\b(?:більше|менше|понад)\s+тисяча\b", c_low):
+        return False
+    if re.search(r"\b(?:більше|менше|понад)\s+[а-яіїєґ]+(?:ей|ів|ів|і|и)\b", o_low) and re.search(r"\b(?:більше|менше|понад)\s+[а-яіїєґ]+(?:а|я)\b", c_low):
+        return False
+
+    # 2. Preposition swap on unchanged antecedents: e.g. «У ній» <-> «На ній», «у ньому» <-> «на ньому»
+    m_prep = re.search(r"\b[УуВв]\s+(ній|ньому|них|цьому|цій|цих)\b", orig_text)
+    if m_prep and re.search(rf"\b[Нн]а\s+{re.escape(m_prep.group(1))}\b", corr_text):
+        return False
+    m_prep2 = re.search(r"\b[Нн]а\s+(ній|ньому|них|цьому|цій|цих)\b", orig_text)
+    if m_prep2 and re.search(rf"\b[УуВв]\s+{re.escape(m_prep2.group(1))}\b", corr_text):
+        return False
+
+    # 3. Instrumental of manner: reject replacing «безліччю способів» with «для безлічі способів»
+    if re.search(r"\bбезліччю\s+способів\b", o_low) and re.search(r"\bдля\s+безлічі\s+способів\b", c_low):
+        return False
+
+    # 4. Genitive parallel: reject breaking parallel genitive «як символу» -> «як символ»
+    if re.search(r"\bяк\s+символу\b", o_low) and re.search(r"\bяк\s+символ\b", c_low):
+        return False
+
+    # 5. Residual errors in corrected_text
+    if re.search(r"\bстендов[іе]\b", c_low):
+        return False
+    if re.search(r"\bколи\s+ми\s+опинил\w*,\s+не\s+поміча\w*\b", c_low):
+        return False
+    if re.search(r"\bсказано\s+стороною\b", c_low) or re.search(r"\bна\s+світлі\b", c_low):
+        return False
+    if re.search(r"\bфактор\w*\s*,\s*завдяки\b", c_low) or re.search(r"\bфактор\w*\s+завдяки\b", c_low):
+        return False
+    if re.search(r"\bбаньк\w*\b", c_low) or re.search(r"\bбаньк\w*\b", o_low):
+        return False
+    if re.search(r"\bспівпада\w*\b", c_low) or re.search(r"\bспівпад\w*\b", c_low):
+        return False
+
+    # 6. Unneeded swaps and meaning changes
+    if re.search(r"\bповоди\w*\s+себе\b", o_low) and re.search(r"\bповоди\w*сь\b|\bповоди\w*ся\b", c_low):
+        return False
+    if re.search(r"\bкотр[иіаеоу]\w*\b", o_low) and re.search(r"\bяк[иіаеоу]\w*\b", c_low):
+        return False
+    if re.search(r"\b[ву]\s+чому\s+справа\b", o_low) and re.search(r"\b[ву]\s+чому\s+річ\b", c_low):
+        return False
+    if re.search(r"\bсвіту\b", o_low) and re.search(r"\bсвітові\b", c_low):
+        return False
+    if re.search(r"\bпоскладніш\w*\b", o_low) and re.search(r"\bскладніш\w*\b", c_low):
+        return False
+    if re.search(r"\bбуло\s+сіро\b", o_low) and re.search(r"\bбуло\s+сірим\b", c_low):
+        return False
+    if (re.search(r"\b[ву]\s+ліжку\b", o_low) and re.search(r"\bна\s+ліжку\b", c_low)) or (
+        re.search(r"\bна\s+ліжку\b", o_low) and re.search(r"\b[ву]\s+ліжку\b", c_low)
+    ):
+        return False
+    if re.search(r"\bпост\w*\b", o_low) and re.search(r"\bпублікац\w*\b", c_low):
+        return False
+    if re.search(r"\bлайк\w*\b", o_low) and re.search(r"\bвподобай\w*\b", c_low):
+        return False
+    if re.search(r"\bнеобхідност\w*\b|\bнеобхідність\b", o_low) and re.search(r"\bпотреб\w*\b", c_low):
+        return False
+    if re.search(r"\bкарання\b", o_low) or re.search(r"\bзійшов\s+з\s+розуму\b", o_low):
+        return False
+
+    # 7. Voice, aspect and tense changes
+    if re.search(r"\b(?:був|була|було|були|буде|будуть)\s+[а-яіїєґ]+(?:ний|на|не|ні|тий|та|те|ті|но|то)\b", o_low) and not re.search(r"\b(?:був|була|було|були|буде|будуть)\s+[а-яіїєґ]+(?:ний|на|не|ні|тий|та|те|ті|но|то)\b", c_low):
+        return False
+    if not re.search(r"\b(?:був|була|було|були|буде|будуть)\s+[а-яіїєґ]+(?:ний|на|не|ні|тий|та|те|ті|но|то)\b", o_low) and re.search(r"\b(?:був|була|було|були|буде|будуть)\s+[а-яіїєґ]+(?:ний|на|не|ні|тий|та|те|ті|но|то)\b", c_low):
+        return False
+    if re.search(r"\bбуло\s+розглянуто\b", o_low):
+        return False
+    if re.search(r"\bвирішуємо\b", o_low) and re.search(r"\bвирішимо\b", c_low):
+        return False
+    if re.search(r"\bрозглядає\b", o_low) and re.search(r"\bрозглядав\b", c_low):
+        return False
+
+    # 8. Meaning changes
+    if re.search(r"\bсхопил\w*\s+на\s+стілець\b", o_low) and re.search(r"\bза\s+стілець\b", c_low):
+        return False
+    if re.search(r"\bвідправить\s+за\s+урядником\b", o_low):
+        return False
+    if re.search(r"\bоднієї\s+дії\b.*\bсвободи\s+волі\b", o_low) or re.search(r"\bрелевантність\s+особистих\s+цінностей\b", o_low):
+        return False
+    if re.search(r"\bвирішувати\s+клубом\b", o_low):
+        return False
+    if re.search(r"\bвздовж\s+(?:\w+\s+)?кварталу\b", o_low):
+        return False
+
+    # 9. Temporal-duration class
+    if re.search(r"\bчерез\s+[^,.]+\s+після\b", o_low) or re.search(r"\bчерез\s+\w+\s+хвилин\w*\s+після\b", o_low):
+        return False
+    if re.search(r"\bза\s+\w+\s+хвилин\w*\s+після\b", c_low):
+        return False
+
+    # 10. Punctuation
+    if re.search(r"^[«\"“]?[Зз]агалом\s+[а-яіїєґ]", corr_text):
+        return False
+    if re.search(r"\b[Вв]цілому\b", orig_text) and not re.search(r"\b[Зз]агалом\s*,", corr_text):
+        return False
+
+    # 11. Conjunction
+    if re.search(r"\bзначить\b", o_low) and (re.search(r"\bотже\b", c_low) or re.search(r"\bозначає\b", c_low)):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -2093,6 +2211,7 @@ def build_grammar_dataset(
     # 5. Extract substantive corrections and pristine zero-error controls
     seen_corrections: set[tuple[str, str]] = set()
     seen_control_texts: set[str] = set()
+    seen_correction_source_texts: set[str] = set()
     euphony_pairs = {
         ("і", "й"), ("й", "і"),
         ("у", "в"), ("в", "у"),
@@ -2106,7 +2225,6 @@ def build_grammar_dataset(
 
     eval_corrections = []
     eval_clean_candidates = []
-    parallel_target_retentions = 0
 
     # 5a. Process eval documents first
     for item in eval_items_raw:
@@ -2143,8 +2261,13 @@ def build_grammar_dataset(
                 )
             continue
 
-        distinct_targets_for_sentence: set[str] = set()
-        for ann_id, edit_list in sorted(item["edits_by_ann"].items()):
+        for ann_id, edit_list in sorted(
+            item["edits_by_ann"].items(),
+            key=lambda pair: (
+                0 if any(TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" for e in pair[1]) else 1,
+                pair[0],
+            ),
+        ):
             in_scope = [e for e in edit_list if e[2] in IN_SCOPE_TAGS]
             if not in_scope:
                 continue
@@ -2177,17 +2300,16 @@ def build_grammar_dataset(
                 and not is_test_near_duplicate(corr_text)
                 and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens)
             ):
-                pair_key = (orig_text, corr_text)
-                if pair_key in seen_corrections:
+                norm_orig = re.sub(r"\s+", " ", orig_text.strip().lower())
+                if norm_orig in seen_correction_source_texts:
                     continue
-                seen_corrections.add(pair_key)
-                if len(distinct_targets_for_sentence) > 0:
-                    parallel_target_retentions += 1
-                distinct_targets_for_sentence.add(corr_text)
+                seen_correction_source_texts.add(norm_orig)
+                seen_corrections.add((orig_text, corr_text))
 
                 sorted_in_scope = sorted(
                     in_scope,
                     key=lambda e: (
+                        0 if TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" else 1,
                         0 if resolve_specific_linguistic_citation(
                             e[2],
                             " ".join(orig_tokens[e[0] : e[1]]),
@@ -2240,6 +2362,7 @@ def build_grammar_dataset(
                         "license": "CC BY 4.0",
                     }
                 )
+                break
 
     # Eval split sentences: strictly forbidden in train to guarantee zero leakage
     eval_forbidden_sentences = (
@@ -2287,8 +2410,13 @@ def build_grammar_dataset(
                 )
             continue
 
-        distinct_targets_for_sentence: set[str] = set()
-        for ann_id, edit_list in sorted(item["edits_by_ann"].items()):
+        for ann_id, edit_list in sorted(
+            item["edits_by_ann"].items(),
+            key=lambda pair: (
+                0 if any(TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" for e in pair[1]) else 1,
+                pair[0],
+            ),
+        ):
             in_scope = [e for e in edit_list if e[2] in IN_SCOPE_TAGS]
             if not in_scope:
                 continue
@@ -2322,17 +2450,16 @@ def build_grammar_dataset(
                 and not is_test_near_duplicate(corr_text)
                 and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens)
             ):
-                pair_key = (orig_text, corr_text)
-                if pair_key in seen_corrections:
+                norm_orig = re.sub(r"\s+", " ", orig_text.strip().lower())
+                if norm_orig in seen_correction_source_texts:
                     continue
-                seen_corrections.add(pair_key)
-                if len(distinct_targets_for_sentence) > 0:
-                    parallel_target_retentions += 1
-                distinct_targets_for_sentence.add(corr_text)
+                seen_correction_source_texts.add(norm_orig)
+                seen_corrections.add((orig_text, corr_text))
 
                 sorted_in_scope = sorted(
                     in_scope,
                     key=lambda e: (
+                        0 if TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" else 1,
                         0 if resolve_specific_linguistic_citation(
                             e[2],
                             " ".join(orig_tokens[e[0] : e[1]]),
@@ -2385,10 +2512,11 @@ def build_grammar_dataset(
                         "license": "CC BY 4.0",
                     }
                 )
+                break
 
     print(
         f"📊 Extracted substantive corrections: {len(train_corrections)} train, "
-        f"{len(eval_corrections)} eval. Parallel annotator target retentions: {parallel_target_retentions}."
+        f"{len(eval_corrections)} eval. Deduplicated by source sentence: {len(seen_correction_source_texts)} distinct sources."
     )
     print(f"🛡️  Extracted clean control candidates: {len(train_clean_candidates)} train, {len(eval_clean_candidates)} eval.")
 
@@ -2431,29 +2559,26 @@ def build_grammar_dataset(
     target_train_total = target_total_corrections - len(eval_corrections)
     target_train_unexpl = target_train_total - target_train_expl
 
-    orig_counts = Counter(c["original_text"] for c in train_corrections)
     base_cats = Counter(TAG_TO_COARSE_CATEGORY.get(c["primary_tag"], c["primary_tag"]) for c in eval_corrections)
 
     def expl_priority(item: dict[str, Any]):
         orig = item["original_text"]
-        is_parallel = 0 if orig_counts[orig] > 1 else 1
+        cat = TAG_TO_COARSE_CATEGORY.get(item["primary_tag"], item["primary_tag"])
+        deficit = max(0, 55 - base_cats.get(cat, 0))
         h = hashlib.sha256(f"{item['doc_id']}_{orig}_{item['corrected_text']}".encode()).hexdigest()
-        return (is_parallel, h)
+        return (-deficit, h)
 
     sorted_expl = sorted(train_explainable, key=expl_priority)
     selected_expl = sorted_expl[:target_train_expl]
 
-    expl_origs = {c["original_text"] for c in selected_expl}
     base_cats.update(TAG_TO_COARSE_CATEGORY.get(c["primary_tag"], c["primary_tag"]) for c in selected_expl)
 
     def unexpl_priority(item: dict[str, Any]):
         orig = item["original_text"]
-        is_parallel = 0 if orig_counts[orig] > 1 else 1
-        partner_in_expl = 0 if orig in expl_origs else 1
         cat = TAG_TO_COARSE_CATEGORY.get(item["primary_tag"], item["primary_tag"])
-        deficit = max(0, 50 - base_cats.get(cat, 0))
+        deficit = max(0, 55 - base_cats.get(cat, 0))
         h = hashlib.sha256(f"{item['doc_id']}_{orig}_{item['corrected_text']}".encode()).hexdigest()
-        return (is_parallel, partner_in_expl, -deficit, h)
+        return (-deficit, h)
 
     sorted_unexpl = sorted(train_unexplainable, key=unexpl_priority)
     selected_unexpl = sorted_unexpl[:target_train_unexpl]
