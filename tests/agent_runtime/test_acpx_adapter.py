@@ -2517,7 +2517,7 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
         "deepseek": {
             "seat": "acpx-deepseek-shadow",
             "agent": "deepseek",
-            "model": "deepseek-v4-flash",
+            "model": "deepseek-v4.1-flash",
         },
     }
 
@@ -2527,7 +2527,7 @@ def test_supported_participant_registry_has_only_fixed_direct_seats():
     [
         (AcpxAgyShadowAdapter, "agy", "agy", "1.1.9", "gemini-3.8-flash-high"),
         (AcpxGlmShadowAdapter, "glm", "opencode", "1.17.13", "glm-5.3"),
-        (AcpxDeepSeekShadowAdapter, "deepseek", "opencode", "1.17.13", "deepseek-v4-flash"),
+        (AcpxDeepSeekShadowAdapter, "deepseek", "opencode", "1.17.13", "deepseek-v4.1-flash"),
     ],
 )
 def test_new_fleet_discussion_seats_use_fixed_confined_commands(
@@ -2715,7 +2715,7 @@ def test_deepseek_shadow_seat_refuses_first_party_egress_in_ci(tmp_path, monkeyp
             prompt="ping",
             mode="read-only",
             cwd=tmp_path,
-            model="deepseek-v4-flash",
+            model="deepseek-v4.1-flash",
             task_id="t-1",
             session_id=None,
             tool_config={

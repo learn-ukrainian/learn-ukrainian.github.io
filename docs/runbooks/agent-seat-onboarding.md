@@ -854,14 +854,18 @@ The DeepSeek seat's **standing route** is first-party via opencode:
 
 - Bridge asks use `ask-deepseek` (or the `ask-hermes` alias) — both ride the
   `acpx-deepseek-shadow` ACP participant on native `opencode acp --pure`
-  pinned to `deepseek-direct/deepseek-v4-flash` at high effort (#6805).
+  pinned to `deepseek/deepseek-flash` at high effort (#6805, #8514).
+  The catalog identity is `deepseek-v4.1-flash`; this provider id is a moving
+  alias. Before consequential dispatch, check the cached models.dev name with
+  `jq -r '.deepseek.models["deepseek-flash"].name' ~/.cache/opencode/models.json`
+  and stop if it no longer reads `DeepSeek V4.1 Flash`.
   DeepSeek ASKs are toolless and self-contained: the seat has no repo or
   tool access, so paste everything the answer needs into the prompt —
   reviews that require repo access go to `delegate.py dispatch --agent
   deepseek` instead (#6886: the seat otherwise tries to emit tool calls and
   the reply terminalizes `failed:non_evidentiary`).
 - Direct one-shot review/research outside the bridge runs
-  `opencode run --model deepseek-direct/deepseek-v4-flash --variant high`
+  `opencode run --model deepseek/deepseek-flash --variant high`
   (native Entire capture).
 - Tool-heavy work goes to `delegate.py dispatch --agent deepseek` from a
   dispatch worktree.

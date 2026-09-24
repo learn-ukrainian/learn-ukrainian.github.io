@@ -1,5 +1,5 @@
 schema_version: model-catalog.v1
-reviewed_on: 2026-09-23
+reviewed_on: 2026-09-24
 refresh_after_days: 30
 
 # This is the preferred/current fleet, not every legacy model exposed by a
@@ -739,11 +739,29 @@ models:
   deepseek-v4-flash:
     family: deepseek
     tier: frontier_practical
+    lifecycle: retired
+    aliases: [deepseek-v4-flash-legacy]
+    roles: [historical_record_resolution]
+    transports: []
+    strengths: [historical_record_resolution]
+    weaknesses: [retired, not_for_new_dispatch]
+    sources:
+      - https://api-docs.deepseek.com/news/news260424/
+  deepseek-v4.1-flash:
+    family: deepseek
+    tier: frontier_practical
     lifecycle: active
     roles: [frontend_agentic_coding, strong_code_review, bounded_agentic_work]
     transports: [hermes, opencode]
     strengths: [frontend_code_quality_per_dollar, very_low_cost, speed, one_million_context]
-    weaknesses: [preliminary_frontend_evidence_only, not_critical_authority, silent_stall_history, not_for_folk_content]
+    weaknesses: [preliminary_frontend_evidence_only, not_critical_authority, silent_stall_history, not_for_folk_content, moving_provider_alias]
+    # The first-party OpenCode id is a moving alias, not a version pin. The
+    # 2026-09-24 models.dev cache named it "DeepSeek V4.1 Flash". Before
+    # consequential dispatch, check the cached deepseek/deepseek-flash name;
+    # if it changes, stop and re-identify the served model before recording it.
+    provider_alias: deepseek/deepseek-flash
+    provider_alias_expected_name: DeepSeek V4.1 Flash
+    provider_alias_drift_check: "jq -r '.deepseek.models[\"deepseek-flash\"].name' ~/.cache/opencode/models.json"
     sources:
       - https://api-docs.deepseek.com/news/news260424/
       - https://api-docs.deepseek.com/quick_start/pricing
@@ -1025,7 +1043,7 @@ review_candidates:
     transport: opencode
     # Hard implement only (complex multi-file, hard lookup) — not default, not a
     # routine review-ladder rung (operator GO 2026-08-13, canary #6703).
-    invocation: opencode run --model deepseek-direct/deepseek-v4-pro --variant high
+    invocation: opencode run --model deepseek/deepseek-v4-pro --variant high
     review_profiles: [code, infra]
     capabilities: [code_review]
     requires_silence_timeout: true
@@ -1055,11 +1073,11 @@ review_candidates:
     invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool --model poolside/poolside/laguna-xs-2.1
     review_profiles: [code, infra]
     capabilities: [code_review]
-  deepseek-v4-flash:
-    model_id: deepseek-v4-flash
+  deepseek-v4.1-flash:
+    model_id: deepseek-v4.1-flash
     route: deepseek
     transport: opencode
-    invocation: opencode run --model deepseek-direct/deepseek-v4-flash --variant high
+    invocation: opencode run --model deepseek/deepseek-flash --variant high
     review_profiles: [code, infra]
     capabilities: [code_review]
     domain_excluded_from: [folk_content]
@@ -1240,7 +1258,7 @@ review_ladders:
     - [kimi-k3]
     # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
     # (volume). Pro hold lifted for hard implement only — never a routine review rung.
-    - [deepseek-v4-flash]
+    - [deepseek-v4.1-flash]
     - [composer-2.5]
     - [gemini-3.1-pro]
     - [pool]
@@ -1258,7 +1276,7 @@ review_ladders:
     - [kimi-k3]
     # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
     # (volume). Pro hold lifted for hard implement only — never a routine review rung.
-    - [deepseek-v4-flash]
+    - [deepseek-v4.1-flash]
     - [composer-2.5]
     - [gemini-3.1-pro]
     - [pool]

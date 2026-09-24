@@ -31,10 +31,10 @@ _SUBSCRIPTION_VIA_OPENROUTER_RE = re.compile(
 )
 # DeepSeek defaults to FIRST-PARTY, never OpenRouter (user order 2026-07-07:
 # the 306-cell multirun matrix drained the OpenRouter account with ~200
-# deepseek cells the night before deepseek-direct landed). The user has since
+# deepseek cells the night before the first-party route landed). The user has since
 # enabled DeepSeek BYOK on OpenRouter, so the OR path now bills the DeepSeek
 # key underneath — but it still adds OpenRouter's BYOK fee and a needless hop.
-# deepseek-direct/<model> is canonical; transport-comparison experiments
+# deepseek/<model> is canonical; transport-comparison experiments
 # (#4321/#4358) go through the override env.
 _DEEPSEEK_VIA_OPENROUTER_RE = re.compile(r"openrouter/deepseek", re.IGNORECASE)
 # OpenRouter GLM remains refused for unattended routing (user order 2026-08-27,
@@ -46,14 +46,15 @@ _GLM_VIA_OPENROUTER_RE = re.compile(
     re.IGNORECASE,
 )
 _OPENROUTER_GLM_MODEL_RE = re.compile(r"openrouter/.+/glm[-]", re.IGNORECASE)
-# deepseek-direct is a POSITIVE allowlist, not a family blocklist: the grok-build
+# deepseek/ is a POSITIVE allowlist, not a family blocklist: the grok-build
 # adversarial review of #4730 produced working bypasses for every blocklist
 # formulation tried (anthropic-claude, openai-gpt, google-gemini, ../claude,
 # some-claude-model — hyphen/underscore/embedding variants). Fail closed
-# instead: a deepseek-direct pin is valid ONLY if its model segment is
-# DeepSeek-family. Underscore spelling normalizes to the same rule.
-_DEEPSEEK_DIRECT_PREFIX_RE = re.compile(r"^deepseek[-_]direct/", re.IGNORECASE)
-_DEEPSEEK_FAMILY_MODEL_RE = re.compile(r"^deepseek", re.IGNORECASE)
+# instead: a deepseek/ pin is valid ONLY if its model segment is
+# DeepSeek-family. Reject the retired provider alias with an actionable route.
+_DEEPSEEK_FIRST_PARTY_PREFIX_RE = re.compile(r"^deepseek/", re.IGNORECASE)
+_DEEPSEEK_RETIRED_PREFIX_RE = re.compile(r"^deepseek[-_]direct/", re.IGNORECASE)
+_DEEPSEEK_FAMILY_MODEL_RE = re.compile(r"^deepseek(?:-|$)", re.IGNORECASE)
 # google-ais is the SAME fail-closed shape: the provider's key lives on a
 # POSTPAY Cloud project, so a Gemini model routed through it WOULD bill.
 # Gemma has no paid SKU on the Gemini API (pricing verified 2026-07-07) —
@@ -109,7 +110,7 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             f"{context}: {text!r} routes DeepSeek through OpenRouter. "
             "Default is FIRST-PARTY (user order 2026-07-07 after the account "
             "drain; OR now BYOKs to the DeepSeek key but still adds the BYOK "
-            "fee + a needless hop). Use deepseek-direct/<model>. "
+            "fee + a needless hop). Use deepseek/<model>. "
             f"Set {_OVERRIDE_ENV}=1 for a deliberate transport-comparison "
             "run (#4321/#4358) — billing-safe under BYOK."
         )
@@ -121,11 +122,16 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             "`delegate.py dispatch --agent cursor`. OpenRouter glm only with "
             f"explicit operator ask + {_OVERRIDE_ENV}=1."
         )
-    direct_prefix = _DEEPSEEK_DIRECT_PREFIX_RE.match(text)
+    if _DEEPSEEK_RETIRED_PREFIX_RE.match(text):
+        raise RoutingGuardError(
+            f"{context}: {text!r} uses the retired DeepSeek provider alias. "
+            "Use deepseek/deepseek-flash or deepseek/deepseek-v4-pro."
+        )
+    direct_prefix = _DEEPSEEK_FIRST_PARTY_PREFIX_RE.match(text)
     if direct_prefix and not _DEEPSEEK_FAMILY_MODEL_RE.match(text[direct_prefix.end() :]):
         raise RoutingGuardError(
             f"{context}: {text!r} routes a non-DeepSeek model through the "
-            "DeepSeek first-party provider. deepseek-direct accepts ONLY "
+            "DeepSeek first-party provider. deepseek/ accepts ONLY "
             "DeepSeek-family model ids (fail-closed allowlist; subscription "
             "families use their native lanes). "
             f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."

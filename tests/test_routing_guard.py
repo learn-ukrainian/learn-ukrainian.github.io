@@ -49,6 +49,14 @@ def _no_override(monkeypatch: pytest.MonkeyPatch):
         # non-subscription but non-DeepSeek: refused by the allowlist too
         "deepseek-direct/mistral-large",
         "deepseek-direct/",
+        "deepseek-direct/deepseek-v4-flash",
+        "deepseek_direct/deepseek-v4-pro",
+        "deepseek/openai/gpt-5.5",
+        "deepseek/claude-sonnet-5",
+        "deepseek/../claude-opus-4-8",
+        "deepseek/some-deepseek-model",
+        "deepseek/deepseekish-malicious",
+        "deepseek/",
         # user order 2026-07-07: deepseek NEVER via OpenRouter (account drained
         # by bakeoff cells; first-party credit is paid + markup-free)
         "openrouter/deepseek/deepseek-v4-flash",
@@ -108,8 +116,8 @@ def test_openrouter_glm_message_points_to_cursor_not_glm() -> None:
         "google-ais/gemma-4-31b-it",  # $0 default lane (Gemma has no paid SKU)
         "google-ais/gemma-4-26b-a4b-it",
         "GOOGLE-AIS/GEMMA-4-31B-IT",
-        "deepseek-direct/deepseek-v4-flash",
-        "deepseek-direct/deepseek-v4-pro",
+        "deepseek/deepseek-flash",
+        "deepseek/deepseek-v4-pro",
         "gemini-3.1-pro-high",  # agy NATIVE lane (no openrouter/ prefix) is the subscription path
         "claude-opus-4.8",  # native Anthropic lane
         "gpt-5.5",  # native codex lane
@@ -122,6 +130,15 @@ def test_openrouter_glm_message_points_to_cursor_not_glm() -> None:
 )
 def test_allowed_models_pass(model: str | None) -> None:
     assert_model_routing_allowed(model, context="test")
+
+
+def test_deepseek_guard_messages_name_live_provider() -> None:
+    with pytest.raises(RoutingGuardError, match="Use deepseek/<model>"):
+        assert_model_routing_allowed("openrouter/deepseek/deepseek-v4-flash", context="test")
+    with pytest.raises(RoutingGuardError, match="deepseek/ accepts ONLY"):
+        assert_model_routing_allowed("deepseek/gpt-5.5", context="test")
+    with pytest.raises(RoutingGuardError, match="deepseek/deepseek-flash"):
+        assert_model_routing_allowed("deepseek-direct/deepseek-v4-flash", context="test")
 
 
 def test_qwen_agent_refused_and_override_env_allows(monkeypatch: pytest.MonkeyPatch) -> None:

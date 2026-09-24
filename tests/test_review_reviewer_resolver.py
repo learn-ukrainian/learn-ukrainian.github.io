@@ -15,7 +15,7 @@ from scripts.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
     CURSOR_AUTO_UNION_FAMILY,
-    DEEPSEEK_V4_FLASH,
+    DEEPSEEK_V4_1_FLASH,
     DEEPSEEK_V4_PRO,
     GLM,
     GROK_4_7,
@@ -71,7 +71,7 @@ def test_family_resolution_across_model_and_harness_aliases():
         "grok-build": "xai",
         "grok-hermes": "xai",
         "grok-4.6": "xai",
-        "deepseek-v4-flash": "deepseek",
+        "deepseek-v4.1-flash": "deepseek",
         "deepseek-v4-pro": "deepseek",
         "pool": "poolside",
         "glm-5.3": "zhipu",
@@ -292,7 +292,7 @@ def test_low_risk_pool_author_gets_astra_before_economical_routes():
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
     assert resolution.policy_version == "deterministic-formal-routing.v2"
-    assert resolution.catalog_reviewed_on == "2026-09-23"
+    assert resolution.catalog_reviewed_on == "2026-09-24"
     assert resolution.resolved_risk == "high"
 
 
@@ -504,11 +504,11 @@ def test_deepseek_flash_receipt_uses_entire_native_opencode_high_route():
         )
     )
     assert resolution.selected is None
-    assert next(item for item in resolution.trace if item.name == "deepseek-v4-flash").status == "excluded"
+    assert next(item for item in resolution.trace if item.name == "deepseek-v4.1-flash").status == "excluded"
 
 
 def test_folk_content_excludes_both_deepseek_models():
-    for candidate in (DEEPSEEK_V4_PRO, DEEPSEEK_V4_FLASH):
+    for candidate in (DEEPSEEK_V4_PRO, DEEPSEEK_V4_1_FLASH):
         result = evaluate_candidate(
             candidate,
             ResolverInputs(author_model="claude", domain="folk_content", formal_review=False),
@@ -613,7 +613,7 @@ def test_learner_content_profile_fails_before_reviewer_ladder_resolution():
 def test_custom_ladder_still_supported_for_focused_callers():
     resolution = resolve_reviewer(
         ResolverInputs(author_model="deepseek-v4-pro", risk="medium"),
-        ladder=((DEEPSEEK_V4_FLASH,),),
+        ladder=((DEEPSEEK_V4_1_FLASH,),),
     )
     assert resolution.selected is None
     assert resolution.trace[0].status == "excluded"

@@ -94,6 +94,27 @@ def test_resolve_invocation_telemetry_reads_claude_plan_flags():
     assert telemetry.cli_version == "2.1.89"
 
 
+def test_deepseek_telemetry_records_catalog_identity_not_moving_invocation_alias(tmp_path):
+    for route, identity in (
+        ("deepseek/deepseek-flash", "deepseek-v4.1-flash"),
+        ("deepseek/deepseek-v4-pro", "deepseek-v4-pro"),
+    ):
+        plan = InvocationPlan(
+            cmd=["opencode", "run", "--model", route, "--variant", "high"],
+            cwd=tmp_path,
+        )
+        with patch("agent_runtime.telemetry._probe_version", return_value="1.18.0"):
+            telemetry = resolve_invocation_telemetry(
+                agent_name="deepseek",
+                plan=plan,
+                requested_model=identity,
+                requested_effort=None,
+            )
+        assert telemetry.model == identity
+        assert telemetry.effort == "high"
+        assert telemetry.cli_version == "1.18.0"
+
+
 def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkeypatch, caplog):
     """Known CLI limits are explicit metadata, not dispatch warnings (#4837)."""
     hermes_home = tmp_path / "hermes"
@@ -108,7 +129,7 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
         return {
             "agy": "1.1.1",
             "cursor-agent": "2026.07.09",
-            "hermes": "0.18.0",
+            "opencode": "1.18.0",
         }.get(Path(prefix[0]).name)
 
     caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
@@ -132,7 +153,7 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
 
     assert (agy.effort, agy.cli_version) == ("not-exposed", "1.1.1")
     assert (cursor.effort, cursor.cli_version) == ("not-exposed", "2026.07.09")
-    assert (deepseek.effort, deepseek.cli_version) == ("xhigh", "0.18.0")
+    assert (deepseek.effort, deepseek.cli_version) == ("high", "1.18.0")
     assert "dispatch telemetry for" not in caplog.text
 
 

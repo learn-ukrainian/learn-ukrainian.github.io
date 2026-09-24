@@ -807,7 +807,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # ask-deepseek (first-party DeepSeek v4 Flash via the opencode ACP seat; ⚠️ China-hosted, LOCAL-ONLY)
     ask_deepseek_parser = subparsers.add_parser(
         "ask-deepseek",
-        help="Send message AND invoke first-party DeepSeek (deepseek-v4-flash) via the opencode ACP seat (#6805). LOCAL-ONLY: data egresses to China, never in CI (use '-' for stdin)",
+        help="Send message AND invoke first-party DeepSeek (deepseek-v4.1-flash) via the opencode ACP seat (#6805). LOCAL-ONLY: data egresses to China, never in CI (use '-' for stdin)",
     )
     ask_deepseek_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_deepseek_parser.add_argument("--task-id", required=True, help="Task ID")

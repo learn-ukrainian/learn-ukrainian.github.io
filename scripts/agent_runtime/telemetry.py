@@ -224,6 +224,14 @@ def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | Non
     if agent_name == "kimi" and plan.metadata.get("harness") == "kimicc":
         alias = plan.metadata.get("kimicc_alias")
         return str(alias).strip() if isinstance(alias, str) and alias.strip() else None
+    if agent_name == "deepseek":
+        from .adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
+
+        invocation_model = _arg_after(plan.cmd, "--model")
+        return next(
+            (identity for identity, route in DEEPSEEK_OPENCODE_MODEL_ROUTES.items() if route == invocation_model),
+            invocation_model,
+        )
     return _arg_after(plan.cmd, "-m", "--model")
 
 
@@ -241,7 +249,9 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return _arg_after(plan.cmd, "--effort")
     if agent_name == "gemini":
         return None
-    if agent_name in ("deepseek", "hermes-deepseek", "qwen") or is_hermes_grok_seat(agent_name):
+    if agent_name == "deepseek":
+        return _arg_after(plan.cmd, "--variant")
+    if agent_name in ("hermes-deepseek", "qwen") or is_hermes_grok_seat(agent_name):
         # Hermes -z mode: effort is config-scoped (~/.hermes/config.yaml),
         # not surfaced on the command line. Adapter logs a warning when the
         # caller's request disagrees with the config — telemetry has nothing
@@ -290,6 +300,13 @@ def _resolve_model_from_defaults(
         from .adapters.kimicc import KimiccHarness
 
         return requested_model or KimiccHarness.default_model
+    if agent_name == "deepseek" and requested_model:
+        from .adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
+
+        return next(
+            (identity for identity, route in DEEPSEEK_OPENCODE_MODEL_ROUTES.items() if route == requested_model),
+            requested_model,
+        )
     if requested_model:
         return requested_model
     if _is_acp_shadow_identity(agent_name):
@@ -335,7 +352,7 @@ def _resolve_effort_from_defaults(
         return requested_effort or _NOT_EXPOSED
     if agent_name in {"agy", "cursor", "gemini"}:
         return _NOT_EXPOSED
-    if agent_name in {"deepseek", "hermes-deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
+    if agent_name in {"hermes-deepseek", "qwen"} or is_hermes_grok_seat(agent_name):
         return _hermes_configured_effort() or _NOT_EXPOSED
     if agent_name == "kimi":
         if harness == "kimicc":
@@ -537,7 +554,10 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     if is_native_grok_seat(agent_name):
         # Native `grok` CLI — NOT hermes-backed; probe it directly.
         return _probe_version_at(("grok",), probe_cwd)
-    if agent_name in ("deepseek", "hermes-deepseek") or is_hermes_grok_seat(agent_name):
+    if agent_name == "deepseek":
+        prefix = (plan.cmd[0],) if plan is not None and plan.cmd else ("opencode",)
+        return _probe_version_at(prefix, probe_cwd)
+    if agent_name == "hermes-deepseek" or is_hermes_grok_seat(agent_name):
         # Hermes-backed seats share one version probe.
         prefix = _hermes_version_prefix(plan.cmd) if plan is not None else ("hermes",)
         return _probe_version_at(prefix, probe_cwd)

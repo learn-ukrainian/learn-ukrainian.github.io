@@ -6,6 +6,7 @@ Part of the routing-budget guard (epic #4707).
 import json
 import logging
 import os
+import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -28,6 +29,25 @@ DEFAULT_FAILURES_THRESHOLD = 2
 # indicate task-specific work (e.g. executing tests or building files) rather than
 # lane-spawning failure.
 DEFAULT_SPAWN_DURATION_THRESHOLD_S = 120
+# Cap on the sanitized provider error excerpt carried in health records (#8514).
+MAX_ERROR_EXCERPT_CHARS = 200
+
+_ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
+
+
+def sanitize_error_excerpt(raw: Any) -> str | None:
+    """Reduce a raw task stderr_excerpt to a single-line, ANSI-free excerpt.
+
+    Task records persist provider CLI output verbatim, including terminal
+    color escapes (e.g. opencode's red ``Error:`` banner). Health records ride
+    the routing-budget JSON into capacity_pick notes, so they must be plain.
+    """
+    if not isinstance(raw, str):
+        return None
+    text = " ".join(_ANSI_ESCAPE_RE.sub("", raw).split())
+    if not text:
+        return None
+    return text[:MAX_ERROR_EXCERPT_CHARS]
 
 
 def is_spawn_phase_failure(record: dict[str, Any], duration_threshold_s: int = DEFAULT_SPAWN_DURATION_THRESHOLD_S) -> bool:
@@ -179,10 +199,15 @@ def compute_lane_health(
             delta = now - oldest_streak_task["_started_at_dt"]
             span_minutes = max(1, round(delta.total_seconds() / 60))
 
+        # Newest failure in the streak carries the provider error text so
+        # routing surfaces (capacity_pick) can say WHY the lane is down (#8514).
+        last_error = sanitize_error_excerpt(streak_tasks[0].get("stderr_excerpt")) if streak_tasks else None
+
         health_data[lane] = {
             "healthy": is_healthy,
             "consecutive_failures": consecutive_failures,
             "span_minutes": span_minutes,
+            "last_error": last_error,
         }
 
     return health_data

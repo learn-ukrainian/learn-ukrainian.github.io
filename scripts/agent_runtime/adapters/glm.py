@@ -132,7 +132,7 @@ class GlmAdapter:
 
         assert_model_routing_allowed(invocation_model, context="GlmAdapter")
 
-        cmd: list[str] = [binary, "run", "--model", invocation_model]
+        cmd: list[str] = [binary, "run", "--model", invocation_model, "--format", "json"]
 
         if mode in ("workspace-write", "danger"):
             cmd.append("--auto")
@@ -173,12 +173,18 @@ class GlmAdapter:
     ) -> ParseResult:
         _ = (output_file, call_start_time)
         rate_limited = bool(_RATE_LIMIT_RE.search(f"{stderr or ''}\n{stdout or ''}"))
-        text = _extract_text_from_stdout(stdout)
 
         try:
-            from scripts.ai_agent_bridge._opencode import read_opencode_turn_status
+            from scripts.ai_agent_bridge._opencode import _parse_opencode_stream, read_opencode_turn_status
         except ModuleNotFoundError:  # pragma: no cover - direct-script runs with only scripts/ on sys.path
-            from ai_agent_bridge._opencode import read_opencode_turn_status
+            from ai_agent_bridge._opencode import _parse_opencode_stream, read_opencode_turn_status
+
+        # Invocation pins --format json: stdout is an NDJSON event stream, so
+        # the reply is the LAST assistant text part (#8514 — under the runner's
+        # PTY, opencode 1.18.x writes the whole formatted transcript to stderr
+        # and leaves stdout empty; the plain-text extraction below only serves
+        # legacy/non-JSON output).
+        text = _extract_text_from_stdout(_parse_opencode_stream(stdout).text)
 
         cwd = plan.cwd if plan is not None else None
         turn_status = read_opencode_turn_status(stdout, cwd=cwd)

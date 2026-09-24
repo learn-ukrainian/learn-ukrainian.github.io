@@ -198,7 +198,7 @@ AGENTS: dict[str, AgentEntry] = {
         # order 2026-08-16, #6805). First-party DeepSeek is China-hosted →
         # CI runs are refused by the adapter.
         "adapter": "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter",
-        "default_model": "deepseek-v4-flash",
+        "default_model": "deepseek-v4.1-flash",
         "default_effort": "high",
         "cost_tier": "low",
         "capabilities": frozenset(
@@ -220,7 +220,7 @@ AGENTS: dict[str, AgentEntry] = {
         # documented opencode fallbacks. Bridge `ask-deepseek`/`ask-hermes`
         # asks route through the acpx-deepseek-shadow opencode seat (#6805).
         "adapter": "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter",
-        "default_model": "deepseek-v4-flash",
+        "default_model": "deepseek-v4.1-flash",
         "cost_tier": "low",
         "capabilities": frozenset(
             {
@@ -417,7 +417,7 @@ AGENTS: dict[str, AgentEntry] = {
         # pinned to first-party deepseek-direct — the standing route since
         # Hermes was permanently removed (operator order 2026-08-16, #6805).
         "adapter": "scripts.agent_runtime.adapters.acpx:AcpxDeepSeekShadowAdapter",
-        "default_model": "deepseek-v4-flash",
+        "default_model": "deepseek-v4.1-flash",
         "cost_tier": "unknown",
         "capabilities": frozenset(),
         "cli_available": False,
