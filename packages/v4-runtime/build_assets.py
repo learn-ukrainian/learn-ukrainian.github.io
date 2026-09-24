@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -59,7 +61,11 @@ def collect_assets(destination: Path) -> None:
 
 
 def write_manifest(destination: Path, *, development: bool = False) -> None:
-    sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY, text=True).strip()
+    commit_override = os.environ.get("LEARN_UKRAINIAN_V4_RUNTIME_COMMIT")
+    if commit_override and re.fullmatch(r"[a-f0-9]{40}", commit_override):
+        sha = commit_override
+    else:
+        sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPOSITORY, text=True).strip()
     # The build command is bound to real committed inputs, including assets,
     # package code, build hooks, license and frozen relationship specification.
     inputs = ["packages/v4-runtime", *json.loads((PACKAGE / "asset_allowlist.json").read_bytes())]
