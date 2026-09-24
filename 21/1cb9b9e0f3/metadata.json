@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "211cb9b9e0f3",
+  "strategy": "manual-commit",
+  "branch": "deepseek/impl-8707",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/orchestration/test_thread_handoff.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/21/1cb9b9e0f3/0/metadata.json",
+      "transcript": "/21/1cb9b9e0f3/0/full.jsonl",
+      "compact_transcript": "/21/1cb9b9e0f3/0/transcript.jsonl",
+      "content_hash": "/21/1cb9b9e0f3/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 132757,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8464128,
+    "output_tokens": 19908,
+    "api_call_count": 66
+  }
+}

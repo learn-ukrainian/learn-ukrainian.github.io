@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "211cb9b9e0f3",
+  "session_id": "ses_f2b60f440ffecvTr4ezNLYl0sl",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-24T18:32:10.378706552Z",
+  "branch": "deepseek/impl-8707",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/orchestration/test_thread_handoff.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "0b935318166a",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 132757,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8464128,
+    "output_tokens": 19908,
+    "api_call_count": 66
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-24T18:32:08.462309143Z",
+    "agent_lines": 1,
+    "agent_removed": 1,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1,
+    "total_lines_changed": 2,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
