@@ -83,6 +83,31 @@ def test_check_parity_rejects_hand_edited_arc_generated_pages(mock_legacy_levels
         assert len(violations) == 1 and "arc_kind" in violations[0][1]
 
 
+def test_check_parity_rejects_generated_pages_with_arc_kind_removed(mock_legacy_levels, mock_subprocess, arc_docs):
+    mock_subprocess.return_value = "1 file changed\n"
+    for page in (arc_docs / "a1" / "alpha" / "index.mdx", arc_docs / "a1" / "index.mdx"):
+        page.write_text(page.read_text(encoding="utf-8").replace("arc_kind:", "kind:"), encoding="utf-8")
+        violations = check_parity([page], {page})
+        assert len(violations) == 1 and "arc page" in violations[0][1]
+
+
+def test_check_parity_staged_bytes_decide_not_the_working_tree(mock_legacy_levels, mock_subprocess, arc_docs, monkeypatch):
+    monkeypatch.setattr("scripts.audit.check_mdx_source_parity.PROJECT_ROOT", arc_docs)
+    page = arc_docs / "a1" / "alpha" / "index.mdx"  # working-tree copy is the corrected one
+    staged = {"a1/alpha/index.mdx": b"---\nhand-edited\n---\n"}
+
+    def fake_git(cmd, **kwargs):
+        if cmd[:2] == ["git", "show"]:
+            return staged[cmd[2].removeprefix(":")]
+        return "1 file changed\n"
+
+    mock_subprocess.side_effect = fake_git
+    violations = check_parity([page], {page}, cached=True)
+    assert len(violations) == 1 and "arc page" in violations[0][1]
+    staged["a1/alpha/index.mdx"] = MODULE_TEXT.encode("utf-8")
+    assert check_parity([page], {page}, cached=True) == []
+
+
 def test_check_parity_rejects_arc_kind_on_a_lesson_file(mock_legacy_levels, mock_subprocess, arc_docs):
     lesson = arc_docs / "a1" / "alpha" / "1.mdx"
     lesson.write_text(MODULE_TEXT, encoding="utf-8")

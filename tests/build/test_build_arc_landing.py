@@ -277,7 +277,7 @@ def _plan_with_lessons(root: gen.Roots, slug: str, numbers: list[int]) -> None:
     )
 
 
-@pytest.mark.parametrize("numbers", [[2], [1, 3], [1, 1], [2, 1], [0, 1], [1, 2, 4]])
+@pytest.mark.parametrize("numbers", [[], [2], [1, 3], [1, 1], [2, 1], [0, 1], [1, 2, 4]])
 def test_plan_lesson_numbers_must_be_exactly_one_to_n(root: gen.Roots, numbers: list[int]) -> None:
     _plan_with_lessons(root, "alpha", numbers)
     _review(root, "alpha", "plan-review.yaml")

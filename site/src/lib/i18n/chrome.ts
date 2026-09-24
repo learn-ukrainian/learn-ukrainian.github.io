@@ -767,7 +767,7 @@ const uk: Record<ChromeKey, string> = {
   'atlas.practiceThisWord': 'Практикувати це слово →',
   'atlas.practiceUnavailable': 'Ще немає в наборі практики',
   'arc.state.plan_reviewed': 'план перевірено',
-  'arc.state.built': 'згенеровано',
+  'arc.state.built': 'уроки підготовлено',
   'arc.checkpoint': 'Контрольна точка',
 };
 

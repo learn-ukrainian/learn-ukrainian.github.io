@@ -128,25 +128,43 @@ def has_arc_kind(mdx_path: Path) -> bool:
     frontmatter = text.split("\n---\n", 1)[0]
     return ARC_GENERATED_RE.search(frontmatter) is not None
 
-def is_arc_generated(mdx_path: Path) -> bool:
-    """True only for a page the arc generator owns, byte for byte as it generates it.
+def is_generator_owned_path(mdx_path: Path) -> bool:
+    """True for ``<level>/index.mdx`` and ``<level>/<slug>/index.mdx`` with a level in ``ARC_LANDING_LEVELS``.
 
-    Owned paths are ``<level>/index.mdx`` and ``<level>/<slug>/index.mdx`` for a level in
-    ``ARC_LANDING_LEVELS``. Their source is the accepted arc plus the plans and build state,
-    not a per-module curriculum directory. A lesson file, or a generated file that was
-    edited by hand, is not exempt whatever its frontmatter says.
+    Ownership is a property of the path, never of the file's frontmatter, so removing
+    ``arc_kind`` cannot move a generated page back under the generic landing skip.
     """
     try:
         parts = mdx_path.relative_to(MDX_DIR).parts
     except ValueError:
         return False
-    if len(parts) not in (2, 3) or parts[-1] != "index.mdx" or parts[0] not in _arc_generator().ARC_LANDING_LEVELS:
-        return False
-    expected = _arc_generated_files(parts[0]).get(mdx_path)
+    return len(parts) in (2, 3) and parts[-1] == "index.mdx" and parts[0] in _arc_generator().ARC_LANDING_LEVELS
+
+def _page_bytes(mdx_path: Path, staged: bool) -> bytes | None:
+    """The page's bytes: the staged blob when ``staged`` (pre-commit), else the working-tree file."""
     try:
-        return expected is not None and mdx_path.read_bytes() == expected.encode("utf-8")
-    except OSError:
+        if staged:
+            return subprocess.check_output(
+                ["git", "show", f":{mdx_path.relative_to(PROJECT_ROOT).as_posix()}"],
+                cwd=PROJECT_ROOT,
+                timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            )
+        return mdx_path.read_bytes()
+    except (OSError, ValueError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return None
+
+def is_arc_generated(mdx_path: Path, staged: bool = False) -> bool:
+    """True only for a generator-owned page, byte for byte as the generator produces it.
+
+    Their source is the accepted arc plus the plans and build state, not a per-module
+    curriculum directory. A lesson file, or a generated file that was edited by hand, is not
+    exempt whatever its frontmatter says. With ``staged`` the staged blob is compared, so an
+    unstaged corrected copy cannot vouch for a bad page that is about to be committed.
+    """
+    if not is_generator_owned_path(mdx_path):
         return False
+    expected = _arc_generated_files(mdx_path.relative_to(MDX_DIR).parts[0]).get(mdx_path)
+    return expected is not None and _page_bytes(mdx_path, staged) == expected.encode("utf-8")
 
 def has_generator_change(changed_files: set[Path]) -> bool:
     """Return true when the MDX generator itself is part of the change set."""
@@ -228,12 +246,12 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
         if len(parts) < 2:
             continue
 
-        if has_arc_kind(mdx_path):
-            if not is_arc_generated(mdx_path):
+        if is_generator_owned_path(mdx_path) or has_arc_kind(mdx_path):
+            if not is_arc_generated(mdx_path, staged=cached):
                 violations.append(
                     (
                         mdx_path,
-                        "arc_kind frontmatter on a file that is not exactly what "
+                        "arc page (generator-owned path or arc_kind frontmatter) that is not exactly what "
                         "scripts/build/build_arc_landing.py generates for that path",
                     )
                 )

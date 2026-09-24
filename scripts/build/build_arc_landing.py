@@ -133,8 +133,8 @@ def _load_module_plan(roots: Roots, slug: str) -> dict[str, Any] | None:
     except PlanError as error:
         raise ValueError(f"cannot read plan {plan_path}: {error}") from error
     numbers = _lesson_numbers(plan)
-    if numbers != list(range(1, len(numbers) + 1)):
-        raise ValueError(f"plan {slug}: lesson numbers must be exactly 1..N (contiguous, no duplicates); found {numbers}")
+    if not numbers or numbers != list(range(1, len(numbers) + 1)):
+        raise ValueError(f"plan {slug}: lesson numbers must be exactly 1..N (contiguous, no duplicates, non-empty); found {numbers}")
     return plan
 
 
