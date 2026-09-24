@@ -36,6 +36,7 @@ def _abetka_key_words() -> Counter[tuple[str, str]]:
     return rows
 
 
+@pytest.mark.repo_wide
 def test_ohoiko_abetka_inventory_covers_all_committed_key_words() -> None:
     records = read_source_inventory(OHOIKO_INVENTORY, project_root=PROJECT_ROOT)
     ohoiko_rows = Counter(

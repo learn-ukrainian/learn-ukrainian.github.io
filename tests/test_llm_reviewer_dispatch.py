@@ -1311,6 +1311,7 @@ def _ast_string(node: ast.AST) -> str | None:
     return None
 
 
+@pytest.mark.repo_wide
 def test_no_production_entrypoint_constructs_bare_bakeoff_arm() -> None:
     root = Path(__file__).resolve().parents[1]
     bare_entrypoints = {

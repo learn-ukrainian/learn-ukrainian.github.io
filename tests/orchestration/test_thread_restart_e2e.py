@@ -27,6 +27,7 @@ from tests.epics_monitor_stub import epics_monitor_stub
 from tests.project_python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+pytestmark = pytest.mark.repo_wide
 HANDOFF = REPO_ROOT / "scripts/orchestration/thread_handoff.py"
 HANDOFF_CANARY = REPO_ROOT / "scripts/orchestration/thread_handoff_canary.py"
 CONTEXT_CANARY = REPO_ROOT / "scripts/context_canary.py"
