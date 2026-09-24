@@ -1888,15 +1888,19 @@ _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 # ordinary read-only discussion of a proposed change as write intent.
 _WRITE_SHAPED_PROMPT_RE = re.compile(
     r"""(?imx)
-    ^\s*(?:[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
-    (?:implement|fix|add|update|modify|edit|remove|delete|refactor|rename|create|build)\b
-    |
-    ^\s*(?:[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
-    write\s+(?:(?:new|the)\s+)?(?:code|tests?|scripts?|files?|documentation|docs?)\b
+    ^\s*(?P<prefix>[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
+    (?:
+        (?:implement|fix|add|update|modify|edit|remove|delete|refactor|rename|create|build)\b
+        |
+        write\s+(?:(?:new|the)\s+)?(?:code|tests?|scripts?|files?|documentation|docs?)\b
+    )
     """,
 )
 _FENCED_BLOCK_RE = re.compile(r"^(`{3,}|~{3,}).*?^\1", re.DOTALL | re.MULTILINE)
 _BLOCKQUOTE_LINE_RE = re.compile(r"^\s*>.*$", re.MULTILINE)
+_HEADING_BOUNDARY_RE = re.compile(r"^\s*\#{1,6}\s+")
+_LIST_BOUNDARY_RE = re.compile(r"^\s*(?:[-*+]\s+|\d+[.)]\s+)")
+_THEMATIC_BREAK_RE = re.compile(r"^\s*[-*_]{3,}\s*$")
 _NO_DELIVERABLE_STATUS = "no_deliverable"
 # A clean read-only checkout holds no uncommitted deliverable. Every terminal
 # status the worker can persist is enough to drop it (#8536). Write-capable
@@ -2061,6 +2065,75 @@ def _strip_quoted_content(prompt: str) -> str:
     return _BLOCKQUOTE_LINE_RE.sub("", without_fences)
 
 
+def _is_list_or_heading_boundary(line: str) -> bool:
+    """Return True if line is a markdown heading, list item, or thematic break."""
+    return bool(_HEADING_BOUNDARY_RE.match(line) or _LIST_BOUNDARY_RE.match(line) or _THEMATIC_BREAK_RE.match(line))
+
+
+def _is_write_directive(line: str, prev_non_empty: str | None) -> bool:
+    """Classify whether a line in a prompt is a write directive (#8703).
+
+    A line is a directive only if:
+    1. It matches the write verb action pattern.
+    2. It does not end in '?' (which indicates a question to the reviewer).
+    3. It starts a sentence:
+       - The line itself is a numbered/bulleted item or heading; OR
+       - The previous non-empty line is absent (e.g. first line of the prompt); OR
+       - The previous non-empty line ends in '.', ':', '!', '?'; OR
+       - The previous non-empty line is a list item or heading boundary.
+    A line that continues the previous line's sentence is prose, not a directive.
+    """
+    match = _WRITE_SHAPED_PROMPT_RE.match(line)
+    if not match:
+        return False
+
+    # A line ending in '?' is a question to the reviewer, not a directive.
+    stripped = line.rstrip()
+    if stripped.endswith("?") or stripped.rstrip("\"'`").endswith("?"):
+        return False
+
+    # A numbered or bulleted item (or heading) starting with a write verb is a directive.
+    if match.group("prefix"):
+        return True
+
+    # Continuation rule: a line without a list/heading prefix is a directive
+    # only if it starts a sentence (the previous non-empty line is absent,
+    # ends in '.', ':', '!', '?', or is a list item / heading boundary).
+    # A line that continues the previous line's sentence is prose, not a directive.
+    if prev_non_empty is None:
+        return True
+
+    prev_stripped = prev_non_empty.rstrip()
+    if prev_stripped.rstrip("\"')`").endswith((".", ":", "!", "?")):
+        return True
+
+    if _HEADING_BOUNDARY_RE.match(prev_stripped) or _THEMATIC_BREAK_RE.match(prev_stripped):
+        return True
+
+    if _LIST_BOUNDARY_RE.match(prev_stripped):
+        # Indented line under an unpunctuated list item continues that item's sentence
+        is_indented_continuation = line.startswith(("  ", "\t")) and not prev_stripped.rstrip("\"')`").endswith(
+            (".", ":", "!", "?")
+        )
+        return not is_indented_continuation
+
+    return False
+
+
+def _has_write_directive(prompt: str) -> bool:
+    """Scan stripped prompt lines for an unquoted write directive (#8703)."""
+    stripped_prompt = _strip_quoted_content(prompt)
+    prev_non_empty: str | None = None
+    for line in stripped_prompt.splitlines():
+        if not line.strip():
+            prev_non_empty = None
+            continue
+        if _is_write_directive(line, prev_non_empty):
+            return True
+        prev_non_empty = line
+    return False
+
+
 def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
     """Reject clearly write-shaped briefs before a read-only worker starts.
 
@@ -2071,11 +2144,12 @@ def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
     requires an instruction-shaped line, rather than matching incidental
     words such as "changes" in a review prompt.  Fenced blocks and blockquote
     lines are excluded from the scan: they carry the brief under critique,
-    not the worker's own instructions.
+    not the worker's own instructions.  Wrapped continuation prose and
+    review questions ending in '?' are not classified as directives (#8703).
     """
     if mode != "read-only":
         return None
-    if not _WRITE_SHAPED_PROMPT_RE.search(_strip_quoted_content(prompt)):
+    if not _has_write_directive(prompt):
         return None
     return (
         "❌ write-shaped prompt cannot run with --mode read-only. "

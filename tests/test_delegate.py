@@ -1196,6 +1196,76 @@ def test_strip_quoted_content_handles_tilde_fences_and_unclosed_fence():
     assert "Add a CLI." in delegate._strip_quoted_content(unclosed)
 
 
+def test_read_only_wrapped_prose_continuation_line_is_not_refused():
+    """Wrapped continuation prose starting with a verb does not trip read-only (#8703).
+
+    Real brief from review-conftest-light-r2: 'fix report ...' was a noun phrase
+    continuing the previous line's sentence, not a directive.
+    """
+    prompt = (
+        "Review the task deliverable and verify that the\n"
+        "fix report `batch_state/tasks/impl-conftest-light-r2.result`.\n"
+    )
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+
+
+def test_read_only_question_to_reviewer_is_not_refused():
+    """A line ending in '?' is a question to the reviewer, not a directive (#8703).
+
+    Real brief from review-8663-r1: 'remove a worktree it did not create? Is the branch ref always kept?'
+    """
+    prompt = "Can a crashed dispatcher\nremove a worktree it did not create? Is the branch ref always kept?\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=prompt) is None
+
+    standalone_question = "remove a worktree it did not create? Is the branch ref always kept?\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=standalone_question) is None
+
+    question_verb = "Fix the bug in the parser?\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=question_verb) is None
+
+    bulleted_question = "- Remove the worktree it did not create?\n"
+    assert delegate._read_only_write_intent_error(mode="read-only", prompt=bulleted_question) is None
+
+
+@pytest.mark.parametrize(
+    "directive_prompt",
+    [
+        "Fix the bug in X.\n",
+        "Please fix the bug in X.\n",
+        "1. Fix the parser\n",
+        "1) Fix the parser\n",
+        "- Update docs\n",
+        "* Update docs\n",
+        "+ Fix the parser\n",
+        "# Fix the parser\n",
+        "Tasks:\nFix the bug in X.\n",
+        "Previous step.\nFix the bug in X.\n",
+        "Why is this broken!\nFix the bug in X.\n",
+        "Why is this broken?\nFix the bug in X.\n",
+        "# Work\nFix the bug in X.\n",
+        "- Step 1\nFix the bug in X.\n",
+        "Context\n\nFix the bug in foo.\n",
+    ],
+)
+def test_read_only_write_directive_cases_are_still_refused(directive_prompt):
+    """Genuine write directives (numbered, bulleted, first-line, or after sentence boundaries) are refused (#8703)."""
+    error = delegate._read_only_write_intent_error(mode="read-only", prompt=directive_prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+
+def test_read_only_blank_line_starts_new_sentence_refused():
+    """A blank line ends the paragraph, so a subsequent imperative verb is a directive (#8703).
+
+    A directive that opens a new paragraph after an unpunctuated line
+    (e.g., 'Context', 'Task', 'Background') must be refused.
+    """
+    prompt = "Context\n\nFix the bug in foo."
+    error = delegate._read_only_write_intent_error(mode="read-only", prompt=prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
 @pytest.mark.parametrize("effort", ["low", "medium", "high"])
 def test_dispatch_accepts_native_grok_effort_vocabulary(agent, effort):
@@ -2192,23 +2262,20 @@ def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_
 def test_deepseek_model_state_requires_expected_cached_alias_name(tmp_path):
     cache = tmp_path / "models.json"
     cache.write_text('{"deepseek":{"models":{"deepseek-flash":{"name":"DeepSeek V4.1 Flash"}}}}')
-    state = delegate._deepseek_model_state(
-        agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache
-    )
+    state = delegate._deepseek_model_state(agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache)
     assert state == {
         "resolved_model": "deepseek-v4.1-flash",
         "resolved_model_known": True,
         "resolved_model_source": "models_dev_cached_alias",
     }
     cache.write_text('{"deepseek":{"models":{"deepseek-flash":{"name":"DeepSeek V4.2 Flash"}}}}')
-    drifted = delegate._deepseek_model_state(
-        agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache
-    )
+    drifted = delegate._deepseek_model_state(agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache)
     assert drifted["resolved_model_known"] is False
     assert drifted["resolved_model"] == "unattested-harness"
-    assert delegate._deepseek_model_state(
-        agent="deepseek", model="deepseek-v4-pro", cache_path=cache
-    )["resolved_model"] == "deepseek-v4-pro"
+    assert (
+        delegate._deepseek_model_state(agent="deepseek", model="deepseek-v4-pro", cache_path=cache)["resolved_model"]
+        == "deepseek-v4-pro"
+    )
 
 
 def test_run_worker_records_unattested_harness_cursor_model_without_inventing_selector(
