@@ -99,22 +99,41 @@ def _locked_input(path: Path, repo_root: Path) -> dict[str, str]:
     return entry
 
 
-def pinned_entries(doc: dict[str, Any]) -> list[tuple[str, dict[str, str]]]:
-    """Every ``{path, sha256}`` a lesson manifest pins, named by its input (lists expand; upstream lessons last)."""
-    pinned = []
-    for name, value in doc["inputs"].items():
-        pinned.extend((name, entry) for entry in (value if isinstance(value, list) else [value]))
-    pinned.extend(("upstream_lessons", entry) for entry in doc["upstream_lessons"])
-    return pinned
+def _is_pin(value: Any) -> bool:
+    """The shape every recorded file input has: a string ``path`` and a sha256 hex digest."""
+    return (
+        isinstance(value, dict)
+        and isinstance(value.get("path"), str)
+        and isinstance(value.get("sha256"), str)
+        and SHA_RE.fullmatch(value["sha256"]) is not None
+    )
+
+
+def pinned_entries(doc: Any, location: str = "") -> list[tuple[str, dict[str, Any]]]:
+    """Every pinned file anywhere in the manifest, with its location (``inputs.pack``, ``module_digest``, ``diff``,
+    ``previous_attempt.review``, ``upstream_lessons[0]``).
+
+    The walk is structural: any object carrying a ``path`` and a ``sha256`` is a pin,
+    so a field the writer adds later is covered without a change here.
+    """
+    if _is_pin(doc):
+        return [(location, doc)]
+    if isinstance(doc, dict):
+        children = ((f"{location}.{key}" if location else str(key), value) for key, value in doc.items())
+    elif isinstance(doc, list):
+        children = ((f"{location}[{index}]", value) for index, value in enumerate(doc))
+    else:
+        return []
+    return [pin for name, value in children for pin in pinned_entries(value, name)]
 
 
 def changed_inputs(doc: dict[str, Any], repo_root: Path) -> list[dict[str, Any]]:
-    """The pinned inputs whose file now differs from what the manifest recorded.
+    """The pinned files whose bytes now differ from what the manifest recorded.
 
-    One record per changed input: ``input`` (its manifest name), ``entry`` (the
-    recorded ``{path, sha256}``) and ``current_sha256`` (``None`` when the file is
-    gone or no longer resolves to the recorded path). The current side is read by
-    ``_input`` — the function that recorded the input — so recording and
+    One record per changed pin: ``input`` (its location in the manifest), ``entry``
+    (the recorded pin) and ``current_sha256`` (``None`` when the file is gone or no
+    longer resolves to the recorded path). Every pin in the manifest is recorded
+    through ``_input``, so it is read back through ``_input`` too and recording and
     freshness cannot disagree about what a path holds.
     """
     root = repo_root.resolve()

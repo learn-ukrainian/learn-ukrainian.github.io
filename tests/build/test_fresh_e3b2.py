@@ -513,12 +513,12 @@ def test_manifest_history_and_closure_preserve_stale_attempts(tmp_path, monkeypa
         "sha256"
     ]
     assert new_digest != old_digest
-    upstream = [row for row in changed["stale"] if row["input"] == "upstream_lessons"]
+    upstream = [row for row in changed["stale"] if row["input"].startswith("upstream_lessons[")]
     assert {(row["n"], row["manifest_sha256"]) for row in upstream} == {(2, old[2]), (3, old[3])}
     assert all(row["upstream"] == 1 for row in upstream)
     # the superseded lesson 1 attempt pinned the lesson text that has since changed; nothing else is stale
     assert {(row["n"], row["manifest_sha256"], row["input"]) for row in changed["stale"] if row not in upstream} >= {
-        (1, old[1], "lesson")
+        (1, old[1], "inputs.lesson")
     }
     assert all(row["manifest_sha256"] in set(old.values()) for row in changed["stale"])
 
@@ -550,20 +550,84 @@ def test_closure_goes_stale_when_a_pinned_input_changes_and_names_it(tmp_path, m
     stale = closure()["stale"]
     named = {(row["n"], row["input"]) for row in stale}
     if which == "learner_state":
-        assert named == {(2, "learner_state")}
+        assert named == {(2, "inputs.learner_state")}
     else:  # shared by every lesson; the rewritten lock file is a pinned input too
-        assert named == {(n, name) for n in (1, 2, 3) for name in (which, f"{which}_lock")}
-    row = next(row for row in stale if row["input"] == which)
+        assert named == {(n, f"inputs.{name}") for n in (1, 2, 3) for name in (which, f"{which}_lock")}
+    row = next(row for row in stale if row["input"] == f"inputs.{which}")
     assert row["path"] == target.relative_to(tmp_path).as_posix()
     assert row["recorded_sha256"] == before and row["current_sha256"] == hashlib.sha256(target.read_bytes()).hexdigest()
     assert "upstream" not in row
+
+
+def _rereview_closure(tmp_path, monkeypatch):
+    (level, slug, plan_dir, evidence_dir, state_dir, page_dir), _first, previous, review = _rereview_setup(
+        tmp_path, monkeypatch
+    )
+    doc, digest = manifest.write_manifest(
+        level, slug, 2, lesson_kind="lesson", state_dir=state_dir, repo_root=tmp_path, plans_dir=plan_dir,
+        evidence_dir=evidence_dir, position=1, site_dir=page_dir, previous_attempt=previous,
+    )
+
+    def stale_of_rereview():
+        result = compute_closure(
+            level, slug, [{"n": 2, "kind": "lesson"}], repo_root=tmp_path, state_dir=state_dir, site_dir=page_dir
+        )
+        return [row for row in result["stale"] if row["manifest_sha256"] == digest]
+
+    assert stale_of_rereview() == []
+    return doc, review, stale_of_rereview
+
+
+@pytest.mark.parametrize("location", ["module_digest", "diff", "previous_attempt.review", "previous_attempt.ledger"])
+def test_closure_goes_stale_when_a_pin_outside_inputs_changes(tmp_path, monkeypatch, location):
+    doc, _review, stale_of_rereview = _rereview_closure(tmp_path, monkeypatch)
+    entry = doc
+    for part in location.split("."):
+        entry = entry[part]
+    target = tmp_path / entry["path"]
+    target.write_bytes(target.read_bytes() + b"\nchanged after the manifest pinned it\n")
+    (row,) = stale_of_rereview()
+    assert (row["input"], row["path"], row["recorded_sha256"]) == (location, entry["path"], entry["sha256"])
+    assert row["current_sha256"] == hashlib.sha256(target.read_bytes()).hexdigest()
+
+
+def test_the_pin_walk_covers_every_pinned_file_in_the_manifest(tmp_path, monkeypatch):
+    doc, _review, _stale = _rereview_closure(tmp_path, monkeypatch)
+    names = [name for name, _entry in manifest.pinned_entries(doc)]
+    assert {"module_digest", "diff", "previous_attempt.review", "previous_attempt.ledger", "inputs.plan"} <= set(names)
+    assert "inputs.activity_data[0]" in names or not doc["inputs"]["activity_data"]
+    assert len(names) == len(set(names))
+    # not a pin: the lock entry (entry_sha256) and the learner-state identity (no path)
+    assert "lesson_lock_entry" not in names and "learner_state" not in names
+
+
+def test_a_new_pinned_field_anywhere_is_detected_without_code_changes(tmp_path):
+    (tmp_path / "notes").mkdir()
+    for name in ("a.txt", "b.txt", "c.txt"):
+        (tmp_path / "notes" / name).write_text(name, encoding="utf-8")
+
+    def pin(name):
+        return {"path": f"notes/{name}", "sha256": hashlib.sha256(name.encode()).hexdigest()}
+
+    doc = {
+        "future_top_level": pin("a.txt"),
+        "future_section": {"nested": [pin("b.txt"), {"deeper": pin("c.txt")}]},
+        "not_a_pin": {"path": "notes/a.txt", "entry_sha256": "0" * 64},
+    }
+    assert manifest.changed_inputs(doc, tmp_path) == []
+    (tmp_path / "notes" / "a.txt").write_text("edited", encoding="utf-8")
+    (tmp_path / "notes" / "c.txt").unlink()
+    assert {(row["input"], row["current_sha256"] is None) for row in manifest.changed_inputs(doc, tmp_path)} == {
+        ("future_top_level", False),
+        ("future_section.nested[1].deeper", True),
+    }
 
 
 def test_closure_reports_a_deleted_pinned_input_as_missing(tmp_path, monkeypatch):
     _, state_dir, _, closure = _closure_of_three(tmp_path, monkeypatch)
     (state_dir / "lesson-3.learner-state.yaml").unlink()
     (row,) = closure()["stale"]
-    assert (row["n"], row["input"], row["current_sha256"]) == (3, "learner_state", None)
+    assert (row["n"], row["input"], row["current_sha256"]) == (3, "inputs.learner_state", None)
 
 
 def test_style_card_sidecar_mismatch_fails_manifest(tmp_path, monkeypatch):

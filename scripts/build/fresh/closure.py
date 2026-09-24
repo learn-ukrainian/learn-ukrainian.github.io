@@ -52,7 +52,7 @@ def compute_closure(level: str, slug: str, lessons: list[dict[str, Any]], *,
                 entry = change["entry"]
                 record = {"n": n, "manifest_sha256": digest, "input": change["input"], "path": entry["path"],
                           "recorded_sha256": entry["sha256"], "current_sha256": change["current_sha256"]}
-                if change["input"] == "upstream_lessons":
+                if "n" in entry:  # a pin that names a lesson (an upstream lesson) says which
                     record["upstream"] = entry["n"]
                 stale.append(record)
     doc = {"closure_schema": 1, "level": level, "slug": slug, "lessons": rows, "stale": stale}
