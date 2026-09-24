@@ -30,13 +30,14 @@ from scripts.projects.open_model_data.build_grammar_component_8342 import (
     has_russianism,
     load_held_out_firewall,
 )
+from scripts.rag.config import VESUM_DB_PATH
 
-COMPONENT_DIR = Path("data/projects/open_model_data/components/grammar")
+COMPONENT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "components" / "grammar"
 SAMPLE_JSON = COMPONENT_DIR / "acceptance_review_sample.json"
 SIGNOFF_TEMPLATE = COMPONENT_DIR / "acceptance_review_sample.signoff_template.json"
 RECEIPT_FILE = COMPONENT_DIR / "acceptance_review_sample.receipt.json"
 SIGNOFF_FILE = COMPONENT_DIR / "acceptance_review_sample.signoff.json"
-VESUM_DB = Path("data/vesum.db")
+VESUM_DB = VESUM_DB_PATH
 
 
 def _inspect_span_in_vesum(span: str, cur: sqlite3.Cursor) -> dict[str, Any]:
@@ -313,7 +314,7 @@ def generate_signoff_and_receipt(findings_file: Path | None = None, write_signof
         # Dynamic defect inspection per item
         item_defects: list[str] = []
         if is_err:
-            if has_russianism(corr_text):
+            if has_russianism(corr_text, vesum_cur=cur):
                 item_defects.append("Росіянізм або ненормативна калька у виправленому тексті")
             if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", corr_text, re.IGNORECASE):
                 item_defects.append("Подвоєне сусіднє слово у виправленому тексті")
@@ -334,7 +335,7 @@ def generate_signoff_and_receipt(findings_file: Path | None = None, write_signof
             if unattested and not any(w[0].isupper() for w in unattested):
                 item_defects.append(f"Непідтверджені словоформи у VESUM: {unattested}")
         else:
-            if has_russianism(orig_text):
+            if has_russianism(orig_text, vesum_cur=cur):
                 item_defects.append("Росіянізм або ненормативна калька у контрольному реченні")
             if not re.search(r"[.!?…»”\"]$", orig_text.strip()):
                 item_defects.append("Відсутній кінцевий розділовий знак контрольного речення")
@@ -366,7 +367,7 @@ def generate_signoff_and_receipt(findings_file: Path | None = None, write_signof
         item_verdict = "CHANGES_REQUESTED" if is_item_defective else "APPROVED"
 
         final_item_rationale = (
-            f"ВИЯВЛЕНО ДЕФЕКТИ: {'; '.join(item_defects)}" if is_item_defective else rationale
+            f"[{rec_id}] ВИЯВЛЕНО ДЕФЕКТИ: {'; '.join(item_defects)}" if is_item_defective else rationale
         )
         distinct_rationales.add(final_item_rationale)
 
@@ -424,12 +425,12 @@ def generate_signoff_and_receipt(findings_file: Path | None = None, write_signof
 
     # Guarantee 100% itemized distinctness across all 300 sample rows
     if len(distinct_rationales) != sample_size:
-        raise RuntimeError(
-            f"Expected {sample_size} distinct item rationales, got only {len(distinct_rationales)}!"
-        )
+        raise RuntimeError(f"Expected {sample_size} distinct item rationales, got only {len(distinct_rationales)}!")
 
     blocker_defect_count = sum(1 for it in reviewed_items if it["verdict"] == "CHANGES_REQUESTED")
-    minor_defect_count = sum(1 for it in reviewed_items if it["status"] == "FAIL" and it["verdict"] != "CHANGES_REQUESTED")
+    minor_defect_count = sum(
+        1 for it in reviewed_items if it["status"] == "FAIL" and it["verdict"] != "CHANGES_REQUESTED"
+    )
     overall_verdict = "APPROVED" if blocker_defect_count == 0 else "CHANGES_REQUESTED"
 
     receipt = {
@@ -511,6 +512,8 @@ def generate_signoff_and_receipt(findings_file: Path | None = None, write_signof
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate Linguistic Review Signoff & Receipt (#8342)")
     parser.add_argument("--findings", type=Path, default=None, help="Optional JSON file with item findings/defects")
-    parser.add_argument("--write-signoff", action="store_true", help="Write actual signoff file (only with verified review)")
+    parser.add_argument(
+        "--write-signoff", action="store_true", help="Write actual signoff file (only with verified review)"
+    )
     args = parser.parse_args()
     generate_signoff_and_receipt(findings_file=args.findings, write_signoff=args.write_signoff)

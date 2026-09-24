@@ -2,7 +2,7 @@
 
 - **Dataset SHA-256:** `7e943361f4832489b1cb9ab060d6b2532b21802ef12be6de1f37db4f55cbd4b2`
 - **Deterministic Sampling Seed Hash:** `42e693ce445eb624cae8f9805c7a6d146ef67f0030eb943fd70958a038bc51d7`
-- **Profile SHA-256:** `bee13c3b07f4142fcfdb068a9160b14490b9c7e7225d12dc30b2633ebb7e7c08`
+- **Profile SHA-256:** `d1a431cfb07024d2b54d4325294b7fdc8d4e05a5fdf147812b2fb553262cc53a`
 - **Sampled Rows:** 300 (Base 300 + Thin Category Boost 0)
 
 ## Reviewer Instructions & Rubric

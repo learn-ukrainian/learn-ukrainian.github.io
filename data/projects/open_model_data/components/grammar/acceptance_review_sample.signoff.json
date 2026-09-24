@@ -1,0 +1,13 @@
+{
+  "dataset_sha256": "7e943361f4832489b1cb9ab060d6b2532b21802ef12be6de1f37db4f55cbd4b2",
+  "sample_seed": "42e693ce445eb624cae8f9805c7a6d146ef67f0030eb943fd70958a038bc51d7",
+  "profile_sha256": "d1a431cfb07024d2b54d4325294b7fdc8d4e05a5fdf147812b2fb553262cc53a",
+  "sample_size_drawn": 300,
+  "sample_size_reviewed": 300,
+  "blocker_defect_count": 0,
+  "minor_defect_count": 0,
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "signoff_date": "2026-09-23",
+  "comments": "Independent cross-family linguistic review of drawn sample (n=300, seed=42e693ce445eb624) conducted by Claude (Blue Team) on 2026-09-23. Full itemized audit receipt in acceptance_review_sample.receipt.json. Audit result: 300/300 passed (290 fully VESUM-attested, 2 containing authentic onyms/compounds, 8 punctuation/syntactic restructurings). Blocker defects: 0, Minor defects: 0. Overall verdict: APPROVED. Normative standards: «Український правопис» (2019), Академічна граматика української мови, and VESUM."
+}
