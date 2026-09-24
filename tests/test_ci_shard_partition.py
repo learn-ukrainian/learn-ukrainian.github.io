@@ -663,3 +663,15 @@ def test_ci_yml_samples_memory_around_pytest_step() -> None:
     assert "mem-sample-shard-${{ matrix.shard }}" in ci_text
     assert "pytest_rss_mib=" in ci_text
     assert "sampling_interval_seconds=15" in ci_text
+
+
+def test_ci_yml_pytest_step_prints_disk_heartbeat() -> None:
+    """#8701: a silent shard death leaves no pytest-timeout dump. The heartbeat
+    runs outside pytest and prints free disk plus D-state workers into the
+    step log that otherwise stops."""
+    ci_text = _ci_text()
+    assert "pytest-heartbeat-shard-${SHARD}.log" in ci_text
+    assert "avail_root_bytes=" in ci_text
+    assert "avail_tmp_bytes=" in ci_text
+    assert "pytest_dstate=" in ci_text
+    assert "pytest-heartbeat-shard-${{ matrix.shard }}" in ci_text

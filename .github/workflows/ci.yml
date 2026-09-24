@@ -303,10 +303,32 @@ jobs:
           # Single initial path + tests/conftest.py's pytest_ignore_collect allowlist
           # hook (LU_PYTEST_SHARD_FILES, exported above) replaces positional file
           # arguments — cheap collection, not a change in which tests run.
+          # #8701: a shard can go silent until the job timeout, with no
+          # pytest-timeout or faulthandler dump. This loop is outside pytest,
+          # so a stuck worker still leaves disk and D-state in the step log.
+          heartbeat="ci-artifacts/pytest-heartbeat-shard-${SHARD}.log"
+          (
+            while true; do
+              printf '%s avail_root_bytes=%s avail_tmp_bytes=%s pytest_dstate=%s\n' \
+                "$(date -u +%FT%TZ)" \
+                "$(df -B1 --output=avail / | tail -1 | tr -d ' ')" \
+                "$(df -B1 --output=avail /tmp | tail -1 | tr -d ' ')" \
+                "$(ps -eo stat,args | awk '$1 ~ /^D/ && /pytest/ {c++} END {print c+0}')" \
+                | tee -a "$heartbeat"
+              sleep 30
+            done
+          ) &
+          heartbeat_pid=$!
+          set +e
           .venv/bin/python -m pytest tests -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
             --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \
             --override-ini addopts=-v --durations=25 \
             --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
+          pytest_ec=$?
+          set -e
+          kill "$heartbeat_pid" 2>/dev/null || true
+          wait "$heartbeat_pid" 2>/dev/null || true
+          exit "$pytest_ec"
       - name: Stop memory sampler
         if: always() && needs.changes.outputs.docs_only == 'false'
         run: |
@@ -333,6 +355,14 @@ jobs:
           name: mem-sample-shard-${{ matrix.shard }}
           path: ci-artifacts/mem-shard-*.log
           if-no-files-found: error
+          retention-days: 14
+      - name: Upload pytest heartbeat
+        if: always() && needs.changes.outputs.docs_only == 'false'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pytest-heartbeat-shard-${{ matrix.shard }}
+          path: ci-artifacts/pytest-heartbeat-shard-*.log
+          if-no-files-found: warn
           retention-days: 14
 
   contracts:
