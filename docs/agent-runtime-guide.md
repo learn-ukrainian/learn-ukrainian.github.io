@@ -603,6 +603,39 @@ dispatch. `unknown` remains reserved for an unexpected resolution failure.
 Every terminal state records a concrete subprocess `returncode`, or a
 `returncode_reason` when no child process ever yielded one.
 
+### Worktree removal and sibling repositories (#8610, #8624)
+
+Every removal of a dispatch worktree (dispatch's own stale-holder and
+superseded-review release, settle, the scheduled reaper, `wt.sh`, the ACP
+runtime reap, and the `worktree_claims remove` CLI) goes through
+`scripts/orchestration/worktree_claims.py`. It takes a per-worktree lock,
+runs the caller's ownership proof, and refuses while another unfinished task
+record names the checkout.
+
+**One control plane.** Dispatch writes task records and per-worktree locks on
+the **public primary checkout** only, even for `--repo infra-private|hramatka`
+(`scripts/config/fleet_repos.yaml`). A remover acting on a sibling-repo
+worktree therefore reads both from the public primary, never from the sibling
+repository's own `batch_state/` or git dir:
+
+| What | Where, for any repository | Resolved by |
+| --- | --- | --- |
+| task records | `<public primary>/batch_state/tasks/` | `worktree_claims.control_plane_root(repo)` |
+| per-worktree lock | `<public primary git common dir>/lu-worktree-locks/<sha256(path)[:32]>.lock` | same |
+| git operations (`worktree remove`, branch, dirty probe) | the worktree's **own** repository | `owning_repo_root(worktree)` |
+
+`control_plane_root` returns the public primary for an allowlisted non-default
+fleet checkout (`<public parent>/<local_name>`) or any linked worktree of one,
+and the repository itself otherwise. If the fleet catalog cannot be read the
+removers refuse (`worktree lock unavailable (fleet repository catalog
+unreadable ...)`) rather than guess. The read-only reaper probes (task status,
+ownership ledger, rollover leases) fall back to the repository's own primary
+in that case; the removal guard does not.
+
+The sibling repositories do not get their own `batch_state` or lock namespace.
+Do not add one: a second lock file for the same path would let a reaper and a
+dispatch hold "the" lock at once.
+
 ## Common mistakes
 
 - **Writing new subprocess logic outside the runtime.** If you're

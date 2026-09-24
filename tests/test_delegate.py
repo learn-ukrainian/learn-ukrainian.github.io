@@ -9584,6 +9584,71 @@ def test_settle_skips_when_an_attacher_holds_the_worktree_lock(tmp_tasks_dir, tm
     assert _branch_ref_present(primary, branch)
 
 
+def _sibling_settle_checkout(tmp_path, monkeypatch, *, task_id: str):
+    """Public control plane (``delegate._REPO_ROOT``) plus a dispatch worktree of its ``infra-private`` sibling (#8624)."""
+    public, _worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="public-unused")
+    sibling = tmp_path / "learn-ukrainian-infra-private"
+    sibling.mkdir()
+    _init_git_repo_for_test(sibling, monkeypatch)
+    (sibling / "README").write_text("base\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README"], cwd=sibling, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "-c", "commit.gpgsign=false", "commit", "-m", "base"],
+        cwd=sibling,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    branch = f"cursor/{task_id}"
+    worktree = sibling.resolve() / ".worktrees" / "dispatch" / "cursor" / task_id
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["git", "worktree", "add", "-b", branch, str(worktree), "HEAD"],
+        cwd=sibling,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    monkeypatch.setattr(worktree_claims, "public_primary_root", lambda: public)
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", None)
+    return public, sibling.resolve(), worktree, branch
+
+
+def test_settle_keeps_a_sibling_repo_worktree_while_a_public_record_claims_it(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8624: a ``--repo`` worktree's claims live in the public batch_state, which settle must read."""
+    task_id = "sibling-settle-claimed"
+    _public, sibling, worktree, branch = _sibling_settle_checkout(tmp_path, monkeypatch, task_id=task_id)
+    tmp_tasks_dir.mkdir(parents=True)
+    (tmp_tasks_dir / "review-attached.json").write_text(
+        json.dumps({"task_id": "review-attached", "status": "spawning", "worktree_path": str(worktree)}),
+        encoding="utf-8",
+    )
+
+    out = delegate._settle_worktree_reap(worktree, created_by_this_dispatch=True, settling_task_id=task_id)
+
+    assert out["action"] == "skipped"
+    assert out["reason"] == "worktree claimed by active task review-attached"
+    assert worktree.exists()
+    assert _branch_ref_present(sibling, branch)
+
+
+def test_settle_removes_an_unclaimed_sibling_repo_worktree_in_its_own_repository(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8624: with no live claim settle drops the sibling checkout, git-operated in the sibling, and keeps its branch."""
+    task_id = "sibling-settle-free"
+    public, sibling, worktree, branch = _sibling_settle_checkout(tmp_path, monkeypatch, task_id=task_id)
+    tmp_tasks_dir.mkdir(parents=True)
+    (tmp_tasks_dir / "finished.json").write_text(
+        json.dumps({"task_id": "finished", "status": "done", "worktree_path": str(worktree)}), encoding="utf-8"
+    )
+
+    out = delegate._settle_worktree_reap(worktree, created_by_this_dispatch=True, settling_task_id=task_id)
+
+    assert out["action"] == "removed", out
+    assert not worktree.exists()
+    assert _branch_ref_present(sibling, branch)
+    assert not _branch_ref_present(public, branch)
+
+
 def test_attach_between_claim_scan_and_removal_is_impossible(tmp_tasks_dir, tmp_path, monkeypatch):
     """#8610 r2 (a): the reviewer's interleaving, an attach right after settle's claim scan, cannot happen."""
     task_id = "reap-ro-scan-then-attach"
