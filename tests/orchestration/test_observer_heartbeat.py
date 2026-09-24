@@ -13,6 +13,7 @@ from scripts.orchestration.observer_heartbeat import (
     post_observer_presence,
     presence_url,
 )
+from scripts.orchestration.session_markers import MARKER_ROOT_ENV
 
 
 class _FakeResponse:
@@ -289,7 +290,11 @@ def test_sweep_mac_gui_presence() -> None:
     assert posted_bodies == []
 
 
-def test_main_mac_gui_mode_posts_idle_for_running_gui(capsys: pytest.CaptureFixture[str]) -> None:
+def test_main_mac_gui_mode_posts_idle_for_running_gui(
+    capsys: pytest.CaptureFixture[str],
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     posted: list[dict[str, object]] = []
 
     def opener(request: object, timeout: int = 0) -> _FakeResponse:
@@ -306,7 +311,8 @@ def test_main_mac_gui_mode_posts_idle_for_running_gui(capsys: pytest.CaptureFixt
         )
 
     lines = ["/Applications/Cursor.app/Contents/MacOS/Cursor"]
-    rc = main(["--mac-gui"], opener=opener, process_lines=lines)
+    monkeypatch.setenv(MARKER_ROOT_ENV, str(tmp_path / "session-markers"))
+    rc = main(["--mac-gui", "--repo-root", str(tmp_path)], opener=opener, process_lines=lines)
     assert rc == 0
     assert len(posted) == 1
     assert posted[0]["agent"] == "cursor"
@@ -316,7 +322,11 @@ def test_main_mac_gui_mode_posts_idle_for_running_gui(capsys: pytest.CaptureFixt
     assert "agent=cursor task_id=cursor-gui status=idle" in out
 
 
-def test_main_mac_gui_mode_noop_when_not_running(capsys: pytest.CaptureFixture[str]) -> None:
+def test_main_mac_gui_mode_noop_when_not_running(
+    capsys: pytest.CaptureFixture[str],
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     posted: list[dict[str, object]] = []
 
     def opener(request: object, timeout: int = 0) -> _FakeResponse:
@@ -324,7 +334,8 @@ def test_main_mac_gui_mode_noop_when_not_running(capsys: pytest.CaptureFixture[s
         posted.append({})
         return _FakeResponse({})
 
-    rc = main(["--mac-gui"], opener=opener, process_lines=["/usr/bin/bash"])
+    monkeypatch.setenv(MARKER_ROOT_ENV, str(tmp_path / "session-markers"))
+    rc = main(["--mac-gui", "--repo-root", str(tmp_path)], opener=opener, process_lines=["/usr/bin/bash"])
     assert rc == 0
     assert posted == []
     out = capsys.readouterr().out
