@@ -687,18 +687,18 @@ def clean_sentence_for_query(sentence: str) -> str:
 
     if guillemet_wrapped:
         s = re.sub(r"^«", "", s)
-        s = re.sub(r"[.?!…]*»$", "", s).strip()
+        s = re.sub(r"»$", "", s).strip()
     elif ascii_wrapped:
         s = re.sub(r'^"', "", s)
-        s = re.sub(r'[.?!…]*"$', "", s).strip()
+        s = re.sub(r'"$', "", s).strip()
 
     if "«" in s or "»" in s:
         s = s.replace("«", "“").replace("»", "”")
 
-    # Strip trailing periods, preserving ?, !, …
-    s = re.sub(r"\.+$", "", s)
-    s = re.sub(r"\.+(?=[”\"]+$)", "", s)
-    s = re.sub(r"[”\"]\s*\.+$", "”", s)
+    # Strip single trailing period, preserving ?, !, and ellipsis (... or …)
+    s = re.sub(r"(?<!\.)\.$", "", s)
+    s = re.sub(r"(?<!\.)\.(?=[”\"]+$)", "", s)
+    s = re.sub(r"[”\"]\s*(?<!\.)\.$", "”", s)
     return s.strip()
 
 

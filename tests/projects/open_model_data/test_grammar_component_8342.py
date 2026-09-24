@@ -789,3 +789,18 @@ def test_source_denominator_reconciliation(grammar_data):
     assert "380" in readme_text
     assert "330" in readme_text
     assert "50" in readme_text
+
+
+def test_clean_sentence_for_query_preserves_quoted_punctuation():
+    """Verify clean_sentence_for_query preserves ?, !, and … inside fully quoted utterances."""
+    from scripts.projects.open_model_data.grammar_linguistic_catalog import clean_sentence_for_query
+
+    assert clean_sentence_for_query("«Чому?»") == "Чому?"
+    assert clean_sentence_for_query("«Стій!»") == "Стій!"
+    assert clean_sentence_for_query("«Що це таке?!»") == "Що це таке?!"
+    assert clean_sentence_for_query("«Невже?...»") == "Невже?..."
+    assert clean_sentence_for_query("«Невже?…»") == "Невже?…"
+    assert clean_sentence_for_query("«Кажу я.»") == "Кажу я"
+    assert clean_sentence_for_query('"Why?"') == "Why?"
+    assert clean_sentence_for_query('"Wait!"') == "Wait!"
+    assert clean_sentence_for_query('"Said he."') == "Said he"

@@ -247,6 +247,17 @@ def generate_signoff_and_receipt(
             raise ValueError(
                 f"Provenance violation: findings indices do not match expected sample indices ({'; '.join(err_parts)})"
             )
+    # Index shards to load full rich record metadata by (file_name, line_number)
+    shards_data: dict[tuple[str, int], dict[str, Any]] = {}
+    for sf in COMPONENT_DIR.glob("grammar_*.jsonl"):
+        with sf.open("r", encoding="utf-8") as f:
+            for idx, line in enumerate(f, 1):
+                if line.strip():
+                    shards_data[(sf.name, idx)] = json.loads(line)
+
+    samples_by_idx = {item["sample_index"]: item for item in samples}
+
+    if write_signoff:
         required_criteria = {
             "pedagogical_soundness",
             "morphology_vesum",
@@ -265,6 +276,24 @@ def generate_signoff_and_receipt(
                 raise ValueError(
                     f"Provenance violation: findings entry key {s_idx} does not match embedded sample_index ({embedded_s_idx})"
                 )
+            item = samples_by_idx[s_idx]
+            rec = shards_data.get((item["file_name"], item["line_number"]))
+            rec_id = rec.get("record_id") if rec else None
+            c_hash = item.get("content_hash")
+
+            f_rec_id = f_entry.get("record_id")
+            if f_rec_id and rec_id and f_rec_id != rec_id:
+                raise ValueError(
+                    f"Provenance violation: findings entry for sample index {s_idx} record_id {f_rec_id!r} "
+                    f"does not match shard record_id {rec_id!r}"
+                )
+            f_c_hash = f_entry.get("content_hash")
+            if f_c_hash and c_hash and f_c_hash != c_hash:
+                raise ValueError(
+                    f"Provenance violation: findings entry for sample index {s_idx} content_hash {f_c_hash!r} "
+                    f"does not match sample content_hash {c_hash!r}"
+                )
+
             r_verdict = f_entry.get("verdict")
             if not isinstance(r_verdict, str) or r_verdict not in ALLOWED_REVIEWER_VERDICTS:
                 raise ValueError(
@@ -282,6 +311,30 @@ def generate_signoff_and_receipt(
                 raise ValueError(
                     f"Provenance violation: findings entry for sample index {s_idx} is missing non-empty 'reviewer_assessment'"
                 )
+
+            # Semantic validation: ensure assessment accurately distinguishes corrections from clean controls
+            lowered_assessment = assessment.lower()
+            if item["is_erroneous"]:
+                if any(
+                    phrase in lowered_assessment
+                    for phrase in [
+                        "контрольне речення",
+                        "захисний контроль",
+                        "без помилок",
+                        "помилок не виявлено",
+                        "без мовних вад",
+                        "без мовних огріхів",
+                    ]
+                ):
+                    raise ValueError(
+                        f"Provenance violation: correction item {s_idx} is misdescribed as a clean control in assessment: {assessment!r}"
+                    )
+            else:
+                if "→" in assessment or "->" in assessment:
+                    raise ValueError(
+                        f"Provenance violation: clean control item {s_idx} is misdescribed as an edit in assessment: {assessment!r}"
+                    )
+
             crit = f_entry.get("criteria")
             if not isinstance(crit, dict) or not required_criteria.issubset(crit.keys()):
                 missing_c = required_criteria - (set(crit.keys()) if isinstance(crit, dict) else set())
@@ -293,14 +346,6 @@ def generate_signoff_and_receipt(
                     raise ValueError(
                         f"Provenance violation: criteria {k} in item {s_idx} must be a boolean, got {crit[k]!r}"
                     )
-
-    # Index shards to load full rich record metadata by (file_name, line_number)
-    shards_data: dict[tuple[str, int], dict[str, Any]] = {}
-    for sf in COMPONENT_DIR.glob("grammar_*.jsonl"):
-        with sf.open("r", encoding="utf-8") as f:
-            for idx, line in enumerate(f, 1):
-                if line.strip():
-                    shards_data[(sf.name, idx)] = json.loads(line)
 
     # Verify held-out firewall for all 300 sampled items
     _test_doc_ids, test_sources, test_targets = load_held_out_firewall(
