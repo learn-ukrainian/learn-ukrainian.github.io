@@ -6,6 +6,8 @@ import os
 import time
 from pathlib import Path
 
+import pytest
+
 from scripts.orchestration import tmp_leak_sweep as tls
 
 
@@ -256,3 +258,198 @@ def test_pressure_shortens_age(tmp_path: Path, monkeypatch) -> None:
         min_age_s=tls.DEFAULT_PRESSURE_MIN_AGE_S,
     )
     assert any(c.path.name == "pr7001-exact-abc" for c in found)
+
+
+# --------------------------------------------------------------------------
+# #8738: Atlas/QA legacy residue, managed-namespace exclusion, /proc probe
+# --------------------------------------------------------------------------
+
+
+def _quiet_pgrep(monkeypatch) -> None:
+    real_run = tls.subprocess.run
+
+    def fake_run(cmd, *args, **kwargs):
+        if cmd[0] == "pgrep":
+            return tls.subprocess.CompletedProcess(args=cmd, returncode=1, stdout="", stderr="")
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(tls.subprocess, "run", fake_run)
+
+
+def test_classify_candidate_name_orders_protected_exact_inventory_pattern() -> None:
+    for name in sorted(tls.LEGACY_EXACT_ALLOWLIST):
+        assert tls.classify_candidate_name(name) == tls.CANDIDATE_KIND_LEGACY_EXACT
+    assert {
+        "atlas-8307-410k-final.db",
+        "atlas-8307-410k-r2.db",
+        "atlas-8307-synthetic-410k.json",
+        "qa-8686-ui-r2",
+        "qa-8686-exercises-r2",
+    } == tls.LEGACY_EXACT_ALLOWLIST
+    assert tls.classify_candidate_name("atlas-8672-ci-pytest3.log") == tls.CANDIDATE_KIND_LEGACY_INVENTORY
+    assert tls.classify_candidate_name("qa-8686-ui-r3") == tls.CANDIDATE_KIND_LEGACY_INVENTORY
+    assert tls.classify_candidate_name("atlas-8307-410k-final.db.bak") == tls.CANDIDATE_KIND_LEGACY_INVENTORY
+    assert tls.classify_candidate_name("review-6621") == tls.CANDIDATE_KIND_PATTERN
+    assert tls.classify_candidate_name("atlas-8307-promotion-plan.md") is None
+    assert tls.classify_candidate_name("atlas-8307-decision.yaml") is None
+    assert tls.classify_candidate_name("qa-1.decision.yml") is None
+    assert tls.classify_candidate_name(tls.NAMESPACE_DIRNAME) is None
+    assert tls.classify_candidate_name("atlas-consult") is None  # no issue number: not a known family
+    assert tls.classify_candidate_name("com.apple.imagent") is None
+
+
+def test_legacy_exact_names_drain_but_other_atlas_qa_residue_is_inventory_only(tmp_path: Path, monkeypatch) -> None:
+    _quiet_pgrep(monkeypatch)
+    exact_db = tmp_path / "atlas-8307-410k-final.db"
+    exact_json = tmp_path / "atlas-8307-synthetic-410k.json"
+    exact_qa = tmp_path / "qa-8686-ui-r2"
+    other_atlas = tmp_path / "atlas-8672-ci-pytest3.log"
+    other_qa = tmp_path / "qa-9999-scratch"
+    promotion = tmp_path / "atlas-8307-promotion-plan.md"
+    decision = tmp_path / "atlas-8307-decision.yaml"
+    for target in (exact_db, exact_json, other_atlas, promotion, decision):
+        _touch_old(target, age_s=10_000, as_file=True)
+    for target in (exact_qa, other_qa):
+        _touch_old(target, age_s=10_000)
+
+    dry = tls.sweep_tmp_leaks(apply=False, tmp_roots=[tmp_path], now=time.time(), min_age_s=3600, min_free_gb=0.0)
+    assert {item["path"] for item in dry["inventory"]} == {str(other_atlas), str(other_qa)}
+    assert all(item["action"] == "inventory_only" for item in dry["inventory"])
+    assert dry["inventory_only"] == 2
+    assert {item["path"] for item in dry["reaped"]} == {str(exact_db), str(exact_json), str(exact_qa)}
+    assert all(item["action"] == "would_reap" for item in dry["reaped"])
+    assert dry["roots_reaped"] == 0
+    reported = str(dry)
+    assert str(promotion) not in reported and str(decision) not in reported
+
+    applied = tls.sweep_tmp_leaks(apply=True, tmp_roots=[tmp_path], now=time.time(), min_age_s=3600, min_free_gb=0.0)
+    assert applied["roots_reaped"] == 3
+    assert applied["errors"] == 0
+    assert not exact_db.exists() and not exact_json.exists() and not exact_qa.exists()
+    assert other_atlas.exists() and other_qa.exists()
+    assert promotion.exists() and decision.exists()
+    assert applied["inventory_only"] == 2
+
+
+def test_managed_namespace_and_scratch_roots_are_never_candidates(tmp_path: Path, monkeypatch) -> None:
+    _quiet_pgrep(monkeypatch)
+    scratch_root = tmp_path / "scratch"
+    scratch_root.mkdir()
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch_root))
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path / "lu-base"))
+    monkeypatch.setattr(tls.tempfile, "gettempdir", lambda: str(tmp_path))
+    namespace = scratch_root / tls.NAMESPACE_DIRNAME
+    _touch_old(namespace, age_s=10_000)
+    fallback = tmp_path / "lu-scratch"  # matches ^lu- but is the fallback scratch root
+    _touch_old(fallback, age_s=10_000)
+    base = tmp_path / "lu-base"  # matches ^lu- but is the dispatcher base root
+    _touch_old(base, age_s=10_000)
+    residue = tmp_path / "lu-real-leak"
+    _touch_old(residue, age_s=10_000)
+
+    found = tls.discover_candidates([tmp_path, scratch_root], now=time.time(), min_age_s=3600)
+    assert {c.path for c in found} == {residue}
+    report = tls.sweep_tmp_leaks(
+        apply=True, tmp_roots=[tmp_path, scratch_root], now=time.time(), min_age_s=3600, min_free_gb=0.0
+    )
+    assert report["roots_reaped"] == 1
+    assert namespace.is_dir() and fallback.is_dir() and base.is_dir()
+    assert not residue.exists()
+
+
+def _fake_proc(
+    tmp_path: Path,
+    pid: int,
+    *,
+    cmdline: bytes = b"",
+    cwd: Path | None = None,
+    fd: Path | None = None,
+    environ: bytes = b"",
+) -> Path:
+    proc_root = tmp_path / "proc"
+    entry = proc_root / str(pid)
+    entry.mkdir(parents=True, exist_ok=True)
+    (entry / "cmdline").write_bytes(cmdline)
+    (entry / "environ").write_bytes(environ)
+    (entry / "cwd").symlink_to(cwd if cwd is not None else tmp_path)
+    (entry / "fd").mkdir(exist_ok=True)
+    if fd is not None:
+        (entry / "fd" / "7").symlink_to(fd)
+    return proc_root
+
+
+def test_proc_probe_detects_cwd_fd_environ_and_cmdline(tmp_path: Path) -> None:
+    target = tmp_path / "atlas-8307-410k-final.db"
+    target.write_text("x")
+    workdir = tmp_path / "qa-8686-ui-r2"
+    (workdir / "inner").mkdir(parents=True)
+    assert tls.proc_references(target, proc_root=tmp_path / "missing") is None
+
+    proc_root = _fake_proc(tmp_path, 4001, cmdline=b"python\0--other\0")
+    assert tls.proc_references(target, proc_root=proc_root) is False
+    _fake_proc(tmp_path, 4002, cmdline=b"sqlite3\0" + str(target).encode() + b"\0")
+    assert tls.proc_references(target, proc_root=proc_root) is True
+
+    proc_root = _fake_proc(tmp_path / "cwd-case", 4003, cwd=workdir / "inner")
+    assert tls.proc_references(workdir, proc_root=proc_root) is True
+    proc_root = _fake_proc(tmp_path / "fd-case", 4004, fd=target)
+    assert tls.proc_references(target, proc_root=proc_root) is True
+    proc_root = _fake_proc(tmp_path / "env-case", 4005, environ=b"HOME=/x\0LU_DB=" + str(target).encode() + b"\0")
+    assert tls.proc_references(target, proc_root=proc_root) is True
+    proc_root = _fake_proc(tmp_path / "prefix-case", 4006, cmdline=b"cat\0" + str(target).encode() + b"-other\0")
+    # Command lines match by substring on purpose (same conservatism as pgrep -f).
+    assert tls.proc_references(target, proc_root=proc_root) is True
+    proc_root = _fake_proc(tmp_path / "unrelated-case", 4007, cwd=tmp_path, fd=tmp_path / "elsewhere")
+    assert tls.proc_references(target, proc_root=proc_root) is False
+
+
+def test_proc_probe_unknown_when_same_uid_process_unreadable(tmp_path: Path, monkeypatch) -> None:
+    target = tmp_path / "qa-8686-exercises-r2"
+    target.mkdir()
+    proc_root = _fake_proc(tmp_path, 4010, cmdline=b"sleep\0")
+    real_read_bytes = Path.read_bytes
+
+    def flaky_read_bytes(self):
+        if self.name == "environ":
+            raise OSError(5, "input/output error")
+        return real_read_bytes(self)
+
+    monkeypatch.setattr(Path, "read_bytes", flaky_read_bytes)
+    assert tls.proc_references(target, proc_root=proc_root) is None
+
+    def opaque_read_bytes(self):
+        if self.name == "environ":
+            raise PermissionError(13, "permission denied")
+        return real_read_bytes(self)
+
+    monkeypatch.setattr(Path, "read_bytes", opaque_read_bytes)
+    assert tls.proc_references(target, proc_root=proc_root) is False
+
+
+def test_path_has_live_process_preserves_on_unknown_proc_verdict(tmp_path: Path, monkeypatch) -> None:
+    _quiet_pgrep(monkeypatch)
+    target = tmp_path / "review-unknown"
+    monkeypatch.setattr(tls, "proc_references", lambda _p: None)
+    assert tls.path_has_live_process(target) is tls._PROC_ROOT.is_dir()
+    monkeypatch.setattr(tls, "proc_references", lambda _p: True)
+    assert tls.path_has_live_process(target) is True
+    monkeypatch.setattr(tls, "proc_references", lambda _p: False)
+    assert tls.path_has_live_process(target) is False
+
+
+def test_legacy_exact_name_held_open_is_preserved(tmp_path: Path, monkeypatch) -> None:
+    _quiet_pgrep(monkeypatch)
+    target = tmp_path / "atlas-8307-410k-r2.db"
+    _touch_old(target, age_s=10_000, as_file=True)
+    if not Path("/proc").is_dir():
+        pytest.skip("open-file probe needs /proc")
+    with target.open("rb") as handle:
+        holder = tls.subprocess.Popen(["sleep", "30"], stdin=handle, stdout=tls.subprocess.DEVNULL)
+    try:
+        report = tls.sweep_tmp_leaks(apply=True, tmp_roots=[tmp_path], now=time.time(), min_age_s=3600, min_free_gb=0.0)
+    finally:
+        holder.kill()
+        holder.wait()
+    assert report["roots_reaped"] == 0
+    assert report["skipped_live"] == 1
+    assert target.exists()

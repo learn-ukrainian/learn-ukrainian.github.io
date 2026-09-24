@@ -415,3 +415,107 @@ not match `sweep_review_temp_orphans` and will refill the disk within hours.
 The scheduled git-hygiene runner (`scheduled_worktree_cleanup.py`) invokes the same
 sweep after the review-temp reaper. Age gates: 2h normally, 30m when free space is
 under 15 GiB. Live process paths are skipped.
+
+### Atlas/QA legacy residue (#8738)
+
+Only five exact names are ever auto-deleted by the sweep, once the age, ownership and
+liveness gates pass: the #8307 Atlas 410k outputs `atlas-8307-410k-final.db`,
+`atlas-8307-410k-r2.db`, `atlas-8307-synthetic-410k.json`, and the #8686 QA scratch
+directories `qa-8686-ui-r2`, `qa-8686-exercises-r2`. Every other `atlas-<n>-*` /
+`qa-<n>-*` entry is **inventoried** (`inventory_only` count and list in the report)
+but never deleted without fresh ownership proof. Names containing `promotion`, and
+any `decision*.yaml`/`.yml`, are protected: never deleted, never listed as residue.
+
+Liveness is no longer `pgrep -f` alone. The sweep also walks `/proc` and treats a
+path as in use when any process has it (or a descendant) as its working directory,
+holds it open, or carries it in its environment or command line. An unreadable
+same-uid process preserves the path (unknown is live). Two accepted limits: other
+users' processes only expose their command line, and non-dumpable same-uid
+credential daemons (`systemd --user`, `(sd-pam)`, `ssh-agent`, `sshd-session`) are
+probed by command line only.
+
+The managed `task-scratch` namespace, every scratch root (`/var/tmp/lu`, the
+`<tmp>/lu-scratch` fallback, `$LU_RUNTIME_TMP_BASE_ROOT`) and their ancestors are
+excluded from the scan even when a basename matches a pattern.
+
+## Task-owned scratch for large ad-hoc runs (#8738)
+
+Large one-off outputs (synthetic Atlas DBs, runtime-shard exports, delegated QA
+scratch) must not be written to hand-named `/tmp` paths: nothing ties such files to
+the process that made them, so the sweep can neither prove them abandoned nor drain
+them. Run the producer through the wrapper instead:
+
+```bash
+.venv/bin/python scripts/tools/task_scratch.py run --task-id atlas-8307-410k \
+    --evidence-dir batch_state/tmp/atlas-8307-410k-evidence -- \
+    bash -euc '
+      .venv/bin/python -m scripts.benchmarks.generate_synthetic_atlas \
+          --source-db data/atlas.db --out "$LU_TASK_SCRATCH_DIR/atlas.db" \
+          --seed 8307 --target 410000
+      .venv/bin/python -m scripts.atlas.export_runtime_shards \
+          --db "$LU_TASK_SCRATCH_DIR/atlas.db" \
+          --out-dir "$LU_TASK_SCRATCH_DIR/export" --verify
+      mkdir -p "$LU_TASK_SCRATCH_DIR/evidence"
+      cp "$LU_TASK_SCRATCH_DIR/export/atlas/current.json" "$LU_TASK_SCRATCH_DIR/evidence/"
+    '
+```
+
+What the wrapper guarantees:
+
+- one unique directory per invocation under `<scratch root>/task-scratch/` (owner-only
+  `0700`); the task id is lease metadata, not a deterministic path, so two concurrent
+  runs of the same task never collide;
+- `TMPDIR`, `TMP`, `TEMP` and `$LU_TASK_SCRATCH_DIR` all point at the payload
+  directory. The `bash -euc '...'` form above is the documented way to chain the two
+  Atlas steps in one run; the child shell expands `$LU_TASK_SCRATCH_DIR`, so keep the
+  script single-quoted;
+- the child starts in its own session behind a launch gate: the wrapper records the
+  child's pid, process group and `/proc` start time in `lease.json` *before* the
+  payload may run. A wrapper killed before that release leaves a child that exits
+  without running anything;
+- SIGINT/SIGTERM/SIGHUP are forwarded to the process group; the wrapper waits for the
+  group, escalates to SIGKILL after `--kill-after-s` (30 s), and cleans. Normal exit
+  and nonzero exit clean too, preserving the child's status (`128 + signal` when
+  signal-killed). Grandchildren that outlive the leader get `--group-grace-s` (15 s),
+  then TERM/KILL. Detached services do not belong here: give them a durable path;
+- **the scratch disappears after a successful run.** Copy the small summary you need
+  into `$LU_TASK_SCRATCH_DIR/evidence/` and pass `--evidence-dir` (16 MiB cap);
+  `--keep` / `--keep-on-failure` leave the lease for the scheduled recovery instead.
+
+Both Atlas producers already route every output under their `--out` / `--out-dir`
+arguments (the exporter only reads `--deck-dir`), so no hard-coded destination stands
+in the way. Existing scripts that hard-code `/tmp/...` paths bypass the wrapper
+entirely; migrate each producer by pointing its output flags at
+`$LU_TASK_SCRATCH_DIR`. The wrapper does not claim to capture writes it was not given.
+
+### Recovery of interrupted runs
+
+```bash
+# inventory: every lease with the guard that preserves it (mutation-free)
+.venv/bin/python scripts/tools/task_scratch.py recover
+
+# reclaim proven orphans (what the scheduled runner does)
+.venv/bin/python scripts/tools/task_scratch.py recover --apply
+```
+
+`scheduled_worktree_cleanup.py` runs the same recovery after the `/tmp` leak sweep.
+A lease is reclaimed only when **all** of the following hold:
+
+1. the entry is a plain directory owned by the current uid on the namespace's device,
+   with a regular (non-symlink) `lease.json` of the current schema whose device/inode
+   match the directory and whose uid is ours;
+2. the lease lock is free (an owning wrapper holds it for its whole lifetime);
+3. the recorded owner is provably dead: pid absent, pid present with a different
+   start time (reuse), or a different kernel boot id;
+4. the recorded child group is provably dead: leader absent or start-time mismatch
+   **and** no process left in the recorded group. Any surviving member, a reused
+   numeric group id, or an unreadable `/proc` preserves;
+5. the newest modification anywhere in the lease is at least 2 h old, or 30 min when
+   the scratch volume has under 15 GiB free. Pressure shortens the age gate only.
+
+Recovery never signals a process. Deletion is fd-relative with `O_NOFOLLOW`, refuses to
+cross a mount point (device change or `/proc/self/mountinfo` entry below the lease),
+and re-checks the directory identity right before it starts. Symlinks inside a lease
+are unlinked, never followed. Anything malformed, foreign, symlinked, in use or unknown
+stays and is counted under `preserved_by_reason` in the receipt; receipts carry
+counts and bytes only, never paths.
