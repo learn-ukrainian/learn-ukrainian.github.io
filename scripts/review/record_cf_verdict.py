@@ -24,6 +24,7 @@ from scripts.orchestration.integration_sweep import (
     SweepError,
     parse_marker,
 )
+from scripts.orchestration.worktree_claims import ARCHIVE_DIR_NAME
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
     UNRESOLVED_AUTHOR_FAMILIES,
@@ -103,6 +104,9 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
             if not TASK_ID.fullmatch(model):
                 raise RecordError("author model unknown")
             task_file = task_root / f"{model}.json"
+            if not task_file.exists():
+                # An old author task may have been archived (#8625).
+                task_file = task_root / ARCHIVE_DIR_NAME / f"{model}.json"
             if not task_file.resolve().is_relative_to(task_root.resolve()):
                 raise RecordError("author task provenance unavailable")
             if task_file.exists():

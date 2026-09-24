@@ -771,6 +771,20 @@ opt-in for hermetic tests; launchers should enable the env.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
+**Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
+`batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
+
+- `settle-stale` settles `needs_finalize` records older than 7 days whose worktree, local
+  branch and remote branch are all gone. They become `done` (the branch's PR merged),
+  `no_deliverable` or `failed`, with a `settled_by` receipt. It only reports class A/B/D
+  records, meaning a branch or dirty worktree still exists; it never changes them.
+- `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`
+  sidecars, into `batch_state/tasks/archive/`.
+- `restore` moves an archived record back.
+
+`delegate.py status`/`wait`, the task-id reuse guard, and `GET /api/delegate/tasks/{id}` all
+fall back to the archive, as does CF-verdict author provenance. The claim scan never reads it.
+
 #### Project Research Registry — orchestrator dispatch duty
 
 Before every dispatch, the orchestrator classifies the task by functional role,

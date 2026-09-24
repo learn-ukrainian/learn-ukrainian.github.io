@@ -14,6 +14,8 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
+from scripts.orchestration.worktree_claims import ARCHIVE_DIR_NAME as TASK_ARCHIVE_DIR_NAME
+
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .monitor_context import production_context as production_context  # re-export: test monkeypatches
 
@@ -58,8 +60,12 @@ def _tasks_root(ctx: MonitorContext | None = None) -> str:
     return os.path.realpath(str(_tasks_dir(ctx)))
 
 
-def _task_state_path(task_id: str, ctx: MonitorContext | None = None) -> str:
+def _task_state_path(task_id: str, ctx: MonitorContext | None = None, *, archived: bool = False) -> str:
     """Resolve ``task_id`` to a state JSON path under the context tasks dir.
+
+    ``archived`` resolves the ``archive/`` copy that
+    ``scripts/orchestration/stale_task_records.py archive`` moves old terminal
+    records into (#8625).
 
     Slash/backslash sanitization alone is not enough. Callers that ``open``
     must re-check ``startswith(root + os.sep)`` in the *same* function as the
@@ -68,7 +74,8 @@ def _task_state_path(task_id: str, ctx: MonitorContext | None = None) -> str:
     """
     safe = task_id.replace("/", "_").replace("\\", "_")
     root = _tasks_root(ctx)
-    fullpath = os.path.realpath(os.path.join(root, f"{safe}.json"))
+    name = os.path.join(TASK_ARCHIVE_DIR_NAME, f"{safe}.json") if archived else f"{safe}.json"
+    fullpath = os.path.realpath(os.path.join(root, name))
     if not fullpath.startswith(root + os.sep):
         fullpath = os.path.join(root, "__rejected__.json")
     return fullpath
@@ -310,6 +317,25 @@ def _save_task_cache_entries(
         pass
 
 
+def _delete_task_cache_entries(
+    tasks_dir_str: str,
+    paths: list[str],
+    ctx: MonitorContext | None = None,
+) -> None:
+    db_path = _task_cache_db_path(tasks_dir_str)
+    if not db_path.exists():
+        return
+    try:
+        conn = _init_task_cache_db(db_path, ctx)
+        if conn is None:
+            return
+        conn.executemany("DELETE FROM task_cache WHERE path = ?", [(path,) for path in paths])
+        conn.commit()
+        conn.close()
+    except (OSError, sqlite3.Error):
+        pass
+
+
 def _delegate_task_rows(
     statuses: set[str] | None = None,
     *,
@@ -351,10 +377,12 @@ def _delegate_task_rows(
         return rows
 
     dirty_records: list[tuple] = []
+    seen_paths: set[str] = set()
 
     for entry in entries:
         if not entry.name.endswith(".json"):
             continue
+        seen_paths.add(entry.path)
 
         try:
             mtime = entry.stat().st_mtime
@@ -459,6 +487,13 @@ def _delegate_task_rows(
 
     if dirty_records:
         _save_task_cache_entries(tasks_dir_str, dirty_records, resolved)
+    # Records archived (#8625) or removed since the last scan leave the cache too,
+    # so the in-memory and SQLite caches shrink with the hot directory.
+    vanished = [path for path in _TASK_STATE_CACHE if path not in seen_paths]
+    if vanished:
+        for path in vanished:
+            del _TASK_STATE_CACHE[path]
+        _delete_task_cache_entries(tasks_dir_str, vanished, resolved)
 
     rows.sort(
         key=lambda item: _parse_iso_datetime(item.get("started_at"))
@@ -500,6 +535,10 @@ def get_delegate_task_detail(
 ) -> tuple[dict[str, Any] | None, dict[str, Any] | None, bool]:
     path = _task_state_path(task_id, ctx)
     task = _read_task_state(path, ctx)
+    archived = False
+    if task is None:
+        task = _read_task_state(_task_state_path(task_id, ctx, archived=True), ctx)
+        archived = task is not None
     if task is None:
         return None, None, False
 
@@ -513,6 +552,12 @@ def get_delegate_task_detail(
         result_file = task.get("result_file")
         if result_file:
             result_text = _read_result_file(str(result_file), ctx)
+            if result_text is None and archived:
+                # The record keeps the hot-directory path; the sidecar moved with it.
+                archived_result = os.path.join(
+                    _tasks_root(ctx), TASK_ARCHIVE_DIR_NAME, os.path.basename(str(result_file))
+                )
+                result_text = _read_result_file(archived_result, ctx)
             if result_text is not None and len(result_text.encode("utf-8")) > RESULT_BYTES_LIMIT:
                 while len(result_text.encode("utf-8")) > RESULT_BYTES_LIMIT:
                     result_text = result_text[:-1]

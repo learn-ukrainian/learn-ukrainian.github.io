@@ -277,6 +277,18 @@ def test_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
 
 
+def test_archived_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
+    """#8625: an old author task moved into tasks/archive/ still proves its family."""
+    tasks = tmp_path / "tasks"
+    write_task(tasks / "archive", task_id="author-task", model="gpt-6-sol", agent="agy")
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: agy/author-task"}}],
+    )
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
+
+
 @pytest.mark.parametrize("trailer", ["codex/../../package", "kimi/../invalid"])
 def test_invalid_author_model_is_rejected_before_task_file_read(monkeypatch, tmp_path, trailer):
     tasks = tmp_path / "tasks"

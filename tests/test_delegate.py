@@ -1811,6 +1811,51 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     assert archived_result[0].name in captured.err
 
 
+def test_dispatch_refuses_task_id_held_by_an_archived_record(tmp_tasks_dir, capsys, monkeypatch):
+    """#8625: an archived terminal record still owns its task id."""
+    archived = delegate._archived_state_path("archived-task")
+    delegate._write_state_atomic(archived, {"task_id": "archived-task", "status": "done"})
+    monkeypatch.setattr(
+        delegate.subprocess,
+        "Popen",
+        lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("must not spawn")),
+    )
+
+    rc = delegate.cmd_dispatch(_minimal_dispatch_args("archived-task"))
+
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "already done (archived)" in captured.err
+    assert "--force-new" in captured.err
+    assert not delegate._state_path("archived-task").exists()
+
+
+def test_dispatch_force_new_over_archived_record_leaves_archive_alone(tmp_tasks_dir):
+    archived = delegate._archived_state_path("archived-task")
+    delegate._write_state_atomic(archived, {"task_id": "archived-task", "status": "done", "keep": True})
+
+    with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
+        rc = delegate.cmd_dispatch(_minimal_dispatch_args("archived-task", force_new=True))
+
+    assert rc == 0
+    assert delegate._read_state(archived)["keep"] is True
+    assert delegate._read_state(delegate._state_path("archived-task"))["status"] == "spawning"
+
+
+def test_status_and_wait_fall_back_to_archived_record(tmp_tasks_dir, capsys):
+    """#8625: status/wait still answer for a task whose record was archived."""
+    import argparse
+
+    record = {"task_id": "old-task", "agent": "codex", "status": "done", "started_at": "2026-08-01T00:00:00+00:00"}
+    delegate._write_state_atomic(delegate._archived_state_path("old-task"), record)
+
+    assert delegate.cmd_status(argparse.Namespace(task_id="old-task")) == 0
+    assert json.loads(capsys.readouterr().out)["status"] == "done"
+    assert delegate.cmd_wait(argparse.Namespace(task_id="old-task", timeout=0, poll_interval=0.1)) == 0
+    assert json.loads(capsys.readouterr().out)["status"] == "done"
+    assert not delegate._state_path("old-task").exists()
+
+
 def test_dispatch_parser_accepts_force_new_flag():
     args = delegate.build_parser().parse_args(
         [

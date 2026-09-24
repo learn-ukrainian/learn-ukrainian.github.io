@@ -353,6 +353,15 @@ def _result_path(task_id: str) -> Path:
     return _state_path(task_id).with_suffix(".result")
 
 
+def _archived_state_path(task_id: str) -> Path:
+    """Where ``stale_task_records archive`` moved an old terminal record (#8625).
+
+    Only terminal records are archived. By-id readers (status, wait, task-id
+    reuse) fall back to this path; the worktree claim scan never needs it.
+    """
+    return worktree_claims.archived_task_record_path(_TASKS_DIR, task_id)
+
+
 def _generate_run_nonce() -> str:
     """Generate a unique run identifier to disambiguate dispatches (#7168)."""
     return uuid.uuid4().hex[:16]
@@ -6881,9 +6890,17 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
     existing = _read_state(state_path)
     record_exists = state_path.exists()
     result_exists = _result_path(task_id).exists()
-    if record_exists or result_exists:
+    # An archived record still owns its task id (#8625): reuse needs --force-new,
+    # which leaves the archived record where it is.
+    archived_path = _archived_state_path(task_id)
+    archived_exists = archived_path.is_file()
+    if record_exists or result_exists or archived_exists:
         if not bool(getattr(args, "force_new", False)):
-            status = _existing_task_status(state_path, existing)
+            if record_exists or result_exists:
+                status = _existing_task_status(state_path, existing)
+            else:
+                existing = _read_state(archived_path)
+                status = f"{_existing_task_status(archived_path, existing)} (archived)"
             pid = existing.get("pid") if existing else None
             pid_part = f" (pid={pid})" if pid not in (None, "") else ""
             print(
@@ -7930,6 +7947,9 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
 def cmd_status(args: argparse.Namespace) -> int:
     state_path = _state_path(args.task_id)
     state = _read_state(state_path)
+    if state is None and _archived_state_path(args.task_id).is_file():
+        state_path = _archived_state_path(args.task_id)
+        state = _read_state(state_path)
     if state is None:
         print(
             json.dumps({"error": f"no state file for task {args.task_id!r}"}),
@@ -8711,6 +8731,8 @@ def cmd_wait(args: argparse.Namespace) -> int:
 
     while True:
         state = _read_state(state_path)
+        if state is None:
+            state = _read_state(_archived_state_path(args.task_id))
         if state is None:
             if expected_nonce is not None and (deadline is None or time.monotonic() < deadline):
                 time.sleep(poll_interval)

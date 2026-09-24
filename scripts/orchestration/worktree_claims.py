@@ -39,6 +39,9 @@ from scripts.path_safety import assert_delete_target
 # Lock files live in ``<git common dir>/<LOCK_DIR_NAME>`` so every checkout of
 # the repository contends on the same file.
 LOCK_DIR_NAME = "lu-worktree-locks"
+# Old terminal task records move to ``<tasks dir>/<ARCHIVE_DIR_NAME>/``
+# (scripts/orchestration/stale_task_records.py, #8625).
+ARCHIVE_DIR_NAME = "archive"
 DEFAULT_LOCK_TIMEOUT_S = 30.0
 _LOCK_POLL_S = 0.05
 # (lock key, thread ident) pairs this process holds; see worktree_lock.
@@ -342,6 +345,23 @@ def task_record_path(tasks_dir: Path, task_id: str) -> Path:
     """Return the task record path dispatch writes for ``task_id``."""
     safe = task_id.replace("/", "_").replace("\\", "_")
     return tasks_dir / f"{safe}.json"
+
+
+def archived_task_record_path(tasks_dir: Path, task_id: str) -> Path:
+    """Return where ``stale_task_records archive`` keeps ``task_id``'s record (#8625).
+
+    Only terminal records are archived, so the claim scan never reads this
+    directory; by-id readers fall back to it.
+    """
+    return task_record_path(tasks_dir / ARCHIVE_DIR_NAME, task_id)
+
+
+def locate_task_record(tasks_dir: Path, task_id: str) -> Path | None:
+    """Return ``task_id``'s record in the hot directory, else in the archive, else ``None``."""
+    for path in (task_record_path(tasks_dir, task_id), archived_task_record_path(tasks_dir, task_id)):
+        if path.is_file():
+            return path
+    return None
 
 
 def checked_out_branch(worktree: Path) -> str | None:
