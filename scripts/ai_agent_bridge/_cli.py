@@ -1544,6 +1544,40 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
     return branch, str(head_sha)
 
 
+def _head_sha_binding_instruction(sha: str) -> str:
+    """Tell the reviewer to stop unless the worktree HEAD is this SHA."""
+    return (
+        f"First run `git rev-parse HEAD`. If it differs from {sha}, "
+        "say so in the first line of the reply and stop without a verdict."
+    )
+
+
+def _review_target_content(target_desc: str, content: str, *, sha: str | None) -> str:
+    """Fold the review target into the prompt, binding a known SHA."""
+    binding = f"\n{_head_sha_binding_instruction(sha)}" if sha else ""
+    return f"Cross-family review target: {target_desc}.{binding}\n\n{content}"
+
+
+_MISSING_ORIGIN_BRANCH_MARKERS = (
+    "couldn't find remote ref",
+    "was not found after fetch",
+)
+
+
+def _missing_origin_branch_message(exc: BaseException, *, branch: str | None, pr_number: int | None) -> str | None:
+    """Name a deleted or merged head when delegate cannot fetch it from origin."""
+    text = str(exc)
+    if not any(marker in text for marker in _MISSING_ORIGIN_BRANCH_MARKERS):
+        return None
+    name = branch or "unknown"
+    if pr_number is not None:
+        return (
+            f"ask --pr {pr_number}: head branch {name!r} no longer exists on origin "
+            "(merged or deleted)"
+        )
+    return f"ask --branch {name}: branch no longer exists on origin (merged or deleted)"
+
+
 def _note_pr_head_movement(result: dict, *, pr_number: int, resolved_sha: str) -> None:
     """Say when the dispatch checkout is not the SHA ``gh`` just resolved."""
     recorded = result.get("worktree_base_sha")
@@ -1603,7 +1637,7 @@ def _handle_acp_compat(args, target: str) -> None:
             )
         else:
             target_desc = f"remote branch origin/{branch}"
-        content = f"Cross-family review target: {target_desc}.\n\n{content}"
+        content = _review_target_content(target_desc, content, sha=resolved_head_sha)
         review = True
 
     if review:
@@ -1728,7 +1762,8 @@ def _dispatch_headless_review(
             branch=branch,
         )
     except RuntimeError as exc:
-        raise SystemExit(str(exc)) from exc
+        missing = _missing_origin_branch_message(exc, branch=branch, pr_number=pr_number)
+        raise SystemExit(missing or str(exc)) from exc
 
     if resolved_head_sha is not None and pr_number is not None:
         _note_pr_head_movement(result, pr_number=pr_number, resolved_sha=resolved_head_sha)

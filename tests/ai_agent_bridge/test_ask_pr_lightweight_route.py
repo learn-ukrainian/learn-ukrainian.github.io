@@ -111,6 +111,9 @@ def test_ask_pr_routes_to_headless_dispatch_not_acp(
     assert "PR #7010" in captured_dispatch["content"]
     assert "gh pr diff 7010" in captured_dispatch["content"]
     assert f"exact head {_HEAD_SHA}" in captured_dispatch["content"]
+    assert "git rev-parse HEAD" in captured_dispatch["content"]
+    assert f"If it differs from {_HEAD_SHA}" in captured_dispatch["content"]
+    assert "stop without a verdict" in captured_dispatch["content"]
     assert captured_dispatch["branch"] == _HEAD_BRANCH
 
 
@@ -274,6 +277,7 @@ def test_ask_branch_does_not_consult_gh(
     assert captured_dispatch["branch"] == "feat-x"
     assert "origin/feat-x" in captured_dispatch["content"]
     assert "exact head" not in str(captured_dispatch["content"])
+    assert "git rev-parse HEAD" not in str(captured_dispatch["content"])
 
 
 def test_ask_pr_reports_when_dispatch_base_sha_moved(
@@ -303,3 +307,36 @@ def test_ask_pr_reports_when_dispatch_base_sha_moved(
     err = capsys.readouterr().err
     assert f"resolved {_HEAD_SHA}" in err
     assert f"dispatch record base {_MOVED_SHA}" in err
+
+
+def test_branch_prompt_binds_sha_only_when_known() -> None:
+    bound = _cli._review_target_content("remote branch origin/feat-x", "body", sha=_HEAD_SHA)
+    unbound = _cli._review_target_content("remote branch origin/feat-x", "body", sha=None)
+
+    assert f"differs from {_HEAD_SHA}" in bound
+    assert "git rev-parse HEAD" in bound
+    assert "git rev-parse HEAD" not in unbound
+
+
+def test_ask_pr_names_deleted_origin_branch(
+    same_repo_pr_gh: None,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def missing_branch(*_args, **_kwargs):
+        raise RuntimeError(
+            "delegate.py dispatch failed rc=1: "
+            "could not fetch existing branch 'cursor/impl-8706': "
+            "fatal: couldn't find remote ref refs/heads/cursor/impl-8706"
+        )
+
+    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", missing_branch)
+    args = _cli._build_parser().parse_args(
+        ["ask-claude", "review this change", "--task-id", "review-gone", "--pr", "8706", "--from", "test"]
+    )
+
+    with pytest.raises(SystemExit, match="no longer exists on origin") as exc_info:
+        _cli._handle_ask_claude(args)
+
+    message = str(exc_info.value)
+    assert _HEAD_BRANCH in message
+    assert "merged or deleted" in message
