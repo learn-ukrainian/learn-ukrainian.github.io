@@ -880,6 +880,20 @@ def test_source_denominator_reconciliation(grammar_data):
     assert recon["delivered_clean_controls_train"] == 330
     assert recon["delivered_clean_controls_eval"] == 50
     assert recon["delivered_total_records"] == 1377
+    assert recon["candidate_edit_sets_excluded_total"] == 4255
+    assert sum(recon["exclusions_by_policy"].values()) == 4255
+    assert recon["candidate_edit_sets_excluded_total"] + recon["delivered_substantive_corrections"] == 5252
+    assert recon["reserve_candidate_count"] == 0
+    assert "reserve_disposition" in recon
+
+    accounting_path = GRAMMAR_DIR / "candidate_exclusion_accounting.json"
+    assert accounting_path.is_file(), f"Missing candidate_exclusion_accounting.json at {accounting_path}"
+    accounting_data = json.loads(accounting_path.read_text(encoding="utf-8"))
+    assert accounting_data["total_candidate_annotator_edit_sets"] == 5252
+    assert accounting_data["delivered_substantive_corrections"] == 997
+    assert accounting_data["total_excluded_candidate_edit_sets"] == 4255
+    assert sum(accounting_data["measured_exclusions_total"].values()) == 4255
+    assert accounting_data["reserve_candidate_count"] == 0
 
     readme_path = GRAMMAR_DIR / "README.md"
     assert readme_path.is_file(), f"Missing README.md at {readme_path}"

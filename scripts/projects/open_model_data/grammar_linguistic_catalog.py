@@ -695,10 +695,13 @@ def clean_sentence_for_query(sentence: str) -> str:
     if "«" in s or "»" in s:
         s = s.replace("«", "“").replace("»", "”")
 
-    # Strip single trailing period, preserving ?, !, and ellipsis (... or …)
-    s = re.sub(r"(?<!\.)\.$", "", s)
-    s = re.sub(r"(?<!\.)\.(?=[”\"]+$)", "", s)
-    s = re.sub(r"[”\"]\s*(?<!\.)\.$", "”", s)
+    # Strip trailing periods unless it is an exact 3-dot ellipsis (...), preserving ?, !, and …
+    if not re.search(r"(?<!\.)\.{3}$", s):
+        s = re.sub(r"\.+$", "", s)
+    if not re.search(r"(?<!\.)\.{3}(?=[”\"]+$)", s):
+        s = re.sub(r"\.+(?=[”\"]+$)", "", s)
+    if not re.search(r"[”\"]\s*(?<!\.)\.{3}$", s):
+        s = re.sub(r"[”\"]\s*\.+$", "”", s)
     return s.strip()
 
 
@@ -706,9 +709,9 @@ def format_query_template(template: str, sentence: str) -> str:
     """Format a query template with a cleaned sentence and resolve any adjacent punctuation collisions."""
     clean_s = clean_sentence_for_query(sentence)
     formatted = template.format(sentence=clean_s)
-    # Deduplicate punctuation across/after quotes (e.g. «...?»? -> «...?», «...!». -> «...!», etc.)
-    formatted = re.sub(r"([?!…][»”\"']+)\s*[?!.]", r"\1", formatted)
-    formatted = re.sub(r"\.\s*([»”\"']+)\s*\.", r"\1.", formatted)
+    # Deduplicate punctuation across/after quotes (e.g. «...?»? -> «...?», «...!». -> «...!», «...».)
+    formatted = re.sub(r"(\.{3}|[?!…]+)([»”\"']+)\s*[?!.]+", r"\1\2", formatted)
+    formatted = re.sub(r"(?<!\.)\.\s*([»”\"']+)\s*\.", r"\1.", formatted)
     formatted = re.sub(r"\?\s*\.", "?", formatted)
     formatted = re.sub(r"!\s*\.", "!", formatted)
     return formatted

@@ -2,8 +2,8 @@
 
 **Dataset Component:** `grammar_v1`
 **Governing Issue:** [#8342](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8342)
-**Governing Specification:** [`docs/projects/open-model-data/GRAMMAR_DATASET_SPEC_8342.md`](../../../docs/projects/open-model-data/GRAMMAR_DATASET_SPEC_8342.md) § 2.5
-**Acceptance Profile:** [`scripts/projects/open_model_data/profiles/grammar_8342.yaml`](../../../scripts/projects/open_model_data/profiles/grammar_8342.yaml)
+**Governing Specification:** [`docs/projects/open-model-data/GRAMMAR_DATASET_SPEC_8342.md`](../../../../../docs/projects/open-model-data/GRAMMAR_DATASET_SPEC_8342.md) § 2.5
+**Acceptance Profile:** [`scripts/projects/open_model_data/profiles/grammar_8342.yaml`](../../../../../scripts/projects/open_model_data/profiles/grammar_8342.yaml)
 
 ---
 
@@ -11,12 +11,12 @@
 
 The negative control instances in `grammar_v1` (protective authentic clean controls) incorporate verified literary and journalistic sentences extracted from the **Brown-UK** corpus:
 
-- **Work:** Brown-UK (БрУК) — Корпус сучасної української мови на засадах Браунівського корпусу / Великий електронний корпус української мови (ВЕКРА)
-- **Creators / Maintainers:** Марія Шведова, Андрій Рисін, Василь Старко та співавтори корпусного проєкту
+- **Work:** Браунський корпус української мови (БрУК) / Brown-UK Corpus of Contemporary Ukrainian
+- **Creators / Maintainers:** Василь Старко (Vasyl Starko), Андрій Рисін (Andriy Rysin) та дописувачі корпусного проєкту Brown-UK
 - **Source Repository:** [brown-uk/corpus](https://github.com/brown-uk/corpus)
-- **Release Reference:** Brown-UK Corpus of Contemporary Ukrainian (Good-rating subcorpus)
+- **Release Reference:** Brown-UK Corpus of Contemporary Ukrainian (Good-rating subcorpus / `data/good/`)
 - **License:** [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-- **License Notice:** © 2017–2026 Brown-UK Project contributors. Licensed under CC BY-NC-SA 4.0.
+- **License Notice:** © 2017–2026 Brown-UK Project contributors (Vasyl Starko, Andriy Rysin, et al.). Licensed under CC BY-NC-SA 4.0.
 
 ---
 

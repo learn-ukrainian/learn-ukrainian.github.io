@@ -27,31 +27,51 @@ Issue #8342 cited approximately ~8,900 human corrections across the UA-GEC datab
 - **Total in-scope train candidate annotator edit sets:** 5,252 candidate edit sets.
 
 ### 2. Systematic Exclusions & Quality Gates (per SPEC §2.2 & §3)
-To ensure zero training corruption, zero benchmark leakage, and high grammatical density, all 5,252 candidate edit sets were subjected to strict, fail-closed filtering:
+To ensure zero training corruption, zero benchmark leakage, and high grammatical density, all 5,252 candidate edit sets (4,802 in train-partition documents, 450 in eval-partition documents) were subjected to strict, fail-closed filtering. Full itemized accounting per candidate is recorded in [`candidate_exclusion_accounting.json`](./candidate_exclusion_accounting.json):
+
 1. **Document-Level 90:10 Partition Holdout:**
    - 10% of documents (partitioned by SHA-256 hash of `doc_id`) are held out for the evaluation split (`grammar_eval_shard_01_of_02.jsonl`, `grammar_eval_shard_02_of_02.jsonl`), preserving document isolation with zero cross-split leakage.
 2. **Official Held-Out Test Firewall:**
-   - Strict firewall matching against `gec-fluency.test.m2` (0 doc overlap, 0 exact text overlap, and 0 near-duplicate sentences with Jaccard $\ge 0.80$; **13** candidate matches excluded).
-3. **Syntactic & Structural Integrity Filters:**
-   - Structural and syntactic quality filters (complex run-ons, dropped copula/subjects): **2,563** candidates excluded.
-   - Uncapitalized sentence fragments: **508** candidates excluded.
+   - Strict firewall matching against `gec-fluency.test.m2` (0 doc overlap, 0 exact text overlap, and 0 near-duplicate sentences with Jaccard $\ge 0.80$; **13** candidate matches excluded: 10 quarantined targets, 3 quarantined sources).
+3. **Cross-Split Eval Partition Isolation:**
+   - Sentences appearing in the evaluation partition are strictly quarantined from the training partition: **10** candidate matches excluded (9 sources, 1 target).
+4. **Syntactic, Semantic & Valency Quality Filters:**
+   - Curated syntactic, semantic, and verb valency filters: **2,304** candidates excluded.
    - Sentence length floor (< 5 words): **287** candidates excluded.
-   - Missing or malformed terminal punctuation: **193** candidates excluded.
-   - Unbalanced quotation marks: **30** candidates excluded.
-4. **Orthographic & Typographic Standard Filters:**
-   - Non-Cyrillic characters, Latin scripts, URLs, emojis, and unprintable symbols: **236** candidates excluded.
-   - Straight ASCII quotation marks (`"` instead of standard Ukrainian `«...»`): **79** candidates excluded.
+   - Sentence-splitting edits: **30** candidates excluded.
+   - Run-on sentences / dropped periods: **4** candidates excluded.
+   - Comma between subject and reporting verb: **3** candidates excluded.
+   - Capitalization after comma-dash: **2** candidates excluded.
+   - Truncated sentence ending in preposition: **1** candidate excluded.
+5. **Orthographic & Typographic Standard Filters:**
+   - Uncapitalized sentence fragments: **501** candidates excluded.
+   - Non-Cyrillic characters, Latin scripts, and control characters: **224** candidates excluded.
+   - Missing or invalid terminal punctuation: **192** candidates excluded.
+   - Stray floating quotation marks: **118** candidates excluded.
+   - Straight ASCII quotation marks (`"` instead of standard Ukrainian `«...»`): **66** candidates excluded.
+   - Unbalanced quotation marks: **29** candidates excluded.
    - Mathematical symbols and special characters: **22** candidates excluded.
-   - Bracket editorial artifacts: **16** candidates excluded.
-5. **Pedagogical Grounding & Scope Filters:**
-   - Pure word insertions (`start == end`): **217** candidates excluded. Pure insertions lack an authentic corrupted grammatical surface form in the source text and risk teaching ungrounded generative insertion rather than grammatical correction.
-   - Polarity flips (adding or dropping negation particle *не*): **70** candidates excluded to preserve source semantics.
-6. **Cross-Document Pair Deduplication:**
-   - Duplicate `(original_text, corrected_text)` pairs across multiple annotators or documents were deduplicated: **21** candidates excluded.
-7. **Funnel Summary:**
-   - Total exclusions: **4,255** candidate edit sets excluded.
+   - Bracket editorial artifacts: **15** candidates excluded.
+   - Malformed quote spacing: **13** candidates excluded.
+   - Colloquial Russian suffix *-то*: **13** candidates excluded.
+   - Unbalanced parentheses: **13** candidates excluded.
+   - Emojis: **6** candidates excluded.
+   - Mixed dashes: **6** candidates excluded.
+   - Triple repeated letters: **4** candidates excluded.
+   - URLs in sentence: **3** candidates excluded.
+   - Spaced dash in initials: **2** candidates excluded.
+6. **Pedagogical Grounding, Safety & Semantic Fidelity:**
+   - Pure word insertions (`start == end`): **215** candidates excluded. Pure insertions lack an authentic corrupted grammatical surface form in the source text and risk teaching ungrounded generative insertion rather than grammatical correction.
+   - Polarity flips (adding or dropping negation particle *не*): **64** candidates excluded to preserve source semantics.
+   - Missing punctuation before direct speech quote: **46** candidates excluded.
+   - Safety filters (violent / morbid / vulgar content): **34** candidates excluded.
+7. **Cross-Document Pair Deduplication:**
+   - Duplicate `(original_text, corrected_text)` pairs across multiple annotators or documents were deduplicated: **15** candidates excluded.
+8. **Funnel Summary & Zero Reserve:**
+   - Total exclusions: **4,255** candidate edit sets excluded (3,891 train, 364 eval).
    - Retained candidate edit sets in pipeline: **997** (911 train candidates + 86 eval candidates).
    - Delivered in final balanced component: **997** substantive corrections (911 train, 86 eval) — 100% of retained candidate edit sets delivered, with zero withheld and zero in reserve.
+   - *Reserve disposition:* The earlier reported figure of 1,096 retained / 99 in reserve was an unmeasured legacy placeholder prior to completing the structural, safety, and orthographic filter suite. Every single candidate is now tracked and measured in `candidate_exclusion_accounting.json`.
 
 ### 3. Delivered Dataset Composition
 - **Substantive Corrections:** **997 records** (911 train across 8 shards, 86 eval across 2 shards).
