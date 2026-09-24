@@ -243,6 +243,10 @@ def test_explanation_relevance_and_target_cleanliness(grammar_data):
     for r in grammar_data["all"]:
         # Verify full edits applied: concurrent errors like spelling 'еффективно' are cleanly corrected
         assert "еффективно" not in r["corrected_text"], f"Uncorrected spelling 'еффективно' in {r['record_id']}"
+        # Verify no empty quotes «» in final_response or reasoning_steps
+        assert "«»" not in r["final_response"], f"Empty quote in final_response of {r['record_id']}: {r['final_response']}"
+        for step in r.get("reasoning_steps", []):
+            assert "«»" not in step, f"Empty quote in reasoning_steps of {r['record_id']}: {step}"
 
         if r["is_erroneous"]:
             meta = r.get("source_metadata", {})

@@ -510,7 +510,7 @@ def resolve_specific_linguistic_citation(
     """
     err = (error_span or "").strip()
     corr = (replacement_span or "").strip()
-    if not err:
+    if not err or not corr:
         return None
     if err == corr:
         return None
@@ -1076,7 +1076,7 @@ def build_reasoning_and_response(
         )
 
         # Fail-closed explanation drop: if not explained or citation cannot be specifically verified
-        if not is_explained or citation is None:
+        if not is_explained or citation is None or not err or not corr:
             source_metadata = {
                 "authority": "Український правопис (2019)",
                 "error_type": primary_tag,
@@ -1118,6 +1118,10 @@ def build_reasoning_and_response(
             corr=corr,
             target=corrected_text,
         )
+
+        if "«»" in final_response or any("«»" in s for s in reasoning_steps):
+            source_metadata["linguistic_rule"] = ""
+            return [], corrected_text, source_metadata
 
         return reasoning_steps, final_response, source_metadata
 
@@ -1237,7 +1241,7 @@ def build_reasoning_and_response_eval(
             primary_tag, error_span, replacement_span, original_text, corrected_text
         )
 
-        if not is_explained or citation is None:
+        if not is_explained or citation is None or not err or not corr:
             source_metadata = {
                 "authority": "Український правопис (2019)",
                 "error_type": primary_tag,
@@ -1273,6 +1277,11 @@ def build_reasoning_and_response_eval(
             corr=corr,
             target=corrected_text,
         )
+
+        if "«»" in final_response or any("«»" in s for s in reasoning_steps):
+            source_metadata["linguistic_rule"] = ""
+            return [], corrected_text, source_metadata
+
         return reasoning_steps, final_response, source_metadata
 
     else:

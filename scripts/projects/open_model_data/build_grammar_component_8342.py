@@ -175,15 +175,7 @@ RUSSIANISM_PATTERNS = [
     r"\bпалаюч\w*\b",
     r"\bпадаюч\w*\b",
     r"\bдіюч\w*\b",
-    r"\bіснуюч\w*\b",
-    r"\bведуч\w*\b",
-    r"\bкеруюч\w*\b",
-    r"\bзнаюч\w*\b",
-    r"\bчитаюч\w*\b",
-    r"\bпрацююч\w*\b",
-    r"\bзвисаюч\w*\b",
-    r"\bпідстрибуюч\w*\b",
-    r"\bпроводжаюч\w*\b",
+    r"\b(?:існуюч|ведуч|керуюч|знаюч|читаюч|працююч|звисаюч|підстрибуюч|проводжаюч)(?:ий|а|е|і|ого|ому|им|их|ими|у|ою|ій)\b",
     r"\bпровожа\w*\b",
     r"\bрефлекту\w*\b",
     r"\bоперу\w*\s+з\b",
@@ -577,6 +569,16 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     # Single-н останній typos
     if re.search(r"\bостан[а-яіїєґ]", text, re.IGNORECASE) and not re.search(r"\bостанн", text, re.IGNORECASE):
+        return False
+    # Claude R20 control defects
+    # #115: частину предмету -> частину предмета (genitive 2nd declension)
+    if re.search(r"\bчастин\w*\s+предмету\b", text, re.IGNORECASE):
+        return False
+    # #72: проблему-бо -> проблему, бо
+    if re.search(r"\b[а-яіїєґ]+-бо\b", text, re.IGNORECASE) and not re.search(r"\b(?:ідіть|глянь|стривай|поглянь|де|чого|хто|що|як)-бо\b", text, re.IGNORECASE):
+        return False
+    # #273: ціль в житті -> мета в житті
+    if re.search(r"\bціль\s+[ву]\s+житті\b", text, re.IGNORECASE):
         return False
 
     # Reject 'їх' before nouns as possessive
@@ -2137,6 +2139,53 @@ def is_valid_candidate(
     if re.search(r"\bна\s+(?:[а-яіїєґ]+\s+)?фоні\b", c_low):
         return False
 
+    # 22. Claude R20 Blockers & Residual Defects
+    # #54: завідувач першого сектору (dropped "але" creating run-on)
+    if re.search(r"\bзавідувач\s+першого\s+сектор\w*\b", c_low):
+        return False
+    # #228: Truncated fragment ending in dangling preposition/conjunction, or missing predicate
+    if re.search(r"\b(?:[зсвуіійта]|до|на|від|по|під|над|для)\s*$", orig_text.strip()):
+        return False
+    if re.search(r"\bмаленькими\s+пальчиками\b", o_low):
+        return False
+    # #191: через деякий період -> за деякий період (false rule, "через" is normal for temporal elapse)
+    if re.search(r"\bчерез\s+деякий\s+період\b", o_low) or re.search(r"\bза\s+деякий\s+період\b", c_low):
+        return False
+    # #72: проблему-бо (residual typo without comma before conjunction "бо")
+    if re.search(r"\b[а-яіїєґ]+-бо\b", c_low) and not re.search(r"\b(?:ідіть|глянь|стривай|поглянь|де|чого|хто|що|як)-бо\b", c_low):
+        return False
+    if re.search(r"\bпроблем\w*-бо\b", c_low) or re.search(r"\bпроблем\w*-бо\b", o_low):
+        return False
+    # #273: ціль в житті -> мета в житті
+    if re.search(r"\bціль\s+[ву]\s+житті\b", c_low) or re.search(r"\bціль\s+[ву]\s+житті\b", o_low):
+        return False
+    # #18: перелетів по повітрю -> через повітря (unidiomatic, should be повітрям)
+    if re.search(r"\bпо\s+повітрю\b", o_low) or re.search(r"\bчерез\s+повітря\b", c_low):
+        return False
+
+    # 23. Claude R20 Minor & Meaning Shifts
+    # #27: місце млина
+    if re.search(r"\bмісце\s+млина\b", c_low):
+        return False
+    # #189: їдуть вони, пан лісом
+    if re.search(r"\bїдуть\s+вони,\s+пан\b", o_low):
+        return False
+    # #124: полягає у визначенні приналежності
+    if re.search(r"\bполягає\s+у\s+визначенні\s+приналежності\b", o_low):
+        return False
+    # #80: В той час, як -> Тоді як
+    if re.search(r"\bв\s+той\s+час,\s+як\b", o_low) and re.search(r"\bтоді\s+як\b", c_low):
+        return False
+    # #9: йшов -> ішов
+    if re.search(r"\bйшов\b", o_low) and re.search(r"\bішов\b", c_low):
+        return False
+    # #151: заспішила -> запоспішала
+    if re.search(r"\bзаспішил\w*\b", o_low) or re.search(r"\bзапоспішал\w*\b", c_low):
+        return False
+    # #250: так що ми могли б
+    if re.search(r"\bтак\s+що\s+ми\s+могли\s+б\b", c_low):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -2849,6 +2898,8 @@ def build_grammar_dataset(
         desc, rule = cit[1], cit[2]
         err_w = cand_item.get("err_span", "").strip()
         corr_w = cand_item.get("repl_span", "").strip()
+        if not err_w or not corr_w:
+            return False
         if err_w and f"«{err_w}»" not in desc and f"«{err_w}»" not in rule and err_w not in desc and err_w not in rule:
             return False
         return not bool(corr_w and f"«{corr_w}»" not in desc and f"«{corr_w}»" not in rule and corr_w not in desc and corr_w not in rule)
