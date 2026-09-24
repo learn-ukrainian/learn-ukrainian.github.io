@@ -643,6 +643,13 @@ _DERIVED_LIVE_TASK_PATHS = (
     (_REAL_TASKS_DIR.parent / "preflight_fast_fail.jsonl").resolve(),
     (_REAL_TASKS_DIR.parent / "lu-worktree-locks").resolve(),
 )
+_REAL_TASKS_DIR_STR = os.fspath(_REAL_TASKS_DIR)
+_REAL_TASKS_DIR_PREFIX = _REAL_TASKS_DIR_STR + os.sep
+_DERIVED_LIVE_TASK_STRS = tuple(os.fspath(path) for path in _DERIVED_LIVE_TASK_PATHS)
+_DERIVED_LIVE_TASK_PREFIXES = tuple(path + os.sep for path in _DERIVED_LIVE_TASK_STRS)
+# Directory realpaths already known not to be a symlink into the live store.
+# One realpath per directory, not one Path.resolve per written file.
+_TASK_STORE_OUTSIDE_PARENTS: set[str] = set()
 _TASK_STORE_WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
 _TASK_STORE_MUTATION_EVENTS = {
     "os.chmod": (0,),
@@ -661,6 +668,21 @@ _TASK_STORE_MUTATION_EVENTS = {
     "shutil.move": (0, 1),
     "shutil.rmtree": (0,),
 }
+# One membership test per audit event. Python calls every hook for every
+# event (``import``, ``compile``, ``exec``, ``os.listdir``, ``sys._getframe``,
+# …). The #8640 opsec hook lives in another module and is not installed for
+# this suite, so this hook stays separate and returns before any path work.
+_TASK_STORE_HANDLED_EVENTS = frozenset(("open", "sqlite3.connect", *_TASK_STORE_MUTATION_EVENTS))
+
+
+def _text_under_live_tasks(text: str) -> bool:
+    """True when ``text`` is already a normalized path inside the live store."""
+    if text == _REAL_TASKS_DIR_STR or text.startswith(_REAL_TASKS_DIR_PREFIX):
+        return True
+    for exact, prefix in zip(_DERIVED_LIVE_TASK_STRS, _DERIVED_LIVE_TASK_PREFIXES, strict=True):
+        if text == exact or text.startswith(prefix):
+            return True
+    return False
 
 
 def _path_under_real_tasks(path: object) -> bool:
@@ -668,12 +690,35 @@ def _path_under_real_tasks(path: object) -> bool:
     if isinstance(path, int) or path is None:
         return False
     try:
-        resolved = Path(os.fsdecode(path)).resolve()
-    except (TypeError, ValueError, OSError):
+        text = os.fsdecode(path)
+    except (TypeError, ValueError):
         return False
-    if resolved == _REAL_TASKS_DIR or _REAL_TASKS_DIR in resolved.parents:
+    if _text_under_live_tasks(text):
         return True
-    return any(resolved == derived or derived in resolved.parents for derived in _DERIVED_LIVE_TASK_PATHS)
+    norm = os.path.normpath(text)
+    if norm != text and _text_under_live_tasks(norm):
+        return True
+    if os.path.isabs(norm) and ".." not in norm:
+        parent = os.path.dirname(norm)
+        if parent not in _TASK_STORE_OUTSIDE_PARENTS:
+            try:
+                real_parent = os.path.realpath(parent)
+            except OSError:
+                return False
+            if real_parent == parent:
+                _TASK_STORE_OUTSIDE_PARENTS.add(parent)
+            elif _text_under_live_tasks(os.path.normpath(os.path.join(real_parent, os.path.basename(norm)))):
+                return True
+        try:
+            if os.path.islink(norm):
+                return _text_under_live_tasks(os.path.normpath(os.path.realpath(norm)))
+        except OSError:
+            return False
+        return False
+    try:
+        return _text_under_live_tasks(os.path.normpath(os.path.realpath(text)))
+    except OSError:
+        return False
 
 
 def _sqlite_path_under_real_tasks(database: object) -> bool:
@@ -698,7 +743,10 @@ def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
     fixture ran. The hook cannot be removed, so it stays installed and only
     refuses paths inside ``_REAL_TASKS_DIR`` and the explicit derived files
     under ``_REAL_TASKS_DIR.parent`` listed in ``_DERIVED_LIVE_TASK_PATHS``.
+    The first statement rejects every event this hook does not handle.
     """
+    if event not in _TASK_STORE_HANDLED_EVENTS:
+        return
     if event == "open" and len(args) >= 3:
         path, mode, flags = args[0], args[1], args[2]
         writing = isinstance(mode, str) and any(char in mode for char in "wax+")
