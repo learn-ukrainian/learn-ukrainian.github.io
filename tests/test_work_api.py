@@ -408,13 +408,17 @@ def _next_sections() -> dict[str, SectionResult]:
     }
 
 
-def _warm_next_cache() -> dict:
+def _warm_next_cache(target_lifecycle_lookup: dict[str | int, str] | None = None) -> dict:
     """Build the fixture projection and install it as the unfiltered warm cache."""
     from scripts.api.state_helpers import cache_set
     from scripts.api.work_router import projection_cache_key
 
     cache_invalidate("work:v1:projection")
-    payload = build_projection(_next_sections(), repository_id=REPO)
+    payload = build_projection(
+        _next_sections(),
+        repository_id=REPO,
+        target_lifecycle_lookup=target_lifecycle_lookup if target_lifecycle_lookup is not None else {},
+    )
     cache_set(projection_cache_key({}), payload)
     return payload
 
@@ -475,6 +479,20 @@ def test_next_other_stream_perspective(monkeypatch):
         "infra-harness": 2,
     }
     assert data["digest"]["unscoped_actionable_count"] == 2
+
+
+def test_closed_blockers_do_not_remain_live():
+    """Closed targets clear blocker flags while preserving relationship evidence."""
+    projection = build_projection(
+        _next_sections(),
+        repository_id=REPO,
+        target_lifecycle_lookup={1: "closed", 2: "closed"},
+    )
+    issues = {item["remote_id"]: item for item in projection["items"] if item["resource_kind"] == "issue"}
+
+    assert issues["6001"]["flags"]["has_blocker"] is False
+    assert issues["6002"]["flags"]["has_blocker"] is False
+    assert any(rel["type"] == "blocked_by" for rel in issues["6001"]["relationships"])
 
 
 def test_next_determinism_two_calls_identical(monkeypatch):
