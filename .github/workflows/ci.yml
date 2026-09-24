@@ -6,11 +6,13 @@ name: CI
 concurrency:
   # pull_request runs key by PR number, not head SHA (#8505): a new push
   # cancels the stale in-flight run for the previous SHA instead of queuing
-  # behind it. This cannot weaken the Gate invariant (S1): the ci-gate job is
-  # `if: always() && !cancelled()`, so a cancelled run's "CI Gate" check
-  # concludes `cancelled`, never success — branch protection stays red until
-  # the surviving run on the newest SHA completes the classified tier.
-  # merge_group and schedule keep the ref-keyed group and never cancel.
+  # behind it. S1: ci-gate is `if: always()`, so it still runs after that
+  # cancel and fails unless every required dependency for the classified tier
+  # succeeded in this same run. A skipped required check is not a substitute —
+  # GitHub reports a conditionally skipped job as success for branch protection
+  # (docs.github.com troubleshooting-required-status-checks
+  # #handling-skipped-but-required-checks). merge_group and schedule keep the
+  # ref-keyed group and never cancel.
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
@@ -668,16 +670,26 @@ jobs:
 
   ci-gate:
     name: CI Gate
-    if: always() && !cancelled()
+    # always(), not `always() && !cancelled()` (#8505). A concurrency cancel
+    # that lands before this job starts would otherwise skip it, and GitHub
+    # treats a skipped required check as success. The step below fails the
+    # job when a required dependency was cancelled or skipped unexpectedly,
+    # and re-reads PR labels so a full-ci label applied after Changes
+    # classified cannot leave a lighter tier green.
+    if: always()
     needs: [changes, ruff, secret-scan, pytest, contracts, frontend, typesafe-triage, plan-validate]
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - name: Require event jobs
         env:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
           FRONTEND: ${{ needs.changes.outputs.frontend }}
           BACKEND: ${{ needs.changes.outputs.backend }}
+          PYTEST_MODE: ${{ needs.changes.outputs.pytest_mode }}
           CHANGES: ${{ needs.changes.result }}
           RUFF: ${{ needs.ruff.result }}
           SECRET: ${{ needs.secret-scan.result }}
@@ -686,10 +698,23 @@ jobs:
           FRONTEND_JOB: ${{ needs.frontend.result }}
           TYPESAFE_TRIAGE: ${{ needs.typesafe-triage.result }}
           PLAN_VALIDATE: ${{ needs.plan-validate.result }}
+          EVENT_NAME: ${{ github.event_name }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
           ok() { [ "$1" = success ]; }
-          skip_ok() { [ "$1" = success ] || [ "$1" = skipped ]; }
+          # `cancelled` is never an allowed skip. A job that the tier did not
+          # need may be `skipped`; a cancel before it starts must still fail
+          # this gate (skipped required checks count as success on GitHub).
+          skip_ok() {
+            if [ "$1" = cancelled ]; then
+              echo "::error::required job was cancelled"
+              exit 1
+            fi
+            [ "$1" = success ] || [ "$1" = skipped ]
+          }
           ok "$CHANGES"
           ok "$SECRET"
           # plan-validate self-scopes to the v2 plan inputs (git diff inside the
@@ -715,8 +740,16 @@ jobs:
           fi
           # Advisory-only (#8232): TypeSafe/Jev is not CF and not merge
           # authority. First slice stays advisory until soak: success,
-          # skipped and failure are all accepted here, so a red TypeSafe
-          # check is visible but never turns CI Gate red.
-          advisory_ok() { [ "$1" = success ] || [ "$1" = skipped ] || [ "$1" = failure ]; }
+          # skipped, failure, and cancelled are all accepted here, so a red
+          # or cancelled TypeSafe check never turns CI Gate red by itself.
+          advisory_ok() { [ "$1" = success ] || [ "$1" = skipped ] || [ "$1" = failure ] || [ "$1" = cancelled ]; }
           advisory_ok "$TYPESAFE_TRIAGE"
+          if [ "$EVENT_NAME" = pull_request ]; then
+            labels="$(gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.labels[].name')" \
+              || { echo "::error::full-ci label lookup failed; refusing to pass CI Gate"; exit 1; }
+            if printf '%s\n' "$labels" | grep -qx 'full-ci' && [ "$PYTEST_MODE" != full ]; then
+              echo "::error::full-ci is set but this run classified '${PYTEST_MODE:-unknown}', not full"
+              exit 1
+            fi
+          fi
           echo "CI Gate green"

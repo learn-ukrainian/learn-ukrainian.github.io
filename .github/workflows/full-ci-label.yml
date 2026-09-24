@@ -2,12 +2,22 @@ name: full-ci label
 
 # Serves the `full-ci` label (#8505). ci.yml no longer subscribes to `labeled`
 # (any label used to restart the full CI on an unchanged commit), so applying
-# `full-ci` re-runs the latest completed ci.yml pull_request run for the PR
-# head instead. The rerun reuses the original event payload, so
-# scripts/ci/classify_changes.py reads the PR's CURRENT labels via the API in
-# the Changes job and fails closed to the full tier when the lookup errors
-# (S3). This workflow's own failure can never turn "CI Gate" green — it only
-# ever triggers a rerun of the real CI.
+# `full-ci` re-runs the ci.yml pull_request run for THIS pull request's head.
+# The rerun reuses the original event payload, so scripts/ci/classify_changes.py
+# reads the PR's CURRENT labels via the API in the Changes job and fails
+# closed to the full tier when the lookup errors (S3). CI Gate also re-reads
+# labels at the end of every pull_request run and fails if `full-ci` is present
+# but the classified tier was not full, including when the label lands while
+# that run is still queued or in progress.
+#
+# Two PRs can share a head SHA. The run lookup must match this event's PR
+# number AND head SHA; an unmatched run is not rerun.
+#
+# Fork PRs are not a supported path. This repo has no `pull_request_target`
+# workflow and does not grant fork PR tokens write access. `pull_request` from
+# a fork gets a read-only GITHUB_TOKEN, so `gh run rerun` cannot succeed. This
+# job fails closed with an explicit error instead of a 403. Same-repository
+# PRs only.
 #
 # Status: advisory. Its result is not a required check; the rerun it starts is
 # what reports "CI Gate".
@@ -33,23 +43,44 @@ jobs:
       contents: read
       actions: write # gh run rerun
     steps:
-      - name: Re-run the latest CI run for the PR head
+      - name: Re-run the CI run for this pull request
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
-          run_id="$(gh api "repos/${REPO}/actions/workflows/ci.yml/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=1" \
-            --jq '.workflow_runs[0].id // empty')"
+          if [ "$HEAD_REPO" != "$REPO" ]; then
+            echo "::error::full-ci rerun does not support fork PRs (head ${HEAD_REPO}). This repo runs CI on same-repository pull_request events only; the fork pull_request token is read-only and cannot rerun workflows."
+            exit 1
+          fi
+          case "$PR_NUMBER" in
+            ''|*[!0-9]*)
+              echo "::error::Refusing to rerun CI without a numeric pull request number."
+              exit 1
+              ;;
+          esac
+          run_id="$(gh api "repos/${REPO}/actions/workflows/ci.yml/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=100" \
+            --jq "[.workflow_runs[] | select(any(.pull_requests[]?; .number == ${PR_NUMBER}))] | .[0].id // empty")"
           if [ -z "$run_id" ]; then
-            echo "::error::No ci.yml pull_request run found for head ${HEAD_SHA}; refusing to treat full-ci as satisfied."
+            echo "::error::No ci.yml pull_request run matched PR #${PR_NUMBER} at ${HEAD_SHA}; refusing to rerun a different PR's CI."
             exit 1
           fi
           status="$(gh api "repos/${REPO}/actions/runs/${run_id}" --jq '.status')"
           if [ "$status" != "completed" ]; then
-            echo "::error::Latest ci.yml run ${run_id} for ${HEAD_SHA} is '${status}'; wait for it, then re-apply the label."
-            exit 1
+            echo "ci.yml run ${run_id} for PR #${PR_NUMBER} is '${status}'; cancelling it so the lighter tier cannot finish, then rerunning."
+            gh run cancel "$run_id" --repo "$REPO" || true
+            deadline=$((SECONDS + 90))
+            while [ "$status" != "completed" ]; do
+              if [ "$SECONDS" -ge "$deadline" ]; then
+                echo "::error::ci.yml run ${run_id} for PR #${PR_NUMBER} did not finish cancelling; CI Gate on that run fails closed if full-ci is set and the tier was not full. Re-apply the label."
+                exit 1
+              fi
+              sleep 5
+              status="$(gh api "repos/${REPO}/actions/runs/${run_id}" --jq '.status')"
+            done
           fi
           gh run rerun "$run_id" --repo "$REPO"
-          echo "Re-ran ci.yml run ${run_id} at ${HEAD_SHA}; Changes reads current labels via the API, so full-ci forces the full tier."
+          echo "Re-ran ci.yml run ${run_id} for PR #${PR_NUMBER} at ${HEAD_SHA}; Changes reads current labels via the API, so full-ci forces the full tier."

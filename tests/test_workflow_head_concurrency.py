@@ -8,9 +8,9 @@ queued ``merge_group`` run. ``merge_group`` must never set
 #8505: pull_request runs key by PR NUMBER, not head SHA, so a new push cancels
 the stale in-flight run for the previous SHA (previously a body edit or label
 could restart CI on an unchanged SHA, and a push queued behind its own stale
-run). This is safe for the required "CI Gate": ci.yml's ci-gate job is
-``if: always() && !cancelled()``, so a cancelled run concludes ``cancelled``,
-never success.
+run). The required "CI Gate" uses ``if: always()`` and fails when a required
+dependency was cancelled or skipped unexpectedly, so a skipped Gate cannot
+count as success.
 """
 
 from __future__ import annotations

@@ -11,13 +11,18 @@ check green or skipped without the classified tier running.
   ci.yml run; scripts/ci/classify_changes.py then reads CURRENT labels via the
   API and fails closed to the full tier (S3) — that fail-closed behavior is
   unit-tested in scripts/ci/test_classify_changes.py.
-- Exactly one job in the fleet is named "CI Gate" (ci.yml), and it keeps
-  `if: always() && !cancelled()`, so a cancelled run concludes `cancelled`,
-  never success — PR-number concurrency cannot launder a green Gate (S1).
+- Exactly one job in the fleet is named "CI Gate" (ci.yml). It uses
+  `if: always()` and fails when a required dependency was cancelled or
+  skipped unexpectedly. GitHub treats a skipped required job as success, so
+  `!cancelled()` must not skip the Gate (S1). On pull_request the Gate
+  re-reads labels and fails if `full-ci` is set but the tier was not full.
 """
 
 from __future__ import annotations
 
+import os
+import subprocess
+import textwrap
 from pathlib import Path
 
 import yaml
@@ -79,6 +84,13 @@ def test_full_ci_label_workflow_fails_closed_shape() -> None:
     assert job["permissions"] == {"contents": "read", "actions": "write"}
     text = (_WORKFLOWS / "full-ci-label.yml").read_text(encoding="utf-8")
     assert "workflows/ci.yml/runs" in text and "gh run rerun" in text
+    # Match this event's PR number and head SHA; do not rerun per_page=1.
+    assert "pull_requests[]?" in text and "PR_NUMBER" in text and "HEAD_SHA" in text
+    assert "per_page=100" in text and "per_page=1\"" not in text and "per_page=1&" not in text
+    # In-progress runs are cancelled, then rerun, so a lighter tier cannot finish.
+    assert "gh run cancel" in text
+    # Fork PRs get a read-only token. This repo does not support that path.
+    assert "HEAD_REPO" in text and "fork" in text.lower()
 
 
 def test_ci_changes_job_can_read_pr_labels() -> None:
@@ -88,10 +100,7 @@ def test_ci_changes_job_can_read_pr_labels() -> None:
     assert changes["permissions"]["pull-requests"] == "read"
 
 
-def test_exactly_one_ci_gate_job_and_it_never_runs_when_cancelled() -> None:
-    # S1: a skipped or fake "CI Gate" from another event path would satisfy the
-    # required check without the tier running. Only ci.yml may define it, and
-    # its `!cancelled()` guard keeps a cancelled run's conclusion non-success.
+def _ci_gate_job() -> dict:
     gate_jobs = []
     for path in sorted(_WORKFLOWS.glob("*.yml")):
         workflow = _load(path.name)
@@ -99,5 +108,125 @@ def test_exactly_one_ci_gate_job_and_it_never_runs_when_cancelled() -> None:
             if job.get("name") == "CI Gate":
                 gate_jobs.append((path.name, job))
     assert [name for name, _ in gate_jobs] == ["ci.yml"]
-    gate = gate_jobs[0][1]
-    assert "always()" in gate["if"] and "!cancelled()" in gate["if"]
+    return gate_jobs[0][1]
+
+
+def _gate_script() -> str:
+    steps = _ci_gate_job()["steps"]
+    assert len(steps) == 1
+    script = steps[0]["run"]
+    assert isinstance(script, str)
+    return script
+
+
+def test_exactly_one_ci_gate_job_and_it_runs_after_cancel() -> None:
+    # S1: a skipped required check is success on GitHub. The Gate must run
+    # after a concurrency cancel (`if: always()`) and fail in the step.
+    gate = _ci_gate_job()
+    assert gate["if"] == "always()"
+    assert "!cancelled()" not in gate["if"]
+    script = _gate_script()
+    assert "required job was cancelled" in script
+    assert "full-ci" in script and "PYTEST_MODE" in script
+
+
+def _run_gate(env: dict[str, str], *, gh: str | None = None) -> subprocess.CompletedProcess[str]:
+    extra = {**os.environ, **env}
+    if gh is not None:
+        extra["PATH"] = gh + os.pathsep + os.environ.get("PATH", "")
+    return subprocess.run(
+        ["bash", "-c", _gate_script()],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=extra,
+    )
+
+
+_GREEN = {
+    "DOCS_ONLY": "false",
+    "FRONTEND": "false",
+    "BACKEND": "true",
+    "PYTEST_MODE": "full",
+    "CHANGES": "success",
+    "RUFF": "success",
+    "SECRET": "success",
+    "PYTEST": "success",
+    "CONTRACTS": "success",
+    "FRONTEND_JOB": "skipped",
+    "TYPESAFE_TRIAGE": "success",
+    "PLAN_VALIDATE": "success",
+    "EVENT_NAME": "merge_group",
+    "REPO": "owner/repo",
+    "PR_NUMBER": "",
+}
+
+
+def test_ci_gate_fails_when_a_required_job_was_cancelled() -> None:
+    result = _run_gate({**_GREEN, "PYTEST": "cancelled"})
+    assert result.returncode != 0
+    assert "CI Gate green" not in result.stdout
+
+
+def test_ci_gate_fails_when_a_required_job_was_skipped() -> None:
+    result = _run_gate({**_GREEN, "SECRET": "skipped"})
+    assert result.returncode != 0
+    assert "CI Gate green" not in result.stdout
+
+
+def test_ci_gate_allows_a_tier_skip_and_rejects_cancelled_tier_skip(tmp_path: Path) -> None:
+    docs = {
+        **_GREEN,
+        "DOCS_ONLY": "true",
+        "PYTEST_MODE": "docs",
+        "RUFF": "skipped",
+        "CONTRACTS": "skipped",
+        "EVENT_NAME": "schedule",
+    }
+    assert _run_gate(docs).returncode == 0
+    cancelled = _run_gate({**docs, "RUFF": "cancelled"})
+    assert cancelled.returncode != 0
+    assert "cancelled" in cancelled.stdout
+
+
+def test_ci_gate_fails_when_full_ci_label_does_not_match_tier(tmp_path: Path) -> None:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "gh").write_text(
+        textwrap.dedent(
+            """\
+            #!/bin/sh
+            printf '%s\\n' full-ci
+            """
+        ),
+        encoding="utf-8",
+    )
+    (bin_dir / "gh").chmod(0o755)
+    result = _run_gate(
+        {
+            **_GREEN,
+            "PYTEST_MODE": "docs",
+            "DOCS_ONLY": "true",
+            "RUFF": "skipped",
+            "CONTRACTS": "skipped",
+            "EVENT_NAME": "pull_request",
+            "PR_NUMBER": "7",
+        },
+        gh=str(bin_dir),
+    )
+    assert result.returncode != 0
+    assert "full-ci" in result.stdout
+    assert "CI Gate green" not in result.stdout
+
+
+def test_ci_gate_passes_when_full_ci_label_matches_full_tier(tmp_path: Path) -> None:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "gh").write_text("#!/bin/sh\nprintf '%s\\n' full-ci\n", encoding="utf-8")
+    (bin_dir / "gh").chmod(0o755)
+    result = _run_gate(
+        {**_GREEN, "EVENT_NAME": "pull_request", "PR_NUMBER": "7"},
+        gh=str(bin_dir),
+    )
+    assert result.returncode == 0, result.stderr
+    assert "CI Gate green" in result.stdout
