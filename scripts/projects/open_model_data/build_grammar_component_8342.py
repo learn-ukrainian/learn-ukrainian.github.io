@@ -628,6 +628,23 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     if re.search(r"\bпроявит\w*\b", text, re.IGNORECASE):
         return False
 
+    # Claude R28 control defects
+    # #97: «у випадку» (calque per Антоненко-Давидович -> «у разі»)
+    if re.search(r"\bу\s+випадку\b", text, re.IGNORECASE):
+        return False
+    # #117: «дозвіл операції» (wrong government -> «на операцію»)
+    if re.search(r"\bдозвіл\s+операції\b", text, re.IGNORECASE):
+        return False
+    # #134: «носком чобота» (Russianism -> «носаком»)
+    if re.search(r"\bноском\s+чобота\b", text, re.IGNORECASE):
+        return False
+    # #221: «Українська есперанто асоціація» (missing hyphen)
+    if re.search(r"\bесперанто\s+асоціація\b", text, re.IGNORECASE):
+        return False
+    # #135: «по кишені» (calque)
+    if re.search(r"\bпо\s+кишені\b", text, re.IGNORECASE):
+        return False
+
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
         return False
@@ -3014,6 +3031,106 @@ def is_valid_candidate(
     if re.search(r"\bпалатк\w*\b", o_low) and re.search(r"\bнамет\w*\b", c_low):
         return False
     if re.search(r"\bв\s+палатці\b", o_low):
+        return False
+
+    # 31. Claude R28 Blockers, Defects & Systemic Validations
+    # Blockers: wrong or worse corrections
+    # #250: «не розумівся на метриках, як оцінювати ці інвестиції…»
+    if re.search(r"\bне\s+розумівся\s+на\s+метриках\b", o_low) or re.search(r"\bяк\s+оцінювати\s+ці\s+інвестиції\b", o_low):
+        return False
+    # #262: «виною цьому є люди» is normative; «винні в цьому є люди» has doubled predicate
+    if re.search(r"\bвиною\s+цьому\s+є\s+люди\b", o_low):
+        return False
+    # #31: «до нього» -> «до неї» swaps referent
+    if re.search(r"\bдо\s+нього\s+вже\s+майже\s+звик\b", o_low):
+        return False
+    # #9: «скрюченими пальцями»
+    if re.search(r"\bскрюченими\s+пальцями\b", o_low) or re.search(r"\bскрученими\s+пальцями\b", c_low):
+        return False
+    # #197: «дістався його» / wrong government
+    if re.search(r"\bдістал[оася]+\s+його\b", o_low) or re.search(r"\bдістал[оася]+\s+його\b", c_low) or re.search(r"\bспектр\s+звуків\s+дістал\w*\b", o_low):
+        return False
+    # #86: «заповним своє серце»
+    if re.search(r"\bзаповним\s+своє\s+серце\b", o_low):
+        return False
+
+    # Blockers: false normativity claims (original is normative)
+    # #1: «мова» -> «йдеться»
+    if re.search(r"\bмова\s+про\s+те\b", o_low) and re.search(r"\bйдеться\s+про\s+те\b", c_low):
+        return False
+    # #15: «Справа у тому» / «Справа в тому»
+    if re.search(r"\bсправа\s+[ув]\s+тому\b", o_low):
+        return False
+    # #6: «обуті зазвичай» -> «взуті»
+    if re.search(r"\bобуті\b", o_low) and re.search(r"\bвзуті\b", c_low):
+        return False
+    # #165: «Вийшло наступне:» -> «таке»
+    if re.search(r"\bвийшло\s+наступне\b", o_low) or re.search(r"\bнаступне:\b", o_low):
+        return False
+    # #92: «чудаки» -> «диваки»
+    if re.search(r"\bчудак\w*\b", o_low) and re.search(r"\bдивак\w*\b", c_low):
+        return False
+    # #225: «виразити» -> «висловити»
+    if re.search(r"\bвиразити\b", o_low) and re.search(r"\bвисловити\b", c_low):
+        return False
+    # #4 & #103: «співпадають» -> «збігаються»
+    if re.search(r"\bспівпада\w*\b", o_low) and re.search(r"\bзбіга\w*\b", c_low):
+        return False
+
+    # Blockers: wrong rule labels
+    # #120: «мовленнєву інтеракція» -> «інтеракцію»
+    if re.search(r"\bмовленнєву\s+інтеракці\w*\b", o_low):
+        return False
+    # #193: «глянути»/«проглянути» (both perfective)
+    if re.search(r"\bповерхнево\s+глянути\b", o_low) or (re.search(r"\bглянути\b", o_low) and re.search(r"\bпроглянути\b", c_low)):
+        return False
+    # #215: «шляхом інтегрування» -> «інтегруванням»
+    if re.search(r"\bшляхом\s+інтегрування\b", o_low):
+        return False
+
+    # Minor: Systemic filter against rewriting analytic comparative/superlative to synthetic
+    # (#7, #203, #226, #239, #246, #216, etc.)
+    if re.search(r"\b(?:більш|менш|найбільш|найменш)\s+[а-яіїєґ]+", o_low) and not re.search(r"\b(?:більш|менш|найбільш|найменш)\b", c_low):
+        return False
+
+    # Minor: Unnecessary rewrites of normative text
+    # #2: «При аналізі» -> «В аналізі»
+    if re.search(r"\bпри\s+аналізі\b", o_low):
+        return False
+    # #82: «почекати менше п'яти хвилин»
+    if re.search(r"\bменше\s+п['ʼ]?яти\s+хвилин\b", o_low):
+        return False
+    # #95: «саме їх дотримання» -> «їхнє»
+    if re.search(r"\bсаме\s+їх\s+дотримання\b", o_low):
+        return False
+    # #74: «задали питання» -> «поставили»
+    if re.search(r"\bзадал[иоа]\s+(?:собі\s+)?(?:лише\s+)?два\s+питання\b", o_low):
+        return False
+    # #211: «вчитися новому» -> «нового»
+    if re.search(r"\bвчитися\s+новому\b", o_low):
+        return False
+    # #210: «виходячи з» -> «на основі»
+    if re.search(r"\bвиходячи\s+з\s+своєї\b", o_low):
+        return False
+    # #265: «у винищувач» -> «до винищувача»
+    if re.search(r"\bу\s+винищувач\b", o_low):
+        return False
+    # #198: «притаю» -> «приховаю»
+    if re.search(r"\bпритаю\b", o_low):
+        return False
+
+    # Minor: Unnatural correction or leftover error
+    # #113: «заскладною»
+    if re.search(r"\bзаскладн\w*\b", c_low) or re.search(r"\bздавалася\s+їм\s+надто\s+складною\b", o_low):
+        return False
+    # #98: «почали гукати» -> «гикати»
+    if re.search(r"\bпочали\s+гукати\b", o_low):
+        return False
+    # #189: «не спроможна»
+    if re.search(r"\bне\s+спроможна\b", o_low) or re.search(r"\bне\s+спроможна\b", c_low):
+        return False
+    # #69: «робота вдома на віддаленці»
+    if re.search(r"\bвіддаленці\b", o_low):
         return False
 
     # Reject unpaired comma after relative pronoun

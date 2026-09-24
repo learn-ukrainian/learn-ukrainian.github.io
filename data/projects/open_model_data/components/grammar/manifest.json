@@ -31,28 +31,28 @@
     }
   },
   "statistics": {
-    "total_records": 1453,
-    "train_records": 1311,
-    "eval_records": 142,
-    "substantive_corrections": 1073,
+    "total_records": 1401,
+    "train_records": 1263,
+    "eval_records": 138,
+    "substantive_corrections": 1021,
     "clean_controls": 380,
-    "clean_control_share": 0.2615,
-    "substantive_correction_share": 0.7385,
+    "clean_control_share": 0.2712,
+    "substantive_correction_share": 0.7288,
     "category_counts": {
-      "calque_lexical_grammatical": 359,
-      "case_government": 326,
+      "calque_lexical_grammatical": 346,
+      "case_government": 318,
       "protective_authentic_control": 380,
-      "syntax_structure": 206,
-      "verb_morphology": 60,
-      "agreement_concord": 122
+      "syntax_structure": 181,
+      "verb_morphology": 58,
+      "agreement_concord": 118
     },
     "source_corpus_counts": {
-      "ua_gec_2.0": 1082,
-      "brown_uk": 371
+      "ua_gec_2.0": 1035,
+      "brown_uk": 366
     },
     "license_counts": {
-      "CC BY 4.0": 1082,
-      "CC BY-NC-SA 4.0": 371
+      "CC BY 4.0": 1035,
+      "CC BY-NC-SA 4.0": 366
     }
   }
 }

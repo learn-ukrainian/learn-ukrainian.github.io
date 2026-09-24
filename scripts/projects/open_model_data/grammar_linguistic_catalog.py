@@ -649,8 +649,8 @@ def resolve_specific_linguistic_citation(
             )
         return (
             "СУМ-20 / VESUM",
-            f"ненормативну або невластиву лексичну одиницю «{err}» замінено на літературне слово «{corr}»",
-            f"Словникова база VESUM та академічний тлумачний словник (СУМ-20) визначають нормативне літературне слововживання: вживаємо нормативне слово «{corr}» замість «{err}»."
+            f"невластиву в цьому контексті лексичну одиницю «{err}» замінено на контекстуально точніше слово «{corr}»",
+            f"Словникова база VESUM та академічний тлумачний словник (СУМ-20) визначають точність контекстуального слововживання: замість «{err}» уживаємо «{corr}»."
         )
 
     # 3. Case government and inflection (G/Case)
@@ -701,11 +701,23 @@ def resolve_specific_linguistic_citation(
 
             # Masculine 2nd declension genitive endings: -а/-я vs -у/-ю (e.g. відсотка vs відсотку)
             if (err_w.endswith(("у", "ю")) and corr_w.endswith(("а", "я"))) or (err_w.endswith(("а", "я")) and corr_w.endswith(("у", "ю"))):
-                return (
-                    "Український правопис (2019) / VESUM",
-                    f"помилкове закінчення родового відмінка однини іменника II відміни «{err}» виправлено на нормативне «{corr}»",
-                    f"«Український правопис» та словникова база VESUM регламентують закінчення родового відмінка іменників: вживаємо нормативне закінчення «{corr}» замість «{err}»."
-                )
+                conn = _get_vesum_connection()
+                is_masc_noun = False
+                if conn is not None:
+                    res = conn.cursor().execute(
+                        "SELECT tags FROM forms_all WHERE word_form IN (?, ?) AND pos = 'noun'",
+                        (corr_w.lower(), err_w.lower()),
+                    ).fetchall()
+                    is_masc_noun = any(":m:" in tags or tags.startswith("noun:m") or ":m" in tags for (tags,) in res)
+                    is_fem_noun = any(":f:" in tags or tags.startswith("noun:f") or ":f" in tags for (tags,) in res)
+                    if is_fem_noun and not is_masc_noun:
+                        is_masc_noun = False
+                if is_masc_noun:
+                    return (
+                        "Український правопис (2019) / VESUM",
+                        f"помилкове закінчення родового відмінка однини іменника II відміни «{err}» виправлено на нормативне «{corr}»",
+                        f"«Український правопис» та словникова база VESUM регламентують закінчення родового відмінка іменників: вживаємо нормативне закінчення «{corr}» замість «{err}»."
+                    )
 
             # 3rd declension noun мати -> матір in accusative
             if err_w.lower() == "мати" and corr_w.lower() == "матір":
@@ -1021,8 +1033,8 @@ def resolve_specific_linguistic_citation(
             )
         return (
             "VESUM / Академічна граматика української мови",
-            f"недоречну видову форму дієслова «{err}» замінено на доречну видову пару «{corr}»",
-            f"В українській граматиці видова семантика дієслів відображає характер протікання дії; форму «{err}» виправлено на видову пару «{corr}» (VESUM)."
+            f"граматичну форму дієслова «{err}» узгоджено за видовою семантикою та контекстом як «{corr}»",
+            f"В українській граматиці дієслівні форми відображають характер протікання дії; слововживання «{err}» скориговано на контекстуально доречну форму «{corr}» (VESUM)."
         )
 
     # 15. Tense (G/Tense)
