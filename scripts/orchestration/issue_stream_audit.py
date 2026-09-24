@@ -1,7 +1,7 @@
 """Issue-stream auditor — every open GH issue must belong to exactly one stream epic.
 
 Registry: scripts/config/issue_streams.yaml (streams → epic issue numbers).
-Membership: native GitHub sub-issue of a stream epic, OR (fallback while the
+Membership: native GitHub sub-issue descendant of a stream epic, OR (fallback while the
 native migration is pending) a ``#N`` reference in a stream epic's body.
 
 Usage:
@@ -837,6 +837,8 @@ _SUBISSUES_NEXT_PAGE_QUERY = (
 # buggy/adversarial API that always reports ``hasNextPage: true`` from looping
 # forever, while remaining far above any real epic's child count.
 _MAX_SUBISSUE_PAGES = 50
+_MAX_SUBISSUE_DEPTH = 8
+_SUBISSUE_BATCH_SIZE = 20
 
 
 def _fetch_subissues_page(epic: int, cursor: str | None, repo_root: Path = ROOT) -> dict:
@@ -901,6 +903,92 @@ def fetch_epic_membership(epic: int, repo_root: Path = ROOT) -> tuple[set[int], 
     )
     refs = {int(m) for m in ISSUE_REF_RE.findall(body)}
     return native, refs
+
+
+def _fetch_subissue_batch(
+    cursors: dict[int, str | None],
+    repo_root: Path = ROOT,
+    body_roots: set[int] | None = None,
+) -> dict[int, dict]:
+    """Fetch one page for each parent in a bounded GraphQL alias batch."""
+    owner, name = _repo_owner_name(repo_root)
+    fields = []
+    for number, cursor in cursors.items():
+        after = f",after:{json.dumps(cursor)}" if cursor is not None else ""
+        body = "body " if number in (body_roots or set()) and cursor is None else ""
+        fields.append(
+            f"i{number}:issue(number:{number}){{{body}subIssues(first:100{after})"
+            "{nodes{number} pageInfo{hasNextPage endCursor}}}"
+        )
+    query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){" + " ".join(fields) + "}}"
+    data = _gh_json(
+        ["api", "graphql", "-f", f"owner={owner}", "-f", f"name={name}", "-f", f"query={query}"],
+        cwd=repo_root,
+    )
+    repository = (data.get("data") or {}).get("repository") or {}
+    return {number: repository.get(f"i{number}") or {} for number in cursors}
+
+
+def _tree_membership(
+    roots: set[int], fetch_batch: Callable[[dict[int, str | None]], dict[int, dict]]
+) -> dict[int, tuple[set[int], set[int]]]:
+    """Traverse native links by level, then assign descendants to every root.
+
+    A parent is fetched once even when two roots reach it. Its adjacency is
+    retained so each root can independently claim a shared descendant.
+    """
+    children: dict[int, set[int]] = {}
+    bodies: dict[int, str] = {}
+    frontier = set(roots)
+    fetched: set[int] = set()
+    for _depth in range(_MAX_SUBISSUE_DEPTH):
+        parents = sorted(frontier - fetched)
+        if not parents:
+            break
+        frontier = set()
+        for start in range(0, len(parents), _SUBISSUE_BATCH_SIZE):
+            batch = parents[start : start + _SUBISSUE_BATCH_SIZE]
+            pending: dict[int, str | None] = dict.fromkeys(batch)
+            for page in range(_MAX_SUBISSUE_PAGES):
+                if not pending:
+                    break
+                issues = fetch_batch(pending)
+                next_pending = {}
+                for number, issue in issues.items():
+                    if page == 0 and number in roots:
+                        bodies[number] = issue.get("body") or ""
+                    sub_issues = issue.get("subIssues") or {}
+                    children.setdefault(number, set()).update(
+                        node["number"]
+                        for node in sub_issues.get("nodes") or []
+                        if isinstance(node, dict) and _is_positive_int(node.get("number"))
+                    )
+                    page_info = sub_issues.get("pageInfo") or {}
+                    cursor = page_info.get("endCursor")
+                    if page_info.get("hasNextPage") and cursor:
+                        next_pending[number] = cursor
+                pending = next_pending
+        fetched.update(parents)
+        frontier = set().union(*(children[number] for number in parents)) - fetched
+
+    membership = {}
+    for root in roots:
+        descendants: set[int] = set()
+        level = {root}
+        for _depth in range(_MAX_SUBISSUE_DEPTH):
+            level = set().union(*(children.get(parent, set()) for parent in level)) - {root}
+            descendants.update(level)
+            if not level:
+                break
+        membership[root] = (
+            descendants,
+            {int(match) for match in ISSUE_REF_RE.findall(bodies.get(root, ""))},
+        )
+    return membership
+
+
+def fetch_tree_membership(roots: set[int], repo_root: Path = ROOT) -> dict[int, tuple[set[int], set[int]]]:
+    return _tree_membership(roots, lambda batch: _fetch_subissue_batch(batch, repo_root, roots))
 
 
 def classify(
@@ -1044,11 +1132,9 @@ def run_audit(
     root = repo_root.resolve() if repo_root is not None else ROOT
     registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml")
     open_issues = fetch_open_issues(root)
-    membership = {
-        epic: fetch_epic_membership(epic, root)
-        for epics in registry.values()
-        for epic in epics
-    }
+    membership = fetch_tree_membership(
+        {epic for epics in registry.values() for epic in epics}, root
+    )
     report = classify(open_issues, registry, membership)
     milestone_rows = load_milestone_rows(root / "docs" / "WORKSTREAMS.md")
     milestone_numbers = {
