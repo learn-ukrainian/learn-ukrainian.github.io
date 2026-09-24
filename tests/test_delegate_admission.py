@@ -7,7 +7,9 @@ probe; no test allocates memory, generates load, or spawns a worker.
 from __future__ import annotations
 
 import json
+import os
 import resource
+import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -248,6 +250,9 @@ def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, ca
 def test_locked_recheck_refuses_a_dispatch_that_lost_the_race(tasks_dir, monkeypatch, capsys):
     """Two dispatches pass the early check; the locked re-check refuses the one that finds the cap full."""
     _stub_worktree(monkeypatch, tasks_dir)
+    monkeypatch.setattr(
+        delegate, "_ensure_worktree", lambda **_kwargs: pytest.fail("a refused dispatch must not create a worktree")
+    )
     monkeypatch.setenv("DISPATCH_MAX_LIVE_WRITE_WORKERS", "1")
     monkeypatch.setattr(
         delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("a refused dispatch must not spawn")
@@ -269,13 +274,198 @@ def test_locked_recheck_refuses_a_dispatch_that_lost_the_race(tasks_dir, monkeyp
     assert rc == 3
     assert calls["n"] == 2
     assert "live write workers 1/1 reached the cap" in capsys.readouterr().err
-    state = delegate._read_state(delegate._state_path("adm-race"))
-    assert state is not None
-    assert state["status"] == "failed"
-    assert state["returncode_reason"] == "dispatch admission refused"
-    assert state["worktree_path"] == str(tasks_dir / "wt")
+    # Refused before the worktree, the task record and the runtime tmp lease (#8717).
+    assert not delegate._state_path("adm-race").exists()
     lease_root = Path(tasks_dir.parent / "scratch" / "learn-ukrainian" / "adm-race")
     assert not lease_root.exists()
+
+
+# --- #8717: admission runs before the worktree and holds the slot until the spawn ------------
+
+
+# ``_stub_worktree`` replaces ``subprocess.run`` for delegate; the scratch repo needs the real one.
+_REAL_RUN = subprocess.run
+
+
+def _git(cwd: Path, *args: str) -> str:
+    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    proc = _REAL_RUN(["git", *args], cwd=cwd, capture_output=True, text=True, check=True, env=env, timeout=30)
+    return proc.stdout.strip()
+
+
+def _scratch_repo(root: Path) -> Path:
+    repo = root / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-q", "-b", "main")
+    _git(repo, "-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-q", "--allow-empty", "-m", "base")
+    return repo
+
+
+def _load_rises_after_the_first_probe(monkeypatch) -> dict[str, int]:
+    """The early check sees a quiet host; every later probe sees load over the limit (the impl-8654-r3 incident)."""
+    calls = {"n": 0}
+
+    def probe():
+        calls["n"] += 1
+        load = 1.0 if calls["n"] == 1 else 40.0
+        return dispatch_admission.HostProbe(mem_available_bytes=64 * _GIB, load1=load, cpu_count=8, proc_available=True)
+
+    monkeypatch.setattr(dispatch_admission, "probe_host", probe)
+    return calls
+
+
+def test_refused_dispatch_leaves_no_worktree_registration_or_task_record(tasks_dir, tmp_path, monkeypatch, capsys):
+    repo = _scratch_repo(tmp_path)
+    worktree = tmp_path / "wt-refused"
+    _stub_worktree(monkeypatch, tasks_dir)
+
+    def real_worktree_add(**_kwargs):
+        _git(repo, "worktree", "add", "-q", "-b", "codex/adm", str(worktree), "HEAD")
+        return worktree, "codex/adm", {"base_sha": _git(repo, "rev-parse", "HEAD"), "layout": "dispatch"}
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", real_worktree_add)
+    real_popen = subprocess.Popen
+
+    def popen_git_only(cmd, *args, **kwargs):
+        if cmd[0] != "git":
+            pytest.fail("a refused dispatch must not spawn")
+        return real_popen(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", popen_git_only)
+    probes = _load_rises_after_the_first_probe(monkeypatch)
+    args = _live_danger_args(tasks_dir, "adm-refused")
+    args.worktree = str(worktree)
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == delegate._ADMISSION_REFUSED_EXIT
+    assert probes["n"] == 2
+    assert "load 5.00 per CPU" in capsys.readouterr().err
+    assert not worktree.exists()
+    assert _git(repo, "worktree", "list", "--porcelain").count("worktree ") == 1
+    assert not delegate._state_path("adm-refused").exists()
+    assert not list(tasks_dir.glob("adm-refused*.json"))
+
+
+def test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created(tasks_dir, monkeypatch):
+    """The hold published under the admission lock counts for other dispatches until the full record replaces it."""
+    _stub_worktree(monkeypatch, tasks_dir)
+    seen: dict[str, object] = {}
+
+    def ensure_worktree(**kwargs):
+        seen["record"] = delegate._read_state(delegate._state_path("adm-held"))
+        seen["live"] = dispatch_admission.scan_task_records(tasks_dir).live_task_ids
+        return tasks_dir / "wt", "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", ensure_worktree)
+
+    class _Proc:
+        pid = 13579
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: _Proc())
+
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-held")) == 0
+
+    held = seen["record"]
+    assert isinstance(held, dict)
+    assert held["status"] == "spawning" and held["pid"] is None and held["mode"] == "danger"
+    assert held[dispatch_admission.ADMISSION_HOLD_KEY]["owner_pid"] == os.getpid()
+    assert seen["live"] == ("adm-held",)
+    final = delegate._read_state(delegate._state_path("adm-held"))
+    assert final is not None
+    assert dispatch_admission.ADMISSION_HOLD_KEY not in final
+    assert final["admission"] == held["admission"]
+
+
+def test_dispatch_that_stops_after_admission_drops_its_hold(tasks_dir, monkeypatch, capsys):
+    _stub_worktree(monkeypatch, tasks_dir)
+    vanished = tasks_dir / "wt-vanished"
+    monkeypatch.setattr(
+        delegate,
+        "_ensure_worktree",
+        lambda **_kwargs: (vanished, "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}),
+    )
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("must not spawn"))
+
+    assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-stopped")) == 1
+
+    assert "disappeared before its task record was published" in capsys.readouterr().err
+    assert not delegate._state_path("adm-stopped").exists()
+
+
+def test_worktree_reservation_keeps_the_admission_hold_and_retire_restores_it(tasks_dir):
+    admission = {"admitted": True}
+    delegate._publish_admission_hold("adm-prep", "nonce-p", mode="workspace-write", admission=admission)
+    owner = dispatch_admission.new_admission_hold("nonce-p")
+    prep = {
+        "path": str(tasks_dir / "wt"),
+        "run_nonce": "nonce-p",
+        "reserved_at": "2026-09-24T00:00:00+00:00",
+        "owner_pid": owner["owner_pid"],
+        "owner_start": owner["owner_start"],
+    }
+
+    delegate._publish_worktree_prep("adm-prep", "nonce-p", prep)
+    reserved = delegate._read_state(delegate._state_path("adm-prep"))
+    assert reserved["worktree_prep"] == prep
+    assert reserved["mode"] == "workspace-write" and reserved["admission"] == admission
+    assert dispatch_admission.scan_task_records(tasks_dir).live_task_ids == ("adm-prep",)
+
+    delegate._retire_worktree_prep("adm-prep", "nonce-p")
+    restored = delegate._read_state(delegate._state_path("adm-prep"))
+    assert "worktree_prep" not in restored
+    assert restored[dispatch_admission.ADMISSION_HOLD_KEY]["owner_pid"] == os.getpid()
+    assert dispatch_admission.scan_task_records(tasks_dir).live_task_ids == ("adm-prep",)
+
+    delegate._release_admission_hold("adm-prep", "nonce-p")
+    assert not delegate._state_path("adm-prep").exists()
+
+
+def test_admission_hold_refuses_to_overwrite_another_runs_live_record(tasks_dir):
+    _running_record(tasks_dir, "adm-dup", pid=os.getpid())
+
+    with pytest.raises(RuntimeError, match="refusing to overwrite"):
+        delegate._publish_admission_hold("adm-dup", "nonce-other", mode="danger", admission={})
+
+
+@pytest.mark.parametrize(
+    ("block", "reason"),
+    [
+        ("worktree_prep", "dispatch_died_during_worktree_prep"),
+        (dispatch_admission.ADMISSION_HOLD_KEY, dispatch_admission.ORPHANED_HOLD_REASON),
+    ],
+)
+def test_admission_marks_a_record_whose_dispatcher_died_crashed(tasks_dir, block, reason):
+    """Admission heals orphaned pid-less records with the same healer status/wait/list/reconcile use."""
+    from tests.worktree_prep_helpers import exited_process_identity
+
+    pid, start = exited_process_identity()
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    path = tasks_dir / "orphan.json"
+    path.write_text(
+        json.dumps(
+            {
+                "task_id": "orphan",
+                "run_nonce": "nonce-orphan",
+                "status": "spawning",
+                "pid": None,
+                "mode": "workspace-write",
+                "started_at": datetime.now(UTC).isoformat(),
+                block: {"run_nonce": "nonce-orphan", "owner_pid": pid, "owner_start": start},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    decision = delegate._evaluate_dispatch_admission("workspace-write", sweep=True)
+
+    assert decision.live_task_ids == ()
+    assert decision.dead_task_ids == ("orphan",)
+    healed = json.loads(path.read_text(encoding="utf-8"))
+    assert healed["status"] == "crashed"
+    assert healed["returncode_reason"] == reason
+    assert "marked crashed by admission probe" in healed["stderr_excerpt"]
 
 
 def test_terminal_fields_record_peak_rss_of_reaped_children(monkeypatch):
