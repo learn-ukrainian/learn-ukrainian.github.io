@@ -76,3 +76,13 @@ def test_catalog_requires_exactly_one_default(tmp_path: Path):
     )
     with pytest.raises(FleetRepoError, match="exactly one default"):
         load_fleet_repos(path)
+
+
+def test_malformed_yaml_and_missing_file_raise_fleet_repo_error(tmp_path: Path):
+    """Config-load failures are normalized so every caller's ``except FleetRepoError`` covers them."""
+    malformed = tmp_path / "fleet_repos.yaml"
+    malformed.write_text("repos: {a: [unclosed\n", encoding="utf-8")
+    with pytest.raises(FleetRepoError, match="catalog unreadable"):
+        load_fleet_repos(malformed)
+    with pytest.raises(FleetRepoError, match="catalog unreadable"):
+        load_fleet_repos(tmp_path / "absent.yaml")

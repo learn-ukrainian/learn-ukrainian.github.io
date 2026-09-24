@@ -22,6 +22,7 @@ from scripts.guardrails.worktree_containment import (
     PROTECTED_BRANCHES,
     resolve_main_root,
 )
+from scripts.orchestration import worktree_claims
 
 
 class GitSafetyError(RuntimeError):
@@ -733,9 +734,29 @@ def assert_bundle_matches_receipt(bundle: BundleReceipt, branch: str) -> None:
         raise GitSafetyError("bundle digest mismatch")
 
 
-def remove_worktree(repo_root: Path, worktree: Path) -> None:
-    proc = run_git(["worktree", "remove", str(worktree)], cwd=repo_root)
-    _require_success(proc, context=f"git worktree remove failed: {worktree}")
+def remove_unclaimed_worktree(repo_root: Path, worktree: Path) -> None:
+    """Remove ``worktree`` through the shared guarded chokepoint (#8610).
+
+    :func:`scripts.orchestration.worktree_claims.remove_unclaimed_worktree`
+    holds delegate's per-worktree lock, refuses while a dispatch task record
+    with an unfinished status names the checkout, and never forces, so git
+    itself refuses a dirty checkout. A lock refusal raises
+    :class:`LockAcquisitionError`, a claim refusal :class:`GitSafetyError`,
+    and a failed removal :class:`GitCommandError`.
+    """
+    removal = worktree_claims.remove_unclaimed_worktree(
+        worktree,
+        repo_root=repo_root,
+        reason="task-family cleanup",
+        owner_task_id=None,
+    )
+    if removal.action == "removed":
+        return
+    if removal.reason in worktree_claims.LOCK_REFUSALS:
+        raise LockAcquisitionError(f"{removal.reason}: {removal.error}")
+    if removal.action == "skipped":
+        raise GitSafetyError(f"worktree removal refused: {removal.reason}")
+    raise GitCommandError(f"git worktree remove failed: {worktree}: {removal.error}")
 
 
 def verify_frozen_preconditions(

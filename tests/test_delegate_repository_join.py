@@ -237,6 +237,18 @@ def test_backfill_repository_apply_stamps_legacy_states(tmp_tasks_dir, tmp_path,
     assert "stamped=2" in capsys.readouterr().out
 
 
+def test_backfill_repository_stamps_archived_records_in_place(tmp_tasks_dir, tmp_path, capsys):
+    """#8625: archived records are history too; they are stamped where they lie."""
+    clone = _git_repo_with_origin(tmp_path / "clone", f"https://github.com/{PUBLIC_REPO}.git")
+    archived = _write_state(tmp_tasks_dir / "archive", "old-kimi", cwd=str(clone))
+
+    assert delegate.cmd_backfill_repository(_backfill_args(apply=True)) == 0
+
+    assert json.loads(archived.read_text(encoding="utf-8"))["repository"] == PUBLIC_REPO
+    assert not (tmp_tasks_dir / "old-kimi.json").exists()
+    assert "stamped=1" in capsys.readouterr().out
+
+
 def test_backfill_repository_stamps_foreign_slug_truthfully(tmp_tasks_dir, tmp_path):
     """A sibling-repo task is stamped with its real foreign identity; the
     scoped public view keeps dropping it (fail closed, no false join)."""

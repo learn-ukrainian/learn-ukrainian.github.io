@@ -8,15 +8,15 @@ from pathlib import Path
 from ai_llm.agent_runtime_call import call_agent_with_fallback
 from ai_llm.fallback import CallResult
 
-CODEX_MODEL_LADDER = ("gpt-6-astra",)
+CODEX_MODEL_LADDER = ("gpt-6-sol",)
 
 
 def call_codex_with_fallback(
     prompt: str,
     *,
     task_name: str,
-    preferred_model: str = "gpt-6-astra",
-    effort: str | None = "low",
+    preferred_model: str = "gpt-6-sol",
+    effort: str | None = "high",
     per_rung_timeout_s: int | None = None,
     overall_timeout_s: int | None = None,
     max_retries: int = 3,
@@ -27,7 +27,7 @@ def call_codex_with_fallback(
 ) -> CallResult:
     """Call Codex through the agent_runtime adapter."""
     if preferred_model != CODEX_MODEL_LADDER[0]:
-        raise ValueError(f"Codex model {preferred_model!r} rejected; only gpt-6-astra is approved")
+        raise ValueError(f"Codex model {preferred_model!r} rejected; only gpt-6-sol is approved")
     return call_agent_with_fallback(
         agent_name="codex",
         prompt=prompt,

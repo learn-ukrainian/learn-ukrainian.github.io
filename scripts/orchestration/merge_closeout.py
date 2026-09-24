@@ -31,6 +31,7 @@ from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import scheduled_worktree_cleanup as swc
 
 DEFAULT_TIMEOUT = 30
+LIVE_PR_FETCH_TIMEOUT = 30
 
 
 class MergeCloseoutError(RuntimeError):
@@ -83,7 +84,75 @@ def _run_gh(
 
 
 def fetch_pr_info(repo_root: Path, pr_number: int, *, repo: str | None = None) -> PullRequestInfo:
-    """Read PR state from GitHub. Raises when the state cannot be proven."""
+    """Read PR state from GitHub, preferring REST's core quota."""
+    info, rest_error = _fetch_pr_info_rest(repo_root, pr_number, repo=repo)
+    if info is not None:
+        return info
+
+    info, graphql_error = _fetch_pr_info_graphql(repo_root, pr_number, repo=repo)
+    if info is not None:
+        return info
+    raise MergeCloseoutError(f"{rest_error}; {graphql_error}")
+
+
+def _fetch_pr_info_rest(
+    repo_root: Path, pr_number: int, *, repo: str | None
+) -> tuple[PullRequestInfo | None, str]:
+    if repo is None:
+        slug = rw._github_owner_repo(repo_root)
+        if slug is None:
+            return None, "REST PR lookup failed: origin owner/repo could not be determined"
+        owner, repo_name = slug
+    else:
+        parts = repo.split("/")
+        if len(parts) != 2 or not all(parts):
+            return None, f"REST PR lookup failed: invalid --repo value {repo!r}; expected owner/name"
+        owner, repo_name = parts
+
+    args = ["gh", "api", "-X", "GET", f"repos/{owner}/{repo_name}/pulls/{pr_number}"]
+    try:
+        proc = _run_gh(args, cwd=repo_root, timeout=LIVE_PR_FETCH_TIMEOUT)
+    except (FileNotFoundError, subprocess.SubprocessError) as exc:
+        return None, f"REST PR lookup failed: {exc}"
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "").strip()
+        return None, f"REST PR lookup failed: {detail or f'exit {proc.returncode}'}"
+    try:
+        payload = json.loads(proc.stdout or "null")
+    except json.JSONDecodeError as exc:
+        return None, f"REST PR lookup returned invalid JSON: {exc}"
+
+    if not isinstance(payload, dict):
+        return None, "REST PR lookup returned a non-object payload"
+    if "merged_at" not in payload:
+        return None, "REST PR payload is missing merged_at"
+    number = payload.get("number")
+    if isinstance(number, bool) or not isinstance(number, int) or number != pr_number:
+        return None, "REST PR payload has an unusable PR number"
+    merged_at = payload.get("merged_at")
+    if merged_at is not None:
+        if not isinstance(merged_at, str) or not merged_at:
+            return None, "REST PR payload has an unusable merged_at value"
+        state = "MERGED"
+    else:
+        raw_state = payload.get("state")
+        if not isinstance(raw_state, str) or raw_state.lower() not in {"open", "closed"}:
+            return None, "REST PR payload has an unusable state"
+        state = raw_state.upper()
+
+    head = payload.get("head")
+    if not isinstance(head, dict):
+        return None, "REST PR payload has an unusable head"
+    head_ref = head.get("ref")
+    head_sha = head.get("sha")
+    if not isinstance(head_ref, str) or not head_ref or not isinstance(head_sha, str) or not head_sha:
+        return None, "REST PR payload has unusable head ref or sha"
+    return PullRequestInfo(pr_number, state, head_ref, head_sha), ""
+
+
+def _fetch_pr_info_graphql(
+    repo_root: Path, pr_number: int, *, repo: str | None
+) -> tuple[PullRequestInfo | None, str]:
     args = [
         "gh",
         "pr",
@@ -97,28 +166,44 @@ def fetch_pr_info(repo_root: Path, pr_number: int, *, repo: str | None = None) -
     try:
         proc = _run_gh(args, cwd=repo_root)
     except (FileNotFoundError, subprocess.SubprocessError) as exc:
-        raise MergeCloseoutError(f"gh pr view {pr_number} failed: {exc}") from exc
+        return None, f"gh pr view {pr_number} failed: {exc}"
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "").strip()
-        raise MergeCloseoutError(
-            f"gh pr view {pr_number} failed: {detail or f'exit {proc.returncode}'}"
-        )
+        return None, f"gh pr view {pr_number} failed: {detail or f'exit {proc.returncode}'}"
     try:
         payload = json.loads(proc.stdout or "{}")
     except json.JSONDecodeError as exc:
-        raise MergeCloseoutError(f"gh pr view {pr_number} returned invalid JSON: {exc}") from exc
+        return None, f"gh pr view {pr_number} returned invalid JSON: {exc}"
     if not isinstance(payload, dict):
-        raise MergeCloseoutError(f"gh pr view {pr_number} returned a non-object payload")
+        return None, f"gh pr view {pr_number} returned a non-object payload"
 
     state = str(payload.get("state") or "").upper()
     head_ref = payload.get("headRefName")
     head_sha = payload.get("headRefOid")
-    return PullRequestInfo(
-        number=pr_number,
-        state=state,
-        head_ref_name=str(head_ref) if head_ref else None,
-        head_sha=str(head_sha) if head_sha else None,
+    return (
+        PullRequestInfo(
+            number=pr_number,
+            state=state,
+            head_ref_name=str(head_ref) if head_ref else None,
+            head_sha=str(head_sha) if head_sha else None,
+        ),
+        "",
     )
+
+
+def _head_is_ancestor_of_pr(repo_root: Path, head: str, pr_sha: str) -> tuple[bool, str | None]:
+    """Return whether ``head`` is on the PR, failing closed on Git errors."""
+    if head == pr_sha:
+        return True, None
+    on_pr = rw._run(
+        ["git", "merge-base", "--is-ancestor", head, pr_sha],
+        cwd=repo_root,
+    )
+    if on_pr.returncode == 0:
+        return True, None
+    if on_pr.returncode == 1:
+        return False, None
+    return False, f"cannot verify local ancestry: {(on_pr.stderr or '').strip() or 'git merge-base failed'}"
 
 
 def _head_belongs_only_to_pr(repo_root: Path, head: str, pr_sha: str) -> bool:
@@ -129,11 +214,8 @@ def _head_belongs_only_to_pr(repo_root: Path, head: str, pr_sha: str) -> bool:
     Commits already on main are excluded: every older main checkout is an
     ancestor of a PR that branched from main.
     """
-    on_pr = rw._run(
-        ["git", "merge-base", "--is-ancestor", head, pr_sha],
-        cwd=repo_root,
-    )
-    if on_pr.returncode != 0:
+    on_pr, error = _head_is_ancestor_of_pr(repo_root, head, pr_sha)
+    if error is not None or not on_pr:
         return False
     on_main = rw._run(
         ["git", "merge-base", "--is-ancestor", head, "origin/main"],
@@ -141,6 +223,35 @@ def _head_belongs_only_to_pr(repo_root: Path, head: str, pr_sha: str) -> bool:
     )
     # 1 means "not an ancestor". Any other nonzero exit is an unreadable ref.
     return on_main.returncode == 1
+
+
+def _fetch_live_pr_head(repo_root: Path, pr_number: int) -> tuple[str | None, str | None]:
+    """Fetch GitHub's current PR head and return its commit SHA.
+
+    The explicit source ref avoids relying on stale local or remote-tracking
+    refs. A failed fetch or unreadable fetched commit is never deletion proof.
+    """
+    ref = f"refs/pull/{pr_number}/head"
+    try:
+        fetch = rw._run(
+            ["git", "fetch", "--no-tags", "origin", ref],
+            cwd=repo_root,
+            timeout=LIVE_PR_FETCH_TIMEOUT,
+            env_overrides={"GIT_TERMINAL_PROMPT": "0"},
+        )
+    except subprocess.TimeoutExpired:
+        return None, f"cannot fetch live PR head {ref}: timed out after {LIVE_PR_FETCH_TIMEOUT} seconds"
+    if fetch.returncode != 0:
+        detail = (fetch.stderr or fetch.stdout or "git fetch failed").strip()
+        return None, f"cannot fetch live PR head {ref}: {detail}"
+    resolved = rw._run(["git", "rev-parse", "--verify", "FETCH_HEAD^{commit}"], cwd=repo_root)
+    if resolved.returncode != 0:
+        detail = (resolved.stderr or resolved.stdout or "git rev-parse failed").strip()
+        return None, f"cannot verify fetched PR head {ref}: {detail}"
+    sha = (resolved.stdout or "").strip()
+    if not sha:
+        return None, f"cannot verify fetched PR head {ref}: empty commit SHA"
+    return sha, None
 
 
 def find_matching_worktrees(repo_root: Path, pr: PullRequestInfo) -> list[rw.WorktreeInfo]:
@@ -250,7 +361,7 @@ def verify_branch_gone(
     expected_head = pr.head_sha
 
     guard_error: str | None = None
-    if apply and expected_head is not None:
+    if apply:
         guard_error = _guard_branch_not_open(repo_root, branch)
 
     remote_error: str | None = None
@@ -278,10 +389,24 @@ def verify_branch_gone(
     elif apply and local_head is not None:
         if expected_head is not None and local_head == expected_head:
             local_error = guard_error or rw._prune_branch(
-                repo_root, branch, force=True, expected_head=expected_head
+                repo_root, branch, force=True, expected_head=local_head
             )
         else:
-            local_error = "local head does not match merged PR head; refusing to delete"
+            live_pr_head, fetch_error = _fetch_live_pr_head(repo_root, pr.number)
+            if fetch_error is not None:
+                local_error = fetch_error
+            elif live_pr_head is not None:
+                on_pr, ancestry_error = _head_is_ancestor_of_pr(repo_root, local_head, live_pr_head)
+                if ancestry_error is not None:
+                    local_error = ancestry_error
+                elif on_pr:
+                    local_error = guard_error or rw._prune_branch(
+                        repo_root, branch, force=True, expected_head=local_head
+                    )
+                else:
+                    local_error = "local head does not match merged PR head; refusing to delete"
+            else:
+                local_error = "local head does not match merged PR head; refusing to delete"
     local_after, local_after_error = _local_branch_head(repo_root, branch)
     if local_after_error is not None:
         local_gone = False

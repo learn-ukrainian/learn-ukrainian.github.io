@@ -12,11 +12,13 @@ from __future__ import annotations
 
 import contextlib
 import errno
+import fcntl
 import json
 import os
 import signal
 import subprocess
 import sys
+import threading
 import time
 import urllib.error
 from pathlib import Path
@@ -34,7 +36,8 @@ from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.result import ParseResult
 from agent_runtime.telemetry import InvocationTelemetry
 
-from scripts.orchestration import job_host_exec
+from scripts.orchestration import job_host_exec, worktree_claims
+from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 
 @pytest.fixture
@@ -141,6 +144,14 @@ def _fixture_runtime_tmp_root(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate.tempfile, "gettempdir", lambda: str(runtime_tmp))
     monkeypatch.delenv("LU_RUNTIME_TMP_BASE_ROOT", raising=False)
     return runtime_tmp
+
+
+@pytest.fixture(autouse=True)
+def _fixture_worktree_lock_dir(tmp_path, monkeypatch):
+    """Keep per-worktree lock files out of the host repository's git dir."""
+    lock_dir = tmp_path / "lu-worktree-locks"
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", lock_dir)
+    return lock_dir
 
 
 @pytest.fixture(autouse=True)
@@ -1003,6 +1014,16 @@ def test_wait_detects_zombie_and_returns_nonzero(tmp_tasks_dir, capsys):
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.parametrize("model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra"])
+def test_dispatch_rejects_retired_gpt56_model_before_spawn(tmp_tasks_dir, capsys, model):
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "cursor", "--model", model, "--task-id", "retired-model", "--prompt", "review"]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert delegate._read_state(delegate._state_path("retired-model")) is None
+    assert "retired GPT-5.6 model" in capsys.readouterr().err
+
+
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
 @pytest.mark.parametrize("effort", ["xhigh", "max"])
 def test_dispatch_rejects_unsupported_native_grok_effort_before_spawn(
@@ -1790,6 +1811,85 @@ def test_dispatch_force_new_archives_state_and_result_then_proceeds(tmp_tasks_di
     assert archived_result[0].name in captured.err
 
 
+def test_dispatch_refuses_task_id_held_by_an_archived_record(tmp_tasks_dir, capsys, monkeypatch):
+    """#8625: an archived terminal record still owns its task id."""
+    archived = delegate._archived_state_path("archived-task")
+    delegate._write_state_atomic(archived, {"task_id": "archived-task", "status": "done"})
+    monkeypatch.setattr(
+        delegate.subprocess,
+        "Popen",
+        lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("must not spawn")),
+    )
+
+    rc = delegate.cmd_dispatch(_minimal_dispatch_args("archived-task"))
+
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "already done (archived)" in captured.err
+    assert "--force-new" in captured.err
+    assert not delegate._state_path("archived-task").exists()
+
+
+def test_dispatch_force_new_over_archived_record_leaves_archive_alone(tmp_tasks_dir):
+    archived = delegate._archived_state_path("archived-task")
+    delegate._write_state_atomic(archived, {"task_id": "archived-task", "status": "done", "keep": True})
+
+    with patch("delegate.subprocess.Popen", return_value=_fake_worker_popen()):
+        rc = delegate.cmd_dispatch(_minimal_dispatch_args("archived-task", force_new=True))
+
+    assert rc == 0
+    assert delegate._read_state(archived)["keep"] is True
+    assert delegate._read_state(delegate._state_path("archived-task"))["status"] == "spawning"
+
+
+def test_status_and_wait_fall_back_to_archived_record(tmp_tasks_dir, capsys):
+    """#8625: status/wait still answer for a task whose record was archived.
+
+    The record keeps its hot-directory ``result_file``; the output names the
+    sidecar that moved into the archive with it.
+    """
+    import argparse
+
+    record = {
+        "task_id": "old-task",
+        "agent": "codex",
+        "status": "done",
+        "started_at": "2026-08-01T00:00:00+00:00",
+        "result_file": str(tmp_tasks_dir / "old-task.result"),
+    }
+    archived = delegate._archived_state_path("old-task")
+    delegate._write_state_atomic(archived, record)
+    archived.with_suffix(".result").write_text("archived reply\n")
+
+    assert delegate.cmd_status(argparse.Namespace(task_id="old-task")) == 0
+    status = json.loads(capsys.readouterr().out)
+    assert (status["status"], status["archived"]) == ("done", True)
+    assert status["result_file"] == str(archived.with_suffix(".result"))
+    assert delegate.cmd_wait(argparse.Namespace(task_id="old-task", timeout=0, poll_interval=0.1)) == 0
+    waited = json.loads(capsys.readouterr().out)
+    assert (waited["status"], waited["result_file"]) == ("done", str(archived.with_suffix(".result")))
+    assert not delegate._state_path("old-task").exists()
+    assert "archived" not in json.loads(archived.read_text())
+
+
+def test_list_is_hot_only_unless_all_is_given(tmp_tasks_dir, capsys):
+    """#8625: ``list`` declares its hot-only history; ``--all`` adds archived records."""
+    delegate._write_state_atomic(delegate._state_path("hot"), {"task_id": "hot", "status": "done"})
+    delegate._write_state_atomic(delegate._archived_state_path("old"), {"task_id": "old", "status": "done"})
+
+    assert delegate.cmd_list(delegate.build_parser().parse_args(["list"])) == 0
+    captured = capsys.readouterr()
+    assert [row["task_id"] for row in json.loads(captured.out)] == ["hot"]
+    assert "1 archived record(s) not listed; pass --all" in captured.err
+
+    assert delegate.cmd_list(delegate.build_parser().parse_args(["list", "--all", "--status", "done"])) == 0
+    captured = capsys.readouterr()
+    rows = {row["task_id"]: row for row in json.loads(captured.out)}
+    assert set(rows) == {"hot", "old"}
+    assert rows["old"]["archived"] is True and "archived" not in rows["hot"]
+    assert "not listed" not in captured.err
+
+
 def test_dispatch_parser_accepts_force_new_flag():
     args = delegate.build_parser().parse_args(
         [
@@ -1855,6 +1955,102 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["cli_version"] == "2.1.89"
     assert state["returncode"] == 0
     assert state["returncode_reason"] is None
+
+
+def _run_cursor_review_worker(tmp_tasks_dir, tmp_path, invoke):
+    task_id = "cursor-review-restore"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "status": "spawning"})
+    with patch("agent_runtime.runner.invoke", side_effect=invoke) as runtime:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="cursor",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            strict_mcp_config=True,
+            mcp_config_path=str(tmp_path / "attempt.json"),
+        )
+    return rc, delegate._read_state(state_path), runtime
+
+
+@pytest.mark.parametrize("preexisting", [True, False])
+def test_cursor_review_restores_mcp_file_after_worker(tmp_tasks_dir, tmp_path, preexisting):
+    mcp_path = tmp_path / ".cursor" / "mcp.json"
+    mcp_path.parent.mkdir()
+    original = b' {"mcpServers": {"other": {}}}\r\n\xff'
+    if preexisting:
+        mcp_path.write_bytes(original)
+
+    def invoke(*_args, **_kwargs):
+        mcp_path.write_bytes(b"attempt ledger config\n")
+        return _finalize_mock_result()
+
+    rc, state, runtime = _run_cursor_review_worker(tmp_tasks_dir, tmp_path, invoke)
+    runtime.assert_called_once()
+    assert rc == 0
+    assert state["worktree_disallow_reuse"] is True
+    assert "worktree_review_attempt_only" not in state
+    if preexisting:
+        assert mcp_path.read_bytes() == original
+    else:
+        assert not mcp_path.exists()
+
+
+def test_cursor_review_backup_read_failure_stops_before_invoke(tmp_tasks_dir, tmp_path, monkeypatch):
+    mcp_path = tmp_path / ".cursor" / "mcp.json"
+    mcp_path.parent.mkdir()
+    original = b"original config\n"
+    mcp_path.write_bytes(original)
+    real_read_bytes = Path.read_bytes
+
+    def fail_backup(path):
+        if path == mcp_path:
+            raise OSError("backup denied")
+        return real_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", fail_backup)
+    rc, state, runtime = _run_cursor_review_worker(
+        tmp_tasks_dir, tmp_path, lambda *_args, **_kwargs: pytest.fail("must not invoke")
+    )
+    runtime.assert_not_called()
+    assert rc != 0
+    assert "failed to back up" in state["stderr_excerpt"]
+    assert "backup denied" in state["stderr_excerpt"]
+    assert real_read_bytes(mcp_path) == original
+
+
+def test_cursor_review_interrupt_before_backup_keeps_file(tmp_tasks_dir, tmp_path):
+    mcp_path = tmp_path / ".cursor" / "mcp.json"
+    mcp_path.parent.mkdir()
+    original = b"original config\n"
+    mcp_path.write_bytes(original)
+
+    class InterruptedTimeout:
+        def __gt__(self, _other):
+            raise KeyboardInterrupt("before backup")
+
+    task_id = "cursor-review-early-interrupt"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "status": "spawning"})
+    with patch("agent_runtime.runner.invoke") as runtime:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="cursor",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            silence_timeout=InterruptedTimeout(),
+            strict_mcp_config=True,
+        )
+    runtime.assert_not_called()
+    assert rc != 0
+    assert "UnboundLocalError" not in str(delegate._read_state(state_path))
+    assert mcp_path.read_bytes() == original
 
 
 def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_path):
@@ -4196,6 +4392,463 @@ def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
     assert state["max_budget_usd"] == 0.5
 
 
+def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
+    task_id = "worker-claude-review-grant"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "fixture",
+            "effort": "unknown",
+            "cli_version": "fixture",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="claude",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            review_id="rev-test",
+            attempt_id="att-test",
+            mcp_config_path=str(tmp_path / "review.mcp.json"),
+            strict_mcp_config=True,
+        )
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"] == {
+        "mcp_config_path": str(tmp_path / "review.mcp.json"),
+        "strict_mcp_config": True,
+        "mcp_server_names": ["sources"],
+        "review_id": "rev-test",
+        "attempt_id": "att-test",
+        "allowed_tools": ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS)),
+    }
+
+
+def _codex_worker_result():
+    return type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "fixture",
+            "effort": "unknown",
+            "cli_version": "fixture",
+        },
+    )()
+
+
+def _prepare_codex_review(tmp_path, monkeypatch, extra_servers=()):
+    """Provision a real Codex review attempt plus a fake ``codex`` printing the effective MCP set."""
+    import json as _json
+    import os as _os
+
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt
+
+    user_home = tmp_path / "user-codex"
+    user_home.mkdir()
+    (user_home / "auth.json").write_text("{}\n", encoding="utf-8")
+    monkeypatch.setenv("CODEX_HOME", str(user_home))
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("review: fixture\n", encoding="utf-8")
+    plan = prepare_review_attempt(
+        review_id="rev-codex",
+        attempt_id="att-codex",
+        manifest_path=manifest,
+        harness="codex",
+        receipts_root=tmp_path / "receipts",
+    )
+    expected = _json.loads(plan.config_path.read_text(encoding="utf-8"))["mcpServers"]["sources"]
+    servers = [
+        {
+            "name": "sources",
+            "enabled": True,
+            "transport": {
+                "type": "stdio",
+                "command": expected["command"],
+                "args": expected["args"],
+                "env": expected["env"],
+            },
+        },
+        *extra_servers,
+    ]
+    bin_dir = tmp_path / "fake-bin"
+    bin_dir.mkdir()
+    canned = tmp_path / "servers.json"
+    canned.write_text(_json.dumps(servers), encoding="utf-8")
+    log = tmp_path / "fake-codex.log"
+    fake = bin_dir / "codex"
+    fake.write_text(
+        f"#!/bin/sh\nprintf '%s|%s\\n' \"$CODEX_HOME\" \"$*\" >> {log}\ncat {canned}\n",
+        encoding="utf-8",
+    )
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bin_dir}{_os.pathsep}{_os.environ['PATH']}")
+    return plan, log
+
+
+def test_run_worker_codex_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, tmp_path, monkeypatch):
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
+
+    plan, log = _prepare_codex_review(tmp_path, monkeypatch)
+    task_id = "worker-codex-review"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="review with mcp__sources__verify_word",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            review_id="rev-codex",
+            attempt_id="att-codex",
+            mcp_config_path=str(plan.config_path),
+            strict_mcp_config=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert tool_config == {
+        "mcp_config_path": str(plan.config_path),
+        "strict_mcp_config": True,
+        "mcp_server_names": ["sources"],
+        "review_id": "rev-codex",
+        "attempt_id": "att-codex",
+        "codex_home_override": str(plan.codex_home),
+    }
+    # The gate ran under the exact scoped home with the launch config flags.
+    gate_calls = [
+        line.split("|", 1)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if line.split("|", 1)[1].startswith("mcp list --json")
+    ]
+    assert len(gate_calls) == 1
+    logged_home, logged_args = gate_calls[0]
+    assert logged_home == str(plan.codex_home)
+    assert 'mcp_servers.sources.default_tools_approval_mode="approve"' in logged_args
+    # Final launch argv/env: scoped CODEX_HOME, no daemon sources URL override.
+    invocation = CodexAdapter().build_invocation(
+        prompt="review with mcp__sources__verify_word",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=task_id,
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert invocation.env_overrides["CODEX_HOME"] == str(plan.codex_home)
+    assert not any("mcp_servers.sources.url" in item or "8766" in item for item in invocation.cmd)
+
+
+def test_run_worker_codex_review_refuses_extra_effective_server(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_codex_review(
+        tmp_path,
+        monkeypatch,
+        extra_servers=[{"name": "leak", "enabled": True, "transport": {"type": "stdio", "command": "/bin/true"}}],
+    )
+    task_id = "worker-codex-review-leak"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch("agent_runtime.runner.invoke") as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            review_id="rev-codex",
+            attempt_id="att-codex",
+            mcp_config_path=str(plan.config_path),
+            strict_mcp_config=True,
+        )
+
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state is not None
+    assert "#8517" in state["stderr_excerpt"]
+    assert "leak" in state["stderr_excerpt"]
+
+
+def test_run_worker_ordinary_codex_dispatch_is_unchanged(tmp_tasks_dir, tmp_path, monkeypatch):
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    calls = tmp_path / "codex-calls"
+    fake = fake_bin / "codex"
+    # Record every invocation's argv: the dispatch-telemetry version probe
+    # legitimately runs `codex --version`, so only the MCP gate is forbidden.
+    fake.write_text(f'#!/bin/sh\necho "$*" >> {calls}\n', encoding="utf-8")
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}:{os.environ['PATH']}")
+    task_id = "worker-codex-ordinary"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+        )
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"] == {}
+    recorded = calls.read_text(encoding="utf-8").splitlines() if calls.exists() else []
+    assert not any("mcp" in line for line in recorded), recorded
+
+
+def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
+    """Provision a real AGY review attempt plus a fake ``agy`` printing the effective MCP table."""
+    import json as _json
+
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt
+
+    app_data = tmp_path / "user-agy" / ".gemini" / "antigravity-cli"
+    app_data.mkdir(parents=True)
+    (app_data / "antigravity-oauth-token").write_text("{}\n", encoding="utf-8")
+    monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data))
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("review: fixture\n", encoding="utf-8")
+    plan = prepare_review_attempt(
+        review_id="rev-agy",
+        attempt_id="att-agy",
+        manifest_path=manifest,
+        harness="agy",
+        receipts_root=tmp_path / "receipts",
+    )
+    expected = _json.loads(plan.config_path.read_text(encoding="utf-8"))["mcpServers"]["sources"]
+    rows = [("sources", "stdio", "enabled", " ".join([expected["command"], *expected["args"]])), *extra_rows]
+    widths = [max(len(row[i]) for row in rows) + 2 for i in range(3)]
+    widths[0] = max(widths[0], len("NAME") + 2)
+    lines = ["NAME".ljust(widths[0]) + "TYPE".ljust(widths[1]) + "STATUS".ljust(widths[2]) + "COMMAND/URL"]
+    lines += ["".join(row[i].ljust(widths[i]) for i in range(3)) + row[3] for row in rows]
+    bin_dir = tmp_path / "fake-bin"
+    bin_dir.mkdir()
+    canned = tmp_path / "agy-table.txt"
+    canned.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    log = tmp_path / "fake-agy.log"
+    fake = bin_dir / "agy"
+    # Record every invocation's argv: the dispatch-telemetry version probe legitimately
+    # runs `agy --version`, so only an `mcp` call is the gate.
+    fake.write_text(
+        f"#!/bin/sh\nprintf '%s|%s|%s\\n' \"$HOME\" \"$AGY_APP_DATA_DIR\" \"$*\" >> {log}\n"
+        f'case "$1" in mcp) cat {canned};; *) echo 1.2.9;; esac\n',
+        encoding="utf-8",
+    )
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    return plan, log
+
+
+def _run_agy_review_worker(task_id, tmp_path, plan):
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    return delegate._run_worker(
+        task_id=task_id,
+        agent="agy",
+        prompt="review with mcp__sources__verify_word",
+        mode="read-only",
+        cwd_str=str(tmp_path),
+        model=None,
+        hard_timeout=60,
+        review_id="rev-agy",
+        attempt_id="att-agy",
+        mcp_config_path=str(plan.config_path),
+        strict_mcp_config=True,
+    )
+
+
+def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, tmp_path, monkeypatch):
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.env_sanitize import build_agent_env
+
+    plan, log = _prepare_agy_review(tmp_path, monkeypatch)
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
+        rc = _run_agy_review_worker("worker-agy-review", tmp_path, plan)
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert tool_config == {
+        "mcp_config_path": str(plan.config_path),
+        "strict_mcp_config": True,
+        "mcp_server_names": ["sources"],
+        "review_id": "rev-agy",
+        "attempt_id": "att-agy",
+        "agy_home_override": str(plan.agy_home),
+    }
+    # agy has no allowed-tools mechanism, so no allowed_tools grant is set.
+    assert "allowed_tools" not in tool_config
+    # The gate ran once, under the scoped home.
+    gate_calls = [
+        line.split("|", 2) for line in log.read_text(encoding="utf-8").splitlines() if line.split("|", 2)[2] == "mcp list"
+    ]
+    assert len(gate_calls) == 1
+    assert gate_calls[0][0] == str(plan.agy_home)
+    assert gate_calls[0][1] == str(plan.agy_home / ".gemini" / "antigravity-cli")
+    # Final spawned env for the launch: scoped HOME and AGY_APP_DATA_DIR.
+    invocation = AgyAdapter().build_invocation(
+        prompt="review",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="worker-agy-review",
+        session_id=None,
+        tool_config=tool_config,
+    )
+    env = build_agent_env(provider="agy", overrides=invocation.env_overrides)
+    assert env["HOME"] == str(plan.agy_home)
+    assert env["AGY_APP_DATA_DIR"] == str(plan.agy_home / ".gemini" / "antigravity-cli")
+
+
+def _agy_token_link(plan):
+    return plan.agy_home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token"
+
+
+def test_run_worker_agy_review_intact_oauth_link_settles_done(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(tmp_path, monkeypatch)
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()):
+        rc = _run_agy_review_worker("worker-agy-link-ok", tmp_path, plan)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("worker-agy-link-ok"))
+    assert state["status"] == "done"
+    assert "agy_oauth_link_error" not in state
+
+
+def test_run_worker_agy_review_refuses_broken_oauth_link_before_launch(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(tmp_path, monkeypatch)
+    link = _agy_token_link(plan)
+    link.unlink()
+    link.write_text("{}\n", encoding="utf-8")
+    with patch("agent_runtime.runner.invoke") as mock_invoke:
+        rc = _run_agy_review_worker("worker-agy-link-pre", tmp_path, plan)
+
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    state = delegate._read_state(delegate._state_path("worker-agy-link-pre"))
+    assert "OAuth link not intact" in state["stderr_excerpt"]
+    assert str(Path.home()) not in state["stderr_excerpt"]
+    assert str(tmp_path) not in state["stderr_excerpt"]
+    assert link.read_text(encoding="utf-8") == "{}\n"
+
+
+def test_run_worker_agy_review_link_replaced_by_file_after_run_is_named_error(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(tmp_path, monkeypatch)
+    link = _agy_token_link(plan)
+    real_token = link.resolve()
+
+    def replace_with_file(*_args, **_kwargs):
+        link.unlink()
+        link.write_text('{"refreshed": true}\n', encoding="utf-8")
+        return _codex_worker_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=replace_with_file):
+        rc = _run_agy_review_worker("worker-agy-link-file", tmp_path, plan)
+
+    assert rc == 1
+    state = delegate._read_state(delegate._state_path("worker-agy-link-file"))
+    assert state["status"] != "done"
+    assert state["agy_oauth_link_error"] == "agy_oauth_link_replaced"
+    assert "agy_oauth_link_replaced" in state["stderr_excerpt"]
+    assert "is a regular file" in state["stderr_excerpt"]
+    assert str(tmp_path) not in state["stderr_excerpt"]
+    # Both files stay untouched for the operator: no credential is copied back.
+    assert link.read_text(encoding="utf-8") == '{"refreshed": true}\n'
+    assert real_token.read_text(encoding="utf-8") == "{}\n"
+
+
+def test_run_worker_agy_review_link_retargeted_after_run_is_named_error(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(tmp_path, monkeypatch)
+    link = _agy_token_link(plan)
+    other = tmp_path / "other-token"
+    other.write_text("{}\n", encoding="utf-8")
+
+    def retarget(*_args, **_kwargs):
+        link.unlink()
+        link.symlink_to(other)
+        return _codex_worker_result()
+
+    with patch("agent_runtime.runner.invoke", side_effect=retarget):
+        rc = _run_agy_review_worker("worker-agy-link-retarget", tmp_path, plan)
+
+    assert rc == 1
+    state = delegate._read_state(delegate._state_path("worker-agy-link-retarget"))
+    assert state["status"] != "done"
+    assert state["agy_oauth_link_error"] == "agy_oauth_link_replaced"
+    assert "agy_oauth_link_replaced" in state["stderr_excerpt"]
+    assert "points elsewhere" in state["stderr_excerpt"]
+    assert str(tmp_path) not in state["stderr_excerpt"]
+    assert link.is_symlink()
+    assert link.resolve() == other.resolve()
+
+
+def test_run_worker_agy_review_refuses_extra_effective_server(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(
+        tmp_path, monkeypatch, extra_rows=[("leak", "http", "enabled", "http://127.0.0.1:8766/mcp")]
+    )
+    with patch("agent_runtime.runner.invoke") as mock_invoke:
+        rc = _run_agy_review_worker("worker-agy-review-leak", tmp_path, plan)
+
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    state = delegate._read_state(delegate._state_path("worker-agy-review-leak"))
+    assert state is not None
+    assert "#8617" in state["stderr_excerpt"]
+    assert "leak" in state["stderr_excerpt"]
+
+
+def test_run_worker_ordinary_agy_dispatch_is_unchanged(tmp_tasks_dir, tmp_path, monkeypatch):
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    calls = tmp_path / "agy-calls"
+    fake = fake_bin / "agy"
+    # Record every invocation's argv: the dispatch-telemetry version probe
+    # legitimately runs `agy --version`, so only an `mcp` call is forbidden.
+    fake.write_text(f'#!/bin/sh\necho "$*" >> {calls}\n', encoding="utf-8")
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}:{os.environ['PATH']}")
+    task_id = "worker-agy-ordinary"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+        )
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"] == {}
+    recorded = calls.read_text(encoding="utf-8").splitlines() if calls.exists() else []
+    assert not any(line.split()[:1] == ["mcp"] for line in recorded), recorded
+
+
 def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path):
     state_path = delegate._state_path("worker-kimicc")
     delegate._write_state_atomic(state_path, {"task_id": "worker-kimicc", "harness": "kimicc"})
@@ -5342,6 +5995,33 @@ def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
     state = delegate._read_state(delegate._state_path("gemini-retired-alias"))
     assert state["agent"] == "agy"
     assert state["agent_alias_note"] == "NOTE: gemini→agy retired CLI"
+
+
+def test_dispatch_gemini_alias_rejects_unknown_model_before_spawn(tmp_tasks_dir, monkeypatch, capsys):
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "gemini",
+            "--model",
+            "gemini-9.9-pro-preview",
+            "--task-id",
+            "gemini-alias-unknown-model",
+            "--prompt",
+            "test",
+        ]
+    )
+
+    def _unexpected_spawn(*_args, **_kwargs):
+        raise AssertionError("unknown model must fail before spawning a worker")
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
+
+    assert delegate.cmd_dispatch(args) == 2
+    assert delegate._read_state(delegate._state_path("gemini-alias-unknown-model")) is None
+    err = capsys.readouterr().err
+    assert "Unsupported AGY model 'gemini-9.9-pro-preview'" in err
+    assert "gemini-3.8-flash-high" not in err
 
 
 def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -6761,9 +7441,35 @@ def test_classify_worktree_layout_distinguishes_flat_and_dispatch(tmp_path):
     )
 
 
-def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, monkeypatch, capsys):
+def _redirect_delegate_worktree_root(monkeypatch, tmp_path: Path) -> Path:
+    """Point auto worktree paths at ``tmp_path`` via ``delegate._REPO_ROOT``.
+
+    ``_auto_worktree_path`` joins ``.worktrees/dispatch/<agent>/<task>`` onto
+    that constant. The cross-repo guard compares the constant to the invocation
+    git root, so the stubbed root has to agree or a bare ``--worktree`` is
+    refused before the path is built.
+    A ``.git`` directory plus the local source dirs let the dirty-primary probe
+    and ``_provision_data_symlinks`` run against the throwaway root. The
+    symlink sources are what used to mkdir the husk (``data/``, ``site/``,
+    ``node_modules``) under the real checkout when git itself was stubbed.
+    """
+    repo = tmp_path / "delegate-repo"
+    repo.mkdir()
+    (repo / ".git").mkdir()
+    (repo / "data").mkdir()
+    (repo / "data" / "vesum.db").write_text("", encoding="utf-8")
+    (repo / "data" / "sources.db").write_text("", encoding="utf-8")
+    (repo / "node_modules").mkdir()
+    (repo / "site" / "node_modules").mkdir(parents=True)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
+    monkeypatch.setattr(delegate, "_resolve_invocation_git_root", lambda _start=None: repo)
+    return repo
+
+
+def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     """Fix 4 (#1476): a fresh dispatch with `--worktree` (bare — no path)
     lands in `.worktrees/dispatch/{agent}/{task}/`, the new default."""
+    repo = _redirect_delegate_worktree_root(monkeypatch, tmp_path)
     import argparse
 
     class _FakeStdin:
@@ -6801,7 +7507,11 @@ def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, monkeypatch, capsys):
     state = delegate._read_state(delegate._state_path("codex-1476-auto-path"))
     assert state is not None
     wt = Path(state["worktree_path"])
+    assert wt.is_relative_to(repo)
     assert wt.parts[-4:] == (".worktrees", "dispatch", "codex", "1476-auto-path")
+    assert (wt / "data").is_dir()
+    assert (wt / "site").is_dir()
+    assert (wt / "node_modules").is_symlink()
     assert state["worktree_branch"] == "codex/1476-auto-path"
     assert state["worktree_layout"] == "dispatch"
 
@@ -7029,6 +7739,56 @@ def test_write_guard_rejects_explicit_worktree_pointing_at_primary(tmp_path):
     )
     assert err is not None
     assert "primary checkout" in err
+
+
+def _add_acp_runtime(main: Path) -> Path:
+    """Register a no-checkout ACP runtime worktree the way the ACP bridge does."""
+    runtime = main / ".worktrees" / "dispatch" / "acp" / "runtime-ask-8610-0123456789"
+    runtime.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["git", "-C", str(main), "worktree", "add", "--detach", "--no-checkout", str(runtime), "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=delegate._sanitized_git_env(),
+        timeout=30,
+    )
+    return runtime.resolve()
+
+
+def test_acp_runtime_worktree_is_never_a_verified_attach_target(tmp_path):
+    """#8610 r5: the ACP bridge removes its runtimes on its own schedule, so none is an attach target."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    runtime = _add_acp_runtime(main)
+
+    assert delegate._resolve_verified_worktree_path(dispatch_wt) == dispatch_wt
+    assert delegate._resolve_verified_worktree_path(runtime) is None
+    assert delegate._is_acp_runtime_path(runtime / "nested")
+    assert not delegate._is_acp_runtime_path(main / ".worktrees" / "dispatch" / "codex" / "acp")
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize("flag", ["cwd", "worktree"])
+def test_dispatch_refuses_an_acp_runtime_cwd_or_worktree_before_side_effects(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, mode, flag
+):
+    """#8610 r5: ``--cwd``/``--worktree`` inside ``.worktrees/dispatch/acp/`` fails with a clear error."""
+    main, _dispatch_wt = _init_repo_with_worktree(tmp_path)
+    runtime = _add_acp_runtime(main)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    spawned: list[object] = []
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: spawned.append(a))
+
+    rc = delegate.cmd_dispatch(_write_args(task_id="acp-attach", mode=mode, **{flag: str(runtime)}))
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert f"--{flag} {str(runtime)!r} resolves inside an ACP runtime worktree" in err
+    assert "never a dispatch target" in err
+    assert not delegate._state_path("acp-attach").exists()
+    assert spawned == []
 
 
 # --- #6900 cross-repo binding (sibling git root vs _REPO_ROOT) --------------
@@ -7591,8 +8351,10 @@ def test_dispatch_accepts_workspace_write_cwd_added_worktree(
 
 def test_dispatch_accepts_bare_worktree_for_workspace_write(
     tmp_tasks_dir,
+    tmp_path,
     monkeypatch,
 ):
+    repo = _redirect_delegate_worktree_root(monkeypatch, tmp_path)
     _, fake_run = _make_run_stub()
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
@@ -7609,7 +8371,11 @@ def test_dispatch_accepts_bare_worktree_for_workspace_write(
     state = delegate._read_state(delegate._state_path("ww-bare"))
     assert state is not None
     wt = Path(state["worktree_path"])
+    assert wt.is_relative_to(repo)
     assert wt.parts[-4:] == (".worktrees", "dispatch", "codex", "ww-bare")
+    assert (wt / "data").is_dir()
+    assert (wt / "site").is_dir()
+    assert (wt / "node_modules").is_symlink()
 
 
 def test_dispatch_accepts_explicit_added_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -8055,7 +8821,7 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
     """Post-worker enrichment must not be able to strand a finished task.
 
     Cross-family review of #5807: the first guard covered the finish telemetry
-    but not the worktree reaping below it, and _reap_finished_worktree performs
+    but not the worktree reaping below it, and settle's worktree reaping performed
     its import OUTSIDE its own handler — so an unimportable reaper module still
     skipped the state write and left the task reading "running".
     """
@@ -8093,7 +8859,7 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
         patch("agent_runtime.runner.invoke", return_value=mock_result),
         patch.object(delegate, "_count_commits_ahead", return_value=1),
         patch.object(delegate, "_worktree_is_dirty", return_value=False),
-        patch.object(delegate, "_reap_finished_worktree", side_effect=unimportable),
+        patch.object(delegate, "_settle_worktree_reap", side_effect=unimportable),
     ):
         with contextlib.suppress(ImportError):
             delegate._run_worker(
@@ -8113,21 +8879,21 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
     assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
 
 
-def test_reap_finished_worktree_survives_an_unimportable_reaper(tmp_path, monkeypatch):
-    """The reaper's own import belongs inside its error handling."""
-    import builtins
+def test_settle_reap_records_a_raising_removal_instead_of_raising(tmp_path, tmp_tasks_dir, monkeypatch):
+    """A step that raises inside the shared chokepoint is an ``error`` record, never an exception."""
 
-    real_import = builtins.__import__
+    def raising_remove(_repo_root, _worktree, *, force):
+        raise RuntimeError("simulated removal crash")
 
-    def fake_import(name, *args, **kwargs):
-        if name == "scripts.orchestration" or name.endswith("reap_worktrees"):
-            raise ImportError(f"simulated missing module: {name}")
-        return real_import(name, *args, **kwargs)
+    monkeypatch.setattr(worktree_claims, "worktree_is_dirty", lambda _path: False)
+    monkeypatch.setattr(worktree_claims, "git_worktree_remove", raising_remove)
+    out = delegate._settle_worktree_reap(tmp_path, created_by_this_dispatch=True, settling_task_id="reap-raises")
 
-    monkeypatch.setattr(builtins, "__import__", fake_import)
-    out = delegate._reap_finished_worktree(tmp_path)
-    assert isinstance(out, dict)
-    assert out.get("ok") is not True
+    assert out["action"] == "error"
+    assert out["reason"] == "worktree removal raised"
+    assert out["error"] == "RuntimeError: simulated removal crash"
+    assert out["pr"] is None
+    assert tmp_path.exists()
 
 
 def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
@@ -8191,21 +8957,35 @@ def _run_settle_reap_worker(
     keep_worktree: bool = False,
     require_review_verdict: bool = False,
     commits_ahead: int | None = None,
+    worktree_reused: bool | None = False,
+    sibling_records: dict[str, Any] | None = None,
 ):
     primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
     if dirty:
         (worktree / "leak.txt").write_text("uncommitted\n", encoding="utf-8")
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(
-        state_path,
-        {
-            "task_id": task_id,
-            "status": "running",
-            "worktree_path": str(worktree),
-            "worktree_base": "main",
-            "worktree_branch": branch,
-        },
-    )
+    own_state: dict[str, Any] = {
+        "task_id": task_id,
+        "status": "running",
+        "worktree_path": str(worktree),
+        "worktree_base": "main",
+        "worktree_branch": branch,
+    }
+    if worktree_reused is not None:
+        own_state["worktree_reused"] = worktree_reused
+    delegate._write_state_atomic(state_path, own_state)
+    # Sibling task records share the tmp tasks dir. A dict names this
+    # worktree via ``worktree_path``; a str is written raw (corrupt record)
+    # with ``{worktree}`` replaced by the worktree path.
+    for sibling_id, record in (sibling_records or {}).items():
+        sibling_path = delegate._state_path(sibling_id)
+        if isinstance(record, str):
+            sibling_path.write_text(record.replace("{worktree}", str(worktree)), encoding="utf-8")
+        else:
+            delegate._write_state_atomic(
+                sibling_path,
+                {"task_id": sibling_id, "worktree_path": str(worktree), **record},
+            )
     mock_result = type(
         "_Result",
         (),
@@ -8356,6 +9136,887 @@ def test_keep_worktree_flag_keeps_clean_read_only_checkout(tmp_tasks_dir, tmp_pa
     assert state["worktree_reap"] is None
     assert worktree.exists()
     assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_review_attached_to_live_implementer_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 (a): a review that reused a running implementer's checkout never removes it."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="review-8607-hermetic-worktree-cf",
+        mode="read-only",
+        worktree_reused=True,
+        sibling_records={"impl-8607": {"status": "running", "mode": "danger", "worktree_reused": False}},
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_reused"] is True
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "reused worktree; owner reaps"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_review_in_own_worktree_still_removed_past_finished_claims(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 (b): a checkout this dispatch created is still removed; finished records do not claim it."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-own",
+        mode="read-only",
+        sibling_records={
+            "old-done": {"status": "done"},
+            "old-dry-run": {"status": "dry_run"},
+            "elsewhere": {"status": "running", "worktree_path": str(tmp_path / "other")},
+        },
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_reap"]["action"] == "removed"
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+@pytest.mark.parametrize("claim_status", ["running", "spawning", "", "needs_finalize", None])
+def test_active_sibling_claim_blocks_reap_when_reused_flag_is_mis_set(
+    tmp_tasks_dir, tmp_path, monkeypatch, claim_status
+):
+    """#8610 (c): another non-terminal task naming the path blocks removal even with reused=False."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-misset",
+        mode="read-only",
+        worktree_reused=False,
+        sibling_records={"impl-owner": {"status": claim_status}},
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree claimed by active task impl-owner"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+@pytest.mark.parametrize(
+    "corrupt",
+    [
+        '{"task_id": "half", "worktree_path": "{worktree}',
+        '["{worktree}"]',
+        '{"worktree_path": 7, "note": "{worktree}"}',
+    ],
+)
+def test_unreadable_sibling_task_record_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch, corrupt):
+    """#8610: a sibling record that names the worktree but cannot be read fails closed."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-corrupt-sibling",
+        mode="read-only",
+        sibling_records={"broken": corrupt},
+    )
+
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "task record broken.json unreadable; refusing worktree removal"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_unknown_worktree_ownership_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: a record without ``worktree_reused`` cannot prove creation, so settle keeps it."""
+    _primary, worktree, _branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-legacy",
+        mode="read-only",
+        worktree_reused=None,
+    )
+
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == (
+        "worktree ownership unknown; refusing worktree removal; operator cleanup: "
+        f"scripts/orchestration/reap_worktrees.py --terminal-dispatches --worktree {worktree} --apply"
+    )
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize(
+    "corrupt",
+    ['{"status": "done", "task_id": "half', '{"status": "failed", "worktree_path": 7}', '[{"status": "done"}]'],
+)
+def test_unrelated_corrupt_task_record_does_not_block_reap(tmp_tasks_dir, tmp_path, monkeypatch, corrupt):
+    """#8610: a finished corrupt record that never names the worktree is not a candidate claim."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-unrelated-corrupt",
+        mode="read-only",
+        sibling_records={"broken": corrupt},
+    )
+
+    assert state["worktree_reap"]["action"] == "removed"
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+@pytest.mark.parametrize("corrupt", ['{"task_id": "half', "[1, 2]", '{"worktree_path": 7}'])
+def test_statusless_corrupt_task_record_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch, corrupt):
+    """#8610: a record with no status key may be an active legacy claim, so it is parsed and fails closed."""
+    _primary, worktree, _branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-statusless-corrupt",
+        mode="read-only",
+        sibling_records={"broken": corrupt},
+    )
+
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "task record broken.json unreadable; refusing worktree removal"
+    assert worktree.exists()
+
+
+def test_repo_relative_sibling_claim_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: a claim is resolved against the repo root, as dispatch does, not the process cwd."""
+    task_id = "reap-ro-relative-claim"
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id=task_id,
+        mode="read-only",
+        sibling_records={
+            "impl-relative": {
+                "status": "running",
+                "worktree_path": f".worktrees/dispatch/cursor/{task_id}/",
+            }
+        },
+    )
+
+    assert Path.cwd() != primary
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree claimed by active task impl-relative"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_unresolvable_sibling_claim_is_recorded_skip_not_settle_crash(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: a NUL in a candidate claim fails closed as a skip; settle still writes the terminal state."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-nul-claim",
+        mode="read-only",
+        sibling_records={"nul": '{"task_id": "nul", "status": "running", "worktree_path": "{worktree}\\u0000x"}'},
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == (
+        "task record nul.json worktree_path unresolvable; refusing worktree removal"
+    )
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_claim_attached_after_ownership_check_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: the active-claim scan runs at removal time, after the ownership decision."""
+    task_id = "reap-ro-late-attach"
+    original = delegate._settled_worktree_ownership
+
+    def ownership_then_attach(worktree, **kwargs):
+        refusal = original(worktree, **kwargs)
+        delegate._write_state_atomic(
+            delegate._state_path("impl-late"),
+            {"task_id": "impl-late", "status": "spawning", "worktree_path": str(worktree)},
+        )
+        return refusal
+
+    monkeypatch.setattr(delegate, "_settled_worktree_ownership", ownership_then_attach)
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id=task_id,
+        mode="read-only",
+    )
+
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree claimed by active task impl-late"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def _delegate_claim_refusal(worktree, *, task_id):
+    """Run the shared claim scan over delegate's task records, exempting ``task_id``."""
+    return worktree_claims.active_worktree_claim_refusal(
+        worktree,
+        tasks_dir=delegate._TASKS_DIR,
+        repo_root=delegate._REPO_ROOT,
+        owner_task_id=task_id,
+        owner_state_file=worktree_claims.task_record_path(delegate._TASKS_DIR, task_id),
+    )
+
+
+def test_active_claim_scan_matches_json_escaped_non_ascii_worktree_name(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: the byte pre-filter also matches the ``\\uXXXX`` spelling ``json.dumps`` writes."""
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    worktree = tmp_path / ".worktrees" / "dispatch" / "cursor" / "огляд-8610"
+    worktree.mkdir(parents=True)
+    delegate._write_state_atomic(
+        delegate._state_path("impl-uk"),
+        {"task_id": "impl-uk", "status": "running", "worktree_path": str(worktree)},
+    )
+    assert "огляд".encode() not in delegate._state_path("impl-uk").read_bytes()
+
+    reason = _delegate_claim_refusal(worktree, task_id="review-uk")
+
+    assert reason == "worktree claimed by active task impl-uk"
+
+
+def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path, monkeypatch, tmp_tasks_dir):
+    """#8610: a relative ``--worktree`` is recorded as the resolved absolute path on prep failure too."""
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
+
+    def fail_ensure(**_kwargs):
+        raise ValueError("simulated worktree preparation failure")
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", fail_ensure)
+    args = _write_args(
+        agent="agy",
+        task_id="task-8610-relative",
+        branch=None,
+        worktree=".worktrees/dispatch/agy/task-8610-relative/",
+        mode="workspace-write",
+    )
+
+    assert delegate.cmd_dispatch(args) == 1
+
+    state = json.loads(delegate._state_path("task-8610-relative").read_text(encoding="utf-8"))
+    assert state["status"] == "failed"
+    expected = (Path(delegate._REPO_ROOT) / ".worktrees/dispatch/agy/task-8610-relative").resolve()
+    assert state["worktree_path"] == str(expected)
+
+
+def test_active_legacy_claim_through_symlink_alias_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 r2: a running legacy record naming the worktree via a differently named alias is still parsed."""
+    task_id = "reap-ro-legacy-alias"
+    alias = tmp_path / "legacy-checkout-alias"
+    alias.symlink_to(tmp_path / "primary" / ".worktrees" / "dispatch" / "cursor" / task_id)
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id=task_id,
+        mode="read-only",
+        sibling_records={"impl-legacy": {"status": "running", "worktree_path": str(alias)}},
+    )
+
+    raw = delegate._state_path("impl-legacy").read_bytes()
+    assert not any(needle in raw for needle in delegate._worktree_claim_needles(worktree, worktree))
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree claimed by active task impl-legacy"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+@pytest.mark.parametrize(
+    ("raw", "candidate"),
+    [
+        (b'{"status": "done", "worktree_path": "/elsewhere/x"}', False),
+        (b'{"status":"running","worktree_path":"/elsewhere/x"}', True),
+        (b'{"status": "needs_finalize"}', True),
+        (b'{"status": "spawning"}', True),
+        (b'{"status": ""}', True),
+        (b'{"status": null}', True),
+        (b'{"worktree_path": "/elsewhere/x"}', True),
+        (b'{"status": "done", "worktree_path": "/wt/target"}', True),
+        (b'{"status": "queued", "worktree_path": "/elsewhere/x"}', True),
+        (b'{"status": "done", "lease": {"status": "running"}}', True),
+        (b'{"status": "done", "lease": {"status": "failed"}}', False),
+        (b'{"status": ["done"]}', True),
+        (b'{"status": "d\\u006fne"}', True),
+        (b'{"status": "done_later"}', True),
+        (b'{"status": "reaped"}', False),
+    ],
+)
+def test_claim_prefilter_keeps_active_and_statusless_records(raw, candidate):
+    """#8610: a record is skipped unparsed only when every ``status`` key shows a released status."""
+    needles = delegate._worktree_claim_needles(Path("/wt/target"), Path("/wt/target"))
+
+    assert delegate._record_may_claim_worktree(raw, needles) is candidate
+
+
+@contextlib.contextmanager
+def _worktree_lock_held_elsewhere(worktree: Path):
+    """Hold ``worktree``'s dispatch/settle lock from a separate process."""
+    _canonical, lock_file = delegate._worktree_lock_path(worktree)
+    lock_file.parent.mkdir(parents=True, exist_ok=True)
+    holder = subprocess.Popen(
+        [
+            sys.executable,
+            "-c",
+            "import fcntl, os, sys\n"
+            "fd = os.open(sys.argv[1], os.O_RDWR | os.O_CREAT, 0o600)\n"
+            "fcntl.flock(fd, fcntl.LOCK_EX)\n"
+            "print('locked', flush=True)\n"
+            "sys.stdin.read()\n",
+            str(lock_file),
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        assert holder.stdout is not None and holder.stdout.readline().strip() == "locked"
+        yield
+    finally:
+        assert holder.stdin is not None
+        holder.stdin.close()
+        holder.wait(timeout=30)
+        if holder.stdout is not None:
+            holder.stdout.close()
+
+
+def _worktree_lock_is_free(worktree: Path) -> bool:
+    """Probe the lock through a fresh descriptor, which conflicts with any holder."""
+    _canonical, lock_file = delegate._worktree_lock_path(worktree)
+    if not lock_file.exists():
+        return True
+    fd = os.open(lock_file, os.O_RDWR)
+    try:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return False
+        fcntl.flock(fd, fcntl.LOCK_UN)
+        return True
+    finally:
+        os.close(fd)
+
+
+def _spawn_passthrough_popen(monkeypatch, on_worker_spawn):
+    """Stub only the dispatch worker spawn; real git keeps running through ``subprocess.run``."""
+    real_popen = subprocess.Popen
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 97531
+        stdin = _FakeStdin()
+
+    def fake_popen(cmd, *args, **kwargs):
+        if isinstance(cmd, list) and "_worker" in cmd:
+            on_worker_spawn(cmd)
+            return _FakeProc()
+        return real_popen(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+
+def _dispatch_from_fixture_primary(primary: Path, monkeypatch) -> None:
+    """Make ``cmd_dispatch`` accept the fixture primary: invoked from it, clean apart from worktrees."""
+    with (primary / ".git" / "info" / "exclude").open("a", encoding="utf-8") as exclude:
+        exclude.write(".worktrees/\n")
+    monkeypatch.chdir(primary)
+
+
+def test_worktree_lock_files_are_private_and_persist(tmp_path, _fixture_worktree_lock_dir):
+    """#8610: lock dir 0o700, lock files 0o600, and a released lock file is never deleted."""
+    worktree = tmp_path / "wt"
+    with delegate.worktree_lock(worktree, timeout_s=0):
+        assert not _worktree_lock_is_free(worktree)
+    _canonical, lock_file = delegate._worktree_lock_path(worktree)
+
+    assert lock_file.parent == _fixture_worktree_lock_dir
+    assert stat_mode(lock_file.parent) == 0o700
+    assert stat_mode(lock_file) == 0o600
+    assert lock_file.exists()
+    assert _worktree_lock_is_free(worktree)
+    assert len(lock_file.stem) == 32
+
+
+def stat_mode(path: Path) -> int:
+    return path.stat().st_mode & 0o777
+
+
+def test_worktree_lock_defaults_to_the_git_common_dir(tmp_path, monkeypatch):
+    """#8610: every checkout of one repository contends on ``<git common dir>/lu-worktree-locks``."""
+    primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="lock-home")
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", None)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", worktree)
+
+    _canonical, lock_file = delegate._worktree_lock_path(worktree)
+
+    assert lock_file.parent == primary / ".git" / "lu-worktree-locks"
+
+
+def test_settle_skips_when_an_attacher_holds_the_worktree_lock(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 r2 (a, c): an attacher holding the lock makes settle time out and skip, never raise."""
+    task_id = "reap-ro-lock-busy"
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DEFAULT_TIMEOUT_S", 0.2)
+    future_worktree = tmp_path / "primary" / ".worktrees" / "dispatch" / "cursor" / task_id
+    with _worktree_lock_held_elsewhere(future_worktree):
+        primary, worktree, branch, state = _run_settle_reap_worker(
+            tmp_tasks_dir=tmp_tasks_dir,
+            tmp_path=tmp_path,
+            monkeypatch=monkeypatch,
+            task_id=task_id,
+            mode="read-only",
+        )
+
+    assert state["status"] == "done"
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree lock busy"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def _sibling_settle_checkout(tmp_path, monkeypatch, *, task_id: str):
+    """Public control plane (``delegate._REPO_ROOT``) plus a dispatch worktree of its ``infra-private`` sibling (#8624)."""
+    public, _worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="public-unused")
+    sibling = tmp_path / "learn-ukrainian-infra-private"
+    sibling.mkdir()
+    _init_git_repo_for_test(sibling, monkeypatch)
+    (sibling / "README").write_text("base\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README"], cwd=sibling, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "-c", "commit.gpgsign=false", "commit", "-m", "base"],
+        cwd=sibling,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    branch = f"cursor/{task_id}"
+    worktree = sibling.resolve() / ".worktrees" / "dispatch" / "cursor" / task_id
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["git", "worktree", "add", "-b", branch, str(worktree), "HEAD"],
+        cwd=sibling,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    monkeypatch.setattr(worktree_claims, "public_primary_root", lambda: public)
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", None)
+    return public, sibling.resolve(), worktree, branch
+
+
+def test_settle_keeps_a_sibling_repo_worktree_while_a_public_record_claims_it(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8624: a ``--repo`` worktree's claims live in the public batch_state, which settle must read."""
+    task_id = "sibling-settle-claimed"
+    _public, sibling, worktree, branch = _sibling_settle_checkout(tmp_path, monkeypatch, task_id=task_id)
+    tmp_tasks_dir.mkdir(parents=True)
+    (tmp_tasks_dir / "review-attached.json").write_text(
+        json.dumps({"task_id": "review-attached", "status": "spawning", "worktree_path": str(worktree)}),
+        encoding="utf-8",
+    )
+
+    out = delegate._settle_worktree_reap(worktree, created_by_this_dispatch=True, settling_task_id=task_id)
+
+    assert out["action"] == "skipped"
+    assert out["reason"] == "worktree claimed by active task review-attached"
+    assert worktree.exists()
+    assert _branch_ref_present(sibling, branch)
+
+
+def test_settle_removes_an_unclaimed_sibling_repo_worktree_in_its_own_repository(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8624: with no live claim settle drops the sibling checkout, git-operated in the sibling, and keeps its branch."""
+    task_id = "sibling-settle-free"
+    public, sibling, worktree, branch = _sibling_settle_checkout(tmp_path, monkeypatch, task_id=task_id)
+    tmp_tasks_dir.mkdir(parents=True)
+    (tmp_tasks_dir / "finished.json").write_text(
+        json.dumps({"task_id": "finished", "status": "done", "worktree_path": str(worktree)}), encoding="utf-8"
+    )
+
+    out = delegate._settle_worktree_reap(worktree, created_by_this_dispatch=True, settling_task_id=task_id)
+
+    assert out["action"] == "removed", out
+    assert not worktree.exists()
+    assert _branch_ref_present(sibling, branch)
+    assert not _branch_ref_present(public, branch)
+
+
+def test_attach_between_claim_scan_and_removal_is_impossible(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 r2 (a): the reviewer's interleaving, an attach right after settle's claim scan, cannot happen."""
+    task_id = "reap-ro-scan-then-attach"
+    original_scan = worktree_claims.active_worktree_claim_refusal
+    attach_outcomes: list[str] = []
+
+    def scan_then_attach(worktree, **kwargs):
+        refusal = original_scan(worktree, **kwargs)
+
+        def attach():
+            try:
+                with delegate.worktree_lock(worktree, timeout_s=0.2):
+                    attach_outcomes.append("attached")
+            except delegate.WorktreeLockTimeout:
+                attach_outcomes.append("lock busy")
+
+        attacher = threading.Thread(target=attach)
+        attacher.start()
+        attacher.join(timeout=30)
+        return refusal
+
+    monkeypatch.setattr(worktree_claims, "active_worktree_claim_refusal", scan_then_attach)
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id=task_id,
+        mode="read-only",
+    )
+
+    assert attach_outcomes == ["lock busy"]
+    assert state["worktree_reap"]["action"] == "removed"
+    assert not worktree.exists()
+    assert _worktree_lock_is_free(worktree)
+    assert _branch_ref_present(primary, branch)
+
+
+def test_dispatch_waits_for_settle_then_follows_missing_worktree_path(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 r2 (b, d): dispatch blocks on settle's lock, then sees the checkout gone and creates a fresh one."""
+    task_id = "reap-ro-settling"
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    _dispatch_from_fixture_primary(primary, monkeypatch)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
+    settle_holds_lock = threading.Event()
+    dispatch_blocked = threading.Event()
+    real_flock = fcntl.flock
+    main_thread = threading.current_thread()
+
+    def spy_flock(fd, operation):
+        try:
+            return real_flock(fd, operation)
+        except BlockingIOError:
+            if threading.current_thread() is main_thread:
+                dispatch_blocked.set()
+            raise
+
+    monkeypatch.setattr(fcntl, "flock", spy_flock)
+    original_scan = worktree_claims.active_worktree_claim_refusal
+
+    def scan_while_dispatch_waits(path, **kwargs):
+        settle_holds_lock.set()
+        assert dispatch_blocked.wait(timeout=30), "dispatch never contended for the settle lock"
+        return original_scan(path, **kwargs)
+
+    monkeypatch.setattr(worktree_claims, "active_worktree_claim_refusal", scan_while_dispatch_waits)
+    ensure_calls: list[dict[str, bool]] = []
+
+    def spy_ensure(**kwargs):
+        path = delegate._normalize_worktree_path(kwargs["raw_path"])
+        ensure_calls.append({"existed": path.exists(), "lock_free": _worktree_lock_is_free(path)})
+        path.mkdir(parents=True)
+        return path, "cursor/impl-attach", {"reused": False, "base_sha": "a" * 40, "layout": "dispatch"}
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", spy_ensure)
+    worker_spawns: list[bool] = []
+    _spawn_passthrough_popen(monkeypatch, lambda _cmd: worker_spawns.append(_worktree_lock_is_free(worktree)))
+    settle_result: dict[str, Any] = {}
+    settler = threading.Thread(
+        target=lambda: settle_result.update(
+            delegate._settle_worktree_reap(worktree, created_by_this_dispatch=True, settling_task_id=task_id)
+        )
+    )
+    settler.start()
+    assert settle_holds_lock.wait(timeout=30)
+
+    rc = delegate.cmd_dispatch(
+        _write_args(agent="agy", task_id="impl-attach", worktree=str(worktree), mode="workspace-write")
+    )
+    settler.join(timeout=60)
+
+    assert settle_result["action"] == "removed"
+    assert _branch_ref_present(primary, branch)
+    assert rc == 0
+    assert ensure_calls == [{"existed": False, "lock_free": False}]
+    state = delegate._read_state(delegate._state_path("impl-attach"))
+    assert state is not None
+    assert state["status"] == "spawning"
+    assert state["worktree_path"] == str(worktree)
+    assert state["worktree_reused"] is False
+    # (d) the dispatch lock is released before its worker, whose settle takes it again, starts.
+    assert worker_spawns == [True]
+
+
+def test_dispatch_fails_before_spawning_when_the_worktree_lock_is_busy(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#8610 r2 (c): a lock timeout fails dispatch with a clear error; nothing is attached or spawned."""
+    task_id = "impl-lock-busy"
+    worktree = tmp_path / ".worktrees" / "dispatch" / "agy" / task_id
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DEFAULT_TIMEOUT_S", 0.2)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
+    ensure_calls: list[dict[str, Any]] = []
+    monkeypatch.setattr(delegate, "_ensure_worktree", lambda **kwargs: ensure_calls.append(kwargs))
+    worker_spawns: list[list[str]] = []
+
+    with _worktree_lock_held_elsewhere(worktree):
+        _spawn_passthrough_popen(monkeypatch, worker_spawns.append)
+        rc = delegate.cmd_dispatch(
+            _write_args(agent="agy", task_id=task_id, worktree=str(worktree), mode="workspace-write")
+        )
+
+    assert rc == 1
+    assert ensure_calls == []
+    assert worker_spawns == []
+    assert "still held by another process after 0.2s" in capsys.readouterr().err
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state is not None
+    assert state["status"] == "failed"
+    assert "worktree lock" in (state.get("last_error") or state.get("stderr_excerpt") or "")
+    assert _worktree_lock_is_free(worktree)
+
+
+def test_cwd_dispatch_fails_when_the_worktree_lock_is_busy(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#8610 r2 (c): attaching an existing worktree through ``--cwd`` honours the lock too."""
+    primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="impl-cwd-busy")
+    _dispatch_from_fixture_primary(primary, monkeypatch)
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DEFAULT_TIMEOUT_S", 0.2)
+    monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda _path: worktree)
+    worker_spawns: list[list[str]] = []
+
+    with _worktree_lock_held_elsewhere(worktree):
+        _spawn_passthrough_popen(monkeypatch, worker_spawns.append)
+        rc = delegate.cmd_dispatch(
+            _write_args(agent="agy", task_id="impl-cwd-busy", cwd=str(worktree), mode="workspace-write")
+        )
+
+    assert rc == 1
+    assert worker_spawns == []
+    assert "failed to lock worktree" in capsys.readouterr().err
+    assert delegate._read_state(delegate._state_path("impl-cwd-busy")) is None
+
+
+def test_worktree_lock_never_nests_on_one_thread(tmp_path):
+    """#8610 r2 (d): a nested same-thread acquisition fails at once instead of waiting on itself."""
+    worktree = tmp_path / "wt"
+    started = time.monotonic()
+    with delegate.worktree_lock(worktree, timeout_s=30):
+        with pytest.raises(delegate.WorktreeLockReentry), delegate.worktree_lock(worktree, timeout_s=30):
+            pass
+        skip = delegate._settle_worktree_reap(worktree, created_by_this_dispatch=True, settling_task_id="self")
+
+    assert time.monotonic() - started < 5
+    assert skip["action"] == "skipped"
+    assert skip["reason"] == "worktree lock already held by this thread"
+    assert _worktree_lock_is_free(worktree)
+
+
+def test_released_statuses_are_one_set_shared_by_claims_prefilter_and_holders():
+    """#8610 r4: the claim policy, its byte pre-filter, and branch-holder release share one status set."""
+    assert delegate._RELEASED_TASK_STATUSES is worktree_claims.RELEASED_TASK_STATUSES
+    assert delegate._NO_DELIVERABLE_STATUS in worktree_claims.RELEASED_TASK_STATUSES
+    needles = delegate._worktree_claim_needles(Path("/wt/target"), Path("/wt/target"))
+    for status in worktree_claims.RELEASED_TASK_STATUSES:
+        raw = json.dumps({"status": status, "worktree_path": "/elsewhere/x"}, indent=2).encode()
+        assert delegate._record_may_claim_worktree(raw, needles) is False, status
+
+
+def test_queued_alias_claim_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 r4: an unknown status such as ``queued`` claims through a differently named alias too."""
+    task_id = "reap-ro-queued-alias"
+    alias = tmp_path / "queued-checkout-alias"
+    alias.symlink_to(tmp_path / "primary" / ".worktrees" / "dispatch" / "cursor" / task_id)
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id=task_id,
+        mode="read-only",
+        sibling_records={"impl-queued": {"status": "queued", "worktree_path": str(alias)}},
+    )
+
+    raw = delegate._state_path("impl-queued").read_bytes()
+    assert not any(needle in raw for needle in delegate._worktree_claim_needles(worktree, worktree))
+    assert delegate._record_may_claim_worktree(raw, delegate._worktree_claim_needles(worktree, worktree))
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree claimed by active task impl-queued"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_non_string_status_claims_instead_of_crashing_the_scan(tmp_tasks_dir, tmp_path):
+    """#8610 r4: an unhashable status is not a released status, so it claims."""
+    worktree = tmp_path / "wt"
+    delegate._write_state_atomic(
+        delegate._state_path("impl-odd"),
+        {"task_id": "impl-odd", "status": ["done"], "worktree_path": str(worktree)},
+    )
+
+    assert _delegate_claim_refusal(worktree, task_id="review-odd") == "worktree claimed by active task impl-odd"
+
+
+def test_cwd_dispatch_fails_when_the_worktree_is_removed_while_it_waits(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#8610 r4: a checkout removed while ``--cwd`` dispatch waits fails dispatch; no record, no spawn."""
+    task_id = "reap-ro-cwd-settling"
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    _dispatch_from_fixture_primary(primary, monkeypatch)
+    settle_holds_lock = threading.Event()
+    dispatch_blocked = threading.Event()
+    real_flock = fcntl.flock
+    main_thread = threading.current_thread()
+
+    def spy_flock(fd, operation):
+        try:
+            return real_flock(fd, operation)
+        except BlockingIOError:
+            if threading.current_thread() is main_thread:
+                dispatch_blocked.set()
+            raise
+
+    monkeypatch.setattr(fcntl, "flock", spy_flock)
+    original_scan = worktree_claims.active_worktree_claim_refusal
+
+    def scan_while_dispatch_waits(path, **kwargs):
+        settle_holds_lock.set()
+        assert dispatch_blocked.wait(timeout=30), "dispatch never contended for the settle lock"
+        return original_scan(path, **kwargs)
+
+    monkeypatch.setattr(worktree_claims, "active_worktree_claim_refusal", scan_while_dispatch_waits)
+    worker_spawns: list[list[str]] = []
+    _spawn_passthrough_popen(monkeypatch, worker_spawns.append)
+    settle_result: dict[str, Any] = {}
+    settler = threading.Thread(
+        target=lambda: settle_result.update(
+            delegate._settle_worktree_reap(worktree, created_by_this_dispatch=True, settling_task_id=task_id)
+        )
+    )
+    settler.start()
+    assert settle_holds_lock.wait(timeout=30)
+
+    rc = delegate.cmd_dispatch(
+        _write_args(agent="agy", task_id="impl-cwd-late", cwd=str(worktree), mode="workspace-write")
+    )
+    settler.join(timeout=60)
+
+    assert settle_result["action"] == "removed"
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+    assert rc == 1
+    assert worker_spawns == []
+    assert "was removed while dispatch waited for its lock" in capsys.readouterr().err
+    assert delegate._read_state(delegate._state_path("impl-cwd-late")) is None
+    assert _worktree_lock_is_free(worktree)
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_dispatch_locks_an_existing_checkout_before_base_resolution_can_rebase_it(
+    tmp_tasks_dir, tmp_path, monkeypatch, dry_run
+):
+    """#8610 r4: attach is lock -> verify -> mutate -> publish; a dry run mutates nothing and takes no lock."""
+    task_id = "impl-rebase-locked"
+    primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    _dispatch_from_fixture_primary(primary, monkeypatch)
+    observed: list[tuple[str, bool]] = []
+
+    def spy_base(**kwargs):
+        assert kwargs["allow_rebase"] is not dry_run
+        observed.append(("base", _worktree_lock_is_free(delegate._normalize_worktree_path(kwargs["raw_path"]))))
+        return "a" * 40
+
+    def spy_ensure(**kwargs):
+        path = delegate._normalize_worktree_path(kwargs["raw_path"])
+        observed.append(("ensure", _worktree_lock_is_free(path)))
+        return path, f"cursor/{task_id}", {"reused": True, "base_sha": "a" * 40, "layout": "dispatch"}
+
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", spy_base)
+    monkeypatch.setattr(delegate, "_ensure_worktree", spy_ensure)
+    worker_spawns: list[bool] = []
+    _spawn_passthrough_popen(monkeypatch, lambda _cmd: worker_spawns.append(_worktree_lock_is_free(worktree)))
+
+    rc = delegate.cmd_dispatch(
+        _write_args(agent="agy", task_id=task_id, worktree=str(worktree), mode="workspace-write", dry_run=dry_run)
+    )
+
+    assert rc == 0
+    if dry_run:
+        assert observed == [("base", True)]
+        assert not delegate._worktree_lock_path(worktree)[1].exists()
+        assert worker_spawns == []
+    else:
+        assert observed == [("base", False), ("ensure", False)]
+        assert worker_spawns == [True]
+
+
+@pytest.mark.parametrize("blocker", ["lock", "claim"])
+def test_stale_branch_holder_release_goes_through_the_guarded_chokepoint(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, blocker
+):
+    """#8610 r4: a stale holder is kept while its lock is held or another task still claims it."""
+    holder = tmp_path / ".worktrees" / "dispatch" / "codex" / "impl-holder"
+    holder.mkdir(parents=True)
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DEFAULT_TIMEOUT_S", 0.2)
+    proofs: list[bool] = []
+
+    def releasable(path, branch):
+        proofs.append(_worktree_lock_is_free(path))
+        return True, "clean+synced; task status=done"
+
+    monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", releasable)
+    commands: list[list[str]] = []
+    real_run = subprocess.run
+
+    def spy_run(cmd, *args, **kwargs):
+        commands.append(list(cmd))
+        if list(cmd[:3]) == ["git", "worktree", "remove"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", spy_run)
+    if blocker == "claim":
+        delegate._write_state_atomic(
+            delegate._state_path("review-attached"),
+            {"task_id": "review-attached", "status": "running", "worktree_path": str(holder)},
+        )
+        released = delegate._release_stale_branch_holders(branch="codex/feature", holders=[holder], dry_run=False)
+        reason = "worktree claimed by active task review-attached"
+        assert proofs == [False]
+    else:
+        with _worktree_lock_held_elsewhere(holder):
+            released = delegate._release_stale_branch_holders(branch="codex/feature", holders=[holder], dry_run=False)
+        reason = "worktree lock busy"
+        assert proofs == []
+
+    assert released == []
+    assert not any(cmd[:3] == ["git", "worktree", "remove"] for cmd in commands)
+    assert f"not auto-releasable ({reason})" in capsys.readouterr().err
+    assert _worktree_lock_is_free(holder)
+
+
+def test_stale_branch_holder_release_removes_under_the_lock(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#8610 r4: a releasable holder with no live claim is removed without force while its lock is held."""
+    holder = tmp_path / ".worktrees" / "dispatch" / "codex" / "impl-holder"
+    holder.mkdir(parents=True)
+    monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", lambda _path, _branch: (True, "clean+synced"))
+    removals: list[tuple[list[str], bool]] = []
+    real_run = subprocess.run
+
+    def spy_run(cmd, *args, **kwargs):
+        if list(cmd[:3]) == ["git", "worktree", "remove"]:
+            removals.append((list(cmd), _worktree_lock_is_free(holder)))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", spy_run)
+
+    released = delegate._release_stale_branch_holders(branch="codex/feature", holders=[holder], dry_run=False)
+
+    assert released == [holder]
+    assert removals == [(["git", "worktree", "remove", str(holder)], False)]
+    assert "released stale branch holder" in capsys.readouterr().err
+    assert _worktree_lock_is_free(holder)
 
 
 def test_danger_failed_clean_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -9419,6 +11080,74 @@ def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
     assert state["worktree_path"] == str(dispatch_wt)
     assert state["worktree_reused"] is True
     assert state["worktree_branch"] is not None
+
+
+def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    _patch_worker_popen(monkeypatch)
+    marker = delegate._review_attempt_marker_path(dispatch_wt)
+    assert not marker.exists()
+
+    # An ordinary attach still works before the review attempt marks the tree.
+    assert delegate.cmd_dispatch(_write_args(task_id="unmarked", mode="read-only", cwd=str(dispatch_wt))) == 0
+    assert delegate._read_state(delegate._state_path("unmarked"))["worktree_reused"] is True
+
+    delegate._mark_review_attempt_worktree(dispatch_wt, "review-original")
+    assert marker.read_text(encoding="utf-8") == "review-original\n"
+    with pytest.raises(ValueError, match=r"review-original.*#8517"):
+        delegate._ensure_worktree(
+            agent="codex", task_id="task-1", raw_path=str(dispatch_wt), resolved_base_sha="unused"
+        )
+    assert delegate.cmd_dispatch(_write_args(task_id="marked", mode="read-only", cwd=str(dispatch_wt))) == 1
+    assert "review-original" in capsys.readouterr().err
+
+
+def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, tmp_path, monkeypatch):
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    _patch_worker_popen(monkeypatch)
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    plan = type("Plan", (), {"config_path": tmp_path / "attempt.json"})()
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt", return_value=plan):
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                agent="claude",
+                task_id="review-marked",
+                mode="read-only",
+                cwd=str(dispatch_wt),
+                review_attempt=str(manifest),
+                review_id="rev-test",
+                attempt_id="att-test",
+            )
+        )
+    assert rc == 0
+    assert delegate._review_attempt_marker_path(dispatch_wt).read_text(encoding="utf-8") == "review-marked\n"
+    state = delegate._read_state(delegate._state_path("review-marked"))
+    assert state["worktree_disallow_reuse"] is True
+    assert "worktree_review_attempt_only" not in state
+
+
+def test_review_attempt_refuses_vps_forward_before_transport(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "test", "remote-host"))
+    monkeypatch.setattr(job_host_exec, "forward_dispatch", lambda **_kwargs: pytest.fail("must not forward"))
+    rc = delegate.cmd_dispatch(
+        _write_args(
+            agent="claude",
+            task_id="review-local",
+            mode="read-only",
+            review_attempt=str(manifest),
+            review_id="rev-test",
+            attempt_id="att-test",
+        )
+    )
+    assert rc == 2
+    assert "cannot forward to remote-host" in capsys.readouterr().err
 
 
 def test_finalize_cwd_reuse_with_pushed_commits_counts_deliverable(

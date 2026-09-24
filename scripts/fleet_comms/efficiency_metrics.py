@@ -28,6 +28,7 @@ from scripts.control_plane.storage import (
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.fleet_comms.message_plane import resolve_plane_mode
 from scripts.fleet_comms.opsec_store import batch_tasks_store, comms_plane_store
+from scripts.orchestration.task_record_store import iter_task_records
 
 # Alert thresholds are intentionally reported, not enforced here. #5646 owns
 # consuming them. Dispatch uses the delegate default floor of 7,200 seconds.
@@ -855,6 +856,7 @@ def collect_stream_bottleneck_metrics(
     Percentiles use linear interpolation of the sorted samples at ``(n - 1) * p``
     and are intentionally omitted until a span has at least twenty durations.
     Each source is fail-open: its errors are reported while other sources continue.
+    Dispatch history includes records archived into ``tasks_dir/archive/`` (#8625).
     """
     clock = (now or datetime.now(UTC)).astimezone(UTC)
     buckets: dict[str, dict[str, dict[str, list[float]]]] = {
@@ -906,7 +908,7 @@ def collect_stream_bottleneck_metrics(
         )
 
     try:
-        task_paths = sorted(tasks_dir.glob("*.json"))
+        task_paths = list(iter_task_records(tasks_dir, include_archive=True))
         if not tasks_dir.is_dir():
             raise FileNotFoundError("tasks_dir_missing")
         for path in task_paths:

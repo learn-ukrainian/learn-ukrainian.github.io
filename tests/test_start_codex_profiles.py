@@ -185,7 +185,9 @@ def _launch(
     primary, linked = _prepare_repo(tmp_path, separate_git_dir=separate_git_dir)
     if stale_native_profile:
         profile_path = primary / "scripts/config/context_profiles.yaml"
-        profile_path.write_text(profile_path.read_text().replace("gpt-6-astra", "gpt-stale"))
+        profile_path.write_text(
+            profile_path.read_text().replace("'^gpt-6-(sol|luna|astra)$'", "'^gpt-stale$'")
+        )
     home_bin = tmp_path / "home" / ".local" / "bin"
     capture = tmp_path / "capture.txt"
     _write_executable(

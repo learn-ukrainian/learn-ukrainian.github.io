@@ -12,7 +12,7 @@
 #   <10% -> "Planned"
 
 a1:
-  planned: 64
+  planned: 55  # generated: build_arc_landing a1 --write sets it to the arc's position count
   status: auto
   description: "Beginner — Cyrillic alphabet, basic grammar, practical scenarios"
   introduction: |

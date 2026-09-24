@@ -17,7 +17,11 @@
 
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Resolve the shared repository root even when this script is run from a linked
+# worktree. The common Git directory belongs to the primary checkout.
+SCRIPT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+GIT_COMMON_DIR="$(git -C "$SCRIPT_ROOT" rev-parse --path-format=absolute --git-common-dir)"
+REPO_ROOT="$(dirname "$GIT_COMMON_DIR")"
 WT_BASE="$(dirname "$REPO_ROOT")"
 API_BASE="http://localhost:8765"
 
@@ -44,6 +48,14 @@ check_active_builds() {
         return 2  # builds active
     fi
     return 0
+}
+
+# The project interpreter lives only in the primary checkout, even when this
+# script runs from a linked worktree.
+project_python() {
+    local common_dir
+    common_dir=$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir)
+    echo "$(dirname "$common_dir")/.venv/bin/python"
 }
 
 # Capture build check result — avoids duplicating set +e/set -e pattern
@@ -158,7 +170,15 @@ cmd_clean() {
         local branch
         branch=$(git -C "$wt_dir" rev-parse --abbrev-ref HEAD)
         cd "$REPO_ROOT"
-        git worktree remove "$wt_dir"
+        # The guarded remover refuses (exit 3) while an unfinished dispatch
+        # task claims the checkout, and waits for any dispatch attaching it (#8610).
+        local interpreter rc=0
+        interpreter=$(project_python)
+        "$interpreter" -m scripts.orchestration.worktree_claims remove "$wt_dir" --reason "wt.sh clean $issue" || rc=$?
+        if [ $rc -ne 0 ]; then
+            red "Worktree not removed: $wt_dir"
+            exit $rc
+        fi
         git branch -d "$branch" 2>/dev/null || yellow "Branch $branch not deleted (may not be merged)"
         green "Worktree removed: $wt_dir"
     fi

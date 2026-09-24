@@ -94,6 +94,12 @@
             "resursy"
           ]
         },
+        "step": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "activity": {
           "type": [
             "string",

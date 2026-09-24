@@ -1,6 +1,6 @@
 # Agent activity matrix
 
-> **Status:** v1.8 — updated 2026-08-13 (Cursor Ultra month pin: prefer `--agent cursor` for mechanical + ordinary infra/code implement through ~2026-09-13; DeepSeek Flash everyday / Pro @ high = hard implement only per operator GO 2026-08-13; #5737 agy/gemini-flash worker-brief boundary). K3 is an active consequential-work and cross-family review candidate, while remaining excluded from the Ukrainian factual/folk gate. The per-task bakeoff SCORE cells (§3–§7) are historical evidence; the current machine-enforced quality floors and ordered peer tiers live in `scripts/config/model_catalog.yaml`. v1.4 added the native Kimi Code OAuth lane. See §10 Provenance for version history.
+> **Status:** v1.9 — active routing refreshed 2026-09-23 for #8565. Codex uses GPT-6 Sol @ high for coding and review, Luna @ high for routine bounded work and scouting, and Astra @ high for hard advisory judgment only. Claude Opus 5.5 handles hard Claude-lane coding where applicable. Gemini 3.8 Flash handles Ukrainian and well-defined work. Historical bakeoff SCORE cells retain the model/version used in each evaluation and are not active routing instructions; current machine-enforced quality floors and ordered peer tiers live in `scripts/config/model_catalog.yaml`. See §10 Provenance for version history.
 > **Purpose:** one canonical place where a task type maps to *primary agent* + *runner-ups* + *eval metric* + *last verified* + *known weakness* + *known strength*. Replaces gut-routing.
 > **Audience:** dual — agents read the JSON projection at `/api/activity-matrix` (future endpoint), humans read this markdown.
 > **Cadence:** every cell has a `last_verified` date. If older than 30 days, the cell is stale and a re-bakeoff should be scheduled before relying on it.
@@ -26,11 +26,11 @@ Each cell carries:
 
 | Agent | Sub-models in use | Auth lane | Cost lane | Status |
 | --- | --- | --- | --- | --- |
-| **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Fable 5.1 (advisor / authority seat; native Claude first, pinned Cursor fallback only), Sonnet 5 (strong practical) | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | **TOP-PRIORITY judgment lane.** Opus 5.5 drives and takes architecture, hard-bug reasoning, and adversarial code review; Fable 5.1 for advisor turns and Ukrainian-specific linguistic judgment; Sonnet for routine work. |
-| **Codex** ⭐ | GPT-6 Astra (workhorse low, reviewer medium, advisor high), Luna (scout max); Sol/Terra fallbacks | OpenAI via Codex CLI | $1000/wk bucket (metered) | **TOP-PRIORITY lane.** Novel impl, cross-file patterns, hard debug, primary V7 reviewer + novel-architecture code review. Cap 2 in-flight. |
-| **agy** | Gemini-family (Antigravity CLI; **replaced gemini-cli 2026-06-08**) | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | **METERED** (corrected 2026-06-19 — NOT unmetered; route by fit/cost, not as a free default) | **Worker-first for implementation** (#5737): Flash (`gemini-3.8-flash-high`) receives **complete task briefs** (one shippable unit + ACs) and does **not** self-decompose into serial micro-PRs — the orchestrator owns sequencing. Catalog `orchestrator_seats` membership remains for fleet-comms, but AGY is **not** a self-orchestrating implementer (compaction loses drive state). Support fit: scripts, ingestion, fixtures/migrations, docs-near-code, wiki writing; §7/factual cleared 2026-06-13. Cap 2 in-flight. Sealed formal CF still #5555. |
+| **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Fable 5.1 (advisor / authority seat; native Claude first, pinned Cursor fallback only), Sonnet 5 (strong practical) | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Fable 5.1 handles advisor turns and Ukrainian-specific linguistic judgment; Sonnet handles routine Claude-lane work. |
+| **Codex** ⭐ | GPT-6 Sol (coding and review @ high), Luna (routine bounded work and scout @ high), Astra (hard advisory @ high) | Native Codex CLI | Metered | Sol handles advanced coding and adversarial review; Luna handles bounded routine implementation and scouting; Astra is reserved for hard consequential advisory judgment. |
+| **agy** | Gemini 3.8 Flash High | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | Metered | Route Ukrainian work and well-defined implementation/review tasks to Flash with a complete one-unit brief and acceptance criteria. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
 | **DeepSeek** | **`deepseek-v4-flash`** @ high = everyday (frontier-practical code/infra). **`deepseek-v4-pro`** @ high = **hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) | Review/research: `opencode run --model deepseek-direct/deepseek-v4-flash --variant high` (native Entire capture). Tool-heavy: `delegate.py --agent deepseek --model deepseek-v4-flash` (default; `--model deepseek-v4-pro` for hard tasks). Pro never default. | Cheap / often idle paid balance | **CODE + infra CF volume.** Prefer when Codex/Claude hot. Not language/folk/authority. First-party only (`openrouter/deepseek/*` refused). |
-| **Grok** | **Grok 4.5** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`) | Native Grok CLI only for active routing | Subscription; CodexBar window | **Active strong coding/review lane.** Never route active Grok work through Hermes; `grok-hermes` is a historical compatibility seat, not a fallback. |
+| **Grok** | **Grok 4.7** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`) | Native Grok CLI only for active routing | Subscription; CodexBar window | **Active strong coding/review lane.** Never route active Grok work through Hermes; `grok-hermes` is a historical compatibility seat, not a fallback. |
 | *Grok Bot (not a seat)* | Cursor/xAI cloud teammate (`app/cursor`) — **external QA observer only** | Not `delegate.py`; no registry adapter; never `--agent grok-bot` | — | Files labeled GitHub issues/comments for drivers to consume. See [`docs/runbooks/grok-bot-qa-observer.md`](../runbooks/grok-bot-qa-observer.md). |
 | **Kimi** (**keep** — operator 2026-08-08) | **`kimi-code/k3-256k`** everyday fast; **`kimi-code/k3`** @ high/max advisory/complex only | Native Kimi Code CLI OAuth: `delegate.py dispatch --agent kimi` | Subscription; CodexBar 5h + weekly | **First-class.** Split tiers so full k3 is not burned on routine. CF outside Moonshot lineage; not a language seat. |
 | **cursor** | **Auto** (default worker) · Composer 2.5 (pinned when family independence matters) | `scripts/delegate.py dispatch --agent cursor` / `ask-cursor` (default model `auto`) | Metered; **Ultra 20x month (2026-08-13→~2026-09-13)** — use it; unused resets | **First-class code/infra worker.** **This month: first pick** for mechanical + ordinary infra/code implement when fit allows; never `auto` as formal CF identity. `concurrency_limit: 1`. Not a language seat. |
@@ -90,6 +90,10 @@ Eleven canonical task types map onto the agent roster. Sub-rows are noted where 
 
 ## 4. The matrix proper
 
+This section preserves historical evaluations of the named model versions. Those
+results are evidence about the tested runs, not current route recommendations;
+use the active roster above and `model-assignment.md` for routing.
+
 ### 4.1 V7 module writing
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
@@ -138,10 +142,8 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 **Promote-protocol round 1 result (2026-05-18, #2132):** DeepSeek-pro proposed splitting the reviewer prompt into Phase 1 (deterministic content-word verification: batch verify_words + query_cefr_level + check_russian_shadow + search_heritage) and Phase 2 (dim-by-dim judgment). Bakeoff queued: DeepSeek-pro vs Codex on `a1/my-morning` post-#2128/#2127 merge.
 
 **Review seat harness eligibility (#8517):** Formal reviews require per-attempt recording of `sources` MCP tool calls into an attempt ledger via attempt-specific environment variables (`LU_REVIEW_ATTEMPT_ID`, `LU_REVIEW_MANIFEST_SHA256`, `LU_REVIEW_LEDGER_PATH`) launched over stdio, dropping the shared HTTP daemon entry.
-- **Eligible harnesses:** `claude` (Claude Code accepts `--strict-mcp-config --mcp-config` to isolate the attempt's stdio config) and `cursor` (mirrors the per-attempt stdio config into the worktree's `.cursor/mcp.json` without daemon URL fallback; requires a dispatch worktree).
+- **Eligible harnesses (for `delegate.py` review attempts):** `agy` (no per-invocation MCP flag, so the attempt runs under a scoped `HOME` — `<attempt_id>.agy-home/` beside the ledger, holding only the stdio `sources` server in `.gemini/config/mcp_config.json` and a symlink to the OAuth token — with `AGY_APP_DATA_DIR` inside it, and the worker refuses to launch unless `agy mcp list` under that environment shows exactly that one server and the scoped config carries the attempt's `LU_REVIEW_*` values; canary `canary-8517-agy-1`, #8617), `codex` (per-invocation `-c mcp_servers.*` overrides merge with the global config, so the attempt runs under a scoped `CODEX_HOME` — `<attempt_id>.codex-home/` beside the ledger, holding only the stdio `sources` server — and the worker refuses to launch unless `codex mcp list --json` shows exactly that one server), `claude` (Claude Code accepts `--strict-mcp-config --mcp-config` to isolate the attempt's stdio config) and `cursor` (mirrors the per-attempt stdio config into the worktree's `.cursor/mcp.json` without daemon URL fallback; requires a dispatch worktree).
 - **Ineligible harnesses:**
-  - `agy`: refused because it has only a single global MCP config (`~/.gemini/config/mcp_config.json`) and cannot take a per-attempt config.
-  - `codex`: refused because per-attempt stdio servers with environment variables are not yet proven (#8517).
   - `grok`: refused because strict per-attempt MCP CLI flags are not yet proven (#8517).
   - `kimicc`: refused because per-attempt stdio config is not yet supported (#8517).
   - `kimi` (native) and Hermes-routed agents (`deepseek`, `grok-hermes`): refused because they read persistent global configuration rather than per-dispatch MCP configurations.
@@ -257,11 +259,11 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | V7 module writing | `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree --writer claude-tools` (default writer omitted) |
 | Wiki article writing | `.venv/bin/python scripts/wiki/compile.py --writer gemini` (default) |
 | Code dispatch (mechanical) | `.venv/bin/python scripts/delegate.py dispatch --agent agy --task-id X --mode danger --worktree --prompt-file BRIEF` |
-| Code dispatch (novel) | `.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-astra --effort low --mode danger --worktree --silence-timeout 3600 --task-id X --prompt-file BRIEF` |
+| Code dispatch (novel) | `.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-sol --effort high --mode danger --worktree --task-id X --prompt-file BRIEF` |
 | Adversarial review (pre-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh --task-id X --prompt-file BRIEF` |
-| Adversarial review (post-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-astra --effort medium --mode read-only ...` per substitutions YAML |
+| Adversarial review | `.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-sol --effort high --mode read-only ...` per substitutions YAML |
 | Code review (PR diff) | Resolve the exact cross-family route with `closeout_cli resolve-reviewer --author-model <exact> --risk <level>`; dispatch its returned route, transport, and required timeout. |
-| Content review (load-bearing, VESUM) | **LANGUAGE-LANES only:** agy / codex / claude / grok-4.6 — **not** deepseek. ~~deepseek-v4-pro example retired~~ (language seats exclude deepseek; Pro is a code-only hard-implement seat since 2026-08-13). |
+| Content review (load-bearing, VESUM) | **LANGUAGE-LANES only:** agy / codex / claude / grok-4.7 — **not** deepseek. ~~deepseek-v4-pro example retired~~ (language seats exclude deepseek; Pro is a code-only hard-implement seat since 2026-08-13). |
 | Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.8-flash-high` |
 | Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.8-flash-high` |
 | Discuss (multi-agent) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss CHANNEL "TOPIC" --with codex,claude,agy` |
@@ -486,6 +488,9 @@ Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 d
 
 ## 10. Provenance
 
+- v1.9: 2026-09-23 (#8565). Refreshed active model roles: GPT-6 Sol coding/review,
+  Luna routine/scout, Astra hard advisory; Opus 5.5 hard Claude-lane coding; Gemini
+  3.8 Flash Ukrainian/well-defined work. Historical evaluations remain labeled as such.
 - v1.8: 2026-08-13 (Cursor Ultra month + DeepSeek Pro hard-implement pin). Prefer `--agent cursor` for mechanical + ordinary infra/code implement through ~2026-09-13; Flash everyday / Pro @ high = hard implement only; roster + §2b updated; CF/`auto` and LANGUAGE-LANES exclusions unchanged.
 - v1.7: 2026-08-12 (#5737). Clarified agy/gemini-flash **worker-vs-orchestrator** boundary: complete task briefs, no self-decomposition into serial micro-PRs; roster Status + §2b updated.
 - v1.4: 2026-07-16 by Codex. Added native Kimi K3 as a subscription lane; its exact context size remains unpublished in current provider docs.

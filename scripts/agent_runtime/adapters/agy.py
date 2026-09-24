@@ -32,8 +32,9 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
   ``enable``, ``disable``. There is no plugin-marketplace browse surface,
   and ``import gemini`` is a no-op in a default install.
 
-MCP enablement is managed by agy's global Antigravity configuration
-(``~/.gemini/config/mcp_config.json``, the file ``agy mcp add`` writes). The
+MCP enablement is managed by agy's Antigravity configuration under ``$HOME``
+(``~/.gemini/config/mcp_config.json``, the file ``agy mcp add`` writes; ``agy -p``
+does not load ``~/.gemini/antigravity-cli/mcp_config.json``). The
 CLI's HTTP field is ``serverUrl``; a Claude-format ``httpUrl`` entry is listed
 by ``agy mcp list`` as a dead ``stdio`` server and ``agy -p`` then sees no
 ``mcp__sources__*`` tools (#7994, 2026-09-19 — this supersedes the 2026-06-13
@@ -41,6 +42,14 @@ note that ``httpUrl`` was sufficient). The adapter does not pass a
 per-invocation MCP flag because agy has none; ``tool_config["mcp_server_names"]``
 is accepted for API parity and observability. Writer dispatch registers and
 verifies the catalog via ``tool_config.ensure_agy_mcp_catalog`` before spawning.
+
+A receipt-recording review attempt (#8617) is the one exception to "global config
+only": ``tool_config["agy_home_override"]`` points at a per-attempt scoped home
+(built by ``review_mcp.prepare_review_attempt``) and the invocation's env overrides
+set ``HOME`` to it and ``AGY_APP_DATA_DIR`` to ``<home>/.gemini/antigravity-cli``.
+The CLI then loads the scoped ``config/mcp_config.json`` (one stdio ``sources``
+server) and the transcript reader follows ``AGY_APP_DATA_DIR`` to the scoped app
+data. Without the key nothing changes.
 
 Differences from the kubedojo source:
 
@@ -150,6 +159,13 @@ _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
     "Gemini 3.5 Flash (Low)",
     "Gemini 3.1 Pro (High)",
     "Gemini 3.1 Pro (Low)",
+    # Legacy API model names map to their supported AGY model tier.
+    "gemini-3.1-pro-preview",
+    "gemini-3-flash-preview",
+    "gemini-3.0-flash-preview",
+    "gemini-3.6-flash",
+    "gemini-3.7-flash",
+    "gemini-2.0-flash",
     "Claude Sonnet 4.6 (Thinking)",
     "Claude Opus 4.6 (Thinking)",
     "GPT-OSS 120B (Medium)",
@@ -177,6 +193,12 @@ def _build_agy_model_map() -> dict[str, str]:
         "Claude Sonnet 4.6 (Thinking)": "claude-sonnet-4-6",
         "Claude Opus 4.6 (Thinking)": "claude-opus-4-6-thinking",
         "GPT-OSS 120B (Medium)": "gpt-oss-120b-medium",
+        "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
+        "gemini-3-flash-preview": "gemini-3.8-flash-high",
+        "gemini-3.0-flash-preview": "gemini-3.8-flash-high",
+        "gemini-3.6-flash": "gemini-3.6-flash-high",
+        "gemini-3.7-flash": "gemini-3.7-flash-high",
+        "gemini-2.0-flash": "gemini-3.8-flash-high",
     }
     for label in _AGY_MODEL_LEGACY_LABELS:
         key = _normalize_model(label)
@@ -189,12 +211,36 @@ def _build_agy_model_map() -> dict[str, str]:
 _AGY_MODEL_BY_NORMALIZED: dict[str, str] = _build_agy_model_map()
 
 
+def unknown_model_suggestion(model: str) -> str:
+    """Return safe guidance for an unknown AGY model identifier."""
+    if "pro" in model.casefold():
+        return "For Gemini Pro, use `--model gemini-3.1-pro-high`."
+    accepted_ids = ", ".join(f"`{slug}`" for slug in _AGY_MODEL_SLUGS)
+    return f"Accepted AGY model ids: {accepted_ids}."
+
+
 class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
 
     name: str = "agy"
     default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.8-flash-high")
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
+
+    @staticmethod
+    def resolve_model_slug(model: str) -> str | None:
+        """Return the canonical AGY model for a known slug or legacy alias."""
+        return _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(model))
+
+    @staticmethod
+    def model_ids_match(left: str, right: str) -> bool:
+        """Compare model IDs ignoring punctuation and case."""
+        return _normalize_model(left) == _normalize_model(right)
+
+    @staticmethod
+    def is_legacy_model_alias(model: str) -> bool:
+        """Return whether an ID is listed as a supported legacy alias."""
+        normalized = _normalize_model(model)
+        return any(_normalize_model(label) == normalized for label in _AGY_MODEL_LEGACY_LABELS)
 
     def build_invocation(
         self,
@@ -317,12 +363,20 @@ class AgyAdapter:
         if output_schema is not None:
             cmd.extend(["--output-format", "json", "--json-schema", json.dumps(output_schema, separators=(",", ":"))])
 
+        env_overrides = {_AGY_LOG_ENV: str(log_path)}
+        agy_home = tc.get("agy_home_override")
+        if agy_home:
+            # Per-attempt scoped home (#8617): agy reads its MCP config from
+            # $HOME/.gemini/config and keeps transcripts under AGY_APP_DATA_DIR.
+            env_overrides["HOME"] = str(agy_home)
+            env_overrides[_AGY_APP_DATA_ENV] = str(Path(agy_home) / ".gemini" / "antigravity-cli")
+
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
             stdin_payload="",
             output_file=None,
-            env_overrides={_AGY_LOG_ENV: str(log_path)},
+            env_overrides=env_overrides,
             env_unsets=(),
             liveness_paths=(log_path,),
             metadata={
@@ -339,17 +393,19 @@ class AgyAdapter:
         """Map a runtime model slug (or display string) to the canonical
         ``agy --model`` slug (from ``agy models``).
 
-        Tries the caller's ``model`` first, then ``default_model``, so a stale
-        placeholder or an empty value degrades to the adapter default rather
-        than passing an invalid flag. Returns ``None`` only when neither maps,
-        leaving the flag unset so agy uses its TUI-selected model.
+        An absent model uses the configured default. An explicit unknown model
+        is rejected so a request can never silently run on a different model.
         """
-        for candidate in (model, self.default_model):
-            if candidate:
-                resolved = _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(candidate))
-                if resolved:
-                    return resolved
-        return None
+        if not model:
+            model = self.default_model
+        if not model:
+            return None
+        resolved = self.resolve_model_slug(model)
+        if resolved:
+            return resolved
+        raise ValueError(
+            f"Unsupported AGY model {model!r}. {unknown_model_suggestion(model)}"
+        )
 
     def parse_response(
         self,

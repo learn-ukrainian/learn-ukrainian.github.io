@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import fcntl
 import json
+import os
 import subprocess
 import sys
 import time
@@ -41,6 +42,11 @@ def built_wheel(tmp_path_factory):
     # Serialize wheel creation, while the behavioral tests remain parallel.
     lock_path = Path(__file__).resolve().parents[3] / "batch_state/v4-runtime-build.lock"
     lock_path.parent.mkdir(parents=True, exist_ok=True)
+    env = dict(os.environ)
+    from learn_ukrainian_v4_runtime.provenance import verify_current_identity
+
+    identity = verify_current_identity()
+    env["LEARN_UKRAINIAN_V4_RUNTIME_COMMIT"] = identity["public_commit"]
     with lock_path.open("a") as build_lock:
         fcntl.flock(build_lock, fcntl.LOCK_EX)
         subprocess.run(
@@ -58,6 +64,7 @@ def built_wheel(tmp_path_factory):
             check=True,
             capture_output=True,
             timeout=120,
+            env=env,
         )
     return next(output.glob("*.whl"))
 

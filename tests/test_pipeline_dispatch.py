@@ -9,6 +9,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -54,35 +56,26 @@ def test_dispatch_gemini_default_never_reaches_pro_on_timeout():
         assert "pro" not in attempted.lower(), f"Pro model {attempted!r} was attempted in default fallback chain"
 
 
-def test_dispatch_gemini_explicit_pro_uses_pro():
-    """Explicit Pro request (model='gemini-3.1-pro-high') uses Pro on initial dispatch."""
+def test_dispatch_gemini_explicit_pro_fails_with_supported_route():
+    with pytest.raises(ValueError, match=r"delegate\.py dispatch --agent agy --model"):
+        dispatch_gemini("test prompt", "task-explicit-pro", model="gemini-3.1-pro-high")
+
+
+def test_fallback_chain_deduplicates_real_effective_agy_routes(monkeypatch):
+    """Different model spellings resolving to the AGY pin are attempted once."""
+    from scripts.pipeline import dispatch as dispatch_module
+
+    monkeypatch.setattr(dispatch_module, "_flash_model", lambda: "gemini-3.8-flash-high")
+    monkeypatch.setattr(dispatch_module, "_flash_lite_model", lambda: "gemini-3.0-flash-preview")
     attempts = []
 
     def fake_dispatch_raw(prompt, task_id, model=None, **kwargs):
         attempts.append(model)
-        return True, "pro response"
+        return False, "429 rate limit"
 
+    # _effective_agy_route calls the production resolver; only transport is stubbed.
     with patch("scripts.pipeline.dispatch.dispatch_gemini_raw", side_effect=fake_dispatch_raw):
-        ok, output = dispatch_gemini("test prompt", "task-explicit-pro", model="gemini-3.1-pro-high")
+        ok, _ = dispatch_gemini("test prompt", "task-deduplicated-fallback")
 
-    assert ok is True
-    assert output == "pro response"
-    assert len(attempts) == 1
-    assert attempts[0] == "gemini-3.1-pro-high"
-
-
-def test_dispatch_gemini_explicit_pro_preview_uses_pro():
-    """Explicit Pro request with legacy preview slug uses Pro on initial dispatch."""
-    attempts = []
-
-    def fake_dispatch_raw(prompt, task_id, model=None, **kwargs):
-        attempts.append(model)
-        return True, "pro preview response"
-
-    with patch("scripts.pipeline.dispatch.dispatch_gemini_raw", side_effect=fake_dispatch_raw):
-        ok, output = dispatch_gemini("test prompt", "task-explicit-pro-prev", model="gemini-3.1-pro-preview")
-
-    assert ok is True
-    assert output == "pro preview response"
-    assert len(attempts) == 1
-    assert attempts[0] == "gemini-3.1-pro-preview"
+    assert not ok
+    assert attempts == ["gemini-3.8-flash-high"]

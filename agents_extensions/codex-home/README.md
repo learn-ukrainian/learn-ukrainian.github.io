@@ -1,25 +1,32 @@
 # Reusable Codex home configuration
 
 This is the canonical portable source for Codex home defaults, orchestration
-guidance, and named profiles. The regular driver uses Astra medium.
+guidance, and named profiles. The regular driver uses Sol high.
 
 | Profile | Model | Effort | Access |
 | --- | --- | --- | --- |
-| `luna_explorer_medium` | `gpt-5.6-luna` | medium | read-only |
-| `luna_explorer_high` | `gpt-5.6-luna` | high | read-only |
-| `astra_worker_low` | `gpt-6-astra` | low | workspace-write |
-| `astra_red_team_high` | `gpt-6-astra` | high | read-only |
+| `luna_explorer_medium` | `gpt-6-luna` | medium | read-only |
+| `luna_explorer_high` | `gpt-6-luna` | high | read-only |
+| `luna_coder_high` | `gpt-6-luna` | high | workspace-write |
+| `sol_coder_high` | `gpt-6-sol` | high | workspace-write |
+| `sol_red_team_high` | `gpt-6-sol` | high | read-only |
+| `sol_ukrainian_content_high` | `gpt-6-sol` | high | workspace-write |
 | `astra_advisor_high` | `gpt-6-astra` | high | read-only |
 
-Use Luna medium for routine scouting and high for ambiguous investigations.
+The default spawned agent is Luna high. Use Luna medium explicitly for routine
+scouting and high for ambiguous investigations or bounded coding. Sol high
+handles broader coding and adversarial review. Astra high is the on-demand
+advisor for consequential design and difficult linguistic judgment. Sol high
+is the Ukrainian content authoring default, subject to VESUM, sources, and
+track immersion checks. This is a routing decision, not a comparative
+Ukrainian-quality benchmark.
 Select named profiles explicitly; full-history inheritance alone does not
 guarantee model and effort. The driver retains final disposition.
 
-Other model-family agents can request CF (cross-family) review from the Astra
-high reviewer through an existing Codex execution route. Compare actual author
-and reviewer families before claiming CF coverage. Astra reviewing Astra is
-same-family. Cross-family and cross-provider independence are distinct. These
-profiles do not install a messaging service or change fleet review eligibility.
+Other model-family agents can request CF (cross-family) review from a GPT-6
+reviewer through an existing Codex execution route. Compare actual author and
+reviewer families before claiming CF coverage. A GPT-6 review of a GPT-6
+author is same-family. These profiles do not change fleet review eligibility.
 
 On Mac or VPS, fetch the intended commit and verify the execution account,
 effective Codex home, runtime, and live model support. Do not silently substitute
@@ -49,11 +56,13 @@ home's `.deploy-backups/` directory. A failure must be investigated using its
 receipt before retrying; per-file atomic replacement is not a multi-file
 transaction. Dry-run and check modes do not write.
 
-The old names `luna_explorer_xhigh`, `luna_worker_max`, `sol_worker_high`, and
-`terra_worker_high` are retired from source. The deployer preserves existing
-target files with those names. Inspect them and move only confirmed obsolete
-profiles into a private backup outside the active `agents/` directory. Record
-the moves for rollback. Preserve unrelated profiles.
+The old names `astra_worker_low` and `astra_red_team_high` are superseded.
+The deployer refuses to apply changes while either remains active. Inspect
+those target files and move them into a private backup outside `agents/`
+before deployment; record the moves for rollback. Older retired names
+(`luna_explorer_xhigh`, `luna_worker_max`, `sol_worker_high`,
+`terra_worker_high`) remain preserved by the deployer and require the same
+manual inspection if present. Preserve unrelated profiles.
 
 Start a fresh task and inspect the loaded catalog after deployment. Check quota
 and health, then run a bounded representative spawn to verify model, effort,

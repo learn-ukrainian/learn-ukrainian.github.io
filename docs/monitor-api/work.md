@@ -195,10 +195,16 @@ server remain on `8768` and `4333`, respectively.
 At a query instant the public projection represents exactly once (or counts in a
 typed omission):
 
-1. Open public issues — one `gh issue list` enumeration, cap **1000**,
-   `truncated=true` when incomplete.
-2. Open public PRs — one `gh pr list` enumeration, same cap. No per-item
-   detail/comment/check fan-out on refresh.
+1. Open public issues — conditional REST pages (`If-None-Match`) followed to the
+   end, cap **1000**. `truncated=true` when that cap or a page ceiling leaves a
+   next link. Pull requests mixed into the issues API are dropped and are not
+   counted as issues.
+2. Open public PRs — same list contract. Check runs, reviews, and mergeability
+   are conditional REST reads per open PR. A truncated check or review list stays
+   unknown. `reviewDecision` is never synthesized as `APPROVED`: REST cannot see
+   the required approval count, so one approval is unknown and Work / idle-PR
+   consumers fail closed. A 304 serves the cached body and does not replace it
+   with an older response.
 3. Complete public `GET /api/issues/streams` response (private cache keys stripped).
 4. Class-4 summaries only:
    - `GET /api/delegate/active`

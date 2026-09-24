@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fresh module dependency closure",
+  "type": "object", "additionalProperties": false,
+  "required": ["closure_schema", "level", "slug", "lessons", "stale"],
+  "properties": {
+    "closure_schema": {"const": 1}, "level": {"type": "string"}, "slug": {"type": "string"},
+    "lessons": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+      "required": ["n", "kind", "lesson_sha256", "current_manifest_sha256"],
+      "properties": {"n": {"type": "integer", "minimum": 1}, "kind": {"enum": ["lesson", "recap"]},
+        "lesson_sha256": {"$ref": "#/$defs/nullable_sha"}, "current_manifest_sha256": {"$ref": "#/$defs/nullable_sha"}}}},
+    "stale": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+      "required": ["n", "manifest_sha256", "upstream", "recorded_sha256", "current_sha256"],
+      "properties": {"n": {"type": "integer", "minimum": 1}, "manifest_sha256": {"$ref": "#/$defs/sha"},
+        "upstream": {"type": "integer", "minimum": 1}, "recorded_sha256": {"$ref": "#/$defs/sha"},
+        "current_sha256": {"$ref": "#/$defs/nullable_sha"}}}}
+  },
+  "$defs": {"sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "nullable_sha": {"anyOf": [{"$ref": "#/$defs/sha"}, {"type": "null"}]}}
+}

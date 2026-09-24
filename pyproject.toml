@@ -13,6 +13,9 @@ python_functions = ["test_*"]
 timeout = 120
 timeout_method = "thread"
 faulthandler_timeout = 110
+# Retain only failures so large successful temp sessions do not accumulate (#8572).
+tmp_path_retention_policy = "failed"
+tmp_path_retention_count = 1
 # atlas_release is publish-time only (requires data/atlas.db); run explicitly with -m atlas_release
 addopts = "-v --tb=short -m 'not atlas_release'"
 filterwarnings = [
@@ -24,6 +27,7 @@ markers = [
     "repo_invariant: repo-wide invariant checks that run in the PR-tier fastlane",
     "atlas_release: real-DB Atlas runtime-shard release gate (requires data/atlas.db; fails closed)",
     "live_network: opt-out of socket-guard for integration tests requiring outbound network",
+    "live_github: intentional integration test that invokes the real GitHub CLI",
     "postgres: needs LEARN_UKRAINIAN_CP_PG_DSN (live Postgres); skips when unset",
     "docs_skills: docs/skills-only CI lane (contract linters for markdown/skills PRs)",
     "reads_content: tests that read curriculum/site-content/wiki files (content CI class lane, #8399)",

@@ -97,7 +97,8 @@ Below are the built lessons of this module to synthesize and recap:
 {% if built_lessons is defined and built_lessons %}
 {% for bl in built_lessons %}
 ### Built Lesson {{ bl.n }}: {{ bl.title }}
-```yaml
+SHA-256: `{{ bl.sha256 }}`
+```mdx
 {{ bl.content }}
 ```
 {% endfor %}

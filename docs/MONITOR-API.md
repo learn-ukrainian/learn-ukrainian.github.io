@@ -235,10 +235,32 @@ permits the documented isolated-fixture 4xx contract. A 5xx is refused unless
 the registry record carries a route-specific reason and explicitly expects it;
 any other returned status fails the invariant.
 
+Every mutation route (POST/PUT/PATCH/DELETE) is exercised too (#8542).
+[`tests/api/opsec_sweep/mutation_recipes.py`](../tests/api/opsec_sweep/mutation_recipes.py)
+holds one recipe per route: it seeds the fixture root or a fixture
+`MonitorContext` store, sends a valid minimal request (loopback-only routes
+use a loopback `TestClient` peer), expects an exact status, and verifies the
+disposable store changed. Mutations run after the read pass, inside a
+process-wide `sys.addaudithook` guard that fails any file write, rename,
+delete, or mkdir outside the fixture root, any process spawn, and any
+`AF_INET`/`AF_INET6` connect. A mutation route without a recipe fails
+`build_registry`. A route that truly cannot run safely goes in
+`registry.MUTATION_SKIPS` with an owner, a 30-day expiry, and an `issue`.
+
+Skips and known-leak rows must cite an open GitHub issue. Tests stay
+hermetic: they read issue states from the committed
+[`tests/api/opsec_sweep/tracking_issues.toml`](../tests/api/opsec_sweep/tracking_issues.toml)
+snapshot and never call GitHub. A row fails when its issue is missing or
+`closed` there, or when the snapshot's `checked_on` date is older than the
+row's renewal window. That means every renewal has to refresh the snapshot
+with `scripts/audit/refresh_opsec_tracking_issues.py --write`. This CLI is the
+only code that calls `gh`; with no flags it reports drift and exits non-zero
+when a cited issue is closed.
+
 PR-A is intentionally green with a shrinking exception table at
 [`tests/api/opsec_sweep/known_leaks.toml`](../tests/api/opsec_sweep/known_leaks.toml).
-Rows require an owner and an expiry no more than 30 days from the PR date;
-expired rows and rows that no longer match a finding fail the test. Adding a
+Rows require an owner, a tracking `issue`, and an expiry no more than 30 days
+from the PR date; expired rows and rows that no longer match a finding fail the test. Adding a
 row requires changing the frozen id set in the test in the same review. PR-B
 burn-downs remove rows by changing the emitter and its direct consumers
 atomically; the following manifest is the record of those boundaries:
@@ -398,6 +420,16 @@ mode (`sources` and `astro` today). `origin_main_age_s > 3600` degrades all
 drift to `unknown` with a `stale_upstream` attention item. Sibling `work`
 services return `drift: not_applicable`.
 
+A running service whose code identity cannot be resolved is reported with
+`serving_mode: "unknown"`, both SHAs `null`, `drift: "unknown"`, and a
+machine-readable `unresolved_reason`: `no_listener_pid` (no listener pid for the
+port), `cwd_unreadable` (the listener's working directory cannot be read),
+`cwd_not_git_repo` (the working directory is neither a release dir nor a git
+checkout), or `head_unresolvable` (a git checkout whose `HEAD` does not resolve).
+One unresolved service never fails the whole report. `unresolved_reason` is
+`null` for every other mode. Ingest rejects `unknown` rows that are not running,
+carry a SHA, or name any other reason, and rejects a reason on any other mode.
+
 ```bash
 curl -s http://localhost:8765/api/fleet/projects/v1 | python3 -m json.tool
 ```
@@ -412,6 +444,9 @@ read freshness window (15 minutes).
 ```bash
 .venv/bin/python scripts/api/project_state_local.py report
 ```
+
+The reporter includes `lane_usage` by probing local subscription lanes; set
+`MONITOR_PROJECT_STATE_LANE_USAGE=0` to skip those probes (hermetic tests).
 
 Operator timer install: `docs/runbooks/project-state-reporter.md`.
 
@@ -639,6 +674,18 @@ Idle-since tracking starts at API process boot; a host that is idle immediately 
 Remote reporters may include an optional `lane_usage` array on `POST /api/fleet/projects/v1/report`. Each row is strictly allowlisted to `{lane, window: "weekly", used_pct, resets_at}` — no emails, org names, plan names, or currency. The collector on the notebook reads CodexBar locally and emits only weekly windows (5-hour burst windows are ignored for pace). The server sanitizer rejects foreign fields with HTTP 400. Estate-wide evaluation always reads the freshest live report by `collected_at`, not the idle host's own block.
 
 `GET /api/state/routing-budget` consumes the same weekly rows as `source: notebook-report` with `age_s` when CodexBar on the API host has no authoritative weekly sample; the pinned `records_loaded=0` suppression lifts only when such data exists.
+
+### GitHub GraphQL budget
+
+`GET /api/state/github-budget` returns one `gh api graphql` observation of
+`rateLimit { limit remaining used resetAt }`. It is cached in-process for 60
+seconds, with concurrent cache misses coalesced into one probe. A successful
+zero remaining balance and GitHub's explicit `RATE_LIMIT` /
+`graphql_rate_limit` error both report `exhausted: true`; other command or
+response failures report `exhausted: null` and an error. This endpoint does not
+use `/rate_limit`, whose REST GraphQL summary can disagree with the live
+GraphQL API response. The read itself costs at least one GraphQL point per
+[GitHub's GraphQL rate-limit documentation](https://docs.github.com/en/graphql/overview/rate-limits-and-node-limits-for-the-graphql-api).
 
 On a running event loop, a missing or expired cache entry and `fresh=true` wait for the shared load probe before responding. A successful sample younger than 30s is `fresh`. Refresh starts at 15s so a live heartbeat does not wait until the window expires; while that probe runs, the same sample stays `fresh` for 15s past the window. Cached metrics between 45 and 300 seconds old may still be returned as `stale` while a refresh runs.
 

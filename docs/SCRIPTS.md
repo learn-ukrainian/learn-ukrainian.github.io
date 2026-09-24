@@ -656,6 +656,7 @@ Additional audit guardrails:
 - `scripts/lexicon/admit_teacher_table.py` - local-only teacher-table Atlas admission and English-card enrichment; writes a separate staged manifest, private deltas, and a named VESUM residual ledger but never publishes
 - `scripts/atlas/atlas_db.py` - rebuild `data/atlas.db` from the hydrated Atlas manifest, materialize the Astro article payload projection, and validate alias targets
 - `scripts/atlas/fill_local.py` - Phase-1 offline local enrichment writer for `data/atlas.db`; reads local dictionary/cache data only and reports per-section before/after coverage
+- `scripts/lexicon/thin_page_report.py` - read-only thin-page report over `data/atlas.db` (#8313): per-entry thinness tier (`bare`/`thin`/`rich`), missing enrichment sections of all 18, and per-section × per-source fillable counts from `data/lexicon/slovnyk_cache/`, `data/ulif_dump_all.db` (opened `mode=ro`, safe while `dump_ulif.py` writes), and `data/sources.db`; never parks or mutates entries. CLI: `.venv/bin/python -m scripts.lexicon.thin_page_report --json /tmp/thin.json`
 - `site/scripts/benchmark-atlas-db.mjs` - benchmark Atlas DB build, preload, and getStaticPaths mapping at current and synthetic sizes
 - `scripts/audit/curriculum_qg_harness.py` - deterministic Ukrainian curriculum QG fixture harness; use it to calibrate B1-27, A1/A2 scaffolding, B1+ leakage, and seminar-register checks before changing QG behavior
 - `scripts/lexicon/promote_teacher_lesson_intake.py` - promote reviewed private teacher-lesson intake into the Word Atlas (`--apply --write --report`); also has two standalone, `--vesum-db`-free modes: `--emit-membership` (fold every approved lemma with an existing Atlas route into curated-practice membership) and `--record-source-shape` (append a weekly source-shape checksum to the intake journal's audit trail). See [Teacher-lesson intake: weekly delta recipe](#teacher-lesson-intake-weekly-delta-recipe) below.
@@ -769,6 +770,40 @@ row (e.g. `codex → cursor`); otherwise it refuses unless `--force-agent`. Flag
 opt-in for hermetic tests; launchers should enable the env.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
+
+**Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
+`batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
+
+- `settle-stale` settles `needs_finalize` records older than 7 days once their worktree,
+  local branch, remote branch **and work** are gone. The work counts as gone only when the
+  record names a commit (`auto_finalize.commit_sha`) that no ref holds under any name, or
+  when the task exited clean with no commits. Each run (dry runs too) first does one
+  `git fetch --no-tags --prune origin` per repository, so remote branches are current; if
+  that fetch fails, no record of that repository is settled (class D, `fetch_failed`). Settled records become `done`,
+  `no_deliverable` or `failed` and carry a `settled_by` receipt. `done` needs a merged PR
+  that carries a recorded commit. A PR that only reuses the branch name leaves the record
+  in class D. Classes A, B and D are reported and never changed. They cover a branch or
+  commit still on origin, a local branch or ref still holding the work (even renamed), a
+  dirty worktree, and commits with no recorded commit id.
+- `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`
+  sidecars, into `batch_state/tasks/archive/`. A record stays hot while its checkout path or
+  an `acp_runtime_paths` entry still exists. Each move holds the record's lock, and it
+  re-checks the record's mtime and status first.
+- `restore` moves an archived record back. No move ever replaces a file: if a writer
+  created the hot record (or a sidecar) first, the writer's file stays and the archived
+  copy is kept and reported.
+
+Readers follow `scripts/orchestration/task_record_store.py`. Active views and the claim scan
+read the hot directory only. Lookups by task id fall back to the archive: `delegate.py
+status`/`wait` (whose `result_file` names the moved sidecar), the task-id reuse guard,
+`GET /api/delegate/tasks/{id}`, `record_cf_verdict` (review and author records) and
+`orchestrator_control` run history. Historical readers use
+`iter_task_records(include_archive=True)`. These are the Monitor `status=all`/terminal listings
+(and the Work projection built on them), bottleneck metrics, the driver-breadth report,
+`delegate.py backfill-repository` and the rate-limit reclassifier. Two views state that their
+history is bounded. `delegate.py list` reads the hot directory, notes on stderr how many
+archived records it left out, and lists them with `--all`. `orchestrator_control inbox
+--recent` reads the hot directory and reports `history_scope: "hot"`.
 
 #### Project Research Registry — orchestrator dispatch duty
 

@@ -23,7 +23,7 @@ from scripts.curriculum.resolver.tokenize import (
     tokenize,
 )
 from scripts.lexicon.calque_corrections import CURATED_CALQUES, LEXICALISED_SAFE
-from scripts.storage.topology import require_local_active_sources_db
+from scripts.storage.topology import ActiveDatabaseNetworkError, require_local_active_sources_db
 from scripts.verification.check_ru_morph import (
     KNOWN_SHADOW_LEMMAS,
     _morph_uk,
@@ -117,6 +117,8 @@ def _is_closed_class_token(
             res = verify_words([token_str, token_str.lower()], db_path=_vesum_path_resolved())
             matches = res.get(token_str) or res.get(token_str.lower()) or []
             vesum_map[token_str] = matches
+        except FileNotFoundError:
+            raise
         except Exception:
             matches = []
     if not matches:
@@ -554,11 +556,11 @@ def check_text(
     max_gec_len = 1
 
     if "ua_gec" in active_checks:
-        sources_path = _sources_path_resolved()
-        sources_sig = _signature(sources_path)
         try:
+            sources_path = _sources_path_resolved()
+            sources_sig = _signature(sources_path)
             ua_gec_index, max_gec_len, dropped_gec_rows = _get_ua_gec_index()
-        except FileNotFoundError as err:
+        except (FileNotFoundError, ActiveDatabaseNetworkError) as err:
             return {
                 "status": "error",
                 "error_code": "source_unavailable",
@@ -567,9 +569,22 @@ def check_text(
 
     if "ua_gec" in active_checks and unit_sentences and ua_gec_index:
         if not vesum_map and unique_forms:
+            vesum_path = _vesum_path_resolved()
+            if not vesum_path.is_file():
+                return {
+                    "status": "error",
+                    "error_code": "source_unavailable",
+                    "error": f"source_unavailable: VESUM database not found at {vesum_path}",
+                }
             query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in unique_forms]))
             try:
-                vesum_map = verify_words(query_words, db_path=_vesum_path_resolved())
+                vesum_map = verify_words(query_words, db_path=vesum_path)
+            except FileNotFoundError as err:
+                return {
+                    "status": "error",
+                    "error_code": "source_unavailable",
+                    "error": f"source_unavailable: {err}",
+                }
             except Exception:
                 vesum_map = {}
         ua_gec_findings: dict[tuple[str, ...], dict[str, Any]] = {}
@@ -605,7 +620,14 @@ def check_text(
                         error_types = sorted(list({r["error_type"] for r in active_rows}))
                         all_docs = sorted(list({str(r["doc_id"]) for r in active_rows}))
                         is_single_token = len(span_key) == 1
-                        is_closed_class_span = all(_is_closed_class_token(t.lookup, vesum_map) for t in span)
+                        try:
+                            is_closed_class_span = all(_is_closed_class_token(t.lookup, vesum_map) for t in span)
+                        except FileNotFoundError as err:
+                            return {
+                                "status": "error",
+                                "error_code": "source_unavailable",
+                                "error": f"source_unavailable: {err}",
+                            }
                         is_collocation = any(r["error_type"] == "F/Collocation" for r in active_rows)
                         is_multi_token_calque = (
                             (not is_single_token)

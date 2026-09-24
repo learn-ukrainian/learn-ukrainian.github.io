@@ -1,0 +1,78 @@
+# Source map for the accepted-decisions record (#8397, #8430).
+# Read by scripts/curriculum/arc/generate_decisions.py. Each entry names one operator-accepted
+# section by doc + exact heading line; `accepted_evidence.line` is the exact line (verbatim, in
+# `accepted_evidence.doc`) that states the acceptance. Dates are never inferred.
+# Record order per level: the level's entries, then the `shared` entries.
+schema: 1
+levels:
+  a1:
+    - doc: docs/epics/fresh-build-a1-arc.md
+      heading: "## 2. Decisions"
+      accepted: "2026-09-21"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-build-program.md
+        line: "| Arcs A1, A2, B1, B2 | `docs/epics/fresh-build-{a1,a2,b1,b2}-arc.md` | all four accepted by the operator 2026-09-21; only A1 has its generated `_arc.yaml` |"
+    - doc: docs/epics/fresh-build-a1-arc.md
+      heading: "## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)"
+      accepted: "2026-09-21"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-a1-arc.md
+        line: "## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)"
+  a2:
+    - doc: docs/epics/fresh-build-a2-arc.md
+      heading: "## 2. Decisions"
+      accepted: "2026-09-21"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-a2-arc.md
+        line: "> Sub-epic #8397, issue #8424. Status: **accepted by the operator 2026-09-21** (r2, by the curriculum-upgrade driver)."
+    - doc: docs/epics/fresh-build-a2-arc.md
+      heading: "## 8. Decisions on the five open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently agreed with all five)"
+      accepted: "2026-09-21"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-a2-arc.md
+        line: "## 8. Decisions on the five open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently agreed with all five)"
+  b1:
+    - doc: docs/epics/fresh-build-b1-arc.md
+      heading: "## 2. Decisions"
+      accepted: "2026-09-21"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-b1-arc.md
+        line: "> Sub-epic #8397, issue #8427. Status: **accepted by the operator 2026-09-21** (r4, by the curriculum-upgrade driver)."
+    - doc: docs/epics/fresh-build-b1-arc.md
+      heading: "## 8. Decisions on the five open questions (operator, 2026-09-21)"
+      accepted: "2026-09-21"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-b1-arc.md
+        line: "## 8. Decisions on the five open questions (operator, 2026-09-21)"
+  b2:
+    - doc: docs/epics/fresh-build-b2-arc.md
+      heading: "## 2. Decisions"
+      accepted: "2026-09-21"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-b2-arc.md
+        line: "> Sub-epic #8397, issue #8427. Status: **accepted by the operator 2026-09-21** (r3, by the"
+    - doc: docs/epics/fresh-build-b2-arc.md
+      heading: "## 8. Decisions on the five open questions (operator, 2026-09-21)"
+      accepted: "2026-09-21"
+      accepted_evidence:
+        doc: docs/epics/fresh-build-b2-arc.md
+        line: "## 8. Decisions on the five open questions (operator, 2026-09-21)"
+shared:
+  - doc: docs/epics/fresh-build-plan-schema.md
+    heading: "## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)"
+    accepted: "2026-09-21"
+    accepted_evidence:
+      doc: docs/epics/fresh-build-plan-schema.md
+      line: "## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)"
+  - doc: docs/epics/fresh-build-writer-contract.md
+    heading: "## Decisions of the operator, 2026-09-21 (unchanged in r3)"
+    accepted: "2026-09-21"
+    accepted_evidence:
+      doc: docs/epics/fresh-build-writer-contract.md
+      line: "## Decisions of the operator, 2026-09-21 (unchanged in r3)"
+  - doc: docs/epics/fresh-build-build-program.md
+    heading: "## 6. The operator's decisions (2026-09-22, his words)"
+    accepted: "2026-09-22"
+    accepted_evidence:
+      doc: docs/epics/fresh-build-build-program.md
+      line: "## 6. The operator's decisions (2026-09-22, his words)"

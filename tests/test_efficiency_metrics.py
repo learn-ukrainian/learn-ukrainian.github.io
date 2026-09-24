@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
+import subprocess
 from pathlib import Path
 
 from scripts.fleet_comms.efficiency_metrics import (
+    _fetch_merge_facts,
     collect_dead_letters,
     collect_delivery_backlog,
     collect_efficiency_metrics,
@@ -122,3 +125,33 @@ def test_legacy_collectors_stay_on_broker_when_authority_is_pg(tmp_path, monkeyp
     assert collect_delivery_backlog(db)["total"] == 1
     assert collect_dead_letters(db)["total"] == 1
     assert collect_efficiency_metrics(db)["deliveries"]["delivered"] == 1
+
+
+def test_merge_fact_query_uses_injected_github_runner() -> None:
+    calls: list[tuple[list[str], float]] = []
+
+    def fake_gh(args: list[str], *, timeout: float) -> subprocess.CompletedProcess[str]:
+        calls.append((args, timeout))
+        return subprocess.CompletedProcess(
+            args,
+            0,
+            json.dumps({"data": {"r0": {"p123": {"mergedAt": "2026-09-20T12:34:56Z"}}}}),
+            "",
+        )
+
+    result = _fetch_merge_facts(
+        [("learn-ukrainian/learn-ukrainian.github.io", 123)],
+        gh_runner=fake_gh,
+        gh_bin="gh-test-double",
+    )
+
+    assert result[("learn-ukrainian/learn-ukrainian.github.io", 123)][0] is not None
+    assert len(calls) == 1
+    assert calls[0][0][0:3] == [
+        "gh-test-double", "api", "graphql",
+    ]
+    assert calls[0][0][3] == "-f"
+    assert calls[0][0][4] == (
+        'query=query { r0: repository(owner: "learn-ukrainian", name: '
+        '"learn-ukrainian.github.io") { p123: pullRequest(number: 123) { mergedAt } } }'
+    )

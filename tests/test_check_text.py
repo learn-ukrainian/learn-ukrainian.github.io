@@ -282,6 +282,51 @@ def test_stress_forms_case_insensitive_and_ambiguity_resolution():
 # ── Synthetic Tests: UA-GEC Whole Span, Overlapping, and Skipped Kinds ──────
 
 
+def _opts_into_vesum(request: pytest.FixtureRequest) -> bool:
+    """Real-database tests skip when the file is absent; hermetic tests mock it."""
+    names = request.fixturenames
+    return "requires_vesum_db" in names or "hermetic_ua_gec_vesum" in names
+
+
+@pytest.fixture(autouse=True)
+def _vesum_path_absent_unless_opt_in(request, monkeypatch, tmp_path):
+    """Match CI, where ``data/vesum.db`` is not provisioned.
+
+    ``check_text`` fails closed when ``_vesum_path_resolved`` is not a file.
+    Leave that path missing unless the test opts into ``hermetic_ua_gec_vesum``
+    or ``requires_vesum_db`` (the latter skips when the database is absent).
+    A test body that monkeypatches the same attribute still wins.
+    """
+    if _opts_into_vesum(request):
+        return
+    missing = tmp_path / "vesum-not-provisioned.db"
+    monkeypatch.setattr(
+        "scripts.verification.check_text._vesum_path_resolved",
+        lambda: missing,
+    )
+
+
+@pytest.fixture
+def hermetic_ua_gec_vesum(monkeypatch, tmp_path):
+    """Temp VESUM file plus a ``verify_words`` mock. Never opens the live database.
+
+    The returned mapping starts empty. Empty rows are not closed-class, so a
+    multi-token calque stays a problem. Put closed-class analyses in the
+    mapping before calling ``check_text`` when a test needs that decision.
+    """
+    vesum_file = tmp_path / "vesum.db"
+    vesum_file.touch()
+    analyses: dict[str, list] = {}
+    monkeypatch.setattr("scripts.verification.check_text._vesum_path_resolved", lambda: vesum_file)
+
+    def _verify(words, **kwargs):
+        return {word: list(analyses.get(word, [])) for word in words}
+
+    monkeypatch.setattr("scripts.verification.check_text.verify_words", _verify)
+    return analyses
+
+
+@pytest.mark.usefixtures("hermetic_ua_gec_vesum")
 def test_synthetic_ua_gec_single_token_to_suspicion(monkeypatch):
     mock_index = {
         ("коментарій",): [
@@ -316,6 +361,7 @@ def test_synthetic_ua_gec_single_token_to_suspicion(monkeypatch):
 test_synthetic_ua_gec_one_word_whole_span = test_synthetic_ua_gec_single_token_to_suspicion
 
 
+@pytest.mark.usefixtures("hermetic_ua_gec_vesum")
 def test_synthetic_ua_gec_multi_token_stays_in_problems(monkeypatch):
     mock_index = {
         ("написання", "постів"): [
@@ -345,6 +391,7 @@ def test_synthetic_ua_gec_multi_token_stays_in_problems(monkeypatch):
     assert p["detail"]["corrections"] == [{"correct": "писати дописи", "doc_ids": ["doc2"]}]
 
 
+@pytest.mark.usefixtures("hermetic_ua_gec_vesum")
 def test_synthetic_ua_gec_collocation_goes_to_suspicion(monkeypatch):
     # Driver settlement 2: F/Collocation of any length goes to suspicions
     mock_index = {
@@ -372,7 +419,7 @@ def test_synthetic_ua_gec_collocation_goes_to_suspicion(monkeypatch):
     assert s["detail"]["label"] == "UA-GEC correction in one document's context; suspicion, not a verdict"
 
 
-def test_synthetic_ua_gec_closed_class_calque_goes_to_suspicion(monkeypatch):
+def test_synthetic_ua_gec_closed_class_calque_goes_to_suspicion(monkeypatch, hermetic_ua_gec_vesum):
     # Closed-class rule: multi-token F/Calque consisting only of closed-class words goes to suspicions
     mock_index = {
         ("як", "він"): [
@@ -387,13 +434,11 @@ def test_synthetic_ua_gec_closed_class_calque_goes_to_suspicion(monkeypatch):
         ],
     }
     monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (mock_index, 2, 0))
-    mock_vesum = {
-        "як": [{"lemma": "як", "pos": "conj", "tags": "conj:subord"}],
-        "він": [{"lemma": "він", "pos": "noun", "tags": "noun:unanim:m:v_naz:pron:pers:3"}],
-    }
-    monkeypatch.setattr(
-        "scripts.verification.check_text.verify_words",
-        lambda words, **kw: {w: mock_vesum.get(w, []) for w in words},
+    hermetic_ua_gec_vesum.update(
+        {
+            "як": [{"lemma": "як", "pos": "conj", "tags": "conj:subord"}],
+            "він": [{"lemma": "він", "pos": "noun", "tags": "noun:unanim:m:v_naz:pron:pers:3"}],
+        }
     )
 
     text = "Він сказав так, як він думав."
@@ -409,6 +454,7 @@ def test_synthetic_ua_gec_closed_class_calque_goes_to_suspicion(monkeypatch):
     )
 
 
+@pytest.mark.usefixtures("hermetic_ua_gec_vesum")
 def test_synthetic_ua_gec_sub_span_not_matched(monkeypatch):
     mock_index = {
         ("написання", "постів"): [
@@ -437,6 +483,7 @@ def test_synthetic_ua_gec_sub_span_not_matched(monkeypatch):
     assert text_full[loc[1] : loc[2]] == "написання постів"
 
 
+@pytest.mark.usefixtures("hermetic_ua_gec_vesum")
 def test_synthetic_ua_gec_overlapping_hits(monkeypatch):
     # Minor 1: test every full-span match, including overlapping spans starting inside earlier match
     mock_index = {
@@ -473,6 +520,7 @@ def test_synthetic_ua_gec_overlapping_hits(monkeypatch):
     assert len(res["suspicions"]) == 1
 
 
+@pytest.mark.usefixtures("hermetic_ua_gec_vesum")
 def test_synthetic_ua_gec_skipped_kind_breaks_contiguity(monkeypatch):
     # Minor 3 / Settlement 5: skipped-kind tokens (latin, digits) break contiguity on text side
     mock_index = {
@@ -508,6 +556,7 @@ def test_synthetic_ua_gec_skipped_kind_breaks_contiguity(monkeypatch):
     assert res_clean["problems"][0]["form"] == "написання постів"
 
 
+@pytest.mark.usefixtures("hermetic_ua_gec_vesum")
 def test_synthetic_ua_gec_skipped_kind_tokens_dropped_and_counted(monkeypatch):
     # Settlement 1: synthetic index count in provenance, not hard-coding against live database
     mock_index = {
@@ -530,7 +579,7 @@ def test_synthetic_ua_gec_skipped_kind_tokens_dropped_and_counted(monkeypatch):
     assert prov["ua_gec_dropped_skipped_kind_rows"] == 5
 
 
-def test_real_ua_gec_skipped_kind_tokens_dropped_and_counted(requires_sources_db):
+def test_real_ua_gec_skipped_kind_tokens_dropped_and_counted(requires_sources_db, requires_vesum_db):
     # Settlement 1: real database variant asserts >= 1
     res = check_text(text="Привіт.", checks=["ua_gec"])
     assert res.get("status") != "error"
@@ -600,6 +649,51 @@ def test_synthetic_vesum_source_unavailable_when_db_missing(monkeypatch):
     assert res.get("status") == "error"
     assert res.get("error_code") == "source_unavailable"
     assert "VESUM database not found" in res.get("error", "")
+
+
+def test_ua_gec_only_missing_vesum_is_source_unavailable(monkeypatch):
+    """Closed-class spans must not become problems when VESUM cannot be read."""
+    mock_index = {
+        ("як", "він"): [
+            {
+                "id": 6663,
+                "error": ", як він",
+                "correct": " за нього",
+                "error_type": "F/Calque",
+                "doc_id": "1334",
+                "is_native": 0,
+            }
+        ],
+    }
+    monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (mock_index, 2, 0))
+    missing = Path("/nonexistent/vesum-check-text.db")
+    monkeypatch.setattr("scripts.verification.check_text._vesum_path_resolved", lambda: missing)
+
+    res = check_text(text="Він сказав так, як він думав.", checks=["ua_gec"])
+
+    assert res == {
+        "status": "error",
+        "error_code": "source_unavailable",
+        "error": f"source_unavailable: VESUM database not found at {missing}",
+    }
+    assert "problems" not in res
+
+
+def test_ua_gec_network_sources_path_returns_source_unavailable(monkeypatch):
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+
+    def raise_network() -> Path:
+        raise ActiveDatabaseNetworkError(
+            "Active sources.db must remain on local storage; "
+            "refused network path (repository_data_on_network_filesystem)."
+        )
+
+    monkeypatch.setattr("scripts.verification.check_text._sources_path_resolved", raise_network)
+    res = check_text(text="Це гарний день.", checks=["ua_gec"])
+    assert res.get("status") == "error"
+    assert res.get("error_code") == "source_unavailable"
+    assert str(res.get("error", "")).startswith("source_unavailable:")
+    assert "refused network path" in res.get("error", "")
 
 
 # ── Real Corpus Fixture Tests (Minor 3, Minor 6, Minor 7) ────────────────────

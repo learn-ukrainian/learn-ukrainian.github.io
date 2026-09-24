@@ -17,6 +17,10 @@ Policy (operational, not production-rollover)
 - ``score`` **auto-hydrates on PASS** (Sol Option D) so the operator never
   has to remember hydrate/restart for diary load; use ``--no-hydrate`` only
   for tests/debugging.
+- A driver handoff is a living document. Mint binds its path (or null for no
+  handoff) plus the selection inputs. ``handoff_sha256`` is informational.
+  Material edits after mint → re-mint to refresh facts. Score reports
+  ``handoff_changed_since_mint`` and does not fail for that edit.
 - Production identity rollover remains ``context_canary mint --snapshot`` (strict 10/10).
 
 Paths (gitignored local; under ``.claude/<epic>-epic/canary/``)
@@ -45,12 +49,15 @@ import json
 import re
 import subprocess
 import sys
+from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+from scripts.session_canary import handoff_select
 
 
 def _infra_harness_stream_id(repo_root: Path | None = None) -> str:
@@ -86,6 +93,9 @@ DEFAULT_SIM_THRESHOLD = 0.75
 N_ANCHORS = 10
 _CANARY_TIMEOUT_SECONDS = 30
 _TIMEOUT_RETURN_CODE = 124
+_NEXT_HEADING_MARKERS = ("next drive", "next after", "next action", "in flight", "live session")
+_HANDS_OFF_HEADING_MARKERS = ("hands-off", "handsoff", "do not", "out of scope")
+_SECTION_COUNT_LIMIT = 10_000
 
 
 def _utc_now() -> str:
@@ -96,15 +106,86 @@ def _canary_dir(repo: Path, epic: str) -> Path:
     return repo / ".claude" / f"{epic}-epic" / "canary"
 
 
+_OWN_HANDOFF = "GROK-DRIVER-HANDOFF.md"
+
+
+def _load_ranked(
+    repo: Path, epic: str, preferred: list[str] | None = None
+) -> list[handoff_select.LoadedCandidate]:
+    """One read per candidate, ranked. Mint and the pre-mint board share this."""
+    own = [_OWN_HANDOFF] if preferred is None else [name for name in preferred if name]
+    return handoff_select.load_and_rank_candidates(
+        repo,
+        epic,
+        handoff_select.LANE_HANDOFF_NAMES,
+        preferred=own,
+    )
+
+
 def _handoff_candidates(repo: Path, epic: str, preferred: list[str] | None = None) -> list[Path]:
-    base = repo / ".claude" / f"{epic}-epic"
-    names = [
-        *(preferred or []),
-        "INTERIM-DRIVER-HANDOFF.md",
-        "CLAUDE-DRIVER-HANDOFF.md",
-        "CODEX-DRIVER-HANDOFF.md",
-    ]
-    return [base / n for n in names]
+    """Freshest lane handoff. Own-lane ties the same freshness date only.
+
+    ``*.superseded.md`` is never returned. Missing names stay at the tail so an
+    empty epic dir still reports the lane's own filename first. Paths come from
+    :func:`_load_ranked`, which already read each file once.
+    """
+    return [item.path for item in _load_ranked(repo, epic, preferred)]
+
+
+def _recorded_write_meta(
+    repo: Path,
+    epic: str,
+    out_dir: Path | None,
+    path: Path | handoff_select.NoHandoff,
+    explicit: str | Path | None,
+) -> Path | None:
+    """Mint-meta path when this write consumes the recorded file.
+
+    An explicit ``--handoff`` is invocation-only, so it does not lock or
+    fail-closed against the recorded path and it does not update the record.
+    """
+    if explicit:
+        return None
+    if not isinstance(path, Path):
+        return None
+    recorded = handoff_select.recorded_mint_handoff(repo, epic, out_dir)
+    if not isinstance(recorded, Path) or path.resolve() != recorded.resolve():
+        return None
+    base = out_dir if out_dir is not None else _canary_dir(repo, epic)
+    return base / "mint_meta.json"
+
+
+def _bound_handoff_path(
+    repo: Path,
+    epic: str,
+    *,
+    explicit: str | Path | None = None,
+    preferred: list[str] | None = None,
+    out_dir: Path | None = None,
+) -> Path | handoff_select.NoHandoff:
+    """Handoff mint, score, and hydrate must share.
+
+    An explicit path wins for this invocation only and is not written into
+    ``mint_meta.json``. Otherwise the mint record wins, including a recorded
+    ``(no handoff)``, which is not re-selected. The ranker runs only when
+    ``mint_meta.json`` is absent. Returning a recorded path does not read it;
+    the caller that consumes the bytes fails closed on that read.
+    """
+    override = _resolve_handoff_override(repo, str(explicit) if explicit else None)
+    if override is not None and not handoff_select.is_superseded_handoff(override):
+        return override
+    recorded = handoff_select.recorded_mint_handoff(repo, epic, out_dir)
+    if isinstance(recorded, handoff_select.NoHandoff):
+        return recorded
+    if isinstance(recorded, Path):
+        return recorded
+    ranked = _handoff_candidates(repo, epic, preferred=preferred)
+    chosen = handoff_select.chosen_handoff_path(ranked)
+    if chosen is not None:
+        return chosen
+    if ranked:
+        return ranked[0]
+    return repo / ".claude" / f"{epic}-epic" / "INTERIM-DRIVER-HANDOFF.md"
 
 
 def _read_text(path: Path, limit: int = 120_000) -> str:
@@ -173,6 +254,49 @@ def _extract_handoff_bullets(md: str, *, heading_substrings: tuple[str, ...], li
     return bullets
 
 
+def _handoff_section_counts(md: str) -> tuple[int, int]:
+    """Count Next and Hands-off bullets the minter can consume."""
+    next_n = len(
+        _extract_handoff_bullets(
+            md,
+            heading_substrings=_NEXT_HEADING_MARKERS,
+            limit=_SECTION_COUNT_LIMIT,
+        )
+    )
+    hands_n = len(
+        _extract_handoff_bullets(
+            md,
+            heading_substrings=_HANDS_OFF_HEADING_MARKERS,
+            limit=_SECTION_COUNT_LIMIT,
+        )
+    )
+    return next_n, hands_n
+
+
+def _format_anchor_shortfall(attempts: list[tuple[str, int, int, int]]) -> str:
+    """Name every handoff tried and its next/hands-off bullet counts."""
+    best = max((anchors for _rel, anchors, _next_n, _hands_n in attempts), default=0)
+    tried = ", ".join(
+        f"{rel} (next={next_n}, hands-off={hands_n})" for rel, _anchors, next_n, hands_n in attempts
+    )
+    if not tried:
+        tried = "(no handoff) (next=0, hands-off=0)"
+    return (
+        f"error: could only derive {best}/{N_ANCHORS} durable anchors; "
+        f"tried {tried}; "
+        "open a stream session and dual-write handoff next/hands-off sections, then re-mint"
+    )
+
+
+def _resolve_handoff_override(repo: Path, raw: str | None) -> Path | None:
+    if not raw:
+        return None
+    path = Path(raw)
+    if not path.is_absolute():
+        path = repo / path
+    return path
+
+
 def _build_facts(
     *,
     epic: str,
@@ -180,6 +304,7 @@ def _build_facts(
     stream_entries: list[dict[str, str]],
     handoff_text: str,
     handoff_rel: str,
+    raise_on_shortfall: bool = True,
 ) -> list[dict[str, str]]:
     """Build exactly 10 unique {id,q,a} facts from durable sources only."""
     facts: list[dict[str, str]] = []
@@ -242,7 +367,7 @@ def _build_facts(
     # 4) Handoff dual-write: Next Drive (reserve workset slots after these)
     next_bullets = _extract_handoff_bullets(
         handoff_text,
-        heading_substrings=("next drive", "next after", "next action", "in flight", "live session"),
+        heading_substrings=_NEXT_HEADING_MARKERS,
     )
     for i, bullet in enumerate(next_bullets[:3], start=1):
         if not add(
@@ -264,7 +389,7 @@ def _build_facts(
 
     hands_off = _extract_handoff_bullets(
         handoff_text,
-        heading_substrings=("hands-off", "handsoff", "do not", "out of scope"),
+        heading_substrings=_HANDS_OFF_HEADING_MARKERS,
     )
     for i, bullet in enumerate(hands_off[:2], start=1):
         if not add(
@@ -306,13 +431,72 @@ def _build_facts(
             break
 
     if len(facts) < N_ANCHORS:
-        raise SystemExit(
-            f"error: could only derive {len(facts)}/{N_ANCHORS} durable anchors; "
-            "open a stream session and dual-write handoff next/hands-off sections, then re-mint"
-        )
+        if not raise_on_shortfall:
+            return facts
+        next_n, hands_n = _handoff_section_counts(handoff_text)
+        label = handoff_rel or "(no handoff)"
+        raise SystemExit(_format_anchor_shortfall([(label, len(facts), next_n, hands_n)]))
 
     # Exactly 10 — prefer earliest (highest-trust: identity + pins)
     return facts[:N_ANCHORS]
+
+
+def select_handoff(
+    *,
+    repo: Path,
+    epic: str,
+    stream_id: str,
+    stream_entries: list[dict[str, str]],
+    candidates: Sequence[handoff_select.LoadedCandidate | Path],
+    explicit: Path | None = None,
+) -> handoff_select.HandoffSelection:
+    """Anchor-yield selection mint and every pre-mint board share.
+
+    Ranking already read each :class:`handoff_select.LoadedCandidate`. Fact
+    counts are measured from that text's selection prefix, and mint builds
+    facts from the same string. ``reason`` is the selected file's
+    repo-relative label, ``(no handoff)`` when the stream alone suffices, or
+    empty when every candidate fell short.
+    """
+
+    def measure(text: str, rel: str) -> tuple[int, int, int]:
+        next_n, hands_n = _handoff_section_counts(text)
+        built = _build_facts(
+            epic=epic,
+            stream_id=stream_id,
+            stream_entries=stream_entries,
+            handoff_text=text,
+            handoff_rel=rel,
+            raise_on_shortfall=False,
+        )
+        return len(built), next_n, hands_n
+
+    return handoff_select.select_handoff(
+        repo=repo,
+        candidates=candidates,
+        explicit=explicit,
+        measure=measure,
+        min_anchors=N_ANCHORS,
+    )
+
+
+def select_board_handoff(
+    repo: Path,
+    epic: str,
+    stream_id: str,
+    candidates: Sequence[handoff_select.LoadedCandidate | Path],
+    *,
+    stream_limit: int = 40,
+) -> handoff_select.HandoffSelection:
+    """Board-time pick. Same selector, candidates, and stream limit mint uses."""
+    stream_entries = _load_stream_entries(stream_id, limit=int(stream_limit))
+    return select_handoff(
+        repo=repo,
+        epic=epic,
+        stream_id=stream_id,
+        stream_entries=stream_entries,
+        candidates=candidates,
+    )
 
 
 def cmd_mint(args: argparse.Namespace) -> int:
@@ -326,35 +510,40 @@ def cmd_mint(args: argparse.Namespace) -> int:
         )
         return 1
 
-    handoff_path: Path | None = None
-    if args.handoff:
-        handoff_path = Path(args.handoff)
-        if not handoff_path.is_absolute():
-            handoff_path = repo / handoff_path
-    else:
-        preferred = getattr(args, "preferred", None)
-        for cand in _handoff_candidates(repo, epic, preferred=preferred):
-            if cand.is_file():
-                handoff_path = cand
-                break
-
-    handoff_text = _read_text(handoff_path) if handoff_path else ""
-    handoff_rel = (
-        str(handoff_path.relative_to(repo)) if handoff_path and handoff_path.is_relative_to(repo) else str(handoff_path or "")
+    explicit = _resolve_handoff_override(repo, getattr(args, "handoff", None))
+    loaded = _load_ranked(repo, epic, preferred=getattr(args, "preferred", None))
+    stream_limit = int(args.stream_limit)
+    stream_entries = _load_stream_entries(stream_id, limit=stream_limit)
+    selected = select_handoff(
+        repo=repo,
+        epic=epic,
+        stream_id=stream_id,
+        stream_entries=stream_entries,
+        candidates=loaded,
+        explicit=explicit,
     )
-
-    stream_entries = _load_stream_entries(stream_id, limit=int(args.stream_limit))
-    try:
-        facts = _build_facts(
-            epic=epic,
-            stream_id=stream_id,
-            stream_entries=stream_entries,
-            handoff_text=handoff_text,
-            handoff_rel=handoff_rel or f".claude/{epic}-epic/",
-        )
-    except SystemExit as exc:
-        print(str(exc), file=sys.stderr)
+    if not selected.reason or selected.anchor_count < N_ANCHORS:
+        print(_format_anchor_shortfall(list(selected.attempts)), file=sys.stderr)
         return 1
+    # Fact building uses the text the selector already validated. A later
+    # rewrite of the file on disk must not change the minted anchors.
+    facts = _build_facts(
+        epic=epic,
+        stream_id=stream_id,
+        stream_entries=stream_entries,
+        handoff_text=selected.text,
+        handoff_rel=selected.reason,
+        raise_on_shortfall=False,
+    )
+    if len(facts) < N_ANCHORS:
+        next_n, hands_n = _handoff_section_counts(selected.text)
+        print(
+            _format_anchor_shortfall([(selected.reason, len(facts), next_n, hands_n)]),
+            file=sys.stderr,
+        )
+        return 1
+    facts = facts[:N_ANCHORS]
+    handoff_rel = selected.reason
 
     out_dir = Path(args.out_dir) if args.out_dir else _canary_dir(repo, epic)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -400,7 +589,14 @@ def cmd_mint(args: argparse.Namespace) -> int:
         "minted_at": _utc_now(),
         "epic": epic,
         "stream_id": stream_id,
-        "handoff": handoff_rel,
+        "handoff": None if selected.path is None else handoff_rel,
+        "handoff_sha256": selected.sha256,
+        "stream_limit": stream_limit,
+        "candidates": [
+            handoff_select.display_repo_path(repo, item.path)
+            for item in loaded
+            if item.text is not None
+        ],
         "n_anchors": len(facts),
         "pass_ratio_default": DEFAULT_PASS_RATIO,
         "policy": "operational-8/10-legacy-facts-from-stream+handoff",
@@ -516,6 +712,7 @@ def cmd_score(args: argparse.Namespace) -> int:
         "model": args.model,
         "score_line": score_line,
         "rc": proc.returncode,
+        "handoff_changed_since_mint": False,
         "policy": "operational-end-on-fail-handoff-not-on-compact-count",
         "action_if_fail": [
             "Append STATE AT HANDBACK to dual-write handoff",
@@ -532,9 +729,31 @@ def cmd_score(args: argparse.Namespace) -> int:
         from scripts.session_canary import diary as diary_mod
 
         preferred = getattr(args, "preferred", None)
-        handoff_path = diary_mod.resolve_handoff_path(
-            repo, epic, getattr(args, "handoff", None), preferred=preferred
+        explicit_raw = getattr(args, "handoff", None)
+        handoff_path = _bound_handoff_path(
+            repo,
+            epic,
+            explicit=explicit_raw,
+            preferred=preferred,
+            out_dir=out_dir,
         )
+        if isinstance(handoff_path, handoff_select.NoHandoff):
+            print("diary: (no handoff)")
+            return 0 if proc.returncode == 0 else (2 if proc.returncode == 2 else proc.returncode)
+        recorded_meta = _recorded_write_meta(repo, epic, out_dir, handoff_path, explicit_raw)
+        if recorded_meta is not None:
+            current = handoff_select.read_consumed_handoff(handoff_path, meta_path=recorded_meta)
+            recorded_sha = None
+            if recorded_meta.is_file():
+                recorded_sha = json.loads(recorded_meta.read_text(encoding="utf-8")).get("handoff_sha256")
+            changed = handoff_select.handoff_changed_since_mint(recorded_sha, current)
+            payload["handoff_changed_since_mint"] = changed
+            verdict_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            if changed:
+                print(
+                    "notice: handoff_changed_since_mint: true — "
+                    "material edits after mint → re-mint to refresh facts"
+                )
         canary_line = diary_mod.format_canary_score_line(
             verdict=verdict,
             score_line=score_line,
@@ -569,6 +788,7 @@ def cmd_score(args: argparse.Namespace) -> int:
                 worktrees=_split_csv_lines(getattr(args, "worktrees", "") or ""),
                 canary_line=canary_line,
                 notes=["Auto-written by grok_lane score on FAIL-HANDOFF"],
+                recorded_meta=recorded_meta,
             )
             print(f"diary handback -> {handoff_path}")
             diary_mod.try_stream_state_note(
@@ -586,6 +806,7 @@ def cmd_score(args: argparse.Namespace) -> int:
                     "PASS = anchors only — not full working memory.",
                     "Auto-hydrate + RE-GROUND checklist printed; dual-write after next batch.",
                 ],
+                recorded_meta=recorded_meta,
             )
             print(f"diary stamp -> {handoff_path}")
             diary_mod.try_stream_state_note(
@@ -601,7 +822,7 @@ def cmd_score(args: argparse.Namespace) -> int:
                         repo=repo,
                         epic=epic,
                         stream_id=stream_id,
-                        handoff=getattr(args, "handoff", None),
+                        handoff=None,
                         out_dir=out_dir,
                         max_tokens=int(getattr(args, "hydrate_max_tokens", 1400)),
                         write=bool(getattr(args, "hydrate_write", False)),
@@ -621,11 +842,15 @@ def cmd_score(args: argparse.Namespace) -> int:
                         "  4) Anything not dual-written before compact may have evaporated\n"
                         "=== END RE-GROUND ===\n"
                     )
+                except handoff_select.RecordedHandoffMissingError:
+                    raise
                 except Exception as hexc:  # fail-open: score already succeeded
                     print(
                         f"warning: auto-hydrate skipped ({type(hexc).__name__}: {hexc})",
                         file=sys.stderr,
                     )
+    except handoff_select.RecordedHandoffMissingError:
+        raise
     except Exception as exc:  # fail-open: never block score exit codes
         print(f"warning: diary dual-write skipped ({type(exc).__name__}: {exc})", file=sys.stderr)
 
@@ -670,11 +895,50 @@ def emit_hydrate_capsule(
 
     epic = epic.strip().lower()
     stream_id = (stream_id or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")).strip()
-    handoff_path = diary_mod.resolve_handoff_path(repo, epic, handoff, preferred=preferred)
-    if not handoff_path.is_file():
-        print(f"error: diary handoff missing: {handoff_path}", file=sys.stderr)
-        return 1, {"error": "missing_handoff", "handoff": str(handoff_path)}
-    diary_text = handoff_path.read_text(encoding="utf-8", errors="replace")
+    # Auto-hydrate passes handoff=None so this resolves the recorded path.
+    # An explicit handoff is this invocation only and is not stored.
+    explicit = handoff
+    recorded = handoff_select.recorded_mint_handoff(repo, epic, out_dir)
+    if explicit:
+        handoff_path = _bound_handoff_path(
+            repo,
+            epic,
+            explicit=explicit,
+            preferred=preferred,
+            out_dir=out_dir,
+        )
+        if isinstance(handoff_path, handoff_select.NoHandoff) or not handoff_path.is_file():
+            print(f"error: diary handoff missing: {handoff_path}", file=sys.stderr)
+            return 1, {"error": "missing_handoff", "handoff": str(handoff_path)}
+        try:
+            diary_text = handoff_path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError) as exc:
+            print(f"error: diary handoff unreadable: {handoff_path} ({exc})", file=sys.stderr)
+            return 1, {"error": "unreadable_handoff", "handoff": str(handoff_path)}
+    elif isinstance(recorded, handoff_select.NoHandoff):
+        print("error: diary handoff missing: (no handoff)", file=sys.stderr)
+        return 1, {"error": "no_handoff", "handoff": "(no handoff)"}
+    elif isinstance(recorded, Path):
+        meta_path = (
+            out_dir if out_dir is not None else _canary_dir(repo, epic)
+        ) / "mint_meta.json"
+        diary_text = handoff_select.read_consumed_handoff(recorded, meta_path=meta_path)
+        handoff_path = recorded
+    else:
+        handoff_path = _bound_handoff_path(
+            repo,
+            epic,
+            explicit=None,
+            preferred=preferred,
+            out_dir=out_dir,
+        )
+        if isinstance(handoff_path, handoff_select.NoHandoff):
+            print("error: diary handoff missing: (no handoff)", file=sys.stderr)
+            return 1, {"error": "no_handoff", "handoff": "(no handoff)"}
+        if not handoff_path.is_file():
+            print(f"error: diary handoff missing: {handoff_path}", file=sys.stderr)
+            return 1, {"error": "missing_handoff", "handoff": str(handoff_path)}
+        diary_text = handoff_path.read_text(encoding="utf-8", errors="replace")
     stream_tail = ""
     if not no_stream:
         stream_tail = diary_mod.try_stream_tail_text(stream_id, limit=int(stream_limit))
@@ -778,6 +1042,7 @@ You are bound to epic **{epic}** / stream **{stream}**.
 - Canary probe under `{canary}/` — rot measurement only, **not** the board
 
 ### Handoff = DIARY (required)
+The handoff is a living document. Mint binds its path; ``handoff_sha256`` is informational. Material edits after mint → re-mint to refresh facts.
 After every real batch (merge, issue close, dispatch start, advisor note, block):
 ```bash
 .venv/bin/python -m scripts.session_canary.grok_lane stamp --epic {epic} \\
@@ -870,7 +1135,18 @@ def cmd_stamp(args: argparse.Namespace) -> int:
     epic = args.epic.strip().lower()
     stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
     preferred = getattr(args, "preferred", None)
-    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff, preferred=preferred)
+    out_dir = Path(args.out_dir) if getattr(args, "out_dir", None) else None
+    path = _bound_handoff_path(
+        repo,
+        epic,
+        explicit=args.handoff,
+        preferred=preferred,
+        out_dir=out_dir,
+    )
+    if isinstance(path, handoff_select.NoHandoff):
+        print("error: (no handoff); re-mint to bind a handoff file", file=sys.stderr)
+        return 1
+    recorded_meta = _recorded_write_meta(repo, epic, out_dir, path, args.handoff)
     bullets = list(args.bullet or [])
     if args.title and not bullets:
         bullets = [args.title]
@@ -885,6 +1161,7 @@ def cmd_stamp(args: argparse.Namespace) -> int:
         bullets=bullets,
         next_drive=next_drive,
         working_set=working_set,
+        recorded_meta=recorded_meta,
     )
     print(f"diary stamp {stamp} -> {path}")
     note = f"DIARY {stamp}: {args.title or 'batch'}; " + "; ".join(bullets[:5])
@@ -901,7 +1178,18 @@ def cmd_handback(args: argparse.Namespace) -> int:
     epic = args.epic.strip().lower()
     stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
     preferred = getattr(args, "preferred", None)
-    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff, preferred=preferred)
+    out_dir = Path(args.out_dir) if getattr(args, "out_dir", None) else None
+    path = _bound_handoff_path(
+        repo,
+        epic,
+        explicit=args.handoff,
+        preferred=preferred,
+        out_dir=out_dir,
+    )
+    if isinstance(path, handoff_select.NoHandoff):
+        print("error: (no handoff); re-mint to bind a handoff file", file=sys.stderr)
+        return 1
+    recorded_meta = _recorded_write_meta(repo, epic, out_dir, path, args.handoff)
     next_drive = list(args.next or []) or ["Load STATE AT HANDBACK + stream; mint canary; resume"]
     canary_line = args.canary_line or "canary not scored this close"
     stamp = diary_mod.append_handback(
@@ -917,6 +1205,7 @@ def cmd_handback(args: argparse.Namespace) -> int:
         worktrees=list(args.worktree or []),
         canary_line=canary_line,
         notes=list(args.note or []),
+        recorded_meta=recorded_meta,
     )
     print(f"STATE AT HANDBACK {stamp} -> {path}")
     diary_mod.try_stream_state_note(
@@ -930,17 +1219,35 @@ def cmd_handback(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="python -m scripts.session_canary.grok_lane",
-        description="Operational Grok epic-lane session canary (8/10 rot gate).",
+        description=(
+            "Operational Grok epic-lane session canary (8/10 rot gate). "
+            "A driver handoff is a living document: mint binds its path "
+            "(or null for no handoff) and the selection inputs. "
+            "handoff_sha256 is informational. "
+            "Material edits after mint → re-mint to refresh facts."
+        ),
     )
     p.add_argument("--repo", type=Path, default=ROOT, help="Repository root")
     sub = p.add_subparsers(dest="command", required=True)
 
-    mint = sub.add_parser("mint", help="Freeze 10 durable anchors from stream + handoff")
+    mint = sub.add_parser(
+        "mint",
+        help="Freeze 10 durable anchors from stream + handoff",
+        description=(
+            "Freeze 10 durable anchors. Records the selected handoff path "
+            "(or null) and the selection inputs. handoff_sha256 is informational. "
+            "Material edits after mint → re-mint to refresh facts."
+        ),
+    )
     mint.add_argument("--epic", required=True, help="Epic slug (atlas, harness, …)")
     mint.add_argument("--stream", default=None, help="Stream id (default from epic map)")
-    mint.add_argument("--handoff", default=None, help="Override dual-write handoff path")
+    mint.add_argument(
+        "--handoff",
+        default=None,
+        help="Use this handoff for this mint only; recorded when it is the selection",
+    )
     mint.add_argument("--out-dir", default=None, help="Canary directory override")
-    mint.add_argument("--stream-limit", type=int, default=40)
+    mint.add_argument("--stream-limit", type=int, default=40, help=handoff_select.STREAM_LIMIT_HELP)
     mint.set_defaults(func=cmd_mint)
 
     questions = sub.add_parser("questions", help="Print/write id→question map (no answers)")

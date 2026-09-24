@@ -23,7 +23,8 @@ bounded fresh worker through the same bridge used by the fleet:
   --fresh --json
 ```
 
-The probe starts a new `gpt-5.6-terra` Codex CLI process through `ask-codex` and
+The probe starts a new Codex CLI process through `ask-codex` using the current
+native model route and
 requires its broker response to equal a unique sentinel. It writes only a
 sanitized TTL receipt under ignored `batch_state/runtime/`; no prompt, response,
 or raw error text is retained. A reserved `collaboration.spawn_agent` rejection

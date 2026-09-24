@@ -337,13 +337,16 @@ steps:
 
   - step_id: cleanup_failed_worktree
     intent: >-
-      Remove only a clean, proven-unmerged worktree without force. Branch deletion is
-      deliberately omitted: a failed branch remains for forensics and approved cleanup.
+      Remove only a clean, proven-unmerged worktree without force, through the guarded
+      worktree_claims CLI: it takes the per-worktree lock dispatch attaches under, proves
+      the task created the worktree, and refuses while another unfinished task claims it
+      (#8610). Branch deletion is deliberately omitted: a failed branch remains for
+      forensics and approved cleanup.
     command:
       adapter: shell
-      argv: [sh, -c, 'git worktree remove ".worktrees/dispatch/$LANE/$TASK_ID" && echo worktree-removed || echo removal-failed']
+      argv: [sh, -c, '.venv/bin/python -m scripts.orchestration.worktree_claims remove ".worktrees/dispatch/$LANE/$TASK_ID" --owner-task-id "$TASK_ID" --reason "rb2 failed-dispatch cleanup" >&2 && echo worktree-removed || echo removal-failed']
       environment: {TRAIL_INVOCATION_ID: "{invocation_id}", LANE: "{lane}", TASK_ID: "{task_id}"}
-      timeout_seconds: 60
+      timeout_seconds: 120
       mutation_class: local-write
       outcome_decoder: {source: stdout-token}
     transitions:

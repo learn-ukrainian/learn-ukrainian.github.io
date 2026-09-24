@@ -110,7 +110,7 @@ const demodule = (src) => src
 const source = fs.readFileSync('site/src/pages/[...slug].astro', 'utf8').split('---')[1];
 const tree = ts.createSourceFile('route.ts', source, ts.ScriptTarget.Latest, true);
 const wanted = new Set(['TRACKS', 'HIDDEN_DOCS', 'normalizeId', 'allDocs', 'visibleDocs',
- 'deployedDocsByTrack', 'landingDocsByTrack', 'plannedModuleGroups', 'A1_UNITS']);
+ 'deployedDocsByTrack', 'landingDocsByTrack', 'HIDDEN_LINK_TRACKS', 'hrefFromRoute', 'sidebar']);
 const selected = tree.statements.filter(statement => {
  if (ts.isFunctionDeclaration(statement)) return statement.name?.text === 'getStaticPaths';
  if (ts.isVariableStatement(statement)) {
@@ -123,15 +123,19 @@ const selected = tree.statements.filter(statement => {
  return false;
 }).map(statement => statement.getText(tree)).join('\n').replace('export async function', 'async function').replaceAll('import.meta.env.PROD', 'true');
 const helper = demodule(fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8'));
-const nav = demodule(fs.readFileSync('site/src/lib/a1-lesson-nav.ts', 'utf8'));
-const units = demodule(fs.readFileSync('site/src/data/a1-v1-modules.ts', 'utf8'));
-const compiled = ts.transpileModule(helper + '\n' + nav + '\n' + units + '\n' + selected, {
+const nav = demodule(fs.readFileSync('site/src/lib/doc-nav.ts', 'utf8'));
+const compiled = ts.transpileModule(helper + '\n' + nav + '\n' + selected, {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
 }).outputText.replace(/^\s*exports?\.[^\n]*\n/gm, '').replace(/^\s*export\s*\{\s*\}\s*;?\s*$/gm, '');
 const docs = JSON.parse(fs.readFileSync(0, 'utf8'));
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: await getStaticPaths(), groups: plannedModuleGroups("a1", TRACKS["a1"]), visible: [...deployedDocsByTrack.keys()]};')(
- async name => name === 'docs' ? docs : [], () => 0
+// `sidebar` reads the page-level `props`/`docRoute`/`docTrack`; bind them to one lesson page.
+const lessonId = 'a1/things-have-gender/2';
+const prelude = `const props = {kind: 'doc', entry: allDocs.find(e => normalizeId(e.id) === '${lessonId}')};
+const docRoute = '${lessonId}'; const docTrack = 'a1';`;
+const body = compiled.replace(/^const sidebar\b/m, prelude + '\nconst sidebar');
+new AsyncFunction('getCollection', 'moduleCount', 'formatLessonCount', body + '\nreturn {routes: (await getStaticPaths()).map(r => ({params: r.params, kind: r.props.kind, arc: r.props.entry?.data ?? {}})), sidebar, visible: [...deployedDocsByTrack.keys()]};')(
+ async name => name === 'docs' ? docs : [], () => 0, count => ({en: `${count} lessons`, uk: `${count} уроки`})
 ).then(result => process.stdout.write(JSON.stringify(result))).catch(error => {console.error(error); process.exitCode = 1;});
 '''
     module, plan = gold
@@ -140,20 +144,75 @@ new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: 
     docs.extend({"id": f"a1/things-have-gender/{name}", "data": yaml.safe_load(mdx.split("---", 2)[1])}
                 for name, mdx in pages.items())
     docs.append({"id": "a1/draft/index", "data": {"title": "Draft", "draft": True, "lessons": []}})
+    # Feed the router the real generated pages (landing + every arc module page) from the working tree.
+    real = Path("site/src/content/docs/a1")
+    landing = yaml.safe_load((real / "index.mdx").read_text(encoding="utf-8").split("---", 2)[1])
+    docs.append({"id": "a1/index", "data": landing})
+    module_slugs = []
+    for page in sorted(real.glob("*/index.mdx")):
+        slug = page.parent.name
+        if slug == "things-have-gender":  # this slug's pages come from the assembler fixture above
+            continue
+        module_slugs.append(slug)
+        docs.append({"id": f"a1/{slug}/index",
+                     "data": yaml.safe_load(page.read_text(encoding="utf-8").split("---", 2)[1])})
+    assert len(module_slugs) >= 50
     result = json.loads(subprocess.check_output(["node", "-e", probe], input=json.dumps(docs), text=True, timeout=30))
-    routes = {route["params"]["slug"] for route in result["routes"]}
+    kinds = {route["params"]["slug"]: route["kind"] for route in result["routes"]}
     assert {
         "a1-v1", "a1-v1/things-have-gender", "a1", "a1/things-have-gender",
         "a1/things-have-gender/1", "a1/things-have-gender/2", "a1/things-have-gender/3",
-    } <= routes
-    assert "a1/draft" not in routes
+    } <= kinds.keys()
+    assert kinds["a1"] == "landingDoc"
+    # `[...slug].astro` picks ArcLanding / ArcModule from `props.entry.data.arc_kind` (line ~456), and the
+    # branch runs in the page body, not in getStaticPaths; so assert the props the branch reads.
+    arc = {route["params"]["slug"]: route["arc"] for route in result["routes"]}
+    assert (arc["a1"]["arc_kind"], arc["a1"]["arc_level"]) == ("landing", "a1")
+    for slug in module_slugs:
+        assert kinds[f"a1/{slug}"] == "doc"
+        assert (arc[f"a1/{slug}"]["arc_kind"], arc[f"a1/{slug}"]["arc_level"], arc[f"a1/{slug}"]["arc_slug"]) == (
+            "module", "a1", slug)
+    assert kinds["a1/things-have-gender"] == kinds["a1/things-have-gender/2"] == "doc"
+    assert "a1/draft" not in kinds
     assert "a1" in result["visible"]
-    assert result["groups"][0]["unit"].startswith("A1.1")
-    upgraded = next(
-        item for group in result["groups"] for item in group["items"]
-        if item["slug"] == "things-have-gender"
-    )
-    assert [item["n"] for item in upgraded["lessons"]] == [1, 2, 3]
+    sidebar = result["sidebar"]
+    assert sidebar["backHref"] == "/a1/"
+    assert [link["num"] for link in sidebar["links"]] == ["01", "02", "03"]
+    assert [link["active"] for link in sidebar["links"]] == [False, True, False]
+    assert [link["href"] for link in sidebar["links"]] == [
+        f"/a1/things-have-gender/{n}/" for n in (1, 2, 3)
+    ]
+    assert (sidebar["progressDone"], sidebar["progressTotal"]) == (2, 3)
+
+
+def test_landing_groups_follow_arc_phase_order():
+    """Execute the real `groupByPhase` (site/src/lib/arc.ts) over the real arc-a1.json."""
+    import json
+    import subprocess
+
+    probe = r'''
+const fs = require('fs');
+const ts = require('typescript');
+const source = fs.readFileSync('site/src/lib/arc.ts', 'utf8')
+  .replace(/^\s*import\s[\s\S]*?;\s*$/gm, '').replaceAll('export ', '');
+const compiled = ts.transpileModule(source, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+}).outputText;
+const data = JSON.parse(fs.readFileSync('site/src/data/arc-a1.json', 'utf8'));
+const groupByPhase = new Function(compiled + '\nreturn groupByPhase;')();
+process.stdout.write(JSON.stringify(groupByPhase(data.positions).map(g => ({phase: g.phase, positions: g.items.map(i => i.position)}))));
+'''
+    groups = json.loads(subprocess.check_output(["node", "-e", probe], text=True, timeout=30))
+    positions = json.loads(Path("site/src/data/arc-a1.json").read_text(encoding="utf-8"))["positions"]
+    arc_phases = list(dict.fromkeys(p["phase"] for p in positions))  # first-seen arc order
+    assert [g["phase"] for g in groups] == arc_phases
+    assert len(groups) > 1
+    flat = [n for g in groups for n in g["positions"]]
+    assert len(flat) == 55
+    assert flat == sorted(flat) == [p["position"] for p in positions]
+    for group in groups:
+        assert group["positions"] == sorted(group["positions"])
+        assert group["positions"] == [p["position"] for p in positions if p["phase"] == group["phase"]]
 
 
 def test_a1_landing_uses_lesson_map_pitch_not_original_body(gold, tmp_path):

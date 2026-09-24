@@ -1,9 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { evaluate } from '@mdx-js/mdx';
-import * as runtime from 'react/jsx-runtime';
 import { archiveBookmarkPaths } from '../../src/lib/a1-archive-routes';
 
 describe('A1 archive bookmarks', () => {
@@ -23,22 +18,5 @@ describe('A1 archive bookmarks', () => {
       { id: 'a1-v1/index.mdx', data: {} },
       { id: 'a1-v1/module/1.mdx', data: {} },
     ])).toEqual([]);
-  });
-});
-
-describe('canonical A1 landing', () => {
-  it.each([{ modules: [] }, { modules: [{ unit: 'Published modules', items: [{
-    num: 1, slug: 'example', title: 'Example', status: 'active',
-    lessons: [{ n: 1, title: 'Lesson', minutes: 5, href: '/a1/example/1/' }],
-  }] }] }])('renders the published lesson modules with their actual count: %j', async ({ modules }) => {
-    const source = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../src/content/docs/a1/index.mdx'), 'utf8')
-      .replace(/^---\n[\s\S]*?\n---\n/, '')
-      .replace("import LevelLanding from '@site/src/components/LevelLanding';",
-        'export const LevelLanding = (props) => props;');
-    const compiled = await evaluate(source, runtime);
-    const tree = compiled.default({ modules });
-    const landing = tree.props.children.find((child: any) => child?.type === compiled.LevelLanding);
-    expect(landing.props.modules).toEqual(modules);
-    expect(landing.props.moduleCount).toBe(modules.reduce((total, group) => total + group.items.length, 0));
   });
 });

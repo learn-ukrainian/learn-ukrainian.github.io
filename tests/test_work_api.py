@@ -408,13 +408,17 @@ def _next_sections() -> dict[str, SectionResult]:
     }
 
 
-def _warm_next_cache() -> dict:
+def _warm_next_cache(target_lifecycle_lookup: dict[str | int, str] | None = None) -> dict:
     """Build the fixture projection and install it as the unfiltered warm cache."""
     from scripts.api.state_helpers import cache_set
     from scripts.api.work_router import projection_cache_key
 
     cache_invalidate("work:v1:projection")
-    payload = build_projection(_next_sections(), repository_id=REPO)
+    payload = build_projection(
+        _next_sections(),
+        repository_id=REPO,
+        target_lifecycle_lookup=target_lifecycle_lookup if target_lifecycle_lookup is not None else {},
+    )
     cache_set(projection_cache_key({}), payload)
     return payload
 
@@ -475,6 +479,20 @@ def test_next_other_stream_perspective(monkeypatch):
         "infra-harness": 2,
     }
     assert data["digest"]["unscoped_actionable_count"] == 2
+
+
+def test_closed_blockers_do_not_remain_live():
+    """Closed targets clear blocker flags while preserving relationship evidence."""
+    projection = build_projection(
+        _next_sections(),
+        repository_id=REPO,
+        target_lifecycle_lookup={1: "closed", 2: "closed"},
+    )
+    issues = {item["remote_id"]: item for item in projection["items"] if item["resource_kind"] == "issue"}
+
+    assert issues["6001"]["flags"]["has_blocker"] is False
+    assert issues["6002"]["flags"]["has_blocker"] is False
+    assert any(rel["type"] == "blocked_by" for rel in issues["6001"]["relationships"])
 
 
 def test_next_determinism_two_calls_identical(monkeypatch):
@@ -1133,27 +1151,47 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
 
     A timed-out build must free the slot for the timer's next attempt, and
     lifespan exit must cancel the timer before draining background work.
+
+    Cache time is driven by an injected manual clock (#8583): the test ages
+    the entry explicitly and waits on stamp/build completion signals, so a
+    loaded runner's scheduler stalls cannot spend the max-stale window the
+    way wall-clock assertions did (a >1s stall between two stamps turned a
+    correct 200 into a 503 stale).
     """
     import threading
     import time
     from unittest.mock import Mock
 
     import scripts.api.main as api_main
+    import scripts.api.state_helpers as state_helpers
     from scripts.api.monitor_context import fixture_context
-    from scripts.api.state_helpers import cache_set
+
+    class ManualClock:
+        def __init__(self) -> None:
+            self._now = 0.0
+            self._lock = threading.Lock()
+
+        def __call__(self) -> float:
+            with self._lock:
+                return self._now
+
+        def advance(self, delta: float) -> None:
+            with self._lock:
+                self._now += delta
+
+    clock = ManualClock()
+    monkeypatch.setattr(state_helpers, "_ttl_clock", clock)
 
     ctx = fixture_context(tmp_path)
     key = work_router.projection_cache_key({}, ctx)
     payload = build_projection(_next_sections(), repository_id=REPO)
-    cache_set(key, payload)
-    original_stamp = work_router.cache_get_with_age(key, float("inf"))[1]
-    assert original_stamp < work_router.CACHE_TTL_S
+    # Seeded under the manual clock, so the entry is exactly 0s old.
+    state_helpers.cache_set(key, payload)
+    assert work_router.cache_get_with_age(key, float("inf"))[1] == 0.0
     _patch_known_streams(monkeypatch)
     monkeypatch.setattr(work_router, "CACHE_TTL_S", 0.1)
     production_timeout = work_router.NEXT_BUILD_TIMEOUT_S
     monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
-    # Multiple successful refreshes over a whole max-stale window prove that
-    # this is recurring maintenance, rather than another one-shot warmup.
     monkeypatch.setattr(work_router, "NEXT_MAX_STALE_S", 1.0)
     for name in (
         "preload_all", "install_signal_logging", "ensure_broker_db_ready",
@@ -1163,12 +1201,13 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
         monkeypatch.setattr(api_main, name, Mock())
     monkeypatch.setattr(api_main.isa, "schedule_refresh", Mock())
 
-    refreshed = threading.Event()
     release_hung = threading.Event()
     timer_stopped = threading.Event()
+    stamps = 0
+    stamps_cond = threading.Condition()
     builds = []
     started = time.monotonic()
-    real_cache_set = work_router.cache_set
+    real_cache_set = state_helpers.cache_set
     real_refresh = work_router.refresh_projection_cache_periodically
 
     def build(**_kwargs):
@@ -1185,9 +1224,18 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
         return payload.copy()
 
     def record_cache_set(cache_key, value):
+        nonlocal stamps
         real_cache_set(cache_key, value)
-        if cache_key == key and time.monotonic() - started > work_router.NEXT_MAX_STALE_S:
-            refreshed.set()
+        if cache_key == key:
+            with stamps_cond:
+                stamps += 1
+                stamps_cond.notify_all()
+
+    def wait_for_stamps(count: int) -> None:
+        with stamps_cond:
+            assert stamps_cond.wait_for(lambda: stamps >= count, timeout=10.0), (
+                f"idle timer produced only {stamps}/{count} refreshes"
+            )
 
     async def refresh(context):
         try:
@@ -1200,13 +1248,41 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
     monkeypatch.setattr(api_main, "refresh_projection_cache_periodically", refresh)
     try:
         with TestClient(api_main.create_app(ctx)) as idle_client:
-            assert refreshed.wait(5.0), "idle timer did not refresh after TTL"
+            # While the entry is fresh the timer must not rebuild; builds can
+            # only start once the manual clock ages the entry past the TTL.
+            time.sleep(3 * work_router.CACHE_TTL_S)
+            assert builds == [], "timer rebuilt a fresh cache"
+
+            # Age the entry well past the TTL: the next tick kicks build #1.
+            # Steps are 2x the TTL so float dust can never leave the age a
+            # hair below the staleness threshold (0.1+0.1+0.1 != 0.3 in
+            # binary floating point). A hung first build times out at 0.2s
+            # and must free the slot so a later tick's build can land the
+            # first stamp (#6984).
+            step = 2 * work_router.CACHE_TTL_S
+            clock.advance(step)
+            wait_for_stamps(1)
+            if hung_first_build:
+                assert len(builds) >= 2, "timed-out build wedged the single-flight slot"
+
+            # Multiple successful refreshes over a whole max-stale window
+            # prove that this is recurring maintenance, rather than another
+            # one-shot warmup. Each step must trigger exactly one more
+            # stamp; the loop total spans NEXT_MAX_STALE_S of cache time.
+            steps = int(work_router.NEXT_MAX_STALE_S / step) + 1
+            for i in range(steps):
+                clock.advance(step)
+                wait_for_stamps(2 + i)
+
             assert len(builds) >= 2
             assert builds[0] - started >= work_router.CACHE_TTL_S
             work_router.wait_for_in_flight_build(key, ctx=ctx)
             assert key not in ctx.stores.work_in_flight
+            # The clock has not moved since the last stamp, so the served age
+            # is deterministic regardless of scheduler load.
             response = idle_client.get("/api/work/v1/next?stream=infra-harness")
             assert response.status_code == 200, response.text
+            assert response.json()["cache_age_s"] == 0.0
             assert response.json()["cache_age_s"] < work_router.NEXT_MAX_STALE_S
             assert [row["work_id"] for row in response.json()["queue"]] == [_wid(6004), _wid(6001)]
             release_hung.set()

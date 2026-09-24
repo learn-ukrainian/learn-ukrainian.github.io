@@ -9,20 +9,241 @@ import contextlib
 import functools
 import ipaddress
 import os
+import shutil
 import socket
 import sqlite3
 import subprocess
 import sys
 import threading
+import weakref
 from collections.abc import Collection, Generator
 from pathlib import Path
+from urllib.parse import parse_qs, unquote, urlsplit
 
 import pytest
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from tests import sparse_trees
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
+    parts = Path(path).parts
+    return len(parts) >= 3 and parts[-3:-1] == ("agent_runtime", "shims")
+
+
+def _resolve_real_gh_binary() -> str | None:
+    """Resolve gh behind agent-runtime shims using the runner's path rules."""
+    candidates = [os.environ.get("AGENT_REAL_GH")]
+    search_path = os.environ.get("AGENT_ORIGINAL_PATH", os.environ.get("PATH", os.defpath))
+    candidates.extend(
+        os.path.join(entry, "gh")
+        for entry in search_path.split(os.pathsep)
+        if entry
+    )
+    for candidate in candidates:
+        if not candidate or _is_agent_runtime_shim(candidate):
+            continue
+        if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
+            return os.path.realpath(candidate)
+    return None
+
+
+_REAL_GH_BINARY = _resolve_real_gh_binary()
+_LIVE_GITHUB_ALLOWED = False
+
+
+@pytest.fixture(autouse=True)
+def _live_github_spawn_policy(request: pytest.FixtureRequest) -> Generator[None, None, None]:
+    """Permit real ``gh`` only for tests explicitly marked as integrations."""
+    global _LIVE_GITHUB_ALLOWED
+    previous = _LIVE_GITHUB_ALLOWED
+    _LIVE_GITHUB_ALLOWED = request.node.get_closest_marker("live_github") is not None
+    try:
+        yield
+    finally:
+        _LIVE_GITHUB_ALLOWED = previous
+
+
+@pytest.fixture(autouse=True)
+def _default_fake_github_cli(
+    _fake_github_bin: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    request: pytest.FixtureRequest,
+) -> None:
+    """Resolve ordinary test GitHub CLI lookups to a failing local stub."""
+    if request.node.get_closest_marker("live_github") is not None:
+        return
+    monkeypatch.setenv("PATH", f"{_fake_github_bin}{os.pathsep}{os.environ.get('PATH', '')}")
+
+
+@pytest.fixture(scope="session")
+def _fake_github_bin(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One failing local gh binary shared by tests in this pytest session."""
+    fake_bin = tmp_path_factory.mktemp("fake-gh")
+    fake_gh = fake_bin / "gh"
+    fake_gh.write_text(
+        "#!/bin/sh\nprintf '%s\\n' 'gh stub: inject a test response instead of contacting GitHub' >&2\nexit 127\n",
+        encoding="utf-8",
+    )
+    fake_gh.chmod(0o755)
+    return fake_bin
+
+
+def _bridge_db_paths() -> tuple[Path, Path]:
+    """Return the primary bridge DB and any configured path before tests begin."""
+    from scripts.ai_agent_bridge import _config
+
+    primary = _config.PRIMARY_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"
+    return primary.resolve(), Path(_config.DB_PATH).resolve()
+
+
+_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH = _bridge_db_paths()
+_API_BRIDGE_DB_PATH = (_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db").resolve()
+_UNISOLATED_BRIDGE_DB_PATHS = frozenset(
+    {_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH}
+)
+_BRIDGE_DB_SUFFIXES = tuple(sorted({path.name for path in _UNISOLATED_BRIDGE_DB_PATHS}))
+_BRIDGE_DB_BINDINGS_TO_REPLACE = set(_UNISOLATED_BRIDGE_DB_PATHS)
+
+
+def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
+    """Return a SQLite path and whether a URI explicitly opens it read-only."""
+    raw_path = os.fspath(database) if isinstance(database, (str, os.PathLike)) else None
+    if raw_path is None:
+        return None, False
+    if raw_path.startswith("file:"):
+        parsed = urlsplit(raw_path)
+        query = parse_qs(parsed.query)
+        return Path(unquote(parsed.path)).resolve(), query.get("mode") == ["ro"]
+    return Path(raw_path).resolve(), False
+
+
+@pytest.fixture(autouse=True)
+def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Redirect imported and future bridge users to one per-test database."""
+    isolated_path = tmp_path / "messages.db"
+    monkeypatch.setenv("AB_DB_PATH", str(isolated_path))
+    # A module first imported during a prior test may retain that test's path.
+    # Carry those paths forward so each test gets its own DB under xdist too.
+    _BRIDGE_DB_BINDINGS_TO_REPLACE.add(isolated_path.resolve())
+    for name, module in tuple(sys.modules.items()):
+        if module is None or not name.startswith(("scripts.", "ai_agent_bridge", "agent_runtime.")):
+            continue
+        for attribute, value in tuple(vars(module).items()):
+            if not isinstance(value, (str, os.PathLike)) or not os.fspath(value).endswith(_BRIDGE_DB_SUFFIXES):
+                continue
+            if Path(value).resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
+                monkeypatch.setattr(module, attribute, isolated_path)
+
+    # The production API app has a context and store handles created at import.
+    # Rebuild both against the isolated path, preserving other configured roots.
+    api_main = sys.modules.get("scripts.api.main")
+    if api_main is not None:
+        app = vars(api_main).get("app")
+        context = getattr(getattr(app, "state", None), "ctx", None)
+        if context is not None and context.roots.message_db_path.resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
+            monkeypatch.setattr(app.state, "ctx", context.with_roots(message_db_path=isolated_path))
+    return isolated_path
+
+
+@pytest.fixture(autouse=True)
+def _guard_real_bridge_db_writes(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest):
+    """Fail the test that tries to open the live bridge DB with write access."""
+    original_connect = sqlite3.connect
+
+    def guarded_connect(database, *args, **kwargs):
+        path, read_only = _sqlite_database_path(database)
+        if path in _UNISOLATED_BRIDGE_DB_PATHS and not read_only:
+            pytest.fail(
+                f"{request.node.nodeid} attempted a writable connection to the real bridge DB "
+                f"at {path}; isolate it with AB_DB_PATH or a DB_PATH fixture",
+                pytrace=False,
+            )
+        return original_connect(database, *args, **kwargs)
+
+    monkeypatch.setattr(sqlite3, "connect", guarded_connect)
+
+
+def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[int, bool]:
+    """Return the size of a tree without following symlinks.
+
+    When a budget is supplied, stop as soon as the measured size exceeds it.
+    The boolean reports that the walk stopped early, so callers do not present
+    a lower bound as an exact size.
+    """
+    size = 0
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        try:
+            entries_context = os.scandir(directory)
+        except (FileNotFoundError, PermissionError):
+            # A temp directory may disappear or become unreadable during teardown.
+            continue
+        with entries_context as entries:
+            for entry in entries:
+                try:
+                    if entry.is_dir(follow_symlinks=False):
+                        pending.append(Path(entry.path))
+                    else:
+                        file_stat = entry.stat(follow_symlinks=False)
+                        size += getattr(file_stat, "st_blocks", 0) * 512 or file_stat.st_size
+                except FileNotFoundError:
+                    # A test may have removed a temp file while the walk ran.
+                    continue
+                if stop_after_bytes is not None and size > stop_after_bytes:
+                    return size, True
+    return size, False
+
+
+def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
+    """Report this session's temp usage and optionally enforce a CI budget."""
+    config = session.config
+    if hasattr(config, "workerinput"):
+        return
+
+    tmp_path_factory = getattr(config, "_tmp_path_factory", None)
+    if tmp_path_factory is None:
+        return
+    if getattr(tmp_path_factory, "_basetemp", None) is None:
+        return
+    basetemp = tmp_path_factory.getbasetemp()
+    budget_value = os.environ.get("LU_PYTEST_TMP_BUDGET_GB")
+    if budget_value is not None and not budget_value.strip():
+        budget_value = None
+    budget_bytes: int | None = None
+    if budget_value is not None:
+        try:
+            budget_gb = float(budget_value)
+            if not (budget_gb >= 0 and budget_gb < float("inf")):
+                raise ValueError
+            budget_bytes = int(budget_gb * 1024**3)
+        except ValueError:
+            print(f"pytest-tmp: invalid LU_PYTEST_TMP_BUDGET_GB={budget_value!r}")
+            session.exitstatus = pytest.ExitCode.TESTS_FAILED
+            return
+
+    try:
+        size, stopped_early = _pytest_tmp_size(basetemp, budget_bytes)
+    except OSError as error:
+        print(f"pytest-tmp: unable to measure {basetemp}: {error}")
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+        return
+
+    size_gb = size / 1024**3
+    reported_size = f"at least {size:,} bytes (walk stopped at budget)" if stopped_early else f"{size_gb:.2f} GB"
+    print(f"pytest-tmp: {reported_size} in {basetemp}")
+    if budget_bytes is not None and size > budget_bytes:
+        print(
+            f"pytest-tmp: session temp size exceeded LU_PYTEST_TMP_BUDGET_GB={budget_value} "
+            f"({budget_bytes / 1024**3:.2f} GB)"
+        )
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
 
 # =============================================================================
 # CI FILE-PLANE SHARD ALLOWLIST (ci-shard-balance-2026-09-07)
@@ -833,12 +1054,13 @@ def _sparse_checkout_enabled() -> bool:
 
 
 def _sparse_missing_trees() -> frozenset[str]:
+    forced = sparse_trees.forced_missing_trees() & _SPARSE_TREES
     if not _sparse_checkout_enabled():
-        return frozenset()
-    missing: list[str] = []
+        return frozenset(forced)
+    missing = set(forced)
     for rel in ("data/projects", "data/lexicon"):
         if not (_REPO_ROOT / rel).is_dir():
-            missing.append(rel)
+            missing.add(rel)
     return frozenset(missing)
 
 
@@ -1211,3 +1433,660 @@ def _enable_formal_shielded_cf_for_unit_tests(monkeypatch: pytest.MonkeyPatch) -
     Production / drivers leave LU_FORMAL_SHIELDED_CF unset so review-pr refuses.
     """
     monkeypatch.setenv("LU_FORMAL_SHIELDED_CF", "1")
+
+
+# Real primary checkout's ``.worktrees/`` — not a ``.worktrees`` directory inside
+# the worker that happens to be running the suite. Dispatch tests that call
+# ``cmd_dispatch`` used to mkdir husks here while git itself was stubbed.
+_REAL_WORKTREES_DIR = ""
+_REAL_WORKTREES_PREFIX = ""
+_WORKTREE_ENTRIES_AT_START: set[str] = set()
+_CREATED_WORKTREE_ENTRIES: set[str] = set()
+# path -> "PYTEST_CURRENT_TEST=... caller=file:line" for each recorded creation.
+_CREATED_WORKTREE_ATTRIBUTION: dict[str, str] = {}
+# How long teardown waits for a still-running ``git worktree add``.
+_POPEN_CLASSIFY_TIMEOUT_SECONDS = 30
+# Bookkeeping bugs are reported once at teardown. They must not raise out of
+# os.mkdir / Popen and change the call the test actually made.
+_GUARD_CLASSIFY_FAILURES: list[str] = []
+_GUARD_CLASSIFY_FAILURE_LIMIT = 8
+
+
+class _PopenWorktreeCall:
+    """One ``git worktree add`` observed at ``Popen`` construction.
+
+    Calls are not merged: each stores that call's own absent-before flag.
+    ``proc`` stays reachable so teardown can poll or wait after the caller
+    drops the object. ``token`` is a weakref so the call is not keyed by a
+    bare ``id()`` a later Popen can reuse.
+    """
+
+    __slots__ = ("absent_before", "attribution", "destination", "proc", "token")
+
+    def __init__(
+        self,
+        proc: subprocess.Popen,
+        destination: str,
+        absent_before: bool,
+        attribution: str,
+    ) -> None:
+        self.token = weakref.ref(proc)
+        self.proc = proc
+        self.destination = destination
+        self.absent_before = absent_before
+        self.attribution = attribution
+
+
+# One record per ``git worktree add`` Popen.
+_POPEN_WORKTREE_CALLS: list[_PopenWorktreeCall] = []
+
+
+def _init_real_worktrees_dir() -> str:
+    """Absolute realpath of the primary checkout's ``.worktrees`` directory."""
+    global _REAL_WORKTREES_DIR, _REAL_WORKTREES_PREFIX
+    if _REAL_WORKTREES_DIR:
+        return _REAL_WORKTREES_DIR
+    from scripts.common.repo_root import main_checkout_root
+
+    worktrees = main_checkout_root(_REPO_ROOT) / ".worktrees"
+    _REAL_WORKTREES_DIR = os.path.realpath(worktrees)
+    _REAL_WORKTREES_PREFIX = _REAL_WORKTREES_DIR + os.sep
+    return _REAL_WORKTREES_DIR
+
+
+def _record_classify_failure(exc: BaseException) -> None:
+    if len(_GUARD_CLASSIFY_FAILURES) >= _GUARD_CLASSIFY_FAILURE_LIMIT:
+        return
+    _GUARD_CLASSIFY_FAILURES.append(f"{type(exc).__name__}: {exc}")
+
+
+def _decode_guard_path(path: object) -> str:
+    """Filesystem text for ``path``.
+
+    ``os.fsdecode(os.fspath(...))`` accepts ``str``, ``bytes``, and path-like
+    objects. A bytes path used to reach ``str.startswith`` and raise
+    ``TypeError`` before the real mkdir ran.
+    """
+    return os.fsdecode(os.fspath(path))  # type: ignore[arg-type]
+
+
+def _worktree_guard_enabled() -> bool:
+    """``LU_WORKTREE_GUARD=0`` turns the hooks off for an overhead measurement."""
+    return os.environ.get("LU_WORKTREE_GUARD", "1") != "0"
+
+
+def _gh_guard_enabled() -> bool:
+    """``LU_GH_GUARD=0`` disables only the real GitHub CLI spawn guard."""
+    return os.environ.get("LU_GH_GUARD", "1") != "0"
+
+
+def _worktree_entry_key(path: object) -> str | None:
+    """Path of a new worktree root, or None for anything nested inside one.
+
+    A dispatch entry is ``.worktrees/dispatch/<agent>/<task>``. A flat entry is
+    a direct child of ``.worktrees``. Deeper paths are files inside a checkout
+    that already exists — including this worker's own worktree — and must not
+    trip the guard. The prefix check is a string compare so ordinary ``/tmp``
+    mkdirs stay cheap.
+
+    The final path component is not resolved. A symlink created as the entry
+    is keyed by the link path, not by the directory it points at.
+    """
+    root = _init_real_worktrees_dir()
+    try:
+        text = os.path.abspath(_decode_guard_path(path))
+    except (TypeError, ValueError):
+        return None
+    if text != root and not text.startswith(_REAL_WORKTREES_PREFIX):
+        return None
+    parent = os.path.realpath(os.path.dirname(text))
+    if parent != root and not parent.startswith(_REAL_WORKTREES_PREFIX):
+        return None
+    name = os.path.basename(text)
+    if not name or name in {".", ".."}:
+        return None
+    candidate = os.path.join(parent, name)
+    if candidate == root:
+        return None
+    parts = [part for part in candidate[len(_REAL_WORKTREES_PREFIX) :].split(os.sep) if part]
+    if len(parts) == 1 or (len(parts) == 3 and parts[0] == "dispatch"):
+        return candidate
+    return None
+
+
+def _missing_worktree_entries(path: object) -> list[str]:
+    """Worktree-root ancestors of ``path`` that do not exist yet."""
+    root = _init_real_worktrees_dir()
+    try:
+        probe = os.path.abspath(_decode_guard_path(path))
+    except (TypeError, ValueError):
+        return []
+    if probe != root and not probe.startswith(_REAL_WORKTREES_PREFIX):
+        return []
+    missing: list[str] = []
+    while probe.startswith(_REAL_WORKTREES_PREFIX) or probe == root:
+        key = _worktree_entry_key(probe)
+        if key and key not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(key):
+            missing.append(key)
+        parent = os.path.dirname(probe)
+        if parent == probe:
+            break
+        probe = parent
+    return missing
+
+
+def _classify_created_path(path: object) -> list[tuple[str, bool]]:
+    """``(entry, existed immediately before the call)`` for one path."""
+    key = _worktree_entry_key(path)
+    if key is None:
+        return []
+    existed = key in _WORKTREE_ENTRIES_AT_START or os.path.lexists(key)
+    return [(key, existed)]
+
+
+def _classify_makedirs_path(path: object) -> list[tuple[str, bool]]:
+    missing = _missing_worktree_entries(path)
+    classified = [(key, False) for key in missing]
+    key = _worktree_entry_key(path)
+    if key and key not in missing and (key in _WORKTREE_ENTRIES_AT_START or os.path.lexists(key)):
+        classified.append((key, True))
+    return classified
+
+
+def _classify_quietly(classify, path: object) -> list[tuple[str, bool]] | None:
+    try:
+        return classify(path)
+    except Exception as exc:
+        # A guard bug must not replace the original call.
+        _record_classify_failure(exc)
+        return None
+
+
+def _caller_outside_conftest() -> str:
+    """First repo frame above this file, as ``path:line``."""
+    here = Path(__file__).resolve()
+    repo = _REPO_ROOT.resolve()
+    frame = sys._getframe()
+    fallback: str | None = None
+    while frame is not None:
+        frame = frame.f_back
+        if frame is None:
+            break
+        filename = frame.f_code.co_filename
+        if not filename or filename.startswith("<"):
+            continue
+        try:
+            resolved = Path(filename).resolve()
+        except OSError:
+            continue
+        if resolved == here:
+            continue
+        try:
+            relative = resolved.relative_to(repo).as_posix()
+        except ValueError:
+            if fallback is None:
+                fallback = f"{resolved}:{frame.f_lineno}"
+            continue
+        return f"{relative}:{frame.f_lineno}"
+    return fallback or "<no frame outside conftest>"
+
+
+def _creation_attribution() -> str:
+    """Node id plus the creating frame, captured when the entry appears."""
+    node = os.environ.get("PYTEST_CURRENT_TEST", "").strip() or "<no PYTEST_CURRENT_TEST>"
+    return f"PYTEST_CURRENT_TEST={node} caller={_caller_outside_conftest()}"
+
+
+def _remember_if_created(key: str, existed_before: bool) -> None:
+    """Record ``key`` only when this call both found it absent and created it.
+
+    The caller observed ``os.path.lexists`` immediately before the original
+    call and that call returned without raising. This checks again afterwards.
+    A path that already existed — including ``os.makedirs(..., exist_ok=True)``
+    on a directory another process owns — is not recorded. A call that raises
+    records nothing, and an earlier absent observation is not reused.
+
+    A tiny race remains: another process can create the path between the
+    before-check and a successful ``exist_ok=True`` return. We accept that
+    window. Locking the real ``.worktrees`` tree would stall every other
+    agent on the host.
+    """
+    if existed_before or key in _WORKTREE_ENTRIES_AT_START:
+        return
+    if os.path.lexists(key):
+        _CREATED_WORKTREE_ENTRIES.add(key)
+        _CREATED_WORKTREE_ATTRIBUTION.setdefault(key, _creation_attribution())
+
+
+def _remember_quietly(classified: list[tuple[str, bool]] | None) -> None:
+    if not classified:
+        return
+    try:
+        for key, existed_before in classified:
+            _remember_if_created(key, existed_before)
+    except Exception as exc:
+        # A guard bug must not replace the original call.
+        _record_classify_failure(exc)
+
+
+def _guarded_mkdir(path: object, *args: object, **kwargs: object):
+    classified = _classify_quietly(_classify_created_path, path)
+    result = _ORIGINAL_OS_MKDIR(path, *args, **kwargs)
+    # A raised call never reaches here, so a failure records nothing.
+    _remember_quietly(classified)
+    return result
+
+
+def _guarded_makedirs(name: object, *args: object, **kwargs: object):
+    classified = _classify_quietly(_classify_makedirs_path, name)
+    result = _ORIGINAL_OS_MAKEDIRS(name, *args, **kwargs)
+    _remember_quietly(classified)
+    return result
+
+
+def _guarded_symlink(src: object, dst: object, *args: object, **kwargs: object):
+    # The link path is the second argument. The target may live anywhere.
+    classified = _classify_quietly(_classify_created_path, dst)
+    result = _ORIGINAL_OS_SYMLINK(src, dst, *args, **kwargs)
+    _remember_quietly(classified)
+    return result
+
+
+def _decode_argv(argv: list | tuple) -> list[str] | None:
+    try:
+        return [_decode_guard_path(arg) for arg in argv]
+    except (TypeError, ValueError):
+        return None
+
+
+def _resolve_against(base: str, raw: str) -> str:
+    if os.path.isabs(raw):
+        return os.path.abspath(raw)
+    return os.path.abspath(os.path.join(base, raw))
+
+
+def _git_global_option_end(args: list[str], cwd: object) -> tuple[int, str] | None:
+    """Index of the subcommand, and the cwd after any ``-C`` options.
+
+    Git globals that take a value (``-c k=v``, ``-C dir``, ``--git-dir``,
+    ``--work-tree``) are skipped. Anything else that is not an option is the
+    subcommand. Returns None when argv is not a git command.
+    """
+    if os.path.basename(args[0]) != "git":
+        return None
+    if cwd is None:
+        base = os.getcwd()
+    else:
+        try:
+            base = os.path.abspath(_decode_guard_path(cwd))
+        except (TypeError, ValueError):
+            return None
+    index = 1
+    while index < len(args):
+        arg = args[index]
+        if arg == "-C":
+            if index + 1 >= len(args):
+                return None
+            base = _resolve_against(base, args[index + 1])
+            index += 2
+            continue
+        if arg.startswith("-C") and arg != "-C":
+            base = _resolve_against(base, arg[2:])
+            index += 1
+            continue
+        if arg == "-c":
+            if index + 1 >= len(args):
+                return None
+            index += 2
+            continue
+        if arg.startswith("-c") and len(arg) > 2:
+            index += 1
+            continue
+        if arg in {"--git-dir", "--work-tree"}:
+            if index + 1 >= len(args):
+                return None
+            index += 2
+            continue
+        if arg.startswith("--git-dir=") or arg.startswith("--work-tree="):
+            index += 1
+            continue
+        if arg == "worktree" or not arg.startswith("-"):
+            return index, base
+        index += 1
+    return None
+
+
+def _git_worktree_add_destination(argv: object, cwd: object) -> str | None:
+    """Destination of ``git worktree add``, when ``argv`` is that command."""
+    if isinstance(argv, (str, bytes)) or not isinstance(argv, (list, tuple)) or not argv:
+        return None
+    args = _decode_argv(argv)
+    if not args:
+        return None
+    parsed = _git_global_option_end(args, cwd)
+    if parsed is None:
+        return None
+    index, base = parsed
+    if index + 1 >= len(args) or args[index] != "worktree" or args[index + 1] != "add":
+        return None
+    index += 2
+    valued = {"-b", "-B", "--reason"}
+    while index < len(args):
+        arg = args[index]
+        if arg == "--":
+            index += 1
+            if index >= len(args):
+                return None
+            dest = args[index]
+            break
+        if arg in valued:
+            if index + 1 >= len(args):
+                return None
+            index += 2
+            continue
+        if arg.startswith("-"):
+            index += 1
+            continue
+        dest = arg
+        break
+    else:
+        return None
+    if not os.path.isabs(dest):
+        dest = os.path.join(base, dest)
+    return _worktree_entry_key(dest)
+
+
+def _popen_cwd(pos: tuple[object, ...], kwargs: dict[str, object]) -> object:
+    if "cwd" in kwargs:
+        return kwargs["cwd"]
+    # Popen positional order after args: bufsize, executable, stdin, stdout,
+    # stderr, preexec_fn, close_fds, shell, cwd.
+    if len(pos) >= 9:
+        return pos[8]
+    return None
+
+
+def _guarded_popen_init(self, args, *pos, **kwargs):
+    _guard_live_github_spawn(args, kwargs)
+    dest: str | None = None
+    absent_before = False
+    try:
+        found = _git_worktree_add_destination(args, _popen_cwd(pos, kwargs))
+        if found is not None:
+            dest = found
+            absent_before = (
+                found not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(found)
+            )
+    except Exception as exc:
+        # A guard bug must not replace the original call.
+        _record_classify_failure(exc)
+        dest = None
+    _ORIGINAL_POPEN_INIT(self, args, *pos, **kwargs)
+    # The process may exit without wait or poll. Remember this call only;
+    # teardown decides from its own absent-before flag and its exit status.
+    if dest is None:
+        return
+    try:
+        _POPEN_WORKTREE_CALLS.append(
+            _PopenWorktreeCall(self, dest, absent_before, _creation_attribution())
+        )
+    except Exception as exc:
+        _record_classify_failure(exc)
+
+
+def _guard_live_github_spawn(args: object, kwargs: dict[str, object]) -> None:
+    """Reject a process spawn that resolves to the installed GitHub CLI."""
+    if _LIVE_GITHUB_ALLOWED or not _gh_guard_enabled() or not _REAL_GH_BINARY:
+        return
+    if isinstance(args, (str, bytes)) or not isinstance(args, (list, tuple)) or not args:
+        return
+    argv = _decode_argv(args)
+    if not argv:
+        return
+    executable = kwargs.get("executable") or argv[0]
+    if not isinstance(executable, (str, bytes, os.PathLike)):
+        return
+    executable_path = os.fsdecode(executable)
+    env = kwargs.get("env")
+    process_env = env if isinstance(env, dict) else os.environ
+    configured_backend = process_env.get("AGENT_REAL_GH")
+    if not os.path.isabs(executable_path):
+        if os.path.basename(executable_path) != "gh":
+            return
+        search_path = os.fspath(process_env.get("PATH", os.defpath))
+        resolved = shutil.which(executable_path, path=search_path)
+        if resolved is None:
+            return
+        executable_path = resolved
+    is_shim = _is_agent_runtime_shim(executable_path) and os.path.basename(executable_path) == "gh"
+    # The runtime shim is safe only when it has been explicitly wired to a
+    # non-real test backend. Never let AGENT_REAL_GH exempt a direct real-gh
+    # spawn; that environment variable is also present in normal agent runs.
+    if (
+        is_shim
+        and configured_backend
+        and os.path.isfile(os.fspath(configured_backend))
+        and os.path.realpath(os.fspath(configured_backend)) != os.path.realpath(_REAL_GH_BINARY)
+    ):
+        return
+    if not is_shim and os.path.realpath(executable_path) != os.path.realpath(_REAL_GH_BINARY):
+        return
+
+    from scripts.secret_redactor import redact_value
+
+    rendered = redact_value(argv)
+    pytest.fail(
+        f"{os.environ.get('PYTEST_CURRENT_TEST', '<unknown test id>')} spawned real gh: {rendered}; "
+        "@pytest.mark.live_github opts this test into real gh/network access; it does not skip the test in CI",
+        pytrace=False,
+    )
+
+
+def _popen_exit_status(proc: subprocess.Popen) -> int | None:
+    """Exit code of ``proc``, or None when it is still running after the wait."""
+    code = proc.poll()
+    if code is not None:
+        return code
+    try:
+        return proc.wait(timeout=_POPEN_CLASSIFY_TIMEOUT_SECONDS)
+    except subprocess.TimeoutExpired:
+        return None
+
+
+def _snapshot_worktree_entries() -> set[str]:
+    """Task directories plus ``git worktree list`` paths. No recursive walk."""
+    root = Path(_init_real_worktrees_dir())
+    found: set[str] = set()
+    if root.is_dir():
+        try:
+            children = list(root.iterdir())
+        except OSError:
+            children = []
+        for child in children:
+            found.add(os.path.realpath(child))
+            if child.name != "dispatch" or not child.is_dir():
+                continue
+            try:
+                agents = list(child.iterdir())
+            except OSError:
+                continue
+            for agent in agents:
+                if not agent.is_dir():
+                    continue
+                try:
+                    tasks = list(agent.iterdir())
+                except OSError:
+                    continue
+                for task in tasks:
+                    found.add(os.path.realpath(task))
+    try:
+        proc = _ORIGINAL_SUBPROCESS_RUN(
+            ["git", "-C", str(root.parent), "worktree", "list", "--porcelain"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return found
+    stdout = getattr(proc, "stdout", "") or ""
+    for line in stdout.splitlines():
+        if line.startswith("worktree "):
+            found.add(os.path.realpath(line[len("worktree ") :].strip()))
+    return found
+
+
+# Bound at import time, before the session fixture installs the hooks.
+_ORIGINAL_OS_MKDIR = os.mkdir
+_ORIGINAL_OS_MAKEDIRS = os.makedirs
+_ORIGINAL_OS_SYMLINK = os.symlink
+_ORIGINAL_SUBPROCESS_RUN = subprocess.run
+_ORIGINAL_POPEN_INIT = subprocess.Popen.__init__
+
+
+def _worktree_guard_teardown_message() -> str | None:
+    """Leftovers and classify failures for this process, or None when clean."""
+    listed = _snapshot_worktree_entries()
+    suspected = set(_CREATED_WORKTREE_ENTRIES)
+    for call in _POPEN_WORKTREE_CALLS:
+        path = call.destination
+        if not call.absent_before or path in _WORKTREE_ENTRIES_AT_START:
+            continue
+        try:
+            code = _popen_exit_status(call.proc)
+        except Exception as exc:
+            _record_classify_failure(exc)
+            continue
+        if code is None:
+            _record_classify_failure(
+                TimeoutError(
+                    f"git worktree add {path}: timed out waiting for exit status"
+                )
+            )
+            continue
+        if code == 0 and (os.path.lexists(path) or path in listed):
+            suspected.add(path)
+            _CREATED_WORKTREE_ATTRIBUTION.setdefault(path, call.attribution)
+    lines: list[str] = []
+    if _GUARD_CLASSIFY_FAILURES:
+        detail = "; ".join(_GUARD_CLASSIFY_FAILURES)
+        lines.append(f"guard could not classify: {detail}")
+    leftovers = sorted(
+        path
+        for path in suspected
+        if path not in _WORKTREE_ENTRIES_AT_START and (os.path.lexists(path) or path in listed)
+    )
+    if leftovers:
+        rendered: list[str] = []
+        for path in leftovers:
+            rendered.append(f"  {path}")
+            rendered.append(
+                "    "
+                + _CREATED_WORKTREE_ATTRIBUTION.get(
+                    path,
+                    "PYTEST_CURRENT_TEST=<unknown> caller=<unknown>",
+                )
+            )
+        joined = "\n".join(rendered)
+        lines.append(
+            "this pytest process created entries under the real .worktrees/ "
+            f"that are still present:\n{joined}\n"
+            "Concurrent worktrees from other processes are not listed."
+        )
+    if not lines:
+        return None
+    return "\n".join(lines)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _guard_real_worktree_entries() -> Generator[None, None, None]:
+    """Fail the session if this process created a worktree entry on the real tree.
+
+    Live agents add checkouts under ``.worktrees/`` for the whole time the suite
+    runs, so a before/after listing of that directory false-positives on a busy
+    host. This guard records only creations that pass through this process:
+    ``os.mkdir`` / ``os.makedirs`` / ``os.symlink`` of a worktree root, and a
+    ``git worktree add`` whose destination appears. ``subprocess.run``,
+    ``call``, ``check_call``, and ``check_output`` all construct
+    ``subprocess.Popen``, so the git hook sits on ``Popen`` rather than on
+    ``run`` alone. Directories nested inside an existing checkout (this
+    worker included) are ignored. Paths already present when the worker
+    started are snapshotted and ignored even if a test touches them.
+
+    mkdir, makedirs, and symlink record a path only when that same call saw
+    it absent immediately beforehand and returned without raising. A failed
+    call records nothing. There is no cross-call memory: an earlier absent
+    observation does not attach to a later ``FileExistsError``. ``Popen`` of
+    ``git worktree add`` records that call's destination and whether it was
+    absent beforehand. Teardown obtains the exit status with ``poll`` and,
+    if the process is still running, ``wait``. Creation is attributed only
+    when that call's return code is 0 and the destination exists. A timeout
+    is reported as "guard could not classify", not as a creation. Each
+    record stores ``PYTEST_CURRENT_TEST`` and the first calling frame outside
+    this file (``file:line`` under the repo). Bookkeeping errors are not
+    raised from the hooked call; teardown reports them as "guard could not
+    classify".
+
+    Set ``LU_WORKTREE_GUARD=0`` to skip directory/worktree hooks and
+    ``LU_GH_GUARD=0`` independently to skip the real-GitHub-CLI spawn guard.
+    Under xdist each worker is its own process, so the hooks and the teardown
+    check run once per worker rather than once in the controller.
+    """
+    guard_worktrees = _worktree_guard_enabled()
+    guard_github = _gh_guard_enabled()
+    if not guard_worktrees and not guard_github:
+        yield
+        return
+    if guard_worktrees:
+        _WORKTREE_ENTRIES_AT_START.clear()
+        _CREATED_WORKTREE_ENTRIES.clear()
+        _CREATED_WORKTREE_ATTRIBUTION.clear()
+        _POPEN_WORKTREE_CALLS.clear()
+        _GUARD_CLASSIFY_FAILURES.clear()
+        _WORKTREE_ENTRIES_AT_START.update(_snapshot_worktree_entries())
+    with pytest.MonkeyPatch.context() as patcher:
+        if guard_worktrees:
+            patcher.setattr(os, "mkdir", _guarded_mkdir)
+            patcher.setattr(os, "makedirs", _guarded_makedirs)
+            patcher.setattr(os, "symlink", _guarded_symlink)
+        patcher.setattr(subprocess.Popen, "__init__", _guarded_popen_init)
+        yield
+    if guard_worktrees:
+        message = _worktree_guard_teardown_message()
+        if message:
+            pytest.fail(message)
+
+
+@pytest.fixture(autouse=True)
+def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep ACP execution off the real primary checkout.
+
+    ``acp_execution_cwd`` on the primary checkout mkdirs
+    ``.worktrees/dispatch/acp`` before ``git worktree add``. That parent
+    stays behind on a CI checkout that had no ``.worktrees`` yet. Redirect
+    only when the resolved cwd is that primary checkout itself.
+
+    ``resolve_main_root`` maps every worktree of this checkout back to the
+    primary, so it must not decide the redirect. A dispatch worktree uses
+    the real helper, which yields that worktree and does not mkdir. Calls
+    aimed at any other repo, including a test's own ``git init`` primary,
+    still run the real helper.
+    """
+    from scripts.ai_agent_bridge import _acp_execution as acp_mod
+
+    real_checkout = Path(_init_real_worktrees_dir()).parent.resolve()
+    original = acp_mod.acp_execution_cwd
+
+    @contextlib.contextmanager
+    def scoped(repo_root, *, task_id):
+        try:
+            resolved = Path(repo_root).resolve()
+        except (OSError, RuntimeError, ValueError):
+            resolved = None
+        if resolved == real_checkout:
+            yield tmp_path_factory.mktemp("acp-execution")
+            return
+        with original(repo_root, task_id=task_id) as workspace:
+            yield workspace
+
+    monkeypatch.setattr(acp_mod, "acp_execution_cwd", scoped)

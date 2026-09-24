@@ -128,6 +128,24 @@ class TestTrueFalse:
         assert parsed[0]["isTrue"] is False
         assert parsed[0]["explanation"] == "Ні."
 
+    def test_answer_to_is_true(self):
+        """YAML also allows 'answer' bool for true-false items."""
+        act = {
+            "type": "true-false",
+            "instruction": "True or false?",
+            "items": [
+                {"statement": "Стіл — чоловічого роду.", "answer": True, "explanation": "Так."},
+                {"statement": "Стіл — жіночого роду.", "answer": False, "explanation": "Ні."},
+            ],
+        }
+        jsx = render_activity_to_jsx(act)
+        assert "<TrueFalse" in jsx
+        parsed = _extract_prop(jsx, "items")
+        assert parsed[0]["isTrue"] is True
+        assert parsed[0]["explanation"] == "Так."
+        assert parsed[1]["isTrue"] is False
+        assert parsed[1]["explanation"] == "Ні."
+
 
 class TestErrorCorrection:
     def test_basic(self):

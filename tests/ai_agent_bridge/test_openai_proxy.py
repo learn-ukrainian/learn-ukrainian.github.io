@@ -322,7 +322,7 @@ def test_healthz_endpoint_returns_backend_status(monkeypatch):
     }
 
 
-def test_codex_backend_defaults_to_astra(monkeypatch):
+def test_codex_backend_defaults_to_sol(monkeypatch):
     monkeypatch.delenv("BRIDGE_PROXY_CODEX_MODEL", raising=False)
     seen = []
 
@@ -332,8 +332,8 @@ def test_codex_backend_defaults_to_astra(monkeypatch):
 
     monkeypatch.setattr(proxy, "_run_backend_command", backend)
     proxy._codex_backend("codex", [proxy.Message(role="user", content="fixture")])
-    assert seen[0][seen[0].index("-m") + 1] == "gpt-6-astra"
-    monkeypatch.setenv("BRIDGE_PROXY_CODEX_MODEL", "gpt-6-astra")
+    assert seen[0][seen[0].index("-m") + 1] == "gpt-6-sol"
+    monkeypatch.setenv("BRIDGE_PROXY_CODEX_MODEL", "gpt-6-sol")
     proxy._codex_backend("codex", [proxy.Message(role="user", content="fixture")])
     assert len(seen) == 2
 

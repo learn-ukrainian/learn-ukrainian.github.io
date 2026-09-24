@@ -89,14 +89,13 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 | Model | Effort |
 |---|---|
-| Astra | Floor **`high`**; prefer **`xhigh`/`max`** for qualifying hard decisions (live OpenAI advisor seat; historical Sol effort notes are obsolete) |
+| GPT-6 Astra (hard advisor) | **`high`** for consequential advisory judgment; raise effort only for a separately justified hard case |
+| GPT-6 Sol (coding and review) | **`high`** default for accountable driving, coding, and adversarial review |
+| GPT-6 Luna (bounded work and scouting) | **`high`** with exact owned paths and an objective scope ceiling; never sole authority |
 | **Opus 5.5** (default Claude model + driver seat, operator 2026-09-22) | Orchestrating / epic driving **`high`** (the launcher default). Routine turns **`medium`** (the API default — and Opus 5.5 at `medium` beats Opus 5 at `high` on coding and knowledge work). See subsection below. |
 | **Fable 5.1** (advisor / authority seat) | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |
 | Fable 5 (legacy) | Prefer **`xhigh`** for ceiling work only when that SKU is seated |
-| Terra (orchestrating hard stream) | **`xhigh`** |
-| Terra (routine implement) | **`medium`–`high`**, escalate with risk |
 | Opus 5 (advisory consults only) | **`high`**; `xhigh` only for a documented hard turn |
-| Luna bounded work / recon | **`max`** with exact owned paths + objective scope ceiling; never sole authority |
 | Claude Haiku recon | **`medium`** default; never sole authority |
 
 #### Fable 5.1 `/effort` decision topology (operator 2026-09-09)
@@ -160,7 +159,7 @@ For work in the **repository review-gate scope** (consequential PRs that must pa
 2. Reviewer must be **qualified for the task family** (code/infra vs VESUM language vs folk).
 3. Use a qualified native toolful review lane and the review-worktree contract in `agents_extensions/shared/skills/local-code-review/SKILL.md`; sealed formal review is retired.
 4. Record provenance on the PR (implementer + reviewer model/family/harness; note advisor if material).
-5. **Conditional selection:** do not offer Terra as CF for OpenAI-authored PRs, or Sonnet as CF for Anthropic-authored PRs, etc.
+5. **Conditional selection:** do not offer GPT-6 Sol as CF for OpenAI-authored PRs, or Sonnet as CF for Anthropic-authored PRs, etc.
 
 Authoritative CF quality ladder remains in `model-assignment.md`; this doctrine does not lower that floor.
 

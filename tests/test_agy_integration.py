@@ -12,6 +12,7 @@ import importlib
 import os
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -117,6 +118,7 @@ def test_registry_exposes_agy():
 
 def test_delegate_dispatch_accepts_agy_agent():
     """``delegate.py dispatch --agent agy ...`` must parse without error."""
+    task_id = f"test-agy-argparse-probe-{uuid.uuid4().hex}"
     result = subprocess.run(
         [
             _TEST_PYTHON,
@@ -125,7 +127,7 @@ def test_delegate_dispatch_accepts_agy_agent():
             "--agent",
             "agy",
             "--task-id",
-            "test-agy-argparse-probe",
+            task_id,
             "--prompt",
             "noop",
             "--dry-run",
@@ -139,7 +141,7 @@ def test_delegate_dispatch_accepts_agy_agent():
         f"delegate dispatch --agent agy failed:\n"
         f"stdout={result.stdout!r}\nstderr={result.stderr!r}"
     )
-    assert "test-agy-argparse-probe" in result.stdout
+    assert task_id in result.stdout
 
 
 def test_ab_channels_valid_agents_includes_agy():

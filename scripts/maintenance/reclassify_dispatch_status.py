@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """Reclassify persisted delegate task states after runtime classifier fixes.
 
-Walks ``batch_state/tasks/*.json`` and revisits any task currently marked
+Walks ``batch_state/tasks/*.json``, and the ``archive/`` that old terminal
+records move into (#8625), and revisits any task currently marked
 ``rate_limited`` using the current adapter parsing logic plus whatever saved
 signals we still have in the task file / usage logs.
 
@@ -23,6 +24,8 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import delegate
 from agent_runtime.runner import _load_adapter
+
+from scripts.orchestration.task_record_store import iter_task_records
 
 DEFAULT_TASKS_DIR = REPO_ROOT / "batch_state" / "tasks"
 DEFAULT_USAGE_DIR = REPO_ROOT / "batch_state" / "api_usage"
@@ -167,7 +170,7 @@ def reclassify_rate_limited_tasks(
     if not tasks_dir.exists():
         return {"changed": changes, "skipped": skipped}
 
-    for task_path in sorted(tasks_dir.glob("*.json")):
+    for task_path in iter_task_records(tasks_dir, include_archive=True):
         outcome = _reclassify_task(
             task_path,
             usage_by_task_id=usage_by_task_id,
@@ -204,23 +207,13 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    usage_by_task_id = _load_usage_by_task_id(args.usage_dir)
-    changed: list[tuple[str, str]] = []
-    skipped: list[tuple[str, str]] = []
-    if args.tasks_dir.exists():
-        for task_path in sorted(args.tasks_dir.glob("*.json")):
-            outcome = _reclassify_task(
-                task_path,
-                usage_by_task_id=usage_by_task_id,
-                dry_run=args.dry_run,
-            )
-            if outcome is None:
-                continue
-            kind, task_id, detail = outcome
-            if kind == "changed":
-                changed.append((task_id, detail))
-            else:
-                skipped.append((task_id, detail))
+    outcomes = reclassify_rate_limited_tasks(
+        tasks_dir=args.tasks_dir,
+        usage_dir=args.usage_dir,
+        dry_run=args.dry_run,
+    )
+    changed = outcomes["changed"]
+    skipped = outcomes["skipped"]
 
     for task_id, detail in changed:
         print(f"{task_id}: {detail}")

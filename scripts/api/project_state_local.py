@@ -57,7 +57,13 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     command = args.command or "report"
     host_id = (args.host_id or resolve_launcher_host_id()).strip().lower()
-    document = collect_local_document(host_id, repo_root=args.repo_root, include_lane_usage=True)
+    # Lane usage probes live subscription endpoints; "0" skips them (hermetic tests).
+    include_lane_usage = os.environ.get("MONITOR_PROJECT_STATE_LANE_USAGE", "1").strip() != "0"
+    document = collect_local_document(
+        host_id,
+        repo_root=args.repo_root,
+        include_lane_usage=include_lane_usage,
+    )
     if document is None:
         print("project-state: collection failed", file=sys.stderr)
         return 2

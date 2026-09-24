@@ -18,6 +18,7 @@ is lemma_outside_state.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -149,6 +150,79 @@ def _is_record_stress_pending(rec: dict[str, Any]) -> bool:
             for f in forms
         )
     return False
+
+
+def _load_expanded_document(
+    exp_file: Path,
+    level: str,
+    slug: str,
+    lesson_n: int,
+    *,
+    required: bool = True,
+) -> tuple[Any | None, GateFailure | None]:
+    """Load and verify an expanded document, returning (doc, failure)."""
+    if not exp_file.is_file():
+        if required:
+            return None, GateFailure(
+                code=codes.EXPANDED_DOCUMENT_MISSING,
+                level=level,
+                slug=slug,
+                lesson=lesson_n,
+                tab="expanded",
+                token=None,
+                sentence=None,
+                record=None,
+                message=f"expanded document {exp_file} not found",
+            )
+        return None, None
+
+    if Path(f"{exp_file}.lock").exists() and not lock.check(exp_file):
+        return None, GateFailure(
+            code=codes.EXPANDED_DOCUMENT_MISMATCH,
+            level=level,
+            slug=slug,
+            lesson=lesson_n,
+            tab="expanded",
+            token=None,
+            sentence=None,
+            record=None,
+            message=f"expanded document {exp_file} failed lock check",
+        )
+
+    try:
+        from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
+
+        doc = ExpandedDocument.load(exp_file)
+        return doc, None
+    except ResolverError as err:
+        fail_code = (
+            codes.EXPANDED_DOCUMENT_MISMATCH
+            if err.code == resolver_codes.LOCK_MISMATCH
+            else codes.EXPANDED_DOCUMENT_MISSING
+        )
+        return None, GateFailure(
+            code=fail_code,
+            level=level,
+            slug=slug,
+            lesson=lesson_n,
+            tab="expanded",
+            token=None,
+            sentence=None,
+            record=None,
+            message=f"expanded document {exp_file} failed to load: {err.message}",
+        )
+    except Exception as err:
+        return None, GateFailure(
+            code=codes.EXPANDED_DOCUMENT_MISSING,
+            level=level,
+            slug=slug,
+            lesson=lesson_n,
+            tab="expanded",
+            token=None,
+            sentence=None,
+            record=None,
+            message=f"expanded document {exp_file} failed to load: {err}",
+        )
 
 
 def check_lesson(
@@ -319,11 +393,21 @@ def check_lesson(
         if isinstance(plc, dict) and "evidence" in plc:
             name_ids.add(plc["evidence"])
 
+    # Map each introduced word to the step(s) that introduce it
+    rec_introducing_steps: dict[str, set[str]] = {}
+    for step in lesson.get("steps") or []:
+        if isinstance(step, dict):
+            s_id = step.get("id")
+            s_intro = step.get("introduces") or {}
+            for w_id in s_intro.get("vocabulary") or []:
+                if isinstance(w_id, str) and s_id:
+                    rec_introducing_steps.setdefault(w_id, set()).add(s_id)
+
     # Finding 5: Recycled IDs are not included in total_allowed_ids
     total_allowed_ids = base_ids | core_ids | name_ids | this_lesson_core_ids | this_lesson_incidental_ids
 
-    # Not checked reporting: introducing_step_not_locatable and missing prior waiver
-    not_checked: list[str] = [codes.INTRODUCING_STEP_NOT_LOCATABLE]
+    # Not checked reporting: missing prior waiver
+    not_checked: list[str] = []
     if allow_missing_prior and planned.waiver:
         not_checked.append(codes.WAIVER_PRIOR_PLANS_MISSING)
 
@@ -476,212 +560,106 @@ def check_lesson(
             )
 
     if stream is not None:
-        stream_inputs = getattr(stream, "inputs", None) or (stream.get("inputs") if isinstance(stream, dict) else {})
-        expected_expanded_sha256 = stream_inputs.get("expanded_sha256") if isinstance(stream_inputs, dict) else None
-    else:
-        res_inputs = res_doc.get("inputs") if isinstance(res_doc, dict) else {}
-        expected_expanded_sha256 = res_inputs.get("expanded_sha256") if isinstance(res_inputs, dict) else None
+        if isinstance(stream, dict):
+            has_inputs = "inputs" in stream and stream["inputs"] is not None
+            stream_inputs = stream["inputs"] if has_inputs else None
+        else:
+            stream_inputs = getattr(stream, "inputs", None)
+            has_inputs = stream_inputs is not None
 
-    expanded_doc = expanded
-    if stream is None or expected_expanded_sha256 is not None:
-        if expanded_doc is None:
-            exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
-            if not exp_file.is_file():
-                return GateReport(
-                    level=level,
-                    slug=slug,
-                    lesson_n=lesson_n,
-                    failures=(
-                        GateFailure(
-                            code=codes.EXPANDED_DOCUMENT_MISSING,
-                            level=level,
-                            slug=slug,
-                            lesson=lesson_n,
-                            tab="expanded",
-                            token=None,
-                            sentence=None,
-                            record=None,
-                            message=f"expanded document {exp_file} not found",
-                        ),
-                    ),
-                    not_checked=tuple(not_checked),
-                )
-            if Path(f"{exp_file}.lock").exists() and not lock.check(exp_file):
-                return GateReport(
-                    level=level,
-                    slug=slug,
-                    lesson_n=lesson_n,
-                    failures=(
-                        GateFailure(
-                            code=codes.EXPANDED_DOCUMENT_MISMATCH,
-                            level=level,
-                            slug=slug,
-                            lesson=lesson_n,
-                            tab="expanded",
-                            token=None,
-                            sentence=None,
-                            record=None,
-                            message=f"expanded document {exp_file} failed lock check",
-                        ),
-                    ),
-                    not_checked=tuple(not_checked),
-                )
-            try:
-                from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
-
-                expanded_doc = ExpandedDocument.load(exp_file)
-            except ResolverError as err:
-                fail_code = (
-                    codes.EXPANDED_DOCUMENT_MISMATCH
-                    if err.code == resolver_codes.LOCK_MISMATCH
-                    else codes.EXPANDED_DOCUMENT_MISSING
-                )
-                return GateReport(
-                    level=level,
-                    slug=slug,
-                    lesson_n=lesson_n,
-                    failures=(
-                        GateFailure(
-                            code=fail_code,
-                            level=level,
-                            slug=slug,
-                            lesson=lesson_n,
-                            tab="expanded",
-                            token=None,
-                            sentence=None,
-                            record=None,
-                            message=f"expanded document {exp_file} failed to load: {err.message}",
-                        ),
-                    ),
-                    not_checked=tuple(not_checked),
-                )
-            except Exception as err:
-                return GateReport(
-                    level=level,
-                    slug=slug,
-                    lesson_n=lesson_n,
-                    failures=(
-                        GateFailure(
-                            code=codes.EXPANDED_DOCUMENT_MISSING,
-                            level=level,
-                            slug=slug,
-                            lesson=lesson_n,
-                            tab="expanded",
-                            token=None,
-                            sentence=None,
-                            record=None,
-                            message=f"expanded document {exp_file} failed to load: {err}",
-                        ),
-                    ),
-                    not_checked=tuple(not_checked),
-                )
-
-        doc_sha256 = getattr(expanded_doc, "sha256", None) or (
-            expanded_doc.get("sha256") if isinstance(expanded_doc, dict) else None
-        )
-        if expected_expanded_sha256 is not None and doc_sha256 != expected_expanded_sha256:
-            origin = "stream inputs" if stream is not None else "receipts inputs"
+        if (
+            not has_inputs
+            or not isinstance(stream_inputs, (dict, Mapping))
+            or not stream_inputs
+            or "expanded_sha256" not in stream_inputs
+            or not stream_inputs["expanded_sha256"]
+            or not isinstance(stream_inputs["expanded_sha256"], str)
+        ):
+            msg = (
+                "in-memory stream has no inputs"
+                if not has_inputs or not stream_inputs
+                else "in-memory stream inputs missing expanded_sha256"
+            )
             return GateReport(
                 level=level,
                 slug=slug,
                 lesson_n=lesson_n,
                 failures=(
                     GateFailure(
-                        code=codes.EXPANDED_DOCUMENT_MISMATCH,
+                        code=codes.INPUT_HASH_MISSING,
                         level=level,
                         slug=slug,
                         lesson=lesson_n,
-                        tab="expanded",
+                        tab="resolutions",
                         token=None,
                         sentence=None,
                         record=None,
-                        message=(
-                            f"expanded document sha256 {doc_sha256!r} differs from "
-                            f"{origin} {expected_expanded_sha256!r}"
-                        ),
+                        message=msg,
                     ),
                 ),
                 not_checked=tuple(not_checked),
             )
+        expected_expanded_sha256 = stream_inputs["expanded_sha256"]
     else:
-        # stream is not None and expected_expanded_sha256 is None
-        if expanded_doc is None:
-            exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
-            if exp_file.is_file():
-                if Path(f"{exp_file}.lock").exists() and not lock.check(exp_file):
-                    return GateReport(
-                        level=level,
-                        slug=slug,
-                        lesson_n=lesson_n,
-                        failures=(
-                            GateFailure(
-                                code=codes.EXPANDED_DOCUMENT_MISMATCH,
-                                level=level,
-                                slug=slug,
-                                lesson=lesson_n,
-                                tab="expanded",
-                                token=None,
-                                sentence=None,
-                                record=None,
-                                message=f"expanded document {exp_file} failed lock check",
-                            ),
-                        ),
-                        not_checked=tuple(not_checked),
-                    )
-                try:
-                    from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
+        res_inputs = res_doc.get("inputs") if isinstance(res_doc, dict) else {}
+        expected_expanded_sha256 = res_inputs.get("expanded_sha256") if isinstance(res_inputs, dict) else None
 
-                    expanded_doc = ExpandedDocument.load(exp_file)
-                except ResolverError as err:
-                    fail_code = (
-                        codes.EXPANDED_DOCUMENT_MISMATCH
-                        if err.code == resolver_codes.LOCK_MISMATCH
-                        else codes.EXPANDED_DOCUMENT_MISSING
-                    )
-                    return GateReport(
-                        level=level,
-                        slug=slug,
-                        lesson_n=lesson_n,
-                        failures=(
-                            GateFailure(
-                                code=fail_code,
-                                level=level,
-                                slug=slug,
-                                lesson=lesson_n,
-                                tab="expanded",
-                                token=None,
-                                sentence=None,
-                                record=None,
-                                message=f"expanded document {exp_file} failed to load: {err.message}",
-                            ),
-                        ),
-                        not_checked=tuple(not_checked),
-                    )
-                except Exception as err:
-                    return GateReport(
-                        level=level,
-                        slug=slug,
-                        lesson_n=lesson_n,
-                        failures=(
-                            GateFailure(
-                                code=codes.EXPANDED_DOCUMENT_MISSING,
-                                level=level,
-                                slug=slug,
-                                lesson=lesson_n,
-                                tab="expanded",
-                                token=None,
-                                sentence=None,
-                                record=None,
-                                message=f"expanded document {exp_file} failed to load: {err}",
-                            ),
-                        ),
-                        not_checked=tuple(not_checked),
-                    )
+    expanded_doc = expanded
+    if expanded_doc is None:
+        exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
+        expanded_doc, failure = _load_expanded_document(exp_file, level, slug, lesson_n, required=True)
+        if failure is not None:
+            return GateReport(
+                level=level,
+                slug=slug,
+                lesson_n=lesson_n,
+                failures=(failure,),
+                not_checked=tuple(not_checked),
+            )
+
+    doc_sha256 = getattr(expanded_doc, "sha256", None) or (
+        expanded_doc.get("sha256") if isinstance(expanded_doc, dict) else None
+    )
+    if expected_expanded_sha256 is not None and doc_sha256 != expected_expanded_sha256:
+        origin = "stream inputs" if stream is not None else "receipts inputs"
+        return GateReport(
+            level=level,
+            slug=slug,
+            lesson_n=lesson_n,
+            failures=(
+                GateFailure(
+                    code=codes.EXPANDED_DOCUMENT_MISMATCH,
+                    level=level,
+                    slug=slug,
+                    lesson=lesson_n,
+                    tab="expanded",
+                    token=None,
+                    sentence=None,
+                    record=None,
+                    message=(
+                        f"expanded document sha256 {doc_sha256!r} differs from {origin} {expected_expanded_sha256!r}"
+                    ),
+                ),
+            ),
+            not_checked=tuple(not_checked),
+        )
 
     units_by_locator: dict[tuple[Any, Any, Any, Any], Any] = {}
     if expanded_doc is not None:
         for u in getattr(expanded_doc, "units", ()):
             units_by_locator[(u.tab, u.activity, u.item, u.block)] = u
+
+    # Keep introducing_step_not_locatable when no unit has a step
+    has_any_step = False
+    if expanded_doc is not None:
+        has_any_step = any(getattr(u, "step", None) is not None for u in getattr(expanded_doc, "units", ()))
+    if not has_any_step and tokens:
+        has_any_step = any(
+            isinstance(tok, dict) and isinstance(tok.get("unit"), dict) and tok["unit"].get("step") is not None
+            for tok in tokens
+        )
+    if not has_any_step:
+        not_checked.append(codes.INTRODUCING_STEP_NOT_LOCATABLE)
 
     # 5. Check tokens
     failures: list[GateFailure] = []
@@ -808,7 +786,7 @@ def check_lesson(
                     if w_rec is None:
                         failures.append(
                             GateFailure(
-                                code=codes.TOKEN_UNRESOLVED,
+                                code=codes.GLOSS_RECORD_MISSING,
                                 level=level,
                                 slug=slug,
                                 lesson=lesson_n,
@@ -871,8 +849,10 @@ def check_lesson(
 
             if rec:
                 seen_records.add(rec)
-                # Teaching position: Settlement 1: record_print, item_prompt, item_answer
-                if role in ("record_print", "item_prompt", "item_answer"):
+                # Teaching position: record_print, item_prompt, item_answer, or introducing step
+                step_id = unit.get("step") or (unit_obj.step if unit_obj is not None else None)
+                is_intro_step = bool(step_id and step_id in rec_introducing_steps.get(rec, set()))
+                if is_intro_step or role in ("record_print", "item_prompt", "item_answer"):
                     for ftag in selected.get("forms") or []:
                         seen_teaching_forms.add((rec, ftag))
 
@@ -930,7 +910,7 @@ def check_lesson(
                                 record=c_id,
                                 message=(
                                     f"taught form {ftag!r} for core record {c_id} does not appear in a teaching position "
-                                    f"(record_print, item_prompt, or item_answer)"
+                                    f"(record_print, item_prompt, item_answer, or introducing step)"
                                 ),
                             )
                         )

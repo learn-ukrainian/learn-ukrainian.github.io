@@ -326,30 +326,27 @@ LU_PRIMARY="$(dirname "$(git -C /path/to/learn-ukrainian rev-parse --path-format
 `--worktree` only). Reaper three-repo sweeps and history migration are later
 P2 slices — not this v1.
 
-### Astra workhorse and Luna bounded scout
+### GPT-6 Codex role routing
 
 For bounded implementation or investigation, read the machine-readable
 `execution_routing.sol_advised_bounded` route in
 [`scripts/config/model_catalog.yaml`](../../scripts/config/model_catalog.yaml)
 before dispatching:
 
-1. Ask `gpt-6-astra` at `high` for an advisory envelope containing the task
-   contract, exact owned paths, maximum changed-file and non-test-LOC ceilings,
-   constraints, risk boundaries, acceptance evidence, and escalation triggers.
-2. If the envelope is complete and the work is bounded, hand it to
-   `gpt-5.6-luna` at `max`. Luna executes within that contract; it does not
-   re-decide the task.
-3. Explicit Luna at `max` is the scout for a clearly bounded,
-   non-consequential task when the accountable root supplies exact owned paths
-   and an objective scope ceiling. Default dispatch uses Astra at `low`, including when the ceiling is
-   missing, broader autonomous integration is required, or consequential
-   ambiguity remains.
-4. The accountable orchestrator checks the owned paths and ceilings before
-   dispatch and again against Luna's returned diff. Luna escalates any ceiling
-   overrun, consequential architecture, security, release, high-risk go/no-go,
-   unresolved consequential ambiguity, broader integration, and final
-   disposition. Astra's advisory is same-family context and never replaces the
-   required independent cross-family review.
+1. Use `gpt-6-sol` at `high` for Codex coding and code review.
+2. Use `gpt-6-luna` at `high` for routine bounded implementation, scouting, and
+   recon with exact owned paths and an objective scope ceiling.
+3. Reserve `gpt-6-astra` at `high` for hard consequential advisory judgment.
+   When an advisory envelope is needed, include the task contract, exact owned
+   paths, maximum changed-file and non-test-LOC ceilings, constraints, risk
+   boundaries, acceptance evidence, and escalation triggers. Astra is an advisor,
+   not the default implementer or reviewer.
+4. The accountable orchestrator checks owned paths and ceilings before dispatch
+   and against the returned diff. Luna escalates any ceiling overrun,
+   consequential architecture, security, release, high-risk go/no-go, unresolved
+   consequential ambiguity, broader integration, and final disposition. An
+   Astra advisory is same-family context and never replaces required independent
+   cross-family review.
 
 Record the envelope and Luna's acceptance evidence with the task handoff. If an
 escalation trigger fires, stop bounded execution and return the unresolved point

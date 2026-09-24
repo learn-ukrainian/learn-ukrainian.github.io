@@ -25,31 +25,50 @@ from .base import InvocationPlan
 from .claude import ClaudeAdapter, _default_claude_bin, _ensure_supported_claude_cli_version
 
 _HEADLESS_WRAPPER = Path(__file__).resolve().parents[1] / "kimicc_headless.sh"
-_SUPPORTED_TOOL_CONFIG_KEYS = frozenset(
+# Keys delegate.py adds on read-only and review attempts. Agent-specific
+# homes (codex/agy) are ignored here; rejecting them would make a shared
+# review tool_config unusable on this harness.
+_DELEGATE_READ_ONLY_AND_REVIEW_KEYS = frozenset(
     {
-        "agent",
-        "allowed_tools",
-        "max_budget_usd",
-        "mcp_config_path",
-        "tools",
-        "strict_mcp_config",
-        "setting_sources",
-        "trail_isolation",
-        "trail_isolation_cwd",
-        "runtime_route",
+        "agy_home_override",
+        "attempt_id",
+        "codex_home_override",
+        "mcp_server_names",
+        "read_only_tmp_root",
+        "review_id",
     }
 )
-_TRAIL_ISOLATION_TOOL_CONFIG_KEYS = frozenset(
-    {
-        "allowed_tools",
-        "harness",
-        "mcp_config_path",
-        "setting_sources",
-        "strict_mcp_config",
-        "tools",
-        "trail_isolation",
-        "trail_isolation_cwd",
-    }
+_SUPPORTED_TOOL_CONFIG_KEYS = (
+    frozenset(
+        {
+            "agent",
+            "allowed_tools",
+            "max_budget_usd",
+            "mcp_config_path",
+            "tools",
+            "strict_mcp_config",
+            "setting_sources",
+            "trail_isolation",
+            "trail_isolation_cwd",
+            "runtime_route",
+        }
+    )
+    | _DELEGATE_READ_ONLY_AND_REVIEW_KEYS
+)
+_TRAIL_ISOLATION_TOOL_CONFIG_KEYS = (
+    frozenset(
+        {
+            "allowed_tools",
+            "harness",
+            "mcp_config_path",
+            "setting_sources",
+            "strict_mcp_config",
+            "tools",
+            "trail_isolation",
+            "trail_isolation_cwd",
+        }
+    )
+    | _DELEGATE_READ_ONLY_AND_REVIEW_KEYS
 )
 
 
@@ -132,6 +151,12 @@ class KimiccHarness:
                     str(tc["setting_sources"]),
                 ]
             )
+        elif tc.get("strict_mcp_config") and isinstance(tc.get("mcp_config_path"), str):
+            # Review attempts set strict_mcp_config without a Claude allowed_tools
+            # grant (that grant is agent=="claude" only). Still pin the config.
+            cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--strict-mcp-config"])
+            if tc.get("allowed_tools"):
+                cmd.extend(["--allowedTools", str(tc["allowed_tools"])])
         elif isinstance(tc.get("mcp_config_path"), str) and tc.get("allowed_tools"):
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--allowedTools", str(tc["allowed_tools"])])
         if tc.get("agent"):
@@ -146,6 +171,14 @@ class KimiccHarness:
             cmd.extend(["--effort", effective_effort])
 
         env_overrides = {"KIMICC_CLAUDE_BIN": claude_bin}
+        read_only_tmp = tc.get("read_only_tmp_root")
+        if read_only_tmp is not None:
+            if mode != "read-only":
+                raise ValueError("KimiccHarness: read_only_tmp_root requires mode='read-only'")
+            lease = Path(str(read_only_tmp))
+            if not lease.is_absolute() or lease.is_symlink() or not lease.is_dir() or lease.resolve() == cwd.resolve():
+                raise ValueError("KimiccHarness: read_only_tmp_root must be an existing directory outside cwd")
+            env_overrides["TMPDIR"] = str(lease)
         if effective_effort:
             # The wrapper derives Claude Code's environment default from this
             # value. Mirror the exact child argv so an explicit override does

@@ -47,9 +47,14 @@ class Unit:
     block: int | str
     role: str
     text: str
+    step: str | None = None
 
     def locator(self) -> dict[str, Any]:
-        return {"tab": self.tab, "activity": self.activity, "item": self.item, "block": self.block}
+        data: dict[str, Any] = {"tab": self.tab}
+        if self.step is not None:
+            data["step"] = self.step
+        data.update({"activity": self.activity, "item": self.item, "block": self.block})
+        return data
 
 
 @dataclass(frozen=True)
@@ -110,7 +115,10 @@ def _unit(index: int, raw: Any) -> Unit:
         raise ResolverError(codes.INVALID_INPUT, f"{where} block must be an index or a field name")
     if not isinstance(raw["text"], str):
         raise ResolverError(codes.INVALID_INPUT, f"{where} text must be a string")
-    unit = Unit(index, raw["tab"], raw["activity"], raw["item"], raw["block"], raw["role"], raw["text"])
+    step = raw.get("step")
+    if step is not None and not isinstance(step, str):
+        raise ResolverError(codes.INVALID_INPUT, f"{where} step must be a string id or null")
+    unit = Unit(index, raw["tab"], raw["activity"], raw["item"], raw["block"], raw["role"], raw["text"], step=step)
     if has_accent(unit.text):
         raise ResolverError(
             codes.ACCENT_IN_INPUT,

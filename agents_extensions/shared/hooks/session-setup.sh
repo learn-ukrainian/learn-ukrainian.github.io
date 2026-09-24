@@ -310,14 +310,21 @@ fi
 # never prevent a SessionStart response from reaching the operator.
 LANE_PROBE_SCRIPT="$PROJECT_DIR/scripts/agent_runtime/lane_probe.py"
 if [ -f "$LANE_PROBE_SCRIPT" ]; then
+  # codex-* is a stream/handoff identity, not a runtime registry key. Probe
+  # the Codex executable lane while preserving HANDOFF_AGENT for all identity,
+  # inbox, and rollover operations below.
+  LANE_PROBE_AGENT="$HANDOFF_AGENT"
+  case "$HANDOFF_AGENT" in
+    codex-*) LANE_PROBE_AGENT="codex" ;;
+  esac
   LANE_PROBE_RC=0
   LANE_PROBE_JSON=$(run_bounded 3 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" \
-    -m scripts.agent_runtime.lane_probe --agent "$HANDOFF_AGENT" --cwd "$PROJECT_DIR" --timeout 2 2>/dev/null) || LANE_PROBE_RC=$?
+    -m scripts.agent_runtime.lane_probe --agent "$LANE_PROBE_AGENT" --cwd "$PROJECT_DIR" --timeout 2 2>/dev/null) || LANE_PROBE_RC=$?
   if [ "$LANE_PROBE_RC" -ne 0 ]; then
     LANE_PROBE_REASON=$(printf '%s' "$LANE_PROBE_JSON" | _hook_deadline 2 jq -r '.probes[0].reason // "probe did not return a result"' 2>/dev/null || true)
-    ISSUES+=("DISPATCH LANE SELF-TEST FAILED for $HANDOFF_AGENT: $LANE_PROBE_REASON")
+    ISSUES+=("DISPATCH LANE SELF-TEST FAILED for $LANE_PROBE_AGENT (handoff identity $HANDOFF_AGENT): $LANE_PROBE_REASON")
   fi
-  unset LANE_PROBE_RC LANE_PROBE_JSON LANE_PROBE_REASON
+  unset LANE_PROBE_AGENT LANE_PROBE_RC LANE_PROBE_JSON LANE_PROBE_REASON
 fi
 unset LANE_PROBE_SCRIPT
 
@@ -1043,14 +1050,14 @@ _emit_session_start_json() {
       '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":$msg}}'; then
       return 0
     fi
-    echo "WARNING: jq failed emitting SessionStart JSON; trying python fallback." >&2
+    echo "WARNING: jq failed emitting SessionStart JSON; trying project interpreter fallback." >&2
   fi
   if [ -x "${BOUNDED_PYTHON:-}" ]; then
     printf '%s' "$msg" | _hook_deadline 2 "$BOUNDED_PYTHON" -c \
       'import json,sys; print(json.dumps({"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":sys.stdin.read()}}))'
     return $?
   fi
-  echo "WARNING: SessionStart context not emitted (jq and python unavailable)." >&2
+  echo "WARNING: SessionStart context not emitted (jq and project interpreter unavailable)." >&2
   return 1
 }
 

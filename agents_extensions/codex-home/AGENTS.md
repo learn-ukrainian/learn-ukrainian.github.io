@@ -46,15 +46,19 @@
 
 ## Worker preference
 
-- Use Astra at medium reasoning as the regular accountable driver. Default
-  implementation workers to Astra at low reasoning.
+- Use Sol at high reasoning as the regular accountable driver. The default
+  subagent is Luna at high reasoning for bounded work.
 - Use `luna_explorer_medium` for routine exploration and scouting. Use
   `luna_explorer_high` when ambiguity or complex call chains justify deeper
   investigation. Both explorer roles are read-only.
-- Use `astra_worker_low` for bounded implementation with explicit owned paths.
-- Use `astra_red_team_high` for adversarial review and `astra_advisor_high` for
-  architecture and technical advice. Both roles are read-only and use Astra
-  at high reasoning; the driver retains final judgment.
+- Use `luna_coder_high` for bounded implementation with explicit owned paths
+  and scope ceilings. Use `sol_coder_high` for broader implementation.
+- Use `sol_red_team_high` for adversarial code review and
+  `astra_advisor_high` for consequential architecture and technical advice.
+  Both roles are read-only; the driver retains final judgment.
+- Use `sol_ukrainian_content_high` for source-grounded Ukrainian authoring.
+  Escalate difficult linguistic or pedagogical judgments to Astra high, and
+  verify word validity, stress, and morphology with VESUM and sources.
 - Resolve exact model identifiers from the live catalog and installed profiles.
   Luna is explicitly permitted for exploration and scouting. Do not silently
   substitute another model if a configured route is unavailable.
@@ -63,8 +67,9 @@
 - Dispatch disjoint bounded packets concurrently when useful; do not manufacture
   work to fill slots or duplicate a healthy investigation.
 - Do trivial deterministic work locally when delegation adds no value.
-- Same-provider red-team review does not replace independent cross-provider
-  review for high-risk changes when an authorized healthy lane is available.
+- GPT-6 red-team review does not count as cross-family review of GPT-6-authored
+  work. Seek independent cross-family dissent for high-risk changes when an
+  authorized healthy lane is available.
 
 ## Agent invocation
 

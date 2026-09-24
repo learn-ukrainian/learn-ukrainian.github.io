@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import contextlib
 import copy
+import functools
 import gc
 import hashlib
 import json
@@ -41,7 +42,13 @@ SCHEMA = CONTRACTS / "dataset_v4_a4_deterministic_extraction_receipt_v1.schema.j
 A2_RECEIPT = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 REAL_SEAL_RECEIPT_PATH = ADMISSION / "dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
 REAL_PACKET_RECEIPT_PATH = ADMISSION / "dataset_v4_a3_builder_packet_receipt_v1.json"
-REAL_SEAL_RECEIPT = json.loads(REAL_SEAL_RECEIPT_PATH.read_text(encoding="utf-8"))
+
+
+@functools.cache
+def _cached_json(path: Path) -> dict:
+    """Read a JSON artifact on first use so collection survives a sparse worktree."""
+    return json.loads(path.read_text(encoding="utf-8"))
+
 
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
@@ -119,7 +126,10 @@ UNIT_COMMITMENT_ALGORITHM_DESCRIPTOR = {
 }
 
 FAMILY_IDS = [f"fam-synthetic-{index:02d}" for index in range(9)]
-assert len(FAMILY_IDS) == len(REAL_SEAL_RECEIPT["source_family_registry"]["families"])
+
+
+def test_synthetic_family_count_matches_the_real_seal_registry() -> None:
+    assert len(FAMILY_IDS) == len(_cached_json(REAL_SEAL_RECEIPT_PATH)["source_family_registry"]["families"])
 
 
 def _canonical_json(value: Any) -> str:
@@ -187,7 +197,7 @@ def _all_keys(value: Any) -> set[str]:
 
 
 def _seal_receipt_shape(family_ids: list[str]) -> dict:
-    receipt = copy.deepcopy(REAL_SEAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_SEAL_RECEIPT_PATH))
     receipt["source_family_registry"]["families"] = [
         {
             "family_id": fid,
@@ -808,7 +818,7 @@ def test_gate_never_reads_the_a3_seals_own_eternal_false_temporal_field() -> Non
     """The A3 seal's own temporal_firewall.builder_packet_issued is a
     permanent, past-tense fact about the seal event -- always false. The
     live gate is open anyway, proving it is not sourced from that field."""
-    assert REAL_SEAL_RECEIPT["temporal_firewall"]["builder_packet_issued"] is False
+    assert _cached_json(REAL_SEAL_RECEIPT_PATH)["temporal_firewall"]["builder_packet_issued"] is False
     gate = extraction.check_builder_packet_gate()
     assert gate["builder_packet_issued"] is True
 
@@ -1083,7 +1093,7 @@ def test_a4_extraction_receipt_never_names_a_held_out_family_or_source_unit_or_s
     assert not _all_keys(receipt) & FORBIDDEN_KEYS
     assert "fam-" not in serialized  # A3 family_ids never appear in a builder-facing receipt
     assert not _all_keys(receipt) & {"salt", "salt_hex", "private_salt", "heldout_family_pool"}
-    for family in REAL_SEAL_RECEIPT["source_family_registry"]["families"]:
+    for family in _cached_json(REAL_SEAL_RECEIPT_PATH)["source_family_registry"]["families"]:
         for unit_id in family["member_source_unit_ids"]:
             assert unit_id not in serialized  # no builder-eligible id, even by elimination
 

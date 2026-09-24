@@ -35,6 +35,7 @@ from scripts.build.fresh.gen_draft_schemas import (
     draft_schema_filename,
     level_activity_types,
 )
+from scripts.build.fresh.path_guard import checked_existing_path
 
 SCHEMA_BASE_URI = "https://learn-ukrainian.github.io/schemas/"
 
@@ -167,6 +168,8 @@ def _registry_for(schemas_dir: str) -> Registry:
     def retrieve(uri: str) -> Resource:
         name = uri.split("#", 1)[0].rsplit("/", 1)[-1]
         path = root / name
+        if root == SCHEMAS_DIR:
+            path = checked_existing_path(SCHEMAS_DIR.parent, path, "schemas")
         if not path.exists():
             raise LookupError(f"no schema file for {uri!r} under {root}")
         with path.open(encoding="utf-8") as handle:
@@ -176,7 +179,10 @@ def _registry_for(schemas_dir: str) -> Registry:
 
 
 def load_schema(name: str, schemas_dir: Path | None = None) -> dict:
-    with ((schemas_dir or SCHEMAS_DIR) / name).open(encoding="utf-8") as handle:
+    path = (schemas_dir or SCHEMAS_DIR) / name
+    if schemas_dir is None or schemas_dir == SCHEMAS_DIR:
+        path = checked_existing_path(SCHEMAS_DIR.parent, path, "schemas")
+    with path.open(encoding="utf-8") as handle:
         return json.load(handle)
 
 

@@ -55,7 +55,7 @@ def test_governor_prompt_binds_one_area_epic_and_github_lifecycle() -> None:
 def test_governor_prompt_keeps_sol_bounded_and_v2_accountable() -> None:
     prompt = _normalized_prompt()
 
-    assert "Run as `gpt-5.6-sol` at `high`" in prompt
+    assert "Run on the native Codex CLI as `gpt-6-sol` at `high`" in prompt
     assert "summoned supervisor, not a resident polling loop" in prompt
     assert "Escalate Sol to `xhigh` only for one concrete" in prompt
     assert prompt.count("list_agents") >= 3

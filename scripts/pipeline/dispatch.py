@@ -45,11 +45,6 @@ def _venv_python() -> str:
     return VENV_PYTHON
 
 
-def _pro_model() -> str:
-    from batch_gemini_config import PRO_MODEL
-    return PRO_MODEL
-
-
 def _flash_model() -> str:
     from batch_gemini_config import FLASH_MODEL
     return FLASH_MODEL
@@ -127,6 +122,13 @@ def _agy_model(model: str | None) -> str:
     return _LEGACY_GEMINI_TO_AGY_MODEL.get(model, model)
 
 
+def _effective_agy_route(model: str | None) -> tuple[str, str | None]:
+    """Resolve an attempted pipeline model to its actual ACP transport/model."""
+    from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+
+    return "acp:agy", resolve_compat_model("agy", _agy_model(model))
+
+
 def _is_rate_limited(output: str) -> bool:
     """Check if dispatch failed due to rate limiting or auth exhaustion."""
     lower = output.lower()
@@ -153,6 +155,11 @@ def dispatch_gemini_raw(
     Returns (success, raw_output_text).
     """
     model = _agy_model(model)
+    from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+
+    # Resolve in this process so incompatibility is visible to the caller;
+    # subprocess stderr is intentionally not part of the pipeline result.
+    model = resolve_compat_model("agy", model)
     args = [
         str(_SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-agy",
         "-",  # read prompt from stdin
@@ -215,8 +222,6 @@ def dispatch_gemini(
     Default calls use Flash and fall back only across Flash rungs (Flash High → Flash Lite).
     Pro is used only when explicitly requested by the caller.
     """
-    requested_model = model
-    is_explicit_pro = bool(requested_model and "pro" in requested_model.lower())
     if model is None:
         model = "gemini-3.8-flash-high"
     ok, output = dispatch_gemini_raw(
@@ -227,19 +232,24 @@ def dispatch_gemini(
     # Fallback cascade: try other models if rate-limited or timed out
     should_fallback = not ok and (_is_rate_limited(output) or output.strip() == "")
     if should_fallback:
-        # Build fallback chain:
-        # Operator rule (2026-09-22): Pro is used ONLY when a caller explicitly asks for it.
-        # Default/Flash calls never reach Pro; explicit Pro requests keep Pro and its fallbacks.
-        if is_explicit_pro:
-            all_models = [_pro_model(), _flash_model(), _flash_lite_model()]
-        else:
-            all_models = [_flash_model(), _flash_lite_model()]
-        # Deduplicate while preserving order
-        seen = set()
+        # The compat resolver rejects non-Flash models on this route. Keep only
+        # the configured Flash rungs and log any rung it refuses.
+        all_models = [_flash_model(), _flash_lite_model()]
+        # Deduplicate effective routes, not source slugs. Compatibility aliases
+        # and legacy names can all resolve to the same AGY ACP pin.
+        current_route = _effective_agy_route(model)
+        seen = {current_route}
         fallbacks = []
         for m in all_models:
-            if m not in seen and m != model:
-                seen.add(m)
+            try:
+                effective_route = _effective_agy_route(m)
+            except ValueError as exc:
+                # A fallback candidate is configuration, not a fresh explicit
+                # request. Skip it when the actual AGY ACP resolver rejects it.
+                _log(f"  [fallback] skipping {m}: {exc}")
+                continue
+            if effective_route not in seen:
+                seen.add(effective_route)
                 fallbacks.append(m)
 
         reason = "rate-limited" if _is_rate_limited(output) else "timeout/hang"

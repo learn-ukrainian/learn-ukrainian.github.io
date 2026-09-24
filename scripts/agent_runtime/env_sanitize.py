@@ -99,6 +99,9 @@ _PROVIDER_SECRET_ALLOWLIST = {
     "cursor": {
         "CURSOR_API_KEY",
     },
+    "acpx-cursor-shadow": {
+        "CURSOR_API_KEY",
+    },
 }
 
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
@@ -122,10 +125,6 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "acpx-kimicc-shadow": {
         # KimiCC K3 uses the same existing Kimi login through its fixed route.
         "ACPX_AUTH_LOGIN",
-    },
-    "acpx-cursor-shadow": {
-        # Non-secret acpx auth-method selector for the existing Cursor login.
-        "ACPX_AUTH_CURSOR_LOGIN",
     },
     "acpx-glm-shadow": {
         # Non-secret selector for OpenCode's advertised ACP method ID
@@ -164,6 +163,13 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     # diagnosis.
     "codex": {
         "CODEX_HOME",
+    },
+    # AGY_APP_DATA_DIR must reach the agy subprocess so a receipt-recording
+    # review attempt (#8617) keeps its app data (OAuth token link, transcripts)
+    # in the per-attempt scoped home. It is a directory path, never a
+    # credential; `HOME` already passes the global safe-name allowlist.
+    "agy": {
+        "AGY_APP_DATA_DIR",
     },
     "deepseek": {
         "HERMES_HOME",
@@ -381,6 +387,11 @@ def build_agent_env(
     The runner applies explicit ``InvocationPlan.env_unsets`` after this call.
     """
     raw = dict(os.environ)
+    if _normalized_provider(provider) == "agy":
+        # Only a receipt-recording review attempt's adapter override may carry
+        # AGY_APP_DATA_DIR (#8617); an ambient export must not leak into an
+        # ordinary dispatch.
+        raw.pop("AGY_APP_DATA_DIR", None)
     raw.update(overrides or {})
 
     env: dict[str, str] = {}

@@ -263,7 +263,6 @@ def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
             else None
         ),
     )
-
     data = state_router.compute_routing_budget(now)
 
     assert data["agents"]["codex"]["status"] == "hot"
@@ -275,6 +274,67 @@ def test_runtime_headroom_blocked_demotes_lane(monkeypatch, tmp_path):
     # at least diagnostics declare hybrid sources
     assert data["diagnostics"]["usage_sources"]["burn_rate_limit"] == "agent_runtime_jsonl"
     assert first_sub["lane"]  # smoke
+
+
+def test_api_projects_sanitized_reserve_and_can_recommend_codex(monkeypatch, tmp_path):
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(
+        monkeypatch,
+        tmp_path,
+        [
+            _record("codex (gpt-5.5)", 800.0, now),
+            _record("claude", 650.0, now),
+            _record("gemini", 480.0, now),
+        ],
+    )
+    monkeypatch.setattr(state_router, "get_freshest_lane_usage", lambda: None)
+    monkeypatch.setattr(
+        state_router,
+        "load_reset_reserve",
+        lambda *_args, **_kwargs: {
+            "available": True,
+            "provider": "codex",
+            "remaining_resets": 2,
+            "confirmed_at": "2026-05-13T20:00:00Z",
+            "expires_at": "2026-05-14T20:00:00Z",
+        },
+    )
+    monkeypatch.setattr(
+        state_router,
+        "get_provider_usage_data",
+        lambda provider: (
+            {
+                "lane": "codex",
+                "primary_used_pct": 70.0,
+                "weekly_used_pct": 80.0,
+                "weekly_pace_delta_pct": 10.0,
+                "will_last_to_reset": False,
+                "windows": {"primary": {"remaining_pct": 20.0, "window_minutes": 300}},
+                "stale": False,
+                "freshness": "fresh",
+                "age_s": 1.0,
+            }
+            if provider == "codex"
+            else None
+        ),
+    )
+
+    monkeypatch.setattr(
+        state_router,
+        "_recommend_agent",
+        lambda *_args, **_kwargs: {"primary_agent_for_code": "cursor", "rationale": "cooler seat", "warnings": []},
+    )
+    data = state_router.compute_routing_budget(now)
+
+    assert data["reset_reserve"] == {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": 2,
+        "confirmed_at": "2026-05-13T20:00:00Z",
+        "expires_at": "2026-05-14T20:00:00Z",
+    }
+    assert data["agents"]["codex"]["status"] == "hot"
+    assert data["recommendation"]["primary_agent_for_code"] == "codex"
 
 
 def test_status_cool_when_burn_under_50(monkeypatch, tmp_path):

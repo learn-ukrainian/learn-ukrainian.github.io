@@ -295,3 +295,39 @@ def test_usable_host_gh_config_dir_requires_hosts_yml(tmp_path) -> None:
     assert usable_host_gh_config_dir(str(good)) == str(good)
     assert usable_host_gh_config_dir(None) is None
     assert usable_host_gh_config_dir("") is None
+
+
+def test_agy_app_data_dir_reaches_only_the_agy_provider() -> None:
+    """The scoped review home (#8617) needs AGY_APP_DATA_DIR at the agy subprocess, nowhere else."""
+    scoped = "/work/receipts/rev/att.agy-home"
+    overrides = {"HOME": scoped, "AGY_APP_DATA_DIR": f"{scoped}/.gemini/antigravity-cli"}
+    with patch.dict("os.environ", {"PATH": "/usr/bin", "HOME": "/Users/example"}, clear=True):
+        agy_env = build_agent_env(provider="agy", overrides=overrides)
+        agy_tools_env = build_agent_env(provider="agy-tools", overrides=overrides)
+        others = {
+            provider: build_agent_env(provider=provider, overrides=overrides)
+            for provider in ("claude", "codex", "kimi", "grok", "gemini")
+        }
+        ordinary = build_agent_env(provider="agy")
+
+    for env in (agy_env, agy_tools_env):
+        assert env["HOME"] == scoped
+        assert env["AGY_APP_DATA_DIR"] == f"{scoped}/.gemini/antigravity-cli"
+    for provider, env in others.items():
+        assert "AGY_APP_DATA_DIR" not in env, provider
+    assert ordinary["HOME"] == "/Users/example"
+    assert "AGY_APP_DATA_DIR" not in ordinary
+
+
+def test_ambient_agy_app_data_dir_is_stripped_unless_the_override_supplies_it() -> None:
+    """An inherited AGY_APP_DATA_DIR never reaches an ordinary dispatch; only the adapter override does."""
+    scoped_app_data = "/work/receipts/rev/att.agy-home/.gemini/antigravity-cli"
+    parent = {"PATH": "/usr/bin", "HOME": "/Users/example", "AGY_APP_DATA_DIR": "/tmp/x"}
+    with patch.dict("os.environ", parent, clear=True):
+        ordinary = build_agent_env(provider="agy")
+        ordinary_tools = build_agent_env(provider="agy-tools")
+        review = build_agent_env(provider="agy", overrides={"AGY_APP_DATA_DIR": scoped_app_data})
+
+    assert "AGY_APP_DATA_DIR" not in ordinary
+    assert "AGY_APP_DATA_DIR" not in ordinary_tools
+    assert review["AGY_APP_DATA_DIR"] == scoped_app_data

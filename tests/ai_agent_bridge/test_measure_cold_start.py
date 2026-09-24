@@ -17,7 +17,7 @@ def _successful_loader(size: int):
 
 
 def test_profile_selects_compact_or_full_source_contract() -> None:
-    compact_profile = resolve_profile("sol_lead", "gpt-5.6-sol")
+    compact_profile = resolve_profile("sol_lead", "gpt-6-sol")
     full_profile = resolve_profile("native_claude", "claude-sonnet-5")
 
     compact = cold_start.build_source_specs(
@@ -46,7 +46,7 @@ def test_profile_selects_compact_or_full_source_contract() -> None:
 def test_conservative_counter_is_explicit_and_rounds_up() -> None:
     tokens, method = cold_start.count_payload_tokens(
         b"1234",
-        model_id="gpt-5.6-sol",
+        model_id="gpt-6-sol",
         token_count_url=None,
     )
 
@@ -68,7 +68,7 @@ def test_gateway_token_counter_wins_when_available(
     )
     tokens, method = cold_start.count_payload_tokens(
         "українська".encode(),
-        model_id="gpt-5.6-sol",
+        model_id="gpt-6-sol",
         token_count_url=token_count_url,
     )
 
@@ -85,7 +85,7 @@ def test_compact_and_full_budgets_are_enforced(
     compact = cold_start.measure(
         "compact",
         profile_id="sol_lead",
-        model_id="gpt-5.6-sol",
+        model_id="gpt-6-sol",
     )
     full = cold_start.measure(
         "full",
@@ -109,14 +109,14 @@ def test_delegated_model_cannot_change_lead_startup_contract(
     terra = cold_start.measure(
         "terra",
         profile_id="sol_lead",
-        model_id="gpt-5.6-sol",
-        delegated_model_id="gpt-5.6-terra",
+        model_id="gpt-6-sol",
+        delegated_model_id="gpt-6-astra",
     )
     luna = cold_start.measure(
         "luna",
         profile_id="sol_lead",
-        model_id="gpt-5.6-sol",
-        delegated_model_id="gpt-5.6-luna",
+        model_id="gpt-6-sol",
+        delegated_model_id="gpt-6-luna",
     )
 
     assert terra.delegated_model_id != luna.delegated_model_id
@@ -171,7 +171,7 @@ def test_observed_first_turn_is_gate_when_larger_and_excludes_output(
     measurement = cold_start.measure(
         "observed",
         profile_id="sol_lead",
-        model_id="gpt-5.6-sol",
+        model_id="gpt-6-sol",
         transcript=transcript,
     )
 
@@ -197,7 +197,7 @@ def test_failed_source_makes_measurement_incomplete(
     measurement = cold_start.measure(
         "incomplete",
         profile_id="sol_lead",
-        model_id="gpt-5.6-sol",
+        model_id="gpt-6-sol",
     )
 
     assert measurement.complete is False

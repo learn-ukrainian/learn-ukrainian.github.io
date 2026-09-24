@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import copy
+import json
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -114,13 +116,27 @@ def test_rb2_cleanup_never_force_deletes_or_removes_the_branch() -> None:
     assert cleanup["command"]["argv"][:2] == ["sh", "-c"]
 
 
+def test_rb2_cleanup_removes_through_the_guarded_cli_as_the_task_owner() -> None:
+    """#8610 r5: cleanup runs the lock + ownership + claim path, never a raw ``git worktree remove``."""
+    cleanup = _rb2_step(_load(RB2_PATH), "cleanup_failed_worktree")
+    script = cleanup["command"]["argv"][2]
+
+    assert script.startswith(
+        '.venv/bin/python -m scripts.orchestration.worktree_claims remove ".worktrees/dispatch/$LANE/$TASK_ID" '
+        '--owner-task-id "$TASK_ID" '
+    )
+    assert "git worktree remove" not in script
+    # The CLI's own output goes to stderr so stdout stays one outcome token.
+    assert " >&2 && echo worktree-removed || echo removal-failed" in script
+
+
 def test_negative_rb2_readding_force_fails_only_the_cleanup_guard() -> None:
     """Mutation check: reintroducing force removal trips the dedicated cleanup guard."""
     spec = _load(RB2_PATH)
     cleanup = next(step for step in spec["steps"] if step["step_id"] == "cleanup_failed_worktree")
-    cleanup["command"]["argv"][2] = cleanup["command"]["argv"][2].replace(
-        "git worktree remove", "git worktree remove --force"
-    )
+    forced = cleanup["command"]["argv"][2].replace("worktree_claims remove", "worktree_claims remove --force")
+    assert forced != cleanup["command"]["argv"][2]
+    cleanup["command"]["argv"][2] = forced
     with pytest.raises(AssertionError):
         _assert_rb2_cleanup_is_non_force(spec)
 
@@ -589,3 +605,89 @@ def test_rb5_close_parks_invalid_closure_authority_evidence(tmp_path: Path) -> N
     assert result.exit_class == ExitClass.STOP_PARKED
     assert result.outcome == "closure_parked"
     assert executor.store.get_run(run_id).closure_state == "parked"
+
+
+def _git(cwd: Path, *args: str) -> str:
+    return subprocess.run(
+        ["git", *args], cwd=cwd, check=True, capture_output=True, text=True, timeout=30
+    ).stdout.strip()
+
+
+def _rb2_cleanup_fixture(tmp_path: Path, *, owner: dict[str, Any]) -> tuple[Path, dict[str, str]]:
+    """A primary with one dispatch worktree, its owner record, and the project interpreter."""
+    _git(tmp_path, "init", "-b", "main")
+    _git(tmp_path, "config", "user.email", "rb2@example.invalid")
+    _git(tmp_path, "config", "user.name", "RB2 Test")
+    (tmp_path / ".gitignore").write_text(".venv/\n.worktrees/\nbatch_state/\n", encoding="utf-8")
+    _git(tmp_path, "add", ".gitignore")
+    _git(tmp_path, "commit", "-m", "base")
+    worktree = tmp_path / ".worktrees/dispatch/grok/impl-8610"
+    _git(tmp_path, "worktree", "add", "-b", "grok/impl-8610", str(worktree))
+    python = tmp_path / ".venv/bin/python"
+    python.parent.mkdir(parents=True)
+    python.write_text(f'#!/bin/sh\nPYTHONPATH="{PROJECT_ROOT}" exec "{sys.executable}" "$@"\n', encoding="utf-8")
+    python.chmod(0o755)
+    tasks = tmp_path / "batch_state/tasks"
+    tasks.mkdir(parents=True)
+    record = {
+        "task_id": "impl-8610",
+        "run_nonce": "fixture-run-nonce",
+        "worktree_path": str(worktree),
+        **owner,
+    }
+    (tasks / "impl-8610.json").write_text(json.dumps(record), encoding="utf-8")
+    return worktree, {"TASK_ID": "impl-8610", "LANE": "grok"}
+
+
+def test_rb2_cleanup_removes_the_failed_task_worktree_and_keeps_its_branch(tmp_path: Path) -> None:
+    """#8610 r5: the owner's finished record releases the worktree it created."""
+    worktree, environment = _rb2_cleanup_fixture(tmp_path, owner={"status": "failed", "worktree_reused": False})
+    cleanup = _rb2_step(_load(RB2_PATH), "cleanup_failed_worktree")
+
+    result = _run_rb2_shell_step(cleanup, tmp_path, environment)
+
+    assert result.stdout == "worktree-removed\n", result.stderr
+    assert not worktree.exists()
+    assert _git(tmp_path, "branch", "--list", "grok/impl-8610")
+    observe = _run_rb2_shell_step(_rb2_step(_load(RB2_PATH), "observe_cleanup"), tmp_path, environment)
+    assert observe.stdout == "worktree-absent\n"
+
+
+@pytest.mark.parametrize(
+    ("owner", "sibling", "refusal"),
+    [
+        (
+            {"status": "failed", "worktree_reused": False},
+            {"task_id": "review-attached", "status": "running"},
+            "worktree claimed by active task review-attached",
+        ),
+        (
+            {"status": "failed", "worktree_reused": True},
+            None,
+            "owner task impl-8610 did not create this worktree; its creator reaps",
+        ),
+        (
+            {"status": "running", "worktree_reused": False},
+            None,
+            "owner task impl-8610 is not finished (status 'running'); refusing worktree removal",
+        ),
+    ],
+)
+def test_rb2_cleanup_refuses_a_claimed_reused_or_live_worktree(
+    tmp_path: Path, owner: dict[str, Any], sibling: dict[str, Any] | None, refusal: str
+) -> None:
+    """#8610 r5: another task's live claim, a reused checkout, or a live owner stops cleanup."""
+    worktree, environment = _rb2_cleanup_fixture(tmp_path, owner=owner)
+    if sibling is not None:
+        (tmp_path / "batch_state/tasks/review-attached.json").write_text(
+            json.dumps({**sibling, "worktree_path": str(worktree)}), encoding="utf-8"
+        )
+    cleanup = _rb2_step(_load(RB2_PATH), "cleanup_failed_worktree")
+
+    result = _run_rb2_shell_step(cleanup, tmp_path, environment)
+
+    assert result.stdout == "removal-failed\n"
+    assert f"refused: {worktree}: {refusal}" in result.stderr
+    assert worktree.exists()
+    labels = _matching_transition_labels(cleanup, actor_outcome="removal-failed", exit_code=result.returncode)
+    assert labels == ["removal_failed"]

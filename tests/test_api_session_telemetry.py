@@ -134,7 +134,7 @@ def test_session_record_drives_capacity_provenance_and_mismatch(
     update_session(
         session_id,
         transcript_path=str(transcript),
-        observed_model="gpt-5.6-sol",
+        observed_model="gpt-6-sol",
         profile_id="sol_lead",
         provenance="SessionStart",
         state_root=project_root,
@@ -156,8 +156,8 @@ def test_session_record_drives_capacity_provenance_and_mismatch(
     telemetry = response.json()["_telemetry"]
     assert telemetry["caller_match"] is True
     assert telemetry["transcript"] == "sol.jsonl"
-    assert telemetry["declared_model"] == "gpt-5.6-sol"
-    assert telemetry["observed_model"] == "gpt-5.6-sol"
+    assert telemetry["declared_model"] == "gpt-6-sol"
+    assert telemetry["observed_model"] == "gpt-6-sol"
     assert telemetry["declared_context_limit"] == 272_000
     assert telemetry["actual_context_limit"] == 360_000
     assert telemetry["selected_profile"] == "sol_lead"
@@ -185,7 +185,7 @@ def test_linked_worktree_reads_record_from_canonical_primary_checkout(
     update_session(
         session_id,
         transcript_path=str(transcript),
-        observed_model="gpt-5.6-sol",
+        observed_model="gpt-6-sol",
         profile_id="sol_lead",
         provenance="SessionStart",
         state_root=primary_root,

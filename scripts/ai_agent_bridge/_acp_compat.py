@@ -66,18 +66,41 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
 
     ``None`` stays ``None`` so the route resolver applies the participant's
     registered pin — a default can never drift from the registry (#6894).
-    Legacy ``gemini*`` slugs (including retired display labels) aimed at the
-    AGY seat map to that seat's current pin, the only model the seat accepts.
-    Anything else passes through unchanged and is validated loudly by the
-    route resolver.
+    Display spellings of the registered pin are accepted. An explicit Gemini
+    model that is not that pin cannot be honored on the AGY ACP seat, so fail
+    with the supported headless dispatch route instead of silently downgrading.
     """
     participant = require_compat_target(command_target)
     if not model:
         return None
     if participant == "agy":
         pin = registered_participant_model("agy")
-        if pin and model != pin and model.strip().lower().startswith("gemini"):
-            return pin
+        if model.strip().lower().startswith("gemini"):
+            from agent_runtime.adapters.agy import AgyAdapter, unknown_model_suggestion
+
+            accepted_model = AgyAdapter.resolve_model_slug(model)
+            if not pin:
+                raise ValueError(
+                    "AGY ACP has no registered model pin; cannot honor explicit "
+                    f"model {model!r}. A model accepted by AGY is "
+                    f"`{accepted_model or AgyAdapter.default_model}`."
+                )
+            if AgyAdapter.model_ids_match(model, pin) or (
+                accepted_model
+                and "flash" in accepted_model
+                and AgyAdapter.is_legacy_model_alias(model)
+            ):
+                return pin
+            if accepted_model is None:
+                message = f"Unknown AGY model {model!r}; cannot honor the explicit request."
+                message += f" {unknown_model_suggestion(model)}"
+                raise ValueError(message)
+            raise ValueError(
+                f"AGY ACP supports only its registered model pin {pin!r}; "
+                f"cannot honor explicit model {model!r}. Use "
+                f"`delegate.py dispatch --agent agy --model {accepted_model}` "
+                "to run a model accepted by AGY."
+            )
     return model
 
 

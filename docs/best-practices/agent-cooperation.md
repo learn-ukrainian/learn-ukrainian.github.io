@@ -325,7 +325,7 @@ does not micromanage that track.
 | State | `docs/session-state/codex-orchestrator-handoff.md` and router | Track handoff (gitignored local), e.g. `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` — not in git/PRs |
 | Work selection | Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues | Track backlog, batches, reviews, content quality |
 | Agent dispatch | Cross-track/tooling agents | Track-local writers/reviewers, including headless Codex |
-| Merge authority | Final reconcile on cross-track/contested merges; SOLE cross-stream sweeper (integration-owner role) for abandoned out-of-stream PRs green+reviewed idle >1h, via scheduled sweep (#4703; stream-scoped 2026-07-13). Track PRs = own-stream-only, membership authoritative via `/api/issues/streams` | Open PRs, route track feedback; self-merge own-track PRs after cross-family review + green CI (#M-12 grant, user 2026-06-16); arm `gh pr merge --auto --squash` at review-gate-pass |
+| Merge authority | Final reconcile on cross-track/contested merges; integration-owner role owns cross-stream landing. The Actions sweep reports only; the local keeper (#8564) owns automatic queue actions. Track PRs = own-stream-only, membership authoritative via `/api/issues/streams` | Open PRs, route track feedback; enqueue own-track PRs after cross-family review + green CI (#M-12 grant, user 2026-06-16) |
 
 **Boundary rule:** if a track orchestrator exists, the main orchestrator treats
 that track's PRs and delegates as awareness-only unless the track orchestrator
@@ -335,12 +335,11 @@ registry (`/api/issues/streams`, from `issue_stream_audit`); branch prefixes are
 AUTHOR lanes, not streams. A track session touches ONLY its own stream's PRs —
 an out-of-stream PR (or one that doesn't resolve to exactly one stream-epic) is
 hands-off with **no time threshold**. The one cross-stream exception is the
-abandoned-PR net, owned by the **INTEGRATION-OWNER ROLE alone** (default:
-Codex-main; a role, NOT any orchestrator), for a green+reviewed out-of-stream PR
-idle >1h — which MUST run as a scheduled integration sweep (not gated on any
-live session) so a down role-holder cannot strand it (user directive
-2026-07-13, supersedes the 2026-07-07
-any-orchestrator backstop). See workflow.md § Merge policy for the full rule.
+landing net, owned by the **INTEGRATION-OWNER ROLE alone** (default: Codex-main;
+a role, NOT any orchestrator). The scheduled Actions integration sweep reports
+state only. The local merge-queue keeper (#8564) owns automatic queue actions
+under the operator's 2026-09-23 decision. See workflow.md § Merge policy for
+the full rule.
 
 ### Track ↔ main communication protocol
 
@@ -875,14 +874,15 @@ Or use the process-escalations skill:
 
 Post on the relevant GH issue explaining what was stuck and why.
 
-## Dispatch handoff: Luna workers + fleet settle (2026-08-02)
+## Dispatch handoff: GPT-6 Luna workers + fleet settle
 
-**Luna (`gpt-5.6-luna` @ max)** is a high-volume **bounded coding worker**, not a solo epic driver.
+**Luna (`gpt-6-luna` @ high)** is a high-volume **bounded coding worker**, not a solo epic driver.
 Orchestrators keep acceptance (CF, merge, residual truth).
 
 ### Briefing Luna
 Append [`docs/dispatch-briefs/luna-max-closeout-contract.md`](../dispatch-briefs/luna-max-closeout-contract.md)
-to every Luna dispatch brief. Require the `CLOSEOUT` ledger block.
+to bounded Luna dispatch briefs. The filename is retained for existing links; its
+current content specifies GPT-6 Luna @ high. Require the `CLOSEOUT` ledger block.
 
 ### Deterministic settle (no LLM)
 When a worker leaves commits without a PR, or dies with `status=running` and a dead PID:

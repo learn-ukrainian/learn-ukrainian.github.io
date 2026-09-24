@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import json
 import os
-import selectors
+import queue
 import shlex
 import shutil
 import subprocess
+import sys
 import threading
 import time
 from pathlib import Path
@@ -20,16 +21,16 @@ _READY_LINE = "acp-text-agent ready"
 # Startup includes importing the ACP SDK under a loaded runner. The budget is
 # bounded so a hung child still fails, and it starts only after spawn.
 _STARTUP_TIMEOUT_S = 60.0
-# Protocol reads start after the ready line, so this bound is the request
-# itself, not process startup.
+# Protocol reads start after the ready line. Keep the bound below pytest's
+# 120s timeout so a stalled request reports the captured server stderr.
 _RPC_TIMEOUT_S = 60.0
 # Cancel must return well before the fake provider's 30s sleep. The product
 # force-kills after 1s; the extra room is scheduler delay under parallel load.
-_CANCEL_ROUNDTRIP_S = 10.0
+_CANCEL_ROUNDTRIP_S = 20.0
 
 
 class _AcpServer:
-    """Child ACP server whose stderr is drained until it signals ready."""
+    """Child ACP server whose output is drained into complete protocol lines."""
 
     def __init__(self, process: subprocess.Popen[str]) -> None:
         self.process = process
@@ -37,8 +38,20 @@ class _AcpServer:
         self._stderr_lock = threading.Lock()
         self._ready = threading.Event()
         self._stderr_done = threading.Event()
-        self._thread = threading.Thread(target=self._drain_stderr, name="acp-stderr", daemon=True)
-        self._thread.start()
+        self._stdout_lines: queue.Queue[str | None] = queue.Queue()
+        self._stderr_thread = threading.Thread(target=self._drain_stderr, name="acp-stderr", daemon=True)
+        self._stdout_thread = threading.Thread(target=self._drain_stdout, name="acp-stdout", daemon=True)
+        self._stderr_thread.start()
+        self._stdout_thread.start()
+
+    def _drain_stdout(self) -> None:
+        stdout = self.process.stdout
+        assert stdout is not None
+        try:
+            for line in stdout:
+                self._stdout_lines.put(line)
+        finally:
+            self._stdout_lines.put(None)
 
     def _drain_stderr(self) -> None:
         stderr = self.process.stderr
@@ -78,22 +91,20 @@ class _AcpServer:
         except subprocess.TimeoutExpired:
             self.process.terminate()
             self.process.wait(timeout=15)
-        self._thread.join(timeout=5)
+        self._stderr_thread.join(timeout=5)
+        self._stdout_thread.join(timeout=5)
 
 
 def _read_json_line(server: _AcpServer, timeout: float = _RPC_TIMEOUT_S) -> dict:
-    selector = selectors.DefaultSelector()
-    process = server.process
-    assert process.stdout is not None
-    selector.register(process.stdout, selectors.EVENT_READ)
     try:
-        ready = selector.select(timeout)
-        if not ready:
-            raise AssertionError(f"timed out waiting for ACP output; stderr={server.stderr_text()!r}")
-        line = process.stdout.readline()
-    finally:
-        selector.close()
-    assert line, f"ACP server exited early with code {process.poll()}; stderr={server.stderr_text()!r}"
+        line = server._stdout_lines.get(timeout=timeout)
+    except queue.Empty as exc:
+        raise AssertionError(f"timed out waiting for ACP output; stderr={server.stderr_text()!r}") from exc
+    if line is None:
+        server._stdout_lines.put(None)
+        raise AssertionError(
+            f"ACP server exited early with code {server.process.poll()}; stderr={server.stderr_text()!r}"
+        )
     return json.loads(line)
 
 
@@ -225,6 +236,32 @@ def _fake_binary(tmp_path: Path, name: str, response: str) -> Path:
     )
     binary.chmod(0o755)
     return binary
+
+
+def test_reader_keeps_consecutive_lines_from_one_pipe_write():
+    process = subprocess.Popen(
+        [
+            sys.executable,
+            "-c",
+            "import sys; "
+            "sys.stderr.write('acp-text-agent ready\\n'); "
+            "sys.stdout.write('{\"id\":1}\\n{\"id\":2}\\n'); "
+            "sys.stdout.flush(); "
+            "sys.stdin.read()",
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        bufsize=1,
+    )
+    server = _AcpServer(process)
+    try:
+        server.wait_until_ready()
+        assert _read_json_line(server, timeout=2.0)["id"] == 1
+        assert _read_json_line(server, timeout=2.0)["id"] == 2
+    finally:
+        server.close()
 
 
 def test_agy_text_agent_is_source_blind_sandboxed_and_ephemeral(tmp_path):

@@ -90,6 +90,7 @@ from ..binary_resolve import resolve_agent_binary
 from ..result import ParseResult
 from ..routes import deepseek_first_party_error, is_deepseek_first_party_forbidden_in_ci
 from .base import InvocationPlan
+from .cursor import _load_cursor_api_key_from_env_file
 from .glm import assert_glm_egress_allowed
 
 try:
@@ -169,14 +170,11 @@ CLAUDE_ACP_MODEL = "claude-sonnet-5"
 CLAUDE_ACP_MODELS = frozenset({CLAUDE_ACP_MODEL, "claude-fable-5"})
 GLM_ACP_MODEL = "glm-5.3"
 GLM_ACP_INVOCATION_MODEL = "zai-coding-plan/glm-5.3"
-# DeepSeek ACP seat (#6805): Hermes was permanently removed from this host
-# (operator order 2026-08-16), so the seat now mirrors the confined GLM/Gemma
-# shape on the standing first-party opencode route. Flash is the catalog pin —
-# Pro stays off the routine review ladder (operator GO 2026-08-13, canary
-# #6703). The bare catalog id is fleet identity; the ``deepseek-direct/``
-# prefix is the opencode invocation detail, same split as the GLM seat.
+# DeepSeek ACP seat (#6805): the bare catalog id remains fleet identity.
+# OpenCode's currently advertised first-party provider/model is the invocation
+# detail; the retired deepseek-direct provider alias is not advertised by ACP.
 DEEPSEEK_ACP_MODEL = "deepseek-v4-flash"
-DEEPSEEK_ACP_INVOCATION_MODEL = "deepseek-direct/deepseek-v4-flash"
+DEEPSEEK_ACP_INVOCATION_MODEL = "deepseek/deepseek-flash"
 # $0 toolless Gemma seat (#6805): the canonical catalog id doubles as the
 # opencode invocation id on the Google AI Studio direct provider. Gemma has no
 # paid SKU on the Gemini API (pricing verified 2026-07-07) and runs toolless —
@@ -1409,6 +1407,7 @@ def _confinement_prefix_argv(
     sealed_review_mcp_config: str | None = None,
     sealed_review_tool_names: tuple[str, ...] | None = None,
     max_turns: int = ACPX_DEFAULT_MAX_TURNS,
+    auth_policy: str = "fail",
 ) -> list[str]:
     """Shared confinement, optionally admitting only sealed review tools."""
     permission_args = ["--deny-all", "--allowed-tools", ""]
@@ -1449,7 +1448,7 @@ def _confinement_prefix_argv(
         "json",
         "--json-strict",
         "--auth-policy",
-        "fail",
+        auth_policy,
         "--non-interactive-permissions",
         "fail",
         "--no-fs",
@@ -1648,7 +1647,7 @@ _MISSING_BINARY_REMEDIATION: dict[str, str] = {
     # first-party via opencode: bridge asks use `ask-deepseek` (or the
     # `ask-hermes` alias) on the acpx-deepseek-shadow ACP seat; direct
     # one-shot review/research runs `opencode run --model
-    # deepseek-direct/deepseek-v4-flash --variant high`; tool-heavy work goes
+    # deepseek/deepseek-flash --variant high`; tool-heavy work goes
     # to `delegate.py dispatch --agent deepseek`.
     "hermes": (
         "Remediation: Hermes was permanently removed from this host "
@@ -1656,7 +1655,7 @@ _MISSING_BINARY_REMEDIATION: dict[str, str] = {
         "routes first-party via opencode as the standing path: bridge asks "
         "use `ask-deepseek` (or the `ask-hermes` alias), direct one-shot "
         "review/research runs `opencode run --model "
-        "deepseek-direct/deepseek-v4-flash --variant high`, and tool-heavy "
+        "deepseek/deepseek-flash --variant high`, and tool-heavy "
         "work goes to `delegate.py dispatch --agent deepseek`. See "
         "docs/runbooks/agent-seat-onboarding.md 'Reviewer-seat transport "
         "recovery'."
@@ -2087,6 +2086,16 @@ class AcpxAdapter:
             if event_id is not None:
                 if not _is_jsonrpc_id(event_id):
                     return self._closed("unrecognized JSON-RPC response id schema", stderr)
+                # Agent-internal replies can appear in ACPX's raw stream even
+                # when no matching client request was sent. They are not a
+                # terminal receipt for this one-shot prompt. Grok emits two
+                # such successful skills-reload replies on some starts.
+                if (
+                    event_id not in request_method_by_id
+                    and has_result
+                    and "stopReason" not in event["result"]
+                ):
+                    continue
                 if event_id in terminal_generations:
                     duplicate_id = event_id
                 terminal_generations.add(event_id)
@@ -2112,11 +2121,22 @@ class AcpxAdapter:
             return self._closed("multiple terminal stopReason responses detected in one-shot exec stream", stderr)
 
         if final_error is not None:
-            if "data" in final_error and not isinstance(final_error["data"], dict):
-                return self._closed("unrecognized ACPX error.data schema", stderr)
-            data = final_error.get("data") or {}
+            raw_data = final_error.get("data")
+            data = raw_data if isinstance(raw_data, dict) else {}
             label = data.get("detailCode") or data.get("acpxCode") or "RUNTIME"
-            message = final_error.get("message", "acpx error")
+            if not isinstance(label, str) or not re.fullmatch(r"[A-Z][A-Z0-9_]{0,63}", label):
+                label = "RUNTIME"
+            message = final_error.get("message")
+            if not isinstance(message, str) or not message.strip():
+                detail = data.get("message") or data.get("detail")
+                message = next(
+                    (
+                        value
+                        for value in (raw_data, detail)
+                        if isinstance(value, str) and value.strip()
+                    ),
+                    "acpx error",
+                )
             if (
                 label == "RUNTIME"
                 and isinstance(message, str)
@@ -2267,6 +2287,7 @@ class _AcpxDiscussionAdapter:
     fixed_effort: str | None = None
     forward_model_to_acpx: bool = True
     auth_env: str | None = None
+    auth_policy: str = "fail"
     default_model: str = "acpx-built-in-default"
     supported_modes: frozenset[str] = frozenset({"read-only"})
     sealed_review_tool_names: tuple[str, ...] = _SEALED_REVIEW_TOOL_NAMES
@@ -2362,6 +2383,7 @@ class _AcpxDiscussionAdapter:
             sealed_review_mcp_config=sealed_review_mcp_config,
             sealed_review_tool_names=self.sealed_review_tool_names,
             max_turns=self._max_turns(sealed_review_mcp_config),
+            auth_policy=self.auth_policy,
         )
         system_prompt = self._system_prompt(sealed_review_mcp_config)
         if system_prompt is not None:
@@ -2470,7 +2492,21 @@ class AcpxKimiCcShadowAdapter(_AcpxDiscussionAdapter):
 class AcpxCursorShadowAdapter(_AcpxDiscussionAdapter):
     name = "acpx-cursor-shadow"
     target_agent = "cursor"
-    auth_env = "ACPX_AUTH_CURSOR_LOGIN"
+    # Cursor's ACP authenticate(cursor_login) can wait indefinitely on an
+    # interactive login. The child receives the existing API key instead.
+    auth_policy = "skip"
+
+    def _env_overrides(
+        self,
+        *,
+        sealed_review_mcp_config: str | None = None,
+    ) -> dict[str, str]:
+        overrides = super()._env_overrides(sealed_review_mcp_config=sealed_review_mcp_config)
+        if not os.environ.get("CURSOR_API_KEY"):
+            file_key = _load_cursor_api_key_from_env_file()
+            if file_key:
+                overrides["CURSOR_API_KEY"] = file_key
+        return overrides
 
 
 class AcpxPoolShadowAdapter(_AcpxDiscussionAdapter):
@@ -2598,7 +2634,7 @@ class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
     deny-all OpenCode config). The previous Hermes text-agent route is
     retired: Hermes was permanently removed from this host (operator order
     2026-08-16) and the documented standing route is first-party
-    ``deepseek-direct/deepseek-v4-flash --variant high`` via opencode.
+    ``deepseek/deepseek-flash --variant high`` via opencode.
     First-party DeepSeek is China-hosted, so CI runs are refused — same
     guard as the dispatch adapter.
     """
@@ -2612,10 +2648,10 @@ class AcpxDeepSeekShadowAdapter(_AcpxDiscussionAdapter):
 
     def _custom_agent_command(self, cwd: Path) -> tuple[str, dict[str, Any]]:
         _ = cwd
-        if is_deepseek_first_party_forbidden_in_ci("deepseek-direct", DEEPSEEK_ACP_INVOCATION_MODEL):
+        if is_deepseek_first_party_forbidden_in_ci("deepseek", DEEPSEEK_ACP_INVOCATION_MODEL):
             raise AcpxShadowRefusalError(
                 deepseek_first_party_error(
-                    provider="deepseek-direct",
+                    provider="deepseek",
                     model=DEEPSEEK_ACP_INVOCATION_MODEL,
                     source=type(self).__name__,
                 )

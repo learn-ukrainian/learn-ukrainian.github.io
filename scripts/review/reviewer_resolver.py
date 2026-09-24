@@ -307,7 +307,7 @@ def normalize_routing_snapshot(snapshot: Mapping[str, object] | None) -> dict[st
 @dataclass(frozen=True)
 class ResolverInputs:
     # Concrete seat/model id, OR a "<ambiguous-harness>:<concrete-model>"
-    # composite (e.g. "cursor:gpt-5.6-sol") disambiguating a multi-model
+    # composite (e.g. "cursor:claude-opus-5-5") disambiguating a multi-model
     # harness session. See resolve_author_family for the exact contract.
     author_model: str
     review_profile: str = "code"
@@ -911,7 +911,7 @@ def resolve_reviewer(
             ),
             AMBIGUOUS_AUTHOR_FAMILY: (
                 f"author harness is multi-model and ambiguous (author_model={inputs.author_model!r}) — "
-                "supply a concrete author model (e.g. 'cursor:gpt-5.6-sol') or a validated author_family override"
+                "supply a concrete author model (e.g. 'cursor:claude-opus-5-5') or a validated author_family override"
             ),
             CONFLICTING_AUTHOR_FAMILY: (
                 f"author identity conflict — the model embedded in author_model={inputs.author_model!r} "

@@ -24,6 +24,11 @@ export const collections = {
 			draft: z.boolean().optional(),
 			pipeline: z.string().optional(),
 			build_status: z.string().optional(),
+			// Generated fresh-arc pages (scripts/build/build_arc_landing.py): the page renders from
+			// site/src/data/arc-<level>.json instead of the MDX body.
+			arc_kind: z.enum(['landing', 'module']).optional(),
+			arc_level: z.string().optional(),
+			arc_slug: z.string().optional(),
 		}).passthrough(),
 	}),
 	// Хрестоматія — a global, cross-track library of full primary-source texts

@@ -1,266 +1,231 @@
 #!/usr/bin/env python3
-"""Arm auto-merge for abandoned, reviewed PRs in the integration sweep.
-
-The scheduled GitHub Actions workflow is the sole non-interactive owner of
-this safety net (#5029). A candidate must be unassigned and unchanged for an
-hour, have a current-head approval, satisfy every required branch check, and
-resolve through a fresh, unambiguous issue-stream audit. Every unavailable or
-malformed input is a refusal, never evidence that a PR is ready.
-"""
+"""Read-only, exact-head PR landing report. The local keeper owns mutations (#8564)."""
 
 from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration import issue_stream_audit
+from scripts.gh_merge_queue_status import GRAPHQL_PR_MQ_QUERY
 
-IDLE_THRESHOLD = timedelta(hours=1)
-# Documented sole required status check (.github/workflows/README.md). Never read
-# GET /repos/.../branches/.../protection — that endpoint needs administration,
-# which GITHUB_TOKEN cannot grant (#6717).
-DOCUMENTED_REQUIRED_CHECK_CONTEXTS = ("CI Gate",)
-_REFS_LINE = re.compile(r"(?im)^\s*(?:[-*]\s*)?refs?\s*:?\s*#([1-9][0-9]*)\b")
-_FORMAL_REVIEW_HEADING = re.compile(r"(?im)^#{1,6}\s+cross-family review\b")
-_FORMAL_REVIEW_HEAD = re.compile(r"(?im)^\s*\*{0,2}head:\*{0,2}\s*`?([0-9a-f]{40})`?\s*$")
-_FORMAL_REVIEWER_FAMILY = re.compile(r"(?im)^\s*\*{0,2}reviewer family:\*{0,2}\s*\S+")
-_FORMAL_APPROVED = re.compile(r"(?im)\bverdict\s*:\s*approved\b")
-_SUCCESSFUL_CONCLUSIONS = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
 Runner = Callable[[list[str]], str]
-
-
-@dataclass(frozen=True)
-class Decision:
-    """One PR's deterministic integration-sweep disposition."""
-
-    number: int
-    eligible: bool
-    reason: str
+SHA = re.compile(r"[0-9a-f]{40}\Z")
+MARKER = re.compile(
+    r"<!-- cf-verdict v1 sha=(?P<sha>[0-9a-f]{40}) task=(?P<task>[^\s]+) "
+    r"started=(?P<started>[^\s]+) verdict=(?P<verdict>APPROVED|CHANGES_REQUESTED|BLOCKED) "
+    r"model=(?P<model>[^\s]+) family=(?P<family>[^\s]+) -->\Z"
+)
+MARKER_PREFIX = "<!-- cf-verdict"
+TRUSTED_ASSOCIATIONS = frozenset({"OWNER", "MEMBER", "COLLABORATOR"})
+REJECTED = frozenset({"CHANGES_REQUESTED", "BLOCKED"})
+SUCCESSFUL = frozenset({"SUCCESS", "NEUTRAL", "SKIPPED"})
+REQUIRED_CHECKS = ("CI Gate",)
+DEFAULT_GH_TIMEOUT_SECONDS = 60.0
 
 
 class SweepError(RuntimeError):
-    """An unavailable authoritative GitHub input that must stop the sweep."""
+    """An authoritative lookup failed; no landing decision can follow."""
 
 
-def _is_github_http_403(message: str) -> bool:
-    """True when gh/API refused with the classic integration permission hole."""
-
-    return "HTTP 403" in message or "Resource not accessible by integration" in message
-
-
-def _is_schedule_event() -> bool:
-    """True for Actions ``schedule`` runs (workflow sets EVENT_NAME / GITHUB_EVENT_NAME)."""
-
-    return any(os.environ.get(key) == "schedule" for key in ("EVENT_NAME", "GITHUB_EVENT_NAME"))
+@dataclass(frozen=True)
+class Verdict:
+    state: str
+    task: str | None = None
+    model: str | None = None
+    family: str | None = None
+    started: datetime | None = None
+    untrusted_markers: tuple[str, ...] = ()
 
 
-def _parse_timestamp(value: object) -> datetime | None:
+@dataclass(frozen=True)
+class PRReport:
+    number: int
+    head: str
+    observed_at: str
+    state: str
+    blockers: tuple[str, ...]
+    untrusted_markers: tuple[str, ...] = ()
+
+
+def _timestamp(value: object) -> datetime | None:
     if not isinstance(value, str) or not value:
         return None
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError:
         return None
-    if parsed.tzinfo is None:
+    return parsed.astimezone(UTC) if parsed.tzinfo else None
+
+
+def _field(comment: Mapping[str, Any], *keys: str) -> Any:
+    return next((comment[key] for key in keys if key in comment), None)
+
+
+def _author_login(comment: Mapping[str, Any]) -> str | None:
+    author = _field(comment, "user", "author")
+    if isinstance(author, Mapping):
+        login = author.get("login")
+        return login if isinstance(login, str) else None
+    return None
+
+
+def parse_marker(body: str) -> dict[str, str] | None:
+    """Accept only an intact recorder comment with one terminal marker."""
+    if body.count(MARKER_PREFIX) != 1 or not body.startswith("### Cross-family review\n"):
         return None
-    return parsed.astimezone(UTC)
+    last = body.rstrip("\n").split("\n")[-1]
+    match = MARKER.fullmatch(last)
+    if match is None:
+        return None
+    item = match.groupdict()
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}(?:Z|\+00:00)", item["started"]):
+        return None
+    if _timestamp(item["started"]) is None:
+        return None
+    if (
+        f"head: {item['sha']}" not in body
+        or f"Reviewer family: {item['family']}" not in body
+        or f"VERDICT: {item['verdict']}" not in body
+        or f"Reviewer model: {item['model']}" not in body
+        or f"Task id: {item['task']}" not in body
+    ):
+        return None
+    return item
 
 
-def _is_usable_pr_number(number: object) -> bool:
-    """True when ``number`` is a real, positive pull request number.
-
-    Every gh call that targets one PR (comments, arm) must receive a usable
-    number; a bare or zero number is never forwarded to gh (#6748).
-    """
-
-    return isinstance(number, int) and not isinstance(number, bool) and number > 0
-
-
-def _pr_number(pr: Mapping[str, Any]) -> int | None:
-    number = pr.get("number")
-    return number if _is_usable_pr_number(number) else None
-
-
-def referenced_issue_numbers(pr: Mapping[str, Any]) -> tuple[set[int] | None, str | None]:
-    """Return explicit issue references or a fail-closed reason.
-
-    GitHub exposes closing references separately. Non-closing membership is
-    deliberately limited to documented ``Refs #N`` lines, so incidental issue
-    numbers in prose, commands, or release notes cannot silently acquire a
-    stream owner.
-    """
-
-    closing = pr.get("closingIssuesReferences")
-    if not isinstance(closing, list):
-        return None, "closing_references_unavailable"
-    numbers: set[int] = set()
-    for reference in closing:
-        number = reference.get("number") if isinstance(reference, Mapping) else None
-        if not isinstance(number, int) or isinstance(number, bool) or number < 1:
-            return None, "invalid_closing_reference"
-        numbers.add(number)
-    body = pr.get("body")
-    if not isinstance(body, str):
-        return None, "body_unavailable"
-    numbers.update(int(match) for match in _REFS_LINE.findall(body))
-    if not numbers:
-        return None, "no_explicit_issue_reference"
-    return numbers, None
-
-
-def resolve_stream_epic(
-    pr: Mapping[str, Any], membership_report: Mapping[str, Any] | None
-) -> tuple[int | None, str | None]:
-    """Resolve every explicit PR issue to one exact stream epic, or refuse."""
-
-    report = issue_stream_audit.validate_membership_report(membership_report, max_age_s=3600)
-    if report is None:
-        return None, "membership_audit_unavailable"
-    numbers, reason = referenced_issue_numbers(pr)
-    if numbers is None:
-        return None, reason
-    index = report.get("effective_membership")
-    if not isinstance(index, Mapping):
-        return None, "membership_index_unavailable"
-    epics: set[int] = set()
-    for number in numbers:
-        entry = index.get(str(number))
-        if not isinstance(entry, Mapping) or entry.get("unique_stream") is not True:
-            return None, "ambiguous_membership"
-        entry_epics = entry.get("epics")
-        if not isinstance(entry_epics, list) or len(entry_epics) != 1:
-            return None, "ambiguous_membership"
-        epic = entry_epics[0]
-        if not isinstance(epic, int) or isinstance(epic, bool) or epic < 1:
-            return None, "ambiguous_membership"
-        epics.add(epic)
-    if len(epics) != 1:
-        return None, "conflicting_membership"
-    return epics.pop(), None
-
-
-def _has_current_head_approval(pr: Mapping[str, Any]) -> bool:
-    head_sha = pr.get("headRefOid")
-    reviews = pr.get("reviews")
-    if not isinstance(head_sha, str) or not head_sha or not isinstance(reviews, list):
-        return False
-    for review in reviews:
-        if not isinstance(review, Mapping) or str(review.get("state") or "").upper() != "APPROVED":
-            continue
-        commit = review.get("commit")
-        commit_sha = commit.get("oid") if isinstance(commit, Mapping) else commit
-        if commit_sha == head_sha:
-            return True
-    return False
-
-
-def _has_current_head_formal_review(comments: Sequence[Mapping[str, Any]] | None, head_sha: object) -> bool:
-    """Accept only the direct-review comment format with an exact head proof."""
-
-    if not isinstance(comments, Sequence) or isinstance(comments, (str, bytes)):
-        return False
-    if not isinstance(head_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", head_sha):
-        return False
-    for comment in comments:
-        body = comment.get("body") if isinstance(comment, Mapping) else None
-        if not isinstance(body, str):
-            continue
-        head = _FORMAL_REVIEW_HEAD.search(body)
-        if (
-            _FORMAL_REVIEW_HEADING.search(body)
-            and _FORMAL_REVIEWER_FAMILY.search(body)
-            and _FORMAL_APPROVED.search(body)
-            and head is not None
-            and head.group(1).lower() == head_sha.lower()
-        ):
-            return True
-    return False
-
-
-def _latest_check(checks: Sequence[Mapping[str, Any]]) -> Mapping[str, Any] | None:
-    dated: list[tuple[datetime, Mapping[str, Any]]] = []
-    for check in checks:
-        timestamp = _parse_timestamp(check.get("startedAt")) or _parse_timestamp(check.get("completedAt"))
-        if timestamp is None:
-            return None
-        dated.append((timestamp, check))
-    return max(dated, key=lambda pair: pair[0])[1] if dated else None
-
-
-def required_checks_green(pr: Mapping[str, Any], required_contexts: Sequence[str]) -> bool:
-    """Require the latest instance of every protected context to be green."""
-
-    rollup = pr.get("statusCheckRollup")
-    if not isinstance(rollup, list) or not required_contexts:
-        return False
-    grouped: dict[str, list[Mapping[str, Any]]] = {context: [] for context in required_contexts}
-    for raw in rollup:
-        if not isinstance(raw, Mapping):
-            continue
-        name = raw.get("name") or raw.get("context")
-        if isinstance(name, str) and name in grouped:
-            grouped[name].append(raw)
-    for context in required_contexts:
-        latest = _latest_check(grouped[context])
-        if latest is None or str(latest.get("status") or "").upper() != "COMPLETED":
-            return False
-        outcome = str(latest.get("conclusion") or latest.get("state") or "").upper()
-        if outcome not in _SUCCESSFUL_CONCLUSIONS:
-            return False
-    return True
-
-
-def decide(
-    pr: Mapping[str, Any],
-    membership_report: Mapping[str, Any] | None,
-    required_contexts: Sequence[str],
+def lookup_verdict(
+    comments: Sequence[Mapping[str, Any]] | None,
+    sha: str,
+    authenticated_login: str | None,
     *,
-    now: datetime,
-    comments: Sequence[Mapping[str, Any]] | None = None,
-) -> Decision:
-    """Return whether a PR can safely receive an auto-merge request."""
+    complete: bool = True,
+) -> Verdict:
+    """Resolve the latest review start for one SHA; malformed or edited evidence poisons it."""
+    if not complete or not isinstance(comments, Sequence) or isinstance(comments, (str, bytes)):
+        return Verdict("unknown")
+    if not SHA.fullmatch(sha) or not authenticated_login:
+        return Verdict("unknown")
+    candidates: list[tuple[datetime, int, dict[str, str]]] = []
+    untrusted: list[str] = []
+    legacy = False
+    other_head = False
+    for index, comment in enumerate(comments):
+        if not isinstance(comment, Mapping):
+            return Verdict("unknown")
+        body = comment.get("body")
+        if not isinstance(body, str):
+            return Verdict("unknown")
+        if MARKER_PREFIX not in body:
+            if re.search(r"(?im)^\s*VERDICT:", body):
+                legacy = True
+            continue
+        marker = parse_marker(body)
+        login = _author_login(comment)
+        association = _field(comment, "author_association", "authorAssociation")
+        if login != authenticated_login or association not in TRUSTED_ASSOCIATIONS:
+            untrusted.append(str(_field(comment, "id", "databaseId") or index))
+            continue
+        if marker is None:
+            return Verdict("unknown", untrusted_markers=tuple(untrusted))
+        if marker["sha"] != sha:
+            other_head = True
+            continue
+        created = _timestamp(_field(comment, "created_at", "createdAt"))
+        updated = _timestamp(_field(comment, "updated_at", "updatedAt"))
+        if created is None or updated is None or created != updated:
+            return Verdict("unknown", untrusted_markers=tuple(untrusted))
+        candidates.append((_timestamp(marker["started"]), index, marker))
+    if not candidates:
+        state = "CF-unrecorded" if legacy else "CF-stale" if other_head else "needs-CF"
+        return Verdict(state, untrusted_markers=tuple(untrusted))
+    latest_start = max(item[0] for item in candidates)
+    tied = [item for item in candidates if item[0] == latest_start]
+    # At a true timestamp tie any rejection wins, irrespective of comment arrival order.
+    winner = next((item for item in tied if item[2]["verdict"] in REJECTED), tied[0])
+    marker = winner[2]
+    return Verdict(marker["verdict"], marker["task"], marker["model"], marker["family"], latest_start, tuple(untrusted))
 
-    number = _pr_number(pr)
-    if number is None:
-        return Decision(0, False, "invalid_pr_number")
+
+def _check_blockers(pr: Mapping[str, Any], required: Sequence[str] = REQUIRED_CHECKS) -> list[str]:
+    checks = pr.get("statusCheckRollup")
+    if not isinstance(checks, list):
+        return ["CI unknown"]
+    grouped: dict[str, list[Mapping[str, Any]]] = {}
+    for check in checks:
+        if not isinstance(check, Mapping):
+            return ["CI unknown"]
+        name = check.get("name") or check.get("context")
+        if isinstance(name, str) and name != "fleet/cross-family-review":
+            grouped.setdefault(name, []).append(check)
+    blockers = []
+    for name in set(required) | set(grouped):
+        versions = grouped.get(name, [])
+        if not versions:
+            blockers.append(f"CI pending {name}")
+            continue
+        dated = [(_timestamp(item.get("startedAt") or item.get("createdAt")), item) for item in versions]
+        if any(timestamp is None for timestamp, _ in dated):
+            blockers.append(f"CI unknown {name}")
+            continue
+        latest = max(dated, key=lambda pair: pair[0])[1]
+        status = str(latest.get("status") or latest.get("state") or "").upper()
+        outcome = str(latest.get("conclusion") or latest.get("state") or "").upper()
+        if status not in {"COMPLETED", "SUCCESS", "FAILURE", "ERROR"}:
+            blockers.append(f"CI pending {name}")
+        elif outcome not in SUCCESSFUL:
+            blockers.append(f"CI red {name}" if outcome else f"CI pending {name}")
+    return sorted(blockers)
+
+
+def classify_pr(pr: Mapping[str, Any], verdict: Verdict, *, queued: bool | None, observed_at: str) -> PRReport:
+    """Expose a deterministic, importable state classifier for the queue keeper."""
+    number = pr.get("number")
+    head = pr.get("headRefOid")
+    if not isinstance(number, int) or number < 1 or not isinstance(head, str) or not SHA.fullmatch(head):
+        return PRReport(int(number or 0), str(head or "")[:12], observed_at, "unknown", ("invalid PR identity",))
+    blockers: list[str] = []
     if pr.get("isDraft") is True:
-        return Decision(number, False, "draft")
-    if pr.get("autoMergeRequest"):
-        return Decision(number, False, "auto_merge_already_enabled")
-    assignees = pr.get("assignees")
-    if not isinstance(assignees, list):
-        return Decision(number, False, "assignees_unavailable")
-    if assignees:
-        return Decision(number, False, "active_owner_assigned")
-    updated_at = _parse_timestamp(pr.get("updatedAt"))
-    if updated_at is None:
-        return Decision(number, False, "updated_at_unavailable")
-    if now - updated_at <= IDLE_THRESHOLD:
-        return Decision(number, False, "not_idle_for_one_hour")
-    if not required_checks_green(pr, required_contexts):
-        return Decision(number, False, "required_ci_not_green")
-    epic, reason = resolve_stream_epic(pr, membership_report)
-    if epic is None:
-        return Decision(number, False, reason or "membership_unavailable")
-    native_approval = str(pr.get("reviewDecision") or "").upper() == "APPROVED" and _has_current_head_approval(pr)
-    if not native_approval and not _has_current_head_formal_review(comments, pr.get("headRefOid")):
-        return Decision(number, False, "current_head_review_missing")
-    return Decision(number, True, f"stream_epic_{epic}")
-
-
-DEFAULT_GH_TIMEOUT_SECONDS = 60.0
+        blockers.append("draft")
+    if verdict.state != "APPROVED":
+        blockers.append(verdict.state)
+    blockers.extend(_check_blockers(pr))
+    mergeable = str(pr.get("mergeable") or "").upper()
+    if mergeable in {"CONFLICTING", "DIRTY"}:
+        blockers.append("merge conflict")
+    if queued is None:
+        blockers.append("queue lookup unknown")
+    if pr.get("isDraft") is True:
+        state = "blocked draft"
+    elif queued is True:
+        state = "queued"
+    elif pr.get("autoMergeRequest"):
+        state = "armed"
+    elif verdict.state == "unknown" or queued is None or "CI unknown" in " ".join(blockers):
+        state = "CF-unknown" if verdict.state == "unknown" else "unknown"
+    elif verdict.state in {"needs-CF", "CF-unrecorded", "CF-stale"}:
+        state = verdict.state
+    elif verdict.state in REJECTED:
+        state = "CF-rejected"
+    elif any(item.startswith("CI red") for item in blockers):
+        state = "CI-red " + ", ".join(item.removeprefix("CI red ") for item in blockers if item.startswith("CI red"))
+    elif any(item.startswith("CI pending") for item in blockers):
+        state = "CI-pending"
+    elif "merge conflict" in blockers:
+        state = "blocked merge conflict"
+    else:
+        state = "ready"
+    return PRReport(number, head[:12], observed_at, state, tuple(blockers), verdict.untrusted_markers)
 
 
 class GitHubAdapter:
-    """Thin GitHub CLI adapter; mutations remain explicit in ``arm_auto_merge``."""
+    """Read-only GitHub CLI boundary. Paged lookups use --slurp and reject malformed pages."""
 
     def __init__(self, repo_root: Path, *, runner: Runner | None = None) -> None:
         self.repo_root = repo_root.resolve()
@@ -268,29 +233,31 @@ class GitHubAdapter:
 
     def _default_runner(self, args: list[str]) -> str:
         try:
-            completed = subprocess.run(
+            result = subprocess.run(
                 args,
                 cwd=self.repo_root,
                 text=True,
                 capture_output=True,
-                check=False,
                 timeout=DEFAULT_GH_TIMEOUT_SECONDS,
+                check=False,
             )
         except subprocess.TimeoutExpired as exc:
-            raise SweepError(
-                f"{' '.join(args[:4])} timed out after {DEFAULT_GH_TIMEOUT_SECONDS}s"
-            ) from exc
-        if completed.returncode != 0:
-            message = (completed.stderr or completed.stdout or "GitHub command failed").strip()
-            raise SweepError(message[:1000])
-        return completed.stdout
-
+            raise SweepError(f"{' '.join(args[:4])} timed out after {DEFAULT_GH_TIMEOUT_SECONDS}s") from exc
+        if result.returncode:
+            raise SweepError((result.stderr or result.stdout or "GitHub lookup failed")[:1000])
+        return result.stdout
 
     def _json(self, args: list[str]) -> Any:
         try:
-            return json.loads(self._runner(args) or "null")
-        except json.JSONDecodeError as exc:
-            raise SweepError("GitHub command returned invalid JSON") from exc
+            return json.loads(self._runner(args))
+        except (ValueError, TypeError) as exc:
+            raise SweepError("GitHub returned invalid JSON") from exc
+
+    def identity(self) -> str:
+        login = self._runner(["gh", "api", "user", "--jq", ".login"]).strip()
+        if not login:
+            raise SweepError("authenticated gh identity unavailable")
+        return login
 
     def list_open_prs(self, repository: str) -> list[dict[str, Any]]:
         payload = self._json(
@@ -305,104 +272,107 @@ class GitHubAdapter:
                 "--limit",
                 "1000",
                 "--json",
-                "number,isDraft,updatedAt,reviewDecision,reviews,autoMergeRequest,assignees,headRefOid,"
-                "statusCheckRollup,body,closingIssuesReferences",
+                "number,isDraft,headRefOid,headRefName,baseRefName,autoMergeRequest,statusCheckRollup,mergeable",
             ]
         )
-        if not isinstance(payload, list) or not all(isinstance(item, dict) for item in payload):
-            raise SweepError("open PR response is not a list of objects")
+        if not isinstance(payload, list) or len(payload) >= 1000 or not all(isinstance(item, dict) for item in payload):
+            raise SweepError("open PR list partial or malformed")
         return payload
-
-    def required_check_contexts(self, repository: str, branch: str = "main") -> list[str]:
-        """Return the documented required check names without any GitHub probe.
-
-        Branch-protection REST needs administration that GITHUB_TOKEN cannot
-        grant (#6717). The GraphQL status-check ``isRequired`` field was removed
-        by GitHub: every rollup lookup now fails with "A pull request ID or pull
-        request number is required." (#6748). The workflow README documents
-        ``CI Gate`` as the only required status check, so that documented set is
-        authoritative and no network probe is made.
-        """
-
-        del repository, branch  # retained for call-site compatibility
-        return list(DOCUMENTED_REQUIRED_CHECK_CONTEXTS)
 
     def comments(self, repository: str, number: int) -> list[dict[str, Any]]:
-        payload = self._json(["gh", "api", f"repos/{repository}/issues/{number}/comments", "--paginate"])
-        if not isinstance(payload, list) or not all(isinstance(item, dict) for item in payload):
-            raise SweepError("PR comments response is not a list of objects")
-        return payload
+        pages = self._json(
+            ["gh", "api", f"repos/{repository}/issues/{number}/comments?per_page=100", "--paginate", "--slurp"]
+        )
+        if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
+            raise SweepError("PR comments pagination incomplete")
+        comments = [item for page in pages for item in page]
+        if not all(isinstance(item, dict) for item in comments):
+            raise SweepError("PR comments malformed")
+        return comments
 
-    def arm_auto_merge(self, repository: str, number: int) -> None:
-        self._runner(
+    def queue_membership(self, repository: str, pr: Mapping[str, Any]) -> bool:
+        owner, name = repository.split("/", 1)
+        number = pr["number"]
+        data = self._json(
             [
                 "gh",
-                "pr",
-                "merge",
-                str(number),
-                "--repo",
-                repository,
-                "--auto",
-                "--squash",
+                "api",
+                "graphql",
+                "-f",
+                f"query={GRAPHQL_PR_MQ_QUERY}",
+                "-f",
+                f"owner={owner}",
+                "-f",
+                f"name={name}",
+                "-F",
+                f"number={number}",
+                "-f",
+                f"branch={pr.get('baseRefName') or 'main'}",
             ]
         )
+        if not isinstance(data, dict) or data.get("errors"):
+            raise SweepError("merge queue GraphQL lookup incomplete")
+        repo = (data.get("data") or {}).get("repository")
+        node = repo.get("pullRequest") if isinstance(repo, dict) else None
+        if (
+            not isinstance(node, dict)
+            or node.get("headRefOid") != pr.get("headRefOid")
+            or not isinstance(node.get("isInMergeQueue"), bool)
+        ):
+            raise SweepError("merge queue head moved or membership unavailable")
+        return node["isInMergeQueue"]
 
 
-def run(
-    adapter: GitHubAdapter,
-    repository: str,
-    *,
-    apply: bool,
-    now: datetime | None = None,
-) -> list[Decision]:
-    """Observe every open PR once and optionally arm eligible candidates."""
-
-    observation_time = now or datetime.now(UTC)
+def run(adapter: GitHubAdapter, repository: str, *, now: datetime | None = None) -> list[PRReport]:
+    observed = (now or datetime.now(UTC)).isoformat(timespec="microseconds")
+    prs = adapter.list_open_prs(repository)
     try:
-        report = issue_stream_audit.run_audit(adapter.repo_root)
-    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
-        raise SweepError(f"issue-stream audit unavailable: {exc}") from exc
-    required_contexts = adapter.required_check_contexts(repository)
-    decisions: list[Decision] = []
-    for pr in adapter.list_open_prs(repository):
-        decision = decide(pr, report, required_contexts, now=observation_time)
-        if decision.reason == "current_head_review_missing" and _is_usable_pr_number(decision.number):
-            # Consult issue comments only with a resolvable PR number. decide()
-            # only reaches this reason with a valid number, but a bare or zero
-            # number is never forwarded to gh (#6748).
-            decision = decide(
-                pr,
-                report,
-                required_contexts,
-                now=observation_time,
-                comments=adapter.comments(repository, decision.number),
-            )
-        decisions.append(decision)
-    if apply:
-        for decision in decisions:
-            if decision.eligible and _is_usable_pr_number(decision.number):
-                adapter.arm_auto_merge(repository, decision.number)
-    return decisions
+        login = adapter.identity()
+    except SweepError:
+        login = None
+    rows = []
+    for pr in prs:
+        number, head = pr.get("number"), pr.get("headRefOid")
+        if not isinstance(number, int) or number < 1 or not isinstance(head, str) or not SHA.fullmatch(head):
+            rows.append(classify_pr(pr, Verdict("unknown"), queued=None, observed_at=observed))
+            continue
+        try:
+            verdict = lookup_verdict(adapter.comments(repository, number), head, login)
+        except SweepError:
+            verdict = Verdict("unknown")
+        try:
+            queued = adapter.queue_membership(repository, pr)
+        except (SweepError, ValueError, KeyError):
+            queued = None
+        rows.append(classify_pr(pr, verdict, queued=queued, observed_at=observed))
+    return rows
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", required=True, help="GitHub owner/repository")
-    parser.add_argument("--apply", action="store_true", help="Arm eligible PRs; default is read-only.")
+    parser.add_argument("--report", action="store_true", help="Print the read-only PR state report")
+    parser.add_argument("--json", action="store_true", help="Print JSON instead of text")
+    parser.add_argument("--apply", action="store_true", help="Retired: automatic landing is owned by the local keeper")
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     args = parser.parse_args(argv)
+    if args.apply:
+        print("integration sweep refused: --apply is retired; this sweep is report-only")
+        return 2
     try:
-        decisions = run(GitHubAdapter(args.repo_root), args.repo, apply=args.apply)
+        rows = run(GitHubAdapter(args.repo_root), args.repo)
     except SweepError as exc:
-        message = str(exc)
-        # Scheduled runs must not paint main red for GITHUB_TOKEN permission holes
-        # (e.g. residual required-context lookup 403). Logic bugs still exit 1.
-        if _is_github_http_403(message) and _is_schedule_event():
-            print(f"integration sweep skipped: {message}")
-            return 0
         print(f"integration sweep refused: {exc}")
         return 1
-    print(json.dumps([decision.__dict__ for decision in decisions], sort_keys=True))
+    if args.json:
+        print(json.dumps([asdict(row) for row in rows], sort_keys=True))
+    else:
+        for row in rows:
+            blockers = ", ".join(row.blockers) or "none"
+            untrusted = f" untrusted-marker={','.join(row.untrusted_markers)}" if row.untrusted_markers else ""
+            print(
+                f"#{row.number} head={row.head} observed_at={row.observed_at} state={row.state} blockers={blockers}{untrusted}"
+            )
     return 0
 
 

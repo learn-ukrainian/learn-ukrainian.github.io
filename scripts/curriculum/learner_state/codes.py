@@ -36,11 +36,13 @@ CORE_NOT_INTRODUCED = "core_not_introduced"
 RECYCLED_NOT_USED = "recycled_not_used"
 TAUGHT_FORM_ABSENT = "taught_form_absent"
 TOKEN_UNRESOLVED = "token_unresolved"
+GLOSS_RECORD_MISSING = "gloss_record_missing"
 PENDING_STRESS = "pending_stress"
 
 # --- Failures: expanded document ---------------------------------------------
 EXPANDED_DOCUMENT_MISSING = "expanded_document_missing"
 EXPANDED_DOCUMENT_MISMATCH = "expanded_document_mismatch"
+INPUT_HASH_MISSING = "input_hash_missing"
 
 # --- Failures: observed index and resolutions receipts -----------------------
 RESOLUTIONS_NOT_FOUND = "resolutions_not_found"
@@ -57,7 +59,7 @@ STRESS_CERTAIN_IDENTITY_OPEN = "stress_certain_identity_open"
 # --- Not Checked -------------------------------------------------------------
 LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED = "lesson_structural_minimums_not_calibrated"
 INTRODUCING_STEP_NOT_LOCATABLE = "introducing_step_not_locatable"
-WAIVER_PRIOR_PLANS_MISSING = PRIOR_PLANS_MISSING
+WAIVER_PRIOR_PLANS_MISSING = "prior_plans_missing_waived"
 
 # --- Descriptions for --help and reporting -----------------------------------
 DESCRIPTIONS: dict[str, str] = {
@@ -77,9 +79,11 @@ DESCRIPTIONS: dict[str, str] = {
     RECYCLED_NOT_USED: "failure: recycled vocabulary item declared in plan is not used in lesson",
     TAUGHT_FORM_ABSENT: "failure: taught form declared in plan does not appear in a teaching position",
     TOKEN_UNRESOLVED: "failure: token is outside allowlist or unclassifiable in resolution stream",
+    GLOSS_RECORD_MISSING: "failure: gloss token refers to a record absent from word store",
     PENDING_STRESS: "failure: resolved form has pending stress in word store",
     EXPANDED_DOCUMENT_MISSING: "failure: expanded document file does not exist or failed to load",
     EXPANDED_DOCUMENT_MISMATCH: "failure: expanded document sha256 disagrees with receipts inputs or lock",
+    INPUT_HASH_MISSING: "failure: in-memory stream has no inputs for hash verification",
     RESOLUTIONS_NOT_FOUND: "failure: lesson resolutions receipts file does not exist",
     RESOLUTIONS_INVALID: "failure: lesson resolutions receipts file is invalid or tampered",
     OBSERVED_SCHEMA_INVALID: "failure: observed index document breaks learner-observed-v1 schema",
@@ -93,6 +97,9 @@ DESCRIPTIONS: dict[str, str] = {
     ),
     INTRODUCING_STEP_NOT_LOCATABLE: (
         "not_checked: introducing step cannot be located until expanded-document units carry step id"
+    ),
+    WAIVER_PRIOR_PLANS_MISSING: (
+        "not_checked: missing plan(s) for earlier arc position(s) waived"
     ),
 }
 
@@ -114,9 +121,11 @@ FAILURE_CODES = frozenset(
         RECYCLED_NOT_USED,
         TAUGHT_FORM_ABSENT,
         TOKEN_UNRESOLVED,
+        GLOSS_RECORD_MISSING,
         PENDING_STRESS,
         EXPANDED_DOCUMENT_MISSING,
         EXPANDED_DOCUMENT_MISMATCH,
+        INPUT_HASH_MISSING,
         RESOLUTIONS_NOT_FOUND,
         RESOLUTIONS_INVALID,
         OBSERVED_SCHEMA_INVALID,

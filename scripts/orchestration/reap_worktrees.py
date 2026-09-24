@@ -13,6 +13,7 @@ Suggested backstop:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import fcntl
 import json
 import os
@@ -41,7 +42,7 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
-from scripts.orchestration import reaper_lifecycle
+from scripts.orchestration import reaper_lifecycle, worktree_claims
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -110,7 +111,11 @@ def _run(
     *,
     cwd: Path,
     timeout: int | None = None,
+    env_overrides: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    env = sanitized_git_env()
+    if env_overrides:
+        env.update(env_overrides)
     return subprocess.run(
         args,
         cwd=cwd,
@@ -118,7 +123,7 @@ def _run(
         text=True,
         check=False,
         timeout=timeout,
-        env=sanitized_git_env(),
+        env=env,
     )
 
 
@@ -158,6 +163,22 @@ def primary_checkout_root(repo_root: Path) -> Path:
     if common_git_dir.name != ".git":
         return repo_root
     return common_git_dir.parent
+
+
+def control_plane_root(repo_root: Path) -> Path:
+    """Return the checkout holding ``repo_root``'s task records, leases, and locks.
+
+    ``repo_root``'s own primary checkout, except a ``--repo`` sibling
+    repository, whose dispatch state lives on the public primary (#8624). The
+    read-only probes fall back to the repository's own primary when the fleet
+    catalog is unreadable; the removal guard (:func:`_enter_dispatch_worktree_guard`)
+    refuses instead.
+    """
+    primary = primary_checkout_root(repo_root)
+    try:
+        return worktree_claims.control_plane_root(primary)
+    except worktree_claims.ControlPlaneError:
+        return primary
 
 
 def _format_failure(proc: subprocess.CompletedProcess[str]) -> str:
@@ -859,6 +880,81 @@ def _tip_is_ancestor_of_origin_main(info: WorktreeInfo) -> bool:
     return _sha_is_ancestor(info.path, info.head, "origin/main")
 
 
+def _merged_origin_gone_proof(info: WorktreeInfo, pr_state: PullRequestState) -> tuple[bool, str]:
+    """Prove a local tip is contained in a merged PR or patch-equivalent upstream.
+
+    Fetch both sources of proof live. A missing ref, ambiguous Git result, or
+    failed probe retains the worktree and identifies commits for inspection.
+    """
+    if info.head is None:
+        return False, "needs_attention; unproven commits: unknown; worktree HEAD unavailable"
+
+    def unproven(shas: list[str], failure: str) -> tuple[bool, str]:
+        return False, f"needs_attention; unproven commits: {', '.join(shas or [info.head])}; {failure}"
+
+    def local_commits() -> list[str]:
+        try:
+            listed = _run(["git", "rev-list", f"origin/main..{info.head}"], cwd=info.path)
+        except (OSError, subprocess.SubprocessError):
+            return [info.head]
+        return listed.stdout.splitlines() if listed.returncode == 0 else [info.head]
+
+    try:
+        if pr_state.number is None or not pr_state.head_sha:
+            return unproven(local_commits(), "PR head unavailable")
+        live_branch = _run(
+            ["git", "ls-remote", "--heads", "origin", info.branch or ""],
+            cwd=info.path,
+            timeout=30,
+        )
+        if live_branch.returncode != 0:
+            return unproven(local_commits(), "origin branch probe failed")
+        if live_branch.stdout.strip():
+            return unproven(local_commits(), "origin branch returned")
+
+        fetched_pr = _run(
+            ["git", "fetch", "--no-tags", "origin", f"refs/pull/{pr_state.number}/head"],
+            cwd=info.path,
+            timeout=30,
+        )
+        if fetched_pr.returncode != 0:
+            return unproven(local_commits(), "PR head fetch failed")
+        fetched_sha = _run(["git", "rev-parse", "--verify", "FETCH_HEAD"], cwd=info.path)
+        if fetched_sha.returncode != 0 or fetched_sha.stdout.strip() != pr_state.head_sha:
+            return unproven(local_commits(), "fetched PR head does not match PR state")
+
+        fetched_main = _run(
+            ["git", "fetch", "--no-tags", "origin", "+refs/heads/main:refs/remotes/origin/main"],
+            cwd=info.path,
+            timeout=30,
+        )
+        if fetched_main.returncode != 0:
+            return unproven(local_commits(), "origin/main fetch failed")
+
+        for descendant in (pr_state.head_sha, "origin/main"):
+            ancestor = _run(
+                ["git", "merge-base", "--is-ancestor", info.head, descendant],
+                cwd=info.path,
+            )
+            if ancestor.returncode == 0:
+                return True, ""
+            if ancestor.returncode != 1:
+                return unproven(local_commits(), "ancestry probe failed")
+
+        cherry = _run(["git", "cherry", "origin/main", info.head], cwd=info.path)
+        if cherry.returncode != 0:
+            return unproven(local_commits(), "patch-equivalence probe failed")
+        lines = cherry.stdout.splitlines()
+        if any(len(line.split()) != 2 or line[0] not in "+-" for line in lines):
+            return unproven(local_commits(), "patch-equivalence output invalid")
+        unmatched = [line.split()[1] for line in lines if line.startswith("+")]
+        if unmatched:
+            return unproven(unmatched, "commits are not patch-equivalent upstream")
+        return True, ""
+    except (OSError, subprocess.SubprocessError):
+        return unproven(local_commits(), "git containment probe failed")
+
+
 def _same_tree_hint(
     info: WorktreeInfo,
     pr_state: PullRequestState | None,
@@ -1244,6 +1340,8 @@ def classify_preservation(result: ReapResult) -> str:
             return "permission_error"
         return "error"
     reason = result.reason.lower()
+    if reason.startswith("needs_attention;"):
+        return "needs_attention"
     if "permission" in reason or "denied" in reason:
         return "permission_error"
     if "primary checkout" in reason:
@@ -1325,7 +1423,7 @@ def _rollover_protected_paths(data: dict[str, Any], base: Path) -> set[str]:
 
 
 def _has_active_rollover_lease(repo_root: Path, info: WorktreeInfo) -> str | None:
-    primary = primary_checkout_root(repo_root)
+    primary = control_plane_root(repo_root)
     worktree_path = os.path.realpath(info.path)
     for candidate_dir in (
         primary / ".agent" / "thread-rollovers",
@@ -1360,7 +1458,7 @@ def _has_active_ownership_claim(repo_root: Path, task_id: str | None) -> str | N
     if env_override:
         db_path = Path(env_override).expanduser().resolve()
     else:
-        db_path = primary_checkout_root(repo_root) / "batch_state" / "tasks" / "write-ownership.sqlite3"
+        db_path = control_plane_root(repo_root) / "batch_state" / "tasks" / "write-ownership.sqlite3"
         if not db_path.is_file():
             return None
     try:
@@ -1388,7 +1486,7 @@ def _has_active_ownership_claim(repo_root: Path, task_id: str | None) -> str | N
 def _task_record(repo_root: Path, task_id: str | None) -> dict[str, Any] | None:
     if not task_id:
         return None
-    task_file = primary_checkout_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json"
+    task_file = control_plane_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json"
     try:
         payload = json.loads(task_file.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -1657,6 +1755,7 @@ def _qualifying_reason(
     merged_pr_only: bool = False,
     include_terminal_dispatches: bool = False,
     pr_unknown: bool = False,
+    attention: list[str] | None = None,
 ) -> str | None:
     """``pr_unknown`` marks the PR state as UNREADABLE rather than absent.
 
@@ -1681,10 +1780,15 @@ def _qualifying_reason(
                 return None
             if _tip_is_ancestor_of_origin_main(info):
                 return f"{pr_label} MERGED; HEAD is an ancestor of origin/main"
-            # Squash merges may leave extra local reconcile commits. A gone
-            # origin branch permits cleanup without an exact PR-head match.
+            # A squash merge may leave a divergent local tip. Prove every
+            # patch is upstream before allowing cleanup of a deleted branch.
             if info.branch is not None and not _origin_branch_present(info.path, info.branch):
-                return f"{pr_label} MERGED; origin branch gone"
+                proved, detail = _merged_origin_gone_proof(info, pr_state)
+                if proved:
+                    return f"{pr_label} MERGED; origin branch gone"
+                if attention is not None:
+                    attention.append(detail)
+                return None
         if (
             not merged_pr_only
             and pr_state.state == "CLOSED"
@@ -1736,7 +1840,7 @@ def _qualifying_reason(
         has_matching_task = False
         task_settled = False
         if is_dispatch_candidate:
-            task_file = repo_root / "batch_state" / "tasks" / f"{task_id}.json"
+            task_file = control_plane_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json"
             if task_file.exists():
                 has_matching_task = True
                 try:
@@ -1894,34 +1998,6 @@ def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
     return None
 
 
-def _remove_worktree(repo_root: Path, info: WorktreeInfo) -> str | None:
-    """Remove a worktree only after the caller has completed every P0 guard.
-
-    ``_worktree_clean`` deliberately accepts disposable ignored residue such as
-    a worker's ``.venv``. Git still considers that residue when removing a
-    worktree, so force is required at this final, guarded deletion boundary.
-    """
-    try:
-        target = assert_delete_target(info.path, repo_root=repo_root)
-    except ValueError as exc:
-        return f"delete guard refused worktree target: {exc}"
-    try:
-        proc = _run(
-            ["git", "worktree", "remove", "--force", str(target)],
-            cwd=repo_root,
-        )
-    except PermissionError as exc:
-        return f"permission denied removing worktree: {exc}"
-    except OSError as exc:
-        return f"OS error removing worktree: {exc}"
-    if proc.returncode != 0:
-        failure_msg = _format_failure(proc)
-        if "permission" in failure_msg.lower() or "denied" in failure_msg.lower():
-            return f"permission denied removing worktree: {failure_msg}"
-        return failure_msg
-    return None
-
-
 def _prune_branch(
     repo_root: Path,
     branch: str | None,
@@ -1948,6 +2024,48 @@ def _prune_branch(
     flag = "-D" if force else "-d"
     deleted = _run(["git", "branch", flag, "--", branch], cwd=repo_root)
     return None if deleted.returncode == 0 else _format_failure(deleted)
+
+
+def _enter_dispatch_worktree_guard(
+    stack: contextlib.ExitStack,
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+) -> str | None:
+    """Take delegate's per-worktree lock and refuse another task's live claim (#8610).
+
+    Dispatch holds the same lock from before it touches a checkout until it
+    publishes the task record that names it, so while ``stack`` holds the lock
+    no attachment can land and every earlier one is visible to the claim
+    scan. The owner task derived from a dispatch path is exempt: the
+    qualifying class already decided its record. Any other task record with
+    an unfinished status that names the checkout refuses removal. Returns a
+    skip reason, or ``None`` with the lock held until ``stack`` closes.
+
+    Records and locks are read from :func:`control_plane_root`: for a
+    ``--repo`` sibling repository that is the public primary, where dispatch
+    writes them (#8624).
+    """
+    primary = primary_checkout_root(repo_root)
+    try:
+        control_root = worktree_claims.control_plane_root(primary)
+        lock_dir = _common_git_dir(control_root) / worktree_claims.LOCK_DIR_NAME
+        stack.enter_context(worktree_claims.worktree_lock(info.path, lock_dir=lock_dir))
+    except worktree_claims.ControlPlaneError as exc:
+        return f"{worktree_claims.LOCK_UNAVAILABLE} ({exc})"
+    except worktree_claims.WorktreeLockError as exc:
+        return f"{worktree_claims.lock_refusal(exc)} ({exc})"
+    except RuntimeError as exc:
+        return f"worktree lock unavailable ({exc})"
+    tasks_dir = control_root / "batch_state" / "tasks"
+    owner_task_id = _dispatch_task_id(repo_root, info)
+    return worktree_claims.active_worktree_claim_refusal(
+        info.path,
+        tasks_dir=tasks_dir,
+        repo_root=primary,
+        owner_task_id=owner_task_id,
+        owner_state_file=tasks_dir / f"{owner_task_id}.json" if owner_task_id else None,
+    )
 
 
 def _reap_qualified_worktree(
@@ -2019,6 +2137,7 @@ def _reap_qualified_worktree(
 
     pending_marked = False
     recovery_ref: str | None = None
+    dispatch_guard = contextlib.ExitStack()
     try:
         # This reservation is intentionally before the final TOCTOU checks.
         # Scheduler/delegate consumers can reject a new bind while it exists.
@@ -2030,6 +2149,17 @@ def _reap_qualified_worktree(
             task_id=_dispatch_task_id(repo_root, info),
         )
         pending_marked = True
+
+        guard_refusal = _enter_dispatch_worktree_guard(dispatch_guard, repo_root=repo_root, info=info)
+        if guard_refusal is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"{guard_refusal}; originally qualified because {reason}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
 
         if dirty:
             preserve_error = _preserve_dirty_worktree(info)
@@ -2103,6 +2233,19 @@ def _reap_qualified_worktree(
                     action="skipped",
                     reason=f"worktree changed during cleanup; originally qualified because {reason}",
                     dirty=None if current_clean is None else True,
+                    pr=_pr_dict(pr_state),
+                )
+
+        if reason.endswith("MERGED; origin branch gone"):
+            assert pr_state is not None
+            proved, detail = _merged_origin_gone_proof(replace(info, head=current_head), pr_state)
+            if not proved:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason=detail,
+                    dirty=dirty,
                     pr=_pr_dict(pr_state),
                 )
 
@@ -2285,7 +2428,10 @@ def _reap_qualified_worktree(
                 info, pr_state
             ) or _tip_is_ancestor_of_origin_main(info)
 
-        remove_error = _remove_worktree(repo_root, info)
+        # ``_worktree_clean`` deliberately accepts disposable ignored residue
+        # such as a worker's ``.venv``; git still counts it, so force is
+        # required at this final, guarded deletion boundary.
+        remove_error = worktree_claims.git_worktree_remove(repo_root, info.path, force=True)
         if remove_error is not None:
             return ReapResult(
                 path=str(info.path),
@@ -2333,6 +2479,7 @@ def _reap_qualified_worktree(
             recovery_ref=recovery_ref,
         )
     finally:
+        dispatch_guard.close()
         if pending_marked:
             reaper_lifecycle.clear_reap_pending(repo_root, info.path)
 
@@ -2544,6 +2691,7 @@ def reap_worktrees(
             # the queried worktree SHA, always matches the head, and its
             # "PR #N MERGED" reason does not enable the cleanup-time re-query.
             pr_unknown = pr_error is not None
+            attention: list[str] = []
             reason = _qualifying_reason(
                 repo_root=repo_root,
                 info=info,
@@ -2555,7 +2703,21 @@ def reap_worktrees(
                 merged_pr_only=merged_pr_only,
                 include_terminal_dispatches=include_terminal_dispatches,
                 pr_unknown=pr_unknown,
+                attention=attention,
             )
+            if attention:
+                results.append(
+                    ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=attention[0],
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                        owner=_dispatch_owner(repo_root, info),
+                    )
+                )
+                continue
             if reason is None:
                 if pr_state is not None and pr_state.state == "OPEN":
                     pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
@@ -2783,6 +2945,7 @@ def aggregate_counts(results: list[ReapResult]) -> dict[str, Any]:
         "permission_error": 0,
         "foreign": 0,
         "unmerged": 0,
+        "needs_attention": 0,
     }
     by_owner: dict[str, int] = {}
     reaped = 0

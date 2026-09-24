@@ -639,9 +639,10 @@ function renderGlanceProjects(data) {
     const services = Array.isArray(host.services) ? host.services : [];
     if (!services.length) rows.push([id, 'unknown', 'unknown', 'unknown', 'unknown']);
     for (const service of services) {
-      const serving = shortSha(service.serving_mode === 'checkout' ? service.checkout_sha : service.serving_sha);
+      const unresolved = service.serving_mode === 'unknown';
+      const serving = unresolved ? 'unresolved' : shortSha(service.serving_mode === 'checkout' ? service.checkout_sha : service.serving_sha);
       const origin = service.repo === 'sibling' ? 'unknown' : shortSha(host.primary?.origin_main_sha);
-      const comparable = host.freshness === 'fresh' && service.state === 'running' && serving !== 'unknown' && origin !== 'unknown';
+      const comparable = host.freshness === 'fresh' && service.state === 'running' && !unresolved && serving !== 'unknown' && origin !== 'unknown';
       const drift = service.drift === 'not_applicable' ? 'not applicable' : !comparable ? 'unknown' : service.drift === true ? 'drift' : service.drift === false ? 'in sync' : 'unknown';
       const state = host.freshness === 'fresh' ? service.state || 'unknown' : 'unknown (stale / unavailable)';
       rows.push([`${id} · ${service.name || 'unknown'}`, state, host.freshness === 'fresh' ? serving : 'unknown', host.freshness === 'fresh' ? origin : 'unknown', drift]);

@@ -292,7 +292,7 @@ def test_low_risk_pool_author_gets_astra_before_economical_routes():
 def test_policy_receipt_exposes_catalog_version_date_and_risk():
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="high"))
     assert resolution.policy_version == "deterministic-formal-routing.v2"
-    assert resolution.catalog_reviewed_on == "2026-09-22"
+    assert resolution.catalog_reviewed_on == "2026-09-23"
     assert resolution.resolved_risk == "high"
 
 
@@ -978,17 +978,19 @@ def test_critical_ladder_keeps_authority_before_practical():
     ]
 
 
-def test_practical_ladder_starts_with_astra_then_fallbacks():
+def test_practical_ladder_starts_with_sol_then_opus_fallbacks():
     for risk in ("high", "medium", "low"):
         ladder = REVIEW_LADDERS[risk]
-        assert [rung[0].name for rung in ladder[:4]] == [
+        assert [rung[0].name for rung in ladder[:6]] == [
             "openai_frontier",
+            "claude-opus-5-5",
+            "claude-opus-5-5-cursor-fallback",
             "claude-sonnet-5",
             "gemini-3.8-flash",
             "grok-4.7",
         ]
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
-        assert ladder[4][0].name == "grok-4.7-cursor-fallback"
+        assert ladder[6][0].name == "grok-4.7-cursor-fallback"
 
 
 def test_candidate_constants_preserve_expected_identity():

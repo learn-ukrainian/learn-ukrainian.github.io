@@ -20,6 +20,15 @@ def adapter():
     return CursorAdapter()
 
 
+@pytest.mark.parametrize("model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra"])
+def test_cursor_adapter_rejects_retired_gpt56_model_before_invocation(adapter, tmp_path, model):
+    with pytest.raises(ValueError, match="is retired"):
+        adapter.build_invocation(
+            prompt="review", mode="read-only", cwd=tmp_path, model=model,
+            task_id="retired-model", session_id=None, tool_config=None,
+        )
+
+
 def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatch):
     monkeypatch.setattr("shutil.which", lambda x: "/usr/local/bin/agent" if x == "agent" else None)
 

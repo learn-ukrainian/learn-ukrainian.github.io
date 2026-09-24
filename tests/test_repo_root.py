@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -98,9 +99,12 @@ def test_bridge_config_state_paths_resolve_to_primary_in_worktree(wt_layout):
         "from scripts.ai_agent_bridge._config import DB_PATH, PID_DIR; "
         "print(f'{DB_PATH};{PID_DIR}')"
     )
+    env = os.environ.copy()
+    env.pop("AB_DB_PATH", None)  # Exercise the default path, not the suite's isolated override.
     proc = subprocess.run(
         [sys.executable, "-c", script],
         cwd=str(worktree),
+        env=env,
         capture_output=True,
         text=True,
         check=True,
