@@ -51,6 +51,25 @@ The CLI then loads the scoped ``config/mcp_config.json`` (one stdio ``sources``
 server) and the transcript reader follows ``AGY_APP_DATA_DIR`` to the scoped app
 data. Without the key nothing changes.
 
+Threat model for background-task completion (#8502 r12): the completion gate
+defends against agy and its agents behaving honestly, and against accidental
+text — a command's output, a viewed log or a grepped transcript that quotes a
+lifecycle header anywhere after agy's own header of its event. agy's transcript
+has no structural field that separates a task's lifecycle messages from its
+other messages: all 3,496 system messages on the operator host (560
+conversations) carry the same ``type`` (``SYSTEM_MESSAGE``), ``source``
+(``SYSTEM``) and ``status`` (``DONE``),
+and ``priority`` does not track the kind (finishes and progress messages are both
+``MESSAGE_PRIORITY_HIGH``). A lifecycle event is therefore read from the one-line
+header agy writes at the start of its own event (see ``_TASK_MESSAGE_HEADER_RE``).
+Out of scope: a message whose first content line — the line agy writes itself
+on every real message — byte-for-byte reproduces agy's ``Task id "<id>"
+finished with result:`` header for its own sender. That needs agy to hand a
+task's own text the first line of its message, or a deliberate forgery; the
+gate does not claim to stop it (pinned as an ``xfail`` test). Every real
+terminal event still counts: a task's LAST terminal event in the slice decides
+it, so a genuine cancellation after such a header is not lost.
+
 Differences from the kubedojo source:
 
 - ``effort: str | None = None`` parameter added on ``build_invocation``
@@ -180,6 +199,14 @@ _IDLE_BACKGROUND_WAIT_RE = re.compile(r"root agent idle; waiting up to \S+ for (
 # timers); the rest is the command text. A RUNNING result without that header
 # stays open work (a "Step is still running" step), so a header this pattern
 # misses fails the run closed instead of hiding a task.
+#
+# A task's LAST terminal event in the slice decides it (#8502 r12): a
+# cancellation, timeout or error after a finish ends the task unfinished, and
+# any later message from a command task whose end was already recorded — a
+# progress message, or an end written after the final reply — reopens it. On
+# the host no task sends anything after its end (0 of 2,716 ends), so this
+# costs no real run; it keeps a genuine later end from being overridden by an
+# earlier header (see the threat model in the module docstring).
 _BACKGROUND_START_HEADER_RE = re.compile(
     r"\ACreated At: [^\n]*\nTool is running as a background task with task id: (?P<id>\S+)"
     r"(?:\nTask Description: (?P<timer>Timer:))?"
@@ -736,7 +763,7 @@ def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str
     final_reply = work[model_events[-1]]
     if final_reply.get("tool_calls") or not str(final_reply.get("content") or "").strip():
         return AGY_BACKGROUND_TASK_UNCONFIRMED
-    started, _finished, unfinished, still_open = _open_work(work[: model_events[-1]])
+    started, _finished, unfinished, still_open = _open_work(work, reply=model_events[-1])
     if unfinished:
         return AGY_BACKGROUND_TASK_CANCELED
     if still_open:
@@ -751,8 +778,14 @@ def _is_model_event(event: Mapping[str, Any]) -> bool:
     return event.get("type") in _MODEL_EVENT_TYPES or event.get("source") == "MODEL"
 
 
-def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[str], set[str]]:
+def _open_work(
+    events: list[dict[str, Any]], *, reply: int | None = None
+) -> tuple[set[str], set[str], set[str], set[str]]:
     """Walk ``events`` in file order; return (tasks started, finished, ended unfinished, work still open).
+
+    ``reply`` is the position of the final reply in ``events``; work must be
+    closed before it. Events after it can only reopen or end a task, never
+    finish one. Without ``reply`` every event counts as before the reply.
 
     Events are read only by the header agy wrote for them (#8502 r11): a start
     only from a RUNNING result's header, a task message only from its own
@@ -768,23 +801,38 @@ def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[st
     sender (it fires once); an interim step with a later event of the same
     tool step. A subagent never closes — agy writes no structured subagent
     finish — and neither does an interim step that names no step.
+
+    A task's LAST terminal event decides it (#8502 r12): a later end replaces
+    an earlier one, so a cancellation after a finish leaves the task
+    unfinished. A command's non-terminal message after its end, or a finish
+    after the reply, reopens it: the task was still running.
     """
     started: set[str] = set()
-    finished: set[str] = set()
-    unfinished: set[str] = set()
+    task_kinds: dict[str, str] = {}
+    ended: dict[str, bool] = {}
     open_work: dict[str, str] = {}
     for position, event in enumerate(events):
+        after_reply = reply is not None and position > reply
         content = str(event.get("content") or "")
         if event.get("type") == "SYSTEM_MESSAGE":
             if message := _TASK_MESSAGE_HEADER_RE.match(content):
                 sender = message.group("sender")
-                kind = open_work.get(sender)
+                kind = task_kinds.get(sender)
                 ended_match = _TASK_ENDED_RE.match(message.group("first_line"))
                 own_end = ended_match is not None and ended_match.group("id") == sender
                 if kind == "timer" or (kind == "command" and own_end):
-                    del open_work[sender]
                     finishes = not own_end or ended_match.group("outcome") == _TASK_FINISHED_OUTCOME
-                    (finished if finishes else unfinished).add(sender)
+                    if finishes and after_reply:
+                        ended.pop(sender, None)
+                        open_work[sender] = kind
+                    else:
+                        open_work.pop(sender, None)
+                        ended[sender] = finishes
+                elif kind == "command" and sender in ended:
+                    del ended[sender]
+                    open_work[sender] = kind
+            continue
+        if after_reply:
             continue
         raw_calls = event.get("tool_calls")
         if isinstance(raw_calls, list) and any(
@@ -797,10 +845,13 @@ def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[st
         if event.get("status") != "RUNNING":
             continue
         if start := _BACKGROUND_START_HEADER_RE.match(content):
-            started.add(start.group("id"))
-            open_work[start.group("id")] = "timer" if start.group("timer") else "command"
+            task_id = start.group("id")
+            started.add(task_id)
+            task_kinds[task_id] = open_work[task_id] = "timer" if start.group("timer") else "command"
         else:
             open_work[f"step:{step}" if step is not None else f"step@{position}"] = "step"
+    finished = {task for task, finishes in ended.items() if finishes}
+    unfinished = {task for task, finishes in ended.items() if not finishes}
     return started, finished, unfinished, set(open_work)
 
 
@@ -819,7 +870,7 @@ def _interim_language(events: list[dict[str, Any]]) -> str | None:
     work = events[prompt + 1 :]
     reply_position = max(position for position, event in enumerate(work) if _is_model_event(event))
     content = str(work[reply_position].get("content") or "")
-    started, finished, _unfinished, _still_open = _open_work(work[:reply_position])
+    started, finished, _unfinished, _still_open = _open_work(work, reply=reply_position)
     if pending := _PENDING_WORK_RE.search(content):
         return f"pending-work wording: {pending.group(0).strip()!r}"
     if not started and (background := _BACKGROUND_LANGUAGE_RE.search(content)):
