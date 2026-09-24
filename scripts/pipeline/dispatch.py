@@ -45,11 +45,6 @@ def _venv_python() -> str:
     return VENV_PYTHON
 
 
-def _pro_model() -> str:
-    from batch_gemini_config import PRO_MODEL
-    return PRO_MODEL
-
-
 def _flash_model() -> str:
     from batch_gemini_config import FLASH_MODEL
     return FLASH_MODEL
@@ -227,8 +222,6 @@ def dispatch_gemini(
     Default calls use Flash and fall back only across Flash rungs (Flash High → Flash Lite).
     Pro is used only when explicitly requested by the caller.
     """
-    requested_model = model
-    is_explicit_pro = bool(requested_model and "pro" in requested_model.lower())
     if model is None:
         model = "gemini-3.8-flash-high"
     ok, output = dispatch_gemini_raw(
@@ -239,13 +232,9 @@ def dispatch_gemini(
     # Fallback cascade: try other models if rate-limited or timed out
     should_fallback = not ok and (_is_rate_limited(output) or output.strip() == "")
     if should_fallback:
-        # Build fallback chain:
-        # Operator rule (2026-09-22): Pro is used ONLY when a caller explicitly asks for it.
-        # Default/Flash calls never reach Pro; explicit Pro requests keep Pro and its fallbacks.
-        if is_explicit_pro:
-            all_models = [_pro_model(), _flash_model(), _flash_lite_model()]
-        else:
-            all_models = [_flash_model(), _flash_lite_model()]
+        # The compat resolver rejects non-Flash models on this route. Keep only
+        # the configured Flash rungs and log any rung it refuses.
+        all_models = [_flash_model(), _flash_lite_model()]
         # Deduplicate effective routes, not source slugs. Compatibility aliases
         # and legacy names can all resolve to the same AGY ACP pin.
         current_route = _effective_agy_route(model)
@@ -254,9 +243,10 @@ def dispatch_gemini(
         for m in all_models:
             try:
                 effective_route = _effective_agy_route(m)
-            except ValueError:
+            except ValueError as exc:
                 # A fallback candidate is configuration, not a fresh explicit
                 # request. Skip it when the actual AGY ACP resolver rejects it.
+                _log(f"  [fallback] skipping {m}: {exc}")
                 continue
             if effective_route not in seen:
                 seen.add(effective_route)

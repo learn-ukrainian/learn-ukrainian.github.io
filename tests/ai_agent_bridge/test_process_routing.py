@@ -263,7 +263,6 @@ def test_ask_gemini_default_model_is_none_so_registry_pin_applies() -> None:
 
 def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     """Rotating the registry pin updates the accepted pin and its display alias."""
-    import pytest
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     monkeypatch.setitem(
@@ -273,8 +272,7 @@ def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     )
     assert registered_participant_model("agy") == "gemini-9.9-flash-high"
     assert resolve_compat_model("gemini", "Gemini 9.9 Flash (High)") == "gemini-9.9-flash-high"
-    with pytest.raises(ValueError, match=r"gemini-9\.9-flash-high"):
-        resolve_compat_model("gemini", "gemini-3.7-flash")
+    assert resolve_compat_model("gemini", "gemini-3.7-flash") == "gemini-9.9-flash-high"
     # Non-Gemini model ids pass through for the route resolver to judge loudly.
     assert resolve_compat_model("gemini", "custom-provider/model-x") == "custom-provider/model-x"
     # Non-agy seats never get rewritten.
@@ -415,10 +413,9 @@ def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> No
     ask_gemini("hello", task_id="t-1")
     assert captured["model"] == "gemini-9.9-flash-high"
 
-    # 2. An explicit alternate Gemini model fails instead of remapping.
-    import pytest
-    with pytest.raises(ValueError, match=r"delegate\.py dispatch --agent agy"):
-        ask_gemini("hello", task_id="t-1", model="gemini-2.0-flash")
+    # 2. A legacy Flash alias keeps following the registry pin.
+    ask_gemini("hello", task_id="t-1", model="gemini-2.0-flash")
+    assert captured["model"] == "gemini-9.9-flash-high"
 
     # 3. Non-gemini model passes through
     ask_gemini("hello", task_id="t-1", model="custom-provider/model-x")

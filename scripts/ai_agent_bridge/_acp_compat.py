@@ -76,23 +76,27 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
     if participant == "agy":
         pin = registered_participant_model("agy")
         if model.strip().lower().startswith("gemini"):
+            from agent_runtime.adapters.agy import AgyAdapter
+
+            accepted_model = AgyAdapter.resolve_model_slug(model)
             if not pin:
                 raise ValueError(
                     "AGY ACP has no registered model pin; cannot honor explicit "
-                    f"model {model!r}. Use "
-                    f"`delegate.py dispatch --agent agy --model {model}` to run it."
+                    f"model {model!r}. A model accepted by AGY is "
+                    f"`{accepted_model or AgyAdapter.default_model}`."
                 )
-            # The CLI display label is an alias only when it names the exact
-            # registered model (punctuation/case differences are cosmetic).
-            def normalize(value: str) -> str:
-                return re.sub(r"[^a-z0-9]", "", value.casefold())
-
-            if normalize(model) == normalize(pin):
+            if AgyAdapter.model_ids_match(model, pin) or (
+                accepted_model
+                and "flash" in accepted_model
+                and AgyAdapter.is_legacy_model_alias(model)
+            ):
                 return pin
+            suggested_model = accepted_model or AgyAdapter.default_model
             raise ValueError(
                 f"AGY ACP supports only its registered model pin {pin!r}; "
                 f"cannot honor explicit model {model!r}. Use "
-                f"`delegate.py dispatch --agent agy --model {model}` to run it."
+                f"`delegate.py dispatch --agent agy --model {suggested_model}` "
+                "to run a model accepted by AGY."
             )
     return model
 

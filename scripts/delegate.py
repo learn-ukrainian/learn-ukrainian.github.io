@@ -6623,6 +6623,15 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
 def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack) -> int:
     """Body of :func:`cmd_dispatch`; ``worktree_locks`` holds the worktree lock."""
+    if getattr(args, "agent", None) == "agy" and getattr(args, "model", None):
+        from agent_runtime.adapters.agy import AgyAdapter
+
+        try:
+            AgyAdapter()._resolve_model_flag(str(args.model))
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,

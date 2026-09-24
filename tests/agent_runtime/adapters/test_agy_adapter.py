@@ -386,17 +386,37 @@ def test_build_invocation_accepts_display_string(tmp_path: Path) -> None:
     assert _model_after_flag(plan) == "gemini-3.8-flash-high"
 
 
-def test_build_invocation_unknown_model_falls_back_to_default(tmp_path: Path) -> None:
-    # A stale/unknown identifier degrades to the adapter default rather than
-    # passing an invalid --model value.
-    plan = _build(tmp_path, model="tui-controlled")
-    assert _model_after_flag(plan) == "gemini-3.8-flash-high"
+def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="Unsupported AGY model"):
+        _build(tmp_path, model="gemini-9.9-pro-preview")
+
+
+def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, capsys) -> None:
+    from argparse import Namespace
+
+    from scripts import delegate
+
+    def unexpected_dispatch(*args, **kwargs):
+        pytest.fail("unknown AGY model reached worker dispatch")
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", unexpected_dispatch)
+    args = Namespace(task_id="unknown-agy-model", agent="agy", model="gemini-9.9-pro-preview")
+
+    result = delegate.cmd_dispatch(args)
+
+    assert result == 2
+    assert "gemini-3.8-flash-high" in capsys.readouterr().err
 
 
 def test_build_invocation_none_model_falls_back_to_default(tmp_path: Path) -> None:
     # No model -> resolves the adapter default slug.
     plan = _build(tmp_path, model=None)
     assert _model_after_flag(plan) == "gemini-3.8-flash-high"
+
+
+def test_build_invocation_maps_pro_preview_to_supported_slug(tmp_path: Path) -> None:
+    plan = _build(tmp_path, model="gemini-3.1-pro-preview")
+    assert _model_after_flag(plan) == "gemini-3.1-pro-high"
 
 
 @pytest.mark.parametrize("tier", ["high", "medium", "low"])

@@ -159,6 +159,13 @@ _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
     "Gemini 3.5 Flash (Low)",
     "Gemini 3.1 Pro (High)",
     "Gemini 3.1 Pro (Low)",
+    # Legacy API model names map to their supported AGY model tier.
+    "gemini-3.1-pro-preview",
+    "gemini-3-flash-preview",
+    "gemini-3.0-flash-preview",
+    "gemini-3.6-flash",
+    "gemini-3.7-flash",
+    "gemini-2.0-flash",
     "Claude Sonnet 4.6 (Thinking)",
     "Claude Opus 4.6 (Thinking)",
     "GPT-OSS 120B (Medium)",
@@ -186,6 +193,12 @@ def _build_agy_model_map() -> dict[str, str]:
         "Claude Sonnet 4.6 (Thinking)": "claude-sonnet-4-6",
         "Claude Opus 4.6 (Thinking)": "claude-opus-4-6-thinking",
         "GPT-OSS 120B (Medium)": "gpt-oss-120b-medium",
+        "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
+        "gemini-3-flash-preview": "gemini-3.8-flash-high",
+        "gemini-3.0-flash-preview": "gemini-3.8-flash-high",
+        "gemini-3.6-flash": "gemini-3.6-flash-high",
+        "gemini-3.7-flash": "gemini-3.7-flash-high",
+        "gemini-2.0-flash": "gemini-3.8-flash-high",
     }
     for label in _AGY_MODEL_LEGACY_LABELS:
         key = _normalize_model(label)
@@ -204,6 +217,22 @@ class AgyAdapter:
     name: str = "agy"
     default_model: str = os.environ.get("LEARN_UK_AGY_MODEL", "gemini-3.8-flash-high")
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
+
+    @staticmethod
+    def resolve_model_slug(model: str) -> str | None:
+        """Return the canonical AGY model for a known slug or legacy alias."""
+        return _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(model))
+
+    @staticmethod
+    def model_ids_match(left: str, right: str) -> bool:
+        """Compare model IDs ignoring punctuation and case."""
+        return _normalize_model(left) == _normalize_model(right)
+
+    @staticmethod
+    def is_legacy_model_alias(model: str) -> bool:
+        """Return whether an ID is listed as a supported legacy alias."""
+        normalized = _normalize_model(model)
+        return any(_normalize_model(label) == normalized for label in _AGY_MODEL_LEGACY_LABELS)
 
     def build_invocation(
         self,
@@ -356,17 +385,20 @@ class AgyAdapter:
         """Map a runtime model slug (or display string) to the canonical
         ``agy --model`` slug (from ``agy models``).
 
-        Tries the caller's ``model`` first, then ``default_model``, so a stale
-        placeholder or an empty value degrades to the adapter default rather
-        than passing an invalid flag. Returns ``None`` only when neither maps,
-        leaving the flag unset so agy uses its TUI-selected model.
+        An absent model uses the configured default. An explicit unknown model
+        is rejected so a request can never silently run on a different model.
         """
-        for candidate in (model, self.default_model):
-            if candidate:
-                resolved = _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(candidate))
-                if resolved:
-                    return resolved
-        return None
+        if not model:
+            model = self.default_model
+        if not model:
+            return None
+        resolved = self.resolve_model_slug(model)
+        if resolved:
+            return resolved
+        raise ValueError(
+            f"Unsupported AGY model {model!r}. Use a model accepted by AGY, "
+            f"such as {self.default_model!r}."
+        )
 
     def parse_response(
         self,
