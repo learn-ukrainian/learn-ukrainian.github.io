@@ -702,20 +702,10 @@ def test_parse_response_fails_run_cut_off_mid_work(stderr: str, reason: str) -> 
     assert result.stderr_excerpt.splitlines()[0] == reason
 
 
-@pytest.mark.parametrize(
-    "stderr",
-    [
-        # agy 1.2.10 live canary (2026-09-24): the run waited, the agent resumed
-        # after the 60s command finished and replied with the real result.
-        "root agent idle; waiting up to 2h0m0s for 1 background task(s)",
-        # Only a daemon (dev server) was stopped; no unfinished work was lost.
-        "terminating 0 background task(s) and 1 daemon task(s) on exit",
-    ],
-)
-def test_parse_response_keeps_run_that_finished_its_background_work(stderr: str) -> None:
+def test_parse_response_keeps_run_whose_only_stop_was_a_daemon() -> None:
     result = AgyAdapter().parse_response(
         stdout="RESULT=CANARY_DONE_8502",
-        stderr=stderr,
+        stderr="terminating 0 background task(s) and 1 daemon task(s) on exit",
         returncode=0,
         output_file=None,
         plan=None,
@@ -723,6 +713,126 @@ def test_parse_response_keeps_run_that_finished_its_background_work(stderr: str)
 
     assert result.ok is True
     assert result.response == "RESULT=CANARY_DONE_8502"
+
+
+# Live probes, agy 1.2.10 (2026-09-24). "finished": a 45s command was
+# backgrounded, the agent idled, the task-finished system message arrived and
+# the agent replied with the output. "abandoned": the 120s command outlived a
+# 40s --print-timeout and agy killed it.
+_FINISHED_CONVERSATION_ID = "3aca585b-1812-499a-8884-4a49d135a486"
+_ABANDONED_CONVERSATION_ID = "44c10a19-f720-4b45-a838-64076907b9d7"
+_IDLE_WAIT_STDERR = "root agent idle; waiting up to 2h0m0s for 1 background task(s)"
+
+
+def _background_plan(tmp_path: Path, conversation_id: str, transcript_lines: list[str]) -> InvocationPlan:
+    app_data = tmp_path / "antigravity-cli"
+    transcript = agy_module._brain_transcript_path(app_data, conversation_id)
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text("\n".join(transcript_lines) + "\n", encoding="utf-8")
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(f"I0924 server.go:1185] Created conversation {conversation_id}\n", encoding="utf-8")
+    return _plan(tmp_path, log_file=log_file, app_data=app_data)
+
+
+def _fixture_lines(name: str) -> list[str]:
+    return (FIXTURES / name).read_text(encoding="utf-8").splitlines()
+
+
+def test_parse_response_accepts_background_work_with_completion_evidence(tmp_path: Path) -> None:
+    plan = _background_plan(
+        tmp_path, _FINISHED_CONVERSATION_ID, _fixture_lines("background_task_finished_transcript.jsonl")
+    )
+    stdout = "I have launched the command and am waiting for it to finish.\nPROBE_DONE_7731"
+
+    result = AgyAdapter().parse_response(
+        stdout=stdout, stderr=_IDLE_WAIT_STDERR, returncode=0, output_file=None, plan=plan
+    )
+
+    assert result.ok is True
+    assert result.response == stdout
+
+
+def test_parse_response_rejects_interim_waiting_reply_without_completion_evidence() -> None:
+    # Reviewer reproduction (#8502 r2): exit 0, the agent's interim reply and
+    # only the idle-wait diagnostic previously parsed as ok=True.
+    result = AgyAdapter().parse_response(
+        stdout="Waiting for task-220 to complete.",
+        stderr="root agent idle; waiting up to 5s for 1 background task(s)",
+        returncode=0,
+        output_file=None,
+        plan=None,
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+def test_parse_response_rejects_background_task_that_never_finished(tmp_path: Path) -> None:
+    plan = _background_plan(
+        tmp_path, _ABANDONED_CONVERSATION_ID, _fixture_lines("background_task_abandoned_transcript.jsonl")
+    )
+
+    result = AgyAdapter().parse_response(
+        stdout="I have started the command and will wait for it to finish.",
+        stderr="root agent idle; waiting up to 40s for 1 background task(s)",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+def test_parse_response_rejects_finished_task_with_no_reply_after_it(tmp_path: Path) -> None:
+    lines = _fixture_lines("background_task_finished_transcript.jsonl")[:-1]  # drop the final reply
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, lines)
+
+    result = AgyAdapter().parse_response(
+        stdout="I have launched the command and am waiting for it to finish.",
+        stderr=_IDLE_WAIT_STDERR,
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+def _fake_agy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, version_output: str) -> Path:
+    fake = tmp_path / "bin" / "agy"
+    fake.parent.mkdir()
+    fake.write_text(f"#!/bin/sh\nprintf '%s\\n' '{version_output}'\n", encoding="utf-8")
+    fake.chmod(0o755)
+    monkeypatch.setattr(agy_module.shutil, "which", lambda name: str(fake) if name == "agy" else None)
+    agy_module._agy_version.cache_clear()
+    return fake
+
+
+@pytest.mark.parametrize(
+    ("version_output", "code"),
+    [("1.2.8", "agy_version_unsupported"), ("agy dev build", "agy_version_unverified")],
+)
+def test_build_invocation_refuses_agy_without_background_wait(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, version_output: str, code: str
+) -> None:
+    _fake_agy(tmp_path, monkeypatch, version_output)
+
+    with pytest.raises(ValueError, match=code):
+        _build(tmp_path, model=None)
+
+
+@pytest.mark.parametrize("version_output", ["1.2.9", "1.2.10", "2.0.0"])
+def test_build_invocation_accepts_agy_with_background_wait(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, version_output: str
+) -> None:
+    fake = _fake_agy(tmp_path, monkeypatch, version_output)
+
+    plan = _build(tmp_path, model=None)
+
+    assert plan.cmd[0] == str(fake.resolve())
 
 
 def test_parse_response_fails_structured_run_cut_off_mid_work(tmp_path: Path) -> None:

@@ -61,11 +61,13 @@ Differences from the kubedojo source:
 from __future__ import annotations
 
 import contextlib
+import functools
 import json
 import logging
 import os
 import re
 import shutil
+import subprocess
 import tempfile
 import time
 import urllib.parse
@@ -91,23 +93,40 @@ _RATE_LIMIT_PATTERNS = (
 )
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 
-# Incomplete-run detection (#8502/#8503). AGY's ``run_command`` tool caps
+# Background-task handling (#8502/#8503). AGY's ``run_command`` tool caps
 # ``WaitMsBeforeAsync`` at 10000 ms, so any command running longer than ten
 # seconds is moved to a background task — no flag or prompt can force it into
-# the foreground. Since agy 1.2.9 print mode keeps the run alive while those
-# tasks finish (bounded by ``--print-timeout``) and the agent resumes when they
-# complete; earlier builds waited only 5s. When the wait budget runs out, agy
-# kills the tasks and still exits 0 with whatever the agent last said
-# ("Waiting for task-220 to complete."). Both stderr lines below are that
-# terminal signal; the benign "root agent idle; waiting up to …" line is not.
-# The reason code leads ``stderr_excerpt`` so it becomes the dispatch's
-# machine-readable ``last_error``; ``delegate.py`` keys on these codes to refuse
-# auto-finalizing an interrupted run as ``done``.
+# the foreground. agy <= 1.2.8 cancelled those tasks about 5s after the agent
+# went idle and exited 0 with the agent's interim "Waiting for task-220 to
+# complete." reply. agy 1.2.9 fixed that upstream (changelog: "runs now wait for
+# background tasks until the --print-timeout deadline"), and the agent resumes
+# when the task-finished system message arrives (live probe, agy 1.2.10,
+# 2026-09-24: a 45s command finished, the agent replied with its output).
+#
+# The adapter therefore (1) refuses to invoke an agy older than
+# ``_AGY_MIN_BACKGROUND_WAIT_VERSION`` — that build cannot finish a long command
+# headlessly, so detection alone would only turn every such run into a failure
+# — and (2) accepts a run that went idle on background work only with positive
+# completion evidence: the transcript records every task as finished and a
+# model reply after the last finish. Otherwise the run fails with a reason code
+# leading ``stderr_excerpt`` (the dispatch's machine-readable ``last_error``);
+# ``delegate.py`` keys on these codes to refuse auto-finalizing it as ``done``.
 AGY_BACKGROUND_TASK_ABANDONED = "agy_background_task_abandoned"
+AGY_BACKGROUND_TASK_UNCONFIRMED = "agy_background_task_unconfirmed"
 AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
-AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (AGY_BACKGROUND_TASK_ABANDONED, AGY_PRINT_TIMEOUT_PARTIAL)
+AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
+    AGY_BACKGROUND_TASK_ABANDONED,
+    AGY_BACKGROUND_TASK_UNCONFIRMED,
+    AGY_PRINT_TIMEOUT_PARTIAL,
+)
+_AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
+_AGY_VERSION_RE = re.compile(r"\b(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\b")
+_AGY_VERSION_PROBE_TIMEOUT_S = 15
 _BACKGROUND_TERMINATED_RE = re.compile(r"terminating (?P<count>\d+) background task\(s\)")
 _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in progress")
+_IDLE_BACKGROUND_WAIT_RE = re.compile(r"root agent idle; waiting up to \S+ for (?P<count>\d+) background task\(s\)")
+_BACKGROUND_STARTED_RE = re.compile(r"Tool is running as a background task with task id: (?P<id>\S+)")
+_BACKGROUND_FINISHED_RE = re.compile(r'Task id "(?P<id>[^"]+)" finished')
 _AGY_LOG_ENV = "AGY_RUNTIME_LOG_FILE"
 _AGY_APP_DATA_ENV = "AGY_APP_DATA_DIR"
 _AGY_UUID = r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
@@ -319,6 +338,7 @@ class AgyAdapter:
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
         with contextlib.suppress(OSError):
             agy_bin = str(Path(agy_bin).resolve())
+        _require_background_wait_support(agy_bin)
         if review_isolation and tc.get("review_write_root"):
             log_dir = Path(str(tc["review_write_root"])) / "tmp"
             log_dir.mkdir(parents=True, exist_ok=True)
@@ -446,9 +466,9 @@ class AgyAdapter:
 
         stdout_response = (stdout or "").strip()
         stderr_text = (stderr or "").strip()
-        incomplete_reason = _incomplete_run_reason(stderr_text)
+        incomplete_reason = _incomplete_run_reason(stderr_text) or _background_completion_gap(stderr_text, plan)
         if incomplete_reason is not None:
-            # A reply written before agy killed the agent's own command is an
+            # A reply written before the agent's own command finished is an
             # interim status, never a result — even when agy exits 0.
             return ParseResult(
                 ok=False,
@@ -530,6 +550,82 @@ def _incomplete_run_reason(stderr_text: str) -> str | None:
     return None
 
 
+def _background_completion_gap(stderr_text: str, plan: InvocationPlan | None) -> str | None:
+    """Return a reason code unless background work the agent waited on provably finished.
+
+    agy prints "root agent idle; waiting up to … for N background task(s)" when
+    the agent ends its turn on unfinished background work. Such a run is only a
+    success when the transcript shows every background task finished and the
+    model replied after the last one; an exit-0 run whose last word is "Waiting
+    for task-220 to complete." has none of that evidence.
+    """
+    if not any(int(match.group("count")) > 0 for match in _IDLE_BACKGROUND_WAIT_RE.finditer(stderr_text)):
+        return None
+    transcript_path = _transcript_path_from_plan(plan)
+    events = _read_transcript_events(transcript_path) if transcript_path is not None else []
+    started: set[str] = set()
+    finished: set[str] = set()
+    last_finish = -1
+    last_reply = -1
+    for position, event in enumerate(events):
+        content = str(event.get("content") or "")
+        step = _event_step_index(event)
+        order = step if step is not None else position
+        started.update(match.group("id") for match in _BACKGROUND_STARTED_RE.finditer(content))
+        if event.get("type") == "SYSTEM_MESSAGE":
+            ids = {match.group("id") for match in _BACKGROUND_FINISHED_RE.finditer(content)}
+            if ids:
+                finished |= ids
+                last_finish = max(last_finish, order)
+        elif event.get("type") == "PLANNER_RESPONSE" and content.strip():
+            last_reply = max(last_reply, order)
+    if not started or not started <= finished or last_reply <= last_finish:
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    return None
+
+
+@functools.lru_cache(maxsize=8)
+def _agy_version(agy_bin: str) -> tuple[int, int, int] | None:
+    """Return the ``agy --version`` triple, or ``None`` when it cannot be read."""
+    try:
+        completed = subprocess.run(
+            [agy_bin, "--version"],
+            capture_output=True,
+            text=True,
+            timeout=_AGY_VERSION_PROBE_TIMEOUT_S,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    match = _AGY_VERSION_RE.search(completed.stdout or "")
+    if completed.returncode != 0 or match is None:
+        return None
+    return (int(match.group("major")), int(match.group("minor")), int(match.group("patch")))
+
+
+def _require_background_wait_support(agy_bin: str) -> None:
+    """Fail closed on an agy build that cannot finish a long command headlessly.
+
+    A missing binary is left to the spawn, which reports it as unavailable.
+    """
+    if not Path(agy_bin).is_file():
+        return
+    version = _agy_version(agy_bin)
+    minimum = ".".join(map(str, _AGY_MIN_BACKGROUND_WAIT_VERSION))
+    if version is None:
+        raise ValueError(
+            f"agy_version_unverified: `{agy_bin} --version` did not report a version; "
+            f"agy >= {minimum} is required so headless runs wait for backgrounded commands (#8502)"
+        )
+    if version < _AGY_MIN_BACKGROUND_WAIT_VERSION:
+        found = ".".join(map(str, version))
+        raise ValueError(
+            f"agy_version_unsupported: agy {found} at {agy_bin} cancels backgrounded commands about 5s "
+            f"after the agent goes idle, so long tests never finish (#8502); run `agy update` "
+            f"to reach >= {minimum}"
+        )
+
+
 def _build_log_path(task_id: str | None) -> Path:
     safe_task = re.sub(r"[^A-Za-z0-9_.-]+", "-", task_id or "call").strip("-")
     if not safe_task:
@@ -586,9 +682,21 @@ def _parse_stdout_marker_tool_calls(text: str) -> list[dict[str, Any]]:
 
 def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, Any]]:
     transcript_path = _transcript_path_from_plan(plan)
-    if transcript_path is None or not transcript_path.exists():
+    if transcript_path is None:
+        return []
+    events = _read_transcript_events(transcript_path)
+    if not events:
         return []
 
+    has_step_index = any(_event_step_index(event) is not None for event in events)
+    if not any(event.get("type") == _LEGACY_MCP_RESULT_TYPE for event in events):
+        return _pair_transcript_generic_results(events, transcript_path=transcript_path)
+    if has_step_index:
+        return _pair_transcript_by_step_index(events, transcript_path=transcript_path)
+    return _pair_transcript_fifo(events, transcript_path=transcript_path)
+
+
+def _read_transcript_events(transcript_path: Path) -> list[dict[str, Any]]:
     try:
         lines = transcript_path.read_text(encoding="utf-8").splitlines()
     except OSError:
@@ -604,16 +712,7 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
             continue
         if isinstance(event, dict):
             events.append(event)
-
-    if not events:
-        return []
-
-    has_step_index = any(_event_step_index(event) is not None for event in events)
-    if not any(event.get("type") == _LEGACY_MCP_RESULT_TYPE for event in events):
-        return _pair_transcript_generic_results(events, transcript_path=transcript_path)
-    if has_step_index:
-        return _pair_transcript_by_step_index(events, transcript_path=transcript_path)
-    return _pair_transcript_fifo(events, transcript_path=transcript_path)
+    return events
 
 
 def _event_step_index(event: Mapping[str, Any]) -> int | None:

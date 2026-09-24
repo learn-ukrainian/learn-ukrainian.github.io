@@ -4244,12 +4244,14 @@ def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
     return worktree
 
 
+@pytest.mark.parametrize("reason", ["agy_background_task_abandoned", "agy_background_task_unconfirmed"])
 @pytest.mark.parametrize("pushed_commit_first", [False, True])
 def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
     pushed_commit_first,
+    reason,
 ):
     """#8502/#8503: agy killed the worker's backgrounded pytest and exited 0.
 
@@ -4257,8 +4259,9 @@ def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
     reason as ``last_error`` — never be auto-committed and settled ``done``,
     and never read as ``done`` just because an earlier commit was pushed.
     """
-    from agent_runtime.adapters.agy import AGY_BACKGROUND_TASK_ABANDONED
+    from agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
 
+    assert reason in AGY_INCOMPLETE_RUN_REASONS
     _sanitize_git_env_for_test(monkeypatch)
     branch = "agy/cut-off-test"
     worktree = _agy_dispatch_worktree(tmp_path, branch)
@@ -4295,7 +4298,7 @@ def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
             "ok": False,
             "response": "",
             "stderr_excerpt": (
-                f"{AGY_BACKGROUND_TASK_ABANDONED}\n"
+                f"{reason}\n"
                 "root agent idle; waiting up to 5s for 1 background task(s)\n"
                 "terminating 1 background task(s) on exit"
             ),
@@ -4329,7 +4332,7 @@ def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
     assert state.get("auto_finalize") is None
     assert state.get("finalize_error") is None
     assert publish_calls == []
-    assert state["last_error"] == AGY_BACKGROUND_TASK_ABANDONED
+    assert state["last_error"] == reason
     assert (worktree / "half_done.py").exists()
 
 

@@ -1112,7 +1112,10 @@ def _agy_good_rows(config_path: Path) -> list[tuple[str, ...]]:
 
 
 def _install_fake_agy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stdout: str, *, body: str = "") -> Path:
-    """Fake ``agy`` on PATH: logs ``cwd|HOME|AGY_APP_DATA_DIR|argv`` and prints canned stdout."""
+    """Fake ``agy`` on PATH: logs ``cwd|HOME|AGY_APP_DATA_DIR|argv`` and prints canned stdout.
+
+    ``--version`` answers a supported build (#8502 floor) without logging.
+    """
     bin_dir = tmp_path / "fake-agy-bin"
     bin_dir.mkdir(exist_ok=True)
     canned = tmp_path / "agy-table.txt"
@@ -1120,7 +1123,8 @@ def _install_fake_agy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stdout: s
     log = tmp_path / "fake-agy.log"
     script = bin_dir / "agy"
     script.write_text(
-        f'#!/bin/sh\nprintf \'%s|%s|%s|%s\\n\' "$PWD" "$HOME" "$AGY_APP_DATA_DIR" "$*" >> {log}\n{body}cat {canned}\n',
+        '#!/bin/sh\n[ "$1" = --version ] && echo 1.2.10 && exit 0\n'
+        f'printf \'%s|%s|%s|%s\\n\' "$PWD" "$HOME" "$AGY_APP_DATA_DIR" "$*" >> {log}\n{body}cat {canned}\n',
         encoding="utf-8",
     )
     script.chmod(0o755)
