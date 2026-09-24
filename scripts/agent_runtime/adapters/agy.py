@@ -73,7 +73,7 @@ import urllib.parse
 import uuid
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
@@ -111,12 +111,14 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # conversation), so a resumed conversation never credits an earlier run's
 # finish or reply (#8502 r5). In that slice the run's own USER_INPUT must
 # appear, every background task started after it must have a finish event, and
-# the last model turn must be a final text reply after the last finish that is
-# not an interim waiting status. The evidence is read from the transcript bound
-# to this invocation (see ``_transcript_path_from_plan``) and never from stderr
-# alone: agy prints its idle-wait diagnostic only on some
-# paths, so its absence proves nothing (#8502 r3). A run whose transcript cannot
-# be bound has no evidence and fails as unconfirmed. Failures lead
+# the last model turn must be a final text reply after the last finish that
+# does not say work is still pending. Ambiguous evidence is unconfirmed (#8502
+# r7): a slice line that does not parse fails the run, it is never skipped. The
+# evidence is read from the transcript bound to this invocation (see
+# ``_transcript_path_from_plan``) and never from stderr alone: agy prints its
+# idle-wait diagnostic only on some paths, so its absence proves nothing (#8502
+# r3). A run whose transcript cannot be bound has no evidence and fails as
+# unconfirmed. Failures lead
 # ``stderr_excerpt`` with a reason code (the dispatch's machine-readable
 # ``last_error``); ``delegate.py`` keys on these codes to refuse auto-finalizing
 # the run as ``done``.
@@ -124,11 +126,13 @@ AGY_BACKGROUND_TASK_ABANDONED = "agy_background_task_abandoned"
 AGY_BACKGROUND_TASK_UNCONFIRMED = "agy_background_task_unconfirmed"
 AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
 AGY_TRANSCRIPT_UNBOUND = "agy_transcript_unbound"
+AGY_TRANSCRIPT_UNREADABLE = "agy_transcript_unreadable"
 AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_BACKGROUND_TASK_ABANDONED,
     AGY_BACKGROUND_TASK_UNCONFIRMED,
     AGY_PRINT_TIMEOUT_PARTIAL,
     AGY_TRANSCRIPT_UNBOUND,
+    AGY_TRANSCRIPT_UNREADABLE,
 )
 _AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
 _AGY_VERSION_RE = re.compile(r"\b(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\b")
@@ -138,12 +142,34 @@ _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in pr
 _IDLE_BACKGROUND_WAIT_RE = re.compile(r"root agent idle; waiting up to \S+ for (?P<count>\d+) background task\(s\)")
 _BACKGROUND_STARTED_RE = re.compile(r"Tool is running as a background task with task id: (?P<id>\S+)")
 _BACKGROUND_FINISHED_RE = re.compile(r'Task id "(?P<id>[^"]+)" finished')
-# An interim status the agent writes while its command is still running
-# ("Waiting for task-220 to complete.", "Waiting 60 seconds for the command to
-# finish...", "I will wait for it to finish."). Only a reply that LEADS with the
-# wait counts, so a final summary that mentions waiting stays a result.
-_INTERIM_WAIT_REPLY_RE = re.compile(
-    r"^\W*(?:(?:I\s*(?:am|'m|will|'ll)|still)\s+(?:now\s+|still\s+)?)?wait(?:ing)?\b", re.IGNORECASE
+# Ambiguous evidence is unconfirmed (#8502 r7): a final reply that says work is
+# still pending ANYWHERE in it is a status, never a result, whatever else it
+# says. Each alternative is one way agy's models phrase pending work; every one
+# is pinned by a test. Past-tense reports ("the background job finished", "I
+# waited for it") do not match.
+_APOSTROPHE = "['\u2019]"
+_PENDING_WORK_RE = re.compile(
+    "|".join(
+        (
+            r"^\W*wait\b",  # "Wait for task-220."
+            r"\bwaiting\b",  # "I am waiting for it", "still waiting on task-2"
+            rf"(?:\bwill|{_APOSTROPHE}ll|\bgoing to|\blet me|\bneed to)\s+(?:now\s+|then\s+)?wait\b",
+            r"\b(?:still|currently)\s+(?:running|executing|in progress|working)\b",
+            r"\b(?:is|are)\s+(?:now\s+)?(?:running|executing|in progress)\b",
+            r"\b(?:launched|started|kicked off|running|spawned)\b[^.!?\n]*\bin the background\b",
+            r"\b(?:once|when|until|after)\s+(?:it|they|this|that|the\s+(?:\w+\s+)?(?:command|tests?|suite|run|job|task"
+            r"|build|process))\s+(?:finish(?:es)?|complete[sd]?|ends?|exits?|(?:is|are)\s+(?:done|finished|complete))\b",
+            rf"\b(?:has|have|is|are)(?:n{_APOSTROPHE}t|\s+not)\s+(?:yet\s+)?(?:finished|completed|complete|done)\b",
+            rf"(?:\bwill|{_APOSTROPHE}ll)\s+(?:report back|check back|follow up|let you know|update you)\b",
+        )
+    ),
+    re.IGNORECASE,
+)
+# A reply that speaks of background work when the slice recorded no task start
+# means the task events were not captured, not that none ran.
+_BACKGROUND_LANGUAGE_RE = re.compile(
+    r"\bbackground(?:ed)?\s+(?:tasks?|jobs?|process(?:es)?|commands?|runs?)\b|\bin the background\b|\bbackgrounded\b",
+    re.IGNORECASE,
 )
 _REPLY_TASK_REF_RE = re.compile(r"\btask-\d+\b")
 # Plan metadata: this invocation's conversation and the size its transcript had
@@ -591,17 +617,21 @@ def _completion_gap(stderr_text: str, plan: InvocationPlan | None) -> str | None
     the model, several mean the slice reaches into an earlier run. After it,
     every background task started must have a "Task id … finished" system
     message, and the last model turn must be a text reply that follows the last
-    finish and is not an interim waiting status (``_is_interim_reply``) — an
-    exit-0 run whose final word is "Waiting for task-220 to complete." has
-    none of that. stderr cannot stand in for the transcript: agy's "root agent
-    idle; waiting up to … for N background task(s)" line is absent on some
-    paths, so it can only add doubt (a claimed wait with no task in the slice),
-    never remove it.
+    finish and is not an interim status (``_is_interim_reply``) — an exit-0 run
+    whose final word is "Waiting for task-220 to complete." has none of that.
+    Ambiguous evidence is unconfirmed: a slice line that does not parse may be
+    the very finish or reply in question, so it fails the run as unreadable
+    rather than being skipped. stderr cannot stand in for the transcript: agy's
+    "root agent idle; waiting up to … for N background task(s)" line is absent
+    on some paths, so it can only add doubt (a claimed wait with no task in the
+    slice), never remove it.
     """
     bound = _invocation_transcript(plan)
     if bound is None:
         return AGY_TRANSCRIPT_UNBOUND
-    _, events = bound
+    if bound.unreadable_lines:
+        return AGY_TRANSCRIPT_UNREADABLE
+    events = bound.events
     prompts = [position for position, event in enumerate(events) if event.get("type") == "USER_INPUT"]
     if len(prompts) != 1:
         return AGY_BACKGROUND_TASK_UNCONFIRMED
@@ -630,22 +660,27 @@ def _completion_gap(stderr_text: str, plan: InvocationPlan | None) -> str | None
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     if final_reply is None or final_reply[0] <= last_finish:
         return AGY_BACKGROUND_TASK_UNCONFIRMED
-    if _is_interim_reply(final_reply[1], finished):
+    if _is_interim_reply(final_reply[1], started, finished):
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     return None
 
 
-def _is_interim_reply(event: Mapping[str, Any], finished: set[str]) -> bool:
+def _is_interim_reply(event: Mapping[str, Any], started: set[str], finished: set[str]) -> bool:
     """True when the model's last turn is not a final answer.
 
-    A turn that still calls tools, says nothing, leads with a wait, or names a
-    task this invocation did not see finish (``task-2`` of an earlier run of a
-    resumed conversation) is a status, not a result.
+    A turn that still calls tools, says nothing, says anywhere that work is
+    still pending (``_PENDING_WORK_RE``), speaks of background work although
+    the slice recorded no task start (the task events were not captured), or
+    names a task this invocation did not see finish (``task-2`` of an earlier
+    run of a resumed conversation) is a status, not a result. Being the LAST
+    turn, a pending reply has no later reply to settle it.
     """
     content = str(event.get("content") or "").strip()
     if event.get("tool_calls") or not content:
         return True
-    if _INTERIM_WAIT_REPLY_RE.match(content):
+    if _PENDING_WORK_RE.search(content):
+        return True
+    if not started and _BACKGROUND_LANGUAGE_RE.search(content):
         return True
     finished_tasks = {task_id.rsplit("/", 1)[-1] for task_id in finished}
     return any(ref not in finished_tasks for ref in _REPLY_TASK_REF_RE.findall(content))
@@ -751,7 +786,7 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
     bound = _invocation_transcript(plan)
     if bound is None:
         return []
-    transcript_path, events = bound
+    transcript_path, events = bound.path, bound.events
 
     has_step_index = any(_event_step_index(event) is not None for event in events)
     if not any(event.get("type") == _LEGACY_MCP_RESULT_TYPE for event in events):
@@ -761,26 +796,42 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
     return _pair_transcript_fifo(events, transcript_path=transcript_path)
 
 
-def _read_transcript_events(transcript_path: Path, *, offset: int = 0) -> list[dict[str, Any]]:
-    """Parse the transcript's JSONL events from byte ``offset`` onward."""
+class _TranscriptSlice(NamedTuple):
+    path: Path
+    events: list[dict[str, Any]]
+    unreadable_lines: int
+
+
+def _read_transcript_events(transcript_path: Path, *, offset: int = 0) -> tuple[list[dict[str, Any]], int] | None:
+    """Parse the transcript's JSONL events from byte ``offset`` onward.
+
+    Returns the events and the count of non-blank lines that are not a JSON
+    object (invalid UTF-8, truncated or corrupt JSON, a bare scalar), or
+    ``None`` when the file cannot be read. Callers decide what an unreadable
+    line means; nothing is silently dropped.
+    """
     try:
         with transcript_path.open("rb") as handle:
             handle.seek(offset)
-            lines = handle.read().decode("utf-8", errors="replace").splitlines()
+            raw_lines = handle.read().splitlines()
     except OSError:
-        return []
+        return None
 
     events: list[dict[str, Any]] = []
-    for raw_line in lines:
+    unreadable = 0
+    for raw_line in raw_lines:
         if not raw_line.strip():
             continue
         try:
-            event = json.loads(raw_line)
-        except json.JSONDecodeError:
+            event = json.loads(raw_line.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            unreadable += 1
             continue
         if isinstance(event, dict):
             events.append(event)
-    return events
+        else:
+            unreadable += 1
+    return events, unreadable
 
 
 def _event_step_index(event: Mapping[str, Any]) -> int | None:
@@ -1020,7 +1071,7 @@ def _bound_conversation(plan: InvocationPlan | None) -> tuple[str, Path] | None:
     return (conversation_id, transcript) if transcript.exists() else None
 
 
-def _invocation_transcript(plan: InvocationPlan | None) -> tuple[Path, list[dict[str, Any]]] | None:
+def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | None:
     """Return the bound transcript and only the events THIS invocation appended.
 
     A resumed conversation starts at the size recorded in the plan when the
@@ -1046,8 +1097,11 @@ def _invocation_transcript(plan: InvocationPlan | None) -> tuple[Path, list[dict
             return None
     except OSError:
         return None
-    events = _read_transcript_events(transcript, offset=offset)
-    return (transcript, events) if events else None
+    parsed = _read_transcript_events(transcript, offset=offset)
+    if parsed is None:
+        return None
+    events, unreadable = parsed
+    return _TranscriptSlice(transcript, events, unreadable) if events or unreadable else None
 
 
 def _transcript_baseline(app_data: Path, session_id: str) -> dict[str, Any]:

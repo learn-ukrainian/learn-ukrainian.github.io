@@ -4244,7 +4244,15 @@ def _agy_dispatch_worktree(tmp_path: Path, branch: str) -> Path:
     return worktree
 
 
-@pytest.mark.parametrize("reason", ["agy_background_task_abandoned", "agy_background_task_unconfirmed", "agy_transcript_unbound"])
+@pytest.mark.parametrize(
+    "reason",
+    [
+        "agy_background_task_abandoned",
+        "agy_background_task_unconfirmed",
+        "agy_transcript_unbound",
+        "agy_transcript_unreadable",
+    ],
+)
 @pytest.mark.parametrize("pushed_commit_first", [False, True])
 def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
     tmp_tasks_dir,

@@ -1206,3 +1206,154 @@ def test_fresh_completed_run_is_accepted(tmp_path: Path) -> None:
     assert result.ok is True
     assert result.response == "PROBE_DONE_7731"
     assert plan.metadata == {}  # a fresh conversation records no baseline
+
+
+# Ambiguous evidence is unconfirmed (#8502 r7): the check keys on what a reply
+# SAYS (pending work anywhere in it) and on the slice being fully readable, not
+# on one interim phrasing at a time.
+def _finished_run_with_final_reply(content: str) -> list[str]:
+    """The finished probe (task-2 started and finished) ending on ``content``."""
+    lines = _fixture_lines("background_task_finished_transcript.jsonl")
+    final = json.loads(lines[-1])
+    final["content"] = content
+    return [*lines[:-1], json.dumps(final)]
+
+
+def _parse_fresh(tmp_path: Path, lines: list[str], stdout: str) -> object:
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, lines)
+    return AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+
+
+def test_waiting_reply_with_no_captured_task_start_is_unconfirmed(tmp_path: Path) -> None:
+    # Reviewer reproduction (#8502 r7): one prompt, no readable task-start
+    # event, empty stderr, and a final reply that is a waiting status in its
+    # middle, not its start. It parsed as ok=True.
+    reply = "I have launched the test command in the background and am waiting for it to finish"
+    prompt = _fixture_lines("background_task_finished_transcript.jsonl")[0]
+    lines = [prompt, json.dumps({"step_index": 1, "type": "PLANNER_RESPONSE", "content": reply})]
+
+    result = _parse_fresh(tmp_path, lines, reply)
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "Wait for task-2 before merging.",
+        "Tests look good so far; I am waiting for the suite to finish.",
+        "Tests look good so far; I'm still waiting on task-2.",
+        "The suite is slow, so I will wait for it.",
+        "The suite is slow, so I’ll wait for it.",
+        "The suite is slow; let me wait for it.",
+        "PROBE_DONE_7731 printed, but the suite is still running.",
+        "PROBE_DONE_7731 printed; the suite is currently in progress.",
+        "PROBE_DONE_7731 printed; the remaining tests are running now.",
+        "I kicked off the full suite in the background.",
+        "Everything is committed. I will push once the tests finish.",
+        "Everything is committed. I will push when it completes.",
+        "Everything is committed, but the suite hasn't finished yet.",
+        "Everything is committed, but the suite has not completed.",
+        "Everything is committed; I'll report back with the results.",
+    ],
+    ids=[
+        "leading-wait",
+        "am-waiting",
+        "still-waiting",
+        "will-wait",
+        "curly-ll-wait",
+        "let-me-wait",
+        "still-running",
+        "currently-in-progress",
+        "are-running",
+        "in-the-background",
+        "once-the-tests-finish",
+        "when-it-completes",
+        "hasnt-finished-yet",
+        "has-not-completed",
+        "will-report-back",
+    ],
+)
+def test_final_reply_expressing_pending_work_is_unconfirmed(tmp_path: Path, reply: str) -> None:
+    # Every started task finished and the reply follows the finish, yet the
+    # reply itself says work is still pending: it is the last word, so nothing
+    # later settles it.
+    result = _parse_fresh(tmp_path, _finished_run_with_final_reply(reply), reply)
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "The background job finished: PROBE_DONE_7731. All 30 tests passed.",
+        "I waited for the background task; it finished with exit code 0 and printed PROBE_DONE_7731.",
+        "task-2 finished with PROBE_DONE_7731; the work is complete and committed.",
+    ],
+)
+def test_finished_run_whose_summary_mentions_background_work_is_accepted(tmp_path: Path, reply: str) -> None:
+    result = _parse_fresh(tmp_path, _finished_run_with_final_reply(reply), reply)
+
+    assert result.ok is True
+    assert result.response == reply
+
+
+def test_background_language_with_no_captured_task_start_is_unconfirmed(tmp_path: Path) -> None:
+    # The same completed-sounding summary, but the slice holds no task start:
+    # the task events were not captured, so the claim has no evidence.
+    reply = "The background job finished: PROBE_DONE_7731. All 30 tests passed."
+    lines = [
+        line
+        for line in _finished_run_with_final_reply(reply)
+        if "background task with task id" not in line and "finished with result" not in line
+    ]
+
+    result = _parse_fresh(tmp_path, lines, reply)
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+@pytest.mark.parametrize(
+    "corrupt",
+    [
+        '{"step_index": 4, "type": "SYSTEM_MESSAGE", "content": "Task id \\"',  # truncated write
+        "\xff\xfe not utf-8",
+        '"a bare JSON string"',
+    ],
+    ids=["truncated-json", "invalid-utf8", "non-object"],
+)
+def test_unreadable_line_in_the_slice_is_unconfirmed(tmp_path: Path, corrupt: str) -> None:
+    # The finished run with one line agy did not write whole: it might have
+    # been this run's finish or a later reply, so it is never skipped.
+    lines = _fixture_lines("background_task_finished_transcript.jsonl")
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, lines)
+    transcript = agy_module._brain_transcript_path(tmp_path / "antigravity-cli", _FINISHED_CONVERSATION_ID)
+    body = "\n".join(lines[:4]) + "\n"
+    tail = "\n".join(lines[4:]) + "\n"
+    transcript.write_bytes(body.encode() + corrupt.encode("latin-1") + b"\n" + tail.encode())
+
+    result = AgyAdapter().parse_response(
+        stdout="PROBE_DONE_7731", stderr="", returncode=0, output_file=None, plan=plan
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNREADABLE
+
+
+def test_unreadable_line_before_a_resumed_runs_baseline_is_not_its_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Only THIS invocation's slice is judged: a corrupt line an earlier run
+    # left behind the baseline neither helps nor fails the resumed run.
+    earlier = [*_fixture_lines("background_task_finished_transcript.jsonl"), '{"truncated": ']
+
+    result = _parse_resumed_run(
+        tmp_path, monkeypatch, earlier=earlier, appended=_resumed_run_lines(), stdout="PROBE_DONE_8812"
+    )
+
+    assert result.ok is True
