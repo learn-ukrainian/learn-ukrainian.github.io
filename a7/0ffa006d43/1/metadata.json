@@ -1,9 +1,11 @@
 {
   "cli_version": "0.8.42",
   "checkpoint_id": "a70ffa006d43",
+  "session_id": "ses_f2b406b65ffe2YgGVkUccvifA5",
   "strategy": "manual-commit",
+  "created_at": "2026-09-24T19:02:03.567196927Z",
   "branch": "deepseek/impl-8707",
-  "checkpoints_count": 2,
+  "checkpoints_count": 1,
   "files_touched": [
     ".github/workflows/ci.yml",
     "docs/runbooks/ci-gate.md",
@@ -34,27 +36,36 @@
     "tests/test_threshold_source_of_truth.py",
     "tests/test_work_privacy.py"
   ],
-  "sessions": [
-    {
-      "metadata": "/a7/0ffa006d43/0/metadata.json",
-      "transcript": "/a7/0ffa006d43/0/full.jsonl",
-      "compact_transcript": "/a7/0ffa006d43/0/transcript.jsonl",
-      "content_hash": "/a7/0ffa006d43/0/content_hash.txt",
-      "prompt": ""
-    },
-    {
-      "metadata": "/a7/0ffa006d43/1/metadata.json",
-      "transcript": "/a7/0ffa006d43/1/full.jsonl",
-      "compact_transcript": "/a7/0ffa006d43/1/transcript.jsonl",
-      "content_hash": "/a7/0ffa006d43/1/content_hash.txt",
-      "prompt": ""
-    }
-  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "935732a654fb",
+  "compact_transcript_start": 0,
   "token_usage": {
-    "input_tokens": 174537,
+    "input_tokens": 41237,
     "cache_creation_tokens": 0,
-    "cache_read_tokens": 9719808,
-    "output_tokens": 24068,
-    "api_call_count": 100
-  }
+    "cache_read_tokens": 1055616,
+    "output_tokens": 3906,
+    "api_call_count": 33
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-24T19:02:01.765989049Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 0,
+    "total_lines_changed": 0,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
 }
