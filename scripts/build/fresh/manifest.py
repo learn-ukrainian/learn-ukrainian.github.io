@@ -1,4 +1,4 @@
-"""Content-addressed, review-ineligible fresh lesson attempt manifests."""
+"""Content-addressed, review-eligible fresh lesson attempt manifests."""
 
 from __future__ import annotations
 
@@ -14,13 +14,18 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import planned_state
+from scripts.review.digest.generator import GENERATOR_VERSION, build_digest, write_digest
 
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "lesson-review-manifest-v1.schema.json"
 
 
 class ManifestInputError(ValueError):
     def __init__(self, path: Path, reason: str, root: Path):
-        self.path = path.resolve().relative_to(root.resolve()).as_posix()
+        resolved = path.resolve()
+        try:
+            self.path = resolved.relative_to(root.resolve()).as_posix()
+        except ValueError:
+            self.path = resolved.as_posix()
         super().__init__(f"{reason}: {self.path}")
 
 
@@ -73,11 +78,33 @@ def _activity_imports(mdx_path: Path, repo_root: Path) -> list[Path]:
     return sorted(paths)
 
 
-def write_manifest(level: str, slug: str, n: int, *, lesson_kind: str, state_dir: Path,
-                   repo_root: Path, plans_dir: Path, evidence_dir: Path, position: int,
-                   site_dir: Path | None = None) -> tuple[dict[str, Any], str]:
+def write_manifest(
+    level: str,
+    slug: str,
+    n: int,
+    *,
+    lesson_kind: str,
+    state_dir: Path,
+    repo_root: Path,
+    plans_dir: Path,
+    evidence_dir: Path,
+    position: int,
+    site_dir: Path | None = None,
+) -> tuple[dict[str, Any], str]:
     root = repo_root.resolve()
-    page = (site_dir or root / "site/src/content/docs" / level / slug) / f"{n}.mdx"
+    page_dir = site_dir or root / "site/src/content/docs" / level / slug
+    expected_paths = (
+        (plans_dir, root / "curriculum/l2-uk-en/lesson-plans" / level),
+        (evidence_dir, root / "curriculum/l2-uk-en/evidence" / level),
+        (state_dir, root / "curriculum/l2-uk-en/evidence" / level / "_state" / slug),
+        (page_dir, root / "site/src/content/docs" / level / slug),
+    )
+    for path, expected in expected_paths:
+        if path.resolve() != expected.resolve():
+            raise ManifestInputError(path, "digest_path_mismatch", root)
+    digest_doc = build_digest(level, slug, n, repo_root=root)
+    digest_path, _ = write_digest(digest_doc, repo_root=root)
+    page = page_dir / f"{n}.mdx"
     plan_path = plans_dir / f"{slug}.yaml"
     pack_path = evidence_dir / f"{slug}.yaml"
     words_path = evidence_dir / "_words.yaml"
@@ -86,10 +113,8 @@ def write_manifest(level: str, slug: str, n: int, *, lesson_kind: str, state_dir
     from scripts.build.fresh.prompt import BAND_CARD_MAP
 
     card_name = BAND_CARD_MAP.get(level.lower().split("-")[0], "b1plus")
-    card_path = checked_existing_path(root, root / "docs/style-cards" / f"{card_name}.md",
-                                      "docs/style-cards")
-    sidecar_path = checked_existing_path(root, root / "docs/style-cards" / f"{card_name}.sha256",
-                                         "docs/style-cards")
+    card_path = checked_existing_path(root, root / "docs/style-cards" / f"{card_name}.md", "docs/style-cards")
+    sidecar_path = checked_existing_path(root, root / "docs/style-cards" / f"{card_name}.sha256", "docs/style-cards")
     if not sidecar_path.is_file():
         raise ManifestInputError(sidecar_path, "style card sidecar missing", root)
     expected = sidecar_path.read_text(encoding="utf-8").strip().split()
@@ -104,9 +129,15 @@ def write_manifest(level: str, slug: str, n: int, *, lesson_kind: str, state_dir
     for k in range(1, n):
         upstream.append({"n": k, "sha256": _input(page.parent / f"{k}.mdx", root)["sha256"]})
     doc = {
-        "manifest_schema": 1, "kind": "lesson", "level": level, "slug": slug, "lesson": n,
-        "lesson_kind": lesson_kind, "recap": lesson_kind == "recap", "review_eligible": False,
-        "blocked_by": ["digest_generator_pending"],
+        "manifest_schema": 1,
+        "kind": "lesson",
+        "level": level,
+        "slug": slug,
+        "lesson": n,
+        "lesson_kind": lesson_kind,
+        "recap": lesson_kind == "recap",
+        "review_eligible": True,
+        "blocked_by": [],
         "inputs": {
             "plan": _input(plan_path, root),
             "pack_lock": _input(Path(f"{pack_path}.lock"), root),
@@ -118,20 +149,33 @@ def write_manifest(level: str, slug: str, n: int, *, lesson_kind: str, state_dir
             "style_card": _input(card_path, root),
             "decisions": _input(plans_dir / "_decisions.yaml", root),
         },
-        "lesson_lock_entry": {"path": lock_path.resolve().relative_to(root).as_posix(),
-                              "lesson": n, "entry_sha256": entry["entry_sha256"]},
-        "learner_state": {"sha256": learner_state_sha256(planned_state(
-            level, position, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=evidence_dir)),
-                          "source": "planned_state"},
-        "module_digest": None, "digest_generator_version": None,
-        "upstream_lessons": upstream, "previous_attempt": None, "diff_sha256": None,
+        "lesson_lock_entry": {
+            "path": lock_path.resolve().relative_to(root).as_posix(),
+            "lesson": n,
+            "entry_sha256": entry["entry_sha256"],
+        },
+        "learner_state": {
+            "sha256": learner_state_sha256(
+                planned_state(
+                    level, position, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=evidence_dir
+                )
+            ),
+            "source": "planned_state",
+        },
+        "module_digest": _input(digest_path, root),
+        "digest_generator_version": GENERATOR_VERSION,
+        "upstream_lessons": upstream,
+        "previous_attempt": None,
+        "diff_sha256": None,
     }
-    Draft202012Validator(json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(
-        encoding="utf-8"))).validate(doc)
+    Draft202012Validator(
+        json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(encoding="utf-8"))
+    ).validate(doc)
     content = lock.yaml_bytes(doc)
     digest = hashlib.sha256(content).hexdigest()
-    history = checked_existing_path(root, state_dir / "manifests" / f"lesson-{n}" / f"{digest}.yaml",
-                                    "curriculum/l2-uk-en/evidence")
+    history = checked_existing_path(
+        root, state_dir / "manifests" / f"lesson-{n}" / f"{digest}.yaml", "curriculum/l2-uk-en/evidence"
+    )
     if history.exists():
         if history.read_bytes() != content:
             raise ValueError(f"content-addressed manifest collision: {history}")
