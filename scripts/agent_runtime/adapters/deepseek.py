@@ -2,7 +2,7 @@
 
 Operator 2026-08-13: DeepSeek dispatch routes through OpenCode to first-party
 ``api.deepseek.com`` with ``--variant high`` by default, replacing the Hermes
-dispatch default so runs get native Entire capture. ``deepseek-v4-flash`` is
+dispatch default so runs get native Entire capture. ``deepseek-v4.1-flash`` is
 the default; ``deepseek-v4-pro`` is reachable via an explicit ``--model
 deepseek-v4-pro`` for hard implement tasks (complex multi-file, hard lookup)
 per the 2026-08-13 operator GO (canary #6703) — Pro is not the default and
@@ -41,9 +41,21 @@ _logger = logging.getLogger(__name__)
 # Provider id ``deepseek`` is opencode's first-party api.deepseek.com provider
 # (#8514: ``deepseek-direct`` does not exist on opencode 1.18.x).
 DEEPSEEK_OPENCODE_MODEL_ROUTES: dict[str, str] = {
-    "deepseek-v4-flash": "deepseek/deepseek-flash",
+    "deepseek-v4.1-flash": "deepseek/deepseek-flash",
     "deepseek-v4-pro": "deepseek/deepseek-v4-pro",
 }
+
+
+def _cached_flash_name() -> str | None:
+    """Read OpenCode's optional models.dev cache without refreshing it."""
+    try:
+        cache = json.loads(
+            (Path.home() / ".cache" / "opencode" / "models.json").read_text(encoding="utf-8")
+        )
+        name = cache["deepseek"]["models"]["deepseek-flash"]["name"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    return name if isinstance(name, str) else None
 
 _RATE_LIMIT_RE = re.compile(
     r"rate limit|rate_limit|usage limit|quota exceeded|too many requests|resource_exhausted|\b429\b",
@@ -78,13 +90,13 @@ def _extract_text_from_stdout(stdout: str) -> str:
 
 
 class DeepSeekAdapter:
-    """Adapter for the opencode CLI with first-party DeepSeek v4."""
+    """Adapter for the opencode CLI with first-party DeepSeek."""
 
     name: str = "deepseek"
     # Fleet MODEL identity (bare catalog id). The ``deepseek`` provider pin
     # is an opencode INVOCATION detail — applied in build_invocation via
     # DEEPSEEK_OPENCODE_MODEL_ROUTES, not stored as identity.
-    default_model: str = "deepseek-v4-flash"
+    default_model: str = "deepseek-v4.1-flash"
     # Operator 2026-08-13: omitted effort defaults to high (--variant high);
     # an explicit --effort always wins.
     default_effort: str = "high"
@@ -120,11 +132,27 @@ class DeepSeekAdapter:
 
         binary = shutil.which("opencode") or "opencode"
         target_model = model or self.default_model
+        if target_model in {
+            "deepseek-v4-flash",
+            "deepseek-v4-flash-legacy",
+            "deepseek/deepseek-v4-flash",
+        }:
+            raise ValueError(
+                "deepseek-v4-flash is retired for historical records; "
+                "use deepseek-v4.1-flash for new first-party dispatches"
+            )
         # Route bare catalog ids to the first-party opencode provider — a bare
-        # "deepseek-v4-flash" would leave provider resolution to opencode and
+        # "deepseek-v4.1-flash" would leave provider resolution to opencode and
         # can land off the api.deepseek.com account. Explicit provider-prefixed
         # ids pass through untouched.
         invocation_model = DEEPSEEK_OPENCODE_MODEL_ROUTES.get(target_model, target_model)
+        if invocation_model == "deepseek/deepseek-flash":
+            cached_name = _cached_flash_name()
+            if cached_name is not None and cached_name != "DeepSeek V4.1 Flash":
+                raise ValueError(
+                    "deepseek/deepseek-flash alias drift: cached models.dev name "
+                    f"is {cached_name!r}, expected 'DeepSeek V4.1 Flash'"
+                )
 
         if is_deepseek_first_party_forbidden_in_ci("deepseek", invocation_model):
             raise ValueError(

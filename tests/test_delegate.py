@@ -2106,6 +2106,28 @@ def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_
     assert state["resolved_model_source"] == "cursor-stream-json"
 
 
+def test_deepseek_model_state_requires_expected_cached_alias_name(tmp_path):
+    cache = tmp_path / "models.json"
+    cache.write_text('{"deepseek":{"models":{"deepseek-flash":{"name":"DeepSeek V4.1 Flash"}}}}')
+    state = delegate._deepseek_model_state(
+        agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache
+    )
+    assert state == {
+        "resolved_model": "deepseek-v4.1-flash",
+        "resolved_model_known": True,
+        "resolved_model_source": "models_dev_cached_alias",
+    }
+    cache.write_text('{"deepseek":{"models":{"deepseek-flash":{"name":"DeepSeek V4.2 Flash"}}}}')
+    drifted = delegate._deepseek_model_state(
+        agent="deepseek", model="deepseek-v4.1-flash", cache_path=cache
+    )
+    assert drifted["resolved_model_known"] is False
+    assert drifted["resolved_model"] == "unattested-harness"
+    assert delegate._deepseek_model_state(
+        agent="deepseek", model="deepseek-v4-pro", cache_path=cache
+    )["resolved_model"] == "deepseek-v4-pro"
+
+
 def test_run_worker_records_unattested_harness_cursor_model_without_inventing_selector(
     tmp_tasks_dir,
     tmp_path,

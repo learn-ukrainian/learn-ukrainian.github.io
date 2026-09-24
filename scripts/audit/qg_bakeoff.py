@@ -72,7 +72,7 @@ _ARM_CHOICES = (TOOLED_ARM, BARE_ARM, BOTH_ARM)
 OPENCODE_TRANSPORT = "opencode"
 OPENCODE_ENTRYPOINT = "qg_bakeoff_opencode"
 OPENCODE_MEASUREMENT_TIER = "opencode_bare_or_tooled"
-DEEPSEEK_DIRECT_FLASH_PIN = DEEPSEEK_OPENCODE_MODEL_ROUTES["deepseek-v4-flash"]
+DEEPSEEK_DIRECT_FLASH_PIN = DEEPSEEK_OPENCODE_MODEL_ROUTES["deepseek-v4.1-flash"]
 DEEPSEEK_DIRECT_PRO_PIN = DEEPSEEK_OPENCODE_MODEL_ROUTES["deepseek-v4-pro"]
 DEEPSEEK_DIRECT_PINS = (DEEPSEEK_DIRECT_FLASH_PIN, DEEPSEEK_DIRECT_PRO_PIN)
 DEEPSEEK_OPENROUTER_FLASH_PIN = "openrouter/deepseek/deepseek-v4-flash"
@@ -147,7 +147,7 @@ class CandidateModel:
 # LU_ROUTING_GUARD_OVERRIDE=1 with explicit user authorization.
 DEFAULT_CANDIDATE_MODELS: tuple[CandidateModel, ...] = (
     CandidateModel("gemma-4-31b", "openrouter/google/gemma-4-31b-it"),
-    CandidateModel("deepseek-v4-flash-direct", DEEPSEEK_DIRECT_FLASH_PIN),
+    CandidateModel("deepseek-v4.1-flash-direct", DEEPSEEK_DIRECT_FLASH_PIN),
     CandidateModel("deepseek-v4-pro-direct", DEEPSEEK_DIRECT_PRO_PIN),
     CandidateModel("claude-frontier-openrouter-unreachable", "TODO_OPENROUTER_ANTHROPIC_FRONTIER_PIN", unresolved=True),
     CandidateModel("gpt-frontier-openrouter-unreachable", "TODO_OPENROUTER_OPENAI_FRONTIER_PIN", unresolved=True),

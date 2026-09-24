@@ -862,7 +862,7 @@ def _hermes_result(*, ok: bool = True, response: str = "response body") -> Resul
 
 def test_hermes_default_model_is_deepseek_flash():
     """DeepSeek Flash is the Hermes tool-heavy default."""
-    assert HERMES_DEFAULT_MODEL == "deepseek-v4-flash"
+    assert HERMES_DEFAULT_MODEL == "deepseek-v4.1-flash"
 
 
 def test_invoke_hermes_uses_shared_runtime():

@@ -114,6 +114,19 @@ def test_explicit_model_and_effort_overrides_win(tmp_path):
     assert plan.cmd[plan.cmd.index("--variant") + 1] == "max"
 
 
+def test_retired_v4_identity_cannot_launch_moving_flash_alias(tmp_path):
+    with pytest.raises(ValueError, match="retired for historical records"):
+        _build("Check.", tmp_path, model="deepseek-v4-flash")
+
+
+def test_cached_alias_drift_refuses_new_flash_dispatch(tmp_path):
+    with patch(
+        "agent_runtime.adapters.deepseek._cached_flash_name",
+        return_value="DeepSeek V4.2 Flash",
+    ), pytest.raises(ValueError, match="alias drift"):
+        _build("Check.", tmp_path)
+
+
 def test_provider_prefixed_model_passes_through(tmp_path):
     plan = _build("Check.", tmp_path, model="deepseek/deepseek-flash")
 

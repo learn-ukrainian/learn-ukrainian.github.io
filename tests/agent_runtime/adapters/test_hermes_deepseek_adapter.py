@@ -250,14 +250,14 @@ def test_registry_lists_deepseek_with_opencode_adapter():
 
     entry = get_agent_entry("deepseek")
     assert entry["cli_available"] is True
-    assert entry["default_model"] == "deepseek-v4-flash"
+    assert entry["default_model"] == "deepseek-v4.1-flash"
     assert entry["default_effort"] == "high"
     assert entry["adapter"].endswith(":DeepSeekAdapter")
     assert entry["resume_policy"] == "never"
 
     hermes_entry = get_agent_entry("hermes-deepseek")
     assert hermes_entry["cli_available"] is True
-    assert hermes_entry["default_model"] == "deepseek-v4-flash"
+    assert hermes_entry["default_model"] == "deepseek-v4.1-flash"
     assert hermes_entry["adapter"].endswith(":HermesDeepSeekAdapter")
     assert hermes_entry["resume_policy"] == "never"
 

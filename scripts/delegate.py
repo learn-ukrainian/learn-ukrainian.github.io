@@ -1508,6 +1508,43 @@ def _cursor_model_state(
     return state
 
 
+def _deepseek_model_state(
+    *, agent: str, model: str | None, cache_path: Path | None = None
+) -> dict[str, Any]:
+    """Attest a DeepSeek route from its versioned pin or cached alias name."""
+    if agent != "deepseek":
+        return {}
+    if model == "deepseek-v4-pro":
+        return {
+            "resolved_model": model,
+            "resolved_model_known": True,
+            "resolved_model_source": "versioned_first_party_route",
+        }
+    if model not in {"deepseek-v4.1-flash", "deepseek/deepseek-flash"}:
+        return {
+            "resolved_model": "unattested-harness",
+            "resolved_model_known": False,
+            "resolved_model_source": "unrecognized_deepseek_route",
+        }
+    path = cache_path or Path.home() / ".cache" / "opencode" / "models.json"
+    try:
+        cache = json.loads(path.read_text(encoding="utf-8"))
+        name = cache["deepseek"]["models"]["deepseek-flash"]["name"]
+    except (OSError, ValueError, KeyError, TypeError):
+        name = None
+    if name == "DeepSeek V4.1 Flash":
+        return {
+            "resolved_model": "deepseek-v4.1-flash",
+            "resolved_model_known": True,
+            "resolved_model_source": "models_dev_cached_alias",
+        }
+    return {
+        "resolved_model": "unattested-harness",
+        "resolved_model_known": False,
+        "resolved_model_source": "models_dev_alias_unverified",
+    }
+
+
 _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
 _NO_DELIVERABLE_NO_COMMITS_REASON = "no_commits_no_changes"
 _NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
@@ -6284,6 +6321,10 @@ def _run_worker(
             **core_terminal_state,
             "model": getattr(result, "model", final_state.get("model")),
             **cursor_model_state,
+            **_deepseek_model_state(
+                agent=agent,
+                model=getattr(result, "model", final_state.get("model")),
+            ),
             "effort": getattr(result, "effort", final_state.get("effort")),
             "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
             "substitution": substitution,
@@ -6506,6 +6547,7 @@ def _record_worktree_prep_failure(
         "agent": agent,
         "model": start_telemetry.model,
         **_cursor_model_state(agent=agent, initial=True),
+        **_deepseek_model_state(agent=agent, model=start_telemetry.model),
         "effort": start_telemetry.effort,
         "cli_version": start_telemetry.cli_version,
         "allow_merge": False,
@@ -7391,6 +7433,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 "agent": dispatch_agent,
                 "model": start_telemetry.model,
                 **_cursor_model_state(agent=dispatch_agent, initial=True),
+                **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
                 "effort": start_telemetry.effort,
                 "cli_version": start_telemetry.cli_version,
                 "mode": args.mode,
@@ -7683,6 +7726,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             "agent": dispatch_agent,
             "model": start_telemetry.model,
             **_cursor_model_state(agent=dispatch_agent, initial=True),
+            **_deepseek_model_state(agent=dispatch_agent, model=start_telemetry.model),
             "effort": start_telemetry.effort,
             "cli_version": start_telemetry.cli_version,
             "allow_merge": bool(getattr(args, "allow_merge", False)),

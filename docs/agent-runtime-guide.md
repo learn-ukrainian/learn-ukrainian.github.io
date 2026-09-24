@@ -481,7 +481,7 @@ chains:
     cooldown_ttl_s: 300
     routes:
       - provider: deepseek
-        model: deepseek-v4-flash
+        model: deepseek-v4.1-flash
       - provider: openrouter
         model: qwen/qwen3.6-plus
 ```

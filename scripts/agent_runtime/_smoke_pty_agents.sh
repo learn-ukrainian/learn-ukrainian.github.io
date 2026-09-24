@@ -66,7 +66,7 @@ MODEL_BY_AGENT = {
     "codex":    None,
     "gemini":   "gemini-3-flash-preview",
     "claude":   "claude-haiku-4-5-20251001",
-    "deepseek": "deepseek-v4-flash",
+    "deepseek": "deepseek-v4.1-flash",
     "grok":     None,
 }
 
