@@ -106,10 +106,15 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # ``_AGY_MIN_BACKGROUND_WAIT_VERSION`` — that build cannot finish a long command
 # headlessly, so detection alone would only turn every such run into a failure
 # — and (2) accepts an exit-0 run only with positive completion evidence from
-# THIS run's own transcript: every background task it started has a finish
-# event and the model replied after the last one. The evidence is read from the
-# transcript bound to this invocation (see ``_transcript_path_from_plan``) and
-# never from stderr alone: agy prints its idle-wait diagnostic only on some
+# THIS invocation's slice of its conversation transcript: the events appended
+# after the transcript size recorded at build time (0 for a fresh
+# conversation), so a resumed conversation never credits an earlier run's
+# finish or reply (#8502 r5). In that slice the run's own USER_INPUT must
+# appear, every background task started after it must have a finish event, and
+# the last model turn must be a final text reply after the last finish that is
+# not an interim waiting status. The evidence is read from the transcript bound
+# to this invocation (see ``_transcript_path_from_plan``) and never from stderr
+# alone: agy prints its idle-wait diagnostic only on some
 # paths, so its absence proves nothing (#8502 r3). A run whose transcript cannot
 # be bound has no evidence and fails as unconfirmed. Failures lead
 # ``stderr_excerpt`` with a reason code (the dispatch's machine-readable
@@ -133,6 +138,17 @@ _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in pr
 _IDLE_BACKGROUND_WAIT_RE = re.compile(r"root agent idle; waiting up to \S+ for (?P<count>\d+) background task\(s\)")
 _BACKGROUND_STARTED_RE = re.compile(r"Tool is running as a background task with task id: (?P<id>\S+)")
 _BACKGROUND_FINISHED_RE = re.compile(r'Task id "(?P<id>[^"]+)" finished')
+# An interim status the agent writes while its command is still running
+# ("Waiting for task-220 to complete.", "Waiting 60 seconds for the command to
+# finish...", "I will wait for it to finish."). Only a reply that LEADS with the
+# wait counts, so a final summary that mentions waiting stays a result.
+_INTERIM_WAIT_REPLY_RE = re.compile(
+    r"^\W*(?:(?:I\s*(?:am|'m|will|'ll)|still)\s+(?:now\s+|still\s+)?)?wait(?:ing)?\b", re.IGNORECASE
+)
+_REPLY_TASK_REF_RE = re.compile(r"\btask-\d+\b")
+# Plan metadata: this invocation's conversation and the size its transcript had
+# when the invocation was built (see ``_transcript_baseline``).
+_TRANSCRIPT_BASELINE_KEY = "agy_transcript_baseline"
 _AGY_LOG_ENV = "AGY_RUNTIME_LOG_FILE"
 _AGY_APP_DATA_ENV = "AGY_APP_DATA_DIR"
 _AGY_UUID = r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
@@ -413,6 +429,11 @@ class AgyAdapter:
             # $HOME/.gemini/config and keeps transcripts under AGY_APP_DATA_DIR.
             env_overrides["HOME"] = str(agy_home)
             env_overrides[_AGY_APP_DATA_ENV] = str(Path(agy_home) / ".gemini" / "antigravity-cli")
+        baseline = (
+            {_TRANSCRIPT_BASELINE_KEY: _transcript_baseline(_agy_app_data(env_overrides), session_id)}
+            if session_id and not review_isolation
+            else {}
+        )
 
         return InvocationPlan(
             cmd=cmd,
@@ -424,6 +445,7 @@ class AgyAdapter:
             liveness_paths=(log_path,),
             metadata={
                 **schema_metadata(output_schema),
+                **baseline,
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -560,25 +582,34 @@ def _incomplete_run_reason(stderr_text: str) -> str | None:
 
 
 def _completion_gap(stderr_text: str, plan: InvocationPlan | None) -> str | None:
-    """Return a reason code unless this run's own transcript proves its work finished.
+    """Return a reason code unless THIS invocation's transcript slice proves its work finished.
 
-    The transcript is the only positive evidence: every background task it
-    started must have a "Task id … finished" system message, and a model reply
-    must follow the last one — an exit-0 run whose final word is "Waiting for
-    task-220 to complete." has neither. stderr cannot stand in for it: agy's
-    "root agent idle; waiting up to … for N background task(s)" line is absent
-    on some paths, so it can only add doubt (a claimed wait with no task in the
-    transcript), never remove it.
+    Only the events this invocation appended count (``_invocation_transcript``):
+    a resumed conversation already holds earlier runs' finishes and replies,
+    which prove nothing about this one (#8502 r5). The slice must hold exactly
+    one USER_INPUT — this invocation's prompt; none means the run never reached
+    the model, several mean the slice reaches into an earlier run. After it,
+    every background task started must have a "Task id … finished" system
+    message, and the last model turn must be a text reply that follows the last
+    finish and is not an interim waiting status (``_is_interim_reply``) — an
+    exit-0 run whose final word is "Waiting for task-220 to complete." has
+    none of that. stderr cannot stand in for the transcript: agy's "root agent
+    idle; waiting up to … for N background task(s)" line is absent on some
+    paths, so it can only add doubt (a claimed wait with no task in the slice),
+    never remove it.
     """
-    transcript_path = _transcript_path_from_plan(plan)
-    events = _read_transcript_events(transcript_path) if transcript_path is not None else []
-    if not events:
+    bound = _invocation_transcript(plan)
+    if bound is None:
         return AGY_TRANSCRIPT_UNBOUND
+    _, events = bound
+    prompts = [position for position, event in enumerate(events) if event.get("type") == "USER_INPUT"]
+    if len(prompts) != 1:
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
     started: set[str] = set()
     finished: set[str] = set()
     last_finish = -1
-    last_reply = -1
-    for position, event in enumerate(events):
+    final_reply: tuple[int, Mapping[str, Any]] | None = None
+    for position, event in enumerate(events[prompts[0] + 1 :]):
         content = str(event.get("content") or "")
         step = _event_step_index(event)
         order = step if step is not None else position
@@ -588,16 +619,36 @@ def _completion_gap(stderr_text: str, plan: InvocationPlan | None) -> str | None
             if ids:
                 finished |= ids
                 last_finish = max(last_finish, order)
-        elif event.get("type") == "PLANNER_RESPONSE" and content.strip():
-            last_reply = max(last_reply, order)
+        elif event.get("type") == "PLANNER_RESPONSE" and (final_reply is None or order >= final_reply[0]):
+            final_reply = (order, event)
     idle_wait_claimed = any(
         int(match.group("count")) > 0 for match in _IDLE_BACKGROUND_WAIT_RE.finditer(stderr_text)
     )
     if idle_wait_claimed and not started:
         return AGY_BACKGROUND_TASK_UNCONFIRMED
-    if started and (not started <= finished or last_reply <= last_finish):
+    if not started <= finished:
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    if final_reply is None or final_reply[0] <= last_finish:
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    if _is_interim_reply(final_reply[1], finished):
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     return None
+
+
+def _is_interim_reply(event: Mapping[str, Any], finished: set[str]) -> bool:
+    """True when the model's last turn is not a final answer.
+
+    A turn that still calls tools, says nothing, leads with a wait, or names a
+    task this invocation did not see finish (``task-2`` of an earlier run of a
+    resumed conversation) is a status, not a result.
+    """
+    content = str(event.get("content") or "").strip()
+    if event.get("tool_calls") or not content:
+        return True
+    if _INTERIM_WAIT_REPLY_RE.match(content):
+        return True
+    finished_tasks = {task_id.rsplit("/", 1)[-1] for task_id in finished}
+    return any(ref not in finished_tasks for ref in _REPLY_TASK_REF_RE.findall(content))
 
 
 @functools.lru_cache(maxsize=8)
@@ -697,12 +748,10 @@ def _parse_stdout_marker_tool_calls(text: str) -> list[dict[str, Any]]:
 
 
 def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, Any]]:
-    transcript_path = _transcript_path_from_plan(plan)
-    if transcript_path is None:
+    bound = _invocation_transcript(plan)
+    if bound is None:
         return []
-    events = _read_transcript_events(transcript_path)
-    if not events:
-        return []
+    transcript_path, events = bound
 
     has_step_index = any(_event_step_index(event) is not None for event in events)
     if not any(event.get("type") == _LEGACY_MCP_RESULT_TYPE for event in events):
@@ -712,9 +761,12 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
     return _pair_transcript_fifo(events, transcript_path=transcript_path)
 
 
-def _read_transcript_events(transcript_path: Path) -> list[dict[str, Any]]:
+def _read_transcript_events(transcript_path: Path, *, offset: int = 0) -> list[dict[str, Any]]:
+    """Parse the transcript's JSONL events from byte ``offset`` onward."""
     try:
-        lines = transcript_path.read_text(encoding="utf-8").splitlines()
+        with transcript_path.open("rb") as handle:
+            handle.seek(offset)
+            lines = handle.read().decode("utf-8", errors="replace").splitlines()
     except OSError:
         return []
 
@@ -952,20 +1004,73 @@ def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
     run of the same prompt opened within the same second, so there is no
     fallback.
     """
+    bound = _bound_conversation(plan)
+    return bound[1] if bound is not None else None
+
+
+def _bound_conversation(plan: InvocationPlan | None) -> tuple[str, Path] | None:
+    """Return (conversation id, transcript path) the invocation's log binds."""
     if plan is None:
         return None
     log_file = plan.env_overrides.get(_AGY_LOG_ENV)
     conversation_id = _conversation_id_from_log(Path(log_file)) if log_file else None
     if not conversation_id:
         return None
-    app_data = Path(
-        plan.env_overrides.get(
-            _AGY_APP_DATA_ENV,
-            str(Path.home() / ".gemini" / "antigravity-cli"),
-        )
-    )
-    transcript = _brain_transcript_path(app_data, conversation_id)
-    return transcript if transcript.exists() else None
+    transcript = _brain_transcript_path(_agy_app_data(plan.env_overrides), conversation_id)
+    return (conversation_id, transcript) if transcript.exists() else None
+
+
+def _invocation_transcript(plan: InvocationPlan | None) -> tuple[Path, list[dict[str, Any]]] | None:
+    """Return the bound transcript and only the events THIS invocation appended.
+
+    A resumed conversation starts at the size recorded in the plan when the
+    invocation was built; any other conversation the log names was not resumed
+    on purpose, so it is read from the start and ``_completion_gap``'s single
+    USER_INPUT rule rejects it if it holds an earlier run. An unknown or no
+    longer valid baseline (unreadable at build time, or a transcript shorter
+    than it now) binds nothing.
+    """
+    bound = _bound_conversation(plan)
+    if bound is None:
+        return None
+    conversation_id, transcript = bound
+    offset: int | None = 0
+    baseline = plan.metadata.get(_TRANSCRIPT_BASELINE_KEY) if plan is not None else None
+    if isinstance(baseline, Mapping) and baseline.get("conversation_id") == conversation_id:
+        raw_offset = baseline.get("offset")
+        offset = raw_offset if isinstance(raw_offset, int) and raw_offset >= 0 else None
+    if offset is None:
+        return None
+    try:
+        if transcript.stat().st_size < offset:
+            return None
+    except OSError:
+        return None
+    events = _read_transcript_events(transcript, offset=offset)
+    return (transcript, events) if events else None
+
+
+def _transcript_baseline(app_data: Path, session_id: str) -> dict[str, Any]:
+    """Record where a resumed conversation's transcript ends before this invocation.
+
+    A fresh conversation records nothing (nothing precedes this run). An absent
+    transcript is offset 0; one that cannot be sized, or a session id that is
+    not a conversation UUID, records ``offset: None`` so the run binds nothing
+    rather than crediting earlier events.
+    """
+    offset: int | None = None
+    if re.fullmatch(_AGY_UUID, session_id):
+        try:
+            offset = _brain_transcript_path(app_data, session_id).stat().st_size
+        except FileNotFoundError:
+            offset = 0
+        except OSError:
+            offset = None
+    return {"conversation_id": session_id, "offset": offset}
+
+
+def _agy_app_data(env_overrides: Mapping[str, str]) -> Path:
+    return Path(env_overrides.get(_AGY_APP_DATA_ENV, str(Path.home() / ".gemini" / "antigravity-cli")))
 
 
 def _brain_transcript_path(app_data: Path, conversation_id: str) -> Path:

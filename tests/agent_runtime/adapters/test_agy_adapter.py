@@ -1019,3 +1019,190 @@ def test_parse_response_fails_structured_run_cut_off_mid_work(tmp_path: Path) ->
 
     assert result.ok is False
     assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_ABANDONED
+
+
+# Resumed conversations (#8502 r5): the transcript of a resumed conversation
+# already holds earlier runs' task finishes and replies. Only the events THIS
+# invocation appended — after the size recorded at build time — are evidence.
+def _resumed_run_lines() -> list[str]:
+    """The finished probe replayed as a second run of the same conversation."""
+    lines = []
+    for line in _fixture_lines("background_task_finished_transcript.jsonl"):
+        event = json.loads(line)
+        event["step_index"] += 6
+        lines.append(json.dumps(event).replace("task-2", "task-8").replace("7731", "8812"))
+    return lines
+
+
+def _parse_resumed_run(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    appended: list[str],
+    stdout: str,
+    earlier: list[str] | None = None,
+) -> object:
+    _fake_agy(tmp_path, monkeypatch, "1.2.10")
+    agy_home = tmp_path / "agy-home"
+    app_data = agy_home / ".gemini" / "antigravity-cli"
+    transcript = agy_module._brain_transcript_path(app_data, _FINISHED_CONVERSATION_ID)
+    transcript.parent.mkdir(parents=True)
+    if earlier is None:
+        earlier = _fixture_lines("background_task_finished_transcript.jsonl")
+    transcript.write_text("\n".join(earlier) + "\n", encoding="utf-8")
+    plan = AgyAdapter().build_invocation(
+        prompt="Retry the probe.",
+        mode="danger",
+        cwd=tmp_path,
+        model=None,
+        task_id="t-resume",
+        session_id=_FINISHED_CONVERSATION_ID,
+        tool_config={"agy_home_override": str(agy_home)},
+    )
+    with transcript.open("a", encoding="utf-8") as handle:
+        handle.writelines(f"{line}\n" for line in appended)
+    log_file = Path(plan.env_overrides["AGY_RUNTIME_LOG_FILE"])
+    log_file.write_text(f"I0924 server.go:1185] found conversation {_FINISHED_CONVERSATION_ID}\n", encoding="utf-8")
+    try:
+        return AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+    finally:
+        log_file.unlink(missing_ok=True)
+
+
+@pytest.mark.parametrize(
+    ("appended_steps", "reason"),
+    [
+        (0, agy_module.AGY_TRANSCRIPT_UNBOUND),  # nothing appended yet
+        (1, agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED),  # only this run's USER_INPUT
+        (4, agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED),  # task-8 started, interim reply
+    ],
+)
+def test_resumed_retry_never_borrows_earlier_finish_and_reply(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, appended_steps: int, reason: str
+) -> None:
+    # Reviewer reproduction (#8502 r5): an exit-0 retry on a resumed
+    # conversation printed "Waiting for task-2 to complete" before adding its
+    # own events; the whole-transcript scan credited the earlier run's task-2
+    # finish and reply (ok=True).
+    result = _parse_resumed_run(
+        tmp_path,
+        monkeypatch,
+        appended=_resumed_run_lines()[:appended_steps],
+        stdout="Waiting for task-2 to complete.",
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == reason
+
+
+def test_resumed_retry_rejects_waiting_reply_about_earlier_task(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The retry's only reply is about the EARLIER run's task-2, which this
+    # invocation never saw finish.
+    user_input = _resumed_run_lines()[0]
+    reply = json.dumps(
+        {"step_index": 7, "type": "PLANNER_RESPONSE", "content": "task-2 is still running; I am waiting on it."}
+    )
+
+    result = _parse_resumed_run(
+        tmp_path, monkeypatch, appended=[user_input, reply], stdout="task-2 is still running; I am waiting on it."
+    )
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+def test_resumed_run_that_completes_is_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    stdout = "I have launched the command and am waiting for it to finish.\nPROBE_DONE_8812"
+
+    result = _parse_resumed_run(tmp_path, monkeypatch, appended=_resumed_run_lines(), stdout=stdout)
+
+    assert result.ok is True
+    assert result.response == stdout
+
+
+def test_resumed_run_reports_only_its_own_tool_calls(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # The earlier run called mcp_sources_verify_words; this one did not.
+    result = _parse_resumed_run(
+        tmp_path,
+        monkeypatch,
+        earlier=_fixture_lines("verify_words_transcript.jsonl"),
+        appended=_resumed_run_lines(),
+        stdout="PROBE_DONE_8812",
+    )
+
+    assert result.ok is True
+    assert not any("verify_words" in str(call) for call in result.tool_calls)
+
+
+def test_resumed_run_with_transcript_shorter_than_baseline_binds_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _fake_agy(tmp_path, monkeypatch, "1.2.10")
+    agy_home = tmp_path / "agy-home"
+    transcript = agy_module._brain_transcript_path(agy_home / ".gemini" / "antigravity-cli", _FINISHED_CONVERSATION_ID)
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text("\n".join(_fixture_lines("background_task_finished_transcript.jsonl")) + "\n")
+    plan = AgyAdapter().build_invocation(
+        prompt="Retry the probe.",
+        mode="danger",
+        cwd=tmp_path,
+        model=None,
+        task_id="t-rewritten",
+        session_id=_FINISHED_CONVERSATION_ID,
+        tool_config={"agy_home_override": str(agy_home)},
+    )
+    transcript.write_text(_resumed_run_lines()[0] + "\n")  # rewritten, not appended
+    log_file = Path(plan.env_overrides["AGY_RUNTIME_LOG_FILE"])
+    log_file.write_text(f"found conversation {_FINISHED_CONVERSATION_ID}\n", encoding="utf-8")
+    try:
+        result = AgyAdapter().parse_response(
+            stdout="PROBE_DONE_8812", stderr="", returncode=0, output_file=None, plan=plan
+        )
+    finally:
+        log_file.unlink(missing_ok=True)
+
+    assert result.ok is False
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
+
+
+@pytest.mark.parametrize(
+    ("lines", "stdout"),
+    [
+        # Reviewer reproduction (#8502 r5): a fresh transcript holding only the
+        # prompt parsed as ok=True.
+        (lambda: _fixture_lines("background_task_finished_transcript.jsonl")[:1], "PROBE_DONE_7731"),
+        # A conversation this run did not ask to resume, holding an earlier run.
+        (
+            lambda: _fixture_lines("background_task_finished_transcript.jsonl") + _resumed_run_lines(),
+            "PROBE_DONE_8812",
+        ),
+        # The last model turn is a tool call, not a reply.
+        (lambda: _fixture_lines(_CANARY_FIXTURE)[:-2], "b4d19d2 (HEAD -> main) canary 8502-r3"),
+    ],
+    ids=["user-input-only", "unrequested-earlier-run", "ends-on-tool-call"],
+)
+def test_fresh_run_without_its_own_final_reply_is_unconfirmed(tmp_path: Path, lines, stdout: str) -> None:
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, lines())
+
+    result = AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+def test_fresh_completed_run_is_accepted(tmp_path: Path) -> None:
+    plan = _background_plan(
+        tmp_path, _FINISHED_CONVERSATION_ID, _fixture_lines("background_task_finished_transcript.jsonl")
+    )
+
+    result = AgyAdapter().parse_response(
+        stdout="PROBE_DONE_7731", stderr="", returncode=0, output_file=None, plan=plan
+    )
+
+    assert result.ok is True
+    assert result.response == "PROBE_DONE_7731"
+    assert plan.metadata == {}  # a fresh conversation records no baseline
