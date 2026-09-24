@@ -771,7 +771,7 @@ def assemble_expanded_document(
                         )
             else:
                 opts = item.get("options") or item.get("choices") or item.get("distractors") or []
-                if act_type == "fill-in" and item.get("mode") == "form-choice":
+                if act_type == "fill-in" and item.get("mode") == "form-choice" and item.get("record"):
                     word_ref = item.get("record")
                     ans_text = item.get("answer")
                     for opt_idx, opt in enumerate(opts):
@@ -1056,9 +1056,16 @@ def finalize_provenance_from_stressed_units(
         text = span.get("text")
         if not text:
             continue
+        text_strip = text.strip() or text
         tab = span.get("tab")
         if tab == "urok":
-            if urok_md is not None and text not in urok_md and text not in rendered_mdx:
+            if (
+                urok_md is not None
+                and text not in urok_md
+                and text_strip not in urok_md
+                and text not in rendered_mdx
+                and text_strip not in rendered_mdx
+            ):
                 raise AssemblerError(
                     "span_text_not_in_rendered_output",
                     f"span text {text!r} not found in rendered urok MD at step {span.get('step')}",
@@ -1068,13 +1075,19 @@ def finalize_provenance_from_stressed_units(
             act_id = span.get("activity")
             act = activities_by_id.get(act_id)
             act_str = str(getattr(act, "__dict__", act)) if act else ""
-            if act and text not in act_str and text not in rendered_mdx:
+            if (
+                act
+                and text not in act_str
+                and text_strip not in act_str
+                and text not in rendered_mdx
+                and text_strip not in rendered_mdx
+            ):
                 raise AssemblerError(
                     "span_text_not_in_rendered_output",
                     f"span text {text!r} not found in rendered activity {act_id}",
                     layer="writer",
                 )
-            elif not act and text not in rendered_mdx:
+            elif not act and text not in rendered_mdx and text_strip not in rendered_mdx:
                 raise AssemblerError(
                     "span_text_not_in_rendered_output",
                     f"span text {text!r} not found in rendered output for activity {act_id}",
@@ -1082,7 +1095,12 @@ def finalize_provenance_from_stressed_units(
                 )
         elif tab == "slovnyk":
             v_str = str(vocab_items) if vocab_items else ""
-            if text not in v_str and text not in rendered_mdx:
+            if (
+                text not in v_str
+                and text_strip not in v_str
+                and text not in rendered_mdx
+                and text_strip not in rendered_mdx
+            ):
                 raise AssemblerError(
                     "span_text_not_in_rendered_output",
                     f"span text {text!r} not found in rendered Slovnyk",
@@ -1090,13 +1108,18 @@ def finalize_provenance_from_stressed_units(
                 )
         elif tab == "resursy":
             r_str = str(external_resources) if external_resources else ""
-            if text not in r_str and text not in rendered_mdx:
+            if (
+                text not in r_str
+                and text_strip not in r_str
+                and text not in rendered_mdx
+                and text_strip not in rendered_mdx
+            ):
                 raise AssemblerError(
                     "span_text_not_in_rendered_output",
                     f"span text {text!r} not found in rendered Resursy",
                     layer="writer",
                 )
-        elif text not in rendered_mdx:
+        elif text not in rendered_mdx and text_strip not in rendered_mdx:
             raise AssemblerError(
                 "span_text_not_in_rendered_output",
                 f"span text {text!r} not found in rendered MDX",
