@@ -921,13 +921,13 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     return True
 
 
-def is_valid_candidate(
+def validate_candidate_rejection(
     orig_text: str,
     corr_text: str,
     in_scope: list[tuple[int, int, str, str]],
     vesum_cur: sqlite3.Cursor | None = None,
     orig_tokens: list[str] | None = None,
-) -> bool:
+) -> str | None:
     """Validate candidate correction against annotator typos, comma-parens, and wholesale rewrites."""
     # Safety: reject graphic / violent / forensic / morbid / vulgar content
     if re.search(
@@ -939,151 +939,151 @@ def is_valid_candidate(
         corr_text,
         re.IGNORECASE,
     ):
-        return False
+        return "safety_violent_morbid_vulgar"
     # Reject pure word insertions where start == end
     if any(e[0] == e[1] and re.search(r"[а-яіїєґА-ЯІЇЄҐ\w]", e[3]) for e in in_scope):
-        return False
+        return "pure_word_insertions"
     # Real word counts
     w1_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text)
     w2_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", corr_text)
     if len(w1_words) < 5 or len(w2_words) < 5:
-        return False
+        return "sentence_length_floor_under_5_words"
     # Sentence start must be uppercase or opening quote + uppercase
     c_strip = corr_text.strip()
     if not (c_strip[0].isupper() or (c_strip[0] in '«"“' and len(c_strip) > 1 and c_strip[1].isupper())):
-        return False
+        return "uncapitalized_or_fragment"
     # Terminal punctuation: must end with . ! ? ... » ” "
     if not re.search(r"(?:[.!?…][»”\"]?|[»”\"][.!?…])$", c_strip):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if corr_text.strip().endswith((";", ":", ",", "-", "–", "—")):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     # Reject unpunctuated run-on sentence / dropped period
     if re.search(
         r"\b[а-яіїєґ]+\s+(?:Най[а-яіїєґ]+|Він|Вона|Вони|Ми|Ви|Це|Той|Такий|Але|Проте|Однак|Тому|Коли|Якщо|Був|Була|Були|Мав|Мала|Пішов|Сказав|Відповів|Зробив)\b",
         corr_text,
     ):
-        return False
+        return "run_on_sentence_dropped_period"
     # Reject comma after question or exclamation mark
     if re.search(r"[\?!][»”\"]?,\s*—", corr_text) or re.search(r"[\?!],", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     # Reject colon-dash combo
     if re.search(r":\s*—", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     # Reject comma between subject and reporting verb
     if re.search(
         r"\b[А-ЯІЇЄҐ][а-яіїєґ]+,\s+(?:підморгнув|сказав|відповів|спитав|вигукнув|побіг|пішов|взяв|зробив)\b", corr_text
     ):
-        return False
+        return "comma_subject_reporting_verb"
     # Reject capitalization after comma-dash
     if re.search(r",\s*—\s*(?:Женучись|[А-ЯІЇЄҐ][а-яіїєґ]+(?:чи|ши|вши|вшись|ться|ти|ть|в|ла|ло|ли))\b", corr_text):
-        return False
+        return "capitalization_after_comma_dash"
     # Reject malformed quote spacing
     if (
         re.search(r'"\s+[а-яіїєґА-ЯІЇЄҐ]', corr_text)
         or re.search(r'[а-яіїєґА-ЯІЇЄҐ]\s+"[а-яіїєґА-ЯІЇЄҐ]', corr_text)
         or re.search(r'\w+"[А-ЯІЇЄҐа-яіїєґ]', corr_text)
     ):
-        return False
+        return "malformed_quote_spacing"
     # Reject missing punctuation before quote in direct speech
     if re.search(r'\b[а-яіїєґА-ЯІЇЄҐ]+\s+["«][А-ЯІЇЄҐ]', corr_text):
-        return False
+        return "missing_punct_before_direct_speech_quote"
     # Strictly reject ASCII straight quotes in both orig and corr (Ukrainian standard requires «...»)
     if '"' in corr_text or '"' in orig_text:
-        return False
+        return "straight_ascii_quotes"
     # Strictly reject decimal dot (must use comma in standard Ukrainian)
     if re.search(r"\b\d+\.\d+\b", corr_text) or re.search(r"\b\d+\.\d+\b", orig_text):
-        return False
+        return "math_special_symbols"
     # Reject sentence-splitting edits
     if re.search(
         r"(?<!\b[А-ЯІЇЄҐ]\.)(?<!\b[а-яіїєґ]\.)(?<!\bім\.)(?<!\bвул\.)(?<!\bр\.)(?<!\bст\.)\.\s+[А-ЯІЇЄҐ]", corr_text
     ) and not re.search(
         r"(?<!\b[А-ЯІЇЄҐ]\.)(?<!\b[а-яіїєґ]\.)(?<!\bім\.)(?<!\bвул\.)(?<!\bр\.)(?<!\bст\.)\.\s+[А-ЯІЇЄҐ]", orig_text
     ):
-        return False
+        return "sentence_splitting_edit"
     # Reject colloquial Russian -то
     if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+-то\b", corr_text) or re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+-то\b", orig_text):
-        return False
+        return "colloquial_russian_suffix_to"
     # No URLs
     if re.search(r"https?://", orig_text) or re.search(r"https?://", corr_text):
-        return False
+        return "url_in_sentence"
     # Strictly Cyrillic: zero Latin, CJK, zero-width, or control characters
     if re.search(r"[a-zA-Z]", corr_text) or re.search(r"[a-zA-Z]", orig_text):
-        return False
+        return "latin_characters"
     if re.search(r"[\u2e80-\u9fff\u3000-\u303f\uff00-\uffef]", corr_text) or re.search(
         r"[\u2e80-\u9fff\u3000-\u303f\uff00-\uffef]", orig_text
     ):
-        return False
+        return "latin_characters"
     if re.search(r"[\u200b-\u200f\u202a-\u202e\ufeff]", corr_text) or re.search(
         r"[\u200b-\u200f\u202a-\u202e\ufeff]", orig_text
     ):
-        return False
+        return "latin_characters"
     # Reject spaced ellipses or ellipses with stray punctuation
     if re.search(r"\s+\.\.\.", corr_text) or re.search(r"\s+\.\.\.", orig_text):
-        return False
+        return "malformed_quote_spacing"
     if re.search(r"\.\.\.[,;:]", corr_text) or re.search(r"[,;:]+\s*[»”\"]", corr_text):
-        return False
+        return "malformed_quote_spacing"
     # Reject spaced dashes in initials, stretched words, or numeric ranges
     if re.search(r"\b[А-ЯІЇЄҐ]\.\s*[—–-]\s*[А-ЯІЇЄҐ]\.", corr_text) or re.search(
         r"\b[А-ЯІЇЄҐ]\.\s*[—–-]\s*[А-ЯІЇЄҐ]\.", orig_text
     ):
-        return False
+        return "spaced_dash_in_initials"
     if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]-[а-яіїєґА-ЯІЇЄҐ]\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]\b", corr_text):
-        return False
+        return "spaced_dash_in_initials"
     if re.search(r"\d+\s+—\s+\d+", corr_text) or re.search(r"\d+\s+—\s+\d+", orig_text):
-        return False
+        return "spaced_dash_in_initials"
     # Reject math symbols or special characters
     if any(c in corr_text for c in "<>~=@#$^&*_+") or any(c in orig_text for c in "<>~=@#$^&*_+"):
-        return False
+        return "math_special_symbols"
     # Reject non-standard or curly apostrophes
     if re.search(r"[’ʼ‘`´ʹ‛]", corr_text) or re.search(r"[’ʼ‘`´ʹ‛]", orig_text):
-        return False
+        return "bracket_editorial_artifacts"
     # Reject emojis
     if any(unicodedata.category(c) == "So" for c in corr_text) or any(
         unicodedata.category(c) == "So" for c in orig_text
     ):
-        return False
+        return "emojis"
     # Reject braces / brackets / editorial artifacts: e.g. "–}" or "{" or "}"
     if any(c in corr_text for c in "{}[]") or any(c in orig_text for c in "{}[]"):
-        return False
+        return "bracket_editorial_artifacts"
     # Reject mixed dashes (en and em dashes in same text)
     if ("–" in corr_text and "—" in corr_text) or ("–" in orig_text and "—" in orig_text):
-        return False
+        return "mixed_dashes"
     # Reject hyphen-as-dash
     if re.search(r"\s+-\s+", corr_text) or re.search(r"\s+-\s+", orig_text):
-        return False
+        return "mixed_dashes"
     # Reject triple repeated letters
     if re.search(r"([а-яіїєґА-ЯІЇЄҐ])\1\1", orig_text, re.IGNORECASE) or re.search(
         r"([а-яіїєґА-ЯІЇЄҐ])\1\1", corr_text, re.IGNORECASE
     ):
-        return False
+        return "triple_repeated_letters"
     # Reject comma before parenthesis
     if re.search(r",\s*\(", orig_text) or re.search(r",\s*\(", corr_text):
-        return False
+        return "bracket_editorial_artifacts"
     # Reject truncated sentences ending with a preposition
     if re.search(r"\b(?:на|в|у|до|з|під|над|через|про|за|при|біля|від|для|без)\s*[\.!?]$", orig_text):
-        return False
+        return "truncated_sentence_ends_in_preposition"
     # Reject adding dialogue dash when orig did not start with dash
     if not orig_text.strip().startswith(("—", "–", "-")) and corr_text.strip().startswith(("—", "–", "-")):
-        return False
+        return "unbalanced_quotes"
     # Unbalanced quotes or brackets
     if corr_text.count("«") != corr_text.count("»") or orig_text.count("«") != orig_text.count("»"):
-        return False
+        return "unbalanced_quotes"
     if corr_text.count('"') % 2 != 0 or orig_text.count('"') % 2 != 0:
-        return False
+        return "unbalanced_quotes"
     if corr_text.count("“") != corr_text.count("”"):
-        return False
+        return "unbalanced_quotes"
     if corr_text.count("(") != corr_text.count(")"):
-        return False
+        return "unbalanced_parentheses"
     # Dash artifacts
     if re.search(r"[—–-]\s*[—–-]", orig_text) or re.search(r"[—–-]\s*[—–-]", corr_text):
-        return False
+        return "mixed_dashes"
     # Stray floating quotes
     if re.search(r'\s+["«»“”„]\s+', corr_text):
-        return False
+        return "stray_floating_quotes"
 
     # Negation consistency: do not flip polarity
     if len(re.findall(r"\bне\b", orig_text.lower())) != len(re.findall(r"\bне\b", corr_text.lower())):
-        return False
+        return "polarity_flips_negation"
 
     # Check for pronoun / gender substitution without context
     o_low = orig_text.lower()
@@ -1091,73 +1091,73 @@ def is_valid_candidate(
     if (re.search(r"\bвін\b", o_low) and re.search(r"\bвона\b", c_low)) or (
         re.search(r"\bвона\b", o_low) and re.search(r"\bвін\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bйого\b", o_low) and re.search(r"\bїї\b", c_low)) or (
         re.search(r"\bїї\b", o_low) and re.search(r"\bйого\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bйому\b", o_low) and re.search(r"\bїй\b", c_low)) or (
         re.search(r"\bїй\b", o_low) and re.search(r"\bйому\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bним\b", o_low) and re.search(r"\bнею\b", c_low)) or (
         re.search(r"\bнею\b", o_low) and re.search(r"\bним\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bньому\b", o_low) and re.search(r"\bній\b", c_low)) or (
         re.search(r"\bній\b", o_low) and re.search(r"\bньому\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bвона\b", o_low) and not re.search(r"\bвона\b", c_low)) or (
         re.search(r"\bвін\b", o_low) and not re.search(r"\bвін\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (
         re.search(r"\bя\s+[а-яіїєґ]+(?:ла|лася|лась)\b", o_low) and re.search(r"\bя\s+[а-яіїєґ]+(?:в|вся|всь)\b", c_low)
     ) or (
         re.search(r"\bя\s+[а-яіїєґ]+(?:в|вся|всь)\b", o_low) and re.search(r"\bя\s+[а-яіїєґ]+(?:ла|лася|лась)\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (
         re.search(r"\b[а-яіїєґ]+(?:ла|лася|лась)\s+я\b", o_low) and re.search(r"\b[а-яіїєґ]+(?:в|вся|всь)\s+я\b", c_low)
     ) or (
         re.search(r"\b[а-яіїєґ]+(?:в|вся|всь)\s+я\b", o_low) and re.search(r"\b[а-яіїєґ]+(?:ла|лася|лась)\s+я\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bрахував\b", o_low) and re.search(r"\bрахувала\b", c_low)) or (
         re.search(r"\bрахувала\b", o_low) and re.search(r"\bрахував\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bя\s+була\b", o_low) and re.search(r"\bя\s+(?:був|знав)\b", c_low)) or (
         re.search(r"\bя\s+був\b", o_low) and re.search(r"\bя\s+(?:була|знала)\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if re.search(r"\bможе\b", o_low) and re.search(r"\bможу\b", c_low):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bви\b", o_low) and re.search(r"\bти\b", c_low)) or (
         re.search(r"\bти\b", o_low) and re.search(r"\bви\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bвас\b", o_low) and re.search(r"\bтебе\b", c_low)) or (
         re.search(r"\bтебе\b", o_low) and re.search(r"\bвас\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bвам\b", o_low) and re.search(r"\bтобі\b", c_low)) or (
         re.search(r"\bтобі\b", o_low) and re.search(r"\bвам\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bвами\b", o_low) and re.search(r"\bтобою\b", c_low)) or (
         re.search(r"\bтобою\b", o_low) and re.search(r"\bвами\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
 
     # Proper name protection
     if (re.search(r"\bіванушк\w*\b", o_low) and re.search(r"\bівасик\w*\b", c_low)) or (
         re.search(r"\bівасик\w*\b", o_low) and re.search(r"\bіванушк\w*\b", c_low)
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bнюто\w*\b", o_low) and re.search(r"\bвпадатиме\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # «Через [час]» -> «За [час]»
     if re.search(
@@ -1167,11 +1167,11 @@ def is_valid_candidate(
         r"\bза\s+(?:день|дні|днів|тиждень|тижні|тижнів|місяц\w*|рік|роки|років|хвилин\w*|годин\w*|час|якийсь\s+час)\b",
         c_low,
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Singular to plural referent shifts
     if re.search(r"\bпервосвящен\w*\b", o_low) and re.search(r"\bпервосвященник\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # Correlative "чим..., тим...": reject changing чим or тим
     if (
@@ -1179,71 +1179,71 @@ def is_valid_candidate(
         and re.search(r"\bтим\b", o_low)
         and not (re.search(r"\bчим\b", c_low) and re.search(r"\bтим\b", c_low))
     ):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Reject unwarranted lexical swaps
     if re.search(r"\bнасос\w*\b", o_low) and re.search(r"\bпомп\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bодин\s+від\s+одного\b", o_low) and re.search(r"\bодне\s+від\s+одного\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдоктор\w*\b", o_low) and re.search(r"\bлікар\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if ("зупинімося" in o_low and "зупинімось" in c_low) or ("зупинімось" in o_low and "зупинімося" in c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпідписник\w*\b", o_low) and re.search(r"\bчитач\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпару\s+речень\b", o_low) and re.search(r"\bтрохи\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bні\s+гроша\b", o_low) and re.search(r"\bні\s+копійки\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bсподоба\w*\b", o_low) and re.search(r"\bподоба\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bночі\b", o_low) and re.search(r"\bранку\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bспівставн\w*\b", o_low) and re.search(r"\bзіставлен\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bзадал\w*\s+питанням\b", o_low) and re.search(r"\bзацікавил\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bповені\s+на\s+землю\b", c_low) or re.search(r"\bвогнегасник\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"^Це\s+неважливо,\s+оскільки\b", orig_text) and not re.search(r"\bневажливо\b", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпотіння\b", o_low) and re.search(r"\bпітливість\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bтеплим\s+океаном\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bгосподи\s+[—–-]\s+боже\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if (
         re.search(r"\b(?:він|вона|воно)\b", o_low) or re.search(r"\bчого\s+так\s+поспішал[аов]\b", o_low)
     ) and re.search(r"\bпоспішали\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\boy-auch\b|\bой-ауч\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bущемленн\w*\b", c_low) or re.search(r"\bущемленн\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bутисків\s+прав\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bспіріт\w*\b", o_low) or re.search(r"\bпримаро\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bсплять\s+не\s+вчасно\b", o_low) and re.search(r"\bне\s+сплять\s+вчасно\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bяк\s+би\s+він\s+не\s+запізнився\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Gender agreement mismatch
     if re.search(r"\bтака\s+(?:вже\s+й\s+|ще\s+й\s+)?[а-яіїєґ]+[еє]\b", c_low):
-        return False
+        return "gender_agreement_mismatch"
     if re.search(r"\bтаке\s+(?:вже\s+й\s+|ще\s+й\s+)?[а-яіїєґ]+[ая]\b", c_low):
-        return False
+        return "gender_agreement_mismatch"
 
     # Dangling subordinate clauses / missing main clause
     if re.search(r",\s*а\s+що\s+[^,\.!?]+[\.!?]$", corr_text):
-        return False
+        return "dangling_subordinate_clause"
 
     # Antecedent-less object pronoun introduced
     if not re.search(r"\b(?:ним|нею|ними)\b", o_low) and re.search(r"\bвін\s+(?:ним|нею|ними)\b", c_low):
-        return False
+        return "contextless_pronoun_or_gender_flip"
 
     # Spaced dashes in compounds/particles
     if re.search(
@@ -1251,462 +1251,462 @@ def is_valid_candidate(
         corr_text,
         re.IGNORECASE,
     ):
-        return False
+        return "spaced_dashes_in_compounds"
     if re.search(r"\b[А-ЯІЇЄҐа-яіїєґ]+\s+[—–-]\s+\d+\b", corr_text):
-        return False
+        return "spaced_dashes_in_compounds"
     if re.search(
         r"\b(?:туди\s+[—–-]\s+сюди|плюс\s+[—–-]\s+мінус|врешті\s+[—–-]\s+решт|караван\s+[—–-]\s+сара[їя]|стейт\s+[—–-]\s+машин\w*|комікс\s+[—–-]\s+вестерн\w*)\b",
         corr_text,
         re.IGNORECASE,
     ):
-        return False
+        return "spaced_dashes_in_compounds"
     if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+\s+[—–-]\s+(?:от|таки|будь|небудь|бо|но|то)\b", corr_text, re.IGNORECASE):
-        return False
+        return "spaced_dashes_in_compounds"
     if re.search(r"\b(?:будь|хто|що|як|де|куди|коли)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+\b", corr_text, re.IGNORECASE):
-        return False
+        return "spaced_dashes_in_compounds"
     if re.search(r"\b(?:рок|поп|джаз|офіс|бізнес)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+\b", corr_text, re.IGNORECASE):
-        return False
+        return "spaced_dashes_in_compounds"
 
     # B4 False / subjective lexical and grammatical swaps
     if re.search(r"\bлюбител\w*\b", o_low) and re.search(r"\bприхильник\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bнастільки\b", o_low) and re.search(r"\bтаким\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bсправа\s+в\s+тому\b", o_low) and re.search(r"\bріч\s+у\s+тому\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bцарил\w*\b", o_low) and re.search(r"\bпанувал\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bяк\s+тільки\b", o_low) and re.search(r"\bщойно\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bгусь\b", o_low) and re.search(r"\bгусак\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bзлодіянн\w*\b", o_low) and re.search(r"\bзлочин\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bжарко\b", o_low) and re.search(r"\bспекотно\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bвесною\b", o_low) and re.search(r"\bнавесні\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдріж\b", o_low) and re.search(r"\bтремтінн\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bодин\s+одного\b", o_low) and re.search(r"\bодні\s+одних\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпо\s+всій\b", o_low) and re.search(r"\b[ву]\s+всій\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпочнемо\b", o_low) and re.search(r"\bпочнімо\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bяк\s+[^,]+,\s+так\s+і\b", o_low) and re.search(r"\bі\s+[^,]+,\s+і\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # Claude R8 Section F valid -> valid swaps
     if re.search(r"\bбуло\s+(?:дуже\s+)?легко\b", o_low) and re.search(r"\bбули\s+(?:дуже\s+)?легкими\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bна\s+вітру\b", o_low) and re.search(r"\bна\s+вітрі\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bтишиною\b", o_low) and re.search(r"\bтишею\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bспостерігається\b", o_low) and re.search(r"\bспостерігають\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bяк\s+би\s+він\s+не\s+запізнився\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bзимою\b", o_low) and re.search(r"\bвзимку\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдавайте\s+[а-яіїєґ]+мо\b", o_low) and re.search(r"\b[а-яіїєґ]+мо\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bне\s+стільки\b", o_low) and re.search(r"\bне\s+так\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bбезкрайнім\b", o_low) and re.search(r"\bбезкраїм\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bбарабанщик\w*\b", o_low) and re.search(r"\bбарабанник\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bблагообразн\w*\b", o_low) and re.search(r"\bмиловид\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bхустка\b", o_low) and re.search(r"\bхустинка\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bСуді\b", orig_text) and re.search(r"\bСьюді\b", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # Contextless gender and number flips
     if (re.search(r"\bвиросла\b", o_low) and re.search(r"\bвиріс\b", c_low)) or (
         re.search(r"\bвиріс\b", o_low) and re.search(r"\bвиросла\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
     if (re.search(r"\bлюбий\b", o_low) and re.search(r"\bлюба\b", c_low)) or (
         re.search(r"\bлюба\b", o_low) and re.search(r"\bлюбий\b", c_low)
     ):
-        return False
+        return "contextless_pronoun_or_gender_flip"
 
     # Punctuation and formatting gates from Claude R8
     if re.search(r"(?<!\.)\.\.(?!\.)", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r'"\.', corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r'(?<![,.!?…])["»”]\s*—', corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r'^[«"“]?Пізніше,', corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(
         r"\b(?:знали|знав|знала|знаю|думаю|бачу|чую|розумію|видно|помітно|вважає)\s+що\b", corr_text, re.IGNORECASE
     ):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+\s+що,\b", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"\bзгідно\s+(?!з\b|із\b|зі\b)[а-яіїєґ]+(?:ом|ем|ям|ою|ею|ами|ями|ах|ях|у|і|а)\b", c_low):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"\bу\s+наслідок\b", c_low):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"\b[Уу]\s+загальному\b", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
 
     # B6 Broken/incoherent repairs
     if re.search(r"\bвдарив\w*\s+до\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bзгідно\s+тим\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bвважа\w*\s+за\b", o_low) and re.search(r"\bгідним\s+життям\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bголуб'ятн\w*\b", o_low) and re.search(r"\bголуб'ятник\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bтриповерхового\s+цегляного\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bне\s+абищо\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bоминул\w*\s+тобі\s+голову\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bза\s+годинами\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bа\s+цього,\s+а\s+років\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bзагадкових,\s+дивних\s+смертей\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bіз\s+вибухом\s+іронічного\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bпершопроходц\w*\b", o_low) and re.search(r"\bзачинател\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bрічка\s+бігла\s+швидко\b", o_low) and re.search(r"\bвода\s+у\s+річці\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bбідл\s+сказав\b", c_low) or "Бідл" in orig_text:
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bінкрустован\w*\s+дрібними\s+діамантами\b", c_low) or re.search(
         r"\bгодинник\w*,\s*інкрустован\w*\b", c_low
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bВ\s+одні\s+з\s+них\b", corr_text) or re.search(r"\bтемним\s+Шкапа\b", corr_text):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bз\s+протягнутою\b", c_low) or re.search(r"\bгодинник\s+Римського\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bіз\s+винятком,\s+для\b", c_low) or re.search(r"\bце\s+візуалізація\s+має\s+бути\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if (
         re.search(r"\b[Уу]їздн\w*\b", o_low)
         or re.search(r"\b[Зз]аїждж\w*\s+лікар\b", c_low)
         or re.search(r"\bвесняний\s+обід\s+на\s+все\s+пиття\b", c_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bзастукал\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bнайлегковажніш\w*\b", c_low) or re.search(r"\bлегковажніш\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bударин\w*\b", o_low) or re.search(r"\bкінський\s+біг\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bстрав\w*\s+вареної\s+собаки\b", c_low) or re.search(r"\bзбираючи\s+вантажівку\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bдо\s+одного\s+колеса\b", c_low) or re.search(r"\bсамому\s+задньому\s+колесі\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bриси\s+догляду\s+і\s+скупості\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bмужики,\s+прозаїки\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bкаже\s+бай-бай\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bкоролівсьво\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bПигарев\b", corr_text):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bособистий\s+секретар\s+[^,.]+\s+лежала\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bчелендж\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bнавіть,\s+можна\s+сказати\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bу\s+сторону\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Claude R9: Garbled or defective gold text
     if re.search(r"\bдо\s+губ\s+думає\b", c_low) or re.search(r"\bрозважити,\s+пасажирів\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bпасажирів\s+які\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bпорушення\s+технології\s+[—–-]\s+у\s+них\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bсклала\s+своє\s+майно\s+та\s+через\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bбув\s+на\s+москалів\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bпри\s+чому\b", c_low) or re.search(r"\bне\s+традиційн\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bінтелігентн\w*\s+дому\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bконтент\s+[—–-]\s+мейкер\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Claude R9: Meaning changed or content invented
     if re.search(r"\bісторики\s+фіксували\s+на\s+території\b", c_low) or re.search(
         r"\bявище\s+колабораціонізму\b", o_low
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bазіз\s+санзар\b", o_low) or re.search(r"\bсанджар\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if "максимум" in o_low and re.search(r"\bщонайменше\s+наполовину\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bгуся\b", o_low) or re.search(r"\bгусак\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bя\s+намалюю\s+тінь\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\b[Яя]кщо\s+ввімкнути\s+режим\b", corr_text):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bстиснут\w*\s+паш\w*\b", c_low) or re.search(r"\bна\s+чиємусь\s+тулуп\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if "дубинк" in o_low and re.search(r"\bпалиц\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if "пару кроків" in o_low and re.search(r"\bкілька\s+кроків\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # Claude R9: Valid-to-valid swaps
     if re.search(r"\bдавай(?:те)?\b", o_low, re.IGNORECASE):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bполиха\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bсує\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bвиросла\s+майже\s+у\s+12\s+разів\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bв\s+саді\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\b[Іі]з\s+самого\s+початку\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\b[Яя]к\s+же\s+автору\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bбільше\s+мільйон\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bвідвіданий\s+нами\s+музей\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bнадів\s+капелюх\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bгодини\s+з\s+чотири\b", c_low) or re.search(r"\b[Мм]орочився\s+він\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bбудуть\s+цікаві\s+ваші\s+варіанти\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bще\s+трохи\s+часу\s+і\s+на\s+піку\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Claude R9: Residual calques / Russianisms in gold
     if re.search(r"\bзадан\w*\s+людськ\w*\b", c_low) or re.search(r"\bзадан\w*\s+травм\w*\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\b[Пп]о\s+можливості\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bкрутильн\w*\s+момент\w*\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bобер-?кондуктор\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bзакалк\w*\b", c_low) or re.search(r"\bФилип\w*\b", c_low) or re.search(r"\bглупство\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
 
     # Minor items
     if re.search(r"\bрозпад\w*\s+атому\b", c_low) or re.search(r"\bрозпад\w*\s+атому\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"[а-яіїєґ]\s+навіщо\b", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bіз\s+с[пткфхчшщ]\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bу\s+гаї\b", o_low) and re.search(r"\bу\s+гаю\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bлюдського\s+мурашник\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bторкаючись\s+футляр\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпротестантськ\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Claude R10: Morphology, agreement, and case government defects
     if re.search(r"\bпри\s+сталих\s+[а-яіїєґ]+\s+та\s+[а-яіїєґ]+и\b", c_low) or re.search(
         r"\bпри\s+сталих\s+тиску\b", c_low
     ):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bпро\s+.*понті\w+\s+пілат\w*\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bщо\s+їхн[яійєі]\s+(?:незліченна\s+)?кількість\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bцентральн\w*\s+апсид\w*\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bкаламутні\s+п['\’]?яні\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bне\s+зручно\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bрахується\s+як\b", c_low) or re.search(r"\b[Пп]ри\s+дійсному\s+твердженні\b", corr_text):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bце\s+конкретне\s+про\s+майбутнє\b", c_low) or re.search(r"\bстимулює\s+використовувати\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\b[Пп]ерший,\s+що\s+ви\s+комплексуєте\b", corr_text):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bє\s+що\s+ухвалювати\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bматимуть\s+слушність\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"^[Пп]онад\s+80%\s+з\s+яких\b", corr_text):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bне\s+працює,\s+повністю\s+зосередилась\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r";\s*зневірившись\b", c_low) or (
         re.search(r"\bвідчаївшись\b", o_low) and re.search(r"\bзневірившись\b", c_low)
     ):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bпрошення\b", o_low) and re.search(r"\bпрохання\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bкоротким\s+обличчям\b", o_low) and re.search(r"\bвузьким\s+обличчям\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bне\s+надмірна\b", o_low) and re.search(r"\bне\s+довга\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if (re.search(r"\bприкажчик\b", o_low) and re.search(r"\bпродавець\b", c_low)) or (
         re.search(r"\bпіднімав\b", o_low) and re.search(r"\bзводив\b", c_low)
     ):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bнавчити\b", o_low) and re.search(r"\bнавчитися\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bкружк\w*\b", o_low) and re.search(r"\bчашк\w*\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bхліба\w*\b", o_low) and re.search(r"\bхлебч\w*\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bзасвічений\b", o_low) and re.search(r"\bзасвічу\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bвказав\w*\s+.*\bдо\s+гори\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
 
     # Claude R10: Category F Valid-to-valid swaps & Self-contradictions
     if re.search(
         r"\bбуд(?:у|еш|е|емо|ете|уть)(?:\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+){0,2}\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+ти(?:ся|сь)?\b", o_low
     ) and re.search(r"\b[а-яіїєґА-ЯІЇЄҐ\x27-]+тим(?:у|еш|е|емо|ете|уть)(?:ться|ся|сь)?\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(
         r"\b(?:читається\s+та\s+обговорюється|цінується|сприймалися\s+представниками|створювалась\s+різниця|вимірювався\s+струм|закладалися\s+їх|контролюється\s+комп['\’]?ютером)\b",
         o_low,
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bзвернемося\b", o_low) and re.search(r"\bзвернімося\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if (re.search(r"\bдозволя\w*\b", o_low) and re.search(r"\bда\w+\s+змог\w*\b", c_low)) or (
         re.search(r"\bда\w+\s+змог\w*\b", o_low) and re.search(r"\bдозволя\w*\b", c_low)
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if (re.search(r"\bдекільк\w*\b", o_low) and re.search(r"\bкільк\w*\b", c_low)) or (
         re.search(r"\bкільк\w*\b", o_low) and re.search(r"\bдекільк\w*\b", c_low)
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if (re.search(r"\bза\s+допомогою\b", o_low) and re.search(r"\bз\s+допомогою\b", c_low)) or (
         re.search(r"\bз\s+допомогою\b", o_low) and re.search(r"\bза\s+допомогою\b", c_low)
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bзадач\w*\b", o_low) and re.search(r"\bзавданн\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bвиключили\b", o_low) and re.search(r"\bвідрахували\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдовкруги\b", o_low) and re.search(r"\bдовкола\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпари\b", o_low) and re.search(r"\bвипари\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bЗа\s+погані\s+вчинки\b", orig_text) and re.search(r"\bЧерез\s+погані\s+вчинки\b", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпару\s+днів\b", o_low) and re.search(r"\bкілька\s+днів\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bакцентує\b", o_low) and re.search(r"\bакцентував\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпоручик\w*\b", o_low) and re.search(r"\bпоручник\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпочитати\b", o_low) and re.search(r"\bпрочитати\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bМетою\s+статті\s+є\b", orig_text) and re.search(r"\bМета\s+статті\b", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bполян\w*\b", o_low) and re.search(r"\bгалявин\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bкойк\w*\b", o_low) and re.search(r"\bліжк\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдубин\w*\b", o_low) and re.search(r"\bдубц\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Claude R10 Minor items
     if re.search(r"\bзастиглими\s+розплющеними\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bкорзин\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bбезтолков\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bогненн\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bодеж\w*\b", c_low) or re.search(r"\bбез\s+всякої\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bсамокатник\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bяк\s+побажаєте\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Claude R11 Section A Grammar Defects
     if re.search(r"\bпаралельн\w*\s+малої\s+бронної\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bїхні\s+велич\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bвсі\s+це\s+драконівські\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bпро\s+політику\s+та\s+літератури\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bЗапам[\x27\u2019\u02bc]яталалося\b", corr_text, re.IGNORECASE) or re.search(
         r"\bпустим\s+ротом\b", c_low
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\b(?:скоріше|швидше)\s+за\s+все\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Claude R11 Section B Invented / Meaning-changing rewrites
     if re.search(r"\bсуспільств\w*\b", o_low) and re.search(r"\bлюдств\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bподібн\w*\s+площ\w*\b", o_low) and re.search(r"\bтакою\s+самою\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bбачити\s+цю\s+атмосферу\b", o_low) and re.search(r"\bвідчувати\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bпродукту\b", c_low) and not re.search(r"\bпродукту\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bздобути\s+завдяки\s+книгам\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bзробити\s+сюрприз\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bзаповним\b", o_low) and re.search(r"\bзаповнив\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bзробленим\s+воно\s+буде\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bстарий\s+добрий\s+боб\b", o_low) and re.search(r"\bбобе\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bрозревіл\w*\b", o_low) and re.search(r"\bрозрюмсал\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bшибанувш\w*\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bспадав\b", c_low) and not re.search(r"\bспадав\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bбула\s+вже\s+ланкова\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bна\s+спільну\s+користь\b", o_low) and re.search(r"\bдля\s+спільної\s+користі\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # Claude R11 Section C Category F general gates
     # Future tense analytic vs synthetic (including reflexives and intervening words)
     if re.search(
         r"\bбуд(?:у|еш|е|емо|ете|уть)(?:\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+){0,2}\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+ти(?:ся|сь)?\b", o_low
     ) and re.search(r"\b[а-яіїєґА-ЯІЇЄҐ\x27-]+тим(?:у|еш|е|емо|ете|уть)(?:ться|ся|сь)?\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ\x27-]+тим(?:у|еш|е|емо|ете|уть)(?:ться|ся|сь)?\b", o_low) and re.search(
         r"\bбуд(?:у|еш|е|емо|ете|уть)(?:\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+){0,2}\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+ти(?:ся|сь)?\b", c_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # Particle б/би
     if re.search(r"\bб\b", o_low) and re.search(r"\bби\b", c_low) and not re.search(r"\bби\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bби\b", o_low) and re.search(r"\bб\b", c_low) and not re.search(r"\bб\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # Relative pronoun swap що -> який
     if orig_tokens:
         for start, end, _tag, repl in in_scope:
@@ -1714,7 +1714,7 @@ def is_valid_candidate(
                 err_w = " ".join(orig_tokens[start:end]).lower().strip()
                 repl_w = repl.lower().strip()
                 if err_w == "що" and re.match(r"^як(?:ий|а|е|і|ого|ій|им|их|ому|ою|у)\b", repl_w):
-                    return False
+                    return "unwarranted_valid_to_valid_lexical_swap"
     # Reflexive passive to active conversion
     if orig_tokens:
         for start, end, _tag, repl in in_scope:
@@ -1746,497 +1746,497 @@ def is_valid_candidate(
                         or "можна" in repl_w
                     )
                 ):
-                    return False
+                    return "unwarranted_valid_to_valid_lexical_swap"
     # Lexical Category F swaps
     if re.search(r"\bпару\b", o_low) and re.search(r"\bкільк\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bколи\s+б\b", o_low) and re.search(r"\bякби\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпідряд\b", o_low) and re.search(r"\bпоспіль\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bбільше\s+того\b", o_low) and re.search(r"\bба\s+більше\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bсправля\w*\s+враженн\w*\b", o_low) and re.search(r"\bвража\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпалити\b", o_low) and re.search(r"\bкурити\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдатчан\w*\b", o_low) and re.search(r"\bданц\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bнарн\w*\b", o_low) and re.search(r"\bгарн\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bяке\s+ж\s+було\b", o_low) and re.search(r"\bяким\s+же\s+було\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Claude R12 Group 1: Ungrammatical Gold Text / Introduced Errors
     if re.search(r"\bпотоками[,\s]+розташован[иі]м\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\b\d+,\d+\s+км,\s+і\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bя\s+[а-яіїєґ]+ли\b", c_low) and not re.search(r"\b(?:ми|і|та|з)\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bположення\b.*\bфіксується\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bприйшла-бо\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bверхнього\s+примірника\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bв\s+обмін\s+за\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bтого\s+аспекту\s+що\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bзатерпал\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Claude R12 Group 2: Invented / Meaning-Changing Rewrites
     if re.search(r"\bазіз\s+санзар\b", o_low) and re.search(r"\bвивчав\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bзалучають\s+державу\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bне\s+виправдовує\s+доріг\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bвідпочивши\s+кілька\s+хвилин\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bвибіжав\b", o_low) and re.search(r"\bвибігав\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bповинні\s+будуть\b", o_low) and re.search(r"\bповинні\s+були\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bпомерещ[аи]л\w*\b", o_low) and re.search(r"\bввижа\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bхто\s+прямує\b", c_low) and not re.search(r"\bхто\s+прямує\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bна\s+варті\b", c_low) and not re.search(r"\bна\s+варті\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bприведе\s+до\s+енергозбереження\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # Claude R12 Group 3: Class-Level Closures & Category F Swaps
     if re.search(r"\bне\s+більше\s+аніж\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bневід[\x27\u2019\u02bc]?ємн\w*\b", o_low) and re.search(r"\bневіддільн\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bлайк\w*\b", o_low) and re.search(r"\bвподобайк\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bтуча\b", o_low) and re.search(r"\bхмара\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпісля\s+кожного\s+заняття\s+давалась\s+домашня\s+робота\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bна\s+ґанок\b", o_low) and re.search(r"\bна\s+ґанку\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bіз\s+лаштунків\b", o_low) and re.search(r"\bз-за\s+лаштунків\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bспійман\w*\b", o_low) and re.search(r"\bпійман\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bнеможливим\b", o_low) and re.search(r"\bнеможливо\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bжител\w*\b", o_low) and re.search(r"\bмешканц\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\b[ву]\s+першу\s+чергу\b", o_low) and re.search(r"\bнасамперед\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bрозглянемо\b", o_low) and re.search(r"\bрозгляньмо\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bє\s+ті\b", o_low) and re.search(r"\bє\s+тими\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bтер\s+(?:собі\s+)?лоб\b", o_low) and re.search(r"\bтер\s+(?:собі\s+)?лоба\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдичі\b", o_low) and re.search(r"\bдичини\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bслабіш\w*\b", o_low) and re.search(r"\bслабш\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bкіньми\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bкур[\x27\u2019\u02bc]?єрові\b", c_low) and re.search(r"\bкур[\x27\u2019\u02bc]?єру\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bз\s+возу\b", o_low) and re.search(r"\bз\s+воза\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Claude R12 Group 5: Minor Russianisms & Specific Rows
     if re.search(r"\bсудорожн\w*\b", c_low) or re.search(r"\bсудорожн\w*\b", o_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bоправданн\w*\b", c_low) or re.search(r"\bоправданн\w*\b", o_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bвідтопирен\w*\b", c_low) or re.search(r"\bвідтопирен\w*\b", o_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bданий\b", o_low) and re.search(r"\bзгаданий\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bв\s+рази\b", o_low) and re.search(r"\bсуттєво\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bповернув\s+обличчя\b", o_low) and re.search(r"\bпоглянув\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bтрясця\s+його\s+матері\b", o_low) or re.search(r"\bтрясця\s+його\s+матері\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bмучав\w*\b", o_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bхто\s+сидить\b", o_low) and re.search(r"\bхто\s+сидів\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
 
     # Claude R13 Section 1: Ungrammatical Gold Text
     if re.search(r"\bрозкланявся\s+з\s+мовчазним\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bмагом[,\s]+сидів\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bнезважаючи\s+обіцянк\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(
         r"\bнезважаючи\s+(?!на\b)(?:обіцянк|те|все|всі|цей|цю|ці|свої|свою|свій|попередженн|складнощ|трудности|перешкод)\w*\b",
         c_low,
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(
         r"\bбільше\s+(?:дванадцять|одинадцять|тринадцять|чотирнадцять|п[\x27\u2019\u02bc]?ятнадцять|шістнадцять|сімнадцять|вісімнадцять|дев[\x27\u2019\u02bc]?ятнадцять|двадцять|тридцять|сорок|п[\x27\u2019\u02bc]?ятдесят|шістдесят|сімдесят|вісімдесят|дев[\x27\u2019\u02bc]?яносто|сто|двісті|триста|чотириста|п[\x27\u2019\u02bc]?ятсот|шістсот|сімсот|вісімсот|дев[\x27\u2019\u02bc]?ятсот|тисяча|два|три|чотири|п[\x27\u2019\u02bc]?ять|шість|сім|вісім|дев[\x27\u2019\u02bc]?ять|десять)\s+(?:тисяч|мільйон|мільярд|сотень|кілометр|метрів|відсотк)\b",
         c_low,
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bсвого\s+кийка\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bвклонився\s+з\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if (
         re.search(r"\bформаційн\w*\s+програм\w*\b", c_low)
         or re.search(r"\bсонячну\s+довкола\s+погоду\b", c_low)
         or re.search(r"\bГранкіна\s+Надія\b", orig_text)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bсамописні\s+пера\b", c_low) or (
         re.search(r"\bсамописн\w+\s+перо\b", o_low) and re.search(r"\bсамописн\w+\s+пера\b", c_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Claude R13 Section 3: Meaning-Changing or Invented Rewrites
     if re.search(r"\bнайкривавіш\w*\b", o_low) and re.search(r"\bнайяскравіш\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bкаже\s+бай-бай\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bчи\s+заслужено\b", o_low) and re.search(r"\bзаслужили\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bціль\s+висловлення\b", c_low) or (
         re.search(r"\bяка\s+ціль\b", o_low) and re.search(r"\bяка\s+ціль\b", c_low)
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # Claude R13 Section 4: Russian Calques in Gold
     if re.search(r"\bтут\s+же\b", c_low) or re.search(r"\bтут\s+же\b", o_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bусіма\s+мірами\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bу\s+керма\b", c_low) or re.search(r"\bу\s+руля\b", o_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bвміщує\s+стіни\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
 
     # Claude R13 Section 5: Remaining Gold Defects
     if re.search(r"\bта\s+з\s+істориком\b", c_low) or re.search(r"\bГуревич\b", orig_text):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\b[ву]\s+північному\s+боці\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bпустили\s+з\s+міста\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bпане\s+малихін\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bфилип\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bне\s+гірше\s+подолу\b", o_low) or re.search(r"\bза\s+поділ\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bрізеншнауцер\w*\b", c_low) or (
         re.search(r"\bтака\s+велика\b", o_low) and re.search(r"\bтакий\s+великий\b", c_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bзворот\s+із\s+міста\b", o_low) and re.search(r"\bгеть\s+з\s+міста\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bсідала\s+йому\s+на\s+обличчя\b", o_low) and re.search(
         r"\bчіплялася\s+йому\s+за\s+обличчя\b", c_low
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bвп[\x27\u2019\u02bc]?ялася\s+долонями\b", o_low) and re.search(r"\bобхопила\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Claude R13 Section 6: Minor Punctuation, Typography, and Controls
     if re.search(r"\bна\s+тільки\s+на\b", c_low):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"\bвизначають\s+як\s+організовується\b", c_low):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"\bна\s+підлогу\s+і\s+наталія\b", c_low):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"\bмонте\s+[—–-]\s+карло\b", c_low):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"\bі\s+трохи\s+почекавши\b", c_low):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"^[«\"“]?Тим\s+часом,", orig_text) or re.search(r"^[«\"“]?Тим\s+часом,", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
 
     # Claude R13 Section 7: Minor: Valid-Variant Swaps
     if re.search(r"\b\d+\s+грам\b", o_low) and re.search(r"\b\d+\s+грамів\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bзабороняється\b", o_low) and re.search(r"\bзаборонено\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bгаманцеві\b", o_low) and re.search(r"\bгаманці\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bу\s+кращих\s+традиціях\b", o_low) and re.search(r"\bу\s+найкращих\s+традиціях\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bрозв[\x27\u2019\u02bc]?язно\b", o_low) and re.search(r"\bневимушено\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bвтратила\s+свідомість\b", o_low) and re.search(r"\bзнепритомніла\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bмучення\b", o_low) and re.search(r"\bмуки\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпро\s+свій\s+успіх\b", o_low) and re.search(r"\bсвого\s+успіху\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпости\b", o_low) and re.search(r"\bдописи\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bв\s+ряд\s+кращих\b", o_low) and re.search(r"\bв\s+ряд\s+найкращих\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Claude R14 Section 1: Ungrammatical Gold Text
     if re.search(r"\bнаді\w*\s+на\s+щастя\b", c_low) or re.search(r"\bзапаморочил\w*\s+у\s+голові\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bрозтягнуло\s+і\s+сплющ\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bшкірян\w*\s+завод\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bневірою,\s+що\b", c_low) or re.search(r"\bвпадала\s+цифра\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"[А-ЯІЇЄҐ][а-яіїєґ]+\s+[—–-]\s+[А-ЯІЇЄҐ][а-яіїєґ]+", orig_text) or re.search(
         r"[А-ЯІЇЄҐ][а-яіїєґ]+\s+[—–-]\s+[А-ЯІЇЄҐ][а-яіїєґ]+", corr_text
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bсформувати\s+кемпінг\b", c_low) or re.search(r"\bіспанської\s+місії\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Claude R14 Section 2: Invented / Meaning-Changing Rewrites & False Claims
     if re.search(r"\bшахрайство\b", o_low) and re.search(r"\bшахраювати\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bконкретна\s+фаза\b", c_low) or (
         re.search(r"\bяка\s+фаза\b", o_low) and re.search(r"\bяку\s+функцію\b", o_low)
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bшипаст\w*\b", o_low) and re.search(r"\bкуслив\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if (
         re.search(r"\bкедрові\s+гальма\b", c_low)
         or re.search(r"\bформі\s+зграї\b", c_low)
         or re.search(r"\bпоклавши\s+коням\b", c_low)
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bрізнокольоровій\s+дівчині\b", c_low) or re.search(r"\bзавдяки\s+пораненню\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if (
         re.search(r"\bвсього\b", o_low)
         and re.search(r"\b(?:лише|тільки)\b", c_low)
         and not re.search(r"\bвсього\b", c_low)
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # Claude R14 Section 3: Valid-Variant Swaps & Unneeded Rewrites
     if re.search(r"\bна\s+рідкість\b", o_low) and re.search(r"\bна\s+диво\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bна\s+додачу\b", o_low) and re.search(r"\bокрім\s+цього\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдо\s+чотирьох\s+годин\b", o_low) and re.search(r"\bдо\s+четвертої\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bнайняв\b", o_low) and re.search(r"\bвинайняв\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдорожч\w*\s+від\b", o_low) and re.search(r"\bдорожч\w*\s+за\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bйшов\b", o_low) and re.search(r"\bминав\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпригадується\b", o_low) and re.search(r"\bпригадую\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bкращими\b", o_low) and re.search(r"\bнайкращими\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bсанів\b", o_low) and re.search(r"\bсанок\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bв\s+той\s+серпневий\s+вечір\b", o_low) and re.search(r"\bтого\s+серпневого\s+вечора\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bвелосипеду\b", o_low) and re.search(r"\bвелосипеда\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bподарунку\b", o_low) and re.search(r"\bподарунка\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпо\s+нитці\s+подій\b", o_low) or re.search(r"\bз\s+кінця\s+до\s+начала\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bсприймав\s+за\s+належне\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпоглинаючи\s+місце\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bхто\s+забрідає\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bколи\s+потрапляєш\b.*\bпочинаєш\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bі\s+свій\s+підхід\s+до\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bозвуч\w*\s+кімнату\b", o_low) or re.search(r"\bпронизливим\s+носовим\s+свистом\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bабсолютно\b", o_low) and re.search(r"\bдуже\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bна\s+власній\s+території\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bтаким\s+чином\b", o_low) and re.search(r"\bотак\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдана\s+проблема\b", o_low) and re.search(r"\bтака\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bяк[\s-]небудь\b", o_low) and not re.search(r"\bяк[\s-]небудь\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bзгадан[іi]\s+нижче\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Conflicting gold targets across candidates
     if re.search(r"\bостовбенів\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bспівбесіда,\s+яка\s+тобі\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bмолекулярна\s+динаміка\s+покриває\s+час\w*\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bя\s+навчався\s+у\s+вузі\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Claude R14 Section 4: Dangling Participle, Euphony, Idioms, Slurs & Hygiene
     if re.search(r"\bспираючись\s+на\s+твою\s+розповідь\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if (
         re.search(r"\bз\s+старим\b", c_low)
         or re.search(r"\bз\s+щетинистим\b", c_low)
         or re.search(r"\bодним\s+з\s+вагомих\b", c_low)
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bфільк\w*\s+грамот\w*\b", c_low) or re.search(r"\bфільчин\w*\s+грамот\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(
         r"\b(?:гівн\w*|тьолк\w*|москаль\w*|курв\w*|бляд\w*|сучк\w*|хуй\w*|пізд\w*|нахуй\w*|похуй\w*)\b", o_low
     ) or re.search(
         r"\b(?:гівн\w*|тьолк\w*|москаль\w*|курв\w*|бляд\w*|сучк\w*|хуй\w*|пізд\w*|нахуй\w*|похуй\w*)\b", c_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Claude R15 Blockers
     if re.search(r"\bнеобхідні\s+багато\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bпесь\w*\s+мух\w*\b", o_low) or re.search(r"\bрої\s+мух\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bне\s+повернувся\b.*\bчерез\s+десять\s+хвилин\b", o_low) or re.search(
         r"\bне\s+тільки\s+через\s+десять\s+хвилин\b", o_low
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(
         r"\b(?:мокшан\w*|псяч\w*\s+мов\w*|хохол\w*|хохляцьк\w*|кацап\w*|жид\w*|жидівськ\w*)\b", o_low
     ) or re.search(r"\b(?:мокшан\w*|псяч\w*\s+мов\w*|хохол\w*|хохляцьк\w*|кацап\w*|жид\w*|жидівськ\w*)\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Claude R15 Residual Russianisms, Euphony, and Errors in Gold
     if re.search(r"\bбрюк\w*\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bбагров\w*\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bпрожову\w*\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bз\s+[шщ][а-яіїєґ]+\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bна\s+днях\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bйде\s+йому\s+на\s+зустріч\b", c_low) or (
         re.search(r"\bна\s+зустріч\b", c_low) and re.search(r"\bназустріч\b", o_low)
     ):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bна\s+стільки\s+того\s+вартувало\b", c_low) or (
         re.search(r"\bна\s+стільки\b", c_low) and not re.search(r"\bна\s+стільки\b", o_low)
     ):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bз\s+(?:його|її|їхньої|нашої|вашої|моєї|твоєї)\s+сторони\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
     if re.search(r"\bвідносно\s+фази\s+сну\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
 
     # Claude R15 Minor: Unneeded Swaps and Mislabelled Corrections
     if re.search(r"\bзажмурив\w*\b", o_low) and re.search(r"\bпримружив\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bяк\s+до\s+вас\b.*\bзвертаються\b", o_low) and re.search(r"\bколи\s+до\s+вас\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bвпада\w*\s+в\s+око\b", o_low) and re.search(r"\bвпада\w*\s+в\s+очі\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bє\s+суто\s+точкою\s+зору\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bдуже\s+легко\b", o_low) and re.search(r"\bлегше\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"^[«\"“]?А\?", orig_text) and re.search(r"^[«\"“]?Га\?", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"^[«\"“]?Ранком\b", orig_text) and re.search(r"^[«\"“]?Зранку\b", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bяк\s+виглядають\s+мої\s+фінансові\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bні\s+в\s+якому\s+разі\b", o_low) and re.search(r"\bгеть\s+не\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bзігнутим\s+в\s+гачок\b", o_low) and not re.search(r"\bзігнутим\s+в\s+гачок\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bбільшість\s+[а-яіїєґ]+\s+(?:втрачає|не\s+задумується)\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Claude R16 Blockers & Linguistic Precision
     # 1. Quantifier + genitive government: reject replacing genitive with nominative after більше/менше/понад
     if re.search(r"\b(?:більше|менше|понад)\s+тисячі\b", o_low) and re.search(
         r"\b(?:більше|менше|понад)\s+тисяча\b", c_low
     ):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\b(?:більше|менше|понад)\s+[а-яіїєґ]+[аяі]\b", o_low) and re.search(
         r"\b(?:більше|менше|понад)\s+тисяча\b", c_low
     ):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\b(?:більше|менше|понад)\s+[а-яіїєґ]+(?:ей|ів|ів|і|и)\b", o_low) and re.search(
         r"\b(?:більше|менше|понад)\s+[а-яіїєґ]+(?:а|я)\b", c_low
     ):
-        return False
+        return "morphology_or_agreement_defect"
 
     # 2. Preposition swap on unchanged antecedents: e.g. «У ній» <-> «На ній», «у ньому» <-> «на ньому»
     m_prep = re.search(r"\b[УуВв]\s+(ній|ньому|них|цьому|цій|цих)\b", orig_text)
     if m_prep and re.search(rf"\b[Нн]а\s+{re.escape(m_prep.group(1))}\b", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     m_prep2 = re.search(r"\b[Нн]а\s+(ній|ньому|них|цьому|цій|цих)\b", orig_text)
     if m_prep2 and re.search(rf"\b[УуВв]\s+{re.escape(m_prep2.group(1))}\b", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 3. Instrumental of manner: reject replacing «безліччю способів» with «для безлічі способів»
     if re.search(r"\bбезліччю\s+способів\b", o_low) and re.search(r"\bдля\s+безлічі\s+способів\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 4. Genitive parallel: reject breaking parallel genitive «як символу» -> «як символ»
     if re.search(r"\bяк\s+символу\b", o_low) and re.search(r"\bяк\s+символ\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 5. Residual errors in corrected_text
     if re.search(r"\bстендов[іе]\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bколи\s+ми\s+опинил\w*,\s+не\s+поміча\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bсказано\s+стороною\b", c_low) or re.search(r"\bна\s+світлі\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bфактор\w*\s*,\s*завдяки\b", c_low) or re.search(r"\bфактор\w*\s+завдяки\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bбаньк\w*\b", c_low) or re.search(r"\bбаньк\w*\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bспівпада\w*\b", c_low) or re.search(r"\bспівпад\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # 6. Unneeded swaps and meaning changes
     if re.search(r"\bповоди\w*\s+себе\b", o_low) and re.search(r"\bповоди\w*сь\b|\bповоди\w*ся\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bкотр[иіаеоу]\w*\b", o_low) and re.search(r"\bяк[иіаеоу]\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\b[ву]\s+чому\s+справа\b", o_low) and re.search(r"\b[ву]\s+чому\s+річ\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bсвіту\b", o_low) and re.search(r"\bсвітові\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпоскладніш\w*\b", o_low) and re.search(r"\bскладніш\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bбуло\s+сіро\b", o_low) and re.search(r"\bбуло\s+сірим\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if (re.search(r"\b[ву]\s+ліжку\b", o_low) and re.search(r"\bна\s+ліжку\b", c_low)) or (
         re.search(r"\bна\s+ліжку\b", o_low) and re.search(r"\b[ву]\s+ліжку\b", c_low)
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпост\w*\b", o_low) and re.search(r"\bпублікац\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bлайк\w*\b", o_low) and re.search(r"\bвподобай\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bнеобхідност\w*\b|\bнеобхідність\b", o_low) and re.search(r"\bпотреб\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bкарання\b", o_low) or re.search(r"\bзійшов\s+з\s+розуму\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 7. Voice, aspect and tense changes
     if re.search(
@@ -2244,239 +2244,239 @@ def is_valid_candidate(
     ) and not re.search(
         r"\b(?:був|була|було|були|буде|будуть)\s+[а-яіїєґ]+(?:ний|на|не|ні|тий|та|те|ті|но|то)\b", c_low
     ):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
     if not re.search(
         r"\b(?:був|була|було|були|буде|будуть)\s+[а-яіїєґ]+(?:ний|на|не|ні|тий|та|те|ті|но|то)\b", o_low
     ) and re.search(r"\b(?:був|була|було|були|буде|будуть)\s+[а-яіїєґ]+(?:ний|на|не|ні|тий|та|те|ті|но|то)\b", c_low):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
     if re.search(r"\bбуло\s+розглянуто\b", o_low):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
     if re.search(r"\bвирішуємо\b", o_low) and re.search(r"\bвирішимо\b", c_low):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
     if re.search(r"\bрозглядає\b", o_low) and re.search(r"\bрозглядав\b", c_low):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
 
     # 8. Meaning changes
     if re.search(r"\bсхопил\w*\s+на\s+стілець\b", o_low) and re.search(r"\bза\s+стілець\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bвідправить\s+за\s+урядником\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bоднієї\s+дії\b.*\bсвободи\s+волі\b", o_low) or re.search(
         r"\bрелевантність\s+особистих\s+цінностей\b", o_low
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bвирішувати\s+клубом\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     if re.search(r"\bвздовж\s+(?:\w+\s+)?кварталу\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # 9. Temporal-duration class
     if re.search(r"\bчерез\s+[^,.]+\s+після\b", o_low) or re.search(r"\bчерез\s+\w+\s+хвилин\w*\s+після\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bза\s+\w+\s+хвилин\w*\s+після\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 10. Punctuation
     if re.search(r"^[«\"“]?[Зз]агалом\s+[а-яіїєґ]", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
     if re.search(r"\b[Вв]цілому\b", orig_text) and not re.search(r"\b[Зз]агалом\s*,", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
 
     # 11. Conjunction
     if re.search(r"\bзначить\b", o_low) and (re.search(r"\bотже\b", c_low) or re.search(r"\bозначає\b", c_low)):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 12. Claude R17 Blockers & Erroneous Corrections
     # #76: locative without preposition after «хіба що» (хіба що танці -> хіба що танцях)
     if re.search(r"\bхіба\s+що\s+[а-яіїєґ]+(?:ах|ях)\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #60: broken parallel case / broken conjunction (компаніями й окремої країни, і загалом)
     if re.search(r"\bй\s+окремої\s+країни\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #131: preposition swap changing meaning (ти — з неї -> ти — з нею)
     if re.search(r"\bти\s*[—–-]\s*з\s+нею\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #80: broken pronoun case in prepositional complement (і їхнє застосування instead of їхнього)
     if re.search(r"\bі\s+їхнє\s+застосування\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #201: stray comma separating subject and predicate / broken phrase
     if re.search(r"\bситуації\s+без\s+потреби,\s+завдає\b", c_low) or re.search(r"\bбез\s+потреби,\s+завдає\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #245: ungrammatical relative clause (який для неї був важливий рубль)
     if re.search(r"\bякий\s+для\s+неї\s+був\s+важливий\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # 13. Claude R17 Voice, Aspect, Tense, Mood changes
     # #251: passive to active rewrite (Кларою Івановською поставлено -> Клара Івановська встановила)
     if re.search(r"\bКлара\s+Івановська\s+встановила\b", corr_text, re.IGNORECASE) or (
         re.search(r"\bпоставлено\b", o_low) and re.search(r"\bвстановила\b", c_low)
     ):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
     # #39: aspect change (пішов -> ішов)
     if re.search(r"\bколи\s+він\s+пішов\b", o_low) and re.search(r"\bколи\s+він\s+ішов\b", c_low):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
     # #81: mood/aspect change (впізнавав би -> впізнав)
     if re.search(r"\bвпізнавав\s+би\b", o_low) and re.search(r"\bвпізнав\b", c_low):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
     # #133: tense change (вважається -> вважатиметься)
     if re.search(r"\bвважається\b", o_low) and re.search(r"\bвважатиметься\b", c_low):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
     # #158: aspect change (розбиратися -> розібратися)
     if re.search(r"\bнеобхідно\s+розбиратися\b", o_low) and re.search(r"\bнеобхідно\s+розібратися\b", c_low):
-        return False
+        return "grammatical_aspect_tense_or_mood_change"
 
     # 14. Claude R17 Unneeded swaps of valid Ukrainian forms
     # #8: в принципі -> загалом
     if re.search(r"\bв\s+принципі\b", o_low) and re.search(r"\bзагалом\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #14: прийняти рішення -> вирішити
     if re.search(r"\bприйняти\s+рішення\b", o_low) and re.search(r"\bвирішити\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #43: кожен день -> кожного дня
     if re.search(r"\bкожен\s+день\b", o_low) and re.search(r"\bкожного\s+дня\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #59: приснилось -> наснилось
     if re.search(r"\bприснил\w*\b", o_low) and re.search(r"\bнаснил\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #87: лист -> листа
     if re.search(r"\bнаписати\s+\w+\s+лист\b", o_low) and re.search(r"\bнаписати\s+\w+\s+листа\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #117: близькозорості -> короткозорості
     if re.search(r"\bблизькозор\w*\b", o_low) and re.search(r"\bкороткозор\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #128: спеки, яку -> спеки, якої
     if re.search(r"\bспеки,\s+як[ую]\b", o_low) and re.search(r"\bспеки,\s+якої\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #152: Один з факторів... це -> Одним із факторів... є
     if re.search(r"\bодин\s+з\s+факторів\b", o_low) and re.search(r"\bодним\s+із\s+факторів\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #228: ставнями -> віконницями
     if re.search(r"\bставн\w*\b", o_low) and re.search(r"\bвіконниц\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #246: на голову принцеси -> на голову принцесі
     if re.search(r"\bна\s+голову\s+принцеси\b", o_low) and re.search(r"\bна\s+голову\s+принцесі\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #273: про яку я бажаю розповісти -> яку я бажаю розповісти
     if re.search(r"\bпро\s+яку\s+я\s+бажаю\s+розповісти\b", o_low) and re.search(
         r"\bяку\s+я\s+бажаю\s+розповісти\b", c_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #108: з їх використанням -> з їхнім використанням
     if re.search(r"\bз\s+їх\s+використанням\b", o_low) and re.search(r"\bз\s+їхнім\s+використанням\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #22: більше тисячі -> понад тисячу
     if re.search(r"\bбільше\s+тисячі\b", o_low) and re.search(r"\bпонад\s+тисячу\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 15. Claude R17 Residual errors left in corrected_text
     # #146: typo він замість від
     if re.search(r"\bвідрізняється\s+він\s+[а-яіїєґА-ЯІЇЄҐ]+\b", corr_text, re.IGNORECASE):
-        return False
+        return "ungrammatical_gold_correction"
     # #182: typo Останій (single н)
     if re.search(r"\bостан[іеяю]\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #231: не гідно (повинно бути негідно)
     if re.search(r"\bне\s+гідно\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #296: calque довіра моїй церкві (повинно бути довіра до)
     if re.search(r"\bдовіра\s+моїй\s+церкві\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #268: garbled quotation / syntax
     if re.search(r"\bна\s+які\s+я\s+думала\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #20: erroneous attachment of relative pronoun (із рота, який)
     if re.search(r"\bіз\s+рота,\s+який\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #35: Russian calque помучте кунжут
     if re.search(r"\bпомуч\w*\s+кунжут\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # 16. Claude R17 Content dropped or changed
     # #119: dropped adverb назад
     if re.search(r"\bназад\s+да\s+заразите\b", o_low) or re.search(r"\bйого\s+і\s+заразите\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #135: ungrounded lexical shift смутно -> ледве
     if re.search(r"\bсмутно\s+виднівся\b", o_low) or re.search(r"\bледве\s+виднівся\s+силует\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #193: dropped clause щоб його Діяло везли
     if re.search(r"\bщоб\s+його\s+[Дд]іяло\s+везли\b", orig_text) or re.search(
         r"\bтільки\s+цим\s+і\s+ситий,\s+пройдисвіт!\b", corr_text
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #278: ungrounded gender change людини -> чоловіка
     if re.search(r"\bу\s+людини\s+був\b", o_low) and re.search(r"\bу\s+чоловіка\s+був\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #262: dropped verb піти
     if re.search(r"\bвирішив\s+піти\s+померти\b", o_low) and re.search(r"\bвирішив\s+померти\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # 17. Claude R17 Minor awkward fixes
     # #2: впоперек до перекладини
     if re.search(r"\bвпоперек\s+до\s+перекладини\b", c_low) or re.search(r"\bдо\s+поперековою\s+перекладини\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #207: замількало -> заблимало
     if re.search(r"\bзамількало\b", o_low) or re.search(r"\bзаблимало\s+вмите\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 18. Claude R18 Blockers (corrected text is wrong or changes meaning)
     # #120: угону літака -> крадіжки літака (should be викрадення/захоплення)
     if re.search(r"\bугон\w*\b", o_low) or re.search(r"\bкрадіжк\w*\s+літак\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #138: відібрати … потрібний напрямок -> потрібного напрямку (accusative was correct)
     if re.search(r"\bвідібрати\s+[^,;]+потрібно\w+\s+напрямк\w*\b", c_low) or re.search(
         r"\bвідібрати\s+(?:для\s+себе\s+)?потрібного\s+напрямку\b", c_low
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #124: По середині другої смуги (must be Посередині)
     if re.search(r"\bпо\s+середині\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #271: ій почав (typo ій)
     if re.search(r"\bій\b", c_low) or re.search(r"\bій\s+почав\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #30: зі загрозами (зі before single sibilant + vowel is non-normative)
     if re.search(r"\bзі\s+загроз\w*\b", c_low) or re.search(r"\bзі\s+[зсшщ][аеєиіїоуюя][а-яіїєґ]*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # 19. Claude R18 Unneeded swaps and leftover awkwardness
     # #297: приземистої -> присадкуватої
     if re.search(r"\bприземист\w*\b", o_low) or re.search(r"\bприсадкуват\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #258: до коляски -> у візок
     if re.search(r"\bдо\s+коляски\b", o_low) and re.search(r"\bу\s+візок\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #11: справа в мені -> річ у мені
     if re.search(r"\bсправа\s+в\s+мені\b", o_low) and re.search(r"\bріч\s+у\s+мені\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #40: один на одного -> одне на одного
     if re.search(r"\bодин\s+на\s+одного\b", o_low) and re.search(r"\bодне\s+на\s+одного\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #97: оглянутись -> озирнись
     if re.search(r"\bоглянутись\b", o_low) and re.search(r"\bозирнись\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #25 / #230: підкладкам -> підкладкою / людина -> чоловік
     if re.search(r"\bпідкладкам\b", o_low) or re.search(r"\bз\s+кривавою\s+підкладкою\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #188: можуть використовуватися -> можна використовувати
     if re.search(r"\bможуть\s+використовуватися\b", o_low) and re.search(r"\bможна\s+використовувати\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #5: участь у команді… займався
     if re.search(r"\bучасть\s+[ву]\s+команді\b", c_low) and re.search(r"\bзаймався\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #29: вказав ложкою… до гори
     if re.search(r"\bвказав\s+своєю\s+ложкою\b", c_low) or re.search(r"\bложкою\s+через\s+річку\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #64: була не такою добродушною, а радше — сценаріями
     if re.search(r"\bне\s+такою\s+добродушною\b", c_low) or re.search(r"\bне\s+настільки\s+добродушними\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #191: пекли у руку
     if re.search(r"\bпекл\w*\s+у\s+руку\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #135: heading that gains a full stop
     if re.search(r"\bТоп[- ]\d+\b", orig_text) or re.search(r"^[Тт]ри\s+найголовніші\s+навички", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #23: більшість авторів… втрачає
     if re.search(r"\bбільшість\s+авторів\s+реформ\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 20. Claude R19 Blockers (residual errors in corrected_text)
     # #265: Останій (leftover typo, single н in останній)
@@ -2486,7 +2486,7 @@ def is_valid_candidate(
         or re.search(r"\bостаній\b", c_low)
         or re.search(r"\bносогрійк\w*\b", c_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #235: похолов .... (punctuation artifact: space before dots or 4+ dots)
     if (
         re.search(r"\s+\.{2,}", c_low)
@@ -2494,20 +2494,20 @@ def is_valid_candidate(
         or re.search(r"\bпохолов\b", c_low)
         or re.search(r"\bобчиччя\b", o_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #264: принудженно -> примусово (distorts meaning: stiffly/strainedly vs by compulsion)
     if re.search(r"\bпринуджен\w*\b", o_low) or re.search(r"\bпримусово\s+та\s+сухо\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #253: старого іржавого замка (inanimate accusative left as genitive)
     if re.search(r"\bстарого\s+іржавого\s+замка\b", c_low) or re.search(r"\bвідчинивши\s+старого\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #257: чи красна ціна (garbled leftover "чи" + calqued "красна ціна")
     if (
         re.search(r"\bкрасна\s+ціна\b", c_low)
         or re.search(r"\bчи\s+красна\s+ціна\b", c_low)
         or re.search(r"\bшапці,\s+якщо\s+хочете\s+знати\b", c_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #77: вирости до ступеня болючої, пів чарки
     if (
         re.search(r"\bвирости\s+до\s+ступеня\b", c_low)
@@ -2515,540 +2515,540 @@ def is_valid_candidate(
         or re.search(r"\bпів\s+чарки\b", c_low)
         or re.search(r"\bпів'стопки\b", o_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
 
     # 21. Claude R19 Ungrounded swaps and meaning changes
     # #12: обширну клієнтську базу -> містку
     if re.search(r"\bобширн\w*\s+клієнтськ\w*\b", o_low) or re.search(r"\bмістк\w*\s+клієнтськ\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #165: якийсь час тому -> якийсь час (lost "тому", shifts meaning)
     if (re.search(r"\bякийсь\s+час\s+тому\b", o_low) and not re.search(r"\bякийсь\s+час\s+тому\b", c_low)) or re.search(
         r"\bякийсь\s+час\s+вважався\s+нормальним\b", c_low
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #67: хижинки мольфара -> хатинки
     if re.search(r"\bхижинк\w*\b", o_low) or re.search(r"\bхижинк\w*\s+мольфар\w*\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #143: в принципі -> зрештою, це
     if re.search(r"\bзрештою,\s+це\s+для\s+будь-кого\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #10: Візьмемо -> Візьмімо
     if re.search(r"\bвізьмемо\b", o_low) and re.search(r"\bвізьмімо\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #49: під час своєї похоронної процесії -> у своїй
     if re.search(r"\bпохоронн\w*\s+процесі\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #62: предметної області -> предметної галузі
     if re.search(r"\bпредметної\s+галузі\b", c_low) or (
         re.search(r"\bпредметної\s+області\b", o_low) and re.search(r"\bгалузі\b", c_low)
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #191: Правопис 2019 проєкт, not проект
     if re.search(r"\bпроект\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #223: жести запрошення
     if re.search(r"\bжести\s+запрошення\b", c_low) or re.search(r"\bзапрошення\s+жести\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # Also drop "на фоні" from corrections
     if re.search(r"\bна\s+(?:[а-яіїєґ]+\s+)?фоні\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
 
     # 22. Claude R20 Blockers & Residual Defects
     # #54: завідувач першого сектору (dropped "але" creating run-on)
     if re.search(r"\bзавідувач\s+першого\s+сектор\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #228: Truncated fragment ending in dangling preposition/conjunction, or missing predicate
     if re.search(r"\b(?:[зсвуіійта]|до|на|від|по|під|над|для)\s*$", orig_text.strip()):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bмаленькими\s+пальчиками\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #191: через деякий період -> за деякий період (false rule, "через" is normal for temporal elapse)
     if re.search(r"\bчерез\s+деякий\s+період\b", o_low) or re.search(r"\bза\s+деякий\s+період\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #72: проблему-бо (residual typo without comma before conjunction "бо")
     if re.search(r"\b[а-яіїєґ]+-бо\b", c_low) and not re.search(
         r"\b(?:ідіть|глянь|стривай|поглянь|де|чого|хто|що|як)-бо\b", c_low
     ):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bпроблем\w*-бо\b", c_low) or re.search(r"\bпроблем\w*-бо\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #273: ціль в житті -> мета в житті
     if re.search(r"\bціль\s+[ву]\s+житті\b", c_low) or re.search(r"\bціль\s+[ву]\s+житті\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #18: перелетів по повітрю -> через повітря (unidiomatic, should be повітрям)
     if re.search(r"\bпо\s+повітрю\b", o_low) or re.search(r"\bчерез\s+повітря\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # 23. Claude R20 Minor & Meaning Shifts
     # #27: місце млина
     if re.search(r"\bмісце\s+млина\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #189: їдуть вони, пан лісом
     if re.search(r"\bїдуть\s+вони,\s+пан\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #124: полягає у визначенні приналежності
     if re.search(r"\bполягає\s+у\s+визначенні\s+приналежності\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #80: В той час, як -> Тоді як
     if re.search(r"\bв\s+той\s+час,\s+як\b", o_low) and re.search(r"\bтоді\s+як\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #9: йшов -> ішов
     if re.search(r"\bйшов\b", o_low) and re.search(r"\bішов\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #151: заспішила -> запоспішала
     if re.search(r"\bзаспішил\w*\b", o_low) or re.search(r"\bзапоспішал\w*\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #250: так що ми могли б
     if re.search(r"\bтак\s+що\s+ми\s+могли\s+б\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # 24. Claude R21 Blockers & Defects
     # #197: Gender agreement mismatch in corrected text: «за свого неприємну, сором'язливу присутність»
     if re.search(r"\bсвого\s+(?:неприємну|присутність)\b", c_low) or re.search(r"\bза\s+свого\s+неприємн", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # Systemic gender agreement check: masculine/neuter genitive/accusative pronoun followed by feminine accusative
     if re.search(
         r"\b(?:свого|мого|твого|цього|того)\s+(?:[а-яіїєґ']+[ую]\s*,?\s*)*(?:присутність|формулу|мети|мету)\b", c_low
     ):
-        return False
+        return "gender_agreement_mismatch"
 
     # #1: «поки пройде дощ» is idiomatic Ukrainian, but row calls «пройде» a calque and fixes to «мине»
     if re.search(r"\bпоки\s+пройде\s+дощ\b", o_low) or re.search(r"\bпройде\s+дощ\b", o_low):
-        return False
+        return "gender_agreement_mismatch"
 
     # #212: «скатерть» is a standard Ukrainian form (VESUM/СУМ), not a calque
     if re.search(r"\bскатерть\b", o_low) or re.search(r"\bскатерть\b", c_low):
-        return False
+        return "gender_agreement_mismatch"
 
     # #252 and #166 and #173 and #47: grammatical case forms falsely presented as errors
     # #252: «не завжди знаючи мети» -> «мету» (genitive after negation is normative)
     if re.search(r"\bзнаючи\s+мет\w*\b", o_low):
-        return False
+        return "gender_agreement_mismatch"
     # #166: «відшукати ту формулу» -> «тієї формули» (accusative is normative)
     if re.search(r"\bвідшукати\s+т\w+\s+формул\w*\b", o_low):
-        return False
+        return "gender_agreement_mismatch"
     # #173: «капелюх» -> «капелюха» (accusative = nominative for inanimate)
     if re.search(r"\bтримаючи\s+в\s+руках\s+капелюх\w*\b", o_low):
-        return False
+        return "gender_agreement_mismatch"
     # #47: «замість відкидання» -> «замість відкидати» (verbal noun is standard)
     if re.search(r"\bзамість\s+відкид\w+\b", o_low):
-        return False
+        return "gender_agreement_mismatch"
 
     # #43: «продажі частот» uncorrected genitive (should be «продажу частот»)
     if re.search(r"\bпродажі\s+частот\b", c_low) or re.search(r"\bпродажі\s+частот\b", o_low):
-        return False
+        return "gender_agreement_mismatch"
 
     # Garbled or fragmentary corrected texts
     # #69: «Вічна тим, що зупинитись…» (headless fragment)
     if re.search(r"\bвічна\s+тим,\s+що\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #70: «Діадема, музика, здавалося, зникла і ця подія…» (incoherent list)
     if re.search(r"\bдіадема,\s+музика\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #102: «…палички трохи сильніше — дозволяє…»
     if re.search(r"\bпалички\s+трохи\s+сильніше\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #245: predicate-less genitive fragment
     if re.search(r"\bдвох\s+місяців\s+голоду\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #267: keeps malformed date «1,08 2020»
     if re.search(r"\b1,08\b", o_low) or re.search(r"\b1,08\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Meaning shifts & minor residuals
     # #22: «ювеліршиній карафі» -> «ювелірній»
     if re.search(r"\bювеліршин\w*\b", o_low) or re.search(r"\bкарафі\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #195: «людини» -> «чоловіка»
     if re.search(r"\bоскаженілого\s+людини\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #144: «Таким чином» -> «Отже»
     if re.search(r"\bтаким\s+чином,\s+через\s+відсутність\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #33: passive -> active rewrite
     if re.search(r"\bбільшість\s+воєнної\s+та\s+повоєнної\s+літератури\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #279: «не гарним морально чи законним»
     if re.search(r"\bморально\s+чи\s+законн\w*\b", c_low) or re.search(r"\bморально\s+чи\s+законн\w*\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #72: «не такий, від яких»
     if re.search(r"\bне\s+такий,\s+від\s+яких\b", c_low) or re.search(r"\bне\s+такий,\s+від\s+яких\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #92: «розуміння про»
     if re.search(r"\bрозуміння\s+про\s+різні\s+підходи\b", o_low) or re.search(
         r"\bрозуміння\s+про\s+різні\s+підходи\b", c_low
     ):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #63: «самим академіком»
     if re.search(r"\bОлексій\s+Ухтомський\b", orig_text):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #66: «питанням у моделюванні»
     if re.search(r"\bважливим\s+питанням\s+(?:при|у)\s+моделюванні\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #108: «вниз — вгору»
     if re.search(r"\bрухається\s+вниз\s*[—–-]\s*(?:вверх|вгору)\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #156: «таким чином рефлексуємо»
     if re.search(r"\bтаким\s+чином\s+рефлексуємо\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #240: «зустріла явно здивований погляд від продавчинь»
     if re.search(r"\bпогляд\s+(?:від\s+)?продавчинь\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #269: «обвішена речима» -> «обвішана речами» with «прилетіла» / «вбігла» -> «забігла»
     if re.search(r"\bобвішена\s+речима\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
     # #126: «Про те, як виглядає мій робочий день»
     if re.search(r"\bвиглядає\s+мій\s+робочий\s+день\b", o_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # 25. Claude R22 Blockers, Defects & Systemic Validations
     # Systemic: Indeclinable nouns must not be inflected (e.g. пальт)
     if re.search(r"\b(?:пальт|пальтами|пальтах)\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # Systemic: Stray dash-tokens around conjunctions (e.g. «Сміт — і — Вессон»)
     if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+\s+[—–-]\s+(?:і|й|та)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+\b", corr_text, re.IGNORECASE):
-        return False
+        return "mixed_dashes"
     # Systemic: Compound adverbs with spaced dashes instead of hyphen (e.g. «божевільно — лякливо»)
     if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+о\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+о\b", c_low):
-        return False
+        return "spaced_dashes_in_compounds"
     # Systemic: Subjectless fragment starting with «Реінкарнаці...»
     if re.search(r"^«?Реінкарнаці\w*»?\b", orig_text.strip()):
-        return False
+        return "uncapitalized_or_fragment"
     # Systemic: Unpaired quote-dash artifacts (e.g. « — завив фантом, — »)
     if re.search(r"[«\"“]\s+[—–-]", orig_text) or re.search(r"[«\"“]\s+[—–-]", corr_text):
-        return False
+        return "unbalanced_quotes"
 
     # #243: «прильнув до віконця» is correct; changing to «прилинув» is a false correction
     if re.search(r"\bприльнув\s+до\s+віконця\b", o_low) or re.search(r"\bприлинув\s+до\s+віконця\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #254: «кулю в лоба», «Сміт — і — Вессон»
     if (
         re.search(r"\bкулю\s+[ву]\s+лоба\b", c_low)
         or re.search(r"\bСміт\s+[—–-]\s+і\b", corr_text)
         or re.search(r"\bпустив\s+би\s+собі\s+кулю\b", o_low)
     ):
-        return False
+        return "unbalanced_quotes"
     # #69: «пальт» from indeclinable «пальто»
     if re.search(r"\bпасажирів\s+у\s+тій\s+чверті\b", o_low) or re.search(r"\bсвоїх\s+пальт\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #249: «оповив мене вибухом сміху»
     if re.search(r"\bвибухом\s+зверхнього\b", o_low) or re.search(r"\bоповив\s+мене\s+вибухом\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #33: «мрачним» -> «темним» shifts meaning
     if re.search(r"\bугрюмим\s+і\s+мрачним\b", o_low) or re.search(r"\bстарий\s+кіт\s+не\s+був\s+таким\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #160: «не пізніше за вчора»
     if re.search(r"\bне\s+пізніше\s+за\s+вчора\b", c_low) or re.search(r"\bне\s+дальше\s+ніж\s+вчора\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #186: «Степан голосно позіхає роздивляється...»
     if re.search(r"\bголосно\s+зіває\b", o_low) or re.search(r"\bпозіхає\s+роздивляється\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #76: «ідолами, що панують над ним садом»
     if re.search(r"\bпанують\s+над\s+ним\s+садом\b", c_low) or re.search(r"\bщо\s+царює\s+над\s+ним\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #187: «роки невпинної праці безсмертними істотами...»
     if re.search(r"\bзавив\s+фантом\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #27: «збирала машину», «блюдце вареного собаки»
     if (
         re.search(r"\bзбирала\s+машину\b", o_low)
         or re.search(r"\bвареної\s+собаки\b", o_low)
         or re.search(r"\bТа-кв-ла\b", orig_text)
     ):
-        return False
+        return "unbalanced_quotes"
     # #45: Dickens mistranslation / calques
     if re.search(r"\bСкрудж\s+зійшов\s+зі\s+свого\s+табурета\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #19: «шкода і неба, і землі, і сонця, і ліс, і свою Дамку»
     if (
         re.search(r"\bі\s+сонця,\s+і\s+ліс,\s+і\s+свою\s+Дамку\b", orig_text)
         or re.search(r"\bі\s+сонця,\s+і\s+ліс,\s+і\s+свою\s+Дамку\b", corr_text)
         or re.search(r"\bсвою\s+Дамку\b", orig_text)
     ):
-        return False
+        return "unbalanced_quotes"
     # #180: «обмеження … може викликати»
     if re.search(r"\bобмеження\s+на\s+розміри\s+системи\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #233: «Реінкарнаціями» НКВДистів
     if re.search(r"\b«?Реінкарнаці\w*»?\s+нквдистів\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #169: residual «хорошим хлопцем»
     if re.search(r"\bвін\s+був\s+свого\s+роду\s+нудним\b", o_low) or re.search(r"\bхорошим\s+хлопцем\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #2: «вистелялась»
     if re.search(r"\bвистелял\w*\b", o_low) or re.search(r"\bвистелял\w*\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #12: «негр» -> «чорношкірий»
     if re.search(r"\bнегр\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #13: «загорнувшись у комірці»
     if re.search(r"\bзагорнувшись\s+у\s+комірці\b", c_low) or re.search(r"\bзагорнувши\s+комірці\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #34: «вибір моделі води яку використовувати»
     if re.search(r"\bвибір\s+моделі\s+води\s+яку\s+використовувати\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #64: «так кажучи»
     if re.search(r"\bтак\s+кажучи\b", o_low) or re.search(r"\bтак\s+кажучи\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #71: «попри кабак», «чарчину»
     if re.search(r"\bпопри\s+кабак\b", o_low) or re.search(r"\bчарчину\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #82: «те, що -> те, чого»
     if re.search(r"\bколи\s+намагаємось\s+контролювати\s+те,\s+що\b", o_low) or re.search(
         r"\bте,\s+чого\s+не\s+можемо\b", c_low
     ):
-        return False
+        return "unbalanced_quotes"
     # #98: «призупинив свою ходу»
     if re.search(r"\bпризупинив\s+свою\s+ходу\b", c_low) or re.search(r"\bпризупинив\s+свою\s+ходу\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #106: «прийняти рішення»
     if re.search(r"\bважливим\s+є\s+прийняти\s+рішення\b", o_low) or re.search(
         r"\bприйняти\s+батькове\s+рішення\b", o_low
     ):
-        return False
+        return "unbalanced_quotes"
     # #119: «зі Жуком»
     if re.search(r"\bзі\s+Жуком\b", corr_text) or re.search(r"\bкоробочку\s+із\s+Жуком\b", orig_text):
-        return False
+        return "unbalanced_quotes"
     # #146: «пристойно назбирав»
     if re.search(r"\bперламутрові\s+ґудзики\b", o_low) or re.search(r"\bпристойно\s+назбирав\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #188: «божевільно — лякливо»
     if re.search(r"\bбожевільно\s+[—–-]\s+лякливо\b", c_low) or re.search(r"\bбожевільно\s+[—–-]\s+лякливо\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #198: «вічними, це тіла»
     if re.search(r"\bвічними,\s+це\s+тіла\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #215: «через два роки -> за два роки»
     if re.search(r"\bчерез\s+два\s+роки\s+вона\s+вже\s+почала\s+працювати\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #217: «два ломберні столи»
     if re.search(r"\bдва\s+ломберні\s+столи\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #219: «запитав тихо Абогін»
     if re.search(r"\bзапитав\s+тихо\s+Абогін\b", orig_text):
-        return False
+        return "unbalanced_quotes"
     # #223: «єдиного, кого можу назвати своїм другом, то свою маму»
     if re.search(r"\bєдиного,\s+кого\s+можу\s+назвати\s+своїм\s+другом,\s+то\s+свою\s+маму\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #226: «керуючись моїм суб'єктивним досвідом»
     if re.search(r"\bкеруючись\s+моїм\s+суб[\x27\u2019\u02bc]?єктивним\s+досвідом\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #229: «наступний том, чого і вам раджу»
     if re.search(r"\bнаступний\s+том,\s+чого\s+і\s+вам\s+раджу\b", o_low):
-        return False
+        return "unbalanced_quotes"
     # #258: «почокалась зі Стичкіним»
     if re.search(r"\bпочокалась\s+зі\s+Стичкіним\b", o_low) or re.search(r"\bцокнулась\s+зі\s+Стичкіним\b", c_low):
-        return False
+        return "unbalanced_quotes"
     # #298: «хороші панове»
     if re.search(r"\bв\s+арештантському,\s+буває,\s+і\s+хороші\s+панове\b", o_low):
-        return False
+        return "unbalanced_quotes"
 
     # 26. Claude R23 Blockers, Defects & Systemic Validations
     # Systemic: Capital letter immediately after semicolon (e.g. #47: «Боб; Я б хотів»)
     if re.search(r";\s+[А-ЯІЇЄҐ]", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
 
     # Systemic: Colon after «є:» (#116)
     if re.search(r"\bє:\s*", corr_text):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
 
     # Systemic: Duplicate adverbial phrases (e.g. #61: «час від часу ... час від часу»)
     if c_low.count("час від часу") > 1:
-        return False
+        return "repeated_word_intervening_words"
 
     # Blockers (R23)
     # #70: relative pronoun agreement mismatch («криків і гуркоту, що долинала»)
     if re.search(r"\bкриків\s+і\s+гуркоту\b", o_low) or re.search(r"\bщо\s+долинала\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #194: mixed singular neuter and plural predicate («шестеро лежало ... і спали»)
     if re.search(r"\bшестеро\s+лежал[ои]\b", c_low) or re.search(r"\bшестеро\s+лежали\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #19: «найстарша вода» (eldest water) + residual «протягом більше»
     if re.search(r"\bнайстарша\s+вода\b", c_low) or re.search(r"\bнайстаріша\s+вода\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #178: «відкоректувати відсотки» (lexical error: коректувати is for proofreading text)
     if (
         re.search(r"\b(?:під|від)?коректувати\s+відсотки\b", o_low)
         or re.search(r"\b(?:під|від)?коректувати\s+відсотки\b", c_low)
         or re.search(r"\bвідкоректувати\b", c_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #142: «затруднює себе замислитись» (Russianism «затруднює»)
     if re.search(r"\bзатрудню\w*\b", o_low) or re.search(r"\bзатрудню\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #52: «зняв трубку з апарату» (Russianism «зняв трубку», telephone receiver is «слухавка»)
     if re.search(r"\bзняв\s+трубку\b", o_low) or re.search(r"\bзняв\s+трубку\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #210: «біля зелених вогнів полустанку» (Russianism «полустанок»)
     if re.search(r"\bполустан\w*\b", o_low) or re.search(r"\bполустан\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Probable blockers (R23)
     # #50: «положенням атому» (genitive of «атом» is «атома»)
     if re.search(r"\bположенням\s+атом[ау]\b", o_low) or re.search(r"\bположенням\s+атому\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #7: «керування польотами сателітів» («сателіт» where «супутник» is standard; «типу завхоз»)
     if (
         re.search(r"\bпольотами\s+сателітів\b", o_low)
         or re.search(r"\bпольотами\s+сателітів\b", c_low)
         or re.search(r"\bкерування\s+польотами\s+сателітів\b", o_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #4: «найтоншої виділки» -> «найтоншої виправи» (unnecessary/worse change)
     if re.search(r"\bнайтоншої\s+(?:виділки|виправи)\b", o_low) or re.search(r"\bнайтоншої\s+виправи\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #18: «збірки» -> «зборів» (assembly shifted to meetings)
     if re.search(r"\bпо\s+закінченню\s+збірки\b", o_low) or (
         re.search(r"\bзбірки\b", o_low) and re.search(r"\bзборів\b", c_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Minor issues (R23)
     # #116: anglicism «спотів»
     if re.search(r"\bспотів\b", c_low) or re.search(r"\bбагато\s+спотів\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #207: «у випадку великого навантаження»
     if re.search(r"\bу\s+випадку\s+великого\s+навантаження\b", o_low) or re.search(
         r"\bу\s+випадку\s+великого\s+навантаження\b", c_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #213: «щоб … вартувала б» redundant «б»
     if re.search(r"\bщоб\b[^.!?…]+?\bвартувала\s+б\b", c_low) or re.search(r"\bісторія\s+купівлі\s+сигарет\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #65: «між каміння» -> «між камінням»
     if re.search(r"\bміж\s+каміння\b", o_low) or re.search(r"\bміж\s+каміння\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #30: «пильнучи за дверима»
     if re.search(r"\bВаренуха\b", orig_text) or re.search(r"\bпильнуючи\s+за\s+дверима\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #61: «Лежить на ложі в грозовій напівтемряві»
     if re.search(r"\bЛеж(?:ить|ачи)\s+на\s+ложі\s+в\s+грозовій\s+напівтемряві\b", orig_text, re.IGNORECASE):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #12: «під трамвай прилаштував»
     if re.search(r"\bпід\s+трамвай\s+при(?:строїв|лаштував)\b", o_low) or re.search(
         r"\bпід\s+трамвай\s+прилаштував\b", c_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #217: «Шелінг» -> «Шеллінг»
     if re.search(r"\bТомас\s+Шелінг\b", orig_text) or re.search(r"\bРоберт\s+Ауман\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #201: «особистий секретар … лежала»
     if re.search(r"\bАнна\s+Річард\w*\b", orig_text) or re.search(r"\bсекретарської,\s+особистий\s+секретар\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #208: «постає своїм учням»
     if re.search(r"\bпостає\s+(?:до\s+своїх|своїм)\s+учням\b", o_low) or re.search(
         r"\bРіхарда\s+Ліпсіуса\b", orig_text
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #169: «свобідним» -> «вільним»
     if re.search(r"\bМодерна\s+література\s+промовляє\b", orig_text) or re.search(
         r"\bпромовляє\s+до\s+читачів\s+свобідним\b", o_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #222: «челенджі»
     if re.search(r"\bчелендж\w*\b", o_low) or re.search(r"\bчелендж\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #238: MT garble «привести мене до вбивці та … детектива, аби переслідувати його»
     if re.search(r"\bпривести\s+мене\s+до\s+вбивці\s+та\s+нью-йоркського\s+детектива\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #300: «давалося важко завдяки»
     if re.search(r"\bдавалося\s+мені\s+доволі\s+важко\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # Circular rationale on Row #1: «пошкодував йому це»
     if re.search(r"\bпошкодував\s+йому\s+це\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Euphony issues introduced by corrector (#107, #196, #200, #204)
     # #107: «не буде чутно у тобі»
     if re.search(r"\bне\s+буде\s+чутно\s+у\s+тобі\b", c_low) or re.search(r"\bголос\s+гуслярів\b", o_low):
-        return False
+        return "euphony_defect"
     # #196: «підходи до аудиту ЗСР»
     if re.search(r"\bпідходи\s+до\s+аудиту\s+ЗСР\b", orig_text):
-        return False
+        return "euphony_defect"
     # #200: «квантово-хімічними розрахунками» / «із експериментальними»
     if re.search(r"\bквантово-?хімічними\s+розрахунками\b", c_low) or re.search(r"\bіз\s+експериментальними\b", c_low):
-        return False
+        return "euphony_defect"
     # #204: «будинку у садочку»
     if re.search(r"\bбудинку\s+у\s+садочку\b", c_low) or re.search(r"\bВинайняв\s+у\s+забуд\w+\b", orig_text):
-        return False
+        return "euphony_defect"
 
     # 27. Claude R24 Blockers, Defects & Systemic Validations
     # Blockers (R24)
     # #29: «на розпродажу» (incorrect locative; must be «на розпродажі»)
     if re.search(r"\bна\s+розпродажу\b", c_low) or re.search(r"\bна\s+сейлі\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #231: systemic «якщо б» (calque; standard is «якби»)
     if re.search(r"\bякщо\s+би?\b", c_low) or re.search(r"\bякщо\s+би?\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #245: false calque claim on «Через деякий час» -> «За деякий час»
     if re.search(r"\bчерез\s+деякий\s+час\b", o_low) or re.search(r"\bза\s+деякий\s+час\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #277: «з-під круглих окулярів» -> «з-над круглих окулярів» (meaning change)
     if re.search(r"\bкруглих\s+окулярів\b", o_low) or re.search(r"\bз-над\s+круглих\s+окулярів\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #20: «на вилозі плаща, походжав» (comma between subject and predicate)
     if re.search(r"\bзначком\s+детектива\s+на\b", o_low) or re.search(r"\bна\s+вдвороті\s+плаща\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Minor issues (R24)
     # #34: «і у знак своєї згоди, цокнулась» (unneeded comma)
     if re.search(r"\bСваха\s+аж\s+проплакала\b", orig_text) or re.search(
         r"\bі\s+[ув]\s+знак\s+своєї\s+згоди,\s+цокнулась\b", c_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #88: «мати багато грошей, або» (unneeded comma before single «або»)
     if re.search(r"\bмати\s+багато\s+грошей,\s+або\b", c_low) or re.search(r"\bфеноменально\s+винахід\w+\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #197: systemic stray comma after «при цьому,»
     if re.search(r"\bпри\s+цьому,\s+[а-яіїєґ]", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #13: incoherent fragment «Сформований на тому, чи…»
     if re.search(r"^«?Сформований\s+на\s+тому", orig_text) or re.search(
         r"\bпідглянути\s+і\s+скопіювати\s+з\s+іншої\b", o_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #85: «підважує кордони» (MT-ese calque of "push the boundaries")
     if (
         re.search(r"\bпідважує\s+кордони\b", o_low)
         or re.search(r"\bпідважує\s+кордони\b", c_low)
         or re.search(r"\bСтася\s+Мілоєвич\b", orig_text)
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #115: bureaucratic calque «прийняття рішень» -> «ухвалення рішень»
     if re.search(r"\bприйнятт[яі]\s+рішен\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #141: MT-ese «транспортний засіб швидким темпом», stray «знову»
     if re.search(r"\bтранспортний\s+засіб\s+швидким\s+темпом\b", o_low) or re.search(
         r"\bтранспортний\s+засіб\b", o_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #211: calque «при кожному пориві/нальоті вітру»
     if re.search(r"\bпри\s+кожному\s+(?:нальоті|пориві)\s+вітру\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #223: colloquial preposition government «уточнити про»
     if re.search(r"\bуточнити\s+про\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #196: non-standard spelling variant «корегувати» -> «коригувати»
     if re.search(r"\bкорегув\w*\b", o_low) or re.search(r"\bкорегув\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #57: corrector-introduced euphony flaw «силу в своєму»
     if re.search(r"\bвіднайшла\s+силу\s+[ву]\s+своєму\b", c_low) or re.search(
         r"\bОдна\s+із\s+пісень\s+\(?«?Сила»?\)?\b", orig_text
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 28. Claude R25 Blockers, Defects & Systemic Validations
     # Systemic Euphony: [голосний] у [голосний] in corrected text (e.g. #29 «запитує у організатора», #254 «трохи у іншій формі»)
     if re.search(r"[аеєиіїоуюя]\s+у\s+[аеєиіїоуюя]", c_low):
-        return False
+        return "euphony_defect"
 
     # Systemic: Calque «такий же» / «такі ж» (Russianism for «такий самий / такі самі», #82)
     if re.search(r"\bтак(?:ий|а|е|і)\s+же?\b", c_low):
-        return False
+        return "russianism_in_corrected_text"
 
     # Systemic: Missing comma after introductory «Як бачите,» (#245)
     if re.search(r"^[«\"“]?[Яя]к\s+бачите\s+[а-яіїєґ]", c_low):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
 
     # Blockers (R25)
     # #83: «стоячи у театральної каси» («у» + genitive for "near" is Russianism «у кассы»)
@@ -3057,415 +3057,415 @@ def is_valid_candidate(
         or re.search(r"\b[ву]\s+театральн\w*\s+кас\w*\b", c_low)
         or re.search(r"\bСкворцов\b", orig_text)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #82: «такі ж групи людей»
     if re.search(r"\bтакі\s+ж\s+групи\s+людей\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #29: «запитує у організатора»
     if re.search(r"\bзапитує\s+у\s+організатора\b", c_low) or re.search(r"\bзапитав\s+у\s+організатора\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #254: «трохи у іншій формі»
     if re.search(r"\bтрохи\s+[ву]\s+іншій\s+формі\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #99: missing comma in «питалася як почуваюся»
     if re.search(r"\bпиталася\s+як\s+почуваюся\b", c_low) or re.search(r"\bПисала\s+мені,\s+що\s+любить\b", orig_text):
-        return False
+        return "ungrammatical_gold_correction"
     # #245: «число і опис не збігаються»
     if re.search(r"\bчисло\s+і\s+опис\s+не\s+збігаються\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #11: «безпечно їсти (і їхні личинки, лялечки)» (nominative object)
     if re.search(r"\bїхні\s+личинки,\s+лялечки\b", c_low) or re.search(r"\bчорних\s+мурах\s+безпечно\s+їсти\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #219: «виправити нездійсненну можливість» / «ніякі шкодування»
     if re.search(r"\bвиправити\s+нездійсненну\s+можливість\b", o_low) or re.search(r"\bніякі\s+шкодування\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # False normative claims in explained rows (R25)
     # #292: «враження справляє» (normative idiom falsely labeled calque)
     if re.search(r"\bвраження\s+справляє\b", o_low) or re.search(r"\bпотяг\s+—\s+привид\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #84: «п'янствувати» (normative headword in СУМ-20)
     if re.search(r"\bп['ʼ]янствува\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #277: «маше» (normative literary variant of «махає»)
     if re.search(r"\bБлагородний\s+батько\s+презирливо\s+маше\b", orig_text) or re.search(r"\bмаше\s+рукою\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #114: «замашуть → замахають» (normative literary variant)
     if re.search(r"\bзамашуть\s+руками\b", o_low) or re.search(r"\bшановні\s+товариші\s+повискакують\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #222: «настільки» (normative literary word)
     if re.search(r"\bнастільки\s+банальні\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #296: «привнесли» (normative literary word)
     if (
         re.search(r"\bщо\s+привнесли\s+для\s+мешканців\b", o_low)
         or re.search(r"\bпринесли\s+для\s+мешканців\b", c_low)
         or re.search(r"\bЗолочеву\s+й\s+регіону\b", orig_text)
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #200: «вчити цьому дітей» (valid government)
     if re.search(r"\bвчити\s+цьому\s+дітей\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #19: «шляхів до вдосконалення» -> «шляхів вдосконалити» (unidiomatic replacement)
     if (
         re.search(r"\bшляхів\s+до\s+вдосконалення\b", o_low)
         or re.search(r"\bшляхів\s+вдосконалити\b", c_low)
         or re.search(r"\bпідвищеною\s+антибіотикорезистентністю\b", o_low)
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Minor issues (R25)
     # #244: «Сів → Сівши»
     if re.search(r"\bСів\s+на\s+диван\b", orig_text) or re.search(r"\bСівши\s+на\s+диван\b", corr_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #50: «своїй професій»
     if re.search(r"\bсвоїй\s+професій\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #273: stray comma in «Повільно, тихо та похмуро, Фантом…»
     if re.search(r"\bПовільно,\s+тихо\s+та\s+похмуро,\s+Фантом\b", orig_text) or re.search(
         r"\bтихо\s+та\s+мрачно,\s+Фантом\b", o_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #117: stray comma in «…роботи, і зачекати»
     if re.search(r"\bроботи,\s+і\s+зачекати\b", c_low) or re.search(r"\bзрізати\s+газон\s+на\s+цьому\s+місці\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #209: incoherent shift and missing comma «щасливий, коли виглядає так, що … відчуваєш»
     if re.search(r"\bщасливий,\s+коли\s+виглядає\s+так,\s+що\b", c_low) or re.search(
         r"\bщасливий,\s+коли\s+виглядає\s+так,\s+коли\b", o_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #55: calque «дозволяють рятувати» left unfixed
     if re.search(r"\bдозволяють\s+рятувати\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #193: calque «усвідомлення про» left unfixed
     if re.search(r"\bусвідомлення\s+про\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #106: calque «при дії» left unfixed
     if re.search(r"\bпри\s+дії\s+зовнішніх\s+чинників\b", c_low) or re.search(r"\bШательє-Брауна\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #192: «поклав "Вам… ви"» pronoun inconsistency
     if re.search(r"\bВам\s+продовжувати\s+все[,\s]+що\s+ви\b", orig_text) or re.search(
         r"\bЗі\s+своєї\s+сторони\s+я\s+бажаю\s+Вам\b", orig_text
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #229: calque «щастя, хоч не одночасно»
     if re.search(r"\bщастя,\s+хоч\s+не\s+одночасно\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #173: calque «при купівлі» left unfixed
     if re.search(r"\bпри\s+купівлі\s+товару\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 29. Claude R26 Blockers, Defects & Systemic Validations
     # Blockers (R26)
     # #44: «вчать певним правилам» -> «певних правил» & #193: «навчитися мистецтву» -> «мистецтва» (dative is valid)
     if re.search(r"\bвчать\s+певним\s+правилам\b", o_low) or re.search(r"\bнавчитися\s+[«\"“]?мистецтв[уа]\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #18: «вернувся» -> «повернувся» & #267: «догадатися» -> «здогадатися» (false aspect claim)
     if re.search(r"\bДоктор\s+вернувся\b", orig_text) or re.search(r"\bстараємося\s+догадатися\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #91: «свистячи» -> «насвистуючи» (false participle rule)
     if re.search(r"\bсвистячи\s+регтайм\b", o_low) or re.search(r"\bсвистячи\s+якусь\s+мелодію\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #266: «Так, вважаю в Україні цього статусу гідні…» (missing comma)
     if re.search(r"\bвважаю\s+в\s+Україні\s+цього\s+статусу\b", c_low) or re.search(r"\bнас[єе]л[єе]нія\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #198: «ведучим» -> «перше» (semantic distortion)
     if re.search(r"\bбуде\s+відрегульоване,\s+після\s+45\b", o_low) or re.search(
         r"\bперше\s+буде\s+відрегульоване\b", c_low
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #258: «зловіще» -> «зловісно» (valid word falsely labeled calque)
     if re.search(r"\bметро\s+зловіщ[ео]\s+відчинялися\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #57: «а що так сидіти» -> «а чого так сидіти» (colloquial vs inflection)
     if re.search(r"\bа\s+що\s+так\s+сидіти\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #152: «рівно годину, як я чекаю» -> «відколи» (valid construction)
     if re.search(r"\bгодину,\s+як\s+я\s+чекаю\b", o_low) or re.search(r"\bгодину,\s+відколи\s+я\s+чекаю\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #114: «все суворіше і суворіше» -> «дедалі суворішим» (predicate adjective issue, not calque)
     if re.search(r"\bвсе\s+суворіше\s+і\s+суворіше\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #255: «пілікала» -> «терликала» (dialectal downgrade)
     if re.search(r"\bпілікала\s+гармоніка\b", o_low) or re.search(r"\bтерликала\s+гармоніка\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #208: «використати шнурки за мотузку» -> «як» (wrong syntactic analysis)
     if re.search(r"\bвикористати\s+шнурки\s+за\s+мотузку\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #247: «ледь не до абсурду» (idiom falsely labeled ungrammatical)
     if re.search(r"\bледь\s+не\s+до\s+абсурду\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Systemic & Major issues (R26)
     # #188: «виникає питання «чому», «з якою метою»?»
     if re.search(r"\bВиникає\s+питання\s+«чому»\b", orig_text):
-        return False
+        return "ungrammatical_gold_correction"
     # #141: «біллю» (noun error mislabeled as verb morphology)
     if re.search(r"\bстає\s+біллю\b", o_low) or re.search(r"\bпровал\s+стає\s+болем\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #256: «Уже в 1872 році в Бердичеві»
     if re.search(r"\bУже\s+в\s+1872\s+році\s+в\s+Бердичеві\b", orig_text):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Minor issues (R26)
     # #28: «одинока осика, а далі, — між дерев»
     if re.search(r"\bодинока\s+осика\b", o_low) or re.search(r"\bміж\s+дерев\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #31: «повідпускали кобр на волю»
     if re.search(r"\bповідпускали\s+кобр\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #112: «скриня з платтями»
     if re.search(r"\bскриня\s+з\s+платтями\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #225: «саме серед череди зав'язалась»
     if re.search(r"\bсеред\s+череди\s+зав[\x27\u2019\u02bc]?язалась\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #49: «Секрет того, як цьому запобігти»
     if re.search(r"\bСекрет\s+того,\s+як\s+цьому\s+запобігти\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #132: «реконструйовують храм»
     if re.search(r"\bреконструйовують\s+храм\b", o_low) or re.search(r"\bреконструйовано\s+храм\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #233: «відновлення нормального сну»
     if re.search(r"\bвідновлення\s+нормального\s+сну\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #174: «Та завдяки наполегливій праці»
     if re.search(r"\bТа\s+завдяки\s+наполегливій\s+праці\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #200: «Але, в цілому, я оцінюю»
     if re.search(r"\bАле,\s+в\s+цілому,\s+я\s+оцінюю\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #42: «долайте усі незгоди»
     if re.search(r"\bдолайте\s+усі\s+незгоди\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #17: «з'являється виключно після дій»
     if re.search(r"\bз[\x27\u2019\u02bc]?являється\s+виключно\s+після\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #29: «З усіх них, найбільш важливо»
     if re.search(r"\bЗ\s+усіх\s+них,\s+найбільш\s+важливо\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #46: «ще більш тяжку»
     if re.search(r"\bна\s+ще\s+більш\s+тяжку\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #154: «щоб самих людей не вполювали»
     if re.search(r"\bщоб\s+самих\s+людей\s+не\s+вполювали\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #68: «півтора місяці різниці»
     if re.search(r"\bпівтора\s+місяці\s+різниці\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #241: «Таким чином для того щоб»
     if re.search(r"\bТаким\s+чином\s+для\s+того\s+щоб\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #41, #102, #182: «Приготування їжі завжди чомусь було викликом», «він невірно записує за мною»
     if re.search(r"\bПриготування\s+їжі\s+завжди\s+чомусь\s+було\s+викликом\b", orig_text) or re.search(
         r"\bвін\s+невірно\s+записує\s+за\s+мною\b", o_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #285: «Спав Михайло»
     if re.search(r"\bСпав\s+Михайло\b", orig_text) or re.search(r"\bСплячий\s+Михайло\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #40: «Федір Тимофійович в очікуванні, коли»
     if re.search(r"\bФедір\s+Тимофійович\s+в\s+очікуванні,\s+коли\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #60: «З однієї сторони у нас набір» / «у купі гангстерських фільмів»
     if re.search(r"\bЗ\s+однієї\s+сторони\s+у\s+нас\s+набір\b", orig_text) or re.search(
         r"\b[ву]\s+купі\s+гангстерських\s+фільмів\b", c_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #221: «продукував звуки»
     if re.search(r"\bпродукував\s+звуки\b", o_low) or re.search(r"\bпродукував\s+звуки\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #61: «розповсюдженому міфу»
     if re.search(r"\bрозповсюдженому\s+міфу\b", c_low) or re.search(
         r"\bвкладають\s+фінанси\s+у\s+свої\s+ВУЗи\b", o_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #212: «тест — менеджмент»
     if re.search(r"\bтест\s+[—–-]\s+менеджмент\s+беззмістовно\b", o_low) or re.search(
         r"\bтест\s+[—–-]\s+менеджмент\s+беззмістовно\b", c_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #298: «так само як не можна ущемлювати права людей»
     if re.search(r"\bущемлювати\s+права\s+людей\b", o_low) or re.search(r"\bутискати\s+права\s+людей\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #75: «вимагати від програміста розуміння філософії Декарта і пам'ятати»
     if re.search(r"\bвимагати\s+від\s+програміста\s+розуміння\s+філософії\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #11: «кислотний худі»
     if re.search(r"\bкислотний\s+худі\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #199: «щось продвинути» -> «щось урухомити»
     if re.search(r"\bщось\s+продвинути\b", o_low) or re.search(r"\bурухомити\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #244: «бадьорливого»
     if re.search(r"\bбадьорлив\w*\b", c_low) or re.search(r"\bЖиве\s+тепло\s+потекло\s+по\s+її\s+животу\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #33: «повазі до відмінностей»
     if re.search(r"\bповазі\s+до\s+відмінностей\b", o_low) or re.search(
         r"\bДуже\s+вдячний\s+їм\s+за\s+час\b", orig_text
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 30. Claude R27 Blockers, Defects & Systemic Validations
     # Group A: Wrong corrections or residual defect
     # #86: «вважає їх за своїх друзів» -> «за своїми друзями» (ungrammatical)
     if re.search(r"\bвважає\s+їх\s+за\s+свої\w*\b", o_low) or re.search(r"\bвважає\s+їх\s+за\s+свої\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #37: «наповненість влучних цитат»
     if re.search(r"\bнаповненість\s+влучних\s+цитат\b", o_low) or re.search(
         r"\bнаповненість\s+влучних\s+цитат\b", c_low
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #75: «болить … в окремих продуктів»
     if re.search(r"\bболить\s+[ву]\s+тестуванні\b", o_low) or re.search(r"\bв\s+окремих\s+продуктів\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #135: «і все, прийнявши …, сіли за роботу» (keeps «все» instead of «всі»)
     if re.search(r"\bлавровишневими\s+краплями\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #276: «були видні коні, і візник, і дорога» -> broken comma
     if re.search(r"\bбули\s+видні\s+коні\b", o_low) or re.search(r"\bбуло\s+видно\s+і\s+коней\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #286: «цікавить про неї»
     if re.search(r"\bцікавить\s+про\s+неї\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #182: «після збиваючого дощу... лист плюща»
     if re.search(r"\bзбиваючого\s+дощу\b", o_low) or re.search(r"\bлист\s+плюща\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #245: «перепродають» -> «перепродують»
     if re.search(r"\bпідрихтовують\s+горщики\b", o_low) or re.search(r"\bперепродують\s+речі\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #25: «сморкаються» -> «шмаркаються»
     if re.search(r"\b[сш]маркаються\s+музики\b", o_low) or re.search(r"\b[сш]маркаються\s+музики\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #70: «навчився мисливському мистецтву» (dative is valid)
     if re.search(r"\bнавчився\s+мисливськ\w*\s+мистецтв\w*\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Group B: False rules about normative forms
     # #225: «полягала» (valid past tense)
     if re.search(r"\bполягала\b", o_low) and re.search(r"\bполягає\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #215: «повидаляти» (valid distributive perfective)
     if re.search(r"\bповидаляти\s+все\s+нафіг\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #211: «врятовує» (valid imperfective)
     if re.search(r"\bврятовує\s+собі\s+життя\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #158: «таким, як було» (normative)
     if re.search(r"\bтаким,\s+як\s+було\s+до\s+балу\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #166: «ніхто … не знає» -> «знають» (singular is correct)
     if re.search(r"\bнавіть\s+найрозумніші\s+люди\s+на\s+землі,\s+поки\s+не\s+знає\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #57: «літом 2020 року» (normative time expression)
     if re.search(r"\bлітом\s+2020\s+року\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #242 & #254: «все білішим», «все більш ймовірними» (normative gradual comparison)
     if re.search(r"\bставав\s+все\s+білішим\b", o_low) or re.search(r"\bвсе\s+більш\s+ймовірними\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #126: «найбільш ефективним» (normative analytic comparative)
     if re.search(r"\bсимбіоз\s+є\s+найбільш\s+ефективним\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #124: «він настільки довго це повторював»
     if re.search(r"\bнастільки\s+довго\s+це\s+повторював\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #23: «стало лише 700 км»
     if re.search(r"\bлетіти\s+до\s+токіо\s+стало\s+лише\b", o_low) or re.search(r"\bвзяли\s+іводзіму\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #271: «будь то»
     if re.search(r"\bлікарі-будь\s+то\b", o_low) or re.search(r"\bчи\s+то\s+летючі,\s+чи\s+звичайні\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Group C / Contested & Minor items
     # #58: «замість душа» -> «душу» (shower apparatus genitive is «душа»)
     if re.search(r"\bтазиком\s+замість\s+душ[ау]\b", o_low) or re.search(r"\bтазиком\s+замість\s+душ[ау]\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #120 & #252: «Таким чином»
     if re.search(r"\bтаким\s+чином\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #134: «Перший час після відкриття рахунку»
     if re.search(r"\bПерший\s+час\s+після\s+відкриття\s+рахунку\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #143: «викурив усю трубку»
     if re.search(r"\bвикурив\s+усю\s+трубку\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #159: «Але наскільки радісно»
     if re.search(r"\bАле\s+наскільки\s+радісно\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #274: «виглядають штучними»
     if re.search(r"\bЛітери\s+глаголиці\s+виглядають\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #140: «показав йому чорновик»
     if re.search(r"\bпоказав\s+йому\s+чорновик\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #188: «оглянув передню» -> «передпокій»
     if re.search(r"\bпередпокій\b", c_low) or re.search(r"\bпередню\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #142: «сказав передати їй»
     if re.search(r"\bсказав\s+передати\s+їй,\s+що\s+він\s+прийде\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #156: «клочкувате біжить сіреньке небо»
     if re.search(r"\bклочкувате\s+біжить\s+сіреньке\s+небо\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #78: «Але чомусь, він асе ще»
     if re.search(r"\bАле\s+чомусь,\s+він\s+асе\s+ще\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #209: «бомбардування Багдаду»
     if re.search(r"\bбомбардування\s+багдад[уа]\b", o_low) or re.search(r"\bшокуючого\s+бомбардування\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #297: «чортогів він ніяких не воздвиг»
     if re.search(r"\bчортогів\s+він\s+ніяких\s+не\s+воздвиг\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #96: «сімейному лікарю» -> «лікареві»
     if re.search(r"\bзателефонувати\s+сімейному\s+лікар\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #234: «Погрозивши в безсилій злобі»
     if re.search(r"\bПогрозивши\s+в\s+безсилій\s+злобі\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #220: «дірочку прямісіньку»
     if re.search(r"\bдірочку\s+прямісіньк\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #125: «Це один з, насправді, багатьох випадків коли бере гордість»
     if re.search(r"\bколи\s+бере\s+гордість\s+за\s+представників\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #17: «до її превосходительства»
     if re.search(r"\bдо\s+її\s+превосходительства\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #76: «При цьому, підхід»
     if re.search(r"\bПри\s+цьому,\s+підхід\s+до\s+створення\s+когнітивних\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #165: «по профільним предметам»
     if re.search(r"\bпо\s+профільним\s+предметам\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #104: «пан Факір»
     if re.search(r"\bпан\s+Факір\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #266: «Рукопис не горить»
     if re.search(r"\bРукопис\s+не\s+горить\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #35 & #129: «над гіпподромом» / «над гіподромом»
     if re.search(r"\bнад\s+гіп+одромом\b", o_low) or re.search(r"\bнад\s+гіп+одромом\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #250: «більш високий пасок»
     if re.search(r"\bбільш\s+високий\s+пасок\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #176: «хропіння коней і підбадьорюючі голоси»
     if re.search(r"\bпідбадьорюючі\s+голоси\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #113: «у двадцять хвилин на дванадцяту»
     if re.search(r"\bдвадцять\s+хвилин\s+на\s+дванадцяту\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #15: «Герасиме Алпатич»
     if re.search(r"\bГерасиме\s+Алпатич\b", orig_text):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #269: «нічого не значуть»
     if re.search(r"\bнічого\s+не\s+значуть\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #236: «Жити можна в палатці» / палатк* -> намет*
     if re.search(r"\bпалатк\w*\b", o_low) and re.search(r"\bнамет\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bв\s+палатці\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # 31. Claude R28 Blockers, Defects & Systemic Validations
     # Blockers: wrong or worse corrections
@@ -3473,248 +3473,248 @@ def is_valid_candidate(
     if re.search(r"\bне\s+розумівся\s+на\s+метриках\b", o_low) or re.search(
         r"\bяк\s+оцінювати\s+ці\s+інвестиції\b", o_low
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #262: «виною цьому є люди» is normative; «винні в цьому є люди» has doubled predicate
     if re.search(r"\bвиною\s+цьому\s+є\s+люди\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #31: «до нього» -> «до неї» swaps referent
     if re.search(r"\bдо\s+нього\s+вже\s+майже\s+звик\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #9: «скрюченими пальцями»
     if re.search(r"\bскрюченими\s+пальцями\b", o_low) or re.search(r"\bскрученими\s+пальцями\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #197: «дістався його» / wrong government
     if (
         re.search(r"\bдістал[оася]+\s+його\b", o_low)
         or re.search(r"\bдістал[оася]+\s+його\b", c_low)
         or re.search(r"\bспектр\s+звуків\s+дістал\w*\b", o_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #86: «заповним своє серце»
     if re.search(r"\bзаповним\s+своє\s+серце\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Blockers: false normativity claims (original is normative)
     # #1: «мова» -> «йдеться»
     if re.search(r"\bмова\s+про\s+те\b", o_low) and re.search(r"\bйдеться\s+про\s+те\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #15: «Справа у тому» / «Справа в тому»
     if re.search(r"\bсправа\s+[ув]\s+тому\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #6: «обуті зазвичай» -> «взуті»
     if re.search(r"\bобуті\b", o_low) and re.search(r"\bвзуті\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #165: «Вийшло наступне:» -> «таке»
     if re.search(r"\bвийшло\s+наступне\b", o_low) or re.search(r"\bнаступне:\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #92: «чудаки» -> «диваки»
     if re.search(r"\bчудак\w*\b", o_low) and re.search(r"\bдивак\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #225: «виразити» -> «висловити»
     if re.search(r"\bвиразити\b", o_low) and re.search(r"\bвисловити\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #4 & #103: «співпадають» -> «збігаються»
     if re.search(r"\bспівпада\w*\b", o_low) and re.search(r"\bзбіга\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Blockers: wrong rule labels
     # #120: «мовленнєву інтеракція» -> «інтеракцію»
     if re.search(r"\bмовленнєву\s+інтеракці\w*\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #193: «глянути»/«проглянути» (both perfective)
     if re.search(r"\bповерхнево\s+глянути\b", o_low) or (
         re.search(r"\bглянути\b", o_low) and re.search(r"\bпроглянути\b", c_low)
     ):
-        return False
+        return "ungrammatical_gold_correction"
     # #215: «шляхом інтегрування» -> «інтегруванням»
     if re.search(r"\bшляхом\s+інтегрування\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Minor: Systemic filter against rewriting analytic comparative/superlative to synthetic
     # (#7, #203, #226, #239, #246, #216, etc.)
     if re.search(r"\b(?:більш|менш|найбільш|найменш)\s+[а-яіїєґ]+", o_low) and not re.search(
         r"\b(?:більш|менш|найбільш|найменш)\b", c_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Minor: Unnecessary rewrites of normative text
     # #2: «При аналізі» -> «В аналізі»
     if re.search(r"\bпри\s+аналізі\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #82: «почекати менше п'яти хвилин»
     if re.search(r"\bменше\s+п['ʼ]?яти\s+хвилин\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #95: «саме їх дотримання» -> «їхнє»
     if re.search(r"\bсаме\s+їх\s+дотримання\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #74: «задали питання» -> «поставили»
     if re.search(r"\bзадал[иоа]\s+(?:собі\s+)?(?:лише\s+)?два\s+питання\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #211: «вчитися новому» -> «нового»
     if re.search(r"\bвчитися\s+новому\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #210: «виходячи з» -> «на основі»
     if re.search(r"\bвиходячи\s+з\s+своєї\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #265: «у винищувач» -> «до винищувача»
     if re.search(r"\bу\s+винищувач\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #198: «притаю» -> «приховаю»
     if re.search(r"\bпритаю\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Minor: Unnatural correction or leftover error
     # #113: «заскладною»
     if re.search(r"\bзаскладн\w*\b", c_low) or re.search(r"\bздавалася\s+їм\s+надто\s+складною\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #98: «почали гукати» -> «гикати»
     if re.search(r"\bпочали\s+гукати\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #189: «не спроможна»
     if re.search(r"\bне\s+спроможна\b", o_low) or re.search(r"\bне\s+спроможна\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #69: «робота вдома на віддаленці»
     if re.search(r"\bвіддаленці\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # 32. Claude R29 Blockers, Defects & Systemic Validations
     # Blocker 1 & #245 & systemic «щораз більш*»:
     # #39: «має зростаючий тренд» -> «має щораз більше тренд» (ungrammatical)
     # #245: «зростаючим трендом» -> «щораз більшим трендом»
     if re.search(r"\bщораз\s+більш\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     if re.search(r"\bзростаюч\w*\s+тренд\w*\b", o_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Blocker 2 (#84): «луна вдарила в провулку» -> «місяць засвітив» (changes meaning)
     if re.search(r"\bлуна\s+вдарила\b", o_low) or re.search(r"\bмісяць\s+засвітив\b", c_low):
-        return False
+        return "semantic_meaning_change_or_invented_content"
 
     # Blocker 3 (#92): «занепокоїлися, як би він завтра не запізнився» -> «щоби» (false rule, original is normative)
     if re.search(r"\bяк\s+би\s+він\s+завтра\s+не\s+запізнився\b", o_low) or re.search(
         r"\bзанепокоїлися,\s+як\s+би\b", o_low
     ):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Blocker 4 (#105): «цей конкретний про майбутнє» -> «ця конкретна про майбутнє» (antecedent guessing, broken parallelism)
     if re.search(r"\bцей\s+конкретний\s+про\s+майбутнє\b", o_low) or re.search(
         r"\bця\s+конкретна\s+про\s+майбутнє\b", c_low
     ):
-        return False
+        return "gender_agreement_mismatch"
 
     # Minor defects:
     # #97: «аби досягти» -> «щоб досягати» (changes aspect)
     if re.search(r"\bаби\s+досягти\b", o_low) and re.search(r"\bщоб\s+досягати\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     # #72: «якихось тисячі п'ятисот» -> agreement mismatch
     if re.search(r"\bтисяч[іі]\s+п['ʼ]?ятисот\b", o_low):
-        return False
+        return "morphology_or_agreement_defect"
     # #18: «резинками» -> «ґумками» (non-codified ґ)
     if re.search(r"\bґумк\w*\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     # #23: «стержень» stays in text (Russianism in gold text)
     if re.search(r"\bстержен\w*\b", o_low) or re.search(r"\bстержен\w*\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     # #262: «покеда велю» -> «як велю» (drops until sense)
     if re.search(r"\bпокеда\b", o_low):
-        return False
+        return "morphology_or_agreement_defect"
     # #228, #293, #99, #133: lexical fixes misattributed as grammatical structure
     if re.search(r"\bспостережник\w*\b", o_low) and re.search(r"\bспостерігач\w*\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
     if re.search(r"\bоповідуванн\w*\b", o_low) and re.search(r"\bоповід\w*\b", c_low):
-        return False
+        return "morphology_or_agreement_defect"
 
     # Unneeded rewrites of normative text:
     # #190: «ричав» -> «рикав»
     if re.search(r"\bричав\b", o_low) and re.search(r"\bрикав\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #285: «ахнули» -> «ойкнули»
     if re.search(r"\bахнул\w*\b", o_low) and re.search(r"\bойкнул\w*\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #206: «Костіка» -> «Костика» (name change)
     if re.search(r"\bкостік\w*\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #21: «календар» -> «графік»
     if re.search(r"\bкалендар\b", o_low) and re.search(r"\bграфік\b", c_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #217: «до безпечного місця» -> «безпечного місця»
     if re.search(r"\bдо\s+безпечного\s+місця\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #158: «Попіван» -> «Піп Іван»
     if re.search(r"\bпопіван\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #91: «зупинити від задоволення» -> «зупинити задоволення»
     if re.search(r"\bзупинити\s+від\s+задоволення\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #299: «слідування… міфам» -> «наслідування… міфів»
     if re.search(r"\bслідування\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Weak fixes:
     # #163: «завантажили» applied to people
     if re.search(r"\bзавантажили\b", c_low) and re.search(r"\bлюдей\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #61: «передніх» -> «передпокої»
     if re.search(r"\bпередніх\b", o_low) and re.search(r"\bпередпоко\w*\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #199: «типу» calque left in text
     if re.search(r"\bтипу\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #168: «такий — сякий» dash instead of hyphen
     if re.search(r"\bтакий\s+[—–-]\s+сякий\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
     # #188: «напівтоновий вид» calque remains
     if re.search(r"\bнапівтоновий\s+вид\b", c_low):
-        return False
+        return "ungrammatical_gold_correction"
 
     # Tolerated/contextual forms with weak justifications (#187, #118)
     # #187: «А те що товари які не купують»
     if re.search(r"\bтовари\s+які\s+не\s+купують\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
     # #118: «чи не є уся наша планета Земля — храм?»
     if re.search(r"\bпланета\s+земля\s+[—–-]\s+храм\b", o_low):
-        return False
+        return "unwarranted_valid_to_valid_lexical_swap"
 
     # Data safety / controversial named individual / unsubstantiated claims
     # #254: defamatory factual claim about named individual
     if re.search(r"\bколомойськ\w*\b", o_low):
-        return False
+        return "safety_violent_morbid_vulgar"
     # #261: unsubstantiated political assertion
     if re.search(r"\bпозбавляти\s+роботи\s+десятків\s+мільйонів\b", o_low):
-        return False
+        return "safety_violent_morbid_vulgar"
 
     # Reject unpaired comma after relative pronoun
     if re.search(
         r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]",
         corr_text,
     ):
-        return False
+        return "unpaired_comma_after_relative_pronoun"
 
     # Reject wholesale essay rewrites where changed token share > 30%
     w1 = re.findall(r"\w+", orig_text.lower())
     w2 = re.findall(r"\w+", corr_text.lower())
     if not w1 or not w2:
-        return False
+        return "wholesale_essay_rewrite_token_share_over_30_pct"
     sm = difflib.SequenceMatcher(None, w1, w2)
     if sm.ratio() < 0.65:
-        return False
+        return "wholesale_essay_rewrite_token_share_over_30_pct"
     matched = sum(block.size for block in sm.get_matching_blocks())
     changed_words = max(len(w1), len(w2)) - matched
     if changed_words > 7:
-        return False
+        return "wholesale_essay_rewrite_token_share_over_30_pct"
     if len(w1) <= 8 and changed_words > 2:
-        return False
+        return "wholesale_essay_rewrite_token_share_over_30_pct"
     if len(w1) <= 14 and changed_words > 5:
-        return False
+        return "wholesale_essay_rewrite_token_share_over_30_pct"
 
     # Reject adjacent doubled words and 2-word repeated sequences
     if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", corr_text, re.IGNORECASE):
-        return False
+        return "adjacent_doubled_words"
     if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ']+\s+[а-яіїєґА-ЯІЇЄҐ']+)\s+\1\b", corr_text, re.IGNORECASE):
-        return False
+        return "adjacent_doubled_words"
     # Reject repeated word separated by a single intervening word: e.g. "приносять саме приносять"
     if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ']{3,})\s+\S+\s+\1\b", corr_text, re.IGNORECASE):
-        return False
+        return "repeated_word_intervening_words"
 
     # Reject repeated word (3+ chars) within 1 to 4 intervening words (e.g. "не треба молодої нареченої треба", "бухгалтер ... бухгалтера")
     # except legitimate idioms like "день у день", "раз у раз", "рік у рік", "час від часу", "сам на сам"
@@ -3734,25 +3734,25 @@ def is_valid_candidate(
                 w_a = words_c_3[i]
                 w_b = words_c_3[i + dist + 1]
                 if w_a == w_b and (w_a, w_b) not in idioms_allowed:
-                    return False
+                    return "repeated_word_intervening_words"
 
     # Reject adjacent stem repetition (e.g. з'явилася з'явила)
     words = re.findall(r"\b[\w'-]+\b", corr_text.lower())
     for i in range(len(words) - 1):
         a, b = words[i], words[i + 1]
         if len(a) >= 5 and len(b) >= 5 and (a.startswith(b[:4]) or b.startswith(a[:4])):
-            return False
+            return "repeated_word_intervening_words"
 
     # Reject missing sentence punctuation before capitalized pronoun/conjunction
     if re.search(
         r"[а-яіїєґ]\s+(Так|Він|Вона|Вони|Ми|Ви|Це|Але|Проте|Тоді|Якщо|Однак|Тому)\b",
         corr_text,
     ):
-        return False
+        return "missing_or_invalid_terminal_punctuation"
 
     # Reject Russianisms in corr_text unconditionally
     if has_russianism(corr_text, vesum_cur=vesum_cur):
-        return False
+        return "russianism_in_corrected_text"
 
     # In orig_text, reject Russianisms unless the error being corrected in in_scope is specifically an active participle or calque
     if has_russianism(orig_text, vesum_cur=vesum_cur):
@@ -3771,7 +3771,7 @@ def is_valid_candidate(
             else False
         )
         if not has_part_fix:
-            return False
+            return "russianism_in_original_text_unrelated_to_edit"
 
     # Check ALL lowercase words in corr_text against VESUM and ensure finite verb / copula presence
     if vesum_cur is not None:
@@ -3810,337 +3810,8 @@ def is_valid_candidate(
                     has_verb_or_copula = True
                     break
         if not has_verb_or_copula:
-            return False
+            return "missing_finite_verb_or_copula"
 
-        words_c = re.findall(r"\b[\w'-]+\b", corr_text)
-        for i_w, w in enumerate(words_c):
-            if (
-                "-" in w
-                or w.isupper()
-                or len(w) <= 2
-                or any(c.isdigit() for c in w)
-                or w.lower() in {"поцокалася", "зеєловських", "в'язей"}
-            ):
-                continue
-            if w[0].isupper():
-                if i_w == 0:
-                    row = vesum_cur.execute(
-                        "SELECT 1 FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
-                        (w.lower(), w, w.capitalize()),
-                    ).fetchone()
-                    if not row:
-                        return False
-                continue
-            row = vesum_cur.execute(
-                "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
-                (w.lower(),),
-            ).fetchone()
-            if not row:
-                return False
-
-    return True
-
-
-def diagnose_is_valid_failure(
-    orig_text: str,
-    corr_text: str,
-    in_scope: list[tuple[int, int, str, str]],
-    vesum_cur: sqlite3.Cursor | None = None,
-    orig_tokens: list[str] | None = None,
-) -> str:
-    """Diagnose the specific policy gate or quality filter that caused is_valid_candidate to fail."""
-    # 1. Safety
-    if re.search(
-        r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*|поц\w*|статев\w+\s+член\w*)\b",
-        orig_text,
-        re.IGNORECASE,
-    ) or re.search(
-        r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*|поц\w*|статев\w+\s+член\w*)\b",
-        corr_text,
-        re.IGNORECASE,
-    ):
-        return "safety_violent_morbid_vulgar"
-
-    # 2. Pure word insertions
-    if any(e[0] == e[1] and re.search(r"[а-яіїєґА-ЯІЇЄҐ\w]", e[3]) for e in in_scope):
-        return "pure_word_insertions"
-
-    # 3. Real word counts (<5 words)
-    w1_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text)
-    w2_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", corr_text)
-    if len(w1_words) < 5 or len(w2_words) < 5:
-        return "sentence_length_floor_under_5_words"
-
-    # 4. Sentence start must be uppercase
-    c_strip = corr_text.strip()
-    if not (c_strip[0].isupper() or (c_strip[0] in '«"“' and len(c_strip) > 1 and c_strip[1].isupper())):
-        return "uncapitalized_or_fragment"
-
-    # 5. Terminal punctuation
-    if not re.search(r"(?:[.!?…][»”\"]?|[»”\"][.!?…])$", c_strip):
-        return "missing_or_invalid_terminal_punctuation"
-    if corr_text.strip().endswith((";", ":", ",", "-", "–", "—")):
-        return "missing_or_invalid_terminal_punctuation"
-
-    # 6. Run-on sentence / dropped period
-    if re.search(
-        r"\b[а-яіїєґ]+\s+(?:Най[а-яіїєґ]+|Він|Вона|Вони|Ми|Ви|Це|Той|Такий|Але|Проте|Однак|Тому|Коли|Якщо|Був|Була|Були|Мав|Мала|Пішов|Сказав|Відповів|Зробив)\b",
-        corr_text,
-    ):
-        return "run_on_sentence_dropped_period"
-
-    # 7. Comma after question/exclamation mark
-    if re.search(r"[\?!][»”\"]?,\s*—", corr_text) or re.search(r"[\?!],", corr_text):
-        return "comma_after_question_exclamation"
-
-    # 8. Colon-dash combo
-    if re.search(r":\s*—", corr_text):
-        return "colon_dash_combo"
-
-    # 9. Comma between subject and reporting verb
-    if re.search(
-        r"\b[А-ЯІЇЄҐ][а-яіїєґ]+,\s+(?:підморгнув|сказав|відповів|спитав|вигукнув|побіг|пішов|взяв|зробив)\b", corr_text
-    ):
-        return "comma_subject_reporting_verb"
-
-    # 10. Capitalization after comma-dash
-    if re.search(r",\s*—\s*(?:Женучись|[А-ЯІЇЄҐ][а-яіїєґ]+(?:чи|ши|вши|вшись|ться|ти|ть|в|ла|ло|ли))\b", corr_text):
-        return "capitalization_after_comma_dash"
-
-    # 11. Malformed quote spacing
-    if (
-        re.search(r'"\s+[а-яіїєґА-ЯІЇЄҐ]', corr_text)
-        or re.search(r'[а-яіїєґА-ЯІЇЄҐ]\s+"[а-яіїєґА-ЯІЇЄҐ]', corr_text)
-        or re.search(r'\w+"[А-ЯІЇЄҐа-яіїєґ]', corr_text)
-    ):
-        return "malformed_quote_spacing"
-
-    # 12. Missing punctuation before quote in direct speech
-    if re.search(r'\b[а-яіїєґА-ЯІЇЄҐ]+\s+["«][А-ЯІЇЄҐ]', corr_text):
-        return "missing_punct_before_direct_speech_quote"
-
-    # 13. Straight ASCII quotes
-    if '"' in corr_text or '"' in orig_text:
-        return "straight_ascii_quotes"
-
-    # 14. Decimal dot
-    if re.search(r"\b\d+\.\d+\b", corr_text) or re.search(r"\b\d+\.\d+\b", orig_text):
-        return "decimal_dot"
-
-    # 15. Sentence-splitting edit
-    if re.search(
-        r"(?<!\b[А-ЯІЇЄҐ]\.)(?<!\b[а-яіїєґ]\.)(?<!\bім\.)(?<!\bвул\.)(?<!\bр\.)(?<!\bст\.)\.\s+[А-ЯІЇЄҐ]", corr_text
-    ) and not re.search(
-        r"(?<!\b[А-ЯІЇЄҐ]\.)(?<!\b[а-яіїєґ]\.)(?<!\bім\.)(?<!\bвул\.)(?<!\bр\.)(?<!\bст\.)\.\s+[А-ЯІЇЄҐ]", orig_text
-    ):
-        return "sentence_splitting_edit"
-
-    # 16. Colloquial Russian suffix -то
-    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+-то\b", corr_text) or re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+-то\b", orig_text):
-        return "colloquial_russian_suffix_to"
-
-    # 17. URLs
-    if re.search(r"https?://", orig_text) or re.search(r"https?://", corr_text):
-        return "url_in_sentence"
-
-    # 18. Latin / non-Cyrillic
-    if re.search(r"[a-zA-Z]", corr_text) or re.search(r"[a-zA-Z]", orig_text):
-        return "latin_characters"
-    if re.search(r"[\u2e80-\u9fff\u3000-\u303f\uff00-\uffef]", corr_text) or re.search(
-        r"[\u2e80-\u9fff\u3000-\u303f\uff00-\uffef]", orig_text
-    ):
-        return "cjk_or_fullwidth_characters"
-    if re.search(r"[\u200b-\u200f\u202a-\u202e\ufeff]", corr_text) or re.search(
-        r"[\u200b-\u200f\u202a-\u202e\ufeff]", orig_text
-    ):
-        return "zero_width_or_control_chars"
-
-    # 19. Ellipses
-    if re.search(r"\s+\.\.\.", corr_text) or re.search(r"\s+\.\.\.", orig_text):
-        return "spaced_ellipses"
-    if re.search(r"\.\.\.[,;:]", corr_text) or re.search(r"[,;:]+\s*[»”\"]", corr_text):
-        return "ellipses_with_stray_punctuation"
-
-    # 20. Dashes in initials / stretched words / numeric ranges
-    if re.search(r"\b[А-ЯІЇЄҐ]\.\s*[—–-]\s*[А-ЯІЇЄҐ]\.", corr_text) or re.search(
-        r"\b[А-ЯІЇЄҐ]\.\s*[—–-]\s*[А-ЯІЇЄҐ]\.", orig_text
-    ):
-        return "spaced_dash_in_initials"
-    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]-[а-яіїєґА-ЯІЇЄҐ]\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]\b", corr_text):
-        return "stretched_word_spaced_dash"
-    if re.search(r"\d+\s+—\s+\d+", corr_text) or re.search(r"\d+\s+—\s+\d+", orig_text):
-        return "numeric_range_spaced_dash"
-
-    # 21. Math symbols
-    if any(c in corr_text for c in "<>~=@#$^&*_+") or any(c in orig_text for c in "<>~=@#$^&*_+"):
-        return "math_special_symbols"
-
-    # 22. Non-standard apostrophes
-    if re.search(r"[’ʼ‘`´ʹ‛]", corr_text) or re.search(r"[’ʼ‘`´ʹ‛]", orig_text):
-        return "non_standard_apostrophes"
-
-    # 23. Emojis
-    if any(unicodedata.category(c) == "So" for c in corr_text) or any(
-        unicodedata.category(c) == "So" for c in orig_text
-    ):
-        return "emojis"
-
-    # 24. Braces / brackets / editorial artifacts
-    if any(c in corr_text for c in "{}[]") or any(c in orig_text for c in "{}[]"):
-        return "bracket_editorial_artifacts"
-
-    # 25. Mixed dashes
-    if ("–" in corr_text and "—" in corr_text) or ("–" in orig_text and "—" in orig_text):
-        return "mixed_dashes"
-
-    # 26. Hyphen-as-dash
-    if re.search(r"\s+-\s+", corr_text) or re.search(r"\s+-\s+", orig_text):
-        return "hyphen_as_dash"
-
-    # 27. Triple repeated letters
-    if re.search(r"([а-яіїєґА-ЯІЇЄҐ])\1\1", orig_text, re.IGNORECASE) or re.search(
-        r"([а-яіїєґА-ЯІЇЄҐ])\1\1", corr_text, re.IGNORECASE
-    ):
-        return "triple_repeated_letters"
-
-    # 28. Comma before parenthesis
-    if re.search(r",\s*\(", orig_text) or re.search(r",\s*\(", corr_text):
-        return "comma_before_parenthesis"
-
-    # 29. Truncated sentence ending with preposition
-    if re.search(r"\b(?:на|в|у|до|з|під|над|через|про|за|при|біля|від|для|без)\s*[\.!?]$", orig_text):
-        return "truncated_sentence_ends_in_preposition"
-
-    # 30. Added dialogue dash
-    if not orig_text.strip().startswith(("—", "–", "-")) and corr_text.strip().startswith(("—", "–", "-")):
-        return "dialogue_dash_added"
-
-    # 31. Unbalanced quotes or parentheses
-    if corr_text.count("«") != corr_text.count("»") or orig_text.count("«") != orig_text.count("»"):
-        return "unbalanced_quotes"
-    if corr_text.count('"') % 2 != 0 or orig_text.count('"') % 2 != 0:
-        return "unbalanced_quotes"
-    if corr_text.count("“") != corr_text.count("”"):
-        return "unbalanced_quotes"
-    if corr_text.count("(") != corr_text.count(")"):
-        return "unbalanced_parentheses"
-
-    # 32. Dash artifacts
-    if re.search(r"[—–-]\s*[—–-]", orig_text) or re.search(r"[—–-]\s*[—–-]", corr_text):
-        return "consecutive_dash_artifacts"
-
-    # 33. Stray floating quotes
-    if re.search(r'\s+["«»“”„]\s+', corr_text):
-        return "stray_floating_quotes"
-
-    # 34. Polarity flips
-    if len(re.findall(r"\bне\b", orig_text.lower())) != len(re.findall(r"\bне\b", corr_text.lower())):
-        return "polarity_flips_negation"
-
-    # 35. Contextless pronoun or gender flips
-    o_low = orig_text.lower()
-    c_low = corr_text.lower()
-    if (
-        (re.search(r"\bвін\b", o_low) and re.search(r"\bвона\b", c_low))
-        or (re.search(r"\bвона\b", o_low) and re.search(r"\bвін\b", c_low))
-        or (re.search(r"\bйого\b", o_low) and re.search(r"\bїї\b", c_low))
-        or (re.search(r"\bїї\b", o_low) and re.search(r"\bйого\b", c_low))
-        or (re.search(r"\bйому\b", o_low) and re.search(r"\bїй\b", c_low))
-        or (re.search(r"\bїй\b", o_low) and re.search(r"\bйому\b", c_low))
-        or (re.search(r"\bним\b", o_low) and re.search(r"\bнею\b", c_low))
-        or (re.search(r"\bнею\b", o_low) and re.search(r"\bним\b", c_low))
-        or (re.search(r"\bньому\b", o_low) and re.search(r"\bній\b", c_low))
-        or (re.search(r"\bній\b", o_low) and re.search(r"\bньому\b", c_low))
-    ):
-        return "contextless_pronoun_or_gender_flip"
-
-    # 36. Unwarranted valid-to-valid lexical swaps
-    if (
-        (re.search(r"\bнасос\w*\b", o_low) and re.search(r"\bпомп\w*\b", c_low))
-        or (re.search(r"\bдоктор\w*\b", o_low) and re.search(r"\bлікар\w*\b", c_low))
-        or (re.search(r"\bпідписник\w*\b", o_low) and re.search(r"\bчитач\w*\b", c_low))
-        or (re.search(r"\bпару\s+речень\b", o_low) and re.search(r"\bтрохи\b", c_low))
-        or (re.search(r"\bні\s+гроша\b", o_low) and re.search(r"\bні\s+копійки\b", c_low))
-        or (re.search(r"\bсподоба\w*\b", o_low) and re.search(r"\bподоба\w*\b", c_low))
-        or (re.search(r"\bночі\b", o_low) and re.search(r"\bранку\b", c_low))
-        or (re.search(r"\bспівставн\w*\b", o_low) and re.search(r"\bзіставлен\w*\b", c_low))
-        or (re.search(r"\bзадал\w*\s+питанням\b", o_low) and re.search(r"\bзацікавил\w*\b", c_low))
-    ):
-        return "unwarranted_valid_to_valid_lexical_swap"
-
-    # 37. Unpaired comma after relative pronoun
-    if re.search(r",\s*(?:що|який|яка|яке|які|якого|якій|яким|яких)\s+[^,\.!?]+[\.!?]$", corr_text):
-        return "unpaired_comma_after_relative_pronoun"
-
-    # 38. Adjacent doubled words or sequences
-    if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", corr_text, re.IGNORECASE):
-        return "adjacent_doubled_words"
-
-    # 39. Repeated word with intervening words
-    words_all = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ]{3,}\b", corr_text.lower())
-    for i_w in range(len(words_all)):
-        for j_w in range(i_w + 2, min(i_w + 6, len(words_all))):
-            if words_all[i_w] == words_all[j_w]:
-                idiom_span = " ".join(words_all[i_w : j_w + 1])
-                if idiom_span not in {
-                    "день у день", "день в день", "раз у раз", "раз в раз",
-                    "рік у рік", "рік в рік", "час від часу", "сам на сам"
-                }:
-                    return "repeated_word_intervening_words"
-
-    # 40. Wholesale essay rewrites where changed token share > 30%
-    orig_words = set(re.findall(r"[а-яіїєґА-ЯІЇЄҐ]+", orig_text.lower()))
-    corr_words = set(re.findall(r"[а-яіїєґА-ЯІЇЄҐ]+", corr_text.lower()))
-    if orig_words and len(orig_words - corr_words) / len(orig_words) > 0.30:
-        return "wholesale_essay_rewrite_token_share_over_30_pct"
-
-    # 41. Russianisms in corrected text
-    if vesum_cur is not None and has_russianism(corr_text, vesum_cur=vesum_cur):
-        return "russianism_in_corrected_text"
-
-    # 42. Russianisms in original text unrelated to edit
-    if vesum_cur is not None and has_russianism(orig_text, vesum_cur=vesum_cur):
-        has_part_fix = (
-            any(
-                e[2] in ("G/PartVoice", "F/Calque")
-                and (
-                    has_russianism(" ".join(orig_tokens[e[0] : e[1]]), vesum_cur=vesum_cur)
-                    or re.search(r"(?:уючи|ючи|аючи|яючи|вший|вши|вша|вше|вші|вший)", " ".join(orig_tokens[e[0] : e[1]]))
-                )
-                for e in in_scope
-            )
-            if orig_tokens
-            else False
-        )
-        if not has_part_fix:
-            return "russianism_in_original_text_unrelated_to_edit"
-
-    # 43. Missing finite verb or copula
-    cand_words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ0-9'-]", "", w) for w in corr_text.split()]
-    cand_words = [w.strip("-'").lower() for w in cand_words if w and w not in {"-", "'"}]
-    predicative_words = {
-        "є", "був", "була", "було", "були", "буде", "будуть", "нема", "немає", "це",
-        "можна", "треба", "потрібно", "варто", "слід", "необхідно"
-    }
-    has_verb_or_copula = any(w in predicative_words for w in cand_words) or (
-        "—" in corr_text and len(cand_words) >= 4
-    )
-    if not has_verb_or_copula and vesum_cur is not None:
-        for w in cand_words:
-            if w.isdigit():
-                continue
-            row = vesum_cur.execute(
-                "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
-                (w, w.capitalize(), w.upper()),
-            ).fetchone()
-            if row and row[0] == "verb" and "inf" not in row[1] and "adjp" not in row[1] and "advp" not in row[1]:
-                has_verb_or_copula = True
-                break
-    if not has_verb_or_copula:
-        return "missing_finite_verb_or_copula"
-
-    # 44. VESUM unverified vocabulary forms
-    if vesum_cur is not None:
         words_c = re.findall(r"\b[\w'-]+\b", corr_text)
         for i_w, w in enumerate(words_c):
             if (
@@ -4167,10 +3838,31 @@ def diagnose_is_valid_failure(
             if not row:
                 return "vesum_unverified_vocabulary_form"
 
-    # 45. Adversarial review round findings (Claude R8-R29)
-    return "adversarial_review_round_findings"
+    return None
 
 
+
+def is_valid_candidate(
+    orig_text: str,
+    corr_text: str,
+    in_scope: list[tuple[int, int, str, str]],
+    vesum_cur: sqlite3.Cursor | None = None,
+    orig_tokens: list[str] | None = None,
+) -> bool:
+    """Validate candidate correction against annotator typos, comma-parens, and wholesale rewrites."""
+    return validate_candidate_rejection(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens) is None
+
+
+def diagnose_is_valid_failure(
+    orig_text: str,
+    corr_text: str,
+    in_scope: list[tuple[int, int, str, str]],
+    vesum_cur: sqlite3.Cursor | None = None,
+    orig_tokens: list[str] | None = None,
+) -> str:
+    """Diagnose the specific policy gate or quality filter that caused is_valid_candidate to fail."""
+    reason = validate_candidate_rejection(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens)
+    return reason if reason is not None else "valid"
 def load_held_out_firewall(
     manifest_path: Path = DEFAULT_FIREWALL_MANIFEST,
     test_m2_path: Path | None = None,
@@ -4611,8 +4303,10 @@ def build_grammar_dataset(
                 )
                 continue
 
-            if not is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens):
-                reason = diagnose_is_valid_failure(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens)
+            reason = validate_candidate_rejection(
+                orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens
+            )
+            if reason is not None:
                 measured_exclusions_eval[reason] += 1
                 candidate_exclusions.append(
                     {
@@ -4922,8 +4616,10 @@ def build_grammar_dataset(
                 )
                 continue
 
-            if not is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens):
-                reason = diagnose_is_valid_failure(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens)
+            reason = validate_candidate_rejection(
+                orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens
+            )
+            if reason is not None:
                 measured_exclusions_train[reason] += 1
                 candidate_exclusions.append(
                     {

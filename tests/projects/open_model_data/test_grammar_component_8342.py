@@ -907,6 +907,8 @@ def test_source_denominator_reconciliation(grammar_data):
     assert sum(accounting_data["measured_exclusions_total"].values()) == 4255
     assert accounting_data["reserve_candidate_count"] == 0
     assert accounting_data["measured_categories_count"] == len(accounting_data["measured_exclusions_total"])
+    assert accounting_data["measured_categories_count"] == 49
+    assert "adversarial_review_round_findings" not in accounting_data["measured_exclusions_total"]
     assert len(accounting_data["candidate_exclusions"]) == 4255
     for ce in accounting_data["candidate_exclusions"]:
         assert "candidate_id" in ce
@@ -916,6 +918,7 @@ def test_source_denominator_reconciliation(grammar_data):
         assert ce["split"] in ("train", "eval")
         assert "primary_tag" in ce
         assert "rejection_gate" in ce
+        assert ce["rejection_gate"] != "adversarial_review_round_findings"
         assert "original_snippet" in ce
 
     readme_path = GRAMMAR_DIR / "README.md"
