@@ -414,7 +414,7 @@ not match `sweep_review_temp_orphans` and will refill the disk within hours.
 
 The scheduled git-hygiene runner (`scheduled_worktree_cleanup.py`) invokes the same
 sweep after the review-temp reaper. Age gates: 2h normally, 30m when free space is
-under 15 GiB. Live process paths are skipped.
+under 15 GiB. Live and liveness-unknown paths are skipped (see below for the proof).
 
 ### Atlas/QA legacy residue (#8738)
 
@@ -426,26 +426,38 @@ directories `qa-8686-ui-r2`, `qa-8686-exercises-r2`. Every other `atlas-<n>-*` /
 but never deleted without fresh ownership proof. Names containing `promotion`, and
 any `decision*.yaml`/`.yml`, are protected: never deleted, never listed as residue.
 
-Liveness is no longer `pgrep -f` alone. The sweep also walks `/proc` and treats a
-path as in use when any process has it (or a descendant) as its working directory,
-holds it open, or carries it in its environment or command line. The guarantee is
-**fail closed**: an entry is deleted only when every same-uid process was fully
-probed and none referenced it. Any same-uid process that refuses inspection of its
-cwd, environment or descriptor table, for any reason including `EACCES`/`EPERM`
-from a non-dumpable process, makes the verdict unknown, and unknown preserves the
-entry (`skipped` reason `liveness_unknown`, distinct from `live_process`). One
-accepted limit: other users' processes only expose their command line; the sweep
-only deletes entries the current uid owns.
+Liveness is not `pgrep -f` alone. The actual proof required before a deletion is
+both of:
 
-Consequence on a typical host: `systemd --user`, `(sd-pam)`, `ssh-agent` and
-`sshd-session` run as the same uid and are non-dumpable, so the legacy auto-sweep
-reports every deletable candidate as `liveness_unknown` and deletes nothing
-(verified on the primary host on 2026-09-24: `path_liveness` on a fresh,
-unreferenced path returned `unknown`). That is intended: the legacy allowlist is a
-best-effort drain, and the reliable path for large residue is the managed
-`task-scratch` lifecycle below, whose recovery proves ownership from recorded
-metadata instead of guessing from `/proc`. Drain legacy names by hand after
-confirming with `lsof`/`fuser` that nothing holds them.
+1. `pgrep -f <path>` exits 1 (no command line of any user names the path); and
+2. a `/proc` walk in which **every** process except the sweep itself was fully
+   probed (scheduler state, command line, working directory, environment, open
+   descriptors) and none references the path or a descendant.
+
+Every process is probed the same way regardless of its owner. A foreign-uid
+process can hold a world-readable legacy file open without naming it on its
+command line, so ownership is never treated as proof of absence. Any process that
+refuses inspection of any probe, for any reason (`EACCES`/`EPERM` from a
+non-dumpable same-uid daemon, a root-owned service or a kernel thread, `EIO`, an
+unreadable `stat` or `cmdline`), makes the verdict unknown, and unknown preserves
+the entry (`skipped` reason `liveness_unknown`, distinct from `live_process`). Only
+two things turn an unreadable process into "holds nothing": `/proc/<pid>` has
+vanished (the process exited), or its state is zombie/dead. A host without `/proc`
+(macOS) cannot detect a process that holds a candidate as its cwd or through an
+open descriptor, so a negative `pgrep` there is `liveness_unknown`, never clear.
+
+Consequence: the legacy auto-sweep is **inventory-only in practice**. On the
+primary Linux host, root-owned services and kernel threads deny cwd/fd/environ to
+the sweep's uid, and `systemd --user`, `(sd-pam)`, `ssh-agent`, `sshd-session` are
+non-dumpable same-uid daemons, so every deletable candidate is reported as
+`liveness_unknown` and nothing is deleted (verified on 2026-09-24 after this
+change: `path_liveness` on a fresh, unreferenced path returned `unknown`; 94
+same-uid processes probed clear, 4 same-uid and every foreign-uid process were
+unknown). On macOS the sweep is inventory-only by construction. That is intended:
+the legacy allowlist is a best-effort drain, and the reliable path for large
+residue is the managed `task-scratch` lifecycle below, whose recovery proves
+ownership from recorded metadata instead of guessing from `/proc`. Drain legacy
+names by hand after confirming with `lsof`/`fuser` that nothing holds them.
 
 The managed `task-scratch` namespace, every scratch root (`/var/tmp/lu`, the
 `<tmp>/lu-scratch` fallback, `$LU_RUNTIME_TMP_BASE_ROOT`) and their ancestors are

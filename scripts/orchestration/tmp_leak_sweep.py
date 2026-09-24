@@ -7,8 +7,11 @@ Agents and one-shot review flows leave multi-GB directories such as
 manifests, so these names never drain without manual intervention.
 
 This module is age-gated, name-pattern scoped, and fails closed on liveness:
-a path is deleted only when every probe proves it unreferenced, and an
-unknown answer preserves it.  It is not a blanket ``rm -rf /tmp/*``.
+a path is deleted only when ``pgrep -f`` is negative AND a ``/proc`` walk fully
+probed every process (any owner: state, command line, cwd, environment, open
+descriptors) without finding a reference.  No ``/proc`` (macOS), or any process
+that refuses inspection, is an unknown answer, and unknown preserves the path.
+It is not a blanket ``rm -rf /tmp/*``.
 
 Atlas/QA legacy residue (#8738): only the exact large names left by the
 #8307 Atlas 410k run and the #8686 QA scratch directories are auto-deleted
@@ -229,86 +232,123 @@ def _text_references(blob: bytes, needle: str, prefix: str) -> bool:
     return False
 
 
-def proc_references(path: Path, *, proc_root: Path = _PROC_ROOT) -> bool | None:
+_PROC_DEAD_STATES = frozenset({"Z", "X"})  # zombie / dead: no cwd, fd table or environ
+
+
+def _process_vanished(entry: Path) -> bool:
+    """Return True only when ``/proc/<pid>`` itself is gone (the process exited)."""
+    try:
+        entry.lstat()
+    except FileNotFoundError:
+        return True
+    except OSError:
+        return False
+    return False
+
+
+def _process_state(entry: Path) -> str | None:
+    """Return the scheduler state letter from ``/proc/<pid>/stat``, or ``None`` if unreadable."""
+    try:
+        blob = (entry / "stat").read_bytes()
+    except OSError:
+        return None
+    _, _, tail = blob.rpartition(b")")
+    fields = tail.split()
+    return fields[0].decode("ascii", errors="replace") if fields else None
+
+
+def _probe_process(entry: Path, needle: str, prefix: str) -> bool | None:
+    """Probe one ``/proc/<pid>`` entry for a reference to ``needle``.
+
+    Returns ``True`` when the process references the path, ``False`` only when
+    every probe (state, command line, working directory, environment, open
+    descriptors) was read and none referenced it, and ``None`` when any of
+    them was unreadable for any reason while the process still exists. The
+    process owner is never consulted: a foreign-uid process can hold a
+    world-readable file open without naming it on its command line, so an
+    unreadable cwd/fd table is unknown, not "no reference". The only way an
+    unreadable probe becomes ``False`` is when ``/proc/<pid>`` has vanished
+    (the process exited) or its state is zombie/dead, which holds nothing.
+    """
+    state = _process_state(entry)
+    if state is None:
+        return False if _process_vanished(entry) else None
+    if state in _PROC_DEAD_STATES:
+        return False
+    try:
+        cmdline = (entry / "cmdline").read_bytes()
+    except OSError:
+        return False if _process_vanished(entry) else None
+    if _text_references(cmdline, needle, prefix):
+        return True
+    try:
+        cwd = os.readlink(entry / "cwd")
+    except OSError:
+        return False if _process_vanished(entry) else None
+    if cwd == needle or cwd.startswith(prefix):
+        return True
+    try:
+        environ = (entry / "environ").read_bytes()
+    except OSError:
+        return False if _process_vanished(entry) else None
+    if _text_references(environ, needle, prefix):
+        return True
+    try:
+        fd_names = list((entry / "fd").iterdir())
+    except OSError:
+        return False if _process_vanished(entry) else None
+    for fd_entry in fd_names:
+        try:
+            target = os.readlink(fd_entry)
+        except FileNotFoundError:
+            continue  # descriptor closed between listing and readlink: holds nothing now
+        except OSError:
+            return False if _process_vanished(entry) else None
+        if target == needle or target.startswith(prefix):
+            return True
+    return False
+
+
+def proc_references(path: Path, *, proc_root: Path | None = None) -> bool | None:
     """Scan ``/proc`` for processes that reference ``path``.
 
-    Checks each process's command line, and — for processes of the same uid —
-    its working directory, open file descriptors and environment. Returns
-    ``True`` when any reference is found, ``False`` only when every same-uid
-    process was fully probed without finding one, and ``None`` when the
-    answer is unknown: ``/proc`` absent, or any same-uid process refused
-    inspection of its cwd, environment or descriptor table for any reason,
-    including ``EACCES``/``EPERM`` from a non-dumpable process. Unknown is
-    never treated as "no reference": such a process may hold the path open.
+    Every process except the caller is probed the same way regardless of its
+    owner: scheduler state, command line, working directory, environment and
+    open file descriptors. Returns ``True`` when any reference is found,
+    ``False`` only when every process was fully probed without finding one,
+    and ``None`` when the answer is unknown: ``/proc`` absent or unreadable,
+    or any process refused inspection of any probe for any reason
+    (``EACCES``/``EPERM`` from a non-dumpable same-uid daemon, a root-owned
+    service or a kernel thread, ``EIO``, ...). Unknown is never treated as
+    "no reference": such a process may hold the path open. Ownership is not
+    a proof of absence; a foreign-uid process can hold a world-readable
+    legacy file open without naming it on its command line.
 
-    One documented limit remains: foreign-uid processes only expose their
-    command line, so a path held open by another user is invisible here (the
-    sweep only deletes entries owned by the current uid, which is why that
-    limit is accepted).
+    Only two cases turn an unreadable process into "no reference": the
+    ``/proc/<pid>`` directory vanished (the process exited), or its state is
+    zombie/dead, which holds no cwd, descriptors or environment.
+
+    ``proc_root`` defaults to the module's ``_PROC_ROOT`` at call time.
     """
-    if not proc_root.is_dir():
+    root = _PROC_ROOT if proc_root is None else proc_root
+    if not root.is_dir():
         return None
     needle = str(path)
     prefix = needle.rstrip("/") + "/"
-    my_uid = os.geteuid()
     my_pid = os.getpid()
     unknown = False
     try:
-        entries = list(proc_root.iterdir())
+        entries = list(root.iterdir())
     except OSError:
         return None
     for entry in entries:
         if not entry.name.isdigit() or int(entry.name) == my_pid:
             continue
-        try:
-            owner_uid = entry.stat().st_uid
-        except OSError:
-            continue  # exited
-        try:
-            cmdline = (entry / "cmdline").read_bytes()
-        except FileNotFoundError:
-            continue
-        except OSError:
-            cmdline = b""
-            if owner_uid == my_uid:
-                unknown = True
-        if _text_references(cmdline, needle, prefix):
+        verdict = _probe_process(entry, needle, prefix)
+        if verdict:
             return True
-        if owner_uid != my_uid:
-            continue
-        try:
-            cwd = os.readlink(entry / "cwd")
-            if cwd == needle or cwd.startswith(prefix):
-                return True
-        except FileNotFoundError:
-            continue
-        except OSError:
+        if verdict is None:
             unknown = True
-        try:
-            environ = (entry / "environ").read_bytes()
-            if _text_references(environ, needle, prefix):
-                return True
-        except FileNotFoundError:
-            continue
-        except OSError:
-            unknown = True
-        try:
-            fd_names = list((entry / "fd").iterdir())
-        except FileNotFoundError:
-            continue
-        except OSError:
-            unknown = True
-            fd_names = []
-        for fd_entry in fd_names:
-            try:
-                target = os.readlink(fd_entry)
-            except FileNotFoundError:
-                continue
-            except OSError:
-                unknown = True
-                continue
-            if target == needle or target.startswith(prefix):
-                return True
     return None if unknown else False
 
 
@@ -317,20 +357,26 @@ LIVENESS_UNKNOWN = "unknown"
 LIVENESS_CLEAR = "clear"
 
 
-def path_liveness(path: Path) -> str:
+def path_liveness(path: Path, *, proc_root: Path | None = None) -> str:
     """Classify ``path`` as ``live``, ``unknown`` or ``clear``.
 
     Combines ``pgrep -f`` (command lines of every user) with the ``/proc``
-    probe (cwd, open files and environment of same-uid processes). Only
-    ``clear`` permits deletion: an unknown ``/proc`` answer on a ``/proc``
-    host is reported as ``unknown`` and preserves the path; a host without
-    ``/proc`` falls back to the ``pgrep`` verdict alone.
+    probe (state, cwd, open files, environment and command line of every
+    process). Only ``clear`` permits deletion, and ``clear`` requires both a
+    negative ``pgrep`` and a ``/proc`` walk in which every process was fully
+    probed and none referenced the path.
+
+    A negative ``pgrep`` alone is not proof: it only sees command lines, so a
+    process holding the path as its cwd or through an open descriptor is
+    invisible to it. A host without ``/proc`` (macOS) therefore returns
+    ``unknown`` and preserves the path; there the legacy sweep is
+    inventory-only and the managed task-scratch lifecycle is the cleanup path.
     """
     if _pgrep_references(path):
         return LIVENESS_LIVE
-    verdict = proc_references(path)
+    verdict = proc_references(path, proc_root=proc_root)
     if verdict is None:
-        return LIVENESS_UNKNOWN if _PROC_ROOT.is_dir() else LIVENESS_CLEAR
+        return LIVENESS_UNKNOWN
     return LIVENESS_LIVE if verdict else LIVENESS_CLEAR
 
 
