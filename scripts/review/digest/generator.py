@@ -36,7 +36,7 @@ def resolve_repo_root(repo_root: Path | str | None = None) -> Path:
     return Path(root).resolve(strict=True)
 
 
-GENERATOR_VERSION: str = "1"
+GENERATOR_VERSION: str = "2"
 DIGEST_SCHEMA: int = 1
 
 ALLOWED_LEVELS: tuple[str, ...] = ("a1", "a2", "b1", "b2", "c1", "c2")
@@ -86,11 +86,7 @@ def _is_allowed_repo_rel_path(rel: Path) -> bool:
         return True
 
     # 2. curriculum/l2-uk-en/lesson-plans/<level>/...
-    if (
-        len(parts) >= 5
-        and parts[0:3] == ("curriculum", "l2-uk-en", "lesson-plans")
-        and parts[3] in ALLOWED_LEVELS
-    ):
+    if len(parts) >= 5 and parts[0:3] == ("curriculum", "l2-uk-en", "lesson-plans") and parts[3] in ALLOWED_LEVELS:
         return True
 
     # 3. site/src/content/docs/<level>/<slug>/...
@@ -266,9 +262,7 @@ def build_digest(
 
     validate_plan_schema(plan_doc, plan_path, repo_root=root)
 
-    plan_lessons_by_n: dict[int, dict[str, Any]] = {
-        l["n"]: l for l in plan_doc["lessons"]
-    }
+    plan_lessons_by_n: dict[int, dict[str, Any]] = {l["n"]: l for l in plan_doc["lessons"]}
 
     sources: list[dict[str, Any]] = []
     lessons: list[dict[str, Any]] = []
@@ -294,7 +288,7 @@ def build_digest(
         except ValueError as exc:
             msg = str(exc)
             if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
-                msg = msg[len(codes.LOCK_MISMATCH) + 2:]
+                msg = msg[len(codes.LOCK_MISMATCH) + 2 :]
             raise DigestError(codes.LOCK_MISMATCH, msg) from exc
         obs_sha256 = compute_file_sha256(obs_path)
         try:
@@ -316,7 +310,7 @@ def build_digest(
         except ValueError as exc:
             msg = str(exc)
             if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
-                msg = msg[len(codes.LOCK_MISMATCH) + 2:]
+                msg = msg[len(codes.LOCK_MISMATCH) + 2 :]
             raise DigestError(codes.LOCK_MISMATCH, msg) from exc
         res_sha256 = compute_file_sha256(res_path)
         try:
@@ -351,7 +345,7 @@ def build_digest(
             }
         )
 
-        prov_map: dict[tuple[Any, Any, Any, Any, Any], dict[str, Any]] = {}
+        prov_by_loc: dict[tuple[Any, Any, Any, Any, Any], list[dict[str, Any]]] = {}
         for span in prov_doc["spans"]:
             if isinstance(span, dict):
                 key = (
@@ -361,15 +355,9 @@ def build_digest(
                     span.get("item"),
                     span.get("block"),
                 )
-                if key not in prov_map:
-                    prov_map[key] = {
-                        "source": span.get("source"),
-                        "ref": span.get("ref"),
-                    }
+                prov_by_loc.setdefault(key, []).append(span)
 
-        observed_roles: dict[str, str] = {
-            rec["id"]: rec["role"] for rec in obs_doc["records"]
-        }
+        observed_roles: dict[str, str] = {rec["id"]: rec["role"] for rec in obs_doc["records"]}
 
         occurrences: list[dict[str, Any]] = []
         names: list[dict[str, Any]] = []
@@ -415,14 +403,37 @@ def build_digest(
                 locator["item"],
                 locator["block"],
             )
-            if tok_key not in prov_map:
+            if tok_key not in prov_by_loc:
                 raise DigestError(
                     codes.UNIT_NOT_IN_PROVENANCE,
                     f"token unit {locator} not found in provenance spans of {prov_path}",
                 )
-            span_info = prov_map[tok_key]
+            spans_for_loc = prov_by_loc[tok_key]
+            if len(spans_for_loc) == 1:
+                span_info = spans_for_loc[0]
+            else:
+                matched = None
+                tok_offset = token.get("offset")
+                tok_str = str(token.get("token", ""))
+                if tok_offset is not None:
+                    for cand in spans_for_loc:
+                        s_start = cand.get("start")
+                        s_end = cand.get("end")
+                        if s_start is not None and s_end is not None and s_start <= tok_offset < s_end:
+                            matched = cand
+                            break
+                if matched is None and tok_str:
+                    for cand in spans_for_loc:
+                        cand_text = str(cand.get("text", ""))
+                        if cand_text and tok_str in cand_text:
+                            matched = cand
+                            break
+                span_info = matched or spans_for_loc[0]
+
             span_source = span_info.get("source")
             span_ref = span_info.get("ref")
+            if span_info.get("span") is not None:
+                locator["span"] = span_info["span"]
 
             offset = token["offset"]
             length = len(token["token"])
@@ -513,10 +524,7 @@ def build_digest(
                     codes.PLAN_INVALID,
                     f"lesson {k} dialogue missing required 'step' in module plan {plan_path}",
                 )
-            places = [
-                p["name"]
-                for p in plan_dialogue.get("places") or []
-            ]
+            places = [p["name"] for p in plan_dialogue.get("places") or []]
             speakers = [
                 {
                     "name": s["name"],

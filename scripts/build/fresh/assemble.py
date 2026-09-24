@@ -146,10 +146,11 @@ STREAM_BLOCKED = "stream_blocked"
 class AssemblerError(Exception):
     """Failure during lesson assembly."""
 
-    def __init__(self, code: str, message: str) -> None:
+    def __init__(self, code: str, message: str, layer: str = "pack") -> None:
         super().__init__(f"{code}: {message}")
         self.code = code
         self.message = message
+        self.layer = layer
 
 
 def get_expanded_validator(schema_path: Path | None = None) -> Draft202012Validator:
@@ -172,30 +173,29 @@ def get_provenance_validator(schema_path: Path | None = None) -> Draft202012Vali
     return _CACHED_PROVENANCE_VALIDATOR
 
 
-def derive_record_kind(ref: str | None, tab: str | None = None) -> str | None:
+def derive_record_kind(ref: str | None, tab: str | None = None) -> str:
     """Derive closed-set record_kind from record identifier prefix and context.
 
-    Closed set and fix layer mapping:
-      word          -> word_store (W- prefix, paradigm forms, slovnyk entries, store options)
-      quote         -> pack (T- prefix in urok)
-      example       -> pack (EX- prefix)
-      exercise_text -> pack (X- prefix)
-      error         -> pack (E- prefix)
-      note          -> pack (N- prefix)
-      video         -> pack (V- prefix)
-      resource      -> pack (T- or resource records in resursy tab)
-      null          -> writer prose (regenerate_lesson)
+    Emitted set from evidence schemas:
+      W-  -> word
+      EX- -> example
+      X-  -> exercise_text
+      E-  -> error
+      N-  -> note
+      V-  -> video
+      T-  -> resource (resursy tab) or quote (urok tab)
+    Any unknown prefix fails with unknown_record_prefix (layer engine).
     """
     if not ref:
-        return None
+        raise AssemblerError("unknown_record_prefix", "record identifier is missing", layer="engine")
     if ref.startswith("W-"):
         return "word"
-    if ref.startswith("E-"):
-        return "error"
     if ref.startswith("EX-"):
         return "example"
     if ref.startswith("X-"):
         return "exercise_text"
+    if ref.startswith("E-"):
+        return "error"
     if ref.startswith("N-"):
         return "note"
     if ref.startswith("V-"):
@@ -204,9 +204,30 @@ def derive_record_kind(ref: str | None, tab: str | None = None) -> str | None:
         if tab == "resursy":
             return "resource"
         return "quote"
-    if tab == "resursy":
-        return "resource"
-    return "quote"
+    raise AssemblerError("unknown_record_prefix", f"unknown record prefix in identifier {ref!r}", layer="engine")
+
+
+def _resolve_single_quiz_key(item: dict[str, Any], opts: list[Any]) -> int | None:
+    dict_correct = [i for i, opt in enumerate(opts) if isinstance(opt, dict) and opt.get("correct") is True]
+    has_int = "correct" in item and isinstance(item["correct"], int)
+    has_str = "answer" in item and isinstance(item["answer"], str)
+    if len(dict_correct) > 1:
+        raise AssemblerError("answer_key_ambiguous", "multiple options marked correct in quiz", layer="writer")
+    resolved: set[int] = set()
+    if has_int:
+        resolved.add(item["correct"])
+    if has_str:
+        offered = [opt.get("text") if isinstance(opt, dict) else opt for opt in opts]
+        matched = [i for i, opt_txt in enumerate(offered) if opt_txt == item["answer"]]
+        if len(matched) > 1:
+            raise AssemblerError("answer_key_ambiguous", "answer matches multiple options", layer="writer")
+        if matched:
+            resolved.add(matched[0])
+    if len(dict_correct) == 1:
+        resolved.add(dict_correct[0])
+    if len(resolved) > 1:
+        raise AssemblerError("answer_key_conflict", "conflicting quiz answer keys", layer="writer")
+    return next(iter(resolved)) if resolved else None
 
 
 def strip_accents(text: str) -> str:
@@ -330,6 +351,8 @@ def assemble_expanded_document(
 
     units: list[dict[str, Any]] = []
     spans: list[dict[str, Any]] = []
+    block_span_counts: dict[tuple[Any, ...], int] = {}
+    block_offsets: dict[tuple[Any, ...], int] = {}
 
     def add_unit(
         tab: str,
@@ -348,6 +371,13 @@ def assemble_expanded_document(
         is_key: bool | None = None,
     ) -> None:
         clean = strip_accents(text) if source != "writer_prose" else text
+        loc_key = (tab, step, activity, item, block)
+        span_idx = block_span_counts.get(loc_key, 0)
+        start_off = block_offsets.get(loc_key, 0)
+        end_off = start_off + len(clean)
+        block_span_counts[loc_key] = span_idx + 1
+        block_offsets[loc_key] = end_off
+
         units.append(
             {
                 "tab": tab,
@@ -359,10 +389,7 @@ def assemble_expanded_document(
                 "text": clean,
             }
         )
-        if source == "record" and record_kind is None and ref:
-            record_kind = derive_record_kind(ref, tab)
-        elif source != "record":
-            record_kind = None
+        record_kind = derive_record_kind(ref, tab) if source == "record" else None
         spans.append(
             {
                 "tab": tab,
@@ -370,6 +397,9 @@ def assemble_expanded_document(
                 "activity": activity,
                 "item": item,
                 "block": block,
+                "span": span_idx,
+                "start": start_off,
+                "end": end_off,
                 "source": source,
                 "ref": ref,
                 "text": clean,
@@ -667,12 +697,21 @@ def assemble_expanded_document(
 
             # Answer-like candidate fields: exclude any boolean value (e.g. true/false activities
             # where answer, correct, is_true, isTrue are boolean flags, not text to resolve/stress).
-            answer = None
-            for key in ("answer", "correction", "target", "correct", "is_true", "isTrue"):
-                val = item.get(key)
-                if val is not None and not isinstance(val, bool) and str(val).strip():
-                    answer = str(val)
-                    break
+            # For error-correction, use the field validated by check 4 (correction, falling back to answer).
+            if act_type == "error-correction":
+                corr_val = item.get("correction") if item.get("correction") is not None else item.get("answer")
+                answer = (
+                    str(corr_val)
+                    if corr_val is not None and not isinstance(corr_val, bool) and str(corr_val).strip()
+                    else None
+                )
+            else:
+                answer = None
+                for key in ("answer", "correction", "target", "correct", "is_true", "isTrue"):
+                    val = item.get(key)
+                    if val is not None and not isinstance(val, bool) and str(val).strip():
+                        answer = str(val)
+                        break
             if answer:
                 for role, span_text in _split_inline_spans(answer, "item_answer"):
                     if act_type == "error-correction":
@@ -765,13 +804,14 @@ def assemble_expanded_document(
                         opt_str = str(opt_val)
 
                         is_key = False
-                        if isinstance(opt, dict) and "correct" in opt:
+                        if act_type in ("quiz", "multiple-choice"):
+                            if "_resolved_key_index" in item:
+                                is_key = opt_idx == item["_resolved_key_index"]
+                            else:
+                                res_key = _resolve_single_quiz_key(item, opts)
+                                is_key = opt_idx == res_key
+                        elif isinstance(opt, dict) and "correct" in opt:
                             is_key = bool(opt.get("correct"))
-                        elif act_type in ("quiz", "multiple-choice"):
-                            if "correct" in item and isinstance(item["correct"], int):
-                                is_key = opt_idx == item["correct"]
-                            elif "answer" in item and isinstance(item["answer"], str):
-                                is_key = opt_str == item["answer"]
                         elif act_type == "fill-in":
                             is_key = opt_str == item.get("answer")
                         elif act_type == "error-correction":
@@ -958,7 +998,7 @@ def write_expanded_document(
     output_dir: Path,
     lesson_n: int,
 ) -> tuple[Path, Path]:
-    """Write expanded document with lock sidecar, and provenance document atomically."""
+    """Write expanded document with lock sidecar, and provenance document with lock sidecar."""
     output_dir.mkdir(parents=True, exist_ok=True)
     exp_path = output_dir / f"lesson-{lesson_n}.expanded.yaml"
     prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
@@ -969,10 +1009,103 @@ def write_expanded_document(
     content_bytes = lock.yaml_bytes(expanded_doc)
     lock.write(exp_path, content_bytes)
 
-    prov_bytes = yaml.safe_dump(provenance_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
-    lock.atomic_write(prov_path, prov_bytes)
+    prov_bytes = lock.yaml_bytes(provenance_doc)
+    lock.write(prov_path, prov_bytes)
 
     return exp_path, prov_path
+
+
+def finalize_provenance_from_stressed_units(
+    provenance_doc: dict[str, Any],
+    stressed_doc: dict[str, Any],
+    rendered_mdx: str,
+    *,
+    converted_activities: list[Any] | None = None,
+    urok_md: str | None = None,
+    vocab_items: list[dict[str, Any]] | None = None,
+    external_resources: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Rewrite provenance document from final stressed units and verify against rendered output."""
+    updated = copy.deepcopy(provenance_doc)
+    spans = updated.get("spans", [])
+    stressed_units = stressed_doc.get("units", [])
+    if len(spans) != len(stressed_units):
+        raise AssemblerError(
+            "provenance_unit_count_mismatch",
+            f"provenance span count ({len(spans)}) does not match stressed unit count ({len(stressed_units)})",
+            layer="engine",
+        )
+
+    # 1. Update each span's text from the final stressed unit
+    for span, unit in zip(spans, stressed_units, strict=True):
+        span["text"] = unit["text"]
+
+    # 2. Recompute character offsets for each block
+    block_offsets: dict[tuple[Any, ...], int] = {}
+    for span in spans:
+        loc_key = (span.get("tab"), span.get("step"), span.get("activity"), span.get("item"), span.get("block"))
+        start_off = block_offsets.get(loc_key, 0)
+        end_off = start_off + len(span["text"])
+        span["start"] = start_off
+        span["end"] = end_off
+        block_offsets[loc_key] = end_off
+
+    # 3. Verify every span's text occurs in the rendered output at its unit
+    activities_by_id = {act.id: act for act in (converted_activities or []) if hasattr(act, "id")}
+    for span in spans:
+        text = span.get("text")
+        if not text:
+            continue
+        tab = span.get("tab")
+        if tab == "urok":
+            if urok_md is not None and text not in urok_md and text not in rendered_mdx:
+                raise AssemblerError(
+                    "span_text_not_in_rendered_output",
+                    f"span text {text!r} not found in rendered urok MD at step {span.get('step')}",
+                    layer="writer",
+                )
+        elif tab == "vpravy":
+            act_id = span.get("activity")
+            act = activities_by_id.get(act_id)
+            act_str = str(getattr(act, "__dict__", act)) if act else ""
+            if act and text not in act_str and text not in rendered_mdx:
+                raise AssemblerError(
+                    "span_text_not_in_rendered_output",
+                    f"span text {text!r} not found in rendered activity {act_id}",
+                    layer="writer",
+                )
+            elif not act and text not in rendered_mdx:
+                raise AssemblerError(
+                    "span_text_not_in_rendered_output",
+                    f"span text {text!r} not found in rendered output for activity {act_id}",
+                    layer="writer",
+                )
+        elif tab == "slovnyk":
+            v_str = str(vocab_items) if vocab_items else ""
+            if text not in v_str and text not in rendered_mdx:
+                raise AssemblerError(
+                    "span_text_not_in_rendered_output",
+                    f"span text {text!r} not found in rendered Slovnyk",
+                    layer="writer",
+                )
+        elif tab == "resursy":
+            r_str = str(external_resources) if external_resources else ""
+            if text not in r_str and text not in rendered_mdx:
+                raise AssemblerError(
+                    "span_text_not_in_rendered_output",
+                    f"span text {text!r} not found in rendered Resursy",
+                    layer="writer",
+                )
+        elif text not in rendered_mdx:
+            raise AssemblerError(
+                "span_text_not_in_rendered_output",
+                f"span text {text!r} not found in rendered MDX",
+                layer="writer",
+            )
+
+    validator = get_provenance_validator()
+    validator.validate(updated)
+    return updated
 
 
 def rewrite_printable_provenance(
@@ -1039,7 +1172,7 @@ def check_5_assembly(
     try:
         expanded_doc, provenance_doc = assemble_expanded_document(draft, plan, pack, words_store, level, slug, lesson_n)
     except AssemblerError as exc:
-        return CheckResult(check=5, passed=False, reason=f"{exc.code}: {exc.message}", layer="pack")
+        return CheckResult(check=5, passed=False, reason=f"{exc.code}: {exc.message}", layer=exc.layer)
     except Exception as exc:
         return CheckResult(check=5, passed=False, reason=f"assembly raised: {exc}", layer="writer")
 
@@ -1599,6 +1732,7 @@ def check_9_stress_and_render(
     slug: str,
     lesson_n: int,
     *,
+    provenance_doc: dict[str, Any] | None = None,
     repo_root: Path = REPO_ROOT,
     output_dir: Path | None = None,
     site_dir: Path | None = None,
@@ -1848,16 +1982,48 @@ def check_9_stress_and_render(
         mdx_file = site_dir / f"{lesson_n}.mdx"
         lock.atomic_write(mdx_file, mdx_content.encode("utf-8"))
 
+    # Finalize provenance from stressed units and write with lock sidecar
+    final_prov_doc = None
+    source_prov = provenance_doc
+    if source_prov is None and output_dir is not None:
+        prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
+        if prov_path.is_file():
+            source_prov = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
+
+    if source_prov is not None:
+        try:
+            final_prov_doc = finalize_provenance_from_stressed_units(
+                source_prov,
+                stressed_doc,
+                mdx_content,
+                converted_activities=converted_activities,
+                urok_md=urok_md,
+                vocab_items=vocab_items,
+                external_resources=external_resources,
+            )
+            if output_dir is not None:
+                prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
+                prov_bytes = lock.yaml_bytes(final_prov_doc)
+                lock.write(prov_path, prov_bytes)
+        except AssemblerError as exc:
+            return CheckResult(check=9, passed=False, reason=f"{exc.code}: {exc.message}", layer=exc.layer)
+        except Exception as exc:
+            return CheckResult(check=9, passed=False, reason=f"provenance finalization failed: {exc}", layer="writer")
+
+    artifacts: dict[str, Any] = {
+        "stressed_doc": stressed_doc,
+        "vocab_items": vocab_items,
+        "external_resources": external_resources,
+        "mdx": mdx_content,
+        "meta_data": meta_data,
+    }
+    if final_prov_doc is not None:
+        artifacts["provenance"] = final_prov_doc
+
     return CheckResult(
         check=9,
         passed=True,
-        artifacts={
-            "stressed_doc": stressed_doc,
-            "vocab_items": vocab_items,
-            "external_resources": external_resources,
-            "mdx": mdx_content,
-            "meta_data": meta_data,
-        },
+        artifacts=artifacts,
     )
 
 
@@ -2002,6 +2168,7 @@ def assemble_lesson(
         level,
         slug,
         lesson_n,
+        provenance_doc=c5.artifacts.get("provenance"),
         repo_root=root,
         output_dir=state_dir,
         site_dir=target_site_dir,

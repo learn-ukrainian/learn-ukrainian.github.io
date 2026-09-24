@@ -123,15 +123,11 @@ def _load_linguistic_seeds() -> tuple[str, str, str, str, str, str, str]:
     ty_str = next(w["lemma"] for w in base_req["words"] if "2nd pers sing" in w.get("note", ""))
     vy_str = next(w["lemma"] for w in base_req["words"] if "2nd pers plur" in w.get("note", ""))
 
-    synii_data = json.loads(
-        (REPO_ROOT / "tests/fixtures/vesum_synii_analyses.json").read_text(encoding="utf-8")
-    )
+    synii_data = json.loads((REPO_ROOT / "tests/fixtures/vesum_synii_analyses.json").read_text(encoding="utf-8"))
     voc_str = synii_data["word"]
     voc_tag = next(m["tags"] for m in synii_data["matches"] if "v_kly" in m["tags"])
 
-    five_lemmas = yaml.safe_load(
-        (REPO_ROOT / "tests/fixtures/a1_five_lemmas_request.yaml").read_text(encoding="utf-8")
-    )
+    five_lemmas = yaml.safe_load((REPO_ROOT / "tests/fixtures/a1_five_lemmas_request.yaml").read_text(encoding="utf-8"))
     name_str = five_lemmas["words"][0]["lemma"]
     q_str = five_lemmas["words"][2]["lemma"]
     l2_str = five_lemmas["words"][3]["lemma"]
@@ -298,11 +294,56 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
         "provenance_schema": 1,
         "lesson": {"level": level, "slug": slug, "n": 1},
         "spans": [
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "dialogue_0", "source": "writer_prose", "ref": None, "text": ty_str},
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "dialogue_1", "source": "writer_prose", "ref": None, "text": vy_str},
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "dialogue_2", "source": "writer_prose", "ref": None, "text": voc_str},
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "dialogue_3", "source": "record", "ref": "W-4", "text": q_str},
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "lead_in", "source": "writer_prose", "ref": None, "text": name_str},
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "dialogue_0",
+                "source": "writer_prose",
+                "ref": None,
+                "text": ty_str,
+            },
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "dialogue_1",
+                "source": "writer_prose",
+                "ref": None,
+                "text": vy_str,
+            },
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "dialogue_2",
+                "source": "writer_prose",
+                "ref": None,
+                "text": voc_str,
+            },
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "dialogue_3",
+                "source": "record",
+                "ref": "W-4",
+                "text": q_str,
+            },
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "lead_in",
+                "source": "writer_prose",
+                "ref": None,
+                "text": name_str,
+            },
         ],
     }
     prov_1_path = state_dir / "lesson-1.provenance.yaml"
@@ -382,18 +423,56 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
         "observed_schema": 1,
         "lesson": {"level": level, "slug": slug, "n": 1},
         "records": [
-            {"id": "W-1", "role": "taught", "forms": [{"tags": "noun:anim:s:v_naz:pron:pers:2", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
-            {"id": "W-2", "role": "drilled", "forms": [{"tags": "noun:anim:p:v_naz:pron:pers:2", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
-            {"id": "W-3", "role": "incidental", "forms": [{"tags": voc_tag, "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
-            {"id": "W-4", "role": "recycled", "forms": [{"tags": "noun:inanim:f:v_naz", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
-            {"id": "W-5", "role": "name", "forms": [{"tags": "noun:anim:f:v_naz:prop:fname", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
+            {
+                "id": "W-1",
+                "role": "taught",
+                "forms": [
+                    {
+                        "tags": "noun:anim:s:v_naz:pron:pers:2",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
+            {
+                "id": "W-2",
+                "role": "drilled",
+                "forms": [
+                    {
+                        "tags": "noun:anim:p:v_naz:pron:pers:2",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
+            {
+                "id": "W-3",
+                "role": "incidental",
+                "forms": [{"tags": voc_tag, "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}],
+            },
+            {
+                "id": "W-4",
+                "role": "recycled",
+                "forms": [
+                    {
+                        "tags": "noun:inanim:f:v_naz",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
+            {
+                "id": "W-5",
+                "role": "name",
+                "forms": [
+                    {
+                        "tags": "noun:anim:f:v_naz:prop:fname",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
         ],
         "untaught_forms": {
             "count": 1,
             "share": 0.2,
-            "forms": [
-                {"record": "W-3", "tags": voc_tag, "category": "v_kly"}
-            ],
+            "forms": [{"record": "W-3", "tags": voc_tag, "category": "v_kly"}],
         },
     }
     obs_schema = json.loads(OBSERVED_SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -406,7 +485,16 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
         "provenance_schema": 1,
         "lesson": {"level": level, "slug": slug, "n": 2},
         "spans": [
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": 0, "source": "record", "ref": "W-6", "text": l2_str},
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": 0,
+                "source": "record",
+                "ref": "W-6",
+                "text": l2_str,
+            },
         ],
     }
     prov_2_path = state_dir / "lesson-2.provenance.yaml"
@@ -443,7 +531,16 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
         "observed_schema": 1,
         "lesson": {"level": level, "slug": slug, "n": 2},
         "records": [
-            {"id": "W-6", "role": "taught", "forms": [{"tags": "noun:inanim:m:v_naz", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
+            {
+                "id": "W-6",
+                "role": "taught",
+                "forms": [
+                    {
+                        "tags": "noun:inanim:m:v_naz",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
         ],
         "untaught_forms": {
             "count": 0,
@@ -518,7 +615,7 @@ def test_build_digest_upto_3_every_field(tmp_path: Path) -> None:
     l1 = lessons[0]
     assert l1["lesson"] == 1
     assert len(l1["occurrences"]) == 4  # W-1, W-2, W-3, W-4 (W-5 is a name)
-    assert len(l1["names"]) == 1        # W-5
+    assert len(l1["names"]) == 1  # W-5
 
     # Check occurrences fields
     occ_by_rec = {o["record"]: o for o in l1["occurrences"]}
@@ -803,9 +900,7 @@ def test_path_traversal_slug_fails_and_reads_nothing(
     assert opened_files == []
 
 
-def test_symlink_pointing_outside_root_fails_and_reads_nothing(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_symlink_pointing_outside_root_fails_and_reads_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """R-11: A symlinked input pointing outside its root fails with path_forbidden and reads nothing."""
     _setup_two_lesson_fixture(tmp_path)
     outside_dir = tmp_path / "outside_dir"
@@ -929,9 +1024,7 @@ def test_optional_places_defaults_to_empty_list(tmp_path: Path) -> None:
     assert doc["lessons"][0]["dialogue"]["places"] == []
 
 
-def test_symlinked_lock_sidecar_refused_before_read(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_symlinked_lock_sidecar_refused_before_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A .lock sidecar that is a symlink is refused before any read of that sidecar."""
     paths = _setup_two_lesson_fixture(tmp_path)
 
@@ -1011,12 +1104,7 @@ def test_in_root_data_symlink_with_escaping_lock_refused_before_read(
             build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
 
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any(
-        "target.observed" in p
-        or "secret_lock" in p
-        or "lesson-1.observed" in p
-        for p in opened_files
-    )
+    assert not any("target.observed" in p or "secret_lock" in p or "lesson-1.observed" in p for p in opened_files)
     expected_allowed = {
         str(paths["plan"]),
         str(paths["mdx_1"]),
@@ -1077,9 +1165,7 @@ def test_symlinked_parent_directory_refused_before_read(
         assert opened_check == []
 
 
-def test_symlinked_schema_refused_before_read(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_symlinked_schema_refused_before_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A symlinked schema is refused before any read."""
     _setup_two_lesson_fixture(tmp_path)
 
@@ -1138,9 +1224,7 @@ def test_symlinked_output_directory_refused_before_write(
     assert exc_info2.value.code == codes.PATH_FORBIDDEN
 
 
-def test_check_digest_refuses_symlink_before_read(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_check_digest_refuses_symlink_before_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """check_digest refuses a symlinked digest file before any read."""
     _setup_two_lesson_fixture(tmp_path)
     doc = build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
@@ -1205,9 +1289,7 @@ def test_symlinked_repo_root_resolved_once_and_refuses_symlink_below_it(
             build_digest("a1", "mod-fixture", 2, repo_root=symlink_root)
 
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any(
-        "target.observed" in p or "lesson-1.observed" in p for p in opened_files
-    )
+    assert not any("target.observed" in p or "lesson-1.observed" in p for p in opened_files)
 
     proc_fail = subprocess.run(cmd_write, capture_output=True, text=True, timeout=30)
     assert proc_fail.returncode == 1
@@ -1340,3 +1422,86 @@ def test_build_digest_fails_when_plan_schema_deleted_after_cache(tmp_path: Path)
         build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
     assert exc_info2.value.code == codes.PLAN_INVALID
     assert "custom_module_field" in exc_info2.value.message
+
+
+def test_digest_token_in_multi_span_attributed_to_record(tmp_path: Path) -> None:
+    # Finding 4: multi-span block attributes token to correct span and record
+    paths = _setup_two_lesson_fixture(tmp_path)
+
+    # Update lesson 1 provenance to have a multi-span prompt block
+    prov_path = paths["prov_1"]
+    prov_data = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
+    prov_data["spans"].append(
+        {
+            "tab": "vpravy",
+            "step": "s1",
+            "activity": "a1",
+            "item": 0,
+            "block": "prompt",
+            "span": 0,
+            "start": 0,
+            "end": 18,
+            "source": "writer_prose",
+            "ref": None,
+            "text": "Виправте помилку: ",
+            "record_kind": None,
+            "record_side": None,
+            "option_origin": None,
+            "is_key": None,
+        }
+    )
+    prov_data["spans"].append(
+        {
+            "tab": "vpravy",
+            "step": "s1",
+            "activity": "a1",
+            "item": 0,
+            "block": "prompt",
+            "span": 1,
+            "start": 18,
+            "end": 23,
+            "source": "record",
+            "ref": "E-001",
+            "text": "слове",
+            "record_kind": "error",
+            "record_side": "incorrect",
+            "option_origin": None,
+            "is_key": None,
+        }
+    )
+    prov_bytes = yaml.safe_dump(prov_data, allow_unicode=True, sort_keys=False).encode("utf-8")
+    lock.write(prov_path, prov_bytes)
+
+    # Add a resolution token pointing to that unit and offset 18
+    rec_path = paths["res_1"]
+    rec_data = yaml.safe_load(rec_path.read_text(encoding="utf-8"))
+    rec_data["tokens"].append(
+        {
+            "unit": {"tab": "vpravy", "step": "s1", "activity": "a1", "item": 0, "block": "prompt"},
+            "offset": 18,
+            "token": "слове",
+            "surface": "sentence_token",
+            "class": "resolved",
+            "candidates": ["W-1"],
+            "selected": {"record": "W-1", "forms": ["noun:inanim:n:v_kly"], "stressed": "сло́ве"},
+            "provenance": "deterministic",
+        }
+    )
+    rec_bytes = yaml.safe_dump(rec_data, allow_unicode=True, sort_keys=False).encode("utf-8")
+    lock.write(rec_path, rec_bytes)
+
+    doc = build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    validate_digest(doc)
+
+    occ = next(
+        (
+            o
+            for o in doc["lessons"][0]["occurrences"]
+            if o["locator"]["tab"] == "vpravy" and o["locator"]["block"] == "prompt"
+        ),
+        None,
+    )
+    assert occ is not None
+    assert occ["span_source"] == "record"
+    assert occ["span_ref"] == "E-001"
+    assert occ["locator"].get("span") == 1

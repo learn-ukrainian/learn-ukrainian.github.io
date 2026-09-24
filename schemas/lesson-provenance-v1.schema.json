@@ -89,6 +89,18 @@
             }
           ]
         },
+        "span": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
         "source": {
           "enum": [
             "record",
@@ -162,6 +174,9 @@
         "activity",
         "item",
         "block",
+        "span",
+        "start",
+        "end",
         "source",
         "ref",
         "text",
@@ -169,6 +184,55 @@
         "record_side",
         "option_origin",
         "is_key"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "const": "record"
+              }
+            },
+            "required": [
+              "source"
+            ]
+          },
+          "then": {
+            "properties": {
+              "record_kind": {
+                "enum": [
+                  "word",
+                  "quote",
+                  "example",
+                  "exercise_text",
+                  "error",
+                  "note",
+                  "video",
+                  "resource"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "const": "writer_prose"
+              }
+            },
+            "required": [
+              "source"
+            ]
+          },
+          "then": {
+            "properties": {
+              "record_kind": {
+                "type": "null"
+              }
+            }
+          }
+        }
       ],
       "additionalProperties": false
     }
