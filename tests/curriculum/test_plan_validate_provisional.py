@@ -67,9 +67,7 @@ def test_a_matching_evidence_ref_has_nothing_pending(env: Env) -> None:
     assert codes.PENDING_PROMOTION not in {item["code"] for item in _report(env)["not_checked"]}
 
 
-@pytest.mark.parametrize(
-    "extra", [["--strict"], ["--allow-missing-prior"], ["--strict", "--allow-missing-prior"]]
-)
+@pytest.mark.parametrize("extra", [["--strict"], ["--allow-missing-prior"], ["--strict", "--allow-missing-prior"]])
 def test_provisional_pack_refuses_strict_and_waivers(env: Env, extra: list[str]) -> None:
     with pytest.raises(SystemExit) as excinfo:
         validate_main([LEVEL, SLUG, "--plan", str(env.plan_path), "--provisional-pack", *extra])

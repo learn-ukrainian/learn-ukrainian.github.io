@@ -4,6 +4,13 @@ Rejects a review whose manifest hash, receipts, quotes, taxonomy checks, or
 evidence branch do not match the pinned inputs. Prints APPROVE or REVISE from
 active and persisting findings. A resolved MAJOR is history and does not block.
 
+A plan review (manifest kind: plan) is validated against the plan pinned by the
+manifest: the plan's sha256 must equal inputs.plan.sha256, every manifest input
+must still be current (after a promotion, only the plan transition proven by the
+promotion receipt may differ), and a located finding's quote must occur inside
+the named lesson/step/activity/field of that plan. Against a manifest that is not
+a plan manifest no plan document is pinned, so:
+
 Plan-review findings with locations are rejected (location_not_in_lesson)
 until a plan document locator is defined.
 """
@@ -182,9 +189,180 @@ def _matching_units(units: list[dict[str, Any]], location: dict[str, Any]) -> li
     return matched
 
 
-def _check_locations(check: _Check, finding: dict[str, Any], units: list[dict[str, Any]], *, kind: str) -> None:
+def _peek_kind(review_path: Path) -> str | None:
+    """The review's kind, read early because it decides which document the review is checked against."""
+    try:
+        review = _load_yaml(Path(review_path))
+    except (OSError, yaml.YAMLError):
+        return None
+    return review.get("kind") if isinstance(review, dict) and isinstance(review.get("kind"), str) else None
+
+
+def _leaf_texts(node: Any) -> list[str]:
+    """Every scalar value under node, one string each, in document order (keys are not text)."""
+    if isinstance(node, dict):
+        return [text for value in node.values() for text in _leaf_texts(value)]
+    if isinstance(node, list):
+        return [text for value in node for text in _leaf_texts(value)]
+    if node is None:
+        return []
+    return [node if isinstance(node, str) else str(node)]
+
+
+def _plan_unit(plan: dict[str, Any], location: dict[str, Any]) -> Any:
+    """The plan node a location or scope names; _MISSING when the plan has no such unit.
+
+    ``lesson`` selects the lesson whose ``n`` it is (omitted: the module itself);
+    ``step`` or ``activity`` selects the entry of that lesson's ``steps`` or
+    ``activities`` with that ``id``; ``field`` is a dotted path of mapping keys and
+    list indexes inside what was selected.
+    """
+    node: Any = plan
+    if "lesson" in location:
+        node = next(
+            (
+                item
+                for item in plan.get("lessons") or []
+                if isinstance(item, dict) and item.get("n") == location["lesson"]
+            ),
+            _MISSING,
+        )
+        if node is _MISSING:
+            return _MISSING
+        for key, list_name in (("step", "steps"), ("activity", "activities")):
+            if key in location:
+                node = next(
+                    (
+                        item
+                        for item in node.get(list_name) or []
+                        if isinstance(item, dict) and item.get("id") == location[key]
+                    ),
+                    _MISSING,
+                )
+                if node is _MISSING:
+                    return _MISSING
+    for part in str(location.get("field", "")).split("."):
+        if not part:
+            continue
+        if isinstance(node, dict) and part in node:
+            node = node[part]
+        elif isinstance(node, list) and part.isdigit() and int(part) < len(node):
+            node = node[int(part)]
+        else:
+            return _MISSING
+    return node
+
+
+_MISSING = object()
+
+
+def _load_plan_document(
+    check: _Check, manifest: dict[str, Any], manifest_hash: str, document: Path | None, root: Path
+) -> dict[str, Any] | None:
+    """The plan a plan-manifest pins, verified against inputs.plan.sha256 before it is used.
+
+    Also fails PLAN_INPUTS_STALE for every other manifest input that changed (the
+    freshness rules of scripts/build/fresh/plan_manifest.py). After a promotion
+    the live plan differs from the manifest by design; the reviewed copy the
+    receipt names is then the pinned document.
+    """
+    from scripts.build.fresh import plan_manifest as pm
+
+    try:
+        pm.validate_manifest_document(manifest)
+    except pm.PlanReviewError as exc:
+        check.add(codes.PLAN_MANIFEST_INVALID, exc.message)
+        return None
+    pinned = manifest["inputs"]["plan"]
+    freshness = pm.plan_review_freshness(root, manifest, manifest_hash)
+    candidates = [Path(document)] if document is not None else [root / pinned["path"]]
+    if document is None and freshness.state == "promoted":
+        candidates.append(
+            pm.state_dir(root, manifest["level"], manifest["slug"]) / f"plan-reviewed.{pinned['sha256']}.yaml"
+        )
+    content: bytes | None = None
+    for candidate in candidates:
+        try:
+            data = candidate.read_bytes()
+        except OSError:
+            continue
+        if hashlib.sha256(data).hexdigest() == pinned["sha256"]:
+            content = data
+            break
+    plan: dict[str, Any] | None = None
+    if content is None:
+        readable = [candidate for candidate in candidates if candidate.is_file()]
+        if readable:
+            check.add(
+                codes.PLAN_BYTES_MISMATCH,
+                f"{readable[0]} does not hash to the manifest's inputs.plan.sha256 {pinned['sha256']}",
+            )
+        else:
+            check.add(codes.PLAN_UNREADABLE, f"{candidates[0]}: the plan the manifest pins is missing")
+    else:
+        try:
+            loaded = yaml.safe_load(content)
+        except yaml.YAMLError as exc:
+            check.add(codes.PLAN_UNREADABLE, f"{candidates[0]}: {type(exc).__name__}")
+        else:
+            if isinstance(loaded, dict) and isinstance(loaded.get("lessons"), list):
+                plan = loaded
+            else:
+                check.add(codes.PLAN_UNREADABLE, f"{candidates[0]} is not a plan mapping with lessons")
+    stale = {path: why for path, why in freshness.stale.items() if not (content is None and path == pinned["path"])}
+    if stale:
+        check.add(
+            codes.PLAN_INPUTS_STALE,
+            "changed since the manifest: " + "; ".join(f"{path} ({why})" for path, why in sorted(stale.items())),
+        )
+    return plan
+
+
+def _check_plan_locations(check: _Check, finding: dict[str, Any], plan: dict[str, Any], locations: list) -> None:
+    if not locations:
+        scope = finding.get("scope")
+        if not isinstance(scope, dict) or "lesson" not in scope:
+            check.add(codes.SCOPE_MISSING, f"{finding.get('id')}: absence finding needs scope.lesson")
+        elif _plan_unit(plan, scope) is _MISSING:
+            check.add(codes.LOCATION_NOT_IN_PLAN, f"{finding.get('id')}: scope {scope} is not in the plan")
+        return
+    for location in locations:
+        if not isinstance(location, dict):
+            continue
+        quote = location.get("quote")
+        folded = fold_quote(quote) if isinstance(quote, str) else ""
+        if folded.strip() == "":
+            check.add(codes.QUOTE_EMPTY, f"{finding.get('id')}: quote is empty")
+            continue
+        unit = _plan_unit(plan, location)
+        if unit is _MISSING:
+            check.add(
+                codes.LOCATION_NOT_IN_PLAN, f"{finding.get('id')}: location {_describe(location)} is not in the plan"
+            )
+            continue
+        if folded not in fold_quote("\n".join(_leaf_texts(unit))):
+            check.add(codes.QUOTE_NOT_IN_UNIT, f"{finding.get('id')}: quote is not inside {_describe(location)}")
+
+
+def _describe(location: dict[str, Any]) -> str:
+    return ", ".join(f"{key} {location[key]}" for key in ("lesson", "step", "activity", "field") if key in location)
+
+
+def _check_locations(
+    check: _Check,
+    finding: dict[str, Any],
+    units: list[dict[str, Any]],
+    *,
+    kind: str,
+    plan: dict[str, Any] | None = None,
+    plan_mode: bool = False,
+) -> None:
     locations = finding.get("locations")
     if not isinstance(locations, list):
+        return
+    if kind == "plan" and plan_mode:
+        if plan is not None:
+            _check_plan_locations(check, finding, plan, locations)
         return
     if kind == "plan" and locations:
         check.add(
@@ -493,19 +671,29 @@ def validate_review(
     review_path: Path,
     *,
     manifest_path: Path,
-    lesson_path: Path,
+    lesson_path: Path | None = None,
     ledger_path: Path,
     previous_ledger_path: Path | None = None,
+    document_path: Path | None = None,
+    repo_root: Path | None = None,
 ) -> ValidationResult:
-    """Validate one review file against its manifest, lesson, and receipt ledger."""
+    """Validate one review file against its manifest, document, and receipt ledger.
+
+    The document is the expanded lesson for a lesson review (``lesson_path`` and
+    ``document_path`` are aliases). For a plan review whose manifest is a plan
+    manifest it is the plan the manifest pins: ``document_path`` if given, else
+    the plan at the manifest's ``inputs.plan.path`` under ``repo_root``.
+    """
     check = _Check()
     review_path = Path(review_path)
     manifest_path = Path(manifest_path)
-    lesson_path = Path(lesson_path)
+    document = document_path if document_path is not None else lesson_path
     ledger_path = Path(ledger_path)
+    root = Path(repo_root) if repo_root is not None else REPO_ROOT
 
     manifest_hash = ""
     recap = False
+    manifest: Any = None
     try:
         manifest_bytes = manifest_path.read_bytes()
         manifest_hash = hashlib.sha256(manifest_bytes).hexdigest()
@@ -517,11 +705,18 @@ def validate_review(
     except (OSError, yaml.YAMLError) as exc:
         check.add(codes.MANIFEST_UNREADABLE, f"{manifest_path}: {type(exc).__name__}")
 
+    plan_mode = _peek_kind(review_path) == "plan" and isinstance(manifest, dict) and manifest.get("kind") == "plan"
     units: list[dict[str, Any]] = []
-    try:
-        units = _units(_load_yaml(lesson_path))
-    except (OSError, yaml.YAMLError, ValueError) as exc:
-        check.add(codes.LESSON_UNREADABLE, f"{lesson_path}: {exc}")
+    plan: dict[str, Any] | None = None
+    if plan_mode:
+        plan = _load_plan_document(check, manifest, manifest_hash, document, root)
+    else:
+        try:
+            if document is None:
+                raise ValueError("no expanded lesson was given")
+            units = _units(_load_yaml(Path(document)))
+        except (OSError, yaml.YAMLError, ValueError) as exc:
+            check.add(codes.LESSON_UNREADABLE, f"{document}: {exc}")
 
     try:
         review = _load_yaml(review_path)
@@ -534,6 +729,12 @@ def validate_review(
 
     for error in _schema_validator().iter_errors(review):
         check.add(codes.SCHEMA_INVALID, f"{error.json_path}: {error.message}")
+
+    if isinstance(manifest, dict) and "kind" in manifest and manifest["kind"] != review.get("kind"):
+        check.add(
+            codes.MANIFEST_KIND_MISMATCH,
+            f"the review is kind {review.get('kind')!r} but its manifest is kind {manifest['kind']!r}",
+        )
 
     attempt = review.get("attempt") if isinstance(review.get("attempt"), dict) else {}
     echoed = attempt.get("manifest_sha256")
@@ -578,7 +779,7 @@ def validate_review(
     for finding in findings:
         if not isinstance(finding, dict):
             continue
-        _check_locations(check, finding, units, kind=kind)
+        _check_locations(check, finding, units, kind=kind, plan=plan, plan_mode=plan_mode)
         _check_finding_evidence(
             check,
             finding,
@@ -613,11 +814,19 @@ def build_parser() -> argparse.ArgumentParser:
         prog="python -m scripts.review.validate",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
-            "Validate a review-v1 return against its attempt manifest, expanded lesson,\n"
+            "Validate a review-v1 return against its attempt manifest, document,\n"
             "and receipt ledger, then print APPROVE or REVISE from active findings.\n"
-            "Use after a review seat returns review.yaml. Do NOT use to judge whether\n"
-            "the evidence supports the claim or whether the severity is right, and do\n"
-            "NOT use for v1 content-review output.\n\n"
+            "The document is the expanded lesson for a lesson review, and the plan the\n"
+            "manifest pins for a plan review. Use after a review seat returns review.yaml.\n"
+            "Do NOT use to judge whether the evidence supports the claim or whether the\n"
+            "severity is right, and do NOT use for v1 content-review output.\n\n"
+            "Plan mode (review kind plan, manifest kind plan): the plan must hash to the\n"
+            "manifest's inputs.plan.sha256; every manifest input must still be current (after\n"
+            "plan-promote only the plan transition its receipt proves may differ); a location\n"
+            "is {lesson, step or activity, field, quote} and the quote must occur inside that\n"
+            "unit's text (its scalar values, one per line); an absence finding uses the scope\n"
+            "{lesson, step or activity}. A review whose manifest is not a plan manifest has no\n"
+            "pinned plan, so:\n"
             "Plan-review findings with locations are rejected (location_not_in_lesson)\n"
             "until a plan document locator is defined."
         ),
@@ -626,6 +835,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.review.validate review.yaml \\\n"
             "    --manifest manifest.yaml --lesson lesson.expanded.yaml \\\n"
             "    --ledger batch_state/review-receipts/<review_id>/<attempt_id>.jsonl\n"
+            "  .venv/bin/python -m scripts.review.validate review.yaml \\\n"
+            "    --manifest plan-review.manifest.yaml --ledger attempt.jsonl   # a plan review\n"
             "  .venv/bin/python -m scripts.review.validate review.yaml \\\n"
             "    --manifest manifest.yaml --lesson lesson.expanded.yaml \\\n"
             "    --ledger attempt.jsonl --previous-ledger previous.jsonl --json\n"
@@ -647,10 +858,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="attempt manifest YAML; its file sha256 must equal attempt.manifest_sha256",
     )
     parser.add_argument(
+        "--document",
         "--lesson",
+        dest="document",
         type=Path,
-        required=True,
-        help="expanded lesson YAML (units with tab, activity, item, text); quotes are checked inside the named unit",
+        default=None,
+        help="the document quotes are checked in: the expanded lesson YAML (units with tab, activity, item, "
+        "text; required for a lesson review), or for a plan review the plan (default: the manifest's "
+        "inputs.plan.path under --repo-root; its sha256 must equal inputs.plan.sha256). --lesson is an alias",
+    )
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=None,
+        help="repository root the plan manifest's paths are relative to (plan reviews only; default: this repository)",
     )
     parser.add_argument(
         "--ledger",
@@ -675,12 +896,15 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    if args.document is None and _peek_kind(args.review) != "plan":
+        parser.error("--document (alias --lesson) is required unless the review is a plan review")
     result = validate_review(
         args.review,
         manifest_path=args.manifest,
-        lesson_path=args.lesson,
+        document_path=args.document,
         ledger_path=args.ledger,
         previous_ledger_path=args.previous_ledger,
+        repo_root=args.repo_root,
     )
     _emit(result, as_json=args.json)
     return 0 if result.ok else 1
