@@ -517,6 +517,9 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
     """Verify generate_grammar_signoff_8342 rejects extra keys, index mismatch, and flags false criteria."""
     findings_file = GRAMMAR_DIR / "claude_review_findings.json"
     raw_findings = json.loads(findings_file.read_text(encoding="utf-8"))
+    samples = json.loads((GRAMMAR_DIR / "acceptance_review_sample.json").read_text(encoding="utf-8"))
+    corr_idx = next(str(s["sample_index"]) for s in samples if s["is_erroneous"])
+    ctrl_idx = next(str(s["sample_index"]) for s in samples if not s["is_erroneous"])
 
     # 1. Extra key rejected
     bad_findings = copy.deepcopy(raw_findings)
@@ -808,7 +811,7 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
 
     # 15. Correction assessment not naming edit pair rejected
     no_span_findings = copy.deepcopy(raw_findings)
-    no_span_findings["3"]["reviewer_assessment"] = "Текст нормалізовано відповідно до літературних норм."
+    no_span_findings[corr_idx]["reviewer_assessment"] = "Текст нормалізовано відповідно до літературних норм."
     f_path19 = tmp_path / "no_span.json"
     f_path19.write_text(json.dumps(no_span_findings), encoding="utf-8")
     with pytest.raises(ValueError, match="does not name edit pair"):
@@ -821,7 +824,7 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
 
     # 16. Clean control assessment lacking sentence-specific citation rejected
     no_cite_findings = copy.deepcopy(raw_findings)
-    no_cite_findings["1"]["reviewer_assessment"] = "Автентичне контрольне речення без помилок."
+    no_cite_findings[ctrl_idx]["reviewer_assessment"] = "Автентичне контрольне речення без помилок."
     f_path20 = tmp_path / "no_cite.json"
     f_path20.write_text(json.dumps(no_cite_findings), encoding="utf-8")
     with pytest.raises(ValueError, match="lacks full sentence-specific citation"):
@@ -834,7 +837,7 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
 
     # 17. Clean control assessment with only four-word partial citation rejected
     partial_cite_findings = copy.deepcopy(raw_findings)
-    partial_cite_findings["1"]["reviewer_assessment"] = (
+    partial_cite_findings[ctrl_idx]["reviewer_assessment"] = (
         "Унікальна оцінка: «і хоч депутатський корпус» — слововжиток нормативний."
     )
     f_path21 = tmp_path / "partial_cite.json"
@@ -850,7 +853,13 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
 
 def test_no_duplicated_query_punctuation(grammar_data):
     """Verify that 0 records have nested guillemets or duplicated punctuation in query."""
-    double_punct_pattern = re.compile(r"[.?!…][»”\"']\s*[.?!…]")
+    double_punct_pattern = re.compile(
+        r"(?:\?[»”\"']\s*\?)"
+        r"|(?:![»”\"']\s*!)"
+        r"|(?:(?<!\.)\.\s*[»”\"']\s*\.)"
+        r"|(?:(\.{3}|[?!…])[»”\"']\s*\.)"
+        r"|(?:(?<!\.)\.\s*[»”\"']\s*[?!…])"
+    )
     for r in grammar_data["all"]:
         q = r.get("query", "")
         assert "««" not in q and "»»" not in q, f"Nested guillemets found in query: {q}"
@@ -859,6 +868,8 @@ def test_no_duplicated_query_punctuation(grammar_data):
         assert not re.search(r"\?\s*\.", q), f"Question followed by period found in query: {q}"
         assert not re.search(r"!\s*\.", q), f"Exclamation followed by period found in query: {q}"
         assert not re.search(r"\.\s*\.", q.replace("...", "").replace("…", "")), f"Double period found in query: {q}"
+        if q.startswith("Чи ") or "чи все тут правильно?" in q.lower():
+            assert "?" in q, f"Carrier question lost its question mark: {q}"
 
 
 def test_source_denominator_reconciliation(grammar_data):
@@ -885,6 +896,7 @@ def test_source_denominator_reconciliation(grammar_data):
     assert recon["candidate_edit_sets_excluded_total"] + recon["delivered_substantive_corrections"] == 5252
     assert recon["reserve_candidate_count"] == 0
     assert "reserve_disposition" in recon
+    assert recon["measured_categories_count"] == len(recon["exclusions_by_policy"])
 
     accounting_path = GRAMMAR_DIR / "candidate_exclusion_accounting.json"
     assert accounting_path.is_file(), f"Missing candidate_exclusion_accounting.json at {accounting_path}"
@@ -894,6 +906,17 @@ def test_source_denominator_reconciliation(grammar_data):
     assert accounting_data["total_excluded_candidate_edit_sets"] == 4255
     assert sum(accounting_data["measured_exclusions_total"].values()) == 4255
     assert accounting_data["reserve_candidate_count"] == 0
+    assert accounting_data["measured_categories_count"] == len(accounting_data["measured_exclusions_total"])
+    assert len(accounting_data["candidate_exclusions"]) == 4255
+    for ce in accounting_data["candidate_exclusions"]:
+        assert "candidate_id" in ce
+        assert "doc_id" in ce
+        assert "sent_idx" in ce
+        assert "ann_id" in ce
+        assert ce["split"] in ("train", "eval")
+        assert "primary_tag" in ce
+        assert "rejection_gate" in ce
+        assert "original_snippet" in ce
 
     readme_path = GRAMMAR_DIR / "README.md"
     assert readme_path.is_file(), f"Missing README.md at {readme_path}"

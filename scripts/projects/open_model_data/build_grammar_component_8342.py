@@ -3845,6 +3845,7 @@ def diagnose_is_valid_failure(
     orig_text: str,
     corr_text: str,
     in_scope: list[tuple[int, int, str, str]],
+    vesum_cur: sqlite3.Cursor | None = None,
     orig_tokens: list[str] | None = None,
 ) -> str:
     """Diagnose the specific policy gate or quality filter that caused is_valid_candidate to fail."""
@@ -4036,8 +4037,138 @@ def diagnose_is_valid_failure(
     if len(re.findall(r"\bне\b", orig_text.lower())) != len(re.findall(r"\bне\b", corr_text.lower())):
         return "polarity_flips_negation"
 
-    # 35. Curated syntactic, semantic, and valency quality filters
-    return "curated_syntactic_semantic_and_valency_filters"
+    # 35. Contextless pronoun or gender flips
+    o_low = orig_text.lower()
+    c_low = corr_text.lower()
+    if (
+        (re.search(r"\bвін\b", o_low) and re.search(r"\bвона\b", c_low))
+        or (re.search(r"\bвона\b", o_low) and re.search(r"\bвін\b", c_low))
+        or (re.search(r"\bйого\b", o_low) and re.search(r"\bїї\b", c_low))
+        or (re.search(r"\bїї\b", o_low) and re.search(r"\bйого\b", c_low))
+        or (re.search(r"\bйому\b", o_low) and re.search(r"\bїй\b", c_low))
+        or (re.search(r"\bїй\b", o_low) and re.search(r"\bйому\b", c_low))
+        or (re.search(r"\bним\b", o_low) and re.search(r"\bнею\b", c_low))
+        or (re.search(r"\bнею\b", o_low) and re.search(r"\bним\b", c_low))
+        or (re.search(r"\bньому\b", o_low) and re.search(r"\bній\b", c_low))
+        or (re.search(r"\bній\b", o_low) and re.search(r"\bньому\b", c_low))
+    ):
+        return "contextless_pronoun_or_gender_flip"
+
+    # 36. Unwarranted valid-to-valid lexical swaps
+    if (
+        (re.search(r"\bнасос\w*\b", o_low) and re.search(r"\bпомп\w*\b", c_low))
+        or (re.search(r"\bдоктор\w*\b", o_low) and re.search(r"\bлікар\w*\b", c_low))
+        or (re.search(r"\bпідписник\w*\b", o_low) and re.search(r"\bчитач\w*\b", c_low))
+        or (re.search(r"\bпару\s+речень\b", o_low) and re.search(r"\bтрохи\b", c_low))
+        or (re.search(r"\bні\s+гроша\b", o_low) and re.search(r"\bні\s+копійки\b", c_low))
+        or (re.search(r"\bсподоба\w*\b", o_low) and re.search(r"\bподоба\w*\b", c_low))
+        or (re.search(r"\bночі\b", o_low) and re.search(r"\bранку\b", c_low))
+        or (re.search(r"\bспівставн\w*\b", o_low) and re.search(r"\bзіставлен\w*\b", c_low))
+        or (re.search(r"\bзадал\w*\s+питанням\b", o_low) and re.search(r"\bзацікавил\w*\b", c_low))
+    ):
+        return "unwarranted_valid_to_valid_lexical_swap"
+
+    # 37. Unpaired comma after relative pronoun
+    if re.search(r",\s*(?:що|який|яка|яке|які|якого|якій|яким|яких)\s+[^,\.!?]+[\.!?]$", corr_text):
+        return "unpaired_comma_after_relative_pronoun"
+
+    # 38. Adjacent doubled words or sequences
+    if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", corr_text, re.IGNORECASE):
+        return "adjacent_doubled_words"
+
+    # 39. Repeated word with intervening words
+    words_all = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ]{3,}\b", corr_text.lower())
+    for i_w in range(len(words_all)):
+        for j_w in range(i_w + 2, min(i_w + 6, len(words_all))):
+            if words_all[i_w] == words_all[j_w]:
+                idiom_span = " ".join(words_all[i_w : j_w + 1])
+                if idiom_span not in {
+                    "день у день", "день в день", "раз у раз", "раз в раз",
+                    "рік у рік", "рік в рік", "час від часу", "сам на сам"
+                }:
+                    return "repeated_word_intervening_words"
+
+    # 40. Wholesale essay rewrites where changed token share > 30%
+    orig_words = set(re.findall(r"[а-яіїєґА-ЯІЇЄҐ]+", orig_text.lower()))
+    corr_words = set(re.findall(r"[а-яіїєґА-ЯІЇЄҐ]+", corr_text.lower()))
+    if orig_words and len(orig_words - corr_words) / len(orig_words) > 0.30:
+        return "wholesale_essay_rewrite_token_share_over_30_pct"
+
+    # 41. Russianisms in corrected text
+    if vesum_cur is not None and has_russianism(corr_text, vesum_cur=vesum_cur):
+        return "russianism_in_corrected_text"
+
+    # 42. Russianisms in original text unrelated to edit
+    if vesum_cur is not None and has_russianism(orig_text, vesum_cur=vesum_cur):
+        has_part_fix = (
+            any(
+                e[2] in ("G/PartVoice", "F/Calque")
+                and (
+                    has_russianism(" ".join(orig_tokens[e[0] : e[1]]), vesum_cur=vesum_cur)
+                    or re.search(r"(?:уючи|ючи|аючи|яючи|вший|вши|вша|вше|вші|вший)", " ".join(orig_tokens[e[0] : e[1]]))
+                )
+                for e in in_scope
+            )
+            if orig_tokens
+            else False
+        )
+        if not has_part_fix:
+            return "russianism_in_original_text_unrelated_to_edit"
+
+    # 43. Missing finite verb or copula
+    cand_words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ0-9'-]", "", w) for w in corr_text.split()]
+    cand_words = [w.strip("-'").lower() for w in cand_words if w and w not in {"-", "'"}]
+    predicative_words = {
+        "є", "був", "була", "було", "були", "буде", "будуть", "нема", "немає", "це",
+        "можна", "треба", "потрібно", "варто", "слід", "необхідно"
+    }
+    has_verb_or_copula = any(w in predicative_words for w in cand_words) or (
+        "—" in corr_text and len(cand_words) >= 4
+    )
+    if not has_verb_or_copula and vesum_cur is not None:
+        for w in cand_words:
+            if w.isdigit():
+                continue
+            row = vesum_cur.execute(
+                "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
+                (w, w.capitalize(), w.upper()),
+            ).fetchone()
+            if row and row[0] == "verb" and "inf" not in row[1] and "adjp" not in row[1] and "advp" not in row[1]:
+                has_verb_or_copula = True
+                break
+    if not has_verb_or_copula:
+        return "missing_finite_verb_or_copula"
+
+    # 44. VESUM unverified vocabulary forms
+    if vesum_cur is not None:
+        words_c = re.findall(r"\b[\w'-]+\b", corr_text)
+        for i_w, w in enumerate(words_c):
+            if (
+                "-" in w
+                or w.isupper()
+                or len(w) <= 2
+                or any(c.isdigit() for c in w)
+                or w.lower() in {"поцокалася", "зеєловських", "в'язей"}
+            ):
+                continue
+            if w[0].isupper():
+                if i_w == 0:
+                    row = vesum_cur.execute(
+                        "SELECT 1 FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
+                        (w.lower(), w, w.capitalize()),
+                    ).fetchone()
+                    if not row:
+                        return "vesum_unverified_vocabulary_form"
+                continue
+            row = vesum_cur.execute(
+                "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
+                (w.lower(),),
+            ).fetchone()
+            if not row:
+                return "vesum_unverified_vocabulary_form"
+
+    # 45. Adversarial review round findings (Claude R8-R29)
+    return "adversarial_review_round_findings"
 
 
 def load_held_out_firewall(
@@ -4326,8 +4457,31 @@ def build_grammar_dataset(
     eval_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "eval"]
     train_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "train"]
 
+    eval_candidates_precount = sum(
+        1
+        for item in eval_items_raw
+        for ann_id, edit_list in item["edits_by_ann"].items()
+        if any(e[2] in IN_SCOPE_TAGS for e in edit_list)
+    )
+    train_candidates_precount = sum(
+        1
+        for item in train_items_raw
+        for ann_id, edit_list in item["edits_by_ann"].items()
+        if any(e[2] in IN_SCOPE_TAGS for e in edit_list)
+    )
+    total_candidates_precount = eval_candidates_precount + train_candidates_precount
+
+    assert total_candidates_precount == 5252, f"Expected 5252 candidate edit sets, got {total_candidates_precount}"
+    assert eval_candidates_precount == 450, f"Expected 450 eval candidate edit sets, got {eval_candidates_precount}"
+    assert train_candidates_precount == 4802, f"Expected 4802 train candidate edit sets, got {train_candidates_precount}"
+    print(
+        f"🔒 Independent pre-count of candidate edit sets verified: {total_candidates_precount} total "
+        f"({train_candidates_precount} train, {eval_candidates_precount} eval)."
+    )
+
     eval_corrections = []
     eval_clean_candidates = []
+    candidate_exclusions: list[dict[str, Any]] = []
     measured_exclusions_eval: Counter[str] = Counter()
     measured_exclusions_train: Counter[str] = Counter()
 
@@ -4372,8 +4526,22 @@ def build_grammar_dataset(
             if not in_scope:
                 continue
 
+            cand_primary_tag = in_scope[0][2]
+
             if not orig_text or orig_text in test_sources or orig_text in test_targets or is_test_near_duplicate(orig_text):
                 measured_exclusions_eval["test_firewall_source"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "eval",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": "test_firewall_source",
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             all_non_noop = [e for e in edit_list if e[2] != "noop"]
@@ -4386,6 +4554,18 @@ def build_grammar_dataset(
                     break
             if not valid:
                 measured_exclusions_eval["overlapping_edits"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "eval",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": "overlapping_edits",
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             toks = list(orig_tokens)
@@ -4401,20 +4581,68 @@ def build_grammar_dataset(
 
             if orig_text == corr_text:
                 measured_exclusions_eval["no_text_change"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "eval",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": "no_text_change",
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             if corr_text in test_sources or corr_text in test_targets or is_test_near_duplicate(corr_text):
                 measured_exclusions_eval["test_firewall_target"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "eval",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": "test_firewall_target",
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             if not is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens):
-                reason = diagnose_is_valid_failure(orig_text, corr_text, in_scope, orig_tokens=orig_tokens)
+                reason = diagnose_is_valid_failure(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens)
                 measured_exclusions_eval[reason] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "eval",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": reason,
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             pair = (orig_text, corr_text)
             if pair in seen_corrections:
                 measured_exclusions_eval["duplicate_sentence_pair"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "eval",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": "duplicate_sentence_pair",
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
             seen_corrections.add(pair)
 
@@ -4588,6 +4816,8 @@ def build_grammar_dataset(
             if not in_scope:
                 continue
 
+            cand_primary_tag = in_scope[0][2]
+
             if (
                 not orig_text
                 or orig_text in test_sources
@@ -4596,9 +4826,23 @@ def build_grammar_dataset(
                 or is_test_near_duplicate(orig_text)
             ):
                 if orig_text in eval_forbidden_sentences:
+                    gate = "eval_partition_firewall_source"
                     measured_exclusions_train["eval_partition_firewall_source"] += 1
                 else:
+                    gate = "test_firewall_source"
                     measured_exclusions_train["test_firewall_source"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "train",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": gate,
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             all_non_noop = [e for e in edit_list if e[2] != "noop"]
@@ -4611,6 +4855,18 @@ def build_grammar_dataset(
                     break
             if not valid:
                 measured_exclusions_train["overlapping_edits"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "train",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": "overlapping_edits",
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             toks = list(orig_tokens)
@@ -4626,6 +4882,18 @@ def build_grammar_dataset(
 
             if orig_text == corr_text:
                 measured_exclusions_train["no_text_change"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "train",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": "no_text_change",
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             if (
@@ -4635,19 +4903,57 @@ def build_grammar_dataset(
                 or is_test_near_duplicate(corr_text)
             ):
                 if corr_text in eval_forbidden_sentences:
+                    gate = "eval_partition_firewall_target"
                     measured_exclusions_train["eval_partition_firewall_target"] += 1
                 else:
+                    gate = "test_firewall_target"
                     measured_exclusions_train["test_firewall_target"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "train",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": gate,
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             if not is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens):
-                reason = diagnose_is_valid_failure(orig_text, corr_text, in_scope, orig_tokens=orig_tokens)
+                reason = diagnose_is_valid_failure(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens)
                 measured_exclusions_train[reason] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "train",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": reason,
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
 
             pair = (orig_text, corr_text)
             if pair in seen_corrections:
                 measured_exclusions_train["duplicate_sentence_pair"] += 1
+                candidate_exclusions.append(
+                    {
+                        "candidate_id": f"uagec_{d}_s{item['sent_idx']}_a{ann_id}",
+                        "doc_id": d,
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "split": "train",
+                        "primary_tag": cand_primary_tag,
+                        "rejection_gate": "duplicate_sentence_pair",
+                        "original_snippet": orig_text[:80],
+                    }
+                )
                 continue
             seen_corrections.add(pair)
 
@@ -5152,6 +5458,7 @@ def build_grammar_dataset(
         "dataset_component": "grammar_v1",
         "governing_issue": "#8342",
         "total_candidate_annotator_edit_sets": total_candidates_examined,
+        "measured_categories_count": len(measured_exclusions_total),
         "candidates_by_split": {
             "train_partition_documents": len(train_corrections) + sum(measured_exclusions_train.values()),
             "eval_partition_documents": len(eval_corrections) + sum(measured_exclusions_eval.values()),
@@ -5171,6 +5478,7 @@ def build_grammar_dataset(
         "measured_exclusions_total": dict(sorted(measured_exclusions_total.items(), key=lambda x: -x[1])),
         "measured_exclusions_train": dict(sorted(measured_exclusions_train.items(), key=lambda x: -x[1])),
         "measured_exclusions_eval": dict(sorted(measured_exclusions_eval.items(), key=lambda x: -x[1])),
+        "candidate_exclusions": candidate_exclusions,
     }
     with exclusion_accounting_file.open("w", encoding="utf-8") as f:
         json.dump(accounting_data, f, ensure_ascii=False, indent=2)
@@ -5224,6 +5532,7 @@ def build_grammar_dataset(
             "ua_gec_train_sentences_total": 31028,
             "ua_gec_train_in_scope_candidate_sentences": 5138,
             "ua_gec_train_in_scope_annotator_edit_sets": 5252,
+            "measured_categories_count": len(measured_exclusions_total),
             "exclusions_by_policy": dict(sorted(measured_exclusions_total.items(), key=lambda x: -x[1])),
             "candidate_edit_sets_excluded_total": sum(measured_exclusions_total.values()),
             "candidate_edit_sets_retained_in_pipeline": total_corrections,

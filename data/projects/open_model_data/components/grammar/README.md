@@ -36,13 +36,23 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
 3. **Cross-Split Eval Partition Isolation:**
    - Sentences appearing in the evaluation partition are strictly quarantined from the training partition: **10** candidate matches excluded (9 sources, 1 target).
 4. **Syntactic, Semantic & Valency Quality Filters:**
-   - Curated syntactic, semantic, and verb valency filters: **2,304** candidates excluded.
+   - Adversarial review round findings (`adversarial_review_round_findings`): **978** candidates excluded.
+   - Unpaired comma after relative pronoun (`unpaired_comma_after_relative_pronoun`): **353** candidates excluded.
    - Sentence length floor (< 5 words): **287** candidates excluded.
-   - Sentence-splitting edits: **30** candidates excluded.
-   - Run-on sentences / dropped periods: **4** candidates excluded.
-   - Comma between subject and reporting verb: **3** candidates excluded.
-   - Capitalization after comma-dash: **2** candidates excluded.
-   - Truncated sentence ending in preposition: **1** candidate excluded.
+   - Wholesale essay rewrite exceeding 30% of tokens (`wholesale_essay_rewrite_token_share_over_30_pct`): **254** candidates excluded.
+   - Repeated word with intervening tokens (`repeated_word_intervening_words`): **213** candidates excluded.
+   - VESUM-unverified vocabulary form in corrected text (`vesum_unverified_vocabulary_form`): **137** candidates excluded.
+   - Russianism in corrected text (`russianism_in_corrected_text`): **132** candidates excluded.
+   - Missing finite verb or copula (`missing_finite_verb_or_copula`): **111** candidates excluded.
+   - Russianism in original text unrelated to edit (`russianism_in_original_text_unrelated_to_edit`): **52** candidates excluded.
+   - Contextless pronoun or gender flip (`contextless_pronoun_or_gender_flip`): **42** candidates excluded.
+   - Unwarranted valid-to-valid lexical swap (`unwarranted_valid_to_valid_lexical_swap`): **30** candidates excluded.
+   - Sentence-splitting edits (`sentence_splitting_edit`): **30** candidates excluded.
+   - Run-on sentences / dropped periods (`run_on_sentence_dropped_period`): **4** candidates excluded.
+   - Comma between subject and reporting verb (`comma_subject_reporting_verb`): **3** candidates excluded.
+   - Capitalization after comma-dash (`capitalization_after_comma_dash`): **2** candidates excluded.
+   - Adjacent doubled words (`adjacent_doubled_words`): **2** candidates excluded.
+   - Truncated sentence ending in preposition (`truncated_sentence_ends_in_preposition`): **1** candidate excluded.
 5. **Orthographic & Typographic Standard Filters:**
    - Uncapitalized sentence fragments: **501** candidates excluded.
    - Non-Cyrillic characters, Latin scripts, and control characters: **224** candidates excluded.
@@ -68,9 +78,10 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
 7. **Cross-Document Pair Deduplication:**
    - Duplicate `(original_text, corrected_text)` pairs across multiple annotators or documents were deduplicated: **15** candidates excluded.
 8. **Funnel Summary & Zero Reserve:**
-   - Total exclusions: **4,255** candidate edit sets excluded (3,891 train, 364 eval).
+   - Total exclusions: **4,255** candidate edit sets excluded across **42** measured criteria (3,891 train, 364 eval).
    - Retained candidate edit sets in pipeline: **997** (911 train candidates + 86 eval candidates).
    - Delivered in final balanced component: **997** substantive corrections (911 train, 86 eval) — 100% of retained candidate edit sets delivered, with zero withheld and zero in reserve.
+   - Complete itemized candidate-level audit trail: 4,255 exclusion records in `candidate_exclusion_accounting.json`, each recording `candidate_id`, `doc_id`, `sent_idx`, `ann_id`, `split`, `primary_tag`, `rejection_gate`, and `original_snippet`.
    - *Reserve disposition:* The earlier reported figure of 1,096 retained / 99 in reserve was an unmeasured legacy placeholder prior to completing the structural, safety, and orthographic filter suite. Every single candidate is now tracked and measured in `candidate_exclusion_accounting.json`.
 
 ### 3. Delivered Dataset Composition

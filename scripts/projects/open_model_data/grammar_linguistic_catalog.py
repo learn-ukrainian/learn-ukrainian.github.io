@@ -709,9 +709,16 @@ def format_query_template(template: str, sentence: str) -> str:
     """Format a query template with a cleaned sentence and resolve any adjacent punctuation collisions."""
     clean_s = clean_sentence_for_query(sentence)
     formatted = template.format(sentence=clean_s)
-    # Deduplicate punctuation across/after quotes (e.g. «...?»? -> «...?», «...!». -> «...!», «...».)
-    formatted = re.sub(r"(\.{3}|[?!…]+)([»”\"']+)\s*[?!.]+", r"\1\2", formatted)
+    # Deduplicate punctuation across/after quotes:
+    # 1. If sentence ends with ellipsis (...) or terminal punctuation (? ! …) and carrier follows with a period, drop carrier period:
+    formatted = re.sub(r"(\.{3}|[?!…])([»”\"']+)\s*\.", r"\1\2", formatted)
+    # 2. If sentence ends with ? and carrier follows with ?, deduplicate:
+    formatted = re.sub(r"\?([»”\"']+)\s*\?", r"?\1", formatted)
+    # 3. If sentence ends with ! and carrier follows with !, deduplicate:
+    formatted = re.sub(r"!([»”\"']+)\s*!", r"!\1", formatted)
+    # 4. If sentence ends with . and carrier follows with ., keep only one period after quote:
     formatted = re.sub(r"(?<!\.)\.\s*([»”\"']+)\s*\.", r"\1.", formatted)
+    # 5. Question or exclamation mark followed by period:
     formatted = re.sub(r"\?\s*\.", "?", formatted)
     formatted = re.sub(r"!\s*\.", "!", formatted)
     return formatted
