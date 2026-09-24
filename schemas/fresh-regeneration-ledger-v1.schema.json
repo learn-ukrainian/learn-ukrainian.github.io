@@ -9,11 +9,29 @@
     "n": {"type": "integer", "minimum": 1},
     "regenerations": {"type": "integer", "minimum": 0, "maximum": 2},
     "terminal_layer": {"enum": [null, "plan", "pack", "driver"]},
+    "last_success": {"type": "object", "additionalProperties": false,
+      "required": ["at", "through_check", "inputs"],
+      "properties": {
+        "at": {"type": "string", "format": "date-time"},
+        "through_check": {"const": 12},
+        "inputs": {"type": "object", "additionalProperties": false,
+          "required": ["plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256", "draft_sha256"],
+          "properties": {
+            "plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "pack_lock": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "words_lock": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "card_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "prompt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "draft_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        }
+      }
+    },
     "attempts": {"type": "array", "items": {"type": "object", "additionalProperties": false,
       "required": ["attempt", "failed_check", "code", "reason", "at", "inputs"],
       "properties": {
         "attempt": {"type": "integer", "minimum": 1},
-        "failed_check": {"type": "integer", "minimum": 1, "maximum": 9},
+        "failed_check": {"type": "integer", "minimum": 1, "maximum": 12},
         "code": {"type": "string", "minLength": 1},
         "reason": {"type": "string", "minLength": 1},
         "at": {"type": "string", "format": "date-time"},

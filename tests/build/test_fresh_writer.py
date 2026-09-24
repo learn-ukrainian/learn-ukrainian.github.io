@@ -351,6 +351,7 @@ sys.exit(1)
         plan_activity_types=types,
         delegate_script=fake_delegate_script,
         repo_root=caller_root,
+        model="gpt-6-astra",
     )
 
     assert res["writer"] == "codex"
@@ -369,6 +370,7 @@ sys.exit(1)
     dispatch_argv = lines[0]["argv"]
     assert dispatch_argv[0] == "dispatch"
     assert "--agent" in dispatch_argv and dispatch_argv[dispatch_argv.index("--agent") + 1] == "codex"
+    assert "--model" in dispatch_argv and dispatch_argv[dispatch_argv.index("--model") + 1] == "gpt-6-astra"
     assert "--mode" in dispatch_argv and dispatch_argv[dispatch_argv.index("--mode") + 1] == "read-only"
     assert "--worktree" in dispatch_argv
     assert (
@@ -479,7 +481,7 @@ def test_r11_forbidden_paths_grep():
     ]
 
     all_files = list(fresh_dir.glob("*.py")) + list(fresh_dir.glob("prompts/*.j2")) + list(fresh_dir.glob("*.yaml"))
-    assert {"runner.py", "regeneration.py"} <= {path.name for path in all_files}
+    assert {"runner.py", "regeneration.py", "manifest.py", "closure.py", "module.py"} <= {path.name for path in all_files}
 
     for fpath in all_files:
         text = fpath.read_text(encoding="utf-8")
@@ -506,7 +508,7 @@ def test_nothing_typed_no_cyrillic_in_engine_code():
     cyrillic_pattern = re.compile(r"[\u0400-\u04FF]")
 
     all_files = list(fresh_dir.glob("*.py")) + list(fresh_dir.glob("prompts/*.j2"))
-    assert {"runner.py", "regeneration.py"} <= {path.name for path in all_files}
+    assert {"runner.py", "regeneration.py", "manifest.py", "closure.py", "module.py"} <= {path.name for path in all_files}
 
     for fpath in all_files:
         text = fpath.read_text(encoding="utf-8")

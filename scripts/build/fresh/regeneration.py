@@ -10,6 +10,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lock
 
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-regeneration-ledger-v1.schema.json"
@@ -17,7 +18,7 @@ INPUT_KEYS = ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_s
 
 
 def _validate(doc: dict[str, Any]) -> None:
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    schema = json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(doc)
 
 
@@ -39,6 +40,7 @@ def record_failure(path: Path, slug: str, n: int, failure: dict[str, Any], input
     if doc["terminal_layer"] is not None:
         return doc
     previous = doc["attempts"]
+    doc.pop("last_success", None)
     layer = failure["layer"]
     if layer not in {"writer", "plan", "pack", "word_store", "engine", "driver"}:
         raise ValueError(f"unknown failure layer {layer!r}")
@@ -64,11 +66,17 @@ def record_failure(path: Path, slug: str, n: int, failure: dict[str, Any], input
     return doc
 
 
-def record_success(path: Path, slug: str, n: int) -> dict[str, Any]:
+def record_success(path: Path, slug: str, n: int, inputs: dict[str, str] | None = None, *,
+                   at: str | None = None) -> dict[str, Any]:
     """Count a regeneration that succeeded without another failure row."""
     doc = load_ledger(path, slug, n)
-    if doc["attempts"] and doc["terminal_layer"] is None:
+    if doc["terminal_layer"] is None:
         doc["regenerations"] = min(2, max(doc["regenerations"], len(doc["attempts"])))
+        if inputs is not None:
+            previous = doc.get("last_success") or {}
+            if previous.get("inputs") != inputs:
+                doc["last_success"] = {"at": at or datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+                                       "through_check": 12, "inputs": dict(inputs)}
         _validate(doc)
         lock.write(path, lock.yaml_bytes(doc))
     return doc

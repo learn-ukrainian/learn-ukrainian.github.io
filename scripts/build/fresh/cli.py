@@ -1,9 +1,11 @@
-"""CLI entry for fresh build engine Part E2 (issue #8397 child 6, #8431 r3).
+"""CLI entry for fresh build engine prompt, writer, lesson and module commands.
 
 Subcommands:
 - render-prompt: render lesson prompt and run rendered-prompt check
 - preflight: verify availability of evidence records, cited forms stress, and compute homographs
 - write: dispatch explicit writer seat, harvest result, validate draft schema, save state
+- build: run checks 1-12 for one lesson or an ordered module
+- closure: recompute historical manifest staleness
 """
 
 from __future__ import annotations
@@ -20,6 +22,7 @@ import yaml
 
 from scripts.build.fresh.draft_schema import LEVELS
 from scripts.build.fresh.immersion import compute_immersion_payload
+from scripts.build.fresh.path_guard import checked_existing_path, checked_path, validate_module
 from scripts.build.fresh.preflight import preflight_lesson
 from scripts.build.fresh.prompt import (
     check_rendered_prompt,
@@ -57,8 +60,8 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.build.fresh.cli",
         description=(
-            "Fresh build engine E2 — prompt rendering, preflight verification, and writer dispatch.\n"
-            "Use to render lesson prompts, run preflights, or invoke writer seats during fresh lesson builds."
+            "Fresh build engine E2 — prompts, preflight, writer dispatch, and ordered builds.\n"
+            "Use to render prompts, run preflights, write drafts, build lessons or modules, and recompute closure."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -272,10 +275,10 @@ def _build_parser() -> argparse.ArgumentParser:
 
     p_build = subparsers.add_parser(
         "build",
-        help="Run ordered fresh lesson checks 1-9 and write gates state",
+        help="Build one lesson or an ordered fresh module through check 12",
         description=(
-            "Run ordered checks 1-9 for one fresh lesson and record the gate results.\n"
-            "Use after a lesson draft and locked evidence exist; provide a question seat when open questions need answers."
+            "Build one lesson or every module lesson through review attempt manifests.\n"
+            "Use with locked evidence; supply a writer seat when a draft needs writing."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -293,7 +296,10 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p_build.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
     p_build.add_argument("slug", help="Module slug, e.g. 'sounds-letters-and-hello'")
-    p_build.add_argument("--lesson", "-n", type=int, required=True, help="Lesson number (1-indexed), e.g. 1")
+    target = p_build.add_mutually_exclusive_group(required=True)
+    target.add_argument("--lesson", "-n", type=int, help="Lesson number (1-indexed), e.g. 1")
+    target.add_argument("--module", action="store_true", help="Build every lesson in order, recap last")
+    p_build.add_argument("--writer-seat", help="Explicit agent:model seat when a draft needs writing")
     p_build.add_argument(
         "--question-seat",
         default=None,
@@ -308,6 +314,30 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
     )
+
+    p_closure = subparsers.add_parser(
+        "closure", help="Recompute stale lesson manifest dependencies",
+        description=(
+            "Recompute module dependency closure from immutable lesson manifests.\n"
+            "Use after building lessons to find stale upstream dependencies before review."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.build.fresh closure a1 sounds-letters-and-hello\n\n"
+            "Outputs:\n"
+            "  Writes module.closure.yaml under evidence/<level>/_state/<slug>/.\n\n"
+            "Exit codes:\n"
+            "  0: Closure recomputed successfully\n"
+            "  1: Input or path validation failed\n\n"
+            "Related:\n"
+            "  scripts/build/fresh/closure.py, fresh module build issue #8397"
+        ),
+    )
+    p_closure.add_argument("level", choices=LEVELS, help="Curriculum level (a1, a2, b1, or b2)")
+    p_closure.add_argument("slug", help="Module slug, e.g. sounds-letters-and-hello")
+    p_closure.add_argument("--repo-root", type=Path, default=None,
+                           help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)")
 
     return parser
 
@@ -333,6 +363,14 @@ def _load_lesson_data(
         evidence_dir=evidence_dir,
         repo_root=root,
     )
+    plan_root = Path("curriculum/l2-uk-en/lesson-plans")
+    evidence_root = Path("curriculum/l2-uk-en/evidence")
+    for name in ("plan", "pack", "words", "registry", "lock", "state_dir"):
+        allowed = plan_root if name == "plan" else evidence_root
+        paths[name] = checked_existing_path(root, paths[name], allowed)
+    for name in ("pack", "words", "registry"):
+        checked_existing_path(root, Path(f"{paths[name]}.lock"), evidence_root)
+    checked_existing_path(root, Path(f"{paths['lock']}.lock"), evidence_root)
 
     # 1. Load plan via scripts.curriculum.validate.loader (Finding 1)
     if not paths["plan"].is_file():
@@ -441,30 +479,40 @@ def _compute_input_hashes(
 
 def _load_recap_built_lessons(
     state_dir: Path,
+    level: str,
     slug: str,
     lesson_n: int,
+    repo_root: Path,
 ) -> list[dict[str, Any]]:
     """Load built lessons 1..N-1 from real files; fail closed and name missing built lesson (#8431, Finding 1)."""
     built: list[dict[str, Any]] = []
-    module_state_dir = state_dir / slug
+    module_state_dir = checked_existing_path(repo_root, state_dir / slug, "curriculum/l2-uk-en/evidence")
 
     for prior_n in range(1, lesson_n):
-        # Check standard draft filename variants in state dir
-        candidates = [
-            module_state_dir / f"lesson-{prior_n}.draft.yaml",
-            module_state_dir / f"lesson-{prior_n}.yaml",
-        ]
-        found = next((c for c in candidates if c.is_file()), None)
-        if found is None:
-            raise FileNotFoundError(
-                f"Built lesson {prior_n} is missing for recap: expected {module_state_dir / f'lesson-{prior_n}.draft.yaml'}"
-            )
-        # Note: E3's assembled lesson replaces the draft once built.
-        lock.require(found)
+        found = checked_path(repo_root, Path("site/src/content/docs") / level / slug / f"{prior_n}.mdx",
+                             "site/src/content/docs")
+        gates = checked_existing_path(repo_root, module_state_dir / f"lesson-{prior_n}.gates.yaml",
+                                      "curriculum/l2-uk-en/evidence")
+        manifest = checked_existing_path(repo_root, module_state_dir / f"lesson-{prior_n}.manifest.yaml",
+                                         "curriculum/l2-uk-en/evidence")
+        sidecar = checked_existing_path(repo_root, module_state_dir / f"lesson-{prior_n}.manifest.sha256",
+                                        "curriculum/l2-uk-en/evidence")
+        try:
+            gate_doc = yaml.safe_load(gates.read_text(encoding="utf-8")) if gates.is_file() else None
+            manifest_doc = yaml.safe_load(manifest.read_text(encoding="utf-8")) if manifest.is_file() else None
+        except (OSError, UnicodeError, yaml.YAMLError) as err:
+            raise ValueError(f"recap_inputs_not_built: lesson {prior_n}: {err}") from err
+        if (not found.is_file() or not gates.is_file() or not manifest.is_file() or not sidecar.is_file()
+                or not isinstance(gate_doc, dict) or gate_doc.get("passed") is not True
+                or hashlib.sha256(manifest.read_bytes()).hexdigest() != sidecar.read_text(encoding="ascii").strip()
+                or not isinstance(manifest_doc, dict)
+                or not isinstance(manifest_doc.get("inputs"), dict)
+                or not isinstance(manifest_doc["inputs"].get("lesson"), dict)
+                or manifest_doc["inputs"]["lesson"].get("sha256") != hashlib.sha256(found.read_bytes()).hexdigest()):
+            raise ValueError(f"recap_inputs_not_built: lesson {prior_n}: {found}")
         text = found.read_text(encoding="utf-8")
-        parsed = yaml.safe_load(text) or {}
-        title = parsed.get("title") or f"Lesson {prior_n}"
-        built.append({"n": prior_n, "title": title, "content": text, "draft": parsed})
+        built.append({"n": prior_n, "title": f"Lesson {prior_n}", "content": text,
+                      "sha256": hashlib.sha256(found.read_bytes()).hexdigest()})
 
     return built
 
@@ -473,39 +521,65 @@ def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
     repo_root = _resolve_repo_root(args)
+    try:
+        validate_module(args.level, args.slug)
+        plan_root = Path("curriculum/l2-uk-en/lesson-plans")
+        evidence_root = Path("curriculum/l2-uk-en/evidence")
+        plan = plan_root / args.level / f"{args.slug}.yaml"
+        evidence = evidence_root / args.level
+        pack = evidence / f"{args.slug}.yaml"
+        words = evidence / "_words.yaml"
+        registry = evidence / "_words.registry.yaml"
+        state = evidence / "_state" / args.slug
+        for rel, allowed in (
+            (plan_root / args.level, plan_root), (plan, plan_root),
+            (evidence, evidence_root), (pack, evidence_root), (words, evidence_root),
+            (registry, evidence_root), (state, evidence_root),
+            (state / "lessons.lock.yaml", evidence_root),
+            (state / "lessons.lock.yaml.lock", evidence_root),
+            *[(Path(f"{item}.lock"), evidence_root) for item in (pack, words, registry)],
+        ):
+            checked_path(repo_root, rel, allowed)
+        checked_path(repo_root, "docs/style-cards", "docs/style-cards")
+        checked_path(repo_root, Path("site/src/content/docs") / args.level / args.slug,
+                     "site/src/content/docs")
+        for option in ("output", "output_dir", "site_dir", "gap_report", "fake_seat"):
+            value = getattr(args, option, None)
+            if value is not None:
+                setattr(args, option, checked_existing_path(
+                    repo_root, value if value.is_absolute() else repo_root / value, "."
+                ))
+    except ValueError as err:
+        print(f"{err}", file=sys.stderr)
+        return 1
     cards_dir = (repo_root / "docs" / "style-cards") if (repo_root / "docs" / "style-cards").is_dir() else None
 
     if args.command == "build":
-        from scripts.build.fresh.runner import run_lesson
-
+        from scripts.build.fresh.module import build_module
         try:
-            plan, _lesson_entry, pack, words, paths = _load_lesson_data(
-                args.level, args.slug, args.lesson, repo_root=repo_root
-            )
-            state_dir = paths["state_dir"] / args.slug
-            draft_path = state_dir / f"lesson-{args.lesson}.draft.yaml"
-            draft = yaml.safe_load(draft_path.read_text(encoding="utf-8"))
-            position = plan.get("arc_ref", {}).get("position", 1)
-            learner = planned_state(
-                args.level, position, args.lesson, allow_missing_prior=True,
-                plans_dir=paths["plan"].parent, evidence_dir=paths["words"].parent,
-            )
-            expected = _compute_input_hashes(paths, args.lesson, learner)
-            _card_path, _card, expected["style_card_sha256"] = style_card_info(args.level, cards_dir=cards_dir)
-            prompt_path = state_dir / f"lesson-{args.lesson}.prompt.md"
-            if prompt_path.is_file():
-                expected["prompt_sha256"] = hashlib.sha256(prompt_path.read_bytes()).hexdigest()
-            report = run_lesson(
-                args.level, args.slug, args.lesson, draft=draft, plan=plan, pack=pack, words=words,
-                state_dir=state_dir, repo_root=repo_root, plans_dir=paths["plan"].parent,
-                evidence_dir=paths["words"].parent, question_seat=args.question_seat,
-                site_dir=repo_root / "site" / "src" / "content" / "docs" / args.level / args.slug,
-                expected_inputs=expected,
-            )
-            print(json.dumps(report, ensure_ascii=False, sort_keys=True))
-            return 0 if report["passed"] else 1
+            report = build_module(args.level, args.slug, repo_root=repo_root, lesson_n=args.lesson,
+                                  writer_seat=args.writer_seat, question_seat=args.question_seat)
+            stopped = report["lessons"][-1] if report["lessons"] else None
+            if args.lesson is not None and stopped and stopped["stopping_check"] == 0:
+                print(json.dumps({"check": 0, "reason": stopped["reason"], "layer": stopped["layer"]},
+                                 ensure_ascii=False, sort_keys=True))
+            else:
+                print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+            return 0 if report["complete"] else 1
         except (OSError, ValueError, KeyError) as err:
             print(json.dumps({"check": 1, "reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)
+            return 1
+
+    if args.command == "closure":
+        from scripts.build.fresh.closure import compute_closure
+        try:
+            plan, _, _, _, paths = _load_lesson_data(args.level, args.slug, 1, repo_root=repo_root)
+            report = compute_closure(args.level, args.slug, list(plan["lessons"]), repo_root=repo_root,
+                                     state_dir=paths["state_dir"] / args.slug)
+            print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+            return 0
+        except (OSError, ValueError, KeyError) as err:
+            print(json.dumps({"reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)
             return 1
 
     if args.command == "render-prompt":
@@ -545,7 +619,7 @@ def main(argv: list[str] | None = None) -> int:
         if is_recap:
             # Load built lessons 1..N-1 from real files, failing closed if missing (Finding 1)
             try:
-                built = _load_recap_built_lessons(paths["state_dir"], args.slug, args.lesson)
+                built = _load_recap_built_lessons(paths["state_dir"], args.level, args.slug, args.lesson, repo_root)
             except (FileNotFoundError, ValueError) as err:
                 print(f"Error loading recap built lessons: {err}", file=sys.stderr)
                 return 1
@@ -706,7 +780,7 @@ def main(argv: list[str] | None = None) -> int:
 
         if is_recap:
             try:
-                built = _load_recap_built_lessons(paths["state_dir"], args.slug, args.lesson)
+                built = _load_recap_built_lessons(paths["state_dir"], args.level, args.slug, args.lesson, repo_root)
             except (FileNotFoundError, ValueError) as err:
                 print(f"Error loading recap built lessons: {err}", file=sys.stderr)
                 return 1
@@ -786,6 +860,16 @@ def main(argv: list[str] | None = None) -> int:
     elif args.command == "assemble":
         from scripts.build.fresh.assemble import assemble_lesson
 
+        try:
+            state = args.output_dir or (repo_root / "curriculum/l2-uk-en/evidence" / args.level / "_state" / args.slug)
+            checked_existing_path(repo_root, state / f"lesson-{args.lesson}.draft.yaml", "." if args.output_dir
+                                  else "curriculum/l2-uk-en/evidence")
+            checked_existing_path(repo_root,
+                                  (args.site_dir or repo_root / "site/src/content/docs" / args.level / args.slug)
+                                  / f"{args.lesson}.mdx", "." if args.site_dir else "site/src/content/docs")
+        except ValueError as err:
+            print(f"{err}", file=sys.stderr)
+            return 1
         res = assemble_lesson(
             level=args.level,
             slug=args.slug,

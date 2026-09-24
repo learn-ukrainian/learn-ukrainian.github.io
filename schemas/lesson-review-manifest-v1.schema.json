@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fresh lesson review attempt manifest",
+  "type": "object", "additionalProperties": false,
+  "required": ["manifest_schema", "kind", "level", "slug", "lesson", "lesson_kind", "recap", "review_eligible", "blocked_by", "inputs", "lesson_lock_entry", "learner_state", "module_digest", "digest_generator_version", "upstream_lessons", "previous_attempt", "diff_sha256"],
+  "properties": {
+    "manifest_schema": {"const": 1}, "kind": {"const": "lesson"},
+    "level": {"type": "string", "minLength": 1}, "slug": {"type": "string", "minLength": 1},
+    "lesson": {"type": "integer", "minimum": 1}, "lesson_kind": {"enum": ["lesson", "recap"]},
+    "recap": {"type": "boolean"}, "review_eligible": {"const": false},
+    "blocked_by": {"const": ["digest_generator_pending"]},
+    "inputs": {"type": "object", "additionalProperties": false,
+      "required": ["plan", "pack_lock", "words_lock", "lessons_lock", "lesson", "activity_data", "gate_report", "style_card", "decisions"],
+      "properties": {
+        "plan": {"$ref": "#/$defs/file"}, "pack_lock": {"$ref": "#/$defs/file"},
+        "words_lock": {"$ref": "#/$defs/file"}, "lessons_lock": {"$ref": "#/$defs/file"},
+        "lesson": {"$ref": "#/$defs/file"},
+        "activity_data": {"type": "array", "items": {"$ref": "#/$defs/file"}},
+        "gate_report": {"$ref": "#/$defs/file"}, "style_card": {"$ref": "#/$defs/file"},
+        "decisions": {"$ref": "#/$defs/file"}
+      }
+    },
+    "lesson_lock_entry": {"type": "object", "additionalProperties": false,
+      "required": ["path", "lesson", "entry_sha256"],
+      "properties": {"path": {"type": "string"}, "lesson": {"type": "integer", "minimum": 1}, "entry_sha256": {"$ref": "#/$defs/sha"}}},
+    "learner_state": {"type": "object", "additionalProperties": false,
+      "required": ["sha256", "source"],
+      "properties": {"sha256": {"$ref": "#/$defs/sha"}, "source": {"const": "planned_state"}}},
+    "module_digest": {"type": "null"}, "digest_generator_version": {"type": "null"},
+    "upstream_lessons": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+      "required": ["n", "sha256"], "properties": {"n": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/sha"}}}},
+    "previous_attempt": {"type": "null"}, "diff_sha256": {"type": "null"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "file": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"],
+      "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha"}}}
+  }
+}

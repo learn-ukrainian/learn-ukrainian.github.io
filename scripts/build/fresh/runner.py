@@ -1,4 +1,4 @@
-"""Ordered, fail-closed checks 1-9 for one fresh lesson."""
+"""Ordered, fail-closed checks 1-12 for one fresh lesson."""
 
 from __future__ import annotations
 
@@ -10,14 +10,17 @@ import subprocess
 import sys
 import uuid
 from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts.build.fresh.assemble import check_5_assembly, check_9_stress_and_render
+from scripts.build.fresh.assemble import check_5_assembly, check_9_stress_and_render, check_11_render
 from scripts.build.fresh.draft_schema import validate_draft
+from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
+from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
 from scripts.build.fresh.writer import strip_markdown_fence
 from scripts.curriculum.evidence import lock
@@ -299,12 +302,14 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
                question_dispatch: QuestionDispatch | None = None, sources: Any = None,
                allowlist: Allowlist | None = None, site_dir: Path | None = None,
                expected_inputs: dict[str, str] | None = None, inventory_gate: Callable[..., Any] = check_lesson,
-               observed_writer: Callable[..., Any] = write_observed) -> dict[str, Any]:
+               observed_writer: Callable[..., Any] = write_observed,
+               render_check: Callable[..., Any] = check_11_render) -> dict[str, Any]:
     """Stop at the first failed check; write a schema-valid gate report each run."""
     from scripts.curriculum.evidence.sources import Sources
     from scripts.curriculum.resolver.stream import load_allowlist
 
     state_dir.mkdir(parents=True, exist_ok=True)
+    unlink_current(state_dir, n)
     rows: list[dict[str, Any]] = []
     inputs = expected_inputs or {}
     ledger_inputs = {
@@ -326,17 +331,20 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
             if number not in existing:
                 rows.append({"check": number, "status": "not_checked", "reason": "prior_check_failed"})
         rows.sort(key=lambda prior: prior["check"])
-        rows.extend({"check": number, "status": "not_checked", "reason": "e3b2_pending"} for number in (10, 11, 12))
+        for number in (10, 11):
+            if number not in {r["check"] for r in rows}:
+                rows.append({"check": number, "status": "not_checked", "reason": "prior_check_failed"})
+        rows.sort(key=lambda prior: prior["check"])
         doc = {"level": level, "slug": slug, "n": n,
                "passed": all(r["status"] != "failed" for r in rows), "checks": rows}
-        Draft202012Validator(json.loads(SCHEMA.read_text(encoding="utf-8"))).validate(doc)
+        Draft202012Validator(json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(
+            encoding="utf-8"))).validate(doc)
         lock.write(gate_path, lock.yaml_bytes(doc))
         bad = next((r for r in rows if r["status"] == "failed"), None)
         if bad is not None:
             record_failure(ledger_path, slug, n, bad, ledger_inputs)
-        else:
-            record_success(ledger_path, slug, n)
-        return doc
+        return {**doc, "passed_through": bad["check"] if bad else 11,
+                "manifest_sha256": None}
 
     previous = load_ledger(ledger_path, slug, n)
     if previous["terminal_layer"] is not None:
@@ -463,4 +471,33 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
         return finish(failure(9, rendered.reason or "stress_or_render_failed", layer,
                               step=rendered.step, activity=rendered.activity, token=rendered.token))
     rows.append(_pass(9))
-    return finish()
+    rows.append({"check": 10, "status": "not_checked", "reason": "grammar_checker_undecided"})
+    (repo_root / "batch_state" / "verify_shippable").mkdir(parents=True, exist_ok=True)
+    try:
+        rendered_check = render_check(level, slug, astro_build=True,
+                                      module_dir=site_dir, plan_path=plans_dir / f"{slug}.yaml")
+    except Exception as err:
+        return finish(failure(11, f"verify_shippable_error: {err}", "engine"))
+    if not rendered_check.passed:
+        row = failure(11, rendered_check.reason or "verify_shippable_failed", "engine")
+        row["details"] = {"verify_shippable": rendered_check.artifacts.get("verify_shippable", {})}
+        return finish(row)
+    rows.append(_pass(11, {"verify_shippable": rendered_check.artifacts.get("verify_shippable", {})}))
+    gate = finish()
+    try:
+        manifest, digest = write_manifest(
+            level, slug, n, lesson_kind="recap" if lesson.get("kind") == "recap" else "lesson", state_dir=state_dir,
+            repo_root=repo_root, plans_dir=plans_dir, evidence_dir=evidence_dir,
+            position=plan.get("arc_ref", {}).get("position", 1), site_dir=site_dir)
+    except Exception as err:
+        reason = str(err)
+        path = getattr(err, "path", None) or (err.filename if isinstance(err, OSError) and err.filename else reason)
+        write_manifest_error(state_dir, n, reason, str(path), datetime.now(UTC).isoformat().replace("+00:00", "Z"))
+        bad = failure(12, reason, "engine")
+        record_failure(ledger_path, slug, n, bad, ledger_inputs)
+        return {**gate, "passed": False, "passed_through": 12, "stopping_check": 12,
+                "reason": reason, "manifest_sha256": None}
+    draft_path = state_dir / f"lesson-{n}.draft.yaml"
+    success_inputs = {**ledger_inputs, "draft_sha256": hashlib.sha256(draft_path.read_bytes()).hexdigest()}
+    record_success(ledger_path, slug, n, success_inputs)
+    return {**gate, "passed_through": 12, "manifest_sha256": digest, "manifest": manifest}
