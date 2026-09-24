@@ -18,13 +18,13 @@
       "deletions": 0,
       "files": 0
     },
-    "cost": 0.022551408000000002,
+    "cost": 0.024285882,
     "tokens": {
-      "input": 39920,
-      "output": 5930,
-      "reasoning": 15764,
+      "input": 41987,
+      "output": 6704,
+      "reasoning": 16429,
       "cache": {
-        "read": 1182336,
+        "read": 1369344,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1790265631029,
-      "updated": 1790265791811
+      "updated": 1790265810545
     }
   },
   "messages": [
@@ -3140,21 +3140,24 @@
           "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8678",
           "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8678"
         },
-        "cost": 0,
+        "cost": 0.0008616,
         "tokens": {
-          "input": 0,
-          "output": 0,
-          "reasoning": 0,
+          "total": 62949,
+          "input": 1356,
+          "output": 228,
+          "reasoning": 565,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 60800
           }
         },
         "modelID": "deepseek-flash",
         "providerID": "deepseek",
         "time": {
-          "created": 1790265791809
+          "created": 1790265791809,
+          "completed": 1790265803210
         },
+        "finish": "tool-calls",
         "id": "msg_0d4281541001rye5CahywqC4AF",
         "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV"
       },
@@ -3182,21 +3185,226 @@
           "tool": "bash",
           "callID": "call_00_8hkRVES5Nce7M9hSx2y94157",
           "state": {
-            "metadata": {
-              "output": "ruff (lint)..............................................................Passed\ngitleaks (secret scan)...................................................Passed\ncheck yaml syntax....................................(no files to check)Skipped\nblock accidentally large files...........................................Passed\ncheck for merge conflicts................................................Passed\nfix end of files.........................................................Passed\ntrim trailing whitespace.................................................Passed\nblock .yaml.bak / .yaml.orig files.......................................Passed\nblock bare python/python3 in new scripts.................................Passed\nblock local-only private-source review exports...........................Passed\ncheck MDX source parity..............................(no files to check)Skipped\ncheck public UA-eval English document language.......(no files to check)Skipped\ncheck forward MDX parity.............................(no files to check)Skipped\ncheck no internal IDs/register in learner surfaces...(no files to check)Skipped\ncheck locked modules are not published...............(no files to check)Skipped\nlesson schema drift gate.............................(no files to check)Skipped\nAtlas lexicon fingerprint freshness gate.............(no files to check)Skipped\nAtlas manifest enrichment-depth gate.................(no files to check)Skipped\ndispatch brief .venv worktree guardrail..............(no files to check)Skipped\nlint session-state env references....................(no files to check)Skipped\nbio dossier §7 cross-track path validator............(no files to check)Skipped\ncheck staged and committed files for OPSEC leaks.........................Passed\n"
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add scripts/ci/pytest_dispatch_cap.py tests/test_dispatch_xdist_cap.py && git commit -q -m \"fix(tests): make the dispatch pytest cap a no-op without pytest-xdist (#8678)\n\nA minimal dispatch-worker venv with only pytest and pyyaml has no xdist, so\nthe cap crashed on config.option.numprocesses whenever the dispatch marker was\nset. Detect xdist importability and guard the -n/--tx option lookups so the\nfan-out cap no-ops when xdist cannot fan out; the full-suite lock still applies.\n\nX-Agent: deepseek/impl-8678\" && git log --oneline -1 && git status --porcelain",
               "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8678"
             },
+            "output": "ruff (lint)..............................................................Passed\ngitleaks (secret scan)...................................................Passed\ncheck yaml syntax....................................(no files to check)Skipped\nblock accidentally large files...........................................Passed\ncheck for merge conflicts................................................Passed\nfix end of files.........................................................Passed\ntrim trailing whitespace.................................................Passed\nblock .yaml.bak / .yaml.orig files.......................................Passed\nblock bare python/python3 in new scripts.................................Passed\nblock local-only private-source review exports...........................Passed\ncheck MDX source parity..............................(no files to check)Skipped\ncheck public UA-eval English document language.......(no files to check)Skipped\ncheck forward MDX parity.............................(no files to check)Skipped\ncheck no internal IDs/register in learner surfaces...(no files to check)Skipped\ncheck locked modules are not published...............(no files to check)Skipped\nlesson schema drift gate.............................(no files to check)Skipped\nAtlas lexicon fingerprint freshness gate.............(no files to check)Skipped\nAtlas manifest enrichment-depth gate.................(no files to check)Skipped\ndispatch brief .venv worktree guardrail..............(no files to check)Skipped\nlint session-state env references....................(no files to check)Skipped\nbio dossier §7 cross-track path validator............(no files to check)Skipped\ncheck staged and committed files for OPSEC leaks.........................Passed\n4be50bbef9 fix(tests): make the dispatch pytest cap a no-op without pytest-xdist (#8678)\n",
+            "metadata": {
+              "output": "ruff (lint)..............................................................Passed\ngitleaks (secret scan)...................................................Passed\ncheck yaml syntax....................................(no files to check)Skipped\nblock accidentally large files...........................................Passed\ncheck for merge conflicts................................................Passed\nfix end of files.........................................................Passed\ntrim trailing whitespace.................................................Passed\nblock .yaml.bak / .yaml.orig files.......................................Passed\nblock bare python/python3 in new scripts.................................Passed\nblock local-only private-source review exports...........................Passed\ncheck MDX source parity..............................(no files to check)Skipped\ncheck public UA-eval English document language.......(no files to check)Skipped\ncheck forward MDX parity.............................(no files to check)Skipped\ncheck no internal IDs/register in learner surfaces...(no files to check)Skipped\ncheck locked modules are not published...............(no files to check)Skipped\nlesson schema drift gate.............................(no files to check)Skipped\nAtlas lexicon fingerprint freshness gate.............(no files to check)Skipped\nAtlas manifest enrichment-depth gate.................(no files to check)Skipped\ndispatch brief .venv worktree guardrail..............(no files to check)Skipped\nlint session-state env references....................(no files to check)Skipped\nbio dossier §7 cross-track path validator............(no files to check)Skipped\ncheck staged and committed files for OPSEC leaks.........................Passed\n4be50bbef9 fix(tests): make the dispatch pytest cap a no-op without pytest-xdist (#8678)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add scripts/ci/pytest_dispatch_cap.py tests/test_dispatch_xdist_cap.py && git commit -q -m \"fix(tests): make the dispatch pytest cap a no-op without pytest-xdist (#8678)\n\nA minimal dispatch-worker venv with only pytest and pyyaml has no xdist, so\nthe cap crashed on config.option.numprocesses whenever the dispatch marker was\nset. Detect xdist importability and guard the -n/--tx option lookups so the\nfan-out cap no-ops when xdist cannot fan out; the full-suite lock still applies.\n\nX-Agent: deepseek/impl-8678\" && git log --oneline -1 && git status --porcelain",
             "time": {
-              "start": 1790265795823
+              "start": 1790265795823,
+              "end": 1790265802980
             }
           },
           "id": "prt_0d428229c001jg7EfB7Oz0w8hC",
           "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
           "messageID": "msg_0d4281541001rye5CahywqC4AF"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "b901ad14099028d58fb6430435b935c1cb77ad04",
+          "type": "step-finish",
+          "tokens": {
+            "total": 62949,
+            "input": 1356,
+            "output": 228,
+            "reasoning": 565,
+            "cache": {
+              "write": 0,
+              "read": 60800
+            }
+          },
+          "cost": 0.0008616,
+          "id": "prt_0d4284169001LS34atSUJQH1qk",
+          "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
+          "messageID": "msg_0d4281541001rye5CahywqC4AF"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d425a1c0001qE6hiU8MmCgLfJ",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8678",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8678"
+        },
+        "cost": 0.000341094,
+        "tokens": {
+          "total": 63439,
+          "input": 449,
+          "output": 115,
+          "reasoning": 27,
+          "cache": {
+            "write": 0,
+            "read": 62848
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790265803216,
+          "completed": 1790265810537
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d42841d0001gJ9FGv0a4AmYP8",
+        "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV"
+      },
+      "parts": [
+        {
+          "snapshot": "b901ad14099028d58fb6430435b935c1cb77ad04",
+          "type": "step-start",
+          "id": "prt_0d4284581001TrSEh1y6JPKEvl",
+          "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
+          "messageID": "msg_0d42841d0001gJ9FGv0a4AmYP8"
+        },
+        {
+          "type": "reasoning",
+          "text": "Committed with hooks passing. `git status --porcelain` output empty (nothing after commit logged). Let me confirm and push.",
+          "time": {
+            "start": 1790265804502,
+            "end": 1790265804750
+          },
+          "id": "prt_0d42846d6001V2EorDE0QhY7fB",
+          "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
+          "messageID": "msg_0d42841d0001gJ9FGv0a4AmYP8"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_dRUEEjYqLU0yUMjTA9IS9156",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git push -u origin HEAD 2>&1 | tail -8 && echo \"--- status ---\" && git status --porcelain && echo \"--- head ---\" && git rev-parse HEAD",
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8678"
+            },
+            "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote..... done\nremote: \nremote: Create a pull request for 'deepseek/impl-8678' on GitHub by visiting:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/impl-8678        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            HEAD -> deepseek/impl-8678\nbranch 'deepseek/impl-8678' set up to track 'origin/deepseek/impl-8678'.\n--- status ---\n--- head ---\n4be50bbef94d983a5e1a5d50b323e2a2c2488852\n",
+            "metadata": {
+              "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote..... done\nremote: \nremote: Create a pull request for 'deepseek/impl-8678' on GitHub by visiting:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/impl-8678        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            HEAD -> deepseek/impl-8678\nbranch 'deepseek/impl-8678' set up to track 'origin/deepseek/impl-8678'.\n--- status ---\n--- head ---\n4be50bbef94d983a5e1a5d50b323e2a2c2488852\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git push -u origin HEAD 2>&1 | tail -8 && echo \"--- status ---\" && git status --porcelain && echo \"--- head ---\" && git rev-parse HEAD",
+            "time": {
+              "start": 1790265804996,
+              "end": 1790265810343
+            }
+          },
+          "id": "prt_0d42847d2001W1ymBnfguAoq10",
+          "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
+          "messageID": "msg_0d42841d0001gJ9FGv0a4AmYP8"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "b901ad14099028d58fb6430435b935c1cb77ad04",
+          "type": "step-finish",
+          "tokens": {
+            "total": 63439,
+            "input": 449,
+            "output": 115,
+            "reasoning": 27,
+            "cache": {
+              "write": 0,
+              "read": 62848
+            }
+          },
+          "cost": 0.000341094,
+          "id": "prt_0d4285e05001iy0oB1mtI4AtZX",
+          "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
+          "messageID": "msg_0d42841d0001gJ9FGv0a4AmYP8"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d425a1c0001qE6hiU8MmCgLfJ",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8678",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8678"
+        },
+        "cost": 0.00053178,
+        "tokens": {
+          "total": 64126,
+          "input": 262,
+          "output": 431,
+          "reasoning": 73,
+          "cache": {
+            "write": 0,
+            "read": 63360
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790265810544,
+          "completed": 1790265813705
+        },
+        "finish": "stop",
+        "id": "msg_0d4285e6f001blaWJ5EfsZbQrI",
+        "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV"
+      },
+      "parts": [
+        {
+          "snapshot": "b901ad14099028d58fb6430435b935c1cb77ad04",
+          "type": "step-start",
+          "id": "prt_0d42861c4001izHCOLc1Kxow2w",
+          "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
+          "messageID": "msg_0d4285e6f001blaWJ5EfsZbQrI"
+        },
+        {
+          "type": "reasoning",
+          "text": "Pushed. `git status --porcelain` empty. Head SHA 4be50bbef94d983a5e1a5d50b323e2a2c2488852.\n\nNow report. Brief says do not open PR. Report pushed head SHA and clean status, plus verification quotes.\n\nLet me summarize concisely with evidence.",
+          "time": {
+            "start": 1790265811685,
+            "end": 1790265812051
+          },
+          "id": "prt_0d42862e5001AC5zjJ1pBoDP14",
+          "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
+          "messageID": "msg_0d4285e6f001blaWJ5EfsZbQrI"
+        },
+        {
+          "type": "text",
+          "text": "Fixed and pushed.\n\n**Root cause:** with the dispatch marker set and xdist absent, `pytest_cmdline_main` called `_arm_maxprocesses`, which read `config.option.numprocesses` unconditionally (an xdist-only option) → `AttributeError`.\n\n**Change** (`scripts/ci/pytest_dispatch_cap.py`):\n- Added `xdist_available()` (real `import xdist`, `ImportError` → False).\n- Cap hooks (`_arm_maxprocesses`, `_shrink_tx`, `_reject_oversized_tx`) now treat missing xdist options as no fan-out; `pytest_cmdline_main` gates the cap on `xdist_available()`.\n- Full-suite lock is unchanged and still taken whenever the marker is set, xdist or not.\n\n**Tests** (`tests/test_dispatch_xdist_cap.py`, +3):\n- `xdist_available()` is False when the import is blocked (`sys.modules[\"xdist\"]=None`).\n- Marked subprocess run with autoload disabled + a shadow `xdist` package that raises → passes, no CAP_LINE.\n- Same no-xdist child still takes the full-suite lock (full-suite refused while held; targeted path runs).\n\n**Verification:**\n- `/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/test_dispatch_xdist_cap.py -n 2 -q` → `24 passed in 9.56s`\n- `ruff check` → `All checks passed!`; `ruff format --check` → `2 files already formatted`\n- Repro before fix: `AttributeError: 'Namespace' object has no attribute 'numprocesses'`; same command now collects clean.\n\nBranch `deepseek/impl-8678` pushed, head `4be50bbef94d983a5e1a5d50b323e2a2c2488852`, `git status --porcelain` empty. No PR opened.",
+          "time": {
+            "start": 1790265812056,
+            "end": 1790265813529
+          },
+          "id": "prt_0d428645800105EnxZHBw4d3O0",
+          "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
+          "messageID": "msg_0d4285e6f001blaWJ5EfsZbQrI"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "b901ad14099028d58fb6430435b935c1cb77ad04",
+          "type": "step-finish",
+          "tokens": {
+            "total": 64126,
+            "input": 262,
+            "output": 431,
+            "reasoning": 73,
+            "cache": {
+              "write": 0,
+              "read": 63360
+            }
+          },
+          "cost": 0.00053178,
+          "id": "prt_0d4286a77001KiITEXsloGhSYS",
+          "sessionID": "ses_f2bda5ecaffe8EuDEKKulL3dSV",
+          "messageID": "msg_0d4285e6f001blaWJ5EfsZbQrI"
         }
       ]
     }
