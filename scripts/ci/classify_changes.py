@@ -404,7 +404,12 @@ def current_pr_labels(repo: str, number: int) -> list[str]:
 
 
 def queue_refs_by_sha(repo: str, base_branch: str) -> dict[str, str]:
-    """Live merge-queue group refs for ``base_branch``, keyed by group head SHA."""
+    """Live merge-queue group refs for ``base_branch``, keyed by group head SHA.
+
+    Two refs on one SHA make the chain walk ambiguous: keeping either would
+    silently drop the other PR and its labels. Raise instead, so the caller
+    fails closed to full.
+    """
     prefix = urllib.parse.quote(f"heads/gh-readonly-queue/{base_branch}/")
     raw = subprocess.check_output(
         [
@@ -419,6 +424,8 @@ def queue_refs_by_sha(repo: str, base_branch: str) -> dict[str, str]:
         sha, _, ref = line.partition(" ")
         if not sha or not ref:
             raise ValueError("invalid matching-refs line")
+        if sha in refs:
+            raise ValueError(f"merge-queue refs {refs[sha]!r} and {ref!r} share {sha}")
         refs[sha] = ref
     return refs
 

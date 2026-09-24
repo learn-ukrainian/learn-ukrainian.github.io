@@ -718,6 +718,40 @@ class ClassifierTests(unittest.TestCase):
              self.assertRaises(ValueError):
             scope.queue_refs_by_sha("owner/repo", "main")
 
+    def test_merge_group_refs_sharing_a_sha_fail_closed(self):
+        # The #8505 r5 blocker: pr-1 and pr-2 point at one SHA. A SHA-keyed map
+        # kept only pr-2, so the walk saw [3, 2] and never read pr-1's full-ci.
+        shared = "2" * 40
+        lines = "".join(
+            f"{sha} {ref}\n"
+            for sha, ref in [
+                (shared, _queue_ref(1, _MAIN_SHA)),
+                (shared, _queue_ref(2, _MAIN_SHA)),
+                ("3" * 40, _queue_ref(3, shared)),
+            ]
+        )
+        with patch.object(scope.subprocess, "check_output", return_value=lines), \
+             self.assertRaises(ValueError):
+            scope.queue_refs_by_sha("owner/repo", "main")
+        env = {
+            "PYTEST_SHARD_COUNT": "4",
+            "EVENT_NAME": "merge_group",
+            "BASE": shared,
+            "HEAD": "3" * 40,
+            "HEAD_REF": _queue_ref(3, shared),
+            "REPO": "owner/repo",
+        }
+        with patch.dict(os.environ, env, clear=True), \
+             patch.object(scope.subprocess, "check_output", return_value=lines), \
+             patch.object(scope, "current_pr_labels", side_effect=lambda _, n: {1: ["full-ci"]}.get(n, [])), \
+             patch.object(scope, "on_base_branch", return_value=True), \
+             patch.object(scope, "compare_paths", return_value=["docs/guide.md"]) as compare, \
+             patch.object(scope, "git_tree_paths", return_value=set()), \
+             contextlib.redirect_stdout(io.StringIO()) as stdout:
+            scope.main()
+        compare.assert_not_called()
+        self.assertIn("pytest_mode=full", stdout.getvalue())
+
     def test_forced_events_do_not_need_compare_api(self):
         # schedule stays force-full without touching the compare API.
         with patch.dict(os.environ, {"PYTEST_SHARD_COUNT": "4", "EVENT_NAME": "schedule"}, clear=True), \
