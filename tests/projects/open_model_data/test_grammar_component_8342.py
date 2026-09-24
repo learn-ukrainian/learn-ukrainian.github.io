@@ -38,6 +38,7 @@ from scripts.projects.open_model_data.generate_grammar_signoff_8342 import (
 from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     IN_SCOPE_TAGS,
     TAG_TO_COARSE_CATEGORY,
+    clean_sentence_for_query,
     is_finite_active_verb,
 )
 
@@ -741,6 +742,82 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
             reviewer_family="claude",
         )
 
+    # 13. Missing or mismatched record_id rejected
+    missing_rec_findings = copy.deepcopy(raw_findings)
+    del missing_rec_findings["1"]["record_id"]
+    f_path15 = tmp_path / "missing_rec.json"
+    f_path15.write_text(json.dumps(missing_rec_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or mismatched record_id"):
+        generate_signoff_and_receipt(
+            findings_file=f_path15,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    mismatched_rec_findings = copy.deepcopy(raw_findings)
+    mismatched_rec_findings["1"]["record_id"] = "wrong_record_id"
+    f_path16 = tmp_path / "mismatched_rec.json"
+    f_path16.write_text(json.dumps(mismatched_rec_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or mismatched record_id"):
+        generate_signoff_and_receipt(
+            findings_file=f_path16,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 14. Missing or mismatched content_hash rejected
+    missing_hash_findings = copy.deepcopy(raw_findings)
+    del missing_hash_findings["1"]["content_hash"]
+    f_path17 = tmp_path / "missing_hash.json"
+    f_path17.write_text(json.dumps(missing_hash_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or mismatched content_hash"):
+        generate_signoff_and_receipt(
+            findings_file=f_path17,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    mismatched_hash_findings = copy.deepcopy(raw_findings)
+    mismatched_hash_findings["1"]["content_hash"] = "0000000000000000000000000000000000000000000000000000000000000000"
+    f_path18 = tmp_path / "mismatched_hash.json"
+    f_path18.write_text(json.dumps(mismatched_hash_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or mismatched content_hash"):
+        generate_signoff_and_receipt(
+            findings_file=f_path18,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 15. Correction assessment not naming edit pair rejected
+    no_span_findings = copy.deepcopy(raw_findings)
+    no_span_findings["1"]["reviewer_assessment"] = "Текст нормалізовано відповідно до літературних норм."
+    f_path19 = tmp_path / "no_span.json"
+    f_path19.write_text(json.dumps(no_span_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="does not name edit pair"):
+        generate_signoff_and_receipt(
+            findings_file=f_path19,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 16. Clean control assessment lacking sentence-specific citation rejected
+    no_cite_findings = copy.deepcopy(raw_findings)
+    no_cite_findings["3"]["reviewer_assessment"] = "Автентичне контрольне речення без помилок."
+    f_path20 = tmp_path / "no_cite.json"
+    f_path20.write_text(json.dumps(no_cite_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="lacks sentence-specific citation"):
+        generate_signoff_and_receipt(
+            findings_file=f_path20,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
 
 def test_no_duplicated_query_punctuation(grammar_data):
     """Verify that 0 records have nested guillemets or duplicated punctuation in query."""
@@ -793,8 +870,6 @@ def test_source_denominator_reconciliation(grammar_data):
 
 def test_clean_sentence_for_query_preserves_quoted_punctuation():
     """Verify clean_sentence_for_query preserves ?, !, and … inside fully quoted utterances."""
-    from scripts.projects.open_model_data.grammar_linguistic_catalog import clean_sentence_for_query
-
     assert clean_sentence_for_query("«Чому?»") == "Чому?"
     assert clean_sentence_for_query("«Стій!»") == "Стій!"
     assert clean_sentence_for_query("«Що це таке?!»") == "Що це таке?!"

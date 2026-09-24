@@ -282,16 +282,16 @@ def generate_signoff_and_receipt(
             c_hash = item.get("content_hash")
 
             f_rec_id = f_entry.get("record_id")
-            if f_rec_id and rec_id and f_rec_id != rec_id:
+            if not f_rec_id or not rec_id or f_rec_id != rec_id:
                 raise ValueError(
-                    f"Provenance violation: findings entry for sample index {s_idx} record_id {f_rec_id!r} "
-                    f"does not match shard record_id {rec_id!r}"
+                    f"Provenance violation: findings entry for sample index {s_idx} missing or mismatched record_id "
+                    f"(expected {rec_id!r}, got {f_rec_id!r})"
                 )
             f_c_hash = f_entry.get("content_hash")
-            if f_c_hash and c_hash and f_c_hash != c_hash:
+            if not f_c_hash or not c_hash or f_c_hash != c_hash:
                 raise ValueError(
-                    f"Provenance violation: findings entry for sample index {s_idx} content_hash {f_c_hash!r} "
-                    f"does not match sample content_hash {c_hash!r}"
+                    f"Provenance violation: findings entry for sample index {s_idx} missing or mismatched content_hash "
+                    f"(expected {c_hash!r}, got {f_c_hash!r})"
                 )
 
             r_verdict = f_entry.get("verdict")
@@ -314,6 +314,10 @@ def generate_signoff_and_receipt(
 
             # Semantic validation: ensure assessment accurately distinguishes corrections from clean controls
             lowered_assessment = assessment.lower()
+            source_meta = rec.get("source_metadata", {})
+            err_span = source_meta.get("error_span", "")
+            repl_span = source_meta.get("replacement_span", "")
+
             if item["is_erroneous"]:
                 if any(
                     phrase in lowered_assessment
@@ -329,10 +333,34 @@ def generate_signoff_and_receipt(
                     raise ValueError(
                         f"Provenance violation: correction item {s_idx} is misdescribed as a clean control in assessment: {assessment!r}"
                     )
+                # Enforce that correction assessment explicitly names its edit spans
+                if err_span and repl_span:
+                    if (
+                        err_span.lower() not in lowered_assessment
+                        or repl_span.lower() not in lowered_assessment
+                    ):
+                        raise ValueError(
+                            f"Provenance violation: correction item {s_idx} assessment does not name edit pair "
+                            f"«{err_span}» → «{repl_span}»: {assessment!r}"
+                        )
+                elif err_span and err_span.lower() not in lowered_assessment:
+                    raise ValueError(
+                        f"Provenance violation: correction item {s_idx} assessment does not name error span "
+                        f"«{err_span}»: {assessment!r}"
+                    )
             else:
                 if "→" in assessment or "->" in assessment:
                     raise ValueError(
                         f"Provenance violation: clean control item {s_idx} is misdescribed as an edit in assessment: {assessment!r}"
+                    )
+                # Ensure control assessment provides sentence-specific evidence
+                orig_tokens = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", item["original_text"].lower())
+                prefix_check = " ".join(orig_tokens[:min(4, len(orig_tokens))])
+                ass_tokens = " ".join(re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", lowered_assessment))
+                if prefix_check and prefix_check not in ass_tokens:
+                    raise ValueError(
+                        f"Provenance violation: clean control item {s_idx} assessment lacks sentence-specific citation "
+                        f"(expected to cite text containing {prefix_check!r}): {assessment!r}"
                     )
 
             crit = f_entry.get("criteria")
@@ -346,6 +374,18 @@ def generate_signoff_and_receipt(
                     raise ValueError(
                         f"Provenance violation: criteria {k} in item {s_idx} must be a boolean, got {crit[k]!r}"
                     )
+
+        # Ensure all control assessments provide distinct sentence-specific evidence
+        control_assessments = [
+            findings[s["sample_index"]].get("reviewer_assessment", "")
+            for s in samples
+            if not s["is_erroneous"]
+        ]
+        if len(set(control_assessments)) != len(control_assessments):
+            raise ValueError(
+                f"Provenance violation: control assessments must provide unique sentence-specific evidence for each item "
+                f"({len(set(control_assessments))} unique out of {len(control_assessments)} controls)"
+            )
 
     # Verify held-out firewall for all 300 sampled items
     _test_doc_ids, test_sources, test_targets = load_held_out_firewall(
