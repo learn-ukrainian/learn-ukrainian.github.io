@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime.adapters.agy import AgyAdapter, _agy_version
 from scripts.agent_runtime.adapters.glm import _CI_ENV_VARS
 from scripts.agent_runtime.registry import AGENTS
 
@@ -133,14 +134,24 @@ _CLI_STUBS = (
 )
 
 
-def _install_cli_stubs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+# Stub bodies for CLIs whose adapter probes the binary before building a plan.
+# agy must report a version at or above the background-wait floor (#8502).
+_CLI_STUB_BODIES: dict[str, str] = {
+    "agy": 'if [ "$1" = "--version" ]; then echo "agy 1.2.9"; fi\nexit 0\n',
+}
+
+
+def _install_cli_stubs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     bin_dir = tmp_path / "cli-stubs"
     bin_dir.mkdir()
     for name in _CLI_STUBS:
         stub = bin_dir / name
-        stub.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        stub.write_text("#!/bin/sh\n" + _CLI_STUB_BODIES.get(name, "exit 0\n"), encoding="utf-8")
         stub.chmod(0o755)
     monkeypatch.setenv("PATH", str(bin_dir))
+    # The probe is cached per path, and pytest reuses tmp dir names.
+    _agy_version.cache_clear()
+    return bin_dir
 
 
 def _tool_config_from_parsed_keys(keys: frozenset[str], tmp_path: Path, lease: Path) -> dict[str, object]:
@@ -212,3 +223,26 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
     assert "read_only_tmp_root" not in joined
     assert "review_id" not in joined
     assert "attempt_id" not in joined
+
+
+@pytest.mark.parametrize(
+    ("stub_body", "code"),
+    [("exit 0\n", "agy_version_unverified"), ('echo "agy 1.2.8"\n', "agy_version_unsupported")],
+)
+def test_agy_stub_without_supported_version_is_still_refused(stub_body, code, tmp_path, monkeypatch) -> None:
+    """The version-reporting stub above must not mask the agy >= 1.2.9 gate."""
+    bin_dir = _install_cli_stubs(tmp_path, monkeypatch)
+    (bin_dir / "agy").write_text("#!/bin/sh\n" + stub_body, encoding="utf-8")
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+
+    with pytest.raises(ValueError, match=code):
+        AgyAdapter().build_invocation(
+            prompt="read-only contract",
+            mode="read-only",
+            cwd=checkout,
+            model=None,
+            task_id="tool-config-contract",
+            session_id=None,
+            tool_config={},
+        )
