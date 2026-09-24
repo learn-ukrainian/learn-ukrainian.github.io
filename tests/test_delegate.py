@@ -4344,6 +4344,16 @@ def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
     assert (worktree / "half_done.py").exists()
 
 
+def test_agy_interim_language_warning_is_not_an_incomplete_run():
+    """#8502 r9: a structurally complete run whose reply reads as pending only warns."""
+    from agent_runtime.adapters.agy import AGY_INTERIM_LANGUAGE_WARNING
+
+    excerpt = f"{AGY_INTERIM_LANGUAGE_WARNING}\npending-work wording: 'awaiting'"
+
+    assert delegate._worker_run_incomplete(excerpt) is False
+    assert delegate._worker_run_incomplete(f"agy_background_task_unconfirmed\n{excerpt}") is True
+
+
 @pytest.mark.parametrize(
     ("path", "expected"),
     [

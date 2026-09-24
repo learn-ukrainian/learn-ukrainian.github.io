@@ -1096,11 +1096,12 @@ def test_resumed_retry_never_borrows_earlier_finish_and_reply(
     assert result.stderr_excerpt.splitlines()[0] == reason
 
 
-def test_resumed_retry_rejects_waiting_reply_about_earlier_task(
+def test_resumed_retry_waiting_on_earlier_task_passes_with_a_warning(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    # The retry's only reply is about the EARLIER run's task-2, which this
-    # invocation never saw finish.
+    # The retry's only reply is about the EARLIER run's task-2. This slice
+    # started nothing, so nothing of this run is open: the wording is only a
+    # warning (#8502 r9).
     user_input = _resumed_run_lines()[0]
     reply = json.dumps(
         {"step_index": 7, "type": "PLANNER_RESPONSE", "content": "task-2 is still running; I am waiting on it."}
@@ -1110,8 +1111,7 @@ def test_resumed_retry_rejects_waiting_reply_about_earlier_task(
         tmp_path, monkeypatch, appended=[user_input, reply], stdout="task-2 is still running; I am waiting on it."
     )
 
-    assert result.ok is False
-    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+    _assert_passed_with_language_warning(result, "task-2 is still running; I am waiting on it.")
 
 
 def test_resumed_run_that_completes_is_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1208,9 +1208,9 @@ def test_fresh_completed_run_is_accepted(tmp_path: Path) -> None:
     assert plan.metadata == {}  # a fresh conversation records no baseline
 
 
-# Ambiguous evidence is unconfirmed (#8502 r7): the check keys on what a reply
-# SAYS (pending work anywhere in it) and on the slice being fully readable, not
-# on one interim phrasing at a time.
+# Ambiguous evidence is unconfirmed (#8502 r7): a slice line that does not
+# parse fails the run. What a reply SAYS never decides it (#8502 r9): pending-
+# work wording in a structurally complete run passes with a warning.
 def _finished_run_with_final_reply(content: str) -> list[str]:
     """The finished probe (task-2 started and finished) ending on ``content``."""
     lines = _fixture_lines("background_task_finished_transcript.jsonl")
@@ -1224,19 +1224,23 @@ def _parse_fresh(tmp_path: Path, lines: list[str], stdout: str) -> object:
     return AgyAdapter().parse_response(stdout=stdout, stderr="", returncode=0, output_file=None, plan=plan)
 
 
-def test_waiting_reply_with_no_captured_task_start_is_unconfirmed(tmp_path: Path) -> None:
-    # Reviewer reproduction (#8502 r7): one prompt, no readable task-start
-    # event, empty stderr, and a final reply that is a waiting status in its
-    # middle, not its start. It parsed as ok=True.
+def _assert_passed_with_language_warning(result: object, response: str) -> None:
+    assert result.ok is True
+    assert result.response == response
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_INTERIM_LANGUAGE_WARNING
+    assert agy_module.AGY_INTERIM_LANGUAGE_WARNING not in agy_module.AGY_INCOMPLETE_RUN_REASONS
+
+
+def test_waiting_reply_with_no_captured_task_start_passes_with_a_warning(tmp_path: Path) -> None:
+    # Reviewer reproduction (#8502 r7): one prompt, no task-start event, empty
+    # stderr, and a reply that says it is waiting on background work. On
+    # supported builds background work always leaves a start event, so none
+    # ran: the run passes and the wording is recorded (#8502 r9).
     reply = "I have launched the test command in the background and am waiting for it to finish"
     prompt = _fixture_lines("background_task_finished_transcript.jsonl")[0]
     lines = [prompt, json.dumps({"step_index": 1, "type": "PLANNER_RESPONSE", "content": reply})]
 
-    result = _parse_fresh(tmp_path, lines, reply)
-
-    assert result.ok is False
-    assert result.response == ""
-    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+    _assert_passed_with_language_warning(_parse_fresh(tmp_path, lines, reply), reply)
 
 
 @pytest.mark.parametrize(
@@ -1286,14 +1290,36 @@ def test_waiting_reply_with_no_captured_task_start_is_unconfirmed(tmp_path: Path
         "pending",
     ],
 )
-def test_final_reply_expressing_pending_work_is_unconfirmed(tmp_path: Path, reply: str) -> None:
-    # Every started task finished and the reply follows the finish, yet the
-    # reply itself says work is still pending: it is the last word, so nothing
-    # later settles it.
+def test_final_reply_expressing_pending_work_passes_with_a_warning(tmp_path: Path, reply: str) -> None:
+    # Every started task finished before the reply, so the run is complete;
+    # the reply's pending-work wording is recorded, never a failure. As a
+    # rejection rule it failed ~13% of real complete runs, mostly finished
+    # reviews ("VERDICT: APPROVE" ... "PR awaiting CI") (#8502 r9).
     result = _parse_fresh(tmp_path, _finished_run_with_final_reply(reply), reply)
 
-    assert result.ok is False
-    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+    _assert_passed_with_language_warning(result, reply)
+    assert result.stderr_excerpt.splitlines()[1].startswith("pending-work wording: ")
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "I started pytest asynchronously; awaiting results",
+        "PROBE_DONE_7731 printed, but the suite is still running.",
+        "VERDICT: APPROVE. PR awaiting CI.",
+    ],
+)
+def test_pending_wording_in_a_structurally_incomplete_run_still_fails(tmp_path: Path, reply: str) -> None:
+    # The same wording where task-2's finish follows the reply: the structural
+    # rule fails the run, and no warning replaces the reason code.
+    lines = _finished_run_with_final_reply(reply)
+    finish = next(line for line in lines if "finished with result" in line)
+    lines = [line for line in lines if line != finish] + [finish]
+
+    result = _parse_fresh(tmp_path, lines, reply)
+
+    _assert_unconfirmed(result)
+    assert agy_module.AGY_INTERIM_LANGUAGE_WARNING not in result.stderr_excerpt
 
 
 @pytest.mark.parametrize(
@@ -1309,11 +1335,13 @@ def test_finished_run_whose_summary_mentions_background_work_is_accepted(tmp_pat
 
     assert result.ok is True
     assert result.response == reply
+    assert result.stderr_excerpt is None  # no warning either
 
 
-def test_background_language_with_no_captured_task_start_is_unconfirmed(tmp_path: Path) -> None:
-    # The same completed-sounding summary, but the slice holds no task start:
-    # the task events were not captured, so the claim has no evidence.
+def test_background_language_with_no_captured_task_start_passes_with_a_warning(tmp_path: Path) -> None:
+    # The same completed-sounding summary, but the slice holds no task start.
+    # No start event means no background work on supported builds, so the
+    # claim is only odd wording (#8502 r9).
     reply = "The background job finished: PROBE_DONE_7731. All 30 tests passed."
     lines = [
         line
@@ -1323,8 +1351,8 @@ def test_background_language_with_no_captured_task_start_is_unconfirmed(tmp_path
 
     result = _parse_fresh(tmp_path, lines, reply)
 
-    assert result.ok is False
-    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+    _assert_passed_with_language_warning(result, reply)
+    assert result.stderr_excerpt.splitlines()[1].startswith("background wording with no task started: ")
 
 
 @pytest.mark.parametrize(
@@ -1372,8 +1400,8 @@ def test_unreadable_line_before_a_resumed_runs_baseline_is_not_its_evidence(
 # The structural guarantee (#8502 r8): the slice is read in ONE order, file
 # position. Every piece of work started before the final reply needs its own
 # finish event positioned before that reply, and the reply must be the last
-# model event. ``step_index`` never orders anything. The vocabulary above is
-# only a backstop on top of this.
+# model event. ``step_index`` never orders anything. This is the whole gate;
+# the vocabulary above only adds a warning (#8502 r9).
 _TASK_2 = f"{_FINISHED_CONVERSATION_ID}/task-2"
 _TASK_3 = f"{_FINISHED_CONVERSATION_ID}/task-3"
 
@@ -1442,13 +1470,40 @@ def test_finish_without_step_index_after_the_final_reply_is_unconfirmed(tmp_path
     _assert_unconfirmed(_judge(tmp_path, lines))
 
 
-def test_async_reply_with_no_captured_task_start_is_unconfirmed(tmp_path: Path) -> None:
+def test_async_reply_with_no_captured_task_start_passes_with_a_warning(tmp_path: Path) -> None:
     # Reviewer probe (#8502 r8, finding 2): no task start, empty stderr, and a
-    # reply that says the work runs asynchronously. Structurally nothing is
-    # open, so only the best-effort backstop can catch it — and does.
+    # reply that says the work runs asynchronously. On agy >= 1.2.9, 748 of
+    # 750 RUNNING results carried a start line and the other 2 were followed
+    # by one, so no start event means no background work: the run passes and
+    # the wording is recorded as a warning (#8502 r9).
     reply = "I started pytest asynchronously; awaiting results"
 
-    _assert_unconfirmed(_judge(tmp_path, [_prompt(), _reply(reply, step_index=1)], reply))
+    _assert_passed_with_language_warning(_judge(tmp_path, [_prompt(), _reply(reply, step_index=1)], reply), reply)
+
+
+@pytest.mark.parametrize(
+    "final",
+    [
+        _event("PLANNER_RESPONSE", "", source="MODEL"),
+        _event("PLANNER_RESPONSE", "Running pytest.", source="MODEL", tool_calls=[{"name": "run_command"}]),
+    ],
+    ids=["empty", "tool-call"],
+)
+def test_a_last_planner_turn_that_is_not_a_reply_is_unconfirmed(tmp_path: Path, final: str) -> None:
+    _assert_unconfirmed(_judge(tmp_path, [_prompt(), final]))
+
+
+def test_structured_output_run_keeps_its_result_with_a_warning(tmp_path: Path) -> None:
+    reply = "VERDICT: APPROVE. PR awaiting CI."
+    plan = _background_plan(tmp_path, _FINISHED_CONVERSATION_ID, [_prompt(), _reply(reply)])
+    plan.metadata["output_schema"] = {
+        "type": "object", "properties": {"verdict": {"type": "string"}}, "required": ["verdict"]
+    }
+    envelope = '{"status": "SUCCESS", "structured_output": {"verdict": "APPROVE"}}'
+
+    result = AgyAdapter().parse_response(stdout=envelope, stderr="", returncode=0, output_file=None, plan=plan)
+
+    _assert_passed_with_language_warning(result, '{"verdict": "APPROVE"}')
 
 
 def test_finish_after_the_final_reply_is_unconfirmed_whatever_its_step_index(tmp_path: Path) -> None:
