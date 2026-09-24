@@ -31,6 +31,7 @@ def guarded_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.setattr(worktree_guard, "_CREATED_WORKTREE_ENTRIES", set())
     monkeypatch.setattr(worktree_guard, "_CREATED_WORKTREE_ATTRIBUTION", {})
     monkeypatch.setattr(worktree_guard, "_POPEN_WORKTREE_CANDIDATES", {})
+    monkeypatch.setattr(worktree_guard, "_PATH_EXISTED_BEFORE", {})
     monkeypatch.setattr(worktree_guard, "_GUARD_CLASSIFY_FAILURES", [])
     return Path(real)
 
@@ -209,6 +210,65 @@ def test_failed_git_worktree_add_is_reported_when_the_directory_remains(
     assert key in message
 
 
+def test_later_worktree_add_is_reported_after_an_earlier_existing_destination(
+    tmp_path: Path, guarded_root: Path
+) -> None:
+    """An earlier add against a path that already exists must not hide a later create.
+
+    Sol r4: ``setdefault`` kept ``existed_before=True`` from attempt 1, so
+    teardown stayed silent after the path was removed and attempt 2 created it.
+    """
+    dest = _scaffold(guarded_root, "again")
+    worktree_guard._ORIGINAL_OS_MKDIR(dest)
+    git = _fake_git(tmp_path / "bin", status=0)
+    argv = [str(git), "worktree", "add", str(dest)]
+    subprocess.run(argv, cwd=tmp_path, env=_git_env(dest), timeout=30, check=True)
+    key = worktree_guard._worktree_entry_key(dest)
+    assert key is not None
+    assert worktree_guard._POPEN_WORKTREE_CANDIDATES[key][0] is True
+    dest.rmdir()
+    subprocess.run(argv, cwd=tmp_path, env=_git_env(dest), timeout=30, check=True)
+    assert dest.is_dir()
+    assert worktree_guard._POPEN_WORKTREE_CANDIDATES[key][0] is False
+    message = worktree_guard._worktree_guard_teardown_message()
+    assert message is not None
+    assert key in message
+
+
+def test_later_mkdir_is_recorded_after_an_earlier_existing_path(guarded_root: Path) -> None:
+    """mkdir/symlink observations use the same absent-before merge as Popen."""
+    dest = _scaffold(guarded_root, "mkdir-again")
+    worktree_guard._ORIGINAL_OS_MKDIR(dest)
+    os.makedirs(dest, exist_ok=True)
+    key = worktree_guard._worktree_entry_key(dest)
+    assert key is not None
+    assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
+    assert worktree_guard._PATH_EXISTED_BEFORE[key] is True
+    os.rmdir(dest)
+    os.mkdir(dest)
+    assert worktree_guard._PATH_EXISTED_BEFORE[key] is False
+    assert key in worktree_guard._CREATED_WORKTREE_ENTRIES
+
+
+def test_later_symlink_is_recorded_after_an_earlier_existing_path(
+    tmp_path: Path, guarded_root: Path
+) -> None:
+    dest = _scaffold(guarded_root, "link-again")
+    target = tmp_path / "target"
+    target.mkdir()
+    worktree_guard._ORIGINAL_OS_SYMLINK(target, dest)
+    with pytest.raises(FileExistsError):
+        os.symlink(target, dest)
+    key = worktree_guard._worktree_entry_key(dest)
+    assert key is not None
+    assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
+    assert worktree_guard._PATH_EXISTED_BEFORE[key] is True
+    os.unlink(dest)
+    os.symlink(target, dest)
+    assert worktree_guard._PATH_EXISTED_BEFORE[key] is False
+    assert key in worktree_guard._CREATED_WORKTREE_ENTRIES
+
+
 def test_symlink_records_the_link_path_not_the_target(tmp_path: Path, guarded_root: Path) -> None:
     target = tmp_path / "target-dir"
     target.mkdir()
@@ -230,6 +290,7 @@ def test_makedirs_records_a_new_entry_and_skips_exist_ok(guarded_root: Path) -> 
     existing = _scaffold(guarded_root, "kept")
     worktree_guard._ORIGINAL_OS_MKDIR(existing)
     worktree_guard._CREATED_WORKTREE_ENTRIES.clear()
+    worktree_guard._PATH_EXISTED_BEFORE.clear()
     os.makedirs(existing, exist_ok=True)
     os.makedirs(created, exist_ok=True)
     assert not worktree_guard._CREATED_WORKTREE_ENTRIES
