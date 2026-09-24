@@ -959,26 +959,178 @@ def test_restore_keeps_a_hot_record_a_writer_created_after_the_check(tasks_dir, 
     assert not (tasks_dir / "revived.result").exists()
 
 
-@pytest.mark.parametrize("companion", ["revived.result", "revived.snapshots/read_only_checkout_post.json"])
-def test_restore_keeps_a_companion_a_writer_created_after_the_check(tasks_dir, monkeypatch, companion):
-    _terminal(tasks_dir, "revived")
-    (tasks_dir / "revived.result").write_text("old reply\n")
-    (tasks_dir / "revived.snapshots").mkdir()
-    for phase in ("pre", "post"):
-        (tasks_dir / "revived.snapshots" / f"read_only_checkout_{phase}.json").write_text(f'{{"old": "{phase}"}}')
+def _rename_after_writer(monkeypatch, target: Path, write: Callable[[], None]) -> list[bool]:
+    """Make a writer act on ``target`` just before the tool renames a directory onto it."""
+    real_rename = os.rename
+    raced: list[bool] = []
+
+    def racing_rename(src, dst):
+        if Path(dst) == target and not raced:
+            raced.append(True)
+            write()
+        return real_rename(src, dst)
+
+    monkeypatch.setattr(str_mod.os, "rename", racing_rename)
+    return raced
+
+
+SNAPSHOT_FILES = {"read_only_checkout_pre.json": '{"old": "pre"}', "read_only_checkout_post.json": '{"old": "post"}'}
+
+
+def _with_snapshots(tasks_dir: Path, name: str) -> Path:
+    _terminal(tasks_dir, name)
+    (tasks_dir / f"{name}.result").write_text("old reply\n")
+    snapshots = tasks_dir / f"{name}.snapshots"
+    snapshots.mkdir()
+    for file_name, text in SNAPSHOT_FILES.items():
+        (snapshots / file_name).write_text(text)
+    return snapshots
+
+
+def _contents(directory: Path) -> dict[str, str]:
+    return {path.name: path.read_text() for path in directory.iterdir()}
+
+
+def _writer_child(directory: Path) -> Callable[[], None]:
+    """A writer that creates ``directory`` holding one child named like an original snapshot."""
+
+    def write() -> None:
+        directory.mkdir(parents=True, exist_ok=True)
+        (directory / "read_only_checkout_post.json").write_text("writer\n")
+
+    return write
+
+
+def test_restore_keeps_a_result_a_writer_created_after_the_check(tasks_dir, monkeypatch):
+    _with_snapshots(tasks_dir, "revived")
     str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
-    target = tasks_dir / companion
+    target = tasks_dir / "revived.result"
     raced = _link_after_writer(monkeypatch, target, lambda: target.write_text("writer\n"))
 
     report = str_mod.restore_archived(tasks_dir, ["revived"], apply=True)
 
     row = report["records"][0]
     assert raced and row["action"] == "restored"
-    assert row["kept_in_archive"] == [companion]
+    assert row["kept_in_archive"] == [str(tasks_dir / "archive" / "revived.result")]
     assert target.read_text() == "writer\n"
-    assert (tasks_dir / "archive" / companion).is_file()
+    assert (tasks_dir / "archive" / "revived.result").read_text() == "old reply\n"
     assert json.loads((tasks_dir / "revived.json").read_text())["status"] == "done"
-    assert (tasks_dir / "revived.snapshots" / "read_only_checkout_pre.json").read_text() == '{"old": "pre"}'
+    assert _contents(tasks_dir / "revived.snapshots") == SNAPSHOT_FILES
+
+
+def test_restore_keeps_a_snapshot_directory_whole_when_a_writer_fills_its_hot_name(tasks_dir, monkeypatch):
+    """A writer's child in the hot snapshot directory keeps the archived one whole, never split."""
+    _with_snapshots(tasks_dir, "revived")
+    str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    hot = tasks_dir / "revived.snapshots"
+    raced = _rename_after_writer(monkeypatch, hot, _writer_child(hot))
+
+    report = str_mod.restore_archived(tasks_dir, ["revived"], apply=True)
+
+    row = report["records"][0]
+    archived = tasks_dir / "archive" / "revived.snapshots"
+    assert raced and row["action"] == "restored"
+    assert row["kept_in_archive"] == [str(archived)]
+    assert _contents(archived) == SNAPSHOT_FILES
+    assert _contents(hot) == {"read_only_checkout_post.json": "writer\n"}
+    assert (tasks_dir / "revived.result").read_text() == "old reply\n"
+
+
+def test_restore_moves_a_snapshot_directory_onto_an_empty_one(tasks_dir, monkeypatch):
+    _with_snapshots(tasks_dir, "revived")
+    str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+    hot = tasks_dir / "revived.snapshots"
+    raced = _rename_after_writer(monkeypatch, hot, hot.mkdir)
+
+    report = str_mod.restore_archived(tasks_dir, ["revived"], apply=True)
+
+    row = report["records"][0]
+    assert raced and row["action"] == "restored" and "kept_in_archive" not in row
+    assert _contents(hot) == SNAPSHOT_FILES
+    assert not (tasks_dir / "archive" / "revived.snapshots").exists()
+
+
+def test_archive_moves_a_snapshot_directory_onto_an_empty_one(tasks_dir):
+    _with_snapshots(tasks_dir, "empty-dest")
+    (tasks_dir / "archive" / "empty-dest.snapshots").mkdir(parents=True)
+
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+
+    row = report["records"][0]
+    assert row["action"] == "archived"
+    assert row["moved"] == ["empty-dest.json", "empty-dest.result", "empty-dest.snapshots"]
+    assert _contents(tasks_dir / "archive" / "empty-dest.snapshots") == SNAPSHOT_FILES
+    assert sorted(path.name for path in tasks_dir.iterdir()) == ["archive"]
+
+
+def test_archive_moves_a_snapshot_directory_whole_past_a_writer_filled_name(tasks_dir, monkeypatch):
+    monkeypatch.setattr(delegate, "_archive_stamp", lambda: STAMP)
+    _with_snapshots(tasks_dir, "clash")
+    foreign = tasks_dir / "archive" / "clash.snapshots"
+    raced = _rename_after_writer(monkeypatch, foreign, _writer_child(foreign))
+
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+
+    row = report["records"][0]
+    stamped = tasks_dir / "archive" / f"clash.{STAMP}.archived.snapshots"
+    assert raced and row["action"] == "archived"
+    assert row["moved"] == ["clash.json", "clash.result", stamped.name]
+    assert _contents(stamped) == SNAPSHOT_FILES
+    assert _contents(foreign) == {"read_only_checkout_post.json": "writer\n"}
+    assert sorted(path.name for path in tasks_dir.iterdir()) == ["archive"]
+    assert _no_staging_left(tasks_dir)
+
+
+def test_archive_never_splits_a_snapshot_directory(tasks_dir, monkeypatch):
+    """Sol r4 probe: a writer fills the snapshot directory's archive name mid-move, its stamped names are taken.
+
+    Child-by-child moves left one original snapshot in the archive and returned
+    the other hot. The directory now goes back whole to its hot name.
+    """
+    monkeypatch.setattr(delegate, "_archive_stamp", lambda: STAMP)
+    hot = _with_snapshots(tasks_dir, "split")
+    archive = tasks_dir / "archive"
+    taken = [archive / f"split.{STAMP}.archived.snapshots", archive / f"split.{STAMP}.{os.getpid()}.archived.snapshots"]
+    for directory in taken:
+        _writer_child(directory)()
+    foreign = archive / "split.snapshots"
+    raced = _rename_after_writer(monkeypatch, foreign, _writer_child(foreign))
+
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+
+    row = report["records"][0]
+    assert raced and row["action"] == "error" and row["moved"] == ["split.json", "split.result"]
+    assert "split.snapshots not archived (archive already holds split.snapshots and its stamped name)" in row["error"]
+    assert row["error"].endswith(f"left at {hot}")
+    assert _contents(hot) == SNAPSHOT_FILES
+    for directory in (foreign, *taken):
+        assert _contents(directory) == {"read_only_checkout_post.json": "writer\n"}
+    assert json.loads((archive / "split.json").read_text())["status"] == "done"
+    assert _no_staging_left(tasks_dir)
+
+
+def test_archive_parks_a_snapshot_directory_whole_when_its_hot_name_is_retaken(tasks_dir, monkeypatch):
+    monkeypatch.setattr(delegate, "_archive_stamp", lambda: STAMP)
+    hot = _with_snapshots(tasks_dir, "parked")
+    archive = tasks_dir / "archive"
+    for name in (
+        "parked.snapshots",
+        f"parked.{STAMP}.archived.snapshots",
+        f"parked.{STAMP}.{os.getpid()}.archived.snapshots",
+    ):
+        _writer_child(archive / name)()
+    # Every archive name is taken, so the directory heads home; a writer fills that name first.
+    raced = _rename_after_writer(monkeypatch, hot, _writer_child(hot))
+
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+
+    row = report["records"][0]
+    assert raced and row["action"] == "error"
+    parked = Path(row["error"].rsplit("left at ", 1)[1])
+    assert parked.parent == archive and parked.name.startswith("parked.snapshots.unplaced-")
+    assert _contents(parked) == SNAPSHOT_FILES
+    assert _contents(hot) == {"read_only_checkout_post.json": "writer\n"}
+    assert _no_staging_left(tasks_dir)
 
 
 def test_archive_never_replaces_a_destination_created_during_the_move(tasks_dir, monkeypatch):

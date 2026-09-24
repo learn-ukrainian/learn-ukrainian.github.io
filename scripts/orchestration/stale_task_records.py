@@ -66,7 +66,9 @@ took is the one it checked, and puts it back if a writer replaced it in
 between. No move ever replaces a file: archive, put-back and ``restore`` place
 each file with ``os.link`` (which fails if the name is taken) before unlinking
 the source, so a writer that created the destination first keeps its file. A
-staged file that cannot be archived goes back to its hot name, or, if a writer
+snapshot directory moves whole with one ``os.rename``, which fails if the
+destination is a non-empty directory; it is never split between hot and
+archive. A staged file that cannot be archived goes back to its hot name, or, if a writer
 took that name, to a visible ``<name>.unplaced-<hex>`` in the archive that the
 report names; no failure leaves a file at its hidden staging name.
 """
@@ -75,6 +77,7 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
+import errno
 import json
 import os
 import re
@@ -1039,31 +1042,35 @@ class _RecordReplaced(Exception):
     """A writer replaced the record between the final check and the move."""
 
 
-def _move_no_replace(src: Path, dst: Path) -> list[Path]:
+# ``rename(2)`` of a directory fails when the destination is a non-empty
+# directory (ENOTEMPTY, or EEXIST, which POSIX also allows) or is not a
+# directory (ENOTDIR), and replaces only an empty directory. POSIX rename(),
+# Linux rename(2) and macOS rename(2) (ERRORS: ENOTEMPTY, ENOTDIR) all specify
+# this, so a directory moves in one atomic step that neither destroys data
+# nor splits the directory.
+_DIR_TAKEN_ERRNOS = frozenset({errno.ENOTEMPTY, errno.EEXIST, errno.ENOTDIR})
+
+
+def _move_no_replace(src: Path, dst: Path) -> None:
     """Move ``src`` to ``dst`` without ever replacing what is at ``dst``.
 
     ``src`` must be a path no writer replaces, since it is unlinked after the
     copy lands: a staging name, or an archived file. A file is hard-linked to
     ``dst`` (``os.link`` raises :class:`FileExistsError`, atomically, if the
-    name is taken) and then unlinked. A directory claims ``dst`` with
-    ``os.mkdir`` (same guarantee) and moves its entries the same way; an entry
-    whose name a writer already took inside it stays at ``src``. Returns the
-    paths left at ``src``.
+    name is taken) and then unlinked. A directory moves whole with one
+    ``os.rename`` (see ``_DIR_TAKEN_ERRNOS``); if ``dst`` holds anything it
+    raises :class:`FileExistsError` and ``src`` stays whole where it was.
     """
     if src.is_dir() and not src.is_symlink():
-        os.mkdir(dst)
-        kept: list[Path] = []
-        for child in sorted(src.iterdir()):
-            try:
-                kept.extend(_move_no_replace(child, dst / child.name))
-            except FileExistsError:
-                kept.append(child)
-        if not kept:
-            os.rmdir(src)
-        return kept
+        try:
+            os.rename(src, dst)
+        except OSError as exc:
+            if exc.errno in _DIR_TAKEN_ERRNOS:
+                raise FileExistsError(exc.errno, f"{dst} already exists", str(dst)) from exc
+            raise
+        return
     os.link(src, dst, follow_symlinks=False)
     os.unlink(src)
-    return []
 
 
 def _stage(path: Path, staging_dir: Path) -> Path:
@@ -1078,11 +1085,9 @@ def _place(staged: Path, dest_dir: Path, name: str, stamp: str) -> Path:
     first = dest_dir / name
     for dest in (first, delegate._archived_artifact_path(first, stamp)):
         try:
-            kept = _move_no_replace(staged, dest)
+            _move_no_replace(staged, dest)
         except FileExistsError:
             continue
-        if kept:
-            raise OSError(f"{dest} was written during the move; {len(kept)} entries not moved")
         return dest
     raise FileExistsError(f"archive already holds {name} and its stamped name")
 
@@ -1100,15 +1105,16 @@ def _unstage(staged: Path, home: Path, dest_dir: Path) -> Path:
 
     ``home`` is the name it was taken from. If a writer has taken that name
     since, the file goes to ``<dest_dir>/<name>.unplaced-<hex>``, a name no
-    record reader globs for. Returns where the file (or what a partly moved
-    directory still holds) now is: the staging name only if both moves failed.
+    record reader globs for. A directory moves whole, so it is never split
+    between the two. Returns where the file now is: the staging name only if
+    both moves failed.
     """
     for target in (home, dest_dir / f"{home.name}.unplaced-{uuid.uuid4().hex[:12]}"):
         try:
-            if not _move_no_replace(staged, target):
-                return target
+            _move_no_replace(staged, target)
         except OSError:
             continue
+        return target
     return staged
 
 
@@ -1295,7 +1301,7 @@ def _restore_group(group: list[Path], tasks_dir: Path, row: dict[str, Any]) -> N
 
     The clash check before this is advisory: a writer can create the hot record
     after it. Every move is :func:`_move_no_replace`, so that writer's file is
-    kept and the archived copy stays where it is.
+    kept and the archived copy (a snapshot directory whole) stays where it is.
     """
     record_path, *sidecars = group
     try:
@@ -1311,12 +1317,9 @@ def _restore_group(group: list[Path], tasks_dir: Path, row: dict[str, Any]) -> N
     try:
         for sidecar in sidecars:
             try:
-                kept.extend(
-                    str(path.relative_to(record_path.parent))
-                    for path in _move_no_replace(sidecar, tasks_dir / sidecar.name)
-                )
+                _move_no_replace(sidecar, tasks_dir / sidecar.name)
             except FileExistsError:
-                kept.append(sidecar.name)
+                kept.append(str(sidecar))
     except OSError as exc:
         row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
         return
