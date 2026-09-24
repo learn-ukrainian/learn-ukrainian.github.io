@@ -7012,6 +7012,27 @@ def test_list_flips_dead_running_to_crashed(tmp_tasks_dir, capsys):
     assert tasks[0]["status"] == "crashed"
 
 
+def test_zombie_probe_preserves_done_written_after_initial_read(tmp_tasks_dir):
+    path = delegate._state_path("race")
+    running = {"task_id": "race", "status": "running", "pid": 999_999_998, "run_nonce": "same-run"}
+    delegate._write_state_atomic(path, running)
+    observed = delegate._read_state(path)
+    done = {
+        **running,
+        "status": "done",
+        "finished_at": "2026-09-24T00:00:00+00:00",
+        "final_branch_head_commit": "completed-head",
+        "auto_finalize": {"status": "pushed"},
+        "rescue_status": "none",
+    }
+    delegate._write_state_atomic(path, done)
+
+    delegate._mark_crashed_task(path, observed, source="list")
+
+    assert observed == done
+    assert delegate._read_state(path) == done
+
+
 # ---------------------------------------------------------------------------
 # #1476 — Fix 1: fetch-before-branch (stale-base footgun)
 # ---------------------------------------------------------------------------
@@ -9210,6 +9231,41 @@ def test_rescue_all_stale_age_and_dry_run(tmp_path, monkeypatch, tmp_tasks_dir, 
     assert delegate.cmd_rescue(args) == 0
     assert json.loads(capsys.readouterr().out)["tasks"] == []
     assert worktree.exists()
+
+
+def test_settle_zombie_with_unpushed_commit_is_rescue_candidate(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
+    from scripts.orchestration import dispatch_settle as ds
+
+    primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    state = delegate._read_state(state_path)
+    state.update({"status": "running", "pid": 999_999_998, "finished_at": None})
+    delegate._write_state_atomic(state_path, state)
+    monkeypatch.setattr(ds, "default_ledger_path", lambda: tmp_path / "ownership.sqlite3")
+    monkeypatch.setattr(ds, "_find_pr", lambda *_args: (None, None))
+
+    result = ds.settle_task("rescue-test", repo_root=primary, task_dir=tmp_tasks_dir, release_stale=False)
+
+    settled = delegate._read_state(state_path)
+    head = delegate._resolve_sha(worktree)
+    assert result.status == "failed"
+    assert settled["finished_at"]
+    assert settled["final_branch_head_commit"] == head
+    assert delegate.cmd_rescue(argparse.Namespace(task_id=None, all_stale=True, older_than="0h", apply=False)) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["candidate"] == 1
+    assert report["tasks"][0]["head"] == head
+
+
+def test_rescue_all_stale_reports_unaged_terminal_record(tmp_tasks_dir, capsys):
+    delegate._write_state_atomic(delegate._state_path("no-finish"), {"task_id": "no-finish", "status": "failed"})
+    delegate._state_path("unreadable").write_text("{broken", encoding="utf-8")
+    assert delegate.cmd_rescue(argparse.Namespace(task_id=None, all_stale=True, older_than="6h", apply=False)) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["skipped"] == 2
+    assert report["tasks"] == [
+        {"task_id": "no-finish", "action": "skipped", "reason": "no finished_at"},
+        {"task_id": "unreadable", "action": "skipped", "reason": "unreadable task state"},
+    ]
 
 
 def test_exit_flags_dirty_committed_unpushed_without_auto_push(tmp_path, monkeypatch, tmp_tasks_dir):

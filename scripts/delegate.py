@@ -148,6 +148,7 @@ from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threate
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.orchestration import reaper_lifecycle, task_record_store, worktree_claims
+from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, task_state_lock, write_state_unlocked
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
@@ -584,19 +585,12 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
     before writing — callers that bypass _state_path may not have
     created it yet.
 
-    Concurrency: each writer uses a PID-suffixed tmp filename so
-    multiple concurrent writers (e.g. two operators both running
-    status on the same zombie task) don't collide on a shared
-    ``.json.tmp`` scratch file. Without the PID suffix, one writer's
-    os.replace() would move the tmp file out from under another
-    writer that's still writing to it, causing FileNotFoundError on
-    the second os.replace. Fixed after Gemini review 2026-04-10.
+    Concurrency: a per-task lock serializes worker and probe writes. Each
+    writer also uses a PID-suffixed tmp filename before ``os.replace``.
     """
     state = _detach_read_only_checkout_snapshots(state)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
-    tmp.write_text(json.dumps(state, indent=2, default=str))
-    os.replace(tmp, path)
+    with task_state_lock(path):
+        write_state_unlocked(path, state)
 
 
 def _append_dispatch_event(event: str, **fields: Any) -> None:
@@ -3316,15 +3310,17 @@ def _record_final_branch_head(state: dict[str, Any]) -> None:
 
 def _mark_crashed_task(state_path: Path, state: dict[str, Any], *, source: str) -> None:
     """Persist a zombie correction with the worktree's final branch head."""
-    prior_status = state.get("status")
-    pid = state.get("pid")
-    state["status"] = "crashed"
-    state["finished_at"] = datetime.now(UTC).isoformat()
-    state["stderr_excerpt"] = (
-        f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by {source} probe"
+    current, _changed = mark_dead_worker_terminal(
+        state_path,
+        state,
+        source=source,
+        terminal_status="crashed",
+        allowed_statuses=("running", "spawning"),
+        pid_alive=_pid_alive,
+        resolve_head=_resolve_sha,
     )
-    _record_final_branch_head(state)
-    _write_state_atomic(state_path, state)
+    state.clear()
+    state.update(_hydrate_read_only_checkout_snapshots(current))
 
 
 def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
@@ -4417,12 +4413,22 @@ def cmd_rescue(args: argparse.Namespace) -> int:
     for path in paths:
         state = _read_state(path)
         if args.all_stale:
-            if not state or state.get("status") not in _RESCUE_TERMINAL_STATUSES:
+            if state is None:
+                rows.append({"task_id": path.stem, "action": "skipped", "reason": "unreadable task state"})
+                continue
+            if state.get("status") not in _RESCUE_TERMINAL_STATUSES:
                 continue
             try:
                 finished = datetime.fromisoformat(str(state["finished_at"]).replace("Z", "+00:00"))
                 age_hours = (now - finished).total_seconds() / 3600
-            except (KeyError, TypeError, ValueError):
+            except (KeyError, TypeError, ValueError, OverflowError):
+                rows.append(
+                    {
+                        "task_id": state.get("task_id"),
+                        "action": "skipped",
+                        "reason": "no finished_at" if not state.get("finished_at") else "invalid finished_at",
+                    }
+                )
                 continue
             if age_hours < min_age_hours:
                 continue
