@@ -118,10 +118,15 @@ _BRIDGE_DB_BINDINGS_TO_REPLACE = set(_UNISOLATED_BRIDGE_DB_PATHS)
 
 
 def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
-    """Return a SQLite path and whether a URI explicitly opens it read-only."""
-    raw_path = os.fspath(database) if isinstance(database, (str, os.PathLike)) else None
-    if raw_path is None:
+    """Return a SQLite path and whether a URI explicitly opens it read-only.
+
+    ``bytes`` and ``os.PathLike`` objects whose ``__fspath__`` returns bytes are
+    paths. Decode them before the ``file:`` check so the guard does not raise
+    ``TypeError`` or treat a raw bytes path as "not a path".
+    """
+    if not isinstance(database, (str, bytes, os.PathLike)):
         return None, False
+    raw_path = os.fsdecode(os.fspath(database))
     if raw_path.startswith("file:"):
         parsed = urlsplit(raw_path)
         query = parse_qs(parsed.query)
@@ -599,11 +604,30 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
 # result, archive, snapshot, log, and admission-lock paths from it at call
 # time. Tests that forget to patch the constant write into the live store
 # the Monitor API and the work board read. Sibling modules keep their own
-# copy of the same directory; retarget those too when they are already
-# imported. The ownership ledger above is a different seam (env override).
+# copy of the same directory; ``_TASK_STORE_RETARGETS`` imports each one and
+# retargets it. The ownership ledger above is a different seam (env override).
 
 _REAL_TASKS_DIR = (resolve_repo_root(Path(__file__), 1) / "batch_state" / "tasks").resolve()
-_TASK_STORE_DIR_ATTRS = ("_TASKS_DIR", "DEFAULT_TASKS_DIR", "DEFAULT_TASK_STATE_DIR")
+# Sibling constants the autouse fixture retargets by importing each module.
+# ``scripts.delegate._TASKS_DIR`` is set in ``_isolate_dispatch_task_store``.
+# Completeness: tests/test_conftest_task_store_guard.py::test_task_store_constants_match_retarget_tuple
+_TASK_STORE_RETARGETS = (
+    ("scripts.fleet.post_task_reap", "_TASKS_DIR"),
+    ("scripts.fleet.hramatka_hygiene_check", "_TASKS_DIR"),
+    ("scripts.fleet.capacity_pick", "_TASKS_DIR"),
+    ("scripts.maintenance.reclassify_dispatch_status", "DEFAULT_TASKS_DIR"),
+    ("scripts.guardrails.delegate_ownership", "DEFAULT_TASK_STATE_DIR"),
+)
+# Live paths ``scripts/delegate.py`` derives from ``_TASKS_DIR.parent``
+# (``grep _TASKS_DIR.parent scripts/``):
+# - ``_TASKS_DIR.parent / "preflight_fast_fail.jsonl"``
+# - fallback ``_TASKS_DIR.parent / worktree_claims.LOCK_DIR_NAME``
+#   (``lu-worktree-locks``) when the git common dir is unknown.
+# This set is explicit. It does not cover the rest of ``batch_state/``.
+_DERIVED_LIVE_TASK_PATHS = (
+    (_REAL_TASKS_DIR.parent / "preflight_fast_fail.jsonl").resolve(),
+    (_REAL_TASKS_DIR.parent / "lu-worktree-locks").resolve(),
+)
 _TASK_STORE_WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
 _TASK_STORE_MUTATION_EVENTS = {
     "os.chmod": (0,),
@@ -625,14 +649,16 @@ _TASK_STORE_MUTATION_EVENTS = {
 
 
 def _path_under_real_tasks(path: object) -> bool:
-    """True when ``path`` is the live task store or a file inside it."""
+    """True for the live task store, a file inside it, or a derived sibling path."""
     if isinstance(path, int) or path is None:
         return False
     try:
         resolved = Path(os.fsdecode(path)).resolve()
     except (TypeError, ValueError, OSError):
         return False
-    return resolved == _REAL_TASKS_DIR or _REAL_TASKS_DIR in resolved.parents
+    if resolved == _REAL_TASKS_DIR or _REAL_TASKS_DIR in resolved.parents:
+        return True
+    return any(resolved == derived or derived in resolved.parents for derived in _DERIVED_LIVE_TASK_PATHS)
 
 
 def _sqlite_path_under_real_tasks(database: object) -> bool:
@@ -655,7 +681,8 @@ def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
     Installed once with ``sys.addaudithook`` (#8640): a monkeypatch of ``open``
     misses ``Path.write_text`` aliases and ``os.open`` captured before the
     fixture ran. The hook cannot be removed, so it stays installed and only
-    refuses paths inside ``_REAL_TASKS_DIR``.
+    refuses paths inside ``_REAL_TASKS_DIR`` and the explicit derived files
+    under ``_REAL_TASKS_DIR.parent`` listed in ``_DERIVED_LIVE_TASK_PATHS``.
     """
     if event == "open" and len(args) >= 3:
         path, mode, flags = args[0], args[1], args[2]
@@ -677,36 +704,44 @@ sys.addaudithook(_task_store_write_hook)
 
 
 def _retarget_loaded_task_dirs(monkeypatch: pytest.MonkeyPatch, isolated: Path) -> None:
-    """Point already-imported task-store constants at ``isolated``."""
-    for module in tuple(sys.modules.values()):
-        if module is None:
-            continue
-        for attr in _TASK_STORE_DIR_ATTRS:
-            value = getattr(module, attr, None)
-            if not isinstance(value, Path):
-                continue
-            try:
-                resolved = value.resolve()
-            except OSError:
-                continue
-            if resolved == _REAL_TASKS_DIR:
-                monkeypatch.setattr(module, attr, isolated)
+    """Import each known task-store module and point its constant at ``isolated``.
+
+    Importing here binds the name before a test body can import the module and
+    keep the live path. The list is ``_TASK_STORE_RETARGETS``, not a scan of
+    ``sys.modules``.
+    """
+    import importlib
+
+    for module_name, attr in _TASK_STORE_RETARGETS:
+        module = importlib.import_module(module_name)
+        monkeypatch.setattr(module, attr, isolated)
 
 
 @pytest.fixture(autouse=True)
 def _isolate_dispatch_task_store(tmp_path_factory: pytest.TempPathFactory, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """Point the dispatch task store at a session-temp directory (#8654).
+    """Point the dispatch task store at a per-test directory (#8654).
 
-    The directory comes from ``tmp_path_factory``, not the test's ``tmp_path``:
-    an autouse fixture that creates a subdirectory of ``tmp_path`` breaks tests
-    that assert their tmp dir starts empty (see ``_isolate_write_ownership_ledger``).
+    The directory is ``<mktemp("dispatch")>/tasks``, so ``_TASKS_DIR.parent``
+    (where delegate writes ``preflight_fast_fail.jsonl``) is also per-test.
+    It comes from ``tmp_path_factory``, not the test's ``tmp_path``: an autouse
+    fixture that creates a subdirectory of ``tmp_path`` breaks tests that
+    assert their tmp dir starts empty (see ``_isolate_write_ownership_ledger``).
     Nothing is copied out of the live store. A test that sets ``_TASKS_DIR``
     itself runs after this autouse fixture, so that override wins.
     """
-    isolated = tmp_path_factory.mktemp("dispatch-tasks")
+    isolated = tmp_path_factory.mktemp("dispatch") / "tasks"
+    isolated.mkdir()
     import scripts.delegate as delegate_mod
 
     monkeypatch.setattr(delegate_mod, "_TASKS_DIR", isolated)
+    # Tests put ``scripts/`` on ``sys.path`` and ``import delegate``. That is a
+    # second module object with its own ``_TASKS_DIR``, not ``scripts.delegate``.
+    flat_delegate = sys.modules.get("delegate")
+    if flat_delegate is not None and flat_delegate is not delegate_mod:
+        flat_file = getattr(flat_delegate, "__file__", None)
+        delegate_file = getattr(delegate_mod, "__file__", None)
+        if flat_file and delegate_file and Path(flat_file).resolve() == Path(delegate_file).resolve():
+            monkeypatch.setattr(flat_delegate, "_TASKS_DIR", isolated)
     _retarget_loaded_task_dirs(monkeypatch, isolated)
     return isolated
 
