@@ -106,6 +106,34 @@ def _check_edits(edits: Sequence[Edit], length: int) -> None:
         previous_end = edit.end
 
 
+def narrow_edit(text: str, edit: Edit) -> Edit | None:
+    """`edit` cut down to the bytes that actually change; None if it changes nothing.
+
+    The common prefix and common suffix of the replaced bytes and their replacement are
+    left out. This is positional: bytes are kept where they stand, never matched up by content
+    elsewhere, so a replacement that gives back the text it replaced is not an edit at all.
+    """
+    old = text[edit.start : edit.end]
+    new = edit.replacement
+    limit = min(len(old), len(new))
+    prefix = 0
+    while prefix < limit and old[prefix] == new[prefix]:
+        prefix += 1
+    suffix = 0
+    while suffix < limit - prefix and old[len(old) - 1 - suffix] == new[len(new) - 1 - suffix]:
+        suffix += 1
+    if prefix == len(old) == len(new):
+        return None
+    return Edit(edit.start + prefix, edit.end - suffix, new[prefix : len(new) - suffix])
+
+
+def narrow_edits(text: str, edits: Sequence[Edit]) -> list[Edit]:
+    """`narrow_edit` over sorted edits of `text`, dropping those that change nothing."""
+    _check_edits(edits, len(text))
+    narrowed = (narrow_edit(text, edit) for edit in edits)
+    return [edit for edit in narrowed if edit is not None]
+
+
 def apply_edits(text: str, edits: Sequence[Edit]) -> str:
     """Splice sorted, non-overlapping `edits` into `text`."""
     _check_edits(edits, len(text))
@@ -138,7 +166,8 @@ def regions_from_edits(edits: Sequence[Edit], length: int) -> list[Region]:
 def edits_from_regions(before: str, after: str, regions: Iterable[Region]) -> list[Edit]:
     """The edits turning `before` into `after` given the bytes that stayed (`regions`).
 
-    Regions must be in document order on both sides; every gap between them is one edit.
+    Regions must be in document order on both sides; every gap between them is one edit,
+    narrowed to the bytes that differ (a gap whose two sides are equal is no edit).
     A region whose bytes differ between the two texts is a reporting bug and raises.
     """
     edits: list[Edit] = []
@@ -156,7 +185,7 @@ def edits_from_regions(before: str, after: str, regions: Iterable[Region]) -> li
         a_cursor = a_start + length
     if b_cursor < len(before) or a_cursor < len(after):
         edits.append(Edit(b_cursor, len(before), after[a_cursor:]))
-    return edits
+    return narrow_edits(before, edits)
 
 
 def compose_regions(first: Sequence[Region], second: Sequence[Region]) -> list[Region]:
@@ -282,7 +311,8 @@ class EditLog:
             spliced = apply_edits(self.text, edits)
             if result is not None and spliced != result:
                 raise ValueError("the reported edits do not produce the transform's output")
-            self.regions = compose_regions(self.regions, regions_from_edits(edits, len(self.text)))
+            narrowed = narrow_edits(self.text, edits)
+            self.regions = compose_regions(self.regions, regions_from_edits(narrowed, len(self.text)))
             self.text = spliced
         else:
             self.text = result if result is not None else apply_edits(self.text, edits)
@@ -321,7 +351,8 @@ class EditLog:
 
         A string template reports the bytes of its group references as kept in place (so a
         `\\1`-style template around a unit leaves the unit located); a callable replacement
-        is reported as one whole-match replacement. Returns the `[start, end)` range of every
+        is reported as one whole-match replacement. Every edit is then narrowed to the bytes
+        that change, so a replacement equal to its match is no edit. Returns the `[start, end)` range of every
         replacement in the new text, in order.
         """
         compiled = re.compile(pattern, flags) if isinstance(pattern, str) else pattern
@@ -497,6 +528,7 @@ class LessonUnitMap:
             raise ValueError(f"transform {transform!r} was not applied to the mapped text")
         if apply_edits(before, edits) != after:
             raise ValueError(f"transform {transform!r} reported edits that do not produce its output")
+        edits = narrow_edits(before, edits)
         for unit in self.units.values():
             if not unit.live:
                 continue

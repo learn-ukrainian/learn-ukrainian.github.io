@@ -37,7 +37,8 @@ def test_apply_edits_and_regions_round_trip() -> None:
     assert after == "Xab\nY\nef\nZ"
     regions = regions_from_edits(edits, len(before))
     assert regions == [(0, 1, 3), (6, 6, 3)]
-    assert edits_from_regions(before, after, regions) == edits
+    # Recovered edits are narrowed: the trailing "\n" of the second edit is unchanged.
+    assert edits_from_regions(before, after, regions) == [Edit(0, 0, "X"), Edit(3, 5, "Y"), Edit(9, 9, "Z")]
     with pytest.raises(ValueError):
         apply_edits(before, [Edit(3, 6, ""), Edit(2, 4, "")])  # overlapping / unsorted
     with pytest.raises(ValueError):
@@ -63,13 +64,13 @@ def test_edit_log_sub_reports_template_groups_as_kept_bytes() -> None:
         Edit(14, 15, "*"),
         Edit(18, 19, "*"),
     ]
-    # `\g<name>` and escapes in templates; a callable is a whole-match replacement.
+    # `\g<name>` and escapes in templates; a callable is a whole-match replacement, narrowed.
     log = EditLog("a\n# h\n")
     log.sub(r"(?P<p>\S[^\n]*)\n(?P<h>#{1,6} )", r"\g<p>\n\n\g<h>")
-    assert log.text == "a\n\n# h\n" and log.edits() == [Edit(1, 2, "\n\n")]
+    assert log.text == "a\n\n# h\n" and log.edits() == [Edit(2, 2, "\n")]
     log = EditLog("[slug:x] t")
     log.sub(r"\[slug:([a-z]+)\]", lambda m: f"[{m.group(1).upper()}](/x)")
-    assert log.edits() == [Edit(0, 8, "[X](/x)")]
+    assert log.edits() == [Edit(1, 8, "X](/x)")]
     # Group references out of match order fall back to a whole-match replacement.
     log = EditLog("ab")
     log.sub(r"(a)(b)", r"\2\1")
@@ -116,8 +117,8 @@ def test_line_edits_report_kept_sliced_edited_and_new_lines() -> None:
     assert out.text() == ":::tip[Tip]\nслово\n:::\n\nend"
     edits = out.edits()
     assert apply_edits(text, edits) == out.text()
-    # The newline between the two kept consecutive input lines is the input's own byte.
-    assert edits == [Edit(0, 11, ":::tip[Tip]\n"), Edit(16, 17, "\n:::\n")]
+    # The newline between the two kept consecutive input lines is the input's own byte.  Edits are narrowed to what changed.
+    assert edits == [Edit(0, 11, ":::tip[Tip]\n"), Edit(17, 17, ":::\n")]
     # A line edited on its own log, and a retracted output line.
     text = "**Діалог 1 — x**\n* item  \nz"
     out = LineEdits(text)
@@ -131,7 +132,7 @@ def test_line_edits_report_kept_sliced_edited_and_new_lines() -> None:
     out.keep(2)
     assert out.text() == "- item\n<Box />\nz"
     assert apply_edits(text, out.edits()) == out.text()
-    assert out.edits() == [Edit(0, 18, "-"), Edit(23, 26, "\n<Box />\n")]
+    assert out.edits() == [Edit(0, 18, "-"), Edit(23, 25, "\n<Box />")]
 
 
 # ---------------------------------------------------------------------------
@@ -407,3 +408,117 @@ def test_generate_mdx_duplicate_paragraph_in_a_removed_section() -> None:
     del m.units[2]
     assert m.verify(mdx) == {1: "слово", 3: "слово"}
     assert m.units[1].start < m.units[3].start
+
+
+# ---------------------------------------------------------------------------
+# No-op and partial replacements (r6 BLOCKER: unchanged text reported as removed)
+# ---------------------------------------------------------------------------
+
+_META = {"title": "T", "subtitle": "", "prev": "/a1/", "next": "/a1/", "lesson": 1, "module_slug": "s"}
+
+
+def _track_and_generate(md: str, unit: str, *, key: str = "u"):
+    m = LessonUnitMap(md)
+    start = md.index(unit)
+    m.track(key, start, start + len(unit), unit)
+    mdx = generate_mdx(md, 1, meta_data=_META, level="a1", fresh=True, unit_map=m)
+    return m, mdx
+
+
+def test_edit_log_records_no_edit_for_a_replacement_equal_to_its_match() -> None:
+    for repl in (lambda match: match.group(0), r"\g<0>", "abc"):
+        log = EditLog("x abc y")
+        log.sub(r"abc", repl)
+        assert log.text == "x abc y" and log.edits() == []
+    # Explicit edits and a replacement that undoes an earlier one are also no-ops.
+    log = EditLog("x abc y")
+    log.apply([Edit(2, 5, "abc")])
+    log.replace(2, 5, "Q")
+    log.replace(2, 3, "abc")
+    assert log.text == "x abc y" and log.edits() == []
+
+
+def test_edit_log_narrows_edits_to_the_changed_middle() -> None:
+    log = EditLog("see [Video](https://a.b/x) now")
+    log.sub(r"\[Video\]\(([^)]*)\)", lambda match: f"[Video]({match.group(1)}?t=1)")
+    assert log.edits() == [Edit(25, 25, "?t=1")]
+    log = EditLog("aa")
+    log.sub("aa", "aaa")  # ambiguous by content; the convention is positional
+    assert log.edits() == [Edit(2, 2, "a")]
+    log = EditLog("abcdef")
+    log.sub("bcd", lambda match: "bXd")
+    assert log.edits() == [Edit(2, 3, "X")]
+
+
+def test_line_edits_and_carry_narrow_edits_that_change_nothing() -> None:
+    text = "a\nb\nc"
+    out = LineEdits(text)
+    out.keep(0)
+    out.new("b")  # the same bytes as input line 1, emitted as new text
+    out.keep(2)
+    assert out.edits() == []
+    m = LessonUnitMap(text)
+    m.track("b", 2, 3, "b")
+    m.carry(text, text, "noop", [Edit(2, 3, "b")])
+    assert m.verify(text) == {"b": "b"}
+
+
+def test_a_real_replacement_over_a_tracked_unit_still_invalidates_it() -> None:
+    log = EditLog("x abc y")
+    log.sub("abc", lambda match: "abd")
+    m = LessonUnitMap("x abc y")
+    m.track("u", 2, 5, "abc")
+    m.carry_log(log, "swap")
+    with pytest.raises(UnitMapError) as exc_info:
+        m.verify("x abd y")
+    assert exc_info.value.kind == LOST_REWRITTEN and exc_info.value.transform == "swap"
+    # Deleting the whole unit is still a removal.
+    log = EditLog("x abc y")
+    log.sub("abc", lambda match: "")
+    m = LessonUnitMap("x abc y")
+    m.track("u", 2, 5, "abc")
+    m.carry_log(log, "drop")
+    with pytest.raises(UnitMapError) as exc_info:
+        m.verify("x  y")
+    assert exc_info.value.kind == LOST_REMOVED
+
+
+def test_a_replacement_that_changes_only_a_suffix_keeps_the_prefix_unit_located() -> None:
+    log = EditLog("x abcdef y")
+    log.sub("abcdef", lambda match: "abcXYZ")
+    m = LessonUnitMap("x abcdef y")
+    m.track("prefix", 2, 5, "abc")
+    m.track("suffix", 5, 8, "def")
+    m.carry_log(log, "tail")
+    assert (m.units["prefix"].start, m.units["prefix"].end) == (2, 5)
+    assert m.units["suffix"].lost_kind == LOST_REMOVED
+    del m.units["suffix"]
+    assert m.verify("x abcXYZ y") == {"prefix": "abc"}
+
+
+def test_generate_mdx_keeps_a_youtube_link_in_a_table_cell_mapped() -> None:
+    # Reviewer reproduction (r6 BLOCKER a): embed_youtube_video_links leaves table links
+    # alone, so the link stays on the page and the unit must verify.
+    link = "[Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)"
+    md = f"# T\n\n| Назва | Посилання |\n| --- | --- |\n| слово | {link} |\n\nend"
+    m, mdx = _track_and_generate(md, link)
+    assert link in mdx
+    assert m.verify(mdx) == {"u": link}
+
+
+def test_generate_mdx_keeps_an_unresolved_slug_link_mapped() -> None:
+    # Reviewer reproduction (r6 BLOCKER b): the unknown slug is returned unchanged.
+    marker = "[slug:this-slug-does-not-exist]"
+    md = f"# T\n\nдив. {marker} тут\n\nend"
+    m, mdx = _track_and_generate(md, marker)
+    assert marker in mdx
+    assert m.verify(mdx) == {"u": marker}
+
+
+def test_generate_mdx_still_rewrites_an_embedded_youtube_link_unit() -> None:
+    link = "[Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)"
+    md = f"# T\n\n{link}\n\nend"
+    m, mdx = _track_and_generate(md, link)
+    assert "<YouTubeVideo" in mdx
+    with pytest.raises(UnitMapError):
+        m.verify(mdx)
