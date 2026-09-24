@@ -291,12 +291,25 @@ def _run_repo(cwd: Path, args: list[str], env: dict[str, str]) -> subprocess.Com
     )
 
 
+def _foreign_rootdir(tmp_path: Path) -> Path:
+    """A real directory outside this checkout, for ``--rootdir`` and invocation dir."""
+    foreign = tmp_path / "foreign-rootdir"
+    foreign.mkdir()
+    resolved = foreign.resolve()
+    repo = _REPO_ROOT.resolve()
+    assert resolved != repo
+    assert repo not in resolved.parents
+    assert resolved not in repo.parents
+    return foreign
+
+
 def test_foreign_rootdir_and_no_path_forms_are_refused_while_lock_held(tmp_path: Path) -> None:
     env = _child_env(tmp_path, marker="impl-8645-b")
     _hold_tmp_lock(tmp_path, env)
+    foreign = _foreign_rootdir(tmp_path)
     forms = (
-        (_REPO_ROOT, ["-q", ".", "--rootdir", "/home/ops"]),
-        (_REPO_ROOT, ["-q", "tests", "--rootdir", "/home/ops"]),
+        (_REPO_ROOT, ["-q", ".", "--rootdir", str(foreign)]),
+        (_REPO_ROOT, ["-q", "tests", "--rootdir", str(foreign)]),
         (_REPO_ROOT / "tests" / "ai_agent_bridge", ["-q"]),
         (_REPO_ROOT, ["-q", ".", "-k", "nomatch", "-m", "nomatch"]),
     )
@@ -361,21 +374,26 @@ class _Args:
         return self._paths
 
 
-def test_full_suite_classification() -> None:
+def test_full_suite_classification(tmp_path: Path) -> None:
     root = repository_root()
     assert root == _REPO_ROOT
-    foreign = Path("/home/ops")
+    foreign = _foreign_rootdir(tmp_path)
     source = _Args("args", [], foreign).ArgsSource
     assert is_full_suite(_Args(source.TESTPATHS, [], foreign))  # type: ignore[arg-type]
     nested = root / "tests" / "ai_agent_bridge"
     invoked = _Args(source.INVOCATION_DIR, [str(nested)], foreign)
     invoked.invocation_params = type("Inv", (), {"dir": nested})()
     assert is_full_suite(invoked)  # type: ignore[arg-type]
-    for raw in (".", "./", "tests", "tests/", "./tests", str(root), str(root / "tests"), str(foreign)):
+    containing = root.parent
+    for raw in (".", "./", "tests", "tests/", "./tests", str(root), str(root / "tests"), str(containing)):
         cfg = _Args(source.ARGS, [raw], foreign)
         cfg.invocation_params = type("Inv", (), {"dir": root})()
         assert is_full_suite(cfg), raw  # type: ignore[arg-type]
         assert path_covers_full_suite(raw, invocation_dir=root)
+    outside = _Args(source.ARGS, [str(foreign)], foreign)
+    outside.invocation_params = type("Inv", (), {"dir": root})()
+    assert not is_full_suite(outside)  # type: ignore[arg-type]
+    assert not path_covers_full_suite(str(foreign), invocation_dir=root)
     targeted = _Args(source.ARGS, ["tests/test_dispatch_xdist_cap.py"], foreign)
     targeted.invocation_params = type("Inv", (), {"dir": root})()
     assert not is_full_suite(targeted)  # type: ignore[arg-type]
