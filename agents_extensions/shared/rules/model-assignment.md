@@ -653,7 +653,7 @@ several models are reachable through more than one. Know both axes before routin
 | Harness | What it adds to ANY model it hosts | Models routed through it | Entry points¹ |
 | --- | --- | --- | --- |
 | **hermes** — REMOVED from this host (operator order 2026-08-16); row kept for history only | (was: SOUL.md persona · `sources` MCP · 16 toolsets · session store) | (was: deepseek · zai/GLM · OpenRouter catalog) | DeepSeek bridge asks now use `ab ask-deepseek` (opencode ACP seat, #6805); execution `delegate.py dispatch --agent deepseek` |
-| **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside **laguna-s-2.1**, free; m.1 prior-gen fallback) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek (first-party `deepseek/` provider; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` (named) · `ab ask-opencode <model>` (generic) |
+| **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside **laguna-s-2.1**, free; m.1 prior-gen fallback) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek (first-party `deepseek/` provider; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` / `ask-deepseek` (named seats only; generic `ask-opencode` is retired) |
 | **native CLIs** (codex, cursor, agy, grok, claude, kimi) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes, never opencode — the native CLI is the ONLY sanctioned grok route for every seat (interactive, orchestrator, ask, dispatch, reviewer/judge) as of operator order 2026-08-16 (#6865, retires the 2026-07-27 opencode-for-orchestrator-seats ruling, see Consequences below). `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native `kimi` CLI subscription seat only (models `k3` · `k3-256k` · `k2.7-coding` · `k2.7-coding-highspeed`) — **never OpenRouter** as a Kimi worker bus | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` / `ask-kimi` · `delegate.py dispatch --agent <a> --mode danger --worktree` (includes `--agent kimi`) · orchestrator grok via `ab ask-grok-build` / native `grok` CLI — never `ab ask-opencode --model xai/grok-*` |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
@@ -664,7 +664,7 @@ bare `ab` resolves to ApacheBench (`/usr/sbin/ab`) outside the user's shell (AGE
 `deepseek/deepseek-flash` (identity `deepseek-v4.1-flash`) at high effort, deny-all tools (the `ask-hermes` alias
 resolves to the same seat; Hermes itself was permanently removed 2026-08-16). Direct one-shot
 review/research outside the bridge still defaults to
-`opencode run --model deepseek/deepseek-flash --variant high` (Flash) or `deepseek/deepseek-v4-pro` (Pro) so the host gets native
+`opencode run --model deepseek/deepseek-flash --variant high` (Flash) so the host gets native
 Entire capture (the legacy generic `ask-opencode` ACP route stays retired — named seats only).
 Tool-heavy execution is `delegate.py dispatch --agent deepseek` → OpenCode first-party
 `deepseek/deepseek-flash` (identity `deepseek-v4.1-flash`) `--variant high` by default (operator 2026-08-13).
@@ -678,7 +678,7 @@ Consequences:
 - **A model "lacking" a capability may just be in the wrong harness** — deepseek can't browse
   natively but browses via opencode; any hermes-hosted model gets VESUM/`sources` tools for free.
 - **Limits are per-harness-credential, not per-model**: when a lane quotas out, the same model is
-  often reachable through another harness (e.g. deepseek via delegate-hermes ↔ opencode), but
+  often reachable through another harness, but
   **GPT/Codex and Claude are hard exceptions**: keep both on their native CLIs (operator
   ruling 2026-07-27 for Claude) and never substitute a Codex OAuth-backed Hermes model or a
   non-native Claude host. **Grok (operator order 2026-08-16, #6865 — retires the 2026-07-27
