@@ -19,6 +19,7 @@ from scripts.build.fresh.module import draft_is_current
 from scripts.build.fresh.regeneration import load_ledger, record_failure, record_success
 from scripts.curriculum.evidence import lock
 from scripts.review.digest.generator import GENERATOR_VERSION, check_digest
+from scripts.review.receipts import ledger as receipts_ledger
 
 pytestmark = pytest.mark.reads_content
 
@@ -169,29 +170,37 @@ def test_manifest_names_every_file_a_reviewer_receives(tmp_path, monkeypatch):
     assert (state_dir / "lesson-3.learner-state.yaml").read_bytes() == payloads[3]
 
 
+def _valid_review(review_id, attempt_id, digest):
+    return {
+        "review_schema": 1,
+        "taxonomy": 1,
+        "kind": "lesson",
+        "attempt": {
+            "review_id": review_id,
+            "attempt_id": attempt_id,
+            "manifest_sha256": digest,
+            "previous_attempt_id": None,
+        },
+        "reviewer": {
+            "resolved_model": "fixture-model",
+            "harness": "fixture-harness",
+            "family": "fixture-family",
+            "prompt_sha256": "cd" * 32,
+        },
+        "checks": {"closing_shape": "clean"},
+        "findings": [],
+    }
+
+
 def _rereview_setup(tmp_path, monkeypatch, *, review_id="rev-1", attempt_id="attempt-1"):
-    """Lesson 2 reviewed once (review + ledger on disk), then rebuilt with different text."""
+    """Lesson 2 reviewed once (a schema-valid review and a sidecar-verified ledger), then rebuilt with different text."""
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
     monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
     first, digest = _write(level, slug, 2, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
     review = state_dir / f"lesson-2.review.{attempt_id}.yaml"
-    review.write_bytes(
-        lock.yaml_bytes(
-            {
-                "review_schema": 1,
-                "kind": "lesson",
-                "attempt": {
-                    "review_id": review_id,
-                    "attempt_id": attempt_id,
-                    "manifest_sha256": digest,
-                    "previous_attempt_id": None,
-                },
-            }
-        )
-    )
+    review.write_bytes(lock.yaml_bytes(_valid_review(review_id, attempt_id, digest)))
     ledger = tmp_path / "batch_state" / "review-receipts" / review_id / f"{attempt_id}.jsonl"
-    ledger.parent.mkdir(parents=True)
-    ledger.write_text('{"receipt": 1}\n', encoding="utf-8")
+    receipts_ledger.create_empty_ledger(ledger)
 
     def entry(path):
         return {"path": path.relative_to(tmp_path).as_posix(), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
@@ -220,7 +229,8 @@ def test_a_re_review_manifest_pins_the_previous_findings_and_a_real_diff(tmp_pat
     )
     Draft202012Validator(json.loads(manifest.SCHEMA.read_text(encoding="utf-8"))).validate(doc)
     assert doc["previous_attempt"] == previous
-    diff_path = state_dir / "lesson-2.diff.attempt-1.patch"
+    diff_path = tmp_path / doc["diff"]["path"]
+    assert diff_path.name == f"lesson-2.diff.attempt-1.{doc['diff']['sha256'][:16]}.patch"
     assert doc["diff"] == {
         "path": diff_path.relative_to(tmp_path).as_posix(),
         "sha256": hashlib.sha256(diff_path.read_bytes()).hexdigest(),
@@ -293,6 +303,83 @@ def test_a_previous_attempt_at_the_wrong_path_is_refused(tmp_path, monkeypatch):
             site_dir=page_dir,
             previous_attempt=previous,
         )
+
+
+def _rereview(level, slug, plan_dir, evidence_dir, state_dir, page_dir, tmp_path, previous):
+    return manifest.write_manifest(
+        level,
+        slug,
+        2,
+        lesson_kind="lesson",
+        state_dir=state_dir,
+        repo_root=tmp_path,
+        plans_dir=plan_dir,
+        evidence_dir=evidence_dir,
+        position=1,
+        site_dir=page_dir,
+        previous_attempt=previous,
+    )
+
+
+def _repin(tmp_path, previous, key, path):
+    previous[key] = {
+        "path": path.relative_to(tmp_path).as_posix(),
+        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+    }
+
+
+def test_a_previous_review_that_breaks_the_review_schema_is_refused(tmp_path, monkeypatch):
+    setup, _first, previous, review = _rereview_setup(tmp_path, monkeypatch)
+    document = yaml.safe_load(review.read_bytes())
+    del document["findings"]
+    review.write_bytes(lock.yaml_bytes(document))
+    _repin(tmp_path, previous, "review", review)
+    with pytest.raises(manifest.ManifestInputError, match=r"does not conform to review-v1.*findings") as refused:
+        _rereview(*setup, tmp_path, previous)
+    assert refused.value.path == review.relative_to(tmp_path).as_posix()
+
+
+def test_a_previous_ledger_without_a_sidecar_is_refused(tmp_path, monkeypatch):
+    setup, _first, previous, _review = _rereview_setup(tmp_path, monkeypatch)
+    ledger = tmp_path / previous["ledger"]["path"]
+    ledger.write_text('{"receipt": 1}\n', encoding="utf-8")
+    receipts_ledger._sidecar(ledger).unlink()
+    _repin(tmp_path, previous, "ledger", ledger)
+    with pytest.raises(manifest.ManifestInputError, match=r"previous ledger not verified.*sidecar missing"):
+        _rereview(*setup, tmp_path, previous)
+
+
+def test_a_previous_ledger_whose_sidecar_does_not_verify_is_refused(tmp_path, monkeypatch):
+    setup, _first, previous, _review = _rereview_setup(tmp_path, monkeypatch)
+    ledger = tmp_path / previous["ledger"]["path"]
+    ledger.write_text('{"receipt_id": "r-1"}\n', encoding="utf-8")
+    receipts_ledger._sidecar(ledger).write_text("0" * 64 + "\n", encoding="ascii")  # covers other bytes
+    _repin(tmp_path, previous, "ledger", ledger)
+    with pytest.raises(manifest.ManifestInputError, match=r"previous ledger not verified.*sidecar mismatch"):
+        _rereview(*setup, tmp_path, previous)
+
+
+def test_two_rebuilds_against_one_previous_attempt_keep_their_own_diffs(tmp_path, monkeypatch):
+    setup, _first, previous, _review = _rereview_setup(tmp_path, monkeypatch)
+    page_dir = setup[-1]
+    docs = [_rereview(*setup, tmp_path, previous)[0]]
+    (page_dir / "2.mdx").write_text("# Lesson 2\nA different sentence.\n", encoding="utf-8")
+    docs.append(_rereview(*setup, tmp_path, previous)[0])
+    first_diff, second_diff = (doc["diff"] for doc in docs)
+    assert first_diff["path"] != second_diff["path"]
+    for diff in (first_diff, second_diff):
+        assert hashlib.sha256((tmp_path / diff["path"]).read_bytes()).hexdigest() == diff["sha256"]
+    assert b"+New sentence." in (tmp_path / first_diff["path"]).read_bytes()
+    assert b"+A different sentence." in (tmp_path / second_diff["path"]).read_bytes()
+
+
+def test_a_different_diff_at_an_existing_content_address_is_refused(tmp_path):
+    state_dir = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/s"
+    path = manifest._write_diff(tmp_path, state_dir, 2, "attempt-1", b"one\n")
+    assert manifest._write_diff(tmp_path, state_dir, 2, "attempt-1", b"one\n") == path  # identical bytes reused
+    path.write_bytes(b"other\n")
+    with pytest.raises(manifest.ManifestInputError, match="diff path collision"):
+        manifest._write_diff(tmp_path, state_dir, 2, "attempt-1", b"one\n")
 
 
 def test_the_manifest_and_the_writer_prompt_share_one_immersion_payload_under_a_waiver(tmp_path, monkeypatch):

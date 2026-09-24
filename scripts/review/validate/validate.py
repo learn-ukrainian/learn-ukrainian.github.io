@@ -92,6 +92,11 @@ def _schema_validator() -> Draft202012Validator:
     return Draft202012Validator(schema)
 
 
+def review_schema_errors(review: Any) -> list[str]:
+    """Every way ``review`` departs from ``schemas/review-v1.schema.json`` (empty when it conforms)."""
+    return [f"{error.json_path}: {error.message}" for error in _schema_validator().iter_errors(review)]
+
+
 def _kind_checks(taxonomy: dict[str, Any], kind: str, *, recap: bool) -> dict[str, str]:
     """Map check name to required, optional, or absent."""
     spec = taxonomy["kinds"][kind]["checks"]
@@ -154,7 +159,8 @@ def _units(document: Any) -> list[dict[str, Any]]:
     return units
 
 
-def _index_ledger(path: Path) -> dict[str, dict[str, Any]]:
+def index_ledger(path: Path) -> dict[str, dict[str, Any]]:
+    """Receipts by id, read through the ledger's sidecar verification; a duplicate or id-less record is refused."""
     indexed: dict[str, dict[str, Any]] = {}
     for record in records(path):
         receipt_id = record.get("receipt_id")
@@ -727,8 +733,8 @@ def validate_review(
         check.add(codes.REVIEW_UNREADABLE, f"{review_path} is not a YAML mapping")
         return ValidationResult(False, None, check.rejections)
 
-    for error in _schema_validator().iter_errors(review):
-        check.add(codes.SCHEMA_INVALID, f"{error.json_path}: {error.message}")
+    for error in review_schema_errors(review):
+        check.add(codes.SCHEMA_INVALID, error)
 
     if isinstance(manifest, dict) and "kind" in manifest and manifest["kind"] != review.get("kind"):
         check.add(
@@ -743,7 +749,7 @@ def validate_review(
 
     current: dict[str, dict[str, Any]] = {}
     try:
-        current = _index_ledger(ledger_path)
+        current = index_ledger(ledger_path)
     except LedgerHashStaleLastLine as exc:
         check.add(codes.LEDGER_HASH_STALE_LAST_LINE, f"{ledger_path}: {exc}")
     except (LedgerError, json.JSONDecodeError, OSError) as exc:
@@ -758,7 +764,7 @@ def validate_review(
     previous: dict[str, dict[str, Any]] | None = None
     if previous_attempt_id and previous_path is not None and Path(previous_path).exists():
         try:
-            previous = _index_ledger(Path(previous_path))
+            previous = index_ledger(Path(previous_path))
         except LedgerHashStaleLastLine as exc:
             check.add(codes.LEDGER_HASH_STALE_LAST_LINE, f"{previous_path}: {exc}")
         except (LedgerError, json.JSONDecodeError, OSError) as exc:

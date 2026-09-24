@@ -28,7 +28,9 @@ from __future__ import annotations
 import difflib
 import hashlib
 import json
+import os
 import re
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -40,6 +42,8 @@ from scripts.build.fresh.path_guard import checked_existing_path, checked_path
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import planned_state
 from scripts.review.digest.generator import GENERATOR_VERSION, build_digest, write_digest
+from scripts.review.receipts.ledger import LedgerError
+from scripts.review.validate.validate import index_ledger, review_schema_errors
 
 ATTEMPT_TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
 SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
@@ -167,10 +171,17 @@ def _previous_attempt_inputs(
     )
     try:
         review = yaml.safe_load(review_bytes)
-        attempt = review["attempt"]
-        review_id, manifest_sha = attempt["review_id"], attempt["manifest_sha256"]
-    except (yaml.YAMLError, KeyError, TypeError) as err:
-        raise ManifestInputError(review_path, "previous review carries no attempt block", root) from err
+    except yaml.YAMLError as err:
+        raise ManifestInputError(review_path, "previous review is not valid YAML", root) from err
+    invalid = review_schema_errors(review)
+    if invalid:
+        raise ManifestInputError(
+            review_path,
+            f"previous review does not conform to review-v1 ({len(invalid)} errors, first: {invalid[0]})",
+            root,
+        )
+    attempt = review["attempt"]
+    review_id, manifest_sha = attempt["review_id"], attempt["manifest_sha256"]
     if (
         review.get("kind") != "lesson"
         or attempt.get("attempt_id") != attempt_id
@@ -183,6 +194,10 @@ def _previous_attempt_inputs(
     ledger_path, _ = _pinned_file(
         root, previous["ledger"], root / "batch_state" / "review-receipts" / review_id / f"{attempt_id}.jsonl", "ledger"
     )
+    try:
+        index_ledger(ledger_path)
+    except (LedgerError, ValueError, OSError) as err:  # JSONDecodeError is a ValueError
+        raise ManifestInputError(ledger_path, f"previous ledger not verified ({err})", root) from err
     history = checked_existing_path(
         root, state_dir / "manifests" / f"lesson-{n}" / f"{manifest_sha}.yaml", EVIDENCE_ROOT
     )
@@ -207,6 +222,37 @@ def _previous_attempt_inputs(
         "ledger": {"path": ledger_path.relative_to(root).as_posix(), "sha256": previous["ledger"]["sha256"]},
     }
     return entry, "".join(lines).encode("utf-8")
+
+
+def _write_diff(root: Path, state_dir: Path, n: int, attempt_id: str, data: bytes) -> Path:
+    """Write the re-review diff at a path addressed by its own bytes; never replace an existing file.
+
+    Two rebuilds against one previous attempt produce different diffs, so each gets
+    its own path and the manifest that pinned an earlier one stays valid. The same
+    bytes are reused; different bytes at an existing path are refused.
+    """
+    digest = hashlib.sha256(data).hexdigest()
+    target = checked_existing_path(root, state_dir / f"lesson-{n}.diff.{attempt_id}.{digest[:16]}.patch", EVIDENCE_ROOT)
+    if target.exists():
+        if target.read_bytes() != data:
+            raise ManifestInputError(target, "diff path collision", root)
+        return target
+    target.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{target.name}.", dir=target.parent)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.chmod(temporary, 0o644)
+        try:
+            os.link(temporary, target)  # create-exclusive: fails rather than replaces
+        except FileExistsError:
+            if target.read_bytes() != data:
+                raise ManifestInputError(target, "diff path collision", root) from None
+    finally:
+        os.unlink(temporary)
+    return target
 
 
 def _activity_imports(mdx_path: Path, repo_root: Path) -> list[Path]:
@@ -291,11 +337,7 @@ def write_manifest(
         previous_doc, diff_bytes = _previous_attempt_inputs(
             previous_attempt, level=level, slug=slug, n=n, state_dir=state_dir, root=root, page=page
         )
-        diff_path = checked_existing_path(
-            root, state_dir / f"lesson-{n}.diff.{previous_doc['attempt_id']}.patch", EVIDENCE_ROOT
-        )
-        lock.atomic_write(diff_path, diff_bytes)
-        diff_input = _input(diff_path, root)
+        diff_input = _input(_write_diff(root, state_dir, n, previous_doc["attempt_id"], diff_bytes), root)
     _keep_lesson_snapshot(root, state_dir, n, page, lesson_input)
     doc = {
         "manifest_schema": 1,
