@@ -668,10 +668,20 @@ def test_ci_yml_samples_memory_around_pytest_step() -> None:
 def test_ci_yml_pytest_step_prints_disk_heartbeat() -> None:
     """#8701: a silent shard death leaves no pytest-timeout dump. The heartbeat
     runs outside pytest and prints free disk plus D-state workers into the
-    step log that otherwise stops."""
+    step log that otherwise stops. It covers selected and full modes only."""
     ci_text = _ci_text()
-    assert "pytest-heartbeat-shard-${SHARD}.log" in ci_text
-    assert "avail_root_bytes=" in ci_text
-    assert "avail_tmp_bytes=" in ci_text
-    assert "pytest_dstate=" in ci_text
-    assert "pytest-heartbeat-shard-${{ matrix.shard }}" in ci_text
+    run = ci_text.split("- name: Run pytest", 1)[1].split("- name: Stop memory sampler", 1)[0]
+    assert "The heartbeat covers the selected and full modes only" in run
+    assert "pytest-heartbeat-shard-${SHARD}.log" in run
+    assert "avail_workspace_bytes=" in run
+    assert "avail_basetemp_bytes=" in run
+    assert "avail_tmp_bytes=" not in run
+    assert "pytest_dstate=" in run
+    # xdist execnet workers do not contain "pytest" on the command line.
+    assert "$2 ~ /^D/ && /-m pytest|import sys;exec[(]eval/" in run
+    assert "ps -eo pid,stat,wchan:32,args" in run
+    assert 'trap \'kill "$heartbeat_pid" 2>/dev/null || true\' EXIT' in run
+    assert 'exit "$pytest_ec"' in run
+    upload = ci_text.split("- name: Upload pytest heartbeat\n", 1)[1].split("\n  contracts:", 1)[0]
+    assert "if: always()" in upload
+    assert "pytest-heartbeat-shard-${{ matrix.shard }}" in upload

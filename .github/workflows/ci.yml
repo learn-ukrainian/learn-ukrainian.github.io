@@ -306,19 +306,51 @@ jobs:
           # #8701: a shard can go silent until the job timeout, with no
           # pytest-timeout or faulthandler dump. This loop is outside pytest,
           # so a stuck worker still leaves disk and D-state in the step log.
+          # The heartbeat covers the selected and full modes only; content and
+          # docs_only return above.
           heartbeat="ci-artifacts/pytest-heartbeat-shard-${SHARD}.log"
+          workspace="${GITHUB_WORKSPACE:-.}"
+          # Default pytest basetemp is the system temp dir (this step sets no
+          # --basetemp). Report that filesystem and the workspace, not /tmp
+          # beside /, which are the same disk on ubuntu-latest.
+          basetemp="${TMPDIR:-/tmp}"
+          : > "$heartbeat"
           (
+            # Kill during `wait` must reap the sleep child; otherwise it is
+            # reparented and keeps running after the loop shell is gone.
+            trap 'kill "$sleep_pid" 2>/dev/null || true; exit 0' TERM
+            sleep_pid=
             while true; do
-              printf '%s avail_root_bytes=%s avail_tmp_bytes=%s pytest_dstate=%s\n' \
+              snapshot="$(ps -eo pid,stat,wchan:32,args | awk '
+                $2 ~ /^D/ && /-m pytest|import sys;exec[(]eval/ {
+                  c++
+                  lines[c] = $0
+                }
+                END {
+                  printf "%d\n", c+0
+                  for (i = 1; i <= c; i++) print lines[i]
+                }
+              ')"
+              dcount="${snapshot%%$'\n'*}"
+              printf '%s avail_workspace_bytes=%s avail_basetemp_bytes=%s pytest_dstate=%s\n' \
                 "$(date -u +%FT%TZ)" \
-                "$(df -B1 --output=avail / | tail -1 | tr -d ' ')" \
-                "$(df -B1 --output=avail /tmp | tail -1 | tr -d ' ')" \
-                "$(ps -eo stat,args | awk '$1 ~ /^D/ && /pytest/ {c++} END {print c+0}')" \
-                | tee -a "$heartbeat"
-              sleep 30
+                "$(df -B1 --output=avail "$workspace" | tail -1 | tr -d ' ')" \
+                "$(df -B1 --output=avail "$basetemp" | tail -1 | tr -d ' ')" \
+                "$dcount"
+              if [ "$dcount" -gt 0 ]; then
+                printf '%s\n' "${snapshot#*$'\n'}"
+              fi
+              sleep 30 &
+              sleep_pid=$!
+              wait $!
             done
-          ) &
+          ) >> "$heartbeat" 2>&1 &
           heartbeat_pid=$!
+          trap 'kill "$heartbeat_pid" 2>/dev/null || true' EXIT
+          # Copy the log to the step output. --pid exits tail when the loop
+          # dies, so the follower cannot hold the step stdout open afterward.
+          tail -n +1 -f --pid="$heartbeat_pid" "$heartbeat" &
+          tail_pid=$!
           set +e
           .venv/bin/python -m pytest tests -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
             --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \
@@ -328,6 +360,7 @@ jobs:
           set -e
           kill "$heartbeat_pid" 2>/dev/null || true
           wait "$heartbeat_pid" 2>/dev/null || true
+          wait "$tail_pid" 2>/dev/null || true
           exit "$pytest_ec"
       - name: Stop memory sampler
         if: always() && needs.changes.outputs.docs_only == 'false'
