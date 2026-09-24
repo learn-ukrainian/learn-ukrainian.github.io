@@ -314,14 +314,20 @@ jobs:
           # --basetemp). Report that filesystem and the workspace, not /tmp
           # beside /, which are the same disk on ubuntu-latest.
           basetemp="${TMPDIR:-/tmp}"
+          # Tests inject ~1s; the shard step keeps the 30s cadence.
+          heartbeat_interval="${PYTEST_HEARTBEAT_INTERVAL:-30}"
           : > "$heartbeat"
           (
             # Kill during `wait` must reap the sleep child; otherwise it is
             # reparented and keeps running after the loop shell is gone.
-            trap 'kill "$sleep_pid" 2>/dev/null || true; exit 0' TERM
+            trap 'kill "$sleep_pid" 2>/dev/null || true; wait "$sleep_pid" 2>/dev/null || true; exit 0' TERM
             sleep_pid=
             while true; do
-              snapshot="$(ps -eo pid,stat,wchan:32,args | awk '
+              # Bound every probe. A wedged df/ps defers the TERM trap until
+              # the foreground command returns; timeout makes that prompt.
+              # `|| true` keeps a timed-out probe from exiting the loop under
+              # pipefail.
+              snapshot="$(timeout 10 ps -eo pid,stat,wchan:32,args | awk '
                 $2 ~ /^D/ && /-m pytest|import sys;exec[(]eval/ {
                   c++
                   lines[c] = $0
@@ -330,19 +336,20 @@ jobs:
                   printf "%d\n", c+0
                   for (i = 1; i <= c; i++) print lines[i]
                 }
-              ')"
+              ' || true)"
               dcount="${snapshot%%$'\n'*}"
+              dcount="${dcount:-0}"
               printf '%s avail_workspace_bytes=%s avail_basetemp_bytes=%s pytest_dstate=%s\n' \
-                "$(date -u +%FT%TZ)" \
-                "$(df -B1 --output=avail "$workspace" | tail -1 | tr -d ' ')" \
-                "$(df -B1 --output=avail "$basetemp" | tail -1 | tr -d ' ')" \
+                "$(timeout 10 date -u +%FT%TZ || true)" \
+                "$(timeout 10 df -B1 --output=avail "$workspace" | tail -1 | tr -d ' ' || true)" \
+                "$(timeout 10 df -B1 --output=avail "$basetemp" | tail -1 | tr -d ' ' || true)" \
                 "$dcount"
               if [ "$dcount" -gt 0 ]; then
                 printf '%s\n' "${snapshot#*$'\n'}"
               fi
-              sleep 30 &
+              sleep "$heartbeat_interval" &
               sleep_pid=$!
-              wait $!
+              wait "$sleep_pid"
             done
           ) >> "$heartbeat" 2>&1 &
           heartbeat_pid=$!
@@ -358,8 +365,37 @@ jobs:
             --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
           pytest_ec=$?
           set -e
-          kill "$heartbeat_pid" 2>/dev/null || true
-          wait "$heartbeat_pid" 2>/dev/null || true
+          # KILL a process and its /proc children. ps here would reintroduce
+          # the disk hang this cleanup exists to escape.
+          kill_tree() {
+            local pid="$1" sig="$2" child
+            for child in $(cat "/proc/${pid}/task/${pid}/children" 2>/dev/null || true); do
+              kill_tree "$child" "$sig"
+            done
+            kill "-${sig}" "$pid" 2>/dev/null || true
+          }
+          # TERM reaps the sleep. A probe stuck in D-state defers that trap,
+          # so after 15s KILL the shell and do not wait on it if it is still
+          # alive — a wedged disk must not hold the step until the job timeout.
+          kill -TERM "$heartbeat_pid" 2>/dev/null || true
+          heartbeat_waited=0
+          while kill -0 "$heartbeat_pid" 2>/dev/null; do
+            if [ "$heartbeat_waited" -ge 15 ]; then
+              kill_tree "$heartbeat_pid" KILL
+              sleep 1
+              break
+            fi
+            sleep 1
+            heartbeat_waited=$((heartbeat_waited + 1))
+          done
+          if ! kill -0 "$heartbeat_pid" 2>/dev/null; then
+            wait "$heartbeat_pid" 2>/dev/null || true
+          fi
+          # tail --pid follows a shell that survived KILL until the job
+          # timeout. Drop it. Its status must not replace pytest_ec.
+          if kill -0 "$heartbeat_pid" 2>/dev/null; then
+            kill "$tail_pid" 2>/dev/null || true
+          fi
           wait "$tail_pid" 2>/dev/null || true
           exit "$pytest_ec"
       - name: Stop memory sampler

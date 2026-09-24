@@ -15,8 +15,10 @@ import io
 import json
 import os
 import re
+import signal
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -682,6 +684,102 @@ def test_ci_yml_pytest_step_prints_disk_heartbeat() -> None:
     assert "ps -eo pid,stat,wchan:32,args" in run
     assert 'trap \'kill "$heartbeat_pid" 2>/dev/null || true\' EXIT' in run
     assert 'exit "$pytest_ec"' in run
+    assert "PYTEST_HEARTBEAT_INTERVAL:-30" in run
+    assert "timeout 10 ps -eo pid,stat,wchan:32,args" in run
+    assert 'timeout 10 df -B1 --output=avail "$workspace"' in run
+    assert 'timeout 10 df -B1 --output=avail "$basetemp"' in run
+    assert 'timeout 10 date -u +%FT%TZ' in run
+    assert 'wait "$sleep_pid"' in run
+    assert 'wait "$tail_pid" 2>/dev/null || true' in run
+    assert 'kill_tree "$heartbeat_pid" KILL' in run
     upload = ci_text.split("- name: Upload pytest heartbeat\n", 1)[1].split("\n  contracts:", 1)[0]
     assert "if: always()" in upload
     assert "pytest-heartbeat-shard-${{ matrix.shard }}" in upload
+
+
+_PYTEST_COMMAND = """\
+.venv/bin/python -m pytest tests -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \\
+  --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \\
+  --override-ini addopts=-v --durations=25 \\
+  --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"\
+"""
+
+
+def _run_pytest_step_script() -> str:
+    """Dedented bash of the Run pytest step, extracted from ci.yml."""
+    step = _ci_text().split("- name: Run pytest\n", 1)[1].split("\n      - name: Stop memory sampler", 1)[0]
+    body = step.split("run: |\n", 1)[1]
+    lines = body.splitlines()
+    indent = len(lines[0]) - len(lines[0].lstrip(" "))
+    script_lines = []
+    for line in lines:
+        if line.startswith(" " * indent):
+            script_lines.append(line[indent:])
+        else:
+            script_lines.append(line)
+    return "\n".join(script_lines) + "\n"
+
+
+def _process_group_members(pgid: int) -> list[str]:
+    members: list[str] = []
+    for entry in Path("/proc").iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            raw = (entry / "stat").read_text(encoding="utf-8")
+            cmdline = (entry / "cmdline").read_bytes().replace(b"\0", b" ").decode("utf-8", "replace").strip()
+        except OSError:
+            continue
+        end = raw.rfind(")")
+        if end < 0:
+            continue
+        fields = raw[end + 2 :].split()
+        if len(fields) >= 3 and int(fields[2]) == pgid:
+            members.append(f"{entry.name} {cmdline}")
+    return members
+
+
+def test_ci_yml_pytest_heartbeat_preserves_exit_and_reaps(tmp_path: Path) -> None:
+    """#8701: the heartbeat block from ci.yml must print, keep the command's
+    exit code, and leave no child in its process group."""
+    script = _run_pytest_step_script()
+    assert _PYTEST_COMMAND in script
+    script = script.replace(_PYTEST_COMMAND, "bash -c 'sleep 3; exit 3'", 1)
+    script_path = tmp_path / "run-pytest.sh"
+    script_path.write_text(script, encoding="utf-8")
+    env = os.environ.copy()
+    env.update(
+        {
+            "DOCS_ONLY": "false",
+            "PYTEST_MODE": "full",
+            "SHARD": "1",
+            "PYTEST_HEARTBEAT_INTERVAL": "1",
+            "GITHUB_WORKSPACE": str(tmp_path),
+            "TMPDIR": str(tmp_path),
+        }
+    )
+    proc = subprocess.Popen(
+        ["bash", str(script_path)],
+        cwd=tmp_path,
+        env=env,
+        start_new_session=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        stdout, stderr = proc.communicate(timeout=10)
+    except subprocess.TimeoutExpired:
+        os.killpg(proc.pid, signal.SIGKILL)
+        stdout, stderr = proc.communicate()
+        raise AssertionError(f"heartbeat step hung\nstdout={stdout}\nstderr={stderr}") from None
+    assert proc.returncode == 3, f"stdout={stdout}\nstderr={stderr}"
+    log = (tmp_path / "ci-artifacts" / "pytest-heartbeat-shard-1.log").read_text(encoding="utf-8")
+    heartbeats = [line for line in log.splitlines() if "avail_workspace_bytes=" in line]
+    assert len(heartbeats) >= 2, log
+    deadline = time.monotonic() + 2
+    members = _process_group_members(proc.pid)
+    while members and time.monotonic() < deadline:
+        time.sleep(0.1)
+        members = _process_group_members(proc.pid)
+    assert members == [], "process group still occupied: " + "; ".join(members)
