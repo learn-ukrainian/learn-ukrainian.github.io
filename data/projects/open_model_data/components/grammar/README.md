@@ -35,16 +35,16 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
 3. **Cross-Split Eval Partition Isolation:**
    - Sentences appearing in the evaluation partition are strictly quarantined from the training partition: **10** candidate matches excluded (9 sources [`eval_partition_firewall_source`], 1 target [`eval_partition_firewall_target`]).
 4. **Syntactic, Semantic & Valency Quality Filters:**
-   - Unwarranted valid-to-valid lexical swap (`unwarranted_valid_to_valid_lexical_swap`): **858** candidates excluded.
+   - Unwarranted valid-to-valid lexical swap (`unwarranted_valid_to_valid_lexical_swap`): **860** candidates excluded.
    - Sentence length floor (< 5 words) (`sentence_length_floor_under_5_words`): **287** candidates excluded.
-   - Ungrammatical gold correction (`ungrammatical_gold_correction`): **273** candidates excluded.
+   - Ungrammatical gold correction (`ungrammatical_gold_correction`): **274** candidates excluded.
    - Wholesale essay rewrite exceeding 30% of tokens (`wholesale_essay_rewrite_token_share_over_30_pct`): **196** candidates excluded.
    - Repeated word with intervening tokens (`repeated_word_intervening_words`): **187** candidates excluded.
-   - Russianism in corrected text (`russianism_in_corrected_text`): **149** candidates excluded.
-   - VESUM-unverified vocabulary form in corrected text (`vesum_unverified_vocabulary_form`): **122** candidates excluded.
+   - Russianism in corrected text (`russianism_in_corrected_text`): **150** candidates excluded.
+   - VESUM-unverified vocabulary form in corrected text (`vesum_unverified_vocabulary_form`): **123** candidates excluded.
    - Missing finite verb or copula (`missing_finite_verb_or_copula`): **113** candidates excluded.
    - Semantic meaning change or invented content (`semantic_meaning_change_or_invented_content`): **97** candidates excluded.
-   - Contextless pronoun or gender flip (`contextless_pronoun_or_gender_flip`): **70** candidates excluded.
+   - Contextless pronoun or gender flip (`contextless_pronoun_or_gender_flip`): **71** candidates excluded.
    - Polarity flips / negation changes (`polarity_flips_negation`): **64** candidates excluded.
    - Russianism in original text unrelated to edit (`russianism_in_original_text_unrelated_to_edit`): **63** candidates excluded.
    - Grammatical aspect, tense, or mood change (`grammatical_aspect_tense_or_mood_change`): **50** candidates excluded.
@@ -59,7 +59,7 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
    - Adjacent doubled words (`adjacent_doubled_words`): **1** candidate excluded.
    - Unpaired comma after relative pronoun (`unpaired_comma_after_relative_pronoun`): **1** candidate excluded.
 5. **Orthographic & Typographic Standard Filters:**
-   - Uncapitalized sentence fragments (`uncapitalized_or_fragment`): **502** candidates excluded.
+   - Uncapitalized sentence fragments (`uncapitalized_or_fragment`): **503** candidates excluded.
    - Non-Cyrillic characters, Latin scripts, and control characters (`latin_characters`): **224** candidates excluded.
    - Missing or invalid terminal punctuation (`missing_or_invalid_terminal_punctuation`): **222** candidates excluded.
    - Stray floating quotation marks (`stray_floating_quotes`): **118** candidates excluded.
@@ -79,8 +79,8 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
    - Spaced dash in initials (`spaced_dash_in_initials`): **2** candidates excluded.
    - Capitalization after comma-dash (`capitalization_after_comma_dash`): **2** candidates excluded.
 6. **Pedagogical Grounding, Safety & Semantic Fidelity:**
-   - Pure word insertions (`start == end`) (`pure_word_insertions`): **215** candidates excluded. Pure insertions lack an authentic corrupted grammatical surface form in the source text and risk teaching ungrounded generative insertion rather than grammatical correction.
-   - Safety filters (violent / morbid / vulgar content) (`safety_violent_morbid_vulgar`): **34** candidates excluded.
+   - Pure word insertions (`start == end`) (`pure_word_insertions`): **216** candidates excluded. Pure insertions lack an authentic corrupted grammatical surface form in the source text and risk teaching ungrounded generative insertion rather than grammatical correction.
+   - Safety filters (violent / morbid / vulgar content) (`safety_violent_morbid_vulgar`): **26** candidates excluded.
    - Defamatory or personal claims about named individuals (`claim_about_named_person`): **1** candidate excluded.
    - Unsubstantiated political assertions (`unsubstantiated_political_assertion`): **1** candidate excluded.
 7. **Cross-Document Pair Deduplication:**

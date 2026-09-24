@@ -931,11 +931,11 @@ def validate_candidate_rejection(
     """Validate candidate correction against annotator typos, comma-parens, and wholesale rewrites."""
     # Safety: reject graphic / violent / forensic / morbid / vulgar content
     if re.search(
-        r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*|поц\w*|статев\w+\s+член\w*)\b",
+        r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*|поц(?:а|ом|у|е|ів|ями|ях)?|статев\w+\s+член\w*)\b",
         orig_text,
         re.IGNORECASE,
     ) or re.search(
-        r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*|поц\w*|статев\w+\s+член\w*)\b",
+        r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*|поц(?:а|ом|у|е|ів|ями|ях)?|статев\w+\s+член\w*)\b",
         corr_text,
         re.IGNORECASE,
     ):
@@ -2210,6 +2210,8 @@ def validate_candidate_rejection(
     if re.search(r"\bбаньк\w*\b", c_low) or re.search(r"\bбаньк\w*\b", o_low):
         return "ungrammatical_gold_correction"
     if re.search(r"\bспівпада\w*\b", c_low) or re.search(r"\bспівпад\w*\b", c_low):
+        return "ungrammatical_gold_correction"
+    if re.search(r"\bвам\s+може\s+зайти\b", c_low):
         return "ungrammatical_gold_correction"
 
     # 6. Unneeded swaps and meaning changes
