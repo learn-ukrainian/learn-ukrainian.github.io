@@ -580,6 +580,13 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # #273: ціль в житті -> мета в житті
     if re.search(r"\bціль\s+[ву]\s+житті\b", text, re.IGNORECASE):
         return False
+    # Claude R21 control defects
+    if re.search(r"\bскатерть\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bпродажі\s+частот\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\b1,08\b", text, re.IGNORECASE):
+        return False
 
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
@@ -2184,6 +2191,101 @@ def is_valid_candidate(
         return False
     # #250: так що ми могли б
     if re.search(r"\bтак\s+що\s+ми\s+могли\s+б\b", c_low):
+        return False
+
+    # 24. Claude R21 Blockers & Defects
+    # #197: Gender agreement mismatch in corrected text: «за свого неприємну, сором'язливу присутність»
+    if re.search(r"\bсвого\s+(?:неприємну|присутність)\b", c_low) or re.search(r"\bза\s+свого\s+неприємн", c_low):
+        return False
+    # Systemic gender agreement check: masculine/neuter genitive/accusative pronoun followed by feminine accusative
+    if re.search(r"\b(?:свого|мого|твого|цього|того)\s+(?:[а-яіїєґ']+[ую]\s*,?\s*)*(?:присутність|формулу|мети|мету)\b", c_low):
+        return False
+
+    # #1: «поки пройде дощ» is idiomatic Ukrainian, but row calls «пройде» a calque and fixes to «мине»
+    if re.search(r"\bпоки\s+пройде\s+дощ\b", o_low) or re.search(r"\bпройде\s+дощ\b", o_low):
+        return False
+
+    # #212: «скатерть» is a standard Ukrainian form (VESUM/СУМ), not a calque
+    if re.search(r"\bскатерть\b", o_low) or re.search(r"\bскатерть\b", c_low):
+        return False
+
+    # #252 and #166 and #173 and #47: grammatical case forms falsely presented as errors
+    # #252: «не завжди знаючи мети» -> «мету» (genitive after negation is normative)
+    if re.search(r"\bзнаючи\s+мет\w*\b", o_low):
+        return False
+    # #166: «відшукати ту формулу» -> «тієї формули» (accusative is normative)
+    if re.search(r"\bвідшукати\s+т\w+\s+формул\w*\b", o_low):
+        return False
+    # #173: «капелюх» -> «капелюха» (accusative = nominative for inanimate)
+    if re.search(r"\bтримаючи\s+в\s+руках\s+капелюх\w*\b", o_low):
+        return False
+    # #47: «замість відкидання» -> «замість відкидати» (verbal noun is standard)
+    if re.search(r"\bзамість\s+відкид\w+\b", o_low):
+        return False
+
+    # #43: «продажі частот» uncorrected genitive (should be «продажу частот»)
+    if re.search(r"\bпродажі\s+частот\b", c_low) or re.search(r"\bпродажі\s+частот\b", o_low):
+        return False
+
+    # Garbled or fragmentary corrected texts
+    # #69: «Вічна тим, що зупинитись…» (headless fragment)
+    if re.search(r"\bвічна\s+тим,\s+що\b", o_low):
+        return False
+    # #70: «Діадема, музика, здавалося, зникла і ця подія…» (incoherent list)
+    if re.search(r"\bдіадема,\s+музика\b", o_low):
+        return False
+    # #102: «…палички трохи сильніше — дозволяє…»
+    if re.search(r"\bпалички\s+трохи\s+сильніше\b", o_low):
+        return False
+    # #245: predicate-less genitive fragment
+    if re.search(r"\bдвох\s+місяців\s+голоду\b", o_low):
+        return False
+    # #267: keeps malformed date «1,08 2020»
+    if re.search(r"\b1,08\b", o_low) or re.search(r"\b1,08\b", c_low):
+        return False
+
+    # Meaning shifts & minor residuals
+    # #22: «ювеліршиній карафі» -> «ювелірній»
+    if re.search(r"\bювеліршин\w*\b", o_low) or re.search(r"\bкарафі\b", o_low):
+        return False
+    # #195: «людини» -> «чоловіка»
+    if re.search(r"\bоскаженілого\s+людини\b", o_low):
+        return False
+    # #144: «Таким чином» -> «Отже»
+    if re.search(r"\bтаким\s+чином,\s+через\s+відсутність\b", o_low):
+        return False
+    # #33: passive -> active rewrite
+    if re.search(r"\bбільшість\s+воєнної\s+та\s+повоєнної\s+літератури\b", o_low):
+        return False
+    # #279: «не гарним морально чи законним»
+    if re.search(r"\bморально\s+чи\s+законн\w*\b", c_low) or re.search(r"\bморально\s+чи\s+законн\w*\b", o_low):
+        return False
+    # #72: «не такий, від яких»
+    if re.search(r"\bне\s+такий,\s+від\s+яких\b", c_low) or re.search(r"\bне\s+такий,\s+від\s+яких\b", o_low):
+        return False
+    # #92: «розуміння про»
+    if re.search(r"\bрозуміння\s+про\s+різні\s+підходи\b", o_low) or re.search(r"\bрозуміння\s+про\s+різні\s+підходи\b", c_low):
+        return False
+    # #63: «самим академіком»
+    if re.search(r"\bОлексій\s+Ухтомський\b", orig_text):
+        return False
+    # #66: «питанням у моделюванні»
+    if re.search(r"\bважливим\s+питанням\s+(?:при|у)\s+моделюванні\b", o_low):
+        return False
+    # #108: «вниз — вгору»
+    if re.search(r"\bрухається\s+вниз\s*[—–-]\s*(?:вверх|вгору)\b", o_low):
+        return False
+    # #156: «таким чином рефлексуємо»
+    if re.search(r"\bтаким\s+чином\s+рефлексуємо\b", o_low):
+        return False
+    # #240: «зустріла явно здивований погляд від продавчинь»
+    if re.search(r"\bпогляд\s+(?:від\s+)?продавчинь\b", o_low):
+        return False
+    # #269: «обвішена речима» -> «обвішана речами» with «прилетіла» / «вбігла» -> «забігла»
+    if re.search(r"\bобвішена\s+речима\b", o_low):
+        return False
+    # #126: «Про те, як виглядає мій робочий день»
+    if re.search(r"\bвиглядає\s+мій\s+робочий\s+день\b", o_low):
         return False
 
     # Reject unpaired comma after relative pronoun

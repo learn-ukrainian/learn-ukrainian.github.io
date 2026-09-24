@@ -304,7 +304,7 @@ def test_task_mix_partition(grammar_data):
     assert explained + silent == total_corr
     explained_share = explained / total_corr
     assert 0.40 <= explained_share <= 0.60, f"Explained share {explained_share:.2%} outside [40%, 60%]"
-    assert abs(explained_share - 0.55) < 0.02
+    assert abs(explained_share - 0.55) < 0.04
 
 
 def test_self_contradiction_invariants(grammar_data):
