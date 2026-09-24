@@ -19,6 +19,16 @@ CONTENT_PREFIXES = ("wiki/", "curriculum/")
 # Events classified by changed paths. Everything else (schedule, dispatch,
 # unknown) forces the full tier without touching the compare API.
 _PATH_CLASSIFIED_EVENTS = frozenset({"pull_request", "merge_group"})
+_FULL_CI_LABEL = "full-ci"
+# Merge-queue group branch, e.g. refs/heads/gh-readonly-queue/main/pr-8656-<sha>.
+# GitHub documents the `gh-readonly-queue/{base_branch}` prefix (docs.github.com
+# managing-a-merge-queue); the `pr-<number>-<parent sha>` tail is the observed
+# live format, where the parent SHA is the group ahead in the queue (or the base
+# branch head). Anything else fails closed to full.
+_QUEUE_REF = re.compile(
+    r"^refs/heads/gh-readonly-queue/(?P<base>.+)/pr-(?P<number>[1-9][0-9]*)-(?P<parent>[0-9a-f]{40})$"
+)
+_MAX_QUEUE_DEPTH = 100
 
 # Content class (#8399): learner-facing content with no imported code surface.
 # Every changed path must live under one of these roots for the class to apply.
@@ -339,7 +349,7 @@ def classify(
         raise ValueError("shard_count must be positive")
 
     # Non-classified event / full-ci / empty / capped: force full (P1.1).
-    if event not in _PATH_CLASSIFIED_EVENTS or "full-ci" in labels or not paths or len(paths) >= 300:
+    if event not in _PATH_CLASSIFIED_EVENTS or has_full_ci(labels) or not paths or len(paths) >= 300:
         return _full(shard_count)
 
     frontend = any(path_in_denominator(path, denominator) for path in paths)
@@ -374,6 +384,102 @@ def classify(
     if candidates is not None:
         return _selected(candidates)
     return _full(shard_count, frontend="true" if frontend else "false")
+
+
+def has_full_ci(labels: Iterable[str]) -> bool:
+    """GitHub label names are case-insensitive, so `Full-CI` counts too."""
+    return any(label.casefold() == _FULL_CI_LABEL for label in labels)
+
+
+def current_pr_labels(repo: str, number: int) -> list[str]:
+    """Current PR labels from the API, not the (possibly stale) event payload."""
+    if number < 1:
+        raise ValueError("invalid pull request number")
+    raw = subprocess.check_output(
+        ["gh", "api", f"repos/{repo}/pulls/{number}", "--jq", ".labels[].name"],
+        text=True,
+        timeout=60,
+    )
+    return [line for line in raw.splitlines() if line]
+
+
+def queue_refs_by_sha(repo: str, base_branch: str) -> dict[str, str]:
+    """Live merge-queue group refs for ``base_branch``, keyed by group head SHA.
+
+    Two refs on one SHA make the chain walk ambiguous: keeping either would
+    silently drop the other PR and its labels. Raise instead, so the caller
+    fails closed to full.
+    """
+    prefix = urllib.parse.quote(f"heads/gh-readonly-queue/{base_branch}/")
+    raw = subprocess.check_output(
+        [
+            "gh", "api", "--paginate", f"repos/{repo}/git/matching-refs/{prefix}",
+            "--jq", '.[] | .object.sha + " " + .ref',
+        ],
+        text=True,
+        timeout=60,
+    )
+    refs: dict[str, str] = {}
+    for line in raw.splitlines():
+        sha, _, ref = line.partition(" ")
+        if not sha or not ref:
+            raise ValueError("invalid matching-refs line")
+        if sha in refs:
+            raise ValueError(f"merge-queue refs {refs[sha]!r} and {ref!r} share {sha}")
+        refs[sha] = ref
+    return refs
+
+
+def on_base_branch(repo: str, base_branch: str, sha: str) -> bool:
+    """True when ``sha`` is the head of ``base_branch`` or one of its ancestors."""
+    spec = urllib.parse.quote(f"{base_branch}...{sha}", safe="/.")
+    raw = subprocess.check_output(
+        ["gh", "api", f"repos/{repo}/compare/{spec}", "--jq", ".status"],
+        text=True,
+        timeout=60,
+    )
+    return raw.strip() in {"identical", "behind"}
+
+
+def merge_group_pr_numbers(head_ref: str, base_sha: str, repo: str) -> list[int]:
+    """Every PR in a merge group: the queue ref's PR plus each PR ahead of it.
+
+    A group holds its own PR plus the PRs ahead of it in the queue, and its ref
+    names only its own PR. GitHub sends ``merge_group.base_sha`` as the group's
+    parent commit, which is the ref's trailing SHA: the head of the group ahead,
+    or the base branch commit for the first group (live runs 35989980156 and
+    35990749894). So ``base_sha`` cannot mark the end of the queue. Follow the
+    parent chain through the live queue refs until it leaves the queue, then
+    require that commit to be on the base branch. A malformed ref, a parent
+    that differs from ``base_sha``, or a chain that ends off the base branch
+    raises, and the caller fails closed to full.
+    """
+    match = _QUEUE_REF.match(head_ref)
+    if match is None:
+        raise ValueError(f"unrecognised merge-queue ref: {head_ref!r}")
+    if match["parent"] != base_sha:
+        raise ValueError(f"merge-queue ref parent {match['parent']} is not base_sha {base_sha!r}")
+    base_branch = match["base"]
+    numbers = [int(match["number"])]
+    parent = match["parent"]
+    refs = queue_refs_by_sha(repo, base_branch)
+    while parent in refs:
+        ahead = _QUEUE_REF.match(refs[parent])
+        if (
+            ahead is None
+            or ahead["base"] != base_branch
+            or int(ahead["number"]) in numbers
+            or len(numbers) >= _MAX_QUEUE_DEPTH
+        ):
+            raise ValueError(f"cannot resolve merge-queue group ahead at {parent}")
+        numbers.append(int(ahead["number"]))
+        parent = ahead["parent"]
+    # A group ahead that already merged is on the base branch, so its PR no
+    # longer needs checking. A group ahead that left the queue unmerged is not,
+    # and GitHub rebuilds this group anyway.
+    if not on_base_branch(repo, base_branch, parent):
+        raise ValueError(f"merge-queue chain ends at {parent}, which is not on {base_branch}")
+    return numbers
 
 
 def compare_paths(base: str, head: str, repo: str) -> list[str]:
@@ -411,14 +517,27 @@ def main() -> None:
     denominator: list[str] = []
     tree_paths: set[str] | None = None
     try:
+        # Labels come from the API, not the event payload: a manual "Re-run
+        # jobs" replays the original payload, and a merge_group payload has no
+        # labels at all (#8505). Any lookup failure raises into the except
+        # below and fails closed to full.
         if event == "pull_request":
             payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
-            labels = [label["name"] for label in payload["pull_request"]["labels"]]
-        if event in _PATH_CLASSIFIED_EVENTS and "full-ci" not in labels:
+            labels = current_pr_labels(os.environ["REPO"], payload["pull_request"]["number"])
+        elif event == "merge_group":
+            # full-ci on ANY PR in the group forces full in the queue run.
+            for number in merge_group_pr_numbers(
+                os.environ.get("HEAD_REF", ""), os.environ.get("BASE", ""), os.environ["REPO"],
+            ):
+                labels.extend(current_pr_labels(os.environ["REPO"], number))
+        if event in _PATH_CLASSIFIED_EVENTS and not has_full_ci(labels):
             # pull_request and merge_group both classify by changed paths;
             # the workflow maps pull_request.base/head or merge_group
-            # .base_sha/.head_sha (group union) into BASE/HEAD. Any failure
-            # here leaves paths empty → fail closed to full.
+            # .base_sha/.head_sha into BASE/HEAD. For a merge group that is
+            # this queue entry's own diff: base_sha is the head of the group
+            # ahead, and each entry runs its own required CI (the ruleset's
+            # ALLGREEN grouping). Any failure here leaves paths empty → fail
+            # closed to full.
             denominator = load_denominator()["paths"]
             paths = compare_paths(
                 os.environ.get("BASE", ""),
@@ -427,8 +546,10 @@ def main() -> None:
             )
             tree_paths = git_tree_paths(Path.cwd())
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
-        # Missing/malformed event, denominator, API response, or git tree → full.
+        # Missing/malformed event, labels, queue ref, denominator, API
+        # response, or git tree → full.
         paths = []
+        labels = [_FULL_CI_LABEL]
         tree_paths = None
     result = classify(
         paths,

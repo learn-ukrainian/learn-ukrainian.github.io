@@ -44,9 +44,9 @@ events then differ deliberately:
   content class AND at least one is `site/src/content/docs/**` — the case
   that used to fall to full because `frontend` was true (PR #8384). A PR
   touching only `curriculum/**`/`wiki/**` keeps the docs fast path.
-- **merge_group**: the queue is the integration gate, so a group resolves to
-  `content` (all paths content class) or `full` exactly as on main — never
-  `docs` or `selected`.
+- **merge_group**: classified with the same path classes as a PR, using each
+  queue entry's own changed paths (ALLGREEN), so a group can resolve to any
+  tier. Any lookup failure or ambiguity resolves to `full`.
 
 The content class emits `pytest_mode=content`: one shard running
 `-m 'reads_content and not slow and not atlas_release'` (same filters and
@@ -57,9 +57,11 @@ with Ruff, Contracts and the Frontend build still on (`docs_only=false`,
 references those content roots without carrying `reads_content`, so new
 content-reading tests cannot silently fall out of the class.
 
-Merge groups compute changed paths from `merge_group.base_sha..head_sha` (the
-union of the group's PRs) via the compare API. A PR carrying `full-ci` still
-forces the full tier; adding a label triggers a fresh run.
+CI runs on `pull_request` opened/synchronize/reopened; labels and PR-body
+edits do not start it. `full-ci` is read from the PR's current labels
+(case-insensitive, fail closed) on the next PR push and in every merge-queue
+run, where every PR in the group is resolved from the queue refs. A label added
+after a green PR run does not rerun it: push again, or rely on the merge queue.
 Manual runs and the daily 03:30 UTC schedule in `ci.yml` use that same full
 floor (`not atlas_release and not slow`). `pytest-slow-nightly.yml` remains the
 separate slow selection; this adds no retries or duplicate slow-test execution.

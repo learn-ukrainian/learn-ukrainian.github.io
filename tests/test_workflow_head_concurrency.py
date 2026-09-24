@@ -1,9 +1,16 @@
-"""Guard workflow concurrency against ref-keyed TOCTOU cancellation.
+"""Guard workflow concurrency against stale-run cancellation gaps.
 
 Two-tier cutover (#6943 stage 2): dual-event / advisory workflows prefix the
 group with ``github.event_name`` so a PR push cannot share a bucket with a
-queued ``merge_group`` run. PR-only workflows keep the original head-SHA
-group. ``merge_group`` must never set ``cancel-in-progress: true``.
+queued ``merge_group`` run. ``merge_group`` must never set
+``cancel-in-progress: true``.
+
+#8505: pull_request runs key by PR NUMBER, not head SHA, so a new push cancels
+the stale in-flight run for the previous SHA (previously a body edit or label
+could restart CI on an unchanged SHA, and a push queued behind its own stale
+run). The required "CI Gate" uses ``if: always()`` and fails when a required
+dependency was cancelled or skipped unexpectedly, so a skipped Gate cannot
+count as success.
 """
 
 from __future__ import annotations
@@ -14,19 +21,24 @@ import pytest
 import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_PR_HEAD_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}"
-_EVENT_PR_HEAD_GROUP = (
+_PR_NUMBER_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+_EVENT_PR_NUMBER_GROUP = (
     "${{ github.workflow }}-${{ github.event_name }}-"
-    "${{ github.event.pull_request.head.sha || github.ref }}"
+    "${{ github.event.pull_request.number || github.ref }}"
 )
+_PR_NUMBER_ONLY_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.number }}"
 _EVENT_SHA_GROUP = "${{ github.workflow }}-${{ github.event_name }}-${{ github.sha }}"
 _WORKFLOW_EXPECTATIONS = {
     ".github/workflows/ci.yml": {
-        "group": _EVENT_PR_HEAD_GROUP,
+        "group": _EVENT_PR_NUMBER_GROUP,
         "cancel-in-progress": "${{ github.event_name == 'pull_request' }}",
     },
     ".github/workflows/content-ci.yml": {
-        "group": _PR_HEAD_GROUP,
+        "group": _PR_NUMBER_GROUP,
+        "cancel-in-progress": True,
+    },
+    ".github/workflows/pr-body-guard.yml": {
+        "group": _PR_NUMBER_ONLY_GROUP,
         "cancel-in-progress": True,
     },
     ".github/workflows/hygiene.yml": {
@@ -38,7 +50,7 @@ _WORKFLOW_EXPECTATIONS = {
         "cancel-in-progress": True,
     },
     ".github/workflows/zizmor.yml": {
-        "group": _PR_HEAD_GROUP,
+        "group": "${{ github.workflow }}-${{ github.event.pull_request.head.sha || github.ref }}",
         "cancel-in-progress": True,
     },
 }
@@ -48,11 +60,11 @@ _WORKFLOW_EXPECTATIONS = {
     ("relative_path", "expected"),
     _WORKFLOW_EXPECTATIONS.items(),
 )
-def test_workflow_concurrency_is_head_sha_keyed_and_preserves_cancellation(
+def test_workflow_concurrency_is_pr_number_keyed_and_preserves_cancellation(
     relative_path: str,
     expected: dict[str, str | bool],
 ) -> None:
-    """Each scoped workflow isolates runs by immutable identity and keeps its policy."""
+    """Each scoped workflow isolates runs by PR identity and keeps its policy."""
     workflow_path = _REPO_ROOT / relative_path
     workflow = yaml.safe_load(workflow_path.read_text(encoding="utf-8"))
 

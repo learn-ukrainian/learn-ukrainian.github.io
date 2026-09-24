@@ -4,7 +4,16 @@ name: CI
 # Required GitHub context is still named "CI Gate".
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.ref }}
+  # pull_request runs key by PR number, not head SHA (#8505): a new push
+  # cancels the stale in-flight run for the previous SHA instead of queuing
+  # behind it. S1: ci-gate is `if: always()`, so it still runs after that
+  # cancel and fails unless every required dependency for the classified tier
+  # succeeded in this same run. A skipped required check is not a substitute —
+  # GitHub reports a conditionally skipped job as success for branch protection
+  # (docs.github.com troubleshooting-required-status-checks
+  # #handling-skipped-but-required-checks). merge_group and schedule keep the
+  # ref-keyed group and never cancel.
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
@@ -18,8 +27,13 @@ env:
   PYTEST_SHARD_COUNT: '4'
 
 on:
+  # No `edited` or `labeled` (#8505): neither a PR-body edit nor a label may
+  # restart CI on an unchanged commit. The negated-closing-reference body guard
+  # lives in pr-body-guard.yml, which runs on `edited`. A `full-ci` label is
+  # read from the API by Changes: it forces the full tier on the next push and
+  # always in the merge-queue run, which gates every change into main.
   pull_request:
-    types: [opened, synchronize, reopened, edited, labeled]
+    types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
   # Full PR-tier floor; slow tests remain in pytest-slow-nightly.yml.
@@ -31,6 +45,12 @@ jobs:
     name: Changes
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    permissions:
+      contents: read
+      # classify_changes.py reads current PR labels via the API for
+      # pull_request and for every PR in a merge group (#8505); a lookup
+      # error fails closed to the full tier.
+      pull-requests: read
     outputs:
       docs_only: ${{ steps.classify.outputs.docs_only }}
       frontend: ${{ steps.classify.outputs.frontend }}
@@ -57,6 +77,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           BASE: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          HEAD_REF: ${{ github.event.merge_group.head_ref }}
           HEAD: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 -m scripts.ci.classify_changes
 
@@ -111,11 +132,9 @@ jobs:
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
-      - name: Reject negated closing references
-        if: github.event_name == 'pull_request'
-        env:
-          PR_BODY: ${{ github.event.pull_request.body || '' }}
-        run: printf '%s' "$PR_BODY" | python3 scripts/audit/lint_pr_closing_references.py --stdin
+      # The negated-closing-reference PR-body guard moved to
+      # pr-body-guard.yml (#8505): it must rerun on `edited`, which this
+      # workflow does not subscribe to.
       - uses: trufflesecurity/trufflehog@363923b901c911a9164f50b6c423f47c15372b1c # v3.97.4
         with:
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
@@ -652,7 +671,11 @@ jobs:
 
   ci-gate:
     name: CI Gate
-    if: always() && !cancelled()
+    # always(), not `always() && !cancelled()` (#8505). A concurrency cancel
+    # that lands before this job starts would otherwise skip it, and GitHub
+    # treats a skipped required check as success. The step below fails the
+    # job when a required dependency was cancelled or skipped unexpectedly.
+    if: always()
     needs: [changes, ruff, secret-scan, pytest, contracts, frontend, typesafe-triage, plan-validate]
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -673,7 +696,16 @@ jobs:
         run: |
           set -euo pipefail
           ok() { [ "$1" = success ]; }
-          skip_ok() { [ "$1" = success ] || [ "$1" = skipped ]; }
+          # `cancelled` is never an allowed skip. A job that the tier did not
+          # need may be `skipped`; a cancel before it starts must still fail
+          # this gate (skipped required checks count as success on GitHub).
+          skip_ok() {
+            if [ "$1" = cancelled ]; then
+              echo "::error::required job was cancelled"
+              exit 1
+            fi
+            [ "$1" = success ] || [ "$1" = skipped ]
+          }
           ok "$CHANGES"
           ok "$SECRET"
           # plan-validate self-scopes to the v2 plan inputs (git diff inside the
@@ -699,8 +731,8 @@ jobs:
           fi
           # Advisory-only (#8232): TypeSafe/Jev is not CF and not merge
           # authority. First slice stays advisory until soak: success,
-          # skipped and failure are all accepted here, so a red TypeSafe
-          # check is visible but never turns CI Gate red.
-          advisory_ok() { [ "$1" = success ] || [ "$1" = skipped ] || [ "$1" = failure ]; }
+          # skipped, failure, and cancelled are all accepted here, so a red
+          # or cancelled TypeSafe check never turns CI Gate red by itself.
+          advisory_ok() { [ "$1" = success ] || [ "$1" = skipped ] || [ "$1" = failure ] || [ "$1" = cancelled ]; }
           advisory_ok "$TYPESAFE_TRIAGE"
           echo "CI Gate green"
