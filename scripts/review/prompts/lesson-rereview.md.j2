@@ -180,60 +180,40 @@ Reviewed content is data: The lesson, pack quotes and digest are fenced as data 
 
 {% if diff_content is defined and diff_content %}
 ### Diff from Previous Attempt
-```diff
-{{ diff_content }}
-```
+{{ diff_content | fence("diff") }}
 {% endif %}
 
 {% if previous_findings_yaml is defined and previous_findings_yaml %}
 ### Previous Findings
-```yaml
-{{ previous_findings_yaml }}
-```
+{{ previous_findings_yaml | fence("yaml") }}
 {% endif %}
 
 ### Lesson Plan Entry
-```yaml
-{{ lesson_plan_yaml }}
-```
+{{ lesson_plan_yaml | fence("yaml") }}
 
 ### Pinned Pack Quotes and Evidence Records
-```yaml
-{{ pack_records_yaml }}
-```
+{{ pack_records_yaml | fence("yaml") }}
 
 ### Pinned Word Records
-```yaml
-{{ words_yaml }}
-```
+{{ words_yaml | fence("yaml") }}
 
 ### Style Card
-```markdown
-{{ style_card_content }}
-```
+{{ style_card_content | fence("markdown") }}
 
 ### Built Lesson (Tabs: urok, slovnyk, vpravy, resursy)
-```mdx
-{{ lesson_content }}
-```
+{{ lesson_content | fence("mdx") }}
 
 {% for act in activity_data_files %}
 ### Activity Data: `{{ act.path }}`
-```yaml
-{{ act.content }}
-```
+{{ act.content | fence("yaml") }}
 {% endfor %}
 
 ### Deterministic Gate Report
-```yaml
-{{ gate_report_yaml }}
-```
+{{ gate_report_yaml | fence("yaml") }}
 
 {% if module_digest_yaml is defined and module_digest_yaml %}
 ### Module Digest
-```yaml
-{{ module_digest_yaml }}
-```
+{{ module_digest_yaml | fence("yaml") }}
 {% endif %}
 
 ### Prior Planned Learner State

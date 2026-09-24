@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +52,27 @@ def compute_sha256(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
 
 
+def data_fence(content: Any, lang: str = "") -> str:
+    """Insert data content safely wrapped in a fence delimiter that cannot occur in the content.
+
+    Computes a backtick fence longer than the longest run of backticks in `content`,
+    with a minimum length of 3 backticks.
+    """
+    if isinstance(content, str):
+        text = content
+    elif content is None:
+        text = ""
+    else:
+        text = yaml.safe_dump(content, allow_unicode=False, sort_keys=False)
+
+    runs = re.findall(r"`+", text)
+    max_run = max((len(r) for r in runs), default=0)
+    fence = "`" * max(3, max_run + 1)
+    body = text if text.endswith("\n") else text + "\n"
+    tag = lang.strip()
+    return f"{fence}{tag}\n{body}{fence}"
+
+
 class ManifestReader:
     """Enforces that only manifest-declared files are read and verified."""
 
@@ -74,12 +96,14 @@ class ManifestReader:
                         self.allowed_paths[p] = str(item["sha256"])
 
         # Top-level manifest files (module_digest, diff, previous_findings)
+        # E3d: manifest["inputs"]["module_digest"]
         if "module_digest" in self.manifest and isinstance(self.manifest["module_digest"], dict):
             md = self.manifest["module_digest"]
             if "path" in md and "sha256" in md:
                 p = (self.repo_root / md["path"]).resolve()
                 self.allowed_paths[p] = str(md["sha256"])
 
+        # E3d: manifest["inputs"]["diff"]
         if "diff_path" in self.manifest and "diff_sha256" in self.manifest:
             p = (self.repo_root / self.manifest["diff_path"]).resolve()
             self.allowed_paths[p] = str(self.manifest["diff_sha256"])
@@ -87,6 +111,7 @@ class ManifestReader:
         # Pack and words locks authorize their corresponding unlocked data files
         # Verify the lock files first so we can register the unlocked targets
         if "pack_lock" in inputs and isinstance(inputs["pack_lock"], dict):
+            # E3d: manifest["inputs"]["pack"]
             lock_rel = inputs["pack_lock"]["path"]
             lock_path = (self.repo_root / lock_rel).resolve()
             lock_bytes = self.read_bytes(lock_path)
@@ -95,6 +120,7 @@ class ManifestReader:
             self.allowed_paths[pack_path] = pack_sha
 
         if "words_lock" in inputs and isinstance(inputs["words_lock"], dict):
+            # E3d: manifest["inputs"]["words"]
             wlock_rel = inputs["words_lock"]["path"]
             wlock_path = (self.repo_root / wlock_rel).resolve()
             wlock_bytes = self.read_bytes(wlock_path)
@@ -194,6 +220,68 @@ def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: Manif
         context["arc"] = arc_doc
         context["arc_yaml"] = yaml.safe_dump(arc_doc, allow_unicode=False, sort_keys=False).strip()
 
+        # Contract 1: arc record of the position and its neighbours
+        pos_num = manifest.get("position")
+        if pos_num is None and "plan" in context and isinstance(context["plan"], dict):
+            pos_num = context["plan"].get("arc_ref", {}).get("position")
+
+        all_positions = arc_doc.get("positions", []) if isinstance(arc_doc, dict) else []
+        if pos_num is not None:
+            target_pos = int(pos_num)
+            neighbour_positions = [
+                p for p in all_positions if isinstance(p, dict) and abs(p.get("position", -999) - target_pos) <= 1
+            ]
+        else:
+            neighbour_positions = all_positions
+
+        context["arc_positions"] = neighbour_positions
+        context["arc_positions_yaml"] = yaml.safe_dump(
+            neighbour_positions, allow_unicode=False, sort_keys=False
+        ).strip()
+
+        # Arc system-or-chunk table
+        soc_data = None
+        if isinstance(arc_doc, dict):
+            for k in ("system_or_chunk", "system_or_chunk_table", "chunks"):
+                if k in arc_doc:
+                    soc_data = arc_doc[k]
+                    break
+        if "system_or_chunk" in inputs:
+            soc_data = reader.read_yaml(inputs["system_or_chunk"]["path"])
+        elif "system_or_chunk" in manifest:
+            soc_data = manifest["system_or_chunk"]
+
+        if soc_data is not None:
+            context["arc_system_or_chunk"] = soc_data
+            context["arc_system_or_chunk_yaml"] = yaml.safe_dump(soc_data, allow_unicode=False, sort_keys=False).strip()
+        else:
+            context["arc_system_or_chunk"] = None
+            context["arc_system_or_chunk_yaml"] = ""
+
+    # Load requirements if present
+    req_data = None
+    if "requirements" in inputs:
+        req_entry = inputs["requirements"]
+        if isinstance(req_entry, dict) and "path" in req_entry:
+            req_data = reader.read_yaml(req_entry["path"])
+    elif "requirements" in manifest:
+        req_data = manifest["requirements"]
+    elif "plan" in context and isinstance(context["plan"], dict) and "requirements" in context["plan"]:
+        req_data = context["plan"]["requirements"]
+    elif "arc" in context and isinstance(context["arc"], dict) and "requirements" in context["arc"]:
+        req_data = context["arc"]["requirements"]
+
+    if req_data is not None:
+        context["requirements"] = req_data
+        context["requirements_yaml"] = (
+            req_data.strip()
+            if isinstance(req_data, str)
+            else yaml.safe_dump(req_data, allow_unicode=False, sort_keys=False).strip()
+        )
+    else:
+        context["requirements"] = None
+        context["requirements_yaml"] = ""
+
     # Load grammar registry if present
     if "grammar" in inputs:
         grammar_doc = reader.read_yaml(inputs["grammar"]["path"])
@@ -205,6 +293,7 @@ def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: Manif
         val_doc = reader.read_json(inputs["validate_report"]["path"])
         context["validate_report"] = val_doc
         context["validate_report_json"] = json.dumps(val_doc, indent=2)
+        context["validate_report_yaml"] = yaml.safe_dump(val_doc, allow_unicode=False, sort_keys=False).strip()
 
     # Load pack verify report if present
     if "pack_verify_report" in inputs:
@@ -213,6 +302,7 @@ def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: Manif
         context["pack_verify_report_json"] = json.dumps(pv_doc, indent=2)
 
     # Load pack records from pack locked by pack_lock
+    # E3d: manifest["inputs"]["pack"]
     if "pack_lock" in inputs:
         lock_rel = inputs["pack_lock"]["path"]
         lock_path = (reader.repo_root / lock_rel).resolve()
@@ -223,6 +313,7 @@ def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: Manif
         context["pack_records_yaml"] = yaml.safe_dump(pack_records, allow_unicode=False, sort_keys=False).strip()
 
     # Load words from words locked by words_lock
+    # E3d: manifest["inputs"]["words"]
     if "words_lock" in inputs:
         wlock_rel = inputs["words_lock"]["path"]
         wlock_path = (reader.repo_root / wlock_rel).resolve()
@@ -255,6 +346,7 @@ def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: Manif
         context["style_card_content"] = reader.read_text(inputs["style_card"]["path"])
 
     # Load module digest if present
+    # E3d: manifest["inputs"]["module_digest"]
     if "module_digest" in manifest and isinstance(manifest["module_digest"], dict):
         md = manifest["module_digest"]
         if "path" in md:
@@ -263,9 +355,11 @@ def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: Manif
             context["module_digest_yaml"] = yaml.safe_dump(digest_doc, allow_unicode=False, sort_keys=False).strip()
 
     # Upstream lessons (for recap)
+    # E3d: manifest["inputs"]["upstream_lessons"]
     context["upstream_lessons"] = manifest.get("upstream_lessons", [])
 
     # Learner state
+    # E3d: manifest["inputs"]["learner_state"]
     l_state = manifest.get("learner_state", {})
     context["learner_state_sha256"] = l_state.get("sha256", "") if isinstance(l_state, dict) else ""
 
@@ -327,6 +421,10 @@ def render_prompt(
         trim_blocks=True,
         lstrip_blocks=True,
     )
+    env.filters["fence"] = data_fence
+    env.globals["fence"] = data_fence
+    env.filters["data_fence"] = data_fence
+    env.globals["data_fence"] = data_fence
 
     try:
         tmpl = env.get_template(resolved_template)
@@ -344,6 +442,14 @@ def render_prompt(
         out.write_text(rendered, encoding="utf-8")
         sidecar = out.with_name(f"{out.name}.sha256")
         sidecar.write_text(f"{prompt_sha256}\n", encoding="ascii")
+        files_read_sidecar = out.with_name(f"{out.name}.files_read.json")
+        rel_files: list[str] = []
+        for f in reader.files_read:
+            try:
+                rel_files.append(f.relative_to(root).as_posix())
+            except ValueError:
+                rel_files.append(f.as_posix())
+        files_read_sidecar.write_text(json.dumps(rel_files, indent=2) + "\n", encoding="utf-8")
 
     return rendered, prompt_sha256, list(reader.files_read)
 
