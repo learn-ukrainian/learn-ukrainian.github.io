@@ -18,11 +18,13 @@ try:
     # Repo-root imports (scripts.api.main, audit chain) resolve the package form.
     from scripts.build.activity_renderer import (
         error_correction_render_values,
+        image_to_letter_render_values,
         unique_error_correction_options,
     )
 except ImportError:  # pragma: no cover - scripts/-rooted callers (MDX generator)
     from build.activity_renderer import (
         error_correction_render_values,
+        image_to_letter_render_values,
         unique_error_correction_options,
     )
 
@@ -513,6 +515,7 @@ class ImageToLetterItem:
     answer: str
     distractors: list[str] = field(default_factory=list)
     note: str = ""
+    explanation: str = ""
 
 
 @dataclass
@@ -1424,12 +1427,14 @@ class ActivityParser:
 
     def _parse_image_to_letter(self, data: dict) -> ImageToLetterActivity:
         items = []
-        for i in data.get('items', []):
+        for index, raw in enumerate(data.get('items', [])):
+            values = image_to_letter_render_values(raw, index)
             items.append(ImageToLetterItem(
-                emoji=i.get('emoji', ''),
-                answer=i.get('answer', ''),
-                distractors=i.get('distractors', []),
-                note=i.get('note', ''),
+                emoji=values['emoji'],
+                answer=values['answer'],
+                distractors=values['distractors'],
+                note=values.get('note', ''),
+                explanation=values.get('explanation', ''),
             ))
         return ImageToLetterActivity(
             title=data.get('title', ''),
@@ -2235,10 +2240,18 @@ class ActivityParser:
         return f"### {self._escape_jsx(heading)}\n\n<Classify client:only='react' {props} />"
 
     def _image_to_letter_to_mdx(self, activity: ImageToLetterActivity) -> str:
-        items = [{'emoji': i.emoji, 'answer': i.answer, 'distractors': i.distractors} for i in activity.items]
+        items = []
+        for i in activity.items:
+            entry: dict[str, Any] = {'emoji': i.emoji, 'answer': i.answer, 'distractors': i.distractors}
+            if i.note:
+                entry['note'] = i.note
+            if i.explanation:
+                entry['explanation'] = i.explanation
+            items.append(entry)
         props = f'items={{JSON.parse(`{self._dump_safe_json(items)}`)}}'
         if activity.title:
             props += f' title="{self._escape_jsx(activity.title)}"'
+        props += self._instruction_prop(activity.instruction)
         heading = activity.title or 'Image to Letter'
         return f"### {self._escape_jsx(heading)}\n\n<ImageToLetter client:only='react' {props} />"
 
