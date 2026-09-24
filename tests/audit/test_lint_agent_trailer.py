@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import argparse
 import json
 from pathlib import Path
 
@@ -49,7 +48,8 @@ def _write_task_record(
 ) -> Path:
     target_dir = tasks_dir / "archive" if archived else tasks_dir
     target_dir.mkdir(parents=True, exist_ok=True)
-    record_file = target_dir / f"{task_id}.json"
+    safe_name = task_id.replace("/", "_").replace("\\", "_")
+    record_file = target_dir / f"{safe_name}.json"
     data = {
         "task_id": task_id,
         "agent": agent,
@@ -411,55 +411,97 @@ def test_grok_build_alias_accepted(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     assert verdict == "PASS"
 
 
-def test_worker_env_carries_lu_x_agent_trailer(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """delegate.py exports LU_X_AGENT_TRAILER into worker_env, sharing _x_agent_trailer helper."""
+def test_worker_env_carries_lu_x_agent_trailer() -> None:
+    """delegate.py exports LU_X_AGENT_TRAILER into worker_env via _build_worker_env and _x_agent_trailer."""
     from scripts import delegate
 
     # Direct helper verification
     assert delegate._x_agent_trailer("codex", "dispatch-trailer-test") == "X-Agent: codex/dispatch-trailer-test"
     assert delegate._x_agent_trailer("codex", "codex-1472-foo") == "X-Agent: codex/1472-foo"
 
-    recorded: dict[str, object] = {}
-
-    class _FakeStdin:
-        def write(self, _data: object) -> None:
-            pass
-
-        def close(self) -> None:
-            pass
-
-    class _FakeProc:
-        pid = 12345
-        stdin = _FakeStdin()
-
-    def fake_popen(*args: object, **kwargs: object) -> _FakeProc:
-        recorded["env"] = kwargs.get("env", {})
-        return _FakeProc()
-
-    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
-    fake_tasks = tmp_path / "batch_tasks"
-    fake_tasks.mkdir()
-    monkeypatch.setattr(delegate, "_TASKS_DIR", fake_tasks)
-
-    args = argparse.Namespace(
-        agent="codex",
+    env = delegate._build_worker_env(
         task_id="dispatch-trailer-test",
-        prompt="test prompt",
-        prompt_file=None,
-        mode="read-only",
-        model=None,
-        cwd=None,
-        worktree=None,
-        hard_timeout=3600,
-        allow_merge=False,
+        dispatch_agent="codex",
+        base_env={},
     )
-
-    rc = delegate.cmd_dispatch(args)
-    assert rc == 0
-    env = recorded["env"]
     assert env["LU_X_AGENT_TRAILER"] == "X-Agent: codex/dispatch-trailer-test"
     assert env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] == "dispatch-trailer-test"
     assert env["LEARN_UKRAINIAN_DISPATCH_AGENT"] == "codex"
+
+
+def test_literal_expected_trailer_accepted_without_record_lookup(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Should-fix 2: literal expected trailer passes before any record lookup.
+
+    1. Task id 'fix:parse' -> record 'fix:parse.json', trailer 'codex/fix-parse'.
+    2. Task id 'codex/foo' -> record 'codex_foo.json', trailer 'codex/foo'.
+    """
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+
+    # Case 1: task id fix:parse
+    _write_task_record(tasks_dir, "fix:parse", agent="codex")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "fix:parse")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+    monkeypatch.delenv("LU_X_AGENT_TRAILER", raising=False)
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
+    assert provenance.expected_trailer == "X-Agent: codex/fix-parse"
+
+    _mock_commit(monkeypatch, "fix: parse colon in task id\n\nX-Agent: codex/fix-parse")
+    verdict, reason = _check_commit("fake-sha", provenance=provenance)
+    assert verdict == "PASS"
+    assert reason == "X-Agent: codex/fix-parse"
+
+    # Case 2: task id codex/foo -> record codex_foo.json
+    _write_task_record(tasks_dir, "codex/foo", agent="codex")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "codex/foo")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
+    assert provenance.expected_trailer == "X-Agent: codex/foo"
+
+    _mock_commit(monkeypatch, "feat: handle codex slash task\n\nX-Agent: codex/foo")
+    verdict, reason = _check_commit("fake-sha", provenance=provenance)
+    assert verdict == "PASS"
+    assert reason == "X-Agent: codex/foo"
+
+
+def test_candidate_order_and_agent_match_preference(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Nit: For trailer 'codex/1472-foo', try {agent}-task first and prefer matching agent record.
+
+    Both '1472-foo.json' (owned by another agent, e.g. claude) and
+    'codex-1472-foo.json' (owned by codex) exist -> 'codex/1472-foo' passes.
+    """
+    tasks_dir = tmp_path / "tasks"
+    tasks_dir.mkdir()
+
+    # 1472-foo owned by claude
+    _write_task_record(tasks_dir, "1472-foo", agent="claude")
+    # codex-1472-foo owned by codex
+    _write_task_record(tasks_dir, "codex-1472-foo", agent="codex")
+
+    # Current dispatch is for a different task to exercise the record lookup path
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "other-task")
+    monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_AGENT", "codex")
+    _write_task_record(tasks_dir, "other-task", agent="codex")
+
+    provenance = resolve_provenance_context(tasks_dir=tasks_dir)
+    assert provenance.active is True
+
+    _mock_commit(monkeypatch, "fix: commit on branch\n\nX-Agent: codex/1472-foo")
+    verdict, reason = _check_commit("fake-sha", provenance=provenance)
+    assert verdict == "PASS"
+    assert reason == "X-Agent: codex/1472-foo"
+
+    # If the matching record is removed, the remaining record owned by claude causes agent mismatch
+    (tasks_dir / "codex-1472-foo.json").unlink()
+    verdict, reason = _check_commit("fake-sha", provenance=provenance)
+    assert verdict == "FAIL"
+    assert "dispatch worktree agent is 'claude'" in reason
 
 
 def test_prompt_preamble_mentions_lu_x_agent_trailer() -> None:

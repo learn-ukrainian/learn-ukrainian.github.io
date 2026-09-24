@@ -124,24 +124,49 @@ def _agents_match(a: str, b: str) -> bool:
 def locate_record_for_trailer(tasks_dir: Path, agent: str, task: str) -> tuple[Path | None, str | None]:
     """Locate task record for a trailer agent/task, normalization-aware.
 
-    For trailer ``agent/task``, accepts a record named ``task`` or ``{agent}-task``
-    (the inverse of ``_x_agent_task_id`` in delegate.py).
+    For trailer ``agent/task``, accepts a record named ``{agent}-task``,
+    ``{agent}_task``, or ``task`` (the inverse of ``_x_agent_task_id`` in delegate.py).
+    Prefers a candidate whose record agent matches the trailer agent.
     """
-    candidates = [task, f"{agent}-{task}"]
+    normalized = task
+    for prefix in (f"{agent}-", f"{agent}/", f"{agent}_"):
+        if normalized.startswith(prefix):
+            normalized = normalized[len(prefix) :]
+            break
+
+    candidates: list[str] = [f"{agent}-{normalized}", f"{agent}_{normalized}"]
     if agent in ("gemini", "agy"):
         other = "agy" if agent == "gemini" else "gemini"
-        candidates.append(f"{other}-{task}")
+        candidates.extend([f"{other}-{normalized}", f"{other}_{normalized}"])
     elif agent in ("grok", "grok-build"):
         other = "grok-build" if agent == "grok" else "grok"
-        candidates.append(f"{other}-{task}")
+        candidates.extend([f"{other}-{normalized}", f"{other}_{normalized}"])
     elif agent in ("deepseek", "deepseek-v4-pro"):
         other = "deepseek" if agent == "deepseek-v4-pro" else "deepseek-v4-pro"
-        candidates.append(f"{other}-{task}")
+        candidates.extend([f"{other}-{normalized}", f"{other}_{normalized}"])
 
+    if normalized not in candidates:
+        candidates.append(normalized)
+    if task not in candidates:
+        candidates.append(task)
+
+    first_existing: tuple[Path, str] | None = None
     for candidate in candidates:
         rec_path = locate_task_record(tasks_dir, candidate)
-        if rec_path is not None:
-            return rec_path, candidate
+        if rec_path is None:
+            continue
+        if first_existing is None:
+            first_existing = (rec_path, candidate)
+        try:
+            data = json.loads(rec_path.read_text(encoding="utf-8"))
+            rec_agent = data.get("agent")
+            if rec_agent and _agents_match(agent, rec_agent):
+                return rec_path, candidate
+        except (OSError, json.JSONDecodeError):
+            pass
+
+    if first_existing is not None:
+        return first_existing
     return None, None
 
 
@@ -165,15 +190,20 @@ class ProvenanceContext:
     expected_task_id: str | None = None
     expected_agent: str | None = None
     tasks_dir: Path | None = None
+    explicit_expected_trailer: str | None = None
 
     @property
     def expected_trailer(self) -> str | None:
+        if self.explicit_expected_trailer:
+            return self.explicit_expected_trailer
         if self.expected_agent and self.expected_task_id:
             task = self.expected_task_id
-            for prefix in (f"{self.expected_agent}-", f"{self.expected_agent}/"):
+            for prefix in (f"{self.expected_agent}-", f"{self.expected_agent}/", f"{self.expected_agent}_"):
                 if task.startswith(prefix):
                     task = task[len(prefix) :]
                     break
+            task = re.sub(r"[^A-Za-z0-9._-]+", "-", task).strip(".-")
+            task = task or "task"
             return f"X-Agent: {self.expected_agent}/{task}"
         return None
 
@@ -202,7 +232,8 @@ def resolve_provenance_context(
         )
 
     # 3. Check tasks directory
-    effective_tasks_dir = (tasks_dir or _default_tasks_dir()).resolve()
+    default_dir = _default_tasks_dir(repo_root=resolve_repo_root(cwd, 2) if cwd else None)
+    effective_tasks_dir = (tasks_dir or default_dir).resolve()
     if not effective_tasks_dir.is_dir():
         return ProvenanceContext(
             active=False,
@@ -212,8 +243,12 @@ def resolve_provenance_context(
 
     # 4. Check if that task's record is found
     env_agent = os.environ.get("LEARN_UKRAINIAN_DISPATCH_AGENT")
-    if not env_agent and (env_trailer := os.environ.get("LU_X_AGENT_TRAILER")):
-        m = _TRAILER_RE.match(env_trailer.strip())
+    env_trailer = os.environ.get("LU_X_AGENT_TRAILER")
+    explicit_trailer: str | None = None
+    if env_trailer and _TRAILER_RE.match(env_trailer.strip()):
+        explicit_trailer = env_trailer.strip()
+    if not env_agent and explicit_trailer:
+        m = _TRAILER_RE.match(explicit_trailer)
         if m:
             env_agent = m.group("agent")
 
@@ -239,6 +274,7 @@ def resolve_provenance_context(
         expected_task_id=expected_task_id,
         expected_agent=expected_agent,
         tasks_dir=effective_tasks_dir,
+        explicit_expected_trailer=explicit_trailer,
     )
 
 
@@ -299,6 +335,9 @@ def _check_commit(
         provenance = resolve_provenance_context(cwd=cwd)
 
     if not provenance.active:
+        return "PASS", trailer_str
+
+    if provenance.expected_trailer and trailer_str == provenance.expected_trailer:
         return "PASS", trailer_str
 
     tasks_dir = provenance.tasks_dir or _default_tasks_dir()
