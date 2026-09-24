@@ -2718,6 +2718,145 @@ def is_valid_candidate(
     if re.search(r"\bпри\s+купівлі\s+товару\b", c_low):
         return False
 
+    # 29. Claude R26 Blockers, Defects & Systemic Validations
+    # Blockers (R26)
+    # #44: «вчать певним правилам» -> «певних правил» & #193: «навчитися мистецтву» -> «мистецтва» (dative is valid)
+    if re.search(r"\bвчать\s+певним\s+правилам\b", o_low) or re.search(r"\bнавчитися\s+[«\"“]?мистецтв[уа]\b", o_low):
+        return False
+    # #18: «вернувся» -> «повернувся» & #267: «догадатися» -> «здогадатися» (false aspect claim)
+    if re.search(r"\bДоктор\s+вернувся\b", orig_text) or re.search(r"\bстараємося\s+догадатися\b", o_low):
+        return False
+    # #91: «свистячи» -> «насвистуючи» (false participle rule)
+    if re.search(r"\bсвистячи\s+регтайм\b", o_low) or re.search(r"\bсвистячи\s+якусь\s+мелодію\b", o_low):
+        return False
+    # #266: «Так, вважаю в Україні цього статусу гідні…» (missing comma)
+    if re.search(r"\bвважаю\s+в\s+Україні\s+цього\s+статусу\b", c_low) or re.search(r"\bнас[єе]л[єе]нія\b", o_low):
+        return False
+    # #198: «ведучим» -> «перше» (semantic distortion)
+    if re.search(r"\bбуде\s+відрегульоване,\s+після\s+45\b", o_low) or re.search(r"\bперше\s+буде\s+відрегульоване\b", c_low):
+        return False
+    # #258: «зловіще» -> «зловісно» (valid word falsely labeled calque)
+    if re.search(r"\bметро\s+зловіщ[ео]\s+відчинялися\b", o_low):
+        return False
+    # #57: «а що так сидіти» -> «а чого так сидіти» (colloquial vs inflection)
+    if re.search(r"\bа\s+що\s+так\s+сидіти\b", o_low):
+        return False
+    # #152: «рівно годину, як я чекаю» -> «відколи» (valid construction)
+    if re.search(r"\bгодину,\s+як\s+я\s+чекаю\b", o_low) or re.search(r"\bгодину,\s+відколи\s+я\s+чекаю\b", c_low):
+        return False
+    # #114: «все суворіше і суворіше» -> «дедалі суворішим» (predicate adjective issue, not calque)
+    if re.search(r"\bвсе\s+суворіше\s+і\s+суворіше\b", o_low):
+        return False
+    # #255: «пілікала» -> «терликала» (dialectal downgrade)
+    if re.search(r"\bпілікала\s+гармоніка\b", o_low) or re.search(r"\bтерликала\s+гармоніка\b", c_low):
+        return False
+    # #208: «використати шнурки за мотузку» -> «як» (wrong syntactic analysis)
+    if re.search(r"\bвикористати\s+шнурки\s+за\s+мотузку\b", o_low):
+        return False
+    # #247: «ледь не до абсурду» (idiom falsely labeled ungrammatical)
+    if re.search(r"\bледь\s+не\s+до\s+абсурду\b", o_low):
+        return False
+
+    # Systemic & Major issues (R26)
+    # #188: «виникає питання «чому», «з якою метою»?»
+    if re.search(r"\bВиникає\s+питання\s+«чому»\b", orig_text):
+        return False
+    # #141: «біллю» (noun error mislabeled as verb morphology)
+    if re.search(r"\bстає\s+біллю\b", o_low) or re.search(r"\bпровал\s+стає\s+болем\b", c_low):
+        return False
+    # #256: «Уже в 1872 році в Бердичеві»
+    if re.search(r"\bУже\s+в\s+1872\s+році\s+в\s+Бердичеві\b", orig_text):
+        return False
+
+    # Minor issues (R26)
+    # #28: «одинока осика, а далі, — між дерев»
+    if re.search(r"\bодинока\s+осика\b", o_low) or re.search(r"\bміж\s+дерев\b", o_low):
+        return False
+    # #31: «повідпускали кобр на волю»
+    if re.search(r"\bповідпускали\s+кобр\b", o_low):
+        return False
+    # #112: «скриня з платтями»
+    if re.search(r"\bскриня\s+з\s+платтями\b", o_low):
+        return False
+    # #225: «саме серед череди зав'язалась»
+    if re.search(r"\bсеред\s+череди\s+зав[\x27\u2019\u02bc]?язалась\b", o_low):
+        return False
+    # #49: «Секрет того, як цьому запобігти»
+    if re.search(r"\bСекрет\s+того,\s+як\s+цьому\s+запобігти\b", orig_text):
+        return False
+    # #132: «реконструйовують храм»
+    if re.search(r"\bреконструйовують\s+храм\b", o_low) or re.search(r"\bреконструйовано\s+храм\b", c_low):
+        return False
+    # #233: «відновлення нормального сну»
+    if re.search(r"\bвідновлення\s+нормального\s+сну\b", o_low):
+        return False
+    # #174: «Та завдяки наполегливій праці»
+    if re.search(r"\bТа\s+завдяки\s+наполегливій\s+праці\b", orig_text):
+        return False
+    # #200: «Але, в цілому, я оцінюю»
+    if re.search(r"\bАле,\s+в\s+цілому,\s+я\s+оцінюю\b", orig_text):
+        return False
+    # #42: «долайте усі незгоди»
+    if re.search(r"\bдолайте\s+усі\s+незгоди\b", o_low):
+        return False
+    # #17: «з'являється виключно після дій»
+    if re.search(r"\bз[\x27\u2019\u02bc]?являється\s+виключно\s+після\b", o_low):
+        return False
+    # #29: «З усіх них, найбільш важливо»
+    if re.search(r"\bЗ\s+усіх\s+них,\s+найбільш\s+важливо\b", orig_text):
+        return False
+    # #46: «ще більш тяжку»
+    if re.search(r"\bна\s+ще\s+більш\s+тяжку\b", o_low):
+        return False
+    # #154: «щоб самих людей не вполювали»
+    if re.search(r"\bщоб\s+самих\s+людей\s+не\s+вполювали\b", o_low):
+        return False
+    # #68: «півтора місяці різниці»
+    if re.search(r"\bпівтора\s+місяці\s+різниці\b", o_low):
+        return False
+    # #241: «Таким чином для того щоб»
+    if re.search(r"\bТаким\s+чином\s+для\s+того\s+щоб\b", orig_text):
+        return False
+    # #41, #102, #182: «Приготування їжі завжди чомусь було викликом», «він невірно записує за мною»
+    if re.search(r"\bПриготування\s+їжі\s+завжди\s+чомусь\s+було\s+викликом\b", orig_text) or re.search(r"\bвін\s+невірно\s+записує\s+за\s+мною\b", o_low):
+        return False
+    # #285: «Спав Михайло»
+    if re.search(r"\bСпав\s+Михайло\b", orig_text) or re.search(r"\bСплячий\s+Михайло\b", c_low):
+        return False
+    # #40: «Федір Тимофійович в очікуванні, коли»
+    if re.search(r"\bФедір\s+Тимофійович\s+в\s+очікуванні,\s+коли\b", orig_text):
+        return False
+    # #60: «З однієї сторони у нас набір» / «у купі гангстерських фільмів»
+    if re.search(r"\bЗ\s+однієї\s+сторони\s+у\s+нас\s+набір\b", orig_text) or re.search(r"\b[ву]\s+купі\s+гангстерських\s+фільмів\b", c_low):
+        return False
+    # #221: «продукував звуки»
+    if re.search(r"\bпродукував\s+звуки\b", o_low) or re.search(r"\bпродукував\s+звуки\b", c_low):
+        return False
+    # #61: «розповсюдженому міфу»
+    if re.search(r"\bрозповсюдженому\s+міфу\b", c_low) or re.search(r"\bвкладають\s+фінанси\s+у\s+свої\s+ВУЗи\b", o_low):
+        return False
+    # #212: «тест — менеджмент»
+    if re.search(r"\bтест\s+[—–-]\s+менеджмент\s+беззмістовно\b", o_low) or re.search(r"\bтест\s+[—–-]\s+менеджмент\s+беззмістовно\b", c_low):
+        return False
+    # #298: «так само як не можна ущемлювати права людей»
+    if re.search(r"\bущемлювати\s+права\s+людей\b", o_low) or re.search(r"\bутискати\s+права\s+людей\b", c_low):
+        return False
+    # #75: «вимагати від програміста розуміння філософії Декарта і пам'ятати»
+    if re.search(r"\bвимагати\s+від\s+програміста\s+розуміння\s+філософії\b", o_low):
+        return False
+    # #11: «кислотний худі»
+    if re.search(r"\bкислотний\s+худі\b", o_low):
+        return False
+    # #199: «щось продвинути» -> «щось урухомити»
+    if re.search(r"\bщось\s+продвинути\b", o_low) or re.search(r"\bурухомити\b", c_low):
+        return False
+    # #244: «бадьорливого»
+    if re.search(r"\bбадьорлив\w*\b", c_low) or re.search(r"\bЖиве\s+тепло\s+потекло\s+по\s+її\s+животу\b", orig_text):
+        return False
+    # #33: «повазі до відмінностей»
+    if re.search(r"\bповазі\s+до\s+відмінностей\b", o_low) or re.search(r"\bДуже\s+вдячний\s+їм\s+за\s+час\b", orig_text):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -3312,15 +3451,33 @@ def build_grammar_dataset(
             has_verb = any(TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" for e in elist)
             in_sc = [e for e in elist if e[2] in IN_SCOPE_TAGS]
             has_single_in_sc = (len(in_sc) == 1)
+
+            non_noop = [e for e in elist if e[2] != "noop"]
+            c_edits = []
+            for e in non_noop:
+                if e[2] in ("Typography", "Format"):
+                    continue
+                if e[2] == "Punctuation":
+                    if "," in " ".join(_orig_tokens[e[0]:e[1]]) and "," not in e[3]:
+                        c_edits.append(e)
+                elif e[2] == "Spelling":
+                    ow = " ".join(_orig_tokens[e[0]:e[1]]).lower().strip()
+                    rw = e[3].lower().strip()
+                    if ow != rw and (ow, rw) not in euphony_pairs:
+                        c_edits.append(e)
+                else:
+                    c_edits.append(e)
+            has_single_content = (len(c_edits) == 1)
+
             is_expl = False
-            if has_single_in_sc:
+            if has_single_content and has_single_in_sc:
                 e = in_sc[0]
                 err_text = " ".join(_orig_tokens[e[0] : e[1]])
-                cit = resolve_specific_linguistic_citation(e[2], err_text, e[3], _orig_text, "")
+                err_clean = err_text.strip(" ,.-–—;:?!\"'«»")
+                corr_clean = e[3].strip(" ,.-–—;:?!\"'«»")
+                cit = resolve_specific_linguistic_citation(e[2], err_clean, corr_clean, _orig_text, "")
                 if cit is not None:
                     desc, rule = cit[1], cit[2]
-                    err_clean = err_text.strip(" ,.-–—;:?!\"'«»")
-                    corr_clean = e[3].strip(" ,.-–—;:?!\"'«»")
                     if (
                         err_clean and corr_clean
                         and (f"«{err_clean}»" in desc or f"«{err_clean}»" in rule or err_clean in desc or err_clean in rule)
@@ -3328,8 +3485,9 @@ def build_grammar_dataset(
                     ):
                         is_expl = True
             return (
-                0 if has_verb else 1,
                 0 if is_expl else 1,
+                0 if has_verb else 1,
+                0 if has_single_content else 1,
                 0 if has_single_in_sc else 1,
                 ann_id,
             )

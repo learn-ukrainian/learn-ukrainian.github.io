@@ -766,7 +766,7 @@ def resolve_specific_linguistic_citation(
         return (
             "Академічна граматика української мови / VESUM",
             f"помилку у формі граматичного числа «{err}» виправлено на «{corr}»",
-            f"Академічна граматика української мови та словникова база VESUM регламентують нормативні числові закінчення та узгодження за числом: вживаємо форму «{corr}» замість «{err}»."
+            f"Академічна граматика української мови та словникова база VESUM регламентують нормативні форми граматичного числа та синтаксичне узгодження за числом: вживаємо форму «{corr}» замість «{err}»."
         )
 
     # 7. Verb Voice (G/VerbVoice): support authentic passive-to-active reflexive replacements;
@@ -1140,11 +1140,26 @@ def resolve_specific_linguistic_citation(
                     (corr_lower, corr_lower.capitalize(), corr_lower.upper()),
                 ).fetchone()
                 if has_corr:
-                    return (
-                        "VESUM / Український правопис (2019)",
-                        f"граматичну помилку у слові «{err}» виправлено на нормативну форму «{corr}»",
-                        f"«Український правопис» (2019) та словникова база VESUM регламентують нормативне словозмінювання: вживаємо форму «{corr}» замість «{err}»."
-                    )
+                    lemmas_err = set(r[0] for r in conn.cursor().execute(
+                        "SELECT lemma FROM forms_all WHERE word_form IN (?, ?, ?)",
+                        (err_lower, err_lower.capitalize(), err_lower.upper())
+                    ).fetchall())
+                    lemmas_corr = set(r[0] for r in conn.cursor().execute(
+                        "SELECT lemma FROM forms_all WHERE word_form IN (?, ?, ?)",
+                        (corr_lower, corr_lower.capitalize(), corr_lower.upper())
+                    ).fetchall())
+                    if lemmas_err and lemmas_corr and (lemmas_err & lemmas_corr):
+                        return (
+                            "VESUM / Український правопис (2019)",
+                            f"граматичну помилку у словозміні «{err}» виправлено на нормативну форму «{corr}»",
+                            f"«Український правопис» (2019) та словникова база VESUM регламентують нормативне словозмінювання: вживаємо форму «{corr}» замість «{err}»."
+                        )
+                    else:
+                        return (
+                            "VESUM / Український правопис (2019)",
+                            f"невідповідну граматичну структуру «{err}» замінено на літературну форму «{corr}»",
+                            f"Згідно з нормами української граматики (база VESUM, «Український правопис» 2019), конструкція «{err}» порушує граматичну структуру речення: вживаємо форму «{corr}»."
+                        )
 
         if corr:
             return (
