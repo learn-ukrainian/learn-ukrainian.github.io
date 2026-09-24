@@ -644,6 +644,13 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # #135: «по кишені» (calque)
     if re.search(r"\bпо\s+кишені\b", text, re.IGNORECASE):
         return False
+    # Claude R29 control defects
+    # #148: «на великій швидкості» -> «на високій швидкості»
+    if re.search(r"\bна\s+великій\s+швидкості\b", text, re.IGNORECASE):
+        return False
+    # #56: «для отримання такої любові треба виконання»
+    if re.search(r"\bдля\s+отримання\s+такої\s+любові\b", text, re.IGNORECASE):
+        return False
 
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
@@ -3131,6 +3138,108 @@ def is_valid_candidate(
         return False
     # #69: «робота вдома на віддаленці»
     if re.search(r"\bвіддаленці\b", o_low):
+        return False
+
+    # 32. Claude R29 Blockers, Defects & Systemic Validations
+    # Blocker 1 & #245 & systemic «щораз більш*»:
+    # #39: «має зростаючий тренд» -> «має щораз більше тренд» (ungrammatical)
+    # #245: «зростаючим трендом» -> «щораз більшим трендом»
+    if re.search(r"\bщораз\s+більш\w*\b", c_low):
+        return False
+    if re.search(r"\bзростаюч\w*\s+тренд\w*\b", o_low):
+        return False
+
+    # Blocker 2 (#84): «луна вдарила в провулку» -> «місяць засвітив» (changes meaning)
+    if re.search(r"\bлуна\s+вдарила\b", o_low) or re.search(r"\bмісяць\s+засвітив\b", c_low):
+        return False
+
+    # Blocker 3 (#92): «занепокоїлися, як би він завтра не запізнився» -> «щоби» (false rule, original is normative)
+    if re.search(r"\bяк\s+би\s+він\s+завтра\s+не\s+запізнився\b", o_low) or re.search(r"\bзанепокоїлися,\s+як\s+би\b", o_low):
+        return False
+
+    # Blocker 4 (#105): «цей конкретний про майбутнє» -> «ця конкретна про майбутнє» (antecedent guessing, broken parallelism)
+    if re.search(r"\bцей\s+конкретний\s+про\s+майбутнє\b", o_low) or re.search(r"\bця\s+конкретна\s+про\s+майбутнє\b", c_low):
+        return False
+
+    # Minor defects:
+    # #97: «аби досягти» -> «щоб досягати» (changes aspect)
+    if re.search(r"\bаби\s+досягти\b", o_low) and re.search(r"\bщоб\s+досягати\b", c_low):
+        return False
+    # #72: «якихось тисячі п'ятисот» -> agreement mismatch
+    if re.search(r"\bтисяч[іі]\s+п['ʼ]?ятисот\b", o_low):
+        return False
+    # #18: «резинками» -> «ґумками» (non-codified ґ)
+    if re.search(r"\bґумк\w*\b", c_low):
+        return False
+    # #23: «стержень» stays in text (Russianism in gold text)
+    if re.search(r"\bстержен\w*\b", o_low) or re.search(r"\bстержен\w*\b", c_low):
+        return False
+    # #262: «покеда велю» -> «як велю» (drops until sense)
+    if re.search(r"\bпокеда\b", o_low):
+        return False
+    # #228, #293, #99, #133: lexical fixes misattributed as grammatical structure
+    if re.search(r"\bспостережник\w*\b", o_low) and re.search(r"\bспостерігач\w*\b", c_low):
+        return False
+    if re.search(r"\bоповідуванн\w*\b", o_low) and re.search(r"\bоповід\w*\b", c_low):
+        return False
+
+    # Unneeded rewrites of normative text:
+    # #190: «ричав» -> «рикав»
+    if re.search(r"\bричав\b", o_low) and re.search(r"\bрикав\b", c_low):
+        return False
+    # #285: «ахнули» -> «ойкнули»
+    if re.search(r"\bахнул\w*\b", o_low) and re.search(r"\bойкнул\w*\b", c_low):
+        return False
+    # #206: «Костіка» -> «Костика» (name change)
+    if re.search(r"\bкостік\w*\b", o_low):
+        return False
+    # #21: «календар» -> «графік»
+    if re.search(r"\bкалендар\b", o_low) and re.search(r"\bграфік\b", c_low):
+        return False
+    # #217: «до безпечного місця» -> «безпечного місця»
+    if re.search(r"\bдо\s+безпечного\s+місця\b", o_low):
+        return False
+    # #158: «Попіван» -> «Піп Іван»
+    if re.search(r"\bпопіван\b", o_low):
+        return False
+    # #91: «зупинити від задоволення» -> «зупинити задоволення»
+    if re.search(r"\bзупинити\s+від\s+задоволення\b", o_low):
+        return False
+    # #299: «слідування… міфам» -> «наслідування… міфів»
+    if re.search(r"\bслідування\b", o_low):
+        return False
+
+    # Weak fixes:
+    # #163: «завантажили» applied to people
+    if re.search(r"\bзавантажили\b", c_low) and re.search(r"\bлюдей\b", c_low):
+        return False
+    # #61: «передніх» -> «передпокої»
+    if re.search(r"\bпередніх\b", o_low) and re.search(r"\bпередпоко\w*\b", c_low):
+        return False
+    # #199: «типу» calque left in text
+    if re.search(r"\bтипу\b", c_low):
+        return False
+    # #168: «такий — сякий» dash instead of hyphen
+    if re.search(r"\bтакий\s+[—–-]\s+сякий\b", c_low):
+        return False
+    # #188: «напівтоновий вид» calque remains
+    if re.search(r"\bнапівтоновий\s+вид\b", c_low):
+        return False
+
+    # Tolerated/contextual forms with weak justifications (#187, #118)
+    # #187: «А те що товари які не купують»
+    if re.search(r"\bтовари\s+які\s+не\s+купують\b", o_low):
+        return False
+    # #118: «чи не є уся наша планета Земля — храм?»
+    if re.search(r"\bпланета\s+земля\s+[—–-]\s+храм\b", o_low):
+        return False
+
+    # Data safety / controversial named individual / unsubstantiated claims
+    # #254: defamatory factual claim about named individual
+    if re.search(r"\bколомойськ\w*\b", o_low):
+        return False
+    # #261: unsubstantiated political assertion
+    if re.search(r"\bпозбавляти\s+роботи\s+десятків\s+мільйонів\b", o_low):
         return False
 
     # Reject unpaired comma after relative pronoun
