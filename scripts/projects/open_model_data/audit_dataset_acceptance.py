@@ -1370,13 +1370,23 @@ def audit_check_7_sample_drawer(
                                     failures.append(
                                         f"Receipt item {s_idx} content_hash mismatch: receipt={r_it.get('content_hash')} vs sample={r.content_hash}"
                                     )
-                                if r.is_erroneous is not None and r_it.get("is_erroneous") != r.is_erroneous:
-                                    failures.append(
-                                        f"Receipt item {s_idx} is_erroneous mismatch: receipt={r_it.get('is_erroneous')!r} vs sample={r.is_erroneous!r}"
-                                    )
-                                if r.original_text is not None and r_it.get("original_text") != r.original_text:
+                                if r.is_erroneous is not None:
+                                    r_it_is_err = r_it.get("is_erroneous")
+                                    if type(r_it_is_err) is not bool or r_it_is_err != r.is_erroneous:
+                                        failures.append(
+                                            f"Receipt item {s_idx} is_erroneous mismatch or non-boolean: receipt={r_it_is_err!r} vs sample={r.is_erroneous!r}"
+                                        )
+                                if r.original_text is not None and (
+                                    "original_text" not in r_it or r_it.get("original_text") != r.original_text
+                                ):
                                     failures.append(
                                         f"Receipt item {s_idx} original_text mismatch: receipt={r_it.get('original_text')!r} vs sample={r.original_text!r}"
+                                    )
+                                if r.corrected_text is not None and (
+                                    "corrected_text" not in r_it or r_it.get("corrected_text") != r.corrected_text
+                                ):
+                                    failures.append(
+                                        f"Receipt item {s_idx} corrected_text mismatch: receipt={r_it.get('corrected_text')!r} vs sample={r.corrected_text!r}"
                                     )
                                 if r.is_erroneous is True:
                                     sm = (
@@ -1386,17 +1396,38 @@ def audit_check_7_sample_drawer(
                                     )
                                     expected_err = sm.get("error_span") or ""
                                     expected_repl = sm.get("replacement_span") or ""
-                                    r_it_err = r_it.get("error_span") or ""
-                                    r_it_repl = r_it.get("replacement_span") or ""
-                                    if expected_err != r_it_err:
+
+                                    if "error_span" not in r_it:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} missing required key 'error_span'"
+                                        )
+                                    if "replacement_span" not in r_it:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} missing required key 'replacement_span'"
+                                        )
+
+                                    r_it_err = r_it.get("error_span")
+                                    r_it_repl = r_it.get("replacement_span")
+
+                                    if r_it_err is not None and not isinstance(r_it_err, str):
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} 'error_span' must be a string, got {type(r_it_err).__name__}"
+                                        )
+                                    elif r_it_err != expected_err:
                                         failures.append(
                                             f"Receipt correction item {s_idx} error_span mismatch: receipt={r_it_err!r} vs sample={expected_err!r}"
                                         )
-                                    if expected_repl != r_it_repl:
+
+                                    if r_it_repl is not None and not isinstance(r_it_repl, str):
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} 'replacement_span' must be a string, got {type(r_it_repl).__name__}"
+                                        )
+                                    elif r_it_repl != expected_repl:
                                         failures.append(
                                             f"Receipt correction item {s_idx} replacement_span mismatch: receipt={r_it_repl!r} vs sample={expected_repl!r}"
                                         )
-                                    if not r_it_err and not r_it_repl:
+
+                                    if not (r_it_err or "") and not (r_it_repl or ""):
                                         failures.append(
                                             f"Receipt correction item {s_idx} missing required correction edit spans (error_span/replacement_span)"
                                         )
