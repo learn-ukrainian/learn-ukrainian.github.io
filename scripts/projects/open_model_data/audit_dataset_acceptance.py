@@ -1444,6 +1444,45 @@ def audit_check_7_sample_drawer(
                                     f"Receipt has {len(unassessed)} item(s) lacking non-empty reviewer_assessment: {unassessed[:5]}"
                                 )
 
+                            ctrl_assessments: list[str] = []
+                            for r_it in items:
+                                s_idx = r_it.get("sample_index")
+                                ass = r_it.get("reviewer_assessment")
+                                if not ass or not isinstance(ass, str) or not ass.strip():
+                                    continue
+                                is_err = r_it.get("is_erroneous")
+                                orig_text = r_it.get("original_text") or ""
+                                if is_err is False and orig_text.strip():
+                                    ctrl_assessments.append(ass)
+                                    orig_tokens = " ".join(re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text.lower()))
+                                    ass_tokens = " ".join(re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", ass.lower()))
+                                    if orig_tokens and orig_tokens not in ass_tokens:
+                                        failures.append(
+                                            f"Receipt control item {s_idx} assessment lacks full sentence-specific citation "
+                                            f"(expected full normalized sentence {orig_tokens!r})"
+                                        )
+                                elif is_err is True:
+                                    err_span = r_it.get("error_span", "") or ""
+                                    repl_span = r_it.get("replacement_span", "") or ""
+                                    lowered_ass = ass.lower()
+                                    if err_span and repl_span:
+                                        if err_span.lower() not in lowered_ass or repl_span.lower() not in lowered_ass:
+                                            failures.append(
+                                                f"Receipt correction item {s_idx} assessment does not name edit pair "
+                                                f"«{err_span}» → «{repl_span}»"
+                                            )
+                                    elif err_span and err_span.lower() not in lowered_ass:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} assessment does not name error span "
+                                            f"«{err_span}»"
+                                        )
+
+                            if ctrl_assessments and len(set(ctrl_assessments)) != len(ctrl_assessments):
+                                failures.append(
+                                    f"Receipt control assessments must provide unique sentence-specific evidence for each item "
+                                    f"({len(set(ctrl_assessments))} unique out of {len(ctrl_assessments)} controls)"
+                                )
+
                             if signoff_data:
                                 if signoff_data.get("blocker_defect_count") != receipt_blockers:
                                     failures.append(

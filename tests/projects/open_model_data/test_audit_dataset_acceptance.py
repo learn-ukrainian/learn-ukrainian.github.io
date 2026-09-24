@@ -6,6 +6,7 @@ dependency fail-closed behaviors, profile provenance, review lifecycle, and base
 
 from __future__ import annotations
 
+import copy
 import json
 import sqlite3
 from pathlib import Path
@@ -803,6 +804,119 @@ def test_check7_receipt_validation_schema_and_criteria_integrity(tmp_path, defau
     )
     assert res_dict_status.status == "FAIL"
     assert any("missing or invalid status: {}" in f for f in res_dict_status.failures)
+
+    # 12. Control receipt item with only four-word partial citation fails acceptance audit
+    ctrl_records = [
+        parse_dataset_record(
+            {
+                "query": f"Як справи {i}?",
+                "final_response": "Чудово.",
+                "original_text": "Автентичне довге речення для надійного контролю мовних норм.",
+                "is_erroneous": False,
+            },
+            Path("shard.jsonl"),
+            i,
+        )
+        for i in range(5)
+    ]
+    sample_ctrl_md = tmp_path / "sample_ctrl.md"
+    _, _, seed_ctrl = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md
+    )
+    drawn_ctrl_sample = json.loads(sample_ctrl_md.with_suffix(".json").read_text(encoding="utf-8"))
+    signoff_ctrl_file = tmp_path / "ctrl_signoff.json"
+    signoff_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    receipt_ctrl_file = tmp_path / "acceptance_review_sample.receipt.json"
+
+    # Full citation in receipt passes
+    valid_ctrl_items = []
+    for s in drawn_ctrl_sample:
+        idx = s["sample_index"]
+        valid_ctrl_items.append(
+            {
+                "sample_index": idx,
+                "content_hash": s["content_hash"],
+                "original_text": s["original_text"],
+                "is_erroneous": False,
+                "verdict": "APPROVED",
+                "status": "PASS",
+                "criteria": {
+                    "pedagogical_soundness": True,
+                    "morphology_vesum": True,
+                    "pravopys_2019": True,
+                    "zero_russianisms": True,
+                    "zero_soviet_sum11": True,
+                },
+                "reviewer_assessment": f"Контрольне речення #{idx} «Автентичне довге речення для надійного контролю мовних норм.» перевірено.",
+            }
+        )
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": valid_ctrl_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_ctrl_pass, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_ctrl_pass.status == "PASS"
+    assert res_ctrl_pass.metrics["signoff_verified"] is True
+
+    # Altering one receipt assessment to a four-word citation fails
+    partial_ctrl_items = copy.deepcopy(valid_ctrl_items)
+    partial_ctrl_items[0]["reviewer_assessment"] = (
+        "Унікальна оцінка: «Автентичне довге речення для» — без мовних огріхів."
+    )
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": partial_ctrl_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_partial_ctrl, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_partial_ctrl.status == "FAIL"
+    assert res_partial_ctrl.metrics["signoff_verified"] is False
+    assert any("lacks full sentence-specific citation" in f for f in res_partial_ctrl.failures)
 
 
 # ── Full Audit Runner & Fail-Closed Tests ───────────────────────────────────
