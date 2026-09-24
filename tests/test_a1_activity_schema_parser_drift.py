@@ -209,3 +209,6 @@ def test_fresh_renderer_and_parser_agree_on_image_to_letter():
     rendered = _render_image_to_letter(act)
     assert '"answer": "Я"' in rendered or '"answer":"Я"' in rendered
     assert rendered.count('"Я"') == 1  # the letter is not repeated inside distractors
+    # instruction renders as the instruction paragraph, not as the header title
+    assert 'instruction={"Pick the first letter."}' in rendered
+    assert "title=" not in rendered

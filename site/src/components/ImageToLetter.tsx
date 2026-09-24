@@ -82,24 +82,31 @@ export default function ImageToLetter({
     title || (isUkrainian ? 'Яка перша буква?' : 'Which first letter?');
   const doneLabel = isUkrainian ? 'Вправу завершено!' : 'Exercise complete!';
 
+  const isLast = currentIndex >= total - 1;
+  const nextLabel = isLast
+    ? isUkrainian ? 'Завершити' : 'Finish'
+    : isUkrainian ? 'Далі →' : 'Next →';
+
+  const handleNext = () => {
+    setCompletedCount((c) => c + 1);
+    if (!isLast) {
+      setCurrentIndex((i) => i + 1);
+      setAnswered(false);
+      setSelectedAnswer(null);
+      setWrongCount(0);
+      setShowHint(false);
+    }
+  };
+
   const handleOptionClick = (option: string) => {
     if (answered) return;
 
     setSelectedAnswer(option);
 
     if (option === item.answer) {
+      // Stay on the card so the learner reads the note/explanation; the
+      // explicit Next/Finish button advances or completes.
       setAnswered(true);
-      setCompletedCount((c) => c + 1);
-      // Auto-advance after 1s
-      setTimeout(() => {
-        if (currentIndex < total - 1) {
-          setCurrentIndex((i) => i + 1);
-          setAnswered(false);
-          setSelectedAnswer(null);
-          setWrongCount(0);
-          setShowHint(false);
-        }
-      }, 1000);
     } else {
       const newWrong = wrongCount + 1;
       setWrongCount(newWrong);
@@ -195,6 +202,11 @@ export default function ImageToLetter({
         )}
         {answered && item.explanation && (
           <p className={directStyles.warNote}>{item.explanation}</p>
+        )}
+        {answered && (
+          <button className={styles.submitButton} onClick={handleNext}>
+            {nextLabel}
+          </button>
         )}
       </div>
     </div>

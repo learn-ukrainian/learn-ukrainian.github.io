@@ -761,7 +761,8 @@ def _render_image_to_letter(act: dict) -> str:
         for index, item in enumerate(act.get("items", []))
     ]
     props = _prop("items", items)
-    props += _opt_prop("title", act.get("instruction"))
+    props += _opt_prop("title", act.get("title"))
+    props += _opt_prop("instruction", act.get("instruction"))
     return _component("ImageToLetter", props)
 
 
