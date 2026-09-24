@@ -209,13 +209,18 @@ def agy_oauth_link_problem(config_path: Path | str) -> str | None:
     whose target resolves to the original real token path. Credentials are never copied
     or repaired here; a deviation is left untouched for the operator.
     """
-    link = agy_review_app_data_dir(agy_review_home_path(config_path)) / _AGY_TOKEN_NAME
+    agy_home = agy_review_home_path(config_path)
+    link = agy_review_app_data_dir(agy_home) / _AGY_TOKEN_NAME
     real_token = _real_agy_token()
+    # The message lands in task state and stderr logs that get quoted into issues and PRs, so it
+    # names the scoped link relative to the attempt directory and the real token only by a label:
+    # no absolute path (which would expose the operator's home directory) is ever included.
+    link_label = link.relative_to(agy_home.parent)
     if not link.is_symlink():
         kind = "a regular file" if link.exists() else "missing"
-        return f"{link} is {kind}, not a symlink to {real_token}"
+        return f"{link_label} is {kind}, not a symlink to the real AGY OAuth token"
     if os.path.realpath(link) != os.path.realpath(real_token):
-        return f"{link} points to {os.path.realpath(link)}, not {os.path.realpath(real_token)}"
+        return f"{link_label} points elsewhere, not to the real AGY OAuth token"
     return None
 
 

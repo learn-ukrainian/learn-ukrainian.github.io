@@ -28,6 +28,7 @@ from scripts.agent_runtime.review_mcp import (
     UNSUPPORTED_HARNESS_REASONS,
     AgyReviewMcpGateError,
     CodexReviewMcpGateError,
+    agy_oauth_link_problem,
     agy_review_app_data_dir,
     agy_review_home_path,
     agy_review_mcp_config_path,
@@ -979,6 +980,50 @@ def test_non_agy_harness_creates_no_agy_home(manifest_file: Path, tmp_path: Path
     assert plan.agy_home is None
     assert "agy_home_override" not in plan.adapter_options
     assert list(plan.config_path.parent.glob("*.agy-home")) == []
+
+
+_AGY_LINK_LABEL = "att-agy-001.agy-home/.gemini/antigravity-cli/antigravity-oauth-token"
+
+
+def test_agy_oauth_link_problem_is_none_when_intact(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_agy(manifest_file, tmp_path)
+    assert agy_oauth_link_problem(plan.config_path) is None
+
+
+@pytest.mark.parametrize(
+    ("breakage", "expected"),
+    [
+        ("missing", f"{_AGY_LINK_LABEL} is missing, not a symlink to the real AGY OAuth token"),
+        ("file", f"{_AGY_LINK_LABEL} is a regular file, not a symlink to the real AGY OAuth token"),
+        ("retarget", f"{_AGY_LINK_LABEL} points elsewhere, not to the real AGY OAuth token"),
+    ],
+)
+def test_agy_oauth_link_problem_names_each_case_without_any_absolute_path(
+    manifest_file: Path,
+    tmp_path: Path,
+    fake_agy_user_home: Path,
+    breakage: str,
+    expected: str,
+) -> None:
+    plan = _prepare_agy(manifest_file, tmp_path)
+    link = agy_review_app_data_dir(plan.agy_home) / "antigravity-oauth-token"
+    link.unlink()
+    if breakage == "file":
+        link.write_text("{}\n", encoding="utf-8")
+    elif breakage == "retarget":
+        other = tmp_path / "elsewhere-token"
+        other.write_text("{}\n", encoding="utf-8")
+        link.symlink_to(other)
+
+    problem = agy_oauth_link_problem(plan.config_path)
+
+    assert problem == expected
+    # The message is quoted into task state, logs, issues and PRs: it must expose no
+    # absolute path (the operator's home, the real token, the retargeted path, or the
+    # attempt directory).
+    for leaked in (str(Path.home()), str(fake_agy_user_home), str(tmp_path), str(plan.agy_home), "elsewhere-token"):
+        assert leaked not in problem
+    assert "/" not in problem.replace(_AGY_LINK_LABEL, "")
 
 
 def test_agy_missing_user_token_is_refused_before_anything_is_created(

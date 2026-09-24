@@ -4660,6 +4660,8 @@ def test_run_worker_agy_review_refuses_broken_oauth_link_before_launch(tmp_tasks
     mock_invoke.assert_not_called()
     state = delegate._read_state(delegate._state_path("worker-agy-link-pre"))
     assert "OAuth link not intact" in state["stderr_excerpt"]
+    assert str(Path.home()) not in state["stderr_excerpt"]
+    assert str(tmp_path) not in state["stderr_excerpt"]
     assert link.read_text(encoding="utf-8") == "{}\n"
 
 
@@ -4681,6 +4683,8 @@ def test_run_worker_agy_review_link_replaced_by_file_after_run_is_named_error(tm
     assert state["status"] != "done"
     assert state["agy_oauth_link_error"] == "agy_oauth_link_replaced"
     assert "agy_oauth_link_replaced" in state["stderr_excerpt"]
+    assert "is a regular file" in state["stderr_excerpt"]
+    assert str(tmp_path) not in state["stderr_excerpt"]
     # Both files stay untouched for the operator: no credential is copied back.
     assert link.read_text(encoding="utf-8") == '{"refreshed": true}\n'
     assert real_token.read_text(encoding="utf-8") == "{}\n"
@@ -4705,6 +4709,8 @@ def test_run_worker_agy_review_link_retargeted_after_run_is_named_error(tmp_task
     assert state["status"] != "done"
     assert state["agy_oauth_link_error"] == "agy_oauth_link_replaced"
     assert "agy_oauth_link_replaced" in state["stderr_excerpt"]
+    assert "points elsewhere" in state["stderr_excerpt"]
+    assert str(tmp_path) not in state["stderr_excerpt"]
     assert link.is_symlink()
     assert link.resolve() == other.resolve()
 
