@@ -114,6 +114,38 @@ def test_scheduled_terminal_dispatch_class_can_be_disabled(tmp_path: Path, monke
     assert captured["include_terminal_dispatches"] is False
 
 
+def test_scheduled_apply_rescues_before_reaper(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    script = repo / "scripts" / "delegate.py"
+    script.parent.mkdir()
+    script.write_text("# fixture\n", encoding="utf-8")
+    calls: list[str] = []
+    original_run = subprocess.run
+
+    def capture_run(command, **kwargs):
+        if isinstance(command, list) and str(script) in command:
+            calls.append("rescue")
+            assert command[-4:] == ["--all-stale", "--older-than", "6h", "--apply"]
+            return subprocess.CompletedProcess(command, 0, '{"summary":{"rescued":1}}', "")
+        return original_run(command, **kwargs)
+
+    monkeypatch.setattr(cleanup.subprocess, "run", capture_run)
+    monkeypatch.setattr(cleanup, "_worktree_prune", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: calls.append("reaper") or [])
+    monkeypatch.setattr(cleanup, "cleanup_gone_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "cleanup_untracked_local_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
+    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+    monkeypatch.setattr(cleanup, "sweep_tmp_leaks", lambda apply=False: {"errors": 0})
+
+    result = cleanup._repo_result(repo, apply=True)
+    assert calls[:2] == ["rescue", "reaper"]
+    assert result["rescue"] == {"rescued": 1}
+
+
 def test_orphaned_broken_gitdir_is_reported_not_deleted(tmp_path: Path) -> None:
     repo = _repo(tmp_path)
     orphan = repo / ".worktrees" / "dispatch" / "codex" / "orphan"

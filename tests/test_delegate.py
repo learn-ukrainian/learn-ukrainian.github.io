@@ -10,6 +10,7 @@ Issue: #1184.
 
 from __future__ import annotations
 
+import argparse
 import contextlib
 import errno
 import fcntl
@@ -21,6 +22,7 @@ import sys
 import threading
 import time
 import urllib.error
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -3096,10 +3098,13 @@ def test_read_only_mutation_paths_ignore_runtime_state_only():
     assert delegate._read_only_ignored_mutation_paths(before, after_cache_leak) == sorted(
         [*after_runtime, ".cache/lemma-frequency-c1-999.json"]
     )
-    assert delegate._read_only_mutation_paths(
-        {".cache/lemma-frequency-c1-999.json": "!!"},
-        {},
-    ) == []
+    assert (
+        delegate._read_only_mutation_paths(
+            {".cache/lemma-frequency-c1-999.json": "!!"},
+            {},
+        )
+        == []
+    )
     assert delegate._read_only_ignored_mutation_paths(
         {".cache/lemma-frequency-c1-999.json": "!!"},
         {},
@@ -3811,12 +3816,17 @@ def test_run_worker_marks_needs_finalize_for_unpushed_commits(
     state = delegate._read_state(state_path)
     assert state is not None
     assert state["status"] == "needs_finalize", (
-        f"unpushed commits reported {state['status']!r}; a clean dispatch with unpushed "
-        "commits must not settle as done"
+        f"unpushed commits reported {state['status']!r}; a clean dispatch with unpushed commits must not settle as done"
     )
     assert state["needs_finalize"] is True
     assert state["commits_ahead"] == 1
     assert state["worktree_dirty_on_exit"] is False
+    if unpushed_count is not None:
+        assert state["rescue_status"] == "unpushed work - needs rescue"
+        assert state["finalize_error"] == "unpushed work - needs rescue"
+    else:
+        assert state["rescue_status"] == "unpushed state unknown - needs rescue"
+    assert state["final_branch_head_commit"] == delegate._resolve_sha(worktree)
     assert rc == 1
 
 
@@ -3928,7 +3938,9 @@ def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatc
     worktree = tmp_path / "worktree"
     subprocess.run(["git", "init", "--bare", str(origin)], check=True, capture_output=True, timeout=30)
     subprocess.run(["git", "init", "--initial-branch=main", str(worktree)], check=True, capture_output=True, timeout=30)
-    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "config", "user.email", "test@example.com"], cwd=worktree, check=True, capture_output=True, timeout=30
+    )
     subprocess.run(["git", "config", "user.name", "test"], cwd=worktree, check=True, capture_output=True, timeout=30)
     (worktree / "README.md").write_text("base\n", encoding="utf-8")
     subprocess.run(["git", "add", "README.md"], cwd=worktree, check=True, timeout=30)
@@ -3937,7 +3949,9 @@ def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatc
     subprocess.run(["git", "push", "-u", "origin", "main"], cwd=worktree, check=True, capture_output=True, timeout=30)
 
     # 1. New local branch not yet pushed to origin: returns None (cannot count / no remote ref)
-    subprocess.run(["git", "checkout", "-b", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "checkout", "-b", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30
+    )
     (worktree / "file.txt").write_text("hello\n", encoding="utf-8")
     subprocess.run(["git", "add", "file.txt"], cwd=worktree, check=True, timeout=30)
     subprocess.run(["git", "commit", "-m", "feat: add file"], cwd=worktree, check=True, timeout=30)
@@ -3945,7 +3959,9 @@ def test_count_unpushed_commits_resolves_remote_ref_or_none(tmp_path, monkeypatc
     assert delegate._count_unpushed_commits(worktree, "feat/my-branch") is None
 
     # 2. Push branch to origin: now 0 unpushed commits
-    subprocess.run(["git", "push", "-u", "origin", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "push", "-u", "origin", "feat/my-branch"], cwd=worktree, check=True, capture_output=True, timeout=30
+    )
     assert delegate._count_unpushed_commits(worktree, "feat/my-branch") == 0
 
     # 3. Add 1 local commit without pushing: now 1 unpushed commit
@@ -4093,6 +4109,20 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     assert state["auto_finalize"]["ok"] is True
     assert state["auto_finalize"]["changed_files"] == ["artifact.txt"]
     assert pushed == ["agy/auto-finalize-test"]
+    assert created_prs == []
+    assert state["auto_finalize"]["pr_url"] is None
+    assert state["final_branch_head_commit"] == delegate._resolve_sha(worktree)
+
+    (worktree / "another.txt").write_text("more work\n", encoding="utf-8")
+    opt_in = delegate._auto_finalize_dirty_worktree(
+        worktree=worktree,
+        task_id="agy-auto-finalize-test",
+        agent="agy",
+        branch="agy/auto-finalize-test",
+        base_branch="main",
+        open_pr=True,
+    )
+    assert opt_in.ok is True
     assert created_prs[0]["branch"] == "agy/auto-finalize-test"
     assert created_prs[0]["base_branch"] == "main"
 
@@ -4494,7 +4524,7 @@ def _prepare_codex_review(tmp_path, monkeypatch, extra_servers=()):
     log = tmp_path / "fake-codex.log"
     fake = bin_dir / "codex"
     fake.write_text(
-        f"#!/bin/sh\nprintf '%s|%s\\n' \"$CODEX_HOME\" \"$*\" >> {log}\ncat {canned}\n",
+        f'#!/bin/sh\nprintf \'%s|%s\\n\' "$CODEX_HOME" "$*" >> {log}\ncat {canned}\n',
         encoding="utf-8",
     )
     fake.chmod(0o755)
@@ -4654,7 +4684,7 @@ def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
     # Record every invocation's argv: the dispatch-telemetry version probe legitimately
     # runs `agy --version`, so only an `mcp` call is the gate.
     fake.write_text(
-        f"#!/bin/sh\nprintf '%s|%s|%s\\n' \"$HOME\" \"$AGY_APP_DATA_DIR\" \"$*\" >> {log}\n"
+        f'#!/bin/sh\nprintf \'%s|%s|%s\\n\' "$HOME" "$AGY_APP_DATA_DIR" "$*" >> {log}\n'
         f'case "$1" in mcp) cat {canned};; *) echo 1.2.9;; esac\n',
         encoding="utf-8",
     )
@@ -4702,7 +4732,9 @@ def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, t
     assert "allowed_tools" not in tool_config
     # The gate ran once, under the scoped home.
     gate_calls = [
-        line.split("|", 2) for line in log.read_text(encoding="utf-8").splitlines() if line.split("|", 2)[2] == "mcp list"
+        line.split("|", 2)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if line.split("|", 2)[2] == "mcp list"
     ]
     assert len(gate_calls) == 1
     assert gate_calls[0][0] == str(plan.agy_home)
@@ -7064,26 +7096,35 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         None,
         owned_paths=["scripts/lexicon/manifest_io.py", "site/src/pages/index.astro"],
     ) == ("data/lexicon",)
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["site/src/pages/index.astro"],
-    ) == ()
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["site/src/pages/index.astro"],
+        )
+        == ()
+    )
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["tests/test_open_model_foundry_cli.py"],
     ) == ("data/projects",)
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["tests/test_open_model_data_timeouts.py"],
-    ) == ()
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["tests/test_open_model_data_timeouts.py"],
+        )
+        == ()
+    )
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
     ) == ("data/lexicon",)
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["scripts/audit/source_inventory_intake.py"],
-    ) == ()
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["scripts/audit/source_inventory_intake.py"],
+        )
+        == ()
+    )
     assert delegate._infer_sparse_include(
         None,
         owned_paths=["tests/test_source_inventory_intake.py"],
@@ -7096,10 +7137,13 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         None,
         owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
     ) == ("data/lexicon",)
-    assert delegate._infer_sparse_include(
-        None,
-        owned_paths=["scripts/practice/noun_mechanics_engine.py"],
-    ) == ()
+    assert (
+        delegate._infer_sparse_include(
+            None,
+            owned_paths=["scripts/practice/noun_mechanics_engine.py"],
+        )
+        == ()
+    )
     assert delegate._infer_sparse_include(
         None,
         prompt_text="Read data/projects/foo.jsonl and leave data/raw alone.",
@@ -8929,6 +8973,192 @@ def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
     )
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary.resolve())
     return primary.resolve(), worktree.resolve(), branch
+
+
+def _rescue_checkout(tmp_path, monkeypatch, *, dirty: bool = True):
+    from scripts.orchestration import reap_worktrees
+
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="rescue-test")
+    origin = tmp_path / "origin.git"
+    subprocess.run(["git", "init", "--bare", str(origin)], check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "remote", "add", "origin", str(origin)], cwd=primary, check=True, capture_output=True, timeout=30
+    )
+    subprocess.run(
+        ["git", "push", "origin", "HEAD:refs/heads/main"], cwd=primary, check=True, capture_output=True, timeout=30
+    )
+    if dirty:
+        (worktree / "artifact.txt").write_text("work to preserve\n", encoding="utf-8")
+    else:
+        (worktree / "artifact.txt").write_text("committed work\n", encoding="utf-8")
+        subprocess.run(["git", "add", "artifact.txt"], cwd=worktree, check=True, capture_output=True, timeout=30)
+        subprocess.run(["git", "commit", "-m", "work"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    monkeypatch.setattr(reap_worktrees, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(reap_worktrees, "_live_cwd_paths", lambda _root: set())
+    state_path = delegate._state_path("rescue-test")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "rescue-test",
+            "agent": "cursor",
+            "status": "needs_finalize",
+            "finished_at": "2020-01-01T00:00:00Z",
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_reused": False,
+        },
+    )
+    return primary, worktree, origin, state_path
+
+
+@pytest.mark.parametrize("dirty", [True, False])
+def test_rescue_pushes_and_verifies_terminal_work(tmp_path, monkeypatch, tmp_tasks_dir, dirty):
+    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=dirty)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "rescued", result
+    state = delegate._read_state(state_path)
+    assert state["rescue_ref"] == "rescue/rescue-test"
+    assert state["rescue_head_commit"] == result["head"]
+    remote = subprocess.run(
+        ["git", "ls-remote", "--heads", str(origin), "rescue/rescue-test"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout
+    assert remote.startswith(result["head"])
+    assert worktree.exists()
+
+
+def test_rescue_push_failure_keeps_worktree(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    original = delegate._rescue_git
+
+    def fail_push(path, *args, **kwargs):
+        if args[0] == "push":
+            return subprocess.CompletedProcess(["git", *args], 1, "", "failure")
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(delegate, "_rescue_git", fail_push)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "error"
+    assert worktree.exists()
+    assert delegate._read_state(state_path).get("rescue_ref") is None
+
+
+def test_rescue_large_file_and_live_task_are_preserved(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    (worktree / "large.bin").write_bytes(b"x" * (5 * 1024 * 1024 + 1))
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "skipped"
+    assert result["reason"] == "files exceed 5 MB"
+    assert worktree.exists()
+    state = delegate._read_state(state_path)
+    state["status"] = "running"
+    delegate._write_state_atomic(state_path, state)
+    assert delegate._rescue_task(state_path, apply=True)["reason"] == "task is not terminal non-success"
+
+
+def test_rescue_cleans_junk_only_without_publishing(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    (worktree / "artifact.txt").unlink()
+    junk = worktree / "__pycache__" / "scratch.pyc"
+    junk.parent.mkdir()
+    junk.write_bytes(b"scratch")
+    subprocess.run(["git", "add", "-f", str(junk)], cwd=worktree, check=True, capture_output=True, timeout=30)
+
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "cleaned", result
+    assert delegate._worktree_is_dirty(worktree) is False
+    assert not junk.exists()
+    assert not subprocess.run(
+        ["git", "ls-remote", "--heads", str(origin), "rescue/rescue-test"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout
+
+
+def test_rescue_cleans_junk_then_preserves_unpushed_commit(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    junk = worktree / "__pycache__" / "scratch.pyc"
+    junk.parent.mkdir()
+    junk.write_bytes(b"scratch")
+    subprocess.run(["git", "add", "-f", str(junk)], cwd=worktree, check=True, capture_output=True, timeout=30)
+
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "rescued", result
+    assert not junk.exists()
+    assert delegate._worktree_is_dirty(worktree) is False
+    assert delegate._read_state(state_path)["rescue_head_commit"] == result["head"]
+
+
+def test_rescue_refuses_branch_changed_since_task_exit(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    subprocess.run(["git", "switch", "-c", "other-work"], cwd=worktree, check=True, capture_output=True, timeout=30)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "skipped"
+    assert result["reason"] == "worktree branch differs from task record"
+    assert (worktree / "artifact.txt").exists()
+
+
+def test_rescue_refuses_active_lease_on_terminal_record(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    state = delegate._read_state(state_path)
+    state["lease"] = {"state": "active"}
+    delegate._write_state_atomic(state_path, state)
+    result = delegate._rescue_task(state_path, apply=True)
+    assert result["action"] == "skipped"
+    assert result["reason"] == "task lease active"
+    assert (worktree / "artifact.txt").exists()
+
+
+def test_rescue_all_stale_age_and_dry_run(tmp_path, monkeypatch, tmp_tasks_dir, capsys):
+    _primary, worktree, origin, state_path = _rescue_checkout(tmp_path, monkeypatch)
+    args = argparse.Namespace(task_id=None, all_stale=True, older_than="6h", apply=False)
+    assert delegate.cmd_rescue(args) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["summary"]["candidate"] == 1
+    assert not subprocess.run(
+        ["git", "ls-remote", "--heads", str(origin), "rescue/rescue-test"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout
+    state = delegate._read_state(state_path)
+    state["finished_at"] = datetime.now(UTC).isoformat()
+    delegate._write_state_atomic(state_path, state)
+    assert delegate.cmd_rescue(args) == 0
+    assert json.loads(capsys.readouterr().out)["tasks"] == []
+    assert worktree.exists()
+
+
+def test_exit_flags_dirty_committed_unpushed_without_auto_push(tmp_path, monkeypatch, tmp_tasks_dir):
+    _primary, worktree, _origin, state_path = _rescue_checkout(tmp_path, monkeypatch, dirty=False)
+    (worktree / "later.txt").write_text("more work\n", encoding="utf-8")
+
+    def forbidden_push(_worktree, _branch):
+        pytest.fail("exit must not auto-push existing unpushed commits")
+
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", forbidden_push)
+    with patch("agent_runtime.runner.invoke", return_value=_finalize_mock_result()):
+        rc = delegate._run_worker(
+            task_id="rescue-test",
+            agent="cursor",
+            prompt="finish",
+            mode="danger",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+        )
+    state = delegate._read_state(state_path)
+    assert rc == 1
+    assert state["status"] == "needs_finalize"
+    assert state["rescue_status"] == "unpushed work - needs rescue"
+    assert state["auto_finalize"] is None
+    assert (worktree / "later.txt").exists()
 
 
 def _branch_ref_present(primary: Path, branch: str) -> bool:
