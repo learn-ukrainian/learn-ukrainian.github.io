@@ -442,8 +442,7 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
         }
     ]
 
-    # 4. image-to-letter: fails check 9 closed until #8716 (see
-    # test_live_runner_image_to_letter_fails_closed_until_8716), so it is not in this run.
+    # 4. image-to-letter: covered by test_live_runner_image_to_letter_locates_spans_on_the_page.
 
     # 5. translate
     trans_items = [
@@ -1372,30 +1371,21 @@ def _image_to_letter_fixture() -> tuple[dict, dict, dict, dict]:
     return draft, plan, pack, words
 
 
-def test_live_runner_image_to_letter_fails_closed_until_8716(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    # Reviewer reproduction (r3 BLOCKER): a schema-valid image-to-letter item passed check 9 while
-    # the ActivityParser dropped image/letter/options. Now the unit's field is read from the page
-    # props and check 9 fails closed. Delete this test with the xfail marker below once #8716 lands.
+def test_live_runner_image_to_letter_locates_spans_on_the_page(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Reviewer reproduction (r3 BLOCKER): a schema-valid image-to-letter item used to pass check 9
+    # while the ActivityParser dropped image/letter/options. Since #8716 the parser reads them, so
+    # the same fixture passes check 9 with the a4 spans located on the page.
     draft, plan, pack, words = _image_to_letter_fixture()
     report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
-    assert report["passed"] is False
-    c9 = next(c for c in report["checks"] if c["check"] == 9)
-    assert c9["status"] == "failed" and c9["layer"] == "engine"
-    assert c9["reason"].startswith("span_location_unrendered: ")
-    assert "'a4'" in c9["reason"]
-    # The provenance on disk is still check 5's document; nothing of check 9 reached disk
-    _expanded, check_5_prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
-    assert (state / "lesson-1.provenance.yaml").read_bytes() == lock.yaml_bytes(check_5_prov)
-    assert not (tmp_path / "site" / "1.mdx").exists()
+    assert report["passed"] is True, report
+    prov_doc = yaml.safe_load((state / "lesson-1.provenance.yaml").read_text(encoding="utf-8"))
+    a4 = {k: v for k, v in _spans_by_unit(prov_doc).items() if k[2] == "a4"}
+    assert [(s["text"], s["is_key"]) for s in a4[("vpravy", "s1", "a4", 0, "opt_0")]] == [("слово", True)]
+    assert [(s["text"], s["is_key"]) for s in a4[("vpravy", "s1", "a4", 0, "opt_1")]] == [("слова", False)]
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="#8716: ActivityParser reads emoji/answer/distractors, the A1 schema has image/letter/options",
-)
 def test_image_to_letter_options_reach_the_page() -> None:
-    # Starts failing loudly (XPASS) once #8716 makes the parser read the schema's fields: then
-    # remove the marker (and the fail-closed live test above).
+    # #8716: the parser reads the schema's image/letter/options, so they reach the page props.
     from scripts.yaml_activities import ActivityParser
 
     parser = ActivityParser()
