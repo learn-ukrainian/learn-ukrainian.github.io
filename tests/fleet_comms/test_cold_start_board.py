@@ -16,6 +16,7 @@ from scripts.fleet_comms.cold_start_board import (
     MAX_BOARD_BYTES,
     ProbeResult,
     _probe_backlog_and_dead_letters,
+    _probe_gh_pr_list,
     _probe_inbox,
     build_cold_start_board,
     cap_data,
@@ -176,6 +177,26 @@ def test_probe_failure_degrades():
         assert "plane crash" in board["probes"]["plane_status"]["error"]
         # Other probes still ran
         assert board["probes"]["capsule_session_env"]["status"] == "ok"
+
+
+def test_gh_pr_list_success_with_fake_cli(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A successful fake gh response is parsed as an available PR probe."""
+    fake_gh = tmp_path / "gh"
+    fake_gh.write_text(
+        '#!/bin/sh\nprintf \'%s\\n\' \'[{"number":8641,"title":"Guard fixes",'
+        '"headRefName":"codex/impl-8638","state":"OPEN"}]\'\n',
+        encoding="utf-8",
+    )
+    fake_gh.chmod(0o755)
+    monkeypatch.setenv("PATH", str(tmp_path))
+
+    result = _probe_gh_pr_list()
+
+    assert result.status == "ok"
+    assert result.data == {
+        "gh_available": True,
+        "prs": [{"number": 8641, "title": "Guard fixes", "headRefName": "codex/impl-8638", "state": "OPEN"}],
+    }
 
 
 def test_size_cap():

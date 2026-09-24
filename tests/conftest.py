@@ -9,6 +9,7 @@ import contextlib
 import functools
 import ipaddress
 import os
+import shutil
 import socket
 import sqlite3
 import subprocess
@@ -27,6 +28,69 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from tests import sparse_trees
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
+    parts = Path(path).parts
+    return len(parts) >= 3 and parts[-3:-1] == ("agent_runtime", "shims")
+
+
+def _resolve_real_gh_binary() -> str | None:
+    """Resolve gh behind agent-runtime shims using the runner's path rules."""
+    candidates = [os.environ.get("AGENT_REAL_GH")]
+    search_path = os.environ.get("AGENT_ORIGINAL_PATH", os.environ.get("PATH", os.defpath))
+    candidates.extend(
+        os.path.join(entry, "gh")
+        for entry in search_path.split(os.pathsep)
+        if entry
+    )
+    for candidate in candidates:
+        if not candidate or _is_agent_runtime_shim(candidate):
+            continue
+        if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
+            return os.path.realpath(candidate)
+    return None
+
+
+_REAL_GH_BINARY = _resolve_real_gh_binary()
+_LIVE_GITHUB_ALLOWED = False
+
+
+@pytest.fixture(autouse=True)
+def _live_github_spawn_policy(request: pytest.FixtureRequest) -> Generator[None, None, None]:
+    """Permit real ``gh`` only for tests explicitly marked as integrations."""
+    global _LIVE_GITHUB_ALLOWED
+    previous = _LIVE_GITHUB_ALLOWED
+    _LIVE_GITHUB_ALLOWED = request.node.get_closest_marker("live_github") is not None
+    try:
+        yield
+    finally:
+        _LIVE_GITHUB_ALLOWED = previous
+
+
+@pytest.fixture(autouse=True)
+def _default_fake_github_cli(
+    _fake_github_bin: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    request: pytest.FixtureRequest,
+) -> None:
+    """Resolve ordinary test GitHub CLI lookups to a failing local stub."""
+    if request.node.get_closest_marker("live_github") is not None:
+        return
+    monkeypatch.setenv("PATH", f"{_fake_github_bin}{os.pathsep}{os.environ.get('PATH', '')}")
+
+
+@pytest.fixture(scope="session")
+def _fake_github_bin(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One failing local gh binary shared by tests in this pytest session."""
+    fake_bin = tmp_path_factory.mktemp("fake-gh")
+    fake_gh = fake_bin / "gh"
+    fake_gh.write_text(
+        "#!/bin/sh\nprintf '%s\\n' 'gh stub: inject a test response instead of contacting GitHub' >&2\nexit 127\n",
+        encoding="utf-8",
+    )
+    fake_gh.chmod(0o755)
+    return fake_bin
 
 
 def _bridge_db_paths() -> tuple[Path, Path]:
@@ -1451,6 +1515,11 @@ def _worktree_guard_enabled() -> bool:
     return os.environ.get("LU_WORKTREE_GUARD", "1") != "0"
 
 
+def _gh_guard_enabled() -> bool:
+    """``LU_GH_GUARD=0`` disables only the real GitHub CLI spawn guard."""
+    return os.environ.get("LU_GH_GUARD", "1") != "0"
+
+
 def _worktree_entry_key(path: object) -> str | None:
     """Path of a new worktree root, or None for anything nested inside one.
 
@@ -1738,6 +1807,7 @@ def _popen_cwd(pos: tuple[object, ...], kwargs: dict[str, object]) -> object:
 
 
 def _guarded_popen_init(self, args, *pos, **kwargs):
+    _guard_live_github_spawn(args, kwargs)
     dest: str | None = None
     absent_before = False
     try:
@@ -1762,6 +1832,54 @@ def _guarded_popen_init(self, args, *pos, **kwargs):
         )
     except Exception as exc:
         _record_classify_failure(exc)
+
+
+def _guard_live_github_spawn(args: object, kwargs: dict[str, object]) -> None:
+    """Reject a process spawn that resolves to the installed GitHub CLI."""
+    if _LIVE_GITHUB_ALLOWED or not _gh_guard_enabled() or not _REAL_GH_BINARY:
+        return
+    if isinstance(args, (str, bytes)) or not isinstance(args, (list, tuple)) or not args:
+        return
+    argv = _decode_argv(args)
+    if not argv:
+        return
+    executable = kwargs.get("executable") or argv[0]
+    if not isinstance(executable, (str, bytes, os.PathLike)):
+        return
+    executable_path = os.fsdecode(executable)
+    env = kwargs.get("env")
+    process_env = env if isinstance(env, dict) else os.environ
+    configured_backend = process_env.get("AGENT_REAL_GH")
+    if not os.path.isabs(executable_path):
+        if os.path.basename(executable_path) != "gh":
+            return
+        search_path = os.fspath(process_env.get("PATH", os.defpath))
+        resolved = shutil.which(executable_path, path=search_path)
+        if resolved is None:
+            return
+        executable_path = resolved
+    is_shim = _is_agent_runtime_shim(executable_path) and os.path.basename(executable_path) == "gh"
+    # The runtime shim is safe only when it has been explicitly wired to a
+    # non-real test backend. Never let AGENT_REAL_GH exempt a direct real-gh
+    # spawn; that environment variable is also present in normal agent runs.
+    if (
+        is_shim
+        and configured_backend
+        and os.path.isfile(os.fspath(configured_backend))
+        and os.path.realpath(os.fspath(configured_backend)) != os.path.realpath(_REAL_GH_BINARY)
+    ):
+        return
+    if not is_shim and os.path.realpath(executable_path) != os.path.realpath(_REAL_GH_BINARY):
+        return
+
+    from scripts.secret_redactor import redact_value
+
+    rendered = redact_value(argv)
+    pytest.fail(
+        f"{os.environ.get('PYTEST_CURRENT_TEST', '<unknown test id>')} spawned real gh: {rendered}; "
+        "@pytest.mark.live_github opts this test into real gh/network access; it does not skip the test in CI",
+        pytrace=False,
+    )
 
 
 def _popen_exit_status(proc: subprocess.Popen) -> int | None:
@@ -1909,28 +2027,34 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
     raised from the hooked call; teardown reports them as "guard could not
     classify".
 
-    Set ``LU_WORKTREE_GUARD=0`` to skip the hooks for an overhead measurement.
-    Under xdist each worker is its own process, so the hook and the teardown
+    Set ``LU_WORKTREE_GUARD=0`` to skip directory/worktree hooks and
+    ``LU_GH_GUARD=0`` independently to skip the real-GitHub-CLI spawn guard.
+    Under xdist each worker is its own process, so the hooks and the teardown
     check run once per worker rather than once in the controller.
     """
-    if not _worktree_guard_enabled():
+    guard_worktrees = _worktree_guard_enabled()
+    guard_github = _gh_guard_enabled()
+    if not guard_worktrees and not guard_github:
         yield
         return
-    _WORKTREE_ENTRIES_AT_START.clear()
-    _CREATED_WORKTREE_ENTRIES.clear()
-    _CREATED_WORKTREE_ATTRIBUTION.clear()
-    _POPEN_WORKTREE_CALLS.clear()
-    _GUARD_CLASSIFY_FAILURES.clear()
-    _WORKTREE_ENTRIES_AT_START.update(_snapshot_worktree_entries())
+    if guard_worktrees:
+        _WORKTREE_ENTRIES_AT_START.clear()
+        _CREATED_WORKTREE_ENTRIES.clear()
+        _CREATED_WORKTREE_ATTRIBUTION.clear()
+        _POPEN_WORKTREE_CALLS.clear()
+        _GUARD_CLASSIFY_FAILURES.clear()
+        _WORKTREE_ENTRIES_AT_START.update(_snapshot_worktree_entries())
     with pytest.MonkeyPatch.context() as patcher:
-        patcher.setattr(os, "mkdir", _guarded_mkdir)
-        patcher.setattr(os, "makedirs", _guarded_makedirs)
-        patcher.setattr(os, "symlink", _guarded_symlink)
+        if guard_worktrees:
+            patcher.setattr(os, "mkdir", _guarded_mkdir)
+            patcher.setattr(os, "makedirs", _guarded_makedirs)
+            patcher.setattr(os, "symlink", _guarded_symlink)
         patcher.setattr(subprocess.Popen, "__init__", _guarded_popen_init)
         yield
-    message = _worktree_guard_teardown_message()
-    if message:
-        pytest.fail(message)
+    if guard_worktrees:
+        message = _worktree_guard_teardown_message()
+        if message:
+            pytest.fail(message)
 
 
 @pytest.fixture(autouse=True)
