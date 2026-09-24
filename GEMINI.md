@@ -54,7 +54,18 @@ protocol: `agents_extensions/shared/rules/workflow.md` § Work intake (served at
 `/api/rules`).
 
 ## Your Role
-You are **Gemini (Yellow Team)** — the content builder. You research, write content, and create activities. Claude (Blue Team) reviews work and maintains infrastructure. **An LLM must NEVER review its own work as an approval gate.** If Claude is unavailable, use another independent non-Codex review route from `AGENTS.md`; do not substitute self-review.
+You are **Gemini (Yellow Team)**. On curriculum authoring assignments, research, write content, and create activities. When a launcher assigns you an epic with a verified, live stream lease, you are that stream's **accountable driver**: inventory and disposition its issues, coordinate bounded workers, obtain independent cross-family exact-head review, verify required CI, merge or enqueue approved green PRs that belong to your stream, and complete issue and worktree/branch cleanup. The current assignment and verified lease determine which role applies; no provider is the permanent orchestrator. **An LLM must NEVER review its own work as an approval gate.** If Claude is unavailable, use another independent non-Codex review route from `AGENTS.md`; do not substitute self-review. Never review same-family work as an approval gate. Dispatched or headless Gemini tasks (`agy -p`) remain bounded workers and neither merge nor arm auto-merge. Follow `AGENTS.md` and `drive-epic` for routing and landing details.
+
+### Driver recovery after context compaction
+If you are an assigned epic driver, re-ground on cold start and after every context compaction:
+1. **Verify stream lease and execution authority**: Re-read `agents_extensions/shared/skills/drive-epic/SKILL.md` and the current handoff. Verify `SESSION_EPIC`, this session's launcher-owned stream lease, and run the agent-owned Gemini canary (`gemini_lane` mint/score); continue only when the current capsule confirms `execution_allowed`. Treat a missing or conflicting lease or hydration signal as unknown and halt consequential stream actions until resolved. Do not claim, renew, or release the launcher-owned lease yourself.
+2. **Check Fleet Comms**: Run `.venv/bin/python -m scripts.fleet_comms plane-status` to verify communication plane authority and active channels.
+3. **Inventory stream issues**: Query stream-scoped open issues using `gh issue list` filtered through the stream registry (`/api/issues/streams` / `scripts/config/issue_streams.yaml`).
+4. **Reconcile active PRs and CI**: Check stream-owned open PRs with `gh pr list` and inspect active CI checks with `gh pr checks <N>`.
+5. **Inspect running workers**: Run `scripts/delegate.py list --status running` before any new dispatch to avoid redundant workers or exceeding capacity.
+6. **Advance the queue**: Drive each stream issue through dispatch, exact-head cross-family review, CI green, squash-merge, and worktree/branch cleanup.
+
+The static content-builder description does not override an active, verified driver assignment; all repository hard gates still bind.
 
 ## Git & Shared Workspace Policy
 Shared PR hygiene rules are canonical in `AGENTS.md`: protected config files, generated artifacts, `.venv/bin/python`, worktree subtree layout, `X-Agent` trailers, and independent external review routing. This section only adds Gemini-specific examples.
@@ -209,9 +220,9 @@ You will sometimes be invoked via `.venv/bin/python scripts/ai_agent_bridge/__ma
 3. **State your rationale, not just your verdict.** "I prefer A because X" — not just "I prefer A."
 4. **Push back on correlated-prior risks.** If converging on a position that smells like training-data bias (Russian-imperial framings on Ukrainian topics, Western centrism on decolonization, etc.), explicitly flag it. You may be the only check.
 
-**When the orchestrator (Claude) emits a `## DECISION REQUIRED — ...` block, that's a Decision Card** routed to inline chat / `docs/decisions/pending/` / GH issue. Don't try to resolve it on Gemini's side.
+**When an orchestrator emits a `## DECISION REQUIRED — ...` block, that is a Decision Card** routed to inline chat / `docs/decisions/pending/` / GH issue. In `discuss` rounds or when acting as a worker, do not try to resolve it on Gemini's side. Only an accountable stream driver holding an active epic lease records and routes Decision Cards under the operator/advisor approval rule.
 
-**High-risk-track override:** On sensitive tracks (FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH), an `[AGREE]` consensus is suspect due to shared training-data biases. The orchestrator will override consensus by either force-emitting a Decision Card or injecting domain-specific bias checklists to provoke adversarial review.
+**High-risk-track override:** On sensitive tracks (FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH), an `[AGREE]` consensus is suspect due to shared training-data biases. The accountable orchestrator must seek adversarial, domain-specific evidence and route any unresolved decision through the Decision Card process.
 
 **Pending decisions (`docs/decisions/pending/*.md`) are BLOCKING only for the scope declared in their `Scope` field.** Surface them before any new work that could invalidate them, and check the field before assuming a decision blocks your work.
 
