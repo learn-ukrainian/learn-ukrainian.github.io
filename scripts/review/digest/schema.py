@@ -19,19 +19,28 @@ _VALIDATORS: dict[str, Draft202012Validator] = {}
 
 
 def _resolve_schema_path(schema_name: str, repo_root: Path | None = None) -> Path:
+    from .generator import _checked_path
+
     if repo_root is not None:
-        cand = repo_root / "schemas" / schema_name
-        if cand.is_file():
-            return cand
-    return REPO_ROOT / "schemas" / schema_name
+        cand_rel = f"schemas/{schema_name}"
+        cand = repo_root / cand_rel
+        if cand.exists(follow_symlinks=False):
+            return _checked_path(repo_root, cand_rel, "schemas")
+    return _checked_path(REPO_ROOT, f"schemas/{schema_name}", "schemas")
 
 
-def get_validator(schema_path: Path | None = None) -> Draft202012Validator:
+def get_validator(schema_path: Path | None = None, repo_root: Path | None = None) -> Draft202012Validator:
     """Return a cached Draft202012Validator for module-digest-v1.schema.json."""
+    from .generator import _checked_path
+
     global _VALIDATOR
-    path = schema_path or SCHEMA_PATH
-    if path == SCHEMA_PATH and _VALIDATOR is not None:
-        return _VALIDATOR
+    root = repo_root or REPO_ROOT
+    if schema_path is not None:
+        path = _checked_path(root, schema_path, "schemas")
+    else:
+        path = _resolve_schema_path("module-digest-v1.schema.json", repo_root)
+        if repo_root is None and _VALIDATOR is not None:
+            return _VALIDATOR
     if not path.is_file():
         raise DigestError(codes.DIGEST_SCHEMA_INVALID, f"schema file not found: {path}")
     try:
@@ -39,7 +48,7 @@ def get_validator(schema_path: Path | None = None) -> Draft202012Validator:
     except Exception as exc:
         raise DigestError(codes.DIGEST_SCHEMA_INVALID, f"schema file unreadable: {exc}") from exc
     validator = Draft202012Validator(schema)
-    if path == SCHEMA_PATH:
+    if schema_path is None and repo_root is None:
         _VALIDATOR = validator
     return validator
 
@@ -64,7 +73,7 @@ def get_cached_validator(schema_name: str, repo_root: Path | None = None) -> Dra
 def validate_digest(doc: Any, *, schema_path: Path | None = None, repo_root: Path | None = None) -> None:
     """Validate document against module-digest-v1.schema.json."""
     if schema_path is not None:
-        validator = get_validator(schema_path)
+        validator = get_validator(schema_path, repo_root=repo_root)
     else:
         validator = get_cached_validator("module-digest-v1.schema.json", repo_root)
     errors = sorted(validator.iter_errors(doc), key=lambda e: [str(p) for p in e.absolute_path])

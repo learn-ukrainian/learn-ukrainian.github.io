@@ -62,20 +62,50 @@ def is_forbidden_path(path: Path) -> bool:
     return any(part == "wiki" for part in parts)
 
 
-def validate_input_path(path: Path, expected_root: Path) -> Path:
-    """Resolve path, ensure it lies under expected_root, and verify it is not forbidden under R-11."""
-    resolved_root = expected_root.resolve()
-    resolved = path.resolve()
+def _checked_path(
+    repo_root: Path,
+    rel_path: Path | str,
+    allowed_root_rel: Path | str,
+) -> Path:
+    """Validate and resolve a path under an allowed root according to R-11 containment.
+
+    Builds the path from the resolved repo root plus the literal repo-relative path;
+    resolves it (Path.resolve(strict=False));
+    requires the resolved path to be inside repo_root.resolve() / allowed_root_rel
+    (the literal allowed root, itself not resolved through symlinks);
+    and refuses anything that resolves under curriculum/l2-uk-en/plans/, a *-v1 directory or wiki/.
+    """
+    resolved_root = repo_root.resolve()
+
+    rel = Path(rel_path)
+    if rel.is_absolute():
+        try:
+            rel = rel.relative_to(resolved_root)
+        except ValueError:
+            try:
+                rel = rel.relative_to(repo_root)
+            except ValueError as exc:
+                raise DigestError(
+                    codes.PATH_FORBIDDEN,
+                    f"path {rel_path} is absolute and outside repo root {resolved_root}",
+                ) from exc
+
+    raw_path = resolved_root / rel
+    resolved = raw_path.resolve(strict=False)
+
+    allowed_rel_clean = str(allowed_root_rel).strip("/")
+    literal_allowed_root = resolved_root / allowed_rel_clean
+
     try:
-        if not resolved.is_relative_to(resolved_root):
+        if not resolved.is_relative_to(literal_allowed_root) or resolved == literal_allowed_root:
             raise DigestError(
                 codes.PATH_FORBIDDEN,
-                f"path {path} resolves outside expected root {resolved_root}: {resolved}",
+                f"path {rel_path} resolves outside expected root {literal_allowed_root}: {resolved}",
             )
     except (ValueError, TypeError) as exc:
         raise DigestError(
             codes.PATH_FORBIDDEN,
-            f"path {path} is invalid: {exc}",
+            f"path {rel_path} is invalid: {exc}",
         ) from exc
 
     if is_forbidden_path(resolved):
@@ -83,7 +113,14 @@ def validate_input_path(path: Path, expected_root: Path) -> Path:
             codes.PATH_FORBIDDEN,
             f"path {resolved} is forbidden under R-11",
         )
+
     return resolved
+
+
+def validate_input_path(path: Path, expected_root: Path, repo_root: Path | None = None) -> Path:
+    """Deprecated compatibility wrapper around _checked_path."""
+    root = repo_root or REPO_ROOT
+    return _checked_path(root, path, expected_root)
 
 
 def _sort_val(v: Any) -> tuple[int, Any]:
@@ -151,13 +188,13 @@ def build_digest(
     if up_to < 1:
         raise DigestError(codes.INVALID_ARGUMENT, f"--up-to must be >= 1, got {up_to}")
 
-    root = (repo_root or REPO_ROOT).resolve()
-    expected_plan_root = (root / f"curriculum/l2-uk-en/lesson-plans/{level}").resolve()
-    expected_state_root = (root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}").resolve()
-    expected_mdx_root = (root / f"site/src/content/docs/{level}/{slug}").resolve()
+    root = repo_root or REPO_ROOT
+    plan_root_rel = f"curriculum/l2-uk-en/lesson-plans/{level}"
+    state_root_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
+    mdx_root_rel = f"site/src/content/docs/{level}/{slug}"
 
-    plan_path = root / f"curriculum/l2-uk-en/lesson-plans/{level}/{slug}.yaml"
-    resolved_plan_path = validate_input_path(plan_path, expected_plan_root)
+    plan_path_rel = f"curriculum/l2-uk-en/lesson-plans/{level}/{slug}.yaml"
+    resolved_plan_path = _checked_path(root, plan_path_rel, plan_root_rel)
 
     if not resolved_plan_path.is_file():
         raise DigestError(codes.PLAN_MISSING, f"module plan {resolved_plan_path} not found")
@@ -184,14 +221,16 @@ def build_digest(
         if k not in plan_lessons_by_n:
             raise DigestError(codes.LESSON_NOT_IN_PLAN, f"lesson {k} not found in module plan {resolved_plan_path}")
 
-        mdx_path = root / f"site/src/content/docs/{level}/{slug}/{k}.mdx"
-        resolved_mdx = validate_input_path(mdx_path, expected_mdx_root)
+        mdx_path_rel = f"site/src/content/docs/{level}/{slug}/{k}.mdx"
+        resolved_mdx = _checked_path(root, mdx_path_rel, mdx_root_rel)
         if not resolved_mdx.is_file():
             raise DigestError(codes.MDX_MISSING, f"lesson {k} MDX file {resolved_mdx} not found")
         mdx_sha256 = compute_file_sha256(resolved_mdx)
 
-        obs_path = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.observed.yaml"
-        resolved_obs = validate_input_path(obs_path, expected_state_root)
+        obs_path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.observed.yaml"
+        obs_lock_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.observed.yaml.lock"
+        resolved_obs = _checked_path(root, obs_path_rel, state_root_rel)
+        _checked_path(root, obs_lock_rel, state_root_rel)
         if not resolved_obs.is_file():
             raise DigestError(codes.OBSERVED_MISSING, f"observed state file {resolved_obs} not found")
         try:
@@ -210,8 +249,10 @@ def build_digest(
             raise DigestError(codes.OBSERVED_INVALID, f"observed file {resolved_obs} is not a YAML mapping")
         validate_observed_schema(obs_doc, resolved_obs, repo_root=root)
 
-        res_path = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.resolutions.yaml"
-        resolved_res = validate_input_path(res_path, expected_state_root)
+        res_path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.resolutions.yaml"
+        res_lock_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.resolutions.yaml.lock"
+        resolved_res = _checked_path(root, res_path_rel, state_root_rel)
+        _checked_path(root, res_lock_rel, state_root_rel)
         if not resolved_res.is_file():
             raise DigestError(codes.RESOLUTIONS_MISSING, f"resolutions file {resolved_res} not found")
         try:
@@ -230,8 +271,8 @@ def build_digest(
             raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {resolved_res} is not a YAML mapping")
         validate_resolutions_schema(res_doc, resolved_res, repo_root=root)
 
-        prov_path = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.provenance.yaml"
-        resolved_prov = validate_input_path(prov_path, expected_state_root)
+        prov_path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.provenance.yaml"
+        resolved_prov = _checked_path(root, prov_path_rel, state_root_rel)
         if not resolved_prov.is_file():
             raise DigestError(codes.PROVENANCE_MISSING, f"provenance file {resolved_prov} not found")
         prov_sha256 = compute_file_sha256(resolved_prov)
@@ -410,6 +451,12 @@ def build_digest(
 
         plan_dialogue = lesson_plan.get("dialogue")
         if plan_dialogue is not None:
+            step = plan_dialogue.get("step")
+            if not isinstance(step, str) or not step:
+                raise DigestError(
+                    codes.PLAN_INVALID,
+                    f"lesson {k} dialogue missing required 'step' in module plan {resolved_plan_path}",
+                )
             places = [
                 p["name"]
                 for p in plan_dialogue.get("places") or []
@@ -423,7 +470,7 @@ def build_digest(
                 for s in plan_dialogue["speakers"]
             ]
             dialogue_entry: dict[str, Any] | None = {
-                "step": plan_dialogue.get("step"),
+                "step": step,
                 "setting": plan_dialogue["setting"],
                 "register": plan_dialogue["register"],
                 "places": places,
@@ -471,10 +518,10 @@ def digest_output_path(
     """Return path to digest-upto-<n>.yaml."""
     validate_level(level)
     validate_slug(slug)
-    root = (repo_root or REPO_ROOT).resolve()
-    expected_root = (root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}").resolve()
-    path = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml"
-    return validate_input_path(path, expected_root)
+    root = repo_root or REPO_ROOT
+    state_root_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
+    path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml"
+    return _checked_path(root, path_rel, state_root_rel)
 
 
 def write_digest(
@@ -486,12 +533,18 @@ def write_digest(
     validate_digest(digest_doc, repo_root=repo_root)
     validate_level(digest_doc["level"])
     validate_slug(digest_doc["slug"])
-    path = digest_output_path(
-        digest_doc["level"],
-        digest_doc["slug"],
-        digest_doc["up_to"],
-        repo_root=repo_root,
-    )
+    root = repo_root or REPO_ROOT
+    level = digest_doc["level"]
+    slug = digest_doc["slug"]
+    up_to = digest_doc["up_to"]
+
+    state_root_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
+    path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml"
+    lock_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml.lock"
+
+    path = _checked_path(root, path_rel, state_root_rel)
+    _checked_path(root, lock_rel, state_root_rel)
+
     content_bytes = lock.yaml_bytes(digest_doc)
     sha256 = lock.write(path, content_bytes)
     return path, sha256
@@ -507,10 +560,16 @@ def check_digest(
     """Verify digest on disk against recomputed content without byte drift."""
     validate_level(level)
     validate_slug(slug)
-    path = digest_output_path(level, slug, up_to, repo_root=repo_root)
+    root = repo_root or REPO_ROOT
+    state_root_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
+    path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml"
+    lock_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml.lock"
+
+    path = _checked_path(root, path_rel, state_root_rel)
+    lock_path = _checked_path(root, lock_rel, state_root_rel)
+
     if not path.is_file():
         raise DigestError(codes.DIGEST_FILE_MISSING, f"digest file {path} not found")
-    lock_path = Path(f"{path}.lock")
     if not lock_path.is_file():
         raise DigestError(codes.DIGEST_FILE_MISSING, f"lock file {lock_path} not found")
     if not lock.check(path):
