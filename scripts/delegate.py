@@ -1542,34 +1542,26 @@ def _retire_worktree_prep(task_id: str, run_nonce: str) -> None:
             state_path.unlink(missing_ok=True)
 
 
-def _release_empty_reservation(worktree_path: Path, prep: dict[str, Any] | None = None) -> dict[str, Any]:
-    """``rmdir`` this run's reserved directory when git registered nothing and left it empty.
+def _leave_reservation(worktree_path: Path, prep: dict[str, Any]) -> dict[str, Any]:
+    """Report the reserved directory a failed add left unregistered; never remove it (#8663).
 
-    The only automatic removal in worktree preparation (#8663). With
-    ``prep``, the directory must still be the inode the reservation created.
+    Git 2.53 can write another add's admin registration while this path is
+    still empty and before its ``.git`` exists, so no ``rmdir`` of the
+    reservation is safe. The directory stays as it is, empty or not, and
+    ``reserved_dir_left`` is recorded in ``prep`` and the returned report.
+    An empty, unregistered one is swept later by the reaper's existing
+    dispatch-husk rule (``reap_worktrees._reap_dispatch_husks``).
     """
-    if not os.path.lexists(worktree_path):
-        return {"action": "none", "reason": "git left no worktree behind", "error": None}
-    if prep is not None and not worktree_prep.identity_matches(prep, worktree_path):
-        return {
-            "action": "skipped",
-            "reason": "path holds a directory this run did not reserve (device/inode differ); never removed",
-            "error": None,
-        }
-    try:
-        # rmdir refuses a non-empty directory, so no file is ever deleted here.
-        os.rmdir(worktree_path)
-    except OSError as exc:
-        return {
-            "action": "skipped",
-            "reason": "reserved directory is unregistered but not empty; left for the husk reaper",
-            "error": f"{type(exc).__name__}: {exc}",
-        }
-    return {
-        "action": "removed",
-        "reason": "git registered no worktree; removed the empty path reservation",
-        "error": None,
-    }
+    left = os.path.lexists(worktree_path)
+    prep["reserved_dir_left"] = left
+    report: dict[str, Any] = {"error": None, "reserved_dir_left": left}
+    if not left:
+        return {**report, "action": "none", "reason": "git left no worktree behind"}
+    if not worktree_prep.identity_matches(prep, worktree_path):
+        reason = "path holds a directory this run did not reserve (device/inode differ); never removed"
+    else:
+        reason = "git registered no worktree; reserved directory left in place, never removed automatically"
+    return {**report, "action": "skipped", "reason": reason}
 
 
 def _settle_failed_worktree_add(
@@ -1579,19 +1571,24 @@ def _settle_failed_worktree_add(
     git_exited: bool,
     prep: dict[str, Any],
 ) -> dict[str, Any]:
-    """Record what this run's failed ``git worktree add`` left; remove at most an empty directory (#8663).
+    """Record what this run's failed ``git worktree add`` left; remove nothing (#8663).
 
     A stopped add got SIGTERM first, so git normally deleted its own partial
-    worktree and admin directory. Once git is confirmed exited, an
-    unregistered path loses only its empty reservation directory (``rmdir``,
-    only while it is still the reserved inode). A worktree git left
+    worktree and admin directory. Whatever remains stays: a reserved
+    directory git left unregistered is reported with ``reserved_dir_left``
+    (see :func:`_leave_reservation`). A worktree git left
     registered is never removed, unlocked or pruned here: it is reported, as
     :data:`worktree_prep.LEFTOVER_KIND` when git still holds its
     ``initializing`` lock, with a removal command to run only after
     verification. Returns the record stored as ``worktree_prep_cleanup``;
     never raises.
     """
-    base: dict[str, Any] = {"path": str(worktree_path), "branch_ref_kept": True}
+    prep["reserved_dir_left"] = os.path.lexists(worktree_path)
+    base: dict[str, Any] = {
+        "path": str(worktree_path),
+        "branch_ref_kept": True,
+        "reserved_dir_left": prep["reserved_dir_left"],
+    }
     if not git_exited:
         return {
             **base,
@@ -1605,7 +1602,7 @@ def _settle_failed_worktree_add(
         return {**base, "action": "error", "reason": "could not list git worktrees; nothing touched", "error": None}
     registered, lock_reason = registration
     if not registered:
-        return {**base, **_release_empty_reservation(worktree_path, prep)}
+        return {**base, **_leave_reservation(worktree_path, prep)}
     report = {
         **base,
         "action": "skipped",
@@ -1665,8 +1662,8 @@ def _add_reserved_worktree(
     before git starts.
 
     Returns the completed process on success. On a timeout or a non-zero
-    exit, settles what the add left (see :func:`_settle_failed_worktree_add`)
-    and raises :class:`WorktreeAddFailed`.
+    exit, reports what the add left (see :func:`_settle_failed_worktree_add`),
+    removing nothing, and raises :class:`WorktreeAddFailed`.
     """
     try:
         os.mkdir(worktree_path)
@@ -1711,10 +1708,11 @@ def _add_reserved_worktree(
         try:
             _publish_worktree_prep(task_id, run_nonce, prep)
         except (OSError, RuntimeError) as exc:
-            released = _release_empty_reservation(worktree_path, prep)
+            left = _leave_reservation(worktree_path, prep)
             raise WorktreeAddFailed(
                 f"could not record the reservation of {worktree_path}: {exc}",
-                cleanup={"path": str(worktree_path), **released, "branch_ref_kept": True},
+                cleanup={"path": str(worktree_path), **left, "branch_ref_kept": True},
+                prep=dict(prep),
             ) from exc
     git_exited = True
     try:
@@ -1732,6 +1730,8 @@ def _add_reserved_worktree(
             return proc
         message = (proc.stderr or proc.stdout or "git worktree add failed").strip()
     cleanup = _settle_failed_worktree_add(worktree_path, repo_root=repo_root, git_exited=git_exited, prep=prep)
+    if run_nonce is not None:
+        _update_worktree_prep(task_id, run_nonce, prep)
     raise WorktreeAddFailed(message, cleanup=cleanup, prep=dict(prep))
 
 
@@ -8403,6 +8403,11 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     f"   worktree cleanup: {exc.cleanup.get('action')} — {exc.cleanup.get('reason')}",
                     file=sys.stderr,
                 )
+                if exc.cleanup.get("reserved_dir_left"):
+                    print(
+                        f"   reserved_dir_left: {exc.cleanup.get('path')} — left in place, never removed automatically",
+                        file=sys.stderr,
+                    )
                 if exc.cleanup.get("needs_attention"):
                     print(
                         f"   needs_attention: {exc.cleanup['needs_attention']} — {exc.cleanup.get('command')}",

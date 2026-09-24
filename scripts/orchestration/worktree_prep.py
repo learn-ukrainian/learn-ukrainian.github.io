@@ -5,8 +5,9 @@ reservation as ``worktree_prep`` in its task record before git starts. The
 record authorizes no removal of a registered worktree: nothing removes one
 automatically. It serves three narrower purposes:
 
-* ``dir_dev``/``dir_ino``: the directory this call created, so dispatch
-  ``rmdir``s only its own empty reservation once git has exited.
+* ``dir_dev``/``dir_ino``: the directory this call created, reported as
+  ``reserved_directory_intact``. Dispatch never removes the reservation,
+  not even an empty one (``reserved_dir_left`` records that it stayed).
 * ``owner_pid``/``owner_start`` (the dispatcher) and ``git_pid``/``git_start``
   (the add), as pid plus ``/proc`` start time: a provisional ``spawning``
   record whose dispatcher is provably gone is marked ``crashed``

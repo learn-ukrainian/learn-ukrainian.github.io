@@ -3,10 +3,12 @@
 Dispatch reserves the path with ``mkdir`` and records the reservation before
 git starts. A slow add is stopped with SIGTERM first, so git's own signal
 cleanup deletes its partial worktree and admin directory; SIGKILL follows
-only after a grace. Once git has exited, the only automatic removal is an
-``rmdir`` of the empty reserved directory git left unregistered. A worktree
-git left registered is reported as ``needs_attention: initializing_leftover``
-with a "verify first:" removal command, never removed, unlocked or pruned.
+only after a grace. Dispatch then removes nothing, not even the empty
+directory it reserved: git 2.53 can register another add there while it is
+still empty, so the directory is left as it is and ``reserved_dir_left``
+records that. A worktree git left registered is reported as
+``needs_attention: initializing_leftover`` with a "verify first:" removal
+command, never removed, unlocked or pruned.
 
 Every test runs in a tmp git repository. Slowness is simulated, by a fake
 runner that leaves the state a killed add leaves, by ``sleep`` stubs, or by a
@@ -343,7 +345,7 @@ def test_git_not_confirmed_exited_touches_nothing(repo: Path, monkeypatch: pytes
     assert record["worktree_prep"] == caught.value.prep
 
 
-def test_add_that_git_cleaned_up_itself_releases_only_the_empty_reservation(repo: Path) -> None:
+def test_add_that_git_refused_leaves_the_empty_reservation_in_place(repo: Path) -> None:
     git(repo, "branch", "claude/taken")
     taken_sha = git(repo, "rev-parse", "refs/heads/claude/taken")
     worktree = _dispatch_path(repo, "taken")
@@ -354,28 +356,38 @@ def test_add_that_git_cleaned_up_itself_releases_only_the_empty_reservation(repo
             repo_root=repo,
             worktree_path=worktree,
             task_id="taken",
+            run_nonce=_NONCE,
         )
 
     assert "already exists" in str(caught.value)
-    assert caught.value.cleanup["action"] == "removed"
-    assert caught.value.cleanup["reason"] == "git registered no worktree; removed the empty path reservation"
-    assert not worktree.exists()
+    cleanup = caught.value.cleanup
+    assert cleanup["action"] == "skipped"
+    assert (
+        cleanup["reason"] == "git registered no worktree; reserved directory left in place, never removed automatically"
+    )
+    assert cleanup["reserved_dir_left"] is True
+    assert caught.value.prep is not None
+    assert caught.value.prep["reserved_dir_left"] is True
+    # The provisional record carries it too, before dispatch writes the failed one.
+    record = _record("taken")
+    assert record is not None
+    assert record["worktree_prep"]["reserved_dir_left"] is True
+    assert worktree.is_dir()
+    assert not any(worktree.iterdir())
     assert git(repo, "rev-parse", "refs/heads/claude/taken") == taken_sha
 
 
-@pytest.mark.parametrize("recreated", [False, True], ids=["not-empty", "another-inode"])
-def test_unregistered_reservation_is_removed_only_while_empty_and_ours(
-    repo: Path, monkeypatch: pytest.MonkeyPatch, recreated: bool
-) -> None:
+@pytest.mark.parametrize("left", ["empty", "not-empty", "another-inode"])
+def test_unregistered_reservation_is_left_as_it_is(repo: Path, monkeypatch: pytest.MonkeyPatch, left: str) -> None:
     def leaves_a_file(add_command: list[str], *, worktree_path: Path, **kwargs: Any):
         _report_git_spawned_then_exited(kwargs["on_spawn"])
-        if recreated:
+        if left == "another-inode":
             # Made before the reservation goes, so it is surely another inode.
             replacement = worktree_path.with_name("replacement")
             replacement.mkdir()
             os.rmdir(worktree_path)
             replacement.rename(worktree_path)
-        else:
+        elif left == "not-empty":
             (worktree_path / "someone-elses.txt").write_text("keep me\n", encoding="utf-8")
         return subprocess.CompletedProcess(add_command, 128, "", "fatal: simulated")
 
@@ -391,9 +403,105 @@ def test_unregistered_reservation_is_removed_only_while_empty_and_ours(
         )
 
     assert caught.value.cleanup["action"] == "skipped"
+    assert caught.value.cleanup["reserved_dir_left"] is True
     assert worktree.is_dir()
-    if not recreated:
+    if left == "not-empty":
         assert (worktree / "someone-elses.txt").read_text(encoding="utf-8") == "keep me\n"
+
+
+def _forbid_removing(monkeypatch: pytest.MonkeyPatch, reserved: Path) -> None:
+    """Fail on any removal syscall aimed at ``reserved`` (the runtime twin of the static test)."""
+    target = os.path.realpath(reserved)
+
+    def guard(name: str, real: Any) -> Any:
+        def checked(path: Any, *args: Any, **kwargs: Any) -> Any:
+            if os.path.realpath(os.fspath(path)) == target:
+                raise AssertionError(f"{name} of the reserved path {reserved}")
+            return real(path, *args, **kwargs)
+
+        return checked
+
+    for module, name in ((os, "rmdir"), (os, "unlink"), (os, "remove"), (os, "removedirs"), (shutil, "rmtree")):
+        monkeypatch.setattr(module, name, guard(name, getattr(module, name)))
+    for name in ("rmdir", "unlink"):
+        monkeypatch.setattr(Path, name, guard(f"Path.{name}", getattr(Path, name)))
+
+
+def _register_empty_path_as_another_add(repo: Path, worktree: Path) -> None:
+    """Leave the state git 2.53 writes mid-add: admin registration, target still empty, no ``.git``."""
+    admin = repo / ".git" / "worktrees" / worktree.name
+    admin.mkdir(parents=True)
+    (admin / "gitdir").write_text(f"{worktree / '.git'}\n", encoding="utf-8")
+    (admin / "locked").write_text("initializing", encoding="utf-8")
+
+
+def test_empty_reservation_registered_by_another_add_after_the_check_is_left_alone(
+    repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    worktree = _dispatch_path(repo, "interleaved")
+
+    def fails_without_registering(add_command: list[str], **kwargs: Any):
+        _report_git_spawned_then_exited(kwargs["on_spawn"])
+        return subprocess.CompletedProcess(add_command, 128, "", "fatal: simulated")
+
+    real_registration = delegate._worktree_registration
+
+    def registration_then_another_add(repo_root: Path, path: Path):
+        # Our check sees nothing registered; another add registers the still-empty path right after.
+        result = real_registration(repo_root, path)
+        _register_empty_path_as_another_add(repo, worktree)
+        return result
+
+    monkeypatch.setattr(delegate, "_run_worktree_add", fails_without_registering)
+    monkeypatch.setattr(delegate, "_worktree_registration", registration_then_another_add)
+    _forbid_removing(monkeypatch, worktree)
+
+    with pytest.raises(delegate.WorktreeAddFailed) as caught:
+        delegate._add_reserved_worktree(
+            ["git", "worktree", "add", "-b", "claude/interleaved", str(worktree), "main"],
+            repo_root=repo,
+            worktree_path=worktree,
+            task_id="interleaved",
+        )
+
+    assert caught.value.cleanup["reserved_dir_left"] is True
+    assert worktree.is_dir()
+    assert (repo / ".git" / "worktrees" / "interleaved" / "gitdir").exists()
+
+
+def test_reservation_whose_record_cannot_be_published_is_left_alone(
+    repo: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    worktree = _dispatch_path(repo, "unpublished")
+
+    def publish_fails_while_another_add_registers(task_id: str, run_nonce: str, prep: dict[str, Any]) -> None:
+        _register_empty_path_as_another_add(repo, worktree)
+        raise RuntimeError("task record is running; refusing to overwrite it")
+
+    def must_not_run(add_command: list[str], **_kwargs: Any):
+        raise AssertionError("git worktree add ran without a published reservation")
+
+    monkeypatch.setattr(delegate, "_publish_worktree_prep", publish_fails_while_another_add_registers)
+    monkeypatch.setattr(delegate, "_run_worktree_add", must_not_run)
+    _forbid_removing(monkeypatch, worktree)
+
+    with pytest.raises(delegate.WorktreeAddFailed) as caught:
+        delegate._add_reserved_worktree(
+            ["git", "worktree", "add", "-b", "claude/unpublished", str(worktree), "main"],
+            repo_root=repo,
+            worktree_path=worktree,
+            task_id="unpublished",
+            run_nonce=_NONCE,
+        )
+
+    assert str(caught.value).startswith(f"could not record the reservation of {worktree}")
+    cleanup = caught.value.cleanup
+    assert cleanup["action"] == "skipped"
+    assert cleanup["reserved_dir_left"] is True
+    assert caught.value.prep is not None
+    assert caught.value.prep["reserved_dir_left"] is True
+    assert worktree.is_dir()
+    assert (repo / ".git" / "worktrees" / "unpublished" / "gitdir").exists()
 
 
 # --- the real ``git`` Popen path -------------------------------------------------------------
@@ -514,6 +622,7 @@ def test_real_git_add_stopped_by_sigterm_leaves_nothing_behind(
     assert str(caught.value).startswith("git worktree add timed out after ")
     # git's own cleanup removed the tree and its admin directory, reservation included.
     assert caught.value.cleanup["action"] == "none"
+    assert caught.value.cleanup["reserved_dir_left"] is False
     assert not worktree.exists()
     assert worktree.resolve() not in _registered(repo)
     assert not any((repo / ".git" / "worktrees").glob("*"))
@@ -592,7 +701,7 @@ _REPORT_ONLY_FUNCTIONS = [
     delegate._run_worktree_add,
     delegate._stop_worktree_add,
     delegate._settle_failed_worktree_add,
-    delegate._release_empty_reservation,
+    delegate._leave_reservation,
     delegate._publish_worktree_prep,
     delegate._update_worktree_prep,
     delegate._retire_worktree_prep,
@@ -604,7 +713,17 @@ _REPORT_ONLY_FUNCTIONS = [
         if obj.__module__ == worktree_prep.__name__
     ),
 ]
-_FORBIDDEN_CALLS = {"remove_unclaimed_worktree", "git_worktree_remove", "rmtree", "_remove_acp_runtime_worktree"}
+_FORBIDDEN_CALLS = {
+    "remove_unclaimed_worktree",
+    "git_worktree_remove",
+    "rmtree",
+    "_remove_acp_runtime_worktree",
+    "rmdir",
+    "removedirs",
+}
+# ``unlink``/``remove`` are allowed only on the task-record file, never on a worktree path.
+_FILE_REMOVALS = {"unlink", "remove"}
+_TASK_RECORD_NAMES = {"state_path"}
 _FORBIDDEN_GIT_WORDS = {"remove", "unlock", "prune"}
 
 
@@ -620,6 +739,11 @@ def test_worktree_prep_and_leftover_report_never_remove_a_registered_worktree(fu
             continue
         callee = node.func.attr if isinstance(node.func, ast.Attribute) else getattr(node.func, "id", "")
         assert callee not in _FORBIDDEN_CALLS, f"{function.__name__} calls {callee}"
+        if callee in _FILE_REMOVALS:
+            receiver = node.func.value if isinstance(node.func, ast.Attribute) else None
+            targets = [receiver, *node.args] if isinstance(receiver, ast.Name) and receiver.id != "os" else node.args
+            names = {target.id for target in targets if isinstance(target, ast.Name)}
+            assert names and names <= _TASK_RECORD_NAMES, f"{function.__name__} calls {callee} on {sorted(names)}"
         # A git argv (a list/tuple literal passed to a call) never names remove, unlock or prune.
         for arg in [*node.args, *(keyword.value for keyword in node.keywords)]:
             if isinstance(arg, (ast.List, ast.Tuple)):

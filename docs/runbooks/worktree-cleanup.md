@@ -146,11 +146,10 @@ Callers and their ownership proofs:
   dispatch created. `delegate._release_stale_branch_holders` performs a
   non-force release after clean, synced, terminal-owner checks so a blocked
   dispatch may reattach its branch.
-- `delegate._settle_failed_worktree_add` never removes a registered worktree.
-  After its own failed or timed-out `git worktree add` has exited, dispatch
-  only `rmdir`s the empty directory it reserved with `mkdir`, and only when
-  git registered nothing there. Anything else is reported (see "Interrupted
-  `git worktree add`" below).
+- `delegate._settle_failed_worktree_add` removes nothing. After its own
+  failed or timed-out `git worktree add`, dispatch leaves the directory it
+  reserved with `mkdir` as it is, empty or not, and reports it (see
+  "Interrupted `git worktree add`" below).
 - `post_task_reap._remove_acp_runtime_worktree` removes only task-state-bound
   ACP runtime paths below `.worktrees/dispatch/acp/`, after its own terminal,
   clean, and liveness checks; it forces for ignored runtime residue.
@@ -211,9 +210,15 @@ Stopping a slow add:
    checkout starts, at its first file, mid-checkout and at its last file.
 2. Dispatch waits up to `_WORKTREE_ADD_STOP_GRACE_S` (30 s) for git to exit.
    SIGKILL follows only after that grace.
-3. Once git has exited, the only automatic removal is `os.rmdir` of the
-   directory dispatch reserved with `mkdir`: only while git registered
-   nothing there, the directory is still the reserved inode, and it is empty.
+3. Dispatch worktree preparation removes nothing, not even the empty
+   directory it reserved with `mkdir`. Git 2.53 can write another add's
+   admin registration while that directory is still empty and before its
+   `.git` exists, so an `rmdir` could disrupt that add. The directory stays
+   as it is; `worktree_prep.reserved_dir_left: true` and the failure output
+   record that it was left. An empty, unregistered one is later swept by the
+   reaper's existing zero-file dispatch-husk rule
+   (`reap_worktrees._reap_dispatch_husks`, described at the end of this
+   section, with its one-hour age floor).
 
 Before git starts, dispatch reserves the path with `mkdir`: a path that
 already exists is never passed to git and never removed. Dispatch also
