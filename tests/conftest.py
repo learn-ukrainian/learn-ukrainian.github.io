@@ -8,6 +8,7 @@ import ast
 import contextlib
 import functools
 import ipaddress
+import itertools
 import os
 import shutil
 import socket
@@ -568,8 +569,19 @@ def _hermetic_dispatch_admission_host(monkeypatch):
     )
 
 
+# One numbered directory per process. ``mktemp`` lists the base to pick the
+# next number, so a per-test call is quadratic over a long session (#8654).
+_WRITE_OWNERSHIP_SEQ = itertools.count()
+
+
+@pytest.fixture(scope="session")
+def _write_ownership_base(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One base directory for every per-test ownership ledger in this process."""
+    return tmp_path_factory.mktemp("write-ownership-stores")
+
+
 @pytest.fixture(autouse=True)
-def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
+def _isolate_write_ownership_ledger(_write_ownership_base: Path, monkeypatch):
     """Every test gets its own write-path ownership ledger.
 
     Root cause (2026-07-25): the ledger path was a module constant baked into
@@ -583,9 +595,12 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     ``tmp_path``: an autouse fixture that creates a subdirectory there breaks
     every test asserting its ``tmp_path`` is empty. Caught in CI by
     test_grok_envelope_failure_skips_forensics_when_unconfigured after the
-    first version of this fixture did exactly that.
+    first version of this fixture did exactly that. The session base is
+    numbered once; each test is ``<base>/<n>`` via ``mkdir``, not another
+    ``mktemp``.
     """
-    ledger_dir = tmp_path_factory.mktemp("write-ownership")
+    ledger_dir = _write_ownership_base / str(next(_WRITE_OWNERSHIP_SEQ))
+    ledger_dir.mkdir(parents=True)
     db_file = ledger_dir / "write-ownership.sqlite3"
     conn = sqlite3.connect(db_file)
     conn.execute(
@@ -717,11 +732,24 @@ def _retarget_loaded_task_dirs(monkeypatch: pytest.MonkeyPatch, isolated: Path) 
         monkeypatch.setattr(module, attr, isolated)
 
 
+# Per-process, not per-test: ``mktemp`` scans the base directory for the next
+# number, and that scan grows with every directory already created (#8654 review).
+_DISPATCH_STORE_SEQ = itertools.count()
+
+
+@pytest.fixture(scope="session")
+def _dispatch_task_store_base(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One numbered base for every per-test task store in this process."""
+    return tmp_path_factory.mktemp("dispatch-stores")
+
+
 @pytest.fixture(autouse=True)
-def _isolate_dispatch_task_store(tmp_path_factory: pytest.TempPathFactory, monkeypatch: pytest.MonkeyPatch) -> Path:
+def _isolate_dispatch_task_store(
+    _dispatch_task_store_base: Path, monkeypatch: pytest.MonkeyPatch
+) -> Path:
     """Point the dispatch task store at a per-test directory (#8654).
 
-    The directory is ``<mktemp("dispatch")>/tasks``, so ``_TASKS_DIR.parent``
+    The directory is ``<session base>/<n>/tasks``, so ``_TASKS_DIR.parent``
     (where delegate writes ``preflight_fast_fail.jsonl``) is also per-test.
     It comes from ``tmp_path_factory``, not the test's ``tmp_path``: an autouse
     fixture that creates a subdirectory of ``tmp_path`` breaks tests that
@@ -729,8 +757,8 @@ def _isolate_dispatch_task_store(tmp_path_factory: pytest.TempPathFactory, monke
     Nothing is copied out of the live store. A test that sets ``_TASKS_DIR``
     itself runs after this autouse fixture, so that override wins.
     """
-    isolated = tmp_path_factory.mktemp("dispatch") / "tasks"
-    isolated.mkdir()
+    isolated = _dispatch_task_store_base / str(next(_DISPATCH_STORE_SEQ)) / "tasks"
+    isolated.mkdir(parents=True)
     import scripts.delegate as delegate_mod
 
     monkeypatch.setattr(delegate_mod, "_TASKS_DIR", isolated)

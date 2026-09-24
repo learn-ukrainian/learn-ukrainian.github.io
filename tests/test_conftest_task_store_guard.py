@@ -55,7 +55,7 @@ def test_write_to_real_preflight_fast_fail_is_refused() -> None:
 def test_isolate_dispatch_task_store_is_not_the_live_dir(
     _isolate_dispatch_task_store: Path,
 ) -> None:
-    """The autouse redirect is ``<dispatch>/tasks``, so its parent is also per-test."""
+    """The autouse redirect is ``<session base>/<n>/tasks``, so its parent is also per-test."""
     import scripts.delegate as delegate_mod
 
     assert _isolate_dispatch_task_store != _REAL_TASKS_DIR
