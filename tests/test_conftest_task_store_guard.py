@@ -120,6 +120,7 @@ def _div_string_tail(node: ast.expr) -> tuple[str, ...]:
     return tuple(parts)
 
 
+@pytest.mark.repo_wide
 def test_task_store_constants_match_retarget_tuple() -> None:
     """A new ``<repo>/batch_state/tasks`` constant in ``scripts/`` must be listed.
 
