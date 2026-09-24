@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fresh plan review attempt manifest",
+  "type": "object", "additionalProperties": false,
+  "required": ["manifest_schema", "kind", "level", "slug", "position", "inputs", "learner_state"],
+  "properties": {
+    "manifest_schema": {"const": 1}, "kind": {"const": "plan"},
+    "level": {"type": "string", "minLength": 1}, "slug": {"type": "string", "minLength": 1},
+    "position": {"type": "integer", "minimum": 1},
+    "inputs": {"type": "object", "additionalProperties": false,
+      "required": ["plan", "pack_lock", "words_lock", "arc", "decisions", "scope", "grammar", "validate_report", "pack_verify_report"],
+      "properties": {
+        "plan": {"$ref": "#/$defs/file"}, "pack_lock": {"$ref": "#/$defs/file"},
+        "words_lock": {"$ref": "#/$defs/file"}, "arc": {"$ref": "#/$defs/file"},
+        "decisions": {"$ref": "#/$defs/file"}, "scope": {"$ref": "#/$defs/file"},
+        "grammar": {"$ref": "#/$defs/file"}, "validate_report": {"$ref": "#/$defs/file"},
+        "pack_verify_report": {"$ref": "#/$defs/file"}
+      }
+    },
+    "learner_state": {"type": "object", "additionalProperties": false,
+      "required": ["sha256", "source"],
+      "properties": {"sha256": {"$ref": "#/$defs/sha"}, "source": {"const": "planned_state"}}}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "file": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"],
+      "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha"}}}
+  }
+}

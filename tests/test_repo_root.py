@@ -76,6 +76,7 @@ def wt_layout(tmp_path) -> tuple[Path, Path]:
 
     files_to_copy = [
         "scripts/common/__init__.py",
+        "scripts/common/bridge_paths.py",
         "scripts/common/repo_root.py",
         "scripts/ai_agent_bridge/_config.py",
         "scripts/ai_agent_bridge/_env.py",

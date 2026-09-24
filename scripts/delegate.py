@@ -109,6 +109,7 @@ import json
 import logging
 import os
 import re
+import resource
 import shutil
 import signal
 import stat
@@ -120,7 +121,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Callable, Collection, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -147,7 +148,7 @@ from scripts.common.scratch import (
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
-from scripts.orchestration import reaper_lifecycle, task_record_store, worktree_claims
+from scripts.orchestration import dispatch_admission, reaper_lifecycle, task_record_store, worktree_claims
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, task_state_lock, write_state_unlocked
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
@@ -520,7 +521,28 @@ def _core_terminal_fields(
         "commits_ahead": commits_ahead,
         "needs_finalize": needs_finalize,
         "finalize_error": finalize_error,
+        "peak_rss_mib": _children_peak_rss_mib(),
     }
+
+
+def _children_peak_rss_mib() -> float | None:
+    """Peak RSS of the largest process this worker has reaped, in MiB (#8645).
+
+    The worker is the waiting parent of the agent CLI, so
+    ``getrusage(RUSAGE_CHILDREN)`` covers the CLI and every descendant that was
+    itself waited for (a shell tool's pytest, xdist workers, git). It is the
+    largest single process, not the tree's sum, and misses descendants that
+    were never reaped up the chain (daemonized or still running at exit).
+    """
+    try:
+        peak = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
+    except (OSError, ValueError):
+        return None
+    if peak <= 0:
+        return None
+    # Linux reports KiB; macOS reports bytes.
+    peak_bytes = peak if sys.platform == "darwin" else peak * 1024
+    return round(peak_bytes / (1024 * 1024), 1)
 
 
 def _apply_returncode_invariant(status: str, returncode: int | None) -> str:
@@ -1497,9 +1519,7 @@ def _cursor_model_state(
     return state
 
 
-def _deepseek_model_state(
-    *, agent: str, model: str | None, cache_path: Path | None = None
-) -> dict[str, Any]:
+def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | None = None) -> dict[str, Any]:
     """Attest a DeepSeek route from its versioned pin or cached alias name."""
     if agent != "deepseek":
         return {}
@@ -3360,6 +3380,51 @@ def _mark_crashed_task(state_path: Path, state: dict[str, Any], *, source: str) 
     state.update(_hydrate_read_only_checkout_snapshots(current))
 
 
+# Exit code for a dispatch refused by host admission: retryable once a worker
+# finishes or the host recovers, unlike exit 2 (invalid request).
+_ADMISSION_REFUSED_EXIT = 3
+
+
+def _evaluate_dispatch_admission(
+    mode: str,
+    *,
+    sweep: bool,
+    thresholds: dispatch_admission.Thresholds | None = None,
+) -> dispatch_admission.AdmissionDecision:
+    """Host admission for a ``mode`` dispatch (#8645 part A).
+
+    With ``sweep`` every running/spawning record whose pid is dead is marked
+    ``crashed`` first, so a dead worker never holds a slot and never sits
+    ``running`` until someone probes it.
+    """
+    return dispatch_admission.evaluate(
+        mode,
+        _TASKS_DIR,
+        pid_alive=_pid_alive,
+        on_dead=(lambda path, state: _mark_crashed_task(path, state, source="admission")) if sweep else None,
+        thresholds=thresholds,
+    )
+
+
+def _report_dispatch_admission(
+    decision: dispatch_admission.AdmissionDecision, *, force_reason: str | None
+) -> int | None:
+    """Print the admission outcome; return the exit code when dispatch must stop."""
+    if decision.exempt:
+        return None
+    if decision.admitted:
+        print(f"🚦 dispatch admission: admitted — {decision.summary()}", file=sys.stderr)
+        return None
+    if force_reason is not None:
+        print(
+            f"⚠️  dispatch admission overridden by --force-admission ({force_reason!r}): {'; '.join(decision.failures)}",
+            file=sys.stderr,
+        )
+        return None
+    print(f"❌ {decision.refusal_line()}", file=sys.stderr)
+    return _ADMISSION_REFUSED_EXIT
+
+
 def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
     """Return the configured upstream remote for the checked-out branch.
 
@@ -4006,6 +4071,68 @@ def _x_agent_task_id(agent: str, task_id: str) -> str:
     return safe or "task"
 
 
+def _x_agent_trailer(agent: str, task_id: str) -> str:
+    return f"X-Agent: {agent}/{_x_agent_task_id(agent, task_id)}"
+
+
+def _build_worker_env(
+    *,
+    task_id: str,
+    dispatch_agent: str,
+    attribution: Any | None = None,
+    run_nonce: str = "",
+    runtime_tmp_root: Path | str | None = None,
+    runtime_tmp_namespace_root: Path | str | None = None,
+    worktree_path: Path | None = None,
+    allow_merge: bool = False,
+    base_env: Mapping[str, str] | None = None,
+) -> dict[str, str]:
+    """Construct the execution environment for a dispatched worker process."""
+    source = dict(os.environ if base_env is None else base_env)
+    worker_env = _pinned_worker_venv_env(source)
+    if attribution is not None:
+        worker_env["LU_RUNTIME_INITIATOR"] = getattr(attribution, "initiator", str(attribution))
+        worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = getattr(attribution, "source", "")
+    if run_nonce:
+        worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
+    # Explicit dispatch-worker identity (#7827): the SessionStart gate uses
+    # this marker to skip the per-agent thread lease, which belongs to the
+    # orchestrator of the agent family, never to a headless worker. Both
+    # names are allowlisted in agent_runtime/env_sanitize.py (name and
+    # value lists — a task id containing "sk-" must survive the secret
+    # redactor), so the marker reaches the harness CLI's SessionStart hook.
+    # The marker is the primary signal: a read-only dispatch without
+    # --worktree runs from the primary checkout, so the
+    # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
+    worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
+    worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
+    worker_env["LU_X_AGENT_TRAILER"] = _x_agent_trailer(dispatch_agent, task_id)
+    # #8645 part B: CI's `--override-ini addopts=-v` drops the pyproject
+    # `-p ci.pytest_dispatch_cap`. Load it from the environment instead.
+    _dispatch_cap_plugin = "ci.pytest_dispatch_cap"
+    _pytest_plugins = [part.strip() for part in worker_env.get("PYTEST_PLUGINS", "").split(",") if part.strip()]
+    if _dispatch_cap_plugin not in _pytest_plugins:
+        _pytest_plugins.append(_dispatch_cap_plugin)
+    worker_env["PYTEST_PLUGINS"] = ",".join(_pytest_plugins)
+    _inject_gh_token_for_agent(worker_env, dispatch_agent)
+    _scrub_unusable_gh_config_dir(worker_env)
+    worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+    if runtime_tmp_root is not None:
+        worker_env["TMPDIR"] = str(runtime_tmp_root)
+        worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+    if runtime_tmp_namespace_root is not None:
+        worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
+    if worktree_path is not None:
+        _apply_worktree_git_ceiling(worker_env, worktree_path)
+    if allow_merge:
+        worker_env.pop("AGENT_NO_MERGE", None)
+        worker_env["AGENT_ALLOW_MERGE"] = "1"
+    else:
+        worker_env["AGENT_NO_MERGE"] = "1"
+        worker_env.pop("AGENT_ALLOW_MERGE", None)
+    return worker_env
+
+
 def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
     try:
         proc = subprocess.run(
@@ -4149,7 +4276,7 @@ def _auto_finalize_dirty_worktree(
                 "-m",
                 body,
                 "--trailer",
-                f"X-Agent: {agent}/{safe_task}",
+                _x_agent_trailer(agent, task_id),
             ],
             cwd=worktree,
             capture_output=True,
@@ -5584,7 +5711,7 @@ def _augment_prompt_with_worktree(
     if mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
             "\n[write-mode closeout]\n"
-            "Commit your work.\n"
+            "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
             "Do not open or merge PRs unless the brief says so; "
@@ -5794,6 +5921,20 @@ def _classify_final_status(
     if ok_outcome:
         return "done"
     return "failed"
+
+
+def _worker_run_incomplete(stderr_excerpt: str | None) -> bool:
+    """True when the adapter could not prove the worker's run finished its work.
+
+    AGY print mode can exit 0 while the agent's backgrounded commands are still
+    running or were killed (#8502/#8503); the adapter then leads
+    ``stderr_excerpt`` with a reason code — including when no transcript bound
+    to this run exists to prove completion. Whatever that worker left in its
+    worktree is unconfirmed, so it must never be auto-finalized as ``done``.
+    """
+    from agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+
+    return _first_error_line(stderr_excerpt) in AGY_INCOMPLETE_RUN_REASONS
 
 
 def _first_error_line(stderr_excerpt: str | None) -> str | None:
@@ -6339,7 +6480,10 @@ def _run_worker(
                 #
                 # Neither unknown can prove the work was committed, so either one surfaces
                 # the task for finalization rather than letting it settle as ``done``.
-                if dirty_on_exit in (True, None) and commits_ahead in (0, None):
+                # A worker cut off mid-work (#8502) leaves unfinished edits even
+                # when it had pushed earlier commits: surface them, never ``done``.
+                run_incomplete = _worker_run_incomplete(stderr_excerpt)
+                if dirty_on_exit in (True, None) and (commits_ahead in (0, None) or run_incomplete):
                     needs_finalize = True
 
                 # Catch committed-but-unpushed write dispatches (#7311):
@@ -6370,7 +6514,13 @@ def _run_worker(
                             if rescue_status:
                                 finalize_error = rescue_status
 
-                if needs_finalize and rescue_status is None and returncode == 0 and mode == "danger":
+                if (
+                    needs_finalize
+                    and rescue_status is None
+                    and returncode == 0
+                    and mode == "danger"
+                    and not run_incomplete
+                ):
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
@@ -7041,6 +7191,12 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
+    force_admission_reason = getattr(args, "force_admission", None)
+    if force_admission_reason is not None:
+        force_admission_reason = str(force_admission_reason).strip()
+        if not force_admission_reason:
+            print("❌ --force-admission requires a non-empty reason", file=sys.stderr)
+            return 2
 
     review_attempt = getattr(args, "review_attempt", None)
     review_id = getattr(args, "review_id", None)
@@ -7531,6 +7687,20 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         elif reason in {"unavailable", "full"}:
             print(f"⚠️  every VPS worker host is {reason}; spawning on notebook", file=sys.stderr)
 
+    # Host admission (#8645 part A) for the host that spawns the worker, so it
+    # follows VPS forwarding. This check fails fast before any worktree side
+    # effect; the authoritative one runs under the admission lock where the
+    # task record is published. Dry-run reports dead-pid records without
+    # marking them.
+    try:
+        admission = _evaluate_dispatch_admission(args.mode, sweep=not bool(getattr(args, "dry_run", False)))
+    except ValueError as exc:
+        print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
+        return 2
+    admission_rc = _report_dispatch_admission(admission, force_reason=force_admission_reason)
+    if admission_rc is not None:
+        return admission_rc
+
     try:
         output_schema_path, output_schema_sha256 = _resolve_output_schema(
             getattr(args, "output_schema", None),
@@ -7751,6 +7921,8 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             }
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
+            if not admission.exempt:
+                dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
             dry_run_reap = _reap_runtime_tmp_lease(
@@ -8068,7 +8240,54 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 file=sys.stderr,
             )
             return 1
-        _write_state_atomic(state_path, initial_state)
+        # Authoritative admission: count → check → publish the spawning record
+        # under one host-wide lock, so concurrent dispatches cannot all pass the
+        # check above and then exceed the cap together (#8645 part A).
+        admission_refusal: str | None = None
+        try:
+            with dispatch_admission.admission_lock(_TASKS_DIR) if not admission.exempt else contextlib.nullcontext():
+                if not admission.exempt:
+                    admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
+                    if admission.admitted or force_admission_reason is not None:
+                        initial_state["admission"] = admission.to_record(force_reason=force_admission_reason)
+                    else:
+                        admission_refusal = admission.refusal_line()
+                if admission_refusal is None:
+                    _write_state_atomic(state_path, initial_state)
+        except dispatch_admission.AdmissionLockTimeout as exc:
+            admission_refusal = f"dispatch admission lock unavailable: {exc}; retry the dispatch"
+        if admission_refusal is not None:
+            _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
+            if worktree_path is not None:
+                # The worktree already exists: a failed record keeps it claimed and visible.
+                _record_worktree_prep_failure(
+                    task_id=task_id,
+                    run_nonce=run_nonce,
+                    attribution=attribution,
+                    agent=dispatch_agent,
+                    mode=args.mode,
+                    prompt=prompt,
+                    error=admission_refusal,
+                    requested_model=args.model,
+                    requested_effort=getattr(args, "effort", None),
+                    requested_harness=requested_harness,
+                    lifecycle_carrier=lifecycle_carrier,
+                    worktree_path=worktree_path,
+                    worktree_branch=worktree_branch,
+                    worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
+                    worktree_base=getattr(args, "base", None) or "main",
+                    agent_alias_note=agent_alias_note,
+                    output_schema_path=output_schema_path,
+                    output_schema_sha256=output_schema_sha256,
+                    keep_worktree=keep_worktree,
+                    hard_timeout=args.hard_timeout,
+                    silence_timeout=silence_timeout,
+                    initial_response_timeout=initial_response_timeout,
+                    max_budget_usd=max_budget_usd,
+                    returncode_reason="dispatch admission refused",
+                )
+            print(f"❌ {admission_refusal}", file=sys.stderr)
+            return _ADMISSION_REFUSED_EXIT
         # The published record now claims the worktree for settle's scan, so
         # the lock is released before the worker, whose own settle takes it
         # again, is spawned. The two acquisitions never nest (#8610).
@@ -8180,45 +8399,16 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         # Pipe the prompt via stdin so it doesn't hit argv length limits.
         # start_new_session=True detaches from our process group — the
         # worker survives our exit, which is what we want.
-        # Pin the worker to this checkout's venv before it can invoke a CLI.  Do
-        # not retain a parent process's activated venv: pip can otherwise rewrite
-        # console scripts in that foreign checkout (#5134).
-        worker_env = _pinned_worker_venv_env(os.environ)
-        worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
-        worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
-        worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
-        # Explicit dispatch-worker identity (#7827): the SessionStart gate uses
-        # this marker to skip the per-agent thread lease, which belongs to the
-        # orchestrator of the agent family, never to a headless worker. Both
-        # names are allowlisted in agent_runtime/env_sanitize.py (name and
-        # value lists — a task id containing "sk-" must survive the secret
-        # redactor), so the marker reaches the harness CLI's SessionStart hook.
-        # The marker is the primary signal: a read-only dispatch without
-        # --worktree runs from the primary checkout, so the
-        # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
-        worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
-        worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
-        # #8645 part B: CI's `--override-ini addopts=-v` drops the pyproject
-        # `-p ci.pytest_dispatch_cap`. Load it from the environment instead.
-        _dispatch_cap_plugin = "ci.pytest_dispatch_cap"
-        _pytest_plugins = [part.strip() for part in worker_env.get("PYTEST_PLUGINS", "").split(",") if part.strip()]
-        if _dispatch_cap_plugin not in _pytest_plugins:
-            _pytest_plugins.append(_dispatch_cap_plugin)
-        worker_env["PYTEST_PLUGINS"] = ",".join(_pytest_plugins)
-        _inject_gh_token_for_agent(worker_env, dispatch_agent)
-        _scrub_unusable_gh_config_dir(worker_env)
-        worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
-        worker_env["TMPDIR"] = str(runtime_tmp_root)
-        worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
-        worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(runtime_tmp_namespace_root.parent)
-        if worktree_path is not None:
-            _apply_worktree_git_ceiling(worker_env, worktree_path)
-        if getattr(args, "allow_merge", False):
-            worker_env.pop("AGENT_NO_MERGE", None)
-            worker_env["AGENT_ALLOW_MERGE"] = "1"
-        else:
-            worker_env["AGENT_NO_MERGE"] = "1"
-            worker_env.pop("AGENT_ALLOW_MERGE", None)
+        worker_env = _build_worker_env(
+            task_id=task_id,
+            dispatch_agent=dispatch_agent,
+            attribution=attribution,
+            run_nonce=run_nonce,
+            runtime_tmp_root=runtime_tmp_root,
+            runtime_tmp_namespace_root=runtime_tmp_namespace_root,
+            worktree_path=worktree_path,
+            allow_merge=bool(getattr(args, "allow_merge", False)),
+        )
         try:
             proc = subprocess.Popen(
                 cmd,
@@ -9451,7 +9641,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  To bypass VPS forwarding and force local spawn: export LU_ALLOW_NOTEBOOK_DISPATCH=1\n"
             "  Configuration errors fail closed without fallback to prevent silent local drift.\n\n"
             "Exit codes:\n"
-            "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
+            "  0 on successful command completion; non-zero on CLI misuse or worker/task failures;\n"
+            "  dispatch exits 3 when host admission refuses a write worker (see `dispatch --help`).\n\n"
             "Related:\n"
             "  Runtime: scripts/agent_runtime/\n"
             "  Rule: agents_extensions/shared/rules/delegate-must-use-worktree.md\n"
@@ -9489,8 +9680,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     # dispatch
     def _dispatch_help_formatter(prog: str) -> argparse.HelpFormatter:
-        return argparse.HelpFormatter(prog, max_help_position=36, width=120)
+        return argparse.RawDescriptionHelpFormatter(prog, max_help_position=36, width=120)
 
+    admission_defaults = dispatch_admission.config_defaults()
     d = sub.add_parser(
         "dispatch",
         help="Fire a task, return immediately (stdout: `<task_id>\\n<run_nonce>`)",
@@ -9498,6 +9690,32 @@ def build_parser() -> argparse.ArgumentParser:
             "Fire an async agent task and return immediately with the task ID and run nonce.\n"
             "Routes to available VPS worker hosts unless LU_ALLOW_NOTEBOOK_DISPATCH=1 is set.\n"
             "Forward configuration requires LU_JOB_DISPATCH_HOST (or ATLAS_RUNNER_HOST) and LU_JOB_REPO."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id fix-123 --prompt-file brief.md "
+            "--mode workspace-write --worktree\n"
+            "  DISPATCH_MAX_LIVE_WRITE_WORKERS=0 .venv/bin/python scripts/delegate.py dispatch --agent codex "
+            "--task-id probe-1 --prompt x --mode workspace-write --worktree --dry-run\n"
+            '  .venv/bin/python scripts/delegate.py dispatch ... --force-admission "hotfix for #1234; one worker is draining"\n\n'
+            "Host admission (#8645; workspace-write and danger only, read-only is exempt):\n"
+            "  Refuses a new worker when live write workers (running/spawning, pid alive) reach "
+            f"DISPATCH_MAX_LIVE_WRITE_WORKERS (default {admission_defaults.max_live_write_workers}),\n"
+            f"  /proc/meminfo MemAvailable is below DISPATCH_MIN_MEM_AVAILABLE_GIB (default "
+            f"{admission_defaults.min_mem_available_gib:g} GiB), or the 1-minute load per CPU\n"
+            f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}). "
+            "Environment variables override the scripts/config.py defaults.\n"
+            "  Without /proc (macOS) memory and CPU are unknown and only the worker cap applies. Records whose pid\n"
+            "  is dead are marked crashed first. The final check holds a host-wide lock until the spawning record\n"
+            "  is published. Preview the decision with: .venv/bin/python -m scripts.fleet.capacity_pick\n\n"
+            "Outputs:\n"
+            "  stdout `<task_id>\\n<run_nonce>`; batch_state/tasks/<task_id>.json (write modes carry an `admission`\n"
+            "  snapshot; terminal records carry `peak_rss_mib`); worker logs under batch_state/tasks/logs/.\n\n"
+            "Exit codes:\n"
+            "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
+            "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission).\n\n"
+            "Related:\n"
+            "  scripts/orchestration/dispatch_admission.py; docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md; #8645\n"
         ),
         formatter_class=_dispatch_help_formatter,
     )
@@ -9532,6 +9750,16 @@ def build_parser() -> argparse.ArgumentParser:
             "and result alongside (never clobber). Required when the task "
             "record already exists in a non-live state (#6980). Refuses when "
             "a running/spawning record still has a live pid (#6981 F1)."
+        ),
+    )
+    d.add_argument(
+        "--force-admission",
+        metavar="REASON",
+        default=None,
+        help=(
+            "Start a write-capable worker even when host admission refuses it (live write-worker cap, "
+            "MemAvailable floor, or load per CPU; #8645). REASON is required and is recorded in the "
+            "task record under admission.force_reason."
         ),
     )
     d.add_argument(

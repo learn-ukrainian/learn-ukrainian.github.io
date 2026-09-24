@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import os
@@ -17,106 +18,251 @@ from scripts.build.fresh.closure import compute_closure
 from scripts.build.fresh.module import draft_is_current
 from scripts.build.fresh.regeneration import load_ledger, record_failure, record_success
 from scripts.curriculum.evidence import lock
+from scripts.review.digest.generator import GENERATOR_VERSION, check_digest
 
 pytestmark = pytest.mark.reads_content
 
 
 def _fixture(root: Path):
+    from tests.build.test_fresh_runner import _fixture as lesson_fixture
+
     level, slug = "a1", "fixture-module"
     plan_dir = root / "curriculum/l2-uk-en/lesson-plans/a1"
     evidence_dir = root / "curriculum/l2-uk-en/evidence/a1"
     state_dir = evidence_dir / "_state" / slug
     page_dir = root / "site/src/content/docs/a1" / slug
     cards = root / "docs/style-cards"
-    for folder in (plan_dir, evidence_dir, state_dir, page_dir, cards):
+    schemas_dir = root / "schemas"
+    for folder in (plan_dir, evidence_dir, state_dir, page_dir, cards, schemas_dir):
         folder.mkdir(parents=True, exist_ok=True)
-    (plan_dir / f"{slug}.yaml").write_text("lessons: []\n", encoding="utf-8")
+    for name in ("module-plan-v2", "resolution-receipts-v1", "learner-observed-v1", "module-digest-v1"):
+        (schemas_dir / f"{name}.schema.json").write_bytes(
+            (Path(__file__).resolve().parents[2] / "schemas" / f"{name}.schema.json").read_bytes()
+        )
+    _, base_plan, _, _ = lesson_fixture()
+    lessons = []
+    for n in (1, 2, 3):
+        lesson = copy.deepcopy(base_plan["lessons"][0])
+        lesson.update(n=n, slug=f"lesson-{n}", title=f"Lesson {n}", kind="recap" if n == 3 else "teach")
+        lessons.append(lesson)
+    plan = {**base_plan, "module": slug, "slug": slug, "lessons": lessons}
+    (plan_dir / f"{slug}.yaml").write_bytes(lock.yaml_bytes(plan))
     (plan_dir / "_decisions.yaml").write_text("decisions: []\n", encoding="utf-8")
     lock.write(evidence_dir / f"{slug}.yaml", b"records: []\n")
     lock.write(evidence_dir / "_words.yaml", b"words: []\n")
     (cards / "a1.md").write_text("A1 style\n", encoding="utf-8")
-    (cards / "a1.sha256").write_text(hashlib.sha256((cards / "a1.md").read_bytes()).hexdigest() + "\n", encoding="ascii")
-    (state_dir / "lessons.lock.yaml").write_bytes(lock.yaml_bytes({"lessons": [
-        {"n": n, "entry_sha256": f"{n}" * 64} for n in (1, 2, 3)]}))
+    (cards / "a1.sha256").write_text(
+        hashlib.sha256((cards / "a1.md").read_bytes()).hexdigest() + "\n", encoding="ascii"
+    )
+    (state_dir / "lessons.lock.yaml").write_bytes(
+        lock.yaml_bytes({"lessons": [{"n": n, "entry_sha256": f"{n}" * 64} for n in (1, 2, 3)]})
+    )
     for n in (1, 2, 3):
         (page_dir / f"{n}.mdx").write_text(f"# Lesson {n}\n", encoding="utf-8")
         (state_dir / f"lesson-{n}.gates.yaml").write_bytes(lock.yaml_bytes({"passed": True}))
+        lesson_id = {"level": level, "slug": slug, "n": n}
+        lock.write(
+            state_dir / f"lesson-{n}.observed.yaml",
+            lock.yaml_bytes(
+                {
+                    "observed_schema": 1,
+                    "lesson": lesson_id,
+                    "records": [],
+                    "untaught_forms": {"count": 0, "share": 0.0, "forms": []},
+                }
+            ),
+        )
+        lock.write(
+            state_dir / f"lesson-{n}.resolutions.yaml",
+            lock.yaml_bytes(
+                {
+                    "resolutions_schema": 1,
+                    "lesson": lesson_id,
+                    "inputs": {
+                        key: "0" * 64
+                        for key in ("expanded_sha256", "allowlist_sha256", "words_lock", "vesum", "trie_digest")
+                    },
+                    "tokens": [],
+                }
+            ),
+        )
+        (state_dir / f"lesson-{n}.provenance.yaml").write_bytes(
+            lock.yaml_bytes(
+                {
+                    "provenance_schema": 1,
+                    "lesson": lesson_id,
+                    "spans": [],
+                }
+            )
+        )
     return level, slug, plan_dir, evidence_dir, state_dir, page_dir
 
 
 def test_manifest_history_and_closure_preserve_stale_attempts(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type(
-        "State", (), {"to_dict": lambda self: {"b": 2, "a": 1}})())
+    monkeypatch.setattr(
+        manifest, "planned_state", lambda *a, **kw: type("State", (), {"to_dict": lambda self: {"b": 2, "a": 1}})()
+    )
     assert manifest.learner_state_sha256(type("State", (), {"to_dict": lambda self: {"a": 1, "b": 2}})()) == (
-        hashlib.sha256(b'{"a":1,"b":2}').hexdigest())
+        hashlib.sha256(b'{"a":1,"b":2}').hexdigest()
+    )
     old = {}
     for n in (1, 2, 3):
-        _, old[n] = manifest.write_manifest(level, slug, n, lesson_kind="recap" if n == 3 else "lesson",
-                                            state_dir=state_dir, repo_root=tmp_path, plans_dir=plan_dir,
-                                            evidence_dir=evidence_dir, position=1, site_dir=page_dir)
+        _, old[n] = manifest.write_manifest(
+            level,
+            slug,
+            n,
+            lesson_kind="recap" if n == 3 else "lesson",
+            state_dir=state_dir,
+            repo_root=tmp_path,
+            plans_dir=plan_dir,
+            evidence_dir=evidence_dir,
+            position=1,
+            site_dir=page_dir,
+        )
         data = yaml.safe_load((state_dir / f"lesson-{n}.manifest.yaml").read_text(encoding="utf-8"))
         Draft202012Validator(json.loads(manifest.SCHEMA.read_text(encoding="utf-8"))).validate(data)
         assert data["recap"] is (n == 3)
+        digest_path = tmp_path / data["module_digest"]["path"]
+        assert data["module_digest"]["sha256"] == hashlib.sha256(digest_path.read_bytes()).hexdigest()
+        assert data["review_eligible"] is True and data["blocked_by"] == []
+        assert data["digest_generator_version"] == GENERATOR_VERSION
+        assert check_digest(level, slug, n, repo_root=tmp_path)[0] == digest_path
         assert [row["n"] for row in data["upstream_lessons"]] == list(range(1, n))
     lessons = [{"n": n, "kind": "recap" if n == 3 else "teach"} for n in (1, 2, 3)]
     clean = compute_closure(level, slug, lessons, repo_root=tmp_path, state_dir=state_dir, site_dir=page_dir)
     assert clean["stale"] == []
     (page_dir / "1.mdx").write_text("# Lesson 1 changed\n", encoding="utf-8")
+    observed_path = state_dir / "lesson-1.observed.yaml"
+    observed = yaml.safe_load(observed_path.read_text(encoding="utf-8"))
+    observed["records"].append({"id": "W-1", "role": "exposed", "forms": []})
+    lock.write(observed_path, lock.yaml_bytes(observed))
+    old_digest = yaml.safe_load((state_dir / "lesson-3.manifest.yaml").read_text(encoding="utf-8"))["module_digest"][
+        "sha256"
+    ]
     for n in (1, 2, 3):
-        manifest.write_manifest(level, slug, n, lesson_kind="recap" if n == 3 else "lesson",
-                                state_dir=state_dir, repo_root=tmp_path, plans_dir=plan_dir,
-                                evidence_dir=evidence_dir, position=1, site_dir=page_dir)
+        manifest.write_manifest(
+            level,
+            slug,
+            n,
+            lesson_kind="recap" if n == 3 else "lesson",
+            state_dir=state_dir,
+            repo_root=tmp_path,
+            plans_dir=plan_dir,
+            evidence_dir=evidence_dir,
+            position=1,
+            site_dir=page_dir,
+        )
     changed = compute_closure(level, slug, lessons, repo_root=tmp_path, state_dir=state_dir, site_dir=page_dir)
+    new_digest = yaml.safe_load((state_dir / "lesson-3.manifest.yaml").read_text(encoding="utf-8"))["module_digest"][
+        "sha256"
+    ]
+    assert new_digest != old_digest
     assert {(row["n"], row["manifest_sha256"]) for row in changed["stale"]} == {(2, old[2]), (3, old[3])}
     assert all(row["upstream"] == 1 for row in changed["stale"])
 
 
 def test_style_card_sidecar_mismatch_fails_manifest(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type(
-        "State", (), {"to_dict": lambda self: {}})())
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type("State", (), {"to_dict": lambda self: {}})())
     (tmp_path / "docs/style-cards/a1.sha256").write_text("0" * 64 + "\n", encoding="ascii")
     with pytest.raises(ValueError, match="style card sidecar mismatch"):
-        manifest.write_manifest(level, slug, 1, lesson_kind="lesson", state_dir=state_dir,
-                                repo_root=tmp_path, plans_dir=plan_dir, evidence_dir=evidence_dir,
-                                position=1, site_dir=page_dir)
+        manifest.write_manifest(
+            level,
+            slug,
+            1,
+            lesson_kind="lesson",
+            state_dir=state_dir,
+            repo_root=tmp_path,
+            plans_dir=plan_dir,
+            evidence_dir=evidence_dir,
+            position=1,
+            site_dir=page_dir,
+        )
     assert not (state_dir / "lesson-1.manifest.yaml").exists()
+
+
+def test_digest_path_guard_rejects_override_and_outside_path(tmp_path):
+    level, slug, _plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    outside = tmp_path.parent / "other-plan-directory"
+    with pytest.raises(manifest.ManifestInputError, match="digest_path_mismatch") as exc:
+        manifest.write_manifest(
+            level,
+            slug,
+            1,
+            lesson_kind="lesson",
+            state_dir=state_dir,
+            repo_root=tmp_path,
+            plans_dir=outside,
+            evidence_dir=evidence_dir,
+            position=1,
+            site_dir=page_dir,
+        )
+    assert exc.value.path == outside.resolve().as_posix()
+    assert not (state_dir / "lesson-1.manifest.yaml").exists()
+    assert not (state_dir / "digest-upto-1.yaml").exists()
 
 
 def test_successful_manifest_clears_stale_check_12_error(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type(
-        "State", (), {"to_dict": lambda self: {}})())
-    manifest.write_manifest_error(state_dir, 1, "old failure", "docs/style-cards/a1.sha256",
-                                  "2026-01-01T00:00:00Z")
-    manifest.write_manifest(level, slug, 1, lesson_kind="lesson", state_dir=state_dir,
-                            repo_root=tmp_path, plans_dir=plan_dir, evidence_dir=evidence_dir,
-                            position=1, site_dir=page_dir)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type("State", (), {"to_dict": lambda self: {}})())
+    manifest.write_manifest_error(state_dir, 1, "old failure", "docs/style-cards/a1.sha256", "2026-01-01T00:00:00Z")
+    manifest.write_manifest(
+        level,
+        slug,
+        1,
+        lesson_kind="lesson",
+        state_dir=state_dir,
+        repo_root=tmp_path,
+        plans_dir=plan_dir,
+        evidence_dir=evidence_dir,
+        position=1,
+        site_dir=page_dir,
+    )
     assert not (state_dir / "lesson-1.manifest-error.yaml").exists()
 
 
 def test_manifest_hashes_all_imported_activity_data_sorted(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type(
-        "State", (), {"to_dict": lambda self: {}})())
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type("State", (), {"to_dict": lambda self: {}})())
     data_dir = tmp_path / "site/src/data"
     data_dir.mkdir(parents=True)
     for name in ("activity-z.json", "activity-a.json"):
         (data_dir / name).write_text("{}\n", encoding="utf-8")
     (page_dir / "1.mdx").write_text(
-        'import z from "@site/src/data/activity-z.json";\n'
-        'import a from "@site/src/data/activity-a.json";\n', encoding="utf-8")
-    doc, _ = manifest.write_manifest(level, slug, 1, lesson_kind="lesson", state_dir=state_dir,
-                                     repo_root=tmp_path, plans_dir=plan_dir, evidence_dir=evidence_dir,
-                                     position=1, site_dir=page_dir)
+        'import z from "@site/src/data/activity-z.json";\nimport a from "@site/src/data/activity-a.json";\n',
+        encoding="utf-8",
+    )
+    doc, _ = manifest.write_manifest(
+        level,
+        slug,
+        1,
+        lesson_kind="lesson",
+        state_dir=state_dir,
+        repo_root=tmp_path,
+        plans_dir=plan_dir,
+        evidence_dir=evidence_dir,
+        position=1,
+        site_dir=page_dir,
+    )
     assert [item["path"] for item in doc["inputs"]["activity_data"]] == [
-        "site/src/data/activity-a.json", "site/src/data/activity-z.json"]
+        "site/src/data/activity-a.json",
+        "site/src/data/activity-z.json",
+    ]
     (data_dir / "activity-a.json").unlink()
     with pytest.raises(FileNotFoundError, match=r"activity-a\.json"):
-        manifest.write_manifest(level, slug, 1, lesson_kind="lesson", state_dir=state_dir,
-                                repo_root=tmp_path, plans_dir=plan_dir, evidence_dir=evidence_dir,
-                                position=1, site_dir=page_dir)
+        manifest.write_manifest(
+            level,
+            slug,
+            1,
+            lesson_kind="lesson",
+            state_dir=state_dir,
+            repo_root=tmp_path,
+            plans_dir=plan_dir,
+            evidence_dir=evidence_dir,
+            position=1,
+            site_dir=page_dir,
+        )
 
 
 def test_build_cli_requires_exactly_one_target():
@@ -135,13 +281,24 @@ def test_success_snapshot_controls_draft_reuse(tmp_path):
     keys = ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")
     inputs = {key: "a" * 64 for key in keys}
     path = tmp_path / "lesson-1.regeneration.yaml"
-    record_success(path, "fixture-module", 1, {**inputs, "draft_sha256": hashlib.sha256(draft.read_bytes()).hexdigest()},
-                   at="2026-01-01T00:00:00Z")
+    record_success(
+        path,
+        "fixture-module",
+        1,
+        {**inputs, "draft_sha256": hashlib.sha256(draft.read_bytes()).hexdigest()},
+        at="2026-01-01T00:00:00Z",
+    )
     ledger = load_ledger(path, "fixture-module", 1)
     assert draft_is_current(ledger, draft, inputs)
     assert not draft_is_current(ledger, draft, {**inputs, "prompt_sha256": "b" * 64})
-    record_failure(path, "fixture-module", 1, {"check": 11, "reason": "render_failed", "layer": "engine"}, inputs,
-                   at="2026-01-02T00:00:00Z")
+    record_failure(
+        path,
+        "fixture-module",
+        1,
+        {"check": 11, "reason": "render_failed", "layer": "engine"},
+        inputs,
+        at="2026-01-02T00:00:00Z",
+    )
     ledger = load_ledger(path, "fixture-module", 1)
     assert ledger["attempts"][0]["failed_check"] == 11
     assert not draft_is_current(ledger, draft, inputs)
@@ -149,8 +306,6 @@ def test_success_snapshot_controls_draft_reuse(tmp_path):
 
 def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, capsys):
     """Exercise the real checks 1-12 with injected model, resolver, and render edges."""
-    import copy
-
     from scripts.build.fresh import assemble, cli, module, runner
     from scripts.build.fresh.preflight import PreflightResult
     from scripts.curriculum.learner_state.inventory_gate import GateReport
@@ -169,9 +324,13 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     plan = {**base_plan, "module": slug, "slug": slug, "lessons": lessons}
     validate_fixture_plan(plan)
     (plan_dir / f"{slug}.yaml").write_bytes(lock.yaml_bytes(plan))
-    paths = {"plan": plan_dir / f"{slug}.yaml", "pack": evidence_dir / f"{slug}.yaml",
-             "words": evidence_dir / "_words.yaml", "lock": state_dir / "lessons.lock.yaml",
-             "state_dir": evidence_dir / "_state"}
+    paths = {
+        "plan": plan_dir / f"{slug}.yaml",
+        "pack": evidence_dir / f"{slug}.yaml",
+        "words": evidence_dir / "_words.yaml",
+        "lock": state_dir / "lessons.lock.yaml",
+        "state_dir": evidence_dir / "_state",
+    }
 
     class State:
         cumulative_core_count = 10
@@ -184,9 +343,13 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         return plan, lessons[n - 1], pack, words, paths
 
     def hashes(_paths, n, _state):
-        return {"plan_sha256": hashlib.sha256(paths["plan"].read_bytes()).hexdigest(),
-                "pack_lock": "0" * 64, "words_lock": "0" * 64,
-                "lesson_lock_entry_sha256": "0" * 64, "learner_state_sha256": "0" * 64}
+        return {
+            "plan_sha256": hashlib.sha256(paths["plan"].read_bytes()).hexdigest(),
+            "pack_lock": "0" * 64,
+            "words_lock": "0" * 64,
+            "lesson_lock_entry_sha256": "0" * 64,
+            "learner_state_sha256": "0" * 64,
+        }
 
     monkeypatch.setattr(cli, "_load_lesson_data", load_data)
     monkeypatch.setattr(cli, "_compute_input_hashes", hashes)
@@ -195,17 +358,28 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: State())
     monkeypatch.setattr(assemble, "planned_state", lambda *a, **kw: State())
     monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
-    monkeypatch.setattr(assemble.lesson_lock, "compute_lesson_lock", lambda *a, **kw: {
-        "lessons": [{"n": n, "entry_sha256": "0" * 64} for n in (1, 2, 3)]})
-    monkeypatch.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type(
-        "Band", (), {"band_key": "a1"})())
-    monkeypatch.setattr(module, "preflight_lesson", lambda *a, **kw: PreflightResult(
-        passed=True, status="ok", gaps=[], homographs=[], homograph_count=0))
+    monkeypatch.setattr(
+        assemble.lesson_lock,
+        "compute_lesson_lock",
+        lambda *a, **kw: {"lessons": [{"n": n, "entry_sha256": "0" * 64} for n in (1, 2, 3)]},
+    )
+    monkeypatch.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": "a1"})())
+    monkeypatch.setattr(
+        module,
+        "preflight_lesson",
+        lambda *a, **kw: PreflightResult(passed=True, status="ok", gaps=[], homographs=[], homograph_count=0),
+    )
     monkeypatch.setattr(module, "render_lesson_prompt", lambda _entry, **kw: "lesson prompt " + kw["plan_sha256"])
-    monkeypatch.setattr(module, "render_recap_prompt", lambda _entry, *, built_lessons, **kw:
-                        "recap prompt " + " ".join(item["sha256"] for item in built_lessons) + kw["plan_sha256"])
-    monkeypatch.setattr(module, "check_rendered_prompt", lambda prompt, *a, **kw: type(
-        "Result", (), {"passed": True, "errors": []})())
+    monkeypatch.setattr(
+        module,
+        "render_recap_prompt",
+        lambda _entry, *, built_lessons, **kw: (
+            "recap prompt " + " ".join(item["sha256"] for item in built_lessons) + kw["plan_sha256"]
+        ),
+    )
+    monkeypatch.setattr(
+        module, "check_rendered_prompt", lambda prompt, *a, **kw: type("Result", (), {"passed": True, "errors": []})()
+    )
     monkeypatch.setattr(module, "compute_immersion_payload", lambda *a, **kw: {})
     allowlist = Allowlist.from_records(words["words"], words_lock="f" * 64)
     calls = []
@@ -217,22 +391,45 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         draft = copy.deepcopy(base_draft)
         draft["lesson"] = {"module": f"a1/{slug}", "n": n}
         draft["inputs"].update(hashes(paths, n, None))
-        draft["inputs"]["style_card_sha256"] = hashlib.sha256((tmp_path / "docs/style-cards/a1.md").read_bytes()).hexdigest()
+        draft["inputs"]["style_card_sha256"] = hashlib.sha256(
+            (tmp_path / "docs/style-cards/a1.md").read_bytes()
+        ).hexdigest()
         if n == 1 and version[0] == 2:
             draft["steps"][0]["blocks"][0]["text"] += " слово"
         lock.atomic_write(state_dir / f"lesson-{n}.draft.yaml", lock.yaml_bytes(draft))
 
     def question_call(batch, seat):
-        return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]}
-                            for q in batch["questions"]]}
+        return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]} for q in batch["questions"]]}
 
     def run_actual(*args, **kwargs):
-        return runner.run_lesson(*args, **kwargs, sources=_FixtureSources(), allowlist=allowlist,
-                                 question_dispatch=question_call,
-                                 inventory_gate=lambda *a, **kw: GateReport("a1", slug, args[2], ()),
-                                 observed_writer=lambda *a, **kw: None,
-                                 render_check=lambda *a, **kw: assemble.CheckResult(
-                                     check=11, passed=True, artifacts={"verify_shippable": {"shippable": True}}))
+        def observed_writer(_level, _slug, n, *, resolutions_doc, state_dir, **_kw):
+            records = sorted(
+                {token["selected"]["record"] for token in resolutions_doc["tokens"] if token.get("selected")}
+            )
+            lock.write(
+                state_dir / f"lesson-{n}.observed.yaml",
+                lock.yaml_bytes(
+                    {
+                        "observed_schema": 1,
+                        "lesson": {"level": _level, "slug": _slug, "n": n},
+                        "records": [{"id": record, "role": "taught", "forms": []} for record in records],
+                        "untaught_forms": {"count": 0, "share": 0.0, "forms": []},
+                    }
+                ),
+            )
+
+        return runner.run_lesson(
+            *args,
+            **kwargs,
+            sources=_FixtureSources(),
+            allowlist=allowlist,
+            question_dispatch=question_call,
+            inventory_gate=lambda *a, **kw: GateReport("a1", slug, args[2], ()),
+            observed_writer=observed_writer,
+            render_check=lambda *a, **kw: assemble.CheckResult(
+                check=11, passed=True, artifacts={"verify_shippable": {"shippable": True}}
+            ),
+        )
 
     evidence_path = os.environ.get("E3B2_EVIDENCE_DIR")
     saved = Path(evidence_path) if evidence_path else None
@@ -243,22 +440,48 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     assert no_seat["lessons"][0]["reason"] == "writer_seat_required"
     if saved:
         shutil.copy2(state_dir / "module.build.yaml", saved / "writer-seat-required.build.yaml")
-    no_recap = module.build_module(level, slug, repo_root=tmp_path, lesson_n=3,
-                                   writer_seat="codex:gpt-6-sol", runner=run_actual)
+    no_recap = module.build_module(
+        level, slug, repo_root=tmp_path, lesson_n=3, writer_seat="codex:gpt-6-sol", runner=run_actual
+    )
     assert not no_recap["complete"] and no_recap["lessons"][0]["reason"] == "recap_inputs_not_built"
     if saved:
         shutil.copy2(state_dir / "module.build.yaml", saved / "recap-inputs-not-built.build.yaml")
     build_with_injections = module.build_module
     with monkeypatch.context() as patch:
-        patch.setattr(module, "build_module", lambda *a, **kw: build_with_injections(
-            *a, writer_dispatch=writer_call, runner=run_actual, **kw))
-        assert cli.main(["build", level, slug, "--module", "--writer-seat", "codex:gpt-6-sol",
-                         "--question-seat", "codex:gpt-6-sol", "--repo-root", str(tmp_path)]) == 0
+        patch.setattr(
+            module,
+            "build_module",
+            lambda *a, **kw: build_with_injections(*a, writer_dispatch=writer_call, runner=run_actual, **kw),
+        )
+        assert (
+            cli.main(
+                [
+                    "build",
+                    level,
+                    slug,
+                    "--module",
+                    "--writer-seat",
+                    "codex:gpt-6-sol",
+                    "--question-seat",
+                    "codex:gpt-6-sol",
+                    "--repo-root",
+                    str(tmp_path),
+                ]
+            )
+            == 0
+        )
     first = json.loads(capsys.readouterr().out)
     assert first["complete"] and calls == [1, 2, 3], first
     assert cli.main(["closure", level, slug, "--repo-root", str(tmp_path)]) == 0
     assert json.loads(capsys.readouterr().out)["stale"] == []
     assert all(row["passed_through"] == 12 and row["manifest_sha256"] for row in first["lessons"])
+    for n in (1, 2, 3):
+        data = yaml.safe_load((state_dir / f"lesson-{n}.manifest.yaml").read_text(encoding="utf-8"))
+        digest_path = tmp_path / data["module_digest"]["path"]
+        assert data["module_digest"]["sha256"] == hashlib.sha256(digest_path.read_bytes()).hexdigest()
+        assert check_digest(level, slug, n, repo_root=tmp_path)[0] == digest_path
+        assert data["review_eligible"] is True and data["blocked_by"] == []
+        assert data["digest_generator_version"] == GENERATOR_VERSION
     for n in (1, 2, 3):
         gates = yaml.safe_load((state_dir / f"lesson-{n}.gates.yaml").read_text(encoding="utf-8"))
         assert [row["check"] for row in gates["checks"]] == list(range(1, 12))
@@ -266,10 +489,19 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     recap = yaml.safe_load((state_dir / "lesson-3.manifest.yaml").read_text(encoding="utf-8"))
     assert recap["recap"] is True and [item["n"] for item in recap["upstream_lessons"]] == [1, 2]
     assert yaml.safe_load((state_dir / "module.closure.yaml").read_text(encoding="utf-8"))["stale"] == []
-    stable_before = {name: (state_dir / name).read_bytes() for name in (
-        "module.build.yaml", "module.closure.yaml", "lesson-1.manifest.yaml", "lesson-2.manifest.yaml",
-        "lesson-3.manifest.yaml", "lesson-1.regeneration.yaml", "lesson-2.regeneration.yaml",
-        "lesson-3.regeneration.yaml")}
+    stable_before = {
+        name: (state_dir / name).read_bytes()
+        for name in (
+            "module.build.yaml",
+            "module.closure.yaml",
+            "lesson-1.manifest.yaml",
+            "lesson-2.manifest.yaml",
+            "lesson-3.manifest.yaml",
+            "lesson-1.regeneration.yaml",
+            "lesson-2.regeneration.yaml",
+            "lesson-3.regeneration.yaml",
+        )
+    }
     if evidence_path:
         shutil.copy2(paths["plan"], saved / "fixture-module.yaml")
         for n in (1, 2, 3):
@@ -279,16 +511,30 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         shutil.copy2(state_dir / "module.build.yaml", saved / "initial-module.build.yaml")
         shutil.copy2(state_dir / "module.closure.yaml", saved / "initial-module.closure.yaml")
     before = {n: hashlib.sha256((page_dir / f"{n}.mdx").read_bytes()).hexdigest() for n in (1, 2, 3)}
-    second = module.build_module(level, slug, repo_root=tmp_path, writer_seat="codex:gpt-6-sol",
-                                 question_seat="codex:gpt-6-sol", writer_dispatch=writer_call, runner=run_actual)
+    second = module.build_module(
+        level,
+        slug,
+        repo_root=tmp_path,
+        writer_seat="codex:gpt-6-sol",
+        question_seat="codex:gpt-6-sol",
+        writer_dispatch=writer_call,
+        runner=run_actual,
+    )
     assert second["complete"] and calls == [1, 2, 3]
     assert stable_before == {name: (state_dir / name).read_bytes() for name in stable_before}
     assert before == {n: hashlib.sha256((page_dir / f"{n}.mdx").read_bytes()).hexdigest() for n in (1, 2, 3)}
     version[0] = 2
     draft_path = state_dir / "lesson-1.draft.yaml"
     draft_path.write_bytes(draft_path.read_bytes() + b"# force writer rewrite\n")
-    third = module.build_module(level, slug, repo_root=tmp_path, writer_seat="codex:gpt-6-sol",
-                                question_seat="codex:gpt-6-sol", writer_dispatch=writer_call, runner=run_actual)
+    third = module.build_module(
+        level,
+        slug,
+        repo_root=tmp_path,
+        writer_seat="codex:gpt-6-sol",
+        question_seat="codex:gpt-6-sol",
+        writer_dispatch=writer_call,
+        runner=run_actual,
+    )
     assert third["complete"] and calls == [1, 2, 3, 1, 3], third
     assert hashlib.sha256((page_dir / "1.mdx").read_bytes()).hexdigest() != before[1]
     closure = yaml.safe_load((state_dir / "module.closure.yaml").read_text(encoding="utf-8"))
@@ -297,9 +543,16 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         shutil.copy2(state_dir / "module.build.yaml", saved / "rebuilt-module.build.yaml")
         shutil.copy2(state_dir / "module.closure.yaml", saved / "rebuilt-module.closure.yaml")
     (tmp_path / "docs/style-cards/a1.sha256").write_text("0" * 64 + "\n", encoding="ascii")
-    mismatch = module.build_module(level, slug, repo_root=tmp_path, lesson_n=1,
-                                   writer_seat="codex:gpt-6-sol", question_seat="codex:gpt-6-sol",
-                                   writer_dispatch=writer_call, runner=run_actual)
+    mismatch = module.build_module(
+        level,
+        slug,
+        repo_root=tmp_path,
+        lesson_n=1,
+        writer_seat="codex:gpt-6-sol",
+        question_seat="codex:gpt-6-sol",
+        writer_dispatch=writer_call,
+        runner=run_actual,
+    )
     assert not mismatch["complete"] and mismatch["lessons"][0]["stopping_check"] == 12
     assert mismatch["lessons"][0]["terminal_layer"] == "driver"
     error = yaml.safe_load((state_dir / "lesson-1.manifest-error.yaml").read_text(encoding="utf-8"))
@@ -309,8 +562,34 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     if evidence_path:
         shutil.copy2(state_dir / "lesson-1.manifest-error.yaml", saved / "lesson-1.manifest-error.yaml")
         shutil.copy2(state_dir / "module.build.yaml", saved / "mismatch-module.build.yaml")
-    terminal = module.build_module(level, slug, repo_root=tmp_path, lesson_n=1,
-                                   writer_seat="codex:gpt-6-sol", runner=run_actual)
+    terminal = module.build_module(
+        level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:gpt-6-sol", runner=run_actual
+    )
     assert terminal["lessons"][0]["terminal_layer"] == "driver"
     if evidence_path:
         shutil.copy2(state_dir / "module.build.yaml", saved / "terminal-module.build.yaml")
+    card = tmp_path / "docs/style-cards/a1.md"
+    (tmp_path / "docs/style-cards/a1.sha256").write_text(
+        hashlib.sha256(card.read_bytes()).hexdigest() + "\n", encoding="ascii"
+    )
+    (state_dir / "lesson-1.observed.yaml").unlink()
+    report = run_actual(
+        level,
+        slug,
+        2,
+        draft=yaml.safe_load((state_dir / "lesson-2.draft.yaml").read_text(encoding="utf-8")),
+        plan=plan,
+        pack=pack,
+        words=words,
+        state_dir=state_dir,
+        repo_root=tmp_path,
+        plans_dir=plan_dir,
+        evidence_dir=evidence_dir,
+        question_seat="codex:gpt-6-sol",
+        site_dir=page_dir,
+    )
+    assert report["passed_through"] == 12 and report["manifest_sha256"] is None
+    assert "digest_error:observed_missing:" in report["reason"]
+    error = yaml.safe_load((state_dir / "lesson-2.manifest-error.yaml").read_text(encoding="utf-8"))
+    assert error["layer"] == "engine" and error["reason"] == report["reason"]
+    assert not (state_dir / "lesson-2.manifest.yaml").exists()

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 import time
 from collections.abc import Callable
 from pathlib import Path
@@ -366,6 +367,37 @@ def test_acp_redirect_is_only_the_primary_checkout_itself() -> None:
         assert Path(workspace).resolve() == dispatch.resolve()
 
 
+def test_acp_redirect_is_active_when_module_was_not_preimported() -> None:
+    """Production imports ``_acp_execution`` function-locally (#8523).
+
+    The autouse fixture must import it itself; a fresh worker that has not
+    loaded the module must still get the redirect, not the real helper.
+    """
+    probe = """
+import sys
+import pytest
+
+class Check:
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_collection_finish(self, session):
+        assert "scripts.ai_agent_bridge._acp_execution" not in sys.modules
+
+raise SystemExit(pytest.main(
+    ["tests/test_conftest_worktree_guard.py::test_real_checkout_acp_execution_does_not_mkdir_dispatch",
+     "-q", "-n", "0", "-p", "no:cacheprovider"],
+    plugins=[Check()],
+))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", probe],
+        cwd=worktree_guard._REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def test_real_checkout_acp_execution_does_not_mkdir_dispatch() -> None:
     """Discuss/ask tests must not leave ``.worktrees/dispatch`` on the real checkout."""
     from scripts.ai_agent_bridge import _acp_execution
@@ -501,6 +533,28 @@ def test_runtime_git_shim_is_not_a_github_spawn(tmp_path: Path, monkeypatch: pyt
         [str(shim), "checkout", "some-branch"],
         {"env": {}},
     )
+
+
+def test_popen_hook_blocks_real_gh_and_path_stub_exits_127(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The Popen hook, not a direct helper call, rejects the resolved real gh.
+
+    Deleting ``_guard_live_github_spawn`` inside ``_guarded_popen_init`` or
+    dropping the ``subprocess.Popen.__init__`` patch must fail this test.
+    Ordinary ``gh`` lookups still hit the autouse PATH stub and exit 127.
+    """
+    real_gh = tmp_path / "real-gh"
+    real_gh.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    real_gh.chmod(0o755)
+    monkeypatch.setattr(worktree_guard, "_REAL_GH_BINARY", os.path.realpath(real_gh))
+    monkeypatch.delenv("LU_GH_GUARD", raising=False)
+
+    with pytest.raises(pytest.fail.Exception, match="spawned real gh"):
+        subprocess.run([os.path.realpath(real_gh)], check=False, timeout=30)
+
+    stub = subprocess.run(["gh"], check=False, capture_output=True, text=True, timeout=30)
+    assert stub.returncode == 127
 
 
 def test_runtime_gh_shim_without_backend_is_blocked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

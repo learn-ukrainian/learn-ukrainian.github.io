@@ -7,8 +7,8 @@
     "manifest_schema": {"const": 1}, "kind": {"const": "lesson"},
     "level": {"type": "string", "minLength": 1}, "slug": {"type": "string", "minLength": 1},
     "lesson": {"type": "integer", "minimum": 1}, "lesson_kind": {"enum": ["lesson", "recap"]},
-    "recap": {"type": "boolean"}, "review_eligible": {"const": false},
-    "blocked_by": {"const": ["digest_generator_pending"]},
+    "recap": {"type": "boolean"}, "review_eligible": {"const": true},
+    "blocked_by": {"type": "array", "maxItems": 0},
     "inputs": {"type": "object", "additionalProperties": false,
       "required": ["plan", "pack_lock", "words_lock", "lessons_lock", "lesson", "activity_data", "gate_report", "style_card", "decisions"],
       "properties": {
@@ -26,7 +26,7 @@
     "learner_state": {"type": "object", "additionalProperties": false,
       "required": ["sha256", "source"],
       "properties": {"sha256": {"$ref": "#/$defs/sha"}, "source": {"const": "planned_state"}}},
-    "module_digest": {"type": "null"}, "digest_generator_version": {"type": "null"},
+    "module_digest": {"$ref": "#/$defs/file"}, "digest_generator_version": {"type": "string", "minLength": 1},
     "upstream_lessons": {"type": "array", "items": {"type": "object", "additionalProperties": false,
       "required": ["n", "sha256"], "properties": {"n": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/sha"}}}},
     "previous_attempt": {"type": "null"}, "diff_sha256": {"type": "null"}

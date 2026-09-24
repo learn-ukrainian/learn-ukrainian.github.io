@@ -12,6 +12,7 @@ _local_repo_root = Path(__file__).resolve().parents[2]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
+from scripts.common.bridge_paths import configured_bridge_db_path
 from scripts.common.repo_root import resolve_repo_root
 
 # Repo root for path resolution
@@ -20,12 +21,7 @@ REPO_ROOT = Path(os.environ.get("AB_REPO_ROOT", str(Path(__file__).parent.parent
 PRIMARY_REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 
 # Database path (same as MCP server uses)
-DB_PATH = Path(
-    os.environ.get(
-        "AB_DB_PATH",
-        str(PRIMARY_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"),
-    )
-)
+DB_PATH = configured_bridge_db_path(PRIMARY_REPO_ROOT)
 PID_DIR = Path(
     os.environ.get(
         "AB_PID_DIR",
