@@ -116,9 +116,13 @@ repo-wide scanners read `docs/`: `tests/test_work_privacy.py`,
 `tests/test_public_tree_no_baked_host_run_root.py`. A docs-only PR that adds a
 baked host path under `docs/` is therefore caught before merge.
 
-The **content lane** is deliberately unchanged. Every repo-wide test that reads
-a content tree also carries `reads_content`, so `-m 'reads_content and not slow
-and not atlas_release'` already runs it: `tests/test_llm_reviewer_dispatch.py`,
+The **content lane** deliberately runs no `-m repo_wide` leg: a scanner of a
+content root carries `reads_content` instead of `repo_wide`, and content mode
+selects `-m 'reads_content and not slow and not atlas_release'`, so such a
+scanner is already selected without a repo-wide pass. Every repo-wide test that
+reads a content tree additionally carries `reads_content`, so
+`-m 'reads_content and not slow and not atlas_release'` already runs it:
+`tests/test_llm_reviewer_dispatch.py`,
 `tests/test_threshold_source_of_truth.py`, `tests/test_sparse_collection_guard.py`,
 `tests/test_public_tree_no_baked_host_run_root.py`,
 `tests/api/test_app_factory.py`, and

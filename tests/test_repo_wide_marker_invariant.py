@@ -67,6 +67,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset({
     "tests/test_curriculum_upgrade_no_host_run_root.py",
     "tests/test_cyrillic_roundtrip_invariant.py",
     "tests/test_fleet_routing_open_model_data_import_guard.py",
+    "tests/test_hooks_executable.py",
     "tests/test_lint_fleet_roster.py",
     "tests/test_lint_prompts.py",
     "tests/test_lint_test_assertions.py",
@@ -74,6 +75,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset({
     "tests/test_post_processor_mutation_invariant.py",
     "tests/test_public_tree_no_baked_host_run_root.py",
     "tests/test_reads_content_marker_invariant.py",
+    "tests/test_session_state_retired.py",
     "tests/test_sparse_collection_guard.py",
     "tests/test_subprocess_timeout_guard.py",
     "tests/test_threshold_source_of_truth.py",
@@ -84,9 +86,12 @@ KNOWN_REPO_WIDE_MODULES = frozenset({
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
+    "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
+    "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
     "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
     "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
     "tests/test_manifest_io.py::test_lexicon_scripts_do_not_open_manifest_inplace",
+    "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
 )
 
 # Escape hatch for a scanner the best-effort heuristic flags but that is not
@@ -123,6 +128,91 @@ NOT_REPO_WIDE = {
     "tests/test_landings_use_levellanding.py::test_track_landing_uses_levellanding_contract": (
         "Reads the site/src/content/docs content tree (DOCS_ROOT) as a content reader, "
         "covered by the reads_content marker and the content lane, not a repo code-tree scan."
+    ),
+    "tests/packaging/test_systemd_templates.py::test_systemd_templates_have_no_host_facts": (
+        "Reads packaging/systemd; packaging/ is not a test or script candidate, so any "
+        "change to a systemd template already forces the full tier."
+    ),
+    "tests/projects/open_model_data/test_audit_dataset_acceptance.py::test_reproduces_v05_grammar_valency_findings": (
+        "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "
+        "any change already forces the full tier."
+    ),
+    "tests/projects/open_model_data/test_audit_dataset_acceptance.py::test_reproduces_v04b_middle_ukrainian_findings": (
+        "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "
+        "any change already forces the full tier."
+    ),
+    "tests/projects/open_model_data/test_audit_dataset_acceptance.py::test_reproduces_v04a_kyivan_rus_findings": (
+        "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "
+        "any change already forces the full tier."
+    ),
+    "tests/projects/open_model_data/test_v6_mine_grammar_valency.py::test_ua_gec_sanitized_error_spans_in_query": (
+        "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "
+        "any change already forces the full tier."
+    ),
+    "tests/projects/open_model_data/test_v6_mine_grammar_valency.py::test_shards_zero_double_terminal_punctuation": (
+        "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "
+        "any change already forces the full tier."
+    ),
+    "tests/projects/open_model_data/test_v6_mine_grammar_valency.py::test_control_records_verbatim_fidelity": (
+        "Scans data/projects/open_model_data; data/ is not a test or script candidate, so "
+        "any change already forces the full tier."
+    ),
+    "tests/test_ci_pr_triggers.py::test_no_workflow_reruns_ci_on_a_label": (
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
+        "already forces the full tier."
+    ),
+    "tests/test_ci_pr_triggers.py::test_exactly_one_ci_gate_job_across_workflows": (
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
+        "already forces the full tier."
+    ),
+    "tests/test_dashboards.py::TestDashboardInventory.test_expected_dashboards_exist": (
+        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change "
+        "already forces the full tier."
+    ),
+    "tests/test_dashboards.py::TestApiEndpoints.test_fetch_calls_in_html": (
+        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change "
+        "already forces the full tier."
+    ),
+    "tests/test_layerb_candidates.py::test_ci_differential_replays_all_unit_fixtures_at_pinned_base_values": (
+        "Scans tests/fixtures/qg_bakeoff; fixture files are not test modules, so any change "
+        "already forces the full tier."
+    ),
+    "tests/test_monitor_route_contracts.py::test_every_dashboard_html_file_has_page_contract": (
+        "Scans dashboards/; dashboards/ is not a test or script candidate, so any change "
+        "already forces the full tier."
+    ),
+    "tests/test_monitor_ui_contracts.py::test_all_playground_pages_use_single_monitor_shell": (
+        "Scans dashboards/*.html; dashboards/ changes already force the full tier, and the "
+        "module also carries reads_content."
+    ),
+    "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_has_review_decisions_for_all_rows": (
+        "Scans data/lexicon/source-inventory-review-decisions; data/ changes already force "
+        "the full tier, and the module also carries reads_content."
+    ),
+    "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words": (
+        "Scans data/lexicon/source-inventory-review-decisions; data/ changes already force "
+        "the full tier, and the module also carries reads_content."
+    ),
+    "tests/test_open_model_phase3_historical_protection_channels.py::test_absent_oes_and_church_slavonic_artifacts_remain_blocked": (
+        "Scans data/projects/open_model_data for named artifacts (metadata-only existence "
+        "check, not a content read); data/ is not a test or script candidate, so any change "
+        "already forces the full tier."
+    ),
+    "tests/test_paths_filter_fail_open.py::test_workflows_only_consume_valid_action_outputs": (
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
+        "already forces the full tier."
+    ),
+    "tests/test_prompt_template_render.py::test_phase_template_renders_without_unknown_tokens": (
+        "Scans scripts/build/phases; scripts/build/ is on the shared-root denylist, so any "
+        "change already forces the full tier."
+    ),
+    "tests/test_site_links.py::TestMdxFiles.test_no_old_module_nn_files": (
+        "Reads the site/src/content/docs content tree as a content reader; the module "
+        "carries reads_content and the content lane runs it."
+    ),
+    "tests/test_ulif_dictua.py::test_fixture_cells_keep_each_attested_preposition_out_of_the_form": (
+        "Scans tests/fixtures/ulif_dictua; fixture files are not test modules, so any change "
+        "already forces the full tier."
     ),
 }
 
@@ -176,7 +266,7 @@ _GIT_TREE_TOKENS = frozenset({"ls-files", "ls-tree"})
 
 _TMP_RECEIVER_TOKENS = ("tmp_path", "tmpdir")
 
-_WALK_ATTRS = frozenset({"glob", "rglob"})
+_WALK_ATTRS = frozenset({"glob", "rglob", "iterdir"})
 
 
 def _test_module_paths() -> list[Path]:
@@ -198,50 +288,108 @@ def _call_name(call: ast.Call) -> str:
     return ".".join(reversed(parts))
 
 
-def _is_repo_root_expr(source: str) -> bool:
-    """True when a path expression is rooted at the repository, not a temp dir."""
+def _is_repo_root_expr(source: str, repo_root_names: frozenset[str] = frozenset()) -> bool:
+    """True when a path expression is rooted at the repository, not a temp dir.
+
+    ``repo_root_names`` carries module-level names that were assigned a
+    repository-rooted expression (transitively), e.g. ``SESSION = ROOT / "docs"``.
+    """
     if any(token in source for token in _TMP_RECEIVER_TOKENS):
         return False
     if "__file__" in source and ("parents" in source or re.search(r"\.parent\b", source)):
         return True
     return any(
-        token in _REPO_ROOT_CONSTANTS or token.endswith("_ROOT")
+        token in _REPO_ROOT_CONSTANTS or token.endswith("_ROOT") or token in repo_root_names
         for token in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", source)
     )
 
 
-def _subprocess_git_tree_scan(call: ast.Call) -> bool:
+def _module_repo_root_names(tree: ast.Module) -> frozenset[str]:
+    """Module-level names assigned a repository-rooted expression, transitively."""
+    assignments = [
+        statement
+        for statement in tree.body
+        if isinstance(statement, ast.Assign)
+        and len(statement.targets) == 1
+        and isinstance(statement.targets[0], ast.Name)
+    ]
+    names: set[str] = set()
+    changed = True
+    while changed:
+        changed = False
+        for statement in assignments:
+            target = statement.targets[0].id
+            if target in names:
+                continue
+            if _is_repo_root_expr(ast.unparse(statement.value), frozenset(names)):
+                names.add(target)
+                changed = True
+    return frozenset(names)
+
+
+def _scope_bindings(statements: list[ast.stmt]) -> dict[str, ast.expr]:
+    """Simple one-level ``name = value`` bindings directly in a scope body."""
+    bindings: dict[str, ast.expr] = {}
+    for statement in statements:
+        if (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+        ):
+            bindings.setdefault(statement.targets[0].id, statement.value)
+        elif (
+            isinstance(statement, ast.AnnAssign)
+            and isinstance(statement.target, ast.Name)
+            and statement.value is not None
+        ):
+            bindings.setdefault(statement.target.id, statement.value)
+    return bindings
+
+
+def _has_git_tree_token(sequence: ast.List | ast.Tuple) -> bool:
+    values = {
+        element.value
+        for element in sequence.elts
+        if isinstance(element, ast.Constant) and isinstance(element.value, str)
+    }
+    return bool(values & _GIT_TREE_TOKENS)
+
+
+def _subprocess_git_tree_scan(call: ast.Call, bindings: dict[str, ast.expr]) -> bool:
     if _call_name(call) not in _SUBPROCESS_CALLS:
         return False
     for node in ast.walk(call):
-        if not isinstance(node, (ast.List, ast.Tuple)):
-            continue
-        values = {
-            element.value
-            for element in node.elts
-            if isinstance(element, ast.Constant) and isinstance(element.value, str)
-        }
-        if values & _GIT_TREE_TOKENS:
-            return True
+        if isinstance(node, (ast.List, ast.Tuple)):
+            if _has_git_tree_token(node):
+                return True
+        elif isinstance(node, ast.Name):
+            value = bindings.get(node.id)
+            if isinstance(value, (ast.List, ast.Tuple)) and _has_git_tree_token(value):
+                return True
     return False
 
 
-def _direct_scan_sites(node: ast.AST) -> list[str]:
+def _direct_scan_sites(
+    node: ast.AST,
+    repo_root_names: frozenset[str] = frozenset(),
+    bindings: dict[str, ast.expr] | None = None,
+) -> list[str]:
     """Repository-tree scans performed anywhere inside ``node``."""
+    bindings = bindings or {}
     sites: list[str] = []
     for call in (child for child in ast.walk(node) if isinstance(child, ast.Call)):
         name = _call_name(call)
         if isinstance(call.func, ast.Attribute) and call.func.attr in _WALK_ATTRS:
             receiver = ast.unparse(call.func.value)
-            if _is_repo_root_expr(receiver):
+            if _is_repo_root_expr(receiver, repo_root_names):
                 sites.append(f"{receiver}.{call.func.attr}")
         elif name in {"os.walk", "os.scandir"} and call.args:
             argument = ast.unparse(call.args[0])
-            if _is_repo_root_expr(argument):
+            if _is_repo_root_expr(argument, repo_root_names):
                 sites.append(f"{name}({argument})")
         elif name.rsplit(".", 1)[-1] in _KNOWN_SCANNER_CALLS:
             sites.append(f"scanner:{name}")
-        elif _subprocess_git_tree_scan(call):
+        elif _subprocess_git_tree_scan(call, bindings):
             sites.append("subprocess git tree scan")
     return sorted(set(sites))
 
@@ -279,7 +427,7 @@ def _top_level_functions(tree: ast.Module) -> dict[str, tuple[ast.FunctionDef | 
         if isinstance(node, ast.ClassDef):
             for item in node.body:
                 if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                    found[item.name] = (item, node)
+                    found[f"{node.name}.{item.name}"] = (item, node)
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             found[node.name] = (node, None)
     return found
@@ -298,10 +446,12 @@ def _function_marked(tree: ast.Module, function: str) -> bool:
 def _implicated_test_functions(tree: ast.Module) -> dict[str, list[str]]:
     """Test functions that scan a repo tree directly or via a scanning helper."""
     functions = _top_level_functions(tree)
+    repo_root_names = _module_repo_root_names(tree)
+    module_bindings = _scope_bindings(tree.body)
     direct: dict[str, list[str]] = {
         name: sites
         for name, (node, _owner) in functions.items()
-        if (sites := _direct_scan_sites(node))
+        if (sites := _direct_scan_sites(node, repo_root_names, {**module_bindings, **_scope_bindings(node.body)}))
     }
 
     def calls(node: ast.AST) -> set[str]:
@@ -309,20 +459,22 @@ def _implicated_test_functions(tree: ast.Module) -> dict[str, list[str]]:
 
     # Propagate through every function: a test that (transitively) calls a
     # scanning helper is itself a scanner, even when the chain passes through
-    # helpers that do not scan on their own.
+    # helpers that do not scan on their own. Method keys are ``Class.method``, so
+    # compare on the bare callable name.
     implicated_all = set(direct)
     changed = True
     while changed:
         changed = False
+        bare = {name.rsplit(".", 1)[-1] for name in implicated_all}
         for name, (node, _owner) in functions.items():
-            if name not in implicated_all and calls(node) & implicated_all:
+            if name not in implicated_all and calls(node) & bare:
                 implicated_all.add(name)
                 changed = True
 
     return {
         name: direct.get(name, ["via scanning helper"])
         for name in implicated_all
-        if name.startswith("test_")
+        if name.rsplit(".", 1)[-1].startswith("test_")
     }
 
 
@@ -332,7 +484,11 @@ def _module_level_scan_sites(tree: ast.Module) -> list[str]:
         for statement in tree.body
         if not isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
     ]
-    return _direct_scan_sites(ast.Module(body=statements, type_ignores=[]))
+    return _direct_scan_sites(
+        ast.Module(body=statements, type_ignores=[]),
+        _module_repo_root_names(tree),
+        _scope_bindings(statements),
+    )
 
 
 def test_repo_tree_scanners_carry_the_marker() -> None:
@@ -500,7 +656,7 @@ def test_marker_detection_accepts_module_function_and_class_forms() -> None:
                 ...
         """
     )
-    assert _function_marked(class_form, "test_x")
+    assert _function_marked(class_form, "TestSuite.test_x")
 
     unrelated = _synthetic(
         """
@@ -563,3 +719,54 @@ def test_heuristic_roots_tmp_paths_and_git_tree_scans() -> None:
         """
     )
     assert "test_scan" in _implicated_test_functions(git_tree_scan)
+
+
+def test_heuristic_follows_named_argv_and_derived_repo_root_constants() -> None:
+    """`subprocess.run(cmd)` and `SESSION = ROOT / ...` are scanners too (#8707 review)."""
+    named_argv = _synthetic(
+        """
+        import subprocess
+        from pathlib import Path
+
+        REPO_ROOT = Path(__file__).resolve().parents[1]
+
+        def test_scan():
+            cmd = ["git", "ls-files", "-s", "agents_extensions/shared/hooks/"]
+            subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, check=True)
+        """
+    )
+    assert "test_scan" in _implicated_test_functions(named_argv)
+
+    derived_root = _synthetic(
+        """
+        from pathlib import Path
+
+        ROOT = Path(__file__).resolve().parents[1]
+        SESSION = ROOT / "docs" / "session-state"
+
+        def test_scan():
+            SESSION.iterdir()
+        """
+    )
+    assert "test_scan" in _implicated_test_functions(derived_root)
+
+
+def test_method_keys_do_not_mask_same_named_methods() -> None:
+    """Two classes with the same method name stay distinct (``Class.method`` keys)."""
+    tree = _synthetic(
+        """
+        import pytest
+
+        class TestOne:
+            @pytest.mark.repo_wide
+            def test_scan(self):
+                (REPO / "tests").rglob("*.py")
+
+        class TestTwo:
+            def test_scan(self):
+                (REPO / "scripts").rglob("*.py")
+        """
+    )
+    assert set(_implicated_test_functions(tree)) == {"TestOne.test_scan", "TestTwo.test_scan"}
+    assert _function_marked(tree, "TestOne.test_scan")
+    assert not _function_marked(tree, "TestTwo.test_scan")
