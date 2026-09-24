@@ -2,6 +2,12 @@
 
 Deterministic, read-only over ``atlas.db``. Does not deploy, does not change the
 live ``/lexicon/<slug>`` route, and never commits the generated tree.
+
+Memory is bounded by one shard, not the corpus: records are replayed from the
+read-only database by indexed lookups, shard candidates are gzip-streamed with an
+early abort past their size cap, accepted leaves are written straight into a
+staging tree, and ``current.json`` is published only after the whole tree (and,
+with ``--verify``, its verification) succeeds.
 """
 
 from __future__ import annotations
@@ -11,12 +17,18 @@ import gzip
 import hashlib
 import json
 import math
+import os
 import re
+import shutil
 import sqlite3
+import struct
 import sys
 import unicodedata
+import uuid
+import zlib
 from collections import defaultdict
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -147,11 +159,6 @@ def entry_shard_id(bit_length: int, prefix_value: int) -> str:
     return f"p{bit_length:02d}-{prefix_value:0{hex_width}x}"
 
 
-def slug_hash_bits(slug: str) -> str:
-    digest = hashlib.sha256(normalize_slug_for_hash(slug).encode("utf-8")).digest()
-    return "".join(f"{byte:08b}" for byte in digest)
-
-
 def search_shard_id(prefix: str) -> str:
     if not prefix:
         return "root"
@@ -246,30 +253,35 @@ def _site_build_entry_model_gates(conn: sqlite3.Connection) -> dict[str, int]:
 
 
 def _unique_component_targets(
-    rows: Sequence[tuple[str, str]],
-) -> dict[str, set[str]]:
-    targets: dict[str, set[str]] = defaultdict(set)
+    rows: Iterable[tuple[str, str]],
+) -> dict[str, str | None]:
+    """Normalized lookup → its single target slug, or ``None`` once ambiguous."""
+    targets: dict[str, str | None] = {}
     for lookup_text, target_slug in rows:
         key = normalize_atlas_text(lookup_text)
-        if key:
-            targets[key].add(target_slug)
+        if not key:
+            continue
+        if key not in targets:
+            targets[key] = target_slug
+        elif targets[key] != target_slug:
+            targets[key] = None
     return targets
 
 
 def build_component_link_targets(
-    article_rows: Sequence[tuple[str, str]],
-    alias_rows: Sequence[tuple[str, str]],
+    article_rows: Iterable[tuple[str, str]],
+    alias_rows: Iterable[tuple[str, str]],
 ) -> dict[str, str]:
     article_targets = _unique_component_targets(article_rows)
     alias_targets = _unique_component_targets(alias_rows)
     out: dict[str, str] = {}
     for lookup, matched in article_targets.items():
-        if len(matched) == 1:
-            out[lookup] = next(iter(matched))
+        if matched is not None:
+            out[lookup] = matched
     for lookup, matched in alias_targets.items():
-        if lookup in article_targets or len(matched) != 1:
+        if lookup in article_targets or matched is None:
             continue
-        out[lookup] = next(iter(matched))
+        out[lookup] = matched
     return out
 
 
@@ -393,83 +405,88 @@ def _sorted_provenance_rows(rows: Iterable[sqlite3.Row]) -> list[dict[str, str |
     return provenance
 
 
-def load_entry_records(
-    conn: sqlite3.Connection,
-    *,
-    practice_levels_by_slug: Mapping[str, Sequence[str]],
-) -> list[dict[str, Any]]:
-    component_article_rows = conn.execute(
-        """SELECT display_head, slug
-           FROM articles
-           WHERE review_state = 'approved' AND visibility = 'public' AND entry_type = 'lemma'
-           ORDER BY display_head COLLATE NOCASE, slug"""
-    ).fetchall()
-    component_alias_rows = conn.execute(
-        """SELECT al.alias, al.target_slug
-           FROM aliases al
-           JOIN articles a ON a.slug = al.target_slug
-           WHERE al.visibility = 'public'
-             AND a.review_state = 'approved'
-             AND a.visibility = 'public'
-             AND a.entry_type = 'lemma'
-           ORDER BY al.alias COLLATE NOCASE, al.target_slug, al.kind"""
-    ).fetchall()
-    component_targets = build_component_link_targets(
-        [(row[0], row[1]) for row in component_article_rows],
-        [(row[0], row[1]) for row in component_alias_rows],
-    )
-    lemma_slugs = {
-        row[0]
-        for row in conn.execute(
-            """SELECT slug FROM articles
-               WHERE review_state = 'approved' AND visibility = 'public' AND entry_type = 'lemma'"""
+# ---------------------------------------------------------------------------
+# Bounded-memory runtime export (#8672)
+#
+# The exporter never holds the corpus: records are replayed one at a time from
+# the read-only SQLite source by indexed slug lookups, only compact partition
+# metadata (slug + slug-hash digest, search rank + postings) stays resident, and
+# every candidate shard is serialised and gzip-streamed with an early abort as
+# soon as the compressed size passes its cap. Accepted leaves are written to a
+# staging tree immediately; only their descriptors are kept.
+# ---------------------------------------------------------------------------
+
+_PAYLOAD_SELECT = """SELECT ap.slug AS slug,
+                            ap.payload_json AS payload_json,
+                            a.entry_type AS entry_type,
+                            a.cefr AS cefr
+                     FROM article_payloads ap
+                     LEFT JOIN articles a ON a.slug = ap.slug
+                     WHERE ap.is_public_route = 1"""
+
+
+def _dumps(payload: Any) -> str:
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=False)
+
+
+def _fragment_bytes(payload: Any) -> bytes:
+    return _dumps(payload).encode("utf-8")
+
+
+class EntryReplay:
+    """Rebuild public-route entry records one at a time from the read-only source.
+
+    Same record shape, ordering and validation as the historical whole-corpus
+    loader; only the per-slug side tables are queried through their indexes
+    (``idx_aliases_target`` / ``idx_related_entries_slug_relation`` /
+    ``idx_prov_slug``) instead of being materialised for the whole corpus.
+    """
+
+    def __init__(
+        self,
+        conn: sqlite3.Connection,
+        *,
+        practice_levels_by_slug: Mapping[str, Sequence[str]],
+    ) -> None:
+        self._conn = conn
+        self._practice_levels_by_slug = practice_levels_by_slug
+        self._component_targets = build_component_link_targets(
+            conn.execute(
+                """SELECT display_head, slug
+                   FROM articles
+                   WHERE review_state = 'approved' AND visibility = 'public' AND entry_type = 'lemma'"""
+            ),
+            conn.execute(
+                """SELECT al.alias, al.target_slug
+                   FROM aliases al
+                   JOIN articles a ON a.slug = al.target_slug
+                   WHERE al.visibility = 'public'
+                     AND a.review_state = 'approved'
+                     AND a.visibility = 'public'
+                     AND a.entry_type = 'lemma'"""
+            ),
         )
-    }
+        self._lemma_slugs = {
+            row[0]
+            for row in conn.execute(
+                """SELECT slug FROM articles
+                   WHERE review_state = 'approved' AND visibility = 'public' AND entry_type = 'lemma'"""
+            )
+        }
 
-    aliases_by_slug: dict[str, list[sqlite3.Row]] = defaultdict(list)
-    for row in conn.execute(
-        """SELECT alias, kind, source, target_slug
-           FROM aliases
-           WHERE visibility = 'public'
-           ORDER BY target_slug, kind, alias, source"""
-    ):
-        aliases_by_slug[row["target_slug"]].append(row)
+    def iter_records(self) -> Iterator[dict[str, Any]]:
+        """Yield every public-route record in ``(route_order, slug)`` order."""
+        cursor = self._conn.execute(f"{_PAYLOAD_SELECT} ORDER BY ap.route_order, ap.slug")
+        for row in cursor:
+            yield self._record(row)
 
-    relations_by_slug: dict[str, list[sqlite3.Row]] = defaultdict(list)
-    for row in conn.execute(
-        """SELECT slug, related_slug, entry_type, relation, component_role, provenance
-           FROM related_entries
-           ORDER BY slug, relation, related_slug, provenance, component_role"""
-    ):
-        relations_by_slug[row["slug"]].append(row)
+    def record_for_slug(self, slug: str) -> dict[str, Any]:
+        row = self._conn.execute(f"{_PAYLOAD_SELECT} AND ap.slug = ?", (slug,)).fetchone()
+        if row is None:
+            raise ExportError(f"public route {slug!r} vanished from the source database during export")
+        return self._record(row)
 
-    provenance_by_slug: dict[str, list[sqlite3.Row]] = defaultdict(list)
-    for row in conn.execute(
-        """SELECT slug, source_family, source_locator, extraction_mode, rowid
-           FROM article_provenance
-           ORDER BY slug, rowid"""
-    ):
-        provenance_by_slug[row["slug"]].append(row)
-
-    payload_rows = conn.execute(
-        """SELECT ap.slug AS slug,
-                  ap.route_order AS route_order,
-                  ap.payload_json AS payload_json,
-                  a.entry_type AS entry_type,
-                  a.display_head AS display_head,
-                  a.lemma AS lemma,
-                  a.pos AS pos,
-                  a.gloss AS gloss,
-                  a.cefr AS cefr,
-                  a.heritage_classification AS heritage_classification
-           FROM article_payloads ap
-           LEFT JOIN articles a ON a.slug = ap.slug
-           WHERE ap.is_public_route = 1
-           ORDER BY ap.route_order, ap.slug"""
-    ).fetchall()
-
-    records: list[dict[str, Any]] = []
-    for row in payload_rows:
+    def _record(self, row: sqlite3.Row) -> dict[str, Any]:
         entry = json.loads(row["payload_json"])
         if not isinstance(entry, dict):
             raise ExportError(f"payload_json for {row['slug']!r} is not an object")
@@ -480,40 +497,68 @@ def load_entry_records(
         kind = "article" if row["entry_type"] is not None else "form_route"
         slug = str(row["slug"])
         practice_levels = list(
-            practice_levels_by_slug.get(slug)
-            or practice_levels_by_slug.get(str(entry.get("lemma") or ""))
+            self._practice_levels_by_slug.get(slug)
+            or self._practice_levels_by_slug.get(str(entry.get("lemma") or ""))
             or []
         )
-        records.append(
-            {
-                "slug": slug,
-                "kind": kind,
-                "entry": entry,
-                "aliases": _sorted_alias_rows(aliases_by_slug.get(slug, [])),
-                "relations": _sorted_relation_rows(relations_by_slug.get(slug, [])),
-                "provenance": _sorted_provenance_rows(provenance_by_slug.get(slug, [])),
-                "renderContext": {
-                    "componentLinks": component_links_for_entry(
-                        entry,
-                        component_targets=component_targets,
-                        lemma_slugs=lemma_slugs,
-                    ),
-                    "practiceLevels": practice_levels,
-                },
-            }
-        )
-    return records
+        conn = self._conn
+        aliases = conn.execute(
+            """SELECT alias, kind, source, target_slug
+               FROM aliases
+               WHERE visibility = 'public' AND target_slug = ?
+               ORDER BY kind, alias, source""",
+            (slug,),
+        ).fetchall()
+        relations = conn.execute(
+            """SELECT related_slug, entry_type, relation, component_role, provenance
+               FROM related_entries
+               WHERE slug = ?
+               ORDER BY relation, related_slug, provenance, component_role""",
+            (slug,),
+        ).fetchall()
+        provenance = conn.execute(
+            """SELECT source_family, source_locator, extraction_mode
+               FROM article_provenance
+               WHERE slug = ?
+               ORDER BY rowid""",
+            (slug,),
+        ).fetchall()
+        return {
+            "slug": slug,
+            "kind": kind,
+            "entry": entry,
+            "aliases": _sorted_alias_rows(aliases),
+            "relations": _sorted_relation_rows(relations),
+            "provenance": _sorted_provenance_rows(provenance),
+            "renderContext": {
+                "componentLinks": component_links_for_entry(
+                    entry,
+                    component_targets=self._component_targets,
+                    lemma_slugs=self._lemma_slugs,
+                ),
+                "practiceLevels": practice_levels,
+            },
+        }
 
 
-def load_search_rows(conn: sqlite3.Connection) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    article_rows = conn.execute(
+def load_entry_records(
+    conn: sqlite3.Connection,
+    *,
+    practice_levels_by_slug: Mapping[str, Sequence[str]],
+) -> list[dict[str, Any]]:
+    """Whole-corpus compatibility wrapper over :class:`EntryReplay` (tests / fixtures)."""
+    replay = EntryReplay(conn, practice_levels_by_slug=practice_levels_by_slug)
+    return list(replay.iter_records())
+
+
+def _iter_article_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]]:
+    # Row order is irrelevant: slug is the primary key, so the (normalized head,
+    # slug) sort applied afterwards is total.
+    for slug, display_head, gloss, entry_type, cefr in conn.execute(
         """SELECT slug, display_head, gloss, entry_type, cefr
            FROM articles
-           WHERE review_state = 'approved' AND visibility = 'public'
-           ORDER BY display_head COLLATE NOCASE, slug"""
-    ).fetchall()
-    articles: list[dict[str, Any]] = []
-    for slug, display_head, gloss, entry_type, cefr in article_rows:
+           WHERE review_state = 'approved' AND visibility = 'public'"""
+    ):
         row: dict[str, Any] = {
             "l": display_head,
             "s": slug,
@@ -524,10 +569,17 @@ def load_search_rows(conn: sqlite3.Connection) -> tuple[list[dict[str, Any]], li
         level = _clean_text(cefr)
         if level:
             row["c"] = level
-        articles.append(row)
-    articles.sort(key=lambda row: (normalize_atlas_text(row["l"]), row["s"]))
+        yield row
 
-    alias_rows = conn.execute(
+
+def _iter_alias_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]]:
+    """Public aliases, first row per ``(normalized alias, target)`` in SQL order wins.
+
+    The ORDER BY is load-bearing: which raw alias/kind survives the dedup depends
+    on it, so it is kept verbatim and only *streamed* rather than fetched.
+    """
+    seen: set[tuple[str, str]] = set()
+    for alias, kind, target_slug, target_head in conn.execute(
         """SELECT alias.alias, alias.kind, alias.target_slug, article.display_head
            FROM aliases AS alias
            JOIN articles AS article ON article.slug = alias.target_slug
@@ -535,17 +587,65 @@ def load_search_rows(conn: sqlite3.Connection) -> tuple[list[dict[str, Any]], li
              AND article.review_state = 'approved'
              AND article.visibility = 'public'
            ORDER BY alias.alias COLLATE NOCASE, alias.target_slug, alias.kind"""
-    ).fetchall()
-    aliases: list[dict[str, Any]] = []
-    seen: set[tuple[str, str]] = set()
-    for alias, kind, target_slug, target_head in alias_rows:
+    ):
         key = (normalize_atlas_text(alias), target_slug)
         if not key[0] or key in seen:
             continue
         seen.add(key)
-        aliases.append({"a": alias, "k": kind, "s": target_slug, "h": target_head})
-    aliases.sort(key=lambda row: (normalize_atlas_text(row["a"]), row["s"], row["k"]))
+        yield {"a": alias, "k": kind, "s": target_slug, "h": target_head}
+
+
+def _article_sort_key(row: Mapping[str, Any]) -> tuple[str, str]:
+    return (normalize_atlas_text(row["l"]), row["s"])
+
+
+def _alias_sort_key(row: Mapping[str, Any]) -> tuple[str, str, str]:
+    return (normalize_atlas_text(row["a"]), row["s"], row["k"])
+
+
+def load_search_rows(conn: sqlite3.Connection) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Whole-corpus search rows in canonical order (compatibility / test oracle)."""
+    articles = sorted(_iter_article_search_rows(conn), key=_article_sort_key)
+    aliases = sorted(_iter_alias_search_rows(conn), key=_alias_sort_key)
     return articles, aliases
+
+
+class SearchFamilyIndex:
+    """Compact search-family state: pre-serialised rows plus a sorted key index.
+
+    ``fragments[rank]`` is the canonical JSON of the row at global sort ``rank``;
+    ``postings`` is ``(index key, rank)`` sorted, so every shard prefix is one
+    contiguous range and shard row sets are just sorted unique ranks. Global rank
+    order equals the historical per-shard order because both sort keys are total.
+    """
+
+    __slots__ = ("fragments", "postings")
+
+    def __init__(self, fragments: list[bytes], postings: list[tuple[str, int]]) -> None:
+        self.fragments = fragments
+        self.postings = postings
+
+    def __len__(self) -> int:
+        return len(self.fragments)
+
+    @classmethod
+    def build(
+        cls,
+        rows: Iterable[Mapping[str, Any]],
+        *,
+        sort_key: Callable[[Mapping[str, Any]], tuple[str, ...]],
+        key_fn: Callable[[Mapping[str, Any]], list[str]],
+    ) -> SearchFamilyIndex:
+        interned: dict[str, str] = {}
+        staged: list[tuple[tuple[str, ...], bytes, tuple[str, ...]]] = []
+        for row in rows:
+            keys = tuple(interned.setdefault(key, key) for key in key_fn(row))
+            staged.append((sort_key(row), _fragment_bytes(row), keys))
+        staged.sort(key=lambda item: item[0])
+        fragments = [item[1] for item in staged]
+        postings = [(key, rank) for rank, item in enumerate(staged) for key in item[2]]
+        postings.sort()
+        return cls(fragments, postings)
 
 
 def object_descriptor(
@@ -556,86 +656,208 @@ def object_descriptor(
     raw: bytes,
     compressed: bytes,
 ) -> dict[str, Any]:
+    return _descriptor(
+        object_id=object_id,
+        relative_url=relative_url,
+        count=count,
+        uncompressed_bytes=len(raw),
+        json_sha256=sha256_hex(raw),
+        compressed=compressed,
+    )
+
+
+def _descriptor(
+    *,
+    object_id: str,
+    relative_url: str,
+    count: int,
+    uncompressed_bytes: int,
+    json_sha256: str,
+    compressed: bytes,
+) -> dict[str, Any]:
     return {
         "id": object_id,
         "url": relative_url,
         "count": count,
         "bytes": len(compressed),
-        "uncompressedBytes": len(raw),
+        "uncompressedBytes": uncompressed_bytes,
         "sha256": sha256_hex(compressed),
-        "jsonSha256": sha256_hex(raw),
+        "jsonSha256": json_sha256,
         "encoding": "gzip",
     }
 
 
+@dataclass(frozen=True)
+class CompressedObject:
+    compressed: bytes
+    uncompressed_bytes: int
+    json_sha256: str
+
+
+def compress_stream_bounded(
+    chunks: Iterable[bytes],
+    *,
+    compression_level: int,
+    max_bytes: int | None,
+) -> CompressedObject | None:
+    """Gzip a chunk stream byte-identically to ``gzip_bytes`` of the joined chunks.
+
+    Returns ``None`` — abandoning the (lazy) chunk source — as soon as the
+    compressed size is certain to exceed ``max_bytes``; ``max_bytes=None`` never
+    aborts. Levels 1-9: deflate output is independent of how the input is chunked,
+    so the stream is the one-shot payload (gzip header taken from ``gzip_bytes``
+    itself, raw deflate body, crc32/isize trailer) and the compressed prefix
+    emitted so far is a strict lower bound on the final size. Level 0 (stored
+    blocks) *does* depend on chunking, so the raw bytes are buffered (aborting once
+    they alone exceed the cap: stored output is never smaller than its input) and
+    the existing one-shot ``gzip_bytes`` produces the final bytes.
+    """
+    sha = hashlib.sha256()
+    raw_bytes = 0
+    if compression_level == 0:
+        buffer = bytearray()
+        for chunk in chunks:
+            buffer += chunk
+            if max_bytes is not None and len(buffer) > max_bytes:
+                return None
+        raw = bytes(buffer)
+        compressed = gzip_bytes(raw, compression_level=0)
+        if max_bytes is not None and len(compressed) > max_bytes:
+            return None
+        return CompressedObject(compressed, len(raw), sha256_hex(raw))
+
+    header = gzip_bytes(b"", compression_level=compression_level)[:10]
+    deflater = zlib.compressobj(compression_level, zlib.DEFLATED, -zlib.MAX_WBITS)
+    pieces = [header]
+    size = len(header)
+    crc = 0
+    for chunk in chunks:
+        sha.update(chunk)
+        crc = zlib.crc32(chunk, crc)
+        raw_bytes += len(chunk)
+        piece = deflater.compress(chunk)
+        if piece:
+            pieces.append(piece)
+            size += len(piece)
+            if max_bytes is not None and size > max_bytes:
+                return None
+    tail = deflater.flush()
+    trailer = struct.pack("<LL", crc, raw_bytes & 0xFFFFFFFF)
+    pieces.extend((tail, trailer))
+    size += len(tail) + len(trailer)
+    if max_bytes is not None and size > max_bytes:
+        return None
+    return CompressedObject(b"".join(pieces), raw_bytes, sha.hexdigest())
+
+
+def _shard_envelope(payload: Mapping[str, Any]) -> tuple[bytes, bytes]:
+    """Split a shard payload's canonical JSON around its ``records`` array."""
+    text = _dumps({**payload, "records": []})
+    if not text.endswith('"records":[]}'):
+        raise ExportError("shard payload envelope must end with its records array")
+    return text[:-2].encode("utf-8"), b"]}\n"
+
+
+def _shard_chunks(head: bytes, fragments: Iterable[bytes], tail: bytes) -> Iterator[bytes]:
+    yield head
+    for position, fragment in enumerate(fragments):
+        yield fragment if position == 0 else b"," + fragment
+    yield tail
+
+
+def slug_digest(slug: str) -> bytes:
+    return hashlib.sha256(normalize_slug_for_hash(slug).encode("utf-8")).digest()
+
+
+def _first_one_bit(
+    ordered: Sequence[tuple[bytes, str]], lo: int, hi: int, bit_index: int
+) -> int:
+    """First index in ``[lo, hi)`` whose digest has a 1 at ``bit_index`` (MSB first)."""
+    byte, shift = bit_index >> 3, 7 - (bit_index & 7)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if (ordered[mid][0][byte] >> shift) & 1:
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
+
+
 def build_entry_shards(
-    records: Sequence[Mapping[str, Any]],
+    route_meta: Iterable[tuple[bytes, str]],
+    fragment_for_slug: Callable[[str], bytes],
     *,
     data_version: str,
     max_gzip_bytes: int,
     compression_level: int,
-) -> tuple[dict[str, Any], dict[str, bytes], dict[str, dict[str, Any]]]:
-    """Adaptive SHA-256 prefix trie over NFC-normalized slug hashes."""
+    write_object: Callable[[str, bytes], None],
+) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+    """Adaptive SHA-256 prefix trie over NFC-normalized slug hashes.
 
-    prepared: list[tuple[str, dict[str, Any]]] = []
-    for record in records:
-        slug = str(record["slug"])
-        prepared.append((slug_hash_bits(slug), dict(record)))
-    prepared.sort(key=lambda item: (item[0], item[1]["slug"]))
-
-    shards: dict[str, dict[str, Any]] = {}
-    compressed_by_id: dict[str, bytes] = {}
+    ``route_meta`` is ``(slug digest, slug)`` per public route. A trie node is a
+    contiguous range of the digest-sorted metadata; a leaf's records are replayed
+    (slug order) through ``fragment_for_slug``, gzip-streamed and written straight
+    through ``write_object``. Only descriptors are retained.
+    """
+    ordered = sorted(route_meta)
+    head, tail = _shard_envelope(
+        {"schema": ENTRY_SHARD_SCHEMA, "schemaVersion": SCHEMA_VERSION, "dataVersion": data_version}
+    )
     descriptors: dict[str, dict[str, Any]] = {}
 
-    def materialize(bit_length: int, prefix_value: int, items: list[tuple[str, dict[str, Any]]]) -> None:
-        shard_id = entry_shard_id(bit_length, prefix_value)
-        ordered = [item[1] for item in sorted(items, key=lambda pair: pair[1]["slug"])]
-        payload = {
-            "schema": ENTRY_SHARD_SCHEMA,
-            "schemaVersion": SCHEMA_VERSION,
-            "dataVersion": data_version,
-            "records": ordered,
-        }
-        raw = canonical_json_bytes(payload)
-        compressed = gzip_bytes(raw, compression_level=compression_level)
-        if len(compressed) > max_gzip_bytes:
-            if len(items) <= 1:
-                slug = items[0][1]["slug"] if items else "?"
-                raise ExportError(
-                    f"single entry record exceeds entry-max-gzip-bytes "
-                    f"({len(compressed)} > {max_gzip_bytes}) slug={slug!r}"
-                )
-            next_bit = bit_length
-            zeros: list[tuple[str, dict[str, Any]]] = []
-            ones: list[tuple[str, dict[str, Any]]] = []
-            for bits, record in items:
-                if bits[next_bit] == "0":
-                    zeros.append((bits, record))
-                else:
-                    ones.append((bits, record))
-            child_bits = bit_length + 1
-            if not zeros:
-                materialize(child_bits, (prefix_value << 1) | 1, ones)
-                return
-            if not ones:
-                materialize(child_bits, prefix_value << 1, zeros)
-                return
-            materialize(child_bits, prefix_value << 1, zeros)
-            materialize(child_bits, (prefix_value << 1) | 1, ones)
-            return
+    def chunks(slugs: Sequence[str]) -> Iterator[bytes]:
+        return _shard_chunks(head, (fragment_for_slug(slug) for slug in slugs), tail)
 
-        relative = f"entries/{shard_id}.json.gz"
-        shards[shard_id] = payload
-        compressed_by_id[shard_id] = compressed
-        descriptors[shard_id] = object_descriptor(
-            object_id=shard_id,
-            relative_url=relative,
-            count=len(ordered),
-            raw=raw,
-            compressed=compressed,
+    def materialize(bit_length: int, prefix_value: int, lo: int, hi: int, known_oversize: bool) -> None:
+        slugs = sorted(item[1] for item in ordered[lo:hi])
+        result = (
+            None
+            if known_oversize
+            else compress_stream_bounded(
+                chunks(slugs), compression_level=compression_level, max_bytes=max_gzip_bytes
+            )
         )
+        if result is not None:
+            shard_id = entry_shard_id(bit_length, prefix_value)
+            relative = f"entries/{shard_id}.json.gz"
+            write_object(relative, result.compressed)
+            descriptors[shard_id] = _descriptor(
+                object_id=shard_id,
+                relative_url=relative,
+                count=len(slugs),
+                uncompressed_bytes=result.uncompressed_bytes,
+                json_sha256=result.json_sha256,
+                compressed=result.compressed,
+            )
+            return
+        if len(slugs) <= 1:
+            measured = compress_stream_bounded(
+                chunks(slugs), compression_level=compression_level, max_bytes=None
+            )
+            size = len(measured.compressed) if measured else 0
+            slug = slugs[0] if slugs else "?"
+            raise ExportError(
+                f"single entry record exceeds entry-max-gzip-bytes "
+                f"({size} > {max_gzip_bytes}) slug={slug!r}"
+            )
+        if bit_length >= 256:
+            raise ExportError(
+                f"entry shard of {len(slugs)} records cannot split: slug hashes are identical"
+            )
+        del slugs
+        mid = _first_one_bit(ordered, lo, hi, bit_length)
+        child_bits = bit_length + 1
+        # A one-sided split leaves the identical record set (and identical, still
+        # oversized, payload) one bit deeper, so it needs no second probe.
+        if mid == lo:
+            materialize(child_bits, (prefix_value << 1) | 1, lo, hi, True)
+        elif mid == hi:
+            materialize(child_bits, prefix_value << 1, lo, hi, True)
+        else:
+            materialize(child_bits, prefix_value << 1, lo, mid, False)
+            materialize(child_bits, (prefix_value << 1) | 1, mid, hi, False)
 
-    materialize(0, 0, prepared)
+    materialize(0, 0, 0, len(ordered), False)
 
     # Prefix-free lookup tree: each leaf is a shard id; internal nodes branch on next bit.
     tree: dict[str, Any] = {"bitLength": 0, "children": {}}
@@ -670,7 +892,7 @@ def build_entry_shards(
         "tree": tree,
         "shards": {key: descriptors[key] for key in sorted(descriptors)},
     }
-    return index, compressed_by_id, descriptors
+    return index, descriptors
 
 
 def _article_index_keys(row: Mapping[str, Any]) -> list[str]:
@@ -700,143 +922,131 @@ def _alias_index_keys(row: Mapping[str, Any]) -> list[str]:
 
 
 def build_search_family_shards(
-    rows: Sequence[Mapping[str, Any]],
+    index: SearchFamilyIndex,
     *,
     family: str,
     data_version: str,
     max_gzip_bytes: int,
     compression_level: int,
-    key_fn,
-    row_id_fn,
     schema: str,
-) -> tuple[dict[str, Any], dict[str, bytes]]:
-    """Adaptive Unicode-prefix trie over indexed keys for one search family."""
+    write_object: Callable[[str, bytes], None],
+) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+    """Adaptive Unicode-prefix trie over indexed keys for one search family.
 
-    # Map prefix → {row_id → row}; also track exact short-key terminals separately.
-    # Start with depth-1 first-character groups (existing strategy).
-    depth1: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
-    for row in rows:
-        for key in key_fn(row):
-            chars = list(key)
-            if not chars:
-                continue
-            prefix = chars[0]
-            depth1[prefix][row_id_fn(row)] = dict(row)
-
-    shards: dict[str, dict[str, Any]] = {}
-    compressed_by_id: dict[str, bytes] = {}
+    A node is a contiguous range of the sorted postings (all keys sharing the
+    prefix). Its rows are the unique ranks in that range, streamed in rank order —
+    the historical shard order — with an early abort past the gzip cap.
+    """
+    postings = index.postings
+    fragments = index.fragments
     descriptors: dict[str, dict[str, Any]] = {}
-    # tree nodes: {prefix, shardId?, terminalShardId?, children?}
-    tree_children: dict[str, Any] = {}
 
-    def write_shard(
-        prefix: str,
-        row_map: Mapping[str, Mapping[str, Any]],
-        *,
-        terminal: bool = False,
-    ) -> str:
+    def ranks_in(lo: int, hi: int) -> list[int]:
+        return sorted({postings[position][1] for position in range(lo, hi)})
+
+    def chunks(prefix: str, ranks: Sequence[int], *, terminal: bool) -> Iterator[bytes]:
+        head, tail = _shard_envelope(
+            {
+                "schema": schema,
+                "schemaVersion": SCHEMA_VERSION,
+                "dataVersion": data_version,
+                "prefix": prefix,
+                "terminal": terminal,
+            }
+        )
+        return _shard_chunks(head, (fragments[rank] for rank in ranks), tail)
+
+    def emit(prefix: str, count: int, result: CompressedObject, *, terminal: bool = False) -> str:
         shard_id = search_shard_id(prefix) + (".term" if terminal else "")
-        ordered = sorted(row_map.values(), key=lambda item: (row_id_fn(item), json.dumps(item, sort_keys=True)))
-        # Deterministic stable sort by natural key then slug/alias.
-        if family == "articles":
-            ordered.sort(key=lambda item: (normalize_atlas_text(str(item["l"])), item["s"]))
-        else:
-            ordered.sort(key=lambda item: (normalize_atlas_text(str(item["a"])), item["s"], item["k"]))
-        payload = {
-            "schema": schema,
-            "schemaVersion": SCHEMA_VERSION,
-            "dataVersion": data_version,
-            "prefix": prefix,
-            "terminal": terminal,
-            "records": ordered,
-        }
-        raw = canonical_json_bytes(payload)
-        compressed = gzip_bytes(raw, compression_level=compression_level)
         relative = f"search/{family}/{shard_id}.json.gz"
-        shards[shard_id] = payload
-        compressed_by_id[shard_id] = compressed
-        descriptors[shard_id] = object_descriptor(
+        write_object(relative, result.compressed)
+        descriptors[shard_id] = _descriptor(
             object_id=shard_id,
             relative_url=relative,
-            count=len(ordered),
-            raw=raw,
-            compressed=compressed,
+            count=count,
+            uncompressed_bytes=result.uncompressed_bytes,
+            json_sha256=result.json_sha256,
+            compressed=result.compressed,
         )
         return shard_id
 
-    def split_or_write(prefix: str, row_map: dict[str, dict[str, Any]]) -> dict[str, Any]:
-        ordered = list(row_map.values())
-        # Probe gzip size without committing.
-        probe_payload = {
-            "schema": schema,
-            "schemaVersion": SCHEMA_VERSION,
-            "dataVersion": data_version,
-            "prefix": prefix,
-            "terminal": False,
-            "records": ordered,
-        }
-        probe = gzip_bytes(canonical_json_bytes(probe_payload), compression_level=compression_level)
+    def split_or_write(prefix: str, lo: int, hi: int) -> dict[str, Any]:
+        ranks = ranks_in(lo, hi)
+        result = compress_stream_bounded(
+            chunks(prefix, ranks, terminal=False),
+            compression_level=compression_level,
+            max_bytes=max_gzip_bytes,
+        )
         node: dict[str, Any] = {"prefix": prefix}
-        if len(probe) <= max_gzip_bytes:
-            shard_id = write_shard(prefix, row_map)
-            node["shardId"] = shard_id
+        if result is not None:
+            node["shardId"] = emit(prefix, len(ranks), result)
             return node
 
-        # Split on next Unicode scalar of each indexed key that lives under this prefix.
-        children: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
-        terminals: dict[str, dict[str, Any]] = {}
-        for row in ordered:
-            placed = False
-            for key in key_fn(row):
-                if not key.startswith(prefix):
-                    continue
-                if key == prefix:
-                    terminals[row_id_fn(row)] = row
-                    placed = True
-                    continue
-                next_char = key[len(prefix)]
-                child_prefix = prefix + next_char
-                children[child_prefix][row_id_fn(row)] = row
-                placed = True
-            if not placed:
-                # Row reached this bucket via a key that equals/extends prefix; keep as terminal.
-                terminals[row_id_fn(row)] = row
+        # Split on the next Unicode scalar of each indexed key under this prefix.
+        # Keys equal to the prefix sort first (terminals); the rest group by next char.
+        depth = len(prefix)
+        terminal_end = lo
+        while terminal_end < hi and len(postings[terminal_end][0]) == depth:
+            terminal_end += 1
+        children: list[tuple[str, int, int]] = []
+        position = terminal_end
+        while position < hi:
+            char = postings[position][0][depth]
+            end = position + 1
+            while end < hi and postings[end][0][depth] == char:
+                end += 1
+            children.append((char, position, end))
+            position = end
 
         if not children:
-            # Cannot split further — hard fail if still oversized.
-            if len(probe) > max_gzip_bytes:
-                raise ExportError(
-                    f"search {family} shard for prefix={prefix!r} exceeds max "
-                    f"({len(probe)} > {max_gzip_bytes}) and cannot split"
-                )
-            shard_id = write_shard(prefix, row_map)
-            node["shardId"] = shard_id
-            return node
+            # Cannot split further — hard fail (still oversized).
+            measured = compress_stream_bounded(
+                chunks(prefix, ranks, terminal=False),
+                compression_level=compression_level,
+                max_bytes=None,
+            )
+            size = len(measured.compressed) if measured else 0
+            raise ExportError(
+                f"search {family} shard for prefix={prefix!r} exceeds max "
+                f"({size} > {max_gzip_bytes}) and cannot split"
+            )
+        del ranks
 
-        if terminals:
-            node["terminalShardId"] = write_shard(prefix, terminals, terminal=True)
+        if terminal_end > lo:
+            terminal_ranks = ranks_in(lo, terminal_end)
+            terminal_result = compress_stream_bounded(
+                chunks(prefix, terminal_ranks, terminal=True),
+                compression_level=compression_level,
+                max_bytes=None,
+            )
+            node["terminalShardId"] = emit(
+                prefix, len(terminal_ranks), terminal_result, terminal=True
+            )
 
-        child_nodes: dict[str, Any] = {}
-        for child_prefix in sorted(children):
-            child_char = child_prefix[len(prefix)]
-            child_nodes[child_char] = split_or_write(child_prefix, children[child_prefix])
-        node["children"] = child_nodes
+        node["children"] = {
+            char: split_or_write(prefix + char, child_lo, child_hi)
+            for char, child_lo, child_hi in children
+        }
         return node
 
     root_children: dict[str, Any] = {}
-    for prefix in sorted(depth1):
-        root_children[prefix] = split_or_write(prefix, depth1[prefix])
+    position = 0
+    while position < len(postings):
+        char = postings[position][0][0]
+        end = position + 1
+        while end < len(postings) and postings[end][0][0] == char:
+            end += 1
+        root_children[char] = split_or_write(char, position, end)
+        position = end
 
-    index = {
+    search_index = {
         "strategy": "unicode-prefix-trie",
         "family": family,
         "maxGzipBytes": max_gzip_bytes,
         "tree": {"prefix": "", "children": root_children},
         "shards": {key: descriptors[key] for key in sorted(descriptors)},
     }
-    # silence unused
-    _ = tree_children
-    return index, compressed_by_id
+    return search_index, descriptors
 
 
 def register_decks(
@@ -889,38 +1099,71 @@ def register_decks(
     return {"levels": levels}, compressed_files
 
 
+class DataVersionHasher:
+    """Incremental SHA-256 of the dataVersion identity document.
+
+    Feeds the exact bytes ``canonical_json_bytes`` of the historical identity
+    structure would contain (entries, then searchArticles, searchAliases, decks),
+    without ever building that corpus-sized structure.
+    """
+
+    def __init__(self, *, generated_at: str) -> None:
+        self._sha = hashlib.sha256()
+        self._entries = 0
+        head = f'{{"schemaVersion":{_dumps(SCHEMA_VERSION)},"generatedAt":{_dumps(generated_at)},"entries":['
+        self._sha.update(head.encode("utf-8"))
+
+    def add_entry(self, record: Mapping[str, Any]) -> None:
+        identity = {
+            "slug": record["slug"],
+            "kind": record["kind"],
+            "entrySha256": sha256_hex(canonical_json_bytes(record["entry"])),
+            "aliasesSha256": sha256_hex(canonical_json_bytes(record["aliases"])),
+            "relationsSha256": sha256_hex(canonical_json_bytes(record["relations"])),
+            "provenanceSha256": sha256_hex(canonical_json_bytes(record["provenance"])),
+            "renderContextSha256": sha256_hex(canonical_json_bytes(record["renderContext"])),
+        }
+        self._sha.update((b"," if self._entries else b"") + _fragment_bytes(identity))
+        self._entries += 1
+
+    def _add_rows(self, name: bytes, fragments: Iterable[bytes]) -> None:
+        self._sha.update(b'],"' + name + b'":[')
+        for position, fragment in enumerate(fragments):
+            self._sha.update(fragment if position == 0 else b"," + fragment)
+
+    def finish(
+        self,
+        *,
+        article_fragments: Iterable[bytes],
+        alias_fragments: Iterable[bytes],
+        deck_index: Mapping[str, Any],
+    ) -> str:
+        self._add_rows(b"searchArticles", article_fragments)
+        self._add_rows(b"searchAliases", alias_fragments)
+        decks = {
+            level: info.get("deckVersion")
+            for level, info in sorted((deck_index.get("levels") or {}).items())
+        }
+        self._sha.update(f'],"decks":{_dumps(decks)}}}\n'.encode())
+        return f"atlas-v1-{self._sha.hexdigest()[:16]}"
+
+
 def compute_data_version(
     *,
     generated_at: str,
-    entry_records: Sequence[Mapping[str, Any]],
-    article_rows: Sequence[Mapping[str, Any]],
-    alias_rows: Sequence[Mapping[str, Any]],
+    entry_records: Iterable[Mapping[str, Any]],
+    article_rows: Iterable[Mapping[str, Any]],
+    alias_rows: Iterable[Mapping[str, Any]],
     deck_index: Mapping[str, Any],
 ) -> str:
-    identity = {
-        "schemaVersion": SCHEMA_VERSION,
-        "generatedAt": generated_at,
-        "entries": [
-            {
-                "slug": record["slug"],
-                "kind": record["kind"],
-                "entrySha256": sha256_hex(canonical_json_bytes(record["entry"])),
-                "aliasesSha256": sha256_hex(canonical_json_bytes(record["aliases"])),
-                "relationsSha256": sha256_hex(canonical_json_bytes(record["relations"])),
-                "provenanceSha256": sha256_hex(canonical_json_bytes(record["provenance"])),
-                "renderContextSha256": sha256_hex(canonical_json_bytes(record["renderContext"])),
-            }
-            for record in entry_records
-        ],
-        "searchArticles": article_rows,
-        "searchAliases": alias_rows,
-        "decks": {
-            level: info.get("deckVersion")
-            for level, info in sorted((deck_index.get("levels") or {}).items())
-        },
-    }
-    digest = sha256_hex(canonical_json_bytes(identity))
-    return f"atlas-v1-{digest[:16]}"
+    hasher = DataVersionHasher(generated_at=generated_at)
+    for record in entry_records:
+        hasher.add_entry(record)
+    return hasher.finish(
+        article_fragments=(_fragment_bytes(row) for row in article_rows),
+        alias_fragments=(_fragment_bytes(row) for row in alias_rows),
+        deck_index=deck_index,
+    )
 
 
 def capacity_report(
@@ -1059,6 +1302,70 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
     }
 
 
+class StagedVersion:
+    """Hidden staging directory beside the version tree it will replace.
+
+    Every object is written here first; nothing under ``versions/<dataVersion>``
+    nor ``current.json`` is touched until :meth:`publish`. A failed export leaves
+    both byte-identical (also when it re-exports the currently referenced
+    dataVersion), and the staging tree is removed.
+    """
+
+    def __init__(self, base_root: Path, data_version: str) -> None:
+        self._base_root = base_root
+        self._version_root = base_root / "versions" / data_version
+        versions_dir = self._version_root.parent
+        versions_dir.mkdir(parents=True, exist_ok=True)
+        self._remove_stale(versions_dir)
+        self._token = f"{os.getpid()}-{uuid.uuid4().hex[:8]}"
+        self.root = versions_dir / f".export-{self._token}"
+        self.root.mkdir()
+
+    @staticmethod
+    def _remove_stale(versions_dir: Path) -> None:
+        """Drop staging trees left behind by exporters that were killed."""
+        for path in versions_dir.glob(".export-*"):
+            match = re.fullmatch(r"\.export-(\d+)-[0-9a-f]+", path.name)
+            if not match or not path.is_dir():
+                continue
+            try:
+                os.kill(int(match.group(1)), 0)
+            except ProcessLookupError:
+                shutil.rmtree(path, ignore_errors=True)
+            except PermissionError:
+                continue
+
+    def write(self, relative: str, data: bytes) -> None:
+        write_bytes(self.root / relative, data)
+
+    def discard(self) -> None:
+        shutil.rmtree(self.root, ignore_errors=True)
+
+    def publish(self, current_bytes: bytes) -> None:
+        """Swap the staged tree in, then publish ``current.json`` last (atomic replace)."""
+        backup: Path | None = None
+        swapped = False
+        current_path = self._base_root / "current.json"
+        pending_pointer = self._base_root / f".current-{self._token}.json"
+        try:
+            if self._version_root.exists():
+                backup = self._version_root.with_name(f".replaced-{self._token}")
+                os.rename(self._version_root, backup)
+            os.rename(self.root, self._version_root)
+            swapped = True
+            write_bytes(pending_pointer, current_bytes)
+            os.replace(pending_pointer, current_path)
+        except BaseException:
+            if swapped:
+                os.rename(self._version_root, self.root)
+            if backup is not None:
+                os.rename(backup, self._version_root)
+            pending_pointer.unlink(missing_ok=True)
+            raise
+        if backup is not None:
+            shutil.rmtree(backup, ignore_errors=True)
+
+
 def export_runtime_shards(
     *,
     db_path: Path,
@@ -1075,6 +1382,8 @@ def export_runtime_shards(
 ) -> dict[str, Any]:
     conn = open_readonly_db(db_path)
     try:
+        # One read snapshot for the whole export: the replay passes re-read rows.
+        conn.execute("BEGIN")
         counts = _site_build_entry_model_gates(conn)
         meta_rows = {
             row["key"]: json.loads(row["value_json"])
@@ -1087,22 +1396,35 @@ def export_runtime_shards(
             raise ExportError("manifest_metadata.generated_at is required")
 
         practice_levels = load_practice_levels_by_slug(deck_dir if include_decks else None)
-        entry_records = load_entry_records(conn, practice_levels_by_slug=practice_levels)
-        article_rows, alias_rows = load_search_rows(conn)
-        if len(entry_records) != counts["publicRoutes"]:
+        replay = EntryReplay(conn, practice_levels_by_slug=practice_levels)
+
+        # Pass 1: identity hash + compact partition metadata; no record is retained.
+        hasher = DataVersionHasher(generated_at=generated_at)
+        route_meta: list[tuple[bytes, str]] = []
+        article_kinds = 0
+        for record in replay.iter_records():
+            hasher.add_entry(record)
+            route_meta.append((slug_digest(record["slug"]), record["slug"]))
+            article_kinds += record["kind"] == "article"
+        if len(route_meta) != counts["publicRoutes"]:
             raise ExportError("entry record count drifted from public route count")
-        if sum(1 for r in entry_records if r["kind"] == "article") != counts["articles"]:
+        if article_kinds != counts["articles"]:
             raise ExportError("article kind count drifted from reviewed entry count")
+
+        article_index = SearchFamilyIndex.build(
+            _iter_article_search_rows(conn), sort_key=_article_sort_key, key_fn=_article_index_keys
+        )
+        alias_index = SearchFamilyIndex.build(
+            _iter_alias_search_rows(conn), sort_key=_alias_sort_key, key_fn=_alias_index_keys
+        )
 
         deck_index, deck_blobs = register_decks(
             deck_dir if include_decks else None,
             compression_level=compression_level,
         )
-        data_version = compute_data_version(
-            generated_at=generated_at,
-            entry_records=entry_records,
-            article_rows=article_rows,
-            alias_rows=alias_rows,
+        data_version = hasher.finish(
+            article_fragments=article_index.fragments,
+            alias_fragments=alias_index.fragments,
             deck_index=deck_index,
         )
         if expected_data_version is not None and expected_data_version != data_version:
@@ -1110,119 +1432,113 @@ def export_runtime_shards(
                 f"--data-version mismatch: expected {expected_data_version!r}, calculated {data_version!r}"
             )
 
-        entry_index, entry_blobs, entry_descriptors = build_entry_shards(
-            entry_records,
-            data_version=data_version,
-            max_gzip_bytes=entry_max_gzip_bytes,
-            compression_level=compression_level,
-        )
-        article_search_index, article_search_blobs = build_search_family_shards(
-            article_rows,
-            family="articles",
-            data_version=data_version,
-            max_gzip_bytes=search_max_gzip_bytes,
-            compression_level=compression_level,
-            key_fn=_article_index_keys,
-            row_id_fn=lambda row: str(row["s"]),
-            schema=SEARCH_ARTICLE_SCHEMA,
-        )
-        alias_search_index, alias_search_blobs = build_search_family_shards(
-            alias_rows,
-            family="aliases",
-            data_version=data_version,
-            max_gzip_bytes=search_max_gzip_bytes,
-            compression_level=compression_level,
-            key_fn=_alias_index_keys,
-            row_id_fn=lambda row: f"{row['a']}\0{row['s']}\0{row['k']}",
-            schema=SEARCH_ALIAS_SCHEMA,
-        )
-
-        # Size band check for non-root leaves on the current corpus.
-        leaf_sizes = [desc["bytes"] for desc in entry_descriptors.values()]
-        for desc in entry_descriptors.values():
-            if desc["bytes"] > entry_max_gzip_bytes:
-                raise ExportError(f"entry shard {desc['id']} exceeds max gzip bytes")
-
+        base_root = out_dir / base_path
         version_rel = f"versions/{data_version}"
-        version_root = out_dir / base_path / version_rel
-        if version_root.exists():
-            # Deterministic re-export into a clean version directory.
-            for path in sorted(version_root.rglob("*"), reverse=True):
-                if path.is_file():
-                    path.unlink()
-                elif path.is_dir():
-                    path.rmdir()
+        stage = StagedVersion(base_root, data_version)
+        try:
+            # Pass 2: replay each accepted leaf straight into the staging tree.
+            entry_index, entry_descriptors = build_entry_shards(
+                route_meta,
+                lambda slug: _fragment_bytes(replay.record_for_slug(slug)),
+                data_version=data_version,
+                max_gzip_bytes=entry_max_gzip_bytes,
+                compression_level=compression_level,
+                write_object=stage.write,
+            )
+            del route_meta
+            article_search_index, _ = build_search_family_shards(
+                article_index,
+                family="articles",
+                data_version=data_version,
+                max_gzip_bytes=search_max_gzip_bytes,
+                compression_level=compression_level,
+                schema=SEARCH_ARTICLE_SCHEMA,
+                write_object=stage.write,
+            )
+            alias_search_index, _ = build_search_family_shards(
+                alias_index,
+                family="aliases",
+                data_version=data_version,
+                max_gzip_bytes=search_max_gzip_bytes,
+                compression_level=compression_level,
+                schema=SEARCH_ALIAS_SCHEMA,
+                write_object=stage.write,
+            )
 
-        for shard_id, blob in entry_blobs.items():
-            write_bytes(version_root / f"entries/{shard_id}.json.gz", blob)
-        for shard_id, blob in article_search_blobs.items():
-            write_bytes(version_root / f"search/articles/{shard_id}.json.gz", blob)
-        for shard_id, blob in alias_search_blobs.items():
-            write_bytes(version_root / f"search/aliases/{shard_id}.json.gz", blob)
-        for key, blob in deck_blobs.items():
-            level, part = key.split("/", 1)
-            write_bytes(version_root / f"decks/{level}/{part}.json.gz", blob)
+            # Size band check for non-root leaves on the current corpus.
+            leaf_sizes = [desc["bytes"] for desc in entry_descriptors.values()]
+            for desc in entry_descriptors.values():
+                if desc["bytes"] > entry_max_gzip_bytes:
+                    raise ExportError(f"entry shard {desc['id']} exceeds max gzip bytes")
 
-        # Rewrite deck relative URLs already set; ensure practice-index naming in docs example
-        # uses practice-index.json.gz style via part name.
-        for level, info in (deck_index.get("levels") or {}).items():
-            for part, descriptor in (info.get("parts") or {}).items():
-                descriptor["url"] = f"decks/{level}/{part}.json.gz"
+            for key, blob in deck_blobs.items():
+                level, part = key.split("/", 1)
+                stage.write(f"decks/{level}/{part}.json.gz", blob)
 
-        manifest = {
-            "schema": MANIFEST_SCHEMA,
-            "schemaVersion": SCHEMA_VERSION,
-            "dataVersion": data_version,
-            "generatedAt": generated_at,
-            "normalization": {
-                "unicode": "NFC",
-                "stripCodepoints": ["U+0301"],
-                "localeLower": "uk-UA",
-                "trim": True,
-            },
-            "counts": {
-                **counts,
-                "searchArticles": len(article_rows),
-                "searchAliases": len(alias_rows),
-                "entryShards": len(entry_descriptors),
-                "searchArticleShards": len(article_search_index["shards"]),
-                "searchAliasShards": len(alias_search_index["shards"]),
-            },
-            "limits": {
-                "entryMaxGzipBytes": entry_max_gzip_bytes,
-                "entryTargetMinGzipBytes": entry_target_min_gzip_bytes,
-                "searchMaxGzipBytes": search_max_gzip_bytes,
-                "compressionLevel": compression_level,
-            },
-            "entries": entry_index,
-            "search": {
-                "articles": article_search_index,
-                "aliases": alias_search_index,
-            },
-            "decks": deck_index,
-        }
-        manifest_bytes = canonical_json_bytes(manifest)
-        write_bytes(version_root / "manifest.json", manifest_bytes)
+            # Rewrite deck relative URLs already set; ensure practice-index naming in docs example
+            # uses practice-index.json.gz style via part name.
+            for level, info in (deck_index.get("levels") or {}).items():
+                for part, descriptor in (info.get("parts") or {}).items():
+                    descriptor["url"] = f"decks/{level}/{part}.json.gz"
 
-        current = {
-            "schema": CURRENT_SCHEMA,
-            "schemaVersion": SCHEMA_VERSION,
-            "dataVersion": data_version,
-            "generatedAt": generated_at,
-            "manifestUrl": f"{version_rel}/manifest.json",
-        }
-        write_bytes(out_dir / base_path / "current.json", canonical_json_bytes(current))
+            manifest = {
+                "schema": MANIFEST_SCHEMA,
+                "schemaVersion": SCHEMA_VERSION,
+                "dataVersion": data_version,
+                "generatedAt": generated_at,
+                "normalization": {
+                    "unicode": "NFC",
+                    "stripCodepoints": ["U+0301"],
+                    "localeLower": "uk-UA",
+                    "trim": True,
+                },
+                "counts": {
+                    **counts,
+                    "searchArticles": len(article_index),
+                    "searchAliases": len(alias_index),
+                    "entryShards": len(entry_descriptors),
+                    "searchArticleShards": len(article_search_index["shards"]),
+                    "searchAliasShards": len(alias_search_index["shards"]),
+                },
+                "limits": {
+                    "entryMaxGzipBytes": entry_max_gzip_bytes,
+                    "entryTargetMinGzipBytes": entry_target_min_gzip_bytes,
+                    "searchMaxGzipBytes": search_max_gzip_bytes,
+                    "compressionLevel": compression_level,
+                },
+                "entries": entry_index,
+                "search": {
+                    "articles": article_search_index,
+                    "aliases": alias_search_index,
+                },
+                "decks": deck_index,
+            }
+            stage.write("manifest.json", canonical_json_bytes(manifest))
 
-        report = {
-            "dataVersion": data_version,
-            "generatedAt": generated_at,
-            "counts": manifest["counts"],
-            "entryShardBytes": sorted(leaf_sizes),
-            "entryShardIds": sorted(entry_descriptors),
-            "outDir": str(out_dir / base_path),
-        }
-        if verify:
-            report["verify"] = verify_tree(out_dir, base_path)
+            report: dict[str, Any] = {
+                "dataVersion": data_version,
+                "generatedAt": generated_at,
+                "counts": manifest["counts"],
+                "entryShardBytes": sorted(leaf_sizes),
+                "entryShardIds": sorted(entry_descriptors),
+                "outDir": str(base_root),
+            }
+            if verify:
+                # Verified before publishing: a bad tree never becomes current.
+                report["verify"] = verify_tree(
+                    out_dir, base_path, manifest_path=stage.root / "manifest.json"
+                )
+
+            current = {
+                "schema": CURRENT_SCHEMA,
+                "schemaVersion": SCHEMA_VERSION,
+                "dataVersion": data_version,
+                "generatedAt": generated_at,
+                "manifestUrl": f"{version_rel}/manifest.json",
+            }
+            stage.publish(canonical_json_bytes(current))
+        finally:
+            stage.discard()
         return report
     finally:
         conn.close()
