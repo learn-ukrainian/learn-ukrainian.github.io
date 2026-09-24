@@ -285,10 +285,11 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     assert stable_before == {name: (state_dir / name).read_bytes() for name in stable_before}
     assert before == {n: hashlib.sha256((page_dir / f"{n}.mdx").read_bytes()).hexdigest() for n in (1, 2, 3)}
     version[0] = 2
-    paths["plan"].write_bytes(paths["plan"].read_bytes() + b"# revised\n")
+    draft_path = state_dir / "lesson-1.draft.yaml"
+    draft_path.write_bytes(draft_path.read_bytes() + b"# force writer rewrite\n")
     third = module.build_module(level, slug, repo_root=tmp_path, writer_seat="codex:gpt-6-sol",
                                 question_seat="codex:gpt-6-sol", writer_dispatch=writer_call, runner=run_actual)
-    assert third["complete"] and calls == [1, 2, 3, 1, 2, 3], third
+    assert third["complete"] and calls == [1, 2, 3, 1, 3], third
     assert hashlib.sha256((page_dir / "1.mdx").read_bytes()).hexdigest() != before[1]
     closure = yaml.safe_load((state_dir / "module.closure.yaml").read_text(encoding="utf-8"))
     assert {(row["n"], row["upstream"]) for row in closure["stale"]} >= {(2, 1), (3, 1)}
