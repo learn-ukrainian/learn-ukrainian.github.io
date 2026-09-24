@@ -184,6 +184,71 @@ def test_task_detail_truncates_large_result(tmp_path, monkeypatch):
     assert len(data["result"].encode("utf-8")) <= delegate_router.RESULT_BYTES_LIMIT
 
 
+def test_task_detail_falls_back_to_archived_record_and_result(tmp_path, monkeypatch):
+    """#8625: an archived record keeps its hot-directory result_file path."""
+    tasks_dir = tmp_path / "tasks"
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+    archive = tasks_dir / delegate_router.TASK_ARCHIVE_DIR_NAME
+    _write_task(
+        archive / "old.json",
+        _task_payload("old", result_file=str(tasks_dir / "old.result"), status="done"),
+    )
+    (archive / "old.result").write_text("archived reply", encoding="utf-8")
+
+    response = client.get("/api/delegate/tasks/old")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["task"]["task_id"] == "old"
+    assert data["result"] == "archived reply"
+
+
+def test_task_listing_keeps_archived_history_and_active_views_stay_hot(tmp_path, monkeypatch):
+    """#8625: status=all and terminal filters read archive/; active queries read the hot directory only."""
+    tasks_dir = tmp_path / "tasks"
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+    _write_task(tasks_dir / "hot-done.json", _task_payload("hot-done"))
+    _write_task(tasks_dir / "hot-failed.json", _task_payload("hot-failed", status="failed"))
+    _write_task(tasks_dir / "archive" / "old-done.json", _task_payload("old-done"))
+    # Never produced by archive; proves active queries do not look there.
+    _write_task(tasks_dir / "archive" / "parked.json", _task_payload("parked", status="needs_finalize"))
+
+    assert client.get("/api/delegate/tasks?status=all").json()["total"] == 4
+    done = client.get("/api/delegate/tasks?status=done").json()
+    assert sorted(row["task_id"] for row in done["tasks"]) == ["hot-done", "old-done"]
+    assert client.get("/api/delegate/tasks?status=needs_finalize").json()["total"] == 0
+    assert client.get("/api/delegate/active").json()["total"] == 0
+
+
+def test_task_cache_drops_records_that_left_the_hot_directory(tmp_path, monkeypatch):
+    """#8625: archived records leave the in-memory and SQLite task cache."""
+    tasks_dir = tmp_path / "tasks"
+    _pin_tasks_dir(monkeypatch, tasks_dir)
+    _write_task(tasks_dir / "keep.json", _task_payload("keep"))
+    _write_task(tasks_dir / "gone.json", _task_payload("gone"))
+    assert client.get("/api/delegate/tasks?status=all").json()["total"] == 2
+    gone_path = str(tasks_dir / "gone.json")
+    assert gone_path in delegate_router._TASK_STATE_CACHE
+
+    (tasks_dir / "archive").mkdir()
+    (tasks_dir / "gone.json").rename(tasks_dir / "archive" / "gone.json")
+    archived_path = str(tasks_dir / "archive" / "gone.json")
+
+    # The archived record keeps counting under its new path; the hot path leaves the cache.
+    assert client.get("/api/delegate/tasks?status=all").json()["total"] == 2
+    assert gone_path not in delegate_router._TASK_STATE_CACHE
+    assert archived_path in delegate_router._TASK_STATE_CACHE
+    cached = delegate_router._load_task_cache_from_db(str(tasks_dir))
+    assert gone_path not in cached
+    assert {str(tasks_dir / "keep.json"), archived_path} <= set(cached)
+    # A hot-only (active) scan never evicts the archive entries it did not read.
+    client.get("/api/delegate/active")
+    assert archived_path in delegate_router._TASK_STATE_CACHE
+    (tasks_dir / "archive" / "gone.json").unlink()
+    assert client.get("/api/delegate/tasks?status=all").json()["total"] == 1
+    assert archived_path not in delegate_router._TASK_STATE_CACHE
+
+
 def test_task_detail_rejects_result_outside_tasks_dir(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
     _pin_tasks_dir(monkeypatch, tasks_dir)

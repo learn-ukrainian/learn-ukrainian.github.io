@@ -771,6 +771,40 @@ opt-in for hermetic tests; launchers should enable the env.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
+**Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
+`batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
+
+- `settle-stale` settles `needs_finalize` records older than 7 days once their worktree,
+  local branch, remote branch **and work** are gone. The work counts as gone only when the
+  record names a commit (`auto_finalize.commit_sha`) that no ref holds under any name, or
+  when the task exited clean with no commits. Each run (dry runs too) first does one
+  `git fetch --no-tags --prune origin` per repository, so remote branches are current; if
+  that fetch fails, no record of that repository is settled (class D, `fetch_failed`). Settled records become `done`,
+  `no_deliverable` or `failed` and carry a `settled_by` receipt. `done` needs a merged PR
+  that carries a recorded commit. A PR that only reuses the branch name leaves the record
+  in class D. Classes A, B and D are reported and never changed. They cover a branch or
+  commit still on origin, a local branch or ref still holding the work (even renamed), a
+  dirty worktree, and commits with no recorded commit id.
+- `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`
+  sidecars, into `batch_state/tasks/archive/`. A record stays hot while its checkout path or
+  an `acp_runtime_paths` entry still exists. Each move holds the record's lock, and it
+  re-checks the record's mtime and status first.
+- `restore` moves an archived record back. No move ever replaces a file: if a writer
+  created the hot record (or a sidecar) first, the writer's file stays and the archived
+  copy is kept and reported.
+
+Readers follow `scripts/orchestration/task_record_store.py`. Active views and the claim scan
+read the hot directory only. Lookups by task id fall back to the archive: `delegate.py
+status`/`wait` (whose `result_file` names the moved sidecar), the task-id reuse guard,
+`GET /api/delegate/tasks/{id}`, `record_cf_verdict` (review and author records) and
+`orchestrator_control` run history. Historical readers use
+`iter_task_records(include_archive=True)`. These are the Monitor `status=all`/terminal listings
+(and the Work projection built on them), bottleneck metrics, the driver-breadth report,
+`delegate.py backfill-repository` and the rate-limit reclassifier. Two views state that their
+history is bounded. `delegate.py list` reads the hot directory, notes on stderr how many
+archived records it left out, and lists them with `--all`. `orchestrator_control inbox
+--recent` reads the hot directory and reports `history_scope: "hot"`.
+
 #### Project Research Registry — orchestrator dispatch duty
 
 Before every dispatch, the orchestrator classifies the task by functional role,

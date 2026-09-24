@@ -34,6 +34,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.git_context import sanitized_git_env
+from scripts.orchestration.task_record_store import task_record_path
 from scripts.path_safety import assert_delete_target
 
 # Lock files live in ``<git common dir>/<LOCK_DIR_NAME>`` so every checkout of
@@ -359,12 +360,6 @@ def repository_lock_dir(repo_root: Path) -> Path:
     if not common_dir:
         raise WorktreeLockError(f"git common dir of {repo_root} unresolvable")
     return Path(common_dir) / LOCK_DIR_NAME
-
-
-def task_record_path(tasks_dir: Path, task_id: str) -> Path:
-    """Return the task record path dispatch writes for ``task_id``."""
-    safe = task_id.replace("/", "_").replace("\\", "_")
-    return tasks_dir / f"{safe}.json"
 
 
 def checked_out_branch(worktree: Path) -> str | None:

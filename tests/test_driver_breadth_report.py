@@ -412,3 +412,20 @@ def test_breadth_report_embeds_admission_wip(tmp_path: Path, capsys) -> None:
     assert admission["queue_ready"] is True
     assert "authoring_wip_cap" in admission["reason_codes"]
     assert admission["wip"]["authoring"]["reason_code"] == "authoring_wip_cap"
+
+
+def test_load_tasks_reads_archived_records(tmp_path: Path) -> None:
+    """#8625: a lookback longer than the archive age still sees archived records."""
+    tasks_dir = tmp_path / "tasks"
+    (tasks_dir / "archive").mkdir(parents=True)
+    _task(tasks_dir / "hot.json", task_id="hot", agent="codex", model="gpt-5.5", initiator="grok", hours_ago=2)
+    _task(
+        tasks_dir / "archive" / "old.json",
+        task_id="old",
+        agent="claude",
+        model="opus",
+        initiator="grok",
+        hours_ago=20 * 24,
+    )
+    tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(UTC) - timedelta(days=30))
+    assert sorted(task["task_id"] for task in tasks) == ["hot", "old"]

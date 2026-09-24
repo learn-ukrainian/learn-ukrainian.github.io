@@ -277,6 +277,29 @@ def test_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
 
 
+def test_archived_review_task_and_reply_are_loadable(tmp_path):
+    """#8625: a review archived before its verdict was recorded can still be published."""
+    tasks = tmp_path / "tasks"
+    write_task(tasks / "archive", task_id="review-old", reply="VERDICT: APPROVE")
+    loaded, reply = recorder._task("review-old", tasks)
+    assert (loaded["status"], reply) == ("done", "VERDICT: APPROVE")
+    # The hot record wins when both exist.
+    write_task(tasks, task_id="review-old", reply="VERDICT: REQUEST_CHANGES")
+    assert recorder._task("review-old", tasks)[1] == "VERDICT: REQUEST_CHANGES"
+
+
+def test_archived_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
+    """#8625: an old author task moved into tasks/archive/ still proves its family."""
+    tasks = tmp_path / "tasks"
+    write_task(tasks / "archive", task_id="author-task", model="gpt-6-sol", agent="agy")
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: agy/author-task"}}],
+    )
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
+
+
 @pytest.mark.parametrize("trailer", ["codex/../../package", "kimi/../invalid"])
 def test_invalid_author_model_is_rejected_before_task_file_read(monkeypatch, tmp_path, trailer):
     tasks = tmp_path / "tasks"
