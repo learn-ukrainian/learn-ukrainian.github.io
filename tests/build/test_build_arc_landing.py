@@ -309,3 +309,8 @@ def test_legacy_landing_generators_skip_arc_levels(tmp_path: Path, monkeypatch: 
     build_landing_pages.main()
     assert not (tmp_path / "a1" / "index.mdx").exists()
     assert (tmp_path / "a2" / "index.mdx").exists(), "other levels are still generated"
+
+
+def test_built_state_label_is_the_accurate_ukrainian_phrase() -> None:
+    chrome = (REPO_ROOT / "site/src/lib/i18n/chrome.ts").read_text(encoding="utf-8")
+    assert "'arc.state.built': 'уроки підготовлено'," in chrome

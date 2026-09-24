@@ -117,12 +117,15 @@ def _arc_generated_files(level: str) -> dict[Path, str]:
     generator = _arc_generator()
     return generator.generated_files(generator.Roots(PROJECT_ROOT, level), generator.load_arc(level))
 
-def has_arc_kind(mdx_path: Path) -> bool:
-    """True when the file's frontmatter claims to be an arc page (``arc_kind: landing|module``)."""
-    try:
-        text = mdx_path.read_text(encoding="utf-8")
-    except OSError:
+def has_arc_kind(mdx_path: Path, staged: bool = False) -> bool:
+    """True when the file's frontmatter claims to be an arc page (``arc_kind: landing|module``).
+
+    Reads through ``_page_bytes``, so with ``staged`` the claim comes from the staged blob.
+    """
+    raw = _page_bytes(mdx_path, staged)
+    if raw is None:
         return False
+    text = raw.decode("utf-8", errors="replace")
     if not text.startswith("---\n"):
         return False
     frontmatter = text.split("\n---\n", 1)[0]
@@ -246,7 +249,7 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
         if len(parts) < 2:
             continue
 
-        if is_generator_owned_path(mdx_path) or has_arc_kind(mdx_path):
+        if is_generator_owned_path(mdx_path) or has_arc_kind(mdx_path, staged=cached):
             if not is_arc_generated(mdx_path, staged=cached):
                 violations.append(
                     (

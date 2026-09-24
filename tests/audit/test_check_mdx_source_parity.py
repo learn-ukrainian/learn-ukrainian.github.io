@@ -108,6 +108,24 @@ def test_check_parity_staged_bytes_decide_not_the_working_tree(mock_legacy_level
     assert check_parity([page], {page}, cached=True) == []
 
 
+def test_check_parity_staged_arc_kind_outside_ownership_is_read_from_the_blob(
+    mock_legacy_levels, mock_subprocess, arc_docs, monkeypatch
+):
+    monkeypatch.setattr("scripts.audit.check_mdx_source_parity.PROJECT_ROOT", arc_docs)
+    other = arc_docs / "b1" / "index.mdx"
+    other.parent.mkdir()
+    other.write_text('---\ntitle: "B1"\n---\n', encoding="utf-8")  # unstaged copy dropped arc_kind
+
+    def fake_git(cmd, **kwargs):
+        if cmd[:2] == ["git", "show"]:
+            return LANDING_TEXT.encode("utf-8")  # the staged blob still claims arc_kind
+        return "1 file changed\n"
+
+    mock_subprocess.side_effect = fake_git
+    violations = check_parity([other], {other}, cached=True)
+    assert len(violations) == 1 and "arc page" in violations[0][1]
+
+
 def test_check_parity_rejects_arc_kind_on_a_lesson_file(mock_legacy_levels, mock_subprocess, arc_docs):
     lesson = arc_docs / "a1" / "alpha" / "1.mdx"
     lesson.write_text(MODULE_TEXT, encoding="utf-8")
