@@ -428,11 +428,24 @@ any `decision*.yaml`/`.yml`, are protected: never deleted, never listed as resid
 
 Liveness is no longer `pgrep -f` alone. The sweep also walks `/proc` and treats a
 path as in use when any process has it (or a descendant) as its working directory,
-holds it open, or carries it in its environment or command line. An unreadable
-same-uid process preserves the path (unknown is live). Two accepted limits: other
-users' processes only expose their command line, and non-dumpable same-uid
-credential daemons (`systemd --user`, `(sd-pam)`, `ssh-agent`, `sshd-session`) are
-probed by command line only.
+holds it open, or carries it in its environment or command line. The guarantee is
+**fail closed**: an entry is deleted only when every same-uid process was fully
+probed and none referenced it. Any same-uid process that refuses inspection of its
+cwd, environment or descriptor table, for any reason including `EACCES`/`EPERM`
+from a non-dumpable process, makes the verdict unknown, and unknown preserves the
+entry (`skipped` reason `liveness_unknown`, distinct from `live_process`). One
+accepted limit: other users' processes only expose their command line; the sweep
+only deletes entries the current uid owns.
+
+Consequence on a typical host: `systemd --user`, `(sd-pam)`, `ssh-agent` and
+`sshd-session` run as the same uid and are non-dumpable, so the legacy auto-sweep
+reports every deletable candidate as `liveness_unknown` and deletes nothing
+(verified on the primary host on 2026-09-24: `path_liveness` on a fresh,
+unreferenced path returned `unknown`). That is intended: the legacy allowlist is a
+best-effort drain, and the reliable path for large residue is the managed
+`task-scratch` lifecycle below, whose recovery proves ownership from recorded
+metadata instead of guessing from `/proc`. Drain legacy names by hand after
+confirming with `lsof`/`fuser` that nothing holds them.
 
 The managed `task-scratch` namespace, every scratch root (`/var/tmp/lu`, the
 `<tmp>/lu-scratch` fallback, `$LU_RUNTIME_TMP_BASE_ROOT`) and their ancestors are
@@ -443,22 +456,32 @@ excluded from the scan even when a basename matches a pattern.
 Large one-off outputs (synthetic Atlas DBs, runtime-shard exports, delegated QA
 scratch) must not be written to hand-named `/tmp` paths: nothing ties such files to
 the process that made them, so the sweep can neither prove them abandoned nor drain
-them. Run the producer through the wrapper instead:
+them. Run the producer through the wrapper instead. The command below is copyable
+from any dispatch worktree: a worktree has no `.venv`, no `data/atlas.db` (sparse
+checkout) and none of the generated `site/public/lexicon` decks the exporter
+registers, so every one of those comes from the primary checkout via
+`PRIMARY_REPO`, which is **exported** so the `bash -euc` child shell sees it:
 
 ```bash
-.venv/bin/python scripts/tools/task_scratch.py run --task-id atlas-8307-410k \
+export PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py run --task-id atlas-8307-410k \
     --evidence-dir batch_state/tmp/atlas-8307-410k-evidence -- \
     bash -euc '
-      .venv/bin/python -m scripts.benchmarks.generate_synthetic_atlas \
-          --source-db data/atlas.db --out "$LU_TASK_SCRATCH_DIR/atlas.db" \
+      "$PRIMARY_REPO/.venv/bin/python" -m scripts.benchmarks.generate_synthetic_atlas \
+          --source-db "$PRIMARY_REPO/data/atlas.db" --out "$LU_TASK_SCRATCH_DIR/atlas.db" \
           --seed 8307 --target 410000
-      .venv/bin/python -m scripts.atlas.export_runtime_shards \
+      "$PRIMARY_REPO/.venv/bin/python" -m scripts.atlas.export_runtime_shards \
           --db "$LU_TASK_SCRATCH_DIR/atlas.db" \
-          --out-dir "$LU_TASK_SCRATCH_DIR/export" --verify
+          --out-dir "$LU_TASK_SCRATCH_DIR/export" \
+          --deck-dir "$PRIMARY_REPO/site/public/lexicon" --verify
       mkdir -p "$LU_TASK_SCRATCH_DIR/evidence"
       cp "$LU_TASK_SCRATCH_DIR/export/atlas/current.json" "$LU_TASK_SCRATCH_DIR/evidence/"
     '
 ```
+
+Rehearse with `--target 50` and an isolated `--scratch-root` before a 410k run; the
+rehearsal on 2026-09-24 from a dispatch worktree took about ten seconds, exited 0,
+exported one evidence file and left the scratch root empty.
 
 What the wrapper guarantees:
 
@@ -467,8 +490,8 @@ What the wrapper guarantees:
   runs of the same task never collide;
 - `TMPDIR`, `TMP`, `TEMP` and `$LU_TASK_SCRATCH_DIR` all point at the payload
   directory. The `bash -euc '...'` form above is the documented way to chain the two
-  Atlas steps in one run; the child shell expands `$LU_TASK_SCRATCH_DIR`, so keep the
-  script single-quoted;
+  Atlas steps in one run; the child shell expands `$LU_TASK_SCRATCH_DIR` and
+  `$PRIMARY_REPO`, so keep the script single-quoted and export `PRIMARY_REPO`;
 - the child starts in its own session behind a launch gate: the wrapper records the
   child's pid, process group and `/proc` start time in `lease.json` *before* the
   payload may run. A wrapper killed before that release leaves a child that exits
@@ -492,10 +515,10 @@ entirely; migrate each producer by pointing its output flags at
 
 ```bash
 # inventory: every lease with the guard that preserves it (mutation-free)
-.venv/bin/python scripts/tools/task_scratch.py recover
+"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover
 
 # reclaim proven orphans (what the scheduled runner does)
-.venv/bin/python scripts/tools/task_scratch.py recover --apply
+"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover --apply
 ```
 
 `scheduled_worktree_cleanup.py` runs the same recovery after the `/tmp` leak sweep.
@@ -513,9 +536,25 @@ A lease is reclaimed only when **all** of the following hold:
 5. the newest modification anywhere in the lease is at least 2 h old, or 30 min when
    the scratch volume has under 15 GiB free. Pressure shortens the age gate only.
 
-Recovery never signals a process. Deletion is fd-relative with `O_NOFOLLOW`, refuses to
-cross a mount point (device change or `/proc/self/mountinfo` entry below the lease),
-and re-checks the directory identity right before it starts. Symlinks inside a lease
-are unlinked, never followed. Anything malformed, foreign, symlinked, in use or unknown
-stays and is counted under `preserved_by_reason` in the receipt; receipts carry
-counts and bytes only, never paths.
+Recovery never signals a process. Deletion (both the owning wrapper's and recovery's)
+is fd-relative with `O_NOFOLLOW` and proves containment on every destructive step:
+
+- before anything is unlinked, a non-destructive pass over the lease re-proves every
+  directory's identity (device/inode), device, and **mount id** on the descriptor it
+  just opened. The mount id comes from `/proc/self/fdinfo/<fd>`, so a bind mount of
+  the same filesystem (same `st_dev`) is refused even when it was placed after the
+  path-based `/proc/self/mountinfo` scan; a pre-existing mount therefore refuses with
+  nothing deleted and the lease metadata intact;
+- the same identity/device/mount-id proof repeats on every directory descent during
+  deletion, and every `rmdir` re-identifies its target with the emptied directory
+  still held open. Linux has no fd-based `rmdir`, so after the call the held
+  descriptor's link count is checked: a swap inside that last window removes only an
+  *empty* directory and is reported as a containment error, never counted as clean;
+- unavailable mount information (`/proc/self/mountinfo` or the per-fd mount id) is a
+  refusal, not a pass. On a host without those (`/proc`-less, e.g. macOS) the wrapper
+  preserves the lease with `mount information unavailable` and recovery reports
+  `mount_info_unavailable`; such leases are cleaned by hand.
+
+Symlinks inside a lease are unlinked, never followed, and a device change is refused.
+Anything malformed, foreign, symlinked, in use or unknown stays and is counted under
+`preserved_by_reason` in the receipt; receipts carry counts and bytes only, never paths.

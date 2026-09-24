@@ -69,6 +69,7 @@ def test_discover_skips_young_and_unrelated(tmp_path: Path) -> None:
 
 
 def test_dry_run_does_not_delete(tmp_path: Path, monkeypatch) -> None:
+    _clear_proc_probe(monkeypatch)
     target = tmp_path / "pr6568"
     _touch_old(target, age_s=10_000)
     real_run = tls.subprocess.run
@@ -93,6 +94,7 @@ def test_dry_run_does_not_delete(tmp_path: Path, monkeypatch) -> None:
 
 
 def test_apply_reaps_old_candidate(tmp_path: Path, monkeypatch) -> None:
+    _clear_proc_probe(monkeypatch)
     target = tmp_path / "review-2002"
     _touch_old(target, age_s=10_000)
     real_run = tls.subprocess.run
@@ -116,6 +118,7 @@ def test_apply_reaps_old_candidate(tmp_path: Path, monkeypatch) -> None:
 
 
 def test_path_has_live_process_matching_and_nonmatching(tmp_path: Path, monkeypatch) -> None:
+    _clear_proc_probe(monkeypatch)
     target = tmp_path / "review-process-check"
 
     # returncode == 0 means matching process found -> True
@@ -216,6 +219,7 @@ def test_live_process_skipped_on_pgrep_timeout_fail_closed(tmp_path: Path, monke
 
 
 def test_recheck_liveness_immediately_before_deletion(tmp_path: Path, monkeypatch) -> None:
+    _clear_proc_probe(monkeypatch)
     target = tmp_path / "review-3005"
     _touch_old(target, age_s=10_000)
 
@@ -276,6 +280,15 @@ def _quiet_pgrep(monkeypatch) -> None:
     monkeypatch.setattr(tls.subprocess, "run", fake_run)
 
 
+def _clear_proc_probe(monkeypatch) -> None:
+    """Sweep-logic tests assert on deletion policy, not on this host's ``/proc``.
+
+    A real host usually has a non-dumpable same-uid daemon (``systemd --user``,
+    ``ssh-agent``), which the fail-closed probe rightly reports as unknown.
+    """
+    monkeypatch.setattr(tls, "proc_references", lambda _p: False)
+
+
 def test_classify_candidate_name_orders_protected_exact_inventory_pattern() -> None:
     for name in sorted(tls.LEGACY_EXACT_ALLOWLIST):
         assert tls.classify_candidate_name(name) == tls.CANDIDATE_KIND_LEGACY_EXACT
@@ -300,6 +313,7 @@ def test_classify_candidate_name_orders_protected_exact_inventory_pattern() -> N
 
 def test_legacy_exact_names_drain_but_other_atlas_qa_residue_is_inventory_only(tmp_path: Path, monkeypatch) -> None:
     _quiet_pgrep(monkeypatch)
+    _clear_proc_probe(monkeypatch)
     exact_db = tmp_path / "atlas-8307-410k-final.db"
     exact_json = tmp_path / "atlas-8307-synthetic-410k.json"
     exact_qa = tmp_path / "qa-8686-ui-r2"
@@ -333,6 +347,7 @@ def test_legacy_exact_names_drain_but_other_atlas_qa_residue_is_inventory_only(t
 
 def test_managed_namespace_and_scratch_roots_are_never_candidates(tmp_path: Path, monkeypatch) -> None:
     _quiet_pgrep(monkeypatch)
+    _clear_proc_probe(monkeypatch)
     scratch_root = tmp_path / "scratch"
     scratch_root.mkdir()
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch_root))
@@ -422,8 +437,88 @@ def test_proc_probe_unknown_when_same_uid_process_unreadable(tmp_path: Path, mon
             raise PermissionError(13, "permission denied")
         return real_read_bytes(self)
 
+    # EACCES/EPERM on a same-uid process is not "no reference": the process
+    # may hold the path open, so the verdict is unknown (fail closed, #8738).
     monkeypatch.setattr(Path, "read_bytes", opaque_read_bytes)
-    assert tls.proc_references(target, proc_root=proc_root) is False
+    assert tls.proc_references(target, proc_root=proc_root) is None
+
+
+@pytest.mark.parametrize("errno_value", [13, 1])
+def test_proc_probe_unknown_when_same_uid_cwd_or_fd_table_denied(tmp_path: Path, monkeypatch, errno_value: int) -> None:
+    target = tmp_path / "atlas-8307-410k-final.db"
+    target.write_text("x")
+    proc_root = _fake_proc(tmp_path, 4011, cmdline=b"sleep\0")
+    real_readlink = os.readlink
+
+    def denied_cwd(path, *args, **kwargs):
+        if str(path).endswith("/cwd"):
+            raise PermissionError(errno_value, "denied")
+        return real_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(tls.os, "readlink", denied_cwd)
+    assert tls.proc_references(target, proc_root=proc_root) is None
+    monkeypatch.undo()
+
+    proc_root = _fake_proc(tmp_path / "fd-denied", 4012, cmdline=b"sleep\0")
+    real_iterdir = Path.iterdir
+
+    def denied_fd_table(self):
+        if self.name == "fd":
+            raise PermissionError(errno_value, "denied")
+        return real_iterdir(self)
+
+    monkeypatch.setattr(Path, "iterdir", denied_fd_table)
+    assert tls.proc_references(target, proc_root=proc_root) is None
+
+
+def test_proc_probe_unknown_when_a_descriptor_link_is_denied(tmp_path: Path, monkeypatch) -> None:
+    target = tmp_path / "qa-8686-ui-r2"
+    target.mkdir()
+    proc_root = _fake_proc(tmp_path, 4013, cmdline=b"sleep\0", fd=tmp_path / "elsewhere")
+    real_readlink = os.readlink
+
+    def denied_fd(path, *args, **kwargs):
+        if "/fd/" in str(path):
+            raise PermissionError(13, "denied")
+        return real_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(tls.os, "readlink", denied_fd)
+    assert tls.proc_references(target, proc_root=proc_root) is None
+
+
+def test_foreign_uid_process_is_probed_by_cmdline_only(tmp_path: Path, monkeypatch) -> None:
+    target = tmp_path / "qa-8686-ui-r2"
+    target.mkdir()
+    proc_root = _fake_proc(tmp_path, 4014, cmdline=b"sleep\0", cwd=target)
+    real_stat = Path.stat
+
+    def foreign_stat(self, *args, **kwargs):
+        st = real_stat(self, *args, **kwargs)
+        if self.parent == proc_root and self.name == "4014":
+            values = list(st)
+            values[4] = st.st_uid + 1
+            return os.stat_result(values)
+        return st
+
+    monkeypatch.setattr(Path, "stat", foreign_stat)
+    assert tls.proc_references(target, proc_root=proc_root) is False  # documented limit: cmdline only
+    proc_root = _fake_proc(tmp_path / "cmd", 4014, cmdline=b"sleep\0" + str(target).encode() + b"\0")
+    assert tls.proc_references(target, proc_root=proc_root) is True
+
+
+def test_unknown_liveness_is_reported_distinctly_and_preserves(tmp_path: Path, monkeypatch) -> None:
+    _quiet_pgrep(monkeypatch)
+    target = tmp_path / "atlas-8307-410k-r2.db"
+    _touch_old(target, age_s=10_000, as_file=True)
+    monkeypatch.setattr(tls, "proc_references", lambda _p: None)
+    monkeypatch.setattr(tls, "_PROC_ROOT", tmp_path / "proc-present")
+    (tmp_path / "proc-present").mkdir()
+    assert tls.path_liveness(target) == tls.LIVENESS_UNKNOWN
+    report = tls.sweep_tmp_leaks(apply=True, tmp_roots=[tmp_path], now=time.time(), min_age_s=3600, min_free_gb=0.0)
+    assert report["roots_reaped"] == 0
+    assert report["skipped_live"] == 1
+    assert report["skipped"] == [{"path": str(target), "reason": "liveness_unknown"}]
+    assert target.exists()
 
 
 def test_path_has_live_process_preserves_on_unknown_proc_verdict(tmp_path: Path, monkeypatch) -> None:

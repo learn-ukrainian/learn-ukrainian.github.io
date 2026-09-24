@@ -6,8 +6,9 @@ Agents and one-shot review flows leave multi-GB directories such as
 ``sweep_review_temp_orphans`` only reaps ``lu-review-*`` / shielded-reviews
 manifests, so these names never drain without manual intervention.
 
-This module is age-gated, name-pattern scoped, and fail-open on live
-processes.  It is not a blanket ``rm -rf /tmp/*``.
+This module is age-gated, name-pattern scoped, and fails closed on liveness:
+a path is deleted only when every probe proves it unreferenced, and an
+unknown answer preserves it.  It is not a blanket ``rm -rf /tmp/*``.
 
 Atlas/QA legacy residue (#8738): only the exact large names left by the
 #8307 Atlas 410k run and the #8686 QA scratch directories are auto-deleted
@@ -21,7 +22,6 @@ those leases are reclaimed only by :mod:`scripts.common.task_scratch`.
 from __future__ import annotations
 
 import argparse
-import errno
 import os
 import re
 import shutil
@@ -234,16 +234,17 @@ def proc_references(path: Path, *, proc_root: Path = _PROC_ROOT) -> bool | None:
 
     Checks each process's command line, and — for processes of the same uid —
     its working directory, open file descriptors and environment. Returns
-    ``True`` when any reference is found, ``False`` when every process was
-    probed without finding one, and ``None`` when the answer is unknown
-    (``/proc`` absent, or a same-uid process failed inspection for a reason
-    other than access denial).
+    ``True`` when any reference is found, ``False`` only when every same-uid
+    process was fully probed without finding one, and ``None`` when the
+    answer is unknown: ``/proc`` absent, or any same-uid process refused
+    inspection of its cwd, environment or descriptor table for any reason,
+    including ``EACCES``/``EPERM`` from a non-dumpable process. Unknown is
+    never treated as "no reference": such a process may hold the path open.
 
-    Two documented limits: foreign-uid processes only expose their command
-    line, and same-uid processes that are non-dumpable (``systemd --user``,
-    ``ssh-agent``, ``sshd-session``, ``(sd-pam)``: credential holders that
-    refuse ``/proc`` inspection with EACCES) are probed by command line only.
-    Neither category is where multi-gigabyte Atlas/QA scratch is held open.
+    One documented limit remains: foreign-uid processes only expose their
+    command line, so a path held open by another user is invisible here (the
+    sweep only deletes entries owned by the current uid, which is why that
+    limit is accepted).
     """
     if not proc_root.is_dir():
         return None
@@ -252,7 +253,6 @@ def proc_references(path: Path, *, proc_root: Path = _PROC_ROOT) -> bool | None:
     my_uid = os.geteuid()
     my_pid = os.getpid()
     unknown = False
-    opaque_errnos = {errno.EACCES, errno.EPERM}
     try:
         entries = list(proc_root.iterdir())
     except OSError:
@@ -282,9 +282,7 @@ def proc_references(path: Path, *, proc_root: Path = _PROC_ROOT) -> bool | None:
                 return True
         except FileNotFoundError:
             continue
-        except OSError as exc:
-            if exc.errno in opaque_errnos:
-                continue  # non-dumpable same-uid process: cmdline was the only probe
+        except OSError:
             unknown = True
         try:
             environ = (entry / "environ").read_bytes()
@@ -292,41 +290,53 @@ def proc_references(path: Path, *, proc_root: Path = _PROC_ROOT) -> bool | None:
                 return True
         except FileNotFoundError:
             continue
-        except OSError as exc:
-            if exc.errno not in opaque_errnos:
-                unknown = True
+        except OSError:
+            unknown = True
         try:
             fd_names = list((entry / "fd").iterdir())
         except FileNotFoundError:
             continue
-        except OSError as exc:
-            if exc.errno not in opaque_errnos:
-                unknown = True
+        except OSError:
+            unknown = True
             fd_names = []
         for fd_entry in fd_names:
             try:
                 target = os.readlink(fd_entry)
+            except FileNotFoundError:
+                continue
             except OSError:
+                unknown = True
                 continue
             if target == needle or target.startswith(prefix):
                 return True
     return None if unknown else False
 
 
-def path_has_live_process(path: Path) -> bool:
-    """Return True unless every available probe proves ``path`` unreferenced.
+LIVENESS_LIVE = "live"
+LIVENESS_UNKNOWN = "unknown"
+LIVENESS_CLEAR = "clear"
+
+
+def path_liveness(path: Path) -> str:
+    """Classify ``path`` as ``live``, ``unknown`` or ``clear``.
 
     Combines ``pgrep -f`` (command lines of every user) with the ``/proc``
-    probe (cwd, open files and environment of same-uid processes). An unknown
-    ``/proc`` answer preserves the path; a host without ``/proc`` falls back to
-    the ``pgrep`` verdict alone.
+    probe (cwd, open files and environment of same-uid processes). Only
+    ``clear`` permits deletion: an unknown ``/proc`` answer on a ``/proc``
+    host is reported as ``unknown`` and preserves the path; a host without
+    ``/proc`` falls back to the ``pgrep`` verdict alone.
     """
     if _pgrep_references(path):
-        return True
+        return LIVENESS_LIVE
     verdict = proc_references(path)
     if verdict is None:
-        return _PROC_ROOT.is_dir()  # unknown on a /proc host preserves; no /proc -> pgrep verdict
-    return verdict
+        return LIVENESS_UNKNOWN if _PROC_ROOT.is_dir() else LIVENESS_CLEAR
+    return LIVENESS_LIVE if verdict else LIVENESS_CLEAR
+
+
+def path_has_live_process(path: Path) -> bool:
+    """Return True unless every available probe proves ``path`` unreferenced."""
+    return path_liveness(path) != LIVENESS_CLEAR
 
 
 def _entry_age_s(path: Path, *, now: float) -> float | None:
@@ -416,6 +426,9 @@ def _remove_path(path: Path, *, repo_root: Path, approved_temp_roots: tuple[Path
     shutil.rmtree(target, ignore_errors=True)
 
 
+_SKIP_REASONS = {LIVENESS_LIVE: "live_process", LIVENESS_UNKNOWN: "liveness_unknown"}
+
+
 def sweep_tmp_leaks(
     *,
     apply: bool = False,
@@ -475,9 +488,10 @@ def sweep_tmp_leaks(
                 }
             )
             continue
-        if path_has_live_process(candidate.path):
+        liveness = path_liveness(candidate.path)
+        if liveness != LIVENESS_CLEAR:
             result["skipped_live"] += 1
-            result["skipped"].append({"path": str(candidate.path), "reason": "live_process"})
+            result["skipped"].append({"path": str(candidate.path), "reason": _SKIP_REASONS[liveness]})
             continue
         if not apply:
             result["reaped"].append(
@@ -491,9 +505,10 @@ def sweep_tmp_leaks(
             )
             continue
         # Re-check liveness immediately before deletion in apply mode
-        if path_has_live_process(candidate.path):
+        liveness = path_liveness(candidate.path)
+        if liveness != LIVENESS_CLEAR:
             result["skipped_live"] += 1
-            result["skipped"].append({"path": str(candidate.path), "reason": "live_process"})
+            result["skipped"].append({"path": str(candidate.path), "reason": _SKIP_REASONS[liveness]})
             continue
         try:
             size = candidate.size_bytes or _entry_size_bytes(candidate.path)

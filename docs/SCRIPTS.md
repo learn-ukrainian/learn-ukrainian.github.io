@@ -737,8 +737,10 @@ local dictionary-cache state.
 ```
 
 `$LU_TASK_SCRATCH_DIR` (also `TMPDIR`) is the payload directory; it is removed on
-exit, failure and interrupt. Full contract and the Atlas 410k invocation:
-`docs/runbooks/worktree-cleanup.md` § Task-owned scratch.
+exit, failure and interrupt. From a dispatch worktree, run the Atlas 410k example with
+the primary checkout's interpreter, source DB and deck dir via an exported
+`PRIMARY_REPO` (`run --help` prints the copyable form). Full contract and the Atlas
+410k invocation: `docs/runbooks/worktree-cleanup.md` § Task-owned scratch.
 
 ### Build pipeline entry point
 

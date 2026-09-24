@@ -35,30 +35,36 @@ from scripts.common import task_scratch as lifecycle
 
 ATLAS_410K_EXAMPLE = """\
 Atlas 410k scale check (both steps share one scratch directory; every large
-output lands under $LU_TASK_SCRATCH_DIR and is removed when the run ends):
+output lands under $LU_TASK_SCRATCH_DIR and is removed when the run ends).
+Copyable from any dispatch worktree: PRIMARY_REPO is the primary checkout
+(the only place with the project .venv, data/atlas.db and the generated
+site/public/lexicon decks); it is exported so the child shell sees it:
 
-  .venv/bin/python scripts/tools/task_scratch.py run --task-id atlas-8307-410k \\
+  export PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+  "$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py run --task-id atlas-8307-410k \\
       --evidence-dir batch_state/tmp/atlas-8307-410k-evidence -- \\
       bash -euc '
-        .venv/bin/python -m scripts.benchmarks.generate_synthetic_atlas \\
-            --source-db data/atlas.db --out "$LU_TASK_SCRATCH_DIR/atlas.db" \\
+        "$PRIMARY_REPO/.venv/bin/python" -m scripts.benchmarks.generate_synthetic_atlas \\
+            --source-db "$PRIMARY_REPO/data/atlas.db" --out "$LU_TASK_SCRATCH_DIR/atlas.db" \\
             --seed 8307 --target 410000
-        .venv/bin/python -m scripts.atlas.export_runtime_shards \\
+        "$PRIMARY_REPO/.venv/bin/python" -m scripts.atlas.export_runtime_shards \\
             --db "$LU_TASK_SCRATCH_DIR/atlas.db" \\
-            --out-dir "$LU_TASK_SCRATCH_DIR/export" --verify
+            --out-dir "$LU_TASK_SCRATCH_DIR/export" \\
+            --deck-dir "$PRIMARY_REPO/site/public/lexicon" --verify
         mkdir -p "$LU_TASK_SCRATCH_DIR/evidence"
         cp "$LU_TASK_SCRATCH_DIR/export/atlas/current.json" "$LU_TASK_SCRATCH_DIR/evidence/"
       '
 
-The single-quoted script runs in `bash -euc`; the $LU_TASK_SCRATCH_DIR
-references are expanded by that child shell, not by your interactive shell.
-Only the copied evidence survives the run.
+The single-quoted script runs in `bash -euc`; the $PRIMARY_REPO and
+$LU_TASK_SCRATCH_DIR references are expanded by that child shell, not by
+your interactive shell. Only the copied evidence survives the run. For a
+smaller rehearsal, lower --target (e.g. 50) and keep everything else.
 
 Recovery of interrupted runs (dry-run by default; the scheduled hygiene
 runner applies it):
 
-  .venv/bin/python scripts/tools/task_scratch.py recover
-  .venv/bin/python scripts/tools/task_scratch.py recover --apply
+  "$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover
+  "$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover --apply
 """
 
 

@@ -432,16 +432,90 @@ def _mounts_below(logical: Path, mounts: frozenset[str] | None) -> list[str]:
     return sorted(point for point in mounts if point == str(logical) or point.startswith(prefix))
 
 
+_FDINFO_MNT_ID = re.compile(r"^mnt_id:\s*(\d+)\s*$", re.MULTILINE)
+
+
+def fd_mount_id(fd: int) -> int | None:
+    """Return the mount id behind an open descriptor, or ``None`` when unknown.
+
+    ``/proc/self/fdinfo/<fd>`` reports the vfsmount the descriptor was opened
+    through. Unlike ``st_dev`` it distinguishes a same-device bind mount, and
+    unlike a path lookup it describes exactly the object the fd holds, so it
+    stays valid however the tree is rearranged after the open.
+    """
+    try:
+        text = Path(f"/proc/self/fdinfo/{fd}").read_text(encoding="ascii", errors="replace")
+    except OSError:
+        return None
+    match = _FDINFO_MNT_ID.search(text)
+    return int(match.group(1)) if match else None
+
+
 def _open_dir_at(dir_fd: int, name: str) -> int:
     return os.open(name, _DIR_OPEN_FLAGS | getattr(os, "O_CLOEXEC", 0), dir_fd=dir_fd)
 
 
-def _rmtree_fd(dir_fd: int, *, device: int) -> None:
-    """Remove every entry below ``dir_fd`` without leaving ``device``.
+def _verify_held_dir(
+    fd: int,
+    *,
+    expected_dev: int,
+    expected_ino: int,
+    device: int,
+    mount_id: int,
+    what: str,
+) -> os.stat_result:
+    """Prove the directory behind ``fd`` is the one we expected, on our device and mount.
 
-    Symlinks are unlinked, never followed. A directory on another device is a
-    mount point: refuse instead of descending. Owner-only permission barriers
-    are repaired once (owner rwx) and retried.
+    Every check is against the open descriptor, never a path: identity
+    (device/inode) against the entry we listed, device against the lease's
+    device, and the mount id against the namespace's mount. A bind mount of
+    the same filesystem keeps ``st_dev`` but gets its own mount id, so it is
+    refused here even when it was placed after any earlier path-based scan.
+    Unavailable mount information is a refusal, never a pass.
+    """
+    st = os.fstat(fd)
+    if not stat.S_ISDIR(st.st_mode):
+        raise ContainmentError(f"{what} is no longer a directory")
+    if (st.st_dev, st.st_ino) != (expected_dev, expected_ino):
+        raise ContainmentError(f"{what} changed identity during deletion")
+    if st.st_dev != device:
+        raise ContainmentError(f"refusing to cross a device boundary at {what}")
+    held_mount = fd_mount_id(fd)
+    if held_mount is None:
+        raise ContainmentError(f"mount information unavailable for {what}; refusing to delete")
+    if held_mount != mount_id:
+        raise ContainmentError(f"{what} is a mount point (mount id {held_mount} != {mount_id})")
+    return st
+
+
+def _rmdir_held(dir_fd: int, name: str, *, held_fd: int, held_st: os.stat_result) -> None:
+    """``rmdir`` ``name`` below ``dir_fd`` only while it is still the directory we emptied.
+
+    ``held_fd`` stays open across the call. The entry is re-identified by
+    device/inode immediately before ``rmdir`` and, because Linux has no
+    fd-based ``rmdir``, the held descriptor is checked afterwards: a link
+    count that did not drop to zero means the name was swapped inside the
+    remaining window and a *different* (necessarily empty) directory went
+    instead. That outcome is reported as a containment error rather than
+    counted as a clean removal.
+    """
+    current = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
+    if not stat.S_ISDIR(current.st_mode) or (current.st_dev, current.st_ino) != (held_st.st_dev, held_st.st_ino):
+        raise ContainmentError(f"directory {name!r} was replaced before rmdir")
+    os.rmdir(name, dir_fd=dir_fd)
+    after = os.fstat(held_fd)
+    if after.st_nlink != 0:
+        raise ContainmentError(f"rmdir removed a different directory in place of {name!r}")
+
+
+def _rmtree_fd(dir_fd: int, *, device: int, mount_id: int) -> None:
+    """Remove every entry below ``dir_fd`` without leaving ``device`` or ``mount_id``.
+
+    Symlinks are unlinked, never followed. Every directory descent re-proves
+    identity, device and mount id on the descriptor it just opened, and every
+    ``rmdir`` re-identifies its target with the emptied directory still held
+    open (:func:`_rmdir_held`). Owner-only permission barriers are repaired
+    once (owner rwx) and retried.
     """
     with os.scandir(dir_fd) as it:
         entries = [(entry.name, entry.stat(follow_symlinks=False)) for entry in it]
@@ -455,13 +529,18 @@ def _rmtree_fd(dir_fd: int, *, device: int) -> None:
                 os.chmod(name, stat.S_IMODE(st.st_mode) | stat.S_IRWXU, dir_fd=dir_fd, follow_symlinks=False)
                 child_fd = _open_dir_at(dir_fd, name)
             try:
-                child_st = os.fstat(child_fd)
-                if (child_st.st_dev, child_st.st_ino) != (st.st_dev, st.st_ino):
-                    raise ContainmentError(f"directory {name!r} changed identity during deletion")
-                _rmtree_fd(child_fd, device=device)
+                child_st = _verify_held_dir(
+                    child_fd,
+                    expected_dev=st.st_dev,
+                    expected_ino=st.st_ino,
+                    device=device,
+                    mount_id=mount_id,
+                    what=f"directory {name!r}",
+                )
+                _rmtree_fd(child_fd, device=device, mount_id=mount_id)
+                _rmdir_held(dir_fd, name, held_fd=child_fd, held_st=child_st)
             finally:
                 os.close(child_fd)
-            os.rmdir(name, dir_fd=dir_fd)
         else:
             os.unlink(name, dir_fd=dir_fd)
 
@@ -474,13 +553,24 @@ def _remove_invocation_dir(
     expected_dev: int,
     expected_ino: int,
 ) -> None:
-    """Delete one direct child of the namespace after re-verifying its identity."""
+    """Delete one direct child of the namespace after re-verifying its identity.
+
+    Fails closed: unavailable mount information (``/proc/self/mountinfo`` or
+    the per-fd mount id) refuses the deletion instead of assuming there is
+    nothing mounted below the lease.
+    """
     if "/" in name or name in {"", ".", ".."}:
         raise ContainmentError(f"invalid invocation directory name {name!r}")
-    below = _mounts_below(namespace / name, mount_points())
+    mounts = mount_points()
+    if mounts is None:
+        raise ContainmentError("mount information unavailable (/proc/self/mountinfo); refusing to delete")
+    below = _mounts_below(namespace / name, mounts)
     if below:
         raise ContainmentError(f"mount point(s) below {name!r}: {len(below)}")
     ns_st = os.fstat(namespace_fd)
+    ns_mount = fd_mount_id(namespace_fd)
+    if ns_mount is None:
+        raise ContainmentError("mount information unavailable for the namespace; refusing to delete")
     st = os.stat(name, dir_fd=namespace_fd, follow_symlinks=False)
     if stat.S_ISLNK(st.st_mode) or not stat.S_ISDIR(st.st_mode):
         raise ContainmentError(f"{name!r} is not a plain directory")
@@ -492,16 +582,27 @@ def _remove_invocation_dir(
         raise ContainmentError(f"{name!r} sits on a different device than the namespace")
     inv_fd = _open_dir_at(namespace_fd, name)
     try:
-        inv_st = os.fstat(inv_fd)
-        if (inv_st.st_dev, inv_st.st_ino) != (expected_dev, expected_ino):
-            raise ContainmentError(f"{name!r} changed identity between check and open")
-        _rmtree_fd(inv_fd, device=inv_st.st_dev)
+        inv_st = _verify_held_dir(
+            inv_fd,
+            expected_dev=expected_dev,
+            expected_ino=expected_ino,
+            device=ns_st.st_dev,
+            mount_id=ns_mount,
+            what=f"invocation directory {name!r}",
+        )
+        # Non-destructive pass first: a mount or device boundary that already
+        # exists anywhere below refuses before a single entry is unlinked, so
+        # the lease metadata survives for recovery to classify. The same
+        # checks repeat on every descent during deletion for anything that
+        # appears afterwards.
+        _walk_stats(inv_fd, device=inv_st.st_dev, mount_id=ns_mount)
+        _rmtree_fd(inv_fd, device=inv_st.st_dev, mount_id=ns_mount)
+        _rmdir_held(namespace_fd, name, held_fd=inv_fd, held_st=inv_st)
     finally:
         os.close(inv_fd)
-    os.rmdir(name, dir_fd=namespace_fd)
 
 
-def _walk_stats(dir_fd: int, *, device: int) -> tuple[int, float]:
+def _walk_stats(dir_fd: int, *, device: int, mount_id: int) -> tuple[int, float]:
     """Return ``(bytes, newest_mtime)`` below ``dir_fd`` without crossing mounts."""
     total = 0
     newest = 0.0
@@ -514,10 +615,15 @@ def _walk_stats(dir_fd: int, *, device: int) -> tuple[int, float]:
                 raise ContainmentError(f"mount boundary at {name!r}")
             child_fd = _open_dir_at(dir_fd, name)
             try:
-                child_st = os.fstat(child_fd)
-                if (child_st.st_dev, child_st.st_ino) != (st.st_dev, st.st_ino):
-                    raise ContainmentError(f"directory {name!r} changed identity during walk")
-                sub_bytes, sub_newest = _walk_stats(child_fd, device=device)
+                _verify_held_dir(
+                    child_fd,
+                    expected_dev=st.st_dev,
+                    expected_ino=st.st_ino,
+                    device=device,
+                    mount_id=mount_id,
+                    what=f"directory {name!r}",
+                )
+                sub_bytes, sub_newest = _walk_stats(child_fd, device=device, mount_id=mount_id)
             finally:
                 os.close(child_fd)
             total += sub_bytes
@@ -1058,6 +1164,11 @@ def recover_orphans(
             result["errors"] += 1
             entries.append(RecoveryEntry(name="", task_id=None, action="error", reason="namespace_changed"))
             return _finalize(result)
+        ns_mount = fd_mount_id(ns_fd)
+        if ns_mount is None:
+            result["errors"] += 1
+            entries.append(RecoveryEntry(name="", task_id=None, action="error", reason="mount_info_unavailable"))
+            return _finalize(result)
         with os.scandir(ns_fd) as it:
             names = sorted(entry.name for entry in it)
         for name in names:
@@ -1072,6 +1183,7 @@ def recover_orphans(
                 min_age_s=effective_min_age,
                 boot=boot,
                 ns_dev=ns_fst.st_dev,
+                ns_mount=ns_mount,
                 namespace=namespace,
             )
     finally:
@@ -1104,6 +1216,7 @@ def _recover_one(
     min_age_s: float,
     boot: str | None,
     ns_dev: int,
+    ns_mount: int,
     namespace: Path,
 ) -> None:
     if name.startswith(".") and name.endswith(".tmp"):
@@ -1189,8 +1302,12 @@ def _recover_one(
             if not group_dead:
                 _preserve(entries, name, task_id, group_reason)
                 return
+            inv_mount = fd_mount_id(inv_fd)
+            if inv_mount is None or inv_mount != ns_mount:
+                _preserve(entries, name, task_id, "mount_boundary")
+                return
             try:
-                size, newest = _walk_stats(inv_fd, device=inv_st.st_dev)
+                size, newest = _walk_stats(inv_fd, device=inv_st.st_dev, mount_id=inv_mount)
             except ContainmentError:
                 _preserve(entries, name, task_id, "mount_boundary")
                 return
