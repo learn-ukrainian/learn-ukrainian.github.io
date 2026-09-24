@@ -523,6 +523,15 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     if re.search(r"\b(?:гівн\w*|тьолк\w*|москаль\w*|курв\w*|бляд\w*|сучк\w*|хуй\w*|пізд\w*|нахуй\w*|похуй\w*)\b", text, re.IGNORECASE):
         return False
+    # Claude R15 control defects
+    if re.search(r"\bнаявність\s+сертифікат\w*\s+однією\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bтлум\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\b(?:мокшан\w*|псяч\w*\s+мов\w*|хохол\w*|хохляцьк\w*|кацап\w*|жид\w*|жидівськ\w*)\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bз\s+[шщ][а-яіїєґ]+\b", text, re.IGNORECASE):
+        return False
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
         return False
@@ -1682,6 +1691,60 @@ def is_valid_candidate(
     if re.search(r"\bфільк\w*\s+грамот\w*\b", c_low) or re.search(r"\bфільчин\w*\s+грамот\w*\b", c_low):
         return False
     if re.search(r"\b(?:гівн\w*|тьолк\w*|москаль\w*|курв\w*|бляд\w*|сучк\w*|хуй\w*|пізд\w*|нахуй\w*|похуй\w*)\b", o_low) or re.search(r"\b(?:гівн\w*|тьолк\w*|москаль\w*|курв\w*|бляд\w*|сучк\w*|хуй\w*|пізд\w*|нахуй\w*|похуй\w*)\b", c_low):
+        return False
+
+    # Claude R15 Blockers
+    if re.search(r"\bнеобхідні\s+багато\b", c_low):
+        return False
+    if re.search(r"\bпесь\w*\s+мух\w*\b", o_low) or re.search(r"\bрої\s+мух\b", c_low):
+        return False
+    if re.search(r"\bне\s+повернувся\b.*\bчерез\s+десять\s+хвилин\b", o_low) or re.search(r"\bне\s+тільки\s+через\s+десять\s+хвилин\b", o_low):
+        return False
+    if re.search(r"\b(?:мокшан\w*|псяч\w*\s+мов\w*|хохол\w*|хохляцьк\w*|кацап\w*|жид\w*|жидівськ\w*)\b", o_low) or re.search(r"\b(?:мокшан\w*|псяч\w*\s+мов\w*|хохол\w*|хохляцьк\w*|кацап\w*|жид\w*|жидівськ\w*)\b", c_low):
+        return False
+
+    # Claude R15 Residual Russianisms, Euphony, and Errors in Gold
+    if re.search(r"\bбрюк\w*\b", c_low):
+        return False
+    if re.search(r"\bбагров\w*\b", c_low):
+        return False
+    if re.search(r"\bпрожову\w*\b", c_low):
+        return False
+    if re.search(r"\bз\s+[шщ][а-яіїєґ]+\b", c_low):
+        return False
+    if re.search(r"\bна\s+днях\b", c_low):
+        return False
+    if re.search(r"\bйде\s+йому\s+на\s+зустріч\b", c_low) or (re.search(r"\bна\s+зустріч\b", c_low) and re.search(r"\bназустріч\b", o_low)):
+        return False
+    if re.search(r"\bна\s+стільки\s+того\s+вартувало\b", c_low) or (re.search(r"\bна\s+стільки\b", c_low) and not re.search(r"\bна\s+стільки\b", o_low)):
+        return False
+    if re.search(r"\bз\s+(?:його|її|їхньої|нашої|вашої|моєї|твоєї)\s+сторони\b", c_low):
+        return False
+    if re.search(r"\bвідносно\s+фази\s+сну\b", c_low):
+        return False
+
+    # Claude R15 Minor: Unneeded Swaps and Mislabelled Corrections
+    if re.search(r"\bзажмурив\w*\b", o_low) and re.search(r"\bпримружив\w*\b", c_low):
+        return False
+    if re.search(r"\bяк\s+до\s+вас\b.*\bзвертаються\b", o_low) and re.search(r"\bколи\s+до\s+вас\b", c_low):
+        return False
+    if re.search(r"\bвпада\w*\s+в\s+око\b", o_low) and re.search(r"\bвпада\w*\s+в\s+очі\b", c_low):
+        return False
+    if re.search(r"\bє\s+суто\s+точкою\s+зору\b", c_low):
+        return False
+    if re.search(r"\bдуже\s+легко\b", o_low) and re.search(r"\bлегше\b", c_low):
+        return False
+    if re.search(r"^[«\"“]?А\?", orig_text) and re.search(r"^[«\"“]?Га\?", corr_text):
+        return False
+    if re.search(r"^[«\"“]?Ранком\b", orig_text) and re.search(r"^[«\"“]?Зранку\b", corr_text):
+        return False
+    if re.search(r"\bяк\s+виглядають\s+мої\s+фінансові\b", o_low):
+        return False
+    if re.search(r"\bні\s+в\s+якому\s+разі\b", o_low) and re.search(r"\bгеть\s+не\b", c_low):
+        return False
+    if re.search(r"\bзігнутим\s+в\s+гачок\b", o_low) and not re.search(r"\bзігнутим\s+в\s+гачок\b", c_low):
+        return False
+    if re.search(r"\bбільшість\s+[а-яіїєґ]+\s+(?:втрачає|не\s+задумується)\b", c_low):
         return False
 
     # Reject unpaired comma after relative pronoun
