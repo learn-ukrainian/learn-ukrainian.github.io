@@ -1,12 +1,12 @@
 [Unit]
-Description=Learn Ukrainian scheduled reconciliation sweep (report-only default)
+Description=Learn Ukrainian reconciliation sweep (marks dead-pid tasks crashed, releases stale claims)
 After=network.target
 
 [Service]
 Type=oneshot
 WorkingDirectory=@REPO_ROOT@
 Environment=PYTHONUNBUFFERED=1
-ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reconcile_sweep
+ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reconcile_sweep --apply
 
 [Install]
 WantedBy=default.target

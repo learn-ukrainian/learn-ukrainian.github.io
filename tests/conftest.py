@@ -448,6 +448,31 @@ def _isolate_overview_last_good(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _hermetic_dispatch_admission_host(monkeypatch):
+    """Dispatch admission sees a healthy host and config-default thresholds (#8645).
+
+    Admission reads this host's MemAvailable and load average; a busy CI runner
+    or developer box must not refuse the write dispatches other tests make.
+    Admission tests monkeypatch ``probe_host`` themselves.
+    """
+    from scripts.orchestration import dispatch_admission
+
+    for name in (
+        dispatch_admission.ENV_MAX_LIVE_WRITE_WORKERS,
+        dispatch_admission.ENV_MIN_MEM_AVAILABLE_GIB,
+        dispatch_admission.ENV_MAX_LOAD_PER_CPU,
+    ):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(
+        dispatch_admission,
+        "probe_host",
+        lambda *_args, **_kwargs: dispatch_admission.HostProbe(
+            mem_available_bytes=64 * 1024**3, load1=0.0, cpu_count=8, proc_available=True
+        ),
+    )
+
+
+@pytest.fixture(autouse=True)
 def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     """Every test gets its own write-path ownership ledger.
 
