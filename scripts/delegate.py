@@ -109,6 +109,7 @@ import json
 import logging
 import os
 import re
+import resource
 import shutil
 import signal
 import stat
@@ -147,7 +148,7 @@ from scripts.common.scratch import (
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
-from scripts.orchestration import reaper_lifecycle, task_record_store, worktree_claims
+from scripts.orchestration import dispatch_admission, reaper_lifecycle, task_record_store, worktree_claims
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, task_state_lock, write_state_unlocked
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
@@ -520,7 +521,28 @@ def _core_terminal_fields(
         "commits_ahead": commits_ahead,
         "needs_finalize": needs_finalize,
         "finalize_error": finalize_error,
+        "peak_rss_mib": _children_peak_rss_mib(),
     }
+
+
+def _children_peak_rss_mib() -> float | None:
+    """Peak RSS of the largest process this worker has reaped, in MiB (#8645).
+
+    The worker is the waiting parent of the agent CLI, so
+    ``getrusage(RUSAGE_CHILDREN)`` covers the CLI and every descendant that was
+    itself waited for (a shell tool's pytest, xdist workers, git). It is the
+    largest single process, not the tree's sum, and misses descendants that
+    were never reaped up the chain (daemonized or still running at exit).
+    """
+    try:
+        peak = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
+    except (OSError, ValueError):
+        return None
+    if peak <= 0:
+        return None
+    # Linux reports KiB; macOS reports bytes.
+    peak_bytes = peak if sys.platform == "darwin" else peak * 1024
+    return round(peak_bytes / (1024 * 1024), 1)
 
 
 def _apply_returncode_invariant(status: str, returncode: int | None) -> str:
@@ -3356,6 +3378,51 @@ def _mark_crashed_task(state_path: Path, state: dict[str, Any], *, source: str) 
     )
     state.clear()
     state.update(_hydrate_read_only_checkout_snapshots(current))
+
+
+# Exit code for a dispatch refused by host admission: retryable once a worker
+# finishes or the host recovers, unlike exit 2 (invalid request).
+_ADMISSION_REFUSED_EXIT = 3
+
+
+def _evaluate_dispatch_admission(
+    mode: str,
+    *,
+    sweep: bool,
+    thresholds: dispatch_admission.Thresholds | None = None,
+) -> dispatch_admission.AdmissionDecision:
+    """Host admission for a ``mode`` dispatch (#8645 part A).
+
+    With ``sweep`` every running/spawning record whose pid is dead is marked
+    ``crashed`` first, so a dead worker never holds a slot and never sits
+    ``running`` until someone probes it.
+    """
+    return dispatch_admission.evaluate(
+        mode,
+        _TASKS_DIR,
+        pid_alive=_pid_alive,
+        on_dead=(lambda path, state: _mark_crashed_task(path, state, source="admission")) if sweep else None,
+        thresholds=thresholds,
+    )
+
+
+def _report_dispatch_admission(
+    decision: dispatch_admission.AdmissionDecision, *, force_reason: str | None
+) -> int | None:
+    """Print the admission outcome; return the exit code when dispatch must stop."""
+    if decision.exempt:
+        return None
+    if decision.admitted:
+        print(f"🚦 dispatch admission: admitted — {decision.summary()}", file=sys.stderr)
+        return None
+    if force_reason is not None:
+        print(
+            f"⚠️  dispatch admission overridden by --force-admission ({force_reason!r}): {'; '.join(decision.failures)}",
+            file=sys.stderr,
+        )
+        return None
+    print(f"❌ {decision.refusal_line()}", file=sys.stderr)
+    return _ADMISSION_REFUSED_EXIT
 
 
 def _tracking_remote_for_current_branch(worktree: Path) -> str | None:
@@ -7124,6 +7191,12 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
+    force_admission_reason = getattr(args, "force_admission", None)
+    if force_admission_reason is not None:
+        force_admission_reason = str(force_admission_reason).strip()
+        if not force_admission_reason:
+            print("❌ --force-admission requires a non-empty reason", file=sys.stderr)
+            return 2
 
     review_attempt = getattr(args, "review_attempt", None)
     review_id = getattr(args, "review_id", None)
@@ -7614,6 +7687,20 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         elif reason in {"unavailable", "full"}:
             print(f"⚠️  every VPS worker host is {reason}; spawning on notebook", file=sys.stderr)
 
+    # Host admission (#8645 part A) for the host that spawns the worker, so it
+    # follows VPS forwarding. This check fails fast before any worktree side
+    # effect; the authoritative one runs under the admission lock where the
+    # task record is published. Dry-run reports dead-pid records without
+    # marking them.
+    try:
+        admission = _evaluate_dispatch_admission(args.mode, sweep=not bool(getattr(args, "dry_run", False)))
+    except ValueError as exc:
+        print(f"❌ invalid dispatch admission threshold: {exc}", file=sys.stderr)
+        return 2
+    admission_rc = _report_dispatch_admission(admission, force_reason=force_admission_reason)
+    if admission_rc is not None:
+        return admission_rc
+
     try:
         output_schema_path, output_schema_sha256 = _resolve_output_schema(
             getattr(args, "output_schema", None),
@@ -7834,6 +7921,8 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             }
             if requested_harness is not None:
                 dry_run_state["harness"] = requested_harness
+            if not admission.exempt:
+                dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
             dry_run_reap = _reap_runtime_tmp_lease(
@@ -8151,7 +8240,54 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 file=sys.stderr,
             )
             return 1
-        _write_state_atomic(state_path, initial_state)
+        # Authoritative admission: count → check → publish the spawning record
+        # under one host-wide lock, so concurrent dispatches cannot all pass the
+        # check above and then exceed the cap together (#8645 part A).
+        admission_refusal: str | None = None
+        try:
+            with dispatch_admission.admission_lock(_TASKS_DIR) if not admission.exempt else contextlib.nullcontext():
+                if not admission.exempt:
+                    admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
+                    if admission.admitted or force_admission_reason is not None:
+                        initial_state["admission"] = admission.to_record(force_reason=force_admission_reason)
+                    else:
+                        admission_refusal = admission.refusal_line()
+                if admission_refusal is None:
+                    _write_state_atomic(state_path, initial_state)
+        except dispatch_admission.AdmissionLockTimeout as exc:
+            admission_refusal = f"dispatch admission lock unavailable: {exc}; retry the dispatch"
+        if admission_refusal is not None:
+            _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
+            if worktree_path is not None:
+                # The worktree already exists: a failed record keeps it claimed and visible.
+                _record_worktree_prep_failure(
+                    task_id=task_id,
+                    run_nonce=run_nonce,
+                    attribution=attribution,
+                    agent=dispatch_agent,
+                    mode=args.mode,
+                    prompt=prompt,
+                    error=admission_refusal,
+                    requested_model=args.model,
+                    requested_effort=getattr(args, "effort", None),
+                    requested_harness=requested_harness,
+                    lifecycle_carrier=lifecycle_carrier,
+                    worktree_path=worktree_path,
+                    worktree_branch=worktree_branch,
+                    worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
+                    worktree_base=getattr(args, "base", None) or "main",
+                    agent_alias_note=agent_alias_note,
+                    output_schema_path=output_schema_path,
+                    output_schema_sha256=output_schema_sha256,
+                    keep_worktree=keep_worktree,
+                    hard_timeout=args.hard_timeout,
+                    silence_timeout=silence_timeout,
+                    initial_response_timeout=initial_response_timeout,
+                    max_budget_usd=max_budget_usd,
+                    returncode_reason="dispatch admission refused",
+                )
+            print(f"❌ {admission_refusal}", file=sys.stderr)
+            return _ADMISSION_REFUSED_EXIT
         # The published record now claims the worktree for settle's scan, so
         # the lock is released before the worker, whose own settle takes it
         # again, is spawned. The two acquisitions never nest (#8610).
@@ -9505,7 +9641,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  To bypass VPS forwarding and force local spawn: export LU_ALLOW_NOTEBOOK_DISPATCH=1\n"
             "  Configuration errors fail closed without fallback to prevent silent local drift.\n\n"
             "Exit codes:\n"
-            "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
+            "  0 on successful command completion; non-zero on CLI misuse or worker/task failures;\n"
+            "  dispatch exits 3 when host admission refuses a write worker (see `dispatch --help`).\n\n"
             "Related:\n"
             "  Runtime: scripts/agent_runtime/\n"
             "  Rule: agents_extensions/shared/rules/delegate-must-use-worktree.md\n"
@@ -9543,8 +9680,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     # dispatch
     def _dispatch_help_formatter(prog: str) -> argparse.HelpFormatter:
-        return argparse.HelpFormatter(prog, max_help_position=36, width=120)
+        return argparse.RawDescriptionHelpFormatter(prog, max_help_position=36, width=120)
 
+    admission_defaults = dispatch_admission.config_defaults()
     d = sub.add_parser(
         "dispatch",
         help="Fire a task, return immediately (stdout: `<task_id>\\n<run_nonce>`)",
@@ -9552,6 +9690,32 @@ def build_parser() -> argparse.ArgumentParser:
             "Fire an async agent task and return immediately with the task ID and run nonce.\n"
             "Routes to available VPS worker hosts unless LU_ALLOW_NOTEBOOK_DISPATCH=1 is set.\n"
             "Forward configuration requires LU_JOB_DISPATCH_HOST (or ATLAS_RUNNER_HOST) and LU_JOB_REPO."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id fix-123 --prompt-file brief.md "
+            "--mode workspace-write --worktree\n"
+            "  DISPATCH_MAX_LIVE_WRITE_WORKERS=0 .venv/bin/python scripts/delegate.py dispatch --agent codex "
+            "--task-id probe-1 --prompt x --mode workspace-write --worktree --dry-run\n"
+            '  .venv/bin/python scripts/delegate.py dispatch ... --force-admission "hotfix for #1234; one worker is draining"\n\n'
+            "Host admission (#8645; workspace-write and danger only, read-only is exempt):\n"
+            "  Refuses a new worker when live write workers (running/spawning, pid alive) reach "
+            f"DISPATCH_MAX_LIVE_WRITE_WORKERS (default {admission_defaults.max_live_write_workers}),\n"
+            f"  /proc/meminfo MemAvailable is below DISPATCH_MIN_MEM_AVAILABLE_GIB (default "
+            f"{admission_defaults.min_mem_available_gib:g} GiB), or the 1-minute load per CPU\n"
+            f"  exceeds DISPATCH_MAX_LOAD_PER_CPU (default {admission_defaults.max_load_per_cpu:g}). "
+            "Environment variables override the scripts/config.py defaults.\n"
+            "  Without /proc (macOS) memory and CPU are unknown and only the worker cap applies. Records whose pid\n"
+            "  is dead are marked crashed first. The final check holds a host-wide lock until the spawning record\n"
+            "  is published. Preview the decision with: .venv/bin/python -m scripts.fleet.capacity_pick\n\n"
+            "Outputs:\n"
+            "  stdout `<task_id>\\n<run_nonce>`; batch_state/tasks/<task_id>.json (write modes carry an `admission`\n"
+            "  snapshot; terminal records carry `peak_rss_mib`); worker logs under batch_state/tasks/logs/.\n\n"
+            "Exit codes:\n"
+            "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
+            "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission).\n\n"
+            "Related:\n"
+            "  scripts/orchestration/dispatch_admission.py; docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md; #8645\n"
         ),
         formatter_class=_dispatch_help_formatter,
     )
@@ -9586,6 +9750,16 @@ def build_parser() -> argparse.ArgumentParser:
             "and result alongside (never clobber). Required when the task "
             "record already exists in a non-live state (#6980). Refuses when "
             "a running/spawning record still has a live pid (#6981 F1)."
+        ),
+    )
+    d.add_argument(
+        "--force-admission",
+        metavar="REASON",
+        default=None,
+        help=(
+            "Start a write-capable worker even when host admission refuses it (live write-worker cap, "
+            "MemAvailable floor, or load per CPU; #8645). REASON is required and is recorded in the "
+            "task record under admission.force_reason."
         ),
     )
     d.add_argument(

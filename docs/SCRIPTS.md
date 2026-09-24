@@ -771,6 +771,31 @@ opt-in for hermetic tests; launchers should enable the env.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
+**Host admission (#8645):** `delegate.py dispatch` refuses a new `workspace-write` or
+`danger` worker when any check fails. Read-only dispatches are exempt. The defaults live in
+`scripts/config.py`, and an environment variable with the same name overrides each one:
+
+| Check | Refused when | Default |
+| --- | --- | --- |
+| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 5 |
+| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 3.5 GiB |
+| `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit | 1.5 |
+
+A refusal exits 3 and prints one line that names each failed check with its measured value
+and threshold. Retry once a worker finishes or the host recovers, or override one dispatch
+with `--force-admission "<reason>"`. The reason is required and is recorded in the task record
+under `admission.force_reason`. Nothing is queued silently. Before counting, admission marks
+every `spawning`/`running` record whose pid is dead as `crashed` (source `admission`), so a
+dead worker never holds a slot. The final count, the check, and publication of the new
+`spawning` record happen under one host-wide lock (`batch_state/tasks/dispatch-admission.lock`),
+so concurrent dispatches cannot all take the last slot. `--dry-run` runs the same check but
+only reports dead records. Without `/proc` (macOS) memory and CPU are reported as `unknown`,
+and only the worker cap applies. `python -m scripts.fleet.capacity_pick` prints the same
+decision as its last line (JSON key `admission`). Write task records keep the `admission`
+snapshot, and every terminal record keeps `peak_rss_mib`. That value is the largest single
+process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to tune the
+thresholds.
+
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
 `batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
 
