@@ -147,7 +147,7 @@ from scripts.common.scratch import (
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
-from scripts.orchestration import reaper_lifecycle, worktree_claims
+from scripts.orchestration import reaper_lifecycle, task_record_store, worktree_claims
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
@@ -359,7 +359,28 @@ def _archived_state_path(task_id: str) -> Path:
     Only terminal records are archived. By-id readers (status, wait, task-id
     reuse) fall back to this path; the worktree claim scan never needs it.
     """
-    return worktree_claims.archived_task_record_path(_TASKS_DIR, task_id)
+    return task_record_store.archived_task_record_path(_TASKS_DIR, task_id)
+
+
+def _read_state_or_archived(task_id: str) -> tuple[Path, dict[str, Any] | None]:
+    """Return ``task_id``'s record path and state: the hot record, else the archived one (#8625).
+
+    An archived state is marked ``archived: true`` and its ``result_file`` names
+    the ``.result`` sidecar that moved into the archive with it. Archived
+    records are terminal, so no caller ever rewrites one.
+    """
+    state_path = _state_path(task_id)
+    state = _read_state(state_path)
+    if state is not None:
+        return state_path, state
+    archived_path = _archived_state_path(task_id)
+    archived = _read_state(archived_path)
+    if archived is None:
+        return state_path, None
+    archived = {**archived, "archived": True}
+    if "result_file" in archived:
+        archived["result_file"] = task_record_store.relocated_result_file(archived_path, archived["result_file"])
+    return archived_path, archived
 
 
 def _generate_run_nonce() -> str:
@@ -7945,11 +7966,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
 
 
 def cmd_status(args: argparse.Namespace) -> int:
-    state_path = _state_path(args.task_id)
-    state = _read_state(state_path)
-    if state is None and _archived_state_path(args.task_id).is_file():
-        state_path = _archived_state_path(args.task_id)
-        state = _read_state(state_path)
+    state_path, state = _read_state_or_archived(args.task_id)
     if state is None:
         print(
             json.dumps({"error": f"no state file for task {args.task_id!r}"}),
@@ -8724,15 +8741,12 @@ _TERMINAL_STATUSES = frozenset(
 
 
 def cmd_wait(args: argparse.Namespace) -> int:
-    state_path = _state_path(args.task_id)
     poll_interval = max(0.5, float(args.poll_interval))
     deadline = time.monotonic() + float(args.timeout) if args.timeout else None
     expected_nonce = getattr(args, "run_nonce", None)
 
     while True:
-        state = _read_state(state_path)
-        if state is None:
-            state = _read_state(_archived_state_path(args.task_id))
+        state_path, state = _read_state_or_archived(args.task_id)
         if state is None:
             if expected_nonce is not None and (deadline is None or time.monotonic() < deadline):
                 time.sleep(poll_interval)
@@ -8872,10 +8886,18 @@ def cmd_cancel(args: argparse.Namespace) -> int:
 
 
 def cmd_list(args: argparse.Namespace) -> int:
+    """Print task summaries as a JSON list.
+
+    History is bounded to the hot directory unless ``--all`` is given: records
+    ``stale_task_records archive`` moved to ``archive/`` (#8625) are then listed
+    too, marked ``"archived": true``. Without ``--all`` a stderr note counts the
+    archived records left out.
+    """
     _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+    include_archive = bool(getattr(args, "all", False))
     tasks: list[dict[str, Any]] = []
     flat_tasks: list[str] = []
-    for state_file in sorted(_TASKS_DIR.glob("*.json")):
+    for state_file in task_record_store.iter_task_records(_TASKS_DIR, include_archive=include_archive):
         state = _read_state(state_file)
         if state is None:
             continue
@@ -8905,9 +8927,18 @@ def cmd_list(args: argparse.Namespace) -> int:
                 "duration_s": state.get("duration_s"),
                 "worktree_path": state.get("worktree_path"),
                 "worktree_layout": layout,
+                **({"archived": True} if state_file.parent.name == task_record_store.ARCHIVE_DIR_NAME else {}),
             }
         )
     print(json.dumps(tasks, indent=2, default=str))
+    if not include_archive:
+        archive_dir = _TASKS_DIR / task_record_store.ARCHIVE_DIR_NAME
+        archived = sum(1 for _ in task_record_store.iter_task_records(archive_dir, include_archive=False))
+        if archived:
+            print(
+                f"ℹ️  history is the hot directory only: {archived} archived record(s) not listed; pass --all.",
+                file=sys.stderr,
+            )
     if flat_tasks:
         print(
             f"⚠️  {len(flat_tasks)} task(s) use the DEPRECATED flat worktree "
@@ -8939,7 +8970,8 @@ def cmd_backfill_repository(args: argparse.Namespace) -> int:
         print(f"❌ tasks dir not found: {_TASKS_DIR}", file=sys.stderr)
         return 1
     scanned = stamped = already = unresolved = conflicts = errors = 0
-    for state_file in sorted(_TASKS_DIR.glob("*.json")):
+    # Archived records (#8625) are history too; they are stamped where they lie.
+    for state_file in task_record_store.iter_task_records(_TASKS_DIR, include_archive=True):
         state = _read_state(state_file)
         if state is None:
             continue
@@ -9543,6 +9575,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     # list
     l = sub.add_parser("list", help="List tasks (with optional status filter)")
+    l.add_argument(
+        "--all",
+        action="store_true",
+        help="Also list records archived into batch_state/tasks/archive/ (#8625); default is the hot directory only.",
+    )
     l.add_argument(
         "--status",
         default=None,

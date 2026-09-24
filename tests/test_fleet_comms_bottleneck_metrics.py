@@ -211,3 +211,28 @@ def test_payload_never_contains_task_prompt_or_message_body(tmp_path: Path) -> N
     assert "private message" not in serialized
     assert '"prompt"' not in serialized
     assert '"body"' not in serialized
+
+
+def test_dispatch_history_includes_archived_records(tmp_path: Path) -> None:
+    """#8625: archiving old terminal records must not shrink all-history metrics."""
+    tasks_dir = tmp_path / "tasks"
+    archive = tasks_dir / "archive"
+    archive.mkdir(parents=True)
+    for seconds in range(1, 21):
+        _write_task(
+            archive if seconds % 2 else tasks_dir,
+            f"task-{seconds}",
+            started=NOW - timedelta(seconds=seconds),
+            finished=NOW,
+            hard_timeout=seconds * 60,
+        )
+    plane_db = tmp_path / "plane.sqlite3"
+    _plane_db(plane_db)
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks_dir, plane_db=plane_db, now=NOW, github_lookup=_merged_at
+    )
+
+    dispatch = payload["by_stream_epic"]["4707"]["dispatch"]
+    assert dispatch["n"] == 20
+    assert "p50" in dispatch["duration_s"]

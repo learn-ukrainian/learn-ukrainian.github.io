@@ -6,37 +6,54 @@ whose worktree, local branch and remote branch are all gone, can never be
 finalized; they only inflate every scan and read as open attention items.
 
 ``settle-stale`` classifies each ``needs_finalize`` record older than
-``--min-age-days`` exactly as the read-only #8625 report did:
+``--min-age-days``:
 
-* **A** the dispatch branch is still on ``origin`` (report only: no finalizer
-  exists for a published branch without its worktree);
-* **B** possible unpushed work: the local branch still exists, or the worktree
-  exists and is dirty (never modified);
-* **C** orphaned: worktree, local branch and remote branch are all gone;
-* **D** anything else, including every record whose evidence is unavailable
-  (never modified).
+* **A** report only: the dispatch branch, or a commit the record names, is
+  still on ``origin`` (no finalizer publishes a branch without its worktree);
+* **B** possible unpushed work (never modified): the local branch still exists,
+  the worktree exists and is dirty, or a local ref (a renamed branch) or a
+  worktree HEAD still holds a commit the record names;
+* **C** orphaned: the worktree path, the local branch and the remote branch are
+  all gone, and so is the work. Either the record names a commit
+  (``auto_finalize.commit_sha``; records carry no other head id) that no local
+  ref, remote-tracking ref or ``origin`` head holds, or the task exited with no
+  commits and a clean tree, leaving nothing to lose;
+* **D** anything else (never modified): evidence unavailable, commits or a
+  dirty exit without a recorded commit id (a renamed branch cannot be ruled
+  out), a recorded commit missing from the object store, or a merged pull
+  request that shares the branch name but none of the record's commits.
 
-Only class C is written: a merged pull request for the branch settles ``done``,
-a clean exit with no commits settles ``no_deliverable``, anything else settles
-``failed``. Evidence comes from one ``git ls-remote --heads`` and one local
-branch listing per repository, worktree probes for the few records whose
-checkout still exists, and one paged REST pull list per repository (never
-GraphQL, never a per-record GitHub call).
+Only class C is written. ``done`` needs a merged pull request tied to the task
+by commit identity: its head or merge commit is a recorded commit, or its head
+descends from one. A pull request that only reuses the branch name may belong
+to a later task, so that record moves to D instead. A clean exit with no
+commits settles ``no_deliverable``; anything else settles ``failed``. Evidence
+comes from one ``git ls-remote --heads`` and one local branch listing per
+repository; one ``git cat-file --batch-check`` and one ``git rev-list --all``
+per repository when records name commits; worktree probes for checkouts that
+still exist; and one paged REST pull list per repository (never GraphQL, never
+a per-record GitHub call). Per-record git calls happen only to name the refs
+holding a commit or to test a same-branch pull request head's ancestry.
 
 ``archive`` moves terminal records (statuses that no longer claim a worktree,
 :data:`worktree_claims.RELEASED_TASK_STATUSES`) older than ``--min-age-days``
 into ``batch_state/tasks/archive/`` with their ``.result`` and read-only
-snapshot sidecars. The claim scan globs only the top level, which is correct
-because archived records are terminal and claim nothing. A record whose linked
-worktree still exists stays hot, because the reaper and the branch-holder
-release read it as the ownership proof for that checkout. ``restore`` moves an
-archived record back.
+snapshot sidecars. A record stays hot while its checkout path (``worktree_path``,
+else a ``cwd`` that is not a primary checkout) exists at all, with or without a
+``.git`` file, or while any ``acp_runtime_paths`` entry exists: the reaper, the
+branch-holder release and ``post_task_reap`` read the hot record as the
+ownership proof. ``restore`` moves an archived record back. Which readers see
+the archive is documented in :mod:`scripts.orchestration.task_record_store`.
 
-Every record write goes through ``delegate._write_state_atomic`` (PID-suffixed
-tmp file plus ``os.replace``) while holding ``delegate.worktree_lock`` for the
-record's worktree path, the lock dispatch holds while it publishes a record
-naming that checkout. A record whose mtime changed since classification is
-skipped: a live writer touched it.
+Settle and archive both hold the record's lock while they write or move it:
+``delegate.worktree_lock`` for its checkout, the lock dispatch holds while it
+publishes a record naming that checkout (a record naming no checkout locks its
+own file). The lock is taken even for a missing path, because dispatch takes it
+before it attaches a checkout. Under the lock the record is re-read; one whose
+mtime or status changed since selection is skipped, because a live writer
+touched it. Settle writes through ``delegate._write_state_atomic``; archive
+verifies that the file it renamed is the one it checked and puts it back if a
+writer replaced it in between.
 """
 
 from __future__ import annotations
@@ -62,10 +79,10 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
 
 from scripts import delegate
 from scripts.common.git_context import sanitized_git_env
-from scripts.orchestration import fleet_repos, worktree_claims
+from scripts.orchestration import fleet_repos, task_record_store, worktree_claims
 
 SETTLED_BY = "settle-stale"
-ARCHIVE_DIR_NAME = worktree_claims.ARCHIVE_DIR_NAME
+ARCHIVE_DIR_NAME = task_record_store.ARCHIVE_DIR_NAME
 NEEDS_FINALIZE = "needs_finalize"
 DEFAULT_SETTLE_MIN_AGE_DAYS = 7.0
 DEFAULT_ARCHIVE_MIN_AGE_DAYS = 14.0
@@ -118,11 +135,14 @@ def _normalize_branch(raw: Any) -> str | None:
     return branch or None
 
 
-def _git(args: list[str], *, cwd: Path, timeout: float) -> subprocess.CompletedProcess[str] | None:
+def _git(
+    args: list[str], *, cwd: Path, timeout: float, stdin: str | None = None
+) -> subprocess.CompletedProcess[str] | None:
     try:
         return subprocess.run(
             ["git", *args],
             cwd=cwd,
+            input=stdin,
             capture_output=True,
             text=True,
             check=False,
@@ -134,8 +154,8 @@ def _git(args: list[str], *, cwd: Path, timeout: float) -> subprocess.CompletedP
 
 
 def _iter_record_files(tasks_dir: Path) -> list[Path]:
-    """Top-level task records only; the archive is never scanned."""
-    return sorted(path for path in tasks_dir.glob("*.json") if path.is_file())
+    """Hot task records only; settle and archive never read the archive."""
+    return list(task_record_store.iter_task_records(tasks_dir, include_archive=False))
 
 
 # ---------------------------------------------------------------------------
@@ -214,20 +234,107 @@ def _commits_ahead_of_base(checkout: Path, branch: str, base: str) -> int | None
 
 
 # ---------------------------------------------------------------------------
+# Commit identity (one object lookup and one reachability pass per repository)
+# ---------------------------------------------------------------------------
+
+_SHA_RE = re.compile(r"^[0-9a-f]{7,64}$")
+
+
+def recorded_work_commits(record: Mapping[str, Any]) -> list[str]:
+    """Commit ids a record names as its work.
+
+    Delegate records carry no final head sha: ``worktree_base_sha`` is the
+    base the task started from, not its work. The one commit a record does
+    name is ``auto_finalize.commit_sha``, the commit delegate made from a dirty
+    tree at exit.
+    """
+    auto_finalize = record.get("auto_finalize")
+    raw = auto_finalize.get("commit_sha") if isinstance(auto_finalize, dict) else None
+    if isinstance(raw, str) and _SHA_RE.match(raw.strip().lower()):
+        return [raw.strip().lower()]
+    return []
+
+
+@dataclasses.dataclass
+class CommitFacts:
+    """Which recorded commits exist locally and which any ref still reaches."""
+
+    resolved: dict[str, str | None]
+    reachable: set[str]
+    error: str | None = None
+
+
+def collect_commit_facts(checkout: Path, shas: Iterable[str]) -> CommitFacts:
+    """Resolve ``shas`` with one ``git cat-file --batch-check`` and one ``git rev-list --all``.
+
+    ``rev-list --all`` walks every ref (local branches, tags, remote-tracking
+    refs, stash) plus the HEAD of every linked worktree, so a commit it does not
+    list is held by no local or remote-tracking ref under any name.
+    """
+    wanted = sorted(set(shas))
+    facts = CommitFacts(resolved={}, reachable=set())
+    if not wanted:
+        return facts
+    lookup = _git(
+        ["cat-file", "--batch-check=%(objectname) %(objecttype)"],
+        cwd=checkout,
+        timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
+        stdin="".join(f"{sha}^{{commit}}\n" for sha in wanted),
+    )
+    lines = lookup.stdout.splitlines() if lookup is not None and lookup.returncode == 0 else []
+    if len(lines) != len(wanted):
+        facts.error = "git cat-file --batch-check failed"
+        return facts
+    for sha, line in zip(wanted, lines, strict=True):
+        parts = line.split()
+        facts.resolved[sha] = parts[0] if len(parts) == 2 and parts[1] == "commit" else None
+    if not any(facts.resolved.values()):
+        return facts
+    walk = _git(["rev-list", "--all"], cwd=checkout, timeout=delegate.DEFAULT_GIT_TIMEOUT_S)
+    if walk is None or walk.returncode != 0:
+        facts.error = "git rev-list --all failed"
+        return facts
+    facts.reachable = set(walk.stdout.split())
+    return facts
+
+
+def _refs_containing(checkout: Path, sha: str) -> list[str]:
+    proc = _git(
+        ["for-each-ref", "--format=%(refname)", "--contains", sha],
+        cwd=checkout,
+        timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
+    )
+    return proc.stdout.split() if proc is not None and proc.returncode == 0 else []
+
+
+def _is_ancestor(checkout: Path, ancestor: str, descendant: str) -> bool:
+    """True only when git proves ``ancestor`` is in ``descendant``'s history."""
+    proc = _git(
+        ["merge-base", "--is-ancestor", ancestor, descendant],
+        cwd=checkout,
+        timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
+    )
+    return proc is not None and proc.returncode == 0
+
+
+# ---------------------------------------------------------------------------
 # Pull request evidence (one paged REST list per repository)
 # ---------------------------------------------------------------------------
 
 
 @dataclasses.dataclass
 class PullIndex:
-    """Merged same-repository pull requests grouped by head branch.
+    """Merged same-repository pull requests grouped by head branch and by commit.
 
-    Pages are listed newest-``updated_at`` first. ``covered_since`` is ``None``
-    when the listing reached every pull request any candidate could need;
-    otherwise only pull requests updated at or after it were seen.
+    ``merged_by_sha`` indexes each pull request under its head sha and its
+    merge commit sha. Pages are listed newest-``updated_at`` first.
+    ``covered_since`` is ``None`` when the listing reached every pull request
+    any candidate could need; otherwise only pull requests updated at or after
+    it were seen.
     """
 
     merged_by_branch: dict[str, list[dict[str, Any]]]
+    merged_by_sha: dict[str, list[dict[str, Any]]] = dataclasses.field(default_factory=lambda: defaultdict(list))
     covered_since: datetime | None = None
     pages: int = 0
     error: str | None = None
@@ -283,9 +390,17 @@ def build_pull_index(
                 continue
             if head_repo.get("full_name") != slug or not isinstance(head.get("ref"), str):
                 continue
-            index.merged_by_branch[head["ref"]].append(
-                {"number": pull.get("number"), "url": pull.get("html_url"), "merged_at": pull.get("merged_at")}
-            )
+            entry = {
+                "number": pull.get("number"),
+                "url": pull.get("html_url"),
+                "merged_at": pull.get("merged_at"),
+                "head_sha": head.get("sha"),
+                "merge_commit_sha": pull.get("merge_commit_sha"),
+            }
+            index.merged_by_branch[head["ref"]].append(entry)
+            for sha in {entry["head_sha"], entry["merge_commit_sha"]}:
+                if isinstance(sha, str) and sha:
+                    index.merged_by_sha[sha.lower()].append(entry)
         last_updated = _parse_ts(pulls[-1].get("updated_at")) if isinstance(pulls[-1], dict) else None
         if len(pulls) < PR_PAGE_SIZE:
             return index
@@ -315,6 +430,8 @@ class Candidate:
     merged_pr: dict[str, Any] | None = None
     skip_reason: str | None = None
     action: str = "report"
+    # Full shas of the recorded commits, set once no ref is proven to hold them.
+    work_commits: list[str] = dataclasses.field(default_factory=list)
 
     @property
     def task_id(self) -> str:
@@ -371,7 +488,18 @@ def select_needs_finalize(tasks_dir: Path, *, min_age_days: float, now: datetime
     return candidates, younger
 
 
+def _is_zero(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value == 0
+
+
 def _classify_one(candidate: Candidate, facts: RepoFacts | None) -> None:
+    """Classify one record from branch-name and worktree evidence.
+
+    A record that reaches class C here is provisional when it names a commit:
+    :func:`_apply_commit_facts` keeps it in C only if no ref still holds that
+    commit. Without a recorded commit a branch rename cannot be ruled out, so C
+    needs a clean exit that left nothing to lose (no commits, clean tree).
+    """
     record = candidate.record
     evidence = candidate.evidence
     slug = record.get("repository")
@@ -384,6 +512,8 @@ def _classify_one(candidate: Candidate, facts: RepoFacts | None) -> None:
             "worktree_path": worktree_raw,
             "returncode": record.get("returncode"),
             "commits_ahead": record.get("commits_ahead"),
+            "worktree_dirty_on_exit": record.get("worktree_dirty_on_exit"),
+            "recorded_commits": recorded_work_commits(record),
         }
     )
     if not isinstance(slug, str) or facts is None:
@@ -425,15 +555,75 @@ def _classify_one(candidate: Candidate, facts: RepoFacts | None) -> None:
         candidate.skip_reason = "possible unpushed work: " + (
             "local branch not on origin" if local_sha is not None else "worktree dirty or unreadable"
         )
-    elif not worktree_exists:
-        candidate.klass = "C"
-    else:
+    elif worktree_exists:
         candidate.klass = "D"
         candidate.skip_reason = "clean worktree exists without a local or remote branch"
+    elif evidence["recorded_commits"]:
+        candidate.klass = "C"
+    elif not _is_zero(record.get("commits_ahead")):
+        candidate.klass = "D"
+        candidate.skip_reason = (
+            f"commits_ahead={record.get('commits_ahead')} but the record names no commit; "
+            "a renamed branch could still hold the work"
+        )
+    elif record.get("worktree_dirty_on_exit") is not False:
+        candidate.klass = "D"
+        candidate.skip_reason = (
+            "uncommitted work at exit and the record names no commit; "
+            "it could since have been committed under another branch name"
+        )
+    else:
+        candidate.klass = "C"
 
 
-def _decide_outcome(candidate: Candidate, index: PullIndex | None) -> None:
-    """Pick the terminal status of an orphaned (class C) record."""
+def _apply_commit_facts(candidate: Candidate, commits: CommitFacts, facts: RepoFacts) -> None:
+    """Keep a provisional class C record only when no ref holds any recorded commit."""
+    evidence = candidate.evidence
+    recorded: list[str] = evidence["recorded_commits"]
+    if commits.error is not None:
+        candidate.klass, candidate.skip_reason = "D", f"commit evidence unavailable: {commits.error}"
+        return
+    missing = [sha for sha in recorded if not commits.resolved.get(sha)]
+    if missing:
+        candidate.klass = "D"
+        candidate.skip_reason = (
+            f"recorded commit {missing[0]} is not in the local object store; cannot prove it is gone"
+        )
+        return
+    full = [commits.resolved[sha] or sha for sha in recorded]
+    candidate.work_commits = full
+    held = [sha for sha in full if sha in commits.reachable]
+    published = sorted(name for name, head in (facts.remote_heads or {}).items() if head in full)
+    refs = sorted({ref for sha in held for ref in _refs_containing(facts.checkout, sha)}) if facts.checkout else []
+    local_refs = [ref for ref in refs if not ref.startswith("refs/remotes/")]
+    evidence.update({"recorded_commits_reachable": bool(held), "refs_containing_commit": refs})
+    if published:
+        evidence["origin_heads_at_commit"] = published
+    if held and (local_refs or not refs):
+        candidate.klass = "B"
+        holder = ", ".join(local_refs) if local_refs else "a worktree HEAD"
+        candidate.skip_reason = f"possible unpushed work: {holder} still holds the recorded commit"
+    elif held or published:
+        candidate.klass = "A"
+        candidate.skip_reason = "recorded commit still on origin under " + ", ".join(published or refs)
+
+
+def _merged_since(pull: Mapping[str, Any], start: datetime | None) -> bool:
+    if start is None:
+        return True
+    merged_at = _parse_ts(pull.get("merged_at"))
+    return merged_at is not None and merged_at >= start
+
+
+def _decide_outcome(candidate: Candidate, index: PullIndex | None, checkout: Path | None) -> None:
+    """Pick the terminal status of an orphaned (class C) record.
+
+    ``done`` needs a merged pull request tied to this task by commit identity:
+    its head or merge commit is a recorded commit, or its head descends from
+    one. A merged pull request that only shares the branch name may be a later
+    task reusing the ref, so that record moves to class D rather than being
+    guessed.
+    """
     if index is None or index.error is not None:
         candidate.skip_reason = f"pull request list unavailable: {index.error if index else 'not fetched'}"
         return
@@ -442,25 +632,39 @@ def _decide_outcome(candidate: Candidate, index: PullIndex | None) -> None:
         candidate.skip_reason = "pull request list does not reach back to the task start; raise --max-pr-pages"
         return
     branch = candidate.evidence.get("branch")
-    merged = [
-        pull
-        for pull in index.merged_by_branch.get(branch or "", [])
-        if start is None or ((merged_at := _parse_ts(pull.get("merged_at"))) is not None and merged_at >= start)
-    ]
+    same_branch = [pull for pull in index.merged_by_branch.get(branch or "", []) if _merged_since(pull, start)]
+    tied = [pull for sha in candidate.work_commits for pull in index.merged_by_sha.get(sha, [])]
+    if not tied and checkout is not None:
+        tied = [
+            pull
+            for pull in same_branch
+            if isinstance(pull.get("head_sha"), str)
+            and any(_is_ancestor(checkout, sha, pull["head_sha"]) for sha in candidate.work_commits)
+        ]
     record = candidate.record
-    if merged:
-        pull = max(merged, key=lambda item: str(item.get("merged_at") or ""))
+    if tied:
+        pull = max(tied, key=lambda item: str(item.get("merged_at") or ""))
         candidate.outcome = "done"
         candidate.merged_pr = pull
-        candidate.settle_reason = f"orphaned: branch {branch} merged in PR #{pull.get('number')}"
-    elif record.get("commits_ahead") == 0 and record.get("returncode") == 0:
+        candidate.settle_reason = f"orphaned: PR #{pull.get('number')} merged this task's recorded commit"
+    elif same_branch:
+        candidate.klass = "D"
+        candidate.evidence["untied_merged_prs"] = [pull.get("number") for pull in same_branch]
+        numbers = ", ".join(f"#{pull.get('number')}" for pull in same_branch)
+        candidate.skip_reason = f"ambiguous: merged PR {numbers} reuses branch {branch} but " + (
+            "carries none of this task's recorded commits"
+            if candidate.work_commits
+            else "the record names no commit that ties it to this task"
+        )
+    elif not candidate.work_commits and _is_zero(record.get("commits_ahead")) and record.get("returncode") == 0:
         candidate.outcome = delegate._NO_DELIVERABLE_STATUS
         candidate.settle_reason = "orphaned: clean exit with no commits; worktree and branch gone"
     else:
         candidate.outcome = "failed"
         candidate.settle_reason = (
             f"orphaned: returncode={record.get('returncode')} commits_ahead={record.get('commits_ahead')}, "
-            "no merged pull request; worktree and branch gone"
+            "no merged pull request carries its work; worktree and branch gone"
+            + ("; no ref holds the recorded commit" if candidate.work_commits else "")
         )
 
 
@@ -479,6 +683,21 @@ def classify(
             facts_by_slug[slug] = collect_repo_facts(slug, repo_checkouts.get(slug))
         _classify_one(candidate, facts_by_slug.get(slug) if isinstance(slug, str) else None)
 
+    naming_commits: dict[str, list[Candidate]] = defaultdict(list)
+    for candidate in candidates:
+        if candidate.klass == "C" and candidate.evidence["recorded_commits"]:
+            naming_commits[str(candidate.record.get("repository"))].append(candidate)
+    for slug, group in naming_commits.items():
+        facts = facts_by_slug[slug]
+        shas = [sha for candidate in group for sha in candidate.evidence["recorded_commits"]]
+        commit_facts = (
+            collect_commit_facts(facts.checkout, shas)
+            if facts.checkout is not None
+            else CommitFacts(resolved={}, reachable=set(), error=f"no local checkout for repository {slug}")
+        )
+        for candidate in group:
+            _apply_commit_facts(candidate, commit_facts, facts)
+
     orphaned_by_slug: dict[str, list[Candidate]] = defaultdict(list)
     for candidate in candidates:
         if candidate.klass == "C":
@@ -489,7 +708,7 @@ def classify(
         oldest = None if any(start is None for start in starts) else min(s for s in starts if s is not None)
         indexes[slug] = build_pull_index(slug, oldest_start=oldest, pager=pager, max_pages=max_pr_pages)
         for candidate in orphaned:
-            _decide_outcome(candidate, indexes[slug])
+            _decide_outcome(candidate, indexes[slug], facts_by_slug[slug].checkout)
     return indexes
 
 
@@ -514,7 +733,7 @@ def _settled_record(candidate: Candidate, current: dict[str, Any], settled_at: s
 def apply_settlement(candidate: Candidate, *, lock_timeout_s: float, now: datetime) -> None:
     """Write one class C record's terminal status, or record why it was skipped."""
     try:
-        with delegate.worktree_lock(str(candidate.evidence["worktree_path"]), timeout_s=lock_timeout_s):
+        with delegate.worktree_lock(_record_lock_target(candidate.record, candidate.path), timeout_s=lock_timeout_s):
             try:
                 mtime_ns = candidate.path.stat().st_mtime_ns
             except FileNotFoundError:
@@ -526,6 +745,9 @@ def apply_settlement(candidate: Candidate, *, lock_timeout_s: float, now: dateti
             current = delegate._read_state_json(candidate.path)
             if current is None or current.get("status") != NEEDS_FINALIZE:
                 candidate.action, candidate.skip_reason = "skipped", "record no longer needs_finalize"
+                return
+            if os.path.lexists(str(candidate.evidence["worktree_path"])):
+                candidate.action, candidate.skip_reason = "skipped", "worktree path reappeared since classification"
                 return
             delegate._write_state_atomic(candidate.path, _settled_record(candidate, current, now.isoformat()))
     except worktree_claims.WorktreeLockError as exc:
@@ -616,11 +838,64 @@ def sidecar_paths(record_path: Path) -> list[Path]:
     return [path for path in candidates if path.exists()]
 
 
-def _linked_worktree_exists(record: dict[str, Any]) -> bool:
-    raw = record.get("worktree_path") or record.get("cwd")
-    if not isinstance(raw, str) or not raw.strip():
-        return False
-    return (Path(raw) / ".git").is_file()
+def _owned_checkout(record: Mapping[str, Any]) -> str | None:
+    """The checkout a record may still own: ``worktree_path``, else a non-primary ``cwd``.
+
+    Read-only tasks run in a repository's primary checkout, whose ``.git`` is a
+    directory. No task owns that checkout, so it never keeps a record hot.
+    """
+    raw = record.get("worktree_path")
+    if isinstance(raw, str) and raw.strip():
+        return raw
+    cwd = record.get("cwd")
+    if isinstance(cwd, str) and cwd.strip() and not (Path(cwd) / ".git").is_dir():
+        return cwd
+    return None
+
+
+def keep_hot_reason(record: Mapping[str, Any]) -> str | None:
+    """Why a terminal record must stay in the hot directory, or ``None``.
+
+    The reaper and the branch-holder release read the hot record as the
+    ownership proof for its checkout, and ``post_task_reap`` finds a task's ACP
+    runtime worktrees only through ``acp_runtime_paths`` in the hot record. A
+    path that still exists keeps the record hot whether or not it holds a
+    ``.git`` file.
+    """
+    checkout = _owned_checkout(record)
+    if checkout is not None and os.path.lexists(checkout):
+        return "worktree path still exists"
+    acp_paths = record.get("acp_runtime_paths")
+    if isinstance(acp_paths, list) and any(item and os.path.lexists(str(item)) for item in acp_paths):
+        return "ACP runtime path still exists"
+    return None
+
+
+def _record_lock_target(record: Mapping[str, Any], record_path: Path) -> str:
+    """The lock settle and archive hold while they rewrite or move a record.
+
+    It is the lock of the record's checkout, which dispatch holds while it
+    publishes a record naming that checkout and every remover holds while it
+    removes one. A record that names no checkout locks its own file, so two
+    runs of this tool never move the same record at once.
+    """
+    return _owned_checkout(record) or str(record_path)
+
+
+def _read_pinned(path: Path) -> tuple[dict[str, Any] | None, os.stat_result]:
+    """Read a record and the ``stat`` of the very inode its bytes came from."""
+    with path.open("rb") as handle:
+        stat = os.fstat(handle.fileno())
+        raw = handle.read()
+    try:
+        record = json.loads(raw)
+    except (ValueError, RecursionError):
+        return None, stat
+    return (record if isinstance(record, dict) else None), stat
+
+
+class _RecordReplaced(Exception):
+    """A writer replaced the record between the final check and the move."""
 
 
 def _free_destination(dest_dir: Path, name: str, stamp: str) -> Path:
@@ -630,8 +905,13 @@ def _free_destination(dest_dir: Path, name: str, stamp: str) -> Path:
     return delegate._archived_artifact_path(dest, stamp)
 
 
-def _move_group(record_path: Path, dest_dir: Path, stamp: str) -> list[str]:
-    """Move a record then its sidecars; never overwrite a destination."""
+def _move_group(record_path: Path, dest_dir: Path, stamp: str, *, checked: os.stat_result) -> list[str]:
+    """Move a record then its sidecars; never overwrite a destination.
+
+    ``checked`` is the ``stat`` of the record as last verified. If the file
+    that moved is not that one, a writer replaced the record in between: it is
+    put back and :class:`_RecordReplaced` is raised before any sidecar moves.
+    """
     dest_dir.mkdir(parents=True, exist_ok=True)
     moved: list[str] = []
     record_dest = _free_destination(dest_dir, record_path.name, stamp)
@@ -639,6 +919,12 @@ def _move_group(record_path: Path, dest_dir: Path, stamp: str) -> list[str]:
     pairs = zip(_sidecar_names(record_path.stem), _sidecar_names(record_dest.stem), strict=True)
     sidecars = [(record_path.with_name(src), dst) for src, dst in pairs if record_path.with_name(src).exists()]
     os.rename(record_path, record_dest)
+    landed = os.lstat(record_dest)
+    if (landed.st_ino, landed.st_mtime_ns) != (checked.st_ino, checked.st_mtime_ns):
+        if os.path.lexists(record_path):
+            raise OSError(f"record replaced during the move and rewritten again; newer copy left at {record_dest}")
+        os.rename(record_dest, record_path)
+        raise _RecordReplaced
     moved.append(record_dest.name)
     for sidecar, name in sidecars:
         dest = _free_destination(dest_dir, name, stamp)
@@ -647,19 +933,65 @@ def _move_group(record_path: Path, dest_dir: Path, stamp: str) -> list[str]:
     return moved
 
 
+def _archive_one(
+    path: Path,
+    row: dict[str, Any],
+    *,
+    selected_mtime_ns: int,
+    lock_target: str,
+    archive_dir: Path,
+    stamp: str,
+    lock_timeout_s: float,
+    before_move: Callable[[Path], None] | None,
+) -> None:
+    """Move one record under its lock after re-checking it, or record why not."""
+    try:
+        with delegate.worktree_lock(lock_target, timeout_s=lock_timeout_s):
+            if before_move is not None:
+                before_move(path)
+            current, stat = _read_pinned(path)
+            if stat.st_mtime_ns != selected_mtime_ns:
+                row["action"], row["skip_reason"] = "skipped", "record changed since selection"
+            elif current is None or current.get("status") not in worktree_claims.RELEASED_TASK_STATUSES:
+                row["action"], row["skip_reason"] = "skipped", "record no longer terminal"
+            elif (reason := keep_hot_reason(current)) is not None:
+                row["action"], row["skip_reason"] = "skipped", reason
+            else:
+                row["moved"] = _move_group(path, archive_dir, stamp, checked=stat)
+                row["action"] = "archived"
+    except worktree_claims.WorktreeLockError as exc:
+        row["action"], row["skip_reason"] = "skipped", worktree_claims.lock_refusal(exc)
+    except FileNotFoundError:
+        row["action"], row["skip_reason"] = "skipped", "record moved since selection"
+    except _RecordReplaced:
+        row["action"], row["skip_reason"] = "skipped", "record replaced during the move; put back"
+    except OSError as exc:
+        row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
+
+
 def archive_terminal(
     tasks_dir: Path,
     *,
     min_age_days: float = DEFAULT_ARCHIVE_MIN_AGE_DAYS,
     apply: bool = False,
+    lock_timeout_s: float = DEFAULT_LOCK_TIMEOUT_S,
     now: datetime | None = None,
+    before_move: Callable[[Path], None] | None = None,
 ) -> dict[str, Any]:
-    """Move old terminal records and their sidecars into ``<tasks_dir>/archive/``."""
+    """Move old terminal records and their sidecars into ``<tasks_dir>/archive/``.
+
+    Each move holds the record's lock (:func:`_record_lock_target`) and first
+    re-reads the record: it is skipped if its mtime changed since selection,
+    its status is no longer terminal, or it still owns a path
+    (:func:`keep_hot_reason`). ``before_move`` is a test seam called under the
+    lock, before that re-check.
+    """
     now = now or datetime.now(UTC)
     archive_dir = tasks_dir / ARCHIVE_DIR_NAME
     stamp = delegate._archive_stamp()
     rows: list[dict[str, Any]] = []
-    kept_worktree = younger = 0
+    kept: Counter[str] = Counter()
+    younger = 0
     for path in _iter_record_files(tasks_dir):
         try:
             mtime_ns = path.stat().st_mtime_ns
@@ -672,8 +1004,8 @@ def archive_terminal(
         if age < min_age_days:
             younger += 1
             continue
-        if _linked_worktree_exists(record):
-            kept_worktree += 1
+        if (reason := keep_hot_reason(record)) is not None:
+            kept[reason] += 1
             continue
         row: dict[str, Any] = {
             "file": path.name,
@@ -683,16 +1015,16 @@ def archive_terminal(
             "action": "would_archive",
         }
         if apply:
-            try:
-                if path.stat().st_mtime_ns != mtime_ns:
-                    row["action"], row["skip_reason"] = "skipped", "record changed since selection"
-                else:
-                    row["moved"] = _move_group(path, archive_dir, stamp)
-                    row["action"] = "archived"
-            except FileNotFoundError:
-                row["action"], row["skip_reason"] = "skipped", "record moved since selection"
-            except OSError as exc:
-                row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
+            _archive_one(
+                path,
+                row,
+                selected_mtime_ns=mtime_ns,
+                lock_target=_record_lock_target(record, path),
+                archive_dir=archive_dir,
+                stamp=stamp,
+                lock_timeout_s=lock_timeout_s,
+                before_move=before_move,
+            )
         rows.append(row)
     return {
         "command": "archive",
@@ -702,7 +1034,7 @@ def archive_terminal(
         "min_age_days": min_age_days,
         "selected": len(rows),
         "younger_left_alone": younger,
-        "kept_worktree_exists": kept_worktree,
+        "kept_hot": dict(kept),
         "actions": dict(Counter(row["action"] for row in rows)),
         "by_status": dict(Counter(str(row["status"]) for row in rows)),
         "records": rows,
@@ -715,7 +1047,9 @@ def restore_archived(tasks_dir: Path, names: Iterable[str], *, apply: bool = Fal
     rows: list[dict[str, Any]] = []
     for name in names:
         record_path = (
-            archive_dir / name if name.endswith(".json") else worktree_claims.archived_task_record_path(tasks_dir, name)
+            archive_dir / name
+            if name.endswith(".json")
+            else task_record_store.archived_task_record_path(tasks_dir, name)
         )
         file_name = record_path.name
         row: dict[str, Any] = {"file": file_name}
@@ -754,6 +1088,7 @@ _PROG = "python -m scripts.orchestration.stale_task_records"
 _RELATED = (
     "Related: scripts/delegate.py (record writer _write_state_atomic, worktree_lock),\n"
     "  scripts/orchestration/worktree_claims.py (claim scan, RELEASED_TASK_STATUSES),\n"
+    "  scripts/orchestration/task_record_store.py (hot/archive layout; which readers see the archive),\n"
     "  batch_state/tasks/report-8625.result (classification report), issue #8625."
 )
 
@@ -830,17 +1165,22 @@ def _build_parser() -> argparse.ArgumentParser:
             "Use it for records whose worktree, local branch and remote branch are all gone."
         ),
         epilog=(
-            "Classes (evidence: one git ls-remote + one local branch list per repository, worktree\n"
-            "probes, one paged REST pull list per repository; never GraphQL or per-record calls):\n"
-            "  A  branch still on origin                        report only\n"
-            "  B  local branch exists, or worktree dirty         never modified\n"
-            "  C  worktree, local and remote branch all gone     settled\n"
-            "  D  anything else or evidence unavailable          never modified\n"
-            "Class C settles to: done (+merged_pr) when a same-repository PR for the branch merged\n"
-            "after the task started; no_deliverable when commits_ahead == 0 and returncode == 0;\n"
-            "failed otherwise. Each write adds settled_by='settle-stale', settled_at, settle_reason,\n"
-            "settle_previous_status and settle_evidence, holds the record's worktree lock, and is\n"
-            "skipped if the record's mtime changed since classification.\n"
+            "Classes (evidence: git ls-remote, a local branch list and, for records naming a commit,\n"
+            "one cat-file + one rev-list --all per repository; worktree probes; one paged REST pull\n"
+            "list per repository; never GraphQL or per-record GitHub calls):\n"
+            "  A  branch, or a recorded commit, still on origin          report only\n"
+            "  B  local branch or a ref holding a recorded commit, or    never modified\n"
+            "     worktree dirty\n"
+            "  C  worktree, branches and the work all gone: a recorded   settled\n"
+            "     commit no ref holds, or a clean exit with no commits\n"
+            "  D  anything else: evidence unavailable, commits or a      never modified\n"
+            "     dirty exit with no recorded commit, a PR that only\n"
+            "     reuses the branch name\n"
+            "Class C settles to: done (+merged_pr) when a merged same-repository PR carries a recorded\n"
+            "commit (head, merge commit, or a head descending from it); no_deliverable for a clean exit\n"
+            "with no commits; failed otherwise. Each write adds settled_by='settle-stale', settled_at,\n"
+            "settle_reason, settle_previous_status and settle_evidence, holds the record's lock, and is\n"
+            "skipped if the record's mtime or status changed since classification.\n"
             "\n"
             "Examples:\n"
             "  .venv/bin/python -m scripts.orchestration.stale_task_records settle-stale --json | head -c 3000\n"
@@ -861,12 +1201,16 @@ def _build_parser() -> argparse.ArgumentParser:
             "records older than the pages reached are skipped, never guessed."
         ),
     )
-    settle.add_argument(
-        "--lock-timeout",
-        type=float,
-        default=DEFAULT_LOCK_TIMEOUT_S,
-        help=f"Seconds to wait for a record's worktree lock before skipping it (default: {DEFAULT_LOCK_TIMEOUT_S:g}).",
-    )
+
+    def lock_timeout(sub: argparse.ArgumentParser) -> None:
+        sub.add_argument(
+            "--lock-timeout",
+            type=float,
+            default=DEFAULT_LOCK_TIMEOUT_S,
+            help=f"Seconds to wait for a record's lock before skipping it (default: {DEFAULT_LOCK_TIMEOUT_S:g}).",
+        )
+
+    lock_timeout(settle)
 
     archive = commands.add_parser(
         "archive",
@@ -874,7 +1218,9 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Move terminal records (done, failed, no_deliverable, timeout, rate_limited, cancelled, crashed,\n"
             "dry_run, reaped) older than --min-age-days, with their .result and .snapshots sidecars, into\n"
-            "batch_state/tasks/archive/. Records whose linked worktree still exists stay in place."
+            "batch_state/tasks/archive/. A record stays in place while its checkout path or any\n"
+            "acp_runtime_paths entry still exists. Each move holds the record's lock and re-checks its\n"
+            "mtime and status first."
         ),
         epilog=(
             "Examples:\n"
@@ -888,6 +1234,7 @@ def _build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     common(archive, min_age_default=DEFAULT_ARCHIVE_MIN_AGE_DAYS)
+    lock_timeout(archive)
 
     restore = commands.add_parser(
         "restore",
@@ -931,7 +1278,9 @@ def main(argv: list[str] | None = None) -> int:
             lock_timeout_s=args.lock_timeout,
         )
     elif args.command == "archive":
-        report = archive_terminal(tasks_dir, min_age_days=args.min_age_days, apply=args.apply)
+        report = archive_terminal(
+            tasks_dir, min_age_days=args.min_age_days, apply=args.apply, lock_timeout_s=args.lock_timeout
+        )
     else:
         report = restore_archived(tasks_dir, args.names, apply=args.apply)
     exit_code = EXIT_ERRORS if report["actions"].get("error") else EXIT_OK

@@ -14,7 +14,9 @@ from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from scripts.orchestration.worktree_claims import ARCHIVE_DIR_NAME as TASK_ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME as TASK_ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import iter_task_records
+from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 from .monitor_context import production_context as production_context  # re-export: test monkeypatches
@@ -352,6 +354,13 @@ def _delegate_task_rows(
     Repository attribution is filter-only: the returned summary rows preserve the
     legacy public shape and never include ``repository`` / ``repository_id``.
     Repository is never inferred from path, cwd, worktree, branch, or task id.
+
+    History (#8625): ``stale_task_records archive`` moves old terminal records
+    into ``archive/``. A query that can match a terminal status (``None`` for
+    all, ``done``, ``failed``, …) reads the hot directory and the archive
+    through :func:`iter_task_records`, so totals and listings keep the full
+    history. Active queries (running, spawning, ``needs_finalize``) read the
+    hot directory only: nothing in the archive can match them.
     """
     global _TASK_STATE_CACHE, _LAST_TASKS_DIR_STR
 
@@ -370,26 +379,23 @@ def _delegate_task_rows(
         return rows
 
     is_active_query = statuses == ACTIVE_TASK_STATUSES
-
-    try:
-        entries = list(os.scandir(tasks_dir_str))
-    except OSError:
-        return rows
+    include_archive = statuses is None or bool(statuses & RELEASED_TASK_STATUSES)
+    scanned_dirs = {tasks_dir_str}
+    if include_archive:
+        scanned_dirs.add(os.path.join(tasks_dir_str, TASK_ARCHIVE_DIR_NAME))
 
     dirty_records: list[tuple] = []
     seen_paths: set[str] = set()
 
-    for entry in entries:
-        if not entry.name.endswith(".json"):
-            continue
-        seen_paths.add(entry.path)
+    for path in iter_task_records(tasks_dir, include_archive=include_archive):
+        path_str = str(path)
+        seen_paths.add(path_str)
 
         try:
-            mtime = entry.stat().st_mtime
+            mtime = os.stat(path_str).st_mtime
         except OSError:
             continue
 
-        path_str = entry.path
         cached = _TASK_STATE_CACHE.get(path_str)
 
         if cached is not None and cached[0] == mtime:
@@ -408,7 +414,7 @@ def _delegate_task_rows(
             claimed_repo = _authoritative_task_repository(task)
             pid = task.get("pid")
             pid_int = int(pid) if pid and str(pid).isdigit() else None
-            task_id = str(task.get("task_id") or entry.name[:-5])
+            task_id = str(task.get("task_id") or path.stem)
             raw_status = str(task.get("status") or "")
             subst = task.get("substitution")
             run_nonce = task.get("run_nonce")
@@ -487,9 +493,12 @@ def _delegate_task_rows(
 
     if dirty_records:
         _save_task_cache_entries(tasks_dir_str, dirty_records, resolved)
-    # Records archived (#8625) or removed since the last scan leave the cache too,
-    # so the in-memory and SQLite caches shrink with the hot directory.
-    vanished = [path for path in _TASK_STATE_CACHE if path not in seen_paths]
+    # Records archived (#8625) or removed since the last scan leave the cache too.
+    # Only directories this query scanned are judged, so a hot-only query never
+    # evicts the archive entries an all-history query cached.
+    vanished = [
+        path for path in _TASK_STATE_CACHE if path not in seen_paths and os.path.dirname(path) in scanned_dirs
+    ]
     if vanished:
         for path in vanished:
             del _TASK_STATE_CACHE[path]
@@ -519,7 +528,8 @@ def list_delegate_tasks(
     total/count and limit slicing. Not exposed on the public HTTP query surface
     (Work passes the already-admitted public singleton via the Python loader).
     Returned rows keep the legacy summary shape and never include repository
-    attribution fields.
+    attribution fields. ``all`` and terminal statuses include records archived
+    by ``stale_task_records`` (#8625), so ``total`` counts the full history.
     """
     task_limit = min(max(1, int(limit)), 500)
     statuses = None if status == "all" else {status}

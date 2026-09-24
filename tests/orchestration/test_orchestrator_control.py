@@ -187,3 +187,50 @@ def test_dispatch_dry_run_builds_delegate_command(tmp_path: Path, capsys):
     assert "--worktree" in command
     assert _option(command, "--base") == "main"
     assert not oc.run_state_path(tmp_path, "a1-policy").exists()
+
+
+def test_run_history_reads_archived_task_and_its_moved_result(tmp_path: Path, capsys):
+    """#8625: run files name tasks by id, so archived records stay in run history."""
+    task_dir = oc.tasks_dir(tmp_path)
+    archive = task_dir / "archive"
+    archive.mkdir(parents=True)
+    oc.write_json_atomic(
+        archive / "old-worker.json",
+        {
+            "task_id": "old-worker",
+            "agent": "codex",
+            "status": "done",
+            "started_at": "2026-06-01T10:00:00Z",
+            "result_file": str(task_dir / "old-worker.result"),
+        },
+    )
+    (archive / "old-worker.result").write_text("Archived summary.", encoding="utf-8")
+    oc.record_task(tmp_path, "old-run", task_id="old-worker", agent="codex")
+
+    rc = oc.main(
+        ["--repo-root", str(tmp_path), "inbox", "--run-id", "old-run", "--include-results", "--format", "json"]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 0
+    assert payload["missing"] == []
+    assert payload["history_scope"] == "hot+archive"
+    assert payload["tasks"][0]["status"] == "done"
+    assert payload["tasks"][0]["result_file"] == str(archive / "old-worker.result")
+    assert payload["tasks"][0]["result_excerpt"] == "Archived summary."
+
+
+def test_recent_inbox_declares_hot_only_history(tmp_path: Path, capsys):
+    _write_task(tmp_path, "hot-worker", {"agent": "codex", "status": "done", "started_at": "2026-06-06T10:00:00Z"})
+    archive = oc.tasks_dir(tmp_path) / "archive"
+    oc.write_json_atomic(
+        archive / "old-worker.json",
+        {"task_id": "old-worker", "status": "done", "started_at": "2026-06-07T10:00:00Z"},
+    )
+
+    rc = oc.main(["--repo-root", str(tmp_path), "inbox", "--recent", "5", "--format", "json"])
+    payload = json.loads(capsys.readouterr().out)
+
+    assert rc == 0
+    assert payload["history_scope"] == "hot"
+    assert [task["task_id"] for task in payload["tasks"]] == ["hot-worker"]

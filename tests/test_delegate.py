@@ -1843,17 +1843,51 @@ def test_dispatch_force_new_over_archived_record_leaves_archive_alone(tmp_tasks_
 
 
 def test_status_and_wait_fall_back_to_archived_record(tmp_tasks_dir, capsys):
-    """#8625: status/wait still answer for a task whose record was archived."""
+    """#8625: status/wait still answer for a task whose record was archived.
+
+    The record keeps its hot-directory ``result_file``; the output names the
+    sidecar that moved into the archive with it.
+    """
     import argparse
 
-    record = {"task_id": "old-task", "agent": "codex", "status": "done", "started_at": "2026-08-01T00:00:00+00:00"}
-    delegate._write_state_atomic(delegate._archived_state_path("old-task"), record)
+    record = {
+        "task_id": "old-task",
+        "agent": "codex",
+        "status": "done",
+        "started_at": "2026-08-01T00:00:00+00:00",
+        "result_file": str(tmp_tasks_dir / "old-task.result"),
+    }
+    archived = delegate._archived_state_path("old-task")
+    delegate._write_state_atomic(archived, record)
+    archived.with_suffix(".result").write_text("archived reply\n")
 
     assert delegate.cmd_status(argparse.Namespace(task_id="old-task")) == 0
-    assert json.loads(capsys.readouterr().out)["status"] == "done"
+    status = json.loads(capsys.readouterr().out)
+    assert (status["status"], status["archived"]) == ("done", True)
+    assert status["result_file"] == str(archived.with_suffix(".result"))
     assert delegate.cmd_wait(argparse.Namespace(task_id="old-task", timeout=0, poll_interval=0.1)) == 0
-    assert json.loads(capsys.readouterr().out)["status"] == "done"
+    waited = json.loads(capsys.readouterr().out)
+    assert (waited["status"], waited["result_file"]) == ("done", str(archived.with_suffix(".result")))
     assert not delegate._state_path("old-task").exists()
+    assert "archived" not in json.loads(archived.read_text())
+
+
+def test_list_is_hot_only_unless_all_is_given(tmp_tasks_dir, capsys):
+    """#8625: ``list`` declares its hot-only history; ``--all`` adds archived records."""
+    delegate._write_state_atomic(delegate._state_path("hot"), {"task_id": "hot", "status": "done"})
+    delegate._write_state_atomic(delegate._archived_state_path("old"), {"task_id": "old", "status": "done"})
+
+    assert delegate.cmd_list(delegate.build_parser().parse_args(["list"])) == 0
+    captured = capsys.readouterr()
+    assert [row["task_id"] for row in json.loads(captured.out)] == ["hot"]
+    assert "1 archived record(s) not listed; pass --all" in captured.err
+
+    assert delegate.cmd_list(delegate.build_parser().parse_args(["list", "--all", "--status", "done"])) == 0
+    captured = capsys.readouterr()
+    rows = {row["task_id"]: row for row in json.loads(captured.out)}
+    assert set(rows) == {"hot", "old"}
+    assert rows["old"]["archived"] is True and "archived" not in rows["hot"]
+    assert "not listed" not in captured.err
 
 
 def test_dispatch_parser_accepts_force_new_flag():

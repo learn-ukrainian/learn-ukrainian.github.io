@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.fleet import idle_settle as idle_settle
+from scripts.orchestration.task_record_store import iter_task_records
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -80,11 +81,16 @@ def load_tasks(
     initiator_prefix: str,
     since: datetime,
 ) -> list[dict[str, Any]]:
+    """Tasks by ``initiator_prefix`` that overlap the window starting at ``since``.
+
+    Reads the hot directory and the archive (#8625), so any lookback sees every
+    record, including terminal ones archived after ``--min-age-days``.
+    """
     rows: list[dict[str, Any]] = []
     if not tasks_dir.is_dir():
         return rows
     prefix = initiator_prefix.strip().lower()
-    for path in sorted(tasks_dir.glob("*.json")):
+    for path in iter_task_records(tasks_dir, include_archive=True):
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError, TypeError, ValueError):

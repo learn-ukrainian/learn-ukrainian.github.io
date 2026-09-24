@@ -24,7 +24,7 @@ from scripts.orchestration.integration_sweep import (
     SweepError,
     parse_marker,
 )
-from scripts.orchestration.worktree_claims import ARCHIVE_DIR_NAME
+from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
     UNRESOLVED_AUTHOR_FAMILIES,
@@ -81,6 +81,13 @@ def _pages(args: list[str]) -> list[dict[str, Any]]:
     return items
 
 
+def _hot_or_archived(task_root: Path, name: str) -> Path:
+    """``task_root / name``, else its copy in ``archive/`` (#8625), else the hot path."""
+    hot = task_root / name
+    archived = task_root / ARCHIVE_DIR_NAME / name
+    return archived if not hot.exists() and archived.exists() else hot
+
+
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
     """Resolve every base..head commit from explicit model attribution, fail closed."""
     commits = _pages(["gh", "api", f"repos/{repository}/pulls/{pr_number}/commits?per_page=100"])
@@ -103,10 +110,7 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
         if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
             if not TASK_ID.fullmatch(model):
                 raise RecordError("author model unknown")
-            task_file = task_root / f"{model}.json"
-            if not task_file.exists():
-                # An old author task may have been archived (#8625).
-                task_file = task_root / ARCHIVE_DIR_NAME / f"{model}.json"
+            task_file = _hot_or_archived(task_root, f"{model}.json")
             if not task_file.resolve().is_relative_to(task_root.resolve()):
                 raise RecordError("author task provenance unavailable")
             if task_file.exists():
@@ -192,8 +196,9 @@ def build_comment(*, sha: str, task_id: str, started: str, verdict: str, model: 
 def _task(task_id: str, task_root: Path) -> tuple[dict[str, Any], str]:
     if not TASK_ID.fullmatch(task_id):
         raise RecordError("invalid task id")
-    task_path = task_root / f"{task_id}.json"
-    result_path = task_root / f"{task_id}.result"
+    task_path = _hot_or_archived(task_root, f"{task_id}.json")
+    # An archived review keeps its reply beside its record.
+    result_path = task_path.with_suffix(".result")
     try:
         task = json.loads(task_path.read_text(encoding="utf-8"))
         reply = result_path.read_text(encoding="utf-8")

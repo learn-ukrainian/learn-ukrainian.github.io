@@ -16,9 +16,22 @@ import json
 import os
 import re
 import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+# Script-mode runs (``python scripts/orchestration/orchestrator_control.py``) need
+# the repository root importable for the shared task-record layout.
+_IMPORT_ROOT = Path(__file__).resolve().parents[2]
+if str(_IMPORT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_IMPORT_ROOT))
+
+from scripts.orchestration.task_record_store import (
+    iter_task_records,
+    locate_task_record,
+    relocated_result_file,
+)
 
 SCHEMA_VERSION = 1
 PYTHON = ".venv/bin/python"
@@ -190,14 +203,32 @@ def record_task(
 
 
 def load_task_state(task_dir: Path, task_id: str) -> dict[str, Any] | None:
-    return read_json(task_state_path(task_dir, task_id))
+    """Read ``task_id``'s record from the hot directory, else from ``archive/`` (#8625).
+
+    Run files name their tasks by id, so run history survives archiving. An
+    archived record's ``result_file`` is repointed at the sidecar that moved
+    with it.
+    """
+    path = locate_task_record(task_dir, task_id)
+    state = read_json(path) if path is not None else None
+    if path is not None and state is not None and "result_file" in state:
+        state["result_file"] = relocated_result_file(path, state["result_file"])
+    return state
 
 
 def discover_task_states(task_dir: Path, *, limit: int) -> list[dict[str, Any]]:
+    """Return the ``limit`` newest records of the hot directory.
+
+    History is bounded to the hot directory (the inbox reports
+    ``history_scope: "hot"``): records archived by ``stale_task_records`` are
+    terminal and at least ``--min-age-days`` old, so they only matter when the
+    hot directory holds fewer than ``limit`` records. ``--run-id`` reads by id
+    and does find archived records.
+    """
     if not task_dir.exists():
         return []
     tasks: list[dict[str, Any]] = []
-    for path in sorted(task_dir.glob("*.json")):
+    for path in iter_task_records(task_dir, include_archive=False):
         state = read_json(path)
         if not state:
             continue
@@ -370,6 +401,7 @@ def collect_inbox(
         "repo_root": str(repo_root),
         "run_id": run_id,
         "run": run_state,
+        "history_scope": "hot+archive" if run_id else "hot",
         "counts": counts,
         "missing": missing,
         "tasks": summaries,
