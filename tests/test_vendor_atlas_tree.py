@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import zipfile
 from pathlib import Path
 
@@ -328,11 +329,20 @@ def test_transport_current_with_only_canonical_sibling_fails_retention(tmp_path:
         vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
 
 
+def _add_generation(tree_root: Path, dir_name: str, *, data_version: str, payload: bytes) -> None:
+    """A ``versions/<dir_name>`` tree whose manifest carries ``data_version`` (exporter shape)."""
+    _mini_generation(tree_root, dir_name, payload=payload)
+    manifest = tree_root / "atlas" / "versions" / dir_name / "manifest.json"
+    doc = json.loads(manifest.read_text(encoding="utf-8"))
+    doc["dataVersion"] = data_version
+    _write(manifest, json.dumps(doc, indent=2) + "\n")
+
+
 def test_prior_transport_sibling_does_not_count_as_extra_prior(tmp_path: Path) -> None:
     tree_root = _with_transport_current(tmp_path, prior=None)
     # Another transport sibling of the SAME current generation is still not a prior.
-    _mini_generation(
-        tree_root, f"v-current-transport-{'cd' * 32}", payload=b"other-alternate"
+    _add_generation(
+        tree_root, f"v-current-transport-{'cd' * 32}", data_version="v-current", payload=b"other-alternate"
     )
     archive, digest = _archive_for(tree_root, tmp_path)
 
@@ -414,6 +424,136 @@ def test_transport_manifest_missing_from_archive_fails(tmp_path: Path) -> None:
     archive, digest = _archive_for(tree_root, tmp_path)
 
     with pytest.raises(VendorError, match="manifestUrl missing on disk"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+# A generation directory is counted only once its name shape and manifest identity
+# are proven; a malformed sibling can never pose as a distinct PRIOR (#8672 review).
+
+
+@pytest.mark.parametrize(
+    "current_dir", ["v-current", f"v-current-transport-{TRANSPORT_HEX}"], ids=["canonical", "transport"]
+)
+def test_reviewer_malformed_transport_sibling_is_not_a_prior(tmp_path: Path, current_dir: str) -> None:
+    # Canonical current + valid alternate current + malformed 62-hex sibling, all v-current.
+    tree_root = _with_transport_current(
+        tmp_path, prior=None, manifest_url=f"versions/{current_dir}/manifest.json"
+    )
+    malformed = f"v-current-transport-{'ef' * 31}"
+    _add_generation(tree_root, malformed, data_version="v-current", payload=b"malformed-sibling")
+    archive, digest = _archive_for(tree_root, tmp_path)
+    dist = tmp_path / "dist"
+
+    with pytest.raises(VendorError, match="malformed generation directory") as excinfo:
+        vendor_atlas_tree(dist, sha256=digest, archive_path=archive)
+    assert malformed in str(excinfo.value)
+    assert not (dist / "atlas").exists()
+
+
+@pytest.mark.parametrize(
+    "dir_name",
+    [
+        f"v-current-transport-{'ef' * 31}",  # reviewer: 62 hex
+        f"v-current-transport-{'ef' * 31}e",  # 63 hex
+        f"v-current-transport-{'ef' * 32}0",  # 65 hex
+        f"v-current-transport-{'EF' * 32}",  # uppercase hex
+        f"v-current-transport-{'ef' * 32}x",  # trailing junk
+        "v-current-transport-",  # empty digest
+        f"v-current-transport-{'eg' * 32}",  # non-hex
+        f"v-current-transport-{'ab' * 32}-transport-{'cd' * 32}",  # double suffix
+        "v-transport-prior",  # marker inside a would-be canonical name
+        f"v-prior-transport-{'ef' * 31}",  # malformed suffix on a different dataVersion
+        " v-prior",  # not a safe path component
+    ],
+)
+def test_malformed_generation_directory_fails_closed(tmp_path: Path, dir_name: str) -> None:
+    tree_root = _with_transport_current(tmp_path)  # valid canonical, alternate and prior
+    match = TRANSPORT_DIR_NAME.fullmatch(dir_name)
+    _add_generation(
+        tree_root, dir_name, data_version=match.group(1) if match else dir_name.strip(), payload=b"odd"
+    )
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="malformed generation directory"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+TRANSPORT_DIR_NAME = re.compile(r"(.+?)-transport-")
+
+
+@pytest.mark.parametrize(
+    ("dir_name", "manifest_data_version"),
+    [
+        ("v-prior", "v-current"),  # a current copy posing under a prior's name
+        ("v-prior", "v-other"),
+        (f"v-prior-transport-{'ef' * 32}", "v-current"),
+        (f"v-prior-transport-{'ef' * 32}", f"v-prior-transport-{'ef' * 32}"),
+        (f"v-current-transport-{'ef' * 32}", f"v-current-transport-{'ef' * 32}"),
+    ],
+)
+def test_generation_manifest_must_carry_its_directory_data_version(
+    tmp_path: Path, dir_name: str, manifest_data_version: str
+) -> None:
+    tree_root = _with_transport_current(tmp_path, prior=None)
+    _add_generation(tree_root, dir_name, data_version=manifest_data_version, payload=b"posing")
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="manifest carries dataVersion"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+@pytest.mark.parametrize("manifest_body", [None, "{not json", "[]", '{"dataVersion": 7}'])
+def test_prior_generation_without_valid_manifest_fails_closed(
+    tmp_path: Path, manifest_body: str | None
+) -> None:
+    tree_root = _with_transport_current(tmp_path)
+    manifest = tree_root / "atlas" / "versions" / "v-prior" / "manifest.json"
+    if manifest_body is None:
+        manifest.unlink()
+    else:
+        _write(manifest, manifest_body)
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="generation atlas/versions/v-prior"):
+        vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+
+@pytest.mark.parametrize("current_dir", ["v-current", f"v-current-transport-{TRANSPORT_HEX}"])
+@pytest.mark.parametrize("canonical_prior", [True, False])
+def test_valid_transport_prior_counts_as_distinct_generation(
+    tmp_path: Path, current_dir: str, canonical_prior: bool
+) -> None:
+    tree_root = _with_transport_current(
+        tmp_path, prior="v-prior" if canonical_prior else None,
+        manifest_url=f"versions/{current_dir}/manifest.json",
+    )
+    alternate_prior = f"v-prior-transport-{'ef' * 32}"
+    _add_generation(tree_root, alternate_prior, data_version="v-prior", payload=b"prior-alternate")
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    metrics = vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+    assert metrics.data_version == "v-current"
+    expected = ["v-prior", alternate_prior] if canonical_prior else [alternate_prior]
+    assert metrics.prior_versions == expected
+
+
+def test_canonical_and_alternate_current_with_prior_report_only_the_prior(tmp_path: Path) -> None:
+    tree_root = _with_transport_current(tmp_path, manifest_url="versions/v-current/manifest.json")
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    metrics = vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
+
+    assert metrics.data_version == "v-current"
+    assert metrics.prior_versions == ["v-prior"]
+
+
+@pytest.mark.parametrize("data_version", [f"v-current-transport-{'ab' * 31}", "v-transport-current"])
+def test_current_data_version_with_transport_marker_fails(tmp_path: Path, data_version: str) -> None:
+    tree_root = _with_transport_current(tmp_path, data_version=data_version)
+    archive, digest = _archive_for(tree_root, tmp_path)
+
+    with pytest.raises(VendorError, match="transport suffix"):
         vendor_atlas_tree(tmp_path / "dist", sha256=digest, archive_path=archive)
 
 

@@ -6,9 +6,11 @@ live ``/lexicon/<slug>`` route, and never commits the generated tree.
 Memory is bounded by one shard, not the corpus: records are replayed from the
 read-only database by indexed lookups, shard candidates are gzip-streamed with an
 early abort past their size cap, accepted leaves are written straight into a
-staging tree, and ``current.json`` is switched (last, atomically) only after the
-whole tree (and, with ``--verify``, its verification) is installed. Search rows
-are kept as locators and replayed from the read snapshot, never retained.
+staging tree, uncapped objects (terminal search shards) are gzip-streamed to
+their file, oversized buckets' error sizes are counted, never held, and
+``current.json`` is switched (last, atomically) only after the whole tree (and,
+with ``--verify``, its verification) is installed. Search rows are kept as
+locators and replayed from the read snapshot, never retained.
 Installed version trees are immutable: a same-dataVersion tree with different
 bytes is installed beside the first as ``<dataVersion>-transport-<sha256>``.
 """
@@ -33,7 +35,7 @@ from collections import defaultdict
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, BinaryIO
 
 # Allow ``python scripts/atlas/export_runtime_shards.py`` (not only ``-m``).
 if __package__ is None or __package__ == "":
@@ -727,31 +729,31 @@ def object_descriptor(
         object_id=object_id,
         relative_url=relative_url,
         count=count,
-        uncompressed_bytes=len(raw),
-        json_sha256=sha256_hex(raw),
-        compressed=compressed,
+        result=GzipResult(len(compressed), sha256_hex(compressed), len(raw), sha256_hex(raw)),
     )
 
 
-def _descriptor(
-    *,
-    object_id: str,
-    relative_url: str,
-    count: int,
-    uncompressed_bytes: int,
-    json_sha256: str,
-    compressed: bytes,
-) -> dict[str, Any]:
+def _descriptor(*, object_id: str, relative_url: str, count: int, result: GzipResult) -> dict[str, Any]:
     return {
         "id": object_id,
         "url": relative_url,
         "count": count,
-        "bytes": len(compressed),
-        "uncompressedBytes": uncompressed_bytes,
-        "sha256": sha256_hex(compressed),
-        "jsonSha256": json_sha256,
+        "bytes": result.compressed_bytes,
+        "uncompressedBytes": result.uncompressed_bytes,
+        "sha256": result.compressed_sha256,
+        "jsonSha256": result.json_sha256,
         "encoding": "gzip",
     }
+
+
+@dataclass(frozen=True)
+class GzipResult:
+    """Sizes and digests of one gzip object; never its bytes."""
+
+    compressed_bytes: int
+    compressed_sha256: str
+    uncompressed_bytes: int
+    json_sha256: str
 
 
 @dataclass(frozen=True)
@@ -761,60 +763,104 @@ class CompressedObject:
     json_sha256: str
 
 
-def compress_stream_bounded(
+def stream_gzip(
     chunks: Iterable[bytes],
     *,
     compression_level: int,
-    max_bytes: int | None,
-) -> CompressedObject | None:
-    """Gzip a chunk stream byte-identically to ``gzip_bytes`` of the joined chunks.
+    sink: Callable[[bytes], object],
+    max_bytes: int | None = None,
+) -> GzipResult | None:
+    """Gzip a chunk stream into ``sink``, byte-identically to ``gzip_bytes`` of the joined chunks.
 
-    Returns ``None`` — abandoning the (lazy) chunk source — as soon as the
-    compressed size is certain to exceed ``max_bytes``; ``max_bytes=None`` never
-    aborts. Levels 1-9: deflate output is independent of how the input is chunked,
-    so the stream is the one-shot payload (gzip header taken from ``gzip_bytes``
-    itself, raw deflate body, crc32/isize trailer) and the compressed prefix
-    emitted so far is a strict lower bound on the final size. Level 0 (stored
-    blocks) *does* depend on chunking, so the raw bytes are buffered (aborting once
-    they alone exceed the cap: stored output is never smaller than its input) and
-    the existing one-shot ``gzip_bytes`` produces the final bytes.
+    Nothing is retained: each compressed piece goes to ``sink`` as it is produced
+    and only sizes/digests are kept. Returns ``None`` — abandoning the (lazy) chunk
+    source — as soon as the compressed size is certain to exceed ``max_bytes``;
+    ``sink`` has then seen a prefix and must be discarded by the caller. Levels
+    1-9: deflate output is independent of how the input is chunked, so the stream
+    is the one-shot payload (gzip header taken from ``gzip_bytes`` itself, raw
+    deflate body, crc32/isize trailer) and the compressed prefix emitted so far is
+    a strict lower bound on the final size. Level 0 (stored blocks) *does* depend
+    on chunking — the one-shot block framing follows the whole input — so the raw
+    bytes are buffered (aborting once they alone exceed the cap: stored output is
+    never smaller than its input) and the existing one-shot ``gzip_bytes`` produces
+    the final bytes — so at level 0 an *uncapped* object is held whole.
     """
-    sha = hashlib.sha256()
-    raw_bytes = 0
+    compressed_sha = hashlib.sha256()
+    size = 0
+
+    def emit(piece: bytes) -> bool:
+        nonlocal size
+        if piece:
+            size += len(piece)
+            compressed_sha.update(piece)
+            sink(piece)
+        return max_bytes is not None and size > max_bytes
+
     if compression_level == 0:
         buffer = bytearray()
         for chunk in chunks:
             buffer += chunk
             if max_bytes is not None and len(buffer) > max_bytes:
                 return None
-        raw = bytes(buffer)
-        compressed = gzip_bytes(raw, compression_level=0)
+        compressed = gzip_bytes(buffer, compression_level=0)
         if max_bytes is not None and len(compressed) > max_bytes:
             return None
-        return CompressedObject(compressed, len(raw), sha256_hex(raw))
+        emit(compressed)
+        return GzipResult(len(compressed), compressed_sha.hexdigest(), len(buffer), sha256_hex(buffer))
 
-    header = gzip_bytes(b"", compression_level=compression_level)[:10]
-    deflater = zlib.compressobj(compression_level, zlib.DEFLATED, -zlib.MAX_WBITS)
-    pieces = [header]
-    size = len(header)
+    raw_sha = hashlib.sha256()
+    raw_bytes = 0
     crc = 0
+    deflater = zlib.compressobj(compression_level, zlib.DEFLATED, -zlib.MAX_WBITS)
+    if emit(gzip_bytes(b"", compression_level=compression_level)[:10]):
+        return None
     for chunk in chunks:
-        sha.update(chunk)
+        raw_sha.update(chunk)
         crc = zlib.crc32(chunk, crc)
         raw_bytes += len(chunk)
-        piece = deflater.compress(chunk)
-        if piece:
-            pieces.append(piece)
-            size += len(piece)
-            if max_bytes is not None and size > max_bytes:
-                return None
-    tail = deflater.flush()
-    trailer = struct.pack("<LL", crc, raw_bytes & 0xFFFFFFFF)
-    pieces.extend((tail, trailer))
-    size += len(tail) + len(trailer)
-    if max_bytes is not None and size > max_bytes:
+        if emit(deflater.compress(chunk)):
+            return None
+    if emit(deflater.flush()) or emit(struct.pack("<LL", crc, raw_bytes & 0xFFFFFFFF)):
         return None
-    return CompressedObject(b"".join(pieces), raw_bytes, sha.hexdigest())
+    return GzipResult(size, compressed_sha.hexdigest(), raw_bytes, raw_sha.hexdigest())
+
+
+def compress_stream_bounded(
+    chunks: Iterable[bytes],
+    *,
+    compression_level: int,
+    max_bytes: int | None,
+) -> CompressedObject | None:
+    """``stream_gzip`` into memory: at most ``max_bytes`` (plus one piece) is held.
+
+    Only for capped candidates; an uncapped object is streamed (``stream_gzip``)
+    or measured (``gzip_size``), never materialized.
+    """
+    pieces: list[bytes] = []
+    result = stream_gzip(chunks, compression_level=compression_level, sink=pieces.append, max_bytes=max_bytes)
+    if result is None:
+        return None
+    return CompressedObject(b"".join(pieces), result.uncompressed_bytes, result.json_sha256)
+
+
+def gzip_size(chunks: Iterable[bytes], *, compression_level: int) -> int:
+    """Exact ``len(gzip_bytes(b"".join(chunks)))``, counted without keeping the output."""
+    result = stream_gzip(chunks, compression_level=compression_level, sink=lambda _piece: None)
+    assert result is not None  # uncapped
+    return result.compressed_bytes
+
+
+def _write_compressed(
+    open_object: Callable[[str], BinaryIO], relative: str, compressed: CompressedObject
+) -> GzipResult:
+    with open_object(relative) as handle:
+        handle.write(compressed.compressed)
+    return GzipResult(
+        len(compressed.compressed),
+        sha256_hex(compressed.compressed),
+        compressed.uncompressed_bytes,
+        compressed.json_sha256,
+    )
 
 
 def _shard_envelope(payload: Mapping[str, Any]) -> tuple[bytes, bytes]:
@@ -857,14 +903,14 @@ def build_entry_shards(
     data_version: str,
     max_gzip_bytes: int,
     compression_level: int,
-    write_object: Callable[[str, bytes], None],
+    open_object: Callable[[str], BinaryIO],
 ) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
     """Adaptive SHA-256 prefix trie over NFC-normalized slug hashes.
 
     ``route_meta`` is ``(slug digest, slug)`` per public route. A trie node is a
     contiguous range of the digest-sorted metadata; a leaf's records are replayed
     (slug order) through ``fragment_for_slug``, gzip-streamed and written straight
-    through ``write_object``. Only descriptors are retained.
+    through ``open_object``. Only descriptors are retained.
     """
     ordered = sorted(route_meta)
     head, tail = _shard_envelope(
@@ -887,21 +933,15 @@ def build_entry_shards(
         if result is not None:
             shard_id = entry_shard_id(bit_length, prefix_value)
             relative = f"entries/{shard_id}.json.gz"
-            write_object(relative, result.compressed)
             descriptors[shard_id] = _descriptor(
                 object_id=shard_id,
                 relative_url=relative,
                 count=len(slugs),
-                uncompressed_bytes=result.uncompressed_bytes,
-                json_sha256=result.json_sha256,
-                compressed=result.compressed,
+                result=_write_compressed(open_object, relative, result),
             )
             return
         if len(slugs) <= 1:
-            measured = compress_stream_bounded(
-                chunks(slugs), compression_level=compression_level, max_bytes=None
-            )
-            size = len(measured.compressed) if measured else 0
+            size = gzip_size(chunks(slugs), compression_level=compression_level)
             slug = slugs[0] if slugs else "?"
             raise ExportError(
                 f"single entry record exceeds entry-max-gzip-bytes "
@@ -996,13 +1036,16 @@ def build_search_family_shards(
     max_gzip_bytes: int,
     compression_level: int,
     schema: str,
-    write_object: Callable[[str, bytes], None],
+    open_object: Callable[[str], BinaryIO],
 ) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
     """Adaptive Unicode-prefix trie over indexed keys for one search family.
 
     A node is a contiguous range of the sorted postings (all keys sharing the
     prefix). Its rows are the unique ranks in that range, streamed in rank order —
-    the historical shard order — with an early abort past the gzip cap.
+    the historical shard order — with an early abort past the gzip cap. Uncapped
+    work never holds a shard: a terminal shard (exact-prefix rows, historically
+    exempt from the cap) is gzip-streamed straight into ``open_object``, and an
+    unsplittable bucket's error size is counted, not materialized.
     """
     postings = index.postings
     descriptors: dict[str, dict[str, Any]] = {}
@@ -1022,19 +1065,21 @@ def build_search_family_shards(
         )
         return _shard_chunks(head, (index.fragment(rank) for rank in ranks), tail)
 
-    def emit(prefix: str, count: int, result: CompressedObject, *, terminal: bool = False) -> str:
+    def emit(prefix: str, count: int, write: Callable[[str], GzipResult], *, terminal: bool = False) -> str:
         shard_id = search_shard_id(prefix) + (".term" if terminal else "")
         relative = f"search/{family}/{shard_id}.json.gz"
-        write_object(relative, result.compressed)
         descriptors[shard_id] = _descriptor(
-            object_id=shard_id,
-            relative_url=relative,
-            count=count,
-            uncompressed_bytes=result.uncompressed_bytes,
-            json_sha256=result.json_sha256,
-            compressed=result.compressed,
+            object_id=shard_id, relative_url=relative, count=count, result=write(relative)
         )
         return shard_id
+
+    def stream_terminal(prefix: str, ranks: Sequence[int], relative: str) -> GzipResult:
+        with open_object(relative) as handle:
+            result = stream_gzip(
+                chunks(prefix, ranks, terminal=True), compression_level=compression_level, sink=handle.write
+            )
+        assert result is not None  # uncapped
+        return result
 
     def split_or_write(prefix: str, lo: int, hi: int) -> dict[str, Any]:
         ranks = ranks_in(lo, hi)
@@ -1045,7 +1090,9 @@ def build_search_family_shards(
         )
         node: dict[str, Any] = {"prefix": prefix}
         if result is not None:
-            node["shardId"] = emit(prefix, len(ranks), result)
+            node["shardId"] = emit(
+                prefix, len(ranks), lambda relative: _write_compressed(open_object, relative, result)
+            )
             return node
 
         # Split on the next Unicode scalar of each indexed key under this prefix.
@@ -1066,12 +1113,7 @@ def build_search_family_shards(
 
         if not children:
             # Cannot split further — hard fail (still oversized).
-            measured = compress_stream_bounded(
-                chunks(prefix, ranks, terminal=False),
-                compression_level=compression_level,
-                max_bytes=None,
-            )
-            size = len(measured.compressed) if measured else 0
+            size = gzip_size(chunks(prefix, ranks, terminal=False), compression_level=compression_level)
             raise ExportError(
                 f"search {family} shard for prefix={prefix!r} exceeds max "
                 f"({size} > {max_gzip_bytes}) and cannot split"
@@ -1080,13 +1122,11 @@ def build_search_family_shards(
 
         if terminal_end > lo:
             terminal_ranks = ranks_in(lo, terminal_end)
-            terminal_result = compress_stream_bounded(
-                chunks(prefix, terminal_ranks, terminal=True),
-                compression_level=compression_level,
-                max_bytes=None,
-            )
             node["terminalShardId"] = emit(
-                prefix, len(terminal_ranks), terminal_result, terminal=True
+                prefix,
+                len(terminal_ranks),
+                lambda relative: stream_terminal(prefix, terminal_ranks, relative),
+                terminal=True,
             )
 
         node["children"] = {
@@ -1376,6 +1416,7 @@ def _tree_digest(root: Path) -> str:
     regular file contributes a distinct marker, so it can never equal a staged tree.
     """
     digest = hashlib.sha256()
+    buffer = memoryview(bytearray(1 << 16))
     entries: list[tuple[str, Path]] = []
     for directory, _dirs, files in os.walk(root):
         entries.extend(
@@ -1388,9 +1429,9 @@ def _tree_digest(root: Path) -> str:
             digest.update(b"\xff" + struct.pack(">Q", 0))
             continue
         digest.update(struct.pack(">Q", path.stat().st_size))
-        with path.open("rb") as handle:
-            while block := handle.read(1 << 20):
-                digest.update(block)
+        with path.open("rb", buffering=0) as handle:
+            while count := handle.readinto(buffer):
+                digest.update(buffer[:count])
     return digest.hexdigest()
 
 
@@ -1453,8 +1494,15 @@ class StagedVersion:
             if match and path.is_file() and cls._owner_is_dead(int(match.group(1))):
                 path.unlink(missing_ok=True)
 
+    def open(self, relative: str) -> BinaryIO:
+        """New staged object opened for (streamed) binary writing."""
+        path = self.root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return path.open("wb")
+
     def write(self, relative: str, data: bytes) -> None:
-        write_bytes(self.root / relative, data)
+        with self.open(relative) as handle:
+            handle.write(data)
 
     def discard(self) -> None:
         shutil.rmtree(self.root, ignore_errors=True)
@@ -1590,7 +1638,7 @@ def export_runtime_shards(
                 data_version=data_version,
                 max_gzip_bytes=entry_max_gzip_bytes,
                 compression_level=compression_level,
-                write_object=stage.write,
+                open_object=stage.open,
             )
             del route_meta
             article_search_index, _ = build_search_family_shards(
@@ -1600,7 +1648,7 @@ def export_runtime_shards(
                 max_gzip_bytes=search_max_gzip_bytes,
                 compression_level=compression_level,
                 schema=SEARCH_ARTICLE_SCHEMA,
-                write_object=stage.write,
+                open_object=stage.open,
             )
             alias_search_index, _ = build_search_family_shards(
                 alias_index,
@@ -1609,7 +1657,7 @@ def export_runtime_shards(
                 max_gzip_bytes=search_max_gzip_bytes,
                 compression_level=compression_level,
                 schema=SEARCH_ALIAS_SCHEMA,
-                write_object=stage.write,
+                open_object=stage.open,
             )
 
             # Size band check for non-root leaves on the current corpus.

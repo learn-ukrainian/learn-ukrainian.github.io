@@ -1122,16 +1122,17 @@ class _Injected(RuntimeError):
 
 
 def _fail_after_writes(monkeypatch, count: int) -> None:
-    real_write = exporter.StagedVersion.write
+    """Fail the staged object write after ``count`` (``open`` backs every staged object)."""
+    real_open = exporter.StagedVersion.open
     seen = {"writes": 0}
 
-    def write(self, relative: str, data: bytes) -> None:
+    def open_object(self, relative: str):
         seen["writes"] += 1
         if seen["writes"] > count:
             raise _Injected(f"write #{seen['writes']} {relative}")
-        real_write(self, relative, data)
+        return real_open(self, relative)
 
-    monkeypatch.setattr(exporter.StagedVersion, "write", write)
+    monkeypatch.setattr(exporter.StagedVersion, "open", open_object)
 
 
 # Stages that fail before/around installing: an identical re-export reuses the installed
@@ -1618,3 +1619,212 @@ def test_export_memory_does_not_grow_with_gloss_bodies(tmp_path: Path) -> None:
     finally:
         tracemalloc.stop()
     assert peak < glosses * 0.25, f"peak {peak} vs gloss bodies {glosses}"
+
+
+# ---------------------------------------------------------------------------
+# Uncapped work streams: an oversized unsplittable bucket is only *counted* and a
+# terminal shard (historically exempt from the cap) is gzip-streamed to its file;
+# neither is serialized or compressed into memory (review of #8672, P1).
+# ---------------------------------------------------------------------------
+
+_SHARED_KEY_CAP = 16_384
+_KEYLESS_GLOSS_CHARS = "!#$%&()*+,-./:;<=>?@[]^{|}~"  # no TOKEN_RE word chars: adds no index key
+
+
+def _shared_key_alias_index(rows: int, *, terminal: bool) -> tuple[SearchFamilyIndex, list[dict]]:
+    """``rows`` long alias rows all keyed ``a`` (plus one ``ab`` row when ``terminal``)."""
+
+    def row(position: int) -> dict:
+        rng = random.Random(position)
+        return {
+            "a": "ab" if position == rows else "a", "k": "canonical", "s": f"s{position:05d}",
+            "h": "".join(rng.choice("абвгдежзийклмнопрстуфхцчшщьюя") for _ in range(2_000)),
+        }
+
+    index = SearchFamilyIndex.build(
+        ((position, row(position)) for position in range(rows + terminal)),
+        sort_key=exporter._alias_sort_key, key_fn=exporter._alias_index_keys, replay=row,
+    )
+    return index, sorted((row(position) for position in range(rows)), key=exporter._alias_sort_key)
+
+
+def _search_shard_raw(schema: str, prefix: str, records: list[dict], *, terminal: bool) -> bytes:
+    return exporter.canonical_json_bytes(
+        {"schema": schema, "schemaVersion": 1, "dataVersion": "v-test",
+         "prefix": prefix, "terminal": terminal, "records": records}
+    )
+
+
+def _build_aliases_traced(index: SearchFamilyIndex, out: Path, *, level: int) -> tuple[str | None, int]:
+    """(ExportError text or None, traced heap peak) of one search-family build into ``out``."""
+
+    def open_object(relative: str):
+        path = out / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return path.open("wb")
+
+    gc.collect()
+    tracemalloc.start()
+    try:
+        try:
+            exporter.build_search_family_shards(
+                index, family="aliases", data_version="v-test", max_gzip_bytes=_SHARED_KEY_CAP,
+                compression_level=level, schema=exporter.SEARCH_ALIAS_SCHEMA, open_object=open_object,
+            )
+            error = None
+        except ExportError as exc:
+            error = str(exc)
+        return error, tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+
+
+@pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
+@pytest.mark.parametrize("level", [0, 1, 6, 9])
+def test_uncapped_search_bucket_is_exact_and_heap_does_not_grow_with_it(
+    tmp_path: Path, level: int, terminal: bool
+) -> None:
+    peaks: dict[int, int] = {}
+    bodies: dict[int, int] = {}
+    for rows in (250, 1_000):
+        index, records = _shared_key_alias_index(rows, terminal=terminal)
+        raw = _search_shard_raw(exporter.SEARCH_ALIAS_SCHEMA, "a", records, terminal=terminal)
+        expected = gzip_bytes(raw, compression_level=level)
+        assert len(expected) > 20 * _SHARED_KEY_CAP
+        out = tmp_path / f"rows{rows}"
+        error, peaks[rows] = _build_aliases_traced(index, out, level=level)
+        bodies[rows] = len(raw)
+        if terminal:
+            assert error is None
+            shard = f"search/aliases/{exporter.search_shard_id('a')}.term.json.gz"
+            assert (out / shard).read_bytes() == expected
+        else:
+            assert error == (
+                f"search aliases shard for prefix='a' exceeds max "
+                f"({len(expected)} > {_SHARED_KEY_CAP}) and cannot split"
+            )
+            assert not out.exists(), "a failing bucket writes nothing"
+    if level == 0:
+        # Residual: stored-block framing of the one-shot gzip follows the whole input,
+        # so level 0 keeps exact bytes by buffering the uncapped object (capped
+        # probes still abort once raw bytes pass the cap).
+        return
+    assert bodies[1_000] > 4 * bodies[250] * 0.95
+    assert peaks[1_000] < peaks[250] * 1.25, peaks
+    assert peaks[1_000] < bodies[1_000] * 0.2, (peaks, bodies)
+
+
+def _make_shared_key_db(path: Path, *, rows: int, terminal: bool, gloss_chars: int = 8_000) -> Path:
+    """Reviewer shape: ``rows`` public articles headed ``a`` with long keyless glosses."""
+    conn = sqlite3.connect(path)
+    conn.executescript(_SOURCE_DDL)
+    conn.execute(
+        "INSERT INTO manifest_metadata VALUES ('generated_at', ?)", (json.dumps("2026-01-02T03:04:05+00:00"),)
+    )
+    for position in range(rows + terminal):
+        rng = random.Random(position)
+        slug, head = f"k{position:05d}", "ab" if position == rows else "a"
+        gloss = "".join(rng.choice(_KEYLESS_GLOSS_CHARS) for _ in range(gloss_chars))
+        conn.execute(
+            "INSERT INTO articles VALUES (?,?,?,?,?,?,?,?,?,?,NULL,NULL)",
+            (slug, head, head, "lemma", "noun", gloss, "approved", "public", None, None),
+        )
+        payload = {"url_slug": slug, "lemma": head, "gloss": gloss}
+        conn.execute(
+            "INSERT INTO article_payloads VALUES (?,?,?,?)",
+            (slug, position, json.dumps(payload, ensure_ascii=False), 1),
+        )
+    conn.commit()
+    conn.close()
+    return path
+
+
+def _export_traced(db: Path, out: Path, *, level: int) -> tuple[str | None, int]:
+    gc.collect()
+    tracemalloc.start()
+    try:
+        try:
+            # No --verify: verify_tree inflates whole shards by design and is not the exporter's memory.
+            export_runtime_shards(
+                db_path=db, out_dir=out, include_decks=False, deck_dir=None, compression_level=level,
+                entry_max_gzip_bytes=65_536, search_max_gzip_bytes=_SHARED_KEY_CAP,
+            )
+            error = None
+        except ExportError as exc:
+            error = str(exc)
+        return error, tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+
+
+@pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
+def test_reviewer_long_article_rows_export_matches_reference_in_bounded_heap(
+    tmp_path: Path, terminal: bool
+) -> None:
+    peaks: dict[int, int] = {}
+    glosses: dict[int, int] = {}
+    for rows in (250, 1_000):
+        db = _make_shared_key_db(tmp_path / f"shared{rows}.db", rows=rows, terminal=terminal)
+        glosses[rows] = sum(len(r[0]) for r in sqlite3.connect(db).execute("SELECT gloss FROM articles"))
+        out = tmp_path / f"out{rows}"
+        error, peaks[rows] = _export_traced(db, out, level=9)
+        if terminal:
+            assert error is None
+            data_version, files, indexes = _reference_export(
+                db, compression_level=9, entry_max=65_536, search_max=_SHARED_KEY_CAP
+            )
+            tree = _snapshot(out / "atlas" / "versions" / data_version)
+            assert {name: blob for name, blob in tree.items() if name != "manifest.json"} == files
+            manifest = json.loads(tree["manifest.json"])
+            assert manifest["search"]["articles"] == indexes["articles"]
+            term = indexes["articles"]["shards"][f"{exporter.search_shard_id('a')}.term"]
+            assert term["count"] == rows and term["bytes"] > 20 * _SHARED_KEY_CAP
+        else:
+            with pytest.raises(ExportError) as expected:
+                _reference_export(db, compression_level=9, entry_max=65_536, search_max=_SHARED_KEY_CAP)
+            assert error == str(expected.value)
+            assert "prefix='a'" in error and "cannot split" in error
+            assert not (out / "atlas" / "current.json").exists()
+    assert glosses[1_000] > 7_900_000
+    # Per-row index metadata (locators, sort keys, route digests) may grow; shard
+    # bodies may not: the old exporter's heap grew by the whole compressed bucket.
+    assert peaks[1_000] - peaks[250] < (glosses[1_000] - glosses[250]) * 0.25, (peaks, glosses)
+    assert peaks[1_000] < glosses[1_000] * 0.25, (peaks, glosses)
+
+
+@pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
+def test_reviewer_long_article_rows_level0_bytes_and_error_match_reference(
+    tmp_path: Path, terminal: bool
+) -> None:
+    db = _make_shared_key_db(tmp_path / "shared.db", rows=120, terminal=terminal, gloss_chars=600)
+    out = tmp_path / "out"
+    error, _ = _export_traced(db, out, level=0)
+    if terminal:
+        assert error is None
+        data_version, files, _ = _reference_export(
+            db, compression_level=0, entry_max=65_536, search_max=_SHARED_KEY_CAP
+        )
+        tree = _snapshot(out / "atlas" / "versions" / data_version)
+        assert {name: blob for name, blob in tree.items() if name != "manifest.json"} == files
+        assert any(name.endswith(".term.json.gz") for name in files)
+    else:
+        with pytest.raises(ExportError) as expected:
+            _reference_export(db, compression_level=0, entry_max=65_536, search_max=_SHARED_KEY_CAP)
+        assert error == str(expected.value)
+
+
+@pytest.mark.parametrize("level", [0, 1, 6, 9])
+def test_gzip_size_and_streamed_sink_match_one_shot_without_retention(level: int) -> None:
+    rng = random.Random(level + 100)
+    raw = "".join(rng.choice("абвгдеж abc012,.\n") for _ in range(300_000)).encode("utf-8")
+    chunks = [raw[i : i + 5_000] for i in range(0, len(raw), 5_000)]
+    expected = gzip_bytes(raw, compression_level=level)
+    assert exporter.gzip_size(iter(chunks), compression_level=level) == len(expected)
+    pieces: list[bytes] = []
+    result = exporter.stream_gzip(iter(chunks), compression_level=level, sink=pieces.append)
+    assert b"".join(pieces) == expected
+    assert result == exporter.GzipResult(
+        len(expected), hashlib.sha256(expected).hexdigest(), len(raw), hashlib.sha256(raw).hexdigest()
+    )
+    if level:
+        assert len(pieces) > 2, "levels 1-9 hand compressed pieces over as they are produced"
