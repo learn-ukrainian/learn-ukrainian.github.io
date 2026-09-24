@@ -4919,6 +4919,100 @@ def test_bundle_upload_success_returns_payload(monkeypatch: pytest.MonkeyPatch) 
     assert result["upload_seq"] == 7
 
 
+def test_confirm_replacement_stream_uploads_with_parser_monitor_base_url(
+    tmp_path: Path, capsys, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """GH #8643: confirm-replacement must carry --monitor-base-url into the bundle upload.
+
+    The confirm step used to rebuild its namespace field-by-field and dropped
+    ``monitor_base_url``, so a ``--stream`` upload always skipped with
+    "'Namespace' object has no attribute 'monitor_base_url'".
+    """
+    _set_lease_env(monkeypatch)
+    monkeypatch.setattr(th, "gather_snapshot", lambda root, url: sample_snapshot(root))
+    assert (
+        th.main(
+            ["--repo-root", str(tmp_path), "prepare", "--agent", "codex", "--harness", "headless", "--active-thread-id", "old"]
+        )
+        == 0
+    )
+    packet = json.loads(capsys.readouterr().out)
+    bootstrap = [
+        "--repo-root",
+        str(tmp_path),
+        "bootstrap-replacement",
+        "--agent",
+        "codex",
+        "--lineage-id",
+        packet["lineage_id"],
+        "--rollover-id",
+        packet["rollover_id"],
+        "--replacement-thread-id",
+        "new-thread",
+        "--evidence",
+        "test exact binding",
+    ]
+    assert th.main(bootstrap) == 0
+    capsys.readouterr()
+    state_path = tmp_path / packet["state_file"]
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    replacement = state["replacement"]
+    snapshot_path = tmp_path / replacement["semantic_snapshot_path"]
+    template_path = snapshot_path.with_name("semantic-snapshot.template.json")
+    th.write_json_atomic(snapshot_path, filled_snapshot_from_template(json.loads(template_path.read_text(encoding="utf-8"))))
+    probe_path = tmp_path / replacement["strict_probe_path"]
+    answers_path = tmp_path / replacement["strict_answers_path"]
+    assert (
+        th.context_canary.main(["mint", "--snapshot", str(snapshot_path), "--out", str(probe_path)]) == 0
+    )
+    probe = json.loads(probe_path.read_text(encoding="utf-8"))
+    th.write_json_atomic(answers_path, {anchor["id"]: anchor["a"] for anchor in probe["anchors"]})
+    probe_path.unlink()
+    capsys.readouterr()
+
+    seen_base_urls: list[str] = []
+
+    class _RecordingBundleClient:
+        def __init__(self, base_url: str, *, timeout_s: float = 3.0) -> None:
+            self.base_url = base_url
+            self.timeout_s = timeout_s
+
+        def post(self, path: str, *, json_body=None, idempotency_key=None, headers=None):
+            seen_base_urls.append(self.base_url)
+            return 200, json.dumps({"upload_seq": 9}), {}
+
+    monkeypatch.setattr(th, "_bundle_client", _RecordingBundleClient)
+
+    monitor_base_url = "http://127.0.0.1:8767"
+    assert (
+        th.main(
+            [
+                "--repo-root",
+                str(tmp_path),
+                "--monitor-base-url",
+                monitor_base_url,
+                "confirm-replacement",
+                "--agent",
+                "codex",
+                "--lineage-id",
+                packet["lineage_id"],
+                "--rollover-id",
+                packet["rollover_id"],
+                "--stream",
+                "epic:8643",
+            ]
+        )
+        == 0
+    )
+    out = capsys.readouterr().out
+    # confirm-replacement prints the mint/questions lines first, then its result JSON.
+    start = out.rfind("\n{")
+    payload = json.loads(out[start + 1 :] if start != -1 else out)
+    assert payload["bundle_upload"]["status"] == "uploaded"
+    assert payload["bundle_upload"]["upload_seq"] == 9
+    assert seen_base_urls == [monitor_base_url]
+
+
 @pytest.mark.parametrize("command", ["resume", "bootstrap-replacement"])
 @pytest.mark.parametrize("damage", ["missing", "empty"])
 def test_successor_refuses_missing_durable_handoff(tmp_path, capsys, monkeypatch, command, damage):
