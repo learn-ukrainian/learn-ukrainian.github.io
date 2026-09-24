@@ -1,0 +1,12 @@
+# GitHub state of every issue an OPSEC sweep skip or known-leak row cites.
+#
+# Tests never call GitHub. Refresh this file with the non-test CLI, which is
+# the only thing allowed to run `gh`:
+#   .venv/bin/python scripts/audit/refresh_opsec_tracking_issues.py --write
+# `build_registry` and the known-leak check fail when a cited issue is missing
+# here or is "closed", and when `checked_on` predates the renewal window of a
+# cited row (so every renewal must refresh these states).
+checked_on = "2026-09-24"
+
+[issues]
+8542 = "open"

@@ -32,9 +32,25 @@ from ..resilience import connect_sqlite
 logger = logging.getLogger(__name__)
 
 
+def db_path_for_root(project_root: Path) -> Path:
+    """Return the aggregate store owned by one Monitor project root."""
+    return Path(project_root) / "data" / "telemetry" / "legacy_comms_routes.db"
+
+
 def _default_db_path() -> Path:
     """Resolve the production default without a module-level Path seam."""
-    return Path(api_config.PROJECT_ROOT) / "data" / "telemetry" / "legacy_comms_routes.db"
+    return db_path_for_root(Path(api_config.PROJECT_ROOT))
+
+
+def _request_db_path(request: Request) -> Path | None:
+    """Resolve the store from the serving app's MonitorContext.
+
+    Writes must land in the same root the ``/api/telemetry`` reader uses; a
+    fixture-built app must never write the process-wide checkout (#8542).
+    """
+    ctx = getattr(request.app.state, "ctx", None)
+    project_root = getattr(getattr(ctx, "roots", None), "project_root", None)
+    return None if project_root is None else db_path_for_root(project_root)
 _RETENTION_DAYS = 90
 _WINDOWS = {
     "1h": timedelta(hours=1),
@@ -269,9 +285,15 @@ def record_legacy_route_usage(
         connection.commit()
 
 
-def _record_safely(route_id: str, method: str, caller_class: str, status_code: int) -> None:
+def _record_safely(
+    route_id: str,
+    method: str,
+    caller_class: str,
+    status_code: int,
+    db_path: Path | None = None,
+) -> None:
     try:
-        record_legacy_route_usage(route_id, method, caller_class, status_code)
+        record_legacy_route_usage(route_id, method, caller_class, status_code, db_path=db_path)
     except (OSError, RuntimeError, sqlite3.Error, ValueError, AssertionError):
         logger.exception(
             "legacy route telemetry failed route_id=%s method=%s status_class=%s",
@@ -287,12 +309,13 @@ async def _run_background(
     method: str,
     caller_class: str,
     status_code: int,
+    db_path: Path | None = None,
 ) -> None:
     try:
         if previous_background is not None:
             await previous_background()
     finally:
-        await asyncio.to_thread(_record_safely, route_id, method, caller_class, status_code)
+        await asyncio.to_thread(_record_safely, route_id, method, caller_class, status_code, db_path)
 
 
 class LegacyCommsTelemetryRoute(APIRoute):
@@ -307,10 +330,11 @@ class LegacyCommsTelemetryRoute(APIRoute):
                 return await route_handler(request)
 
             caller_class = classify_caller(request.headers)
+            db_path = _request_db_path(request)
             try:
                 response = await route_handler(request)
             except RequestValidationError:
-                await asyncio.to_thread(_record_safely, route_id, request.method, caller_class, 422)
+                await asyncio.to_thread(_record_safely, route_id, request.method, caller_class, 422, db_path)
                 raise
             except StarletteHTTPException as exc:
                 await asyncio.to_thread(
@@ -319,10 +343,11 @@ class LegacyCommsTelemetryRoute(APIRoute):
                     request.method,
                     caller_class,
                     exc.status_code,
+                    db_path,
                 )
                 raise
             except Exception:
-                await asyncio.to_thread(_record_safely, route_id, request.method, caller_class, 500)
+                await asyncio.to_thread(_record_safely, route_id, request.method, caller_class, 500, db_path)
                 raise
 
             response.background = BackgroundTask(
@@ -332,6 +357,7 @@ class LegacyCommsTelemetryRoute(APIRoute):
                 request.method,
                 caller_class,
                 response.status_code,
+                db_path,
             )
             return response
 

@@ -12,8 +12,11 @@ import socket
 import sqlite3
 import subprocess
 import sys
+import threading
 import time
 import tomllib
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
@@ -43,7 +46,8 @@ from scripts.fleet_comms import message_plane
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db
 
-from . import registry
+from . import mutation_recipes, registry, tracking_issues
+from .mutation_recipes import LOOPBACK_BASE_URL, LOOPBACK_CLIENT, MutationEnv
 
 pytestmark = pytest.mark.repo_invariant
 
@@ -122,6 +126,91 @@ def _deny_real_database_connect(root: Path, original_connect: Any) -> Any:
         return original_connect(database, *args, **kwargs)
 
     return connect
+
+
+_WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
+_PATH_MUTATION_EVENTS = {
+    # audit event -> indexes of the path arguments it mutates
+    "os.chmod": (0,),
+    "os.chown": (0,),
+    "os.link": (0, 1),
+    "os.mkdir": (0,),
+    "os.remove": (0,),
+    "os.rename": (0, 1),
+    "os.rmdir": (0,),
+    "os.symlink": (0, 1),
+    "os.truncate": (0,),
+    "os.utime": (0,),
+    "shutil.copyfile": (1,),
+    "shutil.copytree": (1,),
+    "shutil.move": (0, 1),
+    "shutil.rmtree": (0,),
+}
+_SPAWN_EVENTS = frozenset({"os.exec", "os.fork", "os.forkpty", "os.posix_spawn", "os.spawn", "os.system", "subprocess.Popen"})
+
+
+class _MutationSideEffectGuard:
+    """Process-wide audit hook that confines mutation requests to the fixture.
+
+    ``sys.addaudithook`` sees every ``open``/rename/remove/spawn/connect,
+    including calls through module-local aliases (``from subprocess import
+    Popen``) that attribute monkeypatches miss. It is inert until
+    :meth:`confine` arms it, and a hook cannot be removed, so it is installed
+    once per process.
+    """
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._root: Path | None = None
+        self.violations: list[str] = []
+
+    def __call__(self, event: str, args: tuple[Any, ...]) -> None:
+        root = self._root
+        if root is None:
+            return
+        if event == "open":
+            path, mode, flags = args
+            writing = isinstance(mode, str) and any(char in mode for char in "wax+")
+            if writing or (isinstance(flags, int) and flags & _WRITE_FLAGS):
+                self._check_path(event, path, root)
+        elif event in _PATH_MUTATION_EVENTS:
+            for index in _PATH_MUTATION_EVENTS[event]:
+                if index < len(args):
+                    self._check_path(event, args[index], root)
+        elif event in _SPAWN_EVENTS:
+            self._deny(f"{event} spawned a process")
+        elif event == "socket.connect":
+            sock, address = args
+            if getattr(sock, "family", None) in {socket.AF_INET, socket.AF_INET6}:
+                self._deny(f"socket.connect to {address!r}")
+
+    def _check_path(self, event: str, path: Any, root: Path) -> None:
+        if isinstance(path, int) or path is None:
+            return
+        try:
+            resolved = Path(os.fsdecode(path)).expanduser().resolve()
+        except (TypeError, ValueError):
+            return
+        if resolved != root and root not in resolved.parents:
+            self._deny(f"{event} outside the fixture root: {resolved}")
+
+    def _deny(self, message: str) -> None:
+        self.violations.append(message)
+        raise PermissionError(f"OPSEC mutation guard: {message}")
+
+    @contextmanager
+    def confine(self, root: Path) -> Iterator[list[str]]:
+        with self._lock:
+            self.violations = []
+            self._root = root
+            try:
+                yield self.violations
+            finally:
+                self._root = None
+
+
+_SIDE_EFFECT_GUARD = _MutationSideEffectGuard()
+sys.addaudithook(_SIDE_EFFECT_GUARD)
 
 
 def _fixture_completed_process(
@@ -429,6 +518,7 @@ def _validate_known_leaks(rows: list[dict[str, str]], findings: list[opsec_scan.
 
     today = date.today()
     latest_allowed = today + timedelta(days=30)
+    tracking = tracking_issues.load_tracking_issues()
     for row in rows:
         expiry = date.fromisoformat(row["expiry"])
         assert expiry > today, f"known leak row expired: {row['id']}"
@@ -436,6 +526,7 @@ def _validate_known_leaks(rows: list[dict[str, str]], findings: list[opsec_scan.
         assert row.get("owner"), f"known leak row has no owner: {row['id']}"
         assert row.get("operation"), f"known leak row has no operation: {row['id']}"
         assert row.get("field"), f"known leak row has no field: {row['id']}"
+        tracking_issues.assert_cites_open_issue(f"known leak row {row['id']}", row.get("issue"), row["expiry"], tracking)
 
 
 def _path_for_record(record: registry.ExerciseRecord) -> str:
@@ -504,6 +595,103 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
             assert record.owner and record.reason and record.expiry
 
 
+def test_every_mutation_has_a_recipe_or_a_cited_skip() -> None:
+    records = registry.build_registry(api_main.app)
+    mutations = {record.key: record for record in records if record.classification == "mutation"}
+    skipped = {key for key, record in mutations.items() if record.fixture == "skip"}
+    assert skipped == set(registry.MUTATION_SKIPS)
+    assert set(mutation_recipes.RECIPES) | {"POST /api/epics/v1/{stream_id}/bundles"} | skipped == set(mutations)
+    for key, recipe in mutation_recipes.RECIPES.items():
+        record = mutations[key]
+        assert record.fixture == "isolated" and record.store == recipe.store
+        assert record.expected_statuses and not any(500 <= status < 600 for status in record.expected_statuses)
+
+
+def test_registry_refuses_a_mutation_without_a_recipe(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/images/reload")
+    with pytest.raises(AssertionError, match="no disposable-store recipe: POST /api/images/reload"):
+        registry.build_registry(api_main.app)
+
+
+def _skip_images_reload(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    *,
+    state: str,
+    checked_on: date,
+) -> None:
+    tracking = tmp_path / "tracking_issues.toml"
+    tracking.write_text(f'checked_on = "{checked_on.isoformat()}"\n[issues]\n8542 = "{state}"\n', encoding="utf-8")
+    monkeypatch.setattr(tracking_issues, "TRACKING_ISSUES_PATH", tracking)
+    monkeypatch.delitem(mutation_recipes.RECIPES, "POST /api/images/reload")
+    monkeypatch.setitem(
+        registry.MUTATION_SKIPS,
+        "POST /api/images/reload",
+        registry.MutationSkip(
+            owner="monitor-images",
+            reason="synthetic skip for the closed-issue forcing function",
+            expiry=(date.today() + timedelta(days=7)).isoformat(),
+            issue=8542,
+        ),
+    )
+
+
+def test_registry_accepts_a_skip_citing_an_open_issue(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    _skip_images_reload(monkeypatch, tmp_path, state="open", checked_on=date.today())
+    records = {record.key: record for record in registry.build_registry(api_main.app)}
+    assert records["POST /api/images/reload"].fixture == "skip"
+    assert records["POST /api/images/reload"].as_dict()["skip"]["issue"] == 8542
+
+
+def test_registry_fails_a_skip_citing_a_closed_issue(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    _skip_images_reload(monkeypatch, tmp_path, state="closed", checked_on=date.today())
+    with pytest.raises(AssertionError, match="cites closed issue #8542"):
+        registry.build_registry(api_main.app)
+
+
+def test_registry_fails_a_skip_renewed_without_refreshing_issue_states(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    _skip_images_reload(monkeypatch, tmp_path, state="open", checked_on=date.today() - timedelta(days=40))
+    with pytest.raises(AssertionError, match="refresh_opsec_tracking_issues"):
+        registry.build_registry(api_main.app)
+
+
+def test_tracking_issues_list_exactly_the_cited_issues() -> None:
+    cited = {skip.issue for skip in registry.MUTATION_SKIPS.values()}
+    cited.update(int(row["issue"]) for row in _load_known_leaks())
+    tracking = tracking_issues.load_tracking_issues()
+    tracking_issues.assert_no_dead_entries(cited, tracking)
+    assert cited <= set(tracking.states)
+
+
+def test_mutation_guard_confines_writes_spawns_and_connects(tmp_path: Path) -> None:
+    root = (tmp_path / "fixture-root").resolve()
+    root.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    with _SIDE_EFFECT_GUARD.confine(root) as violations:
+        (root / "inside.txt").write_text("ok", encoding="utf-8")
+        (root / "inside.txt").rename(root / "moved.txt")
+        with pytest.raises(PermissionError, match="outside the fixture root"):
+            (outside / "escaped.txt").write_text("no", encoding="utf-8")
+        with pytest.raises(PermissionError, match="outside the fixture root"):
+            (root / "moved.txt").rename(outside / "moved.txt")
+        with pytest.raises(PermissionError, match="spawned a process"):
+            os.system("true")
+        probe = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            with pytest.raises(PermissionError, match=r"socket\.connect"):
+                probe.connect(("127.0.0.1", 9))
+        finally:
+            probe.close()
+        assert (root / "moved.txt").read_text(encoding="utf-8") == "ok"
+    assert len(violations) == 4
+    assert not (outside / "escaped.txt").exists()
+    # Disarmed outside ``confine``: ordinary test code is unaffected.
+    (outside / "after.txt").write_text("ok", encoding="utf-8")
+
+
 def test_exercised_read_registry_refuses_unexplained_5xx() -> None:
     records = registry.build_registry(api_main.app)
     unexplained = [
@@ -562,6 +750,7 @@ def test_known_leak_table_rejects_unmatched_dead_and_expired_rows() -> None:
         "field": "body.value",
         "owner": "test-owner",
         "expiry": "2026-09-23",
+        "issue": 8542,
     }
     finding = opsec_scan.Finding(
         operation="GET /other",
@@ -659,15 +848,68 @@ def test_isolated_fixture_denies_real_database_access(isolated_fixture: Isolated
         connection.execute("SELECT 1")
 
 
-def test_opsec_route_sweep_isolated_and_bounded(isolated_fixture: IsolatedFixture) -> None:
+def _exercise_mutations(
+    records: tuple[registry.ExerciseRecord, ...],
+    isolated_fixture: IsolatedFixture,
+    monkeypatch: pytest.MonkeyPatch,
+    findings: list[opsec_scan.Finding],
+    failures: list[str],
+) -> None:
+    """Run every mutation recipe against disposable stores, confined to the fixture."""
+    client = TestClient(api_main.app, raise_server_exceptions=False)
+    loopback_client = TestClient(
+        api_main.app,
+        base_url=LOOPBACK_BASE_URL,
+        raise_server_exceptions=False,
+        client=LOOPBACK_CLIENT,
+    )
+    ctx = api_main.app.state.ctx
+    exercised: list[str] = []
+    with _SIDE_EFFECT_GUARD.confine(isolated_fixture.root) as violations:
+        for record in records:
+            if record.classification != "mutation" or record.fixture == "skip":
+                continue
+            exercised.append(record.key)
+            env = MutationEnv(root=isolated_fixture.root, ctx=ctx, monkeypatch=monkeypatch)
+            prepared = record.setup(env) if record.setup is not None else None
+            if prepared is not None and prepared.body is not None:
+                body, send_body = prepared.body, True
+            else:
+                body, send_body = record.body(), record.body_factory is not None
+            query = {**record.query, **(prepared.query if prepared is not None else {})}
+            response = (loopback_client if record.loopback else client).request(
+                record.method,
+                _path_for_record(record),
+                params=query,
+                headers=dict(record.headers),
+                json=body if send_body else None,
+            )
+            if response.status_code not in record.expected_statuses:
+                failures.append(f"{record.key} status={response.status_code}")
+            elif record.verify is not None:
+                try:
+                    record.verify(env, response)
+                except AssertionError as exc:
+                    failures.append(f"{record.key} store not mutated as expected: {exc}")
+            findings.extend(_scan_response(record, response, isolated_fixture.canaries))
+    failures.extend(f"side effect escaped the fixture: {violation}" for violation in violations)
+    unexercised = sorted(set(mutation_recipes.RECIPES) - set(exercised))
+    failures.extend(f"{key} recipe was never exercised" for key in unexercised)
+
+
+def test_opsec_route_sweep_isolated_and_bounded(
+    isolated_fixture: IsolatedFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
     started = time.perf_counter()
     records = registry.build_registry(api_main.app)
     client = TestClient(api_main.app, raise_server_exceptions=False)
     findings: list[opsec_scan.Finding] = []
     failures: list[str] = []
 
+    # Reads see the pristine fixture; mutations run afterwards so a write can
+    # never change what a read record expects.
     for record in records:
-        if record.fixture == "skip":
+        if record.fixture == "skip" or record.classification == "mutation":
             continue
         if record.method == "WEBSOCKET":
             try:
@@ -701,6 +943,8 @@ def test_opsec_route_sweep_isolated_and_bounded(isolated_fixture: IsolatedFixtur
         if record.key in registry.FIXTURE_EMPTY_ROUTE_KEYS and response.status_code == 200:
             assert _response_payload(response) == [], f"{record.key} did not return its empty fixture envelope"
         findings.extend(_scan_response(record, response, isolated_fixture.canaries))
+
+    _exercise_mutations(records, isolated_fixture, monkeypatch, findings, failures)
 
     dashboard_root = isolated_fixture.root / "dashboards"
     for dashboard in sorted(path for path in dashboard_root.rglob("*") if path.is_file()):

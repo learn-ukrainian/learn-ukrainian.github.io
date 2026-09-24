@@ -235,10 +235,32 @@ permits the documented isolated-fixture 4xx contract. A 5xx is refused unless
 the registry record carries a route-specific reason and explicitly expects it;
 any other returned status fails the invariant.
 
+Every mutation route (POST/PUT/PATCH/DELETE) is exercised too (#8542).
+[`tests/api/opsec_sweep/mutation_recipes.py`](../tests/api/opsec_sweep/mutation_recipes.py)
+holds one recipe per route: it seeds the fixture root or a fixture
+`MonitorContext` store, sends a valid minimal request (loopback-only routes
+use a loopback `TestClient` peer), expects an exact status, and verifies the
+disposable store changed. Mutations run after the read pass, inside a
+process-wide `sys.addaudithook` guard that fails any file write, rename,
+delete, or mkdir outside the fixture root, any process spawn, and any
+`AF_INET`/`AF_INET6` connect. A mutation route without a recipe fails
+`build_registry`. A route that truly cannot run safely goes in
+`registry.MUTATION_SKIPS` with an owner, a 30-day expiry, and an `issue`.
+
+Skips and known-leak rows must cite an open GitHub issue. Tests stay
+hermetic: they read issue states from the committed
+[`tests/api/opsec_sweep/tracking_issues.toml`](../tests/api/opsec_sweep/tracking_issues.toml)
+snapshot and never call GitHub. A row fails when its issue is missing or
+`closed` there, or when the snapshot's `checked_on` date is older than the
+row's renewal window. That means every renewal has to refresh the snapshot
+with `scripts/audit/refresh_opsec_tracking_issues.py --write`. This CLI is the
+only code that calls `gh`; with no flags it reports drift and exits non-zero
+when a cited issue is closed.
+
 PR-A is intentionally green with a shrinking exception table at
 [`tests/api/opsec_sweep/known_leaks.toml`](../tests/api/opsec_sweep/known_leaks.toml).
-Rows require an owner and an expiry no more than 30 days from the PR date;
-expired rows and rows that no longer match a finding fail the test. Adding a
+Rows require an owner, a tracking `issue`, and an expiry no more than 30 days
+from the PR date; expired rows and rows that no longer match a finding fail the test. Adding a
 row requires changing the frozen id set in the test in the same review. PR-B
 burn-downs remove rows by changing the emitter and its direct consumers
 atomically; the following manifest is the record of those boundaries:

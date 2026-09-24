@@ -15,7 +15,7 @@ import hashlib
 import re
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
-from datetime import date, timedelta
+from datetime import date
 from typing import Any, Literal
 
 from fastapi.routing import APIRoute
@@ -23,7 +23,11 @@ from starlette.routing import Mount, WebSocketRoute
 
 from scripts.orchestration import thread_handoff
 
+from . import tracking_issues
+from .mutation_recipes import RECIPES, MutationEnv, Prepared
+
 HTTP_METHODS = frozenset({"DELETE", "GET", "PATCH", "POST", "PUT"})
+MUTATION_METHODS = frozenset({"DELETE", "PATCH", "POST", "PUT"})
 RouteClass = Literal["read", "read-side-effect", "mutation", "stream"]
 FixtureKind = Literal["isolated", "skip"]
 
@@ -48,6 +52,26 @@ FIXTURE_EMPTY_ROUTE_KEYS = frozenset(
         "GET /api/sources/search_text",
     }
 )
+
+
+@dataclass(frozen=True)
+class MutationSkip:
+    """A mutation that genuinely cannot run against disposable stores.
+
+    ``issue`` must be an open GitHub issue in ``tracking_issues.toml``; the
+    registry fails once that issue closes or the 30-day expiry passes.
+    """
+
+    owner: str
+    reason: str
+    expiry: str
+    issue: int
+
+
+# Every Monitor mutation route has a disposable-store recipe (#8542). Add an
+# entry here only for a route that cannot be exercised safely, citing its
+# open tracking issue.
+MUTATION_SKIPS: dict[str, MutationSkip] = {}
 
 EXERCISED_READ_5XX_REASONS: dict[str, str] = {
     "GET /api/comms/by-module/{track}/{slug}": "isolated fixture has no broker module rows",
@@ -96,7 +120,12 @@ class ExerciseRecord:
     owner: str | None = None
     reason: str | None = None
     expiry: str | None = None
+    issue: int | None = None
     expected_statuses: tuple[int, ...] = ()
+    setup: Callable[[MutationEnv], Prepared | None] | None = field(default=None, compare=False)
+    verify: Callable[[MutationEnv, Any], None] | None = field(default=None, compare=False)
+    loopback: bool = False
+    store: str | None = None
 
     @property
     def key(self) -> str:
@@ -126,7 +155,7 @@ class ExerciseRecord:
             "body": self.body_factory,
             "ws_script": list(self.ws_script),
             "skip": (
-                {"owner": self.owner, "reason": self.reason, "expiry": self.expiry}
+                {"owner": self.owner, "reason": self.reason, "expiry": self.expiry, "issue": self.issue}
                 if self.fixture == "skip"
                 else None
             ),
@@ -441,18 +470,8 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
             expected_statuses=(200,),
         )
 
-    if operation.method in {"POST", "PUT", "DELETE", "PATCH"}:
-        return ExerciseRecord(
-            method=operation.method,
-            path_template=operation.path_template,
-            classification="mutation",
-            fixture="skip",
-            path_values=path_values,
-            owner="monitor-infra",
-            reason="mutation has no approved disposable-store recipe yet; tracked in #8542 (renewed 2026-09-23)",
-            expiry="2026-10-21",
-            expected_statuses=statuses,
-        )
+    if operation.method in MUTATION_METHODS:
+        return _mutation_record(operation, path_values, statuses)
 
     classification: RouteClass = "read-side-effect" if operation.path_template == "/api/session-streams/v1/drift" else "read"
     return ExerciseRecord(
@@ -464,6 +483,47 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
         query=_query_for(operation.path_template),
         body_factory=_body_factory(operation.path_template),
         reason=explicit_5xx_reason,
+        expected_statuses=statuses,
+    )
+
+
+def _mutation_record(
+    operation: Operation, path_values: Mapping[str, str], statuses: tuple[int, ...]
+) -> ExerciseRecord:
+    recipe = RECIPES.get(operation.key)
+    skip = MUTATION_SKIPS.get(operation.key)
+    assert recipe is None or skip is None, f"mutation has both a recipe and a skip: {operation.key}"
+    if recipe is not None:
+        return ExerciseRecord(
+            method=operation.method,
+            path_template=operation.path_template,
+            classification="mutation",
+            fixture="isolated",
+            path_values={**path_values, **recipe.path_values},
+            query=recipe.query,
+            headers=recipe.headers,
+            body_factory=recipe.body_factory,
+            reason=recipe.reason,
+            expected_statuses=recipe.expected_statuses,
+            setup=recipe.setup,
+            verify=recipe.verify,
+            loopback=recipe.loopback,
+            store=recipe.store,
+        )
+    assert skip is not None, (
+        f"mutation route has no disposable-store recipe: {operation.key}; add one to "
+        "mutation_recipes.RECIPES (or a MUTATION_SKIPS entry citing an open issue)"
+    )
+    return ExerciseRecord(
+        method=operation.method,
+        path_template=operation.path_template,
+        classification="mutation",
+        fixture="skip",
+        path_values=path_values,
+        owner=skip.owner,
+        reason=skip.reason,
+        expiry=skip.expiry,
+        issue=skip.issue,
         expected_statuses=statuses,
     )
 
@@ -483,14 +543,18 @@ def build_registry(app: Any) -> tuple[ExerciseRecord, ...]:
     assert {record.key for record in records} == {operation.key for operation in operations}, (
         "an app operation has no OPSEC exercise record"
     )
+    stale_recipes = sorted(set(RECIPES) - {record.key for record in records})
+    assert not stale_recipes, f"mutation recipes name operations the app no longer has: {stale_recipes}"
     today = date.today()
-    latest_allowed = today + timedelta(days=30)
+    latest_allowed = today + tracking_issues.RENEWAL_WINDOW
+    tracking = tracking_issues.load_tracking_issues()
     for record in records:
         if record.fixture != "skip":
             continue
         assert record.owner and record.reason and record.expiry, f"skip metadata missing: {record.key}"
         expiry = date.fromisoformat(record.expiry)
         assert today < expiry <= latest_allowed, f"skip expiry outside 30-day window: {record.key}"
+        tracking_issues.assert_cites_open_issue(f"skip {record.key}", record.issue, record.expiry, tracking)
     return tuple(sorted(records, key=lambda record: record.key))
 
 
