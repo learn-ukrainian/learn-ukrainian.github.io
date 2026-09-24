@@ -10,18 +10,30 @@ title. Pilots written out of order can be validated with an explicit, printed
 waiver (--allow-missing-prior); --strict refuses every waiver flag and
 verifies the registry is append-only over git history, so a plan that needs a
 waiver can never be built or merged as buildable.
+
+--provisional-pack is the plan-review mode (docs/epics/fresh-build-review-contracts.md
+"Contract 1"): the plan still points at a pack whose sha256 it does not carry yet,
+so the evidence_ref.sha256 comparison alone becomes the not_checked item
+pending_promotion; every other rule runs, including the append-only registry check
+that --strict adds (a provisional pass must never skip a check that plan-promote's
+strict validation needs later). --write-report stores the run as the plan-review
+manifest's plan-validate input.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
 from pathlib import Path
 
+import yaml
 from jsonschema import Draft202012Validator
 
+from ..arc.loader import SCHEMA_PATH as ARC_SCHEMA_PATH
+from ..evidence import lock as evidence_lock
 from . import codes
 from .cross import check_arc, check_rule4, load_level_plans
 from .loader import (
@@ -38,10 +50,12 @@ from .loader import (
 from .pack import load_pack, load_words, lock_digest
 from .registry import check_append_only, check_plan_against_registry, load_registry, registry_path_for
 from .report import Outcome, Report
-from .scope import check_scope_sidecar, check_title, title_quantities_outcome
+from .scope import check_scope_sidecar, check_title, scope_sidecar_path, title_quantities_outcome
 
 _CYRILLIC = re.compile(r"[А-Яа-яЇїІіЄєҐґЬь]")
 _STRESS_MARKS = ("\u0301", "\u0300")  # combining acute, combining grave
+
+REPORT_NAME = "plan-validate.report.json"
 
 #: Where a needs entry's evidence record lives (r9): pack id prefix, or the
 #: step's own paradigm block.
@@ -794,6 +808,8 @@ def validate_plan(
     allow_missing_prior: bool = False,
     strict: bool = False,
     write_scope: bool = False,
+    provisional_pack: bool = False,
+    plan_bytes: bytes | None = None,
 ) -> Report:
     """Validate one module plan: the complete §6 gate of §2/§2a.
 
@@ -804,15 +820,127 @@ def validate_plan(
     the missing-prior-plans failure into a printed waiver; strict refuses waiver
     flags (the CLI enforces that) and verifies the grammar registry is append-only
     over git history; write_scope regenerates the scope sidecar instead of checking
-    it. Never raises for plan content problems — they come back as failures in the
-    Report.
+    it. provisional_pack (plan review, before the pack hash is promoted into the
+    plan) turns exactly the evidence_ref.sha256 comparison into the not_checked
+    item pending_promotion and runs the append-only registry check that strict
+    adds; nothing else is relaxed. plan_bytes replaces the plan file's bytes (the
+    plan still lives at plan_path, and every sibling file is read from there):
+    plan-promote validates the bytes it is about to publish in memory. Never raises
+    for plan content problems — they come back as failures in the Report. The
+    report's ``inputs`` records the hash of every file the run read.
     """
-    report = Report(level=level, slug=slug)
+    report = Report(level=level, slug=slug, mode="provisional" if provisional_pack else "final")
+    context: dict = {}
+    try:
+        return _validate_plan_run(
+            report,
+            context,
+            level,
+            slug,
+            plan_path=plan_path,
+            pack_path=pack_path,
+            words_path=words_path,
+            activity_schema_path=activity_schema_path,
+            allow_missing_prior=allow_missing_prior,
+            strict=strict,
+            write_scope=write_scope,
+            provisional_pack=provisional_pack,
+            plan_bytes=plan_bytes,
+        )
+    finally:
+        report.inputs = _collect_inputs(context)
+
+
+def _relative_input(path: Path, tree_root: Path) -> str:
+    """The repo-relative posix path an input is recorded under.
+
+    Files of the curriculum tree are relative to the tree's repository root; the
+    schemas are code, so they are relative to this repository (the two are one
+    root outside tests).
+    """
+    resolved = path.resolve()
+    for root in (tree_root.resolve(), REPO_ROOT):
+        try:
+            return resolved.relative_to(root).as_posix()
+        except ValueError:
+            continue
+    return resolved.as_posix()
+
+
+def _collect_inputs(context: dict) -> dict[str, str]:
+    """{path: sha256} of every file the run read: plan, arc (+ its source document
+    and schema), grammar registry, scope sidecar, pack + lock, words + lock, the
+    plan and activity schemas, and every plan at an earlier arc position (rule 4)."""
+    plan_path: Path | None = context.get("plan_path")
+    if plan_path is None:
+        return {}
+    tree_root = evidence_root(plan_path).parent.parent
+    files: dict[Path, str | None] = {}
+
+    def add(path: Path | None, digest: str | None = None) -> None:
+        if path is not None and path.is_file():
+            files[path] = digest
+
+    if "plan_raw" in context:
+        files[plan_path] = hashlib.sha256(context["plan_raw"]).hexdigest()
+    else:
+        add(plan_path)
+    add(context.get("pack_path"))
+    if context.get("pack_path") is not None:
+        add(Path(f"{context['pack_path']}.lock"))
+    add(context.get("words_path"))
+    if context.get("words_path") is not None:
+        add(Path(f"{context['words_path']}.lock"))
+    add(REPO_ROOT / PLAN_SCHEMA_PATH)
+    add(context.get("activity_schema_path"))
+    add(REPO_ROOT / ARC_SCHEMA_PATH)
+    arc_path = plan_path.parent / "_arc.yaml"
+    add(arc_path)
+    if arc_path.is_file():
+        try:
+            source_rel = (yaml.safe_load(arc_path.read_text(encoding="utf-8")) or {}).get("source", {}).get("path")
+        except (OSError, yaml.YAMLError, AttributeError):
+            source_rel = None
+        if isinstance(source_rel, str):
+            add(tree_root / source_rel)
+    add(registry_path_for(plan_path))
+    add(scope_sidecar_path(plan_path, plan_path.stem))
+    for path in context.get("prior_plan_paths", []):
+        add(path)
+    return {_relative_input(path, tree_root): digest or sha256_of(path) for path, digest in sorted(files.items())}
+
+
+def _validate_plan_run(
+    report: Report,
+    context: dict,
+    level: str,
+    slug: str,
+    *,
+    plan_path: Path | None,
+    pack_path: Path | None,
+    words_path: Path | None,
+    activity_schema_path: Path | None,
+    allow_missing_prior: bool,
+    strict: bool,
+    write_scope: bool,
+    provisional_pack: bool,
+    plan_bytes: bytes | None,
+) -> Report:
     _always_not_checked(report)
     try:
         plan_path = resolve_plan_path(level, slug, plan_path)
-        plan_text = read_plan_text(plan_path)
-        plan = load_plan(plan_path)
+        context["plan_path"] = plan_path
+        if plan_bytes is None:
+            read_plan_text(plan_path)  # PLAN_NOT_FOUND when the file is absent
+            plan_raw = plan_path.read_bytes()
+        else:
+            plan_raw = plan_bytes
+        context["plan_raw"] = plan_raw
+        try:
+            plan_text = plan_raw.decode("utf-8")
+        except UnicodeDecodeError as error:
+            raise PlanError(codes.PLAN_YAML_INVALID, f"{plan_path} is not valid UTF-8: {error}") from error
+        plan = load_plan(plan_path, text=plan_text)
         check_plan_slug(plan_path, slug, plan)
     except PlanError as error:
         _fail(report, error.code, error.message)
@@ -822,6 +950,7 @@ def validate_plan(
     report.not_checked.append(title_quantities_outcome(plan))
     root = evidence_root(plan_path)
     words_path = words_path or root / f"evidence/{level}/_words.yaml"
+    context["words_path"] = words_path
 
     _check_stress_marks(report, plan_text)
 
@@ -853,6 +982,7 @@ def validate_plan(
                 f"{plan['evidence_ref']['path']!r}, which resolves to {declared_pack}; "
                 "the declared path must identify the checked pack (rule 3)",
             )
+        context["pack_path"] = pack_path
         pack = load_pack(pack_path)
         store = load_words(words_path)
     except PlanError as error:
@@ -865,7 +995,16 @@ def validate_plan(
                 _fail(report, codes.PACK_LOCK_MISMATCH, f"{pack_path} bytes disagree with {pack_path}.lock (rule 3)")
         except PlanError as error:
             _fail(report, error.code, error.message)
-        if pack_digest != plan["evidence_ref"]["sha256"]:
+        if pack_digest != plan["evidence_ref"]["sha256"] and provisional_pack:
+            report.not_checked.append(
+                Outcome(
+                    codes.PENDING_PROMOTION,
+                    f"evidence_ref.sha256 is {plan['evidence_ref']['sha256']} and the provisional pack's "
+                    f"sha256 is {pack_digest}; plan-promote sets evidence_ref.sha256 to the pack's after "
+                    "the plan review approves",
+                )
+            )
+        elif pack_digest != plan["evidence_ref"]["sha256"]:
             _fail(
                 report,
                 codes.PACK_HASH_MISMATCH,
@@ -881,6 +1020,7 @@ def validate_plan(
     _check_lesson_shape(report, plan)
     _check_inventory_and_order(report, plan)
     _check_cyrillic(report, plan)
+    context["activity_schema_path"] = activity_schema_path or REPO_ROOT / f"schemas/activities-{level}.schema.json"
     allowlist = _activity_allowlist(report, level, activity_schema_path)
     _check_activities(report, plan, allowlist)
     _check_dialogue_and_needs(report, plan)
@@ -912,14 +1052,20 @@ def validate_plan(
 
     # Cross-plan rules (Brief B): earlier plans and the arc (rules 4 and 5),
     # the grammar registry, the scope sidecar and the module title.
-    check_rule4(report, plan, plan_path, allow_missing_prior=allow_missing_prior)
+    level_plans = load_level_plans(plan_path.parent)
+    context["prior_plan_paths"] = [
+        path
+        for position, (_slug, _plan, path) in level_plans.by_position.items()
+        if position < plan["arc_ref"]["position"]
+    ]
+    check_rule4(report, plan, plan_path, allow_missing_prior=allow_missing_prior, level_plans=level_plans)
     check_arc(report, level, plan, plan_path)
     registry_path = registry_path_for(plan_path)
     registry_failures: list[Outcome] = []
     registry = load_registry(registry_path, level, registry_failures)
     report.failures.extend(registry_failures)
     check_plan_against_registry(report, plan, plan_path, registry)
-    if strict and registry is not None:
+    if (strict or provisional_pack) and registry is not None:
         check_append_only(report, registry_path, registry[0])
     scope_letters = check_scope_sidecar(report, plan, plan_path, write=write_scope)
     check_title(report, plan, scope_letters)
@@ -960,6 +1106,24 @@ def validate_level(
     return reports
 
 
+def report_bytes(report: Report) -> bytes:
+    """The deterministic report file: sorted keys, UTF-8, a trailing newline."""
+    return (json.dumps(report.to_json(), ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8")
+
+
+def report_path_for(plan_path: Path, level: str, slug: str) -> Path:
+    """evidence/<level>/_state/<slug>/plan-validate.report.json beside the plan's tree."""
+    return evidence_root(resolve_plan_path(level, slug, plan_path)) / "evidence" / level / "_state" / slug / REPORT_NAME
+
+
+def write_report(report: Report, plan_path: Path | None) -> Path:
+    """Write the plan-validate report (mode 0600, atomic). Written for any status:
+    the plan-review manifest is what refuses a report that is not a clean pass."""
+    path = report_path_for(plan_path, report.level, report.slug)
+    evidence_lock.atomic_write(path, report_bytes(report), mode=0o600)
+    return path
+
+
 def _report_exit_code(report: Report) -> int:
     if report.failures:
         return 1
@@ -989,6 +1153,18 @@ def main(argv: list[str] | None = None) -> int:
             "build preflight and CI run --strict, so a plan that needs a waiver can never be\n"
             "built or merged as buildable.\n"
             "\n"
+            "Plan review: --provisional-pack validates a plan whose evidence_ref.sha256 is not\n"
+            "the pack's yet (the pack builder's provisional pack, before plan-promote). Every\n"
+            "rule runs against the pack at evidence_ref.path; the single change is that the\n"
+            "evidence_ref.sha256 comparison becomes 'not_checked: pending_promotion' recording\n"
+            "both hashes instead of failing pack_hash_mismatch. The append-only registry check\n"
+            "that --strict adds also runs in this mode, so a provisional pass never skips a\n"
+            "check that plan-promote's strict validation needs. --provisional-pack is refused\n"
+            "(exit 2) together with --strict, --allow-missing-prior and --all: a provisional\n"
+            "pass is never a final one, and a waiver is never a pass. --write-report stores\n"
+            "the run (mode: provisional|final and an inputs map of every file it read) as the\n"
+            "plan-review manifest's plan-validate input.\n"
+            "\n"
             "The title check: a run of two or more enumerated single letters in the module's\n"
             "title or subtitle must equal the scope letter list. 'A run of enumerated single\n"
             "letters' is a maximal sequence of two or more tokens, each exactly one UPPERCASE\n"
@@ -1006,10 +1182,13 @@ def main(argv: list[str] | None = None) -> int:
             "  curriculum/l2-uk-en/evidence/<level>/<slug>.yaml(.lock)  the module pack\n"
             "  curriculum/l2-uk-en/evidence/<level>/_words.yaml(.lock)  the word store\n"
             "  schemas/module-plan-v2.schema.json, schemas/activities-<level>.schema.json\n"
-            "Outputs: stdout only; read-only unless --write-scope is given. The scope sidecar\n"
-            "is deterministic (fixed key order, UTF-8, trailing newline); --write-scope\n"
-            "creates it with mode 0600 and a created _scope directory with mode 0700 — no\n"
-            "group-write or world bits.\n"
+            "Outputs: stdout; read-only unless --write-scope or --write-report is given. The\n"
+            "scope sidecar is deterministic (fixed key order, UTF-8, trailing newline);\n"
+            "--write-scope creates it with mode 0600 and a created _scope directory with mode\n"
+            "0700 — no group-write or world bits. --write-report writes\n"
+            "curriculum/l2-uk-en/evidence/<level>/_state/<slug>/plan-validate.report.json\n"
+            "(the --json report: sorted keys, UTF-8, trailing newline, mode 0600, for any\n"
+            "status).\n"
             "Exit codes: 0 = clean pass; 1 = failures; 2 = usage error, including --strict\n"
             "given together with a waiver flag; 3 = waived (no failures, but a waiver was\n"
             "used — never a clean pass). not_checked items never fail the run.\n"
@@ -1019,6 +1198,7 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.curriculum.validate a1 --all --strict   (CI)\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --allow-missing-prior\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --write-scope\n"
+            "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --provisional-pack --write-report\n"
             "Related: docs/epics/fresh-build-plan-schema.md §2/§2a/§6; issues #8412, #8397.\n"
             "Outcome codes:\n" + codes.help_text()
         ),
@@ -1042,6 +1222,19 @@ def main(argv: list[str] | None = None) -> int:
         "--write-scope",
         action="store_true",
         help="write the generated scope sidecar _scope/<slug>.yaml instead of checking it byte for byte",
+    )
+    parser.add_argument(
+        "--provisional-pack",
+        action="store_true",
+        help="plan-review mode: evidence_ref.sha256 not matching the pack becomes not_checked "
+        "'pending_promotion' (both hashes recorded) instead of failing pack_hash_mismatch; the "
+        "registry append-only check still runs; refused with --strict, --allow-missing-prior and --all",
+    )
+    parser.add_argument(
+        "--write-report",
+        action="store_true",
+        help="write the report (mode, inputs map of every file read) to "
+        "evidence/<level>/_state/<slug>/plan-validate.report.json for the plan-review manifest",
     )
     parser.add_argument(
         "--plan",
@@ -1070,6 +1263,15 @@ def main(argv: list[str] | None = None) -> int:
             "--strict refuses every waiver flag (--allow-missing-prior): a plan that needs a "
             "waiver cannot be built or merged as buildable (§2a)"
         )
+    if args.provisional_pack and args.strict:
+        parser.error(
+            "--provisional-pack cannot be combined with --strict: a provisional pass is never the "
+            "final one (plan-promote runs the strict validation)"
+        )
+    if args.provisional_pack and args.allow_missing_prior:
+        parser.error("--provisional-pack refuses --allow-missing-prior: a waived run is never a pass")
+    if (args.provisional_pack or args.write_report) and args.all:
+        parser.error("--provisional-pack and --write-report apply to one module; name a slug, not --all")
     if args.all and args.slug:
         parser.error("--all validates every plan of the level; do not name a slug")
     if not args.all and not args.slug:
@@ -1121,7 +1323,15 @@ def main(argv: list[str] | None = None) -> int:
         allow_missing_prior=args.allow_missing_prior,
         strict=args.strict,
         write_scope=args.write_scope,
+        provisional_pack=args.provisional_pack,
     )
+    if args.write_report:
+        try:
+            written = write_report(report, args.plan)
+        except PlanError as error:
+            print(error, file=sys.stderr)
+            return 1
+        print(f"report written: {written}", file=sys.stderr)
     if args.json:
         print(json.dumps(report.to_json(), ensure_ascii=False, indent=2))
     else:
