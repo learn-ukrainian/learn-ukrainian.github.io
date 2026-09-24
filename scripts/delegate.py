@@ -2126,6 +2126,7 @@ def _has_write_directive(prompt: str) -> bool:
     prev_non_empty: str | None = None
     for line in stripped_prompt.splitlines():
         if not line.strip():
+            prev_non_empty = None
             continue
         if _is_write_directive(line, prev_non_empty):
             return True

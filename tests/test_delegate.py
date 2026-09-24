@@ -1244,11 +1244,24 @@ def test_read_only_question_to_reviewer_is_not_refused():
         "Why is this broken?\nFix the bug in X.\n",
         "# Work\nFix the bug in X.\n",
         "- Step 1\nFix the bug in X.\n",
+        "Context\n\nFix the bug in foo.\n",
     ],
 )
 def test_read_only_write_directive_cases_are_still_refused(directive_prompt):
     """Genuine write directives (numbered, bulleted, first-line, or after sentence boundaries) are refused (#8703)."""
     error = delegate._read_only_write_intent_error(mode="read-only", prompt=directive_prompt)
+    assert error is not None
+    assert "write-shaped prompt" in error
+
+
+def test_read_only_blank_line_starts_new_sentence_refused():
+    """A blank line ends the paragraph, so a subsequent imperative verb is a directive (#8703).
+
+    A directive that opens a new paragraph after an unpunctuated line
+    (e.g., 'Context', 'Task', 'Background') must be refused.
+    """
+    prompt = "Context\n\nFix the bug in foo."
+    error = delegate._read_only_write_intent_error(mode="read-only", prompt=prompt)
     assert error is not None
     assert "write-shaped prompt" in error
 
