@@ -526,7 +526,7 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
     }
     f_path = tmp_path / "extra_keys.json"
     f_path.write_text(json.dumps(bad_findings), encoding="utf-8")
-    with pytest.raises(ValueError, match="unexpected extra 1 sample indices"):
+    with pytest.raises(ValueError, match="unexpected extra 1 sample keys"):
         generate_signoff_and_receipt(
             findings_file=f_path,
             write_signoff=True,
@@ -569,3 +569,17 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
     assert item1["status"] == "FAIL"
     assert item1["verdict"] == "CHANGES_REQUESTED"
     assert any("Порушення критеріїв оцінювання: pedagogical_soundness" in d for d in item1["defects"])
+
+    # 4. Non-canonical key like "01" rejected
+    non_canonical_findings = copy.deepcopy(raw_findings)
+    non_canonical_findings["01"] = non_canonical_findings["1"]
+    del non_canonical_findings["1"]
+    f_path4 = tmp_path / "non_canonical.json"
+    f_path4.write_text(json.dumps(non_canonical_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="non-canonical sample index key"):
+        generate_signoff_and_receipt(
+            findings_file=f_path4,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )

@@ -161,10 +161,25 @@ def generate_signoff_and_receipt(
     sample_size = len(samples)
 
     findings: dict[int, Any] = {}
+    raw_findings: dict[str, Any] = {}
     if findings_file and findings_file.is_file():
         with findings_file.open("r", encoding="utf-8") as f:
             raw_findings = json.load(f)
-            findings = {int(k): v for k, v in raw_findings.items()}
+            if not isinstance(raw_findings, dict):
+                raise ValueError(
+                    "Provenance violation: findings file must contain a JSON object mapping sample indices to evaluations"
+                )
+            for k, v in raw_findings.items():
+                if not isinstance(k, str) or not k.isdigit() or str(int(k)) != k:
+                    raise ValueError(
+                        f"Provenance violation: non-canonical sample index key {k!r} in findings file"
+                    )
+                int_k = int(k)
+                if int_k in findings:
+                    raise ValueError(
+                        f"Provenance violation: duplicate sample index key {k!r} in findings file"
+                    )
+                findings[int_k] = v
 
     if write_signoff:
         if not findings_file or not findings_file.is_file():
@@ -187,6 +202,23 @@ def generate_signoff_and_receipt(
                 "Synthesizing item verdicts without complete reviewer input is strictly forbidden."
             )
         expected_indices = {item["sample_index"] for item in samples}
+        expected_str_keys = {str(item["sample_index"]) for item in samples}
+        raw_keys = set(raw_findings.keys())
+        if raw_keys != expected_str_keys:
+            missing_keys = expected_str_keys - raw_keys
+            extra_keys = raw_keys - expected_str_keys
+            err_parts = []
+            if missing_keys:
+                err_parts.append(
+                    f"missing {len(missing_keys)} sample keys: {sorted(missing_keys)[:10]}"
+                )
+            if extra_keys:
+                err_parts.append(
+                    f"unexpected extra {len(extra_keys)} sample keys: {sorted(extra_keys)[:10]}"
+                )
+            raise ValueError(
+                f"Provenance violation: findings raw keys do not match expected sample keys ({'; '.join(err_parts)})"
+            )
         finding_indices = set(findings.keys())
         if finding_indices != expected_indices:
             missing_indices = expected_indices - finding_indices

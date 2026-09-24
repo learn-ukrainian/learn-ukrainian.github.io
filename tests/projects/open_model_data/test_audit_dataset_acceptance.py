@@ -741,6 +741,29 @@ def test_check7_receipt_validation_schema_and_criteria_integrity(tmp_path, defau
     assert res_mismatch.status == "FAIL"
     assert any("content_hash mismatch" in f for f in res_mismatch.failures)
 
+    # 6. Missing receipt profile_sha256 fails unconditionally
+    _write_receipt(_make_receipt_items())
+    receipt_data = json.loads(receipt_file.read_text(encoding="utf-8"))
+    del receipt_data["profile_sha256"]
+    receipt_file.write_text(json.dumps(receipt_data), encoding="utf-8")
+    res_no_prof, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_no_prof.status == "FAIL"
+    assert any("profile_sha256 (None) does not match profile hash" in f for f in res_no_prof.failures)
+
+    # 7. Item marked FAIL cannot coexist with 0 blockers / accepted receipt
+    fail_item_items = _make_receipt_items()
+    fail_item_items[0]["status"] = "FAIL"
+    fail_item_items[0]["verdict"] = "CHANGES_REQUESTED"
+    _write_receipt(fail_item_items, blockers=0)
+    res_fail_item, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_fail_item.status == "FAIL"
+    assert any("does not reconcile with item-level defect count" in f for f in res_fail_item.failures)
+    assert any("marked FAIL, CHANGES_REQUESTED, or defective" in f for f in res_fail_item.failures)
+
 
 # ── Full Audit Runner & Fail-Closed Tests ───────────────────────────────────
 

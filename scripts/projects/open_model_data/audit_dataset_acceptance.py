@@ -1343,7 +1343,7 @@ def audit_check_7_sample_drawer(
                                     f"Receipt sample_seed ({receipt_seed}) does not match sample seed ({seed_hash})"
                                 )
                             receipt_prof = receipt_data.get("profile_sha256")
-                            if receipt_prof and receipt_prof != profile_sha256:
+                            if receipt_prof != profile_sha256:
                                 failures.append(
                                     f"Receipt profile_sha256 ({receipt_prof}) does not match profile hash ({profile_sha256})"
                                 )
@@ -1379,8 +1379,12 @@ def audit_check_7_sample_drawer(
                                 "zero_russianisms",
                                 "zero_soviet_sum11",
                             }
+                            item_blockers = 0
                             for r_it in items:
                                 s_idx = r_it.get("sample_index")
+                                it_verdict = r_it.get("verdict")
+                                it_status = r_it.get("status")
+                                it_defects = r_it.get("defects", [])
                                 crit = r_it.get("criteria")
                                 if not isinstance(crit, dict) or not required_criteria_keys.issubset(crit.keys()):
                                     failures.append(
@@ -1392,13 +1396,29 @@ def audit_check_7_sample_drawer(
                                         f"Receipt item {s_idx} has non-boolean criteria value"
                                     )
                                     break
-                                if any(crit[k] is False for k in required_criteria_keys) and (
-                                    r_it.get("verdict") == "APPROVED" or r_it.get("status") == "PASS"
-                                ):
-                                    failures.append(
-                                        f"Receipt item {s_idx} has failed criteria (False) but received APPROVED verdict"
-                                    )
-                                    break
+                                has_failed_criteria = any(crit[k] is False for k in required_criteria_keys)
+                                is_defective = (
+                                    it_verdict != "APPROVED"
+                                    or it_status != "PASS"
+                                    or bool(it_defects)
+                                    or has_failed_criteria
+                                )
+                                if is_defective:
+                                    item_blockers += 1
+                                    if has_failed_criteria and (it_verdict == "APPROVED" or it_status == "PASS"):
+                                        failures.append(
+                                            f"Receipt item {s_idx} has failed criteria (False) but received APPROVED verdict"
+                                        )
+                                        break
+
+                            if item_blockers != receipt_blockers:
+                                failures.append(
+                                    f"Receipt blocker_defect_count ({receipt_blockers}) does not reconcile with item-level defect count ({item_blockers})"
+                                )
+                            if item_blockers > 0:
+                                failures.append(
+                                    f"Receipt contains {item_blockers} item(s) marked FAIL, CHANGES_REQUESTED, or defective"
+                                )
 
                             unassessed = [
                                 r_it.get("sample_index")
