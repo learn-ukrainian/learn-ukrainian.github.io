@@ -6,6 +6,7 @@ health evidence (frozen brief semantics).
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from typing import Any
 
 HEALTH_RANK = {
@@ -36,6 +37,76 @@ def is_actionable(item: dict[str, Any] | None) -> bool:
     return bool(code) and code not in NON_ACTIONABLE_ACTION_CODES
 
 
+def _rollup_identity(entry: dict[str, Any]) -> tuple[str, ...] | None:
+    """Check-run identity is ``(workflowName, name)``; a status context is ``context``.
+
+    A partial identity is ``None`` so the caller keeps the row. Dropping it
+    would hide a real failure when two workflows share a job name.
+    """
+    name = entry.get("name")
+    if isinstance(name, str) and name.strip():
+        workflow = entry.get("workflowName")
+        if isinstance(workflow, str) and workflow.strip():
+            return ("check", workflow.strip(), name.strip())
+        return None
+    context = entry.get("context")
+    if isinstance(context, str) and context.strip():
+        return ("status", context.strip())
+    return None
+
+
+def _rollup_timestamp(entry: dict[str, Any]) -> datetime | None:
+    """Latest-run key: ``startedAt``, then ``completedAt`` when start is absent."""
+    for field in ("startedAt", "completedAt"):
+        raw = entry.get(field)
+        if not isinstance(raw, str) or not raw.strip():
+            continue
+        try:
+            parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=UTC)
+        return parsed
+    return None
+
+
+def _collapse_status_rollup(rollup: list[Any]) -> list[Any]:
+    """One row per check identity, the latest by start time.
+
+    Missing identity, a missing timestamp anywhere in the group, or a tie at
+    the latest timestamp keeps every row in that group. A newer success must
+    not erase an older failure unless the timestamps say which run won.
+    """
+    grouped: dict[tuple[str, ...], list[dict[str, Any]]] = {}
+    order: list[tuple[str, ...]] = []
+    kept: list[Any] = []
+    for entry in rollup:
+        if not isinstance(entry, dict):
+            kept.append(entry)
+            continue
+        # Cancelled runs can leave an unexpanded matrix parent, not a real check.
+        if "${{" in str(entry.get("name") or ""):
+            continue
+        identity = _rollup_identity(entry)
+        if identity is None:
+            kept.append(entry)
+            continue
+        if identity not in grouped:
+            grouped[identity] = []
+            order.append(identity)
+        grouped[identity].append(entry)
+    for identity in order:
+        group = grouped[identity]
+        stamps = [_rollup_timestamp(entry) for entry in group]
+        if any(stamp is None for stamp in stamps):
+            kept.extend(group)
+            continue
+        latest = max(stamp for stamp in stamps if stamp is not None)
+        kept.extend(entry for entry, stamp in zip(group, stamps, strict=True) if stamp == latest)
+    return kept
+
+
 def _pr_check_state(pr: dict[str, Any] | None) -> str:
     """Return failing | pending | passing | unknown from GH list rollup only."""
     if not pr:
@@ -45,11 +116,8 @@ def _pr_check_state(pr: dict[str, Any] | None) -> str:
         return "unknown"
     states: list[str] = []
     if isinstance(rollup, list):
-        for entry in rollup:
+        for entry in _collapse_status_rollup(rollup):
             if isinstance(entry, dict):
-                # Cancelled runs can leave an unexpanded matrix parent, not a real check.
-                if "${{" in str(entry.get("name") or ""):
-                    continue
                 states.append(str(entry.get("state") or entry.get("conclusion") or "").upper())
             else:
                 states.append(str(entry).upper())
