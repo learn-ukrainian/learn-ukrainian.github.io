@@ -103,7 +103,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
-import fcntl
+import functools
 import hashlib
 import json
 import logging
@@ -115,13 +115,12 @@ import stat
 import subprocess
 import sys
 import tempfile
-import threading
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Collection, Sequence
+from collections.abc import Callable, Collection, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -148,7 +147,7 @@ from scripts.common.scratch import (
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
-from scripts.orchestration import reaper_lifecycle
+from scripts.orchestration import reaper_lifecycle, worktree_claims
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
@@ -721,27 +720,18 @@ class WorktreeBranchDiverged(RuntimeError):
     """A local --branch ref contains commits absent from its fetched origin ref."""
 
 
-class WorktreeLockError(RuntimeError):
-    """A per-worktree advisory lock could not be acquired."""
+WorktreeLockError = worktree_claims.WorktreeLockError
+WorktreeLockTimeout = worktree_claims.WorktreeLockTimeout
+WorktreeLockReentry = worktree_claims.WorktreeLockReentry
 
-
-class WorktreeLockTimeout(WorktreeLockError):
-    """Another process held the worktree lock for longer than the timeout."""
-
-
-class WorktreeLockReentry(WorktreeLockError):
-    """This process already holds the worktree lock; nesting would self-deadlock."""
-
-
-# Dispatch (create-or-attach, then publish the task record) and settle
-# (ownership check, claim scan, removal) serialize on one lock per worktree,
-# so an attachment can never land between settle's scan and its removal (#8610).
-_WORKTREE_LOCK_DEFAULT_TIMEOUT_S = 30.0
-_WORKTREE_LOCK_POLL_S = 0.05
+# Dispatch (create-or-attach, then publish the task record) and every
+# dispatch-worktree removal (see _remove_dispatch_worktree) serialize on one
+# lock per worktree, so an attachment can never land between a remover's claim
+# scan and its removal (#8610). The lock itself lives in
+# scripts/orchestration/worktree_claims.py, shared with the scheduled reaper.
+_WORKTREE_LOCK_DEFAULT_TIMEOUT_S = worktree_claims.DEFAULT_LOCK_TIMEOUT_S
 # Test seam: overrides ``<git common dir>/lu-worktree-locks`` when set.
 _WORKTREE_LOCK_DIR: Path | None = None
-# (lock key, thread ident) pairs this process holds; see worktree_lock.
-_HELD_WORKTREE_LOCKS: set[tuple[str, int]] = set()
 
 
 def _worktree_lock_dir() -> Path:
@@ -749,70 +739,26 @@ def _worktree_lock_dir() -> Path:
     if _WORKTREE_LOCK_DIR is not None:
         return _WORKTREE_LOCK_DIR
     common_dir = _git_common_dir(_REPO_ROOT)
-    return (common_dir if common_dir is not None else _TASKS_DIR.parent) / "lu-worktree-locks"
+    return (common_dir if common_dir is not None else _TASKS_DIR.parent) / worktree_claims.LOCK_DIR_NAME
 
 
 def _worktree_lock_path(path: Path | str) -> tuple[str, Path]:
     """Return the canonical absolute worktree path and its lock file."""
-    raw = Path(path).expanduser()
-    if not raw.is_absolute():
-        raise WorktreeLockError(f"worktree lock path must be absolute: {raw}")
-    canonical = str(raw.resolve())
-    key = hashlib.sha256(canonical.encode("utf-8", "surrogateescape")).hexdigest()[:32]
-    return canonical, _worktree_lock_dir() / f"{key}.lock"
+    return worktree_claims.lock_path(path, lock_dir=_worktree_lock_dir())
 
 
-@contextlib.contextmanager
-def worktree_lock(path: Path | str, timeout_s: float | None = None):
-    """Hold an exclusive ``flock`` advisory lock for one worktree path.
+def worktree_lock(path: Path | str, timeout_s: float | None = None) -> contextlib.AbstractContextManager[None]:
+    """Hold this repository's exclusive advisory lock for one worktree path.
 
-    The lock file is ``<git common dir>/lu-worktree-locks/<key>.lock``, where
-    the key is the first 32 hex digits of the SHA-256 of the canonical absolute
-    path, so every checkout of the repository contends on the same file. Lock
-    files are never deleted: unlinking one while it is held would let a second
-    process lock a fresh inode, and a stale file is harmless. The lock is
-    polled with ``LOCK_NB`` until ``timeout_s`` elapses, then
-    :class:`WorktreeLockTimeout` is raised. Every failure raises a
-    :class:`WorktreeLockError`. ``timeout_s`` defaults to
-    ``_WORKTREE_LOCK_DEFAULT_TIMEOUT_S``. ``flock`` locks conflict between two
-    opens in one process too, so a nested acquisition on the same thread
-    raises :class:`WorktreeLockReentry` instead of waiting on itself.
+    See :func:`scripts.orchestration.worktree_claims.worktree_lock`. Every
+    failure raises a :class:`WorktreeLockError`; ``timeout_s`` defaults to
+    ``_WORKTREE_LOCK_DEFAULT_TIMEOUT_S``.
     """
-    canonical, lock_file = _worktree_lock_path(path)
-    holder = (lock_file.stem, threading.get_ident())
-    if holder in _HELD_WORKTREE_LOCKS:
-        raise WorktreeLockReentry(f"worktree lock for {canonical} is already held by this thread")
-    if timeout_s is None:
-        timeout_s = _WORKTREE_LOCK_DEFAULT_TIMEOUT_S
-    try:
-        lock_file.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
-        fd = os.open(lock_file, os.O_RDWR | os.O_CREAT | os.O_CLOEXEC, 0o600)
-    except OSError as exc:
-        raise WorktreeLockError(f"worktree lock for {canonical} unavailable: {type(exc).__name__}: {exc}") from exc
-    try:
-        deadline = time.monotonic() + max(timeout_s, 0.0)
-        while True:
-            try:
-                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                break
-            except BlockingIOError:
-                if time.monotonic() >= deadline:
-                    raise WorktreeLockTimeout(
-                        f"worktree lock for {canonical} still held by another process after {timeout_s:g}s"
-                    ) from None
-                time.sleep(_WORKTREE_LOCK_POLL_S)
-            except OSError as exc:
-                raise WorktreeLockError(f"worktree lock for {canonical} failed: {type(exc).__name__}: {exc}") from exc
-    except BaseException:
-        os.close(fd)
-        raise
-    _HELD_WORKTREE_LOCKS.add(holder)
-    try:
-        yield
-    finally:
-        _HELD_WORKTREE_LOCKS.discard(holder)
-        # Closing the descriptor releases the flock.
-        os.close(fd)
+    return worktree_claims.worktree_lock(
+        path,
+        lock_dir=_worktree_lock_dir(),
+        timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if timeout_s is None else timeout_s,
+    )
 
 
 def _normalize_task_id(agent: str, task_id: str) -> str:
@@ -2786,20 +2732,9 @@ def _worktree_matches_origin_branch(path: Path, branch: str) -> bool:
 
 # Terminal statuses that mean a prior dispatch no longer needs the worktree
 # mounted. Includes failure modes — a crashed review worktree should not
-# permanently pin a PR branch for follow-up dispatches (#5340).
-_BRANCH_HOLDER_RELEASABLE_STATUSES = frozenset(
-    {
-        "done",
-        "failed",
-        "timeout",
-        "rate_limited",
-        "crashed",
-        "cancelled",
-        "dry_run",
-        "reaped",
-        _NO_DELIVERABLE_STATUS,
-    }
-)
+# permanently pin a PR branch for follow-up dispatches (#5340). The same set
+# decides which task records stop claiming a worktree for removal (#8610).
+_RELEASED_TASK_STATUSES = worktree_claims.RELEASED_TASK_STATUSES
 
 
 def _branch_holder_activity_reason(
@@ -2845,7 +2780,7 @@ def _branch_holder_activity_reason(
             cand_state = _read_state(_state_path(candidate))
             if isinstance(cand_state, dict):
                 cand_status = cand_state.get("status")
-                if cand_status not in _BRANCH_HOLDER_RELEASABLE_STATUSES:
+                if cand_status not in _RELEASED_TASK_STATUSES:
                     return f"active dispatch task-id={candidate}"
                 if reap_worktrees._task_pid_alive(cand_state):
                     return f"live task PID for task-id={candidate}"
@@ -2892,7 +2827,7 @@ def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]
     status = str(task_state.get("status")) if task_state and task_state.get("status") is not None else None
     if task_state is None:
         return True, "clean+synced; task record absent; activity probes empty"
-    if status in _BRANCH_HOLDER_RELEASABLE_STATUSES:
+    if status in _RELEASED_TASK_STATUSES:
         return True, f"clean+synced; task status={status}"
     return False, f"task still active or invalid status (status={status})"
 
@@ -3095,13 +3030,31 @@ def _superseded_review_releasable(path: Path) -> tuple[bool, str]:
     if task_state is None:
         return True, "clean; task record absent; activity probes empty"
     status = str(task_state.get("status") or "")
-    if status in _BRANCH_HOLDER_RELEASABLE_STATUSES:
+    if status in _RELEASED_TASK_STATUSES:
         return True, f"clean; task status={status}"
     return False, f"task still active or invalid status (status={status})"
 
 
+def _superseded_review_release_proof(path: Path) -> tuple[bool, str]:
+    """Return ``(ok, reason)`` for removing an earlier review round's checkout.
+
+    The checkout must be releasable (:func:`_superseded_review_releasable`)
+    and its HEAD durably contained in main or a remote ref.
+    """
+    ok, reason = _superseded_review_releasable(path)
+    if not ok:
+        return False, reason
+    if not _worktree_head_is_durably_contained(path):
+        return False, "tip not contained in main or a remote ref"
+    return True, reason
+
+
 def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list[Path]:
-    """Remove earlier rounds of this review series before the new checkout is made."""
+    """Remove earlier rounds of this review series before the new checkout is made.
+
+    Each removal goes through :func:`_remove_dispatch_worktree`, which runs the
+    release proof while holding the earlier round's worktree lock (#8610).
+    """
     series = _review_series(task_id)
     if series is None:
         return []
@@ -3114,79 +3067,39 @@ def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list
         earlier_stem, earlier_round = earlier
         if earlier_stem != stem or earlier_round >= current_round:
             continue
-        ok, reason = _superseded_review_releasable(path)
-        if not ok:
-            print(
-                f"ℹ️  earlier review {path} kept ({reason})",
-                file=sys.stderr,
-            )
-            continue
-        if not _worktree_head_is_durably_contained(path):
-            print(
-                f"ℹ️  earlier review {path} kept (tip not contained in main or a remote ref)",
-                file=sys.stderr,
-            )
-            continue
-        scratch_branch = _scratch_branch_for_review_checkout(path, component)
         if dry_run:
+            ok, reason = _superseded_review_release_proof(path)
+            if not ok:
+                print(f"ℹ️  earlier review {path} kept ({reason})", file=sys.stderr)
+                continue
             print(
                 f"🌲 dry-run: would remove superseded review worktree {path} ({reason})",
                 file=sys.stderr,
             )
             released.append(path)
             continue
-        try:
-            proc = subprocess.run(
-                ["git", "worktree", "remove", str(path)],
-                cwd=_REPO_ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=_sanitized_git_env(),
-                timeout=DEFAULT_GIT_TIMEOUT_S,
-            )
-        except (OSError, subprocess.TimeoutExpired) as exc:
-            print(
-                f"⚠️  failed to remove superseded review worktree {path}: {type(exc).__name__}: {exc}",
-                file=sys.stderr,
-            )
-            continue
-        if proc.returncode != 0:
-            print(
-                f"⚠️  failed to remove superseded review worktree {path}: {_format_process_failure(proc)}",
-                file=sys.stderr,
-            )
-            continue
-        print(
-            f"🌲 removed superseded review worktree {path} ({reason})",
-            file=sys.stderr,
+        removal = _remove_dispatch_worktree(
+            path,
+            reason="superseded by a later review round",
+            owner_task_id=None,
+            releasable=functools.partial(_superseded_review_release_proof, path),
         )
-        if scratch_branch is not None:
+        if removal["action"] == "skipped":
+            print(f"ℹ️  earlier review {path} kept ({removal['reason']})", file=sys.stderr)
+            continue
+        if removal["action"] != "removed":
+            print(
+                f"⚠️  failed to remove superseded review worktree {path}: {removal['error']}",
+                file=sys.stderr,
+            )
+            continue
+        print(f"🌲 removed superseded review worktree {path} ({removal['reason']})", file=sys.stderr)
+        # Delete only the local branch named for this review round.
+        scratch_branch = removal["branch"]
+        if scratch_branch is not None and scratch_branch.split("/")[-1] == component:
             _delete_local_branch(scratch_branch)
         released.append(path)
     return released
-
-
-def _scratch_branch_for_review_checkout(path: Path, component: str) -> str | None:
-    """The local branch named for this review round, if the checkout is on it."""
-    try:
-        proc = subprocess.run(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            cwd=path,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return None
-    name = (proc.stdout or "").strip()
-    if proc.returncode != 0 or not name or name == "HEAD":
-        return None
-    if name.split("/")[-1] != component:
-        return None
-    return name
 
 
 def _delete_local_branch(branch: str) -> None:
@@ -3254,52 +3167,51 @@ def _release_stale_branch_holders(
     """Remove releasable holders of ``branch`` so a new worktree can attach.
 
     Returns paths successfully released (or that would be released in dry-run).
-    Non-releasable holders are left in place for the caller to refuse on.
+    Non-releasable holders are left in place for the caller to refuse on. Each
+    removal goes through :func:`_remove_dispatch_worktree`, which runs
+    :func:`_stale_branch_holder_releasable` while holding the holder's
+    worktree lock (#8610).
     """
     released: list[Path] = []
     for path in holders:
-        ok, reason = _stale_branch_holder_releasable(path, branch)
-        if not ok:
-            print(
-                f"ℹ️  branch {branch!r} held by {path} not auto-releasable ({reason})",
-                file=sys.stderr,
-            )
-            continue
         if dry_run:
+            ok, reason = _stale_branch_holder_releasable(path, branch)
+            if not ok:
+                print(
+                    f"ℹ️  branch {branch!r} held by {path} not auto-releasable ({reason})",
+                    file=sys.stderr,
+                )
+                continue
             print(
                 f"🌲 dry-run: would release stale branch holder {path} ({reason})",
                 file=sys.stderr,
             )
             released.append(path)
             continue
-        # No --force: if the tree went dirty after the cleanliness check
+        # No force: if the tree went dirty after the cleanliness check
         # (dirty-TOCTOU), or a process adopted the holder as cwd after the
         # live-CWD probe (live-cwd TOCTOU — accepted residual), git refuses
         # removal and we leave the holder mounted (#5708 CF, #7242).
-        try:
-            proc = subprocess.run(
-                ["git", "worktree", "remove", str(path)],
-                cwd=_REPO_ROOT,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=_sanitized_git_env(),
-                timeout=DEFAULT_GIT_TIMEOUT_S,
-            )
-        except (OSError, subprocess.TimeoutExpired) as exc:
+        removal = _remove_dispatch_worktree(
+            path,
+            reason=f"stale holder of {branch!r}",
+            owner_task_id=None,
+            releasable=functools.partial(_stale_branch_holder_releasable, path, branch),
+        )
+        if removal["action"] == "skipped":
             print(
-                f"⚠️  failed to release stale branch holder {path}: {type(exc).__name__}: {exc}",
+                f"ℹ️  branch {branch!r} held by {path} not auto-releasable ({removal['reason']})",
                 file=sys.stderr,
             )
             continue
-        if proc.returncode != 0:
+        if removal["action"] != "removed":
             print(
-                f"⚠️  failed to release stale branch holder {path}: {_format_process_failure(proc)}",
+                f"⚠️  failed to release stale branch holder {path}: {removal['error']}",
                 file=sys.stderr,
             )
             continue
         print(
-            f"🌲 released stale branch holder {path} ({reason}) so {branch!r} can attach to a new dispatch worktree",
+            f"🌲 released stale branch holder {path} ({removal['reason']}) so {branch!r} can attach to a new dispatch worktree",
             file=sys.stderr,
         )
         released.append(path)
@@ -4254,160 +4166,144 @@ def _should_reap_settled_worktree(
     return False
 
 
-# Every status a finished worker persists. Any other value on a sibling
-# record, including ``needs_finalize``, ``spawning``, ``running``, ``""``,
-# a missing status, or an unknown value, still claims its worktree (#8610).
-_SETTLE_REAP_RELEASED_CLAIM_STATUSES = frozenset(
-    {
-        "done",
-        "failed",
-        _NO_DELIVERABLE_STATUS,
-        "timeout",
-        "rate_limited",
-        "cancelled",
-        "crashed",
-        "dry_run",
-    }
-)
-
-
-def _settled_worktree_reap_refusal(
-    worktree: Path,
-    *,
-    created_by_this_dispatch: bool | None,
-) -> dict[str, Any] | None:
-    """Return a ``worktree_reap`` skip record when settle must not remove ``worktree``.
+def _settled_worktree_ownership(worktree: Path, *, created_by_this_dispatch: bool | None) -> tuple[bool, str]:
+    """Return settle's ``(ok, reason)`` ownership proof for removing ``worktree``.
 
     Settle removes only a checkout this dispatch created. An attached or
     reused checkout belongs to another task, and that owner reaps it (#8610).
     Ownership that cannot be established fails closed; the default reaper
-    does not collect that legacy case, so the skip reason names the explicit
-    operator cleanup. Returns ``None`` when removal may proceed to the
-    active-claim check in :func:`_reap_finished_worktree`.
+    does not collect that legacy case, so the refusal names the explicit
+    operator cleanup.
     """
     if created_by_this_dispatch is None:
-        reason = (
+        return False, (
             "worktree ownership unknown; refusing worktree removal; operator cleanup: "
             "scripts/orchestration/reap_worktrees.py --terminal-dispatches "
             f"--worktree {worktree} --apply"
         )
-    elif not created_by_this_dispatch:
-        reason = "reused worktree; owner reaps"
-    else:
-        return None
-    return {
-        "action": "skipped",
-        "path": str(worktree),
-        "branch": None,
-        "reason": reason,
-        "dirty": None,
-        "pr": None,
-        "error": None,
-    }
+    if not created_by_this_dispatch:
+        return False, "reused worktree; owner reaps"
+    return True, ""
 
 
-def _worktree_claim_needles(worktree: Path, target: Path) -> frozenset[bytes]:
-    """Byte strings one of which every task record naming ``worktree`` contains.
+# The claim scan's byte pre-filter; see scripts/orchestration/worktree_claims.py.
+_worktree_claim_needles = worktree_claims.worktree_claim_needles
+_record_may_claim_worktree = worktree_claims.record_may_claim_worktree
 
-    A record can spell the claim as the absolute path, its resolved form, a
-    repo-relative path, or with a trailing slash. Every such spelling ends in
-    the checkout's own directory name, so that name, raw and JSON-escaped, is
-    the pre-filter. Dispatch always records the resolved absolute path; a
-    legacy record that names the checkout through a differently named symlink
-    is caught by :func:`_record_may_claim_worktree` instead. An empty set
-    means every record is a candidate.
+
+def _active_worktree_claim_refusal(worktree: Path, *, task_id: str | None) -> str | None:
+    """Return a skip reason when an unfinished task record still claims ``worktree``.
+
+    Scans this repository's task records with
+    :func:`scripts.orchestration.worktree_claims.active_worktree_claim_refusal`.
+    Only ``task_id``'s own record, the task settling its own checkout, is
+    exempt; ``None`` exempts nothing. Returns ``None`` when removal may proceed.
     """
-    needles: set[bytes] = set()
-    for name in {worktree.name, target.name}:
-        if name:
-            needles.add(name.encode("utf-8", "surrogateescape"))
-            needles.add(json.dumps(name)[1:-1].encode("ascii"))
-    return frozenset(needles)
+    return worktree_claims.active_worktree_claim_refusal(
+        worktree,
+        tasks_dir=_TASKS_DIR,
+        repo_root=_REPO_ROOT,
+        owner_task_id=task_id,
+        owner_state_file=_state_path(task_id) if task_id is not None else None,
+    )
 
 
-# A top-level status that still claims a worktree, spelled as dispatch and the
-# worker write it. ``null`` is a missing status, which claims too.
-_CLAIMING_STATUS_TOKEN_RE = re.compile(rb'"status"\s*:\s*(?:"(?:spawning|running|needs_finalize|)"|null)')
-_STATUS_KEY_RE = re.compile(rb'"status"\s*:')
+def _git_worktree_remove(worktree: Path, *, branch: str | None, force: bool) -> str | None:
+    """Run the low-level ``git worktree remove``; return an error or ``None``.
 
-
-def _record_may_claim_worktree(raw: bytes, needles: frozenset[bytes]) -> bool:
-    """Return whether a task record's bytes must be parsed by the claim scan.
-
-    A record is a candidate when it contains a spelling of the worktree's
-    directory name, a claiming status token, or no status key at all. The two
-    status tests keep an active legacy record that names the checkout through
-    a differently named symlink alias in the scan; active records are few, so
-    finished records named elsewhere stay unparsed (#8610).
+    Only :func:`_remove_dispatch_worktree` may call this (#8610); a test pins
+    that no other code in this module removes a worktree. ``force`` goes
+    through the scheduled reaper's ``_remove_worktree``: the delete-target
+    guard, then ``git worktree remove --force``, which a clean porcelain tree
+    still needs when it holds ignored residue such as a worker ``.venv``.
+    Without ``force`` git itself refuses a checkout with modified or untracked
+    files.
     """
-    if not needles or any(needle in raw for needle in needles):
-        return True
-    # ``bytes.find`` then an anchored match is about a third cheaper than
-    # ``re.search`` over the large finished records that dominate the scan.
-    position = raw.find(b'"status"')
-    while position != -1:
-        if _CLAIMING_STATUS_TOKEN_RE.match(raw, position):
-            return True
-        position = raw.find(b'"status"', position + 1)
-    return _STATUS_KEY_RE.search(raw) is None
+    if force:
+        # Imported here: an unimportable reaper is a removal failure that the
+        # caller records, not a reason for delegate itself to fail to import.
+        from scripts.orchestration import reap_worktrees
 
-
-def _active_worktree_claim_refusal(worktree: Path, *, task_id: str) -> str | None:
-    """Return a skip reason when another unfinished task still claims ``worktree``.
-
-    Defence in depth for #8610: a sibling task record whose status still
-    claims the checkout and whose ``worktree_path`` resolves to the same path
-    blocks removal, even when ``worktree_reused`` was mis-recorded. Claims are
-    resolved exactly as dispatch resolves ``--worktree``: relative to the
-    repository root. Only candidate records (:func:`_record_may_claim_worktree`)
-    are parsed, so an unrelated finished corrupt record never blocks removal,
-    while a candidate that cannot be read, parsed, or resolved does. Every failure is a skip reason, never an
-    exception. Returns ``None`` when removal may proceed.
-    """
-
-    def refused(state_file: Path, problem: str) -> str:
-        return f"task record {state_file.name} {problem}; refusing worktree removal"
-
+        return reap_worktrees._remove_worktree(
+            _REPO_ROOT,
+            reap_worktrees.WorktreeInfo(path=worktree, branch=branch, head=None, detached=branch is None),
+        )
     try:
-        target = _normalize_worktree_path(str(worktree))
-    except (OSError, RuntimeError, ValueError) as exc:
-        return f"worktree path unresolvable ({type(exc).__name__}); refusing worktree removal"
-    needles = _worktree_claim_needles(worktree, target)
-    own_state = _state_path(task_id)
-    try:
-        state_files = sorted(_TASKS_DIR.glob("*.json"))
-    except OSError as exc:
-        return f"task claims unreadable ({type(exc).__name__}); refusing worktree removal"
-    for state_file in state_files:
-        if state_file == own_state:
-            continue
-        try:
-            raw = state_file.read_bytes()
-        except FileNotFoundError:
-            # Removed between glob and read: it no longer claims anything.
-            continue
-        except OSError:
-            return refused(state_file, "unreadable")
-        if not _record_may_claim_worktree(raw, needles):
-            continue
-        try:
-            record = json.loads(raw)
-        except (ValueError, RecursionError):
-            record = None
-        claimed_path = record.get("worktree_path") if isinstance(record, dict) else None
-        if not isinstance(record, dict) or not isinstance(claimed_path, str | None):
-            return refused(state_file, "unreadable")
-        if record.get("task_id") == task_id or not claimed_path:
-            continue
-        if record.get("status") in _SETTLE_REAP_RELEASED_CLAIM_STATUSES:
-            continue
-        try:
-            claimed = _normalize_worktree_path(claimed_path)
-        except (OSError, RuntimeError, ValueError):
-            return refused(state_file, "worktree_path unresolvable")
-        if claimed == target:
-            return f"worktree claimed by active task {record.get('task_id') or state_file.stem}"
+        proc = subprocess.run(
+            ["git", "worktree", "remove", str(worktree)],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return f"{type(exc).__name__}: {exc}"
+    if proc.returncode != 0:
+        return _format_process_failure(proc)
     return None
+
+
+def _remove_dispatch_worktree(
+    worktree: Path,
+    *,
+    reason: str,
+    owner_task_id: str | None,
+    releasable: Callable[[], tuple[bool, str]],
+    force: bool = False,
+    lock_timeout_s: float | None = None,
+) -> dict[str, Any]:
+    """Remove one dispatch worktree. Every removal in this module comes here (#8610).
+
+    Holding :func:`worktree_lock`, it runs ``releasable``, the caller's
+    ownership proof returning ``(ok, detail)``; for ``force``, a clean-tree
+    proof; the active-claim scan (:func:`_active_worktree_claim_refusal`),
+    which exempts only ``owner_task_id``'s own record; and only then
+    :func:`_git_worktree_remove`. Dispatch holds the same lock from before it
+    touches a checkout until it publishes the record that names it, so every
+    attachment is either visible to the scan or waits and then finds the
+    checkout gone. ``reason`` is the caller's purpose, recorded on success.
+    Returns a ``worktree_reap`` record whose ``action`` is ``removed``,
+    ``skipped``, or ``error``; this never raises.
+    """
+    branch: str | None = None
+    dirty: bool | None = None
+
+    def outcome(action: str, why: str, *, error: str | None = None) -> dict[str, Any]:
+        return {
+            "action": action,
+            "path": str(worktree),
+            "branch": branch,
+            "reason": why,
+            "dirty": dirty,
+            "pr": None,
+            "error": error,
+        }
+
+    with contextlib.ExitStack() as locks:
+        try:
+            locks.enter_context(worktree_lock(worktree, timeout_s=lock_timeout_s))
+        except WorktreeLockError as exc:
+            return outcome("skipped", worktree_claims.lock_refusal(exc), error=str(exc))
+        try:
+            ok, detail = releasable()
+            if not ok:
+                return outcome("skipped", detail)
+            branch = _checked_out_branch(worktree)
+            if force:
+                dirty = _worktree_is_dirty(worktree)
+                if dirty is not False:
+                    return outcome("skipped", "dirty or unknown; refusing worktree removal")
+            claim_refusal = _active_worktree_claim_refusal(worktree, task_id=owner_task_id)
+            if claim_refusal is not None:
+                return outcome("skipped", claim_refusal)
+            error = _git_worktree_remove(worktree, branch=branch, force=force)
+        except Exception as exc:
+            return outcome("error", "worktree removal raised", error=f"{type(exc).__name__}: {exc}")
+        if error is not None:
+            return outcome("error", "worktree removal failed", error=error)
+        return outcome("removed", f"{reason} ({detail})" if detail else reason)
 
 
 def _settle_worktree_reap(
@@ -4417,138 +4313,31 @@ def _settle_worktree_reap(
     settling_task_id: str,
     lock_timeout_s: float | None = None,
 ) -> dict[str, Any]:
-    """Run settle's ownership check, claim scan, and removal under the worktree lock.
-
-    Dispatch holds the same lock from create-or-attach until it publishes the
-    task record that names the worktree, so the claim scan sees every
-    attachment that removal could strand (#8610). A lock that cannot be taken
-    fails closed as a skip record; this never raises.
-    """
-    with contextlib.ExitStack() as locks:
-        try:
-            locks.enter_context(worktree_lock(worktree, timeout_s=lock_timeout_s))
-        except WorktreeLockError as exc:
-            if isinstance(exc, WorktreeLockTimeout):
-                reason = "worktree lock busy"
-            elif isinstance(exc, WorktreeLockReentry):
-                reason = "worktree lock already held by this thread"
-            else:
-                reason = "worktree lock unavailable"
-            return {
-                "action": "skipped",
-                "path": str(worktree),
-                "branch": None,
-                "reason": reason,
-                "dirty": None,
-                "pr": None,
-                "error": str(exc),
-            }
-        return _settled_worktree_reap_refusal(
-            worktree,
-            created_by_this_dispatch=created_by_this_dispatch,
-        ) or _reap_finished_worktree(worktree, settling_task_id=settling_task_id)
-
-
-def _reap_finished_worktree(worktree: Path, *, settling_task_id: str) -> dict[str, Any]:
-    """Remove a settled worktree checkout and keep its branch ref.
+    """Remove a settled checkout this dispatch created and keep its branch ref.
 
     The scheduled reaper's PR, rollover, and GraphQL gates skip the clean
-    read-only review checkouts this path exists to drop. Settle has already
-    proved the tree is clean, so removal is worktree-only: ``git branch``
-    is never invoked, and a missing branch ref after removal is an error.
-
-    Callers hold :func:`worktree_lock` (see :func:`_settle_worktree_reap`), so
-    no dispatch can attach the checkout between the active-claim scan and the
-    removal (#8610).
+    read-only review checkouts this path exists to drop. Removal goes through
+    :func:`_remove_dispatch_worktree` with settle's ownership proof and is
+    worktree-only: ``git branch`` is never invoked, and a missing branch ref
+    after removal is an error. This never raises.
     """
-    branch = _checked_out_branch(worktree)
-    if str(_REPO_ROOT) not in sys.path:
-        sys.path.insert(0, str(_REPO_ROOT))
-
-    try:
-        # Imported inside the handler: an unimportable reaper is a reaping
-        # failure like any other, not a reason to take down the caller.
-        from scripts.orchestration import reap_worktrees
-
-        dirty = _worktree_is_dirty(worktree)
-        if dirty is not False:
-            return {
-                "action": "skipped",
-                "path": str(worktree),
-                "branch": branch,
-                "reason": "dirty or unknown; refusing worktree removal",
-                "dirty": dirty,
-                "pr": None,
-                "error": None,
-            }
-
-        claim_refusal = _active_worktree_claim_refusal(worktree, task_id=settling_task_id)
-        if claim_refusal is not None:
-            return {
-                "action": "skipped",
-                "path": str(worktree),
-                "branch": branch,
-                "reason": claim_refusal,
-                "dirty": False,
-                "pr": None,
-                "error": None,
-            }
-
-        # ``_remove_worktree`` is ``git worktree remove --force`` after the
-        # delete-target guard. It does not prune the branch. Force is required
-        # because a clean porcelain tree can still hold ignored residue such
-        # as a worker ``.venv``, which makes a non-force remove refuse.
-        error = reap_worktrees._remove_worktree(
-            _REPO_ROOT,
-            reap_worktrees.WorktreeInfo(
-                path=worktree,
-                branch=branch,
-                head=None,
-                detached=branch is None,
-            ),
-        )
-    except Exception as exc:
+    removal = _remove_dispatch_worktree(
+        worktree,
+        reason="settled clean worktree; branch ref kept",
+        owner_task_id=settling_task_id,
+        releasable=lambda: _settled_worktree_ownership(worktree, created_by_this_dispatch=created_by_this_dispatch),
+        force=True,
+        lock_timeout_s=lock_timeout_s,
+    )
+    branch = removal["branch"]
+    if removal["action"] == "removed" and branch is not None and not _branch_ref_exists(_REPO_ROOT, branch):
         return {
+            **removal,
             "action": "error",
-            "path": str(worktree),
-            "branch": branch,
-            "reason": "reaper raised",
-            "dirty": None,
-            "pr": None,
-            "error": f"{type(exc).__name__}: {exc}",
-        }
-
-    if error is not None:
-        return {
-            "action": "error",
-            "path": str(worktree),
-            "branch": branch,
-            "reason": "worktree removal failed",
-            "dirty": False,
-            "pr": None,
-            "error": error,
-        }
-
-    if branch is not None and not _branch_ref_exists(_REPO_ROOT, branch):
-        return {
-            "action": "error",
-            "path": str(worktree),
-            "branch": branch,
             "reason": "branch ref missing after worktree removal",
-            "dirty": False,
-            "pr": None,
             "error": f"refs/heads/{branch} was deleted",
         }
-
-    return {
-        "action": "removed",
-        "path": str(worktree),
-        "branch": branch,
-        "reason": "settled clean worktree; branch ref kept",
-        "dirty": False,
-        "pr": None,
-        "error": None,
-    }
+    return removal
 
 
 def _validate_existing_worktree(
@@ -6318,7 +6107,7 @@ def _run_worker(
         # CHECKPOINT: persist the COMPLETE core outcome before any best-effort work.
         #
         # Everything below — worktree reaping, usage extraction, the enriched state
-        # assembly — is enrichment, and any of it can raise: `_reap_finished_worktree`
+        # assembly — is enrichment, and any of it can raise: worktree reaping once
         # performed its import outside its own handler, so an unimportable reaper
         # module skipped the write entirely and stood the task back up as ``running``
         # with a dead pid. Ordering fixes that by construction, where wrapping each
@@ -7359,8 +7148,18 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             if worktree_arg == "auto"
             else worktree_arg
         )
-        if fleet_repo.default:
-            try:
+        try:
+            if not bool(getattr(args, "dry_run", False)):
+                # Attach is lock -> verify the checkout -> mutate -> publish the
+                # task record. The lock is taken before _resolve_worktree_base_sha
+                # can rebase an existing checkout and held until the record naming
+                # the worktree is published, so no removal can land in between.
+                # A removal that finished first leaves a missing path, which the
+                # checks below treat as a fresh worktree (#8610).
+                worktree_locks.enter_context(
+                    worktree_lock(_normalize_worktree_path(resolved_worktree_raw, repo_root=target_repo_root))
+                )
+            if fleet_repo.default:
                 resolved_worktree_base_sha = _resolve_worktree_base_sha(
                     agent=dispatch_agent,
                     task_id=task_id,
@@ -7369,38 +7168,39 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     branch=requested_branch,
                     allow_rebase=not bool(getattr(args, "dry_run", False)),
                 )
-            except (ValueError, RuntimeError) as exc:
-                if not bool(getattr(args, "dry_run", False)):
-                    _record_worktree_prep_failure(
-                        task_id=task_id,
-                        run_nonce=run_nonce,
-                        attribution=attribution,
-                        agent=dispatch_agent,
-                        mode=args.mode,
-                        prompt=prompt,
-                        error=exc,
-                        requested_model=args.model,
-                        requested_effort=getattr(args, "effort", None),
-                        requested_harness=requested_harness,
-                        lifecycle_carrier=lifecycle_carrier,
-                        worktree_path=resolved_worktree_raw,
-                        worktree_branch=requested_branch,
-                        worktree_base=getattr(args, "base", None) or "main",
-                        agent_alias_note=agent_alias_note,
-                        output_schema_path=output_schema_path,
-                        output_schema_sha256=output_schema_sha256,
-                        keep_worktree=keep_worktree,
-                        hard_timeout=args.hard_timeout,
-                        silence_timeout=silence_timeout,
-                        initial_response_timeout=initial_response_timeout,
-                        max_budget_usd=max_budget_usd,
-                    )
-                print(f"❌ failed to resolve immutable worktree base for {task_id!r}: {exc}", file=sys.stderr)
-                return 1
-        else:
-            # Sibling repos resolve the base SHA at create time inside
-            # _ensure_sibling_repo_worktree (simple origin fetch).
-            resolved_worktree_base_sha = None
+            else:
+                # Sibling repos resolve the base SHA at create time inside
+                # _ensure_sibling_repo_worktree (simple origin fetch).
+                resolved_worktree_base_sha = None
+        except (ValueError, RuntimeError) as exc:
+            if not bool(getattr(args, "dry_run", False)):
+                _record_worktree_prep_failure(
+                    task_id=task_id,
+                    run_nonce=run_nonce,
+                    attribution=attribution,
+                    agent=dispatch_agent,
+                    mode=args.mode,
+                    prompt=prompt,
+                    error=exc,
+                    requested_model=args.model,
+                    requested_effort=getattr(args, "effort", None),
+                    requested_harness=requested_harness,
+                    lifecycle_carrier=lifecycle_carrier,
+                    worktree_path=resolved_worktree_raw,
+                    worktree_branch=requested_branch,
+                    worktree_base=getattr(args, "base", None) or "main",
+                    agent_alias_note=agent_alias_note,
+                    output_schema_path=output_schema_path,
+                    output_schema_sha256=output_schema_sha256,
+                    keep_worktree=keep_worktree,
+                    hard_timeout=args.hard_timeout,
+                    silence_timeout=silence_timeout,
+                    initial_response_timeout=initial_response_timeout,
+                    max_budget_usd=max_budget_usd,
+                )
+            failed_step = "lock worktree" if isinstance(exc, WorktreeLockError) else "resolve immutable worktree base"
+            print(f"❌ failed to {failed_step} for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
 
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
     # Runs before task-state write / worktree / branch side effects so a refuse
@@ -7626,13 +7426,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             else worktree_arg
         )
         try:
-            # Held from create-or-attach until the task record naming the
-            # worktree is published, so settle cannot remove a checkout this
-            # dispatch is attaching. A settle that finished first has already
-            # removed it, and _ensure_worktree then sees a missing path (#8610).
-            worktree_locks.enter_context(
-                worktree_lock(_normalize_worktree_path(resolved_raw, repo_root=target_repo_root))
-            )
+            # The worktree lock taken before base resolution is still held (#8610).
             if fleet_repo.default:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
                     agent=dispatch_agent,
@@ -7701,11 +7495,18 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 stderr_fd.close()
                 print(f"❌ failed to lock worktree for {task_id!r}: {exc}", file=sys.stderr)
                 return 1
-            # A settle that held the lock may have removed the worktree; that
-            # is the same as a cwd outside any worktree (#8610).
+            # A removal that held the lock may have taken the checkout while
+            # this dispatch waited. Never fall back to the stale cwd: fail
+            # before any task record is published or any worker spawned (#8610).
             if _resolve_verified_worktree_path(candidate_cwd) != resolved_wt:
-                resolved_wt = None
-        if resolved_wt:
+                stdout_fd.close()
+                stderr_fd.close()
+                print(
+                    f"❌ worktree {resolved_wt} for {task_id!r} was removed while dispatch waited for its lock; "
+                    f"refusing to spawn in {candidate_cwd}",
+                    file=sys.stderr,
+                )
+                return 1
             try:
                 _refuse_review_attempt_worktree_reuse(resolved_wt)
             except (OSError, ValueError, RuntimeError) as exc:
@@ -8873,8 +8674,9 @@ _TERMINAL_STATUSES = frozenset(
         # flags leftover work for a human, it does not mean "still running".
         # Omitting it made ``delegate.py wait`` poll a finished task until its
         # own timeout, and made ``cancel`` willing to signal a stored PID the OS
-        # may already have recycled. Every other terminal vocabulary in this
-        # file already includes it (see _BRANCH_HOLDER_RELEASABLE_STATUSES).
+        # may already have recycled. Worktree claims differ on purpose: a
+        # ``needs_finalize`` record still claims its checkout for the leftover
+        # work (see _RELEASED_TASK_STATUSES).
         "needs_finalize",
         _NO_DELIVERABLE_STATUS,
     },

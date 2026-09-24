@@ -13,6 +13,7 @@ Suggested backstop:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import fcntl
 import json
 import os
@@ -41,7 +42,7 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
-from scripts.orchestration import reaper_lifecycle
+from scripts.orchestration import reaper_lifecycle, worktree_claims
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -2037,6 +2038,41 @@ def _prune_branch(
     return None if deleted.returncode == 0 else _format_failure(deleted)
 
 
+def _enter_dispatch_worktree_guard(
+    stack: contextlib.ExitStack,
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+) -> str | None:
+    """Take delegate's per-worktree lock and refuse another task's live claim (#8610).
+
+    Dispatch holds the same lock from before it touches a checkout until it
+    publishes the task record that names it, so while ``stack`` holds the lock
+    no attachment can land and every earlier one is visible to the claim
+    scan. The owner task derived from a dispatch path is exempt: the
+    qualifying class already decided its record. Any other task record with
+    an unfinished status that names the checkout refuses removal. Returns a
+    skip reason, or ``None`` with the lock held until ``stack`` closes.
+    """
+    try:
+        lock_dir = _common_git_dir(repo_root) / worktree_claims.LOCK_DIR_NAME
+        stack.enter_context(worktree_claims.worktree_lock(info.path, lock_dir=lock_dir))
+    except worktree_claims.WorktreeLockError as exc:
+        return f"{worktree_claims.lock_refusal(exc)} ({exc})"
+    except RuntimeError as exc:
+        return f"worktree lock unavailable ({exc})"
+    primary = primary_checkout_root(repo_root)
+    tasks_dir = primary / "batch_state" / "tasks"
+    owner_task_id = _dispatch_task_id(repo_root, info)
+    return worktree_claims.active_worktree_claim_refusal(
+        info.path,
+        tasks_dir=tasks_dir,
+        repo_root=primary,
+        owner_task_id=owner_task_id,
+        owner_state_file=tasks_dir / f"{owner_task_id}.json" if owner_task_id else None,
+    )
+
+
 def _reap_qualified_worktree(
     *,
     repo_root: Path,
@@ -2106,6 +2142,7 @@ def _reap_qualified_worktree(
 
     pending_marked = False
     recovery_ref: str | None = None
+    dispatch_guard = contextlib.ExitStack()
     try:
         # This reservation is intentionally before the final TOCTOU checks.
         # Scheduler/delegate consumers can reject a new bind while it exists.
@@ -2117,6 +2154,17 @@ def _reap_qualified_worktree(
             task_id=_dispatch_task_id(repo_root, info),
         )
         pending_marked = True
+
+        guard_refusal = _enter_dispatch_worktree_guard(dispatch_guard, repo_root=repo_root, info=info)
+        if guard_refusal is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=f"{guard_refusal}; originally qualified because {reason}",
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+            )
 
         if dirty:
             preserve_error = _preserve_dirty_worktree(info)
@@ -2433,6 +2481,7 @@ def _reap_qualified_worktree(
             recovery_ref=recovery_ref,
         )
     finally:
+        dispatch_guard.close()
         if pending_marked:
             reaper_lifecycle.clear_reap_pending(repo_root, info.path)
 

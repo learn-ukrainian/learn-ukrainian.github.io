@@ -21,6 +21,14 @@ from pathlib import Path
 import pytest
 
 import scripts.delegate as delegate
+from scripts.orchestration import worktree_claims
+
+
+@pytest.fixture(autouse=True)
+def _isolated_worktree_removal(tmp_path, monkeypatch):
+    """Keep removal locks and the task-claim scan off the host repository (#8610)."""
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks")
+    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "tasks")
 
 
 @pytest.mark.parametrize(
@@ -179,6 +187,38 @@ def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Pa
 
     assert released == [earlier]
     assert removed == [str(earlier)]
+
+
+def test_later_round_keeps_an_earlier_round_another_task_still_claims(monkeypatch, tmp_path: Path) -> None:
+    """#8610: the release proof and the claim scan run under the earlier round's worktree lock."""
+    earlier = tmp_path / "codex" / "review-topic-r2"
+    removed: list[str] = []
+    proofs_under_lock: list[bool] = []
+    monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(earlier, "review-topic-r2")])
+
+    def releasable(path: Path) -> tuple[bool, str]:
+        _canonical, lock_file = delegate._worktree_lock_path(path)
+        proofs_under_lock.append(lock_file.stem in {key for key, _thread in worktree_claims._HELD_LOCKS})
+        return True, "clean; task status=done"
+
+    monkeypatch.setattr(delegate, "_superseded_review_releasable", releasable)
+    delegate._write_state_atomic(
+        delegate._state_path("impl-attached"),
+        {"task_id": "impl-attached", "status": "running", "worktree_path": str(earlier)},
+    )
+
+    def fake_run(cmd, **_kwargs):
+        if "worktree" in cmd and "remove" in cmd:
+            removed.append(cmd[-1])
+        return _git_reply(list(cmd), contained=True)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    released = delegate._release_superseded_review_worktrees("review-topic-r4", dry_run=False)
+
+    assert released == []
+    assert removed == []
+    assert proofs_under_lock == [True]
 
 
 class _Proc:

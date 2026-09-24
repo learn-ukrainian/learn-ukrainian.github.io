@@ -256,6 +256,15 @@ pruning. Dirty trees remain untouched unless a human explicitly adds
 `--preserve-then-reap`. Open PRs are never reaped just because HEAD matches
 `origin/<branch>`.
 
+Every remover of a checkout that dispatch can attach (settle, dispatch's
+superseded-review and stale-branch-holder release, this reaper, and task-family
+cleanup) takes the per-worktree lock in `<git common dir>/lu-worktree-locks/`
+that dispatch holds from attach until its task record is published. Under that
+lock it refuses while another task's unfinished record names the checkout
+(`scripts/orchestration/worktree_claims.py`, #8610). The skip reasons are
+`worktree lock busy` and `worktree claimed by active task <id>`. Finish or
+cancel that task, then rerun the cleanup.
+
 ### Hermes / DeepSeek isolation (Sol #213 class)
 
 `ask-hermes` is tool-capable. It **must not** inherit the operator primary

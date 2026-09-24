@@ -10,6 +10,7 @@ Issue: #1184.
 
 from __future__ import annotations
 
+import ast
 import contextlib
 import errno
 import fcntl
@@ -36,7 +37,7 @@ from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.result import ParseResult
 from agent_runtime.telemetry import InvocationTelemetry
 
-from scripts.orchestration import job_host_exec
+from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 
@@ -8216,7 +8217,7 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
     """Post-worker enrichment must not be able to strand a finished task.
 
     Cross-family review of #5807: the first guard covered the finish telemetry
-    but not the worktree reaping below it, and _reap_finished_worktree performs
+    but not the worktree reaping below it, and settle's worktree reaping performed
     its import OUTSIDE its own handler — so an unimportable reaper module still
     skipped the state write and left the task reading "running".
     """
@@ -8254,7 +8255,7 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
         patch("agent_runtime.runner.invoke", return_value=mock_result),
         patch.object(delegate, "_count_commits_ahead", return_value=1),
         patch.object(delegate, "_worktree_is_dirty", return_value=False),
-        patch.object(delegate, "_reap_finished_worktree", side_effect=unimportable),
+        patch.object(delegate, "_settle_worktree_reap", side_effect=unimportable),
     ):
         with contextlib.suppress(ImportError):
             delegate._run_worker(
@@ -8274,8 +8275,8 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
     assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
 
 
-def test_reap_finished_worktree_survives_an_unimportable_reaper(tmp_path, monkeypatch):
-    """The reaper's own import belongs inside its error handling."""
+def test_settle_reap_survives_an_unimportable_reaper(tmp_path, tmp_tasks_dir, monkeypatch):
+    """The reaper's own import belongs inside the removal chokepoint's error handling."""
     import builtins
 
     real_import = builtins.__import__
@@ -8285,10 +8286,14 @@ def test_reap_finished_worktree_survives_an_unimportable_reaper(tmp_path, monkey
             raise ImportError(f"simulated missing module: {name}")
         return real_import(name, *args, **kwargs)
 
+    monkeypatch.setattr(delegate, "_worktree_is_dirty", lambda _path: False)
     monkeypatch.setattr(builtins, "__import__", fake_import)
-    out = delegate._reap_finished_worktree(tmp_path, settling_task_id="reap-unimportable")
-    assert isinstance(out, dict)
-    assert out.get("ok") is not True
+    out = delegate._settle_worktree_reap(tmp_path, created_by_this_dispatch=True, settling_task_id="reap-unimportable")
+
+    assert out["action"] == "error"
+    assert out["reason"] == "worktree removal raised"
+    assert "ImportError" in out["error"]
+    assert tmp_path.exists()
 
 
 def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
@@ -8724,7 +8729,7 @@ def test_unresolvable_sibling_claim_is_recorded_skip_not_settle_crash(tmp_tasks_
 def test_claim_attached_after_ownership_check_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
     """#8610: the active-claim scan runs at removal time, after the ownership decision."""
     task_id = "reap-ro-late-attach"
-    original = delegate._settled_worktree_reap_refusal
+    original = delegate._settled_worktree_ownership
 
     def ownership_then_attach(worktree, **kwargs):
         refusal = original(worktree, **kwargs)
@@ -8734,7 +8739,7 @@ def test_claim_attached_after_ownership_check_blocks_reap(tmp_tasks_dir, tmp_pat
         )
         return refusal
 
-    monkeypatch.setattr(delegate, "_settled_worktree_reap_refusal", ownership_then_attach)
+    monkeypatch.setattr(delegate, "_settled_worktree_ownership", ownership_then_attach)
     primary, worktree, branch, state = _run_settle_reap_worker(
         tmp_tasks_dir=tmp_tasks_dir,
         tmp_path=tmp_path,
@@ -8822,10 +8827,17 @@ def test_active_legacy_claim_through_symlink_alias_blocks_reap(tmp_tasks_dir, tm
         (b'{"status": null}', True),
         (b'{"worktree_path": "/elsewhere/x"}', True),
         (b'{"status": "done", "worktree_path": "/wt/target"}', True),
+        (b'{"status": "queued", "worktree_path": "/elsewhere/x"}', True),
+        (b'{"status": "done", "lease": {"status": "running"}}', True),
+        (b'{"status": "done", "lease": {"status": "failed"}}', False),
+        (b'{"status": ["done"]}', True),
+        (b'{"status": "d\\u006fne"}', True),
+        (b'{"status": "done_later"}', True),
+        (b'{"status": "reaped"}', False),
     ],
 )
 def test_claim_prefilter_keeps_active_and_statusless_records(raw, candidate):
-    """#8610 r2: the byte pre-filter parses name matches, claiming statuses, and status-less records."""
+    """#8610: a record is skipped unparsed only when every ``status`` key shows a released status."""
     needles = delegate._worktree_claim_needles(Path("/wt/target"), Path("/wt/target"))
 
     assert delegate._record_may_claim_worktree(raw, needles) is candidate
@@ -9017,7 +9029,7 @@ def test_dispatch_waits_for_settle_then_follows_missing_worktree_path(tmp_tasks_
                 dispatch_blocked.set()
             raise
 
-    monkeypatch.setattr(delegate.fcntl, "flock", spy_flock)
+    monkeypatch.setattr(fcntl, "flock", spy_flock)
     original_scan = delegate._active_worktree_claim_refusal
 
     def scan_while_dispatch_waits(path, **kwargs):
@@ -9124,6 +9136,249 @@ def test_worktree_lock_never_nests_on_one_thread(tmp_path):
     assert skip["action"] == "skipped"
     assert skip["reason"] == "worktree lock already held by this thread"
     assert _worktree_lock_is_free(worktree)
+
+
+def _enclosing_function_names(tree: ast.AST) -> dict[ast.AST, str | None]:
+    """Map every AST node to the name of its innermost enclosing function."""
+    owners: dict[ast.AST, str | None] = {}
+
+    def visit(node: ast.AST, owner: str | None) -> None:
+        for child in ast.iter_child_nodes(node):
+            child_owner = child.name if isinstance(child, ast.FunctionDef | ast.AsyncFunctionDef) else owner
+            owners[child] = child_owner
+            visit(child, child_owner)
+
+    visit(tree, None)
+    return owners
+
+
+def test_every_delegate_worktree_removal_goes_through_the_chokepoint():
+    """#8610 r4: one low-level remover exists, and only the guarded chokepoint calls it."""
+    tree = ast.parse(Path(delegate.__file__).read_text(encoding="utf-8"))
+    owners = _enclosing_function_names(tree)
+    removers: set[str | None] = set()
+    remover_callers: set[str | None] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.List | ast.Tuple):
+            words = [elt.value for elt in node.elts if isinstance(elt, ast.Constant) and isinstance(elt.value, str)]
+            if any(words[index : index + 2] == ["worktree", "remove"] for index in range(len(words))):
+                removers.add(owners[node])
+        elif (isinstance(node, ast.Attribute) and node.attr == "_remove_worktree") or (
+            isinstance(node, ast.Name) and node.id == "_remove_worktree"
+        ):
+            removers.add(owners[node])
+        elif isinstance(node, ast.Name) and node.id == "_git_worktree_remove":
+            remover_callers.add(owners[node])
+
+    assert removers == {"_git_worktree_remove"}
+    assert remover_callers == {"_remove_dispatch_worktree"}
+
+
+def test_released_statuses_are_one_set_shared_by_claims_prefilter_and_holders():
+    """#8610 r4: the claim policy, its byte pre-filter, and branch-holder release share one status set."""
+    assert delegate._RELEASED_TASK_STATUSES is worktree_claims.RELEASED_TASK_STATUSES
+    assert delegate._NO_DELIVERABLE_STATUS in worktree_claims.RELEASED_TASK_STATUSES
+    needles = delegate._worktree_claim_needles(Path("/wt/target"), Path("/wt/target"))
+    for status in worktree_claims.RELEASED_TASK_STATUSES:
+        raw = json.dumps({"status": status, "worktree_path": "/elsewhere/x"}, indent=2).encode()
+        assert delegate._record_may_claim_worktree(raw, needles) is False, status
+
+
+def test_queued_alias_claim_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 r4: an unknown status such as ``queued`` claims through a differently named alias too."""
+    task_id = "reap-ro-queued-alias"
+    alias = tmp_path / "queued-checkout-alias"
+    alias.symlink_to(tmp_path / "primary" / ".worktrees" / "dispatch" / "cursor" / task_id)
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id=task_id,
+        mode="read-only",
+        sibling_records={"impl-queued": {"status": "queued", "worktree_path": str(alias)}},
+    )
+
+    raw = delegate._state_path("impl-queued").read_bytes()
+    assert not any(needle in raw for needle in delegate._worktree_claim_needles(worktree, worktree))
+    assert delegate._record_may_claim_worktree(raw, delegate._worktree_claim_needles(worktree, worktree))
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree claimed by active task impl-queued"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_non_string_status_claims_instead_of_crashing_the_scan(tmp_tasks_dir, tmp_path):
+    """#8610 r4: an unhashable status is not a released status, so it claims."""
+    worktree = tmp_path / "wt"
+    delegate._write_state_atomic(
+        delegate._state_path("impl-odd"),
+        {"task_id": "impl-odd", "status": ["done"], "worktree_path": str(worktree)},
+    )
+
+    assert delegate._active_worktree_claim_refusal(worktree, task_id="review-odd") == (
+        "worktree claimed by active task impl-odd"
+    )
+
+
+def test_cwd_dispatch_fails_when_the_worktree_is_removed_while_it_waits(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#8610 r4: a checkout removed while ``--cwd`` dispatch waits fails dispatch; no record, no spawn."""
+    task_id = "reap-ro-cwd-settling"
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    _dispatch_from_fixture_primary(primary, monkeypatch)
+    settle_holds_lock = threading.Event()
+    dispatch_blocked = threading.Event()
+    real_flock = fcntl.flock
+    main_thread = threading.current_thread()
+
+    def spy_flock(fd, operation):
+        try:
+            return real_flock(fd, operation)
+        except BlockingIOError:
+            if threading.current_thread() is main_thread:
+                dispatch_blocked.set()
+            raise
+
+    monkeypatch.setattr(fcntl, "flock", spy_flock)
+    original_scan = delegate._active_worktree_claim_refusal
+
+    def scan_while_dispatch_waits(path, **kwargs):
+        settle_holds_lock.set()
+        assert dispatch_blocked.wait(timeout=30), "dispatch never contended for the settle lock"
+        return original_scan(path, **kwargs)
+
+    monkeypatch.setattr(delegate, "_active_worktree_claim_refusal", scan_while_dispatch_waits)
+    worker_spawns: list[list[str]] = []
+    _spawn_passthrough_popen(monkeypatch, worker_spawns.append)
+    settle_result: dict[str, Any] = {}
+    settler = threading.Thread(
+        target=lambda: settle_result.update(
+            delegate._settle_worktree_reap(worktree, created_by_this_dispatch=True, settling_task_id=task_id)
+        )
+    )
+    settler.start()
+    assert settle_holds_lock.wait(timeout=30)
+
+    rc = delegate.cmd_dispatch(
+        _write_args(agent="agy", task_id="impl-cwd-late", cwd=str(worktree), mode="workspace-write")
+    )
+    settler.join(timeout=60)
+
+    assert settle_result["action"] == "removed"
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+    assert rc == 1
+    assert worker_spawns == []
+    assert "was removed while dispatch waited for its lock" in capsys.readouterr().err
+    assert delegate._read_state(delegate._state_path("impl-cwd-late")) is None
+    assert _worktree_lock_is_free(worktree)
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_dispatch_locks_an_existing_checkout_before_base_resolution_can_rebase_it(
+    tmp_tasks_dir, tmp_path, monkeypatch, dry_run
+):
+    """#8610 r4: attach is lock -> verify -> mutate -> publish; a dry run mutates nothing and takes no lock."""
+    task_id = "impl-rebase-locked"
+    primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    _dispatch_from_fixture_primary(primary, monkeypatch)
+    observed: list[tuple[str, bool]] = []
+
+    def spy_base(**kwargs):
+        assert kwargs["allow_rebase"] is not dry_run
+        observed.append(("base", _worktree_lock_is_free(delegate._normalize_worktree_path(kwargs["raw_path"]))))
+        return "a" * 40
+
+    def spy_ensure(**kwargs):
+        path = delegate._normalize_worktree_path(kwargs["raw_path"])
+        observed.append(("ensure", _worktree_lock_is_free(path)))
+        return path, f"cursor/{task_id}", {"reused": True, "base_sha": "a" * 40, "layout": "dispatch"}
+
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", spy_base)
+    monkeypatch.setattr(delegate, "_ensure_worktree", spy_ensure)
+    worker_spawns: list[bool] = []
+    _spawn_passthrough_popen(monkeypatch, lambda _cmd: worker_spawns.append(_worktree_lock_is_free(worktree)))
+
+    rc = delegate.cmd_dispatch(
+        _write_args(agent="agy", task_id=task_id, worktree=str(worktree), mode="workspace-write", dry_run=dry_run)
+    )
+
+    assert rc == 0
+    if dry_run:
+        assert observed == [("base", True)]
+        assert not delegate._worktree_lock_path(worktree)[1].exists()
+        assert worker_spawns == []
+    else:
+        assert observed == [("base", False), ("ensure", False)]
+        assert worker_spawns == [True]
+
+
+@pytest.mark.parametrize("blocker", ["lock", "claim"])
+def test_stale_branch_holder_release_goes_through_the_guarded_chokepoint(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, blocker
+):
+    """#8610 r4: a stale holder is kept while its lock is held or another task still claims it."""
+    holder = tmp_path / ".worktrees" / "dispatch" / "codex" / "impl-holder"
+    holder.mkdir(parents=True)
+    monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DEFAULT_TIMEOUT_S", 0.2)
+    proofs: list[bool] = []
+
+    def releasable(path, branch):
+        proofs.append(_worktree_lock_is_free(path))
+        return True, "clean+synced; task status=done"
+
+    monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", releasable)
+    commands: list[list[str]] = []
+    real_run = subprocess.run
+
+    def spy_run(cmd, *args, **kwargs):
+        commands.append(list(cmd))
+        if list(cmd[:3]) == ["git", "worktree", "remove"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", spy_run)
+    if blocker == "claim":
+        delegate._write_state_atomic(
+            delegate._state_path("review-attached"),
+            {"task_id": "review-attached", "status": "running", "worktree_path": str(holder)},
+        )
+        released = delegate._release_stale_branch_holders(branch="codex/feature", holders=[holder], dry_run=False)
+        reason = "worktree claimed by active task review-attached"
+        assert proofs == [False]
+    else:
+        with _worktree_lock_held_elsewhere(holder):
+            released = delegate._release_stale_branch_holders(branch="codex/feature", holders=[holder], dry_run=False)
+        reason = "worktree lock busy"
+        assert proofs == []
+
+    assert released == []
+    assert not any(cmd[:3] == ["git", "worktree", "remove"] for cmd in commands)
+    assert f"not auto-releasable ({reason})" in capsys.readouterr().err
+    assert _worktree_lock_is_free(holder)
+
+
+def test_stale_branch_holder_release_removes_under_the_lock(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#8610 r4: a releasable holder with no live claim is removed without force while its lock is held."""
+    holder = tmp_path / ".worktrees" / "dispatch" / "codex" / "impl-holder"
+    holder.mkdir(parents=True)
+    monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", lambda _path, _branch: (True, "clean+synced"))
+    removals: list[tuple[list[str], bool]] = []
+    real_run = subprocess.run
+
+    def spy_run(cmd, *args, **kwargs):
+        if list(cmd[:3]) == ["git", "worktree", "remove"]:
+            removals.append((list(cmd), _worktree_lock_is_free(holder)))
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", spy_run)
+
+    released = delegate._release_stale_branch_holders(branch="codex/feature", holders=[holder], dry_run=False)
+
+    assert released == [holder]
+    assert removals == [(["git", "worktree", "remove", str(holder)], False)]
+    assert "released stale branch holder" in capsys.readouterr().err
+    assert _worktree_lock_is_free(holder)
 
 
 def test_danger_failed_clean_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):

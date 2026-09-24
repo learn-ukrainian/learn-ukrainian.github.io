@@ -8,6 +8,7 @@ import os
 import shutil
 import sqlite3
 import subprocess
+import threading
 import time
 from pathlib import Path
 from typing import Any
@@ -17,7 +18,7 @@ import pytest
 from scripts.common.acp_runtime_lock import build_lock_reason, process_start_time
 from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
-from scripts.orchestration import reaper_lifecycle
+from scripts.orchestration import reaper_lifecycle, worktree_claims
 
 _REAL_RUN = subprocess.run
 
@@ -180,6 +181,80 @@ def test_merged_clean_removes_worktree_and_keeps_branch(
     assert_main_checkout_unchanged(repo)
 
 
+def _write_task_record(repo: Path, task_id: str, **fields: Any) -> None:
+    tasks = repo / "batch_state" / "tasks"
+    tasks.mkdir(parents=True, exist_ok=True)
+    (tasks / f"{task_id}.json").write_text(json.dumps({"task_id": task_id, **fields}, indent=2), encoding="utf-8")
+
+
+def test_merged_worktree_claimed_by_another_dispatch_task_is_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8610: under delegate's worktree lock, another task's unfinished claim blocks the reap."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/claimed")
+    patch_gh(monkeypatch, {"codex/claimed": [{"number": 8610, "state": "MERGED"}]})
+    _write_task_record(repo, "review-attached", status="spawning", worktree_path=str(worktree))
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == (
+        "worktree claimed by active task review-attached; originally qualified because PR #8610 MERGED"
+    )
+    assert worktree.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+def test_merged_dispatch_worktree_owner_record_does_not_block_its_own_reap(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8610: the path-derived owner keeps the qualifying class's own record policy."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/impl-owner", path=repo / ".worktrees" / "dispatch" / "codex" / "impl-owner")
+    patch_gh(monkeypatch, {"codex/impl-owner": [{"number": 8611, "state": "MERGED"}]})
+    _write_task_record(repo, "impl-owner", status="needs_finalize", worktree_path=str(worktree), pid=None)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+def test_merged_worktree_is_kept_while_its_dispatch_lock_is_held(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8610: a dispatch attaching the checkout holds its lock; the reaper skips instead of racing it."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/attaching")
+    patch_gh(monkeypatch, {"codex/attaching": [{"number": 8612, "state": "MERGED"}]})
+    monkeypatch.setattr(worktree_claims, "DEFAULT_LOCK_TIMEOUT_S", 0.2)
+    lock_dir = rw._common_git_dir(repo) / worktree_claims.LOCK_DIR_NAME
+    held, release = threading.Event(), threading.Event()
+
+    def attach() -> None:
+        with worktree_claims.worktree_lock(worktree, lock_dir=lock_dir):
+            held.set()
+            release.wait(timeout=30)
+
+    attacher = threading.Thread(target=attach)
+    attacher.start()
+    try:
+        assert held.wait(timeout=30)
+        result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    finally:
+        release.set()
+        attacher.join(timeout=30)
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("worktree lock busy (")
+    assert result.reason.endswith("; originally qualified because PR #8612 MERGED")
+    assert worktree.exists()
+
+
 def test_merged_worktree_with_only_untracked_venv_is_force_removed_after_guards(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -310,7 +385,7 @@ def test_production_worktree_remove_call_sites_are_allowlisted() -> None:
     project_root = Path(__file__).resolve().parents[2]
     assert _raw_worktree_remove_callers(project_root) == {
         "scripts/ai_agent_bridge/_acp_execution.py": {"acp_execution_cwd"},
-        "scripts/delegate.py": {"_release_stale_branch_holders", "_release_superseded_review_worktrees"},
+        "scripts/delegate.py": {"_git_worktree_remove"},
         "scripts/fleet/post_task_reap.py": {"_remove_worktree"},
         "scripts/orchestration/reap_worktrees.py": {"_remove_worktree"},
         "scripts/orchestration/task_family/git_safety.py": {"remove_worktree"},

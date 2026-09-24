@@ -22,6 +22,7 @@ from scripts.guardrails.worktree_containment import (
     PROTECTED_BRANCHES,
     resolve_main_root,
 )
+from scripts.orchestration import worktree_claims
 
 
 class GitSafetyError(RuntimeError):
@@ -734,8 +735,29 @@ def assert_bundle_matches_receipt(bundle: BundleReceipt, branch: str) -> None:
 
 
 def remove_worktree(repo_root: Path, worktree: Path) -> None:
-    proc = run_git(["worktree", "remove", str(worktree)], cwd=repo_root)
-    _require_success(proc, context=f"git worktree remove failed: {worktree}")
+    """Remove ``worktree`` while holding delegate's per-worktree lock (#8610).
+
+    Dispatch holds the same lock from before it touches a checkout until it
+    publishes the task record that names it. Under the lock, a dispatch task
+    record with an unfinished status that names the checkout refuses removal,
+    so a worker attached to it never loses its cwd.
+    """
+    common_dir = run_git(["rev-parse", "--git-common-dir"], cwd=repo_root)
+    _require_success(common_dir, context="git common dir unresolvable")
+    lock_dir = (repo_root / common_dir.stdout.strip()).resolve() / worktree_claims.LOCK_DIR_NAME
+    try:
+        with worktree_claims.worktree_lock(worktree, lock_dir=lock_dir):
+            refusal = worktree_claims.active_worktree_claim_refusal(
+                worktree,
+                tasks_dir=repo_root / "batch_state" / "tasks",
+                repo_root=repo_root,
+            )
+            if refusal is not None:
+                raise GitSafetyError(f"worktree removal refused: {refusal}")
+            proc = run_git(["worktree", "remove", str(worktree)], cwd=repo_root)
+            _require_success(proc, context=f"git worktree remove failed: {worktree}")
+    except worktree_claims.WorktreeLockError as exc:
+        raise LockAcquisitionError(f"{worktree_claims.lock_refusal(exc)}: {exc}") from exc
 
 
 def verify_frozen_preconditions(
