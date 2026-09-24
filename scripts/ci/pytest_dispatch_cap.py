@@ -40,6 +40,18 @@ def _resolved(path: Path) -> Path:
     return path.resolve()
 
 
+def repository_root() -> Path:
+    """Checkout that owns this plugin, from its path and the git toplevel.
+
+    ``pytest --rootdir`` and the process cwd are not the suite boundary.
+    """
+    start = Path(__file__).resolve().parent
+    for candidate in (start, *start.parents):
+        if (candidate / "pyproject.toml").is_file() and (candidate / ".git").exists():
+            return candidate
+    raise RuntimeError("pytest dispatch cap cannot locate the repository root from its module path")
+
+
 def is_tests_root(raw: str, *, invocation_dir: Path, rootpath: Path) -> bool:
     """True when ``raw`` is the tests directory and not a node id or a file under it."""
     if "::" in raw:
@@ -55,11 +67,12 @@ def is_tests_root(raw: str, *, invocation_dir: Path, rootpath: Path) -> bool:
     return resolved == tests_root
 
 
-def path_covers_full_suite(raw: str, *, invocation_dir: Path, rootpath: Path) -> bool:
-    """True when ``raw`` is the repo root, the tests root, or an ancestor of the tests root.
+def path_covers_full_suite(raw: str, *, invocation_dir: Path) -> bool:
+    """True when ``raw`` covers this checkout's tests tree.
 
-    ``.``, ``./``, ``tests``, ``tests/``, and absolute forms all resolve before the
-    comparison. ``--rootdir`` is ``rootpath``. A node id is never the whole suite.
+    The tree is ``<repository_root>/tests``, resolved from this module, not from
+    pytest's rootdir. ``.``, ``tests``, and absolute forms are compared after
+    resolving against ``invocation_dir``. A node id is never the whole suite.
     """
     if "::" in raw:
         return False
@@ -68,8 +81,8 @@ def path_covers_full_suite(raw: str, *, invocation_dir: Path, rootpath: Path) ->
         candidate = invocation_dir / candidate
     try:
         resolved = _resolved(candidate)
-        root = _resolved(rootpath)
-        tests_root = _resolved(rootpath / "tests")
+        root = repository_root()
+        tests_root = _resolved(root / "tests")
     except OSError:
         return False
     if resolved in (root, tests_root):
@@ -82,20 +95,19 @@ def path_covers_full_suite(raw: str, *, invocation_dir: Path, rootpath: Path) ->
 
 
 def is_full_suite(config: pytest.Config) -> bool:
-    """No path args, or any path that covers the tests tree, is a full-suite run.
+    """No path args, or any path that covers this checkout's tests tree.
 
+    Zero path arguments are a full suite wherever the process was started.
     ``-k`` and ``-m`` are not path args, so a filtered full tree stays locked.
+    Pytest's rootdir is ignored.
     """
-    invocation_dir = Path(config.invocation_params.dir)
-    rootpath = Path(config.rootpath)
-    if config.args_source == config.ArgsSource.TESTPATHS:
+    if config.args_source != config.ArgsSource.ARGS:
         return True
     paths = list(config.getoption("file_or_dir") or [])
     if not paths:
-        if config.args_source == config.ArgsSource.ARGS:
-            return True
-        paths = [str(invocation_dir)]
-    return any(path_covers_full_suite(path, invocation_dir=invocation_dir, rootpath=rootpath) for path in paths)
+        return True
+    invocation_dir = Path(config.invocation_params.dir)
+    return any(path_covers_full_suite(path, invocation_dir=invocation_dir) for path in paths)
 
 
 def configured_lock_path(environ: Mapping[str, str] | None = None) -> Path:

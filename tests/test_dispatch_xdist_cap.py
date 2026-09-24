@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.dispatch_xdist_cap import (
+from scripts.ci.pytest_dispatch_cap import (
     CAP_LINE,
     DISPATCH_TASK_ENV,
     FULL_SUITE_BUSY,
@@ -23,6 +23,7 @@ from tests.dispatch_xdist_cap import (
     is_tests_root,
     path_covers_full_suite,
     release_full_suite_lock,
+    repository_root,
 )
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -30,7 +31,7 @@ _PYTEST = sys.executable
 
 
 def _write_probe(directory: Path) -> None:
-    (directory / "probe_workers.py").write_text(
+    (directory / "conftest.py").write_text(
         textwrap.dedent(
             """\
             def pytest_configure(config):
@@ -45,8 +46,12 @@ def _write_probe(directory: Path) -> None:
         ),
         encoding="utf-8",
     )
+    scripts = (_REPO_ROOT / "scripts").as_posix()
     (directory / "pyproject.toml").write_text(
-        "[tool.pytest.ini_options]\ntestpaths = ['tests']\n",
+        "[tool.pytest.ini_options]\n"
+        "testpaths = ['tests']\n"
+        f"pythonpath = ['{scripts}']\n"
+        "addopts = '-p ci.pytest_dispatch_cap'\n",
         encoding="utf-8",
     )
     tests = directory / "tests"
@@ -56,7 +61,7 @@ def _write_probe(directory: Path) -> None:
 
 def _run_pytest(directory: Path, args: list[str], env: dict[str, str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [_PYTEST, "-m", "pytest", "-p", "probe_workers", "-p", "tests.dispatch_xdist_cap", "--noconftest", *args],
+        [_PYTEST, "-m", "pytest", *args],
         cwd=directory,
         env=env,
         capture_output=True,
@@ -70,7 +75,7 @@ def _child_env(directory: Path, *, marker: str | None) -> dict[str, str]:
     env = os.environ.copy()
     env["PYTHONPATH"] = os.pathsep.join([str(directory), str(_REPO_ROOT), env.get("PYTHONPATH", "")])
     env.pop("PYTEST_ADDOPTS", None)
-    env.pop("PYTEST_XDIST_AUTO_NUM_WORKERS", None)
+    env["PYTEST_XDIST_AUTO_NUM_WORKERS"] = "8"
     env.pop("PYTEST_XDIST_WORKER", None)
     env.pop("PYTEST_XDIST_WORKER_COUNT", None)
     env.pop("PYTEST_XDIST_TESTRUNUID", None)
@@ -81,37 +86,47 @@ def _child_env(directory: Path, *, marker: str | None) -> dict[str, str]:
     return env
 
 
+def _observed_workers(completed: subprocess.CompletedProcess[str]) -> int:
+    observed = next(line for line in completed.stdout.splitlines() if line.startswith("OBSERVED_WORKERS="))
+    return int(observed.removeprefix("OBSERVED_WORKERS="))
+
+
+def _assert_workers(completed: subprocess.CompletedProcess[str], expected: int) -> None:
+    assert completed.returncode == 0, completed.stderr
+    assert _observed_workers(completed) == expected
+    assert CAP_LINE in completed.stdout
+
+
 def test_marker_and_n8_clamps_to_two_workers(tmp_path: Path) -> None:
     _write_probe(tmp_path)
     completed = _run_pytest(
         tmp_path, ["-n", "8", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
     )
-    assert completed.returncode == 0, completed.stderr
-    assert "OBSERVED_WORKERS=2" in completed.stdout
-    assert CAP_LINE in completed.stdout
+    _assert_workers(completed, 2)
 
 
-def _assert_clamped(completed: subprocess.CompletedProcess[str]) -> None:
-    assert completed.returncode == 0, completed.stderr
-    observed = next(line for line in completed.stdout.splitlines() if line.startswith("OBSERVED_WORKERS="))
-    assert int(observed.removeprefix("OBSERVED_WORKERS=")) <= 2
-    assert CAP_LINE in completed.stdout
-
-
-def test_marker_and_nauto_clamps_to_at_most_two_workers(tmp_path: Path) -> None:
+def test_marker_and_nauto_clamps_to_two_workers(tmp_path: Path) -> None:
     _write_probe(tmp_path)
     completed = _run_pytest(
         tmp_path, ["-n", "auto", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
     )
-    _assert_clamped(completed)
+    _assert_workers(completed, 2)
 
 
-def test_marker_and_nlogical_clamps_to_at_most_two_workers(tmp_path: Path) -> None:
+def test_marker_and_nlogical_clamps_to_two_workers(tmp_path: Path) -> None:
     _write_probe(tmp_path)
     completed = _run_pytest(
         tmp_path, ["-n", "logical", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
     )
-    _assert_clamped(completed)
+    _assert_workers(completed, 2)
+
+
+def test_marker_and_n1_stays_one_worker(tmp_path: Path) -> None:
+    _write_probe(tmp_path)
+    completed = _run_pytest(
+        tmp_path, ["-n", "1", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
+    )
+    _assert_workers(completed, 1)
 
 
 def test_without_marker_explicit_n_is_unchanged(tmp_path: Path) -> None:
@@ -167,17 +182,48 @@ def test_full_suite_lock_fails_fast_and_targeted_paths_do_not(tmp_path: Path) ->
     assert FULL_SUITE_BUSY not in targeted.stderr + targeted.stdout
 
 
-def test_dot_and_tests_forms_are_refused_while_lock_held(tmp_path: Path) -> None:
-    _write_probe(tmp_path)
-    ran = _arm_suite_sentinel(tmp_path)
+def _run_repo(cwd: Path, args: list[str], env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [_PYTEST, "-m", "pytest", *args],
+        cwd=cwd,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=90,
+        check=False,
+    )
+
+
+def test_foreign_rootdir_and_no_path_forms_are_refused_while_lock_held(tmp_path: Path) -> None:
     env = _child_env(tmp_path, marker="impl-8645-b")
     _hold_tmp_lock(tmp_path, env)
+    forms = (
+        (_REPO_ROOT, ["-q", ".", "--rootdir", "/home/ops"]),
+        (_REPO_ROOT, ["-q", "tests", "--rootdir", "/home/ops"]),
+        (_REPO_ROOT / "tests" / "ai_agent_bridge", ["-q"]),
+        (_REPO_ROOT, ["-q", ".", "-k", "nomatch", "-m", "nomatch"]),
+    )
     try:
-        for args in (["-q", "."], ["-q", "./tests"], ["-q", ".", "-k", "nomatch", "-m", "nomatch"]):
-            blocked = _run_pytest(tmp_path, args, env)
-            _assert_refused_before_tests(blocked, ran)
+        for cwd, args in forms:
+            blocked = _run_repo(cwd, args, env)
+            combined = blocked.stderr + blocked.stdout
+            assert blocked.returncode != 0, combined
+            assert FULL_SUITE_BUSY in combined, combined
+            assert " passed" not in blocked.stdout
     finally:
         release_full_suite_lock()
+
+
+def test_scripts_ci_invocation_loads_the_cap(tmp_path: Path) -> None:
+    env = _child_env(tmp_path, marker="impl-8645-b")
+    completed = _run_repo(
+        _REPO_ROOT,
+        ["-n", "1", "-q", "--collect-only", "scripts/ci/test_classify_changes.py"],
+        env,
+    )
+    combined = completed.stdout + completed.stderr
+    assert CAP_LINE in combined, combined
+    assert FULL_SUITE_BUSY not in combined
 
 
 def test_ci_workflows_do_not_set_the_dispatch_marker() -> None:
@@ -218,28 +264,27 @@ class _Args:
         return self._paths
 
 
-def test_full_suite_classification(tmp_path: Path) -> None:
-    tests = tmp_path / "tests"
-    tests.mkdir()
-    source = _Args("args", [], tmp_path).ArgsSource
-    assert is_full_suite(_Args(source.TESTPATHS, [], tmp_path))  # type: ignore[arg-type]
-    for raw in (".", "./", "tests", "tests/", "./tests", str(tmp_path), str(tests), str(tmp_path.parent)):
-        assert is_full_suite(_Args(source.ARGS, [raw], tmp_path))  # type: ignore[arg-type]
-        assert path_covers_full_suite(raw, invocation_dir=tmp_path, rootpath=tmp_path)
-    assert not is_full_suite(_Args(source.ARGS, ["tests/test_sample.py"], tmp_path))  # type: ignore[arg-type]
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    rooted = _Args(source.ARGS, [str(tests)], tmp_path)
-    rooted.invocation_params = type("Inv", (), {"dir": outside})()
-    assert is_full_suite(rooted)  # type: ignore[arg-type]
-    missed = _Args(source.ARGS, ["tests"], tmp_path)
-    missed.invocation_params = type("Inv", (), {"dir": outside})()
-    assert not is_full_suite(missed)  # type: ignore[arg-type]
-    nested = tests / "nested"
-    nested.mkdir()
-    invoked = _Args(source.INVOCATION_DIR, [], tmp_path)
+def test_full_suite_classification() -> None:
+    root = repository_root()
+    assert root == _REPO_ROOT
+    foreign = Path("/home/ops")
+    source = _Args("args", [], foreign).ArgsSource
+    assert is_full_suite(_Args(source.TESTPATHS, [], foreign))  # type: ignore[arg-type]
+    nested = root / "tests" / "ai_agent_bridge"
+    invoked = _Args(source.INVOCATION_DIR, [str(nested)], foreign)
     invoked.invocation_params = type("Inv", (), {"dir": nested})()
-    assert not is_full_suite(invoked)  # type: ignore[arg-type]
+    assert is_full_suite(invoked)  # type: ignore[arg-type]
+    for raw in (".", "./", "tests", "tests/", "./tests", str(root), str(root / "tests"), str(foreign)):
+        cfg = _Args(source.ARGS, [raw], foreign)
+        cfg.invocation_params = type("Inv", (), {"dir": root})()
+        assert is_full_suite(cfg), raw  # type: ignore[arg-type]
+        assert path_covers_full_suite(raw, invocation_dir=root)
+    targeted = _Args(source.ARGS, ["tests/test_dispatch_xdist_cap.py"], foreign)
+    targeted.invocation_params = type("Inv", (), {"dir": root})()
+    assert not is_full_suite(targeted)  # type: ignore[arg-type]
+    elsewhere = _Args(source.ARGS, ["tests"], foreign)
+    elsewhere.invocation_params = type("Inv", (), {"dir": foreign})()
+    assert not is_full_suite(elsewhere)  # type: ignore[arg-type]
 
 
 def test_lock_path_env_override(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

@@ -25,13 +25,7 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from tests import dispatch_xdist_cap as _dispatch_xdist_cap
 from tests import sparse_trees
-
-# Re-export so this conftest plugin runs the dispatch xdist cap (#8645).
-pytest_cmdline_main = _dispatch_xdist_cap.pytest_cmdline_main
-pytest_sessionstart = _dispatch_xdist_cap.pytest_sessionstart
-pytest_unconfigure = _dispatch_xdist_cap.pytest_unconfigure
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 

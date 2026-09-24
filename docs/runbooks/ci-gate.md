@@ -96,8 +96,8 @@ thread method terminates the process, and replacing it can leave xdist
 hanging until the job limit.
 
 Dispatch workers are a separate host from these runners. When
-`LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `tests/dispatch_xdist_cap.py`
-(loaded by `tests/conftest.py`) clamps xdist with `--maxprocesses=2` for
+`LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `scripts/ci/pytest_dispatch_cap.py`
+(loaded by `pyproject.toml` `addopts` `-p ci.pytest_dispatch_cap`) clamps xdist with `--maxprocesses=2` for
 `-n auto`, `-n logical`, and an explicit `-n`, and a full-suite invocation
 takes one non-blocking lock under `/var/tmp/lu/learn-ukrainian/`
 (`LU_PYTEST_FULL_SUITE_LOCK` overrides that path). CI does

@@ -17,7 +17,9 @@ faulthandler_timeout = 110
 tmp_path_retention_policy = "failed"
 tmp_path_retention_count = 1
 # atlas_release is publish-time only (requires data/atlas.db); run explicitly with -m atlas_release
-addopts = "-v --tb=short -m 'not atlas_release'"
+# -p registers the dispatch xdist cap for every invocation that reads this
+# config, including paths outside tests/ (a tests/conftest.py hook does not).
+addopts = "-v --tb=short -m 'not atlas_release' -p ci.pytest_dispatch_cap"
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
