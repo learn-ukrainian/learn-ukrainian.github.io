@@ -1,0 +1,48 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "8c34f0db585e",
+  "strategy": "manual-commit",
+  "branch": "kimi/impl-8514-deepseek-start",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/agent-runtime-guide.md",
+    "docs/agents/AGENT-CAPABILITY-MATRIX.md",
+    "docs/best-practices/agent-activity-matrix.md",
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/agent_runtime/_smoke_pty_agents.sh",
+    "scripts/agent_runtime/adapters/deepseek.py",
+    "scripts/agent_runtime/registry.py",
+    "scripts/agent_runtime/telemetry.py",
+    "scripts/ai_agent_bridge/_cli.py",
+    "scripts/ai_agent_bridge/_hermes.py",
+    "scripts/audit/qg_bakeoff.py",
+    "scripts/config/model_catalog.yaml",
+    "scripts/delegate.py",
+    "scripts/review/reviewer_resolver.py",
+    "tests/agent_runtime/adapters/test_deepseek_adapter.py",
+    "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py",
+    "tests/agent_runtime/test_acpx_adapter.py",
+    "tests/test_agent_runtime.py",
+    "tests/test_ask_hermes.py",
+    "tests/test_delegate.py",
+    "tests/test_dispatch_telemetry.py",
+    "tests/test_model_catalog.py",
+    "tests/test_review_reviewer_resolver.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/8c/34f0db585e/0/metadata.json",
+      "transcript": "/8c/34f0db585e/0/full.jsonl",
+      "compact_transcript": "/8c/34f0db585e/0/transcript.jsonl",
+      "content_hash": "/8c/34f0db585e/0/content_hash.txt",
+      "prompt": "/8c/34f0db585e/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 14008,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 7552,
+    "output_tokens": 2,
+    "api_call_count": 1
+  }
+}
