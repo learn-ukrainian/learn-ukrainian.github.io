@@ -1858,7 +1858,7 @@ def _guard_live_github_spawn(args: object, kwargs: dict[str, object]) -> None:
         if resolved is None:
             return
         executable_path = resolved
-    is_shim = _is_agent_runtime_shim(executable_path)
+    is_shim = _is_agent_runtime_shim(executable_path) and os.path.basename(executable_path) == "gh"
     # The runtime shim is safe only when it has been explicitly wired to a
     # non-real test backend. Never let AGENT_REAL_GH exempt a direct real-gh
     # spawn; that environment variable is also present in normal agent runs.

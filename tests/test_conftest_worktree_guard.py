@@ -486,3 +486,34 @@ def test_runtime_gh_shim_with_real_backend_is_blocked(tmp_path: Path, monkeypatc
             [str(shim), "issue", "view", "1"],
             {"env": {"AGENT_REAL_GH": str(real_gh)}},
         )
+
+
+def test_runtime_git_shim_is_not_a_github_spawn(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    real_gh = tmp_path / "real-gh"
+    shim = tmp_path / "agent_runtime" / "shims" / "git"
+    for path in (real_gh, shim):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        path.chmod(0o755)
+    monkeypatch.setattr(worktree_guard, "_REAL_GH_BINARY", os.path.realpath(real_gh))
+
+    worktree_guard._guard_live_github_spawn(
+        [str(shim), "checkout", "some-branch"],
+        {"env": {}},
+    )
+
+
+def test_runtime_gh_shim_without_backend_is_blocked(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    real_gh = tmp_path / "real-gh"
+    shim = tmp_path / "agent_runtime" / "shims" / "gh"
+    for path in (real_gh, shim):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        path.chmod(0o755)
+    monkeypatch.setattr(worktree_guard, "_REAL_GH_BINARY", os.path.realpath(real_gh))
+
+    with pytest.raises(pytest.fail.Exception, match="spawned real gh"):
+        worktree_guard._guard_live_github_spawn(
+            [str(shim), "issue", "view", "1"],
+            {"env": {}},
+        )
