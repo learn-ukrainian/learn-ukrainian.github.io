@@ -47,6 +47,7 @@ from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     build_reasoning_and_response_eval,
     classify_sentence_register,
     clean_span_punct,
+    format_query_template,
     resolve_specific_linguistic_citation,
 )
 
@@ -4638,12 +4639,12 @@ def build_grammar_dataset(
             orig_text = item["original_text"]
             reg = classify_sentence_register(orig_text)
 
-            clean_orig_text = re.sub(r"[.?!…]+$", "", orig_text.strip())
             if split_name == "eval":
                 query = ""
                 for offset in range(len(PROMPT_TEMPLATES_EVAL)):
-                    cand = PROMPT_TEMPLATES_EVAL[(seed_idx + offset) % len(PROMPT_TEMPLATES_EVAL)].format(
-                        sentence=clean_orig_text
+                    cand = format_query_template(
+                        PROMPT_TEMPLATES_EVAL[(seed_idx + offset) % len(PROMPT_TEMPLATES_EVAL)],
+                        orig_text,
                     )
                     if cand not in used_queries:
                         query = cand
@@ -4651,19 +4652,22 @@ def build_grammar_dataset(
                         seed_idx = seed_idx + offset
                         break
                 if not query:
-                    query = build_query_eval(clean_orig_text, seed_idx)
+                    query = build_query_eval(orig_text, seed_idx)
             else:
                 templates = PROMPT_TEMPLATES_BY_REGISTER.get(reg) or PROMPT_TEMPLATES_BY_REGISTER["journalistic"]
                 query = ""
                 for offset in range(len(templates)):
-                    cand = templates[(seed_idx + offset) % len(templates)].format(sentence=clean_orig_text)
+                    cand = format_query_template(
+                        templates[(seed_idx + offset) % len(templates)],
+                        orig_text,
+                    )
                     if cand not in used_queries:
                         query = cand
                         used_queries.add(cand)
                         seed_idx = seed_idx + offset
                         break
                 if not query:
-                    query = build_query(clean_orig_text, reg, seed_idx)
+                    query = build_query(orig_text, reg, seed_idx)
 
             is_explained = (
                 ((item["doc_id"], item["original_text"], item["corrected_text"]) in explained_keys)
@@ -4926,26 +4930,36 @@ def build_grammar_dataset(
         },
         "source_denominator_reconciliation": {
             "governing_issue_reference": "Reconciles ~8,900 human corrections cited in #8342 with 997 delivered corrections",
+            "ua_gec_m2_in_scope_edits_total": 9874,
+            "ua_gec_m2_train_in_scope_edits": 8266,
+            "ua_gec_m2_test_in_scope_edits_firewall_quarantined": 1608,
             "ua_gec_train_sentences_total": 31028,
-            "ua_gec_train_in_scope_edits_total": 8266,
             "ua_gec_train_in_scope_candidate_sentences": 5138,
             "ua_gec_train_in_scope_annotator_edit_sets": 5252,
             "exclusions_by_policy": {
                 "document_level_eval_partition_holdout": "10% held out for evaluation split (136 eval records)",
-                "official_test_set_firewall": "Held-out test set firewall (0 doc overlap, 0 Jaccard >= 0.80 near-duplicates)",
-                "uncapitalized_or_fragment": 547,
-                "sentence_length_floor_under_5_words": 293,
-                "non_cyrillic_latin_urls_emojis_symbols": 242,
-                "pure_word_insertions": 218,
+                "official_test_set_firewall": "Held-out test set firewall (0 doc overlap, 0 Jaccard >= 0.80 near-duplicates, 13 candidate matches excluded)",
+                "structural_and_syntactic_quality_filters": 2464,
+                "uncapitalized_or_fragment": 508,
+                "sentence_length_floor_under_5_words": 287,
+                "non_cyrillic_latin_urls_emojis_symbols": 236,
+                "pure_word_insertions": 217,
                 "missing_or_invalid_terminal_punctuation": 193,
-                "polarity_flips_negation": 68,
-                "straight_ascii_quotes": 67,
-                "bracket_math_artifacts": 35,
-                "unbalanced_quotes": 33,
-                "duplicate_pairs_deduplication": "Deduplicated across documents to ensure zero redundant train pairs",
+                "straight_ascii_quotes": 79,
+                "polarity_flips_negation": 70,
+                "unbalanced_quotes": 30,
+                "math_special_symbols": 22,
+                "duplicate_pairs_deduplication": 21,
+                "bracket_editorial_artifacts": 16,
             },
+            "candidate_edit_sets_excluded_total": 4156,
+            "candidate_edit_sets_retained_in_pipeline": 1096,
             "delivered_substantive_corrections": 997,
+            "delivered_substantive_corrections_train": 911,
+            "delivered_substantive_corrections_eval": 86,
             "delivered_clean_controls": 380,
+            "delivered_clean_controls_train": 330,
+            "delivered_clean_controls_eval": 50,
             "delivered_total_records": 1377,
             "substantive_correction_share": 0.724,
             "clean_control_share": 0.276,

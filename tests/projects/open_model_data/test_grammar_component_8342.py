@@ -743,11 +743,16 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
 
 
 def test_no_duplicated_query_punctuation(grammar_data):
-    """Verify that 0 records have duplicated punctuation like «... .». or «... !». in query."""
-    double_punct_pattern = re.compile(r"[.?!…][»\"]\s*[.?!…]")
+    """Verify that 0 records have nested guillemets or duplicated punctuation in query."""
+    double_punct_pattern = re.compile(r"[.?!…][»”\"']\s*[.?!…]")
     for r in grammar_data["all"]:
         q = r.get("query", "")
-        assert not double_punct_pattern.search(q), f"Duplicated punctuation found in query: {q}"
+        assert "««" not in q and "»»" not in q, f"Nested guillemets found in query: {q}"
+        assert not double_punct_pattern.search(q), f"Duplicated punctuation found around quote in query: {q}"
+        assert not re.search(r"\.\s*»\s*\.", q), f"Double dot across quote found in query: {q}"
+        assert not re.search(r"\?\s*\.", q), f"Question followed by period found in query: {q}"
+        assert not re.search(r"!\s*\.", q), f"Exclamation followed by period found in query: {q}"
+        assert not re.search(r"\.\s*\.", q.replace("...", "").replace("…", "")), f"Double period found in query: {q}"
 
 
 def test_source_denominator_reconciliation(grammar_data):
@@ -756,18 +761,31 @@ def test_source_denominator_reconciliation(grammar_data):
     assert "source_denominator_reconciliation" in manifest, "Missing source_denominator_reconciliation in manifest.json"
     recon = manifest["source_denominator_reconciliation"]
 
+    assert recon["ua_gec_m2_in_scope_edits_total"] == 9874
+    assert recon["ua_gec_m2_train_in_scope_edits"] == 8266
+    assert recon["ua_gec_m2_test_in_scope_edits_firewall_quarantined"] == 1608
     assert recon["ua_gec_train_sentences_total"] == 31028
-    assert recon["ua_gec_train_in_scope_edits_total"] == 8266
     assert recon["ua_gec_train_in_scope_candidate_sentences"] == 5138
+    assert recon["ua_gec_train_in_scope_annotator_edit_sets"] == 5252
     assert recon["delivered_substantive_corrections"] == 997
+    assert recon["delivered_substantive_corrections_train"] == 911
+    assert recon["delivered_substantive_corrections_eval"] == 86
     assert recon["delivered_clean_controls"] == 380
+    assert recon["delivered_clean_controls_train"] == 330
+    assert recon["delivered_clean_controls_eval"] == 50
     assert recon["delivered_total_records"] == 1377
 
     readme_path = GRAMMAR_DIR / "README.md"
     assert readme_path.is_file(), f"Missing README.md at {readme_path}"
     readme_text = readme_path.read_text(encoding="utf-8")
     assert "## Source Denominator Reconciliation (#8342)" in readme_text
+    assert "9,874" in readme_text or "9874" in readme_text
     assert "8,266" in readme_text or "8266" in readme_text
+    assert "1,608" in readme_text or "1608" in readme_text
     assert "31,028" in readme_text
     assert "997" in readme_text
+    assert "911" in readme_text
+    assert "86" in readme_text
     assert "380" in readme_text
+    assert "330" in readme_text
+    assert "50" in readme_text

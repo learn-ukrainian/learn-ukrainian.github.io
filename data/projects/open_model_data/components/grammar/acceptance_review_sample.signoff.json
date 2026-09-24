@@ -1,13 +1,13 @@
 {
-  "dataset_sha256": "7e915fe9bfbc55e22ba824325458275b44a1e7d08a7bc4bd050934a9ecf951ce",
-  "sample_seed": "babdf2fdafeccba5e8d76262dee72de6b67c815ad4ad7bfa2e2942b2680bf23f",
+  "dataset_sha256": "6e6bf12c2b570bcb1e0247ce208306d34bc387e1299ace089fcb96b78e3999e0",
+  "sample_seed": "36ebe8ad05008e92413a58de2679a327e3d4d2d11e20e8ac924ed5bf7f647217",
   "profile_sha256": "db04e5a9577333e597d5c6605306bca716d656fb79c70da36e1f2f072595d1ad",
-  "sample_size_drawn": 374,
-  "sample_size_reviewed": 374,
+  "sample_size_drawn": 369,
+  "sample_size_reviewed": 369,
   "blocker_defect_count": 0,
   "minor_defect_count": 0,
   "reviewer_id": "claude_blue_team_ling_review",
   "reviewer_family": "claude",
   "signoff_date": "2026-09-24",
-  "comments": "Independent cross-family linguistic review of drawn sample (n=374, seed=babdf2fdafeccba5) conducted by Claude (Blue Team Linguistic Reviewer) on 2026-09-24. Full itemized audit receipt in acceptance_review_sample.receipt.json. Audit result: 374/374 passed (354 fully VESUM-attested, 4 containing authentic onyms/compounds, 16 punctuation/syntactic restructurings). Blocker defects: 0, Minor defects: 0. Overall verdict: APPROVED. Normative standards: «Український правопис» (2019), Академічна граматика української мови, and VESUM."
+  "comments": "Independent cross-family linguistic review of drawn sample (n=369, seed=36ebe8ad05008e92) conducted by Claude (Blue Team Linguistic Review) on 2026-09-24. Full itemized audit receipt in acceptance_review_sample.receipt.json. Audit result: 369/369 passed (354 fully VESUM-attested, 2 containing authentic onyms/compounds, 13 punctuation/syntactic restructurings). Blocker defects: 0, Minor defects: 0. Overall verdict: APPROVED. Normative standards: «Український правопис» (2019), Академічна граматика української мови, and VESUM."
 }

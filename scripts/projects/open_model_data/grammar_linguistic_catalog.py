@@ -665,12 +665,60 @@ PROMPT_TEMPLATES_BY_REGISTER: dict[str, list[str]] = {
 }
 
 
+def clean_sentence_for_query(sentence: str) -> str:
+    """Normalize a sentence for insertion into carrier query templates.
+
+    1. Strips outermost quotation marks if the entire sentence is quoted.
+    2. Converts any remaining internal guillemets («...») to curved double quotes (“...”)
+       to prevent nested guillemets (««...»») when inserted into «{sentence}».
+    3. Strips trailing period(s), but preserves ?, !, and …
+    4. Handles terminal periods before or after internal closing quotes.
+    """
+    s = sentence.strip()
+
+    guillemet_wrapped = (
+        (s.startswith("«") and s.endswith("»") and s.count("«") == 1 and s.count("»") == 1)
+        or (s.startswith("«") and bool(re.search(r"[.?!…]+»$", s)) and s.count("«") == 1 and s.count("»") == 1)
+    )
+    ascii_wrapped = (
+        (s.startswith('"') and s.endswith('"') and s.count('"') == 2)
+        or (s.startswith('"') and bool(re.search(r'[.?!…]+"$', s)) and s.count('"') == 2)
+    )
+
+    if guillemet_wrapped:
+        s = re.sub(r"^«", "", s)
+        s = re.sub(r"[.?!…]*»$", "", s).strip()
+    elif ascii_wrapped:
+        s = re.sub(r'^"', "", s)
+        s = re.sub(r'[.?!…]*"$', "", s).strip()
+
+    if "«" in s or "»" in s:
+        s = s.replace("«", "“").replace("»", "”")
+
+    # Strip trailing periods, preserving ?, !, …
+    s = re.sub(r"\.+$", "", s)
+    s = re.sub(r"\.+(?=[”\"]+$)", "", s)
+    s = re.sub(r"[”\"]\s*\.+$", "”", s)
+    return s.strip()
+
+
+def format_query_template(template: str, sentence: str) -> str:
+    """Format a query template with a cleaned sentence and resolve any adjacent punctuation collisions."""
+    clean_s = clean_sentence_for_query(sentence)
+    formatted = template.format(sentence=clean_s)
+    # Deduplicate punctuation across/after quotes (e.g. «...?»? -> «...?», «...!». -> «...!», etc.)
+    formatted = re.sub(r"([?!…][»”\"']+)\s*[?!.]", r"\1", formatted)
+    formatted = re.sub(r"\.\s*([»”\"']+)\s*\.", r"\1.", formatted)
+    formatted = re.sub(r"\?\s*\.", "?", formatted)
+    formatted = re.sub(r"!\s*\.", "!", formatted)
+    return formatted
+
+
 def build_query(sentence: str, register: str, seed_index: int) -> str:
     """Deterministically pick a diversified query template for a given register and seed."""
-    clean_sentence = re.sub(r"[.?!…]+$", "", sentence.strip())
     templates = PROMPT_TEMPLATES_BY_REGISTER.get(register) or PROMPT_TEMPLATES_BY_REGISTER["journalistic"]
     tmpl = templates[seed_index % len(templates)]
-    return tmpl.format(sentence=clean_sentence)
+    return format_query_template(tmpl, sentence)
 
 
 # ── 5. Diversified Response and Reasoning Builders ──────────────────────────
@@ -1579,9 +1627,8 @@ RESPONSE_TEMPLATES_CONTROL_EVAL = [
 
 def build_query_eval(sentence: str, seed_index: int) -> str:
     """Pick a diversified prompt template specifically for the held-out evaluation split."""
-    clean_sentence = re.sub(r"[.?!…]+$", "", sentence.strip())
     tmpl = PROMPT_TEMPLATES_EVAL[seed_index % len(PROMPT_TEMPLATES_EVAL)]
-    return tmpl.format(sentence=clean_sentence)
+    return format_query_template(tmpl, sentence)
 
 
 def build_reasoning_and_response_eval(
