@@ -7,10 +7,12 @@ Memory is bounded by one shard, not the corpus: records are replayed from the
 read-only database by indexed lookups, shard candidates are gzip-streamed with an
 early abort past their size cap, accepted leaves are written straight into a
 staging tree, uncapped objects (terminal search shards) are gzip-streamed to
-their file, oversized buckets' error sizes are counted, never held, and
-``current.json`` is switched (last, atomically) only after the whole tree (and,
-with ``--verify``, its verification) is installed. Search rows are kept as
-locators and replayed from the read snapshot, never retained.
+their file at every compression level (level 0's stored-block framing is
+planned from the length, then streamed from a replay), oversized buckets' error
+sizes are counted, never held, and ``current.json`` is switched (last,
+atomically) only after the whole tree (and, with ``--verify``, its streamed
+verification) is installed. Search rows are kept as locators and replayed from
+the read snapshot, never retained.
 Installed version trees are immutable: a same-dataVersion tree with different
 bytes is installed beside the first as ``<dataVersion>-transport-<sha256>``.
 """
@@ -18,6 +20,7 @@ bytes is installed beside the first as ``<dataVersion>-transport-<sha256>``.
 from __future__ import annotations
 
 import argparse
+import functools
 import gzip
 import hashlib
 import json
@@ -34,8 +37,11 @@ import zlib
 from collections import defaultdict
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any, BinaryIO
+
+import ijson
 
 # Allow ``python scripts/atlas/export_runtime_shards.py`` (not only ``-m``).
 if __package__ is None or __package__ == "":
@@ -763,27 +769,368 @@ class CompressedObject:
     json_sha256: str
 
 
+ChunkSource = Callable[[], Iterable[bytes]]
+"""Replayable chunk stream: each call yields the same bytes again (level 0 reads it twice)."""
+
+# ---------------------------------------------------------------------------
+# Level 0 (stored blocks) without buffering the object.
+#
+# ``gzip_bytes(data, 0)`` is ``zlib.compress(data, 0, wbits=31)`` (CPython 3.12
+# ``gzip.compress`` with ``mtime=0``). Its stored-block lengths are not a fixed
+# 65535 split: zlib's ``deflate_stored`` sizes each block from the input left,
+# its 64 KiB window and the *output space* CPython's growing output buffer hands
+# it. Those decisions depend only on lengths, never on bytes, so the framing is
+# planned from the raw length alone (pass 1: length/sha/crc), then the header,
+# stored blocks and trailer are streamed from a replay of the same chunks
+# (pass 2). The model is a length-only transcription of zlib v1.3.1 deflate.c
+# (``deflate``/``deflate_stored``/``flush_pending``, trees.c ``_tr_stored_block``)
+# driven exactly like CPython v3.12.8 ``zlib_compress_impl`` with the
+# pycore_blocks_output_buffer.h block schedule. A runtime differential canary
+# checks it against the live ``gzip_bytes`` before any level-0 object is framed
+# and fails closed on any disagreement.
+# ---------------------------------------------------------------------------
+
+_Z_NO_FLUSH, _Z_FINISH = 0, 4
+_Z_OK, _Z_STREAM_END, _Z_BUF_ERROR = 0, 1, -5
+_UINT_MAX = 0xFFFFFFFF
+_W_SIZE = 1 << 15  # windowBits 15
+_WINDOW_SIZE = 2 * _W_SIZE
+_PENDING_BUF_SIZE = (1 << (8 + 6)) * 4  # lit_bufsize * 4 at DEF_MEM_LEVEL 8
+_MAX_STORED = 65535
+_STORED_HEADER = 5  # (bi_valid + 42) >> 3: level 0 only ever emits byte-aligned stored blocks
+_GZIP_HEADER_BYTES = 10
+_GZIP_TRAILER_BYTES = 8
+# CPython 3.12 Include/internal/pycore_blocks_output_buffer.h BUFFER_BLOCK_SIZE.
+_KIB, _MIB = 1024, 1024 * 1024
+_OUTPUT_BLOCK_SIZES = (
+    32 * _KIB, 64 * _KIB, 256 * _KIB, 1 * _MIB, 4 * _MIB, 8 * _MIB, 16 * _MIB, 16 * _MIB,
+    32 * _MIB, 32 * _MIB, 32 * _MIB, 32 * _MIB, 64 * _MIB, 64 * _MIB, 128 * _MIB, 128 * _MIB,
+    256 * _MIB,
+)
+
+
+def _rank(flush: int) -> int:
+    return flush * 2 - (9 if flush > 4 else 0)
+
+
+class StoredDeflateModel:
+    """Length-only zlib v1.3.1 ``deflate()`` state at level 0 with the gzip wrapper.
+
+    Tracks exactly the fields that steer stored-block framing (``avail_in``,
+    ``avail_out``, ``pending``, ``strstart``, ``block_start``, status, flush
+    history, trailer) with C's unsigned 32-bit wraparound where deflate.c uses it.
+    Every ``_tr_stored_block`` call is reported to ``on_block(length, last)`` in
+    output order; bytes are never modelled. Only ``Z_NO_FLUSH``/``Z_FINISH`` (the
+    flushes CPython's one-shot and compressobj paths use) are supported.
+    """
+
+    def __init__(self, on_block: Callable[[int, int], object]) -> None:
+        self.avail_in = 0
+        self.avail_out = 0
+        self.total_out = 0
+        self._pending = 0
+        self._strstart = 0
+        self._block_start = 0
+        self._status = "gzip"
+        self._last_flush = -2
+        self._wrap = 2
+        self._on_block = on_block
+
+    def _flush_pending(self) -> None:
+        moved = min(self._pending, self.avail_out)
+        self._pending -= moved
+        self.avail_out -= moved
+        self.total_out += moved
+
+    def _stored_block(self, length: int, last: int) -> None:
+        self._on_block(length, last)
+        self._pending += _STORED_HEADER
+
+    def deflate(self, flush: int) -> int:
+        if flush not in (_Z_NO_FLUSH, _Z_FINISH) or (self._status == "finish" and flush != _Z_FINISH):
+            raise ExportError(f"stored deflate model: unsupported call (flush={flush}, status={self._status})")
+        if self.avail_out == 0:
+            return _Z_BUF_ERROR
+        old_flush, self._last_flush = self._last_flush, flush
+        if self._pending:
+            self._flush_pending()
+            if self.avail_out == 0:
+                self._last_flush = -1
+                return _Z_OK
+        elif self.avail_in == 0 and _rank(flush) <= _rank(old_flush) and flush != _Z_FINISH:
+            return _Z_BUF_ERROR
+        if self._status == "finish" and self.avail_in != 0:
+            return _Z_BUF_ERROR
+        if self._status == "gzip":
+            self._pending += _GZIP_HEADER_BYTES
+            self._status = "busy"
+            self._flush_pending()
+            if self._pending:
+                self._last_flush = -1
+                return _Z_OK
+        # ``s->lookahead`` stays 0 at level 0 (deflate_stored never fills it).
+        if self.avail_in != 0 or (flush != _Z_NO_FLUSH and self._status != "finish"):
+            state = self._deflate_stored(flush)
+            if state in ("finish_started", "finish_done"):
+                self._status = "finish"
+            if state in ("need_more", "finish_started"):
+                if self.avail_out == 0:
+                    self._last_flush = -1
+                return _Z_OK
+        if flush != _Z_FINISH:
+            return _Z_OK
+        if self._wrap <= 0:
+            return _Z_STREAM_END
+        self._pending += _GZIP_TRAILER_BYTES
+        self._flush_pending()
+        self._wrap = -self._wrap
+        return _Z_OK if self._pending else _Z_STREAM_END
+
+    def _deflate_stored(self, flush: int) -> str:
+        if self._pending:
+            raise ExportError("stored deflate model: pending output on entry to deflate_stored")
+        min_block = min(_PENDING_BUF_SIZE - 5, _W_SIZE)
+        last = 0
+        used = self.avail_in
+        while True:
+            length = _MAX_STORED
+            if self.avail_out < _STORED_HEADER:
+                break
+            have = self.avail_out - _STORED_HEADER
+            left = self._strstart - self._block_start
+            if length > left + self.avail_in:  # (ulg) sum: no wrap
+                length = left + self.avail_in
+            if length > have:
+                length = have
+            whole = (left + self.avail_in) & _UINT_MAX  # unsigned sum: wraps like the C
+            if length < min_block and (
+                (length == 0 and flush != _Z_FINISH) or flush == _Z_NO_FLUSH or length != whole
+            ):
+                break
+            last = 1 if flush == _Z_FINISH and length == whole else 0
+            self._stored_block(length, last)
+            self._flush_pending()
+            if left:
+                left = min(left, length)
+                self.avail_out -= left
+                self.total_out += left
+                self._block_start += left
+                length -= left
+            if length:
+                if length > self.avail_in:
+                    raise ExportError("stored deflate model: direct copy exceeds available input")
+                self.avail_in -= length
+                self.avail_out -= length
+                self.total_out += length
+            if last:
+                break
+        used -= self.avail_in
+        if used:
+            if used >= _W_SIZE:
+                self._strstart = _W_SIZE
+            else:
+                if _WINDOW_SIZE - self._strstart <= used:
+                    self._strstart -= _W_SIZE
+                self._strstart += used
+            self._block_start = self._strstart
+        if last:
+            return "finish_done"
+        have = _WINDOW_SIZE - self._strstart
+        if self.avail_in > have and self._block_start >= _W_SIZE:
+            self._block_start -= _W_SIZE
+            self._strstart -= _W_SIZE
+            have += _W_SIZE
+        have = min(have, self.avail_in)
+        if have:
+            self.avail_in -= have
+            self._strstart += have
+        have = min(_PENDING_BUF_SIZE - _STORED_HEADER, _MAX_STORED)
+        min_block = min(have, _W_SIZE)
+        left = self._strstart - self._block_start
+        if left >= min_block or (
+            (left or flush == _Z_FINISH) and flush != _Z_NO_FLUSH and self.avail_in == 0 and left <= have
+        ):
+            length = min(left, have)
+            last = 1 if flush == _Z_FINISH and self.avail_in == 0 and length == left else 0
+            self._stored_block(length, last)
+            self._pending += length
+            self._block_start += length
+            self._flush_pending()
+        return "finish_started" if last else "need_more"
+
+
+class OutputBlocks:
+    """CPython ``_BlocksOutputBuffer`` growth schedule (``max_length == -1``)."""
+
+    def __init__(self) -> None:
+        self._count = 0
+
+    def next_block(self) -> int:
+        size = _OUTPUT_BLOCK_SIZES[min(self._count, len(_OUTPUT_BLOCK_SIZES) - 1)]
+        self._count += 1
+        return size
+
+
+def stored_block_plan(raw_bytes: int) -> list[tuple[int, int]]:
+    """``(length, last)`` of every stored block ``gzip_bytes(<raw_bytes bytes>, 0)`` emits.
+
+    Drives :class:`StoredDeflateModel` like CPython 3.12.8 ``zlib_compress_impl``:
+    input handed over in ``UINT_MAX`` slices (``Z_NO_FLUSH`` until the last,
+    ``Z_FINISH``), ``deflate`` repeated while it fills the output, which grows by
+    the output-buffer schedule only once full.
+    """
+    if raw_bytes < 0:
+        raise ValueError("raw_bytes must be non-negative")
+    blocks: list[tuple[int, int]] = []
+    model = StoredDeflateModel(lambda length, last: blocks.append((length, last)))
+    output = OutputBlocks()
+    model.avail_out = output.next_block()
+    remaining = raw_bytes
+    status = _Z_OK
+    while True:
+        model.avail_in = min(remaining, _UINT_MAX)
+        remaining -= model.avail_in
+        flush = _Z_FINISH if remaining == 0 else _Z_NO_FLUSH
+        while True:
+            if model.avail_out == 0:
+                model.avail_out = output.next_block()
+            status = model.deflate(flush)
+            if model.avail_out != 0:
+                break
+        if model.avail_in != 0:
+            raise ExportError("stored block plan: zlib left input unconsumed")
+        if flush == _Z_FINISH:
+            break
+    stored = sum(length for length, _last in blocks)
+    framed = _GZIP_HEADER_BYTES + len(blocks) * _STORED_HEADER + stored + _GZIP_TRAILER_BYTES
+    if (
+        status != _Z_STREAM_END
+        or stored != raw_bytes
+        or [last for _length, last in blocks] != [0] * (len(blocks) - 1) + [1]
+        or any(length > _MAX_STORED for length, _last in blocks)
+        or framed != model.total_out
+    ):
+        raise ExportError(f"stored block plan is inconsistent for {raw_bytes} bytes")
+    return blocks
+
+
+def _stored_gzip_size(blocks: Sequence[tuple[int, int]], raw_bytes: int) -> int:
+    return _GZIP_HEADER_BYTES + len(blocks) * _STORED_HEADER + raw_bytes + _GZIP_TRAILER_BYTES
+
+
+def _frame_stored_gzip(
+    source: ChunkSource, blocks: Sequence[tuple[int, int]], emit: Callable[[bytes], object]
+) -> tuple[int, str, int]:
+    """Emit header, stored blocks and trailer around a replay of ``source``.
+
+    Returns ``(raw bytes, raw sha256, crc32)`` of the replay so the caller can
+    prove it matched the planned pass.
+    """
+    raw_sha = hashlib.sha256()
+    raw_bytes = 0
+    crc = 0
+    emit(gzip_bytes(b"", compression_level=0)[:_GZIP_HEADER_BYTES])
+    plan = iter(blocks)
+    remaining = 0
+
+    def open_block() -> int:
+        try:
+            length, last = next(plan)
+        except StopIteration:
+            raise ExportError("level-0 replay produced more bytes than planned") from None
+        emit(bytes((last,)) + struct.pack("<HH", length, length ^ 0xFFFF))
+        return length
+
+    for chunk in source():
+        raw_sha.update(chunk)
+        crc = zlib.crc32(chunk, crc)
+        raw_bytes += len(chunk)
+        view = memoryview(chunk)
+        position = 0
+        while position < len(chunk):
+            while remaining == 0:
+                remaining = open_block()
+            take = min(remaining, len(chunk) - position)
+            emit(bytes(view[position : position + take]))
+            position += take
+            remaining -= take
+    if remaining:
+        raise ExportError("level-0 replay produced fewer bytes than planned")
+    for length, last in plan:  # only an empty final block can remain (empty input)
+        if length:
+            raise ExportError("level-0 replay produced fewer bytes than planned")
+        emit(bytes((last,)) + struct.pack("<HH", 0, 0xFFFF))
+    emit(struct.pack("<LL", crc, raw_bytes & 0xFFFFFFFF))
+    return raw_bytes, raw_sha.hexdigest(), crc
+
+
+# Lengths that exercise every deflate_stored branch (direct copy, window fill,
+# slide, pending block, empty final block) and the first four output-buffer
+# growths (32 KiB -> 64 KiB -> 256 KiB -> 1 MiB -> 4 MiB).
+_STORED_CANARY_LENGTHS = (
+    0, 1, 5, 32_752, 32_753, 32_754, 32_768, 65_530, 65_531, 65_532, 65_536, 98_304, 98_309,
+    100_000, 131_072, 262_144, 400_000, 1_048_576, 1_500_000,
+)
+_stored_canary_passed = False
+
+
+def check_stored_gzip_runtime() -> None:
+    """Fail closed unless the planner reproduces this runtime's ``gzip_bytes(..., 0)``."""
+    global _stored_canary_passed
+    if _stored_canary_passed:
+        return
+    pattern = bytes(range(251)) * (max(_STORED_CANARY_LENGTHS) // 251 + 1)
+    for length in _STORED_CANARY_LENGTHS:
+        data = pattern[:length]
+        pieces: list[bytes] = []
+        _frame_stored_gzip(lambda data=data: (data,), stored_block_plan(length), pieces.append)
+        if b"".join(pieces) != gzip_bytes(data, compression_level=0):
+            raise ExportError(
+                f"level-0 stored-block planner disagrees with this runtime's gzip (zlib "
+                f"{zlib.ZLIB_RUNTIME_VERSION}, Python {sys.version.split()[0]}) at {length} bytes; "
+                "refusing to frame level-0 objects"
+            )
+    _stored_canary_passed = True
+
+
+def _plan_stored_gzip(source: ChunkSource, *, max_bytes: int | None) -> tuple[list[tuple[int, int]], tuple[int, str, int]] | None:
+    """Level-0 pass 1: the block plan and ``(raw bytes, sha256, crc32)``; ``None`` past ``max_bytes``."""
+    check_stored_gzip_runtime()
+    raw_sha = hashlib.sha256()
+    raw_bytes = 0
+    crc = 0
+    for chunk in source():
+        raw_bytes += len(chunk)
+        if max_bytes is not None and raw_bytes > max_bytes:
+            return None  # stored output is never smaller than its input
+        raw_sha.update(chunk)
+        crc = zlib.crc32(chunk, crc)
+    blocks = stored_block_plan(raw_bytes)
+    if max_bytes is not None and _stored_gzip_size(blocks, raw_bytes) > max_bytes:
+        return None
+    return blocks, (raw_bytes, raw_sha.hexdigest(), crc)
+
+
 def stream_gzip(
-    chunks: Iterable[bytes],
+    source: ChunkSource,
     *,
     compression_level: int,
     sink: Callable[[bytes], object],
     max_bytes: int | None = None,
 ) -> GzipResult | None:
-    """Gzip a chunk stream into ``sink``, byte-identically to ``gzip_bytes`` of the joined chunks.
+    """Gzip a replayable chunk stream into ``sink``, byte-identically to ``gzip_bytes`` of the joined chunks.
 
-    Nothing is retained: each compressed piece goes to ``sink`` as it is produced
-    and only sizes/digests are kept. Returns ``None`` — abandoning the (lazy) chunk
-    source — as soon as the compressed size is certain to exceed ``max_bytes``;
-    ``sink`` has then seen a prefix and must be discarded by the caller. Levels
-    1-9: deflate output is independent of how the input is chunked, so the stream
-    is the one-shot payload (gzip header taken from ``gzip_bytes`` itself, raw
-    deflate body, crc32/isize trailer) and the compressed prefix emitted so far is
-    a strict lower bound on the final size. Level 0 (stored blocks) *does* depend
-    on chunking — the one-shot block framing follows the whole input — so the raw
-    bytes are buffered (aborting once they alone exceed the cap: stored output is
-    never smaller than its input) and the existing one-shot ``gzip_bytes`` produces
-    the final bytes — so at level 0 an *uncapped* object is held whole.
+    Nothing is retained at any level: each compressed piece goes to ``sink`` as it
+    is produced and only sizes/digests are kept. Returns ``None`` — abandoning the
+    (lazy) chunk source — as soon as the compressed size is certain to exceed
+    ``max_bytes``; ``sink`` has then seen a prefix (or nothing) and must be
+    discarded by the caller. Levels 1-9: deflate output is independent of how the
+    input is chunked, so one pass streams the one-shot payload (gzip header taken
+    from ``gzip_bytes`` itself, raw deflate body, crc32/isize trailer) and the
+    compressed prefix emitted so far is a strict lower bound on the final size.
+    Level 0 (stored blocks) frames blocks the way the one-shot call does, which
+    follows the whole input length: ``source`` is read once to plan (aborting once
+    the raw bytes alone pass the cap) and once more to stream the framed blocks.
     """
     compressed_sha = hashlib.sha256()
     size = 0
@@ -797,16 +1144,14 @@ def stream_gzip(
         return max_bytes is not None and size > max_bytes
 
     if compression_level == 0:
-        buffer = bytearray()
-        for chunk in chunks:
-            buffer += chunk
-            if max_bytes is not None and len(buffer) > max_bytes:
-                return None
-        compressed = gzip_bytes(buffer, compression_level=0)
-        if max_bytes is not None and len(compressed) > max_bytes:
+        planned = _plan_stored_gzip(source, max_bytes=max_bytes)
+        if planned is None:
             return None
-        emit(compressed)
-        return GzipResult(len(compressed), compressed_sha.hexdigest(), len(buffer), sha256_hex(buffer))
+        blocks, raw = planned
+        replayed = _frame_stored_gzip(source, blocks, emit)
+        if replayed != raw or size != _stored_gzip_size(blocks, raw[0]):
+            raise ExportError("level-0 replay differs from its planning pass; refusing to publish")
+        return GzipResult(size, compressed_sha.hexdigest(), raw[0], raw[1])
 
     raw_sha = hashlib.sha256()
     raw_bytes = 0
@@ -814,7 +1159,7 @@ def stream_gzip(
     deflater = zlib.compressobj(compression_level, zlib.DEFLATED, -zlib.MAX_WBITS)
     if emit(gzip_bytes(b"", compression_level=compression_level)[:10]):
         return None
-    for chunk in chunks:
+    for chunk in source():
         raw_sha.update(chunk)
         crc = zlib.crc32(chunk, crc)
         raw_bytes += len(chunk)
@@ -826,7 +1171,7 @@ def stream_gzip(
 
 
 def compress_stream_bounded(
-    chunks: Iterable[bytes],
+    source: ChunkSource,
     *,
     compression_level: int,
     max_bytes: int | None,
@@ -837,15 +1182,20 @@ def compress_stream_bounded(
     or measured (``gzip_size``), never materialized.
     """
     pieces: list[bytes] = []
-    result = stream_gzip(chunks, compression_level=compression_level, sink=pieces.append, max_bytes=max_bytes)
+    result = stream_gzip(source, compression_level=compression_level, sink=pieces.append, max_bytes=max_bytes)
     if result is None:
         return None
     return CompressedObject(b"".join(pieces), result.uncompressed_bytes, result.json_sha256)
 
 
-def gzip_size(chunks: Iterable[bytes], *, compression_level: int) -> int:
+def gzip_size(source: ChunkSource, *, compression_level: int) -> int:
     """Exact ``len(gzip_bytes(b"".join(chunks)))``, counted without keeping the output."""
-    result = stream_gzip(chunks, compression_level=compression_level, sink=lambda _piece: None)
+    if compression_level == 0:  # the stored framing follows from the raw length alone
+        planned = _plan_stored_gzip(source, max_bytes=None)
+        assert planned is not None  # uncapped
+        blocks, raw = planned
+        return _stored_gzip_size(blocks, raw[0])
+    result = stream_gzip(source, compression_level=compression_level, sink=lambda _piece: None)
     assert result is not None  # uncapped
     return result.compressed_bytes
 
@@ -918,8 +1268,8 @@ def build_entry_shards(
     )
     descriptors: dict[str, dict[str, Any]] = {}
 
-    def chunks(slugs: Sequence[str]) -> Iterator[bytes]:
-        return _shard_chunks(head, (fragment_for_slug(slug) for slug in slugs), tail)
+    def source(slugs: Sequence[str]) -> ChunkSource:
+        return lambda: _shard_chunks(head, (fragment_for_slug(slug) for slug in slugs), tail)
 
     def materialize(bit_length: int, prefix_value: int, lo: int, hi: int, known_oversize: bool) -> None:
         slugs = sorted(item[1] for item in ordered[lo:hi])
@@ -927,7 +1277,7 @@ def build_entry_shards(
             None
             if known_oversize
             else compress_stream_bounded(
-                chunks(slugs), compression_level=compression_level, max_bytes=max_gzip_bytes
+                source(slugs), compression_level=compression_level, max_bytes=max_gzip_bytes
             )
         )
         if result is not None:
@@ -941,7 +1291,7 @@ def build_entry_shards(
             )
             return
         if len(slugs) <= 1:
-            size = gzip_size(chunks(slugs), compression_level=compression_level)
+            size = gzip_size(source(slugs), compression_level=compression_level)
             slug = slugs[0] if slugs else "?"
             raise ExportError(
                 f"single entry record exceeds entry-max-gzip-bytes "
@@ -1053,7 +1403,7 @@ def build_search_family_shards(
     def ranks_in(lo: int, hi: int) -> list[int]:
         return sorted({postings[position][1] for position in range(lo, hi)})
 
-    def chunks(prefix: str, ranks: Sequence[int], *, terminal: bool) -> Iterator[bytes]:
+    def source(prefix: str, ranks: Sequence[int], *, terminal: bool) -> ChunkSource:
         head, tail = _shard_envelope(
             {
                 "schema": schema,
@@ -1063,7 +1413,7 @@ def build_search_family_shards(
                 "terminal": terminal,
             }
         )
-        return _shard_chunks(head, (index.fragment(rank) for rank in ranks), tail)
+        return lambda: _shard_chunks(head, (index.fragment(rank) for rank in ranks), tail)
 
     def emit(prefix: str, count: int, write: Callable[[str], GzipResult], *, terminal: bool = False) -> str:
         shard_id = search_shard_id(prefix) + (".term" if terminal else "")
@@ -1076,7 +1426,9 @@ def build_search_family_shards(
     def stream_terminal(prefix: str, ranks: Sequence[int], relative: str) -> GzipResult:
         with open_object(relative) as handle:
             result = stream_gzip(
-                chunks(prefix, ranks, terminal=True), compression_level=compression_level, sink=handle.write
+                source(prefix, ranks, terminal=True),
+                compression_level=compression_level,
+                sink=handle.write,
             )
         assert result is not None  # uncapped
         return result
@@ -1084,7 +1436,7 @@ def build_search_family_shards(
     def split_or_write(prefix: str, lo: int, hi: int) -> dict[str, Any]:
         ranks = ranks_in(lo, hi)
         result = compress_stream_bounded(
-            chunks(prefix, ranks, terminal=False),
+            source(prefix, ranks, terminal=False),
             compression_level=compression_level,
             max_bytes=max_gzip_bytes,
         )
@@ -1113,7 +1465,7 @@ def build_search_family_shards(
 
         if not children:
             # Cannot split further — hard fail (still oversized).
-            size = gzip_size(chunks(prefix, ranks, terminal=False), compression_level=compression_level)
+            size = gzip_size(source(prefix, ranks, terminal=False), compression_level=compression_level)
             raise ExportError(
                 f"search {family} shard for prefix={prefix!r} exceeds max "
                 f"({size} > {max_gzip_bytes}) and cannot split"
@@ -1302,6 +1654,265 @@ def capacity_report(
     }
 
 
+# ---------------------------------------------------------------------------
+# Streaming verification (#8672): an object is hashed, inflated and parsed as a
+# stream by ijson, holding one record (or one top-level member) at a time —
+# never the whole shard. Values are built as ``json.loads`` builds them: an
+# integer literal is an exact ``int``, any other number is ``float`` of its text
+# (ijson hands over a ``Decimal``, converted here, so ``1e400`` is ``inf``), and
+# duplicate members keep last-wins semantics. The fast backend is yajl (ijson's ``yajl2_c``), whose
+# known departures from ``json.loads`` are closed here, not inherited:
+#
+# * yajl accepts an unterminated string after the top-level value (``{...}"x``)
+#   at EOF. The parser therefore reads ``_EOF_SENTINEL`` (never hashed) after the
+#   real bytes, with ``multiple_values``: an open string meets its raw newline and
+#   fails, and a complete document is followed by exactly the sentinel ``""``.
+# * yajl treats ``\v``/``\f`` as whitespace. Those bytes are invalid anywhere in
+#   JSON text (UTF-8 never uses them inside a multi-byte character), so their
+#   presence alone rejects the document.
+# * yajl turns an unpaired ``\uD800``-``\uDBFF`` escape into ``?`` or merges it
+#   with the next ``\u`` escape, and rejects an unpaired ``\uDC00``-``\uDFFF``.
+#   yajl therefore sees every surrogate escape rewritten to ``\u0000`` (same
+#   length, same syntax wherever it sits), and a document that had one is decoded
+#   again by ijson's ``python`` backend, whose strings go through the stdlib
+#   scanner; yajl has already judged its syntax. (The exporter never writes one:
+#   canonical JSON is ``ensure_ascii=False``.)
+#
+# What remains fails closed, never open: ``NaN``/``Infinity``/``-Infinity``
+# (``json.loads`` extensions, not JSON; the browser's ``JSON.parse`` rejects them
+# too) and number literals with an exponent beyond ``Decimal``'s range (about
+# 10**18; ``json.dumps`` never writes one) are reported as invalid JSON.
+# ---------------------------------------------------------------------------
+
+_VERIFY_READ_BYTES = 1 << 16
+_EOF_SENTINEL = b'\n""'
+_FORBIDDEN_WS = re.compile(rb"[\x0b\x0c]")
+_SURROGATE_ESCAPE = re.compile(rb"\\u[dD][89a-fA-F][0-9a-fA-F]{2}")
+_SURROGATE_ESCAPE_HOLD = 5  # an escape is 6 bytes: at most 5 can wait for the next read
+_NEUTRAL_ESCAPE = b"\\u0000"
+_CONTAINER_START = frozenset(("start_map", "start_array"))
+_CONTAINER_END = frozenset(("end_map", "end_array"))
+
+
+class JsonStreamError(ValueError):
+    """Invalid JSON text."""
+
+
+class _ParserInput:
+    """What the JSON parser reads: the text, then ``_EOF_SENTINEL``.
+
+    Flags ``\\v``/``\\f`` bytes. Unless ``exact``, also rewrites every surrogate
+    escape to ``\\u0000`` (same length and syntax, wherever it sits) so yajl's
+    verdict never depends on how it decodes surrogates; the flag then tells the
+    caller to take the values from an exact pass.
+    """
+
+    def __init__(self, binary: BinaryIO, *, exact: bool) -> None:
+        self._binary = binary
+        self._exact = exact
+        self._sentinel = _EOF_SENTINEL
+        self._held = b""  # tail that may still become a surrogate escape
+        self.forbidden_whitespace = False
+        self.surrogate_escape = False
+
+    def read(self, size: int = -1) -> bytes:
+        if size == 0:
+            return b""
+        while True:
+            data = self._binary.read(size)
+            if not data:
+                data, self._held, self._sentinel = self._held + self._sentinel, b"", b""
+                return data
+            if not self.forbidden_whitespace and _FORBIDDEN_WS.search(data):
+                self.forbidden_whitespace = True
+            if self._exact:
+                return data
+            text, count = _SURROGATE_ESCAPE.subn(lambda _match: _NEUTRAL_ESCAPE, self._held + data)
+            self.surrogate_escape = self.surrogate_escape or count > 0
+            # An escape starting before the held tail is complete, so it was rewritten above.
+            data, self._held = text[: -_SURROGATE_ESCAPE_HOLD], text[-_SURROGATE_ESCAPE_HOLD:]
+            if data:
+                return data
+
+
+@functools.cache
+def _json_backend(exact: bool) -> Any:
+    """ijson's ``python`` backend when ``exact``, else ``yajl2_c`` (its syntax check is relied on)."""
+    try:
+        return ijson.get_backend("python" if exact else "yajl2_c")
+    except ImportError as exc:  # pragma: no cover - ijson wheels ship yajl2_c
+        raise ExportError(f"streaming verify needs ijson's yajl2_c backend: {exc}") from exc
+
+
+def _next_event(events: Iterator[tuple[str, Any]]) -> tuple[str, Any]:
+    try:
+        return next(events)
+    except StopIteration:
+        raise JsonStreamError("Expecting value") from None
+
+
+def _build_value(events: Iterator[tuple[str, Any]], event: str, value: Any) -> Any:
+    """The value that starts with ``(event, value)``, built like ``json.loads`` builds it."""
+    if event not in _CONTAINER_START:
+        return float(value) if isinstance(value, Decimal) else value
+    builder = ijson.ObjectBuilder()
+    builder.event(event, value)
+    depth = 1
+    for event, value in events:
+        builder.event(event, float(value) if isinstance(value, Decimal) else value)
+        if event in _CONTAINER_START:
+            depth += 1
+        elif event in _CONTAINER_END:
+            depth -= 1
+            if not depth:
+                return builder.value
+    raise JsonStreamError("Expecting value")
+
+
+def _skip_value(events: Iterator[tuple[str, Any]], event: str) -> None:
+    if event not in _CONTAINER_START:
+        return
+    depth = 1
+    for event, _value in events:
+        if event in _CONTAINER_START:
+            depth += 1
+        elif event in _CONTAINER_END:
+            depth -= 1
+            if not depth:
+                return
+    raise JsonStreamError("Expecting value")
+
+
+@dataclass
+class ScannedPayload:
+    """What verification reads from one runtime object (``json.loads`` + ``dict.get`` semantics)."""
+
+    is_object: bool
+    schema_version: Any = None
+    data_version: Any = None
+    has_records: bool = False
+    records_is_list: bool = False
+    record_count: int = 0
+    rows: list[Any] | None = None  # per-record summaries of the (last) records array
+    # False when the text has a surrogate escape: values must come from ``exact=True``.
+    strings_exact: bool = True
+
+
+def scan_json_payload(
+    binary: BinaryIO,
+    *,
+    summarize: Callable[[Any], Any] | None = None,
+    read_bytes: int = _VERIFY_READ_BYTES,
+    exact: bool = False,
+) -> ScannedPayload:
+    """Stream-parse one JSON document through EOF, keeping one record at a time.
+
+    Top-level members keep ``json.loads`` last-wins semantics. The ``records``
+    array is counted and, with ``summarize``, summarised record by record; other
+    member values are skipped event by event unless they are
+    ``schemaVersion``/``dataVersion``. Invalid JSON raises :class:`JsonStreamError`
+    (a ``ValueError``). ``exact=True`` parses with ijson's ``python`` backend,
+    for a document whose ``strings_exact`` came back False.
+    """
+    source = _ParserInput(binary, exact=exact)
+    events = iter(_json_backend(exact).basic_parse(source, buf_size=read_bytes, multiple_values=True))
+    try:
+        payload = _scan_document(events, summarize)
+        if _next_event(events) != ("string", "") or next(events, None) is not None:
+            raise JsonStreamError("Extra data")
+    except (ijson.JSONError, InvalidOperation) as exc:
+        raise JsonStreamError(str(exc) or type(exc).__name__) from None
+    if source.forbidden_whitespace:
+        raise JsonStreamError("Invalid character (vertical tab or form feed)")
+    payload.strings_exact = not source.surrogate_escape
+    return payload
+
+
+def _scan_document(events: Iterator[tuple[str, Any]], summarize: Callable[[Any], Any] | None) -> ScannedPayload:
+    event, _value = _next_event(events)
+    if event != "start_map":
+        _skip_value(events, event)
+        return ScannedPayload(is_object=False)
+    payload = ScannedPayload(is_object=True)
+    while True:
+        event, key = _next_event(events)
+        if event == "end_map":
+            return payload
+        event, value = _next_event(events)
+        if key == "records":
+            payload.has_records = True
+            payload.records_is_list = event == "start_array"
+            payload.record_count = 0
+            payload.rows = [] if summarize is not None and payload.records_is_list else None
+            if not payload.records_is_list:
+                _skip_value(events, event)
+                continue
+            while True:
+                event, value = _next_event(events)
+                if event == "end_array":
+                    break
+                payload.record_count += 1
+                if payload.rows is not None and summarize is not None:
+                    payload.rows.append(summarize(_build_value(events, event, value)))
+                else:
+                    _skip_value(events, event)
+        elif key == "schemaVersion":
+            payload.schema_version = _build_value(events, event, value)
+        elif key == "dataVersion":
+            payload.data_version = _build_value(events, event, value)
+        else:
+            _skip_value(events, event)
+
+
+class _HashingReader:
+    """Binary reader that hashes and counts every byte read through it."""
+
+    def __init__(self, stream: BinaryIO) -> None:
+        self._stream = stream
+        self.sha = hashlib.sha256()
+        self.size = 0
+
+    def read(self, size: int = -1) -> bytes:
+        data = self._stream.read(size)
+        self.sha.update(data)
+        self.size += len(data)
+        return data
+
+    def drain(self) -> None:
+        while self.read(_VERIFY_READ_BYTES):
+            pass
+
+
+def _file_digest(path: Path) -> tuple[int, str]:
+    digest = hashlib.sha256()
+    size = 0
+    with path.open("rb") as handle:
+        while chunk := handle.read(_VERIFY_READ_BYTES):
+            size += len(chunk)
+            digest.update(chunk)
+    return size, digest.hexdigest()
+
+
+def _entry_verify_row(record: Any) -> tuple[Any, str | None, int] | Exception:
+    """``(slug, kind, alias-target mismatches)`` of one entry record, or the error reading it raised.
+
+    Same lookups, in the same order, as the historical whole-shard pass; an
+    exception is kept (not raised) so it surfaces only where that pass would have.
+    """
+    try:
+        slug = record["slug"]
+        hash(slug)
+        kind = record["kind"]
+        category = kind if kind in ("article", "form_route") else None
+        mismatches = 0
+        for alias in record.get("aliases") or []:
+            if alias.get("target_slug") != slug:
+                mismatches += 1
+        return slug, category, mismatches
+    except Exception as exc:  # replayed verbatim at commit time
+        return exc
+
+
 def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = None) -> dict[str, Any]:
     current_path = out_dir / base_path / "current.json"
     if manifest_path is None:
@@ -1313,50 +1924,110 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
 
     errors: list[str] = []
 
-    def check_descriptor(descriptor: Mapping[str, Any], *, family: str) -> None:
+    def check_descriptor(
+        descriptor: Mapping[str, Any], *, family: str, summarize: Callable[[Any], Any] | None = None
+    ) -> ScannedPayload | None:
+        """Stream one object: compressed bytes, gzip integrity, raw bytes, then JSON through EOF."""
         rel = descriptor["url"]
         path = version_root / rel
         if not path.is_file():
             errors.append(f"missing {family} object {rel}")
-            return
-        compressed = path.read_bytes()
-        if len(compressed) != descriptor["bytes"]:
+            return None
+        compressed_bytes, compressed_sha = _file_digest(path)
+        if compressed_bytes != descriptor["bytes"]:
             errors.append(
                 f"{family} {descriptor['id']}: bytes mismatch "
-                f"file={len(compressed)} desc={descriptor['bytes']}"
+                f"file={compressed_bytes} desc={descriptor['bytes']}"
             )
-        if sha256_hex(compressed) != descriptor["sha256"]:
+        if compressed_sha != descriptor["sha256"]:
             errors.append(f"{family} {descriptor['id']}: sha256 mismatch")
+        payload: ScannedPayload | None = None
+        json_error: ValueError | None = None
         try:
-            raw = gzip.decompress(compressed)
-        except OSError as exc:
+            with path.open("rb") as handle, gzip.GzipFile(fileobj=handle, mode="rb") as inflated:
+                raw = _HashingReader(inflated)  # type: ignore[arg-type]
+                try:
+                    payload = scan_json_payload(raw, summarize=summarize)  # type: ignore[arg-type]
+                except ValueError as exc:  # invalid JSON / UTF-8; gzip integrity still decides first
+                    json_error = exc
+                raw.drain()
+            if payload is not None and not payload.strings_exact:
+                # yajl may have mis-decoded a surrogate escape: take the values from the exact decoder.
+                with path.open("rb") as handle, gzip.GzipFile(fileobj=handle, mode="rb") as inflated:
+                    try:
+                        payload = scan_json_payload(inflated, summarize=summarize, exact=True)  # type: ignore[arg-type]
+                    except ValueError as exc:
+                        payload, json_error = None, exc
+        except (OSError, EOFError, zlib.error) as exc:
             errors.append(f"{family} {descriptor['id']}: gzip decode failed: {exc}")
-            return
-        if sha256_hex(raw) != descriptor["jsonSha256"]:
+            return None
+        if raw.sha.hexdigest() != descriptor["jsonSha256"]:
             errors.append(f"{family} {descriptor['id']}: jsonSha256 mismatch")
-        if len(raw) != descriptor["uncompressedBytes"]:
+        if raw.size != descriptor["uncompressedBytes"]:
             errors.append(f"{family} {descriptor['id']}: uncompressedBytes mismatch")
-        payload = json.loads(raw.decode("utf-8"))
+        if json_error is not None:
+            errors.append(f"{family} {descriptor['id']}: invalid JSON: {json_error}")
+            return None
+        assert payload is not None
         if family.startswith("deck"):
-            if not isinstance(payload, dict):
+            if not payload.is_object:
                 errors.append(f"{family} {descriptor['id']}: deck payload must be an object")
-            return
-        if payload.get("schemaVersion") != SCHEMA_VERSION:
+            return payload
+        if not payload.is_object:
+            errors.append(f"{family} {descriptor['id']}: payload must be an object")
+            return None
+        if payload.schema_version != SCHEMA_VERSION:
             errors.append(f"{family} {descriptor['id']}: unsupported schemaVersion")
-        if payload.get("dataVersion") != manifest.get("dataVersion"):
+        if payload.data_version != manifest.get("dataVersion"):
             errors.append(f"{family} {descriptor['id']}: dataVersion mismatch vs manifest")
-        records = payload.get("records")
-        if isinstance(records, list) and len(records) != descriptor["count"]:
+        if payload.records_is_list and payload.record_count != descriptor["count"]:
             errors.append(
                 f"{family} {descriptor['id']}: count mismatch "
-                f"records={len(records)} desc={descriptor['count']}"
+                f"records={payload.record_count} desc={descriptor['count']}"
             )
+        return payload
+
+    # Every public route appears exactly once across entry shards. These checks
+    # run in the same streamed pass but, as before, only count once every object
+    # verified: their errors are held apart and a malformed record's exception is
+    # raised only after the object checks passed.
+    seen_slugs: dict[str, str] = {}
+    article_count = 0
+    form_count = 0
+    entry_errors: list[str] = []
+    entry_failure: Exception | None = None
+
+    def commit_entry_rows(shard_id: str, payload: ScannedPayload) -> None:
+        nonlocal article_count, form_count, entry_failure
+        if entry_failure is not None:
+            return
+        if not payload.has_records:
+            entry_failure = KeyError("records")
+            return
+        if payload.rows is None:
+            entry_failure = ExportError(f"entries {shard_id}: records is not an array")
+            return
+        for row in payload.rows:
+            if isinstance(row, Exception):
+                entry_failure = row
+                return
+            slug, kind, mismatches = row
+            if slug in seen_slugs:
+                entry_errors.append(f"duplicate slug {slug!r} in {seen_slugs[slug]} and {shard_id}")
+            seen_slugs[slug] = shard_id
+            if kind == "article":
+                article_count += 1
+            elif kind == "form_route":
+                form_count += 1
+            entry_errors.extend([f"alias target mismatch on {slug!r}"] * mismatches)
 
     entry_shards = manifest["entries"]["shards"]
-    for descriptor in entry_shards.values():
-        check_descriptor(descriptor, family="entries")
+    for shard_id, descriptor in entry_shards.items():
+        scanned = check_descriptor(descriptor, family="entries", summarize=_entry_verify_row)
         if descriptor["bytes"] > DEFAULT_ENTRY_MAX:
             errors.append(f"entries {descriptor['id']}: gzip exceeds 1 MiB")
+        if scanned is not None:
+            commit_entry_rows(shard_id, scanned)
 
     for family in ("articles", "aliases"):
         for descriptor in manifest["search"][family]["shards"].values():
@@ -1368,26 +2039,9 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
 
     if errors:
         raise ExportError("verify failed:\n- " + "\n- ".join(errors))
-
-    # Every public route appears exactly once across entry shards.
-    seen_slugs: dict[str, str] = {}
-    article_count = 0
-    form_count = 0
-    for shard_id, descriptor in entry_shards.items():
-        raw = gzip.decompress((version_root / descriptor["url"]).read_bytes())
-        payload = json.loads(raw.decode("utf-8"))
-        for record in payload["records"]:
-            slug = record["slug"]
-            if slug in seen_slugs:
-                errors.append(f"duplicate slug {slug!r} in {seen_slugs[slug]} and {shard_id}")
-            seen_slugs[slug] = shard_id
-            if record["kind"] == "article":
-                article_count += 1
-            elif record["kind"] == "form_route":
-                form_count += 1
-            for alias in record.get("aliases") or []:
-                if alias.get("target_slug") != slug:
-                    errors.append(f"alias target mismatch on {slug!r}")
+    if entry_failure is not None:
+        raise entry_failure
+    errors.extend(entry_errors)
 
     expected = manifest["counts"]
     if article_count != expected["articles"]:

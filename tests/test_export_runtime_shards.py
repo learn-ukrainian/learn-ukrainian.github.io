@@ -7,12 +7,18 @@ opt-in via ``skipif`` when the full atlas is present locally.
 
 from __future__ import annotations
 
+import ctypes
+import dataclasses
+import decimal
 import gc
 import gzip
 import hashlib
+import io
 import json
+import mmap
 import os
 import random
+import re
 import shutil
 import signal
 import sqlite3
@@ -21,8 +27,10 @@ import sys
 import threading
 import tracemalloc
 import unicodedata
+import zlib
 from collections import defaultdict
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 
@@ -1058,7 +1066,7 @@ def test_stream_compression_matches_one_shot_gzip(level: int) -> None:
         expected = gzip_bytes(raw, compression_level=level)
         for chunk in (1, 7, 4_096, 65_536 + 3):
             chunks = [raw[i : i + chunk] for i in range(0, len(raw), chunk)]
-            result = compress_stream_bounded(chunks, compression_level=level, max_bytes=None)
+            result = compress_stream_bounded(lambda chunks=chunks: chunks, compression_level=level, max_bytes=None)
             assert result is not None
             assert result.compressed == expected
             assert result.uncompressed_bytes == len(raw)
@@ -1066,8 +1074,9 @@ def test_stream_compression_matches_one_shot_gzip(level: int) -> None:
             assert gzip.decompress(result.compressed) == raw
         # Exact cap boundary: fits at len, aborts at len - 1.
         chunks = [raw[i : i + 999] for i in range(0, len(raw), 999)]
-        assert compress_stream_bounded(chunks, compression_level=level, max_bytes=len(expected)) is not None
-        assert compress_stream_bounded(chunks, compression_level=level, max_bytes=len(expected) - 1) is None
+        source = lambda chunks=chunks: chunks  # noqa: E731
+        assert compress_stream_bounded(source, compression_level=level, max_bytes=len(expected)) is not None
+        assert compress_stream_bounded(source, compression_level=level, max_bytes=len(expected) - 1) is None
 
 
 def test_stream_compression_aborts_before_consuming_source() -> None:
@@ -1082,7 +1091,7 @@ def test_stream_compression_aborts_before_consuming_source() -> None:
 
     for level in (0, 1, 9):
         pulled = 0
-        assert compress_stream_bounded(source(), compression_level=level, max_bytes=20_000) is None
+        assert compress_stream_bounded(source, compression_level=level, max_bytes=20_000) is None
         assert pulled < 20, "an oversized candidate must stop the replay early"
 
 
@@ -1611,9 +1620,9 @@ def test_export_memory_does_not_grow_with_gloss_bodies(tmp_path: Path) -> None:
     assert glosses > 10_000_000
     tracemalloc.start()
     try:
-        # No --verify: verify_tree inflates whole shards by design and is not the exporter's memory.
         export_runtime_shards(
-            db_path=db, out_dir=tmp_path / "out", include_decks=False, deck_dir=None, compression_level=1
+            db_path=db, out_dir=tmp_path / "out", include_decks=False, deck_dir=None, compression_level=1,
+            verify=True,
         )
         _, peak = tracemalloc.get_traced_memory()
     finally:
@@ -1663,6 +1672,7 @@ def _build_aliases_traced(index: SearchFamilyIndex, out: Path, *, level: int) ->
         path.parent.mkdir(parents=True, exist_ok=True)
         return path.open("wb")
 
+    exporter.check_stored_gzip_runtime()  # one-time, corpus-independent canary: not the bucket's memory
     gc.collect()
     tracemalloc.start()
     try:
@@ -1704,11 +1714,6 @@ def test_uncapped_search_bucket_is_exact_and_heap_does_not_grow_with_it(
                 f"({len(expected)} > {_SHARED_KEY_CAP}) and cannot split"
             )
             assert not out.exists(), "a failing bucket writes nothing"
-    if level == 0:
-        # Residual: stored-block framing of the one-shot gzip follows the whole input,
-        # so level 0 keeps exact bytes by buffering the uncapped object (capped
-        # probes still abort once raw bytes pass the cap).
-        return
     assert bodies[1_000] > 4 * bodies[250] * 0.95
     assert peaks[1_000] < peaks[250] * 1.25, peaks
     assert peaks[1_000] < bodies[1_000] * 0.2, (peaks, bodies)
@@ -1740,14 +1745,15 @@ def _make_shared_key_db(path: Path, *, rows: int, terminal: bool, gloss_chars: i
 
 
 def _export_traced(db: Path, out: Path, *, level: int) -> tuple[str | None, int]:
+    """(ExportError text or None, traced heap peak) of one full export *with* ``--verify``."""
+    exporter.check_stored_gzip_runtime()  # one-time, corpus-independent canary
     gc.collect()
     tracemalloc.start()
     try:
         try:
-            # No --verify: verify_tree inflates whole shards by design and is not the exporter's memory.
             export_runtime_shards(
                 db_path=db, out_dir=out, include_decks=False, deck_dir=None, compression_level=level,
-                entry_max_gzip_bytes=65_536, search_max_gzip_bytes=_SHARED_KEY_CAP,
+                entry_max_gzip_bytes=65_536, search_max_gzip_bytes=_SHARED_KEY_CAP, verify=True,
             )
             error = None
         except ExportError as exc:
@@ -1757,21 +1763,34 @@ def _export_traced(db: Path, out: Path, *, level: int) -> tuple[str | None, int]
         tracemalloc.stop()
 
 
+def _verify_traced(out: Path) -> int:
+    gc.collect()
+    tracemalloc.start()
+    try:
+        verify_tree(out, "atlas")
+        return tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+
+
 @pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
+@pytest.mark.parametrize("level", [0, 9])
 def test_reviewer_long_article_rows_export_matches_reference_in_bounded_heap(
-    tmp_path: Path, terminal: bool
+    tmp_path: Path, level: int, terminal: bool
 ) -> None:
+    """Reviewer shape (fixed 8000-char gloss, 250 -> 1000 shared-key rows), export *with* --verify."""
     peaks: dict[int, int] = {}
+    verify_peaks: dict[int, int] = {}
     glosses: dict[int, int] = {}
     for rows in (250, 1_000):
         db = _make_shared_key_db(tmp_path / f"shared{rows}.db", rows=rows, terminal=terminal)
         glosses[rows] = sum(len(r[0]) for r in sqlite3.connect(db).execute("SELECT gloss FROM articles"))
         out = tmp_path / f"out{rows}"
-        error, peaks[rows] = _export_traced(db, out, level=9)
+        error, peaks[rows] = _export_traced(db, out, level=level)
         if terminal:
             assert error is None
             data_version, files, indexes = _reference_export(
-                db, compression_level=9, entry_max=65_536, search_max=_SHARED_KEY_CAP
+                db, compression_level=level, entry_max=65_536, search_max=_SHARED_KEY_CAP
             )
             tree = _snapshot(out / "atlas" / "versions" / data_version)
             assert {name: blob for name, blob in tree.items() if name != "manifest.json"} == files
@@ -1779,38 +1798,22 @@ def test_reviewer_long_article_rows_export_matches_reference_in_bounded_heap(
             assert manifest["search"]["articles"] == indexes["articles"]
             term = indexes["articles"]["shards"][f"{exporter.search_shard_id('a')}.term"]
             assert term["count"] == rows and term["bytes"] > 20 * _SHARED_KEY_CAP
+            verify_peaks[rows] = _verify_traced(out)
         else:
             with pytest.raises(ExportError) as expected:
-                _reference_export(db, compression_level=9, entry_max=65_536, search_max=_SHARED_KEY_CAP)
+                _reference_export(db, compression_level=level, entry_max=65_536, search_max=_SHARED_KEY_CAP)
             assert error == str(expected.value)
             assert "prefix='a'" in error and "cannot split" in error
             assert not (out / "atlas" / "current.json").exists()
     assert glosses[1_000] > 7_900_000
     # Per-row index metadata (locators, sort keys, route digests) may grow; shard
-    # bodies may not: the old exporter's heap grew by the whole compressed bucket.
+    # bodies may not: the old exporter's heap grew by the whole bucket, and the old
+    # --verify by the whole inflated terminal shard (twice for entries).
     assert peaks[1_000] - peaks[250] < (glosses[1_000] - glosses[250]) * 0.25, (peaks, glosses)
     assert peaks[1_000] < glosses[1_000] * 0.25, (peaks, glosses)
-
-
-@pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
-def test_reviewer_long_article_rows_level0_bytes_and_error_match_reference(
-    tmp_path: Path, terminal: bool
-) -> None:
-    db = _make_shared_key_db(tmp_path / "shared.db", rows=120, terminal=terminal, gloss_chars=600)
-    out = tmp_path / "out"
-    error, _ = _export_traced(db, out, level=0)
     if terminal:
-        assert error is None
-        data_version, files, _ = _reference_export(
-            db, compression_level=0, entry_max=65_536, search_max=_SHARED_KEY_CAP
-        )
-        tree = _snapshot(out / "atlas" / "versions" / data_version)
-        assert {name: blob for name, blob in tree.items() if name != "manifest.json"} == files
-        assert any(name.endswith(".term.json.gz") for name in files)
-    else:
-        with pytest.raises(ExportError) as expected:
-            _reference_export(db, compression_level=0, entry_max=65_536, search_max=_SHARED_KEY_CAP)
-        assert error == str(expected.value)
+        assert verify_peaks[1_000] < verify_peaks[250] * 1.25 + 1_000_000, verify_peaks
+        assert verify_peaks[1_000] < glosses[1_000] * 0.2, (verify_peaks, glosses)
 
 
 @pytest.mark.parametrize("level", [0, 1, 6, 9])
@@ -1819,12 +1822,727 @@ def test_gzip_size_and_streamed_sink_match_one_shot_without_retention(level: int
     raw = "".join(rng.choice("абвгдеж abc012,.\n") for _ in range(300_000)).encode("utf-8")
     chunks = [raw[i : i + 5_000] for i in range(0, len(raw), 5_000)]
     expected = gzip_bytes(raw, compression_level=level)
-    assert exporter.gzip_size(iter(chunks), compression_level=level) == len(expected)
+    assert exporter.gzip_size(lambda: iter(chunks), compression_level=level) == len(expected)
     pieces: list[bytes] = []
-    result = exporter.stream_gzip(iter(chunks), compression_level=level, sink=pieces.append)
+    result = exporter.stream_gzip(lambda: iter(chunks), compression_level=level, sink=pieces.append)
     assert b"".join(pieces) == expected
     assert result == exporter.GzipResult(
         len(expected), hashlib.sha256(expected).hexdigest(), len(raw), hashlib.sha256(raw).hexdigest()
     )
     if level:
         assert len(pieces) > 2, "levels 1-9 hand compressed pieces over as they are produced"
+
+
+# ---------------------------------------------------------------------------
+# Level 0 is framed from a length-only model of zlib's stored blocks and streamed
+# (review of #8672, P1): byte parity with the one-shot gzip, nothing buffered.
+# ---------------------------------------------------------------------------
+
+_STORED_PATTERN = bytes(range(256)) * (14 * 1024 * 1024 // 256)
+
+
+def _framed(data: bytes) -> bytes:
+    pieces: list[bytes] = []
+    exporter._frame_stored_gzip(lambda: (data,), exporter.stored_block_plan(len(data)), pieces.append)
+    return b"".join(pieces)
+
+
+def test_stored_block_plan_reproduces_observed_one_shot_block_lengths() -> None:
+    """Python 3.12.8 / zlib 1.3.1 one-shot framing observed by the reviewer."""
+    observed = {
+        65_531: [65_531], 65_532: [65_531, 1], 98_304: [65_531, 32_773], 100_000: [65_531, 32_773, 1_696],
+    }
+    for length, blocks in observed.items():
+        assert [size for size, _last in exporter.stored_block_plan(length)] == blocks
+        assert _framed(_STORED_PATTERN[:length]) == gzip_bytes(_STORED_PATTERN[:length], compression_level=0)
+
+
+def _stored_sweep_lengths() -> list[int]:
+    lengths = set(range(0, 64)) | set(range(32_740, 32_790)) | set(range(65_500, 65_560))
+    lengths |= set(range(98_280, 98_330)) | {131_072, 196_608, 262_144}
+    total = 0
+    for block in exporter._OUTPUT_BLOCK_SIZES[:6]:  # framed output crossing each output-buffer growth
+        total += block
+        lengths |= set(range(total - 80, total + 80, 7)) | set(range(total - 40_000, total, 4_999))
+    rng = random.Random(8672)
+    lengths |= {rng.randrange(0, 3_000_000) for _ in range(150)}
+    return sorted(length for length in lengths if 0 <= length <= len(_STORED_PATTERN))
+
+
+def test_level0_framing_matches_one_shot_gzip_at_boundaries_random_and_buffer_growths() -> None:
+    for length in _stored_sweep_lengths():
+        data = _STORED_PATTERN[:length]
+        assert _framed(data) == gzip_bytes(data, compression_level=0), length
+
+
+@pytest.mark.parametrize("chunking", ["bytes", "odd", "block+3", "random"])
+def test_level0_stream_is_chunking_independent_and_exact(chunking: str) -> None:
+    rng = random.Random(chunking)
+    for length in (0, 1, 32_753, 65_532, 100_000, 400_000, 1_500_000):
+        data = _STORED_PATTERN[:length]
+        if chunking == "bytes":
+            data = data[:3_000]
+            sizes = [1] * len(data)
+        elif chunking == "odd":
+            sizes = [7] * (len(data) // 7 + 1)
+        elif chunking == "block+3":
+            sizes = [65_538] * (len(data) // 65_538 + 1)
+        else:
+            sizes = [rng.randrange(0, 90_000) for _ in range(len(data) // 20_000 + 4)] + [len(data)]
+        chunks, position = [], 0
+        for size in sizes:
+            chunks.append(data[position : position + size])
+            position += size
+        expected = gzip_bytes(data, compression_level=0)
+        pieces: list[bytes] = []
+        result = exporter.stream_gzip(lambda chunks=chunks: iter(chunks), compression_level=0, sink=pieces.append)
+        assert b"".join(pieces) == expected
+        assert result == exporter.GzipResult(
+            len(expected), hashlib.sha256(expected).hexdigest(), len(data), hashlib.sha256(data).hexdigest()
+        )
+        assert exporter.gzip_size(lambda chunks=chunks: iter(chunks), compression_level=0) == len(expected)
+        assert max(len(piece) for piece in pieces) <= max(65_535, max(sizes, default=0)), "streamed, not joined"
+
+
+def _model_compressobj_blocks(lengths: list[int]) -> list[tuple[int, int]]:
+    """Drive the model like CPython 3.12.8 ``Compress.compress`` per call, then ``flush()``."""
+    blocks: list[tuple[int, int]] = []
+    model = exporter.StoredDeflateModel(lambda length, last: blocks.append((length, last)))
+    for flush, pieces in ((exporter._Z_NO_FLUSH, lengths), (exporter._Z_FINISH, [0])):
+        for length in pieces:
+            output = exporter.OutputBlocks()
+            model.avail_out, model.avail_in = output.next_block(), length
+            while True:
+                if model.avail_out == 0:
+                    model.avail_out = output.next_block()
+                model.deflate(flush)
+                if model.avail_out != 0:
+                    break
+            assert model.avail_in == 0
+    return blocks
+
+
+def test_stored_model_no_flush_path_matches_real_zlib_streams() -> None:
+    """``Z_NO_FLUSH`` (the path of every UINT_MAX input slice but the last) against live zlib."""
+    rng = random.Random(3)
+    for _ in range(120):
+        total = rng.choice((rng.randrange(0, 200_000), rng.randrange(0, 2_500_000)))
+        cuts = sorted(rng.randrange(0, total + 1) for _ in range(rng.randrange(0, 10)))
+        lengths = [end - start for start, end in zip([0, *cuts], [*cuts, total], strict=True)]
+        compressor = zlib.compressobj(0, zlib.DEFLATED, 31)
+        real, position = b"", 0
+        for length in lengths:
+            real += compressor.compress(_STORED_PATTERN[position : position + length])
+            position += length
+        real += compressor.flush()
+        pieces: list[bytes] = []
+        exporter._frame_stored_gzip(
+            lambda total=total: (_STORED_PATTERN[:total],), _model_compressobj_blocks(lengths), pieces.append
+        )
+        assert b"".join(pieces) == real, lengths
+
+
+def test_stored_block_plan_beyond_uint_max_without_allocating() -> None:
+    """``zlib_compress_impl`` hands zlib ``UINT_MAX`` slices: ``Z_NO_FLUSH`` then ``Z_FINISH``.
+
+    Source-derived: the ``Z_NO_FLUSH`` slice never writes a block shorter than
+    ``min_block`` (32 KiB), so its tail stays in the window and the ``Z_FINISH``
+    slice emits it together with the rest — the >4 GiB plan is the UINT_MAX plan
+    with its final block extended (and split at 65535) by the extra bytes.
+    """
+    uint_max = exporter._UINT_MAX
+    tracemalloc.start()
+    try:
+        base = exporter.stored_block_plan(uint_max)
+        for extra in (1, 12_345, 70_000):
+            plan = exporter.stored_block_plan(uint_max + extra)
+            tail = base[-1][0] + extra
+            expected_tail = [(65_535, 0)] * ((tail - 1) // 65_535) + [((tail - 1) % 65_535 + 1, 1)]
+            assert plan == base[:-1] + expected_tail, extra
+            assert sum(length for length, _last in plan) == uint_max + extra
+        peak = tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+    assert base[:2] == [(65_531, 0), (32_773, 0)] and base[-1][1] == 1
+    assert peak < 64 * 1024 * 1024, "a length-only plan, never the bytes"
+
+
+class _StoredFrameReader:
+    """Stored-block framing of a level-0 gzip stream read incrementally; data bytes are skipped, not kept."""
+
+    def __init__(self) -> None:
+        self.blocks: list[tuple[int, int]] = []
+        self._skip = 10  # gzip header
+        self._header = b""
+
+    def feed(self, data: memoryview) -> None:
+        position = 0
+        while position < len(data) and not (self.blocks and self.blocks[-1][1]):
+            if self._skip:
+                taken = min(self._skip, len(data) - position)
+                self._skip -= taken
+                position += taken
+                continue
+            piece = bytes(data[position : position + 5 - len(self._header)])
+            self._header += piece
+            position += len(piece)
+            if len(self._header) == 5:
+                header = self._header
+                length = header[1] | header[2] << 8
+                assert header[0] >> 1 == 0 and length ^ 0xFFFF == header[3] | header[4] << 8, header
+                self.blocks.append((length, header[0] & 1))
+                self._skip, self._header = length, b""
+
+
+def _system_libz_version() -> str | None:
+    try:
+        libz = ctypes.CDLL("libz.so.1")
+    except OSError:
+        return None
+    libz.zlibVersion.restype = ctypes.c_char_p
+    return libz.zlibVersion().decode()
+
+
+def _live_zlib_one_shot_blocks(total: int) -> list[tuple[int, int]]:
+    """Stored blocks of the C library driven exactly like CPython 3.12 ``zlib_compress_impl`` (level 0, wbits 31).
+
+    The input is untouched anonymous memory (the zero page, never resident) and
+    one output buffer is reused at every growth, so a >4 GiB input costs 256 MiB.
+    """
+
+    class ZStream(ctypes.Structure):
+        _fields_: ClassVar[list[tuple[str, type]]] = [
+            ("next_in", ctypes.c_void_p), ("avail_in", ctypes.c_uint), ("total_in", ctypes.c_ulong),
+            ("next_out", ctypes.c_void_p), ("avail_out", ctypes.c_uint), ("total_out", ctypes.c_ulong),
+            ("msg", ctypes.c_char_p), ("state", ctypes.c_void_p), ("zalloc", ctypes.c_void_p),
+            ("zfree", ctypes.c_void_p), ("opaque", ctypes.c_void_p), ("data_type", ctypes.c_int),
+            ("adler", ctypes.c_ulong), ("reserved", ctypes.c_ulong),
+        ]
+
+    libz = ctypes.CDLL("libz.so.1")
+    libz.zlibVersion.restype = ctypes.c_char_p
+    libz.deflate.argtypes = [ctypes.POINTER(ZStream), ctypes.c_int]
+    libz.deflateEnd.argtypes = [ctypes.POINTER(ZStream)]
+    stream = ZStream()
+    init = libz.deflateInit2_(ctypes.byref(stream), 0, 8, 31, 8, 0, libz.zlibVersion(), ctypes.sizeof(ZStream))
+    assert init == exporter._Z_OK
+    source = mmap.mmap(-1, max(total, 1))
+    output = mmap.mmap(-1, exporter._OUTPUT_BLOCK_SIZES[-1])
+    output_start = ctypes.addressof(ctypes.c_char.from_buffer(output))
+    view = memoryview(output)
+    reader = _StoredFrameReader()
+    schedule = exporter.OutputBlocks()
+    try:
+        stream.next_in = ctypes.addressof(ctypes.c_char.from_buffer(source))
+        stream.next_out, stream.avail_out = output_start, schedule.next_block()
+        produced, remaining = output_start, total
+        while True:
+            stream.avail_in = min(remaining, exporter._UINT_MAX)
+            remaining -= stream.avail_in
+            flush = zlib.Z_FINISH if remaining == 0 else zlib.Z_NO_FLUSH
+            while True:
+                if stream.avail_out == 0:
+                    stream.next_out, stream.avail_out = output_start, schedule.next_block()
+                    produced = output_start
+                status = libz.deflate(ctypes.byref(stream), flush)
+                reader.feed(view[produced - output_start : stream.next_out - output_start])
+                produced = stream.next_out
+                if stream.avail_out != 0:
+                    break
+            assert stream.avail_in == 0
+            if flush == zlib.Z_FINISH:
+                break
+        assert status == exporter._Z_STREAM_END
+    finally:
+        libz.deflateEnd(ctypes.byref(stream))
+        del view
+        source.close()
+        output.close()
+    return reader.blocks
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    _system_libz_version() != zlib.ZLIB_RUNTIME_VERSION, reason="system libz.so.1 is not this runtime's zlib"
+)
+def test_stored_block_plan_matches_live_zlib_beyond_uint_max() -> None:
+    """The length-only plan against the live library past ``UINT_MAX`` (two input slices)."""
+    one_shot = _StoredFrameReader()
+    one_shot.feed(memoryview(gzip_bytes(bytes(3_000_000), compression_level=0)))
+    assert _live_zlib_one_shot_blocks(3_000_000) == one_shot.blocks  # the driver is CPython's one-shot path
+    for total in (exporter._UINT_MAX + 1, exporter._UINT_MAX + 70_000):
+        assert _live_zlib_one_shot_blocks(total) == exporter.stored_block_plan(total), total
+
+
+def test_stored_planner_canary_fails_closed_on_runtime_disagreement(
+    edge_db: Path, tmp_path: Path, monkeypatch
+) -> None:
+    exporter.check_stored_gzip_runtime()
+    monkeypatch.setattr(exporter, "_stored_canary_passed", False)
+    # A runtime whose output buffer grows differently frames stored blocks differently.
+    monkeypatch.setattr(exporter, "_OUTPUT_BLOCK_SIZES", (16 * 1024, *exporter._OUTPUT_BLOCK_SIZES[1:]))
+    with pytest.raises(ExportError, match="planner disagrees with this runtime"):
+        exporter.check_stored_gzip_runtime()
+    with pytest.raises(ExportError, match="planner disagrees"):
+        exporter.stream_gzip(lambda: (b"x",), compression_level=0, sink=lambda _piece: None)
+    with pytest.raises(ExportError, match="planner disagrees"):
+        _export(edge_db, tmp_path / "out", compression_level=0)
+    assert not (tmp_path / "out" / "atlas" / "current.json").exists()
+    assert exporter._stored_canary_passed is False
+
+
+def test_level0_replay_that_drifts_between_passes_fails_closed() -> None:
+    calls = {"n": 0}
+
+    def drifting():
+        calls["n"] += 1
+        return (b"a" * 70_000,) if calls["n"] == 1 else (b"b" * 70_000,)
+
+    with pytest.raises(ExportError, match="replay differs"):
+        exporter.stream_gzip(drifting, compression_level=0, sink=lambda _piece: None)
+    calls["n"] = 0
+
+    def growing():
+        calls["n"] += 1
+        return (b"a" * (70_000 + calls["n"]),)
+
+    with pytest.raises(ExportError, match="more bytes than planned"):
+        exporter.stream_gzip(growing, compression_level=0, sink=lambda _piece: None)
+
+
+@pytest.mark.parametrize("level", [0, 1, 6, 9])
+def test_oversized_entry_leaf_error_matches_reference_at_every_level(
+    edge_db: Path, tmp_path: Path, level: int
+) -> None:
+    with pytest.raises(ExportError) as expected:
+        _reference_export(edge_db, compression_level=level, entry_max=300, search_max=524_288)
+    with pytest.raises(ExportError) as actual:
+        _export(edge_db, tmp_path / "out", compression_level=level, entry_max_gzip_bytes=300)
+    assert str(actual.value) == str(expected.value)
+    assert "single entry record exceeds" in str(actual.value)
+
+
+@pytest.mark.parametrize("level", [0, 1, 6, 9])
+def test_unsplittable_search_error_matches_reference_at_every_level(
+    edge_db: Path, tmp_path: Path, level: int
+) -> None:
+    with pytest.raises(ExportError) as expected:
+        _reference_export(edge_db, compression_level=level, entry_max=1_048_576, search_max=150)
+    with pytest.raises(ExportError) as actual:
+        _export(edge_db, tmp_path / "out", compression_level=level, search_max_gzip_bytes=150)
+    assert str(actual.value) == str(expected.value)
+    assert "cannot split" in str(actual.value)
+
+
+# ---------------------------------------------------------------------------
+# --verify streams (review of #8672, P1): same checks and error categories as
+# the historical whole-shard verify, json.loads-exact values, bounded memory.
+# ---------------------------------------------------------------------------
+
+
+def _ref_verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path) -> dict:
+    """Historical whole-shard ``verify_tree`` (pre-streaming #8672), the parity oracle."""
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    version_root = manifest_path.parent
+    errors: list[str] = []
+
+    def check_descriptor(descriptor, *, family):
+        rel = descriptor["url"]
+        path = version_root / rel
+        if not path.is_file():
+            errors.append(f"missing {family} object {rel}")
+            return
+        compressed = path.read_bytes()
+        if len(compressed) != descriptor["bytes"]:
+            errors.append(
+                f"{family} {descriptor['id']}: bytes mismatch file={len(compressed)} desc={descriptor['bytes']}"
+            )
+        if exporter.sha256_hex(compressed) != descriptor["sha256"]:
+            errors.append(f"{family} {descriptor['id']}: sha256 mismatch")
+        try:
+            raw = gzip.decompress(compressed)
+        except OSError as exc:
+            errors.append(f"{family} {descriptor['id']}: gzip decode failed: {exc}")
+            return
+        if exporter.sha256_hex(raw) != descriptor["jsonSha256"]:
+            errors.append(f"{family} {descriptor['id']}: jsonSha256 mismatch")
+        if len(raw) != descriptor["uncompressedBytes"]:
+            errors.append(f"{family} {descriptor['id']}: uncompressedBytes mismatch")
+        payload = json.loads(raw.decode("utf-8"))
+        if family.startswith("deck"):
+            if not isinstance(payload, dict):
+                errors.append(f"{family} {descriptor['id']}: deck payload must be an object")
+            return
+        if payload.get("schemaVersion") != exporter.SCHEMA_VERSION:
+            errors.append(f"{family} {descriptor['id']}: unsupported schemaVersion")
+        if payload.get("dataVersion") != manifest.get("dataVersion"):
+            errors.append(f"{family} {descriptor['id']}: dataVersion mismatch vs manifest")
+        records = payload.get("records")
+        if isinstance(records, list) and len(records) != descriptor["count"]:
+            errors.append(
+                f"{family} {descriptor['id']}: count mismatch records={len(records)} desc={descriptor['count']}"
+            )
+
+    entry_shards = manifest["entries"]["shards"]
+    for descriptor in entry_shards.values():
+        check_descriptor(descriptor, family="entries")
+        if descriptor["bytes"] > exporter.DEFAULT_ENTRY_MAX:
+            errors.append(f"entries {descriptor['id']}: gzip exceeds 1 MiB")
+    for family in ("articles", "aliases"):
+        for descriptor in manifest["search"][family]["shards"].values():
+            check_descriptor(descriptor, family=f"search.{family}")
+    for level, info in (manifest.get("decks", {}).get("levels") or {}).items():
+        for part, descriptor in (info.get("parts") or {}).items():
+            check_descriptor(descriptor, family=f"decks.{level}.{part}")
+    if errors:
+        raise ExportError("verify failed:\n- " + "\n- ".join(errors))
+    seen_slugs: dict[str, str] = {}
+    article_count = form_count = 0
+    for shard_id, descriptor in entry_shards.items():
+        payload = json.loads(gzip.decompress((version_root / descriptor["url"]).read_bytes()).decode("utf-8"))
+        for record in payload["records"]:
+            slug = record["slug"]
+            if slug in seen_slugs:
+                errors.append(f"duplicate slug {slug!r} in {seen_slugs[slug]} and {shard_id}")
+            seen_slugs[slug] = shard_id
+            if record["kind"] == "article":
+                article_count += 1
+            elif record["kind"] == "form_route":
+                form_count += 1
+            for alias in record.get("aliases") or []:
+                if alias.get("target_slug") != slug:
+                    errors.append(f"alias target mismatch on {slug!r}")
+    expected = manifest["counts"]
+    if article_count != expected["articles"]:
+        errors.append(f"article count {article_count} != {expected['articles']}")
+    if form_count != expected["formRoutes"]:
+        errors.append(f"form_of count {form_count} != {expected['formRoutes']}")
+    if len(seen_slugs) != expected["publicRoutes"]:
+        errors.append(f"route count {len(seen_slugs)} != {expected['publicRoutes']}")
+    if errors:
+        raise ExportError("verify failed:\n- " + "\n- ".join(errors))
+    return {
+        "dataVersion": manifest["dataVersion"], "articles": article_count, "formRoutes": form_count,
+        "publicRoutes": len(seen_slugs), "entryShards": len(entry_shards),
+    }
+
+
+def _outcome(verify, out: Path, manifest_path: Path) -> tuple[str, str]:
+    try:
+        return "ok", json.dumps(verify(out, "atlas", manifest_path=manifest_path), sort_keys=True)
+    except ExportError as exc:
+        # Only the zlib/gzip library wording after this category differs between readers.
+        return "ExportError", re.sub(r"gzip decode failed: [^\n]*", "gzip decode failed", str(exc))
+    except Exception as exc:
+        return type(exc).__name__, ""
+
+
+def _descriptors(manifest: dict) -> list[dict]:
+    found = list(manifest["entries"]["shards"].values())
+    for family in ("articles", "aliases"):
+        found += list(manifest["search"][family]["shards"].values())
+    for info in (manifest.get("decks", {}).get("levels") or {}).values():
+        found += list((info.get("parts") or {}).values())
+    return found
+
+
+def _rewrite(root: Path, manifest: dict, descriptor: dict, raw: bytes, *, consistent: bool = True) -> None:
+    compressed = gzip_bytes(raw, compression_level=9)
+    (root / descriptor["url"]).write_bytes(compressed)
+    if consistent:
+        descriptor.update(
+            bytes=len(compressed), sha256=hashlib.sha256(compressed).hexdigest(),
+            uncompressedBytes=len(raw), jsonSha256=hashlib.sha256(raw).hexdigest(),
+        )
+    (root / "manifest.json").write_bytes(exporter.canonical_json_bytes(manifest))
+
+
+def _entry_shard(root: Path, manifest: dict, index: int = 0) -> tuple[dict, dict]:
+    descriptor = manifest["entries"]["shards"][sorted(manifest["entries"]["shards"])[index]]
+    return descriptor, json.loads(gzip.decompress((root / descriptor["url"]).read_bytes()))
+
+
+def _json_text(payload: dict) -> bytes:
+    return exporter.canonical_json_bytes(payload)
+
+
+def _mutate(case: str, root: Path, manifest: dict) -> None:
+    descriptor, payload = _entry_shard(root, manifest)
+    path = root / descriptor["url"]
+    blob = path.read_bytes()
+    search = next(iter(manifest["search"]["articles"]["shards"].values()))
+    if case == "flip-byte":
+        path.write_bytes(blob[:40] + bytes([blob[40] ^ 0xFF]) + blob[41:])
+    elif case == "flip-crc":
+        path.write_bytes(blob[:-8] + bytes([blob[-8] ^ 1]) + blob[-7:])
+    elif case == "truncate":
+        path.write_bytes(blob[: len(blob) // 2])
+    elif case == "trailing-zero-padding":
+        path.write_bytes(blob + b"\0\0\0")
+    elif case == "trailing-garbage-member":
+        path.write_bytes(blob + b"garbage")
+    elif case == "second-gzip-member":
+        path.write_bytes(blob + gzip_bytes(b" ", compression_level=9))
+    elif case == "missing-object":
+        path.unlink()
+    elif case == "descriptor-bytes":
+        descriptor["bytes"] += 1
+    elif case == "descriptor-count":
+        search["count"] += 1
+    elif case == "descriptor-json-sha":
+        search["jsonSha256"] = "0" * 64
+    elif case == "stale-raw-descriptor":
+        _rewrite(root, manifest, descriptor, _json_text({**payload, "dataVersion": "other"}), consistent=False)
+    elif case in ("schema-version", "schema-version-float", "schema-version-near-one", "data-version"):
+        value = {"schema-version": 2, "schema-version-float": 1.0, "schema-version-near-one": 1.0000000000000000001}
+        if case == "data-version":
+            raw = _json_text({**payload, "dataVersion": "atlas-v1-other"})
+        else:
+            raw = _json_text(payload).replace(b'"schemaVersion":1', b'"schemaVersion":' + repr(value[case]).encode())
+        _rewrite(root, manifest, descriptor, raw)
+    elif case == "duplicate-members-last-wins":
+        text = _json_text(payload).decode()
+        text = text.replace('"schemaVersion":1', '"schemaVersion":2,"records":[{"slug":"ghost"}],"schemaVersion":1', 1)
+        _rewrite(root, manifest, descriptor, text.encode())
+    elif case == "duplicate-records-first-wins-is-wrong":
+        text = _json_text(payload).decode().rstrip("\n")
+        _rewrite(root, manifest, descriptor, (text[:-1] + ',"records":[]}\n').encode())
+    elif case == "duplicate-slug":
+        _, other = _entry_shard(root, manifest, 1)
+        payload["records"].append(other["records"][0])
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+        descriptor["count"] += 1
+        (root / "manifest.json").write_bytes(exporter.canonical_json_bytes(manifest))
+    elif case == "alias-target":
+        record = next(r for r in payload["records"] if r["aliases"])
+        record["aliases"][0]["target_slug"] = "elsewhere"
+        record["aliases"].append({**record["aliases"][0]})
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+    elif case == "kind-count":
+        payload["records"][0]["kind"] = "something-else"
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+    elif case == "record-not-object":
+        payload["records"][0] = ["not", "an", "object"]
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+    elif case == "records-missing":
+        payload.pop("records")
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+    elif case == "bigint-overflow-surrogate-in-record":
+        text = _json_text(payload).decode()
+        text = text.replace(
+            '"kind":', '"n":123456789012345678901234567890,"big":-1e400,"u":"\\ud800","w":"\\udc00\\ud800\\u0041","kind":', 1
+        )
+        _rewrite(root, manifest, descriptor, text.encode())
+    elif case == "nan-infinity-in-record":
+        text = _json_text(payload).decode().replace('"kind":', '"f":NaN,"z":-Infinity,"kind":', 1)
+        _rewrite(root, manifest, descriptor, text.encode())
+    elif case == "surrogate-alias-target":
+        # yajl alone decodes both unpaired escapes as "x?": only an exact decode sees the mismatch.
+        record = next(r for r in payload["records"] if r["aliases"])
+        record["slug"] = "@slug@"
+        for alias in record["aliases"]:
+            alias["target_slug"] = "@slug@"
+        record["aliases"][0]["target_slug"] = "@target@"
+        text = _json_text(payload).replace(b"@slug@", b"x\\ud800").replace(b"@target@", b"x\\udbff")
+        _rewrite(root, manifest, descriptor, text)
+    elif case == "trailing-unterminated-string":
+        _rewrite(root, manifest, descriptor, _json_text(payload) + b'"x')
+    elif case == "vertical-tab-whitespace":
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b'{"', b'{\x0b"', 1))
+    elif case == "invalid-json-trailing":
+        _rewrite(root, manifest, descriptor, _json_text(payload) + b"{}")
+    elif case == "invalid-json-truncated":
+        _rewrite(root, manifest, descriptor, _json_text(payload)[:-40])
+    elif case == "invalid-json-trailing-comma":
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b"]}\n", b",]}\n"))
+    elif case == "invalid-utf8":
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b'"slug":"', b'"slug":"\xff', 1))
+    elif case == "control-char":
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b'"slug":"', b'"slug":"\x01', 1))
+    elif case == "top-level-array":
+        _rewrite(root, manifest, descriptor, b"[1,2]\n")
+    else:
+        raise AssertionError(case)
+    (root / "manifest.json").write_bytes(exporter.canonical_json_bytes(manifest))
+
+
+# Cases the historical verify let escape as a raw exception now fail as ExportError.
+_HISTORICAL_CRASH = {
+    "flip-byte": "gzip decode failed", "truncate": "gzip decode failed",
+    "invalid-json-trailing": "invalid JSON", "invalid-json-truncated": "invalid JSON",
+    "invalid-json-trailing-comma": "invalid JSON", "invalid-utf8": "invalid JSON",
+    "control-char": "invalid JSON", "top-level-array": "payload must be an object",
+    "trailing-unterminated-string": "invalid JSON", "vertical-tab-whitespace": "invalid JSON",
+}
+# NaN/Infinity are json.loads extensions the runtime's JSON.parse rejects: they fail closed.
+_FAIL_CLOSED = {"nan-infinity-in-record": "invalid JSON"}
+_VERIFY_CASES = [
+    "flip-byte", "flip-crc", "truncate", "trailing-zero-padding", "trailing-garbage-member", "second-gzip-member",
+    "missing-object", "descriptor-bytes", "descriptor-count", "descriptor-json-sha", "stale-raw-descriptor",
+    "schema-version", "schema-version-float", "schema-version-near-one", "data-version",
+    "duplicate-members-last-wins", "duplicate-records-first-wins-is-wrong", "duplicate-slug", "alias-target",
+    "kind-count", "record-not-object", "records-missing", "bigint-overflow-surrogate-in-record",
+    "nan-infinity-in-record", "surrogate-alias-target", "invalid-json-trailing", "invalid-json-truncated",
+    "invalid-json-trailing-comma", "invalid-utf8", "control-char", "top-level-array",
+    "trailing-unterminated-string", "vertical-tab-whitespace",
+]
+
+
+@pytest.fixture(scope="module")
+def verified_tree(edge_db: Path, tmp_path_factory: pytest.TempPathFactory) -> Path:
+    out = tmp_path_factory.mktemp("verify") / "out"
+    _export(edge_db, out, entry_max_gzip_bytes=9_000, search_max_gzip_bytes=1_200)
+    return out
+
+
+@pytest.mark.parametrize("case", _VERIFY_CASES)
+def test_streaming_verify_matches_historical_verify(verified_tree: Path, tmp_path: Path, case: str) -> None:
+    out = tmp_path / "out"
+    shutil.copytree(verified_tree, out)
+    manifest_path = out / "atlas" / json.loads((out / "atlas" / "current.json").read_text())["manifestUrl"]
+    manifest = json.loads(manifest_path.read_text())
+    assert _outcome(verify_tree, out, manifest_path) == _outcome(_ref_verify_tree, out, manifest_path)
+    _mutate(case, manifest_path.parent, manifest)
+    expected = _outcome(_ref_verify_tree, out, manifest_path)
+    actual = _outcome(verify_tree, out, manifest_path)
+    if case in _HISTORICAL_CRASH:
+        assert expected[0] not in ("ok", "ExportError"), expected
+        assert actual[0] == "ExportError" and _HISTORICAL_CRASH[case] in actual[1], actual
+    elif case in _FAIL_CLOSED:
+        assert expected[0] == "ok", expected
+        assert actual[0] == "ExportError" and _FAIL_CLOSED[case] in actual[1], actual
+    else:
+        assert actual == expected
+    assert case in ("trailing-zero-padding", "second-gzip-member", "schema-version-float",
+                    "schema-version-near-one", "duplicate-members-last-wins",
+                    "bigint-overflow-surrogate-in-record") or actual[0] != "ok", actual
+
+
+_JSON_DOCS = [
+    b'{"a":1}', b' \n{ "a" : [ 1 , 2.5 , -0.0 , 1e2 , "x" ] , "b" : {} }\t\r\n', b"{}", b"[]", b'"s"', b"-12", b'""',
+    b'{"records":[{"k":1},{"k":[1,{"x":"\\u00e9\\ud83d\\ude00"}]},{}],"schemaVersion":1,"dataVersion":"v"}',
+    b'{"n":123456789012345678901234567890,"big":1e400,"tiny":1e-400,"s":"\\ud800","t":"\\udc00\\ud800\\u0041",'
+    b'"records":["\\ud800x","\\ud83d\\ude00","\\\\ud800",-9223372036854775809,1E+5,-0],"dataVersion":"\\udbff"}',
+    '{"укр":"слово ґанок їжак","emoji":"😀","esc":"\\"\\\\\\/\\b\\f\\n\\r\\t"}'.encode(),
+    b'{"a":1,"a":2,"records":[1],"records":[2,3],"schemaVersion":7,"schemaVersion":1}',
+    b'{"records":[1.5,-1.25e-3,1E+5,0,true,false,null,"1.5"]}', b'{"records":{"not":"a list"}}',
+    b'[{"a":1},[2,[3]],"x",4]', b'{"deep":' + b"[" * 200 + b"]" * 200 + b"}",
+]
+_BAD_JSON_DOCS = [
+    b"", b"   ", b'{"a":1} x', b'{"a":1}{}', b'{"a":1,}', b'{"a" 1}', b'{a:1}', b"[1,]", b"[1 2]", b'{"a":01}',
+    b'{"a":tru}', b'{"a":"x\x01"}', b'{"a":"\xff"}', b'\xef\xbb\xbf{"a":1}', b'{"a":"unterminated}',
+    b'{"records":[1,2', b'{"a":1', b'{"a":"\\x"}', b'{"a":"\\u12"}', b'{"a":1.}', b'{"a":-}', b'{"a":[1,2]]}',
+    b'{"a":"\xed\xa0\x80"}', b"nul", b'{"a":1}\x00', b'{"a":+1}', b'{"a":1} 1', b'{"a":1}  "abc"', b'"" ""',
+    # yajl alone accepts these: an unterminated string after the value, \v/\f as whitespace.
+    b'{"a":1}"', b'{"a":1}\n"x', b'{"a":1}"}', b'[1]"', b'false "', b'\x0b{"a":1}', b'{"a":\x0c1}', b'{"a":1}\x0b',
+    b'{"a":"\\ud800"}"', b'{"a":"\\ud800\\u12"}', b'{"a":"\\udc00" "b"}',
+]
+# json.loads extensions that fail closed: not JSON (the runtime's JSON.parse rejects
+# NaN/Infinity) or an exponent beyond Decimal's range.
+_FAIL_CLOSED_JSON_DOCS = [b'{"f":NaN}', b'{"i":Infinity}', b"[-Infinity]", b'{"e":1e99999999999999999999}']
+
+
+def _scan(doc: bytes, read_bytes: int, summarize=json.dumps) -> exporter.ScannedPayload:
+    """``scan_json_payload`` as ``verify_tree`` uses it: exact re-decode when the fast pass asks."""
+    scanned = exporter.scan_json_payload(io.BytesIO(doc), summarize=summarize, read_bytes=read_bytes)
+    if not scanned.strings_exact:
+        scanned = exporter.scan_json_payload(io.BytesIO(doc), summarize=summarize, read_bytes=read_bytes, exact=True)
+        assert scanned.strings_exact
+    return scanned
+
+
+def _reject_constant(name: str):
+    raise ValueError(f"{name} fails closed")
+
+
+def _float_failing_closed(text: str) -> float:
+    decimal.Decimal(text)  # InvalidOperation (an ArithmeticError) past Decimal's exponent range
+    return float(text)
+
+
+def _expected_scan(doc: bytes) -> exporter.ScannedPayload:
+    """``json.loads`` + ``dict.get`` view of ``doc``, minus the literals verification fails closed on."""
+    value = json.loads(doc.decode("utf-8"), parse_constant=_reject_constant, parse_float=_float_failing_closed)
+    if not isinstance(value, dict):
+        return exporter.ScannedPayload(is_object=False)
+    records = value.get("records")
+    return exporter.ScannedPayload(
+        is_object=True, schema_version=value.get("schemaVersion"), data_version=value.get("dataVersion"),
+        has_records="records" in value, records_is_list=isinstance(records, list),
+        record_count=len(records) if isinstance(records, list) else 0,
+        rows=[json.dumps(item) for item in records] if isinstance(records, list) else None,
+    )
+
+
+def _scan_outcome(doc: bytes, read_bytes: int) -> tuple:
+    """Everything verification reads from ``doc`` (or that it is invalid), for exact comparison."""
+    try:
+        scanned = _scan(doc, read_bytes)
+    except ValueError:
+        return ("invalid",)
+    scanned.strings_exact = True
+    return ("ok", json.dumps(dataclasses.asdict(scanned), sort_keys=True))
+
+
+def _json_loads_outcome(doc: bytes) -> tuple:
+    try:
+        expected = _expected_scan(doc)
+    except (ValueError, ArithmeticError, RecursionError):
+        return ("invalid",)
+    return ("ok", json.dumps(dataclasses.asdict(expected), sort_keys=True))
+
+
+def test_verify_uses_yajl_and_the_stdlib_string_decoder() -> None:
+    assert exporter._json_backend(False).backend_name == "yajl2_c"
+    assert exporter._json_backend(True).backend_name == "python"
+
+
+@pytest.mark.parametrize("read_bytes", [1, 2, 3, 5, 6, 7, 13, 64, 1 << 16])
+def test_json_stream_decodes_exactly_like_json_loads_at_every_read_size(read_bytes: int) -> None:
+    for doc in _JSON_DOCS:
+        assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), doc
+        fast = exporter.scan_json_payload(io.BytesIO(doc), read_bytes=read_bytes)
+        assert fast.strings_exact == (re.search(rb"\\u[dD][89a-fA-F]", doc) is None), doc
+    for doc in _BAD_JSON_DOCS:
+        with pytest.raises(ValueError):
+            json.loads(doc.decode("utf-8"))
+        with pytest.raises(ValueError):
+            _scan(doc, read_bytes)
+    for doc in _FAIL_CLOSED_JSON_DOCS:
+        json.loads(doc.decode("utf-8"))
+        with pytest.raises(ValueError):
+            _scan(doc, read_bytes)
+
+
+def test_json_stream_matches_json_loads_on_mutated_documents() -> None:
+    """Seeded differential: random documents and byte-level corruptions of them."""
+    rng = random.Random(8672)
+    tokens = [
+        b"{", b"}", b"[", b"]", b",", b":", b'"', b"\\", b"u", b"d", b"8", b"0", b"1", b"-", b"+", b".", b"e",
+        b" ", b"\t", b"\n", b"\x0b", b"\x0c", b"\x00", b"\x01", b"\xff", b"\xed", b"t", b"n", b"x",
+        "я".encode(), b"\\ud800", b"\\udc00", b"\\ud83d\\ude00", b'"records"', b'"schemaVersion"',
+    ]
+
+    def value(depth: int):
+        choice = rng.randrange(9 if depth < 4 else 6)
+        if choice == 0:
+            return rng.randrange(-10**30, 10**30)
+        if choice == 1:
+            return rng.uniform(-1e6, 1e6)
+        if choice == 2:
+            return "".join(rng.choice('aя"\\/\n\t😀é 𐀀') for _ in range(rng.randrange(0, 12)))
+        if choice in (3, 4, 5):
+            return (True, False, None)[choice - 3]
+        if choice in (6, 7):
+            return [value(depth + 1) for _ in range(rng.randrange(0, 5))]
+        return {str(value(depth + 1))[:6]: value(depth + 1) for _ in range(rng.randrange(0, 5))}
+
+    for _ in range(3000):
+        document = {"schemaVersion": 1, "records": [value(0) for _ in range(rng.randrange(0, 6))], "x": value(0)}
+        raw = bytearray(json.dumps(document, ensure_ascii=True, indent=rng.choice([None, 1])).encode())
+        for _ in range(rng.randrange(0, 4)):
+            position = rng.randrange(len(raw) + 1)
+            raw[position : position + rng.randrange(2)] = rng.choice(tokens)
+        doc = bytes(raw[: rng.randrange(len(raw) + 1)] if rng.random() < 0.2 else raw)
+        read_bytes = rng.choice([1, 3, 5, 8, 50])
+        assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), doc

@@ -5,6 +5,7 @@
 # YAML/JSON
 pyyaml>=6.0
 jsonschema>=4.20
+ijson==3.5.1  # scripts/atlas/export_runtime_shards.py streamed --verify (yajl2_c backend; #8672)
 
 # CommonMark parsing for deterministic documentation inventory
 markdown-it-py>=4.2.0
