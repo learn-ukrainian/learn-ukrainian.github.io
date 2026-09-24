@@ -216,6 +216,32 @@ def test_prepaid_deepseek_avoid(change):
     assert report["recommendation"]["primary_agent_for_code"] is None
 
 
+def test_unhealthy_deepseek_account_row_is_avoid():
+    """A lane-health record on an account row demotes it to AVOID with the error."""
+    budget = _fixture_budget()
+    budget["api_accounts"]["deepseek"]["health"] = {
+        "healthy": False,
+        "last_error": "provider config lost (#8514)",
+    }
+    row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
+    assert row["avoid"] is True
+    assert "AVOID" in row["notes"]
+    assert "unhealthy: provider config lost (#8514)" in row["notes"]
+    report = capacity_pick.build_report(budget)
+    pick = next(p for p in report["pick_order"] if p["lane"] == "deepseek")
+    assert pick["pick"] == "AVOID"
+
+
+def test_healthy_deepseek_account_row_unaffected():
+    """health.healthy True changes neither avoid nor notes."""
+    budget = _fixture_budget()
+    baseline = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
+    budget["api_accounts"]["deepseek"]["health"] = {"healthy": True, "last_error": ""}
+    row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "deepseek")
+    assert row["avoid"] is baseline["avoid"] is False
+    assert "unhealthy:" not in row["notes"]
+
+
 def test_unavailable_subscription_never_cool():
     budget = _fixture_budget()
     budget["agents"]["cursor"]["codexbar"]["freshness"] = "unavailable"
