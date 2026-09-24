@@ -11,7 +11,7 @@ replacement, not the old two-tier merge-queue file.
 | Changes | always (`docs_only` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates`) |
 | Ruff | not docs-only |
 | Secret scan | always |
-| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates; `docs` → 1 `docs_skills` shard; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
+| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
 | TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |
@@ -79,6 +79,41 @@ test files, empty or ≥80 candidates, and anything outside the allowlist stay
 `docs_only=false`. After merge, the CI stream owner tracks one week of
 `ci_timings` on the private work item (selected may be rare under on-disk stem
 collision conservatism).
+
+## Repo-wide tests always run in the selected tier (#8707)
+
+Import selection can never pick a test that scans the repository's own trees:
+the Changes job links a changed `scripts/foo.py` to `tests/**/test_foo*.py` (and
+a changed `tests/test_x.py` to itself), but a test scanning `tests/` or
+`scripts/` has no import edge to the changed module. That is how PR #8692
+merged green on the selected tier and then turned `main` red on shard 3 for
+every full-tier run: `tests/test_lint_test_assertions.py::test_repo_test_suite_is_clean`
+scans all of `tests/` and was never selected for a `tests/orchestration/test_thread_handoff.py`
+change.
+
+Such tests carry the `repo_wide` marker (registered in `pyproject.toml`). After
+the candidate run, a `selected` shard runs the marked set under its own narrow
+allowlist:
+
+```
+git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -l repo_wide | sort
+LU_PYTEST_SHARD_FILES=<that list> pytest tests \
+  -m 'repo_wide and not slow and not atlas_release' -n logical --dist=loadfile ...
+```
+
+The narrow allowlist keeps collection cheap (the full tree is ~2 minutes to
+collect); the known set currently runs ~400 tests in under two minutes. An
+empty list fails the step loudly. `tests/test_repo_wide_marker_invariant.py`
+keeps the marker honest: it fails when a module that scans a repository source
+tree (`tests/`, `scripts/`, `agents_extensions/`) or calls a whole-tree linter
+lacks the marker, when a known repo-wide module/function loses it, or when the
+selected tier drops the `-m repo_wide` invocation.
+
+The docs and content lanes are deliberately unchanged. They are entered only
+when every changed path is docs Markdown or curriculum/site-content/wiki
+content; a `tests/` or `scripts/` change can never classify into either lane,
+and the `repo_wide` scanners read the tests/scripts/agents_extensions trees,
+not docs/content. Content tree readers are already covered by `reads_content`.
 
 No CF attest. No auto-arm. No landing-class classifier. No coverage floor.
 Red team review is out of band.

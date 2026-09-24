@@ -6,7 +6,7 @@ import pytest
 
 from scripts.ai_agent_bridge._opencode import OPENCODE_DEFAULT_MODEL, _invoke_opencode
 
-pytestmark = pytest.mark.repo_invariant
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
 
 def test_opencode_default_model_is_cheap_and_guard_allowed():

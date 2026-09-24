@@ -307,6 +307,21 @@ jobs:
             --timeout-method=thread -m 'not atlas_release and not slow' --strict-markers \
             --override-ini addopts=-v --durations=25 \
             --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
+          if [ "$PYTEST_MODE" = "selected" ]; then
+            # Repo-wide tree-scanning tests (#8707) have no import link to the
+            # changed module, so import selection can never pick them. Run them
+            # under their own allowlist so collection stays narrow, whatever
+            # candidates the Changes job chose.
+            repo_wide_list="${RUNNER_TEMP}/pytest-repo-wide-files.txt"
+            git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -l repo_wide \
+              | sort > "$repo_wide_list" || true
+            [ -s "$repo_wide_list" ] || { echo "no repo_wide tests found; the repo_wide marker invariant is broken" >&2; exit 1; }
+            LU_PYTEST_SHARD_FILES="$repo_wide_list" .venv/bin/python -m pytest tests \
+              -m 'repo_wide and not slow and not atlas_release' --strict-markers \
+              -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+              --timeout-method=thread --override-ini addopts=-v \
+              --junitxml="ci-artifacts/pytest-shard-${SHARD}-repo-wide.xml"
+          fi
       - name: Stop memory sampler
         if: always() && needs.changes.outputs.docs_only == 'false'
         run: |
