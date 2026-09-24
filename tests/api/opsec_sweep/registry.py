@@ -24,7 +24,7 @@ from starlette.routing import Mount, WebSocketRoute
 from scripts.orchestration import thread_handoff
 
 from . import tracking_issues
-from .mutation_recipes import RECIPES, MutationEnv, Prepared
+from .mutation_recipes import RECIPES, REFUSAL_RECIPES, MutationEnv, MutationRecipe, Prepared
 
 HTTP_METHODS = frozenset({"DELETE", "GET", "PATCH", "POST", "PUT"})
 MUTATION_METHODS = frozenset({"DELETE", "PATCH", "POST", "PUT"})
@@ -487,6 +487,35 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
     )
 
 
+def _recipe_record(
+    method: str, path_template: str, path_values: Mapping[str, str], recipe: MutationRecipe
+) -> ExerciseRecord:
+    return ExerciseRecord(
+        method=method,
+        path_template=path_template,
+        classification="mutation",
+        fixture="isolated",
+        path_values={**path_values, **recipe.path_values},
+        query=recipe.query,
+        headers=recipe.headers,
+        body_factory=recipe.body_factory,
+        reason=recipe.reason,
+        expected_statuses=recipe.expected_statuses,
+        setup=recipe.setup,
+        verify=recipe.verify,
+        loopback=recipe.loopback,
+        store=recipe.store,
+    )
+
+
+def refusal_records(record: ExerciseRecord) -> tuple[ExerciseRecord, ...]:
+    """Records for the expected refusals exercised alongside ``record``."""
+    return tuple(
+        _recipe_record(record.method, record.path_template, record.path_values, recipe)
+        for recipe in REFUSAL_RECIPES.get(record.key, ())
+    )
+
+
 def _mutation_record(
     operation: Operation, path_values: Mapping[str, str], statuses: tuple[int, ...]
 ) -> ExerciseRecord:
@@ -494,22 +523,7 @@ def _mutation_record(
     skip = MUTATION_SKIPS.get(operation.key)
     assert recipe is None or skip is None, f"mutation has both a recipe and a skip: {operation.key}"
     if recipe is not None:
-        return ExerciseRecord(
-            method=operation.method,
-            path_template=operation.path_template,
-            classification="mutation",
-            fixture="isolated",
-            path_values={**path_values, **recipe.path_values},
-            query=recipe.query,
-            headers=recipe.headers,
-            body_factory=recipe.body_factory,
-            reason=recipe.reason,
-            expected_statuses=recipe.expected_statuses,
-            setup=recipe.setup,
-            verify=recipe.verify,
-            loopback=recipe.loopback,
-            store=recipe.store,
-        )
+        return _recipe_record(operation.method, operation.path_template, path_values, recipe)
     assert skip is not None, (
         f"mutation route has no disposable-store recipe: {operation.key}; add one to "
         "mutation_recipes.RECIPES (or a MUTATION_SKIPS entry citing an open issue)"
@@ -545,6 +559,8 @@ def build_registry(app: Any) -> tuple[ExerciseRecord, ...]:
     )
     stale_recipes = sorted(set(RECIPES) - {record.key for record in records})
     assert not stale_recipes, f"mutation recipes name operations the app no longer has: {stale_recipes}"
+    orphan_refusals = sorted(set(REFUSAL_RECIPES) - set(RECIPES))
+    assert not orphan_refusals, f"refusal recipes need a primary recipe for the same route: {orphan_refusals}"
     today = date.today()
     latest_allowed = today + tracking_issues.RENEWAL_WINDOW
     tracking = tracking_issues.load_tracking_issues()

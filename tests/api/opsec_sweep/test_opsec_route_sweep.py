@@ -20,7 +20,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, NoReturn
 from urllib.parse import parse_qs, unquote, urlparse
 
 import pytest
@@ -65,6 +65,9 @@ PATH_CANARY = "opsec-fixture-canary"
 HOST_ALIAS_CANARY = "opsec-host-alias"
 HOST_ID_CANARY = "opsec-host-id"
 MAX_SWEEP_SECONDS = 60.0
+# Captured at import, before ``isolated_fixture`` patches ``sqlite3.connect``:
+# the alias a module-local ``from sqlite3 import connect`` would hold.
+_CAPTURED_SQLITE_CONNECT = sqlite3.connect
 
 
 @dataclass(frozen=True)
@@ -106,7 +109,8 @@ def _sqlite_database_path(database: Any, *, uri: bool) -> Path | None:
         database = os.fsdecode(database)
     if not isinstance(database, str):
         return None
-    if database == ":memory:":
+    # ``""`` is SQLite's private, delete-on-close temporary database.
+    if database in {"", ":memory:"}:
         return None
     if uri and database.startswith("file:"):
         parsed = urlparse(database)
@@ -152,9 +156,10 @@ _SPAWN_EVENTS = frozenset({"os.exec", "os.fork", "os.forkpty", "os.posix_spawn",
 class _MutationSideEffectGuard:
     """Process-wide audit hook that confines mutation requests to the fixture.
 
-    ``sys.addaudithook`` sees every ``open``/rename/remove/spawn/connect,
-    including calls through module-local aliases (``from subprocess import
-    Popen``) that attribute monkeypatches miss. It is inert until
+    ``sys.addaudithook`` sees every ``open``/rename/remove/spawn/connect and
+    every ``sqlite3.connect``, including calls through module-local aliases
+    (``from subprocess import Popen``, a ``sqlite3.connect`` captured before
+    the fixture patched it) that attribute monkeypatches miss. It is inert until
     :meth:`confine` arms it, and a hook cannot be removed, so it is installed
     once per process.
     """
@@ -179,6 +184,8 @@ class _MutationSideEffectGuard:
                     self._check_path(event, args[index], root)
         elif event in _SPAWN_EVENTS:
             self._deny(f"{event} spawned a process")
+        elif event == "sqlite3.connect":
+            self._check_database(args[0], root)
         elif event == "socket.connect":
             sock, address = args
             if getattr(sock, "family", None) in {socket.AF_INET, socket.AF_INET6}:
@@ -194,7 +201,20 @@ class _MutationSideEffectGuard:
         if resolved != root and root not in resolved.parents:
             self._deny(f"{event} outside the fixture root: {resolved}")
 
-    def _deny(self, message: str) -> None:
+    def _check_database(self, database: Any, root: Path) -> None:
+        # The audit event carries the database argument but not the ``uri``
+        # flag, so a ``file:`` name is read as the URI SQLite would open.
+        if isinstance(database, os.PathLike):
+            database = os.fspath(database)
+        if isinstance(database, bytes):
+            database = os.fsdecode(database)
+        if not isinstance(database, str):
+            self._deny(f"sqlite3.connect with an unrecognized database argument: {type(database).__name__}")
+        database_path = _sqlite_database_path(database, uri=database.startswith("file:"))
+        if database_path is not None and database_path != root and root not in database_path.parents:
+            self._deny(f"sqlite3.connect outside the fixture root: {database_path}")
+
+    def _deny(self, message: str) -> NoReturn:
         self.violations.append(message)
         raise PermissionError(f"OPSEC mutation guard: {message}")
 
@@ -605,6 +625,15 @@ def test_every_mutation_has_a_recipe_or_a_cited_skip() -> None:
         record = mutations[key]
         assert record.fixture == "isolated" and record.store == recipe.store
         assert record.expected_statuses and not any(500 <= status < 600 for status in record.expected_statuses)
+    assert set(mutation_recipes.REFUSAL_RECIPES) <= set(mutation_recipes.RECIPES)
+    for key, refusals in mutation_recipes.REFUSAL_RECIPES.items():
+        for refusal in registry.refusal_records(mutations[key]):
+            assert refusal.key == key and refusal.store == mutations[key].store
+            assert refusal.expected_statuses and all(400 <= status < 500 for status in refusal.expected_statuses)
+        assert len(registry.refusal_records(mutations[key])) == len(refusals)
+    report = mutations["POST /api/fleet/projects/v1/report"]
+    assert report.expected_statuses == (200,)
+    assert [refusal.expected_statuses for refusal in registry.refusal_records(report)] == [(400,)]
 
 
 def test_registry_refuses_a_mutation_without_a_recipe(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -690,6 +719,52 @@ def test_mutation_guard_confines_writes_spawns_and_connects(tmp_path: Path) -> N
     assert not (outside / "escaped.txt").exists()
     # Disarmed outside ``confine``: ordinary test code is unaffected.
     (outside / "after.txt").write_text("ok", encoding="utf-8")
+
+
+def test_mutation_guard_confines_sqlite_through_a_captured_alias(
+    isolated_fixture: IsolatedFixture, tmp_path: Path
+) -> None:
+    # The fixture's ``sqlite3.connect`` patch cannot see a previously captured
+    # alias; only the ``sqlite3.connect`` audit event does.
+    assert sqlite3.connect is not _CAPTURED_SQLITE_CONNECT
+    root = isolated_fixture.root
+    outside = tmp_path / "outside.db"
+    assert root not in outside.resolve().parents
+
+    class _BytesPath:
+        def __fspath__(self) -> bytes:
+            return os.fsencode(outside)
+
+    escapes: tuple[tuple[Any, dict[str, Any]], ...] = (
+        (outside, {}),
+        (str(outside), {}),
+        (os.fsencode(outside), {}),
+        (_BytesPath(), {}),
+        (outside.as_uri() + "?mode=rwc", {"uri": True}),
+        (f"file:{outside}?cache=shared", {"uri": True}),
+    )
+    with _SIDE_EFFECT_GUARD.confine(root) as violations:
+        for database, kwargs in escapes:
+            with pytest.raises(PermissionError, match=r"sqlite3\.connect outside the fixture root"):
+                _CAPTURED_SQLITE_CONNECT(database, **kwargs)
+        with pytest.raises(PermissionError, match=r"sqlite3\.connect outside the fixture root"):
+            sqlite3.Connection(str(outside))
+        inside = root / "stores" / "guard-probe.sqlite3"
+        for database, kwargs in (
+            (inside, {}),
+            (f"file:{inside}?mode=ro", {"uri": True}),
+            (":memory:", {}),
+            ("", {}),
+            ("file:guard-probe?mode=memory&cache=shared", {"uri": True}),
+        ):
+            connection = _CAPTURED_SQLITE_CONNECT(database, **kwargs)
+            try:
+                connection.execute("SELECT 1")
+            finally:
+                connection.close()
+    assert len(violations) == len(escapes) + 1
+    assert not outside.exists()
+    assert inside.is_file()
 
 
 def test_exercised_read_registry_refuses_unexplained_5xx() -> None:
@@ -864,37 +939,46 @@ def _exercise_mutations(
         client=LOOPBACK_CLIENT,
     )
     ctx = api_main.app.state.ctx
-    exercised: list[str] = []
+    exercised: list[tuple[str, tuple[int, ...]]] = []
     with _SIDE_EFFECT_GUARD.confine(isolated_fixture.root) as violations:
-        for record in records:
-            if record.classification != "mutation" or record.fixture == "skip":
+        for primary in records:
+            if primary.classification != "mutation" or primary.fixture == "skip":
                 continue
-            exercised.append(record.key)
-            env = MutationEnv(root=isolated_fixture.root, ctx=ctx, monkeypatch=monkeypatch)
-            prepared = record.setup(env) if record.setup is not None else None
-            if prepared is not None and prepared.body is not None:
-                body, send_body = prepared.body, True
-            else:
-                body, send_body = record.body(), record.body_factory is not None
-            query = {**record.query, **(prepared.query if prepared is not None else {})}
-            response = (loopback_client if record.loopback else client).request(
-                record.method,
-                _path_for_record(record),
-                params=query,
-                headers=dict(record.headers),
-                json=body if send_body else None,
-            )
-            if response.status_code not in record.expected_statuses:
-                failures.append(f"{record.key} status={response.status_code}")
-            elif record.verify is not None:
-                try:
-                    record.verify(env, response)
-                except AssertionError as exc:
-                    failures.append(f"{record.key} store not mutated as expected: {exc}")
-            findings.extend(_scan_response(record, response, isolated_fixture.canaries))
+            # Refusals first: they assert the fixture's own policy, which a
+            # primary recipe's setup may widen for the rest of the sweep.
+            for record in (*registry.refusal_records(primary), primary):
+                exercised.append((record.key, record.expected_statuses))
+                env = MutationEnv(root=isolated_fixture.root, ctx=ctx, monkeypatch=monkeypatch)
+                prepared = record.setup(env) if record.setup is not None else None
+                if prepared is not None and prepared.body is not None:
+                    body, send_body = prepared.body, True
+                else:
+                    body, send_body = record.body(), record.body_factory is not None
+                query = {**record.query, **(prepared.query if prepared is not None else {})}
+                response = (loopback_client if record.loopback else client).request(
+                    record.method,
+                    _path_for_record(record),
+                    params=query,
+                    headers=dict(record.headers),
+                    json=body if send_body else None,
+                )
+                if response.status_code not in record.expected_statuses:
+                    failures.append(f"{record.key} status={response.status_code}")
+                elif record.verify is not None:
+                    try:
+                        record.verify(env, response)
+                    except AssertionError as exc:
+                        failures.append(f"{record.key} store not mutated as expected: {exc}")
+                findings.extend(_scan_response(record, response, isolated_fixture.canaries))
     failures.extend(f"side effect escaped the fixture: {violation}" for violation in violations)
-    unexercised = sorted(set(mutation_recipes.RECIPES) - set(exercised))
-    failures.extend(f"{key} recipe was never exercised" for key in unexercised)
+    expected = {(key, recipe.expected_statuses) for key, recipe in mutation_recipes.RECIPES.items()}
+    expected.update(
+        (key, recipe.expected_statuses)
+        for key, recipes in mutation_recipes.REFUSAL_RECIPES.items()
+        for recipe in recipes
+    )
+    unexercised = sorted(expected - set(exercised))
+    failures.extend(f"{key} recipe expecting {statuses} was never exercised" for key, statuses in unexercised)
 
 
 def test_opsec_route_sweep_isolated_and_bounded(

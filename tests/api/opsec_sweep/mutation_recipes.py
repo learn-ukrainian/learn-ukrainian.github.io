@@ -26,7 +26,7 @@ from typing import Any
 import psutil
 
 from agents_extensions.shared.session_streams.model import LeaseHolder
-from scripts.api import agent_monitor_router, batch_router
+from scripts.api import agent_monitor_router, batch_router, project_state_router
 from scripts.lexicon.runner import atlas_job
 
 AGENT_MONITOR_TOKEN = "opsec-agent-monitor-token"
@@ -34,6 +34,14 @@ ATLAS_JOB_ID = "opsec-atlas-job"
 ATLAS_CLOSE_JOB_ID = "opsec-atlas-close"
 LOOPBACK_CLIENT = ("127.0.0.1", 50000)
 LOOPBACK_BASE_URL = "http://127.0.0.1"
+# Synthetic stream ids (scripts/lint/lint_test_assertions.py::_SYNTHETIC_EPIC_IDS):
+# the fixture epics store is empty, so no id may name a real epic.
+EPIC_CLAIM_STREAM = "epic:1001"
+EPIC_HANDOFF_STREAM = "epic:1002"
+EPIC_HEARTBEAT_STREAM = "epic:2001"
+EPIC_RELEASE_STREAM = "epic:3001"
+PROJECT_REPORTER_ID = "opsec-sweep-host"
+UNLISTED_REPORTER_ID = "opsec-unlisted-host"
 
 
 @dataclass(frozen=True)
@@ -421,11 +429,11 @@ def _claim_body() -> dict[str, Any]:
 
 def _verify_claim(env: MutationEnv, response: Any) -> None:
     assert response.json()["outcome"]
-    assert _epic_lease_state(env, "epic:9101") == "active"
+    assert _epic_lease_state(env, EPIC_CLAIM_STREAM) == "active"
 
 
 def _setup_epic_handoff(env: MutationEnv) -> Prepared:
-    lease = _claim_epic(env, "epic:9102", "handoff")
+    lease = _claim_epic(env, EPIC_HANDOFF_STREAM, "handoff")
     return Prepared(
         body={
             **lease,
@@ -442,7 +450,7 @@ def _verify_epic_handoff(env: MutationEnv, response: Any) -> None:
 
 
 def _setup_epic_heartbeat(env: MutationEnv) -> Prepared:
-    return Prepared(body=_claim_epic(env, "epic:9103", "heartbeat"))
+    return Prepared(body=_claim_epic(env, EPIC_HEARTBEAT_STREAM, "heartbeat"))
 
 
 def _verify_epic_heartbeat(env: MutationEnv, response: Any) -> None:
@@ -451,20 +459,20 @@ def _verify_epic_heartbeat(env: MutationEnv, response: Any) -> None:
 
 
 def _setup_epic_release(env: MutationEnv) -> Prepared:
-    return Prepared(body=_claim_epic(env, "epic:9104", "release"))
+    return Prepared(body=_claim_epic(env, EPIC_RELEASE_STREAM, "release"))
 
 
 def _verify_epic_release(env: MutationEnv, response: Any) -> None:
     assert response.json()["outcome"] == "released"
-    assert _epic_lease_state(env, "epic:9104") == "released"
+    assert _epic_lease_state(env, EPIC_RELEASE_STREAM) == "released"
 
 
 # ── Fleet project-state report ───────────────────────────────────
 
 
-def _project_report_body() -> dict[str, Any]:
+def _project_report_body(host_id: str) -> dict[str, Any]:
     return {
-        "host_id": "opsec-reporter",
+        "host_id": host_id,
         "primary": {
             "head_sha": "0" * 40,
             "origin_main_sha": "0" * 40,
@@ -479,9 +487,41 @@ def _project_report_body() -> dict[str, Any]:
     }
 
 
+def _setup_project_report(env: MutationEnv) -> None:
+    """Allowlist one synthetic reporter for this fixture context only.
+
+    A fixture context resolves no reporter ids by design (it must never read
+    the real host-id environment), so the allowlist is the one seam replaced;
+    peer, validation, and store-write logic stay real.
+    """
+    real_allowed = project_state_router.allowed_reporter_host_ids
+
+    def fixture_allowed(ctx: Any = None) -> frozenset[str]:
+        if ctx is env.ctx:
+            return frozenset({PROJECT_REPORTER_ID})
+        return real_allowed(ctx)
+
+    env.monkeypatch.setattr(project_state_router, "allowed_reporter_host_ids", fixture_allowed)
+    env.scratch["reports_before"] = dict(env.ctx.stores.report_store)
+
+
 def _verify_project_report(env: MutationEnv, response: Any) -> None:
+    payload = response.json()
+    assert payload["host_id"] == PROJECT_REPORTER_ID and payload["received"] is True
+    store = env.ctx.stores.report_store
+    assert PROJECT_REPORTER_ID not in env.scratch["reports_before"]
+    assert set(store) == {*env.scratch["reports_before"], PROJECT_REPORTER_ID}
+    assert store[PROJECT_REPORTER_ID].document["host_id"] == PROJECT_REPORTER_ID
+
+
+def _setup_project_report_refusal(env: MutationEnv) -> None:
+    env.scratch["reports_before"] = dict(env.ctx.stores.report_store)
+
+
+def _verify_project_report_refusal(env: MutationEnv, response: Any) -> None:
     assert response.json() == {"detail": "unknown host_id"}
-    assert env.ctx.stores.report_store == {}
+    assert project_state_router.allowed_reporter_host_ids(env.ctx) == frozenset()
+    assert env.ctx.stores.report_store == env.scratch["reports_before"]
 
 
 # ── Images ───────────────────────────────────────────────────────
@@ -669,7 +709,7 @@ RECIPES: dict[str, MutationRecipe] = {
         store="fixture epics session-stream DB (ctx.stores.epics_store)",
         expected_statuses=(200,),
         reason="claims a fresh epic lease from a loopback peer",
-        path_values={"stream_id": "epic:9101"},
+        path_values={"stream_id": EPIC_CLAIM_STREAM},
         body_factory=_claim_body,
         verify=_verify_claim,
         loopback=True,
@@ -678,7 +718,7 @@ RECIPES: dict[str, MutationRecipe] = {
         store="fixture epics session-stream DB (ctx.stores.epics_store)",
         expected_statuses=(200,),
         reason="appends a state entry under a planted lease from a loopback peer",
-        path_values={"stream_id": "epic:9102"},
+        path_values={"stream_id": EPIC_HANDOFF_STREAM},
         setup=_setup_epic_handoff,
         verify=_verify_epic_handoff,
         loopback=True,
@@ -687,7 +727,7 @@ RECIPES: dict[str, MutationRecipe] = {
         store="fixture epics session-stream DB (ctx.stores.epics_store)",
         expected_statuses=(200,),
         reason="renews a planted lease from a loopback peer",
-        path_values={"stream_id": "epic:9103"},
+        path_values={"stream_id": EPIC_HEARTBEAT_STREAM},
         setup=_setup_epic_heartbeat,
         verify=_verify_epic_heartbeat,
         loopback=True,
@@ -696,19 +736,17 @@ RECIPES: dict[str, MutationRecipe] = {
         store="fixture epics session-stream DB (ctx.stores.epics_store)",
         expected_statuses=(200,),
         reason="releases a planted lease from a loopback peer",
-        path_values={"stream_id": "epic:9104"},
+        path_values={"stream_id": EPIC_RELEASE_STREAM},
         setup=_setup_epic_release,
         verify=_verify_epic_release,
         loopback=True,
     ),
     "POST /api/fleet/projects/v1/report": MutationRecipe(
         store="fixture in-memory report store (ctx.stores.report_store)",
-        expected_statuses=(400,),
-        reason=(
-            "a fixture context allowlists no reporter host ids by design, so a well-formed "
-            "loopback report is refused before the store"
-        ),
-        body_factory=_project_report_body,
+        expected_statuses=(200,),
+        reason="upserts a loopback report from a synthetic reporter allowlisted for the fixture context",
+        body_factory=lambda: _project_report_body(PROJECT_REPORTER_ID),
+        setup=_setup_project_report,
         verify=_verify_project_report,
         loopback=True,
     ),
@@ -780,5 +818,26 @@ RECIPES: dict[str, MutationRecipe] = {
         body_factory=lambda: {"teaching_value": "high"},
         setup=_seed_images,
         verify=_verify_annotation_put,
+    ),
+}
+
+
+# Expected refusals exercised alongside a route's primary recipe. Each runs
+# before the primary (so the fixture's own policy is still in force), is
+# scanned like any response, and must leave its store unchanged.
+REFUSAL_RECIPES: dict[str, tuple[MutationRecipe, ...]] = {
+    "POST /api/fleet/projects/v1/report": (
+        MutationRecipe(
+            store="fixture in-memory report store (ctx.stores.report_store)",
+            expected_statuses=(400,),
+            reason=(
+                "a fixture context allowlists no reporter host ids by design, so a well-formed "
+                "loopback report is refused before the store"
+            ),
+            body_factory=lambda: _project_report_body(UNLISTED_REPORTER_ID),
+            setup=_setup_project_report_refusal,
+            verify=_verify_project_report_refusal,
+            loopback=True,
+        ),
     ),
 }
