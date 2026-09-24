@@ -784,6 +784,26 @@ def test_check7_receipt_validation_schema_and_criteria_integrity(tmp_path, defau
     assert res_bad_status.status == "FAIL"
     assert any("missing or invalid status" in f for f in res_bad_status.failures)
 
+    # 10. Receipt item with unhashable list or dict in verdict fails cleanly
+    list_verdict_items = _make_receipt_items()
+    list_verdict_items[0]["verdict"] = []
+    _write_receipt(list_verdict_items)
+    res_list_verdict, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_list_verdict.status == "FAIL"
+    assert any("missing or invalid verdict: []" in f for f in res_list_verdict.failures)
+
+    # 11. Receipt item with unhashable list or dict in status fails cleanly
+    dict_status_items = _make_receipt_items()
+    dict_status_items[0]["status"] = {}
+    _write_receipt(dict_status_items)
+    res_dict_status, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_dict_status.status == "FAIL"
+    assert any("missing or invalid status: {}" in f for f in res_dict_status.failures)
+
 
 # ── Full Audit Runner & Fail-Closed Tests ───────────────────────────────────
 

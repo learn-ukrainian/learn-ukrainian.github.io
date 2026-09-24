@@ -266,13 +266,13 @@ def generate_signoff_and_receipt(
                     f"Provenance violation: findings entry key {s_idx} does not match embedded sample_index ({embedded_s_idx})"
                 )
             r_verdict = f_entry.get("verdict")
-            if r_verdict not in ALLOWED_REVIEWER_VERDICTS:
+            if not isinstance(r_verdict, str) or r_verdict not in ALLOWED_REVIEWER_VERDICTS:
                 raise ValueError(
                     f"Provenance violation: findings entry for sample index {s_idx} missing or invalid verdict {r_verdict!r} "
                     f"(allowed: {sorted(ALLOWED_REVIEWER_VERDICTS)})"
                 )
             r_status = f_entry.get("status")
-            if r_status not in ALLOWED_REVIEWER_STATUSES:
+            if not isinstance(r_status, str) or r_status not in ALLOWED_REVIEWER_STATUSES:
                 raise ValueError(
                     f"Provenance violation: findings entry for sample index {s_idx} missing or invalid status {r_status!r} "
                     f"(allowed: {sorted(ALLOWED_REVIEWER_STATUSES)})"
@@ -492,42 +492,43 @@ def generate_signoff_and_receipt(
         item_criteria = {}
         if sample_idx in findings:
             f_entry = findings[sample_idx]
-            if isinstance(f_entry, dict):
-                r_verdict = f_entry.get("verdict")
-                r_status = f_entry.get("status")
-                if r_verdict not in ALLOWED_REVIEWER_VERDICTS:
-                    raise ValueError(
-                        f"Provenance violation: item {sample_idx} missing or invalid verdict {r_verdict!r} (allowed: {sorted(ALLOWED_REVIEWER_VERDICTS)})"
-                    )
-                if r_status not in ALLOWED_REVIEWER_STATUSES:
-                    raise ValueError(
-                        f"Provenance violation: item {sample_idx} missing or invalid status {r_status!r} (allowed: {sorted(ALLOWED_REVIEWER_STATUSES)})"
-                    )
-                has_defect = (
-                    r_verdict != "APPROVED"
-                    or r_status != "PASS"
-                    or bool(f_entry.get("defect"))
+            if not isinstance(f_entry, dict):
+                raise ValueError(
+                    f"Provenance violation: findings entry for sample index {sample_idx} must be a JSON object, got {type(f_entry).__name__}"
                 )
-                if has_defect:
-                    defect_desc = (
-                        f_entry.get("defect")
-                        or f_entry.get("comment")
-                        or f"Негативний вердикт рецензента ({r_verdict or r_status})"
-                    )
-                    item_defects.append(defect_desc)
-                reviewer_assessment = (
-                    f_entry.get("reviewer_assessment")
-                    or f_entry.get("evaluation")
+            r_verdict = f_entry.get("verdict")
+            r_status = f_entry.get("status")
+            if not isinstance(r_verdict, str) or r_verdict not in ALLOWED_REVIEWER_VERDICTS:
+                raise ValueError(
+                    f"Provenance violation: item {sample_idx} missing or invalid verdict {r_verdict!r} (allowed: {sorted(ALLOWED_REVIEWER_VERDICTS)})"
+                )
+            if not isinstance(r_status, str) or r_status not in ALLOWED_REVIEWER_STATUSES:
+                raise ValueError(
+                    f"Provenance violation: item {sample_idx} missing or invalid status {r_status!r} (allowed: {sorted(ALLOWED_REVIEWER_STATUSES)})"
+                )
+            has_defect = (
+                r_verdict != "APPROVED"
+                or r_status != "PASS"
+                or bool(f_entry.get("defect"))
+            )
+            if has_defect:
+                defect_desc = (
+                    f_entry.get("defect")
                     or f_entry.get("comment")
-                    or ""
+                    or f"Негативний вердикт рецензента ({r_verdict} / {r_status})"
                 )
-                item_criteria = f_entry.get("criteria", {})
-                if isinstance(item_criteria, dict):
-                    failed_criteria = [k for k, v in item_criteria.items() if v is False]
-                    if failed_criteria:
-                        item_defects.append(f"Порушення критеріїв оцінювання: {', '.join(failed_criteria)}")
-            elif isinstance(f_entry, str):
-                item_defects.append(f_entry)
+                item_defects.append(defect_desc)
+            reviewer_assessment = (
+                f_entry.get("reviewer_assessment")
+                or f_entry.get("evaluation")
+                or f_entry.get("comment")
+                or ""
+            )
+            item_criteria = f_entry.get("criteria", {})
+            if isinstance(item_criteria, dict):
+                failed_criteria = [k for k, v in item_criteria.items() if v is False]
+                if failed_criteria:
+                    item_defects.append(f"Порушення критеріїв оцінювання: {', '.join(failed_criteria)}")
 
         is_item_defective = len(item_defects) > 0
         item_status = "FAIL" if is_item_defective else "PASS"

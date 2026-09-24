@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Acceptance and Regression Tests for Grammar Component (#8342, Epic #6321).
 
 Verifies:
@@ -18,16 +17,11 @@ import copy
 import hashlib
 import json
 import re
-import sys
 from collections import Counter
 from pathlib import Path
 from unittest import mock
 
 import pytest
-
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
     APPROVED_AUTHORITY_PATTERNS,
@@ -47,6 +41,7 @@ from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     is_finite_active_verb,
 )
 
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 GRAMMAR_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "components" / "grammar"
 OLD_RELEASE_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v05_grammar_valency"
 TEST_M2_PATH = PROJECT_ROOT / "data" / "ua-gec" / "data" / "gec-fluency" / "test" / "gec-fluency.test.m2"
@@ -691,6 +686,56 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
     with pytest.raises(ValueError, match="missing or invalid status 'MAYBE'"):
         generate_signoff_and_receipt(
             findings_file=f_path10,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 11. Unhashable list or dict in verdict raises ValueError (not TypeError)
+    list_verdict_findings = copy.deepcopy(raw_findings)
+    list_verdict_findings["1"]["verdict"] = []
+    f_path11 = tmp_path / "list_verdict.json"
+    f_path11.write_text(json.dumps(list_verdict_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"missing or invalid verdict \[\]"):
+        generate_signoff_and_receipt(
+            findings_file=f_path11,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    dict_verdict_findings = copy.deepcopy(raw_findings)
+    dict_verdict_findings["1"]["verdict"] = {}
+    f_path12 = tmp_path / "dict_verdict.json"
+    f_path12.write_text(json.dumps(dict_verdict_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"missing or invalid verdict \{\}"):
+        generate_signoff_and_receipt(
+            findings_file=f_path12,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 12. Unhashable list or dict in status raises ValueError (not TypeError)
+    list_status_findings = copy.deepcopy(raw_findings)
+    list_status_findings["1"]["status"] = []
+    f_path13 = tmp_path / "list_status.json"
+    f_path13.write_text(json.dumps(list_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"missing or invalid status \[\]"):
+        generate_signoff_and_receipt(
+            findings_file=f_path13,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    dict_status_findings = copy.deepcopy(raw_findings)
+    dict_status_findings["1"]["status"] = {}
+    f_path14 = tmp_path / "dict_status.json"
+    f_path14.write_text(json.dumps(dict_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match=r"missing or invalid status \{\}"):
+        generate_signoff_and_receipt(
+            findings_file=f_path14,
             write_signoff=True,
             reviewer_id="claude_blue_team_ling_review",
             reviewer_family="claude",
