@@ -2217,10 +2217,15 @@ def validate_candidate_rejection(
         return "ungrammatical_gold_correction"
 
     # 6. Unneeded swaps and meaning changes
-    if (re.search(r"\bнадяг\w*\b", o_low) and re.search(r"\bодяг\w*\b", c_low)) or (
-        re.search(r"\bв\s+передній\b", o_low) and re.search(r"\b(?:в\s+)?передпоко\w*\b", c_low)
-    ):
-        return "unwarranted_valid_to_valid_lexical_swap"
+    if in_scope:
+        tokens_to_use = orig_tokens if orig_tokens is not None else orig_text.split()
+        for start, end, _tag, corr in in_scope:
+            orig_span = " ".join(tokens_to_use[start:end]).lower()
+            corr_span = corr.lower()
+            if (re.search(r"\bнадяг\w*\b", orig_span) and re.search(r"\bодяг\w*\b", corr_span)) or (
+                re.search(r"\bпередн[яіійює]\b", orig_span) and re.search(r"\bпередпоко\w*\b", corr_span)
+            ):
+                return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bповоди\w*\s+себе\b", o_low) and re.search(r"\bповоди\w*сь\b|\bповоди\w*ся\b", c_low):
         return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bкотр[иіаеоу]\w*\b", o_low) and re.search(r"\bяк[иіаеоу]\w*\b", c_low):
@@ -5178,7 +5183,12 @@ def build_grammar_dataset(
             "eval": sum(measured_exclusions_eval.values()),
         },
         "reserve_candidate_count": 0,
-        "reserve_disposition": "0 in reserve. 100% of all 997 eligible, deduplicated candidate edit sets extracted from UA-GEC train are delivered. The earlier reported figure of 1,096 retained / 99 in reserve was an unmeasured legacy placeholder prior to completing the structural, safety, and orthographic filter suite.",
+        "reserve_disposition": (
+            f"0 in reserve. 100% of all {total_corrections} eligible, deduplicated candidate edit sets "
+            "extracted from UA-GEC train are delivered. The earlier reported figure of 1,096 retained / 99 in "
+            "reserve was an unmeasured legacy placeholder prior to completing the structural, safety, and "
+            "orthographic filter suite."
+        ),
         "measured_exclusions_total": dict(sorted(measured_exclusions_total.items(), key=lambda x: -x[1])),
         "measured_exclusions_train": dict(sorted(measured_exclusions_train.items(), key=lambda x: -x[1])),
         "measured_exclusions_eval": dict(sorted(measured_exclusions_eval.items(), key=lambda x: -x[1])),
@@ -5229,7 +5239,7 @@ def build_grammar_dataset(
             "license_counts": dict(Counter(r["license"] for r in train_dataset_records + eval_dataset_records)),
         },
         "source_denominator_reconciliation": {
-            "governing_issue_reference": "Reconciles ~8,900 human corrections cited in #8342 with 997 delivered corrections",
+            "governing_issue_reference": f"Reconciles ~8,900 human corrections cited in #8342 with {total_corrections} delivered corrections",
             "ua_gec_m2_in_scope_edits_total": 9874,
             "ua_gec_m2_train_in_scope_edits": 8266,
             "ua_gec_m2_test_in_scope_edits_firewall_quarantined": 1608,
@@ -5244,7 +5254,10 @@ def build_grammar_dataset(
             "delivered_substantive_corrections_train": len(train_corrections),
             "delivered_substantive_corrections_eval": len(eval_corrections),
             "reserve_candidate_count": 0,
-            "reserve_disposition": "0 in reserve. 100% of retained candidates (997) delivered across train (911) and eval (86).",
+            "reserve_disposition": (
+                f"0 in reserve. 100% of retained candidates ({total_corrections}) delivered "
+                f"across train ({len(train_corrections)}) and eval ({len(eval_corrections)})."
+            ),
             "delivered_clean_controls": total_controls,
             "delivered_clean_controls_train": len(train_controls),
             "delivered_clean_controls_eval": len(eval_controls),

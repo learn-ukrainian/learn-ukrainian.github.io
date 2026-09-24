@@ -63,7 +63,7 @@
     }
   },
   "source_denominator_reconciliation": {
-    "governing_issue_reference": "Reconciles ~8,900 human corrections cited in #8342 with 997 delivered corrections",
+    "governing_issue_reference": "Reconciles ~8,900 human corrections cited in #8342 with 995 delivered corrections",
     "ua_gec_m2_in_scope_edits_total": 9874,
     "ua_gec_m2_train_in_scope_edits": 8266,
     "ua_gec_m2_test_in_scope_edits_firewall_quarantined": 1608,
@@ -72,10 +72,10 @@
     "ua_gec_train_in_scope_annotator_edit_sets": 5252,
     "measured_categories_count": 51,
     "exclusions_by_policy": {
-      "unwarranted_valid_to_valid_lexical_swap": 862,
+      "unwarranted_valid_to_valid_lexical_swap": 861,
       "uncapitalized_or_fragment": 503,
       "sentence_length_floor_under_5_words": 287,
-      "ungrammatical_gold_correction": 274,
+      "ungrammatical_gold_correction": 275,
       "latin_characters": 224,
       "missing_or_invalid_terminal_punctuation": 222,
       "pure_word_insertions": 216,
@@ -130,7 +130,7 @@
     "delivered_substantive_corrections_train": 909,
     "delivered_substantive_corrections_eval": 86,
     "reserve_candidate_count": 0,
-    "reserve_disposition": "0 in reserve. 100% of retained candidates (997) delivered across train (911) and eval (86).",
+    "reserve_disposition": "0 in reserve. 100% of retained candidates (995) delivered across train (909) and eval (86).",
     "delivered_clean_controls": 380,
     "delivered_clean_controls_train": 330,
     "delivered_clean_controls_eval": 50,

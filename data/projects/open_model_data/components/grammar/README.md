@@ -15,7 +15,7 @@ Focuses specifically on prepositional government, case valency, aspectual pairs,
 
 ## Source Denominator Reconciliation (#8342)
 
-Issue #8342 cited approximately ~8,900 human corrections across the UA-GEC database. This section documents the exact, authoritative funnel reconciling that gross annotation count with the delivered dataset of 997 substantive corrections and 380 authentic clean controls (1,377 total records):
+Issue #8342 cited approximately ~8,900 human corrections across the UA-GEC database. This section documents the exact, authoritative funnel reconciling that gross annotation count with the delivered dataset of 995 substantive corrections and 380 authentic clean controls (1,375 total records):
 
 ### 1. Corpus-Level Counts (UA-GEC 2.0 `gec-fluency`)
 - **Total raw train sentences:** 31,028 sentences (plus 2,690 test sentences).
