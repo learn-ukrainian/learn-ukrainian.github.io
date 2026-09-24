@@ -66,18 +66,34 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
 
     ``None`` stays ``None`` so the route resolver applies the participant's
     registered pin — a default can never drift from the registry (#6894).
-    Legacy ``gemini*`` slugs (including retired display labels) aimed at the
-    AGY seat map to that seat's current pin, the only model the seat accepts.
-    Anything else passes through unchanged and is validated loudly by the
-    route resolver.
+    Display spellings of the registered pin are accepted. An explicit Gemini
+    model that is not that pin cannot be honored on the AGY ACP seat, so fail
+    with the supported headless dispatch route instead of silently downgrading.
     """
     participant = require_compat_target(command_target)
     if not model:
         return None
     if participant == "agy":
         pin = registered_participant_model("agy")
-        if pin and model != pin and model.strip().lower().startswith("gemini"):
-            return pin
+        if model.strip().lower().startswith("gemini"):
+            if not pin:
+                raise ValueError(
+                    "AGY ACP has no registered model pin; cannot honor explicit "
+                    f"model {model!r}. Use "
+                    f"`delegate.py dispatch --agent agy --model {model}` to run it."
+                )
+            # The CLI display label is an alias only when it names the exact
+            # registered model (punctuation/case differences are cosmetic).
+            def normalize(value: str) -> str:
+                return re.sub(r"[^a-z0-9]", "", value.casefold())
+
+            if normalize(model) == normalize(pin):
+                return pin
+            raise ValueError(
+                f"AGY ACP supports only its registered model pin {pin!r}; "
+                f"cannot honor explicit model {model!r}. Use "
+                f"`delegate.py dispatch --agent agy --model {model}` to run it."
+            )
     return model
 
 

@@ -127,6 +127,13 @@ def _agy_model(model: str | None) -> str:
     return _LEGACY_GEMINI_TO_AGY_MODEL.get(model, model)
 
 
+def _effective_agy_route(model: str | None) -> tuple[str, str | None]:
+    """Resolve an attempted pipeline model to its actual ACP transport/model."""
+    from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+
+    return "acp:agy", resolve_compat_model("agy", _agy_model(model))
+
+
 def _is_rate_limited(output: str) -> bool:
     """Check if dispatch failed due to rate limiting or auth exhaustion."""
     lower = output.lower()
@@ -153,6 +160,11 @@ def dispatch_gemini_raw(
     Returns (success, raw_output_text).
     """
     model = _agy_model(model)
+    from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
+
+    # Resolve in this process so incompatibility is visible to the caller;
+    # subprocess stderr is intentionally not part of the pipeline result.
+    model = resolve_compat_model("agy", model)
     args = [
         str(_SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-agy",
         "-",  # read prompt from stdin
@@ -234,12 +246,20 @@ def dispatch_gemini(
             all_models = [_pro_model(), _flash_model(), _flash_lite_model()]
         else:
             all_models = [_flash_model(), _flash_lite_model()]
-        # Deduplicate while preserving order
-        seen = set()
+        # Deduplicate effective routes, not source slugs. Compatibility aliases
+        # and legacy names can all resolve to the same AGY ACP pin.
+        current_route = _effective_agy_route(model)
+        seen = {current_route}
         fallbacks = []
         for m in all_models:
-            if m not in seen and m != model:
-                seen.add(m)
+            try:
+                effective_route = _effective_agy_route(m)
+            except ValueError:
+                # A fallback candidate is configuration, not a fresh explicit
+                # request. Skip it when the actual AGY ACP resolver rejects it.
+                continue
+            if effective_route not in seen:
+                seen.add(effective_route)
                 fallbacks.append(m)
 
         reason = "rate-limited" if _is_rate_limited(output) else "timeout/hang"

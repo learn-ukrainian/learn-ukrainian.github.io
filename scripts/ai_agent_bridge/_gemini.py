@@ -63,8 +63,8 @@ def converse_gemini(
     all previous messages for context.
 
     ``model`` defaults to the AGY seat's live ACP registry pin (or ``AB_GEMINI_MODEL``
-    env override). Legacy ``gemini*`` slugs remap through ``resolve_compat_model``
-    so a pin rotation cannot leave converse on a stale default (#6929/#6959).
+    env override). Only the registered pin and equivalent display spelling are
+    accepted on the AGY ACP route; other explicit Gemini models fail clearly.
     """
     from ._acp_compat import resolve_compat_model
 
@@ -113,8 +113,8 @@ def ask_gemini(
     """Send message to Gemini AND optionally invoke Gemini to process it.
 
     ``model`` defaults to the AGY seat's live ACP registry pin (or ``AB_GEMINI_MODEL``
-    env override). Legacy ``gemini*`` slugs remap through ``resolve_compat_model``
-    (#6894/#6959).
+    env override). Only the registered pin and equivalent display spelling are
+    accepted on the AGY ACP route; other explicit Gemini models fail clearly.
     """
     from ._acp_compat import resolve_compat_model
 
