@@ -21,6 +21,7 @@ from scripts.ai_agent_bridge._messaging import send_message
 @pytest.fixture
 def bridge_db(tmp_path, monkeypatch):
     db_path = tmp_path / "messages.db"
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
     monkeypatch.setattr("scripts.ai_agent_bridge._config.DB_PATH", db_path)
     monkeypatch.setattr("scripts.ai_agent_bridge._db.DB_PATH", db_path)
     monkeypatch.setattr(lifecycle, "PID_DIR", tmp_path / "pids")

@@ -15,8 +15,9 @@ from scripts.ai_agent_bridge import _db, _inbox_watch, _messaging
 
 
 @pytest.fixture(autouse=True)
-def isolate_db(tmp_path: Path):
+def isolate_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """Create an isolated broker database with the current messages schema."""
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
     db_path = tmp_path / "messages.db"
     with (
         patch("scripts.ai_agent_bridge._config.DB_PATH", db_path),

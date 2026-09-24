@@ -249,6 +249,7 @@ def acknowledge(
     consumed_by_live_driver: bool = False,
 ):
     """Mark message(s) as acknowledged, optionally as live-driver consumed."""
+    _require_legacy_ack_writes("ack")
     if isinstance(message_ids, int):
         message_ids = [message_ids]
 
@@ -292,6 +293,7 @@ def acknowledge_all(for_llm: str, *, consumed_by_live_driver: bool = False):
     Phantom launcher-minted ``{provider}-{empty-slots-area}`` names resolve to
     the provider inbox (#7597).
     """
+    _require_legacy_ack_writes("ack-all")
     from ._channels import resolve_recipient_alias
 
     for_llm = resolve_recipient_alias(for_llm)
@@ -349,6 +351,18 @@ def acknowledge_all(for_llm: str, *, consumed_by_live_driver: bool = False):
 
     suffix = " as consumed by live driver" if consumed_by_live_driver else ""
     print(f"✓ Acknowledged {len(msg_ids)} messages{suffix} for {for_llm}: {', '.join(map(str, msg_ids))}")
+
+
+def _require_legacy_ack_writes(command: str) -> None:
+    """Refuse bridge receipts when Fleet Comms owns durable deliveries."""
+    from ._channels_cli import _legacy_writes_retired
+
+    if _legacy_writes_retired():
+        raise SystemExit(
+            f"bridge `{command}` cannot acknowledge legacy inbox message IDs in authority mode; "
+            "use `scripts.fleet_comms deliveries claim`, `deliveries consume`, and "
+            "`deliveries ack` with the authority delivery ID, worker ID, and fence token"
+        )
 
 
 def _message_consumption_state(acknowledged: int, consumed_by_live_driver: int) -> str:
