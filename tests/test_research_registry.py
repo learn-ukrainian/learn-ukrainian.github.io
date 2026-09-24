@@ -23,7 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 PLACEHOLDER_HASH = "sha256:" + "0" * 64
 
 # Deterministic offline stand-ins for the injected seams.
-DEFAULT_STREAMS = {"core-quality": [4274], "atlas-practice": [4387, 4700], "eval-harness": [4913]}
+DEFAULT_STREAMS = {"core-quality": [4274], "atlas-practice": [4387, 4700], "infra-harness": [6943]}
 DEFAULT_DECISIONS = {"dec-001", "dec-002"}
 
 

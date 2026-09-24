@@ -65,7 +65,7 @@ def test_resolve_area_canonical_ids() -> None:
 
     harness = resolve_area("harness")
     assert harness.id == "harness"
-    assert "eval-harness" in harness.aliases
+    assert "corpus-channels" in harness.aliases
 
     devops = resolve_area("devops")
     assert devops.id == "devops"
@@ -84,8 +84,8 @@ def test_resolve_area_aliases() -> None:
     area1 = resolve_area("infra-harness")
     assert area1.id == "infra"
 
-    # eval-harness -> harness
-    area2 = resolve_area("eval-harness")
+    # corpus-channels -> harness
+    area2 = resolve_area("corpus-channels")
     assert area2.id == "harness"
 
     # atlas-practice -> atlas
@@ -109,7 +109,7 @@ def test_resolve_area_by_epic_number() -> None:
     devops = resolve_area(5703)
     assert devops.id == "devops"
 
-    harness = resolve_area(4913)
+    harness = resolve_area(4706)
     assert harness.id == "harness"
 
     # string epic lookup
@@ -121,11 +121,8 @@ def test_resolve_area_by_epic_number() -> None:
     assert resolve_area(6321).id == "open-model-data"
 
 
-@pytest.mark.parametrize(
-    ("stream", "epic"),
-    [("curriculum-upgrade", 7994), ("a1-upgrade", 7995)],
-)
-def test_upgrade_streams_share_core_area_but_isolate_handoffs(stream: str, epic: int) -> None:
+def test_curriculum_upgrade_stream_has_isolated_handoffs() -> None:
+    stream, epic = "curriculum-upgrade", 7994
     assert resolve_area(stream).id == "core"
     assert resolve_area(epic).id == "core"
     candidates = _handoff_candidates_for(stream, epic)
@@ -160,7 +157,8 @@ def test_list_valid_names() -> None:
     assert "infra" in names
     assert "infra-harness" in names
     assert "harness" in names
-    assert "eval-harness" in names
+    assert "eval-harness" not in names
+    assert "a1-upgrade" not in names
     assert "devops" in names
     assert "monitor" in names
     assert "open-model-data" in names
@@ -215,7 +213,6 @@ def test_inventory_session_streams_wiring() -> None:
         ("bio", "bio", "epic:4431"),
         ("seminars-bio", "bio", "epic:4431"),
         ("curriculum-upgrade", "curriculum-upgrade", "epic:7994"),
-        ("a1-upgrade", "a1-upgrade", "epic:7995"),
         ("core-quality", "core-quality", "epic:4274"),
         ("corpus", "corpus", "epic:4706"),
         ("corpus-channels", "corpus", "epic:4706"),

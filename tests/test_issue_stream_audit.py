@@ -285,31 +285,26 @@ def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
     assert {number: page["subIssues"]["nodes"][0]["number"] for number, page in pages.items()} == {100: 10, 200: 20}
 
 
-def test_retired_epics_remain_registered_but_are_not_audit_roots():
+def test_closed_epic_remains_registered_but_is_not_an_audit_root():
     path = issue_stream_audit.REGISTRY_PATH
     registry = load_registry(path)
-    assert registry["eval-harness"] == [4913]
-    assert registry["a1-upgrade"] == [7995]
+    assert "eval-harness" not in registry
+    assert "a1-upgrade" not in registry
     assert registry["open-model-data"] == [6321, 7423]
 
     audit_registry = load_registry(path, audit_only=True)
-    assert "eval-harness" not in audit_registry
-    assert "a1-upgrade" not in audit_registry
     assert audit_registry["open-model-data"] == [6321]
-    assert {4913, 7423, 7995}.isdisjoint({n for epics in audit_registry.values() for n in epics})
+    assert 7423 not in {n for epics in audit_registry.values() for n in epics}
     report = classify(_issues(*[n for epics in audit_registry.values() for n in epics]), audit_registry, {})
     assert report["closed_or_missing_epics"] == []
     assert report["ok"] is True
 
 
 @pytest.mark.parametrize(
-    ("selector", "expected"),
-    [
-        ("a1-upgrade", "a1-upgrade\tepic:7995"),
-        ("eval-harness", "eval-harness\tepic:4913"),
-    ],
+    "selector",
+    ["a1-upgrade", "eval-harness"],
 )
-def test_retired_stream_launchers_still_resolve(selector, expected):
+def test_retired_stream_launchers_fail_closed(selector):
     result = subprocess.run(
         [
             "bash", "-c", 'source "$1"; launcher_selector_resolve "$2"', "bash",
@@ -318,10 +313,11 @@ def test_retired_stream_launchers_still_resolve(selector, expected):
         cwd=issue_stream_audit.ROOT,
         capture_output=True,
         text=True,
-        check=True,
         timeout=30,
     )
-    assert result.stdout.strip() == expected
+    assert result.returncode != 0
+    assert result.stdout == ""
+    assert f"retired lane selector: {selector}" in result.stderr
 
 
 # --------------------------------------------------------------------------- #

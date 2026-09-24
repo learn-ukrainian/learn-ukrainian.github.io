@@ -597,7 +597,7 @@ def _run_refresh_worker(run_id: str) -> int:
 
 
 def load_registry(path: Path = REGISTRY_PATH, *, audit_only: bool = False) -> dict[str, list[int]]:
-    """Return registered epics, optionally excluding retired audit roots.
+    """Return registered epics, optionally excluding closed audit roots.
 
     The default preserves the full registry for launcher and session consumers.
     """
@@ -608,16 +608,12 @@ def load_registry(path: Path = REGISTRY_PATH, *, audit_only: bool = False) -> di
         epics = [int(n) for n in (spec.get("epics") or [])]
         if not epics:
             raise ValueError(f"stream {key!r} has no epics")
-        retired = spec.get("retired", False)
-        if not isinstance(retired, bool):
-            raise ValueError(f"stream {key!r} has invalid retired marker")
         closed = [int(n) for n in (spec.get("closed_epics") or [])]
         if not set(closed) <= set(epics):
             raise ValueError(f"stream {key!r} has closed epics outside its epic list")
-        if not audit_only or not retired:
-            active_epics = [n for n in epics if n not in closed] if audit_only else epics
-            if active_epics:
-                registry[key] = active_epics
+        active_epics = [n for n in epics if n not in closed] if audit_only else epics
+        if active_epics:
+            registry[key] = active_epics
     if not registry:
         raise ValueError("issue_streams.yaml defines no streams")
     return registry

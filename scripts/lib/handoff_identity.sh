@@ -117,7 +117,8 @@ _launcher_infra_stream_id() {
 # launcher_selector_resolve "<lane-or-lane.topic>"
 # Print the canonical lane and stream id, separated by a tab.  This is the
 # single selector table shared by handoff identities and session supervision.
-# Unknown selectors return 1 and print nothing, so callers can fail closed.
+# Unknown selectors return 1 and print nothing on stdout, so callers can fail closed.
+# Retired selectors also explain the rejection on stderr.
 launcher_selector_resolve() {
   local selector="${1:-}"
   local key=""
@@ -160,6 +161,10 @@ launcher_selector_resolve() {
     corpus|corpus-channels)
       key="corpus-channels"
       lane="corpus"
+      ;;
+    eval-harness|a1-upgrade)
+      printf 'retired lane selector: %s\n' "$selector" >&2
+      return 1
       ;;
     infra.*)
       key="${selector#infra.}"

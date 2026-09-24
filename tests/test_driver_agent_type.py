@@ -146,15 +146,18 @@ def test_live_registry_maps_infra_and_hramatka() -> None:
         ("atlas-practice", "infra-orchestrator"),
         ("atlas-intake", "infra-orchestrator"),
         ("infra-harness", "infra-orchestrator"),
-        ("eval-harness", "infra-orchestrator"),
         ("benchmark-2156", "infra-orchestrator"),
         ("corpus-channels", "infra-orchestrator"),
         ("core-quality", "curriculum-orchestrator"),
         ("curriculum-upgrade", "curriculum-orchestrator"),
-        ("a1-upgrade", "curriculum-orchestrator"),
     ],
 )
 def test_live_taxonomy_aliases_resolve(alias: str, expected: str) -> None:
     """fleet_taxonomy.yaml stream aliases must not fall back to the curriculum default (#F1)."""
     assert DEFAULT_TAXONOMY_PATH.is_file()
     assert resolve_driver_agent_type(alias) == expected
+
+
+@pytest.mark.parametrize("lane", ["eval-harness", "a1-upgrade"])
+def test_retired_lane_has_no_driver_agent_type(lane: str) -> None:
+    assert resolve_driver_agent_type(lane) is None
