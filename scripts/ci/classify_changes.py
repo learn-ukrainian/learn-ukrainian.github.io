@@ -334,7 +334,53 @@ def _frontend_only() -> dict[str, str]:
     }
 
 
+# Early PR preflight (#8750): the pytest lanes whose shards run the repo_wide
+# set (#8707) — every file in full, the explicit repo_wide leg in selected.
+# Preflight repeats that set in its own job so a repo-wide failure reports
+# minutes before the shards finish. The docs lane already runs it in one
+# short shard; the content and frontend lanes do not run it at all, so a
+# preflight there would change what the gate proves.
+_PREFLIGHT_PYTEST_MODES = frozenset({"full", "selected"})
+
+
+def preflight_for(event: str, tier: dict[str, str]) -> str:
+    """The single "should preflight run" decision; ci.yml never re-derives it.
+
+    True only on pull_request: merge_group, schedule and workflow_dispatch
+    keep their tiers unchanged and run no preflight.
+    """
+    runs = (
+        event == "pull_request"
+        and tier["backend"] == "true"
+        and tier["pytest_mode"] in _PREFLIGHT_PYTEST_MODES
+    )
+    return "true" if runs else "false"
+
+
 def classify(
+    paths: list[str],
+    *,
+    event: str,
+    labels: list[str],
+    shard_count: int,
+    denominator: list[str],
+    tree_paths: Iterable[str] | None = None,
+    repo_root: Path | None = None,
+) -> dict[str, str]:
+    """Tier outputs plus the ``preflight`` flag derived from them."""
+    tier = classify_tier(
+        paths,
+        event=event,
+        labels=labels,
+        shard_count=shard_count,
+        denominator=denominator,
+        tree_paths=tree_paths,
+        repo_root=repo_root,
+    )
+    return {**tier, "preflight": preflight_for(event, tier)}
+
+
+def classify_tier(
     paths: list[str],
     *,
     event: str,
