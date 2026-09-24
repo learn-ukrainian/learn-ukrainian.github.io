@@ -6,6 +6,9 @@ Subcommands:
 - write: dispatch explicit writer seat, harvest result, validate draft schema, save state
 - build: run checks 1-12 for one lesson or an ordered module
 - closure: recompute historical manifest staleness
+- plan-manifest: run pack-verify --strict on the provisional pack and write the plan-review attempt manifest
+- plan-promote: after an APPROVE plan review, promote the pack hash into the plan's evidence_ref.sha256
+- plan-review-status: report whether the plan review of record still describes the tree
 """
 
 from __future__ import annotations
@@ -339,6 +342,92 @@ def _build_parser() -> argparse.ArgumentParser:
     p_closure.add_argument("--repo-root", type=Path, default=None,
                            help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)")
 
+    p_plan_manifest = subparsers.add_parser(
+        "plan-manifest",
+        help="Write the plan-review attempt manifest (runs pack-verify --strict first)",
+        description=(
+            "Write the plan-review attempt manifest (kind: plan): run pack-verify --strict in-process on the\n"
+            "provisional pack, store its report, then hash every input the plan review sees.\n"
+            "Use after the pack builder wrote the provisional pack and plan-validate --provisional-pack\n"
+            "--write-report passed. Refuses a missing input (naming its path — a level with no grammar\n"
+            "registry needs _grammar.yaml holding []), a pack-verify result that is not a strict pass, and a\n"
+            "plan-validate report that is not a provisional pass with every recorded input hash still current."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --provisional-pack --write-report\n"
+            "  .venv/bin/python -m scripts.build.fresh.cli plan-manifest a1 mod-two\n\n"
+            "Outputs:\n"
+            "  Under curriculum/l2-uk-en/evidence/<level>/_state/<slug>/: pack-verify.report.json,\n"
+            "  plan-review.manifest.yaml, plan-review.manifest.sha256 and manifests/plan/<sha>.yaml.\n"
+            "  Prints {manifest_sha256, manifest} as JSON. A refusal removes the current manifest pointer.\n\n"
+            "Exit codes:\n"
+            "  0: Manifest written (a rerun with unchanged inputs writes identical bytes)\n"
+            "  1: Refused (a code and the paths at fault are printed to stderr as JSON)\n\n"
+            "Related:\n"
+            "  docs/epics/fresh-build-review-contracts.md (review attempt manifest), scripts/build/fresh/plan_manifest.py,\n"
+            "  schemas/plan-review-manifest-v1.schema.json, issues #8397 #8430"
+        ),
+    )
+    p_plan_promote = subparsers.add_parser(
+        "plan-promote",
+        help="Promote the reviewed provisional pack hash into the plan (transactional)",
+        description=(
+            "After an APPROVE plan review, set the plan's evidence_ref.sha256 to the reviewed provisional pack's.\n"
+            "Use once, after the review's plan-review.yaml (verdict, manifest_sha256, attempt_id) is recorded.\n"
+            "Refuses unless the review approved the current manifest and every manifest input (plan, locks, arc,\n"
+            "decisions, scope, grammar, both reports) and the planned learner state are unchanged; the promoted\n"
+            "bytes (only evidence_ref.sha256 differs) must pass the full strict validation in memory before\n"
+            "anything is written."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.build.fresh.cli plan-promote a1 mod-two\n\n"
+            "Outputs:\n"
+            "  Publishes, atomically and in this order, plan-reviewed.<reviewed_sha>.yaml and plan-promotion.yaml\n"
+            "  under evidence/<level>/_state/<slug>/, then the promoted plan; a failed write undoes the earlier ones.\n"
+            "  Prints the receipt as JSON; a second run reports already_promoted.\n\n"
+            "Exit codes:\n"
+            "  0: Promoted (or already promoted)\n"
+            "  1: Refused, nothing written (inputs_changed_since_review names each changed path)\n\n"
+            "Related:\n"
+            "  docs/epics/fresh-build-review-contracts.md (Contract 1, Timing), scripts/build/fresh/plan_promote.py,\n"
+            "  issues #8397 #8430"
+        ),
+    )
+    p_plan_status = subparsers.add_parser(
+        "plan-review-status",
+        help="Report whether the plan review of record still describes the tree",
+        description=(
+            "Report the state of the plan review of record: unreviewed, not_approved, reviewed_pending_promotion,\n"
+            "reviewed_promoted or stale (every changed path named). Downstream steps and the landing call this.\n"
+            "After promotion the only allowed difference from the reviewed manifest is the plan's\n"
+            "evidence_ref.sha256, proven by the promotion receipt; any other change is stale."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.build.fresh.cli plan-review-status a1 mod-two\n"
+            "  .venv/bin/python -m scripts.build.fresh.cli plan-review-status a1 mod-two --require-promoted\n\n"
+            "Outputs:\n"
+            "  One JSON object on stdout: state, manifest_sha256, attempt_id, and stale {path: why}. Read-only.\n\n"
+            "Exit codes:\n"
+            "  0: reviewed_promoted (and reviewed_pending_promotion unless --require-promoted)\n"
+            "  1: any other state\n\n"
+            "Related:\n"
+            "  scripts/build/fresh/plan_manifest.py (plan_review_freshness), issues #8397 #8430"
+        ),
+    )
+    for sub in (p_plan_manifest, p_plan_promote, p_plan_status):
+        sub.add_argument("level", choices=LEVELS, help="Curriculum level (a1, a2, b1, or b2)")
+        sub.add_argument("slug", help="Module slug, e.g. sounds-letters-and-hello")
+        sub.add_argument("--repo-root", type=Path, default=None,
+                         help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)")
+    p_plan_status.add_argument("--require-promoted", action="store_true",
+                               help="Exit 1 unless the plan is promoted (a pending promotion is not enough)")
+
     return parser
 
 
@@ -517,6 +606,32 @@ def _load_recap_built_lessons(
     return built
 
 
+def _run_plan_review_command(args: argparse.Namespace, repo_root: Path) -> int:
+    """plan-manifest, plan-promote and plan-review-status: JSON on stdout, refusals as JSON on stderr."""
+    from scripts.build.fresh import plan_manifest, plan_promote
+
+    try:
+        if args.command == "plan-manifest":
+            manifest, digest = plan_manifest.write_plan_manifest(args.level, args.slug, repo_root=repo_root)
+            print(json.dumps({"manifest_sha256": digest, "manifest": manifest}, ensure_ascii=False, sort_keys=True))
+            return 0
+        if args.command == "plan-promote":
+            print(json.dumps(plan_promote.promote_plan(args.level, args.slug, repo_root=repo_root),
+                             ensure_ascii=False, sort_keys=True))
+            return 0
+        status = plan_manifest.plan_review_status(args.level, args.slug, repo_root=repo_root)
+        print(json.dumps(status, ensure_ascii=False, sort_keys=True))
+        reviewed = ("reviewed_promoted",) if args.require_promoted else ("reviewed_promoted", "reviewed_pending_promotion")
+        return 0 if status["state"] in reviewed else 1
+    except plan_manifest.PlanReviewError as err:
+        print(json.dumps({"code": err.code, "reason": err.message, "paths": err.paths, "layer": "driver"},
+                         ensure_ascii=False, sort_keys=True), file=sys.stderr)
+        return 1
+    except (OSError, ValueError) as err:
+        print(json.dumps({"reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)
+        return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
@@ -569,6 +684,9 @@ def main(argv: list[str] | None = None) -> int:
         except (OSError, ValueError, KeyError) as err:
             print(json.dumps({"check": 1, "reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)
             return 1
+
+    if args.command in {"plan-manifest", "plan-promote", "plan-review-status"}:
+        return _run_plan_review_command(args, repo_root)
 
     if args.command == "closure":
         from scripts.build.fresh.closure import compute_closure
