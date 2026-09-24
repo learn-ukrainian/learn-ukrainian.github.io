@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import fcntl
 import inspect
 import json
@@ -3791,6 +3792,103 @@ def test_dispatch_husk_removal_and_skip_are_journaled(
     assert any(row.get("action") == "removed" for row in old_rows)
     young_rows = [row for row in rows if row.get("path") == str(young_husk)]
     assert any(row["event"] == "skip" for row in young_rows)
+
+
+# --- #8711: a husk a concurrent git worktree add just registered is kept ---
+
+
+def test_dispatch_husk_registered_between_snapshot_and_removal_is_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-race"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    real_lock = worktree_claims.worktree_lock
+
+    @contextlib.contextmanager
+    def registering_lock(path, *, lock_dir, timeout_s=None):
+        if Path(path).resolve() == husk.resolve():
+            # The interleaving from #8711: after the sweep's listing snapshot
+            # a concurrent ``git worktree add`` has written its admin
+            # registration, but ``.git`` has not appeared in the target yet.
+            admin = repo / ".git" / "worktrees" / "ww-race"
+            admin.mkdir(parents=True, exist_ok=True)
+            (admin / "gitdir").write_text(f"{husk / '.git'}\n", encoding="utf-8")
+        with real_lock(path, lock_dir=lock_dir, timeout_s=timeout_s):
+            yield
+
+    monkeypatch.setattr(rw.worktree_claims, "worktree_lock", registering_lock)
+    real_list = rw.list_git_worktrees
+
+    def lagging_list(repo_root: Path) -> list[rw.WorktreeInfo]:
+        # Porcelain lags the admin dir (#8711): only the direct admin re-read
+        # may see the registration.
+        return [info for info in real_list(repo_root) if info.path != husk.resolve()]
+
+    monkeypatch.setattr(rw, "list_git_worktrees", lagging_list)
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert ".git/worktrees/*/gitdir" in result.reason
+    assert husk.exists()
+
+
+def test_dispatch_husk_is_kept_while_another_process_holds_its_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-locked"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_DISPATCH_HUSK_LOCK_TIMEOUT_S", 0.2)
+    lock_dir = repo / ".git" / worktree_claims.LOCK_DIR_NAME
+    entered = threading.Event()
+    release = threading.Event()
+
+    def hold() -> None:
+        with worktree_claims.worktree_lock(husk, lock_dir=lock_dir):
+            entered.set()
+            release.wait(10)
+
+    holder = threading.Thread(target=hold, daemon=True)
+    holder.start()
+    assert entered.wait(5)
+    try:
+        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    finally:
+        release.set()
+        holder.join(5)
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert worktree_claims.LOCK_BUSY in result.reason
+    assert husk.exists()
+
+
+def test_dispatch_husk_still_removed_when_truly_unregistered(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-clean"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "removed"
+    assert not husk.exists()
+    assert_main_checkout_unchanged(repo)
 
 
 def test_acp_runtime_cleanup_recheck_failure_deletes_nothing(
