@@ -1,0 +1,78 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9bb42a682fd7",
+  "session_id": "ses_f2ce137afffeR2kedn8DO02Xg0",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-24T11:15:52.566594071Z",
+  "branch": "kimi/impl-8514-deepseek-start",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "docs/best-practices/agent-activity-matrix.md",
+    "docs/best-practices/fleet-role-scorecard.md",
+    "docs/best-practices/fleet-shared-doctrine.md",
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/ai_agent_bridge/routing_guard.py",
+    "scripts/audit/qg_bakeoff.py",
+    "tests/test_qg_bakeoff_multirun.py",
+    "tests/test_routing_guard.py"
+  ],
+  "agent": "OpenCode",
+  "model": "deepseek-flash",
+  "turn_id": "147036855645",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 19891,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1664,
+    "output_tokens": 2,
+    "api_call_count": 1
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-24T11:15:52.552471651Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 335,
+    "human_modified": 23,
+    "human_removed": 0,
+    "total_committed": 335,
+    "total_lines_changed": 396,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 47,
+      "user_lines_removed": 23,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "docs/best-practices/agent-activity-matrix.md": 1,
+        "docs/best-practices/fleet-role-scorecard.md": 1,
+        "docs/best-practices/fleet-shared-doctrine.md": 1,
+        "docs/runbooks/agent-seat-onboarding.md": 2,
+        "scripts/agent_runtime/adapters/acpx.py": 1,
+        "scripts/ai_agent_bridge/routing_guard.py": 16,
+        "scripts/audit/qg_bakeoff.py": 4,
+        "tests/test_qg_bakeoff_multirun.py": 2,
+        "tests/test_routing_guard.py": 19
+      },
+      "user_removed_per_file": {
+        "docs/best-practices/agent-activity-matrix.md": 1,
+        "docs/best-practices/fleet-role-scorecard.md": 1,
+        "docs/best-practices/fleet-shared-doctrine.md": 1,
+        "docs/runbooks/agent-seat-onboarding.md": 2,
+        "scripts/agent_runtime/adapters/acpx.py": 1,
+        "scripts/ai_agent_bridge/routing_guard.py": 10,
+        "scripts/audit/qg_bakeoff.py": 3,
+        "tests/test_qg_bakeoff_multirun.py": 2,
+        "tests/test_routing_guard.py": 2
+      }
+    }
+  ]
+}

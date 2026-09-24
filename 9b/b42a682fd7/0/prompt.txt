@@ -1,0 +1,10 @@
+"[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/codex/impl-8514-r3
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these trees are NOT present: curriculum, data/lexicon, data/projects, wiki. To materialize one inside this worktree, run `git sparse-checkout add curriculum` `git sparse-checkout add data/lexicon` `git sparse-checkout add data/projects` `git sparse-checkout add wiki` (for example `git sparse-checkout add data/projects`). Do not invent content for missing paths.
+
+Reply with exactly one line: OK"

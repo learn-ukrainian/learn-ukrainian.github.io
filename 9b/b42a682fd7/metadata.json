@@ -1,0 +1,34 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "9bb42a682fd7",
+  "strategy": "manual-commit",
+  "branch": "kimi/impl-8514-deepseek-start",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/best-practices/agent-activity-matrix.md",
+    "docs/best-practices/fleet-role-scorecard.md",
+    "docs/best-practices/fleet-shared-doctrine.md",
+    "docs/runbooks/agent-seat-onboarding.md",
+    "scripts/agent_runtime/adapters/acpx.py",
+    "scripts/ai_agent_bridge/routing_guard.py",
+    "scripts/audit/qg_bakeoff.py",
+    "tests/test_qg_bakeoff_multirun.py",
+    "tests/test_routing_guard.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/9b/b42a682fd7/0/metadata.json",
+      "transcript": "/9b/b42a682fd7/0/full.jsonl",
+      "compact_transcript": "/9b/b42a682fd7/0/transcript.jsonl",
+      "content_hash": "/9b/b42a682fd7/0/content_hash.txt",
+      "prompt": "/9b/b42a682fd7/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 19891,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1664,
+    "output_tokens": 2,
+    "api_call_count": 1
+  }
+}
