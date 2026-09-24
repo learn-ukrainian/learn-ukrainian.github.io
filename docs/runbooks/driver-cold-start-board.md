@@ -1,7 +1,7 @@
 # Driver Cold Start Board & Handoff Runbook
 
-**Status:** Sol PR-2 / WP-A + WP-D operational  
-**Authority:** `scripts/fleet_comms/cold_start_board.py` · `scripts/fleet_comms/cli.py`  
+**Status:** Sol PR-2 / WP-A + WP-D operational
+**Authority:** `scripts/fleet_comms/cold_start_board.py` · `scripts/fleet_comms/cli.py`
 **Binding doctrine:** `agents_extensions/shared/rules/fleet-comms-coordination.md`
 
 ## Purpose
@@ -67,7 +67,7 @@ The board executes 10 diagnostic probes. Each probe measures execution timing (`
 2. **`plane_status`**: Fleet-comms message plane mode, schema version, and parity telemetry. **Load-bearing.**
 3. **`backlog_and_dead_letters`**: Message delivery backlog and dead-letter inventory metadata. **Load-bearing.**
 4. **`bottleneck_slice`**: Per-stream dispatch and lifecycle bottleneck metrics (uses fast local lookup without external network latency).
-5. **`orient_lean`**: Fast local query to Monitor API `/api/orient?lean=true` (0.5s timeout). On timeout/unreachable: status **`skipped`** with `reason=monitor_unreachable` and local `git` branch/head fallback — does **not** poison `board_status`.
+5. **`orient_lean`**: Fast local query to Monitor API `/api/orient?lean=true` (0.5s timeout). On timeout/unreachable: status **`skipped`** with `reason=monitor_unreachable` and local `git` branch/head fallback — does **not** poison `board_status`. On success the board embeds only a **bounded orient summary** (`generated_at` plus the top-5 `issues` as `number`/`title` (≤80 chars)/`state`); the raw orient payload is **no longer embedded**, so a large Monitor response cannot bloat the board.
 6. **`issues_streams_membership`**: Top open issues and stream memberships (from orient when reachable).
 7. **`session_streams_and_handoff`**: Stream digest entries (pinned/recent) and read-only handoff diagnosis (`diagnose_handoff`). DB path resolves via git common-dir / primary checkout `.agent/session-streams/v1/session-streams.sqlite3` (dispatch worktrees must not false-miss). Missing DB / no `stream_id` → `skipped`. **Load-bearing only when the DB exists and the probe degrades/errors.**
 8. **`inbox_check`**: Pending message deliveries addressed to the target agent. **Load-bearing.**
@@ -83,7 +83,7 @@ The board executes 10 diagnostic probes. Each probe measures execution timing (`
 
 - **String Length Cap:** Individual strings in probe outputs are capped at **200 characters** (truncated with `...[truncated N chars]`).
 - **List Length Cap:** Data lists are capped at **5 items** (truncated with `{"_truncated": "N items omitted"}`).
-- **Overall Board Cap:** Total board output is strictly capped at **16KiB (16,384 bytes)**. Oversized payloads apply stricter truncation and append `"_board_truncated": true`.
+- **Overall Board Cap:** Total board output is strictly capped at **16KiB (16,384 bytes)**. Oversized payloads apply stricter truncation and append `"_board_truncated": true`. If truncation alone is not enough, **optional probes are shed (minimized to status/error/store) largest-serialized-first** — protected probes (`plane_status`, `inbox_check`, `backlog_and_dead_letters`, `capsule_session_env`, `needle_search`) keep their data. Only if shedding still does not fit does the last-resort oversized fallback strip all probe `data` (`"_board_oversized_fallback": true`).
 - **Zero Side-Effects:** Exit code is `0` whenever a board is emitted (even if degraded). No leases are claimed, no SQLite databases are mutated, and no HTTP `POST` requests are made.
 
 ---

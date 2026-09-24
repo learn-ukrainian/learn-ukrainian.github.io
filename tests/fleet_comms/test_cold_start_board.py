@@ -657,7 +657,6 @@ def test_orient_lean_projects_large_payload(tmp_path: Path, monkeypatch: pytest.
         assert probe.data["api_reachable"] is True
         orient = probe.data["orient"]
         assert orient["generated_at"] == "2026-09-24T00:00:00Z"
-        assert orient["issues_total"] == 10
         assert len(orient["issues"]) == 5
         assert all(set(issue) == {"number", "title", "state"} for issue in orient["issues"])
         assert all(len(issue["title"]) <= 80 for issue in orient["issues"])
@@ -692,5 +691,50 @@ def test_orient_lean_payload_without_issues_key() -> None:
     orient = probe.data["orient"]
     assert orient["generated_at"] == "2026-09-24T01:00:00Z"
     assert orient["issues"] == []
-    assert orient["issues_total"] == 0
     assert "other" not in orient
+
+
+def test_board_sheds_bloated_optional_probe_before_fallback(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8737 review: a bloated optional probe is shed; load-bearing data survives."""
+    (tmp_path / ".git").mkdir()
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    # Dict keys are not capped by cap_data, so this stays huge after cap steps.
+    huge_payload = {f"key_{i:05d}": f"value_{i}" for i in range(3000)}
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board._probe_gh_pr_list",
+        return_value=ProbeResult(status="ok", elapsed_ms=1.0, data=huge_payload),
+    ):
+        board = build_cold_start_board(repo_root=tmp_path, agent="claude")
+
+    assert board["_board_truncated"] is True
+    assert "_board_oversized_fallback" not in board
+    for name in ("plane_status", "inbox_check", "backlog_and_dead_letters", "capsule_session_env"):
+        assert board["probes"][name].get("data") is not None, name
+    # The bloated optional probe was shed to its minimal form.
+    assert "data" not in board["probes"]["gh_pr_list"]
+    assert board["probes"]["gh_pr_list"]["status"] == "ok"
+    assert len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES
+
+
+def test_board_oversized_fallback_when_load_bearing_probe_huge(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8737 review: shedding cannot shrink a huge load-bearing probe → fallback."""
+    (tmp_path / ".git").mkdir()
+    monkeypatch.setenv("FLEET_COMMS_MESSAGE_PLANE", "off")
+    huge_payload = {f"key_{i:05d}": f"value_{i}" for i in range(3000)}
+
+    with patch(
+        "scripts.fleet_comms.cold_start_board._probe_backlog_and_dead_letters",
+        return_value=huge_payload,
+    ):
+        board = build_cold_start_board(repo_root=tmp_path, agent="claude")
+
+    assert board["_board_truncated"] is True
+    assert board["_board_oversized_fallback"] is True
+    assert len(json.dumps(board, indent=2).encode("utf-8")) <= MAX_BOARD_BYTES

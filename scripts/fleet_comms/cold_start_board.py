@@ -74,16 +74,13 @@ LOAD_BEARING_PROBES = frozenset(
 )
 SESSION_STREAMS_REL = Path(".agent/session-streams/v1/session-streams.sqlite3")
 
-# Optional probes shed (in this order) before the last-resort oversized
-# fallback, so load-bearing probe data survives a single bloated probe.
-_SHED_ORDER = (
-    "needle_search",
-    "issues_streams_membership",
-    "orient_lean",
-    "gh_pr_list",
-    "bottleneck_slice",
-    "session_streams_and_handoff",
-)
+# Probes protected from shedding before the last-resort oversized fallback:
+# the load-bearing set, capsule_session_env, and needle_search (an explicit
+# driver --needle request). Every other probe present on the board is shed
+# largest-serialized-first, so a new optional probe is covered automatically.
+# session_streams_and_handoff is conditionally load-bearing for board_status,
+# but board_status is computed before shedding, so its data can be shed.
+_SHED_PROTECTED_PROBES = LOAD_BEARING_PROBES | {"capsule_session_env", "needle_search"}
 
 
 @dataclass
@@ -310,7 +307,6 @@ def _summarize_orient_payload(payload: Any) -> dict[str, Any]:
             )
     return {
         "generated_at": generated_at,
-        "issues_total": len(raw_issues),
         "issues": issues,
     }
 
@@ -349,19 +345,13 @@ def _probe_orient_lean(
 
 
 def _probe_issues_streams_membership(orient_result: ProbeResult) -> dict[str, Any]:
+    """Reuse the already-projected orient issue list (single projection)."""
     issues: list[dict[str, Any]] = []
     if orient_result.status == "ok" and isinstance(orient_result.data, dict):
         orient_data = orient_result.data.get("orient") or {}
-        raw_issues = orient_data.get("issues") or []
-        for issue in raw_issues[:5]:
-            if isinstance(issue, dict):
-                issues.append(
-                    {
-                        "number": issue.get("number"),
-                        "title": str(issue.get("title", ""))[:80],
-                        "state": issue.get("state"),
-                    }
-                )
+        candidate = orient_data.get("issues")
+        if isinstance(candidate, list):
+            issues = [issue for issue in candidate if isinstance(issue, dict)]
 
     return {
         "top_issues": issues,
@@ -979,12 +969,17 @@ def build_cold_start_board(
         if _board_serialized_bytes(board) <= MAX_BOARD_BYTES:
             return board
 
-    # Shed optional probes (minimized) one by one before the last-resort
+    # Shed optional probes (minimized) before the last-resort oversized
     # fallback so load-bearing probe data survives a bloated optional probe.
+    # Derived from _SHED_PROTECTED_PROBES: every other probe on the board is
+    # sheddable, largest serialized size first, re-checking size after each.
     shed_probes = dict(board["probes"])
-    for name in _SHED_ORDER:
-        if name not in shed_probes:
-            continue
+    shed_order = sorted(
+        (name for name in shed_probes if name not in _SHED_PROTECTED_PROBES),
+        key=lambda name: len(json.dumps(shed_probes[name])),
+        reverse=True,
+    )
+    for name in shed_order:
         shed_probes[name] = _minimal_probe(shed_probes[name])
         board["probes"] = shed_probes
         board["_board_truncated"] = True
