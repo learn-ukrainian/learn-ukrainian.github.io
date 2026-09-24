@@ -30,7 +30,7 @@ def _sampled_slugs(path: Path) -> list[str]:
         conn.close()
 
 
-def _make_source_db(path: Path, article_count: int = 24) -> Path:
+def _make_source_db(path: Path, article_count: int = 24, *, varied_form_shapes: bool = False) -> Path:
     conn = sqlite3.connect(path)
     conn.executescript(SCHEMA)
     cur = conn.cursor()
@@ -107,6 +107,20 @@ def _make_source_db(path: Path, article_count: int = 24) -> Path:
         "INSERT INTO article_payloads(slug, route_order, payload_json, is_public_route) VALUES (?,?,?,?)",
         ("автобусом", 9000, json.dumps(form_payload, ensure_ascii=False), 1),
     )
+    if varied_form_shapes:
+        for order, (slug, form_of) in enumerate(
+            (
+                ("form-string", "автобус"),
+                ("form-lemma", {"lemma": "автобус"}),
+                ("form-unresolved", {"url_slug": "missing-target", "lemma": "автобус"}),
+            ),
+            start=9001,
+        ):
+            payload = {"lemma": slug, "url_slug": slug, "form_of": form_of}
+            cur.execute(
+                "INSERT INTO article_payloads(slug, route_order, payload_json, is_public_route) VALUES (?,?,?,?)",
+                (slug, order, json.dumps(payload, ensure_ascii=False), 1),
+            )
     cur.execute(
         """INSERT INTO articles_fts(slug, display_head, lemma, gloss, aliases)
            SELECT a.slug, a.display_head, a.lemma, COALESCE(a.gloss,''),
@@ -162,6 +176,21 @@ def _assert_form_targets_resolve(db_path: Path) -> int:
             assert payload["url_slug"] == slug
             assert payload["form_of"]["url_slug"] in articles
         return len(routes)
+    finally:
+        conn.close()
+
+
+def _form_payloads(db_path: Path) -> dict[str, dict]:
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        return {
+            slug: json.loads(raw)
+            for slug, raw in conn.execute(
+                """SELECT payload.slug, payload.payload_json FROM article_payloads AS payload
+                   LEFT JOIN articles AS article ON article.slug = payload.slug
+                   WHERE article.slug IS NULL AND payload.is_public_route = 1"""
+            )
+        }
     finally:
         conn.close()
 
@@ -249,6 +278,51 @@ def test_downscale_target_below_source(tmp_path: Path, seed: int, expected_form_
     report = export_runtime_shards(db_path=out, out_dir=tmp_path / "runtime", include_decks=False, verify=True)
     assert report["counts"]["articles"] == 13
     assert report["counts"]["formRoutes"] == expected_form_routes
+
+
+def test_varied_public_form_routes_upscale_and_downscale(tmp_path: Path) -> None:
+    source = _make_source_db(tmp_path / "source.db", varied_form_shapes=True)
+    source_forms = _form_payloads(source)
+    assert len(source_forms) == 4
+
+    up = tmp_path / "up.db"
+    up_summary = build_synthetic_db(source_db=source, out=up, seed=8307, target_articles=48)
+    up_forms = _form_payloads(up)
+    assert up_summary["form_routes"] == len(up_forms) == 8  # 4 originals + 4 natural-ratio copies
+    assert {slug: up_forms[slug] for slug in source_forms} == source_forms
+    for slug, payload in up_forms.items():
+        if "--syn" in slug:
+            assert payload["url_slug"] == slug
+            assert payload["form_of"] == source_forms[slug.split("--syn", 1)[0]]["form_of"]
+    up_report = export_runtime_shards(db_path=up, out_dir=tmp_path / "up-runtime", include_decks=False, verify=True)
+    assert up_report["counts"]["formRoutes"] == 8
+
+    down = tmp_path / "down.db"
+    down_summary = build_synthetic_db(source_db=source, out=down, seed=3, target_articles=23)
+    down_forms = _form_payloads(down)
+    assert down_summary["downscale_form_eligible"] == 3
+    assert down_summary["downscale_form_skipped_unresolved"] == 1
+    assert down_summary["downscale_form_skipped_target"] == 0
+    assert {slug.split("--syn", 1)[0] for slug in down_forms} == {"автобусом", "form-string", "form-lemma"}
+    for slug, payload in down_forms.items():
+        assert payload["url_slug"] == slug
+        assert payload["form_of"] == source_forms[slug.split("--syn", 1)[0]]["form_of"]
+    assert down_summary["form_routes"] == len(down_forms) == 3
+    down_report = export_runtime_shards(
+        db_path=down, out_dir=tmp_path / "down-runtime", include_decks=False, verify=True
+    )
+    assert down_report["counts"]["formRoutes"] == 3
+
+    no_target = tmp_path / "no-target.db"
+    skipped = build_synthetic_db(source_db=source, out=no_target, seed=1, target_articles=13)
+    assert skipped["downscale_form_eligible"] == 0
+    assert skipped["downscale_form_skipped_unresolved"] == 1
+    assert skipped["downscale_form_skipped_target"] == 3
+    assert skipped["form_routes"] == 0
+    no_target_report = export_runtime_shards(
+        db_path=no_target, out_dir=tmp_path / "no-target-runtime", include_decks=False, verify=True
+    )
+    assert no_target_report["counts"]["formRoutes"] == 0
 
 
 @pytest.mark.parametrize("valid_sqlite", [True, False])

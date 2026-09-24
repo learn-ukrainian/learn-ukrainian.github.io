@@ -19,8 +19,9 @@ enrichment + provenance + related entries), so the export hard gates in
 ``scripts/atlas/export_runtime_shards.py`` keep holding: approved+public
 articles equal public routes minus form-of routes, all public aliases resolve,
 and per-entry CEFR agreement is preserved verbatim. Form-of route payloads
-(payload rows without an ``articles`` row) scale at their natural ratio when
-their lemma articles are present in the output.
+(payload rows without an ``articles`` row) scale at their natural ratio on
+upscale, including unresolved source routes. Downscale selects only routes
+whose target article was retained.
 
 Usage:
 
@@ -90,13 +91,13 @@ class SourceSnapshot:
             self.form_route_slugs = sorted(s for s in self.payloads if s not in self.articles)
             self.form_route_targets: dict[str, str] = {}
             for slug in self.form_route_slugs:
-                payload = self.payloads[slug]
-                form_of = json.loads(payload[2]).get("form_of")
-                target = form_of.get("url_slug") if isinstance(form_of, dict) else None
-                if isinstance(target, str) and target in self.articles:
+                form_of = json.loads(self.payloads[slug][2]).get("form_of")
+                if isinstance(form_of, dict):
+                    target = str(form_of.get("url_slug") or form_of.get("lemma") or "").strip() or None
+                else:
+                    target = (str(form_of).strip() or None) if form_of else None
+                if target in self.articles:
                     self.form_route_targets[slug] = target
-                elif payload[3]:
-                    raise ValueError(f"public form route {slug!r} has no article target")
             self.aliases: dict[str, list[tuple]] = {}
             for row in conn.execute(
                 "SELECT alias, kind, source, target_slug, visibility FROM aliases ORDER BY target_slug, alias"
@@ -198,15 +199,25 @@ def _build_synthetic_db_unchecked(
         copy_sources = []
     base_slug_set = set(base_slugs)
 
-    # Form routes can only be selected when their lemma article is in the output.
+    # Upscale models all source routes; downscale retains only routes with kept targets.
     form_slugs = snapshot.form_route_slugs
+    form_eligible = form_skipped_unresolved = form_skipped_target = 0
     if target_articles >= source_article_count:
         form_copies = round(len(form_slugs) * (target_articles - source_article_count) / source_article_count)
         form_copy_sources = [rng.choice(form_slugs) for _ in range(form_copies)] if form_slugs else []
         form_base = form_slugs
     else:
         form_base = []
-        eligible_forms = [slug for slug in form_slugs if snapshot.form_route_targets.get(slug) in base_slug_set]
+        eligible_forms = []
+        for slug in form_slugs:
+            target = snapshot.form_route_targets.get(slug)
+            if target is None:
+                form_skipped_unresolved += 1
+            elif target not in base_slug_set:
+                form_skipped_target += 1
+            else:
+                eligible_forms.append(slug)
+        form_eligible = len(eligible_forms)
         form_count = min(len(eligible_forms), round(len(form_slugs) * target_articles / source_article_count))
         form_copy_sources = sorted(rng.sample(eligible_forms, form_count))
 
@@ -230,6 +241,9 @@ def _build_synthetic_db_unchecked(
         "provenance": 0,
         "related": 0,
         "copies": 0,
+        "downscale_form_eligible": form_eligible,
+        "downscale_form_skipped_unresolved": form_skipped_unresolved,
+        "downscale_form_skipped_target": form_skipped_target,
     }
 
     def insert_article_unit(slug: str, row: tuple, *, synthetic_copy: bool) -> None:
