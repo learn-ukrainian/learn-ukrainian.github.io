@@ -62,7 +62,7 @@ def _worktree_add_via_run(monkeypatch):
     add keeps its old transport and stays visible to those stubs.
     """
 
-    def via_run(add_command, *, cwd, worktree_path, env=None):
+    def via_run(add_command, *, cwd, worktree_path, env=None, **_callbacks):
         return delegate.subprocess.run(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env)
 
     monkeypatch.setattr(delegate, "_run_worktree_add", via_run)

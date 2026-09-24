@@ -150,14 +150,16 @@ Callers and their ownership proofs:
   timed-out `git worktree add`, before any worker is spawned. Dispatch first
   reserves the path with `mkdir` (a path that already exists is never passed
   to git and never removed) and records the reservation as `worktree_prep` in
-  the task record before git starts. Nothing is removed until git is confirmed
-  exited; otherwise the record says `undo_skipped: git_not_confirmed_exited`
+  the task record before git starts (see "Half-built dispatch worktrees"
+  below for what it records). Nothing is removed until git is confirmed
+  exited and its recorded (pid, start time) and process group are proven
+  gone; otherwise the record says `undo_skipped: git_not_confirmed_exited`
   and the reaper decides later. A registered worktree is removed only while
-  git still holds its `initializing` lock, which git lifts when an add
-  finishes, so a completed worktree, whoever made it, is never touched; an
-  unregistered path loses only its empty reservation directory. The removal
-  reuses the worktree lock dispatch holds, forces past the partial checkout,
-  and keeps the branch ref. The failed record carries the outcome as
+  git still holds its `initializing` lock and the half-built proof below
+  holds; an unregistered path loses only its empty reservation directory,
+  and only while it is still the reserved inode. The removal reuses the
+  worktree lock dispatch holds, forces past the partial checkout, and keeps
+  the branch ref. The failed record carries the outcome as
   `worktree_prep_cleanup`.
 - `post_task_reap._remove_acp_runtime_worktree` removes only task-state-bound
   ACP runtime paths below `.worktrees/dispatch/acp/`, after its own terminal,
@@ -219,10 +221,47 @@ terminal, records `pid: null` (no worker was ever spawned), and carries a
 path under the record's own `run_nonce`. Git must still hold the
 `initializing` lock and have written a resolvable HEAD, and the process-CWD
 probe must show no live process inside. A record without `worktree_prep`, such
-as a failed attempt to reuse an existing worktree, never qualifies. Every
-precondition is re-proved under the lock before the unlock and removal; the
-branch ref is kept and a rescue ref pins HEAD. `post_task_reap` routes such a
-task's worktree to this class instead of retaining it as locked.
+as a failed attempt to reuse an existing worktree, never qualifies.
+
+A path string is not ownership, so `worktree_prep`
+(`scripts/orchestration/worktree_prep.py`) also records identities, and the
+undo and the reaper both require every one of them
+(`worktree_prep.removal_refusal`); anything missing or unreadable keeps the
+tree:
+
+- **Directory identity.** `dir_dev`/`dir_ino` of the directory `mkdir`
+  created. The path must still hold that inode, so a path removed and
+  re-created by anyone never qualifies.
+- **Registration identity.** `git_admin_dir`, read from `<path>/.git` as soon
+  as git writes it. `<path>/.git` must still point at it and its `gitdir`
+  file back at `<path>/.git`.
+- **Git exited.** `git_pid`/`git_start` (start time from `/proc/<pid>/stat`
+  field 22), recorded when git is spawned. The pid must be gone or report a
+  different start time, and its process group (which holds the checkout
+  child) must be empty. An unreadable start time is never proof, so hosts
+  without `/proc` keep the tree. A record whose undo said
+  `undo_skipped: git_not_confirmed_exited` qualifies only once this holds.
+- **Checkout never completed.** HEAD must equal the recorded `base_sha`, and
+  `git status --untracked-files=all --ignored` may show only deletions of
+  tracked files and untracked or ignored files at paths HEAD tracks, each no
+  larger than HEAD's blob. An interrupted checkout has no complete index, so
+  what it wrote reads as untracked copies of HEAD's content (the last one
+  possibly truncated). Any modification, addition, rename, conflict or type
+  change, and any file at a path HEAD does not track, keeps the tree, so a
+  finished worktree someone locked `initializing` by hand survives.
+
+Every precondition is re-proved under the lock before the unlock and removal;
+the branch ref is kept and a rescue ref pins HEAD. `post_task_reap` routes
+such a task's worktree to this class instead of retaining it as locked.
+
+`worktree_prep` also records the dispatcher's own `owner_pid`/`owner_start`.
+While `git worktree add` runs, the task record says `spawning` with
+`pid: null`; if the dispatcher dies before writing a terminal record, the
+lazy heal in `delegate.py status|wait|list` and `reconcile_sweep --apply`
+mark it `crashed` with `returncode_reason: dispatch_died_during_worktree_prep`
+once the owner is proven gone (`worktree_prep.is_orphaned_prep_record`), and
+the ownership ledger stops counting it immediately. The reservation stays on
+the crashed record, so the reaper can then remove the half-built tree.
 
 Unregistered directories under `.worktrees/dispatch/<agent>/` that contain
 zero files (empty placeholder trees, e.g. only `site/ node_modules/ data/`

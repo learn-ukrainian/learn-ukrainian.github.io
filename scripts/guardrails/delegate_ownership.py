@@ -32,6 +32,7 @@ except ImportError:  # pragma: no cover - flat script path
 
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
+from scripts.orchestration import worktree_prep
 
 # File lives at scripts/guardrails/… → parents[2] is the checkout root.
 _REPO_ROOT = resolve_repo_root(Path(__file__), 2)
@@ -345,6 +346,7 @@ def _task_still_active(
     state_path = state_dir / f"{_safe_task_state_name(task_id)}.json"
     status = None
     state_pid: int | None = None
+    orphaned_prep = False
     if state_path.is_file():
         try:
             data = json.loads(state_path.read_text(encoding="utf-8"))
@@ -352,6 +354,7 @@ def _task_still_active(
             data = {}
         if isinstance(data, dict):
             status = data.get("status")
+            orphaned_prep = worktree_prep.is_orphaned_prep_record(data)
             raw_pid = data.get("pid")
             if isinstance(raw_pid, int):
                 state_pid = raw_pid
@@ -366,6 +369,10 @@ def _task_still_active(
         return True
 
     if status in TERMINAL_TASK_STATUSES:
+        return False
+    # #8663: a pid-less worktree-prep record whose dispatcher died never gets
+    # a worker pid; it holds nothing.
+    if orphaned_prep:
         return False
 
     # Prefer state worker PID once present (long-lived).

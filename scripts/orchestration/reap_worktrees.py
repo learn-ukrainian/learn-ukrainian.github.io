@@ -42,7 +42,7 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
-from scripts.orchestration import reaper_lifecycle, worktree_claims
+from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -1037,8 +1037,7 @@ def _dispatch_owner(repo_root: Path, info: WorktreeInfo) -> str:
 
 _ACP_RUNTIME_REASON_PREFIX = "acp runtime "
 _ACP_LEGACY_LOCK_MIN_AGE_HOURS = 24.0
-# The lock reason git writes while ``git worktree add`` is still checking out.
-_GIT_INITIALIZING_LOCK_REASON = "initializing"
+_GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
 _HALF_BUILT_REASON_PREFIX = "half-built dispatch worktree "
 # Minimum age for a zero-file dispatch husk before it may be removed.
 # ``delegate.py`` creates the dispatch directory before ``git worktree add``
@@ -1153,8 +1152,16 @@ def _half_built_dispatch_reason(
     ``run_nonce``). A record without that reservation, such as a failed
     attempt to reuse an existing worktree, never qualifies. Git must also have
     written a resolvable HEAD, and a conclusive probe must find no live
-    process cwd inside. Like the ACP class it never consults PR state, so it
-    stays available under --safe-only.
+    process cwd inside.
+
+    The path string is not enough: :func:`worktree_prep.removal_refusal`
+    must also find the directory to be the very inode the reservation
+    created, git's registration to be the admin directory that add created,
+    the recorded add and its process group gone (a record whose undo said
+    ``git_not_confirmed_exited`` qualifies only once this holds), and the
+    tree to hold only an unfinished checkout of the recorded base commit.
+    Like the ACP class it never consults PR state, so it stays available
+    under --safe-only.
     """
     if info.locked_reason != _GIT_INITIALIZING_LOCK_REASON or not info.head:
         return None
@@ -1182,10 +1189,12 @@ def _half_built_dispatch_reason(
     worktree = info.path.resolve()
     if any(_path_contains(worktree, cwd) for cwd in live_cwds):
         return None
+    if worktree_prep.removal_refusal(prep, info.path) is not None:
+        return None
     return (
         f"{_HALF_BUILT_REASON_PREFIX}task-id={task_id} status={status}; "
-        "path reserved by this dispatch run; git lock 'initializing'; worker never spawned (pid=None); "
-        "no live process cwd"
+        "path reserved by this dispatch run (same inode, same git admin dir); git lock 'initializing'; "
+        "git add exited; checkout never completed; worker never spawned (pid=None); no live process cwd"
     )
 
 

@@ -25,6 +25,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.fleet import post_task_reap
+from tests.worktree_prep_helpers import half_built_prep, leave_half_built
 
 
 def _safe_label(task_id: str) -> str:
@@ -718,8 +719,7 @@ def _half_built_dispatch(
 ) -> Path:
     """A dispatch worktree a killed ``git worktree add`` left: locked ``initializing``, partial (#8663)."""
     worktree = _add_dispatch_worktree(repo_root, "claude", task_id)
-    _run(["git", "worktree", "lock", "--reason", "initializing", str(worktree)], cwd=repo_root)
-    (worktree / "README.md").unlink()
+    leave_half_built(worktree, drop=("README.md",))
     state = {
         "task_id": task_id,
         "agent": "claude",
@@ -729,12 +729,7 @@ def _half_built_dispatch(
         "worktree_path": str(worktree),
     }
     if reserved:
-        state["worktree_prep"] = {
-            "path": str(worktree),
-            "run_nonce": "nonce-8663",
-            "reserved_by_mkdir": True,
-            "reserved_at": "2026-09-24T00:00:00+00:00",
-        }
+        state["worktree_prep"] = half_built_prep(worktree, run_nonce="nonce-8663")
     tasks_dir.mkdir(parents=True, exist_ok=True)
     (tasks_dir / f"{task_id}.json").write_text(json.dumps(state), encoding="utf-8")
     return worktree

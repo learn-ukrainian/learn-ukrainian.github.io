@@ -1,9 +1,12 @@
 """A failed or timed-out ``git worktree add`` is undone only on ownership proof (#8663).
 
 Dispatch reserves the path with ``mkdir`` and records the reservation before
-git starts. The undo removes a registered worktree only while git still holds
-its ``initializing`` lock and only once git is confirmed exited; a path this
-run did not reserve is never touched.
+git starts, with the reserved directory's inode, git's admin directory, git's
+and the dispatcher's (pid, start time), and the base commit. The undo removes
+a registered worktree only while git still holds its ``initializing`` lock,
+once git is proven exited, while the path is still the reserved inode under
+the recorded admin directory, and only when the tree holds nothing but an
+unfinished checkout; a path this run did not reserve is never touched.
 
 Every test runs in a tmp git repository. Slowness is simulated, by a fake
 runner that leaves the half-built state a killed add leaves, by ``sleep``
@@ -26,6 +29,8 @@ from typing import Any
 import pytest
 
 from scripts import delegate
+from scripts.orchestration import worktree_prep
+from tests.worktree_prep_helpers import leave_half_built
 
 _REAL_RUN = subprocess.run
 _NONCE = "nonce-8663"
@@ -82,15 +87,22 @@ def _dispatch_path(repo: Path, name: str) -> Path:
     return path
 
 
-def _half_built_add(add_command: list[str], *, cwd: Path, worktree_path: Path, env: Any = None, exited: bool = True):
+def _report_git_spawned_then_exited(on_spawn: Any) -> None:
+    """Hand dispatch the identity of a stand-in git that then exits, as the real add does."""
+    stand_in = subprocess.Popen(["sleep", "30"], start_new_session=True)
+    try:
+        on_spawn(stand_in.pid)
+    finally:
+        stand_in.kill()
+        stand_in.wait()
+
+
+def _half_built_add(add_command: list[str], *, cwd: Path, worktree_path: Path, exited: bool = True, **kwargs: Any):
     """Run the real add, then leave the state a killed add leaves, and time out."""
+    _report_git_spawned_then_exited(kwargs["on_spawn"])
     proc = _REAL_RUN(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=_git_env())
     assert proc.returncode == 0, proc.stderr
-    admin = Path(git(worktree_path, "rev-parse", "--absolute-git-dir"))
-    (admin / "locked").write_text("initializing", encoding="utf-8")
-    (worktree_path / "b.txt").unlink()
-    (worktree_path / "c.txt").unlink()
-    (worktree_path / "untracked-by-git.txt").write_text("written before the index\n", encoding="utf-8")
+    leave_half_built(worktree_path, drop=("b.txt", "c.txt"))
     raise delegate.WorktreeAddTimeout(add_command, 120.0, git_exited=exited)
 
 
@@ -125,15 +137,29 @@ def test_timed_out_add_is_removed_branch_kept_and_recorded(repo: Path, monkeypat
     assert provisional["status"] == "spawning"
     assert provisional["pid"] is None
     assert provisional["run_nonce"] == _NONCE
-    assert provisional["worktree_prep"]["reserved_by_mkdir"] is True
-    assert provisional["worktree_prep"]["run_nonce"] == _NONCE
-    assert provisional["worktree_prep"]["path"] == str(worktree)
+    reserved = provisional["worktree_prep"]
+    assert reserved["reserved_by_mkdir"] is True
+    assert reserved["run_nonce"] == _NONCE
+    assert reserved["path"] == str(worktree)
+    assert reserved["base_sha"] == base_sha
+    assert isinstance(reserved["dir_ino"], int)
+    assert reserved["owner_pid"] == os.getpid()
+    assert isinstance(reserved["owner_start"], int)
+    assert reserved["git_pid"] is None
+    assert reserved["git_admin_dir"] == ""
 
     exc = caught.value
     assert str(exc) == "git worktree add timed out after 120.0s"
     assert exc.cleanup["action"] == "removed"
     assert exc.cleanup["branch_ref_kept"] is True
-    assert exc.prep == provisional["worktree_prep"]
+    assert exc.prep is not None
+    # git's identity and admin directory were added to the reservation.
+    assert {key: exc.prep[key] for key in reserved if key not in ("git_pid", "git_start", "git_admin_dir")} == {
+        key: value for key, value in reserved.items() if key not in ("git_pid", "git_start", "git_admin_dir")
+    }
+    assert isinstance(exc.prep["git_pid"], int)
+    assert isinstance(exc.prep["git_start"], int)
+    assert Path(exc.prep["git_admin_dir"]).parent == repo / ".git" / "worktrees"
     assert not worktree.exists()
     assert worktree.resolve() not in _registered(repo)
     assert git(repo, "rev-parse", "--verify", "refs/heads/claude/impl-8663-r1") == base_sha
@@ -156,7 +182,7 @@ def test_timed_out_add_is_removed_branch_kept_and_recorded(repo: Path, monkeypat
     assert record is not None
     assert record["status"] == "failed"
     assert record["pid"] is None
-    assert record["worktree_prep"] == provisional["worktree_prep"]
+    assert record["worktree_prep"] == exc.prep
     assert record["worktree_prep_cleanup"]["action"] == "removed"
     assert record["worktree_prep_cleanup"]["path"] == str(worktree)
 
@@ -202,22 +228,19 @@ def test_successful_add_retires_the_reservation_record(repo: Path) -> None:
     assert _record("ok") is None
 
 
-def test_registration_left_without_its_directory_is_removed(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    def add_then_lose_directory(add_command: list[str], *, cwd: Path, worktree_path: Path, env: Any = None):
+def test_registration_left_without_its_directory_is_kept(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """With the reserved directory gone, nothing proves whose registration remains."""
+
+    def add_then_lose_directory(add_command: list[str], *, cwd: Path, worktree_path: Path, **kwargs: Any):
+        _report_git_spawned_then_exited(kwargs["on_spawn"])
         proc = _REAL_RUN(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=_git_env())
         assert proc.returncode == 0, proc.stderr
-        admin = Path(git(worktree_path, "rev-parse", "--absolute-git-dir"))
-        (admin / "locked").write_text("initializing", encoding="utf-8")
+        leave_half_built(worktree_path)
         shutil.rmtree(worktree_path)
         raise delegate.WorktreeAddTimeout(add_command, 120.0, git_exited=True)
 
     monkeypatch.setattr(delegate, "_run_worktree_add", add_then_lose_directory)
     worktree = _dispatch_path(repo, "lost-dir")
-    # An unrelated registration whose directory is also gone: a repository-wide
-    # prune would drop it; the undo must not.
-    bystander = _dispatch_path(repo, "bystander")
-    git(repo, "worktree", "add", "-b", "claude/bystander", str(bystander), "main")
-    shutil.rmtree(bystander)
 
     with pytest.raises(delegate.WorktreeAddFailed) as caught:
         delegate._add_worktree_or_undo(
@@ -227,11 +250,9 @@ def test_registration_left_without_its_directory_is_removed(repo: Path, monkeypa
             task_id="lost-dir",
         )
 
-    assert caught.value.cleanup["action"] == "removed"
-    assert caught.value.cleanup["pruned"] is True
-    assert worktree.resolve() not in _registered(repo)
-    assert bystander.resolve() in _registered(repo)
-    assert git(repo, "rev-parse", "--verify", "refs/heads/claude/lost-dir")
+    assert caught.value.cleanup["action"] == "skipped"
+    assert "device/inode differ" in caught.value.cleanup["reason"]
+    assert worktree.resolve() in _registered(repo)
 
 
 def test_pre_existing_path_is_never_passed_to_git_or_removed(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -265,7 +286,7 @@ def test_completed_worktree_made_in_the_reserved_path_is_never_removed(
     """Review blocker: someone else's finished worktree at the path survives a failed add."""
     worktree = _dispatch_path(repo, "raced")
 
-    def human_wins_the_race(add_command: list[str], *, cwd: Path, worktree_path: Path, env: Any = None):
+    def human_wins_the_race(add_command: list[str], *, cwd: Path, worktree_path: Path, **_kwargs: Any):
         # git accepts the empty reserved directory, so another add can land in it.
         git(repo, "worktree", "add", "-b", "human/raced", str(worktree_path), "main")
         (worktree_path / "uncommitted-human-work.txt").write_text("keep me\n", encoding="utf-8")
@@ -284,6 +305,99 @@ def test_completed_worktree_made_in_the_reserved_path_is_never_removed(
     assert "not locked 'initializing'" in caught.value.cleanup["reason"]
     assert (worktree / "uncommitted-human-work.txt").read_text(encoding="utf-8") == "keep me\n"
     assert worktree.resolve() in _registered(repo)
+
+
+def test_reserved_path_recreated_by_another_add_is_kept(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Review blocker: the path string is not ownership once the reserved inode is gone."""
+    worktree = _dispatch_path(repo, "recreated")
+
+    def path_recreated_by_someone_else(add_command: list[str], *, cwd: Path, worktree_path: Path, **kwargs: Any):
+        _report_git_spawned_then_exited(kwargs["on_spawn"])
+        # This run's git failed before writing; someone removes the empty
+        # reservation and their own add lands at the path and is itself killed.
+        os.rmdir(worktree_path)
+        git(repo, "worktree", "add", "-b", "human/recreated", str(worktree_path), "main")
+        leave_half_built(worktree_path, drop=("b.txt",))
+        raise delegate.WorktreeAddTimeout(add_command, 120.0, git_exited=True)
+
+    monkeypatch.setattr(delegate, "_run_worktree_add", path_recreated_by_someone_else)
+    with pytest.raises(delegate.WorktreeAddFailed) as caught:
+        delegate._add_worktree_or_undo(
+            ["git", "worktree", "add", "-b", "claude/recreated", str(worktree), "main"],
+            repo_root=repo,
+            worktree_path=worktree,
+            task_id="recreated",
+            run_nonce=_NONCE,
+        )
+
+    assert caught.value.cleanup["action"] == "skipped"
+    assert "device/inode differ" in caught.value.cleanup["reason"]
+    # The other add's admin directory was never recorded as this run's.
+    assert caught.value.prep is not None
+    assert caught.value.prep["git_admin_dir"] == ""
+    assert worktree.resolve() in _registered(repo)
+    assert (worktree / "a.txt").exists()
+
+
+def test_completed_checkout_locked_initializing_with_work_is_kept(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Review blocker: the ``initializing`` lock alone never proves the checkout is unfinished."""
+
+    def completed_then_locked(add_command: list[str], *, cwd: Path, worktree_path: Path, **kwargs: Any):
+        _report_git_spawned_then_exited(kwargs["on_spawn"])
+        proc = _REAL_RUN(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=_git_env())
+        assert proc.returncode == 0, proc.stderr
+        git(repo, "worktree", "lock", "--reason", "initializing", str(worktree_path))
+        (worktree_path / "a.txt").write_text("uncommitted work\n", encoding="utf-8")
+        raise delegate.WorktreeAddTimeout(add_command, 120.0, git_exited=True)
+
+    monkeypatch.setattr(delegate, "_run_worktree_add", completed_then_locked)
+    worktree = _dispatch_path(repo, "completed")
+
+    with pytest.raises(delegate.WorktreeAddFailed) as caught:
+        delegate._add_worktree_or_undo(
+            ["git", "worktree", "add", "-b", "claude/completed", str(worktree), "main"],
+            repo_root=repo,
+            worktree_path=worktree,
+            task_id="completed",
+        )
+
+    assert caught.value.cleanup["action"] == "skipped"
+    assert "no proof the checkout never completed: tracked change ' M' at a.txt" in caught.value.cleanup["reason"]
+    assert (worktree / "a.txt").read_text(encoding="utf-8") == "uncommitted work\n"
+    assert worktree.resolve() in _registered(repo)
+
+
+def test_git_still_alive_keeps_the_half_built_tree(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Review blocker: nothing is removed while the recorded git (pid, start time) still runs."""
+    still_running = subprocess.Popen(["sleep", "30"], start_new_session=True)
+
+    def half_built_git_alive(add_command: list[str], *, cwd: Path, worktree_path: Path, **kwargs: Any):
+        kwargs["on_spawn"](still_running.pid)
+        proc = _REAL_RUN(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=_git_env())
+        assert proc.returncode == 0, proc.stderr
+        leave_half_built(worktree_path, drop=("b.txt",))
+        raise delegate.WorktreeAddTimeout(add_command, 120.0, git_exited=True)
+
+    monkeypatch.setattr(delegate, "_run_worktree_add", half_built_git_alive)
+    worktree = _dispatch_path(repo, "alive")
+    try:
+        with pytest.raises(delegate.WorktreeAddFailed) as caught:
+            delegate._add_worktree_or_undo(
+                ["git", "worktree", "add", "-b", "claude/alive", str(worktree), "main"],
+                repo_root=repo,
+                worktree_path=worktree,
+                task_id="alive",
+                run_nonce=_NONCE,
+            )
+        assert caught.value.cleanup["undo_skipped"] == "git_not_confirmed_exited"
+        assert worktree.exists()
+        assert caught.value.prep is not None
+        assert caught.value.prep["git_pid"] == still_running.pid
+        assert worktree_prep.git_gone(caught.value.prep) is False
+    finally:
+        still_running.kill()
+        still_running.wait()
+    assert worktree_prep.git_gone(caught.value.prep) is True
 
 
 def test_git_not_confirmed_exited_skips_the_undo(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -435,7 +549,13 @@ def test_real_git_add_killed_mid_checkout_is_undone_and_branch_kept(
     assert git(repo, "rev-parse", "--verify", "refs/heads/claude/killed") == base_sha
     record = _record("killed")
     assert record is not None
-    assert record["worktree_prep"]["reserved_by_mkdir"] is True
+    prep = record["worktree_prep"]
+    assert prep["reserved_by_mkdir"] is True
+    # The real add's identities were recorded while it ran.
+    assert isinstance(prep["git_pid"], int)
+    assert isinstance(prep["git_start"], int)
+    assert prep["git_admin_dir"].startswith(str(repo / ".git" / "worktrees"))
+    assert prep["base_sha"] == base_sha
 
 
 def test_real_git_add_stopped_by_sigterm_cleans_up_after_itself(
