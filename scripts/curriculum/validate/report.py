@@ -49,6 +49,12 @@ class Report:
     notes: list[Outcome] = field(default_factory=list)
     not_checked: list[Outcome] = field(default_factory=list)
     waivers: list[Outcome] = field(default_factory=list)
+    #: "final" (evidence_ref.sha256 must equal the pack) or "provisional" (the
+    #: comparison is a not_checked pending_promotion item; --provisional-pack).
+    mode: str = "final"
+    #: Every file the run read, as {repo-relative path: sha256}; the plan-review
+    #: manifest refuses a report whose recorded hashes differ from the files.
+    inputs: dict[str, str] = field(default_factory=dict)
 
     @property
     def ok(self) -> bool:
@@ -72,6 +78,8 @@ class Report:
             "level": self.level,
             "slug": self.slug,
             "status": self.status,
+            "mode": self.mode,
+            "inputs": dict(sorted(self.inputs.items())),
             "failures": entries(self.failures),
             "notes": entries(self.notes),
             "not_checked": entries(self.not_checked),
@@ -80,6 +88,8 @@ class Report:
 
     def render_text(self) -> str:
         lines = [VALIDATOR_NOTE, f"plan: {self.level}/{self.slug}", f"status: {self.status}"]
+        if self.mode != "final":
+            lines.append(f"mode: {self.mode}")
         lines += [f"FAIL {o.render()}" for o in self.failures]
         lines += [f"NOTE {o.render()}" for o in self.notes]
         lines += [f"NOT_CHECKED {o.render()}" for o in self.not_checked]
