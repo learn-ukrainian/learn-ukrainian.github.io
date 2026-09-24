@@ -281,6 +281,17 @@ jobs:
           if [ "$DOCS_ONLY" = "true" ]; then
             .venv/bin/python -m pytest tests -m docs_skills --strict-markers --timeout=120 \
               --timeout-method=thread --override-ini addopts=-v
+            # Docs-only PRs get no other pytest leg, but several repo-wide
+            # scanners read docs/ (#8707). Run the marked set under the same
+            # narrow allowlist the selected tier uses, so collection stays cheap.
+            repo_wide_list="${RUNNER_TEMP}/pytest-repo-wide-files.txt"
+            git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -lE 'pytest\.mark\.repo_wide' \
+              | sort > "$repo_wide_list" || true
+            [ -s "$repo_wide_list" ] || { echo "no repo_wide tests found; the repo_wide marker invariant is broken" >&2; exit 1; }
+            LU_PYTEST_SHARD_FILES="$repo_wide_list" .venv/bin/python -m pytest tests \
+              -m 'repo_wide and not slow and not atlas_release' --strict-markers \
+              -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+              --timeout-method=thread --override-ini addopts=-v
             exit 0
           fi
           if [ "$PYTEST_MODE" = "content" ]; then
@@ -313,7 +324,7 @@ jobs:
             # under their own allowlist so collection stays narrow, whatever
             # candidates the Changes job chose.
             repo_wide_list="${RUNNER_TEMP}/pytest-repo-wide-files.txt"
-            git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -l repo_wide \
+            git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -lE 'pytest\.mark\.repo_wide' \
               | sort > "$repo_wide_list" || true
             [ -s "$repo_wide_list" ] || { echo "no repo_wide tests found; the repo_wide marker invariant is broken" >&2; exit 1; }
             LU_PYTEST_SHARD_FILES="$repo_wide_list" .venv/bin/python -m pytest tests \

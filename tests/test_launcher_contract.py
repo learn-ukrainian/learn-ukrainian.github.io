@@ -944,6 +944,7 @@ def test_compat_kimicc_and_glmcc_dry_run(tmp_path: Path) -> None:
     assert "glm-compat-secret" not in glm.stdout + glm.stderr
 
 
+@pytest.mark.repo_wide
 def test_retired_names_are_absent_from_tracked_content() -> None:
     tracked = subprocess.run(
         ["git", "ls-files"], cwd=REPO, text=True, capture_output=True, check=True, timeout=30

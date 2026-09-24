@@ -11,25 +11,39 @@ of ``tests/`` for hard-coded epic assertions and was never selected for a
 
 Every test that enforces a repository-wide invariant by scanning files it does
 not import must therefore carry ``repo_wide``, and the selected tier always
-runs the marker (`ci.yml` adds a ``-m repo_wide`` invocation). This module is
+runs the marker (``ci.yml`` adds a ``-m repo_wide`` invocation). The docs lane
+runs it too, because several repo-wide tests read ``docs/``. This module is
 itself ``repo_wide``.
 
 Two checks keep the marker honest:
 
-1. An explicit registry of the known repo-wide modules/functions. New
-   whole-tree scanners must be added here (and marked).
-2. A documented heuristic over each test module's source: a module that walks
-   a repository source tree (a repo-root constant receiver joined to
-   ``.rglob()``/``.glob()``) or calls a known whole-tree linter must carry the
-   marker. The heuristic is deliberately conservative — it targets scanners
-   rooted at the repository (``_REPO_ROOT``, ``REPO_ROOT``, ``PROJECT_ROOT``,
-   ``_TESTS_ROOT``, ``_SCRIPTS_ROOT``, ``_API_ROOT``, ``SCRIPTS_DIR``, ...),
-   not temp-path fixtures.
+1. **The registry is the guarantee.** ``KNOWN_REPO_WIDE_MODULES`` and
+   ``KNOWN_REPO_WIDE_FUNCTIONS`` are the authoritative list of whole-tree
+   scanners. New scanners must be added there and marked; the registry checks
+   fail if an entry disappears or loses its marker.
+2. **The heuristic is a best-effort net.** It parses each test module's AST and
+   flags test functions that walk a repository source tree (a repo-root path
+   expression joined to ``.rglob()``/``.glob()``, ``os.walk``/``os.scandir``,
+   ``git ls-files``/``ls-tree`` through ``subprocess``, or a known whole-tree
+   linter) and then propagates to callers of a scanning helper. It only finds
+   what it was taught to look for; the registry, not the heuristic, is the
+   correctness anchor. A genuinely repository-rooted scanner that is *not*
+   repo-wide (a content reader, a top-level launcher glob whose only possible
+   changes already force the full tier, and so on) is listed in
+   ``NOT_REPO_WIDE`` with a reason.
+
+Marker detection is syntactic and per-function: a test counts as marked only
+when its own ``@pytest.mark.repo_wide`` decorator, its class decorator, or a
+module-level ``pytestmark`` containing ``pytest.mark.repo_wide`` applies to it.
+A comment or docstring mentioning the word does not count, and decorator order
+is irrelevant.
 """
 
 from __future__ import annotations
 
+import ast
 import re
+import textwrap
 from pathlib import Path
 
 import pytest
@@ -67,75 +81,285 @@ KNOWN_REPO_WIDE_MODULES = frozenset({
 })
 
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
-# the function only.
+# the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
+    "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
     "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
     "tests/test_manifest_io.py::test_lexicon_scripts_do_not_open_manifest_inplace",
 )
 
-# Repository-root path constants. A walk rooted at one of these (or a join
-# into tests/scripts/agents_extensions) is repo-wide, not a temp fixture.
-_REPO_ROOT_CONSTANTS = (
-    "_REPO_ROOT",
-    "REPO_ROOT",
+# Escape hatch for a scanner the best-effort heuristic flags but that is not
+# actually repo-wide. Each entry needs a concrete reason; the registry is kept
+# fresh by ``test_not_repo_wide_entries_are_justified``.
+NOT_REPO_WIDE = {
+    "tests/test_ci_shard_partition.py::test_planned_shard_collects_build_tests_through_directory": (
+        "Runs `git ls-files -- tests` and a pytest --collect-only over the planned "
+        "allowlist, but every file it depends on (tests/conftest.py, scripts/ci/*, the "
+        "duration snapshot) is on the shared-root denylist, so any change that could "
+        "affect it already forces the full tier."
+    ),
+    "tests/test_fleet_comms_launcher_awareness.py::test_no_launcher_starts_an_acp_process_at_cold_start": (
+        "Reads only scripts/lib/launcher_core.sh plus the repository root's start-*.sh. "
+        "A root-level addition is never a test/script candidate, and scripts/lib changes "
+        "have no stem-mapped test, so both force the full tier."
+    ),
+    "tests/test_launcher_contract.py::test_root_launcher_allowlist_is_exact": (
+        "Globs only the repository root's start-*.sh; a root-level file change is not a "
+        "test/script candidate and forces the full tier."
+    ),
+    "tests/test_start_cursor_launcher.py::test_cursor_seat_enumerated_in_launcher_core_and_public_estate": (
+        "Globs only the repository root's start-*-driver.sh; a root-level file change is "
+        "not a test/script candidate and forces the full tier."
+    ),
+    "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter": (
+        "Reads the site/src/content/docs content tree (DOCS_ROOT) as a content reader, "
+        "covered by the reads_content marker and the content lane, not a repo code-tree scan."
+    ),
+    "tests/test_landings_use_levellanding.py::test_content_collection_loads_track_index_mdx_files": (
+        "Reads the site/src/content/docs content tree (DOCS_ROOT) as a content reader, "
+        "covered by the reads_content marker and the content lane, not a repo code-tree scan."
+    ),
+    "tests/test_landings_use_levellanding.py::test_track_landing_uses_levellanding_contract": (
+        "Reads the site/src/content/docs content tree (DOCS_ROOT) as a content reader, "
+        "covered by the reads_content marker and the content lane, not a repo code-tree scan."
+    ),
+}
+
+# Repository-root path constants. A walk rooted at one of these (or a join into
+# tests/scripts/agents_extensions) is repo-wide, not a temp fixture. The
+# ``*_ROOT`` suffix and ``Path(__file__).parents[n]`` cover the inline forms.
+_REPO_ROOT_CONSTANTS = frozenset({
+    "REPO",
+    "ROOT",
     "PROJECT_ROOT",
-    "_TESTS_ROOT",
+    "PROJECT_DIR",
+    "REPO_ROOT",
+    "_REPO_ROOT",
     "TESTS_ROOT",
-    "_SCRIPTS_ROOT",
+    "_TESTS_ROOT",
     "SCRIPTS_ROOT",
+    "_SCRIPTS_ROOT",
     "SCRIPTS_DIR",
     "_API_ROOT",
-)
+    "DOCS_ROOT",
+    "_DOCS_ROOT",
+    "SRC_ROOT",
+    "SOURCE_ROOT",
+    "CURRICULUM_ROOT",
+    "CURRICULUM_DIR",
+})
 
-_WALK_RE = re.compile(r"\.(?:rglob|glob)\(|os\.walk\(|iglob\(")
-_RECEIVER_RE = re.compile(r"([\w\.\[\]\"' /\(\)\-]{1,80})\.(?:rglob|glob)\(")
-_SCANNER_RE = re.compile(
-    r"\b(?:find_stale_pinned_assertions|scan_scripts|timeout_less_calls|"
-    r"timeout_less_calls_from_source|_inplace_manifest_writers|production_sites|"
-    r"_iter_surface_python_files|lint_fleet_roster|lint_agent_skills|"
-    r"lint_model_catalog)\s*\("
-)
-_TMP_RE = re.compile(r"tmp_path|tmpdir")
-_MARKER_RE = re.compile(r"repo_wide")
+# Whole-tree linter helpers: calling one is a repo scan even without a glob.
+_KNOWN_SCANNER_CALLS = frozenset({
+    "find_stale_pinned_assertions",
+    "scan_scripts",
+    "timeout_less_calls",
+    "timeout_less_calls_from_source",
+    "_inplace_manifest_writers",
+    "production_sites",
+    "_iter_surface_python_files",
+    "lint_fleet_roster",
+    "lint_agent_skills",
+    "lint_model_catalog",
+})
+
+_SUBPROCESS_CALLS = frozenset({
+    "subprocess.run",
+    "subprocess.check_output",
+    "subprocess.check_call",
+    "subprocess.call",
+    "subprocess.Popen",
+})
+
+_GIT_TREE_TOKENS = frozenset({"ls-files", "ls-tree"})
+
+_TMP_RECEIVER_TOKENS = ("tmp_path", "tmpdir")
+
+_WALK_ATTRS = frozenset({"glob", "rglob"})
 
 
 def _test_module_paths() -> list[Path]:
     return sorted(_TESTS_ROOT.rglob("test_*.py"))
 
 
-def _repo_wide_scanner_modules() -> list[str]:
-    """Documented heuristic: modules scanning a repository source tree."""
-    flagged: list[str] = []
-    for module in _test_module_paths():
-        text = module.read_text(encoding="utf-8")
-        for line in text.splitlines():
-            if _TMP_RE.search(line):
-                continue
-            if _SCANNER_RE.search(line):
-                flagged.append(module.relative_to(_REPO_ROOT).as_posix())
-                break
-            if _WALK_RE.search(line):
-                match = _RECEIVER_RE.search(line)
-                receiver = match.group(1) if match else ""
-                if any(constant in receiver for constant in _REPO_ROOT_CONSTANTS):
-                    flagged.append(module.relative_to(_REPO_ROOT).as_posix())
-                    break
-    return sorted(set(flagged))
+def _parse(module: Path) -> ast.Module:
+    return ast.parse(module.read_text(encoding="utf-8"), filename=str(module))
+
+
+def _call_name(call: ast.Call) -> str:
+    func = call.func
+    parts: list[str] = []
+    while isinstance(func, ast.Attribute):
+        parts.append(func.attr)
+        func = func.value
+    if isinstance(func, ast.Name):
+        parts.append(func.id)
+    return ".".join(reversed(parts))
+
+
+def _is_repo_root_expr(source: str) -> bool:
+    """True when a path expression is rooted at the repository, not a temp dir."""
+    if any(token in source for token in _TMP_RECEIVER_TOKENS):
+        return False
+    if "__file__" in source and ("parents" in source or re.search(r"\.parent\b", source)):
+        return True
+    return any(
+        token in _REPO_ROOT_CONSTANTS or token.endswith("_ROOT")
+        for token in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", source)
+    )
+
+
+def _subprocess_git_tree_scan(call: ast.Call) -> bool:
+    if _call_name(call) not in _SUBPROCESS_CALLS:
+        return False
+    for node in ast.walk(call):
+        if not isinstance(node, (ast.List, ast.Tuple)):
+            continue
+        values = {
+            element.value
+            for element in node.elts
+            if isinstance(element, ast.Constant) and isinstance(element.value, str)
+        }
+        if values & _GIT_TREE_TOKENS:
+            return True
+    return False
+
+
+def _direct_scan_sites(node: ast.AST) -> list[str]:
+    """Repository-tree scans performed anywhere inside ``node``."""
+    sites: list[str] = []
+    for call in (child for child in ast.walk(node) if isinstance(child, ast.Call)):
+        name = _call_name(call)
+        if isinstance(call.func, ast.Attribute) and call.func.attr in _WALK_ATTRS:
+            receiver = ast.unparse(call.func.value)
+            if _is_repo_root_expr(receiver):
+                sites.append(f"{receiver}.{call.func.attr}")
+        elif name in {"os.walk", "os.scandir"} and call.args:
+            argument = ast.unparse(call.args[0])
+            if _is_repo_root_expr(argument):
+                sites.append(f"{name}({argument})")
+        elif name.rsplit(".", 1)[-1] in _KNOWN_SCANNER_CALLS:
+            sites.append(f"scanner:{name}")
+        elif _subprocess_git_tree_scan(call):
+            sites.append("subprocess git tree scan")
+    return sorted(set(sites))
+
+
+def _is_repo_wide_marker(node: ast.AST) -> bool:
+    """True for a real ``pytest.mark.repo_wide`` attribute chain."""
+    return (
+        isinstance(node, ast.Attribute)
+        and node.attr == "repo_wide"
+        and isinstance(node.value, ast.Attribute)
+        and node.value.attr == "mark"
+        and isinstance(node.value.value, ast.Name)
+        and node.value.value.id == "pytest"
+    )
+
+
+def _marked_by_repo_wide(decorators: list[ast.expr]) -> bool:
+    return any(any(_is_repo_wide_marker(node) for node in ast.walk(decorator)) for decorator in decorators)
+
+
+def _module_marked(tree: ast.Module) -> bool:
+    for statement in tree.body:
+        if not isinstance(statement, ast.Assign):
+            continue
+        if not any(isinstance(target, ast.Name) and target.id == "pytestmark" for target in statement.targets):
+            continue
+        if _marked_by_repo_wide([statement.value]):
+            return True
+    return False
+
+
+def _top_level_functions(tree: ast.Module) -> dict[str, tuple[ast.FunctionDef | ast.AsyncFunctionDef, ast.ClassDef | None]]:
+    found: dict[str, tuple[ast.FunctionDef | ast.AsyncFunctionDef, ast.ClassDef | None]] = {}
+    for node in tree.body:
+        if isinstance(node, ast.ClassDef):
+            for item in node.body:
+                if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    found[item.name] = (item, node)
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            found[node.name] = (node, None)
+    return found
+
+
+def _function_marked(tree: ast.Module, function: str) -> bool:
+    entry = _top_level_functions(tree).get(function)
+    if entry is None:
+        return False
+    node, owner = entry
+    return _marked_by_repo_wide(node.decorator_list) or (
+        owner is not None and _marked_by_repo_wide(owner.decorator_list)
+    )
+
+
+def _implicated_test_functions(tree: ast.Module) -> dict[str, list[str]]:
+    """Test functions that scan a repo tree directly or via a scanning helper."""
+    functions = _top_level_functions(tree)
+    direct: dict[str, list[str]] = {
+        name: sites
+        for name, (node, _owner) in functions.items()
+        if (sites := _direct_scan_sites(node))
+    }
+
+    def calls(node: ast.AST) -> set[str]:
+        return {_call_name(call).rsplit(".", 1)[-1] for call in ast.walk(node) if isinstance(call, ast.Call)}
+
+    # Propagate through every function: a test that (transitively) calls a
+    # scanning helper is itself a scanner, even when the chain passes through
+    # helpers that do not scan on their own.
+    implicated_all = set(direct)
+    changed = True
+    while changed:
+        changed = False
+        for name, (node, _owner) in functions.items():
+            if name not in implicated_all and calls(node) & implicated_all:
+                implicated_all.add(name)
+                changed = True
+
+    return {
+        name: direct.get(name, ["via scanning helper"])
+        for name in implicated_all
+        if name.startswith("test_")
+    }
+
+
+def _module_level_scan_sites(tree: ast.Module) -> list[str]:
+    statements = [
+        statement
+        for statement in tree.body
+        if not isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+    ]
+    return _direct_scan_sites(ast.Module(body=statements, type_ignores=[]))
 
 
 def test_repo_tree_scanners_carry_the_marker() -> None:
-    """A module that scans a repo tree or runs a repo lint must be ``repo_wide``."""
-    missing = [
-        module
-        for module in _repo_wide_scanner_modules()
-        if not _MARKER_RE.search((_REPO_ROOT / module).read_text(encoding="utf-8"))
-    ]
+    """A test that scans a repo tree or runs a repo lint must be ``repo_wide``.
+
+    Per-function granularity: every implicated test is checked on its own, so a
+    module with two scanners and one marker fails.
+    """
+    missing: list[str] = []
+    for module in _test_module_paths():
+        relative = module.relative_to(_REPO_ROOT).as_posix()
+        tree = _parse(module)
+        module_marked = _module_marked(tree)
+        for function, sites in _implicated_test_functions(tree).items():
+            node_id = f"{relative}::{function}"
+            if node_id in NOT_REPO_WIDE:
+                continue
+            if module_marked or _function_marked(tree, function):
+                continue
+            missing.append(f"{node_id}  ({', '.join(sites)})")
+        if not module_marked and relative not in NOT_REPO_WIDE and _module_level_scan_sites(tree):
+            missing.append(f"{relative}  (module-level repo tree scan)")
     assert not missing, (
-        "These test modules scan repository trees or run a repo-wide linter but "
+        "These test functions scan repository trees or run a repo-wide linter but "
         "do not carry the repo_wide marker, so an import-selected CI tier can "
-        "never run them (#8707). Add `pytestmark = pytest.mark.repo_wide` "
-        "(or a per-test `@pytest.mark.repo_wide`):\n" + "\n".join(missing)
+        "never run them (#8707). Add `@pytest.mark.repo_wide` (or a module "
+        "`pytestmark`), or add a reasoned NOT_REPO_WIDE entry:\n" + "\n".join(missing)
     )
 
 
@@ -145,27 +369,50 @@ def test_known_repo_wide_modules_carry_the_marker() -> None:
     unmarked = [
         module
         for module in sorted(KNOWN_REPO_WIDE_MODULES)
-        if not _MARKER_RE.search((_REPO_ROOT / module).read_text(encoding="utf-8"))
+        if not _module_marked(_parse(_REPO_ROOT / module))
     ]
-    assert not unmarked, "known repo-wide modules lost their repo_wide marker:\n" + "\n".join(unmarked)
+    assert not unmarked, (
+        "known repo-wide modules lost their module-level repo_wide marker:\n" + "\n".join(unmarked)
+    )
 
 
 def test_known_repo_wide_functions_carry_the_marker() -> None:
+    missing: list[str] = []
     unmarked: list[str] = []
     for node in KNOWN_REPO_WIDE_FUNCTIONS:
         module_rel, _, function = node.partition("::")
         module = _REPO_ROOT / module_rel
-        assert module.is_file(), f"known repo-wide module no longer exists: {module_rel}"
-        text = module.read_text(encoding="utf-8")
-        match = re.search(
-            rf"(?ms)^@[^\n]*repo_wide[^\n]*\n(?:@[^\n]*\n)*def {re.escape(function)}\b",
-            text,
-        )
-        if match is None:
+        if not module.is_file():
+            missing.append(module_rel)
+            continue
+        if not _function_marked(_parse(module), function):
             unmarked.append(node)
+    assert not missing, f"known repo-wide modules no longer exist: {missing}"
     assert not unmarked, (
-        "known repo-wide tests lost their per-function repo_wide decorator:\n" + "\n".join(unmarked)
+        "known repo-wide tests lost their per-function repo_wide decorator "
+        "(decorator order and comments must not matter):\n" + "\n".join(unmarked)
     )
+
+
+def test_not_repo_wide_entries_are_justified() -> None:
+    """The escape hatch stays honest: real node, real reason, still a scanner."""
+    known = set(KNOWN_REPO_WIDE_MODULES) | set(KNOWN_REPO_WIDE_FUNCTIONS)
+    for node_id, reason in NOT_REPO_WIDE.items():
+        assert reason.strip(), f"{node_id}: a NOT_REPO_WIDE entry needs a reason"
+        assert node_id not in known, f"{node_id}: cannot be both repo-wide and NOT_REPO_WIDE"
+        module_rel, _, function = node_id.partition("::")
+        module = _REPO_ROOT / module_rel
+        assert module.is_file(), f"{node_id}: module {module_rel} no longer exists"
+        tree = _parse(module)
+        if function:
+            assert function in _top_level_functions(tree), f"{node_id}: function no longer exists"
+            assert function in _implicated_test_functions(tree), (
+                f"{node_id}: no longer looks like a repo scanner; remove the stale entry"
+            )
+        else:
+            assert _module_level_scan_sites(tree), (
+                f"{node_id}: no longer has a module-level repo scan; remove the stale entry"
+            )
 
 
 def test_selected_tier_command_always_runs_repo_wide() -> None:
@@ -180,3 +427,139 @@ def test_selected_tier_command_always_runs_repo_wide() -> None:
     assert any(re.search(r"-m [^\n]*repo_wide", block) for block in selected_blocks), (
         "the selected tier must run `-m repo_wide` so repo-wide tests always run (#8707)"
     )
+
+
+def test_docs_lane_also_runs_repo_wide() -> None:
+    """Docs-only PRs only get the docs lane, and repo-wide scanners read docs/."""
+    ci_text = _CI.read_text(encoding="utf-8")
+    docs_blocks = re.findall(
+        r'if \[ "\$DOCS_ONLY" = "true" \]; then\n(.*?)\n\s*exit 0',
+        ci_text,
+        re.DOTALL,
+    )
+    assert docs_blocks, "ci.yml has no docs-only pytest block"
+    assert any(re.search(r"-m [^\n]*repo_wide", block) for block in docs_blocks), (
+        "the docs lane must also run `-m repo_wide`: repo-wide tests read docs/ (#8707)"
+    )
+
+
+def _synthetic(source: str) -> ast.Module:
+    return ast.parse(textwrap.dedent(source))
+
+
+def test_marker_detection_requires_the_real_decorator() -> None:
+    """A bare ``repo_wide`` mention in a comment or docstring is not a marker."""
+    tree = _synthetic(
+        '''
+        import pytest
+
+        # repo_wide
+        """repo_wide is a marker."""
+
+        def test_mention_only():
+            assert "repo_wide" == "repo_wide"
+        '''
+    )
+    assert not _module_marked(tree)
+    assert not _function_marked(tree, "test_mention_only")
+
+
+def test_marker_detection_accepts_module_function_and_class_forms() -> None:
+    module_form = _synthetic(
+        """
+        import pytest
+
+        pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
+
+        def test_x():
+            ...
+        """
+    )
+    assert _module_marked(module_form)
+
+    # Decorator order must not matter (the marker is not first).
+    function_form = _synthetic(
+        """
+        import pytest
+
+        @pytest.mark.other
+        @pytest.mark.repo_wide
+        def test_x():
+            ...
+        """
+    )
+    assert _function_marked(function_form, "test_x")
+
+    class_form = _synthetic(
+        """
+        import pytest
+
+        @pytest.mark.repo_wide
+        class TestSuite:
+            def test_x(self):
+                ...
+        """
+    )
+    assert _function_marked(class_form, "test_x")
+
+    unrelated = _synthetic(
+        """
+        import pytest
+
+        @some_other.repo_wide
+        def test_x():
+            ...
+        """
+    )
+    assert not _function_marked(unrelated, "test_x")
+
+
+def test_marker_detection_is_per_function() -> None:
+    """Two scanners in one module, one marker: the unmarked one must stand out."""
+    tree = _synthetic(
+        """
+        import pytest
+
+        @pytest.mark.repo_wide
+        def test_marked():
+            (REPO / "tests").rglob("*.py")
+
+        def test_unmarked():
+            (REPO / "scripts").rglob("*.py")
+        """
+    )
+    assert set(_implicated_test_functions(tree)) == {"test_marked", "test_unmarked"}
+    assert not _module_marked(tree)
+    assert _function_marked(tree, "test_marked")
+    assert not _function_marked(tree, "test_unmarked")
+
+
+def test_heuristic_roots_tmp_paths_and_git_tree_scans() -> None:
+    """Temp-path receivers are skipped; repo-root and git-tree scans are flagged."""
+    tmp_receiver = _synthetic(
+        """
+        def test_tmp(tmp_path):
+            (tmp_path / "x").rglob("*.py")
+        """
+    )
+    assert _implicated_test_functions(tmp_receiver) == {}
+
+    file_relative = _synthetic(
+        """
+        from pathlib import Path
+
+        def test_scan():
+            Path(__file__).resolve().parents[1].rglob("*.py")
+        """
+    )
+    assert "test_scan" in _implicated_test_functions(file_relative)
+
+    git_tree_scan = _synthetic(
+        """
+        import subprocess
+
+        def test_scan():
+            subprocess.run(["git", "ls-files"], capture_output=True, check=True)
+        """
+    )
+    assert "test_scan" in _implicated_test_functions(git_tree_scan)
