@@ -803,6 +803,48 @@ def test_path_traversal_slug_fails_and_reads_nothing(
     assert opened_files == []
 
 
+def test_symlink_pointing_outside_root_fails_and_reads_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """R-11: A symlinked input pointing outside its root fails with path_forbidden and reads nothing."""
+    _setup_two_lesson_fixture(tmp_path)
+    outside_dir = tmp_path / "outside_dir"
+    outside_dir.mkdir(parents=True, exist_ok=True)
+    secret_file = outside_dir / "secret.yaml"
+    secret_file.write_text("secret_content: 1\n", encoding="utf-8")
+
+    symlink_plan = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/mod-symlink.yaml"
+    symlink_plan.symlink_to(secret_file)
+
+    with record_file_reads(monkeypatch) as opened_files:
+        with pytest.raises(DigestError) as exc_info:
+            build_digest("a1", "mod-symlink", 1, repo_root=tmp_path)
+
+    assert exc_info.value.code == codes.PATH_FORBIDDEN
+    assert opened_files == []
+
+
+def test_symlink_pointing_to_forbidden_dir_fails_and_reads_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """R-11: A symlinked input pointing under curriculum/l2-uk-en/plans/ fails with path_forbidden and reads nothing."""
+    _setup_two_lesson_fixture(tmp_path)
+    forbidden_dir = tmp_path / "curriculum/l2-uk-en/plans"
+    forbidden_dir.mkdir(parents=True, exist_ok=True)
+    forbidden_plan = forbidden_dir / "lit-humor.yaml"
+    forbidden_plan.write_text("plan_schema: 1\n", encoding="utf-8")
+
+    symlink_plan = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/mod-symlink-forbidden.yaml"
+    symlink_plan.symlink_to(forbidden_plan)
+
+    with record_file_reads(monkeypatch) as opened_files:
+        with pytest.raises(DigestError) as exc_info:
+            build_digest("a1", "mod-symlink-forbidden", 1, repo_root=tmp_path)
+
+    assert exc_info.value.code == codes.PATH_FORBIDDEN
+    assert opened_files == []
+
+
 def test_invalid_level_fails(tmp_path: Path) -> None:
     """Invalid level not in CLI allowed choices fails with path_forbidden."""
     _setup_two_lesson_fixture(tmp_path)
@@ -983,24 +1025,56 @@ def test_in_root_data_symlink_with_escaping_lock_refused_before_read(
     assert set(opened_files).issubset(expected_allowed)
 
 
+@pytest.mark.parametrize("dir_kind", ["plan", "state", "mdx"])
 def test_symlinked_parent_directory_refused_before_read(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, dir_kind: str
 ) -> None:
-    """A symlinked parent directory is refused before any read."""
-    _setup_two_lesson_fixture(tmp_path)
+    """A symlinked parent directory is refused before any read of that input."""
+    paths = _setup_two_lesson_fixture(tmp_path)
 
-    # Relocate plans directory to an in-root target and create a parent directory symlink
-    plans_parent = tmp_path / "curriculum/l2-uk-en/lesson-plans"
-    real_plans_dir = plans_parent / "a1_real"
-    (plans_parent / "a1").rename(real_plans_dir)
-    (plans_parent / "a1").symlink_to(real_plans_dir)
+    if dir_kind == "plan":
+        plans_parent = tmp_path / "curriculum/l2-uk-en/lesson-plans"
+        real_plans_dir = plans_parent / "a1_real"
+        (plans_parent / "a1").rename(real_plans_dir)
+        (plans_parent / "a1").symlink_to(real_plans_dir)
+        real_target_dir = real_plans_dir
+        expected_allowed: set[str] = set()
+    elif dir_kind == "state":
+        state_parent = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state"
+        real_state_dir = state_parent / "mod-fixture_real"
+        (state_parent / "mod-fixture").rename(real_state_dir)
+        (state_parent / "mod-fixture").symlink_to(real_state_dir)
+        real_target_dir = real_state_dir
+        expected_allowed = {
+            str(paths["plan"]),
+            str(paths["mdx_1"]),
+            str(tmp_path / "schemas/module-plan-v2.schema.json"),
+        }
+    elif dir_kind == "mdx":
+        mdx_parent = tmp_path / "site/src/content/docs/a1"
+        real_mdx_dir = mdx_parent / "mod-fixture_real"
+        (mdx_parent / "mod-fixture").rename(real_mdx_dir)
+        (mdx_parent / "mod-fixture").symlink_to(real_mdx_dir)
+        real_target_dir = real_mdx_dir
+        expected_allowed = {
+            str(paths["plan"]),
+            str(tmp_path / "schemas/module-plan-v2.schema.json"),
+        }
 
     with record_file_reads(monkeypatch) as opened_files:
         with pytest.raises(DigestError) as exc_info:
             build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
 
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert opened_files == []
+    assert not any(str(real_target_dir) in p for p in opened_files)
+    assert set(opened_files).issubset(expected_allowed)
+
+    if dir_kind == "state":
+        with record_file_reads(monkeypatch) as opened_check:
+            with pytest.raises(DigestError) as exc_info_chk:
+                check_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+        assert exc_info_chk.value.code == codes.PATH_FORBIDDEN
+        assert opened_check == []
 
 
 def test_symlinked_schema_refused_before_read(
@@ -1170,3 +1244,99 @@ def test_missing_schema_in_supplied_root_fails_without_fallback(
 
     assert exc_info2.value.code == codes.DIGEST_SCHEMA_INVALID
     assert "schema file not found" in exc_info2.value.message
+
+
+def test_cached_validator_requires_schema_file_on_every_call(tmp_path: Path) -> None:
+    """A cached validator requires schema file to exist on every call; deleting it fails with DIGEST_SCHEMA_INVALID."""
+    _setup_two_lesson_fixture(tmp_path)
+
+    doc = {
+        "digest_schema": DIGEST_SCHEMA,
+        "generator_version": GENERATOR_VERSION,
+        "level": "a1",
+        "slug": "mod-fixture",
+        "up_to": 1,
+        "plan_sha256": "0" * 64,
+        "sources": [],
+        "lessons": [],
+    }
+
+    # Validate once succeeds and populates cache
+    validate_digest(doc, repo_root=tmp_path)
+
+    # Delete the schema file
+    schema_path = tmp_path / "schemas/module-digest-v1.schema.json"
+    schema_path.unlink()
+
+    # Call again in the same process must fail with DIGEST_SCHEMA_INVALID
+    with pytest.raises(DigestError) as exc_info:
+        validate_digest(doc, repo_root=tmp_path)
+    assert exc_info.value.code == codes.DIGEST_SCHEMA_INVALID
+    assert "schema file not found" in exc_info.value.message
+
+
+def test_cached_validator_reloads_on_schema_byte_change(tmp_path: Path) -> None:
+    """Changing schema bytes between calls invalidates old cache and uses the new schema."""
+    _setup_two_lesson_fixture(tmp_path)
+
+    doc = {
+        "digest_schema": DIGEST_SCHEMA,
+        "generator_version": GENERATOR_VERSION,
+        "level": "a1",
+        "slug": "mod-fixture",
+        "up_to": 1,
+        "plan_sha256": "0" * 64,
+        "sources": [],
+        "lessons": [],
+    }
+
+    # Validate once succeeds
+    validate_digest(doc, repo_root=tmp_path)
+
+    # Modify schema bytes to require a new mandatory property
+    schema_path = tmp_path / "schemas/module-digest-v1.schema.json"
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    schema["required"].append("review_round_5_marker")
+    schema["properties"]["review_round_5_marker"] = {"type": "string"}
+    schema_path.write_text(json.dumps(schema), encoding="utf-8")
+
+    # Calling again in the same process must use new schema and fail because doc lacks the field
+    with pytest.raises(DigestError) as exc_info:
+        validate_digest(doc, repo_root=tmp_path)
+    assert exc_info.value.code == codes.DIGEST_SCHEMA_INVALID
+    assert "review_round_5_marker" in exc_info.value.message
+
+    # Providing the new property succeeds under the new schema
+    doc["review_round_5_marker"] = "r5_verified"
+    validate_digest(doc, repo_root=tmp_path)
+
+
+def test_build_digest_fails_when_plan_schema_deleted_after_cache(tmp_path: Path) -> None:
+    """build_digest caches plan validator, but deleting plan schema causes subsequent call to fail."""
+    _setup_two_lesson_fixture(tmp_path)
+
+    # First call succeeds
+    doc = build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert doc["level"] == "a1"
+
+    # Delete the plan schema
+    plan_schema_path = tmp_path / "schemas/module-plan-v2.schema.json"
+    plan_schema_path.unlink()
+
+    # Second call in same process must fail
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert exc_info.value.code == codes.DIGEST_SCHEMA_INVALID
+    assert "schema file not found" in exc_info.value.message
+
+    # Recreate plan schema with changed bytes requiring an extra property
+    real_schema = json.loads((REPO_ROOT / "schemas/module-plan-v2.schema.json").read_text(encoding="utf-8"))
+    real_schema["required"].append("custom_module_field")
+    real_schema["properties"]["custom_module_field"] = {"type": "string"}
+    plan_schema_path.write_text(json.dumps(real_schema), encoding="utf-8")
+
+    # Subsequent call in same process must reload schema and fail with plan_invalid
+    with pytest.raises(DigestError) as exc_info2:
+        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert exc_info2.value.code == codes.PLAN_INVALID
+    assert "custom_module_field" in exc_info2.value.message

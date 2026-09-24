@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -15,7 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas/module-digest-v1.schema.json"
 
 _VALIDATOR: Draft202012Validator | None = None
-_VALIDATORS: dict[str, Draft202012Validator] = {}
+_VALIDATORS: dict[tuple[str, str], Draft202012Validator] = {}
 
 
 def _resolve_schema_path(schema_name: str, repo_root: Path | None = None) -> Path:
@@ -24,6 +25,30 @@ def _resolve_schema_path(schema_name: str, repo_root: Path | None = None) -> Pat
     root = resolve_repo_root(repo_root)
     cand_rel = f"schemas/{schema_name}"
     return _checked_path(root, cand_rel, "schemas")
+
+
+def _load_validator(path: Path) -> Draft202012Validator:
+    """Validate path exists and load/cache Draft202012Validator keyed on (resolved path, sha256)."""
+    if not path.is_file():
+        raise DigestError(codes.DIGEST_SCHEMA_INVALID, f"schema file not found: {path}")
+    try:
+        raw = path.read_bytes()
+    except Exception as exc:
+        raise DigestError(codes.DIGEST_SCHEMA_INVALID, f"schema file unreadable: {exc}") from exc
+
+    file_sha256 = hashlib.sha256(raw).hexdigest()
+    cache_key = (str(path.resolve()), file_sha256)
+    if cache_key in _VALIDATORS:
+        return _VALIDATORS[cache_key]
+
+    try:
+        schema = json.loads(raw.decode("utf-8"))
+        validator = Draft202012Validator(schema)
+    except Exception as exc:
+        raise DigestError(codes.DIGEST_SCHEMA_INVALID, f"schema file unreadable: {exc}") from exc
+
+    _VALIDATORS[cache_key] = validator
+    return validator
 
 
 def get_validator(schema_path: Path | None = None, repo_root: Path | None = None) -> Draft202012Validator:
@@ -36,15 +61,7 @@ def get_validator(schema_path: Path | None = None, repo_root: Path | None = None
         path = _checked_path(root, schema_path, "schemas")
     else:
         path = _resolve_schema_path("module-digest-v1.schema.json", repo_root=root)
-        if repo_root is None and _VALIDATOR is not None:
-            return _VALIDATOR
-    if not path.is_file():
-        raise DigestError(codes.DIGEST_SCHEMA_INVALID, f"schema file not found: {path}")
-    try:
-        schema = json.loads(path.read_text(encoding="utf-8"))
-    except Exception as exc:
-        raise DigestError(codes.DIGEST_SCHEMA_INVALID, f"schema file unreadable: {exc}") from exc
-    validator = Draft202012Validator(schema)
+    validator = _load_validator(path)
     if schema_path is None and repo_root is None:
         _VALIDATOR = validator
     return validator
@@ -56,18 +73,7 @@ def get_cached_validator(schema_name: str, repo_root: Path | None = None) -> Dra
 
     root = resolve_repo_root(repo_root)
     path = _resolve_schema_path(schema_name, repo_root=root)
-    cache_key = str(path)
-    if cache_key in _VALIDATORS:
-        return _VALIDATORS[cache_key]
-    if not path.is_file():
-        raise DigestError(codes.DIGEST_SCHEMA_INVALID, f"schema file not found: {path}")
-    try:
-        schema = json.loads(path.read_text(encoding="utf-8"))
-    except Exception as exc:
-        raise DigestError(codes.DIGEST_SCHEMA_INVALID, f"schema file unreadable: {exc}") from exc
-    validator = Draft202012Validator(schema)
-    _VALIDATORS[cache_key] = validator
-    return validator
+    return _load_validator(path)
 
 
 def validate_digest(doc: Any, *, schema_path: Path | None = None, repo_root: Path | None = None) -> None:
