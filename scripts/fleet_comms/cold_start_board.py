@@ -74,6 +74,17 @@ LOAD_BEARING_PROBES = frozenset(
 )
 SESSION_STREAMS_REL = Path(".agent/session-streams/v1/session-streams.sqlite3")
 
+# Optional probes shed (in this order) before the last-resort oversized
+# fallback, so load-bearing probe data survives a single bloated probe.
+_SHED_ORDER = (
+    "needle_search",
+    "issues_streams_membership",
+    "orient_lean",
+    "gh_pr_list",
+    "bottleneck_slice",
+    "session_streams_and_handoff",
+)
+
 
 @dataclass
 class ProbeResult:
@@ -273,6 +284,37 @@ def _get_local_git_info() -> dict[str, Any]:
         return {"error": str(exc)}
 
 
+def _summarize_orient_payload(payload: Any) -> dict[str, Any]:
+    """Project an orient payload to the bounded summary the board consumes.
+
+    The board only reads reachability, ``generated_at``, and the top-5 issue
+    summaries (number/title/state); everything else is dropped here so the
+    probe stays small regardless of the raw orient payload size (#8737).
+    """
+    raw_issues: list[Any] = []
+    generated_at: Any = None
+    if isinstance(payload, dict):
+        generated_at = payload.get("generated_at")
+        candidate = payload.get("issues")
+        if isinstance(candidate, list):
+            raw_issues = candidate
+    issues: list[dict[str, Any]] = []
+    for issue in raw_issues[:5]:
+        if isinstance(issue, dict):
+            issues.append(
+                {
+                    "number": issue.get("number"),
+                    "title": str(issue.get("title", ""))[:80],
+                    "state": issue.get("state"),
+                }
+            )
+    return {
+        "generated_at": generated_at,
+        "issues_total": len(raw_issues),
+        "issues": issues,
+    }
+
+
 def _probe_orient_lean(
     base_url: str = "http://localhost:8765",
     timeout_s: float = 0.5,
@@ -288,7 +330,7 @@ def _probe_orient_lean(
             return ProbeResult(
                 status="ok",
                 elapsed_ms=elapsed,
-                data={"api_reachable": True, "orient": data},
+                data={"api_reachable": True, "orient": _summarize_orient_payload(data)},
             )
     except Exception as exc:
         elapsed = (time.perf_counter() - start) * 1000.0
@@ -934,6 +976,18 @@ def build_cold_start_board(
             board["_board_truncated"] = True
         else:
             board.pop("_board_truncated", None)
+        if _board_serialized_bytes(board) <= MAX_BOARD_BYTES:
+            return board
+
+    # Shed optional probes (minimized) one by one before the last-resort
+    # fallback so load-bearing probe data survives a bloated optional probe.
+    shed_probes = dict(board["probes"])
+    for name in _SHED_ORDER:
+        if name not in shed_probes:
+            continue
+        shed_probes[name] = _minimal_probe(shed_probes[name])
+        board["probes"] = shed_probes
+        board["_board_truncated"] = True
         if _board_serialized_bytes(board) <= MAX_BOARD_BYTES:
             return board
 
