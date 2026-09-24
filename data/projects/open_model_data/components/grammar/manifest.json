@@ -23,11 +23,18 @@
   "licenses": {
     "ua_gec_2.0": {
       "license": "CC BY 4.0",
-      "attribution": "UA-GEC: Corpus of Annotated Sentences for Ukrainian GEC"
+      "attribution": "UA-GEC: Corpus of Annotated Sentences for Ukrainian GEC",
+      "source_repository": "https://github.com/grammarly/ua-gec",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "brown_uk": {
       "license": "CC BY-NC-SA 4.0",
-      "attribution": "Brown-UK: Corpus of Contemporary Ukrainian (BrUK)"
+      "attribution": "Brown-UK (БрУК): Corpus of Contemporary Ukrainian (BrUK)",
+      "attribution_record": "BROWN_UK_ATTRIBUTION.md",
+      "source_repository": "https://github.com/brown-uk/corpus",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "documents_used_count": 49,
+      "sentences_used_count": 364
     }
   },
   "statistics": {
@@ -66,7 +73,7 @@
     "exclusions_by_policy": {
       "document_level_eval_partition_holdout": "10% held out for evaluation split (136 eval records)",
       "official_test_set_firewall": "Held-out test set firewall (0 doc overlap, 0 Jaccard >= 0.80 near-duplicates, 13 candidate matches excluded)",
-      "structural_and_syntactic_quality_filters": 2464,
+      "structural_and_syntactic_quality_filters": 2563,
       "uncapitalized_or_fragment": 508,
       "sentence_length_floor_under_5_words": 287,
       "non_cyrillic_latin_urls_emojis_symbols": 236,
@@ -79,8 +86,8 @@
       "duplicate_pairs_deduplication": 21,
       "bracket_editorial_artifacts": 16
     },
-    "candidate_edit_sets_excluded_total": 4156,
-    "candidate_edit_sets_retained_in_pipeline": 1096,
+    "candidate_edit_sets_excluded_total": 4255,
+    "candidate_edit_sets_retained_in_pipeline": 997,
     "delivered_substantive_corrections": 997,
     "delivered_substantive_corrections_train": 911,
     "delivered_substantive_corrections_eval": 86,

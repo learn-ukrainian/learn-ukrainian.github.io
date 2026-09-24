@@ -116,6 +116,13 @@ def test_manifest_integrity(grammar_data):
     assert stats["train_records"] == len(grammar_data["train"])
     assert stats["eval_records"] == len(grammar_data["eval"])
 
+    recon = manifest["source_denominator_reconciliation"]
+    assert recon["candidate_edit_sets_excluded_total"] == 4255
+    assert recon["candidate_edit_sets_retained_in_pipeline"] == 997
+    assert recon["delivered_substantive_corrections"] == 997
+    assert manifest["licenses"]["brown_uk"]["attribution_record"] == "BROWN_UK_ATTRIBUTION.md"
+    assert (GRAMMAR_DIR / "BROWN_UK_ATTRIBUTION.md").is_file()
+
 
 def test_control_correction_ratio(grammar_data):
     """Verify strict 20.0% to 30.0% clean controls and 70.0% to 80.0% corrections."""
@@ -210,6 +217,12 @@ def test_brown_uk_attribution(grammar_data):
     brown_records = [r for r in grammar_data["all"] if r["source_corpus"] == "brown_uk"]
     assert len(brown_records) >= 350, f"Expected >= 350 Brown-UK records, got {len(brown_records)}"
 
+    attr_file = GRAMMAR_DIR / "BROWN_UK_ATTRIBUTION.md"
+    assert attr_file.is_file(), f"Missing BROWN_UK_ATTRIBUTION.md at {attr_file}"
+    attr_content = attr_file.read_text(encoding="utf-8")
+    assert "CC BY-NC-SA 4.0" in attr_content
+    assert "БрУК" in attr_content
+
     for r in brown_records:
         assert r["doc_id"] != "brown_uk_corpus", f"Generic synthetic doc_id found in {r['record_id']}"
         assert len(r["doc_id"]) > 5
@@ -219,6 +232,7 @@ def test_brown_uk_attribution(grammar_data):
         assert r["source_metadata"]["license"] == "CC BY-NC-SA 4.0"
         assert r["source_metadata"]["source_corpus"] == "brown_uk"
         assert r["source_metadata"]["doc_name"] == r["doc_name"]
+        assert r["doc_id"] in attr_content
 
 
 def test_parallel_annotator_retention(grammar_data):
@@ -794,7 +808,7 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
 
     # 15. Correction assessment not naming edit pair rejected
     no_span_findings = copy.deepcopy(raw_findings)
-    no_span_findings["1"]["reviewer_assessment"] = "Текст нормалізовано відповідно до літературних норм."
+    no_span_findings["3"]["reviewer_assessment"] = "Текст нормалізовано відповідно до літературних норм."
     f_path19 = tmp_path / "no_span.json"
     f_path19.write_text(json.dumps(no_span_findings), encoding="utf-8")
     with pytest.raises(ValueError, match="does not name edit pair"):
@@ -807,7 +821,7 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
 
     # 16. Clean control assessment lacking sentence-specific citation rejected
     no_cite_findings = copy.deepcopy(raw_findings)
-    no_cite_findings["3"]["reviewer_assessment"] = "Автентичне контрольне речення без помилок."
+    no_cite_findings["1"]["reviewer_assessment"] = "Автентичне контрольне речення без помилок."
     f_path20 = tmp_path / "no_cite.json"
     f_path20.write_text(json.dumps(no_cite_findings), encoding="utf-8")
     with pytest.raises(ValueError, match="lacks full sentence-specific citation"):
@@ -820,8 +834,8 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
 
     # 17. Clean control assessment with only four-word partial citation rejected
     partial_cite_findings = copy.deepcopy(raw_findings)
-    partial_cite_findings["3"]["reviewer_assessment"] = (
-        "Унікальна оцінка: «її вдалось створити одразу» — слововжиток нормативний."
+    partial_cite_findings["1"]["reviewer_assessment"] = (
+        "Унікальна оцінка: «і хоч депутатський корпус» — слововжиток нормативний."
     )
     f_path21 = tmp_path / "partial_cite.json"
     f_path21.write_text(json.dumps(partial_cite_findings), encoding="utf-8")

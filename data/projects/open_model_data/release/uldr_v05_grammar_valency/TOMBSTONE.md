@@ -36,4 +36,4 @@ The grammar valency, prepositional government, and morphosyntactic dataset has b
 - **Canonical Dataset Location:** `data/projects/open_model_data/components/grammar/`
 - **Governing Specification:** [`docs/projects/open-model-data/GRAMMAR_DATASET_SPEC_8342.md`](../../../docs/projects/open-model-data/GRAMMAR_DATASET_SPEC_8342.md)
 - **Acceptance Profile:** [`scripts/projects/open_model_data/profiles/grammar_8342.yaml`](../../../scripts/projects/open_model_data/profiles/grammar_8342.yaml)
-- **Verified Mixture:** Exactly 75.0% substantive corrections / 25.0% pristine controls, 0 synthetic corruptions, 0 shared `doc_id` leakage to held-out test splits, and 100% verified Ukrainian linguistic authorities.
+- **Verified Mixture:** Exactly 72.4% substantive corrections / 27.6% pristine controls, 0 synthetic corruptions, 0 shared `doc_id` leakage to held-out test splits, and 100% verified Ukrainian linguistic authorities.

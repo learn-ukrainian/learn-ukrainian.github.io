@@ -33,7 +33,7 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
 2. **Official Held-Out Test Firewall:**
    - Strict firewall matching against `gec-fluency.test.m2` (0 doc overlap, 0 exact text overlap, and 0 near-duplicate sentences with Jaccard $\ge 0.80$; **13** candidate matches excluded).
 3. **Syntactic & Structural Integrity Filters:**
-   - Structural and syntactic quality filters (complex run-ons, dropped copula/subjects): **2,464** candidates excluded.
+   - Structural and syntactic quality filters (complex run-ons, dropped copula/subjects): **2,563** candidates excluded.
    - Uncapitalized sentence fragments: **508** candidates excluded.
    - Sentence length floor (< 5 words): **287** candidates excluded.
    - Missing or malformed terminal punctuation: **193** candidates excluded.
@@ -49,15 +49,20 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
 6. **Cross-Document Pair Deduplication:**
    - Duplicate `(original_text, corrected_text)` pairs across multiple annotators or documents were deduplicated: **21** candidates excluded.
 7. **Funnel Summary:**
-   - Total exclusions: **4,156** candidate edit sets excluded.
-   - Retained candidate edit sets in pipeline: **1,096** (1,009 train candidates + 87 eval candidates).
-   - Delivered in final balanced component: **997** substantive corrections (911 train, 86 eval), leaving 99 verified candidates in pipeline reserve.
+   - Total exclusions: **4,255** candidate edit sets excluded.
+   - Retained candidate edit sets in pipeline: **997** (911 train candidates + 86 eval candidates).
+   - Delivered in final balanced component: **997** substantive corrections (911 train, 86 eval) — 100% of retained candidate edit sets delivered, with zero withheld and zero in reserve.
 
 ### 3. Delivered Dataset Composition
 - **Substantive Corrections:** **997 records** (911 train across 8 shards, 86 eval across 2 shards).
 - **Protective Clean Controls:** **380 records** (330 train from Brown-UK and gold UA-GEC, 50 eval from Brown-UK).
 - **Total Records:** **1,377 records** (1,241 train records, 136 eval records).
 - **Mixture Ratio:** **72.4% substantive corrections / 27.6% clean controls**, strictly adhering to the 70%–80% corrections and 20%–30% controls required by SPEC §2.2.
+
+## Licensing & Upstream Attribution
+All dataset records carry explicit per-row licensing and provenance:
+- **UA-GEC 2.0:** Licensed under CC BY 4.0. Annotated human error corrections from the official Grammarly UA-GEC release.
+- **Brown-UK (БрУК):** Licensed under CC BY-NC-SA 4.0. Pristine literary and journalistic negative controls. Full per-document catalog, rights architecture, and verification records are documented in [`BROWN_UK_ATTRIBUTION.md`](./BROWN_UK_ATTRIBUTION.md).
 
 ## Query Prompt Punctuation Standards
 Prompt templates follow Ukrainian orthographic standards (Правопис 2019, § 162–164):
