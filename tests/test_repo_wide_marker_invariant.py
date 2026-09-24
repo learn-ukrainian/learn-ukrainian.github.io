@@ -44,6 +44,7 @@ from __future__ import annotations
 import ast
 import re
 import textwrap
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
@@ -88,9 +89,20 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
     "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
+    "tests/projects/open_model_data/test_v4_per_slot_factory.py::test_no_test_in_this_suite_asserts_nonzero_completion_behind_a_stubbed_validator",
+    "tests/test_a1_review_scores.py::TestA1ReviewScores.test_all_modules_have_review_files",
+    "tests/test_a1_review_scores.py::TestA1ReviewScores.test_latest_scores_at_least_8",
+    "tests/test_a1_review_scores.py::TestA1ReviewScores.test_review_files_contain_score_pattern",
+    "tests/test_aggregate_findings.py::TestCollectFindings.test_with_real_a1_data",
+    "tests/test_dashboards.py::TestApiEndpoints.test_endpoints_defined_in_router",
+    "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
     "tests/test_llm_reviewer_dispatch.py::test_no_production_entrypoint_constructs_bare_bakeoff_arm",
     "tests/test_manifest_io.py::test_lexicon_scripts_do_not_open_manifest_inplace",
+    "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
+    "tests/test_prompt_template_render.py::test_phase_template_renders_without_unknown_tokens",
+    "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
+    "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
 )
 
@@ -116,10 +128,6 @@ NOT_REPO_WIDE = {
     "tests/test_start_cursor_launcher.py::test_cursor_seat_enumerated_in_launcher_core_and_public_estate": (
         "Globs only the repository root's start-*-driver.sh; a root-level file change is "
         "not a test/script candidate and forces the full tier."
-    ),
-    "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter": (
-        "Reads the site/src/content/docs content tree (DOCS_ROOT) as a content reader, "
-        "covered by the reads_content marker and the content lane, not a repo code-tree scan."
     ),
     "tests/test_landings_use_levellanding.py::test_content_collection_loads_track_index_mdx_files": (
         "Reads the site/src/content/docs content tree (DOCS_ROOT) as a content reader, "
@@ -189,10 +197,6 @@ NOT_REPO_WIDE = {
         "Scans data/lexicon/source-inventory-review-decisions; data/ changes already force "
         "the full tier, and the module also carries reads_content."
     ),
-    "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words": (
-        "Scans data/lexicon/source-inventory-review-decisions; data/ changes already force "
-        "the full tier, and the module also carries reads_content."
-    ),
     "tests/test_open_model_phase3_historical_protection_channels.py::test_absent_oes_and_church_slavonic_artifacts_remain_blocked": (
         "Scans data/projects/open_model_data for named artifacts (metadata-only existence "
         "check, not a content read); data/ is not a test or script candidate, so any change "
@@ -202,16 +206,53 @@ NOT_REPO_WIDE = {
         "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
         "already forces the full tier."
     ),
-    "tests/test_prompt_template_render.py::test_phase_template_renders_without_unknown_tokens": (
-        "Scans scripts/build/phases; scripts/build/ is on the shared-root denylist, so any "
-        "change already forces the full tier."
-    ),
     "tests/test_site_links.py::TestMdxFiles.test_no_old_module_nn_files": (
         "Reads the site/src/content/docs content tree as a content reader; the module "
         "carries reads_content and the content lane runs it."
     ),
     "tests/test_ulif_dictua.py::test_fixture_cells_keep_each_attested_preposition_out_of_the_form": (
         "Scans tests/fixtures/ulif_dictua; fixture files are not test modules, so any change "
+        "already forces the full tier."
+    ),
+    "tests/build/test_fresh_writer.py::test_nothing_typed_no_cyrillic_in_engine_code": (
+        "Scans the writer engine under scripts/build/fresh; scripts/build/ is on the "
+        "shared-root denylist, so any change already forces the full tier."
+    ),
+    "tests/build/test_fresh_writer.py::test_r11_forbidden_paths_grep": (
+        "Scans the writer engine under scripts/build/fresh; scripts/build/ is on the "
+        "shared-root denylist, so any change already forces the full tier."
+    ),
+    "tests/test_ci_attribution.py::test_run_nodeids_kills_a_wedged_test_and_names_it_on_stderr": (
+        "Uses a repository-rooted scratch path only to create and then delete a "
+        "self-created temp dir (the `rglob` is cleanup); it scans no repository "
+        "invariant tree, so no marker is needed."
+    ),
+    "tests/test_dispatch_xdist_cap.py::test_ci_workflows_do_not_set_the_dispatch_marker": (
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
+        "already forces the full tier."
+    ),
+    "tests/test_site_links.py::TestInternalLinks.test_no_broken_cross_references": (
+        "Reads the site/src/content/docs content tree through a per-track variable; that "
+        "tree is content-class, so the content lane runs the module via reads_content."
+    ),
+    "tests/test_site_links.py::TestMdxFiles.test_all_mdx_have_frontmatter": (
+        "Reads the site/src/content/docs content tree through a per-track variable; that "
+        "tree is content-class, so the content lane runs the module via reads_content."
+    ),
+    "tests/test_site_links.py::TestMdxFiles.test_all_mdx_have_title": (
+        "Reads the site/src/content/docs content tree through a per-track variable; that "
+        "tree is content-class, so the content lane runs the module via reads_content."
+    ),
+    "tests/test_site_links.py::TestModuleCounts.test_minimum_module_count": (
+        "Reads the site/src/content/docs content tree through a per-track variable; that "
+        "tree is content-class, so the content lane runs the module via reads_content."
+    ),
+    "tests/test_source_inventory_intake.py::test_committed_source_inventory_files_are_valid": (
+        "Scans data/lexicon/source-inventory; data/ is not a test or script candidate, so "
+        "any change already forces the full tier."
+    ),
+    "tests/test_workflow_head_concurrency.py::test_merge_group_workflows_do_not_unconditionally_cancel": (
+        "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
         "already forces the full tier."
     ),
 }
@@ -327,10 +368,32 @@ def _module_repo_root_names(tree: ast.Module) -> frozenset[str]:
     return frozenset(names)
 
 
-def _scope_bindings(statements: list[ast.stmt]) -> dict[str, ast.expr]:
-    """Simple one-level ``name = value`` bindings directly in a scope body."""
-    bindings: dict[str, ast.expr] = {}
+def _iter_scope_statements(statements: list[ast.stmt]) -> Iterator[ast.stmt]:
+    """Statements of a scope, descending into ``if``/``with``/``for``/``try`` blocks.
+
+    Nested function/class definitions open a new scope, so their bodies are not
+    part of the enclosing one and are not walked.
+    """
     for statement in statements:
+        yield statement
+        if isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            continue
+        for field in ("body", "orelse", "finalbody"):
+            nested = getattr(statement, field, None)
+            if nested:
+                yield from _iter_scope_statements(nested)
+        for handler in getattr(statement, "handlers", []):
+            yield from _iter_scope_statements(handler.body)
+
+
+def _scope_bindings(statements: list[ast.stmt]) -> dict[str, ast.expr]:
+    """One-level ``name = value`` bindings in a scope body.
+
+    Nested ``if``/``with``/``for``/``try`` blocks count: a ``cmd = [...]``
+    guarded by a condition is still a binding for detection purposes.
+    """
+    bindings: dict[str, ast.expr] = {}
+    for statement in _iter_scope_statements(statements):
         if (
             isinstance(statement, ast.Assign)
             and len(statement.targets) == 1
@@ -344,6 +407,28 @@ def _scope_bindings(statements: list[ast.stmt]) -> dict[str, ast.expr]:
         ):
             bindings.setdefault(statement.target.id, statement.value)
     return bindings
+
+
+def _bindings_repo_root_names(
+    bindings: dict[str, ast.expr],
+    repo_root_names: frozenset[str] = frozenset(),
+) -> frozenset[str]:
+    """Bound names whose value is a repository-rooted expression, transitively.
+
+    A function-local ``api_dir = ROOT / "scripts" / "api"`` roots any walk off
+    ``api_dir`` just as a module-level constant would.
+    """
+    names: set[str] = set()
+    changed = True
+    while changed:
+        changed = False
+        for name, value in bindings.items():
+            if name in names:
+                continue
+            if _is_repo_root_expr(ast.unparse(value), frozenset(repo_root_names | names)):
+                names.add(name)
+                changed = True
+    return frozenset(names)
 
 
 def _has_git_tree_token(sequence: ast.List | ast.Tuple) -> bool:
@@ -448,11 +533,12 @@ def _implicated_test_functions(tree: ast.Module) -> dict[str, list[str]]:
     functions = _top_level_functions(tree)
     repo_root_names = _module_repo_root_names(tree)
     module_bindings = _scope_bindings(tree.body)
-    direct: dict[str, list[str]] = {
-        name: sites
-        for name, (node, _owner) in functions.items()
-        if (sites := _direct_scan_sites(node, repo_root_names, {**module_bindings, **_scope_bindings(node.body)}))
-    }
+    direct: dict[str, list[str]] = {}
+    for name, (node, _owner) in functions.items():
+        bindings = {**module_bindings, **_scope_bindings(node.body)}
+        root_names = repo_root_names | _bindings_repo_root_names(bindings, repo_root_names)
+        if sites := _direct_scan_sites(node, root_names, bindings):
+            direct[name] = sites
 
     def calls(node: ast.AST) -> set[str]:
         return {_call_name(call).rsplit(".", 1)[-1] for call in ast.walk(node) if isinstance(call, ast.Call)}
@@ -484,10 +570,13 @@ def _module_level_scan_sites(tree: ast.Module) -> list[str]:
         for statement in tree.body
         if not isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
     ]
+    bindings = _scope_bindings(statements)
+    module_roots = _module_repo_root_names(tree)
+    root_names = module_roots | _bindings_repo_root_names(bindings, module_roots)
     return _direct_scan_sites(
         ast.Module(body=statements, type_ignores=[]),
-        _module_repo_root_names(tree),
-        _scope_bindings(statements),
+        root_names,
+        bindings,
     )
 
 
@@ -749,6 +838,38 @@ def test_heuristic_follows_named_argv_and_derived_repo_root_constants() -> None:
         """
     )
     assert "test_scan" in _implicated_test_functions(derived_root)
+
+
+def test_heuristic_roots_function_local_and_nested_bindings() -> None:
+    """A function-local repo-root binding and an `if`-guarded argv are scanners (#8707 review)."""
+    local_root = _synthetic(
+        """
+        from pathlib import Path
+
+        ROOT = Path(__file__).resolve().parents[1]
+
+        def test_scan():
+            api_dir = ROOT / "scripts" / "api"
+            for path in api_dir.glob("*.py"):
+                path.read_text()
+        """
+    )
+    assert "test_scan" in _implicated_test_functions(local_root)
+
+    guarded_argv = _synthetic(
+        """
+        import subprocess
+
+        def test_scan(flag):
+            if flag:
+                cmd = ["git", "ls-files"]
+            with open("/dev/null") as _handle:
+                other = ["git", "ls-tree", "-r", "HEAD"]
+            subprocess.run(cmd, capture_output=True, check=True)
+            subprocess.run(other, capture_output=True, check=True)
+        """
+    )
+    assert "test_scan" in _implicated_test_functions(guarded_argv)
 
 
 def test_method_keys_do_not_mask_same_named_methods() -> None:

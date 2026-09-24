@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT / "agents_extensions/shared/skills"
 
 
+@pytest.mark.repo_wide
 def test_split_skill_references_are_reachable_from_their_entrypoint() -> None:
     for name in ("entire-context", "task-family-manager", "thread-rollover", "track-completion"):
         entry = SKILLS / name / "SKILL.md"

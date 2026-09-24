@@ -116,18 +116,33 @@ repo-wide scanners read `docs/`: `tests/test_work_privacy.py`,
 `tests/test_public_tree_no_baked_host_run_root.py`. A docs-only PR that adds a
 baked host path under `docs/` is therefore caught before merge.
 
-The **content lane** deliberately runs no `-m repo_wide` leg: a scanner of a
-content root carries `reads_content` instead of `repo_wide`, and content mode
-selects `-m 'reads_content and not slow and not atlas_release'`, so such a
-scanner is already selected without a repo-wide pass. Every repo-wide test that
-reads a content tree additionally carries `reads_content`, so
-`-m 'reads_content and not slow and not atlas_release'` already runs it:
-`tests/test_llm_reviewer_dispatch.py`,
+The **content lane** deliberately runs no `-m repo_wide` leg: content mode runs
+`-m 'reads_content and not slow and not atlas_release'` (plus the shard safety
+net), so a scanner of a content root is selected by its `reads_content` marker
+without a repo-wide pass. Which lane a content-only PR reaches decides whether
+that marker is enough:
+
+- A PR whose paths are all content-class and include a `site/src/content/docs/`
+  path lands on the **content lane**, which runs `reads_content`: scanners of
+  that tree, for example `tests/test_site_links.py`, run here.
+- A PR touching only `curriculum/` or `wiki/` — no `site/src/content/docs/`
+  path — is docs-only and lands on the **docs lane**, which runs `docs_skills`
+  and `-m 'repo_wide and not slow and not atlas_release'` but **not**
+  `-m reads_content`. A scanner of a curriculum or wiki content root, or of the
+  skills tree the docs lane owns, therefore carries `repo_wide` so the docs lane
+  runs it: `tests/test_ohoiko_source_inventory_scope.py`,
+  `tests/test_prompt_template_render.py`, `tests/test_a1_review_scores.py`,
+  `tests/test_aggregate_findings.py`, `tests/test_schema_validation.py`, and the
+  reference checks in `tests/test_skill_instruction_routes.py` are marked that
+  way.
+
+Repo-wide tests that read a content tree and must also run on the content lane
+carry `reads_content` as well: `tests/test_llm_reviewer_dispatch.py`,
 `tests/test_threshold_source_of_truth.py`, `tests/test_sparse_collection_guard.py`,
 `tests/test_public_tree_no_baked_host_run_root.py`,
 `tests/api/test_app_factory.py`, and
-`tests/test_curriculum_upgrade_no_host_run_root.py` are all marked both ways,
-and none is `slow`/`atlas_release`.
+`tests/test_curriculum_upgrade_no_host_run_root.py` are marked both ways, and
+none is `slow`/`atlas_release`.
 
 `tests/test_repo_wide_marker_invariant.py` keeps the marker honest. Marker
 detection is syntactic and per-function (AST): a test counts only when its own
