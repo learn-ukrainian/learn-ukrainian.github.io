@@ -1,4 +1,4 @@
-"""Assembler for fresh build engine Part E3a (issue #8397, #8431 r3).
+"""Assembler for fresh build engine Part E3a and E3c-1 (issues #8397, #8430, #8431 r3).
 
 Pure functions for:
 - Check 5: draft -> expanded document (plain forms only, step ids on units, provenance)
@@ -8,6 +8,90 @@ Pure functions for:
 Rule 3 compliance: Zero Cyrillic string literals in this module. All Ukrainian text
 comes from records (pack, word store) or the writer's resolved draft.
 Rule 4 (R-11) compliance: No forbidden paths.
+
+Provenance Contract (E3c-1 / ADR-011 / Review Contract #8430):
+Every span in the final lesson-<n>.provenance.yaml carries:
+1. `record_kind` — for `source: record` spans, one of a closed set with its review fix layer:
+   - "word"          -> "word_store" (W- prefix: word store records, paradigms, slovnyk entries, store form options)
+   - "quote"         -> "pack"       (T- prefix: textbook / literary quotes in urok)
+   - "example"       -> "pack"       (EX- prefix: textbook / literary examples in urok)
+   - "exercise_text" -> "pack"       (X- prefix: pack exercise records)
+   - "error"         -> "pack"       (E- prefix: pack error records in vpravy)
+   - "note"          -> "pack"       (N- prefix: style-guide note records)
+   - "video"         -> "pack"       (V- prefix: video records in urok or resursy)
+   - "resource"      -> "pack"       (cited text / resource records in resursy)
+   - null / None     -> "regenerate_lesson" (writer prose)
+   Derivation is strictly from the engine record id prefix / pack section, never from text.
+
+2. `record_side` — for error-correction items:
+   - The span holding the E- record's incorrect text:
+     source="record", ref=<E-id>, record_kind="error", record_side="incorrect"
+   - The correction/answer span holding the E- record's correct text:
+     source="record", ref=<E-id>, record_kind="error", record_side="correct"
+   - null / None elsewhere.
+   Blame rule: R2b blames nothing with record_side: incorrect.
+
+3. `option_origin` and `is_key` — for every learner choice span:
+   - option_origin: "store" when choices come from engine store-generated form options
+     (form-choice; ref carries word record id W-...).
+   - option_origin: "writer_typed" otherwise.
+   - is_key: true for correct choice(s), false for distractors.
+   - null / None for non-choice spans.
+   Blame rule: R2b blames nothing with option_origin: writer_typed and is_key: false.
+
+Per-Type Key Rule Table (A1 learner choices):
+---------------------------------------------------------------------------------------------------------
+Activity Type       Choice Field     Key Identification Rule                     Check 4 Failure Reason
+---------------------------------------------------------------------------------------------------------
+quiz /              options          1. Dict options: option.correct is True     - No correct option: answer_key_missing
+multiple-choice                      2. Int field: item.correct (index)          - Multiple correct options: answer_key_ambiguous
+                                     3. Str field: item.answer (text)            - Index out of range: answer_index_out_of_range
+                                                                                 - Text not in options: answer_not_in_options
+                                                                                 - Text appears >1 in options: answer_key_ambiguous
+                                                                                 - correct & answer conflict: answer_key_conflict
+                                                                                 - Neither provided: answer_key_missing
+
+fill-in             options          mode == "form-choice":                      - Invalid/missing form: form_choice_options_invalid
+(form-choice)                        item.answer matches word form tags          - Duplicate options: form_choice_options_invalid
+                                     option_origin: store, ref: word id          - Answer not in options: form_choice_options_invalid
+
+fill-in             options          item.answer (text)                          - Answer not in options: answer_not_in_options
+(orthography)                                                                    - Duplicate answer in options: answer_key_ambiguous
+
+error-correction    options          item.correction or item.answer (text)       - Answer not in options: answer_not_in_options
+(with choices)                                                                   - Duplicate answer in options: answer_key_ambiguous
+                                                                                 - Sentence/error mismatch: error_text_mismatch
+                                                                                 - Sentence error count != 1: error_text_ambiguous
+                                                                                 - Pack record mismatch: error_ref_mismatch
+
+image-to-letter     options          item.letter (text)                          - Letter not in options: answer_not_in_options
+                                                                                 - Duplicate letter in options: answer_key_ambiguous
+
+translate           options          option.correct is True on option dict       - No correct option: answer_key_missing
+
+odd-one-out         words            1. item.correct (integer index)             - Index out of range: answer_index_out_of_range
+                                     2. item.answer (word text)                  - Answer not in words: answer_not_in_options
+                                                                                 - Duplicate answer in words: answer_key_ambiguous
+                                                                                 - correct & answer conflict: answer_key_conflict
+                                                                                 - Neither provided: answer_key_missing
+
+pick-syllables      syllables        item/act.correctIndices (integer indices)   - correctIndices empty: answer_key_missing
+                                                                                 - Index out of range: answer_index_out_of_range
+                                                                                 - Duplicate indices: answer_key_ambiguous
+
+select              options          option.correct is True on option dict       - Correct count < min_correct: select_correct_set_invalid
+---------------------------------------------------------------------------------------------------------
+
+Item 4 Implementation Choice (Rendered Text in Provenance):
+The final lesson-<n>.provenance.yaml rewrites span text in-place from the printable/rendered
+substitutions (e.g. stressed form options from form_options). Rationale:
+1. Single canonical source of truth for text across all spans.
+2. Reviewer quote matching: findings quote directly from the rendered page with stress, so
+   exact substring matching against span text is simple and consistent.
+3. Downstream tooling (e.g. digest generator, review validators) reads span["text"] without
+   schema branching or duplicate keys.
+4. Avoids redundant text fields on 99% of spans that do not change under print substitution,
+   preserving byte-stability and minimal file footprint.
 """
 
 from __future__ import annotations
@@ -37,8 +121,10 @@ from scripts.generate_mdx.core import generate_mdx
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 EXPANDED_SCHEMA_PATH = REPO_ROOT / "schemas" / "lesson-expanded-v1.schema.json"
+PROVENANCE_SCHEMA_PATH = REPO_ROOT / "schemas" / "lesson-provenance-v1.schema.json"
 
 _CACHED_EXPANDED_VALIDATOR: Draft202012Validator | None = None
+_CACHED_PROVENANCE_VALIDATOR: Draft202012Validator | None = None
 
 # Failure codes
 EXAMPLE_NOT_FOUND = "example_not_found"
@@ -74,6 +160,53 @@ def get_expanded_validator(schema_path: Path | None = None) -> Draft202012Valida
         Draft202012Validator.check_schema(schema)
         _CACHED_EXPANDED_VALIDATOR = Draft202012Validator(schema)
     return _CACHED_EXPANDED_VALIDATOR
+
+
+def get_provenance_validator(schema_path: Path | None = None) -> Draft202012Validator:
+    global _CACHED_PROVENANCE_VALIDATOR
+    if _CACHED_PROVENANCE_VALIDATOR is None:
+        path = schema_path or checked_existing_path(REPO_ROOT, PROVENANCE_SCHEMA_PATH, "schemas")
+        schema = json.loads(path.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        _CACHED_PROVENANCE_VALIDATOR = Draft202012Validator(schema)
+    return _CACHED_PROVENANCE_VALIDATOR
+
+
+def derive_record_kind(ref: str | None, tab: str | None = None) -> str | None:
+    """Derive closed-set record_kind from record identifier prefix and context.
+
+    Closed set and fix layer mapping:
+      word          -> word_store (W- prefix, paradigm forms, slovnyk entries, store options)
+      quote         -> pack (T- prefix in urok)
+      example       -> pack (EX- prefix)
+      exercise_text -> pack (X- prefix)
+      error         -> pack (E- prefix)
+      note          -> pack (N- prefix)
+      video         -> pack (V- prefix)
+      resource      -> pack (T- or resource records in resursy tab)
+      null          -> writer prose (regenerate_lesson)
+    """
+    if not ref:
+        return None
+    if ref.startswith("W-"):
+        return "word"
+    if ref.startswith("E-"):
+        return "error"
+    if ref.startswith("EX-"):
+        return "example"
+    if ref.startswith("X-"):
+        return "exercise_text"
+    if ref.startswith("N-"):
+        return "note"
+    if ref.startswith("V-"):
+        return "video"
+    if ref.startswith("T-"):
+        if tab == "resursy":
+            return "resource"
+        return "quote"
+    if tab == "resursy":
+        return "resource"
+    return "quote"
 
 
 def strip_accents(text: str) -> str:
@@ -190,6 +323,11 @@ def assemble_expanded_document(
             if pid:
                 paradigms_by_id[pid] = st["paradigm"]
 
+    errors_by_id: dict[str, dict[str, Any]] = {}
+    for e in pack.get("errors", []):
+        if isinstance(e, dict) and "id" in e:
+            errors_by_id[e["id"]] = e
+
     units: list[dict[str, Any]] = []
     spans: list[dict[str, Any]] = []
 
@@ -204,6 +342,10 @@ def assemble_expanded_document(
         *,
         source: str = "writer_prose",
         ref: str | None = None,
+        record_kind: str | None = None,
+        record_side: str | None = None,
+        option_origin: str | None = None,
+        is_key: bool | None = None,
     ) -> None:
         clean = strip_accents(text) if source != "writer_prose" else text
         units.append(
@@ -217,6 +359,10 @@ def assemble_expanded_document(
                 "text": clean,
             }
         )
+        if source == "record" and record_kind is None and ref:
+            record_kind = derive_record_kind(ref, tab)
+        elif source != "record":
+            record_kind = None
         spans.append(
             {
                 "tab": tab,
@@ -227,6 +373,10 @@ def assemble_expanded_document(
                 "source": source,
                 "ref": ref,
                 "text": clean,
+                "record_kind": record_kind,
+                "record_side": record_side,
+                "option_origin": option_origin,
+                "is_key": is_key,
             }
         )
 
@@ -339,8 +489,16 @@ def assemble_expanded_document(
                             source="writer_prose",
                         )
                 for line_idx, line in enumerate(block.get("en", [])):
-                    add_unit("urok", step_id, None, None, f"bilingual_en_{block_idx}_{line_idx}",
-                             "vesum_exempt", str(line), source="writer_prose")
+                    add_unit(
+                        "urok",
+                        step_id,
+                        None,
+                        None,
+                        f"bilingual_en_{block_idx}_{line_idx}",
+                        "vesum_exempt",
+                        str(line),
+                        source="writer_prose",
+                    )
 
             elif kind in ("culture", "tip", "summary", "callout"):
                 txt = block.get("text", "")
@@ -383,8 +541,16 @@ def assemble_expanded_document(
                                 source="writer_prose",
                             )
                 for line_idx, line in enumerate(dial.get("translation_en") or []):
-                    add_unit("urok", step_id, None, None, f"dialogue_translation_{line_idx}",
-                             "vesum_exempt", str(line), source="writer_prose")
+                    add_unit(
+                        "urok",
+                        step_id,
+                        None,
+                        None,
+                        f"dialogue_translation_{line_idx}",
+                        "vesum_exempt",
+                        str(line),
+                        source="writer_prose",
+                    )
 
     # Consolidation lead-in
     consol_lead = draft.get("consolidation", {}).get("lead_in")
@@ -413,9 +579,7 @@ def assemble_expanded_document(
                             act_to_step[act_ref] = st_id
 
     plan_acts_by_id = {
-        act["id"]: act
-        for act in lesson_entry.get("activities", [])
-        if isinstance(act, dict) and "id" in act
+        act["id"]: act for act in lesson_entry.get("activities", []) if isinstance(act, dict) and "id" in act
     }
 
     for act in draft.get("activities", []):
@@ -424,11 +588,35 @@ def assemble_expanded_document(
         act_id = act.get("id")
         if not act_id or act_id not in plan_acts_by_id:
             raise AssemblerError(ACTIVITY_NOT_FOUND, f"draft activity {act_id} not found in plan")
+        act_type = plan_acts_by_id[act_id].get("type")
         act_step = act_to_step.get(act_id) if act_id else None
         instr = act.get("instruction")
         if instr:
             for role, span_text in _split_inline_spans(str(instr), "instruction"):
                 add_unit("vpravy", act_step, act_id, None, "instruction", role, span_text, source="writer_prose")
+
+        if act_type == "pick-syllables" and "syllables" in act:
+            syls = act.get("syllables") or []
+            corr_indices = set(act.get("correctIndices") or [])
+            for s_idx, syl in enumerate(syls):
+                is_key = s_idx in corr_indices
+                for role, span_text in _split_inline_spans(str(syl), "item_option"):
+                    add_unit(
+                        "vpravy",
+                        act_step,
+                        act_id,
+                        None,
+                        f"opt_{s_idx}",
+                        role,
+                        span_text,
+                        source="writer_prose",
+                        option_origin="writer_typed",
+                        is_key=is_key,
+                    )
+            expl = act.get("explanation")
+            if expl and isinstance(expl, str):
+                for role, span_text in _split_inline_spans(expl, "instruction"):
+                    add_unit("vpravy", act_step, act_id, None, "explanation", role, span_text, source="writer_prose")
 
         for item_idx, item in enumerate(act.get("items", [])):
             if not isinstance(item, dict):
@@ -441,15 +629,38 @@ def assemble_expanded_document(
                     prompt = str(val)
                     break
             if prompt:
-                error_text = item.get("error") if plan_acts_by_id[act_id].get("type") == "error-correction" else None
-                if isinstance(error_text, str) and error_text and error_text in prompt:
-                    before, after = prompt.split(error_text, 1)
-                    for role, span_text in _split_inline_spans(before, "item_prompt"):
-                        add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
-                    add_unit("vpravy", act_step, act_id, item_idx, "prompt", "error_text", error_text,
-                             source="writer_prose")
-                    for role, span_text in _split_inline_spans(after, "item_prompt"):
-                        add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
+                if act_type == "error-correction":
+                    error_ref = item.get("error_ref")
+                    err_rec = errors_by_id.get(error_ref) if error_ref else None
+                    error_text = err_rec.get("incorrect") if err_rec else item.get("error")
+                    if isinstance(error_text, str) and error_text and error_text in prompt:
+                        before, after = prompt.split(error_text, 1)
+                        for role, span_text in _split_inline_spans(before, "item_prompt"):
+                            add_unit(
+                                "vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose"
+                            )
+                        add_unit(
+                            "vpravy",
+                            act_step,
+                            act_id,
+                            item_idx,
+                            "prompt",
+                            "error_text",
+                            error_text,
+                            source="record",
+                            ref=error_ref,
+                            record_kind="error",
+                            record_side="incorrect",
+                        )
+                        for role, span_text in _split_inline_spans(after, "item_prompt"):
+                            add_unit(
+                                "vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose"
+                            )
+                    else:
+                        for role, span_text in _split_inline_spans(prompt, "item_prompt"):
+                            add_unit(
+                                "vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose"
+                            )
                 else:
                     for role, span_text in _split_inline_spans(prompt, "item_prompt"):
                         add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
@@ -464,17 +675,136 @@ def assemble_expanded_document(
                     break
             if answer:
                 for role, span_text in _split_inline_spans(answer, "item_answer"):
-                    add_unit("vpravy", act_step, act_id, item_idx, "answer", role, span_text, source="writer_prose")
+                    if act_type == "error-correction":
+                        error_ref = item.get("error_ref")
+                        add_unit(
+                            "vpravy",
+                            act_step,
+                            act_id,
+                            item_idx,
+                            "answer",
+                            role,
+                            span_text,
+                            source="record",
+                            ref=error_ref,
+                            record_kind="error",
+                            record_side="correct",
+                        )
+                    else:
+                        add_unit("vpravy", act_step, act_id, item_idx, "answer", role, span_text, source="writer_prose")
 
-            opts = item.get("options") or item.get("choices") or item.get("distractors") or []
-            for opt_idx, opt in enumerate(opts):
-                if isinstance(opt, bool):
-                    continue
-                opt_val = opt.get("text") if isinstance(opt, dict) else opt
-                if opt_val is not None and not isinstance(opt_val, bool):
-                    opt_str = str(opt_val)
-                    for role, span_text in _split_inline_spans(opt_str, "item_option"):
-                        add_unit("vpravy", act_step, act_id, item_idx, f"opt_{opt_idx}", role, span_text, source="writer_prose")
+            if act_type == "odd-one-out" and "words" in item:
+                words_list = item.get("words") or []
+                corr_idx = item.get("correct") if isinstance(item.get("correct"), int) else None
+                ans_str = str(item.get("answer")) if item.get("answer") is not None else None
+                for opt_idx, w_val in enumerate(words_list):
+                    is_key = (opt_idx == corr_idx) if corr_idx is not None else (str(w_val) == ans_str)
+                    for role, span_text in _split_inline_spans(str(w_val), "item_option"):
+                        add_unit(
+                            "vpravy",
+                            act_step,
+                            act_id,
+                            item_idx,
+                            f"opt_{opt_idx}",
+                            role,
+                            span_text,
+                            source="writer_prose",
+                            option_origin="writer_typed",
+                            is_key=is_key,
+                        )
+            elif act_type == "pick-syllables" and "syllables" in item:
+                syls = item.get("syllables") or []
+                corr_indices = set(item.get("correctIndices") or [])
+                for opt_idx, syl in enumerate(syls):
+                    is_key = opt_idx in corr_indices
+                    for role, span_text in _split_inline_spans(str(syl), "item_option"):
+                        add_unit(
+                            "vpravy",
+                            act_step,
+                            act_id,
+                            item_idx,
+                            f"opt_{opt_idx}",
+                            role,
+                            span_text,
+                            source="writer_prose",
+                            option_origin="writer_typed",
+                            is_key=is_key,
+                        )
+            else:
+                opts = item.get("options") or item.get("choices") or item.get("distractors") or []
+                if act_type == "fill-in" and item.get("mode") == "form-choice":
+                    word_ref = item.get("record")
+                    ans_text = item.get("answer")
+                    for opt_idx, opt in enumerate(opts):
+                        if isinstance(opt, bool):
+                            continue
+                        opt_str = str(opt.get("text") if isinstance(opt, dict) else opt)
+                        is_key = opt_str == str(ans_text)
+                        for role, span_text in _split_inline_spans(opt_str, "item_option"):
+                            add_unit(
+                                "vpravy",
+                                act_step,
+                                act_id,
+                                item_idx,
+                                f"opt_{opt_idx}",
+                                role,
+                                span_text,
+                                source="record",
+                                ref=word_ref,
+                                record_kind="word",
+                                option_origin="store",
+                                is_key=is_key,
+                            )
+                elif opts:
+                    for opt_idx, opt in enumerate(opts):
+                        if isinstance(opt, bool):
+                            continue
+                        opt_val = opt.get("text") if isinstance(opt, dict) else opt
+                        if opt_val is None or isinstance(opt_val, bool):
+                            continue
+                        opt_str = str(opt_val)
+
+                        is_key = False
+                        if isinstance(opt, dict) and "correct" in opt:
+                            is_key = bool(opt.get("correct"))
+                        elif act_type in ("quiz", "multiple-choice"):
+                            if "correct" in item and isinstance(item["correct"], int):
+                                is_key = opt_idx == item["correct"]
+                            elif "answer" in item and isinstance(item["answer"], str):
+                                is_key = opt_str == item["answer"]
+                        elif act_type == "fill-in":
+                            is_key = opt_str == item.get("answer")
+                        elif act_type == "error-correction":
+                            corr = item.get("correction") or item.get("answer")
+                            is_key = opt_str == str(corr)
+                        elif act_type == "image-to-letter":
+                            is_key = opt_str == item.get("letter")
+                        elif act_type == "translate":
+                            if isinstance(opt, dict) and "correct" in opt:
+                                is_key = bool(opt.get("correct"))
+                            elif "answer" in item:
+                                is_key = opt_str == item.get("answer")
+                        elif act_type == "select":
+                            is_key = bool(opt.get("correct")) if isinstance(opt, dict) else False
+                        else:
+                            if "correct" in item and isinstance(item["correct"], int):
+                                is_key = opt_idx == item["correct"]
+                            elif "answer" in item and isinstance(item["answer"], str):
+                                is_key = opt_str == item["answer"]
+
+                        for role, span_text in _split_inline_spans(opt_str, "item_option"):
+                            add_unit(
+                                "vpravy",
+                                act_step,
+                                act_id,
+                                item_idx,
+                                f"opt_{opt_idx}",
+                                role,
+                                span_text,
+                                source="writer_prose",
+                                option_origin="writer_typed",
+                                is_key=is_key,
+                            )
 
             err_txt = None
             for key in ("error", "incorrect"):
@@ -484,12 +814,30 @@ def assemble_expanded_document(
                     break
             if err_txt:
                 for role, span_text in _split_inline_spans(err_txt, "error_text"):
-                    add_unit("vpravy", act_step, act_id, item_idx, "error", role, span_text, source="writer_prose")
+                    if act_type == "error-correction":
+                        error_ref = item.get("error_ref")
+                        add_unit(
+                            "vpravy",
+                            act_step,
+                            act_id,
+                            item_idx,
+                            "error",
+                            role,
+                            span_text,
+                            source="record",
+                            ref=error_ref,
+                            record_kind="error",
+                            record_side="incorrect",
+                        )
+                    else:
+                        add_unit("vpravy", act_step, act_id, item_idx, "error", role, span_text, source="writer_prose")
 
             expl = item.get("explanation")
             if expl and isinstance(expl, str):
                 for role, span_text in _split_inline_spans(expl, "instruction"):
-                    add_unit("vpravy", act_step, act_id, item_idx, "explanation", role, span_text, source="writer_prose")
+                    add_unit(
+                        "vpravy", act_step, act_id, item_idx, "explanation", role, span_text, source="writer_prose"
+                    )
 
             pairs = item.get("pairs") or []
             for p_idx, pair in enumerate(pairs):
@@ -615,6 +963,9 @@ def write_expanded_document(
     exp_path = output_dir / f"lesson-{lesson_n}.expanded.yaml"
     prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
 
+    prov_validator = get_provenance_validator()
+    prov_validator.validate(provenance_doc)
+
     content_bytes = lock.yaml_bytes(expanded_doc)
     lock.write(exp_path, content_bytes)
 
@@ -622,6 +973,55 @@ def write_expanded_document(
     lock.atomic_write(prov_path, prov_bytes)
 
     return exp_path, prov_path
+
+
+def rewrite_printable_provenance(
+    output_dir: Path,
+    lesson_n: int,
+    provenance_doc: dict[str, Any],
+    form_options: dict[tuple[str, int], list[dict[str, Any]]],
+) -> tuple[dict[str, Any], Path]:
+    """Rewrite provenance document with rendered/printable forms and atomically write it.
+
+    Item 4: The final lesson-<n>.provenance.yaml matches what the learner sees and
+    the reviewer quotes. For store-generated form options (form-choice items),
+    the span text is updated to the stressed form printed in the lesson.
+    """
+    updated_doc = copy.deepcopy(provenance_doc)
+    for span in updated_doc.get("spans", []):
+        if span.get("tab") != "vpravy" or not isinstance(span.get("item"), int):
+            continue
+        key = (span.get("activity"), span.get("item"))
+        forms = form_options.get(key)
+        if forms is None:
+            continue
+        block = span.get("block")
+        if isinstance(block, str) and block.startswith("opt_"):
+            try:
+                idx = int(block[4:])
+                if 0 <= idx < len(forms):
+                    span["text"] = forms[idx]["stressed"]
+            except ValueError:
+                pass
+        elif block == "answer":
+            matched = next(
+                (f for f in forms if f.get("form") == span.get("text") or f.get("stressed") == span.get("text")),
+                None,
+            )
+            if matched is None and span.get("is_key"):
+                matched = next((f for f in forms if f.get("form") == forms[0].get("form")), None)
+            if matched:
+                span["text"] = matched["stressed"]
+
+    validator = get_provenance_validator()
+    validator.validate(updated_doc)
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
+    prov_bytes = lock.yaml_bytes(updated_doc)
+    lock.write(prov_path, prov_bytes)
+
+    return updated_doc, prov_path
 
 
 def check_5_assembly(
@@ -651,6 +1051,17 @@ def check_5_assembly(
             check=5,
             passed=False,
             reason=f"expanded document schema validation failed at {list(err.path)}: {err.message}",
+            layer="writer",
+        )
+
+    prov_validator = get_provenance_validator()
+    prov_errors = sorted(prov_validator.iter_errors(provenance_doc), key=lambda e: e.path)
+    if prov_errors:
+        err = prov_errors[0]
+        return CheckResult(
+            check=5,
+            passed=False,
+            reason=f"provenance document schema validation failed at {list(err.path)}: {err.message}",
             layer="writer",
         )
 
@@ -1363,9 +1774,7 @@ def check_9_stress_and_render(
         return wid
 
     plan_acts_by_id = {
-        act["id"]: act
-        for act in lesson_entry.get("activities", [])
-        if isinstance(act, dict) and "id" in act
+        act["id"]: act for act in lesson_entry.get("activities", []) if isinstance(act, dict) and "id" in act
     }
 
     for draft_act in draft.get("activities", []):

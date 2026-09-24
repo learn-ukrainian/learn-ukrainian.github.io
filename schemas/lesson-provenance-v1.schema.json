@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lesson-provenance-v1.schema.json",
+  "title": "Lesson Provenance Document v1",
+  "description": "Provenance document tracking every span of a built lesson to its record or writer prose origin (#8430, #8431, E3c-1).",
+  "type": "object",
+  "properties": {
+    "provenance_schema": {
+      "const": 1
+    },
+    "lesson": {
+      "$ref": "#/$defs/lesson"
+    },
+    "spans": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/span"
+      }
+    }
+  },
+  "required": [
+    "provenance_schema",
+    "lesson",
+    "spans"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "lesson": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 1
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "level",
+        "slug",
+        "n"
+      ],
+      "additionalProperties": false
+    },
+    "span": {
+      "type": "object",
+      "properties": {
+        "tab": {
+          "enum": [
+            "urok",
+            "slovnyk",
+            "vpravy",
+            "resursy"
+          ]
+        },
+        "step": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "activity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "item": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "block": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "source": {
+          "enum": [
+            "record",
+            "writer_prose"
+          ]
+        },
+        "ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "record_kind": {
+          "oneOf": [
+            {
+              "enum": [
+                "word",
+                "quote",
+                "example",
+                "exercise_text",
+                "error",
+                "note",
+                "video",
+                "resource"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "record_side": {
+          "oneOf": [
+            {
+              "enum": [
+                "incorrect",
+                "correct"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "option_origin": {
+          "oneOf": [
+            {
+              "enum": [
+                "store",
+                "writer_typed"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "is_key": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "tab",
+        "step",
+        "activity",
+        "item",
+        "block",
+        "source",
+        "ref",
+        "text",
+        "record_kind",
+        "record_side",
+        "option_origin",
+        "is_key"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
