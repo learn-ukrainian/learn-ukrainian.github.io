@@ -43,7 +43,7 @@ Units and spans (r3 invariant):
   and the map moves units by those records alone, by position, never by matching text: a
   unit no edit touches keeps its shifted location, a unit an edit overlaps is marked lost
   with the transform's name, and a removed unit is never re-attached to identical text
-  elsewhere (two identical `# слово` lines, the first removed as duplicate H1: its unit is
+  elsewhere (two identical `# WORD` lines, the first removed as duplicate H1: its unit is
   lost, not moved onto the survivor). Check 9 then reads every unit back at its own location
   in the final MDX and fails closed: removed -> `span_location_unrendered`, rewritten ->
   `span_text_not_in_rendered_output` (engine layer, reason names the transform). Dialogue lines are emitted by the renderer as the page's
