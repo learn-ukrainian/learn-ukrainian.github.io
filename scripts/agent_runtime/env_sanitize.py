@@ -99,6 +99,9 @@ _PROVIDER_SECRET_ALLOWLIST = {
     "cursor": {
         "CURSOR_API_KEY",
     },
+    "acpx-cursor-shadow": {
+        "CURSOR_API_KEY",
+    },
 }
 
 _PROVIDER_SAFE_NAME_ALLOWLIST = {
@@ -122,10 +125,6 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "acpx-kimicc-shadow": {
         # KimiCC K3 uses the same existing Kimi login through its fixed route.
         "ACPX_AUTH_LOGIN",
-    },
-    "acpx-cursor-shadow": {
-        # Non-secret acpx auth-method selector for the existing Cursor login.
-        "ACPX_AUTH_CURSOR_LOGIN",
     },
     "acpx-glm-shadow": {
         # Non-secret selector for OpenCode's advertised ACP method ID

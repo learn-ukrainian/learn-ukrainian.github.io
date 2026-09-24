@@ -1319,11 +1319,10 @@ def test_parse_response_unrecognized_schema_fails_closed():
         ),
         ('{"jsonrpc":"2.0","id":2,"result":[]}\n', "result"),
         ('{"jsonrpc":"2.0","id":null,"error":[]}\n', "error"),
-        ('{"jsonrpc":"2.0","id":null,"error":{"message":"bad","data":[]}}\n', "error.data"),
         ('{"jsonrpc":"2.0","id":{},"result":{"stopReason":"end_turn"}}\n', "response id"),
         ('{"jsonrpc":"2.0","id":[],"result":{"stopReason":"end_turn"}}\n', "response id"),
     ],
-    ids=["params", "update", "content", "result", "error", "error-data", "object-id", "list-id"],
+    ids=["params", "update", "content", "result", "error", "object-id", "list-id"],
 )
 def test_parse_response_malformed_json_rpc_containers_fail_closed(stdout, schema):
     result = AcpxAdapter().parse_response(
@@ -1365,6 +1364,44 @@ def test_parse_response_duplicate_terminal_replay_fails_closed():
     assert "duplicate" in excerpt.lower()
     assert "request id 2" in excerpt
     assert "session/prompt" in excerpt
+
+
+def test_parse_response_ignores_unmatched_agent_internal_replies():
+    stdout = _SUCCESS_NDJSON + (
+        '{"jsonrpc":"2.0","id":"skills-reload","result":{}}\n'
+        '{"jsonrpc":"2.0","id":"skills-reload","result":{}}\n'
+    )
+    result = AcpxAdapter().parse_response(
+        stdout=stdout,
+        stderr="Got response to unknown request skills-reload",
+        returncode=0,
+        output_file=None,
+    )
+    assert result.ok is True
+    assert result.response == "Hello world."
+
+
+@pytest.mark.parametrize("data", ["provider quota exhausted", ["quota exhausted"], 429])
+def test_parse_response_unknown_error_data_keeps_provider_message(data):
+    stdout = json.dumps(
+        {"jsonrpc": "2.0", "id": None, "error": {"message": "provider quota exhausted", "data": data}}
+    )
+    result = AcpxAdapter().parse_response(
+        stdout=stdout, stderr="", returncode=1, output_file=None
+    )
+    assert result.ok is False
+    assert "provider quota exhausted" in (result.stderr_excerpt or "")
+    assert "unrecognized ACPX error.data schema" not in (result.stderr_excerpt or "")
+
+
+@pytest.mark.parametrize("data", ["provider quota exhausted", {"message": "provider quota exhausted"}])
+def test_parse_response_uses_provider_data_message_without_top_level_message(data):
+    stdout = json.dumps({"jsonrpc": "2.0", "id": None, "error": {"data": data}})
+    result = AcpxAdapter().parse_response(
+        stdout=stdout, stderr="", returncode=1, output_file=None
+    )
+    assert result.ok is False
+    assert "provider quota exhausted" in (result.stderr_excerpt or "")
 
 
 def test_parse_response_permission_id_reuse_is_not_replay():
@@ -2047,7 +2084,7 @@ def test_codex_adapter_unchanged_still_targets_codex_only(tmp_path, monkeypatch)
         (AcpxClaudeShadowAdapter, "claude", "claude", "claude-sonnet-5", None),
         (AcpxKimiShadowAdapter, "kimi", "kimi", None, "ACPX_AUTH_LOGIN"),
         (AcpxKimiCcShadowAdapter, "kimicc", "kimi", "kimi-code/k3", "ACPX_AUTH_LOGIN"),
-        (AcpxCursorShadowAdapter, "cursor", "cursor", None, "ACPX_AUTH_CURSOR_LOGIN"),
+        (AcpxCursorShadowAdapter, "cursor", "cursor", None, None),
         (AcpxPoolShadowAdapter, "pool", "pool", None, None),
     ],
 )
@@ -2113,6 +2150,39 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
         assert plan.metadata["claude_acp_adapter_version"] == "0.64.2"
         assert plan.metadata["claude_acp_compatibility"] == "installed>=0.64.2<1"
         assert plan.metadata["claude_acp_launch_source"] == "installed"
+
+
+def test_cursor_acp_uses_existing_key_without_interactive_auth(tmp_path, monkeypatch):
+    _stub_binary(monkeypatch, tmp_path)
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")
+    monkeypatch.setenv("CURSOR_API_KEY", "fixture-cursor-key")
+    adapter = AcpxCursorShadowAdapter()
+    with acpx_module.active_discussion_scope():
+        plan = adapter.build_invocation(
+            prompt="ping",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id="t-1",
+            session_id=None,
+            tool_config={
+                "acpx_discussion": True,
+                "target_agent": "cursor",
+                "correlation_id": "corr-1",
+                "idempotency_key": "idem-1",
+            },
+        )
+    assert ("--auth-policy", "skip") in zip(plan.cmd, plan.cmd[1:], strict=False)
+    env = build_agent_env(provider=adapter.name, overrides=plan.env_overrides)
+    assert env["CURSOR_API_KEY"] == "fixture-cursor-key"
+
+
+def test_cursor_acp_reads_existing_file_key_when_env_is_absent(monkeypatch):
+    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    monkeypatch.setattr(acpx_module, "_load_cursor_api_key_from_env_file", lambda: "fixture-file-key")
+    overrides = AcpxCursorShadowAdapter()._env_overrides()
+    assert overrides["CURSOR_API_KEY"] == "fixture-file-key"
+    assert build_agent_env(provider="acpx-cursor-shadow", overrides=overrides)["CURSOR_API_KEY"] == "fixture-file-key"
 
 
 def test_claude_adapter_preflight_accepts_installed_rolling_dependency(tmp_path):
@@ -2526,7 +2596,7 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
     if participant in ("glm", "deepseek"):
         invocation_model = {
             "glm": "zai-coding-plan/glm-5.3",
-            "deepseek": "deepseek-direct/deepseek-v4-flash",
+            "deepseek": "deepseek/deepseek-flash",
         }[participant]
         assert ("--model", invocation_model) in zip(
             plan.cmd, plan.cmd[1:], strict=False
@@ -2699,7 +2769,7 @@ def test_missing_hermes_binary_error_carries_remediation_and_fallback(monkeypatc
     assert "permanently removed" in message
     assert "do not reinstall" in message
     assert "ask-deepseek" in message
-    assert "opencode run --model deepseek-direct/deepseek-v4-flash" in message
+    assert "opencode run --model deepseek/deepseek-flash" in message
     assert "delegate.py dispatch --agent deepseek" in message
     assert "hermes --version" not in message
 

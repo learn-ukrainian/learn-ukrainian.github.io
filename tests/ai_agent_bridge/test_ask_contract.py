@@ -905,6 +905,25 @@ def test_timeout_error_names_seat_profile_and_no_timeout_escape(
     assert "--no-timeout" in message
 
 
+def test_kimi_unsupported_effort_is_a_clean_cli_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    from agent_runtime.runner import InterAgentTransportError
+
+    def raise_route_error(*args: object, **kwargs: object) -> object:
+        raise InterAgentTransportError(
+            "ACP participant 'kimi' only supports its registered effort pin None; got 'high'"
+        )
+
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", raise_route_error)
+    args = _cli._build_parser().parse_args(
+        ["ask-kimi", "question", "--task-id", "kimi-effort", "--from", "codex", "--effort", "high"]
+    )
+    with pytest.raises(SystemExit) as exc_info:
+        _cli._handle_ask_kimi(args)
+    assert str(exc_info.value) == (
+        "ACP participant 'kimi' only supports its registered effort pin None; got 'high'"
+    )
+
+
 def test_codex_prompt_preserves_runtime_and_dispatch_boundaries() -> None:
     from scripts.ai_agent_bridge._prompts import (
         _build_full_execution_prompt,
