@@ -285,6 +285,9 @@ def active_worktree_claim_refusal(
 
 # Read-only git probes degrade to "unknown" instead of hanging a remover.
 _GIT_PROBE_TIMEOUT_S = 30.0
+# ``git worktree remove`` of a large checkout (node_modules, a worker .venv)
+# can take a while; past this bound the removal is reported as an error.
+GIT_WORKTREE_REMOVE_TIMEOUT_S = 120.0
 
 
 @dataclasses.dataclass(frozen=True)
@@ -367,8 +370,9 @@ def git_worktree_remove(repo_root: Path, worktree: Path, *, force: bool) -> str 
     then runs ``git worktree remove --force``, which a clean porcelain tree
     still needs when it holds ignored residue such as a worker ``.venv``.
     Without ``force`` git itself refuses a checkout with modified or untracked
-    files, and a locked one. The removal has no timeout: a removal killed
-    halfway leaves a half-deleted checkout.
+    files, and a locked one. The removal is bounded by
+    :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`; a timeout is an error, never a
+    removal, since the killed git may leave a half-deleted checkout behind.
     """
     target = worktree
     if force:
@@ -378,7 +382,17 @@ def git_worktree_remove(repo_root: Path, worktree: Path, *, force: bool) -> str 
             return f"delete guard refused worktree target: {exc}"
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
     try:
-        proc = subprocess.run(argv, cwd=repo_root, capture_output=True, text=True, check=False, env=sanitized_git_env())
+        proc = subprocess.run(
+            argv,
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=sanitized_git_env(),
+            timeout=GIT_WORKTREE_REMOVE_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        return f"git worktree remove timed out after {GIT_WORKTREE_REMOVE_TIMEOUT_S:g}s"
     except PermissionError as exc:
         return f"permission denied removing worktree: {exc}"
     except OSError as exc:

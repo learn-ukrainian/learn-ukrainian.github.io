@@ -140,6 +140,29 @@ def test_never_forces_a_dirty_worktree(tmp_path, capsys):
     assert (worktree / "uncommitted.txt").read_text(encoding="utf-8") == "work in progress\n"
 
 
+def test_a_timed_out_removal_is_an_error_never_removed(tmp_path, capsys, monkeypatch):
+    primary = _primary(tmp_path)
+    worktree = _linked(primary, "codex/impl-8")
+    real_run = subprocess.run
+    timeouts: list[object] = []
+
+    def fake_run(argv, *args, **kwargs):
+        if list(argv[1:3]) == ["worktree", "remove"]:
+            timeouts.append(kwargs.get("timeout"))
+            raise subprocess.TimeoutExpired(argv, kwargs["timeout"])
+        return real_run(argv, *args, **kwargs)
+
+    monkeypatch.setattr(worktree_claims.subprocess, "run", fake_run)
+    code, out, _err = _remove(capsys, str(worktree), "--json")
+
+    assert timeouts == [worktree_claims.GIT_WORKTREE_REMOVE_TIMEOUT_S]
+    assert code == worktree_claims.EXIT_ERROR
+    result = json.loads(out)
+    assert result["action"] == "error"
+    assert result["error"] == "git worktree remove timed out after 120s"
+    assert worktree.exists()
+
+
 def test_refuses_while_dispatch_holds_the_worktree_lock(tmp_path, capsys, monkeypatch):
     primary = _primary(tmp_path)
     worktree = _linked(primary, "codex/impl-6")
