@@ -11140,6 +11140,75 @@ def test_interrupt_fallback_records_the_complete_outcome(
     assert isinstance(state.get("duration_s"), float)
 
 
+def test_interrupt_fallback_records_rescue_status_after_unpushed_telemetry(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A checkpoint interrupt must retain the measured unpushed-work verdict."""
+    _init_git_repo_for_test(tmp_path, monkeypatch)
+    state_path = delegate._state_path("interrupt-unpushed")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "interrupt-unpushed",
+            "status": "running",
+            "worktree_path": str(tmp_path),
+            "worktree_base": "main",
+            "worktree_branch": "codex/interrupt-unpushed",
+        },
+    )
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "committed work",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "gpt-5.5",
+            "effort": "xhigh",
+            "cli_version": "0.131.0",
+        },
+    )()
+    real_write = delegate._write_state_atomic
+    interrupted = False
+
+    def interrupt_checkpoint(path, state):
+        nonlocal interrupted
+        if not interrupted and "duration_s" in state:
+            interrupted = True
+            raise KeyboardInterrupt("SIGTERM at the checkpoint")
+        return real_write(path, state)
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result),
+        patch.object(delegate, "_worktree_is_dirty", return_value=False),
+        patch.object(delegate, "_count_commits_ahead", return_value=1),
+        patch.object(delegate, "_count_unpushed_commits", return_value=1),
+        patch.object(delegate, "_write_state_atomic", side_effect=interrupt_checkpoint),
+    ):
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id="interrupt-unpushed",
+                agent="codex",
+                prompt="hi",
+                mode="workspace-write",
+                cwd_str=str(tmp_path),
+                model=None,
+                hard_timeout=60,
+                effort="xhigh",
+            )
+
+    state = delegate._read_state(state_path)
+    assert interrupted
+    assert state is not None
+    assert state["status"] == "needs_finalize"
+    assert state["rescue_status"] == "unpushed work - needs rescue"
+    assert state["final_branch_head_commit"] == delegate._resolve_sha(tmp_path)
+
+
 # ---------------------------------------------------------------------------
 # Issue #6426: finalizer deliverable counting on --cwd reuse worktrees
 # ---------------------------------------------------------------------------

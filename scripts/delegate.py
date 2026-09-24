@@ -5952,6 +5952,7 @@ def _run_worker(
     # read. A terminal status with no context is not an improvement over a stale
     # running one. (Cross-family review of #5807, round nine.)
     final_state: dict[str, Any] = _read_state(state_path) or {}
+    worktree_path = final_state.get("worktree_path")
     final_status = ""
     duration_s = time.monotonic() - start
     result_file: str | None = None
@@ -6241,7 +6242,6 @@ def _run_worker(
         # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
         # worktree exited dirty so follow-up reviewers can see at a glance
         # that the dispatched agent left uncommitted changes behind.
-        worktree_path = final_state.get("worktree_path")
         # Ownership is fixed at launch: only a worktree_path recorded with an
         # explicit ``worktree_reused: false`` was created by this dispatch. A
         # path derived from cwd below, or a legacy record without the flag,
@@ -6491,6 +6491,7 @@ def _run_worker(
                     # the real task record instead of replacing it...
                     **final_state,
                     "final_branch_head_commit": _resolve_sha(Path(worktree_path)) if worktree_path else None,
+                    "rescue_status": rescue_status,
                     # ...and the outcome fields come from the same builder the
                     # checkpoint uses, so an interrupted run never persists a
                     # terminal status beside stale placeholder values.
