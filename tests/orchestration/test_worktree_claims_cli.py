@@ -8,6 +8,7 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
 from pathlib import Path
 
 import pytest
@@ -76,6 +77,166 @@ def test_refuses_while_an_unfinished_task_claims_the_worktree(tmp_path, capsys):
 
     assert (code, out) == (worktree_claims.EXIT_REFUSED, "")
     assert err == f"refused: {worktree}: worktree claimed by active task review-2\n"
+    assert worktree.exists()
+
+
+def _fleet(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
+    """Public primary and its ``infra-private`` sibling checkout beside it (#8624)."""
+    public = _primary(tmp_path)
+    sibling = tmp_path / "learn-ukrainian-infra-private"
+    sibling.mkdir()
+    _git(sibling, "init", "-b", "main")
+    _git(sibling, "config", "user.email", "claims@example.invalid")
+    _git(sibling, "config", "user.name", "Claims Test")
+    (sibling / ".gitignore").write_text(".worktrees/\n", encoding="utf-8")
+    _git(sibling, "add", ".gitignore")
+    _git(sibling, "commit", "-m", "base")
+    monkeypatch.setattr(worktree_claims, "public_primary_root", lambda: public)
+    return public, sibling
+
+
+def test_control_plane_root_is_the_public_primary_only_for_fleet_siblings(tmp_path, monkeypatch):
+    public, sibling = _fleet(tmp_path, monkeypatch)
+    linked = _linked(sibling, "codex/impl-cp")
+    stranger = tmp_path / "stranger"
+    stranger.mkdir()
+    _git(stranger, "init", "-b", "main")
+
+    assert worktree_claims.control_plane_root(public) == public.resolve()
+    assert worktree_claims.control_plane_root(sibling) == public.resolve()
+    assert worktree_claims.control_plane_root(linked) == public.resolve()
+    assert worktree_claims.control_plane_root(stranger) == stranger.resolve()
+
+
+def test_control_plane_root_raises_when_the_fleet_catalog_is_unreadable(tmp_path, monkeypatch):
+    _fleet(tmp_path, monkeypatch)
+
+    def unreadable():
+        raise worktree_claims.FleetRepoError("catalog missing")
+
+    monkeypatch.setattr(worktree_claims, "load_fleet_repos", unreadable)
+
+    with pytest.raises(worktree_claims.ControlPlaneError, match="catalog unreadable"):
+        worktree_claims.control_plane_root(tmp_path / "learn-ukrainian-infra-private")
+
+
+def _malformed_catalog(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Point the real loader at a syntactically invalid ``fleet_repos.yaml`` (no mock of the loader)."""
+    from scripts.orchestration import fleet_repos
+
+    bad = tmp_path / "malformed_fleet_repos.yaml"
+    bad.write_text("repos: {infra-private: [unclosed\n", encoding="utf-8")
+    monkeypatch.setattr(fleet_repos, "_CONFIG_PATH", bad)
+
+
+def test_control_plane_root_raises_control_plane_error_on_malformed_catalog_yaml(tmp_path, monkeypatch):
+    _fleet(tmp_path, monkeypatch)
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    with pytest.raises(worktree_claims.ControlPlaneError, match="catalog unreadable"):
+        worktree_claims.control_plane_root(tmp_path / "learn-ukrainian-infra-private")
+
+
+def test_remove_unclaimed_worktree_never_raises_on_malformed_catalog_yaml(tmp_path, monkeypatch):
+    _public, sibling = _fleet(tmp_path, monkeypatch)
+    worktree = _linked(sibling, "codex/impl-sib-badyaml")
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    result = worktree_claims.remove_unclaimed_worktree(
+        worktree, repo_root=sibling, reason="test", owner_task_id=None
+    )
+
+    assert result.action == "skipped"
+    assert result.reason == worktree_claims.LOCK_UNAVAILABLE
+    assert worktree.exists()
+
+
+def test_malformed_catalog_yaml_refuses_cli_removal_cleanly(tmp_path, capsys, monkeypatch):
+    _public, sibling = _fleet(tmp_path, monkeypatch)
+    worktree = _linked(sibling, "codex/impl-sib-badyaml-cli")
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    code, _out, err = _remove(capsys, str(worktree))
+
+    assert code == worktree_claims.EXIT_REFUSED
+    assert "worktree lock unavailable" in err
+    assert worktree.exists()
+
+
+def test_owning_repo_root_follows_the_worktree_pointer_and_defaults_otherwise(tmp_path, monkeypatch):
+    public, sibling = _fleet(tmp_path, monkeypatch)
+    linked = _linked(sibling, "codex/impl-own")
+
+    assert worktree_claims.owning_repo_root(linked, default=public) == sibling.resolve()
+    assert worktree_claims.owning_repo_root(sibling, default=public) == public
+    assert worktree_claims.owning_repo_root(tmp_path / "missing", default=public) == public
+
+
+def test_sibling_repo_worktree_with_a_live_public_claim_is_not_removed(tmp_path, capsys, monkeypatch):
+    """#8624: the CLI reads the claim dispatch wrote on the public primary, not the sibling's own batch_state."""
+    public, sibling = _fleet(tmp_path, monkeypatch)
+    worktree = _linked(sibling, "codex/impl-sib")
+    _record(public, "review-sib", status="spawning", worktree_path=str(worktree))
+
+    code, out, err = _remove(capsys, str(worktree))
+
+    assert (code, out) == (worktree_claims.EXIT_REFUSED, "")
+    assert err == f"refused: {worktree}: worktree claimed by active task review-sib\n"
+    assert worktree.exists()
+
+
+def test_sibling_repo_worktree_is_removed_once_the_public_claim_is_finished(tmp_path, capsys, monkeypatch):
+    public, sibling = _fleet(tmp_path, monkeypatch)
+    worktree = _linked(sibling, "codex/impl-sib-free")
+    _record(public, "impl-sib-free", status="done", worktree_path=str(worktree))
+
+    code, _out, err = _remove(capsys, str(worktree))
+
+    assert (code, err) == (worktree_claims.EXIT_REMOVED, "")
+    assert not worktree.exists()
+    assert _git(sibling, "branch", "--list", "codex/impl-sib-free")
+
+
+def test_sibling_repo_worktree_is_kept_while_its_public_lock_is_held(tmp_path, capsys, monkeypatch):
+    """#8624: the lock dispatch holds lives in the public git dir; the CLI contends on that file."""
+    public, sibling = _fleet(tmp_path, monkeypatch)
+    worktree = _linked(sibling, "codex/impl-sib-lock")
+    monkeypatch.setattr(worktree_claims, "DEFAULT_LOCK_TIMEOUT_S", 0.2)
+
+    held, release = threading.Event(), threading.Event()
+
+    def attach() -> None:
+        with worktree_claims.worktree_lock(worktree, lock_dir=worktree_claims.repository_lock_dir(public)):
+            held.set()
+            release.wait(timeout=30)
+
+    attacher = threading.Thread(target=attach)
+    attacher.start()
+    try:
+        assert held.wait(timeout=30)
+        code, out, err = _remove(capsys, str(worktree))
+    finally:
+        release.set()
+        attacher.join(timeout=30)
+
+    assert (code, out) == (worktree_claims.EXIT_REFUSED, "")
+    assert "worktree lock busy" in err
+    assert worktree.exists()
+
+
+def test_unreadable_fleet_catalog_refuses_removal(tmp_path, capsys, monkeypatch):
+    _public, sibling = _fleet(tmp_path, monkeypatch)
+    worktree = _linked(sibling, "codex/impl-sib-nocat")
+
+    def unreadable():
+        raise worktree_claims.FleetRepoError("catalog missing")
+
+    monkeypatch.setattr(worktree_claims, "load_fleet_repos", unreadable)
+
+    code, _out, err = _remove(capsys, str(worktree))
+
+    assert code == worktree_claims.EXIT_REFUSED
+    assert "worktree lock unavailable" in err
     assert worktree.exists()
 
 

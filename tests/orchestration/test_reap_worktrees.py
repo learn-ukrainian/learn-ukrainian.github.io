@@ -43,9 +43,9 @@ def git(cwd: Path, *args: str) -> str:
     return (proc.stdout or "").strip()
 
 
-def init_repo(tmp_path: Path) -> Path:
-    repo = tmp_path / "repo"
-    remote = tmp_path / "origin.git"
+def init_repo(tmp_path: Path, name: str = "repo") -> Path:
+    repo = tmp_path / name
+    remote = tmp_path / ("origin.git" if name == "repo" else f"{name}-origin.git")
     git(tmp_path, "init", "--bare", str(remote))
     git(tmp_path, "init", "--initial-branch=main", str(repo))
     git(repo, "config", "user.email", "tester@example.com")
@@ -204,6 +204,141 @@ def test_merged_worktree_claimed_by_another_dispatch_task_is_kept(
     )
     assert worktree.exists()
     assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+def _fleet_layout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
+    """Public primary plus its ``infra-private`` sibling checkout, laid out as layout A does (#8624)."""
+    public = init_repo(tmp_path, "learn-ukrainian")
+    sibling = init_repo(tmp_path, "learn-ukrainian-infra-private")
+    monkeypatch.setattr(worktree_claims, "public_primary_root", lambda: public)
+    return public, sibling
+
+
+def test_sibling_repo_worktree_with_a_live_public_claim_is_kept_by_the_reaper(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8624: dispatch records the claim on the public primary; the private-repo reap must read it there."""
+    public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    worktree = add_worktree(
+        sibling, "codex/private-claimed", path=sibling / ".worktrees" / "dispatch" / "codex" / "own"
+    )
+    patch_gh(monkeypatch, {"codex/private-claimed": [{"number": 8624, "state": "MERGED"}]})
+    _write_task_record(public, "review-attached", status="spawning", worktree_path=str(worktree))
+
+    result = result_for(rw.reap_worktrees(repo_root=sibling, apply=True), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == (
+        "worktree claimed by active task review-attached; originally qualified because PR #8624 MERGED"
+    )
+    assert worktree.exists()
+
+
+def test_sibling_repo_worktree_without_a_claim_is_still_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8624: the public-primary lookup refuses only a live claim; a finished owner still reaps."""
+    public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    worktree = add_worktree(sibling, "codex/private-owner", path=sibling / ".worktrees" / "dispatch" / "codex" / "own")
+    patch_gh(monkeypatch, {"codex/private-owner": [{"number": 8624, "state": "MERGED"}]})
+    _write_task_record(public, "own", status="done", worktree_path=str(worktree), pid=None)
+    _write_task_record(public, "unrelated", status="running", worktree_path=str(public / "elsewhere"))
+
+    result = result_for(rw.reap_worktrees(repo_root=sibling, apply=True), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+def test_sibling_repo_worktree_is_kept_while_dispatch_holds_its_public_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8624: dispatch takes the sibling worktree's lock in the public git dir; the reaper contends there."""
+    public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    worktree = add_worktree(sibling, "codex/private-attaching")
+    patch_gh(monkeypatch, {"codex/private-attaching": [{"number": 8624, "state": "MERGED"}]})
+    monkeypatch.setattr(worktree_claims, "DEFAULT_LOCK_TIMEOUT_S", 0.2)
+    lock_dir = rw._common_git_dir(public) / worktree_claims.LOCK_DIR_NAME
+    held, release = threading.Event(), threading.Event()
+
+    def attach() -> None:
+        with worktree_claims.worktree_lock(worktree, lock_dir=lock_dir):
+            held.set()
+            release.wait(timeout=30)
+
+    attacher = threading.Thread(target=attach)
+    attacher.start()
+    try:
+        assert held.wait(timeout=30)
+        result = result_for(rw.reap_worktrees(repo_root=sibling, apply=True), worktree)
+    finally:
+        release.set()
+        attacher.join(timeout=30)
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("worktree lock busy (")
+    assert worktree.exists()
+
+
+def test_sibling_repo_reap_refuses_when_the_fleet_catalog_is_unreadable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8624: a mutation that cannot tell whether the repo is a sibling refuses instead of guessing."""
+    _public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    worktree = add_worktree(sibling, "codex/private-nocatalog")
+    patch_gh(monkeypatch, {"codex/private-nocatalog": [{"number": 8624, "state": "MERGED"}]})
+
+    def unreadable() -> dict[str, Any]:
+        raise worktree_claims.FleetRepoError("catalog missing")
+
+    monkeypatch.setattr(worktree_claims, "load_fleet_repos", unreadable)
+
+    result = result_for(rw.reap_worktrees(repo_root=sibling, apply=True), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("worktree lock unavailable (fleet repository catalog unreadable")
+    assert worktree.exists()
+
+
+def _malformed_catalog(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Point the real loader at a syntactically invalid ``fleet_repos.yaml`` (no mock of the loader)."""
+    from scripts.orchestration import fleet_repos
+
+    bad = tmp_path / "malformed_fleet_repos.yaml"
+    bad.write_text("repos: {infra-private: [unclosed\n", encoding="utf-8")
+    monkeypatch.setattr(fleet_repos, "_CONFIG_PATH", bad)
+
+
+def test_reap_control_plane_root_falls_back_to_primary_on_malformed_catalog_yaml(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The read-only probes keep working on a malformed catalog instead of crashing."""
+    _public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    assert rw.control_plane_root(sibling) == rw.primary_checkout_root(sibling)
+
+
+def test_sibling_repo_reap_refuses_cleanly_on_malformed_catalog_yaml(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The removal guard refuses (no crash) when the catalog YAML itself is malformed."""
+    _public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    worktree = add_worktree(sibling, "codex/private-badyaml")
+    patch_gh(monkeypatch, {"codex/private-badyaml": [{"number": 8624, "state": "MERGED"}]})
+    _malformed_catalog(tmp_path, monkeypatch)
+
+    result = result_for(rw.reap_worktrees(repo_root=sibling, apply=True), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("worktree lock unavailable (fleet repository catalog unreadable")
+    assert worktree.exists()
 
 
 def test_merged_dispatch_worktree_owner_record_does_not_block_its_own_reap(

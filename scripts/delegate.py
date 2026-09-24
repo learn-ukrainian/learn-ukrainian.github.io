@@ -4267,7 +4267,10 @@ def _remove_dispatch_worktree(
     """
     removal = worktree_claims.remove_unclaimed_worktree(
         worktree,
-        repo_root=_REPO_ROOT,
+        # A ``--repo`` sibling worktree is git-operated in its own repository,
+        # while its records and locks stay on this control plane (#8624).
+        repo_root=worktree_claims.owning_repo_root(worktree, default=_REPO_ROOT),
+        control_root=_REPO_ROOT,
         reason=reason,
         owner_task_id=owner_task_id,
         releasable=releasable,
@@ -4294,6 +4297,8 @@ def _settle_worktree_reap(
     worktree-only: ``git branch`` is never invoked, and a missing branch ref
     after removal is an error. This never raises.
     """
+    # Resolved before removal: the checkout's ``.git`` pointer is gone after it.
+    owning_repo = worktree_claims.owning_repo_root(worktree, default=_REPO_ROOT)
     removal = _remove_dispatch_worktree(
         worktree,
         reason="settled clean worktree; branch ref kept",
@@ -4303,7 +4308,7 @@ def _settle_worktree_reap(
         lock_timeout_s=lock_timeout_s,
     )
     branch = removal["branch"]
-    if removal["action"] == "removed" and branch is not None and not _branch_ref_exists(_REPO_ROOT, branch):
+    if removal["action"] == "removed" and branch is not None and not _branch_ref_exists(owning_repo, branch):
         return {
             **removal,
             "action": "error",

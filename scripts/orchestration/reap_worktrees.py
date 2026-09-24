@@ -165,6 +165,22 @@ def primary_checkout_root(repo_root: Path) -> Path:
     return common_git_dir.parent
 
 
+def control_plane_root(repo_root: Path) -> Path:
+    """Return the checkout holding ``repo_root``'s task records, leases, and locks.
+
+    ``repo_root``'s own primary checkout, except a ``--repo`` sibling
+    repository, whose dispatch state lives on the public primary (#8624). The
+    read-only probes fall back to the repository's own primary when the fleet
+    catalog is unreadable; the removal guard (:func:`_enter_dispatch_worktree_guard`)
+    refuses instead.
+    """
+    primary = primary_checkout_root(repo_root)
+    try:
+        return worktree_claims.control_plane_root(primary)
+    except worktree_claims.ControlPlaneError:
+        return primary
+
+
 def _format_failure(proc: subprocess.CompletedProcess[str]) -> str:
     detail = (proc.stderr or proc.stdout or "").strip()
     if detail:
@@ -1407,7 +1423,7 @@ def _rollover_protected_paths(data: dict[str, Any], base: Path) -> set[str]:
 
 
 def _has_active_rollover_lease(repo_root: Path, info: WorktreeInfo) -> str | None:
-    primary = primary_checkout_root(repo_root)
+    primary = control_plane_root(repo_root)
     worktree_path = os.path.realpath(info.path)
     for candidate_dir in (
         primary / ".agent" / "thread-rollovers",
@@ -1442,7 +1458,7 @@ def _has_active_ownership_claim(repo_root: Path, task_id: str | None) -> str | N
     if env_override:
         db_path = Path(env_override).expanduser().resolve()
     else:
-        db_path = primary_checkout_root(repo_root) / "batch_state" / "tasks" / "write-ownership.sqlite3"
+        db_path = control_plane_root(repo_root) / "batch_state" / "tasks" / "write-ownership.sqlite3"
         if not db_path.is_file():
             return None
     try:
@@ -1470,7 +1486,7 @@ def _has_active_ownership_claim(repo_root: Path, task_id: str | None) -> str | N
 def _task_record(repo_root: Path, task_id: str | None) -> dict[str, Any] | None:
     if not task_id:
         return None
-    task_file = primary_checkout_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json"
+    task_file = control_plane_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json"
     try:
         payload = json.loads(task_file.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -1824,7 +1840,7 @@ def _qualifying_reason(
         has_matching_task = False
         task_settled = False
         if is_dispatch_candidate:
-            task_file = repo_root / "batch_state" / "tasks" / f"{task_id}.json"
+            task_file = control_plane_root(repo_root) / "batch_state" / "tasks" / f"{task_id}.json"
             if task_file.exists():
                 has_matching_task = True
                 try:
@@ -2025,16 +2041,23 @@ def _enter_dispatch_worktree_guard(
     qualifying class already decided its record. Any other task record with
     an unfinished status that names the checkout refuses removal. Returns a
     skip reason, or ``None`` with the lock held until ``stack`` closes.
+
+    Records and locks are read from :func:`control_plane_root`: for a
+    ``--repo`` sibling repository that is the public primary, where dispatch
+    writes them (#8624).
     """
+    primary = primary_checkout_root(repo_root)
     try:
-        lock_dir = _common_git_dir(repo_root) / worktree_claims.LOCK_DIR_NAME
+        control_root = worktree_claims.control_plane_root(primary)
+        lock_dir = _common_git_dir(control_root) / worktree_claims.LOCK_DIR_NAME
         stack.enter_context(worktree_claims.worktree_lock(info.path, lock_dir=lock_dir))
+    except worktree_claims.ControlPlaneError as exc:
+        return f"{worktree_claims.LOCK_UNAVAILABLE} ({exc})"
     except worktree_claims.WorktreeLockError as exc:
         return f"{worktree_claims.lock_refusal(exc)} ({exc})"
     except RuntimeError as exc:
         return f"worktree lock unavailable ({exc})"
-    primary = primary_checkout_root(repo_root)
-    tasks_dir = primary / "batch_state" / "tasks"
+    tasks_dir = control_root / "batch_state" / "tasks"
     owner_task_id = _dispatch_task_id(repo_root, info)
     return worktree_claims.active_worktree_claim_refusal(
         info.path,

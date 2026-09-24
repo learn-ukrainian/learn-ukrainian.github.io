@@ -35,12 +35,15 @@ class FleetRepo:
 
 
 class FleetRepoError(ValueError):
-    """Unknown key, bad catalog, or missing sibling checkout."""
+    """Unknown key, bad or unreadable catalog, or missing sibling checkout."""
 
 
 def load_fleet_repos(path: Path | None = None) -> dict[str, FleetRepo]:
     cfg_path = path or _CONFIG_PATH
-    raw = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
+    try:
+        raw = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
+    except (yaml.YAMLError, OSError) as exc:
+        raise FleetRepoError(f"fleet_repos catalog unreadable: {cfg_path} ({type(exc).__name__}: {exc})") from exc
     if not isinstance(raw, Mapping):
         raise FleetRepoError(f"fleet_repos catalog must be a mapping: {cfg_path}")
     repos_raw = raw.get("repos")

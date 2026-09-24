@@ -34,6 +34,8 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.repo_root import main_checkout_root
+from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos
 from scripts.orchestration.task_record_store import task_record_path
 from scripts.path_safety import assert_delete_target
 
@@ -362,6 +364,54 @@ def repository_lock_dir(repo_root: Path) -> Path:
     return Path(common_dir) / LOCK_DIR_NAME
 
 
+class ControlPlaneError(RuntimeError):
+    """The control-plane root of a repository could not be resolved."""
+
+
+def public_primary_root() -> Path:
+    """Return the public primary checkout that owns ``scripts/delegate.py``.
+
+    Test seam: tests monkeypatch this to lay out a public primary and sibling
+    checkouts under a temporary directory.
+    """
+    return main_checkout_root(Path(__file__).resolve().parents[2])
+
+
+def control_plane_root(repo_root: Path) -> Path:
+    """Return the checkout whose ``batch_state/`` and lock dir govern ``repo_root``'s worktrees.
+
+    Dispatch keeps every task record and per-worktree lock on the public
+    primary, even for ``--repo infra-private|hramatka`` worktrees (#672 P2.1,
+    :mod:`scripts.orchestration.fleet_repos`). A worktree of an allowlisted
+    sibling checkout therefore resolves to the public primary, so a remover
+    acting on it reads the records and takes the lock dispatch wrote and holds
+    (#8624). Any other repository is its own control plane. Raises
+    :class:`ControlPlaneError` when the fleet catalog cannot be read: a caller
+    that mutates must then refuse, since it cannot tell whether the repository
+    is a sibling.
+    """
+    public = public_primary_root().resolve()
+    repo = main_checkout_root(repo_root).resolve()
+    try:
+        catalog = load_fleet_repos()
+    except FleetRepoError as exc:
+        raise ControlPlaneError(f"fleet repository catalog unreadable ({type(exc).__name__}: {exc})") from exc
+    for fleet_repo in catalog.values():
+        if not fleet_repo.default and (public.parent / fleet_repo.local_name).resolve() == repo:
+            return public
+    return repo
+
+
+def owning_repo_root(worktree: Path, *, default: Path) -> Path:
+    """Return the primary checkout a linked ``worktree`` belongs to, else ``default``.
+
+    Read from the worktree's own ``.git`` pointer, so a sibling-repo checkout
+    is git-operated in its own repository rather than the public primary.
+    """
+    root = main_checkout_root(worktree)
+    return root if root != worktree and (root / ".git").is_dir() else default
+
+
 def checked_out_branch(worktree: Path) -> str | None:
     """Return the branch checked out at ``worktree``, or ``None`` when detached or unknown."""
     proc = _git_probe(["rev-parse", "--abbrev-ref", "HEAD"], cwd=worktree)
@@ -434,6 +484,7 @@ def remove_unclaimed_worktree(
     force: bool = False,
     dirty_probe: Callable[[Path], bool | None] | None = None,
     unlock: bool = False,
+    control_root: Path | None = None,
     tasks_dir: Path | None = None,
     lock_dir: Path | None = None,
     lock_timeout_s: float | None = None,
@@ -455,10 +506,15 @@ def remove_unclaimed_worktree(
     Dispatch holds the same lock from before it touches a checkout until it
     publishes the record that names it, so every attachment is either visible
     to step 3 or waits and then finds the checkout gone. ``repo_root`` is the
-    primary checkout: git runs there and recorded claims resolve against it.
-    ``tasks_dir`` defaults to ``<repo_root>/batch_state/tasks`` and
-    ``lock_dir`` to :func:`repository_lock_dir`. ``reason`` is the caller's
-    purpose, recorded on success. This never raises.
+    primary checkout of the worktree's repository: git runs there and
+    recorded claims resolve against it. ``control_root`` is the checkout that
+    holds the task records and lock dir; it defaults to
+    :func:`control_plane_root`, which is ``repo_root`` itself except for a
+    ``--repo`` sibling repository, whose records and locks live on the public
+    primary (#8624). ``tasks_dir`` defaults to
+    ``<control_root>/batch_state/tasks`` and ``lock_dir`` to
+    :func:`repository_lock_dir` of ``control_root``. ``reason`` is the
+    caller's purpose, recorded on success. This never raises.
     """
     branch: str | None = None
     dirty: bool | None = None
@@ -466,16 +522,17 @@ def remove_unclaimed_worktree(
     def outcome(action: str, why: str, *, error: str | None = None) -> WorktreeRemoval:
         return WorktreeRemoval(action=action, path=str(worktree), reason=why, branch=branch, dirty=dirty, error=error)
 
-    tasks_dir = tasks_dir if tasks_dir is not None else repo_root / "batch_state" / "tasks"
     with contextlib.ExitStack() as locks:
         try:
-            locks.enter_context(
-                worktree_lock(
-                    worktree,
-                    lock_dir=lock_dir if lock_dir is not None else repository_lock_dir(repo_root),
-                    timeout_s=lock_timeout_s,
-                )
-            )
+            if tasks_dir is None or lock_dir is None:
+                control_root = control_root if control_root is not None else control_plane_root(repo_root)
+            if tasks_dir is None:
+                tasks_dir = control_root / "batch_state" / "tasks"
+            if lock_dir is None:
+                lock_dir = repository_lock_dir(control_root)
+            locks.enter_context(worktree_lock(worktree, lock_dir=lock_dir, timeout_s=lock_timeout_s))
+        except ControlPlaneError as exc:
+            return outcome("skipped", LOCK_UNAVAILABLE, error=str(exc))
         except WorktreeLockError as exc:
             return outcome("skipped", lock_refusal(exc), error=str(exc))
         try:
@@ -604,11 +661,12 @@ def _build_parser() -> argparse.ArgumentParser:
             "      --reason 'wt.sh clean 817'\n"
             "  .venv/bin/python -m scripts.orchestration.worktree_claims remove .worktrees/dispatch/claude/x --json\n"
             "\n"
-            "Guards, all checked while holding <git common dir>/lu-worktree-locks/<key>.lock:\n"
+            "Guards, all checked while holding <public git common dir>/lu-worktree-locks/<key>.lock:\n"
             "  1. PATH is a registered linked worktree of its repository, never the primary checkout.\n"
             "  2. With --owner-task-id: that task's record is finished, names PATH as its\n"
             "     worktree_path, and records worktree_reused: false (its dispatch created PATH).\n"
-            "  3. No other unfinished task record in <primary>/batch_state/tasks names PATH.\n"
+            "  3. No other unfinished task record in <public primary>/batch_state/tasks names PATH\n"
+            "     (the public primary also holds the records and locks of --repo sibling worktrees, #8624).\n"
             "  4. Plain `git worktree remove`: git refuses modified, untracked, or locked checkouts.\n"
             "\n"
             "Outputs:\n"
@@ -652,8 +710,38 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _cli_remove(args: argparse.Namespace) -> int:
+def _cli_removal(args: argparse.Namespace, worktree: Path, *, repo_root: Path, control_root: Path) -> WorktreeRemoval:
     # Deferred: containment's git plumbing is only needed by the CLI.
+    from scripts.guardrails import worktree_containment
+
+    tasks_dir = control_root / "batch_state" / "tasks"
+
+    def releasable() -> tuple[bool, str]:
+        registered = worktree_containment.registered_worktrees(repo_root)
+        if not registered:
+            return False, "git worktree list failed; refusing worktree removal"
+        if worktree == registered[0]:
+            return False, "PATH is the primary checkout; refusing worktree removal"
+        if worktree not in registered[1:]:
+            return False, "not a registered linked worktree; refusing worktree removal"
+        if args.owner_task_id is None:
+            return True, ""
+        refusal = owner_release_refusal(
+            worktree, owner_task_id=args.owner_task_id, tasks_dir=tasks_dir, repo_root=repo_root
+        )
+        return (False, refusal) if refusal is not None else (True, f"owner task {args.owner_task_id}")
+
+    return remove_unclaimed_worktree(
+        worktree,
+        repo_root=repo_root,
+        reason=args.reason,
+        owner_task_id=args.owner_task_id,
+        releasable=releasable,
+        control_root=control_root,
+    )
+
+
+def _cli_remove(args: argparse.Namespace) -> int:
     from scripts.guardrails import worktree_containment
 
     raw = Path(args.path).expanduser()
@@ -665,31 +753,12 @@ def _cli_remove(args: argparse.Namespace) -> int:
             action="skipped", path=str(worktree), reason="not inside a git repository; refusing worktree removal"
         )
     else:
-        tasks_dir = repo_root / "batch_state" / "tasks"
-
-        def releasable() -> tuple[bool, str]:
-            registered = worktree_containment.registered_worktrees(repo_root)
-            if not registered:
-                return False, "git worktree list failed; refusing worktree removal"
-            if worktree == registered[0]:
-                return False, "PATH is the primary checkout; refusing worktree removal"
-            if worktree not in registered[1:]:
-                return False, "not a registered linked worktree; refusing worktree removal"
-            if args.owner_task_id is None:
-                return True, ""
-            refusal = owner_release_refusal(
-                worktree, owner_task_id=args.owner_task_id, tasks_dir=tasks_dir, repo_root=repo_root
-            )
-            return (False, refusal) if refusal is not None else (True, f"owner task {args.owner_task_id}")
-
-        removal = remove_unclaimed_worktree(
-            worktree,
-            repo_root=repo_root,
-            reason=args.reason,
-            owner_task_id=args.owner_task_id,
-            releasable=releasable,
-            tasks_dir=tasks_dir,
-        )
+        try:
+            control_root = control_plane_root(repo_root)
+        except ControlPlaneError as exc:
+            removal = WorktreeRemoval(action="skipped", path=str(worktree), reason=LOCK_UNAVAILABLE, error=str(exc))
+        else:
+            removal = _cli_removal(args, worktree, repo_root=repo_root, control_root=control_root)
     if args.json:
         print(json.dumps(removal.as_record(), sort_keys=True))
     if removal.action == "removed":
