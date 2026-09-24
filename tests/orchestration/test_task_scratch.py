@@ -314,7 +314,12 @@ def test_evidence_is_exported_only_on_request(tmp_path: Path) -> None:
 
 def test_cli_help_shows_atlas_410k_invocation() -> None:
     completed = subprocess.run(
-        [sys.executable, str(CLI), "run", "--help"], capture_output=True, text=True, check=True, cwd=str(REPO_ROOT)
+        [sys.executable, str(CLI), "run", "--help"],
+        capture_output=True,
+        text=True,
+        check=True,
+        cwd=str(REPO_ROOT),
+        timeout=30,
     )
     for needle in (
         'export PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"',
@@ -340,6 +345,7 @@ def test_cli_rejects_missing_command(tmp_path: Path) -> None:
         capture_output=True,
         text=True,
         cwd=str(REPO_ROOT),
+        timeout=30,
     )
     assert completed.returncode != 0
     assert "missing command" in completed.stderr
