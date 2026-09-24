@@ -395,7 +395,7 @@ def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> 
 @pytest.mark.parametrize(
     ("model", "expected"),
     [
-        ("gemini-9.9-pro-preview", "For Gemini Pro, use `gemini-3.1-pro-high`."),
+        ("gemini-9.9-pro-preview", "For Gemini Pro, use `--model gemini-3.1-pro-high`."),
         (
             "gemini-9.9-flash-preview",
             "Accepted AGY model ids: " + ", ".join(f"`{slug}`" for slug in agy_module._AGY_MODEL_SLUGS) + ".",
@@ -440,7 +440,7 @@ def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, 
 
     assert result == 2
     err = capsys.readouterr().err
-    assert "For Gemini Pro, use `gemini-3.1-pro-high`." in err
+    assert "For Gemini Pro, use `--model gemini-3.1-pro-high`." in err
     assert "gemini-3.8-flash-high" not in err
 
 
