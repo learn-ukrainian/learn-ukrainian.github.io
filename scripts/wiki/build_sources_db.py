@@ -743,6 +743,29 @@ def write_literary_validation_report(report: str) -> Path:
     return report_path
 
 
+def declare_wal(db: Path) -> str:
+    """Put the live sources.db in WAL mode and prove it; raise if SQLite declined.
+
+    The temp DB is folded back to DELETE mode before the swap so it is one
+    self-contained file; the live path must then be WAL again (#8527): evidence
+    readers pin one snapshot per session with a long read transaction, which in
+    DELETE mode would hold a SHARED lock and block the ULIF walk's commits, and
+    in WAL mode costs the writer nothing.
+    """
+    conn = sqlite3.connect(str(db))
+    try:
+        mode = str(conn.execute("PRAGMA journal_mode=WAL").fetchone()[0]).lower()
+    finally:
+        conn.close()
+    if mode != "wal":
+        raise RuntimeError(
+            f"{db} is in journal_mode={mode!r} after the rebuild, expected 'wal'; "
+            "concurrent evidence readers would block writers — fix before using this DB"
+        )
+    print("  📝 journal_mode=wal declared on the live database")
+    return mode
+
+
 def build(db_path: Path | None = None,
           external_dir: Path | None = None,
           textbook_dir: Path | None = None,
@@ -1057,6 +1080,7 @@ def build(db_path: Path | None = None,
         _cleanup_tmp()
         raise
     print(f"  🔁 Atomically replaced {db.name} with the validated rebuild")
+    declare_wal(db)
 
     db_size = db.stat().st_size / 1024 / 1024
     ensure_ukrainian_wiki_manifest(PROJECT_ROOT / "data" / "embeddings" / "manifest.db")

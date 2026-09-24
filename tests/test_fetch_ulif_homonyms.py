@@ -421,6 +421,54 @@ def test_prepare_database_creates_new_db_owner_only(tmp_path):
         os.umask(old_umask)
 
 
+def test_prepare_database_declares_wal_on_new_and_existing_caches(tmp_path):
+    """#8527: the walk is the writer that needs concurrency, so it declares WAL and proves it."""
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    fresh = tmp_path / "fresh" / "cache.db"
+    conn = prepare_database(fresh)
+    try:
+        assert conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+    finally:
+        conn.close()
+    assert fresh.read_bytes()[18:20] == b"\x02\x02"
+
+    # A pre-existing rollback-journal cache is converted on the next start.
+    legacy = tmp_path / "legacy.db"
+    with sqlite3.connect(legacy) as seed:
+        seed.execute("CREATE TABLE placeholder (id INTEGER PRIMARY KEY)")
+    assert legacy.read_bytes()[18:20] == b"\x01\x01"
+    conn = prepare_database(legacy)
+    try:
+        assert conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+    finally:
+        conn.close()
+    assert legacy.read_bytes()[18:20] == b"\x02\x02"
+
+
+def test_prepare_database_fails_loudly_when_wal_is_declined(tmp_path, monkeypatch):
+    from scripts.lexicon.runner import fetch_ulif_homonyms as mod
+
+    class Declines:
+        def __init__(self, inner):
+            self._inner = inner
+
+        def execute(self, sql, *args):
+            if "journal_mode=WAL" in sql:
+                return self._inner.execute("PRAGMA journal_mode")  # reports the unchanged mode
+            return self._inner.execute(sql, *args)
+
+        def __getattr__(self, name):
+            return getattr(self._inner, name)
+
+    from scripts.wiki import sources_db as sdb
+
+    real = sdb._ulif_dictua_conn
+    monkeypatch.setattr(sdb, "_ulif_dictua_conn", lambda path, *, create=False: Declines(real(path, create=create)))
+    with pytest.raises(RuntimeError, match="expected 'wal'"):
+        mod.prepare_database(tmp_path / "declined.db")
+
+
 def test_ensure_private_dir_warns_on_permissive_existing_keeps_mode(tmp_path, capsys):
     from scripts.lexicon.runner.fetch_ulif_homonyms import _ensure_private_dir
 
