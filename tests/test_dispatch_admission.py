@@ -117,6 +117,21 @@ def test_pidless_spawning_record_holds_a_slot_only_during_the_grace_window(tmp_p
     assert decision.dead_task_ids == ()
 
 
+def test_pidless_spawning_record_from_the_future_does_not_hold_a_slot(tmp_path, probe, caplog):
+    tasks = tmp_path / "tasks"
+    future = (datetime.now(UTC) + timedelta(hours=1)).isoformat()
+    skewed = (datetime.now(UTC) + timedelta(seconds=adm.PIDLESS_CLOCK_SKEW_S / 2)).isoformat()
+    _record(tasks, "future", status="spawning", pid=None, started_at=future)
+    _record(tasks, "skewed", status="spawning", pid=None, started_at=skewed)
+
+    with caplog.at_level("WARNING", logger=adm.__name__):
+        decision = adm.evaluate("workspace-write", tasks, pid_alive=lambda _pid: False, thresholds=_LIMITS)
+
+    assert decision.live_task_ids == ("skewed",)
+    assert "pidless spawning record future has started_at" in caplog.text
+    assert "skewed" not in caplog.text
+
+
 def test_low_mem_available_is_refused(tmp_path, probe):
     probe["probe"] = adm.HostProbe(mem_available_bytes=int(2.5 * _GIB), load1=1.0, cpu_count=8, proc_available=True)
 
@@ -136,6 +151,15 @@ def test_high_load_per_cpu_is_refused(tmp_path, probe):
     [failure] = decision.failures
     assert failure.startswith("load 1.75 per CPU (1-minute load 14.00 on 8 CPUs) is above the limit of 1.50")
     assert "DISPATCH_MAX_LOAD_PER_CPU=1.5" in failure
+
+
+def test_single_cpu_load_failure_uses_singular(tmp_path, probe):
+    probe["probe"] = adm.HostProbe(mem_available_bytes=12 * _GIB, load1=3.0, cpu_count=1, proc_available=True)
+
+    decision = adm.evaluate("workspace-write", tmp_path / "tasks", thresholds=_LIMITS)
+
+    [failure] = decision.failures
+    assert "(1-minute load 3.00 on 1 CPU) is above" in failure
 
 
 def test_every_failed_check_is_named_in_one_refusal_line(tmp_path, probe):

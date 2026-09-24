@@ -13,7 +13,8 @@ every check passes. Read-only dispatches are exempt.
   ``spawning``/``running``, its mode is write-capable and its pid is alive. A
   ``spawning`` record without a pid yet holds a slot for
   :data:`PIDLESS_SPAWNING_GRACE_S`: dispatch publishes the record, then writes
-  the Popen pid. A dead pid never holds a slot; the caller may sweep it to
+  the Popen pid. A ``started_at`` more than :data:`PIDLESS_CLOCK_SKEW_S` in the
+  future holds no slot (logged), so a bad clock cannot pin one. A dead pid never holds a slot; the caller may sweep it to
   ``crashed`` through ``on_dead``.
 * **``MemAvailable``** from ``/proc/meminfo`` at or above the floor.
 * **CPU:** the 1-minute load average divided by ``os.cpu_count()`` at or below
@@ -36,6 +37,7 @@ from __future__ import annotations
 import contextlib
 import fcntl
 import json
+import logging
 import os
 import time
 from collections.abc import Callable, Iterator, Mapping
@@ -46,9 +48,12 @@ from typing import Any
 
 from scripts.orchestration import task_record_store
 
+_logger = logging.getLogger(__name__)
+
 WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 ACTIVE_STATUSES = frozenset({"running", "spawning"})
 PIDLESS_SPAWNING_GRACE_S = 120.0
+PIDLESS_CLOCK_SKEW_S = 30.0
 LOCK_FILE_NAME = "dispatch-admission.lock"
 DEFAULT_LOCK_TIMEOUT_S = 60.0
 PROC_ROOT = Path("/proc")
@@ -316,13 +321,16 @@ def scan_task_records(
         write_capable = state.get("mode") in WRITE_CAPABLE_MODES
         pid = _parse_pid(state.get("pid"))
         if pid is None:
+            if not write_capable or state.get("status") != "spawning":
+                continue
             age = _age_s(state.get("started_at"), clock)
-            if (
-                write_capable
-                and state.get("status") == "spawning"
-                and age is not None
-                and age <= PIDLESS_SPAWNING_GRACE_S
-            ):
+            if age is not None and age < -PIDLESS_CLOCK_SKEW_S:
+                _logger.warning(
+                    "dispatch admission: pidless spawning record %s has started_at %.0f s in the future; not counted",
+                    task_id,
+                    -age,
+                )
+            elif age is not None and age <= PIDLESS_SPAWNING_GRACE_S:
                 live.append(task_id)
             continue
         if alive(pid):
@@ -371,7 +379,7 @@ def evaluate(
     load = probe.load_per_cpu
     if load is not None and load > limits.max_load_per_cpu:
         failures.append(
-            f"load {load:.2f} per CPU (1-minute load {probe.load1:.2f} on {probe.cpu_count} CPUs) is above the "
+            f"load {load:.2f} per CPU (1-minute load {probe.load1:.2f} on {probe.cpu_count} CPU{'' if probe.cpu_count == 1 else 's'}) is above the "
             f"limit of {limits.max_load_per_cpu:.2f} ({ENV_MAX_LOAD_PER_CPU}={limits.max_load_per_cpu:g})"
         )
     return AdmissionDecision(

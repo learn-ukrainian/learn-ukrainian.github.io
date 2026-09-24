@@ -453,9 +453,13 @@ def _hermetic_dispatch_admission_host(monkeypatch):
 
     Admission reads this host's MemAvailable and load average; a busy CI runner
     or developer box must not refuse the write dispatches other tests make.
-    Admission tests monkeypatch ``probe_host`` themselves.
+    Admission tests monkeypatch ``probe_host`` themselves. Imported lazily and
+    skipped when unavailable, so conftest still loads in a minimal venv (#8689).
     """
-    from scripts.orchestration import dispatch_admission
+    try:
+        from scripts.orchestration import dispatch_admission
+    except ImportError:
+        return
 
     for name in (
         dispatch_admission.ENV_MAX_LIVE_WRITE_WORKERS,
