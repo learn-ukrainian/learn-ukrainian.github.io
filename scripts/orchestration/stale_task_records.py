@@ -17,10 +17,10 @@ finalized; they only inflate every scan and read as open attention items.
 * **C** orphaned: the worktree path, the local branch and the remote branch are
   all gone, and so is the work. Either the record names a commit
   (``auto_finalize.commit_sha``; records carry no other head id) that no ref
-  reaches, remote-tracking refs freshly fetched, or the task exited with no
+  reaches, every remote branch freshly fetched, or the task exited with no
   commits and a clean tree, leaving nothing to lose;
 * **D** anything else (never modified): evidence unavailable, a failed fetch
-  (``fetch_failed``: stale remote-tracking refs cannot prove the work gone),
+  (``fetch_failed``: stale remote refs cannot prove the work gone),
   commits or a dirty exit without a recorded commit id (a renamed branch cannot be ruled
   out), a recorded commit missing from the object store, or a merged pull
   request that shares the branch name but none of the record's commits.
@@ -30,14 +30,19 @@ by commit identity: its head or merge commit is a recorded commit, or its head
 descends from one. A pull request that only reuses the branch name may belong
 to a later task, so that record moves to D instead. A clean exit with no
 commits settles ``no_deliverable``; anything else settles ``failed``. Evidence
-comes from one ``git fetch --no-tags --prune origin`` (dry runs too: it changes
-only remote-tracking refs), one ``git ls-remote --heads`` and one local branch
-listing per repository; one ``git cat-file --batch-check`` and one
+comes from one fetch per repository of every remote branch into the private
+namespace ``refs/lu-stale-scan/<repo-key>/`` (dry runs too: it writes only that
+namespace), from the allowlisted ``https://github.com/<slug>.git`` with an
+explicit refspec and config injection scrubbed from the environment (see
+:func:`_fetch_scan_refs`), and one ``for-each-ref`` over that namespace and
+the local branches; one ``git cat-file --batch-check`` and one
 ``git rev-list --all`` per repository when records name commits (one walk into
 a set beats ~425 per-commit ``for-each-ref --contains`` walks); worktree probes
 for checkouts that still exist; and one paged REST pull list per repository (never GraphQL, never
 a per-record GitHub call). Per-record git calls happen only to name the refs
-holding a commit or to test a same-branch pull request head's ancestry.
+holding a commit or to test a same-branch pull request head's ancestry. Git and
+``gh`` error text reaches the report only with URL userinfo stripped and
+secrets redacted (:func:`_scrub`).
 
 ``archive`` moves terminal records (statuses that no longer claim a worktree,
 :data:`worktree_claims.RELEASED_TASK_STATUSES`) older than ``--min-age-days``
@@ -60,7 +65,10 @@ first renames the record to a private staging name, verifies that the file it
 took is the one it checked, and puts it back if a writer replaced it in
 between. No move ever replaces a file: archive, put-back and ``restore`` place
 each file with ``os.link`` (which fails if the name is taken) before unlinking
-the source, so a writer that created the destination first keeps its file.
+the source, so a writer that created the destination first keeps its file. A
+staged file that cannot be archived goes back to its hot name, or, if a writer
+took that name, to a visible ``<name>.unplaced-<hex>`` in the archive that the
+report names; no failure leaves a file at its hidden staging name.
 """
 
 from __future__ import annotations
@@ -85,7 +93,7 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from scripts import delegate
+from scripts import delegate, secret_redactor
 from scripts.common.git_context import sanitized_git_env
 from scripts.orchestration import fleet_repos, task_record_store, worktree_claims
 
@@ -143,6 +151,36 @@ def _normalize_branch(raw: Any) -> str | None:
     return branch or None
 
 
+# Environment that could redirect or reconfigure git beyond the checkout's own
+# config: every ``GIT_CONFIG*`` channel (``GIT_CONFIG_COUNT``/``KEY_n``/``VALUE_n``,
+# ``GIT_CONFIG_PARAMETERS``, config-file overrides), transport overrides, and
+# tracing that would copy credentials to stderr. Credentials still come from the
+# normal credential helper in the user's global config.
+_GIT_ENV_DROP = frozenset(
+    {
+        "GIT_ASKPASS",
+        "GIT_CURL_VERBOSE",
+        "GIT_EXEC_PATH",
+        "GIT_PROXY_COMMAND",
+        "GIT_SSH",
+        "GIT_SSH_COMMAND",
+        "GIT_SSL_NO_VERIFY",
+    }
+)
+_GIT_ENV_DROP_PREFIXES = ("GIT_CONFIG", "GIT_TRACE")
+
+
+def _git_env() -> dict[str, str]:
+    """:func:`sanitized_git_env` minus config injection, transport overrides and tracing."""
+    env = {
+        key: value
+        for key, value in sanitized_git_env().items()
+        if key not in _GIT_ENV_DROP and not key.startswith(_GIT_ENV_DROP_PREFIXES)
+    }
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    return env
+
+
 def _git(
     args: list[str], *, cwd: Path, timeout: float, stdin: str | None = None
 ) -> subprocess.CompletedProcess[str] | None:
@@ -154,11 +192,26 @@ def _git(
             capture_output=True,
             text=True,
             check=False,
-            env=sanitized_git_env(),
+            env=_git_env(),
             timeout=timeout,
         )
     except (OSError, subprocess.TimeoutExpired):
         return None
+
+
+# ``scheme://user:password@host`` -> ``scheme://host``.
+_URL_USERINFO_RE = re.compile(r"(?i)\b([a-z][a-z0-9+.-]*://)[^/\s'\"]*@")
+
+
+def _scrub(text: str) -> str:
+    """Strip URL userinfo and redact secrets from text bound for a report field or log."""
+    return secret_redactor.redact_text(_URL_USERINFO_RE.sub(r"\1", text)) or ""
+
+
+def _failure_detail(proc: subprocess.CompletedProcess[str]) -> str:
+    """The last line git printed on failure, scrubbed, or its exit code."""
+    lines = (proc.stderr or proc.stdout or "").strip().splitlines()
+    return _scrub(lines[-1]) if lines else str(proc.returncode)
 
 
 def _iter_record_files(tasks_dir: Path) -> list[Path]:
@@ -171,17 +224,49 @@ def _iter_record_files(tasks_dir: Path) -> list[Path]:
 # ---------------------------------------------------------------------------
 
 
+SCAN_REF_ROOT = "refs/lu-stale-scan"
+_SAFE_REPO_KEY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
+
+
+@dataclasses.dataclass(frozen=True)
+class FetchTarget:
+    """Where a repository's branches are fetched from, and the private ref namespace they land in."""
+
+    key: str
+    url: str
+
+    @property
+    def ref_prefix(self) -> str:
+        return f"{SCAN_REF_ROOT}/{self.key}"
+
+
+def fleet_fetch_target(slug: str) -> FetchTarget | None:
+    """The fetch target of an allowlisted repository (``scripts/config/fleet_repos.yaml``).
+
+    The URL is the canonical ``https://github.com/<slug>.git`` built from the
+    allowlist, never the checkout's ``origin``: a remote's URL and refspec are
+    checkout state that can drift or be narrowed, and the allowlist is the one
+    place that says which repository a slug is. Credentials come from the
+    normal git credential helper for ``https://github.com``.
+    """
+    for key, repo in fleet_repos.load_fleet_repos().items():
+        if repo.github == slug and _SAFE_REPO_KEY_RE.match(key):
+            return FetchTarget(key=key, url=f"https://github.com/{slug}.git")
+    return None
+
+
 @dataclasses.dataclass
 class RepoFacts:
     """Batched git evidence for one repository checkout."""
 
     slug: str
     checkout: Path | None
+    target: FetchTarget | None = None
     remote_heads: dict[str, str] | None = None
     local_branches: dict[str, str] | None = None
     error: str | None = None
-    # Set when ``git fetch`` failed: remote-tracking refs may be stale, so no
-    # record of this repository may be proven orphaned (class C).
+    # Set when the fetch failed: refs from an older scan may be stale, so no
+    # record of this repository may be classified from them.
     fetch_error: str | None = None
 
 
@@ -197,61 +282,78 @@ def default_repo_checkouts() -> dict[str, Path]:
     return checkouts
 
 
-def _fetch_origin(checkout: Path) -> str | None:
-    """Refresh remote-tracking refs with one ``git fetch --no-tags --prune origin``.
+def _fetch_scan_refs(checkout: Path, target: FetchTarget) -> str | None:
+    """Mirror the repository's branches into ``refs/lu-stale-scan/<key>/``; return why it failed, or ``None``.
 
-    Reachability from ``refs/remotes`` proves a commit is off ``origin`` only
-    when those refs are current: an unfetched remote branch may have advanced
-    past a recorded commit. Returns why the fetch failed, or ``None``.
+    Reachability proves a commit is off the remote only when every remote
+    branch is current, so the fetch never depends on the checkout's remote
+    configuration: it names the allowlisted URL and an explicit refspec into a
+    private namespace (``--prune`` drops branches deleted upstream), and runs
+    with config injection scrubbed from the environment (:func:`_git_env`).
+    ``url.<base>.insteadOf`` in the checkout's own config could still rewrite
+    the URL, so the effective URL is checked first.
     """
+    resolved = _git(["ls-remote", "--get-url", target.url], cwd=checkout, timeout=delegate.DEFAULT_GIT_TIMEOUT_S)
+    if resolved is None or resolved.returncode != 0:
+        return f"git ls-remote --get-url failed: {_failure_detail(resolved) if resolved else 'did not finish'}"
+    effective = resolved.stdout.strip()
+    if effective != target.url:
+        return f"git config rewrites {target.url} to {_scrub(effective)} (url.*.insteadOf); refusing to fetch"
     proc = _git(
-        ["fetch", "--no-tags", "--prune", "origin"], cwd=checkout, timeout=delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S
+        [
+            "fetch",
+            "--no-tags",
+            "--prune",
+            "--no-write-fetch-head",
+            target.url,
+            f"+refs/heads/*:{target.ref_prefix}/*",
+        ],
+        cwd=checkout,
+        timeout=delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S,
     )
     if proc is None:
-        return f"git fetch origin did not finish within {delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S:g}s"
+        return f"git fetch {target.url} did not finish within {delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S:g}s"
     if proc.returncode != 0:
-        detail = (proc.stderr or proc.stdout or "").strip().splitlines()
-        return f"git fetch origin failed: {detail[-1] if detail else proc.returncode}"[:300]
+        return f"git fetch {target.url} failed: {_failure_detail(proc)}"[:300]
     return None
 
 
-def collect_repo_facts(slug: str, checkout: Path | None) -> RepoFacts:
-    """One ``git fetch``, one ``git ls-remote --heads origin`` and one local branch listing."""
-    facts = RepoFacts(slug=slug, checkout=checkout)
+def collect_repo_facts(slug: str, checkout: Path | None, target: FetchTarget | None) -> RepoFacts:
+    """One fetch into the scan namespace, then one ``for-each-ref`` over it and the local branches."""
+    facts = RepoFacts(slug=slug, checkout=checkout, target=target)
     if checkout is None:
         facts.error = f"no local checkout for repository {slug}"
         return facts
-    facts.fetch_error = _fetch_origin(checkout)
-    remote = _git(["ls-remote", "--heads", "origin"], cwd=checkout, timeout=delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S)
-    if remote is None or remote.returncode != 0:
-        facts.error = "git ls-remote --heads origin failed"
+    if target is None:
+        facts.error = f"repository {slug} is not in scripts/config/fleet_repos.yaml"
         return facts
-    heads: dict[str, str] = {}
-    for line in remote.stdout.splitlines():
-        parts = line.split()
-        if len(parts) == 2 and parts[1].startswith("refs/heads/"):
-            heads[parts[1].removeprefix("refs/heads/")] = parts[0]
-    local = _git(
-        ["for-each-ref", "--format=%(objectname) %(refname:short)", "refs/heads"],
+    facts.fetch_error = _fetch_scan_refs(checkout, target)
+    if facts.fetch_error is not None:
+        return facts
+    listing = _git(
+        ["for-each-ref", "--format=%(objectname) %(refname)", "refs/heads/", f"{target.ref_prefix}/"],
         cwd=checkout,
         timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
     )
-    if local is None or local.returncode != 0:
-        facts.error = "git for-each-ref refs/heads failed"
+    if listing is None or listing.returncode != 0:
+        facts.error = "git for-each-ref failed"
         return facts
+    heads: dict[str, str] = {}
     branches: dict[str, str] = {}
-    for line in local.stdout.splitlines():
-        sha, _, name = line.partition(" ")
-        if name:
-            branches[name] = sha
+    for line in listing.stdout.splitlines():
+        sha, _, ref = line.partition(" ")
+        if ref.startswith(f"{target.ref_prefix}/"):
+            heads[ref.removeprefix(f"{target.ref_prefix}/")] = sha
+        elif ref.startswith("refs/heads/"):
+            branches[ref.removeprefix("refs/heads/")] = sha
     facts.remote_heads = heads
     facts.local_branches = branches
     return facts
 
 
-def _commits_ahead_of_base(checkout: Path, branch: str, base: str) -> int | None:
+def _commits_ahead_of_base(checkout: Path, base_ref: str, branch: str) -> int | None:
     proc = _git(
-        ["rev-list", "--count", f"refs/remotes/origin/{base}..refs/heads/{branch}"],
+        ["rev-list", "--count", f"{base_ref}..refs/heads/{branch}"],
         cwd=checkout,
         timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
     )
@@ -298,10 +400,11 @@ def collect_commit_facts(checkout: Path, shas: Iterable[str]) -> CommitFacts:
     """Resolve ``shas`` with one ``git cat-file --batch-check`` and one ``git rev-list --all``.
 
     ``rev-list --all`` walks every ref (local branches, tags, remote-tracking
-    refs, stash) plus the HEAD of every linked worktree, so a commit it does not
-    list is held by no local or remote-tracking ref under any name. Callers run
-    it only after :func:`_fetch_origin` succeeded, so ``refs/remotes`` is
-    current and a remote branch that descends from the commit is seen.
+    refs, the ``refs/lu-stale-scan`` namespace, stash) plus the HEAD of every
+    linked worktree, so a commit it does not list is held by no ref under any
+    name. Callers run it only after :func:`_fetch_scan_refs` succeeded, so the
+    scan namespace holds every current remote branch and one that descends
+    from the commit is seen.
     """
     wanted = sorted(set(shas))
     facts = CommitFacts(resolved={}, reachable=set())
@@ -383,8 +486,7 @@ def gh_pull_page(slug: str, page: int) -> list[dict[str, Any]]:
         timeout=delegate.DEFAULT_GH_CLI_TIMEOUT_S,
     )
     if proc.returncode != 0:
-        detail = (proc.stderr or proc.stdout or "").strip().splitlines()
-        raise RuntimeError(f"gh api {endpoint} failed: {detail[-1] if detail else proc.returncode}")
+        raise RuntimeError(f"gh api {endpoint} failed: {_failure_detail(proc)}")
     loaded = json.loads(proc.stdout or "[]")
     if not isinstance(loaded, list):
         raise RuntimeError(f"gh api {endpoint} returned {type(loaded).__name__}, not a list")
@@ -410,7 +512,7 @@ def build_pull_index(
         try:
             pulls = pager(slug, page)
         except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as exc:
-            index.error = f"{type(exc).__name__}: {exc}"[:300]
+            index.error = _scrub(f"{type(exc).__name__}: {exc}")[:300]
             return index
         index.pages = page
         if not pulls:
@@ -551,6 +653,11 @@ def _classify_one(candidate: Candidate, facts: RepoFacts | None) -> None:
     if not isinstance(slug, str) or facts is None:
         candidate.klass, candidate.skip_reason = "D", "record has no known repository"
         return
+    if facts.fetch_error is not None:
+        evidence["fetch_failed"] = facts.fetch_error
+        candidate.klass = "D"
+        candidate.skip_reason = f"fetch_failed: {facts.fetch_error}; stale remote refs cannot prove the work gone"
+        return
     if facts.error is not None or facts.remote_heads is None or facts.local_branches is None:
         candidate.klass, candidate.skip_reason = "D", f"repository evidence unavailable: {facts.error}"
         return
@@ -575,9 +682,11 @@ def _classify_one(candidate: Candidate, facts: RepoFacts | None) -> None:
         evidence["local_branch_sha"] = local_sha
         if on_origin:
             evidence["local_matches_origin"] = local_sha == facts.remote_heads[branch]
-        elif facts.checkout is not None:
+        elif facts.checkout is not None and facts.target is not None:
             base = _normalize_branch(record.get("worktree_base")) or "main"
-            evidence["local_commits_ahead_of_base"] = _commits_ahead_of_base(facts.checkout, branch, base)
+            evidence["local_commits_ahead_of_base"] = _commits_ahead_of_base(
+                facts.checkout, f"{facts.target.ref_prefix}/{base}", branch
+            )
 
     if on_origin:
         candidate.klass = "A"
@@ -627,7 +736,7 @@ def _apply_commit_facts(candidate: Candidate, commits: CommitFacts, facts: RepoF
     held = [sha for sha in full if sha in commits.reachable]
     published = sorted(name for name, head in (facts.remote_heads or {}).items() if head in full)
     refs = sorted({ref for sha in held for ref in _refs_containing(facts.checkout, sha)}) if facts.checkout else []
-    local_refs = [ref for ref in refs if not ref.startswith("refs/remotes/")]
+    local_refs = [ref for ref in refs if not ref.startswith(("refs/remotes/", f"{SCAN_REF_ROOT}/"))]
     evidence.update({"recorded_commits_reachable": bool(held), "refs_containing_commit": refs})
     if published:
         evidence["origin_heads_at_commit"] = published
@@ -712,13 +821,8 @@ def classify(
     for candidate in candidates:
         slug = candidate.record.get("repository")
         if isinstance(slug, str) and slug not in facts_by_slug:
-            facts_by_slug[slug] = collect_repo_facts(slug, repo_checkouts.get(slug))
-        facts = facts_by_slug.get(slug) if isinstance(slug, str) else None
-        _classify_one(candidate, facts)
-        if candidate.klass == "C" and facts is not None and facts.fetch_error is not None:
-            candidate.klass = "D"
-            candidate.evidence["fetch_failed"] = facts.fetch_error
-            candidate.skip_reason = f"fetch_failed: {facts.fetch_error}; stale remote refs cannot prove the work gone"
+            facts_by_slug[slug] = collect_repo_facts(slug, repo_checkouts.get(slug), fleet_fetch_target(slug))
+        _classify_one(candidate, facts_by_slug.get(slug) if isinstance(slug, str) else None)
 
     naming_commits: dict[str, list[Candidate]] = defaultdict(list)
     for candidate in candidates:
@@ -978,41 +1082,96 @@ def _place(staged: Path, dest_dir: Path, name: str, stamp: str) -> Path:
         except FileExistsError:
             continue
         if kept:
-            raise OSError(f"{dest} was written during the move; {len(kept)} entries left at {staged}")
+            raise OSError(f"{dest} was written during the move; {len(kept)} entries not moved")
         return dest
-    raise OSError(f"archive already holds {name} and its stamped name; left at {staged}")
+    raise FileExistsError(f"archive already holds {name} and its stamped name")
 
 
-def _move_group(record_path: Path, dest_dir: Path, stamp: str, *, checked: os.stat_result) -> list[str]:
+class _Unplaced(OSError):
+    """A staged file was not archived; it went back to ``home`` or was parked at ``where``."""
+
+    def __init__(self, reason: str, *, home: Path, where: Path):
+        super().__init__(reason)
+        self.reason, self.home, self.where = reason, home, where
+
+
+def _unstage(staged: Path, home: Path, dest_dir: Path) -> Path:
+    """Return a staged file to ``home`` without replacing anything; else park it where people look.
+
+    ``home`` is the name it was taken from. If a writer has taken that name
+    since, the file goes to ``<dest_dir>/<name>.unplaced-<hex>``, a name no
+    record reader globs for. Returns where the file (or what a partly moved
+    directory still holds) now is: the staging name only if both moves failed.
+    """
+    for target in (home, dest_dir / f"{home.name}.unplaced-{uuid.uuid4().hex[:12]}"):
+        try:
+            if not _move_no_replace(staged, target):
+                return target
+        except OSError:
+            continue
+    return staged
+
+
+def _place_or_unstage(staged: Path, home: Path, dest_dir: Path, name: str, stamp: str) -> Path:
+    """:func:`_place` a staged file; on any failure :func:`_unstage` it before raising.
+
+    An :class:`OSError` becomes :class:`_Unplaced`, which says where the file is.
+    """
+    try:
+        return _place(staged, dest_dir, name, stamp)
+    except BaseException as exc:
+        where = _unstage(staged, home, dest_dir)
+        if isinstance(exc, OSError):
+            raise _Unplaced(str(exc), home=home, where=where) from exc
+        raise
+
+
+def _move_group(
+    record_path: Path, dest_dir: Path, stamp: str, *, checked: os.stat_result
+) -> tuple[list[str], list[str]]:
     """Move a record then its sidecars; never overwrite a destination.
 
     Each file is first renamed to a private staging name, which takes it
     atomically whatever a writer does next. ``checked`` is the ``stat`` of the
     record as last verified. If the staged record is not that file, a writer
-    replaced it in between: it is put back (unless a writer created the record
-    again meanwhile) and :class:`_RecordReplaced` is raised before any sidecar
-    moves.
+    replaced it in between: it is put back and :class:`_RecordReplaced` is
+    raised before any sidecar moves. No failure leaves a file at its staging
+    name: it goes back to its hot name or, if a writer took that name, to a
+    visible ``.unplaced-<hex>`` name in the archive (:class:`_Unplaced` says
+    which). Returns the names archived and a note for each sidecar that was not.
     """
     dest_dir.mkdir(parents=True, exist_ok=True)
     sidecars = [record_path.with_name(name) for name in _sidecar_names(record_path.stem)]
     staged = _stage(record_path, dest_dir)
-    landed = os.lstat(staged)
-    if (landed.st_ino, landed.st_mtime_ns) != (checked.st_ino, checked.st_mtime_ns):
-        try:
-            _move_no_replace(staged, record_path)
-        except FileExistsError:
-            raise OSError(f"record replaced during the move and rewritten again; newer copy left at {staged}") from None
-        raise _RecordReplaced
-    record_dest = _place(staged, dest_dir, record_path.name, stamp)
-    moved = [record_dest.name]
+    try:
+        landed = os.lstat(staged)
+        replaced = (landed.st_ino, landed.st_mtime_ns) != (checked.st_ino, checked.st_mtime_ns)
+    except BaseException as exc:
+        where = _unstage(staged, record_path, dest_dir)
+        if isinstance(exc, OSError):
+            raise _Unplaced(str(exc), home=record_path, where=where) from exc
+        raise
+    if replaced:
+        where = _unstage(staged, record_path, dest_dir)
+        if where == record_path:
+            raise _RecordReplaced
+        raise _Unplaced("record replaced during the move and rewritten again", home=record_path, where=where)
+    record_dest = _place_or_unstage(staged, record_path, dest_dir, record_path.name, stamp)
+    moved, problems = [record_dest.name], []
     # A renamed record takes its sidecars' names along, so they still pair up.
     for sidecar, name in zip(sidecars, _sidecar_names(record_dest.stem), strict=True):
         try:
             staged = _stage(sidecar, dest_dir)
         except FileNotFoundError:
             continue
-        moved.append(_place(staged, dest_dir, name, stamp).name)
-    return moved
+        except OSError as exc:
+            problems.append(f"{sidecar.name} not archived: {exc}")
+            continue
+        try:
+            moved.append(_place_or_unstage(staged, sidecar, dest_dir, name, stamp).name)
+        except _Unplaced as exc:
+            problems.append(f"{sidecar.name} not archived ({exc.reason}); left at {exc.where}")
+    return moved, problems
 
 
 def _archive_one(
@@ -1039,14 +1198,22 @@ def _archive_one(
             elif (reason := keep_hot_reason(current)) is not None:
                 row["action"], row["skip_reason"] = "skipped", reason
             else:
-                row["moved"] = _move_group(path, archive_dir, stamp, checked=stat)
-                row["action"] = "archived"
+                row["moved"], problems = _move_group(path, archive_dir, stamp, checked=stat)
+                row["action"] = "error" if problems else "archived"
+                if problems:
+                    row["error"] = "record archived; " + "; ".join(problems)
     except worktree_claims.WorktreeLockError as exc:
         row["action"], row["skip_reason"] = "skipped", worktree_claims.lock_refusal(exc)
     except FileNotFoundError:
         row["action"], row["skip_reason"] = "skipped", "record moved since selection"
     except _RecordReplaced:
         row["action"], row["skip_reason"] = "skipped", "record replaced during the move; put back"
+    except _Unplaced as exc:
+        if exc.where == exc.home:
+            row["action"], row["skip_reason"] = "skipped", f"{exc.reason}; record left in place"
+        else:
+            row["action"], row["error"] = "error", f"{exc.reason}; record left at {exc.where}"
+            row["recover_path"] = str(exc.where)
     except OSError as exc:
         row["action"], row["error"] = "error", f"{type(exc).__name__}: {exc}"
 
@@ -1278,10 +1445,11 @@ def _build_parser() -> argparse.ArgumentParser:
             "Use it for records whose worktree, local branch and remote branch are all gone."
         ),
         epilog=(
-            "Classes (evidence: git fetch --no-tags --prune origin (dry run too; it changes only\n"
-            "remote-tracking refs), git ls-remote, a local branch list and, for records naming a\n"
-            "commit, one cat-file + one rev-list --all per repository; worktree probes; one paged REST\n"
-            "pull list per repository; never GraphQL or per-record GitHub calls):\n"
+            "Classes (evidence: one git fetch per repository of every branch of the allowlisted\n"
+            "https://github.com/<slug>.git into refs/lu-stale-scan/<repo-key>/ (dry run too; it writes\n"
+            "only that namespace), a ref listing and, for records naming a commit, one cat-file + one\n"
+            "rev-list --all per repository; worktree probes; one paged REST pull list per repository;\n"
+            "never GraphQL or per-record GitHub calls):\n"
             "  A  branch, or a recorded commit, still on origin          report only\n"
             "  B  local branch or a ref holding a recorded commit, or    never modified\n"
             "     worktree dirty\n"

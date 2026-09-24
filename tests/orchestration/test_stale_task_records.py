@@ -69,14 +69,26 @@ def _auto_finalized(sha: str) -> dict[str, Any]:
     return {"ok": False, "commit_sha": sha, "pr_url": None, "error": "push failed", "changed_files": ["x"]}
 
 
+SCAN_KEY = "test"
+SCAN_PREFIX = f"refs/lu-stale-scan/{SCAN_KEY}"
+
+
 @pytest.fixture(autouse=True)
 def _hermetic(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks")
     monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "tasks")
+    # The tool drops every GIT_CONFIG* variable, so git reads $HOME's config: keep it empty.
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(home / ".config"))
     monkeypatch.setenv("GIT_CONFIG_GLOBAL", os.devnull)
     monkeypatch.setenv("GIT_CONFIG_NOSYSTEM", "1")
-    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE"):
+    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_CONFIG_COUNT", "GIT_CONFIG_PARAMETERS"):
         monkeypatch.delenv(key, raising=False)
+    # The allowlisted fetch URL of SLUG is the tmp bare repository, not GitHub.
+    target = str_mod.FetchTarget(key=SCAN_KEY, url=str(tmp_path / "origin.git"))
+    monkeypatch.setattr(str_mod, "fleet_fetch_target", lambda slug: target if slug == SLUG else None)
 
 
 @pytest.fixture
@@ -472,9 +484,126 @@ def test_unfetched_remote_branch_descending_from_the_recorded_commit_is_not_clas
     row = _by_file(_settle(tasks_dir, repo, []))["advanced.json"]
 
     assert row["class"] == "A"
-    assert row["evidence"]["refs_containing_commit"] == ["refs/remotes/origin/rescue/advanced"]
-    assert "rescue/advanced" in _git(repo, "for-each-ref", "refs/remotes/origin")
+    assert row["evidence"]["refs_containing_commit"] == [f"{SCAN_PREFIX}/rescue/advanced"]
+    # The scan namespace is private: the checkout's own remote-tracking refs are untouched.
+    assert "rescue/advanced" not in _git(repo, "for-each-ref", "refs/remotes/origin")
     assert _snapshot(tasks_dir) == before
+
+
+def _descending_branch_only_on_origin(repo: Path, name: str) -> str:
+    """A recorded commit whose only holder is an origin branch that has advanced past it."""
+    work_sha = _orphan_commit(repo, name)
+    _git(repo, "checkout", "-b", "tmp/descendant", work_sha)
+    (repo / "later.txt").write_text("later\n")
+    _git(repo, "add", "later.txt")
+    _git(repo, "commit", "-m", "later")
+    _git(repo, "push", "origin", f"tmp/descendant:refs/heads/rescue/{name}")
+    _git(repo, "checkout", "main")
+    _git(repo, "branch", "-D", "tmp/descendant")
+    _git(repo, "update-ref", "-d", f"refs/remotes/origin/rescue/{name}")
+    assert work_sha not in _git(repo, "rev-list", "--all").split()
+    return work_sha
+
+
+def test_narrow_configured_refspec_still_finds_the_descending_branch(tasks_dir, repo):
+    """Sol r3: a fetch through origin's own refspec would never bring rescue/* in."""
+    work_sha = _descending_branch_only_on_origin(repo, "narrow")
+    _git(repo, "config", "--replace-all", "remote.origin.fetch", "+refs/heads/main:refs/remotes/origin/main")
+    _git(repo, "fetch", "--prune", "origin")
+    assert work_sha not in _git(repo, "rev-list", "--all").split()
+    _record(tasks_dir, "narrow", worktree_dirty_on_exit=True, auto_finalize=_auto_finalized(work_sha))
+
+    report = _settle(tasks_dir, repo, [], apply=True)
+
+    row = _by_file(report)["narrow.json"]
+    assert row["class"] == "A"
+    assert row["evidence"]["refs_containing_commit"] == [f"{SCAN_PREFIX}/rescue/narrow"]
+    assert "settled" not in report["actions"]
+    assert _git(repo, "config", "--get-all", "remote.origin.fetch") == "+refs/heads/main:refs/remotes/origin/main"
+
+
+def test_scan_namespace_is_pruned(tasks_dir, repo):
+    _record(tasks_dir, "no-commits")
+    _git(repo, "push", "origin", "main:refs/heads/doomed")
+    _settle(tasks_dir, repo, [])
+    assert f"{SCAN_PREFIX}/doomed" in _git(repo, "for-each-ref", "--format=%(refname)", SCAN_PREFIX)
+    _git(repo, "push", "origin", ":refs/heads/doomed")
+    _settle(tasks_dir, repo, [])
+    assert _git(repo, "for-each-ref", "--format=%(refname)", SCAN_PREFIX).split() == [f"{SCAN_PREFIX}/main"]
+
+
+def test_git_config_env_redirect_is_ignored(tasks_dir, repo, tmp_path, monkeypatch):
+    """Sol r3: inherited GIT_CONFIG_* rewrites the fetch URL to a repository without the rescue branch."""
+    work_sha = _descending_branch_only_on_origin(repo, "redirected")
+    decoy = tmp_path / "decoy.git"
+    _git(tmp_path, "init", "--bare", "-b", "main", str(decoy))
+    _git(repo, "push", str(decoy), "main")
+    origin = str(tmp_path / "origin.git")
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", f"url.{decoy}.insteadOf")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", origin)
+    monkeypatch.setenv("GIT_CONFIG_PARAMETERS", f"'url.{decoy}.insteadof'='{origin}'")
+    # Under the inherited environment, unscrubbed, the URL resolves to the decoy.
+    unscrubbed = subprocess.run(
+        ["git", "ls-remote", "--get-url", origin], cwd=repo, capture_output=True, text=True, check=True, timeout=30
+    )
+    assert unscrubbed.stdout.strip() == str(decoy)
+    _record(tasks_dir, "redirected", worktree_dirty_on_exit=True, auto_finalize=_auto_finalized(work_sha))
+
+    row = _by_file(_settle(tasks_dir, repo, [], apply=True))["redirected.json"]
+
+    assert row["class"] == "A"
+    assert row["evidence"]["refs_containing_commit"] == [f"{SCAN_PREFIX}/rescue/redirected"]
+
+
+SECRET = "lu_synthetic_TOKEN_9f8e7d6c5b4a39281706"
+
+
+def test_checkout_config_rewrite_refuses_the_fetch_and_hides_credentials(tasks_dir, repo, tmp_path):
+    """``url.*.insteadOf`` in the checkout's own config would silently change which repository is fetched."""
+    origin = str(tmp_path / "origin.git")
+    _git(repo, "config", f"url.https://x-access-token:{SECRET}@example.invalid/r.git.insteadOf", origin)
+    _record(tasks_dir, "no-commits")
+
+    report = _settle(tasks_dir, repo, [], apply=True)
+
+    row = _by_file(report)["no-commits.json"]
+    assert row["class"] == "D"
+    assert "refusing to fetch" in row["skip_reason"]
+    assert "https://example.invalid/r.git" in row["evidence"]["fetch_failed"]
+    assert SECRET not in json.dumps(report) and "x-access-token" not in json.dumps(report)
+
+
+def test_git_error_text_never_carries_credentials(tasks_dir, mixed, monkeypatch, capsys):
+    """Sol r3: the fetch error line was copied into the report verbatim."""
+    real_git = str_mod._git
+    stderr = (
+        f"fatal: unable to access 'https://x-access-token:{SECRET}@github.com/owner/repo.git/': "
+        f"The requested URL returned error: 403 token={SECRET}\n"
+    )
+
+    def leaky_fetch(args, **kwargs):
+        if args[0] == "fetch":
+            return subprocess.CompletedProcess(["git", *args], 128, "", stderr)
+        return real_git(args, **kwargs)
+
+    monkeypatch.setattr(str_mod, "_git", leaky_fetch)
+    report = _run(tasks_dir, mixed)
+    assert "unable to access 'https://github.com/owner/repo.git/'" in report["records"][0]["skip_reason"]
+    assert SECRET not in json.dumps(report)
+
+    assert str_mod.main(["settle-stale", "--tasks-dir", str(tasks_dir)]) == 0
+    assert SECRET not in capsys.readouterr().out
+
+
+def test_gh_error_text_never_carries_credentials(monkeypatch):
+    def failing_gh(*_args, **_kwargs):
+        return subprocess.CompletedProcess(["gh"], 1, "", f"error: https://user:{SECRET}@api.github.com denied\n")
+
+    monkeypatch.setattr(str_mod.subprocess, "run", failing_gh)
+    index = str_mod.build_pull_index(SLUG, oldest_start=None, pager=str_mod.gh_pull_page, max_pages=1)
+    assert index.error and "https://api.github.com denied" in index.error
+    assert SECRET not in index.error
 
 
 def test_failed_fetch_keeps_every_record_of_the_repository_out_of_class_c(tasks_dir, mixed, monkeypatch):
@@ -491,10 +620,11 @@ def test_failed_fetch_keeps_every_record_of_the_repository_out_of_class_c(tasks_
     report = _run(tasks_dir, mixed, apply=True)
 
     rows = _by_file(report)
-    assert report["classes"] == {"A": 1, "B": 2, "C": 0, "D": 6}
-    for name in ("merged.json", "no-commits.json", "crashed.json", "stale-pr.json"):
+    assert report["classes"] == {"A": 0, "B": 0, "C": 0, "D": 9}
+    for name in ("published.json", "local-only.json", "merged.json", "no-commits.json", "crashed.json"):
         assert rows[name]["class"] == "D"
-        assert rows[name]["skip_reason"].startswith("fetch_failed: git fetch origin failed: fatal: unable")
+        assert rows[name]["skip_reason"].startswith("fetch_failed: git fetch ")
+        assert "failed: fatal: unable to access origin" in rows[name]["skip_reason"]
     assert "settled" not in report["actions"]
     assert mixed["pager"].calls == []
     assert _snapshot(tasks_dir) == before
@@ -868,3 +998,79 @@ def test_archive_never_replaces_a_destination_created_during_the_move(tasks_dir,
     assert (foreign.parent / result_name).read_text() == "reply\n"
     assert sorted(path.name for path in tasks_dir.iterdir()) == ["archive"]
     assert not list(foreign.parent.glob(".*.moving"))
+
+
+STAMP = "20260924T120000000000Z"
+
+
+def _fill_archive_names(archive: Path, file_name: str) -> dict[str, bytes]:
+    """Take a file's archive name and both stamped fallbacks, as a racing run could."""
+    archive.mkdir(exist_ok=True)
+    stem, suffix = file_name.rsplit(".", 1)
+    names = [file_name, f"{stem}.{STAMP}.archived.{suffix}", f"{stem}.{STAMP}.{os.getpid()}.archived.{suffix}"]
+    for name in names:
+        (archive / name).write_bytes(f"foreign {name}\n".encode())
+    return {name: (archive / name).read_bytes() for name in names}
+
+
+def _no_staging_left(tasks_dir: Path) -> bool:
+    return not list(tasks_dir.rglob(".*.moving"))
+
+
+def test_archive_double_collision_puts_the_record_back(tasks_dir, monkeypatch):
+    """Sol r3: both archive names taken used to raise with the record only at its hidden staging name."""
+    monkeypatch.setattr(delegate, "_archive_stamp", lambda: STAMP)
+    record = _terminal(tasks_dir, "twice")
+    (tasks_dir / "twice.result").write_text("reply\n")
+    original = record.read_bytes()
+    foreign = _fill_archive_names(tasks_dir / "archive", "twice.json")
+
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+
+    row = report["records"][0]
+    assert row["action"] == "skipped"
+    assert row["skip_reason"] == "archive already holds twice.json and its stamped name; record left in place"
+    assert record.read_bytes() == original
+    assert (tasks_dir / "twice.result").read_text() == "reply\n"
+    assert {name: (tasks_dir / "archive" / name).read_bytes() for name in foreign} == foreign
+    assert _no_staging_left(tasks_dir)
+    assert report["actions"] == {"skipped": 1}
+
+
+def test_archive_double_collision_with_the_hot_name_retaken_parks_the_record_visibly(tasks_dir, monkeypatch):
+    monkeypatch.setattr(delegate, "_archive_stamp", lambda: STAMP)
+    record = _terminal(tasks_dir, "twice")
+    original = record.read_bytes()
+    _fill_archive_names(tasks_dir / "archive", "twice.json")
+    raced = _link_after_writer(
+        monkeypatch, record, lambda: delegate._write_state_atomic(record, {"task_id": "twice", "status": "running"})
+    )
+
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+
+    row = report["records"][0]
+    parked = Path(row["recover_path"])
+    assert raced and row["action"] == "error"
+    assert row["error"] == f"archive already holds twice.json and its stamped name; record left at {parked}"
+    assert parked.parent == tasks_dir / "archive" and parked.name.startswith("twice.json.unplaced-")
+    assert parked.read_bytes() == original
+    assert json.loads(record.read_text())["status"] == "running"
+    assert _no_staging_left(tasks_dir)
+    assert str_mod.main(["archive", "--tasks-dir", str(tasks_dir)]) == 0  # the parked file is no record
+
+
+def test_archive_double_collision_on_a_sidecar_keeps_it_hot_and_reports_it(tasks_dir, monkeypatch):
+    monkeypatch.setattr(delegate, "_archive_stamp", lambda: STAMP)
+    _terminal(tasks_dir, "split")
+    (tasks_dir / "split.result").write_text("reply\n")
+    _fill_archive_names(tasks_dir / "archive", "split.result")
+
+    report = str_mod.archive_terminal(tasks_dir, now=NOW, apply=True)
+
+    row = report["records"][0]
+    assert row["action"] == "error" and row["moved"] == ["split.json"]
+    assert "split.result not archived (archive already holds split.result and its stamped name)" in row["error"]
+    assert row["error"].endswith(f"left at {tasks_dir / 'split.result'}")
+    assert (tasks_dir / "split.result").read_text() == "reply\n"
+    assert json.loads((tasks_dir / "archive" / "split.json").read_text())["status"] == "done"
+    assert _no_staging_left(tasks_dir)
