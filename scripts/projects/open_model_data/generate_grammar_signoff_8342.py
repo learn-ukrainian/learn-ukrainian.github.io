@@ -266,15 +266,15 @@ def generate_signoff_and_receipt(
                     f"Provenance violation: findings entry key {s_idx} does not match embedded sample_index ({embedded_s_idx})"
                 )
             r_verdict = f_entry.get("verdict")
-            if r_verdict is not None and r_verdict not in ALLOWED_REVIEWER_VERDICTS:
+            if r_verdict not in ALLOWED_REVIEWER_VERDICTS:
                 raise ValueError(
-                    f"Provenance violation: findings entry for sample index {s_idx} has unknown verdict {r_verdict!r} "
+                    f"Provenance violation: findings entry for sample index {s_idx} missing or invalid verdict {r_verdict!r} "
                     f"(allowed: {sorted(ALLOWED_REVIEWER_VERDICTS)})"
                 )
             r_status = f_entry.get("status")
-            if r_status is not None and r_status not in ALLOWED_REVIEWER_STATUSES:
+            if r_status not in ALLOWED_REVIEWER_STATUSES:
                 raise ValueError(
-                    f"Provenance violation: findings entry for sample index {s_idx} has unknown status {r_status!r} "
+                    f"Provenance violation: findings entry for sample index {s_idx} missing or invalid status {r_status!r} "
                     f"(allowed: {sorted(ALLOWED_REVIEWER_STATUSES)})"
                 )
             assessment = f_entry.get("reviewer_assessment") or f_entry.get("evaluation")
@@ -495,19 +495,17 @@ def generate_signoff_and_receipt(
             if isinstance(f_entry, dict):
                 r_verdict = f_entry.get("verdict")
                 r_status = f_entry.get("status")
-                if r_verdict is not None and r_verdict not in ALLOWED_REVIEWER_VERDICTS:
+                if r_verdict not in ALLOWED_REVIEWER_VERDICTS:
                     raise ValueError(
-                        f"Provenance violation: item {sample_idx} has unknown verdict {r_verdict!r} (allowed: {sorted(ALLOWED_REVIEWER_VERDICTS)})"
+                        f"Provenance violation: item {sample_idx} missing or invalid verdict {r_verdict!r} (allowed: {sorted(ALLOWED_REVIEWER_VERDICTS)})"
                     )
-                if r_status is not None and r_status not in ALLOWED_REVIEWER_STATUSES:
+                if r_status not in ALLOWED_REVIEWER_STATUSES:
                     raise ValueError(
-                        f"Provenance violation: item {sample_idx} has unknown status {r_status!r} (allowed: {sorted(ALLOWED_REVIEWER_STATUSES)})"
+                        f"Provenance violation: item {sample_idx} missing or invalid status {r_status!r} (allowed: {sorted(ALLOWED_REVIEWER_STATUSES)})"
                     )
                 has_defect = (
-                    r_verdict in ("CHANGES_REQUESTED", "REJECTED")
-                    or (r_verdict is not None and r_verdict != "APPROVED")
-                    or r_status == "FAIL"
-                    or (r_status is not None and r_status != "PASS")
+                    r_verdict != "APPROVED"
+                    or r_status != "PASS"
                     or bool(f_entry.get("defect"))
                 )
                 if has_defect:

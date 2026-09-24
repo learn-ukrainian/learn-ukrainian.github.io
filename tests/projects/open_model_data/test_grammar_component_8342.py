@@ -625,9 +625,72 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
     unknown_findings["1"]["verdict"] = "CUSTOM_NON_APPROVAL"
     f_path7 = tmp_path / "unknown_verdict.json"
     f_path7.write_text(json.dumps(unknown_findings), encoding="utf-8")
-    with pytest.raises(ValueError, match="unknown verdict 'CUSTOM_NON_APPROVAL'"):
+    with pytest.raises(ValueError, match="missing or invalid verdict 'CUSTOM_NON_APPROVAL'"):
         generate_signoff_and_receipt(
             findings_file=f_path7,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 8. Missing or null verdict rejected
+    null_verdict_findings = copy.deepcopy(raw_findings)
+    null_verdict_findings["1"]["verdict"] = None
+    f_path8 = tmp_path / "null_verdict.json"
+    f_path8.write_text(json.dumps(null_verdict_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid verdict None"):
+        generate_signoff_and_receipt(
+            findings_file=f_path8,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    missing_verdict_findings = copy.deepcopy(raw_findings)
+    del missing_verdict_findings["1"]["verdict"]
+    f_path8b = tmp_path / "missing_verdict.json"
+    f_path8b.write_text(json.dumps(missing_verdict_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid verdict None"):
+        generate_signoff_and_receipt(
+            findings_file=f_path8b,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 9. Missing or null status rejected
+    null_status_findings = copy.deepcopy(raw_findings)
+    null_status_findings["1"]["status"] = None
+    f_path9 = tmp_path / "null_status.json"
+    f_path9.write_text(json.dumps(null_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid status None"):
+        generate_signoff_and_receipt(
+            findings_file=f_path9,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    missing_status_findings = copy.deepcopy(raw_findings)
+    del missing_status_findings["1"]["status"]
+    f_path9b = tmp_path / "missing_status.json"
+    f_path9b.write_text(json.dumps(missing_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid status None"):
+        generate_signoff_and_receipt(
+            findings_file=f_path9b,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 10. Unknown status string rejected
+    unknown_status_findings = copy.deepcopy(raw_findings)
+    unknown_status_findings["1"]["status"] = "MAYBE"
+    f_path10 = tmp_path / "unknown_status.json"
+    f_path10.write_text(json.dumps(unknown_status_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="missing or invalid status 'MAYBE'"):
+        generate_signoff_and_receipt(
+            findings_file=f_path10,
             write_signoff=True,
             reviewer_id="claude_blue_team_ling_review",
             reviewer_family="claude",

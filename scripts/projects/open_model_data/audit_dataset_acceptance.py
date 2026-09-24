@@ -1379,11 +1379,23 @@ def audit_check_7_sample_drawer(
                                 "zero_russianisms",
                                 "zero_soviet_sum11",
                             }
+                            allowed_receipt_verdicts = {"APPROVED", "CHANGES_REQUESTED", "REJECTED"}
+                            allowed_receipt_statuses = {"PASS", "FAIL"}
                             item_blockers = 0
                             for r_it in items:
                                 s_idx = r_it.get("sample_index")
                                 it_verdict = r_it.get("verdict")
                                 it_status = r_it.get("status")
+                                if it_verdict not in allowed_receipt_verdicts:
+                                    failures.append(
+                                        f"Receipt item {s_idx} missing or invalid verdict: {it_verdict!r}"
+                                    )
+                                    break
+                                if it_status not in allowed_receipt_statuses:
+                                    failures.append(
+                                        f"Receipt item {s_idx} missing or invalid status: {it_status!r}"
+                                    )
+                                    break
                                 it_defects = r_it.get("defects", [])
                                 crit = r_it.get("criteria")
                                 if not isinstance(crit, dict) or not required_criteria_keys.issubset(crit.keys()):
