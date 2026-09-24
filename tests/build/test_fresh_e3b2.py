@@ -513,8 +513,57 @@ def test_manifest_history_and_closure_preserve_stale_attempts(tmp_path, monkeypa
         "sha256"
     ]
     assert new_digest != old_digest
-    assert {(row["n"], row["manifest_sha256"]) for row in changed["stale"]} == {(2, old[2]), (3, old[3])}
-    assert all(row["upstream"] == 1 for row in changed["stale"])
+    upstream = [row for row in changed["stale"] if row["input"] == "upstream_lessons"]
+    assert {(row["n"], row["manifest_sha256"]) for row in upstream} == {(2, old[2]), (3, old[3])}
+    assert all(row["upstream"] == 1 for row in upstream)
+    # the superseded lesson 1 attempt pinned the lesson text that has since changed; nothing else is stale
+    assert {(row["n"], row["manifest_sha256"], row["input"]) for row in changed["stale"] if row not in upstream} >= {
+        (1, old[1], "lesson")
+    }
+    assert all(row["manifest_sha256"] in set(old.values()) for row in changed["stale"])
+
+
+def _closure_of_three(tmp_path, monkeypatch):
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state({"a": 1}))
+    for n in (1, 2, 3):
+        _write(level, slug, n, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    lessons = [{"n": n, "kind": "recap" if n == 3 else "teach"} for n in (1, 2, 3)]
+
+    def closure():
+        return compute_closure(level, slug, lessons, repo_root=tmp_path, state_dir=state_dir, site_dir=page_dir)
+
+    assert closure()["stale"] == []
+    return evidence_dir, state_dir, slug, closure
+
+
+@pytest.mark.parametrize("which", ["pack", "words", "learner_state"])
+def test_closure_goes_stale_when_a_pinned_input_changes_and_names_it(tmp_path, monkeypatch, which):
+    evidence_dir, state_dir, slug, closure = _closure_of_three(tmp_path, monkeypatch)
+    target = {
+        "pack": evidence_dir / f"{slug}.yaml",
+        "words": evidence_dir / "_words.yaml",
+        "learner_state": state_dir / "lesson-2.learner-state.yaml",
+    }[which]
+    before = hashlib.sha256(target.read_bytes()).hexdigest()
+    lock.write(target, target.read_bytes() + b"# reviewed change, lock rewritten\n")  # the lock agrees: still stale
+    stale = closure()["stale"]
+    named = {(row["n"], row["input"]) for row in stale}
+    if which == "learner_state":
+        assert named == {(2, "learner_state")}
+    else:  # shared by every lesson; the rewritten lock file is a pinned input too
+        assert named == {(n, name) for n in (1, 2, 3) for name in (which, f"{which}_lock")}
+    row = next(row for row in stale if row["input"] == which)
+    assert row["path"] == target.relative_to(tmp_path).as_posix()
+    assert row["recorded_sha256"] == before and row["current_sha256"] == hashlib.sha256(target.read_bytes()).hexdigest()
+    assert "upstream" not in row
+
+
+def test_closure_reports_a_deleted_pinned_input_as_missing(tmp_path, monkeypatch):
+    _, state_dir, _, closure = _closure_of_three(tmp_path, monkeypatch)
+    (state_dir / "lesson-3.learner-state.yaml").unlink()
+    (row,) = closure()["stale"]
+    assert (row["n"], row["input"], row["current_sha256"]) == (3, "learner_state", None)
 
 
 def test_style_card_sidecar_mismatch_fails_manifest(tmp_path, monkeypatch):
@@ -903,7 +952,7 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     assert third["complete"] and calls == [1, 2, 3, 1, 3], third
     assert hashlib.sha256((page_dir / "1.mdx").read_bytes()).hexdigest() != before[1]
     closure = yaml.safe_load((state_dir / "module.closure.yaml").read_text(encoding="utf-8"))
-    assert {(row["n"], row["upstream"]) for row in closure["stale"]} >= {(2, 1), (3, 1)}
+    assert {(row["n"], row["upstream"]) for row in closure["stale"] if "upstream" in row} >= {(2, 1), (3, 1)}
     if evidence_path:
         shutil.copy2(state_dir / "module.build.yaml", saved / "rebuilt-module.build.yaml")
         shutil.copy2(state_dir / "module.closure.yaml", saved / "rebuilt-module.closure.yaml")

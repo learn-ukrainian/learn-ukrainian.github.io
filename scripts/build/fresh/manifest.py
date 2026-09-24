@@ -99,6 +99,37 @@ def _locked_input(path: Path, repo_root: Path) -> dict[str, str]:
     return entry
 
 
+def pinned_entries(doc: dict[str, Any]) -> list[tuple[str, dict[str, str]]]:
+    """Every ``{path, sha256}`` a lesson manifest pins, named by its input (lists expand; upstream lessons last)."""
+    pinned = []
+    for name, value in doc["inputs"].items():
+        pinned.extend((name, entry) for entry in (value if isinstance(value, list) else [value]))
+    pinned.extend(("upstream_lessons", entry) for entry in doc["upstream_lessons"])
+    return pinned
+
+
+def changed_inputs(doc: dict[str, Any], repo_root: Path) -> list[dict[str, Any]]:
+    """The pinned inputs whose file now differs from what the manifest recorded.
+
+    One record per changed input: ``input`` (its manifest name), ``entry`` (the
+    recorded ``{path, sha256}``) and ``current_sha256`` (``None`` when the file is
+    gone or no longer resolves to the recorded path). The current side is read by
+    ``_input`` — the function that recorded the input — so recording and
+    freshness cannot disagree about what a path holds.
+    """
+    root = repo_root.resolve()
+    changed = []
+    for name, entry in pinned_entries(doc):
+        try:
+            now = _input(root / entry["path"], root)
+        except (FileNotFoundError, ValueError):
+            now = None
+        current = now["sha256"] if now and now["path"] == entry["path"] else None
+        if current != entry["sha256"]:
+            changed.append({"input": name, "entry": entry, "current_sha256": current})
+    return changed
+
+
 def learner_state_document(state: Any, immersion: Any | None = None) -> dict[str, Any]:
     """The readable learner-state document; the identity hash covers only ``learner_state``."""
     document: dict[str, Any] = {"learner_state": state.to_dict()}
