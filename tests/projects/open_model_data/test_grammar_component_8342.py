@@ -907,9 +907,18 @@ def test_source_denominator_reconciliation(grammar_data):
     assert sum(accounting_data["measured_exclusions_total"].values()) == 4255
     assert accounting_data["reserve_candidate_count"] == 0
     assert accounting_data["measured_categories_count"] == len(accounting_data["measured_exclusions_total"])
-    assert accounting_data["measured_categories_count"] == 49
+    assert accounting_data["measured_categories_count"] == 51
+    assert recon["measured_categories_count"] == 51
     assert "adversarial_review_round_findings" not in accounting_data["measured_exclusions_total"]
     assert len(accounting_data["candidate_exclusions"]) == 4255
+
+    ce_map = {ce["candidate_id"]: ce for ce in accounting_data["candidate_exclusions"]}
+    # Representative label accuracy assertions (addressing Codex R23 review)
+    assert ce_map["uagec_0846_s4_a1"]["rejection_gate"] == "grammatical_aspect_tense_or_mood_change"
+    assert ce_map["uagec_1082_s91_a0"]["rejection_gate"] == "grammatical_aspect_tense_or_mood_change"
+    assert ce_map["uagec_0249_s10_a0"]["rejection_gate"] == "claim_about_named_person"
+    assert ce_map["uagec_0648_s31_a0"]["rejection_gate"] == "unsubstantiated_political_assertion"
+
     for ce in accounting_data["candidate_exclusions"]:
         assert "candidate_id" in ce
         assert "doc_id" in ce
@@ -948,3 +957,48 @@ def test_clean_sentence_for_query_preserves_quoted_punctuation():
     assert clean_sentence_for_query('"Why?"') == "Why?"
     assert clean_sentence_for_query('"Wait!"') == "Wait!"
     assert clean_sentence_for_query('"Said he."') == "Said he"
+
+
+def test_validator_rejection_label_accuracy():
+    """Verify validate_candidate_rejection semantic label accuracy on representative checks."""
+    from scripts.projects.open_model_data.build_grammar_component_8342 import validate_candidate_rejection
+
+    # 1. Tense change: акцентує (present) -> акцентував (past)
+    orig_tense = "Февр акцентує на духовному житті, культурі та психології людей."
+    corr_tense = "Февр акцентував на духовному житті, культурі та психології людей."
+    assert (
+        validate_candidate_rejection(orig_tense, corr_tense, [(1, 2, "G/Tense", "акцентував")])
+        == "grammatical_aspect_tense_or_mood_change"
+    )
+
+    # 2. Aspect change: почитати -> прочитати
+    orig_aspect = "Кому цікаво, цим займається теорія раціональності і можна почитати в книзі."
+    corr_aspect = "Кому цікаво, цим займається теорія раціональності і можна прочитати в книзі."
+    assert (
+        validate_candidate_rejection(orig_aspect, corr_aspect, [(9, 10, "G/Aspect", "прочитати")])
+        == "grammatical_aspect_tense_or_mood_change"
+    )
+
+    # 3. Claim about named person (defamatory factual claim)
+    orig_named = "Коломойський — це олігарх, який став багатим за рахунок обману людей."
+    corr_named = "Коломойський — це олігарх, який збагатився за рахунок обману людей."
+    assert (
+        validate_candidate_rejection(orig_named, corr_named, [(5, 7, "F/Calque", "збагатився")])
+        == "claim_about_named_person"
+    )
+
+    # 4. Unsubstantiated political assertion
+    orig_pol = "Який сенс позбавляти роботи десятків мільйонів українців без будь-якої причини?"
+    corr_pol = "Який сенс позбавляти роботи десятків мільйонів українців без жодної причини?"
+    assert (
+        validate_candidate_rejection(orig_pol, corr_pol, [(7, 9, "F/Calque", "жодної")])
+        == "unsubstantiated_political_assertion"
+    )
+
+    # 5. Safety: violent / morbid / vulgar content
+    orig_morbid = "Після важкої хвороби він померлий лежав у кімнаті без допомоги."
+    corr_morbid = "Після важкої хвороби він померлим лежав у кімнаті без допомоги."
+    assert (
+        validate_candidate_rejection(orig_morbid, corr_morbid, [(4, 5, "G/Case", "померлим")])
+        == "safety_violent_morbid_vulgar"
+    )

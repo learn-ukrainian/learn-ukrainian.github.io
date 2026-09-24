@@ -1616,11 +1616,11 @@ def validate_candidate_rejection(
     if re.search(r"\bпару\s+днів\b", o_low) and re.search(r"\bкілька\s+днів\b", c_low):
         return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bакцентує\b", o_low) and re.search(r"\bакцентував\b", c_low):
-        return "unwarranted_valid_to_valid_lexical_swap"
+        return "grammatical_aspect_tense_or_mood_change"
     if re.search(r"\bпоручик\w*\b", o_low) and re.search(r"\bпоручник\w*\b", c_low):
         return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bпочитати\b", o_low) and re.search(r"\bпрочитати\b", c_low):
-        return "unwarranted_valid_to_valid_lexical_swap"
+        return "grammatical_aspect_tense_or_mood_change"
     if re.search(r"\bМетою\s+статті\s+є\b", orig_text) and re.search(r"\bМета\s+статті\b", corr_text):
         return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bполян\w*\b", o_low) and re.search(r"\bгалявин\w*\b", c_low):
@@ -3678,10 +3678,10 @@ def validate_candidate_rejection(
     # Data safety / controversial named individual / unsubstantiated claims
     # #254: defamatory factual claim about named individual
     if re.search(r"\bколомойськ\w*\b", o_low):
-        return "safety_violent_morbid_vulgar"
+        return "claim_about_named_person"
     # #261: unsubstantiated political assertion
     if re.search(r"\bпозбавляти\s+роботи\s+десятків\s+мільйонів\b", o_low):
-        return "safety_violent_morbid_vulgar"
+        return "unsubstantiated_political_assertion"
 
     # Reject unpaired comma after relative pronoun
     if re.search(

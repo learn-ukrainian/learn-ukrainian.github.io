@@ -2,7 +2,7 @@
   "dataset_component": "grammar_v1",
   "governing_issue": "#8342",
   "total_candidate_annotator_edit_sets": 5252,
-  "measured_categories_count": 49,
+  "measured_categories_count": 51,
   "candidates_by_split": {
     "train_partition_documents": 4802,
     "eval_partition_documents": 450
@@ -20,7 +20,7 @@
   "reserve_candidate_count": 0,
   "reserve_disposition": "0 in reserve. 100% of all 997 eligible, deduplicated candidate edit sets extracted from UA-GEC train are delivered. The earlier reported figure of 1,096 retained / 99 in reserve was an unmeasured legacy placeholder prior to completing the structural, safety, and orthographic filter suite.",
   "measured_exclusions_total": {
-    "unwarranted_valid_to_valid_lexical_swap": 861,
+    "unwarranted_valid_to_valid_lexical_swap": 858,
     "uncapitalized_or_fragment": 502,
     "sentence_length_floor_under_5_words": 287,
     "ungrammatical_gold_correction": 273,
@@ -39,9 +39,9 @@
     "polarity_flips_negation": 64,
     "russianism_in_original_text_unrelated_to_edit": 63,
     "unbalanced_quotes": 61,
-    "grammatical_aspect_tense_or_mood_change": 47,
+    "grammatical_aspect_tense_or_mood_change": 50,
     "missing_punct_before_direct_speech_quote": 46,
-    "safety_violent_morbid_vulgar": 36,
+    "safety_violent_morbid_vulgar": 34,
     "morphology_or_agreement_defect": 31,
     "sentence_splitting_edit": 30,
     "math_special_symbols": 22,
@@ -65,13 +65,15 @@
     "spaced_dash_in_initials": 2,
     "capitalization_after_comma_dash": 2,
     "adjacent_doubled_words": 1,
+    "claim_about_named_person": 1,
+    "unsubstantiated_political_assertion": 1,
     "truncated_sentence_ends_in_preposition": 1,
     "dangling_subordinate_clause": 1,
     "unpaired_comma_after_relative_pronoun": 1,
     "eval_partition_firewall_target": 1
   },
   "measured_exclusions_train": {
-    "unwarranted_valid_to_valid_lexical_swap": 798,
+    "unwarranted_valid_to_valid_lexical_swap": 795,
     "uncapitalized_or_fragment": 468,
     "sentence_length_floor_under_5_words": 256,
     "ungrammatical_gold_correction": 249,
@@ -90,11 +92,11 @@
     "russianism_in_original_text_unrelated_to_edit": 58,
     "contextless_pronoun_or_gender_flip": 57,
     "unbalanced_quotes": 55,
-    "grammatical_aspect_tense_or_mood_change": 47,
+    "grammatical_aspect_tense_or_mood_change": 50,
     "missing_punct_before_direct_speech_quote": 45,
-    "safety_violent_morbid_vulgar": 31,
     "sentence_splitting_edit": 30,
     "morphology_or_agreement_defect": 30,
+    "safety_violent_morbid_vulgar": 29,
     "math_special_symbols": 21,
     "duplicate_sentence_pair": 15,
     "unbalanced_parentheses": 13,
@@ -115,6 +117,8 @@
     "capitalization_after_comma_dash": 2,
     "triple_repeated_letters": 2,
     "test_firewall_source": 2,
+    "claim_about_named_person": 1,
+    "unsubstantiated_political_assertion": 1,
     "truncated_sentence_ends_in_preposition": 1,
     "dangling_subordinate_clause": 1,
     "unpaired_comma_after_relative_pronoun": 1,
@@ -10746,7 +10750,7 @@
       "ann_id": 0,
       "split": "train",
       "primary_tag": "F/Calque",
-      "rejection_gate": "safety_violent_morbid_vulgar",
+      "rejection_gate": "claim_about_named_person",
       "original_snippet": "Коломойський — це олігарх, який став багатим за рахунок обману і експлуатації Ук"
     },
     {
@@ -19646,7 +19650,7 @@
       "ann_id": 0,
       "split": "train",
       "primary_tag": "F/Calque",
-      "rejection_gate": "safety_violent_morbid_vulgar",
+      "rejection_gate": "unsubstantiated_political_assertion",
       "original_snippet": "Звісно я рад за вас, але якій сенс позбавляти роботи десятків мільйонів Українці"
     },
     {
@@ -23236,7 +23240,7 @@
       "ann_id": 1,
       "split": "train",
       "primary_tag": "G/Tense",
-      "rejection_gate": "unwarranted_valid_to_valid_lexical_swap",
+      "rejection_gate": "grammatical_aspect_tense_or_mood_change",
       "original_snippet": "Февр акцентує на духовному житті, культурі та психології людей (разом з природнь"
     },
     {
@@ -27886,7 +27890,7 @@
       "ann_id": 0,
       "split": "train",
       "primary_tag": "G/Aspect",
-      "rejection_gate": "unwarranted_valid_to_valid_lexical_swap",
+      "rejection_gate": "grammatical_aspect_tense_or_mood_change",
       "original_snippet": "Кому цікаво, цим займається теорія раціональності і можна почитати в книзі Канем"
     },
     {
@@ -35656,7 +35660,7 @@
       "ann_id": 0,
       "split": "train",
       "primary_tag": "G/Aspect",
-      "rejection_gate": "unwarranted_valid_to_valid_lexical_swap",
+      "rejection_gate": "grammatical_aspect_tense_or_mood_change",
       "original_snippet": "Але в будь-якому випадку книгу варто почитати, особливо тим, хто полюбляє творчі"
     },
     {

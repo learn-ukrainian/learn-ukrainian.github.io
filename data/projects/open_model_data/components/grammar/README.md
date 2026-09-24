@@ -35,7 +35,7 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
 3. **Cross-Split Eval Partition Isolation:**
    - Sentences appearing in the evaluation partition are strictly quarantined from the training partition: **10** candidate matches excluded (9 sources [`eval_partition_firewall_source`], 1 target [`eval_partition_firewall_target`]).
 4. **Syntactic, Semantic & Valency Quality Filters:**
-   - Unwarranted valid-to-valid lexical swap (`unwarranted_valid_to_valid_lexical_swap`): **861** candidates excluded.
+   - Unwarranted valid-to-valid lexical swap (`unwarranted_valid_to_valid_lexical_swap`): **858** candidates excluded.
    - Sentence length floor (< 5 words) (`sentence_length_floor_under_5_words`): **287** candidates excluded.
    - Ungrammatical gold correction (`ungrammatical_gold_correction`): **273** candidates excluded.
    - Wholesale essay rewrite exceeding 30% of tokens (`wholesale_essay_rewrite_token_share_over_30_pct`): **196** candidates excluded.
@@ -47,7 +47,7 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
    - Contextless pronoun or gender flip (`contextless_pronoun_or_gender_flip`): **70** candidates excluded.
    - Polarity flips / negation changes (`polarity_flips_negation`): **64** candidates excluded.
    - Russianism in original text unrelated to edit (`russianism_in_original_text_unrelated_to_edit`): **63** candidates excluded.
-   - Grammatical aspect, tense, or mood change (`grammatical_aspect_tense_or_mood_change`): **47** candidates excluded.
+   - Grammatical aspect, tense, or mood change (`grammatical_aspect_tense_or_mood_change`): **50** candidates excluded.
    - Morphology or agreement defect (`morphology_or_agreement_defect`): **31** candidates excluded.
    - Sentence-splitting edits (`sentence_splitting_edit`): **30** candidates excluded.
    - Gender agreement mismatch (`gender_agreement_mismatch`): **11** candidates excluded.
@@ -80,12 +80,14 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
    - Capitalization after comma-dash (`capitalization_after_comma_dash`): **2** candidates excluded.
 6. **Pedagogical Grounding, Safety & Semantic Fidelity:**
    - Pure word insertions (`start == end`) (`pure_word_insertions`): **215** candidates excluded. Pure insertions lack an authentic corrupted grammatical surface form in the source text and risk teaching ungrounded generative insertion rather than grammatical correction.
-   - Safety filters (violent / morbid / vulgar content) (`safety_violent_morbid_vulgar`): **36** candidates excluded.
+   - Safety filters (violent / morbid / vulgar content) (`safety_violent_morbid_vulgar`): **34** candidates excluded.
+   - Defamatory or personal claims about named individuals (`claim_about_named_person`): **1** candidate excluded.
+   - Unsubstantiated political assertions (`unsubstantiated_political_assertion`): **1** candidate excluded.
 7. **Cross-Document Pair Deduplication:**
    - Duplicate `(original_text, corrected_text)` pairs across multiple annotators or documents were deduplicated (`duplicate_sentence_pair`): **15** candidates excluded.
 8. **Funnel Summary & Zero Reserve:**
-   - Total exclusions: **4,255** candidate edit sets excluded across **49** measured criteria (3,891 train, 364 eval).
-- **Zero Catch-Alls:** Every single rejected candidate is mapped directly to its specific validator gate or firewall check; generic catch-all buckets (`adversarial_review_round_findings`) have a count of **0**.
+   - Total exclusions: **4,255** candidate edit sets excluded across **51** measured criteria (3,891 train, 364 eval).
+   - **Zero Catch-Alls:** Every single rejected candidate is mapped directly to its specific validator gate or firewall check; generic catch-all buckets (`adversarial_review_round_findings`) have a count of **0**.
    - Retained candidate edit sets in pipeline: **997** (911 train candidates + 86 eval candidates).
    - Delivered in final balanced component: **997** substantive corrections (911 train, 86 eval) — 100% of retained candidate edit sets delivered, with zero withheld and zero in reserve.
    - Complete itemized candidate-level audit trail: 4,255 exclusion records in `candidate_exclusion_accounting.json`, each recording `candidate_id`, `doc_id`, `sent_idx`, `ann_id`, `split`, `primary_tag`, `rejection_gate`, and `original_snippet`.
