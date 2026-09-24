@@ -1,0 +1,55 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "3e268143fbd8",
+  "session_id": "78c41071-4bc7-4143-99b7-a055fd601837",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-24T01:43:59.252363199Z",
+  "branch": "claude/impl-8397-a1-landing",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "tests/build/test_lesson_assembler.py"
+  ],
+  "agent": "Claude Code",
+  "model": "",
+  "turn_id": "80edf2c88c4a",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 52,
+    "cache_creation_tokens": 48584,
+    "cache_read_tokens": 1235162,
+    "output_tokens": 9603,
+    "api_call_count": 25
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-24T01:43:59.220078011Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 15,
+    "total_committed": 0,
+    "total_lines_changed": 15,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 77,
+      "user_lines_removed": 15,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "curriculum/l2-uk-en/a1/my-morning/wiki_completeness_gate.json": 52,
+        "tests/build/test_lesson_assembler.py": 25
+      },
+      "user_removed_per_file": {
+        "tests/build/test_lesson_assembler.py": 15
+      }
+    }
+  ]
+}
