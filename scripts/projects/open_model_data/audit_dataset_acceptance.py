@@ -1328,6 +1328,18 @@ def audit_check_7_sample_drawer(
                             receipt_blockers = receipt_data.get("blocker_defect_count", 0)
                             if receipt_blockers > 0:
                                 failures.append(f"Receipt reports {receipt_blockers} blocker defect(s)")
+                            if require_receipt:
+                                unassessed = sum(
+                                    1
+                                    for it in items
+                                    if not it.get("reviewer_assessment")
+                                    or not isinstance(it.get("criteria"), dict)
+                                    or not it.get("criteria")
+                                )
+                                if unassessed > 0:
+                                    failures.append(
+                                        f"Receipt has {unassessed} item(s) lacking authentic reviewer assessment or criteria"
+                                    )
                         except Exception as e:
                             failures.append(f"Error parsing review receipt: {e}")
 

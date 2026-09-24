@@ -186,6 +186,42 @@ def generate_signoff_and_receipt(
                 f"for all {sample_size} sampled items, but findings file only contained {len(findings)} evaluated items. "
                 "Synthesizing item verdicts without complete reviewer input is strictly forbidden."
             )
+        expected_indices = {item["sample_index"] for item in samples}
+        missing_indices = expected_indices - set(findings.keys())
+        if missing_indices:
+            raise ValueError(
+                f"Provenance violation: findings file is missing evaluations for {len(missing_indices)} sample indices: "
+                f"{sorted(missing_indices)[:10]}..."
+            )
+        required_criteria = {
+            "pedagogical_soundness",
+            "morphology_vesum",
+            "pravopys_2019",
+            "zero_russianisms",
+            "zero_soviet_sum11",
+        }
+        for s_idx in expected_indices:
+            f_entry = findings.get(s_idx)
+            if not isinstance(f_entry, dict):
+                raise ValueError(
+                    f"Provenance violation: findings entry for sample index {s_idx} must be a JSON object, got {type(f_entry).__name__}"
+                )
+            assessment = f_entry.get("reviewer_assessment") or f_entry.get("evaluation")
+            if not assessment or not isinstance(assessment, str) or not assessment.strip():
+                raise ValueError(
+                    f"Provenance violation: findings entry for sample index {s_idx} is missing non-empty 'reviewer_assessment'"
+                )
+            crit = f_entry.get("criteria")
+            if not isinstance(crit, dict) or not required_criteria.issubset(crit.keys()):
+                missing_c = required_criteria - (set(crit.keys()) if isinstance(crit, dict) else set())
+                raise ValueError(
+                    f"Provenance violation: findings entry for sample index {s_idx} is missing required criteria: {missing_c}"
+                )
+            for k in required_criteria:
+                if not isinstance(crit[k], bool):
+                    raise ValueError(
+                        f"Provenance violation: criteria {k} in item {s_idx} must be a boolean, got {crit[k]!r}"
+                    )
 
     # Index shards to load full rich record metadata by (file_name, line_number)
     shards_data: dict[tuple[str, int], dict[str, Any]] = {}
@@ -382,6 +418,7 @@ def generate_signoff_and_receipt(
         # External reviewer findings if provided
         sample_idx = item["sample_index"]
         reviewer_assessment = ""
+        item_criteria = {}
         if sample_idx in findings:
             f_entry = findings[sample_idx]
             if isinstance(f_entry, dict):
@@ -399,6 +436,7 @@ def generate_signoff_and_receipt(
                     or f_entry.get("comment")
                     or ""
                 )
+                item_criteria = f_entry.get("criteria", {})
             elif isinstance(f_entry, str):
                 item_defects.append(f_entry)
 
@@ -429,6 +467,7 @@ def generate_signoff_and_receipt(
                 "tag": tag,
                 "task_type": task_type,
                 "reviewer_assessment": reviewer_assessment or None,
+                "criteria": item_criteria,
                 "is_erroneous": is_err,
                 "status": item_status,
                 "verdict": item_verdict,
@@ -509,6 +548,8 @@ def generate_signoff_and_receipt(
             "held_out_firewall_verified": True,
             "blocker_defect_count": blocker_defect_count,
             "minor_defect_count": minor_defect_count,
+            "all_sample_indices_matched": bool(write_signoff),
+            "criteria_evaluations_verified": bool(write_signoff),
         },
         "reviewed_sample_items": reviewed_items,
     }
