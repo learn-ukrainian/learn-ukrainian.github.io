@@ -5584,7 +5584,7 @@ def _augment_prompt_with_worktree(
     if mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
             "\n[write-mode closeout]\n"
-            "Commit your work.\n"
+            "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
             "Do not open or merge PRs unless the brief says so; "
@@ -8198,6 +8198,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
         worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
         worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
+        worker_env["LU_X_AGENT_TRAILER"] = f"X-Agent: {dispatch_agent}/{task_id}"
         # #8645 part B: CI's `--override-ini addopts=-v` drops the pyproject
         # `-p ci.pytest_dispatch_cap`. Load it from the environment instead.
         _dispatch_cap_plugin = "ci.pytest_dispatch_cap"
