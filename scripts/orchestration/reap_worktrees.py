@@ -1252,8 +1252,11 @@ def _admin_registered_worktree_paths(common_git_dir: Path) -> set[Path]:
     ``git worktree add`` writes this admin entry before ``.git`` appears in
     the target directory, and ``git worktree list --porcelain`` can lag it
     (#8711), so the locked re-check reads the admin directory directly. Each
-    ``gitdir`` file holds the absolute path of the target's ``.git`` file.
-    Every read failure raises: the caller fails closed.
+    ``gitdir`` file holds the path of the target's ``.git`` file; git 2.48+
+    can record it relative (``worktree.useRelativePaths`` /
+    ``--relative-paths``), resolved the way git resolves it — against the
+    admin entry's own directory. Every read failure raises: the caller fails
+    closed.
     """
     registered: set[Path] = set()
     admin_dir = common_git_dir / "worktrees"
@@ -1275,7 +1278,7 @@ def _admin_registered_worktree_paths(common_git_dir: Path) -> set[Path]:
             continue
         target = Path(raw)
         if not target.is_absolute():
-            raise RuntimeError(f"git worktree registration {gitdir} is not absolute: {raw!r}")
+            target = entry / target
         registered.add(target.parent.resolve())
     return registered
 
@@ -1291,8 +1294,16 @@ def _remove_dispatch_husk_locked(repo_root: Path, *, child: Path, resolved: Path
     Raises :class:`worktree_claims.WorktreeLockError` when the lock is not
     taken and :class:`RuntimeError` when a re-check probe fails; both callers
     turn into a skip, never a removal.
+
+    The lock directory comes from the strict
+    :func:`worktree_claims.control_plane_root`, like
+    :func:`_enter_dispatch_worktree_guard`: a mutating caller must refuse
+    when the fleet catalog is unreadable, never fall back to the local
+    checkout — delegate holds the lock on the public primary for a
+    ``--repo`` sibling, so locking anywhere else would not exclude it
+    (#8711 review).
     """
-    control_root = control_plane_root(repo_root)
+    control_root = worktree_claims.control_plane_root(primary_checkout_root(repo_root))
     lock_dir = _common_git_dir(control_root) / worktree_claims.LOCK_DIR_NAME
     with worktree_claims.worktree_lock(child, lock_dir=lock_dir, timeout_s=_DISPATCH_HUSK_LOCK_TIMEOUT_S):
         listing = {info.path for info in list_git_worktrees(repo_root)}
@@ -1303,6 +1314,14 @@ def _remove_dispatch_husk_locked(repo_root: Path, *, child: Path, resolved: Path
             return "path registered in .git/worktrees/*/gitdir during the locked re-check; a concurrent add claimed it"
         if _tree_has_any_file_or_symlink(resolved):
             return "files appeared in the husk during the locked re-check; treating as in use"
+        age_hours = _tree_newest_age_hours(resolved)
+        if age_hours is None:
+            raise RuntimeError(f"could not determine husk age during the locked re-check: {resolved}")
+        if age_hours < _DISPATCH_HUSK_MIN_AGE_HOURS:
+            return (
+                f"empty placeholder husk is only {age_hours:.1f}h old "
+                f"(< {_DISPATCH_HUSK_MIN_AGE_HOURS:g}h minimum) at the locked re-check; treating as in use"
+            )
         target = assert_delete_target(child, repo_root=repo_root)
         shutil.rmtree(target)
     return None

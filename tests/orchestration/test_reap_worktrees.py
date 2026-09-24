@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import contextlib
 import fcntl
 import inspect
 import json
@@ -3797,45 +3796,187 @@ def test_dispatch_husk_removal_and_skip_are_journaled(
 # --- #8711: a husk a concurrent git worktree add just registered is kept ---
 
 
-def test_dispatch_husk_registered_between_snapshot_and_removal_is_kept(
+def test_dispatch_husk_claimed_by_a_real_concurrent_add_is_kept(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """#8711: the reaper waits out a real ``git worktree add`` holding the per-path lock, then skips.
+
+    A second thread takes the same per-path worktree lock dispatch takes and,
+    once the sweep has passed its last pre-lock husk check (the age probe),
+    runs a real ``git worktree add`` into the empty husk. The reaper's lock
+    timeout (10s) far exceeds the add, so it waits the add out, and its locked
+    re-listing must then show the fresh worktree. On pre-#8711 code (no lock,
+    no re-check) the sweep instead removes the husk from under the running
+    add.
+    """
     repo = init_repo(tmp_path)
-    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-race"
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-addrace"
+    husk.mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    lock_dir = repo / ".git" / worktree_claims.LOCK_DIR_NAME
+    lock_held = threading.Event()
+    add_start = threading.Event()
+    add_errors: list[str] = []
+
+    real_age = rw._tree_newest_age_hours
+
+    def signalling_age(root: Path, now: float | None = None) -> float | None:
+        # The sweep's age probe is its last look at the pristine husk before
+        # it reaches for the lock; start the concurrent add then.
+        if Path(root).resolve() == husk.resolve():
+            add_start.set()
+        return real_age(root, now=now)
+
+    monkeypatch.setattr(rw, "_tree_newest_age_hours", signalling_age)
+
+    def add() -> None:
+        try:
+            with worktree_claims.worktree_lock(husk, lock_dir=lock_dir):
+                lock_held.set()
+                if not add_start.wait(10):
+                    add_errors.append("reaper never probed the husk's age")
+                    return
+                git(repo, "worktree", "add", "-b", "codex/ww-addrace", str(husk), "main")
+        except Exception as exc:  # surfaced in the main thread below
+            add_errors.append(repr(exc))
+
+    adder = threading.Thread(target=add, daemon=True)
+    adder.start()
+    assert lock_held.wait(10)
+    try:
+        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    finally:
+        adder.join(15)
+
+    assert not add_errors
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "registered as a git worktree during the locked re-check" in result.reason
+    assert (husk / ".git").is_file()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_dispatch_husk_is_kept_when_the_fleet_catalog_is_unreadable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8711 review: the husk lock dir must fail closed like the removal guard does.
+
+    With the catalog unreadable the reaper cannot tell whether ``--repo``
+    made this checkout a sibling whose locks live on the public primary, so
+    it must skip rather than lock a directory delegate never contends on.
+    """
+    _public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    husk = sibling / ".worktrees" / "dispatch" / "codex" / "ww-nocatalog"
     (husk / "site").mkdir(parents=True)
     _backdate_tree(husk, 2)
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
 
-    real_lock = worktree_claims.worktree_lock
+    def unreadable() -> dict[str, Any]:
+        raise worktree_claims.FleetRepoError("catalog missing")
 
-    @contextlib.contextmanager
-    def registering_lock(path, *, lock_dir, timeout_s=None):
-        if Path(path).resolve() == husk.resolve():
-            # The interleaving from #8711: after the sweep's listing snapshot
-            # a concurrent ``git worktree add`` has written its admin
-            # registration, but ``.git`` has not appeared in the target yet.
-            admin = repo / ".git" / "worktrees" / "ww-race"
-            admin.mkdir(parents=True, exist_ok=True)
-            (admin / "gitdir").write_text(f"{husk / '.git'}\n", encoding="utf-8")
-        with real_lock(path, lock_dir=lock_dir, timeout_s=timeout_s):
-            yield
+    monkeypatch.setattr(worktree_claims, "load_fleet_repos", unreadable)
 
-    monkeypatch.setattr(rw.worktree_claims, "worktree_lock", registering_lock)
-    real_list = rw.list_git_worktrees
+    results = rw.reap_worktrees(repo_root=sibling, apply=True, live_cwds=set())
 
-    def lagging_list(repo_root: Path) -> list[rw.WorktreeInfo]:
-        # Porcelain lags the admin dir (#8711): only the direct admin re-read
-        # may see the registration.
-        return [info for info in real_list(repo_root) if info.path != husk.resolve()]
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "fleet repository catalog unreadable" in result.reason
+    assert husk.exists()
 
-    monkeypatch.setattr(rw, "list_git_worktrees", lagging_list)
+
+def test_admin_registered_paths_resolve_a_gitdir_relative_to_the_admin_entry(
+    tmp_path: Path,
+) -> None:
+    """git 2.48+ can record the gitdir relative to ``.git/worktrees/<id>/`` (#8711 review)."""
+    repo = init_repo(tmp_path)
+    target = repo / ".worktrees" / "dispatch" / "codex" / "ww-relative"
+    target.mkdir(parents=True)
+    admin = repo / ".git" / "worktrees" / "ww-relative"
+    admin.mkdir(parents=True)
+    relative = os.path.relpath(target / ".git", admin)
+    assert not Path(relative).is_absolute()
+    (admin / "gitdir").write_text(f"{relative}\n", encoding="utf-8")
+
+    assert rw._admin_registered_worktree_paths(repo / ".git") == {target.resolve()}
+
+
+def test_dispatch_husk_named_by_a_relative_gitdir_entry_is_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-relkeep"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    admin = repo / ".git" / "worktrees" / "ww-relkeep"
+    admin.mkdir(parents=True)
+    (admin / "gitdir").write_text(f"{os.path.relpath(husk / '.git', admin)}\n", encoding="utf-8")
 
     results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
 
     result = result_for(results, husk)
     assert result.action == "skipped"
-    assert ".git/worktrees/*/gitdir" in result.reason
+    assert husk.exists()
+
+
+def test_dispatch_husk_is_removed_when_a_relative_gitdir_entry_points_elsewhere(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """One relative entry must not poison the admin read for every husk (#8711 review)."""
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-relclean"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    elsewhere = repo / "elsewhere-wt"
+    admin = repo / ".git" / "worktrees" / "elsewhere-wt"
+    admin.mkdir(parents=True)
+    (admin / "gitdir").write_text(
+        f"{os.path.relpath(elsewhere / '.git', admin)}\n", encoding="utf-8"
+    )
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "removed"
+    assert not husk.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_dispatch_husk_turned_young_during_the_locked_recheck_is_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8711 review: age is re-proved under the lock, not only at the sweep's snapshot."""
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-rejuvenated"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    real_age = rw._tree_newest_age_hours
+    calls = 0
+
+    def stale_then_fresh(root: Path, now: float | None = None) -> float | None:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return real_age(root, now=now)
+        # The locked re-check: a lock holder left only fresh empty subdirs.
+        return 0.0
+
+    monkeypatch.setattr(rw, "_tree_newest_age_hours", stale_then_fresh)
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "at the locked re-check" in result.reason
     assert husk.exists()
 
 
