@@ -73,6 +73,7 @@ def build_env(root: Path, *, git_repo: bool = True) -> Env:
     world.plan_path.write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
     plans_dir, evidence_dir = world.plan_path.parent, world.pack_path.parent
     (plans_dir / "_decisions.yaml").write_text("decisions: []\n", encoding="utf-8")
+    (root / "docs/epics/fresh-build-requirements.md").write_text("# fixture requirements\n", encoding="utf-8")
     (evidence_dir / "_base.request.yaml").write_text(
         yaml.safe_dump({"words": [{"lemma": "lemma-eight", "pos": "noun"}]}), encoding="utf-8"
     )

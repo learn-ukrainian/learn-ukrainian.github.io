@@ -227,6 +227,16 @@ def test_a_changed_manifest_input_makes_the_review_stale(case: Case) -> None:
     assert "_arc.yaml" in payload["rejections"][0]["message"]
 
 
+@pytest.mark.parametrize("name", ["requirements", "arc_source"])
+def test_a_changed_requirements_or_arc_source_makes_the_review_stale(case: Case, name: str) -> None:
+    case.write_review([case.finding()])
+    entry = yaml.safe_load(case.manifest.read_bytes())["inputs"][name]
+    append_comment(case.env.root / entry["path"])
+    code, payload = case.validate()
+    assert code == 1 and rejected(payload) == {codes.PLAN_INPUTS_STALE}
+    assert entry["path"] in payload["rejections"][0]["message"]
+
+
 @pytest.mark.parametrize("name", ["pack", "words", "learner_state"])
 def test_a_changed_pack_word_store_or_state_file_makes_the_review_stale(case: Case, name: str) -> None:
     """A rewritten lock does not excuse a changed pack or word store: the manifest names the file itself."""

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Fresh lesson review attempt manifest",
   "type": "object", "additionalProperties": false,
-  "required": ["manifest_schema", "kind", "level", "slug", "lesson", "lesson_kind", "recap", "review_eligible", "blocked_by", "inputs", "lesson_lock_entry", "learner_state", "module_digest", "digest_generator_version", "upstream_lessons", "previous_attempt", "diff_sha256"],
+  "required": ["manifest_schema", "kind", "level", "slug", "lesson", "lesson_kind", "recap", "review_eligible", "blocked_by", "inputs", "lesson_lock_entry", "learner_state", "module_digest", "digest_generator_version", "upstream_lessons", "previous_attempt", "diff"],
   "properties": {
     "manifest_schema": {"const": 1}, "kind": {"const": "lesson"},
     "level": {"type": "string", "minLength": 1}, "slug": {"type": "string", "minLength": 1},
@@ -32,8 +32,15 @@
     "upstream_lessons": {"type": "array", "items": {"type": "object", "additionalProperties": false,
       "required": ["n", "path", "sha256"], "properties": {"n": {"type": "integer", "minimum": 1},
         "path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha"}}}},
-    "previous_attempt": {"type": "null"}, "diff_sha256": {"type": "null"}
+    "previous_attempt": {"oneOf": [{"type": "null"}, {"type": "object", "additionalProperties": false,
+      "required": ["attempt_id", "review", "ledger"],
+      "properties": {"attempt_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+        "review": {"$ref": "#/$defs/file"}, "ledger": {"$ref": "#/$defs/file"}}}]},
+    "diff": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/file"}]}
   },
+  "if": {"properties": {"previous_attempt": {"type": "null"}}},
+  "then": {"properties": {"diff": {"type": "null"}}},
+  "else": {"properties": {"diff": {"type": "object"}}},
   "$defs": {
     "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "file": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"],

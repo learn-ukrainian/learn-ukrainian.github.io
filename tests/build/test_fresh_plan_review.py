@@ -30,6 +30,8 @@ MANIFEST_SCHEMA = Path(__file__).resolve().parents[2] / "schemas" / "plan-review
 PLANS = f"curriculum/l2-uk-en/lesson-plans/{LEVEL}"
 EVIDENCE = f"curriculum/l2-uk-en/evidence/{LEVEL}"
 STATE = f"{EVIDENCE}/_state/{SLUG}"
+REQUIREMENTS = "docs/epics/fresh-build-requirements.md"
+ARC_SOURCE = "docs/epics/fresh-build-a1-arc.md"
 
 
 def fake_verify(status: str = "ok", errors: tuple[str, ...] = (), calls: list | None = None):
@@ -122,7 +124,9 @@ def test_manifest_is_schema_valid_and_rerun_is_byte_identical(env: Env, capsys) 
         "words": f"{EVIDENCE}/_words.yaml",
         "words_lock": f"{EVIDENCE}/_words.yaml.lock",
         "learner_state": f"{STATE}/plan-review.learner-state.yaml",
+        "requirements": REQUIREMENTS,
         "arc": f"{PLANS}/_arc.yaml",
+        "arc_source": ARC_SOURCE,
         "decisions": f"{PLANS}/_decisions.yaml",
         "scope": f"{PLANS}/_scope/{SLUG}.yaml",
         "grammar": f"{PLANS}/_grammar.yaml",
@@ -207,6 +211,8 @@ def test_a_changed_input_changes_the_manifest_sha(env: Env, capsys) -> None:
         ("decisions", f"{PLANS}/_decisions.yaml"),
         ("grammar", f"{PLANS}/_grammar.yaml"),
         ("arc", f"{PLANS}/_arc.yaml"),
+        ("requirements", REQUIREMENTS),
+        ("arc_source", ARC_SOURCE),
         ("scope", f"{PLANS}/_scope/{SLUG}.yaml"),
         ("pack_lock", f"{EVIDENCE}/{SLUG}.yaml.lock"),
         ("words_lock", f"{EVIDENCE}/_words.yaml.lock"),
@@ -394,6 +400,8 @@ INPUT_CHANGES = {
     "words": (edit_words, f"{EVIDENCE}/_words.yaml"),
     "words_lock": (edit_words, f"{EVIDENCE}/_words.yaml.lock"),
     "arc": (lambda env: append_comment(env.plans_dir / "_arc.yaml"), f"{PLANS}/_arc.yaml"),
+    "requirements": (lambda env: append_comment(env.root / REQUIREMENTS), REQUIREMENTS),
+    "arc_source": (lambda env: append_comment(env.root / ARC_SOURCE), ARC_SOURCE),
     "decisions": (lambda env: append_comment(env.plans_dir / "_decisions.yaml"), f"{PLANS}/_decisions.yaml"),
     "scope": (lambda env: append_comment(env.plans_dir / "_scope" / f"{SLUG}.yaml"), f"{PLANS}/_scope/{SLUG}.yaml"),
     "grammar": (lambda env: append_comment(env.plans_dir / "_grammar.yaml"), f"{PLANS}/_grammar.yaml"),

@@ -155,6 +155,7 @@ def test_manifest_names_every_file_a_reviewer_receives(tmp_path, monkeypatch):
         assert set(document["immersion"]["permitted_languages"]) >= {"narration", "activity_instruction", "gloss"}
         assert state_path.read_bytes() == lock.yaml_bytes(document)
         assert doc["learner_state"] == {"sha256": manifest.learner_state_sha256(state), "source": "planned_state"}
+        assert doc["previous_attempt"] is None and doc["diff"] is None  # a first review
         assert [row["n"] for row in doc["upstream_lessons"]] == list(range(1, n))
         for row in doc["upstream_lessons"]:
             assert row["path"] == f"site/src/content/docs/a1/{slug}/{row['n']}.mdx"
@@ -166,6 +167,177 @@ def test_manifest_names_every_file_a_reviewer_receives(tmp_path, monkeypatch):
     _write(level, slug, 3, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
     assert (state_dir / "lesson-3.manifest.yaml").read_bytes() == first
     assert (state_dir / "lesson-3.learner-state.yaml").read_bytes() == payloads[3]
+
+
+def _rereview_setup(tmp_path, monkeypatch, *, review_id="rev-1", attempt_id="attempt-1"):
+    """Lesson 2 reviewed once (review + ledger on disk), then rebuilt with different text."""
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
+    first, digest = _write(level, slug, 2, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    review = state_dir / f"lesson-2.review.{attempt_id}.yaml"
+    review.write_bytes(
+        lock.yaml_bytes(
+            {
+                "review_schema": 1,
+                "kind": "lesson",
+                "attempt": {
+                    "review_id": review_id,
+                    "attempt_id": attempt_id,
+                    "manifest_sha256": digest,
+                    "previous_attempt_id": None,
+                },
+            }
+        )
+    )
+    ledger = tmp_path / "batch_state" / "review-receipts" / review_id / f"{attempt_id}.jsonl"
+    ledger.parent.mkdir(parents=True)
+    ledger.write_text('{"receipt": 1}\n', encoding="utf-8")
+
+    def entry(path):
+        return {"path": path.relative_to(tmp_path).as_posix(), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+
+    previous = {"attempt_id": attempt_id, "review": entry(review), "ledger": entry(ledger)}
+    (page_dir / "2.mdx").write_text("# Lesson 2\nNew sentence.\n", encoding="utf-8")
+    return (level, slug, plan_dir, evidence_dir, state_dir, page_dir), first, previous, review
+
+
+def test_a_re_review_manifest_pins_the_previous_findings_and_a_real_diff(tmp_path, monkeypatch):
+    (level, slug, plan_dir, evidence_dir, state_dir, page_dir), first, previous, _review = _rereview_setup(
+        tmp_path, monkeypatch
+    )
+    doc, digest = manifest.write_manifest(
+        level,
+        slug,
+        2,
+        lesson_kind="lesson",
+        state_dir=state_dir,
+        repo_root=tmp_path,
+        plans_dir=plan_dir,
+        evidence_dir=evidence_dir,
+        position=1,
+        site_dir=page_dir,
+        previous_attempt=previous,
+    )
+    Draft202012Validator(json.loads(manifest.SCHEMA.read_text(encoding="utf-8"))).validate(doc)
+    assert doc["previous_attempt"] == previous
+    diff_path = state_dir / "lesson-2.diff.attempt-1.patch"
+    assert doc["diff"] == {
+        "path": diff_path.relative_to(tmp_path).as_posix(),
+        "sha256": hashlib.sha256(diff_path.read_bytes()).hexdigest(),
+    }
+    text = diff_path.read_text(encoding="utf-8")
+    assert "+New sentence." in text and " # Lesson 2" in text
+    assert f"@{first['inputs']['lesson']['sha256'][:12]}" in text
+    assert doc["inputs"]["lesson"]["sha256"] != first["inputs"]["lesson"]["sha256"]
+    # a byte-stable rerun of the same re-review
+    manifest.write_manifest(
+        level,
+        slug,
+        2,
+        lesson_kind="lesson",
+        state_dir=state_dir,
+        repo_root=tmp_path,
+        plans_dir=plan_dir,
+        evidence_dir=evidence_dir,
+        position=1,
+        site_dir=page_dir,
+        previous_attempt=previous,
+    )
+    assert (state_dir / "lesson-2.manifest.sha256").read_text(encoding="ascii") == f"{digest}\n"
+
+
+@pytest.mark.parametrize("target", ["review", "ledger", "lesson_snapshot"])
+def test_a_tampered_previous_attempt_input_is_refused(tmp_path, monkeypatch, target):
+    (level, slug, plan_dir, evidence_dir, state_dir, page_dir), first, previous, review = _rereview_setup(
+        tmp_path, monkeypatch
+    )
+    victim = {
+        "review": review,
+        "ledger": tmp_path / previous["ledger"]["path"],
+        "lesson_snapshot": manifest.lesson_snapshot_path(state_dir, 2, first["inputs"]["lesson"]["sha256"]),
+    }[target]
+    victim.write_bytes(victim.read_bytes() + b"tampered\n")
+    with pytest.raises(manifest.ManifestInputError) as refused:
+        manifest.write_manifest(
+            level,
+            slug,
+            2,
+            lesson_kind="lesson",
+            state_dir=state_dir,
+            repo_root=tmp_path,
+            plans_dir=plan_dir,
+            evidence_dir=evidence_dir,
+            position=1,
+            site_dir=page_dir,
+            previous_attempt=previous,
+        )
+    assert refused.value.path == victim.relative_to(tmp_path).as_posix()
+
+
+def test_a_previous_attempt_at_the_wrong_path_is_refused(tmp_path, monkeypatch):
+    (level, slug, plan_dir, evidence_dir, state_dir, page_dir), _first, previous, _review = _rereview_setup(
+        tmp_path, monkeypatch
+    )
+    previous["ledger"]["path"] = "batch_state/review-receipts/other/attempt-1.jsonl"
+    with pytest.raises(manifest.ManifestInputError, match="not at its expected path"):
+        manifest.write_manifest(
+            level,
+            slug,
+            2,
+            lesson_kind="lesson",
+            state_dir=state_dir,
+            repo_root=tmp_path,
+            plans_dir=plan_dir,
+            evidence_dir=evidence_dir,
+            position=1,
+            site_dir=page_dir,
+            previous_attempt=previous,
+        )
+
+
+def test_the_manifest_and_the_writer_prompt_share_one_immersion_payload_under_a_waiver(tmp_path, monkeypatch):
+    from scripts.build.fresh import cli, module
+
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    plan = yaml.safe_load((plan_dir / f"{slug}.yaml").read_bytes())
+    paths = {
+        "plan": plan_dir / f"{slug}.yaml",
+        "pack": evidence_dir / f"{slug}.yaml",
+        "words": evidence_dir / "_words.yaml",
+        "lock": state_dir / "lessons.lock.yaml",
+        "state_dir": evidence_dir / "_state",
+    }
+    waived = _fake_state({"level": "a1"}, cumulative_core_count=4)
+    waived.waiver = "waived: prior_plans_missing (missing positions: [1])"
+    monkeypatch.setattr(
+        cli, "_load_lesson_data", lambda _l, _s, n, **_kw: (plan, plan["lessons"][n - 1], {}, {}, paths)
+    )
+    monkeypatch.setattr(
+        cli,
+        "_compute_input_hashes",
+        lambda *a: {
+            k: "0" * 64
+            for k in ("plan_sha256", "pack_lock", "words_lock", "lesson_lock_entry_sha256", "learner_state_sha256")
+        },
+    )
+    monkeypatch.setattr(cli, "_load_cited_records", lambda *a: {})
+    monkeypatch.setattr(module, "planned_state", lambda *a, **kw: waived)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: waived)
+    seen = {}
+
+    def render(_entry, **kw):
+        seen["immersion"] = kw["immersion"]
+        return "prompt"
+
+    monkeypatch.setattr(module, "render_lesson_prompt", render)
+    monkeypatch.setattr(
+        module, "check_rendered_prompt", lambda *a, **kw: type("Result", (), {"passed": True, "errors": []})()
+    )
+    module.build_module(level, slug, repo_root=tmp_path, lesson_n=1)
+    doc, _ = _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    materialized = yaml.safe_load((tmp_path / doc["inputs"]["learner_state"]["path"]).read_bytes())["immersion"]
+    assert seen["immersion"].waiver == waived.waiver
+    assert materialized == seen["immersion"].to_dict()
 
 
 def test_a_pack_or_word_store_that_disagrees_with_its_lock_fails_naming_it(tmp_path, monkeypatch):
@@ -476,7 +648,7 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     monkeypatch.setattr(
         module, "check_rendered_prompt", lambda prompt, *a, **kw: type("Result", (), {"passed": True, "errors": []})()
     )
-    monkeypatch.setattr(module, "compute_immersion_payload", lambda *a, **kw: {})
+    monkeypatch.setattr(module, "lesson_immersion_payload", lambda *a, **kw: {})
     allowlist = Allowlist.from_records(words["words"], words_lock="f" * 64)
     calls = []
     version = [1]

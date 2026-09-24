@@ -18,6 +18,13 @@ planned learner state: the engine writes it as deterministic YAML
 (``plan-review.learner-state.yaml`` with its lock sidecar) and records it as
 ``inputs.learner_state``. ``learner_state.sha256`` stays the canonical-JSON
 identity of the same ``planned_state`` result the file holds.
+
+Contract 1 also hands the reviewer "the requirements and the arc's system-or-chunk
+table". The requirements are ``docs/epics/fresh-build-requirements.md``
+(``inputs.requirements``). ``_arc.yaml`` is a per-position extract that does not
+carry the system-or-chunk table, so the arc source document it names in
+``source.path`` (``docs/epics/fresh-build-<level>-arc.md``, section 3) is pinned as
+``inputs.arc_source``.
 """
 
 from __future__ import annotations
@@ -49,6 +56,7 @@ PACK_VERIFY_REPORT_NAME = "pack-verify.report.json"
 MANIFEST_NAME = "plan-review.manifest.yaml"
 SIDECAR_NAME = "plan-review.manifest.sha256"
 LEARNER_STATE_NAME = "plan-review.learner-state.yaml"
+REQUIREMENTS_REL = "docs/epics/fresh-build-requirements.md"
 REVIEW_NAME = "plan-review.yaml"
 RECEIPT_NAME = "plan-promotion.yaml"
 _SHA = re.compile(r"[0-9a-f]{64}")
@@ -61,7 +69,9 @@ INPUT_NAMES = (
     "words",
     "words_lock",
     "learner_state",
+    "requirements",
     "arc",
+    "arc_source",
     "decisions",
     "scope",
     "grammar",
@@ -80,6 +90,7 @@ _RECEIPT_KEYS = (
 # Refusal codes (stable identifiers; the CLI prints them as the JSON reason prefix).
 INPUT_MISSING = "input_missing"
 PLAN_UNREADABLE = "plan_unreadable"
+ARC_UNREADABLE = "arc_unreadable"
 PACK_PATH_MISMATCH = "pack_path_mismatch"
 PACK_CHANGED_DURING_VERIFY = "pack_changed_during_verify"
 PACK_VERIFY_REFUSED = "pack_verify_report_refused"
@@ -349,6 +360,23 @@ def planned_state_sha256(root: Path, level: str, position: int) -> str:
     return learner_state_sha256(prior_planned_state(root, level, position))
 
 
+def _arc_source_path(root: Path, arc_path: Path) -> Path:
+    """The arc source document ``_arc.yaml`` names in ``source.path`` (a repo-relative docs/epics markdown file)."""
+    try:
+        recorded = yaml.safe_load(arc_path.read_bytes())["source"]["path"]
+    except (OSError, yaml.YAMLError, KeyError, TypeError) as error:
+        raise PlanReviewError(ARC_UNREADABLE, f"{_relative(root, arc_path)} names no source document") from error
+    relative = Path(str(recorded))
+    if relative.is_absolute() or ".." in relative.parts or relative.parts[:2] != ("docs", "epics"):
+        raise PlanReviewError(
+            ARC_UNREADABLE, f"{_relative(root, arc_path)} source.path {recorded!r} is not under docs/epics"
+        )
+    path = root / relative
+    if not path.is_file():
+        raise PlanReviewError(INPUT_MISSING, f"input missing: {relative.as_posix()}", [relative.as_posix()])
+    return path
+
+
 def _entry(root: Path, path: Path) -> dict[str, str]:
     try:
         return _input(path, root)
@@ -392,10 +420,12 @@ def _write_plan_manifest(level: str, slug: str, root: Path, sources_instance: An
         "scope": plans / "_scope" / f"{slug}.yaml",
         "grammar": plans / "_grammar.yaml",
         "validate_report": directory / VALIDATE_REPORT_NAME,
+        "requirements": root / REQUIREMENTS_REL,
     }
     missing = [_relative(root, path) for path in files.values() if not path.is_file()]
     if missing:
         raise PlanReviewError(INPUT_MISSING, "input missing: " + ", ".join(missing), missing)
+    files["arc_source"] = _arc_source_path(root, files["arc"])
 
     try:
         plan = load_plan(plan_path)
