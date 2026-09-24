@@ -7,12 +7,43 @@ import py_compile
 import shlex
 import shutil
 import subprocess
+import sys
 import time
 from pathlib import Path
 
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+def test_shared_conftest_imports_without_bridge_runtime() -> None:
+    """The rules workflow has only pytest and PyYAML when it loads conftest."""
+    probe = """
+import importlib.abc
+import runpy
+import sys
+
+class RejectHeavyBridgeImports(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname.startswith((
+            "scripts.ai_agent_bridge", "scripts.fleet_comms",
+            "agent_runtime", "learn_ukrainian_v4_runtime",
+        )):
+            raise ImportError(f"conftest imported optional runtime: {fullname}")
+        return None
+
+sys.meta_path.insert(0, RejectHeavyBridgeImports())
+runpy.run_path("tests/conftest.py")
+assert "scripts.ai_agent_bridge" not in sys.modules
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", probe],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def _resolve_project_python() -> Path:
