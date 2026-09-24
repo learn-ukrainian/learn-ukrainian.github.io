@@ -1478,6 +1478,26 @@ def test_live_runner_prose_heading_removed_by_generate_mdx_fails_closed(
     assert not (tmp_path / "site" / "1.mdx").exists()
 
 
+def test_live_runner_duplicate_heading_removed_by_generate_mdx_is_not_reattached(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Reviewer reproduction (r5 BLOCKER): two identical `# слово` prose units; generate_mdx
+    # removes the first (duplicate H1) and the identical second line survives on the page. The
+    # map moves units by the transform's own edit record, never by matching text, so the
+    # removed unit is not re-attached to the surviving copy: check 9 fails closed for it.
+    draft, plan, pack, words = _fixture()
+    for _ in range(2):
+        draft["steps"][0]["blocks"].insert(0, {"kind": "prose", "text": "# слово", "explains": ["W-1"]})
+    validate_fixture_draft(draft)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is False
+    c9 = _check_9_row(report)
+    assert c9["status"] == "failed" and c9["layer"] == "engine"
+    assert c9["reason"].startswith("span_location_unrendered: unit 0 at ('urok', 's1', None, None, 0): ")
+    assert "transform 'remove_duplicate_h1' removed the bytes of unit 0 ('# сло́во')" in c9["reason"]
+    assert not (tmp_path / "site" / "1.mdx").exists()
+
+
 def test_live_runner_heading_inside_prose_unit_rewritten_by_generate_mdx_fails_closed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

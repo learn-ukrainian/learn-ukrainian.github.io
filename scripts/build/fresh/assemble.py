@@ -38,11 +38,15 @@ Units and spans (r3 invariant):
   parsing, section clean-up, readings insertion, YouTube embedding, inline activity
   injection, folk blocks, callouts, slug links, bad-form markers, HTML fixes, comment
   removal, story sections, dialogues, duplicate-H1 removal, heading emojis, tab strip and
-  wrap, `normalize_mdx`): a unit whose bytes survive unchanged keeps its shifted location, a
-  unit a transform removed or rewrote is marked lost with the transform's name. Check 9 then
-  reads every unit back at its own location in the final MDX and fails closed: removed ->
-  `span_location_unrendered`, rewritten -> `span_text_not_in_rendered_output` (engine layer,
-  reason names the transform). Dialogue lines are emitted by the renderer as the page's
+  wrap, document assembly, `normalize_mdx`). Every transform reports its own edit record
+  (the input ranges it removed or replaced and what it put there, `EditLog`/`LineEdits`),
+  and the map moves units by those records alone, by position, never by matching text: a
+  unit no edit touches keeps its shifted location, a unit an edit overlaps is marked lost
+  with the transform's name, and a removed unit is never re-attached to identical text
+  elsewhere (two identical `# слово` lines, the first removed as duplicate H1: its unit is
+  lost, not moved onto the survivor). Check 9 then reads every unit back at its own location
+  in the final MDX and fails closed: removed -> `span_location_unrendered`, rewritten ->
+  `span_text_not_in_rendered_output` (engine layer, reason names the transform). Dialogue lines are emitted by the renderer as the page's
   DialogueBox component; their units are the escaped bytes inside the `exchanges` payload,
   decoded back at verification (`CODEC_JS_JSON_STRING`). Urok block text is taken from the
   draft with end-of-line whitespace dropped (`page_text`), the one normalization the page

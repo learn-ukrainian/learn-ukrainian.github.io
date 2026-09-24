@@ -4,11 +4,17 @@ The Urok renderer records, for every expanded unit it emits, the byte range of t
 text in its markdown. `generate_mdx` then rewrites that markdown in a fixed sequence of
 transforms (frontmatter parsing, section clean-up, readings insertion, YouTube embedding,
 inline activity injection, callouts, dialogues, duplicate-H1 removal, heading emojis, tab
-wrapping, `normalize_mdx`). After each transform the map is carried forward: a unit whose
-bytes survive unchanged inside one contiguous equal region of the transform's diff keeps its
-(shifted) location; a unit the transform removed or rewrote is marked lost, with the
-transform's name. `verify` then re-reads every unit at its own location in the final page
-text and fails closed for lost units. Nothing is ever searched for in the page.
+wrapping, `normalize_mdx`). Every transform reports its edits explicitly: the character
+ranges of its input it removed or replaced, and the text it put there (`Edit`). A transform
+runs its string operations through an `EditLog`, which records the edits of every regex
+substitution, range replacement, insertion or strip it performs and composes them into one
+edit record per transform; line-based transforms report which input line (or slice of it)
+each output line came from (`LineEdits`). The map then moves every unit by those records
+alone: a unit no edit touches keeps its (shifted) location; a unit an edit overlaps is
+marked lost with the transform's name. Identity is by position, never by content: nothing
+is diffed, matched or searched for, so a removed unit is never re-attached to identical
+text elsewhere. `verify` re-reads every unit at its own location in the final page text and
+fails closed for lost units.
 
 A unit whose page location is a component prop (a dialogue line inside the DialogueBox
 `exchanges` payload) is tracked as the escaped bytes inside the JSX with the codec that
@@ -19,9 +25,8 @@ from __future__ import annotations
 
 import json
 import re
-from collections.abc import Hashable
+from collections.abc import Callable, Hashable, Iterable, Sequence
 from dataclasses import dataclass
-from difflib import SequenceMatcher
 
 CODEC_PLAIN = "plain"
 # A JSON string body inside a single-quoted JS string literal: `JSON.parse('...')`.
@@ -68,6 +73,365 @@ class UnitMapError(Exception):
         self.message = message
 
 
+# =============================================================================
+# Edit records
+# =============================================================================
+
+
+@dataclass(frozen=True)
+class Edit:
+    """One edit of a transform: its input's `[start, end)` became `replacement`.
+
+    `start == end` is a pure insertion at `start`; an empty `replacement` is a removal.
+    """
+
+    start: int
+    end: int
+    replacement: str
+
+    def __post_init__(self) -> None:
+        if not 0 <= self.start <= self.end:
+            raise ValueError(f"invalid edit range [{self.start}, {self.end})")
+
+
+Region = tuple[int, int, int]
+"""`(before_start, after_start, length)`: bytes an edit record left in place."""
+
+
+def _check_edits(edits: Sequence[Edit], length: int) -> None:
+    previous_end = 0
+    for edit in edits:
+        if edit.start < previous_end or edit.end > length:
+            raise ValueError(f"edits are not sorted and non-overlapping within [0, {length}): {edit}")
+        previous_end = edit.end
+
+
+def apply_edits(text: str, edits: Sequence[Edit]) -> str:
+    """Splice sorted, non-overlapping `edits` into `text`."""
+    _check_edits(edits, len(text))
+    parts: list[str] = []
+    cursor = 0
+    for edit in edits:
+        parts.append(text[cursor : edit.start])
+        parts.append(edit.replacement)
+        cursor = edit.end
+    parts.append(text[cursor:])
+    return "".join(parts)
+
+
+def regions_from_edits(edits: Sequence[Edit], length: int) -> list[Region]:
+    """The bytes of a text of `length` that `edits` leave in place, with their new positions."""
+    _check_edits(edits, length)
+    regions: list[Region] = []
+    b_cursor = a_cursor = 0
+    for edit in edits:
+        if edit.start > b_cursor:
+            regions.append((b_cursor, a_cursor, edit.start - b_cursor))
+            a_cursor += edit.start - b_cursor
+        a_cursor += len(edit.replacement)
+        b_cursor = edit.end
+    if length > b_cursor:
+        regions.append((b_cursor, a_cursor, length - b_cursor))
+    return regions
+
+
+def edits_from_regions(before: str, after: str, regions: Iterable[Region]) -> list[Edit]:
+    """The edits turning `before` into `after` given the bytes that stayed (`regions`).
+
+    Regions must be in document order on both sides; every gap between them is one edit.
+    A region whose bytes differ between the two texts is a reporting bug and raises.
+    """
+    edits: list[Edit] = []
+    b_cursor = a_cursor = 0
+    for b_start, a_start, length in regions:
+        if length <= 0:
+            continue
+        if b_start < b_cursor or a_start < a_cursor:
+            raise ValueError(f"kept regions are not in document order at ({b_start}, {a_start}, {length})")
+        if before[b_start : b_start + length] != after[a_start : a_start + length]:
+            raise ValueError(f"kept region ({b_start}, {a_start}, {length}) is not the same bytes on both sides")
+        if b_start > b_cursor or a_start > a_cursor:
+            edits.append(Edit(b_cursor, b_start, after[a_cursor:a_start]))
+        b_cursor = b_start + length
+        a_cursor = a_start + length
+    if b_cursor < len(before) or a_cursor < len(after):
+        edits.append(Edit(b_cursor, len(before), after[a_cursor:]))
+    return edits
+
+
+def compose_regions(first: Sequence[Region], second: Sequence[Region]) -> list[Region]:
+    """Kept regions of two consecutive steps composed: a byte stays iff both steps kept it."""
+    composed: list[Region] = []
+    j = 0
+    for b_start, m_start, length in first:
+        m_end = m_start + length
+        while j < len(second) and second[j][0] + second[j][2] <= m_start:
+            j += 1
+        k = j
+        while k < len(second) and second[k][0] < m_end:
+            m2_start, a_start, length2 = second[k]
+            low = max(m_start, m2_start)
+            high = min(m_end, m2_start + length2)
+            if high > low:
+                composed.append((b_start + low - m_start, a_start + low - m2_start, high - low))
+            k += 1
+    return composed
+
+
+_TEMPLATE_ESCAPES = {"a": "\a", "b": "\b", "f": "\f", "n": "\n", "r": "\r", "t": "\t", "v": "\v", "\\": "\\"}
+
+
+def _parse_template(template: str, pattern: re.Pattern[str]) -> list[str | int] | None:
+    """A `re.sub` template as literal pieces and group numbers; None if it is not that simple."""
+    pieces: list[str | int] = []
+    literal: list[str] = []
+    i = 0
+    while i < len(template):
+        char = template[i]
+        if char != "\\":
+            literal.append(char)
+            i += 1
+            continue
+        i += 1
+        if i >= len(template):
+            return None
+        char = template[i]
+        group: int | None = None
+        if char == "g":
+            close = template.find(">", i)
+            if i + 1 >= len(template) or template[i + 1] != "<" or close < 0:
+                return None
+            name = template[i + 2 : close]
+            group = int(name) if name.isdigit() else pattern.groupindex.get(name)
+            if group is None:
+                return None
+            i = close + 1
+        elif char.isdigit():
+            digits = char
+            if i + 1 < len(template) and template[i + 1].isdigit():
+                digits += template[i + 1]
+            group = int(digits)
+            i += len(digits)
+        elif char in _TEMPLATE_ESCAPES:
+            literal.append(_TEMPLATE_ESCAPES[char])
+            i += 1
+            continue
+        else:
+            return None
+        if literal:
+            pieces.append("".join(literal))
+            literal = []
+        pieces.append(group)
+    if literal:
+        pieces.append("".join(literal))
+    return pieces
+
+
+def _match_edits(match: re.Match[str], replacement: str, template: list[str | int] | None) -> list[Edit]:
+    """The edits of one substitution: group references in the template are bytes kept in place.
+
+    A template whose group references are not in match order (or repeat a group) is reported
+    as a whole-match replacement.
+    """
+    if template is None:
+        return [Edit(match.start(), match.end(), replacement)]
+    edits: list[Edit] = []
+    cursor = match.start()
+    literal = ""
+    rebuilt: list[str] = []
+    for piece in template:
+        if isinstance(piece, str):
+            literal += piece
+            rebuilt.append(piece)
+            continue
+        g_start, g_end = match.span(piece)
+        if g_start < 0:
+            continue  # an unmatched group expands to nothing
+        if g_start < cursor:
+            return [Edit(match.start(), match.end(), replacement)]
+        rebuilt.append(match.string[g_start:g_end])
+        if g_start > cursor or literal:
+            edits.append(Edit(cursor, g_start, literal))
+        literal = ""
+        cursor = g_end
+    if "".join(rebuilt) != replacement:
+        return [Edit(match.start(), match.end(), replacement)]
+    if match.end() > cursor or literal:
+        edits.append(Edit(cursor, match.end(), literal))
+    return edits
+
+
+class EditLog:
+    """A text under transformation, recording every edit against the text it started from.
+
+    With `record=False` the log only performs the string operations (the legacy path; the
+    library calls are the same as before the log existed, so output is byte-identical). With
+    `record=True` it also keeps the regions of `before` that are still in place, composed
+    over every operation, from which `edits()` reports the transform's edit record.
+    """
+
+    def __init__(self, text: str, record: bool = True) -> None:
+        self.before = text
+        self.text = text
+        self.record = record
+        self.regions: list[Region] = [(0, 0, len(text))] if text else []
+
+    def apply(self, edits: Sequence[Edit], result: str | None = None) -> None:
+        """Advance by explicit `edits` of the current text; `result`, if given, must be what they produce."""
+        if self.record:
+            spliced = apply_edits(self.text, edits)
+            if result is not None and spliced != result:
+                raise ValueError("the reported edits do not produce the transform's output")
+            self.regions = compose_regions(self.regions, regions_from_edits(edits, len(self.text)))
+            self.text = spliced
+        else:
+            self.text = result if result is not None else apply_edits(self.text, edits)
+
+    def replace(self, start: int, end: int, replacement: str) -> None:
+        """Replace `[start, end)` of the current text (an insertion when `start == end`)."""
+        if self.text[start:end] == replacement:
+            return
+        self.apply([Edit(start, end, replacement)], self.text[:start] + replacement + self.text[end:])
+
+    def insert(self, position: int, text: str) -> None:
+        self.replace(position, position, text)
+
+    def strip(self) -> None:
+        """`str.strip()`: leading and trailing whitespace removed from the ends."""
+        stripped = self.text.strip()
+        if not stripped:
+            self.replace(0, len(self.text), "")
+            return
+        lead = len(self.text) - len(self.text.lstrip())
+        trail = len(self.text) - len(self.text.rstrip())
+        edits = [Edit(0, lead, "")] if lead else []
+        if trail:
+            edits.append(Edit(len(self.text) - trail, len(self.text), ""))
+        if edits:
+            self.apply(edits, stripped)
+
+    def sub(
+        self,
+        pattern: str | re.Pattern[str],
+        repl: str | Callable[[re.Match[str]], str],
+        count: int = 0,
+        flags: int = 0,
+    ) -> list[tuple[int, int]]:
+        """`re.sub` on the current text, reporting each substitution as edits.
+
+        A string template reports the bytes of its group references as kept in place (so a
+        `\\1`-style template around a unit leaves the unit located); a callable replacement
+        is reported as one whole-match replacement. Returns the `[start, end)` range of every
+        replacement in the new text, in order.
+        """
+        compiled = re.compile(pattern, flags) if isinstance(pattern, str) else pattern
+        if not self.record:
+            self.text = compiled.sub(repl, self.text, count)
+            return []
+        template = _parse_template(repl, compiled) if isinstance(repl, str) else None
+        recorded: list[tuple[re.Match[str], str]] = []
+
+        def replace(match: re.Match[str]) -> str:
+            replacement = repl(match) if callable(repl) else match.expand(repl)
+            recorded.append((match, replacement))
+            return replacement
+
+        result = compiled.sub(replace, self.text, count)
+        edits: list[Edit] = []
+        ranges: list[tuple[int, int]] = []
+        delta = 0
+        for match, replacement in recorded:
+            edits.extend(_match_edits(match, replacement, template))
+            ranges.append((match.start() + delta, match.start() + delta + len(replacement)))
+            delta += len(replacement) - (match.end() - match.start())
+        self.apply(edits, result)
+        return ranges
+
+    def edits(self) -> list[Edit]:
+        """The transform's edit record: how `before` became the current text."""
+        if not self.record:
+            raise ValueError("this log did not record edits")
+        return edits_from_regions(self.before, self.text, self.regions)
+
+
+LineSource = tuple[int, Sequence[Region]] | None
+"""Where an output line came from: `(input line, kept regions within it)`, or None for new text."""
+
+
+class LineEdits:
+    """Output of a line-based transform with, per output line, the input line it came from.
+
+    The transform splits its input on newlines and appends output lines; here it says for
+    each one whether it is input line `i` verbatim (`keep`), a slice of it (`slice`), input
+    line `i` after its own recorded edits (`edited`) or new text (`new`). The newline between
+    two output lines that come from consecutive input lines is the input's own separator;
+    every other newline, and every input line never referenced, is an edit.
+    """
+
+    def __init__(self, text: str, record: bool = True) -> None:
+        self.before = text
+        self.lines = text.split("\n")
+        self.record = record
+        self.out: list[str] = []
+        self.src: list[LineSource] = []
+
+    def _append(self, text: str, source: LineSource) -> None:
+        self.out.append(text)
+        if self.record:
+            self.src.append(source)
+
+    def keep(self, index: int) -> None:
+        line = self.lines[index]
+        self._append(line, (index, [(0, 0, len(line))]))
+
+    def slice(self, index: int, start: int, end: int) -> None:
+        self._append(self.lines[index][start:end], (index, [(start, 0, end - start)]))
+
+    def edited(self, index: int, log: EditLog) -> None:
+        """Input line `index` transformed through its own `EditLog` (started from that line)."""
+        if log.before != self.lines[index]:
+            raise ValueError(f"the log was not started from input line {index}")
+        self._append(log.text, (index, log.regions))
+
+    def new(self, text: str) -> None:
+        self._append(text, None)
+
+    def delete(self, position: int) -> None:
+        """Drop output line `position` again (a transform retracting an emitted line)."""
+        del self.out[position]
+        if self.record:
+            del self.src[position]
+
+    def text(self) -> str:
+        return "\n".join(self.out)
+
+    def edits(self) -> list[Edit]:
+        if not self.record:
+            raise ValueError("this log did not record edits")
+        offsets = [0]
+        for line in self.lines:
+            offsets.append(offsets[-1] + len(line) + 1)
+        regions: list[Region] = []
+        a_cursor = 0
+        previous: LineSource = None
+        for position, (line, source) in enumerate(zip(self.out, self.src, strict=True)):
+            if position:
+                if source is not None and previous is not None and source[0] == previous[0] + 1:
+                    regions.append((offsets[source[0]] - 1, a_cursor, 1))
+                a_cursor += 1
+            if source is not None:
+                index, local = source
+                regions.extend((offsets[index] + b, a_cursor + a, n) for b, a, n in local)
+            a_cursor += len(line)
+            previous = source
+        return edits_from_regions(self.before, self.text(), regions)
+
+
+# =============================================================================
+# The map
+# =============================================================================
+
+
 @dataclass
 class TrackedUnit:
     key: Hashable
@@ -83,96 +447,26 @@ class TrackedUnit:
         return self.lost_by is None
 
 
-def _common_prefix_len(a: str, b: str) -> int:
-    n = min(len(a), len(b))
-    i = 0
-    while i < n and a[i] == b[i]:
-        i += 1
-    return i
-
-
-def _common_suffix_len(a: str, b: str, limit: int) -> int:
-    i = 0
-    while i < limit and a[len(a) - 1 - i] == b[len(b) - 1 - i]:
-        i += 1
-    return i
-
-
-def _line_offsets(lines: list[str]) -> list[int]:
-    offsets = [0]
-    for line in lines:
-        offsets.append(offsets[-1] + len(line))
-    return offsets
-
-
-_LINE_KEY_RE = re.compile(r"^[\s>]+")
-
-
-def _line_key(line: str) -> str:
-    """Alignment key of a line: leading blockquote markers and edge whitespace ignored.
-
-    Transforms typically strip `> ` prefixes (callouts) or pad lines; keying on the content
-    keeps such lines as anchors, while blank lines (empty key) never anchor the alignment.
-    """
-    return _LINE_KEY_RE.sub("", line).rstrip()
-
-
-def _char_regions(b_chunk: str, a_chunk: str, b_base: int, a_base: int) -> list[tuple[int, int, int]]:
-    matcher = SequenceMatcher(None, b_chunk, a_chunk, autojunk=False)
-    return [(b_base + blk.a, a_base + blk.b, blk.size) for blk in matcher.get_matching_blocks() if blk.size]
-
-
-def equal_regions(before: str, after: str) -> list[tuple[int, int, int]]:
-    """Regions `(before_start, after_start, length)` whose bytes a transform left in place.
-
-    Regions are in document order on both sides (monotonic) and non-overlapping. The diff is
-    the common prefix and suffix, then a line-level alignment of the middle keyed on line
-    content (`_line_key`), refined character by character wherever paired lines are not
-    byte-identical and inside replaced line groups. Adjacent regions are merged.
-    """
-    if before == after:
-        return [(0, 0, len(before))] if before else []
-    prefix = _common_prefix_len(before, after)
-    suffix = _common_suffix_len(before, after, min(len(before), len(after)) - prefix)
-    regions: list[tuple[int, int, int]] = []
-    if prefix:
-        regions.append((0, 0, prefix))
-    b_mid = before[prefix : len(before) - suffix]
-    a_mid = after[prefix : len(after) - suffix]
-    b_lines = b_mid.splitlines(keepends=True)
-    a_lines = a_mid.splitlines(keepends=True)
-    b_off = _line_offsets(b_lines)
-    a_off = _line_offsets(a_lines)
-    b_keys = [_line_key(line) for line in b_lines]
-    a_keys = [_line_key(line) for line in a_lines]
-    matcher = SequenceMatcher(lambda key: key == "", b_keys, a_keys, autojunk=False)
-    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
-        if tag == "equal":
-            for i, j in zip(range(i1, i2), range(j1, j2), strict=True):
-                if b_lines[i] == a_lines[j]:
-                    regions.append((prefix + b_off[i], prefix + a_off[j], len(b_lines[i])))
-                else:
-                    regions.extend(_char_regions(b_lines[i], a_lines[j], prefix + b_off[i], prefix + a_off[j]))
-        elif tag == "replace":
-            regions.extend(
-                _char_regions(
-                    b_mid[b_off[i1] : b_off[i2]],
-                    a_mid[a_off[j1] : a_off[j2]],
-                    prefix + b_off[i1],
-                    prefix + a_off[j1],
-                )
-            )
-    if suffix:
-        regions.append((len(before) - suffix, len(after) - suffix, suffix))
-    merged: list[tuple[int, int, int]] = []
-    for region in regions:
-        if merged:
-            b_start, a_start, length = merged[-1]
-            if b_start + length == region[0] and a_start + length == region[1]:
-                merged[-1] = (b_start, a_start, length + region[2])
-                continue
-        merged.append(region)
-    return merged
+def _carry_unit(start: int, end: int, edits: Sequence[Edit]) -> tuple[int, int] | str:
+    """The unit's range after `edits`, or the kind of loss if an edit touched it."""
+    shift = 0
+    covered = 0
+    touched = False
+    for edit in edits:
+        if edit.start == edit.end:
+            if edit.start <= start:
+                shift += len(edit.replacement)
+            elif edit.start < end:
+                touched = True  # an insertion inside the unit splits it
+            continue
+        if edit.end <= start:
+            shift += len(edit.replacement) - (edit.end - edit.start)
+        elif edit.start < end:
+            touched = True
+            covered += min(end, edit.end) - max(start, edit.start)
+    if touched:
+        return LOST_REMOVED if covered >= end - start else LOST_REWRITTEN
+    return (start + shift, end + shift)
 
 
 class LessonUnitMap:
@@ -193,26 +487,33 @@ class LessonUnitMap:
     def texts(self) -> dict[Hashable, str]:
         return {key: unit.text for key, unit in self.units.items()}
 
-    def carry(self, before: str, after: str, transform: str) -> None:
-        """Advance the map over one transform that turned `before` into `after`."""
+    def carry(self, before: str, after: str, transform: str, edits: Sequence[Edit]) -> None:
+        """Advance the map over one transform that turned `before` into `after` by `edits`.
+
+        The edits are the transform's own report of what it removed, replaced or inserted;
+        they must reproduce `after` from `before`. Units are moved by position only.
+        """
         if before != self.text:
             raise ValueError(f"transform {transform!r} was not applied to the mapped text")
-        if before != after:
-            regions = equal_regions(before, after)
-            for unit in self.units.values():
-                if not unit.live:
-                    continue
-                assert unit.start is not None and unit.end is not None
-                target = _map_range(regions, unit.start, unit.end)
-                if target is None:
-                    unit.lost_kind = (
-                        LOST_REMOVED if not _overlaps_any(regions, unit.start, unit.end) else LOST_REWRITTEN
-                    )
-                    unit.lost_by = transform
-                    unit.start = unit.end = None
-                else:
-                    unit.start, unit.end = target
+        if apply_edits(before, edits) != after:
+            raise ValueError(f"transform {transform!r} reported edits that do not produce its output")
+        for unit in self.units.values():
+            if not unit.live:
+                continue
+            assert unit.start is not None and unit.end is not None
+            target = _carry_unit(unit.start, unit.end, edits)
+            if isinstance(target, str):
+                unit.lost_kind = target
+                unit.lost_by = transform
+                unit.start = unit.end = None
+            else:
+                unit.start, unit.end = target
         self.text = after
+
+    def carry_log(self, log: EditLog, transform: str) -> str:
+        """`carry` over a recorded `EditLog`; returns the transformed text."""
+        self.carry(log.before, log.text, transform, log.edits())
+        return log.text
 
     def adopt(self, other: LessonUnitMap) -> None:
         """Take over the units of a map in the same coordinate space (same current text)."""
@@ -265,14 +566,3 @@ class LessonUnitMap:
                 )
             found[key] = text
         return found
-
-
-def _map_range(regions: list[tuple[int, int, int]], start: int, end: int) -> tuple[int, int] | None:
-    for b_start, a_start, length in regions:
-        if b_start <= start and end <= b_start + length:
-            return (a_start + start - b_start, a_start + end - b_start)
-    return None
-
-
-def _overlaps_any(regions: list[tuple[int, int, int]], start: int, end: int) -> bool:
-    return any(b_start < end and start < b_start + length for b_start, _a_start, length in regions)
