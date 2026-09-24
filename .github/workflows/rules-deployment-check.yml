@@ -70,5 +70,10 @@ jobs:
           bash scripts/deploy_prompts.sh
           bash scripts/check_rules_deployment.sh
 
+      # tests/conftest.py imports learn_ukrainian_v4_runtime; this slim venv
+      # installs only pytest + pyyaml, so expose the src layout via PYTHONPATH
+      # (same approach as hygiene.yml's focused agent config tests).
       - name: Regression tests for deploy drift check
+        env:
+          PYTHONPATH: packages/v4-runtime/src
         run: .venv/bin/python -m pytest tests/test_deploy_script_idempotency.py -v
