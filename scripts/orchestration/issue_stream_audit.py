@@ -918,7 +918,7 @@ def _fetch_subissue_batch(
         body = "body " if number in (body_roots or set()) and cursor is None else ""
         fields.append(
             f"i{number}:issue(number:{number}){{{body}subIssues(first:100{after})"
-            "{nodes{number} pageInfo{hasNextPage endCursor}}}"
+            "{nodes{number subIssuesSummary{total}} pageInfo{hasNextPage endCursor}}}"
         )
     query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){" + " ".join(fields) + "}}"
     data = _gh_json(
@@ -930,14 +930,18 @@ def _fetch_subissue_batch(
 
 
 def _tree_membership(
-    roots: set[int], fetch_batch: Callable[[dict[int, str | None]], dict[int, dict]]
+    roots: set[int],
+    fetch_batch: Callable[[dict[int, str | None]], dict[int, dict]],
+    warnings: list[dict] | None = None,
 ) -> dict[int, tuple[set[int], set[int]]]:
-    """Traverse native links by level, then assign descendants to every root.
+    """Traverse native links by level, assigning descendants to their roots.
 
     A parent is fetched once even when two roots reach it. Its adjacency is
-    retained so each root can independently claim a shared descendant.
+    retained so each root can independently claim a shared descendant, but
+    descent stops at another registered root's subtree.
     """
     children: dict[int, set[int]] = {}
+    child_totals: dict[int, int] = {}
     bodies: dict[int, str] = {}
     frontier = set(roots)
     fetched: set[int] = set()
@@ -958,6 +962,11 @@ def _tree_membership(
                     if page == 0 and number in roots:
                         bodies[number] = issue.get("body") or ""
                     sub_issues = issue.get("subIssues") or {}
+                    for node in sub_issues.get("nodes") or []:
+                        if isinstance(node, dict) and _is_positive_int(node.get("number")):
+                            total = (node.get("subIssuesSummary") or {}).get("total")
+                            if isinstance(total, int) and total >= 0:
+                                child_totals[node["number"]] = total
                     children.setdefault(number, set()).update(
                         node["number"]
                         for node in sub_issues.get("nodes") or []
@@ -969,14 +978,22 @@ def _tree_membership(
                         next_pending[number] = cursor
                 pending = next_pending
         fetched.update(parents)
-        frontier = set().union(*(children[number] for number in parents)) - fetched
+        frontier = {
+            number
+            for parent in parents
+            for number in children[parent]
+            if number not in fetched and child_totals.get(number) != 0
+        }
+
+    if frontier and warnings is not None:
+        warnings.append({"code": "truncated_depth", "depth": _MAX_SUBISSUE_DEPTH, "frontier": sorted(frontier)})
 
     membership = {}
     for root in roots:
         descendants: set[int] = set()
         level = {root}
         for _depth in range(_MAX_SUBISSUE_DEPTH):
-            level = set().union(*(children.get(parent, set()) for parent in level)) - {root}
+            level = set().union(*(children.get(parent, set()) for parent in level)) - roots
             descendants.update(level)
             if not level:
                 break
@@ -987,8 +1004,10 @@ def _tree_membership(
     return membership
 
 
-def fetch_tree_membership(roots: set[int], repo_root: Path = ROOT) -> dict[int, tuple[set[int], set[int]]]:
-    return _tree_membership(roots, lambda batch: _fetch_subissue_batch(batch, repo_root, roots))
+def fetch_tree_membership(
+    roots: set[int], repo_root: Path = ROOT, warnings: list[dict] | None = None
+) -> dict[int, tuple[set[int], set[int]]]:
+    return _tree_membership(roots, lambda batch: _fetch_subissue_batch(batch, repo_root, roots), warnings)
 
 
 def classify(
@@ -1132,8 +1151,9 @@ def run_audit(
     root = repo_root.resolve() if repo_root is not None else ROOT
     registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml")
     open_issues = fetch_open_issues(root)
+    traversal_warnings: list[dict] = []
     membership = fetch_tree_membership(
-        {epic for epics in registry.values() for epic in epics}, root
+        {epic for epics in registry.values() for epic in epics}, root, traversal_warnings
     )
     report = classify(open_issues, registry, membership)
     milestone_rows = load_milestone_rows(root / "docs" / "WORKSTREAMS.md")
@@ -1150,7 +1170,7 @@ def run_audit(
         root,
         known_open_issue_numbers=open_issue_numbers,
     )
-    report["warnings"] = milestone_warnings(
+    report["warnings"] = traversal_warnings + milestone_warnings(
         milestone_rows,
         issue_states,
         unavailable_issue_numbers=unavailable_numbers,
@@ -1410,7 +1430,12 @@ def human_summary(report: dict) -> str:
     if report["closed_or_missing_epics"]:
         lines.append(f"⚠️ stream epics not open: {report['closed_or_missing_epics']}")
     for warning in report.get("warnings") or []:
-        if warning["code"] == "milestone_row_marked":
+        if warning["code"] == "truncated_depth":
+            lines.append(
+                f"WARN: native sub-issue traversal truncated at depth {warning['depth']} "
+                f"with {len(warning['frontier'])} parents still to inspect"
+            )
+        elif warning["code"] == "milestone_row_marked":
             lines.append(
                 f"WARN: stream milestone {warning['stream']} marked {warning['marker']}"
             )

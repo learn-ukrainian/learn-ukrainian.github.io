@@ -170,6 +170,46 @@ def test_nested_multi_home_keeps_both_root_epics(registry):
     assert report["effective_membership"]["12"]["epics"] == [100, 200]
 
 
+def test_nested_registered_root_owns_its_subtree(registry):
+    edges = {100: [150], 150: [10]}
+
+    def fetch_batch(cursors):
+        return {number: _page(edges.get(number, []), False) for number in cursors}
+
+    membership = _tree_membership({100, 150}, fetch_batch)
+    report = classify(_issues(100, 150, 10), {"product": [100, 150]}, membership)
+    assert membership[100][0] == set()
+    assert membership[150][0] == {10}
+    assert report["multi_homed"] == []
+    assert report["effective_membership"]["10"]["epics"] == [150]
+
+
+def test_nested_root_does_not_hide_independent_native_path():
+    edges = {100: [150, 10], 150: [10]}
+
+    def fetch_batch(cursors):
+        return {number: _page(edges.get(number, []), False) for number in cursors}
+
+    membership = _tree_membership({100, 150}, fetch_batch)
+    report = classify(_issues(100, 150, 10), {"product": [100, 150]}, membership)
+    assert report["effective_membership"]["10"]["epics"] == [100, 150]
+    assert [item["number"] for item in report["multi_homed"]] == [10]
+
+
+def test_known_leaf_children_are_not_queried():
+    calls = []
+
+    def fetch_batch(cursors):
+        calls.append(dict(cursors))
+        if 100 in cursors:
+            return {100: _page([10, 11], False, child_totals={10: 0, 11: 1})}
+        return {11: _page([12], False, child_totals={12: 0})}
+
+    membership = _tree_membership({100}, fetch_batch)
+    assert membership[100][0] == {10, 11, 12}
+    assert calls == [{100: None}, {11: None}]
+
+
 def test_tree_traversal_pages_parent_before_next_level():
     calls = []
 
@@ -195,11 +235,35 @@ def test_native_descent_stops_at_depth_eight(registry):
         queried.extend(cursors)
         return {number: _page(edges.get(number, []), False) for number in cursors}
 
-    membership = _tree_membership({100}, fetch_batch)
+    warnings = []
+    membership = _tree_membership({100}, fetch_batch, warnings)
     assert membership[100][0] == set(range(1, 9))
     assert 8 not in queried
     report = classify(_issues(100, *range(1, 10)), {"product": [100]}, membership)
     assert [item["number"] for item in report["orphans"]] == [9]
+    assert warnings == [{"code": "truncated_depth", "depth": 8, "frontier": [8]}]
+    assert "WARN: native sub-issue traversal truncated at depth 8" in issue_stream_audit.human_summary(
+        {**report, "warnings": warnings}
+    )
+
+
+def test_depth_eight_known_leaf_does_not_warn():
+    edges = {100: [1], **{number: [number + 1] for number in range(1, 8)}}
+    warnings = []
+
+    def fetch_batch(cursors):
+        return {
+            number: _page(
+                edges.get(number, []),
+                False,
+                child_totals={child: 0 if child == 8 else 1 for child in edges.get(number, [])},
+            )
+            for number in cursors
+        }
+
+    membership = _tree_membership({100}, fetch_batch, warnings)
+    assert membership[100][0] == set(range(1, 9))
+    assert warnings == []
 
 
 def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
@@ -216,6 +280,7 @@ def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
     query = calls[0][0][-1]
     assert "i100:issue(number:100){body subIssues(first:100)" in query
     assert 'i200:issue(number:200){subIssues(first:100,after:"cursor")' in query
+    assert "nodes{number subIssuesSummary{total}}" in query
     assert {number: page["subIssues"]["nodes"][0]["number"] for number, page in pages.items()} == {100: 10, 200: 20}
 
 
@@ -679,11 +744,16 @@ def test_validate_membership_report_rejects_non_dict():
 # No network/gh subprocess: ``_paginate_subissues`` takes an injected page
 # fetcher, exactly as production wires it to ``_fetch_subissues_page``.
 # --------------------------------------------------------------------------- #
-def _page(nodes, has_next, end_cursor=None, body=""):
+def _page(nodes, has_next, end_cursor=None, body="", child_totals=None):
     return {
         "body": body,
         "subIssues": {
-            "nodes": [{"number": n} for n in nodes],
+            "nodes": [
+                {"number": n, "subIssuesSummary": {"total": child_totals[n]}}
+                if child_totals and n in child_totals
+                else {"number": n}
+                for n in nodes
+            ],
             "pageInfo": {"hasNextPage": has_next, "endCursor": end_cursor},
         },
     }
