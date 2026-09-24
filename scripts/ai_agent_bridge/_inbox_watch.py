@@ -27,8 +27,9 @@ from typing import TYPE_CHECKING, TextIO
 from agent_runtime.agent_identity import seat_read_aliases
 from secret_redactor import redact_text
 
+from . import _config
 from ._channels import resolve_recipient_alias
-from ._config import DB_PATH, PRIMARY_REPO_ROOT
+from ._config import PRIMARY_REPO_ROOT
 
 if TYPE_CHECKING:
     from agents_extensions.shared.session_streams.model import Lease
@@ -511,7 +512,7 @@ def run_watcher(
     agent: str,
     *,
     interval_seconds: float = DEFAULT_POLL_INTERVAL_SECONDS,
-    db_path: Path = DB_PATH,
+    db_path: Path | None = None,
     lock_dir: Path = DEFAULT_LOCK_DIR,
     output: TextIO = sys.stdout,
     once: bool = False,
@@ -530,7 +531,7 @@ def run_watcher(
     last_seen = 0
     watchdog_warned = False
     try:
-        conn = open_readonly_db(db_path)
+        conn = open_readonly_db(db_path if db_path is not None else _config.DB_PATH)
         while True:
             try:
                 from ._ask_lifecycle import run_ask_watchdog

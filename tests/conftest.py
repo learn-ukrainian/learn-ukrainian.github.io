@@ -28,14 +28,21 @@ from tests import sparse_trees
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def _bridge_db_path() -> Path:
-    """Return the bridge database selected before tests begin."""
+def _bridge_db_paths() -> tuple[Path, Path]:
+    """Return the primary bridge DB and any configured path before tests begin."""
     from scripts.ai_agent_bridge import _config
 
-    return Path(_config.DB_PATH).resolve()
+    primary = _config.PRIMARY_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"
+    return primary.resolve(), Path(_config.DB_PATH).resolve()
 
 
-_REAL_BRIDGE_DB_PATH = _bridge_db_path()
+_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH = _bridge_db_paths()
+_API_BRIDGE_DB_PATH = (_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db").resolve()
+_UNISOLATED_BRIDGE_DB_PATHS = frozenset(
+    {_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH}
+)
+_BRIDGE_DB_SUFFIXES = tuple(sorted({path.name for path in _UNISOLATED_BRIDGE_DB_PATHS}))
+_BRIDGE_DB_BINDINGS_TO_REPLACE = set(_UNISOLATED_BRIDGE_DB_PATHS)
 
 
 def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
@@ -50,19 +57,31 @@ def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
     return Path(raw_path).resolve(), False
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """Point every already-imported bridge DB binding at a per-test database."""
-    from scripts.ai_agent_bridge import _config
-
+    """Redirect imported and future bridge users to one per-test database."""
     isolated_path = tmp_path / "messages.db"
-    monkeypatch.setattr(_config, "DB_PATH", isolated_path)
+    monkeypatch.setenv("AB_DB_PATH", str(isolated_path))
+    # A module first imported during a prior test may retain that test's path.
+    # Carry those paths forward so each test gets its own DB under xdist too.
+    _BRIDGE_DB_BINDINGS_TO_REPLACE.add(isolated_path.resolve())
     for name, module in tuple(sys.modules.items()):
-        if not (name.startswith("scripts.ai_agent_bridge") or name.startswith("ai_agent_bridge")):
+        if module is None or not name.startswith(("scripts.", "ai_agent_bridge", "agent_runtime.")):
             continue
-        captured_path = getattr(module, "DB_PATH", None)
-        if isinstance(captured_path, (str, os.PathLike)) and Path(captured_path).resolve() == _REAL_BRIDGE_DB_PATH:
-            monkeypatch.setattr(module, "DB_PATH", isolated_path)
+        for attribute, value in tuple(vars(module).items()):
+            if not isinstance(value, (str, os.PathLike)) or not os.fspath(value).endswith(_BRIDGE_DB_SUFFIXES):
+                continue
+            if Path(value).resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
+                monkeypatch.setattr(module, attribute, isolated_path)
+
+    # The production API app has a context and store handles created at import.
+    # Rebuild both against the isolated path, preserving other configured roots.
+    api_main = sys.modules.get("scripts.api.main")
+    if api_main is not None:
+        app = vars(api_main).get("app")
+        context = getattr(getattr(app, "state", None), "ctx", None)
+        if context is not None and context.roots.message_db_path.resolve() in _BRIDGE_DB_BINDINGS_TO_REPLACE:
+            monkeypatch.setattr(app.state, "ctx", context.with_roots(message_db_path=isolated_path))
     return isolated_path
 
 
@@ -73,10 +92,10 @@ def _guard_real_bridge_db_writes(monkeypatch: pytest.MonkeyPatch, request: pytes
 
     def guarded_connect(database, *args, **kwargs):
         path, read_only = _sqlite_database_path(database)
-        if path == _REAL_BRIDGE_DB_PATH and not read_only:
+        if path in _UNISOLATED_BRIDGE_DB_PATHS and not read_only:
             pytest.fail(
                 f"{request.node.nodeid} attempted a writable connection to the real bridge DB "
-                f"at {_REAL_BRIDGE_DB_PATH}; isolate it with AB_DB_PATH or a DB_PATH fixture",
+                f"at {path}; isolate it with AB_DB_PATH or a DB_PATH fixture",
                 pytrace=False,
             )
         return original_connect(database, *args, **kwargs)
