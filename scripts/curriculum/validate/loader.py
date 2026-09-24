@@ -94,16 +94,18 @@ def evidence_root(plan_path: Path) -> Path:
     )
 
 
-def load_plan(plan_path: Path) -> dict:
+def load_plan(plan_path: Path, *, text: str | None = None) -> dict:
     """Read the plan file, reject v1 plans and removed v1 fields, return the dict.
 
     The raw text is returned by read_plan_text for the stress-mark scan; JSON
-    Schema validation itself happens in validate.py.
+    Schema validation itself happens in validate.py. ``text`` replaces the file
+    read (plan-promote validates the bytes it is about to publish in memory);
+    plan_path still names where the plan lives.
     """
-    if not plan_path.is_file():
+    if text is None and not plan_path.is_file():
         raise PlanError(codes.PLAN_NOT_FOUND, f"plan file {plan_path} does not exist")
     try:
-        data = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+        data = yaml.safe_load(plan_path.read_text(encoding="utf-8") if text is None else text)
     except yaml.YAMLError as error:
         raise PlanError(codes.PLAN_YAML_INVALID, f"{plan_path} is not valid YAML: {error}") from error
     if not isinstance(data, dict):

@@ -28,6 +28,22 @@ from level_config import base_level
 # is accepted as the deliverable. Tune from observed runs.
 DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX = 300
 
+# Dispatch admission (#8645 part A; scripts/orchestration/dispatch_admission.py).
+# `delegate.py dispatch` refuses a new write-capable worker (workspace-write,
+# danger) when any check fails; read-only dispatches are exempt. An environment
+# variable with the same name overrides each default; `--force-admission
+# "<reason>"` overrides one dispatch and records the reason in its task record.
+# Basis (15 GB / 8-core host, 2026-09-24): 5-7 concurrent workers running
+# targeted `-n 2` tests kept MemAvailable at 11.1-13.5 GB; the 09:13Z OOM
+# needed full-suite `-n auto` runs. Tune from the per-worker `peak_rss_mib`
+# and the `admission` snapshot each task record now carries.
+# Live write workers (spawning/running, pid alive) at which a new one is refused.
+DISPATCH_MAX_LIVE_WRITE_WORKERS = 5
+# /proc/meminfo MemAvailable floor, in GiB.
+DISPATCH_MIN_MEM_AVAILABLE_GIB = 3.5
+# 1-minute load average divided by os.cpu_count(); refused above this.
+DISPATCH_MAX_LOAD_PER_CPU = 1.5
+
 # =============================================================================
 # TRACK CONFIGURATION
 # =============================================================================

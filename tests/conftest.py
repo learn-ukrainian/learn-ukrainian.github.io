@@ -79,7 +79,11 @@ def _default_fake_github_cli(
     """Resolve ordinary test GitHub CLI lookups to a failing local stub."""
     if request.node.get_closest_marker("live_github") is not None:
         return
-    monkeypatch.setenv("PATH", f"{_fake_github_bin}{os.pathsep}{os.environ.get('PATH', '')}")
+    # An empty PATH entry means "the current directory". Drop unset, empty,
+    # and blank inherited entries so the stub is prepended without putting
+    # cwd on PATH.
+    inherited = [entry for entry in os.environ.get("PATH", "").split(os.pathsep) if entry]
+    monkeypatch.setenv("PATH", os.pathsep.join([os.fspath(_fake_github_bin), *inherited]))
 
 
 @pytest.fixture(scope="session")
@@ -203,11 +207,94 @@ def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[i
     return size, False
 
 
+# =============================================================================
+# CONTENT-TREE POLLUTION GUARD (#8631)
+# =============================================================================
+# A test that drives a build/promote writer against the real repo root leaves
+# files under ``curriculum/`` (e.g. ``a1/my-morning/wiki_completeness_gate.json``).
+# That makes the checkout dirty, and ``curriculum/`` changes read as content
+# drift. The controller snapshots ``git status`` for the content trees at
+# session start and fails the session if it differs at session end.
+
+_CONTENT_TREE_PATHSPECS = ("curriculum/", "site/src/content/")
+_CONTENT_TREE_GIT_TIMEOUT_S = 60
+_CONTENT_TREE_SNAPSHOT_KEY = "_content_tree_snapshot"
+
+
+def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
+    """``git status --porcelain`` lines for the content trees, or None outside git."""
+    git_args = ["git", "-C", str(root)]
+    try:
+        top = subprocess.run(
+            [*git_args, "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            text=True,
+            timeout=_CONTENT_TREE_GIT_TIMEOUT_S,
+            check=False,
+        )
+        if top.returncode != 0 or Path(top.stdout.strip()).resolve() != root.resolve():
+            return None
+        status = subprocess.run(
+            [*git_args, "status", "--porcelain", "--untracked-files=all", "--", *_CONTENT_TREE_PATHSPECS],
+            capture_output=True,
+            text=True,
+            timeout=_CONTENT_TREE_GIT_TIMEOUT_S,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if status.returncode != 0:
+        return None
+    return frozenset(line for line in status.stdout.splitlines() if line.strip())
+
+
+def _content_tree_changes(
+    before: frozenset[str] | None, after: frozenset[str] | None
+) -> tuple[list[str], list[str]]:
+    """Sorted ``(added, removed)`` status lines between two snapshots.
+
+    Both directions count: deleting a pre-existing untracked file or restoring a
+    pre-existing tracked modification changes the tree just as much as a new file.
+    """
+    if before is None or after is None:
+        return [], []
+    return sorted(after - before), sorted(before - after)
+
+
+def pytest_sessionstart(session: pytest.Session) -> None:
+    config = session.config
+    if hasattr(config, "workerinput"):
+        return
+    setattr(config, _CONTENT_TREE_SNAPSHOT_KEY, _content_tree_snapshot(_REPO_ROOT))
+
+
+def _enforce_content_tree_clean(session: pytest.Session) -> None:
+    before = getattr(session.config, _CONTENT_TREE_SNAPSHOT_KEY, None)
+    added, removed = _content_tree_changes(before, _content_tree_snapshot(_REPO_ROOT))
+    if not added and not removed:
+        return
+    print(
+        "content-tree guard: git status under "
+        f"{', '.join(_CONTENT_TREE_PATHSPECS)} changed during the test session. "
+        "Either a test wrote to (or removed files from) the real checkout — point its "
+        "writer at tmp_path — or another process in the same checkout, such as an "
+        "operator build, wrote concurrently:"
+    )
+    for label, lines in (("added", added), ("removed", removed)):
+        if lines:
+            print(f"  status entries {label} since session start:")
+            for line in lines:
+                print(f"    {line}")
+    if session.exitstatus == pytest.ExitCode.OK:
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     """Report this session's temp usage and optionally enforce a CI budget."""
     config = session.config
     if hasattr(config, "workerinput"):
         return
+    _enforce_content_tree_clean(session)
 
     tmp_path_factory = getattr(config, "_tmp_path_factory", None)
     if tmp_path_factory is None:
@@ -445,6 +532,35 @@ def _isolate_overview_last_good(tmp_path, monkeypatch):
     router = sys.modules.get("scripts.api.dashboard_router")
     if router is not None:
         router.reset_overview_state_for_tests()
+
+
+@pytest.fixture(autouse=True)
+def _hermetic_dispatch_admission_host(monkeypatch):
+    """Dispatch admission sees a healthy host and config-default thresholds (#8645).
+
+    Admission reads this host's MemAvailable and load average; a busy CI runner
+    or developer box must not refuse the write dispatches other tests make.
+    Admission tests monkeypatch ``probe_host`` themselves. Imported lazily and
+    skipped when unavailable, so conftest still loads in a minimal venv (#8689).
+    """
+    try:
+        from scripts.orchestration import dispatch_admission
+    except ImportError:
+        return
+
+    for name in (
+        dispatch_admission.ENV_MAX_LIVE_WRITE_WORKERS,
+        dispatch_admission.ENV_MIN_MEM_AVAILABLE_GIB,
+        dispatch_admission.ENV_MAX_LOAD_PER_CPU,
+    ):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr(
+        dispatch_admission,
+        "probe_host",
+        lambda *_args, **_kwargs: dispatch_admission.HostProbe(
+            mem_available_bytes=64 * 1024**3, load1=0.0, cpu_count=8, proc_available=True
+        ),
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -1811,6 +1927,9 @@ def _popen_cwd(pos: tuple[object, ...], kwargs: dict[str, object]) -> object:
 
 def _guarded_popen_init(self, args, *pos, **kwargs):
     _guard_live_github_spawn(args, kwargs)
+    if not _worktree_guard_enabled():
+        _ORIGINAL_POPEN_INIT(self, args, *pos, **kwargs)
+        return
     dest: str | None = None
     absent_before = False
     try:
@@ -1841,6 +1960,10 @@ def _guard_live_github_spawn(args: object, kwargs: dict[str, object]) -> None:
     """Reject a process spawn that resolves to the installed GitHub CLI."""
     if _LIVE_GITHUB_ALLOWED or not _gh_guard_enabled() or not _REAL_GH_BINARY:
         return
+    # Limits: a string argv is not inspected, so ``shell=True`` (the command
+    # is a string) is unguarded. A positional ``executable`` is ignored; only
+    # ``kwargs["executable"]`` is read. ``os.system`` and
+    # ``asyncio.create_subprocess_shell`` never reach this hook.
     if isinstance(args, (str, bytes)) or not isinstance(args, (list, tuple)) or not args:
         return
     argv = _decode_argv(args)

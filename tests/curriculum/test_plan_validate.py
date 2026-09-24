@@ -1075,6 +1075,9 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     from tests.curriculum.test_plan_validate_cross import produced_cross_codes
 
     produced |= produced_cross_codes(tmp_path / "cross")
+    from tests.curriculum.test_plan_validate_provisional import produced_provisional_codes
+
+    produced |= produced_provisional_codes(tmp_path / "provisional")
     assert produced == set(codes.DESCRIPTIONS)
 
 

@@ -40,18 +40,15 @@ runner, and orchestrator hosts).
 
 ### 1. Reconciliation Sweep (`learn-ukrainian-reconcile.service` + `.timer`)
 
-- **Frequency**: Hourly (`OnCalendar=hourly`, `RandomizedDelaySec=300`, `Persistent=true`).
-- **What it does**: Runs `scripts/orchestration/reconcile_sweep.py` which:
-  1. Releases write-ownership claims for inactive tasks via `dispatch_settle release-stale`.
-  2. Marks running-with-dead-PID task records as `crashed` via the existing lazy heal path (`scripts/delegate.py status`).
-  3. Logs a one-line summary count (`scanned_tasks`, `zombies`, `stale_claims`) to stdout/journal.
-- **Default mode**: Report-only (dry-run). It inspects and reports what would be settled without mutating state or database records.
-- **Dry-run → Apply promotion**: After verifying observability in the journal, edit `~/.config/systemd/user/learn-ukrainian-reconcile.service` to pass `--apply`:
-  ```ini
-  ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reconcile_sweep --apply
-  ```
-- **Enable command**:
+- **Frequency**: Every 5 minutes (`OnBootSec=2min`, `OnUnitActiveSec=5min`, `AccuracySec=30s`), so a worker killed by the OOM killer or SIGKILL stops reading `running` within one interval (#8645). Dispatch admission also sweeps dead pids before it counts write workers.
+- **What it does**: Runs `scripts/orchestration/reconcile_sweep.py --apply` which:
+  1. Releases write-ownership claims for inactive tasks via `dispatch_settle release-stale` (the same reconciliation every dispatch runs at admission).
+  2. Marks running/spawning task records whose pid is dead as `crashed` via the existing lazy heal path (`scripts/delegate.py status`). The mark re-checks status, pid, run nonce and liveness under the task's writer lock, so it cannot overwrite a worker's own terminal write; a pid owned by another user, or reused, counts as alive.
+  3. Logs a one-line summary count (`scanned_tasks`, `zombies_crashed`, `stale_claims_released`) to stdout/journal.
+- **Default mode**: Apply. Run `.venv/bin/python -m scripts.orchestration.reconcile_sweep` by hand (no `--apply`) for a report-only dry run. To make the timer report-only, drop `--apply` from `~/.config/systemd/user/learn-ukrainian-reconcile.service`.
+- **Enable or update** (the unit files are templates; install them with `@REPO_ROOT@` replaced):
   ```bash
+  systemctl --user daemon-reload
   systemctl --user enable --now learn-ukrainian-reconcile.timer
   ```
 

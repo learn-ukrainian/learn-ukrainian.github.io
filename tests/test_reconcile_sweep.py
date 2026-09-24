@@ -435,7 +435,7 @@ def test_reconcile_sweep_systemd_exec_start_smoke(tmp_path: Path) -> None:
 
     # 1. Verify exact ExecStart shape in systemd unit
     exec_line = next(line for line in content.splitlines() if line.startswith("ExecStart="))
-    assert exec_line == "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reconcile_sweep"
+    assert exec_line == "ExecStart=@REPO_ROOT@/.venv/bin/python -m scripts.orchestration.reconcile_sweep --apply"
 
     # Derive module args from the unit command shape
     cmd_template = exec_line.removeprefix("ExecStart=").strip()
@@ -453,7 +453,7 @@ def test_reconcile_sweep_systemd_exec_start_smoke(tmp_path: Path) -> None:
     assert res_help.returncode == 0
     assert "Reconcile stale write-ownership claims" in res_help.stdout
 
-    # 3. Smoke test: module invocation in default report mode
+    # 3. Smoke test: the unit's own invocation (apply mode, #8645) against an empty task dir
     task_dir = tmp_path / "tasks"
     task_dir.mkdir()
     res_report = subprocess.run(
@@ -472,7 +472,7 @@ def test_reconcile_sweep_systemd_exec_start_smoke(tmp_path: Path) -> None:
         timeout=60,
     )
     assert res_report.returncode == 0
-    assert "reconcile-sweep: mode=dry_run scanned_tasks=0 zombie_tasks=0 stale_claims=0" in res_report.stdout
+    assert "reconcile-sweep: mode=apply scanned_tasks=0 zombies_crashed=0 stale_claims_released=0" in res_report.stdout
 
     # 4. Smoke test: direct script path execution with --help and report mode
     script_path = str(repo_root / "scripts" / "orchestration" / "reconcile_sweep.py")
