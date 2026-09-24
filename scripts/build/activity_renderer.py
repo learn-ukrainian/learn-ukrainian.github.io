@@ -713,23 +713,53 @@ def _render_highlight_morphemes(act: dict) -> str:
     return _component("HighlightMorphemes", props)
 
 
+class ImageToLetterShapeError(ValueError):
+    """An image-to-letter item carries neither the schema nor the legacy shape."""
+
+
+def image_to_letter_render_values(item: Any, index: int = 0) -> dict[str, Any]:
+    """Normalise one image-to-letter item to the React ImageToLetterItem shape.
+
+    Two authoring shapes reach the component ``{emoji, answer, distractors[]}``:
+      - schema (activities-a1.schema.json): ``{image, letter, options?}``
+      - legacy (direct track, audit fixers): ``{emoji, answer, distractors?}``
+
+    ``options`` lists every choice and includes the letter, so the letter is
+    removed from it; the component shuffles ``[answer, *distractors]``.
+    """
+    if not isinstance(item, dict):
+        raise ImageToLetterShapeError(
+            f"image-to-letter item {index} must be a mapping, got {type(item).__name__}"
+        )
+    emoji = item.get("emoji") or item.get("image")
+    answer = item.get("answer") or item.get("letter")
+    if not emoji or not answer:
+        raise ImageToLetterShapeError(
+            f"image-to-letter item {index} matches neither the schema shape "
+            f"(image, letter, options) nor the legacy shape (emoji, answer, "
+            f"distractors); keys present: {sorted(item)}"
+        )
+    raw = item.get("distractors") if item.get("distractors") is not None else item.get("options")
+    distractors: list[str] = []
+    for option in raw or []:
+        if option != answer and option not in distractors:
+            distractors.append(option)
+    entry: dict[str, Any] = {"emoji": emoji, "answer": answer, "distractors": distractors}
+    for key in ("note", "explanation"):
+        if item.get(key):
+            entry[key] = item[key]
+    return entry
+
+
 def _render_image_to_letter(act: dict) -> str:
     """image-to-letter → <ImageToLetter items={[...]} />
 
-    YAML: {image, letter, options?}
-    React ImageToLetterItem: {emoji, answer, distractors[]}
+    See :func:`image_to_letter_render_values` for the accepted item shapes.
     """
-    items = []
-    for item in act.get("items", []):
-        entry: dict[str, Any] = {
-            "emoji": item.get("image", ""),
-            "answer": item.get("letter", ""),
-            "distractors": item.get("options", []),
-        }
-        if item.get("note"):
-            entry["note"] = item["note"]
-        items.append(entry)
-
+    items = [
+        image_to_letter_render_values(item, index)
+        for index, item in enumerate(act.get("items", []))
+    ]
     props = _prop("items", items)
     props += _opt_prop("title", act.get("instruction"))
     return _component("ImageToLetter", props)

@@ -24,6 +24,11 @@ interface ImageToLetterItem {
    * @ukrainianText false
    */
   note?: string;
+  /**
+   * @schemaDescription Teaching feedback shown after the correct answer.
+   * @ukrainianText false
+   */
+  explanation?: string;
 }
 
 interface ImageToLetterProps {
@@ -38,6 +43,11 @@ interface ImageToLetterProps {
    */
   title?: string;
   /**
+   * @schemaDescription Task instruction shown under the header.
+   * @ukrainianText false
+   */
+  instruction?: string;
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
@@ -47,6 +57,7 @@ interface ImageToLetterProps {
 export default function ImageToLetter({
   items,
   title,
+  instruction,
   isUkrainian = true,
 }: ImageToLetterProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -124,6 +135,12 @@ export default function ImageToLetter({
         <span>{headerLabel}</span>
       </div>
 
+      {instruction && (
+        <p className={styles.instruction}>
+          <strong>{instruction}</strong>
+        </p>
+      )}
+
       {/* Progress bar */}
       <div className={directStyles.warProgress}>
         <span>
@@ -172,9 +189,12 @@ export default function ImageToLetter({
           })}
         </div>
 
-        {/* Note shown after correct answer */}
+        {/* Note and explanation shown after correct answer */}
         {answered && item.note && (
           <p className={directStyles.warNote}>{item.note}</p>
+        )}
+        {answered && item.explanation && (
+          <p className={directStyles.warNote}>{item.explanation}</p>
         )}
       </div>
     </div>

@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 43cc34af25a9b84d9b92ab725d7fea2cf8c7c13021494ef534396eea4155c7c0
+  components_sha256: b9bfb83d0777706e8276cb74c38aa7a7402b4b25814609daa388033013cab3bb
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -1107,6 +1107,10 @@ components:
         type: string
         description: Display title shown above the component.
         ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Task instruction shown under the header.
+        ukrainian_text: 'false'
       - name: isUkrainian
         type: boolean
         description: UI language flag for Ukrainian labels and feedback.
@@ -1130,10 +1134,15 @@ components:
         type: string
         description: Note value consumed by this component.
         ukrainian_text: 'false'
+      - name: explanation
+        type: string
+        description: Teaching feedback shown after the correct answer.
+        ukrainian_text: 'false'
     example:
       items:
       - <ImageToLetterItem>
       title: Приклад
+      instruction: Приклад
     deprecated: false
     deprecation_reason: null
   LetterGrid:
