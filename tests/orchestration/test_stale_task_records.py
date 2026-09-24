@@ -423,6 +423,22 @@ def _settle(tasks_dir: Path, repo: Path, pulls: list[dict[str, Any]], **kwargs: 
     return str_mod.settle_stale(tasks_dir, repo_checkouts={SLUG: repo}, pager=FakePager(pulls), now=NOW, **kwargs)
 
 
+@pytest.mark.parametrize("head_field", ["final", "legacy", "neither"])
+def test_recorded_final_head_classifies_orphaned_work(tasks_dir, repo, head_field):
+    sha = _orphan_commit(repo, f"head-{head_field}")
+    fields: dict[str, Any] = {"commits_ahead": 1, "worktree_dirty_on_exit": True}
+    if head_field == "final":
+        fields["final_branch_head_commit"] = sha
+    elif head_field == "legacy":
+        fields["auto_finalize"] = _auto_finalized(sha)
+    _record(tasks_dir, f"head-{head_field}", **fields)
+
+    row = _by_file(_settle(tasks_dir, repo, []))[f"head-{head_field}.json"]
+
+    assert row["class"] == ("D" if head_field == "neither" else "C")
+    assert row["evidence"]["recorded_commits"] == ([] if head_field == "neither" else [sha])
+
+
 def test_renamed_branch_keeps_its_record_out_of_class_c(tasks_dir, repo):
     """Sol's probe: the recorded branch name is gone because the branch was renamed, not deleted."""
     _git(repo, "checkout", "-b", "codex/renamed")

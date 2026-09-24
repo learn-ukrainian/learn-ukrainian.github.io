@@ -16,7 +16,7 @@ finalized; they only inflate every scan and read as open attention items.
   worktree HEAD still holds a commit the record names;
 * **C** orphaned: the worktree path, the local branch and the remote branch are
   all gone, and so is the work. Either the record names a commit
-  (``auto_finalize.commit_sha``; records carry no other head id) that no ref
+  (``final_branch_head_commit``, or legacy ``auto_finalize.commit_sha``) that no ref
   reaches, every remote branch freshly fetched, or the task exited with no
   commits and a clean tree, leaving nothing to lose;
 * **D** anything else (never modified): evidence unavailable, a failed fetch
@@ -378,15 +378,15 @@ _SHA_RE = re.compile(r"^[0-9a-f]{7,64}$")
 def recorded_work_commits(record: Mapping[str, Any]) -> list[str]:
     """Commit ids a record names as its work.
 
-    Delegate records carry no final head sha: ``worktree_base_sha`` is the
-    base the task started from, not its work. The one commit a record does
-    name is ``auto_finalize.commit_sha``, the commit delegate made from a dirty
-    tree at exit.
+    New delegate records name the final branch head. Older records may only
+    name the commit delegate made from a dirty tree at exit. The base SHA is
+    the task's starting point, not its work.
     """
     auto_finalize = record.get("auto_finalize")
-    raw = auto_finalize.get("commit_sha") if isinstance(auto_finalize, dict) else None
-    if isinstance(raw, str) and _SHA_RE.match(raw.strip().lower()):
-        return [raw.strip().lower()]
+    old_head = auto_finalize.get("commit_sha") if isinstance(auto_finalize, dict) else None
+    for raw in (record.get("final_branch_head_commit"), old_head):
+        if isinstance(raw, str) and _SHA_RE.fullmatch(raw.strip().lower()):
+            return [raw.strip().lower()]
     return []
 
 
