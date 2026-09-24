@@ -952,14 +952,27 @@ def _run_worktree_gc_sweep(ctx: MonitorContext | None = None) -> None:
         removed = sum(1 for r in results if r.action in ("removed", "preserved_then_removed"))
         skipped = sum(1 for r in results if r.action == "skipped")
         errors = sum(1 for r in results if r.action == "error")
+        # Report-only findings (#8663), e.g. an interrupted ``git worktree add``.
+        needs_attention = [
+            {"path": r.path, **{key: r.needs_attention.get(key) for key in ("kind", "command")}}
+            for r in results
+            if r.needs_attention is not None
+        ]
 
         _last_gc_sweep_summary = {
             "time": _isoformat_z(datetime.now(UTC)),
             "removed": removed,
             "skipped": skipped,
             "errors": errors,
+            "needs_attention": needs_attention,
         }
-        logger.info("worktree GC sweep: removed=%d, skipped=%d, errors=%d", removed, skipped, errors)
+        logger.info(
+            "worktree GC sweep: removed=%d, skipped=%d, errors=%d, needs_attention=%d",
+            removed,
+            skipped,
+            errors,
+            len(needs_attention),
+        )
     except Exception as exc:
         logger.exception("worktree GC sweep failed: %s", exc)
 

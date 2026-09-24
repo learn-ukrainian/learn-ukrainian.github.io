@@ -94,7 +94,7 @@ def mark_orphaned_worktree_prep_crashed(
     ``is_orphaned`` (normally ``worktree_prep.is_orphaned_prep_record``) is
     re-proved under the writer lock against the record as it is now, and the
     record must still be the observed run. ``worktree_prep`` is kept: it is
-    the reaper's proof for the half-built worktree the dispatcher left.
+    the reaper's evidence for any worktree the dispatcher's add left behind.
     """
     with task_state_lock(path):
         try:

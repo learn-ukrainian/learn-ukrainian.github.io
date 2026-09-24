@@ -735,7 +735,7 @@ def _half_built_dispatch(
     return worktree
 
 
-def test_half_built_initializing_worktree_reaped_through_p0_reaper(hermetic_reap):
+def test_initializing_leftover_is_reported_through_p0_reaper_and_kept(hermetic_reap):
     repo_root, _ = hermetic_reap
     # The canonical reaper reads records from the control plane's batch_state.
     tasks_dir = repo_root / "batch_state" / "tasks"
@@ -744,9 +744,18 @@ def test_half_built_initializing_worktree_reaped_through_p0_reaper(hermetic_reap
 
     report = post_task_reap.post_task_reap("impl-8663-r3", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
 
-    assert report["main_worktree"]["action"] == "removed"
-    assert report["main_worktree"]["reason"].startswith("half-built dispatch worktree task-id=impl-8663-r3")
-    assert not worktree.exists()
+    main = report["main_worktree"]
+    assert main["action"] == "skipped"
+    assert main["reason"].startswith("needs_attention: initializing_leftover; task-id=impl-8663-r3")
+    assert main["needs_attention"]["kind"] == "initializing_leftover"
+    [finding] = report["needs_attention"]
+    assert finding["path"] == str(worktree)
+    assert finding["command"].startswith("verify first: ")
+    assert finding["evidence"]["head"] == head
+    assert report["errors"] == []
+    assert worktree.is_dir()
+    listing = _run(["git", "worktree", "list", "--porcelain"], cwd=repo_root).stdout
+    assert "locked initializing" in listing
     assert _run(["git", "rev-parse", "refs/heads/claude/impl-8663-r3"], cwd=repo_root).stdout.strip() == head
 
 

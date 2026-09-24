@@ -33,8 +33,8 @@ DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX = 300
 # take minutes when host I/O is saturated, so a fixed 30 s kill left half-built
 # worktrees behind. The add always gets the base window. Past it, dispatch
 # keeps waiting while the checkout is still gaining files, gives up once it has
-# gained none for the stall window, and never waits past the ceiling. A failed
-# or timed-out add is undone before the dispatch fails.
+# gained none for the stall window, and never waits past the ceiling. A stopped
+# add gets SIGTERM first so git cleans up its own partial worktree.
 DELEGATE_WORKTREE_ADD_TIMEOUT_S = 120.0
 DELEGATE_WORKTREE_ADD_STALL_S = 60.0
 DELEGATE_WORKTREE_ADD_MAX_S = 900.0

@@ -151,15 +151,6 @@ def worktree_lock(path: Path | str, *, lock_dir: Path, timeout_s: float | None =
         os.close(fd)
 
 
-def holds_worktree_lock(path: Path | str, *, lock_dir: Path) -> bool:
-    """Return True when this thread holds :func:`worktree_lock` for ``path`` in ``lock_dir``."""
-    try:
-        _, lock_file = lock_path(path, lock_dir=lock_dir)
-        return _held_lock_key(lock_file) in _HELD_LOCKS
-    except (WorktreeLockError, OSError, RuntimeError):
-        return False
-
-
 LOCK_BUSY = "worktree lock busy"
 LOCK_REENTRY = "worktree lock already held by this thread"
 LOCK_UNAVAILABLE = "worktree lock unavailable"
@@ -507,7 +498,6 @@ def remove_unclaimed_worktree(
     tasks_dir: Path | None = None,
     lock_dir: Path | None = None,
     lock_timeout_s: float | None = None,
-    reuse_held_lock: bool = False,
 ) -> WorktreeRemoval:
     """Remove ``worktree`` unless a live task claims it. Every remover comes here (#8610).
 
@@ -534,12 +524,7 @@ def remove_unclaimed_worktree(
     primary (#8624). ``tasks_dir`` defaults to
     ``<control_root>/batch_state/tasks`` and ``lock_dir`` to
     :func:`repository_lock_dir` of ``control_root``. ``reason`` is the
-    caller's purpose, recorded on success. ``reuse_held_lock`` lets a caller
-    that already holds the lock in ``lock_dir`` on this thread, such as
-    dispatch undoing its own failed ``git worktree add`` (#8663), run every
-    step under that lock instead of refusing as a reentry; any other lock,
-    including this path's lock in another directory, is still acquired. This
-    never raises.
+    caller's purpose, recorded on success. This never raises.
     """
     branch: str | None = None
     dirty: bool | None = None
@@ -555,8 +540,7 @@ def remove_unclaimed_worktree(
                 tasks_dir = control_root / "batch_state" / "tasks"
             if lock_dir is None:
                 lock_dir = repository_lock_dir(control_root)
-            if not (reuse_held_lock and holds_worktree_lock(worktree, lock_dir=lock_dir)):
-                locks.enter_context(worktree_lock(worktree, lock_dir=lock_dir, timeout_s=lock_timeout_s))
+            locks.enter_context(worktree_lock(worktree, lock_dir=lock_dir, timeout_s=lock_timeout_s))
         except ControlPlaneError as exc:
             return outcome("skipped", LOCK_UNAVAILABLE, error=str(exc))
         except WorktreeLockError as exc:

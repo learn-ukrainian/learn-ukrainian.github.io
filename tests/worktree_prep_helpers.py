@@ -1,4 +1,4 @@
-"""Shared fixtures for the #8663 worktree-prep ownership proof tests."""
+"""Shared fixtures for the #8663 worktree-prep leftover tests."""
 
 from __future__ import annotations
 
@@ -61,7 +61,6 @@ def half_built_prep(worktree: Path, *, run_nonce: str, git: tuple[int, int] | No
         "dir_dev": dev,
         "dir_ino": ino,
         "base_sha": _git(worktree, "rev-parse", "HEAD"),
-        "git_admin_dir": worktree_prep.read_git_admin_dir(worktree) or "",
         "git_pid": git_pid,
         "git_start": git_start,
         "owner_pid": owner["pid"],

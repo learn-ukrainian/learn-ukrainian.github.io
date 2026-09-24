@@ -18,7 +18,7 @@ from scripts.common.acp_runtime_lock import build_lock_reason, process_start_tim
 from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
-from tests.worktree_prep_helpers import half_built_prep, leave_half_built
+from tests.worktree_prep_helpers import exited_process_identity, half_built_prep, leave_half_built
 
 _REAL_RUN = subprocess.run
 
@@ -3819,7 +3819,7 @@ def test_acp_runtime_cleanup_recheck_failure_deletes_nothing(
     assert worktree.exists()
 
 
-# --- #8663: half-built dispatch worktrees left by a killed `git worktree add` ---
+# --- #8663: worktrees an interrupted `git worktree add` left are reported, never removed ---
 
 
 def add_half_built_dispatch(repo: Path, task_id: str) -> Path:
@@ -3851,43 +3851,200 @@ def _reserved_record(
     return record
 
 
-def _info(repo: Path, worktree: Path) -> rw.WorktreeInfo:
-    return next(item for item in rw.list_git_worktrees(repo) if item.path.resolve() == worktree.resolve())
+def _reap_apply(repo: Path, monkeypatch: pytest.MonkeyPatch) -> list[rw.ReapResult]:
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    return rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
 
 
-def test_half_built_dispatch_worktree_reaped_with_branch_kept(
+def _assert_untouched(repo: Path, worktree: Path) -> None:
+    info = next(item for item in rw.list_git_worktrees(repo) if item.path.resolve() == worktree.resolve())
+    assert info.locked_reason == "initializing"
+    assert worktree.is_dir()
+
+
+def test_initializing_leftover_is_reported_with_evidence_and_never_removed(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo = init_repo(tmp_path)
     worktree = add_half_built_dispatch(repo, "impl-8663-r5")
     head = git(repo, "rev-parse", "refs/heads/claude/impl-8663-r5")
-    _write_task_record(repo, "impl-8663-r5", **_reserved_record(worktree))
-    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
-    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    record = _reserved_record(worktree)
+    _write_task_record(repo, "impl-8663-r5", **record)
 
-    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+    results = _reap_apply(repo, monkeypatch)
 
     result = result_for(results, worktree)
-    assert result.action == "removed"
-    assert result.reason.startswith("half-built dispatch worktree task-id=impl-8663-r5 status=failed")
-    assert not worktree.exists()
+    command = worktree_prep.verify_first_command(repo, worktree)
+    assert result.action == "skipped"
+    assert result.reason == (
+        "needs_attention: initializing_leftover; task-id=impl-8663-r5 status=failed; "
+        f"git worktree add left this worktree locked 'initializing'; never removed automatically; {command}"
+    )
+    assert rw.classify_preservation(result) == "needs_attention"
+    finding = result.needs_attention
+    assert finding is not None
+    assert finding["kind"] == "initializing_leftover"
+    assert finding["task_id"] == "impl-8663-r5"
+    assert finding["worktree_prep"] == record["worktree_prep"]
+    assert finding["command"] == command
+    assert command.startswith(f"verify first: git -C {repo} worktree unlock {worktree} && ")
+    evidence = finding["evidence"]
+    assert evidence["reserved_directory_intact"] is True
+    assert evidence["git_add_exited"] is True
+    assert evidence["dispatcher_exited"] is False
+    assert evidence["head"] == head
+    assert evidence["head_is_base"] is True
+    # No index was written: every tracked file reads as deleted, the two written as untracked.
+    assert {key: evidence["status"][key] for key in ("deleted", "untracked", "changed")} == {
+        "deleted": 3,
+        "untracked": 2,
+        "changed": 0,
+    }
+    _assert_untouched(repo, worktree)
     assert git(repo, "rev-parse", "--verify", "refs/heads/claude/impl-8663-r5") == head
-    journal = reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8")
-    assert "half-built dispatch worktree task-id=impl-8663-r5" in journal
+
+    journal = [json.loads(line) for line in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    [event] = [row for row in journal if row["path"] == str(worktree)]
+    assert event["event"] == "needs_attention"
+    assert event["needs_attention"]["command"] == command
+
+    counts = rw.aggregate_counts(results)
+    assert counts["by_preservation_class"]["needs_attention"] == 1
+    assert counts["needs_attention"] == [{"path": str(worktree), "kind": "initializing_leftover", "command": command}]
+    aggregate = rw.format_aggregate_results(counts, apply=True)
+    assert "Needs attention (never removed automatically):" in aggregate
+    assert command in aggregate
+    assert "1 need(s) attention" in rw.format_text_results(results, apply=True).splitlines()[0]
     assert_main_checkout_unchanged(repo)
 
 
-def test_failed_reuse_of_an_existing_locked_worktree_is_kept(
+def _with_prep(record: dict[str, Any], **changes: Any) -> dict[str, Any]:
+    return {**record, "worktree_prep": {**record["worktree_prep"], **changes}}
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(lambda record: {**record, "pid": 424242}, id="worker-pid-recorded"),
+        pytest.param(lambda record: {**record, "run_nonce": "another-run"}, id="run-nonce-mismatch"),
+        pytest.param(
+            lambda record: _with_prep(record, dir_ino=record["worktree_prep"]["dir_ino"] + 1), id="another-inode"
+        ),
+        pytest.param(lambda record: _with_prep(record, git_start=None), id="git-liveness-unknown"),
+        pytest.param(lambda record: _with_prep(record, base_sha="0" * 40), id="head-is-not-the-base"),
+    ],
+)
+def test_leftover_evidence_never_turns_into_a_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mutate: Any,
+) -> None:
+    """Whatever the evidence says, the class only reports."""
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-guard")
+    _write_task_record(repo, "impl-8663-guard", **mutate(_reserved_record(worktree)))
+
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert result.needs_attention is not None
+    _assert_untouched(repo, worktree)
+
+
+def test_leftover_while_git_still_runs_reports_it_alive(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-stuck")
+    stuck_git = subprocess.Popen(["sleep", "30"], start_new_session=True)
+    try:
+        start = process_start_time(stuck_git.pid)
+        assert start is not None
+        prep = half_built_prep(worktree, run_nonce="nonce-8663", git=(stuck_git.pid, start))
+        _write_task_record(repo, "impl-8663-stuck", **_reserved_record(worktree, prep=prep))
+
+        result = result_for(_reap_apply(repo, monkeypatch), worktree)
+    finally:
+        stuck_git.kill()
+        stuck_git.wait()
+
+    assert result.needs_attention is not None
+    assert result.needs_attention["evidence"]["git_add_exited"] is False
+    _assert_untouched(repo, worktree)
+
+
+def test_leftover_of_a_dispatch_still_running_its_add_is_active(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-live")
+    # The provisional record dispatch holds while its add runs; the dispatcher (this process) lives.
+    _write_task_record(repo, "impl-8663-live", **_reserved_record(worktree, status="spawning"))
+
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == (
+        "active dispatch task-id=impl-8663-live status=spawning: git worktree add may still be running"
+    )
+    assert rw.classify_preservation(result) == "active_dispatch"
+    assert result.needs_attention is None
+    _assert_untouched(repo, worktree)
+
+
+def test_leftover_of_a_dispatcher_that_died_mid_add_is_reported(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-orphan")
+    dead_pid, dead_start = exited_process_identity()
+    record = _with_prep(_reserved_record(worktree, status="spawning"), owner_pid=dead_pid, owner_start=dead_start)
+    _write_task_record(repo, "impl-8663-orphan", **record)
+
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
+
+    assert result.needs_attention is not None
+    assert result.needs_attention["task_status"] == "spawning"
+    assert result.needs_attention["evidence"]["dispatcher_exited"] is True
+    _assert_untouched(repo, worktree)
+
+
+@pytest.mark.parametrize(
+    "work",
+    [
+        pytest.param(lambda wt: (wt / "README.md").write_text("uncommitted edit\n", encoding="utf-8"), id="modified"),
+        pytest.param(lambda wt: (wt / "notes.txt").write_text("new work\n", encoding="utf-8"), id="new-file"),
+    ],
+)
+def test_completed_worktree_locked_initializing_by_hand_is_kept_and_its_work_reported(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, work: Any
+) -> None:
+    """Round-3 blocker: a finished checkout under a manual ``initializing`` lock is never reaped."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/impl-8663-done", path=repo / ".worktrees" / "dispatch" / "claude" / "done")
+    git(repo, "worktree", "lock", "--reason", "initializing", str(worktree))
+    work(worktree)
+    before = {entry.name: entry.read_bytes() for entry in worktree.iterdir() if entry.is_file()}
+    _write_task_record(repo, "done", **_reserved_record(worktree))
+
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert result.needs_attention is not None
+    status = result.needs_attention["evidence"]["status"]
+    assert status["changed"] + status["untracked"] == 1
+    assert {entry.name: entry.read_bytes() for entry in worktree.iterdir() if entry.is_file()} == before
+    _assert_untouched(repo, worktree)
+
+
+def test_initializing_lock_without_a_reservation_is_not_reported_or_removed(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """A failed attempt to reuse a worktree someone else made never proves ownership."""
+    """A failed attempt to reuse a worktree someone else made is not this class."""
     repo = init_repo(tmp_path)
     worktree = add_half_built_dispatch(repo, "impl-8663-reuse")
     (worktree / "uncommitted-human-work.txt").write_text("keep me\n", encoding="utf-8")
-    # Exactly what _record_worktree_prep_failure writes when attaching to the
-    # existing path fails: terminal, pid null, the path, and no reservation.
     _write_task_record(
         repo,
         "impl-8663-reuse",
@@ -3898,178 +4055,10 @@ def test_failed_reuse_of_an_existing_locked_worktree_is_kept(
         worktree_reused=False,
         returncode_reason="worktree preparation failed",
     )
-    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
-    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
 
-    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
 
     assert result.action != "removed"
-    assert not result.reason.startswith("half-built dispatch worktree")
+    assert result.needs_attention is None
     assert (worktree / "uncommitted-human-work.txt").read_text(encoding="utf-8") == "keep me\n"
-    assert worktree.resolve() in {info.path.resolve() for info in rw.list_git_worktrees(repo)}
-
-
-def test_half_built_dispatch_worktree_kept_while_its_task_runs(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    repo = init_repo(tmp_path)
-    worktree = add_half_built_dispatch(repo, "impl-8663-live")
-    _write_task_record(repo, "impl-8663-live", **_reserved_record(worktree, status="running", pid=os.getpid()))
-    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
-
-    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
-
-    assert result.action == "skipped"
-    assert result.reason == "non-terminal dispatch task-id=impl-8663-live status=running"
-    assert worktree.exists()
-
-
-def _without(record: dict[str, Any], key: str) -> dict[str, Any]:
-    return {name: value for name, value in record.items() if name != key}
-
-
-def _with_prep(record: dict[str, Any], **changes: Any) -> dict[str, Any]:
-    return {**record, "worktree_prep": {**record["worktree_prep"], **changes}}
-
-
-@pytest.mark.parametrize(
-    ("mutate", "live_cwd_inside"),
-    [
-        pytest.param(lambda record: {**record, "pid": 424242}, False, id="worker-was-spawned"),
-        pytest.param(lambda record: _without(record, "pid"), False, id="pid-not-recorded"),
-        pytest.param(lambda record: record, True, id="live-process-cwd-inside"),
-        pytest.param(lambda record: {**record, "status": "spawning"}, False, id="still-spawning"),
-        pytest.param(lambda record: _without(record, "worktree_prep"), False, id="no-reservation"),
-        pytest.param(lambda record: _with_prep(record, reserved_by_mkdir=False), False, id="not-reserved-by-mkdir"),
-        pytest.param(lambda record: {**record, "run_nonce": "another-run"}, False, id="run-nonce-mismatch"),
-        pytest.param(lambda record: _without(record, "run_nonce"), False, id="run-nonce-missing"),
-        pytest.param(lambda record: _with_prep(record, path="/elsewhere"), False, id="reservation-for-another-path"),
-        pytest.param(lambda record: _with_prep(record, dir_ino=None), False, id="inode-not-recorded"),
-        pytest.param(
-            lambda record: _with_prep(record, dir_ino=record["worktree_prep"]["dir_ino"] + 1),
-            False,
-            id="another-inode",
-        ),
-        pytest.param(lambda record: _with_prep(record, git_admin_dir=""), False, id="admin-dir-not-recorded"),
-        pytest.param(
-            lambda record: _with_prep(record, git_admin_dir=record["worktree_prep"]["git_admin_dir"] + "1"),
-            False,
-            id="another-admin-dir",
-        ),
-        pytest.param(lambda record: _with_prep(record, git_pid=None), False, id="git-pid-not-recorded"),
-        pytest.param(lambda record: _with_prep(record, git_start=None), False, id="git-start-unreadable"),
-        pytest.param(lambda record: _with_prep(record, base_sha="0" * 40), False, id="head-is-not-the-base"),
-    ],
-)
-def test_half_built_class_requires_full_ownership_proof(
-    tmp_path: Path,
-    mutate: Any,
-    live_cwd_inside: bool,
-) -> None:
-    repo = init_repo(tmp_path)
-    worktree = add_half_built_dispatch(repo, "impl-8663-guard")
-    info = _info(repo, worktree)
-    assert info.locked_reason == "initializing"
-    record = _reserved_record(worktree)
-    _write_task_record(repo, "impl-8663-guard", **record)
-    assert rw._half_built_dispatch_reason(repo_root=repo, info=info, live_cwds=set()) is not None
-
-    _write_task_record(repo, "impl-8663-guard", **mutate(record))
-
-    live_cwds = {worktree.resolve()} if live_cwd_inside else set()
-    assert rw._half_built_dispatch_reason(repo_root=repo, info=info, live_cwds=live_cwds) is None
-    assert rw._half_built_dispatch_reason(repo_root=repo, info=info, live_cwds=None) is None
-
-
-def test_half_built_class_requires_the_initializing_lock(tmp_path: Path) -> None:
-    repo = init_repo(tmp_path)
-    worktree = add_half_built_dispatch(repo, "impl-8663-lock")
-    _write_task_record(repo, "impl-8663-lock", **_reserved_record(worktree))
-    git(repo, "worktree", "unlock", str(worktree))
-    git(repo, "worktree", "lock", "--reason", "kept by a human", str(worktree))
-
-    assert rw._half_built_dispatch_reason(repo_root=repo, info=_info(repo, worktree), live_cwds=set()) is None
-
-
-def test_path_removed_and_reused_by_another_add_is_kept(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Review blocker: a stale reservation never authorizes a later worktree at the same path."""
-    repo = init_repo(tmp_path)
-    worktree = add_half_built_dispatch(repo, "impl-8663-reused")
-    stale = _reserved_record(worktree)
-    git(repo, "worktree", "remove", "--force", "--force", str(worktree))
-    # Another add lands at the same path (a new directory, so a new inode) and
-    # is itself caught mid-checkout.
-    git(repo, "worktree", "add", "-b", "human/reused", str(worktree), "main")
-    leave_half_built(worktree, drop=("b.txt",))
-    (worktree / "README.md").write_text("human edit\n", encoding="utf-8")
-    _write_task_record(repo, "impl-8663-reused", **stale)
-    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
-    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
-
-    assert worktree_prep.removal_refusal(stale["worktree_prep"], worktree) == (
-        "path no longer holds the directory this run reserved (device/inode differ)"
-    )
-    assert rw._half_built_dispatch_reason(repo_root=repo, info=_info(repo, worktree), live_cwds=set()) is None
-    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
-    assert result.action != "removed"
-    assert (worktree / "README.md").read_text(encoding="utf-8") == "human edit\n"
-
-
-@pytest.mark.parametrize(
-    "work",
-    [
-        pytest.param(lambda wt: (wt / "README.md").write_text("uncommitted edit\n", encoding="utf-8"), id="modified"),
-        pytest.param(lambda wt: (wt / "notes.txt").write_text("new work\n", encoding="utf-8"), id="new-file"),
-        pytest.param(lambda wt: (wt / "debug.log").write_text("ignored output\n", encoding="utf-8"), id="ignored"),
-    ],
-)
-def test_completed_worktree_locked_initializing_with_work_is_kept(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, work: Any
-) -> None:
-    """Review blocker: a finished checkout under a manual ``initializing`` lock is never reaped."""
-    repo = init_repo(tmp_path)
-    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n*.log\n", encoding="utf-8")
-    git(repo, "commit", "-am", "ignore logs")
-    worktree = add_worktree(repo, "claude/impl-8663-done", path=repo / ".worktrees" / "dispatch" / "claude" / "done")
-    git(repo, "worktree", "lock", "--reason", "initializing", str(worktree))
-    work(worktree)
-    _write_task_record(repo, "done", **_reserved_record(worktree))
-    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
-    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
-
-    assert rw._half_built_dispatch_reason(repo_root=repo, info=_info(repo, worktree), live_cwds=set()) is None
-    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
-    assert result.action != "removed"
-    assert worktree.exists()
-
-
-def test_half_built_kept_while_git_still_runs_then_reaped_once_it_exits(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """Review blocker: an undo skipped as ``git_not_confirmed_exited`` waits for git itself."""
-    repo = init_repo(tmp_path)
-    worktree = add_half_built_dispatch(repo, "impl-8663-stuck")
-    stuck_git = subprocess.Popen(["sleep", "30"], start_new_session=True)
-    try:
-        start = process_start_time(stuck_git.pid)
-        assert start is not None
-        record = _reserved_record(
-            worktree,
-            prep=half_built_prep(worktree, run_nonce="nonce-8663", git=(stuck_git.pid, start)),
-            worktree_prep_cleanup={"action": "skipped", "undo_skipped": "git_not_confirmed_exited"},
-        )
-        _write_task_record(repo, "impl-8663-stuck", **record)
-        monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
-        monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
-
-        kept = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
-        assert kept.action != "removed"
-        assert worktree.exists()
-    finally:
-        stuck_git.kill()
-        stuck_git.wait()
-
-    removed = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
-    assert removed.action == "removed"
-    assert not worktree.exists()
+    _assert_untouched(repo, worktree)

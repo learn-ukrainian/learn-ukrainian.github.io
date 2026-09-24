@@ -405,11 +405,10 @@ def _reap_main_worktree(
         and state.get("pid", False) is None
         and isinstance(state.get("worktree_prep"), dict)
     ):
-        # #8663: this task reserved the path, its ``git worktree add`` never
-        # finished, and no worker was spawned. The partial checkout is dirty
-        # by construction, so the canonical P0 reaper's half-built class,
-        # which re-proves the reservation, not the clean-tree checks below,
-        # decides it.
+        # #8663: this task's ``git worktree add`` was stopped and left the
+        # worktree under git's ``initializing`` lock. It is never removed
+        # automatically; the canonical P0 reaper's report-only class returns
+        # the ``needs_attention`` evidence and journals it.
         row = _reap_via_canonical(
             repo_root=repo_root,
             bound_path=bound_path,
@@ -538,6 +537,7 @@ def _reap_via_canonical(
         "pr": row.pr,
         "recovery_ref": row.recovery_ref,
         "branch": row.branch,
+        "needs_attention": row.needs_attention,
     }
 
 
@@ -788,6 +788,7 @@ def post_task_reap(
             },
             "acp_runtimes": [],
             "errors": [],
+            "needs_attention": [],
         }
 
     main_result = _reap_main_worktree(
@@ -813,6 +814,13 @@ def post_task_reap(
         if item.get("error"):
             errors.append(f"acp runtime {item['path']}: {item['error']}")
 
+    # Report-only findings (#8663): nothing acted on them; a human must.
+    needs_attention = [
+        {"path": item.get("path"), **item["needs_attention"]}
+        for item in (main_result, *acp_results)
+        if item.get("needs_attention")
+    ]
+
     return {
         "task_id": task_id,
         "task_status": state.get("status"),
@@ -820,6 +828,7 @@ def post_task_reap(
         "main_worktree": main_result,
         "acp_runtimes": acp_results,
         "errors": errors,
+        "needs_attention": needs_attention,
     }
 
 

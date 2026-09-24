@@ -553,7 +553,7 @@ def test_reconcile_sweep_crashes_prep_record_whose_dispatcher_died(
     assert healed["returncode_reason"] == "dispatch_died_during_worktree_prep"
     assert healed["pid"] is None
     assert healed["finished_at"]
-    # The reservation stays: it is the reaper's proof for the half-built tree.
+    # The reservation stays: it is the evidence the reaper reports for any leftover.
     assert healed["worktree_prep"]["reserved_by_mkdir"] is True
 
 
