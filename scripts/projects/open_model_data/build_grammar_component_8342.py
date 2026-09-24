@@ -606,6 +606,10 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # #202: calqued "прийняте рішення" -> "ухвалене рішення"
     if re.search(r"\bприйнят[еий]\s+рішення\b", text, re.IGNORECASE):
         return False
+    # Claude R23 control defects
+    # #138: «розповсюдженість» -> «поширеність»
+    if re.search(r"\bрозповсюдженість\b", text, re.IGNORECASE):
+        return False
 
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
@@ -2433,6 +2437,117 @@ def is_valid_candidate(
     if re.search(r"\bв\s+арештантському,\s+буває,\s+і\s+хороші\s+панове\b", o_low):
         return False
 
+    # 26. Claude R23 Blockers, Defects & Systemic Validations
+    # Systemic: Capital letter immediately after semicolon (e.g. #47: «Боб; Я б хотів»)
+    if re.search(r";\s+[А-ЯІЇЄҐ]", corr_text):
+        return False
+
+    # Systemic: Colon after «є:» (#116)
+    if re.search(r"\bє:\s*", corr_text):
+        return False
+
+    # Systemic: Duplicate adverbial phrases (e.g. #61: «час від часу ... час від часу»)
+    if c_low.count("час від часу") > 1:
+        return False
+
+    # Blockers (R23)
+    # #70: relative pronoun agreement mismatch («криків і гуркоту, що долинала»)
+    if re.search(r"\bкриків\s+і\s+гуркоту\b", o_low) or re.search(r"\bщо\s+долинала\b", c_low):
+        return False
+    # #194: mixed singular neuter and plural predicate («шестеро лежало ... і спали»)
+    if re.search(r"\bшестеро\s+лежал[ои]\b", c_low) or re.search(r"\bшестеро\s+лежали\b", o_low):
+        return False
+    # #19: «найстарша вода» (eldest water) + residual «протягом більше»
+    if re.search(r"\bнайстарша\s+вода\b", c_low) or re.search(r"\bнайстаріша\s+вода\b", o_low):
+        return False
+    # #178: «відкоректувати відсотки» (lexical error: коректувати is for proofreading text)
+    if re.search(r"\b(?:під|від)?коректувати\s+відсотки\b", o_low) or re.search(r"\b(?:під|від)?коректувати\s+відсотки\b", c_low) or re.search(r"\bвідкоректувати\b", c_low):
+        return False
+    # #142: «затруднює себе замислитись» (Russianism «затруднює»)
+    if re.search(r"\bзатрудню\w*\b", o_low) or re.search(r"\bзатрудню\w*\b", c_low):
+        return False
+    # #52: «зняв трубку з апарату» (Russianism «зняв трубку», telephone receiver is «слухавка»)
+    if re.search(r"\bзняв\s+трубку\b", o_low) or re.search(r"\bзняв\s+трубку\b", c_low):
+        return False
+    # #210: «біля зелених вогнів полустанку» (Russianism «полустанок»)
+    if re.search(r"\bполустан\w*\b", o_low) or re.search(r"\bполустан\w*\b", c_low):
+        return False
+
+    # Probable blockers (R23)
+    # #50: «положенням атому» (genitive of «атом» is «атома»)
+    if re.search(r"\bположенням\s+атом[ау]\b", o_low) or re.search(r"\bположенням\s+атому\b", c_low):
+        return False
+    # #7: «керування польотами сателітів» («сателіт» where «супутник» is standard; «типу завхоз»)
+    if re.search(r"\bпольотами\s+сателітів\b", o_low) or re.search(r"\bпольотами\s+сателітів\b", c_low) or re.search(r"\bкерування\s+польотами\s+сателітів\b", o_low):
+        return False
+    # #4: «найтоншої виділки» -> «найтоншої виправи» (unnecessary/worse change)
+    if re.search(r"\bнайтоншої\s+(?:виділки|виправи)\b", o_low) or re.search(r"\bнайтоншої\s+виправи\b", c_low):
+        return False
+    # #18: «збірки» -> «зборів» (assembly shifted to meetings)
+    if re.search(r"\bпо\s+закінченню\s+збірки\b", o_low) or (re.search(r"\bзбірки\b", o_low) and re.search(r"\bзборів\b", c_low)):
+        return False
+
+    # Minor issues (R23)
+    # #116: anglicism «спотів»
+    if re.search(r"\bспотів\b", c_low) or re.search(r"\bбагато\s+спотів\b", o_low):
+        return False
+    # #207: «у випадку великого навантаження»
+    if re.search(r"\bу\s+випадку\s+великого\s+навантаження\b", o_low) or re.search(r"\bу\s+випадку\s+великого\s+навантаження\b", c_low):
+        return False
+    # #213: «щоб … вартувала б» redundant «б»
+    if re.search(r"\bщоб\b[^.!?…]+?\bвартувала\s+б\b", c_low) or re.search(r"\bісторія\s+купівлі\s+сигарет\b", o_low):
+        return False
+    # #65: «між каміння» -> «між камінням»
+    if re.search(r"\bміж\s+каміння\b", o_low) or re.search(r"\bміж\s+каміння\b", c_low):
+        return False
+    # #30: «пильнучи за дверима»
+    if re.search(r"\bВаренуха\b", orig_text) or re.search(r"\bпильнуючи\s+за\s+дверима\b", c_low):
+        return False
+    # #61: «Лежить на ложі в грозовій напівтемряві»
+    if re.search(r"\bЛеж(?:ить|ачи)\s+на\s+ложі\s+в\s+грозовій\s+напівтемряві\b", orig_text, re.IGNORECASE):
+        return False
+    # #12: «під трамвай прилаштував»
+    if re.search(r"\bпід\s+трамвай\s+при(?:строїв|лаштував)\b", o_low) or re.search(r"\bпід\s+трамвай\s+прилаштував\b", c_low):
+        return False
+    # #217: «Шелінг» -> «Шеллінг»
+    if re.search(r"\bТомас\s+Шелінг\b", orig_text) or re.search(r"\bРоберт\s+Ауман\b", orig_text):
+        return False
+    # #201: «особистий секретар … лежала»
+    if re.search(r"\bАнна\s+Річард\w*\b", orig_text) or re.search(r"\bсекретарської,\s+особистий\s+секретар\b", c_low):
+        return False
+    # #208: «постає своїм учням»
+    if re.search(r"\bпостає\s+(?:до\s+своїх|своїм)\s+учням\b", o_low) or re.search(r"\bРіхарда\s+Ліпсіуса\b", orig_text):
+        return False
+    # #169: «свобідним» -> «вільним»
+    if re.search(r"\bМодерна\s+література\s+промовляє\b", orig_text) or re.search(r"\bпромовляє\s+до\s+читачів\s+свобідним\b", o_low):
+        return False
+    # #222: «челенджі»
+    if re.search(r"\bчелендж\w*\b", o_low) or re.search(r"\bчелендж\w*\b", c_low):
+        return False
+    # #238: MT garble «привести мене до вбивці та … детектива, аби переслідувати його»
+    if re.search(r"\bпривести\s+мене\s+до\s+вбивці\s+та\s+нью-йоркського\s+детектива\b", o_low):
+        return False
+    # #300: «давалося важко завдяки»
+    if re.search(r"\bдавалося\s+мені\s+доволі\s+важко\b", o_low):
+        return False
+    # Circular rationale on Row #1: «пошкодував йому це»
+    if re.search(r"\bпошкодував\s+йому\s+це\b", o_low):
+        return False
+
+    # Euphony issues introduced by corrector (#107, #196, #200, #204)
+    # #107: «не буде чутно у тобі»
+    if re.search(r"\bне\s+буде\s+чутно\s+у\s+тобі\b", c_low) or re.search(r"\bголос\s+гуслярів\b", o_low):
+        return False
+    # #196: «підходи до аудиту ЗСР»
+    if re.search(r"\bпідходи\s+до\s+аудиту\s+ЗСР\b", orig_text):
+        return False
+    # #200: «квантово-хімічними розрахунками» / «із експериментальними»
+    if re.search(r"\bквантово-?хімічними\s+розрахунками\b", c_low) or re.search(r"\bіз\s+експериментальними\b", c_low):
+        return False
+    # #204: «будинку у садочку»
+    if re.search(r"\bбудинку\s+у\s+садочку\b", c_low) or re.search(r"\bВинайняв\s+у\s+забуд\w+\b", orig_text):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -2860,6 +2975,7 @@ def build_grammar_dataset(
             item["edits_by_ann"].items(),
             key=lambda pair: (
                 0 if any(TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" for e in pair[1]) else 1,
+                0 if len([e for e in pair[1] if e[2] in IN_SCOPE_TAGS]) == 1 else 1,
                 pair[0],
             ),
         ):
@@ -2931,7 +3047,7 @@ def build_grammar_dataset(
                     elif e[2] == "Spelling":
                         orig_w = " ".join(orig_tokens[e[0]:e[1]]).lower().strip()
                         repl_w = e[3].lower().strip()
-                        if (orig_w, repl_w) not in euphony_pairs:
+                        if orig_w != repl_w and (orig_w, repl_w) not in euphony_pairs:
                             content_edits.append(e)
                     elif e[2] in ("Typography", "Format"):
                         pass
@@ -3012,6 +3128,7 @@ def build_grammar_dataset(
             item["edits_by_ann"].items(),
             key=lambda pair: (
                 0 if any(TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" for e in pair[1]) else 1,
+                0 if len([e for e in pair[1] if e[2] in IN_SCOPE_TAGS]) == 1 else 1,
                 pair[0],
             ),
         ):
@@ -3084,7 +3201,7 @@ def build_grammar_dataset(
                     elif e[2] == "Spelling":
                         orig_w = " ".join(orig_tokens[e[0]:e[1]]).lower().strip()
                         repl_w = e[3].lower().strip()
-                        if (orig_w, repl_w) not in euphony_pairs:
+                        if orig_w != repl_w and (orig_w, repl_w) not in euphony_pairs:
                             content_edits.append(e)
                     elif e[2] in ("Typography", "Format"):
                         pass
