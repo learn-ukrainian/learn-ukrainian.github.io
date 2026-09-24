@@ -4,7 +4,14 @@ name: CI
 # Required GitHub context is still named "CI Gate".
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.head.sha || github.ref }}
+  # pull_request runs key by PR number, not head SHA (#8505): a new push
+  # cancels the stale in-flight run for the previous SHA instead of queuing
+  # behind it. This cannot weaken the Gate invariant (S1): the ci-gate job is
+  # `if: always() && !cancelled()`, so a cancelled run's "CI Gate" check
+  # concludes `cancelled`, never success — branch protection stays red until
+  # the surviving run on the newest SHA completes the classified tier.
+  # merge_group and schedule keep the ref-keyed group and never cancel.
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
@@ -18,8 +25,13 @@ env:
   PYTEST_SHARD_COUNT: '4'
 
 on:
+  # No `edited`/`labeled` (#8505): a PR-body edit or a label change must not
+  # restart the full CI on an unchanged commit. The negated-closing-reference
+  # body guard moved to pr-body-guard.yml (runs on `edited`); the `full-ci`
+  # label is served by full-ci-label.yml (reruns this workflow; the Changes
+  # job reads current labels via the API and fails closed to the full tier).
   pull_request:
-    types: [opened, synchronize, reopened, edited, labeled]
+    types: [opened, synchronize, reopened]
   merge_group:
   workflow_dispatch:
   # Full PR-tier floor; slow tests remain in pytest-slow-nightly.yml.
@@ -31,6 +43,12 @@ jobs:
     name: Changes
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    permissions:
+      contents: read
+      # classify_changes.py reads current PR labels via the API because a
+      # workflow rerun reuses the original (stale) event payload (#8505); a
+      # lookup error fails closed to the full tier.
+      pull-requests: read
     outputs:
       docs_only: ${{ steps.classify.outputs.docs_only }}
       frontend: ${{ steps.classify.outputs.frontend }}
@@ -111,11 +129,9 @@ jobs:
             python3 scripts/audit/lint_opsec_leaks.py --public-identifiers
           fi
       - run: python3 scripts/audit/check_no_internal_ids.py --changed-vs-base origin/main
-      - name: Reject negated closing references
-        if: github.event_name == 'pull_request'
-        env:
-          PR_BODY: ${{ github.event.pull_request.body || '' }}
-        run: printf '%s' "$PR_BODY" | python3 scripts/audit/lint_pr_closing_references.py --stdin
+      # The negated-closing-reference PR-body guard moved to
+      # pr-body-guard.yml (#8505): it must rerun on `edited`, which this
+      # workflow no longer subscribes to.
       - uses: trufflesecurity/trufflehog@363923b901c911a9164f50b6c423f47c15372b1c # v3.97.4
         with:
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}

@@ -376,6 +376,18 @@ def classify(
     return _full(shard_count, frontend="true" if frontend else "false")
 
 
+def current_pr_labels(repo: str, number: int) -> list[str]:
+    """Current PR labels from the API; a rerun keeps the original payload."""
+    if number < 1:
+        raise ValueError("invalid pull request number")
+    raw = subprocess.check_output(
+        ["gh", "api", f"repos/{repo}/pulls/{number}", "--jq", ".labels[].name"],
+        text=True,
+        timeout=60,
+    )
+    return [line for line in raw.splitlines() if line]
+
+
 def compare_paths(base: str, head: str, repo: str) -> list[str]:
     """Keep rename sources and structured filenames; never split paths on newlines."""
     if not base or set(base) <= {"0"} or not head:
@@ -414,6 +426,15 @@ def main() -> None:
         if event == "pull_request":
             payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
             labels = [label["name"] for label in payload["pull_request"]["labels"]]
+            if "full-ci" not in labels:
+                # ci.yml no longer subscribes to `labeled` (#8505): applying
+                # the full-ci label reruns the latest ci.yml run, and a rerun
+                # reuses the ORIGINAL event payload, so payload labels can be
+                # stale. Read the current labels from the API; any failure
+                # raises into the except below and fails closed to full.
+                labels = current_pr_labels(
+                    os.environ["REPO"], payload["pull_request"]["number"],
+                )
         if event in _PATH_CLASSIFIED_EVENTS and "full-ci" not in labels:
             # pull_request and merge_group both classify by changed paths;
             # the workflow maps pull_request.base/head or merge_group
