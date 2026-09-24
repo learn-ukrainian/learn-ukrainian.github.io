@@ -7,15 +7,18 @@ opt-in via ``skipif`` when the full atlas is present locally.
 
 from __future__ import annotations
 
+import gc
 import gzip
 import hashlib
 import json
 import os
 import random
 import shutil
+import signal
 import sqlite3
 import subprocess
 import sys
+import threading
 import tracemalloc
 import unicodedata
 from collections import defaultdict
@@ -27,6 +30,8 @@ from scripts.atlas import export_runtime_shards as exporter
 from scripts.atlas.export_runtime_shards import (
     EntryReplay,
     ExportError,
+    SearchFamilyIndex,
+    StagedVersion,
     compress_stream_bounded,
     compute_data_version,
     export_runtime_shards,
@@ -562,7 +567,14 @@ _GLOSS_WORDS = [
 ]
 
 
-def _make_source_db(path: Path, *, records: int = 90, filler_chars: int = 600, seed: int = 8672) -> Path:
+def _make_source_db(
+    path: Path,
+    *,
+    records: int = 90,
+    filler_chars: int = 600,
+    seed: int = 8672,
+    gloss_chars: int | None = None,
+) -> Path:
     """Synthetic source DB covering sort/dedup/terminal/form-route/private edge cases."""
     rng = random.Random(seed)
     conn = sqlite3.connect(path)
@@ -581,6 +593,8 @@ def _make_source_db(path: Path, *, records: int = 90, filler_chars: int = 600, s
     for index, (slug, head, entry_type) in enumerate(articles):
         private = index % 17 == 16
         gloss = None if index % 7 == 6 else " ".join(rng.sample(_GLOSS_WORDS, rng.randint(1, 4)))
+        if gloss_chars is not None:  # long glosses over one fixed vocabulary (body size, not key count, varies)
+            gloss = (" ".join(_GLOSS_WORDS) + " ") * (gloss_chars // 60 + 1)
         cefr = ("A1", "B2", None)[index % 3]
         lemma = head if entry_type == "lemma" else " ".join(rng.sample(lemma_heads, 2))
         conn.execute(
@@ -1120,7 +1134,15 @@ def _fail_after_writes(monkeypatch, count: int) -> None:
     monkeypatch.setattr(exporter.StagedVersion, "write", write)
 
 
-@pytest.mark.parametrize("stage", ["first-leaf", "mid-export", "manifest", "verify", "swap", "pointer"])
+# Stages that fail before/around installing: an identical re-export reuses the installed
+# tree (no rename), a changed-limits re-export must install an alternate tree.
+_REEXPORT_STAGES = [
+    "first-leaf", "mid-export", "manifest", "verify", "pointer",
+    "swap-transport", "pointer-transport",
+]
+
+
+@pytest.mark.parametrize("stage", _REEXPORT_STAGES)
 def test_failed_reexport_keeps_current_pointer_and_referenced_tree_byte_identical(
     edge_db: Path, tmp_path: Path, monkeypatch, stage: str
 ) -> None:
@@ -1131,6 +1153,8 @@ def test_failed_reexport_keeps_current_pointer_and_referenced_tree_byte_identica
     current = json.loads(before["atlas/current.json"])
     assert current["dataVersion"] == report["dataVersion"]  # re-export targets the referenced version
     total_objects = sum(1 for name in before if name.startswith(f"atlas/versions/{report['dataVersion']}/"))
+    transport = stage.endswith("-transport")
+    reexport = {**kwargs, "compression_level": 6} if transport else kwargs
 
     real_rename, real_replace = os.rename, os.replace
     if stage == "first-leaf":
@@ -1141,9 +1165,9 @@ def test_failed_reexport_keeps_current_pointer_and_referenced_tree_byte_identica
         _fail_after_writes(monkeypatch, total_objects - 1)
     elif stage == "verify":
         monkeypatch.setattr(exporter, "verify_tree", lambda *a, **k: (_ for _ in ()).throw(_Injected("verify")))
-    elif stage == "swap":
+    elif stage == "swap-transport":
         def rename(src, dst, *a, **k):
-            if Path(src).name.startswith(".export-") and Path(dst).name == report["dataVersion"]:
+            if Path(src).name.startswith(".export-"):
                 raise _Injected("swap")
             return real_rename(src, dst, *a, **k)
 
@@ -1157,15 +1181,29 @@ def test_failed_reexport_keeps_current_pointer_and_referenced_tree_byte_identica
         monkeypatch.setattr(exporter.os, "replace", replace)
 
     with pytest.raises(_Injected):
-        _export(edge_db, out, **kwargs)
+        _export(edge_db, out, **reexport)
     monkeypatch.undo()
-    assert _snapshot(out) == before
+    after = _snapshot(out)
+    # The pointer and every previously installed object are byte-identical; the only
+    # thing a failure may leave is a complete, unreferenced alternate tree.
+    assert {name: blob for name, blob in after.items() if name in before} == before
+    assert all(
+        name.startswith(f"atlas/versions/{report['dataVersion']}-transport-") for name in after.keys() - before.keys()
+    )
+    if stage != "pointer-transport":
+        assert after.keys() == before.keys()
     assert verify_tree(out, "atlas")["dataVersion"] == report["dataVersion"]
-    assert _snapshot(out) == before
+    assert _snapshot(out) == after
 
-    # And a subsequent healthy re-export still succeeds and is identical.
-    _export(edge_db, out, **kwargs)
-    assert _snapshot(out) == before
+    # And a subsequent healthy re-export still succeeds and the referenced tree is intact.
+    _export(edge_db, out, **reexport)
+    healed = _snapshot(out)
+    assert {name: blob for name, blob in healed.items() if name in before and name != "atlas/current.json"} == {
+        name: blob for name, blob in before.items() if name != "atlas/current.json"
+    }
+    assert verify_tree(out, "atlas")["dataVersion"] == report["dataVersion"]
+    if not transport:
+        assert healed == before
 
 
 def test_stale_staging_from_killed_export_is_reclaimed(edge_db: Path, tmp_path: Path) -> None:
@@ -1195,3 +1233,388 @@ def test_export_memory_is_bounded_by_leaf_not_corpus(tmp_path: Path) -> None:
     finally:
         tracemalloc.stop()
     assert peak < payload_bytes * 0.25, f"peak {peak} vs payload {payload_bytes}"
+
+
+# ---------------------------------------------------------------------------
+# Published trees are immutable; the pointer is switched last (review of #8672).
+# ---------------------------------------------------------------------------
+
+
+def _pointer(out: Path) -> dict:
+    return json.loads((out / "atlas" / "current.json").read_text(encoding="utf-8"))
+
+
+def _pointed_manifest(out: Path) -> Path:
+    return out / "atlas" / _pointer(out)["manifestUrl"]
+
+
+def _version_dirs(out: Path) -> list[str]:
+    return sorted(p.name for p in (out / "atlas" / "versions").iterdir() if not p.name.startswith("."))
+
+
+def test_identical_reexport_reuses_installed_tree_untouched(edge_db: Path, tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    report = _export(edge_db, out)
+    tree = out / "atlas" / "versions" / report["dataVersion"]
+    before, stat = _snapshot(out), tree.stat()
+    again = _export(edge_db, out)
+    assert _snapshot(out) == before
+    assert tree.stat().st_ino == stat.st_ino and tree.stat().st_mtime_ns == stat.st_mtime_ns
+    assert _version_dirs(out) == [report["dataVersion"]]
+    assert report["manifestUrl"] == again["manifestUrl"] == f"versions/{report['dataVersion']}/manifest.json"
+
+
+_CHANGED_LIMITS = [
+    {"compression_level": 6},
+    {"entry_max_gzip_bytes": 6_000},
+    {"search_max_gzip_bytes": 700},
+    {"entry_target_min_gzip_bytes": 1_000},
+]
+
+
+@pytest.mark.parametrize("changed", _CHANGED_LIMITS, ids=lambda item: next(iter(item)))
+def test_changed_limits_keep_every_old_url_and_publish_alternate_tree(
+    edge_db: Path, tmp_path: Path, changed: dict
+) -> None:
+    out = tmp_path / "out"
+    base = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
+    first = _export(edge_db, out, **base)
+    old_manifest = _pointed_manifest(out)
+    before = _snapshot(out)
+
+    second = _export(edge_db, out, **{**base, **changed})
+
+    assert second["dataVersion"] == first["dataVersion"]  # same data, different transport bytes
+    after = _snapshot(out)
+    assert {name: blob for name, blob in after.items() if name in before and name != "atlas/current.json"} == {
+        name: blob for name, blob in before.items() if name != "atlas/current.json"
+    }, "no previously published URL may change or disappear"
+    new_root = _pointed_manifest(out).parent
+    assert new_root.name == f"{first['dataVersion']}-transport-{exporter._tree_digest(new_root)}"
+    assert second["manifestUrl"] == _pointer(out)["manifestUrl"] == f"versions/{new_root.name}/manifest.json"
+    assert verify_tree(out, "atlas")["dataVersion"] == first["dataVersion"]
+    # An old-manifest reader stays valid after the pointer switched.
+    assert old_manifest.is_file()
+    assert verify_tree(out, "atlas", manifest_path=old_manifest)["dataVersion"] == first["dataVersion"]
+
+    # Repeating the changed export reuses the alternate tree; the original limits point back home.
+    settled = _snapshot(out)
+    _export(edge_db, out, **{**base, **changed})
+    assert _snapshot(out) == settled
+    _export(edge_db, out, **base)
+    assert _pointer(out)["manifestUrl"] == first["manifestUrl"]
+    assert len(_version_dirs(out)) == 2
+
+
+_KILL_SCRIPT = """
+import json, os, signal, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from scripts.atlas import export_runtime_shards as ex
+point, db, out, kwargs = sys.argv[2], Path(sys.argv[3]), Path(sys.argv[4]), json.loads(sys.argv[5])
+real_rename, real_replace = os.rename, os.replace
+def die():
+    os.kill(os.getpid(), signal.SIGKILL)
+def rename(src, dst, *a, **k):
+    if not Path(src).name.startswith(".export-"):
+        return real_rename(src, dst, *a, **k)
+    if point == "before-install":
+        die()
+    real_rename(src, dst, *a, **k)
+    if point == "after-install":
+        die()
+def replace(src, dst, *a, **k):
+    if Path(dst).name != "current.json":
+        return real_replace(src, dst, *a, **k)
+    if point == "before-pointer":
+        die()
+    real_replace(src, dst, *a, **k)
+    if point == "after-pointer":
+        die()
+os.rename, os.replace = rename, replace
+ex.export_runtime_shards(db_path=db, out_dir=out, include_decks=False, deck_dir=None, verify=True, **kwargs)
+"""
+
+_KILL_POINTS = ["before-install", "after-install", "before-pointer", "after-pointer"]
+
+
+def _run_killed(edge_db: Path, out: Path, point: str, **kwargs) -> None:
+    result = subprocess.run(
+        [sys.executable, "-c", _KILL_SCRIPT, str(ROOT), point, str(edge_db), str(out), json.dumps(kwargs)],
+        cwd=ROOT, capture_output=True, text=True, check=False, timeout=120,
+    )
+    assert result.returncode == -signal.SIGKILL, (point, result.returncode, result.stderr)
+
+
+@pytest.mark.parametrize(
+    ("point", "changed"),
+    # An identical re-export installs nothing (it reuses the tree), so only its pointer switch can be killed.
+    [(point, True) for point in _KILL_POINTS] + [("before-pointer", False), ("after-pointer", False)],
+)
+def test_sigkill_during_publication_always_leaves_pointer_to_complete_tree(
+    edge_db: Path, tmp_path: Path, point: str, changed: bool
+) -> None:
+    out = tmp_path / "out"
+    base = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
+    first = _export(edge_db, out, **base)
+    old_pointer = (out / "atlas" / "current.json").read_bytes()
+    old_manifest = _pointed_manifest(out)
+    old_tree = _snapshot(old_manifest.parent)
+
+    _run_killed(edge_db, out, point, **({**base, "compression_level": 6} if changed else base))
+
+    assert _snapshot(old_manifest.parent) == old_tree, "the published tree is never touched"
+    result = verify_tree(out, "atlas")  # pointer resolves to a complete, verifying tree
+    assert result["dataVersion"] == first["dataVersion"]
+    if point != "after-pointer" or not changed:
+        assert (out / "atlas" / "current.json").read_bytes() == old_pointer
+    else:
+        assert _pointed_manifest(out).parent.name.startswith(f"{first['dataVersion']}-transport-")
+    assert verify_tree(out, "atlas", manifest_path=old_manifest)["dataVersion"] == first["dataVersion"]
+
+    # The next healthy run cleans the dead staging tree and converges.
+    _export(edge_db, out, **({**base, "compression_level": 6} if changed else base))
+    assert not [name for name in os.listdir(out / "atlas" / "versions") if name.startswith(".export-")]
+    assert not list((out / "atlas").glob(".current-*"))
+    assert verify_tree(out, "atlas")["dataVersion"] == first["dataVersion"]
+
+
+@pytest.mark.parametrize("point", _KILL_POINTS)
+def test_sigkill_during_first_export_never_publishes_a_dangling_pointer(
+    edge_db: Path, tmp_path: Path, point: str
+) -> None:
+    out = tmp_path / "out"
+    _run_killed(edge_db, out, point)
+    pointer = out / "atlas" / "current.json"
+    if point == "after-pointer":
+        assert verify_tree(out, "atlas")["publicRoutes"] > 0
+    else:
+        assert not pointer.exists()
+    report = _export(edge_db, out)
+    assert verify_tree(out, "atlas")["dataVersion"] == report["dataVersion"]
+
+
+def _synthetic_stage(base: Path, data_version: str, files: dict[str, bytes]) -> StagedVersion:
+    stage = StagedVersion(base, data_version)
+    for relative, data in files.items():
+        stage.write(relative, data)
+    return stage
+
+
+def _publish_synthetic(base: Path, data_version: str, files: dict[str, bytes]) -> str:
+    stage = _synthetic_stage(base, data_version, files)
+    try:
+        return stage.install()
+    finally:
+        stage.discard()
+
+
+_TREE_A = {"manifest.json": b"{}\n", "entries/p0.json.gz": b"a" * 100}
+_TREE_B = {"manifest.json": b"{}\n", "entries/p0.json.gz": b"b" * 100}
+
+
+def test_install_reuses_identical_and_never_overwrites_different(tmp_path: Path) -> None:
+    base = tmp_path / "atlas"
+    assert _publish_synthetic(base, "atlas-v1-x", _TREE_A) == "atlas-v1-x"
+    canonical = base / "versions" / "atlas-v1-x"
+    inode = canonical.stat().st_ino
+    assert _publish_synthetic(base, "atlas-v1-x", _TREE_A) == "atlas-v1-x"
+    assert canonical.stat().st_ino == inode
+
+    digest = exporter._tree_digest(_synthetic_stage(base, "atlas-v1-x", _TREE_B).root)
+    name = _publish_synthetic(base, "atlas-v1-x", _TREE_B)
+    assert name == f"atlas-v1-x-transport-{digest}"
+    assert _snapshot(canonical) == _TREE_A
+    assert _publish_synthetic(base, "atlas-v1-x", _TREE_B) == name  # identical suffix is reused
+    assert _version_dirs(tmp_path) == sorted(["atlas-v1-x", name])
+
+
+def test_transport_collision_with_different_bytes_fails_closed(tmp_path: Path) -> None:
+    base = tmp_path / "atlas"
+    _publish_synthetic(base, "atlas-v1-x", _TREE_A)
+    probe = _synthetic_stage(base, "atlas-v1-x", _TREE_B)
+    squatter = base / "versions" / f"atlas-v1-x-transport-{exporter._tree_digest(probe.root)}"
+    probe.discard()
+    squatter.mkdir()
+    (squatter / "manifest.json").write_bytes(b"squatter")
+    with pytest.raises(ExportError, match="refusing to overwrite"):
+        _publish_synthetic(base, "atlas-v1-x", _TREE_B)
+    assert _snapshot(squatter) == {"manifest.json": b"squatter"}
+    assert _snapshot(base / "versions" / "atlas-v1-x") == _TREE_A
+
+
+@pytest.mark.parametrize("winner", ["identical", "different"])
+def test_concurrent_destination_creation_never_overwrites_the_winner(
+    tmp_path: Path, monkeypatch, winner: str
+) -> None:
+    base = tmp_path / "atlas"
+    loser = _synthetic_stage(base, "atlas-v1-x", _TREE_A)
+    rival = _synthetic_stage(base, "atlas-v1-x", _TREE_A if winner == "identical" else _TREE_B)
+    real_rename = os.rename
+    state = {"raced": False}
+
+    def rename(src, dst, *a, **k):
+        if Path(src) == loser.root and not state["raced"]:
+            state["raced"] = True  # the rival lands on the canonical destination first
+            real_rename(rival.root, Path(dst))
+        return real_rename(src, dst, *a, **k)
+
+    monkeypatch.setattr(exporter.os, "rename", rename)
+    name = loser.install()
+    loser.discard()
+    monkeypatch.undo()
+    canonical = base / "versions" / "atlas-v1-x"
+    assert _snapshot(canonical) == (_TREE_A if winner == "identical" else _TREE_B)
+    if winner == "identical":
+        assert name == "atlas-v1-x"
+        assert _version_dirs(tmp_path) == ["atlas-v1-x"]
+    else:
+        assert name.startswith("atlas-v1-x-transport-")
+        assert _snapshot(base / "versions" / name) == _TREE_A
+
+
+def test_concurrent_publishers_do_not_overwrite_each_other(tmp_path: Path) -> None:
+    base = tmp_path / "atlas"
+    trees = [_TREE_A, _TREE_B] * 3
+    barrier = threading.Barrier(len(trees))
+    outcomes: list[tuple[dict[str, bytes], str]] = []
+    errors: list[BaseException] = []
+
+    def worker(files: dict[str, bytes]) -> None:
+        try:
+            stage = _synthetic_stage(base, "atlas-v1-x", files)
+            barrier.wait(timeout=30)
+            try:
+                outcomes.append((files, stage.publish(lambda url: json.dumps({"manifestUrl": url}).encode())))
+            finally:
+                stage.discard()
+        except BaseException as exc:
+            errors.append(exc)
+
+    threads = [threading.Thread(target=worker, args=(files,)) for files in trees]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=60)
+    assert not errors, errors
+    assert len(outcomes) == len(trees)
+    for files, manifest_url in outcomes:
+        assert _snapshot((base / manifest_url).parent) == files
+    installed = _version_dirs(tmp_path)
+    assert len(installed) == 2 and "atlas-v1-x" in installed
+    assert (base / json.loads((base / "current.json").read_text())["manifestUrl"]).is_file()
+
+
+def test_concurrent_full_exports_with_different_limits_all_stay_valid(edge_db: Path, tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    variants = [{"compression_level": 9}, {"compression_level": 6}] * 2
+    errors: list[BaseException] = []
+
+    def worker(kwargs: dict) -> None:
+        try:
+            _export(edge_db, out, **kwargs)
+        except BaseException as exc:
+            errors.append(exc)
+
+    threads = [threading.Thread(target=worker, args=(kwargs,)) for kwargs in variants]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=110)
+    assert not errors, errors
+    dirs = _version_dirs(out)
+    assert len(dirs) == 2
+    for name in dirs:
+        assert verify_tree(out, "atlas", manifest_path=out / "atlas" / "versions" / name / "manifest.json")
+    assert verify_tree(out, "atlas")["dataVersion"]
+
+
+def test_stale_pending_pointer_from_killed_export_is_reclaimed(edge_db: Path, tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    base = out / "atlas"
+    base.mkdir(parents=True)
+    dead = base / ".current-999999999-deadbeef.json"
+    dead.write_bytes(b"{}")
+    alive = base / f".current-{os.getpid()}-cafebabe.json"
+    alive.write_bytes(b"{}")
+    _export(edge_db, out)
+    assert not dead.exists()
+    assert alive.exists()
+
+
+# ---------------------------------------------------------------------------
+# Search rows are replayed from the read snapshot, never retained as bodies.
+# ---------------------------------------------------------------------------
+
+
+def _build_indexes(conn: sqlite3.Connection) -> tuple[SearchFamilyIndex, SearchFamilyIndex]:
+    articles = SearchFamilyIndex.build(
+        ((row["s"], row) for row in exporter._iter_article_search_rows(conn)),
+        sort_key=exporter._article_sort_key,
+        key_fn=exporter._article_index_keys,
+        replay=lambda slug: exporter._replay_article_search_row(conn, slug),
+    )
+    aliases = SearchFamilyIndex.build(
+        exporter._iter_located_alias_search_rows(conn),
+        sort_key=exporter._alias_sort_key,
+        key_fn=exporter._alias_index_keys,
+        replay=lambda rowid: exporter._replay_alias_search_row(conn, rowid),
+    )
+    return articles, aliases
+
+
+def test_replayed_search_fragments_match_reference_rows_and_order(edge_db: Path, fixture_db: Path) -> None:
+    for db in (edge_db, fixture_db):
+        conn = open_readonly_db(db)
+        try:
+            conn.execute("BEGIN")
+            articles, aliases = _build_indexes(conn)
+            ref_articles, ref_aliases = _ref_load_search_rows(conn)
+            assert list(articles.iter_fragments()) == [exporter._fragment_bytes(row) for row in ref_articles]
+            assert list(aliases.iter_fragments()) == [exporter._fragment_bytes(row) for row in ref_aliases]
+            assert not hasattr(articles, "fragments") and not hasattr(aliases, "fragments")
+        finally:
+            conn.close()
+
+
+def test_search_index_memory_follows_key_metadata_not_gloss_bodies(tmp_path: Path) -> None:
+    retained: dict[int, int] = {}
+    bodies: dict[int, int] = {}
+    for gloss_chars in (60, 20_000):
+        db = _make_source_db(tmp_path / f"g{gloss_chars}.db", records=700, filler_chars=1, gloss_chars=gloss_chars)
+        conn = open_readonly_db(db)
+        try:
+            conn.execute("BEGIN")
+            bodies[gloss_chars] = sum(len(r[0] or "") for r in conn.execute("SELECT gloss FROM articles"))
+            gc.collect()
+            tracemalloc.start()
+            try:
+                before = tracemalloc.get_traced_memory()[0]
+                articles, aliases = _build_indexes(conn)
+                gc.collect()
+                retained[gloss_chars] = tracemalloc.get_traced_memory()[0] - before
+                assert len(articles) > 600 and len(aliases) > 600
+            finally:
+                tracemalloc.stop()
+            del articles, aliases
+        finally:
+            conn.close()
+    assert bodies[20_000] > 10_000_000
+    assert retained[20_000] < retained[60] * 1.25, retained
+    assert retained[20_000] < bodies[20_000] * 0.25, (retained, bodies)
+
+
+def test_export_memory_does_not_grow_with_gloss_bodies(tmp_path: Path) -> None:
+    db = _make_source_db(tmp_path / "gloss.db", records=700, filler_chars=1, gloss_chars=20_000)
+    glosses = sum(len(r[0] or "") for r in sqlite3.connect(db).execute("SELECT gloss FROM articles"))
+    assert glosses > 10_000_000
+    tracemalloc.start()
+    try:
+        # No --verify: verify_tree inflates whole shards by design and is not the exporter's memory.
+        export_runtime_shards(
+            db_path=db, out_dir=tmp_path / "out", include_decks=False, deck_dir=None, compression_level=1
+        )
+        _, peak = tracemalloc.get_traced_memory()
+    finally:
+        tracemalloc.stop()
+    assert peak < glosses * 0.25, f"peak {peak} vs gloss bodies {glosses}"

@@ -6,8 +6,11 @@ live ``/lexicon/<slug>`` route, and never commits the generated tree.
 Memory is bounded by one shard, not the corpus: records are replayed from the
 read-only database by indexed lookups, shard candidates are gzip-streamed with an
 early abort past their size cap, accepted leaves are written straight into a
-staging tree, and ``current.json`` is published only after the whole tree (and,
-with ``--verify``, its verification) succeeds.
+staging tree, and ``current.json`` is switched (last, atomically) only after the
+whole tree (and, with ``--verify``, its verification) is installed. Search rows
+are kept as locators and replayed from the read snapshot, never retained.
+Installed version trees are immutable: a same-dataVersion tree with different
+bytes is installed beside the first as ``<dataVersion>-transport-<sha256>``.
 """
 
 from __future__ import annotations
@@ -551,6 +554,22 @@ def load_entry_records(
     return list(replay.iter_records())
 
 
+def _article_search_row(
+    slug: str, display_head: str, gloss: object, entry_type: str, cefr: object
+) -> dict[str, Any]:
+    row: dict[str, Any] = {
+        "l": display_head,
+        "s": slug,
+        "g": _clean_text(gloss),
+        "r": transliterate(display_head),
+        "t": entry_type,
+    }
+    level = _clean_text(cefr)
+    if level:
+        row["c"] = level
+    return row
+
+
 def _iter_article_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]]:
     # Row order is irrelevant: slug is the primary key, so the (normalized head,
     # slug) sort applied afterwards is total.
@@ -559,28 +578,28 @@ def _iter_article_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, An
            FROM articles
            WHERE review_state = 'approved' AND visibility = 'public'"""
     ):
-        row: dict[str, Any] = {
-            "l": display_head,
-            "s": slug,
-            "g": _clean_text(gloss),
-            "r": transliterate(display_head),
-            "t": entry_type,
-        }
-        level = _clean_text(cefr)
-        if level:
-            row["c"] = level
-        yield row
+        yield _article_search_row(slug, display_head, gloss, entry_type, cefr)
 
 
-def _iter_alias_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]]:
-    """Public aliases, first row per ``(normalized alias, target)`` in SQL order wins.
+def _replay_article_search_row(conn: sqlite3.Connection, slug: str) -> dict[str, Any]:
+    """Re-read one article search row by primary key (same snapshot as the scan)."""
+    found = conn.execute(
+        "SELECT slug, display_head, gloss, entry_type, cefr FROM articles WHERE slug = ?", (slug,)
+    ).fetchone()
+    if found is None:
+        raise ExportError(f"search article row vanished during export: {slug!r}")
+    return _article_search_row(*found)
+
+
+def _iter_located_alias_search_rows(conn: sqlite3.Connection) -> Iterator[tuple[int, dict[str, Any]]]:
+    """Public aliases as ``(rowid, row)``; first row per ``(normalized alias, target)`` wins.
 
     The ORDER BY is load-bearing: which raw alias/kind survives the dedup depends
     on it, so it is kept verbatim and only *streamed* rather than fetched.
     """
     seen: set[tuple[str, str]] = set()
-    for alias, kind, target_slug, target_head in conn.execute(
-        """SELECT alias.alias, alias.kind, alias.target_slug, article.display_head
+    for rowid, alias, kind, target_slug, target_head in conn.execute(
+        """SELECT alias.rowid, alias.alias, alias.kind, alias.target_slug, article.display_head
            FROM aliases AS alias
            JOIN articles AS article ON article.slug = alias.target_slug
            WHERE alias.visibility = 'public'
@@ -592,7 +611,27 @@ def _iter_alias_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]
         if not key[0] or key in seen:
             continue
         seen.add(key)
-        yield {"a": alias, "k": kind, "s": target_slug, "h": target_head}
+        yield rowid, {"a": alias, "k": kind, "s": target_slug, "h": target_head}
+
+
+def _iter_alias_search_rows(conn: sqlite3.Connection) -> Iterator[dict[str, Any]]:
+    for _rowid, row in _iter_located_alias_search_rows(conn):
+        yield row
+
+
+def _replay_alias_search_row(conn: sqlite3.Connection, rowid: int) -> dict[str, Any]:
+    """Re-read the winning alias row by rowid (same snapshot as the dedup scan)."""
+    found = conn.execute(
+        """SELECT alias.alias, alias.kind, alias.target_slug, article.display_head
+           FROM aliases AS alias
+           JOIN articles AS article ON article.slug = alias.target_slug
+           WHERE alias.rowid = ?""",
+        (rowid,),
+    ).fetchone()
+    if found is None:
+        raise ExportError(f"search alias row vanished during export: rowid={rowid}")
+    alias, kind, target_slug, target_head = found
+    return {"a": alias, "k": kind, "s": target_slug, "h": target_head}
 
 
 def _article_sort_key(row: Mapping[str, Any]) -> tuple[str, str]:
@@ -611,41 +650,69 @@ def load_search_rows(conn: sqlite3.Connection) -> tuple[list[dict[str, Any]], li
 
 
 class SearchFamilyIndex:
-    """Compact search-family state: pre-serialised rows plus a sorted key index.
+    """Compact search-family state: row locators plus a sorted key index.
 
-    ``fragments[rank]`` is the canonical JSON of the row at global sort ``rank``;
-    ``postings`` is ``(index key, rank)`` sorted, so every shard prefix is one
-    contiguous range and shard row sets are just sorted unique ranks. Global rank
-    order equals the historical per-shard order because both sort keys are total.
+    No serialised row body is retained. ``locators[rank]`` identifies the source
+    row at global sort ``rank`` (article slug / alias rowid) and ``replay`` re-reads
+    it from the read snapshot on demand, so memory follows the locator and index
+    key metadata, never the gloss bodies. ``postings`` is ``(index key, rank)``
+    sorted, so every shard prefix is one contiguous range and shard row sets are
+    just sorted unique ranks. Global rank order equals the historical per-shard
+    order because both sort keys are total.
     """
 
-    __slots__ = ("fragments", "postings")
+    __slots__ = ("_replay", "locators", "postings")
 
-    def __init__(self, fragments: list[bytes], postings: list[tuple[str, int]]) -> None:
-        self.fragments = fragments
+    def __init__(
+        self,
+        locators: list[Any],
+        postings: list[tuple[str, int]],
+        replay: Callable[[Any], Mapping[str, Any]],
+    ) -> None:
+        self.locators = locators
         self.postings = postings
+        self._replay = replay
 
     def __len__(self) -> int:
-        return len(self.fragments)
+        return len(self.locators)
+
+    def fragment(self, rank: int) -> bytes:
+        """Canonical JSON of the row at global sort ``rank``, replayed from the source."""
+        return _fragment_bytes(self._replay(self.locators[rank]))
+
+    def iter_fragments(self) -> Iterator[bytes]:
+        for rank in range(len(self.locators)):
+            yield self.fragment(rank)
 
     @classmethod
     def build(
         cls,
-        rows: Iterable[Mapping[str, Any]],
+        rows: Iterable[tuple[Any, Mapping[str, Any]]],
         *,
         sort_key: Callable[[Mapping[str, Any]], tuple[str, ...]],
         key_fn: Callable[[Mapping[str, Any]], list[str]],
+        replay: Callable[[Any], Mapping[str, Any]],
     ) -> SearchFamilyIndex:
+        """Index ``(locator, row)`` pairs; each row body is dropped once keyed."""
         interned: dict[str, str] = {}
-        staged: list[tuple[tuple[str, ...], bytes, tuple[str, ...]]] = []
-        for row in rows:
-            keys = tuple(interned.setdefault(key, key) for key in key_fn(row))
-            staged.append((sort_key(row), _fragment_bytes(row), keys))
-        staged.sort(key=lambda item: item[0])
-        fragments = [item[1] for item in staged]
-        postings = [(key, rank) for rank, item in enumerate(staged) for key in item[2]]
+        locators: list[Any] = []
+        sort_keys: list[tuple[str, ...]] = []
+        postings: list[tuple[str, int]] = []
+        for locator, row in rows:
+            position = len(locators)
+            locators.append(locator)
+            sort_keys.append(sort_key(row))
+            postings.extend((interned.setdefault(key, key), position) for key in key_fn(row))
+        order = sorted(range(len(locators)), key=sort_keys.__getitem__)
+        del sort_keys
+        rank_of = [0] * len(order)
+        for rank, position in enumerate(order):
+            rank_of[position] = rank
+        locators = [locators[position] for position in order]
+        del order
+        postings = [(key, rank_of[position]) for key, position in postings]
         postings.sort()
-        return cls(fragments, postings)
+        return cls(locators, postings, replay)
 
 
 def object_descriptor(
@@ -938,7 +1005,6 @@ def build_search_family_shards(
     the historical shard order — with an early abort past the gzip cap.
     """
     postings = index.postings
-    fragments = index.fragments
     descriptors: dict[str, dict[str, Any]] = {}
 
     def ranks_in(lo: int, hi: int) -> list[int]:
@@ -954,7 +1020,7 @@ def build_search_family_shards(
                 "terminal": terminal,
             }
         )
-        return _shard_chunks(head, (fragments[rank] for rank in ranks), tail)
+        return _shard_chunks(head, (index.fragment(rank) for rank in ranks), tail)
 
     def emit(prefix: str, count: int, result: CompressedObject, *, terminal: bool = False) -> str:
         shard_id = search_shard_id(prefix) + (".term" if terminal else "")
@@ -1302,38 +1368,90 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
     }
 
 
-class StagedVersion:
-    """Hidden staging directory beside the version tree it will replace.
+def _tree_digest(root: Path) -> str:
+    """SHA-256 over a tree's ordered relative paths, lengths and bytes.
 
-    Every object is written here first; nothing under ``versions/<dataVersion>``
-    nor ``current.json`` is touched until :meth:`publish`. A failed export leaves
-    both byte-identical (also when it re-exports the currently referenced
-    dataVersion), and the staging tree is removed.
+    Each regular file contributes ``len(path) path len(bytes) bytes`` (8-byte
+    big-endian lengths, so no two trees frame alike); anything that is not a
+    regular file contributes a distinct marker, so it can never equal a staged tree.
+    """
+    digest = hashlib.sha256()
+    entries: list[tuple[str, Path]] = []
+    for directory, _dirs, files in os.walk(root):
+        entries.extend(
+            (Path(directory, name).relative_to(root).as_posix(), Path(directory, name)) for name in files
+        )
+    for relative, path in sorted(entries):
+        encoded = relative.encode("utf-8")
+        digest.update(struct.pack(">Q", len(encoded)) + encoded)
+        if not path.is_file() or path.is_symlink():
+            digest.update(b"\xff" + struct.pack(">Q", 0))
+            continue
+        digest.update(struct.pack(">Q", path.stat().st_size))
+        with path.open("rb") as handle:
+            while block := handle.read(1 << 20):
+                digest.update(block)
+    return digest.hexdigest()
+
+
+def _fsync_dir(path: Path) -> None:
+    fd = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+class StagedVersion:
+    """Hidden staging directory beside the version trees it may join.
+
+    Every object is written here first. Published trees are immutable: nothing is
+    ever renamed away, deleted or rewritten once installed under ``versions/``.
+    :meth:`publish` installs the staged tree at ``versions/<dataVersion>`` (reusing
+    a byte-identical tree already there untouched) or, when that path holds a
+    different tree, at ``versions/<dataVersion>-transport-<tree sha256>`` so every
+    URL a reader already holds stays valid. ``current.json`` is replaced last and
+    atomically, so a process that dies at any point leaves a pointer to a complete
+    tree. A failed export leaves the pointer and every installed tree untouched
+    and removes the staging tree.
     """
 
     def __init__(self, base_root: Path, data_version: str) -> None:
         self._base_root = base_root
-        self._version_root = base_root / "versions" / data_version
-        versions_dir = self._version_root.parent
-        versions_dir.mkdir(parents=True, exist_ok=True)
-        self._remove_stale(versions_dir)
+        self._data_version = data_version
+        self._versions_dir = base_root / "versions"
+        self._versions_dir.mkdir(parents=True, exist_ok=True)
+        self._remove_stale(self._versions_dir)
+        self._remove_stale_pointers(base_root)
         self._token = f"{os.getpid()}-{uuid.uuid4().hex[:8]}"
-        self.root = versions_dir / f".export-{self._token}"
+        self.root = self._versions_dir / f".export-{self._token}"
         self.root.mkdir()
 
     @staticmethod
-    def _remove_stale(versions_dir: Path) -> None:
+    def _owner_is_dead(pid: int) -> bool:
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return True
+        except PermissionError:
+            return False
+        return False
+
+    @classmethod
+    def _remove_stale(cls, versions_dir: Path) -> None:
         """Drop staging trees left behind by exporters that were killed."""
         for path in versions_dir.glob(".export-*"):
             match = re.fullmatch(r"\.export-(\d+)-[0-9a-f]+", path.name)
-            if not match or not path.is_dir():
-                continue
-            try:
-                os.kill(int(match.group(1)), 0)
-            except ProcessLookupError:
+            if match and path.is_dir() and cls._owner_is_dead(int(match.group(1))):
                 shutil.rmtree(path, ignore_errors=True)
-            except PermissionError:
-                continue
+
+    @classmethod
+    def _remove_stale_pointers(cls, base_root: Path) -> None:
+        """Drop pending ``current.json`` writes left behind by killed exporters."""
+        for path in base_root.glob(".current-*.json"):
+            match = re.fullmatch(r"\.current-(\d+)-[0-9a-f]+\.json", path.name)
+            if match and path.is_file() and cls._owner_is_dead(int(match.group(1))):
+                path.unlink(missing_ok=True)
 
     def write(self, relative: str, data: bytes) -> None:
         write_bytes(self.root / relative, data)
@@ -1341,29 +1459,53 @@ class StagedVersion:
     def discard(self) -> None:
         shutil.rmtree(self.root, ignore_errors=True)
 
-    def publish(self, current_bytes: bytes) -> None:
-        """Swap the staged tree in, then publish ``current.json`` last (atomic replace)."""
-        backup: Path | None = None
-        swapped = False
+    def _install_as(self, name: str, digest: str) -> bool:
+        """Make ``versions/<name>`` hold the staged tree; False if it holds other bytes.
+
+        A destination that appears concurrently is never overwritten: rename onto a
+        non-empty directory fails, and the winner is then compared byte for byte.
+        """
+        target = self._versions_dir / name
+        if not target.exists():
+            try:
+                os.rename(self.root, target)
+            except OSError:
+                if not target.exists():
+                    raise
+            else:
+                _fsync_dir(self._versions_dir)
+                return True
+        return target.is_dir() and not target.is_symlink() and _tree_digest(target) == digest
+
+    def install(self) -> str:
+        """Install the staged tree; return the name of the version directory to point at."""
+        digest = _tree_digest(self.root)
+        canonical = self._data_version
+        for name in (canonical, f"{canonical}-transport-{digest}"):
+            if self._install_as(name, digest):
+                return name
+        raise ExportError(
+            f"transport version {canonical}-transport-{digest} already holds different bytes; "
+            "refusing to overwrite a published tree"
+        )
+
+    def publish(self, build_current: Callable[[str], bytes]) -> str:
+        """Install the tree, then atomically point ``current.json`` at it (last step).
+
+        ``build_current`` receives the relative manifest URL of the chosen tree.
+        """
+        name = self.install()
+        manifest_url = f"versions/{name}/manifest.json"
         current_path = self._base_root / "current.json"
-        pending_pointer = self._base_root / f".current-{self._token}.json"
+        pending = self._base_root / f".current-{self._token}.json"
         try:
-            if self._version_root.exists():
-                backup = self._version_root.with_name(f".replaced-{self._token}")
-                os.rename(self._version_root, backup)
-            os.rename(self.root, self._version_root)
-            swapped = True
-            write_bytes(pending_pointer, current_bytes)
-            os.replace(pending_pointer, current_path)
+            write_bytes(pending, build_current(manifest_url))
+            os.replace(pending, current_path)
         except BaseException:
-            if swapped:
-                os.rename(self._version_root, self.root)
-            if backup is not None:
-                os.rename(backup, self._version_root)
-            pending_pointer.unlink(missing_ok=True)
+            pending.unlink(missing_ok=True)
             raise
-        if backup is not None:
-            shutil.rmtree(backup, ignore_errors=True)
+        _fsync_dir(self._base_root)
+        return manifest_url
 
 
 def export_runtime_shards(
@@ -1412,10 +1554,16 @@ def export_runtime_shards(
             raise ExportError("article kind count drifted from reviewed entry count")
 
         article_index = SearchFamilyIndex.build(
-            _iter_article_search_rows(conn), sort_key=_article_sort_key, key_fn=_article_index_keys
+            ((row["s"], row) for row in _iter_article_search_rows(conn)),
+            sort_key=_article_sort_key,
+            key_fn=_article_index_keys,
+            replay=lambda slug: _replay_article_search_row(conn, slug),
         )
         alias_index = SearchFamilyIndex.build(
-            _iter_alias_search_rows(conn), sort_key=_alias_sort_key, key_fn=_alias_index_keys
+            _iter_located_alias_search_rows(conn),
+            sort_key=_alias_sort_key,
+            key_fn=_alias_index_keys,
+            replay=lambda rowid: _replay_alias_search_row(conn, rowid),
         )
 
         deck_index, deck_blobs = register_decks(
@@ -1423,8 +1571,8 @@ def export_runtime_shards(
             compression_level=compression_level,
         )
         data_version = hasher.finish(
-            article_fragments=article_index.fragments,
-            alias_fragments=alias_index.fragments,
+            article_fragments=article_index.iter_fragments(),
+            alias_fragments=alias_index.iter_fragments(),
             deck_index=deck_index,
         )
         if expected_data_version is not None and expected_data_version != data_version:
@@ -1433,7 +1581,6 @@ def export_runtime_shards(
             )
 
         base_root = out_dir / base_path
-        version_rel = f"versions/{data_version}"
         stage = StagedVersion(base_root, data_version)
         try:
             # Pass 2: replay each accepted leaf straight into the staging tree.
@@ -1529,14 +1676,18 @@ def export_runtime_shards(
                     out_dir, base_path, manifest_path=stage.root / "manifest.json"
                 )
 
-            current = {
-                "schema": CURRENT_SCHEMA,
-                "schemaVersion": SCHEMA_VERSION,
-                "dataVersion": data_version,
-                "generatedAt": generated_at,
-                "manifestUrl": f"{version_rel}/manifest.json",
-            }
-            stage.publish(canonical_json_bytes(current))
+            def build_current(manifest_url: str) -> bytes:
+                return canonical_json_bytes(
+                    {
+                        "schema": CURRENT_SCHEMA,
+                        "schemaVersion": SCHEMA_VERSION,
+                        "dataVersion": data_version,
+                        "generatedAt": generated_at,
+                        "manifestUrl": manifest_url,
+                    }
+                )
+
+            report["manifestUrl"] = stage.publish(build_current)
         finally:
             stage.discard()
         return report
