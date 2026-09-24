@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Generate Independent Linguistic Review Signoff & Itemized Receipt for Grammar Component (#8342).
 
-Performs itemized verification of the 300 sampled instances in
+Performs itemized verification of the sampled instances in
 data/projects/open_model_data/components/grammar/acceptance_review_sample.json
 and generates:
-1. acceptance_review_sample.receipt.json (300-item itemized review dossier)
+1. acceptance_review_sample.receipt.json (itemized review dossier)
 2. acceptance_review_sample.signoff.json (cryptographic signoff report matching template hashes)
 """
 
@@ -149,6 +149,23 @@ def generate_signoff_and_receipt(
     if not VESUM_DB.is_file():
         raise FileNotFoundError(f"Missing VESUM db at {VESUM_DB}")
 
+    with SAMPLE_JSON.open("r", encoding="utf-8") as f:
+        samples = json.load(f)
+
+    with SIGNOFF_TEMPLATE.open("r", encoding="utf-8") as f:
+        tmpl = json.load(f)
+
+    dataset_sha256 = tmpl["dataset_sha256"]
+    sample_seed = tmpl["sample_seed"]
+    profile_sha256 = tmpl["profile_sha256"]
+    sample_size = len(samples)
+
+    findings: dict[int, Any] = {}
+    if findings_file and findings_file.is_file():
+        with findings_file.open("r", encoding="utf-8") as f:
+            raw_findings = json.load(f)
+            findings = {int(k): v for k, v in raw_findings.items()}
+
     if write_signoff:
         if not findings_file or not findings_file.is_file():
             raise ValueError(
@@ -163,23 +180,12 @@ def generate_signoff_and_receipt(
             raise ValueError(
                 "Provenance violation: --write-signoff requires an explicit non-empty --reviewer-family (e.g. claude)."
             )
-
-    findings: dict[int, Any] = {}
-    if findings_file and findings_file.is_file():
-        with findings_file.open("r", encoding="utf-8") as f:
-            raw_findings = json.load(f)
-            findings = {int(k): v for k, v in raw_findings.items()}
-
-    with SAMPLE_JSON.open("r", encoding="utf-8") as f:
-        samples = json.load(f)
-
-    with SIGNOFF_TEMPLATE.open("r", encoding="utf-8") as f:
-        tmpl = json.load(f)
-
-    dataset_sha256 = tmpl["dataset_sha256"]
-    sample_seed = tmpl["sample_seed"]
-    profile_sha256 = tmpl["profile_sha256"]
-    sample_size = len(samples)
+        if len(findings) < sample_size:
+            raise ValueError(
+                f"Provenance violation: --write-signoff requires authentic itemized reviewer findings "
+                f"for all {sample_size} sampled items, but findings file only contained {len(findings)} evaluated items. "
+                "Synthesizing item verdicts without complete reviewer input is strictly forbidden."
+            )
 
     # Index shards to load full rich record metadata by (file_name, line_number)
     shards_data: dict[tuple[str, int], dict[str, Any]] = {}
@@ -375,12 +381,24 @@ def generate_signoff_and_receipt(
 
         # External reviewer findings if provided
         sample_idx = item["sample_index"]
+        reviewer_assessment = ""
         if sample_idx in findings:
             f_entry = findings[sample_idx]
             if isinstance(f_entry, dict):
-                defect_desc = f_entry.get("defect") or f_entry.get("comment") or "Зовнішній дефект"
-                if f_entry.get("verdict") == "CHANGES_REQUESTED" or defect_desc:
+                has_defect = (
+                    f_entry.get("verdict") == "CHANGES_REQUESTED"
+                    or f_entry.get("status") == "FAIL"
+                    or bool(f_entry.get("defect"))
+                )
+                if has_defect:
+                    defect_desc = f_entry.get("defect") or f_entry.get("comment") or "Дефект виявлено рецензентом"
                     item_defects.append(defect_desc)
+                reviewer_assessment = (
+                    f_entry.get("reviewer_assessment")
+                    or f_entry.get("evaluation")
+                    or f_entry.get("comment")
+                    or ""
+                )
             elif isinstance(f_entry, str):
                 item_defects.append(f_entry)
 
@@ -388,9 +406,12 @@ def generate_signoff_and_receipt(
         item_status = "FAIL" if is_item_defective else "PASS"
         item_verdict = "CHANGES_REQUESTED" if is_item_defective else "APPROVED"
 
-        final_item_rationale = (
-            f"[{rec_id}] ВИЯВЛЕНО ДЕФЕКТИ: {'; '.join(item_defects)}" if is_item_defective else rationale
-        )
+        if is_item_defective:
+            final_item_rationale = f"[{rec_id}] ВИЯВЛЕНО ДЕФЕКТИ: {'; '.join(item_defects)}"
+        elif reviewer_assessment:
+            final_item_rationale = f"{rationale} [Оцінка рецензента: {reviewer_assessment}]"
+        else:
+            final_item_rationale = rationale
         distinct_rationales.add(final_item_rationale)
 
         reviewed_items.append(
@@ -407,6 +428,7 @@ def generate_signoff_and_receipt(
                 "category": category,
                 "tag": tag,
                 "task_type": task_type,
+                "reviewer_assessment": reviewer_assessment or None,
                 "is_erroneous": is_err,
                 "status": item_status,
                 "verdict": item_verdict,
@@ -445,7 +467,7 @@ def generate_signoff_and_receipt(
 
     conn.close()
 
-    # Guarantee 100% itemized distinctness across all 300 sample rows
+    # Guarantee 100% itemized distinctness across all sample rows
     if len(distinct_rationales) != sample_size:
         raise RuntimeError(f"Expected {sample_size} distinct item rationales, got only {len(distinct_rationales)}!")
 
@@ -456,7 +478,7 @@ def generate_signoff_and_receipt(
     overall_verdict = "APPROVED" if blocker_defect_count == 0 else "CHANGES_REQUESTED"
 
     receipt = {
-        "receipt_id": "REV-2026-09-23-OMD-8342-SAMPLE-REVIEW-300",
+        "receipt_id": f"REV-2026-09-24-OMD-8342-SAMPLE-REVIEW-{sample_size}",
         "review_type": "independent_cross_family_sample_audit",
         "dataset_name": "grammar_v1",
         "dataset_sha256": dataset_sha256,
