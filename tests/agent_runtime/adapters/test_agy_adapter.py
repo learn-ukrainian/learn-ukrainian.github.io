@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+import re
+import time
 from pathlib import Path
 
 import pytest
@@ -21,7 +22,6 @@ def _plan(
     log_file: Path,
     app_data: Path,
     cmd: list[str] | None = None,
-    spawn_time: float | None = None,
 ) -> InvocationPlan:
     return InvocationPlan(
         cmd=cmd or ["agy"],
@@ -34,7 +34,7 @@ def _plan(
         },
         env_unsets=(),
         liveness_paths=(log_file,),
-        metadata={} if spawn_time is None else {agy_module._SPAWN_WALL_TIME_KEY: spawn_time},
+        metadata={},
     )
 
 
@@ -490,23 +490,18 @@ def _write_generic_transcript(app_data: Path, conversation_id: str = GENERIC_CON
     return transcript
 
 
-# ``created_at`` of the first USER_INPUT in generic_results_transcript.jsonl.
-GENERIC_OPENED_AT = datetime(2026, 9, 19, 19, 58, 11, tzinfo=UTC).timestamp()
-
-
 def _parse_generic(
     tmp_path: Path,
     *,
     log_text: str | None,
     cmd: list[str] | None = None,
-    spawn_time: float | None = GENERIC_OPENED_AT,
 ):
     app_data = tmp_path / "antigravity-cli"
     log_file = tmp_path / "agy.log"
     if log_text is not None:
         log_file.write_text(log_text, encoding="utf-8")
     _write_generic_transcript(app_data)
-    plan = _plan(tmp_path, log_file=log_file, app_data=app_data, cmd=cmd, spawn_time=spawn_time)
+    plan = _plan(tmp_path, log_file=log_file, app_data=app_data, cmd=cmd)
     return AgyAdapter().parse_response(
         stdout="module text", stderr="", returncode=0, output_file=None, plan=plan
     )
@@ -582,46 +577,13 @@ def test_conversation_id_recovered_from_alternate_log_phrases(tmp_path: Path, li
 
 
 @pytest.mark.parametrize("log_text", [None, "I0919 no conversation id in this log\n"])
-def test_transcript_located_by_prompt_when_log_names_no_conversation(
-    tmp_path: Path, log_text: str | None
-) -> None:
+def test_log_without_conversation_id_binds_no_transcript(tmp_path: Path, log_text: str | None) -> None:
+    # A brain transcript opening with this run's own prompt is present, but the
+    # runtime log names no conversation: nothing binds, nothing is credited.
     result = _parse_generic(tmp_path, log_text=log_text, cmd=["agy", "-p", GENERIC_PROMPT])
-    assert [call["name"] for call in result.tool_calls].count("mcp__sources__search_text") == 2
-
-
-def test_prompt_fallback_never_credits_unrelated_conversation(tmp_path: Path) -> None:
-    result = _parse_generic(
-        tmp_path, log_text=None, cmd=["agy", "-p", "Review this pull request for bugs."]
-    )
     assert result.tool_calls == []
     assert result.ok is False
     assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
-
-
-@pytest.mark.parametrize("spawn_time", [GENERIC_OPENED_AT + 60, None])
-def test_prompt_fallback_never_credits_conversation_opened_before_spawn(
-    tmp_path: Path, spawn_time: float | None
-) -> None:
-    # Same prompt, but that conversation belongs to an earlier run (or the plan
-    # recorded no spawn time to bind against): it must not lend its evidence.
-    result = _parse_generic(tmp_path, log_text=None, cmd=["agy", "-p", GENERIC_PROMPT], spawn_time=spawn_time)
-    assert result.tool_calls == []
-    assert result.ok is False
-    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
-
-
-def test_prompt_fallback_refuses_ambiguous_concurrent_matches(tmp_path: Path) -> None:
-    app_data = tmp_path / "antigravity-cli"
-    _write_generic_transcript(app_data)
-    _write_generic_transcript(app_data, conversation_id="00000000-aaaa-4bbb-8ccc-000000000002")
-    plan = _plan(
-        tmp_path,
-        log_file=tmp_path / "agy.log",
-        app_data=app_data,
-        cmd=["agy", "-p", GENERIC_PROMPT],
-        spawn_time=GENERIC_OPENED_AT,
-    )
-    assert agy_module._transcript_path_from_plan(plan) is None
 
 
 def test_generic_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> None:
@@ -843,7 +805,7 @@ def test_parse_response_never_borrows_earlier_same_prompt_run(tmp_path: Path) ->
     log_file = tmp_path / "agy.log"
     log_file.write_text(f"I0924 server.go:1185] Created conversation {_ABANDONED_CONVERSATION_ID}\n", encoding="utf-8")
     prompt = "Run this exact shell command: `sleep 45 && echo PROBE_DONE_7731`."
-    plan = _plan(tmp_path, log_file=log_file, app_data=app_data, cmd=["agy", "-p", prompt], spawn_time=0.0)
+    plan = _plan(tmp_path, log_file=log_file, app_data=app_data, cmd=["agy", "-p", prompt])
 
     result = AgyAdapter().parse_response(
         stdout="Waiting for task-220 to complete.", stderr="", returncode=0, output_file=None, plan=plan
@@ -851,6 +813,67 @@ def test_parse_response_never_borrows_earlier_same_prompt_run(tmp_path: Path) ->
 
     assert result.ok is False
     assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_TRANSCRIPT_UNBOUND
+
+
+_RETRY_CONVERSATION_ID = "5953861f-3323-4774-b095-c20d69cc13c7"
+
+
+@pytest.mark.parametrize(
+    ("log_names_retry", "reason"),
+    [(False, agy_module.AGY_TRANSCRIPT_UNBOUND), (True, agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED)],
+)
+def test_same_second_retry_never_borrows_earlier_finished_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, log_names_retry: bool, reason: str
+) -> None:
+    # Reviewer reproduction (#8502 r4): an earlier run of the same prompt opened
+    # its conversation at 1000.1 and finished; the retry spawned at 1000.9. The
+    # removed prompt fallback compared whole seconds and credited the earlier
+    # run's completion evidence to the retry's interim reply (ok=True).
+    _fake_agy(tmp_path, monkeypatch, "1.2.10")
+    finished = _fixture_lines("background_task_finished_transcript.jsonl")
+    prompt = json.loads(finished[0])["content"].removeprefix("<USER_REQUEST>\n").removesuffix("\n</USER_REQUEST>")
+    opened_this_second = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    app_data = tmp_path / "antigravity-cli"
+    plan = AgyAdapter().build_invocation(
+        prompt=prompt,
+        mode="danger",
+        cwd=tmp_path,
+        model=None,
+        task_id="t-retry",
+        session_id=None,
+        tool_config={"agy_home_override": str(tmp_path / "agy-home")},
+    )
+    plan.env_overrides["AGY_APP_DATA_DIR"] = str(app_data)
+    earlier = [re.sub(r'"created_at": "[^"]+"', f'"created_at": "{opened_this_second}"', line) for line in finished]
+    transcripts = {_FINISHED_CONVERSATION_ID: earlier}
+    if log_names_retry:
+        # The retry's own conversation stopped at its interim reply.
+        transcripts[_RETRY_CONVERSATION_ID] = [
+            line.replace(_FINISHED_CONVERSATION_ID, _RETRY_CONVERSATION_ID) for line in earlier[:4]
+        ]
+    for conversation_id, lines in transcripts.items():
+        transcript = agy_module._brain_transcript_path(app_data, conversation_id)
+        transcript.parent.mkdir(parents=True)
+        transcript.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    log_file = Path(plan.env_overrides["AGY_RUNTIME_LOG_FILE"])
+    log_file.write_text(
+        f"I0924 server.go:1239] Created conversation {_RETRY_CONVERSATION_ID}\n" if log_names_retry else "",
+        encoding="utf-8",
+    )
+    try:
+        result = AgyAdapter().parse_response(
+            stdout="I have launched the command and am waiting for it to finish.",
+            stderr="",
+            returncode=0,
+            output_file=None,
+            plan=plan,
+        )
+    finally:
+        log_file.unlink(missing_ok=True)
+
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == reason
 
 
 def test_parse_response_rejects_claimed_wait_with_no_task_in_transcript(tmp_path: Path) -> None:
@@ -907,8 +930,10 @@ def test_parse_response_rejects_finished_task_with_no_reply_after_it(tmp_path: P
 # task-18, the agent replied "Waiting 60 seconds…", the task-finished message
 # arrived at step 20, and the agent then committed (b4d19d2) and replied. The
 # runtime returned ok=True with stderr "root agent idle; waiting up to 2h0m0s
-# for 1 background task(s)". Transcript saved verbatim except /home/<user> and
-# the read-only output of steps 1-14 (the agent listing unrelated local repos).
+# for 1 background task(s)". Every event, step index, status and timestamp is
+# kept; local paths are synthetic (/work/repo, /agy-app-data), model
+# ``thinking`` is dropped, and the read-only exploration of steps 1-16 is
+# redacted.
 _CANARY_CONVERSATION_ID = "01a753b2-d67a-4b03-99cc-358e6493e70b"
 _CANARY_FIXTURE = f"background_task_write_canary_{_CANARY_CONVERSATION_ID}.jsonl"
 _CANARY_STDOUT = "Waiting 60 seconds for the command to finish...\nb4d19d2 (HEAD -> main) canary 8502-r3\nCANARY_8502_R3_DONE"

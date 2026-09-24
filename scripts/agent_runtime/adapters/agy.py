@@ -16,9 +16,8 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
   ``mode="danger"`` for headless dispatch (mirrors the codex protection).
 - Print-mode stdout is the final answer only. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
-  ``--log-file`` path for each invocation (fallback: the one brain
-  conversation opened after this invocation's spawn whose ``USER_INPUT`` opens
-  with its prompt).
+  ``--log-file`` path for each invocation: the conversation id that log names
+  is the only binding (no fallback; see ``_transcript_path_from_plan``).
   Tool results are ``type: GENERIC`` events (agy 2026-09) or legacy
   ``MCP_TOOL`` events; both shapes are paired with planner intents.
 - Per-invocation model is ``--model "<Display Name>"`` where the display name
@@ -70,11 +69,9 @@ import re
 import shutil
 import subprocess
 import tempfile
-import time
 import urllib.parse
 import uuid
 from collections.abc import Mapping
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -128,9 +125,6 @@ AGY_INCOMPLETE_RUN_REASONS: tuple[str, ...] = (
     AGY_PRINT_TIMEOUT_PARTIAL,
     AGY_TRANSCRIPT_UNBOUND,
 )
-# Wall-clock time recorded in the plan just before spawn. A transcript located
-# without the runtime log's conversation id must have been opened at or after it.
-_SPAWN_WALL_TIME_KEY = "agy_spawn_wall_time"
 _AGY_MIN_BACKGROUND_WAIT_VERSION: tuple[int, int, int] = (1, 2, 9)
 _AGY_VERSION_RE = re.compile(r"\b(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\b")
 _AGY_VERSION_PROBE_TIMEOUT_S = 15
@@ -150,7 +144,6 @@ _AGY_CONVERSATION_RE = re.compile(
 # older builds used the dedicated ``MCP_TOOL`` type.
 _LEGACY_MCP_RESULT_TYPE = "MCP_TOOL"
 _GENERIC_RESULT_TYPE = "GENERIC"
-_PROMPT_MATCH_CHARS = 200
 _STDOUT_MARKER_RE = re.compile(r"^\s*●\s+(?P<tool>mcp_sources_[A-Za-z0-9_]+)\((?P<args>.*)\)\s*$")
 _STDOUT_RESULT_PREFIX = "⎿"
 _SAVED_OUTPUT_POINTER_RE = re.compile(
@@ -431,7 +424,6 @@ class AgyAdapter:
             liveness_paths=(log_path,),
             metadata={
                 **schema_metadata(output_schema),
-                _SPAWN_WALL_TIME_KEY: time.time(),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
@@ -951,13 +943,20 @@ def _pair_transcript_generic_results(
 def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
     """Return the transcript of THIS invocation's conversation, or ``None``.
 
-    The per-invocation runtime log names the conversation agy opened for this
-    run; when it does, only that conversation's transcript counts — a missing
-    file is ``None``, never a lookalike. Otherwise the prompt fallback may only
-    pick a conversation opened after this invocation's spawn (#8502 r3: an
-    earlier run with the same prompt must never lend its evidence).
+    The per-invocation runtime log is the only binding: agy truncates it on
+    open and logs the conversation it created or resumed before the first
+    model turn (``Created conversation <id>`` / ``found conversation <id>``;
+    every log from agy 1.1.24 through 1.2.10 names one, #8502 r4). A log that
+    names no conversation, or names one whose transcript is missing, binds
+    nothing — matching brain/ by prompt and timestamp could credit an earlier
+    run of the same prompt opened within the same second, so there is no
+    fallback.
     """
     if plan is None:
+        return None
+    log_file = plan.env_overrides.get(_AGY_LOG_ENV)
+    conversation_id = _conversation_id_from_log(Path(log_file)) if log_file else None
+    if not conversation_id:
         return None
     app_data = Path(
         plan.env_overrides.get(
@@ -965,92 +964,12 @@ def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
             str(Path.home() / ".gemini" / "antigravity-cli"),
         )
     )
-    log_file = plan.env_overrides.get(_AGY_LOG_ENV)
-    conversation_id = _conversation_id_from_log(Path(log_file)) if log_file else None
-    if conversation_id:
-        transcript = _brain_transcript_path(app_data, conversation_id)
-        return transcript if transcript.exists() else None
-    fallback = _transcript_path_from_brain(plan, app_data)
-    if fallback is not None:
-        _logger.warning(
-            "agy runtime log did not identify the conversation; matched brain transcript %s by prompt",
-            fallback,
-        )
-    return fallback
+    transcript = _brain_transcript_path(app_data, conversation_id)
+    return transcript if transcript.exists() else None
 
 
 def _brain_transcript_path(app_data: Path, conversation_id: str) -> Path:
     return app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
-
-
-def _prompt_from_plan(plan: InvocationPlan) -> str:
-    cmd = list(plan.cmd)
-    with contextlib.suppress(ValueError, IndexError):
-        return str(cmd[cmd.index("-p") + 1])
-    return ""
-
-
-def _transcript_path_from_brain(plan: InvocationPlan, app_data: Path) -> Path | None:
-    """Find this invocation's transcript when the runtime log names no conversation.
-
-    A conversation qualifies only when its first ``USER_INPUT`` opens with this
-    invocation's own prompt AND was created at or after the spawn time recorded
-    in the plan, so neither an unrelated conversation nor an earlier run of the
-    same prompt is ever credited. No recorded spawn time, no match, or more than
-    one match (concurrent identical prompts) all resolve to ``None``.
-    """
-    prompt_head = _prompt_from_plan(plan).strip()[:_PROMPT_MATCH_CHARS]
-    spawn_time = plan.metadata.get(_SPAWN_WALL_TIME_KEY)
-    if not prompt_head or not isinstance(spawn_time, (int, float)):
-        return None
-    # ``created_at`` has whole-second precision; compare against the spawn second.
-    not_before = int(spawn_time)
-    needle = "<USER_REQUEST>\n" + prompt_head
-    try:
-        conversation_dirs = list((app_data / "brain").iterdir())
-    except OSError:
-        return None
-    matches: list[Path] = []
-    for conversation_dir in conversation_dirs:
-        transcript = _brain_transcript_path(app_data, conversation_dir.name)
-        try:
-            if transcript.stat().st_mtime < not_before:
-                continue
-        except OSError:
-            continue
-        opened_at = _transcript_opening_time(transcript, needle)
-        if opened_at is not None and opened_at >= not_before:
-            matches.append(transcript)
-    return matches[0] if len(matches) == 1 else None
-
-
-def _transcript_opening_time(transcript: Path, needle: str) -> float | None:
-    """Return the epoch ``created_at`` of the first ``USER_INPUT`` when it opens with ``needle``."""
-    try:
-        with transcript.open(encoding="utf-8", errors="replace") as handle:
-            for raw_line in handle:
-                if not raw_line.strip():
-                    continue
-                event = json.loads(raw_line)
-                if isinstance(event, dict) and event.get("type") == "USER_INPUT":
-                    if not str(event.get("content") or "").lstrip().startswith(needle):
-                        return None
-                    return _parse_created_at(event.get("created_at"))
-    except (OSError, json.JSONDecodeError):
-        return None
-    return None
-
-
-def _parse_created_at(value: Any) -> float | None:
-    if not isinstance(value, str) or not value:
-        return None
-    try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    except ValueError:
-        return None
-    if parsed.tzinfo is None:
-        return None
-    return parsed.timestamp()
 
 
 def _conversation_id_from_log(log_file: Path) -> str | None:
