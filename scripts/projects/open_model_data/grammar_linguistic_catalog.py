@@ -667,9 +667,10 @@ PROMPT_TEMPLATES_BY_REGISTER: dict[str, list[str]] = {
 
 def build_query(sentence: str, register: str, seed_index: int) -> str:
     """Deterministically pick a diversified query template for a given register and seed."""
+    clean_sentence = re.sub(r"[.?!…]+$", "", sentence.strip())
     templates = PROMPT_TEMPLATES_BY_REGISTER.get(register) or PROMPT_TEMPLATES_BY_REGISTER["journalistic"]
     tmpl = templates[seed_index % len(templates)]
-    return tmpl.format(sentence=sentence)
+    return tmpl.format(sentence=clean_sentence)
 
 
 # ── 5. Diversified Response and Reasoning Builders ──────────────────────────
@@ -1578,8 +1579,9 @@ RESPONSE_TEMPLATES_CONTROL_EVAL = [
 
 def build_query_eval(sentence: str, seed_index: int) -> str:
     """Pick a diversified prompt template specifically for the held-out evaluation split."""
+    clean_sentence = re.sub(r"[.?!…]+$", "", sentence.strip())
     tmpl = PROMPT_TEMPLATES_EVAL[seed_index % len(PROMPT_TEMPLATES_EVAL)]
-    return tmpl.format(sentence=sentence)
+    return tmpl.format(sentence=clean_sentence)
 
 
 def build_reasoning_and_response_eval(

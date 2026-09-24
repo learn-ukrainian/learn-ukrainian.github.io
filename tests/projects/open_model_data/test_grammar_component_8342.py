@@ -740,3 +740,34 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
             reviewer_id="claude_blue_team_ling_review",
             reviewer_family="claude",
         )
+
+
+def test_no_duplicated_query_punctuation(grammar_data):
+    """Verify that 0 records have duplicated punctuation like «... .». or «... !». in query."""
+    double_punct_pattern = re.compile(r"[.?!…][»\"]\s*[.?!…]")
+    for r in grammar_data["all"]:
+        q = r.get("query", "")
+        assert not double_punct_pattern.search(q), f"Duplicated punctuation found in query: {q}"
+
+
+def test_source_denominator_reconciliation(grammar_data):
+    """Verify that manifest and README contain documented source denominator reconciliation (#8342)."""
+    manifest = grammar_data["manifest"]
+    assert "source_denominator_reconciliation" in manifest, "Missing source_denominator_reconciliation in manifest.json"
+    recon = manifest["source_denominator_reconciliation"]
+
+    assert recon["ua_gec_train_sentences_total"] == 31028
+    assert recon["ua_gec_train_in_scope_edits_total"] == 8266
+    assert recon["ua_gec_train_in_scope_candidate_sentences"] == 5138
+    assert recon["delivered_substantive_corrections"] == 997
+    assert recon["delivered_clean_controls"] == 380
+    assert recon["delivered_total_records"] == 1377
+
+    readme_path = GRAMMAR_DIR / "README.md"
+    assert readme_path.is_file(), f"Missing README.md at {readme_path}"
+    readme_text = readme_path.read_text(encoding="utf-8")
+    assert "## Source Denominator Reconciliation (#8342)" in readme_text
+    assert "8,266" in readme_text or "8266" in readme_text
+    assert "31,028" in readme_text
+    assert "997" in readme_text
+    assert "380" in readme_text

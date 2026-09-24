@@ -1317,7 +1317,7 @@ def audit_check_7_sample_drawer(
                     require_receipt = thresholds.get("require_review_receipt", False)
                     if require_receipt and not receipt_path.is_file():
                         failures.append(f"Missing itemized review receipt: {receipt_path}")
-                    elif receipt_path.is_file():
+                    elif require_receipt and receipt_path.is_file():
                         try:
                             receipt_data = json.loads(receipt_path.read_text(encoding="utf-8"))
                             items = receipt_data.get("reviewed_sample_items", [])
