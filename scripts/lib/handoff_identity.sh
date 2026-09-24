@@ -23,6 +23,27 @@
 
 _HANDOFF_IDENTITY_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
+# Read the same compatibility map used by /api/work/v1/next. Unknown selectors
+# still fall through to registry-key resolution below.
+_launcher_compat_alias() {
+  local selector="${1:-}"
+  local aliases="$_HANDOFF_IDENTITY_DIR/../config/launcher_stream_aliases.tsv"
+  [ -f "$aliases" ] || return 1
+  awk -F '\t' -v wanted="$selector" '
+    /^#/ || NF == 0 { next }
+    NF != 3 { invalid = 1; next }
+    $1 == wanted {
+      if (found++) invalid = 1
+      key = $2
+      lane = $3
+    }
+    END {
+      if (invalid || !found) exit 1
+      printf "%s\t%s\n", key, lane
+    }
+  ' "$aliases"
+}
+
 # _launcher_stream_anchor_epic "<stream-key>"
 # Print the first epic number listed for that key in issue_streams.yaml.
 # Fail closed (print nothing, return 1) when the registry is missing or the
@@ -124,57 +145,27 @@ launcher_selector_resolve() {
   local key=""
   local lane=""
   local epic=""
+  local mapped=""
 
-  # Compatibility aliases preserve the pre-registry lane identity while their
-  # stream anchor still comes from the registry.  Generic selectors below are
-  # intentionally not added here: a new registry row must work without a
-  # launcher edit.
+  # Retired selectors fail before alias and generic registry resolution.
   case "$selector" in
-    infra|harness|infra.fleet-comms)
-      key="infra-harness"
-      lane="infra"
-      ;;
-    devops|infra.devops)
-      key="devops"
-      lane="devops"
-      ;;
-    monitor|infra.monitor|ops-api|ops.api|operator-api)
-      key="monitor"
-      lane="monitor"
-      ;;
-    atlas|practice|practice-hub|atlas.practice)
-      key="atlas-practice"
-      lane="atlas"
-      ;;
-    hramatka|hramatka.lessons)
-      key="hramatka"
-      lane="hramatka"
-      ;;
-    folk|seminars-folk)
-      key="seminars-folk"
-      lane="folk"
-      ;;
-    bio|seminars-bio)
-      key="seminars-bio"
-      lane="bio"
-      ;;
-    corpus|corpus-channels)
-      key="corpus-channels"
-      lane="corpus"
-      ;;
-    eval-harness|a1-upgrade)
+    eval-harness|a1-upgrade|infra.eval-harness|infra.a1-upgrade)
       printf 'retired lane selector: %s\n' "$selector" >&2
       return 1
       ;;
-    infra.*)
-      key="${selector#infra.}"
-      lane="$key"
-      ;;
-    *)
-      key="$selector"
-      lane="$key"
-      ;;
   esac
+
+  if mapped="$(_launcher_compat_alias "$selector")"; then
+    IFS=$'\t' read -r key lane <<< "$mapped"
+  else
+    # Generic selectors are intentionally absent from the compatibility map:
+    # a new registry row must work without a launcher edit.
+    case "$selector" in
+      infra.*) key="${selector#infra.}" ;;
+      *) key="$selector" ;;
+    esac
+    lane="$key"
+  fi
 
   epic="$(_launcher_stream_anchor_epic "$key")" || return 1
   case "$epic" in

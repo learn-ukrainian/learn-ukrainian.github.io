@@ -27,7 +27,8 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.6 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
 | **curriculum-upgrade** (#7994 machinery) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic curriculum-upgrade` |
-| **a1-upgrade** (#7995 content rollout; blocked on #7994 Phase 1 landing, selector remains mintable) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic a1-upgrade` |
+| **a1-upgrade** (#7995 closed 2026-09-24) | Retired selector; no driver launch | — |
+| **eval-harness** (#4913 closed 2026-09-24) | Retired selector; route new infra work through `infra` | — |
 | **folk** (curriculum track) | Grok 4.6 † | `./start-grok-driver.sh --epic folk` |
 | **bio** (curriculum track) | Grok 4.6 | `./start-grok-driver.sh --epic bio` |
 | **any epic** — incident · architecture cutover · contested review | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |

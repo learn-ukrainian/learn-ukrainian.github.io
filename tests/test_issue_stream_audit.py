@@ -302,7 +302,7 @@ def test_closed_epic_remains_registered_but_is_not_an_audit_root():
 
 @pytest.mark.parametrize(
     "selector",
-    ["a1-upgrade", "eval-harness"],
+    ["a1-upgrade", "eval-harness", "infra.a1-upgrade", "infra.eval-harness"],
 )
 def test_retired_stream_launchers_fail_closed(selector):
     result = subprocess.run(
