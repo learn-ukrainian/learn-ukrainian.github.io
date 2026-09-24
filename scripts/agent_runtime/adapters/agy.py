@@ -265,7 +265,6 @@ _BACKGROUND_LANGUAGE_RE = re.compile(
     r"\bbackground(?:ed)?\s+(?:tasks?|jobs?|process(?:es)?|commands?|runs?)\b|\bin the background\b|\bbackgrounded\b",
     re.IGNORECASE,
 )
-_REPLY_TASK_REF_RE = re.compile(r"\btask-\d+\b")
 # Plan metadata: this invocation's conversation and the size its transcript had
 # when the invocation was built (see ``_transcript_baseline``).
 _TRANSCRIPT_BASELINE_KEY = "agy_transcript_baseline"
@@ -860,25 +859,23 @@ def _interim_language(events: list[dict[str, Any]]) -> str | None:
 
     DIAGNOSTIC ONLY (#8502 r9): the caller has already accepted the slice, so
     this never fails a run. It flags a final reply that says work is still
-    pending (``_PENDING_WORK_RE``), speaks of background work although the
-    slice started no task, or names a task this invocation did not see finish
-    (``task-2`` of an earlier run of a resumed conversation). With no start
-    event there was no background work (see ``_BACKGROUND_START_HEADER_RE``), so
-    such a reply is odd wording worth a look, not unfinished work.
+    pending (``_PENDING_WORK_RE``, which covers "waiting for task-2" and "task-2
+    is still running"), or speaks of background work although the slice started
+    no task. A bare mention of some ``task-N`` is not a signal (#8667): a task
+    this slice started and never finished already fails the structural gate. With
+    no start event there was no background work (see
+    ``_BACKGROUND_START_HEADER_RE``), so such a reply is odd wording worth a
+    look, not unfinished work.
     """
     prompt = next(position for position, event in enumerate(events) if event.get("type") == "USER_INPUT")
     work = events[prompt + 1 :]
     reply_position = max(position for position, event in enumerate(work) if _is_model_event(event))
     content = str(work[reply_position].get("content") or "")
-    started, finished, _unfinished, _still_open = _open_work(work, reply=reply_position)
+    started, _finished, _unfinished, _still_open = _open_work(work, reply=reply_position)
     if pending := _PENDING_WORK_RE.search(content):
         return f"pending-work wording: {pending.group(0).strip()!r}"
     if not started and (background := _BACKGROUND_LANGUAGE_RE.search(content)):
         return f"background wording with no task started: {background.group(0)!r}"
-    finished_tasks = {task_id.rsplit("/", 1)[-1] for task_id in finished}
-    unfinished = [ref for ref in _REPLY_TASK_REF_RE.findall(content) if ref not in finished_tasks]
-    if unfinished:
-        return f"names a task this run did not see finish: {unfinished[0]!r}"
     return None
 
 
