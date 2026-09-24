@@ -13,7 +13,7 @@ resolve_public_commit = run_path(str(REPOSITORY / "packages/v4-runtime/build_ass
 
 
 def _git(*args: str) -> str:
-    return subprocess.check_output(["git", *args], cwd=REPOSITORY, text=True).strip()
+    return subprocess.check_output(["git", *args], cwd=REPOSITORY, text=True, timeout=30).strip()
 
 
 def test_malformed_commit_override_raises(monkeypatch):
