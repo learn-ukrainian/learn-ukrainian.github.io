@@ -53,6 +53,9 @@ MAX_UNIT_RESEEDS = 3
 CONSECUTIVE_RETRY_STOP = 3
 REGISTER_PAGE_SIZE = 25
 LOCK_NAME = "runner.lock"
+LIVENESS_NAME = "liveness"
+PROGRESS_INTERVAL_ENV = "ULIF_PROGRESS_INTERVAL_SECONDS"
+DEFAULT_PROGRESS_INTERVAL_SECONDS = 60.0
 
 EXIT_OK = 0
 EXIT_USAGE = 1
@@ -1581,7 +1584,95 @@ def _requests_transport(user_agent: str) -> Transport:
     return send
 
 
-HEARTBEAT_INTERVAL_SECONDS = 60.0
+HEARTBEAT_INTERVAL_SECONDS = DEFAULT_PROGRESS_INTERVAL_SECONDS
+
+
+def resolve_progress_interval(explicit: float | None = None) -> float:
+    """Flag wins. Otherwise ``ULIF_PROGRESS_INTERVAL_SECONDS``, else 60s."""
+    if explicit is None:
+        raw = os.environ.get(PROGRESS_INTERVAL_ENV, "").strip()
+        if not raw:
+            return DEFAULT_PROGRESS_INTERVAL_SECONDS
+        try:
+            explicit = float(raw)
+        except ValueError as exc:
+            raise ValueError(f"{PROGRESS_INTERVAL_ENV} must be a positive number, got {raw!r}") from exc
+    if explicit <= 0:
+        raise ValueError(f"progress interval must be > 0, got {explicit}")
+    return explicit
+
+
+def _immediate_operator_message(what: str) -> bool:
+    """Back-off and error text bypass the progress rate limit."""
+    return what.startswith("waiting for back-off") or what.startswith("error") or what.startswith("stopping")
+
+
+def _touch_liveness(state_dir: Path, stamp: str) -> None:
+    path = state_dir / LIVENESS_NAME
+    path.write_text(f"{stamp}\n", encoding="utf-8")
+
+
+def format_periodic_progress(
+    *,
+    kind: str,
+    done: int,
+    total: int,
+    requests_made: int,
+    elapsed_seconds: float,
+    eta_seconds: float | None,
+) -> str:
+    rate = (requests_made / elapsed_seconds) if elapsed_seconds > 0 else 0.0
+    eta = "unknown" if eta_seconds is None else f"{eta_seconds:.0f}s"
+    return f"progress: {kind}={done}/{total} requests={requests_made} rate={rate:.3f}/s eta={eta}"
+
+
+def _eta_seconds(remaining: int, timed_units: int, wall_seconds: float) -> float | None:
+    if remaining <= 0:
+        return 0.0
+    if timed_units <= 0 or wall_seconds <= 0:
+        return None
+    return remaining * (wall_seconds / timed_units)
+
+
+class OperatorProgress:
+    """Silent per-request liveness, with at most one progress line per interval.
+
+    The callback return value is still the delay until the next wake, which
+    ``PoliteClient._sleep_with_heartbeat`` uses to slice long waits.
+    """
+
+    def __init__(
+        self,
+        *,
+        interval: float,
+        clock: ClockFn,
+        state_dir: Path,
+        emit: Callable[[], None],
+        touch: Callable[[str], None] | None = None,
+    ) -> None:
+        self.interval = interval
+        self.clock = clock
+        self.state_dir = state_dir
+        self.emit = emit
+        self.touch = touch or (lambda stamp: _touch_liveness(state_dir, stamp))
+        self._last_emit = clock()
+
+    def note_progress(self) -> None:
+        self._last_emit = self.clock()
+
+    def __call__(self, what: str) -> float:
+        now = self.clock()
+        with contextlib.suppress(Exception):
+            self.touch(f"{now:.3f}")
+        if _immediate_operator_message(what):
+            print(f"heartbeat: {what}", file=sys.stderr, flush=True)
+            return self.interval
+        due_in = self.interval - (now - self._last_emit)
+        if due_in <= 0.0:
+            self.emit()
+            self._last_emit = now
+            return self.interval
+        return due_in
 
 
 def _keep_walk(
@@ -1927,6 +2018,7 @@ def run_fetch(
     sleep: SleepFn = _default_sleep,
     clock: ClockFn = time.monotonic,
     scanner: Scanner = scan_for_legacy_crawler,
+    progress_interval: float | None = None,
 ) -> int:
     if resume_cmd:
         resolved_resume_cmd = resume_cmd
@@ -1955,7 +2047,15 @@ def run_fetch(
             cmd_parts.append("--break-stale-lock")
         if quiet:
             cmd_parts.append("--quiet")
+        if progress_interval is not None:
+            cmd_parts.extend(["--progress-interval", f"{progress_interval:g}"])
         resolved_resume_cmd = shlex.join(cmd_parts)
+
+    try:
+        progress_every = resolve_progress_interval(progress_interval)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return EXIT_USAGE
 
     if delay_seconds < MIN_DELAY_SECONDS:
         print(f"delay must be >= {MIN_DELAY_SECONDS}", file=sys.stderr)
@@ -1974,8 +2074,6 @@ def run_fetch(
     base_requests = 0
     process_units_finished = 0
     process_wall_time = 0.0
-    last_progress_time = [clock()]
-    last_heartbeat_time = [clock()]
 
     lock: RunnerLock | None = None
     ledger: SpellingLedger | None = None
@@ -1991,16 +2089,31 @@ def run_fetch(
         with contextlib.suppress(ValueError, OSError):
             old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
 
-    def on_heartbeat(what: str) -> float:
-        now = clock()
-        due_in_progress = max(0.0, HEARTBEAT_INTERVAL_SECONDS - (now - last_progress_time[0]))
-        due_in_heartbeat = max(0.0, HEARTBEAT_INTERVAL_SECONDS - (now - last_heartbeat_time[0]))
-        time_until_due = max(due_in_progress, due_in_heartbeat)
-        if time_until_due <= 0.0:
-            print(f"heartbeat: {what}", file=sys.stderr, flush=True)
-            last_heartbeat_time[0] = now
-            return HEARTBEAT_INTERVAL_SECONDS
-        return time_until_due
+    def _emit_fetch_progress() -> None:
+        if ledger is None:
+            return
+        counts = ledger.counts()
+        finished = counts["stored"] + counts["absent_from_ulif"] + counts["retry_scheduled"] + counts["error"]
+        requests_made = base_requests + (client.requests_made if client is not None else 0)
+        timed = int(ledger.meta("cumulative_timed_units", "0") or "0")
+        wall = float(ledger.meta("cumulative_wall_seconds", "0.0") or "0.0")
+        remaining = counts["pending"] + counts["retry_scheduled"] + counts["error"]
+        line = format_periodic_progress(
+            kind="spellings",
+            done=finished,
+            total=counts["spellings_total"],
+            requests_made=requests_made,
+            elapsed_seconds=clock() - start_time,
+            eta_seconds=_eta_seconds(remaining, timed, wall),
+        )
+        print(line, file=sys.stderr, flush=True)
+
+    on_heartbeat = OperatorProgress(
+        interval=progress_every,
+        clock=clock,
+        state_dir=state_dir,
+        emit=_emit_fetch_progress,
+    )
 
     try:
         try:
@@ -2184,7 +2297,7 @@ def run_fetch(
                             spelling=spelling,
                         )
                         print(line, file=sys.stderr, flush=True)
-                        last_progress_time[0] = clock()
+                        on_heartbeat.note_progress()
 
                     if unit_state == "retry_scheduled":
                         consecutive_retries += 1
@@ -2980,6 +3093,7 @@ def run_walk(
     sleep: SleepFn = _default_sleep,
     clock: ClockFn = time.monotonic,
     scanner: Scanner = scan_for_legacy_crawler,
+    progress_interval: float | None = None,
 ) -> int:
     if resume_cmd:
         resolved_resume_cmd = resume_cmd
@@ -3004,7 +3118,15 @@ def run_walk(
             cmd_parts.append("--break-stale-lock")
         if quiet:
             cmd_parts.append("--quiet")
+        if progress_interval is not None:
+            cmd_parts.extend(["--progress-interval", f"{progress_interval:g}"])
         resolved_resume_cmd = shlex.join(cmd_parts)
+
+    try:
+        progress_every = resolve_progress_interval(progress_interval)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return EXIT_USAGE
 
     if delay_seconds < MIN_DELAY_SECONDS:
         print(f"delay must be >= {MIN_DELAY_SECONDS}", file=sys.stderr)
@@ -3023,8 +3145,6 @@ def run_walk(
     base_requests = 0
     process_pages_finished = 0
     process_wall_time = 0.0
-    last_progress_time = [clock()]
-    last_heartbeat_time = [clock()]
 
     lock: RunnerLock | None = None
     ledger: SpellingLedger | None = None
@@ -3040,16 +3160,30 @@ def run_walk(
         with contextlib.suppress(ValueError, OSError):
             old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
 
-    def on_heartbeat(what: str) -> float:
-        now = clock()
-        due_in_progress = max(0.0, HEARTBEAT_INTERVAL_SECONDS - (now - last_progress_time[0]))
-        due_in_heartbeat = max(0.0, HEARTBEAT_INTERVAL_SECONDS - (now - last_heartbeat_time[0]))
-        time_until_due = max(due_in_progress, due_in_heartbeat)
-        if time_until_due <= 0.0:
-            print(f"heartbeat: {what}", file=sys.stderr, flush=True)
-            last_heartbeat_time[0] = now
-            return HEARTBEAT_INTERVAL_SECONDS
-        return time_until_due
+    def _emit_walk_progress() -> None:
+        if ledger is None:
+            return
+        counts = ledger.walk_counts()
+        requests_made = base_requests + (client.requests_made if client is not None else 0)
+        timed = int(ledger.meta("cumulative_timed_pages", "0") or "0")
+        wall = float(ledger.meta("cumulative_page_wall_seconds", "0.0") or "0.0")
+        remaining = max(0, counts["pages_total"] - counts["pages_done"])
+        line = format_periodic_progress(
+            kind="pages",
+            done=counts["pages_done"],
+            total=counts["pages_total"],
+            requests_made=requests_made,
+            elapsed_seconds=clock() - start_time,
+            eta_seconds=_eta_seconds(remaining, timed, wall),
+        )
+        print(line, file=sys.stderr, flush=True)
+
+    on_heartbeat = OperatorProgress(
+        interval=progress_every,
+        clock=clock,
+        state_dir=state_dir,
+        emit=_emit_walk_progress,
+    )
 
     try:
         try:
@@ -3381,7 +3515,7 @@ def run_walk(
                                     page_num=current_page,
                                 )
                                 print(line, file=sys.stderr, flush=True)
-                                last_progress_time[0] = clock()
+                                on_heartbeat.note_progress()
 
                             stop_reason = "finished"
                             break
@@ -3476,7 +3610,7 @@ def run_walk(
                                 page_num=current_page,
                             )
                             print(line, file=sys.stderr, flush=True)
-                            last_progress_time[0] = clock()
+                            on_heartbeat.note_progress()
 
                         current_page += 1
                         current_page_html = next_html
@@ -3948,7 +4082,16 @@ Related:
         "--quiet",
         "-q",
         action="store_true",
-        help="Suppress per-spelling progress lines (start banner, heartbeat, stop summary always print; default: False)",
+        help="Suppress per-spelling progress lines (start banner, periodic progress, stop summary always print; default: False)",
+    )
+    run.add_argument(
+        "--progress-interval",
+        type=float,
+        default=None,
+        help=(
+            "Seconds between operator progress lines "
+            f"(default: {DEFAULT_PROGRESS_INTERVAL_SECONDS:g}, or {PROGRESS_INTERVAL_ENV})"
+        ),
     )
 
     walk = sub.add_parser(
@@ -4023,7 +4166,16 @@ Related:
         "--quiet",
         "-q",
         action="store_true",
-        help="Suppress per-page progress lines (start banner, heartbeat, stop summary always print; default: False)",
+        help="Suppress per-page progress lines (start banner, periodic progress, stop summary always print; default: False)",
+    )
+    walk.add_argument(
+        "--progress-interval",
+        type=float,
+        default=None,
+        help=(
+            "Seconds between operator progress lines "
+            f"(default: {DEFAULT_PROGRESS_INTERVAL_SECONDS:g}, or {PROGRESS_INTERVAL_ENV})"
+        ),
     )
     walk.add_argument(
         "--start-headword",
@@ -4284,6 +4436,8 @@ Related:
             cmd_parts.append("--break-stale-lock")
         if args.quiet:
             cmd_parts.append("--quiet")
+        if args.progress_interval is not None:
+            cmd_parts.extend(["--progress-interval", f"{args.progress_interval:g}"])
         resume_cmd = shlex.join(cmd_parts)
 
         old_sigterm = None
@@ -4331,6 +4485,7 @@ Related:
                     quiet=args.quiet,
                     spellings_file=args.spellings_file,
                     resume_cmd=resume_cmd,
+                    progress_interval=args.progress_interval,
                 )
                 if code == EXIT_OK:
                     ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
@@ -4366,6 +4521,8 @@ Related:
             cmd_parts.append("--break-stale-lock")
         if args.quiet:
             cmd_parts.append("--quiet")
+        if args.progress_interval is not None:
+            cmd_parts.extend(["--progress-interval", f"{args.progress_interval:g}"])
         if args.start_headword != "а":
             cmd_parts.extend(["--start-headword", args.start_headword])
         resume_cmd = shlex.join(cmd_parts)
@@ -4390,6 +4547,7 @@ Related:
                 quiet=args.quiet,
                 start_headword=args.start_headword,
                 resume_cmd=resume_cmd,
+                progress_interval=args.progress_interval,
             )
             if code == EXIT_OK:
                 ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
