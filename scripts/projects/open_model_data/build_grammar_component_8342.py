@@ -4110,7 +4110,6 @@ def build_grammar_dataset(
     # 5. Extract substantive corrections and pristine zero-error controls
     seen_corrections: set[tuple[str, str]] = set()
     seen_control_texts: set[str] = set()
-    seen_correction_source_texts: set[str] = set()
     euphony_pairs = {
         ("і", "й"),
         ("й", "і"),
@@ -4200,11 +4199,10 @@ def build_grammar_dataset(
                 and not is_test_near_duplicate(corr_text)
                 and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens)
             ):
-                norm_orig = re.sub(r"\s+", " ", orig_text.strip().lower())
-                if norm_orig in seen_correction_source_texts:
+                pair = (orig_text, corr_text)
+                if pair in seen_corrections:
                     continue
-                seen_correction_source_texts.add(norm_orig)
-                seen_corrections.add((orig_text, corr_text))
+                seen_corrections.add(pair)
 
                 merged_in_scope = merge_contiguous_same_tag_edits(in_scope)
                 sorted_in_scope = sorted(
@@ -4406,11 +4404,10 @@ def build_grammar_dataset(
                 and not is_test_near_duplicate(corr_text)
                 and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens)
             ):
-                norm_orig = re.sub(r"\s+", " ", orig_text.strip().lower())
-                if norm_orig in seen_correction_source_texts:
+                pair = (orig_text, corr_text)
+                if pair in seen_corrections:
                     continue
-                seen_correction_source_texts.add(norm_orig)
-                seen_corrections.add((orig_text, corr_text))
+                seen_corrections.add(pair)
 
                 merged_in_scope = merge_contiguous_same_tag_edits(in_scope)
                 sorted_in_scope = sorted(
@@ -4477,7 +4474,7 @@ def build_grammar_dataset(
 
     print(
         f"📊 Extracted substantive corrections: {len(train_corrections)} train, "
-        f"{len(eval_corrections)} eval. Deduplicated by source sentence: {len(seen_correction_source_texts)} distinct sources."
+        f"{len(eval_corrections)} eval. Total unique (source, correction) pairs: {len(seen_corrections)}."
     )
     print(
         f"🛡️  Extracted clean control candidates: {len(train_clean_candidates)} train, {len(eval_clean_candidates)} eval."
@@ -4620,7 +4617,9 @@ def build_grammar_dataset(
 
         # Deterministic shuffle / sort by content hash
         all_raw_items.sort(
-            key=lambda x: hashlib.sha256(f"{x[1]['doc_id']}_{x[1]['original_text']}".encode()).hexdigest()
+            key=lambda x: hashlib.sha256(
+                f"{x[1]['doc_id']}_{x[1].get('sent_idx', 0)}_{x[1].get('ann_id', 0)}_{x[1]['original_text']}_{x[1].get('corrected_text', '')}".encode()
+            ).hexdigest()
         )
 
         if split_name == "train":

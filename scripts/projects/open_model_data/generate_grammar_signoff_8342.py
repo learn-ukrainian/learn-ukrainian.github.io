@@ -134,13 +134,35 @@ def _inspect_control_in_vesum(text: str, cur: sqlite3.Cursor) -> dict[str, Any]:
     }
 
 
-def generate_signoff_and_receipt(findings_file: Path | None = None, write_signoff: bool = False) -> None:
+def generate_signoff_and_receipt(
+    findings_file: Path | None = None,
+    write_signoff: bool = False,
+    reviewer_id: str | None = None,
+    reviewer_family: str | None = None,
+    reviewer_name: str | None = None,
+    signoff_date: str | None = None,
+) -> None:
     if not SAMPLE_JSON.is_file():
         raise FileNotFoundError(f"Missing sample json: {SAMPLE_JSON}")
     if not SIGNOFF_TEMPLATE.is_file():
         raise FileNotFoundError(f"Missing signoff template: {SIGNOFF_TEMPLATE}")
     if not VESUM_DB.is_file():
         raise FileNotFoundError(f"Missing VESUM db at {VESUM_DB}")
+
+    if write_signoff:
+        if not findings_file or not findings_file.is_file():
+            raise ValueError(
+                "Provenance violation: --write-signoff requires an authentic --findings JSON file. "
+                "Synthesizing an approved signoff without reviewer evaluation input is strictly forbidden."
+            )
+        if not reviewer_id or not reviewer_id.strip():
+            raise ValueError(
+                "Provenance violation: --write-signoff requires an explicit non-empty --reviewer-id (e.g. claude_blue_team_ling_review)."
+            )
+        if not reviewer_family or not reviewer_family.strip():
+            raise ValueError(
+                "Provenance violation: --write-signoff requires an explicit non-empty --reviewer-family (e.g. claude)."
+            )
 
     findings: dict[int, Any] = {}
     if findings_file and findings_file.is_file():
@@ -442,12 +464,12 @@ def generate_signoff_and_receipt(findings_file: Path | None = None, write_signof
         "profile_sha256": profile_sha256,
         "sample_size_drawn": sample_size,
         "sample_size_reviewed": sample_size,
-        "reviewer_id": "claude_blue_team_ling_review" if write_signoff else "",
-        "reviewer_family": "claude" if write_signoff else "",
-        "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)" if write_signoff else "",
+        "reviewer_id": reviewer_id or "",
+        "reviewer_family": reviewer_family or "",
+        "reviewer_name": reviewer_name or ("Claude Sonnet (Blue Team Independent Language Reviewer)" if reviewer_family == "claude" else reviewer_id or ""),
         "reviewer_credential": "Cross-Family Independent Review Protocol",
         "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
-        "review_date": "2026-09-23",
+        "review_date": signoff_date or "2026-09-23",
         "verdict": overall_verdict,
         "blocker_defect_count": blocker_defect_count,
         "minor_defect_count": minor_defect_count,
@@ -474,6 +496,8 @@ def generate_signoff_and_receipt(findings_file: Path | None = None, write_signof
         f.write("\n")
 
     if write_signoff:
+        signoff_dt = signoff_date or "2026-09-23"
+        display_name = reviewer_name or ("Claude (Blue Team)" if reviewer_family == "claude" else reviewer_id)
         signoff = {
             "dataset_sha256": dataset_sha256,
             "sample_seed": sample_seed,
@@ -482,12 +506,12 @@ def generate_signoff_and_receipt(findings_file: Path | None = None, write_signof
             "sample_size_reviewed": sample_size,
             "blocker_defect_count": blocker_defect_count,
             "minor_defect_count": minor_defect_count,
-            "reviewer_id": "claude_blue_team_ling_review",
-            "reviewer_family": "claude",
-            "signoff_date": "2026-09-23",
+            "reviewer_id": reviewer_id,
+            "reviewer_family": reviewer_family,
+            "signoff_date": signoff_dt,
             "comments": (
                 f"Independent cross-family linguistic review of drawn sample (n={sample_size}, seed={sample_seed[:16]}) "
-                f"conducted by Claude (Blue Team) on 2026-09-23. Full itemized audit receipt in acceptance_review_sample.receipt.json. "
+                f"conducted by {display_name} on {signoff_dt}. Full itemized audit receipt in acceptance_review_sample.receipt.json. "
                 f"Audit result: {sample_size - blocker_defect_count}/{sample_size} passed ({fully_attested_count} fully VESUM-attested, "
                 f"{corpus_lexica_count} containing authentic onyms/compounds, {punctuation_restructure_count} punctuation/syntactic restructurings). "
                 f"Blocker defects: {blocker_defect_count}, Minor defects: {minor_defect_count}. "
@@ -511,9 +535,28 @@ def generate_signoff_and_receipt(findings_file: Path | None = None, write_signof
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate Linguistic Review Signoff & Receipt (#8342)")
-    parser.add_argument("--findings", type=Path, default=None, help="Optional JSON file with item findings/defects")
+    parser.add_argument("--findings", type=Path, default=None, help="JSON file with authentic item findings/defects")
     parser.add_argument(
-        "--write-signoff", action="store_true", help="Write actual signoff file (only with verified review)"
+        "--write-signoff", action="store_true", help="Write actual signoff file (requires --findings and reviewer info)"
+    )
+    parser.add_argument(
+        "--reviewer-id", type=str, default=None, help="Reviewer ID (e.g. claude_blue_team_ling_review)"
+    )
+    parser.add_argument(
+        "--reviewer-family", type=str, default=None, help="Reviewer family (e.g. claude)"
+    )
+    parser.add_argument(
+        "--reviewer-name", type=str, default=None, help="Reviewer display name"
+    )
+    parser.add_argument(
+        "--signoff-date", type=str, default=None, help="Signoff date (YYYY-MM-DD)"
     )
     args = parser.parse_args()
-    generate_signoff_and_receipt(findings_file=args.findings, write_signoff=args.write_signoff)
+    generate_signoff_and_receipt(
+        findings_file=args.findings,
+        write_signoff=args.write_signoff,
+        reviewer_id=args.reviewer_id,
+        reviewer_family=args.reviewer_family,
+        reviewer_name=args.reviewer_name,
+        signoff_date=args.signoff_date,
+    )

@@ -14,3 +14,4 @@ thresholds:
   max_query_top5_share: 0.20
   min_query_entropy: 0.80
   min_query_unique_skeletons: 50
+  require_review_receipt: true

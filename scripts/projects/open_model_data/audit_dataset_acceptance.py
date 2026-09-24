@@ -1312,11 +1312,12 @@ def audit_check_7_sample_drawer(
                     if not reviewer_family or not isinstance(reviewer_family, str) or not reviewer_family.strip():
                         failures.append("Signoff missing valid reviewer_family")
 
-                    # Check for verified itemized receipt
+                    # Check for verified itemized receipt if configured or present
                     receipt_path = sample_out_path.parent / "acceptance_review_sample.receipt.json"
-                    if not receipt_path.is_file():
+                    require_receipt = thresholds.get("require_review_receipt", False)
+                    if require_receipt and not receipt_path.is_file():
                         failures.append(f"Missing itemized review receipt: {receipt_path}")
-                    else:
+                    elif receipt_path.is_file():
                         try:
                             receipt_data = json.loads(receipt_path.read_text(encoding="utf-8"))
                             items = receipt_data.get("reviewed_sample_items", [])
