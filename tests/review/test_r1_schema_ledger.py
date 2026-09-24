@@ -55,7 +55,17 @@ PLAN_CHECKS = (
 )
 LESSON_CHECKS = ("job", "language", "learner_fit", "activity", "evidence_use", "english", "fact")
 SNAPSHOTS = {
-    "sources_db": {"digest": "11" * 32, "metadata": {"db_sha256": "11" * 32}},
+    "sources_db": {
+        "digest": "11" * 32,
+        "metadata": {
+            "scheme": "file-meta-v1",
+            "size_bytes": 13,
+            "mtime_ns": 1,
+            "journal_mode": "wal",
+            "wal_bytes": 0,
+            "wal_mtime_ns": None,
+        },
+    },
     "vesum": {"digest": "22" * 32, "metadata": {"canonical_jsonl_sha256": "22" * 32}},
     "trie": {"digest": "33" * 32},
 }
@@ -345,11 +355,8 @@ def test_ledger_append_only_and_sidecar_mismatch(tmp_path: Path) -> None:
         lookup(path, first)
 
 
-def test_collect_snapshots_uses_fingerprint_and_vesum_metadata(tmp_path: Path) -> None:
-    sources_db = tmp_path / "sources.db"
-    sources_db.write_bytes(b"sources-bytes")
-    vesum = tmp_path / "vesum.db"
-    connection = sqlite3.connect(vesum)
+def _vesum_fixture(path: Path) -> None:
+    connection = sqlite3.connect(path)
     connection.execute("CREATE TABLE vesum_build_metadata (key TEXT, value TEXT)")
     connection.execute(
         "INSERT INTO vesum_build_metadata VALUES ('canonical_jsonl_sha256', ?)",
@@ -357,16 +364,94 @@ def test_collect_snapshots_uses_fingerprint_and_vesum_metadata(tmp_path: Path) -
     )
     connection.commit()
     connection.close()
+
+
+def test_collect_snapshots_uses_file_metadata_identity_and_vesum_metadata(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """sources_db is a metadata identity (scheme file-meta-v1): 64-hex digest, no body read (#8527)."""
+    sources_db = tmp_path / "sources.db"
+    header = bytearray(b"SQLite format 3\x00" + b"\x10\x00" + b"\x02\x02" + bytes(80))
+    sources_db.write_bytes(bytes(header))
+    # Sparse: far larger than any read budget, so a whole-file hash could not finish in test time.
+    # Probe sparse support with 64 MiB before extending, so a non-sparse filesystem never fills up.
+    os.truncate(sources_db, 64 << 20)
+    size = 64 << 20
+    if sources_db.stat().st_blocks * 512 < (1 << 20):
+        size = 1 << 34
+        os.truncate(sources_db, size)
+    (tmp_path / "sources.db-wal").write_bytes(b"w" * 7)
+    vesum = tmp_path / "vesum.db"
+    _vesum_fixture(vesum)
     from scripts.curriculum.evidence.sources import Sources
 
+    bytes_read = {"total": 0}
+    real_open = Path.open
+
+    def counting_open(self, *args, **kwargs):
+        stream = real_open(self, *args, **kwargs)
+        if self == sources_db:
+            real_read = stream.read
+
+            def read(size=-1):
+                data = real_read(size)
+                bytes_read["total"] += len(data)
+                return data
+
+            stream.read = read
+        return stream
+
+    monkeypatch.setattr(Path, "open", counting_open)
+    monkeypatch.setattr(hashlib, "file_digest", lambda *_a, **_k: pytest.fail("collect_snapshots hashed a file body"))
     sources = Sources(sources_db=sources_db, vesum_db=vesum)
     try:
         snapshot = collect_snapshots(sources=sources, trie_digest="cd" * 32)
     finally:
         sources.close()
-    assert snapshot["sources_db"]["digest"] == hashlib.sha256(b"sources-bytes").hexdigest()
+    entry = snapshot["sources_db"]
+    stat = sources_db.stat()
+    wal_stat = (tmp_path / "sources.db-wal").stat()
+    assert entry["metadata"] == {
+        "scheme": "file-meta-v1",
+        "size_bytes": size,
+        "mtime_ns": stat.st_mtime_ns,
+        "journal_mode": "wal",
+        "wal_bytes": 7,
+        "wal_mtime_ns": wal_stat.st_mtime_ns,
+    }
+    assert len(entry["digest"]) == 64 and all(ch in "0123456789abcdef" for ch in entry["digest"])
+    expected = hashlib.sha256(
+        json.dumps(entry["metadata"], sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    ).hexdigest()
+    assert entry["digest"] == expected
+    assert bytes_read["total"] <= 100, f"sources.db body was read: {bytes_read['total']} bytes"
     assert snapshot["vesum"]["digest"] == "ab" * 32
     assert snapshot["trie"]["digest"] == "cd" * 32
+
+
+def test_sources_db_meta_identity_changes_with_size_or_mtime(tmp_path: Path) -> None:
+    from scripts.curriculum.evidence.sources import Sources
+
+    sources_db = tmp_path / "sources.db"
+    sources_db.write_bytes(b"sources-bytes")
+    vesum = tmp_path / "vesum.db"
+    _vesum_fixture(vesum)
+    sources = Sources(sources_db=sources_db, vesum_db=vesum)
+    try:
+        first = collect_snapshots(sources=sources, trie_digest="cd" * 32)["sources_db"]
+        assert first["metadata"]["journal_mode"] is None  # not a SQLite header, no pinned session
+        os.utime(sources_db, ns=(first["metadata"]["mtime_ns"] + 1_000_000_000,) * 2)
+        after_mtime = collect_snapshots(sources=sources, trie_digest="cd" * 32)["sources_db"]
+        assert after_mtime["metadata"]["size_bytes"] == first["metadata"]["size_bytes"]
+        assert after_mtime["digest"] != first["digest"]
+        with sources_db.open("ab") as stream:
+            stream.write(b"!")
+        os.utime(sources_db, ns=(after_mtime["metadata"]["mtime_ns"],) * 2)
+        after_size = collect_snapshots(sources=sources, trie_digest="cd" * 32)["sources_db"]
+        assert after_size["metadata"]["mtime_ns"] == after_mtime["metadata"]["mtime_ns"]
+        assert after_size["digest"] not in {first["digest"], after_mtime["digest"]}
+    finally:
+        sources.close()
 
 
 def test_session_from_environ_off_and_incomplete(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

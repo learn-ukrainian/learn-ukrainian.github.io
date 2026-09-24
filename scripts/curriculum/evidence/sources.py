@@ -32,6 +32,7 @@ from . import codes, config, tags
 
 BATCH_SIZE = 500
 SOURCES_DB_SCHEME = "rows-v2"
+SOURCES_DB_META_SCHEME = "file-meta-v1"
 LEGACY_SOURCES_DB_SCHEME = "file-v1"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
@@ -128,10 +129,14 @@ def open_snapshot(path: Path) -> sqlite3.Connection:
     the read mark (a bare BEGIN pins nothing until the first read).
     """
     conn = sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True, isolation_level=None)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA busy_timeout=30000")
-    conn.execute("BEGIN")
-    conn.execute("SELECT 1 FROM sqlite_master LIMIT 1").fetchone()
+    try:
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA busy_timeout=30000")
+        conn.execute("BEGIN")
+        conn.execute("SELECT 1 FROM sqlite_master LIMIT 1").fetchone()
+    except BaseException:
+        conn.close()
+        raise
     return conn
 
 
@@ -270,6 +275,36 @@ class Sources:
             raise ValueError(f"{codes.SOURCE_CHANGED}: {str(path)!r} while hashing")
         self._fingerprints[path] = (signature, digest, metadata)
         return digest, metadata
+
+    def _sources_db_meta_identity(self) -> tuple[str, dict]:
+        """Cheap, honestly labelled identity of the sources.db file: metadata only, never its body.
+
+        The review receipt ledger records this per attempt. It is not a content
+        hash: hashing the multi-gigabyte file per process is what raced the
+        ULIF walk (#8527). The content evidence of a sources.db read is the
+        receipt's full stored result (rows-v2). The digest is the sha256 of the
+        canonical metadata JSON so readers expecting a 64-hex string stay valid.
+        """
+        path = self.sources_db
+        try:
+            stat = path.stat()
+        except OSError as exc:
+            raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(path)!r}") from exc
+        wal_bytes, wal_mtime_ns = 0, None
+        with suppress(OSError):
+            wal_stat = Path(f"{path}-wal").stat()
+            wal_bytes, wal_mtime_ns = wal_stat.st_size, wal_stat.st_mtime_ns
+        # Header bytes first (20 bytes); the pinned session's PRAGMA answer when the header is unreadable.
+        journal_mode = journal_mode_from_header(path) or self.journal_mode
+        metadata = {
+            "scheme": SOURCES_DB_META_SCHEME,
+            "size_bytes": stat.st_size,
+            "mtime_ns": stat.st_mtime_ns,
+            "journal_mode": journal_mode,
+            "wal_bytes": wal_bytes,
+            "wal_mtime_ns": wal_mtime_ns,
+        }
+        return hashlib.sha256(_canonical(metadata)).hexdigest(), metadata
 
     def _db(self) -> sqlite3.Connection:
         if self._conn is None:
