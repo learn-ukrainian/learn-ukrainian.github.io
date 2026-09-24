@@ -91,6 +91,47 @@ def test_parsed_delegate_keys_cover_read_only_and_review_attempts() -> None:
     assert {"mcp_server_names", "review_id", "attempt_id", "strict_mcp_config", "mcp_config_path"} <= keys
 
 
+# Placeholder per key delegate.py assigns. An unmapped key still gets a
+# value so a new read-only or review assignment is sent, not dropped.
+_KEY_PLACEHOLDERS: dict[str, object] = {
+    "read_only_tmp_root": "LEASE",
+    "mcp_config_path": "MCP_CONFIG",
+    "strict_mcp_config": True,
+    "mcp_server_names": ["sources"],
+    "review_id": "rev-contract",
+    "attempt_id": "att-contract",
+    "allowed_tools": "mcp__sources__verify_word",
+    "codex_home_override": "CODEX_HOME",
+    "agy_home_override": "AGY_HOME",
+}
+
+# Failures that are fixture preconditions, not key rejection. Any other
+# exception fails the contract, including ones that omit "unsupported tool_config".
+_EXPECTED_PRECONDITIONS: dict[str, tuple[str, str]] = {
+    "CursorAdapter": (
+        "could not resolve MCP server config",
+        "strict review mirrors servers from mcp_config_path; this fixture has no sources server file",
+    ),
+}
+
+
+def _tool_config_from_parsed_keys(keys: frozenset[str], tmp_path: Path, lease: Path) -> dict[str, object]:
+    """Build the adapter payload from the parsed delegate set."""
+    path_for = {
+        "LEASE": str(lease),
+        "MCP_CONFIG": str(tmp_path / "review.mcp.json"),
+        "CODEX_HOME": str(tmp_path / "codex-home"),
+        "AGY_HOME": str(tmp_path / "agy-home"),
+    }
+    config: dict[str, object] = {}
+    for key in sorted(keys):
+        placeholder = _KEY_PLACEHOLDERS.get(key, f"unmapped-delegate-key:{key}")
+        config[key] = path_for.get(placeholder, placeholder) if isinstance(placeholder, str) else placeholder
+    if set(config) != set(keys):
+        raise AssertionError(f"tool_config keys {sorted(config)} != parsed {sorted(keys)}")
+    return config
+
+
 @pytest.mark.parametrize("adapter_cls", _dispatch_adapter_classes(), ids=lambda cls: cls.__name__)
 def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, tmp_path, monkeypatch) -> None:
     lease = tmp_path / "learn-ukrainian" / "contract-lease"
@@ -108,21 +149,8 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
     )
     monkeypatch.setattr("scripts.agent_runtime.adapters.claude._default_claude_bin", lambda: str(claude))
 
-    tool_config = {
-        "read_only_tmp_root": str(lease),
-        "mcp_config_path": str(tmp_path / "review.mcp.json"),
-        "strict_mcp_config": True,
-        "mcp_server_names": ["sources"],
-        "review_id": "rev-contract",
-        "attempt_id": "att-contract",
-        "allowed_tools": "mcp__sources__verify_word",
-        "codex_home_override": str(tmp_path / "codex-home"),
-        "agy_home_override": str(tmp_path / "agy-home"),
-    }
-    # Drop keys the parser does not currently assign so the call stays
-    # exactly the delegate set, plus harness for the Kimi seat.
     parsed = delegate_read_only_and_review_tool_config_keys()
-    tool_config = {key: value for key, value in tool_config.items() if key in parsed}
+    tool_config = _tool_config_from_parsed_keys(parsed, tmp_path, lease)
     if adapter_cls.__name__ == "KimiAdapter":
         tool_config["harness"] = "kimicc"
 
@@ -138,10 +166,12 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
         )
     except Exception as exc:
         message = str(exc)
-        assert "unsupported tool_config" not in message, f"{adapter_cls.__name__} rejected delegate keys: {message}"
-        if adapter_cls.__name__ in {"KimiAdapter", "KimiccHarness"}:
-            raise
-        return
+        if "unsupported tool_config" in message:
+            raise AssertionError(f"{adapter_cls.__name__} rejected delegate keys: {message}") from exc
+        expected = _EXPECTED_PRECONDITIONS.get(adapter_cls.__name__)
+        if expected is not None and expected[0] in message:
+            return
+        raise
 
     joined = " ".join(plan.cmd)
     assert "read_only_tmp_root" not in joined
