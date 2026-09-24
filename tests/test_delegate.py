@@ -52,6 +52,23 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _worktree_add_via_run(monkeypatch):
+    """Route ``git worktree add`` through ``subprocess.run`` in this file.
+
+    Dispatch runs the add under ``Popen`` with a progress-aware bound (#8663);
+    that transport and its undo are covered in
+    tests/test_delegate_worktree_add_undo.py. Tests here stub
+    ``subprocess.run`` for every git call, or ``Popen`` for the worker, so the
+    add keeps its old transport and stays visible to those stubs.
+    """
+
+    def via_run(add_command, *, cwd, worktree_path, env=None):
+        return delegate.subprocess.run(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env)
+
+    monkeypatch.setattr(delegate, "_run_worktree_add", via_run)
+
+
+@pytest.fixture(autouse=True)
 def _stub_primary_integrity_sweep(monkeypatch):
     """Keep _run_worker/cmd_dispatch tests hermetic from the ambient checkout.
 

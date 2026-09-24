@@ -144,6 +144,11 @@ from scripts.common.scratch import (
     resolve_scratch_root,
     scratch_scan_roots,
 )
+from scripts.config import (
+    DELEGATE_WORKTREE_ADD_MAX_S,
+    DELEGATE_WORKTREE_ADD_STALL_S,
+    DELEGATE_WORKTREE_ADD_TIMEOUT_S,
+)
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
@@ -1279,6 +1284,271 @@ def _auto_worktree_path(agent: str, task_id: str, *, repo_root: Path | None = No
     return root / ".worktrees" / "dispatch" / agent / safe
 
 
+# ``git worktree add`` bounds, configurable in scripts/config.py (#8663). Tests
+# shrink them here instead of generating host load.
+_WORKTREE_ADD_TIMEOUT_S: float = DELEGATE_WORKTREE_ADD_TIMEOUT_S
+_WORKTREE_ADD_STALL_S: float = DELEGATE_WORKTREE_ADD_STALL_S
+_WORKTREE_ADD_MAX_S: float = DELEGATE_WORKTREE_ADD_MAX_S
+# How often a slow add's checkout is re-counted once the base window has passed.
+_WORKTREE_ADD_POLL_S: float = 5.0
+# How long a stopped add gets to run git's own cleanup after SIGTERM, and to
+# exit after SIGKILL.
+_WORKTREE_ADD_STOP_GRACE_S: float = 30.0
+
+
+class WorktreeAddFailed(RuntimeError):
+    """``git worktree add`` failed or timed out before any worker was spawned (#8663).
+
+    ``cleanup`` records what dispatch did to the half-built worktree the add
+    left behind; the failed task record carries it as ``worktree_prep_cleanup``.
+    """
+
+    def __init__(self, message: str, *, cleanup: dict[str, Any]) -> None:
+        super().__init__(message)
+        self.cleanup = cleanup
+
+
+def _checkout_entry_count(path: Path) -> int:
+    """Count the files and directories under ``path``, skipping ``.git``.
+
+    The progress signal for a slow ``git worktree add``: a checkout that is
+    still being written keeps gaining entries. Entries that vanish mid-walk
+    are skipped; a missing ``path`` counts as zero.
+    """
+    count = 0
+    pending = [path]
+    while pending:
+        try:
+            with os.scandir(pending.pop()) as entries:
+                for entry in entries:
+                    if entry.name == ".git":
+                        continue
+                    count += 1
+                    try:
+                        if entry.is_dir(follow_symlinks=False):
+                            pending.append(Path(entry.path))
+                    except OSError:
+                        continue
+        except OSError:
+            continue
+    return count
+
+
+def _stop_worktree_add(proc: subprocess.Popen[str]) -> None:
+    """Stop a slow ``git worktree add`` and its checkout child.
+
+    SIGTERM goes to the whole process group first: git's signal handler then
+    deletes the worktree it was building. SIGKILL follows if it does not exit
+    in time, and :func:`_undo_failed_worktree_add` removes whatever remains.
+    """
+    for sig in (signal.SIGTERM, signal.SIGKILL):
+        with contextlib.suppress(ProcessLookupError, PermissionError):
+            os.killpg(proc.pid, sig)
+        try:
+            proc.communicate(timeout=_WORKTREE_ADD_STOP_GRACE_S)
+            return
+        except subprocess.TimeoutExpired:
+            continue
+
+
+def _run_worktree_add(
+    add_command: list[str],
+    *,
+    cwd: Path,
+    worktree_path: Path,
+    env: dict[str, str] | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run ``git worktree add`` with a progress-aware bound (#8663).
+
+    The add always gets :data:`_WORKTREE_ADD_TIMEOUT_S`. After that it keeps
+    running while the checkout at ``worktree_path`` is still gaining entries,
+    is stopped once it gains none for :data:`_WORKTREE_ADD_STALL_S`, and is
+    never allowed past :data:`_WORKTREE_ADD_MAX_S`. A stopped add raises
+    :class:`subprocess.TimeoutExpired`.
+    """
+    proc = subprocess.Popen(
+        add_command,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=env,
+        # Its own process group, so a stop also reaches the checkout child.
+        start_new_session=True,
+    )
+    started = time.monotonic()
+    poll_s = max(min(_WORKTREE_ADD_POLL_S, _WORKTREE_ADD_STALL_S), 0.01)
+    last_count: int | None = None
+    last_growth = started
+    while True:
+        elapsed = time.monotonic() - started
+        if elapsed < _WORKTREE_ADD_TIMEOUT_S:
+            wait_s = min(_WORKTREE_ADD_TIMEOUT_S, _WORKTREE_ADD_MAX_S) - elapsed
+        else:
+            wait_s = min(poll_s, _WORKTREE_ADD_MAX_S - elapsed)
+        try:
+            stdout, stderr = proc.communicate(timeout=max(wait_s, 0.01))
+        except subprocess.TimeoutExpired:
+            pass
+        else:
+            return subprocess.CompletedProcess(add_command, proc.returncode, stdout, stderr)
+        now = time.monotonic()
+        if now - started >= _WORKTREE_ADD_MAX_S:
+            break
+        if now - started < _WORKTREE_ADD_TIMEOUT_S:
+            continue
+        count = _checkout_entry_count(worktree_path)
+        if last_count is None or count > last_count:
+            last_count = count
+            last_growth = now
+        elif now - last_growth >= _WORKTREE_ADD_STALL_S:
+            break
+    _stop_worktree_add(proc)
+    raise subprocess.TimeoutExpired(add_command, time.monotonic() - started)
+
+
+def _registered_worktree_paths(repo_root: Path) -> set[Path] | None:
+    """Return every worktree ``repo_root`` registers, or ``None`` when git cannot say."""
+    try:
+        proc = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+            env=_sanitized_git_env(),
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    return {
+        Path(line.removeprefix("worktree ")).resolve()
+        for line in (proc.stdout or "").splitlines()
+        if line.startswith("worktree ")
+    }
+
+
+def _undo_failed_worktree_add(worktree_path: Path, *, repo_root: Path, task_id: str) -> dict[str, Any]:
+    """Remove the half-built worktree a failed ``git worktree add`` left behind (#8663).
+
+    Callers pass only a path that did not exist before their own add, and call
+    this before any worker is spawned, so nothing but git has written there.
+    The removal goes through the shared chokepoint
+    (:func:`worktree_claims.remove_unclaimed_worktree`) under the worktree
+    lock dispatch already holds: it re-proves the path is a registered
+    worktree of ``repo_root``, refuses while another unfinished task claims it,
+    lifts git's ``initializing`` lock, and runs ``git worktree remove --force``.
+    A registration whose directory is gone is pruned. The branch ref is never
+    touched. Returns the record stored as ``worktree_prep_cleanup``; never
+    raises.
+    """
+    target = worktree_path.resolve()
+    base: dict[str, Any] = {"path": str(worktree_path), "branch_ref_kept": True}
+    if worktree_path.exists():
+
+        def releasable() -> tuple[bool, str]:
+            current = _registered_worktree_paths(repo_root)
+            if current is None or target not in current:
+                return False, "path is not a registered git worktree; left for the husk reaper"
+            return True, "no worker was spawned"
+
+        def fresh_add_holds_no_work(_path: Path) -> bool:
+            # The half checkout is dirty by construction (missing and
+            # untracked files mid-write), but only this call's git wrote it.
+            return False
+
+        removal = worktree_claims.remove_unclaimed_worktree(
+            worktree_path,
+            repo_root=repo_root,
+            control_root=_REPO_ROOT,
+            reason="undid a failed git worktree add; branch ref kept",
+            owner_task_id=task_id,
+            releasable=releasable,
+            force=True,
+            dirty_probe=fresh_add_holds_no_work,
+            unlock=True,
+            tasks_dir=_TASKS_DIR,
+            lock_dir=_worktree_lock_dir(),
+            reuse_held_lock=True,
+        )
+        if removal.action != "removed":
+            return {**base, **removal.as_record()}
+        base = {**base, **removal.as_record()}
+    remaining = _registered_worktree_paths(repo_root)
+    if remaining is None:
+        if "action" in base:
+            return base
+        return {**base, "action": "error", "reason": "could not list git worktrees", "error": None}
+    if target not in remaining:
+        if "action" in base:
+            return base
+        return {**base, "action": "none", "reason": "git left no worktree behind", "error": None}
+    if worktree_path.exists():
+        return {**base, "action": "error", "reason": "worktree still registered after removal", "error": None}
+    # The directory is gone but git still registers it (and may still hold its
+    # ``initializing`` lock); ``git worktree prune`` drops only such entries.
+    for args in (["git", "worktree", "unlock", str(worktree_path)], ["git", "worktree", "prune"]):
+        with contextlib.suppress(OSError, subprocess.TimeoutExpired):
+            subprocess.run(
+                args,
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+                env=_sanitized_git_env(),
+            )
+    remaining = _registered_worktree_paths(repo_root)
+    if remaining is None or target in remaining:
+        return {**base, "action": "error", "reason": "stale worktree registration survived prune", "error": None}
+    return {
+        **base,
+        "action": "removed",
+        "reason": "pruned the stale registration of a half-built worktree",
+        "error": None,
+        "pruned": True,
+    }
+
+
+def _add_worktree_or_undo(
+    add_command: list[str],
+    *,
+    repo_root: Path,
+    worktree_path: Path,
+    task_id: str,
+    env: dict[str, str] | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run this dispatch's ``git worktree add``; undo its leftovers when it fails (#8663).
+
+    Returns the completed process on success. On a timeout or a non-zero
+    exit, removes what the add left at ``worktree_path`` (see
+    :func:`_undo_failed_worktree_add`) and raises :class:`WorktreeAddFailed`.
+    A path that already existed before the add is never touched.
+    """
+    existed_before = worktree_path.exists()
+    try:
+        proc = _run_worktree_add(add_command, cwd=repo_root, worktree_path=worktree_path, env=env)
+    except subprocess.TimeoutExpired as exc:
+        message = f"git worktree add timed out after {exc.timeout:.1f}s"
+    else:
+        if proc.returncode == 0:
+            return proc
+        message = (proc.stderr or proc.stdout or "git worktree add failed").strip()
+    if existed_before:
+        cleanup = {
+            "path": str(worktree_path),
+            "action": "skipped",
+            "reason": "path existed before this git worktree add; never removed",
+            "error": None,
+            "branch_ref_kept": True,
+        }
+    else:
+        cleanup = _undo_failed_worktree_add(worktree_path, repo_root=repo_root, task_id=task_id)
+    raise WorktreeAddFailed(message, cleanup=cleanup)
+
+
 def _ensure_sibling_repo_worktree(
     *,
     repo_root: Path,
@@ -1354,21 +1624,13 @@ def _ensure_sibling_repo_worktree(
         raise RuntimeError(f"{origin_ref} unresolvable in sibling repo {root} after fetch")
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
     add_command = ["git", "worktree", "add", "-b", worktree_branch, str(worktree_path), origin_ref]
-    try:
-        proc = subprocess.run(
-            add_command,
-            cwd=root,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-            env=_sanitized_git_env(),
-        )
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
-    if proc.returncode != 0:
-        stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
-        raise RuntimeError(stderr)
+    _add_worktree_or_undo(
+        add_command,
+        repo_root=root,
+        worktree_path=worktree_path,
+        task_id=task_id,
+        env=_sanitized_git_env(),
+    )
     actual_sha = _resolve_sha(worktree_path)
     if actual_sha is None:
         raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
@@ -5503,20 +5765,7 @@ def _ensure_worktree(
         add_command.extend(["-B", requested_branch, str(worktree_path), worktree_base_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
-    try:
-        proc = subprocess.run(
-            add_command,
-            cwd=_REPO_ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
-    if proc.returncode != 0:
-        stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
-        raise RuntimeError(stderr)
+    _add_worktree_or_undo(add_command, repo_root=_REPO_ROOT, worktree_path=worktree_path, task_id=task_id)
     actual_sha = _resolve_sha(worktree_path)
     if actual_sha is None:
         raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
@@ -6830,11 +7079,14 @@ def _record_worktree_prep_failure(
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
     returncode_reason: str = "worktree preparation failed",
+    worktree_prep_cleanup: dict[str, Any] | None = None,
 ) -> bool:
     """Persist a terminal failed task record when worktree provisioning is refused.
 
     Returns True when a record was written. Refuses to overwrite an existing
     running/spawning record (pre-write re-check closes the guard→write race).
+    ``worktree_prep_cleanup`` is what dispatch did to the worktree a failed
+    ``git worktree add`` left behind (#8663); it is recorded when given.
     """
     if str(_REPO_ROOT / "scripts") not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT / "scripts"))
@@ -6905,6 +7157,8 @@ def _record_worktree_prep_failure(
         failed_state["harness"] = requested_harness
     if lifecycle_carrier is not None:
         failed_state["task_lifecycle"] = lifecycle_carrier
+    if worktree_prep_cleanup is not None:
+        failed_state["worktree_prep_cleanup"] = worktree_prep_cleanup
     state_path = _state_path(task_id)
     existing = _read_state(state_path)
     if existing is not None and existing.get("status") in ("running", "spawning"):
@@ -7906,8 +8160,14 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 silence_timeout=silence_timeout,
                 initial_response_timeout=initial_response_timeout,
                 max_budget_usd=max_budget_usd,
+                worktree_prep_cleanup=exc.cleanup if isinstance(exc, WorktreeAddFailed) else None,
             )
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
+            if isinstance(exc, WorktreeAddFailed):
+                print(
+                    f"   worktree cleanup: {exc.cleanup.get('action')} — {exc.cleanup.get('reason')}",
+                    file=sys.stderr,
+                )
             return 1
     elif args.cwd:
         candidate_cwd = _resolve_cwd_path(args.cwd)

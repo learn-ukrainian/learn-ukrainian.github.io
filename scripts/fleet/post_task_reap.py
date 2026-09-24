@@ -182,25 +182,29 @@ def _worktree_is_dirty(path: Path, *, ignore_deleted_tracked: bool = False) -> b
     return bool(lines)
 
 
-def _git_worktree_is_locked(path: Path, repo_root: Path) -> bool:
-    """Return True if git reports the worktree as locked.  Fail closed."""
+def _git_worktree_lock_reason(path: Path, repo_root: Path) -> str | None:
+    """Return git's lock reason for the worktree, or None when it is unlocked.
+
+    A lock without a reason is ``""``. Fail closed: when git cannot list the
+    worktree, it is reported as locked with reason ``""``.
+    """
     proc = _run_git(["worktree", "list", "--porcelain"], cwd=repo_root)
     if proc.returncode != 0:
-        return True
+        return ""
     resolved = path.resolve()
     entry_path: Path | None = None
-    locked = False
+    lock_reason: str | None = None
     for line in (proc.stdout or "").splitlines():
         if line.startswith("worktree "):
             if entry_path == resolved:
-                return locked
+                return lock_reason
             entry_path = Path(line[len("worktree ") :].strip()).resolve()
-            locked = False
-        elif line.startswith("locked"):
-            locked = True
+            lock_reason = None
+        elif line == "locked" or line.startswith("locked "):
+            lock_reason = line.removeprefix("locked").strip()
     if entry_path == resolved:
-        return locked
-    return True
+        return lock_reason
+    return ""
 
 
 def _pid_alive(pid: int) -> bool | None:
@@ -395,7 +399,27 @@ def _reap_main_worktree(
             "error": None,
         }
 
-    if _git_worktree_is_locked(bound_path, repo_root):
+    lock_reason = _git_worktree_lock_reason(bound_path, repo_root)
+    if lock_reason == "initializing" and state.get("pid", False) is None:
+        # #8663: this task's ``git worktree add`` never finished and no worker
+        # was spawned. The partial checkout is dirty by construction, so the
+        # canonical P0 reaper's half-built class, not the clean-tree checks
+        # below, decides it.
+        row = _reap_via_canonical(
+            repo_root=repo_root,
+            bound_path=bound_path,
+            apply=apply,
+            include_terminal_dispatches=True,
+        )
+        if row is None:
+            return {
+                "path": str(bound_path),
+                "action": "retained",
+                "reason": "canonical P0 reaper did not evaluate bound path",
+                "error": None,
+            }
+        return row
+    if lock_reason is not None:
         return {
             "path": str(bound_path),
             "action": "retained",

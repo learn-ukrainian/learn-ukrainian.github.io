@@ -435,13 +435,17 @@ def test_apply_dispatch_sparse_checkout_timeouts(tmp_path: Path) -> None:
 
 
 def test_ensure_worktree_timeouts(tmp_path: Path) -> None:
-    # 1. worktree add timeout
+    # 1. worktree add timeout (#8663: the add has its own progress-aware bound)
     with (
         patch("scripts.delegate._fetch_base", return_value=True),
         patch("scripts.delegate._resolve_sha", return_value="sha123"),
-        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "worktree", "add"], DEFAULT_GIT_TIMEOUT_S)),
+        patch(
+            "scripts.delegate._run_worktree_add",
+            side_effect=subprocess.TimeoutExpired(["git", "worktree", "add"], 120.0),
+        ),
+        patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "worktree", "list"], DEFAULT_GIT_TIMEOUT_S)),
     ):
-        with pytest.raises(RuntimeError, match=r"git worktree add timed out after 30\.0s"):
+        with pytest.raises(RuntimeError, match=r"git worktree add timed out after 120\.0s"):
             _ensure_worktree(
                 agent="agy",
                 task_id="task-123",
@@ -455,10 +459,10 @@ def test_ensure_worktree_timeouts(tmp_path: Path) -> None:
         patch("scripts.delegate._fetch_base", return_value=True),
         patch("scripts.delegate._branch_worktree_paths", return_value=[]),
         patch("scripts.delegate._resolve_sha", return_value="sha123"),
+        patch("scripts.delegate._run_worktree_add", return_value=_completed(returncode=0)),
         patch(
             "subprocess.run",
             side_effect=[
-                _completed(returncode=0),  # worktree add
                 subprocess.TimeoutExpired(["git", "branch"], DEFAULT_GIT_TIMEOUT_S),  # branch --set-upstream-to
             ],
         ),

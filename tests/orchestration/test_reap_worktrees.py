@@ -3816,3 +3816,81 @@ def test_acp_runtime_cleanup_recheck_failure_deletes_nothing(
     assert result.action == "skipped"
     assert result.reason == "injected recheck failure"
     assert worktree.exists()
+
+
+# --- #8663: half-built dispatch worktrees left by a killed `git worktree add` ---
+
+
+def add_half_built_dispatch(repo: Path, task_id: str) -> Path:
+    """Leave the state a killed ``git worktree add`` leaves: locked, partial checkout."""
+    (repo / "b.txt").write_text("b\n", encoding="utf-8")
+    git(repo, "add", "b.txt")
+    git(repo, "commit", "-m", "second file")
+    worktree = add_worktree(repo, f"claude/{task_id}", path=repo / ".worktrees" / "dispatch" / "claude" / task_id)
+    git(repo, "worktree", "lock", "--reason", "initializing", str(worktree))
+    (worktree / "b.txt").unlink()
+    (worktree / "written-before-index.txt").write_text("partial\n", encoding="utf-8")
+    return worktree
+
+
+def test_half_built_dispatch_worktree_reaped_with_branch_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-r5")
+    head = git(repo, "rev-parse", "refs/heads/claude/impl-8663-r5")
+    _write_task_record(repo, "impl-8663-r5", status="failed", pid=None, worktree_path=str(worktree))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+
+    result = result_for(results, worktree)
+    assert result.action == "removed"
+    assert result.reason.startswith("half-built dispatch worktree task-id=impl-8663-r5 status=failed")
+    assert not worktree.exists()
+    assert git(repo, "rev-parse", "--verify", "refs/heads/claude/impl-8663-r5") == head
+    journal = reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8")
+    assert "half-built dispatch worktree task-id=impl-8663-r5" in journal
+    assert_main_checkout_unchanged(repo)
+
+
+def test_half_built_dispatch_worktree_kept_while_its_task_runs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-live")
+    _write_task_record(repo, "impl-8663-live", status="running", pid=os.getpid(), worktree_path=str(worktree))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == "non-terminal dispatch task-id=impl-8663-live status=running"
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize(
+    ("record", "live_cwd_inside"),
+    [
+        pytest.param({"status": "failed", "pid": 424242}, False, id="worker-was-spawned"),
+        pytest.param({"status": "failed"}, False, id="pid-not-recorded"),
+        pytest.param({"status": "failed", "pid": None}, True, id="live-process-cwd-inside"),
+    ],
+)
+def test_half_built_class_requires_pid_none_and_no_live_cwd(
+    tmp_path: Path,
+    record: dict[str, Any],
+    live_cwd_inside: bool,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-guard")
+    _write_task_record(repo, "impl-8663-guard", worktree_path=str(worktree), **record)
+    info = next(item for item in rw.list_git_worktrees(repo) if item.path.resolve() == worktree.resolve())
+    assert info.locked_reason == "initializing"
+
+    live_cwds = {worktree.resolve()} if live_cwd_inside else set()
+    assert rw._half_built_dispatch_reason(repo_root=repo, info=info, live_cwds=live_cwds) is None
+    assert rw._half_built_dispatch_reason(repo_root=repo, info=info, live_cwds=None) is None

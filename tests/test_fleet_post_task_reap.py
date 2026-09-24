@@ -705,3 +705,41 @@ def test_cli_no_acp_runtime(hermetic_reap, capsys):
     assert report["main_worktree"]["action"] == "removed"
     assert report["acp_runtimes"] == []
     assert acp_path.exists()
+
+
+def _half_built_dispatch(repo_root: Path, tasks_dir: Path, task_id: str, *, status: str, pid: Any) -> Path:
+    """A dispatch worktree a killed ``git worktree add`` left: locked ``initializing``, partial (#8663)."""
+    worktree = _add_dispatch_worktree(repo_root, "claude", task_id)
+    _run(["git", "worktree", "lock", "--reason", "initializing", str(worktree)], cwd=repo_root)
+    (worktree / "README.md").unlink()
+    state = {"task_id": task_id, "agent": "claude", "status": status, "pid": pid, "worktree_path": str(worktree)}
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps(state), encoding="utf-8")
+    return worktree
+
+
+def test_half_built_initializing_worktree_reaped_through_p0_reaper(hermetic_reap):
+    repo_root, _ = hermetic_reap
+    # The canonical reaper reads records from the control plane's batch_state.
+    tasks_dir = repo_root / "batch_state" / "tasks"
+    worktree = _half_built_dispatch(repo_root, tasks_dir, "impl-8663-r3", status="failed", pid=None)
+    head = _run(["git", "rev-parse", "refs/heads/claude/impl-8663-r3"], cwd=repo_root).stdout.strip()
+
+    report = post_task_reap.post_task_reap("impl-8663-r3", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "removed"
+    assert report["main_worktree"]["reason"].startswith("half-built dispatch worktree task-id=impl-8663-r3")
+    assert not worktree.exists()
+    assert _run(["git", "rev-parse", "refs/heads/claude/impl-8663-r3"], cwd=repo_root).stdout.strip() == head
+
+
+def test_initializing_lock_with_recorded_pid_stays_retained(hermetic_reap):
+    repo_root, _ = hermetic_reap
+    tasks_dir = repo_root / "batch_state" / "tasks"
+    worktree = _half_built_dispatch(repo_root, tasks_dir, "impl-8663-pid", status="failed", pid=424242)
+
+    report = post_task_reap.post_task_reap("impl-8663-pid", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained"
+    assert report["main_worktree"]["reason"] == "registered worktree is locked"
+    assert worktree.exists()

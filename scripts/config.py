@@ -28,6 +28,17 @@ from level_config import base_level
 # is accepted as the deliverable. Tune from observed runs.
 DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX = 300
 
+# Bounds for the ``git worktree add`` that dispatch runs before it spawns a
+# worker (#8663). A full checkout writes tens of thousands of files, which can
+# take minutes when host I/O is saturated, so a fixed 30 s kill left half-built
+# worktrees behind. The add always gets the base window. Past it, dispatch
+# keeps waiting while the checkout is still gaining files, gives up once it has
+# gained none for the stall window, and never waits past the ceiling. A failed
+# or timed-out add is undone before the dispatch fails.
+DELEGATE_WORKTREE_ADD_TIMEOUT_S = 120.0
+DELEGATE_WORKTREE_ADD_STALL_S = 60.0
+DELEGATE_WORKTREE_ADD_MAX_S = 900.0
+
 # =============================================================================
 # TRACK CONFIGURATION
 # =============================================================================

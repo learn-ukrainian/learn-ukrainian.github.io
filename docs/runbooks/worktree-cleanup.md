@@ -146,6 +146,13 @@ Callers and their ownership proofs:
   dispatch created. `delegate._release_stale_branch_holders` performs a
   non-force release after clean, synced, terminal-owner checks so a blocked
   dispatch may reattach its branch.
+- `delegate._undo_failed_worktree_add` removes only the path its own failed or
+  timed-out `git worktree add` created, before any worker is spawned; a path
+  that existed before the add is never touched. It reuses the worktree lock
+  dispatch already holds, lifts git's `initializing` lock, forces past the
+  partial checkout, prunes a registration whose directory is gone, and keeps
+  the branch ref. The failed task record carries the outcome as
+  `worktree_prep_cleanup`.
 - `post_task_reap._remove_acp_runtime_worktree` removes only task-state-bound
   ACP runtime paths below `.worktrees/dispatch/acp/`, after its own terminal,
   clean, and liveness checks; it forces for ignored runtime residue.
@@ -190,6 +197,21 @@ the same dead-owner sweep on entry, before creating its own workspace, so a
 killed ask's stub is gone by the next ACP call at the latest. As defence in
 depth, the ask entry path converts SIGTERM into an orderly unwind
 (`SystemExit(143)`) so the context `finally` cleans up when it can.
+
+### Half-built dispatch worktrees (#8663)
+
+`delegate.py` bounds `git worktree add` by `DELEGATE_WORKTREE_ADD_*` in
+`scripts/config.py`: a base window, then more time only while the checkout is
+still gaining files, up to a hard ceiling. A stopped add gets SIGTERM first so
+git deletes its own half-built tree, and dispatch undoes whatever remains (see
+the callers above). If a dispatch dies before that undo, the registered
+worktree stays locked `initializing` with a partial checkout. `reap_worktrees`
+reaps it under `--apply` and `--safe-only` when its dispatch task record names
+the path, is terminal, records `pid: null` (no worker was ever spawned), git
+has written a resolvable HEAD, and the process-CWD probe shows no live process
+inside. Every precondition is re-proved under the lock before the unlock and
+removal; the branch ref is kept and a rescue ref pins HEAD. `post_task_reap`
+routes such a task's worktree to this class instead of retaining it as locked.
 
 Unregistered directories under `.worktrees/dispatch/<agent>/` that contain
 zero files (empty placeholder trees, e.g. only `site/ node_modules/ data/`
