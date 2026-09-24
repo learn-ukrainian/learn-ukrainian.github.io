@@ -40,6 +40,7 @@ class ClassifierTests(unittest.TestCase):
             result,
             {
                 "docs_only": "false",
+                "docs_reads_content": "false",
                 "frontend": frontend,
                 "backend": "true",
                 "shards": "[1, 2, 3, 4]",
@@ -49,11 +50,12 @@ class ClassifierTests(unittest.TestCase):
             },
         )
 
-    def assert_docs(self, result):
+    def assert_docs(self, result, reads_content="false"):
         self.assertEqual(
             result,
             {
                 "docs_only": "true",
+                "docs_reads_content": reads_content,
                 "frontend": "false",
                 "backend": "true",
                 "shards": "[1]",
@@ -65,6 +67,7 @@ class ClassifierTests(unittest.TestCase):
 
     def assert_selected(self, result, candidates):
         self.assertEqual(result["docs_only"], "false")
+        self.assertEqual(result["docs_reads_content"], "false")
         self.assertEqual(result["frontend"], "false")
         self.assertEqual(result["backend"], "true")
         self.assertEqual(result["shards"], "[1]")
@@ -77,6 +80,7 @@ class ClassifierTests(unittest.TestCase):
             result,
             {
                 "docs_only": "false",
+                "docs_reads_content": "false",
                 "frontend": "true",
                 "backend": "false",
                 "shards": "[]",
@@ -91,6 +95,7 @@ class ClassifierTests(unittest.TestCase):
             result,
             {
                 "docs_only": "false",
+                "docs_reads_content": "false",
                 "frontend": "true",
                 "backend": "true",
                 "shards": "[1]",
@@ -114,10 +119,11 @@ class ClassifierTests(unittest.TestCase):
         # wiki/ is a content-class root, so a wiki-only group is content;
         # curriculum/ outside the class roots (e.g. example.yaml at the
         # curriculum root) is full on the queue.
-        self.assert_docs(self.classify(["wiki/example.yaml"]))
-        self.assert_docs(self.classify(["wiki/example.yaml"], event="merge_group"))
-        self.assert_docs(self.classify(["curriculum/example.yaml"]))
-        self.assert_docs(self.classify(["curriculum/example.yaml"], event="merge_group"))
+        # #8720: a curriculum/wiki docs PR also flags the reads_content leg.
+        self.assert_docs(self.classify(["wiki/example.yaml"]), reads_content="true")
+        self.assert_docs(self.classify(["wiki/example.yaml"], event="merge_group"), reads_content="true")
+        self.assert_docs(self.classify(["curriculum/example.yaml"]), reads_content="true")
+        self.assert_docs(self.classify(["curriculum/example.yaml"], event="merge_group"), reads_content="true")
 
     def test_content_class_roots(self):
         content_paths = [
@@ -139,13 +145,13 @@ class ClassifierTests(unittest.TestCase):
                 if path.startswith("site/"):
                     self.assert_content(self.classify([path], event="merge_group"))
                 else:
-                    self.assert_docs(self.classify([path], event="merge_group"))
+                    self.assert_docs(self.classify([path], event="merge_group"), reads_content="true")
         with self.subTest(change="single-pr-curriculum-wiki-keeps-docs"):
             for path in content_paths:
                 if path.startswith("site/"):
                     self.assert_content(self.classify([path]))
                 else:
-                    self.assert_docs(self.classify([path]))
+                    self.assert_docs(self.classify([path]), reads_content="true")
 
     def test_content_plus_script_forces_full(self):
         tree = _tree(
@@ -192,8 +198,8 @@ class ClassifierTests(unittest.TestCase):
         # curriculum/l1-uk is outside the content-class roots but still a
         # docs path on PR; the merge queue pays full for it.
         pr_docs = ["curriculum/l1-uk/a1/module.md", "wiki/figures/example.md"]
-        self.assert_docs(self.classify(pr_docs))
-        self.assert_docs(self.classify(pr_docs, event="merge_group"))
+        self.assert_docs(self.classify(pr_docs), reads_content="true")
+        self.assert_docs(self.classify(pr_docs, event="merge_group"), reads_content="true")
         # site/ paths outside src/content/docs hit the frontend denominator
         # and are not content class: full on both events.
         for path in ("site/src/content/readings/a1/x.mdx", "site/src/components/X.astro"):
@@ -211,15 +217,16 @@ class ClassifierTests(unittest.TestCase):
         # pays the content lane either way.
         curriculum_only = ["curriculum/l2-uk-en/a1/module/lesson-1/module.md"]
         with_site = [*curriculum_only, "site/src/content/docs/a1/module/1.mdx"]
-        self.assert_docs(self.classify(curriculum_only))
+        self.assert_docs(self.classify(curriculum_only), reads_content="true")
         self.assert_content(self.classify(with_site))
-        self.assert_docs(self.classify(curriculum_only, event="merge_group"))
+        self.assert_docs(self.classify(curriculum_only, event="merge_group"), reads_content="true")
         self.assert_content(self.classify(with_site, event="merge_group"))
 
     def test_merge_group_content_class(self):
         # #8437: curriculum markdown without learner pages stays on the docs lane.
         self.assert_docs(
-            self.classify(["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], event="merge_group")
+            self.classify(["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], event="merge_group"),
+            reads_content="true",
         )
 
     def test_merge_group_docs_only_stays_docs(self):
@@ -227,6 +234,63 @@ class ClassifierTests(unittest.TestCase):
         self.assert_docs(
             self.classify(["docs/guide.md", "README.md"], event="merge_group"),
         )
+
+    def test_docs_reads_content_flag(self):
+        # #8720: only a docs-lane result whose paths touch curriculum/ or wiki/
+        # flags the reads_content leg, on both pull_request and merge_group.
+        for event in ("pull_request", "merge_group"):
+            with self.subTest(event=event, case="curriculum"):
+                self.assert_docs(
+                    self.classify(
+                        ["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], event=event
+                    ),
+                    reads_content="true",
+                )
+            with self.subTest(event=event, case="wiki"):
+                self.assert_docs(
+                    self.classify(["wiki/figures/example.md"], event=event),
+                    reads_content="true",
+                )
+            with self.subTest(event=event, case="docs-only"):
+                self.assert_docs(
+                    self.classify(["docs/runbooks/ci-gate.md"], event=event),
+                    reads_content="false",
+                )
+        # A curriculum path mixed with a docs/ path is still docs with the flag.
+        self.assert_docs(
+            self.classify(["docs/guide.md", "wiki/figures/example.md"]),
+            reads_content="true",
+        )
+        # Site learner pages stay on the content lane, which already runs
+        # reads_content; the docs flag does not apply.
+        self.assert_content(self.classify(["site/src/content/docs/a1/module/1.mdx"]))
+        # A mixed content+code PR is full and never sets the docs flag.
+        tree = _tree(
+            "scripts/delegate.py",
+            "tests/test_delegate.py",
+            "tests/test_ci_shard_partition.py",
+        )
+        self.assert_full(
+            self.classify(
+                ["curriculum/l2-uk-en/a1/module/lesson-1/module.md", "scripts/delegate.py"],
+                tree_paths=tree,
+            ),
+            frontend="false",
+        )
+
+    def test_docs_reads_content_flag_reaches_main_output(self):
+        # #8720: the flag is wired through main()'s GITHUB_OUTPUT.
+        stdout, _, _ = self._run_main_pull_request(
+            {"pull_request": {"labels": [], "number": 7}},
+            paths=["wiki/figures/example.md"],
+        )
+        self.assertIn("pytest_mode=docs", stdout)
+        self.assertIn("docs_reads_content=true", stdout)
+        stdout, _, _ = self._run_main_pull_request(
+            {"pull_request": {"labels": [], "number": 7}},
+            paths=["docs/guide.md"],
+        )
+        self.assertIn("docs_reads_content=false", stdout)
 
     def test_merge_group_script_and_test_forces_full(self):
         # D1 (#8399): what would be `selected` on a pull request is full on
@@ -278,7 +342,7 @@ class ClassifierTests(unittest.TestCase):
             "curriculum/l2-uk-en/a1/module/lesson-1/module.md",
             "curriculum/l2-uk-en/a1/module/lesson-1/module-renamed.md",
         ]
-        self.assert_docs(self.classify(paths, event="merge_group"))
+        self.assert_docs(self.classify(paths, event="merge_group"), reads_content="true")
 
     def test_rename_from_content_root_to_outside_forces_full(self):
         # D6 (#8399): the rename destination is outside every docs/content
@@ -419,7 +483,7 @@ class ClassifierTests(unittest.TestCase):
                 "REPO": "owner/repo",
             }
             full_line = (
-                "docs_only=false\nfrontend=true\nbackend=true\nshards=[1, 2, 3, 4]\n"
+                "docs_only=false\ndocs_reads_content=false\nfrontend=true\nbackend=true\nshards=[1, 2, 3, 4]\n"
                 "pytest_mode=full\nshard_count=4\npytest_candidates=[]\n"
             )
             for error in (
@@ -445,7 +509,7 @@ class ClassifierTests(unittest.TestCase):
                 scope.main()
                 self.assertEqual(
                     output.read_text(),
-                    "docs_only=true\nfrontend=false\nbackend=true\nshards=[1]\n"
+                    "docs_only=true\ndocs_reads_content=false\nfrontend=false\nbackend=true\nshards=[1]\n"
                     "pytest_mode=docs\nshard_count=1\npytest_candidates=[]\n",
                 )
 

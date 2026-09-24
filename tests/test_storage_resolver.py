@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import sqlite3
 import subprocess
 from pathlib import Path
 
@@ -332,3 +333,32 @@ def test_storage_topology_scope_has_no_committed_operator_home_paths() -> None:
                 f"{path.relative_to(REPO_ROOT)}:{line_no}:{match.group(0)}"
             )
     assert offenders == [], "committed operator-home paths:\n" + "\n".join(offenders)
+
+
+def test_status_reports_sources_db_size_and_journal_mode(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    (repo / "data").mkdir(parents=True)
+    (repo / "scripts").mkdir()
+    db = repo / "data" / "sources.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE t (id INTEGER PRIMARY KEY)")
+        assert conn.execute("PRAGMA journal_mode=WAL").fetchone()[0] == "wal"
+    payload = resolve_topology(
+        repository_root=repo,
+        env={},
+        smb_candidates=[tmp_path / "missing-smb"],
+        drive_candidates=[tmp_path / "missing-drive"],
+    ).to_dict()
+    active = payload["active_database"]
+    assert active["journal_mode"] == "wal"
+    assert active["size_bytes"] == db.stat().st_size > 0
+    assert isinstance(active["wal_bytes"], int)
+    json.dumps(payload)
+
+    missing = resolve_topology(
+        repository_root=tmp_path / "elsewhere",
+        env={},
+        smb_candidates=[],
+        drive_candidates=[],
+    ).to_dict()["active_database"]
+    assert (missing["size_bytes"], missing["journal_mode"], missing["wal_bytes"]) == (None, None, None)

@@ -129,6 +129,12 @@
         "built_at": {
           "type": "string",
           "format": "date-time"
+        },
+        "sources_db_scheme": {
+          "enum": [
+            "file-v1",
+            "rows-v2"
+          ]
         }
       },
       "required": [
@@ -202,6 +208,10 @@
               "type": "integer"
             }
           ]
+        },
+        "row_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
         }
       },
       "required": [
@@ -276,6 +286,10 @@
               "type": "integer"
             }
           ]
+        },
+        "row_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
         }
       },
       "required": [
@@ -424,6 +438,10 @@
             },
             "id": {
               "type": "integer"
+            },
+            "row_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
             }
           },
           "required": [
@@ -470,6 +488,10 @@
             },
             "id": {
               "type": "integer"
+            },
+            "row_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
             }
           },
           "required": [

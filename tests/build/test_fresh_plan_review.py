@@ -20,7 +20,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.build.fresh import plan_manifest
 from scripts.build.fresh.cli import main as cli_main
-from scripts.curriculum.evidence import lock
+from scripts.curriculum.evidence import codes, lock, sources
 from tests.curriculum.test_plan_validate import LEVEL, SLUG
 from tests.helpers.plan_review_world import STALE_SHA, Env, build_env, git, sha, validate_provisional
 
@@ -325,26 +325,32 @@ def test_missing_prior_plan_refuses_instead_of_waiving(env: Env, capsys) -> None
 
 
 class _FakeSources:
+    """The slice of ``Sources`` a pack citing no rows needs: snapshot observability and close."""
+
     sources_db = Path("sources.db")
 
-    def _fingerprint(self, _path):
-        return "0" * 64, {}
+    def snapshot_report(self) -> dict:
+        return {"journal_mode": "wal", "wal_bytes": 0, "wal_bytes_start": 0, "snapshot_seconds": 0.0}
 
     def close(self) -> None:
         pass
 
 
-def test_real_pack_verify_function_is_called_strictly(tmp_path: Path) -> None:
+def write_pack(tmp_path: Path, **built_with: str) -> None:
+    """A locked, schema-valid pack citing no rows; ``built_with`` overrides the rows-v2 identity fields."""
     pack = {
         "evidence_schema": 1,
         "module": f"{LEVEL}/x",
         "built_with": {
             "mcp_commit": "0" * 40,
-            "sources_db": "0" * 64,
+            # rows-v2: built_with.sources_db aggregates the cited rows' digests; none cited → sha256("[]")
+            "sources_db_scheme": sources.SOURCES_DB_SCHEME,
+            "sources_db": sources.aggregate_digest([]),
             "vesum": "0" * 64,
             "trie": "0" * 64,
             "ulif_forms": "0" * 64,
             "standard_sha256": "0" * 64,
+            **built_with,
         },
         "texts": [],
         "exercises": [],
@@ -356,10 +362,21 @@ def test_real_pack_verify_function_is_called_strictly(tmp_path: Path) -> None:
     }
     (tmp_path / "x.yaml").write_bytes(yaml.safe_dump(pack).encode("utf-8"))
     lock.write(tmp_path / "x.yaml")
+
+
+def test_real_pack_verify_function_is_called_strictly(tmp_path: Path) -> None:
+    write_pack(tmp_path)
     result = plan_manifest.verify_pack_strict(
         LEVEL, "x", evidence_dir=tmp_path, plans_dir=tmp_path, sources_instance=_FakeSources()
     )
     assert result["status"] == "ok" and result["errors"] == []
+    assert result["sources_db_scheme"] == sources.SOURCES_DB_SCHEME
+    # a pack still carrying the retired file digest (file-v1) is refused under --strict, never waived
+    write_pack(tmp_path, sources_db_scheme=sources.LEGACY_SOURCES_DB_SCHEME, sources_db="0" * 64)
+    legacy = plan_manifest.verify_pack_strict(
+        LEVEL, "x", evidence_dir=tmp_path, plans_dir=tmp_path, sources_instance=_FakeSources()
+    )
+    assert legacy["status"] == "failed" and legacy["errors"][0].startswith(f"{codes.LEGACY_IDENTITY}:")
     # strict is not negotiable: the refusal --strict --offline gets from verify_pack proves the flag reached it
     refused = plan_manifest.verify_pack_strict(
         LEVEL, "x", evidence_dir=tmp_path, plans_dir=tmp_path, sources_instance=_FakeSources(), offline=True
