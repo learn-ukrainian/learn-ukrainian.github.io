@@ -19,7 +19,7 @@ from scripts.agent_runtime.adapters.kimi import (
     KIMI_PROJECT_SKILLS_RELATIVE,
     KimiAdapter,
 )
-from scripts.agent_runtime.adapters.kimicc import KimiccHarness, effective_kimicc_model
+from scripts.agent_runtime.adapters.kimicc import KimiccHarness, resolve_kimicc_dispatch_model
 from scripts.agent_runtime.telemetry import resolve_invocation_telemetry
 from scripts.agent_runtime.tool_config import build_mcp_tool_config
 from scripts.audit.lint_agent_trailer import _TRAILER_RE
@@ -147,8 +147,8 @@ def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monk
     assert native.cmd[0] == str(tmp_path / "kimi")
     assert native.cmd[native.cmd.index("-m") + 1] == "kimi-code/k3-256k"
     assert kimicc.cmd[0].endswith("scripts/agent_runtime/kimicc_headless.sh")
-    # kimicc's omitted model is the review-pr pin (kimi-code/k3 → alias k3),
-    # which is the id Claude Code accepts. Full k3 injects --effort high.
+    # An omitted kimicc model is the catalog default (kimi-code/k3 → alias k3).
+    # Full k3 injects --effort high. Native kimi still defaults to k3-256k.
     assert KimiccHarness.default_model == "kimi-code/k3"
     assert kimicc.cmd[kimicc.cmd.index("--model") + 1] == "k3"
     assert kimicc.cmd[kimicc.cmd.index("--effort") + 1] == "high"
@@ -158,18 +158,19 @@ def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monk
     assert "CLAUDE_CONFIG_DIR" in kimicc.env_unsets
 
 
-def test_kimicc_omitted_model_resolves_to_runtime_id_not_native_default():
-    assert effective_kimicc_model(None, adapter_default="k3-256k") == "kimi-code/k3"
-    assert effective_kimicc_model("k2.7", adapter_default="k3-256k") == "k2.7"
+def test_kimicc_omitted_model_resolves_to_catalog_default_not_native_default():
+    assert resolve_kimicc_dispatch_model(None) == "kimi-code/k3"
+    assert resolve_kimicc_dispatch_model("") == "kimi-code/k3"
+    assert resolve_kimicc_dispatch_model("k2.7") == "k2.7"
     assert KimiccHarness.default_model == "kimi-code/k3"
 
 
-def test_kimicc_refuses_catalog_alias_claude_code_rejects(tmp_path, monkeypatch):
+def test_kimicc_refuses_model_that_is_not_a_routable_kimicc_alias(tmp_path, monkeypatch):
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    with pytest.raises(ValueError, match="unrecognized_model"):
+    with pytest.raises(ValueError, match="not a routable kimicc model"):
         KimiccHarness().build_invocation(
             prompt="Inspect the target.",
             mode="read-only",

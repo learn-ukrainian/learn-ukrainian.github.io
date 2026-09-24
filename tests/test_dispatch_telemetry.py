@@ -496,16 +496,16 @@ def test_kimicc_telemetry_records_the_headless_k3_route(tmp_path):
     )
 
 
-def test_kimicc_telemetry_omitted_model_defaults_to_kimi_code_k3(tmp_path):
-    """An omitted --model on kimicc is the review-pr pin kimi-code/k3.
+def test_kimicc_telemetry_omitted_model_agrees_at_dispatch_and_after_spawn(tmp_path):
+    """An omitted --model spawns the catalog kimicc default.
 
-    That alias is full k3, so dispatch-time effort is high. A plan that
-    already carries a different alias still reports that alias.
+    Dispatch-time telemetry and the after-spawn plan must record the same
+    model and effort. The default route is full k3, so both say k3 / high.
     """
     plan = InvocationPlan(
-        cmd=["kimicc_headless.sh", "--model", "k2.7"],
+        cmd=["kimicc_headless.sh", "--model", "k3", "--effort", "high"],
         cwd=tmp_path,
-        metadata={"harness": "kimicc", "kimicc_alias": "k2.7", "claude_bin": "claude"},
+        metadata={"harness": "kimicc", "kimicc_alias": "k3", "claude_bin": "claude"},
     )
 
     with patch("agent_runtime.telemetry.claude_cli_version", return_value="2.1.220"):
@@ -522,8 +522,8 @@ def test_kimicc_telemetry_omitted_model_defaults_to_kimi_code_k3(tmp_path):
             requested_effort=None,
         )
 
-    assert (at_dispatch.model, at_dispatch.effort) == ("kimi-code/k3", "high")
-    assert (after_spawn.model, after_spawn.effort) == ("k2.7", "not-exposed")
+    assert (at_dispatch.model, at_dispatch.effort) == ("k3", "high")
+    assert (after_spawn.model, after_spawn.effort) == (at_dispatch.model, at_dispatch.effort)
 
 
 def test_kimicc_telemetry_prefers_explicit_effort_and_does_not_default_k2_7(tmp_path):
