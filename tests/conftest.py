@@ -241,11 +241,17 @@ def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
     return frozenset(line for line in status.stdout.splitlines() if line.strip())
 
 
-def _content_tree_changes(before: frozenset[str] | None, after: frozenset[str] | None) -> list[str]:
-    """Status lines present after the session but not before it, sorted."""
+def _content_tree_changes(
+    before: frozenset[str] | None, after: frozenset[str] | None
+) -> tuple[list[str], list[str]]:
+    """Sorted ``(added, removed)`` status lines between two snapshots.
+
+    Both directions count: deleting a pre-existing untracked file or restoring a
+    pre-existing tracked modification changes the tree just as much as a new file.
+    """
     if before is None or after is None:
-        return []
-    return sorted(after - before)
+        return [], []
+    return sorted(after - before), sorted(before - after)
 
 
 def pytest_sessionstart(session: pytest.Session) -> None:
@@ -257,16 +263,21 @@ def pytest_sessionstart(session: pytest.Session) -> None:
 
 def _enforce_content_tree_clean(session: pytest.Session) -> None:
     before = getattr(session.config, _CONTENT_TREE_SNAPSHOT_KEY, None)
-    changes = _content_tree_changes(before, _content_tree_snapshot(_REPO_ROOT))
-    if not changes:
+    added, removed = _content_tree_changes(before, _content_tree_snapshot(_REPO_ROOT))
+    if not added and not removed:
         return
     print(
-        "content-tree guard: the test session changed files under "
-        f"{', '.join(_CONTENT_TREE_PATHSPECS)} (a test wrote into the real checkout; "
-        "point its writer at tmp_path):"
+        "content-tree guard: git status under "
+        f"{', '.join(_CONTENT_TREE_PATHSPECS)} changed during the test session. "
+        "Either a test wrote to (or removed files from) the real checkout — point its "
+        "writer at tmp_path — or another process in the same checkout, such as an "
+        "operator build, wrote concurrently:"
     )
-    for line in changes:
-        print(f"  {line}")
+    for label, lines in (("added", added), ("removed", removed)):
+        if lines:
+            print(f"  status entries {label} since session start:")
+            for line in lines:
+                print(f"    {line}")
     if session.exitstatus == pytest.ExitCode.OK:
         session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
