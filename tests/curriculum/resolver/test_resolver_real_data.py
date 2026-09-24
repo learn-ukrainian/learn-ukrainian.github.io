@@ -3,7 +3,8 @@
 Skipped only when data/sources.db or data/vesum.db is absent (resolved by Sources()'s
 main-root rule, never a relative path). Records are built by the canonical word-store
 builder (`words.build_words`, dry run) from VESUM entries; no form, stress or gloss is
-typed here — the only Ukrainian in this file is the spellings being looked up.
+invented here. The two expected stress readings for `зараз` are checked against
+the sources oracle and the ULIF paradigm.
 
 Replay of the Codex seat's measurement: textbook_sections 6286 (ULP lesson 10), the
 bilingual story only, one unit per non-empty line, stress stripped, apostrophes
@@ -13,6 +14,7 @@ normalised. A change that moves these numbers must be reported, not hidden.
 from __future__ import annotations
 
 from contextlib import closing
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -136,6 +138,28 @@ def _classes(stream, text: str) -> list[str]:
     return [t["class"] for t in stream.tokens if t["token"] == text]
 
 
+def _assert_zaraz_contract(token: dict, allowed: Allowlist, *, noun_checked: bool) -> None:
+    """The noun's ULIF paradigm resolves its stress only after that group is checked."""
+    assert token["class"] == codes.STRESS_OPEN
+    assert token["selected"] is None and token["provenance"] is None
+    assert len(token["candidates"]) == len(token["readings"]) == 2
+    assert set(token["candidates"]) == {r["record"] for r in token["readings"]}
+    for reading in token["readings"]:
+        assert {"record", "stressed", "stress_source", "forms"} <= reading.keys()
+        assert reading["record"] in allowed.records and reading["forms"]
+    by_lemma = {allowed.records[r["record"]]["lemma"]: r for r in token["readings"]}
+    assert set(by_lemma) == {"зараз", "зараза"}
+    assert by_lemma["зараз"]["stressed"] == "за́раз"
+    assert by_lemma["зараз"]["stress_source"] in {"trie", "ulif"}
+    noun = by_lemma["зараза"]
+    if noun_checked:
+        assert noun["stressed"] == "зара́з" and noun["stress_source"] == "ulif"
+        assert "message" not in token
+    else:
+        assert noun["stressed"] is None and noun["stress_source"] == "pending"
+        assert noun["record"] in token["message"] and "pending" in token["message"]
+
+
 def test_ulp_lesson_10_replay(real, store):
     src, story, analyses, _entries, _request = real
     tokens = [t for u in story.units for t in tokenize(u.text) if t.kind == "cyrillic"]
@@ -152,8 +176,7 @@ def test_ulp_lesson_10_replay(real, store):
     by_class: dict[str, list[str]] = {}
     for token in cyrillic:
         by_class.setdefault(token["class"], []).append(token["token"])
-    assert by_class[codes.STRESS_OPEN] == ["зараз"]
-    assert len(by_class[codes.STRESS_CERTAIN_IDENTITY_OPEN]) == 15
+    assert "зараз" in by_class[codes.STRESS_OPEN]
     assert by_class[codes.LEMMA_OUTSIDE_STATE] == ["Огойко"]
     outside = next(t for t in cyrillic if t["class"] == codes.LEMMA_OUTSIDE_STATE)
     assert outside["surface"] == codes.PROPER_NOUN
@@ -168,7 +191,11 @@ def test_ulp_lesson_10_replay(real, store):
         codes.PENDING_STRESS,
     }
     zaraz = next(t for t in cyrillic if t["token"] == "зараз")
-    assert len(zaraz["candidates"]) == 2 and "pending" in zaraz["message"]
+    noun_group = src.ulif_entries(["зараза"]).raw["зараза"]
+    noun_checked = src.ulif_group_checked(noun_group)
+    noun_record = next(w for w in store["words"] if w["lemma"] == "зараза" and w["pos"] == "noun")
+    assert isinstance(noun_record["ulif"], dict) == noun_checked
+    _assert_zaraz_contract(zaraz, allowed, noun_checked=noun_checked)
     vona = next(t for t in cyrillic if t["token"] == "Вона")
     assert vona["class"] == codes.RESOLVED and vona["surface"] == codes.SENTENCE_TOKEN
     assert stream.reports == []
@@ -176,18 +203,51 @@ def test_ulp_lesson_10_replay(real, store):
     assert stream.to_bytes() == resolve(story, allowed, src).to_bytes()
     batch = build_questions(stream, story, allowed)
     validate_questions(batch)
-    assert len(batch["questions"]) == 16 and [q["token"] for q in batch["questions"] if q["blocking"]] == ["зараз"]
+    open_tokens = [t for t in cyrillic if t["class"] in codes.OPEN_CLASSES]
+    assert len(batch["questions"]) == len(open_tokens)
+    assert [q["token"] for q in batch["questions"]] == [t["token"] for t in open_tokens]
+    assert [q["token"] for q in batch["questions"] if q["blocking"]] == by_class[codes.STRESS_OPEN]
+
+
+@pytest.mark.parametrize("noun_checked", [False, True])
+def test_zaraz_checked_and_unchecked_contract(real, store, noun_checked):
+    # Replay both word-store states even when the live walk has reached one of them.
+    records = deepcopy(_records(store, real, "зараз"))
+    noun = next(w for w in records if w["lemma"] == "зараза" and w["pos"] == "noun")
+    forms = [f for f in noun["forms"] if f["form"] == "зараз" and f["learner"]]
+    assert len(forms) == 1
+    if noun_checked:
+        forms[0]["stressed"] = "зара́з"
+        forms[0]["stress_source"] = "ulif"
+    else:
+        forms[0].pop("stressed", None)
+        forms[0]["stress_source"] = "pending"
+    allowed = Allowlist.from_records(records)
+    document = _doc("зараз")
+    stream = resolve(document, allowed, real[0])
+    token = stream.tokens[0]
+    _assert_zaraz_contract(token, allowed, noun_checked=noun_checked)
+    questions = build_questions(stream, document, allowed)
+    validate_questions(questions)
+    assert len(questions["questions"]) == 1
+    assert questions["questions"][0]["token"] == "зараз"
+    assert questions["questions"][0]["blocking"] is True
+    assert {c["stressed"] for c in questions["questions"][0]["candidates"]} == (
+        {"за́раз", "зара́з"} if noun_checked else {"за́раз", None}
+    )
 
 
 def test_named_real_cases(real, store):
     src = real[0]
     zamok = _records(store, real, "замок", pos="noun")
     assert len(zamok) == 2
-    # The trie cannot split the homograph by tags and ULIF has no entry: both records are pending.
+    # The trie cannot split the homograph by tags; the requested VESUM entries
+    # do not select one of its three ULIF homonyms, so both records are pending.
     assert _classes(resolve(_doc("замок"), Allowlist.from_records(zamok), src), "замок") == [codes.PENDING_STRESS]
 
     zaraz = resolve(_doc("зараз"), Allowlist.from_records(_records(store, real, "зараз", pos="adv")), src)
     assert _classes(zaraz, "зараз") == [codes.RESOLVED]
+    assert zaraz.tokens[0]["selected"]["stressed"] == "за́раз"
 
     laska = _records(store, real, "ласка")
     stream = resolve(_doc("ласка"), Allowlist.from_records(laska), src)
