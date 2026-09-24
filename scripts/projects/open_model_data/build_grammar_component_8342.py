@@ -428,6 +428,9 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     if re.search(r'\b[Уу]\s+загальному\b', text):
         return False
+    # Reject missing comma after introductory Отже
+    if re.search(r"^[«\"“]?[Оо]тже\s+[а-яіїєґ]", text):
+        return False
     # Reject straight quotes (standard Ukrainian requires «...»)
     if '"' in text:
         return False
@@ -1865,6 +1868,132 @@ def is_valid_candidate(
     if re.search(r"\bзначить\b", o_low) and (re.search(r"\bотже\b", c_low) or re.search(r"\bозначає\b", c_low)):
         return False
 
+    # 12. Claude R17 Blockers & Erroneous Corrections
+    # #76: locative without preposition after «хіба що» (хіба що танці -> хіба що танцях)
+    if re.search(r"\bхіба\s+що\s+[а-яіїєґ]+(?:ах|ях)\b", c_low):
+        return False
+    # #60: broken parallel case / broken conjunction (компаніями й окремої країни, і загалом)
+    if re.search(r"\bй\s+окремої\s+країни\b", c_low):
+        return False
+    # #131: preposition swap changing meaning (ти — з неї -> ти — з нею)
+    if re.search(r"\bти\s*[—–-]\s*з\s+нею\b", c_low):
+        return False
+    # #80: broken pronoun case in prepositional complement (і їхнє застосування instead of їхнього)
+    if re.search(r"\bі\s+їхнє\s+застосування\b", c_low):
+        return False
+    # #201: stray comma separating subject and predicate / broken phrase
+    if re.search(r"\bситуації\s+без\s+потреби,\s+завдає\b", c_low) or re.search(r"\bбез\s+потреби,\s+завдає\b", c_low):
+        return False
+    # #245: ungrammatical relative clause (який для неї був важливий рубль)
+    if re.search(r"\bякий\s+для\s+неї\s+був\s+важливий\b", c_low):
+        return False
+
+    # 13. Claude R17 Voice, Aspect, Tense, Mood changes
+    # #251: passive to active rewrite (Кларою Івановською поставлено -> Клара Івановська встановила)
+    if re.search(r"\bКлара\s+Івановська\s+встановила\b", corr_text, re.IGNORECASE) or (re.search(r"\bпоставлено\b", o_low) and re.search(r"\bвстановила\b", c_low)):
+        return False
+    # #39: aspect change (пішов -> ішов)
+    if re.search(r"\bколи\s+він\s+пішов\b", o_low) and re.search(r"\bколи\s+він\s+ішов\b", c_low):
+        return False
+    # #81: mood/aspect change (впізнавав би -> впізнав)
+    if re.search(r"\bвпізнавав\s+би\b", o_low) and re.search(r"\bвпізнав\b", c_low):
+        return False
+    # #133: tense change (вважається -> вважатиметься)
+    if re.search(r"\bвважається\b", o_low) and re.search(r"\bвважатиметься\b", c_low):
+        return False
+    # #158: aspect change (розбиратися -> розібратися)
+    if re.search(r"\bнеобхідно\s+розбиратися\b", o_low) and re.search(r"\bнеобхідно\s+розібратися\b", c_low):
+        return False
+
+    # 14. Claude R17 Unneeded swaps of valid Ukrainian forms
+    # #8: в принципі -> загалом
+    if re.search(r"\bв\s+принципі\b", o_low) and re.search(r"\bзагалом\b", c_low):
+        return False
+    # #14: прийняти рішення -> вирішити
+    if re.search(r"\bприйняти\s+рішення\b", o_low) and re.search(r"\bвирішити\b", c_low):
+        return False
+    # #43: кожен день -> кожного дня
+    if re.search(r"\bкожен\s+день\b", o_low) and re.search(r"\bкожного\s+дня\b", c_low):
+        return False
+    # #59: приснилось -> наснилось
+    if re.search(r"\bприснил\w*\b", o_low) and re.search(r"\bнаснил\w*\b", c_low):
+        return False
+    # #87: лист -> листа
+    if re.search(r"\bнаписати\s+\w+\s+лист\b", o_low) and re.search(r"\bнаписати\s+\w+\s+листа\b", c_low):
+        return False
+    # #117: близькозорості -> короткозорості
+    if re.search(r"\bблизькозор\w*\b", o_low) and re.search(r"\bкороткозор\w*\b", c_low):
+        return False
+    # #128: спеки, яку -> спеки, якої
+    if re.search(r"\bспеки,\s+як[ую]\b", o_low) and re.search(r"\bспеки,\s+якої\b", c_low):
+        return False
+    # #152: Один з факторів... це -> Одним із факторів... є
+    if re.search(r"\bодин\s+з\s+факторів\b", o_low) and re.search(r"\bодним\s+із\s+факторів\b", c_low):
+        return False
+    # #228: ставнями -> віконницями
+    if re.search(r"\bставн\w*\b", o_low) and re.search(r"\bвіконниц\w*\b", c_low):
+        return False
+    # #246: на голову принцеси -> на голову принцесі
+    if re.search(r"\bна\s+голову\s+принцеси\b", o_low) and re.search(r"\bна\s+голову\s+принцесі\b", c_low):
+        return False
+    # #273: про яку я бажаю розповісти -> яку я бажаю розповісти
+    if re.search(r"\bпро\s+яку\s+я\s+бажаю\s+розповісти\b", o_low) and re.search(r"\bяку\s+я\s+бажаю\s+розповісти\b", c_low):
+        return False
+    # #108: з їх використанням -> з їхнім використанням
+    if re.search(r"\bз\s+їх\s+використанням\b", o_low) and re.search(r"\bз\s+їхнім\s+використанням\b", c_low):
+        return False
+    # #22: більше тисячі -> понад тисячу
+    if re.search(r"\bбільше\s+тисячі\b", o_low) and re.search(r"\bпонад\s+тисячу\b", c_low):
+        return False
+
+    # 15. Claude R17 Residual errors left in corrected_text
+    # #146: typo він замість від
+    if re.search(r"\bвідрізняється\s+він\s+[а-яіїєґА-ЯІЇЄҐ]+\b", corr_text, re.IGNORECASE):
+        return False
+    # #182: typo Останій (single н)
+    if re.search(r"\bостан[іеяю]\b", c_low):
+        return False
+    # #231: не гідно (повинно бути негідно)
+    if re.search(r"\bне\s+гідно\b", c_low):
+        return False
+    # #296: calque довіра моїй церкві (повинно бути довіра до)
+    if re.search(r"\bдовіра\s+моїй\s+церкві\b", c_low):
+        return False
+    # #268: garbled quotation / syntax
+    if re.search(r"\bна\s+які\s+я\s+думала\b", c_low):
+        return False
+    # #20: erroneous attachment of relative pronoun (із рота, який)
+    if re.search(r"\bіз\s+рота,\s+який\b", c_low):
+        return False
+    # #35: Russian calque помучте кунжут
+    if re.search(r"\bпомуч\w*\s+кунжут\b", c_low):
+        return False
+
+    # 16. Claude R17 Content dropped or changed
+    # #119: dropped adverb назад
+    if re.search(r"\bназад\s+да\s+заразите\b", o_low) or re.search(r"\bйого\s+і\s+заразите\b", c_low):
+        return False
+    # #135: ungrounded lexical shift смутно -> ледве
+    if re.search(r"\bсмутно\s+виднівся\b", o_low) or re.search(r"\bледве\s+виднівся\s+силует\b", c_low):
+        return False
+    # #193: dropped clause щоб його Діяло везли
+    if re.search(r"\bщоб\s+його\s+[Дд]іяло\s+везли\b", orig_text) or re.search(r"\bтільки\s+цим\s+і\s+ситий,\s+пройдисвіт!\b", corr_text):
+        return False
+    # #278: ungrounded gender change людини -> чоловіка
+    if re.search(r"\bу\s+людини\s+був\b", o_low) and re.search(r"\bу\s+чоловіка\s+був\b", c_low):
+        return False
+    # #262: dropped verb піти
+    if re.search(r"\bвирішив\s+піти\s+померти\b", o_low) and re.search(r"\bвирішив\s+померти\b", c_low):
+        return False
+
+    # 17. Claude R17 Minor awkward fixes
+    # #2: впоперек до перекладини
+    if re.search(r"\bвпоперек\s+до\s+перекладини\b", c_low) or re.search(r"\bдо\s+поперековою\s+перекладини\b", o_low):
+        return False
+    # #207: замількало -> заблимало
+    if re.search(r"\bзамількало\b", o_low) or re.search(r"\bзаблимало\s+вмите\b", c_low):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -2152,6 +2281,24 @@ def parse_m2_sentences(m2_path: Path) -> list[dict[str, Any]]:
     return records
 
 
+def merge_contiguous_same_tag_edits(
+    edits: list[tuple[int, int, str, str]],
+) -> list[tuple[int, int, str, str]]:
+    """Merge contiguous M2 token edits that share the exact same grammatical tag into a single constituent edit."""
+    if not edits:
+        return []
+    sorted_e = sorted(edits, key=lambda x: (x[0], x[1]))
+    merged = [sorted_e[0]]
+    for cur in sorted_e[1:]:
+        prev = merged[-1]
+        if prev[1] == cur[0] and prev[2] == cur[2]:
+            merged_corr = (prev[3] + " " + cur[3]).strip()
+            merged[-1] = (prev[0], cur[1], prev[2], merged_corr)
+        else:
+            merged.append(cur)
+    return merged
+
+
 def build_grammar_dataset(
     train_m2_path: Path = DEFAULT_UA_GEC_TRAIN_M2,
     test_m2_path: Path = DEFAULT_UA_GEC_TEST_M2,
@@ -2306,8 +2453,9 @@ def build_grammar_dataset(
                 seen_correction_source_texts.add(norm_orig)
                 seen_corrections.add((orig_text, corr_text))
 
+                merged_in_scope = merge_contiguous_same_tag_edits(in_scope)
                 sorted_in_scope = sorted(
-                    in_scope,
+                    merged_in_scope,
                     key=lambda e: (
                         0 if TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" else 1,
                         0 if resolve_specific_linguistic_citation(
@@ -2324,7 +2472,7 @@ def build_grammar_dataset(
                 primary_tag = primary_edit[2]
                 err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
                 repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
-                all_tags = [e[2] for e in in_scope]
+                all_tags = [e[2] for e in merged_in_scope]
                 content_edits = []
                 for e in all_non_noop:
                     if e[2] == "noop":
@@ -2342,6 +2490,8 @@ def build_grammar_dataset(
                     else:
                         content_edits.append(e)
 
+                merged_content_edits = merge_contiguous_same_tag_edits(content_edits)
+
                 eval_corrections.append(
                     {
                         "doc_id": d,
@@ -2354,9 +2504,9 @@ def build_grammar_dataset(
                         "all_tags": all_tags,
                         "err_span": err_span,
                         "repl_span": repl_span,
-                        "num_content_edits": len(content_edits),
+                        "num_content_edits": len(merged_content_edits),
                         "num_total_edits": len(all_non_noop),
-                        "has_other_content": any(e[2] not in IN_SCOPE_TAGS for e in content_edits),
+                        "has_other_content": any(e[2] not in IN_SCOPE_TAGS for e in merged_content_edits),
                         "source_type": "ua_gec_human_annotated",
                         "source_corpus": "ua_gec_2.0",
                         "license": "CC BY 4.0",
@@ -2456,8 +2606,9 @@ def build_grammar_dataset(
                 seen_correction_source_texts.add(norm_orig)
                 seen_corrections.add((orig_text, corr_text))
 
+                merged_in_scope = merge_contiguous_same_tag_edits(in_scope)
                 sorted_in_scope = sorted(
-                    in_scope,
+                    merged_in_scope,
                     key=lambda e: (
                         0 if TAG_TO_COARSE_CATEGORY.get(e[2]) == "verb_morphology" else 1,
                         0 if resolve_specific_linguistic_citation(
@@ -2474,7 +2625,7 @@ def build_grammar_dataset(
                 primary_tag = primary_edit[2]
                 err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
                 repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
-                all_tags = [e[2] for e in in_scope]
+                all_tags = [e[2] for e in merged_in_scope]
                 content_edits = []
                 for e in all_non_noop:
                     if e[2] == "noop":
@@ -2492,6 +2643,8 @@ def build_grammar_dataset(
                     else:
                         content_edits.append(e)
 
+                merged_content_edits = merge_contiguous_same_tag_edits(content_edits)
+
                 train_corrections.append(
                     {
                         "doc_id": d,
@@ -2504,9 +2657,9 @@ def build_grammar_dataset(
                         "all_tags": all_tags,
                         "err_span": err_span,
                         "repl_span": repl_span,
-                        "num_content_edits": len(content_edits),
+                        "num_content_edits": len(merged_content_edits),
                         "num_total_edits": len(all_non_noop),
-                        "has_other_content": any(e[2] not in IN_SCOPE_TAGS for e in content_edits),
+                        "has_other_content": any(e[2] not in IN_SCOPE_TAGS for e in merged_content_edits),
                         "source_type": "ua_gec_human_annotated",
                         "source_corpus": "ua_gec_2.0",
                         "license": "CC BY 4.0",
