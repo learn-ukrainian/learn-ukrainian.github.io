@@ -20,6 +20,8 @@ bytes is installed beside the first as ``<dataVersion>-transport-<sha256>``.
 from __future__ import annotations
 
 import argparse
+import codecs
+import decimal
 import functools
 import gzip
 import hashlib
@@ -37,7 +39,7 @@ import zlib
 from collections import defaultdict
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, BinaryIO
 
@@ -145,11 +147,6 @@ def sha256_hex(data: bytes) -> str:
 
 def gzip_bytes(data: bytes, *, compression_level: int) -> bytes:
     return gzip.compress(data, compresslevel=compression_level, mtime=0)
-
-
-def write_bytes(path: Path, data: bytes) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(data)
 
 
 def write_text(path: Path, text: str) -> None:
@@ -1674,14 +1671,28 @@ def capacity_report(
 #   with the next ``\u`` escape, and rejects an unpaired ``\uDC00``-``\uDFFF``.
 #   yajl therefore sees every surrogate escape rewritten to ``\u0000`` (same
 #   length, same syntax wherever it sits), and a document that had one is decoded
-#   again by ijson's ``python`` backend, whose strings go through the stdlib
-#   scanner; yajl has already judged its syntax. (The exporter never writes one:
-#   canonical JSON is ``ensure_ascii=False``.)
+#   again by the exact decoder (below); yajl has already judged its syntax. (The
+#   exporter never writes one: canonical JSON is ``ensure_ascii=False``.)
+# * ijson builds a ``Decimal`` from every non-integer literal, and ``Decimal``
+#   cannot hold an exponent beyond about 10**18 (``1e-99999999999999999999``,
+#   which ``json.loads`` reads as ``0.0``). yajl runs under a ``decimal`` context
+#   that does not trap the failed conversion: the literal becomes ``NaN`` (never
+#   a JSON value) with the context's flag raised, yajl finishes judging the
+#   syntax, and the document is decoded again by the exact decoder.
+# * ijson's ``yajl2_c`` mishandles the ``ValueError`` of an integer literal past
+#   ``sys.get_int_max_str_digits()`` (a leaked ``SystemError``, or a crash of the
+#   interpreter). yajl therefore sees every digit run that long cut to its first
+#   four digits (same syntax wherever it sits), and a document that had one is
+#   decoded again by the exact decoder, where ``int()`` raises as in ``json.loads``.
+#
+# The exact decoder is :func:`_exact_basic_parse`: the stdlib's own string scanner
+# (``json.decoder.scanstring``) and number rules (``int``/``float`` of the literal
+# text), token by token, so any valid document is read exactly as ``json.loads``
+# reads it — one token in memory at a time, with no size or exponent cap.
 #
 # What remains fails closed, never open: ``NaN``/``Infinity``/``-Infinity``
 # (``json.loads`` extensions, not JSON; the browser's ``JSON.parse`` rejects them
-# too) and number literals with an exponent beyond ``Decimal``'s range (about
-# 10**18; ``json.dumps`` never writes one) are reported as invalid JSON.
+# too) are reported as invalid JSON.
 # ---------------------------------------------------------------------------
 
 _VERIFY_READ_BYTES = 1 << 16
@@ -1690,12 +1701,27 @@ _FORBIDDEN_WS = re.compile(rb"[\x0b\x0c]")
 _SURROGATE_ESCAPE = re.compile(rb"\\u[dD][89a-fA-F][0-9a-fA-F]{2}")
 _SURROGATE_ESCAPE_HOLD = 5  # an escape is 6 bytes: at most 5 can wait for the next read
 _NEUTRAL_ESCAPE = b"\\u0000"
+_DIGITS = b"0123456789"
+_DIGITS_AS_ZERO = bytes(0x30 if 0x30 <= byte <= 0x39 else 0x78 for byte in range(256))  # digits -> 0, rest -> x
+_DIGIT_RUN_KEEP = 4  # digits a too-long run keeps: all of a ``\uXXXX`` escape's that it may start in
 _CONTAINER_START = frozenset(("start_map", "start_array"))
 _CONTAINER_END = frozenset(("end_map", "end_array"))
+# yajl's pass: an out-of-range exponent becomes ``NaN`` and raises the flag instead of the error.
+_UNTRAPPED_DECIMAL = decimal.Context(traps=[])
+_JSON_WS = re.compile(r"[ \t\n\r]*")
+_JSON_NUMBER = re.compile(r"-?(?:0|[1-9][0-9]*)(\.[0-9]+)?([eE][-+]?[0-9]+)?")
+_JSON_NUMBER_RUN = re.compile(r"[-+.eE0-9]*")
+_JSON_LITERALS = (("true", True), ("false", False), ("null", None))
 
 
 class JsonStreamError(ValueError):
     """Invalid JSON text."""
+
+
+@functools.cache
+def _long_digit_run(limit: int) -> re.Pattern[bytes]:
+    """A whole run of more than ``limit`` ASCII digits."""
+    return re.compile(rb"(?<![0-9])[0-9]{%d,}" % (limit + 1))
 
 
 class _ParserInput:
@@ -1703,17 +1729,25 @@ class _ParserInput:
 
     Flags ``\\v``/``\\f`` bytes. Unless ``exact``, also rewrites every surrogate
     escape to ``\\u0000`` (same length and syntax, wherever it sits) so yajl's
-    verdict never depends on how it decodes surrogates; the flag then tells the
-    caller to take the values from an exact pass.
+    verdict never depends on how it decodes surrogates, and cuts every run of more
+    than ``sys.get_int_max_str_digits()`` digits to its first four so yajl never
+    converts an integer ``int()`` refuses. Four keeps the syntax wherever the run
+    sits: a leading ``0`` stays followed by a digit, and a run that starts inside
+    a ``\\uXXXX`` escape keeps all of that escape's digits. Either flag then tells
+    the caller to take the values from an exact pass.
     """
 
     def __init__(self, binary: BinaryIO, *, exact: bool) -> None:
         self._binary = binary
         self._exact = exact
         self._sentinel = _EOF_SENTINEL
-        self._held = b""  # tail that may still become a surrogate escape
+        self._held = b""  # tail the next read may still change: a surrogate escape's head, a digit run
+        limit = sys.get_int_max_str_digits()
+        self._long_digits = _long_digit_run(limit) if limit else None
+        self._too_many_digits = b"0" * (limit + 1)  # in ``_DIGITS_AS_ZERO`` terms: C-speed pre-check
         self.forbidden_whitespace = False
         self.surrogate_escape = False
+        self.long_digit_run = False
 
     def read(self, size: int = -1) -> bytes:
         if size == 0:
@@ -1729,19 +1763,137 @@ class _ParserInput:
                 return data
             text, count = _SURROGATE_ESCAPE.subn(lambda _match: _NEUTRAL_ESCAPE, self._held + data)
             self.surrogate_escape = self.surrogate_escape or count > 0
-            # An escape starting before the held tail is complete, so it was rewritten above.
-            data, self._held = text[: -_SURROGATE_ESCAPE_HOLD], text[-_SURROGATE_ESCAPE_HOLD:]
+            hold = _SURROGATE_ESCAPE_HOLD  # an escape starting before it is complete: rewritten above
+            if self._long_digits is not None:
+                if self._too_many_digits in text.translate(_DIGITS_AS_ZERO):
+                    text, count = self._long_digits.subn(lambda match: match[0][:_DIGIT_RUN_KEEP], text)
+                    self.long_digit_run = self.long_digit_run or count > 0
+                # A trailing digit run (at most the limit long, now) is held whole until it ends.
+                hold = max(hold, len(text) - len(text.rstrip(_DIGITS)))
+            data, self._held = text[:-hold], text[-hold:]
             if data:
                 return data
 
 
 @functools.cache
-def _json_backend(exact: bool) -> Any:
-    """ijson's ``python`` backend when ``exact``, else ``yajl2_c`` (its syntax check is relied on)."""
+def _json_backend() -> Any:
+    """ijson's ``yajl2_c`` backend: the fast pass, whose syntax check is relied on."""
     try:
-        return ijson.get_backend("python" if exact else "yajl2_c")
+        return ijson.get_backend("yajl2_c")
     except ImportError as exc:  # pragma: no cover - ijson wheels ship yajl2_c
         raise ExportError(f"streaming verify needs ijson's yajl2_c backend: {exc}") from exc
+
+
+# Parser states of the exact decoder.
+_VALUE, _VALUE_OR_END, _KEY, _KEY_OR_END, _COLON, _COMMA_OR_END = range(6)
+
+
+def _exact_basic_parse(source: _ParserInput, read_bytes: int) -> Iterator[tuple[str, Any]]:
+    """ijson ``basic_parse`` events (``multiple_values``) of ``source`` with ``json.loads`` values.
+
+    Strings go through ``json.decoder.scanstring`` (strict, as ``json.loads``) and
+    numbers are ``int``/``float`` of their literal text, so a surrogate escape or
+    an exponent no ``Decimal`` holds reads exactly as ``json.loads`` reads it.
+    One token is buffered at a time; anything that is not JSON raises
+    :class:`JsonStreamError`.
+    """
+    decode = codecs.getincrementaldecoder("utf-8")().decode
+    text, pos, eof = "", 0, False
+
+    def more() -> bool:
+        """Append the next read to the unconsumed text; False once the input is exhausted."""
+        nonlocal text, pos, eof
+        if eof:
+            return False
+        # Grow with the pending token, so a long string or number is read in linear time.
+        data = source.read(max(read_bytes, len(text) - pos))
+        try:
+            decoded = decode(data, final=not data)
+        except UnicodeDecodeError as exc:
+            raise JsonStreamError(str(exc)) from None
+        text, pos, eof = text[pos:] + decoded, 0, not data
+        return True
+
+    stack: list[bool] = []  # True for an object, False for an array
+    state = _VALUE
+    while True:
+        while (pos := _JSON_WS.match(text, pos).end()) == len(text):
+            if not more():
+                if stack or state != _VALUE:
+                    raise JsonStreamError("Expecting value")
+                return
+        char = text[pos]
+        if state == _COLON:
+            if char != ":":
+                raise JsonStreamError("Expecting ':' delimiter")
+            pos, state = pos + 1, _VALUE
+            continue
+        if state == _COMMA_OR_END and char == ",":
+            pos, state = pos + 1, _KEY if stack[-1] else _VALUE
+            continue
+        if (char == "}" and state in (_KEY_OR_END, _COMMA_OR_END) and stack[-1]) or (
+            char == "]" and state in (_VALUE_OR_END, _COMMA_OR_END) and not stack[-1]
+        ):
+            pos += 1
+            yield ("end_map" if stack.pop() else "end_array"), None
+        elif state in (_COMMA_OR_END, _COLON):
+            raise JsonStreamError("Expecting ',' delimiter")
+        elif char == '"':
+            end = pos + 1
+            while True:  # the closing quote: one preceded by an even run of backslashes
+                end = text.find('"', end)
+                if end < 0:
+                    scanned = len(text) - pos
+                    if not more():
+                        raise JsonStreamError("Unterminated string")
+                    end = pos + scanned  # ``more`` moved the token to the start of ``text``
+                    continue
+                escape = end - 1
+                while text[escape] == "\\":
+                    escape -= 1
+                if (end - escape) % 2:
+                    break
+                end += 1
+            try:
+                value, pos = json.decoder.scanstring(text, pos + 1, True)
+            except json.JSONDecodeError as exc:
+                raise JsonStreamError(exc.msg) from None
+            if state in (_KEY, _KEY_OR_END):
+                yield "map_key", value
+                state = _COLON
+                continue
+            yield "string", value
+        elif state in (_KEY, _KEY_OR_END):
+            raise JsonStreamError("Expecting property name enclosed in double quotes")
+        elif char == "{" or char == "[":
+            pos += 1
+            stack.append(char == "{")
+            yield ("start_map" if char == "{" else "start_array"), None
+            state = _KEY_OR_END if char == "{" else _VALUE_OR_END
+            continue
+        elif char == "-" or "0" <= char <= "9":
+            while _JSON_NUMBER_RUN.match(text, pos).end() == len(text) and more():
+                pass
+            match = _JSON_NUMBER.match(text, pos)
+            if match is None:
+                raise JsonStreamError("Expecting value")
+            try:
+                number = float(match.group()) if match.group(1) or match.group(2) else int(match.group())
+            except ValueError as exc:  # past sys.get_int_max_str_digits(), as json.loads
+                raise JsonStreamError(str(exc)) from None
+            pos = match.end()
+            yield "number", number
+        else:
+            while len(text) - pos < 5 and more():
+                pass
+            for word, literal in _JSON_LITERALS:
+                if text.startswith(word, pos):
+                    pos += len(word)
+                    yield ("null" if literal is None else "boolean"), literal
+                    break
+            else:
+                raise JsonStreamError("Expecting value")
+        state = _COMMA_OR_END if stack else _VALUE
 
 
 def _next_event(events: Iterator[tuple[str, Any]]) -> tuple[str, Any]:
@@ -1794,8 +1946,9 @@ class ScannedPayload:
     records_is_list: bool = False
     record_count: int = 0
     rows: list[Any] | None = None  # per-record summaries of the (last) records array
-    # False when the text has a surrogate escape: values must come from ``exact=True``.
-    strings_exact: bool = True
+    # False when yajl's values are not exact (a surrogate escape, a digit run past
+    # the int limit, an exponent no ``Decimal`` holds): values come from ``exact=True``.
+    values_exact: bool = True
 
 
 def scan_json_payload(
@@ -1811,20 +1964,26 @@ def scan_json_payload(
     array is counted and, with ``summarize``, summarised record by record; other
     member values are skipped event by event unless they are
     ``schemaVersion``/``dataVersion``. Invalid JSON raises :class:`JsonStreamError`
-    (a ``ValueError``). ``exact=True`` parses with ijson's ``python`` backend,
-    for a document whose ``strings_exact`` came back False.
+    (a ``ValueError``). ``exact=True`` parses with :func:`_exact_basic_parse`,
+    for a document whose ``values_exact`` came back False.
     """
     source = _ParserInput(binary, exact=exact)
-    events = iter(_json_backend(exact).basic_parse(source, buf_size=read_bytes, multiple_values=True))
-    try:
-        payload = _scan_document(events, summarize)
-        if _next_event(events) != ("string", "") or next(events, None) is not None:
-            raise JsonStreamError("Extra data")
-    except (ijson.JSONError, InvalidOperation) as exc:
-        raise JsonStreamError(str(exc) or type(exc).__name__) from None
+    if exact:
+        events = _exact_basic_parse(source, read_bytes)
+    else:
+        events = iter(_json_backend().basic_parse(source, buf_size=read_bytes, multiple_values=True))
+    with decimal.localcontext(_UNTRAPPED_DECIMAL) as numbers:
+        try:
+            payload = _scan_document(events, summarize)
+            if _next_event(events) != ("string", "") or next(events, None) is not None:
+                raise JsonStreamError("Extra data")
+        except ijson.JSONError as exc:
+            raise JsonStreamError(str(exc) or type(exc).__name__) from None
     if source.forbidden_whitespace:
         raise JsonStreamError("Invalid character (vertical tab or form feed)")
-    payload.strings_exact = not source.surrogate_escape
+    payload.values_exact = not (
+        source.surrogate_escape or source.long_digit_run or numbers.flags[decimal.InvalidOperation]
+    )
     return payload
 
 
@@ -1951,8 +2110,8 @@ def verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path | None = N
                 except ValueError as exc:  # invalid JSON / UTF-8; gzip integrity still decides first
                     json_error = exc
                 raw.drain()
-            if payload is not None and not payload.strings_exact:
-                # yajl may have mis-decoded a surrogate escape: take the values from the exact decoder.
+            if payload is not None and not payload.values_exact:
+                # yajl mis-decodes surrogate escapes and cannot hold every exponent: decode exactly.
                 with path.open("rb") as handle, gzip.GzipFile(fileobj=handle, mode="rb") as inflated:
                     try:
                         payload = scan_json_payload(inflated, summarize=summarize, exact=True)  # type: ignore[arg-type]
@@ -2097,6 +2256,25 @@ def _fsync_dir(path: Path) -> None:
         os.close(fd)
 
 
+@dataclass(frozen=True)
+class Publication:
+    """A committed ``current.json`` replacement: the export is published.
+
+    ``durability_error`` is set when syncing the pointer's directory failed after
+    the replacement. The pointer then resolves (to this tree, or to a later
+    publisher's), but whether the rename survives a crash is unconfirmed; the
+    pointer on disk is the previous or the new one, never torn, since its bytes
+    were synced before the rename.
+    """
+
+    manifest_url: str
+    durability_error: str | None = None
+
+    @property
+    def durable(self) -> bool:
+        return self.durability_error is None
+
+
 class StagedVersion:
     """Hidden staging directory beside the version trees it may join.
 
@@ -2108,7 +2286,9 @@ class StagedVersion:
     URL a reader already holds stays valid. ``current.json`` is replaced last and
     atomically, so a process that dies at any point leaves a pointer to a complete
     tree. A failed export leaves the pointer and every installed tree untouched
-    and removes the staging tree.
+    and removes the staging tree. The replacement is the commit point: after it
+    nothing can fail the export, and nothing restores the old pointer (a
+    concurrent publisher may already have moved it on).
     """
 
     def __init__(self, base_root: Path, data_version: str) -> None:
@@ -2191,23 +2371,33 @@ class StagedVersion:
             "refusing to overwrite a published tree"
         )
 
-    def publish(self, build_current: Callable[[str], bytes]) -> str:
+    def publish(self, build_current: Callable[[str], bytes]) -> Publication:
         """Install the tree, then atomically point ``current.json`` at it (last step).
 
         ``build_current`` receives the relative manifest URL of the chosen tree.
+        Anything failing up to the replacement (tree install and its directory
+        sync, the pending pointer's write and fsync, the rename) raises with the
+        pointer untouched. A failed directory sync after it is reported on the
+        returned :class:`Publication`, not raised: the export is already published.
         """
         name = self.install()
         manifest_url = f"versions/{name}/manifest.json"
         current_path = self._base_root / "current.json"
         pending = self._base_root / f".current-{self._token}.json"
         try:
-            write_bytes(pending, build_current(manifest_url))
+            with pending.open("wb") as handle:
+                handle.write(build_current(manifest_url))
+                handle.flush()
+                os.fsync(handle.fileno())
             os.replace(pending, current_path)
         except BaseException:
             pending.unlink(missing_ok=True)
             raise
-        _fsync_dir(self._base_root)
-        return manifest_url
+        try:
+            _fsync_dir(self._base_root)
+        except OSError as exc:
+            return Publication(manifest_url, durability_error=f"fsync of {self._base_root} failed: {exc}")
+        return Publication(manifest_url)
 
 
 def export_runtime_shards(
@@ -2389,7 +2579,14 @@ def export_runtime_shards(
                     }
                 )
 
-            report["manifestUrl"] = stage.publish(build_current)
+            publication = stage.publish(build_current)
+            report["manifestUrl"] = publication.manifest_url
+            if not publication.durable:
+                report["publication"] = {
+                    "committed": True,
+                    "durable": False,
+                    "error": publication.durability_error,
+                }
         finally:
             stage.discard()
         return report
@@ -2522,6 +2719,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
 
     print(json.dumps(report, ensure_ascii=False, indent=2))
+    if "publication" in report:
+        print(
+            f"warning: published {report['manifestUrl']}, but its durability is unconfirmed "
+            f"({report['publication']['error']}); after a crash current.json may still name "
+            "the previous version",
+            file=sys.stderr,
+        )
     return 0
 
 

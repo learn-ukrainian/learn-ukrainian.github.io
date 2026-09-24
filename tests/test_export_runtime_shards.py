@@ -9,12 +9,13 @@ from __future__ import annotations
 
 import ctypes
 import dataclasses
-import decimal
+import errno
 import gc
 import gzip
 import hashlib
 import io
 import json
+import math
 import mmap
 import os
 import random
@@ -22,6 +23,7 @@ import re
 import shutil
 import signal
 import sqlite3
+import stat
 import subprocess
 import sys
 import threading
@@ -1495,7 +1497,9 @@ def test_concurrent_publishers_do_not_overwrite_each_other(tmp_path: Path) -> No
             stage = _synthetic_stage(base, "atlas-v1-x", files)
             barrier.wait(timeout=30)
             try:
-                outcomes.append((files, stage.publish(lambda url: json.dumps({"manifestUrl": url}).encode())))
+                publication = stage.publish(lambda url: json.dumps({"manifestUrl": url}).encode())
+                assert publication.durable
+                outcomes.append((files, publication.manifest_url))
             finally:
                 stage.discard()
         except BaseException as exc:
@@ -1513,6 +1517,136 @@ def test_concurrent_publishers_do_not_overwrite_each_other(tmp_path: Path) -> No
     installed = _version_dirs(tmp_path)
     assert len(installed) == 2 and "atlas-v1-x" in installed
     assert (base / json.loads((base / "current.json").read_text())["manifestUrl"]).is_file()
+
+
+def _fsync_target(fd: int, base: Path) -> str:
+    """Which publication step an ``os.fsync`` belongs to: the only file synced is the pending pointer."""
+    status = os.fstat(fd)
+    if not stat.S_ISDIR(status.st_mode):
+        return "pointer-file"
+    if os.path.samestat(status, (base / "versions").stat()):
+        return "versions-dir"
+    return "base-dir" if os.path.samestat(status, base.stat()) else "other"
+
+
+_FSYNC_STEPS = ["versions-dir", "pointer-file", "base-dir"]  # install, pending pointer, then (after the rename) its dir
+
+
+@pytest.mark.parametrize("point", _FSYNC_STEPS)
+def test_fsync_failure_fails_export_only_before_the_pointer_replacement(
+    edge_db: Path, tmp_path: Path, monkeypatch, point: str
+) -> None:
+    """Before ``os.replace(pending, current.json)`` a failed fsync is a failed export (pointer untouched).
+
+    After it the export is published: readers already resolve the new pointer, so
+    reporting failure would misclassify it, and restoring the old pointer could
+    clobber a concurrent publisher. The export succeeds and its report says the
+    pointer's durability is unconfirmed.
+    """
+    out = tmp_path / "out"
+    atlas = out / "atlas"
+    kwargs = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
+    first = _export(edge_db, out, **kwargs)
+    assert "publication" not in first, "a durable publication reports exactly as before"
+    before = _snapshot(out)
+    synced: list[str] = []
+    real_fsync = os.fsync
+
+    def fsync(fd: int) -> None:
+        synced.append(_fsync_target(fd, atlas))
+        if synced[-1] == point:
+            raise OSError(errno.EIO, f"injected {point}")
+        real_fsync(fd)
+
+    monkeypatch.setattr(exporter.os, "fsync", fsync)
+    if point == "base-dir":
+        report = _export(edge_db, out, **kwargs, compression_level=6)
+    else:
+        with pytest.raises(OSError, match=f"injected {point}"):
+            _export(edge_db, out, **kwargs, compression_level=6)
+    monkeypatch.undo()
+    assert synced == _FSYNC_STEPS[: _FSYNC_STEPS.index(point) + 1]
+
+    after = _snapshot(out)
+    unchanged = {name: blob for name, blob in before.items() if name != "atlas/current.json"}
+    assert {name: blob for name, blob in after.items() if name in unchanged} == unchanged, "every old URL stays"
+    assert all(
+        name.startswith(f"atlas/versions/{first['dataVersion']}-transport-")
+        for name in after.keys() - before.keys()
+    )
+    assert not list(atlas.glob(".current-*")) and not list((atlas / "versions").glob(".export-*"))
+    if point == "base-dir":
+        assert report["publication"] == {
+            "committed": True, "durable": False, "error": f"fsync of {atlas} failed: [Errno 5] injected base-dir",
+        }
+        assert _pointer(out)["manifestUrl"] == report["manifestUrl"] != json.loads(before["atlas/current.json"])[
+            "manifestUrl"
+        ]
+    else:
+        assert after["atlas/current.json"] == before["atlas/current.json"]
+    assert verify_tree(out, "atlas")["dataVersion"] == first["dataVersion"]
+
+
+@pytest.mark.parametrize("point", ["pointer-file", "base-dir"])
+def test_failure_around_the_commit_never_moves_a_concurrent_publishers_pointer(
+    tmp_path: Path, monkeypatch, point: str
+) -> None:
+    """A rival publishes completely inside the failing fsync; the failing publisher never touches its pointer."""
+    base = tmp_path / "atlas"
+    publisher = _synthetic_stage(base, "atlas-v1-x", _TREE_A)
+    rival = _synthetic_stage(base, "atlas-v1-y", _TREE_B)
+    real_fsync = os.fsync
+    raced: list[exporter.Publication] = []
+
+    def build_current(url: str) -> bytes:
+        return json.dumps({"manifestUrl": url}).encode()
+
+    def fsync(fd: int) -> None:
+        if not raced and _fsync_target(fd, base) == point:
+            raced.append(None)  # type: ignore[arg-type]  # the rival's own fsyncs pass through
+            raced[0] = rival.publish(build_current)
+            raise OSError(errno.EIO, "injected")
+        real_fsync(fd)
+
+    monkeypatch.setattr(exporter.os, "fsync", fsync)
+    try:
+        if point == "pointer-file":
+            with pytest.raises(OSError, match="injected"):
+                publisher.publish(build_current)
+        else:
+            publication = publisher.publish(build_current)
+            assert publication.manifest_url == "versions/atlas-v1-x/manifest.json"
+            assert not publication.durable and "injected" in str(publication.durability_error)
+    finally:
+        monkeypatch.undo()
+        publisher.discard()
+        rival.discard()
+    assert raced[0].durable and raced[0].manifest_url == "versions/atlas-v1-y/manifest.json"
+    assert json.loads((base / "current.json").read_text()) == {"manifestUrl": raced[0].manifest_url}
+    assert _snapshot(base / "versions" / "atlas-v1-x") == _TREE_A
+    assert _snapshot(base / "versions" / "atlas-v1-y") == _TREE_B
+    assert not list(base.glob(".current-*"))
+
+
+def test_cli_reports_unconfirmed_pointer_durability_without_failing(
+    edge_db: Path, tmp_path: Path, monkeypatch, capsys
+) -> None:
+    out = tmp_path / "out"
+    real_fsync_dir = exporter._fsync_dir
+
+    def fsync_dir(path: Path) -> None:
+        if path == out / "atlas":
+            raise OSError(errno.EIO, "injected")
+        real_fsync_dir(path)
+
+    monkeypatch.setattr(exporter, "_fsync_dir", fsync_dir)
+    argv = ["--db", str(edge_db), "--out-dir", str(out), "--no-decks", "--verify"]
+    assert exporter.main(argv) == 0
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
+    assert report["publication"]["committed"] is True and report["publication"]["durable"] is False
+    assert captured.err.startswith(f"warning: published {report['manifestUrl']}, but its durability is unconfirmed")
+    assert _pointer(out)["manifestUrl"] == report["manifestUrl"]
 
 
 def test_concurrent_full_exports_with_different_limits_all_stay_valid(edge_db: Path, tmp_path: Path) -> None:
@@ -2003,12 +2137,22 @@ def _system_libz_version() -> str | None:
     return libz.zlibVersion().decode()
 
 
+def _resident_memory_bytes() -> int:
+    """Anonymous plus shmem-backed resident memory of this process (``/proc/self/status``)."""
+    fields = dict(line.split(":", 1) for line in Path("/proc/self/status").read_text().splitlines() if ":" in line)
+    return sum(int(fields[name].split()[0]) * 1024 for name in ("RssAnon", "RssShmem"))
+
+
 def _live_zlib_one_shot_blocks(total: int) -> list[tuple[int, int]]:
     """Stored blocks of the C library driven exactly like CPython 3.12 ``zlib_compress_impl`` (level 0, wbits 31).
 
-    The input is untouched anonymous memory (the zero page, never resident) and
-    one output buffer is reused at every growth, so a >4 GiB input costs 256 MiB.
+    The input is a private anonymous mapping that is only read, so every page
+    stays the shared zero page and is never resident (a shared anonymous mapping,
+    ``mmap``'s default, would be backed by shmem pages as zlib reads it: checked
+    below). One output buffer is reused at every growth, so a >4 GiB input costs
+    256 MiB.
     """
+    resident_before = _resident_memory_bytes()
 
     class ZStream(ctypes.Structure):
         _fields_: ClassVar[list[tuple[str, type]]] = [
@@ -2026,14 +2170,16 @@ def _live_zlib_one_shot_blocks(total: int) -> list[tuple[int, int]]:
     stream = ZStream()
     init = libz.deflateInit2_(ctypes.byref(stream), 0, 8, 31, 8, 0, libz.zlibVersion(), ctypes.sizeof(ZStream))
     assert init == exporter._Z_OK
-    source = mmap.mmap(-1, max(total, 1))
-    output = mmap.mmap(-1, exporter._OUTPUT_BLOCK_SIZES[-1])
+    private = mmap.MAP_PRIVATE | mmap.MAP_ANONYMOUS
+    source = mmap.mmap(-1, max(total, 1), flags=private)
+    output = mmap.mmap(-1, exporter._OUTPUT_BLOCK_SIZES[-1], flags=private)
+    source_start = ctypes.addressof(ctypes.c_char.from_buffer(source))
     output_start = ctypes.addressof(ctypes.c_char.from_buffer(output))
     view = memoryview(output)
     reader = _StoredFrameReader()
     schedule = exporter.OutputBlocks()
     try:
-        stream.next_in = ctypes.addressof(ctypes.c_char.from_buffer(source))
+        stream.next_in = source_start
         stream.next_out, stream.avail_out = output_start, schedule.next_block()
         produced, remaining = output_start, total
         while True:
@@ -2053,6 +2199,9 @@ def _live_zlib_one_shot_blocks(total: int) -> list[tuple[int, int]]:
             if flush == zlib.Z_FINISH:
                 break
         assert status == exporter._Z_STREAM_END
+        grown = _resident_memory_bytes() - resident_before
+        # Only the (written) output buffer may become resident, never the input.
+        assert grown < exporter._OUTPUT_BLOCK_SIZES[-1] + (32 << 20), f"resident memory grew {grown} bytes"
     finally:
         libz.deflateEnd(ctypes.byref(stream))
         del view
@@ -2333,6 +2482,30 @@ def _mutate(case: str, root: Path, manifest: dict) -> None:
             '"kind":', '"n":123456789012345678901234567890,"big":-1e400,"u":"\\ud800","w":"\\udc00\\ud800\\u0041","kind":', 1
         )
         _rewrite(root, manifest, descriptor, text.encode())
+    elif case == "extreme-numbers-in-record":
+        # json.loads: 0.0, inf, 0.0, -0.0 and two exact 4300-digit integers (the default int limit).
+        numbers = (
+            '"u":1e-99999999999999999999,"o":1e99999999999999999999,"z":0e99999999999999999999,'
+            f'"nz":-0e-99999999999999999999,"big":{"9" * 4300},"nbig":-{"9" * 4300},'
+        )
+        text = _json_text(payload).decode().replace('"kind":', numbers + '"kind":', 1)
+        _rewrite(root, manifest, descriptor, text.encode())
+    elif case == "int-past-digit-limit-in-record":
+        raw = _json_text(payload).replace(b'"kind":', b'"n":' + b"9" * 4301 + b',"kind":', 1)
+        _rewrite(root, manifest, descriptor, raw)
+    elif case in ("extreme-exponent-duplicate-member", "extreme-exponent-last-member-wins"):
+        extreme = b'"schemaVersion":1e99999999999999999999'
+        if case == "extreme-exponent-duplicate-member":  # the extreme member is overridden: schemaVersion 1
+            members = extreme + b',"schemaVersion":1'
+        else:  # the extreme member wins: schemaVersion 0.0
+            members = b'"schemaVersion":1,' + extreme.replace(b"1e", b"1e-")
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b'"schemaVersion":1', members, 1))
+    elif case == "extreme-exponent-deck":
+        # A correctly hashed deck the historical json.loads verify accepts (``unused`` is 0.0).
+        deck = {"id": "a1/practice-index", "url": "decks/a1/practice-index.json.gz"}
+        (root / "decks" / "a1").mkdir(parents=True)
+        manifest["decks"] = {"levels": {"a1": {"parts": {"practice-index": deck}}}}
+        _rewrite(root, manifest, deck, b'{"deckVersion":"d","unused":1e-99999999999999999999}\n')
     elif case == "nan-infinity-in-record":
         text = _json_text(payload).decode().replace('"kind":', '"f":NaN,"z":-Infinity,"kind":', 1)
         _rewrite(root, manifest, descriptor, text.encode())
@@ -2373,6 +2546,7 @@ _HISTORICAL_CRASH = {
     "invalid-json-trailing-comma": "invalid JSON", "invalid-utf8": "invalid JSON",
     "control-char": "invalid JSON", "top-level-array": "payload must be an object",
     "trailing-unterminated-string": "invalid JSON", "vertical-tab-whitespace": "invalid JSON",
+    "int-past-digit-limit-in-record": "invalid JSON",
 }
 # NaN/Infinity are json.loads extensions the runtime's JSON.parse rejects: they fail closed.
 _FAIL_CLOSED = {"nan-infinity-in-record": "invalid JSON"}
@@ -2384,7 +2558,9 @@ _VERIFY_CASES = [
     "kind-count", "record-not-object", "records-missing", "bigint-overflow-surrogate-in-record",
     "nan-infinity-in-record", "surrogate-alias-target", "invalid-json-trailing", "invalid-json-truncated",
     "invalid-json-trailing-comma", "invalid-utf8", "control-char", "top-level-array",
-    "trailing-unterminated-string", "vertical-tab-whitespace",
+    "trailing-unterminated-string", "vertical-tab-whitespace", "extreme-numbers-in-record",
+    "int-past-digit-limit-in-record", "extreme-exponent-duplicate-member", "extreme-exponent-last-member-wins",
+    "extreme-exponent-deck",
 ]
 
 
@@ -2415,7 +2591,8 @@ def test_streaming_verify_matches_historical_verify(verified_tree: Path, tmp_pat
         assert actual == expected
     assert case in ("trailing-zero-padding", "second-gzip-member", "schema-version-float",
                     "schema-version-near-one", "duplicate-members-last-wins",
-                    "bigint-overflow-surrogate-in-record") or actual[0] != "ok", actual
+                    "bigint-overflow-surrogate-in-record", "extreme-numbers-in-record",
+                    "extreme-exponent-duplicate-member", "extreme-exponent-deck") or actual[0] != "ok", actual
 
 
 _JSON_DOCS = [
@@ -2427,6 +2604,19 @@ _JSON_DOCS = [
     b'{"a":1,"a":2,"records":[1],"records":[2,3],"schemaVersion":7,"schemaVersion":1}',
     b'{"records":[1.5,-1.25e-3,1E+5,0,true,false,null,"1.5"]}', b'{"records":{"not":"a list"}}',
     b'[{"a":1},[2,[3]],"x",4]', b'{"deep":' + b"[" * 200 + b"]" * 200 + b"}",
+    # Exponents no Decimal holds, read as json.loads reads them (review of #8672).
+    b'{"deckVersion":"d","unused":1e-99999999999999999999}',
+    b'{"records":[1e99999999999999999999,-1e99999999999999999999,0e99999999999999999999,-0e-99999999999999999999,'
+    b'1e-99999999999999999999,-0E+99999999999999999999,0.0e-99999999999999999999,1E+000000000000000000000000001,'
+    b"1e999999999999999999,1e-999999999999999999,-0.0,-0]}",
+    b'{"schemaVersion":1e99999999999999999999,"records":[],"schemaVersion":1,"dataVersion":-0e99999999999999999999}',
+    b'{"records":[1],"schemaVersion":1,"schemaVersion":1e-99999999999999999999,"records":[2e99999999999999999999]}',
+    # Integers up to the int limit stay exact; digit runs past it outside integers are fine.
+    b'{"records":[' + b"9" * 4300 + b",-" + b"9" * 4300 + b"," + b"1" * 5000 + b".5," + b"2" * 5000 + b"e-400]}",
+    b'[0.' + b"0" * 5000 + b"1,1e" + b"0" * 5000 + b"1,-0e" + b"9" * 5000 + b"]",
+    # Digit runs and extreme exponents inside strings are only text, also where a run starts inside an escape.
+    b'["\\ud9' + b"9" * 5000 + b'","\\u12' + b"3" * 5000 + b'","\\u0' + b"0" * 5000 + b'"]',
+    b'{"s":"' + b"7" * 5000 + b'","records":["1e99999999999999999999","' + b"0" * 4301 + b'"],"dataVersion":"\\ud800"}',
 ]
 _BAD_JSON_DOCS = [
     b"", b"   ", b'{"a":1} x', b'{"a":1}{}', b'{"a":1,}', b'{"a" 1}', b'{a:1}', b"[1,]", b"[1 2]", b'{"a":01}',
@@ -2436,18 +2626,21 @@ _BAD_JSON_DOCS = [
     # yajl alone accepts these: an unterminated string after the value, \v/\f as whitespace.
     b'{"a":1}"', b'{"a":1}\n"x', b'{"a":1}"}', b'[1]"', b'false "', b'\x0b{"a":1}', b'{"a":\x0c1}', b'{"a":1}\x0b',
     b'{"a":"\\ud800"}"', b'{"a":"\\ud800\\u12"}', b'{"a":"\\udc00" "b"}',
+    # Numbers: past the int limit (json.loads raises ValueError), or not JSON numbers at all.
+    b"[" + b"9" * 4301 + b"]", b'{"a":-' + b"9" * 4301 + b"}", b"[0" + b"0" * 5000 + b"]", b"[-0" + b"1" * 5000 + b"]",
+    b'{"a":1e99999999999999999999x}', b"[1e]", b"[1e+]", b"[.5e99999999999999999999]", b"[1.e99999999999999999999]",
+    b'{"a":1e99999999999999999999,}', b"[1e99999999999999999999 1]",
 ]
-# json.loads extensions that fail closed: not JSON (the runtime's JSON.parse rejects
-# NaN/Infinity) or an exponent beyond Decimal's range.
-_FAIL_CLOSED_JSON_DOCS = [b'{"f":NaN}', b'{"i":Infinity}', b"[-Infinity]", b'{"e":1e99999999999999999999}']
+# json.loads extensions that fail closed: not JSON (the runtime's JSON.parse rejects NaN/Infinity).
+_FAIL_CLOSED_JSON_DOCS = [b'{"f":NaN}', b'{"i":Infinity}', b"[-Infinity]", b'{"f":1,"records":[NaN]}']
 
 
 def _scan(doc: bytes, read_bytes: int, summarize=json.dumps) -> exporter.ScannedPayload:
     """``scan_json_payload`` as ``verify_tree`` uses it: exact re-decode when the fast pass asks."""
     scanned = exporter.scan_json_payload(io.BytesIO(doc), summarize=summarize, read_bytes=read_bytes)
-    if not scanned.strings_exact:
+    if not scanned.values_exact:
         scanned = exporter.scan_json_payload(io.BytesIO(doc), summarize=summarize, read_bytes=read_bytes, exact=True)
-        assert scanned.strings_exact
+        assert scanned.values_exact
     return scanned
 
 
@@ -2455,14 +2648,9 @@ def _reject_constant(name: str):
     raise ValueError(f"{name} fails closed")
 
 
-def _float_failing_closed(text: str) -> float:
-    decimal.Decimal(text)  # InvalidOperation (an ArithmeticError) past Decimal's exponent range
-    return float(text)
-
-
 def _expected_scan(doc: bytes) -> exporter.ScannedPayload:
     """``json.loads`` + ``dict.get`` view of ``doc``, minus the literals verification fails closed on."""
-    value = json.loads(doc.decode("utf-8"), parse_constant=_reject_constant, parse_float=_float_failing_closed)
+    value = json.loads(doc.decode("utf-8"), parse_constant=_reject_constant)
     if not isinstance(value, dict):
         return exporter.ScannedPayload(is_object=False)
     records = value.get("records")
@@ -2474,13 +2662,21 @@ def _expected_scan(doc: bytes) -> exporter.ScannedPayload:
     )
 
 
-def _scan_outcome(doc: bytes, read_bytes: int) -> tuple:
-    """Everything verification reads from ``doc`` (or that it is invalid), for exact comparison."""
+def _scan_outcome(doc: bytes, read_bytes: int, *, exact_only: bool = False) -> tuple:
+    """Everything verification reads from ``doc`` (or that it is invalid), for exact comparison.
+
+    ``exact_only`` runs the exact decoder alone, without yajl's syntax verdict first.
+    """
     try:
-        scanned = _scan(doc, read_bytes)
+        if exact_only:
+            scanned = exporter.scan_json_payload(
+                io.BytesIO(doc), summarize=json.dumps, read_bytes=read_bytes, exact=True
+            )
+        else:
+            scanned = _scan(doc, read_bytes)
     except ValueError:
         return ("invalid",)
-    scanned.strings_exact = True
+    scanned.values_exact = True
     return ("ok", json.dumps(dataclasses.asdict(scanned), sort_keys=True))
 
 
@@ -2492,26 +2688,67 @@ def _json_loads_outcome(doc: bytes) -> tuple:
     return ("ok", json.dumps(dataclasses.asdict(expected), sort_keys=True))
 
 
-def test_verify_uses_yajl_and_the_stdlib_string_decoder() -> None:
-    assert exporter._json_backend(False).backend_name == "yajl2_c"
-    assert exporter._json_backend(True).backend_name == "python"
+def test_verify_fast_pass_is_yajl() -> None:
+    assert exporter._json_backend().backend_name == "yajl2_c"
 
 
 @pytest.mark.parametrize("read_bytes", [1, 2, 3, 5, 6, 7, 13, 64, 1 << 16])
 def test_json_stream_decodes_exactly_like_json_loads_at_every_read_size(read_bytes: int) -> None:
     for doc in _JSON_DOCS:
         assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), doc
+        assert _scan_outcome(doc, read_bytes, exact_only=True) == _json_loads_outcome(doc), doc
         fast = exporter.scan_json_payload(io.BytesIO(doc), read_bytes=read_bytes)
-        assert fast.strings_exact == (re.search(rb"\\u[dD][89a-fA-F]", doc) is None), doc
+        if re.search(rb"\\u[dD][89a-fA-F]", doc):
+            assert not fast.values_exact, doc
+        elif not re.search(rb"[0-9]{19}", doc):  # no exponent Decimal refuses, no integer int() refuses
+            assert fast.values_exact, doc
     for doc in _BAD_JSON_DOCS:
         with pytest.raises(ValueError):
             json.loads(doc.decode("utf-8"))
         with pytest.raises(ValueError):
             _scan(doc, read_bytes)
+        assert _scan_outcome(doc, read_bytes, exact_only=True) == ("invalid",), doc
     for doc in _FAIL_CLOSED_JSON_DOCS:
         json.loads(doc.decode("utf-8"))
         with pytest.raises(ValueError):
             _scan(doc, read_bytes)
+        assert _scan_outcome(doc, read_bytes, exact_only=True) == ("invalid",), doc
+
+
+def test_extreme_numbers_read_like_json_loads() -> None:
+    """The reviewer's deck, and each class of number literal no ``Decimal`` or yajl conversion holds."""
+    deck = exporter.scan_json_payload(io.BytesIO(b'{"deckVersion":"d","unused":1e-99999999999999999999}'))
+    assert deck.is_object and not deck.values_exact  # yajl judged the syntax; values come from the exact pass
+    cases = {
+        b"1e-99999999999999999999": 0.0, b"-1e-99999999999999999999": -0.0, b"1e99999999999999999999": math.inf,
+        b"-1e99999999999999999999": -math.inf, b"0e99999999999999999999": 0.0, b"-0e99999999999999999999": -0.0,
+        b"0.000e-99999999999999999999": 0.0, b"1E+000000000000000000000000001": 10.0, b"-0": 0, b"-0.0": -0.0,
+        b"9" * 4300: int("9" * 4300), b"-" + b"9" * 4300: -int("9" * 4300),
+    }
+    for literal, expected in cases.items():
+        doc = b'{"schemaVersion":' + literal + b',"records":[' + literal + b"]}"
+        scanned = _scan(doc, 64, summarize=lambda value: value)
+        assert json.loads(doc)["schemaVersion"] == expected
+        for value in (scanned.schema_version, scanned.rows[0]):
+            assert type(value) is type(expected) and repr(value) == repr(expected), literal[:30]
+    with pytest.raises(ValueError, match="integer string conversion"):
+        json.loads(b"[" + b"9" * 4301 + b"]")
+    with pytest.raises(ValueError, match="integer string conversion"):
+        _scan(b"[" + b"9" * 4301 + b"]", 64)
+
+
+@pytest.mark.parametrize("limit", [0, 640])
+def test_integer_digit_limit_matches_json_loads_at_every_read_size(limit: int) -> None:
+    """The yajl guard follows ``sys.get_int_max_str_digits()`` (0: no limit, 640: the smallest allowed)."""
+    previous = sys.get_int_max_str_digits()
+    sys.set_int_max_str_digits(limit)
+    try:
+        for digits in (639, 640, 641, 5000):
+            doc = b'{"records":[-' + b"7" * digits + b',"' + b"7" * digits + b'",0.' + b"7" * digits + b"]}"
+            for read_bytes in (1, 5, 64, 1 << 16):
+                assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), (limit, digits, read_bytes)
+    finally:
+        sys.set_int_max_str_digits(previous)
 
 
 def test_json_stream_matches_json_loads_on_mutated_documents() -> None:
@@ -2521,6 +2758,7 @@ def test_json_stream_matches_json_loads_on_mutated_documents() -> None:
         b"{", b"}", b"[", b"]", b",", b":", b'"', b"\\", b"u", b"d", b"8", b"0", b"1", b"-", b"+", b".", b"e",
         b" ", b"\t", b"\n", b"\x0b", b"\x0c", b"\x00", b"\x01", b"\xff", b"\xed", b"t", b"n", b"x",
         "я".encode(), b"\\ud800", b"\\udc00", b"\\ud83d\\ude00", b'"records"', b'"schemaVersion"',
+        b"e99999999999999999999", b"e-99999999999999999999", b"1e99999999999999999999", b"9" * 4301, b"0" * 4301,
     ]
 
     def value(depth: int):
@@ -2545,4 +2783,6 @@ def test_json_stream_matches_json_loads_on_mutated_documents() -> None:
             raw[position : position + rng.randrange(2)] = rng.choice(tokens)
         doc = bytes(raw[: rng.randrange(len(raw) + 1)] if rng.random() < 0.2 else raw)
         read_bytes = rng.choice([1, 3, 5, 8, 50])
-        assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), doc
+        expected = _json_loads_outcome(doc)
+        assert _scan_outcome(doc, read_bytes) == expected, doc
+        assert _scan_outcome(doc, read_bytes, exact_only=True) == expected, doc
