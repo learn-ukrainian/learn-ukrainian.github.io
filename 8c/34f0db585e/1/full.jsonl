@@ -1,0 +1,166 @@
+{
+  "info": {
+    "id": "ses_f2c9f1d4affeiz6lBRLaYrtH4O",
+    "slug": "lucky-wolf",
+    "projectID": "c4cb20568b49f5c34ee7abdc0cd296fbd941fbd2",
+    "directory": "/home/ops/learn-ukrainian/.worktrees/dispatch/codex/impl-8514-r4",
+    "path": "",
+    "title": "Worktree dispatch with shared interpreter",
+    "agent": "build",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "high"
+    },
+    "version": "1.18.32",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0.003079842,
+    "tokens": {
+      "input": 19895,
+      "output": 2,
+      "reasoning": 149,
+      "cache": {
+        "read": 1664,
+        "write": 0
+      }
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1790252737206,
+      "updated": 1790252755418
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1790252737356
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "deepseek",
+          "modelID": "deepseek-flash",
+          "variant": "high"
+        },
+        "summary": {
+          "diffs": []
+        },
+        "id": "msg_0d360e34c001du0MBBpNbtgnCN",
+        "sessionID": "ses_f2c9f1d4affeiz6lBRLaYrtH4O"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"[delegate worktree]\nRun all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/codex/impl-8514-r4\nDo not switch branches in the main checkout.\nIf you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.\n\n[shared project interpreter]\nNever create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.\nSparse-checkout is active: these trees are NOT present: curriculum, data/lexicon, data/projects, wiki. To materialize one inside this worktree, run `git sparse-checkout add curriculum` `git sparse-checkout add data/lexicon` `git sparse-checkout add data/projects` `git sparse-checkout add wiki` (for example `git sparse-checkout add data/projects`). Do not invent content for missing paths.\n\nAnswer with exactly one line: OK\"",
+          "id": "prt_0d360e35a001sxBeYQN5DOTcef",
+          "sessionID": "ses_f2c9f1d4affeiz6lBRLaYrtH4O",
+          "messageID": "msg_0d360e34c001du0MBBpNbtgnCN"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d360e34c001du0MBBpNbtgnCN",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/codex/impl-8514-r4",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/codex/impl-8514-r4"
+        },
+        "cost": 0.003079842,
+        "tokens": {
+          "total": 21710,
+          "input": 19895,
+          "output": 2,
+          "reasoning": 149,
+          "cache": {
+            "write": 0,
+            "read": 1664
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790252740207,
+          "completed": 1790252758835
+        },
+        "finish": "stop",
+        "id": "msg_0d360ee6f001l8OmcyVTir3ae1",
+        "sessionID": "ses_f2c9f1d4affeiz6lBRLaYrtH4O"
+      },
+      "parts": [
+        {
+          "snapshot": "b33d992b62e75d4e9548e2b447e3555a6993a1f2",
+          "type": "step-start",
+          "id": "prt_0d361313e001WW95Av8swxPZoR",
+          "sessionID": "ses_f2c9f1d4affeiz6lBRLaYrtH4O",
+          "messageID": "msg_0d360ee6f001l8OmcyVTir3ae1"
+        },
+        {
+          "type": "reasoning",
+          "text": "The user is asking me to answer with exactly one line: OK. This is just a delegate worktree setup message. Let me just respond with OK.\n\nThe instruction says \"Answer with exactly one line: OK\". But there's no actual task here beyond setting context. I should just respond OK.\n\nWait, let me re-read. The message is a delegation preamble. There's no actual task described. It just says \"Answer with exactly one line: OK\". So I respond OK.\n\nBut maybe I should verify the worktree exists? The literal instruction is to answer with exactly one line OK. I'll comply.\n\nActually, this seems like an odd prompt injection-ish thing. But it's just a setup confirmation. I'll answer OK.",
+          "time": {
+            "start": 1790252757882,
+            "end": 1790252758598
+          },
+          "id": "prt_0d361337a001n9rlQqTPMikz19",
+          "sessionID": "ses_f2c9f1d4affeiz6lBRLaYrtH4O",
+          "messageID": "msg_0d360ee6f001l8OmcyVTir3ae1"
+        },
+        {
+          "type": "text",
+          "text": "OK",
+          "time": {
+            "start": 1790252758601,
+            "end": 1790252758616
+          },
+          "id": "prt_0d3613649001hvk6ExMXyMMjL2",
+          "sessionID": "ses_f2c9f1d4affeiz6lBRLaYrtH4O",
+          "messageID": "msg_0d360ee6f001l8OmcyVTir3ae1"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "b33d992b62e75d4e9548e2b447e3555a6993a1f2",
+          "type": "step-finish",
+          "tokens": {
+            "total": 21710,
+            "input": 19895,
+            "output": 2,
+            "reasoning": 149,
+            "cache": {
+              "write": 0,
+              "read": 1664
+            }
+          },
+          "cost": 0.003079842,
+          "id": "prt_0d36136ba001Rlx3198z8DUxiT",
+          "sessionID": "ses_f2c9f1d4affeiz6lBRLaYrtH4O",
+          "messageID": "msg_0d360ee6f001l8OmcyVTir3ae1"
+        }
+      ]
+    }
+  ]
+}
