@@ -43,11 +43,12 @@ def _make_source_db(path: Path, article_count: int = 24) -> Path:
         ("generated_at", json.dumps("2026-09-11T10:12:36+00:00")),
     )
     for i in range(article_count):
-        slug = f"слово-{i:03d}"
+        slug = "автобус" if i == article_count - 1 else f"слово-{i:03d}"
+        lemma = "автобус" if i == article_count - 1 else f"слово {i}"
         cefr = "A1" if i % 2 == 0 else None
         enrichment = {"cefr": {"level": cefr}} if cefr else {}
         payload = {
-            "lemma": f"слово {i}",
+            "lemma": lemma,
             "url_slug": slug,
             "gloss": f"word {i}",
             "pos": "noun",
@@ -59,8 +60,8 @@ def _make_source_db(path: Path, article_count: int = 24) -> Path:
             " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 slug,
-                f"слово {i}",
-                f"слово {i}",
+                lemma,
+                lemma,
                 "lemma",
                 "noun",
                 f"word {i}",
@@ -92,13 +93,19 @@ def _make_source_db(path: Path, article_count: int = 24) -> Path:
     cur.execute(
         "INSERT INTO related_entries(slug, related_slug, entry_type, relation, component_role, provenance)"
         " VALUES (?,?,?,?,?,?)",
-        ("слово-000", f"слово-{article_count - 1:03d}", "lemma", "related", None, "verified"),
+        ("слово-000", "автобус", "lemma", "related", None, "verified"),
     )
-    # one form-of route payload: a public route with no articles row
-    form_payload = {"lemma": "словеса", "url_slug": "словеса", "gloss": "words", "pos": "noun"}
+    # A real Atlas form route has no articles row and links to a lemma article.
+    form_payload = {
+        "lemma": "автобусом",
+        "url_slug": "автобусом",
+        "gloss": "by bus",
+        "pos": "instrument",
+        "form_of": {"lemma": "автобус", "url_slug": "автобус"},
+    }
     cur.execute(
         "INSERT INTO article_payloads(slug, route_order, payload_json, is_public_route) VALUES (?,?,?,?)",
-        ("словеса", 9000, json.dumps(form_payload, ensure_ascii=False), 1),
+        ("автобусом", 9000, json.dumps(form_payload, ensure_ascii=False), 1),
     )
     cur.execute(
         """INSERT INTO articles_fts(slug, display_head, lemma, gloss, aliases)
@@ -141,6 +148,24 @@ def _export_gate_counts(db_path: Path) -> dict[str, int]:
         conn.close()
 
 
+def _assert_form_targets_resolve(db_path: Path) -> int:
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    try:
+        articles = {row[0] for row in conn.execute("SELECT slug FROM articles")}
+        routes = conn.execute(
+            """SELECT payload.slug, payload.payload_json FROM article_payloads AS payload
+               LEFT JOIN articles AS article ON article.slug = payload.slug
+               WHERE payload.is_public_route = 1 AND article.slug IS NULL"""
+        ).fetchall()
+        for slug, raw in routes:
+            payload = json.loads(raw)
+            assert payload["url_slug"] == slug
+            assert payload["form_of"]["url_slug"] in articles
+        return len(routes)
+    finally:
+        conn.close()
+
+
 def test_same_seed_produces_byte_identical_dataset(tmp_path: Path) -> None:
     source = _make_source_db(tmp_path / "source.db")
     out_a = tmp_path / "synthetic-a.db"
@@ -171,6 +196,7 @@ def test_synthetic_db_hits_target_and_satisfies_export_gates(tmp_path: Path) -> 
     assert gates["reviewed"] == gates["public_routes"] - gates["form_of"]
     assert gates["invalid_aliases"] == 0
     assert gates["form_of"] >= 1  # natural-ratio form-of route copies preserved
+    assert _assert_form_targets_resolve(out) == gates["form_of"]
     conn = sqlite3.connect(out)
     try:
         assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
@@ -205,19 +231,24 @@ def test_dataset_is_marked_synthetic(tmp_path: Path) -> None:
         conn.close()
 
 
-def test_downscale_target_below_source(tmp_path: Path) -> None:
+@pytest.mark.parametrize("seed,expected_form_routes", [(1, 0), (3, 1)])
+def test_downscale_target_below_source(tmp_path: Path, seed: int, expected_form_routes: int) -> None:
     source = _make_source_db(tmp_path / "source.db")
     out = tmp_path / "small.db"
-    summary = build_synthetic_db(source_db=source, out=out, seed=7, target_articles=5)
-    assert summary["articles"] == 5
+    summary = build_synthetic_db(source_db=source, out=out, seed=seed, target_articles=13)
+    assert summary["articles"] == 13
     gates = _export_gate_counts(out)
     assert gates["reviewed"] == gates["public_routes"] - gates["form_of"]
     assert gates["invalid_aliases"] == 0
+    assert _assert_form_targets_resolve(out) == expected_form_routes
     conn = sqlite3.connect(out)
     try:
         assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
     finally:
         conn.close()
+    report = export_runtime_shards(db_path=out, out_dir=tmp_path / "runtime", include_decks=False, verify=True)
+    assert report["counts"]["articles"] == 13
+    assert report["counts"]["formRoutes"] == expected_form_routes
 
 
 @pytest.mark.parametrize("valid_sqlite", [True, False])

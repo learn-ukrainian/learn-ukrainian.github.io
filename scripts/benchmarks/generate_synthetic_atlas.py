@@ -19,8 +19,8 @@ enrichment + provenance + related entries), so the export hard gates in
 ``scripts/atlas/export_runtime_shards.py`` keep holding: approved+public
 articles equal public routes minus form-of routes, all public aliases resolve,
 and per-entry CEFR agreement is preserved verbatim. Form-of route payloads
-(payload rows without an ``articles`` row) are resampled as their own units at
-their natural ratio.
+(payload rows without an ``articles`` row) scale at their natural ratio when
+their lemma articles are present in the output.
 
 Usage:
 
@@ -88,6 +88,15 @@ class SourceSnapshot:
             ):
                 self.payloads[row[0]] = row
             self.form_route_slugs = sorted(s for s in self.payloads if s not in self.articles)
+            self.form_route_targets: dict[str, str] = {}
+            for slug in self.form_route_slugs:
+                payload = self.payloads[slug]
+                form_of = json.loads(payload[2]).get("form_of")
+                target = form_of.get("url_slug") if isinstance(form_of, dict) else None
+                if isinstance(target, str) and target in self.articles:
+                    self.form_route_targets[slug] = target
+                elif payload[3]:
+                    raise ValueError(f"public form route {slug!r} has no article target")
             self.aliases: dict[str, list[tuple]] = {}
             for row in conn.execute(
                 "SELECT alias, kind, source, target_slug, visibility FROM aliases ORDER BY target_slug, alias"
@@ -189,7 +198,7 @@ def _build_synthetic_db_unchecked(
         copy_sources = []
     base_slug_set = set(base_slugs)
 
-    # Form-of route payloads (no articles row) scale at their natural ratio.
+    # Form routes can only be selected when their lemma article is in the output.
     form_slugs = snapshot.form_route_slugs
     if target_articles >= source_article_count:
         form_copies = round(len(form_slugs) * (target_articles - source_article_count) / source_article_count)
@@ -197,11 +206,9 @@ def _build_synthetic_db_unchecked(
         form_base = form_slugs
     else:
         form_base = []
-        form_copy_sources = (
-            sorted(rng.sample(form_slugs, round(len(form_slugs) * target_articles / source_article_count)))
-            if form_slugs
-            else []
-        )
+        eligible_forms = [slug for slug in form_slugs if snapshot.form_route_targets.get(slug) in base_slug_set]
+        form_count = min(len(eligible_forms), round(len(form_slugs) * target_articles / source_article_count))
+        form_copy_sources = sorted(rng.sample(eligible_forms, form_count))
 
     out.unlink()
     conn = sqlite3.connect(out)
