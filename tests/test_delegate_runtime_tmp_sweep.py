@@ -194,6 +194,17 @@ def test_runtime_tmp_orphan_sweep_stem_index_mutation_check(
         "_build_runtime_tmp_legacy_stem_index",
         lambda: {},
     )
+    # Directory iteration order is a host property. Pin the reverted scan to
+    # sorted names so every seeded decoy is read before a legacy match.
+    original_glob = Path.glob
+
+    def _sorted_glob(self: Path, pattern: str):
+        found = original_glob(self, pattern)
+        if self == delegate._TASKS_DIR:
+            return iter(sorted(found, key=lambda path: path.name))
+        return found
+
+    monkeypatch.setattr(Path, "glob", _sorted_glob)
     delegate._sweep_runtime_tmp_orphans()
     reverted_reads = reverted_counts["read_state_json"]
 
