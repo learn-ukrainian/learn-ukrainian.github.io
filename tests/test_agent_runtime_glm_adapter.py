@@ -239,7 +239,7 @@ def test_glm_delegate_worker_state_lifecycle_success(tmp_path, monkeypatch):
 
     tasks_dir = tmp_path / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
 
     # Write initial state file as cmd_dispatch does
@@ -283,7 +283,7 @@ def test_glm_delegate_worker_state_lifecycle_failure(tmp_path, monkeypatch):
 
     tasks_dir = tmp_path / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     monkeypatch.setenv("PATH", f"{fake_bin.parent}:{os.environ.get('PATH', '')}")
 
     # Write initial state file as cmd_dispatch does

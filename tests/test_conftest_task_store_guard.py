@@ -12,7 +12,6 @@ import pytest
 from tests.conftest import (
     _DERIVED_LIVE_TASK_PATHS,
     _REAL_TASKS_DIR,
-    _TASK_STORE_RETARGETS,
 )
 
 
@@ -60,17 +59,18 @@ def test_isolate_dispatch_task_store_is_not_the_live_dir(
     import scripts.api.delegate_router as delegate_router
     import scripts.api.main as api_main
     import scripts.delegate as delegate_mod
+    from scripts.common.task_store_paths import tasks_dir
 
     assert _isolate_dispatch_task_store != _REAL_TASKS_DIR
     assert _isolate_dispatch_task_store.name == "tasks"
-    assert _isolate_dispatch_task_store == delegate_mod._TASKS_DIR
+    assert _isolate_dispatch_task_store == tasks_dir()
     assert _isolate_dispatch_task_store.parent != _REAL_TASKS_DIR.parent
     assert _isolate_dispatch_task_store.parent == api_config.BATCH_STATE_DIR
     assert _isolate_dispatch_task_store.parent == api_main.app.state.ctx.roots.batch_state_dir
     assert delegate_router._tasks_dir(api_main.app.state.ctx) == _isolate_dispatch_task_store
     assert delegate_router._tasks_dir(None) == _isolate_dispatch_task_store
     assert _REAL_TASKS_DIR not in delegate_mod._state_path("t-isolated").parents
-    fast_fail = delegate_mod._TASKS_DIR.parent / "preflight_fast_fail.jsonl"
+    fast_fail = tasks_dir().parent / "preflight_fast_fail.jsonl"
     assert _REAL_TASKS_DIR.parent not in fast_fail.resolve().parents
 
 
@@ -78,15 +78,15 @@ def test_test_level_override_wins_over_autouse(
     _isolate_dispatch_task_store: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """A test-level ``monkeypatch.setattr`` of ``delegate._TASKS_DIR`` wins."""
-    import scripts.delegate as delegate
+    """A test-level ``LU_TASKS_DIR`` override wins."""
+    from scripts.common.task_store_paths import tasks_dir
 
     override = _isolate_dispatch_task_store.parent / "override-tasks"
     override.mkdir()
-    monkeypatch.setattr(delegate, "_TASKS_DIR", override)
-    assert override == delegate._TASKS_DIR
-    assert _isolate_dispatch_task_store != delegate._TASKS_DIR
-    assert _REAL_TASKS_DIR != delegate._TASKS_DIR
+    monkeypatch.setenv("LU_TASKS_DIR", str(override))
+    assert override == tasks_dir()
+    assert _isolate_dispatch_task_store != tasks_dir()
+    assert tasks_dir() != _REAL_TASKS_DIR
 
 
 def _module_level_tasks_dir_constants(source: str) -> list[str]:
@@ -128,28 +128,39 @@ def _div_string_tail(node: ast.expr) -> tuple[str, ...]:
 
 
 @pytest.mark.repo_wide
-def test_task_store_constants_match_retarget_tuple() -> None:
-    """A new ``<repo>/batch_state/tasks`` constant in ``scripts/`` must be listed.
-
-    ``scripts.delegate._TASKS_DIR`` is retargeted in the fixture itself. Every
-    other module-level constant with that value belongs in ``_TASK_STORE_RETARGETS``.
-    """
+def test_task_store_consumers_use_call_time_resolver() -> None:
+    """No module may bind the shared task-store path at import time."""
     repo = Path(__file__).resolve().parents[1]
     found: set[tuple[str, str]] = set()
     for path in sorted((repo / "scripts").rglob("*.py")):
         relative = path.relative_to(repo).with_suffix("")
-        module_name = (
-            ".".join(relative.parts[:-1]) if relative.name == "__init__" else ".".join(relative.parts)
-        )
+        module_name = ".".join(relative.parts[:-1]) if relative.name == "__init__" else ".".join(relative.parts)
         source = path.read_text(encoding="utf-8")
         for name in _module_level_tasks_dir_constants(source):
             found.add((module_name, name))
 
-    allowed = set(_TASK_STORE_RETARGETS) | {("scripts.delegate", "_TASKS_DIR")}
-    missing = found - allowed
-    assert not missing, f"add {sorted(missing)} to _TASK_STORE_RETARGETS in tests/conftest.py"
-    assert set(_TASK_STORE_RETARGETS) <= found
-    assert ("scripts.delegate", "_TASKS_DIR") in found
+    assert not found, f"replace module-level task-store paths with tasks_dir(): {sorted(found)}"
+
+    consumers = (
+        ("scripts/delegate.py", "tasks_dir"),
+        ("scripts/fleet/post_task_reap.py", "default_tasks_dir"),
+        ("scripts/fleet/hramatka_hygiene_check.py", "default_tasks_dir"),
+        ("scripts/fleet/capacity_pick.py", "default_tasks_dir"),
+        ("scripts/maintenance/reclassify_dispatch_status.py", "default_tasks_dir"),
+        ("scripts/guardrails/delegate_ownership.py", "tasks_dir"),
+    )
+    for relative, name in consumers:
+        tree = ast.parse((repo / relative).read_text(encoding="utf-8"))
+        assert any(
+            isinstance(node, ast.ImportFrom)
+            and node.module == "scripts.common.task_store_paths"
+            and any(alias.name == "tasks_dir" and (alias.asname or alias.name) == name for alias in node.names)
+            for node in ast.walk(tree)
+        ), relative
+        assert any(
+            isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == name
+            for node in ast.walk(tree)
+        ), relative
 
     from scripts.orchestration import worktree_claims
 

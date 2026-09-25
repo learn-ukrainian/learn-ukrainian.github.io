@@ -8,6 +8,7 @@ signals we still have in the task file / usage logs.
 
 Issue: #1404
 """
+
 from __future__ import annotations
 
 import argparse
@@ -25,9 +26,9 @@ if str(SCRIPTS_DIR) not in sys.path:
 import delegate
 from agent_runtime.runner import _load_adapter
 
+from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration.task_record_store import iter_task_records
 
-DEFAULT_TASKS_DIR = REPO_ROOT / "batch_state" / "tasks"
 DEFAULT_USAGE_DIR = REPO_ROOT / "batch_state" / "api_usage"
 
 
@@ -160,10 +161,11 @@ def _reclassify_task(
 
 def reclassify_rate_limited_tasks(
     *,
-    tasks_dir: Path = DEFAULT_TASKS_DIR,
+    tasks_dir: Path | None = None,
     usage_dir: Path = DEFAULT_USAGE_DIR,
     dry_run: bool = False,
 ) -> dict[str, list[tuple[str, str]]]:
+    tasks_dir = tasks_dir or default_tasks_dir()
     usage_by_task_id = _load_usage_by_task_id(usage_dir)
     changes: list[tuple[str, str]] = []
     skipped: list[tuple[str, str]] = []
@@ -191,7 +193,7 @@ def main() -> int:
     parser.add_argument(
         "--tasks-dir",
         type=Path,
-        default=DEFAULT_TASKS_DIR,
+        default=default_tasks_dir(),
         help="Directory containing delegate task JSON state files.",
     )
     parser.add_argument(

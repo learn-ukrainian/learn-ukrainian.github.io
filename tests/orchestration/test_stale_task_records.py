@@ -76,7 +76,7 @@ SCAN_PREFIX = f"refs/lu-stale-scan/{SCAN_KEY}"
 @pytest.fixture(autouse=True)
 def _hermetic(tmp_path, monkeypatch):
     monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks")
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "tasks")
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     # The tool drops every GIT_CONFIG* variable, so git reads $HOME's config: keep it empty.
     home = tmp_path / "home"
     home.mkdir()

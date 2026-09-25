@@ -151,7 +151,7 @@ def _dispatch_args(*extra: str):
 
 
 def _patch_spawn(monkeypatch, tmp_path):
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "tasks")
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: _FakeProc())
     monkeypatch.setattr(delegate, "_session_stream_store", lambda: _session_stream_store(tmp_path))
     telemetry = type(
@@ -281,7 +281,7 @@ def test_check_budget_off_by_default(monkeypatch, tmp_path, capsys):
 
 
 def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "tasks")
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
     monkeypatch.setattr(
         delegate.urllib.request,
@@ -419,7 +419,7 @@ def test_adapter_probe_keeps_model_when_invocation_cannot_run(monkeypatch):
 
 
 def test_adapter_valueerror_before_spawn_is_failed(monkeypatch, tmp_path):
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
 
     def boom(*_args, **_kwargs):
         raise ValueError("CodexAdapter: model='claude-fable-5-1' rejected; only 'gpt-6-astra' is approved")
@@ -519,7 +519,9 @@ def test_check_budget_reports_deficit_from_empty_ledger_codexbar(monkeypatch, tm
     assert "claude" in err and "codex" in err
 
 
-def test_check_budget_reports_unknown_when_empty_ledger_subscription_snapshots_unavailable(monkeypatch, tmp_path, capsys):
+def test_check_budget_reports_unknown_when_empty_ledger_subscription_snapshots_unavailable(
+    monkeypatch, tmp_path, capsys
+):
     """A failed guard refresh must be explicit rather than using the old silent empty design."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
@@ -542,8 +544,7 @@ def test_check_budget_reports_unknown_when_empty_ledger_subscription_snapshots_u
     assert rc == 0
     err = capsys.readouterr().err
     assert (
-        "budget UNKNOWN — could not verify subscription usage snapshots; "
-        "lanes may be in deficit; no hard sub."
+        "budget UNKNOWN — could not verify subscription usage snapshots; lanes may be in deficit; no hard sub."
     ) in err
     assert "per design" not in err
     assert "HARD AUTO-SUBSTITUTE" not in err
@@ -752,7 +753,7 @@ def test_dispatch_capacity_hint_printed_when_target_lane_busy(monkeypatch, tmp_p
     """Task 2: non-blocking note printed when dispatching to busy lane while other lanes idle."""
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: True)
 
     # Create a running task for codex
@@ -815,8 +816,7 @@ def test_dispatch_cursor_allows_worker_when_driver_lease_is_other_session(
     assert len(spawned) == 1
     err = capsys.readouterr().err
     assert (
-        f"NOTE: Cursor driver live on {cursor_driver_stream_id} (other session); "
-        "spawning a separate Cursor worker."
+        f"NOTE: Cursor driver live on {cursor_driver_stream_id} (other session); spawning a separate Cursor worker."
     ) in err
     assert "CAPACITY REFUSED" not in err
 
@@ -868,8 +868,7 @@ def test_dispatch_cursor_allows_worker_when_lease_is_on_another_host(
     assert len(spawned) == 1
     err = capsys.readouterr().err
     assert (
-        f"NOTE: Cursor driver live on {cursor_driver_stream_id} (other session); "
-        "spawning a separate Cursor worker."
+        f"NOTE: Cursor driver live on {cursor_driver_stream_id} (other session); spawning a separate Cursor worker."
     ) in err
     assert "CAPACITY REFUSED" not in err
 
@@ -998,33 +997,64 @@ def test_dispatch_cursor_missing_session_stream_db_is_absence_not_refusal(monkey
 
 
 @pytest.mark.parametrize("lane,provider", [("deepseek", None), ("codex", "openrouter")])
-@pytest.mark.parametrize("change", [
-    {"total_balance": 0, "limit_remaining_usd": 0},
-    {"is_available": False}, {"total_balance": 4.99, "limit_remaining_usd": 4.99},
-    {"probe_state": "NEED_PROBE"}, {"probe_state": "NEED_KEY"},
-    {"freshness": "stale_last_good"}, {"freshness": "unavailable"}, {"age_s": 601},
-])
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"total_balance": 0, "limit_remaining_usd": 0},
+        {"is_available": False},
+        {"total_balance": 4.99, "limit_remaining_usd": 4.99},
+        {"probe_state": "NEED_PROBE"},
+        {"probe_state": "NEED_KEY"},
+        {"freshness": "stale_last_good"},
+        {"freshness": "unavailable"},
+        {"age_s": 601},
+    ],
+)
 def test_prepaid_guard_refuses_without_cost_ledger(monkeypatch, lane, provider, change):
-    account = {"probe_state": "ok", "freshness": "fresh", "age_s": 1,
-               "currency": "USD", "total_balance": 30, "limit_remaining_usd": 30,
-               "is_available": True, **change}
+    account = {
+        "probe_state": "ok",
+        "freshness": "fresh",
+        "age_s": 1,
+        "currency": "USD",
+        "total_balance": 30,
+        "limit_remaining_usd": 30,
+        "is_available": True,
+        **change,
+    }
     prepaid = provider or lane
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
-        "agents": {}, "api_accounts": {prepaid: account},
-        "diagnostics": {"records_loaded": 0, "stale": True},
-    })
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "agents": {},
+            "api_accounts": {prepaid: account},
+            "diagnostics": {"records_loaded": 0, "stale": True},
+        },
+    )
     with pytest.raises(delegate.BudgetGuardRefuseError, match=f"NOTE: ROUTING REFUSED: prepaid {prepaid}"):
         delegate._resolve_agent_with_budget_guard(lane, provider=provider)
 
 
 @pytest.mark.parametrize("lane,provider", [("deepseek", None), ("codex", "openrouter")])
 def test_fresh_funded_prepaid_does_not_require_cost_ledger(monkeypatch, lane, provider):
-    account = {"probe_state": "ok", "freshness": "fresh", "age_s": 1,
-               "currency": "USD", "total_balance": 30, "limit_remaining_usd": 30, "is_available": True}
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
-        "agents": {}, "api_accounts": {provider or lane: account},
-        "diagnostics": {"records_loaded": 0, "stale": True},
-    })
+    account = {
+        "probe_state": "ok",
+        "freshness": "fresh",
+        "age_s": 1,
+        "currency": "USD",
+        "total_balance": 30,
+        "limit_remaining_usd": 30,
+        "is_available": True,
+    }
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "agents": {},
+            "api_accounts": {provider or lane: account},
+            "diagnostics": {"records_loaded": 0, "stale": True},
+        },
+    )
     assert delegate._resolve_agent_with_budget_guard(lane, provider=provider) == lane
 
 
@@ -1032,24 +1062,41 @@ def test_fresh_funded_prepaid_does_not_require_cost_ledger(monkeypatch, lane, pr
 def test_prepaid_monitor_failure_refuses(monkeypatch, lane, provider):
     def unavailable():
         raise delegate.MonitorApiUnavailable("offline")
+
     monkeypatch.setattr(delegate, "_fetch_routing_budget", unavailable)
     with pytest.raises(delegate.BudgetGuardRefuseError, match="NEED_PROBE"):
         delegate._resolve_agent_with_budget_guard(lane, provider=provider)
 
 
-@pytest.mark.parametrize("args,prepaid", [
-    (("--agent", "deepseek"), "deepseek"),
-    (("--provider", "openrouter"), "openrouter"),
-])
+@pytest.mark.parametrize(
+    "args,prepaid",
+    [
+        (("--agent", "deepseek"), "deepseek"),
+        (("--provider", "openrouter"), "openrouter"),
+    ],
+)
 def test_check_budget_empty_prepaid_refuses_before_spawn(monkeypatch, tmp_path, capsys, args, prepaid):
     _patch_spawn(monkeypatch, tmp_path)
     spawned = _track_worker_spawns(monkeypatch)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
-    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
-        "agents": {}, "diagnostics": {"records_loaded": 0},
-        "api_accounts": {prepaid: {"probe_state": "ok", "freshness": "fresh", "age_s": 0,
-                                    "currency": "USD", "total_balance": 0, "limit_remaining_usd": 0}},
-    })
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "agents": {},
+            "diagnostics": {"records_loaded": 0},
+            "api_accounts": {
+                prepaid: {
+                    "probe_state": "ok",
+                    "freshness": "fresh",
+                    "age_s": 0,
+                    "currency": "USD",
+                    "total_balance": 0,
+                    "limit_remaining_usd": 0,
+                }
+            },
+        },
+    )
     result = delegate.cmd_dispatch(_dispatch_args("--check-budget", *args))
     assert result == 2
     assert not spawned

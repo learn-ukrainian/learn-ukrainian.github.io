@@ -30,6 +30,7 @@ try:
 except ImportError:  # pragma: no cover - flat script path
     from common.repo_root import resolve_repo_root  # type: ignore
 
+from scripts.common.task_store_paths import tasks_dir
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import dispatch_admission
@@ -37,7 +38,6 @@ from scripts.orchestration import dispatch_admission
 # File lives at scripts/guardrails/… → parents[2] is the checkout root.
 _REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 DEFAULT_LEDGER_PATH = _REPO_ROOT / "batch_state" / "tasks" / "write-ownership.sqlite3"
-DEFAULT_TASK_STATE_DIR = _REPO_ROOT / "batch_state" / "tasks"
 
 LEDGER_ENV_VAR = "LEARN_UKRAINIAN_OWNERSHIP_LEDGER"
 TASK_STATE_ENV_VAR = "LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR"
@@ -59,7 +59,7 @@ def default_ledger_path() -> Path:
 def default_task_state_dir() -> Path:
     """Task-state directory, resolved at call time (see :func:`default_ledger_path`)."""
     override = (os.environ.get(TASK_STATE_ENV_VAR) or "").strip()
-    return Path(override) if override else DEFAULT_TASK_STATE_DIR
+    return Path(override) if override else tasks_dir()
 
 
 # Admission uses the short-lived CLI PID until the worker PID is written.

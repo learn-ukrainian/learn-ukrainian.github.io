@@ -98,6 +98,7 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
 
 from scripts import delegate, secret_redactor
 from scripts.common.git_context import sanitized_git_env
+from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration import fleet_repos, task_record_store, worktree_claims
 from scripts.orchestration.dead_worker_state import task_state_lock
 
@@ -1444,7 +1445,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "--tasks-dir",
             type=Path,
             default=None,
-            help=f"Task record directory (default: {delegate._TASKS_DIR}).",
+            help=f"Task record directory (default: {default_tasks_dir()}).",
         )
         if min_age_default is not None:
             sub.add_argument(
@@ -1563,7 +1564,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
-    tasks_dir: Path = args.tasks_dir or delegate._TASKS_DIR
+    tasks_dir: Path = args.tasks_dir or default_tasks_dir()
     if not tasks_dir.is_dir():
         print(f"tasks dir not found: {tasks_dir}", file=sys.stderr)
         return EXIT_USAGE

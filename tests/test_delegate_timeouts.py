@@ -166,7 +166,7 @@ def test_worktree_is_clean_timeouts(tmp_path: Path) -> None:
 def test_release_stale_branch_holders_timeouts(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     with (
         patch("scripts.delegate._WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks"),
-        patch("scripts.delegate._TASKS_DIR", tmp_path / "tasks"),
+        patch.dict("os.environ", {"LU_TASKS_DIR": str(tmp_path / "tasks")}),
         patch("scripts.delegate._stale_branch_holder_releasable", return_value=(True, "clean")),
         patch(
             "subprocess.run",

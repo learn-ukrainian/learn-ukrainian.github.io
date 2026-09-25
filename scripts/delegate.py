@@ -145,6 +145,7 @@ from scripts.common.scratch import (
     resolve_scratch_root,
     scratch_scan_roots,
 )
+from scripts.common.task_store_paths import tasks_dir
 from scripts.config import (
     DELEGATE_WORKTREE_ADD_MAX_S,
     DELEGATE_WORKTREE_ADD_STALL_S,
@@ -169,7 +170,6 @@ from scripts.orchestration.dead_worker_state import (
 )
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
-_TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 # The Gemini-family seat is intentionally absent in BOTH spellings: the
 # retired ``gemini`` alias resolves to ``agy`` before Popen (#7041), so the
@@ -362,10 +362,10 @@ DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
 
 
 def _state_path(task_id: str) -> Path:
-    _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+    tasks_dir().mkdir(parents=True, exist_ok=True)
     # task-ids with slashes would break paths; sanitize
     safe = task_id.replace("/", "_").replace("\\", "_")
-    return _TASKS_DIR / f"{safe}.json"
+    return tasks_dir() / f"{safe}.json"
 
 
 def _result_path(task_id: str) -> Path:
@@ -378,7 +378,7 @@ def _archived_state_path(task_id: str) -> Path:
     Only terminal records are archived. By-id readers (status, wait, task-id
     reuse) fall back to this path; the worktree claim scan never needs it.
     """
-    return task_record_store.archived_task_record_path(_TASKS_DIR, task_id)
+    return task_record_store.archived_task_record_path(tasks_dir(), task_id)
 
 
 def _read_state_or_archived(task_id: str) -> tuple[Path, dict[str, Any] | None]:
@@ -747,10 +747,10 @@ def _append_dispatch_event(event: str, **fields: Any) -> None:
         **fields,
     }
     try:
-        _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+        tasks_dir().mkdir(parents=True, exist_ok=True)
         line = (json.dumps(payload, ensure_ascii=False, default=str) + "\n").encode("utf-8")
         fd = os.open(
-            str(_TASKS_DIR / "dispatch_events.jsonl"),
+            str(tasks_dir() / "dispatch_events.jsonl"),
             os.O_APPEND | os.O_CREAT | os.O_WRONLY,
             0o600,
         )
@@ -909,7 +909,7 @@ def _worktree_lock_dir() -> Path:
     if _WORKTREE_LOCK_DIR is not None:
         return _WORKTREE_LOCK_DIR
     common_dir = _git_common_dir(_REPO_ROOT)
-    return (common_dir if common_dir is not None else _TASKS_DIR.parent) / worktree_claims.LOCK_DIR_NAME
+    return (common_dir if common_dir is not None else tasks_dir().parent) / worktree_claims.LOCK_DIR_NAME
 
 
 def _worktree_lock_path(path: Path | str) -> tuple[str, Path]:
@@ -1151,7 +1151,7 @@ def _build_runtime_tmp_legacy_stem_index() -> dict[str, str]:
     """Map lease names to task-record stems without opening any JSON."""
     index: dict[str, str] = {}
     try:
-        state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
+        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
     except OSError:
         return index
     for state_path in state_files:
@@ -1170,9 +1170,9 @@ def _read_runtime_tmp_state_for_legacy_lease(
     """Resolve one marker-less lease, falling back to a bounded record scan."""
     stem = legacy_stem_index.get(lease_name)
     if stem is not None:
-        return _read_state_json(_TASKS_DIR / f"{stem}.json")
+        return _read_state_json(tasks_dir() / f"{stem}.json")
     try:
-        state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
+        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
     except OSError:
         return None
     for state_path in state_files:
@@ -3055,7 +3055,7 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_primary_integrity import check_primary_integrity
 
-        ok, message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=_TASKS_DIR)
+        ok, message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  primary-integrity watchdog errored ({type(exc).__name__}: {exc}); "
@@ -3096,7 +3096,7 @@ def _warn_venv_integrity() -> None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_venv_integrity import check_venv_integrity
 
-        ok, message = check_venv_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        ok, message = check_venv_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  venv-integrity probe errored ({type(exc).__name__}: {exc}); "
@@ -3130,7 +3130,7 @@ def _warn_worktree_cleanup_integrity() -> None:
                 check_worktree_cleanup_integrity,
             )
 
-        ok, message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        ok, message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  worktree-cleanup-integrity probe errored ({type(exc).__name__}: {exc}); "
@@ -3163,7 +3163,7 @@ def _warn_node_modules_integrity() -> None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_node_modules_integrity import check_node_modules_integrity
 
-        ok, message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        ok, message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  node_modules-integrity probe errored ({type(exc).__name__}: {exc}); "
@@ -3587,7 +3587,7 @@ def _task_state_for_worktree(path: Path) -> tuple[str | None, dict[str, Any] | N
     resolved = path.resolve()
     # 1) Authoritative: scan states for worktree_path match.
     try:
-        state_files = list(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else []
+        state_files = list(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else []
     except OSError:
         state_files = []
     for state_file in state_files:
@@ -4250,7 +4250,7 @@ def _evaluate_dispatch_admission(
     """
     return dispatch_admission.evaluate(
         mode,
-        _TASKS_DIR,
+        tasks_dir(),
         pid_alive=_pid_alive,
         on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
@@ -5420,7 +5420,7 @@ def cmd_rescue(args: argparse.Namespace) -> int:
         except (TypeError, ValueError):
             print("--older-than must be a non-negative hour duration, such as 6h", file=sys.stderr)
             return 2
-        paths = sorted(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else []
+        paths = sorted(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else []
     elif args.task_id:
         paths = [_state_path(args.task_id)]
         min_age_hours = 0
@@ -5565,7 +5565,7 @@ def _remove_dispatch_worktree(
         owner_task_id=owner_task_id,
         releasable=releasable,
         force=force,
-        tasks_dir=_TASKS_DIR,
+        tasks_dir=tasks_dir(),
         lock_dir=_worktree_lock_dir(),
         lock_timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if lock_timeout_s is None else lock_timeout_s,
     )
@@ -7817,7 +7817,7 @@ def _run_worker(
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_primary_integrity import check_primary_integrity
 
-        pi_ok, pi_message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=_TASKS_DIR)
+        pi_ok, pi_message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=tasks_dir())
         if not pi_ok:
             _append_dispatch_event(
                 "primary_integrity_post_worker",
@@ -7845,7 +7845,7 @@ def _run_worker(
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_node_modules_integrity import check_node_modules_integrity
 
-        nmi_ok, nmi_message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        nmi_ok, nmi_message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
         if not nmi_ok:
             _append_dispatch_event(
                 "node_modules_integrity_post_worker",
@@ -7870,7 +7870,7 @@ def _run_worker(
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_venv_integrity import check_venv_integrity
 
-        vi_ok, vi_message = check_venv_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        vi_ok, vi_message = check_venv_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
         if not vi_ok:
             _append_dispatch_event(
                 "venv_integrity_post_worker",
@@ -7898,7 +7898,7 @@ def _run_worker(
                 check_worktree_cleanup_integrity,
             )
 
-        wci_ok, wci_message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        wci_ok, wci_message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
         if not wci_ok:
             _append_dispatch_event(
                 "worktree_cleanup_integrity_post_worker",
@@ -8141,7 +8141,7 @@ def _run_preflight_triage(args: argparse.Namespace, *, worktree_arg: str | None)
     print(result.message, file=sys.stderr)
     if not result.fast_fail:
         return None
-    pt.record_fast_fail(args.task_id, result, _TASKS_DIR.parent / "preflight_fast_fail.jsonl")
+    pt.record_fast_fail(args.task_id, result, tasks_dir().parent / "preflight_fast_fail.jsonl")
     return pt.FAST_FAIL_EXIT_CODE
 
 
@@ -9072,7 +9072,7 @@ def _dispatch(
     if not admission.exempt:
         admission_refusal: str | None = None
         try:
-            with dispatch_admission.admission_lock(_TASKS_DIR):
+            with dispatch_admission.admission_lock(tasks_dir()):
                 admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
                 if admission.admitted or force_admission_reason is not None:
                     admission_record = admission.to_record(force_reason=force_admission_reason)
@@ -9107,7 +9107,7 @@ def _dispatch(
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch
     # side effects behind.
-    log_dir = _TASKS_DIR / "logs"
+    log_dir = tasks_dir() / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     stdout_log = log_dir / f"{task_id}.stdout.log"
     stderr_log = log_dir / f"{task_id}.stderr.log"
@@ -10295,8 +10295,8 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         target_norm = normalize_agent_name(dispatch_agent) or target_norm
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
-        if _TASKS_DIR.is_dir():
-            for state_file in _TASKS_DIR.glob("*.json"):
+        if tasks_dir().is_dir():
+            for state_file in tasks_dir().glob("*.json"):
                 state = _read_state(state_file)
                 if not state or state.get("status") not in ("running", "spawning"):
                     continue
@@ -10313,7 +10313,7 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
 
         health: dict[str, Any] = {}
         with contextlib.suppress(Exception):
-            health = compute_lane_health(_TASKS_DIR)
+            health = compute_lane_health(tasks_dir())
 
         idle_lanes = [
             lane
@@ -10541,11 +10541,11 @@ def cmd_list(args: argparse.Namespace) -> int:
     too, marked ``"archived": true``. Without ``--all`` a stderr note counts the
     archived records left out.
     """
-    _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+    tasks_dir().mkdir(parents=True, exist_ok=True)
     include_archive = bool(getattr(args, "all", False))
     tasks: list[dict[str, Any]] = []
     flat_tasks: list[str] = []
-    for state_file in task_record_store.iter_task_records(_TASKS_DIR, include_archive=include_archive):
+    for state_file in task_record_store.iter_task_records(tasks_dir(), include_archive=include_archive):
         state = _read_state(state_file)
         if state is None:
             continue
@@ -10577,7 +10577,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         )
     print(json.dumps(tasks, indent=2, default=str))
     if not include_archive:
-        archive_dir = _TASKS_DIR / task_record_store.ARCHIVE_DIR_NAME
+        archive_dir = tasks_dir() / task_record_store.ARCHIVE_DIR_NAME
         archived = sum(1 for _ in task_record_store.iter_task_records(archive_dir, include_archive=False))
         if archived:
             print(
@@ -10611,12 +10611,12 @@ def cmd_backfill_repository(args: argparse.Namespace) -> int:
     be proven stay unclassified.
     """
     apply_changes = bool(getattr(args, "apply", False))
-    if not _TASKS_DIR.is_dir():
-        print(f"❌ tasks dir not found: {_TASKS_DIR}", file=sys.stderr)
+    if not tasks_dir().is_dir():
+        print(f"❌ tasks dir not found: {tasks_dir()}", file=sys.stderr)
         return 1
     scanned = stamped = already = unresolved = conflicts = errors = 0
     # Archived records (#8625) are history too; they are stamped where they lie.
-    for state_file in task_record_store.iter_task_records(_TASKS_DIR, include_archive=True):
+    for state_file in task_record_store.iter_task_records(tasks_dir(), include_archive=True):
         state = _read_state(state_file)
         if state is None:
             continue
