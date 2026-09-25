@@ -8,11 +8,11 @@ replacement, not the old two-tier merge-queue file.
 
 | Job | When |
 | --- | --- |
-| Changes | always (`docs_only` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |
+| Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |
 | Preflight | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |
 | Ruff | not docs-only |
 | Secret scan | always |
-| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
+| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
 | TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |
@@ -127,19 +127,22 @@ that marker is enough:
   path lands on the **content lane**, which runs `reads_content`: scanners of
   that tree, for example `tests/test_site_links.py`, run here.
 - A PR touching only `curriculum/` or `wiki/` — no `site/src/content/docs/`
-  path — is docs-only and lands on the **docs lane**. The docs lane runs
-  `docs_skills` and `-m 'repo_wide and not slow and not atlas_release'`, and
-  it does not run `-m reads_content`. A handful of curriculum and wiki
-  scanners are marked `repo_wide`, so those tests do run there:
-  `tests/test_ohoiko_source_inventory_scope.py`,
+  path — is docs-only and lands on the **docs lane**. Since #8720 the docs lane
+  also runs `-m 'reads_content and not slow and not atlas_release'` (under the
+  same narrow allowlist as the `repo_wide` leg) whenever the flag
+  `docs_reads_content` is `true`, which `classify_changes.py` sets only for a
+  docs-lane result with some path under `curriculum/` or `wiki/`. This closes
+  the gap that let PR #8712 (a docs-only change) merge green and turn `main`
+  red on the next full-tier run: `docs/epics/fresh-build-build-program.md` is a
+  hashed source of every `curriculum/l2-uk-en/lesson-plans/<lvl>/_decisions.yaml`,
+  and `tests/curriculum/arc/test_decisions_record.py` (a `reads_content` module)
+  went red on `main`. A few curriculum and wiki scanners are marked `repo_wide`
+  and ran there before #8720: `tests/test_ohoiko_source_inventory_scope.py`,
   `tests/test_prompt_template_render.py`, `tests/test_a1_review_scores.py`,
-  `tests/test_aggregate_findings.py`,
-  `tests/test_schema_validation.py`
+  `tests/test_aggregate_findings.py`, `tests/test_schema_validation.py`
   (`test_a2_plans_match_module_schema`), and the reference checks in
-  `tests/test_skill_instruction_routes.py`. That list is not the set of tests
-  that read those trees. Most `reads_content` tests that read `curriculum/` or
-  `wiki/` are not `repo_wide`, so a curriculum- or wiki-only PR does not run
-  them. That gap is tracked in #8720.
+  `tests/test_skill_instruction_routes.py`; the new `reads_content` leg is what
+  covers the rest.
 
 Repo-wide tests that read a content tree and must also run on the content lane
 carry `reads_content` as well: `tests/test_llm_reviewer_dispatch.py`,

@@ -725,6 +725,23 @@ is the only step that admits those into curated-practice recognition. It never g
 gloss-fallback availability (unlike promotion), so it is stable across runs regardless of
 local dictionary-cache state.
 
+### Task-owned scratch for large ad-hoc runs (#8738)
+
+```bash
+# run a big producer inside a disposable, task-owned scratch directory
+.venv/bin/python scripts/tools/task_scratch.py run --task-id atlas-8307-410k -- COMMAND [ARGS...]
+# inventory / reclaim interrupted runs (the scheduled hygiene runner applies this)
+.venv/bin/python scripts/tools/task_scratch.py recover [--apply]
+# ad-hoc /tmp leak sweep (exact Atlas/QA legacy names drain; other atlas-*/qa-* are inventory only)
+.venv/bin/python -m scripts.orchestration.tmp_leak_sweep [--apply]
+```
+
+`$LU_TASK_SCRATCH_DIR` (also `TMPDIR`) is the payload directory; it is removed on
+exit, failure and interrupt. From a dispatch worktree, run the Atlas 410k example with
+the primary checkout's interpreter, source DB and deck dir via an exported
+`PRIMARY_REPO` (`run --help` prints the copyable form). Full contract and the Atlas
+410k invocation: `docs/runbooks/worktree-cleanup.md` § Task-owned scratch.
+
 ### Build pipeline entry point
 
 `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree` is the single end-to-end build entry point. It drives the write -> enrich -> review -> audit -> publish chain.
