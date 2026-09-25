@@ -646,6 +646,25 @@ def test_two_concurrent_records_at_the_budget_edge_accept_exactly_one(
     assert world.db_rows("findings", f"attempt_id = '{refused.attempt_id}'") == []
 
 
+def test_a_decision_committed_before_the_write_transaction_is_honoured(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    for _ in range(3):
+        _revise(world)  # terminal: a fourth round is refused unless the operator decides first
+    made = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    checked = record._rejection_codes
+
+    def decided_meanwhile(*args: Any, **kwargs: Any) -> list[str]:
+        result = checked(*args, **kwargs)
+        _decide(world, "revise_rounds")  # committed after every pre-transaction step, before the write transaction
+        return result
+
+    monkeypatch.setattr(record, "_rejection_codes", decided_meanwhile)
+    outcome = world.record(made)
+    assert outcome.accepted and outcome.verdict == "REVISE", outcome
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 4
+
+
 def test_two_concurrent_regenerations_at_five_of_six_spend_exactly_one(
     world: World, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -762,6 +781,49 @@ def test_recording_the_same_failure_twice_counts_it_once(world: World) -> None:
     record.record_return(None, **kwargs)
     assert record.record_return(None, **kwargs).replay
     assert world.db_rows("budgets")[0]["review_failures"] == 1
+
+
+def test_two_concurrent_failure_records_of_one_attempt_count_it_once(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    made = world.make_return(2, [finding(evidence={"receipt": "r-fabricated"})])
+    world.record(made)  # a rejected return: a --failure record counts it, once
+    barrier = threading.Barrier(2, timeout=30)
+    real_transaction, real_connect = findings_db.transaction, findings_db.connect
+    armed = threading.local()
+
+    def connect(*args: Any, **kwargs: Any) -> sqlite3.Connection:
+        conn = real_connect(*args, **kwargs)
+        armed.on = True  # the first write transaction after the connection opens is the one to synchronize
+        return conn
+
+    def synchronized(conn: sqlite3.Connection) -> Any:
+        if getattr(armed, "on", False):
+            armed.on = False
+            barrier.wait()  # both are about to open the write transaction, whatever they read before it
+        return real_transaction(conn)
+
+    monkeypatch.setattr(findings_db, "connect", connect)
+    monkeypatch.setattr(findings_db, "transaction", synchronized)
+
+    def fail() -> record.Outcome:
+        return record.record_return(
+            None,
+            manifest_path=world.manifest(2),
+            task_id="review-claude",
+            repo_root=world.root,
+            db_path=world.db,
+            tasks_dir=world.tasks_dir,
+            review_id=made["review_id"],
+            attempt_id=made["attempt_id"],
+            failure="rejected_return",
+        )
+
+    outcomes = _run_together([fail, fail])
+    assert all(isinstance(outcome, record.Outcome) for outcome in outcomes), outcomes
+    assert sorted(outcome.replay for outcome in outcomes) == [False, True]
+    [budget] = world.db_rows("budgets")
+    assert budget["review_failures"] == 1
 
 
 def test_a_rejected_return_is_counted_as_a_failed_review_by_a_later_failure_record(world: World) -> None:
