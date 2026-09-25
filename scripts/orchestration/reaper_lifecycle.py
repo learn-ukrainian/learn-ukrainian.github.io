@@ -307,7 +307,7 @@ def restore_worktree(
             timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired:
-        return False, f"git rev-parse branch timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s"
+        return False, f"git rev-parse branch timed out after {DEFAULT_GIT_TIMEOUT_SECONDS:g}s"
     if branch_ref.returncode == 0 and (branch_ref.stdout or "").strip() != sha:
         return False, "branch no longer matches recovery ref"
     command = ["git", "worktree", "add"]
@@ -325,7 +325,7 @@ def restore_worktree(
             timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired as exc:
-        return False, f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s: {exc}"
+        return False, f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_SECONDS:g}s: {exc}"
     if proc.returncode != 0:
         return False, (proc.stderr or proc.stdout or "git worktree add failed").strip()
     return True, None
