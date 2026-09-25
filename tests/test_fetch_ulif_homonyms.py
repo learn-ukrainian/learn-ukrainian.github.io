@@ -1136,6 +1136,53 @@ def test_walk_printed_number_mismatch_marker_failure_rolls_back_atomically(tmp_p
         ledger.close()
 
 
+def test_register_rows_normalized_spelling_index_added_to_legacy_ledger(tmp_path):
+    """#8807 follow-up: a ledger built without the index gains it on next open."""
+    legacy_path = tmp_path / "state" / "ledger.sqlite"
+    legacy_path.parent.mkdir(parents=True)
+    with sqlite3.connect(legacy_path) as seed:
+        seed.executescript(
+            """
+            CREATE TABLE register_rows (
+                page_num INTEGER NOT NULL,
+                row_index INTEGER NOT NULL,
+                select_arg TEXT NOT NULL,
+                stressed_headword TEXT NOT NULL,
+                normalized_spelling TEXT NOT NULL,
+                state TEXT NOT NULL,
+                entry_sha256 TEXT NOT NULL DEFAULT '',
+                homonym_index INTEGER,
+                unknown_controls TEXT NOT NULL DEFAULT '',
+                paradigm_source TEXT NOT NULL DEFAULT '',
+                error TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                PRIMARY KEY (page_num, row_index)
+            );
+            """
+        )
+        assert not any(
+            row[1] == "register_rows_normalized_spelling" for row in seed.execute("PRAGMA index_list(register_rows)")
+        )
+
+    ledger = SpellingLedger(legacy_path)
+    try:
+        index_names = {row["name"] for row in ledger.conn.execute("PRAGMA index_list(register_rows)")}
+        assert "register_rows_normalized_spelling" in index_names
+
+        plan = [
+            str(row["detail"])
+            for row in ledger.conn.execute(
+                "EXPLAIN QUERY PLAN SELECT 1 FROM register_rows "
+                "WHERE normalized_spelling = ? AND error LIKE 'printed_number_mismatch%' LIMIT 1",
+                ("арканзас",),
+            )
+        ]
+        assert any("register_rows_normalized_spelling" in detail for detail in plan), plan
+    finally:
+        ledger.close()
+
+
 def test_overlapping_register_identity_opened_once(tmp_path):
     """Duplicate (page_delta, select) collapses; physical row opened once."""
     duplicated = _dedupe_register_rows(
