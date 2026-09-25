@@ -625,18 +625,47 @@ def insert_agreement(
     )
 
 
+def agreement_attempt_rows(
+    conn: sqlite3.Connection, level: str, slug: str, lesson_n: int, attempt_id: str
+) -> tuple[list[sqlite3.Row], list[str]]:
+    """Every attempt row an ``agreement`` row's attempt id can mean on that lesson, and the review ids they span.
+
+    The agreement row stores attempt ids only, while ``(review_id, attempt_id)`` is what ``attempts`` keeps unique.
+    More than one review id in the second element means the id is ambiguous and the row cannot be attributed.
+    """
+    rows = conn.execute(
+        "SELECT * FROM attempts WHERE attempt_id = ? AND level = ? AND slug = ? AND lesson_n = ? ORDER BY seq",
+        (attempt_id, level, slug, lesson_n),
+    ).fetchall()
+    return rows, sorted({row["review_id"] for row in rows})
+
+
+AGREEMENT_SATISFIED = "satisfied"
+AGREEMENT_PENDING = "pending"
+AGREEMENT_AMBIGUOUS = "agreement_ambiguous"
+
+
+def agreement_state(conn: sqlite3.Connection, level: str, slug: str, lesson_n: int, manifest_sha256: str) -> str:
+    """``satisfied`` when a second-seat comparison's first-seat attempt reviewed exactly ``manifest_sha256``.
+
+    ``agreement_ambiguous`` (fail closed) when a comparison of the lesson names a first-seat attempt id that exists
+    under more than one review id and no unambiguous comparison satisfies the gate; otherwise ``pending``.
+    """
+    ambiguous = False
+    for agreement in conn.execute(
+        "SELECT attempt_a FROM agreement WHERE level = ? AND slug = ? AND lesson_n = ?", (level, slug, lesson_n)
+    ).fetchall():
+        rows, review_ids = agreement_attempt_rows(conn, level, slug, lesson_n, agreement["attempt_a"])
+        if len(review_ids) > 1:
+            ambiguous = True
+        elif any(row["role"] == "first" and row["manifest_sha256"] == manifest_sha256 for row in rows):
+            return AGREEMENT_SATISFIED
+    return AGREEMENT_AMBIGUOUS if ambiguous else AGREEMENT_PENDING
+
+
 def has_agreement_on(conn: sqlite3.Connection, level: str, slug: str, lesson_n: int, manifest_sha256: str) -> bool:
-    """Whether a second-seat comparison exists whose first-seat attempt reviewed exactly ``manifest_sha256``."""
-    return (
-        conn.execute(
-            "SELECT 1 FROM agreement g JOIN attempts a ON a.attempt_id = g.attempt_a AND a.level = g.level"
-            " AND a.slug = g.slug AND a.lesson_n = g.lesson_n"
-            " WHERE g.level = ? AND g.slug = ? AND g.lesson_n = ? AND a.role = 'first' AND a.manifest_sha256 = ?"
-            " LIMIT 1",
-            (level, slug, lesson_n, manifest_sha256),
-        ).fetchone()
-        is not None
-    )
+    """Whether the second-seat gate is satisfied for ``manifest_sha256`` (see ``agreement_state``)."""
+    return agreement_state(conn, level, slug, lesson_n, manifest_sha256) == AGREEMENT_SATISFIED
 
 
 # --- measurement (R3): identities, adjudicated results ------------------------------------------

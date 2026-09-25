@@ -99,6 +99,7 @@ HOLD_CURRENT_MANIFEST_UNKNOWN = "current_manifest_unknown"
 HOLD_CURRENT_MANIFEST_STALE = "current_manifest_stale"
 HOLD_REVIEW_ON_SUPERSEDED_MANIFEST = "review_on_superseded_manifest"
 HOLD_SECOND_SEAT_PENDING = "second_seat_pending"
+HOLD_AGREEMENT_AMBIGUOUS = findings_db.AGREEMENT_AMBIGUOUS
 PROJECTION_FIELDS = ("verdict", "attempt_id", "manifest_sha256", "validated_at")
 
 MODULE_VERDICT_NAME = "module-verdict.yaml"
@@ -825,15 +826,25 @@ def compute_module_verdict(
             row["state"] == "current"
             and row["verdict"] == "APPROVE"
             and second_seat.selected(level, slug, row["n"], params["second_seat_divisor"])
-            and not findings_db.has_agreement_on(conn, level, slug, row["n"], current.digest)
+            and (gate := findings_db.agreement_state(conn, level, slug, row["n"], current.digest))
+            != findings_db.AGREEMENT_SATISFIED
         ):
-            holds.append(
-                {
-                    "code": HOLD_SECOND_SEAT_PENDING,
-                    "detail": f"lesson {row['n']} is in the second-seat sample and has no second review of its"
-                    " current manifest",
-                }
-            )
+            if gate == findings_db.AGREEMENT_AMBIGUOUS:
+                holds.append(
+                    {
+                        "code": HOLD_AGREEMENT_AMBIGUOUS,
+                        "detail": f"lesson {row['n']}: a second-seat comparison names a first-seat attempt id that"
+                        " exists under more than one review, so it cannot be attributed to this review",
+                    }
+                )
+            else:
+                holds.append(
+                    {
+                        "code": HOLD_SECOND_SEAT_PENDING,
+                        "detail": f"lesson {row['n']} is in the second-seat sample and has no second review of its"
+                        " current manifest",
+                    }
+                )
     by_lesson = {row["n"]: row for row in rows}
     open_items, waiting, pending_fix = [], [], []
     for item in findings_db.module_settle_items(conn, level, slug):

@@ -64,7 +64,7 @@ UNIT_NOT_ATTEMPTED = "unit_not_attempted"
 NO_ATTEMPTS = "no_attempts"
 MIXED_SEAT = "mixed_seat"
 AGREEMENT_UNATTRIBUTED = "agreement_unattributed"
-AGREEMENT_AMBIGUOUS = "agreement_ambiguous"
+AGREEMENT_AMBIGUOUS = findings_db.AGREEMENT_AMBIGUOUS
 CONFIRMATION_LEAK = "confirmation_leak"
 IDENTITY_MISMATCH = "seed_identity_mismatch"
 EMPTY_SET = "empty_set"
@@ -536,18 +536,15 @@ def agreement_by_seat_pair(
                 for attempt_id in (row["attempt_a"], row["attempt_b"]):
                     # The agreement row stores attempt ids only, and (review_id, attempt_id) is what the attempts table
                     # keeps unique: an id shared by two reviews cannot be attributed to a seat, so it refuses.
-                    found = conn.execute(
-                        "SELECT review_id, harness, reviewer_model FROM attempts WHERE attempt_id = ? AND level = ?"
-                        " AND slug = ? AND lesson_n = ? ORDER BY seq",
-                        (attempt_id, row["level"], row["slug"], row["lesson_n"]),
-                    ).fetchall()
+                    found, review_ids = findings_db.agreement_attempt_rows(
+                        conn, row["level"], row["slug"], row["lesson_n"], attempt_id
+                    )
                     if not found:
                         raise ScoreError(
                             f"agreement of {row['level']}/{row['slug']}/{row['lesson_n']} names attempt {attempt_id} "
                             "that is not in the database",
                             AGREEMENT_UNATTRIBUTED,
                         )
-                    review_ids = sorted({attempt["review_id"] for attempt in found})
                     if len(review_ids) > 1:
                         raise ScoreError(
                             f"agreement of {row['level']}/{row['slug']}/{row['lesson_n']} names attempt {attempt_id}, "

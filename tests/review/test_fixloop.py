@@ -981,6 +981,29 @@ def test_a_recorded_second_review_of_the_current_manifest_lets_the_sampled_modul
     assert document["verdict"] == "APPROVE" and document["holds"] == []
 
 
+def test_a_second_seat_attempt_id_reused_under_another_review_holds_as_ambiguous(
+    world: World, promoted: None, monkeypatch
+) -> None:
+    monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: SAMPLED)
+    approve_all(world)
+    record_second_seat(world, 3)
+    assert verdict(world, SAMPLED)["verdict"] == "APPROVE"
+    [agreement] = world.db_rows("agreement")
+    conn = db.connect(world.db)
+    try:
+        original = conn.execute(
+            "SELECT * FROM attempts WHERE attempt_id = ? AND lesson_n = 3", (agreement["attempt_a"],)
+        ).fetchone()
+        columns = original.keys()
+        with db.transaction(conn):
+            db.insert_attempt(conn, {**{c: original[c] for c in columns}, "review_id": "rev-elsewhere"})
+    finally:
+        conn.close()
+    document = verdict(world, SAMPLED)
+    assert document["verdict"] == "HOLD" and codes_of(document) == [fixloop.HOLD_AGREEMENT_AMBIGUOUS]
+    assert "more than one review" in document["holds"][0]["detail"]
+
+
 def test_a_second_review_of_an_older_manifest_does_not_count(world: World, promoted: None, monkeypatch) -> None:
     monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: SAMPLED)
     approve_all(world)
