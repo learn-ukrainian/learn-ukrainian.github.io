@@ -807,9 +807,9 @@ def test_archive_round_trip_moves_record_with_sidecars(tasks_dir):
 
     restored = str_mod.restore_archived(tasks_dir, ["old-done", f"redo.{stamp}.archived.json"], apply=True)
     assert restored["actions"] == {"restored": 2}
-    assert {key: value[0] for key, value in _snapshot(tasks_dir).items()} == {
-        key: value[0] for key, value in before.items()
-    }
+    # The per-task lock file is not a task artifact; restore leaves it beside the archived name.
+    after = {key: value[0] for key, value in _snapshot(tasks_dir).items() if not key.endswith(".lock")}
+    assert after == {key: value[0] for key, value in before.items()}
     assert task_record_store.locate_task_record(tasks_dir, "old-done") == tasks_dir / "old-done.json"
 
 

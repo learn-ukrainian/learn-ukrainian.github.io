@@ -153,7 +153,10 @@ def test_read_only_delegate_snapshot_sidecar_path_is_runtime_state():
     ``tests/test_delegate.py`` ``[repo-root]`` cases.
     """
     sidecar = "tasks/read-only-task.snapshots/read_only_checkout_pre.json"
+    digest = "tasks/read-only-task.snapshots/digest.json"
     assert delegate._is_read_only_delegate_snapshot_sidecar_path(sidecar)
+    assert delegate._is_read_only_delegate_snapshot_sidecar_path(digest)
+    assert delegate._is_read_only_runtime_state_path(digest)
     assert delegate._is_read_only_runtime_state_path(sidecar)
     assert not delegate._is_read_only_runtime_telemetry_path(sidecar)
 
@@ -282,11 +285,8 @@ def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     assert sibling.exists()
-    post = state["read_only_checkout_post"]
-    assert not any(
-        delegate._is_read_only_snapshot_excluded_path(path) for path in post
-    )
 
 
 def test_read_only_dispatch_ignores_other_lane_worktree_activity(
@@ -347,10 +347,7 @@ def test_read_only_dispatch_ignores_other_lane_worktree_activity(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
-    post = state["read_only_checkout_post"]
-    assert not any(
-        delegate._is_read_only_snapshot_excluded_path(path) for path in post
-    )
+    assert state["read_only_snapshot_retention"] == "digest"
 
 
 def test_read_only_failed_worker_keeps_real_error_alongside_mutation(
