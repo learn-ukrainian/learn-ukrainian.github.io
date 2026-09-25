@@ -449,13 +449,25 @@ def _require_data_artifact(
     data_root = Path(os.environ.get("LEARN_UKRAINIAN_TEST_DATA_ROOT", _REPO_ROOT))
     artifact = data_root / relative_path
     if not artifact.is_file():
+        try:
+            from scripts.guardrails.worktree_containment import resolve_main_root
+
+            fallback = resolve_main_root(_REPO_ROOT) / relative_path
+            if fallback.is_file():
+                artifact = fallback
+        except Exception:
+            pass
+    if not artifact.is_file():
         pytest.skip(f"requires {relative_path} (not provisioned in CI)")
 
     if required_sqlite_tables:
         try:
             with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
                 available_tables = {
-                    row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+                    row[0]
+                    for row in connection.execute(
+                        "SELECT name FROM sqlite_master WHERE type IN ('table', 'view')"
+                    )
                 }
         except sqlite3.Error:
             available_tables = set()

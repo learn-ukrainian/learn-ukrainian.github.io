@@ -6,6 +6,7 @@ dependency fail-closed behaviors, profile provenance, review lifecycle, and base
 
 from __future__ import annotations
 
+import copy
 import json
 import sqlite3
 from pathlib import Path
@@ -601,6 +602,772 @@ def test_check7_signoff_verification_lifecycle(tmp_path, default_thresholds):
     )
     assert res_bad_type.status == "FAIL"
     assert any("must be a non-negative integer" in f for f in res_bad_type.failures)
+
+
+def test_check7_receipt_validation_schema_and_criteria_integrity(tmp_path, default_thresholds):
+    """Verify check 7 validates review receipt schema, criteria, hashes, and assessments."""
+    records = [
+        parse_dataset_record({"query": f"q_{i}", "final_response": f"a_{i}"}, Path("shard.jsonl"), i) for i in range(5)
+    ]
+    sample_md = tmp_path / "sample.md"
+    thresholds = dict(default_thresholds)
+    thresholds["sample_size"] = 5
+    thresholds["require_review_receipt"] = True
+
+    _, _, seed = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md
+    )
+    drawn_sample = json.loads(sample_md.with_suffix(".json").read_text(encoding="utf-8"))
+    signoff_file = tmp_path / "valid_signoff.json"
+    signoff_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_123",
+                "sample_seed": seed,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    receipt_file = tmp_path / "acceptance_review_sample.receipt.json"
+
+    def _make_receipt_items(criteria_override=None, assessment_override=None, hash_override=None):
+        items = []
+        for s in drawn_sample:
+            i = s["sample_index"]
+            crit = {
+                "pedagogical_soundness": True,
+                "morphology_vesum": True,
+                "pravopys_2019": True,
+                "zero_russianisms": True,
+                "zero_soviet_sum11": True,
+            }
+            if criteria_override and i in criteria_override:
+                crit = criteria_override[i]
+            assessment = "Автентична оцінка рецензента"
+            if assessment_override and i in assessment_override:
+                assessment = assessment_override[i]
+            c_hash = s["content_hash"]
+            if hash_override and i in hash_override:
+                c_hash = hash_override[i]
+            items.append(
+                {
+                    "sample_index": i,
+                    "content_hash": c_hash,
+                    "verdict": "APPROVED",
+                    "status": "PASS",
+                    "criteria": crit,
+                    "reviewer_assessment": assessment,
+                }
+            )
+        return items
+
+    def _write_receipt(items, dataset_sha="dataset_hash_123", sample_seed=seed, verdict="APPROVED", blockers=0):
+        receipt_file.write_text(
+            json.dumps(
+                {
+                    "dataset_sha256": dataset_sha,
+                    "sample_seed": sample_seed,
+                    "profile_sha256": "profile_hash_456",
+                    "sample_size_drawn": 5,
+                    "sample_size_reviewed": 5,
+                    "blocker_defect_count": blockers,
+                    "minor_defect_count": 0,
+                    "reviewer_id": "linguist_1",
+                    "reviewer_family": "independent_human",
+                    "verdict": verdict,
+                    "reviewed_sample_items": items,
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    # 1. Valid receipt passes
+    _write_receipt(_make_receipt_items())
+    res, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res.status == "PASS"
+    assert res.metrics["signoff_verified"] is True
+
+    # 2. Missing criterion key fails
+    bad_items = _make_receipt_items(criteria_override={1: {"pedagogical_soundness": True}})
+    _write_receipt(bad_items)
+    res_bad_crit, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_bad_crit.status == "FAIL"
+    assert any("missing required 5 criteria keys" in f for f in res_bad_crit.failures)
+
+    # 3. False criterion with APPROVED verdict fails
+    failed_crit_items = _make_receipt_items(
+        criteria_override={
+            2: {
+                "pedagogical_soundness": False,
+                "morphology_vesum": True,
+                "pravopys_2019": True,
+                "zero_russianisms": True,
+                "zero_soviet_sum11": True,
+            }
+        }
+    )
+    _write_receipt(failed_crit_items)
+    res_false_crit, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_false_crit.status == "FAIL"
+    assert any("has failed criteria (False) but received APPROVED verdict" in f for f in res_false_crit.failures)
+
+    # 4. Empty reviewer_assessment fails
+    empty_assess_items = _make_receipt_items(assessment_override={3: "   "})
+    _write_receipt(empty_assess_items)
+    res_empty_assess, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_empty_assess.status == "FAIL"
+    assert any("lacking non-empty reviewer_assessment" in f for f in res_empty_assess.failures)
+
+    # 5. Content hash mismatch fails
+    mismatch_items = _make_receipt_items(hash_override={1: "tampered_content_hash"})
+    _write_receipt(mismatch_items)
+    res_mismatch, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_mismatch.status == "FAIL"
+    assert any("content_hash mismatch" in f for f in res_mismatch.failures)
+
+    # 6. Missing receipt profile_sha256 fails unconditionally
+    _write_receipt(_make_receipt_items())
+    receipt_data = json.loads(receipt_file.read_text(encoding="utf-8"))
+    del receipt_data["profile_sha256"]
+    receipt_file.write_text(json.dumps(receipt_data), encoding="utf-8")
+    res_no_prof, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_no_prof.status == "FAIL"
+    assert any("profile_sha256 (None) does not match profile hash" in f for f in res_no_prof.failures)
+
+    # 7. Item marked FAIL cannot coexist with 0 blockers / accepted receipt
+    fail_item_items = _make_receipt_items()
+    fail_item_items[0]["status"] = "FAIL"
+    fail_item_items[0]["verdict"] = "CHANGES_REQUESTED"
+    _write_receipt(fail_item_items, blockers=0)
+    res_fail_item, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_fail_item.status == "FAIL"
+    assert any("does not reconcile with item-level defect count" in f for f in res_fail_item.failures)
+    assert any("marked FAIL, CHANGES_REQUESTED, or defective" in f for f in res_fail_item.failures)
+
+    # 8. Receipt item with invalid/missing verdict fails
+    bad_verdict_items = _make_receipt_items()
+    bad_verdict_items[0]["verdict"] = "UNKNOWN"
+    _write_receipt(bad_verdict_items)
+    res_bad_verdict, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_bad_verdict.status == "FAIL"
+    assert any("missing or invalid verdict" in f for f in res_bad_verdict.failures)
+
+    # 9. Receipt item with invalid/missing status fails
+    bad_status_items = _make_receipt_items()
+    bad_status_items[0]["status"] = None
+    _write_receipt(bad_status_items)
+    res_bad_status, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_bad_status.status == "FAIL"
+    assert any("missing or invalid status" in f for f in res_bad_status.failures)
+
+    # 10. Receipt item with unhashable list or dict in verdict fails cleanly
+    list_verdict_items = _make_receipt_items()
+    list_verdict_items[0]["verdict"] = []
+    _write_receipt(list_verdict_items)
+    res_list_verdict, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_list_verdict.status == "FAIL"
+    assert any("missing or invalid verdict: []" in f for f in res_list_verdict.failures)
+
+    # 11. Receipt item with unhashable list or dict in status fails cleanly
+    dict_status_items = _make_receipt_items()
+    dict_status_items[0]["status"] = {}
+    _write_receipt(dict_status_items)
+    res_dict_status, _, _ = audit_check_7_sample_drawer(
+        records, thresholds, "dataset_hash_123", "profile_hash_456", sample_md, signoff_file
+    )
+    assert res_dict_status.status == "FAIL"
+    assert any("missing or invalid status: {}" in f for f in res_dict_status.failures)
+
+    # 12. Control receipt item with only four-word partial citation fails acceptance audit
+    ctrl_records = [
+        parse_dataset_record(
+            {
+                "query": f"Як справи {i}?",
+                "final_response": "Чудово.",
+                "original_text": "Автентичне довге речення для надійного контролю мовних норм.",
+                "is_erroneous": False,
+            },
+            Path("shard.jsonl"),
+            i,
+        )
+        for i in range(5)
+    ]
+    sample_ctrl_md = tmp_path / "sample_ctrl.md"
+    _, _, seed_ctrl = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md
+    )
+    drawn_ctrl_sample = json.loads(sample_ctrl_md.with_suffix(".json").read_text(encoding="utf-8"))
+    signoff_ctrl_file = tmp_path / "ctrl_signoff.json"
+    signoff_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    receipt_ctrl_file = tmp_path / "acceptance_review_sample.receipt.json"
+
+    # Full citation in receipt passes
+    valid_ctrl_items = []
+    for s in drawn_ctrl_sample:
+        idx = s["sample_index"]
+        valid_ctrl_items.append(
+            {
+                "sample_index": idx,
+                "content_hash": s["content_hash"],
+                "original_text": s["original_text"],
+                "is_erroneous": False,
+                "verdict": "APPROVED",
+                "status": "PASS",
+                "criteria": {
+                    "pedagogical_soundness": True,
+                    "morphology_vesum": True,
+                    "pravopys_2019": True,
+                    "zero_russianisms": True,
+                    "zero_soviet_sum11": True,
+                },
+                "reviewer_assessment": f"Контрольне речення #{idx} «Автентичне довге речення для надійного контролю мовних норм.» перевірено.",
+            }
+        )
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": valid_ctrl_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_ctrl_pass, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_ctrl_pass.status == "PASS"
+    assert res_ctrl_pass.metrics["signoff_verified"] is True
+
+    # Altering one receipt assessment to a four-word citation fails
+    partial_ctrl_items = copy.deepcopy(valid_ctrl_items)
+    partial_ctrl_items[0]["reviewer_assessment"] = (
+        "Унікальна оцінка: «Автентичне довге речення для» — без мовних огріхів."
+    )
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": partial_ctrl_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_partial_ctrl, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_partial_ctrl.status == "FAIL"
+    assert res_partial_ctrl.metrics["signoff_verified"] is False
+    assert any("lacks full sentence-specific citation" in f for f in res_partial_ctrl.failures)
+
+    # 13. Omitting or mutating is_erroneous in receipt item fails
+    bad_is_err_items = copy.deepcopy(valid_ctrl_items)
+    bad_is_err_items[0]["is_erroneous"] = True
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": bad_is_err_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_bad_is_err, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_bad_is_err.status == "FAIL"
+    assert any("is_erroneous mismatch" in f for f in res_bad_is_err.failures)
+
+    # Omitting is_erroneous from receipt item also fails
+    del bad_is_err_items[0]["is_erroneous"]
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": bad_is_err_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_omit_is_err, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_omit_is_err.status == "FAIL"
+    assert any("is_erroneous mismatch" in f for f in res_omit_is_err.failures)
+
+    # 13b. Integer 0 or 1 for is_erroneous fails (must be strict boolean)
+    int_bool_items = copy.deepcopy(valid_ctrl_items)
+    int_bool_items[0]["is_erroneous"] = 0
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": int_bool_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_int_bool, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_int_bool.status == "FAIL"
+    assert any("is_erroneous mismatch or non-boolean" in f for f in res_int_bool.failures)
+
+    # 14. Shortening or mutating original_text in receipt item fails
+    short_orig_items = copy.deepcopy(valid_ctrl_items)
+    short_orig_items[0]["original_text"] = "Автентичне довге речення для"
+    # Even if reviewer assessment cites this shortened text, the check fails on mismatch
+    short_orig_items[0]["reviewer_assessment"] = (
+        "Контрольне речення #1 «Автентичне довге речення для» перевірено."
+    )
+    receipt_ctrl_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_ctrl",
+                "sample_seed": seed_ctrl,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": short_orig_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_short_orig, _, _ = audit_check_7_sample_drawer(
+        ctrl_records, thresholds, "dataset_hash_ctrl", "profile_hash_456", sample_ctrl_md, signoff_ctrl_file
+    )
+    assert res_short_orig.status == "FAIL"
+    assert any("original_text mismatch" in f for f in res_short_orig.failures)
+    assert any("lacks full sentence-specific citation" in f for f in res_short_orig.failures)
+
+    # 15. Correction records require error_span / replacement_span and validate them against sample
+    corr_records = [
+        parse_dataset_record(
+            {
+                "query": f"Виправ помилку {i}",
+                "final_response": "Виправлено.",
+                "original_text": "Він приймав участь у заходах.",
+                "corrected_text": "Він брав участь у заходах.",
+                "is_erroneous": True,
+                "source_metadata": {
+                    "error_span": "приймав участь",
+                    "replacement_span": "брав участь",
+                },
+            },
+            Path("shard_corr.jsonl"),
+            i,
+        )
+        for i in range(5)
+    ]
+    sample_corr_md = tmp_path / "sample_corr.md"
+    _, _, seed_corr = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md
+    )
+    drawn_corr_sample = json.loads(sample_corr_md.with_suffix(".json").read_text(encoding="utf-8"))
+    signoff_corr_file = tmp_path / "corr_signoff.json"
+    signoff_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    receipt_corr_file = tmp_path / "acceptance_review_sample.receipt.json"
+
+    valid_corr_items = []
+    for s in drawn_corr_sample:
+        idx = s["sample_index"]
+        valid_corr_items.append(
+            {
+                "sample_index": idx,
+                "content_hash": s["content_hash"],
+                "original_text": s["original_text"],
+                "corrected_text": s["corrected_text"],
+                "is_erroneous": True,
+                "error_span": "приймав участь",
+                "replacement_span": "брав участь",
+                "verdict": "APPROVED",
+                "status": "PASS",
+                "criteria": {
+                    "pedagogical_soundness": True,
+                    "morphology_vesum": True,
+                    "pravopys_2019": True,
+                    "zero_russianisms": True,
+                    "zero_soviet_sum11": True,
+                },
+                "reviewer_assessment": f"Виправлено дефект #{idx}: замінено «приймав участь» → «брав участь».",
+            }
+        )
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": valid_corr_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_corr_pass, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_corr_pass.status == "PASS"
+    assert res_corr_pass.metrics["signoff_verified"] is True
+
+    # 15b. Mutating or omitting corrected_text in receipt item fails
+    bad_corr_text_items = copy.deepcopy(valid_corr_items)
+    bad_corr_text_items[0]["corrected_text"] = "Зовсім інший виправлений текст."
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": bad_corr_text_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_bad_corr_text, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_bad_corr_text.status == "FAIL"
+    assert any("corrected_text mismatch" in f for f in res_bad_corr_text.failures)
+
+    # Omitting corrected_text from receipt item also fails
+    del bad_corr_text_items[0]["corrected_text"]
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": bad_corr_text_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_omit_corr_text, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_omit_corr_text.status == "FAIL"
+    assert any("corrected_text mismatch" in f for f in res_omit_corr_text.failures)
+
+    # 16. Missing edit spans in correction receipt item fails
+    no_spans_items = copy.deepcopy(valid_corr_items)
+    del no_spans_items[0]["error_span"]
+    del no_spans_items[0]["replacement_span"]
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": no_spans_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_no_spans, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_no_spans.status == "FAIL"
+    assert any("missing required key 'error_span'" in f for f in res_no_spans.failures)
+    assert any("missing required key 'replacement_span'" in f for f in res_no_spans.failures)
+    assert any("error_span mismatch" in f for f in res_no_spans.failures)
+
+    # 17. Mismatched edit span in correction receipt item fails
+    mismatched_span_items = copy.deepcopy(valid_corr_items)
+    mismatched_span_items[0]["error_span"] = "інша помилка"
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": mismatched_span_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_mismatched_span, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_mismatched_span.status == "FAIL"
+    assert any("error_span mismatch" in f for f in res_mismatched_span.failures)
+
+    # 18. Correction assessment omitting edit pair names fails
+    generic_corr_items = copy.deepcopy(valid_corr_items)
+    generic_corr_items[0]["reviewer_assessment"] = "Все чудово перевірено і виправлено без зауважень."
+    receipt_corr_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_corr",
+                "sample_seed": seed_corr,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 5,
+                "sample_size_reviewed": 5,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": generic_corr_items,
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_generic_corr, _, _ = audit_check_7_sample_drawer(
+        corr_records, thresholds, "dataset_hash_corr", "profile_hash_456", sample_corr_md, signoff_corr_file
+    )
+    assert res_generic_corr.status == "FAIL"
+    assert any("assessment does not name edit pair" in f for f in res_generic_corr.failures)
+
+    # 19. Deletion correction with empty replacement span requires explicit replacement_span key
+    del_records = [
+        parse_dataset_record(
+            {
+                "query": "Вилучи зайве слово",
+                "final_response": "Вилучено.",
+                "original_text": "Він сказав те що прийде.",
+                "corrected_text": "Він сказав що прийде.",
+                "is_erroneous": True,
+                "source_metadata": {
+                    "error_span": "те",
+                    "replacement_span": "",
+                },
+            },
+            Path("shard_del.jsonl"),
+            1,
+        )
+    ]
+    sample_del_md = tmp_path / "sample_del.md"
+    _, _, seed_del = audit_check_7_sample_drawer(
+        del_records, {"sample_size": 1, "require_review_receipt": True}, "dataset_hash_del", "profile_hash_456", sample_del_md
+    )
+    drawn_del_sample = json.loads(sample_del_md.with_suffix(".json").read_text(encoding="utf-8"))
+    signoff_del_file = tmp_path / "del_signoff.json"
+    signoff_del_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_del",
+                "sample_seed": seed_del,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_reviewed": 1,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    receipt_del_file = tmp_path / "acceptance_review_sample.receipt.json"
+
+    # Valid deletion item with explicit replacement_span: "" passes
+    valid_del_item = {
+        "sample_index": 1,
+        "content_hash": drawn_del_sample[0]["content_hash"],
+        "original_text": drawn_del_sample[0]["original_text"],
+        "corrected_text": drawn_del_sample[0]["corrected_text"],
+        "is_erroneous": True,
+        "error_span": "те",
+        "replacement_span": "",
+        "verdict": "APPROVED",
+        "status": "PASS",
+        "criteria": {
+            "pedagogical_soundness": True,
+            "morphology_vesum": True,
+            "pravopys_2019": True,
+            "zero_russianisms": True,
+            "zero_soviet_sum11": True,
+        },
+        "reviewer_assessment": "Вилучено зайве слово «те» відповідно до чинних синтаксичних норм.",
+    }
+    receipt_del_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_del",
+                "sample_seed": seed_del,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 1,
+                "sample_size_reviewed": 1,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": [valid_del_item],
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_del_pass, _, _ = audit_check_7_sample_drawer(
+        del_records, {"sample_size": 1, "require_review_receipt": True}, "dataset_hash_del", "profile_hash_456", sample_del_md, signoff_del_file
+    )
+    assert res_del_pass.status == "PASS"
+    assert res_del_pass.metrics["signoff_verified"] is True
+
+    # Omitting replacement_span from deletion receipt item fails even though expected replacement is empty
+    bad_del_item = copy.deepcopy(valid_del_item)
+    del bad_del_item["replacement_span"]
+    receipt_del_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_del",
+                "sample_seed": seed_del,
+                "profile_sha256": "profile_hash_456",
+                "sample_size_drawn": 1,
+                "sample_size_reviewed": 1,
+                "blocker_defect_count": 0,
+                "minor_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+                "verdict": "APPROVED",
+                "reviewed_sample_items": [bad_del_item],
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_del_fail, _, _ = audit_check_7_sample_drawer(
+        del_records, {"sample_size": 1, "require_review_receipt": True}, "dataset_hash_del", "profile_hash_456", sample_del_md, signoff_del_file
+    )
+    assert res_del_fail.status == "FAIL"
+    assert any("missing required key 'replacement_span'" in f for f in res_del_fail.failures)
 
 
 # ── Full Audit Runner & Fail-Closed Tests ───────────────────────────────────
