@@ -3883,7 +3883,8 @@ def test_dispatch_husk_is_kept_when_the_fleet_catalog_is_unreadable(
 
     result = result_for(results, husk)
     assert result.action == "skipped"
-    assert "fleet repository catalog unreadable" in result.reason
+    # Same wording as the removal guard: the lock, not the re-check, is what failed (#8748).
+    assert result.reason.startswith(f"{worktree_claims.LOCK_UNAVAILABLE} (fleet repository catalog unreadable")
     assert husk.exists()
 
 
@@ -4012,6 +4013,121 @@ def test_dispatch_husk_is_kept_while_another_process_holds_its_lock(
     assert result.action == "skipped"
     assert worktree_claims.LOCK_BUSY in result.reason
     assert husk.exists()
+
+
+def test_sibling_repo_dispatch_husk_is_kept_while_dispatch_holds_its_public_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: a ``--repo`` sibling's husk contends on the public primary's lock dir, not its own."""
+    public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    husk = sibling / ".worktrees" / "dispatch" / "codex" / "ww-sibling-locked"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_DISPATCH_HUSK_LOCK_TIMEOUT_S", 0.2)
+    lock_dir = rw._common_git_dir(public) / worktree_claims.LOCK_DIR_NAME
+    entered = threading.Event()
+    release = threading.Event()
+
+    def hold() -> None:
+        with worktree_claims.worktree_lock(husk, lock_dir=lock_dir):
+            entered.set()
+            release.wait(10)
+
+    holder = threading.Thread(target=hold, daemon=True)
+    holder.start()
+    assert entered.wait(5)
+    try:
+        results = rw.reap_worktrees(repo_root=sibling, apply=True, live_cwds=set())
+    finally:
+        release.set()
+        holder.join(5)
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert result.reason.startswith(f"{worktree_claims.LOCK_BUSY} (")
+    assert husk.exists()
+    assert not (rw._common_git_dir(sibling) / worktree_claims.LOCK_DIR_NAME).exists()
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root traverses a mode-000 directory")
+def test_dispatch_husk_is_kept_when_an_admin_entry_is_untraversable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: an admin entry the reaper cannot read might register the husk; skip, never remove."""
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-hidden-admin"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    admin = repo / ".git" / "worktrees" / "ww-hidden-admin"
+    admin.mkdir(parents=True)
+    (admin / "gitdir").write_text(f"{husk / '.git'}\n", encoding="utf-8")
+    admin.chmod(0)
+    try:
+        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    finally:
+        admin.chmod(0o755)
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "husk registration re-check failed closed" in result.reason
+    assert "unreadable" in result.reason
+    assert husk.exists()
+
+
+def test_dispatch_husk_is_kept_when_git_hangs_under_the_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: a hung ``git worktree list`` under the per-path lock times out into a skip.
+
+    A fake ``git`` on PATH delegates to the real one until the sweep has
+    passed its last pre-lock probe (the age check), then makes ``git worktree
+    list`` sleep well past the locked-call bound. Without the bound the sweep
+    holds the lock for the whole sleep and then removes the husk.
+    """
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-hung-git"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_LOCKED_GIT_TIMEOUT_S", 0.5)
+    real_git = shutil.which("git")
+    assert real_git
+    hang_marker = tmp_path / "hang-git"
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    fake_git = fake_bin / "git"
+    fake_git.write_text(
+        "#!/bin/sh\n"
+        f'if [ -e "{hang_marker}" ] && [ "$1" = worktree ] && [ "$2" = list ]; then exec sleep 5; fi\n'
+        f'exec "{real_git}" "$@"\n',
+        encoding="utf-8",
+    )
+    fake_git.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
+
+    real_age = rw._tree_newest_age_hours
+
+    def arm_hang(root: Path, now: float | None = None) -> float | None:
+        if Path(root).resolve() == husk.resolve():
+            hang_marker.touch()
+        return real_age(root, now=now)
+
+    monkeypatch.setattr(rw, "_tree_newest_age_hours", arm_hang)
+
+    started = time.monotonic()
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    elapsed = time.monotonic() - started
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "timed out" in result.reason
+    assert husk.exists()
+    assert elapsed < 4
 
 
 def test_dispatch_husk_still_removed_when_truly_unregistered(
