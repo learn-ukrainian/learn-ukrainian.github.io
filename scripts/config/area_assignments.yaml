@@ -4,6 +4,8 @@
 #
 # Derivation rule: slots = provider identity functions × launcher_selector_resolve lanes;
 # see scripts/lib/handoff_identity.sh — do not add rows without a mintable selector.
+# Both directions are enforced by tests/test_handoff_slot_registry.py, and the launcher
+# refuses a selector whose <provider>-<lane> slot is not listed here (#8303).
 
 schema_version: 1
 assignments:

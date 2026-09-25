@@ -493,6 +493,9 @@ launcher_validate_mode() {
       launcher_selector_help >&2
       exit 2
     fi
+    if [ "$LC_EPIC" != "AUTO" ]; then
+      launcher_require_registered_slot "$LC_PROVIDER" "$LC_EPIC" || exit 2
+    fi
     if [ "$LC_MODEL" = gpt-6-luna ]; then
       launcher_error "gpt-6-luna is a scouting model, not a governor model. Use gpt-6-sol."
       exit 4
@@ -513,6 +516,7 @@ launcher_validate_mode() {
     launcher_selector_help >&2
     exit 2
   fi
+  launcher_require_registered_slot "$LC_PROVIDER" "$LC_EPIC" || exit 2
   LC_EPIC="$(launcher_selector_lane "$LC_EPIC")"
 }
 

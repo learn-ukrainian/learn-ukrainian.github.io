@@ -24,6 +24,7 @@ from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import EntryType, HolderKind, LeaseHolder, isoformat_z
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.launcher_sandbox import copy_slot_registry
 from tests.project_python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -177,6 +178,8 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
         watcher.parent.mkdir(parents=True, exist_ok=True)
         watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
         watcher.chmod(0o755)
+        # Driver launches check their handoff slot against the real roster (#8303).
+        copy_slot_registry(primary)
     git(primary, "add", ".")
     git(primary, "commit", "-m", "test fixture")
     # A raw .venv symlink would run the REAL codex transport probe (live model

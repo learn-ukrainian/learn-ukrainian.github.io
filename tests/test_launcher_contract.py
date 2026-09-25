@@ -21,6 +21,7 @@ from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.launcher_sandbox import copy_slot_registry
 
 REPO = Path(__file__).resolve().parents[1]
 PUBLIC = (
@@ -229,6 +230,8 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
     watcher.chmod(0o755)
+    # Driver launches check their handoff slot against the real roster (#8303).
+    copy_slot_registry(root)
 
     claim_marker = tmp_path / "lease-claimed"
     close_marker = tmp_path / "lease-closed"
@@ -390,6 +393,8 @@ def _core_driver_exit_fixture(
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
     watcher.chmod(0o755)
+    # Driver launches check their handoff slot against the real roster (#8303).
+    copy_slot_registry(root)
 
     close_attempts = tmp_path / "close-attempts"
     close_marker = tmp_path / "lease-closed"
@@ -973,11 +978,12 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     assert "would select agent" not in explicit.stdout
     assert "--effort high --agent curriculum-orchestrator " in explicit.stdout
 
-    # Stream aliases (fleet_taxonomy.yaml) must not fall back to the curriculum
-    # settings default: atlas-practice canonicalizes to the atlas area (#F1, r3).
+    # A registry stream key with no roster slot would mint an unregistered handoff
+    # identity, so the launcher refuses it instead of starting the session (#8303).
     alias = run_launcher("start-claude-driver.sh", "--epic", "atlas-practice")
-    assert alias.returncode == 0, alias.stderr
-    assert "launcher: would select agent infra-orchestrator for lane atlas-practice" in alias.stdout
+    assert alias.returncode == 2
+    assert "claude-atlas-practice" in alias.stderr
+    assert "not registered" in alias.stderr
 
 
 def hermes_stub_env(tmp_path: Path, *, help_text: str | None = None) -> dict[str, str]:

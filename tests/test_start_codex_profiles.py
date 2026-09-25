@@ -10,6 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.launcher_sandbox import copy_slot_registry
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 # Tests spawn the same prescribed project interpreter that is running pytest;
 # dispatch worktrees intentionally do not contain a private .venv.
@@ -71,6 +73,8 @@ def _prepare_repo(
         destination = primary / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
+    # Driver launches check their handoff slot against the real roster (#8303).
+    copy_slot_registry(primary)
 
     # Profile tests have no message service. Supply the idle watcher process
     # that the real launcher owns and must reap when the provider exits.
