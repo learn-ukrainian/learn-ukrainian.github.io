@@ -413,3 +413,34 @@ def test_run_ask_review_dispatch_with_approve_verdict_stays_done(monkeypatch, tm
     assert state["ok"] is True
     assert state["status"] == "done"
     assert state.get("no_deliverable_reason") is None
+
+
+def test_run_ask_review_dispatch_judges_by_verdict_not_dispatch_exit(monkeypatch, tmp_path):
+    """#8786: a read-only review has no push; its verdict line is the deliverable.
+
+    The live failure had the worker print a complete verdict and then exit
+    non-zero as ``no_deliverable``. The wrapper must judge a review by the
+    parsed verdict, not by the dispatch process exit code, and a reply with no
+    verdict must still fail loudly (covered by the sibling test above).
+    """
+    result_file = tmp_path / "result.md"
+    result_file.write_text(
+        "Adversarial review complete.\n\n**Verdict**: **APPROVE**\n", encoding="utf-8"
+    )
+
+    def fake_run(cmd, **kwargs):
+        if "dispatch" in cmd:
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            return subprocess.CompletedProcess(
+                cmd,
+                1,
+                stdout=json.dumps({"status": "no_deliverable", "result_file": str(result_file)}),
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    state = wrappers.run_ask_review_dispatch("deepseek", "review this", task_id="review-8786")
+    assert state["ok"] is True
+    assert state["status"] == "done"
+    assert state.get("no_deliverable_reason") is None

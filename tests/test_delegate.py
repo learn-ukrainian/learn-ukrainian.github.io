@@ -2738,6 +2738,57 @@ def test_run_worker_review_with_verdict_stays_done(
     assert state["no_deliverable_reason"] is None
 
 
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        (
+            "bold-label-and-token",
+            "Adversarial review complete.\n\n**Verdict**: **APPROVE**\n",
+        ),
+        (
+            "bold-token",
+            "Findings cited at scripts/foo.py:42.\n\nVERDICT: **REQUEST_CHANGES**\n",
+        ),
+        (
+            "backticked-token",
+            "Findings: none.\n\nVERDICT: `APPROVED`\n",
+        ),
+        (
+            "bold-label",
+            "**VERDICT**: CHANGES_REQUESTED\n",
+        ),
+    ],
+)
+def test_run_worker_review_with_markdown_decorated_verdict_stays_done(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    label,
+    response,
+):
+    """#8786: reviewers render the verdict in Markdown; it is still a verdict.
+
+    The live driver saw ``**Verdict**: **APPROVE**`` and
+    ``VERDICT: **REQUEST_CHANGES**`` misclassified as
+    ``review_missing_verdict_line``, so a completed read-only review was
+    reported ``no_deliverable``. Emphasis punctuation around the label or the
+    token must not hide the verdict.
+    """
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id=f"review-md-verdict-{label}",
+        mode="read-only",
+        response=response,
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=True,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["no_deliverable_reason"] is None
+
+
 def test_run_worker_non_review_read_only_without_verdict_stays_done(
     tmp_tasks_dir,
     tmp_path,

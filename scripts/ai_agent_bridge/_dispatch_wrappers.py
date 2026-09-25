@@ -500,19 +500,23 @@ def run_ask_review_dispatch(
             except OSError:
                 response = ""
         state["response"] = response
-        state["ok"] = wait_proc.returncode == 0
-        if state["ok"]:
-            # #8421: transport-ok must not mask a verdict-less review. The
-            # worker already terminalizes such runs as no_deliverable via
-            # --require-review-verdict; re-check here so a stale worker that
-            # still reports done cannot surface as a successful review.
-            from scripts import delegate as _delegate
+        # #8786: a read-only review is judged by its verdict, not by a push or
+        # by the dispatch exit code — it has no branch deliverable by design.
+        # The worker already applies --require-review-verdict, but re-decide
+        # here so a stale worker that still reports no_deliverable beside a
+        # valid verdict line cannot surface as a failed review, and a reply
+        # with no verdict can never surface as a successful one (#8421).
+        from scripts import delegate as _delegate
 
-            verdict_failure = _delegate._review_verdict_failure_reason(response)
-            if verdict_failure is not None:
-                state["status"] = _delegate._NO_DELIVERABLE_STATUS
-                state["ok"] = False
-                state["no_deliverable_reason"] = verdict_failure
+        verdict_failure = _delegate._review_verdict_failure_reason(response)
+        if verdict_failure is not None:
+            state["ok"] = False
+            state["status"] = _delegate._NO_DELIVERABLE_STATUS
+            state["no_deliverable_reason"] = verdict_failure
+        else:
+            state["ok"] = True
+            if state.get("status") != "done":
+                state["status"] = "done"
         if not state["ok"] and not state.get("stderr_excerpt"):
             state["stderr_excerpt"] = f"ask-{agent} review dispatch did not complete: status={state.get('status')!r}"
         return state

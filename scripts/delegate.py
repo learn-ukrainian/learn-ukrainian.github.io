@@ -2121,8 +2121,14 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # scripts/ai_agent_bridge/_review_verdict.py and
 # scripts/fleet_comms/review_publication.py. REQUEST_CHANGES is the token
 # cf_preflight.py and the review prompts actually ask reviewers to write.
+# Reviewers routinely render the label and token in Markdown emphasis
+# (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
+# full verdicts and must not be misread as missing (#8786). Only emphasis
+# punctuation (``*``, ``_``, backtick) and whitespace may sit between the
+# label, its colon, and the token — the token still has to be one of the
+# canonical words, so a verdict-less reply keeps failing loudly.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"\bVERDICT\s*:\s*(?:APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)\b",
+    r"\bVERDICT[\s*_`]*:[\s*_`]*(?:APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)\b",
     re.IGNORECASE,
 )
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
