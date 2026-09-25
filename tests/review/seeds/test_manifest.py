@@ -62,7 +62,7 @@ def test_a_scoring_manifest_round_trips_and_is_private(env: Env) -> None:
     seed = linguistic_seed("seed-a1")
     path = sm.write_scoring_manifest(seed, env.root)
     assert path == env.root / "batch_state" / "review-measurement" / "seeds" / "seed-a1.yaml"
-    assert mode(path) == 0o600 and mode(path.parent) == 0o700
+    assert mode(path) == 0o600 and mode(path.parent) == 0o700 and mode(path.parent.parent) == 0o700
     assert sm.load_seed("seed-a1", env.root) == seed
     document = yaml.safe_load(path.read_bytes())
     assert document["scoring_manifest"] == 1 and document["identities"]["gold_verdict"] == "pass"

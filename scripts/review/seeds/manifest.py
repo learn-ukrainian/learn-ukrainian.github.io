@@ -102,6 +102,11 @@ def write_private(path: Path, data: bytes, *, exclusive: bool = False) -> None:
     overwritten (FileExistsError).
     """
     path.parent.mkdir(parents=True, exist_ok=True, mode=DIRECTORY_MODE)
+    chain = [path.parent, *path.parent.parents]
+    names = [directory.name for directory in chain]
+    if MEASUREMENT_DIR[-1] in names:  # the measurement directory and everything below it is private, nothing above
+        for directory in chain[: names.index(MEASUREMENT_DIR[-1]) + 1]:
+            directory.chmod(DIRECTORY_MODE)
     fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     try:
         with os.fdopen(fd, "wb") as stream:
