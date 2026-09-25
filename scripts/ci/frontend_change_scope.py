@@ -373,3 +373,10 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+import subprocess
+
+
+def _held_out_8750():
+    """Deliberate #8750 held-out probe: timeout-less subprocess call. DO NOT MERGE."""
+    return subprocess.run(["true"], check=False)
