@@ -586,7 +586,7 @@ def test_parse_stored_uses_completed_entry_after_interrupted_retry(tmp_path: Pat
             role="entry",
             response_sha256="orphan-response",
             request_sha256="orphan-request",
-            homonym_index=3,
+            homonym_index=None,
             register_position="2:99",
         )
         assert parse_stored(ledger, cache) == 0
@@ -598,6 +598,137 @@ def test_parse_stored_uses_completed_entry_after_interrupted_retry(tmp_path: Pat
     finally:
         cache.close()
         ledger.close()
+
+
+def test_completed_attempt_is_the_only_source_of_tabs_in_offline_and_live_paths(tmp_path: Path):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    spelling = "ішим"
+    position = "1:0"
+    ledger = SpellingLedger(tmp_path / "state" / "ledger.sqlite")
+    cache = prepare_database(tmp_path / "cache.db")
+    try:
+        entry_html = _html("ishym-entry-1.html")
+        entry_sha = ulif_walk._sha256(entry_html.encode("utf-8"))
+        tab_bodies = {
+            "synonyms": _html("zamok-entry-2-syn.html"),
+            "phraseology": _html("zamok-entry-2-phras.html"),
+        }
+        for digest, body in [
+            (entry_sha, entry_html),
+            *[(ulif_walk._sha256(v.encode()), v) for v in tab_bodies.values()],
+        ]:
+            ulif_walk._store_blob(cache, digest, body.encode("utf-8"), "text/html; charset=utf-8")
+        cache.commit()
+
+        ledger.ensure_row(1, 0, select_arg="Select$0", stressed_headword="Іши́м", normalized_spelling=spelling)
+        # An interrupted attempt saved X; the completed attempt saved Y from the same entry body.
+        for kind in ("synonyms", "phraseology"):
+            ledger.record_response(
+                spelling=spelling,
+                role="entry",
+                response_sha256=entry_sha,
+                request_sha256="request",
+                homonym_index=1,
+                register_position=position,
+            )
+            ledger.record_response(
+                spelling=spelling,
+                role="tab",
+                response_sha256=ulif_walk._sha256(tab_bodies[kind].encode()),
+                request_sha256="request",
+                homonym_index=1,
+                tab_kind=kind,
+                register_position=position,
+            )
+        ledger.mark_row(1, 0, "completed", entry_sha256=entry_sha)
+        ledger.ensure(spelling)
+        ledger.mark(spelling, "stored", entry_count=1)
+
+        def stored_raw_kinds() -> set[str]:
+            ref = cache.execute(
+                "SELECT raw_response_ref FROM ulif_dictua_entries WHERE normalized_query = ?", (spelling,)
+            ).fetchone()[0]
+            manifest = cache.execute(
+                "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?", (ref.removeprefix("sha256:"),)
+            ).fetchone()[0]
+            return set(json.loads(manifest))
+
+        assert parse_stored(ledger, cache) == 0
+        assert stored_raw_kinds() == {"phraseology"}
+
+        cache.execute("DELETE FROM ulif_dictua_sections")
+        cache.execute("DELETE FROM ulif_dictua_entries")
+        cache.commit()
+        ledger.mark(spelling, "pending")
+        assert ulif_walk._commit_spelling_group(ledger, cache, spelling) == 0
+        assert stored_raw_kinds() == {"phraseology"}
+    finally:
+        cache.close()
+        ledger.close()
+
+
+def test_parse_refuses_mixed_targeted_and_walk_ledger(tmp_path: Path, capsys):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+    cache = prepare_database(db_path)
+    cache.close()
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.ensure_row(1, 0, select_arg="Select$0", stressed_headword="Іши́м", normalized_spelling="ішим")
+        ledger.record_response(spelling="ішим", role="seed", response_sha256="seed", request_sha256="request")
+        cache = prepare_database(db_path)
+        try:
+            with pytest.raises(ValueError, match="mixed targeted run and walk data"):
+                parse_stored(ledger, cache)
+        finally:
+            cache.close()
+    finally:
+        ledger.close()
+    assert ulif_walk.main(["parse", "--state-dir", str(state_dir), "--db", str(db_path)]) == EXIT_USAGE
+    assert "mixed targeted run and walk data" in capsys.readouterr().err
+
+
+def test_fetch_modes_refuse_reusing_the_opposite_state_dir(tmp_path: Path, capsys):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database, run_fetch
+
+    db_path = tmp_path / "cache.db"
+    prepare_database(db_path).close()
+
+    run_state = tmp_path / "run-state"
+    run_ledger = SpellingLedger(run_state / "ledger.sqlite")
+    run_ledger.set_meta("mode", "run")
+    run_ledger.close()
+    assert (
+        run_walk(
+            state_dir=run_state,
+            db_path=db_path,
+            transport=lambda *_: pytest.fail("mixed-mode walk made a request"),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_USAGE
+    )
+    assert "targeted run data in --state-dir" in capsys.readouterr().err
+
+    walk_state = tmp_path / "walk-state"
+    walk_ledger = SpellingLedger(walk_state / "ledger.sqlite")
+    walk_ledger.set_meta("mode", "walk")
+    walk_ledger.close()
+    assert (
+        run_fetch(
+            spellings=["ішим"],
+            state_dir=walk_state,
+            db_path=db_path,
+            transport=lambda *_: pytest.fail("mixed-mode run made a request"),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_USAGE
+    )
+    assert "walk data in --state-dir" in capsys.readouterr().err
 
 
 def test_resume_after_injected_mid_page_failure_refetches_nothing_already_stored(tmp_path: Path):
