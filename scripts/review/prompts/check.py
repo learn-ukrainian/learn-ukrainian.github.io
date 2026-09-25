@@ -1,22 +1,28 @@
-"""Check rendered reviewer prompt for contract violations (#8430 Part R2 item 1).
+"""Check a rendered reviewer prompt against the review contract (#8430 Part R2 item 1).
 
-Validates:
-- Every pin the manifest names exists and hashes to its recorded sha256, before anything else
-  is read for any other purpose (a failure returns at once)
-- No v1 path references (curriculum/l2-uk-en/a1/, plans/)
-- No other module's slug: the level's module list, the pinned arc, module locators in the
-  prompt, and any slug the driver adds
-- No writer prompt or writer self-assessment leakage
-- No earlier edition of the lesson (except re-review's diff and previous findings), taken
-  from the content-addressed lesson snapshots of the lesson's own history
-- No unresolved Jinja placeholders in the template-produced text ({%, %}, {{, }}, TODO, : None)
-- Every file read was a pin the manifest names and its sha256 matched
+The contract (``docs/epics/fresh-build-review-contracts.md``, principle 4 and "The review attempt
+manifest (r4)") is about **which documents** a reviewer receives: never the writer's prompt,
+reasoning or self-assessment, no earlier edition, no other module's content, and nothing that the
+attempt manifest does not name and hash. So this checker proves deterministic facts about documents
+and never scans the text of a pinned input for leaks:
 
-Pins are found the way the engine records them (``pinned_entries``): any object with a
-``path`` and a ``sha256`` anywhere in the manifest. Each pinned file is read once, verified,
-and that verified text serves every later check. The checker is a verifier, not a reviewer
-input: beyond the pins it reads the module manifest and the lesson's content-addressed
-snapshots, and lists them as ``verifier_reads`` (they never reach the rendered prompt).
+1. **Pin eligibility** (``eligibility.pin_refusals``): every pinned file is an input the contract
+   lists for this manifest kind, at this module's own path for the current build. A v1 or archive
+   path, another module's file, a writer file or a superseded snapshot is refused by a named code
+   before anything is read.
+2. **Exact render**: every pin's sha256 is verified, then the prompt is rendered again from the
+   manifest through the same ``render.py`` path. The prompt file must equal that render byte for byte
+   (and its ``.sha256`` sidecar its hash), so no appended or altered text, no fence trick, and no read
+   of an unpinned file can pass.
+3. **Template lint**: what the *templates* say. Every ``*.md.j2`` is linted, and so is a render of the
+   template in use with every pinned datum replaced by a sentinel (template-produced text only). The
+   lint refuses another module's slug, a v1 path, writer or earlier-edition wording, unresolved
+   placeholders and an unclosed fence. Pinned data is never text-scanned: a rebuilt lesson legitimately
+   shares text with its earlier edition, and lesson content may use an English word that is also a
+   module slug; neither is a contract violation.
+
+Beyond the pins the checker reads the module manifest (for the level's slugs) and the templates, and
+lists them as ``verifier_reads``; they never reach the rendered prompt.
 """
 
 from __future__ import annotations
@@ -29,10 +35,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import jinja2
 import yaml
 
 from scripts.build.fresh.manifest import pinned_entries
-from scripts.review.prompts.render import RenderError, resolve_template_name
+from scripts.review.prompts.eligibility import pin_refusals
+from scripts.review.prompts.render import RenderError, render, resolve_template_name
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PROMPTS_DIR = Path(__file__).resolve().parent
@@ -68,6 +76,7 @@ WRITER_LEAKAGE_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"\bnotes?\s+to\s+(?:the\s+)?reviewer\b", re.IGNORECASE),
 )
 
+#: A first review's template must not talk of an earlier edition; a re-review's names its diff and findings.
 EARLIER_EDITION_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"\bearlier edition\b", re.IGNORECASE),
     re.compile(r"\bprevious edition\b", re.IGNORECASE),
@@ -97,6 +106,21 @@ PLACEHOLDER_MARKERS: tuple[str, ...] = (
     "__PLACEHOLDER__",
 )
 
+#: One-word module slugs (across the level lists of ``curriculum.yaml``) that are also ordinary English words
+#: the authored templates use as prose. They are the only slugs a template may contain; a test keeps this
+#: set equal to the collisions the shipped templates really have. Pinned data is never scanned, so it
+#: needs no such exemption.
+TEMPLATE_PROSE_SLUGS: frozenset[str] = frozenset({"comparison", "euphony", "review", "surzhyk"})
+
+#: A module locator: the level directory of a plan, evidence pack, scope sidecar or built page, then the slug.
+MODULE_LOCATOR = re.compile(
+    r"(?:lesson-plans|_scope|evidence|site/src/content/docs)/(?:[a-z0-9]+-)?[a-z0-9]+/(?P<slug>[A-Za-z0-9][A-Za-z0-9-]*)"
+)
+#: The module manifest the level-wide slug list comes from (a verifier read, never a reviewer input).
+MODULE_MANIFEST = "curriculum/l2-uk-en/curriculum.yaml"
+FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,})[^`]*$")
+JINJA_TAG = re.compile(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", re.DOTALL)
+
 
 @dataclass(frozen=True)
 class RenderedPromptCheckResult:
@@ -118,12 +142,6 @@ class RenderedPromptCheckResult:
 
 def compute_sha256(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
-
-
-def _collect_allowed_manifest_paths(manifest: dict[str, Any], repo_root: Path) -> dict[Path, str]:
-    """Every pinned file, by resolved path, with the sha256 the manifest records."""
-    root = repo_root.resolve()
-    return {(root / entry["path"]).resolve(): str(entry["sha256"]) for _, entry in pinned_entries(manifest)}
 
 
 def _verify_manifest_inputs(manifest: dict[str, Any], repo_root: Path, errors: list[str]) -> dict[Path, bytes]:
@@ -168,90 +186,22 @@ def _verify_manifest_inputs(manifest: dict[str, Any], repo_root: Path, errors: l
     return verified
 
 
-TAXONOMY_EXEMPT_WORDS: frozenset[str] = frozenset(
-    {"euphony", "register", "recap", "review", "comparison", "language", "grammar"}
-)
-
-
-def _is_taxonomy_boilerplate_line(line: str) -> bool:
-    line_lower = line.lower()
-    return any(
-        marker in line_lower
-        for marker in (
-            "sub_dimension:",
-            "register, euphony, stress",
-            "russianism | surzhyk",
-            "`register` and `euphony`",
-            "register and euphony",
-            "dimension:",
-            "taxonomy:",
-            "checks:",
-            "review kind",
-            "lesson review",
-            "plan review",
-        )
-    )
-
-
-#: A module locator: the level directory of a plan, evidence pack, scope sidecar or built page, then the slug.
-MODULE_LOCATOR = re.compile(
-    r"(?:lesson-plans|_scope|evidence|site/src/content/docs)/(?:[a-z0-9]+-)?[a-z0-9]+/(?P<slug>[A-Za-z0-9][A-Za-z0-9-]*)"
-)
-
-
-#: The module manifest the level-wide slug list comes from (a verifier read, never a reviewer input).
-MODULE_MANIFEST = "curriculum/l2-uk-en/curriculum.yaml"
-#: Where every manifest write keeps the exact bytes of the lesson it records (``scripts.build.fresh.manifest``).
-EVIDENCE_ROOT = "curriculum/l2-uk-en/evidence"
-LESSON_SNAPSHOT = re.compile(r"lesson\.(?P<digest>[0-9a-f]{64})\.mdx\Z")
-DIFF_BASE = re.compile(r"(?m)^--- a/\S*@(?P<prefix>[0-9a-f]{12})\s*$")
-#: Shortest earlier-edition line treated as a passage (shorter lines are template and markup noise).
-MIN_PASSAGE = 20
-FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,})[^`]*$")
-
-
 def _slug_pattern(slug: str) -> re.Pattern[str]:
     """The slug as a whole token: not part of a longer slug, identifier or hyphenated word."""
     return re.compile(rf"(?<![A-Za-z0-9_-]){re.escape(slug)}(?![A-Za-z0-9_-])")
 
 
-def _template_text(prompt: str, errors: list[str]) -> str:
-    """The prompt without its fenced data blocks: what the template itself produced.
-
-    The renderer fences every pinned file it inserts with a fence longer than any backtick run
-    inside it, so a block closes only at its own fence. An unclosed fence would hide the rest of
-    the prompt from every scan of template text, so it is an error.
-    """
-    kept: list[str] = []
+def _unclosed_fence(text: str) -> bool:
+    """Whether a fenced block in ``text`` is never closed (a fence closes only at its own or a longer run)."""
     closing: str | None = None
-    for line in prompt.splitlines():
+    for line in text.splitlines():
         if closing is None:
             opening = FENCE_OPEN.match(line)
             if opening:
                 closing = opening.group("fence")
-            else:
-                kept.append(line)
         elif re.fullmatch(rf" {{0,3}}`{{{len(closing)},}}\s*", line):
             closing = None
-    if closing is not None:
-        errors.append("unbalanced_data_fence: a fenced data block is never closed")
-    return "\n".join(kept)
-
-
-def _pinned_arc_positions(
-    manifest_doc: dict[str, Any], root: Path, verified: dict[Path, bytes]
-) -> list[dict[str, Any]]:
-    """The positions of the pinned arc (``inputs.arc``), from its already verified bytes; empty when none is pinned."""
-    entry = dict(pinned_entries(manifest_doc)).get("inputs.arc")
-    data = verified.get((root / entry["path"]).resolve()) if entry else None
-    if data is None:
-        return []
-    try:
-        arc = yaml.safe_load(data.decode("utf-8"))
-    except (UnicodeDecodeError, yaml.YAMLError):
-        return []
-    positions = arc.get("positions", []) if isinstance(arc, dict) else []
-    return [item for item in positions if isinstance(item, dict)]
+    return closing is not None
 
 
 def _level_slugs(manifest_doc: dict[str, Any], root: Path, verifier_reads: list[str], errors: list[str]) -> set[str]:
@@ -279,117 +229,88 @@ def _level_slugs(manifest_doc: dict[str, Any], root: Path, verifier_reads: list[
     return slugs
 
 
-def _template_source(
-    manifest_doc: dict[str, Any],
-    template_name: str | None,
-    prompts_dir: Path | None,
-    root: Path,
-    verifier_reads: list[str],
-    errors: list[str],
-) -> str:
-    """The unrendered template the prompt came from (a verifier read): its own words are authored, not leaked."""
-    try:
-        path = (prompts_dir or PROMPTS_DIR).resolve() / resolve_template_name(manifest_doc, template_name)
-    except RenderError as err:
-        errors.append(f"template_unavailable: {err}")
-        return ""
-    if not path.is_file():
-        errors.append(f"template_unavailable: {path.as_posix()} does not exist")
-        return ""
-    verifier_reads.append(path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix())
-    return path.read_text(encoding="utf-8")
-
-
-def _earlier_editions(
-    manifest_doc: dict[str, Any],
-    root: Path,
-    verified: dict[Path, bytes],
-    verifier_reads: list[str],
-    errors: list[str],
-) -> list[tuple[str, bytes]]:
-    """Every earlier edition of this lesson, from the content-addressed snapshots its manifest writes kept.
-
-    The snapshots sit next to the manifest history, named by the sha256 of their bytes. The current
-    lesson is not earlier, and a re-review's diff base is the one edition its pinned diff is
-    allowed to quote, so both are left out. A snapshot whose bytes do not hash to its name is an error.
-    """
-    if manifest_doc.get("kind") != "lesson":
-        return []
-    pins = dict(pinned_entries(manifest_doc))
-    lesson = pins.get("inputs.lesson")
-    number, level, slug = manifest_doc.get("lesson"), manifest_doc.get("level"), manifest_doc.get("slug")
-    if lesson is None or not (isinstance(number, int) and level and slug):
-        return []
-    skipped = {str(lesson["sha256"])}
-    diff = pins.get("diff")
-    if manifest_doc.get("previous_attempt") and diff is not None:
-        diff_text = verified.get((root / diff["path"]).resolve(), b"").decode("utf-8", errors="replace")
-        base = DIFF_BASE.search(diff_text)
-        if base is None and diff_text.strip():
-            errors.append(
-                "earlier_edition: the pinned diff names no base lesson snapshot, so earlier editions are unknown"
-            )
-            return []
-        skipped.add(base.group("prefix") if base else "")
-    directory = root / EVIDENCE_ROOT / str(level) / "_state" / str(slug) / "manifests" / f"lesson-{number}"
-    editions: list[tuple[str, bytes]] = []
-    for snapshot in sorted(directory.glob("lesson.*.mdx")) if directory.is_dir() else []:
-        named = LESSON_SNAPSHOT.match(snapshot.name)
-        if named is None or any(named.group("digest").startswith(digest) for digest in skipped if digest):
-            continue
-        data = snapshot.read_bytes()
-        verifier_reads.append(snapshot.relative_to(root).as_posix())
-        if compute_sha256(data) != named.group("digest"):
-            errors.append(f"input_hash_mismatch: lesson snapshot {snapshot.name} does not hash to its name")
-        else:
-            editions.append((snapshot.name, data))
-    return editions
-
-
-def _check_earlier_edition(
-    label: str, earlier_bytes: bytes, pinned_texts: list[str], prompt: str, errors: list[str]
+def _lint_template_text(
+    text: str, label: str, *, own_slug: Any, foreign_slugs: set[str], rereview: bool, rendered: bool, errors: list[str]
 ) -> None:
-    """The overlap rule: earlier text a pinned file also holds (current lesson, diff, findings) is manifested.
+    """Lint text a template produced (or, unrendered, its literal text): never pinned data."""
+    for pat in FORBIDDEN_V1_PATTERNS:
+        match = pat.search(text)
+        if match:
+            errors.append(f"forbidden_v1_path: {label} contains a v1 path matching {pat.pattern!r}: {match.group(0)!r}")
+    for pat in WRITER_LEAKAGE_PATTERNS:
+        match = pat.search(text)
+        if match:
+            errors.append(f"writer_prompt_or_assessment: {label} contains forbidden writer text: {match.group(0)!r}")
+    for pat in REREVIEW_FULL_EDITION_PATTERNS if rereview else EARLIER_EDITION_PATTERNS:
+        match = pat.search(text)
+        if match:
+            errors.append(f"earlier_edition: {label} contains earlier edition text: {match.group(0)!r}")
+    # A slug the level lists is another module's unless it is this one's; an ordinary word the templates
+    # use as prose (TEMPLATE_PROSE_SLUGS) is only an identifier where it stands in a module locator.
+    for locator in MODULE_LOCATOR.finditer(text):
+        if locator.group("slug") != own_slug:
+            errors.append(f"forbidden_module_slug: {label} has a locator into another module: {locator.group(0)!r}")
+    for slug in sorted(foreign_slugs - {own_slug} - TEMPLATE_PROSE_SLUGS):
+        if _slug_pattern(slug).search(text):
+            errors.append(f"forbidden_module_slug: {label} names another module slug {slug!r}")
+    if _unclosed_fence(text):
+        errors.append(f"unbalanced_data_fence: {label} opens a fenced block it never closes")
+    for marker in PLACEHOLDER_MARKERS:
+        if marker in text:
+            errors.append(f"unresolved_placeholder: {label} contains placeholder token {marker!r}")
+    if rendered:
+        if "{%" in text or "%}" in text:
+            errors.append(f"unresolved_placeholder: {label} has an unrendered Jinja statement tag ({{% or %}})")
+        if "{{" in text or "}}" in text:
+            errors.append(f"unresolved_placeholder: {label} has an unrendered Jinja expression tag ({{{{ or }}}})")
+        for line in text.splitlines():
+            if ": None" in line and not line.strip().startswith("#"):
+                errors.append(f"unresolved_placeholder: {label} rendered a variable as 'None': {line.strip()!r}")
 
-    What only the earlier edition holds must not reach the prompt: not its bytes, its hash, or any
-    passage (line) that no pinned file carries.
-    """
-    earlier_text = earlier_bytes.decode("utf-8", errors="replace").strip()
-    if not earlier_text or any(earlier_text in text for text in pinned_texts):
-        return
-    earlier_sha = compute_sha256(earlier_bytes)
-    if earlier_sha in prompt:
-        errors.append(f"earlier_edition: prompt contains unmanifested earlier edition hash {earlier_sha} from {label}")
-    if len(earlier_text) >= 10 and earlier_text in prompt:
-        errors.append(f"earlier_edition: prompt contains unmanifested earlier edition bytes from {label}")
-        return
-    for line in earlier_text.splitlines():
-        passage = line.strip()
-        if len(passage) >= MIN_PASSAGE and passage in prompt and not any(passage in text for text in pinned_texts):
-            errors.append(
-                f"earlier_edition: prompt contains an unmanifested earlier edition passage from {label}: {passage!r}"
-            )
-            return
+
+def _template_paths(prompts_dir: Path) -> list[Path]:
+    return sorted(prompts_dir.glob("*.md.j2"))
 
 
-def _derive_foreign_slugs(
+def _lint_templates(
     manifest_doc: dict[str, Any],
-    positions: list[dict[str, Any]],
-    other_slugs: set[str] | list[str] | None = None,
-    rendered_prompt: str = "",
-    level_slugs: set[str] | None = None,
-) -> set[str]:
-    """Foreign module slugs from the pinned arc, the prompt's own module locators, the driver and the level's list.
-
-    The module manifest lists every slug of the level, so any of them other than this module's own is foreign.
-    """
-    current_slug = manifest_doc.get("slug")
-    slugs: set[str] = set(other_slugs or []) | set(level_slugs or [])
-    slugs.update(str(pos["slug"]) for pos in positions if pos.get("slug"))
-    slugs.update(match.group("slug") for match in MODULE_LOCATOR.finditer(rendered_prompt))
-    if current_slug:
-        slugs.discard(current_slug)
-    return slugs
+    used_text: str | None,
+    used_name: str,
+    prompts_dir: Path,
+    root: Path,
+    foreign_slugs: set[str],
+    verifier_reads: list[str],
+    errors: list[str],
+) -> None:
+    """Lint every template in the directory (literal text) and the render of the one in use (sentinel data)."""
+    parser = jinja2.Environment()
+    for path in _template_paths(prompts_dir):
+        verifier_reads.append(path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix())
+        source = path.read_text(encoding="utf-8")
+        try:
+            parser.parse(source)
+        except jinja2.TemplateSyntaxError as err:
+            errors.append(f"template_invalid: {path.name} does not parse ({err})")
+            continue
+        _lint_template_text(
+            JINJA_TAG.sub("", source),
+            f"template {path.name}",
+            own_slug=manifest_doc.get("slug"),
+            foreign_slugs=foreign_slugs,
+            rereview="rereview" in path.name,
+            rendered=False,
+            errors=errors,
+        )
+    if used_text is not None:
+        _lint_template_text(
+            used_text,
+            f"the render of {used_name} without its pinned data",
+            own_slug=manifest_doc.get("slug"),
+            foreign_slugs=foreign_slugs,
+            rereview="rereview" in used_name or bool(manifest_doc.get("previous_attempt")),
+            rendered=True,
+            errors=errors,
+        )
 
 
 def check_prompt(
@@ -399,11 +320,10 @@ def check_prompt(
     *,
     repo_root: Path | None = None,
     files_read: list[Path | str] | None = None,
-    other_slugs: set[str] | list[str] | None = None,
-    earlier_editions: list[Path | str] | None = None,
+    recorded_sha256: str | None = None,
     prompts_dir: Path | None = None,
 ) -> RenderedPromptCheckResult:
-    """Validate a rendered reviewer prompt against all contract requirements."""
+    """Validate a rendered reviewer prompt: eligible pins, exact re-render, clean templates."""
     root = (repo_root or REPO_ROOT).resolve()
     errors: list[str] = []
     verifier_reads: list[str] = []
@@ -428,118 +348,57 @@ def check_prompt(
             verifier_reads=verifier_reads,
         )
 
-    # 1. Verify every pin's hash before any pinned content is used for anything else
+    # 1. Pin eligibility: which documents may reach the reviewer (nothing is read yet)
+    errors.extend(str(refusal) for refusal in pin_refusals(manifest_doc, root))
+    if errors:
+        return result()
+
+    # 2. Every pin's hash is verified before any pinned content is used for anything else
     verified = _verify_manifest_inputs(manifest_doc, root, errors)
     if errors:
         return result()
-    pinned_texts = [data.decode("utf-8", errors="replace") for data in verified.values()]
-
-    # 2. Verify files read: each must be a pin, and every pin was verified above
     if files_read is not None:
         for f in files_read:
             fp = (root / f).resolve() if not Path(f).is_absolute() else Path(f)
             if fp not in verified:
                 errors.append(f"unauthorized_file_read: file {fp.as_posix()} was read but is not in manifest inputs")
 
-    # 3. Check for forbidden v1 paths
-    for pat in FORBIDDEN_V1_PATTERNS:
-        match = pat.search(rendered_prompt)
-        if match:
+    # 3. Exact render: the same render.py path, the same manifest, byte for byte
+    used_text: str | None = None
+    try:
+        rendering = render(manifest_source, template_name, repo_root=root, prompts_dir=prompts_dir)
+    except RenderError as err:
+        errors.append(f"render_failed: {type(err).__name__}: {err}")
+    else:
+        used_text = rendering.template_text
+        if rendered_prompt != rendering.prompt:
+            first = next(
+                (i for i, (a, b) in enumerate(zip(rendered_prompt, rendering.prompt, strict=False)) if a != b),
+                min(len(rendered_prompt), len(rendering.prompt)),
+            )
             errors.append(
-                f"forbidden_v1_path: prompt contains v1 path reference matching {pat.pattern!r}: {match.group(0)!r}"
+                f"prompt_not_exact_render: the prompt ({prompt_sha256}) differs from the render of the manifest "
+                f"({rendering.prompt_sha256}) at character {first}"
+            )
+        if recorded_sha256 is not None and recorded_sha256 != rendering.prompt_sha256:
+            errors.append(
+                f"prompt_sha256_mismatch: the sidecar records {recorded_sha256}, the render of the manifest is "
+                f"{rendering.prompt_sha256}"
             )
 
-    # 4. Foreign module detection (the level's modules, the pinned arc, the prompt's module locators, the driver's list)
-    template_text = _template_text(rendered_prompt, errors)
-    positions = _pinned_arc_positions(manifest_doc, root, verified)
-    allowed_neighbour_slugs: set[str] = set()
-    pos_num = manifest_doc.get("position")
-    if manifest_doc.get("kind") == "plan" and pos_num is not None:
-        for pos in positions:
-            p_num = pos.get("position")
-            if isinstance(p_num, int) and abs(p_num - int(pos_num)) <= 1 and pos.get("slug"):
-                allowed_neighbour_slugs.add(str(pos["slug"]))
-
-    level_slugs = _level_slugs(manifest_doc, root, verifier_reads, errors)
-    foreign_slugs = _derive_foreign_slugs(manifest_doc, positions, other_slugs, rendered_prompt, level_slugs)
-    explicit_slugs = _derive_foreign_slugs(manifest_doc, positions, other_slugs, rendered_prompt)
-    level_only = {slug for slug in foreign_slugs - explicit_slugs if "-" not in slug}
-    template_source = (
-        _template_source(manifest_doc, template_name, prompts_dir, root, verifier_reads, errors) if level_only else ""
+    # 4. Template lint: the level's other slugs come from the module manifest (a verifier read)
+    foreign = _level_slugs(manifest_doc, root, verifier_reads, errors)
+    used_name = resolve_template_name(manifest_doc, template_name)
+    _lint_templates(
+        manifest_doc,
+        used_text,
+        used_name,
+        (prompts_dir or PROMPTS_DIR).resolve(),
+        root,
+        foreign,
+        verifier_reads,
+        errors,
     )
-
-    for s in sorted(foreign_slugs):
-        if not s or (manifest_doc.get("kind") == "plan" and s in allowed_neighbour_slugs):
-            # Neighbour position references are permitted in plan review context
-            continue
-        pattern = _slug_pattern(s)
-        # A single word can be ordinary prose, so a slug known only as a one-word entry of the level's list
-        # is looked for in the template-produced text, and skipped when the template's own source uses the
-        # word (authored prose such as "comparison"); every other slug (hyphenated, a module locator, the
-        # pinned arc, the driver's) is an identifier wherever it stands.
-        if s in level_only and pattern.search(template_source):
-            continue
-        searched = template_text if s in level_only else rendered_prompt
-        if s in TAXONOMY_EXEMPT_WORDS:
-            lines = searched.splitlines()
-            found = any(pattern.search(line) and not _is_taxonomy_boilerplate_line(line) for line in lines)
-        else:
-            found = bool(pattern.search(searched))
-        if found:
-            errors.append(f"forbidden_module_slug: found other module slug {s!r} in rendered prompt")
-
-    # 5. Check for writer prompt or self-assessment leakage
-    for pat in WRITER_LEAKAGE_PATTERNS:
-        match = pat.search(rendered_prompt)
-        if match:
-            errors.append(f"writer_prompt_or_assessment: prompt contains forbidden writer text: {match.group(0)!r}")
-
-    # 6. Check for earlier edition of the lesson
-    t_name = template_name or ""
-    is_rereview = "rereview" in t_name or bool(manifest_doc.get("previous_attempt"))
-
-    # Earlier editions come from the lesson's own pinned history (every snapshot but the current one and a
-    # re-review's diff base) and, optionally, from the driver.
-    supplied: list[tuple[str, bytes]] = []
-    for item in earlier_editions or []:
-        candidate = (root / item).resolve() if not Path(item).is_absolute() else Path(item)
-        if candidate.is_file():
-            supplied.append((candidate.name, candidate.read_bytes()))
-        else:
-            supplied.append(("supplied text", str(item).encode("utf-8")))
-    for label, data in [*_earlier_editions(manifest_doc, root, verified, verifier_reads, errors), *supplied]:
-        _check_earlier_edition(label, data, pinned_texts, rendered_prompt, errors)
-
-    if is_rereview:
-        for pat in REREVIEW_FULL_EDITION_PATTERNS:
-            match = pat.search(rendered_prompt)
-            if match:
-                errors.append(
-                    f"earlier_edition: prompt contains forbidden full earlier edition text: {match.group(0)!r}"
-                )
-    else:
-        for pat in EARLIER_EDITION_PATTERNS:
-            match = pat.search(rendered_prompt)
-            if match:
-                errors.append(
-                    f"earlier_edition: prompt contains earlier edition or previous attempt text: {match.group(0)!r}"
-                )
-
-    # 7. Check for unresolved Jinja placeholders (in what the template produced; fenced pinned data is literal)
-    if "{%" in template_text or "%}" in template_text:
-        errors.append("unresolved_placeholder: unrendered Jinja statement tag ({% or %}) found in prompt")
-
-    if "{{" in template_text or "}}" in template_text:
-        errors.append("unresolved_placeholder: unrendered Jinja expression tag ({{ or }}) found in prompt")
-
-    for marker in PLACEHOLDER_MARKERS:
-        if marker in rendered_prompt:
-            errors.append(f"unresolved_placeholder: placeholder token {marker!r} found in prompt")
-
-    for line in rendered_prompt.splitlines():
-        if ": None" in line and not line.strip().startswith("#"):
-            errors.append(f"unresolved_placeholder: template variable rendered as 'None': {line.strip()!r}")
-
     return result()
 
 
@@ -555,15 +414,6 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Path to files_read sidecar (default: <prompt_file>.files_read.json)",
     )
-    parser.add_argument(
-        "--earlier-edition",
-        action="append",
-        default=[],
-        help="Path to an earlier edition of the lesson the prompt must not carry (repeatable)",
-    )
-    parser.add_argument(
-        "--other-slug", action="append", default=[], help="Another module's slug the prompt must not name (repeatable)"
-    )
     args = parser.parse_args(argv)
 
     root = Path(args.repo_root) if args.repo_root else REPO_ROOT
@@ -575,7 +425,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     prompt_text = prompt_path.read_text(encoding="utf-8")
 
-    # The CLI must read the files_read sidecar and must not run without it
+    # The CLI must read the files_read sidecar and the prompt's sha256 sidecar, and must not run without them
     files_read_path = None
     if args.files_read:
         files_read_path = (
@@ -590,6 +440,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if files_read_path is None or not files_read_path.is_file():
         print(f"FAIL: Missing required files_read sidecar for {prompt_path.name}: CLI must not run without it")
+        return 1
+    sha_sidecar = prompt_path.with_name(f"{prompt_path.name}.sha256")
+    if not sha_sidecar.is_file():
+        print(f"FAIL: Missing required sha256 sidecar for {prompt_path.name}: CLI must not run without it")
+        return 1
+    recorded = sha_sidecar.read_text(encoding="ascii").strip()
+    if recorded != compute_sha256(prompt_text.encode("utf-8")):
+        print(f"FAIL: The sha256 sidecar {sha_sidecar.name} does not match the prompt file")
         return 1
 
     try:
@@ -608,8 +466,7 @@ def main(argv: list[str] | None = None) -> int:
         template_name=args.template,
         repo_root=root,
         files_read=files_read_list,
-        other_slugs=set(args.other_slug),
-        earlier_editions=list(args.earlier_edition),
+        recorded_sha256=recorded,
         prompts_dir=Path(args.prompts_dir) if args.prompts_dir else None,
     )
 

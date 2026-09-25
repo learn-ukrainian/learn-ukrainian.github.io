@@ -7,7 +7,8 @@ a ``sha256`` anywhere in the manifest is a pin (``scripts.build.fresh.manifest
 .pinned_entries``), so ``inputs.*``, ``module_digest``, ``diff``,
 ``previous_attempt.*`` and ``upstream_lessons[*]`` are read alike. A file is read
 only through a pin, only after its bytes match the pin's sha256, and no path is
-derived from another path.
+derived from another path. A pin that the contract does not let this reviewer receive
+(``eligibility``) is refused before anything is read.
 """
 
 from __future__ import annotations
@@ -16,6 +17,7 @@ import argparse
 import hashlib
 import json
 import re
+from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -25,6 +27,7 @@ import yaml
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from scripts.build.fresh.manifest import learner_state_sha256, pinned_entries
+from scripts.review.prompts.eligibility import Refusal, pin_refusals
 from scripts.review.receipts import REVIEW_TOOLS
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -90,6 +93,14 @@ class WordsLockMismatchError(RenderError):
 
 class LearnerStateMismatchError(RenderError):
     """The materialized learner state does not hash to the identity the manifest records."""
+
+
+class PinIneligibleError(RenderError):
+    """A pinned input is not one the contract lets this reviewer receive (see ``eligibility``)."""
+
+    def __init__(self, refusals: list[Refusal]):
+        self.refusals = refusals
+        super().__init__("; ".join(str(refusal) for refusal in refusals))
 
 
 def compute_sha256(content: bytes) -> str:
@@ -354,18 +365,56 @@ def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: Manif
     return context
 
 
-def render_prompt(
+#: Context entries that come from the manifest itself, not from the content of a pinned file.
+MANIFEST_CONTEXT_KEYS = frozenset(
+    {"manifest", "manifest_sha256", "review_tools", "learner_state_sha256", "previous_attempt_id"}
+)
+#: What stands for pinned content in the template-only render.
+SENTINEL = "PINNED-DATUM"
+
+
+def _sentinel(value: Any) -> Any:
+    if isinstance(value, str):
+        return SENTINEL
+    if isinstance(value, dict):
+        return {key: _sentinel(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_sentinel(item) for item in value] or [{"n": 1, "path": SENTINEL, "content": SENTINEL}]
+    return value
+
+
+def sentinel_context(context: dict[str, Any]) -> dict[str, Any]:
+    """The render context with every piece of pinned content replaced by one sentinel string.
+
+    Structure is kept (lists keep their length, an empty one gets a single item so loop bodies
+    render too), so rendering it yields exactly the text the template itself produces.
+    """
+    return {key: value if key in MANIFEST_CONTEXT_KEYS else _sentinel(value) for key, value in context.items()}
+
+
+@dataclass(frozen=True)
+class Rendering:
+    """A rendered prompt with what the checker needs to prove it is exact and clean."""
+
+    prompt: str
+    prompt_sha256: str
+    #: The same template rendered with every pinned datum replaced by ``SENTINEL``: template-produced text only.
+    template_text: str
+    files_read: list[Path]
+    root: Path
+
+
+def render(
     manifest_source: Path | str | dict[str, Any],
     template_name: str | None = None,
     *,
     repo_root: Path | None = None,
-    output_path: Path | None = None,
     prompts_dir: Path | None = None,
-) -> tuple[str, str, list[Path]]:
-    """Render a reviewer prompt from manifest inputs and write prompt sha256 beside it.
+) -> Rendering:
+    """Render a reviewer prompt from the manifest's pins alone.
 
-    Returns:
-        tuple[rendered_prompt, prompt_sha256, files_read]
+    Every pin must first be eligible (``eligibility.pin_refusals``, nothing read), then each
+    file is read only through its pin and only when its bytes hash to the pinned sha256.
     """
     root = (repo_root or REPO_ROOT).resolve()
     p_dir = (prompts_dir or PROMPTS_DIR).resolve()
@@ -382,6 +431,9 @@ def render_prompt(
     else:
         raise RenderError(f"invalid manifest source: {type(manifest_source)}")
 
+    refusals = pin_refusals(manifest_doc, root)
+    if refusals:
+        raise PinIneligibleError(refusals)
     reader = ManifestReader(manifest_doc, repo_root=root)
     resolved_template = resolve_template_name(manifest_doc, template_name)
 
@@ -406,8 +458,30 @@ def render_prompt(
 
     context = _build_context(manifest_doc, manifest_sha256, reader)
     rendered = tmpl.render(**context)
+    return Rendering(
+        prompt=rendered,
+        prompt_sha256=compute_sha256(rendered.encode("utf-8")),
+        template_text=tmpl.render(**sentinel_context(context)),
+        files_read=list(reader.files_read),
+        root=root,
+    )
 
-    prompt_sha256 = compute_sha256(rendered.encode("utf-8"))
+
+def render_prompt(
+    manifest_source: Path | str | dict[str, Any],
+    template_name: str | None = None,
+    *,
+    repo_root: Path | None = None,
+    output_path: Path | None = None,
+    prompts_dir: Path | None = None,
+) -> tuple[str, str, list[Path]]:
+    """Render a reviewer prompt from manifest inputs and write prompt sha256 beside it.
+
+    Returns:
+        tuple[rendered_prompt, prompt_sha256, files_read]
+    """
+    rendering = render(manifest_source, template_name, repo_root=repo_root, prompts_dir=prompts_dir)
+    rendered, prompt_sha256, root = rendering.prompt, rendering.prompt_sha256, rendering.root
 
     if output_path is not None:
         out = Path(output_path)
@@ -417,7 +491,7 @@ def render_prompt(
         sidecar.write_text(f"{prompt_sha256}\n", encoding="ascii")
         files_read_sidecar = out.with_name(f"{out.name}.files_read.json")
         rel_files: list[str] = []
-        for f in reader.files_read:
+        for f in rendering.files_read:
             try:
                 rel_files.append(f.relative_to(root).as_posix())
             except ValueError:
@@ -425,7 +499,7 @@ def render_prompt(
         read_record = {"files_read": rel_files, "verifier_reads": []}  # the checker records what verification read
         files_read_sidecar.write_text(json.dumps(read_record, indent=2) + "\n", encoding="utf-8")
 
-    return rendered, prompt_sha256, list(reader.files_read)
+    return rendered, prompt_sha256, rendering.files_read
 
 
 def main(argv: list[str] | None = None) -> int:
