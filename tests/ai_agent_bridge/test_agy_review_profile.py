@@ -178,7 +178,12 @@ def _fake_branch_diff(name: str, diff_stdout: str, *, fail: str | None = None):
         if command[:2] == ["git", "check-ref-format"]:
             assert command == ["git", "check-ref-format", "--branch", name]
             code = 1 if fail == "check-ref-format" else 0
-            return subprocess.CompletedProcess(command, code, stderr="invalid ref" if code else "")
+            return subprocess.CompletedProcess(
+                command,
+                code,
+                stdout="" if code else f"{name}\n",
+                stderr="invalid ref" if code else "",
+            )
         if command[:2] == ["git", "fetch"]:
             assert command == ["git", "fetch", "origin", _branch_refspec(name)]
             code = 1 if fail == "fetch" else 0
@@ -495,7 +500,7 @@ def test_agy_implementation_dispatch_is_not_review_gated(
         import subprocess
 
         if command[:2] == ["git", "check-ref-format"]:
-            return subprocess.CompletedProcess(command, 0, stdout="")
+            return subprocess.CompletedProcess(command, 0, stdout="feature\n")
         raise AssertionError(f"implementation dispatch must not list a review diff: {command}")
 
     monkeypatch.setattr("subprocess.run", fake_run)
@@ -576,3 +581,78 @@ def test_pr_number_below_one_is_refused(monkeypatch: pytest.MonkeyPatch) -> None
     monkeypatch.setattr("subprocess.run", fake_run)
     with pytest.raises(SystemExit, match="could not list changed files"):
         _handle_acp_compat(_review_args(pr=0), "agy")
+
+
+def _git(repo: str, *args: str) -> None:
+    import subprocess
+
+    from scripts.common.git_context import sanitized_git_env
+
+    completed = subprocess.run(
+        ["git", *args],
+        cwd=repo,
+        check=False,
+        capture_output=True,
+        text=True,
+        env=sanitized_git_env(),
+    )
+    if completed.returncode != 0:
+        detail = (completed.stderr or completed.stdout or "").strip()
+        raise AssertionError(f"git {' '.join(args)} failed: {detail}")
+
+
+def test_validate_plain_branch_name_real_git_refuses_unsafe_names(tmp_path) -> None:
+    """``a..b``, ``x.lock``, a space, and ``@{-1}`` are refused; one plain name is kept.
+
+    ``@{-1}`` is a previous checkout in this repo, so ``check-ref-format --branch``
+    would expand it. The validator must refuse that shorthand instead of returning
+    the expanded name.
+    """
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    root = str(repo)
+    _git(root, "init", "-b", "valid-name")
+    _git(root, "config", "user.email", "t@example.com")
+    _git(root, "config", "user.name", "t")
+    (repo / "f").write_text("hi\n", encoding="utf-8")
+    _git(root, "add", "f")
+    _git(root, "commit", "-m", "init")
+    _git(root, "checkout", "-b", "other")
+
+    for name in ("a..b", "x.lock", "name with space", "@{-1}"):
+        with pytest.raises(UnsafeBranchNameError):
+            validate_plain_branch_name(name, repo_root=root)
+
+    assert validate_plain_branch_name("valid-name", repo_root=root) == "valid-name"
+
+
+def test_branch_changed_paths_ignore_hostile_git_dir(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:
+    """Fetch, rev-parse, and diff must follow ``repo_root``, not the caller's ``GIT_DIR``."""
+    from scripts.ai_agent_bridge._agy import list_branch_changed_paths
+
+    remote = tmp_path / "remote.git"
+    repo = tmp_path / "repo"
+    hostile = tmp_path / "hostile"
+    _git(str(tmp_path), "init", "--bare", str(remote))
+    repo.mkdir()
+    root = str(repo)
+    _git(root, "init", "-b", "trunk")
+    _git(root, "config", "user.email", "t@example.com")
+    _git(root, "config", "user.name", "t")
+    _git(root, "remote", "add", "origin", str(remote))
+    (repo / "base").write_text("base\n", encoding="utf-8")
+    _git(root, "add", "base")
+    _git(root, "commit", "-m", "base")
+    _git(root, "branch", "main")
+    _git(root, "checkout", "-b", "feature")
+    (repo / "notes.txt").write_text("feature\n", encoding="utf-8")
+    _git(root, "add", "notes.txt")
+    _git(root, "commit", "-m", "feature")
+    _git(str(remote), "fetch", root, "main:main", "feature:feature")
+    _git(root, "fetch", "origin", "+refs/heads/main:refs/remotes/origin/main")
+    _git(str(tmp_path), "init", "-b", "main", str(hostile))
+
+    monkeypatch.setenv("GIT_DIR", str(hostile / ".git"))
+    assert list_branch_changed_paths("feature", repo_root=root) == ["notes.txt"]

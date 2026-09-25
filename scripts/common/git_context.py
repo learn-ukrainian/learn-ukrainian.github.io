@@ -48,14 +48,17 @@ def validate_plain_branch_name(branch: str, *, repo_root: str | Path) -> str:
     """Reject an unsafe branch name, then confirm it with ``git check-ref-format``.
 
     Shared by the Gemini remote-branch gate, ``ask --pr`` head resolution, and
-    ``delegate --branch`` reuse. Prefix and ``:`` checks run before git so a
-    refspec-shaped name never becomes a command argument.
+    ``delegate --branch`` reuse. Prefix, ``:``, and ``@{`` checks run before git
+    so a refspec or ``@{-N}`` shorthand never becomes a command argument.
+    ``check-ref-format --branch`` expands ``@{-N}`` to a previous checkout and
+    prints that name; the value returned is git's stdout, the name git accepted.
     """
     normalized = branch.strip()
     if (
         not normalized
         or normalized.startswith(_UNSAFE_BRANCH_PREFIXES)
         or ":" in normalized
+        or "@{" in normalized
         or "\n" in normalized
         or "\x00" in normalized
     ):
@@ -77,4 +80,14 @@ def validate_plain_branch_name(branch: str, *, repo_root: str | Path) -> str:
         raise UnsafeBranchNameError(
             f"refusing branch name {branch!r}: {detail or f'exit {proc.returncode}'}"
         )
-    return normalized
+    confirmed = (proc.stdout or "").strip()
+    if (
+        not confirmed
+        or "\n" in confirmed
+        or confirmed.startswith(_UNSAFE_BRANCH_PREFIXES)
+        or ":" in confirmed
+        or "@{" in confirmed
+        or "\x00" in confirmed
+    ):
+        raise UnsafeBranchNameError(f"refusing branch name {branch!r}: git confirmed {confirmed!r}")
+    return confirmed

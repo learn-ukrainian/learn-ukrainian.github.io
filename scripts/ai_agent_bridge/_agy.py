@@ -170,7 +170,12 @@ def gemini_content_paths_error(paths: list[str]) -> str | None:
     return None
 
 
-def _run_changed_path_command(command: list[str], *, cwd: str) -> str:
+def _run_changed_path_command(
+    command: list[str],
+    *,
+    cwd: str,
+    env: dict[str, str] | None = None,
+) -> str:
     import subprocess
 
     try:
@@ -181,6 +186,7 @@ def _run_changed_path_command(command: list[str], *, cwd: str) -> str:
             text=True,
             check=False,
             timeout=60,
+            env=env,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise GeminiChangedPathListError(str(exc)) from exc
@@ -239,6 +245,7 @@ def list_branch_changed_paths(branch: str, *, repo_root: str) -> list[str]:
     from scripts.common.git_context import (
         UnsafeBranchNameError,
         origin_tracking_refspec,
+        sanitized_git_env,
         validate_plain_branch_name,
     )
 
@@ -246,14 +253,17 @@ def list_branch_changed_paths(branch: str, *, repo_root: str) -> list[str]:
         name = validate_plain_branch_name(branch, repo_root=repo_root)
     except UnsafeBranchNameError as exc:
         raise GeminiChangedPathListError(f"refusing to diff branch {branch!r}: {exc}") from exc
+    git_env = sanitized_git_env()
     _run_changed_path_command(
         ["git", "fetch", "origin", origin_tracking_refspec(name)],
         cwd=repo_root,
+        env=git_env,
     )
     sha = _full_git_sha(
         _run_changed_path_command(
             ["git", "rev-parse", "--verify", f"refs/remotes/origin/{name}"],
             cwd=repo_root,
+            env=git_env,
         )
     )
     if sha is None:
@@ -261,6 +271,7 @@ def list_branch_changed_paths(branch: str, *, repo_root: str) -> list[str]:
     raw = _run_changed_path_command(
         ["git", "diff", "--name-only", f"origin/main...{sha}"],
         cwd=repo_root,
+        env=git_env,
     )
     return [line.strip() for line in raw.splitlines() if line.strip()]
 

@@ -5580,6 +5580,8 @@ def _make_run_stub(
 
     def fake_run(cmd, **kwargs):
         calls.append(list(cmd))
+        if cmd[:3] == ["git", "check-ref-format", "--branch"]:
+            return subprocess.CompletedProcess(cmd, 0, f"{cmd[-1]}\n", "")
         if cmd[:2] == ["git", "fetch"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
         if cmd[:2] == ["git", "rev-parse"]:
@@ -6478,6 +6480,8 @@ def test_branch_reuse_resets_behind_local_ref_to_fetched_origin(tmp_tasks_dir, t
 
     def fake_run(cmd, **_kwargs):
         calls.append(list(cmd))
+        if cmd[:3] == ["git", "check-ref-format", "--branch"]:
+            return subprocess.CompletedProcess(cmd, 0, f"{cmd[-1]}\n", "")
         if cmd[:2] == ["git", "fetch"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
         if cmd[:2] == ["git", "rev-parse"]:
@@ -6774,6 +6778,8 @@ def test_branch_reuse_refuses_diverged_local_ref(tmp_tasks_dir, tmp_path, monkey
     branch = "claude/predeploy-visibility"
 
     def fake_run(cmd, **_kwargs):
+        if cmd[:3] == ["git", "check-ref-format", "--branch"]:
+            return subprocess.CompletedProcess(cmd, 0, f"{cmd[-1]}\n", "")
         if cmd[:2] == ["git", "fetch"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
         if cmd[:2] == ["git", "rev-parse"]:
@@ -6858,11 +6864,13 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
     assert lines[1] == state["run_nonce"]
 
 
-def test_branch_reuse_refuses_protected_branch_before_git_calls(tmp_path, monkeypatch):
+def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkeypatch):
     calls: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
         calls.append(list(cmd))
+        if cmd[:3] == ["git", "check-ref-format", "--branch"]:
+            return subprocess.CompletedProcess(cmd, 0, f"{cmd[-1]}\n", "")
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
@@ -6874,7 +6882,7 @@ def test_branch_reuse_refuses_protected_branch_before_git_calls(tmp_path, monkey
             raw_path=str(tmp_path / "unsafe"),
             branch="main",
         )
-    assert calls == []
+    assert calls == [["git", "check-ref-format", "--branch", "main"]]
 
 
 def test_branch_reuse_refuses_branch_checked_out_in_another_worktree(tmp_path, monkeypatch):
