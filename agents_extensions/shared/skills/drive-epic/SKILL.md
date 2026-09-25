@@ -466,8 +466,11 @@ catalog and the served `/api/rules` reviewer-seat rule. Do **not** hardcode Clau
 Sonnet (or any one model). The writer's family is never eligible.
 
 **Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**,
-chosen from the "Code review" row of `model-assignment.md` (Gemini reviews Ukrainian
-only, never code — operator 2026-09-25). **VPS drivers** may still
+chosen from the "Code review" row of `model-assignment.md`
+(GLM from the Cloud catalog, Grok, GPT, Kimi K3, … — whatever the
+live catalog lists that is outside the author's family and meets
+that Code review routing). Gemini/AGY reviews Ukrainian only, never code
+(operator 2026-09-25). **VPS drivers** may still
 use the existing `ask-<lane>` / `delegate.py` review path below; the landing order
 in §7 is the same.
 

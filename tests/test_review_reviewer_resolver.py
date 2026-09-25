@@ -345,7 +345,7 @@ def test_real_routing_budget_payload_is_normalized_without_crashing():
     assert resolution.selected.health == "degraded"
 
 
-def test_real_gemini_lane_outage_excludes_agy_candidates():
+def test_gemini_lane_outage_does_not_create_code_review_route():
     snapshot = {
         "agents": {
             "gemini": {"status": "unknown", "health": {"healthy": False}},
@@ -354,9 +354,38 @@ def test_real_gemini_lane_outage_excludes_agy_candidates():
     }
     resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk="medium", routing_snapshot=snapshot))
     assert resolution.selected.name == "claude-sonnet-5"
-    gemini = next(entry for entry in resolution.trace if entry.name == "gemini-3.1-pro")
-    assert gemini.health == "unhealthy"
-    assert gemini.status == "excluded"
+    assert all(not entry.concrete_model.startswith("gemini-") for entry in resolution.trace)
+
+
+def test_gemini_code_review_refused_even_in_injected_ladder_and_pin(monkeypatch):
+    injected = replace(
+        SONNET_5,
+        name="injected-gemini",
+        concrete_model="gemini-3.8-flash-high",
+        family="google",
+        route="agy",
+        transport="agy",
+    )
+    inputs = ResolverInputs(author_model="codex", risk="medium")
+    result = evaluate_candidate(injected, inputs)
+    assert result.status == "excluded"
+    assert "operator 2026-09-25" in result.reason
+    resolution = resolve_reviewer(inputs, ladder=((injected,),))
+    assert resolution.selected is None
+    assert resolution.trace[0].status == "excluded"
+    assert "Gemini reviews Ukrainian only, never code" in resolution.trace[0].reason
+    monkeypatch.setitem(REVIEW_CANDIDATES, injected.name, injected)
+    pinned = resolve_reviewer(
+        ResolverInputs(
+            author_model="codex",
+            risk="medium",
+            pinned_candidate=injected.name,
+            pressure_override_reason="explicit regression pin",
+        ),
+        ladder=((injected,),),
+    )
+    assert pinned.selected is None
+    assert "hard eligibility gate" in pinned.fail_closed_reason
 
 
 def test_health_statuses_are_case_normalized_and_unsupported_values_fail_closed():
@@ -981,16 +1010,15 @@ def test_critical_ladder_keeps_authority_before_practical():
 def test_practical_ladder_starts_with_sol_then_opus_fallbacks():
     for risk in ("high", "medium", "low"):
         ladder = REVIEW_LADDERS[risk]
-        assert [rung[0].name for rung in ladder[:6]] == [
+        assert [rung[0].name for rung in ladder[:5]] == [
             "openai_frontier",
             "claude-opus-5-5",
             "claude-opus-5-5-cursor-fallback",
             "claude-sonnet-5",
-            "gemini-3.8-flash",
             "grok-4.7",
         ]
         assert "glm-5.3" not in {c.name for rung in ladder for c in rung}
-        assert ladder[6][0].name == "grok-4.7-cursor-fallback"
+        assert ladder[5][0].name == "grok-4.7-cursor-fallback"
 
 
 def test_candidate_constants_preserve_expected_identity():

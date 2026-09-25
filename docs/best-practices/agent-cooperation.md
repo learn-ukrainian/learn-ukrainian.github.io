@@ -59,9 +59,9 @@ the independent review gate.
 | 🟢 **Зелена команда** (Green) | Codex | Main orchestrator, adversarial reviewer, bug finder, code improver |
 | ⚙️ **Review lane** | DeepSeek | Cheap code/content review and deterministic triage |
 
-Gemini is currently paused for review/merge confidence until the user re-enables
-that lane. Historical Gemini instructions in this document describe old bridge
-behavior; prefer Claude, Codex, Cursor, and DeepSeek for new orchestration work.
+Gemini/AGY handles Ukrainian-language work and review under the LANGUAGE-LANES
+rule. Code review follows `model-assignment.md` Code review row. Historical
+Gemini instructions in this document describe old bridge behavior.
 
 **Both teams are adversarial by design.** The purpose is quality through finding mistakes, not agreement. An approved module means both teams couldn't find serious problems — not that both teams were polite.
 
@@ -75,7 +75,7 @@ Self-review produces inflated scores. Observed in production: Gemini reviewing i
 
 ### Valid review paths
 - ✅ Claude reviews Gemini's content
-- ✅ Gemini reviews Claude's architecture proposals
+- ✅ Gemini reviews Claude's Ukrainian-language content
 - ✅ Codex reviews Claude or Gemini implementation work
 - ✅ Automated audit gates (no LLM bias)
 - ❌ Gemini reviews its own content
@@ -434,11 +434,14 @@ Full guide: [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md).
 - **CC 2.1.119+: `Agent` tool with `isolation: "worktree"` no longer reuses stale worktrees from prior sessions.** Until this fix we avoided the built-in Agent-tool isolation and hand-rolled `git worktree add` (see `.claude/rules/delegate-must-use-worktree.md`). The hand-rolled pattern is still correct — it survives across sessions, shows up in `git worktree list`, and matches our dispatch conventions — but the Agent-tool built-in is now a safe alternative for short-lived, same-session isolation.
 
 ### Direct dispatch (ask-agy / ask-codex)
-For requests needing immediate response:
+For requests needing immediate response. AGY reviews Ukrainian content only
+(`--review --review-profile ukrainian`). Code review uses `ask-codex`.
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
-  "Review posted on #559. Please read and respond." \
-  --task-id issue-559
+  "Перевір український текст у curriculum/l2-uk-en/a1/hello.md." \
+  --task-id issue-559 \
+  --review \
+  --review-profile ukrainian
 
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
   "Bug report posted on #560. Please read and respond." \
@@ -473,8 +476,9 @@ This means the broker can route among Claude, AGY, and Codex. In practice, GitHu
 ### Review Persistence
 
 Gemini CLI review auto-posting is legacy behavior and is not a current route.
-For current Gemini-family review, use AGY via the bridge and record the review
-result in the PR body or GitHub issue explicitly.
+For current Ukrainian-language review by Gemini, use AGY via the bridge and
+record the review result in the PR body or GitHub issue explicitly. Code review
+follows `model-assignment.md` Code review row.
 
 ### Passive notification (MCP send_message)
 For non-blocking FYI messages AGY sees at next session start:
@@ -818,7 +822,7 @@ Never parse Gemini's prose output for structured data.
 ### AGY Model Names
 
 Gemini CLI and Gemini Code Assist are unsupported for current project work.
-For Gemini-family review or support, use AGY through
+For Ukrainian-language Gemini-family review or support, use AGY through
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...` or
 `scripts/delegate.py dispatch --agent agy ...`.
 

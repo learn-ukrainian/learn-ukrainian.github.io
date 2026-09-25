@@ -7321,7 +7321,7 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
     assert lines[1] == state["run_nonce"]
 
 
-def test_branch_reuse_refuses_protected_branch_before_git_calls(tmp_path, monkeypatch):
+def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkeypatch):
     calls: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):

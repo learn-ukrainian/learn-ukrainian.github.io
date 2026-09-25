@@ -437,6 +437,11 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             raise ModelCatalogError(f"review_candidates.{name} cannot use {model_id!r} as a formal review candidate")
         if model_id not in models:
             raise ModelCatalogError(f"review_candidates.{name}.model_id references unknown model {model_id!r}")
+        if model_id.casefold().startswith("gemini-") or candidate.get("route") == "agy":
+            raise ModelCatalogError(
+                f"review_candidates.{name} violates operator 2026-09-25: "
+                "Gemini reviews Ukrainian only, never code (model-assignment.md)"
+            )
         if models[model_id]["lifecycle"] != "active":
             raise ModelCatalogError(f"review candidate {name!r} must reference an active model")
         _require_string(candidate.get("route"), f"review_candidates.{name}.route")
