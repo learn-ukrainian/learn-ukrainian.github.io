@@ -21,6 +21,7 @@ from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.launcher_sandbox import copy_slot_registry
 
 REPO = Path(__file__).resolve().parents[1]
 PUBLIC = (
@@ -229,6 +230,8 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
     watcher.chmod(0o755)
+    # Driver launches check their handoff slot against the real roster (#8303).
+    copy_slot_registry(root)
 
     claim_marker = tmp_path / "lease-claimed"
     close_marker = tmp_path / "lease-closed"
@@ -236,9 +239,6 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
         f"""#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.handoff_slot_registry" ]]; then
-  exit 0  # the sandbox has no roster or bridge package; registration is covered by test_handoff_slot_registry.py
-fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   touch {os.fspath(claim_marker)!r}
   cat <<'JSON'
@@ -393,6 +393,8 @@ def _core_driver_exit_fixture(
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
     watcher.chmod(0o755)
+    # Driver launches check their handoff slot against the real roster (#8303).
+    copy_slot_registry(root)
 
     close_attempts = tmp_path / "close-attempts"
     close_marker = tmp_path / "lease-closed"
@@ -403,9 +405,6 @@ def _core_driver_exit_fixture(
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
         f"""#!/usr/bin/env bash
-if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.handoff_slot_registry" ]]; then
-  exit 0  # the sandbox has no roster or bridge package; registration is covered by test_handoff_slot_registry.py
-fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
