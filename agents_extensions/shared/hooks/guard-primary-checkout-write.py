@@ -104,8 +104,9 @@ This command parser does not model arbitrary interpreters (for example,
 ``python -c``, ``node -e``, or ``perl -e`` writing files), ``$EDITOR``, or
 binaries that write without path arguments. Long-tail writers conservatively
 classify every path-like argument, including read-only inputs such as
-``sort PRIMARY/file -o /tmp/out``; this accepted false positive keeps new
-output options from silently escaping the guard. Targets supplied only through
+``sort PRIMARY/file -o /tmp/out``. Unknown ``--name=value`` options are not
+assumed to name output paths; newly added output options need explicit table
+entries. ``zsh --emulate sh -c`` is not modeled. Targets supplied only through
 stdin or an external file list with unknown contents remain invisible: for
 example, ``find -files0-from /tmp/list -delete`` and
 ``cat /tmp/list | xargs -I{} sh -c 'echo x > {}'`` are allowed from a dispatch
@@ -1147,7 +1148,7 @@ def _long_tail_targets(args: list[str], command: str) -> list[str]:
             name, sep, attached = str(arg[2:]).partition("=")
             if sep:
                 value = arg.tail(len(name) + 3) if isinstance(arg, ShellWord) else attached
-                if long_values.get(name, True):
+                if long_values.get(name, False):
                     words.append(value)
             elif name in long_values and i < len(args):
                 value = args[i]
@@ -1261,8 +1262,6 @@ def _inplace_fixer_targets(command: str, args: list[str]) -> list[str]:
         "--edition",
         "--config-path",
         "-c",
-        "-l",
-        "-e",
     }
     targets: list[str] = []
     skip = False
@@ -1278,6 +1277,9 @@ def _inplace_fixer_targets(command: str, args: list[str]) -> list[str]:
             skip = True
             continue
         if not options_done and command == "shfmt" and arg in {"-i", "-ln"}:
+            skip = True
+            continue
+        if not options_done and command == "gofmt" and arg == "-r":
             skip = True
             continue
         if not options_done and arg.startswith("-"):
@@ -1303,12 +1305,15 @@ def _shell_command_script(args: list[str]) -> str | None:
             i += 1
             continue
         if arg.startswith("-") and not arg.startswith("--"):
+            script_index = i + 1
+            for flag in arg[1:]:
+                if flag in {"o", "O"}:
+                    script_index += 1
             if "c" in arg[1:]:
-                script_index = i + 1
                 if script_index < len(args) and args[script_index] == "--":
                     script_index += 1
                 return args[script_index] if script_index < len(args) else None
-            i += 1
+            i = script_index
             continue
         if arg.startswith(("+O", "-O")):
             i += 1

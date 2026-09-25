@@ -1379,6 +1379,59 @@ def test_issue_8785_option_destinations_follow_target_worktree(repo: Path, templ
     assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "curl --proto=https https://example.test/a -o /tmp/x",
+        "sort --parallel=2 /tmp/in -o /tmp/out",
+        "tar --exclude=AGENTS.md -cf /tmp/out /tmp/in",
+        "tar --exclude='*.pyc' -cf /tmp/out /tmp/in",
+    ],
+)
+def test_issue_8785_unknown_long_values_do_not_write_primary(repo: Path, command: str):
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == 0, (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "curl --output={target}/AGENTS.md URL",
+        "wget --output-document={target}/AGENTS.md URL",
+        "sort --output={target}/AGENTS.md /tmp/in",
+        "tar --file={target}/AGENTS.md -c /tmp/in",
+        "patch --output={target}/AGENTS.md -i /tmp/in.patch",
+    ],
+)
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_known_long_values_follow_target(repo: Path, template: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = template.format(target=target)
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
+
+
+@pytest.mark.parametrize("flags", ["-oc", "-oce"])
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_bash_cluster_option_value_precedes_script(repo: Path, flags: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = f"bash {flags} pipefail 'echo x > {target}/AGENTS.md'"
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
+
+
+@pytest.mark.parametrize("flag", ["-l", "-e", "-r 'a -> b'"])
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_gofmt_flag_values_follow_target(repo: Path, flag: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = f"gofmt -w {flag} {target}/f.go"
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
+
+
 def test_issue_8785_inherited_cdpath_makes_bare_relative_cd_unknown(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _run(
