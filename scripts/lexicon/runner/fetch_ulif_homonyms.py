@@ -2677,7 +2677,7 @@ def _reseed_to_page(
     exp_start = str(p_rec["start_headword"]) if p_rec and p_rec["start_headword"] else None
     exp_end = str(p_rec["end_headword"]) if p_rec and p_rec["end_headword"] else None
 
-    # A page without a recorded start can only be anchored from the prior page.
+    # A page without a recorded start has no safe direct search; it fast-forwards.
     search_target = exp_start or (start_headword if target_page == 1 else None)
     landed: list[dict[str, Any]] = []
     search_html = ""
@@ -2725,45 +2725,6 @@ def _reseed_to_page(
         return search_html, landed, 0
 
     if target_page > 1:
-        previous = ledger.get_page(target_page - 1)
-        previous_end = str(previous["end_headword"]) if previous and previous["end_headword"] else ""
-        if previous_end:
-            if previous_end == search_target:
-                # A homonym straddles the boundary: the direct search already
-                # fetched this window, so only the anchor position changes.
-                fallback_html, fallback_rows = search_html, landed
-            else:
-                fields = _form_fields(seed_tokens, spelling=previous_end, extra=_image_click(SEARCH_BUTTON))
-                fallback_html, fallback_req = client.exchange("POST", fields)
-                _keep_walk(
-                    ledger,
-                    cache,
-                    "",
-                    f"tsearch:{marker_prefix}:previous:{target_page}",
-                    fallback_html,
-                    fallback_req,
-                    current_page=target_page,
-                )
-                fallback_rows = parse_register_list(fallback_html)
-                if not fallback_rows:
-                    raise SessionInvalid(f"{marker_prefix}_previous_missing_register")
-            offset = _resume_window_offset(
-                ledger,
-                fallback_rows,
-                target_page=target_page,
-                anchor_headword=previous_end,
-                anchor_page=target_page - 1,
-                anchor_index=24,
-            )
-            if offset is not None:
-                if not quiet:
-                    print(
-                        f"resuming: previous-page end search page {target_page}, k={offset}",
-                        file=sys.stderr,
-                        flush=True,
-                    )
-                return fallback_html, fallback_rows, offset
-
         if not quiet:
             print(
                 f"resuming: direct searches could not locate page {target_page}; using fast-forward",

@@ -695,16 +695,8 @@ class ShiftedWindowServer:
             if word == "а":
                 return HttpResult(200, self._window(0), {})
             if word == self.words[25]:
-                mutation = "absent" if self.mode in {"fast_forward", "terminal_previous"} else self.mode
                 start = 25 if self.mode == "duplicate_aligned" else 25 - self.offset
-                return HttpResult(200, self._window(start, mutate=mutation), {})
-            if word == self.words[24]:
-                if self.mode == "terminal_previous":
-                    return HttpResult(
-                        200, _register_html(self.words[:25], "VS-0", has_next=False, register_size=100), {}
-                    )
-                start = 25 if self.mode == "fast_forward" else 25 - self.offset
-                return HttpResult(200, self._window(start), {})
+                return HttpResult(200, self._window(start, mutate=self.mode), {})
         if "ctl00$ContentPlaceHolder1$nextpage.x" in data:
             if self.fail_nextpage_500_times > 0:
                 self.fail_nextpage_500_times -= 1
@@ -840,7 +832,7 @@ def test_first_unrecorded_page_uses_previous_ledger_boundary(tmp_path: Path):
         ledger.close()
 
 
-def test_resume_without_target_start_searches_previous_end_first(tmp_path: Path):
+def test_resume_without_target_start_fast_forwards(tmp_path: Path):
     state_dir = tmp_path / "state"
     state_dir.mkdir()
     _seed_shifted_ledger(state_dir)
@@ -869,7 +861,7 @@ def test_resume_without_target_start_searches_previous_end_first(tmp_path: Path)
         for _, data in server.requests
         if data and "ctl00$ContentPlaceHolder1$search.x" in data
     ]
-    assert searches == ["w024"]
+    assert searches == ["а"]
 
 
 def test_shifted_page_requires_all_recorded_rows_before_completion(tmp_path: Path, monkeypatch):
@@ -925,8 +917,8 @@ def test_failed_reseed_never_reuses_stale_window(tmp_path: Path):
     assert sum(bool(data and "ctl00$ContentPlaceHolder1$nextpage.x" in data) for _, data in server.requests) == 1
 
 
-@pytest.mark.parametrize("mode", ["absent", "duplicate", "duplicate_aligned", "fast_forward"])
-def test_resume_search_fallbacks(tmp_path: Path, mode: str, capsys):
+@pytest.mark.parametrize("mode", ["absent", "duplicate", "duplicate_aligned"])
+def test_resume_unaligned_direct_search_fast_forwards(tmp_path: Path, mode: str, capsys):
     state_dir = tmp_path / "state"
     state_dir.mkdir()
     _seed_shifted_ledger(state_dir)
@@ -942,13 +934,14 @@ def test_resume_search_fallbacks(tmp_path: Path, mode: str, capsys):
     )
     assert code == EXIT_OK
     output = capsys.readouterr().err
-    assert ("fast-forwarding" if mode == "fast_forward" else "previous-page end search") in output
+    assert "fast-forwarding" in output
+    assert "previous-page" not in output
     searches = [
         data["ctl00$ContentPlaceHolder1$tsearch"]
         for method, data in server.requests
         if data and "ctl00$ContentPlaceHolder1$search.x" in data
     ]
-    assert searches == (["w025", "w024", "а"] if mode == "fast_forward" else ["w025", "w024"])
+    assert searches == ["w025", "а"]
 
 
 def test_shifted_resume_mapped_row_mismatch_stops_before_entry_click(tmp_path: Path):
@@ -991,28 +984,6 @@ def test_shifted_resume_persistent_nextpage_failure_exhausts_retries(tmp_path: P
     ledger = SpellingLedger(state_dir / "ledger.sqlite")
     try:
         assert ledger.get_page(2)["state"] == "retry_scheduled"
-    finally:
-        ledger.close()
-
-
-def test_previous_end_terminal_window_cannot_finish_unseen_target_page(tmp_path: Path):
-    state_dir = tmp_path / "state"
-    state_dir.mkdir()
-    _seed_shifted_ledger(state_dir)
-    server = ShiftedWindowServer(4, mode="terminal_previous")
-    code = run_walk(
-        state_dir=state_dir,
-        db_path=tmp_path / "cache.db",
-        delay_seconds=1,
-        transport=server,
-        sleep=_noop_sleep,
-        scanner=lambda: False,
-    )
-    assert code == EXIT_USAGE
-    assert not any(data and data.get("__EVENTTARGET") == "ctl00$ContentPlaceHolder1$dgv" for _, data in server.requests)
-    ledger = SpellingLedger(state_dir / "ledger.sqlite")
-    try:
-        assert ledger.get_page(2)["error"] == "resume_mismatch"
     finally:
         ledger.close()
 
@@ -1797,16 +1768,11 @@ def test_resume_offset_homonym_window_with_drift_is_rejected(tmp_path: Path):
         ledger.close()
 
 
-@pytest.mark.parametrize(
-    ("target_rows", "offset", "source"),
-    [(True, 3, "direct search"), (False, 1, "previous-page end search")],
-)
-def test_reseed_at_homonym_page_boundary_skips_fast_forward(
-    tmp_path: Path, capsys, target_rows: bool, offset: int, source: str
-):
-    # Without page 6932 rows the direct anchor is ambiguous (k=0 and k=1 both
-    # agree); the same window anchored on page 6931's last row settles k=1.
-    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite", target_rows=target_rows)
+def test_reseed_at_homonym_page_boundary_skips_fast_forward(tmp_path: Path, capsys):
+    # The operator's live case: page 6932 has its 25 rows recorded, so the
+    # direct search settles the homonym alignment (k=3) without pagination.
+    offset = 3
+    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite")
     cache = ulif_walk.prepare_database(tmp_path / "cache.db")
     requests: list[tuple[str, dict[str, str] | None]] = []
 
@@ -1830,5 +1796,54 @@ def test_reseed_at_homonym_page_boundary_skips_fast_forward(
     assert [row["stressed"] for row in rows[offset - 1 : offset + 1]] == ["порива́ння", "порива́ння"]
     assert [method for method, _ in requests] == ["GET", "POST"]
     err = capsys.readouterr().err
-    assert f"{source} page 6932, k={offset}" in err
+    assert f"direct search page 6932, k={offset}" in err
     assert "fast-forward" not in err
+
+
+def _ambiguous_boundary_window(kind: str) -> list[str]:
+    """Windows whose first two rows are the boundary homonym; page 6932 rows are unrecorded.
+
+    ``target_start``: the window really starts at page 6932 row 0 and page 6932
+    itself opens with two ``порива́ння`` rows (review of 40a2172c47).
+    ``previous_end``: the window really starts at page 6931 row 24 (k=1).
+    Both are the same 25 headwords apart from the tail, and no ledger row tells them apart.
+    """
+    if kind == "target_start":
+        return ["порива́ння", "порива́ння", *(stressed for stressed, _ in _BOUNDARY_PAGE_6932[1:24])]
+    return [stressed for stressed, _ in _BOUNDARY_PAGE_6931[-1:] + _BOUNDARY_PAGE_6932[:24]]
+
+
+@pytest.mark.parametrize("kind", ["target_start", "previous_end"])
+def test_reseed_ambiguous_homonym_boundary_fast_forwards_instead_of_guessing(tmp_path: Path, monkeypatch, kind: str):
+    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite", target_rows=False)
+    cache = ulif_walk.prepare_database(tmp_path / "cache.db")
+    words = _ambiguous_boundary_window(kind)
+    assert words[:2] == ["порива́ння", "порива́ння"]
+    requests: list[tuple[str, dict[str, str] | None]] = []
+
+    def transport(method: str, data: dict[str, str] | None) -> HttpResult:
+        requests.append((method, data))
+        if method == "GET":
+            return HttpResult(200, _register_html([], "SEED", register_size=262812), {})
+        assert data is not None
+        assert data["ctl00$ContentPlaceHolder1$tsearch"] == "порива́ння", "no previous-page anchor search"
+        return HttpResult(200, _register_html(words, "VS-W", register_size=262812), {})
+
+    fast_forwarded: list[int] = []
+
+    def fake_fast_forward(client, ledger, cache, seed_tokens, start_headword, target_page, *, quiet=False):
+        fast_forwarded.append(target_page)
+        html = _register_html(_BOUNDARY_WORDS[25 : 25 + 25], "VS-FF", register_size=262812)
+        return html, parse_register_list(html)
+
+    monkeypatch.setattr(ulif_walk, "_fast_forward_to_page", fake_fast_forward)
+    client = ulif_walk.PoliteClient(transport, delay_seconds=1, sleep=_noop_sleep)
+    try:
+        _, rows, landed_offset = ulif_walk._reseed_to_page(client, ledger, cache, target_page=6932, start_headword="а")
+    finally:
+        cache.close()
+        ledger.close()
+    assert fast_forwarded == [6932]
+    assert landed_offset == 0
+    assert rows[0]["stressed"] == "порива́ння"
+    assert [method for method, _ in requests] == ["GET", "POST"]
