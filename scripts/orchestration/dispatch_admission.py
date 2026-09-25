@@ -11,11 +11,17 @@ every check passes. Read-only dispatches are exempt.
 
 * **Live write workers below the cap.** A worker is live when its record says
   ``spawning``/``running``, its mode is write-capable and its pid is alive. A
-  ``spawning`` record without a pid yet holds a slot for
-  :data:`PIDLESS_SPAWNING_GRACE_S`: dispatch publishes the record, then writes
-  the Popen pid. A ``started_at`` more than :data:`PIDLESS_CLOCK_SKEW_S` in the
-  future holds no slot (logged), so a bad clock cannot pin one. A dead pid never holds a slot; the caller may sweep it to
-  ``crashed`` through ``on_dead``.
+  ``spawning`` record without a pid holds a slot while the dispatcher that owns
+  it is alive when it names that dispatcher: an admission hold
+  (``admission_hold``, published under the lock before any worktree side
+  effect) or a worktree reservation (``worktree_prep``, which lives as long as
+  a slow ``git worktree add``, up to 900 s). Any other pid-less ``spawning``
+  record holds a slot for :data:`PIDLESS_SPAWNING_GRACE_S`: dispatch publishes
+  the record, then writes the Popen pid. A ``started_at`` more than
+  :data:`PIDLESS_CLOCK_SKEW_S` in the future holds no slot (logged), so a bad
+  clock cannot pin one. A dead pid, or a pid-less record whose dispatcher is
+  provably gone, never holds a slot; the caller may sweep it to ``crashed``
+  through ``on_dead``.
 * **``MemAvailable``** from ``/proc/meminfo`` at or above the floor.
 * **CPU:** the 1-minute load average divided by ``os.cpu_count()`` at or below
   the limit.
@@ -26,10 +32,14 @@ enforced; the admission line says so. Thresholds default to the constants in
 same name.
 
 The check alone is a snapshot, so dispatch runs it again under
-:func:`admission_lock` and publishes its ``spawning`` record before releasing
-the lock: two concurrent dispatches cannot both take the last slot.
+:func:`admission_lock` and publishes an admission hold before releasing the
+lock: two concurrent dispatches cannot both take the last slot. The hold is
+published before the worktree is created, so a refusal leaves no worktree and
+no task record (#8717); the dispatch's later records replace it in place and
+keep the slot until the worker's pid is written.
 
-Stdlib only, so capacity_pick and delegate can import it cheaply.
+Stdlib-only apart from sibling helpers, so capacity_pick and delegate can
+import it cheaply.
 """
 
 from __future__ import annotations
@@ -46,7 +56,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.orchestration import task_record_store
+from scripts.orchestration import task_record_store, worktree_prep
 
 _logger = logging.getLogger(__name__)
 
@@ -61,6 +71,11 @@ PROC_ROOT = Path("/proc")
 ENV_MAX_LIVE_WRITE_WORKERS = "DISPATCH_MAX_LIVE_WRITE_WORKERS"
 ENV_MIN_MEM_AVAILABLE_GIB = "DISPATCH_MIN_MEM_AVAILABLE_GIB"
 ENV_MAX_LOAD_PER_CPU = "DISPATCH_MAX_LOAD_PER_CPU"
+
+# Pid-less ``spawning`` record naming the dispatcher that holds an admitted
+# slot until the worker exists (#8717).
+ADMISSION_HOLD_KEY = "admission_hold"
+ORPHANED_HOLD_REASON = "dispatch_died_after_admission"
 
 _GIB = 1024**3
 _ACTIVE_STATUS_MARKERS = tuple(f'"{status}"'.encode() for status in sorted(ACTIVE_STATUSES))
@@ -286,6 +301,60 @@ def _age_s(started_at: Any, now: datetime) -> float | None:
     return (now - started).total_seconds()
 
 
+def new_admission_hold(run_nonce: str) -> dict[str, Any]:
+    """This dispatcher's claim on an admitted slot: run, pid and ``/proc`` start time."""
+    owner = worktree_prep.process_identity(os.getpid())
+    return {
+        "run_nonce": run_nonce,
+        "owner_pid": owner["pid"],
+        "owner_start": owner["start"],
+        "admitted_at": datetime.now(UTC).isoformat(),
+    }
+
+
+def is_admission_hold_record(record: Mapping[str, Any]) -> bool:
+    """True for a pid-less record carrying this run's :data:`ADMISSION_HOLD_KEY`."""
+    hold = record.get(ADMISSION_HOLD_KEY)
+    return (
+        "pid" in record
+        and record["pid"] is None
+        and isinstance(hold, dict)
+        and isinstance(record.get("run_nonce"), str)
+        and hold.get("run_nonce") == record.get("run_nonce")
+    )
+
+
+def is_orphaned_admission_hold(record: dict[str, Any]) -> bool:
+    """True for an active admission hold whose dispatcher is provably gone.
+
+    Dispatch replaces the hold with its full record before the worker starts;
+    a dispatcher that dies first leaves a hold nothing else will finish. A
+    record that also carries ``worktree_prep`` is judged by
+    :func:`worktree_prep.is_orphaned_prep_record` instead.
+    """
+    hold = record.get(ADMISSION_HOLD_KEY)
+    return (
+        record.get("status") in ACTIVE_STATUSES
+        and "worktree_prep" not in record
+        and is_admission_hold_record(record)
+        and worktree_prep.process_gone(hold.get("owner_pid"), hold.get("owner_start"))  # type: ignore[union-attr]
+    )
+
+
+def _dispatcher_owner(record: dict[str, Any]) -> dict[str, Any] | None:
+    """The dispatcher block a pid-less record names as its owner, if any."""
+    prep = record.get("worktree_prep")
+    if isinstance(prep, dict):
+        return prep
+    hold = record.get(ADMISSION_HOLD_KEY)
+    return hold if isinstance(hold, dict) else None
+
+
+def is_orphaned_pidless_record(record: dict[str, Any]) -> bool:
+    """True when a pid-less worktree reservation or admission hold has lost its dispatcher."""
+    return worktree_prep.is_orphaned_prep_record(record) or is_orphaned_admission_hold(record)
+
+
 @dataclass(frozen=True)
 class WorkerScan:
     live_task_ids: tuple[str, ...]
@@ -298,7 +367,12 @@ def scan_task_records(
     pid_alive: Callable[[int], bool] | None = None,
     now: datetime | None = None,
 ) -> WorkerScan:
-    """Live write workers, and every active record (any mode) whose pid is dead."""
+    """Live write workers, and every active record (any mode) whose owner is gone.
+
+    The owner is the worker pid, or for a pid-less worktree reservation or
+    admission hold the dispatcher that wrote it (proof per
+    :func:`is_orphaned_pidless_record`).
+    """
     alive = pid_alive or process_alive
     clock = now or datetime.now(UTC)
     live: list[str] = []
@@ -321,7 +395,19 @@ def scan_task_records(
         write_capable = state.get("mode") in WRITE_CAPABLE_MODES
         pid = _parse_pid(state.get("pid"))
         if pid is None:
+            if is_orphaned_pidless_record(state):
+                dead.append((path, state))
+                continue
             if not write_capable or state.get("status") != "spawning":
+                continue
+            owner = _dispatcher_owner(state)
+            owner_pid = _parse_pid(owner.get("owner_pid")) if owner is not None else None
+            if owner_pid is not None:
+                # Held while the dispatcher lives, however long its worktree
+                # add runs. A missing pid is proof it is gone even on a host
+                # without /proc, where only the pid can be checked.
+                if alive(owner_pid):
+                    live.append(task_id)
                 continue
             age = _age_s(state.get("started_at"), clock)
             if age is not None and age < -PIDLESS_CLOCK_SKEW_S:
@@ -351,8 +437,9 @@ def evaluate(
 ) -> AdmissionDecision:
     """Decide whether a ``mode`` dispatch may start a worker on this host now.
 
-    ``on_dead`` receives every active record whose pid is dead (the caller marks
-    it ``crashed``); without it the records are only reported. Invalid threshold
+    ``on_dead`` receives every active record whose pid is dead or whose
+    dispatcher is provably gone (the caller marks it ``crashed``); without it
+    the records are only reported. Invalid threshold
     environment variables raise ``ValueError``.
     """
     if mode not in WRITE_CAPABLE_MODES:

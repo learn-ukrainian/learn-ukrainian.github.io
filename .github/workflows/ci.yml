@@ -60,6 +60,9 @@ jobs:
       pytest_mode: ${{ steps.classify.outputs.pytest_mode }}
       shard_count: ${{ steps.classify.outputs.shard_count }}
       pytest_candidates: ${{ steps.classify.outputs.pytest_candidates }}
+      # The one "should preflight run" decision (#8750): classify_changes
+      # .preflight_for. The preflight job and CI Gate both read it.
+      preflight: ${{ steps.classify.outputs.preflight }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -141,6 +144,73 @@ jobs:
           base: ${{ steps.secret-scan-scope.outputs.trufflehog_base }}
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
+
+  preflight:
+    # Early PR signal for repo-wide invariants (#8750). The full and selected
+    # shards still run the same repo_wide set (the backstop) and do not need
+    # this job, so a green run is no slower; a red invariant just reports
+    # minutes before the shards finish. No Postgres, npm or native apt deps:
+    # no repo_wide test uses them (see docs/runbooks/ci-gate.md).
+    name: Preflight
+    needs: [changes]
+    if: needs.changes.outputs.preflight == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      LU_PYTEST_TMP_BUDGET_GB: "5"
+      # Registered non-repo_wide invariants that also run here, one path per
+      # line (#8750). tests/test_ci_preflight.py checks every path exists.
+      PREFLIGHT_EXTRA_TESTS: |
+        tests/curriculum/arc/test_decisions_record.py
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Set up uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: '0.12.9'
+          enable-cache: true
+          cache-dependency-glob: requirements-lock.txt
+      - name: Install Python deps
+        run: |
+          set -euo pipefail
+          python -m venv .venv
+          # Same install as the pytest shards.
+          grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
+            > "${RUNNER_TEMP}/requirements-ci.txt"
+          uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
+          .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+          .venv/bin/python packages/v4-runtime/build_assets.py
+      - name: Hydrate Atlas lexicon manifest
+        run: |
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+      - name: Run preflight pytest
+        run: |
+          set -euo pipefail
+          # Same allowlist construction and flags as the shards' repo_wide leg.
+          repo_wide_list="${RUNNER_TEMP}/pytest-repo-wide-files.txt"
+          git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -lE 'pytest\.mark\.repo_wide' \
+            | sort > "$repo_wide_list" || true
+          [ -s "$repo_wide_list" ] || { echo "no repo_wide tests found; the repo_wide marker invariant is broken" >&2; exit 1; }
+          extra_list="${RUNNER_TEMP}/pytest-preflight-extra-files.txt"
+          printf '%s\n' "$PREFLIGHT_EXTRA_TESTS" | sed '/^[[:space:]]*$/d' > "$extra_list"
+          [ -s "$extra_list" ] || { echo "PREFLIGHT_EXTRA_TESTS is empty" >&2; exit 1; }
+          # Run both sets even when the first fails, so one run reports every
+          # broken invariant; the step still fails if either did.
+          status=0
+          LU_PYTEST_SHARD_FILES="$repo_wide_list" .venv/bin/python -m pytest tests \
+            -m 'repo_wide and not slow and not atlas_release' --strict-markers \
+            -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+            --timeout-method=thread --override-ini addopts=-v || status=$?
+          LU_PYTEST_SHARD_FILES="$extra_list" .venv/bin/python -m pytest tests \
+            -m 'not slow and not atlas_release' --strict-markers \
+            -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+            --timeout-method=thread --override-ini addopts=-v || status=$?
+          exit "$status"
 
   pytest:
     name: pytest (${{ matrix.shard }})
@@ -719,7 +789,7 @@ jobs:
     # treats a skipped required check as success. The step below fails the
     # job when a required dependency was cancelled or skipped unexpectedly.
     if: always()
-    needs: [changes, ruff, secret-scan, pytest, contracts, frontend, typesafe-triage, plan-validate]
+    needs: [changes, ruff, secret-scan, preflight, pytest, contracts, frontend, typesafe-triage, plan-validate]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -728,9 +798,11 @@ jobs:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
           FRONTEND: ${{ needs.changes.outputs.frontend }}
           BACKEND: ${{ needs.changes.outputs.backend }}
+          PREFLIGHT_SCHEDULED: ${{ needs.changes.outputs.preflight }}
           CHANGES: ${{ needs.changes.result }}
           RUFF: ${{ needs.ruff.result }}
           SECRET: ${{ needs.secret-scan.result }}
+          PREFLIGHT: ${{ needs.preflight.result }}
           PYTEST: ${{ needs.pytest.result }}
           CONTRACTS: ${{ needs.contracts.result }}
           FRONTEND_JOB: ${{ needs.frontend.result }}
@@ -755,6 +827,16 @@ jobs:
           # step on pull_request; always runs on merge_group/schedule), so a
           # skip is never legitimate here — only success.
           ok "$PLAN_VALIDATE"
+          # Preflight (#8750): Changes decides once whether it runs. Scheduled,
+          # it must succeed (failure, cancelled or skipped all fail the gate);
+          # not scheduled, it must be skipped. merge_group, schedule and
+          # workflow_dispatch always take the second branch.
+          if [ "$PREFLIGHT_SCHEDULED" = true ]; then
+            ok "$PREFLIGHT" || { echo "::error::preflight was scheduled but concluded '$PREFLIGHT'"; exit 1; }
+          elif [ "$PREFLIGHT" != skipped ]; then
+            echo "::error::preflight was not scheduled but concluded '$PREFLIGHT'"
+            exit 1
+          fi
           if [ "$BACKEND" = false ]; then
             skip_ok "$PYTEST"
           else

@@ -14,6 +14,7 @@ from pathlib import Path
 import pytest
 
 from scripts.orchestration import dispatch_admission as adm
+from scripts.orchestration import worktree_prep
 
 _GIB = 1024**3
 _LIMITS = adm.Thresholds(max_live_write_workers=2, min_mem_available_gib=3.5, max_load_per_cpu=1.5)
@@ -266,3 +267,65 @@ def test_admission_lock_is_exclusive_across_holders(tmp_path):
     with adm.admission_lock(tasks, timeout_s=0.1):
         pass
     assert (tasks / adm.LOCK_FILE_NAME).is_file()
+
+
+# --- #8717: pid-less records owned by a live dispatcher --------------------------------------
+
+
+def _own_identity() -> dict:
+    return worktree_prep.process_identity(os.getpid())
+
+
+def _pidless_owned_record(tasks_dir: Path, task_id: str, *, block: str, owner: dict, age_s: float) -> Path:
+    """A pid-less ``spawning`` write record whose ``block`` (worktree_prep or admission_hold) names ``owner``."""
+    return _record(
+        tasks_dir,
+        task_id,
+        status="spawning",
+        pid=None,
+        started_at=(datetime.now(UTC) - timedelta(seconds=age_s)).isoformat(),
+        **{block: {"run_nonce": f"nonce-{task_id}", "owner_pid": owner["pid"], "owner_start": owner["start"]}},
+    )
+
+
+@pytest.mark.parametrize("block", ["worktree_prep", adm.ADMISSION_HOLD_KEY])
+def test_pidless_record_of_a_live_dispatcher_holds_a_slot_past_the_grace_window(tmp_path, probe, block):
+    """A slow ``git worktree add`` (up to 900 s) keeps its admitted slot while the dispatcher lives."""
+    tasks = tmp_path / "tasks"
+    _pidless_owned_record(tasks, "slow-prep", block=block, owner=_own_identity(), age_s=300)
+    assert adm.PIDLESS_SPAWNING_GRACE_S < 300
+
+    decision = adm.evaluate("workspace-write", tasks, thresholds=_LIMITS)
+
+    assert decision.live_task_ids == ("slow-prep",)
+    assert decision.dead_task_ids == ()
+
+
+@pytest.mark.parametrize("block", ["worktree_prep", adm.ADMISSION_HOLD_KEY])
+def test_pidless_record_of_a_dead_dispatcher_is_not_counted_and_is_handed_to_the_sweeper(tmp_path, probe, block):
+    from tests.worktree_prep_helpers import exited_process_identity
+
+    tasks = tmp_path / "tasks"
+    pid, start = exited_process_identity()
+    path = _pidless_owned_record(tasks, "orphan", block=block, owner={"pid": pid, "start": start}, age_s=10)
+    swept: list[Path] = []
+
+    decision = adm.evaluate("workspace-write", tasks, on_dead=lambda p, _state: swept.append(p), thresholds=_LIMITS)
+
+    assert decision.live_task_ids == ()
+    assert decision.dead_task_ids == ("orphan",)
+    assert swept == [path]
+
+
+def test_pidless_record_of_a_gone_dispatcher_without_start_time_is_not_counted_or_swept(tmp_path, probe):
+    """Without a recorded start time a missing pid frees the slot, but is no proof for marking it crashed."""
+    from tests.worktree_prep_helpers import exited_process_identity
+
+    tasks = tmp_path / "tasks"
+    pid, _start = exited_process_identity()
+    _pidless_owned_record(tasks, "no-start", block="worktree_prep", owner={"pid": pid, "start": None}, age_s=10)
+
+    decision = adm.evaluate("workspace-write", tasks, on_dead=lambda *_a: pytest.fail("no proof"), thresholds=_LIMITS)
+
+    assert decision.live_task_ids == ()
+    assert decision.dead_task_ids == ()

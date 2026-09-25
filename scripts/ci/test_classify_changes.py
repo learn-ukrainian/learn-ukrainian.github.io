@@ -26,7 +26,8 @@ def _tree(*paths: str) -> frozenset[str]:
 
 class ClassifierTests(unittest.TestCase):
     def classify(self, paths, event="pull_request", labels=None, tree_paths=None):
-        return scope.classify(
+        """Tier outputs; every call also checks the derived ``preflight`` flag (#8750)."""
+        result = scope.classify(
             paths,
             event=event,
             labels=labels or [],
@@ -34,6 +35,15 @@ class ClassifierTests(unittest.TestCase):
             denominator=load_denominator()["paths"],
             tree_paths=tree_paths if tree_paths is not None else frozenset(),
         )
+        tier = dict(result)
+        preflight = tier.pop("preflight")
+        expected = (
+            "true"
+            if event == "pull_request" and tier["pytest_mode"] in {"full", "selected"}
+            else "false"
+        )
+        self.assertEqual(preflight, expected, (event, tier["pytest_mode"]))
+        return tier
 
     def assert_full(self, result, frontend="false"):
         self.assertEqual(
@@ -484,7 +494,7 @@ class ClassifierTests(unittest.TestCase):
             }
             full_line = (
                 "docs_only=false\ndocs_reads_content=false\nfrontend=true\nbackend=true\nshards=[1, 2, 3, 4]\n"
-                "pytest_mode=full\nshard_count=4\npytest_candidates=[]\n"
+                "pytest_mode=full\nshard_count=4\npytest_candidates=[]\npreflight=true\n"
             )
             for error in (
                 OSError(),
@@ -510,7 +520,7 @@ class ClassifierTests(unittest.TestCase):
                 self.assertEqual(
                     output.read_text(),
                     "docs_only=true\ndocs_reads_content=false\nfrontend=false\nbackend=true\nshards=[1]\n"
-                    "pytest_mode=docs\nshard_count=1\npytest_candidates=[]\n",
+                    "pytest_mode=docs\nshard_count=1\npytest_candidates=[]\npreflight=false\n",
                 )
 
     def _run_main_pull_request(self, payload, api_labels=None, api_error=None, paths=None):
@@ -828,6 +838,78 @@ class ClassifierTests(unittest.TestCase):
             self.assertIn("shard_count=4", stdout.getvalue())
             self.assertIn("shards=[1, 2, 3, 4]", stdout.getvalue())
             self.assertIn("pytest_candidates=[]", stdout.getvalue())
+
+    def _preflight(self, paths, event="pull_request", labels=None, tree_paths=None):
+        return scope.classify(
+            paths,
+            event=event,
+            labels=labels or [],
+            shard_count=4,
+            denominator=load_denominator()["paths"],
+            tree_paths=tree_paths if tree_paths is not None else frozenset(),
+        )["preflight"]
+
+    def test_preflight_runs_only_on_pull_request_repo_wide_lanes(self):
+        # #8750: preflight repeats the repo_wide set that the full and
+        # selected shards run, so it is on exactly for those PR lanes.
+        tree = _tree("tests/test_x.py", "tests/test_ci_shard_partition.py")
+        lanes = {
+            "full": (["unknown/file.txt"], None),
+            "selected": (["tests/test_x.py"], tree),
+            "docs": (["docs/guide.md"], None),
+            "content": (["site/src/content/docs/a1/page.mdx"], None),
+            "frontend": (["site/src/components/Widget.tsx"], None),
+        }
+        expected = {"full": "true", "selected": "true", "docs": "false", "content": "false", "frontend": "false"}
+        for lane, (paths, lane_tree) in lanes.items():
+            with self.subTest(lane=lane):
+                result = scope.classify(
+                    paths,
+                    event="pull_request",
+                    labels=[],
+                    shard_count=4,
+                    denominator=load_denominator()["paths"],
+                    tree_paths=lane_tree if lane_tree is not None else frozenset(),
+                )
+                self.assertEqual(result["pytest_mode"], lane)
+                self.assertEqual(result["preflight"], expected[lane])
+
+    def test_preflight_never_runs_outside_pull_request(self):
+        tree = _tree("tests/test_x.py", "tests/test_ci_shard_partition.py")
+        for event in ("merge_group", "schedule", "workflow_dispatch", "push", ""):
+            for paths, lane_tree in ((["unknown/file.txt"], None), (["tests/test_x.py"], tree)):
+                with self.subTest(event=event, paths=paths):
+                    self.assertEqual(self._preflight(paths, event=event, tree_paths=lane_tree), "false")
+                    self.assertEqual(
+                        self._preflight(paths, event=event, labels=["full-ci"], tree_paths=lane_tree),
+                        "false",
+                    )
+
+    def test_preflight_follows_forced_full_on_pull_request(self):
+        # full-ci, an empty diff and the 300-file cap force the full tier, so
+        # preflight runs; a full-ci label turns a docs PR into a preflight PR.
+        self.assertEqual(self._preflight(["docs/guide.md"]), "false")
+        self.assertEqual(self._preflight(["docs/guide.md"], labels=["Full-CI"]), "true")
+        self.assertEqual(self._preflight([]), "true")
+        self.assertEqual(self._preflight([f"docs/{i}.md" for i in range(300)]), "true")
+
+    def test_preflight_rule_reads_the_tier_not_the_paths(self):
+        full = scope._full(4)
+        self.assertEqual(scope.preflight_for("pull_request", full), "true")
+        self.assertEqual(scope.preflight_for("pull_request", scope._selected(["tests/test_x.py"])), "true")
+        for tier in (scope._docs(), scope._content(), scope._frontend_only()):
+            with self.subTest(mode=tier["pytest_mode"]):
+                self.assertEqual(scope.preflight_for("pull_request", tier), "false")
+        self.assertEqual(scope.preflight_for("pull_request", {**full, "backend": "false"}), "false")
+        self.assertEqual(scope.preflight_for("merge_group", full), "false")
+
+    def test_label_lookup_failure_on_pull_request_still_runs_preflight(self):
+        stdout, _compare, _labels = self._run_main_pull_request(
+            {"pull_request": {"labels": [], "number": 7}},
+            api_error=subprocess.CalledProcessError(1, "gh"),
+        )
+        self.assertIn("pytest_mode=full", stdout)
+        self.assertIn("preflight=true", stdout)
 
     def test_merge_group_without_event_env_fails_closed(self):
         # merge_group classifies by paths (#8399), but a missing REPO env must
