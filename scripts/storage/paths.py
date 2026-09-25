@@ -76,8 +76,16 @@ def load_manifest(group: str, repo: Path = ROOT) -> dict:
             f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts manifest build --group {group} --pre <commit>",
             "manifest missing",
         )
-    manifest = json.loads(path.read_text(encoding="utf-8"))
-    if manifest.get("group") != group or not isinstance(manifest.get("entries"), list):
+    return validate_manifest(json.loads(path.read_text(encoding="utf-8")), group, str(path))
+
+
+def validate_manifest(manifest: object, group: str, path: str) -> dict:
+    """Check a parsed manifest's group and entries; ``path`` names its source in errors."""
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("group") != group
+        or not isinstance(manifest.get("entries"), list)
+    ):
         raise ValueError(f"invalid manifest: {path}")
     seen: set[str] = set()
     for entry in manifest["entries"]:

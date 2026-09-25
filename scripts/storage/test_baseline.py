@@ -3,7 +3,8 @@
 Disposition files are JSON objects with optional ``renamed``, ``fixture``, and
 ``needs_artifact`` arrays. Jobs are informational: test IDs are compared across
 the whole run. Pure passing additions are reported automatically. A rename's
-new ID must pass. Host-run evidence is a JUnit path or a pytest -rA transcript
+new ID must pass. A skipped ID that now passes is reported as an improvement;
+a passing ID that becomes skipped still needs a disposition. Host-run evidence is a JUnit path or a pytest -rA transcript
 with an exact passing summary and the named ID in its PASSES section.
 """
 
@@ -261,6 +262,15 @@ def _host_passed(host_run: Any, test_id: str, repo_root: Path) -> bool:
     return any(line.strip() == f"PASSED {test_id}" for line in host_run.splitlines())
 
 
+def _improvements(before: dict[str, tuple[str, str, str]], after: dict[str, tuple[str, str, str]]) -> list[str]:
+    """Return IDs that were skipped before and pass now; they need no disposition."""
+    return sorted(
+        test_id
+        for test_id, (outcome, _, _) in after.items()
+        if outcome == "passed" and before.get(test_id, (None,))[0] == "skipped"
+    )
+
+
 def compare_baselines(
     old: dict[str, Any],
     new: dict[str, Any],
@@ -328,6 +338,7 @@ def compare_baselines(
     for test_id in sorted(rename_nonpassed - covered):
         errors.append(f"rename to {test_id} requires the new outcome passed or a corresponding disposition")
 
+    covered.update(_improvements(before, after))
     for test_id in sorted(changes - covered):
         prior = before.get(test_id, (None,))[0]
         current = after.get(test_id, (None,))[0]
@@ -345,7 +356,8 @@ def build_parser() -> argparse.ArgumentParser:
   /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.test_baseline capture --junit pytest.xml --job pytest-1 --source-sha abc123 --output baseline.json
   /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.test_baseline compare --old old.json --new new.json --dispositions dispositions.json
 
-Outputs: capture writes deterministic JSON with per-job IDs; compare reports passing additions.
+Outputs: capture writes deterministic JSON with per-job IDs; compare reports passing additions
+and skipped -> passed improvements (passed -> skipped still needs a disposition).
 Exit codes: 0 means captured or every changed ID is disposed; 1 means invalid input or missing disposition.
 Related: issue #8809, spec v3.3 sections 5 and 8.4.
 Disposition JSON keys: renamed [{old,new}], fixture [{id,fixture}],
@@ -406,9 +418,12 @@ def main(argv: list[str] | None = None) -> int:
             for test_id in new_ids.keys() - old_ids.keys()
             if new_ids[test_id][0] == "passed" and test_id not in renamed
         )
-        print(f"baseline comparison passed: {len(additions)} passing addition(s)")
+        improvements = _improvements(old_ids, new_ids)
+        print(f"baseline comparison passed: {len(additions)} passing addition(s), {len(improvements)} improvement(s)")
         for test_id in additions:
             print(f"ADDED passed {test_id} (job {new_ids[test_id][1]})")
+        for test_id in improvements:
+            print(f"IMPROVED skipped -> passed {test_id} (job {new_ids[test_id][1]})")
         return 0
     except BaselineError as exc:
         print(f"error: {exc}", file=sys.stderr)
