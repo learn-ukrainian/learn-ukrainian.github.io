@@ -83,6 +83,11 @@ SESSION_IDENTITY_ENV_VARS = (
     "LEARN_UKRAINIAN_EXPECTED_MAIN_MODEL_ID",
     "LEARN_UKRAINIAN_EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS",
     "LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH",
+    # Claudex supervisor child launch (scripts/orchestration/claudex_supervisor.py);
+    # rollover and SessionStart bind to the supervisor run through these.
+    "LEARN_UKRAINIAN_CLAUDEX_MANAGED_LAUNCH",
+    "LEARN_UKRAINIAN_CLAUDEX_RUN_ID",
+    "LEARN_UKRAINIAN_CLAUDEX_LAUNCH_GENERATION",
     # SessionStart runtime (scripts/lib/session_record.py, session-setup.sh).
     "LEARN_UKRAINIAN_SESSION_ID",
     "LEARN_UKRAINIAN_SESSION_RECORD",
@@ -100,6 +105,9 @@ SESSION_IDENTITY_ENV_VARS = (
     # Telemetry run/session ids (scripts/telemetry/emit.py).
     "LU_RUN_ID",
     "LU_SESSION_ID",
+    # Codex hook probe session (scripts/agent_runtime/codex_hook_probe.py).
+    "CODEX_HOOK_PROBE_LOG",
+    "CODEX_HOOK_PROBE_DENY_TOOLS",
     # Harness-native ids the hooks read; the harness, not a launcher, sets them.
     "LEARN_UK_HOOK_SESSION_ID",
     "CODEX_THREAD_ID",
@@ -110,14 +118,18 @@ SESSION_IDENTITY_ENV_VARS = (
 )
 
 
-@pytest.fixture(autouse=True)
-def _strip_live_session_identity(monkeypatch: pytest.MonkeyPatch) -> None:
+@pytest.hookimpl(wrapper=True, tryfirst=True)
+def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None) -> Generator[None, object, object]:
     """Run every test without the launching agent session's identity (#8778).
 
-    Tests that need one of these variables set it themselves.
+    The outermost wrapper around setup, call, and teardown, so no fixture of
+    any scope sees the identity. Tests that need a variable set it themselves;
+    the original environment returns after teardown.
     """
-    for name in SESSION_IDENTITY_ENV_VARS:
-        monkeypatch.delenv(name, raising=False)
+    with pytest.MonkeyPatch.context() as patch:
+        for name in SESSION_IDENTITY_ENV_VARS:
+            patch.delenv(name, raising=False)
+        return (yield)
 
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
