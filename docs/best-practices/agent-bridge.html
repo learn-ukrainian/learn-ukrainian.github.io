@@ -116,10 +116,10 @@
   <header class="hero">
     <div class="title-block">
       <h1>Agent Bridge — Channel Communication</h1>
-      <div class="sub">Migrated from Markdown on 2026-09-25 09:00</div>
+      <div class="sub">Migrated from Markdown on 2026-09-25</div>
     </div>
     <div class="meta">
-      <div>Source: agent-bridge.md</div>
+      <div>Source: docs/best-practices/agent-bridge.md</div>
       <div>Author: Gemini (Yellow Team)</div>
     </div>
   </header>
@@ -381,15 +381,44 @@ activity.</p>
 <p>Use <code>--silence-timeout 0</code> only when the hard timeout alone is acceptable
 and you have another way to detect parked sessions.</p>
 <h2>When to use channels vs <code>ask-*</code></h2>
-<p>| Situation | Use |
-| --- | --- |
-| One-off question, no history needed | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...</code> / <code>ask-claude</code> / <code>ask-codex</code> |
-| Sustained discussion on a topic | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post</code> to a channel |
-| Need a 2-3 agent debate on a design | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> |
-| Sharing context across many delegations | Pin it in <code>docs/agent-channels/{topic}/context.md</code> |
-| Formal PR review (CF gate) | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr &lt;N&gt;</code> |
-| Code review discussion (non-gate) | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ... --to</code> a non-Gemini seat |
-| Want the post visible in the dashboard | Channels only (the legacy <code>messages</code> table has its own UI) |</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One-off question, no history needed</td>
+<td><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...</code> / <code>ask-claude</code> / <code>ask-codex</code></td>
+</tr>
+<tr>
+<td>Sustained discussion on a topic</td>
+<td><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post</code> to a channel</td>
+</tr>
+<tr>
+<td>Need a 2-3 agent debate on a design</td>
+<td><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code></td>
+</tr>
+<tr>
+<td>Sharing context across many delegations</td>
+<td>Pin it in <code>docs/agent-channels/{topic}/context.md</code></td>
+</tr>
+<tr>
+<td>Formal PR review (CF gate)</td>
+<td><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr &lt;N&gt;</code></td>
+</tr>
+<tr>
+<td>Code review discussion (non-gate)</td>
+<td><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ... --to</code> a non-Gemini seat</td>
+</tr>
+<tr>
+<td>Want the post visible in the dashboard</td>
+<td>Channels only (the legacy <code>messages</code> table has its own UI)</td>
+</tr>
+</tbody>
+</table>
 <h2>The hygiene rule</h2>
 <p><strong>Nothing commits or merges without adversarial review from another
 agent.</strong> Per channel conventions:</p>
@@ -470,15 +499,52 @@ which means the numbers below under-sell the savings for typical
 of project rules each time.</p>
 <p><strong>Measured brief sizes (chars sent from claude → gemini, excluding
 the ~10KB project-rules wrapper the legacy bridge prepends):</strong></p>
-<p>| Review round            | Task ID               | Brief size |
-| ----------------------- | --------------------- | ---------: |
-| B.3 r1 (initial)        | <code>bridge-b3-review</code>    |      6,621 |
-| B.3 r2 (3 new blockers) | <code>bridge-b3-review-r2</code> |      5,304 |
-| B.3 r3 (backslash bug)  | <code>bridge-b3-review-r3</code> |      2,683 |
-| B.3 r4 (CLEAN)          | <code>bridge-b3-review-r4</code> |      2,121 |
-| B.4 r1 (4 blockers)     | <code>bridge-b4-review</code>    |      4,827 |
-| B.4 r2 (MINOR)          | <code>bridge-b4-review-r2</code> |      3,915 |
-| <strong>Total</strong>               |                       | <strong>25,471</strong> |</p>
+<table>
+<thead>
+<tr>
+<th>Review round</th>
+<th>Task ID</th>
+<th style="text-align:right">Brief size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B.3 r1 (initial)</td>
+<td><code>bridge-b3-review</code></td>
+<td style="text-align:right">6,621</td>
+</tr>
+<tr>
+<td>B.3 r2 (3 new blockers)</td>
+<td><code>bridge-b3-review-r2</code></td>
+<td style="text-align:right">5,304</td>
+</tr>
+<tr>
+<td>B.3 r3 (backslash bug)</td>
+<td><code>bridge-b3-review-r3</code></td>
+<td style="text-align:right">2,683</td>
+</tr>
+<tr>
+<td>B.3 r4 (CLEAN)</td>
+<td><code>bridge-b3-review-r4</code></td>
+<td style="text-align:right">2,121</td>
+</tr>
+<tr>
+<td>B.4 r1 (4 blockers)</td>
+<td><code>bridge-b4-review</code></td>
+<td style="text-align:right">4,827</td>
+</tr>
+<tr>
+<td>B.4 r2 (MINOR)</td>
+<td><code>bridge-b4-review-r2</code></td>
+<td style="text-align:right">3,915</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td style="text-align:right"><strong>25,471</strong></td>
+</tr>
+</tbody>
+</table>
 <p>Every brief in that table would have been ~12KB larger had I
 followed the old convention (manually re-pasting the rules/history
 that channels would otherwise pin). Six rounds × ~12KB = <strong>~72KB

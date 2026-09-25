@@ -186,7 +186,7 @@ def _fake_branch_diff(name: str, diff_stdout: str, *, fail: str | None = None):
             code = 1 if fail == "rev-parse" else 0
             stdout = "" if code else f"{_REMOTE_SHA}\n"
             return subprocess.CompletedProcess(command, code, stdout=stdout, stderr="missing" if code else "")
-        assert command == ["git", "diff", "--name-only", f"origin/main...{_REMOTE_SHA}"]
+        assert command == ["git", "diff", "--name-only", "--no-renames", f"origin/main...{_REMOTE_SHA}"]
         code = 1 if fail == "diff" else 0
         return subprocess.CompletedProcess(
             command, code, stdout="" if code else diff_stdout, stderr="diff failed" if code else ""
@@ -230,30 +230,23 @@ def test_content_only_pr_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch
         lambda number: ("content-branch", "a" * 40),
     )
 
+    sha = "a" * 40
+
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if command[:3] == ["gh", "api", "--paginate"]:
-            assert command[3:] == [
-                "repos/{owner}/{repo}/pulls/77/files",
-                "--jq",
-                ".[].filename",
-            ]
-            return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
-        assert command == [
-            "gh",
-            "api",
-            "repos/{owner}/{repo}/pulls/77",
-            "--jq",
-            ".changed_files",
-        ]
-        return subprocess.CompletedProcess(command, 0, stdout="1\n")
+        if command[:2] == ["git", "fetch"]:
+            assert command == ["git", "fetch", "origin", sha]
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        assert command == ["git", "diff", "--name-only", "--no-renames", f"origin/main...{sha}"]
+        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
     _handle_acp_compat(_review_args(pr=77), "agy")
     assert seen["target"] == "agy"
     assert seen["kwargs"]["review_profile"] == "ukrainian"
     assert seen["kwargs"]["pr_number"] == 77
+    assert seen["kwargs"]["pinned_head"] == sha
 
 
 def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -266,14 +259,16 @@ def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) 
         lambda number: ("mixed-branch", "b" * 40),
     )
 
+    sha = "b" * 40
+
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if "--paginate" in command:
-            return subprocess.CompletedProcess(
-                command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n"
-            )
-        return subprocess.CompletedProcess(command, 0, stdout="2\n")
+        if command[:2] == ["git", "fetch"]:
+            assert command[-1] == sha
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        assert command[-1] == f"origin/main...{sha}"
+        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
@@ -311,30 +306,18 @@ def test_pr_file_past_the_hundredth_still_refuses_code(monkeypatch: pytest.Monke
         "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
         lambda number: ("wide-branch", "d" * 40),
     )
+    sha = "d" * 40
     names = [f"curriculum/l2-uk-en/a1/page-{index}.md" for index in range(1, 151)]
     names[119] = _CODE_PATH
 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if "--paginate" in command:
-            assert command == [
-                "gh",
-                "api",
-                "--paginate",
-                "repos/{owner}/{repo}/pulls/120/files",
-                "--jq",
-                ".[].filename",
-            ]
-            return subprocess.CompletedProcess(command, 0, stdout="\n".join(names) + "\n")
-        assert command == [
-            "gh",
-            "api",
-            "repos/{owner}/{repo}/pulls/120",
-            "--jq",
-            ".changed_files",
-        ]
-        return subprocess.CompletedProcess(command, 0, stdout="150\n")
+        if command[:2] == ["git", "fetch"]:
+            assert command == ["git", "fetch", "origin", sha]
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        assert command == ["git", "diff", "--name-only", "--no-renames", f"origin/main...{sha}"]
+        return subprocess.CompletedProcess(command, 0, stdout="\n".join(names) + "\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
@@ -402,9 +385,7 @@ def test_delegate_review_verdict_without_profile_is_refused(
         raise AssertionError("review-verdict without a profile must not spawn")
 
     monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
-    args = delegate.build_parser().parse_args(
-        _dispatch_argv("--require-review-verdict")
-    )
+    args = delegate.build_parser().parse_args(_dispatch_argv("--require-review-verdict"))
     assert delegate.cmd_dispatch(args) == 2
     assert "--review-profile" in capsys.readouterr().err
     assert delegate._read_state(delegate._state_path("agy-review-gate")) is None
@@ -479,7 +460,7 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
     assert listed == [
         ["git", "fetch", "origin", _branch_refspec("feature")],
         ["git", "rev-parse", "--verify", "refs/remotes/origin/feature"],
-        ["git", "diff", "--name-only", f"origin/main...{_REMOTE_SHA}"],
+        ["git", "diff", "--name-only", "--no-renames", f"origin/main...{_REMOTE_SHA}"],
     ]
 
 
@@ -536,25 +517,33 @@ def test_branch_diff_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> None
         _handle_acp_compat(_review_args(branch="feature"), "agy")
 
 
-def test_pr_changed_files_mismatch_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
-    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
-        raise AssertionError("a short PR file list must not reach Gemini dispatch")
+def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The path gate's SHA is the only commit dispatch may check out."""
+    gate_sha = "e" * 40
+    moved_sha = "f" * 40
 
-    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    def fake_dispatch(*_args: object, **kwargs: object) -> None:
+        assert kwargs["pinned_head"] == gate_sha
+        raise RuntimeError(
+            f"refusing dispatch: fetched branch head {moved_sha} differs from the Gemini path-gate SHA {gate_sha}"
+        )
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._dispatch_wrappers.run_ask_review_dispatch", fake_dispatch)
     monkeypatch.setattr(
         "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
-        lambda number: ("content-branch", "e" * 40),
+        lambda number: ("content-branch", gate_sha),
     )
 
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if "--paginate" in command:
-            return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
-        return subprocess.CompletedProcess(command, 0, stdout="2\n")
+        if command[:2] == ["git", "fetch"]:
+            assert command[-1] == gate_sha
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    with pytest.raises(SystemExit, match="does not match changed_files"):
+    with pytest.raises(SystemExit, match="differs from the Gemini path-gate SHA"):
         _handle_acp_compat(_review_args(pr=41), "agy")
 
 
@@ -737,4 +726,215 @@ def test_branch_changed_paths_ignore_hostile_git_dir(monkeypatch: pytest.MonkeyP
     _git(str(tmp_path), "init", "-b", "main", str(hostile))
 
     monkeypatch.setenv("GIT_DIR", str(hostile / ".git"))
-    assert list_branch_changed_paths("feature", repo_root=root) == ["notes.txt"]
+    heads: list[str] = []
+    assert list_branch_changed_paths("feature", repo_root=root, head_out=heads) == ["notes.txt"]
+    assert len(heads) == 1 and len(heads[0]) == 40
+
+
+def test_cursor_gemini_model_review_is_refused_including_after_substitution(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A Gemini model on Cursor is a review gate, including the post-substitution model."""
+    from scripts import delegate
+    from scripts.ai_agent_bridge._agy import gemini_review_verdict_dispatch_error
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "cursor",
+            "--model",
+            "gemini-3.1-pro",
+            "--task-id",
+            "cursor-gemini-review",
+            "--prompt",
+            "Review this change.",
+            "--require-review-verdict",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "--review-profile" in err
+
+    substituted = gemini_review_verdict_dispatch_error(
+        agent="cursor",
+        require_review_verdict=True,
+        profile=None,
+        pr_number=None,
+        branch=None,
+        repo_root=".",
+        model="grok-4.7",
+        resolved_model="google/gemini-3.8-flash-high",
+    )
+    assert substituted is not None
+    assert "--review-profile" in substituted
+
+
+def test_rename_from_code_onto_content_is_a_code_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    """``--no-renames`` keeps the deleted code path visible on the pinned SHA."""
+    from scripts.ai_agent_bridge._agy import list_branch_changed_paths, list_commit_changed_paths
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command[:2] == ["git", "diff"]:
+            assert "--no-renames" in command
+            return subprocess.CompletedProcess(command, 0, stdout=f"scripts/x.py\n{_CONTENT_PATH}\n")
+        if command[:2] == ["git", "fetch"]:
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        if command[:3] == ["git", "rev-parse", "--verify"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{_REMOTE_SHA}\n")
+        if command[:2] == ["git", "check-ref-format"]:
+            return subprocess.CompletedProcess(command, 0, stdout="feature\n")
+        raise AssertionError(command)
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    branch_paths = list_branch_changed_paths("feature", repo_root=".")
+    assert "scripts/x.py" in branch_paths
+    pr_paths = list_commit_changed_paths(_REMOTE_SHA, repo_root=".")
+    assert pr_paths == ["scripts/x.py", _CONTENT_PATH]
+
+
+def test_delegate_pr_gate_diffs_the_resolved_sha(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """``delegate --pr`` resolves the head once and diffs that SHA, not the API file list."""
+    from scripts import delegate
+
+    sha = "a" * 40
+    payload = '{"headRefName":"feature","headRefOid":"' + sha + '","isCrossRepository":false}\n'
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command[:2] == ["gh", "pr"]:
+            return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "fetch"]:
+            assert command == ["git", "fetch", "origin", sha]
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        if command[:2] == ["git", "diff"]:
+            assert command == ["git", "diff", "--name-only", "--no-renames", f"origin/main...{sha}"]
+            return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
+        if command[:2] == ["git", "check-ref-format"]:
+            return subprocess.CompletedProcess(command, 0, stdout="feature\n")
+        raise AssertionError(command)
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--task-id",
+            "agy-pr-pin",
+            "--prompt",
+            "Implement the requested dispatch guard and add regression tests.",
+            "--require-review-verdict",
+            "--review-profile",
+            "ukrainian",
+            "--pr",
+            "77",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "write-shaped prompt" in err
+    assert "gemini_code_review_forbidden" not in err
+    assert args.pinned_head == sha
+    assert args.branch == "feature"
+
+
+def test_delegate_pr_pinned_head_must_match_resolved_sha(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """``--pr`` plus an unrelated ``--pinned-head`` is refused, even with the right branch."""
+    from scripts import delegate
+
+    sha = "a" * 40
+    other = "b" * 40
+    payload = '{"headRefName":"feature","headRefOid":"' + sha + '","isCrossRepository":false}\n'
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command[:2] == ["gh", "pr"]:
+            return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "check-ref-format"]:
+            return subprocess.CompletedProcess(command, 0, stdout="feature\n")
+        raise AssertionError(command)
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--task-id",
+            "agy-pr-pin-mismatch",
+            "--prompt",
+            "Implement the requested dispatch guard and add regression tests.",
+            "--pr",
+            "77",
+            "--pinned-head",
+            other,
+            "--branch",
+            "feature",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert f"--pinned-head {other} is not PR #77 head {sha}" in err
+    assert args.branch == "feature"
+
+
+def test_delegate_pr_pinned_head_requires_the_pr_branch(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A pin without ``--branch`` must not fall through and start from main."""
+    from scripts import delegate
+
+    sha = "a" * 40
+    payload = '{"headRefName":"feature","headRefOid":"' + sha + '","isCrossRepository":false}\n'
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command[:2] == ["gh", "pr"]:
+            return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "check-ref-format"]:
+            return subprocess.CompletedProcess(command, 0, stdout="feature\n")
+        raise AssertionError(command)
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--task-id",
+            "agy-pr-pin-no-branch",
+            "--prompt",
+            "Implement the requested dispatch guard and add regression tests.",
+            "--pr",
+            "77",
+            "--pinned-head",
+            sha,
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "--pr 77 with --pinned-head requires --branch 'feature'" in err
+    assert args.branch is None
+
+
+def test_dispatch_refuses_when_fetched_head_differs_from_gate_sha() -> None:
+    from scripts.delegate import _refuse_if_gate_head_moved
+
+    gate = "a" * 40
+    _refuse_if_gate_head_moved(gate, gate)
+    with pytest.raises(RuntimeError, match="differs from the Gemini path-gate SHA"):
+        _refuse_if_gate_head_moved("b" * 40, gate)

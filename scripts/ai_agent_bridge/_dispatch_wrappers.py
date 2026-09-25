@@ -377,6 +377,7 @@ def build_ask_review_dispatch_command(
     effort: str | None,
     branch: str | None = None,
     review_profile: str | None = None,
+    pinned_head: str | None = None,
 ) -> list[str]:
     """Headless dispatch command for one review-intent ask-*.
 
@@ -410,6 +411,8 @@ def build_ask_review_dispatch_command(
     ]
     if branch:
         cmd.extend(["--branch", branch])
+    if pinned_head:
+        cmd.extend(["--pinned-head", pinned_head])
     if review_profile:
         cmd.extend(["--review-profile", review_profile])
     if model:
@@ -436,6 +439,7 @@ def run_ask_review_dispatch(
     hard_timeout: int | None = None,
     branch: str | None = None,
     review_profile: str | None = None,
+    pinned_head: str | None = None,
 ) -> dict[str, Any]:
     """Dispatch one review-intent ask-* to the headless native CLI and block for it.
 
@@ -459,6 +463,7 @@ def run_ask_review_dispatch(
             effort=effort,
             branch=branch,
             review_profile=review_profile,
+            pinned_head=pinned_head,
         )
         try:
             dispatch_proc = subprocess.run(
@@ -521,9 +526,7 @@ def run_ask_review_dispatch(
         from scripts import delegate as _delegate
 
         status = state.get("status")
-        completed = (status == "done" and wait_proc.returncode == 0) or (
-            status == _delegate._NO_DELIVERABLE_STATUS
-        )
+        completed = (status == "done" and wait_proc.returncode == 0) or (status == _delegate._NO_DELIVERABLE_STATUS)
         verdict_failure = _delegate._review_verdict_failure_reason(response)
         if completed and verdict_failure is None:
             state["ok"] = True
