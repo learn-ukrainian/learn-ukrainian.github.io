@@ -21,6 +21,11 @@ interface DivideWordsItem {
    * @ukrainianText true
    */
   hint?: string;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
+  explanation?: string;
 }
 
 interface DivideWordsProps {
@@ -222,6 +227,9 @@ export default function DivideWords({ instruction, items }: DivideWordsProps) {
           </p>
           {current.hint && (
             <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem' }}>{current.hint}</p>
+          )}
+          {current.explanation && (
+            <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem' }}>{current.explanation}</p>
           )}
         </div>
       )}

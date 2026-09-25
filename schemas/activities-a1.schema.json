@@ -583,12 +583,13 @@
             "required": [
               "image",
               "letter",
+              "options",
               "explanation"
             ],
             "properties": {
               "image": {
                 "type": "string",
-                "minLength": 1
+                "pattern": "^(?:[A-Za-z0-9_./-]+\\.(?:png|jpe?g|webp|svg)|[^A-Za-z0-9\\s]{1,8})$"
               },
               "letter": {
                 "type": "string",

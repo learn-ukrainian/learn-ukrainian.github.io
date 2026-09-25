@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 4f2055dd5c0764070fab269581e49ad94999ba6bc276459930a8cb1c3efb5253
+  components_sha256: 6ec6776c6011dd292f677095edfed0c35cd58964407835957b42b16cbaf54ce8
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -45,6 +45,10 @@ components:
       - name: hint
         type: string
         description: Hint value consumed by this component.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
         ukrainian_text: 'true'
     example:
       instruction: Приклад
@@ -282,6 +286,10 @@ components:
       - name: translation
         type: string
         description: English translation or gloss.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
         ukrainian_text: 'true'
     example:
       items:
@@ -611,6 +619,10 @@ components:
       - name: hint
         type: string
         description: Hint value consumed by this component.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
         ukrainian_text: 'true'
     example:
       items:
@@ -1162,6 +1174,10 @@ components:
         type: string
         description: Display title shown above the component.
         ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
     nested_types:
       LetterEntry:
       - name: upper
@@ -1171,6 +1187,10 @@ components:
       - name: lower
         type: string
         description: Lower value consumed by this component.
+        ukrainian_text: 'true'
+      - name: name
+        type: string
+        description: Name value consumed by this component.
         ukrainian_text: 'true'
       - name: emoji
         type: string
@@ -1192,6 +1212,7 @@ components:
       letters:
       - <LetterEntry>
       title: Приклад
+      instruction: Приклад
     deprecated: false
     deprecation_reason: null
   LexiconCustomDeckManager:
@@ -1694,9 +1715,11 @@ components:
     deprecation_reason: null
   PhraseTable:
     tab: vocabulary
-    level_scope: *id001
-    activity_type: null
-    placement: n/a
+    level_scope:
+    - a1
+    - a2
+    activity_type: phrase-table
+    placement: both
     props:
       required:
       - name: groups
@@ -1708,6 +1731,10 @@ components:
         type: string
         description: Display title shown above the component.
         ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
       - name: isUkrainian
         type: boolean
         description: UI language flag for Ukrainian labels and feedback.
@@ -1715,6 +1742,10 @@ components:
         default: false
     nested_types:
       PhraseGroup:
+      - name: label
+        type: string
+        description: Label value consumed by this component.
+        ukrainian_text: 'true'
       - name: function
         type: string
         description: Function value consumed by this component.
@@ -1727,6 +1758,7 @@ components:
       groups:
       - <PhraseGroup>
       title: Приклад
+      instruction: Приклад
     deprecated: false
     deprecation_reason: null
   PickSyllables:
@@ -2809,6 +2841,10 @@ components:
         type: string
         description: Hint value consumed by this component.
         ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
+        ukrainian_text: 'true'
     example:
       instruction: Приклад
     deprecated: false
@@ -3026,6 +3062,10 @@ components:
         type: string
         description: Note value consumed by this component.
         ukrainian_text: 'false'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown under the item.
+        ukrainian_text: 'true'
     example:
       items:
       - <WatchAndRepeatItem>

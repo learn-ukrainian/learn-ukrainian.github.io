@@ -10054,6 +10054,7 @@ _ACTIVITY_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
     "observe": _activity("examples", "prompt"),
     "odd-one-out": _activity("items"),
     "order": _activity("items", "correct_order"),
+    "phrase-table": _activity("groups"),
     "pick-syllables": _activity("syllables", "category", "correctIndices", "explanation"),
     # Seminar / B2+ analytical types. The fields below cover both
     # the canonical and legacy authoring shapes that `ActivityParser`

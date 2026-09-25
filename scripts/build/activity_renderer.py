@@ -509,6 +509,8 @@ def _render_anagram(act: dict) -> str:
         }
         if item.get("hint"):
             entry["hint"] = item["hint"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
 
     props = _prop("items", items)
@@ -555,12 +557,15 @@ def _render_unjumble(act: dict) -> str:
     for item in act.get("items", []):
         words = item.get("words", [])
         correct = item.get("correct_order", [])
+        answer = item.get("answer") or " ".join(str(c) for c in correct)
         entry: dict[str, Any] = {
-            "words": " / ".join(words),
-            "answer": " ".join(correct),
+            "words": " / ".join(str(w) for w in words),
+            "answer": str(answer),
         }
         if item.get("hint"):
             entry["hint"] = item["hint"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
 
     props = _prop("items", items)
@@ -740,6 +745,12 @@ def image_to_letter_render_values(item: Any, index: int = 0) -> dict[str, Any]:
             f"distractors); keys present: {sorted(item)}"
         )
     raw = item.get("distractors") if item.get("distractors") is not None else item.get("options")
+    if "options" in item:
+        options = item["options"]
+        if not isinstance(options, (list, tuple)) or answer not in options:
+            raise ImageToLetterShapeError(
+                f"image-to-letter item {index} options do not contain letter {answer!r}"
+            )
     distractors: list[str] = []
     for option in raw or []:
         if option != answer and option not in distractors:
@@ -777,21 +788,22 @@ def _render_letter_grid(act: dict) -> str:
             "upper": entry.get("upper", ""),
             "lower": entry.get("lower", ""),
         }
-        for field in ("emoji", "key_word", "note", "sound_type"):
+        for field in ("name", "emoji", "key_word", "note", "sound_type"):
             if entry.get(field):
                 item[field] = entry[field]
         letters.append(item)
 
     props = _prop("letters", letters)
-    props += _opt_prop("title", act.get("instruction"))
+    props += _opt_prop("title", act.get("title"))
+    props += _opt_prop("instruction", act.get("instruction"))
     return _component("LetterGrid", props)
 
 
 def _render_watch_and_repeat(act: dict) -> str:
     """watch-and-repeat → <WatchAndRepeat items={[...]} />
 
-    YAML: items[{video, letter?, word?, note?}]
-    React WatchAndRepeatItem: {video, letter?, word?, note?}
+    YAML: items[{video, letter?, word?, sound?, note?, explanation?}]
+    React WatchAndRepeatItem: {video, letter?, word?, sound?, note?, explanation?}
     """
     items = []
     for item in act.get("items", []):
@@ -800,12 +812,17 @@ def _render_watch_and_repeat(act: dict) -> str:
             entry["letter"] = item["letter"]
         if item.get("word"):
             entry["word"] = item["word"]
+        if item.get("sound"):
+            entry["sound"] = item["sound"]
         if item.get("note"):
             entry["note"] = item["note"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
 
     props = _prop("items", items)
-    props += _opt_prop("title", act.get("instruction"))
+    props += _opt_prop("title", act.get("title"))
+    props += _opt_prop("instruction", act.get("instruction"))
     return _component("WatchAndRepeat", props)
 
 
@@ -835,6 +852,8 @@ def _render_divide_words(act: dict) -> str:
         entry = {"word": item.get("word", ""), "answer": item.get("answer", "")}
         if item.get("hint"):
             entry["hint"] = item["hint"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
     props = _prop("items", items)
     props += _opt_prop("instruction", act.get("instruction"))
@@ -848,6 +867,8 @@ def _render_count_syllables(act: dict) -> str:
         entry = {"word": item.get("word", ""), "correct": item.get("correct", 1)}
         if item.get("translation"):
             entry["translation"] = item["translation"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
     props = _prop("items", items)
     props += _opt_prop("instruction", act.get("instruction"))
@@ -870,7 +891,7 @@ def _render_phrase_table(act: dict) -> str:
     """phrase-table → <PhraseTable groups={[...]} />
 
     YAML: groups[{label, phrases[str|{phrase, context?, emoji?}]}]
-    React PhraseGroup: {function(=label), phrases[{phrase, context?, emoji?}]}
+    React PhraseGroup: {label, function(=label), phrases[{phrase, context?, emoji?}]}
     """
     groups = []
     for g in act.get("groups", []):
@@ -879,18 +900,22 @@ def _render_phrase_table(act: dict) -> str:
             if isinstance(p, str):
                 phrases.append({"phrase": p})
             else:
-                phrases.append({
-                    "phrase": p.get("phrase", ""),
-                    "context": p.get("context"),
-                    "emoji": p.get("emoji"),
-                })
+                entry = {"phrase": p.get("phrase", "")}
+                if p.get("context"):
+                    entry["context"] = p["context"]
+                if p.get("emoji"):
+                    entry["emoji"] = p["emoji"]
+                phrases.append(entry)
+        label = g.get("label") or g.get("function", "")
         groups.append({
-            "function": g.get("label", ""),
+            "label": label,
+            "function": label,
             "phrases": phrases,
         })
 
     props = _prop("groups", groups)
-    props += _opt_prop("title", act.get("instruction"))
+    props += _opt_prop("title", act.get("title"))
+    props += _opt_prop("instruction", act.get("instruction"))
     return _component("PhraseTable", props)
 
 

@@ -34,13 +34,18 @@ interface AnagramQuestionProps {
    */
   hint?: string;
   /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
+  explanation?: string;
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
   isUkrainian?: boolean;
 }
 
-export function AnagramQuestion({ scrambled, answer, hint, isUkrainian }: AnagramQuestionProps) {
+export function AnagramQuestion({ scrambled, answer, hint, explanation, isUkrainian }: AnagramQuestionProps) {
   // Parse scrambled letters (space-separated) and shuffle so they're never in correct order
   const letters = useMemo(() => {
     const rawLetters = scrambled.split(' ').filter(l => l.trim());
@@ -210,6 +215,7 @@ export function AnagramQuestion({ scrambled, answer, hint, isUkrainian }: Anagra
           data-correct={isCorrect ? 'true' : 'false'}
         >
           {isCorrect ? correctLabel : `${incorrectLabel} ${answer}`}
+          {explanation && <p className={styles.explanation} data-activity="explanation">{explanation}</p>}
         </div>
       )}
     </div>
@@ -232,6 +238,11 @@ interface AnagramItem {
    * @ukrainianText true
    */
   hint?: string;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
+  explanation?: string;
 }
 
 interface AnagramProps {
@@ -277,6 +288,7 @@ export default function Anagram({ items, instruction, children, isUkrainian }: A
             scrambled={item.scrambled}
             answer={item.answer}
             hint={item.hint}
+            explanation={item.explanation}
             isUkrainian={isUkrainian}
           />
         )) : children}
