@@ -35,9 +35,9 @@ To ensure zero training corruption, zero benchmark leakage, and high grammatical
 3. **Cross-Split Eval Partition Isolation:**
    - Sentences appearing in the evaluation partition are strictly quarantined from the training partition: **10** candidate matches excluded (9 sources [`eval_partition_firewall_source`], 1 target [`eval_partition_firewall_target`]).
 4. **Syntactic, Semantic & Valency Quality Filters:**
-   - Unwarranted valid-to-valid lexical swap (`unwarranted_valid_to_valid_lexical_swap`): **862** candidates excluded.
+   - Unwarranted valid-to-valid lexical swap (`unwarranted_valid_to_valid_lexical_swap`): **861** candidates excluded.
    - Sentence length floor (< 5 words) (`sentence_length_floor_under_5_words`): **287** candidates excluded.
-   - Ungrammatical gold correction (`ungrammatical_gold_correction`): **274** candidates excluded.
+   - Ungrammatical gold correction (`ungrammatical_gold_correction`): **275** candidates excluded.
    - Wholesale essay rewrite exceeding 30% of tokens (`wholesale_essay_rewrite_token_share_over_30_pct`): **196** candidates excluded.
    - Repeated word with intervening tokens (`repeated_word_intervening_words`): **187** candidates excluded.
    - Russianism in corrected text (`russianism_in_corrected_text`): **150** candidates excluded.

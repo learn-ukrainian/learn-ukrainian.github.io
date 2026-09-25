@@ -2215,6 +2215,8 @@ def validate_candidate_rejection(
         return "ungrammatical_gold_correction"
     if re.search(r"\bпоряд\s+безголовим\b", c_low):
         return "ungrammatical_gold_correction"
+    if re.search(r"\bлавровишневими\s+краплями\b", o_low):
+        return "ungrammatical_gold_correction"
 
     # 6. Unneeded swaps and meaning changes
     if in_scope:
@@ -2223,7 +2225,8 @@ def validate_candidate_rejection(
             orig_span = " ".join(tokens_to_use[start:end]).lower()
             corr_span = corr.lower()
             if (re.search(r"\bнадяг\w*\b", orig_span) and re.search(r"\bодяг\w*\b", corr_span)) or (
-                re.search(r"\bпередн[яіійює]\b", orig_span) and re.search(r"\bпередпоко\w*\b", corr_span)
+                re.search(r"\bпередн(?:ій|[яіює]|ьої|ею|ьою)\b", orig_span)
+                and re.search(r"\bпередпоко\w*\b", corr_span)
             ):
                 return "unwarranted_valid_to_valid_lexical_swap"
     if re.search(r"\bповоди\w*\s+себе\b", o_low) and re.search(r"\bповоди\w*сь\b|\bповоди\w*ся\b", c_low):

@@ -1005,3 +1005,38 @@ def test_validator_rejection_label_accuracy():
         validate_candidate_rejection(orig_morbid, corr_morbid, [(4, 5, "G/Case", "померлим")])
         == "safety_violent_morbid_vulgar"
     )
+
+
+def test_isolated_perednia_to_peredpokii_lexical_swap_regression():
+    """Verify that swapping передній (or other inflections of передня) to передпокої
+
+    is rejected as unwarranted_valid_to_valid_lexical_swap even when isolated
+    (without an accompanying nadiahshy -> odiahnuvshy edit). Regression test for Codex R27.
+    """
+    from scripts.projects.open_model_data.build_grammar_component_8342 import validate_candidate_rejection
+
+    orig_text = "Він стояв у передній і розмовляв."
+    corr_text = "Він стояв у передпокої і розмовляв."
+    orig_tokens = ["Він", "стояв", "у", "передній", "і", "розмовляв", "."]
+    in_scope = [(3, 4, "F/Calque", "передпокої")]
+
+    res = validate_candidate_rejection(
+        orig_text=orig_text,
+        corr_text=corr_text,
+        in_scope=in_scope,
+        orig_tokens=orig_tokens,
+    )
+    assert res == "unwarranted_valid_to_valid_lexical_swap"
+
+    # Also verify feminine form передня -> передпокій
+    orig_f = "Передня була просторою і світлою."
+    corr_f = "Передпокій був просторим і світлим."
+    tokens_f = ["Передня", "була", "просторою", "і", "світлою", "."]
+    in_scope_f = [(0, 1, "F/Calque", "Передпокій")]
+    res_f = validate_candidate_rejection(
+        orig_text=orig_f,
+        corr_text=corr_f,
+        in_scope=in_scope_f,
+        orig_tokens=tokens_f,
+    )
+    assert res_f == "unwarranted_valid_to_valid_lexical_swap"
