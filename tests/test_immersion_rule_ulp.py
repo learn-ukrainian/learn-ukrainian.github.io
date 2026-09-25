@@ -233,8 +233,10 @@ The word **вода́** is useful in the morning because you see it in routines,
 # (`-m "not atlas_release and not slow"`) excludes it; it still runs in the slow/nightly path.
 @pytest.mark.slow
 def test_ulp_fidelity_correction_reruns_stress_and_gate(tmp_path: Path) -> None:
-    module_dir = tmp_path / "module"
-    module_dir.mkdir()
+    # Path must contain an `a1` segment so validate_activity_yaml_file selects
+    # the A1 schema (which permits error_ref) instead of the base schema.
+    module_dir = tmp_path / "a1" / "module"
+    module_dir.mkdir(parents=True)
     plan_path = tmp_path / "plan.yaml"
     plan_path.write_text(
         "\n".join(
