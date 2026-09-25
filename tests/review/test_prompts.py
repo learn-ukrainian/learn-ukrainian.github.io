@@ -306,6 +306,7 @@ def test_plan_prompt_contains_all_required_rules_and_sections(tmp_path: Path, mo
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.repo_wide
 def test_no_cyrillic_characters_in_templates_or_code():
     """Verify that no Ukrainian or Cyrillic characters exist in prompt templates or code."""
     cyrillic_re = re.compile(r"[\u0400-\u04FF]")
@@ -596,6 +597,7 @@ def _verifier_paths(root: Path) -> set[Path]:
     return {(root / MODULE_MANIFEST).resolve()}
 
 
+@pytest.mark.repo_wide
 def test_no_e3d_placeholder_markers_are_left():
     text = "\n".join(
         path.read_text(encoding="utf-8")
@@ -1389,6 +1391,7 @@ def _lint(tmp_path, monkeypatch, source: str, *, name: str = "bad", use: bool = 
     )
 
 
+@pytest.mark.repo_wide
 def test_the_shipped_templates_pass_the_lint_and_are_all_linted(tmp_path, monkeypatch):
     manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
@@ -1399,6 +1402,7 @@ def test_the_shipped_templates_pass_the_lint_and_are_all_linted(tmp_path, monkey
     assert {"lesson-review.md.j2", "lesson-rereview.md.j2", "plan-review.md.j2"} <= linted
 
 
+@pytest.mark.repo_wide
 def test_template_lint_refuses_another_modules_slug_but_not_ordinary_prose(tmp_path, monkeypatch):
     prose = "The prompt lists a comparison and a review of euphony and surzhyk.\n"
     ok = _lint(tmp_path / "ok", monkeypatch, prose)
@@ -1414,6 +1418,7 @@ def test_template_lint_refuses_another_modules_slug_but_not_ordinary_prose(tmp_p
         )
 
 
+@pytest.mark.repo_wide
 def test_template_lint_refuses_v1_writer_and_earlier_edition_wording(tmp_path, monkeypatch):
     cases = {
         "v1": ("Read curriculum/l2-uk-en/a1/lesson-1.yaml first.\n", "forbidden_v1_path"),
@@ -1426,6 +1431,7 @@ def test_template_lint_refuses_v1_writer_and_earlier_edition_wording(tmp_path, m
         assert not res.passed and any(err.startswith(code) for err in res.errors), (name, res.errors)
 
 
+@pytest.mark.repo_wide
 def test_template_lint_refuses_unresolved_placeholders_in_what_a_template_renders(tmp_path, monkeypatch):
     res = _lint(tmp_path / "used", monkeypatch, 'Module {{ manifest.slug }}\n{{ "{{ oops }}" }}\n', use=True)
     assert not res.passed and any(
@@ -1435,6 +1441,7 @@ def test_template_lint_refuses_unresolved_placeholders_in_what_a_template_render
     assert not todo.passed and any("unresolved_placeholder" in err for err in todo.errors)
 
 
+@pytest.mark.repo_wide
 def test_template_lint_refuses_an_unclosed_fence_and_a_template_that_does_not_parse(tmp_path, monkeypatch):
     fence = _lint(tmp_path / "fence", monkeypatch, "```yaml\nnever closed\n")
     assert not fence.passed and any("unbalanced_data_fence" in err for err in fence.errors)
@@ -1442,6 +1449,7 @@ def test_template_lint_refuses_an_unclosed_fence_and_a_template_that_does_not_pa
     assert not parse.passed and any("template_invalid" in err for err in parse.errors)
 
 
+@pytest.mark.repo_wide
 def test_a_re_review_template_may_name_its_previous_findings_but_a_first_review_template_may_not(tmp_path, monkeypatch):
     ok = _lint(tmp_path / "ok", monkeypatch, "Judge each of the previous findings.\n", name="extra-rereview")
     assert ok.passed, ok.errors
@@ -1479,6 +1487,7 @@ def test_a_rebuilt_lesson_may_share_text_with_its_earlier_edition(tmp_path, monk
     assert not any("manifests/" in path for path in res.verifier_reads), "no snapshot history is read"
 
 
+@pytest.mark.repo_wide
 def test_the_template_prose_exemption_is_exactly_the_real_collisions_of_the_shipped_templates():
     root = Path(__file__).resolve().parents[2]
     levels = yaml.safe_load((root / MODULE_MANIFEST).read_text(encoding="utf-8"))["levels"]
@@ -1514,6 +1523,7 @@ EXTERNAL_READ_TAGS = {
 
 
 @pytest.mark.parametrize("name", list(EXTERNAL_READ_TAGS))
+@pytest.mark.repo_wide
 def test_a_template_that_includes_imports_or_extends_a_file_fails_lint_and_render(tmp_path, monkeypatch, name):
     source = EXTERNAL_READ_TAGS[name]
     manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)

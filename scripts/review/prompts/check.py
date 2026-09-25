@@ -295,7 +295,11 @@ def _lint_templates(
     errors: list[str],
 ) -> None:
     """Lint every template in the directory (literal text) and the render of the one in use (sentinel data)."""
-    parser = jinja2.Environment()
+    parser = jinja2.Environment(
+        autoescape=jinja2.select_autoescape(
+            enabled_extensions=("html", "htm", "xml"), default_for_string=False, default=False
+        )
+    )
     for path in _template_paths(prompts_dir):
         verifier_reads.append(path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix())
         source = path.read_text(encoding="utf-8")
