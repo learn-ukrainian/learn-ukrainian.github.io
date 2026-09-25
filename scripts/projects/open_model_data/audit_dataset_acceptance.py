@@ -575,10 +575,13 @@ def audit_check_2_form_letters(records: list[DatasetRecord], thresholds: dict[st
     failures = []
 
     # Query limits
+    max_q_top1 = thresholds.get("max_query_top1_share")
     max_q_top5 = thresholds.get("max_query_top5_share", 0.80)
     min_q_k = thresholds.get("min_query_unique_skeletons", 20)
     min_q_entropy = thresholds.get("min_query_entropy", 0.60)
     if total >= 20:
+        if max_q_top1 is not None and total >= 50 and q_stats["top1"] > max_q_top1:
+            failures.append(f"Query top 1 pattern covers {q_stats['top1']:.1%}, exceeding limit {max_q_top1:.1%}")
         if total >= 50 and q_stats["top5"] > max_q_top5:
             failures.append(f"Query top 5 patterns cover {q_stats['top5']:.1%}, exceeding limit {max_q_top5:.1%}")
         effective_min_q_k = min(min_q_k, max(3, total // 5))
@@ -1106,36 +1109,25 @@ def audit_check_7_sample_drawer(
     scored_records.sort(key=lambda x: x[0])
     selected = [r for _, r in scored_records[:sample_size]]
 
-    # Ensure thin categories are included up to cap
-    thin_cap = thresholds.get("thin_category_sample_cap", 20)
+    # Ensure 100% of thin categories (<50 examples in UA-GEC/dataset) are included per SPEC §2.2 & §3
     min_cat = thresholds.get("min_examples_per_category", 50)
-    category_counts = Counter(r.category for r in records if r.category)
-    # Sort thin categories before iteration to be invariant to PYTHONHASHSEED (Fixes Blocker 4)
-    thin_categories = sorted([cat for cat, c in category_counts.items() if c < min_cat])
+    tag_counts = Counter(r.raw.get("tag") for r in records if r.is_erroneous and r.raw.get("tag"))
+    cat_counts = Counter(r.category for r in records if r.is_erroneous and r.category)
+    thin_tags = {tag for tag, c in tag_counts.items() if c < min_cat}
+    thin_cats = {cat for cat, c in cat_counts.items() if c < min_cat}
 
     selected_hashes = {r.content_hash for r in selected}
-    thin_by_cat: dict[str, list[DatasetRecord]] = {}
-    for cat in thin_categories:
-        cat_recs = [r for r in records if r.category == cat and r.content_hash not in selected_hashes]
-        # Sort additions by deterministic rank hash, never file order
-        cat_recs.sort(key=lambda r: hashlib.sha256(f"{seed_hash}:{r.content_hash}".encode()).hexdigest())
-        thin_by_cat[cat] = cat_recs[:thin_cap]
+    thin_records = [
+        r
+        for r in records
+        if r.is_erroneous
+        and r.content_hash not in selected_hashes
+        and (r.raw.get("tag") in thin_tags or r.category in thin_cats)
+    ]
+    # Sort deterministically by rank hash
+    thin_records.sort(key=lambda r: hashlib.sha256(f"{seed_hash}:{r.content_hash}".encode()).hexdigest())
 
-    # Fair round-robin allocation across thin categories up to 100 total
-    thin_additions: list[DatasetRecord] = []
-    max_round = thin_cap
-    max_total_thin = 100
-    for round_idx in range(max_round):
-        if len(thin_additions) >= max_total_thin:
-            break
-        for cat in thin_categories:
-            if len(thin_additions) >= max_total_thin:
-                break
-            recs = thin_by_cat[cat]
-            if round_idx < len(recs):
-                thin_additions.append(recs[round_idx])
-
-    all_sampled = selected + thin_additions
+    all_sampled = selected + thin_records
     actual_drawn_count = len(all_sampled)
 
     # Resolve output paths safely
@@ -1155,7 +1147,7 @@ def audit_check_7_sample_drawer(
         f"- **Dataset SHA-256:** `{dataset_sha256}`",
         f"- **Deterministic Sampling Seed Hash:** `{seed_hash}`",
         f"- **Profile SHA-256:** `{profile_sha256}`",
-        f"- **Sampled Rows:** {actual_drawn_count} (Base {len(selected)} + Thin Category Boost {len(thin_additions)})",
+        f"- **Sampled Rows:** {actual_drawn_count} (Base {len(selected)} + Thin Category Boost {len(thin_records)})",
         "",
         "## Reviewer Instructions & Rubric",
         "For each instance below, evaluate the text using authentic Ukrainian linguistic tools (СУМ-20, Правопис 2019, VESUM, Антоненко-Давидович).",
@@ -1319,6 +1311,260 @@ def audit_check_7_sample_drawer(
                         failures.append("Signoff missing valid reviewer_id")
                     if not reviewer_family or not isinstance(reviewer_family, str) or not reviewer_family.strip():
                         failures.append("Signoff missing valid reviewer_family")
+
+                    # Check for verified itemized receipt if configured or present
+                    receipt_path = sample_out_path.parent / "acceptance_review_sample.receipt.json"
+                    require_receipt = thresholds.get("require_review_receipt", False)
+                    if require_receipt and not receipt_path.is_file():
+                        failures.append(f"Missing itemized review receipt: {receipt_path}")
+                    elif require_receipt and receipt_path.is_file():
+                        try:
+                            receipt_data = json.loads(receipt_path.read_text(encoding="utf-8"))
+                            items = receipt_data.get("reviewed_sample_items", [])
+                            if len(items) != actual_drawn_count:
+                                failures.append(
+                                    f"Receipt item count ({len(items)}) does not match sample size drawn ({actual_drawn_count})"
+                                )
+                            receipt_blockers = receipt_data.get("blocker_defect_count", 0)
+                            if receipt_blockers > 0:
+                                failures.append(f"Receipt reports {receipt_blockers} blocker defect(s)")
+                            receipt_verdict = receipt_data.get("verdict")
+                            if receipt_verdict != "APPROVED":
+                                failures.append(f"Receipt verdict is {receipt_verdict!r}, expected 'APPROVED'")
+
+                            receipt_ds_hash = receipt_data.get("dataset_sha256")
+                            if receipt_ds_hash != dataset_sha256:
+                                failures.append(
+                                    f"Receipt dataset_sha256 ({receipt_ds_hash}) does not match dataset hash ({dataset_sha256})"
+                                )
+                            receipt_seed = receipt_data.get("sample_seed")
+                            if receipt_seed != seed_hash:
+                                failures.append(
+                                    f"Receipt sample_seed ({receipt_seed}) does not match sample seed ({seed_hash})"
+                                )
+                            receipt_prof = receipt_data.get("profile_sha256")
+                            if receipt_prof != profile_sha256:
+                                failures.append(
+                                    f"Receipt profile_sha256 ({receipt_prof}) does not match profile hash ({profile_sha256})"
+                                )
+
+                            receipt_items_by_idx = {it.get("sample_index"): it for it in items}
+                            expected_indices = set(range(1, actual_drawn_count + 1))
+                            receipt_indices = set(receipt_items_by_idx.keys())
+                            missing_in_receipt = expected_indices - receipt_indices
+                            extra_in_receipt = receipt_indices - expected_indices
+                            if missing_in_receipt:
+                                failures.append(
+                                    f"Receipt missing {len(missing_in_receipt)} sampled indices: {sorted(missing_in_receipt)[:5]}"
+                                )
+                            if extra_in_receipt:
+                                failures.append(
+                                    f"Receipt contains {len(extra_in_receipt)} unexpected sampled indices: {sorted(extra_in_receipt)[:5]}"
+                                )
+
+                            for s_idx, r in enumerate(all_sampled, start=1):
+                                r_it = receipt_items_by_idx.get(s_idx)
+                                if not r_it:
+                                    continue
+                                if r_it.get("content_hash") != r.content_hash:
+                                    failures.append(
+                                        f"Receipt item {s_idx} content_hash mismatch: receipt={r_it.get('content_hash')} vs sample={r.content_hash}"
+                                    )
+                                if r.is_erroneous is not None:
+                                    r_it_is_err = r_it.get("is_erroneous")
+                                    if type(r_it_is_err) is not bool or r_it_is_err != r.is_erroneous:
+                                        failures.append(
+                                            f"Receipt item {s_idx} is_erroneous mismatch or non-boolean: receipt={r_it_is_err!r} vs sample={r.is_erroneous!r}"
+                                        )
+                                if r.original_text is not None and (
+                                    "original_text" not in r_it or r_it.get("original_text") != r.original_text
+                                ):
+                                    failures.append(
+                                        f"Receipt item {s_idx} original_text mismatch: receipt={r_it.get('original_text')!r} vs sample={r.original_text!r}"
+                                    )
+                                if r.corrected_text is not None and (
+                                    "corrected_text" not in r_it or r_it.get("corrected_text") != r.corrected_text
+                                ):
+                                    failures.append(
+                                        f"Receipt item {s_idx} corrected_text mismatch: receipt={r_it.get('corrected_text')!r} vs sample={r.corrected_text!r}"
+                                    )
+                                if r.is_erroneous is True:
+                                    sm = (
+                                        r.source_metadata
+                                        if isinstance(r.source_metadata, dict)
+                                        else (r.raw.get("source_metadata") if isinstance(r.raw.get("source_metadata"), dict) else {})
+                                    )
+                                    expected_err = sm.get("error_span") or ""
+                                    expected_repl = sm.get("replacement_span") or ""
+
+                                    if "error_span" not in r_it:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} missing required key 'error_span'"
+                                        )
+                                    if "replacement_span" not in r_it:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} missing required key 'replacement_span'"
+                                        )
+
+                                    r_it_err = r_it.get("error_span")
+                                    r_it_repl = r_it.get("replacement_span")
+
+                                    if r_it_err is not None and not isinstance(r_it_err, str):
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} 'error_span' must be a string, got {type(r_it_err).__name__}"
+                                        )
+                                    elif r_it_err != expected_err:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} error_span mismatch: receipt={r_it_err!r} vs sample={expected_err!r}"
+                                        )
+
+                                    if r_it_repl is not None and not isinstance(r_it_repl, str):
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} 'replacement_span' must be a string, got {type(r_it_repl).__name__}"
+                                        )
+                                    elif r_it_repl != expected_repl:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} replacement_span mismatch: receipt={r_it_repl!r} vs sample={expected_repl!r}"
+                                        )
+
+                                    if not (r_it_err or "") and not (r_it_repl or ""):
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} missing required correction edit spans (error_span/replacement_span)"
+                                        )
+
+                            required_criteria_keys = {
+                                "pedagogical_soundness",
+                                "morphology_vesum",
+                                "pravopys_2019",
+                                "zero_russianisms",
+                                "zero_soviet_sum11",
+                            }
+                            allowed_receipt_verdicts = {"APPROVED", "CHANGES_REQUESTED", "REJECTED"}
+                            allowed_receipt_statuses = {"PASS", "FAIL"}
+                            item_blockers = 0
+                            for r_it in items:
+                                s_idx = r_it.get("sample_index")
+                                it_verdict = r_it.get("verdict")
+                                it_status = r_it.get("status")
+                                if not isinstance(it_verdict, str) or it_verdict not in allowed_receipt_verdicts:
+                                    failures.append(
+                                        f"Receipt item {s_idx} missing or invalid verdict: {it_verdict!r}"
+                                    )
+                                    break
+                                if not isinstance(it_status, str) or it_status not in allowed_receipt_statuses:
+                                    failures.append(
+                                        f"Receipt item {s_idx} missing or invalid status: {it_status!r}"
+                                    )
+                                    break
+                                it_defects = r_it.get("defects", [])
+                                crit = r_it.get("criteria")
+                                if not isinstance(crit, dict) or not required_criteria_keys.issubset(crit.keys()):
+                                    failures.append(
+                                        f"Receipt item {s_idx} missing required 5 criteria keys"
+                                    )
+                                    break
+                                if any(not isinstance(crit[k], bool) for k in required_criteria_keys):
+                                    failures.append(
+                                        f"Receipt item {s_idx} has non-boolean criteria value"
+                                    )
+                                    break
+                                has_failed_criteria = any(crit[k] is False for k in required_criteria_keys)
+                                is_defective = (
+                                    it_verdict != "APPROVED"
+                                    or it_status != "PASS"
+                                    or bool(it_defects)
+                                    or has_failed_criteria
+                                )
+                                if is_defective:
+                                    item_blockers += 1
+                                    if has_failed_criteria and (it_verdict == "APPROVED" or it_status == "PASS"):
+                                        failures.append(
+                                            f"Receipt item {s_idx} has failed criteria (False) but received APPROVED verdict"
+                                        )
+                                        break
+
+                            if item_blockers != receipt_blockers:
+                                failures.append(
+                                    f"Receipt blocker_defect_count ({receipt_blockers}) does not reconcile with item-level defect count ({item_blockers})"
+                                )
+                            if item_blockers > 0:
+                                failures.append(
+                                    f"Receipt contains {item_blockers} item(s) marked FAIL, CHANGES_REQUESTED, or defective"
+                                )
+
+                            unassessed = [
+                                r_it.get("sample_index")
+                                for r_it in items
+                                if not r_it.get("reviewer_assessment")
+                                or not isinstance(r_it.get("reviewer_assessment"), str)
+                                or not r_it.get("reviewer_assessment").strip()
+                            ]
+                            if unassessed:
+                                failures.append(
+                                    f"Receipt has {len(unassessed)} item(s) lacking non-empty reviewer_assessment: {unassessed[:5]}"
+                                )
+
+                            ctrl_assessments: list[str] = []
+                            for s_idx, r in enumerate(all_sampled, start=1):
+                                r_it = receipt_items_by_idx.get(s_idx)
+                                if not r_it:
+                                    continue
+                                ass = r_it.get("reviewer_assessment")
+                                if not ass or not isinstance(ass, str) or not ass.strip():
+                                    continue
+                                is_err = r.is_erroneous if r.is_erroneous is not None else r_it.get("is_erroneous")
+                                orig_text = r.original_text if r.original_text is not None else (r_it.get("original_text") or "")
+                                if is_err is False and orig_text.strip():
+                                    ctrl_assessments.append(ass)
+                                    orig_tokens = " ".join(re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text.lower()))
+                                    ass_tokens = " ".join(re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", ass.lower()))
+                                    if orig_tokens and orig_tokens not in ass_tokens:
+                                        failures.append(
+                                            f"Receipt control item {s_idx} assessment lacks full sentence-specific citation "
+                                            f"(expected full normalized sentence {orig_tokens!r})"
+                                        )
+                                elif is_err is True:
+                                    sm = (
+                                        r.source_metadata
+                                        if isinstance(r.source_metadata, dict)
+                                        else (r.raw.get("source_metadata") if isinstance(r.raw.get("source_metadata"), dict) else {})
+                                    )
+                                    err_span = sm.get("error_span") or r_it.get("error_span") or ""
+                                    repl_span = sm.get("replacement_span") or r_it.get("replacement_span") or ""
+                                    lowered_ass = ass.lower()
+                                    if err_span and repl_span:
+                                        if err_span.lower() not in lowered_ass or repl_span.lower() not in lowered_ass:
+                                            failures.append(
+                                                f"Receipt correction item {s_idx} assessment does not name edit pair "
+                                                f"«{err_span}» → «{repl_span}»"
+                                            )
+                                    elif err_span and err_span.lower() not in lowered_ass:
+                                        failures.append(
+                                            f"Receipt correction item {s_idx} assessment does not name error span "
+                                            f"«{err_span}»"
+                                        )
+
+                            if ctrl_assessments and len(set(ctrl_assessments)) != len(ctrl_assessments):
+                                failures.append(
+                                    f"Receipt control assessments must provide unique sentence-specific evidence for each item "
+                                    f"({len(set(ctrl_assessments))} unique out of {len(ctrl_assessments)} controls)"
+                                )
+
+                            if signoff_data:
+                                if signoff_data.get("blocker_defect_count") != receipt_blockers:
+                                    failures.append(
+                                        f"Signoff blocker_defect_count ({signoff_data.get('blocker_defect_count')}) does not match receipt blocker_defect_count ({receipt_blockers})"
+                                    )
+                                if signoff_data.get("reviewer_id") != receipt_data.get("reviewer_id"):
+                                    failures.append(
+                                        f"Signoff reviewer_id ({signoff_data.get('reviewer_id')}) does not match receipt reviewer_id ({receipt_data.get('reviewer_id')})"
+                                    )
+                                if signoff_data.get("reviewer_family") != receipt_data.get("reviewer_family"):
+                                    failures.append(
+                                        f"Signoff reviewer_family ({signoff_data.get('reviewer_family')}) does not match receipt reviewer_family ({receipt_data.get('reviewer_family')})"
+                                    )
+                        except Exception as e:
+                            failures.append(f"Error parsing review receipt: {e}")
 
                     if not failures:
                         signoff_verified = True
