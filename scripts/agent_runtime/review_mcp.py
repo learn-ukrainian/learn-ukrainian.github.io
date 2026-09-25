@@ -38,7 +38,7 @@ In scope:
 * A stale or pre-planted symlink, or a component owned by another user, at or **below the trust
   anchor**. The anchor is the ``receipts_root`` itself (the default ``batch_state/review-receipts``
   or an explicit one), opened ``O_DIRECTORY | O_NOFOLLOW`` and refused if it is a symlink, not a
-  directory, not owned by the current user, or group/world-writable. Every component below it is
+  directory or not owned by the current user (a group/world-writable root we own is tightened in place with ``fchmod`` on the fd). Every component below it is
   created or opened one level at a time with ``O_DIRECTORY | O_NOFOLLOW`` relative to its parent's
   descriptor and owner-checked, and every per-attempt file is created relative to the final
   descriptor. Provisioning, the diagnostics write and the pre-launch re-check share one helper
@@ -198,18 +198,33 @@ _UNSAFE_DIRECTORY = (
     "review attempt refused: a review runtime directory is a symlink, is not a directory, "
     "or is not owned by the current user (#8652)"
 )
-_WRITABLE_ROOT = (
-    "review attempt refused: the receipts root is group- or world-writable; "
-    "remove the write bits (chmod go-w) and retry (#8652)"
-)
+_TIGHTENED_LOG = "receipts-root-permissions.diagnostics.txt"
 _DEFAULT_RECEIPTS_PARTS = ("batch_state", "review-receipts")
 _DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+
+
+def _note_tightened(dir_fd: int, old_mode: int) -> None:
+    """Best-effort note, in the tightened directory's own diagnostics file, that its mode was reduced."""
+    with contextlib.suppress(OSError):
+        fd = os.open(_TIGHTENED_LOG, os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o600, dir_fd=dir_fd)
+        try:
+            os.write(
+                fd,
+                f"tightened receipts root {oct(stat.S_IMODE(old_mode))} -> {oct(stat.S_IMODE(old_mode) & ~0o022)}\n".encode(
+                    "ascii"
+                ),
+            )
+        finally:
+            os.close(fd)
 
 
 def _open_owned_dir(name: Path | str, *, dir_fd: int | None = None, private: bool = False) -> int:
     """Open ``name`` as a directory without following a symlink; refuse unless the caller owns it.
 
-    ``private=True`` also refuses a directory that is group- or world-writable.
+    ``private=True`` also tightens a group- or world-writable directory we own in place, with
+    ``fchmod`` on the verified descriptor (never the path, so a swap cannot redirect it). Other
+    tools on the host create these directories under umask 002, so refusing would refuse every
+    review; the tightening is noted once in a 0600 diagnostics file inside the directory.
 
     ``O_NOFOLLOW`` guards only the final component, so callers walk a path one component at a
     time with ``dir_fd``. The owner check runs on the opened descriptor (``fstat``), so it
@@ -227,7 +242,8 @@ def _open_owned_dir(name: Path | str, *, dir_fd: int | None = None, private: boo
         if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid():
             raise ReviewDirectoryError(_UNSAFE_DIRECTORY)
         if private and info.st_mode & (stat.S_IWGRP | stat.S_IWOTH):
-            raise ReviewDirectoryError(_WRITABLE_ROOT)
+            os.fchmod(fd, stat.S_IMODE(info.st_mode) & ~0o022)
+            _note_tightened(fd, info.st_mode)
     except BaseException:
         os.close(fd)
         raise
@@ -238,7 +254,7 @@ def _open_receipts_root(root: Path, *, create: bool) -> int:
     """Open the receipts root: the trust anchor of every attempt directory under it.
 
     The root itself is opened ``O_DIRECTORY | O_NOFOLLOW`` and refused if it is a symlink, is not a
-    directory, is not owned by the current user, or is group/world-writable. For an explicit root its
+    directory or is not owned by the current user (group/world-writable bits on our own root are removed in place). For an explicit root its
     ancestors are followed by design (see the module's threat model); the default root
     (``<primary checkout>/batch_state/review-receipts``) is additionally walked no-follow from the
     primary checkout, as before. ``create=True`` makes what is missing (mode 0700); ``create=False``

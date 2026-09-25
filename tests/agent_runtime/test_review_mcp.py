@@ -2355,25 +2355,72 @@ def test_fallback_write_cannot_land_in_a_different_attempt_tree(manifest_file: P
     assert list(other_attempt.iterdir()) == []
 
 
-@pytest.mark.parametrize("mode", [0o770, 0o775, 0o707, 0o777])
-def test_group_or_world_writable_receipts_root_is_refused(mode: int, manifest_file: Path, tmp_path: Path) -> None:
+@pytest.mark.parametrize(("mode", "expected"), [(0o775, 0o755), (0o777, 0o755), (0o770, 0o750), (0o707, 0o705)])
+def test_own_group_or_world_writable_receipts_root_is_tightened(
+    mode: int, expected: int, manifest_file: Path, tmp_path: Path
+) -> None:
     (tmp_path / "receipts").mkdir()
     (tmp_path / "receipts").chmod(mode)
-    with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
-        _prepare_codex(manifest_file, tmp_path)
-    assert "group- or world-writable" in str(refused.value)
-    assert str(tmp_path) not in str(refused.value)
-    assert list((tmp_path / "receipts").iterdir()) == []
+    plan = _prepare_codex(manifest_file, tmp_path)
+    assert stat.S_IMODE((tmp_path / "receipts").stat().st_mode) == expected
+    assert plan.config_path.exists()
+    note = (tmp_path / "receipts" / review_mcp_module._TIGHTENED_LOG).read_text(encoding="utf-8")
+    assert "tightened" in note
+    assert str(tmp_path) not in note
 
 
-def test_receipts_root_that_becomes_group_writable_fails_the_recheck(manifest_file: Path, tmp_path: Path) -> None:
+def test_receipts_root_that_becomes_group_writable_is_tightened_on_recheck(manifest_file: Path, tmp_path: Path) -> None:
     plan = _prepare_codex(manifest_file, tmp_path)
     (tmp_path / "receipts").chmod(0o775)
-    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="group- or world-writable"):
-        verify_review_attempt_paths(plan.config_path)
-    stand_in = review_mcp_module._untrusted("stderr", "secret", review_diagnostics_path(plan.config_path))
-    assert "details not saved" in stand_in
-    assert not list((tmp_path / "receipts").rglob("*.diagnostics.log"))
+    verify_review_attempt_paths(plan.config_path)
+    assert stat.S_IMODE((tmp_path / "receipts").stat().st_mode) == 0o755
+
+
+def test_fchmod_acts_on_the_verified_descriptor_not_the_path(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A swap between open and fchmod must not chmod the swap target."""
+    root = tmp_path / "receipts"
+    root.mkdir()
+    root.chmod(0o775)
+    victim = tmp_path / "victim"
+    victim.mkdir()
+    victim.chmod(0o775)
+    real_fstat = os.fstat
+    swapped: list[bool] = []
+
+    def swapping_fstat(fd: int) -> os.stat_result:
+        info = real_fstat(fd)
+        if not swapped and stat.S_ISDIR(info.st_mode) and info.st_ino == root.stat().st_ino:
+            swapped.append(True)
+            root.rename(tmp_path / "moved-receipts")
+            root.symlink_to(victim, target_is_directory=True)
+        return info
+
+    monkeypatch.setattr(review_mcp_module.os, "fstat", swapping_fstat)
+    fd = review_mcp_module._open_owned_dir(root, private=True)
+    os.close(fd)
+    assert swapped
+    assert stat.S_IMODE(victim.stat().st_mode) == 0o775
+    assert stat.S_IMODE((tmp_path / "moved-receipts").stat().st_mode) == 0o755
+
+
+def test_writable_receipts_root_owned_by_another_user_is_refused_untouched(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / "receipts").mkdir()
+    (tmp_path / "receipts").chmod(0o775)
+    real_fstat = os.fstat
+
+    def foreign_fstat(fd: int) -> os.stat_result:
+        info = real_fstat(fd)
+        return os.stat_result((info.st_mode, info.st_ino, info.st_dev, info.st_nlink, info.st_uid + 1, *info[5:]))
+
+    monkeypatch.setattr(review_mcp_module.os, "fstat", foreign_fstat)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="not owned by the current user") as refused:
+        _prepare_codex(manifest_file, tmp_path)
+    assert str(tmp_path) not in str(refused.value)
+    assert stat.S_IMODE((tmp_path / "receipts").stat().st_mode) == 0o775
 
 
 def test_receipts_root_owned_by_another_user_fails_the_recheck(
@@ -2405,8 +2452,9 @@ def test_default_root_uses_the_same_root_check(
     verify_review_attempt_paths(plan.config_path)
     root = tmp_path / "batch_state" / "review-receipts"
     root.chmod(0o775)
-    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="group- or world-writable"):
-        verify_review_attempt_paths(plan.config_path)
-    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="group- or world-writable"):
-        prepare_review_attempt(**{**kwargs, "attempt_id": "att-x-002"})
-    assert not (root / "rev-x-001" / "att-x-002.jsonl").exists()
+    verify_review_attempt_paths(plan.config_path)
+    assert stat.S_IMODE(root.stat().st_mode) == 0o755
+    root.chmod(0o777)
+    prepare_review_attempt(**{**kwargs, "attempt_id": "att-x-002"})
+    assert stat.S_IMODE(root.stat().st_mode) == 0o755
+    assert (root / "rev-x-001" / "att-x-002.jsonl").exists()
