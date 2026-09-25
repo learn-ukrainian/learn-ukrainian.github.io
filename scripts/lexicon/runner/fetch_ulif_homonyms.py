@@ -2536,7 +2536,7 @@ def _listing_rows(ledger: SpellingLedger, page_num: int) -> dict[int, str]:
     return rows
 
 
-def verify_ledger_continuity(path: Path) -> int:
+def verify_ledger_continuity(path: Path, *, warn_on_overlap: bool = False) -> int:
     """Read only: check recorded page geometry and entry-position evidence.
 
     The ledger stores entry response hashes and their page/row positions, but
@@ -2548,14 +2548,15 @@ def verify_ledger_continuity(path: Path) -> int:
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA query_only=ON")
         pages = conn.execute("SELECT * FROM register_pages ORDER BY page_num").fetchall()
-        entry_positions: dict[str, str] = {}
+        entry_positions: dict[str, list[str]] = {}
         for response in conn.execute(
             "SELECT register_position, spelling FROM responses WHERE role = 'entry' AND register_position != ''"
         ):
             position = str(response["register_position"])
-            if position in entry_positions:
-                raise ResumeMismatchError(f"register position {position}: duplicate entry response")
-            entry_positions[position] = str(response["spelling"])
+            # An interrupted row can have several entry clicks before its tabs
+            # finish and mark_row commits completion. Every attempt must still
+            # agree with the listing spelling at this position.
+            entry_positions.setdefault(position, []).append(str(response["spelling"]))
         initial_search_recorded = (
             conn.execute("SELECT 1 FROM responses WHERE role = 'tsearch:start' LIMIT 1").fetchone() is not None
         )
@@ -2598,7 +2599,13 @@ def verify_ledger_continuity(path: Path) -> int:
                     try:
                         _verify_register_continuity(previous_completed_rows, rows, number)
                     except SessionInvalid as exc:
-                        raise ResumeMismatchError(f"page {number}: {exc}") from exc
+                        message = (
+                            f"pages {number - 1} and {number}: suspect cross-page overlap ({exc}); verify manually"
+                        )
+                        if warn_on_overlap:
+                            print(f"ledger continuity warning: {message}", file=sys.stderr)
+                        else:
+                            raise ResumeMismatchError(message) from exc
                 previous_completed_rows = rows
             else:
                 if page["row_count"] and len(rows) > int(page["row_count"]):
@@ -2609,8 +2616,10 @@ def verify_ledger_continuity(path: Path) -> int:
                 position = f"{number}:{index}"
                 if normalize_ulif_spelling(str(row["stressed_headword"])) != row["normalized_spelling"]:
                     raise ResumeMismatchError(f"page {number} row {index}: headword differs from normalized spelling")
-                response_spelling = entry_positions.get(position)
-                if response_spelling is not None and str(row["normalized_spelling"]) != response_spelling:
+                if any(
+                    str(row["normalized_spelling"]) != response_spelling
+                    for response_spelling in entry_positions.get(position, ())
+                ):
                     raise ResumeMismatchError(f"page {number} row {index}: spelling differs from entry response")
             checked += 1
         orphan = conn.execute(
@@ -3403,7 +3412,7 @@ def run_walk(
             ledger_path = state_dir / "ledger.sqlite"
             if ledger_path.exists():
                 try:
-                    verify_ledger_continuity(ledger_path)
+                    verify_ledger_continuity(ledger_path, warn_on_overlap=True)
                 except (ResumeMismatchError, sqlite3.Error) as exc:
                     print(f"stopping: ledger continuity error ({exc})", file=sys.stderr)
                     stop_reason = "ledger continuity error"

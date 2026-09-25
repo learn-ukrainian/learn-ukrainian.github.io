@@ -1046,6 +1046,86 @@ def test_verify_ledger_rejects_row_shift_against_recorded_entry_position(tmp_pat
         ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite")
 
 
+def test_entry_retry_after_tab_interruption_never_bricks_startup(tmp_path: Path, capsys):
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+    state_dir.mkdir()
+
+    for attempt in range(2):
+        server = MockULIFServer()
+        clicked = False
+
+        def interrupted_transport(method: str, data: dict[str, str] | None, server=server) -> HttpResult:
+            nonlocal clicked
+            if clicked:
+                raise KeyboardInterrupt
+            result = server(method, data)
+            if data and data.get("__EVENTARGUMENT") == "Select$2" and server.current_page == 1:
+                clicked = True
+            return result
+
+        assert (
+            run_walk(
+                state_dir=state_dir,
+                db_path=db_path,
+                delay_seconds=1,
+                transport=interrupted_transport,
+                sleep=_noop_sleep,
+                scanner=lambda: False,
+            )
+            == ulif_walk.EXIT_INTERRUPTED
+        )
+        ledger = SpellingLedger(state_dir / "ledger.sqlite")
+        try:
+            assert (
+                ledger.conn.execute(
+                    "SELECT COUNT(*) FROM responses WHERE role = 'entry' AND register_position = '1:2'"
+                ).fetchone()[0]
+                == attempt + 1
+            )
+            assert (
+                ledger.conn.execute("SELECT state FROM register_rows WHERE page_num = 1 AND row_index = 2").fetchone()[
+                    0
+                ]
+                == "pending"
+            )
+        finally:
+            ledger.close()
+        assert ulif_walk.main(["walk", "--state-dir", str(state_dir), "--verify-ledger"]) == EXIT_OK
+        assert "ledger continuity OK" in capsys.readouterr().out
+
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=db_path,
+            delay_seconds=1,
+            max_pages=1,
+            transport=MockULIFServer(),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+    assert ulif_walk.main(["walk", "--state-dir", str(state_dir), "--verify-ledger"]) == EXIT_OK
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert (
+            ledger.conn.execute(
+                "SELECT COUNT(*) FROM responses WHERE role = 'entry' AND register_position = '1:2'"
+            ).fetchone()[0]
+            == 3
+        )
+        ledger.conn.execute(
+            "UPDATE responses SET spelling = 'wrong' WHERE role = 'entry' AND register_position = '1:2' "
+            "AND id = (SELECT MIN(id) FROM responses WHERE role = 'entry' AND register_position = '1:2')"
+        )
+        ledger.conn.commit()
+    finally:
+        ledger.close()
+    with pytest.raises(ulif_walk.ResumeMismatchError, match=r"page 1 row 2: spelling differs from entry response"):
+        ulif_walk.verify_ledger_continuity(state_dir / "ledger.sqlite")
+
+
 def test_verify_ledger_accepts_interrupted_page_write(tmp_path: Path):
     ledger = SpellingLedger(tmp_path / "ledger.sqlite")
     try:
@@ -1059,7 +1139,7 @@ def test_verify_ledger_accepts_interrupted_page_write(tmp_path: Path):
     assert ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite") == 1
 
 
-def test_verify_ledger_reuses_walk_cross_page_overlap_check(tmp_path: Path):
+def test_verify_ledger_reports_suspect_overlap_while_walk_startup_warns(tmp_path: Path, capsys):
     ledger = SpellingLedger(tmp_path / "ledger.sqlite")
     try:
         first = [f"w{index:02d}" for index in range(25)]
@@ -1073,8 +1153,27 @@ def test_verify_ledger_reuses_walk_cross_page_overlap_check(tmp_path: Path):
             ledger.mark_page(page_num, "completed")
     finally:
         ledger.close()
-    with pytest.raises(ulif_walk.ResumeMismatchError, match=r"page 2: .*register_overlap"):
+    with pytest.raises(
+        ulif_walk.ResumeMismatchError, match=r"pages 1 and 2: suspect cross-page overlap .*verify manually"
+    ):
         ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite")
+
+    def forbidden_transport(method: str, data: dict[str, str] | None) -> HttpResult:
+        pytest.fail("request cap should prevent network calls")
+
+    assert (
+        run_walk(
+            state_dir=tmp_path,
+            db_path=tmp_path / "cache.db",
+            delay_seconds=1,
+            max_requests=0,
+            transport=forbidden_transport,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+    assert "ledger continuity warning: pages 1 and 2: suspect cross-page overlap" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize(

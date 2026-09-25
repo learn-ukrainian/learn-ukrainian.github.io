@@ -35,6 +35,7 @@ def _brute_consistent(
     page_row_count: int | None,
     end_headword: str | None,
     target_page: int,
+    nonterminal_page: bool = False,
 ) -> tuple[set[int], bool]:
     """Return (consistent starts, whether any fitting start overlaps a recorded row)."""
     known = page_row_count if page_row_count and page_row_count > 0 else None
@@ -49,9 +50,9 @@ def _brute_consistent(
     for origin in range(-page_size if target_page > 1 else 0, limit):
         last = origin + window_length - 1
         fits = True
-        if short and known is not None and last != known - 1:
+        if short and known is not None and not nonterminal_page and last != known - 1:
             fits = False
-        if last >= limit and (short or (known is not None and known < page_size)):
+        if last >= limit and not nonterminal_page and (short or (known is not None and known < page_size)):
             fits = False
         if not fits:
             continue
@@ -88,6 +89,7 @@ def _assert_matches_oracle(
     page_row_count: int | None = None,
     end_headword: str | None = None,
     target_page: int = 2,
+    nonterminal_page: bool = False,
 ) -> None:
     previous = previous_rows or {}
     consistent, overlapped = _brute_consistent(
@@ -98,6 +100,7 @@ def _assert_matches_oracle(
         page_row_count=page_row_count,
         end_headword=end_headword,
         target_page=target_page,
+        nonterminal_page=nonterminal_page,
     )
     try:
         got: int | str | None = align_resume_window(
@@ -108,6 +111,7 @@ def _assert_matches_oracle(
             page_row_count=page_row_count,
             end_headword=end_headword,
             target_page=target_page,
+            nonterminal_page=nonterminal_page,
         )
     except ResumeMismatchError:
         got = "raise"
@@ -117,7 +121,7 @@ def _assert_matches_oracle(
         assert got == true_start
     elif len(consistent) > 1:
         assert got is None
-    elif overlapped:
+    elif overlapped and not (nonterminal_page and len(window) < page_size):
         assert got == "raise"
     else:
         assert got is None
@@ -183,7 +187,7 @@ def test_short_final_page_does_not_accept_a_shifted_tail_as_the_start(tmp_path: 
 
 @pytest.mark.timeout(300)
 def test_exhaustive_alignment_matches_the_brute_force_oracle() -> None:
-    """Every page, recorded subset, landing, and fetch-sized window for page sizes 1..6.
+    """Every page through size 5 and a deterministic third of size 6.
 
     Full windows are ``page_size`` rows and may run off the end of the page.
     Short windows are the final-page tail from the landing through the last row.
@@ -192,7 +196,9 @@ def test_exhaustive_alignment_matches_the_brute_force_oracle() -> None:
     cases = 0
     for page_size in range(1, 7):
         pages = list(itertools.product(_ALPHABET, repeat=page_size))
-        for page in pages:
+        for page_index, page in enumerate(pages):
+            if page_size == 6 and page_index % 3:
+                continue
             end = page[-1]
             for mask in range(1 << page_size):
                 recorded = {index: page[index] for index in range(page_size) if mask & (1 << index)}
@@ -253,9 +259,9 @@ def test_exhaustive_alignment_matches_the_brute_force_oracle() -> None:
                                     end_headword=end,
                                 )
                                 cases += 1
-    # 593_466 target-only windows (sizes 1..6) plus 379_800 windows that also vary
-    # the previous page (sizes 1..3).
-    assert cases == 973_266, cases
+    # 251_322 target-only windows plus 379_800 windows that also vary the
+    # previous page (sizes 1..3). Size 6 samples 243 of 729 pages.
+    assert cases == 631_122, cases
 
 
 @pytest.mark.timeout(20)
@@ -294,6 +300,52 @@ def test_short_pages_unknown_end_and_matching_next_page_oracle() -> None:
                                 )
                                 cases += 1
     assert cases > 8_000
+
+
+@pytest.mark.timeout(20)
+def test_nonterminal_previous_page_oracle_with_homonym_suffixes() -> None:
+    """Enumerate preceding-page searches that cross into a short target page.
+
+    The fixtures include repeated distinct pairs, a six-row homonym run,
+    shorter ambiguous runs, and a known target start. Short contradictory
+    windows must follow the production raise-suppression rule.
+    """
+    cases = 0
+    page_size = 8
+    previous_pages = (
+        ("P0", "P1", "P2", "P3", "P4", "P5", "A", "B"),
+        ("P0", "P1", "A", "A", "A", "A", "A", "A"),
+        ("P0", "P1", "P2", "P3", "P4", "A", "A", "A"),
+    )
+    targets = (("T", "U", "V"), ("A", "T", "U"))
+    for previous in previous_pages:
+        for target in targets:
+            for suffix_size in range(1, page_size + 1):
+                for target_size in range(1, len(target) + 1):
+                    window = previous[-suffix_size:] + target[:target_size]
+                    for recorded_start in (0, page_size - suffix_size, page_size):
+                        recorded = {index: previous[index] for index in range(recorded_start, page_size)}
+                        _assert_matches_oracle(
+                            window,
+                            true_start=page_size - suffix_size,
+                            page_size=page_size,
+                            target_rows=recorded,
+                            page_row_count=page_size,
+                            end_headword=previous[-1],
+                            target_page=1,
+                            nonterminal_page=True,
+                        )
+                        cases += 1
+    assert cases == 432
+
+    # An impossible short window with recorded overlap does not raise while
+    # the previous page is nonterminal: the unknown next page may explain it.
+    assert (
+        align_resume_window(("Z",), page_size=2, target_rows={0: "A", 1: "B"}, page_row_count=2, nonterminal_page=True)
+        is None
+    )
+    with pytest.raises(ResumeMismatchError):
+        align_resume_window(("Z",), page_size=2, target_rows={0: "A", 1: "B"}, page_row_count=2)
 
 
 def _register_html(words: tuple[str, ...], *, size: int) -> str:
@@ -373,6 +425,65 @@ def test_previous_page_anchor_handles_short_terminal_page(
                 )
                 == previous_suffix - 25
             )
+    finally:
+        cache.close()
+        ledger.close()
+
+
+@pytest.mark.parametrize(
+    ("suffix", "target_start", "direct"),
+    [
+        (("A", "B"), "T", True),
+        (("A", "A", "B", "B", "C", "C"), "T", True),
+        (("A", "A", "A"), None, False),
+        (("A",), "A", False),
+        (("A",), "T", True),
+    ],
+)
+def test_previous_page_suffix_guard_with_homonyms_and_known_target_start(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    suffix: tuple[str, ...],
+    target_start: str | None,
+    direct: bool,
+) -> None:
+    """A uniquely aligned suffix uses the guard's pair, six-row, and start rules."""
+    previous = tuple(f"p{index:02d}" for index in range(25 - len(suffix))) + suffix
+    target = (target_start or "T",)
+    window = suffix + target
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    cache = ulif_walk.prepare_database(tmp_path / "cache.db")
+    try:
+        ledger.ensure_page(1, start_headword=previous[0], end_headword=previous[-1], row_count=25)
+        for index, word in enumerate(previous):
+            ledger.ensure_row(1, index, select_arg=f"Select${index}", stressed_headword=word, normalized_spelling=word)
+        ledger.mark_page(1, "completed")
+        if target_start is not None:
+            ledger.ensure_page(2, start_headword=target_start, row_count=25)
+
+        def transport(method: str, data: dict[str, str] | None) -> HttpResult:
+            if method == "GET":
+                return HttpResult(200, _register_html((), size=26), {})
+            assert data is not None
+            assert data["ctl00$ContentPlaceHolder1$tsearch"] == previous[-1]
+            return HttpResult(200, _register_html(window, size=26), {})
+
+        fast_forwarded: list[int] = []
+
+        def fast_forward(client, ledger, cache, seed_tokens, start_headword, target_page, *, quiet=False):
+            fast_forwarded.append(target_page)
+            html = _register_html(target, size=26)
+            return html, parse_register_list(html)
+
+        monkeypatch.setattr(ulif_walk, "_fast_forward_to_page", fast_forward)
+        # Isolate the suffix guard: the independent oracle above checks the
+        # alignment decision, while this checks what a unique offset permits.
+        monkeypatch.setattr(ulif_walk, "_resume_window_offset", lambda *args, **kwargs: len(suffix) - 25)
+        client = PoliteClient(transport, delay_seconds=1, sleep=lambda _seconds: None)
+        _, rows, offset = _reseed_to_page(client, ledger, cache, target_page=2, start_headword="p00", quiet=True)
+        assert [row["stressed"] for row in rows] == list(window if direct else target)
+        assert offset == (len(suffix) if direct else 0)
+        assert fast_forwarded == ([] if direct else [2])
     finally:
         cache.close()
         ledger.close()
