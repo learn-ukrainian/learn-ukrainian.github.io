@@ -1154,6 +1154,11 @@ def _install_fake_agy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, stdout: s
     return log
 
 
+def _fake_agy_bin(tmp_path: Path) -> str:
+    """Path of the fake ``agy`` from ``_install_fake_agy`` — never a host-installed binary."""
+    return str(tmp_path / "fake-agy-bin" / "agy")
+
+
 def _agy_env(plan) -> dict[str, str]:
     return {
         "HOME": str(plan.agy_home),
@@ -1163,10 +1168,8 @@ def _agy_env(plan) -> dict[str, str]:
 
 
 def _verify_agy(plan, tmp_path: Path, **kwargs) -> None:
-    agy_bin = shutil.which("agy")
-    assert agy_bin is not None
     verify_agy_review_effective_mcp(
-        config_path=plan.config_path, cwd=tmp_path, env=_agy_env(plan), agy_bin=agy_bin, **kwargs
+        config_path=plan.config_path, cwd=tmp_path, env=_agy_env(plan), agy_bin=_fake_agy_bin(tmp_path), **kwargs
     )
 
 
@@ -1184,8 +1187,7 @@ def test_agy_gate_accepts_exactly_sources_with_padded_table(
     log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
     cwd = tmp_path / "wt"
     cwd.mkdir()
-    agy_bin = shutil.which("agy")
-    assert agy_bin is not None
+    agy_bin = _fake_agy_bin(tmp_path)
     verify_agy_review_effective_mcp(config_path=plan.config_path, cwd=cwd, env=_agy_env(plan), agy_bin=agy_bin)
     logged_cwd, logged_home, logged_app_data, logged_args = log.read_text(encoding="utf-8").strip().split("|")
     assert Path(logged_cwd) == cwd.resolve()
@@ -1300,8 +1302,7 @@ def test_agy_gate_refuses_a_launch_environment_without_the_scoped_home(
 ) -> None:
     plan = _prepare_agy(manifest_file, tmp_path)
     log = _install_fake_agy(tmp_path, monkeypatch, _agy_table(_agy_good_rows(plan.config_path)))
-    agy_bin = shutil.which("agy")
-    assert agy_bin is not None
+    agy_bin = _fake_agy_bin(tmp_path)
     good = _agy_env(plan)
     for bad in (
         {**good, "HOME": str(tmp_path / "real-home")},
