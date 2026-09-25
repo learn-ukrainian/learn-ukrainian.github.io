@@ -104,8 +104,11 @@ stay gitignored, and no consumer reads bulk data through them:
 - **Textbook PDFs** are read from `textbooks/` under the resolved bulk root
   (`scripts/wiki/config.py` `TEXTBOOK_PDFS_DIR`).
 - **Custody-access archive locators** (`gdrive:learn-ukrainian-data/<rel>` and
-  `gdrive:<rel>`) resolve to `<rel>` under the bulk root. When no marker-valid
-  root resolves, the source is reported as unmounted.
+  `gdrive:<rel>`; a bare `<rel>` too) resolve to `<rel>` under the bulk root and
+  nowhere else — there is no repository-relative search root. Absolute locators
+  and any locator whose symlink-resolved path leaves the bulk root fail closed
+  with an error naming the locator kind. When no marker-valid root resolves, the
+  source is reported as unmounted.
 - **VESUM release-asset cache**: `scripts/rag/build_vesum_shadow.py` downloads
   the public, SHA-pinned `dict_uk` asset into a repository-local `data/vesum/`
   directory unless you pass `--asset` or `--cache-dir`. This is a gitignored
