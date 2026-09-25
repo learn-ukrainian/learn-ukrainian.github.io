@@ -384,7 +384,7 @@ def test_parent_swap_to_symlink_between_check_and_open_touches_nothing_outside(
         os.rename(tasks, saved)
         tasks.symlink_to(outside, target_is_directory=True)
 
-    def _wrapped_open(path, flags, mode=0o777, *, dir_fd=None):
+    def _wrapped_open(path, flags, mode=0o600, *, dir_fd=None):
         nonlocal swapped
         target = Path(path)
         if dir_fd is None and not swapped and target != root and root in target.parents:
@@ -413,6 +413,7 @@ def test_help_is_two_lines_and_has_no_host_path() -> None:
         capture_output=True,
         text=True,
         cwd=repo,
+        timeout=30,
     )
     text = proc.stdout
     collapsed = " ".join(text.split())
@@ -537,7 +538,7 @@ def test_one_record_oserror_does_not_abort_the_sweep_or_the_receipt(
     good = _write_full_sidecars(tasks, "good", entries=1)
     real_open = os.open
 
-    def _open(path, flags, mode=0o777, *, dir_fd=None):
+    def _open(path, flags, mode=0o600, *, dir_fd=None):
         if path == "bad.json.lock":
             raise OSError(code, os.strerror(code))
         if dir_fd is None:
