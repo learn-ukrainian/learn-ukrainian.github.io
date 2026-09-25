@@ -8,10 +8,13 @@
     "level": {"type": "string", "minLength": 1}, "slug": {"type": "string", "minLength": 1},
     "position": {"type": "integer", "minimum": 1},
     "inputs": {"type": "object", "additionalProperties": false,
-      "required": ["plan", "pack_lock", "words_lock", "arc", "decisions", "scope", "grammar", "validate_report", "pack_verify_report"],
+      "required": ["plan", "pack", "pack_lock", "words", "words_lock", "learner_state", "requirements", "arc", "arc_source", "decisions", "scope", "grammar", "validate_report", "pack_verify_report"],
       "properties": {
-        "plan": {"$ref": "#/$defs/file"}, "pack_lock": {"$ref": "#/$defs/file"},
-        "words_lock": {"$ref": "#/$defs/file"}, "arc": {"$ref": "#/$defs/file"},
+        "plan": {"$ref": "#/$defs/file"}, "pack": {"$ref": "#/$defs/file"},
+        "pack_lock": {"$ref": "#/$defs/file"}, "words": {"$ref": "#/$defs/file"},
+        "words_lock": {"$ref": "#/$defs/file"}, "learner_state": {"$ref": "#/$defs/file"},
+        "requirements": {"$ref": "#/$defs/file"}, "arc": {"$ref": "#/$defs/file"},
+        "arc_source": {"$ref": "#/$defs/file"},
         "decisions": {"$ref": "#/$defs/file"}, "scope": {"$ref": "#/$defs/file"},
         "grammar": {"$ref": "#/$defs/file"}, "validate_report": {"$ref": "#/$defs/file"},
         "pack_verify_report": {"$ref": "#/$defs/file"}

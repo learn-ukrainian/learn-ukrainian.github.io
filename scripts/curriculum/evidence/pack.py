@@ -49,6 +49,32 @@ def load_schema(schema_name: str) -> dict[str, Any]:
     return json.loads(schema_path.read_text(encoding="utf-8"))
 
 
+def locator(source: dict[str, Any]) -> str:
+    """'<table>:<key>' of the row a pack record cites."""
+    if "table" in source:
+        return f"{source['table']}:{source.get('id')}"
+    table = "literary_texts" if source.get("kind") == "literary" else "textbooks"
+    return f"{table}:{source.get('chunk_id')}"
+
+
+def cited_rows(pack_doc: dict[str, Any]) -> list[tuple[str, str]]:
+    """The (locator, row_sha256) pairs a pack cites; built_with.sources_db aggregates them (rows-v2)."""
+    pairs: list[tuple[str, str]] = []
+    for list_name in ("texts", "exercises", "examples", "errors", "notes"):
+        for record in pack_doc.get(list_name) or []:
+            source = record.get("source") if isinstance(record, dict) else None
+            if isinstance(source, dict) and source.get("row_sha256"):
+                pairs.append((locator(source), source["row_sha256"]))
+    return pairs
+
+
+def pack_scheme(pack_doc: dict[str, Any]) -> str:
+    built_with = pack_doc.get("built_with") if isinstance(pack_doc, dict) else None
+    if not isinstance(built_with, dict):
+        return sources.LEGACY_SOURCES_DB_SCHEME
+    return str(built_with.get("sources_db_scheme") or sources.LEGACY_SOURCES_DB_SCHEME)
+
+
 def collapse_with_indices(text: str) -> tuple[str, list[int]]:
     """Collapse runs of whitespace and record mapping back to original text character indices."""
     norm = sources.normalize_spelling(text)
@@ -222,6 +248,7 @@ def build_pack(
                         "section_id": chunk.get("parent_section_id"),
                         "page": chunk.get("page"),
                         "chunk_id": chunk["chunk_id"],
+                        "row_sha256": sources.row_digest(chunk),
                     },
                     "quote": quote,
                     "sha256": sha256,
@@ -254,6 +281,7 @@ def build_pack(
                         "section_id": chunk.get("parent_section_id"),
                         "page": chunk.get("page"),
                         "chunk_id": chunk["chunk_id"],
+                        "row_sha256": sources.row_digest(chunk),
                     },
                     "quote": quote,
                     "sha256": sha256,
@@ -294,6 +322,7 @@ def build_pack(
                         "section_id": chunk.get("parent_section_id"),
                         "page": chunk.get("page"),
                         "chunk_id": chunk["chunk_id"],
+                        "row_sha256": sources.row_digest(chunk),
                     }
                 elif table == "literary_texts":
                     chunk = sources_instance.get_literary_chunk(chunk_id)
@@ -309,6 +338,7 @@ def build_pack(
                         "year": chunk.get("year"),
                         "page": None,
                         "chunk_id": chunk["chunk_id"],
+                        "row_sha256": sources.row_digest(chunk),
                     }
                 else:
                     raise ValueError(
@@ -356,7 +386,7 @@ def build_pack(
             errors_out.append(
                 {
                     "id": err_req["id"],
-                    "source": {"table": "ua_gec_errors", "id": row["id"]},
+                    "source": {"table": "ua_gec_errors", "id": row["id"], "row_sha256": sources.row_digest(row)},
                     "incorrect": row["error"],
                     "correct": row["correct"],
                     "error_type": row["error_type"],
@@ -379,7 +409,7 @@ def build_pack(
             notes_out.append(
                 {
                     "id": n["id"],
-                    "source": {"table": "style_guide", "id": row["id"]},
+                    "source": {"table": "style_guide", "id": row["id"], "row_sha256": sources.row_digest(row)},
                     "word": row["word"],
                     "section": row.get("section"),
                     "text": row["text"],
@@ -445,8 +475,12 @@ def build_pack(
             if report:
                 report(f"unsupported: {idx}/{len(raw_unsupported)}")
 
-        # 8. built_with
-        sources_db_hash = sources_instance._fingerprint(sources_instance.sources_db)[0]
+        # 8. built_with: the sources.db identity is the digest of exactly the rows this pack cites.
+        cited: list[tuple[str, str]] = []
+        for records in (texts_out, exercises_out, examples_out, errors_out, notes_out):
+            for record in records:
+                cited.append((locator(record["source"]), record["source"]["row_sha256"]))
+        sources_db_hash = sources.aggregate_digest(cited)
         # No pack section reads VESUM; record its identity only when the file is there to open.
         vesum_present = sources_instance.vesum_db.is_file()
         vesum_hash = sources_instance._vesum_identity()[0] if vesum_present else None
@@ -460,6 +494,7 @@ def build_pack(
         built_with: dict[str, Any] = {
             "mcp_commit": commit_sha,
             "sources_db": sources_db_hash,
+            "sources_db_scheme": sources.SOURCES_DB_SCHEME,
             "vesum": vesum_hash,
             "trie": trie_hash,
             "ulif_forms": "pending",
@@ -537,6 +572,7 @@ def build_pack(
             "standard_count": len(standard_out),
             "unsupported_open_count": open_unsupported_count,
             "unsupported_resolved_count": len(unsupported_out) - open_unsupported_count,
+            "snapshot": sources_instance.snapshot_report(),
             "pack": pack_doc,
         }
     finally:

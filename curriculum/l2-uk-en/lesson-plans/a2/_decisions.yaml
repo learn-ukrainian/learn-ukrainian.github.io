@@ -180,7 +180,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-build-program.md
     line: '## 6. The operator''s decisions (2026-09-22, his words)'
-  doc_sha256: 64de6ced1c7415fbb9370dfa529870d5c03dbeb6afef2bad4b7f30b0737838b2
+  doc_sha256: c6da514d3f14d6bd1f19db3397f90978a256786db099cbca9fb8d619dc8da699
   section_sha256: c05d262d386151e122faeae9afdfd2c14836306e52c0fd13a00e03c7a15cbdb7
   text: |+
     ## 6. The operator's decisions (2026-09-22, his words)

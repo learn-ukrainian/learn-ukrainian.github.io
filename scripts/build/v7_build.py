@@ -1736,8 +1736,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help=(
             "Load the plan and build the knowledge packet, then stop before "
-            "writer invocation (default: false). In --upgrade mode, save lessons.yaml "
-            "and the rendered writer_prompt.md without calling any model."
+            "writer invocation (default: false). Without --upgrade, a dry "
+            "run writes nothing to disk and reports the wiki completeness "
+            "verdict on the phase_done event. With --upgrade, it writes "
+            "lessons.yaml, upgrade_inputs.json and writer_prompt.md to the "
+            "upgrade output directory and calls no model."
         ),
     )
     parser.add_argument(
@@ -2387,7 +2390,11 @@ def _run(args: argparse.Namespace) -> int:
     phase = "start"
     timeout_agent = writer
     tracker = LastEventTracker()
-    archive = run_archive.RunArchive.from_env()
+    dry_run = bool(getattr(args, "dry_run", False))
+    # A dry run computes and reports but persists nothing: no run archive
+    # (it lives under curriculum/l2-uk-en/_orchestration), no module dir,
+    # no phase artefacts (#8679).
+    archive = None if dry_run else run_archive.RunArchive.from_env()
     plan_path: Path | None = None
     module_dir: Path | None = None
 
@@ -2464,7 +2471,8 @@ def _run(args: argparse.Namespace) -> int:
         phase = "wiki_completeness_gate"
         _phase_started(archive, phase)
         started_at = time.monotonic()
-        module_dir.mkdir(parents=True, exist_ok=True)
+        if not dry_run:
+            module_dir.mkdir(parents=True, exist_ok=True)
         if (
             resume_enabled
             and not force_rerun
@@ -2480,9 +2488,18 @@ def _run(args: argparse.Namespace) -> int:
                 slug=slug,
                 wiki_manifest=wiki_manifest_data,
             )
-            linear_pipeline.write_json(
-                module_dir / "wiki_completeness_gate.json", wiki_completeness_gate
-            )
+            if not dry_run:
+                linear_pipeline.write_json(
+                    module_dir / "wiki_completeness_gate.json", wiki_completeness_gate
+                )
+        gate_fields: dict[str, Any] = {}
+        if dry_run and isinstance(wiki_completeness_gate, Mapping):
+            # The operator still sees the gate result, on the event stream.
+            gate_fields = {
+                "dry_run": True,
+                "verdict": wiki_completeness_gate.get("verdict"),
+                "diagnostic": wiki_completeness_gate.get("diagnostic"),
+            }
         _phase_done(
             phase,
             started_at,
@@ -2491,6 +2508,7 @@ def _run(args: argparse.Namespace) -> int:
             event_sink=tracker.emit,
             archive=archive,
             artifact_dir=module_dir,
+            **gate_fields,
         )
         if not isinstance(wiki_completeness_gate, Mapping) or wiki_completeness_gate.get("verdict") != "PASS":
             diagnostic = (
@@ -2500,7 +2518,7 @@ def _run(args: argparse.Namespace) -> int:
             )
             raise linear_pipeline.LinearPipelineError(str(diagnostic))
 
-        if args.dry_run:
+        if dry_run:
             sections = [
                 str(item.get("section"))
                 for item in plan.get("content_outline", [])

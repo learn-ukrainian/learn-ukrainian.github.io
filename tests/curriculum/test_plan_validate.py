@@ -226,6 +226,20 @@ def prior_plan() -> dict:
     }
 
 
+def fixture_arc_document(slug: str) -> str:
+    """An arc source shaped like docs/epics/fresh-build-a1-arc.md: prose sections around the section 3 table."""
+    return (
+        f"# fixture arc document for {slug}\n\n"
+        "## 2. Decisions\n\nD1 - fixture decision text.\n\n"
+        "## 3. Grammar at A1: system or chunk\n\n"
+        "| Item | Status at A1 | Where (position) | Standard |\n"
+        "| --- | --- | --- | --- |\n"
+        "| Fixture item one | system | 1-2 | fixture standard one |\n"
+        "| Fixture item two | chunk only | 2 | fixture standard two |\n\n"
+        "## 5. The positions\n\nPosition 1: fixture-only prose that is not the table.\n"
+    )
+
+
 def fixture_arc(plan: dict) -> dict:
     """A generated-looking arc whose position 2 matches the (mutated) fixture plan.
 
@@ -318,7 +332,7 @@ def write_world(root: Path, plan: dict, pack: dict, words: dict, slug: str = SLU
     (plan_dir / f"{PRIOR_SLUG}.yaml").write_bytes(_dump(prior_plan()))
     doc_path = root / ARC_DOC_REL
     doc_path.parent.mkdir(parents=True, exist_ok=True)
-    doc_path.write_bytes(f"# fixture arc document for {slug}\n".encode())
+    doc_path.write_bytes(fixture_arc_document(slug).encode())
     arc = fixture_arc(plan)
     arc["source"]["sha256"] = hashlib.sha256(doc_path.read_bytes()).hexdigest()
     (plan_dir / "_arc.yaml").write_bytes(_dump(arc))

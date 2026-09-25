@@ -74,6 +74,14 @@ LOAD_BEARING_PROBES = frozenset(
 )
 SESSION_STREAMS_REL = Path(".agent/session-streams/v1/session-streams.sqlite3")
 
+# Probes protected from shedding before the last-resort oversized fallback:
+# the load-bearing set, capsule_session_env, and needle_search (an explicit
+# driver --needle request). Every other probe present on the board is shed
+# largest-serialized-first, so a new optional probe is covered automatically.
+# session_streams_and_handoff is conditionally load-bearing for board_status,
+# but board_status is computed before shedding, so its data can be shed.
+_SHED_PROTECTED_PROBES = LOAD_BEARING_PROBES | {"capsule_session_env", "needle_search"}
+
 
 @dataclass
 class ProbeResult:
@@ -273,6 +281,36 @@ def _get_local_git_info() -> dict[str, Any]:
         return {"error": str(exc)}
 
 
+def _summarize_orient_payload(payload: Any) -> dict[str, Any]:
+    """Project an orient payload to the bounded summary the board consumes.
+
+    The board only reads reachability, ``generated_at``, and the top-5 issue
+    summaries (number/title/state); everything else is dropped here so the
+    probe stays small regardless of the raw orient payload size (#8737).
+    """
+    raw_issues: list[Any] = []
+    generated_at: Any = None
+    if isinstance(payload, dict):
+        generated_at = payload.get("generated_at")
+        candidate = payload.get("issues")
+        if isinstance(candidate, list):
+            raw_issues = candidate
+    issues: list[dict[str, Any]] = []
+    for issue in raw_issues[:5]:
+        if isinstance(issue, dict):
+            issues.append(
+                {
+                    "number": issue.get("number"),
+                    "title": str(issue.get("title", ""))[:80],
+                    "state": issue.get("state"),
+                }
+            )
+    return {
+        "generated_at": generated_at,
+        "issues": issues,
+    }
+
+
 def _probe_orient_lean(
     base_url: str = "http://localhost:8765",
     timeout_s: float = 0.5,
@@ -288,7 +326,7 @@ def _probe_orient_lean(
             return ProbeResult(
                 status="ok",
                 elapsed_ms=elapsed,
-                data={"api_reachable": True, "orient": data},
+                data={"api_reachable": True, "orient": _summarize_orient_payload(data)},
             )
     except Exception as exc:
         elapsed = (time.perf_counter() - start) * 1000.0
@@ -307,19 +345,13 @@ def _probe_orient_lean(
 
 
 def _probe_issues_streams_membership(orient_result: ProbeResult) -> dict[str, Any]:
+    """Reuse the already-projected orient issue list (single projection)."""
     issues: list[dict[str, Any]] = []
     if orient_result.status == "ok" and isinstance(orient_result.data, dict):
         orient_data = orient_result.data.get("orient") or {}
-        raw_issues = orient_data.get("issues") or []
-        for issue in raw_issues[:5]:
-            if isinstance(issue, dict):
-                issues.append(
-                    {
-                        "number": issue.get("number"),
-                        "title": str(issue.get("title", ""))[:80],
-                        "state": issue.get("state"),
-                    }
-                )
+        candidate = orient_data.get("issues")
+        if isinstance(candidate, list):
+            issues = [issue for issue in candidate if isinstance(issue, dict)]
 
     return {
         "top_issues": issues,
@@ -934,6 +966,23 @@ def build_cold_start_board(
             board["_board_truncated"] = True
         else:
             board.pop("_board_truncated", None)
+        if _board_serialized_bytes(board) <= MAX_BOARD_BYTES:
+            return board
+
+    # Shed optional probes (minimized) before the last-resort oversized
+    # fallback so load-bearing probe data survives a bloated optional probe.
+    # Derived from _SHED_PROTECTED_PROBES: every other probe on the board is
+    # sheddable, largest serialized size first, re-checking size after each.
+    shed_probes = dict(board["probes"])
+    shed_order = sorted(
+        (name for name in shed_probes if name not in _SHED_PROTECTED_PROBES),
+        key=lambda name: len(json.dumps(shed_probes[name])),
+        reverse=True,
+    )
+    for name in shed_order:
+        shed_probes[name] = _minimal_probe(shed_probes[name])
+        board["probes"] = shed_probes
+        board["_board_truncated"] = True
         if _board_serialized_bytes(board) <= MAX_BOARD_BYTES:
             return board
 

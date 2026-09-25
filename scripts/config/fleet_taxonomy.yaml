@@ -40,12 +40,9 @@ areas:
   harness:
     id: harness
     aliases:
-      - eval-harness
       - benchmark-2156
       - corpus-channels
     epics:
-      - number: 4913
-        name: "UA eval harness — QG gates, grammar-lexical gate, annotation, bakeoffs"
       - number: 4639  # operator ruling: benchmark->harness
         name: "Ukrainian LLM factuality benchmark — community release"
       - number: 4706  # operator ruling: corpus->harness, datasets mission
@@ -82,14 +79,11 @@ areas:
     aliases:
       - core-quality
       - curriculum-upgrade
-      - a1-upgrade
     epics:
       - number: 4274
         name: "Core-track deterministic quality"
       - number: 7994
         name: "Curriculum upgrade machinery — V7 upgrade mode, lesson gates, MDX assembler"
-      - number: 7995
-        name: "A1 content rollout — 55 modules into 60-minute lessons under canonical a1"
   seminars:
     id: seminars
     aliases:

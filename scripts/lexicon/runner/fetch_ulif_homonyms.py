@@ -1558,6 +1558,21 @@ def prepare_database(db_path: Path) -> sqlite3.Connection:
     assert conn is not None
     if created:
         _ensure_private_file(db_path)
+    # The walk is the writer that needs concurrency: evidence readers pin one
+    # snapshot per session, which only WAL lets coexist with commits (#8527).
+    # WAL is a persistent file property, so this is a no-op on an already-WAL
+    # file and a loud failure when SQLite cannot honour it.
+    try:
+        mode = str(conn.execute("PRAGMA journal_mode=WAL").fetchone()[0]).lower()
+    except sqlite3.Error:
+        conn.close()
+        raise
+    if mode != "wal":
+        conn.close()
+        raise RuntimeError(
+            f"{db_path} is in journal_mode={mode!r}, expected 'wal'; the walk must not "
+            "run in a mode where pinned readers block its commits"
+        )
     return conn
 
 

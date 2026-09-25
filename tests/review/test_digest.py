@@ -45,6 +45,7 @@ from scripts.review.digest import (
     validate_digest,
     write_digest,
 )
+from scripts.review.digest.generator import align_receipt_tokens, expected_receipt_tokens, plain_to_rendered_offset
 
 pytestmark = pytest.mark.reads_content
 
@@ -123,15 +124,11 @@ def _load_linguistic_seeds() -> tuple[str, str, str, str, str, str, str]:
     ty_str = next(w["lemma"] for w in base_req["words"] if "2nd pers sing" in w.get("note", ""))
     vy_str = next(w["lemma"] for w in base_req["words"] if "2nd pers plur" in w.get("note", ""))
 
-    synii_data = json.loads(
-        (REPO_ROOT / "tests/fixtures/vesum_synii_analyses.json").read_text(encoding="utf-8")
-    )
+    synii_data = json.loads((REPO_ROOT / "tests/fixtures/vesum_synii_analyses.json").read_text(encoding="utf-8"))
     voc_str = synii_data["word"]
     voc_tag = next(m["tags"] for m in synii_data["matches"] if "v_kly" in m["tags"])
 
-    five_lemmas = yaml.safe_load(
-        (REPO_ROOT / "tests/fixtures/a1_five_lemmas_request.yaml").read_text(encoding="utf-8")
-    )
+    five_lemmas = yaml.safe_load((REPO_ROOT / "tests/fixtures/a1_five_lemmas_request.yaml").read_text(encoding="utf-8"))
     name_str = five_lemmas["words"][0]["lemma"]
     q_str = five_lemmas["words"][2]["lemma"]
     l2_str = five_lemmas["words"][3]["lemma"]
@@ -158,6 +155,7 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
         "resolution-receipts-v1.schema.json",
         "learner-observed-v1.schema.json",
         "module-digest-v1.schema.json",
+        "lesson-provenance-v1.schema.json",
     ):
         (schemas_dir / s_name).write_bytes((REPO_ROOT / "schemas" / s_name).read_bytes())
 
@@ -298,11 +296,96 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
         "provenance_schema": 1,
         "lesson": {"level": level, "slug": slug, "n": 1},
         "spans": [
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "dialogue_0", "source": "writer_prose", "ref": None, "text": ty_str},
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "dialogue_1", "source": "writer_prose", "ref": None, "text": vy_str},
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "dialogue_2", "source": "writer_prose", "ref": None, "text": voc_str},
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "dialogue_3", "source": "record", "ref": "W-4", "text": q_str},
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": "lead_in", "source": "writer_prose", "ref": None, "text": name_str},
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "dialogue_0",
+                "span": 0,
+                "start": 0,
+                "end": len(ty_str),
+                "source": "writer_prose",
+                "ref": None,
+                "role": "dialogue_line",
+                "text": ty_str,
+                "record_kind": None,
+                "record_side": None,
+                "option_origin": None,
+                "is_key": None,
+            },
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "dialogue_1",
+                "span": 0,
+                "start": 0,
+                "end": len(vy_str),
+                "source": "writer_prose",
+                "ref": None,
+                "role": "dialogue_line",
+                "text": vy_str,
+                "record_kind": None,
+                "record_side": None,
+                "option_origin": None,
+                "is_key": None,
+            },
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "dialogue_2",
+                "span": 0,
+                "start": 0,
+                "end": len(voc_str),
+                "source": "writer_prose",
+                "ref": None,
+                "role": "dialogue_line",
+                "text": voc_str,
+                "record_kind": None,
+                "record_side": None,
+                "option_origin": None,
+                "is_key": None,
+            },
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "dialogue_3",
+                "span": 0,
+                "start": 0,
+                "end": len(q_str),
+                "source": "record",
+                "ref": "W-4",
+                "role": "record_print",
+                "text": q_str,
+                "record_kind": "word",
+                "record_side": None,
+                "option_origin": None,
+                "is_key": None,
+            },
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "lead_in",
+                "span": 0,
+                "start": 0,
+                "end": len(name_str),
+                "source": "writer_prose",
+                "ref": None,
+                "role": "narration",
+                "text": name_str,
+                "record_kind": None,
+                "record_side": None,
+                "option_origin": None,
+                "is_key": None,
+            },
         ],
     }
     prov_1_path = state_dir / "lesson-1.provenance.yaml"
@@ -382,18 +465,56 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
         "observed_schema": 1,
         "lesson": {"level": level, "slug": slug, "n": 1},
         "records": [
-            {"id": "W-1", "role": "taught", "forms": [{"tags": "noun:anim:s:v_naz:pron:pers:2", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
-            {"id": "W-2", "role": "drilled", "forms": [{"tags": "noun:anim:p:v_naz:pron:pers:2", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
-            {"id": "W-3", "role": "incidental", "forms": [{"tags": voc_tag, "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
-            {"id": "W-4", "role": "recycled", "forms": [{"tags": "noun:inanim:f:v_naz", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
-            {"id": "W-5", "role": "name", "forms": [{"tags": "noun:anim:f:v_naz:prop:fname", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
+            {
+                "id": "W-1",
+                "role": "taught",
+                "forms": [
+                    {
+                        "tags": "noun:anim:s:v_naz:pron:pers:2",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
+            {
+                "id": "W-2",
+                "role": "drilled",
+                "forms": [
+                    {
+                        "tags": "noun:anim:p:v_naz:pron:pers:2",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
+            {
+                "id": "W-3",
+                "role": "incidental",
+                "forms": [{"tags": voc_tag, "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}],
+            },
+            {
+                "id": "W-4",
+                "role": "recycled",
+                "forms": [
+                    {
+                        "tags": "noun:inanim:f:v_naz",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
+            {
+                "id": "W-5",
+                "role": "name",
+                "forms": [
+                    {
+                        "tags": "noun:anim:f:v_naz:prop:fname",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
         ],
         "untaught_forms": {
             "count": 1,
             "share": 0.2,
-            "forms": [
-                {"record": "W-3", "tags": voc_tag, "category": "v_kly"}
-            ],
+            "forms": [{"record": "W-3", "tags": voc_tag, "category": "v_kly"}],
         },
     }
     obs_schema = json.loads(OBSERVED_SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -406,7 +527,24 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
         "provenance_schema": 1,
         "lesson": {"level": level, "slug": slug, "n": 2},
         "spans": [
-            {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": 0, "source": "record", "ref": "W-6", "text": l2_str},
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": 0,
+                "span": 0,
+                "start": 0,
+                "end": len(l2_str),
+                "source": "record",
+                "ref": "W-6",
+                "role": "record_print",
+                "text": l2_str,
+                "record_kind": "word",
+                "record_side": None,
+                "option_origin": None,
+                "is_key": None,
+            },
         ],
     }
     prov_2_path = state_dir / "lesson-2.provenance.yaml"
@@ -443,7 +581,16 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
         "observed_schema": 1,
         "lesson": {"level": level, "slug": slug, "n": 2},
         "records": [
-            {"id": "W-6", "role": "taught", "forms": [{"tags": "noun:inanim:m:v_naz", "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0}}]},
+            {
+                "id": "W-6",
+                "role": "taught",
+                "forms": [
+                    {
+                        "tags": "noun:inanim:m:v_naz",
+                        "count_by_tab": {"urok": 1, "slovnyk": 0, "vpravy": 0, "resursy": 0},
+                    }
+                ],
+            },
         ],
         "untaught_forms": {
             "count": 0,
@@ -518,7 +665,7 @@ def test_build_digest_upto_3_every_field(tmp_path: Path) -> None:
     l1 = lessons[0]
     assert l1["lesson"] == 1
     assert len(l1["occurrences"]) == 4  # W-1, W-2, W-3, W-4 (W-5 is a name)
-    assert len(l1["names"]) == 1        # W-5
+    assert len(l1["names"]) == 1  # W-5
 
     # Check occurrences fields
     occ_by_rec = {o["record"]: o for o in l1["occurrences"]}
@@ -803,9 +950,7 @@ def test_path_traversal_slug_fails_and_reads_nothing(
     assert opened_files == []
 
 
-def test_symlink_pointing_outside_root_fails_and_reads_nothing(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_symlink_pointing_outside_root_fails_and_reads_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """R-11: A symlinked input pointing outside its root fails with path_forbidden and reads nothing."""
     _setup_two_lesson_fixture(tmp_path)
     outside_dir = tmp_path / "outside_dir"
@@ -929,9 +1074,7 @@ def test_optional_places_defaults_to_empty_list(tmp_path: Path) -> None:
     assert doc["lessons"][0]["dialogue"]["places"] == []
 
 
-def test_symlinked_lock_sidecar_refused_before_read(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_symlinked_lock_sidecar_refused_before_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A .lock sidecar that is a symlink is refused before any read of that sidecar."""
     paths = _setup_two_lesson_fixture(tmp_path)
 
@@ -1011,12 +1154,7 @@ def test_in_root_data_symlink_with_escaping_lock_refused_before_read(
             build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
 
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any(
-        "target.observed" in p
-        or "secret_lock" in p
-        or "lesson-1.observed" in p
-        for p in opened_files
-    )
+    assert not any("target.observed" in p or "secret_lock" in p or "lesson-1.observed" in p for p in opened_files)
     expected_allowed = {
         str(paths["plan"]),
         str(paths["mdx_1"]),
@@ -1077,9 +1215,7 @@ def test_symlinked_parent_directory_refused_before_read(
         assert opened_check == []
 
 
-def test_symlinked_schema_refused_before_read(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_symlinked_schema_refused_before_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """A symlinked schema is refused before any read."""
     _setup_two_lesson_fixture(tmp_path)
 
@@ -1138,9 +1274,7 @@ def test_symlinked_output_directory_refused_before_write(
     assert exc_info2.value.code == codes.PATH_FORBIDDEN
 
 
-def test_check_digest_refuses_symlink_before_read(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_check_digest_refuses_symlink_before_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """check_digest refuses a symlinked digest file before any read."""
     _setup_two_lesson_fixture(tmp_path)
     doc = build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
@@ -1205,9 +1339,7 @@ def test_symlinked_repo_root_resolved_once_and_refuses_symlink_below_it(
             build_digest("a1", "mod-fixture", 2, repo_root=symlink_root)
 
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any(
-        "target.observed" in p or "lesson-1.observed" in p for p in opened_files
-    )
+    assert not any("target.observed" in p or "lesson-1.observed" in p for p in opened_files)
 
     proc_fail = subprocess.run(cmd_write, capture_output=True, text=True, timeout=30)
     assert proc_fail.returncode == 1
@@ -1340,3 +1472,194 @@ def test_build_digest_fails_when_plan_schema_deleted_after_cache(tmp_path: Path)
         build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
     assert exc_info2.value.code == codes.PLAN_INVALID
     assert "custom_module_field" in exc_info2.value.message
+
+
+def _multi_span_prompt_fixture(tmp_path: Path) -> dict[str, Path]:
+    """Two-lesson fixture whose lesson 1 gains a two-span prompt unit: writer prefix + E-001 text."""
+    paths = _setup_two_lesson_fixture(tmp_path)
+    prov_path = paths["prov_1"]
+    prov_data = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
+    prov_data["spans"].append(
+        {
+            "tab": "vpravy",
+            "step": "s1",
+            "activity": "a1",
+            "item": 0,
+            "block": "prompt",
+            "span": 0,
+            "start": 0,
+            "end": 18,
+            "source": "writer_prose",
+            "ref": None,
+            "role": "item_prompt",
+            "text": "Виправте помилку: ",
+            "record_kind": None,
+            "record_side": None,
+            "option_origin": None,
+            "is_key": None,
+        }
+    )
+    prov_data["spans"].append(
+        {
+            "tab": "vpravy",
+            "step": "s1",
+            "activity": "a1",
+            "item": 0,
+            "block": "prompt",
+            "span": 1,
+            "start": 18,
+            "end": 23,
+            "source": "record",
+            "ref": "E-001",
+            "role": "error_text",
+            "text": "слове",
+            "record_kind": "error",
+            "record_side": "incorrect",
+            "option_origin": None,
+            "is_key": None,
+        }
+    )
+    prov_bytes = yaml.safe_dump(prov_data, allow_unicode=True, sort_keys=False).encode("utf-8")
+    lock.write(prov_path, prov_bytes)
+    return paths
+
+
+def _prompt_receipt(offset: int, token: str, *, selected: dict[str, Any] | None) -> dict[str, Any]:
+    return {
+        "unit": {"tab": "vpravy", "step": "s1", "activity": "a1", "item": 0, "block": "prompt"},
+        "offset": offset,
+        "token": token,
+        "surface": "sentence_token",
+        "class": "resolved" if selected else "skipped:fixture",
+        "candidates": ["W-1"] if selected else [],
+        "selected": selected,
+        "provenance": "deterministic",
+    }
+
+
+def _write_prompt_receipts(paths: dict[str, Path], tokens: list[dict[str, Any]]) -> None:
+    rec_path = paths["res_1"]
+    rec_data = yaml.safe_load(rec_path.read_text(encoding="utf-8"))
+    rec_data["tokens"].extend(tokens)
+    lock.write(rec_path, yaml.safe_dump(rec_data, allow_unicode=True, sort_keys=False).encode("utf-8"))
+
+
+def test_digest_error_record_token_at_unit_offset_0_attributed_to_e_span(tmp_path: Path) -> None:
+    # Round-2 finding 4: the receipt records the E-001 token at offset 0 of its own resolver unit
+    # (the second span); the digest must convert that to unit offset 18 and attribute the E- span.
+    paths = _multi_span_prompt_fixture(tmp_path)
+    selected = {"record": "W-1", "forms": ["noun:inanim:n:v_kly"], "stressed": "сло́ве"}
+    _write_prompt_receipts(
+        paths,
+        [
+            _prompt_receipt(0, "Виправте", selected=None),
+            _prompt_receipt(9, "помилку", selected=None),
+            _prompt_receipt(0, "слове", selected=selected),
+        ],
+    )
+
+    doc = build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    validate_digest(doc)
+
+    occ = [
+        o
+        for o in doc["lessons"][0]["occurrences"]
+        if o["locator"]["tab"] == "vpravy" and o["locator"]["block"] == "prompt"
+    ]
+    assert len(occ) == 1
+    assert occ[0]["span_source"] == "record"
+    assert occ[0]["span_ref"] == "E-001"
+    assert occ[0]["locator"]["span"] == 1
+    assert occ[0]["offset"] == 0  # the receipt offset is reported unchanged
+
+
+def test_digest_receipt_offset_with_unit_origin_fails_closed(tmp_path: Path) -> None:
+    # A receipt that recorded the E-001 token at the unit-relative offset 18 does not describe any
+    # resolver unit of that prompt; the alignment must refuse it rather than guess a span.
+    paths = _multi_span_prompt_fixture(tmp_path)
+    selected = {"record": "W-1", "forms": ["noun:inanim:n:v_kly"], "stressed": "сло́ве"}
+    _write_prompt_receipts(
+        paths,
+        [
+            _prompt_receipt(0, "Виправте", selected=None),
+            _prompt_receipt(9, "помилку", selected=None),
+            _prompt_receipt(18, "слове", selected=selected),
+        ],
+    )
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert exc_info.value.code == codes.RECEIPT_SPAN_ALIGNMENT_FAILED
+    assert "offset 18" in exc_info.value.message
+
+
+def test_digest_receipts_missing_a_span_token_fail_closed(tmp_path: Path) -> None:
+    # The receipts list every token of a unit; a shorter list cannot be aligned to the spans.
+    paths = _multi_span_prompt_fixture(tmp_path)
+    selected = {"record": "W-1", "forms": ["noun:inanim:n:v_kly"], "stressed": "сло́ве"}
+    _write_prompt_receipts(paths, [_prompt_receipt(0, "слове", selected=selected)])
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert exc_info.value.code == codes.RECEIPT_SPAN_ALIGNMENT_FAILED
+
+
+def test_digest_rejects_provenance_spans_that_do_not_partition_their_unit(tmp_path: Path) -> None:
+    paths = _multi_span_prompt_fixture(tmp_path)
+    prov_path = paths["prov_1"]
+    prov_data = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
+    e_span = next(s for s in prov_data["spans"] if s.get("ref") == "E-001")
+    e_span["start"], e_span["end"] = 0, 5  # span-relative offsets, not unit-relative: a gap at 18
+    lock.write(prov_path, yaml.safe_dump(prov_data, allow_unicode=True, sort_keys=False).encode("utf-8"))
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert exc_info.value.code == codes.PROVENANCE_INVALID
+    assert "partition" in exc_info.value.message
+
+
+def test_digest_validates_provenance_against_schema(tmp_path: Path) -> None:
+    paths = _setup_two_lesson_fixture(tmp_path)
+    prov_path = paths["prov_1"]
+    prov_data = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
+    del prov_data["spans"][0]["role"]
+    lock.write(prov_path, yaml.safe_dump(prov_data, allow_unicode=True, sort_keys=False).encode("utf-8"))
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    assert exc_info.value.code == codes.PROVENANCE_INVALID
+    assert "role" in exc_info.value.message
+
+
+def _span(idx: int, start: int, text: str, *, role: str = "narration", ref: str | None = None) -> dict[str, Any]:
+    return {"span": idx, "start": start, "end": start + len(text), "text": text, "role": role, "ref": ref}
+
+
+def test_plain_to_rendered_offset_skips_combining_accents() -> None:
+    rendered = "сло\u0301во сло\u0301во"
+    assert plain_to_rendered_offset(rendered, 0) == 0
+    assert plain_to_rendered_offset(rendered, 3) == 4
+    assert plain_to_rendered_offset(rendered, 6) == 7
+    assert plain_to_rendered_offset(rendered, 11) == len(rendered)
+    with pytest.raises(ValueError):
+        plain_to_rendered_offset(rendered, 12)
+
+
+def test_align_receipt_tokens_converts_span_relative_plain_offsets_to_unit_rendered_offsets() -> None:
+    # Unit rendered text: "сло́во " + "сло́во" + " " + "слово (word)" (a gloss reference).
+    spans = [
+        _span(0, 0, "сло\u0301во "),
+        _span(1, 7, "сло\u0301во", role="quoted_term"),
+        _span(2, 13, " "),
+        _span(3, 14, "слово (word)", role="gloss_ref", ref="W-1"),
+    ]
+    receipts = [
+        {"offset": 0, "token": "слово"},  # span 0, plain offset 0
+        {"offset": 0, "token": "слово"},  # span 1, plain offset 0 -> unit offset 7
+        {"offset": 8, "token": "W-1"},  # span 3: the id inside "{{gloss:W-1}}"
+    ]
+    assert align_receipt_tokens(spans, receipts) == [(0, 0), (1, 7), (3, 14)]
+    assert expected_receipt_tokens(spans) == [(0, 0, "слово"), (1, 0, "слово"), (3, 8, "W-1")]
+
+    with pytest.raises(DigestError) as exc_info:
+        align_receipt_tokens(spans, receipts[:2])
+    assert exc_info.value.code == codes.RECEIPT_SPAN_ALIGNMENT_FAILED
+    with pytest.raises(DigestError) as exc_info:
+        align_receipt_tokens(spans, [receipts[0], {"offset": 7, "token": "слово"}, receipts[2]])
+    assert exc_info.value.code == codes.RECEIPT_SPAN_ALIGNMENT_FAILED

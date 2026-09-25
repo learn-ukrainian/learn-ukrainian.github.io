@@ -1,6 +1,10 @@
 import subprocess
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.repo_wide
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 def test_hooks_are_executable_in_git():

@@ -393,6 +393,11 @@ def build_ask_review_dispatch_command(
         "dispatch",
         "--agent",
         agent,
+    ]
+    # Native kimi refuses read-only. kimicc is the harness that can run it.
+    if agent == "kimi":
+        cmd += ["--harness", "kimicc"]
+    cmd += [
         "--mode",
         "read-only",
         "--worktree",

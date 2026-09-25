@@ -34,7 +34,7 @@ def test_happy_path_real_files() -> None:
     res = validate_fleet_taxonomy()
     assert res["ok"] is True
     assert res["areas_count"] == 9
-    assert res["epics_count"] == 23
+    assert res["epics_count"] == 21
     assert res["assignments_count"] == 9
 
 
@@ -43,8 +43,8 @@ def test_negative_duplicate_alias_across_areas(tmp_path: Any) -> None:
     tax_data = yaml.safe_load(TAXONOMY_PATH.read_text(encoding="utf-8"))
     ass_data = yaml.safe_load(ASSIGNMENTS_PATH.read_text(encoding="utf-8"))
 
-    # Break taxonomy data by adding an alias from harness ('eval-harness') into infra
-    tax_data["areas"]["infra"]["aliases"].append("eval-harness")
+    # Break taxonomy data by adding an alias from harness into infra.
+    tax_data["areas"]["infra"]["aliases"].append("corpus-channels")
 
     tax_file = tmp_path / "fleet_taxonomy.yaml"
     ass_file = tmp_path / "area_assignments.yaml"
@@ -60,7 +60,7 @@ def test_negative_duplicate_alias_across_areas(tmp_path: Any) -> None:
         )
 
     assert "not injective" in str(exc_info.value)
-    assert "eval-harness" in str(exc_info.value)
+    assert "corpus-channels" in str(exc_info.value)
 
 
 def test_negative_epic_in_two_areas(tmp_path: Any) -> None:

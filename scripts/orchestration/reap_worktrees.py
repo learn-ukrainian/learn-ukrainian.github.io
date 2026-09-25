@@ -42,7 +42,7 @@ from scripts.common.acp_runtime_lock import (
 )
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
-from scripts.orchestration import reaper_lifecycle, worktree_claims
+from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -96,6 +96,9 @@ class ReapResult:
     branch_pruned: bool = False
     recovery_ref: str | None = None
     owner: str | None = None
+    # Report-only findings (#8663): kind, evidence, and a "verify first:"
+    # removal command a human runs; the reaper never acts on them.
+    needs_attention: dict[str, Any] | None = None
 
 
 def sanitized_git_env() -> dict[str, str]:
@@ -110,7 +113,7 @@ def _run(
     args: list[str],
     *,
     cwd: Path,
-    timeout: int | None = None,
+    timeout: float | None = None,
     env_overrides: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
     env = sanitized_git_env()
@@ -237,8 +240,12 @@ def parse_worktree_porcelain(output: str) -> list[WorktreeInfo]:
     return entries
 
 
-def list_git_worktrees(repo_root: Path) -> list[WorktreeInfo]:
-    proc = _run(["git", "worktree", "list", "--porcelain"], cwd=repo_root)
+def list_git_worktrees(repo_root: Path, *, timeout: float | None = None) -> list[WorktreeInfo]:
+    """List registered worktrees; an expired ``timeout`` raises :class:`RuntimeError`."""
+    try:
+        proc = _run(["git", "worktree", "list", "--porcelain"], cwd=repo_root, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git worktree list timed out after {timeout:g}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"git worktree list failed: {_format_failure(proc)}")
     return parse_worktree_porcelain(proc.stdout or "")
@@ -1037,12 +1044,26 @@ def _dispatch_owner(repo_root: Path, info: WorktreeInfo) -> str:
 
 _ACP_RUNTIME_REASON_PREFIX = "acp runtime "
 _ACP_LEGACY_LOCK_MIN_AGE_HOURS = 24.0
+_GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
 # Minimum age for a zero-file dispatch husk before it may be removed.
 # ``delegate.py`` creates the dispatch directory before ``git worktree add``
 # registers it, so an unregistered empty directory can be mid-creation; the
 # provisioning window is seconds, and one hour bounds it with a wide margin
 # while still reaping same-day debris.
 _DISPATCH_HUSK_MIN_AGE_HOURS = 1.0
+# How long the husk sweep waits for the per-path worktree lock before it
+# skips. ``git worktree add`` writes its admin registration
+# (``.git/worktrees/<name>/gitdir``) before ``.git`` appears in the target,
+# so the sweep's listing snapshot can predate a registration that is already
+# committed (#8711); the final re-check runs under the same lock dispatch
+# holds. A dispatch add holds that lock only briefly at this granularity, so
+# a short wait bounds the sweep without stalling it.
+_DISPATCH_HUSK_LOCK_TIMEOUT_S = 10.0
+# Bound on each git call the husk removal makes around the per-path lock. A
+# hung ``git worktree list`` would otherwise hold that lock indefinitely and a
+# waiting dispatch would fail on its own 30s lock timeout (#8748); an expired
+# bound skips the husk instead.
+_LOCKED_GIT_TIMEOUT_S = 5.0
 
 
 def _is_acp_runtime_path(repo_root: Path, path: Path) -> bool:
@@ -1122,6 +1143,71 @@ def _acp_runtime_cleanup_recheck(repo_root: Path, info: WorktreeInfo) -> str | N
     return None
 
 
+def _names_path(claimed: object, path: Path) -> bool:
+    """True when ``claimed`` is a non-empty path string resolving to ``path``."""
+    if not isinstance(claimed, str) or not claimed:
+        return False
+    try:
+        return Path(claimed).resolve() == path.resolve()
+    except (OSError, RuntimeError):
+        return False
+
+
+def _initializing_leftover_result(repo_root: Path, info: WorktreeInfo) -> ReapResult | None:
+    """Report-only class (#8663): a worktree dispatch's stopped ``git worktree add`` left.
+
+    Applies to a worktree git still locks ``initializing`` whose dispatch
+    task record carries the ``worktree_prep`` reservation for this path.
+    Such a worktree is never removed, unlocked or pruned automatically:
+    every ownership proof tried for that left a race in which a foreign or
+    completed worktree qualified. While the reserving dispatch may still be
+    running its add, the result says so; otherwise it is
+    ``needs_attention: initializing_leftover`` with the evidence and a
+    removal command marked "verify first:"; each pass journals it as a
+    ``needs_attention`` event. Returns ``None`` for any other worktree.
+    """
+    if info.locked_reason != _GIT_INITIALIZING_LOCK_REASON:
+        return None
+    task_id = _dispatch_task_id(repo_root, info)
+    payload = _task_record(repo_root, task_id)
+    prep = payload.get("worktree_prep") if payload is not None else None
+    if payload is None or not isinstance(prep, dict) or not _names_path(prep.get("path"), info.path):
+        return None
+    owner = _dispatch_owner(repo_root, info)
+    status = payload.get("status")
+    if status in ("running", "spawning") and not worktree_prep.is_orphaned_prep_record(payload):
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=f"active dispatch task-id={task_id} status={status}: git worktree add may still be running",
+            dirty=None,
+            owner=owner,
+        )
+    command = worktree_prep.verify_first_command(repo_root, info.path)
+    finding = {
+        "kind": worktree_prep.LEFTOVER_KIND,
+        "task_id": task_id,
+        "task_status": status,
+        "worktree_prep": prep,
+        "evidence": worktree_prep.leftover_evidence(prep, info.path),
+        "command": command,
+    }
+    reason = (
+        f"needs_attention: {worktree_prep.LEFTOVER_KIND}; task-id={task_id} status={status}; "
+        f"git worktree add left this worktree locked 'initializing'; never removed automatically; {command}"
+    )
+    return ReapResult(
+        path=str(info.path),
+        branch=info.branch,
+        action="skipped",
+        reason=reason,
+        dirty=None,
+        owner=owner,
+        needs_attention=finding,
+    )
+
+
 def _tree_has_any_file_or_symlink(root: Path) -> bool:
     """True when ``root`` holds any file, symlink, or metadata entry.
 
@@ -1169,6 +1255,96 @@ def _tree_newest_age_hours(root: Path, now: float | None = None) -> float | None
     return ((now or time.time()) - newest) / 3600
 
 
+def _admin_registered_worktree_paths(common_git_dir: Path) -> set[Path]:
+    """Worktree paths named by a ``.git/worktrees/*/gitdir`` registration.
+
+    ``git worktree add`` writes this admin entry before ``.git`` appears in
+    the target directory, and ``git worktree list --porcelain`` can lag it
+    (#8711), so the locked re-check reads the admin directory directly. Each
+    ``gitdir`` file holds the path of the target's ``.git`` file; git 2.48+
+    can record it relative (``worktree.useRelativePaths`` /
+    ``--relative-paths``), resolved the way git resolves it — against the
+    admin entry's own directory. Every read failure raises: the caller fails
+    closed.
+    """
+    registered: set[Path] = set()
+    admin_dir = common_git_dir / "worktrees"
+    try:
+        if not admin_dir.is_dir():
+            return registered
+        entries = list(admin_dir.iterdir())
+    except OSError as exc:
+        raise RuntimeError(f"git worktree admin dir {admin_dir} unreadable: {exc}") from exc
+    for entry in entries:
+        gitdir = entry / "gitdir"
+        # Only a proven absence skips an entry; ``Path.is_file()`` would also
+        # turn an untraversable entry into "no registration" on interpreters
+        # that swallow EACCES (#8748).
+        try:
+            raw = gitdir.read_text(encoding="utf-8", errors="surrogateescape").strip()
+        except (FileNotFoundError, NotADirectoryError):
+            continue
+        except OSError as exc:
+            raise RuntimeError(f"git worktree registration {gitdir} unreadable: {exc}") from exc
+        if not raw:
+            continue
+        target = Path(raw)
+        if not target.is_absolute():
+            target = entry / target
+        registered.add(target.parent.resolve())
+    return registered
+
+
+def _remove_dispatch_husk_locked(repo_root: Path, *, child: Path, resolved: Path) -> str | None:
+    """Re-check registration and emptiness under delegate's per-path lock, then remove (#8711).
+
+    Dispatch holds :func:`worktree_claims.worktree_lock` for the target path
+    across its whole ``git worktree add``, so while this holds the same lock
+    no add can be mid-registration: either the add registered first (and the
+    fresh re-check below sees it) or it waits and then finds the directory
+    gone. Returns a skip reason, or ``None`` after the husk was removed.
+    Raises :class:`worktree_claims.WorktreeLockError` when the lock is not
+    taken and :class:`RuntimeError` when a re-check probe fails or a git call
+    outlives ``_LOCKED_GIT_TIMEOUT_S``; the caller turns both into a skip,
+    never a removal.
+
+    The lock directory comes from the strict
+    :func:`worktree_claims.control_plane_root`, like
+    :func:`_enter_dispatch_worktree_guard`: a mutating caller must refuse
+    when the fleet catalog is unreadable, never fall back to the local
+    checkout — delegate holds the lock on the public primary for a
+    ``--repo`` sibling, so locking anywhere else would not exclude it
+    (#8711 review). A lock directory that cannot be resolved is reported
+    with the guard's :data:`worktree_claims.LOCK_UNAVAILABLE` reason.
+    """
+    try:
+        control_root = worktree_claims.control_plane_root(primary_checkout_root(repo_root))
+        lock_dir = _common_git_dir(control_root, timeout=_LOCKED_GIT_TIMEOUT_S) / worktree_claims.LOCK_DIR_NAME
+    except RuntimeError as exc:
+        return f"{worktree_claims.LOCK_UNAVAILABLE} ({exc})"
+    common_git_dir = _common_git_dir(repo_root, timeout=_LOCKED_GIT_TIMEOUT_S)
+    with worktree_claims.worktree_lock(child, lock_dir=lock_dir, timeout_s=_DISPATCH_HUSK_LOCK_TIMEOUT_S):
+        listing = {info.path for info in list_git_worktrees(repo_root, timeout=_LOCKED_GIT_TIMEOUT_S)}
+        if resolved in listing:
+            return "path registered as a git worktree during the locked re-check; a concurrent add claimed it"
+        admin_registered = _admin_registered_worktree_paths(common_git_dir)
+        if resolved in admin_registered:
+            return "path registered in .git/worktrees/*/gitdir during the locked re-check; a concurrent add claimed it"
+        if _tree_has_any_file_or_symlink(resolved):
+            return "files appeared in the husk during the locked re-check; treating as in use"
+        age_hours = _tree_newest_age_hours(resolved)
+        if age_hours is None:
+            raise RuntimeError(f"could not determine husk age during the locked re-check: {resolved}")
+        if age_hours < _DISPATCH_HUSK_MIN_AGE_HOURS:
+            return (
+                f"empty placeholder husk is only {age_hours:.1f}h old "
+                f"(< {_DISPATCH_HUSK_MIN_AGE_HOURS:g}h minimum) at the locked re-check; treating as in use"
+            )
+        target = assert_delete_target(child, repo_root=repo_root)
+        shutil.rmtree(target)
+    return None
+
+
 def _reap_dispatch_husks(
     repo_root: Path,
     *,
@@ -1187,7 +1363,11 @@ def _reap_dispatch_husks(
     rule. Every other guard fails closed too: an unavailable process-CWD
     probe, a live process cwd inside, or a youngest-mtime age below
     ``_DISPATCH_HUSK_MIN_AGE_HOURS`` (measured across the whole subtree, so a
-    directory still being provisioned is never "old") all preserve.
+    directory still being provisioned is never "old") all preserve. The
+    removal itself runs under delegate's per-path worktree lock with a fresh
+    registration re-check (#8711): the ``registered`` snapshot this sweep was
+    called with can predate a concurrent ``git worktree add``, which writes
+    its admin registration before ``.git`` appears in the target.
     """
     results: list[ReapResult] = []
     dispatch_root = repo_root / ".worktrees" / "dispatch"
@@ -1303,8 +1483,31 @@ def _reap_dispatch_husks(
                 pr=None,
             )
             try:
-                target = assert_delete_target(child, repo_root=repo_root)
-                shutil.rmtree(target)
+                refusal = _remove_dispatch_husk_locked(repo_root, child=child, resolved=resolved)
+            except worktree_claims.WorktreeLockError as exc:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=f"{worktree_claims.lock_refusal(exc)} ({exc})",
+                        dirty=False,
+                        owner=owner,
+                    )
+                )
+                continue
+            except RuntimeError as exc:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=f"husk registration re-check failed closed ({exc})",
+                        dirty=False,
+                        owner=owner,
+                    )
+                )
+                continue
             except (ValueError, OSError) as exc:
                 results.append(
                     ReapResult(
@@ -1315,6 +1518,18 @@ def _reap_dispatch_husks(
                         dirty=False,
                         owner=owner,
                         error=str(exc),
+                    )
+                )
+                continue
+            if refusal is not None:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=refusal,
+                        dirty=False,
+                        owner=owner,
                     )
                 )
                 continue
@@ -1340,7 +1555,7 @@ def classify_preservation(result: ReapResult) -> str:
             return "permission_error"
         return "error"
     reason = result.reason.lower()
-    if reason.startswith("needs_attention;"):
+    if result.needs_attention is not None or reason.startswith(("needs_attention;", "needs_attention:")):
         return "needs_attention"
     if "permission" in reason or "denied" in reason:
         return "permission_error"
@@ -1574,8 +1789,11 @@ def _activity_reason(
     return None
 
 
-def _common_git_dir(repo_root: Path) -> Path:
-    proc = _run(["git", "rev-parse", "--git-common-dir"], cwd=repo_root)
+def _common_git_dir(repo_root: Path, *, timeout: float | None = None) -> Path:
+    try:
+        proc = _run(["git", "rev-parse", "--git-common-dir"], cwd=repo_root, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git rev-parse --git-common-dir timed out after {timeout:g}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"cannot resolve git common dir: {_format_failure(proc)}")
     path = Path((proc.stdout or "").strip())
@@ -2629,6 +2847,14 @@ def reap_worktrees(
                 qualified.append((info, acp_reason, False, None))
                 continue
 
+            # Report-only class (#8663): a dispatch worktree a stopped
+            # ``git worktree add`` left under git's ``initializing`` lock is
+            # reported for a human and never qualifies for removal.
+            leftover = _initializing_leftover_result(repo_root, info)
+            if leftover is not None:
+                results.append(leftover)
+                continue
+
             dirty_state = _worktree_clean(info.path)
             dirty = None if dirty_state is None else not dirty_state
 
@@ -2828,6 +3054,10 @@ def reap_worktrees(
 
     for result in results:
         event = "reap" if result.action in {"removed", "preserved_then_removed"} else "skip"
+        extra: dict[str, Any] = {}
+        if result.needs_attention is not None:
+            event = "needs_attention"
+            extra["needs_attention"] = result.needs_attention
         reaper_lifecycle.append_journal(
             repo_root,
             event,
@@ -2839,6 +3069,7 @@ def reap_worktrees(
             pr=result.pr,
             error=result.error,
             recovery_ref=result.recovery_ref,
+            **extra,
         )
     return results
 
@@ -2929,8 +3160,12 @@ def format_text_results(results: list[ReapResult], *, apply: bool) -> str:
     candidates = sum(1 for result in results if result.action in remove_actions)
     skipped = sum(1 for result in results if result.action == "skipped")
     errors = sum(1 for result in results if result.action == "error")
+    attention = sum(1 for result in results if result.needs_attention is not None)
     mode = "APPLY" if apply else "DRY RUN"
-    lines = [f"{mode}: {candidates} candidate(s), {skipped} skipped, {errors} error(s)"]
+    summary = f"{mode}: {candidates} candidate(s), {skipped} skipped, {errors} error(s)"
+    if attention:
+        summary = f"{summary}, {attention} need(s) attention"
+    lines = [summary]
     lines.extend(_format_result_line(result) for result in results)
     return "\n".join(lines)
 
@@ -2951,8 +3186,13 @@ def aggregate_counts(results: list[ReapResult]) -> dict[str, Any]:
     reaped = 0
     reaped_by_owner: dict[str, int] = {}
     retained_exceptions = 0
+    needs_attention: list[dict[str, Any]] = []
 
     for r in results:
+        if r.needs_attention is not None:
+            needs_attention.append(
+                {"path": r.path, "kind": r.needs_attention.get("kind"), "command": r.needs_attention.get("command")}
+            )
         owner = r.owner or "unattributed"
         by_owner[owner] = by_owner.get(owner, 0) + 1
         cls = classify_preservation(r)
@@ -2975,6 +3215,7 @@ def aggregate_counts(results: list[ReapResult]) -> dict[str, Any]:
         "by_preservation_class": preservation_classes,
         "by_owner": dict(sorted(by_owner.items())),
         "reaped_by_owner": dict(sorted(reaped_by_owner.items())),
+        "needs_attention": needs_attention,
     }
 
 
@@ -2992,6 +3233,12 @@ def format_aggregate_results(counts: dict[str, Any], *, apply: bool) -> str:
     lines.append("  By owner:")
     for owner, count in sorted(counts.get("by_owner", {}).items()):
         lines.append(f"    {owner}: {count}")
+    attention = counts.get("needs_attention") or []
+    if attention:
+        lines.append("  Needs attention (never removed automatically):")
+        for item in attention:
+            lines.append(f"    {item['kind']}: {item['path']}")
+            lines.append(f"      {item['command']}")
     return "\n".join(lines)
 
 

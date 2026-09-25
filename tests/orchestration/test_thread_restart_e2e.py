@@ -27,6 +27,7 @@ from tests.epics_monitor_stub import epics_monitor_stub
 from tests.project_python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+pytestmark = pytest.mark.repo_wide
 HANDOFF = REPO_ROOT / "scripts/orchestration/thread_handoff.py"
 HANDOFF_CANARY = REPO_ROOT / "scripts/orchestration/thread_handoff_canary.py"
 CONTEXT_CANARY = REPO_ROOT / "scripts/context_canary.py"
@@ -140,6 +141,7 @@ def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path,
                 "scripts/lib/profile_resolver.sh",
                 "scripts/lib/session_supervisor.sh",
                 "scripts/config/issue_streams.yaml",
+                "scripts/config/launcher_stream_aliases.tsv",
                 "agents_extensions/codex/hooks.json",
                 "agents_extensions/shared/hooks/session-setup.sh",
                 # Deploy status breadcrumbs (PR #5814 r6): deploy_prompts.sh now

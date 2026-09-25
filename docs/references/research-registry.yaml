@@ -93,7 +93,7 @@ records:
     consumer: null
     reason: >-
       Documented but not adopted: no dedicated stream-owned implementation issue
-      and no validated prompt/code consumer exist. Create a child under
-      eval-harness #4913 before adoption; #4913 is the stream epic, not a child.
+      and no validated prompt/code consumer exist. Create an issue under the
+      current owning stream before adoption; eval-harness #4913 is closed.
     replacement: null
     access_class: tracked-digest

@@ -146,6 +146,10 @@ Callers and their ownership proofs:
   dispatch created. `delegate._release_stale_branch_holders` performs a
   non-force release after clean, synced, terminal-owner checks so a blocked
   dispatch may reattach its branch.
+- `delegate._settle_failed_worktree_add` removes nothing. After its own
+  failed or timed-out `git worktree add`, dispatch leaves the directory it
+  reserved with `mkdir` as it is, empty or not, and reports it (see
+  "Interrupted `git worktree add`" below).
 - `post_task_reap._remove_acp_runtime_worktree` removes only task-state-bound
   ACP runtime paths below `.worktrees/dispatch/acp/`, after its own terminal,
   clean, and liveness checks; it forces for ignored runtime residue.
@@ -190,6 +194,87 @@ the same dead-owner sweep on entry, before creating its own workspace, so a
 killed ask's stub is gone by the next ACP call at the latest. As defence in
 depth, the ask entry path converts SIGTERM into an orderly unwind
 (`SystemExit(143)`) so the context `finally` cleans up when it can.
+
+### Interrupted `git worktree add` (#8663)
+
+`delegate.py` bounds `git worktree add` by `DELEGATE_WORKTREE_ADD_*` in
+`scripts/config.py`: a base window, then more time only while the checkout is
+still gaining files, up to a hard ceiling. The add runs in the C locale (so
+git's lock reason is the literal `initializing`) in its own process group.
+
+Stopping a slow add:
+
+1. SIGTERM goes to the add's process group. Git's signal handler deletes the
+   worktree directory and admin directory it was building; the branch ref is
+   kept. Tests prove this on the host git (2.53.0) with SIGTERM before the
+   checkout starts, at its first file, mid-checkout and at its last file.
+2. Dispatch waits up to `_WORKTREE_ADD_STOP_GRACE_S` (30 s) for git to exit.
+   SIGKILL follows only after that grace.
+3. Dispatch worktree preparation removes nothing, not even the empty
+   directory it reserved with `mkdir`. Git 2.53 can write another add's
+   admin registration while that directory is still empty and before its
+   `.git` exists, so an `rmdir` could disrupt that add. The directory stays
+   as it is; `worktree_prep.reserved_dir_left: true` and the failure output
+   record that it was left. An empty, unregistered one is later swept by the
+   reaper's existing zero-file dispatch-husk rule
+   (`reap_worktrees._reap_dispatch_husks`, described at the end of this
+   section, with its one-hour age floor).
+
+Before git starts, dispatch reserves the path with `mkdir`: a path that
+already exists is never passed to git and never removed. Dispatch also
+records the reservation as `worktree_prep` in the task record. The record
+holds the path, `dir_dev`/`dir_ino`, `base_sha`, the dispatcher's
+`owner_pid`/`owner_start`, and git's `git_pid`/`git_start` (start time from
+`/proc/<pid>/stat` field 22). The failed task record keeps `worktree_prep`
+and stores the outcome as `worktree_prep_cleanup`.
+
+**Nothing removes, unlocks or prunes a registered worktree automatically.**
+Dispatch and the reapers both follow this rule. Three review rounds tried to
+prove ownership well enough for automatic removal, and each proof left a race
+in which a foreign or completed worktree could qualify. A leftover can happen
+when git was SIGKILLed, when its cleanup failed, or when the dispatcher died
+mid-add. It stays registered and locked `initializing`, and it is reported as
+`needs_attention: initializing_leftover`:
+
+- dispatch's `worktree_prep_cleanup` and its stderr carry `needs_attention`
+  and the command;
+- `reap_worktrees` reports a dispatch worktree locked `initializing` whose
+  task record carries `worktree_prep` for that path. The row is `skipped`,
+  its reason starts with `needs_attention: initializing_leftover`, and
+  `needs_attention` holds the evidence. The aggregate output lists it under
+  "Needs attention", the Monitor GC sweep summary under `needs_attention`,
+  and every pass appends a `needs_attention` journal event. No other class
+  sees the worktree. While the reserving dispatch may still be running its
+  add, the row says so instead;
+- `post_task_reap` routes such a task's worktree to that report. Its JSON
+  carries a top-level `needs_attention` list.
+
+The evidence (`worktree_prep.leftover_evidence`) covers:
+
+- the `worktree_prep` facts;
+- whether the directory is still the reserved inode;
+- whether the recorded git add (and its process group) and the dispatcher
+  are proven gone;
+- HEAD against `base_sha`;
+- a `git status` summary.
+
+To act on a leftover:
+
+1. Check the evidence. Git and the dispatcher should be gone and nothing
+   should be running inside the worktree. HEAD should be the base commit,
+   and the status should show only a partial checkout (deleted and untracked
+   files).
+2. Only then run the reported command, which starts with `verify first:`:
+   `git -C <repo> worktree unlock <path> && git -C <repo> worktree remove --force <path>`.
+   The branch ref is not touched.
+
+The dispatcher's `owner_pid`/`owner_start` serve one more purpose. While
+`git worktree add` runs, the task record says `spawning` with `pid: null`. If
+the dispatcher dies before writing a terminal record, two paths mark it
+`crashed` with `returncode_reason: dispatch_died_during_worktree_prep` once
+the owner is proven gone (`worktree_prep.is_orphaned_prep_record`): the lazy
+heal in `delegate.py status|wait|list`, and `reconcile_sweep --apply`. The
+ownership ledger stops counting such a record immediately.
 
 Unregistered directories under `.worktrees/dispatch/<agent>/` that contain
 zero files (empty placeholder trees, e.g. only `site/ node_modules/ data/`
@@ -414,4 +499,159 @@ not match `sweep_review_temp_orphans` and will refill the disk within hours.
 
 The scheduled git-hygiene runner (`scheduled_worktree_cleanup.py`) invokes the same
 sweep after the review-temp reaper. Age gates: 2h normally, 30m when free space is
-under 15 GiB. Live process paths are skipped.
+under 15 GiB. Live and liveness-unknown paths are skipped (see below for the proof).
+
+### Atlas/QA legacy residue (#8738)
+
+Only five exact names are ever auto-deleted by the sweep, once the age, ownership and
+liveness gates pass: the #8307 Atlas 410k outputs `atlas-8307-410k-final.db`,
+`atlas-8307-410k-r2.db`, `atlas-8307-synthetic-410k.json`, and the #8686 QA scratch
+directories `qa-8686-ui-r2`, `qa-8686-exercises-r2`. Every other `atlas-<n>-*` /
+`qa-<n>-*` entry is **inventoried** (`inventory_only` count and list in the report)
+but never deleted without fresh ownership proof. Names containing `promotion`, and
+any `decision*.yaml`/`.yml`, are protected: never deleted, never listed as residue.
+
+Liveness is not `pgrep -f` alone. The actual proof required before a deletion is
+both of:
+
+1. `pgrep -f <path>` exits 1 (no command line of any user names the path); and
+2. a `/proc` walk in which **every** process except the sweep itself was fully
+   probed (scheduler state, command line, working directory, environment, open
+   descriptors) and none references the path or a descendant.
+
+Every process is probed the same way regardless of its owner. A foreign-uid
+process can hold a world-readable legacy file open without naming it on its
+command line, so ownership is never treated as proof of absence. Any process that
+refuses inspection of any probe, for any reason (`EACCES`/`EPERM` from a
+non-dumpable same-uid daemon, a root-owned service or a kernel thread, `EIO`, an
+unreadable `stat` or `cmdline`), makes the verdict unknown, and unknown preserves
+the entry (`skipped` reason `liveness_unknown`, distinct from `live_process`). Only
+two things turn an unreadable process into "holds nothing": `/proc/<pid>` has
+vanished (the process exited), or its state is zombie/dead. A host without `/proc`
+(macOS) cannot detect a process that holds a candidate as its cwd or through an
+open descriptor, so a negative `pgrep` there is `liveness_unknown`, never clear.
+
+Consequence: the legacy auto-sweep is **inventory-only in practice**. On the
+primary Linux host, root-owned services and kernel threads deny cwd/fd/environ to
+the sweep's uid, and `systemd --user`, `(sd-pam)`, `ssh-agent`, `sshd-session` are
+non-dumpable same-uid daemons, so every deletable candidate is reported as
+`liveness_unknown` and nothing is deleted (verified on 2026-09-24 after this
+change: `path_liveness` on a fresh, unreferenced path returned `unknown`; 94
+same-uid processes probed clear, 4 same-uid and every foreign-uid process were
+unknown). On macOS the sweep is inventory-only by construction. That is intended:
+the legacy allowlist is a best-effort drain, and the reliable path for large
+residue is the managed `task-scratch` lifecycle below, whose recovery proves
+ownership from recorded metadata instead of guessing from `/proc`. Drain legacy
+names by hand after confirming with `lsof`/`fuser` that nothing holds them.
+
+The managed `task-scratch` namespace, every scratch root (`/var/tmp/lu`, the
+`<tmp>/lu-scratch` fallback, `$LU_RUNTIME_TMP_BASE_ROOT`) and their ancestors are
+excluded from the scan even when a basename matches a pattern.
+
+## Task-owned scratch for large ad-hoc runs (#8738)
+
+Large one-off outputs (synthetic Atlas DBs, runtime-shard exports, delegated QA
+scratch) must not be written to hand-named `/tmp` paths: nothing ties such files to
+the process that made them, so the sweep can neither prove them abandoned nor drain
+them. Run the producer through the wrapper instead. The command below is copyable
+from any dispatch worktree: a worktree has no `.venv`, no `data/atlas.db` (sparse
+checkout) and none of the generated `site/public/lexicon` decks the exporter
+registers, so every one of those comes from the primary checkout via
+`PRIMARY_REPO`, which is **exported** so the `bash -euc` child shell sees it:
+
+```bash
+export PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py run --task-id atlas-8307-410k \
+    --evidence-dir batch_state/tmp/atlas-8307-410k-evidence -- \
+    bash -euc '
+      "$PRIMARY_REPO/.venv/bin/python" -m scripts.benchmarks.generate_synthetic_atlas \
+          --source-db "$PRIMARY_REPO/data/atlas.db" --out "$LU_TASK_SCRATCH_DIR/atlas.db" \
+          --seed 8307 --target 410000
+      "$PRIMARY_REPO/.venv/bin/python" -m scripts.atlas.export_runtime_shards \
+          --db "$LU_TASK_SCRATCH_DIR/atlas.db" \
+          --out-dir "$LU_TASK_SCRATCH_DIR/export" \
+          --deck-dir "$PRIMARY_REPO/site/public/lexicon" --verify
+      mkdir -p "$LU_TASK_SCRATCH_DIR/evidence"
+      cp "$LU_TASK_SCRATCH_DIR/export/atlas/current.json" "$LU_TASK_SCRATCH_DIR/evidence/"
+    '
+```
+
+Rehearse with `--target 50` and an isolated `--scratch-root` before a 410k run; the
+rehearsal on 2026-09-24 from a dispatch worktree took about ten seconds, exited 0,
+exported one evidence file and left the scratch root empty.
+
+What the wrapper guarantees:
+
+- one unique directory per invocation under `<scratch root>/task-scratch/` (owner-only
+  `0700`); the task id is lease metadata, not a deterministic path, so two concurrent
+  runs of the same task never collide;
+- `TMPDIR`, `TMP`, `TEMP` and `$LU_TASK_SCRATCH_DIR` all point at the payload
+  directory. The `bash -euc '...'` form above is the documented way to chain the two
+  Atlas steps in one run; the child shell expands `$LU_TASK_SCRATCH_DIR` and
+  `$PRIMARY_REPO`, so keep the script single-quoted and export `PRIMARY_REPO`;
+- the child starts in its own session behind a launch gate: the wrapper records the
+  child's pid, process group and `/proc` start time in `lease.json` *before* the
+  payload may run. A wrapper killed before that release leaves a child that exits
+  without running anything;
+- SIGINT/SIGTERM/SIGHUP are forwarded to the process group; the wrapper waits for the
+  group, escalates to SIGKILL after `--kill-after-s` (30 s), and cleans. Normal exit
+  and nonzero exit clean too, preserving the child's status (`128 + signal` when
+  signal-killed). Grandchildren that outlive the leader get `--group-grace-s` (15 s),
+  then TERM/KILL. Detached services do not belong here: give them a durable path;
+- **the scratch disappears after a successful run.** Copy the small summary you need
+  into `$LU_TASK_SCRATCH_DIR/evidence/` and pass `--evidence-dir` (16 MiB cap);
+  `--keep` / `--keep-on-failure` leave the lease for the scheduled recovery instead.
+
+Both Atlas producers already route every output under their `--out` / `--out-dir`
+arguments (the exporter only reads `--deck-dir`), so no hard-coded destination stands
+in the way. Existing scripts that hard-code `/tmp/...` paths bypass the wrapper
+entirely; migrate each producer by pointing its output flags at
+`$LU_TASK_SCRATCH_DIR`. The wrapper does not claim to capture writes it was not given.
+
+### Recovery of interrupted runs
+
+```bash
+# inventory: every lease with the guard that preserves it (mutation-free)
+"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover
+
+# reclaim proven orphans (what the scheduled runner does)
+"$PRIMARY_REPO/.venv/bin/python" scripts/tools/task_scratch.py recover --apply
+```
+
+`scheduled_worktree_cleanup.py` runs the same recovery after the `/tmp` leak sweep.
+A lease is reclaimed only when **all** of the following hold:
+
+1. the entry is a plain directory owned by the current uid on the namespace's device,
+   with a regular (non-symlink) `lease.json` of the current schema whose device/inode
+   match the directory and whose uid is ours;
+2. the lease lock is free (an owning wrapper holds it for its whole lifetime);
+3. the recorded owner is provably dead: pid absent, pid present with a different
+   start time (reuse), or a different kernel boot id;
+4. the recorded child group is provably dead: leader absent or start-time mismatch
+   **and** no process left in the recorded group. Any surviving member, a reused
+   numeric group id, or an unreadable `/proc` preserves;
+5. the newest modification anywhere in the lease is at least 2 h old, or 30 min when
+   the scratch volume has under 15 GiB free. Pressure shortens the age gate only.
+
+Recovery never signals a process. Deletion (both the owning wrapper's and recovery's)
+is fd-relative with `O_NOFOLLOW` and proves containment on every destructive step:
+
+- before anything is unlinked, a non-destructive pass over the lease re-proves every
+  directory's identity (device/inode), device, and **mount id** on the descriptor it
+  just opened. The mount id comes from `/proc/self/fdinfo/<fd>`, so a bind mount of
+  the same filesystem (same `st_dev`) is refused even when it was placed after the
+  path-based `/proc/self/mountinfo` scan; a pre-existing mount therefore refuses with
+  nothing deleted and the lease metadata intact;
+- the same identity/device/mount-id proof repeats on every directory descent during
+  deletion, and every `rmdir` re-identifies its target with the emptied directory
+  still held open. Linux has no fd-based `rmdir`, so after the call the held
+  descriptor's link count is checked: a swap inside that last window removes only an
+  *empty* directory and is reported as a containment error, never counted as clean;
+- unavailable mount information (`/proc/self/mountinfo` or the per-fd mount id) is a
+  refusal, not a pass. On a host without those (`/proc`-less, e.g. macOS) the wrapper
+  preserves the lease with `mount information unavailable` and recovery reports
+  `mount_info_unavailable`; such leases are cleaned by hand.
+
+Symlinks inside a lease are unlinked, never followed, and a device change is refused.
+Anything malformed, foreign, symlinked, in use or unknown stays and is counted under
+`preserved_by_reason` in the receipt; receipts carry counts and bytes only, never paths.

@@ -1400,6 +1400,7 @@ def test_prompt_carries_every_legacy_canary_issue_class() -> None:
     assert all(issue_id in prompt for issue_id in issue_ids)
 
 
+@pytest.mark.repo_wide
 def test_prompt_versions_match_track_policy() -> None:
     policy = pbr.load_track_policy()
     marker = f"Semantic prompt version: `{policy['semantic_prompt_version']}`"

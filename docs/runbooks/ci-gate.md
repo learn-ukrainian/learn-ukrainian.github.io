@@ -4,17 +4,21 @@ New workflow (Fable 5.1, 2026-09-03). `.github/workflows/ci.yml` is a short
 replacement, not the old two-tier merge-queue file.
 
 `CI Gate` is the only required GitHub check. Same jobs on `pull_request` and
-`merge_group`.
+`merge_group`. Inside Fast checks, the Preflight step runs on `pull_request`
+only.
 
 | Job | When |
 | --- | --- |
-| Changes | always (`docs_only` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates`) |
-| Ruff | not docs-only |
+| Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |
 | Secret scan | always |
-| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates; `docs` → 1 `docs_skills` shard; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
+| Fast checks | always; one runner for four check steps, in this order (see [Fast checks](#fast-checks-8750-phase-a2)): |
+| Fast checks: Preflight step | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |
+| Fast checks: Ruff step | not docs-only |
+| Fast checks: Plan Validate step | always (the v2 plan validator self-scopes on `pull_request` to its input paths; the generated arc landing `a1 --check` always runs) |
+| Fast checks: TypeSafe triage step | always (advisory during soak, #8232: `continue-on-error`, and CI Gate accepts any outcome, so a red TypeSafe step is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the step red) |
+| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
-| TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |
 | CI Gate | always |
 
 The Changes job uses `scripts/ci/classify_changes.py`. Ordinary PRs skip
@@ -80,8 +84,238 @@ test files, empty or ≥80 candidates, and anything outside the allowlist stay
 `ci_timings` on the private work item (selected may be rare under on-disk stem
 collision conservatism).
 
+## Repo-wide tests always run in the selected and docs tiers (#8707)
+
+Import selection can never pick a test that scans the repository's own trees:
+the Changes job links a changed `scripts/foo.py` to `tests/**/test_foo*.py` (and
+a changed `tests/test_x.py` to itself), but a test scanning `tests/` or
+`scripts/` has no import edge to the changed module. That is how PR #8692
+merged green on the selected tier and then turned `main` red on shard 3 for
+every full-tier run: `tests/test_lint_test_assertions.py::test_repo_test_suite_is_clean`
+scans all of `tests/` and was never selected for a `tests/orchestration/test_thread_handoff.py`
+change.
+
+Such tests carry the `repo_wide` marker (registered in `pyproject.toml`). After
+the candidate run, a `selected` shard runs the marked set under its own narrow
+allowlist:
+
+```
+git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
+  | xargs -r grep -lE 'pytest\.mark\.repo_wide' | sort
+LU_PYTEST_SHARD_FILES=<that list> pytest tests \
+  -m 'repo_wide and not slow and not atlas_release' -n logical --dist=loadfile ...
+```
+
+The narrow allowlist keeps collection cheap (the full tree is ~2 minutes to
+collect); the known set currently runs ~400 tests in under two minutes. An
+empty list fails the step loudly. The grep matches the exact marker
+declaration, not a bare `repo_wide` mention, so a comment or an unrelated
+string cannot pull a file into the allowlist (the `-m` filter would skip it
+anyway, but the list stays honest).
+
+The **docs lane** runs the same `-m repo_wide` invocation after its
+`docs_skills` run. Docs-lane PRs reach no other pytest leg, and several
+repo-wide scanners read `docs/`: `tests/test_work_privacy.py`,
+`tests/test_agent_fleet_tooling_guardrails.py`, and
+`tests/test_public_tree_no_baked_host_run_root.py`. A docs-only PR that adds a
+baked host path under `docs/` is therefore caught before merge.
+
+The **content lane** deliberately runs no `-m repo_wide` leg: content mode runs
+`-m 'reads_content and not slow and not atlas_release'` (plus the shard safety
+net), so a scanner of a content root is selected by its `reads_content` marker
+without a repo-wide pass. Which lane a content-only PR reaches decides whether
+that marker is enough:
+
+- A PR whose paths are all content-class and include a `site/src/content/docs/`
+  path lands on the **content lane**, which runs `reads_content`: scanners of
+  that tree, for example `tests/test_site_links.py`, run here.
+- A PR touching only `curriculum/` or `wiki/` — no `site/src/content/docs/`
+  path — is docs-only and lands on the **docs lane**. Since #8720 the docs lane
+  also runs `-m 'reads_content and not slow and not atlas_release'` (under the
+  same narrow allowlist as the `repo_wide` leg) whenever the flag
+  `docs_reads_content` is `true`, which `classify_changes.py` sets only for a
+  docs-lane result with some path under `curriculum/` or `wiki/`. This closes
+  the gap that let PR #8712 (a docs-only change) merge green and turn `main`
+  red on the next full-tier run: `docs/epics/fresh-build-build-program.md` is a
+  hashed source of every `curriculum/l2-uk-en/lesson-plans/<lvl>/_decisions.yaml`,
+  and `tests/curriculum/arc/test_decisions_record.py` (a `reads_content` module)
+  went red on `main`. A few curriculum and wiki scanners are marked `repo_wide`
+  and ran there before #8720: `tests/test_ohoiko_source_inventory_scope.py`,
+  `tests/test_prompt_template_render.py`, `tests/test_a1_review_scores.py`,
+  `tests/test_aggregate_findings.py`, `tests/test_schema_validation.py`
+  (`test_a2_plans_match_module_schema`), and the reference checks in
+  `tests/test_skill_instruction_routes.py`; the new `reads_content` leg is what
+  covers the rest.
+
+Repo-wide tests that read a content tree and must also run on the content lane
+carry `reads_content` as well: `tests/test_llm_reviewer_dispatch.py`,
+`tests/test_threshold_source_of_truth.py`, `tests/test_sparse_collection_guard.py`,
+`tests/test_public_tree_no_baked_host_run_root.py`,
+`tests/api/test_app_factory.py`, and
+`tests/test_curriculum_upgrade_no_host_run_root.py` are marked both ways, and
+none is `slow`/`atlas_release`.
+
+`tests/test_repo_wide_marker_invariant.py` keeps the marker honest. Marker
+detection is syntactic and per-function (AST): a test counts only when its own
+`@pytest.mark.repo_wide` decorator, its class decorator, or a module-level
+`pytestmark` contains `pytest.mark.repo_wide`, so decorator order and comments
+do not matter and a module with two scanners and one marker fails. The
+authoritative guarantee is the explicit registry of known repo-wide
+modules/functions plus a reasoned `NOT_REPO_WIDE` escape hatch; the AST
+heuristic over each test module (repo-rooted `.glob`/`.rglob`,
+`os.walk`/`os.scandir`, `git ls-files`/`ls-tree` through `subprocess`, and
+known whole-tree linters, propagated through helper calls) is a best-effort
+net. The invariant also fails when the selected tier or the docs lane drops
+its `-m repo_wide` invocation.
+
 No CF attest. No auto-arm. No landing-class classifier. No coverage floor.
 Red team review is out of band.
+
+## Early PR preflight (#8750 phase A)
+
+The Preflight step of the `Fast checks` job reports a broken repo-wide invariant (a missing
+`subprocess` timeout, the test-assertion lint, the marker invariants) in a few
+minutes instead of after a full pytest shard. Before it, the p50 time to the
+first failed job on a full PR run was about 13 minutes.
+
+### Measured results (2026-09-25)
+
+Baseline before phase A (459 CI runs, 2026-09-22 20:24Z to 2026-09-24 23:07Z):
+89% of PR runs take the full tier; time to first failed job on failing full PR
+runs p50 13.0 min, p95 29.2 min; pytest job queue p50 1.2 min, p95 12.7 min.
+
+Held-out probe PR #8759 (a timeout-less `subprocess.run`): the preflight failed
+on `tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts`
+after 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s
+after the run started; `CI Gate` was red; the shards' repo_wide backstop also
+failed.
+
+Known limit: the preflight competes with the pytest shards for runners. All CI
+jobs are GitHub-hosted and concurrent jobs peak at the account's 20-job cap, so
+queue time can dominate. Phase A.2 (issue #8750) consolidates short checks into
+one `fast-checks` job.
+
+**When it runs.** `scripts/ci/classify_changes.py` decides once and emits
+`preflight`. `preflight_for()` returns `true` only for a `pull_request` event
+whose tier is `full` or `selected`: the tiers whose shards run the
+`repo_wide` set. The Preflight step's `if:` (and its setup steps') and CI
+Gate both read that one output, and nothing in `ci.yml` re-derives it. The other lanes get no
+preflight:
+
+- The **docs** lane already runs `repo_wide` in its single short shard.
+- The **content** and **frontend** lanes do not run `repo_wide` at all, so a
+  preflight there would change what the gate proves.
+- **`merge_group`, `schedule` and `workflow_dispatch`** always get
+  `preflight=false`.
+
+A `full-ci` label or a classifier failure on a PR forces `full`, and so turns
+preflight on.
+
+**What it runs.** It uses the same allowlist construction and flags as the
+shards' `repo_wide` leg. An empty allowlist fails the step loudly:
+
+```
+LU_PYTEST_SHARD_FILES=<repo_wide list> pytest tests \
+  -m 'repo_wide and not slow and not atlas_release' --strict-markers \
+  -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+  --timeout-method=thread --override-ini addopts=-v
+```
+
+A second invocation then runs the files registered in the step's
+`PREFLIGHT_EXTRA_TESTS` env, one path per line, under
+`-m 'not slow and not atlas_release'` with the same flags. These are cheap
+invariants that fail often but are not `repo_wide`. Today the list holds only
+`tests/curriculum/arc/test_decisions_record.py`, the cross-file hash
+invariant that caused 7 of the 40 sampled PR failures. On its own it takes
+about 5 s. An empty list also fails loudly. `tests/test_ci_preflight.py`
+checks that every registered path exists and is not already `repo_wide`.
+Both invocations always run, so one run reports every broken invariant; the
+step fails if either one failed.
+
+**Setup.** Preflight uses the same Python and uv install as the shards, and
+the same Atlas manifest hydrate. It leaves out the Postgres service, Node/npm
+and the native apt packages (bubblewrap, libpq, apparmor), because no
+`repo_wide` test uses them: no marked file mentions a Postgres DSN,
+`psycopg` or `bwrap`, and the one that mentions `npm` stubs it. The whole
+selection passes in a fresh depth-1 clone with no Postgres DSN and no
+`node_modules` (the shared Fast checks checkout is full-history because
+Plan Validate and TypeSafe triage need it). The uv setup, dependency install
+and hydrate steps run only when `preflight=true`. Step
+`timeout-minutes: 8`.
+
+**Parallel, not gating.** No shard `needs: fast-checks`, and the shards still
+run the `repo_wide` tests as the backstop, so a green run is no slower.
+Nothing is cancelled when preflight fails. Preflight only makes the red
+signal arrive earlier.
+
+**CI Gate rule.** This rule lives in the gate step:
+
+- `preflight=true`: the Preflight step outcome must be `success`. `failure`,
+  `cancelled`, `skipped` and a missing output all fail the gate.
+- `preflight=false`: the Preflight step outcome must be `skipped`.
+- If Changes itself did not succeed, the gate fails before it reaches this
+  rule.
+
+`merge_group` and nightly runs have no preflight. Their gate evaluation is
+unchanged apart from the `preflight=false → skipped` branch.
+
+**Superseded runs.** A new push to the same PR cancels the superseded run
+through the workflow `concurrency` group. CI Gate is `if: always()`, so it
+still runs for that stale SHA and fails there (see the `concurrency` comment
+in `ci.yml`). That red lands on a commit that is no longer the PR head. The
+replacement run on the new head is the one that decides the PR.
+
+## Fast checks (#8750 phase A.2)
+
+Every `ci.yml` job runs on a GitHub-hosted runner, and the account runs at
+most 20 jobs at once. Preflight, Ruff, Plan Validate and TypeSafe triage each
+took about 1 to 3 minutes, and each held a full runner slot while pytest
+shards waited for one. The `fast-checks` job (`needs: changes`) now runs them
+as steps of one job: one checkout (full history), one `setup-python` with pip
+cache, and uv plus the shard-style `.venv` install and Atlas hydrate only
+when `preflight=true`. Ruff and Plan Validate install their own small pip
+dependencies inside their steps. Four jobs became one, so every run holds
+three fewer runner slots.
+
+**Every check runs.** Each check step has `if: ${{ !cancelled() && <its
+original job condition> }}`, so a failed step does not skip the checks after
+it, and one run reports every red check. A cancelled run still skips them.
+Preflight runs first, for the earliest signal.
+
+**Timeouts.** Each check keeps its old job timeout as a step
+`timeout-minutes`: Preflight 8, Ruff 5, Plan Validate 10, TypeSafe triage 5.
+The job timeout is 35: the 28-minute sum plus 7 for checkout and the
+preflight install.
+
+**Outputs, not conclusions.** Each check step has an `id`, and the job
+exposes `steps.<id>.outcome` as the outputs `preflight`, `ruff`,
+`plan_validate` and `typesafe`. CI Gate reads those outcomes, never a step
+`conclusion`: under `continue-on-error` a failed step concludes `success`.
+A step skipped by its condition reports `skipped`.
+
+**CI Gate rule for Fast checks:**
+
+- The job result must be `success` or `failure`. `cancelled`, `skipped` or a
+  missing result fails the gate.
+- The Changes flags these rules read (`preflight`, `docs_only`) must be
+  `true` or `false`; anything else fails the gate.
+- Preflight: `success` when `preflight=true`, `skipped` otherwise.
+- Ruff: `success` when `docs_only=false`, `skipped` otherwise.
+- Plan Validate: always `success`.
+- TypeSafe triage: logged, never blocks. A missing output still fails the gate,
+  because it means the job outputs are broken.
+- The gate logs every check's outcome before it fails, so one gate log names
+  every red check.
+- If every check passed its rule but the job still failed, a setup step
+  (checkout, Python, the preflight install) broke, and the gate fails.
+
+`tests/test_ci_pr_triggers.py` runs the real gate script for every
+check × condition × outcome combination, including cancelled and missing
+outputs.
+
+**Retry trade-off.** "Re-run failed jobs" now re-runs all four checks, not
+only the red one. A Ruff fix therefore costs up to one more Preflight run
+(about 3 minutes). That is the price of freeing three runner slots per run.
 
 ## pytest shard collection and balance (ci-shard-balance-2026-09-07)
 

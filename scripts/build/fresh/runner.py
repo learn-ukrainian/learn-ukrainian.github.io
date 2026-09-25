@@ -1,4 +1,40 @@
-"""Ordered, fail-closed checks 1-12 for one fresh lesson."""
+"""Ordered, fail-closed checks 1-12 for one fresh lesson.
+
+Per-Type Key Rule Table (Check 4):
++--------------------+------------------------+-----------------------+---------------------------------------+
+| Activity Type      | Choice Container       | Key Source            | Key Rule / Validation                 |
++--------------------+------------------------+-----------------------+---------------------------------------+
+| quiz               | items[].options        | correct (int),        | Exactly 1 key. int in bounds; str in  |
+| / multiple-choice  |                        | answer (str), or      | options; exactly 1 dict correct: true.|
+|                    |                        | opt.correct == true   | Multi-spec must resolve to same opt.  |
+| fill-in            | items[].options        | answer (str) or       | form-choice: tags form in options;    |
+|                    |                        | answer_tags (str)     | orthography: answer in options x 1.   |
+| error-correction   | items[].options        | correction / answer   | error == E-.incorrect & in sentence x1|
+|                    | (optional)             | (str) from E- record  | corr == E-.correct & in options if opt|
+| image-to-letter    | items[].options        | letter (str)          | letter in options x 1.                |
+| translate          | items[].options        | opt.correct == true   | Exactly 1 dict with correct: true, or |
+|                    |                        | or answer (str)       | answer in options x 1.                |
+| odd-one-out        | items[].words          | correct (int) or      | Exactly 1 odd word. int in bounds;    |
+|                    |                        | answer (str)          | answer in words x 1. Must match if    |
+|                    |                        |                       | both specified.                       |
+| pick-syllables     | act.syllables          | correctIndices (list) | Non-empty list of unique int indices; |
+|                    | (or items[].syllables) |                       | all indices within bounds.            |
+| select             | items[].options        | opt.correct == true   | >= max(floor, min_correct) correct    |
+|                    |                        |                       | opts; floor is 1 at A2/B1, else 2.    |
++--------------------+------------------------+-----------------------+---------------------------------------+
+
+Named Failure Reasons for Check 4:
+- error_text_mismatch: item's error != record's incorrect, or incorrect not in sentence
+- error_text_ambiguous: record's incorrect occurs more than once in sentence
+- error_ref_mismatch: error_ref missing, not planned, or correction != record's correct
+- answer_key_missing: no answer key specified for choices
+- answer_key_ambiguous: key matches multiple options, duplicate options match key, or duplicate correctIndices
+- answer_key_conflict: conflicting answer keys specified on same item
+- answer_index_out_of_range: 0-based key index out of bounds
+- answer_not_in_options: key text not found in offered options/words
+- form_choice_options_invalid: form-choice options not unique, not in record, or answer tag mismatch
+- select_correct_set_invalid: select activity has fewer correct options than required
+"""
 
 from __future__ import annotations
 
@@ -17,7 +53,11 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts.build.fresh.assemble import check_5_assembly, check_9_stress_and_render, check_11_render
+from scripts.build.fresh.assemble import (
+    check_5_assembly,
+    check_9_stress_and_render,
+    check_11_render,
+)
 from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
 from scripts.build.fresh.path_guard import checked_existing_path
@@ -150,7 +190,12 @@ def _forms(record: dict[str, Any]) -> dict[str, dict[str, Any]]:
 
 
 def check_4_activities(
-    draft: dict[str, Any], lesson: dict[str, Any], words: dict[str, Any], pack: dict[str, Any]
+    draft: dict[str, Any],
+    lesson: dict[str, Any],
+    words: dict[str, Any],
+    pack: dict[str, Any],
+    *,
+    level: str | None = None,
 ) -> tuple[dict[str, Any], dict[tuple[str, int], list[dict[str, Any]]]]:
     records = {w["id"]: w for w in words.get("words") or []}
     errors = {e["id"]: e for e in pack.get("errors") or []}
@@ -159,6 +204,20 @@ def check_4_activities(
     for activity in draft.get("activities") or []:
         aid = activity["id"]
         typ = planned[aid]["type"]
+
+        if typ == "pick-syllables" and "syllables" in activity:
+            syls = activity.get("syllables") or []
+            if "correctIndices" not in activity or activity.get("correctIndices") is None:
+                return failure(4, "answer_key_missing", "writer", activity=aid), {}
+            corr_indices = activity.get("correctIndices") or []
+            if len(corr_indices) == 0:
+                return failure(4, "answer_key_missing", "writer", activity=aid), {}
+            for ci in corr_indices:
+                if not isinstance(ci, int) or not (0 <= ci < len(syls)):
+                    return failure(4, "answer_index_out_of_range", "writer", activity=aid, token=str(ci)), {}
+            if len(corr_indices) != len(set(corr_indices)):
+                return failure(4, "answer_key_ambiguous", "writer", activity=aid), {}
+
         for idx, item in enumerate(activity.get("items") or []):
             if typ == "fill-in" and item.get("mode") == "form-choice":
                 record = records.get(item.get("record"))
@@ -179,41 +238,167 @@ def check_4_activities(
                 ):
                     return failure(4, "form_choice_options_invalid", "writer", activity=aid, token=str(idx)), {}
                 form_options[(aid, idx)] = selected
-            if (
-                typ == "fill-in"
-                and item.get("options")
-                and item.get("mode") != "form-choice"
-                and item.get("answer") not in item["options"]
-            ):
-                return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
+
+            elif typ == "fill-in" and item.get("options") and item.get("mode") != "form-choice":
+                ans = item.get("answer")
+                opts = item.get("options") or []
+                if ans is None or not isinstance(ans, str):
+                    return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
+                matched = [i for i, opt in enumerate(opts) if opt == ans]
+                if len(matched) == 0:
+                    return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
+                if len(matched) > 1:
+                    return failure(4, "answer_key_ambiguous", "writer", activity=aid, token=str(idx)), {}
+
             if typ == "error-correction":
                 er = errors.get(item.get("error_ref"))
-                if (
-                    er is None
-                    or item.get("error_ref") not in (planned[aid].get("error_refs") or [])
-                    or er.get("incorrect") not in item.get("sentence", "")
-                    or er.get("correct") != item.get("correction", item.get("answer"))
-                ):
+                if er is None or item.get("error_ref") not in (planned[aid].get("error_refs") or []):
                     return failure(4, "error_ref_mismatch", "writer", activity=aid, token=str(idx)), {}
-            if (
-                typ in {"quiz", "multiple-choice"}
-                and "correct" in item
-                and isinstance(item["correct"], int)
-                and not 0 <= item["correct"] < len(item.get("options") or [])
-            ):
-                return failure(4, "answer_index_out_of_range", "writer", activity=aid, token=str(idx)), {}
+                rec_incorrect = er.get("incorrect")
+                if item.get("error") != rec_incorrect:
+                    return failure(4, "error_text_mismatch", "writer", activity=aid, token=str(idx)), {}
+                sentence = item.get("sentence", "")
+                if rec_incorrect not in sentence:
+                    return failure(4, "error_text_mismatch", "writer", activity=aid, token=str(idx)), {}
+                if sentence.count(rec_incorrect) > 1:
+                    return failure(4, "error_text_ambiguous", "writer", activity=aid, token=str(idx)), {}
+                has_corr = "correction" in item and item["correction"] is not None
+                has_ans = "answer" in item and item["answer"] is not None
+                if not has_corr and not has_ans:
+                    return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
+                if has_corr and has_ans and item["correction"] != item["answer"]:
+                    return failure(4, "answer_key_conflict", "writer", activity=aid, token=str(idx)), {}
+                corr = item["correction"] if has_corr else item["answer"]
+                if er.get("correct") != corr:
+                    return failure(4, "error_ref_mismatch", "writer", activity=aid, token=str(idx)), {}
+                if item.get("options"):
+                    opts = item["options"]
+                    if corr not in opts:
+                        return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
+                    if opts.count(corr) > 1:
+                        return failure(4, "answer_key_ambiguous", "writer", activity=aid, token=str(idx)), {}
+
+            if typ in {"quiz", "multiple-choice"}:
+                options = item.get("options") or []
+                offered = [option.get("text") if isinstance(option, dict) else option for option in options]
+                has_int = "correct" in item and isinstance(item["correct"], int)
+                has_str = "answer" in item and isinstance(item["answer"], str)
+                dict_correct = [
+                    i for i, opt in enumerate(options) if isinstance(opt, dict) and opt.get("correct") is True
+                ]
+
+                if len(dict_correct) > 1:
+                    return failure(4, "answer_key_ambiguous", "writer", activity=aid, token=str(idx)), {}
+
+                if has_int and not (0 <= item["correct"] < len(options)):
+                    return failure(4, "answer_index_out_of_range", "writer", activity=aid, token=str(idx)), {}
+
+                str_matched_indices = []
+                if has_str:
+                    str_matched_indices = [i for i, opt_txt in enumerate(offered) if opt_txt == item["answer"]]
+                    if len(str_matched_indices) == 0:
+                        return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
+                    if len(str_matched_indices) > 1:
+                        return failure(4, "answer_key_ambiguous", "writer", activity=aid, token=str(idx)), {}
+
+                if not has_int and not has_str and len(dict_correct) == 0:
+                    return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
+
+                resolved_indices = set()
+                if has_int:
+                    resolved_indices.add(item["correct"])
+                if str_matched_indices:
+                    resolved_indices.add(str_matched_indices[0])
+                if dict_correct:
+                    resolved_indices.add(dict_correct[0])
+                if len(resolved_indices) > 1:
+                    return failure(4, "answer_key_conflict", "writer", activity=aid, token=str(idx)), {}
+
+                item["_resolved_key_index"] = next(iter(resolved_indices))
+
+            if typ == "odd-one-out" and "words" in item:
+                words_list = item.get("words") or []
+                has_int = "correct" in item and isinstance(item["correct"], int)
+                has_str = "answer" in item and isinstance(item["answer"], str)
+                if not has_int and not has_str:
+                    return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
+                if has_int and not (0 <= item["correct"] < len(words_list)):
+                    return failure(4, "answer_index_out_of_range", "writer", activity=aid, token=str(idx)), {}
+                str_idx = None
+                if has_str:
+                    matched = [i for i, w in enumerate(words_list) if w == item["answer"]]
+                    if len(matched) == 0:
+                        return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
+                    if len(matched) > 1:
+                        return failure(4, "answer_key_ambiguous", "writer", activity=aid, token=str(idx)), {}
+                    str_idx = matched[0]
+                if has_int and has_str and item["correct"] != str_idx:
+                    return failure(4, "answer_key_conflict", "writer", activity=aid, token=str(idx)), {}
+
+            if typ == "image-to-letter" and item.get("options"):
+                letter = item.get("letter")
+                opts = item.get("options") or []
+                if letter is None or not isinstance(letter, str):
+                    return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
+                matched = [i for i, opt in enumerate(opts) if opt == letter]
+                if len(matched) == 0:
+                    return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
+                if len(matched) > 1:
+                    return failure(4, "answer_key_ambiguous", "writer", activity=aid, token=str(idx)), {}
+
+            if typ == "translate" and item.get("options"):
+                opts = item.get("options") or []
+                dict_correct = [i for i, opt in enumerate(opts) if isinstance(opt, dict) and opt.get("correct") is True]
+                has_str = "answer" in item and isinstance(item["answer"], str)
+                if not has_str and len(dict_correct) == 0:
+                    return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
+                if len(dict_correct) > 1:
+                    return failure(4, "answer_key_ambiguous", "writer", activity=aid, token=str(idx)), {}
+                str_idx = None
+                if has_str:
+                    matched = [
+                        i
+                        for i, opt in enumerate(opts)
+                        if (opt.get("text") if isinstance(opt, dict) else opt) == item["answer"]
+                    ]
+                    if len(matched) == 0:
+                        return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
+                    if len(matched) > 1:
+                        return failure(4, "answer_key_ambiguous", "writer", activity=aid, token=str(idx)), {}
+                    str_idx = matched[0]
+                if dict_correct and str_idx is not None and dict_correct[0] != str_idx:
+                    return failure(4, "answer_key_conflict", "writer", activity=aid, token=str(idx)), {}
+
+            if typ == "pick-syllables" and "syllables" in item:
+                syls = item.get("syllables") or []
+                if "correctIndices" not in item or item.get("correctIndices") is None:
+                    return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
+                corr_indices = item.get("correctIndices") or []
+                if len(corr_indices) == 0:
+                    return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
+                for ci in corr_indices:
+                    if not isinstance(ci, int) or not (0 <= ci < len(syls)):
+                        return failure(4, "answer_index_out_of_range", "writer", activity=aid, token=str(ci)), {}
+                if len(corr_indices) != len(set(corr_indices)):
+                    return failure(4, "answer_key_ambiguous", "writer", activity=aid, token=str(idx)), {}
+
             if "answers" in item and "options" in item and not set(item["answers"]) <= set(item["options"]):
                 return failure(4, "answers_not_subset", "writer", activity=aid, token=str(idx)), {}
+
             if typ == "select":
-                correct_count = sum(option.get("correct") is True for option in item.get("options") or [])
-                if correct_count < max(2, item.get("min_correct", 2)):
+                opts = item.get("options") or []
+                correct_count = sum(option.get("correct") is True for option in opts)
+                if correct_count == 0:
+                    return failure(4, "answer_key_missing", "writer", activity=aid, token=str(idx)), {}
+                mod_level = (
+                    (level or "").lower()
+                    or draft.get("lesson", {}).get("module", "").split("/")[0].lower()
+                    or lesson.get("level", "").lower()
+                )
+                min_allowed = 1 if mod_level in {"a2", "b1"} else 2
+                min_req = item.get("min_correct", min_allowed)
+                if correct_count < max(min_allowed, min_req):
                     return failure(4, "select_correct_set_invalid", "writer", activity=aid, token=str(idx)), {}
-            if typ == "quiz" and isinstance(item.get("answer"), str):
-                offered = [
-                    option.get("text") if isinstance(option, dict) else option for option in item.get("options") or []
-                ]
-                if item["answer"] not in offered:
-                    return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
     return _pass(4), form_options
 
 
@@ -490,7 +675,7 @@ def run_lesson(
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
-    row, form_options = check_4_activities(draft, lesson, words, pack)
+    row, form_options = check_4_activities(draft, lesson, words, pack, level=level)
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
@@ -620,6 +805,7 @@ def run_lesson(
             level,
             slug,
             n,
+            provenance_doc=assembled.artifacts.get("provenance"),
             repo_root=repo_root,
             output_dir=state_dir,
             site_dir=site_dir,
@@ -640,6 +826,8 @@ def run_lesson(
                 token=rendered.token,
             )
         )
+    if rendered.artifacts.get("provenance"):
+        assembled.artifacts["provenance"] = rendered.artifacts["provenance"]
     rows.append(_pass(9))
     rows.append({"check": 10, "status": "not_checked", "reason": "grammar_checker_undecided"})
     (repo_root / "batch_state" / "verify_shippable").mkdir(parents=True, exist_ok=True)

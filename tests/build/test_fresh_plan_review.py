@@ -20,7 +20,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.build.fresh import plan_manifest
 from scripts.build.fresh.cli import main as cli_main
-from scripts.curriculum.evidence import lock
+from scripts.curriculum.evidence import codes, lock, sources
 from tests.curriculum.test_plan_validate import LEVEL, SLUG
 from tests.helpers.plan_review_world import STALE_SHA, Env, build_env, git, sha, validate_provisional
 
@@ -30,6 +30,8 @@ MANIFEST_SCHEMA = Path(__file__).resolve().parents[2] / "schemas" / "plan-review
 PLANS = f"curriculum/l2-uk-en/lesson-plans/{LEVEL}"
 EVIDENCE = f"curriculum/l2-uk-en/evidence/{LEVEL}"
 STATE = f"{EVIDENCE}/_state/{SLUG}"
+REQUIREMENTS = "docs/epics/fresh-build-requirements.md"
+ARC_SOURCE = "docs/epics/fresh-build-a1-arc.md"
 
 
 def fake_verify(status: str = "ok", errors: tuple[str, ...] = (), calls: list | None = None):
@@ -117,9 +119,14 @@ def test_manifest_is_schema_valid_and_rerun_is_byte_identical(env: Env, capsys) 
     assert len(manifest["learner_state"]["sha256"]) == 64
     assert {name: entry["path"] for name, entry in manifest["inputs"].items()} == {
         "plan": f"{PLANS}/{SLUG}.yaml",
+        "pack": f"{EVIDENCE}/{SLUG}.yaml",
         "pack_lock": f"{EVIDENCE}/{SLUG}.yaml.lock",
+        "words": f"{EVIDENCE}/_words.yaml",
         "words_lock": f"{EVIDENCE}/_words.yaml.lock",
+        "learner_state": f"{STATE}/plan-review.learner-state.yaml",
+        "requirements": REQUIREMENTS,
         "arc": f"{PLANS}/_arc.yaml",
+        "arc_source": ARC_SOURCE,
         "decisions": f"{PLANS}/_decisions.yaml",
         "scope": f"{PLANS}/_scope/{SLUG}.yaml",
         "grammar": f"{PLANS}/_grammar.yaml",
@@ -128,6 +135,7 @@ def test_manifest_is_schema_valid_and_rerun_is_byte_identical(env: Env, capsys) 
     }
     for entry in manifest["inputs"].values():
         assert entry["sha256"] == sha(env.root / entry["path"])
+    assert lock.check(env.pack_path) and lock.check(env.words_path)
     assert (env.state_dir / "plan-review.manifest.sha256").read_text(encoding="ascii") == f"{digest}\n"
     assert lock.yaml_bytes(manifest) == current.read_bytes()
     assert (env.state_dir / "manifests" / "plan" / f"{digest}.yaml").read_bytes() == current.read_bytes()
@@ -137,6 +145,36 @@ def test_manifest_is_schema_valid_and_rerun_is_byte_identical(env: Env, capsys) 
     code, out, _err = run(env, capsys, "plan-manifest", LEVEL, SLUG)
     assert code == 0 and json.loads(out)["manifest_sha256"] == digest
     assert snapshot(env) == first
+
+
+def test_materialized_prior_state_is_the_state_the_identity_hashes(env: Env, capsys) -> None:
+    from scripts.build.fresh.manifest import learner_state_sha256
+    from scripts.curriculum.learner_state.planned import planned_state
+
+    make_manifest(env, capsys)
+    manifest = yaml.safe_load((env.state_dir / "plan-review.manifest.yaml").read_bytes())
+    state_path = env.state_dir / "plan-review.learner-state.yaml"
+    state = planned_state(LEVEL, 2, 1, plans_dir=env.plans_dir, evidence_dir=env.evidence_dir)
+    document = yaml.safe_load(state_path.read_bytes())
+    assert document == {"learner_state": state.to_dict()}
+    assert state_path.read_bytes() == lock.yaml_bytes({"learner_state": state.to_dict()})
+    assert lock.check(state_path)  # its lock sidecar
+    assert manifest["learner_state"]["sha256"] == learner_state_sha256(state)
+    assert manifest["inputs"]["learner_state"] == {
+        "path": f"{STATE}/plan-review.learner-state.yaml",
+        "sha256": sha(state_path),
+    }
+
+
+def test_a_words_file_that_disagrees_with_its_lock_is_refused_naming_it(env: Env, capsys, monkeypatch) -> None:
+    make_manifest(env, capsys)
+    append_comment(env.words_path)  # bytes no longer match the lock sidecar
+    monkeypatch.setattr(plan_manifest, "validate_report_problems", lambda *a, **kw: {})
+    code, _out, err = run(env, capsys, "plan-manifest", LEVEL, SLUG)
+    assert code == 1
+    refusal = error(err)
+    assert refusal["code"] == plan_manifest.LOCK_MISMATCH and f"{EVIDENCE}/_words.yaml" in refusal["paths"]
+    assert not (env.state_dir / "plan-review.manifest.yaml").exists()
 
 
 def test_manifest_runs_pack_verify_strictly_on_the_exact_pack_and_stores_its_report(
@@ -173,6 +211,8 @@ def test_a_changed_input_changes_the_manifest_sha(env: Env, capsys) -> None:
         ("decisions", f"{PLANS}/_decisions.yaml"),
         ("grammar", f"{PLANS}/_grammar.yaml"),
         ("arc", f"{PLANS}/_arc.yaml"),
+        ("requirements", REQUIREMENTS),
+        ("arc_source", ARC_SOURCE),
         ("scope", f"{PLANS}/_scope/{SLUG}.yaml"),
         ("pack_lock", f"{EVIDENCE}/{SLUG}.yaml.lock"),
         ("words_lock", f"{EVIDENCE}/_words.yaml.lock"),
@@ -285,26 +325,32 @@ def test_missing_prior_plan_refuses_instead_of_waiving(env: Env, capsys) -> None
 
 
 class _FakeSources:
+    """The slice of ``Sources`` a pack citing no rows needs: snapshot observability and close."""
+
     sources_db = Path("sources.db")
 
-    def _fingerprint(self, _path):
-        return "0" * 64, {}
+    def snapshot_report(self) -> dict:
+        return {"journal_mode": "wal", "wal_bytes": 0, "wal_bytes_start": 0, "snapshot_seconds": 0.0}
 
     def close(self) -> None:
         pass
 
 
-def test_real_pack_verify_function_is_called_strictly(tmp_path: Path) -> None:
+def write_pack(tmp_path: Path, **built_with: str) -> None:
+    """A locked, schema-valid pack citing no rows; ``built_with`` overrides the rows-v2 identity fields."""
     pack = {
         "evidence_schema": 1,
         "module": f"{LEVEL}/x",
         "built_with": {
             "mcp_commit": "0" * 40,
-            "sources_db": "0" * 64,
+            # rows-v2: built_with.sources_db aggregates the cited rows' digests; none cited → sha256("[]")
+            "sources_db_scheme": sources.SOURCES_DB_SCHEME,
+            "sources_db": sources.aggregate_digest([]),
             "vesum": "0" * 64,
             "trie": "0" * 64,
             "ulif_forms": "0" * 64,
             "standard_sha256": "0" * 64,
+            **built_with,
         },
         "texts": [],
         "exercises": [],
@@ -316,10 +362,21 @@ def test_real_pack_verify_function_is_called_strictly(tmp_path: Path) -> None:
     }
     (tmp_path / "x.yaml").write_bytes(yaml.safe_dump(pack).encode("utf-8"))
     lock.write(tmp_path / "x.yaml")
+
+
+def test_real_pack_verify_function_is_called_strictly(tmp_path: Path) -> None:
+    write_pack(tmp_path)
     result = plan_manifest.verify_pack_strict(
         LEVEL, "x", evidence_dir=tmp_path, plans_dir=tmp_path, sources_instance=_FakeSources()
     )
     assert result["status"] == "ok" and result["errors"] == []
+    assert result["sources_db_scheme"] == sources.SOURCES_DB_SCHEME
+    # a pack still carrying the retired file digest (file-v1) is refused under --strict, never waived
+    write_pack(tmp_path, sources_db_scheme=sources.LEGACY_SOURCES_DB_SCHEME, sources_db="0" * 64)
+    legacy = plan_manifest.verify_pack_strict(
+        LEVEL, "x", evidence_dir=tmp_path, plans_dir=tmp_path, sources_instance=_FakeSources()
+    )
+    assert legacy["status"] == "failed" and legacy["errors"][0].startswith(f"{codes.LEGACY_IDENTITY}:")
     # strict is not negotiable: the refusal --strict --offline gets from verify_pack proves the flag reached it
     refused = plan_manifest.verify_pack_strict(
         LEVEL, "x", evidence_dir=tmp_path, plans_dir=tmp_path, sources_instance=_FakeSources(), offline=True
@@ -355,9 +412,13 @@ def edit_learner_state(env: Env) -> None:
 #: the words lock and the arc included, plus the planned learner state.
 INPUT_CHANGES = {
     "plan": (lambda env: append_comment(env.plan_path), f"{PLANS}/{SLUG}.yaml"),
+    "pack": (edit_pack, f"{EVIDENCE}/{SLUG}.yaml"),
     "pack_lock": (edit_pack, f"{EVIDENCE}/{SLUG}.yaml.lock"),
+    "words": (edit_words, f"{EVIDENCE}/_words.yaml"),
     "words_lock": (edit_words, f"{EVIDENCE}/_words.yaml.lock"),
     "arc": (lambda env: append_comment(env.plans_dir / "_arc.yaml"), f"{PLANS}/_arc.yaml"),
+    "requirements": (lambda env: append_comment(env.root / REQUIREMENTS), REQUIREMENTS),
+    "arc_source": (lambda env: append_comment(env.root / ARC_SOURCE), ARC_SOURCE),
     "decisions": (lambda env: append_comment(env.plans_dir / "_decisions.yaml"), f"{PLANS}/_decisions.yaml"),
     "scope": (lambda env: append_comment(env.plans_dir / "_scope" / f"{SLUG}.yaml"), f"{PLANS}/_scope/{SLUG}.yaml"),
     "grammar": (lambda env: append_comment(env.plans_dir / "_grammar.yaml"), f"{PLANS}/_grammar.yaml"),
@@ -370,6 +431,10 @@ INPUT_CHANGES = {
         f"{STATE}/pack-verify.report.json",
     ),
     "learner_state": (edit_learner_state, "learner_state"),
+    "learner_state_file": (
+        lambda env: append_comment(env.state_dir / "plan-review.learner-state.yaml"),
+        f"{STATE}/plan-review.learner-state.yaml",
+    ),
 }
 
 
