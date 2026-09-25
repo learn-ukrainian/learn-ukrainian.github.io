@@ -373,3 +373,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+import subprocess
+import os
+
+
+def _held_out_8750a2():
+    """Deliberate #8750 A.2 probe: ruff F401 (unused os) + timeout-less subprocess. DO NOT MERGE."""
+    return subprocess.run(["true"], check=False)
