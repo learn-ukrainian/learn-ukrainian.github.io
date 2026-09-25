@@ -151,13 +151,19 @@ Usage:
   ./scripts/backup-data.sh backup [--execute]
   ./scripts/backup-data.sh snapshots
   ./scripts/backup-data.sh verify [--read-data]
-  ./scripts/backup-data.sh restore SNAPSHOT --to ABSOLUTE_EMPTY_DIR [--execute]
+  ./scripts/backup-data.sh restore SNAPSHOT --to ABSOLUTE_EMPTY_DIR [--path RELATIVE_PATH] [--execute]
 
 Safety:
   - init, backup, and restore are previews unless --execute is supplied.
   - backup requires epic state, .agent/, batch_state/, data/, and full source coverage.
   - successful snapshots contain BACKUP-RECEIPT.json and a restore command.
   - restore refuses non-empty, project, cloud, and legacy-backup targets.
+  - restore first measures exactly what it will write (restic stats, restore-size)
+    and refuses, writing nothing, unless the target filesystem has that much free
+    space plus a margin (default 10%). The preview reports the same numbers.
+  - restore --path RELATIVE_PATH restores only that file or directory of the run
+    (for example data/atlas.db, read from its database snapshot via the receipt;
+    other paths come from the file-phase snapshot). Same guards and preflight.
   - no command prunes or deletes snapshots.
 
 Required environment:
@@ -166,12 +172,25 @@ Required environment:
   RESTIC_PASSWORD_FILE Absolute path to a mode-600 restic password file.
 
 Optional environment:
+  LU_BACKUP_RESTORE_MARGIN_PERCENT
+                        Extra free space required over the restore size (default: 10).
   LU_BACKUP_PROJECT_ROOT
                         Project checkout (default: script's repository).
   LU_BACKUP_LEGACY_DIR Read-only legacy Drive directory used for symlink checks.
   LU_BACKUP_TMPDIR      Private staging parent (default: $TMPDIR or /tmp).
   LU_BACKUP_TAG         Restic tag (default: learn-ukrainian-data).
   LU_BACKUP_HOST        Stable restic host label (default: learn-ukrainian).
+
+Examples:
+  ./scripts/backup-data.sh restore latest --to /scratch/restore              # preview
+  ./scripts/backup-data.sh restore latest --to /scratch/restore --execute    # whole run
+  ./scripts/backup-data.sh restore latest --to /scratch/one --path data/atlas.db --execute
+
+Exit codes:
+  0  success (or preview complete)
+  1  any refusal or failure, including too little free space for a restore
+
+Related: docs/SCRIPTS.md (backup-data), issue #8829.
 EOF
 }
 
@@ -1299,17 +1318,99 @@ validate_restore_target() {
   printf '%s\n' "$target_real"
 }
 
+format_bytes() {
+  awk -v bytes="$1" 'BEGIN {
+    split("B KiB MiB GiB TiB", unit, " ")
+    i = 1
+    while (bytes >= 1024 && i < 5) { bytes /= 1024; i++ }
+    if (i == 1) printf "%d B\n", bytes
+    else printf "%.1f %s\n", bytes, unit[i]
+  }'
+}
+
+restore_margin_percent() {
+  local margin=${LU_BACKUP_RESTORE_MARGIN_PERCENT:-10}
+  [[ "$margin" =~ ^[0-9]{1,4}$ ]] ||
+    die "LU_BACKUP_RESTORE_MARGIN_PERCENT must be a whole number of percent (for example 10)."
+  printf '%s\n' "$margin"
+}
+
+# Free bytes on the filesystem that will hold the restore target (the target
+# itself may not exist yet, so measure its nearest existing ancestor).
+target_free_bytes() {
+  local probe=$1 free_kib
+  while [[ ! -d "$probe" ]]; do
+    probe="$(dirname "$probe")"
+  done
+  free_kib="$(df -Pk "$probe" | awk 'NR == 2 {print $4}')"
+  [[ "$free_kib" =~ ^[0-9]+$ ]] || die "Could not determine free space for the restore target."
+  printf '%s\n' $((free_kib * 1024))
+}
+
+target_filesystem_label() {
+  local probe=$1
+  while [[ ! -d "$probe" ]]; do
+    probe="$(dirname "$probe")"
+  done
+  df -Pk "$probe" | awk 'NR == 2 {print $1 " mounted at " $6}'
+}
+
+# Total restore size (bytes) of whole snapshots, from restic's own accounting.
+snapshots_restore_size_bytes() {
+  local stats
+  [[ $# -gt 0 ]] || { printf '0\n'; return; }
+  stats="$(restic_repository_command stats --mode restore-size --json "$@")" ||
+    die "Could not compute the restore size of the selected snapshots."
+  jq -er '.total_size | select(type == "number")' <<< "$stats" ||
+    die "Restic reported no restore size for the selected snapshots."
+}
+
+# "COUNT BYTES" of the files under one path of a snapshot (path-scoped restore).
+snapshot_path_size() {
+  local snapshot=$1 path=$2 listing
+  listing="$(restic_repository_command ls --json --recursive "$snapshot" "/$path")" ||
+    die "Could not list $path in snapshot $snapshot."
+  jq -sr 'map(select(.struct_type == "node" and .type == "file") | .size) | "\(length) \(add // 0)"' \
+    <<< "$listing"
+}
+
+# Refuse before anything is written when the target cannot hold the restore.
+check_restore_space() {
+  local target=$1 size_bytes=$2 margin required free
+  margin="$(restore_margin_percent)"
+  required=$((size_bytes + (size_bytes * margin + 99) / 100))
+  free="$(target_free_bytes "$target")"
+  info "Restore size $(format_bytes "$size_bytes") (+${margin}% margin = $(format_bytes "$required")); free on target: $(format_bytes "$free")."
+  ((free >= required)) ||
+    die "Insufficient free space to restore into $target: need $(format_bytes "$required") (restore size $(format_bytes "$size_bytes") + ${margin}% margin), have $(format_bytes "$free") on $(target_filesystem_label "$target"). Nothing was restored. Free space, choose another --to, restore one file with --path RELATIVE_PATH, or lower LU_BACKUP_RESTORE_MARGIN_PERCENT."
+}
+
+validate_restore_scope() {
+  local scope=$1
+  [[ "$scope" != /* && "$scope" != "" ]] ||
+    die "--path must be a non-empty path relative to the run root (for example data/atlas.db)."
+  [[ "/$scope/" != *"/../"* && "/$scope/" != *"/./"* && "$scope" != *//* ]] ||
+    die "--path must not contain '.', '..', or empty components: $scope"
+  [[ "$scope" != *[\*\?\[\\]* && "$scope" != *$'\n'* && "$scope" != *$'\t'* ]] ||
+    die "--path must be a literal path (no glob characters): $scope"
+}
+
 run_restore() {
   local snapshot=$1
   local target=$2
   local execute=$3
-  local target_real receipt receipt_schema base_id patch_id database_id database_path database_mode check_output
-  local manifest_id snapshots_json
-  local -a args
+  local scope=${4:-}
+  local target_real receipt receipt_json receipt_schema base_id patch_id database_id database_path database_mode check_output
+  local manifest_id snapshots_json size_bytes path_info path_count path_bytes index
+  local scope_is_database=0 databases_selected=0
+  local -a whole_ids=() step_ids=() step_includes=() step_db_paths=() step_db_modes=()
 
   validate_environment
   require_initialized_repository
   [[ -n "$snapshot" && "$snapshot" != -* ]] || die "Invalid snapshot ID."
+  restore_margin_percent >/dev/null
+  [[ -z "$scope" ]] || validate_restore_scope "${scope%/}"
+  scope="${scope%/}"
   target_real="$(validate_restore_target "$target")"
 
   manifest_id="$snapshot"
@@ -1324,36 +1425,48 @@ run_restore() {
     fi
   fi
 
-  args=(restore "$manifest_id" --target "$target_real" --overwrite never)
-  if [[ "$execute" -eq 0 ]]; then
-    info "Restore preview only; no files will be written."
-    restic_repository_command "${args[@]}" --dry-run --verbose=2
-    echo "Preview complete. Re-run with --execute to restore into: $target_real"
-    return
-  fi
-
-  acquire_lock
-  restic_repository_command "${args[@]}"
-  receipt="$target_real/BACKUP-RECEIPT.json"
-  [[ -f "$receipt" && ! -L "$receipt" ]] ||
-    die "Restored snapshot has no safe BACKUP-RECEIPT.json; refusing to claim a complete restore."
-  receipt_schema="$(jq -er '.schema_version' "$receipt")" || die "Restored receipt is invalid JSON."
+  # Read the run's receipt without writing to the target, so the whole plan
+  # (which snapshots, how many bytes) is known before any restore starts.
+  receipt_json="$(restic_repository_command dump "$manifest_id" /BACKUP-RECEIPT.json)" ||
+    die "Could not read BACKUP-RECEIPT.json from snapshot $manifest_id; refusing to restore."
+  receipt_schema="$(jq -er '.schema_version' <<< "$receipt_json")" || die "Snapshot receipt is invalid JSON."
   [[ "$receipt_schema" == 1 || "$receipt_schema" == 2 ]] || die "Unsupported restored receipt schema."
-  if [[ "$receipt_schema" == 2 ]]; then
+
+  if [[ "$receipt_schema" == 1 ]]; then
+    step_ids+=("$manifest_id")
+    step_includes+=("${scope:+/$scope}")
+    step_db_paths+=("")
+    step_db_modes+=("")
+  else
     jq -e '
       .linux_run.run_id | type == "string" and length > 0
-    ' "$receipt" >/dev/null || die "Restored Linux receipt has no run ID."
+    ' <<< "$receipt_json" >/dev/null || die "Restored Linux receipt has no run ID."
     jq -e '(.linux_run.databases | type == "array") and
       (.linux_run.databases | all(.[]; (.path | type == "string") and
         (.snapshot_id | type == "string") and (.mode | type == "string")))' \
-      "$receipt" >/dev/null || die "Restored Linux receipt has invalid database inventory."
-    base_id="$(jq -r '.linux_run.base_snapshot_id' "$receipt")"
+      <<< "$receipt_json" >/dev/null || die "Restored Linux receipt has invalid database inventory."
+    base_id="$(jq -r '.linux_run.base_snapshot_id' <<< "$receipt_json")"
     [[ "$base_id" =~ ^[0-9a-f]{64}$ ]] || die "Restored Linux receipt has invalid base snapshot ID."
-    restic_repository_command restore "$base_id" --target "$target_real" --overwrite never
-    patch_id="$(jq -r '.linux_run.patch_snapshot_id // empty' "$receipt")"
-    if [[ -n "$patch_id" ]]; then
-      [[ "$patch_id" =~ ^[0-9a-f]{64}$ ]] || die "Restored Linux receipt has invalid patch snapshot ID."
-      restic_repository_command restore "$patch_id" --target "$target_real" --overwrite never
+    patch_id="$(jq -r '.linux_run.patch_snapshot_id // empty' <<< "$receipt_json")"
+    [[ -z "$patch_id" || "$patch_id" =~ ^[0-9a-f]{64}$ ]] ||
+      die "Restored Linux receipt has invalid patch snapshot ID."
+    if [[ -z "$scope" ]]; then
+      step_ids+=("$manifest_id" "$base_id")
+      step_includes+=("" "")
+      step_db_paths+=("" "")
+      step_db_modes+=("" "")
+      if [[ -n "$patch_id" ]]; then
+        step_ids+=("$patch_id")
+        step_includes+=("")
+        step_db_paths+=("")
+        step_db_modes+=("")
+      fi
+    elif [[ "$scope" == GIT-WORKTREE.patch ]]; then
+      [[ -n "$patch_id" ]] || die "This run has no GIT-WORKTREE.patch (the worktree was clean)."
+      step_ids+=("$patch_id")
+      step_includes+=("")
+      step_db_paths+=("")
+      step_db_modes+=("")
     fi
     while IFS=$'\t' read -r database_path database_id database_mode; do
       [[ -n "$database_path" ]] || continue
@@ -1367,12 +1480,75 @@ run_restore() {
         die "Restored Linux receipt has invalid database snapshot ID."
       [[ "$database_mode" =~ ^[0-7]{3,4}$ ]] ||
         die "Restored Linux receipt has invalid database mode."
-      restic_repository_command restore "$database_id" --target "$target_real" --overwrite never
+      if [[ -z "$scope" || "$database_path" == "$scope" || "$database_path" == "$scope"/* ]]; then
+        step_ids+=("$database_id")
+        step_includes+=("")
+        step_db_paths+=("$database_path")
+        step_db_modes+=("$database_mode")
+        databases_selected=$((databases_selected + 1))
+        [[ "$database_path" != "$scope" ]] || scope_is_database=1
+      fi
+    done < <(jq -r '.linux_run.databases[] | [.path, .snapshot_id, .mode] | @tsv' <<< "$receipt_json")
+    if [[ -n "$scope" && "$scope" != GIT-WORKTREE.patch && "$scope_is_database" -eq 0 ]]; then
+      # Not a single database: the path lives in the file-phase snapshot (and
+      # any databases beneath it were already selected above).
+      step_ids+=("$base_id")
+      step_includes+=("/$scope")
+      step_db_paths+=("")
+      step_db_modes+=("")
+    fi
+  fi
+
+  # Exact size of what will be restored: whole snapshots via restic stats,
+  # path-scoped file-phase reads via ls.
+  size_bytes=0
+  path_count=0
+  for index in "${!step_ids[@]}"; do
+    if [[ -z "${step_includes[$index]}" ]]; then
+      whole_ids+=("${step_ids[$index]}")
+    else
+      path_info="$(snapshot_path_size "${step_ids[$index]}" "$scope")"
+      read -r path_count path_bytes <<< "$path_info"
+      size_bytes=$((size_bytes + path_bytes))
+    fi
+  done
+  size_bytes=$((size_bytes + $(snapshots_restore_size_bytes ${whole_ids[@]+"${whole_ids[@]}"})))
+  if [[ -n "$scope" ]]; then
+    [[ "$path_count" -gt 0 || "$databases_selected" -gt 0 || "$scope" == GIT-WORKTREE.patch ]] ||
+      die "Nothing at --path $scope in snapshot $manifest_id."
+  fi
+  check_restore_space "$target_real" "$size_bytes"
+
+  if [[ "$execute" -eq 0 ]]; then
+    info "Restore preview only; no files will be written."
+    if [[ -z "$scope" ]]; then
+      restic_repository_command restore "$manifest_id" --target "$target_real" --overwrite never --dry-run --verbose=2
+    else
+      for index in "${!step_ids[@]}"; do
+        restic_repository_command restore "${step_ids[$index]}" --target "$target_real" --overwrite never \
+          ${step_includes[$index]:+--include "${step_includes[$index]}"} --dry-run --verbose=2
+      done
+    fi
+    echo "Preview complete. Re-run with --execute to restore into: $target_real"
+    return
+  fi
+
+  acquire_lock
+  for index in "${!step_ids[@]}"; do
+    restic_repository_command restore "${step_ids[$index]}" --target "$target_real" --overwrite never \
+      ${step_includes[$index]:+--include "${step_includes[$index]}"}
+    if [[ -z "$scope" && "$index" -eq 0 ]]; then
+      receipt="$target_real/BACKUP-RECEIPT.json"
+      [[ -f "$receipt" && ! -L "$receipt" ]] ||
+        die "Restored snapshot has no safe BACKUP-RECEIPT.json; refusing to claim a complete restore."
+    fi
+    database_path="${step_db_paths[$index]}"
+    if [[ -n "$database_path" ]]; then
       [[ -f "$target_real/$database_path" && ! -L "$target_real/$database_path" ]] ||
         die "Restored database is missing or unsafe: $database_path"
-      chmod "$database_mode" "$target_real/$database_path"
-    done < <(jq -r '.linux_run.databases[] | [.path, .snapshot_id, .mode] | @tsv' "$receipt")
-  fi
+      chmod "${step_db_modes[$index]}" "$target_real/$database_path"
+    fi
+  done
   while IFS= read -r -d '' database_path; do
     check_output="$(sqlite3 "$(sqlite_immutable_uri "$database_path")" 'PRAGMA integrity_check;')" ||
       die "SQLite integrity_check failed on restored database: ${database_path#"$target_real"/}"
@@ -1522,6 +1698,7 @@ main() {
     restore)
       snapshot=""
       target=""
+      scope=""
       execute=0
       while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -1529,6 +1706,12 @@ main() {
             shift
             [[ $# -gt 0 ]] || die "--to requires an absolute directory."
             target=$1
+            ;;
+          --path)
+            shift
+            [[ $# -gt 0 ]] || die "--path requires a path relative to the run root."
+            [[ -z "$scope" ]] || die "restore accepts exactly one --path."
+            scope=$1
             ;;
           --execute)
             execute=1
@@ -1545,7 +1728,7 @@ main() {
       done
       [[ -n "$snapshot" ]] || die "restore requires a snapshot ID."
       [[ -n "$target" ]] || die "restore requires --to ABSOLUTE_EMPTY_DIR."
-      run_restore "$snapshot" "$target" "$execute"
+      run_restore "$snapshot" "$target" "$execute" "$scope"
       ;;
     *)
       usage >&2
