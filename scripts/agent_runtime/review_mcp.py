@@ -80,6 +80,78 @@ _AGY_MCP_LIST_TIMEOUT_S = 60.0
 _AGY_TOKEN_NAME = "antigravity-oauth-token"
 _AGY_MCP_LIST_COLUMNS = ("NAME", "TYPE", "STATUS", "COMMAND/URL")
 
+_FRAGMENT_LIMIT = 80
+_STDERR_LIMIT = 200
+_IDENTIFIER_PREFIX_LIMIT = 8
+_LISTED_NAMES = 5
+_MIN_MASKED_VALUE_LEN = 3
+_PATH_MASK = "<path>"
+# Anything path-shaped, run to the next delimiter so a path with spaces is masked whole:
+# ``C:\x`` / ``C:/x``, UNC ``\\host``, ``~/x`` / ``~user/x``, ``./x`` / ``../x`` and ``/x``.
+_PATH_SHAPED_RE = re.compile(
+    r"""(?:
+        (?<![\w])[A-Za-z]:[\\/]
+      | \\\\(?=[^\s\\])
+      | (?<![\w.~])~[\w.-]*[\\/]
+      | (?<![\w.])\.{1,2}[\\/]
+      | (?<![\w.~])/(?=\S)
+    )[^'"`,;<>|)\]}\r\n]*""",
+    re.VERBOSE,
+)
+
+
+def _known_values(extra: Mapping[str, str | None] | None = None) -> dict[str, str | None]:
+    """The values a refusal must never carry: the operator home and the scoped-launch env values."""
+    values: dict[str, str | None] = {
+        "~": os.path.expanduser("~"),
+        "$HOME": os.environ.get("HOME"),
+        "$CODEX_HOME": os.environ.get("CODEX_HOME"),
+        "$AGY_APP_DATA_DIR": os.environ.get("AGY_APP_DATA_DIR"),
+    }
+    values.update(extra or {})
+    return values
+
+
+def _sanitize(
+    text: object,
+    values: Mapping[str, str | None] | None = None,
+    *,
+    limit: int | None = _FRAGMENT_LIMIT,
+) -> str:
+    """The one sanitizer for every refusal built from untrusted text (tool output, config content, CLI args).
+
+    Masks each known log-unsafe value with its label (longest first, so a nested path collapses to
+    its innermost label; empty, root and tiny values are skipped, since masking ``/`` or ``1`` would
+    mangle everything), then masks anything path-shaped, flattens whitespace and control characters,
+    and bounds the length. Masking happens before truncation, so a cut never splits a secret past
+    the mask. ``limit=None`` skips only the length bound (the whole-message safety net).
+    """
+    cleaned = str(text)
+    for label, value in sorted(_known_values(values).items(), key=lambda item: len(item[1] or ""), reverse=True):
+        if value and len(value.strip("/")) >= _MIN_MASKED_VALUE_LEN:
+            cleaned = cleaned.replace(value, label)
+    cleaned = _PATH_SHAPED_RE.sub(_PATH_MASK, cleaned)
+    cleaned = " ".join("".join(ch if ch.isprintable() else " " for ch in cleaned).split())
+    if limit is not None and len(cleaned) > limit:
+        cleaned = cleaned[:limit] + "..."
+    return cleaned
+
+
+def _describe_identifier(value: object) -> str:
+    """Describe an invalid identifier by its size and a short sanitized prefix, never the value."""
+    if not isinstance(value, str):
+        return f"a {type(value).__name__}, not a string"
+    prefix = _sanitize(value, limit=_IDENTIFIER_PREFIX_LIMIT)
+    return f"{len(value)} characters starting {prefix!r}"
+
+
+def _describe_names(names: Sequence[object]) -> str:
+    """List server names for a refusal: a bounded count of bounded, sanitized names."""
+    shown = [_sanitize(name, limit=_IDENTIFIER_PREFIX_LIMIT * 4) for name in names[:_LISTED_NAMES]]
+    if len(names) > _LISTED_NAMES:
+        shown.append(f"... {len(names) - _LISTED_NAMES} more")
+    return repr(shown)
+
 
 class CodexReviewMcpGateError(ValueError):
     """The effective Codex MCP server set for a review attempt is not exactly ``sources``."""
@@ -129,7 +201,7 @@ def codex_review_home_path(config_path: Path | str) -> Path:
     """Return the scoped ``CODEX_HOME`` directory that pairs with an attempt's ``.mcp.json``."""
     config = Path(config_path)
     if not config.name.endswith(_MCP_CONFIG_SUFFIX):
-        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config.name!r}")
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {_sanitize(config.name)!r}")
     return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _CODEX_HOME_SUFFIX)
 
 
@@ -137,7 +209,7 @@ def agy_review_home_path(config_path: Path | str) -> Path:
     """Return the scoped AGY ``HOME`` directory that pairs with an attempt's ``.mcp.json``."""
     config = Path(config_path)
     if not config.name.endswith(_MCP_CONFIG_SUFFIX):
-        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config.name!r}")
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {_sanitize(config.name)!r}")
     return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _AGY_HOME_SUFFIX)
 
 
@@ -255,9 +327,9 @@ def prepare_review_attempt(
         FileNotFoundError: If manifest_path does not exist.
     """
     if not isinstance(review_id, str) or not _TOKEN_RE.match(review_id):
-        raise ValueError(f"invalid review_id: {review_id!r}")
+        raise ValueError(f"invalid review_id: must match {_TOKEN_RE.pattern} (got {_describe_identifier(review_id)})")
     if not isinstance(attempt_id, str) or not _TOKEN_RE.match(attempt_id):
-        raise ValueError(f"invalid attempt_id: {attempt_id!r}")
+        raise ValueError(f"invalid attempt_id: must match {_TOKEN_RE.pattern} (got {_describe_identifier(attempt_id)})")
 
     canonical_harness = (harness or "").lower().strip()
     if canonical_harness in UNSUPPORTED_HARNESS_REASONS:
@@ -265,11 +337,14 @@ def prepare_review_attempt(
             f"review attempt refused for {canonical_harness}: {UNSUPPORTED_HARNESS_REASONS[canonical_harness]} (#8517)"
         )
     if canonical_harness not in SUPPORTED_HARNESSES:
-        raise ValueError(f"review attempt refused for unsupported harness {canonical_harness!r} (#8517)")
+        raise ValueError(
+            f"review attempt refused for unsupported harness (supported: {', '.join(sorted(SUPPORTED_HARNESSES))}; "
+            f"got {_describe_identifier(canonical_harness)}) (#8517)"
+        )
 
     manifest_file = Path(manifest_path).resolve()
     if not manifest_file.is_file():
-        raise FileNotFoundError(f"review manifest file not found: {manifest_file.name!r}")
+        raise FileNotFoundError(f"review manifest file not found: {_sanitize(manifest_file.name)!r}")
 
     manifest_bytes = manifest_file.read_bytes()
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
@@ -303,7 +378,9 @@ def prepare_review_attempt(
         or (codex_home is not None and (codex_home.exists() or codex_home.is_symlink()))
         or (agy_home is not None and (agy_home.exists() or agy_home.is_symlink()))
     ):
-        raise FileExistsError(f"review attempt {attempt_id!r} already exists for review {review_id!r}")
+        raise FileExistsError(
+            f"review attempt {_sanitize(attempt_id)!r} already exists for review {_sanitize(review_id)!r}"
+        )
 
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
     config_payload = {
@@ -373,7 +450,9 @@ def prepare_review_attempt(
             _populate_agy_review_home(agy_home, real_agy_token, config_bytes)
     except FileExistsError as exc:
         _rollback()
-        raise FileExistsError(f"review attempt {attempt_id!r} already exists for review {review_id!r}") from exc
+        raise FileExistsError(
+            f"review attempt {_sanitize(attempt_id)!r} already exists for review {_sanitize(review_id)!r}"
+        ) from exc
     except BaseException:
         _rollback()
         raise
@@ -436,12 +515,14 @@ def verify_codex_review_effective_mcp(
     log_unsafe = {"$CODEX_HOME": str(codex_home), "~": os.path.expanduser("~")}
 
     def refuse(reason: str) -> CodexReviewMcpGateError:
-        return CodexReviewMcpGateError(f"codex review attempt refused: {_redact(reason, log_unsafe)} (#8517)")
+        return CodexReviewMcpGateError(
+            f"codex review attempt refused: {_sanitize(reason, log_unsafe, limit=None)} (#8517)"
+        )
 
     try:
         expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        raise refuse(f"cannot read the attempt MCP config {config.name!r}: {_exc_reason(exc)}") from exc
+        raise refuse(f"cannot read the attempt MCP config {_sanitize(config.name)!r}: {_exc_reason(exc)}") from exc
     if not (codex_home / "config.toml").is_file():
         raise refuse("the scoped CODEX_HOME has no config.toml")
 
@@ -460,24 +541,25 @@ def verify_codex_review_effective_mcp(
     except (OSError, subprocess.SubprocessError) as exc:
         raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc)})") from exc
     if proc.returncode != 0:
-        # Mask before truncating, so a cut never splits a log-unsafe value past the mask.
-        raise refuse(f"`codex mcp list` exited {proc.returncode}: {_redact(proc.stderr.strip(), log_unsafe)[:200]}")
+        raise refuse(
+            f"`codex mcp list` exited {proc.returncode}: {_sanitize(proc.stderr, log_unsafe, limit=_STDERR_LIMIT)}"
+        )
     try:
         servers = json.loads(proc.stdout)
     except ValueError as exc:
-        raise refuse(f"`codex mcp list --json` did not return JSON: {exc}") from exc
+        raise refuse(f"`codex mcp list --json` did not return JSON: {_sanitize(exc)}") from exc
     if not isinstance(servers, list):
         raise refuse("`codex mcp list --json` did not return a list")
 
     names = sorted(str(item.get("name")) if isinstance(item, dict) else repr(item) for item in servers)
     if names != ["sources"]:
-        raise refuse(f"effective MCP servers are {names!r}; exactly ['sources'] is allowed")
+        raise refuse(f"effective MCP servers are {_describe_names(names)}; exactly ['sources'] is allowed")
     server = servers[0]
     transport = server.get("transport") or {}
     if server.get("enabled") is not True:
         raise refuse("the sources server is not enabled")
     if transport.get("type") != "stdio":
-        raise refuse(f"the sources server transport is {transport.get('type')!r}, not stdio")
+        raise refuse(f"the sources server transport is {_sanitize(transport.get('type'))!r}, not stdio")
     if transport.get("command") != expected["command"] or list(transport.get("args") or []) != expected["args"]:
         raise refuse("the sources server command/args differ from the attempt's .mcp.json")
     if dict(transport.get("env") or {}) != expected["env"]:
@@ -531,25 +613,25 @@ def _agy_mcp_list_rows(stdout: str, refuse: Callable[[str], AgyReviewMcpGateErro
         raise refuse("`agy mcp list` printed no table")
     header = re.fullmatch(r"(NAME)(\s+)(TYPE)(\s+)(STATUS)(\s+)(COMMAND/URL)", lines[0])
     if header is None:
-        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {lines[0]!r}")
+        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {_sanitize(lines[0])!r}")
     offsets = [header.start(group) for group in (1, 3, 5, 7)]
     if offsets[0] != 0:
-        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {lines[0]!r}")
+        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {_sanitize(lines[0])!r}")
 
     rows: list[dict[str, str]] = []
     for line in lines[1:]:
         if len(line) <= offsets[3] or any(line[offset - 1] != " " or line[offset] == " " for offset in offsets[1:]):
-            raise refuse(f"`agy mcp list` row is truncated or misaligned: {line!r}")
+            raise refuse(f"`agy mcp list` row is truncated or misaligned: {_sanitize(line)!r}")
         name = line[offsets[0] : offsets[1]].strip()
         kind = line[offsets[1] : offsets[2]].strip()
         status = line[offsets[2] : offsets[3]].strip()
         target = line[offsets[3] :].strip()
         if any(not cell or any(ch.isspace() for ch in cell) for cell in (name, kind, status)):
-            raise refuse(f"`agy mcp list` row cannot be parsed: {line!r}")
+            raise refuse(f"`agy mcp list` row cannot be parsed: {_sanitize(line)!r}")
         rows.append({"name": name, "type": kind, "status": status, "target": target})
     names = [row["name"] for row in rows]
     if len(set(names)) != len(names):
-        raise refuse(f"`agy mcp list` repeats a server name: {names!r}")
+        raise refuse(f"`agy mcp list` repeats a server name: {_describe_names(names)}")
     return rows
 
 
@@ -565,26 +647,14 @@ def _exc_reason(exc: BaseException) -> str:
         return f"{type(exc).__name__} after {exc.timeout:g}s"
     if isinstance(exc, subprocess.SubprocessError):
         return type(exc).__name__
-    return f"{type(exc).__name__}: {exc}"
-
-
-def _redact(text: str, values: Mapping[str, str | None]) -> str:
-    """Replace each log-unsafe value in ``text`` with its label, longest value first.
-
-    Longest first makes a nested path (AGY_APP_DATA_DIR under HOME) collapse to its innermost
-    label. Empty and root values are skipped: masking ``/`` would mangle every path.
-    """
-    for label, value in sorted(values.items(), key=lambda item: len(item[1] or ""), reverse=True):
-        if value and value.strip("/"):
-            text = text.replace(value, label)
-    return text
+    return f"{type(exc).__name__}: {_sanitize(exc)}"
 
 
 def _strict_json_object(text: str) -> Any:
     def no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
         keys = [key for key, _ in pairs]
         if len(set(keys)) != len(keys):
-            raise ValueError(f"duplicate JSON keys: {keys!r}")
+            raise ValueError(f"duplicate JSON keys: {_describe_names(keys)}")
         return dict(pairs)
 
     return json.loads(text, object_pairs_hook=no_duplicates)
@@ -618,14 +688,14 @@ def verify_agy_review_effective_mcp(
     }
 
     def refuse(reason: str) -> AgyReviewMcpGateError:
-        return AgyReviewMcpGateError(f"agy review attempt refused: {_redact(reason, log_unsafe)} (#8617)")
+        return AgyReviewMcpGateError(f"agy review attempt refused: {_sanitize(reason, log_unsafe, limit=None)} (#8617)")
 
     try:
         expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
         command = expected["command"]
         args = list(expected["args"])
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        raise refuse(f"cannot read the attempt MCP config {config.name!r}: {_exc_reason(exc)}") from exc
+        raise refuse(f"cannot read the attempt MCP config {_sanitize(config.name)!r}: {_exc_reason(exc)}") from exc
     if not isinstance(expected.get("env"), dict) or set(expected["env"]) != set(ENV_KEYS):
         raise refuse("the attempt MCP config does not carry exactly the three LU_REVIEW_* variables")
 
@@ -658,17 +728,20 @@ def verify_agy_review_effective_mcp(
     except (OSError, subprocess.SubprocessError) as exc:
         raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc)})") from exc
     if proc.returncode != 0:
-        # Mask before truncating, so a cut never splits a log-unsafe value past the mask.
-        raise refuse(f"`agy mcp list` exited {proc.returncode}: {_redact(proc.stderr.strip(), log_unsafe)[:200]}")
+        raise refuse(
+            f"`agy mcp list` exited {proc.returncode}: {_sanitize(proc.stderr, log_unsafe, limit=_STDERR_LIMIT)}"
+        )
 
     rows = _agy_mcp_list_rows(proc.stdout, refuse)
     if [row["name"] for row in rows] != ["sources"]:
-        raise refuse(f"effective MCP servers are {[row['name'] for row in rows]!r}; exactly ['sources'] is allowed")
+        raise refuse(
+            f"effective MCP servers are {_describe_names([row['name'] for row in rows])}; exactly ['sources'] is allowed"
+        )
     row = rows[0]
     if row["type"] != "stdio":
-        raise refuse(f"the sources server type is {row['type']!r}, not stdio")
+        raise refuse(f"the sources server type is {_sanitize(row['type'])!r}, not stdio")
     if row["status"] != "enabled":
-        raise refuse(f"the sources server status is {row['status']!r}, not enabled")
+        raise refuse(f"the sources server status is {_sanitize(row['status'])!r}, not enabled")
     if row["target"] != expected_target:
         raise refuse("the sources server command/args differ from the attempt's .mcp.json")
 
@@ -707,7 +780,9 @@ def verify_agy_review_launch(
 
     link_problem = agy_oauth_link_problem(config_path)
     if link_problem is not None:
-        raise AgyReviewMcpGateError(f"agy review attempt refused: OAuth link not intact: {link_problem} (#8617)")
+        raise AgyReviewMcpGateError(
+            f"agy review attempt refused: OAuth link not intact: {_sanitize(link_problem)} (#8617)"
+        )
 
     plan = AgyAdapter().build_invocation(
         prompt="",

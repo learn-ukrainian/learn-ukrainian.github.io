@@ -1578,3 +1578,198 @@ def test_real_agy_cli_lists_exactly_the_scoped_sources_server(manifest_file: Pat
         task_id="review-agy-live",
         tool_config=_agy_tool_config(plan),
     )
+
+
+# --- #8652: one sanitizer for every refusal built from untrusted text ---------------------------
+
+_MARKER = "private-marker-8652"
+_MARKER_PATHS = [
+    pytest.param(f"/srv/{_MARKER}/secret.json", id="absolute"),
+    pytest.param(f"~/{_MARKER}", id="tilde"),
+    pytest.param(f"C:\\{_MARKER}\\x", id="windows"),
+    pytest.param(f"/srv/with space/{_MARKER}/secret.json", id="absolute-with-spaces"),
+]
+
+
+def _refusal_from_prepare(tmp_path: Path, manifest_file: Path, **overrides: str) -> str:
+    kwargs = {"review_id": "rev-001", "attempt_id": "att-001", "harness": "claude", **overrides}
+    with pytest.raises(ValueError, match=r"invalid|unsupported") as refused:
+        prepare_review_attempt(manifest_path=manifest_file, receipts_root=tmp_path / "receipts", **kwargs)
+    return str(refused.value)
+
+
+def _codex_refusal(tmp_path: Path, manifest_file: Path, monkeypatch: pytest.MonkeyPatch, servers, **script) -> str:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    if servers is not None:
+        _install_fake_codex(tmp_path, monkeypatch, servers)
+    else:
+        bin_dir = tmp_path / "fake-bin"
+        bin_dir.mkdir()
+        fake = bin_dir / "codex"
+        fake.write_text(f"#!/bin/sh\n{script['body']}", encoding="utf-8")
+        fake.chmod(0o755)
+        monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    with pytest.raises(CodexReviewMcpGateError) as refused:
+        verify_codex_review_effective_mcp(config_path=plan.config_path, cwd=tmp_path)
+    return str(refused.value)
+
+
+def _agy_refusal(tmp_path: Path, manifest_file: Path, monkeypatch: pytest.MonkeyPatch, stdout: str, **kwargs) -> str:
+    plan = _prepare_agy(manifest_file, tmp_path)
+    _install_fake_agy(tmp_path, monkeypatch, stdout(plan) if callable(stdout) else stdout, **kwargs)
+    with pytest.raises(AgyReviewMcpGateError) as refused:
+        _verify_agy(plan, tmp_path)
+    return str(refused.value)
+
+
+def _agy_row(plan, **cells: str) -> str:
+    row = {"name": "sources", "type": "stdio", "status": "enabled", "target": _agy_expected_target(plan.config_path)}
+    row.update(cells)
+    return _agy_table([tuple(row.values())])
+
+
+def _surface_review_id(marker, tmp_path, manifest_file, _mp):
+    return _refusal_from_prepare(tmp_path, manifest_file, review_id=marker)
+
+
+def _surface_attempt_id(marker, tmp_path, manifest_file, _mp):
+    return _refusal_from_prepare(tmp_path, manifest_file, attempt_id=marker)
+
+
+def _surface_harness(marker, tmp_path, manifest_file, _mp):
+    return _refusal_from_prepare(tmp_path, manifest_file, harness=marker)
+
+
+def _surface_codex_server_name(marker, tmp_path, manifest_file, mp):
+    return _codex_refusal(tmp_path, manifest_file, mp, [{"name": marker, "enabled": True}])
+
+
+def _surface_codex_non_dict_server(marker, tmp_path, manifest_file, mp):
+    return _codex_refusal(tmp_path, manifest_file, mp, [marker])
+
+
+def _surface_codex_transport_type(marker, tmp_path, manifest_file, mp):
+    plan = _prepare_codex(manifest_file, tmp_path)
+    entry = _sources_entry(plan.config_path)
+    entry["transport"]["type"] = marker
+    _install_fake_codex(tmp_path, monkeypatch=mp, servers=[entry])
+    with pytest.raises(CodexReviewMcpGateError) as refused:
+        verify_codex_review_effective_mcp(config_path=plan.config_path, cwd=tmp_path)
+    return str(refused.value)
+
+
+def _surface_codex_stderr(marker, tmp_path, manifest_file, mp):
+    return _codex_refusal(tmp_path, manifest_file, mp, None, body=f'echo "boom {marker} more" >&2\nexit 3\n')
+
+
+def _surface_codex_bad_json(marker, tmp_path, manifest_file, mp):
+    return _codex_refusal(tmp_path, manifest_file, mp, None, body=f'echo "{{{marker}"\n')
+
+
+def _surface_agy_stderr(marker, tmp_path, manifest_file, mp):
+    return _agy_refusal(tmp_path, manifest_file, mp, "", body=f'echo "boom {marker} more" >&2\nexit 3\n')
+
+
+def _surface_agy_header(marker, tmp_path, manifest_file, mp):
+    return _agy_refusal(tmp_path, manifest_file, mp, f"NAME TYPE STATUS {marker}\n")
+
+
+def _surface_agy_row_misaligned(marker, tmp_path, manifest_file, mp):
+    return _agy_refusal(tmp_path, manifest_file, mp, _agy_table([]) + f"sources stdio enabled {marker}\n")
+
+
+def _surface_agy_row_unparseable(marker, tmp_path, manifest_file, mp):
+    return _agy_refusal(tmp_path, manifest_file, mp, _agy_table([]) + f"sources  stdio  {marker} x  cmd\n")
+
+
+def _surface_agy_server_name(marker, tmp_path, manifest_file, mp):
+    return _agy_refusal(tmp_path, manifest_file, mp, lambda plan: _agy_row(plan, name=marker))
+
+
+def _surface_agy_repeated_server_name(marker, tmp_path, manifest_file, mp):
+    return _agy_refusal(
+        tmp_path,
+        manifest_file,
+        mp,
+        lambda plan: _agy_table([(marker, "stdio", "enabled", "c"), (marker, "a", "b", "c")]),
+    )
+
+
+def _surface_agy_type(marker, tmp_path, manifest_file, mp):
+    return _agy_refusal(tmp_path, manifest_file, mp, lambda plan: _agy_row(plan, type=marker))
+
+
+def _surface_agy_status(marker, tmp_path, manifest_file, mp):
+    return _agy_refusal(tmp_path, manifest_file, mp, lambda plan: _agy_row(plan, status=marker))
+
+
+def _surface_agy_scoped_config_keys(marker, tmp_path, manifest_file, mp):
+    plan = _prepare_agy(manifest_file, tmp_path)
+    _install_fake_agy(tmp_path, mp, _agy_table(_agy_good_rows(plan.config_path)))
+    duplicated = json.dumps(marker)
+    agy_review_mcp_config_path(plan.agy_home).write_text(f"{{{duplicated}: 1, {duplicated}: 2}}", encoding="utf-8")
+    with pytest.raises(AgyReviewMcpGateError) as refused:
+        _verify_agy(plan, tmp_path)
+    return str(refused.value)
+
+
+_UNTRUSTED_SURFACES = [
+    _surface_review_id,
+    _surface_attempt_id,
+    _surface_harness,
+    _surface_codex_server_name,
+    _surface_codex_non_dict_server,
+    _surface_codex_transport_type,
+    _surface_codex_stderr,
+    _surface_codex_bad_json,
+    _surface_agy_stderr,
+    _surface_agy_header,
+    _surface_agy_row_misaligned,
+    _surface_agy_row_unparseable,
+    _surface_agy_server_name,
+    _surface_agy_repeated_server_name,
+    _surface_agy_type,
+    _surface_agy_status,
+    _surface_agy_scoped_config_keys,
+]
+
+
+@pytest.mark.parametrize("marker", _MARKER_PATHS)
+@pytest.mark.parametrize("surface", _UNTRUSTED_SURFACES, ids=lambda fn: fn.__name__.removeprefix("_surface_"))
+def test_refusals_never_echo_a_path_from_untrusted_input(
+    surface, marker: str, manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A path injected into any untrusted input never reaches a refusal message (#8652)."""
+    message = surface(marker, tmp_path, manifest_file, monkeypatch)
+    assert message
+    assert _MARKER not in message, message
+    assert "with space" not in message, message
+
+
+@pytest.mark.parametrize("field", ["review_id", "attempt_id"])
+def test_invalid_identifier_refusal_names_the_rule_and_a_short_prefix_only(
+    field: str, manifest_file: Path, tmp_path: Path
+) -> None:
+    value = "bad id with spaces " + "x" * 300
+    message = _refusal_from_prepare(tmp_path, manifest_file, **{field: value})
+    assert f"invalid {field}: must match " in message
+    assert value not in message
+    assert len(message) < 200
+
+
+def test_sanitizer_bounds_length_and_masks_known_values_and_the_operator_home(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from scripts.agent_runtime.review_mcp import _sanitize
+
+    assert len(_sanitize("x" * 1000)) == 83
+    assert _sanitize("x" * 1000, limit=None) == "x" * 1000
+    assert _sanitize("secret-token-value here", {"$TOKEN": "secret-token-value"}) == "$TOKEN here"
+    assert _sanitize("line one\nline\ttwo\x00") == "line one line two"
+    monkeypatch.setenv("HOME", "/srv/operator-home")
+    assert "operator-home" not in _sanitize("home is /srv/operator-home ok")
+    # Relative words are not path-shaped: labels and column names survive.
+    assert (
+        _sanitize("NAME TYPE STATUS COMMAND/URL and/or $CODEX_HOME")
+        == "NAME TYPE STATUS COMMAND/URL and/or $CODEX_HOME"
+    )
