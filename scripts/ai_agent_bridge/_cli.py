@@ -1673,7 +1673,9 @@ def _handle_acp_compat(args, target: str) -> None:
         content = _review_target_content(target_desc, content, sha=resolved_head_sha)
         review = True
 
-    if review and target in {"agy", "gemini"}:
+    from ._review_pr import is_gemini_family_model
+
+    if review and (target in {"agy", "gemini"} or is_gemini_family_model(model)):
         from ._agy import gemini_pr_or_branch_content_error, gemini_review_profile_error
 
         profile_error = gemini_review_profile_error(getattr(args, "review_profile", None))

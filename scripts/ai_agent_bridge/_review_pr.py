@@ -473,6 +473,29 @@ def formal_cf_pin(reviewer: str) -> tuple[str, str]:
     return model, effort
 
 
+# Short names that are Gemini-family without a ``gemini-`` version leaf.
+# ``gemini-flash`` and every other ``gemini-…`` id match the prefix below.
+_GEMINI_MODEL_ALIASES = frozenset({"gemini", "gemini-flash", "gemini-pro"})
+
+
+def gemini_model_leaf(model: str | None) -> str:
+    """Last slash segment of a model id, lowercased.
+
+    ``google/gemini-3.1-pro`` and ``openrouter/google/gemini-3.1-pro`` share
+    the leaf ``gemini-3.1-pro``.
+    """
+    text = (model or "").strip()
+    if not text:
+        return ""
+    return text.casefold().rsplit("/", 1)[-1]
+
+
+def is_gemini_family_model(model: str | None) -> bool:
+    """True when the model id is Gemini-family, including provider-prefixed ids."""
+    leaf = gemini_model_leaf(model)
+    return leaf.startswith("gemini-") or leaf in _GEMINI_MODEL_ALIASES
+
+
 def resolve_requested_review_candidate(
     reviewer_request: str,
     explicit_model: str | None,
@@ -487,10 +510,7 @@ def resolve_requested_review_candidate(
     an attested native route from a non-formal fallback carrying the same model.
     """
     model = (explicit_model or "").strip() or None
-    # Provider-prefixed ids (``google/gemini-…``, ``openrouter/google/gemini-…``)
-    # share the Gemini leaf. Compare the last slash segment, lowercased.
-    model_leaf = model.casefold().rsplit("/", 1)[-1] if model is not None else ""
-    if reviewer_request == REVIEWER_AGY or model_leaf.startswith("gemini-"):
+    if reviewer_request == REVIEWER_AGY or is_gemini_family_model(model):
         raise ReviewSafetyError(
             "gemini_code_review_forbidden: operator 2026-09-25 — "
             "Gemini reviews Ukrainian only, never code (model-assignment.md)"

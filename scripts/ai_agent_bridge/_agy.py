@@ -196,13 +196,20 @@ def _run_changed_path_command(
     return proc.stdout or ""
 
 
+# One row per changed file: current name, then the pre-rename path when GitHub has one.
+# ``changed_files`` counts files, so the row count — not the expanded path count — is the check.
+PR_CHANGED_FILES_JQ = '.[] | [.filename, (.previous_filename // "")] | @tsv'
+
+
 def list_pr_changed_paths(pr_number: int, *, repo_root: str) -> list[str]:
-    """Every changed path on a PR. Fail closed when the list or its count is missing.
+    """Every changed path on a PR, including a rename's old path.
 
     ``gh pr view --json files`` stops at 100 files and still exits 0, so a code
     file past that page would be invisible. ``gh api --paginate`` follows every
-    page. The PR object's ``changed_files`` count must match the names returned;
-    a missing count, a failed call, or a short list refuses the review.
+    page. The PR object's ``changed_files`` count must match the file rows
+    returned; a missing count, a failed call, or a short list refuses the review.
+    A rename's ``previous_filename`` is classified too, so moving ``scripts/x.py``
+    onto a content path cannot hide the deletion.
     """
     number = int(pr_number)
     if number < 1:
@@ -216,14 +223,22 @@ def list_pr_changed_paths(pr_number: int, *, repo_root: str) -> list[str]:
         raise GeminiChangedPathListError("PR changed-file count is unavailable")
     expected = int(count_raw)
     raw = _run_changed_path_command(
-        ["gh", "api", "--paginate", f"{pull}/files", "--jq", ".[].filename"],
+        ["gh", "api", "--paginate", f"{pull}/files", "--jq", PR_CHANGED_FILES_JQ],
         cwd=repo_root,
     )
-    paths = [line.strip() for line in raw.splitlines() if line.strip()]
-    if len(paths) != expected:
-        raise GeminiChangedPathListError(
-            f"PR file list length {len(paths)} does not match changed_files {expected}"
-        )
+    paths: list[str] = []
+    rows = 0
+    for line in raw.splitlines():
+        if not line.strip():
+            continue
+        rows += 1
+        current, _, previous = line.partition("\t")
+        for name in (current, previous):
+            cleaned = name.strip()
+            if cleaned:
+                paths.append(cleaned)
+    if rows != expected:
+        raise GeminiChangedPathListError(f"PR file list length {rows} does not match changed_files {expected}")
     return paths
 
 
@@ -234,7 +249,12 @@ def _full_git_sha(value: str) -> str | None:
     return None
 
 
-def list_branch_changed_paths(branch: str, *, repo_root: str) -> list[str]:
+def list_branch_changed_paths(
+    branch: str,
+    *,
+    repo_root: str,
+    head_out: list[str] | None = None,
+) -> list[str]:
     """Changed paths on the remote branch Gemini actually reads.
 
     ``ask-agy --branch`` and ``delegate --branch`` mean the remote head.
@@ -268,8 +288,12 @@ def list_branch_changed_paths(branch: str, *, repo_root: str) -> list[str]:
     )
     if sha is None:
         raise GeminiChangedPathListError(f"fetch of {name!r} did not resolve an exact SHA")
+    if head_out is not None:
+        head_out.append(sha)
+    # ``--no-renames`` keeps the pre-rename path. Without it, a rename of
+    # ``scripts/x.py`` onto a content path reports only the new name.
     raw = _run_changed_path_command(
-        ["git", "diff", "--name-only", f"origin/main...{sha}"],
+        ["git", "diff", "--name-only", "--no-renames", f"origin/main...{sha}"],
         cwd=repo_root,
         env=git_env,
     )
@@ -281,6 +305,7 @@ def gemini_pr_or_branch_content_error(
     pr_number: int | None,
     branch: str | None,
     repo_root: str,
+    head_out: list[str] | None = None,
 ) -> str | None:
     """Refuse a Gemini PR/branch target unless every changed path is content.
 
@@ -294,10 +319,24 @@ def gemini_pr_or_branch_content_error(
         if pr_number is not None:
             paths = list_pr_changed_paths(int(pr_number), repo_root=repo_root)
         else:
-            paths = list_branch_changed_paths(str(branch), repo_root=repo_root)
+            paths = list_branch_changed_paths(str(branch), repo_root=repo_root, head_out=head_out)
         return gemini_content_paths_error(paths)
     except GeminiChangedPathListError as exc:
         return f"{GEMINI_CODE_REVIEW_FORBIDDEN}; could not list changed files: {exc}"
+
+
+def gemini_review_targets_model(
+    *,
+    agent: str,
+    model: str | None = None,
+    resolved_model: str | None = None,
+) -> bool:
+    """True when this review would run a Gemini-family model on any harness."""
+    from ._review_pr import is_gemini_family_model
+
+    if (agent or "").strip().lower() in GEMINI_REVIEW_AGENTS:
+        return True
+    return is_gemini_family_model(model) or is_gemini_family_model(resolved_model)
 
 
 def gemini_review_verdict_dispatch_error(
@@ -308,15 +347,25 @@ def gemini_review_verdict_dispatch_error(
     pr_number: int | None,
     branch: str | None,
     repo_root: str,
+    model: str | None = None,
+    resolved_model: str | None = None,
+    review: bool = False,
+    head_out: list[str] | None = None,
 ) -> str | None:
-    """Gate a review-verdict dispatch to agy/gemini. Implementation dispatches pass.
+    """Gate a review-typed dispatch whose agent or model is Gemini-family.
 
-    A review-verdict dispatch needs ``--review-profile ukrainian``. When it
-    also names a PR or branch, every changed path must be Ukrainian content.
+    Review-typed means ``--require-review-verdict``, ``--review`` / ``--type review``,
+    or ``--pr``. The requested model and the model after fallback substitution
+    are both checked, on every agent. A matching dispatch needs
+    ``--review-profile ukrainian``. When it also names a PR or branch, every
+    changed path must be Ukrainian content. ``head_out`` receives the branch
+    SHA that path list was computed against, when a branch was listed.
+    Implementation dispatches pass.
     """
-    if not require_review_verdict:
+    review_typed = require_review_verdict or review or pr_number is not None
+    if not review_typed:
         return None
-    if (agent or "").strip().lower() not in GEMINI_REVIEW_AGENTS:
+    if not gemini_review_targets_model(agent=agent, model=model, resolved_model=resolved_model):
         return None
     profile_error = gemini_review_profile_error(profile)
     if profile_error is not None:
@@ -325,6 +374,7 @@ def gemini_review_verdict_dispatch_error(
         pr_number=pr_number,
         branch=branch,
         repo_root=repo_root,
+        head_out=head_out,
     )
 
 

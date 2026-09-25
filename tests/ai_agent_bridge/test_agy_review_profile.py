@@ -186,7 +186,7 @@ def _fake_branch_diff(name: str, diff_stdout: str, *, fail: str | None = None):
             code = 1 if fail == "rev-parse" else 0
             stdout = "" if code else f"{_REMOTE_SHA}\n"
             return subprocess.CompletedProcess(command, code, stdout=stdout, stderr="missing" if code else "")
-        assert command == ["git", "diff", "--name-only", f"origin/main...{_REMOTE_SHA}"]
+        assert command == ["git", "diff", "--name-only", "--no-renames", f"origin/main...{_REMOTE_SHA}"]
         code = 1 if fail == "diff" else 0
         return subprocess.CompletedProcess(
             command, code, stdout="" if code else diff_stdout, stderr="diff failed" if code else ""
@@ -237,7 +237,7 @@ def test_content_only_pr_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch
             assert command[3:] == [
                 "repos/{owner}/{repo}/pulls/77/files",
                 "--jq",
-                ".[].filename",
+                '.[] | [.filename, (.previous_filename // "")] | @tsv',
             ]
             return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
         assert command == [
@@ -270,9 +270,7 @@ def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) 
         import subprocess
 
         if "--paginate" in command:
-            return subprocess.CompletedProcess(
-                command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n"
-            )
+            return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
         return subprocess.CompletedProcess(command, 0, stdout="2\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
@@ -324,7 +322,7 @@ def test_pr_file_past_the_hundredth_still_refuses_code(monkeypatch: pytest.Monke
                 "--paginate",
                 "repos/{owner}/{repo}/pulls/120/files",
                 "--jq",
-                ".[].filename",
+                '.[] | [.filename, (.previous_filename // "")] | @tsv',
             ]
             return subprocess.CompletedProcess(command, 0, stdout="\n".join(names) + "\n")
         assert command == [
@@ -402,9 +400,7 @@ def test_delegate_review_verdict_without_profile_is_refused(
         raise AssertionError("review-verdict without a profile must not spawn")
 
     monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
-    args = delegate.build_parser().parse_args(
-        _dispatch_argv("--require-review-verdict")
-    )
+    args = delegate.build_parser().parse_args(_dispatch_argv("--require-review-verdict"))
     assert delegate.cmd_dispatch(args) == 2
     assert "--review-profile" in capsys.readouterr().err
     assert delegate._read_state(delegate._state_path("agy-review-gate")) is None
@@ -479,7 +475,7 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
     assert listed == [
         ["git", "fetch", "origin", _branch_refspec("feature")],
         ["git", "rev-parse", "--verify", "refs/remotes/origin/feature"],
-        ["git", "diff", "--name-only", f"origin/main...{_REMOTE_SHA}"],
+        ["git", "diff", "--name-only", "--no-renames", f"origin/main...{_REMOTE_SHA}"],
     ]
 
 
@@ -737,4 +733,85 @@ def test_branch_changed_paths_ignore_hostile_git_dir(monkeypatch: pytest.MonkeyP
     _git(str(tmp_path), "init", "-b", "main", str(hostile))
 
     monkeypatch.setenv("GIT_DIR", str(hostile / ".git"))
-    assert list_branch_changed_paths("feature", repo_root=root) == ["notes.txt"]
+    heads: list[str] = []
+    assert list_branch_changed_paths("feature", repo_root=root, head_out=heads) == ["notes.txt"]
+    assert len(heads) == 1 and len(heads[0]) == 40
+
+
+def test_cursor_gemini_model_review_is_refused_including_after_substitution(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A Gemini model on Cursor is a review gate, including the post-substitution model."""
+    from scripts import delegate
+    from scripts.ai_agent_bridge._agy import gemini_review_verdict_dispatch_error
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "cursor",
+            "--model",
+            "gemini-3.1-pro",
+            "--task-id",
+            "cursor-gemini-review",
+            "--prompt",
+            "Review this change.",
+            "--require-review-verdict",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "--review-profile" in err
+
+    substituted = gemini_review_verdict_dispatch_error(
+        agent="cursor",
+        require_review_verdict=True,
+        profile=None,
+        pr_number=None,
+        branch=None,
+        repo_root=".",
+        model="grok-4.7",
+        resolved_model="google/gemini-3.8-flash-high",
+    )
+    assert substituted is not None
+    assert "--review-profile" in substituted
+
+
+def test_rename_from_code_onto_content_is_a_code_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    """``--no-renames`` and ``previous_filename`` keep the deleted code path visible."""
+    from scripts.ai_agent_bridge._agy import list_branch_changed_paths, list_pr_changed_paths
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command[:2] == ["git", "diff"]:
+            assert "--no-renames" in command
+            return subprocess.CompletedProcess(command, 0, stdout=f"scripts/x.py\n{_CONTENT_PATH}\n")
+        if command[:2] == ["git", "fetch"]:
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        if command[:3] == ["git", "rev-parse", "--verify"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{_REMOTE_SHA}\n")
+        if command[:2] == ["gh", "api"] and "--paginate" in command:
+            assert "previous_filename" in command[-1]
+            return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\tscripts/x.py\n")
+        if command[:2] == ["gh", "api"]:
+            return subprocess.CompletedProcess(command, 0, stdout="1\n")
+        if command[:2] == ["git", "check-ref-format"]:
+            return subprocess.CompletedProcess(command, 0, stdout="feature\n")
+        raise AssertionError(command)
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    branch_paths = list_branch_changed_paths("feature", repo_root=".")
+    assert "scripts/x.py" in branch_paths
+    pr_paths = list_pr_changed_paths(4, repo_root=".")
+    assert pr_paths == [_CONTENT_PATH, "scripts/x.py"]
+
+
+def test_dispatch_refuses_when_fetched_head_differs_from_gate_sha() -> None:
+    from scripts.delegate import _refuse_if_gate_head_moved
+
+    gate = "a" * 40
+    _refuse_if_gate_head_moved(gate, gate)
+    with pytest.raises(RuntimeError, match="differs from the Gemini path-gate SHA"):
+        _refuse_if_gate_head_moved("b" * 40, gate)

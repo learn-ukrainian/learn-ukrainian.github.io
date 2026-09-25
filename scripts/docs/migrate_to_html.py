@@ -189,8 +189,7 @@ def migrate(input_path: Path, output_path: Path, *, force: bool = False) -> bool
     report_author = existing_report_author(output_path)
     if report_author and not force:
         print(
-            f"REFUSE: {output_path} appears hand-curated (report-author={report_author}); "
-            "pass --force to overwrite.",
+            f"REFUSE: {output_path} appears hand-curated (report-author={report_author}); pass --force to overwrite.",
             file=sys.stderr,
         )
         return False
@@ -211,7 +210,7 @@ def migrate(input_path: Path, output_path: Path, *, force: bool = False) -> bool
         "status": "migrated",
     }
 
-    md = MarkdownIt()
+    md = MarkdownIt().enable("table")
     content_html = md.render(md_text)
 
     template = Template(HTML_TEMPLATE, autoescape=True)

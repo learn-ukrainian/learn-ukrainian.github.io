@@ -6203,6 +6203,15 @@ def _record_worktree_local_venv_warning(
         )
 
 
+def _refuse_if_gate_head_moved(origin_sha: str, pinned_head_sha: str | None) -> None:
+    """Refuse when a later fetch is not the SHA the Gemini path gate checked."""
+    if pinned_head_sha is not None and origin_sha != pinned_head_sha:
+        raise RuntimeError(
+            "refusing dispatch: fetched branch head "
+            f"{origin_sha} differs from the Gemini path-gate SHA {pinned_head_sha}"
+        )
+
+
 def _resolve_worktree_base_sha(
     *,
     agent: str,
@@ -6211,6 +6220,7 @@ def _resolve_worktree_base_sha(
     base: str,
     branch: str | None,
     allow_rebase: bool = True,
+    pinned_head_sha: str | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -6244,7 +6254,10 @@ def _resolve_worktree_base_sha(
             # Validate only after the dirty check above, so a dirty checkout
             # always receives the most actionable refusal.
             _fetch_existing_branch(requested_branch)
-            _require_local_branch_is_ancestor_of_origin(requested_branch)
+            _refuse_if_gate_head_moved(
+                _require_local_branch_is_ancestor_of_origin(requested_branch),
+                pinned_head_sha,
+            )
         resolved = _resolve_sha(worktree_path)
         if resolved is None:
             raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
@@ -6252,7 +6265,9 @@ def _resolve_worktree_base_sha(
 
     if requested_branch:
         _fetch_existing_branch(requested_branch)
-        return _require_local_branch_is_ancestor_of_origin(requested_branch)
+        origin_sha = _require_local_branch_is_ancestor_of_origin(requested_branch)
+        _refuse_if_gate_head_moved(origin_sha, pinned_head_sha)
+        return pinned_head_sha or origin_sha
 
     origin_ref = _origin_base_ref(base)
     if _fetch_base(base):
@@ -8161,6 +8176,7 @@ def _dispatch(
         return 2
     from scripts.ai_agent_bridge._agy import gemini_review_verdict_dispatch_error
 
+    gemini_checked_heads: list[str] = []
     gemini_review_error = gemini_review_verdict_dispatch_error(
         agent=str(args.agent),
         require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
@@ -8168,6 +8184,10 @@ def _dispatch(
         pr_number=getattr(args, "pr", None),
         branch=getattr(args, "branch", None),
         repo_root=str(_REPO_ROOT),
+        model=getattr(args, "model", None),
+        review=bool(getattr(args, "review", False))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+        head_out=gemini_checked_heads,
     )
     if gemini_review_error is not None:
         print(f"❌ {gemini_review_error}", file=sys.stderr)
@@ -8588,6 +8608,30 @@ def _dispatch(
         )
         args.model = None
 
+    from agent_runtime.telemetry import _resolve_model_from_defaults
+
+    resolved_model = _resolve_model_from_defaults(
+        dispatch_agent,
+        getattr(args, "model", None),
+        harness=requested_harness,
+    )
+    gemini_review_error = gemini_review_verdict_dispatch_error(
+        agent=str(dispatch_agent),
+        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
+        profile=getattr(args, "review_profile", None),
+        pr_number=getattr(args, "pr", None),
+        branch=getattr(args, "branch", None),
+        repo_root=str(_REPO_ROOT),
+        model=getattr(args, "model", None),
+        resolved_model=resolved_model,
+        review=bool(getattr(args, "review", False))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+        head_out=gemini_checked_heads,
+    )
+    if gemini_review_error is not None:
+        print(f"❌ {gemini_review_error}", file=sys.stderr)
+        return 2
+
     try:
         _validate_dispatch_effort(dispatch_agent, getattr(args, "effort", None))
     except ValueError as exc:
@@ -8724,6 +8768,7 @@ def _dispatch(
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     allow_rebase=not bool(getattr(args, "dry_run", False)),
+                    pinned_head_sha=gemini_checked_heads[-1] if gemini_checked_heads else None,
                 )
             else:
                 # Sibling repos resolve the base SHA at create time inside

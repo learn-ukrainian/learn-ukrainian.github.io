@@ -116,7 +116,7 @@
   <header class="hero">
     <div class="title-block">
       <h1>Agent Cooperation Best Practices</h1>
-      <div class="sub">Migrated from Markdown on 2026-09-25 09:18</div>
+      <div class="sub">Migrated from Markdown on 2026-09-25 15:20</div>
     </div>
     <div class="meta">
       <div>Source: agent-cooperation.md</div>
@@ -141,14 +141,47 @@ Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
 </blockquote>
 <hr />
 <h2>Cooperation surfaces (ownership — do not conflate)</h2>
-<p>| Surface | Role | Authority |
-| --- | --- | --- |
-| <strong><code>discuss</code></strong> (bridge) | Bounded deliberation / design input | Never implementation; never the formal cross-family review gate |
-| <strong><code>scripts/delegate.py dispatch</code></strong> | Isolated implementation execution | Worktree writes only; not durable fleet authority |
-| <strong>Fleet-comms + file handoffs</strong> | Durable coordination | Fleet Comms owns durable messages/jobs in <code>authority</code> mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query <code>plane-status</code>, preserve existing stream ownership, and never create legacy message/job writes or another control plane |
-| <strong>ACPX</strong> | Explicit fixed Codex↔Grok panel for one consequential read-only design/risk comparison (default-off/shadow) | Sole surface <code>acp-discuss</code>; no automatic launcher/delegate use, queue, retry, formal review, or authority |
-| <strong>Entire context recall</strong> | Optional body-free historical discovery and provenance | Local verified locator cards only; never coordination, source authority, rollover, Monitor, or formal review |
-| <strong>Buzz</strong> | <strong>Deferred</strong> | Relay-as-authority conflicts with the current model — out of scope |</p>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Role</th>
+<th>Authority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>discuss</code></strong> (bridge)</td>
+<td>Bounded deliberation / design input</td>
+<td>Never implementation; never the formal cross-family review gate</td>
+</tr>
+<tr>
+<td><strong><code>scripts/delegate.py dispatch</code></strong></td>
+<td>Isolated implementation execution</td>
+<td>Worktree writes only; not durable fleet authority</td>
+</tr>
+<tr>
+<td><strong>Fleet-comms + file handoffs</strong></td>
+<td>Durable coordination</td>
+<td>Fleet Comms owns durable messages/jobs in <code>authority</code> mode; legacy stores are read-only migration/projection inputs. Session handoff files still carry continuity, not competing message or lease authority — query <code>plane-status</code>, preserve existing stream ownership, and never create legacy message/job writes or another control plane</td>
+</tr>
+<tr>
+<td><strong>ACPX</strong></td>
+<td>Explicit fixed Codex↔Grok panel for one consequential read-only design/risk comparison (default-off/shadow)</td>
+<td>Sole surface <code>acp-discuss</code>; no automatic launcher/delegate use, queue, retry, formal review, or authority</td>
+</tr>
+<tr>
+<td><strong>Entire context recall</strong></td>
+<td>Optional body-free historical discovery and provenance</td>
+<td>Local verified locator cards only; never coordination, source authority, rollover, Monitor, or formal review</td>
+</tr>
+<tr>
+<td><strong>Buzz</strong></td>
+<td><strong>Deferred</strong></td>
+<td>Relay-as-authority conflicts with the current model — out of scope</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Discussion is not formal review.</strong> Design panels and same-family helpers do not
 seal PRs. Formal CF (shielded <code>review-pr</code> / <code>publish-review-verdict</code> RETIRED):</p>
 <pre><code class="language-bash">printf '%s\n' &quot;Cross-family review of PR &lt;N&gt; at exact head &lt;SHA&gt;: VERDICT + findings.&quot; \
@@ -166,12 +199,37 @@ queueing or retrying. A partial result is evidence to inspect, never success or
 the independent review gate.</p>
 <hr />
 <h2>Team Structure</h2>
-<p>| Team | Agent | Role |
-|------|-------|------|
-| 💙 <strong>Синя команда</strong> (Blue) | Claude | Architect, reviewer, quality gate |
-| 💛 <strong>Жовта команда</strong> (Gold) | Cursor / track writers | Content builder, implementer |
-| 🟢 <strong>Зелена команда</strong> (Green) | Codex | Main orchestrator, adversarial reviewer, bug finder, code improver |
-| ⚙️ <strong>Review lane</strong> | DeepSeek | Cheap code/content review and deterministic triage |</p>
+<table>
+<thead>
+<tr>
+<th>Team</th>
+<th>Agent</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>💙 <strong>Синя команда</strong> (Blue)</td>
+<td>Claude</td>
+<td>Architect, reviewer, quality gate</td>
+</tr>
+<tr>
+<td>💛 <strong>Жовта команда</strong> (Gold)</td>
+<td>Cursor / track writers</td>
+<td>Content builder, implementer</td>
+</tr>
+<tr>
+<td>🟢 <strong>Зелена команда</strong> (Green)</td>
+<td>Codex</td>
+<td>Main orchestrator, adversarial reviewer, bug finder, code improver</td>
+</tr>
+<tr>
+<td>⚙️ <strong>Review lane</strong></td>
+<td>DeepSeek</td>
+<td>Cheap code/content review and deterministic triage</td>
+</tr>
+</tbody>
+</table>
 <p>Gemini/AGY handles Ukrainian-language work and review under the LANGUAGE-LANES
 rule. Code review follows <code>model-assignment.md</code> Code review row. Historical
 Gemini instructions in this document describe old bridge behavior.</p>
@@ -389,24 +447,74 @@ evidential role before treating an occurrence as normative</li>
 <h2>Communication Channels</h2>
 <h3>GitHub-first (primary)</h3>
 <p>All substantive discussion happens on GitHub where it is persistent and searchable.</p>
-<p>| Channel | Use For | Max Length |
-|---------|---------|------------|
-| <strong>GitHub issues</strong> | Task specs, proposals, architecture plans | Unlimited |
-| <strong>GitHub comments</strong> | Reviews, feedback, progress, disagreements | Unlimited |
-| <strong>Broker messages</strong> | Short notifications pointing to GitHub | &lt;200 chars |</p>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>Use For</th>
+<th>Max Length</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GitHub issues</strong></td>
+<td>Task specs, proposals, architecture plans</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td><strong>GitHub comments</strong></td>
+<td>Reviews, feedback, progress, disagreements</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td><strong>Broker messages</strong></td>
+<td>Short notifications pointing to GitHub</td>
+<td>&lt;200 chars</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Never put full reviews or code in broker messages.</strong> Post on GitHub, then ping with &quot;review posted on #559.&quot;</p>
 <h3>Track orchestrator promotion</h3>
 <p>A <strong>track orchestrator</strong> is an agent promoted to own one curriculum track or
 epic end-to-end, such as BIO. Once promoted, that orchestrator owns the track's
 content queue, dispatches, handoff, and PR preparation. The main orchestrator
 does not micromanage that track.</p>
-<p>| Scope | Main orchestrator owns | Track orchestrator owns |
-|---|---|---|
-| Branch policy | <code>main</code>, merge sequencing, release safety | Dispatch worktrees and PR branches only |
-| State | <code>docs/session-state/codex-orchestrator-handoff.md</code> and router | Track handoff (gitignored local), e.g. <code>.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md</code> — not in git/PRs |
-| Work selection | Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues | Track backlog, batches, reviews, content quality |
-| Agent dispatch | Cross-track/tooling agents | Track-local writers/reviewers, including headless Codex |
-| Merge authority | Final reconcile on cross-track/contested merges; integration-owner role owns cross-stream landing. The Actions sweep reports only; the local keeper (#8564) owns automatic queue actions. Track PRs = own-stream-only, membership authoritative via <code>/api/issues/streams</code> | Open PRs, route track feedback; enqueue own-track PRs after cross-family review + green CI (#M-12 grant, user 2026-06-16) |</p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Main orchestrator owns</th>
+<th>Track orchestrator owns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Branch policy</td>
+<td><code>main</code>, merge sequencing, release safety</td>
+<td>Dispatch worktrees and PR branches only</td>
+</tr>
+<tr>
+<td>State</td>
+<td><code>docs/session-state/codex-orchestrator-handoff.md</code> and router</td>
+<td>Track handoff (gitignored local), e.g. <code>.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md</code> — not in git/PRs</td>
+</tr>
+<tr>
+<td>Work selection</td>
+<td>Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues</td>
+<td>Track backlog, batches, reviews, content quality</td>
+</tr>
+<tr>
+<td>Agent dispatch</td>
+<td>Cross-track/tooling agents</td>
+<td>Track-local writers/reviewers, including headless Codex</td>
+</tr>
+<tr>
+<td>Merge authority</td>
+<td>Final reconcile on cross-track/contested merges; integration-owner role owns cross-stream landing. The Actions sweep reports only; the local keeper (#8564) owns automatic queue actions. Track PRs = own-stream-only, membership authoritative via <code>/api/issues/streams</code></td>
+<td>Open PRs, route track feedback; enqueue own-track PRs after cross-family review + green CI (#M-12 grant, user 2026-06-16)</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Boundary rule:</strong> if a track orchestrator exists, the main orchestrator treats
 that track's PRs and delegates as awareness-only unless the track orchestrator
 asks for help. This keeps one owner per workstream and prevents duplicate
@@ -457,12 +565,32 @@ scope=&lt;what main will do&gt; boundary=&lt;what remains track-owned&gt;
 <p><code>docs/session-state/current.md</code> is a compatibility router, not a shared scratch
 handoff. It keeps <code>Latest-Brief:</code> plus an <code>Agent-Handoff:</code> mapping.</p>
 <p>Durable role handoffs and thread rollover packets are separate:</p>
-<p>| Agent | Durable role handoff |
-|---|---|
-| orchestrator | <code>docs/session-state/codex-orchestrator-handoff.md</code> |
-| codex | <code>docs/session-state/current.orchestrator.md</code> → <code>docs/session-state/codex-orchestrator-handoff.md</code> |
-| claude | <code>docs/session-state/current.claude.md</code> |
-| gemini | <code>docs/session-state/current.gemini.md</code> |</p>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Durable role handoff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>orchestrator</td>
+<td><code>docs/session-state/codex-orchestrator-handoff.md</code></td>
+</tr>
+<tr>
+<td>codex</td>
+<td><code>docs/session-state/current.orchestrator.md</code> → <code>docs/session-state/codex-orchestrator-handoff.md</code></td>
+</tr>
+<tr>
+<td>claude</td>
+<td><code>docs/session-state/current.claude.md</code></td>
+</tr>
+<tr>
+<td>gemini</td>
+<td><code>docs/session-state/current.gemini.md</code></td>
+</tr>
+</tbody>
+</table>
 <p>Thread rollover packets are generated locally under
 <code>.agent/&lt;agent&gt;-thread-handoff.md</code> by
 <code>scripts/orchestration/thread_handoff.py prepare</code>. They are for moving a
@@ -558,13 +686,42 @@ Independent PR CF is <code>ask-&lt;lane&gt; --type review</code> with the verdic
 <li><strong>Documented deliberation</strong> — channel transcript = referenceable context for future sessions, not &quot;trust me, I thought about it&quot;</li>
 </ul>
 <h3>When to use which tool</h3>
-<p>| Use <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> | Use bridge <code>ask-agy</code> (single-shot) | Don't use either |
-|---|---|---|
-| Architectural trade-offs (e.g., module_type categories, retrieval strategy) | Mechanical PR review with green CI | Trivial fixes (delete leftover file) |
-| Pedagogy/framing decisions (POC scope, anchor choice, decolonization audits) | Adversarial review of a single PR | Implementation tasks (Codex codes alone) |
-| Brief pre-flight before dispatch (catch ambiguities before Codex burns 8 min) | Quick disambiguation question | When the answer is obvious |
-| Cross-agent deadlock (Gemini APPROVE, Codex REVISE on same artifact) | Spot-check an output against a rule | Time-sensitive merge decisions (3-min discussion latency stacks) |
-| Quality review of foundational content (M1-M3 modules, ADRs) | One-off domain question | |</p>
+<table>
+<thead>
+<tr>
+<th>Use <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code></th>
+<th>Use bridge <code>ask-agy</code> (single-shot)</th>
+<th>Don't use either</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Architectural trade-offs (e.g., module_type categories, retrieval strategy)</td>
+<td>Mechanical PR review with green CI</td>
+<td>Trivial fixes (delete leftover file)</td>
+</tr>
+<tr>
+<td>Pedagogy/framing decisions (POC scope, anchor choice, decolonization audits)</td>
+<td>Adversarial review of a single PR</td>
+<td>Implementation tasks (Codex codes alone)</td>
+</tr>
+<tr>
+<td>Brief pre-flight before dispatch (catch ambiguities before Codex burns 8 min)</td>
+<td>Quick disambiguation question</td>
+<td>When the answer is obvious</td>
+</tr>
+<tr>
+<td>Cross-agent deadlock (Gemini APPROVE, Codex REVISE on same artifact)</td>
+<td>Spot-check an output against a rule</td>
+<td>Time-sensitive merge decisions (3-min discussion latency stacks)</td>
+</tr>
+<tr>
+<td>Quality review of foundational content (M1-M3 modules, ADRs)</td>
+<td>One-off domain question</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <h3>Budget angle</h3>
 <ul>
 <li><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss ... --with agy,codex</code> (Claude excluded) avoids Anthropic spend; AGY itself is metered. Use when AGY/Codex perspectives are enough.</li>
@@ -619,11 +776,32 @@ Independent PR CF is <code>ask-&lt;lane&gt; --type review</code> with the verdic
 <p><strong>Pattern:</strong> Consensus on high-risk tracks is a SIGNAL TO CHECK, not a signal to proceed.</p>
 <h3>Where Decision Cards land</h3>
 <p>Three locations depending on user availability:</p>
-<p>| Situation | Location | Why |
-|---|---|---|
-| User online, mid-session | Inline in chat reply | Immediate visibility, user can <code>go</code> in next message |
-| User AFK, no live session | <code>docs/decisions/pending/{YYYY-MM-DD}-{slug}.md</code> | Durable, scannable on return; cold-start protocol checks this dir |
-| Multi-week architectural call | New GH issue with <code>decision-pending</code> label + Decision Card as body | Long-lived discussion needs an issue thread, not a markdown file |</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Location</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User online, mid-session</td>
+<td>Inline in chat reply</td>
+<td>Immediate visibility, user can <code>go</code> in next message</td>
+</tr>
+<tr>
+<td>User AFK, no live session</td>
+<td><code>docs/decisions/pending/{YYYY-MM-DD}-{slug}.md</code></td>
+<td>Durable, scannable on return; cold-start protocol checks this dir</td>
+</tr>
+<tr>
+<td>Multi-week architectural call</td>
+<td>New GH issue with <code>decision-pending</code> label + Decision Card as body</td>
+<td>Long-lived discussion needs an issue thread, not a markdown file</td>
+</tr>
+</tbody>
+</table>
 <p>Note: High-risk-track Decision Cards (the ones force-emitted by Mechanism A) should ALWAYS be routed inline-or-pending, never silently auto-resolved, even when the user appears online.</p>
 <p>Every Decision Card MUST include a <code>Scope</code> field. The scope declares exactly which tracks, issues, and paths are blocked by the pending decision and which work can continue independently. If a Decision Card omits scope, agents must use the conservative interpretation that it blocks everything — precisely the failure mode this field is meant to avoid.</p>
 <p>When the user decides:</p>
@@ -703,22 +881,72 @@ rule + session payloads.</p>
 <h3>Scoped queries during work</h3>
 <p>Once bootstrapped, prefer these deterministic endpoints over
 filesystem spelunking:</p>
-<p>| Question | Endpoint |
-|---|---|
-| What's module <code>{slug}</code> doing right now? | <code>GET /api/state/module/{track}/slug/{slug}</code> |
-| Per-module dashboard for N..M on {track} | <code>GET /api/state/range/{track}?start=N&amp;end=M</code> |
-| Which files would <code>--force</code> delete? | <code>GET /api/artifacts/{track}/{slug}/force-preview</code> |
-| Classified file manifest (source/generated/published/stale) | <code>GET /api/artifacts/{track}/{slug}/files</code> |
-| Main + style review + empty-findings flag | <code>GET /api/artifacts/{track}/{slug}/review-snapshot</code> |
-| state.json vs reality cross-check | <code>GET /api/artifacts/{track}/{slug}/drift</code> |
-| Ship-ready snapshot for one module | <code>GET /api/artifacts/{track}/{slug}</code> |
-| Aggregate ship-ready list | <code>GET /api/artifacts/ship-ready[?track=...]</code> |
-| Public site reachability + freshness | <code>GET /api/site/health</code> |
-| Recent GH Pages deployments | <code>GET /api/site/deployments</code> |
-| Active worktrees | <code>GET /api/worktrees</code> |
-| Open issues grouped + supersede metadata | <code>GET /api/issues/map</code> |
-| Per-agent auth mode | <code>GET /api/runtime/auth</code> |
-| Fresh Codex process health | <code>GET /api/runtime/transport-health</code> |</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Endpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What's module <code>{slug}</code> doing right now?</td>
+<td><code>GET /api/state/module/{track}/slug/{slug}</code></td>
+</tr>
+<tr>
+<td>Per-module dashboard for N..M on {track}</td>
+<td><code>GET /api/state/range/{track}?start=N&amp;end=M</code></td>
+</tr>
+<tr>
+<td>Which files would <code>--force</code> delete?</td>
+<td><code>GET /api/artifacts/{track}/{slug}/force-preview</code></td>
+</tr>
+<tr>
+<td>Classified file manifest (source/generated/published/stale)</td>
+<td><code>GET /api/artifacts/{track}/{slug}/files</code></td>
+</tr>
+<tr>
+<td>Main + style review + empty-findings flag</td>
+<td><code>GET /api/artifacts/{track}/{slug}/review-snapshot</code></td>
+</tr>
+<tr>
+<td>state.json vs reality cross-check</td>
+<td><code>GET /api/artifacts/{track}/{slug}/drift</code></td>
+</tr>
+<tr>
+<td>Ship-ready snapshot for one module</td>
+<td><code>GET /api/artifacts/{track}/{slug}</code></td>
+</tr>
+<tr>
+<td>Aggregate ship-ready list</td>
+<td><code>GET /api/artifacts/ship-ready[?track=...]</code></td>
+</tr>
+<tr>
+<td>Public site reachability + freshness</td>
+<td><code>GET /api/site/health</code></td>
+</tr>
+<tr>
+<td>Recent GH Pages deployments</td>
+<td><code>GET /api/site/deployments</code></td>
+</tr>
+<tr>
+<td>Active worktrees</td>
+<td><code>GET /api/worktrees</code></td>
+</tr>
+<tr>
+<td>Open issues grouped + supersede metadata</td>
+<td><code>GET /api/issues/map</code></td>
+</tr>
+<tr>
+<td>Per-agent auth mode</td>
+<td><code>GET /api/runtime/auth</code></td>
+</tr>
+<tr>
+<td>Fresh Codex process health</td>
+<td><code>GET /api/runtime/transport-health</code></td>
+</tr>
+</tbody>
+</table>
 <p>Full endpoint reference: <a href="../MONITOR-API.md"><code>docs/MONITOR-API.md</code></a>.</p>
 <p>Legacy steps that remain useful if the API is unreachable:</p>
 <ol>
