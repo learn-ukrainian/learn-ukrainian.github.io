@@ -376,6 +376,7 @@ def build_ask_review_dispatch_command(
     model: str | None,
     effort: str | None,
     branch: str | None = None,
+    review_profile: str | None = None,
 ) -> list[str]:
     """Headless dispatch command for one review-intent ask-*.
 
@@ -409,6 +410,8 @@ def build_ask_review_dispatch_command(
     ]
     if branch:
         cmd.extend(["--branch", branch])
+    if review_profile:
+        cmd.extend(["--review-profile", review_profile])
     if model:
         cmd += ["--model", model]
     if effort:
@@ -432,6 +435,7 @@ def run_ask_review_dispatch(
     effort: str | None = None,
     hard_timeout: int | None = None,
     branch: str | None = None,
+    review_profile: str | None = None,
 ) -> dict[str, Any]:
     """Dispatch one review-intent ask-* to the headless native CLI and block for it.
 
@@ -448,7 +452,13 @@ def run_ask_review_dispatch(
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
         prompt_path.write_text(content, encoding="utf-8")
         dispatch_command = build_ask_review_dispatch_command(
-            agent, task_id, prompt_path, model=model, effort=effort, branch=branch,
+            agent,
+            task_id,
+            prompt_path,
+            model=model,
+            effort=effort,
+            branch=branch,
+            review_profile=review_profile,
         )
         try:
             dispatch_proc = subprocess.run(

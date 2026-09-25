@@ -7872,6 +7872,19 @@ def _dispatch(
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
+    from scripts.ai_agent_bridge._agy import gemini_review_verdict_dispatch_error
+
+    gemini_review_error = gemini_review_verdict_dispatch_error(
+        agent=str(args.agent),
+        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
+        profile=getattr(args, "review_profile", None),
+        pr_number=getattr(args, "pr", None),
+        branch=getattr(args, "branch", None),
+        repo_root=str(_REPO_ROOT),
+    )
+    if gemini_review_error is not None:
+        print(f"❌ {gemini_review_error}", file=sys.stderr)
+        return 2
     try:
         requested_harness = _resolve_dispatch_harness(args.agent, getattr(args, "harness", None))
     except ValueError as exc:
@@ -10563,7 +10576,19 @@ def build_parser() -> argparse.ArgumentParser:
             "Review-typed dispatch: a run that settles done without a "
             "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED` line in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
-            "ask-* review wrapper; ordinary dispatches are unaffected."
+            "ask-* review wrapper; ordinary dispatches are unaffected. "
+            "On agy/gemini this also requires --review-profile ukrainian, and "
+            "a --branch target must be a Ukrainian-content diff."
+        ),
+    )
+    d.add_argument(
+        "--review-profile",
+        default=None,
+        choices=("code", "ukrainian"),
+        help=(
+            "Required with --require-review-verdict when --agent is agy or gemini. "
+            "code is refused (Gemini reviews Ukrainian only, never code — "
+            "operator 2026-09-25). Ukrainian content review must pass ukrainian."
         ),
     )
     d.add_argument(

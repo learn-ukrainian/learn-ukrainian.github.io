@@ -158,3 +158,262 @@ def test_ukrainian_content_caller_passes_the_profile() -> None:
     assert command[:1] == ("ask-agy",)
     assert "--review" in command
     assert command[command.index("--review-profile") + 1] == "ukrainian"
+
+
+_CONTENT_PATH = "curriculum/l2-uk-en/a1/hello.md"
+_CODE_PATH = "scripts/delegate.py"
+
+
+def _review_args(**overrides: object) -> SimpleNamespace:
+    base = dict(
+        content="перевір текст",
+        data=None,
+        to_model=None,
+        model=None,
+        task_id="review-agy-diff",
+        review=True,
+        type="query",
+        pr=None,
+        branch=None,
+        review_profile="ukrainian",
+        background=False,
+        effort=None,
+        output_path=None,
+        stdout_only=False,
+        no_timeout=False,
+    )
+    base.update(overrides)
+    return SimpleNamespace(**base)
+
+
+def test_content_only_pr_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen: dict[str, object] = {}
+
+    def fake_dispatch(target: str, content: str, **kwargs: object) -> None:
+        seen["target"] = target
+        seen["kwargs"] = kwargs
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        lambda number: ("content-branch", "a" * 40),
+    )
+
+    def fake_run(command: list[str], **kwargs: object):
+        assert command[:4] == ["gh", "pr", "view", "77"]
+        assert command[4:] == ["--json", "files"]
+        import json
+        import subprocess
+
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout=json.dumps({"files": [{"path": _CONTENT_PATH}]}),
+        )
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    _handle_acp_compat(_review_args(pr=77), "agy")
+    assert seen["target"] == "agy"
+    assert seen["kwargs"]["review_profile"] == "ukrainian"
+    assert seen["kwargs"]["pr_number"] == 77
+
+
+def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("mixed PR must not reach Gemini dispatch")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        lambda number: ("mixed-branch", "b" * 40),
+    )
+
+    def fake_run(command: list[str], **kwargs: object):
+        import json
+        import subprocess
+
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            stdout=json.dumps({"files": [{"path": _CONTENT_PATH}, {"path": _CODE_PATH}]}),
+        )
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
+        _handle_acp_compat(_review_args(pr=88), "agy")
+
+
+def test_pr_file_listing_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("file-listing failure must not reach Gemini dispatch")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        lambda number: ("broken-branch", "c" * 40),
+    )
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        return subprocess.CompletedProcess(command, 1, stderr="gh unavailable")
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    with pytest.raises(SystemExit, match="could not list changed files"):
+        _handle_acp_compat(_review_args(pr=99), "agy")
+
+
+def test_content_only_branch_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen: dict[str, object] = {}
+
+    def fake_dispatch(target: str, content: str, **kwargs: object) -> None:
+        seen["branch"] = kwargs.get("branch")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        assert command == ["git", "diff", "--name-only", "origin/main...content-branch"]
+        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    _handle_acp_compat(_review_args(branch="content-branch"), "agy")
+    assert seen["branch"] == "content-branch"
+
+
+def _dispatch_argv(*extra: str) -> list[str]:
+    return [
+        "dispatch",
+        "--agent",
+        "agy",
+        "--task-id",
+        "agy-review-gate",
+        "--prompt",
+        "перевір український текст",
+        *extra,
+    ]
+
+
+def test_delegate_review_verdict_without_profile_is_refused(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from scripts import delegate
+
+    def _unexpected_spawn(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("review-verdict without a profile must not spawn")
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
+    args = delegate.build_parser().parse_args(
+        _dispatch_argv("--require-review-verdict")
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert "--review-profile" in capsys.readouterr().err
+    assert delegate._read_state(delegate._state_path("agy-review-gate")) is None
+
+
+def test_delegate_review_verdict_mixed_branch_names_the_path(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from scripts import delegate
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        assert command == ["git", "diff", "--name-only", "origin/main...feature"]
+        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    monkeypatch.setattr("subprocess.run", fake_run)
+    args = delegate.build_parser().parse_args(
+        _dispatch_argv("--require-review-verdict", "--review-profile", "ukrainian", "--branch", "feature")
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "gemini_code_review_forbidden" in err
+    assert _CODE_PATH in err
+
+
+def test_delegate_review_verdict_file_listing_failure_is_refused(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from scripts import delegate
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        return subprocess.CompletedProcess(command, 1, stderr="origin/main missing")
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    monkeypatch.setattr("subprocess.run", fake_run)
+    args = delegate.build_parser().parse_args(
+        _dispatch_argv("--require-review-verdict", "--review-profile", "ukrainian", "--branch", "feature")
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert "could not list changed files" in capsys.readouterr().err
+
+
+def test_delegate_review_verdict_content_branch_passes_the_gate(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from scripts import delegate
+
+    listed: list[list[str]] = []
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        listed.append(command)
+        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--task-id",
+            "agy-content-ok",
+            "--prompt",
+            "Implement the requested dispatch guard and add regression tests.",
+            "--require-review-verdict",
+            "--review-profile",
+            "ukrainian",
+            "--branch",
+            "feature",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "write-shaped prompt" in err
+    assert "gemini_code_review_forbidden" not in err
+    assert listed == [["git", "diff", "--name-only", "origin/main...feature"]]
+
+
+def test_agy_implementation_dispatch_is_not_review_gated(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from scripts import delegate
+
+    def fake_run(command: list[str], **kwargs: object):
+        raise AssertionError(f"implementation dispatch must not list a review diff: {command}")
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--task-id",
+            "agy-impl",
+            "--prompt",
+            "Implement the requested dispatch guard and add regression tests.",
+            "--branch",
+            "feature",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "write-shaped prompt" in err
+    assert "gemini_code_review_forbidden" not in err
+    assert "--review-profile" not in err

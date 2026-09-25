@@ -434,11 +434,14 @@ Full guide: [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md).
 - **CC 2.1.119+: `Agent` tool with `isolation: "worktree"` no longer reuses stale worktrees from prior sessions.** Until this fix we avoided the built-in Agent-tool isolation and hand-rolled `git worktree add` (see `.claude/rules/delegate-must-use-worktree.md`). The hand-rolled pattern is still correct — it survives across sessions, shows up in `git worktree list`, and matches our dispatch conventions — but the Agent-tool built-in is now a safe alternative for short-lived, same-session isolation.
 
 ### Direct dispatch (ask-agy / ask-codex)
-For requests needing immediate response:
+For requests needing immediate response. AGY reviews Ukrainian content only
+(`--review --review-profile ukrainian`). Code review uses `ask-codex`.
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
-  "Review posted on #559. Please read and respond." \
-  --task-id issue-559
+  "Перевір український текст у curriculum/l2-uk-en/a1/hello.md." \
+  --task-id issue-559 \
+  --review \
+  --review-profile ukrainian
 
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
   "Bug report posted on #560. Please read and respond." \

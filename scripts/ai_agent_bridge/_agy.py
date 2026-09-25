@@ -147,6 +147,135 @@ def gemini_review_profile_error(profile: str | None) -> str | None:
     return AGY_REVIEW_PROFILE_REQUIRED
 
 
+class GeminiChangedPathListError(RuntimeError):
+    """The changed-file list for a Gemini PR or branch review could not be read."""
+
+
+def gemini_content_paths_error(paths: list[str]) -> str | None:
+    """Allow a Gemini PR/branch review only when every path is Ukrainian content.
+
+    The classifier is ``scripts.ci.classify_changes.is_content_class_path``.
+    An empty list is a listing failure: there is nothing to prove the diff
+    is content. The first non-content path is named in listed order.
+    """
+    from scripts.ci.classify_changes import is_content_class_path
+
+    if not paths:
+        raise GeminiChangedPathListError("changed-file list was empty")
+    for path in paths:
+        normalized = str(path).strip().replace("\\", "/")
+        if not normalized or not is_content_class_path(normalized):
+            shown = normalized or "<empty>"
+            return f"{GEMINI_CODE_REVIEW_FORBIDDEN}; first non-content path: {shown}"
+    return None
+
+
+def _run_changed_path_command(command: list[str], *, cwd: str) -> str:
+    import subprocess
+
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=60,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise GeminiChangedPathListError(str(exc)) from exc
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "").strip().replace("\n", " ")
+        raise GeminiChangedPathListError(detail or f"exit {proc.returncode}")
+    return proc.stdout or ""
+
+
+def list_pr_changed_paths(pr_number: int, *, repo_root: str) -> list[str]:
+    """Changed paths from ``gh pr view N --json files``. Fail closed on any miss."""
+    import json
+
+    raw = _run_changed_path_command(
+        ["gh", "pr", "view", str(pr_number), "--json", "files"],
+        cwd=repo_root,
+    )
+    try:
+        payload = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise GeminiChangedPathListError("gh pr view returned invalid JSON") from exc
+    files = payload.get("files") if isinstance(payload, dict) else None
+    if not isinstance(files, list):
+        raise GeminiChangedPathListError("gh pr view JSON has no files list")
+    paths: list[str] = []
+    for item in files:
+        if not isinstance(item, dict) or not isinstance(item.get("path"), str):
+            raise GeminiChangedPathListError("gh pr view files entry has no path")
+        paths.append(item["path"])
+    return paths
+
+
+def list_branch_changed_paths(branch: str, *, repo_root: str) -> list[str]:
+    """Changed paths from ``git diff --name-only origin/main...<branch>``."""
+    name = branch.strip()
+    if not name or name.startswith("-") or "\n" in name or "\x00" in name:
+        raise GeminiChangedPathListError(f"refusing to diff branch {branch!r}")
+    raw = _run_changed_path_command(
+        ["git", "diff", "--name-only", f"origin/main...{name}"],
+        cwd=repo_root,
+    )
+    return [line.strip() for line in raw.splitlines() if line.strip()]
+
+
+def gemini_pr_or_branch_content_error(
+    *,
+    pr_number: int | None,
+    branch: str | None,
+    repo_root: str,
+) -> str | None:
+    """Refuse a Gemini PR/branch target unless every changed path is content.
+
+    A PR uses ``gh pr view``. A branch with no PR uses ``git diff``. Any
+    failure to list files refuses. ``None`` means the target may proceed.
+    """
+    if pr_number is None and not (branch and str(branch).strip()):
+        return None
+    try:
+        if pr_number is not None:
+            paths = list_pr_changed_paths(int(pr_number), repo_root=repo_root)
+        else:
+            paths = list_branch_changed_paths(str(branch), repo_root=repo_root)
+        return gemini_content_paths_error(paths)
+    except GeminiChangedPathListError as exc:
+        return f"{GEMINI_CODE_REVIEW_FORBIDDEN}; could not list changed files: {exc}"
+
+
+def gemini_review_verdict_dispatch_error(
+    *,
+    agent: str,
+    require_review_verdict: bool,
+    profile: str | None,
+    pr_number: int | None,
+    branch: str | None,
+    repo_root: str,
+) -> str | None:
+    """Gate a review-verdict dispatch to agy/gemini. Implementation dispatches pass.
+
+    A review-verdict dispatch needs ``--review-profile ukrainian``. When it
+    also names a PR or branch, every changed path must be Ukrainian content.
+    """
+    if not require_review_verdict:
+        return None
+    if (agent or "").strip().lower() not in GEMINI_REVIEW_AGENTS:
+        return None
+    profile_error = gemini_review_profile_error(profile)
+    if profile_error is not None:
+        return profile_error
+    return gemini_pr_or_branch_content_error(
+        pr_number=pr_number,
+        branch=branch,
+        repo_root=repo_root,
+    )
+
+
 def ask_agy(
     content: str,
     task_id: str | None = None,

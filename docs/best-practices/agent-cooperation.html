@@ -116,7 +116,7 @@
   <header class="hero">
     <div class="title-block">
       <h1>Agent Cooperation Best Practices</h1>
-      <div class="sub">Migrated from Markdown on 2026-09-25 09:00</div>
+      <div class="sub">Migrated from Markdown on 2026-09-25 09:18</div>
     </div>
     <div class="meta">
       <div>Source: agent-cooperation.md</div>
@@ -495,10 +495,13 @@ invoked through <code>scripts/agent_runtime/runner.invoke()</code>. This applies
 <li><strong>CC 2.1.119+: <code>Agent</code> tool with <code>isolation: &quot;worktree&quot;</code> no longer reuses stale worktrees from prior sessions.</strong> Until this fix we avoided the built-in Agent-tool isolation and hand-rolled <code>git worktree add</code> (see <code>.claude/rules/delegate-must-use-worktree.md</code>). The hand-rolled pattern is still correct — it survives across sessions, shows up in <code>git worktree list</code>, and matches our dispatch conventions — but the Agent-tool built-in is now a safe alternative for short-lived, same-session isolation.</li>
 </ul>
 <h3>Direct dispatch (ask-agy / ask-codex)</h3>
-<p>For requests needing immediate response:</p>
+<p>For requests needing immediate response. AGY reviews Ukrainian content only
+(<code>--review --review-profile ukrainian</code>). Code review uses <code>ask-codex</code>.</p>
 <pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
-  &quot;Review posted on #559. Please read and respond.&quot; \
-  --task-id issue-559
+  &quot;Перевір український текст у curriculum/l2-uk-en/a1/hello.md.&quot; \
+  --task-id issue-559 \
+  --review \
+  --review-profile ukrainian
 
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
   &quot;Bug report posted on #560. Please read and respond.&quot; \

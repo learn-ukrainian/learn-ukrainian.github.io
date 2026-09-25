@@ -1665,11 +1665,19 @@ def _handle_acp_compat(args, target: str) -> None:
         review = True
 
     if review and target in {"agy", "gemini"}:
-        from ._agy import gemini_review_profile_error
+        from ._agy import gemini_pr_or_branch_content_error, gemini_review_profile_error
 
         profile_error = gemini_review_profile_error(getattr(args, "review_profile", None))
         if profile_error is not None:
             raise SystemExit(profile_error)
+        if pr_number is not None or branch is not None:
+            content_error = gemini_pr_or_branch_content_error(
+                pr_number=int(pr_number) if pr_number is not None else None,
+                branch=branch,
+                repo_root=str(REPO_ROOT),
+            )
+            if content_error is not None:
+                raise SystemExit(content_error)
 
     if review:
         # #7155: a reviewer must be able to use tools (gh, fs, pytest) — ACP's
@@ -1696,6 +1704,7 @@ def _handle_acp_compat(args, target: str) -> None:
             branch=branch,
             resolved_head_sha=resolved_head_sha,
             pr_number=int(pr_number) if pr_number is not None else None,
+            review_profile=getattr(args, "review_profile", None),
         )
         return
 
@@ -1760,6 +1769,7 @@ def _dispatch_headless_review(
     branch: str | None = None,
     resolved_head_sha: str | None = None,
     pr_number: int | None = None,
+    review_profile: str | None = None,
 ) -> None:
     """Run a review-intent ask-* through the headless native-CLI dispatch path.
 
@@ -1791,6 +1801,7 @@ def _dispatch_headless_review(
             effort=effort,
             hard_timeout=hard_timeout,
             branch=branch,
+            review_profile=review_profile,
         )
     except RuntimeError as exc:
         missing = _missing_origin_branch_message(exc, branch=branch, pr_number=pr_number)
