@@ -1464,6 +1464,17 @@ def test_restore_margin_is_configurable(
     assert accepted.returncode == 0, accepted.stderr
     assert "Restore preview only" in accepted.stdout
 
+    # Leading zeros are decimal, not octal: 010 is 10 % (not 8 %), 08 is 8 % (not an error).
+    _fake_free_space(environment, GIB + GIB * 9 // 100)
+    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "010"
+    ten = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
+    assert ten.returncode != 0
+    assert "+ 10% margin" in ten.stderr
+    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "08"
+    eight = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
+    assert eight.returncode == 0, eight.stderr
+    assert "Restore preview only" in eight.stdout
+
     environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "ten"
     invalid = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
     assert invalid.returncode != 0
@@ -1521,12 +1532,26 @@ def test_restore_path_gets_the_same_space_preflight_and_guards(
     assert "Insufficient free space" in result.stderr
     assert _restore_ids(environment) == []
 
-    for unsafe in ("/etc/passwd", "../data/atlas.db", "data/../x", "data/*.db", ""):
-        rejected = _run(
-            environment, "restore", MANIFEST_ID, "--to", str(target), "--path", unsafe,
-        )
-        assert rejected.returncode != 0, unsafe
-        assert "--path" in rejected.stderr
+    # Free space is ample from here on, so only the --path guard can refuse; and
+    # --execute is set, so a bypass would restore for real (visible in the log).
+    _fake_free_space(environment, 50 * GIB)
+    for unsafe in ("/etc/passwd", "../data/atlas.db", "data/../x", "data/*.db", "", " ", "/"):
+        for mode in ((), ("--execute",)):
+            rejected = _run(
+                environment, "restore", MANIFEST_ID, "--to", str(target), "--path", unsafe, *mode,
+            )
+            assert rejected.returncode != 0, (unsafe, mode)
+            assert "--path" in rejected.stderr, (unsafe, mode)
+            assert "Insufficient free space" not in rejected.stderr, (unsafe, mode)
+            assert _restore_ids(environment) == [], (unsafe, mode)
+            assert not target.exists(), (unsafe, mode)
+    twice = _run(
+        environment, "restore", MANIFEST_ID, "--to", str(target),
+        "--path", "", "--path", "data/atlas.db", "--execute",
+    )
+    assert twice.returncode != 0
+    assert "exactly one --path" in twice.stderr
+    assert _restore_ids(environment) == []
     missing = _run(environment, "restore", MANIFEST_ID, "--to", str(target), "--path")
     assert missing.returncode != 0
     assert "--path requires" in missing.stderr

@@ -1332,7 +1332,8 @@ restore_margin_percent() {
   local margin=${LU_BACKUP_RESTORE_MARGIN_PERCENT:-10}
   [[ "$margin" =~ ^[0-9]{1,4}$ ]] ||
     die "LU_BACKUP_RESTORE_MARGIN_PERCENT must be a whole number of percent (for example 10)."
-  printf '%s\n' "$margin"
+  # Force base 10: bash arithmetic reads a leading zero as octal (010 -> 8, 08 -> error).
+  printf '%s\n' "$((10#$margin))"
 }
 
 # Free bytes on the filesystem that will hold the restore target (the target
@@ -1387,7 +1388,7 @@ check_restore_space() {
 
 validate_restore_scope() {
   local scope=$1
-  [[ "$scope" != /* && "$scope" != "" ]] ||
+  [[ "$scope" != /* && "$scope" =~ [^[:space:]] ]] ||
     die "--path must be a non-empty path relative to the run root (for example data/atlas.db)."
   [[ "/$scope/" != *"/../"* && "/$scope/" != *"/./"* && "$scope" != *//* ]] ||
     die "--path must not contain '.', '..', or empty components: $scope"
@@ -1400,6 +1401,7 @@ run_restore() {
   local target=$2
   local execute=$3
   local scope=${4:-}
+  local scope_given=${5:-0}
   local target_real receipt receipt_json receipt_schema base_id patch_id database_id database_path database_mode check_output
   local manifest_id snapshots_json size_bytes path_info path_count path_bytes index
   local scope_is_database=0 databases_selected=0
@@ -1409,7 +1411,9 @@ run_restore() {
   require_initialized_repository
   [[ -n "$snapshot" && "$snapshot" != -* ]] || die "Invalid snapshot ID."
   restore_margin_percent >/dev/null
-  [[ -z "$scope" ]] || validate_restore_scope "${scope%/}"
+  # A given --path is always validated, even when empty: an empty value must
+  # never fall through to a whole-run restore.
+  [[ "$scope_given" -eq 0 && -z "$scope" ]] || validate_restore_scope "${scope%/}"
   scope="${scope%/}"
   target_real="$(validate_restore_target "$target")"
 
@@ -1699,6 +1703,7 @@ main() {
       snapshot=""
       target=""
       scope=""
+      scope_given=0
       execute=0
       while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -1710,7 +1715,8 @@ main() {
           --path)
             shift
             [[ $# -gt 0 ]] || die "--path requires a path relative to the run root."
-            [[ -z "$scope" ]] || die "restore accepts exactly one --path."
+            [[ "$scope_given" -eq 0 ]] || die "restore accepts exactly one --path."
+            scope_given=1
             scope=$1
             ;;
           --execute)
@@ -1728,7 +1734,7 @@ main() {
       done
       [[ -n "$snapshot" ]] || die "restore requires a snapshot ID."
       [[ -n "$target" ]] || die "restore requires --to ABSOLUTE_EMPTY_DIR."
-      run_restore "$snapshot" "$target" "$execute" "$scope"
+      run_restore "$snapshot" "$target" "$execute" "$scope" "$scope_given"
       ;;
     *)
       usage >&2
