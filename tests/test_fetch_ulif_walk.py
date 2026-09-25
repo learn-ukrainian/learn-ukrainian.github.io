@@ -1647,3 +1647,188 @@ def test_invalid_next_page_html_does_not_finish_with_exit_zero(tmp_path: Path):
             conn.close()
     finally:
         ledger.close()
+
+
+# Live ledger rows at the 2026-09-25 interruption (#8400): the homonym
+# ``порива́ння`` ends page 6931 and starts page 6932.
+_BOUNDARY_PAGE_6931 = [
+    ("порекомендува́тися", "порекомендуватися"),
+    ("по-ремісни́цьки", "по-ремісницьки"),
+    ("по-ремісни́цькому", "по-ремісницькому"),
+    ("поре́мствувати", "поремствувати"),
+    ("по́рений", "порений"),
+    ("по́рений", "порений"),
+    ("поренча́та", "поренчата"),
+    ("поре́п", "пореп"),
+    ("поре́паний", "порепаний"),
+    ("поре́патися", "порепатися"),
+    ("порепетува́ти", "порепетувати"),
+    ("порефо́рмений", "пореформений"),
+    ("по-реформі́стськи", "по-реформістськи"),
+    ("по-реформі́стському", "по-реформістському"),
+    ("порешети́ти", "порешетити"),
+    ("порешети́тися", "порешетитися"),
+    ("пореше́чений", "порешечений"),
+    ("поржаві́лий", "поржавілий"),
+    ("поржаві́ти", "поржавіти"),
+    ("поржа́влений", "поржавлений"),
+    ("пориба́лити", "порибалити"),
+    ("по-ри́б'ячому", "по-риб'ячому"),
+    ("пори́в", "порив"),
+    ("пори́в", "порив"),
+    ("порива́ння", "поривання"),
+]
+_BOUNDARY_PAGE_6932 = [
+    ("порива́ння", "поривання"),
+    ("порива́ти", "поривати"),
+    ("порива́ти", "поривати"),
+    ("порива́ти", "поривати"),
+    ("порива́тися", "пориватися"),
+    ("порива́тися", "пориватися"),
+    ("порива́ч", "поривач"),
+    ("пори́вний", "поривний"),
+    ("поривни́й", "поривний"),
+    ("пори́вність", "поривність"),
+    ("пори́вно", "поривно"),
+    ("пори́вчастий", "поривчастий"),
+    ("пори́вчастість", "поривчастість"),
+    ("пори́вчасто", "поривчасто"),
+    ("пори́вчатий", "поривчатий"),
+    ("пори́вчатість", "поривчатість"),
+    ("пори́вчато", "поривчато"),
+    ("порида́ти", "поридати"),
+    ("порижі́лий", "порижілий"),
+    ("порижі́ти", "порижіти"),
+    ("по́риз", "пориз"),
+    ("по-ри́зьки", "по-ризьки"),
+    ("по-ри́зькому", "по-ризькому"),
+    ("По́рик", "порик"),
+    ("пори́кувати", "порикувати"),
+]
+_BOUNDARY_WORDS = [stressed for stressed, _ in _BOUNDARY_PAGE_6931 + _BOUNDARY_PAGE_6932]
+_BOUNDARY_GLOBAL = 6931 * 25  # canonical index of page 6932 row 0
+
+
+def _seed_boundary_ledger(path: Path, *, target_rows: bool = True) -> SpellingLedger:
+    ledger = SpellingLedger(path)
+    ledger.ensure_page(6931, start_headword="порекомендува́тися", end_headword="порива́ння", row_count=25)
+    ledger.mark_page(6931, "completed")
+    ledger.ensure_page(
+        6932,
+        start_headword="порива́ння",
+        end_headword="пори́кувати" if target_rows else "",
+        row_count=25 if target_rows else 0,
+    )
+    pages = [(6931, _BOUNDARY_PAGE_6931)] + ([(6932, _BOUNDARY_PAGE_6932)] if target_rows else [])
+    for page, rows in pages:
+        for index, (stressed, normalized) in enumerate(rows):
+            ledger.ensure_row(
+                page, index, select_arg=f"Select${index}", stressed_headword=stressed, normalized_spelling=normalized
+            )
+            if page == 6931 or index < 10:
+                ledger.mark_row(page, index, "completed")
+    return ledger
+
+
+def _boundary_window(offset: int) -> list[dict[str, str]]:
+    start = len(_BOUNDARY_PAGE_6931) - offset
+    return parse_register_list(_register_html(_BOUNDARY_WORDS[start : start + 25], "VS-W", register_size=262812))
+
+
+@pytest.mark.parametrize("offset", [0, 1, 3, 4, 20])
+def test_resume_offset_aligns_homonym_across_page_boundary(tmp_path: Path, offset: int):
+    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite")
+    try:
+        rows = _boundary_window(offset)
+        assert len(rows) == 25
+        # At k=0 the window holds only page 6932's homonym, not page 6931's.
+        anchors = ((6932, 0), (6931, 24)) if offset else ((6932, 0),)
+        for anchor_page, anchor_index in anchors:
+            assert (
+                _resume_window_offset(
+                    ledger,
+                    rows,
+                    target_page=6932,
+                    anchor_headword="порива́ння",
+                    anchor_page=anchor_page,
+                    anchor_index=anchor_index,
+                )
+                == offset
+            )
+    finally:
+        ledger.close()
+
+
+def test_resume_offset_stays_none_when_two_homonym_alignments_agree(tmp_path: Path):
+    # Without page 6932 rows, the window starting at the first homonym is
+    # consistent both at k=0 and k=1, so neither may be chosen.
+    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite", target_rows=False)
+    try:
+        rows = _boundary_window(1)
+        assert [row["stressed"] for row in rows[:2]] == ["порива́ння", "порива́ння"]
+        assert (
+            _resume_window_offset(
+                ledger, rows, target_page=6932, anchor_headword="порива́ння", anchor_page=6932, anchor_index=0
+            )
+            is None
+        )
+    finally:
+        ledger.close()
+
+
+def test_resume_offset_homonym_window_with_drift_is_rejected(tmp_path: Path):
+    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite")
+    try:
+        drifted = _boundary_window(3)
+        drifted[10] = {**drifted[10], "stressed": "поривни́ця", "unstressed": "поривниця"}
+        assert (
+            _resume_window_offset(
+                ledger, drifted, target_page=6932, anchor_headword="порива́ння", anchor_page=6932, anchor_index=0
+            )
+            is None
+        )
+        single = _boundary_window(0)
+        single[5] = {**single[5], "stressed": "поривни́ця", "unstressed": "поривниця"}
+        with pytest.raises(ulif_walk.ResumeMismatchError, match="page 6932 row 5"):
+            _resume_window_offset(
+                ledger, single, target_page=6932, anchor_headword="порива́ння", anchor_page=6932, anchor_index=0
+            )
+    finally:
+        ledger.close()
+
+
+@pytest.mark.parametrize(
+    ("target_rows", "offset", "source"),
+    [(True, 3, "direct search"), (False, 1, "previous-page end search")],
+)
+def test_reseed_at_homonym_page_boundary_skips_fast_forward(
+    tmp_path: Path, capsys, target_rows: bool, offset: int, source: str
+):
+    # Without page 6932 rows the direct anchor is ambiguous (k=0 and k=1 both
+    # agree); the same window anchored on page 6931's last row settles k=1.
+    ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite", target_rows=target_rows)
+    cache = ulif_walk.prepare_database(tmp_path / "cache.db")
+    requests: list[tuple[str, dict[str, str] | None]] = []
+
+    def transport(method: str, data: dict[str, str] | None) -> HttpResult:
+        requests.append((method, data))
+        if method == "GET":
+            return HttpResult(200, _register_html([], "SEED", register_size=262812), {})
+        assert data is not None
+        assert "ctl00$ContentPlaceHolder1$search.x" in data, "only direct searches are allowed"
+        assert data["ctl00$ContentPlaceHolder1$tsearch"] == "порива́ння"
+        start = len(_BOUNDARY_PAGE_6931) - offset
+        return HttpResult(200, _register_html(_BOUNDARY_WORDS[start : start + 25], "VS-W", register_size=262812), {})
+
+    client = ulif_walk.PoliteClient(transport, delay_seconds=1, sleep=_noop_sleep)
+    try:
+        _, rows, landed_offset = ulif_walk._reseed_to_page(client, ledger, cache, target_page=6932, start_headword="а")
+    finally:
+        cache.close()
+        ledger.close()
+    assert landed_offset == offset
+    assert [row["stressed"] for row in rows[offset - 1 : offset + 1]] == ["порива́ння", "порива́ння"]
+    assert [method for method, _ in requests] == ["GET", "POST"]
+    err = capsys.readouterr().err
+    assert f"{source} page 6932, k={offset}" in err
+    assert "fast-forward" not in err

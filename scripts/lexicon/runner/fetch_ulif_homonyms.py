@@ -2527,25 +2527,42 @@ def _resume_window_offset(
 ) -> int | None:
     """Return the distance from the window start to the target page's first row.
 
-    A unique stressed anchor fixes the window's canonical origin. All known
-    rows in the window must then agree with the ledger before any entry click.
+    Each anchor occurrence proposes a canonical origin for the window. A unique
+    anchor must agree with every known ledger row or the resume stops as drift.
+    A repeated anchor (a homonym run, possibly straddling the page boundary) is
+    accepted only when exactly one of its origins agrees with the ledger.
     """
     matches = [i for i, row in enumerate(rows) if row["stressed"] == anchor_headword]
-    if len(matches) != 1 or len(rows) != REGISTER_PAGE_SIZE:
+    if not matches or len(rows) != REGISTER_PAGE_SIZE:
         return None
-    start_global = (anchor_page - 1) * REGISTER_PAGE_SIZE + anchor_index - matches[0]
-    if start_global < 0:
-        return None
-    offset = (target_page - 1) * REGISTER_PAGE_SIZE - start_global
-    if not 0 <= offset <= REGISTER_PAGE_SIZE:
-        return None
+    anchor_global = (anchor_page - 1) * REGISTER_PAGE_SIZE + anchor_index
+    target_global = (target_page - 1) * REGISTER_PAGE_SIZE
+    candidates = [
+        anchor_global - match
+        for match in matches
+        if anchor_global - match >= 0 and 0 <= target_global - (anchor_global - match) <= REGISTER_PAGE_SIZE
+    ]
+    if len(matches) == 1:
+        if not candidates:
+            return None
+        _verify_known_window_rows(ledger, rows, candidates[0])
+        return target_global - candidates[0]
 
-    _verify_known_window_rows(ledger, rows, start_global)
-    return offset
+    consistent = [start for start in candidates if _known_window_drift(ledger, rows, start) is None]
+    if len(consistent) != 1:
+        return None
+    return target_global - consistent[0]
 
 
 def _verify_known_window_rows(ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int) -> None:
     """Reject drift at every canonical position already recorded in the ledger."""
+    drift = _known_window_drift(ledger, rows, start_global)
+    if drift is not None:
+        raise ResumeMismatchError(drift)
+
+
+def _known_window_drift(ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int) -> str | None:
+    """Describe the first known ledger row the window disagrees with, or None."""
     known_pages: dict[int, dict[int, sqlite3.Row]] = {}
     page_records: dict[int, sqlite3.Row | None] = {}
     for i, row in enumerate(rows):
@@ -2559,7 +2576,7 @@ def _verify_known_window_rows(ledger: SpellingLedger, rows: list[dict[str, Any]]
             row["stressed"] != expected["stressed_headword"]
             or normalize_ulif_spelling(str(row["unstressed"])) != expected["normalized_spelling"]
         ):
-            raise ResumeMismatchError(
+            return (
                 f"page {page_num} row {row_index}: expected {expected['stressed_headword']}, landed {row['stressed']}"
             )
         if page_num not in page_records:
@@ -2568,9 +2585,8 @@ def _verify_known_window_rows(ledger: SpellingLedger, rows: list[dict[str, Any]]
         if page is not None:
             boundary = "start_headword" if row_index == 0 else "end_headword" if row_index == 24 else None
             if boundary and page[boundary] and row["stressed"] != page[boundary]:
-                raise ResumeMismatchError(
-                    f"page {page_num} {boundary}: expected {page[boundary]}, landed {row['stressed']}"
-                )
+                return f"page {page_num} {boundary}: expected {page[boundary]}, landed {row['stressed']}"
+    return None
 
 
 _UKRAINIAN_REGISTER_ALPHABET = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
@@ -2711,21 +2727,26 @@ def _reseed_to_page(
     if target_page > 1:
         previous = ledger.get_page(target_page - 1)
         previous_end = str(previous["end_headword"]) if previous and previous["end_headword"] else ""
-        if previous_end and previous_end != search_target:
-            fields = _form_fields(seed_tokens, spelling=previous_end, extra=_image_click(SEARCH_BUTTON))
-            fallback_html, fallback_req = client.exchange("POST", fields)
-            _keep_walk(
-                ledger,
-                cache,
-                "",
-                f"tsearch:{marker_prefix}:previous:{target_page}",
-                fallback_html,
-                fallback_req,
-                current_page=target_page,
-            )
-            fallback_rows = parse_register_list(fallback_html)
-            if not fallback_rows:
-                raise SessionInvalid(f"{marker_prefix}_previous_missing_register")
+        if previous_end:
+            if previous_end == search_target:
+                # A homonym straddles the boundary: the direct search already
+                # fetched this window, so only the anchor position changes.
+                fallback_html, fallback_rows = search_html, landed
+            else:
+                fields = _form_fields(seed_tokens, spelling=previous_end, extra=_image_click(SEARCH_BUTTON))
+                fallback_html, fallback_req = client.exchange("POST", fields)
+                _keep_walk(
+                    ledger,
+                    cache,
+                    "",
+                    f"tsearch:{marker_prefix}:previous:{target_page}",
+                    fallback_html,
+                    fallback_req,
+                    current_page=target_page,
+                )
+                fallback_rows = parse_register_list(fallback_html)
+                if not fallback_rows:
+                    raise SessionInvalid(f"{marker_prefix}_previous_missing_register")
             offset = _resume_window_offset(
                 ledger,
                 fallback_rows,
