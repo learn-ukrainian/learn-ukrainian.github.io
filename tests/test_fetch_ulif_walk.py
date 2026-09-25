@@ -787,25 +787,13 @@ def test_shifted_resume_rejects_next_window_drift_before_writing_rows(tmp_path: 
         sleep=_noop_sleep,
         scanner=lambda: False,
     )
-    assert code == EXIT_RETRY_STORM
+    assert code == (EXIT_USAGE if mode == "reset" else EXIT_RETRY_STORM)
     ledger = SpellingLedger(state_dir / "ledger.sqlite")
     try:
         assert ledger.page_rows(3) == []
-        assert ledger.get_page(2)["state"] == "retry_scheduled"
+        assert ledger.get_page(2)["state"] == ("error" if mode == "reset" else "retry_scheduled")
     finally:
         ledger.close()
-
-
-@pytest.mark.parametrize(
-    ("before", "after"),
-    [
-        ("абазинський", "Аба́зівка"),  # live ledger page 2: и -> і
-        ("авіапатрульний", "авіапатрулюва́ння"),  # page 23: ь -> ю
-        ("ад'ютантський", "Аелі́та"),  # pages 78-79: apostrophe and capital
-    ],
-)
-def test_ulif_order_key_accepts_recorded_boundaries(before: str, after: str):
-    assert ulif_walk._register_order_key(before) <= ulif_walk._register_order_key(after)
 
 
 def test_first_unrecorded_page_uses_previous_ledger_boundary(tmp_path: Path):
@@ -819,12 +807,13 @@ def test_first_unrecorded_page_uses_previous_ledger_boundary(tmp_path: Path):
             [{"stressed": "Аба́зівка"}, {"stressed": "абазія"}],
             25,
         )
-        with pytest.raises(ulif_walk.SessionInvalid, match="register_regression"):
-            ulif_walk._verify_first_unrecorded_page(
-                ledger,
-                [{"stressed": "а"}, {"stressed": "абазія"}],
-                25,
-            )
+        # A local alphabet cannot reject a page ULIF supplies; there is no
+        # stored entry at the new position yet to contradict this window.
+        ulif_walk._verify_first_unrecorded_page(
+            ledger,
+            [{"stressed": "а"}, {"stressed": "абазія"}],
+            25,
+        )
     finally:
         ledger.close()
 
@@ -972,7 +961,7 @@ def test_chunked_walk_resumes_next_unrecorded_page_without_fast_forward(tmp_path
     assert searches == ["w049"]
 
 
-@pytest.mark.parametrize("damage", ["gap", "order", "start", "end", "count"])
+@pytest.mark.parametrize("damage", ["gap", "start", "end", "count"])
 def test_verify_ledger_flag_is_read_only_and_names_bad_page(tmp_path: Path, capsys, damage: str):
     state_dir = tmp_path / "state"
     state_dir.mkdir()
@@ -984,7 +973,6 @@ def test_verify_ledger_flag_is_read_only_and_names_bad_page(tmp_path: Path, caps
         ledger.mark_page(1, "completed")
         changes = {
             "gap": "UPDATE register_rows SET row_index = 4 WHERE page_num = 1 AND row_index = 1",
-            "order": "UPDATE register_rows SET stressed_headword = 'г' WHERE page_num = 1 AND row_index = 1",
             "start": "UPDATE register_pages SET start_headword = 'х' WHERE page_num = 1",
             "end": "UPDATE register_pages SET end_headword = 'х' WHERE page_num = 1",
             "count": "UPDATE register_pages SET row_count = 2 WHERE page_num = 1",
@@ -999,6 +987,105 @@ def test_verify_ledger_flag_is_read_only_and_names_bad_page(tmp_path: Path, caps
     assert code == EXIT_USAGE
     assert "page 1" in capsys.readouterr().err
     assert ledger_path.stat().st_mtime_ns == before
+
+
+# Source order from the live ULIF register, page 4098, rows 16–24. The
+# capitalized proper name at row 19 precedes lower-case ледь at row 20.
+ULIF_PAGE_4098_TAIL = (
+    "ле́ді",
+    "Ле́дісмі́т",
+    "Ле́дне",
+    "Лель",
+    "ледь",
+    "ледь",
+    "ледь-ле́дь",
+    "ледь-не-ле́дь",
+    "Ледяне́ць",
+)
+
+
+def _record_page_4098_tail(ledger: SpellingLedger) -> None:
+    words = ("ле́две",) * 16 + ULIF_PAGE_4098_TAIL
+    ledger.ensure_page(1, start_headword=words[0], end_headword=words[-1], row_count=len(words))
+    for index, word in enumerate(words):
+        spelling = normalize_ulif_spelling(word)
+        ledger.ensure_row(1, index, select_arg=f"Select${index}", stressed_headword=word, normalized_spelling=spelling)
+        ledger.record_response(
+            spelling=spelling,
+            role="entry",
+            response_sha256="a" * 64,
+            request_sha256="b" * 64,
+            register_position=f"1:{index}",
+        )
+    ledger.mark_page(1, "completed")
+
+
+def test_verify_ledger_accepts_ulif_page_4098_source_order(tmp_path: Path):
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    try:
+        _record_page_4098_tail(ledger)
+    finally:
+        ledger.close()
+    assert ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite") == 1
+
+
+def test_verify_ledger_rejects_row_shift_against_recorded_entry_position(tmp_path: Path):
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    try:
+        _record_page_4098_tail(ledger)
+        # Keep indexes contiguous and boundaries correct, but shift one row's
+        # spelling away from the entry response stored at the same position.
+        ledger.conn.execute(
+            "UPDATE register_rows SET stressed_headword = 'ле́две', normalized_spelling = 'ледве' "
+            "WHERE page_num = 1 AND row_index = 20"
+        )
+        ledger.conn.commit()
+    finally:
+        ledger.close()
+    with pytest.raises(ulif_walk.ResumeMismatchError, match=r"row 20.*entry response"):
+        ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite")
+
+
+@pytest.mark.parametrize(
+    ("sizes", "initial_search", "expected_failure"),
+    [
+        ((22, 25), True, None),
+        ((22, 25), False, "page 1: short page"),
+        ((25, 22, 25), True, "page 2: short page"),
+        ((25, 26), True, "page 2: row count exceeds"),
+    ],
+)
+def test_verify_ledger_short_search_page_and_page_size(
+    tmp_path: Path, sizes: tuple[int, ...], initial_search: bool, expected_failure: str | None
+):
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    try:
+        if initial_search:
+            ledger.record_response(
+                spelling="",
+                role="tsearch:start",
+                response_sha256="a" * 64,
+                request_sha256="b" * 64,
+            )
+        for page_num, size in enumerate(sizes, start=1):
+            words = [f"w{page_num:02d}-{index:02d}" for index in range(size)]
+            ledger.ensure_page(page_num, start_headword=words[0], end_headword=words[-1], row_count=size)
+            for index, word in enumerate(words):
+                ledger.ensure_row(
+                    page_num,
+                    index,
+                    select_arg=f"Select${index}",
+                    stressed_headword=word,
+                    normalized_spelling=word,
+                )
+            ledger.mark_page(page_num, "completed")
+    finally:
+        ledger.close()
+    if expected_failure is None:
+        assert ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite") == len(sizes)
+    else:
+        with pytest.raises(ulif_walk.ResumeMismatchError, match=expected_failure):
+            ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite")
 
 
 def test_verify_ledger_flag_reports_success_without_cache_or_requests(tmp_path: Path, capsys):

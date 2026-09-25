@@ -2537,34 +2537,69 @@ def _listing_rows(ledger: SpellingLedger, page_num: int) -> dict[int, str]:
 
 
 def verify_ledger_continuity(path: Path) -> int:
-    """Read only: reject broken register page evidence before a walk resumes."""
+    """Read only: check recorded page geometry and entry-position evidence.
+
+    The ledger stores entry response hashes and their page/row positions, but
+    the response bodies and page-listing HTML live in the separate blob cache.
+    This check can compare recorded spellings with entry response metadata; it
+    cannot independently reconstruct ULIF's listing or verify response bytes.
+    """
     with contextlib.closing(sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)) as conn:
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA query_only=ON")
-        pages = conn.execute("SELECT * FROM register_pages ORDER BY page_num")
+        pages = conn.execute("SELECT * FROM register_pages ORDER BY page_num").fetchall()
+        entry_positions: dict[str, str] = {}
+        for response in conn.execute(
+            "SELECT register_position, spelling FROM responses WHERE role = 'entry' AND register_position != ''"
+        ):
+            position = str(response["register_position"])
+            if position in entry_positions:
+                raise ResumeMismatchError(f"register position {position}: duplicate entry response")
+            entry_positions[position] = str(response["spelling"])
+        initial_search_recorded = (
+            conn.execute("SELECT 1 FROM responses WHERE role = 'tsearch:start' LIMIT 1").fetchone() is not None
+        )
         checked = 0
         for page in pages:
             number = int(page["page_num"])
             if number != checked + 1:
                 raise ResumeMismatchError(f"page {number}: ledger page sequence has a gap before this page")
             rows = conn.execute(
-                "SELECT row_index, stressed_headword FROM register_rows WHERE page_num = ? ORDER BY row_index",
+                "SELECT row_index, stressed_headword, normalized_spelling, state FROM register_rows "
+                "WHERE page_num = ? ORDER BY row_index",
                 (number,),
             ).fetchall()
             indexes = [int(row["row_index"]) for row in rows]
             if indexes != list(range(len(rows))):
                 raise ResumeMismatchError(f"page {number}: ledger rows are not contiguous from row 0")
             words = [str(row["stressed_headword"]) for row in rows]
-            if any(_register_order_key(left) > _register_order_key(right) for left, right in itertools.pairwise(words)):
-                raise ResumeMismatchError(f"page {number}: ledger headwords are out of listing order")
+            if len(rows) > REGISTER_PAGE_SIZE:
+                raise ResumeMismatchError(f"page {number}: row count exceeds page size {REGISTER_PAGE_SIZE}")
+            # The first page can be a short search landing (22 rows in the
+            # live walk); later nonterminal next-page windows have 25.
+            if (
+                page["state"] == "completed"
+                and 0 < len(rows) < REGISTER_PAGE_SIZE
+                and number != len(pages)
+                and (number != 1 or not initial_search_recorded)
+            ):
+                raise ResumeMismatchError(f"page {number}: short page before the last page")
             if words and page["start_headword"] != words[0]:
                 raise ResumeMismatchError(f"page {number}: start headword does not match row 0")
-            if page["end_headword"] and (not words or page["end_headword"] != words[-1]):
+            if words and page["end_headword"] and page["end_headword"] != words[-1]:
                 raise ResumeMismatchError(f"page {number}: end headword does not match last row")
-            if page["row_count"] and int(page["row_count"]) != len(rows):
+            if (page["row_count"] or page["state"] == "completed") and int(page["row_count"]) != len(rows):
                 raise ResumeMismatchError(f"page {number}: row count does not match recorded rows")
             if page["state"] == "completed" and (not words or not page["end_headword"]):
                 raise ResumeMismatchError(f"page {number}: completed page lacks listing boundaries")
+            for row in rows:
+                index = int(row["row_index"])
+                position = f"{number}:{index}"
+                if normalize_ulif_spelling(str(row["stressed_headword"])) != row["normalized_spelling"]:
+                    raise ResumeMismatchError(f"page {number} row {index}: headword differs from normalized spelling")
+                response_spelling = entry_positions.get(position)
+                if response_spelling is not None and str(row["normalized_spelling"]) != response_spelling:
+                    raise ResumeMismatchError(f"page {number} row {index}: spelling differs from entry response")
             checked += 1
         orphan = conn.execute(
             "SELECT MIN(r.page_num) FROM register_rows r LEFT JOIN register_pages p ON p.page_num = r.page_num "
@@ -2741,28 +2776,10 @@ def _known_window_drift(ledger: SpellingLedger, rows: list[dict[str, Any]], star
     return None
 
 
-_UKRAINIAN_REGISTER_ALPHABET = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
-_REGISTER_RANKS = {letter: index for index, letter in enumerate(_UKRAINIAN_REGISTER_ALPHABET)}
-
-
-def _register_order_key(spelling: str) -> tuple[int, ...]:
-    """Compare the first three register letters in Ukrainian order.
-
-    This key ignores spaces, hyphens, and apostrophes for the coarse boundary
-    comparison. The full key has three reversals in the recorded walk;
-    the three-letter key has none and still detects a reset to an earlier part
-    of the register. Acute marks and case do not affect the order.
-    """
-    letters = (letter for letter in spelling.casefold() if letter not in " \t-\u0301'’ʼ")
-    return tuple(
-        _REGISTER_RANKS.get(letter, len(_REGISTER_RANKS) + ord(letter)) for letter in itertools.islice(letters, 3)
-    )
-
-
 def _verify_register_continuity(
     preceding: Sequence[Mapping[str, Any] | sqlite3.Row], following: Sequence[Mapping[str, Any]], page_num: int
 ) -> None:
-    """Reject backwards navigation and a repeated multi-row window before row writes."""
+    """Reject a repeated multi-row window before row writes."""
     if not preceding or not following:
         raise SessionInvalid(f"page_{page_num}_missing_continuity_anchor")
 
@@ -2772,8 +2789,6 @@ def _verify_register_continuity(
         except (KeyError, IndexError):
             return str(row["stressed_headword"])
 
-    if _register_order_key(headword(preceding[-1])) > _register_order_key(headword(following[0])):
-        raise SessionInvalid(f"page_{page_num}_register_regression")
     if len(following) >= 2:
         # Repeated homonyms can legitimately straddle a window. Two different
         # spellings repeating together are an overlap; a uniform run needs a
