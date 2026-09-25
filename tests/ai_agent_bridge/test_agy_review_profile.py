@@ -200,16 +200,23 @@ def test_content_only_pr_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch
     )
 
     def fake_run(command: list[str], **kwargs: object):
-        assert command[:4] == ["gh", "pr", "view", "77"]
-        assert command[4:] == ["--json", "files"]
-        import json
         import subprocess
 
-        return subprocess.CompletedProcess(
-            command,
-            0,
-            stdout=json.dumps({"files": [{"path": _CONTENT_PATH}]}),
-        )
+        if command[:3] == ["gh", "api", "--paginate"]:
+            assert command[3:] == [
+                "repos/{owner}/{repo}/pulls/77/files",
+                "--jq",
+                ".[].filename",
+            ]
+            return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
+        assert command == [
+            "gh",
+            "api",
+            "repos/{owner}/{repo}/pulls/77",
+            "--jq",
+            ".changed_files",
+        ]
+        return subprocess.CompletedProcess(command, 0, stdout="1\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
     _handle_acp_compat(_review_args(pr=77), "agy")
@@ -229,14 +236,13 @@ def test_mixed_pr_refuses_naming_the_code_path(monkeypatch: pytest.MonkeyPatch) 
     )
 
     def fake_run(command: list[str], **kwargs: object):
-        import json
         import subprocess
 
-        return subprocess.CompletedProcess(
-            command,
-            0,
-            stdout=json.dumps({"files": [{"path": _CONTENT_PATH}, {"path": _CODE_PATH}]}),
-        )
+        if "--paginate" in command:
+            return subprocess.CompletedProcess(
+                command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n"
+            )
+        return subprocess.CompletedProcess(command, 0, stdout="2\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
@@ -263,6 +269,47 @@ def test_pr_file_listing_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> 
         _handle_acp_compat(_review_args(pr=99), "agy")
 
 
+def test_pr_file_past_the_hundredth_still_refuses_code(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A code file at position 120 must refuse. The old 100-file page would hide it."""
+
+    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("a code file past page 1 must not reach Gemini dispatch")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        lambda number: ("wide-branch", "d" * 40),
+    )
+    names = [f"curriculum/l2-uk-en/a1/page-{index}.md" for index in range(1, 151)]
+    names[119] = _CODE_PATH
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if "--paginate" in command:
+            assert command == [
+                "gh",
+                "api",
+                "--paginate",
+                "repos/{owner}/{repo}/pulls/120/files",
+                "--jq",
+                ".[].filename",
+            ]
+            return subprocess.CompletedProcess(command, 0, stdout="\n".join(names) + "\n")
+        assert command == [
+            "gh",
+            "api",
+            "repos/{owner}/{repo}/pulls/120",
+            "--jq",
+            ".changed_files",
+        ]
+        return subprocess.CompletedProcess(command, 0, stdout="150\n")
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
+        _handle_acp_compat(_review_args(pr=120), "agy")
+
+
 def test_content_only_branch_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyPatch) -> None:
     seen: dict[str, object] = {}
 
@@ -274,12 +321,50 @@ def test_content_only_branch_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyP
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        assert command == ["git", "diff", "--name-only", "origin/main...content-branch"]
+        if command[:3] == ["git", "fetch", "origin"]:
+            assert command == ["git", "fetch", "origin", "content-branch"]
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        assert command == ["git", "diff", "--name-only", "origin/main...origin/content-branch"]
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
     _handle_acp_compat(_review_args(branch="content-branch"), "agy")
     assert seen["branch"] == "content-branch"
+
+
+def test_prefixed_branch_names_are_refused_before_git(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_run(command: list[str], **kwargs: object):
+        raise AssertionError(f"prefixed branch must not reach git: {command}")
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    for name in ("origin/feature", "refs/heads/feature"):
+        with pytest.raises(SystemExit, match="could not list changed files"):
+            _handle_acp_compat(_review_args(branch=name), "agy")
+
+
+def test_stale_local_content_branch_is_refused_when_remote_has_code(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A local content-only ref must not hide code on origin/<branch>."""
+
+    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("remote code must not reach Gemini dispatch")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command == ["git", "diff", "--name-only", "origin/main...feature"]:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
+        if command == ["git", "fetch", "origin", "feature"]:
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        assert command == ["git", "diff", "--name-only", "origin/main...origin/feature"]
+        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
+        _handle_acp_compat(_review_args(branch="feature"), "agy")
 
 
 def _dispatch_argv(*extra: str) -> list[str]:
@@ -320,7 +405,10 @@ def test_delegate_review_verdict_mixed_branch_names_the_path(
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        assert command == ["git", "diff", "--name-only", "origin/main...feature"]
+        if command[:3] == ["git", "fetch", "origin"]:
+            assert command == ["git", "fetch", "origin", "feature"]
+            return subprocess.CompletedProcess(command, 0, stdout="")
+        assert command == ["git", "diff", "--name-only", "origin/main...origin/feature"]
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
 
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
@@ -387,7 +475,10 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
     err = capsys.readouterr().err
     assert "write-shaped prompt" in err
     assert "gemini_code_review_forbidden" not in err
-    assert listed == [["git", "diff", "--name-only", "origin/main...feature"]]
+    assert listed == [
+        ["git", "fetch", "origin", "feature"],
+        ["git", "diff", "--name-only", "origin/main...origin/feature"],
+    ]
 
 
 def test_agy_implementation_dispatch_is_not_review_gated(

@@ -191,35 +191,58 @@ def _run_changed_path_command(command: list[str], *, cwd: str) -> str:
 
 
 def list_pr_changed_paths(pr_number: int, *, repo_root: str) -> list[str]:
-    """Changed paths from ``gh pr view N --json files``. Fail closed on any miss."""
-    import json
+    """Every changed path on a PR. Fail closed when the list or its count is missing.
 
+    ``gh pr view --json files`` stops at 100 files and still exits 0, so a code
+    file past that page would be invisible. ``gh api --paginate`` follows every
+    page. The PR object's ``changed_files`` count must match the names returned;
+    a missing count, a failed call, or a short list refuses the review.
+    """
+    number = int(pr_number)
+    if number < 1:
+        raise GeminiChangedPathListError(f"refusing to list files for PR {pr_number!r}")
+    pull = f"repos/{{owner}}/{{repo}}/pulls/{number}"
+    count_raw = _run_changed_path_command(
+        ["gh", "api", pull, "--jq", ".changed_files"],
+        cwd=repo_root,
+    ).strip()
+    if not count_raw.isdigit():
+        raise GeminiChangedPathListError("PR changed-file count is unavailable")
+    expected = int(count_raw)
     raw = _run_changed_path_command(
-        ["gh", "pr", "view", str(pr_number), "--json", "files"],
+        ["gh", "api", "--paginate", f"{pull}/files", "--jq", ".[].filename"],
         cwd=repo_root,
     )
-    try:
-        payload = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise GeminiChangedPathListError("gh pr view returned invalid JSON") from exc
-    files = payload.get("files") if isinstance(payload, dict) else None
-    if not isinstance(files, list):
-        raise GeminiChangedPathListError("gh pr view JSON has no files list")
-    paths: list[str] = []
-    for item in files:
-        if not isinstance(item, dict) or not isinstance(item.get("path"), str):
-            raise GeminiChangedPathListError("gh pr view files entry has no path")
-        paths.append(item["path"])
+    paths = [line.strip() for line in raw.splitlines() if line.strip()]
+    if len(paths) != expected:
+        raise GeminiChangedPathListError(
+            f"PR file list length {len(paths)} does not match changed_files {expected}"
+        )
     return paths
 
 
 def list_branch_changed_paths(branch: str, *, repo_root: str) -> list[str]:
-    """Changed paths from ``git diff --name-only origin/main...<branch>``."""
+    """Changed paths on the remote branch Gemini actually reads.
+
+    ``ask-agy --branch`` and ``delegate --branch`` mean ``origin/<name>``.
+    Diffing the local name accepts a stale content-only checkout while the
+    remote tip contains code, and refuses a remote-only branch as an unknown
+    revision. Fetch that one remote ref, then diff ``origin/main...origin/<name>``.
+    """
     name = branch.strip()
-    if not name or name.startswith("-") or "\n" in name or "\x00" in name:
+    if (
+        not name
+        or name.startswith(("-", "origin/", "refs/"))
+        or "\n" in name
+        or "\x00" in name
+    ):
         raise GeminiChangedPathListError(f"refusing to diff branch {branch!r}")
+    _run_changed_path_command(
+        ["git", "fetch", "origin", name],
+        cwd=repo_root,
+    )
     raw = _run_changed_path_command(
-        ["git", "diff", "--name-only", f"origin/main...{name}"],
+        ["git", "diff", "--name-only", f"origin/main...origin/{name}"],
         cwd=repo_root,
     )
     return [line.strip() for line in raw.splitlines() if line.strip()]
@@ -233,8 +256,9 @@ def gemini_pr_or_branch_content_error(
 ) -> str | None:
     """Refuse a Gemini PR/branch target unless every changed path is content.
 
-    A PR uses ``gh pr view``. A branch with no PR uses ``git diff``. Any
-    failure to list files refuses. ``None`` means the target may proceed.
+    A PR uses paginated ``gh api`` file names checked against ``changed_files``.
+    A branch with no PR fetches ``origin/<name>`` and diffs that remote ref.
+    Any failure to list files refuses. ``None`` means the target may proceed.
     """
     if pr_number is None and not (branch and str(branch).strip()):
         return None
