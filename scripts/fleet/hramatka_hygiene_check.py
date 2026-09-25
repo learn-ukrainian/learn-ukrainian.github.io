@@ -42,6 +42,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import pr_identity
 
 REPO_ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
@@ -56,7 +57,6 @@ PRIVATE_BOARD = 349
 DEFAULT_HIGH_WATER_PERCENT = 95
 GH_TIMEOUT_SECONDS = 15.0
 
-_TASKS_DIR = REPO_ROOT / "batch_state" / "tasks"
 _DISPATCH_WORKTREES_ROOT = REPO_ROOT / ".worktrees" / "dispatch"
 
 # Same terminal-status vocabulary as post_task_reap.py / the drive-epic
@@ -393,7 +393,7 @@ def hygiene_check(
     disk_path: Path = REPO_ROOT,
     repo_root: Path = REPO_ROOT,
     dispatch_worktrees_root: Path = _DISPATCH_WORKTREES_ROOT,
-    tasks_dir: Path = _TASKS_DIR,
+    tasks_dir: Path | None = None,
     reader: IssueReader = _gh_issue,
     open_pr_probe: OpenPrProbe = _branch_has_open_pr,
 ) -> dict[str, Any]:
@@ -441,7 +441,7 @@ def hygiene_check(
     zombies, detectable = _detect_zombie_worktrees(
         repo_root=repo_root,
         dispatch_root=dispatch_worktrees_root,
-        tasks_dir=tasks_dir,
+        tasks_dir=tasks_dir or default_tasks_dir(),
         open_pr_probe=open_pr_probe,
     )
     if zombies:
@@ -484,7 +484,7 @@ def main(argv: list[str] | None = None, *, reader: IssueReader = _gh_issue) -> i
         default=_DISPATCH_WORKTREES_ROOT,
         help=".worktrees/dispatch root to scan for zombies",
     )
-    parser.add_argument("--tasks-dir", type=Path, default=_TASKS_DIR, help="batch_state/tasks directory")
+    parser.add_argument("--tasks-dir", type=Path, default=default_tasks_dir(), help="batch_state/tasks directory")
     args = parser.parse_args(argv)
 
     receipt = hygiene_check(

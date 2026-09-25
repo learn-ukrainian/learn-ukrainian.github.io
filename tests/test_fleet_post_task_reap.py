@@ -40,7 +40,7 @@ def hermetic_reap(monkeypatch, tmp_path):
     tasks_dir.mkdir(parents=True)
 
     monkeypatch.setattr(post_task_reap, "ROOT", repo_root)
-    monkeypatch.setattr(post_task_reap, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     monkeypatch.setattr(post_task_reap, "_DISPATCH_WORKTREES_ROOT", repo_root / ".worktrees" / "dispatch")
     monkeypatch.setattr(post_task_reap, "_ACP_RUNTIME_ROOT", repo_root / ".worktrees" / "dispatch" / "acp")
 
@@ -63,9 +63,7 @@ def hermetic_reap(monkeypatch, tmp_path):
 
     # Shared-probe control (#7127): the bound checkout resolves to a GitHub
     # repository and provably has no OPEN PR, unless a test overrides it.
-    monkeypatch.setattr(
-        post_task_reap.pr_identity, "resolve_repo_slug", lambda _root: "octo/hermetic"
-    )
+    monkeypatch.setattr(post_task_reap.pr_identity, "resolve_repo_slug", lambda _root: "octo/hermetic")
     monkeypatch.setattr(
         post_task_reap.pr_identity,
         "probe_open_pr_for_branch",
@@ -401,7 +399,8 @@ def test_no_pr_pr_probe_error_retain(hermetic_reap, monkeypatch):
     worktree = _add_dispatch_worktree(repo_root, "kimi", "pr-error-task")
     _write_task_state(tasks_dir, "pr-error-task", "done", worktree)
     monkeypatch.setattr(
-        post_task_reap.reap_worktrees, "_query_pr_states",
+        post_task_reap.reap_worktrees,
+        "_query_pr_states",
         lambda _repo, _branch: ([], "gh unavailable"),
     )
 

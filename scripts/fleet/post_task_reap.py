@@ -25,11 +25,11 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.fleet import pr_identity
 from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
-_TASKS_DIR = ROOT / "batch_state" / "tasks"
 _DISPATCH_WORKTREES_ROOT = ROOT / ".worktrees" / "dispatch"
 _ACP_RUNTIME_ROOT = _DISPATCH_WORKTREES_ROOT / "acp"
 
@@ -768,12 +768,13 @@ def _reap_acp_runtime_worktrees(
 def post_task_reap(
     task_id: str,
     *,
-    tasks_dir: Path = _TASKS_DIR,
+    tasks_dir: Path | None = None,
     repo_root: Path = ROOT,
     apply: bool = False,
     include_acp_runtime: bool = True,
 ) -> dict[str, Any]:
     """Return a reap report for ``task_id``; delete only when ``apply`` is True."""
+    tasks_dir = tasks_dir or default_tasks_dir()
     state = _load_task_state(tasks_dir, task_id)
     if state is None:
         return {
@@ -843,7 +844,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--tasks-dir",
         type=Path,
-        default=_TASKS_DIR,
+        default=default_tasks_dir(),
         help="batch_state/tasks directory",
     )
     parser.add_argument(

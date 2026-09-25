@@ -44,10 +44,10 @@ from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 @pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
-    """Redirect delegate._TASKS_DIR to a tmp path so tests don't pollute
+    """Redirect delegate.tasks_dir() to a tmp path so tests don't pollute
     the real batch_state/tasks/ directory."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     return tasks_dir
 
 
@@ -10465,10 +10465,10 @@ def _delegate_claim_refusal(worktree, *, task_id):
     """Run the shared claim scan over delegate's task records, exempting ``task_id``."""
     return worktree_claims.active_worktree_claim_refusal(
         worktree,
-        tasks_dir=delegate._TASKS_DIR,
+        tasks_dir=delegate.tasks_dir(),
         repo_root=delegate._REPO_ROOT,
         owner_task_id=task_id,
-        owner_state_file=worktree_claims.task_record_path(delegate._TASKS_DIR, task_id),
+        owner_state_file=worktree_claims.task_record_path(delegate.tasks_dir(), task_id),
     )
 
 

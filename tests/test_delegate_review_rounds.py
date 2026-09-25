@@ -28,7 +28,7 @@ from scripts.orchestration import worktree_claims
 def _isolated_worktree_removal(tmp_path, monkeypatch):
     """Keep removal locks and the task-claim scan off the host repository (#8610)."""
     monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks")
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "tasks")
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
 
 
 @pytest.mark.parametrize(

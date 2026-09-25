@@ -141,11 +141,7 @@ def _resolve_real_gh_binary() -> str | None:
     """Resolve gh behind agent-runtime shims using the runner's path rules."""
     candidates = [os.environ.get("AGENT_REAL_GH")]
     search_path = os.environ.get("AGENT_ORIGINAL_PATH", os.environ.get("PATH", os.defpath))
-    candidates.extend(
-        os.path.join(entry, "gh")
-        for entry in search_path.split(os.pathsep)
-        if entry
-    )
+    candidates.extend(os.path.join(entry, "gh") for entry in search_path.split(os.pathsep) if entry)
     for candidate in candidates:
         if not candidate or _is_agent_runtime_shim(candidate):
             continue
@@ -210,9 +206,7 @@ def _bridge_db_paths() -> tuple[Path, Path]:
 
 _REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH = _bridge_db_paths()
 _API_BRIDGE_DB_PATH = default_bridge_db_path(_REPO_ROOT).resolve()
-_UNISOLATED_BRIDGE_DB_PATHS = frozenset(
-    {_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH}
-)
+_UNISOLATED_BRIDGE_DB_PATHS = frozenset({_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH})
 _BRIDGE_DB_SUFFIXES = tuple(sorted({path.name for path in _UNISOLATED_BRIDGE_DB_PATHS}))
 _BRIDGE_DB_BINDINGS_TO_REPLACE = set(_UNISOLATED_BRIDGE_DB_PATHS)
 
@@ -353,9 +347,7 @@ def _content_tree_snapshot(root: Path) -> frozenset[str] | None:
     return frozenset(line for line in status.stdout.splitlines() if line.strip())
 
 
-def _content_tree_changes(
-    before: frozenset[str] | None, after: frozenset[str] | None
-) -> tuple[list[str], list[str]]:
+def _content_tree_changes(before: frozenset[str] | None, after: frozenset[str] | None) -> tuple[list[str], list[str]]:
     """Sorted ``(added, removed)`` status lines between two snapshots.
 
     Both directions count: deleting a pre-existing untracked file or restoring a
@@ -564,9 +556,7 @@ def _require_data_artifact(
             with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
                 available_tables = {
                     row[0]
-                    for row in connection.execute(
-                        "SELECT name FROM sqlite_master WHERE type IN ('table', 'view')"
-                    )
+                    for row in connection.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")
                 }
         except sqlite3.Error:
             available_tables = set()
@@ -623,9 +613,7 @@ def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
     monkeypatch their own.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_DB", str(tmp_path / "llm_qg.db"))
-    monkeypatch.setenv(
-        "LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json")
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json"))
 
 
 @pytest.fixture(autouse=True)
@@ -726,28 +714,13 @@ def _isolate_write_ownership_ledger(_write_ownership_base: Path, monkeypatch):
 # =============================================================================
 # DISPATCH TASK STORE ISOLATION (#8654)
 # =============================================================================
-# ``delegate._TASKS_DIR`` is a module constant. Helpers compute the record,
-# result, archive, snapshot, log, and admission-lock paths from it at call
-# time. Tests that forget to patch the constant write into the live store
-# the Monitor API and the work board read. Sibling modules keep their own
-# copy of the same directory; ``_TASK_STORE_RETARGETS`` imports each one and
-# retargets it. The ownership ledger above is a different seam (env override).
+# All dispatch task-store consumers resolve ``LU_TASKS_DIR`` at call time.
+# The ownership ledger above is a separate seam (env override).
 
 _REAL_TASKS_DIR = (resolve_repo_root(Path(__file__), 1) / "batch_state" / "tasks").resolve()
-# Sibling constants the autouse fixture retargets by importing each module.
-# ``scripts.delegate._TASKS_DIR`` is set in ``_isolate_dispatch_task_store``.
-# Completeness: tests/test_conftest_task_store_guard.py::test_task_store_constants_match_retarget_tuple
-_TASK_STORE_RETARGETS = (
-    ("scripts.fleet.post_task_reap", "_TASKS_DIR"),
-    ("scripts.fleet.hramatka_hygiene_check", "_TASKS_DIR"),
-    ("scripts.fleet.capacity_pick", "_TASKS_DIR"),
-    ("scripts.maintenance.reclassify_dispatch_status", "DEFAULT_TASKS_DIR"),
-    ("scripts.guardrails.delegate_ownership", "DEFAULT_TASK_STATE_DIR"),
-)
-# Live paths ``scripts/delegate.py`` derives from ``_TASKS_DIR.parent``
-# (``grep _TASKS_DIR.parent scripts/``):
-# - ``_TASKS_DIR.parent / "preflight_fast_fail.jsonl"``
-# - fallback ``_TASKS_DIR.parent / worktree_claims.LOCK_DIR_NAME``
+# Live paths ``scripts/delegate.py`` derives from ``tasks_dir().parent``:
+# - ``tasks_dir().parent / "preflight_fast_fail.jsonl"``
+# - fallback ``tasks_dir().parent / worktree_claims.LOCK_DIR_NAME``
 #   (``lu-worktree-locks``) when the git common dir is unknown.
 # This set is explicit. It does not cover the rest of ``batch_state/``.
 _DERIVED_LIVE_TASK_PATHS = (
@@ -841,7 +814,7 @@ def _refuse_real_task_store_write(kind: str, path: object) -> None:
     node = os.environ.get("PYTEST_CURRENT_TEST", "<unknown>")
     pytest.fail(
         f"{node} attempted to {kind} the real dispatch task store at {path} "
-        f"({_REAL_TASKS_DIR}); isolate delegate._TASKS_DIR",
+        f"({_REAL_TASKS_DIR}); set LU_TASKS_DIR for isolation",
         pytrace=False,
     )
 
@@ -885,7 +858,7 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
     minimal test environments. ``create_app(production_context())`` freezes
     the root onto ``app.state.ctx`` at import. ``delegate_router._tasks_dir``
     then writes ``.task_cache.sqlite3`` under that directory. The delegate
-    ``_TASKS_DIR`` retarget does not move it, and the audit guard turns that
+    ``LU_TASKS_DIR`` does not move it, and the audit guard turns that
     connect into a 500 (``Failed`` is a ``BaseException``, so the orient
     section handler does not catch it).
 
@@ -913,28 +886,6 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
         monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
 
 
-def _retarget_loaded_task_dirs(monkeypatch: pytest.MonkeyPatch, isolated: Path) -> None:
-    """Import available task-store modules and point their constants at ``isolated``.
-
-    Importing here binds the name before a test body can import the module and
-    keep the live path. Minimal workflow venvs omit the agent runtime package;
-    modules requiring it cannot be imported there. The list is
-    ``_TASK_STORE_RETARGETS``, not a scan of ``sys.modules``.
-    """
-    import importlib
-
-    for module_name, attr in _TASK_STORE_RETARGETS:
-        try:
-            module = importlib.import_module(module_name)
-        except ModuleNotFoundError as exc:
-            if exc.name != "learn_ukrainian_v4_runtime":
-                raise
-            # Skipped module keeps its live path; if a test later injects a stub
-            # runtime and imports it, the audit hook is the backstop.
-            continue
-        monkeypatch.setattr(module, attr, isolated)
-
-
 # Per-process, not per-test: ``mktemp`` scans the base directory for the next
 # number, and that scan grows with every directory already created (#8654 review).
 _DISPATCH_STORE_SEQ = itertools.count()
@@ -947,17 +898,15 @@ def _dispatch_task_store_base(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 
 @pytest.fixture(autouse=True)
-def _isolate_dispatch_task_store(
-    _dispatch_task_store_base: Path, monkeypatch: pytest.MonkeyPatch
-) -> Path:
+def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Point the dispatch task store at a per-test directory (#8654).
 
-    The directory is ``<session base>/<n>/tasks``, so ``_TASKS_DIR.parent``
+    The directory is ``<session base>/<n>/tasks``, so ``tasks_dir().parent``
     (where delegate writes ``preflight_fast_fail.jsonl``) is also per-test.
     It comes from ``tmp_path_factory``, not the test's ``tmp_path``: an autouse
     fixture that creates a subdirectory of ``tmp_path`` breaks tests that
     assert their tmp dir starts empty (see ``_isolate_write_ownership_ledger``).
-    Nothing is copied out of the live store. A test that sets ``_TASKS_DIR``
+    Nothing is copied out of the live store. A test that sets ``LU_TASKS_DIR``
     itself runs after this autouse fixture, so that override wins.
     The same directory's parent becomes ``config.BATCH_STATE_DIR`` and
     ``app.state.ctx.roots.batch_state_dir``, so Monitor requests do not open
@@ -965,19 +914,8 @@ def _isolate_dispatch_task_store(
     """
     isolated = _dispatch_task_store_base / str(next(_DISPATCH_STORE_SEQ)) / "tasks"
     isolated.mkdir(parents=True)
-    import scripts.delegate as delegate_mod
-
-    monkeypatch.setattr(delegate_mod, "_TASKS_DIR", isolated)
+    monkeypatch.setenv("LU_TASKS_DIR", str(isolated))
     _retarget_api_batch_state(monkeypatch, isolated.parent)
-    # Tests put ``scripts/`` on ``sys.path`` and ``import delegate``. That is a
-    # second module object with its own ``_TASKS_DIR``, not ``scripts.delegate``.
-    flat_delegate = sys.modules.get("delegate")
-    if flat_delegate is not None and flat_delegate is not delegate_mod:
-        flat_file = getattr(flat_delegate, "__file__", None)
-        delegate_file = getattr(delegate_mod, "__file__", None)
-        if flat_file and delegate_file and Path(flat_file).resolve() == Path(delegate_file).resolve():
-            monkeypatch.setattr(flat_delegate, "_TASKS_DIR", isolated)
-    _retarget_loaded_task_dirs(monkeypatch, isolated)
     return isolated
 
 
@@ -1181,10 +1119,7 @@ def sparse_missing_tree_skip_reason(
     needed = _trees_needed_by_test(normalized, item_name)
     for tree in ("data/projects", "data/lexicon"):
         if tree in missing_trees and tree in needed:
-            return (
-                f"{tree} is absent from this sparse worktree; "
-                f"re-include it with --sparse-include {tree}"
-            )
+            return f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
     return None
 
 
@@ -1384,11 +1319,7 @@ def _is_fixture(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> tuple[bool, bool]
         autouse = False
         if call is not None:
             for keyword in call.keywords:
-                if (
-                    keyword.arg == "autouse"
-                    and isinstance(keyword.value, ast.Constant)
-                    and keyword.value.value is True
-                ):
+                if keyword.arg == "autouse" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True:
                     autouse = True
         return True, autouse
     return False, False
@@ -1540,9 +1471,7 @@ def _analyze_test_module(
         if autouse:
             module_trees.update(direct.get(name, ()))
 
-    function_trees = tuple(
-        (name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees
-    )
+    function_trees = tuple((name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees)
     return frozenset(module_trees), function_trees
 
 
@@ -2345,9 +2274,7 @@ def _guarded_popen_init(self, args, *pos, **kwargs):
         found = _git_worktree_add_destination(args, _popen_cwd(pos, kwargs))
         if found is not None:
             dest = found
-            absent_before = (
-                found not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(found)
-            )
+            absent_before = found not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(found)
     except Exception as exc:
         # A guard bug must not replace the original call.
         _record_classify_failure(exc)
@@ -2358,9 +2285,7 @@ def _guarded_popen_init(self, args, *pos, **kwargs):
     if dest is None:
         return
     try:
-        _POPEN_WORKTREE_CALLS.append(
-            _PopenWorktreeCall(self, dest, absent_before, _creation_attribution())
-        )
+        _POPEN_WORKTREE_CALLS.append(_PopenWorktreeCall(self, dest, absent_before, _creation_attribution()))
     except Exception as exc:
         _record_classify_failure(exc)
 
@@ -2493,11 +2418,7 @@ def _worktree_guard_teardown_message() -> str | None:
             _record_classify_failure(exc)
             continue
         if code is None:
-            _record_classify_failure(
-                TimeoutError(
-                    f"git worktree add {path}: timed out waiting for exit status"
-                )
-            )
+            _record_classify_failure(TimeoutError(f"git worktree add {path}: timed out waiting for exit status"))
             continue
         if code == 0 and (os.path.lexists(path) or path in listed):
             suspected.add(path)

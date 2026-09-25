@@ -45,7 +45,7 @@ def tmp_tasks_dir(tmp_path, monkeypatch):
     """Isolate delegate + delegate_router state scans in a tmp directory."""
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     monkeypatch.setattr(delegate_router, "_tasks_dir", lambda ctx=None: tasks_dir)
     # The router keeps a process-wide scan cache keyed by tasks-dir path;
     # force a cold read so each test sees only its own fixture rows.

@@ -431,7 +431,7 @@ def test_force_new_archive_after_digest_does_not_recreate_the_hot_record(
     tasks = root / "tasks"
     _write_record(tasks, "moving", status="done", age_days=20, run_nonce="same")
     _write_full_sidecars(tasks, "moving", entries=2)
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     locked: list[Path] = []
 
     @contextlib.contextmanager
