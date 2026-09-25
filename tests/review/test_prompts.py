@@ -1038,27 +1038,13 @@ def test_every_legitimate_manifest_kind_from_the_real_engine_fixtures_is_eligibl
     assert pin_refusals(plan, tmp_path / "plan") == []
 
 
-def test_activity_data_may_be_shared_site_data_or_this_modules_own_files(tmp_path, monkeypatch):
-    level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(tmp_path)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
-    (tmp_path / "site/src/data").mkdir(parents=True)
-    (tmp_path / "site/src/data/activity-a.json").write_text("{}\n", encoding="utf-8")
-    (page_dir / "activity-b.json").write_text("{}\n", encoding="utf-8")
-    (page_dir / "2.mdx").write_text(
-        'import a from "@site/src/data/activity-a.json";\nimport b from "./activity-b.json";\n', encoding="utf-8"
-    )
-    doc, _ = _write(level, slug, 2, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
-    _write_module_manifest(tmp_path, slug)
-    assert [item["path"] for item in doc["inputs"]["activity_data"]] == [
-        f"{PAGES}/activity-b.json",
-        "site/src/data/activity-a.json",
-    ]
+def test_a_real_engine_lesson_pins_no_activity_data_and_passes(tmp_path, monkeypatch):
+    # The engine emits no data imports (activity data is inline component props): empty on both sides.
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    assert doc["inputs"]["activity_data"] == []
     assert pin_refusals(doc, tmp_path) == []
     rendered, _sha, files_read = render_prompt(doc, repo_root=tmp_path)
     assert check_prompt(rendered, doc, repo_root=tmp_path, files_read=files_read).passed
-
-    _repoint(tmp_path, doc, "inputs.activity_data[0]", "site/src/content/docs/a1/neighbour-unit/activity.json")
-    _assert_refused(tmp_path, monkeypatch, doc, eligibility.PIN_FOREIGN_MODULE)
 
 
 def test_rule_a_a_pin_at_a_location_the_contract_does_not_list_is_refused(tmp_path, monkeypatch):
@@ -1239,16 +1225,14 @@ def test_eligibility_reads_only_the_pinned_lesson_and_the_table_names_a_contract
     assert read and {path.resolve() for path in read} == {(tmp_path / doc["inputs"]["lesson"]["path"]).resolve()}
 
 
-def _activity_manifest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict:
-    """A real lesson-2 manifest whose lesson imports one shared data file and one of its own."""
+def _activity_manifest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, rel: str) -> dict:
+    """A lesson-2 manifest whose lesson imports the data file at ``rel``, pinned exactly as the writer records it."""
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(tmp_path)
     monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
-    (tmp_path / "site/src/data").mkdir(parents=True)
-    (tmp_path / "site/src/data/activity-a.json").write_text("{}\n", encoding="utf-8")
-    (page_dir / "activity-b.json").write_text("{}\n", encoding="utf-8")
-    (page_dir / "2.mdx").write_text(
-        'import a from "@site/src/data/activity-a.json";\nimport b from "./activity-b.json";\n', encoding="utf-8"
-    )
+    target = tmp_path / rel
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("{}\n", encoding="utf-8")
+    (page_dir / "2.mdx").write_text(f'import a from "@site/{rel.removeprefix("site/")}";\n', encoding="utf-8")
     doc, _ = _write(level, slug, 2, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
     _write_module_manifest(tmp_path, slug)
     return doc
@@ -1259,61 +1243,34 @@ def _refusal_codes(doc: dict, root: Path) -> list[str]:
 
 
 @pytest.mark.parametrize(
-    ("rel", "codes"),
+    "rel",
     [
-        # the reviewer's three probes (review r4): each was accepted and each is now refused
-        ("site/src/data/other-module/answers.json", ["pin_activity_data_mismatch"] * 2),  # an extra and a missing
-        ("site/src/data/lesson-2.prompt.md", ["pin_writer_material"]),
-        (f"{PAGES}/lesson-2.self-assessment.yaml", ["pin_writer_material"]),
-        # writer files at their engine names are refused for this kind of pin too
-        (f"{PAGES}/lesson-2.draft.yaml", ["pin_writer_material"]),
-        ("site/src/data/lesson-2.raw.txt", ["pin_writer_material"]),
-        # inside this module's own page directory but not imported by the lesson
-        (f"{PAGES}/unimported.json", ["pin_activity_data_mismatch"] * 2),
+        "site/src/data/neighbour-unit/answers.json",  # the reviewer's reproduction: a neighbour's data, pinned to match
+        "site/src/data/activity-a.json",
+        "site/src/content/docs/a1/neighbour-unit/activity.json",
+        f"{PAGES}/activity-b.json",
     ],
 )
-def test_activity_data_that_the_lesson_does_not_import_or_that_is_writer_material_is_refused(
-    tmp_path, monkeypatch, rel, codes
-):
-    doc = _activity_manifest(tmp_path, monkeypatch)
-    _repoint(tmp_path, doc, "inputs.activity_data[0]", rel)
-    assert _refusal_codes(doc, tmp_path) == codes
-    with pytest.raises(PinIneligibleError):
+def test_any_activity_data_pin_is_refused_as_unsupported(tmp_path, monkeypatch, rel):
+    doc = _activity_manifest(tmp_path, monkeypatch, rel)
+    assert [item["path"] for item in doc["inputs"]["activity_data"]] == [rel]
+    assert _refusal_codes(doc, tmp_path) == ["pin_activity_data_unsupported"]
+    with pytest.raises(PinIneligibleError, match="pin_activity_data_unsupported"):
         render_prompt(doc, repo_root=tmp_path)
     result = check_prompt("dummy prompt", doc, repo_root=tmp_path)
     assert not result.passed and all(err.startswith(("pin_", "manifest_")) for err in result.errors)
 
 
-def test_activity_data_must_equal_exactly_the_lessons_imports(tmp_path, monkeypatch):
-    doc = _activity_manifest(tmp_path, monkeypatch)
-    assert _refusal_codes(doc, tmp_path) == []
-    entries = doc["inputs"]["activity_data"]
-
-    missing = json.loads(json.dumps(doc))
-    del missing["inputs"]["activity_data"][1]
-    assert _refusal_codes(missing, tmp_path) == ["pin_activity_data_mismatch"]
-
-    empty = json.loads(json.dumps(doc))
-    empty["inputs"]["activity_data"] = []
-    assert _refusal_codes(empty, tmp_path) == ["pin_activity_data_mismatch"] * 2
-
-    repeated = json.loads(json.dumps(doc))
-    repeated["inputs"]["activity_data"].append(dict(entries[0]))
-    assert _refusal_codes(repeated, tmp_path) == ["pin_activity_data_mismatch"]
-
-    extra = json.loads(json.dumps(doc))
-    (tmp_path / "site/src/data/extra.json").write_text("{}\n", encoding="utf-8")
-    entry = dict(entries[0])
-    entry["path"] = "site/src/data/extra.json"
-    entry["sha256"] = hashlib.sha256(b"{}\n").hexdigest()
-    extra["inputs"]["activity_data"].append(entry)
-    assert _refusal_codes(extra, tmp_path) == ["pin_activity_data_mismatch"]
+def test_a_lesson_that_imports_data_fails_even_with_the_pin_removed(tmp_path, monkeypatch):
+    doc = _activity_manifest(tmp_path, monkeypatch, "site/src/data/activity-a.json")
+    doc["inputs"]["activity_data"] = []
+    assert _refusal_codes(doc, tmp_path) == ["pin_activity_data_mismatch"]
     with pytest.raises(PinIneligibleError, match="pin_activity_data_mismatch"):
-        render_prompt(extra, repo_root=tmp_path)
+        render_prompt(doc, repo_root=tmp_path)
 
 
 def test_the_activity_set_is_derived_with_the_engines_own_import_reader(tmp_path, monkeypatch):
-    doc = _activity_manifest(tmp_path, monkeypatch)
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     assert eligibility._activity_imports is manifest._activity_imports
     calls = []
     real = manifest._activity_imports

@@ -16,9 +16,9 @@ A later worker adds ``settle`` by adding its table; a kind without a table is re
 The manifest is first validated against its schema (``manifest_schema_invalid``), so every input
 the schema requires is pinned. Then each pin is judged: the writer-material and foreign-module
 refusals apply to every pin of every kind, before anything else can accept it. The one pin kind that
-is a *set* rather than a path, ``inputs.activity_data[]``, must equal exactly the activity files the
-pinned lesson imports (derived with the engine's own ``_activity_imports``, after the lesson's bytes
-are checked against its pin): that is the only place this module reads a file.
+is a *set* rather than a path, ``inputs.activity_data[]``, is refused outright (the engine emits no data
+imports), and the pinned lesson's imports (derived with the engine's own ``_activity_imports``, after the
+lesson's bytes are checked against its pin) must be empty too: that is the only place this module reads a file.
 
 Refusal codes, one per rule (each pin gets the first that applies):
 
@@ -36,8 +36,8 @@ Refusal codes, one per rule (each pin gets the first that applies):
                                  locations, so they pass the exact-path rule)
 - ``pin_foreign_module``         another module's (or another level's) directory or file
 - ``pin_outside_module_paths``   anything else that is not this module's path for that location
-- ``pin_activity_data_mismatch`` ``inputs.activity_data[]`` is not exactly the set of activity files
-                                 the pinned lesson imports (an extra, a missing or a repeated path)
+- ``pin_activity_data_unsupported`` any ``inputs.activity_data[]`` pin: the engine emits no data imports
+- ``pin_activity_data_mismatch`` the pinned lesson imports activity data (which no pin can then cover)
 """
 
 from __future__ import annotations
@@ -72,6 +72,7 @@ PIN_SUPERSEDED_SNAPSHOT = "pin_superseded_snapshot"
 PIN_FOREIGN_MODULE = "pin_foreign_module"
 PIN_OUTSIDE_MODULE_PATHS = "pin_outside_module_paths"
 PIN_ACTIVITY_DATA_MISMATCH = "pin_activity_data_mismatch"
+PIN_ACTIVITY_DATA_UNSUPPORTED = "pin_activity_data_unsupported"
 
 
 @dataclass(frozen=True)
@@ -124,8 +125,10 @@ LESSON_LOCATIONS: _Table = {
     "inputs.learner_state": lambda m, e: f"{m.state}/lesson-{m.lesson}\\.learner-state\\.yaml",
     "inputs.lessons_lock": lambda m, e: f"{m.state}/lessons\\.lock\\.yaml",
     "inputs.lesson": lambda m, e: f"{m.pages}/{m.lesson}\\.mdx",
-    # Coarse locality only; ``activity_data_refusals`` holds the set to exactly the lesson's imports.
-    "inputs.activity_data[]": lambda m, e: f"site/src/(?!content/docs/)[^/].*|{m.pages}/[^/].*",
+    # No ``inputs.activity_data[]`` entry on purpose: the engine emits no data imports today (activity data
+    # is inline component props), so any such pin is refused (``pin_activity_data_unsupported``). When the
+    # engine does emit them, add a positive per-module location rule here (see
+    # ``scripts/generate_mdx/core.py:781-822`` and ``_activity_imports`` in ``scripts/build/fresh/manifest.py``).
     "inputs.gate_report": lambda m, e: f"{m.state}/lesson-{m.lesson}\\.gates\\.yaml",
     "inputs.style_card": lambda m, e: (
         f"docs/style-cards/{BAND_CARD_MAP.get(m.level.lower().split('-')[0], 'b1plus')}\\.md"
@@ -354,6 +357,16 @@ def pin_refusals(manifest: dict[str, Any], repo_root: Path) -> list[Refusal]:
             )
             continue
         key = re.sub(r"\[\d+\]", "[]", location)
+        if key == "inputs.activity_data[]":
+            refusals.append(
+                Refusal(
+                    PIN_ACTIVITY_DATA_UNSUPPORTED,
+                    location,
+                    path,
+                    "the engine emits no data imports; there is no module-owned activity-data location to pin",
+                )
+            )
+            continue
         if key in RE_REVIEW_LOCATIONS and module.attempt is None:
             refusals.append(
                 Refusal(
