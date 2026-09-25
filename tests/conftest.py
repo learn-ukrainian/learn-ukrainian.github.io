@@ -8,6 +8,7 @@ import ast
 import contextlib
 import functools
 import ipaddress
+import itertools
 import os
 import shutil
 import socket
@@ -118,10 +119,15 @@ _BRIDGE_DB_BINDINGS_TO_REPLACE = set(_UNISOLATED_BRIDGE_DB_PATHS)
 
 
 def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
-    """Return a SQLite path and whether a URI explicitly opens it read-only."""
-    raw_path = os.fspath(database) if isinstance(database, (str, os.PathLike)) else None
-    if raw_path is None:
+    """Return a SQLite path and whether a URI explicitly opens it read-only.
+
+    ``bytes`` and ``os.PathLike`` objects whose ``__fspath__`` returns bytes are
+    paths. Decode them before the ``file:`` check so the guard does not raise
+    ``TypeError`` or treat a raw bytes path as "not a path".
+    """
+    if not isinstance(database, (str, bytes, os.PathLike)):
         return None, False
+    raw_path = os.fsdecode(os.fspath(database))
     if raw_path.startswith("file:"):
         parsed = urlsplit(raw_path)
         query = parse_qs(parsed.query)
@@ -443,13 +449,25 @@ def _require_data_artifact(
     data_root = Path(os.environ.get("LEARN_UKRAINIAN_TEST_DATA_ROOT", _REPO_ROOT))
     artifact = data_root / relative_path
     if not artifact.is_file():
+        try:
+            from scripts.guardrails.worktree_containment import resolve_main_root
+
+            fallback = resolve_main_root(_REPO_ROOT) / relative_path
+            if fallback.is_file():
+                artifact = fallback
+        except Exception:
+            pass
+    if not artifact.is_file():
         pytest.skip(f"requires {relative_path} (not provisioned in CI)")
 
     if required_sqlite_tables:
         try:
             with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
                 available_tables = {
-                    row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+                    row[0]
+                    for row in connection.execute(
+                        "SELECT name FROM sqlite_master WHERE type IN ('table', 'view')"
+                    )
                 }
         except sqlite3.Error:
             available_tables = set()
@@ -563,8 +581,19 @@ def _hermetic_dispatch_admission_host(monkeypatch):
     )
 
 
+# One numbered directory per process. ``mktemp`` lists the base to pick the
+# next number, so a per-test call is quadratic over a long session (#8654).
+_WRITE_OWNERSHIP_SEQ = itertools.count()
+
+
+@pytest.fixture(scope="session")
+def _write_ownership_base(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One base directory for every per-test ownership ledger in this process."""
+    return tmp_path_factory.mktemp("write-ownership-stores")
+
+
 @pytest.fixture(autouse=True)
-def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
+def _isolate_write_ownership_ledger(_write_ownership_base: Path, monkeypatch):
     """Every test gets its own write-path ownership ledger.
 
     Root cause (2026-07-25): the ledger path was a module constant baked into
@@ -578,9 +607,12 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     ``tmp_path``: an autouse fixture that creates a subdirectory there breaks
     every test asserting its ``tmp_path`` is empty. Caught in CI by
     test_grok_envelope_failure_skips_forensics_when_unconfigured after the
-    first version of this fixture did exactly that.
+    first version of this fixture did exactly that. The session base is
+    numbered once; each test is ``<base>/<n>`` via ``mkdir``, not another
+    ``mktemp``.
     """
-    ledger_dir = tmp_path_factory.mktemp("write-ownership")
+    ledger_dir = _write_ownership_base / str(next(_WRITE_OWNERSHIP_SEQ))
+    ledger_dir.mkdir(parents=True)
     db_file = ledger_dir / "write-ownership.sqlite3"
     conn = sqlite3.connect(db_file)
     conn.execute(
@@ -590,6 +622,253 @@ def _isolate_write_ownership_ledger(tmp_path_factory, monkeypatch):
     conn.close()
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_LEDGER", str(db_file))
     monkeypatch.setenv("LEARN_UKRAINIAN_OWNERSHIP_TASK_STATE_DIR", str(ledger_dir))
+
+
+# =============================================================================
+# DISPATCH TASK STORE ISOLATION (#8654)
+# =============================================================================
+# ``delegate._TASKS_DIR`` is a module constant. Helpers compute the record,
+# result, archive, snapshot, log, and admission-lock paths from it at call
+# time. Tests that forget to patch the constant write into the live store
+# the Monitor API and the work board read. Sibling modules keep their own
+# copy of the same directory; ``_TASK_STORE_RETARGETS`` imports each one and
+# retargets it. The ownership ledger above is a different seam (env override).
+
+_REAL_TASKS_DIR = (resolve_repo_root(Path(__file__), 1) / "batch_state" / "tasks").resolve()
+# Sibling constants the autouse fixture retargets by importing each module.
+# ``scripts.delegate._TASKS_DIR`` is set in ``_isolate_dispatch_task_store``.
+# Completeness: tests/test_conftest_task_store_guard.py::test_task_store_constants_match_retarget_tuple
+_TASK_STORE_RETARGETS = (
+    ("scripts.fleet.post_task_reap", "_TASKS_DIR"),
+    ("scripts.fleet.hramatka_hygiene_check", "_TASKS_DIR"),
+    ("scripts.fleet.capacity_pick", "_TASKS_DIR"),
+    ("scripts.maintenance.reclassify_dispatch_status", "DEFAULT_TASKS_DIR"),
+    ("scripts.guardrails.delegate_ownership", "DEFAULT_TASK_STATE_DIR"),
+)
+# Live paths ``scripts/delegate.py`` derives from ``_TASKS_DIR.parent``
+# (``grep _TASKS_DIR.parent scripts/``):
+# - ``_TASKS_DIR.parent / "preflight_fast_fail.jsonl"``
+# - fallback ``_TASKS_DIR.parent / worktree_claims.LOCK_DIR_NAME``
+#   (``lu-worktree-locks``) when the git common dir is unknown.
+# This set is explicit. It does not cover the rest of ``batch_state/``.
+_DERIVED_LIVE_TASK_PATHS = (
+    (_REAL_TASKS_DIR.parent / "preflight_fast_fail.jsonl").resolve(),
+    (_REAL_TASKS_DIR.parent / "lu-worktree-locks").resolve(),
+)
+_REAL_TASKS_DIR_STR = os.fspath(_REAL_TASKS_DIR)
+_REAL_TASKS_DIR_PREFIX = _REAL_TASKS_DIR_STR + os.sep
+_DERIVED_LIVE_TASK_STRS = tuple(os.fspath(path) for path in _DERIVED_LIVE_TASK_PATHS)
+_DERIVED_LIVE_TASK_PREFIXES = tuple(path + os.sep for path in _DERIVED_LIVE_TASK_STRS)
+# Directory realpaths already known not to be a symlink into the live store.
+# One realpath per directory, not one Path.resolve per written file.
+_TASK_STORE_OUTSIDE_PARENTS: set[str] = set()
+_TASK_STORE_WRITE_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
+_TASK_STORE_MUTATION_EVENTS = {
+    "os.chmod": (0,),
+    "os.chown": (0,),
+    "os.link": (0, 1),
+    "os.mkdir": (0,),
+    "os.remove": (0,),
+    "os.rename": (0, 1),
+    "os.rmdir": (0,),
+    "os.symlink": (0, 1),
+    "os.truncate": (0,),
+    "os.unlink": (0,),
+    "os.utime": (0,),
+    "shutil.copyfile": (1,),
+    "shutil.copytree": (1,),
+    "shutil.move": (0, 1),
+    "shutil.rmtree": (0,),
+}
+# One membership test per audit event. Python calls every hook for every
+# event (``import``, ``compile``, ``exec``, ``os.listdir``, ``sys._getframe``,
+# …). The #8640 opsec hook lives in another module and is not installed for
+# this suite, so this hook stays separate and returns before any path work.
+_TASK_STORE_HANDLED_EVENTS = frozenset(("open", "sqlite3.connect", *_TASK_STORE_MUTATION_EVENTS))
+
+
+def _text_under_live_tasks(text: str) -> bool:
+    """True when ``text`` is already a normalized path inside the live store."""
+    if text == _REAL_TASKS_DIR_STR or text.startswith(_REAL_TASKS_DIR_PREFIX):
+        return True
+    for exact, prefix in zip(_DERIVED_LIVE_TASK_STRS, _DERIVED_LIVE_TASK_PREFIXES, strict=True):
+        if text == exact or text.startswith(prefix):
+            return True
+    return False
+
+
+def _path_under_real_tasks(path: object) -> bool:
+    """True for the live task store, a file inside it, or a derived sibling path."""
+    if isinstance(path, int) or path is None:
+        return False
+    try:
+        text = os.fsdecode(path)
+    except (TypeError, ValueError):
+        return False
+    if _text_under_live_tasks(text):
+        return True
+    norm = os.path.normpath(text)
+    if norm != text and _text_under_live_tasks(norm):
+        return True
+    if os.path.isabs(norm) and ".." not in norm:
+        parent = os.path.dirname(norm)
+        if parent not in _TASK_STORE_OUTSIDE_PARENTS:
+            try:
+                real_parent = os.path.realpath(parent)
+            except OSError:
+                return False
+            if real_parent == parent:
+                _TASK_STORE_OUTSIDE_PARENTS.add(parent)
+            elif _text_under_live_tasks(os.path.normpath(os.path.join(real_parent, os.path.basename(norm)))):
+                return True
+        try:
+            if os.path.islink(norm):
+                return _text_under_live_tasks(os.path.normpath(os.path.realpath(norm)))
+        except OSError:
+            return False
+        return False
+    try:
+        return _text_under_live_tasks(os.path.normpath(os.path.realpath(text)))
+    except OSError:
+        return False
+
+
+def _sqlite_path_under_real_tasks(database: object) -> bool:
+    path, read_only = _sqlite_database_path(database)
+    return path is not None and not read_only and _path_under_real_tasks(path)
+
+
+def _refuse_real_task_store_write(kind: str, path: object) -> None:
+    node = os.environ.get("PYTEST_CURRENT_TEST", "<unknown>")
+    pytest.fail(
+        f"{node} attempted to {kind} the real dispatch task store at {path} "
+        f"({_REAL_TASKS_DIR}); isolate delegate._TASKS_DIR",
+        pytrace=False,
+    )
+
+
+def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
+    """Fail a writable open, rename, or sqlite connect under the live task store.
+
+    Installed once with ``sys.addaudithook`` (#8640): a monkeypatch of ``open``
+    misses ``Path.write_text`` aliases and ``os.open`` captured before the
+    fixture ran. The hook cannot be removed, so it stays installed and only
+    refuses paths inside ``_REAL_TASKS_DIR`` and the explicit derived files
+    under ``_REAL_TASKS_DIR.parent`` listed in ``_DERIVED_LIVE_TASK_PATHS``.
+    The first statement rejects every event this hook does not handle.
+    """
+    if event not in _TASK_STORE_HANDLED_EVENTS:
+        return
+    if event == "open" and len(args) >= 3:
+        path, mode, flags = args[0], args[1], args[2]
+        writing = isinstance(mode, str) and any(char in mode for char in "wax+")
+        if (writing or (isinstance(flags, int) and flags & _TASK_STORE_WRITE_FLAGS)) and _path_under_real_tasks(path):
+            _refuse_real_task_store_write("write", path)
+        return
+    indexes = _TASK_STORE_MUTATION_EVENTS.get(event)
+    if indexes is not None:
+        for index in indexes:
+            if index < len(args) and _path_under_real_tasks(args[index]):
+                _refuse_real_task_store_write(event, args[index])
+        return
+    if event == "sqlite3.connect" and args and _sqlite_path_under_real_tasks(args[0]):
+        _refuse_real_task_store_write("open a database in", args[0])
+
+
+sys.addaudithook(_task_store_write_hook)
+
+
+def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path) -> None:
+    """Point Monitor's task-store root at this test's ``batch_state``.
+
+    ``create_app(production_context())`` freezes ``config.BATCH_STATE_DIR`` onto
+    ``app.state.ctx`` at import. ``delegate_router._tasks_dir`` then writes
+    ``.task_cache.sqlite3`` under that directory. The delegate ``_TASKS_DIR``
+    retarget does not move it, and the audit guard turns that connect into a
+    500 (``Failed`` is a ``BaseException``, so the orient section handler does
+    not catch it).
+
+    ``git_hygiene_router._active_task_ids`` is not this seam: it reads
+    ``project_root / "batch_state" / "tasks"`` (the checkout, via
+    ``live_repo_root``), and only opens task JSON read-only. It never opens
+    the task-cache database. Pointing ``live_repo_root`` at the temp store
+    would detach git-backed API tests from the repo.
+
+    ``hramatka_router`` binds ``BATCH_STATE_DIR / "hramatka"`` at import. That
+    is the lesson store, not ``tasks/``, and this guard does not watch it.
+    """
+    import scripts.api.config as api_config
+    from scripts.api.monitor_context import production_context
+
+    monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
+    production_context.cache_clear()
+    api_main = sys.modules.get("scripts.api.main")
+    if api_main is None:
+        return
+    app = vars(api_main).get("app")
+    context = getattr(getattr(app, "state", None), "ctx", None)
+    if context is not None:
+        monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
+
+
+def _retarget_loaded_task_dirs(monkeypatch: pytest.MonkeyPatch, isolated: Path) -> None:
+    """Import each known task-store module and point its constant at ``isolated``.
+
+    Importing here binds the name before a test body can import the module and
+    keep the live path. The list is ``_TASK_STORE_RETARGETS``, not a scan of
+    ``sys.modules``.
+    """
+    import importlib
+
+    for module_name, attr in _TASK_STORE_RETARGETS:
+        module = importlib.import_module(module_name)
+        monkeypatch.setattr(module, attr, isolated)
+
+
+# Per-process, not per-test: ``mktemp`` scans the base directory for the next
+# number, and that scan grows with every directory already created (#8654 review).
+_DISPATCH_STORE_SEQ = itertools.count()
+
+
+@pytest.fixture(scope="session")
+def _dispatch_task_store_base(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One numbered base for every per-test task store in this process."""
+    return tmp_path_factory.mktemp("dispatch-stores")
+
+
+@pytest.fixture(autouse=True)
+def _isolate_dispatch_task_store(
+    _dispatch_task_store_base: Path, monkeypatch: pytest.MonkeyPatch
+) -> Path:
+    """Point the dispatch task store at a per-test directory (#8654).
+
+    The directory is ``<session base>/<n>/tasks``, so ``_TASKS_DIR.parent``
+    (where delegate writes ``preflight_fast_fail.jsonl``) is also per-test.
+    It comes from ``tmp_path_factory``, not the test's ``tmp_path``: an autouse
+    fixture that creates a subdirectory of ``tmp_path`` breaks tests that
+    assert their tmp dir starts empty (see ``_isolate_write_ownership_ledger``).
+    Nothing is copied out of the live store. A test that sets ``_TASKS_DIR``
+    itself runs after this autouse fixture, so that override wins.
+    The same directory's parent becomes ``config.BATCH_STATE_DIR`` and
+    ``app.state.ctx.roots.batch_state_dir``, so Monitor requests do not open
+    the live ``.task_cache.sqlite3``.
+    """
+    isolated = _dispatch_task_store_base / str(next(_DISPATCH_STORE_SEQ)) / "tasks"
+    isolated.mkdir(parents=True)
+    import scripts.delegate as delegate_mod
+
+    monkeypatch.setattr(delegate_mod, "_TASKS_DIR", isolated)
+    _retarget_api_batch_state(monkeypatch, isolated.parent)
+    # Tests put ``scripts/`` on ``sys.path`` and ``import delegate``. That is a
+    # second module object with its own ``_TASKS_DIR``, not ``scripts.delegate``.
+    flat_delegate = sys.modules.get("delegate")
+    if flat_delegate is not None and flat_delegate is not delegate_mod:
+        flat_file = getattr(flat_delegate, "__file__", None)
+        delegate_file = getattr(delegate_mod, "__file__", None)
+        if flat_file and delegate_file and Path(flat_file).resolve() == Path(delegate_file).resolve():
+            monkeypatch.setattr(flat_delegate, "_TASKS_DIR", isolated)
+    _retarget_loaded_task_dirs(monkeypatch, isolated)
+    return isolated
 
 
 class SocketBlockedError(RuntimeError):

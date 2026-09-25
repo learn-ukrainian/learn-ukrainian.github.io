@@ -10,7 +10,21 @@ record still describes the tree — before promotion (every input unchanged) and
 after promotion (every input unchanged except the plan, whose only allowed
 difference is the ``evidence_ref.sha256`` transition proven by the promotion
 receipt). The helpers of ``manifest.py`` are reused, including its private
-``_input``; ``manifest.py`` is owned by a parallel package and is not edited.
+``_input``.
+
+The manifest names every file the reviewer receives. Besides the plan, the pack
+and word store (each with its lock) and the reports, that includes the full prior
+planned learner state: the engine writes it as deterministic YAML
+(``plan-review.learner-state.yaml`` with its lock sidecar) and records it as
+``inputs.learner_state``. ``learner_state.sha256`` stays the canonical-JSON
+identity of the same ``planned_state`` result the file holds.
+
+Contract 1 also hands the reviewer "the requirements and the arc's system-or-chunk
+table". The requirements are ``docs/epics/fresh-build-requirements.md``
+(``inputs.requirements``). ``_arc.yaml`` is a per-position extract that does not
+carry the system-or-chunk table, so the arc source document it names in
+``source.path`` (``docs/epics/fresh-build-<level>-arc.md``, section 3) is pinned as
+``inputs.arc_source``.
 """
 
 from __future__ import annotations
@@ -26,7 +40,7 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts.build.fresh.manifest import _input, learner_state_sha256
+from scripts.build.fresh.manifest import _input, learner_state_document, learner_state_sha256, materialize_learner_state
 from scripts.build.fresh.manifest import sha256 as file_sha256
 from scripts.build.fresh.path_guard import checked_path, validate_module
 from scripts.curriculum.evidence import lock
@@ -41,6 +55,8 @@ TREE = "curriculum/l2-uk-en"
 PACK_VERIFY_REPORT_NAME = "pack-verify.report.json"
 MANIFEST_NAME = "plan-review.manifest.yaml"
 SIDECAR_NAME = "plan-review.manifest.sha256"
+LEARNER_STATE_NAME = "plan-review.learner-state.yaml"
+REQUIREMENTS_REL = "docs/epics/fresh-build-requirements.md"
 REVIEW_NAME = "plan-review.yaml"
 RECEIPT_NAME = "plan-promotion.yaml"
 _SHA = re.compile(r"[0-9a-f]{64}")
@@ -48,9 +64,14 @@ _SHA = re.compile(r"[0-9a-f]{64}")
 #: The manifest input names, in schema order.
 INPUT_NAMES = (
     "plan",
+    "pack",
     "pack_lock",
+    "words",
     "words_lock",
+    "learner_state",
+    "requirements",
     "arc",
+    "arc_source",
     "decisions",
     "scope",
     "grammar",
@@ -69,11 +90,13 @@ _RECEIPT_KEYS = (
 # Refusal codes (stable identifiers; the CLI prints them as the JSON reason prefix).
 INPUT_MISSING = "input_missing"
 PLAN_UNREADABLE = "plan_unreadable"
+ARC_UNREADABLE = "arc_unreadable"
 PACK_PATH_MISMATCH = "pack_path_mismatch"
 PACK_CHANGED_DURING_VERIFY = "pack_changed_during_verify"
 PACK_VERIFY_REFUSED = "pack_verify_report_refused"
 VALIDATE_REPORT_REFUSED = "validate_report_refused"
 LEARNER_STATE_UNAVAILABLE = "learner_state_unavailable"
+LOCK_MISMATCH = "lock_mismatch"
 MANIFEST_INVALID = "manifest_invalid"
 MANIFEST_COLLISION = "manifest_collision"
 REVIEW_MISSING = "review_missing"
@@ -314,14 +337,14 @@ def unlink_current(root: Path, level: str, slug: str) -> None:
         path.unlink(missing_ok=True)
 
 
-def planned_state_sha256(root: Path, level: str, position: int) -> str:
-    """sha256 of the full prior planned learner state before this position (lesson 1).
+def prior_planned_state(root: Path, level: str, position: int) -> Any:
+    """The full prior planned learner state before this position (lesson 1).
 
     No waiver: a plan review needs every earlier position present, so a missing
     prior plan refuses instead of reviewing against an incomplete state.
     """
     try:
-        state = planned_state(
+        return planned_state(
             level,
             position,
             1,
@@ -330,7 +353,28 @@ def planned_state_sha256(root: Path, level: str, position: int) -> str:
         )
     except PlannedStateError as error:
         raise PlanReviewError(LEARNER_STATE_UNAVAILABLE, str(error)) from error
-    return learner_state_sha256(state)
+
+
+def planned_state_sha256(root: Path, level: str, position: int) -> str:
+    """The canonical-JSON identity of :func:`prior_planned_state`."""
+    return learner_state_sha256(prior_planned_state(root, level, position))
+
+
+def _arc_source_path(root: Path, arc_path: Path) -> Path:
+    """The arc source document ``_arc.yaml`` names in ``source.path`` (a repo-relative docs/epics markdown file)."""
+    try:
+        recorded = yaml.safe_load(arc_path.read_bytes())["source"]["path"]
+    except (OSError, yaml.YAMLError, KeyError, TypeError) as error:
+        raise PlanReviewError(ARC_UNREADABLE, f"{_relative(root, arc_path)} names no source document") from error
+    relative = Path(str(recorded))
+    if relative.is_absolute() or ".." in relative.parts or relative.parts[:2] != ("docs", "epics"):
+        raise PlanReviewError(
+            ARC_UNREADABLE, f"{_relative(root, arc_path)} source.path {recorded!r} is not under docs/epics"
+        )
+    path = root / relative
+    if not path.is_file():
+        raise PlanReviewError(INPUT_MISSING, f"input missing: {relative.as_posix()}", [relative.as_posix()])
+    return path
 
 
 def _entry(root: Path, path: Path) -> dict[str, str]:
@@ -364,19 +408,24 @@ def _write_plan_manifest(level: str, slug: str, root: Path, sources_instance: An
     directory = state_dir(root, level, slug)
     plan_path = plans / f"{slug}.yaml"
     pack_path = evidence / f"{slug}.yaml"
+    words_path = evidence / "_words.yaml"
     files = {
         "plan": plan_path,
+        "pack": pack_path,
         "pack_lock": Path(f"{pack_path}.lock"),
-        "words_lock": Path(f"{evidence / '_words.yaml'}.lock"),
+        "words": words_path,
+        "words_lock": Path(f"{words_path}.lock"),
         "arc": plans / "_arc.yaml",
         "decisions": plans / "_decisions.yaml",
         "scope": plans / "_scope" / f"{slug}.yaml",
         "grammar": plans / "_grammar.yaml",
         "validate_report": directory / VALIDATE_REPORT_NAME,
+        "requirements": root / REQUIREMENTS_REL,
     }
-    missing = [_relative(root, path) for path in (*files.values(), pack_path) if not path.is_file()]
+    missing = [_relative(root, path) for path in files.values() if not path.is_file()]
     if missing:
         raise PlanReviewError(INPUT_MISSING, "input missing: " + ", ".join(missing), missing)
+    files["arc_source"] = _arc_source_path(root, files["arc"])
 
     try:
         plan = load_plan(plan_path)
@@ -428,6 +477,21 @@ def _write_plan_manifest(level: str, slug: str, root: Path, sources_instance: An
             list(problems),
         )
 
+    for name in ("pack", "words"):
+        if not lock.check(files[name]):
+            raise PlanReviewError(
+                LOCK_MISMATCH, f"{_relative(root, files[name])} disagrees with its lock", [_relative(root, files[name])]
+            )
+    state = prior_planned_state(root, level, position)
+    state_path = _guarded(root, directory / LEARNER_STATE_NAME)
+    try:
+        materialize_learner_state(state_path, learner_state_document(state), root)
+    except (OSError, ValueError) as error:
+        raise PlanReviewError(
+            LEARNER_STATE_UNAVAILABLE, f"cannot write {_relative(root, state_path)}: {error}"
+        ) from error
+    files["learner_state"] = state_path
+
     manifest = {
         "manifest_schema": 1,
         "kind": "plan",
@@ -435,7 +499,7 @@ def _write_plan_manifest(level: str, slug: str, root: Path, sources_instance: An
         "slug": slug,
         "position": position,
         "inputs": {name: _entry(root, files[name]) for name in INPUT_NAMES},
-        "learner_state": {"sha256": planned_state_sha256(root, level, position), "source": "planned_state"},
+        "learner_state": {"sha256": learner_state_sha256(state), "source": "planned_state"},
     }
     validate_manifest_document(manifest)
     content = lock.yaml_bytes(manifest)

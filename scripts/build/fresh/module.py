@@ -12,7 +12,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.closure import compute_closure
-from scripts.build.fresh.immersion import compute_immersion_payload
+from scripts.build.fresh.immersion import lesson_immersion_payload
 from scripts.build.fresh.manifest import unlink_current
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.build.fresh.preflight import preflight_lesson
@@ -80,8 +80,7 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
             built = (_load_recap_built_lessons(paths["state_dir"], level, slug, n, repo_root)
                      if entry.get("kind") == "recap" else [])
             common = dict(cited_records=_load_cited_records(entry, pack, words), learner_state=learner,
-                          immersion=compute_immersion_payload(level, position, n,
-                                                               cumulative_core_count=learner.cumulative_core_count),
+                          immersion=lesson_immersion_payload(level, position, n, learner),
                           level=level, slug=slug, lesson_n=n, style_card_path=card_path,
                           **{key: expected[key] for key in ("plan_sha256", "pack_lock", "words_lock",
                                                              "lesson_lock_entry_sha256", "learner_state_sha256")})
