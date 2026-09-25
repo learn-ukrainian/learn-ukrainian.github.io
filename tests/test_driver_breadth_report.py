@@ -479,3 +479,11 @@ def test_load_tasks_reads_archived_records(tmp_path: Path) -> None:
     )
     tasks = load_tasks(tasks_dir, initiator_prefix="grok", since=datetime.now(UTC) - timedelta(days=30))
     assert sorted(task["task_id"] for task in tasks) == ["hot", "old"]
+
+
+@pytest.mark.parametrize("value", ["-1", "0", "-0.5", "nan", "inf", "abc"])
+def test_rejects_non_positive_since_hours(value: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as excinfo:
+        main(["--tasks-dir", str(tmp_path), "--since-hours", value])
+    assert excinfo.value.code == 2
+    assert "--since-hours" in capsys.readouterr().err

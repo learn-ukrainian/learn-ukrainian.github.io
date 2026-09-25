@@ -180,7 +180,8 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator claude-infra --since-hours 24 --enforce\n"
             "  .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --json\n"
             "Outputs: report on stdout; no files written.\n"
-            "Exit codes: 0 success; 2 failed breadth or idle disposition enforcement.\n"
+            "Exit codes: 0 success; 2 failed breadth or idle disposition enforcement, or invalid arguments\n"
+            "  (including a non-positive --since-hours).\n"
             "Related: agents_extensions/shared/rules/fleet-driver-routing.md; issue #8819."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -198,9 +199,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--since-hours",
-        type=float,
+        type=idle_settle.positive_hours,
         default=24.0,
-        help="Lookback window in hours for tasks and idle events (default: 24; e.g. 48). Missing or invalid idle timestamps stay included",
+        help="Lookback window in hours (must be > 0) for tasks and idle events (default: 24; e.g. 48). Missing or invalid idle timestamps stay included",
     )
     parser.add_argument(
         "--enforce",

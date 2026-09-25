@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 import uuid
 from dataclasses import asdict, dataclass, field
@@ -888,6 +889,17 @@ def run_evaluate(
     return rc, decision, event
 
 
+def positive_hours(raw: str) -> float:
+    """argparse type for lookback windows: a finite number of hours greater than zero."""
+    try:
+        value = float(raw)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"invalid number of hours: {raw!r}") from None
+    if not math.isfinite(value) or value <= 0:
+        raise argparse.ArgumentTypeError(f"must be a positive number of hours, got {raw!r}")
+    return value
+
+
 def _cmd_evaluate(args: argparse.Namespace) -> int:
     if args.snapshot_json is not None:
         snapshot = parse_snapshot(_load_json_file(args.snapshot_json))
@@ -985,7 +997,8 @@ def _build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Example: .venv/bin/python -m scripts.fleet.idle_settle report --since-hours 24 --json\n"
             "Outputs: report on stdout; no files written.\n"
-            "Exit codes: 0 success; 2 invalid input or report error.\n"
+            "Exit codes: 0 success (a missing or unreadable store reports zero events); "
+            "2 invalid arguments, including a non-positive --since-hours.\n"
             "Related: scripts.fleet.driver_breadth_report; issue #8819."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -998,9 +1011,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     report.add_argument(
         "--since-hours",
-        type=float,
+        type=positive_hours,
         default=None,
-        help="Lookback window in hours, inclusive (default: all events; e.g. 24). Missing or invalid timestamps stay included",
+        help="Lookback window in hours, must be > 0, inclusive (default: all events; e.g. 24). Missing or invalid timestamps stay included",
     )
     report.add_argument("--json", action="store_true", help="Print JSON instead of text (default: text)")
     report.set_defaults(func=_cmd_report)
