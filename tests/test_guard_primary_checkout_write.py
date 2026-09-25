@@ -23,6 +23,7 @@ import importlib.util
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -35,9 +36,15 @@ HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-primary-ch
 # Git env vars that would hijack the throwaway repos below (inherited under
 # pre-commit / a git hook). Mirrors the module's own denylist.
 _GIT_ENV = {
-    "GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY",
-    "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_NAMESPACE", "GIT_CEILING_DIRECTORIES",
-    "GIT_DISCOVERY_ACROSS_FILESYSTEM", "GIT_COMMON_DIR",
+    "GIT_DIR",
+    "GIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_NAMESPACE",
+    "GIT_CEILING_DIRECTORIES",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+    "GIT_COMMON_DIR",
 }
 
 
@@ -164,13 +171,16 @@ def _clean_env() -> dict[str, str]:
 def _git(repo: Path, *args: str) -> None:
     subprocess.run(
         ["git", "-C", str(repo), *args],
-        check=True, capture_output=True, text=True, env=_clean_env(), timeout=10,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=_clean_env(),
+        timeout=10,
     )
 
 
 def _python() -> str:
-    venv = REPO_ROOT / ".venv" / "bin" / "python"
-    return str(venv) if venv.exists() else "python3"
+    return sys.executable
 
 
 @pytest.fixture
@@ -188,8 +198,7 @@ def repo(tmp_path: Path) -> Path:
     _git(main, "add", "curriculum/tracked.md", ".gitignore")
     _git(main, "commit", "-q", "-m", "init")
 
-    _git(main, "worktree", "add", "-q",
-         ".worktrees/dispatch/claude/task-1", "-b", "claude/task-1")
+    _git(main, "worktree", "add", "-q", ".worktrees/dispatch/claude/task-1", "-b", "claude/task-1")
     return main
 
 
@@ -197,8 +206,12 @@ def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> 
     return subprocess.run(
         [_python(), str(HOOK_PATH)],
         input=json.dumps(payload),
-        cwd=repo, check=False, capture_output=True, text=True,
-        env={**_clean_env(), **(env_extra or {})}, timeout=30,
+        cwd=repo,
+        check=False,
+        capture_output=True,
+        text=True,
+        env={**_clean_env(), **(env_extra or {})},
+        timeout=30,
     )
 
 
@@ -248,15 +261,11 @@ def test_read_only_bash_allowed(repo: Path):
         assert result.returncode == 0, f"{command!r}: {result.stderr}"
 
 
-def test_read_only_bash_redirect_is_allowed_when_jsonschema_is_masked(
-    repo: Path, tmp_path: Path
-) -> None:
+def test_read_only_bash_redirect_is_allowed_when_jsonschema_is_masked(repo: Path, tmp_path: Path) -> None:
     """Read-only commands do not depend on optional Python packages."""
     poison = tmp_path / "poison"
     poison.mkdir()
-    (poison / "jsonschema.py").write_text(
-        "raise ImportError('jsonschema deliberately masked')\n", encoding="utf-8"
-    )
+    (poison / "jsonschema.py").write_text("raise ImportError('jsonschema deliberately masked')\n", encoding="utf-8")
     env = _clean_env()
     env["PYTHONPATH"] = str(poison)
     payload = {
@@ -329,7 +338,8 @@ def test_bash_line_continuation_cannot_hide_primary_in_place_edit(repo: Path):
 
 def test_write_capable_bash_redirect_blocked(repo: Path):
     payload = {
-        "tool_name": "Bash", "cwd": str(repo),
+        "tool_name": "Bash",
+        "cwd": str(repo),
         "tool_input": {"command": "echo tampered > curriculum/tracked.md"},
     }
     result = _run(repo, payload)
@@ -339,7 +349,8 @@ def test_write_capable_bash_redirect_blocked(repo: Path):
 
 def test_write_capable_bash_tee_blocked(repo: Path):
     payload = {
-        "tool_name": "Bash", "cwd": str(repo),
+        "tool_name": "Bash",
+        "cwd": str(repo),
         "tool_input": {"command": "echo x | tee curriculum/tracked.md"},
     }
     result = _run(repo, payload)
@@ -348,7 +359,8 @@ def test_write_capable_bash_tee_blocked(repo: Path):
 
 def test_bash_redirect_to_gitignored_allowed(repo: Path):
     payload = {
-        "tool_name": "Bash", "cwd": str(repo),
+        "tool_name": "Bash",
+        "cwd": str(repo),
         "tool_input": {"command": "echo x > local_state/out.log"},
     }
     result = _run(repo, payload)
@@ -377,7 +389,8 @@ def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
     # resolved real path, not by cwd).
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     payload = {
-        "tool_name": "Bash", "cwd": str(worktree),
+        "tool_name": "Bash",
+        "cwd": str(worktree),
         "tool_input": {"command": f"echo x > {repo / 'curriculum' / 'tracked.md'}"},
     }
     result = _run(repo, payload)
@@ -392,16 +405,12 @@ def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
     [
         # Body text with `>N` (previously misread as a redirect to '15%').
         (
-            "cat > /tmp/brief.md <<'EOF'\n"
-            "... if >15% of the last 30 consecutive live passages ...\n"
-            "EOF",
+            "cat > /tmp/brief.md <<'EOF'\n... if >15% of the last 30 consecutive live passages ...\nEOF",
             ["/tmp/brief.md"],
         ),
         # Body text with markdown backtick code spans (#4855 live repro).
         (
-            "cat > /tmp/brief.md <<'EOF'\n"
-            "run `.venv/bin/python scripts/x.py` then check\n"
-            "EOF",
+            "cat > /tmp/brief.md <<'EOF'\nrun `.venv/bin/python scripts/x.py` then check\nEOF",
             ["/tmp/brief.md"],
         ),
         # Tab-indented body with <<- and a redirect-looking line.
@@ -492,9 +501,7 @@ def test_bash_git_write_intents_allowlisted_or_ignored(command):
 
 
 def test_bash_git_write_intents_honors_dash_c():
-    intents = hook.bash_git_write_intents(
-        "git -C .worktrees/dispatch/claude/task-1 apply /tmp/x.diff"
-    )
+    intents = hook.bash_git_write_intents("git -C .worktrees/dispatch/claude/task-1 apply /tmp/x.diff")
     assert len(intents) == 1
     assert intents[0]["c_path"] == ".worktrees/dispatch/claude/task-1"
     assert intents[0]["kind"] == "apply"
@@ -676,9 +683,7 @@ def test_git_mv_via_dash_c_worktree_allowed(repo: Path):
     payload = {
         "tool_name": "Bash",
         "cwd": str(repo),
-        "tool_input": {
-            "command": f"git -C {worktree} mv curriculum/tracked.md curriculum/renamed.md"
-        },
+        "tool_input": {"command": f"git -C {worktree} mv curriculum/tracked.md curriculum/renamed.md"},
     }
     result = _run(repo, payload)
     assert result.returncode == 0, result.stderr
@@ -757,9 +762,7 @@ def test_bash_shell_var_reassignment_not_expanded(repo: Path):
         "tool_name": "Bash",
         "cwd": str(repo),
         "tool_input": {
-            "command": (
-                "A=curriculum/tracked.md; echo x > $A; A=local_state/ok.log"
-            ),
+            "command": ("A=curriculum/tracked.md; echo x > $A; A=local_state/ok.log"),
         },
     }
     result = _run(repo, payload)
@@ -936,6 +939,104 @@ def test_bash_read_home_shadows_inherited_home(repo: Path):
     result = _bash(repo, command, env={"HOME": "/tmp"})
     assert result.returncode == 2, result.stderr
     assert "unresolved_shell_variable" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "template, reason",
+    [
+        ("echo x > {primary_parent}/mai?/curriculum/tracked.md", "undecidable_glob_write_target"),
+        ("echo x > {primary}/curriculum/{{tracked,new}}.md", "undecidable_glob_write_target"),
+        ("cd {primary}; echo x > curriculum/tracked.md", "tracked"),
+        ("command -p tee {primary}/curriculum/tracked.md", "tracked"),
+        ("builtin tee {primary}/curriculum/tracked.md", "tracked"),
+        ("exec tee {primary}/curriculum/tracked.md", "tracked"),
+        ("cat <<EOF\n$(echo x > {primary}/curriculum/tracked.md)\nEOF", "tracked"),
+        ("echo {primary}/curriculum/tracked.md | xargs tee", "undecidable_xargs_stdin_target"),
+        ("find /tmp -maxdepth 0 -exec tee {primary}/curriculum/tracked.md \\;", "tracked"),
+        ("$(cd {primary} && tee curriculum/tracked.md)", "tracked"),
+        ("pushd {primary}; tee curriculum/tracked.md", "tracked"),
+        ("find /tmp -exec sh -c 'echo x > {primary}/curriculum/tracked.md' \\;", "tracked"),
+        ("env -i tee {primary}/curriculum/tracked.md", "tracked"),
+        (
+            "env -u HOME nice -n 2 timeout -s TERM 2 stdbuf -oL nohup sudo -u root tee {primary}/curriculum/tracked.md",
+            "tracked",
+        ),
+        ("cat <<EOF\n`echo x > {primary}/curriculum/tracked.md`\nEOF", "tracked"),
+        ("find {primary} -execdir tee relative.md \\;", "undecidable_find_execdir_target"),
+        ("cd $UNKNOWN; echo x > relative.md", "undecidable_write_target_after_cd"),
+    ],
+)
+def test_issue_8785_primary_bypasses_block(repo: Path, template: str, reason: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(primary=repo, primary_parent=repo.parent)
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+    assert reason in result.stderr
+
+
+def test_issue_8785_quoted_heredoc_body_is_inert(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = f"cat <<'EOF'\n$(echo x > {repo}/curriculum/tracked.md)\nEOF"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+def test_issue_8785_mixed_heredocs_keep_quoted_body_inert(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = f"cat <<'INERT' <<ACTIVE\n$(echo x > {repo}/curriculum/tracked.md)\nINERT\nplain text\nACTIVE"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("body", ["`cd {primary}`", "$((1 > {primary}/curriculum/tracked.md))"])
+def test_issue_8785_heredoc_nonwriting_expansion_does_not_change_parent_cwd(repo: Path, body: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = "cat <<EOF\n" + body.format(primary=repo) + "\nEOF\ntee safe.txt"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("target", ["local_state/out-?.log", ".worktrees/dispatch/claude/task-1/out-?.log"])
+def test_issue_8785_safe_globs_remain_allowed(repo: Path, target: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = f"echo x > {repo / target}"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cat /tmp/read-only",
+        "grep needle /tmp/read-only",
+        "find /tmp -maxdepth 0",
+        "git log -1",
+        "cd /tmp; tee scratch.txt",
+        "tee /tmp/scratch.txt",
+        "echo /tmp/scratch.txt | xargs tee",
+        "echo x > /tmp/out-?.txt",
+    ],
+)
+def test_issue_8785_safe_commands_remain_allowed(repo: Path, command: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "template, reason",
+    [
+        ("cd {primary}; git add curriculum/tracked.md", "tracked"),
+        ("pushd {primary}; git apply /tmp/change.diff", "git_mediated_primary_worktree"),
+        ("cd $UNKNOWN; git add file.txt", "undecidable_git_cwd_after_cd"),
+    ],
+)
+def test_issue_8785_git_writer_uses_effective_cwd(repo: Path, template: str, reason: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(primary=repo)
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+    assert reason in result.stderr
 
 
 @pytest.mark.parametrize(
