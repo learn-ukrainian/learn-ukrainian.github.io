@@ -35,9 +35,10 @@ import yaml
 
 from scripts.build.fresh import manifest, plan_manifest
 from scripts.curriculum.evidence import lock
-from scripts.review.prompts.check import check_prompt
+from scripts.review.prompts.check import MODULE_MANIFEST, check_prompt
 from scripts.review.prompts.check import main as check_main
 from scripts.review.prompts.render import (
+    ArcTableMissingError,
     InputHashMismatchError,
     LearnerStateMismatchError,
     ManifestReader,
@@ -68,11 +69,20 @@ EXPECTED_RULE_SNIPPET = (
 LEARNER_STATE = {"level": "a1", "core_ids": {"W-1": {"position": 1, "lesson": 1}}}
 
 
+def _write_module_manifest(root: Path, own_slug: str) -> None:
+    """The module manifest the checker reads for the level's slugs: this module, a neighbour, other modules and a one-word slug the template itself uses as prose."""
+    path = root / "curriculum/l2-uk-en/curriculum.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    modules = [own_slug, "neighbour-unit", "alien-unit-slug", "alienword", "comparison"]
+    path.write_text(yaml.safe_dump({"levels": {"a1": {"type": "core", "modules": modules}}}), encoding="utf-8")
+
+
 def _setup_lesson_fixture(root: Path, monkeypatch: pytest.MonkeyPatch, lesson_n: int = 2) -> tuple[Path, dict, str]:
     """A real lesson manifest from the engine's three-lesson fixture (lesson 3 is the recap)."""
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(root)
     monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
     doc, digest = _write(level, slug, lesson_n, state_dir, plan_dir, evidence_dir, page_dir, root)
+    _write_module_manifest(root, slug)
     return state_dir / f"lesson-{lesson_n}.manifest.yaml", doc, digest
 
 
@@ -82,6 +92,7 @@ def _setup_plan_fixture(root: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Pa
     assert validate_provisional(env) == 0
     doc, digest = plan_manifest.write_plan_manifest(LEVEL, SLUG, repo_root=env.root)
     manifest_path = env.state_dir / "plan-review.manifest.yaml"
+    _write_module_manifest(root, SLUG)
     return manifest_path, doc, digest
 
 
@@ -414,6 +425,7 @@ def _write_rereview(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         site_dir=page_dir,
         previous_attempt=previous,
     )
+    _write_module_manifest(tmp_path, slug)
     return state_dir / "lesson-2.manifest.yaml", doc
 
 
@@ -713,8 +725,9 @@ def test_check_cli_runs_and_enforces_files_read_sidecar(tmp_path: Path, monkeypa
     # 3. CLI fails when sidecar records an unauthorized read
     unauthorized_file = tmp_path / "unauthorized.txt"
     unauthorized_file.write_text("unauthorized data", encoding="utf-8")
-    bad_files_read = [*json.loads(sidecar_backup), "unauthorized.txt"]
-    sidecar_path.write_text(json.dumps(bad_files_read), encoding="utf-8")
+    bad_record = json.loads(sidecar_backup)
+    bad_record["files_read"].append("unauthorized.txt")
+    sidecar_path.write_text(json.dumps(bad_record), encoding="utf-8")
 
     ret_unauth = check_main([str(prompt_out), "--manifest", str(manifest_path), "--repo-root", str(tmp_path)])
     assert ret_unauth != 0
@@ -749,13 +762,22 @@ def _pinned_paths(doc: dict, root: Path) -> set[Path]:
     return {(root / entry["path"]).resolve() for _, entry in manifest.pinned_entries(doc)}
 
 
+def _verifier_paths(root: Path, doc: dict) -> set[Path]:
+    """What only the checker may read besides the pins: the module manifest and this lesson's own snapshots."""
+    state = root / "curriculum/l2-uk-en/evidence" / doc["level"] / "_state" / doc["slug"]
+    snapshots = set(state.glob("manifests/lesson-*/lesson.*.mdx")) if doc["kind"] == "lesson" else set()
+    return {(root / "curriculum/l2-uk-en/curriculum.yaml").resolve(), *(path.resolve() for path in snapshots)}
+
+
 def test_no_e3d_placeholder_markers_are_left():
     text = "\n".join(
         path.read_text(encoding="utf-8")
         for path in (Path(__file__).resolve().parents[2] / "scripts/review/prompts").glob("*.py")
     )
     assert "E3d:" not in text
-    assert "curriculum.yaml" not in text
+    assert "curriculum.yaml" not in (
+        Path(__file__).resolve().parents[2] / "scripts/review/prompts/render.py"
+    ).read_text(encoding="utf-8")  # the renderer reads pins only; the module manifest is the checker's verifier read
 
 
 @pytest.mark.parametrize("lesson_n", [2, 3])
@@ -769,8 +791,8 @@ def test_lesson_render_and_check_read_only_pinned_files(tmp_path, monkeypatch, l
         assert check_prompt(box["rendered"], manifest_path, repo_root=tmp_path, files_read=box["files"]).passed
 
     read = _read_paths_during(tmp_path, monkeypatch, run)
-    assert read <= pinned | {manifest_path.resolve()}, sorted(read - pinned)
-    assert {path.resolve() for path in box["files"]} <= pinned
+    assert read <= pinned | {manifest_path.resolve()} | _verifier_paths(tmp_path, doc), sorted(read - pinned)
+    assert {path.resolve() for path in box["files"]} <= pinned  # the renderer's reads: pins only
 
 
 def test_plan_render_and_check_read_only_pinned_files(tmp_path, monkeypatch):
@@ -783,7 +805,7 @@ def test_plan_render_and_check_read_only_pinned_files(tmp_path, monkeypatch):
         assert check_prompt(box["rendered"], manifest_path, repo_root=tmp_path, files_read=box["files"]).passed
 
     read = _read_paths_during(tmp_path, monkeypatch, run)
-    assert read <= pinned | {manifest_path.resolve()}, sorted(read - pinned)
+    assert read <= pinned | {manifest_path.resolve()} | _verifier_paths(tmp_path, doc), sorted(read - pinned)
     assert {path.resolve() for path in box["files"]} == pinned  # a plan review reads every input the manifest names
 
 
@@ -812,6 +834,7 @@ def test_recap_review_renders_the_built_upstream_lessons_beside_the_digest(tmp_p
     doc, _ = _write(level, slug, 3, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
     assert doc["recap"] is True and [row["n"] for row in doc["upstream_lessons"]] == [1, 2]
     manifest_path = state_dir / "lesson-3.manifest.yaml"
+    _write_module_manifest(tmp_path, slug)
 
     rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
 
@@ -890,8 +913,10 @@ def test_plan_review_renders_the_full_prior_state_the_requirements_and_the_arc_s
     assert "immersion" not in document  # a plan review carries the state only
     requirements = (tmp_path / inputs["requirements"]["path"]).read_text(encoding="utf-8").strip()
     assert requirements and requirements in rendered
-    arc_source = (tmp_path / inputs["arc_source"]["path"]).read_text(encoding="utf-8").strip()
-    assert arc_source and arc_source in rendered
+    arc_source = (tmp_path / inputs["arc_source"]["path"]).read_text(encoding="utf-8")
+    table = "\n".join(line for line in arc_source.splitlines() if line.startswith("|"))
+    assert "| Fixture item one |" in table and table in rendered
+    assert "fixture-only prose" not in rendered and "fixture decision text" not in rendered
     read = {path.relative_to(tmp_path).as_posix() for path in files_read}
     assert {inputs[name]["path"] for name in ("learner_state", "requirements", "arc_source")} <= read
 
@@ -915,3 +940,212 @@ def test_pack_quotes_come_from_the_pinned_pack_bytes(tmp_path, monkeypatch):
     rendered, _sha, _files = render_prompt(manifest_path, repo_root=tmp_path)
     pack_text = (tmp_path / doc["inputs"]["pack"]["path"]).read_text(encoding="utf-8").strip()
     assert pack_text in rendered
+
+
+# ---------------------------------------------------------------------------
+# Review r3 findings: the arc table, verify-before-use, and default exclusions
+# ---------------------------------------------------------------------------
+
+
+def _is_verifier_read(path: str) -> bool:
+    """A checker-only read: the module manifest, the template source or one of the lesson's own snapshots."""
+    return path == MODULE_MANIFEST or path.endswith(".md.j2") or "/manifests/lesson-" in path
+
+
+def _lesson_editions(tmp_path, monkeypatch, *texts: str):
+    """Lesson 2 written once per text (each write keeps a content-addressed snapshot); the last text is current."""
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
+    for text in texts:
+        (page_dir / "2.mdx").write_text(text, encoding="utf-8")
+        doc, _ = _write(level, slug, 2, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    _write_module_manifest(tmp_path, slug)
+    return state_dir / "lesson-2.manifest.yaml", doc
+
+
+def _set_arc_source(tmp_path, doc, text):
+    source_path = tmp_path / doc["inputs"]["arc_source"]["path"]
+    source_path.write_text(text, encoding="utf-8")
+    doc["inputs"]["arc_source"]["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "# Arc\n\n## 2. Decisions\nOTHER-MODULE-DECISION\n\n## 5. The positions\nOTHER-MODULE-POSITION\n",
+        "# Arc\n\n## 3. Grammar at A1: system or chunk\n\nProse only, no table. OTHER-MODULE-PROSE\n",
+        "# fixture arc document for mod-one\n",
+    ],
+    ids=["no-section-3", "section-3-without-a-table", "title-only"],
+)
+def test_an_arc_source_without_the_system_or_chunk_table_is_refused_by_name(tmp_path, monkeypatch, text):
+    _, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    _set_arc_source(tmp_path, doc, text)
+    with pytest.raises(ArcTableMissingError, match="arc source"):
+        render_prompt(doc, repo_root=tmp_path)
+
+
+def test_another_modules_content_outside_the_arc_table_never_reaches_the_plan_prompt(tmp_path, monkeypatch):
+    _, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    _set_arc_source(
+        tmp_path,
+        doc,
+        "# Arc\n\n## 2. Decisions\nOTHER-MODULE-DECISION\n\n## 3. Grammar at A1: system or chunk\n\n"
+        "Section prose OTHER-MODULE-LEAD-IN.\n\n| Item | Status |\n| --- | --- |\n| Genitive | chunk |\n\n"
+        "## 5. The 55 positions\n\n| Pos | Slug |\n| --- | --- |\n| 9 | OTHER-MODULE-ROW |\n",
+    )
+    rendered, _sha, _files = render_prompt(doc, repo_root=tmp_path)
+    assert "| Genitive | chunk |" in rendered
+    assert not [
+        marker for marker in ("OTHER-MODULE-DECISION", "OTHER-MODULE-LEAD-IN", "OTHER-MODULE-ROW") if marker in rendered
+    ]
+
+
+def test_a_changed_arc_is_read_at_most_once_before_the_check_fails(tmp_path, monkeypatch):
+    manifest_path, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    arc_path = tmp_path / doc["inputs"]["arc"]["path"]
+    arc_path.write_bytes(arc_path.read_bytes() + b"# changed after the manifest\n")
+
+    reads: list[Path] = []
+    read_bytes, read_text = Path.read_bytes, Path.read_text
+    monkeypatch.setattr(Path, "read_bytes", lambda self: reads.append(self.resolve()) or read_bytes(self))
+    monkeypatch.setattr(
+        Path, "read_text", lambda self, *a, **kw: reads.append(self.resolve()) or read_text(self, *a, **kw)
+    )
+    res = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    monkeypatch.undo()
+
+    assert not res.passed and any(
+        "input_hash_mismatch" in err and doc["inputs"]["arc"]["path"] in err for err in res.errors
+    )
+    assert reads.count(arc_path.resolve()) == 1
+    pinned = _pinned_paths(doc, tmp_path)
+    inside = [path for path in reads if path.is_relative_to(tmp_path.resolve())]
+    assert set(inside) <= pinned | {manifest_path.resolve()}, "nothing but pins is read once a pin fails"
+    assert all(inside.count(path) <= 1 for path in pinned)
+    assert res.verifier_reads == []
+
+
+def test_an_earlier_lesson_edition_is_refused_from_the_pinned_history_without_any_flag(tmp_path, monkeypatch):
+    earlier = (
+        "# Lesson 2\nOLD-EDITION line about the first wording of this lesson.\nOLD-EDITION second passage line here.\n"
+    )
+    manifest_path, _doc = _lesson_editions(
+        tmp_path, monkeypatch, earlier, "# Lesson 2\nNew wording for the second edition.\n"
+    )
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    assert "OLD-EDITION" not in rendered
+    clean = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert clean.passed, clean.errors
+    assert all(_is_verifier_read(path) for path in clean.verifier_reads)
+    assert sum("lesson." in path for path in clean.verifier_reads) == 1  # the one earlier snapshot
+
+    whole = check_prompt(f"{rendered}\n{earlier}\n", manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert not whole.passed and any("earlier_edition" in err for err in whole.errors)
+    passage = check_prompt(
+        f"{rendered}\nOLD-EDITION second passage line here.\n", manifest_path, repo_root=tmp_path, files_read=files_read
+    )
+    assert not passage.passed and any("earlier edition passage" in err for err in passage.errors)
+    digest = hashlib.sha256(earlier.encode("utf-8")).hexdigest()
+    hashed = check_prompt(f"{rendered}\n{digest}\n", manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert not hashed.passed and any(digest in err for err in hashed.errors)
+
+
+def test_a_re_review_may_quote_its_diff_base_but_not_a_still_earlier_edition(tmp_path, monkeypatch):
+    oldest = "# Lesson 2\nOLDEST-EDITION line that no later edition kept at all.\n"
+    manifest_path, _doc = _write_rereview(tmp_path, monkeypatch)
+    state_dir = manifest_path.parent
+    snapshot = manifest.lesson_snapshot_path(state_dir, 2, hashlib.sha256(oldest.encode("utf-8")).hexdigest())
+    snapshot.parent.mkdir(parents=True, exist_ok=True)
+    snapshot.write_text(oldest, encoding="utf-8")
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+
+    assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
+    leaked = check_prompt(f"{rendered}\n{oldest}\n", manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert not leaked.passed and any("earlier_edition" in err for err in leaked.errors)
+
+
+def test_an_altered_lesson_snapshot_fails_the_check(tmp_path, monkeypatch):
+    manifest_path, doc = _lesson_editions(
+        tmp_path, monkeypatch, "# Lesson 2\nOLD-EDITION wording.\n", "# Lesson 2\nNew wording.\n"
+    )
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    current = doc["inputs"]["lesson"]["sha256"]
+    older = next(
+        path for path in manifest_path.parent.glob("manifests/lesson-2/lesson.*.mdx") if current not in path.name
+    )
+    older.write_text("tampered", encoding="utf-8")
+    res = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert not res.passed and any("does not hash to its name" in err for err in res.errors)
+
+
+def test_another_modules_plain_slug_fails_by_default_from_the_module_manifest(tmp_path, monkeypatch):
+    manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    assert "alien-unit-slug" not in rendered  # the module manifest never reaches the prompt
+
+    ok = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert ok.passed, ok.errors
+    assert MODULE_MANIFEST in ok.verifier_reads and all(_is_verifier_read(path) for path in ok.verifier_reads)
+
+    hyphenated = check_prompt(
+        f"{rendered}\nSee alien-unit-slug.\n", manifest_path, repo_root=tmp_path, files_read=files_read
+    )
+    assert not hyphenated.passed and any("alien-unit-slug" in err for err in hyphenated.errors)
+    one_word = check_prompt(f"{rendered}\nSee alienword.\n", manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert not one_word.passed and any("alienword" in err for err in one_word.errors)
+    inside_data = check_prompt(
+        f"{rendered}\n```text\nalienword is ordinary prose in pinned data\n```\n",
+        manifest_path,
+        repo_root=tmp_path,
+        files_read=files_read,
+    )
+    assert inside_data.passed, inside_data.errors  # a one-word slug inside fenced pinned data is not a leak
+    part_of_longer = check_prompt(
+        f"{rendered}\nalienword-two\n", manifest_path, repo_root=tmp_path, files_read=files_read
+    )
+    assert part_of_longer.passed, part_of_longer.errors
+
+
+def test_a_missing_module_manifest_fails_the_check_by_name(tmp_path, monkeypatch):
+    manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    (tmp_path / MODULE_MANIFEST).unlink()
+    res = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert not res.passed and any("module_manifest_unavailable" in err for err in res.errors)
+
+
+def test_the_cli_records_the_verifier_reads_apart_from_the_files_read(tmp_path, monkeypatch):
+    manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    prompt_out = manifest_path.parent / "lesson-2.prompt.md"
+    render_prompt(manifest_path, repo_root=tmp_path, output_path=prompt_out)
+    sidecar = prompt_out.with_name(f"{prompt_out.name}.files_read.json")
+    assert json.loads(sidecar.read_text(encoding="utf-8"))["verifier_reads"] == []
+    assert check_main([str(prompt_out), "--manifest", str(manifest_path), "--repo-root", str(tmp_path)]) == 0
+    record = json.loads(sidecar.read_text(encoding="utf-8"))
+    assert MODULE_MANIFEST in record["verifier_reads"]
+    assert all(_is_verifier_read(path) for path in record["verifier_reads"])
+    assert not set(record["verifier_reads"]) & set(record["files_read"])
+    assert MODULE_MANIFEST not in prompt_out.read_text(encoding="utf-8")
+
+
+def test_a_literal_placeholder_in_pinned_data_is_data_but_one_in_template_text_still_fails(tmp_path, monkeypatch):
+    manifest_path, _doc = _lesson_editions(
+        tmp_path, monkeypatch, "# Lesson 2\nType `{{ name }}` and `{% if x %}` literally.\n"
+    )
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    assert "`{{ name }}`" in rendered
+    res = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert res.passed, res.errors
+
+    for stray in ("{{ unresolved }}", "{% if unresolved %}"):
+        polluted = check_prompt(f"{rendered}\n{stray}\n", manifest_path, repo_root=tmp_path, files_read=files_read)
+        assert not polluted.passed and any("unresolved_placeholder" in err for err in polluted.errors)
+
+
+def test_an_unclosed_data_fence_fails_the_check(tmp_path, monkeypatch):
+    manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    res = check_prompt(f"{rendered}\n```\n{{{{ hidden }}}}\n", manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert not res.passed and any("unbalanced_data_fence" in err for err in res.errors)

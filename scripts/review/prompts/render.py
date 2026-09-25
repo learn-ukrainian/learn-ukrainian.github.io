@@ -203,10 +203,40 @@ def resolve_template_name(manifest: dict[str, Any], template_name: str | None = 
     raise RenderError(f"unable to infer template for manifest kind: {kind!r}")
 
 
-def _arc_section(arc_source: str) -> str:
-    """Section 3 of the arc source document (the system-or-chunk table), or the whole document without one."""
-    match = re.search(r"(?m)^## 3\..*?(?=^## |\Z)", arc_source, flags=re.DOTALL)
-    return match.group(0).strip() if match else arc_source.strip()
+ARC_SECTION = re.compile(r"(?ms)^## 3\..*?(?=^## |\Z)")
+TABLE_SEPARATOR = re.compile(r"\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)*\|?")
+
+
+class ArcTableMissingError(RenderError):
+    """The pinned arc source has no system-or-chunk table (its section 3)."""
+
+
+def _arc_table(arc_source: str, path: str) -> str:
+    """The system-or-chunk table of the arc source (the tables in its section 3), nothing else.
+
+    Each arc document keeps that table under its ``## 3.`` heading. A source without the
+    section, or a section without a table, is refused by name: the reviewer never receives
+    another part of the document, so another module's content cannot arrive with it.
+    """
+    section = ARC_SECTION.search(arc_source)
+    if section is None:
+        raise ArcTableMissingError(f"the arc source {path} has no section 3 (system or chunk table)")
+    tables: list[list[str]] = []
+    current: list[str] = []
+    for line in [*section.group(0).splitlines(), ""]:
+        if line.lstrip().startswith("|"):
+            current.append(line.strip())
+        elif current:
+            tables.append(current)
+            current = []
+    rendered = [
+        "\n".join(rows)
+        for rows in tables
+        if len(rows) >= 3 and TABLE_SEPARATOR.fullmatch(rows[1].strip().replace(" ", ""))
+    ]
+    if not rendered:
+        raise ArcTableMissingError(f"section 3 of the arc source {path} holds no table")
+    return "\n\n".join(rendered)
 
 
 def _neighbour_positions(arc: Any, position: Any) -> list[Any]:
@@ -292,7 +322,9 @@ def _plan_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str,
         "pack_text": reader.locked_text("inputs.pack", "inputs.pack_lock", PackLockMismatchError),
         "words_text": reader.locked_text("inputs.words", "inputs.words_lock", WordsLockMismatchError),
         "requirements_text": reader.pin_text("inputs.requirements"),
-        "arc_system_or_chunk_text": _arc_section(reader.pin_text("inputs.arc_source")),
+        "arc_system_or_chunk_text": _arc_table(
+            reader.pin_text("inputs.arc_source"), reader.pin("inputs.arc_source")["path"]
+        ),
         "decisions_text": reader.pin_text("inputs.decisions"),
         "scope_text": reader.pin_text("inputs.scope"),
         "grammar_text": reader.pin_text("inputs.grammar"),
@@ -390,7 +422,8 @@ def render_prompt(
                 rel_files.append(f.relative_to(root).as_posix())
             except ValueError:
                 rel_files.append(f.as_posix())
-        files_read_sidecar.write_text(json.dumps(rel_files, indent=2) + "\n", encoding="utf-8")
+        read_record = {"files_read": rel_files, "verifier_reads": []}  # the checker records what verification read
+        files_read_sidecar.write_text(json.dumps(read_record, indent=2) + "\n", encoding="utf-8")
 
     return rendered, prompt_sha256, list(reader.files_read)
 
