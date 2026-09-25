@@ -154,13 +154,15 @@ class QuizCorrectnessError(ValueError):
 
 
 def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
-    """Return the indices of the correct option(s) of one quiz item.
+    """Return the index of the one correct option of a quiz item.
 
     The schema lets three inputs name the answer: ``options[].correct`` flags,
-    the ``correct`` index and the ``answer`` text. Every input present is a
-    claim about which options are correct; the result is what all claims
-    agree on. Contradicting claims, or no claim at all, raise
-    ``QuizCorrectnessError`` -- the first choice is never assumed.
+    the ``correct`` index and the ``answer`` text. Each input present is turned
+    into the complete set of option indices it calls correct, and all present
+    sets must be equal, non-empty and of size one (the ``Quiz`` component
+    takes a single ``correctIndex``). Anything else raises
+    ``QuizCorrectnessError`` naming the claims -- the first choice is never
+    assumed and a claim is never silently dropped.
     """
     where = f"quiz item {index}"
     if not isinstance(item, dict):
@@ -171,18 +173,21 @@ def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
     texts = [opt.get("text") if isinstance(opt, dict) else opt for opt in options]
 
     claims: dict[str, set[int]] = {}
-    flagged = {i for i, opt in enumerate(options) if isinstance(opt, dict) and opt.get("correct")}
-    # Flags on a mix of bare strings and objects cannot mark the strings, so
-    # they only count as a claim when they name something or cover every option.
-    if flagged or all(isinstance(opt, dict) for opt in options):
-        claims["options[].correct"] = flagged
-    index_claim = item.get("correct")
-    if type(index_claim) is int:
-        if not 0 <= index_claim < len(options):
-            raise QuizCorrectnessError(
-                f"{where}: correct={index_claim} out of range (0-{len(options) - 1})"
-            )
-        claims["correct"] = {index_claim}
+    # The flags claim is present once any option carries a `correct` key; bare
+    # strings and objects without the key are not-correct within this claim.
+    if any(isinstance(opt, dict) and "correct" in opt for opt in options):
+        claims["options[].correct"] = {
+            i for i, opt in enumerate(options) if isinstance(opt, dict) and opt.get("correct") is True
+        }
+    if "correct" in item:
+        named = item["correct"]
+        named_set = list(named) if isinstance(named, (list, tuple, set)) else [named]
+        for value in named_set:
+            if type(value) is not int or not 0 <= value < len(options):
+                raise QuizCorrectnessError(
+                    f"{where}: correct={named!r} is not an option index (0-{len(options) - 1})"
+                )
+        claims["correct"] = set(named_set)
     answer = item.get("answer")
     if isinstance(answer, str):
         claims["answer"] = {i for i, text in enumerate(texts) if text == answer}
@@ -191,13 +196,15 @@ def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
         raise QuizCorrectnessError(
             f"{where} names no correct option (needs options[].correct, correct or answer)"
         )
-    agreed = set.intersection(*claims.values())
-    if not agreed:
-        named = "; ".join(f"{name} -> {sorted(found) or 'none'}" for name, found in claims.items())
+    described = "; ".join(f"{name} -> {sorted(found) or 'none'}" for name, found in claims.items())
+    sets = list(claims.values())
+    if any(found != sets[0] for found in sets):
+        raise QuizCorrectnessError(f"{where}: claims disagree ({described})")
+    if len(sets[0]) != 1:
         raise QuizCorrectnessError(
-            f"{where}: correct option is contradicted or unnamed ({named})"
+            f"{where}: must name exactly one correct option ({described})"
         )
-    return sorted(agreed)
+    return sorted(sets[0])
 
 
 class GroupSortNameError(ValueError):

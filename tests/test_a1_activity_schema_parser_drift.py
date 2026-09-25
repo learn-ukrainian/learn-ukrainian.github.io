@@ -636,8 +636,10 @@ CONSISTENT_QUIZZES = {
     "flags+index": ({"options": _obj(False, True, False), "correct": 1}, ["opt1"]),
     "flags+answer": ({"options": _obj(True, False), "answer": "opt0"}, ["opt0"]),
     "flags+index+answer": ({"options": _obj(False, False, True), "correct": 2, "answer": "opt2"}, ["opt2"]),
-    "mixed-index-on-string": ({"options": ["a", {"text": "b", "correct": False}], "correct": 0}, ["a"]),
-    "several-flags": ({"options": _obj(True, True, False)}, ["opt0", "opt1"]),
+    "flags+index+answer-agree": (
+        {"options": _obj(False, True, False), "correct": 1, "answer": "opt1"}, ["opt1"],
+    ),
+    "mixed-flag-on-object": ({"options": ["a", {"text": "b", "correct": True}], "correct": 1}, ["b"]),
 }
 
 
@@ -658,6 +660,16 @@ CONTRADICTORY_QUIZZES = {
     "answer-names-no-option": {"options": ["a", "b"], "answer": "z"},
     "no-input-names-an-option": {"options": ["a", "b"]},
     "index-out-of-range": {"options": ["a", "b"], "correct": 5},
+    "two-true-flags+index": {"options": _obj(True, True, False), "correct": 0},
+    "two-true-flags-alone": {"options": _obj(True, True, False)},
+    "two-true-flags-equal-index-list": {"options": _obj(True, True, False), "correct": [0, 1]},
+    "mixed-explicit-false-on-named-index": {
+        "options": ["a", {"text": "b", "correct": False}], "correct": 1,
+    },
+    "mixed-index-on-bare-string-vs-flags": {
+        "options": ["a", {"text": "b", "correct": False}], "correct": 0,
+    },
+    "index-not-an-int": {"options": ["a", "b"], "correct": "1"},
 }
 
 
@@ -670,6 +682,11 @@ def test_quiz_with_contradicting_or_unnamed_answer_is_rejected_never_first_choic
         ActivityParser()._parse_activity(activity)
     with pytest.raises(QuizCorrectnessError, match="quiz item 0"):
         render_activity_to_jsx(activity)
+
+
+def test_quiz_correct_index_list_is_a_claim_of_its_own_set():
+    assert quiz_correct_indices({"options": ["a", "b", "c"], "correct": [2]}) == [2]
+    assert quiz_correct_indices({"options": _obj(False, False, True), "correct": [2], "answer": "opt2"}) == [2]
 
 
 def _validate(tmp_path, *activities: dict):
