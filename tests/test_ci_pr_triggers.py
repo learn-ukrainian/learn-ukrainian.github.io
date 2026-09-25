@@ -30,6 +30,8 @@ from typing import Any
 import pytest
 import yaml
 
+from scripts.ci.classify_changes import preflight_for
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _WORKFLOWS = _REPO_ROOT / ".github" / "workflows"
 
@@ -213,9 +215,12 @@ def test_expression_evaluator_follows_github_semantics() -> None:
 
 # --- ci.yml job simulation -------------------------------------------------
 
-_REAL_OUTPUTS = {
-    "changes": {"docs_only": "false", "backend": "true", "frontend": "true", "shards": "[1]"},
-}
+_FULL_TIER = {"docs_only": "false", "backend": "true", "frontend": "true", "shards": "[1]", "pytest_mode": "full"}
+
+
+def _changes_outputs(github: dict[str, Any]) -> dict[str, str]:
+    """A full-tier Changes result for this event; preflight comes from the classifier."""
+    return {**_FULL_TIER, "preflight": preflight_for(github["event_name"], _FULL_TIER)}
 
 
 def _github(event_name: str, event: dict[str, Any], ref: str = "refs/pull/7/merge") -> dict[str, Any]:
@@ -261,7 +266,7 @@ def _simulate(github: dict[str, Any]) -> tuple[dict[str, str], dict[str, str]]:
             "needs": {
                 need: {
                     "result": results[need],
-                    "outputs": _REAL_OUTPUTS.get(need, {}) if results[need] == "ran" else {},
+                    "outputs": _changes_outputs(github) if need == "changes" and results[need] == "ran" else {},
                 }
                 for need in needs
             },
@@ -297,7 +302,9 @@ def test_no_workflow_reruns_ci_on_a_label() -> None:
 @pytest.mark.parametrize("event", sorted(_EVENTS))
 def test_every_event_runs_every_tier_job_and_reports_ci_gate(event: str) -> None:
     results, names = _simulate(_EVENTS[event])
-    assert {job for job, result in results.items() if result != "ran"} == set()
+    # Preflight (#8750) runs on pull_request only; every other job runs on every event.
+    expected_skips = set() if _EVENTS[event]["event_name"] == "pull_request" else {"preflight"}
+    assert {job for job, result in results.items() if result != "ran"} == expected_skips
     assert names["ci-gate"] == "CI Gate"
     assert names["changes"] == "Changes"
 
@@ -380,7 +387,9 @@ _GREEN = {
     "DOCS_ONLY": "false",
     "FRONTEND": "false",
     "BACKEND": "true",
+    "PREFLIGHT_SCHEDULED": "true",
     "CHANGES": "success",
+    "PREFLIGHT": "success",
     "RUFF": "success",
     "SECRET": "success",
     "PYTEST": "success",
@@ -421,3 +430,33 @@ def test_ci_gate_allows_a_tier_skip_and_rejects_cancelled_tier_skip() -> None:
     cancelled = _run_gate({**docs, "RUFF": "cancelled"})
     assert cancelled.returncode != 0
     assert "cancelled" in cancelled.stdout
+
+
+_JOB_RESULTS = ("success", "failure", "cancelled", "skipped")
+
+
+@pytest.mark.parametrize("result", _JOB_RESULTS)
+@pytest.mark.parametrize("scheduled", ["true", "false"])
+def test_ci_gate_preflight_rule(scheduled: str, result: str) -> None:
+    # #8750: scheduled → only success passes; not scheduled → only skipped.
+    gate = _run_gate({**_GREEN, "PREFLIGHT_SCHEDULED": scheduled, "PREFLIGHT": result})
+    passes = result == ("success" if scheduled == "true" else "skipped")
+    assert (gate.returncode == 0) is passes, gate.stdout + gate.stderr
+    assert ("CI Gate green" in gate.stdout) is passes
+    if not passes:
+        assert "preflight was" in gate.stdout
+
+
+def test_ci_gate_preflight_wiring() -> None:
+    env = _ci_gate_job()["steps"][0]["env"]
+    assert env["PREFLIGHT_SCHEDULED"] == "${{ needs.changes.outputs.preflight }}"
+    assert env["PREFLIGHT"] == "${{ needs.preflight.result }}"
+    assert "preflight" in _ci_gate_job()["needs"]
+
+
+def test_ci_gate_still_fails_when_changes_fails_without_a_preflight_output() -> None:
+    # A failed Changes job emits no outputs; the gate must fail on CHANGES first.
+    for changes in ("failure", "cancelled"):
+        gate = _run_gate({**_GREEN, "CHANGES": changes, "PREFLIGHT_SCHEDULED": "", "PREFLIGHT": "skipped"})
+        assert gate.returncode != 0
+        assert "CI Gate green" not in gate.stdout
