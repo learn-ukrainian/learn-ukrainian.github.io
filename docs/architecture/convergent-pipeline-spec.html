@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-05-09" />
+<meta name="report-date" content="2026-09-25" />
 
 <meta name="report-status" content="migrated" />
 
@@ -116,7 +116,7 @@
   <header class="hero">
     <div class="title-block">
       <h1>Convergent Pipeline — Implementation Spec (final, patched)</h1>
-      <div class="sub">Migrated from Markdown on 2026-05-09 09:38</div>
+      <div class="sub">Migrated from Markdown on 2026-09-25 15:53</div>
     </div>
     <div class="meta">
       <div>Source: convergent-pipeline-spec.md</div>
@@ -212,11 +212,28 @@ else:
 <li>This prevents chasing a pedagogy 8.5 while linguistic accuracy sits at 7.0 and then hitting <code>budget_exhausted</code> with the floor still failing.</li>
 </ul>
 <h2>Reviewer assignment matrix (hard invariant, feature-flagged)</h2>
-<p>| Writer | Reviewer allowed |
-|---|---|
-| gemini | claude, codex |
-| claude | gemini, codex |
-| codex  | claude, gemini |</p>
+<table>
+<thead>
+<tr>
+<th>Writer</th>
+<th>Reviewer allowed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gemini</td>
+<td>claude, codex</td>
+</tr>
+<tr>
+<td>claude</td>
+<td>gemini, codex</td>
+</tr>
+<tr>
+<td>codex</td>
+<td>claude, gemini</td>
+</tr>
+</tbody>
+</table>
 <p><strong>This is NEW code in Phase B, not reuse.</strong> Only default routing exists in <code>_determine_reviewer()</code> (<code>v6_build.py:4855</code>). <code>SELF_REVIEW_DETECTED</code> audit check is not currently a hard gate (consistent with ongoing Gemini-only capacity workaround).</p>
 <p><strong>Feature flag: <code>CONVERGENCE_MATRIX_ENFORCED</code> (default OFF at ship time).</strong></p>
 <ul>
@@ -295,17 +312,62 @@ history:                                     # append-only replay log
 <li><strong>Fallback: third-agent semantic check</strong> — only for same-scope ambiguity neither rule above catches. Expensive; used sparingly.</li>
 </ol>
 <h2>Constraint → writer directive mapping (what can be learned vs plan-revised)</h2>
-<p>| Category | Writer-addressable | Route to plan-revision |
-|---|---|---|
-| Forbidden lexicon / calques (<code>приймати→брати участь</code>) | ✓ | |
-| Register / pronoun rules per speaker | ✓ | |
-| Required dialogue acts (<code>А у тебе?</code>) | ✓ | |
-| Typographical / notation fixes (<code>[=]</code> notation) | ✓ | |
-| Context-free aspect / paronym / stress rules | | ✓ |
-| Vocabulary density / mandatory list scope | | ✓ |
-| Pedagogical sequence of sections | | ✓ |
-| Plan-level register contradiction | | ✓ |
-| Scenario ↔ grammar alignment | | ✓ |</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Writer-addressable</th>
+<th>Route to plan-revision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Forbidden lexicon / calques (<code>приймати→брати участь</code>)</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>Register / pronoun rules per speaker</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>Required dialogue acts (<code>А у тебе?</code>)</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>Typographical / notation fixes (<code>[=]</code> notation)</td>
+<td>✓</td>
+<td></td>
+</tr>
+<tr>
+<td>Context-free aspect / paronym / stress rules</td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Vocabulary density / mandatory list scope</td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Pedagogical sequence of sections</td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Plan-level register contradiction</td>
+<td></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Scenario ↔ grammar alignment</td>
+<td></td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
 <p>If a normalized finding maps to a plan-revision category, the ladder SHOULD bias toward tier 5 faster (don't waste full_rewrite on it).</p>
 <h2>--force semantics</h2>
 <p><strong>Current state (before this spec):</strong> <code>_clean_build_artifacts()</code> (<code>v6_build.py:954</code>) only preserves <code>index.md</code> + <code>friction.yaml</code>. <code>--force</code> would DELETE <code>module-memory.yaml</code> today. This is a spec-required code change, not just policy.</p>

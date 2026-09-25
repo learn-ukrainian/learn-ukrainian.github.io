@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-05-09" />
+<meta name="report-date" content="2026-09-25" />
 
 <meta name="report-status" content="migrated" />
 
@@ -116,7 +116,7 @@
   <header class="hero">
     <div class="title-block">
       <h1>V6 Pipeline Architecture Review</h1>
-      <div class="sub">Migrated from Markdown on 2026-05-09 09:38</div>
+      <div class="sub">Migrated from Markdown on 2026-09-25 15:53</div>
     </div>
     <div class="meta">
       <div>Source: v6-pipeline-review.md</div>
@@ -216,15 +216,76 @@ main()
 </code></pre>
 <hr />
 <h2>2. Dispatch Table — Every LLM Call</h2>
-<p>| Phase | Default Agent | Default Model | Timeout | MCP Tools | Notes |
-|-------|--------------|---------------|---------|-----------|-------|
-| skeleton | writer base (strip -tools) | <code>claude-sonnet-4-6</code> (Claude) / Gemini PRO | 300s | No | Structure planning, cheap model OK |
-| write (single) | writer flag | Inherited from dispatch | 600s (900s w/tools) | If -tools | Full content generation |
-| write (chunked) | writer base | Inherited from dispatch | 300s/section | No | <strong>BUG: no tools in chunks</strong> |
-| activities | gemini-tools / claude-tools | Gemini PRO / <code>claude-sonnet-4-6</code> | 300s | Yes | JSON Schema validated |
-| vocab | writer base | <code>FLASH_LITE_MODEL</code> (Gemini) / <code>claude-sonnet-4-6</code> | 180s | No | Dictionary-like structured output |
-| review | cross-agent | Gemini PRO / <code>claude-opus-4-6</code> | 600s | Yes | Adversarial, opposite of writer |
-| section-rewrite | writer family-tools | Inherited from dispatch | 300s | Yes (Claude) / Yes (Gemini) | Fix weak sections |</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Default Agent</th>
+<th>Default Model</th>
+<th>Timeout</th>
+<th>MCP Tools</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>skeleton</td>
+<td>writer base (strip -tools)</td>
+<td><code>claude-sonnet-4-6</code> (Claude) / Gemini PRO</td>
+<td>300s</td>
+<td>No</td>
+<td>Structure planning, cheap model OK</td>
+</tr>
+<tr>
+<td>write (single)</td>
+<td>writer flag</td>
+<td>Inherited from dispatch</td>
+<td>600s (900s w/tools)</td>
+<td>If -tools</td>
+<td>Full content generation</td>
+</tr>
+<tr>
+<td>write (chunked)</td>
+<td>writer base</td>
+<td>Inherited from dispatch</td>
+<td>300s/section</td>
+<td>No</td>
+<td><strong>BUG: no tools in chunks</strong></td>
+</tr>
+<tr>
+<td>activities</td>
+<td>gemini-tools / claude-tools</td>
+<td>Gemini PRO / <code>claude-sonnet-4-6</code></td>
+<td>300s</td>
+<td>Yes</td>
+<td>JSON Schema validated</td>
+</tr>
+<tr>
+<td>vocab</td>
+<td>writer base</td>
+<td><code>FLASH_LITE_MODEL</code> (Gemini) / <code>claude-sonnet-4-6</code></td>
+<td>180s</td>
+<td>No</td>
+<td>Dictionary-like structured output</td>
+</tr>
+<tr>
+<td>review</td>
+<td>cross-agent</td>
+<td>Gemini PRO / <code>claude-opus-4-6</code></td>
+<td>600s</td>
+<td>Yes</td>
+<td>Adversarial, opposite of writer</td>
+</tr>
+<tr>
+<td>section-rewrite</td>
+<td>writer family-tools</td>
+<td>Inherited from dispatch</td>
+<td>300s</td>
+<td>Yes (Claude) / Yes (Gemini)</td>
+<td>Fix weak sections</td>
+</tr>
+</tbody>
+</table>
 <h3>Model resolution flow:</h3>
 <pre><code>dispatch_agent(model=None)
   → is_gemini? → from batch_gemini_config import PRO_MODEL → &quot;gemini-3.1-pro-preview&quot;
@@ -234,53 +295,239 @@ main()
 <hr />
 <h2>3. File I/O Map — Every File Read/Written During a Build</h2>
 <h3>Read:</h3>
-<p>| File | Phase | Purpose |
-|------|-------|---------|
-| <code>curriculum.yaml</code> | main, check, publish | Module ordering, slug resolution |
-| <code>plans/{level}/{slug}.yaml</code> | check, skeleton, write, activities, vocab, review, enrich | Source of truth |
-| <code>{level}/research/{slug}-knowledge-packet.md</code> | skeleton, write | RAG excerpts |
-| <code>{level}/{slug}.md</code> | exercises, annotate, enrich, verify, review, publish | Content |
-| <code>{level}/activities/{slug}.yaml</code> | publish | Activity data |
-| <code>{level}/vocabulary/{slug}.yaml</code> | enrich | Словник data |
-| <code>{level}/orchestration/{slug}/skeleton.md</code> | write (single-step mode) | Existing skeleton |
-| <code>{level}/orchestration/{slug}/verify-flags.yaml</code> | review | Writer uncertainty flags |
-| <code>docs/rules/global-friction.yaml</code> | write retry | Cross-build learnings |
-| <code>{level}/orchestration/*/friction.yaml</code> | write retry | Module friction files |
-| <code>docs/rules/pedagogy-patterns.yaml</code> | activities | Exercise patterns |
-| <code>docs/resources/external_resources.yaml</code> | enrich | External links |
-| <code>docs/resources/miyklas-url-index.yaml</code> | enrich | МійКлас URLs |
-| <code>docs/resources/ulp-articles-index.yaml</code> | enrich | ULP article URLs |
-| <code>schemas/activity-v2.schema.json</code> | activities | Validation schema |
-| <code>data/vesum.db</code> | enrich, verify, review | VESUM SQLite |</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Phase</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>curriculum.yaml</code></td>
+<td>main, check, publish</td>
+<td>Module ordering, slug resolution</td>
+</tr>
+<tr>
+<td><code>plans/{level}/{slug}.yaml</code></td>
+<td>check, skeleton, write, activities, vocab, review, enrich</td>
+<td>Source of truth</td>
+</tr>
+<tr>
+<td><code>{level}/research/{slug}-knowledge-packet.md</code></td>
+<td>skeleton, write</td>
+<td>RAG excerpts</td>
+</tr>
+<tr>
+<td><code>{level}/{slug}.md</code></td>
+<td>exercises, annotate, enrich, verify, review, publish</td>
+<td>Content</td>
+</tr>
+<tr>
+<td><code>{level}/activities/{slug}.yaml</code></td>
+<td>publish</td>
+<td>Activity data</td>
+</tr>
+<tr>
+<td><code>{level}/vocabulary/{slug}.yaml</code></td>
+<td>enrich</td>
+<td>Словник data</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/skeleton.md</code></td>
+<td>write (single-step mode)</td>
+<td>Existing skeleton</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/verify-flags.yaml</code></td>
+<td>review</td>
+<td>Writer uncertainty flags</td>
+</tr>
+<tr>
+<td><code>docs/rules/global-friction.yaml</code></td>
+<td>write retry</td>
+<td>Cross-build learnings</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/*/friction.yaml</code></td>
+<td>write retry</td>
+<td>Module friction files</td>
+</tr>
+<tr>
+<td><code>docs/rules/pedagogy-patterns.yaml</code></td>
+<td>activities</td>
+<td>Exercise patterns</td>
+</tr>
+<tr>
+<td><code>docs/resources/external_resources.yaml</code></td>
+<td>enrich</td>
+<td>External links</td>
+</tr>
+<tr>
+<td><code>docs/resources/miyklas-url-index.yaml</code></td>
+<td>enrich</td>
+<td>МійКлас URLs</td>
+</tr>
+<tr>
+<td><code>docs/resources/ulp-articles-index.yaml</code></td>
+<td>enrich</td>
+<td>ULP article URLs</td>
+</tr>
+<tr>
+<td><code>schemas/activity-v2.schema.json</code></td>
+<td>activities</td>
+<td>Validation schema</td>
+</tr>
+<tr>
+<td><code>data/vesum.db</code></td>
+<td>enrich, verify, review</td>
+<td>VESUM SQLite</td>
+</tr>
+</tbody>
+</table>
 <h3>Written:</h3>
-<p>| File | Phase | Purpose |
-|------|-------|---------|
-| <code>{level}/research/{slug}-knowledge-packet.md</code> | research | RAG packet |
-| <code>{level}/orchestration/{slug}/research-quality.json</code> | research | Quality score |
-| <code>{level}/orchestration/{slug}/skeleton.md</code> | skeleton | Structure plan |
-| <code>{level}/orchestration/{slug}/v6-skeleton-prompt.md</code> | skeleton | Saved prompt |
-| <code>{level}/orchestration/{slug}/v6-prompt.md</code> | write | Saved prompt |
-| <code>{level}/orchestration/{slug}/pacing-plan.txt</code> | write | Pacing plan extract |
-| <code>{level}/{slug}.md</code> | write | <strong>Content (main output)</strong> |
-| <code>{level}/activities/{slug}.yaml</code> | activities | Activity data |
-| <code>{level}/orchestration/{slug}/v6-activities-prompt.md</code> | activities | Saved prompt |
-| <code>{level}/vocabulary/{slug}.yaml</code> | vocab | Vocabulary YAML |
-| <code>{level}/review/{slug}-review-r{N}.md</code> | review | Versioned review |
-| <code>{level}/review/{slug}-review.md</code> | review | Latest review |
-| <code>{level}/orchestration/{slug}/review-structured-r{N}.yaml</code> | review | Parsed scores |
-| <code>{level}/orchestration/{slug}/v6-review-prompt.md</code> | review | Saved prompt |
-| <code>{level}/orchestration/{slug}/verify-flags.yaml</code> | verify | VERIFY flags |
-| <code>{level}/orchestration/{slug}/exercise-verification.json</code> | verify-exercises | Grounding |
-| <code>{level}/orchestration/{slug}/quick-verify.json</code> | write | Quick verify results |
-| <code>{level}/orchestration/{slug}/state.json</code> | all phases | Pipeline state |
-| <code>{level}/orchestration/{slug}/dispatch/*-meta.json</code> | all dispatches | Dispatch logs |
-| <code>{level}/orchestration/{slug}/dispatch/*.stderr.log</code> | all dispatches | Stderr capture |
-| <code>{level}/build-stats.jsonl</code> | write | Retry statistics |
-| <code>{level}/build-errors/{slug}-errors.md</code> | write (exhausted) | Error report |
-| <code>{level}/orchestration/{slug}/friction.yaml</code> | write (exhausted) | Auto-friction |
-| <code>{level}/orchestration/{slug}/correction-attempt-{N}.md</code> | write retry | Directive |
-| <code>starlight/src/content/docs/{level}/{slug}.mdx</code> | publish | <strong>MDX output</strong> |
-| <code>{level}/orchestration/{slug}/index.md</code> | final | Orchestration index |</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Phase</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{level}/research/{slug}-knowledge-packet.md</code></td>
+<td>research</td>
+<td>RAG packet</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/research-quality.json</code></td>
+<td>research</td>
+<td>Quality score</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/skeleton.md</code></td>
+<td>skeleton</td>
+<td>Structure plan</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/v6-skeleton-prompt.md</code></td>
+<td>skeleton</td>
+<td>Saved prompt</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/v6-prompt.md</code></td>
+<td>write</td>
+<td>Saved prompt</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/pacing-plan.txt</code></td>
+<td>write</td>
+<td>Pacing plan extract</td>
+</tr>
+<tr>
+<td><code>{level}/{slug}.md</code></td>
+<td>write</td>
+<td><strong>Content (main output)</strong></td>
+</tr>
+<tr>
+<td><code>{level}/activities/{slug}.yaml</code></td>
+<td>activities</td>
+<td>Activity data</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/v6-activities-prompt.md</code></td>
+<td>activities</td>
+<td>Saved prompt</td>
+</tr>
+<tr>
+<td><code>{level}/vocabulary/{slug}.yaml</code></td>
+<td>vocab</td>
+<td>Vocabulary YAML</td>
+</tr>
+<tr>
+<td><code>{level}/review/{slug}-review-r{N}.md</code></td>
+<td>review</td>
+<td>Versioned review</td>
+</tr>
+<tr>
+<td><code>{level}/review/{slug}-review.md</code></td>
+<td>review</td>
+<td>Latest review</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/review-structured-r{N}.yaml</code></td>
+<td>review</td>
+<td>Parsed scores</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/v6-review-prompt.md</code></td>
+<td>review</td>
+<td>Saved prompt</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/verify-flags.yaml</code></td>
+<td>verify</td>
+<td>VERIFY flags</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/exercise-verification.json</code></td>
+<td>verify-exercises</td>
+<td>Grounding</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/quick-verify.json</code></td>
+<td>write</td>
+<td>Quick verify results</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/state.json</code></td>
+<td>all phases</td>
+<td>Pipeline state</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/dispatch/*-meta.json</code></td>
+<td>all dispatches</td>
+<td>Dispatch logs</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/dispatch/*.stderr.log</code></td>
+<td>all dispatches</td>
+<td>Stderr capture</td>
+</tr>
+<tr>
+<td><code>{level}/build-stats.jsonl</code></td>
+<td>write</td>
+<td>Retry statistics</td>
+</tr>
+<tr>
+<td><code>{level}/build-errors/{slug}-errors.md</code></td>
+<td>write (exhausted)</td>
+<td>Error report</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/friction.yaml</code></td>
+<td>write (exhausted)</td>
+<td>Auto-friction</td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/correction-attempt-{N}.md</code></td>
+<td>write retry</td>
+<td>Directive</td>
+</tr>
+<tr>
+<td><code>starlight/src/content/docs/{level}/{slug}.mdx</code></td>
+<td>publish</td>
+<td><strong>MDX output</strong></td>
+</tr>
+<tr>
+<td><code>{level}/orchestration/{slug}/index.md</code></td>
+<td>final</td>
+<td>Orchestration index</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2>4. Bug List</h2>
 <h3>CRITICAL (will cause incorrect behavior)</h3>
@@ -416,14 +663,40 @@ main()
 <hr />
 <h2>5. Prompt Template Analysis</h2>
 <h3>Placeholders by template</h3>
-<p>| Template | Placeholders |
-|----------|-------------|
-| v6-skeleton.md | TOPIC_TITLE, MODULE_NUM, LEVEL, PHASE, WORD_TARGET, WORD_OVERSHOOT, PLAN_CONTENT, KNOWLEDGE_PACKET, SUMMARY_HEADING |
-| v6-write.md | TOPIC_TITLE, MODULE_NUM, LEVEL, PHASE, WORD_TARGET, WORD_CEILING, PLAN_CONTENT, KNOWLEDGE_PACKET, EXACT_SECTION_TITLES, IMMERSION_RULE, PEDAGOGICAL_CONSTRAINTS, LEVEL_CONSTRAINTS, VOCABULARY_HINTS, PRONUNCIATION_VIDEOS, GOLDEN_FRAGMENT, SUMMARY_HEADING |
-| v6-write-seminar.md | TOPIC_TITLE, MODULE_NUM, LEVEL, PHASE, WORD_TARGET, WORD_CEILING, PLAN_CONTENT, KNOWLEDGE_PACKET, GOLDEN_FRAGMENT, <strong>SKELETON_SECTION</strong>, <strong>CORRECTION_SECTION</strong> |
-| v6-activities.md | MODULE_NUM, TOPIC_TITLE, LEVEL, MODULE_SLUG, INJECTION_MARKERS, PLAN_ACTIVITY_HINTS, PLAN_VOCABULARY, MODULE_CONTENT, TOOL_INSTRUCTIONS, LEVEL_CONTEXT, PEDAGOGY_PATTERNS |
-| v6-vocab.md | PLAN_VOCABULARY, MODULE_CONTENT |
-| v6-review.md | MODULE_NUM, TOPIC_TITLE, LEVEL, PHASE, WRITER_MODEL, WORD_TARGET, PLAN_CONTENT, GENERATED_CONTENT |</p>
+<table>
+<thead>
+<tr>
+<th>Template</th>
+<th>Placeholders</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v6-skeleton.md</td>
+<td>TOPIC_TITLE, MODULE_NUM, LEVEL, PHASE, WORD_TARGET, WORD_OVERSHOOT, PLAN_CONTENT, KNOWLEDGE_PACKET, SUMMARY_HEADING</td>
+</tr>
+<tr>
+<td>v6-write.md</td>
+<td>TOPIC_TITLE, MODULE_NUM, LEVEL, PHASE, WORD_TARGET, WORD_CEILING, PLAN_CONTENT, KNOWLEDGE_PACKET, EXACT_SECTION_TITLES, IMMERSION_RULE, PEDAGOGICAL_CONSTRAINTS, LEVEL_CONSTRAINTS, VOCABULARY_HINTS, PRONUNCIATION_VIDEOS, GOLDEN_FRAGMENT, SUMMARY_HEADING</td>
+</tr>
+<tr>
+<td>v6-write-seminar.md</td>
+<td>TOPIC_TITLE, MODULE_NUM, LEVEL, PHASE, WORD_TARGET, WORD_CEILING, PLAN_CONTENT, KNOWLEDGE_PACKET, GOLDEN_FRAGMENT, <strong>SKELETON_SECTION</strong>, <strong>CORRECTION_SECTION</strong></td>
+</tr>
+<tr>
+<td>v6-activities.md</td>
+<td>MODULE_NUM, TOPIC_TITLE, LEVEL, MODULE_SLUG, INJECTION_MARKERS, PLAN_ACTIVITY_HINTS, PLAN_VOCABULARY, MODULE_CONTENT, TOOL_INSTRUCTIONS, LEVEL_CONTEXT, PEDAGOGY_PATTERNS</td>
+</tr>
+<tr>
+<td>v6-vocab.md</td>
+<td>PLAN_VOCABULARY, MODULE_CONTENT</td>
+</tr>
+<tr>
+<td>v6-review.md</td>
+<td>MODULE_NUM, TOPIC_TITLE, LEVEL, PHASE, WRITER_MODEL, WORD_TARGET, PLAN_CONTENT, GENERATED_CONTENT</td>
+</tr>
+</tbody>
+</table>
 <h3>Contradictions between prompts</h3>
 <ol>
 <li>
@@ -502,27 +775,109 @@ main()
 </ul>
 <hr />
 <h2>7. Silent Failure Points</h2>
-<p>| Location | What can fail | What happens |
-|----------|--------------|--------------|
-| <code>step_research</code> research_quality import | <code>assess_research_compat</code> missing | Warning logged, continues |
-| <code>step_verify</code> VESUM check | <code>_run_vesum_verify</code> import fails | Warning, continues |
-| <code>step_verify</code> IPA scan | <code>_run_ipa_scan</code> import fails | Warning, continues |
-| <code>step_vocab</code> YAML parse | Writer returns non-YAML | Returns None, logged |
-| <code>step_enrich</code> enrichment | Exception in enrich_file | Returns empty list, logged |
-| <code>step_annotate</code> stress marks | Import or runtime error | Warning, continues |
-| <code>_resolve_verify_flags</code> | VESUM DB missing | Returns unresolved flags |
-| <code>_query_friction_for_errors</code> | YAML parse errors in friction files | Silent continue per file |
-| <code>_save_structured_findings</code> | Regex doesn't match review format | Empty YAML saved |
-| <code>enrich.py</code> <code>_vesum_lookup</code> | SQLite error | Returns (&quot;&quot;, &quot;&quot;), silent |
-| <code>_build_vesum_report</code> | SQLite error | Returns &quot;&quot; |</p>
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>What can fail</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>step_research</code> research_quality import</td>
+<td><code>assess_research_compat</code> missing</td>
+<td>Warning logged, continues</td>
+</tr>
+<tr>
+<td><code>step_verify</code> VESUM check</td>
+<td><code>_run_vesum_verify</code> import fails</td>
+<td>Warning, continues</td>
+</tr>
+<tr>
+<td><code>step_verify</code> IPA scan</td>
+<td><code>_run_ipa_scan</code> import fails</td>
+<td>Warning, continues</td>
+</tr>
+<tr>
+<td><code>step_vocab</code> YAML parse</td>
+<td>Writer returns non-YAML</td>
+<td>Returns None, logged</td>
+</tr>
+<tr>
+<td><code>step_enrich</code> enrichment</td>
+<td>Exception in enrich_file</td>
+<td>Returns empty list, logged</td>
+</tr>
+<tr>
+<td><code>step_annotate</code> stress marks</td>
+<td>Import or runtime error</td>
+<td>Warning, continues</td>
+</tr>
+<tr>
+<td><code>_resolve_verify_flags</code></td>
+<td>VESUM DB missing</td>
+<td>Returns unresolved flags</td>
+</tr>
+<tr>
+<td><code>_query_friction_for_errors</code></td>
+<td>YAML parse errors in friction files</td>
+<td>Silent continue per file</td>
+</tr>
+<tr>
+<td><code>_save_structured_findings</code></td>
+<td>Regex doesn't match review format</td>
+<td>Empty YAML saved</td>
+</tr>
+<tr>
+<td><code>enrich.py</code> <code>_vesum_lookup</code></td>
+<td>SQLite error</td>
+<td>Returns (&quot;&quot;, &quot;&quot;), silent</td>
+</tr>
+<tr>
+<td><code>_build_vesum_report</code></td>
+<td>SQLite error</td>
+<td>Returns &quot;&quot;</td>
+</tr>
+</tbody>
+</table>
 <h3>Content corruption risk</h3>
-<p>| Scenario | Risk | Mitigation |
-|----------|------|------------|
-| <code>_rewrite_weak_sections</code> produces truncated output | <strong>MEDIUM</strong> — checked at line 2893-2896 (reject if &lt;70% of original) |
-| Enrichment shrinks content | <strong>LOW</strong> — checked at line 704 (reject if &lt;50% of original) |
-| <code>_post_process_content</code> strips valid tab markers | <strong>LOW</strong> — only runs in full pipeline before enrich adds tabs |
-| Review fix loop worsens score | <strong>LOW</strong> — stopped if score doesn't improve (line 3627-3632) |
-| Section rewrite drops sections | <strong>LOW</strong> — checked at line 2888-2889 |</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_rewrite_weak_sections</code> produces truncated output</td>
+<td><strong>MEDIUM</strong> — checked at line 2893-2896 (reject if &lt;70% of original)</td>
+<td></td>
+</tr>
+<tr>
+<td>Enrichment shrinks content</td>
+<td><strong>LOW</strong> — checked at line 704 (reject if &lt;50% of original)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>_post_process_content</code> strips valid tab markers</td>
+<td><strong>LOW</strong> — only runs in full pipeline before enrich adds tabs</td>
+<td></td>
+</tr>
+<tr>
+<td>Review fix loop worsens score</td>
+<td><strong>LOW</strong> — stopped if score doesn't improve (line 3627-3632)</td>
+<td></td>
+</tr>
+<tr>
+<td>Section rewrite drops sections</td>
+<td><strong>LOW</strong> — checked at line 2888-2889</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2>8. Refactor Recommendations</h2>
 <h3>P0: Fix before next build</h3>
@@ -593,59 +948,269 @@ GEMINI = ModelFamily(&quot;gemini&quot;, &quot;gemini-3.1-pro-preview&quot;, &qu
 <hr />
 <h2>9. Function Reference (42 functions)</h2>
 <h3>Pipeline steps (public):</h3>
-<p>| Function | Lines | Purpose |
-|----------|-------|---------|
-| <code>step_check</code> | 284-358 | Plan validation + auto-fix |
-| <code>step_research</code> | 361-409 | RAG knowledge packet |
-| <code>step_skeleton</code> | 412-511 | Paragraph-level structure |
-| <code>step_write</code> | 797-1034 | Single-call content generation |
-| <code>step_write_chunked</code> | 677-794 | Section-by-section generation |
-| <code>step_write_with_retry</code> | 1037-1155 | Write + quick_verify + retry loop |
-| <code>step_exercises</code> | 1371-1408 | <strong>LEGACY</strong> — fill exercise placeholders |
-| <code>step_activities</code> | 1935-2154 | Structured activity YAML generation |
-| <code>step_vocab</code> | 1504-1604 | Writer-generated vocabulary |
-| <code>step_enrich</code> | 2278-2301 | Deterministic enrichment |
-| <code>step_verify</code> | 2304-2421 | VESUM + Russicism + IPA checks |
-| <code>step_verify_exercises</code> | 1703-1751 | Exercise grounding check |
-| <code>step_annotate</code> | 1477-1501 | Stress mark annotation |
-| <code>step_review</code> | 2502-2777 | Cross-agent adversarial review |
-| <code>step_publish</code> | 3209-3385 | MDX generation with 4 tabs |
-| <code>main</code> | 3388-3660 | CLI + orchestration |</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Lines</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>step_check</code></td>
+<td>284-358</td>
+<td>Plan validation + auto-fix</td>
+</tr>
+<tr>
+<td><code>step_research</code></td>
+<td>361-409</td>
+<td>RAG knowledge packet</td>
+</tr>
+<tr>
+<td><code>step_skeleton</code></td>
+<td>412-511</td>
+<td>Paragraph-level structure</td>
+</tr>
+<tr>
+<td><code>step_write</code></td>
+<td>797-1034</td>
+<td>Single-call content generation</td>
+</tr>
+<tr>
+<td><code>step_write_chunked</code></td>
+<td>677-794</td>
+<td>Section-by-section generation</td>
+</tr>
+<tr>
+<td><code>step_write_with_retry</code></td>
+<td>1037-1155</td>
+<td>Write + quick_verify + retry loop</td>
+</tr>
+<tr>
+<td><code>step_exercises</code></td>
+<td>1371-1408</td>
+<td><strong>LEGACY</strong> — fill exercise placeholders</td>
+</tr>
+<tr>
+<td><code>step_activities</code></td>
+<td>1935-2154</td>
+<td>Structured activity YAML generation</td>
+</tr>
+<tr>
+<td><code>step_vocab</code></td>
+<td>1504-1604</td>
+<td>Writer-generated vocabulary</td>
+</tr>
+<tr>
+<td><code>step_enrich</code></td>
+<td>2278-2301</td>
+<td>Deterministic enrichment</td>
+</tr>
+<tr>
+<td><code>step_verify</code></td>
+<td>2304-2421</td>
+<td>VESUM + Russicism + IPA checks</td>
+</tr>
+<tr>
+<td><code>step_verify_exercises</code></td>
+<td>1703-1751</td>
+<td>Exercise grounding check</td>
+</tr>
+<tr>
+<td><code>step_annotate</code></td>
+<td>1477-1501</td>
+<td>Stress mark annotation</td>
+</tr>
+<tr>
+<td><code>step_review</code></td>
+<td>2502-2777</td>
+<td>Cross-agent adversarial review</td>
+</tr>
+<tr>
+<td><code>step_publish</code></td>
+<td>3209-3385</td>
+<td>MDX generation with 4 tabs</td>
+</tr>
+<tr>
+<td><code>main</code></td>
+<td>3388-3660</td>
+<td>CLI + orchestration</td>
+</tr>
+</tbody>
+</table>
 <h3>Support functions (private):</h3>
-<p>| Function | Lines | Purpose |
-|----------|-------|---------|
-| <code>_build_tool_instructions</code> | 58-148 | MCP tool prompt section |
-| <code>_extract_body</code> | 158-180 | Split prose from enrichment tabs |
-| <code>_clean_build_artifacts</code> | 183-243 | Remove previous build files |
-| <code>_log</code> | 246-247 | Print with flush |
-| <code>_save_v6_state</code> | 250-281 | Write state.json |
-| <code>_parse_skeleton_sections</code> | 514-551 | Parse skeleton H2 sections |
-| <code>_extract_word_budget</code> | 554-557 | Parse word budget from heading |
-| <code>_build_section_summary</code> | 560-575 | Rolling summary for chunks |
-| <code>_build_chunk_prompt</code> | 578-674 | Build prompt for one section |
-| <code>_query_friction_for_errors</code> | 1158-1240 | Search friction files for patterns |
-| <code>_save_structured_findings</code> | 1243-1286 | Parse review scores → YAML |
-| <code>_generate_friction</code> | 1289-1328 | Auto-generate friction on failure |
-| <code>_log_stats</code> | 1331-1347 | Append retry stats to JSONL |
-| <code>_save_quick_verify</code> | 1350-1368 | Persist quick verify results |
-| <code>_post_process_content</code> | 1411-1474 | Strip LLM artifacts |
-| <code>_extract_verify_flags</code> | 1607-1625 | Parse <code>&lt;!-- VERIFY --&gt;</code> markers |
-| <code>_resolve_verify_flags</code> | 1628-1685 | VESUM lookup for flags |
-| <code>_save_verify_flags</code> | 1688-1700 | Write flags YAML |
-| <code>_check_activity_semantics</code> | 1754-1771 | Check inline activity ids |
-| <code>_build_activity_level_context</code> | 1774-1853 | Level-aware activity context |
-| <code>_build_pedagogy_patterns</code> | 1856-1932 | Match pedagogy patterns |
-| <code>_inject_abetka_activities</code> | 2157-2275 | Deterministic alphabet activities |
-| <code>_build_vesum_report</code> | 2424-2499 | Pre-verify words for reviewer |
-| <code>_rewrite_weak_sections</code> | 2780-2904 | Section-level content rewrite |
-| <code>_build_review_correction</code> | 2911-2997 | <strong>DEAD CODE</strong> — correction directive |
-| <code>_parse_review_fixes</code> | 3000-3038 | <strong>DEAD CODE</strong> — parse <code>&lt;fixes&gt;</code> block |
-| <code>_strip_dsl_blocks</code> | 3041-3057 | Remove legacy DSL exercises |
-| <code>_convert_tab_markers</code> | 3060-3093 | Tab markers → MDX components |
-| <code>_load_activities</code> | 3096-3108 | Load activities YAML |
-| <code>_inject_inline_activities</code> | 3111-3132 | Replace markers with JSX |
-| <code>_build_workbook_tab</code> | 3135-3153 | Render workbook activities |
-| <code>_build_resources_tab</code> | 3156-3206 | Build resources from plan |</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Lines</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_build_tool_instructions</code></td>
+<td>58-148</td>
+<td>MCP tool prompt section</td>
+</tr>
+<tr>
+<td><code>_extract_body</code></td>
+<td>158-180</td>
+<td>Split prose from enrichment tabs</td>
+</tr>
+<tr>
+<td><code>_clean_build_artifacts</code></td>
+<td>183-243</td>
+<td>Remove previous build files</td>
+</tr>
+<tr>
+<td><code>_log</code></td>
+<td>246-247</td>
+<td>Print with flush</td>
+</tr>
+<tr>
+<td><code>_save_v6_state</code></td>
+<td>250-281</td>
+<td>Write state.json</td>
+</tr>
+<tr>
+<td><code>_parse_skeleton_sections</code></td>
+<td>514-551</td>
+<td>Parse skeleton H2 sections</td>
+</tr>
+<tr>
+<td><code>_extract_word_budget</code></td>
+<td>554-557</td>
+<td>Parse word budget from heading</td>
+</tr>
+<tr>
+<td><code>_build_section_summary</code></td>
+<td>560-575</td>
+<td>Rolling summary for chunks</td>
+</tr>
+<tr>
+<td><code>_build_chunk_prompt</code></td>
+<td>578-674</td>
+<td>Build prompt for one section</td>
+</tr>
+<tr>
+<td><code>_query_friction_for_errors</code></td>
+<td>1158-1240</td>
+<td>Search friction files for patterns</td>
+</tr>
+<tr>
+<td><code>_save_structured_findings</code></td>
+<td>1243-1286</td>
+<td>Parse review scores → YAML</td>
+</tr>
+<tr>
+<td><code>_generate_friction</code></td>
+<td>1289-1328</td>
+<td>Auto-generate friction on failure</td>
+</tr>
+<tr>
+<td><code>_log_stats</code></td>
+<td>1331-1347</td>
+<td>Append retry stats to JSONL</td>
+</tr>
+<tr>
+<td><code>_save_quick_verify</code></td>
+<td>1350-1368</td>
+<td>Persist quick verify results</td>
+</tr>
+<tr>
+<td><code>_post_process_content</code></td>
+<td>1411-1474</td>
+<td>Strip LLM artifacts</td>
+</tr>
+<tr>
+<td><code>_extract_verify_flags</code></td>
+<td>1607-1625</td>
+<td>Parse <code>&lt;!-- VERIFY --&gt;</code> markers</td>
+</tr>
+<tr>
+<td><code>_resolve_verify_flags</code></td>
+<td>1628-1685</td>
+<td>VESUM lookup for flags</td>
+</tr>
+<tr>
+<td><code>_save_verify_flags</code></td>
+<td>1688-1700</td>
+<td>Write flags YAML</td>
+</tr>
+<tr>
+<td><code>_check_activity_semantics</code></td>
+<td>1754-1771</td>
+<td>Check inline activity ids</td>
+</tr>
+<tr>
+<td><code>_build_activity_level_context</code></td>
+<td>1774-1853</td>
+<td>Level-aware activity context</td>
+</tr>
+<tr>
+<td><code>_build_pedagogy_patterns</code></td>
+<td>1856-1932</td>
+<td>Match pedagogy patterns</td>
+</tr>
+<tr>
+<td><code>_inject_abetka_activities</code></td>
+<td>2157-2275</td>
+<td>Deterministic alphabet activities</td>
+</tr>
+<tr>
+<td><code>_build_vesum_report</code></td>
+<td>2424-2499</td>
+<td>Pre-verify words for reviewer</td>
+</tr>
+<tr>
+<td><code>_rewrite_weak_sections</code></td>
+<td>2780-2904</td>
+<td>Section-level content rewrite</td>
+</tr>
+<tr>
+<td><code>_build_review_correction</code></td>
+<td>2911-2997</td>
+<td><strong>DEAD CODE</strong> — correction directive</td>
+</tr>
+<tr>
+<td><code>_parse_review_fixes</code></td>
+<td>3000-3038</td>
+<td><strong>DEAD CODE</strong> — parse <code>&lt;fixes&gt;</code> block</td>
+</tr>
+<tr>
+<td><code>_strip_dsl_blocks</code></td>
+<td>3041-3057</td>
+<td>Remove legacy DSL exercises</td>
+</tr>
+<tr>
+<td><code>_convert_tab_markers</code></td>
+<td>3060-3093</td>
+<td>Tab markers → MDX components</td>
+</tr>
+<tr>
+<td><code>_load_activities</code></td>
+<td>3096-3108</td>
+<td>Load activities YAML</td>
+</tr>
+<tr>
+<td><code>_inject_inline_activities</code></td>
+<td>3111-3132</td>
+<td>Replace markers with JSX</td>
+</tr>
+<tr>
+<td><code>_build_workbook_tab</code></td>
+<td>3135-3153</td>
+<td>Render workbook activities</td>
+</tr>
+<tr>
+<td><code>_build_resources_tab</code></td>
+<td>3156-3206</td>
+<td>Build resources from plan</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2>10. Supporting File Analysis (AC20-AC23)</h2>
 <h3>activity_renderer.py (AC21)</h3>

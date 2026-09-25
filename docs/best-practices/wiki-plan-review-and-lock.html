@@ -116,7 +116,7 @@
   <header class="hero">
     <div class="title-block">
       <h1>Review-and-Lock: Wiki + Plan</h1>
-      <div class="sub">Migrated from Markdown on 2026-09-25 09:00</div>
+      <div class="sub">Migrated from Markdown on 2026-09-25 15:53</div>
     </div>
     <div class="meta">
       <div>Source: wiki-plan-review-and-lock.md</div>
@@ -158,13 +158,48 @@
 <h2>AC-1 — Wiki to ≥9/10 (the 5-dimension rubric)</h2>
 <h3>The rubric</h3>
 <p>Score each dimension 1–10. All five must be ≥9 to lock. The thresholds and rationales are the same as the standard wiki review rubric used in <code>wiki/.reviews/.../*.md</code>:</p>
-<p>| # | Dimension | Focus | Auto-cap trigger |
-|---|-----------|-------|------------------|
-| 1 | <strong>Factual accuracy</strong> | Every claim sourced (inline citation or <code>sources.yaml</code> entry). Vague / unsourced claims → deduct. | ≤ 7 if any claim references a source that doesn't support it. |
-| 2 | <strong>Ukrainian language quality</strong> | Russianisms (кон→кін), Surzhyk (шо→що), calques (приймати душ→брати душ), paronyms. Four <strong>separate</strong> checks. | ≤ 7 if ANY Russianism in instructional text. |
-| 3 | <strong>Decolonization</strong> | Ukrainian on its own terms. No &quot;like Russian but...&quot; framing. Russian-origin calques explicitly named when discussed. | ≤ 6 if any &quot;like Russian&quot; comparison. |
-| 4 | <strong>Completeness</strong> | Covers all aspects a module writer needs: sequence, core dialogue, modern pragmatics, L2-specific errors, vocab boundaries. | ≤ 7 if a writer would have to invent a section that should exist. |
-| 5 | <strong>Actionable guidance</strong> | A writer can lift sentences directly. Generic advice (&quot;teach it well&quot;) does not count. | ≤ 5 if section is pure high-level strategy. |</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Dimension</th>
+<th>Focus</th>
+<th>Auto-cap trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Factual accuracy</strong></td>
+<td>Every claim sourced (inline citation or <code>sources.yaml</code> entry). Vague / unsourced claims → deduct.</td>
+<td>≤ 7 if any claim references a source that doesn't support it.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Ukrainian language quality</strong></td>
+<td>Russianisms (кон→кін), Surzhyk (шо→що), calques (приймати душ→брати душ), paronyms. Four <strong>separate</strong> checks.</td>
+<td>≤ 7 if ANY Russianism in instructional text.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Decolonization</strong></td>
+<td>Ukrainian on its own terms. No &quot;like Russian but...&quot; framing. Russian-origin calques explicitly named when discussed.</td>
+<td>≤ 6 if any &quot;like Russian&quot; comparison.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Completeness</strong></td>
+<td>Covers all aspects a module writer needs: sequence, core dialogue, modern pragmatics, L2-specific errors, vocab boundaries.</td>
+<td>≤ 7 if a writer would have to invent a section that should exist.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Actionable guidance</strong></td>
+<td>A writer can lift sentences directly. Generic advice (&quot;teach it well&quot;) does not count.</td>
+<td>≤ 5 if section is pure high-level strategy.</td>
+</tr>
+</tbody>
+</table>
 <h3>Checklist for AC-1</h3>
 <ol>
 <li><strong>Apply any outstanding <code>&lt;fixes&gt;</code> block</strong> from the latest review round (check <code>git log -p</code> on the wiki to confirm they haven't already landed — compilation regenerates files and can silently drop fixes).</li>
@@ -272,10 +307,27 @@ review_notes: &gt;-
 <hr />
 <h2>AC-4 — Adversarial review before PR</h2>
 <p>Two rows. Infra and rubric drift are code review. Vocabulary stays with AGY.</p>
-<p>| Row | What | Seat |
-| --- | --- | --- |
-| Code review | (1) wiki fixes that open new gaps, (2) lifecycle field names colliding with the plan schema, (3) checklist categories the latest audit would have caught, (4) this rubric drifting from what was applied | Non-Gemini code-review seat (<code>ask-codex</code> / <code>ask-claude</code> <code>--type review</code>) |
-| Ukrainian factual | (5) hallucinated vocab not verifiable in VESUM | AGY, <code>--review-profile ukrainian</code> only |</p>
+<table>
+<thead>
+<tr>
+<th>Row</th>
+<th>What</th>
+<th>Seat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Code review</td>
+<td>(1) wiki fixes that open new gaps, (2) lifecycle field names colliding with the plan schema, (3) checklist categories the latest audit would have caught, (4) this rubric drifting from what was applied</td>
+<td>Non-Gemini code-review seat (<code>ask-codex</code> / <code>ask-claude</code> <code>--type review</code>)</td>
+</tr>
+<tr>
+<td>Ukrainian factual</td>
+<td>(5) hallucinated vocab not verifiable in VESUM</td>
+<td>AGY, <code>--review-profile ukrainian</code> only</td>
+</tr>
+</tbody>
+</table>
 <pre><code class="language-bash"># Code review — non-Gemini seat
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - \
   --task-id &lt;N&gt;-review --type review &lt;&lt;'EOF'

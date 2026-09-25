@@ -8174,20 +8174,43 @@ def _dispatch(
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
-    from scripts.ai_agent_bridge._agy import gemini_review_verdict_dispatch_error
+    from scripts.ai_agent_bridge._agy import (
+        GeminiChangedPathListError,
+        gemini_review_verdict_dispatch_error,
+        resolve_same_repo_pr_head,
+    )
+
+    pr_number = getattr(args, "pr", None)
+    pinned_head = getattr(args, "pinned_head", None)
+    if pr_number is not None and not pinned_head:
+        try:
+            pr_branch, pinned_head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(_REPO_ROOT))
+        except GeminiChangedPathListError as exc:
+            print(f"❌ could not resolve PR head: {exc}", file=sys.stderr)
+            return 2
+        named_branch = getattr(args, "branch", None)
+        if named_branch and named_branch != pr_branch:
+            print(
+                f"❌ --branch {named_branch!r} is not PR #{pr_number} head {pr_branch!r}",
+                file=sys.stderr,
+            )
+            return 2
+        args.branch = pr_branch
+        args.pinned_head = pinned_head
 
     gemini_checked_heads: list[str] = []
     gemini_review_error = gemini_review_verdict_dispatch_error(
         agent=str(args.agent),
         require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
         profile=getattr(args, "review_profile", None),
-        pr_number=getattr(args, "pr", None),
+        pr_number=pr_number,
         branch=getattr(args, "branch", None),
         repo_root=str(_REPO_ROOT),
         model=getattr(args, "model", None),
         review=bool(getattr(args, "review", False))
         or str(getattr(args, "type", "") or "").strip().casefold() == "review",
         head_out=gemini_checked_heads,
+        head_sha=pinned_head,
     )
     if gemini_review_error is not None:
         print(f"❌ {gemini_review_error}", file=sys.stderr)
@@ -8619,7 +8642,7 @@ def _dispatch(
         agent=str(dispatch_agent),
         require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
         profile=getattr(args, "review_profile", None),
-        pr_number=getattr(args, "pr", None),
+        pr_number=pr_number,
         branch=getattr(args, "branch", None),
         repo_root=str(_REPO_ROOT),
         model=getattr(args, "model", None),
@@ -8627,6 +8650,7 @@ def _dispatch(
         review=bool(getattr(args, "review", False))
         or str(getattr(args, "type", "") or "").strip().casefold() == "review",
         head_out=gemini_checked_heads,
+        head_sha=getattr(args, "pinned_head", None) or pinned_head,
     )
     if gemini_review_error is not None:
         print(f"❌ {gemini_review_error}", file=sys.stderr)
@@ -8768,7 +8792,10 @@ def _dispatch(
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     allow_rebase=not bool(getattr(args, "dry_run", False)),
-                    pinned_head_sha=gemini_checked_heads[-1] if gemini_checked_heads else None,
+                    pinned_head_sha=(
+                        getattr(args, "pinned_head", None)
+                        or (gemini_checked_heads[-1] if gemini_checked_heads else None)
+                    ),
                 )
             else:
                 # Sibling repos resolve the base SHA at create time inside
@@ -10870,6 +10897,24 @@ def build_parser() -> argparse.ArgumentParser:
             "`--worktree PATH` to reuse a specific added worktree "
             "(validated against the expected dispatch branch before reuse). "
             "Refuses when the invocation cwd is a different git root (#6900)."
+        ),
+    )
+    d.add_argument(
+        "--pr",
+        type=int,
+        default=None,
+        help=(
+            "Review this same-repo PR. The head SHA is resolved once and pinned; "
+            "a later fetch of a different tip refuses the dispatch."
+        ),
+    )
+    d.add_argument(
+        "--pinned-head",
+        default=None,
+        metavar="SHA",
+        help=(
+            "Exact commit the worktree must check out. A fetched branch tip that "
+            "differs from this SHA refuses the dispatch."
         ),
     )
     d.add_argument(

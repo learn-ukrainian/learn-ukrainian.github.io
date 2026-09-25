@@ -585,7 +585,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # process-claude
-    proc_claude_parser = subparsers.add_parser("process-claude", help="Drain a queued ask via ACP; explicit reviews remain toolful")
+    proc_claude_parser = subparsers.add_parser(
+        "process-claude", help="Drain a queued ask via ACP; explicit reviews remain toolful"
+    )
     proc_claude_parser.add_argument("message_id", type=int, help="Message ID for Claude to process")
     proc_claude_parser.add_argument(
         "--new-session",
@@ -594,7 +596,10 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Force new session even if one exists for this task",
     )
     proc_claude_parser.add_argument(
-        "--async", dest="fire_and_forget", action="store_true", help="Legacy review background option; rejected for ordinary ACP asks."
+        "--async",
+        dest="fire_and_forget",
+        action="store_true",
+        help="Legacy review background option; rejected for ordinary ACP asks.",
     )
     proc_claude_parser.add_argument(
         "--no-timeout",
@@ -604,7 +609,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # process-codex
-    proc_codex_parser = subparsers.add_parser("process-codex", help="Drain a queued ask via ACP; explicit reviews remain toolful")
+    proc_codex_parser = subparsers.add_parser(
+        "process-codex", help="Drain a queued ask via ACP; explicit reviews remain toolful"
+    )
     proc_codex_parser.add_argument("message_id", type=int, help="Message ID for Codex to process")
     proc_codex_parser.add_argument(
         "--new-session", dest="new_session", action="store_true", help="Force new session even if one exists"
@@ -631,10 +638,16 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     proc_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
-    proc_kimi_parser = subparsers.add_parser("process-kimi", help="Drain a queued ask via ACP; explicit reviews remain toolful")
+    proc_kimi_parser = subparsers.add_parser(
+        "process-kimi", help="Drain a queued ask via ACP; explicit reviews remain toolful"
+    )
     proc_kimi_parser.add_argument("message_id", type=int, help="Message ID for kimi to process")
-    proc_kimi_parser.add_argument("--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh")
-    proc_kimi_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout")
+    proc_kimi_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh"
+    )
+    proc_kimi_parser.add_argument(
+        "--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout"
+    )
     proc_kimi_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # process-ask is the detached-worker re-entry point for ``ask-* --background``.
@@ -882,7 +895,9 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=["minimal", "high", "max"],
         help=f"Reasoning effort (default {POOL_DEFAULT_VARIANT}; use high/max for harder tasks)",
     )
-    ask_pool_parser.add_argument("--model", default=None, help=f"Deprecated alias for --to-model (default {POOL_MODEL})")
+    ask_pool_parser.add_argument(
+        "--model", default=None, help=f"Deprecated alias for --to-model (default {POOL_MODEL})"
+    )
     ask_pool_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_pool_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_pool_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
@@ -899,7 +914,9 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_glm_parser.add_argument("--type", default="query", help="Message type")
     ask_glm_parser.add_argument("--data", help="Path to data file to attach")
     ask_glm_parser.add_argument(
-        "--model", default=None, help=f"Deprecated alias for --to-model (default {GLM_MODEL}; e.g. zai/glm-5.3-flash or zai-coding-plan/glm-5.3)"
+        "--model",
+        default=None,
+        help=f"Deprecated alias for --to-model (default {GLM_MODEL}; e.g. zai/glm-5.3-flash or zai-coding-plan/glm-5.3)",
     )
     ask_glm_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_glm_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
@@ -979,8 +996,12 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_kimi_parser.add_argument("--task-id", required=True, help="Task ID")
     ask_kimi_parser.add_argument("--type", default="query", help="Message type")
     ask_kimi_parser.add_argument("--data", help="Path to data file to attach")
-    ask_kimi_parser.add_argument("--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh")
-    ask_kimi_parser.add_argument("--model", help=f"Deprecated alias for --to-model (default {KIMI_BRIDGE_DEFAULT_MODEL})")
+    ask_kimi_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Accepted for parity; Kimi always starts fresh"
+    )
+    ask_kimi_parser.add_argument(
+        "--model", help=f"Deprecated alias for --to-model (default {KIMI_BRIDGE_DEFAULT_MODEL})"
+    )
     ask_kimi_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_kimi_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_kimi_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
@@ -1168,7 +1189,8 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     cleanup_parser.add_argument("--dry-run", action="store_true", help="Report what would be cleaned")
     cleanup_parser.add_argument(
-        "--expire", action="store_true",
+        "--expire",
+        action="store_true",
         help=(
             "Also run the channel-delivery TTL auto-expire + dead-lane "
             "bulk-expire sweep (#4837 item 4). Honors --dry-run."
@@ -1354,9 +1376,7 @@ def _dispatch_command(args):
     elif args.command == "thread":
         resolve_thread(args.identifier)
     elif args.command == "process":
-        process_message_for_recipient(
-            args.message_id, model=args.model, no_timeout=args.no_timeout
-        )
+        process_message_for_recipient(args.message_id, model=args.model, no_timeout=args.no_timeout)
     elif args.command in {"process-claude", "process-codex", "process-grok", "process-grok-build", "process-kimi"}:
         if _process_target(args.message_id, args.command.removeprefix("process-"), vars(args)) is False:
             raise SystemExit("ACP processing failed; message left unconsumed")
@@ -1538,29 +1558,20 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
             detail = detail[:200] + "…"
         suffix = f": {detail}" if detail else ""
         raise SystemExit(
-            f"ask --pr {pr_number}: gh pr view failed (exit {proc.returncode}){suffix}; "
-            "refusing to review main"
+            f"ask --pr {pr_number}: gh pr view failed (exit {proc.returncode}){suffix}; refusing to review main"
         )
     try:
         payload = json.loads(proc.stdout or "")
     except json.JSONDecodeError as exc:
-        raise SystemExit(
-            f"ask --pr {pr_number}: gh pr view returned invalid JSON; refusing to review main"
-        ) from exc
+        raise SystemExit(f"ask --pr {pr_number}: gh pr view returned invalid JSON; refusing to review main") from exc
     if not isinstance(payload, dict):
-        raise SystemExit(
-            f"ask --pr {pr_number}: gh pr view returned a non-object payload; refusing to review main"
-        )
+        raise SystemExit(f"ask --pr {pr_number}: gh pr view returned a non-object payload; refusing to review main")
     if payload.get("isCrossRepository") is not False:
-        raise SystemExit(
-            f"ask --pr {pr_number}: cross-repository PR; refusing to review main"
-        )
+        raise SystemExit(f"ask --pr {pr_number}: cross-repository PR; refusing to review main")
     branch = payload.get("headRefName")
     head_sha = payload.get("headRefOid")
     if not isinstance(branch, str) or not branch.strip():
-        raise SystemExit(
-            f"ask --pr {pr_number}: PR payload has no head branch; refusing to review main"
-        )
+        raise SystemExit(f"ask --pr {pr_number}: PR payload has no head branch; refusing to review main")
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
 
     try:
@@ -1571,9 +1582,7 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
             f"refusing to review main ({exc})"
         ) from exc
     if not _is_full_git_sha(head_sha):
-        raise SystemExit(
-            f"ask --pr {pr_number}: PR payload has no full head SHA; refusing to review main"
-        )
+        raise SystemExit(f"ask --pr {pr_number}: PR payload has no full head SHA; refusing to review main")
     return branch, str(head_sha)
 
 
@@ -1604,25 +1613,24 @@ def _missing_origin_branch_message(exc: BaseException, *, branch: str | None, pr
         return None
     name = branch or "unknown"
     if pr_number is not None:
-        return (
-            f"ask --pr {pr_number}: head branch {name!r} no longer exists on origin "
-            "(merged or deleted)"
-        )
+        return f"ask --pr {pr_number}: head branch {name!r} no longer exists on origin (merged or deleted)"
     return f"ask --branch {name}: branch no longer exists on origin (merged or deleted)"
 
 
-def _note_pr_head_movement(result: dict, *, pr_number: int, resolved_sha: str) -> None:
-    """Say when the dispatch checkout is not the SHA ``gh`` just resolved."""
+def _refuse_pr_head_movement(result: dict, *, pr_number: int, resolved_sha: str) -> None:
+    """Refuse when the dispatch checkout is not the SHA resolved for the path gate."""
     recorded = result.get("worktree_base_sha")
     if not isinstance(recorded, str) or not recorded.strip():
-        return
+        raise SystemExit(
+            f"ask --pr {pr_number}: refusing dispatch: no worktree base SHA was recorded "
+            f"for resolved head {resolved_sha}"
+        )
     recorded = recorded.strip().lower()
     if recorded == resolved_sha:
         return
-    print(
-        f"ask --pr {pr_number}: branch head moved between resolution and dispatch: "
-        f"resolved {resolved_sha}, dispatch record base {recorded}",
-        file=sys.stderr,
+    raise SystemExit(
+        f"ask --pr {pr_number}: refusing dispatch: branch head moved between resolution and dispatch: "
+        f"resolved {resolved_sha}, dispatch record base {recorded}"
     )
 
 
@@ -1649,10 +1657,7 @@ def _handle_acp_compat(args, target: str) -> None:
         raise SystemExit(f"ask-{target} requires --task-id")
     # Review intent comes from either spelling: the explicit --review flag or
     # the --type review drivers actually pass (#6805).
-    review = (
-        bool(getattr(args, "review", False))
-        or str(getattr(args, "type", "") or "").strip().casefold() == "review"
-    )
+    review = bool(getattr(args, "review", False)) or str(getattr(args, "type", "") or "").strip().casefold() == "review"
     pr_number = getattr(args, "pr", None)
     branch = getattr(args, "branch", None)
     resolved_head_sha: str | None = None
@@ -1664,10 +1669,7 @@ def _handle_acp_compat(args, target: str) -> None:
         # #8706: --pr must check out that PR's head, not the default base.
         if pr_number is not None:
             branch, resolved_head_sha = _resolve_same_repo_pr_head(int(pr_number))
-            target_desc = (
-                f"PR #{pr_number} — exact head {resolved_head_sha} "
-                f"(`gh pr diff {pr_number}`)"
-            )
+            target_desc = f"PR #{pr_number} — exact head {resolved_head_sha} (`gh pr diff {pr_number}`)"
         else:
             target_desc = f"remote branch origin/{branch}"
         content = _review_target_content(target_desc, content, sha=resolved_head_sha)
@@ -1686,6 +1688,7 @@ def _handle_acp_compat(args, target: str) -> None:
                 pr_number=int(pr_number) if pr_number is not None else None,
                 branch=branch,
                 repo_root=str(REPO_ROOT),
+                head_sha=resolved_head_sha,
             )
             if content_error is not None:
                 raise SystemExit(content_error)
@@ -1714,6 +1717,7 @@ def _handle_acp_compat(args, target: str) -> None:
             hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else None,
             branch=branch,
             resolved_head_sha=resolved_head_sha,
+            pinned_head=resolved_head_sha,
             pr_number=int(pr_number) if pr_number is not None else None,
             review_profile=getattr(args, "review_profile", None),
         )
@@ -1749,9 +1753,7 @@ def _handle_acp_compat(args, target: str) -> None:
             hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else None,
         )
         if not bool(getattr(result, "ok", False)):
-            raise SystemExit(
-                getattr(result, "stderr_excerpt", None) or "ACP ask failed without a diagnostic"
-            )
+            raise SystemExit(getattr(result, "stderr_excerpt", None) or "ACP ask failed without a diagnostic")
     except (ValueError, InterAgentTransportError) as exc:
         raise SystemExit(str(exc)) from exc
     except AgentTimeoutError as exc:
@@ -1779,6 +1781,7 @@ def _dispatch_headless_review(
     hard_timeout: int | None,
     branch: str | None = None,
     resolved_head_sha: str | None = None,
+    pinned_head: str | None = None,
     pr_number: int | None = None,
     review_profile: str | None = None,
 ) -> None:
@@ -1813,13 +1816,14 @@ def _dispatch_headless_review(
             hard_timeout=hard_timeout,
             branch=branch,
             review_profile=review_profile,
+            pinned_head=pinned_head,
         )
     except RuntimeError as exc:
         missing = _missing_origin_branch_message(exc, branch=branch, pr_number=pr_number)
         raise SystemExit(missing or str(exc)) from exc
 
     if resolved_head_sha is not None and pr_number is not None:
-        _note_pr_head_movement(result, pr_number=pr_number, resolved_sha=resolved_head_sha)
+        _refuse_pr_head_movement(result, pr_number=pr_number, resolved_sha=resolved_head_sha)
 
     response = str(result.get("response") or "")
     if output_path:

@@ -196,50 +196,74 @@ def _run_changed_path_command(
     return proc.stdout or ""
 
 
-# One row per changed file: current name, then the pre-rename path when GitHub has one.
-# ``changed_files`` counts files, so the row count — not the expanded path count — is the check.
-PR_CHANGED_FILES_JQ = '.[] | [.filename, (.previous_filename // "")] | @tsv'
+def resolve_same_repo_pr_head(pr_number: int, *, repo_root: str) -> tuple[str, str]:
+    """Return ``(head branch, full head SHA)`` from one ``gh pr view``.
 
-
-def list_pr_changed_paths(pr_number: int, *, repo_root: str) -> list[str]:
-    """Every changed path on a PR, including a rename's old path.
-
-    ``gh pr view --json files`` stops at 100 files and still exits 0, so a code
-    file past that page would be invisible. ``gh api --paginate`` follows every
-    page. The PR object's ``changed_files`` count must match the file rows
-    returned; a missing count, a failed call, or a short list refuses the review.
-    A rename's ``previous_filename`` is classified too, so moving ``scripts/x.py``
-    onto a content path cannot hide the deletion.
+    The SHA is the only commit the path gate and the later dispatch may use.
+    A second lookup is a different moment: callers keep this pair and pass the
+    SHA through instead of asking GitHub again.
     """
     number = int(pr_number)
     if number < 1:
         raise GeminiChangedPathListError(f"refusing to list files for PR {pr_number!r}")
-    pull = f"repos/{{owner}}/{{repo}}/pulls/{number}"
-    count_raw = _run_changed_path_command(
-        ["gh", "api", pull, "--jq", ".changed_files"],
-        cwd=repo_root,
-    ).strip()
-    if not count_raw.isdigit():
-        raise GeminiChangedPathListError("PR changed-file count is unavailable")
-    expected = int(count_raw)
     raw = _run_changed_path_command(
-        ["gh", "api", "--paginate", f"{pull}/files", "--jq", PR_CHANGED_FILES_JQ],
+        [
+            "gh",
+            "pr",
+            "view",
+            str(number),
+            "--json",
+            "headRefName,headRefOid,isCrossRepository",
+        ],
         cwd=repo_root,
     )
-    paths: list[str] = []
-    rows = 0
-    for line in raw.splitlines():
-        if not line.strip():
-            continue
-        rows += 1
-        current, _, previous = line.partition("\t")
-        for name in (current, previous):
-            cleaned = name.strip()
-            if cleaned:
-                paths.append(cleaned)
-    if rows != expected:
-        raise GeminiChangedPathListError(f"PR file list length {rows} does not match changed_files {expected}")
-    return paths
+    import json
+
+    try:
+        payload = json.loads(raw or "")
+    except json.JSONDecodeError as exc:
+        raise GeminiChangedPathListError("gh pr view returned invalid JSON") from exc
+    if not isinstance(payload, dict):
+        raise GeminiChangedPathListError("gh pr view returned a non-object payload")
+    if payload.get("isCrossRepository") is not False:
+        raise GeminiChangedPathListError("cross-repository PR")
+    branch = payload.get("headRefName")
+    sha = _full_git_sha(str(payload.get("headRefOid") or ""))
+    if not isinstance(branch, str) or not branch.strip() or sha is None:
+        raise GeminiChangedPathListError("PR payload has no head branch and full head SHA")
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        branch = validate_plain_branch_name(branch, repo_root=repo_root)
+    except UnsafeBranchNameError as exc:
+        raise GeminiChangedPathListError(f"PR head branch {branch!r} is not a local branch name: {exc}") from exc
+    return branch, sha
+
+
+def list_commit_changed_paths(sha: str, *, repo_root: str) -> list[str]:
+    """Changed paths of one fetched commit against ``origin/main``.
+
+    ``git fetch origin <sha>`` downloads that commit and does not move a branch
+    ref. ``--no-renames`` keeps the pre-rename path, so a rename of
+    ``scripts/x.py`` onto a content path still reports the old name.
+    """
+    pinned = _full_git_sha(sha)
+    if pinned is None:
+        raise GeminiChangedPathListError(f"refusing to diff non-SHA {sha!r}")
+    from scripts.common.git_context import sanitized_git_env
+
+    git_env = sanitized_git_env()
+    _run_changed_path_command(
+        ["git", "fetch", "origin", pinned],
+        cwd=repo_root,
+        env=git_env,
+    )
+    raw = _run_changed_path_command(
+        ["git", "diff", "--name-only", "--no-renames", f"origin/main...{pinned}"],
+        cwd=repo_root,
+        env=git_env,
+    )
+    return [line.strip() for line in raw.splitlines() if line.strip()]
 
 
 def _full_git_sha(value: str) -> str | None:
@@ -306,18 +330,33 @@ def gemini_pr_or_branch_content_error(
     branch: str | None,
     repo_root: str,
     head_out: list[str] | None = None,
+    head_sha: str | None = None,
 ) -> str | None:
     """Refuse a Gemini PR/branch target unless every changed path is content.
 
-    A PR uses paginated ``gh api`` file names checked against ``changed_files``.
-    A branch with no PR fetches that remote head by explicit refspec and diffs the SHA the fetch resolved.
-    Any failure to list files refuses. ``None`` means the target may proceed.
+    A PR head is resolved once. The changed paths are ``git diff`` of that
+    exact SHA (``origin/main...<sha>``), never a file list that can move
+    between the request and the checkout. ``head_sha`` is that already
+    resolved commit; when it is omitted and a PR number is set, this resolves
+    it once. A branch with no PR fetches that remote head by explicit refspec
+    and diffs the SHA the fetch resolved. ``head_out`` receives the SHA the
+    diff used. Any failure to list files refuses. ``None`` means the target
+    may proceed.
     """
-    if pr_number is None and not (branch and str(branch).strip()):
+    if head_sha is None and pr_number is None and not (branch and str(branch).strip()):
         return None
     try:
-        if pr_number is not None:
-            paths = list_pr_changed_paths(int(pr_number), repo_root=repo_root)
+        if pr_number is not None and int(pr_number) < 1:
+            raise GeminiChangedPathListError(f"refusing to list files for PR {pr_number!r}")
+        if head_sha is not None or pr_number is not None:
+            pinned = _full_git_sha(head_sha or "")
+            if pinned is None:
+                if pr_number is None:
+                    raise GeminiChangedPathListError(f"refusing to diff non-SHA {head_sha!r}")
+                _branch, pinned = resolve_same_repo_pr_head(int(pr_number), repo_root=repo_root)
+            if head_out is not None:
+                head_out.append(pinned)
+            paths = list_commit_changed_paths(pinned, repo_root=repo_root)
         else:
             paths = list_branch_changed_paths(str(branch), repo_root=repo_root, head_out=head_out)
         return gemini_content_paths_error(paths)
@@ -351,6 +390,7 @@ def gemini_review_verdict_dispatch_error(
     resolved_model: str | None = None,
     review: bool = False,
     head_out: list[str] | None = None,
+    head_sha: str | None = None,
 ) -> str | None:
     """Gate a review-typed dispatch whose agent or model is Gemini-family.
 
@@ -358,9 +398,9 @@ def gemini_review_verdict_dispatch_error(
     or ``--pr``. The requested model and the model after fallback substitution
     are both checked, on every agent. A matching dispatch needs
     ``--review-profile ukrainian``. When it also names a PR or branch, every
-    changed path must be Ukrainian content. ``head_out`` receives the branch
-    SHA that path list was computed against, when a branch was listed.
-    Implementation dispatches pass.
+    changed path must be Ukrainian content. ``head_sha``, when set, is the
+    commit that diff covers; otherwise a PR number is resolved once.
+    ``head_out`` receives that SHA. Implementation dispatches pass.
     """
     review_typed = require_review_verdict or review or pr_number is not None
     if not review_typed:
@@ -375,6 +415,7 @@ def gemini_review_verdict_dispatch_error(
         branch=branch,
         repo_root=repo_root,
         head_out=head_out,
+        head_sha=head_sha,
     )
 
 
