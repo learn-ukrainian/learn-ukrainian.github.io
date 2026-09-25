@@ -6672,6 +6672,50 @@ def _emit_terminal_dispatch_event(
         )
 
 
+def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness: str | None) -> list[str]:
+    """Flags ``cmd_dispatch`` copies onto the ``_worker`` argv.
+
+    ``--harness`` and ``--require-review-verdict`` are how a read-only kimi
+    review reaches ``_run_worker``. Review-attempt MCP flags stay on the
+    ``review_plan`` branch and are not part of this list.
+    """
+    flags: list[str] = []
+    if requested_harness is not None:
+        flags.extend(["--harness", requested_harness])
+    if bool(getattr(args, "require_review_verdict", False)):
+        flags.append("--require-review-verdict")
+    return flags
+
+
+def _kimicc_read_only_review_grant(
+    *,
+    harness: str | None,
+    mode: str,
+    require_review_verdict: bool,
+) -> dict[str, str]:
+    """Sources MCP grant for ``ask-kimi --review``.
+
+    That ask is ``dispatch --agent kimi --harness kimicc --mode read-only
+    --require-review-verdict``. The headless wrapper always passes ``--bare``,
+    and ``claude --bare`` does not load the checkout ``.mcp.json``, so this
+    passes the same file Claude read-only reviews discover from the worktree
+    (the streamable-HTTP ``sources`` server) plus the Claude Code
+    ``--allowedTools`` names. Write modes and non-review read-only dispatches
+    get nothing.
+    """
+    if harness != "kimicc" or mode != "read-only" or not require_review_verdict:
+        return {}
+    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+
+    allowed = review_tools_allowed_csv("claude")
+    if not allowed:
+        return {}
+    return {
+        "allowed_tools": allowed,
+        "mcp_config_path": str(_REPO_ROOT / ".mcp.json"),
+    }
+
+
 def _run_worker(
     task_id: str,
     agent: str,
@@ -6842,13 +6886,19 @@ def _run_worker(
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
                 tool_config["attempt_id"] = attempt_id
-            if strict_mcp_config and review_id is not None and attempt_id is not None and (
-                agent == "claude" or harness == "kimicc"
-            ):
+            if strict_mcp_config and review_id is not None and attempt_id is not None and agent == "claude":
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
-                # kimicc keeps agent "kimi"; the grant key is the Claude-Code harness.
-                tool_config["allowed_tools"] = review_tools_allowed_csv("kimicc" if harness == "kimicc" else agent)
+                tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
+            # ask-kimi --review is dispatch --agent kimi --harness kimicc
+            # --mode read-only --require-review-verdict, not --review-attempt.
+            tool_config.update(
+                _kimicc_read_only_review_grant(
+                    harness=harness,
+                    mode=mode,
+                    require_review_verdict=require_review_verdict,
+                )
+            )
             if (
                 strict_mcp_config
                 and review_id is not None
@@ -9047,14 +9097,11 @@ def _dispatch(
             "--runtime-tmp-namespace-root",
             str(runtime_tmp_namespace_root),
         ]
-        if requested_harness is not None:
-            cmd.extend(["--harness", requested_harness])
+        cmd.extend(_dispatch_worker_identity_flags(args, requested_harness))
         if keep_worktree:
             cmd.append("--keep-worktree")
         if bool(getattr(args, "finalize_open_pr", False)):
             cmd.append("--finalize-open-pr")
-        if bool(getattr(args, "require_review_verdict", False)):
-            cmd.append("--require-review-verdict")
         if max_budget_usd is not None:
             cmd.extend(["--max-budget-usd", str(max_budget_usd)])
         if output_schema_path is not None:

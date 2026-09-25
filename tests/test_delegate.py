@@ -4768,46 +4768,93 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
-def test_run_worker_grants_review_tools_to_kimicc(tmp_tasks_dir, tmp_path):
-    task_id = "worker-kimicc-review-grant"
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id, "harness": "kimicc"})
-    mock_result = type(
-        "_Result",
-        (),
-        {
-            "ok": True,
-            "response": "done",
-            "stderr_excerpt": None,
-            "returncode": 0,
-            "rate_limited": False,
-            "model": "fixture",
-            "effort": "unknown",
-            "cli_version": "fixture",
-        },
-    )()
-    allowed = ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
+def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypatch):
+    """ask-kimi --review is dispatch parsing through to the kimicc argv."""
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: None,
+    )
+    from scripts.agent_runtime.adapters.kimicc import KimiccHarness
 
-    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
-        rc = delegate._run_worker(
-            task_id=task_id,
-            agent="kimi",
-            prompt="review",
-            mode="read-only",
-            cwd_str=str(tmp_path),
-            model=None,
-            hard_timeout=60,
-            harness="kimicc",
-            review_id="rev-test",
-            attempt_id="att-test",
-            mcp_config_path=str(tmp_path / "review.mcp.json"),
-            strict_mcp_config=True,
-        )
+    dispatch = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "kimi",
+            "--harness",
+            "kimicc",
+            "--mode",
+            "read-only",
+            "--task-id",
+            "kimi-review-sources",
+            "--prompt",
+            "Review the diff and call mcp__sources__verify_word once.",
+            "--require-review-verdict",
+        ]
+    )
+    worker = delegate.build_parser().parse_args(
+        [
+            "_worker",
+            "--task-id",
+            dispatch.task_id,
+            "--agent",
+            dispatch.agent,
+            "--mode",
+            dispatch.mode,
+            "--cwd",
+            str(tmp_path),
+            *delegate._dispatch_worker_identity_flags(dispatch, dispatch.harness),
+        ]
+    )
+    grant = delegate._kimicc_read_only_review_grant(
+        harness=worker.harness,
+        mode=worker.mode,
+        require_review_verdict=worker.require_review_verdict,
+    )
+    plan = KimiccHarness().build_invocation(
+        prompt="Review the diff and call mcp__sources__verify_word once.",
+        mode=worker.mode,
+        cwd=tmp_path,
+        model="k3",
+        task_id=worker.task_id,
+        session_id=None,
+        tool_config={"harness": worker.harness, **grant},
+    )
+    allowed = plan.cmd[plan.cmd.index("--allowedTools") + 1]
+    assert "mcp__sources__verify_words" in allowed.split(",")
+    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(delegate._REPO_ROOT / ".mcp.json")
+    assert "--strict-mcp-config" not in plan.cmd
 
-    assert rc == 0
-    tool_config = mock_invoke.call_args.kwargs["tool_config"]
-    assert tool_config["allowed_tools"] == allowed
-    assert tool_config["harness"] == "kimicc"
-    assert mock_invoke.call_args.args[0] == "kimi"
+    plain = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "kimi",
+            "--harness",
+            "kimicc",
+            "--mode",
+            "read-only",
+            "--task-id",
+            "kimi-not-a-review",
+            "--prompt",
+            "What does this function do?",
+        ]
+    )
+    assert delegate._kimicc_read_only_review_grant(
+        harness=plain.harness,
+        mode=plain.mode,
+        require_review_verdict=plain.require_review_verdict,
+    ) == {}
+    write_review = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="workspace-write",
+        require_review_verdict=True,
+    )
+    assert write_review == {}
 
 
 def _codex_worker_result():

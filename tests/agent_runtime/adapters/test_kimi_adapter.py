@@ -310,6 +310,11 @@ def test_kimicc_accepts_delegate_read_only_and_review_keys(tmp_path, monkeypatch
 
 def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
     _kimicc_ready(tmp_path, monkeypatch)
+    probed: list[str] = []
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: probed.append("probed"),
+    )
     with pytest.raises(ValueError, match="read_only_tmp_root"):
         KimiccHarness().build_invocation(
             prompt="critique",
@@ -320,6 +325,7 @@ def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
             session_id=None,
             tool_config={"read_only_tmp_root": str(tmp_path)},
         )
+    assert probed == []
 
 
 def _kimicc_lease_invocation(tmp_path, monkeypatch, lease: Path, checkout: Path):
@@ -370,27 +376,6 @@ def test_kimicc_accepts_isolated_read_only_lease(tmp_path, monkeypatch):
     checkout.mkdir()
     plan = _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
     assert plan.env_overrides["TMPDIR"] == str(lease.resolve())
-
-
-def test_kimicc_review_attempt_argv_includes_sources_allowed_tools(tmp_path, monkeypatch):
-    _kimicc_ready(tmp_path, monkeypatch)
-    allowed = "mcp__sources__verify_word,mcp__sources__search_sources"
-    plan = KimiccHarness().build_invocation(
-        prompt="critique",
-        mode="read-only",
-        cwd=tmp_path,
-        model="k3",
-        task_id="kimicc-sources",
-        session_id=None,
-        tool_config={
-            "harness": "kimicc",
-            "mcp_config_path": str(tmp_path / "review.mcp.json"),
-            "strict_mcp_config": True,
-            "allowed_tools": allowed,
-        },
-    )
-    assert plan.cmd[plan.cmd.index("--allowedTools") + 1] == allowed
-    assert "--strict-mcp-config" in plan.cmd
 
 
 def test_kimicc_still_rejects_unknown_tool_config_keys(tmp_path, monkeypatch):

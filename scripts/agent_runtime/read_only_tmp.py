@@ -38,7 +38,7 @@ def validate_read_only_tmp_root(
     checkout = cwd.resolve()
     if (
         mode != "read-only"
-        or tool_config.get("review_isolation")
+        or tool_config.get("review_isolation")  # Codex sealed reviews; kimicc rejects that key first
         or not root.is_absolute()
         or root.is_symlink()
         or not root.is_dir()
