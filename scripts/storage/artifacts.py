@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import tarfile
 import tempfile
+import time
 from pathlib import Path
 
 from scripts.storage import paths
@@ -36,12 +37,23 @@ def _git(repo: Path, *args: str, input_bytes: bytes | None = None) -> bytes:
 def _json_write(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as stream:
-        json.dump(value, stream, indent=2, sort_keys=True)
-        stream.write("\n")
-        stream.flush()
-        os.fsync(stream.fileno())
         temp = Path(stream.name)
-    os.replace(temp, path)
+        try:
+            json.dump(value, stream, indent=2, sort_keys=True)
+            stream.write("\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        except BaseException:
+            temp.unlink(missing_ok=True)
+            raise
+    try:
+        os.replace(temp, path)
+    finally:
+        temp.unlink(missing_ok=True)
+
+
+def _manifest_digest(value: object) -> str:
+    return hashlib.sha256((json.dumps(value, indent=2, sort_keys=True) + "\n").encode()).hexdigest()
 
 
 def _rows(repo: Path) -> list[dict[str, str]]:
@@ -168,18 +180,30 @@ def _store_copy(source: Path, sha: str, store: Path) -> None:
         if target.is_symlink() or paths.hash_file(target) != sha:
             raise ValueError(f"corrupt store object: {sha}")
         return
-    with tempfile.NamedTemporaryFile(dir=store, delete=False) as stream, source.open("rb") as reader:
-        shutil.copyfileobj(reader, stream)
-        stream.flush()
-        os.fsync(stream.fileno())
+    with tempfile.NamedTemporaryFile(dir=store, delete=False) as stream:
         temp = Path(stream.name)
-    if paths.hash_file(temp) != sha:
-        temp.unlink()
-        raise ValueError(f"source changed during store copy: {source}")
-    os.replace(temp, target)
+        try:
+            with source.open("rb") as reader:
+                shutil.copyfileobj(reader, stream)
+            stream.flush()
+            os.fsync(stream.fileno())
+        except BaseException:
+            temp.unlink(missing_ok=True)
+            raise
+    try:
+        if paths.hash_file(temp) != sha:
+            raise ValueError(f"source changed during store copy: {source}")
+        os.replace(temp, target)
+    finally:
+        temp.unlink(missing_ok=True)
 
 
 def snapshot(repo: Path, phase: str) -> int:
+    with _lock(repo):
+        return _snapshot_locked(repo, phase)
+
+
+def _snapshot_locked(repo: Path, phase: str) -> int:
     entries = _phase_entries(repo, phase)
     store = paths.artifact_store_root(repo)
     for group, entry in entries:
@@ -200,65 +224,106 @@ def _restore_from_blob(repo: Path, blob: str, target: Path, sha: str) -> None:
         raise FileNotFoundError(f"git blob unavailable: {blob}")
     target.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream:
-        proc = subprocess.Popen(["git", "cat-file", "blob", blob], cwd=repo, stdout=stream)
-        if proc.wait(timeout=120) != 0:
-            Path(stream.name).unlink()
-            raise ValueError(f"git cat-file failed: {blob}")
         temp = Path(stream.name)
-    if paths.hash_file(temp) != sha:
-        temp.unlink()
-        raise ValueError(f"git blob hash differs from manifest: {blob}")
-    os.replace(temp, target)
+        try:
+            proc = subprocess.Popen(["git", "cat-file", "blob", blob], cwd=repo, stdout=stream)
+            if proc.wait(timeout=120) != 0:
+                raise ValueError(f"git cat-file failed: {blob}")
+        except BaseException:
+            temp.unlink(missing_ok=True)
+            raise
+    try:
+        if paths.hash_file(temp) != sha:
+            raise ValueError(f"git blob hash differs from manifest: {blob}")
+        os.replace(temp, target)
+    finally:
+        temp.unlink(missing_ok=True)
 
 
-def hydrate(repo: Path, entries: list[tuple[str, dict]]) -> int:
+def hydrate(repo: Path, entries: list[tuple[str, dict]], *, force_preserve: bool = False) -> int:
+    with _lock(repo):
+        return _hydrate_locked(repo, entries, force_preserve=force_preserve)
+
+
+def _hydrate_locked(repo: Path, entries: list[tuple[str, dict]], *, force_preserve: bool) -> int:
     store = paths.artifact_store_root(repo)
     count = 0
+    failures = []
     for group, entry in entries:
-        rel = _entry_rel(entry)
-        target = repo / entry["path"]
         try:
-            paths.verify_file(target, entry, group=group, rel=rel)
-            _store_copy(target, entry["sha256"], store)
+            _hydrate_one(repo, group, entry, store, force_preserve=force_preserve)
             count += 1
-            continue
-        except paths.MissingArtifactError:
-            pass
-        sha = entry["sha256"]
-        object_path = store / sha
-        if object_path.exists():
-            if paths.hash_file(object_path) != sha or object_path.stat().st_size != entry["size"]:
-                raise ValueError(f"corrupt store object {sha}")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            with (
-                tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream,
-                object_path.open("rb") as reader,
-            ):
-                shutil.copyfileobj(reader, stream)
-                temp = Path(stream.name)
-            os.replace(temp, target)
-        elif entry.get("git_blob") and _blob_present(repo, entry["git_blob"]):
-            _restore_from_blob(repo, entry["git_blob"], target, sha)
-        else:
-            raise paths.MissingArtifactError(
-                group,
-                rel,
-                "/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts import <tarball>",
-                "store object and git blob unavailable",
-            )
-        paths.verify_file(target, entry, group=group, rel=rel)
-        _store_copy(target, sha, store)
-        count += 1
+        except (OSError, ValueError) as exc:
+            failures.append(f"{entry['path']}: {exc}")
+    if failures:
+        raise ValueError(f"hydrate: {len(failures)} artifact(s) failed:\n" + "\n".join(failures))
     return count
+
+
+def _hydrate_one(repo: Path, group: str, entry: dict, store: Path, *, force_preserve: bool) -> None:
+    rel = _entry_rel(entry)
+    target = repo / entry["path"]
+    sha = entry["sha256"]
+    obj = store / sha
+    valid_obj = (
+        obj.is_file() and not obj.is_symlink() and obj.stat().st_size == entry["size"] and paths.hash_file(obj) == sha
+    )
+    blob = entry.get("git_blob")
+    if target.is_file() and not target.is_symlink():
+        target_sha = paths.hash_file(target)
+        if target_sha == sha:
+            if not valid_obj:
+                if obj.exists() or obj.is_symlink():
+                    print(f"warning: corrupt store object {sha}; repairing from target", file=__import__("sys").stderr)
+                    _quarantine_corrupt_object(obj, store)
+                _store_copy(target, sha, store)
+            return
+        if target_sha != sha:
+            if not force_preserve:
+                raise ValueError("REFUSED divergent target; use --force-preserve")
+            _store_copy(target, target_sha, store)
+            with (store / "divergent.jsonl").open("a", encoding="utf-8") as log:
+                log.write(json.dumps({"path": entry["path"], "sha256": target_sha, "recorded_at": _now()}) + "\n")
+                log.flush()
+                os.fsync(log.fileno())
+    elif target.exists() or target.is_symlink():
+        raise ValueError("REFUSED non-regular target")
+    if valid_obj:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        _restore_from_store(obj, target)
+    elif blob and _blob_present(repo, blob) and _sha_blob(repo, blob) == sha:
+        if obj.exists() or obj.is_symlink():
+            print(f"warning: corrupt store object {sha}; using git blob", file=__import__("sys").stderr)
+        _restore_from_blob(repo, blob, target, sha)
+        if obj.exists() or obj.is_symlink():
+            _quarantine_corrupt_object(obj, store)
+    else:
+        raise paths.MissingArtifactError(
+            group, rel, "import a verified tarball", "store object and git blob unavailable"
+        )
+    paths.verify_file(target, entry, group=group, rel=rel)
+    _store_copy(target, sha, store)
+
+
+def _quarantine_corrupt_object(obj: Path, store: Path) -> None:
+    quarantine = store / ".corrupt"
+    quarantine.mkdir(exist_ok=True)
+    os.replace(obj, quarantine / f"{obj.name}-{time.time_ns()}")
 
 
 def verify(repo: Path, entries: list[tuple[str, dict]]) -> int:
     store = paths.artifact_store_root(repo)
+    failures = []
     for group, entry in entries:
-        paths.verify_file(repo / entry["path"], entry, group=group, rel=_entry_rel(entry))
-        obj = store / entry["sha256"]
-        if not obj.is_file() or obj.stat().st_size != entry["size"] or paths.hash_file(obj) != entry["sha256"]:
-            raise ValueError(f"missing or corrupt store object: {entry['sha256']}")
+        try:
+            paths.verify_file(repo / entry["path"], entry, group=group, rel=_entry_rel(entry))
+            obj = store / entry["sha256"]
+            if not obj.is_file() or obj.stat().st_size != entry["size"] or paths.hash_file(obj) != entry["sha256"]:
+                raise ValueError(f"missing or corrupt store object: {entry['sha256']}")
+        except (OSError, ValueError) as exc:
+            failures.append(f"{entry['path']}: {exc}")
+    if failures:
+        raise ValueError(f"verify: {len(failures)} artifact(s) failed:\n" + "\n".join(failures))
     return len(entries)
 
 
@@ -269,6 +334,9 @@ def _lock(repo: Path):
     with (store / ".publish.lock").open("a+b") as stream:
         fcntl.flock(stream, fcntl.LOCK_EX)
         try:
+            for leftover in store.glob("tmp*"):
+                if leftover.is_file() and not leftover.is_symlink() and time.time() - leftover.stat().st_mtime > 3600:
+                    leftover.unlink()
             yield
         finally:
             fcntl.flock(stream, fcntl.LOCK_UN)
@@ -295,13 +363,26 @@ def _recover_locked(repo: Path) -> int:
         old = next((item for item in manifest["entries"] if item.get("path") == f"data/{rel}"), None)
         if old is None or old.get("sha256") != record["old_sha256"]:
             raise ValueError(f"inconsistent publish recovery record: {journal}")
+        manifest_path = paths.manifest_path(group, repo)
+        current_digest = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+        old_digest = _manifest_digest(manifest)
+        new_digest = record.get("new_manifest_digest")
+        if current_digest not in {old_digest, new_digest} or not isinstance(new_digest, str):
+            raise ValueError(f"publish recovery REFUSED: manifest changed after journal {journal}")
+        target = repo / "data" / rel
+        target_sha = paths.hash_file(target) if target.is_file() and not target.is_symlink() else None
+        if current_digest == new_digest and target_sha == record.get("new_sha256"):
+            journal.unlink()
+            count += 1
+            continue
+        if target_sha not in {None, old["sha256"], record.get("new_sha256")}:
+            raise ValueError(f"publish recovery REFUSED: target changed after journal {target}")
         obj = store / old["sha256"]
         if not obj.is_file() or obj.stat().st_size != old["size"] or paths.hash_file(obj) != old["sha256"]:
             raise ValueError(f"missing prior store object for publish recovery: {old['sha256']}")
-        target = repo / "data" / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         _restore_from_store(obj, target)
-        _json_write(paths.manifest_path(group, repo), manifest)
+        _json_write(manifest_path, manifest)
         paths.verify_file(target, old, group=group, rel=rel)
         journal.unlink()
         count += 1
@@ -341,7 +422,7 @@ def publish(repo: Path, group: str, rel: str, source: Path, producer: str) -> st
             "producer": producer,
             "published_at": _now(),
             "supersedes": entry["sha256"],
-            "mtime_ns": source.stat().st_mtime_ns,
+            "mtime_ns": None,
         }
         new_manifest = {
             **manifest,
@@ -349,43 +430,61 @@ def publish(repo: Path, group: str, rel: str, source: Path, producer: str) -> st
         }
         # The lock excludes writers. The old object is kept for rollback if a rename fails.
         target.parent.mkdir(parents=True, exist_ok=True)
-        with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream, source.open("rb") as reader:
-            shutil.copyfileobj(reader, stream)
-            stream.flush()
-            os.fsync(stream.fileno())
+        with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream:
             temp = Path(stream.name)
-        if paths.hash_file(temp) != sha:
-            temp.unlink()
-            raise ValueError("staging file changed during publish")
+            try:
+                with source.open("rb") as reader:
+                    shutil.copyfileobj(reader, stream)
+                stream.flush()
+                os.fsync(stream.fileno())
+            except BaseException:
+                temp.unlink(missing_ok=True)
+                raise
         journal = _journal_path(repo, group, rel)
-        _json_write(
-            journal,
-            {
-                "repo": str(repo.resolve()),
-                "group": group,
-                "rel": rel,
-                "old_sha256": entry["sha256"],
-                "manifest": manifest,
-            },
-        )
         try:
+            if paths.hash_file(temp) != sha:
+                raise ValueError("staging file changed during publish")
+            # The rename preserves the temporary file's timestamp.
+            replacement["mtime_ns"] = temp.stat().st_mtime_ns
+            _json_write(
+                journal,
+                {
+                    "repo": str(repo.resolve()),
+                    "group": group,
+                    "rel": rel,
+                    "old_sha256": entry["sha256"],
+                    "new_sha256": sha,
+                    "new_manifest_digest": _manifest_digest(new_manifest),
+                    "manifest": manifest,
+                },
+            )
             os.replace(temp, target)
+            replacement["mtime_ns"] = target.stat().st_mtime_ns
             _json_write(paths.manifest_path(group, repo), new_manifest)
         except BaseException:
-            _restore_from_store(store / entry["sha256"], target)
-            _json_write(paths.manifest_path(group, repo), manifest)
-            journal.unlink()
+            if journal.exists():
+                _recover_locked(repo)
             raise
+        finally:
+            temp.unlink(missing_ok=True)
         paths.verify_file(target, replacement, group=group, rel=rel)
         journal.unlink()
         return sha
 
 
 def _restore_from_store(object_path: Path, target: Path) -> None:
-    with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream, object_path.open("rb") as reader:
-        shutil.copyfileobj(reader, stream)
+    with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream:
         temp = Path(stream.name)
-    os.replace(temp, target)
+        try:
+            with object_path.open("rb") as reader:
+                shutil.copyfileobj(reader, stream)
+        except BaseException:
+            temp.unlink(missing_ok=True)
+            raise
+    try:
+        os.replace(temp, target)
+    finally:
+        temp.unlink(missing_ok=True)
 
 
 def export_group(repo: Path, group: str, output: Path) -> int:
@@ -409,6 +508,11 @@ def export_group(repo: Path, group: str, output: Path) -> int:
 
 
 def import_tarball(repo: Path, tarball: Path) -> int:
+    with _lock(repo):
+        return _import_tarball_locked(repo, tarball)
+
+
+def _import_tarball_locked(repo: Path, tarball: Path) -> int:
     with tarfile.open(tarball, "r:gz") as archive:
         manifest_member = archive.getmember("manifest.json")
         if not manifest_member.isfile():
@@ -435,15 +539,21 @@ def import_tarball(repo: Path, tarball: Path) -> int:
             reader = archive.extractfile(member)
             assert reader is not None
             with tempfile.NamedTemporaryFile(dir=store, delete=False) as stream:
-                digest = hashlib.sha256()
-                while chunk := reader.read(1024 * 1024):
-                    digest.update(chunk)
-                    stream.write(chunk)
                 temp = Path(stream.name)
-            if digest.hexdigest() != sha or temp.stat().st_size != size:
-                temp.unlink()
-                raise ValueError(f"tampered object {sha}")
-            os.replace(temp, store / sha)
+                try:
+                    digest = hashlib.sha256()
+                    while chunk := reader.read(1024 * 1024):
+                        digest.update(chunk)
+                        stream.write(chunk)
+                except BaseException:
+                    temp.unlink(missing_ok=True)
+                    raise
+            try:
+                if digest.hexdigest() != sha or temp.stat().st_size != size:
+                    raise ValueError(f"tampered object {sha}")
+                os.replace(temp, store / sha)
+            finally:
+                temp.unlink(missing_ok=True)
     return len(expected)
 
 
@@ -475,6 +585,11 @@ def _parser() -> argparse.ArgumentParser:
     snap = sub.add_parser("snapshot", help="Copy and hash a phase's migration A files into the host store.")
     snap.add_argument("--phase", required=True, help="Migration phase P1, P2, P3, P4, or P5.")
     hyd = sub.add_parser("hydrate", help="Restore current files from host store, then available Git blobs.")
+    hyd.add_argument(
+        "--force-preserve",
+        action="store_true",
+        help="Preserve divergent target bytes in store and divergent log before replacing them (default: refuse).",
+    )
     exclusive = hyd.add_mutually_exclusive_group(required=True)
     exclusive.add_argument("--group", help="Classification group to hydrate, for example raw_source.")
     exclusive.add_argument("--phase", help="Migration phase to hydrate, for example P1.")
@@ -496,7 +611,11 @@ def _parser() -> argparse.ArgumentParser:
     )
     imp = sub.add_parser("import", help="Verify every tarball object against the local tracked manifest.")
     imp.add_argument("tarball", type=Path, help="Tarball produced by export, for example /tmp/raw-source.tar.gz.")
-    sub.add_parser("status", help="Show manifest entry counts and current store availability.")
+    sub.add_parser(
+        "status",
+        help="Show manifest entry counts and current store availability.",
+        description="Report manifest entry counts and available store objects without creating a store.",
+    )
     return parser
 
 
@@ -516,7 +635,7 @@ def main(argv: list[str] | None = None, *, repo: Path = ROOT) -> int:
                 if args.phase
                 else [(args.group, entry) for entry in paths.load_manifest(args.group, repo)["entries"]]
             )
-            count = hydrate(repo, entries)
+            count = hydrate(repo, entries, force_preserve=args.force_preserve)
         elif args.command == "verify":
             entries = (
                 [(args.group, entry) for entry in paths.load_manifest(args.group, repo)["entries"]]

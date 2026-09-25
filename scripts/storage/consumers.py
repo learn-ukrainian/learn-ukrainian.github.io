@@ -23,7 +23,17 @@ CLASSIFICATION = Path("registry/artifacts/classification-v1.tsv")
 KNOWN_BASES_BY_PHASE = {
     "P1": ("DATA_DIR", "DATA_ROOT", "REGISTRY_ROOT", "artifact_path", "PRACTICE_DIR", "TRANSLATIONS_DIR"),
     "P2": ("DATA_DIR", "DATA_ROOT", "artifact_path", "LEXICON_DATA_DIR"),
-    "P3": ("DATA_DIR", "DATA_ROOT", "artifact_path", "OPEN_MODEL_DATA_DIR", "OPEN_MODEL_DATA_ROOT"),
+    "P3": (
+        "DATA_DIR",
+        "DATA_ROOT",
+        "artifact_path",
+        "OPEN_MODEL_DATA_DIR",
+        "OPEN_MODEL_DATA_ROOT",
+        "CONTRACTS_DIR",
+        "RELEASE_DIR",
+        "DEFAULT_CONTRACTS_DIR",
+        "DEFAULT_RELEASE_DIR",
+    ),
     "P4": ("DATA_DIR", "DATA_ROOT", "artifact_path"),
     "P5": ("DATA_DIR", "DATA_ROOT", "REGISTRY_ROOT", "artifact_path"),
 }
@@ -115,18 +125,49 @@ def scan_inventory(repo_root: Path, *, phase: str, table: Path | None = None) ->
     )
     file_join_pattern = re.compile(r"Path\(__file__\)[^\n]{0,160}['" "](?:data|registry)(?:/|['" "])", re.IGNORECASE)
     literal_pattern = re.compile("|".join(re.escape(path) for path in sorted(artifacts, key=len, reverse=True)))
+    phase_roots = {
+        "P2": ("data/lexicon",),
+        "P3": ("data/projects/open_model_data",),
+        "P4": ("data/projects/ua_eval_harness", "data/projects/ua_open_weight_eval", "data/processed", "data/datasets"),
+    }.get(phase, tuple(sorted({"/".join(path.split("/")[:3]) for path in artifacts})))
+    prefix_pattern = re.compile("|".join(re.escape(root) + r"(?:/|['\"]|$)" for root in phase_roots))
+    segment_join = re.compile(r"['\"]data['\"]\s*(?:(?:/|,)\s*['\"][^'\"\n]+['\"]\s*){1,5}")
+    path_import = (
+        re.compile(r"\b(?:from|import)\s+(?:scripts\.projects\.)?open_model_data(?:\.paths\b|\s+import\s+paths\b)")
+        if phase == "P3"
+        else None
+    )
     rows: list[dict[str, str]] = []
     for file_path in _tracked_files(repo_root):
         if not file_path.is_file() or file_path == table_path:
+            continue
+        relative = file_path.relative_to(repo_root).as_posix()
+        if relative.startswith(("registry/artifacts/", "data/", "curriculum/", "wiki/")) or file_path.suffix not in {
+            ".py",
+            ".sh",
+            ".ts",
+            ".tsx",
+            ".js",
+            ".mjs",
+            ".yaml",
+            ".yml",
+            ".toml",
+            ".md",
+        }:
             continue
         try:
             text = file_path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             continue
-        relative = file_path.relative_to(repo_root).as_posix()
-        if relative.startswith("registry/artifacts/"):
-            continue
         found = set(literal_pattern.findall(text))
+        if prefix_pattern.search(text):
+            found.add("base:phase-directory-prefix")
+        for match in segment_join.finditer(text):
+            segments = re.findall(r"['\"]([^'\"]+)['\"]", match.group())
+            if any("/".join(segments).startswith(root + "/") or "/".join(segments) == root for root in phase_roots):
+                found.add("base:data-segment-join")
+        if path_import and path_import.search(text):
+            found.add("base:open_model_data.paths")
         found.update(f"base:{name}" for name in dynamic_pattern.findall(text))
         found.update(f"base:{name}:data-join" for name in root_join_pattern.findall(text))
         if file_join_pattern.search(text):

@@ -8,6 +8,7 @@ import os
 import re
 import subprocess
 import tempfile
+from functools import lru_cache
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -43,11 +44,15 @@ def checked_rel(rel: str) -> Path:
 
 def artifact_store_root(repo: Path = ROOT) -> Path:
     """Return the host store, shared by all worktrees of this checkout."""
+    return _cached_store_root(repo.resolve(), os.environ.get("LU_ARTIFACT_STORE"))
+
+
+@lru_cache(maxsize=64)
+def _cached_store_root(repo: Path, override: str | None) -> Path:
     common = subprocess.check_output(
         ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], cwd=repo, text=True, timeout=30
     ).strip()
     primary = Path(common).resolve().parent
-    override = os.environ.get("LU_ARTIFACT_STORE")
     store = Path(override).expanduser().resolve() if override else primary / "data/.artifact-store"
     # A dispatch checkout can be short-lived. Never make it the only owner of bytes.
     resolved_repo = repo.resolve()
@@ -111,6 +116,11 @@ def find_entry(group: str, rel: str, repo: Path = ROOT) -> dict:
     return matches[0]
 
 
+@lru_cache(maxsize=256)
+def _cached_manifest(group: str, repo: Path, mtime_ns: int, size: int) -> dict:
+    return load_manifest(group, repo)
+
+
 def hash_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as source:
@@ -133,7 +143,14 @@ def verify_file(path: Path, entry: dict, *, group: str, rel: str) -> None:
 
 def artifact_path(group: str, rel: str, *, repo: Path = ROOT) -> Path:
     """Return a verified runtime artifact; only this read may use the local stat cache."""
-    entry = find_entry(group, rel, repo)
+    checked_rel(rel)
+    manifest_file = manifest_path(group, repo)
+    stamp = manifest_file.stat()
+    manifest = _cached_manifest(group, repo.resolve(), stamp.st_mtime_ns, stamp.st_size)
+    matches = [entry for entry in manifest["entries"] if entry["path"] == f"data/{rel}"]
+    if len(matches) != 1:
+        raise MissingArtifactError(group, rel, "hydrate the artifact group", "no unique manifest entry")
+    entry = matches[0]
     path = repo / "data" / checked_rel(rel)
     command = f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
     if not path.is_file() or path.is_symlink():

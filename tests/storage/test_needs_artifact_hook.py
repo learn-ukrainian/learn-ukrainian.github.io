@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -48,3 +49,13 @@ def test_corrupt_artifact_fails_instead_of_skipping(monkeypatch: pytest.MonkeyPa
 def test_needs_artifact_requires_two_positional_arguments() -> None:
     with pytest.raises(pytest.UsageError, match=r"exactly \(group, rel\)"):
         conftest.pytest_runtest_setup(_item("group-a"))
+
+
+def test_ci_audits_collection_and_runtime_skips_from_all_configured_roots() -> None:
+    workflow = (Path(__file__).resolve().parents[2] / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    audit = workflow.split("- name: Verify needs_artifact skip set", 1)[1].split("- name: Stop memory sampler", 1)[0]
+    assert "needs.changes.outputs.docs_only == 'false'" in audit
+    assert "pytest --collect-only -m needs_artifact" in audit
+    assert "git ls-files | grep -E" in audit
+    assert "collected != expected" in audit
+    assert "expected - artifact_skips" in audit and "artifact_skips - expected" in audit

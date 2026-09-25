@@ -23,6 +23,8 @@ def test_tracked_data_paths_are_all_allowlisted() -> None:
     tracked = {path.decode("utf-8") for path in result.stdout.split(b"\0") if path}
     allowed = {line for line in ALLOWLIST.read_text(encoding="utf-8").splitlines() if line and not line.startswith("#")}
     unauthorized = sorted(tracked - allowed)
+    stale = sorted(allowed - tracked)
     assert not unauthorized, (
         "tracked data paths absent from registry/artifacts/tracked-data-allowlist.txt:\n" + "\n".join(unauthorized)
     )
+    assert not stale, "stale tracked-data allowlist entries:\n" + "\n".join(stale)

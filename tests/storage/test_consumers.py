@@ -32,6 +32,7 @@ def test_scan_includes_literal_artifacts_and_known_dynamic_bases(tmp_path: Path)
     rows = scan_inventory(tmp_path, phase="P1", table=table)
     assert rows == [
         {"artifact": "base:DATA_ROOT", "consumer": "scripts/reader.py", "check": ""},
+        {"artifact": "base:phase-directory-prefix", "consumer": "scripts/reader.py", "check": ""},
         {"artifact": "data/registry.yaml", "consumer": "scripts/reader.py", "check": ""},
         {"artifact": "data/translations/example.json", "consumer": "scripts/reader.py", "check": ""},
     ]
@@ -40,7 +41,44 @@ def test_scan_includes_literal_artifacts_and_known_dynamic_bases(tmp_path: Path)
     assert output.read_text(encoding="utf-8").splitlines() == [
         '"artifact"\t"consumer"\t"check"',
         '"base:DATA_ROOT"\t"scripts/reader.py"\t""',
+        '"base:phase-directory-prefix"\t"scripts/reader.py"\t""',
         '"data/registry.yaml"\t"scripts/reader.py"\t""',
         '"data/translations/example.json"\t"scripts/reader.py"\t""',
     ]
     assert "DATA_ROOT" in KNOWN_BASES
+
+
+def test_p3_scan_finds_reviewed_dynamic_consumers() -> None:
+    root = Path(__file__).resolve().parents[2]
+    names = {row["consumer"] for row in scan_inventory(root, phase="P3")}
+    for filename in (
+        "judge_eval_seat.py",
+        "package_unified_dataset.py",
+        "model_view_exporter.py",
+        "v4_mine_stem_controls.py",
+        "phase3_textbook_nonhit.py",
+        "v6_mine_general_assistant_textbooks.py",
+        "v5_mine_dialect_corpus.py",
+    ):
+        assert f"scripts/projects/open_model_data/{filename}" in names
+
+
+def test_p3_scan_finds_segment_joins_and_paths_import(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-q")
+    table = tmp_path / "registry/artifacts/classification-v1.tsv"
+    table.parent.mkdir(parents=True)
+    table.write_text(
+        "path\tclass\tgroup\ndata/projects/open_model_data/contracts/schema.json\tA\tcontracts\n",
+        encoding="utf-8",
+    )
+    source = tmp_path / "scripts/reader.py"
+    source.parent.mkdir()
+    source.write_text(
+        "from scripts.projects.open_model_data.paths import CONTRACTS_DIR\n"
+        'A = Path("data") / "projects" / "open_model_data" / "contracts"\n'
+        'B = os.path.join("data", "projects", "open_model_data", "release")\n',
+        encoding="utf-8",
+    )
+    _git(tmp_path, "add", "registry/artifacts/classification-v1.tsv", "scripts/reader.py")
+    labels = {row["artifact"] for row in scan_inventory(tmp_path, phase="P3", table=table)}
+    assert {"base:data-segment-join", "base:open_model_data.paths"} <= labels

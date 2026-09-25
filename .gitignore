@@ -183,6 +183,7 @@ private-source-review/
 **/atlas-private-teacher-lesson-bulk-triage.md
 data/lexicon/intake/*_journal.json
 data/lexicon/intake/*.lock
+data/.artifact-store/
 
 # Temporary markdown files (root folder)
 temp*.md

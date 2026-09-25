@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import fcntl
 import hashlib
 import io
 import json
@@ -162,7 +163,7 @@ def test_gating_verify_hashes_same_size_restored_mtime(repo: Path) -> None:
     assert paths.artifact_path("raw_source", "raw/source.txt", repo=repo) == target
     target.write_bytes(b"omega")
     os.utime(target, ns=(stamp, stamp))
-    with pytest.raises(paths.MissingArtifactError, match="sha256"):
+    with pytest.raises(ValueError, match="sha256"):
         artifacts.verify(repo, entries(repo))
 
 
@@ -195,3 +196,150 @@ def test_status_does_not_create_a_store_without_transactions(repo: Path) -> None
     assert not store.exists()
     assert artifacts.main(["status"], repo=repo) == 0
     assert not store.exists()
+
+
+def test_status_help_describes_its_read_only_report(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit, match="0"):
+        artifacts._parser().parse_args(["status", "--help"])
+    assert "without creating a store" in capsys.readouterr().out.replace("\n", " ")
+
+
+def test_hydrate_refuses_divergence_and_force_preserves(repo: Path) -> None:
+    artifacts.snapshot(repo, "P1")
+    target = repo / "data/raw/source.txt"
+    target.write_bytes(b"local edit")
+    with pytest.raises(ValueError, match="REFUSED divergent"):
+        artifacts.hydrate(repo, entries(repo))
+    assert target.read_bytes() == b"local edit"
+    assert artifacts.hydrate(repo, entries(repo), force_preserve=True) == 1
+    assert target.read_bytes() == b"alpha"
+    store = paths.artifact_store_root(repo)
+    divergent_sha = hashlib.sha256(b"local edit").hexdigest()
+    assert (store / divergent_sha).read_bytes() == b"local edit"
+    assert json.loads((store / "divergent.jsonl").read_text().splitlines()[0])["sha256"] == divergent_sha
+
+
+def test_hydrate_collects_missing_and_corrupt_store_falls_back_to_blob(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    artifacts.snapshot(repo, "P1")
+    item = entries(repo)[0][1]
+    store = paths.artifact_store_root(repo)
+    (store / item["sha256"]).write_bytes(b"wrong")
+    (repo / item["path"]).unlink()
+    assert artifacts.hydrate(repo, entries(repo)) == 1
+    assert "using git blob" in capsys.readouterr().err
+    assert (store / item["sha256"]).read_bytes() == b"alpha"
+    assert [path.read_bytes() for path in (store / ".corrupt").iterdir()] == [b"wrong"]
+    missing = {**item, "path": "data/raw/second.txt", "sha256": "0" * 64, "git_blob": None}
+    (repo / item["path"]).unlink()
+    missing_again = {**missing, "path": "data/raw/third.txt"}
+    with pytest.raises(ValueError, match=r"2 artifact\(s\) failed") as error:
+        artifacts.hydrate(repo, [("raw_source", missing), ("raw_source", missing_again)])
+    assert "second.txt" in str(error.value) and "third.txt" in str(error.value)
+    with pytest.raises(ValueError, match=r"2 artifact\(s\) failed"):
+        artifacts.verify(repo, [("raw_source", missing), ("raw_source", missing_again)])
+
+
+def test_recovery_checks_manifest_digest_and_completed_publish(repo: Path, tmp_path: Path) -> None:
+    artifacts.snapshot(repo, "P1")
+    old = paths.load_manifest("raw_source", repo)
+    stage = tmp_path / "stage"
+    stage.write_bytes(b"bravo")
+    artifacts.publish(repo, "raw_source", "raw/source.txt", stage, "test")
+    new = paths.load_manifest("raw_source", repo)
+    journal = artifacts._journal_path(repo, "raw_source", "raw/source.txt")
+    record = {
+        "repo": str(repo.resolve()),
+        "group": "raw_source",
+        "rel": "raw/source.txt",
+        "old_sha256": old["entries"][0]["sha256"],
+        "new_sha256": new["entries"][0]["sha256"],
+        "new_manifest_digest": artifacts._manifest_digest(new),
+        "manifest": old,
+    }
+    artifacts._json_write(journal, record)
+    assert artifacts.recover_incomplete(repo) == 1
+    assert (repo / "data/raw/source.txt").read_bytes() == b"bravo"
+    assert paths.load_manifest("raw_source", repo) == new
+    artifacts._json_write(journal, record)
+    changed = {**new, "extra": "later"}
+    artifacts._json_write(paths.manifest_path("raw_source", repo), changed)
+    with pytest.raises(ValueError, match="manifest changed"):
+        artifacts.recover_incomplete(repo)
+    assert (repo / "data/raw/source.txt").read_bytes() == b"bravo"
+    artifacts._json_write(paths.manifest_path("raw_source", repo), old)
+    assert artifacts.recover_incomplete(repo) == 1
+    assert (repo / "data/raw/source.txt").read_bytes() == b"alpha"
+
+
+def test_publish_records_placed_mtime_and_sweeps_stale_store_temp(repo: Path, tmp_path: Path) -> None:
+    stage = tmp_path / "stage"
+    stage.write_bytes(b"bravo")
+    store = paths.artifact_store_root(repo)
+    store.mkdir()
+    stale = store / "tmpold"
+    stale.write_bytes(b"orphan")
+    os.utime(stale, (0, 0))
+    artifacts.publish(repo, "raw_source", "raw/source.txt", stage, "test")
+    assert not stale.exists()
+    assert entries(repo)[0][1]["mtime_ns"] == (repo / "data/raw/source.txt").stat().st_mtime_ns
+
+
+def test_failed_store_copy_removes_temporary_file(repo: Path) -> None:
+    store = paths.artifact_store_root(repo)
+    source = repo / "data/raw/source.txt"
+    with pytest.raises(ValueError, match="source changed during store copy"):
+        artifacts._store_copy(source, "0" * 64, store)
+    assert list(store.glob("tmp*")) == []
+
+
+def test_artifact_path_caches_root_and_reloads_changed_manifest(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    target = repo / "data/raw/source.txt"
+    assert paths.artifact_path("raw_source", "raw/source.txt", repo=repo) == target
+    monkeypatch.setattr(
+        paths.subprocess,
+        "check_output",
+        lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("git rev-parse repeated")),
+    )
+    assert paths.artifact_path("raw_source", "raw/source.txt", repo=repo) == target
+    manifest_path = paths.manifest_path("raw_source", repo)
+    manifest = json.loads(manifest_path.read_text())
+    manifest["entries"][0]["sha256"] = "0" * 64
+    manifest["entries"][0]["store"] = "0" * 64
+    artifacts._json_write(manifest_path, manifest)
+    with pytest.raises(paths.MissingArtifactError, match="sha256"):
+        paths.artifact_path("raw_source", "raw/source.txt", repo=repo)
+
+
+def test_snapshot_hydrate_and_import_hold_publish_lock(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original_copy = artifacts._store_copy
+    checked = []
+
+    def locked_copy(source: Path, sha: str, store: Path) -> None:
+        with (store / ".publish.lock").open("a+b") as lock:
+            with pytest.raises(BlockingIOError):
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        checked.append(source)
+        original_copy(source, sha, store)
+
+    monkeypatch.setattr(artifacts, "_store_copy", locked_copy)
+    assert artifacts.snapshot(repo, "P1") == 1
+    (repo / "data/raw/source.txt").unlink()
+    assert artifacts.hydrate(repo, entries(repo)) == 1
+    assert len(checked) == 2
+    bundle = tmp_path / "bundle.tar.gz"
+    artifacts.export_group(repo, "raw_source", bundle)
+    original_replace = artifacts.os.replace
+
+    def locked_replace(source: Path, target: Path) -> None:
+        if Path(target).parent == paths.artifact_store_root(repo):
+            with (paths.artifact_store_root(repo) / ".publish.lock").open("a+b") as lock:
+                with pytest.raises(BlockingIOError):
+                    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        original_replace(source, target)
+
+    monkeypatch.setattr(artifacts.os, "replace", locked_replace)
+    assert artifacts.import_tarball(repo, bundle) == 1

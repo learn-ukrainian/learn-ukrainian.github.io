@@ -13,6 +13,8 @@ from scripts.storage.test_baseline import (
     _unpack_baseline,
     capture_junit,
     compare_baselines,
+    main,
+    nodeid_to_junit_id,
 )
 
 
@@ -73,7 +75,11 @@ def test_packed_baseline_roundtrips_exact_ids_without_raw_secret_patterns() -> N
         (
             {
                 "needs_artifact": [
-                    {"job": "pytest-1", "id": "pkg::test_data", "host_run": "pytest pkg::test_data PASSED"}
+                    {
+                        "job": "pytest-1",
+                        "id": "pkg::test_data",
+                        "host_run": "PASSED pkg::test_data\n= 1 passed in 0.01s =",
+                    }
                 ]
             },
             [],
@@ -149,3 +155,74 @@ def test_duplicate_test_ids_in_junit_are_rejected(tmp_path: Path) -> None:
     )
     with pytest.raises(BaselineError, match="duplicate test ID"):
         capture_junit([("pytest-1", xml)])
+
+
+def test_passing_addition_and_cross_job_move_are_accepted() -> None:
+    old = {"jobs": {"pytest-1": {"outcomes": {"pkg::existing": "passed"}}}}
+    new = {"jobs": {"pytest-2": {"outcomes": {"pkg::existing": "passed", "pkg::added": "passed"}}}}
+    assert compare_baselines(old, new, {}) == []
+    new["jobs"]["pytest-2"]["outcomes"]["pkg::added"] = "failed"
+    assert "undisposed" in compare_baselines(old, new, {})[0]
+
+
+@pytest.mark.parametrize("outcome", ["failed", "skipped", "error"])
+def test_cross_job_rename_requires_passed(outcome: str) -> None:
+    old = {"jobs": {"pytest-1": {"outcomes": {"pkg::old": "passed"}}}}
+    new = {"jobs": {"pytest-2": {"outcomes": {"pkg::new": outcome}}}}
+    row = {"renamed": [{"old": "pkg::old", "new": "pkg::new"}]}
+    assert "requires the new outcome passed" in compare_baselines(old, new, row)[0]
+    new["jobs"]["pytest-2"]["outcomes"]["pkg::new"] = "passed"
+    assert compare_baselines(old, new, row) == []
+
+
+def test_rename_to_artifact_skip_requires_its_own_disposition() -> None:
+    old = {"jobs": {"a": {"outcomes": {"pkg::old": "passed"}}}}
+    new = {"jobs": {"b": {"outcomes": {"pkg::new": "skipped"}, "skip_reasons": {"pkg::new": "needs_artifact: absent"}}}}
+    dispositions = {
+        "renamed": [{"old": "pkg::old", "new": "pkg::new"}],
+        "needs_artifact": [{"id": "pkg::new", "host_run": "PASSED pkg::new\n= 1 passed in 0.01s ="}],
+    }
+    assert compare_baselines(old, new, dispositions) == []
+
+
+def test_host_run_rejects_failing_summary_and_accepts_junit(tmp_path: Path) -> None:
+    old = {"jobs": {"a": {"outcomes": {"pkg::test_data": "passed"}}}}
+    new = {
+        "jobs": {
+            "b": {
+                "outcomes": {"pkg::test_data": "skipped"},
+                "skip_reasons": {"pkg::test_data": "needs_artifact: absent"},
+            }
+        }
+    }
+    row = {
+        "needs_artifact": [
+            {"id": "pkg::test_data", "host_run": "PASSED pkg::test_data\n= 1 passed, 1 failed in 0.1s ="}
+        ]
+    }
+    assert compare_baselines(old, new, row)
+    xml = _junit(tmp_path / "host.xml", '<testcase classname="pkg" name="test_data"/>')
+    row["needs_artifact"][0]["host_run"] = {"junit": str(xml)}
+    assert compare_baselines(old, new, row) == []
+    _junit(xml, '<testcase classname="pkg" name="test_data"><failure/></testcase>')
+    assert compare_baselines(old, new, row)
+    xml.write_text('<testsuite failures="1"><testcase classname="pkg" name="test_data"/></testsuite>')
+    assert compare_baselines(old, new, row)
+
+
+def test_compare_cli_reports_passing_addition(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    old = tmp_path / "old.json"
+    new = tmp_path / "new.json"
+    dispositions = tmp_path / "dispositions.json"
+    old.write_text(json.dumps({"jobs": {"a": {"outcomes": {"pkg::existing": "passed"}}}}))
+    new.write_text(json.dumps({"jobs": {"b": {"outcomes": {"pkg::existing": "passed", "pkg::new": "passed"}}}}))
+    dispositions.write_text("{}")
+    assert main(["compare", "--old", str(old), "--new", str(new), "--dispositions", str(dispositions)]) == 0
+    assert "ADDED passed pkg::new (job b)" in capsys.readouterr().out
+
+
+def test_collected_node_ids_match_junit_ids_for_classes_and_parameter_colons() -> None:
+    assert nodeid_to_junit_id("tests/pkg/test_mod.py::TestCase::test_example[param::name]") == (
+        "tests.pkg.test_mod.TestCase::test_example[param::name]"
+    )
+    assert nodeid_to_junit_id("scripts/test_tool.py::test_one") == "scripts.test_tool::test_one"
