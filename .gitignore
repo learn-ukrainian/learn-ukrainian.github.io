@@ -263,8 +263,9 @@ _archive/
 # Test artifacts
 test_git_mtime/
 
-# Downloaded textbook PDFs (561 MB+, not for version control)
-data/textbooks/
+# Downloaded textbook PDFs (561 MB+, not for version control). No trailing slash:
+# a host-local symlink to the bulk root must stay ignored too (#8803).
+data/textbooks
 
 # RAG pipeline artifacts (generated at runtime)
 data/qdrant/
@@ -273,7 +274,7 @@ data/textbook_images/
 data/textbook_chunks
 data/literary_texts/*.bin
 data/literary_texts/*.npy
-data/vesum/
+data/vesum
 data/vesum.db
 data/backups/
 data/esu/urls.jsonl

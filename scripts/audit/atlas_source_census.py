@@ -44,11 +44,12 @@ from scripts.lexicon.content_lexicon_reconciler import (
     strip_mdx_to_prose,
 )
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.wiki.config import TEXTBOOK_PDFS_DIR
 
 WORKFLOW_ID = "atlas_source_census.v1"
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_TEXTBOOK_TXT_ROOT = PROJECT_ROOT / "docs" / "references" / "private" / "textbooks-txt"
-DEFAULT_TEXTBOOK_PDF_ROOT = PROJECT_ROOT / "data" / "textbooks"
+DEFAULT_TEXTBOOK_PDF_ROOT = TEXTBOOK_PDFS_DIR
 DEFAULT_TEXTBOOK_JSONL_ROOT = PROJECT_ROOT / "data" / "textbook_chunks"
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_OHOIKO_PRIVATE_ROOT = (
@@ -930,7 +931,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--textbook-pdf-root",
         type=Path,
         default=DEFAULT_TEXTBOOK_PDF_ROOT,
-        help="Local textbook PDF root.",
+        help="Textbook PDF root (default: textbooks/ under the resolved bulk root).",
     )
     parser.add_argument(
         "--sources-db",
