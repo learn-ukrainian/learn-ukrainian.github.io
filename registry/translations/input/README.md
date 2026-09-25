@@ -4,7 +4,7 @@
 
 1. **Read instructions**: `TRANSLATE-ME.txt`
 2. **Words to translate**: `all-remaining-words.txt` (413 words)
-3. **Save result to**: `data/translations/all-translations.json`
+3. **Save result to**: `registry/translations/all-translations.json`
 4. **Tell Claude**: "done"
 
 ## Status

@@ -130,6 +130,32 @@ def test_publish_rollback_on_failed_manifest_replace(
     assert entries(repo)[0][1]["supersedes"] == hashlib.sha256(b"alpha").hexdigest()
 
 
+def test_write_artifact_publishes_manifest_paths_and_writes_others_directly(repo: Path, tmp_path: Path) -> None:
+    published = artifacts.write_artifact(
+        repo / "data/raw/source.txt", "raw_source", "test", lambda dest: dest.write_bytes(b"charlie"), repo=repo
+    )
+    assert published == (repo / "data/raw/source.txt").resolve()
+    item = entries(repo)[0][1]
+    assert item["sha256"] == hashlib.sha256(b"charlie").hexdigest()
+    assert item["supersedes"] == hashlib.sha256(b"alpha").hexdigest()
+    assert (repo / "data/raw/source.txt").read_bytes() == b"charlie"
+    assert artifacts.verify(repo, entries(repo)) == 1
+
+    scratch = tmp_path / "scratch.txt"
+    artifacts.write_artifact(scratch, "raw_source", "test", lambda dest: dest.write_bytes(b"delta"), repo=repo)
+    assert scratch.read_bytes() == b"delta"
+    assert entries(repo)[0][1]["sha256"] == hashlib.sha256(b"charlie").hexdigest()
+
+
+def test_write_artifact_fails_closed_when_published_target_diverged(repo: Path) -> None:
+    (repo / "data/raw/source.txt").write_bytes(b"edited in place")
+    with pytest.raises(paths.MissingArtifactError, match=r"size|sha256"):
+        artifacts.write_artifact(
+            repo / "data/raw/source.txt", "raw_source", "test", lambda dest: dest.write_bytes(b"new"), repo=repo
+        )
+    assert (repo / "data/raw/source.txt").read_bytes() == b"edited in place"
+
+
 def test_killed_mid_publish_recovers_old_version(repo: Path, tmp_path: Path) -> None:
     stage = tmp_path / "stage"
     stage.write_bytes(b"bravo")

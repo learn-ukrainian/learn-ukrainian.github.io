@@ -14,7 +14,7 @@ from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_ROOT = ROOT / "data" / "lexicon-dataset"
-DEFAULT_POINTER = ROOT / "data" / "lexicon-dataset.pointer.json"
+DEFAULT_POINTER = ROOT / "registry" / "lexicon-dataset.pointer.json"
 DEFAULT_GZIP = ROOT / "data" / "lexicon-open-dataset.json.gz"
 DEFAULT_RELEASE_TAG = "atlas-open-dataset"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"

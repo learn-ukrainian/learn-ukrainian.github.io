@@ -1,7 +1,7 @@
 # Tell Gemini This:
 
 ```
-Read the file: data/translations/input/all-remaining-words.txt
+Read the file: registry/translations/input/all-remaining-words.txt
 
 Translate those Ukrainian words to English. Return ONLY a JSON object with format:
 {
@@ -18,7 +18,7 @@ Rules:
 - Skip words that are clearly fragments or corrupted (just omit from JSON)
 - Return ONLY the JSON object, no other text
 
-Save your response to: data/translations/all-translations.json
+Save your response to: registry/translations/all-translations.json
 ```
 
 That's it. When done, tell Claude: "done"

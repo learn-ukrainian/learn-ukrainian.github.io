@@ -9,7 +9,7 @@ import yaml
 
 from .config import PROJECT_ROOT
 
-CHANNELS_PATH = PROJECT_ROOT / "data" / "external_articles" / "channels.yaml"
+CHANNELS_PATH = PROJECT_ROOT / "registry" / "external_articles" / "channels.yaml"
 
 REGISTER_TAGS = {"spoken", "scripted", "interview", "mixed"}
 DECOLONIZATION_TAGS = {"strong", "moderate", "none", "neutral"}

@@ -79,7 +79,7 @@ def test_active_reviewer_keeps_dimension_calibration() -> None:
 def test_canonical_anchors_registry_exists_and_has_required_keys() -> None:
     import yaml as _yaml
 
-    registry_path = REPO_ROOT / "data" / "canonical_anchors.yaml"
+    registry_path = REPO_ROOT / "registry" / "canonical_anchors.yaml"
     assert registry_path.exists(), (
         f"Canonical anchors registry missing at {registry_path}"
     )

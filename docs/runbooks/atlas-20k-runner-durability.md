@@ -29,7 +29,7 @@ therefore picked up automatically by the next `backup-data.sh backup
 (local enrichment caches) is already covered the same way; this closes the
 one gap: the VPS itself.
 
-The v0.1 open dataset (`data/lexicon-dataset.pointer.json` → GitHub Release
+The v0.1 open dataset (`registry/lexicon-dataset.pointer.json` → GitHub Release
 asset `atlas-open-dataset`) is a different, unrelated mechanism for
 *publishing* derived, license-cleared data. Do not route raw ULIF scrape
 output or the runner ledger through it — that pattern is for the public

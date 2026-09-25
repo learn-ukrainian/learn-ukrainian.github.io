@@ -19,7 +19,7 @@ from pathlib import Path
 import yaml
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-_INDEX_PATH = _PROJECT_ROOT / "data" / "miyklas" / "grammar_index.yaml"
+_INDEX_PATH = _PROJECT_ROOT / "registry" / "miyklas" / "grammar_index.yaml"
 _BASE_URL = "https://miyklas.com.ua"
 
 # Pre-compiled: strip parenthetical English, punctuation, quotes

@@ -13,7 +13,7 @@ learner-facing corrections.
 | Source layer | What it establishes | Pair admission rule |
 | --- | --- | --- |
 | Antonenko-Davydovych and State-Standard textbook citations collected in `scripts/lexicon/calque_corrections.py` | A reviewed correction and its sense restriction | Copy the cited correction only after the native lemma resolves in the public Atlas and add a project-authored frame. |
-| UA-GEC v2 `F/Calque` gold evidence (`data/ua-gec-gold/ua-gec-gold.json`) | An annotated source → correction pair under CC-BY-4.0 | Keep the exact UA-GEC ID in `citations`; do not treat a raw frequency row as an independent correction. |
+| UA-GEC v2 `F/Calque` gold evidence (`registry/ua-gec-gold/ua-gec-gold.json`) | An annotated source → correction pair under CC-BY-4.0 | Keep the exact UA-GEC ID in `citations`; do not treat a raw frequency row as an independent correction. |
 | Atlas `heritage_status` / `is_russianism` | Additional evidence when the calque itself has an Atlas entry | Use it to support severity, never to override a sense restriction or invent a replacement. |
 
 The 2026-08-03 batch grows the source from 72 to 90 pairs. Its additions are

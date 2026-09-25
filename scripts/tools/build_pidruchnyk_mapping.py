@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build data/pidruchnyk_urls.yaml from pidruchnyk.com.ua index pages.
+"""Build registry/pidruchnyk_urls.yaml from pidruchnyk.com.ua index pages.
 
 Contact: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues
 """
@@ -19,7 +19,7 @@ from bs4 import BeautifulSoup
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
-DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "data" / "pidruchnyk_urls.yaml"
+DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "registry" / "pidruchnyk_urls.yaml"
 BASE_URL = "https://pidruchnyk.com.ua"
 REQUEST_DELAY_S = 0.5
 USER_AGENT = (

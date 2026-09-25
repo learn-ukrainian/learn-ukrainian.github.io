@@ -194,7 +194,7 @@ describe('pronoun-mechanics', () => {
   });
 
   it('validates canonical pronoun mechanics deck file', () => {
-    const deckPath = resolve(__dirname, '../../../data/practice/pronoun_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/pronoun_mechanics_deck.json');
     expect(existsSync(deckPath)).toBe(true);
 
     const raw = readFileSync(deckPath, 'utf-8');
@@ -230,7 +230,7 @@ describe('pronoun-mechanics', () => {
   });
 
   it('evaluates feedback directly using actual exported deck cards without throwing TypeError', () => {
-    const deckPath = resolve(__dirname, '../../../data/practice/pronoun_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/pronoun_mechanics_deck.json');
     const raw = readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(raw);
 
@@ -264,7 +264,7 @@ describe('pronoun-mechanics', () => {
   });
 
   it('regression: ensures zero valid alternative collisions across Cards 24, 26, 27, 29, 31, 32, 66, 68, 70', () => {
-    const deckPath = resolve(__dirname, '../../../data/practice/pronoun_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/pronoun_mechanics_deck.json');
     const raw = readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(raw);
     const cardMap = new Map<string, any>(deck.cards.map((c: any) => [c.card_id, c]));

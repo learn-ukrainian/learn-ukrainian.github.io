@@ -82,3 +82,44 @@ def test_p3_scan_finds_segment_joins_and_paths_import(tmp_path: Path) -> None:
     _git(tmp_path, "add", "registry/artifacts/classification-v1.tsv", "scripts/reader.py")
     labels = {row["artifact"] for row in scan_inventory(tmp_path, phase="P3", table=table)}
     assert {"base:data-segment-join", "base:open_model_data.paths"} <= labels
+
+
+def test_scan_finds_moved_registry_twin_of_kept_paths(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-q")
+    table = tmp_path / "registry/artifacts/classification-v1.tsv"
+    table.parent.mkdir(parents=True)
+    table.write_text(
+        "path\tmode\tblob\tsize\tclass\tgroup\treason\tjudgment\n"
+        "data/translations/example.json\t100644\tx\t1\tK\ttranslations\tr\trule\n"
+        "data/raw/source.html\t100644\tx\t1\tA\traw_source\tr\trule\n",
+        encoding="utf-8",
+    )
+    source = tmp_path / "scripts/reader.py"
+    source.parent.mkdir()
+    source.write_text(
+        'TRANSLATIONS = ROOT / "registry" / "translations" / "example.json"\nRAW = "registry/raw/source.html"\n',
+        encoding="utf-8",
+    )
+    _git(tmp_path, "add", "registry/artifacts/classification-v1.tsv", "scripts/reader.py")
+    rows = scan_inventory(tmp_path, phase="P1", table=table)
+    assert {"artifact": "base:data-segment-join", "consumer": "scripts/reader.py", "check": ""} in rows
+    source.write_text(
+        'TRANSLATIONS = "registry/translations/example.json"\nRAW = "registry/raw/source.html"\n', encoding="utf-8"
+    )
+    labels = {row["artifact"] for row in scan_inventory(tmp_path, phase="P1", table=table)}
+    # The K path is reported under its table path; an A path never moved, so its registry twin is not a hit.
+    assert "data/translations/example.json" in labels
+    assert "data/raw/source.html" not in labels
+
+
+def test_scan_finds_quoted_data_prefix_classifiers(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-q")
+    table = tmp_path / "registry/artifacts/classification-v1.tsv"
+    table.parent.mkdir(parents=True)
+    table.write_text("path\tclass\tgroup\ndata/registry.yaml\tK\troot\n", encoding="utf-8")
+    source = tmp_path / "scripts/classify.py"
+    source.parent.mkdir()
+    source.write_text('CONTENT_PATH_PREFIXES = ("curriculum/", "data/")\n', encoding="utf-8")
+    _git(tmp_path, "add", "registry/artifacts/classification-v1.tsv", "scripts/classify.py")
+    rows = scan_inventory(tmp_path, phase="P1", table=table)
+    assert {"artifact": "base:data-prefix", "consumer": "scripts/classify.py", "check": ""} in rows

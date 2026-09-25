@@ -2,7 +2,7 @@
 
 Use the existing downloader, native extractor, and incremental ingester for
 the remaining STEM cells. Resolve source pages from
-`data/pidruchnyk_urls.yaml` and `docs/l2-uk-direct/textbook-selection.yaml`;
+`registry/pidruchnyk_urls.yaml` and `docs/l2-uk-direct/textbook-selection.yaml`;
 never construct a guessed publisher URL.
 
 ## Source choices
@@ -22,7 +22,7 @@ Bondarenko grade 7 pidruchnyk fallback page is already recorded in the selection
 file. Both Tarasenkova volumes are required.
 
 Grades 5–6 use integrated natural science in
-`data/textbook_curriculum_denominator.yaml` (`g05.natural_5_6_one_of` and
+`registry/textbook_curriculum_denominator.yaml` (`g05.natural_5_6_one_of` and
 `g06.natural_5_6_one_of`). Preserve those books' `pryroda` subject; do not
 relabel them `biolohiya` to fill a census grid. Likewise, separate algebra,
 physics, and chemistry begin at grade 7; mathematics is represented by

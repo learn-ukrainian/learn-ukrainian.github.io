@@ -7,6 +7,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 _project_root = os.path.dirname(
@@ -402,3 +403,17 @@ def test_concept_extraction_rejects_override_before_preparation(monkeypatch):
     for model in ("gpt-5.5", "unknown", ""):
         with pytest.raises(ValueError, match="requires gpt-6-sol"):
             audit.run_codex_concept_extraction("fixture", model=model)
+
+
+@pytest.mark.needs_artifact("corpus_audit_snapshots", "corpus_audit/coverage_map.json")
+def test_load_coverage_map_resolves_the_published_artifact() -> None:
+    coverage_map = audit.load_coverage_map()
+    assert coverage_map["metadata"]["article_count"] == len(coverage_map["articles"])
+    assert audit.classify_gap_categories(coverage_map)
+
+
+def test_load_coverage_map_reads_explicit_paths_directly(tmp_path: Path) -> None:
+    explicit = tmp_path / "coverage_map.json"
+    explicit.write_text('{"articles": [], "metadata": {}}', encoding="utf-8")
+    assert audit.load_coverage_map(explicit) == {"articles": [], "metadata": {}}
+    assert audit.load_coverage_map(tmp_path / "missing.json") == {}

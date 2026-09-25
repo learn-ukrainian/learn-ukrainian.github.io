@@ -16,6 +16,7 @@ import subprocess
 import tarfile
 import tempfile
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 from scripts.storage import paths
@@ -470,6 +471,29 @@ def publish(repo: Path, group: str, rel: str, source: Path, producer: str) -> st
         paths.verify_file(target, replacement, group=group, rel=rel)
         journal.unlink()
         return sha
+
+
+def write_artifact(
+    target: Path, group: str, producer: str, write: Callable[[Path], object], *, repo: Path = ROOT
+) -> Path:
+    """Run ``write`` for ``target``; publish through a staging file when it is a manifest artifact of ``group``.
+
+    A producer's default output may be a published A path (spec section 3: only ``publish`` writes it).
+    Any other output path, such as a scratch or test path, is written directly.
+    """
+    data_root = (repo / "data").resolve()
+    resolved = Path(target).resolve()
+    if resolved.is_relative_to(data_root):
+        rel = resolved.relative_to(data_root).as_posix()
+        entries = paths.load_manifest(group, repo)["entries"]
+        if any(entry["path"] == f"data/{rel}" for entry in entries):
+            with tempfile.TemporaryDirectory(prefix="publish-stage-") as staging:
+                staged = Path(staging) / resolved.name
+                write(staged)
+                publish(repo, group, rel, staged, producer)
+            return resolved
+    write(Path(target))
+    return Path(target)
 
 
 def _restore_from_store(object_path: Path, target: Path) -> None:

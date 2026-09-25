@@ -11,12 +11,15 @@ import yaml
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
-from wiki.channels import CHANNELS_PATH, TRACK_CHANNEL_AFFINITY, get_track_affinity, load_channels
+from wiki.channels import TRACK_CHANNEL_AFFINITY, get_track_affinity, load_channels
+
+# The scraped corpus is untracked local data; only the channel registry moved to registry/.
+EXTERNAL_CORPUS_DIR = Path(__file__).resolve().parents[1] / "data" / "external_articles"
 
 
 def test_registry_schema_covers_all_live_source_files():
     channels = load_channels(reload=True)
-    source_files = {path.stem for path in CHANNELS_PATH.parent.glob("*.jsonl")}
+    source_files = {path.stem for path in EXTERNAL_CORPUS_DIR.glob("*.jsonl")}
     if not source_files:
         # The corpus itself is untracked local data. With none of it present the glob is
         # empty, every registry entry reads as "uncovered", and the failure says nothing
@@ -24,7 +27,7 @@ def test_registry_schema_covers_all_live_source_files():
         # When the corpus IS present (any developer machine) the assertion below still runs
         # in full: this narrows the test to where it has evidence, it does not weaken it.
         pytest.skip(
-            f"requires the external-article corpus (*.jsonl under {CHANNELS_PATH.parent}) — "
+            f"requires the external-article corpus (*.jsonl under {EXTERNAL_CORPUS_DIR}) — "
             "untracked local data, not provisioned in CI"
         )
     assert set(channels) == source_files

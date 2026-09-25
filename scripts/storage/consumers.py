@@ -105,6 +105,13 @@ def _artifact_paths(table: Path, phase: str) -> list[str]:
         raise ConsumerInventoryError(f"cannot read classification table {table}: {exc}") from exc
 
 
+def _kept_paths(table: Path, artifacts: list[str]) -> set[str]:
+    """Return the K artifacts, which reappear under ``registry/`` after their phase."""
+    with table.open(encoding="utf-8", newline="") as stream:
+        kept = {row["path"] for row in csv.DictReader(stream, delimiter="\t") if row.get("class") == "K"}
+    return kept & set(artifacts)
+
+
 def _tracked_files(repo_root: Path) -> list[Path]:
     result = subprocess.run(["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, timeout=30)
     return [repo_root / name.decode("utf-8") for name in result.stdout.split(b"\0") if name]
@@ -124,14 +131,22 @@ def scan_inventory(repo_root: Path, *, phase: str, table: Path | None = None) ->
         re.IGNORECASE,
     )
     file_join_pattern = re.compile(r"Path\(__file__\)[^\n]{0,160}['" "](?:data|registry)(?:/|['" "])", re.IGNORECASE)
+    kept = _kept_paths(table_path, artifacts)
     literal_pattern = re.compile("|".join(re.escape(path) for path in sorted(artifacts, key=len, reverse=True)))
     phase_roots = {
         "P2": ("data/lexicon",),
         "P3": ("data/projects/open_model_data",),
         "P4": ("data/projects/ua_eval_harness", "data/projects/ua_open_weight_eval", "data/processed", "data/datasets"),
     }.get(phase, tuple(sorted({"/".join(path.split("/")[:3]) for path in artifacts})))
-    prefix_pattern = re.compile("|".join(re.escape(root) + r"(?:/|['\"]|$)" for root in phase_roots))
-    segment_join = re.compile(r"['\"]data['\"]\s*(?:(?:/|,)\s*['\"][^'\"\n]+['\"]\s*){1,5}")
+    prefix_pattern = re.compile(
+        "|".join(
+            re.escape(root) + r"(?:/|['\"]|$)"
+            for root in (*phase_roots, *("registry/" + root.removeprefix("data/") for root in phase_roots))
+        )
+    )
+    segment_join = re.compile(r"['\"](?:data|registry)['\"]\s*(?:(?:/|,)\s*['\"][^'\"\n]+['\"]\s*){1,5}")
+    # A quoted "data/" prefix classifies or lists whole trees (for example the Pages auto-deploy denylist).
+    bare_data_prefix = re.compile(r"['\"]data/['\"]")
     path_import = (
         re.compile(r"\b(?:from|import)\s+(?:scripts\.projects\.)?open_model_data(?:\.paths\b|\s+import\s+paths\b)")
         if phase == "P3"
@@ -160,12 +175,18 @@ def scan_inventory(repo_root: Path, *, phase: str, table: Path | None = None) ->
         except (OSError, UnicodeDecodeError):
             continue
         found = set(literal_pattern.findall(text))
+        if "registry/" in text:
+            # A K path is referenced as registry/<rel> once moved; it stays labelled by its table path.
+            found.update(set(literal_pattern.findall(text.replace("registry/", "data/"))) & kept)
         if prefix_pattern.search(text):
             found.add("base:phase-directory-prefix")
         for match in segment_join.finditer(text):
             segments = re.findall(r"['\"]([^'\"]+)['\"]", match.group())
+            segments = ["data" if segments[0] == "registry" else segments[0], *segments[1:]]
             if any("/".join(segments).startswith(root + "/") or "/".join(segments) == root for root in phase_roots):
                 found.add("base:data-segment-join")
+        if bare_data_prefix.search(text):
+            found.add("base:data-prefix")
         if path_import and path_import.search(text):
             found.add("base:open_model_data.paths")
         found.update(f"base:{name}" for name in dynamic_pattern.findall(text))
