@@ -589,7 +589,8 @@
             "properties": {
               "image": {
                 "type": "string",
-                "pattern": "^(?:[A-Za-z0-9_./-]+\\.(?:png|jpe?g|webp|svg)|[^A-Za-z0-9\\s]{1,8})$"
+                "minLength": 1,
+                "description": "Either an asset path (letters, digits, _ . / - ending in .png, .jpg, .jpeg, .webp or .svg) or exactly one emoji (a single grapheme cluster starting with an Extended_Pictographic or Regional_Indicator code point; ZWJ sequences, skin tones and flags count as one). JSON Schema cannot express this; image_to_letter_image_kind() in scripts/build/activity_renderer.py is the authoritative check."
               },
               "letter": {
                 "type": "string",
@@ -598,6 +599,7 @@
               "options": {
                 "type": "array",
                 "minItems": 2,
+                "uniqueItems": true,
                 "items": {
                   "type": "string",
                   "minLength": 1

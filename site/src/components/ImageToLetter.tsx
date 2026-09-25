@@ -5,7 +5,7 @@ import { shuffle } from './utils';
 
 interface ImageToLetterItem {
   /**
-   * @schemaDescription Emoji value consumed by this component.
+   * @schemaDescription One emoji, or an image asset path (.png, .jpg, .jpeg, .webp, .svg) shown as a picture.
    * @ukrainianText false
    */
   emoji: string;
@@ -53,6 +53,10 @@ interface ImageToLetterProps {
    */
   isUkrainian?: boolean;
 }
+
+// Mirrors the asset-path branch of image_to_letter_image_kind() in
+// scripts/build/activity_renderer.py; anything else is an emoji shown as text.
+const IMAGE_ASSET_PATH = /^[A-Za-z0-9_./-]+\.(?:png|jpe?g|webp|svg)$/;
 
 export default function ImageToLetter({
   items,
@@ -162,8 +166,17 @@ export default function ImageToLetter({
       </div>
 
       <div className={directStyles.itlCard}>
-        {/* Large emoji */}
-        <div className={directStyles.itlEmoji}>{item.emoji}</div>
+        {/* Large emoji, or the picture for an asset path (alt must not name the answer) */}
+        {IMAGE_ASSET_PATH.test(item.emoji) ? (
+          <img
+            src={item.emoji}
+            alt="Picture prompt"
+            className={directStyles.itlImage}
+            data-activity="itl-image"
+          />
+        ) : (
+          <div className={directStyles.itlEmoji}>{item.emoji}</div>
+        )}
 
         {/* Hint: show the correct answer highlighted */}
         {showHint && (

@@ -17,6 +17,8 @@ import re
 from itertools import pairwise
 from typing import Any
 
+import regex
+
 
 def render_activity_to_jsx(activity: dict, *, alphabet: bool = False) -> str:
     """Convert an activity YAML dict to React component JSX string.
@@ -150,17 +152,30 @@ def _component(name: str, props: str) -> str:
 def _render_quiz(act: dict) -> str:
     """quiz → <Quiz questions={[...]} instruction="..." />
 
-    YAML items have {question, options[], correct(index)} format.
-    React expects {question, options[{text, correct}]} format.
+    YAML items have {question|prompt, options[], correct(index)|answer(text)}
+    or options[{text, correct}]. React expects {question, options[{text, correct}],
+    explanation?}.
     """
     questions = []
     for item in act.get("items", []):
-        correct_idx = item.get("correct", 0)
-        options = [
-            {"text": opt, "correct": i == correct_idx}
-            for i, opt in enumerate(item.get("options", []))
-        ]
-        q: dict[str, Any] = {"question": item.get("question", ""), "options": options}
+        correct_idx = item.get("correct")
+        correct_answer = item.get("answer")
+        options = []
+        for i, opt in enumerate(item.get("options", [])):
+            if isinstance(opt, dict):
+                options.append({"text": opt.get("text", ""), "correct": bool(opt.get("correct", False))})
+            elif type(correct_idx) is int:
+                options.append({"text": opt, "correct": i == correct_idx})
+            elif correct_answer is not None:
+                options.append({"text": opt, "correct": opt == correct_answer})
+            else:
+                options.append({"text": opt, "correct": i == 0})
+        q: dict[str, Any] = {
+            "question": item.get("question") or item.get("prompt", ""),
+            "options": options,
+        }
+        if item.get("explanation"):
+            q["explanation"] = item["explanation"]
         questions.append(q)
 
     props = _prop("questions", questions)
@@ -171,7 +186,7 @@ def _render_quiz(act: dict) -> str:
 def _render_fill_in(act: dict) -> str:
     """fill-in → <FillIn items={[...]} instruction="..." />
 
-    YAML: {sentence, answer, options?}
+    YAML: {sentence, answer, explanation, options?, mode?}
     React: same structure.
     """
     items = []
@@ -180,8 +195,9 @@ def _render_fill_in(act: dict) -> str:
             "sentence": item.get("sentence", ""),
             "answer": item.get("answer", ""),
         }
-        if item.get("options"):
-            entry["options"] = item["options"]
+        for key in ("options", "explanation", "mode"):
+            if item.get(key):
+                entry[key] = item[key]
         items.append(entry)
 
     props = _prop("items", items)
@@ -203,12 +219,12 @@ def _render_match_up(act: dict) -> str:
 def _render_group_sort(act: dict) -> str:
     """group-sort → <GroupSort groups={{...}} instruction="..." />
 
-    YAML: groups[{label, items[]}]
+    YAML: groups[{label|name, items[]}]
     React: groups is {label: items[]} dict.
     """
     groups = {}
     for g in act.get("groups", []):
-        groups[g.get("label", "")] = g.get("items", [])
+        groups[g.get("label") or g.get("name", "")] = g.get("items", [])
 
     props = _prop("groups", groups)
     props += _opt_prop("instruction", act.get("instruction"))
@@ -257,7 +273,7 @@ def _render_error_correction(act: dict, *, alphabet: bool = False) -> str:
         correct_form, options = error_correction_render_values(
             item.get("sentence", ""),
             item.get("error", ""),
-            item.get("correction", ""),
+            item.get("correction") or item.get("answer", ""),
             item.get("options", []),
             alphabet=alphabet,
         )
@@ -547,19 +563,44 @@ def _render_translate(act: dict) -> str:
     return _component("Translate", props)
 
 
+_UNJUMBLE_TOKEN_FIELDS = ("words", "jumbled", "prompt", "scrambled", "letters", "tiles")
+
+
+def unjumble_tokens(item: dict, index: int = 0) -> list[str]:
+    """Return the jumbled tokens of one unjumble item, whichever field carries them.
+
+    A list is taken as-is; a string is split on ``/`` when present, else on
+    whitespace.
+    """
+    for field_name in _UNJUMBLE_TOKEN_FIELDS:
+        if field_name not in item:
+            continue
+        value = item[field_name]
+        if isinstance(value, list):
+            return [str(token) for token in value]
+        if isinstance(value, str):
+            separator = "/" if "/" in value else None
+            return [token.strip() for token in value.split(separator) if token.strip()]
+        raise TypeError(
+            f"unjumble item {index} field {field_name!r} must be str or list, "
+            f"got {type(value).__name__}"
+        )
+    raise KeyError(f"unjumble item {index} missing one of: words, jumbled, prompt, scrambled")
+
+
 def _render_unjumble(act: dict) -> str:
     """unjumble → <Unjumble items={[...]} instruction="..." />
 
-    YAML: {words[], correct_order[], hint?}
+    YAML: {words|jumbled|prompt|scrambled, answer|correct_order[], hint?, explanation}
     React UnjumbleItem: {words(string, slash-separated), answer(string), hint?}
     """
     items = []
-    for item in act.get("items", []):
-        words = item.get("words", [])
+    for index, item in enumerate(act.get("items", [])):
+        words = unjumble_tokens(item, index)
         correct = item.get("correct_order", [])
         answer = item.get("answer") or " ".join(str(c) for c in correct)
         entry: dict[str, Any] = {
-            "words": " / ".join(str(w) for w in words),
+            "words": " / ".join(words),
             "answer": str(answer),
         }
         if item.get("hint"):
@@ -722,6 +763,29 @@ class ImageToLetterShapeError(ValueError):
     """An image-to-letter item carries neither the schema nor the legacy shape."""
 
 
+_IMAGE_ASSET_PATH = re.compile(r"[A-Za-z0-9_./-]+\.(?:png|jpe?g|webp|svg)")
+_EMOJI_LEAD = regex.compile(r"[\p{Extended_Pictographic}\p{Regional_Indicator}]")
+
+
+def image_to_letter_image_kind(value: Any) -> str | None:
+    """Classify an image-to-letter ``image`` as ``"asset"``, ``"emoji"`` or ``None`` (invalid).
+
+    JSON Schema cannot express "exactly one emoji", so this function is the
+    authoritative rule (the schema only states it in prose): an asset path, or
+    exactly one extended grapheme cluster whose first code point is
+    Extended_Pictographic or a Regional_Indicator (ZWJ sequences, skin tones
+    and flags each form one cluster).
+    """
+    if not isinstance(value, str) or not value:
+        return None
+    if _IMAGE_ASSET_PATH.fullmatch(value):
+        return "asset"
+    clusters = regex.findall(r"\X", value)
+    if len(clusters) == 1 and _EMOJI_LEAD.match(clusters[0]):
+        return "emoji"
+    return None
+
+
 def image_to_letter_render_values(item: Any, index: int = 0) -> dict[str, Any]:
     """Normalise one image-to-letter item to the React ImageToLetterItem shape.
 
@@ -744,6 +808,11 @@ def image_to_letter_render_values(item: Any, index: int = 0) -> dict[str, Any]:
             f"(image, letter, options) nor the legacy shape (emoji, answer, "
             f"distractors); keys present: {sorted(item)}"
         )
+    if image_to_letter_image_kind(emoji) is None:
+        raise ImageToLetterShapeError(
+            f"image-to-letter item {index} image {emoji!r} is neither an asset path "
+            f"(png/jpg/jpeg/webp/svg) nor exactly one emoji"
+        )
     raw = item.get("distractors") if item.get("distractors") is not None else item.get("options")
     if "options" in item:
         options = item["options"]
@@ -755,6 +824,11 @@ def image_to_letter_render_values(item: Any, index: int = 0) -> dict[str, Any]:
     for option in raw or []:
         if option != answer and option not in distractors:
             distractors.append(option)
+    if not distractors:
+        raise ImageToLetterShapeError(
+            f"image-to-letter item {index} has no choice distinct from letter {answer!r}; "
+            f"a learner needs at least one distractor"
+        )
     entry: dict[str, Any] = {"emoji": emoji, "answer": answer, "distractors": distractors}
     for key in ("note", "explanation"):
         if item.get(key):

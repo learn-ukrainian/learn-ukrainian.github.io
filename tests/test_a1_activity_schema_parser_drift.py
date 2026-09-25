@@ -1,9 +1,11 @@
 """Schema/parser drift guard for the A1 activity schema (#8716).
 
 For every A1 activity type, build a minimal valid item from the schema's
-required fields (one variant per ``anyOf`` required-alternative), run it
-through ``ActivityParser`` and ``to_mdx`` and assert that no free-text field
-the schema requires is silently dropped before it reaches the JSX layer.
+required fields (one variant per ``anyOf`` required-alternative and per
+``oneOf``/``anyOf`` branch), push it through BOTH MDX emitters --
+``ActivityParser.to_mdx`` and ``activity_renderer.render_activity_to_jsx`` --
+and assert that no free-text field the schema requires is silently dropped
+before it reaches the JSX layer.
 
 Types whose drift is known and needs component work (not a field mapping)
 are listed in ``KNOWN_DRIFT``; the test fails when an entry stops being
@@ -26,7 +28,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from yaml_activities import ActivityParser
 
-from scripts.build.activity_renderer import ImageToLetterShapeError
+from scripts.build.activity_renderer import (
+    ImageToLetterShapeError,
+    image_to_letter_image_kind,
+    render_activity_to_jsx,
+)
 
 SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "activities-a1.schema.json"
 SCHEMA = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -48,7 +54,7 @@ def _variants(node: dict, path: str, counter) -> list:
         return _variants(DEFS[node["$ref"].split("/")[-1]], path, counter)
     for key in ("oneOf", "anyOf"):
         if key in node and "properties" not in node:
-            return _variants(node[key][0], path, counter)
+            return [v for branch in node[key] for v in _variants(branch, path, counter)]
     if "const" in node:
         return [node["const"]]
     if node.get("pattern") == "^E-[0-9]{3,}$":
@@ -97,18 +103,33 @@ def _fresh(value, counter):
     return value
 
 
+def _make_answers_meaningful(instance) -> None:
+    """Make generated answers name real choices, as an authored item would."""
+    if not isinstance(instance, dict):
+        return
+    for row in instance.get("items", []):
+        if not isinstance(row, dict):
+            continue
+        # A text `answer` must name one of the choices to be meaningful.
+        for choices in ("words", "options"):
+            if "answer" in row and isinstance(row.get(choices), list):
+                first = row[choices][0]
+                row["answer"] = first["text"] if isinstance(first, dict) else first
+        if "letter" in row and "options" in row:
+            row["letter"] = row["options"][0]
+    items = instance.get("items")
+    order = instance.get("correct_order")
+    # String `correct_order` must be a permutation of the item strings.
+    if instance.get("type") == "order" and order and isinstance(order[0], str):
+        instance["correct_order"] = list(reversed(items))
+
+
 def _cases() -> list[tuple[str, int, dict]]:
     cases = []
     for name, node in DEFS.items():
         counter = itertools.count(1)
         for index, instance in enumerate(_variants(node, "", counter)):
-            for row in instance.get("items", []) if isinstance(instance, dict) else []:
-                # A text `answer` must name one of the choices to be meaningful.
-                for choices in ("words", "options"):
-                    if isinstance(row, dict) and "answer" in row and choices in row:
-                        row["answer"] = row[choices][0]
-                if isinstance(row, dict) and "letter" in row and "options" in row:
-                    row["letter"] = row["options"][0]
+            _make_answers_meaningful(instance)
             cases.append((name.removesuffix("-a1"), index, instance))
     return cases
 
@@ -121,22 +142,45 @@ def test_generated_examples_are_schema_valid():
         assert VALIDATOR.is_valid([instance]), f"{name}: generated example is not schema-valid"
 
 
-@pytest.mark.parametrize(
-    ("activity_type", "index", "example"),
-    [c for c in CASES if c[0] not in PARSER_REJECTS],
-    ids=[f"{c[0]}-{c[1]}" for c in CASES if c[0] not in PARSER_REJECTS],
-)
+PARSED_CASES = [c for c in CASES if c[0] not in PARSER_REJECTS]
+PARSED_IDS = [f"{c[0]}-{c[1]}" for c in PARSED_CASES]
+
+
+def _dropped(example: dict, *outputs: str) -> set[str]:
+    """Field names whose sentinel is missing from any of ``outputs``."""
+    markers = SENTINEL.findall(json.dumps(example))
+    return {
+        m.split("_", 1)[1]
+        for m in markers
+        if m.split("_", 1)[1] not in INTERNAL_ONLY and any(m not in out for out in outputs)
+    }
+
+
+def test_every_a1_type_and_branch_is_generated():
+    assert {c[0] for c in CASES} == {n.removesuffix("-a1") for n in DEFS}
+    # Branch enumeration must widen coverage beyond one case per type.
+    assert len(CASES) > len(DEFS)
+
+
+@pytest.mark.parametrize(("activity_type", "index", "example"), PARSED_CASES, ids=PARSED_IDS)
 def test_parser_keeps_every_required_field(activity_type, index, example):
     parser = ActivityParser()
     activity = parser._parse_activity(example)
     parsed = json.dumps(dataclasses.asdict(activity), ensure_ascii=False)
-    mdx = parser.to_mdx([activity])
-    sentinels = {m.group(0).split("_", 1)[1]: m.group(0) for m in SENTINEL.finditer(json.dumps(example))}
-    for field in INTERNAL_ONLY:
-        sentinels.pop(field, None)
-    dropped = {field for field, marker in sentinels.items() if marker not in parsed or marker not in mdx}
+    dropped = _dropped(example, parsed, parser.to_mdx([activity]))
     assert dropped == KNOWN_DRIFT.get(activity_type, set()), (
         f"{activity_type}: required fields dropped by ActivityParser/to_mdx = {sorted(dropped)}; "
+        f"known drift = {sorted(KNOWN_DRIFT.get(activity_type, set()))}"
+    )
+
+
+@pytest.mark.parametrize(("activity_type", "index", "example"), CASES, ids=[f"{c[0]}-{c[1]}" for c in CASES])
+def test_renderer_keeps_every_required_field(activity_type, index, example):
+    jsx = render_activity_to_jsx(example)
+    assert "Unknown activity type" not in jsx
+    dropped = _dropped(example, jsx)
+    assert dropped == KNOWN_DRIFT.get(activity_type, set()), (
+        f"{activity_type}: required fields dropped by activity_renderer = {sorted(dropped)}; "
         f"known drift = {sorted(KNOWN_DRIFT.get(activity_type, set()))}"
     )
 
@@ -234,24 +278,78 @@ def test_image_to_letter_schema_requires_min_two_options():
     assert not VALIDATOR.is_valid([bad])
 
 
-@pytest.mark.parametrize("bad_image", ["apple-emoji", "not an image", "cat.txt"])
-def test_image_to_letter_schema_rejects_invalid_image_pattern(bad_image):
-    bad = {
-        "type": "image-to-letter",
-        "instruction": "Оберіть букву",
-        "items": [{"image": bad_image, "letter": "Я", "options": ["А", "Я"], "explanation": "e"}],
-    }
-    assert not VALIDATOR.is_valid([bad])
+def _itl_item(**overrides) -> dict:
+    return {"image": "🍎", "letter": "Я", "options": ["А", "Я"], "explanation": "e", **overrides}
 
 
-@pytest.mark.parametrize("good_image", ["🍎", "assets/apple.png", "img/flag.svg", "symbols/star.webp", "path/to/pic.jpg"])
-def test_image_to_letter_schema_accepts_asset_or_emoji(good_image):
-    good = {
-        "type": "image-to-letter",
-        "instruction": "Оберіть букву",
-        "items": [{"image": good_image, "letter": "Я", "options": ["А", "Я"], "explanation": "e"}],
-    }
-    assert VALIDATOR.is_valid([good])
+def _itl_activity(item: dict) -> dict:
+    return {"type": "image-to-letter", "instruction": "Оберіть букву", "items": [item]}
+
+
+CYRILLIC_WORD = "".join(chr(cp) for cp in (0x44F, 0x431, 0x43B, 0x443, 0x43A, 0x43E))  # a Cyrillic word
+GOOD_IMAGES = [
+    "🕷️",
+    "👨🏾‍❤️‍💋‍👨🏿",
+    "👨‍👩‍👧‍👦",
+    "🇺🇦",
+    "🍎",
+    "assets/apple.png",
+    "img/flag.svg",
+    "symbols/star.webp",
+    "path/to/pic.jpg",
+]
+BAD_IMAGES = [CYRILLIC_WORD, "!!!", "🍎🍎", "🍎🍌", "A", "apple-emoji", "not an image", "cat.txt", " 🍎"]
+
+
+@pytest.mark.parametrize("good_image", GOOD_IMAGES)
+def test_image_to_letter_image_accepts_asset_or_one_emoji(good_image):
+    assert image_to_letter_image_kind(good_image) is not None
+    assert VALIDATOR.is_valid([_itl_activity(_itl_item(image=good_image))])
+    _itl_mdx([_itl_item(image=good_image)])  # renderer accepts it too
+
+
+@pytest.mark.parametrize("bad_image", BAD_IMAGES)
+def test_image_to_letter_image_rejects_everything_else(bad_image):
+    assert image_to_letter_image_kind(bad_image) is None
+    with pytest.raises(ImageToLetterShapeError, match="neither an asset path"):
+        _itl_mdx([_itl_item(image=bad_image)])
+    with pytest.raises(ImageToLetterShapeError):
+        render_activity_to_jsx(_itl_activity(_itl_item(image=bad_image)))
+
+
+def test_image_to_letter_schema_leaves_the_image_rule_to_python():
+    image = DEFS["image-to-letter-a1"]["properties"]["items"]["items"]["properties"]["image"]
+    assert "pattern" not in image
+    assert image["minLength"] == 1
+    assert "image_to_letter_image_kind" in image["description"]
+
+
+def test_image_to_letter_schema_requires_unique_options():
+    assert not VALIDATOR.is_valid([_itl_activity(_itl_item(options=["Я", "Я"]))])
+
+
+@pytest.mark.parametrize("options", [["Я", "Я"], ["Я", "Я", "Я"]])
+def test_image_to_letter_needs_a_distractor_distinct_from_the_letter(options):
+    with pytest.raises(ImageToLetterShapeError, match="no choice distinct from letter 'Я'"):
+        _itl_mdx([_itl_item(options=options)])
+
+
+def test_image_to_letter_validator_reports_bad_items_before_render(tmp_path):
+    import yaml
+    from build.activity_validator import validate_activities  # scripts/ is on sys.path
+
+    path = tmp_path / "module.yaml"
+    path.write_text(
+        yaml.safe_dump(
+            {"inline": [_itl_activity(_itl_item(image=CYRILLIC_WORD)), _itl_activity(_itl_item(options=["Я", "Я"]))]},
+            allow_unicode=True,
+        ),
+        encoding="utf-8",
+    )
+    messages = [i.message for i in validate_activities(path) if i.activity_type == "image-to-letter"]
+    assert len(messages) == 2
+    assert "neither an asset path" in messages[0]
+    assert "no choice distinct" in messages[1]
 
 
 def test_image_to_letter_validator_rejects_options_without_letter():
@@ -414,3 +512,8 @@ def test_phrase_table_mdx_emission():
     assert "Привіт" in mdx
     assert "неформальне" in mdx
     assert "👋" in mdx
+
+
+@pytest.mark.parametrize("value", ["", None, 7, ["🍎"]])
+def test_image_to_letter_image_kind_rejects_non_strings_and_empty(value):
+    assert image_to_letter_image_kind(value) is None

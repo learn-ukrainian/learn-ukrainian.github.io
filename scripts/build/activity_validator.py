@@ -41,8 +41,10 @@ if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from build.activity_renderer import (
+    ImageToLetterShapeError,
     derive_error_correction_replacement,
     error_correction_render_values,
+    image_to_letter_render_values,
     is_punctuation_error_correction,
 )
 
@@ -167,6 +169,8 @@ def validate_activities(
                 issues.extend(_check_match_up(slug, section, pairs))
             elif atype == "true-false":
                 issues.extend(_check_true_false(slug, section, items))
+            elif atype == "image-to-letter":
+                issues.extend(_check_image_to_letter(slug, section, items))
 
     # Section-level checks (need level context)
     if level and module_num:
@@ -568,6 +572,21 @@ def _check_true_false(
                 f"'correct' should be boolean, got {type(correct).__name__}: {correct}",
             ))
 
+    return issues
+
+
+def _check_image_to_letter(
+    slug: str, section: str, items: list,
+) -> list[ActivityIssue]:
+    """Run the renderer's own shape rules so a bad item fails here, not at render."""
+    issues: list[ActivityIssue] = []
+    for i, item in enumerate(items):
+        try:
+            image_to_letter_render_values(item, i)
+        except ImageToLetterShapeError as exc:
+            issues.append(ActivityIssue(
+                slug, section, "image-to-letter", i, "error", str(exc),
+            ))
     return issues
 
 

@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 6ec6776c6011dd292f677095edfed0c35cd58964407835957b42b16cbaf54ce8
+  components_sha256: 4dda1adc8ca37ebaea81c9cb0c0476270c4f53e6ada1a7bbd6ac83c374421aab
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -1132,7 +1132,7 @@ components:
       ImageToLetterItem:
       - name: emoji
         type: string
-        description: Emoji value consumed by this component.
+        description: One emoji, or an image asset path (.png, .jpg, .jpeg, .webp, .svg) shown as a picture.
         ukrainian_text: 'false'
       - name: answer
         type: string

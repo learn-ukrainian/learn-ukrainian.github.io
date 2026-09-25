@@ -20,12 +20,14 @@ try:
         error_correction_render_values,
         image_to_letter_render_values,
         unique_error_correction_options,
+        unjumble_tokens,
     )
 except ImportError:  # pragma: no cover - scripts/-rooted callers (MDX generator)
     from build.activity_renderer import (
         error_correction_render_values,
         image_to_letter_render_values,
         unique_error_correction_options,
+        unjumble_tokens,
     )
 
 # =============================================================================
@@ -953,7 +955,7 @@ class ActivityParser:
     def _parse_unjumble(self, data: dict) -> UnjumbleActivity:
         items = []
         for item_index, item_data in enumerate(self._item_rows(data)):
-            words = self._unjumble_words(item_data, item_index)
+            words = unjumble_tokens(item_data, item_index)
             answer = (
                 item_data.get('answer') or item_data.get('word')
                 or item_data.get('sentence') or item_data.get('correct')
@@ -971,23 +973,6 @@ class ActivityParser:
             explanation = str(item_data.get('explanation') or '')
             items.append(UnjumbleItem(words=words, answer=answer, hint=hint, explanation=explanation))
         return UnjumbleActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
-
-    def _unjumble_words(self, item_data: dict, item_index: int) -> list[str]:
-        for field_name in ('words', 'jumbled', 'prompt', 'scrambled', 'letters', 'tiles'):
-            if field_name in item_data:
-                return self._tokens_from_unjumble_field(item_data[field_name], field_name, item_index)
-        raise KeyError(f"unjumble item {item_index} missing one of: words, jumbled, prompt, scrambled")
-
-    def _tokens_from_unjumble_field(self, value: Any, field_name: str, item_index: int) -> list[str]:
-        if isinstance(value, list):
-            return [str(token) for token in value]
-        if isinstance(value, str):
-            separator = '/' if '/' in value else None
-            return [token.strip() for token in value.split(separator) if token.strip()]
-        raise TypeError(
-            f"unjumble item {item_index} field {field_name!r} must be str or list, "
-            f"got {type(value).__name__}"
-        )
 
     def _parse_error_correction(self, data: dict) -> ErrorCorrectionActivity:
         items = []
