@@ -10,11 +10,13 @@ reported and left untouched. Dry-run is the default; pass ``--apply`` to write.
 from __future__ import annotations
 
 import argparse
+import contextlib
+import fcntl
 import json
 import os
 import stat
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -26,10 +28,13 @@ for _path in (REPO_ROOT, SCRIPTS_DIR):
         sys.path.insert(0, str(_path))
 
 from scripts import delegate
-from scripts.orchestration.dead_worker_state import task_state_lock
-from scripts.orchestration.stale_task_records import _record_age_days
+from scripts.orchestration.stale_task_records import (
+    DEFAULT_LOCK_TIMEOUT_S,
+    _record_age_days,
+    _record_lock_target,
+)
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
-from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
+from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES, WorktreeLockError
 
 DEFAULT_BATCH_STATE = REPO_ROOT / "batch_state"
 # A clean verdict already lives on the task record, so the full JSON has no
@@ -40,67 +45,61 @@ _SNAPSHOT_SUFFIX = delegate._READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX
 # is measured and left alone.
 _ALLOWLISTED_SNAPSHOT_PARENTS = ("", ARCHIVE_DIR_NAME)
 _PHASES = ("pre", "post")
+# ``path_safety`` does not open by directory fd. Every name below the
+# batch_state fd is a single path component; ``..`` and symlinks never become
+# a path string passed to open/stat/replace/unlink.
+_DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+_READ_FLAGS = os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC
 
 
-def _root_dir(batch_state: Path) -> Path:
-    """Return the real batch_state directory, refusing a symlink or any other name."""
+def _component(name: str) -> bool:
+    return name not in {"", ".", ".."} and "/" not in name and "\x00" not in name
+
+
+def _open_root(batch_state: Path) -> int:
+    """Open the real ``batch_state`` directory. A symlink or any other name is refused."""
+    if batch_state.name != "batch_state":
+        raise ValueError(f"refusing to sweep {batch_state}: path must be a directory named batch_state")
     try:
-        info = batch_state.lstat()
+        return os.open(batch_state, _DIR_FLAGS)
     except OSError as exc:
         raise ValueError(f"refusing to sweep {batch_state}: path must be a directory named batch_state") from exc
-    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode) or batch_state.name != "batch_state":
-        raise ValueError(f"refusing to sweep {batch_state}: path must be a directory named batch_state")
-    root = batch_state.resolve()
-    if root.name != "batch_state":
-        raise ValueError(f"refusing to sweep {batch_state}: path must be a directory named batch_state")
-    return root
 
 
-def _nofollow(root: Path, path: Path, *, allow_missing_leaf: bool = False) -> Path | None:
-    """Return ``path`` when every component from ``root`` is a real, contained entry.
-
-    ``lstat`` rejects a symlink at any level. The leaf may be absent when the
-    caller is about to create it. ``..`` and paths outside ``root`` are refused.
-    """
-    try:
-        relative = path.absolute().relative_to(root)
-    except ValueError:
-        return None
-    if not relative.parts or any(part in {"", ".", ".."} for part in relative.parts):
-        return None
-    current = root
-    for index, part in enumerate(relative.parts):
-        current = current / part
-        leaf = index == len(relative.parts) - 1
-        try:
-            info = current.lstat()
-        except FileNotFoundError:
-            if allow_missing_leaf and leaf:
-                return current
-            return None
-        except OSError:
-            return None
-        if stat.S_ISLNK(info.st_mode):
-            return None
-    return current
-
-
-def _read_regular(root: Path, path: Path) -> bytes | None:
-    """Read a regular file with ``O_NOFOLLOW``, or return None if that is unsafe."""
-    checked = _nofollow(root, path)
-    if checked is None:
+def _open_dir(dir_fd: int, name: str) -> int | None:
+    if not _component(name):
         return None
     try:
-        info = checked.lstat()
+        return os.open(name, _DIR_FLAGS, dir_fd=dir_fd)
     except OSError:
         return None
-    if not stat.S_ISREG(info.st_mode):
+
+
+def _lstat_at(dir_fd: int, name: str) -> os.stat_result | None:
+    if not _component(name):
         return None
     try:
-        fd = os.open(checked, os.O_RDONLY | os.O_NOFOLLOW)
+        return os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
+    except OSError:
+        return None
+
+
+def _is_regular(dir_fd: int, name: str) -> bool:
+    info = _lstat_at(dir_fd, name)
+    return info is not None and stat.S_ISREG(info.st_mode)
+
+
+def _read_regular_at(dir_fd: int, name: str) -> bytes | None:
+    """Read one regular file in ``dir_fd``. A symlink or a swap of ``name`` is not followed."""
+    if not _component(name):
+        return None
+    try:
+        fd = os.open(name, _READ_FLAGS, dir_fd=dir_fd)
     except OSError:
         return None
     try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            return None
         chunks: list[bytes] = []
         while True:
             chunk = os.read(fd, 1024 * 1024)
@@ -112,69 +111,117 @@ def _read_regular(root: Path, path: Path) -> bytes | None:
         os.close(fd)
 
 
-def _write_bytes_nofollow(root: Path, path: Path, raw: bytes) -> None:
-    """Create or replace ``path`` without following a symlink at any level."""
-    checked = _nofollow(root, path, allow_missing_leaf=True)
-    if checked is None:
-        raise OSError(f"refusing to write {path}: symlink or path outside batch_state")
-    parent = _nofollow(root, checked.parent)
-    if parent is None:
-        raise OSError(f"refusing to write {path}: symlink or path outside batch_state")
-    tmp = parent / f".{checked.name}.tmp.{os.getpid()}"
-    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+def _write_bytes_at(dir_fd: int, name: str, raw: bytes) -> None:
+    """Create or replace ``name`` inside ``dir_fd`` without a path below the root fd."""
+    if not _component(name):
+        raise OSError(f"refusing to write {name}: symlink or path outside batch_state")
+    tmp = f".{name}.tmp.{os.getpid()}"
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=dir_fd)
     try:
-        os.write(fd, raw)
-    finally:
+        view = memoryview(raw)
+        while view:
+            view = view[os.write(fd, view) :]
+    except OSError:
         os.close(fd)
-    os.replace(tmp, checked)
-
-
-def _unlink_regular(root: Path, path: Path) -> None:
-    checked = _nofollow(root, path)
-    if checked is None:
-        return
+        with contextlib.suppress(OSError):
+            os.unlink(tmp, dir_fd=dir_fd)
+        raise
+    os.close(fd)
     try:
-        info = checked.lstat()
+        os.replace(tmp, name, src_dir_fd=dir_fd, dst_dir_fd=dir_fd)
     except OSError:
+        with contextlib.suppress(OSError):
+            os.unlink(tmp, dir_fd=dir_fd)
+        raise
+
+
+def _unlink_regular_at(dir_fd: int, name: str) -> None:
+    if not _is_regular(dir_fd, name):
         return
-    if stat.S_ISREG(info.st_mode):
-        checked.unlink()
+    with contextlib.suppress(OSError):
+        os.unlink(name, dir_fd=dir_fd)
 
 
-def _file_bytes(path: Path) -> int:
-    try:
-        info = path.lstat()
-    except OSError:
-        return 0
-    if not stat.S_ISREG(info.st_mode):
+def _file_bytes_at(dir_fd: int, name: str) -> int:
+    info = _lstat_at(dir_fd, name)
+    if info is None or not stat.S_ISREG(info.st_mode):
         return 0
     return info.st_size
 
 
-def _tree_bytes(path: Path) -> int:
+def _tree_bytes_at(dir_fd: int) -> int:
     try:
-        info = path.lstat()
+        names = os.listdir(dir_fd)
     except OSError:
         return 0
-    if stat.S_ISLNK(info.st_mode):
-        return 0
-    if stat.S_ISREG(info.st_mode):
-        return info.st_size
     total = 0
-    try:
-        children = path.rglob("*")
-    except OSError:
-        return 0
-    for child in children:
-        total += _file_bytes(child)
+    for name in names:
+        info = _lstat_at(dir_fd, name)
+        if info is None or stat.S_ISLNK(info.st_mode):
+            continue
+        if stat.S_ISREG(info.st_mode):
+            total += info.st_size
+        elif stat.S_ISDIR(info.st_mode):
+            child = _open_dir(dir_fd, name)
+            if child is None:
+                continue
+            try:
+                total += _tree_bytes_at(child)
+            finally:
+                os.close(child)
     return total
 
 
-def _phase_snapshots(root: Path, snapshot_dir: Path) -> tuple[dict[str, str], dict[str, str]] | None:
-    """Return parsed phase maps when both files are regular JSON objects under ``root``."""
+def _names(dir_fd: int) -> list[str]:
+    try:
+        return sorted(os.listdir(dir_fd))
+    except OSError:
+        return []
+
+
+@contextlib.contextmanager
+def _task_record_lock(parent_fd: int, record_name: str) -> Iterator[None]:
+    """Lock ``<record>.lock`` in ``parent_fd`` — the same file :func:`task_state_lock` uses.
+
+    ``Path.with_suffix(suffix + ".lock")`` on ``foo.json`` is ``foo.json.lock``.
+    Opening it through the directory fd keeps a parent-directory swap from
+    redirecting the lock.
+    """
+    fd = os.open(
+        record_name + ".lock",
+        os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW | os.O_CLOEXEC,
+        0o600,
+        dir_fd=parent_fd,
+    )
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        yield
+    finally:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+        os.close(fd)
+
+
+def _hot_pair(parent_fd: int, record_name: str, snapshot_name: str, snap_fd: int) -> bool:
+    """True when the record and snapshot dir are still the hot names we locked.
+
+    Archive renames both out of this directory. A leftover fd must not be
+    treated as the hot path, and a replaced directory inode must not either.
+    """
+    record = _lstat_at(parent_fd, record_name)
+    current = _lstat_at(parent_fd, snapshot_name)
+    if record is None or current is None:
+        return False
+    if not stat.S_ISREG(record.st_mode) or not stat.S_ISDIR(current.st_mode):
+        return False
+    held = os.fstat(snap_fd)
+    return (current.st_dev, current.st_ino) == (held.st_dev, held.st_ino)
+
+
+def _phase_snapshots(snap_fd: int) -> tuple[dict[str, str], dict[str, str]] | None:
+    """Return parsed phase maps when both files are regular JSON objects in ``snap_fd``."""
     loaded: list[dict[str, str]] = []
     for phase in _PHASES:
-        raw = _read_regular(root, snapshot_dir / f"read_only_checkout_{phase}.json")
+        raw = _read_regular_at(snap_fd, f"read_only_checkout_{phase}.json")
         if raw is None:
             return None
         try:
@@ -200,24 +247,25 @@ def _explicit_clean(record: dict[str, Any]) -> bool:
 
 def _eligible(
     record: dict[str, Any] | None,
-    record_path: Path,
+    info: os.stat_result | None,
     *,
     min_age_days: float,
     now: datetime,
 ) -> bool:
-    if record is None or record.get("status") not in RELEASED_TASK_STATUSES or not _explicit_clean(record):
+    if (
+        record is None
+        or info is None
+        or record.get("status") not in RELEASED_TASK_STATUSES
+        or not _explicit_clean(record)
+    ):
         return False
-    try:
-        info = record_path.lstat()
-    except OSError:
-        return False
-    if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
+    if not stat.S_ISREG(info.st_mode):
         return False
     return _record_age_days(record, info.st_mtime_ns, now) >= min_age_days
 
 
-def _read_record(root: Path, record_path: Path) -> dict[str, Any] | None:
-    raw = _read_regular(root, record_path)
+def _read_record_at(parent_fd: int, record_name: str) -> dict[str, Any] | None:
+    raw = _read_regular_at(parent_fd, record_name)
     if raw is None:
         return None
     try:
@@ -227,30 +275,13 @@ def _read_record(root: Path, record_path: Path) -> dict[str, Any] | None:
     return loaded if isinstance(loaded, dict) else None
 
 
-def _snapshot_candidates(root: Path, tasks_dir: Path) -> list[Path]:
-    found: list[Path] = []
-    for parent_name in _ALLOWLISTED_SNAPSHOT_PARENTS:
-        parent = tasks_dir / parent_name if parent_name else tasks_dir
-        if _nofollow(root, parent) is None:
-            continue
-        try:
-            children = sorted(parent.glob(f"*{_SNAPSHOT_SUFFIX}"))
-        except OSError:
-            continue
-        for path in children:
-            if path.name.endswith(_SNAPSHOT_SUFFIX) and _nofollow(root, path) is not None:
-                try:
-                    info = path.lstat()
-                except OSError:
-                    continue
-                if stat.S_ISDIR(info.st_mode):
-                    found.append(path)
-    return found
-
-
-def _record_for_snapshot(snapshot_dir: Path) -> Path:
-    stem = snapshot_dir.name[: -len(_SNAPSHOT_SUFFIX)]
-    return snapshot_dir.with_name(f"{stem}.json")
+def _record_name_for(snapshot_name: str) -> str | None:
+    if not snapshot_name.endswith(_SNAPSHOT_SUFFIX):
+        return None
+    stem = snapshot_name[: -len(_SNAPSHOT_SUFFIX)]
+    if not stem or not _component(stem):
+        return None
+    return f"{stem}.json"
 
 
 def _digest_bytes(pre: dict[str, str], post: dict[str, str]) -> bytes:
@@ -258,50 +289,138 @@ def _digest_bytes(pre: dict[str, str], post: dict[str, str]) -> bytes:
 
 
 def _apply_one(
-    root: Path,
-    snapshot_dir: Path,
-    record_path: Path,
+    parent_fd: int,
+    snapshot_name: str,
+    record_name: str,
+    logical_record: Path,
+    observed: dict[str, Any],
     *,
     observed_status: Any,
     observed_nonce: Any,
     min_age_days: float,
     now: datetime,
     crash_after: str | None,
+    on_after_digest: Callable[[], None] | None,
 ) -> str | None:
-    """Digest one sidecar under the task lock. Return the action, or None to skip.
+    """Digest one sidecar. Return the action, or None to skip.
 
-    The lock is the same per-task lock delegate holds while it publishes the
-    task record. Status and ``run_nonce`` are read again under that lock; a
-    re-dispatch that changed either one keeps its new sidecars.
+    Lock order, global with dispatch and archive (checkout, then the per-task
+    record lock). Archive holds only the checkout lock (:func:`_record_lock_target`)
+    while it renames the record and its sidecar. Dispatch holds that same
+    checkout lock and then the per-task lock. Taking the per-task lock first
+    would deadlock against dispatch. Under both locks the record and the
+    snapshot directory must still be the hot names; if archive has already
+    moved them, this returns without writing a hot record back.
     """
-    with task_state_lock(record_path):
-        current = _read_record(root, record_path)
-        if current is None:
-            return None
-        if current.get("status") != observed_status or current.get("run_nonce") != observed_nonce:
-            return None
-        if not _eligible(current, record_path, min_age_days=min_age_days, now=now):
-            return None
-        phases = _phase_snapshots(root, snapshot_dir)
+    try:
+        with (
+            delegate.worktree_lock(_record_lock_target(observed, logical_record), timeout_s=DEFAULT_LOCK_TIMEOUT_S),
+            _task_record_lock(parent_fd, record_name),
+        ):
+            if not _is_regular(parent_fd, record_name):
+                return None
+            snap_fd = _open_dir(parent_fd, snapshot_name)
+            if snap_fd is None or not _hot_pair(parent_fd, record_name, snapshot_name, snap_fd):
+                if snap_fd is not None:
+                    os.close(snap_fd)
+                return None
+            try:
+                current = _read_record_at(parent_fd, record_name)
+                info = _lstat_at(parent_fd, record_name)
+                if current is None:
+                    return None
+                if current.get("status") != observed_status or current.get("run_nonce") != observed_nonce:
+                    return None
+                if not _eligible(current, info, min_age_days=min_age_days, now=now):
+                    return None
+                phases = _phase_snapshots(snap_fd)
+                if phases is None:
+                    return None
+                pre, post = phases
+                _write_bytes_at(snap_fd, delegate._READ_ONLY_SNAPSHOT_DIGEST_NAME, _digest_bytes(pre, post))
+                if crash_after == "digest":
+                    raise RuntimeError("crash after digest")
+                if on_after_digest is not None:
+                    on_after_digest()
+                if not _hot_pair(parent_fd, record_name, snapshot_name, snap_fd):
+                    return None
+                current["read_only_snapshot_retention"] = delegate._READ_ONLY_SNAPSHOT_RETENTION_DIGEST
+                _write_bytes_at(
+                    parent_fd,
+                    record_name,
+                    json.dumps(current, indent=2, default=str).encode("utf-8"),
+                )
+                if crash_after == "record":
+                    raise RuntimeError("crash after record")
+                for phase in _PHASES:
+                    _unlink_regular_at(snap_fd, f"read_only_checkout_{phase}.json")
+                return "digested"
+            finally:
+                os.close(snap_fd)
+    except WorktreeLockError:
+        return None
+
+
+def _measure_candidate(
+    parent_fd: int,
+    rel_dir: str,
+    snapshot_name: str,
+    *,
+    root: Path,
+    min_age_days: float,
+    now: datetime,
+    apply: bool,
+    on_before_lock: Callable[[], None] | None,
+    on_after_digest: Callable[[], None] | None,
+    crash_after: str | None,
+) -> tuple[dict[str, Any], int] | None:
+    record_name = _record_name_for(snapshot_name)
+    if record_name is None:
+        return None
+    info = _lstat_at(parent_fd, record_name)
+    record = _read_record_at(parent_fd, record_name)
+    if not _eligible(record, info, min_age_days=min_age_days, now=now) or record is None:
+        return None
+    snap_fd = _open_dir(parent_fd, snapshot_name)
+    if snap_fd is None:
+        return None
+    try:
+        phases = _phase_snapshots(snap_fd)
         if phases is None:
             return None
         pre, post = phases
         digest_raw = _digest_bytes(pre, post)
-        digest_path = snapshot_dir / delegate._READ_ONLY_SNAPSHOT_DIGEST_NAME
-        _write_bytes_nofollow(root, digest_path, digest_raw)
-        if crash_after == "digest":
-            raise RuntimeError("crash after digest")
-        current["read_only_snapshot_retention"] = delegate._READ_ONLY_SNAPSHOT_RETENTION_DIGEST
-        _write_bytes_nofollow(
-            root,
-            record_path,
-            json.dumps(current, indent=2, default=str).encode("utf-8"),
+        before = sum(_file_bytes_at(snap_fd, f"read_only_checkout_{phase}.json") for phase in _PHASES)
+    finally:
+        os.close(snap_fd)
+    reclaimed = before - len(digest_raw)
+    row = {
+        "snapshot_dir": f"{rel_dir}/{snapshot_name}",
+        "task_id": record.get("task_id") if record else record_name[: -len(".json")],
+        "status": record.get("status") if record else None,
+        "reclaimable_bytes": reclaimed,
+        "action": "would_digest",
+    }
+    if apply:
+        if on_before_lock is not None:
+            on_before_lock()
+        action = _apply_one(
+            parent_fd,
+            snapshot_name,
+            record_name,
+            Path(os.path.abspath(os.path.join(os.fspath(root), rel_dir, record_name))),
+            record,
+            observed_status=record.get("status"),
+            observed_nonce=record.get("run_nonce"),
+            min_age_days=min_age_days,
+            now=now,
+            crash_after=crash_after,
+            on_after_digest=on_after_digest,
         )
-        if crash_after == "record":
-            raise RuntimeError("crash after record")
-        for phase in _PHASES:
-            _unlink_regular(root, snapshot_dir / f"read_only_checkout_{phase}.json")
-        return "digested"
+        if action is None:
+            return None
+        row["action"] = action
+    return row, reclaimed
 
 
 def plan_retention(
@@ -311,79 +430,112 @@ def plan_retention(
     apply: bool = False,
     now: datetime | None = None,
     on_before_lock: Callable[[], None] | None = None,
+    on_after_digest: Callable[[], None] | None = None,
     crash_after: str | None = None,
 ) -> dict[str, Any]:
     """Measure every batch_state subtree. Rewrite only eligible snapshot sidecars.
 
     ``batch_state`` must be a directory named ``batch_state``. A symlink at any
-    level, or a path that resolves outside it, is ignored. Non-terminal tasks
-    and snapshot dirs without an explicit clean verdict are left as they are.
+    level is ignored: every open, stat, write, and unlink below that directory
+    uses a descriptor opened with ``O_NOFOLLOW``. Non-terminal tasks and
+    snapshot dirs without an explicit clean verdict are left as they are.
     """
-    root = _root_dir(batch_state)
-    now = now or datetime.now(UTC)
-    tasks_dir = root / "tasks"
+    root_fd = _open_root(batch_state)
+    try:
+        return _plan_open(
+            batch_state,
+            root_fd,
+            min_age_days=min_age_days,
+            apply=apply,
+            now=now or datetime.now(UTC),
+            on_before_lock=on_before_lock,
+            on_after_digest=on_after_digest,
+            crash_after=crash_after,
+        )
+    finally:
+        os.close(root_fd)
+
+
+def _plan_open(
+    batch_state: Path,
+    root_fd: int,
+    *,
+    min_age_days: float,
+    apply: bool,
+    now: datetime,
+    on_before_lock: Callable[[], None] | None,
+    on_after_digest: Callable[[], None] | None,
+    crash_after: str | None,
+) -> dict[str, Any]:
     reclaimable_by_top: dict[str, int] = {}
     selected: list[dict[str, Any]] = []
-
-    if _nofollow(root, tasks_dir) is not None:
-        for snapshot_dir in _snapshot_candidates(root, tasks_dir):
-            record_path = _record_for_snapshot(snapshot_dir)
-            if _nofollow(root, record_path) is None or _nofollow(root, snapshot_dir) is None:
-                continue
-            record = _read_record(root, record_path)
-            if not _eligible(record, record_path, min_age_days=min_age_days, now=now):
-                continue
-            phases = _phase_snapshots(root, snapshot_dir)
-            if phases is None or record is None:
-                continue
-            pre, post = phases
-            digest_raw = _digest_bytes(pre, post)
-            before = sum(_file_bytes(snapshot_dir / f"read_only_checkout_{phase}.json") for phase in _PHASES)
-            reclaimed = before - len(digest_raw)
-            row = {
-                "snapshot_dir": str(snapshot_dir.relative_to(root)),
-                "task_id": record.get("task_id") if record else record_path.stem,
-                "status": record.get("status") if record else None,
-                "reclaimable_bytes": reclaimed,
-                "action": "would_digest",
-            }
-            if apply:
-                if on_before_lock is not None:
-                    on_before_lock()
-                action = _apply_one(
-                    root,
-                    snapshot_dir,
-                    record_path,
-                    observed_status=record.get("status"),
-                    observed_nonce=record.get("run_nonce"),
-                    min_age_days=min_age_days,
-                    now=now,
-                    crash_after=crash_after,
-                )
-                if action is None:
-                    continue
-                row["action"] = action
-            selected.append(row)
-            reclaimable_by_top["tasks"] = reclaimable_by_top.get("tasks", 0) + reclaimed
+    tasks_fd = _open_dir(root_fd, "tasks")
+    if tasks_fd is not None:
+        try:
+            parents = [("tasks", tasks_fd)]
+            archive_fd = _open_dir(tasks_fd, ARCHIVE_DIR_NAME)
+            if archive_fd is not None:
+                parents.append((f"tasks/{ARCHIVE_DIR_NAME}", archive_fd))
+            try:
+                for rel_dir, parent_fd in parents:
+                    for snapshot_name in _names(parent_fd):
+                        info = _lstat_at(parent_fd, snapshot_name)
+                        if (
+                            info is None
+                            or not snapshot_name.endswith(_SNAPSHOT_SUFFIX)
+                            or not stat.S_ISDIR(info.st_mode)
+                        ):
+                            continue
+                        measured = _measure_candidate(
+                            parent_fd,
+                            rel_dir,
+                            snapshot_name,
+                            root=batch_state,
+                            min_age_days=min_age_days,
+                            now=now,
+                            apply=apply,
+                            on_before_lock=on_before_lock,
+                            on_after_digest=on_after_digest,
+                            crash_after=crash_after,
+                        )
+                        if measured is None:
+                            continue
+                        row, reclaimed = measured
+                        selected.append(row)
+                        reclaimable_by_top["tasks"] = reclaimable_by_top.get("tasks", 0) + reclaimed
+            finally:
+                if archive_fd is not None:
+                    os.close(archive_fd)
+        finally:
+            os.close(tasks_fd)
 
     subtrees: list[dict[str, Any]] = []
-    try:
-        entries = sorted(root.iterdir(), key=lambda path: path.name)
-    except OSError:
-        entries = []
-    for entry in entries:
-        if _nofollow(root, entry) is None:
+    for name in _names(root_fd):
+        info = _lstat_at(root_fd, name)
+        if info is None or stat.S_ISLNK(info.st_mode):
+            continue
+        if stat.S_ISREG(info.st_mode):
+            nbytes = info.st_size
+        elif stat.S_ISDIR(info.st_mode):
+            child = _open_dir(root_fd, name)
+            if child is None:
+                continue
+            try:
+                nbytes = _tree_bytes_at(child)
+            finally:
+                os.close(child)
+        else:
             continue
         subtrees.append(
             {
-                "name": entry.name,
-                "bytes": _tree_bytes(entry),
-                "reclaimable_bytes": reclaimable_by_top.get(entry.name, 0),
+                "name": name,
+                "bytes": nbytes,
+                "reclaimable_bytes": reclaimable_by_top.get(name, 0),
             }
         )
     return {
         "mode": "apply" if apply else "dry-run",
-        "batch_state": str(root),
+        "batch_state": str(batch_state),
         "min_age_days": min_age_days,
         "allowlist": [
             "tasks/*.snapshots",

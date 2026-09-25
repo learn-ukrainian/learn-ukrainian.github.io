@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
+import os
 import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
@@ -327,6 +329,86 @@ def test_hygiene_cadence_dry_run_then_apply_keeps_the_allowlist(tmp_path: Path) 
     assert applied[0]["apply"]["selected"][0]["action"] == "digested"
     assert _names(snapshot) == {"digest.json"}
     assert (other / "blob.bin").read_bytes() == b"keep"
+
+
+def test_archive_between_digest_and_record_does_not_recreate_the_hot_record(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _batch(tmp_path)
+    tasks = root / "tasks"
+    _write_record(tasks, "moving", status="done", age_days=20, run_nonce="same")
+    snapshot = _write_full_sidecars(tasks, "moving", entries=2)
+    record_path = tasks / "moving.json"
+
+    def _archive_midway() -> None:
+        # The sweep already holds the checkout lock. Archive takes that same
+        # lock; this call drops it so the move lands between the digest write
+        # and the record write, which is the interleaving under test.
+        monkeypatch.setattr(delegate, "worktree_lock", lambda *_args, **_kwargs: contextlib.nullcontext())
+        stale_task_records.archive_terminal(tasks, min_age_days=0, apply=True, now=NOW)
+
+    report = plan_retention(root, min_age_days=0, apply=True, now=NOW, on_after_digest=_archive_midway)
+
+    assert not record_path.exists()
+    assert report["selected"] == []
+    assert not snapshot.exists()
+    archived = json.loads((tasks / "archive" / "moving.json").read_text(encoding="utf-8"))
+    assert "read_only_snapshot_retention" not in archived
+    assert (tasks / "archive" / "moving.snapshots").is_dir()
+
+
+def test_parent_swap_to_symlink_between_check_and_open_touches_nothing_outside(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _batch(tmp_path)
+    tasks = root / "tasks"
+    _write_record(tasks, "swap", status="done", age_days=10, run_nonce="same")
+    _write_full_sidecars(tasks, "swap", entries=1)
+    outside = tmp_path / "outside"
+    outside_snap = outside / "swap.snapshots"
+    outside_snap.mkdir(parents=True)
+    payload = json.dumps({"stolen.txt": " M"}, separators=(",", ":"))
+    for phase in ("pre", "post"):
+        (outside_snap / f"read_only_checkout_{phase}.json").write_text(payload, encoding="utf-8")
+    (outside_snap / "digest.json").write_text("OUTSIDE-DIGEST", encoding="utf-8")
+    (outside / "swap.json").write_text((tasks / "swap.json").read_text(encoding="utf-8"), encoding="utf-8")
+    (outside / "untouched.txt").write_bytes(b"leave-me")
+    before = {
+        path.relative_to(outside).as_posix(): path.read_bytes()
+        for path in outside.rglob("*")
+        if path.is_file()
+    }
+    swapped = False
+    real_open = os.open
+
+    def _swap() -> None:
+        saved = tmp_path / "tasks.real"
+        os.rename(tasks, saved)
+        tasks.symlink_to(outside, target_is_directory=True)
+
+    def _wrapped_open(path, flags, mode=0o777, *, dir_fd=None):
+        nonlocal swapped
+        target = Path(path)
+        if dir_fd is None and not swapped and target != root and root in target.parents:
+            swapped = True
+            _swap()
+        fd = real_open(path, flags, mode) if dir_fd is None else real_open(path, flags, mode, dir_fd=dir_fd)
+        if dir_fd is None and not swapped and target == root:
+            swapped = True
+            _swap()
+        return fd
+
+    monkeypatch.setattr(os, "open", _wrapped_open)
+
+    report = plan_retention(root, min_age_days=0, apply=True, now=NOW)
+
+    assert report["selected"] == []
+    after = {
+        path.relative_to(outside).as_posix(): path.read_bytes()
+        for path in outside.rglob("*")
+        if path.is_file()
+    }
+    assert after == before
 
 
 def test_help_is_two_lines_and_has_no_host_path() -> None:
