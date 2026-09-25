@@ -177,9 +177,14 @@ if [[ "${1:-}" == "dump" ]]; then
   cat "$FAKE_SNAPSHOT_DIR/${3#/}"
   exit 0
 fi
+if [[ "${1:-}" == "stats" ]]; then
+  printf '{"total_size":%s,"total_file_count":1,"snapshots_count":1}\n' "${FAKE_STATS_TOTAL_SIZE:-1000}"
+  exit 0
+fi
 if [[ "${1:-}" == "restore" && -n "${FAKE_SNAPSHOT_DIR:-}" ]]; then
   dry_run=0
   restore_target=""
+  restore_id="${2:-}"
   shift
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -194,7 +199,11 @@ if [[ "${1:-}" == "restore" && -n "${FAKE_SNAPSHOT_DIR:-}" ]]; then
   if [[ "$dry_run" == 0 ]]; then
     test -n "$restore_target"
     mkdir -p "$restore_target"
-    cp -a "$FAKE_SNAPSHOT_DIR/." "$restore_target/"
+    if [[ -d "$FAKE_SNAPSHOT_DIR/by-id/$restore_id" ]]; then
+      cp -a "$FAKE_SNAPSHOT_DIR/by-id/$restore_id/." "$restore_target/"
+    else
+      cp -a "$FAKE_SNAPSHOT_DIR/." "$restore_target/"
+    fi
   fi
 fi
 if [[ "${1:-}" == "backup" && -n "${FAKE_MUTATED_LIVE_STATE_SOURCE:-}" ]]; then
@@ -248,6 +257,52 @@ def _run(
 def _log(environment: dict[str, str]) -> str:
     path = Path(environment["FAKE_RESTIC_LOG"])
     return path.read_text(encoding="utf-8") if path.exists() else ""
+
+
+def _use_local_restic(
+    environment: dict[str, str],
+    tmp_path: Path,
+) -> None:
+    """Route the fake `restic` on PATH to a real local restic repository."""
+    real_restic = shutil.which("restic", path=os.environ["PATH"])
+    if real_restic is None:
+        pytest.skip("restic unavailable")
+    repository = tmp_path / "local-restic-repository"
+    subprocess.run(
+        [real_restic, "-r", str(repository), "init"],
+        env={**os.environ, "RESTIC_PASSWORD_FILE": environment["RESTIC_PASSWORD_FILE"]},
+        check=True, capture_output=True, text=True, timeout=30,
+    )
+    environment["TEST_LOCAL_RESTIC_REPOSITORY"] = str(repository)
+    environment["TEST_REAL_RESTIC"] = real_restic
+    environment["TEST_PEAK_LOG"] = str(tmp_path / "peak.log")
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(
+        fake_bin / "restic",
+        r"""#!/bin/bash
+set -eu
+args=()
+while [[ "$#" -gt 0 ]]; do
+  if [[ "$1" == "--option" && "${2:-}" == "rclone.connections=1" ]]; then
+    shift 2
+    continue
+  fi
+  args+=("$1")
+  shift
+done
+if [[ "${args[0]:-}" == "backup" ]]; then
+  for argument in "${args[@]}"; do
+    if [[ "$argument" == "--stdin" ]]; then
+      count="$(find "$LU_BACKUP_TMPDIR" -type f \( -name '*.db' -o -name '*.sqlite*' \) | wc -l)"
+      printf '%s\n' "$count" >> "$TEST_PEAK_LOG"
+      break
+    fi
+  done
+fi
+export RESTIC_REPOSITORY="$TEST_LOCAL_RESTIC_REPOSITORY"
+exec "$TEST_REAL_RESTIC" "${args[@]}"
+""",
+    )
 
 
 def test_review_homes_are_excluded_but_other_absolute_links_still_fail(
@@ -318,46 +373,9 @@ def test_linux_local_restic_round_trip_stages_one_db_at_a_time(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
     tmp_path: Path,
 ) -> None:
-    real_restic = shutil.which("restic", path=os.environ["PATH"])
-    if real_restic is None:
-        pytest.skip("restic unavailable")
     environment, source, staging, _legacy = backup_environment
-    repository = tmp_path / "local-restic-repository"
-    subprocess.run(
-        [real_restic, "-r", str(repository), "init"],
-        env={**os.environ, "RESTIC_PASSWORD_FILE": environment["RESTIC_PASSWORD_FILE"]},
-        check=True, capture_output=True, text=True, timeout=30,
-    )
-    environment["TEST_LOCAL_RESTIC_REPOSITORY"] = str(repository)
-    environment["TEST_REAL_RESTIC"] = real_restic
-    environment["TEST_PEAK_LOG"] = str(tmp_path / "peak.log")
+    _use_local_restic(environment, tmp_path)
     fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
-    _write_executable(
-        fake_bin / "restic",
-        r"""#!/bin/bash
-set -eu
-args=()
-while [[ "$#" -gt 0 ]]; do
-  if [[ "$1" == "--option" && "${2:-}" == "rclone.connections=1" ]]; then
-    shift 2
-    continue
-  fi
-  args+=("$1")
-  shift
-done
-if [[ "${args[0]:-}" == "backup" ]]; then
-  for argument in "${args[@]}"; do
-    if [[ "$argument" == "--stdin" ]]; then
-      count="$(find "$LU_BACKUP_TMPDIR" -type f \( -name '*.db' -o -name '*.sqlite*' \) | wc -l)"
-      printf '%s\n' "$count" >> "$TEST_PEAK_LOG"
-      break
-    fi
-  done
-fi
-export RESTIC_REPOSITORY="$TEST_LOCAL_RESTIC_REPOSITORY"
-exec "$TEST_REAL_RESTIC" "${args[@]}"
-""",
-    )
     _write_executable(fake_bin / "cp", "#!/bin/bash\nexit 97\n")
     (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
     first_connection = sqlite3.connect(source / "first.db")
@@ -1270,11 +1288,15 @@ def test_restore_is_a_dry_run_and_refuses_unsafe_targets(
 ) -> None:
     environment, _source, _staging, _legacy = backup_environment
     restore_target = tmp_path / "restore-target"
+    snapshot = Path(environment["FAKE_SNAPSHOT_DIR"])
+    snapshot.mkdir()
+    (snapshot / "BACKUP-RECEIPT.json").write_text('{"schema_version": 1}\n', encoding="utf-8")
 
     preview = _run(environment, "restore", "latest", "--to", str(restore_target))
 
     assert preview.returncode == 0, preview.stderr
     assert "Restore preview only" in preview.stdout
+    assert "Restore size" in preview.stdout
     assert "arg=<restore>" in _log(environment)
     assert "arg=<--dry-run>" in _log(environment)
     assert "arg=<--overwrite> arg=<never>" in _log(environment)
@@ -1318,6 +1340,265 @@ def test_restore_refuses_filesystem_root_as_project_overlap(
     assert result.returncode != 0
     assert "Restore target must be outside the project checkout" in result.stderr
     assert "arg=<restore>" not in _log(environment)
+
+
+MANIFEST_ID = "0" * 64
+BASE_ID = "b" * 64
+ATLAS_ID = "a" * 64
+OTHER_ID = "c" * 64
+GIB = 1024**3
+
+
+def _write_fake_run(environment: dict[str, str]) -> Path:
+    """Publish a schema-2 run (manifest, base, two databases) in the fake repository."""
+    snapshot = Path(environment["FAKE_SNAPSHOT_DIR"])
+    databases = {"data/atlas.db": ATLAS_ID, "data/other.db": OTHER_ID}
+    for relative, snapshot_id in databases.items():
+        database = snapshot / "by-id" / snapshot_id / relative
+        database.parent.mkdir(parents=True)
+        with sqlite3.connect(database) as connection:
+            connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+    (snapshot / "by-id" / BASE_ID / "data").mkdir(parents=True)
+    (snapshot / "by-id" / BASE_ID / "data" / "notes.txt").write_text("base\n", encoding="utf-8")
+    receipt = {
+        "schema_version": 2,
+        "linux_run": {
+            "run_id": "run-1",
+            "base_snapshot_id": BASE_ID,
+            "databases": [
+                {"path": path, "snapshot_id": snapshot_id, "mode": "600"}
+                for path, snapshot_id in databases.items()
+            ],
+        },
+    }
+    (snapshot / "BACKUP-RECEIPT.json").write_text(json.dumps(receipt), encoding="utf-8")
+    (snapshot / "by-id" / MANIFEST_ID).mkdir(parents=True)
+    shutil.copy(snapshot / "BACKUP-RECEIPT.json", snapshot / "by-id" / MANIFEST_ID)
+    return snapshot
+
+
+def _fake_free_space(environment: dict[str, str], available_bytes: int) -> None:
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(
+        fake_bin / "df",
+        "#!/bin/bash\n"
+        "printf '%s\\n' 'Filesystem 1024-blocks Used Available Capacity Mounted on'\n"
+        f"printf 'testfs 8388608 0 %s 0%% /scratch\\n' {available_bytes // 1024}\n",
+    )
+
+
+def _restore_ids(environment: dict[str, str]) -> list[str]:
+    return [
+        line.split("arg=<restore> arg=<", 1)[1].split(">", 1)[0]
+        for line in _log(environment).splitlines()
+        if "arg=<restore>" in line
+    ]
+
+
+def test_restore_refuses_when_target_lacks_space_for_the_whole_run(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_fake_run(environment)
+    environment["FAKE_STATS_TOTAL_SIZE"] = str(10 * GIB)
+    _fake_free_space(environment, 1 * GIB)
+    target = tmp_path / "small-disk-restore"
+
+    result = _run(environment, "restore", MANIFEST_ID, "--to", str(target), "--execute")
+
+    assert result.returncode != 0
+    assert "Insufficient free space" in result.stderr
+    assert "need 11.0 GiB" in result.stderr
+    assert "have 1.0 GiB" in result.stderr
+    assert "testfs mounted at /scratch" in result.stderr
+    assert "Nothing was restored" in result.stderr
+    assert _restore_ids(environment) == []
+    assert not target.exists()
+
+    preview = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
+    assert preview.returncode != 0
+    assert "Insufficient free space" in preview.stderr
+    assert _restore_ids(environment) == []
+
+
+def test_restore_measures_exactly_the_snapshots_it_restores(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_fake_run(environment)
+    _fake_free_space(environment, 50 * GIB)
+    target = tmp_path / "big-disk-restore"
+
+    result = _run(environment, "restore", MANIFEST_ID, "--to", str(target), "--execute")
+
+    assert result.returncode == 0, result.stderr
+    stats = [line for line in _log(environment).splitlines() if "arg=<stats>" in line]
+    assert len(stats) == 1
+    assert "arg=<--mode> arg=<restore-size>" in stats[0]
+    for snapshot_id in (MANIFEST_ID, BASE_ID, ATLAS_ID, OTHER_ID):
+        assert f"arg=<{snapshot_id}>" in stats[0]
+    assert _restore_ids(environment) == [MANIFEST_ID, BASE_ID, ATLAS_ID, OTHER_ID]
+    assert (target / "BACKUP-RECEIPT.json").is_file()
+    assert (target / "data" / "atlas.db").is_file()
+    assert (target / "data" / "other.db").is_file()
+
+
+def test_restore_margin_is_configurable(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_fake_run(environment)
+    environment["FAKE_STATS_TOTAL_SIZE"] = str(GIB)
+    _fake_free_space(environment, GIB + GIB // 20)
+    target = tmp_path / "tight-restore"
+
+    refused = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
+    assert refused.returncode != 0
+    assert "10% margin" in refused.stderr
+
+    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "0"
+    accepted = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
+    assert accepted.returncode == 0, accepted.stderr
+    assert "Restore preview only" in accepted.stdout
+
+    # Leading zeros are decimal, not octal: 010 is 10 % (not 8 %), 08 is 8 % (not an error).
+    _fake_free_space(environment, GIB + GIB * 9 // 100)
+    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "010"
+    ten = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
+    assert ten.returncode != 0
+    assert "+ 10% margin" in ten.stderr
+    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "08"
+    eight = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
+    assert eight.returncode == 0, eight.stderr
+    assert "Restore preview only" in eight.stdout
+
+    environment["LU_BACKUP_RESTORE_MARGIN_PERCENT"] = "ten"
+    invalid = _run(environment, "restore", MANIFEST_ID, "--to", str(target))
+    assert invalid.returncode != 0
+    assert "LU_BACKUP_RESTORE_MARGIN_PERCENT" in invalid.stderr
+
+
+def test_restore_path_restores_one_database_snapshot(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_fake_run(environment)
+    _fake_free_space(environment, 50 * GIB)
+    target = tmp_path / "one-database"
+
+    preview = _run(
+        environment, "restore", MANIFEST_ID, "--to", str(target), "--path", "data/atlas.db",
+    )
+    assert preview.returncode == 0, preview.stderr
+    assert "Restore preview only" in preview.stdout
+    assert not target.exists()
+
+    result = _run(
+        environment, "restore", MANIFEST_ID, "--to", str(target),
+        "--path", "data/atlas.db", "--execute",
+    )
+
+    assert result.returncode == 0, result.stderr
+    stats = [line for line in _log(environment).splitlines() if "arg=<stats>" in line]
+    assert stats
+    assert all(f"arg=<{ATLAS_ID}>" in line for line in stats)
+    assert all(f"arg=<{OTHER_ID}>" not in line and f"arg=<{BASE_ID}>" not in line for line in stats)
+    assert _restore_ids(environment) == [ATLAS_ID, ATLAS_ID]
+    assert (target / "data" / "atlas.db").stat().st_mode & 0o777 == 0o600
+    assert not (target / "data" / "other.db").exists()
+    assert not (target / "BACKUP-RECEIPT.json").exists()
+    assert not (target / "data" / "notes.txt").exists()
+
+
+def test_restore_path_gets_the_same_space_preflight_and_guards(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_fake_run(environment)
+    environment["FAKE_STATS_TOTAL_SIZE"] = str(2 * GIB)
+    _fake_free_space(environment, GIB)
+    target = tmp_path / "small-one-database"
+
+    result = _run(
+        environment, "restore", MANIFEST_ID, "--to", str(target),
+        "--path", "data/atlas.db", "--execute",
+    )
+    assert result.returncode != 0
+    assert "Insufficient free space" in result.stderr
+    assert _restore_ids(environment) == []
+
+    # Free space is ample from here on, so only the --path guard can refuse; and
+    # --execute is set, so a bypass would restore for real (visible in the log).
+    _fake_free_space(environment, 50 * GIB)
+    for unsafe in ("/etc/passwd", "../data/atlas.db", "data/../x", "data/*.db", "", " ", "/"):
+        for mode in ((), ("--execute",)):
+            rejected = _run(
+                environment, "restore", MANIFEST_ID, "--to", str(target), "--path", unsafe, *mode,
+            )
+            assert rejected.returncode != 0, (unsafe, mode)
+            assert "--path" in rejected.stderr, (unsafe, mode)
+            assert "Insufficient free space" not in rejected.stderr, (unsafe, mode)
+            assert _restore_ids(environment) == [], (unsafe, mode)
+            assert not target.exists(), (unsafe, mode)
+    twice = _run(
+        environment, "restore", MANIFEST_ID, "--to", str(target),
+        "--path", "", "--path", "data/atlas.db", "--execute",
+    )
+    assert twice.returncode != 0
+    assert "exactly one --path" in twice.stderr
+    assert _restore_ids(environment) == []
+    missing = _run(environment, "restore", MANIFEST_ID, "--to", str(target), "--path")
+    assert missing.returncode != 0
+    assert "--path requires" in missing.stderr
+
+
+def test_restore_path_real_restic_restores_only_the_named_file(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    _use_local_restic(environment, tmp_path)
+    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    (source / "other.txt").write_text("not this one\n", encoding="utf-8")
+    with sqlite3.connect(source / "first.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+        connection.execute("INSERT INTO recovery_probe VALUES ('first')")
+    with sqlite3.connect(source / "second.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+    backed_up = _run(environment, "backup", "--execute")
+    assert backed_up.returncode == 0, backed_up.stderr
+
+    database_target = tmp_path / "restored-database"
+    database = _run(
+        environment, "restore", "latest", "--to", str(database_target),
+        "--path", "data/first.db", "--execute",
+    )
+    assert database.returncode == 0, database.stderr
+    assert sorted(path.relative_to(database_target).as_posix()
+                  for path in database_target.rglob("*") if path.is_file()) == ["data/first.db"]
+
+    file_target = tmp_path / "restored-file"
+    plain = _run(
+        environment, "restore", "latest", "--to", str(file_target),
+        "--path", "data/ordinary.txt", "--execute",
+    )
+    assert plain.returncode == 0, plain.stderr
+    assert sorted(path.relative_to(file_target).as_posix()
+                  for path in file_target.rglob("*") if path.is_file()) == ["data/ordinary.txt"]
+
+    absent_target = tmp_path / "restored-absent"
+    absent = _run(
+        environment, "restore", "latest", "--to", str(absent_target),
+        "--path", "data/no-such-file.txt", "--execute",
+    )
+    assert absent.returncode != 0
+    assert "Nothing at --path" in absent.stderr
+    assert not absent_target.exists()
 
 
 def test_init_requires_execute_before_creating_repository(

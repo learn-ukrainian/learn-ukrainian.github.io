@@ -445,6 +445,14 @@ post-#1427 `ukrainian_wiki` table and the post-#1555 chunker policy.
   --to /absolute/path/to/empty-recovery-directory \
   --execute
 
+# 2b) Restore needs free space: the script measures the restore size first
+#     and refuses (writing nothing) if the target filesystem has less than
+#     size + LU_BACKUP_RESTORE_MARGIN_PERCENT (default 10). To restore just one
+#     file or directory of the run (e.g. one database), add --path:
+./scripts/backup-data.sh restore latest \
+  --to /absolute/path/to/empty-recovery-directory \
+  --path data/sources.db --execute
+
 # 3) Verify the staged database. Row counts should be non-trivial.
 sqlite3 /absolute/path/to/empty-recovery-directory/data/sources.db "
   PRAGMA quick_check;
