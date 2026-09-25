@@ -259,3 +259,67 @@ def test_a_parameter_without_a_date_a_basis_or_a_sane_value_is_refused(tmp_path:
     path.write_text(yaml.safe_dump(document), encoding="utf-8")
     with pytest.raises(db.FindingsDbError):
         db.load_parameters(path)
+
+
+# --- sequence, latest and moot ------------------------------------------------------------------------
+
+
+def test_latest_accepted_is_the_highest_sequence_and_ignores_seeds_seconds_and_rejections(
+    conn: sqlite3.Connection,
+) -> None:
+    rows = [
+        attempt_row(attempt_id="A1", verdict="APPROVE", validated_at="2031-01-01T00:00:00+00:00"),
+        attempt_row(
+            attempt_id="A2", verdict="REVISE", validated_at="2020-01-01T00:00:00+00:00"
+        ),  # later, earlier clock
+        attempt_row(attempt_id="A3", verdict="REJECTED"),
+        attempt_row(attempt_id="A4", verdict="APPROVE", role="second"),
+        attempt_row(attempt_id="A5", verdict="APPROVE", seed_id="seed-1"),
+        attempt_row(attempt_id="A6", verdict="APPROVE", lesson_n=3),
+    ]
+    with db.transaction(conn):
+        for row in rows:
+            db.insert_attempt(conn, row)
+    latest = db.latest_accepted(conn, "a1", "m", "lesson", 2)
+    assert latest["attempt_id"] == "A2"
+    assert db.latest_accepted(conn, "a1", "m", "plan", None) is None
+    assert [row["seq"] for row in conn.execute("SELECT seq FROM attempts ORDER BY seq")] == [1, 2, 3, 4, 5, 6]
+
+
+def test_a_settle_seat_cannot_decide_moot_superseded(conn: sqlite3.Connection) -> None:
+    with db.transaction(conn):
+        item = db.open_settle_item(
+            conn, ref="R/A/F-1", kind="unsupported_by_source", level="a1", slug="m", lesson_n=2,
+            manifest_sha256="a" * 64, opened_at="t",
+        )  # fmt: skip
+    with pytest.raises(db.FindingsDbError, match="unknown settle outcome"):
+        db.record_settle_outcome(conn, item, db.MOOT_SUPERSEDED, [], "settle-seat")
+
+
+def test_close_superseded_items_closes_only_older_open_items_of_that_target(conn: sqlite3.Connection) -> None:
+    def open_item(ref: str, manifest: str, lesson_n: int = 2, slug: str = "m") -> int:
+        return db.open_settle_item(
+            conn, ref=ref, kind="unsupported_by_source", level="a1", slug=slug, lesson_n=lesson_n,
+            manifest_sha256=manifest, opened_at="t",
+        )  # fmt: skip
+
+    with db.transaction(conn):
+        old = open_item("R/A/F-1", "a" * 64)
+        current = open_item("R/B/F-1", "b" * 64)
+        other_lesson = open_item("R/C/F-1", "a" * 64, lesson_n=3)
+        other_module = open_item("R/D/F-1", "a" * 64, slug="n")
+        decided = open_item("R/E/F-1", "a" * 64)
+    db.record_settle_outcome(conn, decided, "refuted", ["r-1"], "settle-seat")
+    with db.transaction(conn):
+        closed = db.close_superseded_items(
+            conn, level="a1", slug="m", lesson_n=2, current_manifest_sha256="b" * 64, superseded_by="B",
+            decided_at="now",
+        )  # fmt: skip
+    assert closed == [old]
+    by_id = {row["item_id"]: row for row in db.module_settle_items(conn, "a1", "m")} | {
+        row["item_id"]: row for row in db.module_settle_items(conn, "a1", "n")
+    }
+    assert by_id[old]["outcome"] == db.MOOT_SUPERSEDED and by_id[old]["superseded_by"] == "B"
+    assert by_id[old]["needs_operator"] == 0 and by_id[old]["decided_at"] == "now"
+    assert by_id[current]["outcome"] is None and by_id[other_lesson]["outcome"] is None
+    assert by_id[other_module]["outcome"] is None and by_id[decided]["outcome"] == "refuted"

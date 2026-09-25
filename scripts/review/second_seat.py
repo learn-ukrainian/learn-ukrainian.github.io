@@ -180,7 +180,7 @@ def _first_attempt(
 ) -> sqlite3.Row | None:
     return conn.execute(
         "SELECT * FROM attempts WHERE level = ? AND slug = ? AND lesson_n = ? AND manifest_sha256 = ? AND role = 'first'"
-        " AND seed_id IS NULL AND verdict IN ('APPROVE', 'REVISE') ORDER BY rowid DESC LIMIT 1",
+        " AND seed_id IS NULL AND verdict IN ('APPROVE', 'REVISE') ORDER BY seq DESC LIMIT 1",
         (level, slug, lesson_n, manifest_sha256),
     ).fetchone()
 

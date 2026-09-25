@@ -8,6 +8,7 @@ validator is the real one: nothing of it is faked, a return is accepted or rejec
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 from pathlib import Path
@@ -692,15 +693,23 @@ def test_a_blocking_disagreement_opens_a_settle_item_that_holds_the_module(world
     assert item["finding_ref"].endswith("/attempt-1/F-01") and outcome.settle_items == [item["item_id"]]
 
 
-def test_a_second_seat_of_the_writers_or_the_first_reviewers_family_is_refused(world: World, sampled: None) -> None:
+def test_a_second_seat_of_the_first_reviewers_family_is_refused(world: World, sampled: None) -> None:
     world.record(world.make_return(2))
-    world.task("review-gpt", "codex", "gpt-6-astra")  # the writer's family
-    with pytest.raises(record.RecordError, match="third family"):
-        world.record(world.make_return(2), task_id="review-gpt", second=True)
     world.task("review-claude-2", "claude", "claude-opus-5-5")  # the first reviewer's family
     with pytest.raises(record.RecordError, match="third family"):
         world.record(world.make_return(2), task_id="review-claude-2", second=True)
     assert world.db_rows("agreement") == [] and len(world.db_rows("attempts")) == 1
+
+
+def test_a_second_seat_of_the_writers_family_is_a_rejected_attempt(world: World, sampled: None) -> None:
+    world.record(world.make_return(2))
+    world.task("review-gpt", "codex", "gpt-6-astra")  # the writer's family
+    outcome = world.record(world.make_return(2), task_id="review-gpt", second=True)
+    assert not outcome.accepted and outcome.verdict == "REJECTED"
+    assert record.SAME_FAMILY_REVIEW in outcome.rejection_codes
+    [second] = world.db_rows("attempts", "role = 'second'")
+    assert second["verdict"] == "REJECTED" and record.SAME_FAMILY_REVIEW in json.loads(second["rejection_codes_json"])
+    assert world.db_rows("agreement") == []
 
 
 def test_a_second_seat_needs_the_lesson_to_be_sampled_and_a_first_review_on_that_manifest(
@@ -900,3 +909,255 @@ def _rows(path: Path, table: str) -> list[sqlite3.Row]:
         return conn.execute(f"SELECT * FROM {table}").fetchall()
     finally:
         conn.close()
+
+
+# --- the cross-family gate --------------------------------------------------------------------------------
+
+
+def test_a_first_seat_of_the_writers_own_family_is_a_rejected_attempt(world: World) -> None:
+    world.task("review-gpt", "codex", "gpt-6-astra")  # the fixture's writer model is gpt-6-astra too
+    made = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    outcome = world.record(made, task_id="review-gpt")
+    assert not outcome.accepted and outcome.verdict == "REJECTED"
+    assert record.SAME_FAMILY_REVIEW in outcome.rejection_codes
+    [attempt] = world.db_rows("attempts")
+    assert attempt["verdict"] == "REJECTED" and attempt["reviewer_family"] == attempt["writer_family"] == "openai"
+    assert json.loads(attempt["rejection_codes_json"]) == [record.SAME_FAMILY_REVIEW]
+    assert world.db_rows("findings") == [] and world.db_rows("budgets") == [] and world.db_rows("settle_items") == []
+    assert not world.verdict_file(2).exists()
+
+
+def test_a_reviewer_of_another_family_is_not_rejected_for_family(world: World) -> None:
+    outcome = world.record(world.make_return(2))
+    assert outcome.accepted and record.SAME_FAMILY_REVIEW not in outcome.rejection_codes
+
+
+@pytest.mark.parametrize(
+    "writer_record",
+    [{"writer": "mystery-lane", "model": "mystery-model-9"}, {"writer": "auto", "model": "unknown"}, None],
+)
+def test_an_unresolvable_writer_identity_refuses_the_attempt_and_records_nothing(
+    world: World, writer_record: dict[str, str] | None
+) -> None:
+    path = world.state_dir / "lesson-2.writer.yaml"
+    if writer_record is None:
+        path.unlink()
+    else:
+        path.write_bytes(yaml.safe_dump(writer_record).encode())
+    made = world.make_return(2)
+    with pytest.raises(record.RecordError, match=record.WRITER_IDENTITY_UNKNOWN) as raised:
+        world.record(made)
+    assert raised.value.code == record.WRITER_IDENTITY_UNKNOWN
+    assert world.db_rows("attempts") == [] and not world.verdict_file(2).exists()
+    assert not list(world.state_dir.glob("*.review.*"))
+
+
+def test_an_unresolvable_writer_refuses_a_second_seat_too(world: World, sampled: None) -> None:
+    world.record(world.make_return(2))
+    world.task("review-google", "agy", "gemini-3.8-flash-high")
+    (world.state_dir / "lesson-2.writer.yaml").write_bytes(yaml.safe_dump({"writer": "x", "model": "y"}).encode())
+    with pytest.raises(record.RecordError, match=record.WRITER_IDENTITY_UNKNOWN):
+        world.record(world.make_return(2), task_id="review-google", second=True)
+
+
+# --- the verdict file is a projection of the database ------------------------------------------------------
+
+
+def latest_row(world: World, n: int) -> sqlite3.Row:
+    conn = findings_db.connect(world.db)
+    try:
+        return findings_db.latest_accepted(conn, LEVEL, SLUG, "lesson", n)
+    finally:
+        conn.close()
+
+
+def assert_file_is_latest_row(world: World, n: int) -> None:
+    latest = latest_row(world, n)
+    on_disk = yaml.safe_load(world.verdict_file(n).read_bytes())
+    assert on_disk == {name: latest[name] for name in ("verdict", "attempt_id", "manifest_sha256", "validated_at")}
+
+
+def fail_verdict_writes(monkeypatch: pytest.MonkeyPatch) -> dict[str, bool]:
+    """Make every verdict-file write fail while ``switch["on"]``; returns the switch."""
+    real = lock.atomic_write
+    switch = {"on": True}
+
+    def failing(path: Path, content: bytes, **kwargs: Any) -> None:
+        if switch["on"] and Path(path).name.endswith(".verdict.yaml"):
+            raise OSError("no space left on device")
+        real(path, content, **kwargs)
+
+    monkeypatch.setattr(lock, "atomic_write", failing)
+    return switch
+
+
+def test_a_failed_verdict_write_after_the_commit_keeps_the_attempt_and_reports_the_stale_file(
+    world: World, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    world.record(world.make_return(2))  # APPROVE, published
+    switch = fail_verdict_writes(monkeypatch)
+    made = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    assert record.main(_argv(world, made)) == 2  # recorded, but the file could not follow
+    printed = json.loads(capsys.readouterr().out)
+    assert printed["accepted"] and printed["verdict"] == "REVISE" and "no space left" in printed["projection_error"]
+    assert "--repair-projections" in printed["next"]
+    assert latest_row(world, 2)["verdict"] == "REVISE" and len(world.db_rows("attempts")) == 2
+    assert yaml.safe_load(world.verdict_file(2).read_bytes())["verdict"] == "APPROVE"  # stale, and the row says so
+    switch["on"] = False
+    assert record.main(_argv(world, made)) == 0  # recording it again republishes from the database
+    assert_file_is_latest_row(world, 2)
+    assert yaml.safe_load(world.verdict_file(2).read_bytes())["verdict"] == "REVISE"
+
+
+def test_replaying_an_older_attempt_never_republishes_it_over_a_newer_one(world: World) -> None:
+    one = world.make_return(2)
+    world.record(one)  # attempt 1: APPROVE
+    two = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    world.record(two)  # attempt 2: REVISE
+    again = world.record(one)
+    assert again.replay and again.verdict == "APPROVE"
+    assert_file_is_latest_row(world, 2)
+    on_disk = yaml.safe_load(world.verdict_file(2).read_bytes())
+    assert (on_disk["verdict"], on_disk["attempt_id"]) == ("REVISE", two["attempt_id"])
+
+
+def test_latest_is_the_highest_sequence_not_the_latest_timestamp(world: World) -> None:
+    world.record(world.make_return(2), now="2031-01-01T00:00:00+00:00")
+    two = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    world.record(two, now="2020-01-01T00:00:00+00:00")  # a clock that went backwards
+    assert latest_row(world, 2)["attempt_id"] == two["attempt_id"]
+    assert_file_is_latest_row(world, 2)
+
+
+def test_a_replay_publishes_the_projection_that_a_crash_left_out(world: World) -> None:
+    made = world.make_return(2)
+    world.record(made)
+    world.verdict_file(2).unlink()
+    assert world.record(made).replay
+    assert_file_is_latest_row(world, 2)
+
+
+# --- the raw return is reserved, validated and stored as one set of bytes ---------------------------------------
+
+
+def two_returns_of_one_attempt(world: World) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Two different returns under one attempt id (kept apart on disk: make_return names files by attempt)."""
+    ids = ("review-x", "attempt-x")
+    first = world.make_return(2, ids=ids)
+    kept_first = world.out / "first.return.yaml"
+    kept_first.write_bytes(first["review"].read_bytes())
+    second = world.make_return(2, [finding("F-01", severity="MAJOR")], ids=ids)
+    kept_second = world.out / "second.return.yaml"
+    kept_second.write_bytes(second["review"].read_bytes())
+    return {**first, "review": kept_first}, {**second, "review": kept_second}
+
+
+def saved_return(world: World, made: dict[str, Any]) -> Path:
+    return world.state_dir / f"lesson-2.review.{made['attempt_id']}.yaml"
+
+
+def test_two_recorders_of_one_attempt_id_with_different_bytes_cannot_validate_one_and_store_the_other(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    a, b = two_returns_of_one_attempt(world)
+    real = record._rejection_codes
+    seen: list[str] = []
+
+    def racing(*args: Any, **kwargs: Any) -> list[str]:
+        # recorder B runs to its own reservation while recorder A is still validating
+        with pytest.raises(record.RecordError) as raised:
+            world.record(b)
+        seen.append(raised.value.code)
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(record, "_rejection_codes", racing)
+    outcome = world.record(a)
+    assert seen == [record.ATTEMPT_RETURN_CONFLICT]
+    assert outcome.accepted and outcome.findings == 0
+    assert saved_return(world, a).read_bytes() == a["review"].read_bytes()
+    [attempt] = world.db_rows("attempts")
+    assert attempt["return_sha256"] == hashlib.sha256(a["review"].read_bytes()).hexdigest()
+    assert world.db_rows("findings") == []  # B's finding was never stored
+
+
+def test_a_reserved_return_replaced_before_the_insert_is_refused(world: World, monkeypatch: pytest.MonkeyPatch) -> None:
+    a, b = two_returns_of_one_attempt(world)
+    real = record._rejection_codes
+
+    def swapping(root: Path, manifest: Any, manifest_sha: str, kind: str, saved: Path, *rest: Any) -> list[str]:
+        codes_ = real(root, manifest, manifest_sha, kind, saved, *rest)
+        lock.atomic_write(saved, b["review"].read_bytes())  # the file is replaced under the validation
+        return codes_
+
+    monkeypatch.setattr(record, "_rejection_codes", swapping)
+    with pytest.raises(record.RecordError, match=record.ATTEMPT_RETURN_CONFLICT):
+        world.record(a)
+    assert world.db_rows("attempts") == [] and not world.verdict_file(2).exists()
+
+
+def test_a_different_return_under_a_reserved_name_is_refused_even_with_no_row(world: World) -> None:
+    a, b = two_returns_of_one_attempt(world)
+    record._reserve_return(world.root, world.state_dir, saved_return(world, a).name, a["review"].read_bytes())
+    with pytest.raises(record.RecordError, match=record.ATTEMPT_RETURN_CONFLICT):
+        world.record(b)
+    assert saved_return(world, a).read_bytes() == a["review"].read_bytes() and world.db_rows("attempts") == []
+    assert world.record(a).accepted  # the same bytes under the reserved name are the same attempt: idempotent
+    assert not list(world.state_dir.glob(".lesson-2.review.*"))  # no temporary file is left behind
+
+
+def test_recording_a_recorded_attempt_with_different_bytes_is_an_attempt_return_conflict(world: World) -> None:
+    a, b = two_returns_of_one_attempt(world)
+    world.record(a)
+    with pytest.raises(record.RecordError) as raised:
+        world.record(b)
+    assert raised.value.code == record.ATTEMPT_RETURN_CONFLICT
+    assert saved_return(world, a).read_bytes() == a["review"].read_bytes()
+
+
+# --- claims raised against an older manifest are moot once the lesson is reviewed on a newer one ------------------
+
+
+def regenerate_lesson_two(world: World) -> None:
+    (world.page_dir / "2.mdx").write_text("# Lesson 2 regenerated\n", encoding="utf-8")
+    world.write_manifests((2, 3))
+
+
+def test_a_newer_manifests_accepted_attempt_closes_the_older_open_items_as_moot(world: World) -> None:
+    old = world.make_return(2, [unsupported("F-01")])
+    world.record(old)
+    [item] = world.db_rows("settle_items")
+    old_manifest = world.digest(2)
+    regenerate_lesson_two(world)
+    assert world.digest(2) != old_manifest
+    new = world.make_return(2)  # the regenerated lesson no longer makes the claim
+    outcome = world.record(new)
+    assert outcome.accepted and outcome.moot_items == [item["item_id"]]
+    [closed] = world.db_rows("settle_items")
+    assert closed["outcome"] == findings_db.MOOT_SUPERSEDED and closed["superseded_by"] == new["attempt_id"]
+    assert not closed["needs_operator"] and closed["manifest_sha256"] == old_manifest
+
+
+def test_a_claim_raised_again_on_the_new_manifest_opens_a_new_item(world: World) -> None:
+    world.record(world.make_return(2, [unsupported("F-01")]))
+    regenerate_lesson_two(world)
+    again = world.make_return(2, [unsupported("F-01")])
+    outcome = world.record(again)
+    items = world.db_rows("settle_items", "1=1 ORDER BY item_id")
+    assert [row["outcome"] for row in items] == [findings_db.MOOT_SUPERSEDED, None]
+    assert items[1]["manifest_sha256"] == world.digest(2) and outcome.settle_items == [items[1]["item_id"]]
+
+
+def test_an_attempt_on_the_same_manifest_closes_nothing_and_neither_does_another_lesson(world: World) -> None:
+    world.record(world.make_return(2, [unsupported("F-01")]))
+    world.record(world.make_return(2))  # a re-review of the same manifest
+    world.record(world.make_return(1))  # another lesson
+    assert [row["outcome"] for row in world.db_rows("settle_items")] == [None]
+
+
+def test_nothing_is_closed_when_the_attempts_manifest_is_not_the_current_one(world: World) -> None:
+    world.record(world.make_return(2, [unsupported("F-01")]))
+    regenerate_lesson_two(world)
+    newer = world.make_return(2)
+    (world.state_dir / "lesson-2.manifest.sha256").unlink()  # the engine's pointer is gone: current is unknown
+    assert world.record(newer).accepted
+    assert [row["outcome"] for row in world.db_rows("settle_items")] == [None]

@@ -20,6 +20,13 @@ report for the driver. It performs no repair and takes no automatic branch:
 * **Module verdict** — ``module-verdict.yaml``, computed from the lesson verdicts of record,
   the open settle items and the plan's promotion state. A module with an open settle item
   is never APPROVE.
+* **Projections** — the database is the source of truth. ``lesson-<n>.verdict.yaml`` and
+  ``plan-review.yaml`` are projections of the latest accepted first-seat attempt of their target
+  (highest ``attempts.seq``). A missing or disagreeing file is stale: the module is HOLD
+  (``verdict_projection_stale``) until ``--repair-projections`` rewrites it from the database.
+* **The findings database** lives in the primary checkout's ``batch_state/review-findings/`` by
+  design (``findings_db.batch_root``), shared by every worktree of the repository, so a budget
+  or settle item recorded from one worktree is the same one every other worktree reads.
 """
 
 from __future__ import annotations
@@ -29,6 +36,7 @@ import json
 import re
 import sqlite3
 import sys
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -70,6 +78,9 @@ REASON_REVIEW_FAILURE = "review_failure_after_fallback"
 REASON_SETTLE = "settle_needs_operator"
 REASON_UNSUPPORTED_LESSONS = "unsupported_claim_in_three_lessons"
 REASON_DISPUTED = "verdict_disputed"
+
+HOLD_PROJECTION_STALE = "verdict_projection_stale"
+PROJECTION_FIELDS = ("verdict", "attempt_id", "manifest_sha256", "validated_at")
 
 MODULE_VERDICT_NAME = "module-verdict.yaml"
 MODULE_VERDICT_SCHEMA: dict[str, Any] = {
@@ -161,6 +172,83 @@ def plan_lessons(root: Path, level: str, slug: str) -> list[dict[str, Any]]:
         return [{"n": int(item["n"]), "kind": "recap" if item.get("kind") == "recap" else "lesson"} for item in lessons]
     except (OSError, yaml.YAMLError, KeyError, TypeError, ValueError) as error:
         raise FixLoopError(f"the plan of {level}/{slug} is unreadable: {error}") from error
+
+
+# --- verdict files: projections of the database -------------------------------------------------
+
+
+def projection_name(kind: str, n: int | None) -> str:
+    return f"lesson-{n}.verdict.yaml" if kind == "lesson" else pm.REVIEW_NAME
+
+
+def projection_document(attempt: sqlite3.Row) -> dict[str, Any]:
+    """What the verdict file of a target holds: the latest accepted attempt's own fields."""
+    return {name: attempt[name] for name in PROJECTION_FIELDS}
+
+
+def projection_problem(directory: Path, kind: str, n: int | None, latest: sqlite3.Row | None) -> str | None:
+    """Why the verdict file of a target is not the projection of its latest accepted attempt; None when it is."""
+    name = projection_name(kind, n)
+    path = Path(directory) / name
+    if latest is None:
+        return f"{name} exists but the database holds no accepted attempt for it" if path.exists() else None
+    of_record = f"the latest accepted attempt is {latest['attempt_id']} ({latest['verdict']})"
+    if not path.is_file():
+        return f"{name} is missing; {of_record}"
+    try:
+        record = yaml.safe_load(path.read_bytes())
+    except yaml.YAMLError:
+        record = None
+    if record != projection_document(latest):
+        seen = (
+            f"{record.get('verdict')} of {record.get('attempt_id')}" if isinstance(record, dict) else "nothing usable"
+        )
+        return f"{name} holds {seen}, but {of_record}"
+    return None
+
+
+def publish_projection(
+    conn: sqlite3.Connection, root: Path, level: str, slug: str, kind: str, n: int | None
+) -> Path | None:
+    """Write the verdict file of a target from the database (temp file + atomic rename); None with no accepted attempt.
+
+    Call it after the attempt is committed. The latest attempt is read under the database's write
+    lock, so two publishers cannot leave the older attempt in the file: the last one to write has
+    read the last committed row.
+    """
+    directory = state_dir(root, level, slug)
+    with findings_db.transaction(conn):  # a mutex only: nothing here changes a row
+        latest = findings_db.latest_accepted(conn, level, slug, kind, n)
+        if latest is None:
+            return None
+        path = checked_existing_path(Path(root).resolve(), directory / projection_name(kind, n), f"{TREE}/evidence")
+        lock.atomic_write(path, lock.yaml_bytes(projection_document(latest)))
+    return path
+
+
+def projection_targets(root: Path, level: str, slug: str) -> list[tuple[str, int | None]]:
+    return [("plan", None), *(("lesson", item["n"]) for item in plan_lessons(root, level, slug))]
+
+
+def repair_projections(conn: sqlite3.Connection, root: Path, level: str, slug: str) -> dict[str, list[str]]:
+    """Rewrite every stale or missing verdict file of the module from the database.
+
+    A file with no accepted attempt behind it cannot be repaired (there is nothing to project); it
+    is returned under ``unrepairable`` and keeps holding the module.
+    """
+    directory = state_dir(root, level, slug)
+    repaired: list[str] = []
+    unrepairable: list[str] = []
+    for kind, n in projection_targets(root, level, slug):
+        latest = findings_db.latest_accepted(conn, level, slug, kind, n)
+        if projection_problem(directory, kind, n, latest) is None:
+            continue
+        if latest is None:
+            unrepairable.append(projection_name(kind, n))
+        else:
+            publish_projection(conn, root, level, slug, kind, n)
+            repaired.append(projection_name(kind, n))
+    return {"repaired": repaired, "unrepairable": unrepairable}
 
 
 # --- layer assignment -----------------------------------------------------------------------
@@ -289,30 +377,46 @@ def gate_candidates(rows: list[sqlite3.Row], pattern: str) -> list[dict[str, Any
     ]
 
 
-def unsupported_claim_counts(conn: sqlite3.Connection, level_threshold: int) -> list[dict[str, Any]]:
-    """Unsupported claims that recur across lessons of the level, keyed by dimension, sub-dimension and quote.
+def normalize_claim(text: str) -> str:
+    """A disputed object compared as words: stress marks dropped, case folded, whitespace collapsed, ends trimmed."""
+    folded = fold_quote(unicodedata.normalize("NFC", text)).casefold()
+    return " ".join(folded.split()).strip(" \t.,;:!?\"'«»“”„()[]")
 
-    A claim's identity is its dimension, sub-dimension and the first located quote (folded);
-    an absence finding is keyed by its claim text. ``to_operator`` is set at the threshold.
+
+def claim_key(finding: dict[str, Any]) -> tuple[str, str, str]:
+    """The identity of a claim across lessons: ``dimension``, ``sub_dimension`` and the disputed object.
+
+    The object is the finding's ``expected`` (review-v1: the form the reviewer says it should be) when
+    it has one, otherwise its ``claim`` text. The quote is never part of it: it is where the claim
+    was seen in one lesson, not what the claim is.
+    """
+    disputed = finding.get("expected") or finding["claim"]
+    return (finding["dimension"], finding.get("sub_dimension") or "", normalize_claim(disputed))
+
+
+def unsupported_claim_counts(conn: sqlite3.Connection, level_threshold: int) -> list[dict[str, Any]]:
+    """Unsupported claims that recur across lessons of the level, keyed by :func:`claim_key`.
+
+    Only the latest accepted first-seat attempt of each lesson counts (a claim a regenerated lesson no
+    longer makes is not a recurrence). ``to_operator`` is set at the threshold.
     """
     rows = conn.execute(
         "SELECT f.finding_json, a.slug, a.lesson_n FROM findings f JOIN attempts a"
         " ON a.review_id = f.review_id AND a.attempt_id = f.attempt_id"
-        " WHERE f.evidence_kind = 'unsupported_by_source' AND f.status = 'active' AND a.seed_id IS NULL"
-        " AND a.role = 'first' AND a.verdict IN ('APPROVE', 'REVISE')"
+        " WHERE f.evidence_kind = 'unsupported_by_source' AND f.status IN ('active', 'persisting')"
+        " AND a.seed_id IS NULL AND a.role = 'first' AND a.verdict IN ('APPROVE', 'REVISE') AND a.kind = 'lesson'"
+        " AND a.seq = (SELECT MAX(b.seq) FROM attempts b WHERE b.level = a.level AND b.slug = a.slug"
+        " AND b.kind = a.kind AND b.lesson_n = a.lesson_n AND b.role = 'first' AND b.seed_id IS NULL"
+        " AND b.verdict IN ('APPROVE', 'REVISE'))"
     ).fetchall()
     groups: dict[tuple, set[tuple[str, int]]] = {}
     for row in rows:
-        finding = json.loads(row["finding_json"])
-        located = [item.get("quote") for item in finding.get("locations") or [] if isinstance(item, dict)]
-        anchor = fold_quote(located[0]) if located and located[0] else finding["claim"]
-        key = (finding["dimension"], finding.get("sub_dimension") or "", anchor)
-        groups.setdefault(key, set()).add((row["slug"], row["lesson_n"]))
+        groups.setdefault(claim_key(json.loads(row["finding_json"])), set()).add((row["slug"], row["lesson_n"]))
     return [
         {
             "dimension": key[0],
             "sub_dimension": key[1] or None,
-            "anchor": key[2],
+            "claim": key[2],
             "lessons": sorted(found),
             "to_operator": len(found) >= level_threshold,
         }
@@ -535,8 +639,37 @@ def compute_module_verdict(
     plan = pm.plan_review_status(level, slug, repo_root=root)
     if plan["state"] != "reviewed_promoted":
         holds.append({"code": "plan_not_promoted", "detail": f"the plan review is {plan['state']}"})
-    rows = [lesson_review_state(root, directory, item["n"], item["kind"], closure) for item in lessons]
+    plan_problem = projection_problem(
+        directory, "plan", None, findings_db.latest_accepted(conn, level, slug, "plan", None)
+    )
+    if plan_problem:
+        holds.append({"code": HOLD_PROJECTION_STALE, "detail": plan_problem})
+    rows = []
+    projection_stale: set[int] = set()
+    for item in lessons:
+        problem = projection_problem(
+            directory, "lesson", item["n"], findings_db.latest_accepted(conn, level, slug, "lesson", item["n"])
+        )
+        if problem:  # the file is not the database's latest accepted attempt: trust neither, hold, name why
+            projection_stale.add(item["n"])
+            holds.append({"code": HOLD_PROJECTION_STALE, "detail": f"lesson {item['n']}: {problem}"})
+            rows.append(
+                {
+                    "n": item["n"],
+                    "kind": item["kind"],
+                    "state": "stale",
+                    "verdict": None,
+                    "attempt_id": None,
+                    "manifest_sha256": None,
+                    "validated_at": None,
+                    "stale": [problem],
+                }
+            )
+        else:
+            rows.append(lesson_review_state(root, directory, item["n"], item["kind"], closure))
     for row in rows:
+        if row["n"] in projection_stale:
+            continue
         if row["state"] == "unreviewed":
             holds.append({"code": "lesson_unreviewed", "detail": f"lesson {row['n']} has no review of record"})
         elif row["state"] == "stale":
@@ -678,7 +811,7 @@ def build_report(
         + [
             _terminal(
                 REASON_UNSUPPORTED_LESSONS,
-                f"{item['dimension']} {item['anchor']!r} in {len(item['lessons'])} lessons",
+                f"{item['dimension']} {item['claim']!r} in {len(item['lessons'])} lessons",
                 None,
             )
             for item in unsupported_claim_counts(conn, params["unsupported_claim_lessons_to_operator"])
@@ -735,12 +868,14 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python -m scripts.review.fixloop report a1 my-module\n"
             "  .venv/bin/python -m scripts.review.fixloop verdict a1 my-module\n"
+            "  .venv/bin/python -m scripts.review.fixloop verdict a1 my-module --repair-projections\n"
             "  .venv/bin/python -m scripts.review.fixloop regenerate a1 my-module 2\n"
             "  .venv/bin/python -m scripts.review.fixloop dispute a1 my-module 2 --reason 'writer lane disputes'\n"
             "  .venv/bin/python -m scripts.review.fixloop operator-decision a1 7 --decision 'keep: attested'\n"
             "\nOutputs: report prints text (--json: one object); verdict writes\n"
             "curriculum/l2-uk-en/evidence/<level>/_state/<slug>/module-verdict.yaml; regenerate, dispute and\n"
-            "operator-decision update batch_state/review-findings/<level>.sqlite.\n"
+            "operator-decision update batch_state/review-findings/<level>.sqlite. With --repair-projections,\n"
+            "report and verdict first rewrite lesson-<n>.verdict.yaml and plan-review.yaml from the database.\n"
             "Exit codes: 0 done; 3 a terminal transition (the module goes to the operator); 2 usage or data error."
         ),
     )
@@ -757,6 +892,11 @@ def build_parser() -> argparse.ArgumentParser:
         item.add_argument("level")
         item.add_argument("slug")
         item.add_argument("--json", action="store_true", help="print the report as one JSON object")
+        item.add_argument(
+            "--repair-projections",
+            action="store_true",
+            help="first rewrite every missing or disagreeing verdict file from the database's latest accepted attempt",
+        )
     regen = sub.add_parser("regenerate", help="spend one regeneration of a lesson (refused past the budget)")
     regen.add_argument("level")
     regen.add_argument("slug")
@@ -779,6 +919,12 @@ def main(argv: list[str] | None = None) -> int:
     params = findings_db.load_parameters()
     conn = findings_db.connect(args.db or findings_db.db_path(args.level, root))
     try:
+        repair: dict[str, list[str]] | None = None
+        if args.command in ("report", "verdict") and args.repair_projections:
+            repair = repair_projections(conn, root, args.level, args.slug)
+            print(
+                f"repaired verdict files: {repair['repaired']}; unrepairable: {repair['unrepairable']}", file=sys.stderr
+            )
         if args.command == "report":
             report = build_report(conn, args.level, args.slug, root=root, params=params)
             print(
@@ -794,6 +940,7 @@ def main(argv: list[str] | None = None) -> int:
                         "verdict": document["verdict"],
                         "path": path.relative_to(root).as_posix(),
                         "holds": document["holds"],
+                        **({"projections": repair} if repair is not None else {}),
                     },
                     sort_keys=True,
                 )

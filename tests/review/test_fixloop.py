@@ -370,6 +370,10 @@ def test_the_report_lists_the_gate_candidates_for_the_driver(world: World) -> No
     assert "GATE CANDIDATE" in fixloop.render_report(report)
 
 
+def quoted_unsupported(claim: str, quote: str, **overrides: Any) -> dict[str, Any]:
+    return unsupported("F-01", claim=claim, locations=[{"tab": "urok", "quote": quote}], **overrides)
+
+
 def test_the_same_unsupported_claim_in_three_lessons_goes_to_the_operator(world: World) -> None:
     for n in (1, 2):
         world.record(world.make_return(n, [unsupported("F-01")]))
@@ -384,6 +388,66 @@ def test_the_same_unsupported_claim_in_three_lessons_goes_to_the_operator(world:
     finally:
         conn.close()
     assert fixloop.REASON_UNSUPPORTED_LESSONS in {item["reason"] for item in report["terminal"]}
+
+
+def test_one_claim_quoted_differently_in_three_lessons_reaches_the_threshold(world: World) -> None:
+    # the claim is what is disputed (here the claim text, no `expected`), not where it was seen
+    for n, quote in ((1, PROSE), (2, "lesson prose"), (3, "prose alpha")):
+        world.record(world.make_return(n, [quoted_unsupported("The form is a russianism.", quote)]))
+    conn = db.connect(world.db)
+    try:
+        [group] = fixloop.unsupported_claim_counts(conn, 3)
+    finally:
+        conn.close()
+    assert group["to_operator"] is True and len(group["lessons"]) == 3
+    assert group["claim"] == "the form is a russianism"
+
+
+def test_the_disputed_object_is_the_expected_value_when_the_finding_has_one(world: World) -> None:
+    # two different claim texts about one disputed object: `expected` (validated against the stored result) is the object
+    for n, text in ((1, "Says one thing."), (2, "Says another thing.")):
+        world.record(world.make_return(n, [quoted_unsupported(text, PROSE, expected="No results")]))
+    conn = db.connect(world.db)
+    try:
+        [group] = fixloop.unsupported_claim_counts(conn, 3)
+    finally:
+        conn.close()
+    assert group["claim"] == "no results" and len(group["lessons"]) == 2
+
+
+def test_different_claims_on_identical_quotes_do_not_group(world: World) -> None:
+    for n, text in ((1, "The form is a russianism."), (2, "The stress is wrong."), (3, "The case is wrong.")):
+        world.record(world.make_return(n, [quoted_unsupported(text, PROSE)]))
+    conn = db.connect(world.db)
+    try:
+        assert fixloop.unsupported_claim_counts(conn, 3) == []
+    finally:
+        conn.close()
+
+
+def test_claim_identity_is_dimension_sub_dimension_and_object() -> None:
+    base = {"dimension": "language", "sub_dimension": "calque", "claim": "A  Claim."}
+    assert fixloop.claim_key(base) == fixloop.claim_key({**base, "claim": "a claim"})
+    assert fixloop.claim_key(base) != fixloop.claim_key({**base, "sub_dimension": "surzhyk"})
+    assert fixloop.claim_key(base) != fixloop.claim_key({**base, "dimension": "fact", "sub_dimension": None})
+    assert fixloop.claim_key({**base, "expected": "X"}) == fixloop.claim_key(
+        {**base, "claim": "other", "expected": "x"}
+    )
+    assert fixloop.claim_key({**base, "locations": [{"tab": "urok", "quote": "q"}]}) == fixloop.claim_key(base)
+
+
+def test_a_claim_a_regenerated_lesson_no_longer_makes_is_not_a_recurrence(world: World) -> None:
+    for n in (1, 2, 3):
+        world.record(world.make_return(n, [unsupported("F-01")]))
+    (world.page_dir / "3.mdx").write_text("# Lesson 3 regenerated\n", encoding="utf-8")
+    world.write_manifests((3,))
+    world.record(world.make_return(3))  # the regenerated lesson does not make the claim
+    conn = db.connect(world.db)
+    try:
+        [group] = fixloop.unsupported_claim_counts(conn, 3)
+    finally:
+        conn.close()
+    assert len(group["lessons"]) == 2 and group["to_operator"] is False
 
 
 # --- budgets survive changes upstream ---------------------------------------------------------------
@@ -752,6 +816,163 @@ def test_a_seeded_review_never_reaches_the_module_verdict(world: World, promoted
     )
     document = verdict(world)
     assert document["verdict"] == "APPROVE" and document["settle_items"]["open"] == []
+
+
+# --- moot settle items ------------------------------------------------------------------------------------------------
+
+
+def regenerate_lesson(world: World, n: int) -> None:
+    (world.page_dir / f"{n}.mdx").write_text(f"# Lesson {n} regenerated\n", encoding="utf-8")
+    world.write_manifests((n,))
+    world.closure()
+
+
+def test_an_unsupported_claim_the_regenerated_lesson_no_longer_makes_does_not_hold_the_module(
+    world: World, promoted: None
+) -> None:
+    world.record(world.make_return(1))
+    world.record(world.make_return(2, [unsupported("F-01")]))
+    world.record(world.make_return(3))
+    world.closure()
+    assert "settle_open" in codes_of(verdict(world))
+    regenerate_lesson(world, 2)
+    world.write_manifests((3,))  # lesson 3 reads lesson 2: its manifest is new as well
+    world.closure()
+    world.record(world.make_return(2))
+    world.record(world.make_return(3))
+    world.closure()
+    document = verdict(world)
+    assert document["verdict"] == "APPROVE", document["holds"]
+    assert document["settle_items"]["open"] == []
+    conn = db.connect(world.db)
+    try:
+        [item] = db.module_settle_items(conn, LEVEL, SLUG)
+    finally:
+        conn.close()
+    assert item["outcome"] == db.MOOT_SUPERSEDED and not db.is_open(item) and not db.is_waiting_for_operator(item)
+
+
+def test_a_claim_the_regenerated_lesson_makes_again_still_holds_the_module(world: World, promoted: None) -> None:
+    world.record(world.make_return(1))
+    world.record(world.make_return(2, [unsupported("F-01")]))
+    world.record(world.make_return(3))
+    regenerate_lesson(world, 2)
+    world.write_manifests((3,))
+    world.closure()
+    world.record(world.make_return(2, [unsupported("F-01")]))
+    world.record(world.make_return(3))
+    world.closure()
+    document = verdict(world)
+    assert document["verdict"] != "APPROVE" and "settle_open" in codes_of(document)
+    [open_item] = document["settle_items"]["open"]
+    assert open_item["lesson_n"] == 2
+    conn = db.connect(world.db)
+    try:
+        old, new = db.module_settle_items(conn, LEVEL, SLUG)
+    finally:
+        conn.close()
+    assert old["outcome"] == db.MOOT_SUPERSEDED and new["outcome"] is None and new["manifest_sha256"] == world.digest(2)
+
+
+# --- the verdict files are projections of the database ------------------------------------------------------------------
+
+
+def published(world: World, n: int) -> dict[str, Any]:
+    return yaml.safe_load(world.verdict_file(n).read_bytes())
+
+
+def latest_projection(world: World, n: int) -> dict[str, Any]:
+    conn = db.connect(world.db)
+    try:
+        latest = db.latest_accepted(conn, LEVEL, SLUG, "lesson", n)
+        return fixloop.projection_document(latest)
+    finally:
+        conn.close()
+
+
+def test_a_verdict_write_that_failed_after_the_commit_holds_the_module_until_it_is_repaired(
+    world: World, promoted: None, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from tests.review.test_record import fail_verdict_writes
+
+    approve_all(world)
+    switch = fail_verdict_writes(monkeypatch)
+    outcome = world.record(world.make_return(2, [finding("F-01", severity="MAJOR")]))  # REVISE committed, file stale
+    assert outcome.projection_error and published(world, 2)["verdict"] == "APPROVE"
+    switch["on"] = False
+    document = verdict(world)
+    assert document["verdict"] == "HOLD" and fixloop.HOLD_PROJECTION_STALE in codes_of(document)
+    [hold] = [item for item in document["holds"] if item["code"] == fixloop.HOLD_PROJECTION_STALE]
+    assert "lesson-2.verdict.yaml" in hold["detail"] and outcome.attempt_id in hold["detail"]
+    assert document["lessons"][1]["state"] == "stale"
+    capsys.readouterr()
+    assert run(world, "verdict", LEVEL, SLUG, "--repair-projections") == 0
+    printed = json.loads(capsys.readouterr().out)
+    assert printed["projections"] == {"repaired": ["lesson-2.verdict.yaml"], "unrepairable": []}
+    assert published(world, 2) == latest_projection(world, 2) and published(world, 2)["verdict"] == "REVISE"
+    repaired = verdict(world)
+    assert fixloop.HOLD_PROJECTION_STALE not in codes_of(repaired) and "lesson_revise" in codes_of(repaired)
+
+
+def test_replaying_an_older_attempt_leaves_the_module_on_the_latest_attempts_verdict(
+    world: World, promoted: None
+) -> None:
+    approve_all(world)
+    older = world.make_return(2)
+    world.record(older)
+    world.record(world.make_return(2, [finding("F-01", severity="MAJOR")]))  # the latest: REVISE
+    world.record(older)  # the earlier APPROVE recorded again
+    assert published(world, 2) == latest_projection(world, 2) and published(world, 2)["verdict"] == "REVISE"
+    document = verdict(world)
+    assert document["verdict"] != "APPROVE" and "lesson_revise" in codes_of(document)
+    assert fixloop.HOLD_PROJECTION_STALE not in codes_of(document)
+
+
+@pytest.mark.parametrize("damage", ["missing", "older_verdict"])
+def test_a_missing_or_disagreeing_verdict_file_is_stale_with_a_named_reason_and_repairable(
+    world: World, promoted: None, damage: str
+) -> None:
+    approve_all(world)
+    if damage == "missing":
+        world.verdict_file(2).unlink()
+    else:
+        document = published(world, 2)
+        document["verdict"] = "REVISE"
+        world.verdict_file(2).write_bytes(yaml.safe_dump(document).encode())
+    held = verdict(world)
+    assert held["verdict"] == "HOLD" and codes_of(held) == [fixloop.HOLD_PROJECTION_STALE]
+    assert "lesson 2" in held["holds"][0]["detail"] and "lesson-2.verdict.yaml" in held["holds"][0]["detail"]
+    conn = db.connect(world.db)
+    try:
+        assert fixloop.repair_projections(conn, world.root, LEVEL, SLUG) == {
+            "repaired": ["lesson-2.verdict.yaml"],
+            "unrepairable": [],
+        }
+    finally:
+        conn.close()
+    assert verdict(world)["verdict"] == "APPROVE"
+
+
+def test_a_verdict_file_with_no_accepted_attempt_behind_it_holds_and_cannot_be_repaired(
+    world: World, promoted: None, capsys: pytest.CaptureFixture[str]
+) -> None:
+    approve_all(world)
+    plan_review = world.state_dir / "plan-review.yaml"
+    plan_review.write_text("verdict: APPROVE\nattempt_id: forged\nmanifest_sha256: " + "0" * 64 + "\n")
+    held = verdict(world)
+    assert held["verdict"] == "HOLD" and "plan-review.yaml" in held["holds"][0]["detail"]
+    assert run(world, "verdict", LEVEL, SLUG, "--repair-projections") == 0
+    assert json.loads(capsys.readouterr().out)["projections"] == {"repaired": [], "unrepairable": ["plan-review.yaml"]}
+    assert plan_review.exists()  # nothing to project from: the file is left for the operator, and it keeps holding
+
+
+def test_the_report_repairs_projections_too(world: World, promoted: None, capsys: pytest.CaptureFixture[str]) -> None:
+    approve_all(world)
+    world.verdict_file(1).unlink()
+    assert run(world, "report", LEVEL, SLUG, "--repair-projections") == 0
+    captured = capsys.readouterr()
+    assert "module a1/fixture-module: APPROVE" in captured.out and "lesson-1.verdict.yaml" in captured.err
+    assert published(world, 1) == latest_projection(world, 1)
 
 
 # --- the CLI -------------------------------------------------------------------------------------------------------------

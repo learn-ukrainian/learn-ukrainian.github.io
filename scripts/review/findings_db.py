@@ -11,7 +11,13 @@ Unrelated to ``scripts/review/findings.py`` (the closeout code-review ledger).
 
 A settle item is **open** while ``outcome IS NULL``. An item the settle seat closed as
 ``source_conflict`` or ``unresolved`` is marked ``needs_operator`` and still holds the
-module until the operator's decision is recorded (``operator_decided_at``).
+module until the operator's decision is recorded (``operator_decided_at``). An item whose lesson
+was reviewed again on a newer manifest is closed by ``record`` as ``moot_superseded`` (the
+superseding attempt is kept in ``superseded_by``); it is not a settle decision and holds nothing.
+
+The database is the source of truth. ``attempts.seq`` is a monotonic sequence (never reused: the
+column is AUTOINCREMENT), and "latest" always means the highest ``seq``, never wall time. The
+verdict files the landing reads are projections of :func:`latest_accepted`.
 """
 
 from __future__ import annotations
@@ -31,14 +37,16 @@ from scripts.common.repo_root import main_checkout_root
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PARAMETERS_PATH = REPO_ROOT / "scripts" / "config" / "review_parameters.yaml"
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 DB_DIRECTORY = ("batch_state", "review-findings")
 LEVEL_RE = re.compile(r"[a-z0-9][a-z0-9-]{0,31}\Z")
 
 VERDICTS = ("APPROVE", "REVISE", "REJECTED", "FAILED")
 ROLES = ("first", "second")
 SETTLE_KINDS = ("unsupported_by_source", "second_seat_disagreement")
-SETTLE_OUTCOMES = ("supported_defect", "refuted", "source_conflict", "unresolved")
+MOOT_SUPERSEDED = "moot_superseded"
+SEAT_OUTCOMES = ("supported_defect", "refuted", "source_conflict", "unresolved")  # what the settle seat may decide
+SETTLE_OUTCOMES = (*SEAT_OUTCOMES, MOOT_SUPERSEDED)  # ``moot_superseded`` is written only by ``record``
 OPERATOR_OUTCOMES = frozenset({"source_conflict", "unresolved"})
 BUDGET_FIELDS = ("revise_rounds", "regenerations", "review_failures")
 PLAN_LESSON_N = 0  # the budgets row of a module's plan review
@@ -46,6 +54,7 @@ PLAN_LESSON_N = 0  # the budgets row of a module's plan review
 _TABLES = """
 CREATE TABLE IF NOT EXISTS schema_version (version INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS attempts (
+    seq INTEGER PRIMARY KEY AUTOINCREMENT,
     review_id TEXT NOT NULL,
     attempt_id TEXT NOT NULL,
     kind TEXT NOT NULL CHECK (kind IN ('plan', 'lesson')),
@@ -66,7 +75,7 @@ CREATE TABLE IF NOT EXISTS attempts (
     writer_family TEXT,
     return_sha256 TEXT,
     failure_reason TEXT,
-    PRIMARY KEY (review_id, attempt_id)
+    UNIQUE (review_id, attempt_id)
 );
 CREATE TABLE IF NOT EXISTS findings (
     review_id TEXT NOT NULL,
@@ -107,13 +116,14 @@ CREATE TABLE IF NOT EXISTS settle_items (
     manifest_sha256 TEXT,
     opened_at TEXT NOT NULL,
     outcome TEXT CHECK (outcome IS NULL OR outcome IN
-        ('supported_defect', 'refuted', 'source_conflict', 'unresolved')),
+        ('supported_defect', 'refuted', 'source_conflict', 'unresolved', 'moot_superseded')),
     receipts_json TEXT,
     decided_by TEXT,
     decided_at TEXT,
     needs_operator INTEGER NOT NULL DEFAULT 0,
     operator_decision TEXT,
     operator_decided_at TEXT,
+    superseded_by TEXT,
     UNIQUE (finding_ref, kind)
 );
 CREATE TABLE IF NOT EXISTS agreement (
@@ -318,12 +328,26 @@ def module_attempts(
 ) -> list[sqlite3.Row]:
     """Accepted, non-seeded attempts of a module in recording order (seeded lessons never reach the loop)."""
     marks = ", ".join("?" for _ in verdicts)
-    query = f"SELECT rowid AS rowid_, * FROM attempts WHERE level = ? AND slug = ? AND seed_id IS NULL AND verdict IN ({marks})"
+    query = f"SELECT * FROM attempts WHERE level = ? AND slug = ? AND seed_id IS NULL AND verdict IN ({marks})"
     args: list[Any] = [level, slug, *verdicts]
     if role is not None:
         query += " AND role = ?"
         args.append(role)
-    return conn.execute(query + " ORDER BY rowid_", args).fetchall()
+    return conn.execute(query + " ORDER BY seq", args).fetchall()
+
+
+def latest_accepted(
+    conn: sqlite3.Connection, level: str, slug: str, kind: str, lesson_n: int | None
+) -> sqlite3.Row | None:
+    """The latest accepted first-seat, non-seeded attempt for one manifest target (a lesson, or the plan).
+
+    "Latest" is the highest ``seq``. The verdict file of the target is a projection of this row.
+    """
+    return conn.execute(
+        "SELECT * FROM attempts WHERE level = ? AND slug = ? AND kind = ? AND lesson_n IS ? AND role = 'first'"
+        " AND seed_id IS NULL AND verdict IN ('APPROVE', 'REVISE') ORDER BY seq DESC LIMIT 1",
+        (level, slug, kind, lesson_n),
+    ).fetchone()
 
 
 def module_findings(conn: sqlite3.Connection, level: str, slug: str) -> list[sqlite3.Row]:
@@ -333,7 +357,7 @@ def module_findings(conn: sqlite3.Connection, level: str, slug: str) -> list[sql
         " a.role AS role, a.level AS level, a.slug AS slug"
         " FROM findings f JOIN attempts a ON a.review_id = f.review_id AND a.attempt_id = f.attempt_id"
         " WHERE a.level = ? AND a.slug = ? AND a.seed_id IS NULL AND a.verdict IN ('APPROVE', 'REVISE')"
-        " AND a.role = 'first' ORDER BY a.rowid, f.rowid",
+        " AND a.role = 'first' ORDER BY a.seq, f.rowid",
         (level, slug),
     ).fetchall()
 
@@ -410,7 +434,7 @@ def record_settle_outcome(
 
     Raises SettleAlreadyDecided when the item has an outcome already: there is no second round.
     """
-    if outcome not in SETTLE_OUTCOMES:
+    if outcome not in SEAT_OUTCOMES:
         raise FindingsDbError(f"unknown settle outcome {outcome!r}")
     with transaction(conn):
         changed = conn.execute(
@@ -445,6 +469,36 @@ def module_settle_items(conn: sqlite3.Connection, level: str, slug: str) -> list
     return conn.execute(
         "SELECT * FROM settle_items WHERE level = ? AND slug = ? ORDER BY item_id", (level, slug)
     ).fetchall()
+
+
+def close_superseded_items(
+    conn: sqlite3.Connection,
+    *,
+    level: str,
+    slug: str,
+    lesson_n: int | None,
+    current_manifest_sha256: str,
+    superseded_by: str,
+    decided_at: str,
+) -> list[int]:
+    """Close, as ``moot_superseded``, every open item of the target raised against an older manifest.
+
+    Runs inside the caller's transaction, when an attempt on ``current_manifest_sha256`` is accepted. The
+    item's claim is about a manifest that is no longer the target's current one, so it holds nothing;
+    a claim the new attempt raises again opens its own item on the new manifest. Returns the item ids.
+    """
+    rows = conn.execute(
+        "SELECT item_id FROM settle_items WHERE level = ? AND slug = ? AND lesson_n IS ? AND outcome IS NULL"
+        " AND manifest_sha256 IS NOT ? ORDER BY item_id",
+        (level, slug, lesson_n, current_manifest_sha256),
+    ).fetchall()
+    for row in rows:
+        conn.execute(
+            "UPDATE settle_items SET outcome = ?, decided_by = 'record', decided_at = ?, needs_operator = 0,"
+            " receipts_json = '[]', superseded_by = ? WHERE item_id = ?",
+            (MOOT_SUPERSEDED, decided_at, superseded_by, row["item_id"]),
+        )
+    return [row["item_id"] for row in rows]
 
 
 def is_open(item: sqlite3.Row) -> bool:

@@ -4,12 +4,19 @@
 --task-id ...`` runs the active validator in-process (``validate_review``; nothing of its
 rejections is re-implemented), then:
 
-1. copies the raw return to ``lesson-<n>.review.<attempt_id>.yaml`` (a plan review:
-   ``plan-review.<attempt_id>.yaml``) in the module's ``_state`` directory. ``record`` owns that file;
-2. **accepted** — writes the verdict file the landing reads (``lesson-<n>.verdict.yaml``, a plan:
-   ``plan-review.yaml``, holding ``verdict``, ``attempt_id``, ``manifest_sha256``, ``validated_at``),
-   the ``attempts`` row and one ``findings`` row per finding, one settle item per active
-   ``unsupported_by_source`` finding, and counts a REVISE round;
+1. reserves ``lesson-<n>.review.<attempt_id>.yaml`` (a plan review: ``plan-review.<attempt_id>.yaml``) in the
+   module's ``_state`` directory with create-exclusive semantics and writes the return's bytes to it (fsynced
+   before the name appears). The bytes validated, hashed (``return_sha256``) and stored are the in-memory
+   bytes; the file is re-hashed against them before the row is inserted. The same attempt id with different
+   bytes is refused (``attempt_return_conflict``), the same bytes again are idempotent;
+2. **accepted** — writes the ``attempts`` row and one ``findings`` row per finding, one settle item per
+   active ``unsupported_by_source`` finding, closes the lesson's older open settle items as
+   ``moot_superseded`` when the attempt is on the lesson's current manifest, and counts a REVISE round.
+   **After the commit** it projects the database's latest accepted attempt of the target into the verdict
+   file the landing reads (``lesson-<n>.verdict.yaml``, a plan: ``plan-review.yaml``; temp file + atomic
+   rename). The file is a projection, never a source: if the write fails the attempt stays recorded, the
+   outcome carries ``projection_error`` (exit 2) and the fix loop holds the module until
+   ``fixloop verdict <level> <slug> --repair-projections`` rewrites it;
 3. **rejected** — writes the saved return and an ``attempts`` row (``verdict: REJECTED`` with the
    validator's codes), nothing else. Count it as a failed review with ``--failure``;
 4. ``--failure <reason>`` records a review that returned nothing (or a rejected return): an
@@ -18,7 +25,10 @@ rejections is re-implemented), then:
 Identities are trusted, not self-reported: the reviewer's model and harness come from the dispatch
 record (``batch_state/tasks/<task-id>.json``), its family from the closeout resolver
 (``scripts.review.reviewer_resolver.resolve_author_family``), the writer's family from
-``lesson-<n>.writer.yaml`` through the same resolver. An unknown model or family fails closed.
+``lesson-<n>.writer.yaml`` through the same resolver. An unknown model or family fails closed: an
+unresolvable writer refuses the attempt (``writer_identity_unknown``, nothing recorded), and a first- or
+second-seat reviewer of the writer's own family is rejected (``same_family_review``, a REJECTED row).
+A plan review has no lesson writer record, so the writer check applies to lesson reviews only.
 
 A lesson attempt is also refused as **stale** when any file its manifest pins (found structurally,
 ``scripts.build.fresh.manifest.changed_inputs``) has changed since the manifest was written.
@@ -29,10 +39,14 @@ file, a budget or a settle item, and the fix loop never reads it.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
+import os
 import re
+import sqlite3
 import sys
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -42,7 +56,6 @@ import yaml
 from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
-from scripts.curriculum.evidence import lock
 from scripts.review import findings_db, fixloop, second_seat
 from scripts.review.validate.validate import validate_review
 
@@ -54,10 +67,17 @@ SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
 # record's own rejection codes, beside the validator's (scripts/review/validate/codes.py).
 MANIFEST_INPUTS_STALE = "manifest_inputs_stale"
 ATTEMPT_IDENTITY_MISMATCH = "attempt_identity_mismatch"
+SAME_FAMILY_REVIEW = "same_family_review"
+WRITER_IDENTITY_UNKNOWN = "writer_identity_unknown"
+ATTEMPT_RETURN_CONFLICT = "attempt_return_conflict"
 
 
 class RecordError(Exception):
     """Nothing could be recorded (unknown identity, unusable manifest, an attempt recorded twice)."""
+
+    def __init__(self, message: str, code: str | None = None) -> None:
+        super().__init__(f"{code}: {message}" if code else message)
+        self.code = code
 
 
 @dataclass
@@ -76,6 +96,8 @@ class Outcome:
     terminal: list[dict[str, Any]] = field(default_factory=list)
     replay: bool = False
     seed_id: str | None = None
+    moot_items: list[int] = field(default_factory=list)
+    projection_error: str | None = None
     next: str | None = None
 
     def payload(self) -> dict[str, Any]:
@@ -134,24 +156,64 @@ def _guarded(root: Path, path: Path) -> Path:
     return checked_existing_path(root, path, f"{TREE}/evidence")
 
 
-def _save_return(root: Path, directory: Path, name: str, data: bytes) -> Path:
-    """Copy the raw return (0o644); a different return already saved under this attempt id is refused."""
+def _reserve_return(root: Path, directory: Path, name: str, data: bytes) -> tuple[Path, str]:
+    """Reserve ``name`` for this return's bytes; the sha256 of ``data`` is what every later step is held to.
+
+    The bytes are written and fsynced to an exclusively created temporary file (mkstemp: ``O_CREAT|O_EXCL``)
+    and then linked to the name, which fails when the name is taken: exactly one recorder creates it, and it
+    appears complete, so a crash never leaves a partial file that would wedge the attempt id. Whoever finds
+    the name taken reads it back; a different return under this attempt id is refused
+    (``attempt_return_conflict``), an identical one is the same attempt again.
+    """
     target = _guarded(root, directory / name)
-    if target.exists():
-        if target.read_bytes() != data:
-            raise RecordError(f"{name} already holds a different return for this attempt")
-        return target
-    lock.atomic_write(target, data)
-    return target
+    digest = hashlib.sha256(data).hexdigest()
+    target.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{name}.", dir=target.parent)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            os.fchmod(stream.fileno(), 0o644)
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        with contextlib.suppress(FileExistsError):
+            os.link(temporary, target)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
+    _require_saved(target, digest, name)
+    return target, digest
 
 
-def _write_verdict_file(
-    root: Path, directory: Path, name: str, verdict: str, attempt_id: str, manifest: str, validated_at: str
-) -> Path:
-    document = {"verdict": verdict, "attempt_id": attempt_id, "manifest_sha256": manifest, "validated_at": validated_at}
-    target = _guarded(root, directory / name)
-    lock.atomic_write(target, lock.yaml_bytes(document))
-    return target
+def _require_saved(target: Path, digest: str, name: str) -> None:
+    """The reserved file must still hold exactly the bytes being recorded."""
+    if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
+        raise RecordError(f"{name} holds a different return for this attempt", ATTEMPT_RETURN_CONFLICT)
+
+
+def _current_manifest(directory: Path, kind: str, lesson_n: int | None) -> str | None:
+    """The manifest the engine currently points at for the target (its ``.sha256`` sidecar), or None."""
+    sidecar = f"lesson-{lesson_n}.manifest.sha256" if kind == "lesson" else pm.SIDECAR_NAME
+    try:
+        digest = (Path(directory) / sidecar).read_text(encoding="ascii").strip()
+    except (OSError, ValueError):
+        return None
+    return digest if SHA_RE.fullmatch(digest) else None
+
+
+def _publish(
+    outcome: Outcome, conn: sqlite3.Connection, root: Path, level: str, slug: str, kind: str, lesson_n: int | None
+) -> None:
+    """Project the database's latest accepted attempt of the target into its verdict file (after the commit)."""
+    try:
+        path = fixloop.publish_projection(conn, root, level, slug, kind, lesson_n)
+    except (OSError, ValueError) as error:
+        outcome.projection_error = f"{fixloop.projection_name(kind, lesson_n)} could not be written: {error}"
+        outcome.next = (
+            f"the attempt is recorded but its verdict file is stale (the module holds): "
+            f"python -m scripts.review.fixloop verdict {level} {slug} --repair-projections"
+        )
+        return
+    outcome.verdict_file = _rel(root, path)
 
 
 # --- the manifest -----------------------------------------------------------------------
@@ -227,15 +289,12 @@ def record_return(
             raise RecordError(f"{name} is missing or not a safe token: pass --{name.replace('_', '-')}")
     review_id, attempt_id = ids["review_id"], ids["attempt_id"]
 
-    saved: Path | None = None
-    if failure is None:
-        name = f"lesson-{lesson_n}.review.{attempt_id}.yaml" if kind == "lesson" else f"plan-review.{attempt_id}.yaml"
-        saved = _save_return(root, directory, name, data)
-
     identity = resolve_reviewer_identity(
         task_id, Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
     )
     params = findings_db.load_parameters()
+    if second and kind != "lesson":
+        raise RecordError("a second seat reviews lessons, not plans")
     conn = findings_db.connect(db_path or findings_db.db_path(level, root))
     try:
         existing = findings_db.get_attempt(conn, review_id, attempt_id)
@@ -258,16 +317,22 @@ def record_return(
                 second,
                 moment,
             )
-        return_sha = hashlib.sha256(data).hexdigest()
-        if existing is not None:
-            return _replay(root, directory, existing, return_sha, saved, kind, lesson_n)
         writer = None
-        first = None
-        if second:
-            if kind != "lesson":
-                raise RecordError("a second seat reviews lessons, not plans")
+        if existing is None and kind == "lesson" and (seed_id is None or second):
             try:
                 writer = second_seat.writer_family(directory, lesson_n)
+            except second_seat.IdentityError as error:
+                raise RecordError(str(error), WRITER_IDENTITY_UNKNOWN) from error
+        name = f"lesson-{lesson_n}.review.{attempt_id}.yaml" if kind == "lesson" else f"plan-review.{attempt_id}.yaml"
+        saved, return_sha = _reserve_return(root, directory, name, data)
+        if existing is not None:
+            return _replay(conn, root, directory, existing, return_sha, saved, kind, lesson_n)
+        first = None
+        preset: list[str] = []
+        if writer is not None and identity["family"] == writer:
+            preset.append(SAME_FAMILY_REVIEW)  # the seat is the writer's own family: it may not review the lesson
+        elif second:
+            try:
                 first = second_seat.check_eligible(
                     conn,
                     level=level,
@@ -279,25 +344,27 @@ def record_return(
                     writer=writer,
                     params=params,
                 )
-            except (second_seat.SecondSeatError, second_seat.IdentityError) as error:
+            except second_seat.SecondSeatError as error:
                 raise RecordError(str(error)) from error
-        elif kind == "lesson" and seed_id is None:
-            try:
-                writer = second_seat.writer_family(directory, lesson_n)
-            except second_seat.IdentityError:
-                writer = None  # the writer's family is recorded when it resolves; only a second seat needs it
-        codes = _rejection_codes(
-            root,
-            manifest,
-            manifest_sha,
-            kind,
-            saved,
-            manifest_path,
-            document_path,
-            ledger_path,
-            previous_ledger_path,
-            echoed,
-            ids,
+        codes = list(
+            dict.fromkeys(
+                [
+                    *preset,
+                    *_rejection_codes(
+                        root,
+                        manifest,
+                        manifest_sha,
+                        kind,
+                        saved,
+                        manifest_path,
+                        document_path,
+                        ledger_path,
+                        previous_ledger_path,
+                        echoed,
+                        ids,
+                    ),
+                ]
+            )
         )
         review = _load_yaml_bytes(data)
         verdict = "REJECTED" if codes else review_verdict(review)
@@ -324,22 +391,32 @@ def record_return(
             "writer_family": writer,
             "return_sha256": return_sha,
         }
-        if codes:
-            with findings_db.transaction(conn):
-                findings_db.insert_attempt(conn, row)
-            return Outcome(
-                False,
-                "REJECTED",
-                review_id,
-                attempt_id,
-                kind,
-                rejection_codes=codes,
-                saved_return=_rel(root, saved),
-                seed_id=seed_id,
-                next=f"count it as a failed review: record --failure rejected_return --review-id {review_id} --attempt-id {attempt_id}",
-            )
-        outcome = _persist_accepted(conn, root, directory, review, row, params, seed_id, second, first, moment)
+        _require_saved(saved, return_sha, name)  # what is stored is what was validated and hashed
+        try:
+            if codes:
+                with findings_db.transaction(conn):
+                    findings_db.insert_attempt(conn, row)
+                return Outcome(
+                    False,
+                    "REJECTED",
+                    review_id,
+                    attempt_id,
+                    kind,
+                    rejection_codes=codes,
+                    saved_return=_rel(root, saved),
+                    seed_id=seed_id,
+                    next=f"count it as a failed review: record --failure rejected_return --review-id {review_id} --attempt-id {attempt_id}",
+                )
+            outcome = _persist_accepted(conn, directory, review, row, seed_id, second, first, moment)
+        except sqlite3.IntegrityError:  # a concurrent recorder committed this attempt first
+            existing = findings_db.get_attempt(conn, review_id, attempt_id)
+            if existing is None:
+                raise
+            return _replay(conn, root, directory, existing, return_sha, saved, kind, lesson_n)
         outcome.saved_return = _rel(root, saved)
+        if seed_id is None and not second:
+            _publish(outcome, conn, root, level, slug, kind, lesson_n)
+            outcome.terminal = _terminal_now(conn, level, slug, lesson_n, params)
         return outcome
     finally:
         conn.close()
@@ -385,11 +462,9 @@ def _rejection_codes(
 
 def _persist_accepted(
     conn: Any,
-    root: Path,
     directory: Path,
     review: dict[str, Any],
     row: dict[str, Any],
-    params: dict[str, Any],
     seed_id: str | None,
     second: bool,
     first: Any,
@@ -404,9 +479,21 @@ def _persist_accepted(
         except fixloop.ProvenanceError:
             provenance = None
     opened: list[int] = []
+    moot: list[int] = []
     agreement = None
     with findings_db.transaction(conn):
         findings_db.insert_attempt(conn, row)
+        if seed_id is None and not second and row["manifest_sha256"] == _current_manifest(directory, kind, lesson_n):
+            # a review of the target's current manifest is accepted: claims raised against an older one are moot
+            moot = findings_db.close_superseded_items(
+                conn,
+                level=level,
+                slug=slug,
+                lesson_n=lesson_n,
+                current_manifest_sha256=row["manifest_sha256"],
+                superseded_by=row["attempt_id"],
+                decided_at=moment,
+            )
         for finding in findings:
             layer = None if seed_id is not None else fixloop.layer_for_finding(finding, provenance, kind=kind)
             findings_db.insert_finding(conn, row["review_id"], row["attempt_id"], finding, layer=layer, seed_id=seed_id)
@@ -433,7 +520,7 @@ def _persist_accepted(
                 conn, first, findings_db.get_attempt(conn, row["review_id"], row["attempt_id"]), opened_at=moment
             )
             opened += agreement.pop("settle_items")
-    outcome = Outcome(
+    return Outcome(
         True,
         row["verdict"],
         row["review_id"],
@@ -443,17 +530,8 @@ def _persist_accepted(
         settle_items=opened,
         agreement=agreement,
         seed_id=seed_id,
+        moot_items=moot,
     )
-    if seed_id is None and not second:
-        name = f"lesson-{lesson_n}.verdict.yaml" if kind == "lesson" else pm.REVIEW_NAME
-        outcome.verdict_file = _rel(
-            root,
-            _write_verdict_file(
-                root, directory, name, row["verdict"], row["attempt_id"], row["manifest_sha256"], row["validated_at"]
-            ),
-        )
-        outcome.terminal = _terminal_now(conn, level, slug, lesson_n, params)
-    return outcome
 
 
 def _terminal_now(
@@ -487,12 +565,24 @@ def _terminal_now(
 
 
 def _replay(
-    root: Path, directory: Path, existing: Any, return_sha: str, saved: Path, kind: str, lesson_n: int | None
+    conn: sqlite3.Connection,
+    root: Path,
+    directory: Path,
+    existing: Any,
+    return_sha: str,
+    saved: Path,
+    kind: str,
+    lesson_n: int | None,
 ) -> Outcome:
-    """The same return recorded again: change nothing but re-publish the verdict file a crash may have left out."""
+    """The same return recorded again: change no row, and re-project the database's latest attempt.
+
+    The verdict file is rewritten from the latest accepted attempt of the target, never from ``existing``:
+    replaying an older attempt cannot bring back a verdict a newer one replaced.
+    """
     if existing["return_sha256"] != return_sha:
         raise RecordError(
-            f"attempt {existing['attempt_id']} of review {existing['review_id']} was recorded with a different return"
+            f"attempt {existing['attempt_id']} of review {existing['review_id']} was recorded with a different return",
+            ATTEMPT_RETURN_CONFLICT,
         )
     outcome = Outcome(
         existing["verdict"] in ("APPROVE", "REVISE"),
@@ -506,19 +596,7 @@ def _replay(
         seed_id=existing["seed_id"],
     )
     if outcome.accepted and existing["role"] == "first" and existing["seed_id"] is None:
-        name = f"lesson-{lesson_n}.verdict.yaml" if kind == "lesson" else pm.REVIEW_NAME
-        outcome.verdict_file = _rel(
-            root,
-            _write_verdict_file(
-                root,
-                directory,
-                name,
-                existing["verdict"],
-                existing["attempt_id"],
-                existing["manifest_sha256"],
-                existing["validated_at"],
-            ),
-        )
+        _publish(outcome, conn, root, existing["level"], existing["slug"], kind, lesson_n)
     return outcome
 
 
@@ -604,7 +682,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
             "Record one review attempt of the fresh build: validate the return with the active validator, save it,\n"
-            "and on acceptance write the verdict file the landing reads plus the attempts and findings rows,\n"
+            "and on acceptance write the attempts and findings rows, then project the verdict file the landing reads,\n"
             "settle items and budgets in batch_state/review-findings/<level>.sqlite (#8430).\n"
             "Use once per attempt, after the review seat returns. With --failure, record a review that returned\n"
             "nothing (timeout, crash, no deliverable) or count a rejected return as a failed review.\n"
@@ -618,9 +696,10 @@ def build_parser() -> argparse.ArgumentParser:
             "    --ledger batch_state/review-receipts/R/A.jsonl --task-id plan-review-a1-m\n"
             "  .venv/bin/python -m scripts.review.record --failure timeout --manifest lesson-2.manifest.yaml \\\n"
             "    --review-id R --attempt-id A --task-id review-a1-m-2\n"
-            "\nOutputs: one JSON object on stdout. Writes the saved return, the verdict file (accepted first-seat\n"
-            "attempts) and the findings database. Exit codes: 0 accepted or failure recorded; 1 rejected;\n"
-            "3 accepted or recorded and a terminal transition (operator) is reached; 2 not recorded (error on stderr)."
+            "\nOutputs: one JSON object on stdout. Writes the saved return, the findings database and, after the commit,\n"
+            "the verdict file (a projection of the latest accepted first-seat attempt). Exit codes: 0 accepted or\n"
+            "failure recorded; 1 rejected; 3 accepted or recorded and a terminal transition (operator) is reached;\n"
+            "2 not recorded (error on stderr), or recorded but the verdict file could not be written (projection_error)."
         ),
     )
     parser.add_argument("review", type=Path, nargs="?", help="the reviewer's review.yaml (omit with --failure)")
@@ -694,6 +773,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {error}", file=sys.stderr)
         return 2
     print(json.dumps(outcome.payload(), indent=2, sort_keys=True, ensure_ascii=False))
+    if outcome.projection_error:
+        print(f"error: {outcome.projection_error}", file=sys.stderr)
+        return 2
     if outcome.terminal:
         return 3
     return 0 if outcome.accepted or args.failure is not None else 1
