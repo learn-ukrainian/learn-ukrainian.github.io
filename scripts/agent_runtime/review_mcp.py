@@ -31,6 +31,33 @@ symlink to the OAuth token (the only credential ``agy -p`` needs). The launch ru
 refuses the attempt unless ``agy mcp list`` under that same environment shows exactly
 that one server.
 
+Threat model (#8652)
+--------------------
+In scope:
+
+* A stale or pre-planted symlink, or a component owned by another user, anywhere **below the
+  trust anchor** at provisioning time. The anchor is the primary checkout for the default
+  receipts tree, or the nearest existing ancestor of an explicit ``receipts_root``. Every
+  component below it is created or opened one level at a time with ``O_DIRECTORY | O_NOFOLLOW``
+  relative to its parent's descriptor and owner-checked, and every per-attempt file is created
+  relative to the final descriptor.
+* Every write this module makes itself after provisioning (the diagnostics file). It re-walks
+  the same components from the anchor descriptor and writes through ``dir_fd``, never by full
+  path, so a component swapped for a symlink afterwards cannot redirect it.
+* A non-racy change after provisioning, caught by ``verify_review_attempt_paths``: it re-runs the
+  no-follow, owner-checked walk and checks the attempt's files immediately before a path string
+  is handed to a gate or launcher, and refuses with fixed wording on any mismatch.
+
+Out of scope, by decision:
+
+* A process running as the **same uid** that swaps components after provisioning. It could
+  equally edit the config file itself, so a symlink gives it no extra capability. The external
+  CLIs (``codex``, ``agy``, ``claude``) take path strings, so no in-process fix removes that
+  window; the re-check only narrows it.
+* Symlinks in the **ancestors of a caller-chosen** ``receipts_root`` anchor. Following them is
+  intended: hosts legitimately symlink ``/home`` and similar paths. Components *below* the
+  anchor stay no-follow, and a ``receipts_root`` that is itself a symlink is refused.
+
 Note: Ledger creation and sidecar management will be consolidated once R1
 (cursor/impl-review-r1-schema-ledger) merges to main.
 """
@@ -196,18 +223,21 @@ def _open_owned_dir(name: Path | str, *, dir_fd: int | None = None) -> int:
     return fd
 
 
-def _open_runtime_dir(anchor: Path, components: Sequence[str]) -> int:
-    """Create-or-open ``components`` under the trusted ``anchor``, never following a symlink.
+def _open_runtime_dir(anchor: Path, components: Sequence[str], *, create: bool = True) -> int:
+    """Open ``components`` under the trusted ``anchor`` (creating them if ``create``), never following a symlink.
 
     Each component is made with ``mkdir`` (mode 0700) relative to its parent's descriptor, then
     opened ``O_DIRECTORY | O_NOFOLLOW`` and checked for ownership, so a symlink planted at any
-    level (or swapped in later) is refused rather than followed. Returns the last directory's fd.
+    level (or swapped in later) is refused rather than followed. The anchor itself is opened
+    normally: its own ancestors are trusted (see the module's threat model). ``create=False`` only
+    re-walks what provisioning made and never creates. Returns the last directory's fd.
     """
     fd = os.open(anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
     try:
         for name in components:
-            with contextlib.suppress(FileExistsError):
-                os.mkdir(name, 0o700, dir_fd=fd)
+            if create:
+                with contextlib.suppress(FileExistsError):
+                    os.mkdir(name, 0o700, dir_fd=fd)
             child = _open_owned_dir(name, dir_fd=fd)
             os.close(fd)
             fd = child
@@ -234,6 +264,37 @@ def _create_file(name: str, dir_fd: int, payload: bytes) -> None:
         handle.write(payload)
 
 
+# Where each provisioned attempt directory hangs: ``abspath(review_dir) -> (anchor, components)``.
+# A later write or re-check walks from the anchor's descriptor, never by the full path.
+_PROVISIONED: dict[str, tuple[Path, tuple[str, ...]]] = {}
+
+
+def _walk_origin(review_dir: Path | str) -> tuple[Path, tuple[str, ...]]:
+    """The trusted anchor and the components below it for an attempt directory.
+
+    Uses what ``prepare_review_attempt`` recorded. A directory this process did not provision falls
+    back to the primary checkout's ``batch_state/review-receipts`` tree when it lies in it, and
+    otherwise to its own parent as the anchor, so at least the directory itself is walked no-follow.
+    """
+    key = os.path.abspath(review_dir)
+    known = _PROVISIONED.get(key)
+    if known is not None:
+        return known
+    location = Path(key)
+    primary_root = resolve_repo_root(Path(__file__), 2)
+    with contextlib.suppress(ValueError):
+        parts = location.relative_to(primary_root).parts
+        if parts[:2] == ("batch_state", "review-receipts") and len(parts) > 2:
+            return primary_root, parts
+    return location.parent, (location.name,)
+
+
+def _open_attempt_dir(review_dir: Path | str) -> int:
+    """Open an already provisioned attempt directory via the no-follow walk from its anchor."""
+    anchor, components = _walk_origin(review_dir)
+    return _open_runtime_dir(anchor, components, create=False)
+
+
 def _untrusted(label: str, text: object, diagnostics: Path) -> str:
     """The stand-in a refusal shows for untrusted free text: its size and fingerprint, never its content.
 
@@ -248,9 +309,10 @@ def _untrusted(label: str, text: object, diagnostics: Path) -> str:
     fingerprint = hashlib.sha256(payload).hexdigest()[:_FINGERPRINT_LEN]
     saved = f"details in {diagnostics.name}"
     try:
-        # Open the attempt directory without following a symlink and create the file relative to it,
-        # so a directory swapped in after prepare_review_attempt cannot redirect the write.
-        dir_fd = _open_owned_dir(diagnostics.parent)
+        # Re-walk the attempt directory from its anchor descriptor (no symlink followed at any
+        # component) and create the file relative to it, so a component swapped in after
+        # prepare_review_attempt cannot redirect the write.
+        dir_fd = _open_attempt_dir(diagnostics.parent)
         try:
             fd = os.open(diagnostics.name, os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o600, dir_fd=dir_fd)
             try:
@@ -266,6 +328,48 @@ def _untrusted(label: str, text: object, diagnostics: Path) -> str:
         reason = _errno_name(exc) if isinstance(exc, OSError) else None
         saved = f"details not saved: {reason or 'unsafe directory'}"
     return f"<{label}: {len(raw)} chars, sha256 {fingerprint}; {saved}>"
+
+
+_ATTEMPT_PATHS_CHANGED = "a review attempt path is a symlink, has the wrong type, or is not owned by the current user"
+_UNSAFE_ATTEMPT = f"review attempt refused: {_ATTEMPT_PATHS_CHANGED} (#8652)"
+
+
+def _check_attempt_entry(name: str, dir_fd: int, *, want_dir: bool) -> None:
+    """Refuse ``name`` in ``dir_fd`` unless it is a real (never a symlink) file or directory we own."""
+    try:
+        info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
+    except FileNotFoundError:
+        return
+    kind_ok = stat.S_ISDIR(info.st_mode) if want_dir else stat.S_ISREG(info.st_mode)
+    if not kind_ok or info.st_uid != os.geteuid():
+        raise ReviewDirectoryError(_UNSAFE_ATTEMPT)
+
+
+def verify_review_attempt_paths(config_path: Path | str) -> None:
+    """Re-check an attempt's paths just before a path string is handed to a gate or launcher.
+
+    Re-runs the no-follow, owner-checked component walk from the trusted anchor and checks that the
+    attempt's ``.mcp.json``, ledger and sidecar (when present) are regular files, and its scoped
+    Codex/AGY homes (when present) are real directories, all owned by the current user. This catches
+    a symlink or foreign owner swapped in after ``prepare_review_attempt``; it cannot close the
+    window between this check and the external CLI opening the path (see the threat model).
+
+    Raises:
+        ReviewDirectoryError: on any mismatch, with fixed wording that never names a path.
+    """
+    config = Path(config_path)
+    if not config.name.endswith(_MCP_CONFIG_SUFFIX):
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {_echo_identifier(config.name)!r}")
+    stem = config.name[: -len(_MCP_CONFIG_SUFFIX)]
+    dir_fd = _open_attempt_dir(config.parent)
+    try:
+        _check_attempt_entry(config.name, dir_fd, want_dir=False)
+        for name in (f"{stem}.jsonl", f"{stem}.jsonl.sha256"):
+            _check_attempt_entry(name, dir_fd, want_dir=False)
+        for name in (f"{stem}{_CODEX_HOME_SUFFIX}", f"{stem}{_AGY_HOME_SUFFIX}"):
+            _check_attempt_entry(name, dir_fd, want_dir=True)
+    finally:
+        os.close(dir_fd)
 
 
 def _errno_name(exc: OSError) -> str | None:
@@ -554,6 +658,7 @@ def prepare_review_attempt(
     # symlink or foreign-owned), then create every per-attempt file relative to this descriptor
     # so a component swapped in after the check cannot redirect them (#8652).
     review_fd = _open_runtime_dir(anchor, components)
+    _PROVISIONED[os.path.abspath(review_dir)] = (anchor, tuple(components))
     created: list[str] = []
 
     def _rollback() -> None:
@@ -676,6 +781,10 @@ def verify_codex_review_effective_mcp(
     def refuse(reason: str) -> CodexReviewMcpGateError:
         return CodexReviewMcpGateError(f"codex review attempt refused: {_mask(reason, log_unsafe)} (#8517)")
 
+    try:
+        verify_review_attempt_paths(config)
+    except (OSError, ReviewDirectoryError):
+        raise refuse(_ATTEMPT_PATHS_CHANGED) from None
     try:
         expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
     except (OSError, ValueError, KeyError, TypeError) as exc:
@@ -854,6 +963,10 @@ def verify_agy_review_effective_mcp(
     def refuse(reason: str) -> AgyReviewMcpGateError:
         return AgyReviewMcpGateError(f"agy review attempt refused: {_mask(reason, log_unsafe)} (#8617)")
 
+    try:
+        verify_review_attempt_paths(config)
+    except (OSError, ReviewDirectoryError):
+        raise refuse(_ATTEMPT_PATHS_CHANGED) from None
     try:
         expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
         command = expected["command"]

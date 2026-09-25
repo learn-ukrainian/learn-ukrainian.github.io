@@ -7050,6 +7050,13 @@ def _run_worker(
                     except OSError as exc:
                         raise RuntimeError(f"failed to back up {cursor_mcp_path}: {exc}") from exc
 
+            if strict_mcp_config and review_id is not None and attempt_id is not None and mcp_config_path is not None:
+                # Last check before the path strings reach the launcher: re-walk the attempt
+                # directory no-follow and owner-checked (#8652). It narrows, not closes, the window.
+                from scripts.agent_runtime.review_mcp import verify_review_attempt_paths
+
+                verify_review_attempt_paths(mcp_config_path)
+
             result = runtime_invoke(
                 agent,
                 prompt,

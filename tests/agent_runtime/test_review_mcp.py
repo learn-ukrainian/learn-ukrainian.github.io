@@ -41,6 +41,7 @@ from scripts.agent_runtime.review_mcp import (
     verify_agy_review_effective_mcp,
     verify_agy_review_launch,
     verify_codex_review_effective_mcp,
+    verify_review_attempt_paths,
 )
 from scripts.common.repo_root import resolve_repo_root
 from scripts.review.receipts.ledger import REVIEW_TOOLS
@@ -2185,4 +2186,115 @@ def test_diagnostics_are_never_written_through_a_planted_directory_symlink(tmp_p
     stand_in = review_mcp_module._untrusted("stderr", "secret", planted / "att.diagnostics.log")
     assert "details not saved: unsafe directory" in stand_in
     assert str(tmp_path) not in stand_in
+    assert list(outside.iterdir()) == []
+
+
+# --- #8652 threat model: post-provision writes go via the anchor fd; a pre-launch re-check; anchor ancestors ---
+
+
+def _swap_receipts_for_symlink(tmp_path: Path, outside: Path) -> None:
+    """Replace ``receipts`` after provisioning with a symlink to ``outside`` (the real tree moves away)."""
+    (tmp_path / "receipts").rename(tmp_path / "receipts-moved")
+    (tmp_path / "receipts").symlink_to(outside, target_is_directory=True)
+
+
+def test_diagnostics_write_after_a_receipts_swap_stays_inside_the_root(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    outside = tmp_path / "outside"
+    (outside / "rev-codex-001").mkdir(parents=True)
+    _swap_receipts_for_symlink(tmp_path, outside)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", review_diagnostics_path(plan.config_path))
+    assert "details not saved: unsafe directory" in stand_in
+    assert str(tmp_path) not in stand_in
+    assert list((outside / "rev-codex-001").iterdir()) == []
+    assert not list((tmp_path / "receipts-moved").rglob("*.diagnostics.log"))
+
+
+def test_diagnostics_write_uses_the_anchor_walk_when_nothing_is_swapped(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    diagnostics = review_diagnostics_path(plan.config_path)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", diagnostics)
+    assert f"details in {diagnostics.name}" in stand_in
+    assert "secret" in diagnostics.read_text(encoding="utf-8")
+    assert stat.S_IMODE(diagnostics.stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("swap", ["receipts", "review-dir", "config", "codex-home"])
+def test_a_swap_before_launch_is_refused_by_the_recheck(
+    swap: str, manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    verify_review_attempt_paths(plan.config_path)  # an untouched attempt passes
+    log = _install_fake_codex(tmp_path, monkeypatch, [_sources_entry(plan.config_path)])
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    if swap == "receipts":
+        _swap_receipts_for_symlink(tmp_path, outside)
+    elif swap == "review-dir":
+        plan.config_path.parent.rename(tmp_path / "moved")
+        plan.config_path.parent.symlink_to(outside, target_is_directory=True)
+    elif swap == "config":
+        real = tmp_path / "other.json"
+        real.write_bytes(plan.config_path.read_bytes())
+        plan.config_path.unlink()
+        plan.config_path.symlink_to(real)
+    else:
+        moved = tmp_path / "home-moved"
+        plan.codex_home.rename(moved)
+        plan.codex_home.symlink_to(moved, target_is_directory=True)
+
+    with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
+        verify_review_attempt_paths(plan.config_path)
+    assert str(tmp_path) not in str(refused.value)
+    with pytest.raises(CodexReviewMcpGateError, match=r"symlink, has the wrong type, or is not owned") as gate:
+        verify_codex_review_effective_mcp(config_path=plan.config_path, cwd=tmp_path)
+    assert str(tmp_path) not in str(gate.value)
+    assert not log.exists()  # refused before `codex mcp list` ran
+    with pytest.raises(AgyReviewMcpGateError, match=r"symlink, has the wrong type, or is not owned"):
+        verify_agy_review_effective_mcp(config_path=plan.config_path, cwd=tmp_path, env={}, agy_bin="/nonexistent")
+    assert list(outside.iterdir()) == []
+
+
+def test_recheck_refuses_an_attempt_file_owned_by_another_user(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    real_geteuid = os.geteuid
+    monkeypatch.setattr(review_mcp_module.os, "geteuid", lambda: real_geteuid() + 1)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError):
+        verify_review_attempt_paths(plan.config_path)
+
+
+def test_anchor_with_a_symlinked_ancestor_is_accepted(manifest_file: Path, tmp_path: Path) -> None:
+    real = tmp_path / "real-home"
+    real.mkdir()
+    (tmp_path / "home-link").symlink_to(real, target_is_directory=True)
+    plan = prepare_review_attempt(
+        review_id="rev-codex-001",
+        attempt_id="att-codex-001",
+        manifest_path=manifest_file,
+        harness="codex",
+        receipts_root=tmp_path / "home-link" / "receipts",
+    )
+    assert (real / "receipts" / "rev-codex-001" / "att-codex-001.mcp.json").is_file()
+    verify_review_attempt_paths(plan.config_path)
+    stand_in = review_mcp_module._untrusted("stderr", "x", review_diagnostics_path(plan.config_path))
+    assert "details in " in stand_in
+
+
+def test_symlink_below_a_symlinked_anchor_is_still_refused(manifest_file: Path, tmp_path: Path) -> None:
+    real = tmp_path / "real-home"
+    (real / "receipts").mkdir(parents=True)
+    (tmp_path / "home-link").symlink_to(real, target_is_directory=True)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (real / "receipts" / "rev-codex-001").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError):
+        prepare_review_attempt(
+            review_id="rev-codex-001",
+            attempt_id="att-codex-001",
+            manifest_path=manifest_file,
+            harness="codex",
+            receipts_root=tmp_path / "home-link" / "receipts",
+        )
     assert list(outside.iterdir()) == []
