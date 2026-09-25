@@ -4857,6 +4857,105 @@ def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypa
     assert write_review == {}
 
 
+def test_kimicc_read_only_review_grant_prefers_dispatch_worktree_mcp(tmp_path):
+    """The grant names the worker checkout's .mcp.json when that cwd is a dispatch worktree."""
+    worktree = delegate._REPO_ROOT / ".worktrees" / "dispatch" / "cursor" / "grant-fixture"
+    grant = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="read-only",
+        require_review_verdict=True,
+        cwd=worktree,
+    )
+    assert grant["mcp_config_path"] == str(worktree / ".mcp.json")
+    outside = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="read-only",
+        require_review_verdict=True,
+        cwd=tmp_path,
+    )
+    assert outside["mcp_config_path"] == str(delegate._REPO_ROOT / ".mcp.json")
+
+
+def _kimicc_worker_result(response: str):
+    return type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": response,
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "fixture",
+            "effort": "unknown",
+            "cli_version": "fixture",
+        },
+    )()
+
+
+def test_run_worker_kimicc_read_only_review_grants_sources(tmp_tasks_dir, tmp_path):
+    """The _run_worker update seam, not a hand-built grant, sets the sources tools."""
+    task_id = "worker-kimicc-review-grant"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch(
+        "agent_runtime.runner.invoke",
+        return_value=_kimicc_worker_result("Reviewed.\nVERDICT: APPROVE\n"),
+    ) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Review the diff and call mcp__sources__verify_word once.",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+            require_review_verdict=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert "mcp__sources__verify_words" in tool_config["allowed_tools"].split(",")
+    assert tool_config["mcp_config_path"] == str(delegate._REPO_ROOT / ".mcp.json")
+
+
+def test_run_worker_kimicc_workspace_write_review_grants_nothing(tmp_tasks_dir, tmp_path, monkeypatch):
+    task_id = "worker-kimicc-write-review"
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+    _init_git_repo_for_test(worktree, monkeypatch)
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {"task_id": task_id, "worktree_path": str(worktree), "worktree_base": "main"},
+    )
+    response = (
+        "VERDICT: APPROVE\n"
+        'DELIVERABLE: {"outcome":"no_change","reason":"write mode must not receive the sources grant"}\n'
+    )
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=_kimicc_worker_result(response)) as mock_invoke,
+        patch.object(delegate, "_count_commits_ahead", return_value=0),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Review the diff.",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+            require_review_verdict=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert "allowed_tools" not in tool_config
+    assert "mcp_config_path" not in tool_config
+
+
 def _codex_worker_result():
     return type(
         "_Result",

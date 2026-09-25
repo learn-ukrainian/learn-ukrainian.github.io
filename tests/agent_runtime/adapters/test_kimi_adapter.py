@@ -308,6 +308,38 @@ def test_kimicc_accepts_delegate_read_only_and_review_keys(tmp_path, monkeypatch
     assert "agy_home_override" not in plan.cmd
 
 
+def test_kimicc_sources_grant_argv_is_read_only_only(tmp_path, monkeypatch):
+    """mcp_config_path + allowed_tools reach the wrapper only in read-only mode."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    tool_config = {
+        "mcp_config_path": str(tmp_path / ".mcp.json"),
+        "allowed_tools": "mcp__sources__verify_word",
+    }
+    read_only = KimiccHarness().build_invocation(
+        prompt="critique",
+        mode="read-only",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimicc-sources-ro",
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert read_only.cmd[read_only.cmd.index("--mcp-config") + 1] == str(tmp_path / ".mcp.json")
+    assert read_only.cmd[read_only.cmd.index("--allowedTools") + 1] == "mcp__sources__verify_word"
+
+    write = KimiccHarness().build_invocation(
+        prompt="critique",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimicc-sources-write",
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert "--mcp-config" not in write.cmd
+    assert "--allowedTools" not in write.cmd
+
+
 def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
     _kimicc_ready(tmp_path, monkeypatch)
     probed: list[str] = []

@@ -6692,27 +6692,35 @@ def _kimicc_read_only_review_grant(
     harness: str | None,
     mode: str,
     require_review_verdict: bool,
+    cwd: Path | None = None,
 ) -> dict[str, str]:
     """Sources MCP grant for ``ask-kimi --review``.
 
     That ask is ``dispatch --agent kimi --harness kimicc --mode read-only
     --require-review-verdict``. The headless wrapper always passes ``--bare``,
-    and ``claude --bare`` does not load the checkout ``.mcp.json``, so this
-    passes the same file Claude read-only reviews discover from the worktree
-    (the streamable-HTTP ``sources`` server) plus the Claude Code
-    ``--allowedTools`` names. Write modes and non-review read-only dispatches
-    get nothing.
+    and ``claude --bare`` does not load ``.mcp.json``. A review that is not
+    bare discovers that file from the checkout it is running in. When this
+    worker's cwd is a dispatch worktree, pass that worktree's ``.mcp.json``:
+    the worktree can be a different commit from the primary checkout, so the
+    sources server the review should see is the one checked out there. Any
+    other cwd (the primary checkout, or a path that is not a dispatch
+    worktree) gets ``_REPO_ROOT / ".mcp.json"``. Write modes and non-review
+    read-only dispatches get nothing.
     """
     if harness != "kimicc" or mode != "read-only" or not require_review_verdict:
         return {}
     from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+    from scripts.guardrails.worktree_containment import is_dispatch_worktree
 
     allowed = review_tools_allowed_csv("claude")
     if not allowed:
         return {}
+    mcp_config = _REPO_ROOT / ".mcp.json"
+    if cwd is not None and is_dispatch_worktree(cwd):
+        mcp_config = Path(cwd) / ".mcp.json"
     return {
         "allowed_tools": allowed,
-        "mcp_config_path": str(_REPO_ROOT / ".mcp.json"),
+        "mcp_config_path": str(mcp_config),
     }
 
 
@@ -6897,6 +6905,7 @@ def _run_worker(
                     harness=harness,
                     mode=mode,
                     require_review_verdict=require_review_verdict,
+                    cwd=cwd,
                 )
             )
             if (

@@ -209,10 +209,15 @@ class KimiccHarness:
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--strict-mcp-config"])
             if tc.get("allowed_tools"):
                 cmd.extend(["--allowedTools", str(tc["allowed_tools"])])
-        elif isinstance(tc.get("mcp_config_path"), str) and tc.get("allowed_tools"):
-            # Read-only kimicc reviews. --bare does not load .mcp.json, so the
-            # dispatch passes the checkout file Claude reviews discover, plus
-            # the sources --allowedTools grant. Write modes do not set these.
+        elif (
+            mode == "read-only"
+            and isinstance(tc.get("mcp_config_path"), str)
+            and tc.get("allowed_tools")
+        ):
+            # Local boundary, not only the delegate grant. --bare does not
+            # load .mcp.json, so a read-only review passes the checkout file
+            # plus the sources --allowedTools grant. A write mode that still
+            # carries these keys must not emit them.
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--allowedTools", str(tc["allowed_tools"])])
         if tc.get("agent"):
             cmd.extend(["--agent", str(tc["agent"])])
