@@ -5833,12 +5833,17 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 # and each one read only ``curriculum/l2-uk-en/curriculum.yaml``
 # (FileNotFoundError, or ORCH_TRACK_NOT_ACTIVE because a missing manifest
 # yields no active levels). Cone mode also checks out files that sit
-# directly in every ancestor of an included directory, so including
-# ``curriculum/l2-uk-en/evidence`` (smallest l2-uk-en subdirectory, 20K)
-# materialises curriculum.yaml plus the other loose files beside it
-# (vocabulary.db, module-mapping.json, callout-claims-review.md).
-# ``du -sh`` of that materialised tree: 3.4M, not 289M. The anchor is added
-# only when that directory exists at HEAD.
+# directly in every ancestor of an included directory. The anchor is
+# ``curriculum/l2-uk-en/lesson-plans`` (192K), not a smaller sibling:
+# once ``curriculum/`` exists, collection of
+# tests/curriculum/test_plan_validate_cross.py loads
+# ``lesson-plans/a1/_arc.yaml`` (tree_absent is false). An evidence-only
+# anchor (3.4M, yaml present, arc absent) died at collection with exit 2.
+# Including lesson-plans materialises the arc, curriculum.yaml, and the
+# other loose files beside the manifest (vocabulary.db,
+# module-mapping.json, callout-claims-review.md). ``du -sh`` of that
+# tree: 3.6M, not 289M. The anchor is added only when that directory
+# exists at HEAD.
 _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
     {
         "curriculum",
@@ -5847,7 +5852,7 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
         "data/lexicon",
     }
 )
-_DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE = "curriculum/l2-uk-en/evidence"
+_DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE = "curriculum/l2-uk-en/lesson-plans"
 # Owned-path prefixes that re-include a default-excluded tree even when the
 # path itself is not under that tree (tests and scripts that read it).
 # Filename stems end with "_" and match tests/test_open_model_*.py. Exact
@@ -6082,9 +6087,10 @@ def _apply_dispatch_sparse_checkout(
 
     Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
     (~633MB), and ``data/lexicon/`` (~277MB). When ``curriculum`` stays
-    excluded and ``curriculum/l2-uk-en/evidence`` exists at HEAD, that
+    excluded and ``curriculum/l2-uk-en/lesson-plans`` exists at HEAD, that
     directory is still cone-included so ``curriculum/l2-uk-en/curriculum.yaml``
-    is present (~3.4MB) without the rest of ``curriculum/``.
+    and ``lesson-plans/a1/_arc.yaml`` are present (~3.6MB) without the rest
+    of ``curriculum/``.
     ``--full-checkout`` disables sparse mode. ``--sparse-include`` keeps a
     named excluded tree.
     """

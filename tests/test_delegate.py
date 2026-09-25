@@ -6099,8 +6099,8 @@ def _make_run_stub(
             # curriculum/l2-uk-en/curriculum.yaml without the rest of the tree.
             if cmd[-1:] == ["data/"]:
                 listing = "data/corpus_audit\ndata/lexicon\ndata/projects\ndata/raw\n"
-            elif cmd[-1:] == ["curriculum/l2-uk-en/evidence"]:
-                listing = "curriculum/l2-uk-en/evidence\n"
+            elif cmd[-1:] == ["curriculum/l2-uk-en/lesson-plans"]:
+                listing = "curriculum/l2-uk-en/lesson-plans\n"
             else:
                 listing = "curriculum\ndata\ndocs\nscripts\nsite\ntests\nwiki\n"
             return subprocess.CompletedProcess(cmd, 0, listing, "")
@@ -7819,7 +7819,7 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     set_calls = [c for c in sparse_calls if c[:3] == ["git", "sparse-checkout", "set"]]
     assert set_calls, "default dispatch worktree must apply sparse-checkout set"
     assert "curriculum" not in set_calls[0]
-    assert "curriculum/l2-uk-en/evidence" in set_calls[0]
+    assert "curriculum/l2-uk-en/lesson-plans" in set_calls[0]
     assert "wiki" not in set_calls[0]
     assert "data/projects" not in set_calls[0]
     assert "data/lexicon" not in set_calls[0]
@@ -9651,9 +9651,9 @@ def test_apply_dispatch_sparse_checkout_keeps_curriculum_manifest(tmp_path):
     manifest = primary / "curriculum" / "l2-uk-en" / "curriculum.yaml"
     manifest.parent.mkdir(parents=True)
     manifest.write_text("levels: {}\n", encoding="utf-8")
-    evidence = primary / "curriculum" / "l2-uk-en" / "evidence" / "a1" / "note.txt"
-    evidence.parent.mkdir(parents=True)
-    evidence.write_text("anchor\n", encoding="utf-8")
+    arc = primary / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "_arc.yaml"
+    arc.parent.mkdir(parents=True)
+    arc.write_text("level: a1\n", encoding="utf-8")
     plans = primary / "curriculum" / "l2-uk-en" / "plans" / "a2" / "x.yaml"
     plans.parent.mkdir(parents=True)
     plans.write_text("slug: x\n", encoding="utf-8")
@@ -9675,9 +9675,9 @@ def test_apply_dispatch_sparse_checkout_keeps_curriculum_manifest(tmp_path):
     meta = delegate._apply_dispatch_sparse_checkout(worktree)
     assert meta["applied"] is True
     assert "curriculum" in meta["excluded"]
-    assert "curriculum/l2-uk-en/evidence" in meta["included_dirs"]
+    assert "curriculum/l2-uk-en/lesson-plans" in meta["included_dirs"]
     assert (worktree / "curriculum" / "l2-uk-en" / "curriculum.yaml").is_file()
-    assert (worktree / "curriculum" / "l2-uk-en" / "evidence" / "a1" / "note.txt").is_file()
+    assert (worktree / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "_arc.yaml").is_file()
     assert not (worktree / "curriculum" / "l2-uk-en" / "plans").exists()
     assert not (worktree / "curriculum" / "l2-uk-direct").exists()
     assert not (worktree / "wiki").exists()
