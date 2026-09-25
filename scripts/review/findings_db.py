@@ -648,17 +648,19 @@ AGREEMENT_AMBIGUOUS = "agreement_ambiguous"
 def agreement_state(conn: sqlite3.Connection, level: str, slug: str, lesson_n: int, manifest_sha256: str) -> str:
     """``satisfied`` when a second-seat comparison's first-seat attempt reviewed exactly ``manifest_sha256``.
 
-    ``agreement_ambiguous`` (fail closed) when a comparison of the lesson names a first-seat attempt id that exists
-    under more than one review id and no unambiguous comparison satisfies the gate; otherwise ``pending``.
+    ``agreement_ambiguous`` (fail closed) when a comparison of the lesson names either attempt id (as the scorer
+    resolves both) under more than one review id and no unambiguous comparison satisfies the gate; otherwise ``pending``.
     """
     ambiguous = False
     for agreement in conn.execute(
-        "SELECT attempt_a FROM agreement WHERE level = ? AND slug = ? AND lesson_n = ?", (level, slug, lesson_n)
+        "SELECT attempt_a, attempt_b FROM agreement WHERE level = ? AND slug = ? AND lesson_n = ?",
+        (level, slug, lesson_n),
     ).fetchall():
-        rows, review_ids = agreement_attempt_rows(conn, level, slug, lesson_n, agreement["attempt_a"])
-        if len(review_ids) > 1:
+        first_rows, first_ids = agreement_attempt_rows(conn, level, slug, lesson_n, agreement["attempt_a"])
+        _, second_ids = agreement_attempt_rows(conn, level, slug, lesson_n, agreement["attempt_b"])
+        if len(first_ids) > 1 or len(second_ids) > 1:
             ambiguous = True
-        elif any(row["role"] == "first" and row["manifest_sha256"] == manifest_sha256 for row in rows):
+        elif any(row["role"] == "first" and row["manifest_sha256"] == manifest_sha256 for row in first_rows):
             return AGREEMENT_SATISFIED
     return AGREEMENT_AMBIGUOUS if ambiguous else AGREEMENT_PENDING
 

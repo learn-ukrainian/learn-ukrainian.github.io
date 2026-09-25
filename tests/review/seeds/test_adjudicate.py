@@ -50,6 +50,7 @@ class Case:
         task_id: str | None = None,
         prompt_sha256: str | None = None,
         prompt_blocks: list[str] | None = None,
+        mode: str = "read-only",
     ) -> str:
         """Write the dispatch record of the adjudication (by default of this case's own task and its rendered prompt,
         dispatched plain: delegate appended only its worktree block)."""
@@ -61,6 +62,7 @@ class Case:
             "agent": agent,
             "model": model,
             "status": "done",
+            "mode": mode,
             "prompt_sha256": sha,
             "effective_prompt_sha256": hashlib.sha256(b"effective " + sha.encode()).hexdigest(),
             "prompt_blocks": blocks,
@@ -439,6 +441,23 @@ def test_a_dispatch_with_caller_controlled_prompt_blocks_is_refused(seeded: Case
     assert code_of(seeded, good) == [adj.TASK_MISMATCH]
     # plain (only the worktree block), or no block at all (no worktree): accepted
     seeded.dispatch("agy", "gemini-3.1-pro-preview", prompt_blocks=[])
+    assert seeded.record(good)["new"] is True
+
+
+def test_a_dispatch_that_was_not_read_only_is_refused(seeded: Case) -> None:
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    # the same task file, dispatched write-capable: delegate adds write-mode instructions under the worktree label
+    for mode in ("workspace-write", "danger"):
+        seeded.dispatch("agy", "gemini-3.1-pro-preview", mode=mode)
+        assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    # a record that carries no mode cannot prove it was read-only
+    path = seeded.env.tasks / f"{seeded.task_id}.json"
+    record = json.loads(path.read_text(encoding="utf-8"))
+    del record["mode"]
+    path.write_text(json.dumps(record), encoding="utf-8")
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    # read-only with only the worktree block: accepted
+    seeded.dispatch("agy", "gemini-3.1-pro-preview", mode="read-only", prompt_blocks=["worktree"])
     assert seeded.record(good)["new"] is True
 
 
