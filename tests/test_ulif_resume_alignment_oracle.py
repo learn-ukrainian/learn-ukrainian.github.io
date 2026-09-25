@@ -11,11 +11,16 @@ from pathlib import Path
 
 import pytest
 
+from scripts.lexicon.runner import fetch_ulif_homonyms as ulif_walk
 from scripts.lexicon.runner.fetch_ulif_homonyms import (
+    HttpResult,
+    PoliteClient,
     ResumeMismatchError,
     SpellingLedger,
+    _reseed_to_page,
     _resume_window_offset,
     align_resume_window,
+    parse_register_list,
 )
 
 _ALPHABET = ("A", "B", "C")
@@ -38,8 +43,11 @@ def _brute_consistent(
     end = end_headword or None
     consistent: set[int] = set()
     overlapped = False
+    window_length = len(window)
+    previous_get = previous_rows.get
+    target_get = target_rows.get
     for origin in range(-page_size if target_page > 1 else 0, limit):
-        last = origin + len(window) - 1
+        last = origin + window_length - 1
         fits = True
         if short and known is not None and last != known - 1:
             fits = False
@@ -53,9 +61,9 @@ def _brute_consistent(
             coord = origin + index
             expected = None
             if coord < 0:
-                expected = previous_rows.get(page_size + coord)
+                expected = previous_get(page_size + coord)
             elif coord < limit:
-                expected = target_rows.get(coord)
+                expected = target_get(coord)
             if expected is None:
                 continue
             overlaps = True
@@ -68,13 +76,6 @@ def _brute_consistent(
         if matches:
             consistent.add(origin)
     return consistent, overlapped
-
-
-def _ask(window: tuple[str, ...], **kwargs: object) -> int | str | None:
-    try:
-        return align_resume_window(window, **kwargs)  # type: ignore[arg-type]
-    except ResumeMismatchError:
-        return "raise"
 
 
 def _assert_matches_oracle(
@@ -98,15 +99,18 @@ def _assert_matches_oracle(
         end_headword=end_headword,
         target_page=target_page,
     )
-    got = _ask(
-        window,
-        page_size=page_size,
-        target_rows=target_rows,
-        previous_rows=previous,
-        page_row_count=page_row_count,
-        end_headword=end_headword,
-        target_page=target_page,
-    )
+    try:
+        got: int | str | None = align_resume_window(
+            window,
+            page_size=page_size,
+            target_rows=target_rows,
+            previous_rows=previous,
+            page_row_count=page_row_count,
+            end_headword=end_headword,
+            target_page=target_page,
+        )
+    except ResumeMismatchError:
+        got = "raise"
     if isinstance(got, int):
         assert got == true_start, (got, true_start, consistent, window)
     if consistent == {true_start}:
@@ -290,3 +294,85 @@ def test_short_pages_unknown_end_and_matching_next_page_oracle() -> None:
                                 )
                                 cases += 1
     assert cases > 8_000
+
+
+def _register_html(words: tuple[str, ...], *, size: int) -> str:
+    rows = "".join(
+        '<tr><td><a href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,'
+        f'&#39;Select${index}&#39;)">{word}</a></td></tr>'
+        for index, word in enumerate(words)
+    )
+    return (
+        '<input type="hidden" name="__VIEWSTATE" value="VS" />'
+        '<input type="hidden" name="__VIEWSTATEGENERATOR" value="GEN" />'
+        '<input type="hidden" name="__EVENTVALIDATION" value="EV" />'
+        f'<table id="ContentPlaceHolder1_dgv">{rows}</table>'
+        f'<span id="ContentPlaceHolder1_rlength">Реєстрових слів - {size}</span>'
+    )
+
+
+@pytest.mark.parametrize("terminal_size", [1, 3, 7])
+@pytest.mark.parametrize(("previous_suffix", "direct"), [(3, True), (1, False), (0, False)])
+def test_previous_page_anchor_handles_short_terminal_page(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, terminal_size: int, previous_suffix: int, direct: bool
+) -> None:
+    """Exercise anchor choice, +25 conversion, and suffix guard on a short terminal page."""
+    previous = tuple(f"p{index:02d}" for index in range(25))
+    terminal = tuple(f"t{index:02d}" for index in range(terminal_size))
+    window = previous[25 - previous_suffix :] + terminal
+    size = 25 + terminal_size  # Not a multiple of the register page size.
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    cache = ulif_walk.prepare_database(tmp_path / "cache.db")
+    try:
+        ledger.ensure_page(1, start_headword=previous[0], end_headword=previous[-1], row_count=25)
+        for index, word in enumerate(previous):
+            ledger.ensure_row(1, index, select_arg=f"Select${index}", stressed_headword=word, normalized_spelling=word)
+        ledger.mark_page(1, "completed")
+
+        searches: list[str] = []
+
+        def transport(method: str, data: dict[str, str] | None) -> HttpResult:
+            if method == "GET":
+                return HttpResult(200, _register_html((), size=size), {})
+            assert data is not None
+            searches.append(data["ctl00$ContentPlaceHolder1$tsearch"])
+            return HttpResult(200, _register_html(window, size=size), {})
+
+        fast_forwarded: list[int] = []
+
+        def fast_forward(client, ledger, cache, seed_tokens, start_headword, target_page, *, quiet=False):
+            fast_forwarded.append(target_page)
+            html = _register_html(terminal, size=size)
+            return html, parse_register_list(html)
+
+        monkeypatch.setattr(ulif_walk, "_fast_forward_to_page", fast_forward)
+        client = PoliteClient(transport, delay_seconds=1, sleep=lambda _seconds: None)
+        _, rows, offset = _reseed_to_page(client, ledger, cache, target_page=2, start_headword="p00", quiet=True)
+        assert searches == [previous[-1]]
+        assert [row["stressed"] for row in rows] == list(window if direct else terminal)
+        assert offset == (previous_suffix if direct else 0)
+        assert fast_forwarded == ([] if direct else [2])
+
+        if previous_suffix:
+            # The oracle's known previous listing locates the raw search start.
+            matching = [
+                start
+                for start in range(25)
+                if all(previous[start + i] == word for i, word in enumerate(window) if start + i < 25)
+            ]
+            assert matching == [25 - previous_suffix]
+            assert (
+                _resume_window_offset(
+                    ledger,
+                    [{"stressed": word} for word in window],
+                    target_page=1,
+                    anchor_headword=previous[-1],
+                    anchor_page=1,
+                    anchor_index=0,
+                    nonterminal_page=True,
+                )
+                == previous_suffix - 25
+            )
+    finally:
+        cache.close()
+        ledger.close()

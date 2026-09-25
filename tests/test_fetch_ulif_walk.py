@@ -1046,6 +1046,37 @@ def test_verify_ledger_rejects_row_shift_against_recorded_entry_position(tmp_pat
         ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite")
 
 
+def test_verify_ledger_accepts_interrupted_page_write(tmp_path: Path):
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    try:
+        # The walk commits page geometry before it writes the listing rows.
+        ledger.ensure_page(1, start_headword="w00", end_headword="w24", row_count=25)
+        for index in range(3):
+            word = f"w{index:02d}"
+            ledger.ensure_row(1, index, select_arg=f"Select${index}", stressed_headword=word, normalized_spelling=word)
+    finally:
+        ledger.close()
+    assert ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite") == 1
+
+
+def test_verify_ledger_reuses_walk_cross_page_overlap_check(tmp_path: Path):
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    try:
+        first = [f"w{index:02d}" for index in range(25)]
+        second = ["w22", "w23", *[f"x{index:02d}" for index in range(23)]]
+        for page_num, words in ((1, first), (2, second)):
+            ledger.ensure_page(page_num, start_headword=words[0], end_headword=words[-1], row_count=25)
+            for index, word in enumerate(words):
+                ledger.ensure_row(
+                    page_num, index, select_arg=f"Select${index}", stressed_headword=word, normalized_spelling=word
+                )
+            ledger.mark_page(page_num, "completed")
+    finally:
+        ledger.close()
+    with pytest.raises(ulif_walk.ResumeMismatchError, match=r"page 2: .*register_overlap"):
+        ulif_walk.verify_ledger_continuity(tmp_path / "ledger.sqlite")
+
+
 @pytest.mark.parametrize(
     ("sizes", "initial_search", "expected_failure"),
     [

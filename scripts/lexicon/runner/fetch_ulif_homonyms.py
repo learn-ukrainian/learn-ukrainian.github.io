@@ -2560,6 +2560,7 @@ def verify_ledger_continuity(path: Path) -> int:
             conn.execute("SELECT 1 FROM responses WHERE role = 'tsearch:start' LIMIT 1").fetchone() is not None
         )
         checked = 0
+        previous_completed_rows: list[sqlite3.Row] | None = None
         for page in pages:
             number = int(page["page_num"])
             if number != checked + 1:
@@ -2586,12 +2587,23 @@ def verify_ledger_continuity(path: Path) -> int:
                 raise ResumeMismatchError(f"page {number}: short page before the last page")
             if words and page["start_headword"] != words[0]:
                 raise ResumeMismatchError(f"page {number}: start headword does not match row 0")
-            if words and page["end_headword"] and page["end_headword"] != words[-1]:
-                raise ResumeMismatchError(f"page {number}: end headword does not match last row")
-            if (page["row_count"] or page["state"] == "completed") and int(page["row_count"]) != len(rows):
-                raise ResumeMismatchError(f"page {number}: row count does not match recorded rows")
-            if page["state"] == "completed" and (not words or not page["end_headword"]):
-                raise ResumeMismatchError(f"page {number}: completed page lacks listing boundaries")
+            if page["state"] == "completed":
+                if words and page["end_headword"] != words[-1]:
+                    raise ResumeMismatchError(f"page {number}: end headword does not match last row")
+                if int(page["row_count"]) != len(rows):
+                    raise ResumeMismatchError(f"page {number}: row count does not match recorded rows")
+                if not words or not page["end_headword"]:
+                    raise ResumeMismatchError(f"page {number}: completed page lacks listing boundaries")
+                if previous_completed_rows is not None:
+                    try:
+                        _verify_register_continuity(previous_completed_rows, rows, number)
+                    except SessionInvalid as exc:
+                        raise ResumeMismatchError(f"page {number}: {exc}") from exc
+                previous_completed_rows = rows
+            else:
+                if page["row_count"] and len(rows) > int(page["row_count"]):
+                    raise ResumeMismatchError(f"page {number}: recorded rows exceed page row count")
+                previous_completed_rows = None
             for row in rows:
                 index = int(row["row_index"])
                 position = f"{number}:{index}"
@@ -2619,6 +2631,7 @@ def align_resume_window(
     page_row_count: int | None = None,
     end_headword: str | None = None,
     target_page: int = 1,
+    nonterminal_page: bool = False,
 ) -> int | None:
     """Return where ``headwords[0]`` sits relative to the target page's row 0.
 
@@ -2631,6 +2644,8 @@ def align_resume_window(
     recorded row matches it, and the window fits a known page length and end
     headword. A short window (shorter than ``page_size``) on a page whose row
     count is known is the tail of the register, so it must end on the last row.
+    When the recorded page precedes the terminal page, a short window can cross
+    its boundary; ``nonterminal_page`` permits that crossing.
     A full window may cross onto the next page; those rows are not an input.
 
     ``ResumeMismatchError`` is raised only when no start is consistent and some
@@ -2652,9 +2667,11 @@ def align_resume_window(
 
     for origin in range(-page_size if target_page > 1 else 0, limit):
         last = origin + len(headwords) - 1
-        if short and known_count is not None and last != known_count - 1:
+        if short and known_count is not None and not nonterminal_page and last != known_count - 1:
             continue
-        if last >= limit and (short or (known_count is not None and known_count < page_size)):
+        if last >= limit and (
+            not nonterminal_page and (short or (known_count is not None and known_count < page_size))
+        ):
             continue
         overlaps = 0
         mismatch_count = 0
@@ -2700,7 +2717,7 @@ def align_resume_window(
 
     if len(consistent) == 1:
         return consistent[0]
-    if not consistent and saw_overlap and best is not None:
+    if not consistent and saw_overlap and best is not None and not (nonterminal_page and short):
         raise ResumeMismatchError(best[1])
     return None
 
@@ -2713,6 +2730,7 @@ def _resume_window_offset(
     anchor_headword: str,
     anchor_page: int,
     anchor_index: int,
+    nonterminal_page: bool = False,
 ) -> int | None:
     """Return how many rows the window starts before the target page, or None.
 
@@ -2735,6 +2753,7 @@ def _resume_window_offset(
         page_row_count=row_count,
         end_headword=end,
         target_page=target_page,
+        nonterminal_page=nonterminal_page,
     )
     if origin is None:
         return None
@@ -2887,6 +2906,7 @@ def _reseed_to_page(
             anchor_headword=search_target or "",
             anchor_page=anchor_page,
             anchor_index=0,
+            nonterminal_page=anchor_page != target_page,
         )
         offset = (
             anchor_offset + REGISTER_PAGE_SIZE
