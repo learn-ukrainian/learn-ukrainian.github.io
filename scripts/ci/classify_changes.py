@@ -261,6 +261,7 @@ def build_selected_candidates(paths: Sequence[str], tree: Iterable[str]) -> list
 def _full(shard_count: int, *, frontend: str = "true") -> dict[str, str]:
     return {
         "docs_only": "false",
+        "docs_reads_content": "false",
         "frontend": frontend,
         "backend": "true",
         "shards": json.dumps(list(range(1, shard_count + 1))),
@@ -270,9 +271,10 @@ def _full(shard_count: int, *, frontend: str = "true") -> dict[str, str]:
     }
 
 
-def _docs() -> dict[str, str]:
+def _docs(*, reads_content: bool = False) -> dict[str, str]:
     return {
         "docs_only": "true",
+        "docs_reads_content": "true" if reads_content else "false",
         "frontend": "false",
         "backend": "true",
         "shards": "[1]",
@@ -288,6 +290,7 @@ def _content() -> dict[str, str]:
     # build even though only site/ paths match the frontend denominator.
     return {
         "docs_only": "false",
+        "docs_reads_content": "false",
         "frontend": "true",
         "backend": "true",
         "shards": "[1]",
@@ -300,6 +303,7 @@ def _content() -> dict[str, str]:
 def _selected(candidates: Sequence[str]) -> dict[str, str]:
     return {
         "docs_only": "false",
+        "docs_reads_content": "false",
         "frontend": "false",
         "backend": "true",
         "shards": "[1]",
@@ -325,6 +329,7 @@ def is_pure_frontend_path(path: str) -> bool:
 def _frontend_only() -> dict[str, str]:
     return {
         "docs_only": "false",
+        "docs_reads_content": "false",
         "frontend": "true",
         "backend": "false",
         "shards": "[]",
@@ -355,6 +360,18 @@ def preflight_for(event: str, tier: dict[str, str]) -> str:
         and tier["pytest_mode"] in _PREFLIGHT_PYTEST_MODES
     )
     return "true" if runs else "false"
+
+
+# Trees whose edits force the docs lane to run the reads_content pytest leg
+# (#8720): a docs-lane PR that changes curriculum/ or wiki/ content can break a
+# test that reads those live trees, and the docs lane otherwise runs no
+# reads_content tests.
+_READS_CONTENT_ROOTS = ("curriculum/", "wiki/")
+
+
+def has_reads_content_root_path(paths: Iterable[str]) -> bool:
+    """True when any changed path is under curriculum/ or wiki/ (#8720)."""
+    return any(_norm(path).startswith(_READS_CONTENT_ROOTS) for path in paths)
 
 
 def classify(
@@ -415,7 +432,10 @@ def classify_tier(
         return _content()
     docs_only = all(is_docs(path) for path in paths) and not frontend
     if docs_only:
-        return _docs()
+        # A curriculum/wiki docs PR still needs the reads_content leg (#8720):
+        # the docs lane runs no reads_content tests otherwise, so an edit that
+        # breaks a test reading those live trees would merge green.
+        return _docs(reads_content=has_reads_content_root_path(paths))
 
     tree: set[str] | None
     if tree_paths is not None:

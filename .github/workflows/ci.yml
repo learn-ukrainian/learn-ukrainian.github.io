@@ -53,6 +53,7 @@ jobs:
       pull-requests: read
     outputs:
       docs_only: ${{ steps.classify.outputs.docs_only }}
+      docs_reads_content: ${{ steps.classify.outputs.docs_reads_content }}
       frontend: ${{ steps.classify.outputs.frontend }}
       backend: ${{ steps.classify.outputs.backend }}
       shards: ${{ steps.classify.outputs.shards }}
@@ -344,6 +345,7 @@ jobs:
       - name: Run pytest
         env:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
+          DOCS_READS_CONTENT: ${{ needs.changes.outputs.docs_reads_content }}
           PYTEST_MODE: ${{ needs.changes.outputs.pytest_mode }}
           SHARD: ${{ matrix.shard }}
         run: |
@@ -362,6 +364,21 @@ jobs:
               -m 'repo_wide and not slow and not atlas_release' --strict-markers \
               -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
               --timeout-method=thread --override-ini addopts=-v
+            # A curriculum/ or wiki/ docs PR runs no reads_content tests
+            # otherwise, so an edit that breaks a test reading those live trees
+            # merges green and turns main red on the next full-tier run (#8720).
+            # Find the marked modules with the same narrow allowlist pattern as
+            # the repo_wide leg; an empty list fails the step loudly.
+            if [ "$DOCS_READS_CONTENT" = "true" ]; then
+              reads_content_list="${RUNNER_TEMP}/pytest-reads-content-files.txt"
+              git ls-files -- tests | grep -E '/test_[^/]+\.py$' | xargs -r grep -lE 'pytest\.mark\.reads_content' \
+                | sort > "$reads_content_list" || true
+              [ -s "$reads_content_list" ] || { echo "no reads_content tests found; the reads_content marker invariant is broken" >&2; exit 1; }
+              LU_PYTEST_SHARD_FILES="$reads_content_list" .venv/bin/python -m pytest tests \
+                -m 'reads_content and not slow and not atlas_release' --strict-markers \
+                -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+                --timeout-method=thread --override-ini addopts=-v
+            fi
             exit 0
           fi
           if [ "$PYTEST_MODE" = "content" ]; then

@@ -15,6 +15,12 @@ Resolution order (one shared resolution — do not copy per script):
    ``<system temp>/lu-scratch`` so tooling stays available on hosts without a
    writable ``/var/tmp``.
 
+Task-owned disposable scratch for large ad-hoc runs (#8738) lives in the
+``task-scratch`` namespace directly below this root; see
+:mod:`scripts.common.task_scratch` and ``scripts/tools/task_scratch.py``.
+Legacy sweeps must never treat that namespace, these roots, or their
+ancestors as residue.
+
 ``LU_RUNTIME_TMP_BASE_ROOT`` is deliberately *not* a creation override: the
 dispatcher records it so nested cleanup can find the namespace base, and
 honoring it here would pull worker scratch back onto tmpfs.
