@@ -98,7 +98,7 @@ exit 64
     )
     _write_executable(
         fake_bin / "restic",
-        """#!/bin/bash
+        r"""#!/bin/bash
 set -eu
 if [[ "${1:-}" == "version" ]]; then
   printf '%s\n' 'restic 0.19.1 compiled with go1.24.0 on darwin/arm64'
@@ -115,34 +115,60 @@ fi
 if [[ "${1:-}" == "cat" && -z "${RESTIC_REPOSITORY:-}" ]]; then
   exit 78
 fi
-if [[ "${1:-}" == "backup" && -n "${FAKE_DB_RELATIVE:-}" ]]; then
-  rows="$(sqlite3 "file:$PWD/$FAKE_DB_RELATIVE?mode=ro&immutable=1" \
+stdin_filename=""
+if [[ "${1:-}" == "backup" ]]; then
+  previous=""
+  for argument in "$@"; do
+    [[ "$previous" == "--stdin-filename" ]] && stdin_filename="$argument"
+    previous="$argument"
+  done
+  if [[ -n "$stdin_filename" ]]; then
+    mkdir -p "$(dirname "$FAKE_SNAPSHOT_DIR/$stdin_filename")"
+    cat > "$FAKE_SNAPSHOT_DIR/$stdin_filename"
+  else
+    mkdir -p "$FAKE_SNAPSHOT_DIR"
+    cp -a "$PWD/.claude" "$PWD/.agent" "$PWD/batch_state" "$PWD/data" "$FAKE_SNAPSHOT_DIR/"
+    find "$FAKE_SNAPSHOT_DIR" -type f \
+      \( -name '*-wal' -o -name '*-shm' -o -name '*-journal' -o -name '.DS_Store' \) -delete
+    find "$FAKE_SNAPSHOT_DIR" -type d \
+      \( -name qdrant -o -name __pycache__ -o -name '*-home' \) -prune -exec find '{}' -depth -delete \;
+    find "$FAKE_SNAPSHOT_DIR" -type f \( -name '*.db' -o -name '*.sqlite*' \) -delete
+  fi
+fi
+if [[ "${1:-}" == "backup" && -n "${FAKE_DB_RELATIVE:-}" && "$stdin_filename" == "$FAKE_DB_RELATIVE" ]]; then
+  rows="$(sqlite3 "file:$FAKE_SNAPSHOT_DIR/$stdin_filename?mode=ro&immutable=1" \
     'SELECT COUNT(*) FROM recovery_probe;')"
   printf 'db_rows=<%s>\n' "$rows" >> "$FAKE_RESTIC_LOG"
 fi
-if [[ "${1:-}" == "backup" && -n "${FAKE_REQUIRED_RELATIVE:-}" ]]; then
-  test -f "$PWD/$FAKE_REQUIRED_RELATIVE"
-  printf 'staged_required=<%s>\n' "$FAKE_REQUIRED_RELATIVE" \
-    >> "$FAKE_RESTIC_LOG"
+if [[ "${1:-}" == "backup" && -n "${FAKE_REQUIRED_RELATIVE:-}" && -f "$FAKE_SNAPSHOT_DIR/$FAKE_REQUIRED_RELATIVE" ]]; then
+  printf 'staged_required=<%s>\n' "$FAKE_REQUIRED_RELATIVE" >> "$FAKE_RESTIC_LOG"
 fi
-if [[ "${1:-}" == "backup" && -n "${FAKE_FORBIDDEN_RELATIVES:-}" ]]; then
+if [[ "${1:-}" == "backup" && -n "${FAKE_FORBIDDEN_RELATIVES:-}" && -z "$stdin_filename" ]]; then
   for forbidden in $FAKE_FORBIDDEN_RELATIVES; do
-    test ! -e "$PWD/$forbidden"
+    test ! -e "$FAKE_SNAPSHOT_DIR/$forbidden"
     printf 'staged_excluded=<%s>\n' "$forbidden" >> "$FAKE_RESTIC_LOG"
   done
 fi
-if [[ "${1:-}" == "backup" && -f "$PWD/BACKUP-RECEIPT.json" ]]; then
+if [[ "${1:-}" == "backup" && "$stdin_filename" == "BACKUP-RECEIPT.json" ]]; then
   jq -c '{
     status: .receipt_status,
     paths: [.paths[].path],
     agent: (.paths[] | select(.path == ".agent")),
     data: (.paths[] | select(.path == "data"))
   }' \
-    "$PWD/BACKUP-RECEIPT.json" >> "$FAKE_RESTIC_LOG"
+    "$FAKE_SNAPSHOT_DIR/BACKUP-RECEIPT.json" >> "$FAKE_RESTIC_LOG"
 fi
-if [[ "${1:-}" == "backup" && -n "${FAKE_SNAPSHOT_DIR:-}" ]]; then
-  mkdir -p "$FAKE_SNAPSHOT_DIR"
-  cp -a "$PWD/." "$FAKE_SNAPSHOT_DIR/"
+if [[ "${1:-}" == "ls" ]]; then
+  find "$FAKE_SNAPSHOT_DIR/data/lexicon/runner-mirror" -type f -printf '%p\n' 2>/dev/null \
+    | while IFS= read -r path; do
+      relative="${path#"$FAKE_SNAPSHOT_DIR"}"
+      jq -cn --arg path "$relative" '{struct_type:"node",type:"file",path:$path}'
+    done
+  exit 0
+fi
+if [[ "${1:-}" == "dump" ]]; then
+  cat "$FAKE_SNAPSHOT_DIR/${3#/}"
+  exit 0
 fi
 if [[ "${1:-}" == "restore" && -n "${FAKE_SNAPSHOT_DIR:-}" ]]; then
   dry_run=0
@@ -193,6 +219,7 @@ exit 0
         "LU_BACKUP_TMPDIR": str(staging),
         "LU_BACKUP_LEGACY_DIR": str(legacy),
         "FAKE_RESTIC_LOG": str(log),
+        "FAKE_SNAPSHOT_DIR": str(tmp_path / "snapshot"),
         "FAKE_REPOSITORY_STATE": "initialized",
     }
     return environment, source, staging, legacy
@@ -214,6 +241,160 @@ def _run(
 def _log(environment: dict[str, str]) -> str:
     path = Path(environment["FAKE_RESTIC_LOG"])
     return path.read_text(encoding="utf-8") if path.exists() else ""
+
+
+def test_review_homes_are_excluded_but_other_absolute_links_still_fail(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    home = (
+        source.parent / "batch_state" / "review-receipts"
+        / "attempt-1" / "a1.agy-home"
+    )
+    home.mkdir(parents=True)
+    credential = tmp_path / "dummy-credential"
+    credential.write_text("fixture only\n", encoding="utf-8")
+    (home / "credential-link").symlink_to(credential)
+
+    doctor = _run(environment, "doctor")
+    assert doctor.returncode == 0, doctor.stderr
+    assert "Doctor checks passed." in doctor.stdout
+    preview = _run(environment, "backup")
+    assert preview.returncode == 0, preview.stderr
+    assert str(home) in _log(environment)
+    executed = _run(environment, "backup", "--execute")
+    assert executed.returncode == 0, executed.stderr
+    assert not (Path(environment["FAKE_SNAPSHOT_DIR"]) / "batch_state"
+                / "review-receipts" / "attempt-1" / "a1.agy-home").exists()
+
+    other = source.parent / "batch_state" / "unsafe-link"
+    other.symlink_to(credential)
+    rejected = _run(environment, "doctor")
+    assert rejected.returncode != 0
+    assert "Absolute symlink is not backup-safe in batch_state" in rejected.stderr
+
+
+def test_linux_checks_free_space_before_each_database(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    for name in ("a.db", "b.db"):
+        with sqlite3.connect(source / name) as connection:
+            connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+    counter = tmp_path / "df-count"
+    environment["FAKE_DF_COUNT"] = str(counter)
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(
+        fake_bin / "df",
+        r"""#!/bin/bash
+count=0
+[[ ! -f "$FAKE_DF_COUNT" ]] || count="$(cat "$FAKE_DF_COUNT")"
+count=$((count + 1))
+printf '%s\n' "$count" > "$FAKE_DF_COUNT"
+available=4194304
+[[ "$count" -eq 1 ]] || available=2097152
+printf '%s\n' 'Filesystem 1024-blocks Used Available Capacity Mounted on'
+printf 'testfs 8388608 0 %s 0%% /staging\n' "$available"
+""",
+    )
+    result = _run(environment, "backup", "--execute")
+    assert result.returncode != 0
+    assert "Insufficient staging space for data/b.db" in result.stderr
+    assert counter.read_text(encoding="utf-8").strip() == "2"
+    assert _log(environment).count("arg=<lu-part-db>") == 1
+    assert "arg=<lu-part-complete>" not in _log(environment)
+
+
+def test_linux_local_restic_round_trip_stages_one_db_at_a_time(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    real_restic = shutil.which("restic", path=os.environ["PATH"])
+    if real_restic is None:
+        pytest.skip("restic unavailable")
+    environment, source, staging, _legacy = backup_environment
+    repository = tmp_path / "local-restic-repository"
+    subprocess.run(
+        [real_restic, "-r", str(repository), "init"],
+        env={**os.environ, "RESTIC_PASSWORD_FILE": environment["RESTIC_PASSWORD_FILE"]},
+        check=True, capture_output=True, text=True, timeout=30,
+    )
+    environment["TEST_LOCAL_RESTIC_REPOSITORY"] = str(repository)
+    environment["TEST_REAL_RESTIC"] = real_restic
+    environment["TEST_PEAK_LOG"] = str(tmp_path / "peak.log")
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(
+        fake_bin / "restic",
+        r"""#!/bin/bash
+set -eu
+args=()
+while [[ "$#" -gt 0 ]]; do
+  if [[ "$1" == "--option" && "${2:-}" == "rclone.connections=1" ]]; then
+    shift 2
+    continue
+  fi
+  args+=("$1")
+  shift
+done
+if [[ "${args[0]:-}" == "backup" ]]; then
+  for argument in "${args[@]}"; do
+    if [[ "$argument" == "--stdin" ]]; then
+      count="$(find "$LU_BACKUP_TMPDIR" -type f \( -name '*.db' -o -name '*.sqlite*' \) | wc -l)"
+      printf '%s\n' "$count" >> "$TEST_PEAK_LOG"
+      break
+    fi
+  done
+fi
+export RESTIC_REPOSITORY="$TEST_LOCAL_RESTIC_REPOSITORY"
+exec "$TEST_REAL_RESTIC" "${args[@]}"
+""",
+    )
+    _write_executable(fake_bin / "cp", "#!/bin/bash\nexit 97\n")
+    (source / "ordinary.txt").write_text("recover me\n", encoding="utf-8")
+    first_connection = sqlite3.connect(source / "first.db")
+    first_connection.execute("PRAGMA journal_mode=WAL")
+    first_connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+    first_connection.execute("INSERT INTO recovery_probe VALUES ('first')")
+    first_connection.commit()
+    (source / "first.db").chmod(0o600)
+    second = source.parent / "batch_state" / "second.sqlite3"
+    with sqlite3.connect(second) as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+        connection.execute("INSERT INTO recovery_probe VALUES ('second')")
+    (source / "orphan.db-journal").write_text("transient", encoding="utf-8")
+    home = source.parent / "batch_state" / "review-receipts" / "attempt" / "a1.agy-home"
+    home.mkdir(parents=True)
+    (home / "token-link").symlink_to(tmp_path / "nonexistent-token")
+    symlink_home = source.parent / "batch_state" / "review-receipts" / "attempt-2" / "b2.agy-home"
+    symlink_home.parent.mkdir(parents=True)
+    symlink_home.symlink_to(tmp_path / "nonexistent-scoped-home")
+
+    try:
+        backed_up = _run(environment, "backup", "--execute")
+    finally:
+        first_connection.close()
+    assert backed_up.returncode == 0, backed_up.stderr
+    assert Path(environment["TEST_PEAK_LOG"]).read_text(encoding="utf-8").splitlines() == ["1", "1", "0"]
+    assert list(staging.iterdir()) == []
+    target = tmp_path / "restored"
+    restored = _run(environment, "restore", "latest", "--to", str(target), "--execute")
+    assert restored.returncode == 0, restored.stderr
+    assert (target / "data" / "ordinary.txt").read_text(encoding="utf-8") == "recover me\n"
+    assert not (target / "data" / "first.db-wal").exists()
+    assert not (target / "data" / "first.db-shm").exists()
+    assert not (target / "data" / "orphan.db-journal").exists()
+    assert not (target / "batch_state" / "review-receipts" / "attempt" / "a1.agy-home").exists()
+    assert not (target / "batch_state" / "review-receipts" / "attempt-2" / "b2.agy-home").exists()
+    for database in (target / "data" / "first.db", target / "batch_state" / "second.sqlite3"):
+        with sqlite3.connect(database) as connection:
+            assert connection.execute("PRAGMA integrity_check").fetchone() == ("ok",)
+            assert connection.execute("SELECT COUNT(*) FROM recovery_probe").fetchone() == (1,)
+    assert (target / "data" / "first.db").stat().st_mode & 0o777 == 0o600
+    receipt = json.loads((target / "BACKUP-RECEIPT.json").read_text(encoding="utf-8"))
+    assert receipt["schema_version"] == 2
+    assert len(receipt["linux_run"]["databases"]) == 2
 
 
 def test_backup_defaults_to_repository_dry_run(
@@ -395,7 +576,7 @@ def test_execute_fails_closed_when_live_runner_mirror_changes_after_staging(
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode != 0
-    assert "refusing to write a receipt for content not backed up" in result.stderr
+    assert "refusing to write a durability receipt" in result.stderr
     assert not (mirror.parent / "RESTIC-GATE-RECEIPT.json").exists()
     with pytest.raises(DurableMirrorError, match="no restic gate receipt"):
         require_durable(mirror)
@@ -450,7 +631,8 @@ def test_execute_rejects_a_corrupt_database_before_upload(
 
     assert result.returncode != 0
     assert "SQLite online backup failed: data/corrupt.db" in result.stderr
-    assert "arg=<backup>" not in _log(environment)
+    assert "arg=<lu-part-db>" not in _log(environment)
+    assert "arg=<lu-part-complete>" not in _log(environment)
     assert list(staging.iterdir()) == []
 
 
@@ -483,11 +665,14 @@ def test_receipt_counts_match_post_exclusion_snapshot_contents(
     assert list(staging.iterdir()) == []
 
 
-def test_execute_refuses_when_full_tree_would_exceed_staging_space(
+def test_execute_refuses_when_one_database_would_exceed_staging_space(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     (source / "valuable.txt").write_text("sole copy\n", encoding="utf-8")
+    database = source / "large.db"
+    with sqlite3.connect(database) as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
     fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
     _write_executable(
         fake_bin / "df",
@@ -501,7 +686,7 @@ printf '%s\\n' 'testfs 4194304 0 2097152 0% /staging'
 
     assert result.returncode != 0
     assert "Insufficient staging space" in result.stderr
-    assert "arg=<backup>" not in _log(environment)
+    assert "arg=<lu-part-db>" not in _log(environment)
 
 
 def test_darwin_rejects_cross_volume_copy_on_write_staging(
