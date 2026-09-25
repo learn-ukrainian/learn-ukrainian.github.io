@@ -2386,7 +2386,7 @@ def test_controller_preserves_python_launcher_for_stage_subprocesses(
         expected_evidence_manifest_sha256="2" * 64,
         expected_sources_endpoint_identity={
             "server_code_sha256": "3" * 64,
-            "sources_db_sha256": "4" * 64,
+            "sources_db_meta_sha256": "4" * 64,
             "vesum_db_sha256": "5" * 64,
         },
     )
@@ -2430,7 +2430,7 @@ def test_controller_binds_preflight_source_identity_into_grok_command(
         expected_evidence_manifest_sha256="3" * 64,
         expected_sources_endpoint_identity={
             "server_code_sha256": "4" * 64,
-            "sources_db_sha256": "5" * 64,
+            "sources_db_meta_sha256": "5" * 64,
             "vesum_db_sha256": "6" * 64,
         },
     )

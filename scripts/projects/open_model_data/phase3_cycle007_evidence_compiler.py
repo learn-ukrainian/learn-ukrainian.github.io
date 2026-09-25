@@ -42,6 +42,7 @@ from typing import Any, Protocol
 from urllib.parse import urlparse
 
 from scripts.api.occupancy_local import occupancy_marker_scope
+from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
 
@@ -599,7 +600,7 @@ _VERIFY_WORDS_LINE_RE = re.compile(
 
 _SERVER_IDENTITY_TOOL = "mcp_server_identity"
 _SERVER_IDENTITY_KEYS: frozenset[str] = frozenset(
-    {"server_code_sha256", "sources_db_sha256", "sources_db_bytes", "vesum_db_sha256", "vesum_db_bytes"}
+    {"server_code_sha256", "sources_db_meta_sha256", "sources_db_bytes", "vesum_db_sha256", "vesum_db_bytes"}
 )
 
 
@@ -626,13 +627,17 @@ class LocalMcpSourcesClient:
     cache miss is reported ``unavailable``, never fetched.
 
     ``server_identity()`` (fixes v3, item 1) never trusts a locally computed
-    hash on its own. It hashes the exact local ``server.py``/``sources.db``/
-    ``vesum.db`` files this process reviewed (what it *expects*), calls the
-    endpoint's own ``mcp_server_identity`` tool through the real MCP
-    transport, and requires an exact match on every field — a mismatch,
-    missing tool, or malformed response is terminal. This is what proves the
-    endpoint is actually backed by the same reviewed code/data, not merely
-    files that happen to exist on the caller's own filesystem.
+    value on its own. It derives the identity of the exact local
+    ``server.py``/``sources.db``/``vesum.db`` files this process reviewed
+    (what it *expects*), calls the endpoint's own ``mcp_server_identity`` tool
+    through the real MCP transport, and requires an exact match on every
+    field — a mismatch, missing tool, or malformed response is terminal. This
+    is what proves the endpoint is actually backed by the same reviewed
+    code/data, not merely files that happen to exist on the caller's own
+    filesystem. ``server.py`` and ``vesum.db`` are static and content-hashed;
+    ``sources.db`` (~10 GB, written continuously) is compared by its
+    ``file-meta-v1`` metadata identity (``sources_db_meta_sha256``: size,
+    mtime, journal mode, WAL size/mtime), never a body hash (#8683).
     """
 
     def __init__(
@@ -665,17 +670,18 @@ class LocalMcpSourcesClient:
         self._identity: Mapping[str, Any] = self._attest_server_identity()
 
     def _attest_server_identity(self) -> Mapping[str, Any]:
+        sources_db_meta_sha256, sources_db_meta = sources_db_meta_identity(self._sources_db)
         expected = {
             "server_code_sha256": contract.sha256_file(self._server_code),
-            "sources_db_sha256": contract.sha256_file(self._sources_db),
-            "sources_db_bytes": self._sources_db.stat().st_size,
+            "sources_db_meta_sha256": sources_db_meta_sha256,
+            "sources_db_bytes": sources_db_meta["size_bytes"],
             "vesum_db_sha256": contract.sha256_file(self._vesum_db),
             "vesum_db_bytes": self._vesum_db.stat().st_size,
         }
         payload = self._call_json(_SERVER_IDENTITY_TOOL, {})
         if not isinstance(payload, Mapping) or set(payload) != _SERVER_IDENTITY_KEYS:
             raise LocalMcpSourcesClientError(f"malformed_json_response:{_SERVER_IDENTITY_TOOL}")
-        for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256"):
+        for key in ("server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256"):
             if not (isinstance(payload.get(key), str) and len(payload[key]) == 64):
                 raise LocalMcpSourcesClientError(f"malformed_json_response:{_SERVER_IDENTITY_TOOL}")
         for key in ("sources_db_bytes", "vesum_db_bytes"):
@@ -1137,7 +1143,7 @@ def compile_row_evidence(
     phenomenon-scoped before model calls").
     """
     vesum_source_version = str(identity["vesum_db_sha256"])
-    sources_db_source_version = str(identity["sources_db_sha256"])
+    sources_db_source_version = str(identity["sources_db_meta_sha256"])
     russian_shadow_source_version = _russian_shadow_source_version()
 
     source_text = str(row.get("source_text", ""))
@@ -1596,7 +1602,7 @@ def bind_pravopys_2019_comparison_evidence(
     closed per-channel claim boundary in the contract module).
     ``source_version`` must be an exact source/database hash (never a
     URL-like literal) — callers pass the compiler's own
-    ``identity["sources_db_sha256"]``. Standalone/manual entry point;
+    ``identity["sources_db_meta_sha256"]``. Standalone/manual entry point;
     ``compile_row_evidence`` uses ``_bind_pravopys_2019_comparison_for_row``
     instead so ``query_pravopys`` is only called once per row, not once per
     phenomenon.
@@ -1703,7 +1709,7 @@ def compile_packet_sidecar(
         "tokenizer_version": TOKENIZER_VERSION,
         "code_hashes": CODE_HASHES,
         "server_code_sha256": identity["server_code_sha256"],
-        "sources_db_sha256": identity["sources_db_sha256"],
+        "sources_db_meta_sha256": identity["sources_db_meta_sha256"],
         "vesum_db_sha256": identity["vesum_db_sha256"],
         "network_lookups_performed": 0,
         "rows": row_records,
@@ -1804,7 +1810,7 @@ def _compile_sidecar_bundle(
             "tokenizer_version": TOKENIZER_VERSION,
             "code_hashes": CODE_HASHES,
             "server_code_sha256": identity["server_code_sha256"],
-            "sources_db_sha256": identity["sources_db_sha256"],
+            "sources_db_meta_sha256": identity["sources_db_meta_sha256"],
             "vesum_db_sha256": identity["vesum_db_sha256"],
         }
         channel_counts: Counter[str] = Counter()
@@ -1854,7 +1860,7 @@ def _compile_sidecar_bundle(
             "tokenizer_version": TOKENIZER_VERSION,
             "code_hashes": CODE_HASHES,
             "server_code_sha256": identity["server_code_sha256"],
-            "sources_db_sha256": identity["sources_db_sha256"],
+            "sources_db_meta_sha256": identity["sources_db_meta_sha256"],
             "vesum_db_sha256": identity["vesum_db_sha256"],
             "packet_count": len(packets),
             "row_count": row_count,
@@ -1975,7 +1981,7 @@ def _build_bundle_manifest(
         "tokenizer_version": TOKENIZER_VERSION,
         "code_hashes": CODE_HASHES,
         "server_code_sha256": identity["server_code_sha256"],
-        "sources_db_sha256": identity["sources_db_sha256"],
+        "sources_db_meta_sha256": identity["sources_db_meta_sha256"],
         "vesum_db_sha256": identity["vesum_db_sha256"],
         "packet_count": packet_count,
         "row_count": aggregate["row_count"],
@@ -2025,7 +2031,7 @@ def compile_sidecar_bundle_resumable(
         "tokenizer_version": TOKENIZER_VERSION,
         "code_hashes": CODE_HASHES,
         "server_code_sha256": identity["server_code_sha256"],
-        "sources_db_sha256": identity["sources_db_sha256"],
+        "sources_db_meta_sha256": identity["sources_db_meta_sha256"],
         "vesum_db_sha256": identity["vesum_db_sha256"],
     }
     target_row_count = sum(len(packet) for packet in packets)

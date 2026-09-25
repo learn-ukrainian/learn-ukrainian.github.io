@@ -744,14 +744,14 @@ def test_batch_runner_uses_controller_bound_source_identity_without_local_databa
     monkeypatch.setattr(runner.compiler, "DEFAULT_VESUM_DB", tmp_path / "missing-vesum.db")
     runner.EXPECTED_SOURCES_ENDPOINT_IDENTITY = {
         "server_code_sha256": "1" * 64,
-        "sources_db_sha256": "2" * 64,
+        "sources_db_meta_sha256": "2" * 64,
         "vesum_db_sha256": "3" * 64,
     }
 
     identity = runner._get_expected_identity()
 
     assert identity["server_code_sha256"] == "1" * 64
-    assert identity["sources_db_sha256"] == "2" * 64
+    assert identity["sources_db_meta_sha256"] == "2" * 64
     assert identity["vesum_db_sha256"] == "3" * 64
 
 
@@ -770,14 +770,14 @@ def test_grok_runner_uses_controller_bound_source_identity_without_local_databas
     monkeypatch.setattr(runner.compiler, "DEFAULT_VESUM_DB", tmp_path / "missing-vesum.db")
     runner.EXPECTED_SOURCES_ENDPOINT_IDENTITY = {
         "server_code_sha256": "4" * 64,
-        "sources_db_sha256": "5" * 64,
+        "sources_db_meta_sha256": "5" * 64,
         "vesum_db_sha256": "6" * 64,
     }
 
     identity = runner._get_expected_identity()
 
     assert identity["server_code_sha256"] == "4" * 64
-    assert identity["sources_db_sha256"] == "5" * 64
+    assert identity["sources_db_meta_sha256"] == "5" * 64
     assert identity["vesum_db_sha256"] == "6" * 64
 
 

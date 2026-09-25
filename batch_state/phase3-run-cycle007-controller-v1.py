@@ -234,7 +234,7 @@ def _hex64(value: Any) -> bool:
 
 SOURCE_IDENTITY_HASH_KEYS = (
     "server_code_sha256",
-    "sources_db_sha256",
+    "sources_db_meta_sha256",
     "vesum_db_sha256",
 )
 
@@ -274,13 +274,13 @@ def _exact_hash_map(value: Any, keys: set[str]) -> bool:
 def _source_endpoint_identity(value: Any) -> dict[str, Any]:
     if not isinstance(value, dict) or set(value) != {
         "server_code_sha256",
-        "sources_db_sha256",
+        "sources_db_meta_sha256",
         "sources_db_bytes",
         "vesum_db_sha256",
         "vesum_db_bytes",
     }:
         raise ControllerError("preflight_binding_drift")
-    for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256"):
+    for key in ("server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256"):
         if not _hex64(value.get(key)):
             raise ControllerError("preflight_binding_drift")
     for key in ("sources_db_bytes", "vesum_db_bytes"):
@@ -819,7 +819,7 @@ def preflight(
         raise ControllerError("preflight_binding_drift")
     if any(
         evidence_manifest.get(key) != gemini_sources_id[key]
-        for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256")
+        for key in ("server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256")
     ):
         raise ControllerError("preflight_binding_drift")
     manifest_identity_keys = {"sources_db_bytes", "vesum_db_bytes"}
@@ -1484,7 +1484,7 @@ def _commands_for_stage(
                     "--expected-server-code-sha",
                     source_identity_hashes["server_code_sha256"],
                     "--expected-sources-db-sha",
-                    source_identity_hashes["sources_db_sha256"],
+                    source_identity_hashes["sources_db_meta_sha256"],
                     "--expected-vesum-db-sha",
                     source_identity_hashes["vesum_db_sha256"],
                     "--expected-label-prompt-sha",
@@ -1537,7 +1537,7 @@ def _commands_for_stage(
                     "--expected-server-code-sha",
                     source_identity_hashes["server_code_sha256"],
                     "--expected-sources-db-sha",
-                    source_identity_hashes["sources_db_sha256"],
+                    source_identity_hashes["sources_db_meta_sha256"],
                     "--expected-vesum-db-sha",
                     source_identity_hashes["vesum_db_sha256"],
                     "--expected-label-prompt-sha",

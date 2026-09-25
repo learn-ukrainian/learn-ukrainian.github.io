@@ -233,7 +233,7 @@ def _setup_certified_package(tmp_path: Path):
         "tokenizer_version": "1",
         "code_hashes": CURRENT_CODE_HASHES,
         "server_code_sha256": endpoint["server_code_sha256"],
-        "sources_db_sha256": endpoint["sources_db_sha256"],
+        "sources_db_meta_sha256": endpoint["sources_db_meta_sha256"],
         "vesum_db_sha256": endpoint["vesum_db_sha256"],
         "network_lookups_performed": 0,
         "rows": clean_ev_rows,
@@ -295,7 +295,7 @@ def _setup_certified_package(tmp_path: Path):
         "tokenizer_version": "1",
         "code_hashes": CURRENT_CODE_HASHES,
         "server_code_sha256": endpoint["server_code_sha256"],
-        "sources_db_sha256": endpoint["sources_db_sha256"],
+        "sources_db_meta_sha256": endpoint["sources_db_meta_sha256"],
         "vesum_db_sha256": endpoint["vesum_db_sha256"],
         "network_lookups_performed": 0,
         "rows": res_ev_rows,
@@ -314,7 +314,7 @@ def _setup_certified_package(tmp_path: Path):
         "tokenizer_version": "1",
         "code_hashes": CURRENT_CODE_HASHES,
         "server_code_sha256": endpoint["server_code_sha256"],
-        "sources_db_sha256": endpoint["sources_db_sha256"],
+        "sources_db_meta_sha256": endpoint["sources_db_meta_sha256"],
         "vesum_db_sha256": endpoint["vesum_db_sha256"],
         "packet_count": 2,
         "row_count": 4,
@@ -1073,7 +1073,7 @@ def test_certifier_successful_exact_fixture_closure(tmp_path):
                 "tokenizer_version": verify_mod.evidence_compiler.TOKENIZER_VERSION,
                 "code_hashes": verify_mod._recompute_evidence_code_hashes(),
                 "server_code_sha256": cert["sources_endpoint_identity"]["server_code_sha256"],
-                "sources_db_sha256": cert["sources_endpoint_identity"]["sources_db_sha256"],
+                "sources_db_meta_sha256": cert["sources_endpoint_identity"]["sources_db_meta_sha256"],
                 "vesum_db_sha256": cert["sources_endpoint_identity"]["vesum_db_sha256"],
             }
         )
@@ -1096,7 +1096,7 @@ def test_certifier_rejects_rebound_evidence_identity(tmp_path):
     pkg = _setup_certified_package(tmp_path)
     manifest_path = pkg / "evidence" / "manifest.json"
     evidence_manifest = json.loads(manifest_path.read_text())
-    evidence_manifest["sources_db_sha256"] = "0" * 64
+    evidence_manifest["sources_db_meta_sha256"] = "0" * 64
     evidence_manifest["manifest_sha256"] = contract.sha256_value(
         {key: value for key, value in evidence_manifest.items() if key != "manifest_sha256"}
     )

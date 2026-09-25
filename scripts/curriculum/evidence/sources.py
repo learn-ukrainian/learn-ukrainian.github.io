@@ -29,10 +29,12 @@ from scripts.rag.config import VESUM_DB_PATH
 from scripts.verification import stress, vesum
 
 from . import codes, config, tags
+from .db_identity import canonical_bytes as _canonical
+from .db_identity import journal_mode_from_header as journal_mode_from_header  # re-export
+from .db_identity import sources_db_meta_identity
 
 BATCH_SIZE = 500
 SOURCES_DB_SCHEME = "rows-v2"
-SOURCES_DB_META_SCHEME = "file-meta-v1"
 LEGACY_SOURCES_DB_SCHEME = "file-v1"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
@@ -87,11 +89,6 @@ def _sources_path() -> Path:
     return resolve_main_root(REPO_ROOT) / "data/sources.db"
 
 
-def _canonical(value: Any) -> bytes:
-    # ensure_ascii=False keeps Ukrainian bytes readable; bytes values raise (no cited table has a BLOB).
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-
-
 def row_digest(row: Mapping[str, Any]) -> str:
     """Identity of one source row exactly as the accessor returned it (no column excluded)."""
     if not isinstance(row, Mapping):
@@ -138,22 +135,6 @@ def open_snapshot(path: Path) -> sqlite3.Connection:
         conn.close()
         raise
     return conn
-
-
-def journal_mode_from_header(path: Path) -> str | None:
-    """SQLite header bytes 18-19: 2,2 means WAL; 1,1 legacy (rollback) journal. None when unreadable."""
-    try:
-        with Path(path).open("rb") as stream:
-            header = stream.read(20)
-    except OSError:
-        return None
-    if len(header) < 20 or header[:16] != b"SQLite format 3\x00":
-        return None
-    if header[18] == 2 and header[19] == 2:
-        return "wal"
-    if header[18] == 1 and header[19] == 1:
-        return "delete"
-    return "unknown"
 
 
 class Sources:
@@ -277,34 +258,8 @@ class Sources:
         return digest, metadata
 
     def _sources_db_meta_identity(self) -> tuple[str, dict]:
-        """Cheap, honestly labelled identity of the sources.db file: metadata only, never its body.
-
-        The review receipt ledger records this per attempt. It is not a content
-        hash: hashing the multi-gigabyte file per process is what raced the
-        ULIF walk (#8527). The content evidence of a sources.db read is the
-        receipt's full stored result (rows-v2). The digest is the sha256 of the
-        canonical metadata JSON so readers expecting a 64-hex string stay valid.
-        """
-        path = self.sources_db
-        try:
-            stat = path.stat()
-        except OSError as exc:
-            raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(path)!r}") from exc
-        wal_bytes, wal_mtime_ns = 0, None
-        with suppress(OSError):
-            wal_stat = Path(f"{path}-wal").stat()
-            wal_bytes, wal_mtime_ns = wal_stat.st_size, wal_stat.st_mtime_ns
-        # Header bytes first (20 bytes); the pinned session's PRAGMA answer when the header is unreadable.
-        journal_mode = journal_mode_from_header(path) or self.journal_mode
-        metadata = {
-            "scheme": SOURCES_DB_META_SCHEME,
-            "size_bytes": stat.st_size,
-            "mtime_ns": stat.st_mtime_ns,
-            "journal_mode": journal_mode,
-            "wal_bytes": wal_bytes,
-            "wal_mtime_ns": wal_mtime_ns,
-        }
-        return hashlib.sha256(_canonical(metadata)).hexdigest(), metadata
+        """sources.db file-metadata identity (scheme ``file-meta-v1``, never a body hash); see ``db_identity``."""
+        return sources_db_meta_identity(self.sources_db, fallback_journal_mode=self.journal_mode)
 
     def _db(self) -> sqlite3.Connection:
         if self._conn is None:

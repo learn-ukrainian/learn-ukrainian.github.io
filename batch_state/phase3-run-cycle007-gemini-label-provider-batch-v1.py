@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
 from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
@@ -366,12 +367,12 @@ def _identity(row: dict[str, Any]) -> tuple[str, str]:
 
 def _get_expected_identity() -> dict[str, Any]:
     server_code_sha = EXPECTED_SOURCES_ENDPOINT_IDENTITY.get("server_code_sha256")
-    sources_db_sha = EXPECTED_SOURCES_ENDPOINT_IDENTITY.get("sources_db_sha256")
+    sources_db_sha = EXPECTED_SOURCES_ENDPOINT_IDENTITY.get("sources_db_meta_sha256")
     vesum_db_sha = EXPECTED_SOURCES_ENDPOINT_IDENTITY.get("vesum_db_sha256")
     if not server_code_sha and compiler.DEFAULT_SERVER_CODE.is_file():
         server_code_sha = contract.sha256_file(compiler.DEFAULT_SERVER_CODE)
     if not sources_db_sha and compiler.DEFAULT_SOURCES_DB.is_file():
-        sources_db_sha = contract.sha256_file(compiler.DEFAULT_SOURCES_DB)
+        sources_db_sha = sources_db_meta_identity(compiler.DEFAULT_SOURCES_DB)[0]
     if not vesum_db_sha and compiler.DEFAULT_VESUM_DB.is_file():
         vesum_db_sha = contract.sha256_file(compiler.DEFAULT_VESUM_DB)
     return {
@@ -379,7 +380,7 @@ def _get_expected_identity() -> dict[str, Any]:
         "tokenizer_version": FROZEN_EVIDENCE_TOKENIZER_VERSION,
         "code_hashes": dict(FROZEN_EVIDENCE_CODE_HASHES),
         "server_code_sha256": server_code_sha or "",
-        "sources_db_sha256": sources_db_sha or "",
+        "sources_db_meta_sha256": sources_db_sha or "",
         "vesum_db_sha256": vesum_db_sha or "",
     }
 
@@ -2316,7 +2317,7 @@ def main() -> int:
         "--expected-evidence-manifest-sha", required=True, help="controller-bound evidence manifest SHA256"
     )
     parser.add_argument("--expected-server-code-sha", required=True, help="controller-bound Sources server SHA256")
-    parser.add_argument("--expected-sources-db-sha", required=True, help="controller-bound sources DB SHA256")
+    parser.add_argument("--expected-sources-db-sha", required=True, help="controller-bound sources DB file-meta-v1 identity (not a content hash)")
     parser.add_argument("--expected-vesum-db-sha", required=True, help="controller-bound VESUM DB SHA256")
     parser.add_argument(
         "--expected-label-prompt-sha",
@@ -2362,7 +2363,7 @@ def main() -> int:
         EXPECTED_EVIDENCE_MANIFEST_SHA256 = args.expected_evidence_manifest_sha
         EXPECTED_SOURCES_ENDPOINT_IDENTITY = {
             "server_code_sha256": args.expected_server_code_sha,
-            "sources_db_sha256": args.expected_sources_db_sha,
+            "sources_db_meta_sha256": args.expected_sources_db_sha,
             "vesum_db_sha256": args.expected_vesum_db_sha,
         }
         if args.packet_index is not None:

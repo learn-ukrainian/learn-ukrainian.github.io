@@ -153,7 +153,7 @@ def _setup_resolution_package(tmp_path: Path, *, unresolved_count: int = 1, clea
         "tokenizer_version": "1",
         "code_hashes": {"compiler_id": "c1"},
         "server_code_sha256": "srv",
-        "sources_db_sha256": "src",
+        "sources_db_meta_sha256": "src",
         "vesum_db_sha256": "vsm",
         "network_lookups_performed": 0,
         "rows": rows_ev,
@@ -172,7 +172,7 @@ def _setup_resolution_package(tmp_path: Path, *, unresolved_count: int = 1, clea
         "tokenizer_version": "1",
         "code_hashes": {"compiler_id": "c1"},
         "server_code_sha256": "srv",
-        "sources_db_sha256": "src",
+        "sources_db_meta_sha256": "src",
         "vesum_db_sha256": "vsm",
         "packet_count": 1,
         "row_count": len(rows),
@@ -717,7 +717,7 @@ def test_disk_evidence_identity_rehashes_real_files_not_manifest_fields(tmp_path
     first = res_mod._disk_evidence_identity()
     sources.write_bytes(b"sources-v2")
     second = res_mod._disk_evidence_identity()
-    assert first["sources_db_sha256"] != second["sources_db_sha256"]
+    assert first["sources_db_meta_sha256"] != second["sources_db_meta_sha256"]
     assert first["server_code_sha256"] == second["server_code_sha256"]
 
 

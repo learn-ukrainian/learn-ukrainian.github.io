@@ -173,7 +173,7 @@ def test_preflight_does_not_export_endpoint_or_key(monkeypatch: pytest.MonkeyPat
 def test_mcp_identity_hashes_actual_safe_corpus_identity(monkeypatch: pytest.MonkeyPatch) -> None:
     identity = {
         "server_code_sha256": "a" * 64,
-        "sources_db_sha256": "b" * 64,
+        "sources_db_meta_sha256": "b" * 64,
         "sources_db_bytes": 123,
         "vesum_db_sha256": "c" * 64,
         "vesum_db_bytes": 456,

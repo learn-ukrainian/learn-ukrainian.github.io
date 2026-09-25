@@ -33,7 +33,7 @@ class AdapterError(ValueError):
 _TOOL_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{0,127}$")
 _PROJECT_PYTHON = (Path(__file__).resolve().parents[3] / ".venv" / "bin" / "python").resolve()
 _SERVER_IDENTITY_TOOL = "mcp_server_identity"
-_SERVER_IDENTITY_HASH_KEYS = frozenset({"server_code_sha256", "sources_db_sha256", "vesum_db_sha256"})
+_SERVER_IDENTITY_HASH_KEYS = frozenset({"server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256"})
 _SERVER_IDENTITY_SAFE_KEYS = _SERVER_IDENTITY_HASH_KEYS | frozenset({"sources_db_bytes", "vesum_db_bytes"})
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _TOOL_POLICY_ERROR = "tool_policy_error"

@@ -299,7 +299,7 @@ _REQUIRED_SIDECAR_FIELDS: tuple[str, ...] = (
     "tokenizer_version",
     "code_hashes",
     "server_code_sha256",
-    "sources_db_sha256",
+    "sources_db_meta_sha256",
     "vesum_db_sha256",
     "network_lookups_performed",
     "rows",
@@ -325,7 +325,7 @@ _IDENTITY_FIELDS: tuple[str, ...] = (
     "tokenizer_version",
     "code_hashes",
     "server_code_sha256",
-    "sources_db_sha256",
+    "sources_db_meta_sha256",
     "vesum_db_sha256",
 )
 _SIDECAR_LANES: frozenset[str] = frozenset({"clean_label", "residual_label"})
@@ -407,7 +407,7 @@ def validate_sidecar(sidecar: Mapping[str, Any], *, expected_identity: Mapping[s
         or sidecar["code_hashes"]["tokenizer_version"] != sidecar["tokenizer_version"]
     ):
         _fail("sidecar_shape_drift", "sidecar tokenizer identity disagrees with code_hashes")
-    for field in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256"):
+    for field in ("server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256"):
         if not _is_sha256(sidecar[field]):
             _fail("sidecar_shape_drift", f"sidecar {field} must be a hex sha256")
     if not _SIDECAR_ID_RE.fullmatch(str(sidecar["sidecar_id"])):
@@ -468,7 +468,7 @@ _REQUIRED_MANIFEST_FIELDS: tuple[str, ...] = (
     "tokenizer_version",
     "code_hashes",
     "server_code_sha256",
-    "sources_db_sha256",
+    "sources_db_meta_sha256",
     "vesum_db_sha256",
     "packet_count",
     "row_count",
@@ -578,7 +578,7 @@ def validate_manifest(manifest: Mapping[str, Any], *, expected_identity: Mapping
         or manifest["code_hashes"]["tokenizer_version"] != manifest["tokenizer_version"]
     ):
         _fail("manifest_shape_drift", "manifest tokenizer identity disagrees with code_hashes")
-    for field in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256", "manifest_sha256"):
+    for field in ("server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256", "manifest_sha256"):
         if not _is_sha256(manifest[field]):
             _fail("manifest_shape_drift", f"manifest {field} must be a hex sha256")
 

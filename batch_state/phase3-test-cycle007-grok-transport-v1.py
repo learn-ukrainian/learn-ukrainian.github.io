@@ -238,7 +238,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "tokenizer_version": compiler.TOKENIZER_VERSION,
         "code_hashes": compiler.CODE_HASHES,
         "server_code_sha256": "f" * 64,
-        "sources_db_sha256": "1" * 64,
+        "sources_db_meta_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
         "network_lookups_performed": 0,
         "rows": sidecar_rows,
@@ -256,7 +256,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
         "tokenizer_version": compiler.TOKENIZER_VERSION,
         "code_hashes": compiler.CODE_HASHES,
         "server_code_sha256": "f" * 64,
-        "sources_db_sha256": "1" * 64,
+        "sources_db_meta_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
         "packet_count": 1,
         "row_count": count,
@@ -294,7 +294,7 @@ def make_package(root: Path, *, lane: str = "clean_label", index: int = 1, count
     RUN.EXPECTED_EVIDENCE_MANIFEST_SHA256 = RUN.digest(ev_manifest_bytes)
     RUN.EXPECTED_SOURCES_ENDPOINT_IDENTITY = {
         "server_code_sha256": "f" * 64,
-        "sources_db_sha256": "1" * 64,
+        "sources_db_meta_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
     }
 

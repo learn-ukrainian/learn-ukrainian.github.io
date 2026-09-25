@@ -178,7 +178,7 @@ def test_on_call_tool_mcp_server_identity_returns_public_safe_hashes(server):
     payload = json.loads(result.content[0].text)
     assert set(payload) == {
         "server_code_sha256",
-        "sources_db_sha256",
+        "sources_db_meta_sha256",
         "sources_db_bytes",
         "vesum_db_sha256",
         "vesum_db_bytes",

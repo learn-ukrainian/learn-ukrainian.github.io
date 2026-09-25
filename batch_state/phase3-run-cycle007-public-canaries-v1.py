@@ -38,6 +38,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
 from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
@@ -445,7 +446,7 @@ def compile_public_sidecar(
         "tokenizer_version": compiler.TOKENIZER_VERSION,
         "code_hashes": compiler.CODE_HASHES,
         "server_code_sha256": identity["server_code_sha256"],
-        "sources_db_sha256": identity["sources_db_sha256"],
+        "sources_db_meta_sha256": identity["sources_db_meta_sha256"],
         "vesum_db_sha256": identity["vesum_db_sha256"],
     }
     validator.validate_sidecar(sidecar, expected_identity=expected_identity)
@@ -919,7 +920,7 @@ def build_receipt(
         "response_hashes": response_hashes,
         "sources_endpoint_identity": {
             "server_code_sha256": str(sources_identity["server_code_sha256"]),
-            "sources_db_sha256": str(sources_identity["sources_db_sha256"]),
+            "sources_db_meta_sha256": str(sources_identity["sources_db_meta_sha256"]),
             "sources_db_bytes": int(sources_identity["sources_db_bytes"]),
             "vesum_db_sha256": str(sources_identity["vesum_db_sha256"]),
             "vesum_db_bytes": int(sources_identity["vesum_db_bytes"]),
@@ -995,7 +996,7 @@ def make_synthetic_mcp_client(tmp_path: Path) -> compiler.LocalMcpSourcesClient:
         "mcp_server_identity": json.dumps(
             {
                 "server_code_sha256": contract.sha256_file(server_code),
-                "sources_db_sha256": contract.sha256_file(sources_db),
+                "sources_db_meta_sha256": sources_db_meta_identity(sources_db)[0],
                 "sources_db_bytes": sources_db.stat().st_size,
                 "vesum_db_sha256": contract.sha256_file(vesum_db),
                 "vesum_db_bytes": vesum_db.stat().st_size,

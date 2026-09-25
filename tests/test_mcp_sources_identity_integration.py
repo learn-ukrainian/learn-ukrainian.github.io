@@ -27,6 +27,7 @@ import httpx
 import pytest
 import uvicorn
 
+from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
 from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -96,7 +97,7 @@ def real_client(sources_http_url):
 def test_real_transport_attests_endpoint_identity_against_local_files(real_client):
     identity = real_client.server_identity()
     assert identity["server_code_sha256"] == compiler.contract.sha256_file(SERVER_PATH)
-    assert identity["sources_db_sha256"] == compiler.contract.sha256_file(SOURCES_DB)
+    assert identity["sources_db_meta_sha256"] == sources_db_meta_identity(SOURCES_DB)[0]
     assert identity["vesum_db_sha256"] == compiler.contract.sha256_file(VESUM_DB)
     assert identity["sources_db_bytes"] == SOURCES_DB.stat().st_size
     assert identity["vesum_db_bytes"] == VESUM_DB.stat().st_size

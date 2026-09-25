@@ -322,7 +322,7 @@ def test_progress_recomputes_hash_only_call_ledger_and_rejects_tamper(tmp_path: 
             "tokenizer_id": compiler.TOKENIZER_ID,
             "tokenizer_version": compiler.TOKENIZER_VERSION,
             "code_hashes": compiler.CODE_HASHES,
-            **{key: client.server_identity()[key] for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256")},
+            **{key: client.server_identity()[key] for key in ("server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256")},
         },
         source_package_binding=None,
         packet_bindings=[],

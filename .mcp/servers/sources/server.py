@@ -293,9 +293,12 @@ async def list_tools() -> list[Tool]:
         _tool(
             name="mcp_server_identity",
             description=(
-                "Return public-safe exact identity hashes (SHA-256) for the running server.py, "
-                "its actual sources.db, and its actual vesum.db — never a path or content. "
-                "A client can compare these endpoint-reported hashes against the exact locally "
+                "Return public-safe identity values for the running server.py, its actual sources.db, "
+                "and its actual vesum.db — never a path or content. server.py and vesum.db are "
+                "static and get exact content hashes (SHA-256). sources.db is a huge, continuously "
+                "written WAL database, so it gets a file-metadata identity (scheme file-meta-v1: "
+                "size, mtime, journal mode, WAL size/mtime; no body read) — a state identity, "
+                "NOT a content hash. A client can compare these against the exact locally "
                 "reviewed files it expects to prove the endpoint is backed by the same reviewed "
                 "code/data, not merely files that happen to exist on the caller's own filesystem."
             ),
@@ -2101,9 +2104,9 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
 # Cache key: (resolved path, mtime_ns, ctime_ns, size, inode).
 # The required identity is (resolved path, st_size, st_mtime_ns); ctime and
 # inode are included so a same-size, same-mtime replace still recomputes.
-# ``mcp_server_identity`` hashes server code, sources.db, and vesum.db
-# through this same cache. The lock stops concurrent cold calls from
-# re-reading a multi-gigabyte file.
+# ``mcp_server_identity`` hashes the static server code and vesum.db through
+# this same cache (never sources.db: see ``handle_mcp_server_identity``). The
+# lock stops concurrent cold calls from re-reading a multi-gigabyte file.
 _FILE_HASH_CACHE: dict[tuple[str, int, int, int, int], str] = {}
 _FILE_HASH_LOCK = threading.Lock()
 
@@ -2154,17 +2157,27 @@ async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
     Callers (``LocalMcpSourcesClient.server_identity()``) compare these
     endpoint-reported values against the exact locally reviewed files they
     expect; this handler must never merely echo back whatever a client
-    claims — it hashes the server's own actual running files.
+    claims — it derives them from the server's own actual running files.
+
+    ``sources_db_meta_sha256`` is NOT a content hash. sources.db is ~10 GB, in
+    WAL mode, and written continuously by the ULIF walk, so a body hash is a
+    multi-second full read and races the writer (#8527, #8683). It is the
+    shared ``file-meta-v1`` metadata identity (size, mtime, journal mode, WAL
+    size/mtime); the field name says so. Only the static server code and
+    vesum.db keep content hashes.
     """
+    from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
+
     server_path = Path(__file__).resolve()
     sources_db_path = PROJECT_ROOT / "data" / "sources.db"
     vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
 
     def _identity() -> dict[str, Any]:
+        sources_db_meta_sha256, sources_db_meta = sources_db_meta_identity(sources_db_path)
         return {
             "server_code_sha256": _sha256_of_file(server_path),
-            "sources_db_sha256": _sha256_of_file(sources_db_path),
-            "sources_db_bytes": sources_db_path.stat().st_size,
+            "sources_db_meta_sha256": sources_db_meta_sha256,
+            "sources_db_bytes": sources_db_meta["size_bytes"],
             "vesum_db_sha256": _sha256_of_file(vesum_db_path),
             "vesum_db_bytes": vesum_db_path.stat().st_size,
         }

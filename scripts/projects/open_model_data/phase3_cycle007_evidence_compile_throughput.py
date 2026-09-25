@@ -81,7 +81,7 @@ _IDENTITY_COMPARE_KEYS = (
     "tokenizer_version",
     "code_hashes",
     "server_code_sha256",
-    "sources_db_sha256",
+    "sources_db_meta_sha256",
     "vesum_db_sha256",
 )
 

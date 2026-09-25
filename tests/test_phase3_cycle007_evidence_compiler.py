@@ -17,6 +17,7 @@ from typing import Any
 
 import pytest
 
+from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
 from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
@@ -59,7 +60,7 @@ class SyntheticSourcesClient:
         self._pravopys = pravopys or {}
         self._server_identity = server_identity or {
             "server_code_sha256": "a" * 64,
-            "sources_db_sha256": "b" * 64,
+            "sources_db_meta_sha256": "b" * 64,
             "sources_db_bytes": 1,
             "vesum_db_sha256": "c" * 64,
             "vesum_db_bytes": 1,
@@ -133,7 +134,7 @@ def _row(unit_id: str = "unit-1", text: str = "Привіт світ") -> dict[s
 def _identity(**overrides: Any) -> dict[str, Any]:
     base = {
         "server_code_sha256": "a" * 64,
-        "sources_db_sha256": "b" * 64,
+        "sources_db_meta_sha256": "b" * 64,
         "sources_db_bytes": 1,
         "vesum_db_sha256": "c" * 64,
         "vesum_db_bytes": 1,
@@ -219,11 +220,11 @@ def test_source_version_drift_changes_evidence_id():
 
 
 def test_sources_db_version_drift_changes_evidence_id():
-    """sources.db-backed channels (style guide, UA-GEC, heritage) bind sources_db_sha256."""
+    """sources.db-backed channels (style guide, UA-GEC, heritage) bind sources_db_meta_sha256."""
     row = _row()
     client = SyntheticSourcesClient()
-    ids_v1 = compiler.compile_row_evidence(row, client, identity=_identity(sources_db_sha256="b" * 64))["evidence_ids"]
-    ids_v2 = compiler.compile_row_evidence(row, client, identity=_identity(sources_db_sha256="e" * 64))["evidence_ids"]
+    ids_v1 = compiler.compile_row_evidence(row, client, identity=_identity(sources_db_meta_sha256="b" * 64))["evidence_ids"]
+    ids_v2 = compiler.compile_row_evidence(row, client, identity=_identity(sources_db_meta_sha256="e" * 64))["evidence_ids"]
     assert ids_v1 != ids_v2
 
 
@@ -647,7 +648,7 @@ def test_row_level_evidence_id_never_satisfies_a_residual_phenomenon():
 def _identity_payload(files: dict[str, Path]) -> dict[str, Any]:
     return {
         "server_code_sha256": contract.sha256_file(files["server_code"]),
-        "sources_db_sha256": contract.sha256_file(files["sources_db"]),
+        "sources_db_meta_sha256": sources_db_meta_identity(files["sources_db"])[0],
         "sources_db_bytes": files["sources_db"].stat().st_size,
         "vesum_db_sha256": contract.sha256_file(files["vesum_db"]),
         "vesum_db_bytes": files["vesum_db"].stat().st_size,
@@ -680,6 +681,9 @@ def _stub_client_files(tmp_path: Path) -> dict[str, Path]:
     server_code = tmp_path / "server.py"
     for path in (sources_db, vesum_db, server_code):
         path.write_bytes(b"stub")
+    # sources.db identity is file metadata (file-meta-v1), not content: pin mtime so equal stubs in
+    # different temp dirs stay the same "reviewed file" across resumed processes.
+    os.utime(sources_db, ns=(1_700_000_000_000_000_000,) * 2)
     return {"sources_db": sources_db, "vesum_db": vesum_db, "server_code": server_code}
 
 

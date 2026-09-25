@@ -105,7 +105,7 @@ def _expected_identity(**overrides: Any) -> dict[str, Any]:
         "tokenizer_version": "1",
         "code_hashes": copy.deepcopy(compiler.CODE_HASHES),
         "server_code_sha256": "f" * 64,
-        "sources_db_sha256": "1" * 64,
+        "sources_db_meta_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
     }
     base.update(overrides)
@@ -157,7 +157,7 @@ def _full_sidecar(rows, retrieval_payloads, *, lane="clean_label", identity=None
         "tokenizer_version": identity["tokenizer_version"],
         "code_hashes": identity["code_hashes"],
         "server_code_sha256": identity["server_code_sha256"],
-        "sources_db_sha256": identity["sources_db_sha256"],
+        "sources_db_meta_sha256": identity["sources_db_meta_sha256"],
         "vesum_db_sha256": identity["vesum_db_sha256"],
         "network_lookups_performed": 0,
         "rows": rows,
@@ -194,7 +194,7 @@ def _full_manifest(
         "tokenizer_version": identity["tokenizer_version"],
         "code_hashes": identity["code_hashes"],
         "server_code_sha256": identity["server_code_sha256"],
-        "sources_db_sha256": identity["sources_db_sha256"],
+        "sources_db_meta_sha256": identity["sources_db_meta_sha256"],
         "vesum_db_sha256": identity["vesum_db_sha256"],
         "packet_count": packet_count,
         "row_count": row_count,

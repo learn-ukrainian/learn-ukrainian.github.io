@@ -123,7 +123,7 @@ sys.exit(0)
         "tokenizer_version": "1",
         "code_hashes": compiler.CODE_HASHES,
         "server_code_sha256": "f" * 64,
-        "sources_db_sha256": "1" * 64,
+        "sources_db_meta_sha256": "1" * 64,
         "vesum_db_sha256": "2" * 64,
         "packet_count": 204,
         "row_count": 10159,
@@ -147,7 +147,7 @@ sys.exit(0)
 
     sources_identity = {
         "server_code_sha256": "f" * 64,
-        "sources_db_sha256": "1" * 64,
+        "sources_db_meta_sha256": "1" * 64,
         "sources_db_bytes": 1024,
         "vesum_db_sha256": "2" * 64,
         "vesum_db_bytes": 2048,
@@ -427,7 +427,7 @@ def test_preflight_fails_on_omitted_field_in_canary_receipt(tmp_path: Path) -> N
 def test_preflight_fails_on_source_identity_divergence(tmp_path: Path) -> None:
     pkg, preflight_path, gemini_canary, grok_canary, code_paths = make_controller_fixtures(tmp_path)
     val = CTRL._read_json(grok_canary)
-    val["sources_endpoint_identity"]["sources_db_sha256"] = "9" * 64
+    val["sources_endpoint_identity"]["sources_db_meta_sha256"] = "9" * 64
     val["receipt_sha256"] = CTRL.digest(CTRL.canonical({k: v for k, v in val.items() if k != "receipt_sha256"}))
     put(grok_canary, val)
 

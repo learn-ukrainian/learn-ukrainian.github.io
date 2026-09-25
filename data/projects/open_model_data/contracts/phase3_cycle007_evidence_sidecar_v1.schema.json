@@ -3,7 +3,7 @@
   "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/phase3_cycle007_evidence_sidecar_v1.schema.json",
   "title": "Phase 3 Cycle 007 per-packet evidence sidecar v1",
   "type": "object", "additionalProperties": false,
-  "required": ["schema_version", "evaluation_cycle_id", "lane", "packet_binding", "packet_index", "row_count", "tokenizer_id", "tokenizer_version", "code_hashes", "server_code_sha256", "sources_db_sha256", "vesum_db_sha256", "network_lookups_performed", "rows", "retrieval_payloads", "sidecar_id"],
+  "required": ["schema_version", "evaluation_cycle_id", "lane", "packet_binding", "packet_index", "row_count", "tokenizer_id", "tokenizer_version", "code_hashes", "server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256", "network_lookups_performed", "rows", "retrieval_payloads", "sidecar_id"],
   "properties": {
     "schema_version": {"const": "phase3_cycle007_evidence_sidecar_v1"},
     "evaluation_cycle_id": {"const": "phase3-v2-1-evaluation-cycle-007"},
@@ -15,7 +15,7 @@
     "tokenizer_version": {"type": "string", "minLength": 1},
     "code_hashes": {"$ref": "#/$defs/codeHashes"},
     "server_code_sha256": {"$ref": "#/$defs/sha256"},
-    "sources_db_sha256": {"$ref": "#/$defs/sha256"},
+    "sources_db_meta_sha256": {"$ref": "#/$defs/sha256"},
     "vesum_db_sha256": {"$ref": "#/$defs/sha256"},
     "network_lookups_performed": {"const": 0},
     "rows": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/rowEvidence"}},

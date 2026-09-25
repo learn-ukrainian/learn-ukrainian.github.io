@@ -16,6 +16,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
 from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as evidence_compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
@@ -288,7 +289,7 @@ _CANARY_FIELDS = frozenset(
 _SOURCES_ENDPOINT_FIELDS = frozenset(
     {
         "server_code_sha256",
-        "sources_db_sha256",
+        "sources_db_meta_sha256",
         "sources_db_bytes",
         "vesum_db_sha256",
         "vesum_db_bytes",
@@ -367,7 +368,7 @@ def _recompute_sources_endpoint_identity() -> dict[str, Any]:
     """
     try:
         source_code_sha256 = _file_sha256(SOURCES_SERVER_CODE)
-        sources_db_sha256 = _file_sha256(SOURCES_DB)
+        sources_db_meta_sha256 = sources_db_meta_identity(SOURCES_DB)[0]
         vesum_db_sha256 = _file_sha256(VESUM_DB)
         sources_db_bytes = SOURCES_DB.stat().st_size
         vesum_db_bytes = VESUM_DB.stat().st_size
@@ -377,7 +378,7 @@ def _recompute_sources_endpoint_identity() -> dict[str, Any]:
         raise Error("closure_validation_failed")
     return {
         "server_code_sha256": source_code_sha256,
-        "sources_db_sha256": sources_db_sha256,
+        "sources_db_meta_sha256": sources_db_meta_sha256,
         "sources_db_bytes": sources_db_bytes,
         "vesum_db_sha256": vesum_db_sha256,
         "vesum_db_bytes": vesum_db_bytes,
@@ -411,7 +412,7 @@ def _recompute_evidence_identity() -> dict[str, Any]:
         "tokenizer_version": evidence_compiler.TOKENIZER_VERSION,
         "code_hashes": _recompute_evidence_code_hashes(),
         "server_code_sha256": endpoint["server_code_sha256"],
-        "sources_db_sha256": endpoint["sources_db_sha256"],
+        "sources_db_meta_sha256": endpoint["sources_db_meta_sha256"],
         "vesum_db_sha256": endpoint["vesum_db_sha256"],
     }
 
@@ -532,7 +533,7 @@ def _validate_controls(
         "tokenizer_version": evidence_compiler.TOKENIZER_VERSION,
         "code_hashes": expected_evidence_code_hashes,
         "server_code_sha256": expected_sources["server_code_sha256"],
-        "sources_db_sha256": expected_sources["sources_db_sha256"],
+        "sources_db_meta_sha256": expected_sources["sources_db_meta_sha256"],
         "vesum_db_sha256": expected_sources["vesum_db_sha256"],
     }
     label_prompt_sha256s = _recompute_label_prompt_sha256s(package)
@@ -557,7 +558,7 @@ def _validate_controls(
         endpoint_is_valid = (
             isinstance(endpoint, dict)
             and set(endpoint) == _SOURCES_ENDPOINT_FIELDS
-            and all(_hex(endpoint.get(key)) for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256"))
+            and all(_hex(endpoint.get(key)) for key in ("server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256"))
             and all(
                 isinstance(endpoint.get(key), int) and not isinstance(endpoint.get(key), bool) and endpoint[key] > 0
                 for key in ("sources_db_bytes", "vesum_db_bytes")
@@ -604,7 +605,7 @@ def _validate_controls(
         canaries[provider] = (value, raw)
     if any(
         evidence.get(key) != expected_sources[key]
-        for key in ("server_code_sha256", "sources_db_sha256", "vesum_db_sha256")
+        for key in ("server_code_sha256", "sources_db_meta_sha256", "vesum_db_sha256")
     ):
         raise Error("evidence_validation_failed")
     if evidence.get("code_hashes") != expected_evidence_code_hashes:

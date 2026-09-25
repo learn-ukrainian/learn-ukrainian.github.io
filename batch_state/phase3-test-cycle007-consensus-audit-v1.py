@@ -153,7 +153,7 @@ def _synthetic_row_evidence(row: dict[str, str]) -> tuple[dict[str, Any], dict[s
         "tokenizer_version": tokenizer_version,
         "code_hashes": code_hashes,
         "server_code_sha256": "1" * 64,
-        "sources_db_sha256": "2" * 64,
+        "sources_db_meta_sha256": "2" * 64,
         "vesum_db_sha256": "3" * 64,
     }
     payload = {"source_text_sha256": "4" * 64}
@@ -161,7 +161,7 @@ def _synthetic_row_evidence(row: dict[str, str]) -> tuple[dict[str, Any], dict[s
     evidence = contract.build_evidence_record(
         channel="source_metadata",
         source_identity="synthetic-family",
-        source_version=identity["sources_db_sha256"],
+        source_version=identity["sources_db_meta_sha256"],
         locator=f"synthetic-row:{row['unit_id']}",
         query=None,
         status="attested",

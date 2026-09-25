@@ -193,7 +193,7 @@ def _build_evidence(root: Path, materialization: Path) -> Path:
                     "query_plan_sha256": "f" * 64,
                 },
                 "server_code_sha256": "1" * 64,
-                "sources_db_sha256": "2" * 64,
+                "sources_db_meta_sha256": "2" * 64,
                 "vesum_db_sha256": "3" * 64,
                 "network_lookups_performed": 0,
                 "rows": rows,

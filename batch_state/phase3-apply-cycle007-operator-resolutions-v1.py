@@ -13,6 +13,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
 from scripts.projects.open_model_data import phase3_cycle007_evidence_compiler as evidence_compiler
 from scripts.projects.open_model_data import phase3_cycle007_evidence_contract as contract
 from scripts.projects.open_model_data import phase3_cycle007_evidence_validator as validator
@@ -388,7 +389,7 @@ def _disk_evidence_identity() -> dict[str, Any]:
             "tokenizer_version": evidence_compiler.TOKENIZER_VERSION,
             "code_hashes": dict(evidence_compiler.CODE_HASHES),
             "server_code_sha256": contract.sha256_file(server_code),
-            "sources_db_sha256": contract.sha256_file(sources_db),
+            "sources_db_meta_sha256": sources_db_meta_identity(sources_db)[0],
             "vesum_db_sha256": contract.sha256_file(vesum_db),
         }
     except Error:

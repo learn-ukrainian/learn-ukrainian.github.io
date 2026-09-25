@@ -35,7 +35,7 @@ class SyntheticSourcesClient:
     def server_identity(self):
         return {
             "server_code_sha256": "a" * 64,
-            "sources_db_sha256": "b" * 64,
+            "sources_db_meta_sha256": "b" * 64,
             "sources_db_bytes": 1,
             "vesum_db_sha256": "c" * 64,
             "vesum_db_bytes": 1,
