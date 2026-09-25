@@ -6,6 +6,7 @@ import os
 import subprocess
 from pathlib import Path
 
+from scripts.agent_runtime.adapters import kimicc as kimicc_adapter
 from scripts.agent_runtime.adapters.kimicc import KimiccHarness
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -232,18 +233,26 @@ def _wrapper_args(stdout: str) -> list[str]:
     return [line.removeprefix("arg=") for line in stdout.splitlines() if line.startswith("arg=")]
 
 
-_SOURCES_GRANT = {
-    "mcp_config_path": "/trusted/.mcp.json",
-    "allowed_tools": "mcp__sources__verify_word,mcp__sources__verify_words",
-    "strict_mcp_config": True,
-}
+def _sources_grant(tmp_path: Path, monkeypatch) -> dict:
+    """The delegate review grant, with the adapter's trusted config under tmp_path."""
+    trusted = tmp_path / "primary" / ".mcp.json"
+    trusted.parent.mkdir(exist_ok=True)
+    trusted.write_text('{"mcpServers": {}}', encoding="utf-8")
+    monkeypatch.setattr(kimicc_adapter, "trusted_mcp_config_path", lambda: trusted)
+    return {
+        "mcp_config_path": str(trusted),
+        "allowed_tools": "mcp__sources__inspect_word,mcp__sources__verify_words",
+        "strict_mcp_config": True,
+        kimicc_adapter.REVIEW_VERDICT_MARKER_KEY: True,
+    }
 
 
 def test_headless_wrapper_read_only_review_leaves_plan_mode_and_denies_writes(tmp_path: Path, monkeypatch) -> None:
     """Plan mode refuses MCP calls, so the sources review runs in dontAsk (#8652)."""
     home = tmp_path / "home"
     home.mkdir()
-    plan = _adapter_plan(tmp_path, monkeypatch, model="k3", tool_config=dict(_SOURCES_GRANT))
+    grant = _sources_grant(tmp_path, monkeypatch)
+    plan = _adapter_plan(tmp_path, monkeypatch, model="k3", tool_config=grant)
     env = _clean_kimicc_env(home)
     env.update({**plan.env_overrides, "KIMICC_AUTH_TOKEN": "test-route-token"})
 
@@ -254,8 +263,8 @@ def test_headless_wrapper_read_only_review_leaves_plan_mode_and_denies_writes(tm
     assert "plan" not in args
     assert args.count("--permission-mode") == 1
     assert args[args.index("--permission-mode") + 1] == "dontAsk"
-    assert args[args.index("--allowedTools") + 1] == _SOURCES_GRANT["allowed_tools"]
-    assert args[args.index("--mcp-config") + 1] == "/trusted/.mcp.json"
+    assert args[args.index("--allowedTools") + 1] == grant["allowed_tools"]
+    assert args[args.index("--mcp-config") + 1] == grant["mcp_config_path"]
     assert "--strict-mcp-config" in args
     assert args[args.index("--tools") + 1] == "Read,Grep,Glob,LS"
     denied = set(args[args.index("--disallowedTools") + 1].split(","))
@@ -284,7 +293,8 @@ def test_headless_wrapper_plain_read_only_keeps_plan_mode(tmp_path: Path, monkey
 def test_headless_wrapper_workspace_write_review_grant_is_unchanged(tmp_path: Path, monkeypatch) -> None:
     home = tmp_path / "home"
     home.mkdir()
-    plan = _adapter_plan(tmp_path, monkeypatch, model="k3", mode="workspace-write", tool_config=dict(_SOURCES_GRANT))
+    grant = _sources_grant(tmp_path, monkeypatch)
+    plan = _adapter_plan(tmp_path, monkeypatch, model="k3", mode="workspace-write", tool_config=grant)
     env = _clean_kimicc_env(home)
     env.update({**plan.env_overrides, "KIMICC_AUTH_TOKEN": "test-route-token"})
 
@@ -317,3 +327,55 @@ def test_headless_wrapper_refuses_review_profile_outside_read_only(tmp_path: Pat
         assert result.returncode == 2, mode
         assert "--read-only-review requires --mode read-only" in result.stderr
         assert result.stdout == ""
+
+
+def test_headless_wrapper_read_only_review_with_write_capable_tool_keeps_plan_mode(tmp_path: Path, monkeypatch) -> None:
+    """A write-capable MCP tool in the grant never reaches dontAsk (#8652)."""
+    home = tmp_path / "home"
+    home.mkdir()
+    grant = _sources_grant(tmp_path, monkeypatch)
+    grant["allowed_tools"] += ",mcp__github__create_pull_request"
+    plan = _adapter_plan(tmp_path, monkeypatch, model="k3", tool_config=grant)
+    env = _clean_kimicc_env(home)
+    env.update({**plan.env_overrides, "KIMICC_AUTH_TOKEN": "test-route-token"})
+
+    result = subprocess.run(plan.cmd, cwd=_REPO_ROOT, env=env, capture_output=True, text=True, timeout=20)
+
+    assert result.returncode == 0, result.stderr
+    args = _wrapper_args(result.stdout)
+    assert args[args.index("--permission-mode") + 1] == "plan"
+    assert "dontAsk" not in args
+
+
+def test_headless_wrapper_refuses_review_profile_without_strict_mcp_config(tmp_path: Path) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    claude = tmp_path / "claude"
+    _fake_claude(claude)
+    env = _clean_kimicc_env(home)
+    env.update({"KIMICC_CLAUDE_BIN": str(claude), "KIMICC_AUTH_TOKEN": "test-route-token"})
+
+    result = subprocess.run(
+        [
+            str(_WRAPPER),
+            "--model",
+            "k3",
+            "--mode",
+            "read-only",
+            "--read-only-review",
+            "--mcp-config",
+            "/any/.mcp.json",
+            "--allowedTools",
+            "mcp__sources__verify_words",
+            "--prompt",
+            "say hi",
+        ],
+        cwd=_REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert result.returncode == 2
+    assert "--read-only-review requires --strict-mcp-config" in result.stderr
+    assert result.stdout == ""

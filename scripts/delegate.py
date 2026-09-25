@@ -6798,6 +6798,9 @@ def _kimicc_read_only_review_grant(
         "allowed_tools": allowed,
         "mcp_config_path": str(mcp_config),
         "strict_mcp_config": True,
+        # The adapter leaves plan mode only with this marker plus its own
+        # checks of the config path and the tool allowlist (#8652).
+        "review_verdict_required": True,
     }
 
 

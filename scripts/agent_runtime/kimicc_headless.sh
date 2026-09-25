@@ -86,6 +86,21 @@ if [ "$READ_ONLY_REVIEW" -eq 1 ] && [ "$MODE" != "read-only" ]; then
   echo "Error: --read-only-review requires --mode read-only." >&2
   exit 2
 fi
+if [ "$READ_ONLY_REVIEW" -eq 1 ]; then
+  # The adapter only emits the review flag with the trusted strict MCP config;
+  # without --strict-mcp-config, dontAsk could pre-approve tools from servers
+  # the checkout or user config adds.
+  has_strict=0
+  for arg in "${FORWARD_ARGS[@]}"; do
+    if [ "$arg" = "--strict-mcp-config" ]; then
+      has_strict=1
+    fi
+  done
+  if [ "$has_strict" -eq 0 ]; then
+    echo "Error: --read-only-review requires --strict-mcp-config." >&2
+    exit 2
+  fi
+fi
 
 export KIMICC_HEADLESS=1
 if kimicc_configure_route "$PROJECT_DIR"; then

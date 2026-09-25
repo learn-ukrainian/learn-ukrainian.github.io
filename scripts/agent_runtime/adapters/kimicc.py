@@ -9,10 +9,13 @@ makes this stateless: long calls must be relaunched before the roughly
 
 from __future__ import annotations
 
+import logging
+import re
 import shutil
 from pathlib import Path
 from typing import Any
 
+from scripts.common.repo_root import resolve_repo_root
 from scripts.review.model_catalog import (
     ModelCatalogError,
     kimi_model_aliases,
@@ -30,7 +33,41 @@ from ..trail_isolation import (
 from .base import InvocationPlan
 from .claude import ClaudeAdapter, _default_claude_bin, _ensure_supported_claude_cli_version
 
+_logger = logging.getLogger(__name__)
+
 _HEADLESS_WRAPPER = Path(__file__).resolve().parents[1] / "kimicc_headless.sh"
+# Set to True by delegate's ask-kimi --review grant (dispatch --agent kimi
+# --harness kimicc --mode read-only --require-review-verdict). It is one of the
+# conditions for leaving plan mode, not a grant on its own.
+REVIEW_VERDICT_MARKER_KEY = "review_verdict_required"
+# The only tools a review may pre-approve once it leaves plan mode: the read-only
+# sources lookups (the receipt ledger's REVIEW_TOOLS) and the read/search
+# built-ins. Fixed here rather than derived, so a new server-side tool cannot
+# widen the boundary without an adapter change (#8652).
+_READ_ONLY_REVIEW_SOURCES_TOOLS = frozenset(
+    {
+        "check_russian_shadow",
+        "check_text",
+        "inspect_word",
+        "inspect_words",
+        "query_cefr_level",
+        "query_grac",
+        "query_pravopys",
+        "query_r2u",
+        "query_sum20",
+        "query_ulif",
+        "search_heritage",
+        "search_style_guide",
+        "search_text",
+        "search_ua_gec_errors",
+        "verify_quote",
+        "verify_stress",
+        "verify_words",
+    }
+)
+READ_ONLY_REVIEW_ALLOWED_TOOLS = frozenset(
+    {f"mcp__sources__{name}" for name in _READ_ONLY_REVIEW_SOURCES_TOOLS} | {"Read", "Grep", "Glob", "LS"}
+)
 # Keys delegate.py adds on read-only and review attempts. Agent-specific
 # homes (codex/agy) are ignored here; rejecting them would make a shared
 # review tool_config unusable on this harness.
@@ -41,6 +78,7 @@ _DELEGATE_READ_ONLY_AND_REVIEW_KEYS = frozenset(
         "codex_home_override",
         "mcp_server_names",
         "read_only_tmp_root",
+        REVIEW_VERDICT_MARKER_KEY,
         "review_id",
     }
 )
@@ -108,6 +146,63 @@ def resolve_kimicc_dispatch_model(model: str | None, catalog: dict[str, Any] | N
     if model is None or not str(model).strip():
         return kimicc_default_model(catalog)
     return str(model).strip()
+
+
+def trusted_mcp_config_path() -> Path:
+    """The primary checkout's ``.mcp.json``, never a worktree copy.
+
+    A dispatch worktree is the branch under review, so its config is
+    untrusted (a stdio entry would run the author's command).
+    """
+    return resolve_repo_root(Path(__file__), 3) / ".mcp.json"
+
+
+def _allowed_tool_names(value: Any) -> list[str] | None:
+    """Split an ``--allowedTools`` value the way Claude Code does (commas or spaces)."""
+    if isinstance(value, str):
+        items = [value]
+    elif isinstance(value, (list, tuple)) and all(isinstance(item, str) for item in value):
+        items = list(value)
+    else:
+        return None
+    return [name for item in items for name in re.split(r"[,\s]+", item) if name]
+
+
+def read_only_review_refusal(mode: str, tc: dict[str, Any], *, trail_isolation: bool) -> str | None:
+    """Why this dispatch must stay in plan mode, or None when it may run in dontAsk.
+
+    Plan mode refuses every MCP call (#8652), so a sources review has to
+    leave it. ``--tools`` restricts only the built-ins; the MCP boundary is
+    ``--strict-mcp-config`` plus the pre-approved ``--allowedTools``. The
+    adapter checks every condition itself instead of trusting the caller.
+    """
+    if mode != "read-only":
+        return f"mode is {mode!r}"
+    if trail_isolation:
+        return "trail isolation keeps its own profile"
+    if tc.get(REVIEW_VERDICT_MARKER_KEY) is not True:
+        return f"no {REVIEW_VERDICT_MARKER_KEY} marker from the delegate review path"
+    if tc.get("strict_mcp_config") is not True:
+        return "strict_mcp_config is not set"
+    if tc.get("agent"):
+        return "an --agent profile can carry its own tools and permission mode"
+    config = tc.get("mcp_config_path")
+    if not isinstance(config, str) or not config:
+        return "no mcp_config_path"
+    trusted = trusted_mcp_config_path()
+    try:
+        same = Path(config).resolve(strict=True) == trusted.resolve(strict=True)
+    except OSError:
+        same = False
+    if not same:
+        return f"mcp_config_path {config!r} is not the trusted {str(trusted)!r}"
+    names = _allowed_tool_names(tc.get("allowed_tools"))
+    if not names:
+        return "allowed_tools is empty or malformed"
+    outside = sorted(set(names) - READ_ONLY_REVIEW_ALLOWED_TOOLS)
+    if outside:
+        return f"allowed_tools outside the read-only allowlist: {outside}"
+    return None
 
 
 class KimiccHarness:
@@ -191,20 +286,16 @@ class KimiccHarness:
             "--prompt",
             prompt,
         ]
-        # A read-only review carries the sources MCP grant (the delegate
-        # review grant or a sealed review attempt). The wrapper runs it in
-        # dontAsk mode instead of plan mode, which refuses every MCP call
-        # (#8652): only the granted tools and the read/search built-ins run,
-        # and Write/Edit/NotebookEdit/Bash stay denied. Other read-only
-        # dispatches (plain, trail isolation) keep plan mode, and write modes
-        # never get this flag.
-        if (
-            mode == "read-only"
-            and not trail_isolation
-            and isinstance(tc.get("mcp_config_path"), str)
-            and tc.get("allowed_tools")
-        ):
-            cmd.append("--read-only-review")
+        # Leave plan mode only for a verified read-only review profile. The
+        # wrapper then runs dontAsk: only the pre-approved read-only tools run,
+        # and Write/Edit/NotebookEdit/Bash stay denied. Everything else,
+        # including write modes, keeps its previous permission mode.
+        if mode == "read-only" and not trail_isolation:
+            refusal = read_only_review_refusal(mode, tc, trail_isolation=trail_isolation)
+            if refusal is None:
+                cmd.append("--read-only-review")
+            elif tc.get("mcp_config_path") or tc.get("allowed_tools") or tc.get(REVIEW_VERDICT_MARKER_KEY):
+                _logger.warning("KimiccHarness: read-only dispatch stays in plan mode: %s", refusal)
         if trail_isolation:
             cmd.extend(
                 [
