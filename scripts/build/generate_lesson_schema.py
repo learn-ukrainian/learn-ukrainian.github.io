@@ -136,6 +136,7 @@ ACTIVITY_TYPE_BY_COMPONENT = {
     "OddOneOut": "odd-one-out",
     "Order": "order",
     "PaleographyAnalysis": "paleography-analysis",
+    "PhraseTable": "phrase-table",
     "PickSyllables": "pick-syllables",
     "Quiz": "quiz",
     "ReadingActivity": "reading",

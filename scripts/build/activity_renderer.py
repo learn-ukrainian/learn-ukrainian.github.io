@@ -17,6 +17,8 @@ import re
 from itertools import pairwise
 from typing import Any
 
+import regex
+
 
 def render_activity_to_jsx(activity: dict, *, alphabet: bool = False) -> str:
     """Convert an activity YAML dict to React component JSX string.
@@ -147,20 +149,111 @@ def _component(name: str, props: str) -> str:
 # Core activity renderers
 # ---------------------------------------------------------------------------
 
+class QuizCorrectnessError(ValueError):
+    """A quiz item's inputs contradict each other or name no correct option."""
+
+
+def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
+    """Return the index of the one correct option of a quiz item.
+
+    The schema lets three inputs name the answer: ``options[].correct`` flags,
+    the ``correct`` index and the ``answer`` text. Each input present is turned
+    into the complete set of option indices it calls correct, and all present
+    sets must be equal, non-empty and of size one (the ``Quiz`` component
+    takes a single ``correctIndex``). Anything else raises
+    ``QuizCorrectnessError`` naming the claims -- the first choice is never
+    assumed and a claim is never silently dropped.
+    """
+    where = f"quiz item {index}"
+    if not isinstance(item, dict):
+        raise QuizCorrectnessError(f"{where} is not a mapping: {type(item).__name__}")
+    options = item.get("options")
+    if not isinstance(options, list) or not options:
+        raise QuizCorrectnessError(f"{where} has no options list")
+    texts = [opt.get("text") if isinstance(opt, dict) else opt for opt in options]
+
+    claims: dict[str, set[int]] = {}
+    # The flags claim is present once any option carries a `correct` key; bare
+    # strings and objects without the key are not-correct within this claim.
+    for i, opt in enumerate(options):
+        if isinstance(opt, dict) and "correct" in opt and not isinstance(opt["correct"], bool):
+            raise QuizCorrectnessError(
+                f"{where}: options[{i}].correct={opt['correct']!r} is not a boolean"
+            )
+    if any(isinstance(opt, dict) and "correct" in opt for opt in options):
+        claims["options[].correct"] = {
+            i for i, opt in enumerate(options) if isinstance(opt, dict) and opt.get("correct") is True
+        }
+    if "correct" in item:
+        named = item["correct"]
+        named_set = list(named) if isinstance(named, (list, tuple, set)) else [named]
+        for value in named_set:
+            if type(value) is not int or not 0 <= value < len(options):
+                raise QuizCorrectnessError(
+                    f"{where}: correct={named!r} is not an option index (0-{len(options) - 1})"
+                )
+        claims["correct"] = set(named_set)
+    if "answer" in item:
+        answer = item["answer"]
+        if not isinstance(answer, str) or not answer:
+            raise QuizCorrectnessError(f"{where}: answer={answer!r} is not a non-empty string")
+        claims["answer"] = {i for i, text in enumerate(texts) if text == answer}
+
+    if not claims:
+        raise QuizCorrectnessError(
+            f"{where} names no correct option (needs options[].correct, correct or answer)"
+        )
+    described = "; ".join(f"{name} -> {sorted(found) or 'none'}" for name, found in claims.items())
+    sets = list(claims.values())
+    if any(found != sets[0] for found in sets):
+        raise QuizCorrectnessError(f"{where}: claims disagree ({described})")
+    if len(sets[0]) != 1:
+        raise QuizCorrectnessError(
+            f"{where}: must name exactly one correct option ({described})"
+        )
+    return sorted(sets[0])
+
+
+class GroupSortNameError(ValueError):
+    """A group-sort group carries two different category names."""
+
+
+def group_sort_group_name(group: Any, index: int = 0) -> str:
+    """Return the category name of one group-sort group (``label`` or ``name``).
+
+    When both keys are present they must agree; otherwise whichever is present
+    is used.
+    """
+    if not isinstance(group, dict):
+        raise GroupSortNameError(f"group-sort group {index} is not a mapping: {type(group).__name__}")
+    label, name = group.get("label"), group.get("name")
+    if label and name and label != name:
+        raise GroupSortNameError(
+            f"group-sort group {index} has label {label!r} and name {name!r}; keep only one"
+        )
+    return label or name or ""
+
+
 def _render_quiz(act: dict) -> str:
     """quiz → <Quiz questions={[...]} instruction="..." />
 
-    YAML items have {question, options[], correct(index)} format.
-    React expects {question, options[{text, correct}]} format.
+    YAML items have {question|prompt, options[], correct(index)|answer(text)}
+    or options[{text, correct}]. React expects {question, options[{text, correct}],
+    explanation?}.
     """
     questions = []
-    for item in act.get("items", []):
-        correct_idx = item.get("correct", 0)
+    for index, item in enumerate(act.get("items", [])):
+        correct = set(quiz_correct_indices(item, index))
         options = [
-            {"text": opt, "correct": i == correct_idx}
-            for i, opt in enumerate(item.get("options", []))
+            {"text": opt.get("text", "") if isinstance(opt, dict) else opt, "correct": i in correct}
+            for i, opt in enumerate(item["options"])
         ]
-        q: dict[str, Any] = {"question": item.get("question", ""), "options": options}
+        q: dict[str, Any] = {
+            "question": item.get("question") or item.get("prompt", ""),
+            "options": options,
+        }
+        if item.get("explanation"):
+            q["explanation"] = item["explanation"]
         questions.append(q)
 
     props = _prop("questions", questions)
@@ -171,7 +264,7 @@ def _render_quiz(act: dict) -> str:
 def _render_fill_in(act: dict) -> str:
     """fill-in → <FillIn items={[...]} instruction="..." />
 
-    YAML: {sentence, answer, options?}
+    YAML: {sentence, answer, explanation, options?, mode?}
     React: same structure.
     """
     items = []
@@ -180,8 +273,9 @@ def _render_fill_in(act: dict) -> str:
             "sentence": item.get("sentence", ""),
             "answer": item.get("answer", ""),
         }
-        if item.get("options"):
-            entry["options"] = item["options"]
+        for key in ("options", "explanation", "mode"):
+            if item.get(key):
+                entry[key] = item[key]
         items.append(entry)
 
     props = _prop("items", items)
@@ -203,12 +297,12 @@ def _render_match_up(act: dict) -> str:
 def _render_group_sort(act: dict) -> str:
     """group-sort → <GroupSort groups={{...}} instruction="..." />
 
-    YAML: groups[{label, items[]}]
+    YAML: groups[{label|name, items[]}]
     React: groups is {label: items[]} dict.
     """
     groups = {}
-    for g in act.get("groups", []):
-        groups[g.get("label", "")] = g.get("items", [])
+    for index, g in enumerate(act.get("groups", [])):
+        groups[group_sort_group_name(g, index)] = g.get("items", [])
 
     props = _prop("groups", groups)
     props += _opt_prop("instruction", act.get("instruction"))
@@ -257,7 +351,7 @@ def _render_error_correction(act: dict, *, alphabet: bool = False) -> str:
         correct_form, options = error_correction_render_values(
             item.get("sentence", ""),
             item.get("error", ""),
-            item.get("correction", ""),
+            item.get("correction") or item.get("answer", ""),
             item.get("options", []),
             alphabet=alphabet,
         )
@@ -509,6 +603,8 @@ def _render_anagram(act: dict) -> str:
         }
         if item.get("hint"):
             entry["hint"] = item["hint"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
 
     props = _prop("items", items)
@@ -545,22 +641,50 @@ def _render_translate(act: dict) -> str:
     return _component("Translate", props)
 
 
+_UNJUMBLE_TOKEN_FIELDS = ("words", "jumbled", "prompt", "scrambled", "letters", "tiles")
+
+
+def unjumble_tokens(item: dict, index: int = 0) -> list[str]:
+    """Return the jumbled tokens of one unjumble item, whichever field carries them.
+
+    A list is taken as-is; a string is split on ``/`` when present, else on
+    whitespace.
+    """
+    for field_name in _UNJUMBLE_TOKEN_FIELDS:
+        if field_name not in item:
+            continue
+        value = item[field_name]
+        if isinstance(value, list):
+            return [str(token) for token in value]
+        if isinstance(value, str):
+            separator = "/" if "/" in value else None
+            return [token.strip() for token in value.split(separator) if token.strip()]
+        raise TypeError(
+            f"unjumble item {index} field {field_name!r} must be str or list, "
+            f"got {type(value).__name__}"
+        )
+    raise KeyError(f"unjumble item {index} missing one of: words, jumbled, prompt, scrambled")
+
+
 def _render_unjumble(act: dict) -> str:
     """unjumble → <Unjumble items={[...]} instruction="..." />
 
-    YAML: {words[], correct_order[], hint?}
+    YAML: {words|jumbled|prompt|scrambled, answer|correct_order[], hint?, explanation}
     React UnjumbleItem: {words(string, slash-separated), answer(string), hint?}
     """
     items = []
-    for item in act.get("items", []):
-        words = item.get("words", [])
+    for index, item in enumerate(act.get("items", [])):
+        words = unjumble_tokens(item, index)
         correct = item.get("correct_order", [])
+        answer = item.get("answer") or " ".join(str(c) for c in correct)
         entry: dict[str, Any] = {
             "words": " / ".join(words),
-            "answer": " ".join(correct),
+            "answer": str(answer),
         }
         if item.get("hint"):
             entry["hint"] = item["hint"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
 
     props = _prop("items", items)
@@ -568,13 +692,36 @@ def _render_unjumble(act: dict) -> str:
     return _component("Unjumble", props)
 
 
+def order_correct_indices(items: list, correct_order: list) -> list[int]:
+    """Resolve an order item's ``correct_order`` to zero-based indices into ``items``.
+
+    Writers (e.g. codex on m20 a1/my-morning act-3) commonly express the
+    answer as the ordered ITEM STRINGS rather than integer indices into
+    ``items``. When ``correct_order`` is an exact permutation of UNIQUE items,
+    resolve each string to its index -- unambiguous, and a natural authoring
+    form we accept rather than HARD-fail at MDX assembly.
+    """
+    str_items = [str(item) for item in items]
+    if (all(isinstance(entry, str) for entry in correct_order)
+            and len(str_items) == len(set(str_items))
+            and len(correct_order) == len(str_items)
+            and set(correct_order) == set(str_items)):
+        correct_order = [str_items.index(entry) for entry in correct_order]
+    if not all(isinstance(index, int) for index in correct_order):
+        raise TypeError("order correct_order must contain integers")
+    if any(index < 0 or index >= len(items) for index in correct_order):
+        raise ValueError("order correct_order index out of range")
+    return list(correct_order)
+
+
 def _render_order(act: dict) -> str:
     """order → <Order items={[...]} correct_order={[...]} instruction="..." />
 
     For dialogue/sequence ordering. Items displayed shuffled, learner clicks to reorder.
     """
-    props = _prop("items", act.get("items", []))
-    props += _prop("correct_order", act.get("correct_order", []))
+    items = act.get("items", [])
+    props = _prop("items", items)
+    props += _prop("correct_order", order_correct_indices(items, act.get("correct_order", [])))
     props += _opt_prop("instruction", act.get("instruction"))
     return _component("Order", props)
 
@@ -717,6 +864,44 @@ class ImageToLetterShapeError(ValueError):
     """An image-to-letter item carries neither the schema nor the legacy shape."""
 
 
+_IMAGE_ASSET_PATH = re.compile(r"[A-Za-z0-9_./-]+\.(?:png|jpe?g|webp|svg)")
+_FLAG = regex.compile(r"\p{Regional_Indicator}{2}")
+_EMOJI_LEAD = regex.compile(r"\p{Extended_Pictographic}")
+_EMOJI_PRESENTATION = regex.compile(r"\p{Emoji_Presentation}")
+_VS16 = "\N{VARIATION SELECTOR-16}"
+
+
+def _is_emoji_cluster(cluster: str) -> bool:
+    """One grapheme cluster that renders as a colour picture (flag or emoji)."""
+    if _FLAG.fullmatch(cluster):
+        return True
+    if not _EMOJI_LEAD.match(cluster):
+        return False
+    # Text-default pictographs (bare (c), (tm)) only render as emoji with U+FE0F.
+    return bool(_EMOJI_PRESENTATION.match(cluster)) or cluster[1:2] == _VS16
+
+
+def image_to_letter_image_kind(value: Any) -> str | None:
+    """Classify an image-to-letter ``image`` as ``"asset"``, ``"emoji"`` or ``None`` (invalid).
+
+    JSON Schema cannot express "exactly one emoji", so this function is the
+    authoritative rule (the schema only states it in prose): an asset path, or
+    exactly one extended grapheme cluster that is a Regional_Indicator pair
+    (a flag) or starts with an Extended_Pictographic code point that renders
+    as emoji -- Emoji_Presentation, or followed by U+FE0F -- so ZWJ sequences
+    and skin tones qualify while bare text-default symbols such as the
+    copyright sign do not.
+    """
+    if not isinstance(value, str) or not value:
+        return None
+    if _IMAGE_ASSET_PATH.fullmatch(value):
+        return "asset"
+    clusters = regex.findall(r"\X", value)
+    if len(clusters) == 1 and _is_emoji_cluster(clusters[0]):
+        return "emoji"
+    return None
+
+
 def image_to_letter_render_values(item: Any, index: int = 0) -> dict[str, Any]:
     """Normalise one image-to-letter item to the React ImageToLetterItem shape.
 
@@ -739,11 +924,27 @@ def image_to_letter_render_values(item: Any, index: int = 0) -> dict[str, Any]:
             f"(image, letter, options) nor the legacy shape (emoji, answer, "
             f"distractors); keys present: {sorted(item)}"
         )
+    if image_to_letter_image_kind(emoji) is None:
+        raise ImageToLetterShapeError(
+            f"image-to-letter item {index} image {emoji!r} is neither an asset path "
+            f"(png/jpg/jpeg/webp/svg) nor exactly one emoji"
+        )
     raw = item.get("distractors") if item.get("distractors") is not None else item.get("options")
+    if "options" in item:
+        options = item["options"]
+        if not isinstance(options, (list, tuple)) or answer not in options:
+            raise ImageToLetterShapeError(
+                f"image-to-letter item {index} options do not contain letter {answer!r}"
+            )
     distractors: list[str] = []
     for option in raw or []:
         if option != answer and option not in distractors:
             distractors.append(option)
+    if not distractors:
+        raise ImageToLetterShapeError(
+            f"image-to-letter item {index} has no choice distinct from letter {answer!r}; "
+            f"a learner needs at least one distractor"
+        )
     entry: dict[str, Any] = {"emoji": emoji, "answer": answer, "distractors": distractors}
     for key in ("note", "explanation"):
         if item.get(key):
@@ -777,21 +978,22 @@ def _render_letter_grid(act: dict) -> str:
             "upper": entry.get("upper", ""),
             "lower": entry.get("lower", ""),
         }
-        for field in ("emoji", "key_word", "note", "sound_type"):
+        for field in ("name", "emoji", "key_word", "note", "sound_type"):
             if entry.get(field):
                 item[field] = entry[field]
         letters.append(item)
 
     props = _prop("letters", letters)
-    props += _opt_prop("title", act.get("instruction"))
+    props += _opt_prop("title", act.get("title"))
+    props += _opt_prop("instruction", act.get("instruction"))
     return _component("LetterGrid", props)
 
 
 def _render_watch_and_repeat(act: dict) -> str:
     """watch-and-repeat → <WatchAndRepeat items={[...]} />
 
-    YAML: items[{video, letter?, word?, note?}]
-    React WatchAndRepeatItem: {video, letter?, word?, note?}
+    YAML: items[{video, letter?, word?, sound?, note?, explanation?}]
+    React WatchAndRepeatItem: {video, letter?, word?, sound?, note?, explanation?}
     """
     items = []
     for item in act.get("items", []):
@@ -800,12 +1002,17 @@ def _render_watch_and_repeat(act: dict) -> str:
             entry["letter"] = item["letter"]
         if item.get("word"):
             entry["word"] = item["word"]
+        if item.get("sound"):
+            entry["sound"] = item["sound"]
         if item.get("note"):
             entry["note"] = item["note"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
 
     props = _prop("items", items)
-    props += _opt_prop("title", act.get("instruction"))
+    props += _opt_prop("title", act.get("title"))
+    props += _opt_prop("instruction", act.get("instruction"))
     return _component("WatchAndRepeat", props)
 
 
@@ -835,6 +1042,8 @@ def _render_divide_words(act: dict) -> str:
         entry = {"word": item.get("word", ""), "answer": item.get("answer", "")}
         if item.get("hint"):
             entry["hint"] = item["hint"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
     props = _prop("items", items)
     props += _opt_prop("instruction", act.get("instruction"))
@@ -848,6 +1057,8 @@ def _render_count_syllables(act: dict) -> str:
         entry = {"word": item.get("word", ""), "correct": item.get("correct", 1)}
         if item.get("translation"):
             entry["translation"] = item["translation"]
+        if item.get("explanation"):
+            entry["explanation"] = item["explanation"]
         items.append(entry)
     props = _prop("items", items)
     props += _opt_prop("instruction", act.get("instruction"))
@@ -870,7 +1081,7 @@ def _render_phrase_table(act: dict) -> str:
     """phrase-table → <PhraseTable groups={[...]} />
 
     YAML: groups[{label, phrases[str|{phrase, context?, emoji?}]}]
-    React PhraseGroup: {function(=label), phrases[{phrase, context?, emoji?}]}
+    React PhraseGroup: {label, function(=label), phrases[{phrase, context?, emoji?}]}
     """
     groups = []
     for g in act.get("groups", []):
@@ -879,18 +1090,22 @@ def _render_phrase_table(act: dict) -> str:
             if isinstance(p, str):
                 phrases.append({"phrase": p})
             else:
-                phrases.append({
-                    "phrase": p.get("phrase", ""),
-                    "context": p.get("context"),
-                    "emoji": p.get("emoji"),
-                })
+                entry = {"phrase": p.get("phrase", "")}
+                if p.get("context"):
+                    entry["context"] = p["context"]
+                if p.get("emoji"):
+                    entry["emoji"] = p["emoji"]
+                phrases.append(entry)
+        label = g.get("label") or g.get("function", "")
         groups.append({
-            "function": g.get("label", ""),
+            "label": label,
+            "function": label,
             "phrases": phrases,
         })
 
     props = _prop("groups", groups)
-    props += _opt_prop("title", act.get("instruction"))
+    props += _opt_prop("title", act.get("title"))
+    props += _opt_prop("instruction", act.get("instruction"))
     return _component("PhraseTable", props)
 
 

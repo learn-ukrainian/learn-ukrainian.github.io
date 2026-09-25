@@ -27,6 +27,25 @@ const legacy = {
 const DONE = /Вправу завершено!/;
 
 describe('ImageToLetter', () => {
+  test('renders an asset path as an <img> with answer-neutral alt text, not as text', () => {
+    const { container } = render(<ImageToLetter items={[{ ...apple, emoji: 'assets/apple.png' }]} />);
+    const img = container.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img).toHaveAttribute('src', 'assets/apple.png');
+    const alt = img?.getAttribute('alt') ?? '';
+    expect(alt).not.toBe('');
+    for (const leak of [apple.answer, ...apple.distractors, 'apple']) {
+      expect(alt).not.toContain(leak);
+    }
+    expect(screen.queryByText('assets/apple.png')).not.toBeInTheDocument();
+  });
+
+  test.each(['🍎', '👨‍👩‍👧‍👦', '🇺🇦'])('renders the emoji %s as text, not as an image', (emoji) => {
+    const { container } = render(<ImageToLetter items={[{ ...apple, emoji }]} />);
+    expect(container.querySelector('img')).toBeNull();
+    expect(screen.getByText(emoji)).toBeInTheDocument();
+  });
+
   test('renders the answer and every distractor as an option button', () => {
     render(<ImageToLetter items={[apple]} />);
     const labels = screen.getAllByRole('button').map((b) => b.textContent);

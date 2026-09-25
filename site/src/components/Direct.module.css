@@ -300,6 +300,12 @@
   line-height: 1;
 }
 
+.itlImage {
+  max-width: min(100%, 16rem);
+  max-height: clamp(5rem, 12vw, 8rem);
+  object-fit: contain;
+}
+
 .itlHint {
   font-size: 1rem;
   color: var(--ifm-color-emphasis-600);

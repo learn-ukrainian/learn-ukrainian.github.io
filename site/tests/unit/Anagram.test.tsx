@@ -111,6 +111,20 @@ describe('AnagramQuestion', () => {
     expect(feedback?.getAttribute('data-correct')).toBe('true');
   });
 
+  test('renders explanation when provided after submitting answer', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <AnagramQuestion scrambled="x" answer="x" explanation="Це літера х" />
+    );
+
+    await user.click(tilesIn(container, 'letter-bank')[0]);
+    await user.click(submitBtn(container));
+
+    const explanation = container.querySelector('[data-activity="explanation"]');
+    expect(explanation).toBeInTheDocument();
+    expect(explanation?.textContent).toContain('Це літера х');
+  });
+
   test('shows incorrect feedback when the wrong answer is submitted', async () => {
     const user = userEvent.setup();
     // 'abc' scrambled, answer is 'cab' — whatever order ends up won't be 'cab'

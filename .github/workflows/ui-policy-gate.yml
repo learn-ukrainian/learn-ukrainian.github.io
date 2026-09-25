@@ -47,8 +47,9 @@ jobs:
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
           # jsonschema: `npm run build` imports scripts/audit via meta_validator —
-          # keep in sync with the ci.yml frontend job venv.
-          .venv/bin/python -m pip install PyYAML jsonschema
+          # keep in sync with the ci.yml frontend job venv. regex: scripts/build/activity_renderer.py
+          # is imported through scripts.audit.checks by the hydrate steps.
+          .venv/bin/python -m pip install PyYAML jsonschema regex==2026.5.9
 
       - name: Restore Atlas lexicon manifest cache
         id: atlas-manifest-cache
