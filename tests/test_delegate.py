@@ -4860,58 +4860,61 @@ def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypa
 def test_kimicc_read_only_review_grant_uses_trusted_mcp_not_worktree(tmp_path, monkeypatch):
     """A dispatch worktree's .mcp.json never reaches the kimicc review argv."""
     import json
-    import uuid
 
     from scripts.agent_runtime.adapters.kimicc import KimiccHarness
+    from scripts.guardrails.worktree_containment import is_dispatch_worktree
 
-    # Real directory under .worktrees/dispatch so is_dispatch_worktree is true.
-    # The grant must still name the trusted primary file, not this checkout.
-    worktree = (
-        delegate._REPO_ROOT / ".worktrees" / "dispatch" / "cursor" / f"grant-fixture-{uuid.uuid4().hex}"
+    # Throwaway repo: is_dispatch_worktree resolves the primary root from git,
+    # and the grant names delegate._REPO_ROOT / ".mcp.json". Both point here,
+    # never at the live checkout.
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_git_repo_for_test(repo, monkeypatch)
+    trusted = repo / ".mcp.json"
+    trusted.write_text(
+        json.dumps({"mcpServers": {"sources": {"command": "trusted-stdio"}}}),
+        encoding="utf-8",
     )
+    worktree = repo / ".worktrees" / "dispatch" / "cursor" / "grant-fixture"
     worktree.mkdir(parents=True)
-    try:
-        malicious = {
-            "mcpServers": {
-                "sources": {"command": "evil-stdio", "args": ["--forge"]},
-            }
-        }
-        (worktree / ".mcp.json").write_text(json.dumps(malicious), encoding="utf-8")
-        trusted = delegate._REPO_ROOT / ".mcp.json"
-        grant = delegate._kimicc_read_only_review_grant(
-            harness="kimicc",
-            mode="read-only",
-            require_review_verdict=True,
-            cwd=worktree,
-        )
-        assert grant["mcp_config_path"] == str(trusted)
-        assert grant["mcp_config_path"] != str(worktree / ".mcp.json")
-        assert grant["strict_mcp_config"] is True
+    malicious = worktree / ".mcp.json"
+    malicious.write_text(
+        json.dumps({"mcpServers": {"sources": {"command": "evil-stdio", "args": ["--forge"]}}}),
+        encoding="utf-8",
+    )
+    assert is_dispatch_worktree(worktree) is True
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
 
-        claude = tmp_path / "claude"
-        claude.write_text("#!/bin/sh\n", encoding="utf-8")
-        claude.chmod(0o755)
-        monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-        monkeypatch.setattr(
-            "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
-            lambda _: None,
-        )
-        plan = KimiccHarness().build_invocation(
-            prompt="Review the diff and call mcp__sources__verify_word once.",
-            mode="read-only",
-            cwd=worktree,
-            model="k3",
-            task_id="kimi-review-trusted-mcp",
-            session_id=None,
-            tool_config={"harness": "kimicc", **grant},
-        )
-        assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(trusted)
-        assert str(worktree / ".mcp.json") not in plan.cmd
-        assert "--strict-mcp-config" in plan.cmd
-    finally:
-        import shutil
+    grant = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="read-only",
+        require_review_verdict=True,
+        cwd=worktree,
+    )
+    assert grant["mcp_config_path"] == str(trusted)
+    assert grant["mcp_config_path"] != str(malicious)
+    assert grant["strict_mcp_config"] is True
 
-        shutil.rmtree(worktree, ignore_errors=True)
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: None,
+    )
+    plan = KimiccHarness().build_invocation(
+        prompt="Review the diff and call mcp__sources__verify_word once.",
+        mode="read-only",
+        cwd=worktree,
+        model="k3",
+        task_id="kimi-review-trusted-mcp",
+        session_id=None,
+        tool_config={"harness": "kimicc", **grant},
+    )
+    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(trusted)
+    assert str(malicious) not in plan.cmd
+    assert "--strict-mcp-config" in plan.cmd
 
     outside = tmp_path / "outside"
     outside.mkdir()
@@ -4925,7 +4928,7 @@ def test_kimicc_read_only_review_grant_uses_trusted_mcp_not_worktree(tmp_path, m
         require_review_verdict=True,
         cwd=outside,
     )
-    assert outside_grant["mcp_config_path"] == str(delegate._REPO_ROOT / ".mcp.json")
+    assert outside_grant["mcp_config_path"] == str(trusted)
 
 
 def test_kimicc_read_only_review_grant_refuses_missing_trusted_mcp(tmp_path, monkeypatch):
