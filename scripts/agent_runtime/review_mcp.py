@@ -44,6 +44,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
@@ -160,6 +161,79 @@ def review_diagnostics_path(config_path: Path | str) -> Path:
     return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _DIAGNOSTICS_SUFFIX)
 
 
+class ReviewDirectoryError(ValueError):
+    """A review runtime directory is a symlink, not a directory, or not owned by the current user."""
+
+
+_UNSAFE_DIRECTORY = (
+    "review attempt refused: a review runtime directory is a symlink, is not a directory, "
+    "or is not owned by the current user (#8652)"
+)
+_DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+
+
+def _open_owned_dir(name: Path | str, *, dir_fd: int | None = None) -> int:
+    """Open ``name`` as a directory without following a symlink; refuse unless the caller owns it.
+
+    ``O_NOFOLLOW`` guards only the final component, so callers walk a path one component at a
+    time with ``dir_fd``. The owner check runs on the opened descriptor (``fstat``), so it
+    describes the very directory that is then used, whatever happens to the path afterwards.
+    The refusal is fixed wording: it never names the path.
+    """
+    try:
+        fd = os.open(name, _DIRECTORY_FLAGS, dir_fd=dir_fd)
+    except OSError as exc:
+        if exc.errno in (errno.ELOOP, errno.ENOTDIR):
+            raise ReviewDirectoryError(_UNSAFE_DIRECTORY) from None
+        raise
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid():
+            raise ReviewDirectoryError(_UNSAFE_DIRECTORY)
+    except BaseException:
+        os.close(fd)
+        raise
+    return fd
+
+
+def _open_runtime_dir(anchor: Path, components: Sequence[str]) -> int:
+    """Create-or-open ``components`` under the trusted ``anchor``, never following a symlink.
+
+    Each component is made with ``mkdir`` (mode 0700) relative to its parent's descriptor, then
+    opened ``O_DIRECTORY | O_NOFOLLOW`` and checked for ownership, so a symlink planted at any
+    level (or swapped in later) is refused rather than followed. Returns the last directory's fd.
+    """
+    fd = os.open(anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    try:
+        for name in components:
+            with contextlib.suppress(FileExistsError):
+                os.mkdir(name, 0o700, dir_fd=fd)
+            child = _open_owned_dir(name, dir_fd=fd)
+            os.close(fd)
+            fd = child
+    except BaseException:
+        os.close(fd)
+        raise
+    return fd
+
+
+def _lexists(name: str, dir_fd: int) -> bool:
+    """Whether ``name`` exists in ``dir_fd`` (a dangling symlink counts; nothing is followed)."""
+    try:
+        os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
+    except FileNotFoundError:
+        return False
+    return True
+
+
+def _create_file(name: str, dir_fd: int, payload: bytes) -> None:
+    """Create ``name`` exclusively (0600) inside ``dir_fd`` and write ``payload``."""
+    fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=dir_fd)
+    with os.fdopen(fd, "wb") as handle:
+        os.fchmod(handle.fileno(), 0o600)
+        handle.write(payload)
+
+
 def _untrusted(label: str, text: object, diagnostics: Path) -> str:
     """The stand-in a refusal shows for untrusted free text: its size and fingerprint, never its content.
 
@@ -174,16 +248,23 @@ def _untrusted(label: str, text: object, diagnostics: Path) -> str:
     fingerprint = hashlib.sha256(payload).hexdigest()[:_FINGERPRINT_LEN]
     saved = f"details in {diagnostics.name}"
     try:
-        fd = os.open(diagnostics, os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o600)
+        # Open the attempt directory without following a symlink and create the file relative to it,
+        # so a directory swapped in after prepare_review_attempt cannot redirect the write.
+        dir_fd = _open_owned_dir(diagnostics.parent)
         try:
-            os.fchmod(fd, 0o600)
-            os.write(
-                fd, f"--- {label} ({len(raw)} chars, sha256 {fingerprint}) ---\n".encode("ascii") + payload + b"\n"
-            )
+            fd = os.open(diagnostics.name, os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o600, dir_fd=dir_fd)
+            try:
+                os.fchmod(fd, 0o600)
+                os.write(
+                    fd, f"--- {label} ({len(raw)} chars, sha256 {fingerprint}) ---\n".encode("ascii") + payload + b"\n"
+                )
+            finally:
+                os.close(fd)
         finally:
-            os.close(fd)
-    except OSError as exc:
-        saved = f"details not saved: {_errno_name(exc) or 'OSError'}"
+            os.close(dir_fd)
+    except (OSError, ReviewDirectoryError) as exc:
+        reason = _errno_name(exc) if isinstance(exc, OSError) else None
+        saved = f"details not saved: {reason or 'unsafe directory'}"
     return f"<{label}: {len(raw)} chars, sha256 {fingerprint}; {saved}>"
 
 
@@ -299,11 +380,11 @@ def _render_codex_review_config(python_bin: Path, sources_server: Path, env: dic
     return "\n".join(lines) + "\n"
 
 
-def _link_codex_auth(codex_home: Path) -> None:
-    """Symlink the user's Codex ``auth.json`` (as ``_ensure_codex_writer_home`` does)."""
+def _link_codex_auth(home_fd: int) -> None:
+    """Symlink the user's Codex ``auth.json`` into the scoped home (as ``_ensure_codex_writer_home`` does)."""
     real_auth = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex") / "auth.json"
     if real_auth.exists():
-        (codex_home / "auth.json").symlink_to(real_auth)
+        os.symlink(real_auth, "auth.json", dir_fd=home_fd)
 
 
 def _real_agy_token() -> Path:
@@ -312,24 +393,33 @@ def _real_agy_token() -> Path:
     return Path(app_data) / _AGY_TOKEN_NAME
 
 
-def _populate_agy_review_home(agy_home: Path, real_token: Path, config_bytes: bytes) -> None:
-    """Fill a freshly created scoped AGY home: the sources-only MCP config and a linked OAuth token.
+def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: bytes) -> None:
+    """Fill a freshly created scoped AGY home (open as ``home_fd``): the sources-only MCP config and a linked token.
 
     Only the OAuth token is linked (never copied): the #8617 spike proved it is the
     sole credential ``agy -p`` needs. Everything else agy wants it creates itself.
+    Every directory and file is made relative to descriptors, never by path.
     """
-    app_data = agy_review_app_data_dir(agy_home)
-    mcp_config = agy_review_mcp_config_path(agy_home)
-    for directory in (agy_home / ".gemini", mcp_config.parent, app_data):
-        os.mkdir(directory, 0o700)
-    fd_config = os.open(mcp_config, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-    with os.fdopen(fd_config, "wb") as handle:
-        handle.write(config_bytes)
-    # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
-    # token) must land in the real token file. A refreshed copy would leave the real
-    # token stale or invalidated and break every other AGY lane. "Nothing written to the
-    # real ~/.gemini" means configuration; agy_oauth_link_problem() guards the link itself.
-    (app_data / _AGY_TOKEN_NAME).symlink_to(real_token)
+    parts = agy_review_app_data_dir(Path()).parts  # .gemini / antigravity-cli
+    config_parts = agy_review_mcp_config_path(Path()).parts  # .gemini / config / mcp_config.json
+    gemini_fd = config_fd = app_data_fd = None
+    try:
+        os.mkdir(parts[0], 0o700, dir_fd=home_fd)
+        gemini_fd = _open_owned_dir(parts[0], dir_fd=home_fd)
+        os.mkdir(config_parts[1], 0o700, dir_fd=gemini_fd)
+        config_fd = _open_owned_dir(config_parts[1], dir_fd=gemini_fd)
+        os.mkdir(parts[1], 0o700, dir_fd=gemini_fd)
+        app_data_fd = _open_owned_dir(parts[1], dir_fd=gemini_fd)
+        _create_file(config_parts[2], config_fd, config_bytes)
+        # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
+        # token) must land in the real token file. A refreshed copy would leave the real
+        # token stale or invalidated and break every other AGY lane. "Nothing written to the
+        # real ~/.gemini" means configuration; agy_oauth_link_problem() guards the link itself.
+        os.symlink(real_token, _AGY_TOKEN_NAME, dir_fd=app_data_fd)
+    finally:
+        for fd in (app_data_fd, config_fd, gemini_fd):
+            if fd is not None:
+                os.close(fd)
 
 
 def agy_oauth_link_problem(config_path: Path | str) -> str | None:
@@ -416,13 +506,25 @@ def prepare_review_attempt(
     python_bin = primary_root / ".venv" / "bin" / "python"
     sources_server = primary_root / ".mcp" / "servers" / "sources" / "server.py"
 
-    base_dir = receipts_root if receipts_root is not None else (primary_root / "batch_state" / "review-receipts")
+    if receipts_root is None:
+        # The primary checkout is the trusted anchor; every runtime component below it is walked.
+        base_dir = primary_root / "batch_state" / "review-receipts"
+        anchor, components = primary_root, ("batch_state", "review-receipts", review_id)
+    else:
+        # An explicit root: its nearest existing ancestor is trusted, everything below is walked.
+        base_dir = Path(os.path.abspath(receipts_root))
+        anchor = base_dir.parent
+        while not anchor.exists():
+            anchor = anchor.parent
+        components = (*base_dir.relative_to(anchor).parts, review_id)
     review_dir = base_dir / review_id
-    review_dir.mkdir(parents=True, exist_ok=True)
 
-    ledger_path = review_dir / f"{attempt_id}.jsonl"
-    sidecar_path = review_dir / f"{attempt_id}.jsonl.sha256"
-    config_path = review_dir / f"{attempt_id}.mcp.json"
+    ledger_name = f"{attempt_id}.jsonl"
+    sidecar_name = f"{attempt_id}.jsonl.sha256"
+    config_name = f"{attempt_id}.mcp.json"
+    ledger_path = review_dir / ledger_name
+    sidecar_path = review_dir / sidecar_name
+    config_path = review_dir / config_name
     codex_home = codex_review_home_path(config_path) if canonical_harness == "codex" else None
     agy_home = agy_review_home_path(config_path) if canonical_harness == "agy" else None
     real_agy_token = _real_agy_token() if agy_home is not None else None
@@ -430,18 +532,6 @@ def prepare_review_attempt(
         raise ValueError(
             f"AGY OAuth token not found for the scoped review home: no {_AGY_TOKEN_NAME} in the "
             "real AGY_APP_DATA_DIR (default ~/.gemini/antigravity-cli) (#8617)"
-        )
-
-    # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
-    if (
-        ledger_path.exists()
-        or sidecar_path.exists()
-        or config_path.exists()
-        or (codex_home is not None and (codex_home.exists() or codex_home.is_symlink()))
-        or (agy_home is not None and (agy_home.exists() or agy_home.is_symlink()))
-    ):
-        raise FileExistsError(
-            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
         )
 
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
@@ -460,64 +550,70 @@ def prepare_review_attempt(
     }
     config_bytes = (json.dumps(config_payload, indent=2) + "\n").encode("utf-8")
 
-    created_paths: list[Path] = []
+    # Create or open each runtime directory without following symlinks (refusing any that is a
+    # symlink or foreign-owned), then create every per-attempt file relative to this descriptor
+    # so a component swapped in after the check cannot redirect them (#8652).
+    review_fd = _open_runtime_dir(anchor, components)
+    created: list[str] = []
 
     def _rollback() -> None:
-        for path in reversed(created_paths):
+        for name in reversed(created):
             with contextlib.suppress(OSError):
-                if path.is_dir() and not path.is_symlink():
-                    shutil.rmtree(path, ignore_errors=True)
+                if stat.S_ISDIR(os.stat(name, dir_fd=review_fd, follow_symlinks=False).st_mode):
+                    shutil.rmtree(name, ignore_errors=True, dir_fd=review_fd)
                 else:
-                    path.unlink(missing_ok=True)
+                    os.unlink(name, dir_fd=review_fd)
+
+    def _already_exists() -> FileExistsError:
+        return FileExistsError(
+            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
+        )
 
     try:
-        # Create empty ledger (0 bytes, 0o600) exclusively
-        fd_ledger = os.open(ledger_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        os.close(fd_ledger)
-        created_paths.append(ledger_path)
+        # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
+        existing = [ledger_name, sidecar_name, config_name]
+        existing += [home.name for home in (codex_home, agy_home) if home is not None]
+        if any(_lexists(name, review_fd) for name in existing):
+            raise _already_exists()
 
-        # Create sidecar containing empty SHA-256 + newline exclusively
-        fd_sidecar = os.open(sidecar_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        with os.fdopen(fd_sidecar, "wb") as handle:
-            handle.write(sidecar_bytes)
-        created_paths.append(sidecar_path)
-
-        # Create config exclusively
-        fd_config = os.open(config_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        with os.fdopen(fd_config, "wb") as handle:
-            handle.write(config_bytes)
-        created_paths.append(config_path)
-
-        for target in created_paths:
-            if (target.stat().st_mode & 0o777) != 0o600:
-                os.chmod(target, 0o600)
+        for name, payload in ((ledger_name, b""), (sidecar_name, sidecar_bytes), (config_name, config_bytes)):
+            _create_file(name, review_fd, payload)
+            created.append(name)
 
         if codex_home is not None:
             # Exclusive mkdir: refuses a pre-existing (or pre-planted) home.
-            os.mkdir(codex_home, 0o700)
-            created_paths.append(codex_home)
-            fd_toml = os.open(codex_home / "config.toml", os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-            with os.fdopen(fd_toml, "w", encoding="utf-8") as handle:
-                handle.write(
+            os.mkdir(codex_home.name, 0o700, dir_fd=review_fd)
+            created.append(codex_home.name)
+            home_fd = _open_owned_dir(codex_home.name, dir_fd=review_fd)
+            try:
+                _create_file(
+                    "config.toml",
+                    home_fd,
                     _render_codex_review_config(
                         python_bin, sources_server, config_payload["mcpServers"]["sources"]["env"]
-                    )
+                    ).encode("utf-8"),
                 )
-            _link_codex_auth(codex_home)
+                _link_codex_auth(home_fd)
+            finally:
+                os.close(home_fd)
 
         if agy_home is not None and real_agy_token is not None:
             # Exclusive mkdir: refuses a pre-existing (or pre-planted) home.
-            os.mkdir(agy_home, 0o700)
-            created_paths.append(agy_home)
-            _populate_agy_review_home(agy_home, real_agy_token, config_bytes)
+            os.mkdir(agy_home.name, 0o700, dir_fd=review_fd)
+            created.append(agy_home.name)
+            home_fd = _open_owned_dir(agy_home.name, dir_fd=review_fd)
+            try:
+                _populate_agy_review_home(home_fd, real_agy_token, config_bytes)
+            finally:
+                os.close(home_fd)
     except FileExistsError as exc:
         _rollback()
-        raise FileExistsError(
-            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
-        ) from exc
+        raise _already_exists() from exc
     except BaseException:
         _rollback()
         raise
+    finally:
+        os.close(review_fd)
 
     adapter_options: dict[str, Any] = {
         "mcp_config_path": str(config_path),

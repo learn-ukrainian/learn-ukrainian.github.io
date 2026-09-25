@@ -1038,7 +1038,7 @@ def test_agy_missing_user_token_is_refused_before_anything_is_created(
         _prepare_agy(manifest_file, tmp_path)
     # The refusal names the variable, never its value (#8652).
     assert str(tmp_path) not in str(refused.value)
-    assert list((tmp_path / "receipts" / "rev-agy-001").iterdir()) == []
+    assert not (tmp_path / "receipts").exists()
 
 
 def test_agy_preexisting_home_is_refused_and_untouched(manifest_file: Path, tmp_path: Path) -> None:
@@ -1083,8 +1083,8 @@ def test_agy_home_race_after_precheck_rolls_back_other_files_and_spares_the_plan
 
     def racing_mkdir(path, *args, **kwargs):
         if str(path).endswith(".agy-home"):
-            real_mkdir(path, 0o700)  # someone else won the race
-            (Path(path) / "marker").write_text("theirs\n", encoding="utf-8")
+            real_mkdir(path, 0o700, dir_fd=kwargs.get("dir_fd"))  # someone else won the race
+            (review_dir / Path(path).name / "marker").write_text("theirs\n", encoding="utf-8")
             raise FileExistsError(path)
         return real_mkdir(path, *args, **kwargs)
 
@@ -2064,3 +2064,125 @@ def test_refusals_keep_allowlisted_names_and_counts_verbatim(
     assert "got mystery-harness" in message
     message = _refusal_from_prepare(tmp_path, manifest_file, harness="a/b")
     assert "got <redacted: 3 chars>" in message
+
+
+# --- #8652: the per-attempt review directory refuses planted symlinks; files go through a dir fd ---
+
+
+def _assert_directory_refusal(refused: pytest.ExceptionInfo[Exception], tmp_path: Path) -> None:
+    assert isinstance(refused.value, review_mcp_module.ReviewDirectoryError)
+    assert "symlink" in str(refused.value)
+    assert str(tmp_path) not in str(refused.value)
+
+
+def test_symlink_planted_at_the_review_directory_is_refused(manifest_file: Path, tmp_path: Path) -> None:
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (tmp_path / "receipts").mkdir()
+    (tmp_path / "receipts" / "rev-codex-001").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
+        _prepare_codex(manifest_file, tmp_path)
+    _assert_directory_refusal(refused, tmp_path)
+    assert list(outside.iterdir()) == []
+
+
+def test_symlink_planted_at_the_receipts_root_is_refused(manifest_file: Path, tmp_path: Path) -> None:
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (tmp_path / "receipts").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
+        _prepare_codex(manifest_file, tmp_path)
+    _assert_directory_refusal(refused, tmp_path)
+    assert list(outside.iterdir()) == []
+
+
+@pytest.mark.parametrize(
+    "planted_at", ["batch_state", "batch_state/review-receipts", "batch_state/review-receipts/rev-x-001"]
+)
+def test_symlink_planted_at_any_default_runtime_component_is_refused(
+    planted_at: str, manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake_root = tmp_path / "repo"
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    planted = fake_root / planted_at
+    planted.parent.mkdir(parents=True)
+    planted.symlink_to(outside, target_is_directory=True)
+    monkeypatch.setattr(review_mcp_module, "resolve_repo_root", lambda *_args: fake_root)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
+        prepare_review_attempt(
+            review_id="rev-x-001", attempt_id="att-x-001", manifest_path=manifest_file, harness="codex"
+        )
+    _assert_directory_refusal(refused, tmp_path)
+    assert list(outside.iterdir()) == []
+
+
+@pytest.mark.parametrize(("harness", "suffix"), [("codex", ".codex-home"), ("agy", ".agy-home")])
+def test_symlink_planted_at_the_attempt_directory_is_refused(
+    harness: str, suffix: str, manifest_file: Path, tmp_path: Path, fake_agy_user_home: Path
+) -> None:
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    review_dir = tmp_path / "receipts" / "rev-x-001"
+    review_dir.mkdir(parents=True)
+    (review_dir / f"att-x-001{suffix}").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(FileExistsError, match="already exists"):
+        prepare_review_attempt(
+            review_id="rev-x-001",
+            attempt_id="att-x-001",
+            manifest_path=manifest_file,
+            harness=harness,
+            receipts_root=tmp_path / "receipts",
+        )
+    assert list(outside.iterdir()) == []
+    assert sorted(path.name for path in review_dir.iterdir()) == [f"att-x-001{suffix}"]
+
+
+def test_directory_owned_by_another_user_is_refused(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(review_mcp_module.os, "geteuid", lambda: os.stat(tmp_path).st_uid + 1)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
+        _prepare_codex(manifest_file, tmp_path)
+    assert "not owned by the current user" in str(refused.value)
+    assert str(tmp_path) not in str(refused.value)
+    assert list((tmp_path / "receipts").iterdir()) == []
+
+
+def test_files_follow_the_directory_descriptor_when_the_path_is_swapped_after_the_check(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    review_dir = tmp_path / "receipts" / "rev-codex-001"
+    real_lexists = review_mcp_module._lexists
+    swapped: list[bool] = []
+
+    def swapping_lexists(name: str, dir_fd: int) -> bool:
+        if not swapped:  # the first use of the descriptor is after the walk's checks
+            swapped.append(True)
+            review_dir.rename(tmp_path / "receipts" / "moved-away")
+            review_dir.symlink_to(outside, target_is_directory=True)
+        return real_lexists(name, dir_fd)
+
+    monkeypatch.setattr(review_mcp_module, "_lexists", swapping_lexists)
+    _prepare_codex(manifest_file, tmp_path)
+    assert swapped
+    assert list(outside.iterdir()) == []
+    assert sorted(path.name for path in (tmp_path / "receipts" / "moved-away").iterdir()) == [
+        "att-codex-001.codex-home",
+        "att-codex-001.jsonl",
+        "att-codex-001.jsonl.sha256",
+        "att-codex-001.mcp.json",
+    ]
+
+
+def test_diagnostics_are_never_written_through_a_planted_directory_symlink(tmp_path: Path) -> None:
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    planted = tmp_path / "review-dir"
+    planted.symlink_to(outside, target_is_directory=True)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", planted / "att.diagnostics.log")
+    assert "details not saved: unsafe directory" in stand_in
+    assert str(tmp_path) not in stand_in
+    assert list(outside.iterdir()) == []
