@@ -1037,3 +1037,24 @@ def test_isolated_perednia_to_peredpokii_lexical_swap_regression():
         orig_tokens=tokens_f,
     )
     assert res_f == "unwarranted_valid_to_valid_lexical_swap"
+
+
+def test_systemic_gender_agreement_multiple_adjectives_regression():
+    """Verify systemic gender agreement mismatch detection on multiple intervening adjectives.
+
+    Specifically verifies that strings like «свого сумну, гірку, важку присутність»
+    with three or more adjectives are caught as gender_agreement_mismatch without ReDoS.
+    Regression test for Codex R30.
+    """
+    orig_text = "Він відчував свою сумну, гірку, важку присутність."
+    corr_text = "Він відчував свого сумну, гірку, важку присутність."
+    tokens = ["Він", "відчував", "свого", "сумну,", "гірку,", "важку", "присутність."]
+    in_scope = [(2, 3, "G/Gender", "свого")]
+
+    res = validate_candidate_rejection(
+        orig_text=orig_text,
+        corr_text=corr_text,
+        in_scope=in_scope,
+        orig_tokens=tokens,
+    )
+    assert res == "gender_agreement_mismatch"
