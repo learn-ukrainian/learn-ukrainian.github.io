@@ -670,6 +670,12 @@ CONTRADICTORY_QUIZZES = {
         "options": ["a", {"text": "b", "correct": False}], "correct": 0,
     },
     "index-not-an-int": {"options": ["a", "b"], "correct": "1"},
+    "answer-null": {"options": ["a", "b"], "correct": 0, "answer": None},
+    "answer-empty": {"options": ["a", "b"], "correct": 0, "answer": ""},
+    "answer-int": {"options": ["a", "b"], "correct": 0, "answer": 3},
+    "answer-null-alone": {"options": ["a", "b"], "answer": None},
+    "index-null": {"options": ["a", "b"], "correct": None, "answer": "a"},
+    "flag-not-a-bool": {"options": ["a", {"text": "b", "correct": None}], "correct": 0},
 }
 
 

@@ -175,6 +175,11 @@ def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
     claims: dict[str, set[int]] = {}
     # The flags claim is present once any option carries a `correct` key; bare
     # strings and objects without the key are not-correct within this claim.
+    for i, opt in enumerate(options):
+        if isinstance(opt, dict) and "correct" in opt and not isinstance(opt["correct"], bool):
+            raise QuizCorrectnessError(
+                f"{where}: options[{i}].correct={opt['correct']!r} is not a boolean"
+            )
     if any(isinstance(opt, dict) and "correct" in opt for opt in options):
         claims["options[].correct"] = {
             i for i, opt in enumerate(options) if isinstance(opt, dict) and opt.get("correct") is True
@@ -188,8 +193,10 @@ def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
                     f"{where}: correct={named!r} is not an option index (0-{len(options) - 1})"
                 )
         claims["correct"] = set(named_set)
-    answer = item.get("answer")
-    if isinstance(answer, str):
+    if "answer" in item:
+        answer = item["answer"]
+        if not isinstance(answer, str) or not answer:
+            raise QuizCorrectnessError(f"{where}: answer={answer!r} is not a non-empty string")
         claims["answer"] = {i for i, text in enumerate(texts) if text == answer}
 
     if not claims:
