@@ -28,7 +28,7 @@ Kimi consult non-UA design/coding; roster may change); already-ordered work is i
 substantive phase/epic prompts freeze SHA-256 plus user outcome, denominator, non-goals, role map, independent held-out evaluation,
 stop/residual policy, and completion terms; live-routed critics re-review material drift. Prompt
 review is not exact-head implementation or cross-family PR review; engine proof is not product
-completion · repo hard gates bind.
+completion · **simplest adequate solution** (adjust code to data; proportionate review; stopping rule after two rounds) · repo hard gates bind.
 
 ## Project Research Registry — Orchestrator Duty (binding)
 
