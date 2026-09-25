@@ -1241,12 +1241,12 @@ def test_issue_8785_principle_blocks_review_escapes(repo: Path, template: str):
         "wget -O../../../../AGENTS.md https://example.test/a",
         "unzip /tmp/x.zip -d../../../../",
         "patch -o../../../../AGENTS.md -i /tmp/x.patch",
-        "sort -X../../../../AGENTS.md /tmp/in",
         "cd {primary}; sort -oAGENTS.md /tmp/in",
         "cd {primary}; curl -oAGENTS.md https://example.test/a",
         "ruff format {primary}/AGENTS.md",
         "ruff check --fix {primary}/AGENTS.md",
-        "ruff check --unsafe-fixes {primary}/AGENTS.md",
+        "ruff check --fix-only {primary}/AGENTS.md",
+        "ruff check --fix --unsafe-fixes {primary}/AGENTS.md",
         "black {primary}/AGENTS.md",
         "isort {primary}/AGENTS.md",
         "prettier --write {primary}/AGENTS.md",
@@ -1255,6 +1255,7 @@ def test_issue_8785_principle_blocks_review_escapes(repo: Path, template: str):
         "clang-format -i {primary}/AGENTS.md",
         "gofmt -w {primary}/AGENTS.md",
         "gofmt -l -w {primary}/AGENTS.md",
+        "gofmt -lw {primary}/AGENTS.md",
         "rustfmt {primary}/AGENTS.md",
         "shfmt -w {primary}/AGENTS.md",
         "markdownlint --fix {primary}/AGENTS.md",
@@ -1267,6 +1268,9 @@ def test_issue_8785_principle_blocks_review_escapes(repo: Path, template: str):
         "bash -o pipefail -lc 'echo x > {primary}/AGENTS.md'",
         "bash +O extglob -lc 'echo x > {primary}/AGENTS.md'",
         "bash -lc -- 'echo x > {primary}/AGENTS.md'",
+        "bash --noprofile --norc -lc 'echo x > {primary}/AGENTS.md'",
+        "bash --login --rcfile /tmp/bashrc -lc 'echo x > {primary}/AGENTS.md'",
+        "bash --init-file=/tmp/bashrc -lc 'echo x > {primary}/AGENTS.md'",
     ],
 )
 def test_issue_8785_final_review_writers_block(repo: Path, command: str):
@@ -1284,17 +1288,95 @@ def test_issue_8785_final_review_writers_block(repo: Path, command: str):
         "black --check {primary}/AGENTS.md",
         "isort --check-only {primary}/AGENTS.md",
         "rustfmt --check {primary}/AGENTS.md",
+        "ruff check --unsafe-fixes {primary}/AGENTS.md",
         "bash -- -c 'echo x > {primary}/AGENTS.md'",
         "cd {primary}; sort -o/tmp/safe-output /tmp/in",
         "cd {primary}; tar -cf/tmp/safe-archive /tmp/in",
         "find -files0-from /tmp/list -delete",
         "cat /tmp/list | xargs -I{{}} sh -c 'echo x > {{}}'",
+        "sort -X../../../../AGENTS.md /tmp/in",
     ],
 )
 def test_issue_8785_final_review_allowed(repo: Path, command: str):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _bash(repo, command.format(primary=repo), cwd=worktree)
     assert result.returncode == 0, (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "shell",
+    [
+        "bash -lc",
+        "bash -o pipefail -lc",
+        "bash +O extglob -lc",
+        "bash --noprofile --norc -lc",
+        "bash --login --rcfile /tmp/bashrc -lc",
+        "bash --init-file=/tmp/bashrc -lc",
+        "sh -lc",
+        "dash -ec",
+        "zsh -lc",
+    ],
+)
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_shell_git_cluster_uses_same_extractor(repo: Path, shell: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = f"{shell} 'cd {target} && git add AGENTS.md'"
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "curl -fsSL URL -o /tmp/x",
+        "wget -O{worktree}/out https://example.test/AGENTS.md",
+        "wget -P{worktree} https://example.test/AGENTS.md",
+        "sort -k1,1 /tmp/in -o /tmp/out",
+        "shfmt -i 2 -w {worktree}/f.sh",
+        "shfmt -ln bash -p -w {worktree}/f.sh",
+        "bash -lc 'cat AGENTS.md'",
+        "git -C {worktree} status",
+        "curl -K {primary}/AGENTS.md -o /tmp/x URL",
+        "curl -T {primary}/AGENTS.md -o /tmp/x URL",
+        "patch -i {primary}/AGENTS.md -o /tmp/x",
+        "split -l 2 /tmp/in {worktree}/part",
+    ],
+)
+def test_issue_8785_primary_cwd_has_no_phantom_write_target(repo: Path, template: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(primary=repo, worktree=worktree)
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == 0, (command, result.stderr)
+
+
+def test_issue_8785_clustered_curl_remote_name_writes_in_primary_cwd(repo: Path):
+    result = _bash(repo, "curl -fsSLO https://example.test/AGENTS.md", cwd=repo)
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "curl -o{target}/AGENTS.md URL",
+        "wget -a{target}/AGENTS.md URL",
+        "sort -o{target}/AGENTS.md /tmp/in",
+        "tar -cf{target}/AGENTS.md /tmp/in",
+        "unzip /tmp/in.zip -d{target}",
+        "patch -o{target}/AGENTS.md -i /tmp/in.patch",
+        "split /tmp/in {target}/part",
+        "gofmt -lw {target}/AGENTS.md",
+        "ruff check --fix-only {target}/AGENTS.md",
+        "ruff check --fix --unsafe-fixes {target}/AGENTS.md",
+    ],
+)
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_option_destinations_follow_target_worktree(repo: Path, template: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = template.format(target=target)
+    result = _bash(repo, command, cwd=worktree)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
 
 
 def test_issue_8785_inherited_cdpath_makes_bare_relative_cd_unknown(repo: Path):

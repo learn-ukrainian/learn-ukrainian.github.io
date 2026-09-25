@@ -48,10 +48,12 @@ Covered write surfaces
   or ``git -C``) is the protected primary checkout. Rescue clean forms
   ``git checkout -- <path>`` and plain ``git restore <path>`` (no ``--source``)
   remain allowed so operators can discard accidental dirt.
-* Precise transfer parsing for rsync and git archive; whole-argv conservative
+* Precise transfer parsing for rsync and git archive; conservative positional
   classification for long-tail writers (curl, wget, sort, SQLite, tar, unzip,
-  patch, tee, truncate, split, csplit, ffmpeg, convert). Curl ``-O`` and wget
-  default output use a cwd-relative remote filename. cp/mv ``--backup`` and
+  patch, tee, truncate, split, csplit, ffmpeg, convert). Known short-option
+  values are parsed by command. Curl ``-K``/``-T`` and patch ``-i`` are read
+  inputs; curl ``-O`` and wget default output use a cwd-relative remote
+  filename. cp/mv ``--backup`` and
   ``--suffix`` modify the classified destination; rsync ``--compare-dest`` and
   ``--link-dest`` only read their paths.
 
@@ -109,7 +111,8 @@ example, ``find -files0-from /tmp/list -delete`` and
 ``cat /tmp/list | xargs -I{} sh -c 'echo x > {}'`` are allowed from a dispatch
 worktree. This is the same rule as ``cat /tmp/list | xargs tee``: fail closed
 only when a command literal names the primary checkout or the effective cwd
-is the primary checkout. Unlisted writers and shell
+is the primary checkout. Config files such as curl ``-K`` may themselves
+direct writes; their contents are not inspected. Unlisted writers and shell
 features not parsed here remain residuals. This is defense-in-depth, not a
 sandbox; physical worktree isolation and the monitor remain necessary.
 
@@ -1097,52 +1100,102 @@ _LONG_TAIL_WRITERS = frozenset(
 )
 
 
-_LONG_TAIL_SHORT_PATH_VALUES = {
-    "sort": frozenset("oT"),
-    "curl": frozenset("oDc"),
-    "tar": frozenset("f"),
-    "wget": frozenset("OoP"),
-    "unzip": frozenset("d"),
-    "patch": frozenset("odi"),
+# Short options that consume a value. True means the value may name a write
+# location; False means it is an input or a non-path control value. Positional
+# inputs remain conservatively classified by the long-tail rule above.
+_LONG_TAIL_SHORT_VALUES: dict[str, dict[str, bool]] = {
+    "curl": {**dict.fromkeys("oDc", True), **dict.fromkeys("KT", False)},
+    "wget": dict.fromkeys("OoaP", True),
+    "sort": {**dict.fromkeys("oT", True), **dict.fromkeys("kt", False)},
+    "tar": dict.fromkeys("fC", True),
+    "unzip": {"d": True},
+    "patch": {**dict.fromkeys("orBd", True), "i": False},
+    "split": dict.fromkeys("aCbln", False),
+}
+_LONG_TAIL_LONG_VALUES: dict[str, dict[str, bool]] = {
+    "curl": {
+        "output": True,
+        "output-dir": True,
+        "dump-header": True,
+        "cookie-jar": True,
+        "config": False,
+        "upload-file": False,
+    },
+    "wget": {"output-document": True, "output-file": True, "append-output": True, "directory-prefix": True},
+    "sort": {"output": True, "temporary-directory": True, "key": False, "field-separator": False},
+    "tar": {"file": True, "directory": True},
+    "unzip": {"directory": True},
+    "patch": {"output": True, "reject-file": True, "prefix": True, "directory": True, "input": False},
 }
 
 
 def _long_tail_targets(args: list[str], command: str) -> list[str]:
     """Path-like argv words, including values attached to options and dot commands."""
     targets: list[str] = []
-    for arg in args:
+    short_values = _LONG_TAIL_SHORT_VALUES.get(command, {})
+    long_values = _LONG_TAIL_LONG_VALUES.get(command, {})
+    i = 0
+    options_done = False
+    while i < len(args):
+        arg = args[i]
+        i += 1
         if arg == "--":
+            options_done = True
             continue
-        words = [arg]
-        if "=" in arg:
-            words.append(arg.tail(arg.index("=") + 1) if isinstance(arg, ShellWord) else arg.split("=", 1)[1])
-        # A known path-taking flag consumes the remainder of its cluster.
-        # For unfamiliar flags, keep every plausible letter boundary so an
-        # attached -XREL remains a candidate without a command-specific list.
-        if arg.startswith("-") and not arg.startswith("--"):
-            value_start = next(
-                (
-                    offset + 1
-                    for offset in range(1, len(arg))
-                    if all(letter.isalpha() for letter in arg[1 : offset + 1])
-                    if arg[offset] in _LONG_TAIL_SHORT_PATH_VALUES.get(command, ())
-                ),
-                None,
-            )
-            if value_start is not None and value_start < len(arg):
-                words.append(arg.tail(value_start) if isinstance(arg, ShellWord) else arg[value_start:])
-            elif value_start is None:
-                for offset in range(2, len(arg)):
-                    words.append(arg.tail(offset) if isinstance(arg, ShellWord) else arg[offset:])
-                    if not arg[offset].isalpha():
-                        break
+        words: list[str] = []
+        if not options_done and arg.startswith("--"):
+            name, sep, attached = str(arg[2:]).partition("=")
+            if sep:
+                value = arg.tail(len(name) + 3) if isinstance(arg, ShellWord) else attached
+                if long_values.get(name, True):
+                    words.append(value)
+            elif name in long_values and i < len(args):
+                value = args[i]
+                i += 1
+                if long_values[name]:
+                    words.append(value)
+        elif not options_done and arg.startswith("-") and arg != "-":
+            for offset, flag in enumerate(arg[1:], 1):
+                if flag not in short_values:
+                    continue
+                if offset + 1 < len(arg):
+                    value = arg.tail(offset + 1) if isinstance(arg, ShellWord) else arg[offset + 1 :]
+                elif i < len(args):
+                    value = args[i]
+                    i += 1
+                else:
+                    break
+                if short_values[flag]:
+                    words.append(value)
+                break
+        elif command not in {"curl", "wget"}:
+            words.append(arg)
         # Absolute embedded values and SQLite dot commands.
-        for match in re.finditer(r"(?:^|\s|=|-[A-Za-z]+)(/[^\s]+)", arg):
-            words.append(ShellWord(match.group(1), getattr(arg, "unresolved_at", None), getattr(arg, "raw", arg)))
-        if any(char.isspace() for char in arg):
-            words.extend(ShellWord(part, getattr(arg, "unresolved_at", None)) for part in str(arg).split())
+        for word in tuple(words):
+            for match in re.finditer(r"(?:^|\s|=|-[A-Za-z]+)(/[^\s]+)", word):
+                words.append(
+                    ShellWord(match.group(1), getattr(word, "unresolved_at", None), getattr(word, "raw", word))
+                )
+            if any(char.isspace() for char in word):
+                words.extend(ShellWord(part, getattr(word, "unresolved_at", None)) for part in str(word).split())
         targets.extend(word for word in words if word and not str(word).startswith("-") and "://" not in word)
     return list(dict.fromkeys(targets))
+
+
+def _has_short_option(args: list[str], command: str, flag: str) -> bool:
+    """Find a short flag before a value ends its option cluster."""
+    value_options = _LONG_TAIL_SHORT_VALUES.get(command, {})
+    for arg in args:
+        if arg == "--":
+            break
+        if not arg.startswith("-") or arg.startswith("--"):
+            continue
+        for letter in arg[1:]:
+            if letter == flag:
+                return True
+            if letter in value_options:
+                break
+    return False
 
 
 _INPLACE_FIXERS = frozenset(
@@ -1168,7 +1221,7 @@ def _inplace_fixer_targets(command: str, args: list[str]) -> list[str]:
         if not args or args[0] not in {"format", "check"}:
             return []
         writing = args[0] == "format" and "--check" not in args and "--diff" not in args
-        writing |= args[0] == "check" and any(a in {"--fix", "--unsafe-fixes"} for a in args)
+        writing |= args[0] == "check" and any(a in {"--fix", "--fix-only"} for a in args)
         args = args[1:]
     elif command in {"black", "isort"}:
         writing = not any(a in {"--check", "--check-only", "--diff"} for a in args)
@@ -1189,6 +1242,8 @@ def _inplace_fixer_targets(command: str, args: list[str]) -> list[str]:
             "markdownlint-cli2": {"--fix"},
         }
         writing = any(a in write_flags.get(command, ()) for a in args)
+        if command in {"gofmt", "shfmt"}:
+            writing |= any(a.startswith("-") and not a.startswith("--") and "w" in a[1:] for a in args)
     if not writing:
         return []
     # These options consume a non-target value; the rest of the positional
@@ -1222,6 +1277,9 @@ def _inplace_fixer_targets(command: str, args: list[str]) -> list[str]:
         if not options_done and arg in value_options:
             skip = True
             continue
+        if not options_done and command == "shfmt" and arg in {"-i", "-ln"}:
+            skip = True
+            continue
         if not options_done and arg.startswith("-"):
             continue
         targets.append(arg)
@@ -1235,8 +1293,14 @@ def _shell_command_script(args: list[str]) -> str | None:
         arg = args[i]
         if arg == "--":
             return None
-        if arg in {"-o", "+O"}:
+        if arg in {"-o", "-O", "+O", "--rcfile", "--init-file"}:
             i += 2
+            continue
+        if arg.startswith(("--rcfile=", "--init-file=")):
+            i += 1
+            continue
+        if arg.startswith("--"):
+            i += 1
             continue
         if arg.startswith("-") and not arg.startswith("--"):
             if "c" in arg[1:]:
@@ -1246,7 +1310,7 @@ def _shell_command_script(args: list[str]) -> str | None:
                 return args[script_index] if script_index < len(args) else None
             i += 1
             continue
-        if arg.startswith("+O"):
+        if arg.startswith(("+O", "-O")):
             i += 1
             continue
         return None
@@ -1423,12 +1487,18 @@ def _writer_targets(
     cmd, idx = _command_word(segment)
     if cmd in _LONG_TAIL_WRITERS:
         targets.extend(_long_tail_targets(segment[idx + 1 :], cmd))
-        if cmd == "curl" and any(arg == "-O" or arg == "--remote-name" for arg in segment[idx + 1 :]):
+        if cmd == "curl" and (_has_short_option(segment[idx + 1 :], cmd, "O") or "--remote-name" in segment[idx + 1 :]):
             targets.extend(
                 ShellWord(Path(str(arg).split("?", 1)[0]).name) for arg in segment[idx + 1 :] if "://" in arg
             )
-        if cmd == "wget" and not any(
-            arg in {"-O", "--output-document", "-P", "--directory-prefix"} for arg in segment[idx + 1 :]
+        if cmd == "wget" and not (
+            _has_short_option(segment[idx + 1 :], cmd, "O")
+            or _has_short_option(segment[idx + 1 :], cmd, "P")
+            or any(
+                arg in {"--output-document", "--directory-prefix"}
+                or arg.startswith(("--output-document=", "--directory-prefix="))
+                for arg in segment[idx + 1 :]
+            )
         ):
             targets.extend(
                 ShellWord(Path(str(arg).split("?", 1)[0]).name) for arg in segment[idx + 1 :] if "://" in arg
@@ -1803,11 +1873,9 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
                 intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1))
             continue
         if cmd in {"sh", "bash", "zsh", "dash"} and depth < 3:
-            args = segment[idx + 1 :]
-            if "-c" in args:
-                pos = args.index("-c")
-                if pos + 1 < len(args) and getattr(args[pos + 1], "unresolved_at", None) is None:
-                    intents.extend(bash_git_write_intents(str(args[pos + 1]), cwd=effective_cwd, depth=depth + 1))
+            script = _shell_command_script(segment[idx + 1 :])
+            if script is not None and getattr(script, "unresolved_at", None) is None:
+                intents.extend(bash_git_write_intents(str(script), cwd=effective_cwd, depth=depth + 1))
             continue
         if not _is_git_binary(cmd):
             continue
