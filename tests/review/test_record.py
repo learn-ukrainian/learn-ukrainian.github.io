@@ -23,6 +23,7 @@ from scripts.build.fresh.plan_promote import promote_plan
 from scripts.curriculum.evidence import lock
 from scripts.review import findings_db, fixloop, record, second_seat
 from scripts.review.receipts.ledger import create_empty_ledger
+from scripts.review.seeds import manifest as seed_manifest
 from scripts.review.validate import codes
 from tests.build.test_fresh_e3b2 import _fake_state, _fixture, _write
 from tests.review.test_r1_schema_ledger import LESSON_CHECKS, PLAN_CHECKS, _dump, _record, _review
@@ -159,7 +160,46 @@ class World:
         if finding.get("source_conflict") == "auto":
             finding["source_conflict"] = {"a": {"receipt": receipt()}, "b": {"receipt": receipt("second authority")}}
 
-    def record(self, made: dict[str, Any], *, task_id: str = "review-claude", **kwargs: Any) -> record.Outcome:
+    def register_unit(self, unit_id: str, n: int) -> None:
+        """Register a measurement lesson (a mechanical seed, or a clean lesson) the way R3 does, so record accepts it.
+
+        A unit a test registered itself (with the identities it wants) is left as it is.
+        """
+        if unit_id in {*seed_manifest.unit_ids(self.root)[0], *seed_manifest.unit_ids(self.root)[1]}:
+            return
+        if unit_id.startswith(seed_manifest.CLEAN_PREFIX):
+            seed_manifest.write_clean_record(
+                seed_manifest.Clean(unit_id, "fixture", LEVEL, SLUG, n, "openai"), repo_root=self.root
+            )
+            return
+        seed_manifest.write_scoring_manifest(
+            seed_manifest.Seed(
+                unit_id,
+                "mechanical",
+                "fixture",
+                LEVEL,
+                SLUG,
+                n,
+                "job",
+                None,
+                [{"tab": "urok"}],
+                "a defect",
+                "found",
+                "openai",
+                None,
+                None,
+                None,
+                None,
+                "not_applicable",
+            ),
+            repo_root=self.root,
+        )
+
+    def record(
+        self, made: dict[str, Any], *, task_id: str = "review-claude", register: bool = True, **kwargs: Any
+    ) -> record.Outcome:
+        if register and kwargs.get("seed_id"):
+            self.register_unit(kwargs["seed_id"], made["n"])
         return record.record_return(
             made["review"],
             manifest_path=self.manifest(made["n"]),
@@ -600,6 +640,7 @@ def test_a_seeded_attempt_is_kept_apart_and_never_enters_the_fix_loop(world: Wor
 
 
 def test_a_seeded_failure_does_not_count_against_the_lesson(world: World) -> None:
+    world.register_unit("seed-7", 2)
     record.record_return(
         None,
         manifest_path=world.manifest(2),
