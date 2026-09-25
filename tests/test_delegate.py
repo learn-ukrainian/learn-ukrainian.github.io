@@ -6095,8 +6095,12 @@ def _make_run_stub(
             # Default dirs for sparse-checkout tests / ensure_worktree.
             # ``data/`` is listed separately so nested exclusions can drop
             # data/projects and data/lexicon while keeping sibling data dirs.
+            # The curriculum manifest cone exists so a default worktree keeps
+            # curriculum/l2-uk-en/curriculum.yaml without the rest of the tree.
             if cmd[-1:] == ["data/"]:
                 listing = "data/corpus_audit\ndata/lexicon\ndata/projects\ndata/raw\n"
+            elif cmd[-1:] == ["curriculum/l2-uk-en/evidence"]:
+                listing = "curriculum/l2-uk-en/evidence\n"
             else:
                 listing = "curriculum\ndata\ndocs\nscripts\nsite\ntests\nwiki\n"
             return subprocess.CompletedProcess(cmd, 0, listing, "")
@@ -7815,6 +7819,7 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     set_calls = [c for c in sparse_calls if c[:3] == ["git", "sparse-checkout", "set"]]
     assert set_calls, "default dispatch worktree must apply sparse-checkout set"
     assert "curriculum" not in set_calls[0]
+    assert "curriculum/l2-uk-en/evidence" in set_calls[0]
     assert "wiki" not in set_calls[0]
     assert "data/projects" not in set_calls[0]
     assert "data/lexicon" not in set_calls[0]
@@ -9604,6 +9609,80 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert (worktree / "wiki" / "f.txt").is_file()
     assert (worktree / "data" / "projects" / "f.txt").is_file()
     assert (worktree / "data" / "lexicon" / "f.txt").is_file()
+
+
+def test_apply_dispatch_sparse_checkout_keeps_curriculum_manifest(tmp_path):
+    """Default cone keeps curriculum.yaml via the evidence anchor, not the tree."""
+    import os
+    import subprocess
+
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    clean_env = {
+        k: v
+        for k, v in os.environ.items()
+        if k
+        not in {
+            "GIT_DIR",
+            "GIT_WORK_TREE",
+            "GIT_INDEX_FILE",
+            "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+            "GIT_COMMON_DIR",
+            "GIT_NAMESPACE",
+        }
+    }
+    clean_env["GIT_CEILING_DIRECTORIES"] = str(tmp_path)
+
+    def git(*args, cwd=primary):
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=clean_env,
+            timeout=30,
+        )
+
+    git("init", "-b", "main")
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "Test")
+    manifest = primary / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text("levels: {}\n", encoding="utf-8")
+    evidence = primary / "curriculum" / "l2-uk-en" / "evidence" / "a1" / "note.txt"
+    evidence.parent.mkdir(parents=True)
+    evidence.write_text("anchor\n", encoding="utf-8")
+    plans = primary / "curriculum" / "l2-uk-en" / "plans" / "a2" / "x.yaml"
+    plans.parent.mkdir(parents=True)
+    plans.write_text("slug: x\n", encoding="utf-8")
+    other = primary / "curriculum" / "l2-uk-direct" / "manifest.yaml"
+    other.parent.mkdir(parents=True)
+    other.write_text("tracks: []\n", encoding="utf-8")
+    wiki = primary / "wiki" / "f.txt"
+    wiki.parent.mkdir(parents=True)
+    wiki.write_text("wiki\n", encoding="utf-8")
+    scripts = primary / "scripts" / "f.txt"
+    scripts.parent.mkdir(parents=True)
+    scripts.write_text("scripts\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-m", "init")
+
+    worktree = tmp_path / "wt"
+    git("worktree", "add", str(worktree), "HEAD")
+
+    meta = delegate._apply_dispatch_sparse_checkout(worktree)
+    assert meta["applied"] is True
+    assert "curriculum" in meta["excluded"]
+    assert "curriculum/l2-uk-en/evidence" in meta["included_dirs"]
+    assert (worktree / "curriculum" / "l2-uk-en" / "curriculum.yaml").is_file()
+    assert (worktree / "curriculum" / "l2-uk-en" / "evidence" / "a1" / "note.txt").is_file()
+    assert not (worktree / "curriculum" / "l2-uk-en" / "plans").exists()
+    assert not (worktree / "curriculum" / "l2-uk-direct").exists()
+    assert not (worktree / "wiki").exists()
+    assert (worktree / "scripts" / "f.txt").is_file()
+    assert (primary / "curriculum" / "l2-uk-en" / "plans" / "a2" / "x.yaml").is_file()
 
 
 def test_count_commits_ahead_treats_a_vanished_worktree_as_unknown(tmp_path):
