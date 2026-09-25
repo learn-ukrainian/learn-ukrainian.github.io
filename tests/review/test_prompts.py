@@ -23,6 +23,7 @@ import pytest
 import yaml
 
 from scripts.build.fresh import manifest, plan_manifest
+from scripts.build.fresh.cli import _load_cited_records
 from scripts.curriculum.evidence import lock
 from scripts.review.prompts import eligibility
 from scripts.review.prompts.check import MODULE_MANIFEST, TEMPLATE_PROSE_SLUGS, check_prompt
@@ -769,11 +770,69 @@ def test_the_arc_source_renders_its_system_or_chunk_section_only(tmp_path, monke
     assert "SECTION-TWO-TEXT" not in rendered and "SECTION-FIVE-TEXT" not in rendered
 
 
-def test_pack_quotes_come_from_the_pinned_pack_bytes(tmp_path, monkeypatch):
-    manifest_path, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
-    rendered, _sha, _files = render_prompt(manifest_path, repo_root=tmp_path)
-    pack_text = (tmp_path / doc["inputs"]["pack"]["path"]).read_text(encoding="utf-8").strip()
-    assert pack_text in rendered
+def _seed_records(root: Path, monkeypatch: pytest.MonkeyPatch, lesson_n: int = 2) -> tuple[Path, dict]:
+    """A lesson manifest whose pinned pack and word store hold cited and uncited records."""
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(root)
+    plan_path = plan_dir / f"{slug}.yaml"
+    plan = yaml.safe_load(plan_path.read_bytes())
+    plan["lessons"][lesson_n - 1]["steps"][0]["evidence"] = ["T-1"]
+    plan_path.write_bytes(lock.yaml_bytes(plan))
+    lock.write(
+        evidence_dir / f"{slug}.yaml",
+        lock.yaml_bytes({"texts": [{"id": "T-1", "text": "cited-quote"}, {"id": "T-9", "text": "uncited-quote"}]}),
+    )
+    lock.write(
+        evidence_dir / "_words.yaml",
+        lock.yaml_bytes({"words": [{"id": "W-1", "lemma": "cited-lemma"}, {"id": "W-7", "lemma": "uncited-lemma"}]}),
+    )
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
+    doc, _ = _write(level, slug, lesson_n, state_dir, plan_dir, evidence_dir, page_dir, root)
+    _write_module_manifest(root, slug)
+    return state_dir / f"lesson-{lesson_n}.manifest.yaml", doc
+
+
+def test_a_lesson_reviewer_receives_the_cited_records_the_writer_received_and_no_others(tmp_path, monkeypatch):
+    manifest_path, doc = _seed_records(tmp_path, monkeypatch)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    plan = yaml.safe_load((tmp_path / doc["inputs"]["plan"]["path"]).read_bytes())
+    entry = plan["lessons"][1]
+    pack = yaml.safe_load((tmp_path / doc["inputs"]["pack"]["path"]).read_bytes())
+    words = yaml.safe_load((tmp_path / doc["inputs"]["words"]["path"]).read_bytes())
+    received = _load_cited_records(entry, pack, words)
+    assert sorted(received) == ["T-1", "W-1"]
+    for record_id, record in received.items():
+        assert dump_yaml({record_id: record}) in rendered
+    for uncited in ("uncited-quote", "uncited-lemma", "T-9", "W-7"):
+        assert uncited not in rendered
+    # the pins stay whole files: both are read and verified against their hashes
+    assert {doc["inputs"]["pack"]["path"], doc["inputs"]["words"]["path"]} <= _pin_reads(files_read, tmp_path)
+    assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
+
+
+def test_a_lesson_re_review_receives_only_the_cited_records(tmp_path, monkeypatch):
+    manifest_path, _doc = _write_rereview(tmp_path, monkeypatch)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    assert "### Word Records The Plan Cites" in rendered
+    assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
+
+
+def test_the_plan_reviewer_receives_the_records_the_plan_cites_and_no_others(tmp_path, monkeypatch):
+    manifest_path, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    for cited in ("lemma-one", "lemma-two", "lemma-three", "name-one", "name-two", "place-one"):
+        assert cited in rendered
+    for uncited in ("W-007", "W-009", "lemma-seven", "lemma-nine"):
+        assert uncited not in rendered
+    assert {doc["inputs"]["pack"]["path"], doc["inputs"]["words"]["path"]} <= _pin_reads(files_read, tmp_path)
+    assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
+
+
+def test_the_cited_records_are_still_verified_against_the_whole_pinned_files(tmp_path, monkeypatch):
+    manifest_path, doc = _seed_records(tmp_path, monkeypatch)
+    words = tmp_path / doc["inputs"]["words"]["path"]
+    words.write_bytes(words.read_bytes() + b"# tampered uncited tail\n")
+    with pytest.raises(InputHashMismatchError):
+        render_prompt(manifest_path, repo_root=tmp_path)
 
 
 # ---------------------------------------------------------------------------

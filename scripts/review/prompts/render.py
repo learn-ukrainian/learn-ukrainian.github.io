@@ -27,6 +27,7 @@ import yaml
 from jinja2 import DictLoader, StrictUndefined
 from jinja2.sandbox import ImmutableSandboxedEnvironment
 
+from scripts.build.fresh.cli import _load_cited_records
 from scripts.build.fresh.manifest import learner_state_sha256, pinned_entries
 from scripts.review.prompts.eligibility import Refusal, pin_refusals
 from scripts.review.receipts import REVIEW_TOOLS
@@ -321,6 +322,28 @@ def _learner_state_context(reader: ManifestReader, manifest: dict[str, Any]) -> 
     return context
 
 
+def _cited_records_context(reader: ManifestReader, plan_entries: list[dict[str, Any]]) -> dict[str, str]:
+    """The records the plan entries cite, from the pinned pack and word store, as two YAML texts.
+
+    Both files are read through their pins and verified against their locks whole (the pins stay whole
+    files); only the rendered excerpt is filtered. The records are the writer's own: each entry goes through
+    the writer's loader (``scripts.build.fresh.cli._load_cited_records``), so an uncited record never
+    reaches a reviewer and a cited one arrives exactly as the writer received it.
+    """
+    pack = yaml.safe_load(reader.locked_text("inputs.pack", "inputs.pack_lock", PackLockMismatchError))
+    words = yaml.safe_load(reader.locked_text("inputs.words", "inputs.words_lock", WordsLockMismatchError))
+    if not isinstance(pack, dict) or not isinstance(words, dict):
+        raise RenderError("the pinned pack and word store must each be a mapping")
+    cited: dict[str, Any] = {}
+    for entry in plan_entries:
+        cited.update(_load_cited_records(entry, pack, words))
+    word_ids = {rec["id"] for rec in words.get("words") or [] if isinstance(rec, dict) and "id" in rec}
+    return {
+        "pack_text": dump_yaml({rid: rec for rid, rec in sorted(cited.items()) if rid not in word_ids}),
+        "words_text": dump_yaml({rid: rec for rid, rec in sorted(cited.items()) if rid in word_ids}),
+    }
+
+
 def _lesson_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str, Any]:
     context: dict[str, Any] = {}
     plan = reader.pin_yaml("inputs.plan")
@@ -328,8 +351,7 @@ def _lesson_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[st
     if entry is None:
         raise RenderError(f"the pinned plan has no lesson {manifest['lesson']}")
     context["lesson_plan_yaml"] = dump_yaml(entry)
-    context["pack_text"] = reader.locked_text("inputs.pack", "inputs.pack_lock", PackLockMismatchError)
-    context["words_text"] = reader.locked_text("inputs.words", "inputs.words_lock", WordsLockMismatchError)
+    context.update(_cited_records_context(reader, [entry]))
     context.update(_learner_state_context(reader, manifest))
     context["lesson_content"] = reader.pin_text("inputs.lesson")
     context["activity_data_files"] = [
@@ -364,10 +386,9 @@ def _lesson_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[st
 
 
 def _plan_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str, Any]:
+    plan = reader.pin_yaml("inputs.plan")
     context: dict[str, Any] = {
         "plan_text": reader.pin_text("inputs.plan"),
-        "pack_text": reader.locked_text("inputs.pack", "inputs.pack_lock", PackLockMismatchError),
-        "words_text": reader.locked_text("inputs.words", "inputs.words_lock", WordsLockMismatchError),
         "requirements_text": reader.pin_text("inputs.requirements"),
         "arc_system_or_chunk_text": _arc_table(
             reader.pin_text("inputs.arc_source"), reader.pin("inputs.arc_source")["path"]
@@ -378,6 +399,7 @@ def _plan_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str,
         "validate_report_text": reader.pin_text("inputs.validate_report"),
         "pack_verify_report_text": reader.pin_text("inputs.pack_verify_report"),
     }
+    context.update(_cited_records_context(reader, [row for row in plan.get("lessons") or [] if isinstance(row, dict)]))
     context.update(_learner_state_context(reader, manifest))
     arc = reader.pin_yaml("inputs.arc")
     context["arc_positions_yaml"] = dump_yaml(_neighbour_positions(arc, manifest.get("position")))
