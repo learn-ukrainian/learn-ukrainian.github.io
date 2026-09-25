@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import fcntl
 import inspect
 import json
@@ -4078,6 +4079,71 @@ def test_dispatch_husk_is_kept_when_an_admin_entry_is_untraversable(
     assert husk.exists()
 
 
+@pytest.mark.skipif(os.geteuid() == 0, reason="root traverses a mode-000 directory")
+def test_dispatch_husk_is_kept_when_the_admin_dir_is_untraversable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: an untraversable ``.git/worktrees`` might register the husk; skip, never remove.
+
+    ``Path.is_dir()`` answers False on EACCES, so the registration re-check
+    must ``iterdir()`` the admin directory directly: only a proven absence
+    may read as "no registrations".
+    """
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-hidden-admindir"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    admin = repo / ".git" / "worktrees"
+    admin.mkdir(exist_ok=True)
+    admin.chmod(0)
+    try:
+        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    finally:
+        admin.chmod(0o755)
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "husk registration re-check failed closed" in result.reason
+    assert "unreadable" in result.reason
+    assert husk.exists()
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root traverses a mode-000 directory")
+def test_admin_registered_worktree_paths_raises_when_untraversable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: an untraversable admin dir raises; it never reads as "no registrations".
+
+    Interpreters that swallow EACCES answer ``Path.is_dir()`` False for an
+    untraversable directory; emulating that here pins the contract that only
+    a proven absence (``FileNotFoundError``/``NotADirectoryError`` from
+    ``iterdir()``) may read as "no registrations".
+    """
+    real_is_dir = Path.is_dir
+
+    def eacces_swallowing_is_dir(self: Path, *args: Any, **kwargs: Any) -> bool:
+        try:
+            return real_is_dir(self, *args, **kwargs)
+        except PermissionError:
+            return False
+
+    monkeypatch.setattr(Path, "is_dir", eacces_swallowing_is_dir)
+    common = tmp_path / ".git"
+    admin = common / "worktrees"
+    (admin / "entry").mkdir(parents=True)
+    # Mode-000 on the parent makes even ``stat`` of the admin dir see EACCES,
+    # the case ``is_dir()`` reads as absence on EACCES-swallowing interpreters.
+    common.chmod(0)
+    try:
+        with pytest.raises(RuntimeError, match="unreadable"):
+            rw._admin_registered_worktree_paths(common)
+    finally:
+        common.chmod(0o755)
+
+
 def test_dispatch_husk_is_kept_when_git_hangs_under_the_lock(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -4172,6 +4238,66 @@ def test_acp_runtime_cleanup_recheck_failure_deletes_nothing(
     assert result.action == "skipped"
     assert result.reason == "injected recheck failure"
     assert worktree.exists()
+
+
+def test_qualified_reap_skips_when_git_hangs_under_the_guard(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: a hung git under the qualified-reap guard times out into a skip.
+
+    A fake ``git`` on PATH delegates to the real one until the sweep enters
+    delegate's per-worktree guard, then makes ``git worktree list`` — the ACP
+    runtime cleanup re-check's probe — sleep well past the locked-call bound.
+    Without the bound the sweep holds the guard for the whole sleep, past a
+    concurrent dispatch's 30s lock timeout, and then deletes.
+    """
+    repo = init_repo(tmp_path)
+    worktree = add_acp_runtime(
+        repo,
+        "runtime-hung-git",
+        build_lock_reason("ask-8748", pid=_dead_pid(), start_time=1),
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(rw, "_LOCKED_GIT_TIMEOUT_S", 0.5)
+    real_git = shutil.which("git")
+    assert real_git
+    hang_marker = tmp_path / "hang-git"
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    fake_git = fake_bin / "git"
+    fake_git.write_text(
+        "#!/bin/sh\n"
+        f'if [ -e "{hang_marker}" ] && [ "$1" = worktree ] && [ "$2" = list ]; then exec sleep 5; fi\n'
+        f'exec "{real_git}" "$@"\n',
+        encoding="utf-8",
+    )
+    fake_git.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
+
+    real_guard = rw._enter_dispatch_worktree_guard
+
+    def arm_hang(
+        stack: contextlib.ExitStack,
+        *,
+        repo_root: Path,
+        info: rw.WorktreeInfo,
+    ) -> str | None:
+        hang_marker.touch()
+        return real_guard(stack, repo_root=repo_root, info=info)
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", arm_hang)
+
+    started = time.monotonic()
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+    elapsed = time.monotonic() - started
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert "timed out" in result.reason
+    assert worktree.exists()
+    assert elapsed < 4
 
 
 # --- #8663: worktrees an interrupted `git worktree add` left are reported, never removed ---

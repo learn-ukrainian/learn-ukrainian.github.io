@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import contextvars
 import fcntl
 import json
 import os
@@ -23,6 +24,7 @@ import signal
 import subprocess
 import sys
 import time
+from collections.abc import Iterator
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
@@ -109,6 +111,15 @@ def sanitized_git_env() -> dict[str, str]:
     }
 
 
+# While set, every ``_run`` call without an explicit timeout inherits this
+# bound. ``_reap_qualified_worktree`` sets it for the region in which it holds
+# delegate's per-worktree lock (#8748).
+_LOCKED_GIT_BUDGET_S: contextvars.ContextVar[float | None] = contextvars.ContextVar(
+    "reap_worktrees_locked_git_budget_s",
+    default=None,
+)
+
+
 def _run(
     args: list[str],
     *,
@@ -119,6 +130,8 @@ def _run(
     env = sanitized_git_env()
     if env_overrides:
         env.update(env_overrides)
+    if timeout is None:
+        timeout = _LOCKED_GIT_BUDGET_S.get()
     return subprocess.run(
         args,
         cwd=cwd,
@@ -128,6 +141,23 @@ def _run(
         timeout=timeout,
         env=env,
     )
+
+
+@contextlib.contextmanager
+def _bounded_locked_git() -> Iterator[None]:
+    """Bound every git call without an explicit timeout to :data:`_LOCKED_GIT_TIMEOUT_S`.
+
+    Entered once delegate's per-worktree lock is held, so a wedged git raises
+    :class:`subprocess.TimeoutExpired` — which the caller turns into a skip,
+    never a deletion — well inside a concurrent dispatch's 30s lock wait
+    instead of holding the lock past it (#8748). Calls that already carry an
+    explicit timeout (network fetches, ``gh``, tree walks) keep it.
+    """
+    token = _LOCKED_GIT_BUDGET_S.set(_LOCKED_GIT_TIMEOUT_S)
+    try:
+        yield
+    finally:
+        _LOCKED_GIT_BUDGET_S.reset(token)
 
 
 def resolve_repo_root(cwd: Path | None = None) -> Path:
@@ -245,7 +275,7 @@ def list_git_worktrees(repo_root: Path, *, timeout: float | None = None) -> list
     try:
         proc = _run(["git", "worktree", "list", "--porcelain"], cwd=repo_root, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git worktree list timed out after {timeout:g}s") from exc
+        raise RuntimeError(f"git worktree list timed out after {exc.timeout:g}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"git worktree list failed: {_format_failure(proc)}")
     return parse_worktree_porcelain(proc.stdout or "")
@@ -263,13 +293,17 @@ def is_under_worktrees(repo_root: Path, path: Path) -> bool:
     return True
 
 
-def _worktree_clean(path: Path) -> bool | None:
+def _worktree_clean(path: Path, *, timeout: float | None = None) -> bool | None:
     """Return True when the worktree has no meaningful dirty files.
 
     Dispatch workers often leave an untracked ``.venv`` (or nested site
-    venv) which must not block reaping multi-hundred-MB trees.
+    venv) which must not block reaping multi-hundred-MB trees. Callers
+    holding delegate's per-worktree lock pass
+    :data:`_LOCKED_GIT_STATUS_TIMEOUT_S` so a wedged ``git status``
+    surfaces as :class:`subprocess.TimeoutExpired` (a skip) instead of
+    holding the lock (#8748).
     """
-    proc = _run(["git", "status", "--porcelain", "-uall"], cwd=path)
+    proc = _run(["git", "status", "--porcelain", "-uall"], cwd=path, timeout=timeout)
     if proc.returncode != 0:
         return None
     ignored_prefixes = (".venv/", ".venv", "node_modules/", "node_modules")
@@ -1059,11 +1093,20 @@ _DISPATCH_HUSK_MIN_AGE_HOURS = 1.0
 # holds. A dispatch add holds that lock only briefly at this granularity, so
 # a short wait bounds the sweep without stalling it.
 _DISPATCH_HUSK_LOCK_TIMEOUT_S = 10.0
-# Bound on each git call the husk removal makes around the per-path lock. A
-# hung ``git worktree list`` would otherwise hold that lock indefinitely and a
-# waiting dispatch would fail on its own 30s lock timeout (#8748); an expired
-# bound skips the husk instead.
+# Bound on each git call made while holding a per-worktree lock — the husk
+# removal's locked re-check and, via ``_bounded_locked_git``, every otherwise
+# unbounded git call in the qualified-reap locked region. A hung ``git
+# worktree list`` would otherwise hold that lock indefinitely and a waiting
+# dispatch would fail on its own 30s lock timeout (#8748); an expired bound
+# skips instead.
 _LOCKED_GIT_TIMEOUT_S = 5.0
+# Bound for the tree-walking git calls in the qualified-reap locked region:
+# ``git status --porcelain -uall`` and the preserve ``git add``/``git commit``
+# walk every untracked file, a worker ``.venv``/``node_modules`` included.
+# Measured 0.31s on a 283MB dispatch worktree (#8748 follow-up), so 15s is
+# ~50x headroom yet still ends well inside a waiting dispatch's 30s lock
+# timeout.
+_LOCKED_GIT_STATUS_TIMEOUT_S = 15.0
 
 
 def _is_acp_runtime_path(repo_root: Path, path: Path) -> bool:
@@ -1120,9 +1163,19 @@ def _acp_dead_owner_reason(
 
 
 def _acp_runtime_cleanup_recheck(repo_root: Path, info: WorktreeInfo) -> str | None:
-    """Re-prove every ACP runtime precondition immediately before deletion."""
+    """Re-prove every ACP runtime precondition immediately before deletion.
+
+    Runs under delegate's per-worktree lock, so the listing inherits the
+    locked-git budget (:func:`_bounded_locked_git`); a wedged or failed
+    listing is a skip reason here, never an exception escaping the guard
+    (#8748).
+    """
     fresh: WorktreeInfo | None = None
-    for current in list_git_worktrees(repo_root):
+    try:
+        worktrees = list_git_worktrees(repo_root)
+    except RuntimeError as exc:
+        return f"acp runtime worktree list unavailable during cleanup ({exc})"
+    for current in worktrees:
         if current.path.resolve() == info.path.resolve():
             fresh = current
             break
@@ -1264,15 +1317,18 @@ def _admin_registered_worktree_paths(common_git_dir: Path) -> set[Path]:
     ``gitdir`` file holds the path of the target's ``.git`` file; git 2.48+
     can record it relative (``worktree.useRelativePaths`` /
     ``--relative-paths``), resolved the way git resolves it — against the
-    admin entry's own directory. Every read failure raises: the caller fails
-    closed.
+    admin entry's own directory. Only a proven absence
+    (``FileNotFoundError``/``NotADirectoryError``) reads as "no
+    registrations"; every other read failure raises: the caller fails closed.
     """
     registered: set[Path] = set()
     admin_dir = common_git_dir / "worktrees"
+    # ``iterdir()`` directly: ``is_dir()`` also answers False on EACCES, which
+    # would read an untraversable admin dir as "no registrations" (#8748).
     try:
-        if not admin_dir.is_dir():
-            return registered
         entries = list(admin_dir.iterdir())
+    except (FileNotFoundError, NotADirectoryError):
+        return registered
     except OSError as exc:
         raise RuntimeError(f"git worktree admin dir {admin_dir} unreadable: {exc}") from exc
     for entry in entries:
@@ -1793,7 +1849,7 @@ def _common_git_dir(repo_root: Path, *, timeout: float | None = None) -> Path:
     try:
         proc = _run(["git", "rev-parse", "--git-common-dir"], cwd=repo_root, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git rev-parse --git-common-dir timed out after {timeout:g}s") from exc
+        raise RuntimeError(f"git rev-parse --git-common-dir timed out after {exc.timeout:g}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"cannot resolve git common dir: {_format_failure(proc)}")
     path = Path((proc.stdout or "").strip())
@@ -1835,7 +1891,10 @@ def _live_origin_heads_present(path: Path, branch: str | None) -> bool | None:
     """Return whether origin currently has ``branch``. ``None`` if ls-remote failed."""
     if not branch:
         return False
-    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=path)
+    # This runs under the qualified-reap lock; 30s matches the network bound
+    # ``_merged_origin_gone_proof`` gives the same probe, so a wedged network
+    # call ends in a skip instead of holding the lock (#8748).
+    proc = _run(["git", "ls-remote", "--heads", "origin", branch], cwd=path, timeout=30)
     if proc.returncode != 0:
         return None
     return bool((proc.stdout or "").strip())
@@ -2196,9 +2255,9 @@ def adopt_dispatch_worktrees(repo_root: Path) -> list[dict[str, Any]]:
     return adopted
 
 
-def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
+def _preserve_dirty_worktree(info: WorktreeInfo, *, timeout: float | None = None) -> str | None:
     branch = info.branch or "detached"
-    add_proc = _run(["git", "add", "-A"], cwd=info.path)
+    add_proc = _run(["git", "add", "-A"], cwd=info.path, timeout=timeout)
     if add_proc.returncode != 0:
         return f"git add failed: {_format_failure(add_proc)}"
     commit_proc = _run(
@@ -2210,6 +2269,7 @@ def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
             f"wip: preserve {branch} before reap [skip ci]",
         ],
         cwd=info.path,
+        timeout=timeout,
     )
     if commit_proc.returncode != 0:
         return f"git commit failed: {_format_failure(commit_proc)}"
@@ -2267,7 +2327,7 @@ def _enter_dispatch_worktree_guard(
     primary = primary_checkout_root(repo_root)
     try:
         control_root = worktree_claims.control_plane_root(primary)
-        lock_dir = _common_git_dir(control_root) / worktree_claims.LOCK_DIR_NAME
+        lock_dir = _common_git_dir(control_root, timeout=_LOCKED_GIT_TIMEOUT_S) / worktree_claims.LOCK_DIR_NAME
         stack.enter_context(worktree_claims.worktree_lock(info.path, lock_dir=lock_dir))
     except worktree_claims.ControlPlaneError as exc:
         return f"{worktree_claims.LOCK_UNAVAILABLE} ({exc})"
@@ -2379,8 +2439,15 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
             )
 
+        # Everything below runs while delegate's per-worktree lock is held:
+        # every git call without its own timeout inherits
+        # ``_LOCKED_GIT_TIMEOUT_S`` so a wedged git ends in the
+        # ``TimeoutExpired`` skip below instead of holding the lock past a
+        # concurrent dispatch's 30s lock wait (#8748).
+        dispatch_guard.enter_context(_bounded_locked_git())
+
         if dirty:
-            preserve_error = _preserve_dirty_worktree(info)
+            preserve_error = _preserve_dirty_worktree(info, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
             if preserve_error is not None:
                 return ReapResult(
                     path=str(info.path),
@@ -2443,7 +2510,7 @@ def _reap_qualified_worktree(
                     error=f"worktree unlock failed: {_format_failure(unlock)}",
                 )
         else:
-            current_clean = _worktree_clean(info.path)
+            current_clean = _worktree_clean(info.path, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
             if current_clean is not True:
                 return ReapResult(
                     path=str(info.path),
@@ -2695,6 +2762,20 @@ def _reap_qualified_worktree(
             pr=_pr_dict(pr_state),
             branch_pruned=branch_pruned,
             recovery_ref=recovery_ref,
+        )
+    except subprocess.TimeoutExpired as exc:
+        # A git call outlived its locked-region bound (#8748): skip, never
+        # delete — the killed git leaves the tree's state unproven.
+        return ReapResult(
+            path=str(info.path),
+            branch=info.branch,
+            action="skipped",
+            reason=(
+                f"git call timed out after {exc.timeout:g}s during cleanup; "
+                f"originally qualified because {reason}"
+            ),
+            dirty=dirty,
+            pr=_pr_dict(pr_state),
         )
     finally:
         dispatch_guard.close()
