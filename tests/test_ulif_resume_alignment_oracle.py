@@ -29,6 +29,7 @@ def _brute_consistent(
     previous_rows: dict[int, str],
     page_row_count: int | None,
     end_headword: str | None,
+    target_page: int,
 ) -> tuple[set[int], bool]:
     """Return (consistent starts, whether any fitting start overlaps a recorded row)."""
     known = page_row_count if page_row_count and page_row_count > 0 else None
@@ -37,7 +38,7 @@ def _brute_consistent(
     end = end_headword or None
     consistent: set[int] = set()
     overlapped = False
-    for origin in range(-page_size, limit):
+    for origin in range(-page_size if target_page > 1 else 0, limit):
         last = origin + len(window) - 1
         fits = True
         if short and known is not None and last != known - 1:
@@ -85,6 +86,7 @@ def _assert_matches_oracle(
     previous_rows: dict[int, str] | None = None,
     page_row_count: int | None = None,
     end_headword: str | None = None,
+    target_page: int = 2,
 ) -> None:
     previous = previous_rows or {}
     consistent, overlapped = _brute_consistent(
@@ -94,6 +96,7 @@ def _assert_matches_oracle(
         previous_rows=previous,
         page_row_count=page_row_count,
         end_headword=end_headword,
+        target_page=target_page,
     )
     got = _ask(
         window,
@@ -102,6 +105,7 @@ def _assert_matches_oracle(
         previous_rows=previous,
         page_row_count=page_row_count,
         end_headword=end_headword,
+        target_page=target_page,
     )
     if isinstance(got, int):
         assert got == true_start, (got, true_start, consistent, window)
@@ -248,3 +252,41 @@ def test_exhaustive_alignment_matches_the_brute_force_oracle() -> None:
     # 593_466 target-only windows (sizes 1..6) plus 379_800 windows that also vary
     # the previous page (sizes 1..3).
     assert cases == 973_266, cases
+
+
+@pytest.mark.timeout(20)
+def test_short_pages_unknown_end_and_matching_next_page_oracle() -> None:
+    """Enumerate final-page tails and full windows whose next rows can repeat."""
+    cases = 0
+    for page_size in range(1, 4):
+        for count in range(1, page_size + 1):
+            for page in itertools.product(_ALPHABET, repeat=count):
+                for mask in range(1 << count):
+                    recorded = {index: page[index] for index in range(count) if mask & (1 << index)}
+                    for end in (None, "", page[-1]):
+                        for landing in range(count):
+                            tail = page[landing:]
+                            for target_page in (1, 2):
+                                _assert_matches_oracle(
+                                    tail,
+                                    true_start=landing,
+                                    page_size=page_size,
+                                    target_rows=recorded,
+                                    page_row_count=count,
+                                    end_headword=end,
+                                    target_page=target_page,
+                                )
+                                cases += 1
+                            if count != page_size:
+                                continue
+                            for next_page in itertools.product(_ALPHABET, repeat=landing):
+                                _assert_matches_oracle(
+                                    tail + next_page,
+                                    true_start=landing,
+                                    page_size=page_size,
+                                    target_rows=recorded,
+                                    page_row_count=count,
+                                    end_headword=end,
+                                )
+                                cases += 1
+    assert cases > 8_000

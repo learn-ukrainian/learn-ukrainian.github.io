@@ -688,10 +688,11 @@ class ShiftedWindowServer:
         assert data is not None
         if "ctl00$ContentPlaceHolder1$search.x" in data:
             word = data.get("ctl00$ContentPlaceHolder1$tsearch")
-            if word == "а":
+            if word in ("а", self.words[0]):
                 return HttpResult(200, self._window(0), {})
-            if word == self.words[25]:
-                start = 25 if self.mode == "duplicate_aligned" else 25 - self.offset
+            if word in (self.words[24], self.words[25], self.words[49], self.words[50]):
+                target_start = 50 if word in (self.words[49], self.words[50]) else 25
+                start = target_start if self.mode == "duplicate_aligned" else target_start - self.offset
                 return HttpResult(200, self._window(start, mutate=self.mode), {})
         if "ctl00$ContentPlaceHolder1$nextpage.x" in data:
             if self.fail_nextpage_500_times > 0:
@@ -828,13 +829,15 @@ def test_first_unrecorded_page_uses_previous_ledger_boundary(tmp_path: Path):
         ledger.close()
 
 
-def test_resume_without_target_start_fast_forwards(tmp_path: Path):
+def test_resume_without_target_start_searches_last_completed_page(tmp_path: Path):
     state_dir = tmp_path / "state"
     state_dir.mkdir()
     _seed_shifted_ledger(state_dir)
     ledger = SpellingLedger(state_dir / "ledger.sqlite")
     try:
-        ledger.conn.execute("UPDATE register_pages SET start_headword = '' WHERE page_num = 2")
+        ledger.conn.execute(
+            "UPDATE register_pages SET start_headword = '', end_headword = '', row_count = 0 WHERE page_num = 2"
+        )
         ledger.conn.execute("DELETE FROM register_rows WHERE page_num = 2")
         ledger.conn.commit()
     finally:
@@ -857,7 +860,190 @@ def test_resume_without_target_start_fast_forwards(tmp_path: Path):
         for _, data in server.requests
         if data and "ctl00$ContentPlaceHolder1$search.x" in data
     ]
-    assert searches == ["а"]
+    assert searches == ["w024"]
+
+
+def test_page_one_reseed_after_transient_failure_uses_direct_search(tmp_path: Path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        words = ShiftedWindowServer.words[:25]
+        ledger.ensure_page(1, start_headword=words[0], end_headword=words[-1], row_count=25)
+        for index, word in enumerate(words):
+            ledger.ensure_row(
+                1,
+                index,
+                select_arg=f"Select${index}",
+                stressed_headword=word,
+                normalized_spelling=normalize_ulif_spelling(word),
+            )
+        ledger.mark_page(1, "retry_scheduled", error="transient_error")
+    finally:
+        ledger.close()
+    server = ShiftedWindowServer(0)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            delay_seconds=1,
+            max_pages=1,
+            transport=server,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+    err = capsys.readouterr().err
+    assert "direct search page 1, k=0" in err
+    assert "resume_mismatch" not in err
+
+
+def test_mid_page_prefix_resumes_from_completed_page_without_fast_forward(tmp_path: Path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.conn.execute("DELETE FROM register_rows WHERE page_num = 2 AND row_index >= 22")
+        ledger.conn.execute("UPDATE register_pages SET end_headword = '', row_count = 0 WHERE page_num = 2")
+        ledger.conn.commit()
+    finally:
+        ledger.close()
+    server = ShiftedWindowServer(3)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            delay_seconds=1,
+            max_pages=1,
+            transport=server,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+    assert "direct search page 2, k=3" in capsys.readouterr().err
+    searches = [
+        data["ctl00$ContentPlaceHolder1$tsearch"]
+        for _, data in server.requests
+        if data and "ctl00$ContentPlaceHolder1$search.x" in data
+    ]
+    assert searches == ["w024"]
+
+
+def test_chunked_walk_resumes_next_unrecorded_page_without_fast_forward(tmp_path: Path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    first = ShiftedWindowServer(3)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            delay_seconds=1,
+            max_pages=1,
+            transport=first,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+    capsys.readouterr()
+    second = ShiftedWindowServer(3)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            delay_seconds=1,
+            max_pages=1,
+            transport=second,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+    assert "direct search page 3" in capsys.readouterr().err
+    searches = [
+        data["ctl00$ContentPlaceHolder1$tsearch"]
+        for _, data in second.requests
+        if data and "ctl00$ContentPlaceHolder1$search.x" in data
+    ]
+    assert searches == ["w049"]
+
+
+@pytest.mark.parametrize("damage", ["gap", "order", "start", "end", "count"])
+def test_verify_ledger_flag_is_read_only_and_names_bad_page(tmp_path: Path, capsys, damage: str):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.ensure_page(1, start_headword="а", end_headword="в", row_count=3)
+        for index, word in enumerate(("а", "б", "в")):
+            ledger.ensure_row(1, index, select_arg=f"Select${index}", stressed_headword=word, normalized_spelling=word)
+        ledger.mark_page(1, "completed")
+        changes = {
+            "gap": "UPDATE register_rows SET row_index = 4 WHERE page_num = 1 AND row_index = 1",
+            "order": "UPDATE register_rows SET stressed_headword = 'г' WHERE page_num = 1 AND row_index = 1",
+            "start": "UPDATE register_pages SET start_headword = 'х' WHERE page_num = 1",
+            "end": "UPDATE register_pages SET end_headword = 'х' WHERE page_num = 1",
+            "count": "UPDATE register_pages SET row_count = 2 WHERE page_num = 1",
+        }
+        ledger.conn.execute(changes[damage])
+        ledger.conn.commit()
+    finally:
+        ledger.close()
+    ledger_path = state_dir / "ledger.sqlite"
+    before = ledger_path.stat().st_mtime_ns
+    code = ulif_walk.main(["walk", "--state-dir", str(state_dir), "--verify-ledger"])
+    assert code == EXIT_USAGE
+    assert "page 1" in capsys.readouterr().err
+    assert ledger_path.stat().st_mtime_ns == before
+
+
+def test_verify_ledger_flag_reports_success_without_cache_or_requests(tmp_path: Path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.ensure_page(1, start_headword="а", end_headword="б", row_count=2)
+        for index, word in enumerate(("а", "б")):
+            ledger.ensure_row(1, index, select_arg=f"Select${index}", stressed_headword=word, normalized_spelling=word)
+        ledger.mark_page(1, "completed")
+    finally:
+        ledger.close()
+    assert ulif_walk.main(["walk", "--state-dir", str(state_dir), "--verify-ledger"]) == EXIT_OK
+    assert "ledger continuity OK: 1 pages checked" in capsys.readouterr().out
+
+
+def test_walk_rejects_broken_ledger_before_network_or_cache(tmp_path: Path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.ensure_page(1, start_headword="а", end_headword="б", row_count=2)
+        ledger.ensure_row(1, 0, select_arg="Select$0", stressed_headword="а", normalized_spelling="а")
+        ledger.ensure_row(1, 2, select_arg="Select$1", stressed_headword="б", normalized_spelling="б")
+    finally:
+        ledger.close()
+
+    def forbidden_transport(method: str, data: dict[str, str] | None) -> HttpResult:
+        pytest.fail("network reached before ledger verification")
+
+    cache_path = tmp_path / "cache.db"
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=cache_path,
+            delay_seconds=1,
+            transport=forbidden_transport,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_USAGE
+    )
+    assert "page 1" in capsys.readouterr().err
+    assert not cache_path.exists()
 
 
 def test_shifted_page_requires_all_recorded_rows_before_completion(tmp_path: Path, monkeypatch):
