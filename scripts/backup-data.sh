@@ -621,10 +621,29 @@ is_sqlite_database() {
 }
 
 unreadable_backup_paths() {
-  local relative
+  local relative root found path
   for relative in "${BACKUP_PATHS[@]}"; do
     [[ "$relative" == GIT-WORKTREE.patch || "$relative" == BACKUP-RECEIPT.json ]] && continue
-    find "$(source_for_backup_path "$relative")" -type f ! -readable -print
+    root="$(source_for_backup_path "$relative")"
+    # Prune inaccessible directories so find can continue through other roots.
+    # Capture any remaining permission errors without propagating find's status
+    # into the caller's command substitution under set -e.
+    found="$(LC_ALL=C find "$root" \
+      \( -type d \( ! -readable -o ! -executable \) -print -prune \) -o \
+      \( -type f ! -readable -print \) 2>&1)" || true
+    [[ -n "$found" ]] || continue
+    while IFS= read -r path; do
+      if [[ "$path" == 'find: '* ]]; then
+        if [[ "$path" == *': Permission denied' ]]; then
+          path="${path#find: }"
+          path="${path%: Permission denied}"
+          path="${path:1:${#path}-2}"
+        else
+          path="$root"
+        fi
+      fi
+      printf '%s\n' "$path"
+    done <<< "$found"
   done
 }
 
@@ -1407,10 +1426,10 @@ run_doctor() {
       unreadable="$(unreadable_backup_paths)"
       if [[ -n "$unreadable" ]]; then
         unreadable_count="$(printf '%s\n' "$unreadable" | wc -l)"
-        echo "WARNING: $unreadable_count file(s) under backup roots are unreadable by the backup user:" >&2
+        echo "WARNING: $unreadable_count path(s) under backup roots are unreadable by the backup user:" >&2
         printf '%s\n' "$unreadable" | sed -n '1,20p' >&2
         if ((unreadable_count > 20)); then
-          echo "  ... $((unreadable_count - 20)) more unreadable file(s)" >&2
+          echo "  ... $((unreadable_count - 20)) more unreadable path(s)" >&2
         fi
       fi
       if repository_is_initialized; then
