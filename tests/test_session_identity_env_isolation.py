@@ -19,6 +19,10 @@ from tests.conftest import SESSION_IDENTITY_ENV_VARS
 
 pytest_plugins = ("pytester",)
 
+# The export sites are repository trees (launchers, hooks, agent runtime) that
+# this module globs rather than imports, so import selection cannot pick it (#8707).
+pytestmark = pytest.mark.repo_wide
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 _SHELL_EXPORT_SITES = (
