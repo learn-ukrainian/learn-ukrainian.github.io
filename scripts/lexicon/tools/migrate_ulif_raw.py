@@ -43,7 +43,10 @@ def _table_counts(conn: sqlite3.Connection, *, exclude_raw: bool = False) -> dic
 
 def _no_holders(db: Path) -> None:
     paths = [str(p) for p in (db, Path(f"{db}-wal"), Path(f"{db}-shm")) if p.exists()]
-    result = subprocess.run(["lsof", "-t", "--", *paths], capture_output=True, text=True, check=False)
+    try:
+        result = subprocess.run(["lsof", "-t", "--", *paths], capture_output=True, text=True, check=False, timeout=30)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError("lsof preflight timed out") from exc
     if result.returncode == 0 or result.stdout.strip():
         raise RuntimeError("sources.db has open holders; stop services and writers")
     if result.returncode != 1:
