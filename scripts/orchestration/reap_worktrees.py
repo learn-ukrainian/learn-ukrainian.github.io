@@ -196,9 +196,13 @@ def _bounded_locked_git() -> Iterator[None]:
 
     Network probes (``git ls-remote``, ``gh``, :func:`_merged_origin_gone_proof`)
     run before this context. Under it, those results are re-checked with
-    local git only (``rev-parse``, ``merge-base``). The context ends once
-    ``git worktree remove`` has succeeded, so a later branch prune is not
-    this "never delete" bound.
+    local git only (``rev-parse``, ``merge-base``). The context ends before
+    ``git worktree remove``. Removal keeps its own
+    :data:`worktree_claims.GIT_WORKTREE_REMOVE_TIMEOUT_S` (120s) and is not
+    clipped to the time left here: a fraction of a second is enough to kill
+    ``git worktree remove --force`` mid-delete. A dispatch waiting on the
+    lock that hits its 30s timeout retries. Branch prune is also outside
+    this bound.
     """
     budget_token = _LOCKED_GIT_BUDGET_S.set(_LOCKED_GIT_TIMEOUT_S)
     deadline_token = _LOCKED_REGION_DEADLINE.set(time.monotonic() + _locked_region_budget_s())
@@ -2599,13 +2603,14 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
             )
 
-        # The block below holds delegate's per-worktree lock. Git inside it
-        # is bounded by ``_bounded_locked_git``: each call at most
+        # The block below holds delegate's per-worktree lock. Git inside
+        # ``_bounded_locked_git`` is bounded: each call at most
         # ``_LOCKED_GIT_TIMEOUT_S`` (or the timeout it passes, such as the
         # 15s status/add/commit cap), and every call also at most the time
         # left on the region deadline (``DEFAULT_LOCK_TIMEOUT_S`` minus
-        # ``_LOCKED_REGION_MARGIN_S``). A timeout here skips and does not
-        # delete. The context ends when removal returns, before branch prune.
+        # ``_LOCKED_REGION_MARGIN_S``). A timeout there skips and does not
+        # delete. That context ends before removal. Removal keeps its own
+        # 120s bound, then the lock is released before branch prune.
         bounded_git = _bounded_locked_git()
         bounded_git.__enter__()
         prune_contained = False
@@ -2899,32 +2904,36 @@ def _reap_qualified_worktree(
                 prune_contained = _pr_matches_worktree_head(
                     info, pr_state
                 ) or _tip_is_ancestor_of_origin_main(info)
-
-            # ``_worktree_clean`` deliberately accepts disposable ignored residue
-            # such as a worker's ``.venv``; git still counts it, so force is
-            # required at this final, guarded deletion boundary.
-            remove_timeout = _locked_call_timeout(worktree_claims.GIT_WORKTREE_REMOVE_TIMEOUT_S)
-            if _remaining_locked_s() is not None and remove_timeout <= 0:
-                raise subprocess.TimeoutExpired(["git", "worktree", "remove"], 0)
-            remove_error = worktree_claims.git_worktree_remove(
-                repo_root,
-                info.path,
-                force=True,
-                timeout=remove_timeout,
-            )
-            if remove_error is not None:
-                return ReapResult(
-                    path=str(info.path),
-                    branch=info.branch,
-                    action="error",
-                    reason=reason,
-                    dirty=dirty,
-                    pr=_pr_dict(pr_state),
-                    error=remove_error,
-                    recovery_ref=recovery_ref,
-                )
         finally:
             bounded_git.__exit__(None, None, None)
+
+        # Outside the region deadline. The deadline is the dispatch lock
+        # wait minus a margin (~25s); clipping removal to a leftover
+        # fraction of a second kills ``git worktree remove --force``
+        # mid-delete. Removal keeps :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`
+        # (120s). A waiter that hits its 30s lock timeout retries.
+        # ``_worktree_clean`` accepts disposable ignored residue such as a
+        # worker's ``.venv``; git still counts it, so force is required.
+        remove_error = worktree_claims.git_worktree_remove(
+            repo_root,
+            info.path,
+            force=True,
+        )
+        if remove_error is not None:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="error",
+                reason=reason,
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+                error=remove_error,
+                recovery_ref=recovery_ref,
+            )
+
+        # Prune and the daily-cap write do not need the per-worktree lock.
+        # A waiter blocked on removal can proceed as soon as the checkout is gone.
+        dispatch_guard.close()
 
         # Removal succeeded, so this is no longer the "never delete" bound.
         # A prune timeout is a branch-prune error on an already-removed tree.
@@ -2978,6 +2987,7 @@ def _reap_qualified_worktree(
             ),
             dirty=dirty,
             pr=_pr_dict(pr_state),
+            recovery_ref=recovery_ref,
         )
     finally:
         dispatch_guard.close()

@@ -454,9 +454,10 @@ def git_worktree_remove(
     then runs ``git worktree remove --force``, which a clean porcelain tree
     still needs when it holds ignored residue such as a worker ``.venv``.
     Without ``force`` git itself refuses a checkout with modified or untracked
-    files, and a locked one.     The removal is bounded by ``timeout`` when the caller passes one (the
-    reaper passes the time left on its locked-region deadline), otherwise by
-    :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`. A timeout is an error, never a
+    files, and a locked one. The removal is bounded by ``timeout`` when the
+    caller passes one, otherwise by :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`.
+    The reaper does not pass a timeout: removal keeps that 120s bound and is
+    not clipped to the locked-region deadline. A timeout is an error, never a
     removal, since the killed git may leave a half-deleted checkout behind.
     """
     target = worktree

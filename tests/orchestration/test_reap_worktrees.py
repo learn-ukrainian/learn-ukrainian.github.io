@@ -4435,6 +4435,136 @@ def test_qualified_reap_skips_when_the_region_deadline_expires(
     assert elapsed < 3
 
 
+def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: a nearly spent region deadline does not start a clipped removal.
+
+    Once the pre-removal checks finish, leftover deadline time used to become
+    the ``git worktree remove`` timeout, so a remove could start with a
+    fraction of a second and be killed mid-delete. Removal now keeps its own
+    120s bound. A remove that outlasts the leftover deadline still finishes,
+    and the per-worktree lock is already released before branch prune and the
+    daily-cap write.
+    """
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/own-bound")
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {"codex/own-bound": [{"number": 91, "state": "MERGED", "headRefOid": head}]})
+    real_recovery = rw.reaper_lifecycle.create_recovery_ref
+
+    def expire_after_recovery(*args: Any, **kwargs: Any):
+        result = real_recovery(*args, **kwargs)
+        rw._LOCKED_REGION_DEADLINE.set(time.monotonic() + 0.05)
+        return result
+
+    monkeypatch.setattr(rw.reaper_lifecycle, "create_recovery_ref", expire_after_recovery)
+    remove_timeouts: list[float | None] = []
+    held_during_remove: list[bool] = []
+    held_during_prune: list[bool] = []
+    held_during_record: list[bool] = []
+    real_remove = worktree_claims.git_worktree_remove
+    real_prune = rw._prune_branch
+    real_record = rw.reaper_lifecycle.record_reap_for_cap
+
+    def spy_remove(*args: Any, **kwargs: Any):
+        remove_timeouts.append(kwargs.get("timeout"))
+        held_during_remove.append(bool(worktree_claims._HELD_LOCKS))
+        return real_remove(*args, **kwargs)
+
+    def spy_prune(*args: Any, **kwargs: Any):
+        held_during_prune.append(bool(worktree_claims._HELD_LOCKS))
+        return real_prune(*args, **kwargs)
+
+    def spy_record(*args: Any, **kwargs: Any):
+        held_during_record.append(bool(worktree_claims._HELD_LOCKS))
+        return real_record(*args, **kwargs)
+
+    monkeypatch.setattr(worktree_claims, "git_worktree_remove", spy_remove)
+    monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", spy_remove)
+    monkeypatch.setattr(rw, "_prune_branch", spy_prune)
+    monkeypatch.setattr(rw.reaper_lifecycle, "record_reap_for_cap", spy_record)
+    real_git = shutil.which("git")
+    assert real_git
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    fake_git = fake_bin / "git"
+    fake_git.write_text(
+        "#!/bin/sh\n"
+        'if [ "$1" = worktree ] && [ "$2" = remove ]; then sleep 0.4; fi\n'
+        f'exec "{real_git}" "$@"\n',
+        encoding="utf-8",
+    )
+    fake_git.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            prune_merged_branches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.recovery_ref
+    assert not worktree.exists()
+    assert remove_timeouts == [None]
+    assert held_during_remove == [True]
+    assert held_during_prune == [False]
+    assert held_during_record == [False]
+
+
+def test_timeout_after_recovery_ref_keeps_the_ref(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A region timeout after the rescue ref exists skips removal and names the ref."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/rescue-timeout")
+    patch_gh(
+        monkeypatch,
+        {"codex/rescue-timeout": [{"number": 92, "state": "MERGED", "headRefOid": "b" * 40}]},
+    )
+    real_recovery = rw.reaper_lifecycle.create_recovery_ref
+
+    def expire_after_recovery(*args: Any, **kwargs: Any):
+        result = real_recovery(*args, **kwargs)
+        rw._LOCKED_REGION_DEADLINE.set(time.monotonic() - 1)
+        return result
+
+    monkeypatch.setattr(rw.reaper_lifecycle, "create_recovery_ref", expire_after_recovery)
+    started_remove = False
+    real_remove = worktree_claims.git_worktree_remove
+
+    def spy_remove(*args: Any, **kwargs: Any):
+        nonlocal started_remove
+        started_remove = True
+        return real_remove(*args, **kwargs)
+
+    monkeypatch.setattr(worktree_claims, "git_worktree_remove", spy_remove)
+    monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", spy_remove)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            prune_merged_branches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert "timed out" in result.reason
+    assert result.recovery_ref
+    assert worktree.exists()
+    assert started_remove is False
+
+
 def test_network_probes_run_before_the_per_worktree_lock(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
