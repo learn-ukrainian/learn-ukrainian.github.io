@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import json
 import os
+import re
 import shutil
 import stat
 import subprocess
@@ -15,6 +17,7 @@ from unittest.mock import patch
 
 import pytest
 
+import scripts.agent_runtime.review_mcp as review_mcp_module
 import scripts.delegate as delegate_cli
 from scripts.agent_runtime.adapters.claude import ClaudeAdapter
 from scripts.agent_runtime.adapters.codex import CodexAdapter
@@ -34,6 +37,7 @@ from scripts.agent_runtime.review_mcp import (
     agy_review_mcp_config_path,
     codex_review_home_path,
     prepare_review_attempt,
+    review_diagnostics_path,
     verify_agy_review_effective_mcp,
     verify_agy_review_launch,
     verify_codex_review_effective_mcp,
@@ -1331,8 +1335,9 @@ def test_agy_gate_fails_closed_when_probe_breaks(
     _install_fake_agy(
         tmp_path, monkeypatch, good, body="echo boom >&2\ncat " + str(tmp_path / "agy-table.txt") + "\nexit 3\n"
     )
-    with pytest.raises(AgyReviewMcpGateError, match=r"exited 3.*boom.*#8617"):
+    with pytest.raises(AgyReviewMcpGateError, match=r"exited 3: <stderr: 5 chars, sha256 [0-9a-f]{12}; .*#8617"):
         _verify_agy(plan, tmp_path)
+    assert "boom" in review_diagnostics_path(plan.config_path).read_text(encoding="utf-8")
     # timeout
     _install_fake_agy(tmp_path, monkeypatch, good, body="exec sleep 5\n")
     with pytest.raises(AgyReviewMcpGateError, match=r"TimeoutExpired.*#8617"):
@@ -1404,8 +1409,9 @@ def test_agy_gate_refusals_never_embed_home_or_app_data_values(
     assert "cannot read the scoped agy MCP config" in messages[1]
     assert "could not compute" in messages[2]
     assert "cannot read the attempt MCP config" in messages[3]
-    # Echoed probe output keeps its shape, with each value replaced by the variable's name.
-    assert "boom $HOME $AGY_APP_DATA_DIR" in messages[4]
+    # Probe output is never echoed: the refusal carries only its size and fingerprint.
+    assert "exited 3: <stderr: " in messages[4]
+    assert "boom" not in messages[4]
     for message in messages:
         for value in (env["HOME"], env["AGY_APP_DATA_DIR"], str(operator_home), "marker-8652", str(tmp_path)):
             assert value not in message, message
@@ -1443,7 +1449,8 @@ def test_codex_gate_refusals_never_embed_codex_home_or_home_values(
     (plan.codex_home / "config.toml").unlink()
     refusal()
 
-    assert "boom $CODEX_HOME ~" in messages[0]
+    assert "exited 3: <stderr: " in messages[0]
+    assert "boom" not in messages[0]
     assert "could not compute" in messages[1]
     assert "cannot read the attempt MCP config" in messages[2]
     assert "scoped CODEX_HOME has no config.toml" in messages[3]
@@ -1595,6 +1602,10 @@ _MARKER_PATHS = [
     pytest.param(f"file:///srv/{_MARKER}/x", id="file-url"),
     pytest.param(f"srv\u2215{_MARKER}\u2215x", id="unicode-division-slash"),
     pytest.param(f"srv\uff0f{_MARKER}\uff0fx", id="unicode-fullwidth-slash"),
+    pytest.param(f"srv\\{_MARKER}\\x", id="backslash"),
+    pytest.param(f"x/srv/a {_MARKER}", id="whitespace-split"),
+    pytest.param(f"x%252Fsrv%252Fa {_MARKER}", id="whitespace-split-double-encoded"),
+    pytest.param(f"a\t{_MARKER}", id="tab-split"),
 ]
 
 
@@ -1720,7 +1731,153 @@ def _surface_agy_scoped_config_keys(marker, tmp_path, manifest_file, mp):
     return str(refused.value)
 
 
+def _fail_probe(monkeypatch: pytest.MonkeyPatch, exc: BaseException) -> None:
+    """Make the gate's probe subprocess fail with ``exc`` (patched after the attempt is prepared)."""
+
+    def boom(*_args, **_kwargs):
+        raise exc
+
+    monkeypatch.setattr(review_mcp_module.subprocess, "run", boom)
+
+
+def _fail_reads(monkeypatch: pytest.MonkeyPatch, exc: BaseException, *, name: str) -> None:
+    """Make ``Path.read_text`` fail with ``exc`` for files called ``name``."""
+    real = Path.read_text
+
+    def read_text(self, *args, **kwargs):
+        if self.name == name:
+            raise exc
+        return real(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", read_text)
+
+
+def _codex_probe_failure(tmp_path, manifest_file, mp, exc) -> str:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    _fail_probe(mp, exc)
+    with pytest.raises(CodexReviewMcpGateError) as refused:
+        verify_codex_review_effective_mcp(config_path=plan.config_path, cwd=tmp_path)
+    return str(refused.value)
+
+
+def _agy_probe_failure(tmp_path, manifest_file, mp, exc) -> str:
+    plan = _prepare_agy(manifest_file, tmp_path)
+    _install_fake_agy(tmp_path, mp, "")
+    _fail_probe(mp, exc)
+    with pytest.raises(AgyReviewMcpGateError) as refused:
+        _verify_agy(plan, tmp_path)
+    return str(refused.value)
+
+
+def _surface_codex_probe_strerror(marker, tmp_path, manifest_file, mp):
+    return _codex_probe_failure(tmp_path, manifest_file, mp, OSError(errno.ENOENT, marker))
+
+
+def _surface_codex_probe_filename(marker, tmp_path, manifest_file, mp):
+    return _codex_probe_failure(
+        tmp_path, manifest_file, mp, OSError(errno.ENOENT, "No such file", marker, None, marker)
+    )
+
+
+def _surface_codex_probe_subprocess_error(marker, tmp_path, manifest_file, mp):
+    return _codex_probe_failure(tmp_path, manifest_file, mp, subprocess.SubprocessError(marker))
+
+
+def _surface_codex_probe_timeout(marker, tmp_path, manifest_file, mp):
+    return _codex_probe_failure(tmp_path, manifest_file, mp, subprocess.TimeoutExpired(cmd=marker, timeout=1))
+
+
+def _surface_codex_config_read_strerror(marker, tmp_path, manifest_file, mp):
+    plan = _prepare_codex(manifest_file, tmp_path)
+    _fail_reads(mp, OSError(errno.EACCES, marker), name=plan.config_path.name)
+    with pytest.raises(CodexReviewMcpGateError) as refused:
+        verify_codex_review_effective_mcp(config_path=plan.config_path, cwd=tmp_path)
+    return str(refused.value)
+
+
+def _surface_codex_config_read_value_error(marker, tmp_path, manifest_file, mp):
+    plan = _prepare_codex(manifest_file, tmp_path)
+    _fail_reads(mp, ValueError(marker), name=plan.config_path.name)
+    with pytest.raises(CodexReviewMcpGateError) as refused:
+        verify_codex_review_effective_mcp(config_path=plan.config_path, cwd=tmp_path)
+    return str(refused.value)
+
+
+def _surface_agy_probe_strerror(marker, tmp_path, manifest_file, mp):
+    return _agy_probe_failure(tmp_path, manifest_file, mp, OSError(errno.ENOENT, marker))
+
+
+def _surface_agy_probe_filename(marker, tmp_path, manifest_file, mp):
+    return _agy_probe_failure(tmp_path, manifest_file, mp, OSError(errno.ENOENT, "No such file", marker, None, marker))
+
+
+def _surface_agy_probe_subprocess_error(marker, tmp_path, manifest_file, mp):
+    return _agy_probe_failure(tmp_path, manifest_file, mp, subprocess.SubprocessError(marker))
+
+
+def _surface_agy_probe_timeout(marker, tmp_path, manifest_file, mp):
+    return _agy_probe_failure(tmp_path, manifest_file, mp, subprocess.TimeoutExpired(cmd=marker, timeout=1))
+
+
+def _surface_agy_config_read_strerror(marker, tmp_path, manifest_file, mp):
+    plan = _prepare_agy(manifest_file, tmp_path)
+    _fail_reads(mp, OSError(errno.EACCES, marker), name=plan.config_path.name)
+    with pytest.raises(AgyReviewMcpGateError) as refused:
+        _verify_agy(plan, tmp_path)
+    return str(refused.value)
+
+
+def _surface_agy_scoped_config_read_strerror(marker, tmp_path, manifest_file, mp):
+    plan = _prepare_agy(manifest_file, tmp_path)
+    _install_fake_agy(tmp_path, mp, _agy_table(_agy_good_rows(plan.config_path)))
+    _fail_reads(mp, OSError(errno.EACCES, marker), name="mcp_config.json")
+    with pytest.raises(AgyReviewMcpGateError) as refused:
+        _verify_agy(plan, tmp_path)
+    return str(refused.value)
+
+
+def _surface_agy_scoped_config_bad_json(marker, tmp_path, manifest_file, mp):
+    plan = _prepare_agy(manifest_file, tmp_path)
+    _install_fake_agy(tmp_path, mp, _agy_table(_agy_good_rows(plan.config_path)))
+    agy_review_mcp_config_path(plan.agy_home).write_text(f"{{{marker}", encoding="utf-8")
+    with pytest.raises(AgyReviewMcpGateError) as refused:
+        _verify_agy(plan, tmp_path)
+    return str(refused.value)
+
+
+def _surface_agy_oauth_link(marker, tmp_path, manifest_file, mp):
+    plan = _prepare_agy(manifest_file, tmp_path)
+    link = agy_review_app_data_dir(plan.agy_home) / "antigravity-oauth-token"
+    link.unlink()
+    link.symlink_to(tmp_path / marker.replace("/", "_").replace("\\", "_"))
+    with pytest.raises(AgyReviewMcpGateError) as refused:
+        verify_agy_review_launch(
+            config_path=plan.config_path,
+            cwd=tmp_path,
+            mode="read-only",
+            model=None,
+            effort=None,
+            task_id="review-agy-link",
+            tool_config=_agy_tool_config(plan),
+        )
+    return str(refused.value)
+
+
 _UNTRUSTED_SURFACES = [
+    _surface_codex_probe_strerror,
+    _surface_codex_probe_filename,
+    _surface_codex_probe_subprocess_error,
+    _surface_codex_probe_timeout,
+    _surface_codex_config_read_strerror,
+    _surface_codex_config_read_value_error,
+    _surface_agy_probe_strerror,
+    _surface_agy_probe_filename,
+    _surface_agy_probe_subprocess_error,
+    _surface_agy_probe_timeout,
+    _surface_agy_config_read_strerror,
+    _surface_agy_scoped_config_read_strerror,
+    _surface_agy_scoped_config_bad_json,
+    _surface_agy_oauth_link,
     _surface_review_id,
     _surface_attempt_id,
     _surface_harness,
@@ -1776,17 +1933,118 @@ def test_echo_identifier_shows_clean_names_verbatim_and_redacts_everything_else(
     assert _echo_identifier(None) == "<redacted: a NoneType>"
 
 
-def test_free_text_reduces_to_the_allowlist_and_masks_known_values(monkeypatch: pytest.MonkeyPatch) -> None:
-    from scripts.agent_runtime.review_mcp import _free_text
+_ENTRY_RE = re.compile(r"--- (?P<label>\w+) \((?P<size>\d+) chars, sha256 (?P<fp>[0-9a-f]{12})\) ---\n")
 
-    assert _free_text("x" * 1000) == "…"  # an over-long token collapses whole
-    assert len(_free_text("ab " * 1000)) == 83
-    assert _free_text("secret-token-value here", {"$TOKEN": "secret-token-value"}) == "$TOKEN here"
-    assert _free_text("line one\nline\ttwo\x00") == "line one line two"
-    monkeypatch.setenv("HOME", "/srv/operator-home")
-    assert "operator-home" not in _free_text("home is /srv/operator-home ok")
-    assert _free_text("boom x/srv/a b/c d%2Fe ok") == "boom … ok"
-    assert _free_text("Expecting value: line 1 column 1 (char 0)") == "Expecting value: line 1 column 1 (char 0)"
+
+def test_review_mcp_has_no_free_text_renderer() -> None:
+    """The allowlist/blocklist free-text path is gone: nothing renders untrusted text into a refusal (#8652)."""
+    assert not hasattr(review_mcp_module, "_free_text")
+
+
+def test_untrusted_stand_in_carries_size_and_fingerprint_and_the_file_holds_the_text(tmp_path: Path) -> None:
+    text = f"boom x/srv/a {_MARKER} \u2215 %252Fsrv\nsecond line\n"
+    diagnostics = tmp_path / "att-001.diagnostics.log"
+
+    stand_in = review_mcp_module._untrusted("stderr", text, diagnostics)
+
+    fingerprint = hashlib.sha256(text.encode("utf-8")).hexdigest()[:12]
+    assert stand_in == f"<stderr: {len(text)} chars, sha256 {fingerprint}; details in att-001.diagnostics.log>"
+    assert _MARKER not in stand_in
+    assert stat.S_IMODE(diagnostics.stat().st_mode) == 0o600
+    content = diagnostics.read_text(encoding="utf-8")
+    header = _ENTRY_RE.match(content)
+    assert header is not None
+    assert (header["label"], int(header["size"]), header["fp"]) == ("stderr", len(text), fingerprint)
+    assert content[header.end() :] == text + "\n"
+
+
+def test_untrusted_appends_entries_and_tightens_a_loose_file(tmp_path: Path) -> None:
+    diagnostics = tmp_path / "att-001.diagnostics.log"
+    diagnostics.write_text("earlier\n", encoding="utf-8")
+    diagnostics.chmod(0o644)
+
+    review_mcp_module._untrusted("stderr", "one", diagnostics)
+    review_mcp_module._untrusted("row", "two", diagnostics)
+
+    assert stat.S_IMODE(diagnostics.stat().st_mode) == 0o600
+    content = diagnostics.read_text(encoding="utf-8")
+    assert content.startswith("earlier\n--- stderr (3 chars")
+    assert "\none\n--- row (3 chars" in content
+    assert content.endswith("\ntwo\n")
+
+
+def test_untrusted_still_reports_size_and_fingerprint_when_the_file_cannot_be_written(tmp_path: Path) -> None:
+    stand_in = review_mcp_module._untrusted("stderr", f"x/srv/a {_MARKER}", tmp_path / "missing-dir" / "d.log")
+    assert "details not saved: ENOENT" in stand_in
+    assert "sha256 " in stand_in
+    assert _MARKER not in stand_in
+    assert "missing-dir" not in stand_in
+    planted = tmp_path / "planted.diagnostics.log"
+    planted.symlink_to(tmp_path / "elsewhere")
+    assert "details not saved: ELOOP" in review_mcp_module._untrusted("stderr", "x", planted)
+    assert not (tmp_path / "elsewhere").exists()
+
+
+@pytest.mark.parametrize(
+    ("exc", "expected_head"),
+    [
+        (OSError(errno.ENOENT, "No such file", "/srv/x"), "FileNotFoundError (ENOENT): <exception: "),
+        (PermissionError(errno.EACCES, "denied"), "PermissionError (EACCES): <exception: "),
+        (OSError("bare"), "OSError: <exception: "),
+        (OSError(-99999, "unknown code"), "OSError: <exception: "),
+        (subprocess.TimeoutExpired(cmd="x", timeout=2.5), "TimeoutExpired after 2.5s: <exception: "),
+        (subprocess.SubprocessError(_MARKER), "SubprocessError: <exception: "),
+        (KeyError(_MARKER), "KeyError: <exception: "),
+        (ValueError(f"x/srv/a {_MARKER}"), "ValueError: <exception: "),
+    ],
+)
+def test_exc_reason_names_class_and_errno_only(exc: BaseException, expected_head: str, tmp_path: Path) -> None:
+    reason = review_mcp_module._exc_reason(exc, tmp_path / "att.diagnostics.log")
+    assert reason.startswith(expected_head), reason
+    assert _MARKER not in reason
+    assert "/srv/x" not in reason
+    assert "details in att.diagnostics.log" in reason
+
+
+def test_refusal_names_the_diagnostics_file_and_the_file_holds_the_full_probe_text(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Codex/AGY stderr is fingerprinted in the refusal and kept whole in a 0600 file beside the attempt config."""
+    for harness, refusal in (
+        ("codex", lambda mp: _codex_refusal(tmp_path, manifest_file, mp, None, body=_STDERR_BODY)),
+        ("agy", lambda mp: _agy_refusal(tmp_path, manifest_file, mp, "", body=_STDERR_BODY)),
+    ):
+        message = refusal(monkeypatch)
+        diagnostics = next(tmp_path.rglob(f"att-{harness}-001.diagnostics.log"))
+        assert diagnostics.parent == next(tmp_path.rglob(f"att-{harness}-001.mcp.json")).parent
+        assert stat.S_IMODE(diagnostics.stat().st_mode) == 0o600
+        assert f"details in {diagnostics.name}" in message
+        assert str(diagnostics.parent) not in message
+        entry = diagnostics.read_text(encoding="utf-8")
+        header = _ENTRY_RE.match(entry)
+        assert header is not None
+        body = entry[header.end() :].removesuffix("\n")
+        assert body == f"boom x/srv/a {_MARKER} more\n"
+        assert f"<stderr: {header['size']} chars, sha256 {header['fp']};" in message
+        assert hashlib.sha256(body.encode("utf-8")).hexdigest()[:12] == header["fp"]
+        assert _MARKER not in message
+
+
+_STDERR_BODY = f'echo "boom x/srv/a {_MARKER} more" >&2\nexit 3\n'
+
+
+def test_refusals_name_the_error_class_and_errno(manifest_file: Path, tmp_path: Path) -> None:
+    with pytest.MonkeyPatch.context() as mp:
+        message = _surface_codex_probe_strerror(_MARKER, tmp_path, manifest_file, mp)
+    assert "could not compute the effective MCP set (FileNotFoundError (ENOENT): <exception: " in message
+    other = tmp_path / "second"
+    other.mkdir()
+    with pytest.MonkeyPatch.context() as mp:
+        message = _surface_agy_scoped_config_read_strerror(_MARKER, other, manifest_file, mp)
+    assert "PermissionError (EACCES): <exception: " in message
+    diagnostics = next(other.rglob("att-agy-001.diagnostics.log"))
+    assert _MARKER in diagnostics.read_text(encoding="utf-8")
+    assert stat.S_IMODE(diagnostics.stat().st_mode) == 0o600
 
 
 def test_refusals_keep_allowlisted_names_and_counts_verbatim(

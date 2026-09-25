@@ -38,6 +38,7 @@ Note: Ledger creation and sidecar management will be consolidated once R1
 from __future__ import annotations
 
 import contextlib
+import errno
 import hashlib
 import json
 import os
@@ -78,17 +79,15 @@ _CODEX_MCP_LIST_TIMEOUT_S = 60.0
 _AGY_HOME_SUFFIX = ".agy-home"
 _AGY_MCP_LIST_TIMEOUT_S = 60.0
 _AGY_TOKEN_NAME = "antigravity-oauth-token"
+_LINK_ELSEWHERE = "points elsewhere"
 _AGY_MCP_LIST_COLUMNS = ("NAME", "TYPE", "STATUS", "COMMAND/URL")
 
-_FRAGMENT_LIMIT = 80
-_STDERR_LIMIT = 200
 _LISTED_NAMES = 5
-_ELLIPSIS = "…"
+_DIAGNOSTICS_SUFFIX = ".diagnostics.log"
+_FINGERPRINT_LEN = 12
 # The only shape an untrusted identifier may echo in a refusal. No ``/``, ``\``, ``%`` or ``~``
 # by construction, so a path in any encoding (relative, URL-encoded, ``file://``, unicode slash) fails.
 _ECHO_IDENTIFIER_RE = re.compile(r"[A-Za-z0-9_.:-]{1,64}")
-# A free-text token's core, without the brackets/quotes/commas that commonly wrap it.
-_FREE_TEXT_TOKEN_RE = re.compile(r"""[(\[{"',;]*([^(\[{"',;)\]}]+)[)\]}"',;]*""")
 _MIN_MASKED_VALUE_LEN = 3
 _PATH_MASK = "<path>"
 # Anything path-shaped, run to the next delimiter so a path with spaces is masked whole:
@@ -118,13 +117,14 @@ def _known_values(extra: Mapping[str, str | None] | None = None) -> dict[str, st
 
 
 def _mask(text: object, values: Mapping[str, str | None] | None = None) -> str:
-    """Mask the log-unsafe values and path shapes in ``text`` and flatten whitespace (no length bound).
+    """Mask the log-unsafe values and path shapes in ``text`` and flatten whitespace.
 
     Masks each known log-unsafe value with its label (longest first, so a nested path collapses to
     its innermost label; empty, root and tiny values are skipped, since masking ``/`` or ``1`` would
-    mangle everything), then masks anything path-shaped. This is a blocklist, so it is only the
-    whole-message safety net and the first pass of ``_free_text``; every untrusted piece is
-    reduced through ``_echo_identifier`` or ``_free_text`` before it is interpolated.
+    mangle everything), then masks anything path-shaped. This is a blocklist, so it is only a
+    whole-message safety net over refusals that already carry no untrusted free text: those never
+    interpolate stderr, stdout, exception strings, ``strerror``, config or table text (see
+    ``_untrusted``) and show an untrusted identifier only through ``_echo_identifier``.
     """
     cleaned = str(text)
     for label, value in sorted(_known_values(values).items(), key=lambda item: len(item[1] or ""), reverse=True):
@@ -148,32 +148,49 @@ def _echo_identifier(value: object) -> str:
     return f"<redacted: {len(value)} chars>"
 
 
-def _free_text(
-    text: object,
-    values: Mapping[str, str | None] | None = None,
-    *,
-    limit: int = _FRAGMENT_LIMIT,
-) -> str:
-    """Untrusted free text (stderr, JSON errors, table lines) as a refusal may show it.
+def review_diagnostics_path(config_path: Path | str) -> Path:
+    """Return the local diagnostics file that pairs with an attempt's ``.mcp.json``.
 
-    First the ``_mask`` pass, then an allowlist per whitespace-delimited token: a token survives only
-    if its core (outside surrounding brackets/quotes/commas) fully matches ``_ECHO_IDENTIFIER_RE``,
-    or it is one of the mask labels. Every other token collapses to ``…``, so a relative,
-    URL-encoded, ``file://`` or unicode-slash path is dropped whole rather than shown in pieces.
-    Runs of ``…`` merge and the result is capped, after the reduction, so a cut never splits a token.
+    It sits beside the attempt's ledger under the ignored ``batch_state/`` runtime tree (never
+    committed) and holds the full untrusted text a refusal deliberately does not echo.
     """
-    labels = {_PATH_MASK, *_known_values(values)}
-    kept: list[str] = []
-    for token in _mask(text, values).split():
-        core = _FREE_TEXT_TOKEN_RE.fullmatch(token)
-        if token in labels or (core is not None and _ECHO_IDENTIFIER_RE.fullmatch(core.group(1))):
-            kept.append(token)
-        elif not kept or kept[-1] != _ELLIPSIS:
-            kept.append(_ELLIPSIS)
-    cleaned = " ".join(kept)
-    if len(cleaned) > limit:
-        cleaned = cleaned[:limit] + "..."
-    return cleaned
+    config = Path(config_path)
+    if not config.name.endswith(_MCP_CONFIG_SUFFIX):
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {_echo_identifier(config.name)!r}")
+    return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _DIAGNOSTICS_SUFFIX)
+
+
+def _untrusted(label: str, text: object, diagnostics: Path) -> str:
+    """The stand-in a refusal shows for untrusted free text: its size and fingerprint, never its content.
+
+    Untrusted free text (tool stderr/stdout, exception strings, ``strerror``, config and table text)
+    is never echoed, in whole or in part, because no filter can prove a fragment of it path-free.
+    The refusal carries our fixed wording, the text's length, ``sha256(text)[:12]`` for correlation
+    and the diagnostics file's basename; the full text is appended to that file (mode 0600).
+    ``label`` is fixed wording from our code.
+    """
+    raw = text if isinstance(text, str) else str(text)
+    payload = raw.encode("utf-8", errors="backslashreplace")
+    fingerprint = hashlib.sha256(payload).hexdigest()[:_FINGERPRINT_LEN]
+    saved = f"details in {diagnostics.name}"
+    try:
+        fd = os.open(diagnostics, os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o600)
+        try:
+            os.fchmod(fd, 0o600)
+            os.write(
+                fd, f"--- {label} ({len(raw)} chars, sha256 {fingerprint}) ---\n".encode("ascii") + payload + b"\n"
+            )
+        finally:
+            os.close(fd)
+    except OSError as exc:
+        saved = f"details not saved: {_errno_name(exc) or 'OSError'}"
+    return f"<{label}: {len(raw)} chars, sha256 {fingerprint}; {saved}>"
+
+
+def _errno_name(exc: OSError) -> str | None:
+    """The symbolic errno (``ENOENT``) of an ``OSError``, or ``None`` when it carries none."""
+    code = exc.errno
+    return errno.errorcode.get(code) if isinstance(code, int) else None
 
 
 def _describe_identifier(value: object) -> str:
@@ -329,11 +346,20 @@ def agy_oauth_link_problem(config_path: Path | str) -> str | None:
     # names the scoped link relative to the attempt directory and the real token only by a label:
     # no absolute path (which would expose the operator's home directory) is ever included.
     link_label = link.relative_to(agy_home.parent)
+    state = _agy_oauth_link_state(link, real_token)
+    if state is None:
+        return None
+    if state == _LINK_ELSEWHERE:
+        return f"{link_label} {state}, not to the real AGY OAuth token"
+    return f"{link_label} {state}, not a symlink to the real AGY OAuth token"
+
+
+def _agy_oauth_link_state(link: Path, real_token: Path) -> str | None:
+    """Fixed wording for how ``link`` deviates from the real token (``None`` when intact)."""
     if not link.is_symlink():
-        kind = "a regular file" if link.exists() else "missing"
-        return f"{link_label} is {kind}, not a symlink to the real AGY OAuth token"
+        return "is a regular file" if link.exists() else "is missing"
     if os.path.realpath(link) != os.path.realpath(real_token):
-        return f"{link_label} points elsewhere, not to the real AGY OAuth token"
+        return _LINK_ELSEWHERE
     return None
 
 
@@ -549,6 +575,7 @@ def verify_codex_review_effective_mcp(
     config = Path(config_path)
     codex_home = codex_review_home_path(config)
     log_unsafe = {"$CODEX_HOME": str(codex_home), "~": os.path.expanduser("~")}
+    diagnostics = review_diagnostics_path(config)
 
     def refuse(reason: str) -> CodexReviewMcpGateError:
         return CodexReviewMcpGateError(f"codex review attempt refused: {_mask(reason, log_unsafe)} (#8517)")
@@ -557,7 +584,7 @@ def verify_codex_review_effective_mcp(
         expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
     except (OSError, ValueError, KeyError, TypeError) as exc:
         raise refuse(
-            f"cannot read the attempt MCP config {_echo_identifier(config.name)!r}: {_exc_reason(exc)}"
+            f"cannot read the attempt MCP config {_echo_identifier(config.name)!r}: {_exc_reason(exc, diagnostics)}"
         ) from exc
     if not (codex_home / "config.toml").is_file():
         raise refuse("the scoped CODEX_HOME has no config.toml")
@@ -575,15 +602,16 @@ def verify_codex_review_effective_mcp(
             check=False,
         )
     except (OSError, subprocess.SubprocessError) as exc:
-        raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc)})") from exc
+        raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc, diagnostics)})") from exc
     if proc.returncode != 0:
-        raise refuse(
-            f"`codex mcp list` exited {proc.returncode}: {_free_text(proc.stderr, log_unsafe, limit=_STDERR_LIMIT)}"
-        )
+        raise refuse(f"`codex mcp list` exited {proc.returncode}: {_untrusted('stderr', proc.stderr, diagnostics)}")
     try:
         servers = json.loads(proc.stdout)
     except ValueError as exc:
-        raise refuse(f"`codex mcp list --json` did not return JSON: {_free_text(exc)}") from exc
+        raise refuse(
+            f"`codex mcp list --json` did not return JSON: {_exc_reason(exc, diagnostics)}; "
+            f"{_untrusted('stdout', proc.stdout, diagnostics)}"
+        ) from exc
     if not isinstance(servers, list):
         raise refuse("`codex mcp list --json` did not return a list")
 
@@ -637,7 +665,9 @@ def verify_codex_review_launch(
             Path(plan.output_file).unlink(missing_ok=True)
 
 
-def _agy_mcp_list_rows(stdout: str, refuse: Callable[[str], AgyReviewMcpGateError]) -> list[dict[str, str]]:
+def _agy_mcp_list_rows(
+    stdout: str, refuse: Callable[[str], AgyReviewMcpGateError], diagnostics: Path
+) -> list[dict[str, str]]:
     """Strictly parse ``agy mcp list`` (a padded text table with no JSON mode).
 
     The header must be exactly ``NAME TYPE STATUS COMMAND/URL``; every other non-empty
@@ -648,22 +678,23 @@ def _agy_mcp_list_rows(stdout: str, refuse: Callable[[str], AgyReviewMcpGateErro
     if not lines:
         raise refuse("`agy mcp list` printed no table")
     header = re.fullmatch(r"(NAME)(\s+)(TYPE)(\s+)(STATUS)(\s+)(COMMAND/URL)", lines[0])
-    if header is None:
-        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {_free_text(lines[0])!r}")
+    if header is None or header.start(1) != 0:
+        raise refuse(
+            f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: "
+            f"{_untrusted('header', lines[0], diagnostics)}"
+        )
     offsets = [header.start(group) for group in (1, 3, 5, 7)]
-    if offsets[0] != 0:
-        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {_free_text(lines[0])!r}")
 
     rows: list[dict[str, str]] = []
     for line in lines[1:]:
         if len(line) <= offsets[3] or any(line[offset - 1] != " " or line[offset] == " " for offset in offsets[1:]):
-            raise refuse(f"`agy mcp list` row is truncated or misaligned: {_free_text(line)!r}")
+            raise refuse(f"`agy mcp list` row is truncated or misaligned: {_untrusted('row', line, diagnostics)}")
         name = line[offsets[0] : offsets[1]].strip()
         kind = line[offsets[1] : offsets[2]].strip()
         status = line[offsets[2] : offsets[3]].strip()
         target = line[offsets[3] :].strip()
         if any(not cell or any(ch.isspace() for ch in cell) for cell in (name, kind, status)):
-            raise refuse(f"`agy mcp list` row cannot be parsed: {_free_text(line)!r}")
+            raise refuse(f"`agy mcp list` row cannot be parsed: {_untrusted('row', line, diagnostics)}")
         rows.append({"name": name, "type": kind, "status": status, "target": target})
     names = [row["name"] for row in rows]
     if len(set(names)) != len(names):
@@ -671,19 +702,19 @@ def _agy_mcp_list_rows(stdout: str, refuse: Callable[[str], AgyReviewMcpGateErro
     return rows
 
 
-def _exc_reason(exc: BaseException) -> str:
-    """Describe an exception for a refusal without the absolute paths it may embed.
+def _exc_reason(exc: BaseException, diagnostics: Path) -> str:
+    """Describe an exception for a refusal: its class, its errno code and a fingerprint, never its text.
 
-    ``OSError`` carries the file name and ``SubprocessError`` the command line; both are paths
-    under the operator's home, so only the error class and OS reason are kept.
+    ``str(exc)`` is untrusted (``OSError`` carries the file name and ``strerror``, ``SubprocessError``
+    the command line, a parser error a slice of the input), so it goes to the diagnostics file and
+    the refusal shows only the class name, ``errno.errorcode[exc.errno]`` (e.g. ``ENOENT``) when
+    present, and ``_untrusted``'s length and fingerprint.
     """
-    if isinstance(exc, OSError):
-        return f"{type(exc).__name__}: {exc.strerror or 'OS error'}"
+    code = _errno_name(exc) if isinstance(exc, OSError) else None
+    head = f"{type(exc).__name__} ({code})" if code else type(exc).__name__
     if isinstance(exc, subprocess.TimeoutExpired):
-        return f"{type(exc).__name__} after {exc.timeout:g}s"
-    if isinstance(exc, subprocess.SubprocessError):
-        return type(exc).__name__
-    return f"{type(exc).__name__}: {_free_text(exc)}"
+        head = f"{head} after {exc.timeout:g}s"
+    return f"{head}: {_untrusted('exception', exc, diagnostics)}"
 
 
 def _strict_json_object(text: str) -> Any:
@@ -722,6 +753,7 @@ def verify_agy_review_effective_mcp(
         "$HOME": env.get("HOME"),
         "~": os.path.expanduser("~"),
     }
+    diagnostics = review_diagnostics_path(config)
 
     def refuse(reason: str) -> AgyReviewMcpGateError:
         return AgyReviewMcpGateError(f"agy review attempt refused: {_mask(reason, log_unsafe)} (#8617)")
@@ -732,7 +764,7 @@ def verify_agy_review_effective_mcp(
         args = list(expected["args"])
     except (OSError, ValueError, KeyError, TypeError) as exc:
         raise refuse(
-            f"cannot read the attempt MCP config {_echo_identifier(config.name)!r}: {_exc_reason(exc)}"
+            f"cannot read the attempt MCP config {_echo_identifier(config.name)!r}: {_exc_reason(exc, diagnostics)}"
         ) from exc
     if not isinstance(expected.get("env"), dict) or set(expected["env"]) != set(ENV_KEYS):
         raise refuse("the attempt MCP config does not carry exactly the three LU_REVIEW_* variables")
@@ -764,13 +796,11 @@ def verify_agy_review_effective_mcp(
             check=False,
         )
     except (OSError, subprocess.SubprocessError) as exc:
-        raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc)})") from exc
+        raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc, diagnostics)})") from exc
     if proc.returncode != 0:
-        raise refuse(
-            f"`agy mcp list` exited {proc.returncode}: {_free_text(proc.stderr, log_unsafe, limit=_STDERR_LIMIT)}"
-        )
+        raise refuse(f"`agy mcp list` exited {proc.returncode}: {_untrusted('stderr', proc.stderr, diagnostics)}")
 
-    rows = _agy_mcp_list_rows(proc.stdout, refuse)
+    rows = _agy_mcp_list_rows(proc.stdout, refuse, diagnostics)
     if [row["name"] for row in rows] != ["sources"]:
         raise refuse(
             f"effective MCP servers are {_describe_names([row['name'] for row in rows])}; exactly ['sources'] is allowed"
@@ -789,7 +819,7 @@ def verify_agy_review_effective_mcp(
     except (OSError, ValueError) as exc:
         raise refuse(
             f"cannot read the scoped agy MCP config (.gemini/config/mcp_config.json under the scoped HOME): "
-            f"{_exc_reason(exc)}"
+            f"{_exc_reason(exc, diagnostics)}"
         ) from exc
     if not isinstance(loaded, dict) or set(loaded) != {"mcpServers"}:
         raise refuse("the scoped agy MCP config has keys other than mcpServers")
@@ -816,10 +846,11 @@ def verify_agy_review_launch(
     from scripts.agent_runtime.adapters.agy import AgyAdapter
     from scripts.agent_runtime.env_sanitize import build_agent_env
 
-    link_problem = agy_oauth_link_problem(config_path)
-    if link_problem is not None:
+    agy_home = agy_review_home_path(config_path)
+    link_state = _agy_oauth_link_state(agy_review_app_data_dir(agy_home) / _AGY_TOKEN_NAME, _real_agy_token())
+    if link_state is not None:
         raise AgyReviewMcpGateError(
-            f"agy review attempt refused: OAuth link not intact: {_free_text(link_problem)} (#8617)"
+            f"agy review attempt refused: OAuth link not intact: the scoped {_AGY_TOKEN_NAME} {link_state} (#8617)"
         )
 
     plan = AgyAdapter().build_invocation(
