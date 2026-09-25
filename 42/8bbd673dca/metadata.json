@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "428bbd673dca",
+  "strategy": "manual-commit",
+  "branch": "deepseek/impl-8750-docs",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/ci-gate.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/42/8bbd673dca/0/metadata.json",
+      "transcript": "/42/8bbd673dca/0/full.jsonl",
+      "compact_transcript": "/42/8bbd673dca/0/transcript.jsonl",
+      "content_hash": "/42/8bbd673dca/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 28347,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 206336,
+    "output_tokens": 1224,
+    "api_call_count": 9
+  }
+}

@@ -1,0 +1,964 @@
+{
+  "info": {
+    "id": "ses_f29de28ceffe10nZgySx556dEc",
+    "slug": "lucky-lagoon",
+    "projectID": "c4cb20568b49f5c34ee7abdc0cd296fbd941fbd2",
+    "directory": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+    "path": "",
+    "title": "Recording phase A preflight measurements in CI runbook",
+    "agent": "build",
+    "model": {
+      "id": "deepseek-flash",
+      "providerID": "deepseek",
+      "variant": "high"
+    },
+    "version": "1.18.32",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "cost": 0.006225258,
+    "tokens": {
+      "input": 28347,
+      "output": 1224,
+      "reasoning": 1033,
+      "cache": {
+        "read": 206336,
+        "write": 0
+      }
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1790298937138,
+      "updated": 1790298977917
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1790298937276
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "deepseek",
+          "modelID": "deepseek-flash",
+          "variant": "high"
+        },
+        "summary": {
+          "diffs": [
+            {
+              "file": "docs/runbooks/ci-gate.md",
+              "patch": "Index: docs/runbooks/ci-gate.md\n===================================================================\n--- docs/runbooks/ci-gate.md\t\n+++ docs/runbooks/ci-gate.md\t\n@@ -1,347 +1,364 @@\n # CI Gate\n \n New workflow (Fable 5.1, 2026-09-03). `.github/workflows/ci.yml` is a short\n replacement, not the old two-tier merge-queue file.\n \n `CI Gate` is the only required GitHub check. Same jobs on `pull_request` and\n `merge_group`, except Preflight, which runs on `pull_request` only.\n \n | Job | When |\n | --- | --- |\n | Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |\n | Preflight | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |\n | Ruff | not docs-only |\n | Secret scan | always |\n | pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |\n | Contracts | not docs-only |\n | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |\n | TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |\n | CI Gate | always |\n \n The Changes job uses `scripts/ci/classify_changes.py`. Ordinary PRs skip\n ruff/contracts and run one `docs_skills` pytest leg only when every path is\n Markdown in docs/, shared skills, agent deploy trees, or the repository root,\n or belongs to curriculum/ or wiki/ without a `site/` path (the curriculum/wiki\n fast path predates the content class; the queue run is its safety net).\n Frontend denominator matches always override the docs exemption, including\n `packages/activity-kit/`. Unknown paths, including Markdown under unrecognized\n or executable trees, run the full pytest shard set and ruff/contracts;\n frontend follows its denominator. All docs YAML, schemas, packages, dashboards,\n dependency manifests/locks, Python/pre-commit configuration, and scripts/config\n or scripts/ci changes therefore run the full PR-tier floor.\n \n Content class (#8399): learner content under `curriculum/l2-uk-en/`,\n `curriculum/l2-uk-direct/`, `site/src/content/docs/`, or `wiki/`, minus the\n code-imported files inside those roots (each forces full on both events and\n is excluded from the docs exemption): any `curriculum/**/curriculum.yaml`,\n `curriculum/l2-uk-direct/manifest.yaml`,\n `curriculum/l2-uk-direct/bolshakova-letter-order.yaml`,\n `curriculum/l2-uk-en/module-mapping.json`, `curriculum/l2-uk-en/vocabulary.db`,\n and any `*.py`/`*.db`/`*.sqlite` or track-root `*.json` under the roots (the\n importers are listed in `is_code_load_bearing_content`'s docstring). The\n events then differ deliberately:\n \n - **pull_request**: the content class applies only when every changed path is\n   content class AND at least one is `site/src/content/docs/**` — the case\n   that used to fall to full because `frontend` was true (PR #8384). A PR\n   touching only `curriculum/**`/`wiki/**` keeps the docs fast path.\n - **merge_group**: classified with the same path classes as a PR, using each\n   queue entry's own changed paths (ALLGREEN), so a group can resolve to any\n   tier. Any lookup failure or ambiguity resolves to `full`.\n \n The content class emits `pytest_mode=content`: one shard running\n `-m 'reads_content and not slow and not atlas_release'` (same filters and\n `--timeout=120` as the full PR tier) plus `tests/test_ci_shard_partition.py`,\n with Ruff, Contracts and the Frontend build still on (`docs_only=false`,\n `frontend=true`). The marker is load-bearing:\n `tests/test_reads_content_marker_invariant.py` fails when a test module\n references those content roots without carrying `reads_content`, so new\n content-reading tests cannot silently fall out of the class.\n \n CI runs on `pull_request` opened/synchronize/reopened; labels and PR-body\n edits do not start it. `full-ci` is read from the PR's current labels\n (case-insensitive, fail closed) on the next PR push and in every merge-queue\n run, where every PR in the group is resolved from the queue refs. A label added\n after a green PR run does not rerun it: push again, or rely on the merge queue.\n Manual runs and the daily 03:30 UTC schedule in `ci.yml` use that same full\n floor (`not atlas_release and not slow`). `pytest-slow-nightly.yml` remains the\n separate slow selection; this adds no retries or duplicate slow-test execution.\n Missing/malformed comparison data, API errors, empty changes, and the compare\n API's 300-file cap fail closed to the full tier including frontend.\n \n Scripts/`tests/`-only PRs that pass the selected allowlist run\n `pytest_mode=selected`: one matrix job, `shard_count=1`, and `plan-files`\n stdin from `pytest_candidates` (resolved once in Changes — no re-derive in\n pytest). Shared-root denylist hits (`.github/`, `scripts/ci|config|build/`,\n conftest, locks, packages/schemas/site/curriculum, etc.), non-test files under\n `tests/`, non-`.py` under `scripts/`, stem collisions, unmapped scripts, deleted\n test files, empty or ≥80 candidates, and anything outside the allowlist stay\n `pytest_mode=full` with four shards. Contracts and ruff stay on whenever\n `docs_only=false`. After merge, the CI stream owner tracks one week of\n `ci_timings` on the private work item (selected may be rare under on-disk stem\n collision conservatism).\n \n ## Repo-wide tests always run in the selected and docs tiers (#8707)\n \n Import selection can never pick a test that scans the repository's own trees:\n the Changes job links a changed `scripts/foo.py` to `tests/**/test_foo*.py` (and\n a changed `tests/test_x.py` to itself), but a test scanning `tests/` or\n `scripts/` has no import edge to the changed module. That is how PR #8692\n merged green on the selected tier and then turned `main` red on shard 3 for\n every full-tier run: `tests/test_lint_test_assertions.py::test_repo_test_suite_is_clean`\n scans all of `tests/` and was never selected for a `tests/orchestration/test_thread_handoff.py`\n change.\n \n Such tests carry the `repo_wide` marker (registered in `pyproject.toml`). After\n the candidate run, a `selected` shard runs the marked set under its own narrow\n allowlist:\n \n ```\n git ls-files -- tests | grep -E '/test_[^/]+\\.py$' \\\n   | xargs -r grep -lE 'pytest\\.mark\\.repo_wide' | sort\n LU_PYTEST_SHARD_FILES=<that list> pytest tests \\\n   -m 'repo_wide and not slow and not atlas_release' -n logical --dist=loadfile ...\n ```\n \n The narrow allowlist keeps collection cheap (the full tree is ~2 minutes to\n collect); the known set currently runs ~400 tests in under two minutes. An\n empty list fails the step loudly. The grep matches the exact marker\n declaration, not a bare `repo_wide` mention, so a comment or an unrelated\n string cannot pull a file into the allowlist (the `-m` filter would skip it\n anyway, but the list stays honest).\n \n The **docs lane** runs the same `-m repo_wide` invocation after its\n `docs_skills` run. Docs-lane PRs reach no other pytest leg, and several\n repo-wide scanners read `docs/`: `tests/test_work_privacy.py`,\n `tests/test_agent_fleet_tooling_guardrails.py`, and\n `tests/test_public_tree_no_baked_host_run_root.py`. A docs-only PR that adds a\n baked host path under `docs/` is therefore caught before merge.\n \n The **content lane** deliberately runs no `-m repo_wide` leg: content mode runs\n `-m 'reads_content and not slow and not atlas_release'` (plus the shard safety\n net), so a scanner of a content root is selected by its `reads_content` marker\n without a repo-wide pass. Which lane a content-only PR reaches decides whether\n that marker is enough:\n \n - A PR whose paths are all content-class and include a `site/src/content/docs/`\n   path lands on the **content lane**, which runs `reads_content`: scanners of\n   that tree, for example `tests/test_site_links.py`, run here.\n - A PR touching only `curriculum/` or `wiki/` — no `site/src/content/docs/`\n   path — is docs-only and lands on the **docs lane**. Since #8720 the docs lane\n   also runs `-m 'reads_content and not slow and not atlas_release'` (under the\n   same narrow allowlist as the `repo_wide` leg) whenever the flag\n   `docs_reads_content` is `true`, which `classify_changes.py` sets only for a\n   docs-lane result with some path under `curriculum/` or `wiki/`. This closes\n   the gap that let PR #8712 (a docs-only change) merge green and turn `main`\n   red on the next full-tier run: `docs/epics/fresh-build-build-program.md` is a\n   hashed source of every `curriculum/l2-uk-en/lesson-plans/<lvl>/_decisions.yaml`,\n   and `tests/curriculum/arc/test_decisions_record.py` (a `reads_content` module)\n   went red on `main`. A few curriculum and wiki scanners are marked `repo_wide`\n   and ran there before #8720: `tests/test_ohoiko_source_inventory_scope.py`,\n   `tests/test_prompt_template_render.py`, `tests/test_a1_review_scores.py`,\n   `tests/test_aggregate_findings.py`, `tests/test_schema_validation.py`\n   (`test_a2_plans_match_module_schema`), and the reference checks in\n   `tests/test_skill_instruction_routes.py`; the new `reads_content` leg is what\n   covers the rest.\n \n Repo-wide tests that read a content tree and must also run on the content lane\n carry `reads_content` as well: `tests/test_llm_reviewer_dispatch.py`,\n `tests/test_threshold_source_of_truth.py`, `tests/test_sparse_collection_guard.py`,\n `tests/test_public_tree_no_baked_host_run_root.py`,\n `tests/api/test_app_factory.py`, and\n `tests/test_curriculum_upgrade_no_host_run_root.py` are marked both ways, and\n none is `slow`/`atlas_release`.\n \n `tests/test_repo_wide_marker_invariant.py` keeps the marker honest. Marker\n detection is syntactic and per-function (AST): a test counts only when its own\n `@pytest.mark.repo_wide` decorator, its class decorator, or a module-level\n `pytestmark` contains `pytest.mark.repo_wide`, so decorator order and comments\n do not matter and a module with two scanners and one marker fails. The\n authoritative guarantee is the explicit registry of known repo-wide\n modules/functions plus a reasoned `NOT_REPO_WIDE` escape hatch; the AST\n heuristic over each test module (repo-rooted `.glob`/`.rglob`,\n `os.walk`/`os.scandir`, `git ls-files`/`ls-tree` through `subprocess`, and\n known whole-tree linters, propagated through helper calls) is a best-effort\n net. The invariant also fails when the selected tier or the docs lane drops\n its `-m repo_wide` invocation.\n \n No CF attest. No auto-arm. No landing-class classifier. No coverage floor.\n Red team review is out of band.\n \n ## Early PR preflight (#8750 phase A)\n \n The `Preflight` job reports a broken repo-wide invariant (a missing\n `subprocess` timeout, the test-assertion lint, the marker invariants) in a few\n minutes instead of after a full pytest shard. Before it, the p50 time to the\n first failed job on a full PR run was about 13 minutes.\n \n+### Measured results (2026-09-25)\n+\n+Baseline before phase A (459 CI runs, 2026-09-22 20:24Z to 2026-09-24 23:07Z):\n+89% of PR runs take the full tier; time to first failed job on failing full PR\n+runs p50 13.0 min, p95 29.2 min; pytest job queue p50 1.2 min, p95 12.7 min.\n+\n+Held-out probe PR #8759 (a timeout-less `subprocess.run`): the preflight failed\n+on `tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts`\n+after 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s\n+after the run started; `CI Gate` was red; the shards' repo_wide backstop also\n+failed.\n+\n+Known limit: the preflight competes with the pytest shards for runners. All CI\n+jobs are GitHub-hosted and concurrent jobs peak at the account's 20-job cap, so\n+queue time can dominate. Phase A.2 (issue #8750) consolidates short checks into\n+one `fast-checks` job.\n+\n **When it runs.** `scripts/ci/classify_changes.py` decides once and emits\n `preflight`. `preflight_for()` returns `true` only for a `pull_request` event\n whose tier is `full` or `selected`: the tiers whose shards run the\n `repo_wide` set. The Preflight job's `if:` and CI Gate both read that one\n output, and nothing in `ci.yml` re-derives it. The other lanes get no\n preflight:\n \n - The **docs** lane already runs `repo_wide` in its single short shard.\n - The **content** and **frontend** lanes do not run `repo_wide` at all, so a\n   preflight there would change what the gate proves.\n - **`merge_group`, `schedule` and `workflow_dispatch`** always get\n   `preflight=false`.\n \n A `full-ci` label or a classifier failure on a PR forces `full`, and so turns\n preflight on.\n \n **What it runs.** It uses the same allowlist construction and flags as the\n shards' `repo_wide` leg. An empty allowlist fails the step loudly:\n \n ```\n LU_PYTEST_SHARD_FILES=<repo_wide list> pytest tests \\\n   -m 'repo_wide and not slow and not atlas_release' --strict-markers \\\n   -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \\\n   --timeout-method=thread --override-ini addopts=-v\n ```\n \n A second invocation then runs the files registered in the job's\n `PREFLIGHT_EXTRA_TESTS` env, one path per line, under\n `-m 'not slow and not atlas_release'` with the same flags. These are cheap\n invariants that fail often but are not `repo_wide`. Today the list holds only\n `tests/curriculum/arc/test_decisions_record.py`, the cross-file hash\n invariant that caused 7 of the 40 sampled PR failures. On its own it takes\n about 5 s. An empty list also fails loudly. `tests/test_ci_preflight.py`\n checks that every registered path exists and is not already `repo_wide`.\n Both invocations always run, so one run reports every broken invariant; the\n step fails if either one failed.\n \n **Setup.** Preflight uses the same Python and uv install as the shards, and\n the same Atlas manifest hydrate. It leaves out the Postgres service, Node/npm\n and the native apt packages (bubblewrap, libpq, apparmor), because no\n `repo_wide` test uses them: no marked file mentions a Postgres DSN,\n `psycopg` or `bwrap`, and the one that mentions `npm` stubs it. The checkout\n is shallow. The whole selection passes in a fresh depth-1 clone with no\n Postgres DSN and no `node_modules`. `timeout-minutes: 8`.\n \n **Parallel, not gating.** No shard `needs: preflight`, and the shards still\n run the `repo_wide` tests as the backstop, so a green run is no slower.\n Nothing is cancelled when preflight fails. Preflight only makes the red\n signal arrive earlier.\n \n **CI Gate rule.** This rule lives in the gate step:\n \n - `preflight=true`: the Preflight result must be `success`. `failure`,\n   `cancelled` and `skipped` all fail the gate.\n - `preflight=false`: the Preflight result must be `skipped`.\n - If Changes itself did not succeed, the gate fails before it reaches this\n   rule.\n \n `merge_group` and nightly runs have no preflight. Their gate evaluation is\n unchanged apart from the `preflight=false → skipped` branch.\n \n **Superseded runs.** A new push to the same PR cancels the superseded run\n through the workflow `concurrency` group. CI Gate is `if: always()`, so it\n still runs for that stale SHA and fails there (see the `concurrency` comment\n in `ci.yml`). That red lands on a commit that is no longer the PR head. The\n replacement run on the new head is the one that decides the PR.\n \n ## pytest shard collection and balance (ci-shard-balance-2026-09-07)\n \n The code pytest shards run on all 4 runner vCPUs (`-n logical`, not `-n auto`\n which counts physical cores), collect through one initial `tests` path\n instead of positional file arguments, and balance by measured per-file\n duration instead of a modulo split. Full-tier shard count (`4`) is declared\n once in `ci.yml`'s workflow-level `env: PYTEST_SHARD_COUNT`. The Changes job\n emits `shard_count` (1 or 4) and `shards`; `plan-files` always uses\n `needs.changes.outputs.shard_count` so selected mode never LPT-partitions a\n candidate set into unused buckets.\n `--max-worker-restart=0` fails the job on a worker crash: pytest-timeout's\n thread method terminates the process, and replacing it can leave xdist\n hanging until the job limit.\n \n Dispatch workers are a separate host from these runners. SCOPE for #8645\n part B: this guards workers against accidental xdist fan-out and concurrent\n full suites. It is not a sandbox against deliberate evasion; parts A (memory\n admission) and C (per-worker cgroup) are the hard limits.\n \n When `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `scripts/ci/pytest_dispatch_cap.py`\n clamps xdist to two workers. `pyproject.toml` `addopts` still passes\n `-p ci.pytest_dispatch_cap`, and `scripts/delegate.py` also sets\n `PYTEST_PLUGINS=ci.pytest_dispatch_cap` (appended when the variable is already\n set). `build_agent_env` forwards that variable into the agent CLI only while\n the dispatch marker is set, and only as the single entry\n `ci.pytest_dispatch_cap` — any other comma-separated plugin name is dropped.\n A worker that copies CI's `--override-ini addopts=-v` therefore still loads\n the cap. The `pythonpath` ini key is separate from `addopts` and still\n makes `ci.pytest_dispatch_cap` importable. The plugin is idempotent when both\n registrations load it. `-n auto`, `-n logical`, and an explicit `-n` use\n `--maxprocesses=2`. A `--tx` spec whose expanded worker count is greater than\n 2 (for example `--tx 3*popen`) is a usage error before configuration; the cap\n does not rewrite the spec. A full-suite invocation takes one non-blocking lock\n under `/var/tmp/lu/learn-ukrainian/` (`LU_PYTEST_FULL_SUITE_LOCK` overrides\n that path). The fd is stored on the pytest config that acquired it and\n released only in that run's `pytest_unconfigure`, so a nested `pytest.main()`\n does not drop the outer run's lock. CI does not set the dispatch variable\n (see `.github/workflows/`), so shard `-n logical` is unchanged. A second\n full-suite run on a dispatch host fails immediately and tells the worker to\n run targeted tests.\n \n **Collection — allowlist hook.** `tests/conftest.py` implements\n `pytest_ignore_collect`, gated on env var `LU_PYTEST_SHARD_FILES`: unset,\n collection is completely unchanged (local dev, `docs_skills` lane); set, it\n must point at a readable, non-empty, newline-delimited list of repo-relative\n `test_*.py` paths with no duplicates — anything else (missing, unreadable,\n malformed, empty) raises loudly at first collection. Directories are never\n filtered by the hook: it explicitly admits them and allowed files, overriding\n pytest's default `norecursedirs` exclusions such as `build`; other files are\n ignored. This preserves the tracked-file selection, including `tests/build/`.\n \n **Balance — `scripts/ci/pytest_shards.py` file plane.** Two new subcommands,\n extending the existing planner (Cursor Cloud's node-ID plane — `plan` /\n `plan-shard` / `run` / `verify-artifacts` — is untouched):\n \n - `plan-files --shard-id N --shard-count K --durations <json> --output <path>`:\n   reads candidate repo-relative file paths from stdin (`ci.yml` pipes in\n   `git ls-files -- tests | grep -E '/test_[^/]+\\.py$' | sort`), LPT-assigns\n   them across `K` shards from the committed duration snapshot (median\n   fallback for files without history), writes shard `N`'s sorted allowlist,\n   and prints every shard's predicted weight.\n - `file-durations --junit <xml>... --output <json>`: refreshes the committed\n   snapshot from JUnit reports. Aggregation policy: a JUnit\n   `<testcase time=\"...\">` already sums setup+call+teardown for that node\n   (pytest's own writer combines the three), so no phase decomposition is\n   attempted; the same node ID appearing in more than one report (a rerun, or\n   the same file spanning several reports) keeps the maximum, not the sum,\n   before per-file totals are formed; a testcase whose `classname`/`name`\n   doesn't resolve to a repo test file is skipped and counted, never raised.\n \n **Snapshot refresh procedure.** After a landing-tier CI run (`merge_group` or\n `push` to `main`), download each shard's uploaded `pytest-junit-shard-N`\n artifact and run:\n \n ```\n .venv/bin/python scripts/ci/pytest_shards.py file-durations \\\n   --junit pytest-shard-1.xml --junit pytest-shard-2.xml \\\n   --junit pytest-shard-3.xml --junit pytest-shard-4.xml \\\n   --output scripts/ci/pytest-file-durations.json\n ```\n \n Commit the refreshed snapshot (sorted keys, 3-decimal rounding) when shard\n balance measurably drifts — not on every green run.\n \n ## Cloud advisory runner dependency parity (#6977 slice A)\n \n `scripts/ci/cursor_cloud_full_pytest.sh` (the offline-verifiable Cursor cloud\n pytest prototype; see `docs/design/2026-09-06-cloud-agent-pytest-advisory.md`)\n mirrors this job's \"Install Python deps\" and \"Hydrate Atlas lexicon manifest\"\n steps: same lockfile exclude set (`torch`/`torchvision`/`open_clip_torch`/\n `stanza`), `uv pip` when available, `packages/v4-runtime --no-build-isolation`\n + `build_assets.py`, and an unconditional hard-fail manifest hydrate. It also\n requires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as this job's\n disposable Postgres service) whenever control-plane tests are selected, and\n detects (never sudo-installs) the Linux native deps this job's \"Install\n native mechanism test dependencies\" step provisions (`bubblewrap`, `libpq`).\n **When this job's dependency install recipe changes, update the runner\n script to match** — a drifted runner is a false-green risk, not just stale\n docs (the whole point of that runner is offline/local sealed-run parity with\n this job). Runner ↔ CI parity is covered offline by\n `tests/ci/test_cursor_cloud_pytest_verify.py`; artifact transport, live cloud\n qualification and the advisory Check publisher remain open (operator/advisor\n GO required, see the design doc's \"Explicit open decision\" section).\n",
+              "additions": 17,
+              "deletions": 0,
+              "status": "modified"
+            }
+          ]
+        },
+        "id": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"[delegate worktree]\nRun all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs\nDo not switch branches in the main checkout.\nIf you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.\n\n[shared project interpreter]\nNever create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.\nSparse-checkout is active: these trees are NOT present: curriculum, data/lexicon, data/projects, wiki. To materialize one inside this worktree, run `git sparse-checkout add curriculum` `git sparse-checkout add data/lexicon` `git sparse-checkout add data/projects` `git sparse-checkout add wiki` (for example `git sparse-checkout add data/projects`). Do not invent content for missing paths.\n\n[write-mode closeout]\nCommit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n`git push -u origin HEAD`\nLeave `git status --porcelain` empty (commit or delete scratch files).\nDo not open or merge PRs unless the brief says so; report the pushed head SHA and clean status.\n\n[optional delivery signal]\nIf you finish with zero commits (a verified no-op), you MAY end your final response with one machine-readable line as positive proof: `DELIVERABLE: {\\\"outcome\\\":\\\"no_change\\\",\\\"reason\\\":\\\"why no changes are required\\\"}`. This line is optional — its absence never fails the dispatch.\n\n# impl-8750-docs — record phase A's measured results in the CI runbook (issue #8750)\n\nCommit trailer, literal, one line: `X-Agent: deepseek/impl-8750-docs`\nWork only in your dispatch worktree. Push the branch. Do NOT open a PR and do NOT merge.\nChange ONLY `docs/runbooks/ci-gate.md` (this PR must stay docs-only; the driver uses it to prove the preflight skips on docs-only PRs).\n\nIn `docs/runbooks/ci-gate.md`, in the existing \\\"Early PR preflight\\\" section, add a short \\\"Measured results (2026-09-25)\\\" subsection.\nUse only these facts (from issue #8750 comments; do not add numbers of your own):\n- Baseline before phase A (459 CI runs, 2026-09-22 20:24Z to 2026-09-24 23:07Z): 89% of PR runs take the full tier; time to first\n  failed job on failing full PR runs p50 13.0 min, p95 29.2 min; pytest job queue p50 1.2 min, p95 12.7 min.\n- Held-out probe PR #8759 (a timeout-less `subprocess.run`): the preflight failed on\n  `tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts` after 3m04s of execution;\n  it waited 5m21s for a runner; its verdict came 10m12s after the run started; `CI Gate` was red; the shards' repo_wide backstop also failed.\n- Known limit: the preflight competes with the pytest shards for runners. All CI jobs are GitHub-hosted and concurrent jobs peak at the\n  account's 20-job cap, so queue time can dominate. Phase A.2 (issue #8750) consolidates short checks into one `fast-checks` job.\nPlain prose, a short list is fine, no more than about 15 lines. Keep existing text unchanged.\n\nVerify: `npx markdownlint-cli2 docs/runbooks/ci-gate.md` if available (report pre-existing errors separately from new ones); the\npre-commit hooks on commit. Commit `docs(ci): record phase A preflight measurements (#8750)`, push.\n\"",
+          "id": "prt_0d621d7ce001NIKTgw1jnV7qk6",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d621d7bc001IV70tC9x4FLVzs"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs"
+        },
+        "cost": 0.003134892,
+        "tokens": {
+          "total": 22290,
+          "input": 20546,
+          "output": 71,
+          "reasoning": 9,
+          "cache": {
+            "write": 0,
+            "read": 1664
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790298939799,
+          "completed": 1790298956680
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d621e197001p43rE88BThZJst",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "snapshot": "c0483020418eb3cecee7c6ef9f3907ecf16be084",
+          "type": "step-start",
+          "id": "prt_0d6221efa001B351FbadpME7BO",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d621e197001p43rE88BThZJst"
+        },
+        {
+          "type": "reasoning",
+          "text": "Let me start by reading the target file.",
+          "time": {
+            "start": 1790298956201,
+            "end": 1790298956311
+          },
+          "id": "prt_0d62221a9001HRLJBthEfJ6cEw",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d621e197001p43rE88BThZJst"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_00_ZmZWyVKVuegoZR597dfK1748",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md"
+            },
+            "output": "<path>/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md</path>\n<type>file</type>\n<content>\n1: # CI Gate\n2: \n3: New workflow (Fable 5.1, 2026-09-03). `.github/workflows/ci.yml` is a short\n4: replacement, not the old two-tier merge-queue file.\n5: \n6: `CI Gate` is the only required GitHub check. Same jobs on `pull_request` and\n7: `merge_group`, except Preflight, which runs on `pull_request` only.\n8: \n9: | Job | When |\n10: | --- | --- |\n11: | Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |\n12: | Preflight | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |\n13: | Ruff | not docs-only |\n14: | Secret scan | always |\n15: | pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |\n16: | Contracts | not docs-only |\n17: | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |\n18: | TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |\n19: | CI Gate | always |\n20: \n21: The Changes job uses `scripts/ci/classify_changes.py`. Ordinary PRs skip\n22: ruff/contracts and run one `docs_skills` pytest leg only when every path is\n23: Markdown in docs/, shared skills, agent deploy trees, or the repository root,\n24: or belongs to curriculum/ or wiki/ without a `site/` path (the curriculum/wiki\n25: fast path predates the content class; the queue run is its safety net).\n26: Frontend denominator matches always override the docs exemption, including\n27: `packages/activity-kit/`. Unknown paths, including Markdown under unrecognized\n28: or executable trees, run the full pytest shard set and ruff/contracts;\n29: frontend follows its denominator. All docs YAML, schemas, packages, dashboards,\n30: dependency manifests/locks, Python/pre-commit configuration, and scripts/config\n31: or scripts/ci changes therefore run the full PR-tier floor.\n32: \n33: Content class (#8399): learner content under `curriculum/l2-uk-en/`,\n34: `curriculum/l2-uk-direct/`, `site/src/content/docs/`, or `wiki/`, minus the\n35: code-imported files inside those roots (each forces full on both events and\n36: is excluded from the docs exemption): any `curriculum/**/curriculum.yaml`,\n37: `curriculum/l2-uk-direct/manifest.yaml`,\n38: `curriculum/l2-uk-direct/bolshakova-letter-order.yaml`,\n39: `curriculum/l2-uk-en/module-mapping.json`, `curriculum/l2-uk-en/vocabulary.db`,\n40: and any `*.py`/`*.db`/`*.sqlite` or track-root `*.json` under the roots (the\n41: importers are listed in `is_code_load_bearing_content`'s docstring). The\n42: events then differ deliberately:\n43: \n44: - **pull_request**: the content class applies only when every changed path is\n45:   content class AND at least one is `site/src/content/docs/**` — the case\n46:   that used to fall to full because `frontend` was true (PR #8384). A PR\n47:   touching only `curriculum/**`/`wiki/**` keeps the docs fast path.\n48: - **merge_group**: classified with the same path classes as a PR, using each\n49:   queue entry's own changed paths (ALLGREEN), so a group can resolve to any\n50:   tier. Any lookup failure or ambiguity resolves to `full`.\n51: \n52: The content class emits `pytest_mode=content`: one shard running\n53: `-m 'reads_content and not slow and not atlas_release'` (same filters and\n54: `--timeout=120` as the full PR tier) plus `tests/test_ci_shard_partition.py`,\n55: with Ruff, Contracts and the Frontend build still on (`docs_only=false`,\n56: `frontend=true`). The marker is load-bearing:\n57: `tests/test_reads_content_marker_invariant.py` fails when a test module\n58: references those content roots without carrying `reads_content`, so new\n59: content-reading tests cannot silently fall out of the class.\n60: \n61: CI runs on `pull_request` opened/synchronize/reopened; labels and PR-body\n62: edits do not start it. `full-ci` is read from the PR's current labels\n63: (case-insensitive, fail closed) on the next PR push and in every merge-queue\n64: run, where every PR in the group is resolved from the queue refs. A label added\n65: after a green PR run does not rerun it: push again, or rely on the merge queue.\n66: Manual runs and the daily 03:30 UTC schedule in `ci.yml` use that same full\n67: floor (`not atlas_release and not slow`). `pytest-slow-nightly.yml` remains the\n68: separate slow selection; this adds no retries or duplicate slow-test execution.\n69: Missing/malformed comparison data, API errors, empty changes, and the compare\n70: API's 300-file cap fail closed to the full tier including frontend.\n71: \n72: Scripts/`tests/`-only PRs that pass the selected allowlist run\n73: `pytest_mode=selected`: one matrix job, `shard_count=1`, and `plan-files`\n74: stdin from `pytest_candidates` (resolved once in Changes — no re-derive in\n75: pytest). Shared-root denylist hits (`.github/`, `scripts/ci|config|build/`,\n76: conftest, locks, packages/schemas/site/curriculum, etc.), non-test files under\n77: `tests/`, non-`.py` under `scripts/`, stem collisions, unmapped scripts, deleted\n78: test files, empty or ≥80 candidates, and anything outside the allowlist stay\n79: `pytest_mode=full` with four shards. Contracts and ruff stay on whenever\n80: `docs_only=false`. After merge, the CI stream owner tracks one week of\n81: `ci_timings` on the private work item (selected may be rare under on-disk stem\n82: collision conservatism).\n83: \n84: ## Repo-wide tests always run in the selected and docs tiers (#8707)\n85: \n86: Import selection can never pick a test that scans the repository's own trees:\n87: the Changes job links a changed `scripts/foo.py` to `tests/**/test_foo*.py` (and\n88: a changed `tests/test_x.py` to itself), but a test scanning `tests/` or\n89: `scripts/` has no import edge to the changed module. That is how PR #8692\n90: merged green on the selected tier and then turned `main` red on shard 3 for\n91: every full-tier run: `tests/test_lint_test_assertions.py::test_repo_test_suite_is_clean`\n92: scans all of `tests/` and was never selected for a `tests/orchestration/test_thread_handoff.py`\n93: change.\n94: \n95: Such tests carry the `repo_wide` marker (registered in `pyproject.toml`). After\n96: the candidate run, a `selected` shard runs the marked set under its own narrow\n97: allowlist:\n98: \n99: ```\n100: git ls-files -- tests | grep -E '/test_[^/]+\\.py$' \\\n101:   | xargs -r grep -lE 'pytest\\.mark\\.repo_wide' | sort\n102: LU_PYTEST_SHARD_FILES=<that list> pytest tests \\\n103:   -m 'repo_wide and not slow and not atlas_release' -n logical --dist=loadfile ...\n104: ```\n105: \n106: The narrow allowlist keeps collection cheap (the full tree is ~2 minutes to\n107: collect); the known set currently runs ~400 tests in under two minutes. An\n108: empty list fails the step loudly. The grep matches the exact marker\n109: declaration, not a bare `repo_wide` mention, so a comment or an unrelated\n110: string cannot pull a file into the allowlist (the `-m` filter would skip it\n111: anyway, but the list stays honest).\n112: \n113: The **docs lane** runs the same `-m repo_wide` invocation after its\n114: `docs_skills` run. Docs-lane PRs reach no other pytest leg, and several\n115: repo-wide scanners read `docs/`: `tests/test_work_privacy.py`,\n116: `tests/test_agent_fleet_tooling_guardrails.py`, and\n117: `tests/test_public_tree_no_baked_host_run_root.py`. A docs-only PR that adds a\n118: baked host path under `docs/` is therefore caught before merge.\n119: \n120: The **content lane** deliberately runs no `-m repo_wide` leg: content mode runs\n121: `-m 'reads_content and not slow and not atlas_release'` (plus the shard safety\n122: net), so a scanner of a content root is selected by its `reads_content` marker\n123: without a repo-wide pass. Which lane a content-only PR reaches decides whether\n124: that marker is enough:\n125: \n126: - A PR whose paths are all content-class and include a `site/src/content/docs/`\n127:   path lands on the **content lane**, which runs `reads_content`: scanners of\n128:   that tree, for example `tests/test_site_links.py`, run here.\n129: - A PR touching only `curriculum/` or `wiki/` — no `site/src/content/docs/`\n130:   path — is docs-only and lands on the **docs lane**. Since #8720 the docs lane\n131:   also runs `-m 'reads_content and not slow and not atlas_release'` (under the\n132:   same narrow allowlist as the `repo_wide` leg) whenever the flag\n133:   `docs_reads_content` is `true`, which `classify_changes.py` sets only for a\n134:   docs-lane result with some path under `curriculum/` or `wiki/`. This closes\n135:   the gap that let PR #8712 (a docs-only change) merge green and turn `main`\n136:   red on the next full-tier run: `docs/epics/fresh-build-build-program.md` is a\n137:   hashed source of every `curriculum/l2-uk-en/lesson-plans/<lvl>/_decisions.yaml`,\n138:   and `tests/curriculum/arc/test_decisions_record.py` (a `reads_content` module)\n139:   went red on `main`. A few curriculum and wiki scanners are marked `repo_wide`\n140:   and ran there before #8720: `tests/test_ohoiko_source_inventory_scope.py`,\n141:   `tests/test_prompt_template_render.py`, `tests/test_a1_review_scores.py`,\n142:   `tests/test_aggregate_findings.py`, `tests/test_schema_validation.py`\n143:   (`test_a2_plans_match_module_schema`), and the reference checks in\n144:   `tests/test_skill_instruction_routes.py`; the new `reads_content` leg is what\n145:   covers the rest.\n146: \n147: Repo-wide tests that read a content tree and must also run on the content lane\n148: carry `reads_content` as well: `tests/test_llm_reviewer_dispatch.py`,\n149: `tests/test_threshold_source_of_truth.py`, `tests/test_sparse_collection_guard.py`,\n150: `tests/test_public_tree_no_baked_host_run_root.py`,\n151: `tests/api/test_app_factory.py`, and\n152: `tests/test_curriculum_upgrade_no_host_run_root.py` are marked both ways, and\n153: none is `slow`/`atlas_release`.\n154: \n155: `tests/test_repo_wide_marker_invariant.py` keeps the marker honest. Marker\n156: detection is syntactic and per-function (AST): a test counts only when its own\n157: `@pytest.mark.repo_wide` decorator, its class decorator, or a module-level\n158: `pytestmark` contains `pytest.mark.repo_wide`, so decorator order and comments\n159: do not matter and a module with two scanners and one marker fails. The\n160: authoritative guarantee is the explicit registry of known repo-wide\n161: modules/functions plus a reasoned `NOT_REPO_WIDE` escape hatch; the AST\n162: heuristic over each test module (repo-rooted `.glob`/`.rglob`,\n163: `os.walk`/`os.scandir`, `git ls-files`/`ls-tree` through `subprocess`, and\n164: known whole-tree linters, propagated through helper calls) is a best-effort\n165: net. The invariant also fails when the selected tier or the docs lane drops\n166: its `-m repo_wide` invocation.\n167: \n168: No CF attest. No auto-arm. No landing-class classifier. No coverage floor.\n169: Red team review is out of band.\n170: \n171: ## Early PR preflight (#8750 phase A)\n172: \n173: The `Preflight` job reports a broken repo-wide invariant (a missing\n174: `subprocess` timeout, the test-assertion lint, the marker invariants) in a few\n175: minutes instead of after a full pytest shard. Before it, the p50 time to the\n176: first failed job on a full PR run was about 13 minutes.\n177: \n178: **When it runs.** `scripts/ci/classify_changes.py` decides once and emits\n179: `preflight`. `preflight_for()` returns `true` only for a `pull_request` event\n180: whose tier is `full` or `selected`: the tiers whose shards run the\n181: `repo_wide` set. The Preflight job's `if:` and CI Gate both read that one\n182: output, and nothing in `ci.yml` re-derives it. The other lanes get no\n183: preflight:\n184: \n185: - The **docs** lane already runs `repo_wide` in its single short shard.\n186: - The **content** and **frontend** lanes do not run `repo_wide` at all, so a\n187:   preflight there would change what the gate proves.\n188: - **`merge_group`, `schedule` and `workflow_dispatch`** always get\n189:   `preflight=false`.\n190: \n191: A `full-ci` label or a classifier failure on a PR forces `full`, and so turns\n192: preflight on.\n193: \n194: **What it runs.** It uses the same allowlist construction and flags as the\n195: shards' `repo_wide` leg. An empty allowlist fails the step loudly:\n196: \n197: ```\n198: LU_PYTEST_SHARD_FILES=<repo_wide list> pytest tests \\\n199:   -m 'repo_wide and not slow and not atlas_release' --strict-markers \\\n200:   -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \\\n201:   --timeout-method=thread --override-ini addopts=-v\n202: ```\n203: \n204: A second invocation then runs the files registered in the job's\n205: `PREFLIGHT_EXTRA_TESTS` env, one path per line, under\n206: `-m 'not slow and not atlas_release'` with the same flags. These are cheap\n207: invariants that fail often but are not `repo_wide`. Today the list holds only\n208: `tests/curriculum/arc/test_decisions_record.py`, the cross-file hash\n209: invariant that caused 7 of the 40 sampled PR failures. On its own it takes\n210: about 5 s. An empty list also fails loudly. `tests/test_ci_preflight.py`\n211: checks that every registered path exists and is not already `repo_wide`.\n212: Both invocations always run, so one run reports every broken invariant; the\n213: step fails if either one failed.\n214: \n215: **Setup.** Preflight uses the same Python and uv install as the shards, and\n216: the same Atlas manifest hydrate. It leaves out the Postgres service, Node/npm\n217: and the native apt packages (bubblewrap, libpq, apparmor), because no\n218: `repo_wide` test uses them: no marked file mentions a Postgres DSN,\n219: `psycopg` or `bwrap`, and the one that mentions `npm` stubs it. The checkout\n220: is shallow. The whole selection passes in a fresh depth-1 clone with no\n221: Postgres DSN and no `node_modules`. `timeout-minutes: 8`.\n222: \n223: **Parallel, not gating.** No shard `needs: preflight`, and the shards still\n224: run the `repo_wide` tests as the backstop, so a green run is no slower.\n225: Nothing is cancelled when preflight fails. Preflight only makes the red\n226: signal arrive earlier.\n227: \n228: **CI Gate rule.** This rule lives in the gate step:\n229: \n230: - `preflight=true`: the Preflight result must be `success`. `failure`,\n231:   `cancelled` and `skipped` all fail the gate.\n232: - `preflight=false`: the Preflight result must be `skipped`.\n233: - If Changes itself did not succeed, the gate fails before it reaches this\n234:   rule.\n235: \n236: `merge_group` and nightly runs have no preflight. Their gate evaluation is\n237: unchanged apart from the `preflight=false → skipped` branch.\n238: \n239: **Superseded runs.** A new push to the same PR cancels the superseded run\n240: through the workflow `concurrency` group. CI Gate is `if: always()`, so it\n241: still runs for that stale SHA and fails there (see the `concurrency` comment\n242: in `ci.yml`). That red lands on a commit that is no longer the PR head. The\n243: replacement run on the new head is the one that decides the PR.\n244: \n245: ## pytest shard collection and balance (ci-shard-balance-2026-09-07)\n246: \n247: The code pytest shards run on all 4 runner vCPUs (`-n logical`, not `-n auto`\n248: which counts physical cores), collect through one initial `tests` path\n249: instead of positional file arguments, and balance by measured per-file\n250: duration instead of a modulo split. Full-tier shard count (`4`) is declared\n251: once in `ci.yml`'s workflow-level `env: PYTEST_SHARD_COUNT`. The Changes job\n252: emits `shard_count` (1 or 4) and `shards`; `plan-files` always uses\n253: `needs.changes.outputs.shard_count` so selected mode never LPT-partitions a\n254: candidate set into unused buckets.\n255: `--max-worker-restart=0` fails the job on a worker crash: pytest-timeout's\n256: thread method terminates the process, and replacing it can leave xdist\n257: hanging until the job limit.\n258: \n259: Dispatch workers are a separate host from these runners. SCOPE for #8645\n260: part B: this guards workers against accidental xdist fan-out and concurrent\n261: full suites. It is not a sandbox against deliberate evasion; parts A (memory\n262: admission) and C (per-worker cgroup) are the hard limits.\n263: \n264: When `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `scripts/ci/pytest_dispatch_cap.py`\n265: clamps xdist to two workers. `pyproject.toml` `addopts` still passes\n266: `-p ci.pytest_dispatch_cap`, and `scripts/delegate.py` also sets\n267: `PYTEST_PLUGINS=ci.pytest_dispatch_cap` (appended when the variable is already\n268: set). `build_agent_env` forwards that variable into the agent CLI only while\n269: the dispatch marker is set, and only as the single entry\n270: `ci.pytest_dispatch_cap` — any other comma-separated plugin name is dropped.\n271: A worker that copies CI's `--override-ini addopts=-v` therefore still loads\n272: the cap. The `pythonpath` ini key is separate from `addopts` and still\n273: makes `ci.pytest_dispatch_cap` importable. The plugin is idempotent when both\n274: registrations load it. `-n auto`, `-n logical`, and an explicit `-n` use\n275: `--maxprocesses=2`. A `--tx` spec whose expanded worker count is greater than\n276: 2 (for example `--tx 3*popen`) is a usage error before configuration; the cap\n277: does not rewrite the spec. A full-suite invocation takes one non-blocking lock\n278: under `/var/tmp/lu/learn-ukrainian/` (`LU_PYTEST_FULL_SUITE_LOCK` overrides\n279: that path). The fd is stored on the pytest config that acquired it and\n280: released only in that run's `pytest_unconfigure`, so a nested `pytest.main()`\n281: does not drop the outer run's lock. CI does not set the dispatch variable\n282: (see `.github/workflows/`), so shard `-n logical` is unchanged. A second\n283: full-suite run on a dispatch host fails immediately and tells the worker to\n284: run targeted tests.\n285: \n286: **Collection — allowlist hook.** `tests/conftest.py` implements\n287: `pytest_ignore_collect`, gated on env var `LU_PYTEST_SHARD_FILES`: unset,\n288: collection is completely unchanged (local dev, `docs_skills` lane); set, it\n289: must point at a readable, non-empty, newline-delimited list of repo-relative\n290: `test_*.py` paths with no duplicates — anything else (missing, unreadable,\n291: malformed, empty) raises loudly at first collection. Directories are never\n292: filtered by the hook: it explicitly admits them and allowed files, overriding\n293: pytest's default `norecursedirs` exclusions such as `build`; other files are\n294: ignored. This preserves the tracked-file selection, including `tests/build/`.\n295: \n296: **Balance — `scripts/ci/pytest_shards.py` file plane.** Two new subcommands,\n297: extending the existing planner (Cursor Cloud's node-ID plane — `plan` /\n298: `plan-shard` / `run` / `verify-artifacts` — is untouched):\n299: \n300: - `plan-files --shard-id N --shard-count K --durations <json> --output <path>`:\n301:   reads candidate repo-relative file paths from stdin (`ci.yml` pipes in\n302:   `git ls-files -- tests | grep -E '/test_[^/]+\\.py$' | sort`), LPT-assigns\n303:   them across `K` shards from the committed duration snapshot (median\n304:   fallback for files without history), writes shard `N`'s sorted allowlist,\n305:   and prints every shard's predicted weight.\n306: - `file-durations --junit <xml>... --output <json>`: refreshes the committed\n307:   snapshot from JUnit reports. Aggregation policy: a JUnit\n308:   `<testcase time=\"...\">` already sums setup+call+teardown for that node\n309:   (pytest's own writer combines the three), so no phase decomposition is\n310:   attempted; the same node ID appearing in more than one report (a rerun, or\n311:   the same file spanning several reports) keeps the maximum, not the sum,\n312:   before per-file totals are formed; a testcase whose `classname`/`name`\n313:   doesn't resolve to a repo test file is skipped and counted, never raised.\n314: \n315: **Snapshot refresh procedure.** After a landing-tier CI run (`merge_group` or\n316: `push` to `main`), download each shard's uploaded `pytest-junit-shard-N`\n317: artifact and run:\n318: \n319: ```\n320: .venv/bin/python scripts/ci/pytest_shards.py file-durations \\\n321:   --junit pytest-shard-1.xml --junit pytest-shard-2.xml \\\n322:   --junit pytest-shard-3.xml --junit pytest-shard-4.xml \\\n323:   --output scripts/ci/pytest-file-durations.json\n324: ```\n325: \n326: Commit the refreshed snapshot (sorted keys, 3-decimal rounding) when shard\n327: balance measurably drifts — not on every green run.\n328: \n329: ## Cloud advisory runner dependency parity (#6977 slice A)\n330: \n331: `scripts/ci/cursor_cloud_full_pytest.sh` (the offline-verifiable Cursor cloud\n332: pytest prototype; see `docs/design/2026-09-06-cloud-agent-pytest-advisory.md`)\n333: mirrors this job's \"Install Python deps\" and \"Hydrate Atlas lexicon manifest\"\n334: steps: same lockfile exclude set (`torch`/`torchvision`/`open_clip_torch`/\n335: `stanza`), `uv pip` when available, `packages/v4-runtime --no-build-isolation`\n336: + `build_assets.py`, and an unconditional hard-fail manifest hydrate. It also\n337: requires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as this job's\n338: disposable Postgres service) whenever control-plane tests are selected, and\n339: detects (never sudo-installs) the Linux native deps this job's \"Install\n340: native mechanism test dependencies\" step provisions (`bubblewrap`, `libpq`).\n341: **When this job's dependency install recipe changes, update the runner\n342: script to match** — a drifted runner is a false-green risk, not just stale\n343: docs (the whole point of that runner is offline/local sealed-run parity with\n344: this job). Runner ↔ CI parity is covered offline by\n345: `tests/ci/test_cursor_cloud_pytest_verify.py`; artifact transport, live cloud\n346: qualification and the advisory Check publisher remain open (operator/advisor\n347: GO required, see the design doc's \"Explicit open decision\" section).\n\n(End of file - total 347 lines)\n</content>",
+            "metadata": {
+              "preview": "# CI Gate\n\nNew workflow (Fable 5.1, 2026-09-03). `.github/workflows/ci.yml` is a short\nreplacement, not the old two-tier merge-queue file.\n\n`CI Gate` is the only required GitHub check. Same jobs on `pull_request` and\n`merge_group`, except Preflight, which runs on `pull_request` only.\n\n| Job | When |\n| --- | --- |\n| Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |\n| Preflight | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |\n| Ruff | not docs-only |\n| Secret scan | always |\n| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |\n| Contracts | not docs-only |\n| Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |\n| TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |\n| CI Gate | always |\n",
+              "truncated": false,
+              "loaded": [],
+              "display": {
+                "type": "file",
+                "path": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md",
+                "text": "# CI Gate\n\nNew workflow (Fable 5.1, 2026-09-03). `.github/workflows/ci.yml` is a short\nreplacement, not the old two-tier merge-queue file.\n\n`CI Gate` is the only required GitHub check. Same jobs on `pull_request` and\n`merge_group`, except Preflight, which runs on `pull_request` only.\n\n| Job | When |\n| --- | --- |\n| Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |\n| Preflight | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |\n| Ruff | not docs-only |\n| Secret scan | always |\n| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |\n| Contracts | not docs-only |\n| Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |\n| TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |\n| CI Gate | always |\n\nThe Changes job uses `scripts/ci/classify_changes.py`. Ordinary PRs skip\nruff/contracts and run one `docs_skills` pytest leg only when every path is\nMarkdown in docs/, shared skills, agent deploy trees, or the repository root,\nor belongs to curriculum/ or wiki/ without a `site/` path (the curriculum/wiki\nfast path predates the content class; the queue run is its safety net).\nFrontend denominator matches always override the docs exemption, including\n`packages/activity-kit/`. Unknown paths, including Markdown under unrecognized\nor executable trees, run the full pytest shard set and ruff/contracts;\nfrontend follows its denominator. All docs YAML, schemas, packages, dashboards,\ndependency manifests/locks, Python/pre-commit configuration, and scripts/config\nor scripts/ci changes therefore run the full PR-tier floor.\n\nContent class (#8399): learner content under `curriculum/l2-uk-en/`,\n`curriculum/l2-uk-direct/`, `site/src/content/docs/`, or `wiki/`, minus the\ncode-imported files inside those roots (each forces full on both events and\nis excluded from the docs exemption): any `curriculum/**/curriculum.yaml`,\n`curriculum/l2-uk-direct/manifest.yaml`,\n`curriculum/l2-uk-direct/bolshakova-letter-order.yaml`,\n`curriculum/l2-uk-en/module-mapping.json`, `curriculum/l2-uk-en/vocabulary.db`,\nand any `*.py`/`*.db`/`*.sqlite` or track-root `*.json` under the roots (the\nimporters are listed in `is_code_load_bearing_content`'s docstring). The\nevents then differ deliberately:\n\n- **pull_request**: the content class applies only when every changed path is\n  content class AND at least one is `site/src/content/docs/**` — the case\n  that used to fall to full because `frontend` was true (PR #8384). A PR\n  touching only `curriculum/**`/`wiki/**` keeps the docs fast path.\n- **merge_group**: classified with the same path classes as a PR, using each\n  queue entry's own changed paths (ALLGREEN), so a group can resolve to any\n  tier. Any lookup failure or ambiguity resolves to `full`.\n\nThe content class emits `pytest_mode=content`: one shard running\n`-m 'reads_content and not slow and not atlas_release'` (same filters and\n`--timeout=120` as the full PR tier) plus `tests/test_ci_shard_partition.py`,\nwith Ruff, Contracts and the Frontend build still on (`docs_only=false`,\n`frontend=true`). The marker is load-bearing:\n`tests/test_reads_content_marker_invariant.py` fails when a test module\nreferences those content roots without carrying `reads_content`, so new\ncontent-reading tests cannot silently fall out of the class.\n\nCI runs on `pull_request` opened/synchronize/reopened; labels and PR-body\nedits do not start it. `full-ci` is read from the PR's current labels\n(case-insensitive, fail closed) on the next PR push and in every merge-queue\nrun, where every PR in the group is resolved from the queue refs. A label added\nafter a green PR run does not rerun it: push again, or rely on the merge queue.\nManual runs and the daily 03:30 UTC schedule in `ci.yml` use that same full\nfloor (`not atlas_release and not slow`). `pytest-slow-nightly.yml` remains the\nseparate slow selection; this adds no retries or duplicate slow-test execution.\nMissing/malformed comparison data, API errors, empty changes, and the compare\nAPI's 300-file cap fail closed to the full tier including frontend.\n\nScripts/`tests/`-only PRs that pass the selected allowlist run\n`pytest_mode=selected`: one matrix job, `shard_count=1`, and `plan-files`\nstdin from `pytest_candidates` (resolved once in Changes — no re-derive in\npytest). Shared-root denylist hits (`.github/`, `scripts/ci|config|build/`,\nconftest, locks, packages/schemas/site/curriculum, etc.), non-test files under\n`tests/`, non-`.py` under `scripts/`, stem collisions, unmapped scripts, deleted\ntest files, empty or ≥80 candidates, and anything outside the allowlist stay\n`pytest_mode=full` with four shards. Contracts and ruff stay on whenever\n`docs_only=false`. After merge, the CI stream owner tracks one week of\n`ci_timings` on the private work item (selected may be rare under on-disk stem\ncollision conservatism).\n\n## Repo-wide tests always run in the selected and docs tiers (#8707)\n\nImport selection can never pick a test that scans the repository's own trees:\nthe Changes job links a changed `scripts/foo.py` to `tests/**/test_foo*.py` (and\na changed `tests/test_x.py` to itself), but a test scanning `tests/` or\n`scripts/` has no import edge to the changed module. That is how PR #8692\nmerged green on the selected tier and then turned `main` red on shard 3 for\nevery full-tier run: `tests/test_lint_test_assertions.py::test_repo_test_suite_is_clean`\nscans all of `tests/` and was never selected for a `tests/orchestration/test_thread_handoff.py`\nchange.\n\nSuch tests carry the `repo_wide` marker (registered in `pyproject.toml`). After\nthe candidate run, a `selected` shard runs the marked set under its own narrow\nallowlist:\n\n```\ngit ls-files -- tests | grep -E '/test_[^/]+\\.py$' \\\n  | xargs -r grep -lE 'pytest\\.mark\\.repo_wide' | sort\nLU_PYTEST_SHARD_FILES=<that list> pytest tests \\\n  -m 'repo_wide and not slow and not atlas_release' -n logical --dist=loadfile ...\n```\n\nThe narrow allowlist keeps collection cheap (the full tree is ~2 minutes to\ncollect); the known set currently runs ~400 tests in under two minutes. An\nempty list fails the step loudly. The grep matches the exact marker\ndeclaration, not a bare `repo_wide` mention, so a comment or an unrelated\nstring cannot pull a file into the allowlist (the `-m` filter would skip it\nanyway, but the list stays honest).\n\nThe **docs lane** runs the same `-m repo_wide` invocation after its\n`docs_skills` run. Docs-lane PRs reach no other pytest leg, and several\nrepo-wide scanners read `docs/`: `tests/test_work_privacy.py`,\n`tests/test_agent_fleet_tooling_guardrails.py`, and\n`tests/test_public_tree_no_baked_host_run_root.py`. A docs-only PR that adds a\nbaked host path under `docs/` is therefore caught before merge.\n\nThe **content lane** deliberately runs no `-m repo_wide` leg: content mode runs\n`-m 'reads_content and not slow and not atlas_release'` (plus the shard safety\nnet), so a scanner of a content root is selected by its `reads_content` marker\nwithout a repo-wide pass. Which lane a content-only PR reaches decides whether\nthat marker is enough:\n\n- A PR whose paths are all content-class and include a `site/src/content/docs/`\n  path lands on the **content lane**, which runs `reads_content`: scanners of\n  that tree, for example `tests/test_site_links.py`, run here.\n- A PR touching only `curriculum/` or `wiki/` — no `site/src/content/docs/`\n  path — is docs-only and lands on the **docs lane**. Since #8720 the docs lane\n  also runs `-m 'reads_content and not slow and not atlas_release'` (under the\n  same narrow allowlist as the `repo_wide` leg) whenever the flag\n  `docs_reads_content` is `true`, which `classify_changes.py` sets only for a\n  docs-lane result with some path under `curriculum/` or `wiki/`. This closes\n  the gap that let PR #8712 (a docs-only change) merge green and turn `main`\n  red on the next full-tier run: `docs/epics/fresh-build-build-program.md` is a\n  hashed source of every `curriculum/l2-uk-en/lesson-plans/<lvl>/_decisions.yaml`,\n  and `tests/curriculum/arc/test_decisions_record.py` (a `reads_content` module)\n  went red on `main`. A few curriculum and wiki scanners are marked `repo_wide`\n  and ran there before #8720: `tests/test_ohoiko_source_inventory_scope.py`,\n  `tests/test_prompt_template_render.py`, `tests/test_a1_review_scores.py`,\n  `tests/test_aggregate_findings.py`, `tests/test_schema_validation.py`\n  (`test_a2_plans_match_module_schema`), and the reference checks in\n  `tests/test_skill_instruction_routes.py`; the new `reads_content` leg is what\n  covers the rest.\n\nRepo-wide tests that read a content tree and must also run on the content lane\ncarry `reads_content` as well: `tests/test_llm_reviewer_dispatch.py`,\n`tests/test_threshold_source_of_truth.py`, `tests/test_sparse_collection_guard.py`,\n`tests/test_public_tree_no_baked_host_run_root.py`,\n`tests/api/test_app_factory.py`, and\n`tests/test_curriculum_upgrade_no_host_run_root.py` are marked both ways, and\nnone is `slow`/`atlas_release`.\n\n`tests/test_repo_wide_marker_invariant.py` keeps the marker honest. Marker\ndetection is syntactic and per-function (AST): a test counts only when its own\n`@pytest.mark.repo_wide` decorator, its class decorator, or a module-level\n`pytestmark` contains `pytest.mark.repo_wide`, so decorator order and comments\ndo not matter and a module with two scanners and one marker fails. The\nauthoritative guarantee is the explicit registry of known repo-wide\nmodules/functions plus a reasoned `NOT_REPO_WIDE` escape hatch; the AST\nheuristic over each test module (repo-rooted `.glob`/`.rglob`,\n`os.walk`/`os.scandir`, `git ls-files`/`ls-tree` through `subprocess`, and\nknown whole-tree linters, propagated through helper calls) is a best-effort\nnet. The invariant also fails when the selected tier or the docs lane drops\nits `-m repo_wide` invocation.\n\nNo CF attest. No auto-arm. No landing-class classifier. No coverage floor.\nRed team review is out of band.\n\n## Early PR preflight (#8750 phase A)\n\nThe `Preflight` job reports a broken repo-wide invariant (a missing\n`subprocess` timeout, the test-assertion lint, the marker invariants) in a few\nminutes instead of after a full pytest shard. Before it, the p50 time to the\nfirst failed job on a full PR run was about 13 minutes.\n\n**When it runs.** `scripts/ci/classify_changes.py` decides once and emits\n`preflight`. `preflight_for()` returns `true` only for a `pull_request` event\nwhose tier is `full` or `selected`: the tiers whose shards run the\n`repo_wide` set. The Preflight job's `if:` and CI Gate both read that one\noutput, and nothing in `ci.yml` re-derives it. The other lanes get no\npreflight:\n\n- The **docs** lane already runs `repo_wide` in its single short shard.\n- The **content** and **frontend** lanes do not run `repo_wide` at all, so a\n  preflight there would change what the gate proves.\n- **`merge_group`, `schedule` and `workflow_dispatch`** always get\n  `preflight=false`.\n\nA `full-ci` label or a classifier failure on a PR forces `full`, and so turns\npreflight on.\n\n**What it runs.** It uses the same allowlist construction and flags as the\nshards' `repo_wide` leg. An empty allowlist fails the step loudly:\n\n```\nLU_PYTEST_SHARD_FILES=<repo_wide list> pytest tests \\\n  -m 'repo_wide and not slow and not atlas_release' --strict-markers \\\n  -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \\\n  --timeout-method=thread --override-ini addopts=-v\n```\n\nA second invocation then runs the files registered in the job's\n`PREFLIGHT_EXTRA_TESTS` env, one path per line, under\n`-m 'not slow and not atlas_release'` with the same flags. These are cheap\ninvariants that fail often but are not `repo_wide`. Today the list holds only\n`tests/curriculum/arc/test_decisions_record.py`, the cross-file hash\ninvariant that caused 7 of the 40 sampled PR failures. On its own it takes\nabout 5 s. An empty list also fails loudly. `tests/test_ci_preflight.py`\nchecks that every registered path exists and is not already `repo_wide`.\nBoth invocations always run, so one run reports every broken invariant; the\nstep fails if either one failed.\n\n**Setup.** Preflight uses the same Python and uv install as the shards, and\nthe same Atlas manifest hydrate. It leaves out the Postgres service, Node/npm\nand the native apt packages (bubblewrap, libpq, apparmor), because no\n`repo_wide` test uses them: no marked file mentions a Postgres DSN,\n`psycopg` or `bwrap`, and the one that mentions `npm` stubs it. The checkout\nis shallow. The whole selection passes in a fresh depth-1 clone with no\nPostgres DSN and no `node_modules`. `timeout-minutes: 8`.\n\n**Parallel, not gating.** No shard `needs: preflight`, and the shards still\nrun the `repo_wide` tests as the backstop, so a green run is no slower.\nNothing is cancelled when preflight fails. Preflight only makes the red\nsignal arrive earlier.\n\n**CI Gate rule.** This rule lives in the gate step:\n\n- `preflight=true`: the Preflight result must be `success`. `failure`,\n  `cancelled` and `skipped` all fail the gate.\n- `preflight=false`: the Preflight result must be `skipped`.\n- If Changes itself did not succeed, the gate fails before it reaches this\n  rule.\n\n`merge_group` and nightly runs have no preflight. Their gate evaluation is\nunchanged apart from the `preflight=false → skipped` branch.\n\n**Superseded runs.** A new push to the same PR cancels the superseded run\nthrough the workflow `concurrency` group. CI Gate is `if: always()`, so it\nstill runs for that stale SHA and fails there (see the `concurrency` comment\nin `ci.yml`). That red lands on a commit that is no longer the PR head. The\nreplacement run on the new head is the one that decides the PR.\n\n## pytest shard collection and balance (ci-shard-balance-2026-09-07)\n\nThe code pytest shards run on all 4 runner vCPUs (`-n logical`, not `-n auto`\nwhich counts physical cores), collect through one initial `tests` path\ninstead of positional file arguments, and balance by measured per-file\nduration instead of a modulo split. Full-tier shard count (`4`) is declared\nonce in `ci.yml`'s workflow-level `env: PYTEST_SHARD_COUNT`. The Changes job\nemits `shard_count` (1 or 4) and `shards`; `plan-files` always uses\n`needs.changes.outputs.shard_count` so selected mode never LPT-partitions a\ncandidate set into unused buckets.\n`--max-worker-restart=0` fails the job on a worker crash: pytest-timeout's\nthread method terminates the process, and replacing it can leave xdist\nhanging until the job limit.\n\nDispatch workers are a separate host from these runners. SCOPE for #8645\npart B: this guards workers against accidental xdist fan-out and concurrent\nfull suites. It is not a sandbox against deliberate evasion; parts A (memory\nadmission) and C (per-worker cgroup) are the hard limits.\n\nWhen `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `scripts/ci/pytest_dispatch_cap.py`\nclamps xdist to two workers. `pyproject.toml` `addopts` still passes\n`-p ci.pytest_dispatch_cap`, and `scripts/delegate.py` also sets\n`PYTEST_PLUGINS=ci.pytest_dispatch_cap` (appended when the variable is already\nset). `build_agent_env` forwards that variable into the agent CLI only while\nthe dispatch marker is set, and only as the single entry\n`ci.pytest_dispatch_cap` — any other comma-separated plugin name is dropped.\nA worker that copies CI's `--override-ini addopts=-v` therefore still loads\nthe cap. The `pythonpath` ini key is separate from `addopts` and still\nmakes `ci.pytest_dispatch_cap` importable. The plugin is idempotent when both\nregistrations load it. `-n auto`, `-n logical`, and an explicit `-n` use\n`--maxprocesses=2`. A `--tx` spec whose expanded worker count is greater than\n2 (for example `--tx 3*popen`) is a usage error before configuration; the cap\ndoes not rewrite the spec. A full-suite invocation takes one non-blocking lock\nunder `/var/tmp/lu/learn-ukrainian/` (`LU_PYTEST_FULL_SUITE_LOCK` overrides\nthat path). The fd is stored on the pytest config that acquired it and\nreleased only in that run's `pytest_unconfigure`, so a nested `pytest.main()`\ndoes not drop the outer run's lock. CI does not set the dispatch variable\n(see `.github/workflows/`), so shard `-n logical` is unchanged. A second\nfull-suite run on a dispatch host fails immediately and tells the worker to\nrun targeted tests.\n\n**Collection — allowlist hook.** `tests/conftest.py` implements\n`pytest_ignore_collect`, gated on env var `LU_PYTEST_SHARD_FILES`: unset,\ncollection is completely unchanged (local dev, `docs_skills` lane); set, it\nmust point at a readable, non-empty, newline-delimited list of repo-relative\n`test_*.py` paths with no duplicates — anything else (missing, unreadable,\nmalformed, empty) raises loudly at first collection. Directories are never\nfiltered by the hook: it explicitly admits them and allowed files, overriding\npytest's default `norecursedirs` exclusions such as `build`; other files are\nignored. This preserves the tracked-file selection, including `tests/build/`.\n\n**Balance — `scripts/ci/pytest_shards.py` file plane.** Two new subcommands,\nextending the existing planner (Cursor Cloud's node-ID plane — `plan` /\n`plan-shard` / `run` / `verify-artifacts` — is untouched):\n\n- `plan-files --shard-id N --shard-count K --durations <json> --output <path>`:\n  reads candidate repo-relative file paths from stdin (`ci.yml` pipes in\n  `git ls-files -- tests | grep -E '/test_[^/]+\\.py$' | sort`), LPT-assigns\n  them across `K` shards from the committed duration snapshot (median\n  fallback for files without history), writes shard `N`'s sorted allowlist,\n  and prints every shard's predicted weight.\n- `file-durations --junit <xml>... --output <json>`: refreshes the committed\n  snapshot from JUnit reports. Aggregation policy: a JUnit\n  `<testcase time=\"...\">` already sums setup+call+teardown for that node\n  (pytest's own writer combines the three), so no phase decomposition is\n  attempted; the same node ID appearing in more than one report (a rerun, or\n  the same file spanning several reports) keeps the maximum, not the sum,\n  before per-file totals are formed; a testcase whose `classname`/`name`\n  doesn't resolve to a repo test file is skipped and counted, never raised.\n\n**Snapshot refresh procedure.** After a landing-tier CI run (`merge_group` or\n`push` to `main`), download each shard's uploaded `pytest-junit-shard-N`\nartifact and run:\n\n```\n.venv/bin/python scripts/ci/pytest_shards.py file-durations \\\n  --junit pytest-shard-1.xml --junit pytest-shard-2.xml \\\n  --junit pytest-shard-3.xml --junit pytest-shard-4.xml \\\n  --output scripts/ci/pytest-file-durations.json\n```\n\nCommit the refreshed snapshot (sorted keys, 3-decimal rounding) when shard\nbalance measurably drifts — not on every green run.\n\n## Cloud advisory runner dependency parity (#6977 slice A)\n\n`scripts/ci/cursor_cloud_full_pytest.sh` (the offline-verifiable Cursor cloud\npytest prototype; see `docs/design/2026-09-06-cloud-agent-pytest-advisory.md`)\nmirrors this job's \"Install Python deps\" and \"Hydrate Atlas lexicon manifest\"\nsteps: same lockfile exclude set (`torch`/`torchvision`/`open_clip_torch`/\n`stanza`), `uv pip` when available, `packages/v4-runtime --no-build-isolation`\n+ `build_assets.py`, and an unconditional hard-fail manifest hydrate. It also\nrequires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as this job's\ndisposable Postgres service) whenever control-plane tests are selected, and\ndetects (never sudo-installs) the Linux native deps this job's \"Install\nnative mechanism test dependencies\" step provisions (`bubblewrap`, `libpq`).\n**When this job's dependency install recipe changes, update the runner\nscript to match** — a drifted runner is a false-green risk, not just stale\ndocs (the whole point of that runner is offline/local sealed-run parity with\nthis job). Runner ↔ CI parity is covered offline by\n`tests/ci/test_cursor_cloud_pytest_verify.py`; artifact transport, live cloud\nqualification and the advisory Check publisher remain open (operator/advisor\nGO required, see the design doc's \"Explicit open decision\" section).",
+                "lineStart": 1,
+                "lineEnd": 347,
+                "totalLines": 347,
+                "truncated": false
+              }
+            },
+            "title": "docs/runbooks/ci-gate.md",
+            "time": {
+              "start": 1790298956441,
+              "end": 1790298956480
+            }
+          },
+          "id": "prt_0d622221b001qrFpqfN0KWgBO0",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d621e197001p43rE88BThZJst"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "c0483020418eb3cecee7c6ef9f3907ecf16be084",
+          "type": "step-finish",
+          "tokens": {
+            "total": 22290,
+            "input": 20546,
+            "output": 71,
+            "reasoning": 9,
+            "cache": {
+              "write": 0,
+              "read": 1664
+            }
+          },
+          "cost": 0.003134892,
+          "id": "prt_0d6222325001YBIt55CHEWB72h",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d621e197001p43rE88BThZJst"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs"
+        },
+        "cost": 0.001294116,
+        "tokens": {
+          "total": 29089,
+          "input": 6362,
+          "output": 146,
+          "reasoning": 309,
+          "cache": {
+            "write": 0,
+            "read": 22272
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790298956687,
+          "completed": 1790298959679
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d622238f001jC7fFwKVi4GkTA",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "snapshot": "c0483020418eb3cecee7c6ef9f3907ecf16be084",
+          "type": "step-start",
+          "id": "prt_0d6222656001uns6pyO4AqHHQ8",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d622238f001jC7fFwKVi4GkTA"
+        },
+        {
+          "type": "reasoning",
+          "text": "I need to add a \"Measured results (2026-09-25)\" subsection in the Early PR preflight section. Where exactly? After line 176 (the intro paragraph) or at end of section? The section runs from 171 to 243. Let me add it perhaps right after the intro paragraph (line 176) or at the end of the section before \"## pytest shard...\". \"in the existing 'Early PR preflight' section, add a short 'Measured results (2026-09-25)' subsection.\" A subsection likely as `###` heading. But document uses `**bold**` for sub-parts. The task says subsection. I'll add `### Measured results (2026-09-25)`.\n\nWhere to place? Probably after the intro \"When it runs\" ... Hmm. A natural place is at the end of the early preflight section, after \"Superseded runs\" paragraph (before line 245). But then measured results come after description. Actually placing right after the intro paragraph may be most visible. Let me place after line 176 (intro) so baseline numbers immediately follow the intro. Actually the intro already says \"p50 time to the first failed job on a full PR run was about 13 minutes.\" The measured subsection expands on that. Place after the intro makes sense.\n\nLet me check markdownlint config for line length etc. The doc lines are wrapped ~80 chars. Let me check .markdownlint config.",
+          "time": {
+            "start": 1790298957509,
+            "end": 1790298958908
+          },
+          "id": "prt_0d62226c5001ByMP1mSxJ3lhGN",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d622238f001jC7fFwKVi4GkTA"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_YEqb9nwBvBngzhrR9gTd4936",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cat /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/.markdownlint.json 2>/dev/null; cat /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/.markdownlint-cli2.jsonc 2>/dev/null; ls -a /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs | grep markdown"
+            },
+            "output": "{\n  \"$schema\": \"https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json\",\n  \"default\": true,\n  \"MD013\": false,\n  \"MD033\": false,\n  \"MD024\": {\n    \"siblings_only\": true\n  },\n  \"MD041\": false,\n  \"MD034\": false,\n  \"MD025\": false,\n  \"MD026\": false,\n  \"MD028\": false,\n  \"MD029\": false,\n  \"MD030\": false,\n  \"MD031\": false,\n  \"MD032\": false,\n  \"MD036\": false,\n  \"MD037\": false,\n  \"MD040\": false,\n  \"MD046\": false,\n  \"MD047\": true,\n  \"MD049\": {\n    \"style\": \"asterisk\"\n  },\n  \"MD050\": {\n    \"style\": \"asterisk\"\n  }\n}\n.markdownlint.json\n",
+            "metadata": {
+              "output": "{\n  \"$schema\": \"https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json\",\n  \"default\": true,\n  \"MD013\": false,\n  \"MD033\": false,\n  \"MD024\": {\n    \"siblings_only\": true\n  },\n  \"MD041\": false,\n  \"MD034\": false,\n  \"MD025\": false,\n  \"MD026\": false,\n  \"MD028\": false,\n  \"MD029\": false,\n  \"MD030\": false,\n  \"MD031\": false,\n  \"MD032\": false,\n  \"MD036\": false,\n  \"MD037\": false,\n  \"MD040\": false,\n  \"MD046\": false,\n  \"MD047\": true,\n  \"MD049\": {\n    \"style\": \"asterisk\"\n  },\n  \"MD050\": {\n    \"style\": \"asterisk\"\n  }\n}\n.markdownlint.json\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cat /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/.markdownlint.json 2>/dev/null; cat /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/.markdownlint-cli2.jsonc 2>/dev/null; ls -a /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs | grep markdown",
+            "time": {
+              "start": 1790298959226,
+              "end": 1790298959408
+            }
+          },
+          "id": "prt_0d6222c41001q50CWwiJtH9IB6",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d622238f001jC7fFwKVi4GkTA"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "c0483020418eb3cecee7c6ef9f3907ecf16be084",
+          "type": "step-finish",
+          "tokens": {
+            "total": 29089,
+            "input": 6362,
+            "output": 146,
+            "reasoning": 309,
+            "cache": {
+              "write": 0,
+              "read": 22272
+            }
+          },
+          "cost": 0.001294116,
+          "id": "prt_0d6222e97001oxo0U2DN3mjBHs",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d622238f001jC7fFwKVi4GkTA"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs"
+        },
+        "cost": 0.000613968,
+        "tokens": {
+          "total": 30120,
+          "input": 248,
+          "output": 461,
+          "reasoning": 355,
+          "cache": {
+            "write": 0,
+            "read": 29056
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790298959692,
+          "completed": 1790298963358
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d6222f4c001nr16PgWZ23ck4d",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "snapshot": "c0483020418eb3cecee7c6ef9f3907ecf16be084",
+          "type": "step-start",
+          "id": "prt_0d62232b5001Q57wGRGqWZ8xe5",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6222f4c001nr16PgWZ23ck4d"
+        },
+        {
+          "type": "reasoning",
+          "text": "Now add the subsection. I'll add after the intro paragraph (line 176), before \"**When it runs.**\". A `###` heading. Keep existing text unchanged.\n\nDraft, ≤ ~15 lines plain prose/list:\n\n### Measured results (2026-09-25)\n\nBaseline before phase A (459 CI runs, 2026-09-22 20:24Z to 2026-09-24 23:07Z):\n89% of PR runs take the full tier; time to first failed job on failing full PR\nruns p50 13.0 min, p95 29.2 min; pytest job queue p50 1.2 min, p95 12.7 min.\n\nHeld-out probe PR #8759 (a timeout-less `subprocess.run`): the preflight failed\non `tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts`\nafter 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s\nafter the run started; `CI Gate` was red; the shards' repo_wide backstop also\nfailed.\n\nKnown limit: the preflight competes with the pytest shards for runners. All CI\njobs are GitHub-hosted and concurrent jobs peak at the account's 20-job cap, so\nqueue time can dominate. Phase A.2 (issue #8750) consolidates short checks into\none `fast-checks` job.\n\nThat's 13 lines of content plus heading/blank. Good.\n\nWhere exactly? Insert after line 176. Let me do edit.",
+          "time": {
+            "start": 1790298960735,
+            "end": 1790298961916
+          },
+          "id": "prt_0d622335e001NNglbXNrA6BiwF",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6222f4c001nr16PgWZ23ck4d"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_00_5pT7l4xbKsqa5SK7kIUq1134",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md",
+              "oldString": "minutes instead of after a full pytest shard. Before it, the p50 time to the\nfirst failed job on a full PR run was about 13 minutes.\n\n**When it runs.**",
+              "newString": "minutes instead of after a full pytest shard. Before it, the p50 time to the\nfirst failed job on a full PR run was about 13 minutes.\n\n### Measured results (2026-09-25)\n\nBaseline before phase A (459 CI runs, 2026-09-22 20:24Z to 2026-09-24 23:07Z):\n89% of PR runs take the full tier; time to first failed job on failing full PR\nruns p50 13.0 min, p95 29.2 min; pytest job queue p50 1.2 min, p95 12.7 min.\n\nHeld-out probe PR #8759 (a timeout-less `subprocess.run`): the preflight failed\non `tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts`\nafter 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s\nafter the run started; `CI Gate` was red; the shards' repo_wide backstop also\nfailed.\n\nKnown limit: the preflight competes with the pytest shards for runners. All CI\njobs are GitHub-hosted and concurrent jobs peak at the account's 20-job cap, so\nqueue time can dominate. Phase A.2 (issue #8750) consolidates short checks into\none `fast-checks` job.\n\n**When it runs.**"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md\n===================================================================\n--- /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md\n+++ /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md\n@@ -174,8 +174,25 @@\n `subprocess` timeout, the test-assertion lint, the marker invariants) in a few\n minutes instead of after a full pytest shard. Before it, the p50 time to the\n first failed job on a full PR run was about 13 minutes.\n \n+### Measured results (2026-09-25)\n+\n+Baseline before phase A (459 CI runs, 2026-09-22 20:24Z to 2026-09-24 23:07Z):\n+89% of PR runs take the full tier; time to first failed job on failing full PR\n+runs p50 13.0 min, p95 29.2 min; pytest job queue p50 1.2 min, p95 12.7 min.\n+\n+Held-out probe PR #8759 (a timeout-less `subprocess.run`): the preflight failed\n+on `tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts`\n+after 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s\n+after the run started; `CI Gate` was red; the shards' repo_wide backstop also\n+failed.\n+\n+Known limit: the preflight competes with the pytest shards for runners. All CI\n+jobs are GitHub-hosted and concurrent jobs peak at the account's 20-job cap, so\n+queue time can dominate. Phase A.2 (issue #8750) consolidates short checks into\n+one `fast-checks` job.\n+\n **When it runs.** `scripts/ci/classify_changes.py` decides once and emits\n `preflight`. `preflight_for()` returns `true` only for a `pull_request` event\n whose tier is `full` or `selected`: the tiers whose shards run the\n `repo_wide` set. The Preflight job's `if:` and CI Gate both read that one\n",
+              "filediff": {
+                "file": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md",
+                "patch": "Index: /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md\n===================================================================\n--- /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md\n+++ /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md\n@@ -174,8 +174,25 @@\n `subprocess` timeout, the test-assertion lint, the marker invariants) in a few\n minutes instead of after a full pytest shard. Before it, the p50 time to the\n first failed job on a full PR run was about 13 minutes.\n \n+### Measured results (2026-09-25)\n+\n+Baseline before phase A (459 CI runs, 2026-09-22 20:24Z to 2026-09-24 23:07Z):\n+89% of PR runs take the full tier; time to first failed job on failing full PR\n+runs p50 13.0 min, p95 29.2 min; pytest job queue p50 1.2 min, p95 12.7 min.\n+\n+Held-out probe PR #8759 (a timeout-less `subprocess.run`): the preflight failed\n+on `tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts`\n+after 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s\n+after the run started; `CI Gate` was red; the shards' repo_wide backstop also\n+failed.\n+\n+Known limit: the preflight competes with the pytest shards for runners. All CI\n+jobs are GitHub-hosted and concurrent jobs peak at the account's 20-job cap, so\n+queue time can dominate. Phase A.2 (issue #8750) consolidates short checks into\n+one `fast-checks` job.\n+\n **When it runs.** `scripts/ci/classify_changes.py` decides once and emits\n `preflight`. `preflight_for()` returns `true` only for a `pull_request` event\n whose tier is `full` or `selected`: the tiers whose shards run the\n `repo_wide` set. The Preflight job's `if:` and CI Gate both read that one\n",
+                "additions": 17,
+                "deletions": 0
+              },
+              "truncated": false
+            },
+            "title": "docs/runbooks/ci-gate.md",
+            "time": {
+              "start": 1790298963049,
+              "end": 1790298963081
+            }
+          },
+          "id": "prt_0d6223803001C1ZU36HwsKAEc9",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6222f4c001nr16PgWZ23ck4d"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-finish",
+          "tokens": {
+            "total": 30120,
+            "input": 248,
+            "output": 461,
+            "reasoning": 355,
+            "cache": {
+              "write": 0,
+              "read": 29056
+            }
+          },
+          "cost": 0.000613968,
+          "id": "prt_0d6223d2c001y0Y0s0yLkBkQUf",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6222f4c001nr16PgWZ23ck4d"
+        },
+        {
+          "type": "patch",
+          "hash": "c0483020418eb3cecee7c6ef9f3907ecf16be084",
+          "files": [
+            "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md"
+          ],
+          "id": "prt_0d6223d97001WfFbfX8oXaocq4",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6222f4c001nr16PgWZ23ck4d"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs"
+        },
+        "cost": 0.000187506,
+        "tokens": {
+          "total": 30252,
+          "input": 183,
+          "output": 99,
+          "reasoning": 18,
+          "cache": {
+            "write": 0,
+            "read": 29952
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790298963364,
+          "completed": 1790298967006
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d6223da4001H1ArHFZ0Tmji1t",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-start",
+          "id": "prt_0d6224065001uAmdh5QZuJTPC6",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6223da4001H1ArHFZ0Tmji1t"
+        },
+        {
+          "type": "reasoning",
+          "text": "Now verify markdownlint. Check if npx markdownlint-cli2 available.",
+          "time": {
+            "start": 1790298964619,
+            "end": 1790298964801
+          },
+          "id": "prt_0d622428b001c2qlwusojEo9RH",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6223da4001H1ArHFZ0Tmji1t"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_qxaTA58xt5t56iVD4jYH6225",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs && npx --no-install markdownlint-cli2 docs/runbooks/ci-gate.md 2>&1 | tail -30; echo \"EXIT:$?\""
+            },
+            "output": "markdownlint-cli2 v0.20.0 (markdownlint v0.40.0)\nFinding: docs/runbooks/ci-gate.md\nLinting: 1 file(s)\nSummary: 1 error(s)\ndocs/runbooks/ci-gate.md:353:1 error MD004/ul-style Unordered list style [Expected: dash; Actual: plus]\nEXIT:0\n",
+            "metadata": {
+              "output": "markdownlint-cli2 v0.20.0 (markdownlint v0.40.0)\nFinding: docs/runbooks/ci-gate.md\nLinting: 1 file(s)\nSummary: 1 error(s)\ndocs/runbooks/ci-gate.md:353:1 error MD004/ul-style Unordered list style [Expected: dash; Actual: plus]\nEXIT:0\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cd /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs && npx --no-install markdownlint-cli2 docs/runbooks/ci-gate.md 2>&1 | tail -30; echo \"EXIT:$?\"",
+            "time": {
+              "start": 1790298965305,
+              "end": 1790298966778
+            }
+          },
+          "id": "prt_0d6224345001iO8JsXOyt3w1MY",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6223da4001H1ArHFZ0Tmji1t"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-finish",
+          "tokens": {
+            "total": 30252,
+            "input": 183,
+            "output": 99,
+            "reasoning": 18,
+            "cache": {
+              "write": 0,
+              "read": 29952
+            }
+          },
+          "cost": 0.000187506,
+          "id": "prt_0d6224b6d001DQ2R0EjIVExuIv",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6223da4001H1ArHFZ0Tmji1t"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs"
+        },
+        "cost": 0.000234474,
+        "tokens": {
+          "total": 30555,
+          "input": 143,
+          "output": 103,
+          "reasoning": 101,
+          "cache": {
+            "write": 0,
+            "read": 30208
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790298967018,
+          "completed": 1790298969170
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d6224bea001aP3O30OX5jxt0T",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-start",
+          "id": "prt_0d6224eb6001ZMgDgw7YUJm22l",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6224bea001aP3O30OX5jxt0T"
+        },
+        {
+          "type": "reasoning",
+          "text": "One error at line 353. Let me check whether it's pre-existing (in the last paragraph lines ~353). My insertion shifted line numbers by +19. Line 353 now corresponds to original line 334 probably. Let me check original: line 335-347 were the last section. The `+` list? Let me look. Actually the \"Cloud advisory runner dependency parity\" section had no list. Wait line 353 with `+`. Let me view lines 345-360.",
+          "time": {
+            "start": 1790298968111,
+            "end": 1790298968706
+          },
+          "id": "prt_0d622502f0011pnGaKEMy5LPmT",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6224bea001aP3O30OX5jxt0T"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_00_nxAQLwycl5nEC3vwEpi35699",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md",
+              "offset": 345,
+              "limit": 20
+            },
+            "output": "<path>/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md</path>\n<type>file</type>\n<content>\n345: \n346: ## Cloud advisory runner dependency parity (#6977 slice A)\n347: \n348: `scripts/ci/cursor_cloud_full_pytest.sh` (the offline-verifiable Cursor cloud\n349: pytest prototype; see `docs/design/2026-09-06-cloud-agent-pytest-advisory.md`)\n350: mirrors this job's \"Install Python deps\" and \"Hydrate Atlas lexicon manifest\"\n351: steps: same lockfile exclude set (`torch`/`torchvision`/`open_clip_torch`/\n352: `stanza`), `uv pip` when available, `packages/v4-runtime --no-build-isolation`\n353: + `build_assets.py`, and an unconditional hard-fail manifest hydrate. It also\n354: requires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as this job's\n355: disposable Postgres service) whenever control-plane tests are selected, and\n356: detects (never sudo-installs) the Linux native deps this job's \"Install\n357: native mechanism test dependencies\" step provisions (`bubblewrap`, `libpq`).\n358: **When this job's dependency install recipe changes, update the runner\n359: script to match** — a drifted runner is a false-green risk, not just stale\n360: docs (the whole point of that runner is offline/local sealed-run parity with\n361: this job). Runner ↔ CI parity is covered offline by\n362: `tests/ci/test_cursor_cloud_pytest_verify.py`; artifact transport, live cloud\n363: qualification and the advisory Check publisher remain open (operator/advisor\n364: GO required, see the design doc's \"Explicit open decision\" section).\n\n(End of file - total 364 lines)\n</content>",
+            "metadata": {
+              "preview": "\n## Cloud advisory runner dependency parity (#6977 slice A)\n\n`scripts/ci/cursor_cloud_full_pytest.sh` (the offline-verifiable Cursor cloud\npytest prototype; see `docs/design/2026-09-06-cloud-agent-pytest-advisory.md`)\nmirrors this job's \"Install Python deps\" and \"Hydrate Atlas lexicon manifest\"\nsteps: same lockfile exclude set (`torch`/`torchvision`/`open_clip_torch`/\n`stanza`), `uv pip` when available, `packages/v4-runtime --no-build-isolation`\n+ `build_assets.py`, and an unconditional hard-fail manifest hydrate. It also\nrequires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as this job's\ndisposable Postgres service) whenever control-plane tests are selected, and\ndetects (never sudo-installs) the Linux native deps this job's \"Install\nnative mechanism test dependencies\" step provisions (`bubblewrap`, `libpq`).\n**When this job's dependency install recipe changes, update the runner\nscript to match** — a drifted runner is a false-green risk, not just stale\ndocs (the whole point of that runner is offline/local sealed-run parity with\nthis job). Runner ↔ CI parity is covered offline by\n`tests/ci/test_cursor_cloud_pytest_verify.py`; artifact transport, live cloud\nqualification and the advisory Check publisher remain open (operator/advisor\nGO required, see the design doc's \"Explicit open decision\" section).",
+              "truncated": false,
+              "loaded": [],
+              "display": {
+                "type": "file",
+                "path": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs/docs/runbooks/ci-gate.md",
+                "text": "\n## Cloud advisory runner dependency parity (#6977 slice A)\n\n`scripts/ci/cursor_cloud_full_pytest.sh` (the offline-verifiable Cursor cloud\npytest prototype; see `docs/design/2026-09-06-cloud-agent-pytest-advisory.md`)\nmirrors this job's \"Install Python deps\" and \"Hydrate Atlas lexicon manifest\"\nsteps: same lockfile exclude set (`torch`/`torchvision`/`open_clip_torch`/\n`stanza`), `uv pip` when available, `packages/v4-runtime --no-build-isolation`\n+ `build_assets.py`, and an unconditional hard-fail manifest hydrate. It also\nrequires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as this job's\ndisposable Postgres service) whenever control-plane tests are selected, and\ndetects (never sudo-installs) the Linux native deps this job's \"Install\nnative mechanism test dependencies\" step provisions (`bubblewrap`, `libpq`).\n**When this job's dependency install recipe changes, update the runner\nscript to match** — a drifted runner is a false-green risk, not just stale\ndocs (the whole point of that runner is offline/local sealed-run parity with\nthis job). Runner ↔ CI parity is covered offline by\n`tests/ci/test_cursor_cloud_pytest_verify.py`; artifact transport, live cloud\nqualification and the advisory Check publisher remain open (operator/advisor\nGO required, see the design doc's \"Explicit open decision\" section).",
+                "lineStart": 345,
+                "lineEnd": 364,
+                "totalLines": 364,
+                "truncated": false
+              }
+            },
+            "title": "docs/runbooks/ci-gate.md",
+            "time": {
+              "start": 1790298968904,
+              "end": 1790298968961
+            }
+          },
+          "id": "prt_0d6225287001hbuRHBMLPa9IkI",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6224bea001aP3O30OX5jxt0T"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-finish",
+          "tokens": {
+            "total": 30555,
+            "input": 143,
+            "output": 103,
+            "reasoning": 101,
+            "cache": {
+              "write": 0,
+              "read": 30208
+            }
+          },
+          "cost": 0.000234474,
+          "id": "prt_0d62253e5001U4DdVlCTxF17ZC",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6224bea001aP3O30OX5jxt0T"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs"
+        },
+        "cost": 0.000345492,
+        "tokens": {
+          "total": 31291,
+          "input": 538,
+          "output": 104,
+          "reasoning": 185,
+          "cache": {
+            "write": 0,
+            "read": 30464
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790298969175,
+          "completed": 1790298972535
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d6225457001zdGVXdvV4PAduj",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-start",
+          "id": "prt_0d6225764001z2JzDEDI6RLVgi",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6225457001zdGVXdvV4PAduj"
+        },
+        {
+          "type": "reasoning",
+          "text": "The MD004 error at 353 is a false positive? Line 353 begins with `+ \\`build_assets.py\\`` — actually that's a continuation of a sentence where `(`torch`/`torchvision`/`open_clip_torch`/`stanza`), `uv pip` when available, `packages/v4-runtime --no-build-isolation` + `build_assets.py``. The `+` at start of line is being parsed as a list item. This is pre-existing (original line 334). Not caused by my change. Let me confirm by running markdownlint on original (git show HEAD version). Actually easier: it's clearly pre-existing content untouched by me. Report separately.\n\nLet me verify by stashing? Just check git diff to confirm only my hunk changed. And run markdownlint against HEAD version via process substitution.",
+          "time": {
+            "start": 1790298970329,
+            "end": 1790298971214
+          },
+          "id": "prt_0d62258d9001CeIOuABGu56Ncg",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6225457001zdGVXdvV4PAduj"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_B73OtKqFg48rOQdcBNhT2382",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs && git diff --stat && npx --no-install markdownlint-cli2 <(git show HEAD:docs/runbooks/ci-gate.md) 2>&1 | tail -8"
+            },
+            "output": " docs/runbooks/ci-gate.md | 17 +++++++++++++++++\n 1 file changed, 17 insertions(+)\nmarkdownlint-cli2 v0.20.0 (markdownlint v0.40.0)\nFinding: /dev/fd/63\nLinting: 0 file(s)\nSummary: 0 error(s)\n",
+            "metadata": {
+              "output": " docs/runbooks/ci-gate.md | 17 +++++++++++++++++\n 1 file changed, 17 insertions(+)\nmarkdownlint-cli2 v0.20.0 (markdownlint v0.40.0)\nFinding: /dev/fd/63\nLinting: 0 file(s)\nSummary: 0 error(s)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cd /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs && git diff --stat && npx --no-install markdownlint-cli2 <(git show HEAD:docs/runbooks/ci-gate.md) 2>&1 | tail -8",
+            "time": {
+              "start": 1790298971408,
+              "end": 1790298972312
+            }
+          },
+          "id": "prt_0d6225c5c001dcbPChAd7rcJtA",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6225457001zdGVXdvV4PAduj"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-finish",
+          "tokens": {
+            "total": 31291,
+            "input": 538,
+            "output": 104,
+            "reasoning": 185,
+            "cache": {
+              "write": 0,
+              "read": 30464
+            }
+          },
+          "cost": 0.000345492,
+          "id": "prt_0d62260fc001LEa6o35Cov3Yhc",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6225457001zdGVXdvV4PAduj"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs"
+        },
+        "cost": 0.000215646,
+        "tokens": {
+          "total": 31544,
+          "input": 145,
+          "output": 146,
+          "reasoning": 21,
+          "cache": {
+            "write": 0,
+            "read": 31232
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790298972544,
+          "completed": 1790298975430
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d6226180001W17QHIcTj8Ejlw",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-start",
+          "id": "prt_0d622643d001hJ2CCfspQFuFkA",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6226180001W17QHIcTj8Ejlw"
+        },
+        {
+          "type": "reasoning",
+          "text": "The process substitution didn't lint (0 files). Let me copy original to a temp file and lint.",
+          "time": {
+            "start": 1790298973534,
+            "end": 1790298973676
+          },
+          "id": "prt_0d622655e001dKkjwY6bzZuB0j",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6226180001W17QHIcTj8Ejlw"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_Nz1FpXOD9wcwFh84bfUY0013",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs && git show HEAD:docs/runbooks/ci-gate.md > /var/tmp/lu/learn-ukrainian/impl-8750-docs/orig-ci-gate.md && npx --no-install markdownlint-cli2 /var/tmp/lu/learn-ukrainian/impl-8750-docs/orig-ci-gate.md 2>&1 | tail -8"
+            },
+            "output": "markdownlint-cli2 v0.20.0 (markdownlint v0.40.0)\nFinding: /var/tmp/lu/learn-ukrainian/impl-8750-docs/orig-ci-gate.md\nLinting: 1 file(s)\nSummary: 1 error(s)\n../../../../../../../var/tmp/lu/learn-ukrainian/impl-8750-docs/orig-ci-gate.md:336:1 error MD004/ul-style Unordered list style [Expected: dash; Actual: plus]\n",
+            "metadata": {
+              "output": "markdownlint-cli2 v0.20.0 (markdownlint v0.40.0)\nFinding: /var/tmp/lu/learn-ukrainian/impl-8750-docs/orig-ci-gate.md\nLinting: 1 file(s)\nSummary: 1 error(s)\n../../../../../../../var/tmp/lu/learn-ukrainian/impl-8750-docs/orig-ci-gate.md:336:1 error MD004/ul-style Unordered list style [Expected: dash; Actual: plus]\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cd /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs && git show HEAD:docs/runbooks/ci-gate.md > /var/tmp/lu/learn-ukrainian/impl-8750-docs/orig-ci-gate.md && npx --no-install markdownlint-cli2 /var/tmp/lu/learn-ukrainian/impl-8750-docs/orig-ci-gate.md 2>&1 | tail -8",
+            "time": {
+              "start": 1790298974249,
+              "end": 1790298975251
+            }
+          },
+          "id": "prt_0d62265ee001O9RfmuvwUgbUx8",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6226180001W17QHIcTj8Ejlw"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-finish",
+          "tokens": {
+            "total": 31544,
+            "input": 145,
+            "output": 146,
+            "reasoning": 21,
+            "cache": {
+              "write": 0,
+              "read": 31232
+            }
+          },
+          "cost": 0.000215646,
+          "id": "prt_0d6226c79001YYBex663bE3G3i",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6226180001W17QHIcTj8Ejlw"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs"
+        },
+        "cost": 0.000199164,
+        "tokens": {
+          "total": 31799,
+          "input": 182,
+          "output": 94,
+          "reasoning": 35,
+          "cache": {
+            "write": 0,
+            "read": 31488
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790298975435,
+          "completed": 1790298977908
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d6226ccb001je4M9CDUMctI0r",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-start",
+          "id": "prt_0d6226fa1001ohZuFwZmT3YemP",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6226ccb001je4M9CDUMctI0r"
+        },
+        {
+          "type": "reasoning",
+          "text": "Confirmed pre-existing (line 336 in original, 353 after my +17). My change introduces no new lint errors.\n\nNow commit. Check git status, env trailer.",
+          "time": {
+            "start": 1790298976822,
+            "end": 1790298977094
+          },
+          "id": "prt_0d6227236001tvnphDrqaTlV8H",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6226ccb001je4M9CDUMctI0r"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_6bn4daGzfat52nmrki676872",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs && echo \"TRAILER=$LU_X_AGENT_TRAILER\" && git status --porcelain && git log --oneline -3"
+            },
+            "output": "TRAILER=X-Agent: deepseek/impl-8750-docs\n M docs/runbooks/ci-gate.md\nbf18b39e25 fix(tests): isolate the dispatch task store suite-wide and guard the live one (#8654) (#8747)\n9f914d00ba ci: early PR preflight for repo-wide invariants, gate-aware (#8750 phase A) (#8758)\n929cf9bfad feat(fresh): E3c-1 provenance kinds; check 9 verifies units against the rendered page (#8397) (#8757)\n",
+            "metadata": {
+              "output": "TRAILER=X-Agent: deepseek/impl-8750-docs\n M docs/runbooks/ci-gate.md\nbf18b39e25 fix(tests): isolate the dispatch task store suite-wide and guard the live one (#8654) (#8747)\n9f914d00ba ci: early PR preflight for repo-wide invariants, gate-aware (#8750 phase A) (#8758)\n929cf9bfad feat(fresh): E3c-1 provenance kinds; check 9 verifies units against the rendered page (#8397) (#8757)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "cd /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs && echo \"TRAILER=$LU_X_AGENT_TRAILER\" && git status --porcelain && git log --oneline -3",
+            "time": {
+              "start": 1790298977282,
+              "end": 1790298977714
+            }
+          },
+          "id": "prt_0d6227349001q3DKZpnTRUKEmg",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6226ccb001je4M9CDUMctI0r"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-finish",
+          "tokens": {
+            "total": 31799,
+            "input": 182,
+            "output": 94,
+            "reasoning": 35,
+            "cache": {
+              "write": 0,
+              "read": 31488
+            }
+          },
+          "cost": 0.000199164,
+          "id": "prt_0d6227614001Mp2VF8A8yfyyBe",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d6226ccb001je4M9CDUMctI0r"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d621d7bc001IV70tC9x4FLVzs",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790298977914
+        },
+        "id": "msg_0d622767a001WQN5RKOCDRZust",
+        "sessionID": "ses_f29de28ceffe10nZgySx556dEc"
+      },
+      "parts": [
+        {
+          "snapshot": "0cb69919952fde755786b705a60b3ceed3c745de",
+          "type": "step-start",
+          "id": "prt_0d6227954001aS7LCO3H8EGSpl",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d622767a001WQN5RKOCDRZust"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_IP9IDfbUMyNsLLhUl0av0113",
+          "state": {
+            "metadata": {
+              "output": "ruff (lint)..........................................(no files to check)Skipped\ngitleaks (secret scan)...................................................Passed\ncheck yaml syntax....................................(no files to check)Skipped\nblock accidentally large files...........................................Passed\ncheck for merge conflicts................................................Passed\nfix end of files.........................................................Passed\ntrim trailing whitespace.................................................Passed\nblock .yaml.bak / .yaml.orig files.......................................Passed\nblock bare python/python3 in new scripts.................................Passed\nblock local-only private-source review exports...........................Passed\ncheck MDX source parity..............................(no files to check)Skipped\ncheck public UA-eval English document language.......(no files to check)Skipped\ncheck forward MDX parity.............................(no files to check)Skipped\ncheck no internal IDs/register in learner surfaces...(no files to check)Skipped\ncheck locked modules are not published...............(no files to check)Skipped\nlesson schema drift gate.............................(no files to check)Skipped\nAtlas lexicon fingerprint freshness gate.............(no files to check)Skipped\nAtlas manifest enrichment-depth gate.................(no files to check)Skipped\ndispatch brief .venv worktree guardrail..............(no files to check)Skipped\nlint session-state env references....................(no files to check)Skipped\nbio dossier §7 cross-track path validator............(no files to check)Skipped\ncheck staged and committed files for OPSEC leaks.........................Passed\n"
+            },
+            "status": "running",
+            "input": {
+              "command": "cd /home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8750-docs && git add docs/runbooks/ci-gate.md && git commit -m \"docs(ci): record phase A preflight measurements (#8750)\" -m \"$LU_X_AGENT_TRAILER\" && git push -u origin HEAD"
+            },
+            "time": {
+              "start": 1790298979230
+            }
+          },
+          "id": "prt_0d6227a7e001aWcPk8nXWkCgYA",
+          "sessionID": "ses_f29de28ceffe10nZgySx556dEc",
+          "messageID": "msg_0d622767a001WQN5RKOCDRZust"
+        }
+      ]
+    }
+  ]
+}

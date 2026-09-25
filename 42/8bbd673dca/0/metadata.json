@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "428bbd673dca",
+  "session_id": "ses_f29de28ceffe10nZgySx556dEc",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-25T01:16:25.550196517Z",
+  "branch": "deepseek/impl-8750-docs",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/runbooks/ci-gate.md"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "cab05d9f4c9c",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 28347,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 206336,
+    "output_tokens": 1224,
+    "api_call_count": 9
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-25T01:16:25.534869485Z",
+    "agent_lines": 17,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 17,
+    "total_lines_changed": 17,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
