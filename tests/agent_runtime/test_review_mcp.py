@@ -12,6 +12,7 @@ import stat
 import subprocess
 import tomllib
 import uuid
+from collections.abc import Iterator
 from pathlib import Path
 from unittest.mock import patch
 
@@ -65,6 +66,16 @@ def fake_agy_user_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     (app_data / "antigravity-oauth-token").write_text('{"fixture": true}\n', encoding="utf-8")
     monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data))
     return app_data
+
+
+@pytest.fixture(autouse=True)
+def _host_independent_umask() -> Iterator[None]:
+    """Directories the tests pre-create must not be group-writable on a umask-002 host (#8652)."""
+    old = os.umask(0o022)
+    try:
+        yield
+    finally:
+        os.umask(old)
 
 
 @pytest.fixture
@@ -2298,3 +2309,104 @@ def test_symlink_below_a_symlinked_anchor_is_still_refused(manifest_file: Path, 
             receipts_root=tmp_path / "home-link" / "receipts",
         )
     assert list(outside.iterdir()) == []
+
+
+# --- #8652 r16: the cross-process fallback anchors at a verified receipts_root (no symlink, owner, mode) ---
+
+
+def _swap_root_with_symlink(tmp_path: Path, outside: Path) -> None:
+    """Replace ``receipts`` with a symlink to ``outside`` (the real tree moves away)."""
+    (tmp_path / "receipts").rename(tmp_path / "receipts-moved")
+    (tmp_path / "receipts").symlink_to(outside, target_is_directory=True)
+
+
+def _foreign_process_forgets_provisioning() -> None:
+    """Nothing in-process remembers an attempt: a fresh call sees only the path, like another process."""
+    assert not hasattr(review_mcp_module, "_PROVISIONED")
+
+
+def test_fallback_refuses_a_receipts_root_swapped_for_a_symlink(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    _foreign_process_forgets_provisioning()
+    outside = tmp_path / "outside"
+    (outside / "rev-codex-001").mkdir(parents=True)
+    _swap_root_with_symlink(tmp_path, outside)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
+        verify_review_attempt_paths(plan.config_path)
+    assert "symlink" in str(refused.value)
+    assert str(tmp_path) not in str(refused.value)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", review_diagnostics_path(plan.config_path))
+    assert "details not saved: unsafe directory" in stand_in
+    assert list((outside / "rev-codex-001").iterdir()) == []
+    assert not list(outside.rglob("*.diagnostics.log"))
+    assert not list((tmp_path / "receipts-moved").rglob("*.diagnostics.log"))
+
+
+def test_fallback_write_cannot_land_in_a_different_attempt_tree(manifest_file: Path, tmp_path: Path) -> None:
+    """The reported scenario: the swapped root points at another tree that has the same review id."""
+    plan = _prepare_codex(manifest_file, tmp_path)
+    _foreign_process_forgets_provisioning()
+    other = tmp_path / "other-tree"
+    other_attempt = other / "rev-codex-001"
+    other_attempt.mkdir(parents=True)
+    _swap_root_with_symlink(tmp_path, other)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", review_diagnostics_path(plan.config_path))
+    assert "details not saved" in stand_in
+    assert list(other_attempt.iterdir()) == []
+
+
+@pytest.mark.parametrize("mode", [0o770, 0o775, 0o707, 0o777])
+def test_group_or_world_writable_receipts_root_is_refused(mode: int, manifest_file: Path, tmp_path: Path) -> None:
+    (tmp_path / "receipts").mkdir()
+    (tmp_path / "receipts").chmod(mode)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError) as refused:
+        _prepare_codex(manifest_file, tmp_path)
+    assert "group- or world-writable" in str(refused.value)
+    assert str(tmp_path) not in str(refused.value)
+    assert list((tmp_path / "receipts").iterdir()) == []
+
+
+def test_receipts_root_that_becomes_group_writable_fails_the_recheck(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    (tmp_path / "receipts").chmod(0o775)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="group- or world-writable"):
+        verify_review_attempt_paths(plan.config_path)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", review_diagnostics_path(plan.config_path))
+    assert "details not saved" in stand_in
+    assert not list((tmp_path / "receipts").rglob("*.diagnostics.log"))
+
+
+def test_receipts_root_owned_by_another_user_fails_the_recheck(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    real_geteuid = os.geteuid
+    monkeypatch.setattr(review_mcp_module.os, "geteuid", lambda: real_geteuid() + 1)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="not owned by the current user"):
+        verify_review_attempt_paths(plan.config_path)
+
+
+def test_fallback_still_works_for_an_attempt_provisioned_elsewhere(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    _foreign_process_forgets_provisioning()
+    verify_review_attempt_paths(plan.config_path)
+    diagnostics = review_diagnostics_path(plan.config_path)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", diagnostics)
+    assert f"details in {diagnostics.name}" in stand_in
+    assert "secret" in diagnostics.read_text(encoding="utf-8")
+
+
+def test_default_root_uses_the_same_root_check(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(review_mcp_module, "resolve_repo_root", lambda *_args: tmp_path)
+    kwargs = {"review_id": "rev-x-001", "attempt_id": "att-x-001", "manifest_path": manifest_file, "harness": "codex"}
+    plan = prepare_review_attempt(**kwargs)
+    verify_review_attempt_paths(plan.config_path)
+    root = tmp_path / "batch_state" / "review-receipts"
+    root.chmod(0o775)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="group- or world-writable"):
+        verify_review_attempt_paths(plan.config_path)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="group- or world-writable"):
+        prepare_review_attempt(**{**kwargs, "attempt_id": "att-x-002"})
+    assert not (root / "rev-x-001" / "att-x-002.jsonl").exists()

@@ -35,14 +35,16 @@ Threat model (#8652)
 --------------------
 In scope:
 
-* A stale or pre-planted symlink, or a component owned by another user, anywhere **below the
-  trust anchor** at provisioning time. The anchor is the primary checkout for the default
-  receipts tree, or the nearest existing ancestor of an explicit ``receipts_root``. Every
-  component below it is created or opened one level at a time with ``O_DIRECTORY | O_NOFOLLOW``
-  relative to its parent's descriptor and owner-checked, and every per-attempt file is created
-  relative to the final descriptor.
+* A stale or pre-planted symlink, or a component owned by another user, at or **below the trust
+  anchor**. The anchor is the ``receipts_root`` itself (the default ``batch_state/review-receipts``
+  or an explicit one), opened ``O_DIRECTORY | O_NOFOLLOW`` and refused if it is a symlink, not a
+  directory, not owned by the current user, or group/world-writable. Every component below it is
+  created or opened one level at a time with ``O_DIRECTORY | O_NOFOLLOW`` relative to its parent's
+  descriptor and owner-checked, and every per-attempt file is created relative to the final
+  descriptor. Provisioning, the diagnostics write and the pre-launch re-check share one helper
+  (``_open_attempt_dir``), so an attempt provisioned by another process is checked identically.
 * Every write this module makes itself after provisioning (the diagnostics file). It re-walks
-  the same components from the anchor descriptor and writes through ``dir_fd``, never by full
+  the attempt directory from the verified root and writes through ``dir_fd``, never by full
   path, so a component swapped for a symlink afterwards cannot redirect it.
 * A non-racy change after provisioning, caught by ``verify_review_attempt_paths``: it re-runs the
   no-follow, owner-checked walk and checks the attempt's files immediately before a path string
@@ -54,9 +56,9 @@ Out of scope, by decision:
   equally edit the config file itself, so a symlink gives it no extra capability. The external
   CLIs (``codex``, ``agy``, ``claude``) take path strings, so no in-process fix removes that
   window; the re-check only narrows it.
-* Symlinks in the **ancestors of a caller-chosen** ``receipts_root`` anchor. Following them is
-  intended: hosts legitimately symlink ``/home`` and similar paths. Components *below* the
-  anchor stay no-follow, and a ``receipts_root`` that is itself a symlink is refused.
+* Symlinks in the **ancestors of** ``receipts_root``. Following them is intended: hosts
+  legitimately symlink ``/home`` and similar paths. The root itself and everything below it stay
+  no-follow, and a ``receipts_root`` that is itself a symlink is refused.
 
 Note: Ledger creation and sidecar management will be consolidated once R1
 (cursor/impl-review-r1-schema-ledger) merges to main.
@@ -196,11 +198,18 @@ _UNSAFE_DIRECTORY = (
     "review attempt refused: a review runtime directory is a symlink, is not a directory, "
     "or is not owned by the current user (#8652)"
 )
+_WRITABLE_ROOT = (
+    "review attempt refused: the receipts root is group- or world-writable; "
+    "remove the write bits (chmod go-w) and retry (#8652)"
+)
+_DEFAULT_RECEIPTS_PARTS = ("batch_state", "review-receipts")
 _DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 
 
-def _open_owned_dir(name: Path | str, *, dir_fd: int | None = None) -> int:
+def _open_owned_dir(name: Path | str, *, dir_fd: int | None = None, private: bool = False) -> int:
     """Open ``name`` as a directory without following a symlink; refuse unless the caller owns it.
+
+    ``private=True`` also refuses a directory that is group- or world-writable.
 
     ``O_NOFOLLOW`` guards only the final component, so callers walk a path one component at a
     time with ``dir_fd``. The owner check runs on the opened descriptor (``fstat``), so it
@@ -217,22 +226,56 @@ def _open_owned_dir(name: Path | str, *, dir_fd: int | None = None) -> int:
         info = os.fstat(fd)
         if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid():
             raise ReviewDirectoryError(_UNSAFE_DIRECTORY)
+        if private and info.st_mode & (stat.S_IWGRP | stat.S_IWOTH):
+            raise ReviewDirectoryError(_WRITABLE_ROOT)
     except BaseException:
         os.close(fd)
         raise
     return fd
 
 
-def _open_runtime_dir(anchor: Path, components: Sequence[str], *, create: bool = True) -> int:
-    """Open ``components`` under the trusted ``anchor`` (creating them if ``create``), never following a symlink.
+def _open_receipts_root(root: Path, *, create: bool) -> int:
+    """Open the receipts root: the trust anchor of every attempt directory under it.
+
+    The root itself is opened ``O_DIRECTORY | O_NOFOLLOW`` and refused if it is a symlink, is not a
+    directory, is not owned by the current user, or is group/world-writable. For an explicit root its
+    ancestors are followed by design (see the module's threat model); the default root
+    (``<primary checkout>/batch_state/review-receipts``) is additionally walked no-follow from the
+    primary checkout, as before. ``create=True`` makes what is missing (mode 0700); ``create=False``
+    never creates anything.
+    """
+    root = Path(os.path.abspath(root))
+    primary_root = resolve_repo_root(Path(__file__), 2)
+    if root == primary_root / _DEFAULT_RECEIPTS_PARTS[0] / _DEFAULT_RECEIPTS_PARTS[1]:
+        fd = os.open(primary_root, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+        try:
+            for name in _DEFAULT_RECEIPTS_PARTS:
+                if create:
+                    with contextlib.suppress(FileExistsError):
+                        os.mkdir(name, 0o700, dir_fd=fd)
+                child = _open_owned_dir(name, dir_fd=fd, private=name == _DEFAULT_RECEIPTS_PARTS[-1])
+                os.close(fd)
+                fd = child
+        except BaseException:
+            os.close(fd)
+            raise
+        return fd
+    if create:
+        root.parent.mkdir(parents=True, exist_ok=True)
+        with contextlib.suppress(FileExistsError):
+            os.mkdir(root, 0o700)
+    return _open_owned_dir(root, private=True)
+
+
+def _open_runtime_dir(root: Path, components: Sequence[str], *, create: bool = True) -> int:
+    """Open ``components`` under the verified receipts ``root`` (creating them if ``create``), never following a symlink.
 
     Each component is made with ``mkdir`` (mode 0700) relative to its parent's descriptor, then
     opened ``O_DIRECTORY | O_NOFOLLOW`` and checked for ownership, so a symlink planted at any
-    level (or swapped in later) is refused rather than followed. The anchor itself is opened
-    normally: its own ancestors are trusted (see the module's threat model). ``create=False`` only
-    re-walks what provisioning made and never creates. Returns the last directory's fd.
+    level (or swapped in later) is refused rather than followed. ``create=False`` only re-walks what
+    provisioning made and never creates. Returns the last directory's fd.
     """
-    fd = os.open(anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+    fd = _open_receipts_root(root, create=create)
     try:
         for name in components:
             if create:
@@ -264,35 +307,16 @@ def _create_file(name: str, dir_fd: int, payload: bytes) -> None:
         handle.write(payload)
 
 
-# Where each provisioned attempt directory hangs: ``abspath(review_dir) -> (anchor, components)``.
-# A later write or re-check walks from the anchor's descriptor, never by the full path.
-_PROVISIONED: dict[str, tuple[Path, tuple[str, ...]]] = {}
+def _open_attempt_dir(review_dir: Path | str, *, create: bool = False) -> int:
+    """Open an attempt directory as ``<receipts_root>/<review_id>``, anchored at the verified root.
 
-
-def _walk_origin(review_dir: Path | str) -> tuple[Path, tuple[str, ...]]:
-    """The trusted anchor and the components below it for an attempt directory.
-
-    Uses what ``prepare_review_attempt`` recorded. A directory this process did not provision falls
-    back to the primary checkout's ``batch_state/review-receipts`` tree when it lies in it, and
-    otherwise to its own parent as the anchor, so at least the directory itself is walked no-follow.
+    Provisioning (``create=True``) and every later re-check or diagnostics write share this one
+    walk, so a directory provisioned by another process is checked exactly like one provisioned
+    here: the parent is the receipts root, verified itself (no symlink, owner, mode), and the
+    attempt directory is opened no-follow below it.
     """
-    key = os.path.abspath(review_dir)
-    known = _PROVISIONED.get(key)
-    if known is not None:
-        return known
-    location = Path(key)
-    primary_root = resolve_repo_root(Path(__file__), 2)
-    with contextlib.suppress(ValueError):
-        parts = location.relative_to(primary_root).parts
-        if parts[:2] == ("batch_state", "review-receipts") and len(parts) > 2:
-            return primary_root, parts
-    return location.parent, (location.name,)
-
-
-def _open_attempt_dir(review_dir: Path | str) -> int:
-    """Open an already provisioned attempt directory via the no-follow walk from its anchor."""
-    anchor, components = _walk_origin(review_dir)
-    return _open_runtime_dir(anchor, components, create=False)
+    location = Path(os.path.abspath(review_dir))
+    return _open_runtime_dir(location.parent, (location.name,), create=create)
 
 
 def _untrusted(label: str, text: object, diagnostics: Path) -> str:
@@ -610,17 +634,12 @@ def prepare_review_attempt(
     python_bin = primary_root / ".venv" / "bin" / "python"
     sources_server = primary_root / ".mcp" / "servers" / "sources" / "server.py"
 
+    # The receipts root (default or explicit) is the trust anchor: verified itself, with
+    # everything below it walked no-follow. Its ancestors are followed by design.
     if receipts_root is None:
-        # The primary checkout is the trusted anchor; every runtime component below it is walked.
-        base_dir = primary_root / "batch_state" / "review-receipts"
-        anchor, components = primary_root, ("batch_state", "review-receipts", review_id)
+        base_dir = primary_root.joinpath(*_DEFAULT_RECEIPTS_PARTS)
     else:
-        # An explicit root: its nearest existing ancestor is trusted, everything below is walked.
         base_dir = Path(os.path.abspath(receipts_root))
-        anchor = base_dir.parent
-        while not anchor.exists():
-            anchor = anchor.parent
-        components = (*base_dir.relative_to(anchor).parts, review_id)
     review_dir = base_dir / review_id
 
     ledger_name = f"{attempt_id}.jsonl"
@@ -657,8 +676,7 @@ def prepare_review_attempt(
     # Create or open each runtime directory without following symlinks (refusing any that is a
     # symlink or foreign-owned), then create every per-attempt file relative to this descriptor
     # so a component swapped in after the check cannot redirect them (#8652).
-    review_fd = _open_runtime_dir(anchor, components)
-    _PROVISIONED[os.path.abspath(review_dir)] = (anchor, tuple(components))
+    review_fd = _open_attempt_dir(review_dir, create=True)
     created: list[str] = []
 
     def _rollback() -> None:
