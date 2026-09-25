@@ -491,7 +491,6 @@ def test_bash_git_write_intents_blocked_kinds(command, kind):
         "git status",
         "git log --oneline",
         "git stash list",
-        "git checkout -b feature",
     ],
 )
 def test_bash_git_write_intents_allowlisted_or_ignored(command):
@@ -689,16 +688,15 @@ def test_git_mv_via_dash_c_worktree_allowed(repo: Path):
     assert result.returncode == 0, result.stderr
 
 
-def test_git_checkout_branch_only_not_blocked_by_git_guard(repo: Path):
-    """Branch switch has no pathspecs — left to the branch-switch guard."""
+def test_git_checkout_branch_only_blocked_by_effective_cwd_guard(repo: Path):
+    """The write guard owns branch mutations after effective-cwd resolution."""
     payload = {
         "tool_name": "Bash",
         "cwd": str(repo),
         "tool_input": {"command": "git checkout -b feature-x"},
     }
     result = _run(repo, payload)
-    # No git-mediated path intent → this hook allows (other hooks may still fire).
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 2, result.stderr
 
 
 def test_bash_shell_var_to_gitignored_allowed(repo: Path):
@@ -1121,7 +1119,7 @@ def test_bash_write_targets_see_through_compound_keywords():
         ("parallel cp /tmp/source ::: {primary}/AGENTS.md", "undecidable_xargs_stdin_target"),
         ("cd {primary}; parallel tee ::: AGENTS.md", "undecidable_xargs_stdin_target"),
         ("cd {primary}; echo AGENTS.md | xargs tee", "undecidable_xargs_stdin_target"),
-        ("cd {primary}; find . -exec tee {{}} \\;", "undecidable_glob_write_target"),
+        ("cd {primary}; find . -exec tee {{}} \\;", "tracked_primary_checkout"),
         ("cd {primary}; tee AGENTS.md", "AGENTS.md"),
         ('cd {primary}; eval "$COMMAND"', "undecidable_eval_primary_target"),
         ("rm {primary}/AGENTS.md", "AGENTS.md"),
@@ -1178,6 +1176,62 @@ def test_issue_8785_review_writers_block(repo: Path, template: str, reason: str)
     assert reason in result.stderr
 
 
+@pytest.mark.parametrize(
+    "template",
+    [
+        "find {primary} -exec rm {{}} \\;",
+        "find {primary} -exec rm -rf {{}} +",
+        "find {primary} -exec tee {{}} \\;",
+        "find -D exec {primary} -delete",
+        "find -D exec -O2 {primary} -delete",
+        "find -files0-from {primary}/list -delete",
+        "find /tmp -fprintf {primary}/AGENTS.md '%p'",
+        "find /tmp -fprint {primary}/AGENTS.md",
+        "find /tmp -fprint0 {primary}/AGENTS.md",
+        "find /tmp -fls {primary}/AGENTS.md",
+        "curl --output-dir {primary} -O https://example.test/a",
+        "curl --output-dir={primary} -o AGENTS.md https://example.test/a",
+        "curl -D {primary}/AGENTS.md https://example.test/a",
+        "curl -c {primary}/AGENTS.md https://example.test/a",
+        "wget -o {primary}/AGENTS.md https://example.test/a",
+        "sort -T {primary} -o /tmp/out /tmp/in",
+        "sort {primary}/AGENTS.md -o /tmp/out",  # accepted long-tail input false positive
+        "xargs sort -o {primary}/AGENTS.md",
+        "parallel sort -o {primary}/AGENTS.md ::: /tmp/a",
+        "sqlite3 /tmp/a.db '.save {primary}/AGENTS.md'",
+        'sh -c "$CMD"',
+        'bash -c "$CMD"',
+        'zsh -c "$CMD"',
+        'dash -c "$CMD"',
+        "git -C {primary} switch -f other",
+        "git -C {primary} checkout other",
+        "git -C {primary} merge other",
+        "git -C {primary} pull",
+        "git -C {primary} rebase other",
+        "git -C {primary} cherry-pick HEAD~1",
+        "git -C {primary} revert HEAD",
+        "git -C {primary} am /tmp/a.patch",
+        "git -C {primary} apply /tmp/a.patch",
+        "git -C {primary} stash pop",
+        "git -C {primary} stash apply",
+        "git -C {primary} read-tree -u HEAD",
+        "sh -c 'git -C {primary} merge other'",
+        "git worktree remove {primary}",
+        "tar -xf /tmp/x.tar -C {primary}",
+        "unzip /tmp/x.zip -d {primary}",
+        "patch -d {primary} -i /tmp/x.patch",
+        "ffmpeg -i /tmp/in.mp4 {primary}/out.mp4",
+        "convert /tmp/in.png {primary}/out.png",
+    ],
+)
+def test_issue_8785_principle_blocks_review_escapes(repo: Path, template: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(
+        repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": template.format(primary=repo)}}
+    )
+    assert result.returncode == 2, (template, result.stderr)
+
+
 def test_issue_8785_inherited_cdpath_makes_bare_relative_cd_unknown(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _run(
@@ -1229,7 +1283,6 @@ def test_issue_8785_inherited_cdpath_makes_bare_relative_cd_unknown(repo: Path):
         "mv /tmp/a /tmp/b",
         "rsync --compare-dest={primary} /tmp/a /tmp/b",
         "rsync --link-dest={primary} /tmp/a /tmp/b",
-        "tar -tf {primary}/AGENTS.md",
         "cp /tmp/a {worktree}/copy.txt",
         "cp --backup=numbered --suffix=.bak /tmp/a {worktree}/copy.txt",
         "rsync -a /tmp/source {worktree}/copy.txt",
