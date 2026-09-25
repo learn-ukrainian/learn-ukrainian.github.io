@@ -2807,6 +2807,49 @@ def test_parse_review_verdict_rejects_examples_and_quotes(label, response):
     assert delegate._review_verdict_failure_reason(response) == "review_missing_verdict_line"
 
 
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        # Live 2026-09-25 (review-nogem-r5, claude-sonnet-5): both approvals
+        # were reported ``no_deliverable`` because prose followed the token.
+        (
+            "bold-sentence-then-prose",
+            "Findings resolved.\n\n**VERDICT: APPROVE.** Both issues from my earlier review are fixed.\n",
+            "APPROVE",
+        ),
+        (
+            "bold-then-parenthetical",
+            "**VERDICT: APPROVE** (three non-blocking findings below)\n\n1. Nit.\n",
+            "APPROVE",
+        ),
+        ("bold-label-bold-token-dash", "**Verdict**: **APPROVE** — see below\n", "APPROVE"),
+        ("double-underscore-token", "VERDICT: __REQUEST_CHANGES__\n", "REQUEST_CHANGES"),
+        ("token-then-comma", "VERDICT: BLOCKED, the migration drops data.\n", "BLOCKED"),
+    ],
+)
+def test_parse_review_verdict_accepts_trailing_prose(label, response, expected):
+    """#8786: a verdict line may carry punctuation, emphasis, or prose after the token."""
+    assert delegate.parse_review_verdict(response) == expected
+    assert delegate._review_verdict_failure_reason(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("no-word-boundary", "VERDICT: APPROVEX\n"),
+        ("no-word-boundary-underscore", "VERDICT: APPROVE_LATER\n"),
+        ("no-word-boundary-cyrillic", "VERDICT: APPROVEд\n"),
+        ("inline-with-prose-after", "I will report VERDICT: APPROVE later, after CI.\n"),
+        ("quoted-with-prose-after", "> **VERDICT: APPROVE.** Looks good.\n"),
+        ("indented-with-prose-after", "Example:\n\n    VERDICT: APPROVE — fine\n"),
+        ("fenced-with-prose-after", "```\n**VERDICT: APPROVE** (see below)\n```\n"),
+    ],
+)
+def test_parse_review_verdict_rejects_non_verdict_lines_with_trailing_text(label, response):
+    """#8786: trailing text is allowed, but the line must still start with the label."""
+    assert delegate.parse_review_verdict(response) is None
+
+
 def test_parse_review_verdict_accepts_bold_line():
     assert delegate.parse_review_verdict("Findings.\n\n**VERDICT: APPROVE**\n") == "APPROVE"
 

@@ -2123,17 +2123,22 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # cf_preflight.py and the review prompts actually ask reviewers to write.
 # Reviewers routinely render the label and token in Markdown emphasis
 # (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
-# full verdicts and must not be misread as missing (#8786). A verdict is a
-# whole LINE: emphasis punctuation (``*``, ``_``, backtick) and whitespace
-# may sit around the label, its colon, and the token, but nothing else may
-# share the line — so an inline or quoted example ("I will report
-# ``VERDICT: APPROVE`` later", ``> VERDICT: APPROVE``) is not a verdict.
+# full verdicts and must not be misread as missing (#8786). A verdict line
+# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
+# emphasis/backticks/whitespace around its colon, then the token and a word
+# boundary. Anything may follow the token — reviewers write
+# ``**VERDICT: APPROVE.** Both issues are fixed.`` and
+# ``**VERDICT: APPROVE** (three non-blocking findings below)``. An inline or
+# quoted example ("I will report ``VERDICT: APPROVE`` later",
+# ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
+# The boundary treats ``_`` as emphasis (``__APPROVE__``) unless a letter or
+# digit follows it (``APPROVE_LATER``), so ``APPROVEX`` is not a verdict.
 # Indentation follows CommonMark: at most three leading spaces; four or more,
 # or a tab, make the line an indented code block, i.e. an example.
 _REVIEW_VERDICT_LINE_RE = re.compile(
     r"^ {0,3}(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
-    r"[*_`\s]*$",
+    r"(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
 )
 # A CommonMark fence line: at most three leading spaces, then three or more
@@ -2393,8 +2398,8 @@ def parse_review_verdict(response: str) -> str | None:
 
     The single verdict parser for the review-success contract (#8786): the
     dispatch worker and the ask-* review wrapper both call it. Only a line
-    that is exactly a verdict (see ``_REVIEW_VERDICT_LINE_RE``) outside a code
-    block counts, and the LAST such line wins — a report may discuss earlier
+    that starts with a verdict (see ``_REVIEW_VERDICT_LINE_RE``) outside a
+    code block counts, and the LAST such line wins — a report may discuss earlier
     drafts, but its closing line is its verdict. An unclosed fence runs to the
     end of the text, as in CommonMark.
     """
@@ -2421,7 +2426,7 @@ def _review_verdict_failure_reason(response: str) -> str | None:
     (the ask-* review wrapper); ordinary asks and implement dispatches never
     require a magic marker. A review reply that never states
     ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED>``
-    on a line of its own is not a completed review — on 2026-09-21 several
+    at the start of a line is not a completed review — on 2026-09-21 several
     review tasks settled ``done`` with a promise to wait for a background
     command as the whole body (#8421).
     """
