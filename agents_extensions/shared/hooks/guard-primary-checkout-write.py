@@ -103,7 +103,13 @@ This command parser does not model arbitrary interpreters (for example,
 binaries that write without path arguments. Long-tail writers conservatively
 classify every path-like argument, including read-only inputs such as
 ``sort PRIMARY/file -o /tmp/out``; this accepted false positive keeps new
-output options from silently escaping the guard. Unlisted writers and shell
+output options from silently escaping the guard. Targets supplied only through
+stdin or an external file list with unknown contents remain invisible: for
+example, ``find -files0-from /tmp/list -delete`` and
+``cat /tmp/list | xargs -I{} sh -c 'echo x > {}'`` are allowed from a dispatch
+worktree. This is the same rule as ``cat /tmp/list | xargs tee``: fail closed
+only when a command literal names the primary checkout or the effective cwd
+is the primary checkout. Unlisted writers and shell
 features not parsed here remain residuals. This is defense-in-depth, not a
 sandbox; physical worktree isolation and the monitor remain necessary.
 
@@ -1091,7 +1097,17 @@ _LONG_TAIL_WRITERS = frozenset(
 )
 
 
-def _long_tail_targets(args: list[str]) -> list[str]:
+_LONG_TAIL_SHORT_PATH_VALUES = {
+    "sort": frozenset("oT"),
+    "curl": frozenset("oDc"),
+    "tar": frozenset("f"),
+    "wget": frozenset("OoP"),
+    "unzip": frozenset("d"),
+    "patch": frozenset("odi"),
+}
+
+
+def _long_tail_targets(args: list[str], command: str) -> list[str]:
     """Path-like argv words, including values attached to options and dot commands."""
     targets: list[str] = []
     for arg in args:
@@ -1100,13 +1116,141 @@ def _long_tail_targets(args: list[str]) -> list[str]:
         words = [arg]
         if "=" in arg:
             words.append(arg.tail(arg.index("=") + 1) if isinstance(arg, ShellWord) else arg.split("=", 1)[1])
-        # Short attached values (-o/path, -T/path) and SQLite dot commands.
+        # A known path-taking flag consumes the remainder of its cluster.
+        # For unfamiliar flags, keep every plausible letter boundary so an
+        # attached -XREL remains a candidate without a command-specific list.
+        if arg.startswith("-") and not arg.startswith("--"):
+            value_start = next(
+                (
+                    offset + 1
+                    for offset in range(1, len(arg))
+                    if all(letter.isalpha() for letter in arg[1 : offset + 1])
+                    if arg[offset] in _LONG_TAIL_SHORT_PATH_VALUES.get(command, ())
+                ),
+                None,
+            )
+            if value_start is not None and value_start < len(arg):
+                words.append(arg.tail(value_start) if isinstance(arg, ShellWord) else arg[value_start:])
+            elif value_start is None:
+                for offset in range(2, len(arg)):
+                    words.append(arg.tail(offset) if isinstance(arg, ShellWord) else arg[offset:])
+                    if not arg[offset].isalpha():
+                        break
+        # Absolute embedded values and SQLite dot commands.
         for match in re.finditer(r"(?:^|\s|=|-[A-Za-z]+)(/[^\s]+)", arg):
             words.append(ShellWord(match.group(1), getattr(arg, "unresolved_at", None), getattr(arg, "raw", arg)))
         if any(char.isspace() for char in arg):
             words.extend(ShellWord(part, getattr(arg, "unresolved_at", None)) for part in str(arg).split())
         targets.extend(word for word in words if word and not str(word).startswith("-") and "://" not in word)
     return list(dict.fromkeys(targets))
+
+
+_INPLACE_FIXERS = frozenset(
+    {
+        "ruff",
+        "black",
+        "isort",
+        "prettier",
+        "eslint",
+        "clang-format",
+        "gofmt",
+        "rustfmt",
+        "shfmt",
+        "markdownlint",
+        "markdownlint-cli2",
+    }
+)
+
+
+def _inplace_fixer_targets(command: str, args: list[str]) -> list[str]:
+    """Primary file operands of formatters and linters in write mode."""
+    if command == "ruff":
+        if not args or args[0] not in {"format", "check"}:
+            return []
+        writing = args[0] == "format" and "--check" not in args and "--diff" not in args
+        writing |= args[0] == "check" and any(a in {"--fix", "--unsafe-fixes"} for a in args)
+        args = args[1:]
+    elif command in {"black", "isort"}:
+        writing = not any(a in {"--check", "--check-only", "--diff"} for a in args)
+    elif command == "rustfmt":
+        writing = (
+            "--check" not in args
+            and "--emit=stdout" not in args
+            and not any(args[i : i + 2] == ["--emit", "stdout"] for i in range(len(args) - 1))
+        )
+    else:
+        write_flags = {
+            "prettier": {"--write", "-w"},
+            "eslint": {"--fix"},
+            "clang-format": {"-i"},
+            "gofmt": {"-w"},
+            "shfmt": {"-w"},
+            "markdownlint": {"--fix"},
+            "markdownlint-cli2": {"--fix"},
+        }
+        writing = any(a in write_flags.get(command, ()) for a in args)
+    if not writing:
+        return []
+    # These options consume a non-target value; the rest of the positional
+    # words are paths. The guard's containment layer decides which are primary.
+    value_options = {
+        "--config",
+        "--ignore-path",
+        "--stdin-filepath",
+        "--extension",
+        "--target-version",
+        "--line-length",
+        "--output-format",
+        "--range",
+        "--emit",
+        "--edition",
+        "--config-path",
+        "-c",
+        "-l",
+        "-e",
+    }
+    targets: list[str] = []
+    skip = False
+    options_done = False
+    for arg in args:
+        if skip:
+            skip = False
+            continue
+        if arg == "--":
+            options_done = True
+            continue
+        if not options_done and arg in value_options:
+            skip = True
+            continue
+        if not options_done and arg.startswith("-"):
+            continue
+        targets.append(arg)
+    return targets
+
+
+def _shell_command_script(args: list[str]) -> str | None:
+    """Return the script after a shell -c cluster, stepping over option values."""
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        if arg == "--":
+            return None
+        if arg in {"-o", "+O"}:
+            i += 2
+            continue
+        if arg.startswith("-") and not arg.startswith("--"):
+            if "c" in arg[1:]:
+                script_index = i + 1
+                if script_index < len(args) and args[script_index] == "--":
+                    script_index += 1
+                return args[script_index] if script_index < len(args) else None
+            i += 1
+            continue
+        if arg.startswith("+O"):
+            i += 1
+            continue
+        return None
+    return None
 
 
 def _operands(args: list[str], command: str) -> tuple[list[str], str | None, set[str], list[str]]:
@@ -1278,7 +1422,7 @@ def _writer_targets(
                 target.decision_reason = "undecidable_write_target_after_cd"
     cmd, idx = _command_word(segment)
     if cmd in _LONG_TAIL_WRITERS:
-        targets.extend(_long_tail_targets(segment[idx + 1 :]))
+        targets.extend(_long_tail_targets(segment[idx + 1 :], cmd))
         if cmd == "curl" and any(arg == "-O" or arg == "--remote-name" for arg in segment[idx + 1 :]):
             targets.extend(
                 ShellWord(Path(str(arg).split("?", 1)[0]).name) for arg in segment[idx + 1 :] if "://" in arg
@@ -1291,6 +1435,8 @@ def _writer_targets(
             )
     elif cmd in ("sed", "perl"):
         targets.extend(_inplace_edit_targets(segment, idx))
+    elif cmd in _INPLACE_FIXERS:
+        targets.extend(_inplace_fixer_targets(cmd, segment[idx + 1 :]))
     elif cmd in _DESTINATION_WRITERS:
         targets.extend(_destination_targets(segment, idx, cmd))
     elif cmd in {"rm", "unlink", "rmdir", "shred", "chmod", "chown", "touch"}:
@@ -1317,17 +1463,14 @@ def _writer_targets(
         else:
             targets.extend(bash_write_targets(" ".join(args), cwd=cwd, main_root=main_root, depth=depth + 1))
     elif cmd in {"sh", "bash", "zsh", "dash"} and depth < 3:
-        args = segment[idx + 1 :]
-        if "-c" in args:
-            pos = args.index("-c")
-            if pos + 1 < len(args):
-                script = args[pos + 1]
-                if getattr(script, "unresolved_at", None) is not None:
-                    unknown = ShellWord("dynamic shell script")
-                    unknown.decision_reason = "undecidable_shell_script_target"
-                    targets.append(unknown)
-                else:
-                    targets.extend(bash_write_targets(str(script), cwd=cwd, main_root=main_root, depth=depth + 1))
+        script = _shell_command_script(segment[idx + 1 :])
+        if script is not None:
+            if getattr(script, "unresolved_at", None) is not None:
+                unknown = ShellWord("dynamic shell script")
+                unknown.decision_reason = "undecidable_shell_script_target"
+                targets.append(unknown)
+            else:
+                targets.extend(bash_write_targets(str(script), cwd=cwd, main_root=main_root, depth=depth + 1))
     elif cmd == "find" and depth < 3:
         targets.extend(_find_targets(segment[idx + 1 :], cwd=cwd, main_root=main_root, depth=depth))
     return targets
@@ -1384,6 +1527,7 @@ def _xargs_writer(template: list[str]) -> bool:
         "zsh",
         "dash",
         "eval",
+        *_INPLACE_FIXERS,
     }
 
 

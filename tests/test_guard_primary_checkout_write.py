@@ -1232,6 +1232,71 @@ def test_issue_8785_principle_blocks_review_escapes(repo: Path, template: str):
     assert result.returncode == 2, (template, result.stderr)
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "sort -o../../../../AGENTS.md /tmp/in",
+        "curl -o../../../../AGENTS.md https://example.test/a",
+        "tar -cf../../../../AGENTS.md /tmp/a",
+        "wget -O../../../../AGENTS.md https://example.test/a",
+        "unzip /tmp/x.zip -d../../../../",
+        "patch -o../../../../AGENTS.md -i /tmp/x.patch",
+        "sort -X../../../../AGENTS.md /tmp/in",
+        "cd {primary}; sort -oAGENTS.md /tmp/in",
+        "cd {primary}; curl -oAGENTS.md https://example.test/a",
+        "ruff format {primary}/AGENTS.md",
+        "ruff check --fix {primary}/AGENTS.md",
+        "ruff check --unsafe-fixes {primary}/AGENTS.md",
+        "black {primary}/AGENTS.md",
+        "isort {primary}/AGENTS.md",
+        "prettier --write {primary}/AGENTS.md",
+        "prettier -w {primary}/AGENTS.md",
+        "eslint --fix {primary}/AGENTS.md",
+        "clang-format -i {primary}/AGENTS.md",
+        "gofmt -w {primary}/AGENTS.md",
+        "gofmt -l -w {primary}/AGENTS.md",
+        "rustfmt {primary}/AGENTS.md",
+        "shfmt -w {primary}/AGENTS.md",
+        "markdownlint --fix {primary}/AGENTS.md",
+        "markdownlint-cli2 --fix {primary}/AGENTS.md",
+        "bash -lc 'echo x > {primary}/AGENTS.md'",
+        "bash -ec 'echo x > {primary}/AGENTS.md'",
+        "zsh -lc 'echo x > {primary}/AGENTS.md'",
+        "dash -ec 'echo x > {primary}/AGENTS.md'",
+        "sh -lc 'echo x > {primary}/AGENTS.md'",
+        "bash -o pipefail -lc 'echo x > {primary}/AGENTS.md'",
+        "bash +O extglob -lc 'echo x > {primary}/AGENTS.md'",
+        "bash -lc -- 'echo x > {primary}/AGENTS.md'",
+    ],
+)
+def test_issue_8785_final_review_writers_block(repo: Path, command: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, command.format(primary=repo), cwd=worktree)
+    assert result.returncode == 2, (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "ruff check {primary}/AGENTS.md",
+        "ruff format --check {primary}/AGENTS.md",
+        "prettier --check {primary}/AGENTS.md",
+        "black --check {primary}/AGENTS.md",
+        "isort --check-only {primary}/AGENTS.md",
+        "rustfmt --check {primary}/AGENTS.md",
+        "bash -- -c 'echo x > {primary}/AGENTS.md'",
+        "cd {primary}; sort -o/tmp/safe-output /tmp/in",
+        "cd {primary}; tar -cf/tmp/safe-archive /tmp/in",
+        "find -files0-from /tmp/list -delete",
+        "cat /tmp/list | xargs -I{{}} sh -c 'echo x > {{}}'",
+    ],
+)
+def test_issue_8785_final_review_allowed(repo: Path, command: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, command.format(primary=repo), cwd=worktree)
+    assert result.returncode == 0, (command, result.stderr)
+
+
 def test_issue_8785_inherited_cdpath_makes_bare_relative_cd_unknown(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _run(
