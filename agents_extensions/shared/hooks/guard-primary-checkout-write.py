@@ -28,15 +28,19 @@ Covered write surfaces
   the ``*** Add/Update/Delete File:`` / ``*** Move to:`` headers of the patch
   body (issue #4447 verified Codex CLI fires PreToolUse for ``apply_patch``).
 * ``Bash`` — write-capable redirection (including ``>&`` file operands and
-  ``<>``), ``tee``, ``dd of=``, copy/move/link/install/rsync destinations, and
-  in-place editors (``sed -i`` / ``perl -i``). Quote-aware tokenization keeps a
+  ``<>``), ``tee``, ``dd of=``, copy/move/link/install/rsync destinations,
+  removed ``mv`` / ``rsync --remove-source-files`` sources, direct filesystem
+  mutators (``rm``, ``unlink``, ``rmdir``, ``truncate``, ``shred``, ``chmod``,
+  ``chown``, ``touch``), and in-place editors (``sed -i`` / ``perl -i``).
+  Quote-aware tokenization keeps a
   ``>`` inside a quoted string (e.g. a commit message) from reading as a
   redirect. Literal ``cd``/``pushd`` change the base of following relative
   targets; uncertain navigation blocks those targets. Common command wrappers,
   ``find -exec`` writers, and executable substitutions in unquoted heredocs
-  feed the same writer parser. Literal ``eval`` strings are parsed recursively.
-  ``xargs`` / ``parallel`` writers with primary-path literals block because
-  their generated arguments can supply an unknown target.
+  feed the same writer parser. Decidable ``eval`` strings are parsed
+  recursively; undecidable ones block when a primary path is named or the
+  effective cwd is primary. ``xargs`` / ``parallel`` writers block when their
+  generated arguments can supply a primary target.
 * ``Bash`` git-mediated working-tree writes (issues #5396 / #5517) — ``git apply`` /
   ``git am``, ``git add``, ``git stash pop|apply``, ``git mv`` / ``git rm``,
   ``git checkout <ref> -- <path>``, ``git checkout <ref> <path>`` (no ``--``),
@@ -723,8 +727,8 @@ class _Expander:
             self._forget(name)
             return
         word = self._expand(token[match.end() :])
-        if word.unresolved_at is not None or _WHITESPACE_RE.search(word):
-            self._forget(name)  # unquoted use would word-split
+        if word.unresolved_at is not None:
+            self._forget(name)
             return
         if name == "IFS":
             self._forget(name)
@@ -738,10 +742,19 @@ class _Expander:
             if match:
                 self._forget(match.group(1))
 
-    def _expand(self, token: str) -> ShellWord:
+    def _expand(self, token: str, *, eval_arg: bool = False) -> ShellWord:
         for match in _ASSIGNING_EXPANSION_RE.finditer(token):
             self._forget(match.group(1))
-        return _expand_word(token, self._lookup)
+        # A quoted command string may contain spaces. Other uses of such a
+        # binding are undecidable because unquoted expansion may word-split.
+        lookup = (
+            self._lookup
+            if eval_arg
+            else lambda name: (
+                value if (value := self._lookup(name)) is not None and not _WHITESPACE_RE.search(value) else None
+            )
+        )
+        return _expand_word(token, lookup)
 
     # -- scope tracking ------------------------------------------------------
 
@@ -798,7 +811,8 @@ class _Expander:
             return words
 
         # Expansion sees the state from before this command's own effects.
-        words = [self._expand(tok) for tok in body]
+        cmd, cmd_index = _command_word(body)
+        words = [self._expand(tok, eval_arg=cmd == "eval" and i > cmd_index) for i, tok in enumerate(body)]
         if header:
             self._forget_leading_names(body)
         for tok in body[:lead]:  # ``S=x cmd``: cmd's environment, never a binding
@@ -992,33 +1006,123 @@ def _inplace_edit_targets(segment: list[str], cmd_index: int) -> list[str]:
 
 
 _DESTINATION_WRITERS = frozenset({"cp", "mv", "install", "ln", "rsync"})
+# GNU getopt operands: an option's value is never a source or destination.
+# Keep the short options per command; a value can follow a cluster (-at DIR)
+# or be attached to its final option (-atDIR). Long options accept =VALUE.
+_VALUE_OPTIONS: dict[str, tuple[frozenset[str], frozenset[str]]] = {
+    "cp": (frozenset("St"), frozenset({"suffix", "target-directory"})),
+    "mv": (frozenset("St"), frozenset({"suffix", "target-directory"})),
+    "ln": (frozenset("St"), frozenset({"suffix", "target-directory"})),
+    "install": (
+        frozenset("gmoSt"),
+        frozenset({"group", "mode", "owner", "suffix", "target-directory", "strip-program"}),
+    ),
+    "rsync": (
+        frozenset("e"),
+        frozenset(
+            {
+                "rsh",
+                "exclude",
+                "include",
+                "filter",
+                "files-from",
+                "exclude-from",
+                "include-from",
+                "chmod",
+                "backup-dir",
+                "temp-dir",
+                "partial-dir",
+                "log-file",
+                "out-format",
+                "bwlimit",
+                "port",
+                "address",
+                "iconv",
+                "usermap",
+                "groupmap",
+                "sockopts",
+                "rsync-path",
+            }
+        ),
+    ),
+    "rm": (frozenset(), frozenset()),
+    "unlink": (frozenset(), frozenset()),
+    "rmdir": (frozenset(), frozenset()),
+    "truncate": (frozenset("rs"), frozenset({"reference", "size"})),
+    "shred": (frozenset("ns"), frozenset({"iterations", "size"})),
+    "chmod": (frozenset(), frozenset({"reference"})),
+    "chown": (frozenset(), frozenset({"reference", "from"})),
+    "touch": (frozenset("drt"), frozenset({"date", "reference", "time"})),
+}
 
 
-def _destination_targets(segment: list[str], cmd_index: int, command: str) -> list[str]:
-    """Destination operand, including GNU target-directory forms where valid."""
-    args = segment[cmd_index + 1 :]
+def _operands(args: list[str], command: str) -> tuple[list[str], str | None, set[str]]:
+    """Return getopt operands, GNU target directory and seen option names."""
+    short_values, long_values = _VALUE_OPTIONS[command]
     positionals: list[str] = []
     target_dir: str | None = None
+    seen: set[str] = set()
     options_done = False
     i = 0
     while i < len(args):
         arg = args[i]
-        if not options_done and arg == "--":
-            options_done = True
-        elif not options_done and command != "rsync" and arg in {"-t", "--target-directory"}:
-            if i + 1 < len(args):
-                target_dir = args[i + 1]
-                i += 1
-        elif not options_done and command != "rsync" and arg.startswith("--target-directory="):
-            target_dir = arg.tail(len("--target-directory=")) if isinstance(arg, ShellWord) else arg.split("=", 1)[1]
-        elif not options_done and command != "rsync" and arg.startswith("-t") and len(arg) > 2:
-            target_dir = arg.tail(2) if isinstance(arg, ShellWord) else arg[2:]
-        elif options_done or not arg.startswith("-") or arg == "-":
-            positionals.append(arg)
         i += 1
+        if options_done or arg == "-" or not arg.startswith("-"):
+            positionals.append(arg)
+            continue
+        if arg == "--":
+            options_done = True
+            continue
+        if arg.startswith("--"):
+            name, sep, attached = str(arg[2:]).partition("=")
+            seen.add(name)
+            if name in long_values:
+                if sep:
+                    value = arg.tail(len(name) + 3) if isinstance(arg, ShellWord) else attached
+                elif i < len(args):
+                    value = args[i]
+                    i += 1
+                else:
+                    continue
+                if name == "target-directory":
+                    target_dir = value
+            continue
+        for offset, flag in enumerate(arg[1:], 1):
+            seen.add(flag)
+            if flag not in short_values:
+                continue
+            if offset + 1 < len(arg):
+                value = arg.tail(offset + 1) if isinstance(arg, ShellWord) else arg[offset + 1 :]
+            elif i < len(args):
+                value = args[i]
+                i += 1
+            else:
+                break
+            if flag == "t" and command in _DESTINATION_WRITERS:
+                target_dir = value
+            break
+    return positionals, target_dir, seen
+
+
+def _destination_targets(segment: list[str], cmd_index: int, command: str) -> list[str]:
+    """Destination and removed sources of a filesystem transfer."""
+    args = segment[cmd_index + 1 :]
+    positionals, target_dir, seen = _operands(args, command)
+    if command == "install" and ("d" in seen or "directory" in seen):
+        return positionals
+    sources = positionals if target_dir is not None else positionals[:-1]
+    removed_sources = command == "mv" or (command == "rsync" and "remove-source-files" in seen)
+    targets = sources if removed_sources else []
     if target_dir is not None:
-        return [target_dir]
-    return [positionals[-1]] if len(positionals) >= 2 else []
+        return [*targets, target_dir]
+    return [*targets, positionals[-1]] if len(positionals) >= 2 else targets
+
+
+def _mutation_targets(segment: list[str], cmd_index: int, command: str) -> list[str]:
+    positionals, _, seen = _operands(segment[cmd_index + 1 :], command)
+    if command in {"chmod", "chown"} and "reference" not in seen:
+        positionals = positionals[1:]  # mode or owner, then paths
+    return positionals
 
 
 def _dd_targets(segment: list[str], cmd_index: int) -> list[str]:
@@ -1046,13 +1150,16 @@ def _writer_targets(
         targets.extend(_inplace_edit_targets(segment, idx))
     elif cmd in _DESTINATION_WRITERS:
         targets.extend(_destination_targets(segment, idx, cmd))
+    elif cmd in {"rm", "unlink", "rmdir", "truncate", "shred", "chmod", "chown", "touch"}:
+        targets.extend(_mutation_targets(segment, idx, cmd))
     elif cmd == "dd":
         targets.extend(_dd_targets(segment, idx))
     elif cmd == "eval" and depth < 3:
         args = segment[idx + 1 :]
         if any(getattr(arg, "unresolved_at", None) is not None for arg in args):
-            if main_root is not None and any(
-                _eval_names_primary_literal(str(arg), cwd or "/", main_root) for arg in args
+            if main_root is not None and (
+                _names_primary_literal(".", cwd or "/", main_root)
+                or any(_eval_names_primary_literal(str(arg), cwd or "/", main_root) for arg in args)
             ):
                 unknown = ShellWord("eval dynamic primary target")
                 unknown.decision_reason = "undecidable_eval_primary_target"
@@ -1105,7 +1212,21 @@ def _xargs_writer(segment: list[str]) -> bool:
     while i < len(args) and args[i].startswith("-"):
         i += 2 if args[i] in value_opts else 1
     writer, _ = _command_word(args[i:])
-    return writer in {"tee", "sed", "perl", "dd", *_DESTINATION_WRITERS}
+    return writer in {
+        "tee",
+        "sed",
+        "perl",
+        "dd",
+        "rm",
+        "unlink",
+        "rmdir",
+        "truncate",
+        "shred",
+        "chmod",
+        "chown",
+        "touch",
+        *_DESTINATION_WRITERS,
+    }
 
 
 def _names_primary_literal(word: str, cwd: str, main_root: Path) -> bool:
@@ -1250,9 +1371,13 @@ def bash_write_targets(
         if (
             _xargs_writer(segment)
             and main_root is not None
-            and any(
-                not word.startswith("-") and _names_primary_literal(str(word), effective_cwd or cwd or "/", main_root)
-                for word in pipeline
+            and (
+                _names_primary_literal(".", effective_cwd or "/", main_root)
+                or any(
+                    not word.startswith("-")
+                    and _names_primary_literal(str(word), effective_cwd or cwd or "/", main_root)
+                    for word in pipeline
+                )
             )
         ):
             unknown = ShellWord("xargs stdin write target")
