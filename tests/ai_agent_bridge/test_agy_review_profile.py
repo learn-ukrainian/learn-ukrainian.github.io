@@ -162,6 +162,39 @@ def test_ukrainian_content_caller_passes_the_profile() -> None:
 
 _CONTENT_PATH = "curriculum/l2-uk-en/a1/hello.md"
 _CODE_PATH = "scripts/delegate.py"
+_REMOTE_SHA = "a" * 40
+
+
+def _branch_refspec(name: str) -> str:
+    return f"+refs/heads/{name}:refs/remotes/origin/{name}"
+
+
+def _fake_branch_diff(name: str, diff_stdout: str, *, fail: str | None = None):
+    """Script the check-ref, exact fetch, rev-parse, and diff the gate runs."""
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command[:2] == ["git", "check-ref-format"]:
+            assert command == ["git", "check-ref-format", "--branch", name]
+            code = 1 if fail == "check-ref-format" else 0
+            return subprocess.CompletedProcess(command, code, stderr="invalid ref" if code else "")
+        if command[:2] == ["git", "fetch"]:
+            assert command == ["git", "fetch", "origin", _branch_refspec(name)]
+            code = 1 if fail == "fetch" else 0
+            return subprocess.CompletedProcess(command, code, stderr="fetch failed" if code else "")
+        if command[:3] == ["git", "rev-parse", "--verify"]:
+            assert command == ["git", "rev-parse", "--verify", f"refs/remotes/origin/{name}"]
+            code = 1 if fail == "rev-parse" else 0
+            stdout = "" if code else f"{_REMOTE_SHA}\n"
+            return subprocess.CompletedProcess(command, code, stdout=stdout, stderr="missing" if code else "")
+        assert command == ["git", "diff", "--name-only", f"origin/main...{_REMOTE_SHA}"]
+        code = 1 if fail == "diff" else 0
+        return subprocess.CompletedProcess(
+            command, code, stdout="" if code else diff_stdout, stderr="diff failed" if code else ""
+        )
+
+    return fake_run
 
 
 def _review_args(**overrides: object) -> SimpleNamespace:
@@ -317,17 +350,7 @@ def test_content_only_branch_reaches_gemini_dispatch(monkeypatch: pytest.MonkeyP
         seen["branch"] = kwargs.get("branch")
 
     monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
-
-    def fake_run(command: list[str], **kwargs: object):
-        import subprocess
-
-        if command[:3] == ["git", "fetch", "origin"]:
-            assert command == ["git", "fetch", "origin", "content-branch"]
-            return subprocess.CompletedProcess(command, 0, stdout="")
-        assert command == ["git", "diff", "--name-only", "origin/main...origin/content-branch"]
-        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
-
-    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("subprocess.run", _fake_branch_diff("content-branch", f"{_CONTENT_PATH}\n"))
     _handle_acp_compat(_review_args(branch="content-branch"), "agy")
     assert seen["branch"] == "content-branch"
 
@@ -337,7 +360,7 @@ def test_prefixed_branch_names_are_refused_before_git(monkeypatch: pytest.Monkey
         raise AssertionError(f"prefixed branch must not reach git: {command}")
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    for name in ("origin/feature", "refs/heads/feature"):
+    for name in ("origin/feature", "refs/heads/feature", "github/feature", "+feature", "-feature", "feat:ure"):
         with pytest.raises(SystemExit, match="could not list changed files"):
             _handle_acp_compat(_review_args(branch=name), "agy")
 
@@ -351,18 +374,10 @@ def test_stale_local_content_branch_is_refused_when_remote_has_code(
         raise AssertionError("remote code must not reach Gemini dispatch")
 
     monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
-
-    def fake_run(command: list[str], **kwargs: object):
-        import subprocess
-
-        if command == ["git", "diff", "--name-only", "origin/main...feature"]:
-            return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
-        if command == ["git", "fetch", "origin", "feature"]:
-            return subprocess.CompletedProcess(command, 0, stdout="")
-        assert command == ["git", "diff", "--name-only", "origin/main...origin/feature"]
-        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
-
-    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr(
+        "subprocess.run",
+        _fake_branch_diff("feature", f"{_CONTENT_PATH}\n{_CODE_PATH}\n"),
+    )
     with pytest.raises(SystemExit, match=rf"gemini_code_review_forbidden.*{_CODE_PATH}"):
         _handle_acp_compat(_review_args(branch="feature"), "agy")
 
@@ -402,17 +417,11 @@ def test_delegate_review_verdict_mixed_branch_names_the_path(
 ) -> None:
     from scripts import delegate
 
-    def fake_run(command: list[str], **kwargs: object):
-        import subprocess
-
-        if command[:3] == ["git", "fetch", "origin"]:
-            assert command == ["git", "fetch", "origin", "feature"]
-            return subprocess.CompletedProcess(command, 0, stdout="")
-        assert command == ["git", "diff", "--name-only", "origin/main...origin/feature"]
-        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n{_CODE_PATH}\n")
-
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
-    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr(
+        "subprocess.run",
+        _fake_branch_diff("feature", f"{_CONTENT_PATH}\n{_CODE_PATH}\n"),
+    )
     args = delegate.build_parser().parse_args(
         _dispatch_argv("--require-review-verdict", "--review-profile", "ukrainian", "--branch", "feature")
     )
@@ -427,13 +436,8 @@ def test_delegate_review_verdict_file_listing_failure_is_refused(
 ) -> None:
     from scripts import delegate
 
-    def fake_run(command: list[str], **kwargs: object):
-        import subprocess
-
-        return subprocess.CompletedProcess(command, 1, stderr="origin/main missing")
-
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
-    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr("subprocess.run", _fake_branch_diff("feature", "", fail="fetch"))
     args = delegate.build_parser().parse_args(
         _dispatch_argv("--require-review-verdict", "--review-profile", "ukrainian", "--branch", "feature")
     )
@@ -447,12 +451,11 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
     from scripts import delegate
 
     listed: list[list[str]] = []
+    scripted = _fake_branch_diff("feature", f"{_CONTENT_PATH}\n")
 
     def fake_run(command: list[str], **kwargs: object):
-        import subprocess
-
         listed.append(command)
-        return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
+        return scripted(command, **kwargs)
 
     monkeypatch.setattr("subprocess.run", fake_run)
     args = delegate.build_parser().parse_args(
@@ -476,8 +479,10 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
     assert "write-shaped prompt" in err
     assert "gemini_code_review_forbidden" not in err
     assert listed == [
-        ["git", "fetch", "origin", "feature"],
-        ["git", "diff", "--name-only", "origin/main...origin/feature"],
+        ["git", "check-ref-format", "--branch", "feature"],
+        ["git", "fetch", "origin", _branch_refspec("feature")],
+        ["git", "rev-parse", "--verify", "refs/remotes/origin/feature"],
+        ["git", "diff", "--name-only", f"origin/main...{_REMOTE_SHA}"],
     ]
 
 
@@ -487,6 +492,10 @@ def test_agy_implementation_dispatch_is_not_review_gated(
     from scripts import delegate
 
     def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command[:2] == ["git", "check-ref-format"]:
+            return subprocess.CompletedProcess(command, 0, stdout="")
         raise AssertionError(f"implementation dispatch must not list a review diff: {command}")
 
     monkeypatch.setattr("subprocess.run", fake_run)
@@ -508,3 +517,62 @@ def test_agy_implementation_dispatch_is_not_review_gated(
     assert "write-shaped prompt" in err
     assert "gemini_code_review_forbidden" not in err
     assert "--review-profile" not in err
+
+
+def test_branch_fetch_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("a failed fetch must not reach Gemini dispatch")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("subprocess.run", _fake_branch_diff("feature", "", fail="fetch"))
+    with pytest.raises(SystemExit, match="could not list changed files"):
+        _handle_acp_compat(_review_args(branch="feature"), "agy")
+
+
+def test_branch_diff_failure_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("a failed diff must not reach Gemini dispatch")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr("subprocess.run", _fake_branch_diff("feature", "", fail="diff"))
+    with pytest.raises(SystemExit, match="could not list changed files"):
+        _handle_acp_compat(_review_args(branch="feature"), "agy")
+
+
+def test_pr_changed_files_mismatch_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("a short PR file list must not reach Gemini dispatch")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        lambda number: ("content-branch", "e" * 40),
+    )
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if "--paginate" in command:
+            return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
+        return subprocess.CompletedProcess(command, 0, stdout="2\n")
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    with pytest.raises(SystemExit, match="does not match changed_files"):
+        _handle_acp_compat(_review_args(pr=41), "agy")
+
+
+def test_pr_number_below_one_is_refused(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_dispatch(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("PR number below 1 must not reach Gemini dispatch")
+
+    def fake_run(command: list[str], **kwargs: object):
+        raise AssertionError(f"PR number below 1 must not reach gh: {command}")
+
+    monkeypatch.setattr("scripts.ai_agent_bridge._cli._dispatch_headless_review", fake_dispatch)
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._cli._resolve_same_repo_pr_head",
+        lambda number: ("content-branch", "e" * 40),
+    )
+    monkeypatch.setattr("subprocess.run", fake_run)
+    with pytest.raises(SystemExit, match="could not list changed files"):
+        _handle_acp_compat(_review_args(pr=0), "agy")

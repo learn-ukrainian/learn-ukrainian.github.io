@@ -1555,12 +1555,15 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
         raise SystemExit(
             f"ask --pr {pr_number}: PR payload has no head branch; refusing to review main"
         )
-    branch = branch.strip()
-    if branch.startswith(("-", "origin/", "refs/", "github/")):
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        branch = validate_plain_branch_name(branch, repo_root=REPO_ROOT)
+    except UnsafeBranchNameError as exc:
         raise SystemExit(
             f"ask --pr {pr_number}: PR head branch {branch!r} is not a local branch name; "
-            "refusing to review main"
-        )
+            f"refusing to review main ({exc})"
+        ) from exc
     if not _is_full_git_sha(head_sha):
         raise SystemExit(
             f"ask --pr {pr_number}: PR payload has no full head SHA; refusing to review main"

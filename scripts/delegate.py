@@ -3022,7 +3022,9 @@ def _warn_if_monitor_api_unreachable() -> None:
 
 def _origin_tracking_refspec(branch: str) -> str:
     """Explicit fetch mapping that lands ``branch`` under refs/remotes/origin."""
-    return f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
+    from scripts.common.git_context import origin_tracking_refspec
+
+    return origin_tracking_refspec(branch)
 
 
 def _fetch_remote_branch(remote: str, branch: str) -> subprocess.CompletedProcess[str] | None:
@@ -3199,14 +3201,16 @@ def _fetch_base(base: str) -> bool:
 
 
 def _validate_branch_reuse_name(branch: str) -> str:
-    """Reject unsafe or ambiguous ``--branch`` values before touching git."""
-    normalized = branch.strip()
-    if not normalized:
-        raise ValueError("--branch must name an existing non-protected branch")
-    if normalized.startswith(("origin/", "refs/", "github/")):
+    """Reject unsafe or ambiguous ``--branch`` values before attaching a worktree."""
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        normalized = validate_plain_branch_name(branch, repo_root=_REPO_ROOT)
+    except UnsafeBranchNameError as exc:
         raise ValueError(
-            f"--branch must be a local branch name without origin/, github/, or refs/ prefixes: got {branch!r}"
-        )
+            "--branch must be a local branch name without origin/, github/, or refs/ "
+            f"prefixes, and a valid git branch: got {branch!r} ({exc})"
+        ) from exc
 
     containment = _load_worktree_containment()
     if normalized in containment.PROTECTED_BRANCHES:

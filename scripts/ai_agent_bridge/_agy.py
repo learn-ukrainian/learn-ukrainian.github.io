@@ -221,28 +221,45 @@ def list_pr_changed_paths(pr_number: int, *, repo_root: str) -> list[str]:
     return paths
 
 
+def _full_git_sha(value: str) -> str | None:
+    sha = value.strip().lower()
+    if len(sha) == 40 and all(char in "0123456789abcdef" for char in sha):
+        return sha
+    return None
+
+
 def list_branch_changed_paths(branch: str, *, repo_root: str) -> list[str]:
     """Changed paths on the remote branch Gemini actually reads.
 
-    ``ask-agy --branch`` and ``delegate --branch`` mean ``origin/<name>``.
-    Diffing the local name accepts a stale content-only checkout while the
-    remote tip contains code, and refuses a remote-only branch as an unknown
-    revision. Fetch that one remote ref, then diff ``origin/main...origin/<name>``.
+    ``ask-agy --branch`` and ``delegate --branch`` mean the remote head.
+    Fetch with an explicit refspec so a narrow clone updates
+    ``refs/remotes/origin/<name>`` instead of only FETCH_HEAD, then diff the
+    SHA that fetch resolved. A stale tracking ref is never the diff base.
     """
-    name = branch.strip()
-    if (
-        not name
-        or name.startswith(("-", "origin/", "refs/"))
-        or "\n" in name
-        or "\x00" in name
-    ):
-        raise GeminiChangedPathListError(f"refusing to diff branch {branch!r}")
+    from scripts.common.git_context import (
+        UnsafeBranchNameError,
+        origin_tracking_refspec,
+        validate_plain_branch_name,
+    )
+
+    try:
+        name = validate_plain_branch_name(branch, repo_root=repo_root)
+    except UnsafeBranchNameError as exc:
+        raise GeminiChangedPathListError(f"refusing to diff branch {branch!r}: {exc}") from exc
     _run_changed_path_command(
-        ["git", "fetch", "origin", name],
+        ["git", "fetch", "origin", origin_tracking_refspec(name)],
         cwd=repo_root,
     )
+    sha = _full_git_sha(
+        _run_changed_path_command(
+            ["git", "rev-parse", "--verify", f"refs/remotes/origin/{name}"],
+            cwd=repo_root,
+        )
+    )
+    if sha is None:
+        raise GeminiChangedPathListError(f"fetch of {name!r} did not resolve an exact SHA")
     raw = _run_changed_path_command(
-        ["git", "diff", "--name-only", f"origin/main...origin/{name}"],
+        ["git", "diff", "--name-only", f"origin/main...{sha}"],
         cwd=repo_root,
     )
     return [line.strip() for line in raw.splitlines() if line.strip()]
@@ -257,7 +274,7 @@ def gemini_pr_or_branch_content_error(
     """Refuse a Gemini PR/branch target unless every changed path is content.
 
     A PR uses paginated ``gh api`` file names checked against ``changed_files``.
-    A branch with no PR fetches ``origin/<name>`` and diffs that remote ref.
+    A branch with no PR fetches that remote head by explicit refspec and diffs the SHA the fetch resolved.
     Any failure to list files refuses. ``None`` means the target may proceed.
     """
     if pr_number is None and not (branch and str(branch).strip()):
