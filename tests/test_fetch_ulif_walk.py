@@ -494,6 +494,243 @@ def test_parse_stored_gives_identical_rows_for_both_paradigm_sources(tmp_path: P
         ledger.close()
 
 
+def test_parse_stored_uses_completed_entry_after_interrupted_retry(tmp_path: Path, monkeypatch, capsys):
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+    real_keep = ulif_walk._keep_walk
+    first_server = MockULIFServer()
+
+    def first_transport(method: str, data: dict[str, str] | None) -> HttpResult:
+        result = first_server(method, data)
+        if data and data.get("__VIEWSTATE") == "VS-p2" and data.get("__EVENTARGUMENT") == "Select$1":
+            return HttpResult(
+                result.status_code, result.text.replace("(місто в Росії)", "(STALE RETRY BODY)"), result.headers
+            )
+        return result
+
+    def interrupt_after_entry(*args, **kwargs):
+        result = real_keep(*args, **kwargs)
+        if args[3] == "entry" and kwargs.get("register_position") == "2:1":
+            raise KeyboardInterrupt
+        return result
+
+    monkeypatch.setattr(ulif_walk, "_keep_walk", interrupt_after_entry)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=db_path,
+            delay_seconds=1.0,
+            transport=first_transport,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == ulif_walk.EXIT_INTERRUPTED
+    )
+    monkeypatch.setattr(ulif_walk, "_keep_walk", real_keep)
+
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=db_path,
+            delay_seconds=1.0,
+            transport=MockULIFServer(),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    cache = sqlite3.connect(db_path)
+    try:
+        responses = list(
+            ledger.conn.execute(
+                "SELECT response_sha256, homonym_index FROM responses "
+                "WHERE spelling = 'ішим' AND role = 'entry' ORDER BY id"
+            )
+        )
+        completed = ledger.completed_rows_for_spelling("ішим")
+        assert len(responses) == 3
+        assert [row[1] for row in responses] == [1, 1, 2]
+        assert responses[0][0] != responses[1][0]
+        assert len(completed) == 2
+        assert completed[0]["entry_sha256"] == responses[1][0]
+
+        cache.execute(
+            "UPDATE ulif_dictua_entries SET canonical_headword = 'KEEP' "
+            "WHERE normalized_query = 'ішим' AND homonym_index = 1"
+        )
+        cache.commit()
+        capsys.readouterr()
+        assert parse_stored(ledger, cache) == 0
+        err = capsys.readouterr().err
+        rows = list(
+            cache.execute(
+                "SELECT homonym_index, canonical_headword FROM ulif_dictua_entries "
+                "WHERE normalized_query = 'ішим' ORDER BY homonym_index"
+            )
+        )
+        duplicate = ledger.conn.execute("SELECT duplicate_content FROM spellings WHERE spelling = 'ішим'").fetchone()[0]
+        assert rows[0] == (1, "KEEP")
+        assert len(rows) == 2
+        assert [row[0] for row in rows] == [1, 2]
+        assert duplicate == 0
+        assert ledger.meta("differing_content_hashes") == "0"
+        assert (
+            "parse complete: 5 spellings parsed, 8 entries written, 0 groups differed, "
+            "0 printed_number_mismatch errors, positions skipped: 0"
+        ) in err
+
+        ledger.record_response(
+            spelling="ішим",
+            role="entry",
+            response_sha256="orphan-response",
+            request_sha256="orphan-request",
+            homonym_index=None,
+            register_position="2:99",
+        )
+        assert parse_stored(ledger, cache) == 0
+        err = capsys.readouterr().err
+        assert (
+            "parse complete: 5 spellings parsed, 8 entries written, 0 groups differed, "
+            "0 printed_number_mismatch errors, positions skipped: 1"
+        ) in err
+    finally:
+        cache.close()
+        ledger.close()
+
+
+def test_completed_attempt_is_the_only_source_of_tabs_in_offline_and_live_paths(tmp_path: Path):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    spelling = "ішим"
+    position = "1:0"
+    ledger = SpellingLedger(tmp_path / "state" / "ledger.sqlite")
+    cache = prepare_database(tmp_path / "cache.db")
+    try:
+        entry_html = _html("ishym-entry-1.html")
+        entry_sha = ulif_walk._sha256(entry_html.encode("utf-8"))
+        tab_bodies = {
+            "synonyms": _html("zamok-entry-2-syn.html"),
+            "phraseology": _html("zamok-entry-2-phras.html"),
+        }
+        for digest, body in [
+            (entry_sha, entry_html),
+            *[(ulif_walk._sha256(v.encode()), v) for v in tab_bodies.values()],
+        ]:
+            ulif_walk._store_blob(cache, digest, body.encode("utf-8"), "text/html; charset=utf-8")
+        cache.commit()
+
+        ledger.ensure_row(1, 0, select_arg="Select$0", stressed_headword="Іши́м", normalized_spelling=spelling)
+        # An interrupted attempt saved X; the completed attempt saved Y from the same entry body.
+        for kind in ("synonyms", "phraseology"):
+            ledger.record_response(
+                spelling=spelling,
+                role="entry",
+                response_sha256=entry_sha,
+                request_sha256="request",
+                homonym_index=1,
+                register_position=position,
+            )
+            ledger.record_response(
+                spelling=spelling,
+                role="tab",
+                response_sha256=ulif_walk._sha256(tab_bodies[kind].encode()),
+                request_sha256="request",
+                homonym_index=1,
+                tab_kind=kind,
+                register_position=position,
+            )
+        ledger.mark_row(1, 0, "completed", entry_sha256=entry_sha)
+        ledger.ensure(spelling)
+        ledger.mark(spelling, "stored", entry_count=1)
+
+        def stored_raw_kinds() -> set[str]:
+            ref = cache.execute(
+                "SELECT raw_response_ref FROM ulif_dictua_entries WHERE normalized_query = ?", (spelling,)
+            ).fetchone()[0]
+            manifest = cache.execute(
+                "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?", (ref.removeprefix("sha256:"),)
+            ).fetchone()[0]
+            return set(json.loads(manifest))
+
+        assert parse_stored(ledger, cache) == 0
+        assert stored_raw_kinds() == {"phraseology"}
+
+        cache.execute("DELETE FROM ulif_dictua_sections")
+        cache.execute("DELETE FROM ulif_dictua_entries")
+        cache.commit()
+        ledger.mark(spelling, "pending")
+        assert ulif_walk._commit_spelling_group(ledger, cache, spelling) == 0
+        assert stored_raw_kinds() == {"phraseology"}
+    finally:
+        cache.close()
+        ledger.close()
+
+
+def test_parse_refuses_mixed_targeted_and_walk_ledger(tmp_path: Path, capsys):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+    cache = prepare_database(db_path)
+    cache.close()
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.ensure_row(1, 0, select_arg="Select$0", stressed_headword="Іши́м", normalized_spelling="ішим")
+        ledger.record_response(spelling="ішим", role="seed", response_sha256="seed", request_sha256="request")
+        cache = prepare_database(db_path)
+        try:
+            with pytest.raises(ValueError, match="mixed targeted run and walk data"):
+                parse_stored(ledger, cache)
+        finally:
+            cache.close()
+    finally:
+        ledger.close()
+    assert ulif_walk.main(["parse", "--state-dir", str(state_dir), "--db", str(db_path)]) == EXIT_USAGE
+    assert "mixed targeted run and walk data" in capsys.readouterr().err
+
+
+def test_fetch_modes_refuse_reusing_the_opposite_state_dir(tmp_path: Path, capsys):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database, run_fetch
+
+    db_path = tmp_path / "cache.db"
+    prepare_database(db_path).close()
+
+    run_state = tmp_path / "run-state"
+    run_ledger = SpellingLedger(run_state / "ledger.sqlite")
+    run_ledger.set_meta("mode", "run")
+    run_ledger.close()
+    assert (
+        run_walk(
+            state_dir=run_state,
+            db_path=db_path,
+            transport=lambda *_: pytest.fail("mixed-mode walk made a request"),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_USAGE
+    )
+    assert "targeted run data in --state-dir" in capsys.readouterr().err
+
+    walk_state = tmp_path / "walk-state"
+    walk_ledger = SpellingLedger(walk_state / "ledger.sqlite")
+    walk_ledger.set_meta("mode", "walk")
+    walk_ledger.close()
+    assert (
+        run_fetch(
+            spellings=["ішим"],
+            state_dir=walk_state,
+            db_path=db_path,
+            transport=lambda *_: pytest.fail("mixed-mode run made a request"),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_USAGE
+    )
+    assert "walk data in --state-dir" in capsys.readouterr().err
+
+
 def test_resume_after_injected_mid_page_failure_refetches_nothing_already_stored(tmp_path: Path):
     server1 = MockULIFServer(fail_on_page2_row1=True)
     state_dir = tmp_path / "state"

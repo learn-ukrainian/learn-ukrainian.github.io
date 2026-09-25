@@ -279,7 +279,8 @@ dependency/critical-path → utilization. Later items never override earlier one
 2. **Authorized idle is not a utilization failure.** A settle-hold must name one code:
    `dependency_blocked | authoring_wip_cap | review_wip_cap | ci_capacity |
    worktree_wip_cap | disk_capacity | integration_wip_cap | human_decision |
-   no_ready_work`. Silence is not a disposition.
+   no_ready_work`. Silence is not a disposition. A free lane with nothing compatible
+   is `no_ready_work`; `dependency_blocked` names a real blocker, never a mismatch.
 3. **Pipeline with a depth limit.** While CF/CI runs on unit N, author N+1 only up to
    the WIP/resource cap. Unit N **regains priority** the moment review feedback returns.
    Never serialize implement → review → delta with idle gaps.
@@ -399,6 +400,9 @@ dispatch, run `capacity_pick` and pass `--check-budget` (or export
 Refuse habit-routing to hot / near_cap / CodexBar-deficit lanes when cooler seats
 are listed. `--check-budget` hard-subs via `dispatch_fallbacks` when mapped
 (e.g. `codex → cursor`); otherwise exits non-zero unless `--force-agent` + NOTE.
+Before claiming who authored work, read the `🔄 HARD AUTO-SUBSTITUTE` line (stderr) and
+the task record's `agent`/`model` in `batch_state/tasks/<id>.json` (2026-09-25). Never
+filter dispatch output down to the base-SHA line or drop stderr; that hides the substitution.
 
 Then dispatch with a numbered brief
 (worktree → work → tests → ruff → conventional commit → push → PR → **no auto-merge by
@@ -434,6 +438,11 @@ run `.venv/bin/python -m scripts.fleet.post_task_reap --task-id <id>` (dry-run b
 pass `--apply` to reap the bound dispatch worktree). `post_task_reap` delegates removal to
 the P0 reaper; do not substitute a direct Git removal path.
 
+**Wait-loop hygiene (2026-09-24).** Before arming a wait on a tool's output, grep the
+tool's source or one real output for the exact string — a loop on text the tool never
+prints (`would ADMIT` vs `would admit now`) waits forever. Never `pkill -f` a pattern
+that also appears in your own command line; it kills your shell.
+
 ### 5a. Required live-driver inbox drain — after settle
 
 Once the settle-loop reaches its decision point, drain again before choosing the next
@@ -456,10 +465,12 @@ and the attested SHA equals the current PR head. Discussion on the thread is not
 catalog and the served `/api/rules` reviewer-seat rule. Do **not** hardcode Claude
 Sonnet (or any one model). The writer's family is never eligible.
 
-**Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**
+**Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**,
+chosen from the "Code review" row of `model-assignment.md`
 (GLM from the Cloud catalog, Grok, GPT, Kimi K3, … — whatever the
 live catalog lists that is outside the author's family and meets
-`model-assignment.md` Code review routing). **VPS drivers** may still
+that Code review routing). Gemini/AGY reviews Ukrainian only, never code
+(operator 2026-09-25). **VPS drivers** may still
 use the existing `ask-<lane>` / `delegate.py` review path below; the landing order
 in §7 is the same.
 
@@ -480,6 +491,12 @@ This command line is unchanged, but the transport underneath it is not ACP
 route to a headless native CLI with tools (`delegate.py dispatch --agent <lane>
 --worktree`, `gh`/pytest available), never the tool-less `--deny-all --no-fs
 --no-terminal` chat transport. ACP stays for ordinary, non-review `ask-*`.
+
+**Read-only review asks can be refused on brief wording (#8703).** The write-shape check
+in `delegate.py` still refuses a read-only ask when a sentence or list item starts with a
+write verb (`Fix …`, `- Remove …`). Wrapped continuation lines, questions ending in `?`,
+and fenced or `>`-quoted text pass. Quote the brief under review; phrase your own asks as
+questions. After launching any `ask-*`, confirm `batch_state/tasks/<id>.json` exists.
 
 Read the review CONTENT (not just pass/fail), apply deltas,
 re-probe gate-driving data yourself. If the head moves after APPROVE, the CF is
@@ -549,6 +566,42 @@ exact-head CF review if the head moved, then re-queue — same hour, never left
 overnight. Do not stand up a bot or recovery workflow for this; it is driver work
 like any other red CI.
 
+**Before enqueue: cover the whole repo (#8692, fix #8707).** If the PR's own CI ran only
+the selected tier and the PR touches `tests/`, lint config, or anything repo-wide, add
+the `full-ci` label first so the queue run covers every shard. #8692 merged on shard 1
+alone; a repo-wide lint test in shard 3 then failed every full-tier run for ~2.5 h and
+dequeued unrelated PRs (#8691 ×3, #8693 ×2).
+
+**Before opening a PR that touches launchers or hooks, run every real-launcher test
+(2026-09-25).** A worker's targeted tests are not the CI suite. Most launcher tests call
+the shared `run_launcher` helper (`tests/test_launcher_contract.py`) instead of
+`subprocess`, so select on launcher names and helpers, never on `subprocess`. Run it from
+the checkout root; dispatch worktrees have no `.venv`, so resolve the primary checkout's
+interpreter:
+
+```bash
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" -m pytest -q $(grep -rlE 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|scripts/launchers/|\brun_launcher\b' tests/)
+```
+
+**Diagnose pytest failures from the junit artifact first (#8701, #8705).**
+`gh run view --log-failed` and the live log truncate or stall — that read as a "silent
+shard death", cost a closed PR and 3 review rounds, and was wrong. When the run has
+`pytest-junit-*` artifacts, download them to a scratch dir (never the primary checkout)
+and parse `<failure>`; a FAILED test there is a test failure, so confirm any new failure
+mode in the artifact before naming it. Lint, setup, and other jobs without that artifact:
+read `gh run view <run> --log-failed`.
+
+```bash
+gh run download <run> --pattern 'pytest-junit-*' -D "$(mktemp -d)"
+```
+
+**Main red: fix main first.** Find the breaking commit (`git log` of the failing test's
+inputs) and fix main before re-enqueueing anything. Refresh blocked PRs with
+`gh pr update-branch <pr>` (always pass the number; bare, it targets the current
+branch's PR) — never close/reopen, which reuses stale merge refs and fails again. Verify parent1 == the approved head and the PR patch-id is unchanged, then get
+one batched exact-head re-CF per reviewer family.
+
 ### 7-rollout. Local / production proof (when the epic requires it)
 
 Do **not** make every epic driver a standing release owner. Gate rollout by charter:
@@ -609,6 +662,9 @@ file handoff current — it stays authoritative through every plane mode (below)
 On a Hramatka epic (#4542) drive, before declaring the handoff verified-clean run
 `.venv/bin/python -m scripts.fleet.hramatka_hygiene_check` — only exit 0 is a pass;
 exit 2 (`unknown`, GitHub unreachable) is never a clean handoff either (`docs/runbooks/hramatka-driver-queue.md`).
+
+**Evidence hygiene.** Every timestamp in a handoff comes from `date -u`, never from
+memory or a clock guess (a handoff once said "18:0xZ" at 17:55Z).
 
 **Skill source of truth is git, not deploy trees.** Edit only
 `agents_extensions/shared/skills/drive-epic/SKILL.md` (this file). Never implement or

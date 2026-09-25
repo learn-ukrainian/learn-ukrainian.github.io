@@ -3060,9 +3060,9 @@ def test_run_worker_does_not_flag_read_only_tiny_response(
     assert state["status"] == "done"
     assert state["needs_finalize"] is False
     assert state["no_deliverable_reason"] is None
-    assert state["read_only_checkout_pre"] == {}
-    assert state["read_only_checkout_post"] == {}
+    assert state["read_only_snapshot_retention"] == "digest"
     assert state["read_only_mutation_paths"] == []
+    assert "read_only_checkout_pre" not in json.loads(delegate._state_path("read-only-tiny-response").read_text())
 
 
 def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
@@ -3117,6 +3117,8 @@ def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_checkout_pre"] == {}
+    assert state["read_only_snapshot_retention"] == "full"
+    assert (delegate._read_only_snapshot_dir_for("read-only-seminar-leak") / "read_only_checkout_post.json").is_file()
     assert state["read_only_mutation_paths"] == leaked_paths
     assert state["read_only_ignored_mutation_paths"] == ignored_paths
     assert state["read_only_checkout_post"] == {
@@ -3258,8 +3260,8 @@ def test_read_only_dispatch_allows_entire_harness_telemetry(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     for relative_path in _ENTIRE_HARNESS_TELEMETRY_PATHS:
-        assert state["read_only_checkout_post"][relative_path] == "!!"
         assert (checkout / relative_path).exists()
 
 
@@ -3510,8 +3512,8 @@ def test_read_only_dispatch_allows_harness_runtime_state(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     for relative_path in _READ_ONLY_RUNTIME_STATE_PATHS:
-        assert state["read_only_checkout_post"][relative_path] == "!!"
         assert (checkout / relative_path).exists()
 
 
@@ -3557,7 +3559,7 @@ def test_read_only_dispatch_allows_gitignored_cache_write(
     assert state["read_only_mutation_paths"] == []
     assert state["read_only_ignored_mutation_paths"] == [cache_path]
     assert state["last_error"] is None
-    assert state["read_only_checkout_post"][cache_path] == "!!"
+    assert state["read_only_snapshot_retention"] == "digest"
     assert (checkout / cache_path).exists()
 
 
@@ -3798,9 +3800,8 @@ def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     assert sibling.exists()
-    post = state["read_only_checkout_post"]
-    assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in post)
 
 
 def test_read_only_dispatch_still_fails_on_task_authored_write_with_sibling_worktree(

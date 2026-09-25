@@ -88,7 +88,7 @@ def test_reaper_lifecycle_create_recovery_ref_timeout(tmp_path: Path) -> None:
     ):
         ref, err = rl.create_recovery_ref(tmp_path, branch="feature", head="a" * 40)
         assert ref is None
-        assert "timed out after 30.0s" in str(err)
+        assert "timed out after 30s" in str(err)
 
 
 def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
@@ -127,7 +127,7 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
             worktree_path=target,
         )
         assert ok is False
-        assert "git rev-parse branch timed out after 30.0s" in str(err)
+        assert "git rev-parse branch timed out after 30s" in str(err)
 
     # 3. Timeout on worktree add
     with patch(
@@ -145,7 +145,7 @@ def test_reaper_lifecycle_restore_worktree_timeouts(tmp_path: Path) -> None:
             worktree_path=target,
         )
         assert ok is False
-        assert "git worktree add timed out after 30.0s" in str(err)
+        assert "git worktree add timed out after 30s" in str(err)
 
     # 4. Successful restore verifies timeout passed to all calls
     calls: list[dict] = []
