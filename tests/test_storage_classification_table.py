@@ -28,6 +28,7 @@ def generated() -> tuple[str, list[dict[str, str]]]:
     return table, list(csv.DictReader(io.StringIO(table), delimiter="\t"))
 
 
+@pytest.mark.repo_wide
 def test_frozen_rows_and_git_index_totals(generated: tuple[str, list[dict[str, str]]]) -> None:
     table, rows = generated
     assert table == TABLE.read_text(encoding="utf-8")
@@ -41,8 +42,8 @@ def test_frozen_rows_and_git_index_totals(generated: tuple[str, list[dict[str, s
     # phases remove data/ paths from the live worktree index.
     with tempfile.TemporaryDirectory(prefix=".classification-index-", dir=ROOT) as scratch:
         env = {**os.environ, "GIT_INDEX_FILE": str(Path(scratch) / "index")}
-        subprocess.run(["git", "read-tree", BASE], cwd=ROOT, env=env, check=True)
-        index = subprocess.check_output(["git", "ls-files", "-s", "data"], cwd=ROOT, env=env)
+        subprocess.run(["git", "read-tree", BASE], cwd=ROOT, env=env, check=True, timeout=30)
+        index = subprocess.check_output(["git", "ls-files", "-s", "data"], cwd=ROOT, env=env, timeout=30)
     entries = [line.split(b"\t", 1) for line in index.splitlines()]
     assert len(entries) == len(rows)
     indexed = {path.decode(): (meta.split()[0].decode(), meta.split()[1].decode()) for meta, path in entries}
@@ -54,6 +55,7 @@ def test_frozen_rows_and_git_index_totals(generated: tuple[str, list[dict[str, s
         input=blobs,
         stdout=subprocess.PIPE,
         check=True,
+        timeout=120,
     ).stdout
     assert sum(int(size) for size in sizes.splitlines()) == sum(int(row["size"]) for row in rows)
 
@@ -79,7 +81,7 @@ def test_meta_matches_table_generator_and_git_base(generated: tuple[str, list[di
     assert (
         meta["generator_blob"]
         == subprocess.check_output(
-            ["git", "hash-object", "scripts/storage/build_classification_table.py"], cwd=ROOT, text=True
+            ["git", "hash-object", "scripts/storage/build_classification_table.py"], cwd=ROOT, text=True, timeout=30
         ).strip()
     )
 

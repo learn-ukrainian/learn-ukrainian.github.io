@@ -763,6 +763,7 @@ def git(repo: Path, *args: str, env: dict[str, str] | None = None) -> bytes:
         check=True,
         capture_output=True,
         env=env,
+        timeout=30,
     ).stdout
 
 

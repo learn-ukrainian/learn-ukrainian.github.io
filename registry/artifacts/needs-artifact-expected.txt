@@ -1,0 +1,2 @@
+# One exact JUnit ID (classname::name) per expected needs_artifact skip.
+# Update alongside the test baseline when an artifact-dependent test is added.
