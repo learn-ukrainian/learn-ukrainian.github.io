@@ -191,6 +191,20 @@ class KimiccHarness:
             "--prompt",
             prompt,
         ]
+        # A read-only review carries the sources MCP grant (the delegate
+        # review grant or a sealed review attempt). The wrapper runs it in
+        # dontAsk mode instead of plan mode, which refuses every MCP call
+        # (#8652): only the granted tools and the read/search built-ins run,
+        # and Write/Edit/NotebookEdit/Bash stay denied. Other read-only
+        # dispatches (plain, trail isolation) keep plan mode, and write modes
+        # never get this flag.
+        if (
+            mode == "read-only"
+            and not trail_isolation
+            and isinstance(tc.get("mcp_config_path"), str)
+            and tc.get("allowed_tools")
+        ):
+            cmd.append("--read-only-review")
         if trail_isolation:
             cmd.extend(
                 [
@@ -209,11 +223,7 @@ class KimiccHarness:
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--strict-mcp-config"])
             if tc.get("allowed_tools"):
                 cmd.extend(["--allowedTools", str(tc["allowed_tools"])])
-        elif (
-            mode == "read-only"
-            and isinstance(tc.get("mcp_config_path"), str)
-            and tc.get("allowed_tools")
-        ):
+        elif mode == "read-only" and isinstance(tc.get("mcp_config_path"), str) and tc.get("allowed_tools"):
             # Local boundary, not only the delegate grant. --bare does not
             # load .mcp.json, so a read-only review passes the checkout file
             # plus the sources --allowedTools grant. A write mode that still

@@ -326,6 +326,7 @@ def test_kimicc_sources_grant_argv_is_read_only_only(tmp_path, monkeypatch):
     )
     assert read_only.cmd[read_only.cmd.index("--mcp-config") + 1] == str(tmp_path / ".mcp.json")
     assert read_only.cmd[read_only.cmd.index("--allowedTools") + 1] == "mcp__sources__verify_word"
+    assert "--read-only-review" in read_only.cmd
 
     write = KimiccHarness().build_invocation(
         prompt="critique",
@@ -338,6 +339,33 @@ def test_kimicc_sources_grant_argv_is_read_only_only(tmp_path, monkeypatch):
     )
     assert "--mcp-config" not in write.cmd
     assert "--allowedTools" not in write.cmd
+    assert "--read-only-review" not in write.cmd
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+def test_kimicc_review_profile_needs_read_only_mode_and_sources_grant(tmp_path, monkeypatch, mode):
+    """Only a read-only dispatch with the sources grant leaves plan mode (#8652)."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    strict_grant = {
+        "mcp_config_path": str(tmp_path / ".mcp.json"),
+        "allowed_tools": "mcp__sources__verify_words",
+        "strict_mcp_config": True,
+    }
+    for tool_config, expected in (
+        (strict_grant, mode == "read-only"),
+        ({}, False),
+        ({"mcp_config_path": str(tmp_path / ".mcp.json")}, False),
+    ):
+        plan = KimiccHarness().build_invocation(
+            prompt="critique",
+            mode=mode,
+            cwd=tmp_path,
+            model="k3",
+            task_id=f"kimicc-review-profile-{mode}",
+            session_id=None,
+            tool_config=tool_config,
+        )
+        assert ("--read-only-review" in plan.cmd) is expected, (mode, tool_config)
 
 
 def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
