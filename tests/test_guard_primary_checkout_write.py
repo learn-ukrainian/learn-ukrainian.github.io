@@ -765,3 +765,118 @@ def test_bash_shell_var_reassignment_not_expanded(repo: Path):
     # Must not allow (would dirty tracked file under bash's true binding).
     assert result.returncode == 2, result.stderr
     assert "unresolved_shell_variable" in result.stderr or "tracked_primary" in result.stderr
+
+
+# ===========================================================================
+# #8500: same-command $VAR paths are expanded before the containment check
+# ===========================================================================
+
+
+@pytest.mark.parametrize(
+    "command, text, unresolved_at",
+    [
+        ("S=/tmp/x; cat > $S/a.md", "/tmp/x/a.md", None),
+        ('S=/tmp/x && echo hi > "$S/b.txt"', "/tmp/x/b.txt", None),
+        ("export S=/tmp/y; echo x > ${S}/f", "/tmp/y/f", None),
+        ("A=/tmp; B=$A/b; echo x > $B/f", "/tmp/b/f", None),
+        # Quoted / escaped expansion characters stay literal.
+        ("echo x > '$HOME/f'", "$HOME/f", None),
+        ('echo x > "~/f"', "~/f", None),
+        # Unknown values: never assigned, $(...), backticks, subshell- or
+        # pipeline-scoped, prefix-only, re-bound, or after source/eval.
+        ("echo x > $UNSET/f", "$UNSET/f", 0),
+        ("S=$(pwd); echo x > $S/f", "$S/f", 0),
+        ("S=`pwd`; echo x > $S/f", "$S/f", 0),
+        ("(S=/tmp/x); echo x > $S/f", "$S/f", 0),
+        ("S=/tmp/x | cat; echo x > $S/f", "$S/f", 0),
+        ("S=/tmp/x cmd > $S/f", "$S/f", 0),
+        ("S=/tmp/x; for S in a; do echo x > $S/f; done", "$S/f", 0),
+        ("S=/tmp/x; source env.sh; echo x > $S/f", "$S/f", 0),
+        ("echo x > /tmp/$X/y", "/tmp/$X/y", 5),
+    ],
+)
+def test_bash_write_targets_expand_same_command_variables(command, text, unresolved_at):
+    (target,) = hook.bash_write_targets(command)
+    assert target == text
+    assert target.unresolved_at == unresolved_at
+
+
+def test_bash_write_targets_expand_home_and_tilde(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("HOME", "/home/someone")
+    assert hook.bash_write_targets("echo x > ~/f; echo y > $HOME/g") == [
+        "/home/someone/f",
+        "/home/someone/g",
+    ]
+
+
+def test_bash_git_write_intents_expand_dash_c_variable():
+    (intent,) = hook.bash_git_write_intents("W=/r/.worktrees/dispatch/a/b; git -C $W add f")
+    assert intent["c_path"] == "/r/.worktrees/dispatch/a/b"
+
+
+def _bash(repo: Path, command: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
+    payload = {
+        "tool_name": "Bash",
+        "cwd": str(cwd or repo),
+        "tool_input": {"command": command},
+    }
+    return _run(repo, payload)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "S=/tmp/x; cat > $S/a.md",
+        'S=/tmp/x && echo hi > "$S/b.txt"',
+        "S=/tmp/x; echo hi | tee $S/c.txt",
+        "echo x > ~/scratch-8500.txt",
+        # Unknown tail under a literal directory that cannot reach the primary.
+        "echo x > /nonexistent-8500/$X/f",
+        "echo x > local_state/$X.log",
+    ],
+)
+def test_bash_expanded_variable_write_outside_primary_allowed(repo: Path, command: str):
+    result = _bash(repo, command)
+    assert result.returncode == 0, result.stderr
+
+
+def test_bash_expanded_variable_git_dash_c_worktree_allowed(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, f"W={worktree}; git -C $W add f")
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command, reason",
+    [
+        ("S={repo}; echo x > $S/f", "untracked_primary_checkout"),
+        ("S={repo}; echo x > $S/curriculum/tracked.md", "tracked_primary_checkout"),
+        ("echo x > $UNSET/f", "unresolved_shell_variable"),
+        ("S=$(pwd); echo x > $S/f", "unresolved_shell_variable"),
+        ("(S=/tmp/x); echo x > $S/f", "unresolved_shell_variable"),
+        ("echo x > '$HOME/f'", "untracked_primary_checkout"),
+        # A literal prefix that is the primary root or one of its ancestors
+        # can still reach the primary through the unknown component.
+        ("echo x > {repo}/$X/f", "unresolved_shell_variable"),
+        ("echo x > {parent}/$X/f", "unresolved_shell_variable"),
+    ],
+)
+def test_bash_variable_write_into_primary_still_blocked(repo: Path, command: str, reason: str):
+    result = _bash(repo, command.format(repo=repo, parent=repo.parent))
+    assert result.returncode == 2, result.stderr
+    assert reason in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "W={repo}; git -C $W add curriculum/tracked.md",
+        "git -C $UNSET add curriculum/tracked.md",
+        "W=$(pwd); git -C $W apply /tmp/worker.diff",
+    ],
+)
+def test_bash_variable_git_dash_c_primary_still_blocked(repo: Path, command: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, command.format(repo=repo), cwd=worktree)
+    assert result.returncode == 2, result.stderr
+    assert "#5396" in result.stderr
