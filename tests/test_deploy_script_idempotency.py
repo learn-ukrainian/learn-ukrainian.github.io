@@ -59,6 +59,50 @@ assert "scripts.ai_agent_bridge" not in sys.modules
     assert result.returncode == 0, result.stderr
 
 
+def test_shared_conftest_autouse_setup_without_api_runtime() -> None:
+    """Run a real test through conftest's autouse setup in the rules venv."""
+    probe = """
+import importlib.abc
+import sys
+from pathlib import Path
+
+import pytest
+import yaml  # noqa: F401
+
+ALLOWED_PREFIXES = (
+    "pytest", "_pytest", "pluggy", "yaml", "_yaml", "iniconfig",
+    "packaging", "scripts", "tests", "agent_runtime",
+)
+
+class AllowlistOnly(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        top = fullname.partition(".")[0]
+        if top == "learn_ukrainian_v4_runtime":
+            raise ModuleNotFoundError(f"No module named '{top}'", name=top)
+        if (top in sys.stdlib_module_names or top in ALLOWED_PREFIXES
+                or Path(f"{top}.py").is_file() or Path(top, "__init__.py").is_file()
+                or Path("scripts", f"{top}.py").is_file()
+                or Path("scripts", top, "__init__.py").is_file()):
+            return None
+        raise ImportError(f"test setup imported outside the allowlist: {fullname}")
+
+sys.meta_path.insert(0, AllowlistOnly())
+raise SystemExit(pytest.main([
+    "tests/test_deploy_script_idempotency.py::test_shared_conftest_imports_without_bridge_runtime",
+    "-q", "-o", "addopts=",
+]))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", probe],
+        cwd=REPO_ROOT,
+        env={**os.environ, "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1", "PYTEST_PLUGINS": ""},
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def _resolve_project_python() -> Path:
     local = REPO_ROOT / ".venv" / "bin" / "python"
     if local.exists():

@@ -781,10 +781,12 @@ sys.addaudithook(_task_store_write_hook)
 def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path) -> None:
     """Point Monitor's task-store root at this test's ``batch_state``.
 
-    ``create_app(production_context())`` freezes ``config.BATCH_STATE_DIR`` onto
-    ``app.state.ctx`` at import. ``delegate_router._tasks_dir`` then writes
-    ``.task_cache.sqlite3`` under that directory. The delegate ``_TASKS_DIR``
-    retarget does not move it, and the audit guard turns that connect into a
+    ``production_context()`` reads ``config.BATCH_STATE_DIR`` when called, so
+    importing Monitor here would only pull in FastAPI during fixture setup in
+    minimal test environments. ``create_app(production_context())`` freezes
+    the root onto ``app.state.ctx`` at import. ``delegate_router._tasks_dir``
+    then writes ``.task_cache.sqlite3`` under that directory. The delegate
+    ``_TASKS_DIR`` retarget does not move it, and the audit guard turns that connect into a
     500 (``Failed`` is a ``BaseException``, so the orient section handler does
     not catch it).
 
@@ -798,10 +800,11 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
     is the lesson store, not ``tasks/``, and this guard does not watch it.
     """
     import scripts.api.config as api_config
-    from scripts.api.monitor_context import production_context
 
     monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
-    production_context.cache_clear()
+    monitor_context = sys.modules.get("scripts.api.monitor_context")
+    if monitor_context is not None:
+        monitor_context.production_context.cache_clear()
     api_main = sys.modules.get("scripts.api.main")
     if api_main is None:
         return
@@ -812,16 +815,22 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
 
 
 def _retarget_loaded_task_dirs(monkeypatch: pytest.MonkeyPatch, isolated: Path) -> None:
-    """Import each known task-store module and point its constant at ``isolated``.
+    """Import available task-store modules and point their constants at ``isolated``.
 
     Importing here binds the name before a test body can import the module and
-    keep the live path. The list is ``_TASK_STORE_RETARGETS``, not a scan of
-    ``sys.modules``.
+    keep the live path. Minimal workflow venvs omit the agent runtime package;
+    modules requiring it cannot be imported there. The list is
+    ``_TASK_STORE_RETARGETS``, not a scan of ``sys.modules``.
     """
     import importlib
 
     for module_name, attr in _TASK_STORE_RETARGETS:
-        module = importlib.import_module(module_name)
+        try:
+            module = importlib.import_module(module_name)
+        except ModuleNotFoundError as exc:
+            if exc.name != "learn_ukrainian_v4_runtime":
+                raise
+            continue
         monkeypatch.setattr(module, attr, isolated)
 
 
