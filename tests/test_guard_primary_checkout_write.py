@@ -1007,7 +1007,7 @@ def test_issue_8785_safe_globs_remain_allowed(repo: Path, target: str):
     [
         ("/tmp/out-?.txt", False),
         ("{primary}/out-?.txt", True),
-        ("/tmp/*/main/AGENTS.md", True),
+        ("{grandparent}/*/main/AGENTS.md", True),
         ("{primary}/{{a,b}}.md", True),
         ("/tmp/{{a,b}}.txt", False),
         ("{parent}/**/AGENTS.md", True),
@@ -1015,11 +1015,58 @@ def test_issue_8785_safe_globs_remain_allowed(repo: Path, target: str):
 )
 def test_issue_8785_glob_reach_depends_on_component(repo: Path, template: str, blocked: bool):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
-    command = f"echo x > {template.format(primary=repo, parent=repo.parent)}"
+    command = f"echo x > {template.format(primary=repo, parent=repo.parent, grandparent=repo.parent.parent)}"
     result = _bash(repo, command, cwd=worktree)
     assert result.returncode == (2 if blocked else 0), result.stderr
     if blocked:
         assert "undecidable_glob_write_target" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "cp /tmp/payload {parent}/m*",
+        "cp /tmp/payload {parent}/mai?",
+        "cp -t {parent}/m* /tmp/payload",
+        "cp /tmp/payload {parent}/{{main,other}}",
+        "rm -rf {parent}/m*",
+        "chmod 700 {parent}/m*",
+        "mv {parent}/m* /tmp/x",
+        "ln -s /tmp/payload {parent}/m*",
+        "rsync -a /tmp/payload {parent}/m*",
+        "cd {parent}; rm -rf m*",
+        "cd {parent}; cp /tmp/payload m*",
+    ],
+)
+def test_issue_8785_final_component_can_match_primary(repo: Path, template: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(parent=repo.parent)
+    result = _bash(repo, command, cwd=worktree)
+    assert result.returncode == 2, (command, result.stderr)
+    assert "undecidable_glob_write_target" in result.stderr
+
+
+@pytest.mark.parametrize("pattern", ["*", "m*", "mai?", "{main,other}", "{other,ma*}", "{main,{other}}", "{other,{main,sibling}}"])
+def test_issue_8785_parent_pattern_matching_primary_blocks(repo: Path, pattern: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, f"rm -rf {repo.parent}/{pattern}", cwd=worktree)
+    assert result.returncode == 2, result.stderr
+    assert "undecidable_glob_write_target" in result.stderr
+
+
+@pytest.mark.parametrize("pattern", ["other*", "{other,sibling}", "out-?.txt", "{a,b}.txt"])
+def test_issue_8785_parent_pattern_matching_siblings_allowed(repo: Path, pattern: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, f"rm -rf {repo.parent}/{pattern}", cwd=worktree)
+    assert result.returncode == 0, result.stderr
+
+
+def test_issue_8785_hidden_component_glob_semantics():
+    assert not hook._final_component_matches("*", ".main")
+    assert not hook._final_component_matches("[.]main", ".main")
+    assert hook._final_component_matches(".m*", ".main")
+    assert hook._final_component_matches("{other,.m*}", ".main")
+    assert hook._final_component_matches("{other,{.main,sibling}}", ".main")
 
 
 @pytest.mark.parametrize(

@@ -129,6 +129,7 @@ for one shell invocation. Prefer fixing the cwd / using a worktree instead.
 
 from __future__ import annotations
 
+import fnmatch
 import json
 import os
 import re
@@ -2210,6 +2211,34 @@ def _resolve(path_str: str, cwd: str, *, expand_user: bool = True) -> Path:
     return path
 
 
+def _final_component_matches(pattern: str, name: str) -> bool:
+    """Match a shell final-component pattern, including brace alternatives."""
+    for start, char in enumerate(pattern):
+        if char != "{":
+            continue
+        depth = 0
+        alternatives: list[str] = []
+        part_start = start + 1
+        for end in range(start, len(pattern)):
+            if pattern[end] == "{":
+                depth += 1
+            elif pattern[end] == "}":
+                depth -= 1
+                if depth == 0:
+                    alternatives.append(pattern[part_start:end])
+                    if len(alternatives) > 1:
+                        return any(
+                            _final_component_matches(pattern[:start] + alternative + pattern[end + 1 :], name)
+                            for alternative in alternatives
+                        )
+                    break
+            elif pattern[end] == "," and depth == 1:
+                alternatives.append(pattern[part_start:end])
+                part_start = end + 1
+    # Bash globs do not match a leading dot unless the pattern starts with it.
+    return (not name.startswith(".") or pattern.startswith(".")) and fnmatch.fnmatchcase(name, pattern)
+
+
 def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None) -> object:
     """Containment decision for one expanded Bash path word.
 
@@ -2227,10 +2256,12 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
         first = next(i for i, part in enumerate(parts) if re.search(r"[*?\[\]{}]", part))
         prefix = Path(*parts[:first]) if first else Path(".")
         prefix = _resolve(str(prefix), getattr(word, "base", None) or base, expand_user=False).resolve()
-        # A glob confined to the filename cannot descend from an ancestor
-        # directory into the primary checkout. Directory globs and ** can.
+        # Directory globs and ** can descend from an ancestor. A final-component
+        # glob reaches the primary only if it matches the next path component.
         directory_glob = first < len(parts) - 1 or "**" in word
-        may_reach_primary = prefix == main_root or (directory_glob and prefix in main_root.parents)
+        may_reach_primary = prefix == main_root
+        if prefix in main_root.parents:
+            may_reach_primary = directory_glob or _final_component_matches(parts[-1], main_root.relative_to(prefix).parts[0])
         if main_root in prefix.parents:
             may_reach_primary = not wc.evaluate_write(prefix / "__guard_glob_probe__", cwd=base).allowed
         if may_reach_primary:
