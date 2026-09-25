@@ -24,6 +24,10 @@ rejections is re-implemented), then:
    ``fixloop verdict <level> <slug> --repair-projections`` rewrites it;
 3. **rejected** — writes the saved return and an ``attempts`` row (``verdict: REJECTED`` with the
    validator's codes), nothing else. Count it as a failed review with ``--failure``;
+   A first-seat lesson attempt past a **terminal budget** is refused the same way (``budget_terminal``, a
+   REJECTED row that touches no budget, settle item or verdict file): the lesson's REVISE rounds are past the
+   limit, or the module's regenerations are spent and the lesson's verdict of record is a REVISE on the very
+   manifest under review. It is accepted again after ``fixloop budget-decision`` records the operator's decision;
 4. ``--failure <reason>`` records a review that returned nothing (or a rejected return): an
    ``attempts`` row and one more ``budgets.review_failures``.
 
@@ -75,6 +79,7 @@ ATTEMPT_IDENTITY_MISMATCH = "attempt_identity_mismatch"
 SAME_FAMILY_REVIEW = "same_family_review"
 WRITER_IDENTITY_UNKNOWN = "writer_identity_unknown"
 ATTEMPT_RETURN_CONFLICT = "attempt_return_conflict"
+BUDGET_TERMINAL = "budget_terminal"
 
 
 class RecordError(Exception):
@@ -351,6 +356,10 @@ def record_return(
                 )
             except second_seat.SecondSeatError as error:
                 raise RecordError(str(error)) from error
+        if kind == "lesson" and seed_id is None and not second:
+            terminal_budget = _terminal_budget(conn, root, level, slug, lesson_n, manifest_sha, params)
+            if terminal_budget is not None:
+                preset.append(BUDGET_TERMINAL)
         codes = list(
             dict.fromkeys(
                 [
@@ -411,7 +420,12 @@ def record_return(
                     rejection_codes=codes,
                     saved_return=_rel(root, saved),
                     seed_id=seed_id,
-                    next=f"count it as a failed review: record --failure rejected_return --review-id {review_id} --attempt-id {attempt_id}",
+                    next=(
+                        f"{terminal_budget}; the operator decides: python -m scripts.review.fixloop budget-decision"
+                        f" {level} {slug} {lesson_n} --decision ... --decided-by ..."
+                        if BUDGET_TERMINAL in codes
+                        else f"count it as a failed review: record --failure rejected_return --review-id {review_id} --attempt-id {attempt_id}"
+                    ),
                 )
             outcome = _persist_accepted(
                 conn, root, directory, review, row, seed_id, second, first, moment, verify_saved
@@ -428,6 +442,42 @@ def record_return(
         return outcome
     finally:
         conn.close()
+
+
+def _terminal_budget(
+    conn: sqlite3.Connection,
+    root: Path,
+    level: str,
+    slug: str,
+    lesson_n: int,
+    manifest_sha: str,
+    params: dict[str, Any],
+) -> str | None:
+    """Why a new first-seat attempt of the lesson is past a terminal budget (the operator has not decided), or None.
+
+    The REVISE budget is the lesson's own: past it, every attempt is refused. The regeneration budget is the
+    module's: once spent, a lesson still REVISE on the manifest under review cannot be regenerated, so a
+    review of that same manifest only cycles; a review of a new manifest (the last regeneration's) stays open.
+    """
+    if findings_db.revise_budget_terminal(conn, level, slug, lesson_n, params):
+        return (
+            f"lesson {lesson_n}: REVISE round {findings_db.module_budgets(conn, level, slug)[lesson_n]['revise_rounds']}"
+            f" exceeds {params['max_revise_rounds']}; no further round is allowed"
+        )
+    latest = findings_db.latest_accepted(conn, level, slug, "lesson", lesson_n)
+    if latest is None or latest["verdict"] != "REVISE" or latest["manifest_sha256"] != manifest_sha:
+        return None
+    try:
+        lesson_count = len(fixloop.plan_lessons(root, level, slug))
+    except fixloop.FixLoopError as error:
+        raise RecordError(
+            f"the module's lessons are unknown ({error}); the regeneration budget cannot be checked"
+        ) from error
+    if findings_db.regeneration_budget_terminal(conn, level, slug, lesson_count, params):
+        return (
+            f"the regeneration budget of {level}/{slug} is spent and lesson {lesson_n} is still REVISE on this manifest"
+        )
+    return None
 
 
 def review_verdict(review: Any) -> str:
@@ -567,14 +617,13 @@ def _terminal_now(
     conn: Any, level: str, slug: str, lesson_n: int | None, params: dict[str, Any]
 ) -> list[dict[str, Any]]:
     """The terminal transitions the counters of ``lesson_n`` (or the plan) imply right now."""
-    budget = findings_db.module_budgets(conn, level, slug).get(
-        lesson_n if lesson_n is not None else findings_db.PLAN_LESSON_N
-    )
+    target = lesson_n if lesson_n is not None else findings_db.PLAN_LESSON_N
+    budget = findings_db.module_budgets(conn, level, slug).get(target)
     if budget is None:
         return []
     where = f"lesson {lesson_n}" if lesson_n is not None else "the plan review"
     found = []
-    if budget["revise_rounds"] > params["max_revise_rounds"]:
+    if findings_db.revise_budget_terminal(conn, level, slug, target, params):
         found.append(
             {
                 "transition": fixloop.TERMINAL,

@@ -472,6 +472,174 @@ def test_each_revise_verdict_is_a_round_and_the_third_is_terminal(world: World) 
     )
 
 
+def _revise(world: World) -> record.Outcome:
+    return world.record(world.make_return(2, [finding("F-01", severity="MAJOR")]))
+
+
+def _decide(world: World, budget: str, decided_by: str = "operator") -> int:
+    conn = findings_db.connect(world.db)
+    try:
+        return findings_db.record_budget_operator_decision(
+            conn, LEVEL, SLUG, 2, "one more round", decided_by, budget=budget
+        )
+    finally:
+        conn.close()
+
+
+def test_a_revise_round_past_the_terminal_budget_is_refused_and_counts_nothing(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    projection = world.verdict_file(2).read_bytes()
+    attempts = len(world.db_rows("attempts"))
+    outcome = _revise(world)  # the reviewer's reproduction: a fourth record after the terminal third
+    assert not outcome.accepted and outcome.verdict == "REJECTED"
+    assert outcome.rejection_codes == [record.BUDGET_TERMINAL] and not outcome.terminal
+    assert "budget-decision" in outcome.next
+    [budget] = world.db_rows("budgets", "lesson_n = 2")
+    assert budget["revise_rounds"] == 3
+    assert world.verdict_file(2).read_bytes() == projection
+    rows = world.db_rows("attempts")
+    assert len(rows) == attempts + 1 and rows[-1]["verdict"] == "REJECTED"
+    assert json.loads(rows[-1]["rejection_codes_json"]) == [record.BUDGET_TERMINAL]
+    assert world.db_rows("findings", f"attempt_id = '{rows[-1]['attempt_id']}'") == []
+
+
+def test_the_cli_exits_1_on_a_refused_round_past_the_terminal_budget(
+    world: World, capsys: pytest.CaptureFixture[str]
+) -> None:
+    for _ in range(3):
+        _revise(world)
+    made = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    assert record.main(_argv(world, made)) == 1
+    assert json.loads(capsys.readouterr().out)["rejection_codes"] == [record.BUDGET_TERMINAL]
+
+
+def test_a_refused_round_is_replayed_as_refused(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    made = world.make_return(2, [finding("F-01", severity="MAJOR")])
+    first, again = world.record(made), world.record(made)
+    assert first.rejection_codes == again.rejection_codes == [record.BUDGET_TERMINAL] and not again.accepted
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 3
+
+
+def test_an_operator_decision_allows_one_more_round_then_the_budget_is_terminal_again(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    assert _decide(world, "revise_rounds") == 3
+    fourth = _revise(world)
+    assert fourth.accepted and world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 4
+    assert fourth.terminal[0]["reason"] == "revise_budget_exhausted"  # a fourth round is terminal again
+    fifth = _revise(world)
+    assert fifth.rejection_codes == [record.BUDGET_TERMINAL]
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 4
+    assert _decide(world, "revise_rounds") == 4
+    assert _revise(world).accepted
+
+
+def test_a_decision_for_another_lesson_or_before_the_budget_is_terminal_does_not_release_a_lesson(
+    world: World,
+) -> None:
+    _revise(world)
+    _revise(world)
+    _decide(world, "revise_rounds")  # count 2: the budget is not terminal yet, the decision is spent by round 3
+    assert _revise(world).accepted
+    assert _revise(world).rejection_codes == [record.BUDGET_TERMINAL]
+
+
+def test_an_approve_of_another_lesson_is_not_blocked_by_a_terminal_lesson(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    assert world.record(world.make_return(1)).accepted
+
+
+def _spend_regenerations(world: World, count: int) -> None:
+    conn = findings_db.connect(world.db)
+    try:
+        for n in [1, 2, 3, 1, 2, 3][:count]:
+            fixloop.regenerate(conn, LEVEL, SLUG, n, [1, 2, 3], findings_db.load_parameters(), None)
+    finally:
+        conn.close()
+
+
+def test_a_review_of_an_unregenerated_revise_manifest_is_refused_once_the_regenerations_are_spent(
+    world: World,
+) -> None:
+    assert _revise(world).verdict == "REVISE"
+    _spend_regenerations(world, 6)
+    outcome = _revise(world)  # the same manifest, still REVISE, and nothing left to regenerate it with
+    assert outcome.rejection_codes == [record.BUDGET_TERMINAL] and not outcome.accepted
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 1
+    _decide(world, "regenerations")
+    assert _revise(world).accepted
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 2
+
+
+def test_the_review_of_the_last_regeneration_is_not_refused(world: World) -> None:
+    assert _revise(world).verdict == "REVISE"
+    _spend_regenerations(world, 6)
+    regenerate_lesson_two(world)  # a new manifest: this is the regenerated lesson's own review
+    assert world.record(world.make_return(2)).accepted
+
+
+def test_regeneration_is_refused_past_the_budget_until_the_operator_decides(world: World) -> None:
+    _spend_regenerations(world, 6)
+    conn = findings_db.connect(world.db)
+    try:
+        params, lessons = findings_db.load_parameters(), [1, 2, 3]
+        with pytest.raises(fixloop.TerminalTransition):
+            fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)
+        findings_db.record_budget_operator_decision(
+            conn, LEVEL, SLUG, 2, "one more", "operator", budget="regenerations"
+        )
+        assert fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)["regenerations"] == 7
+        with pytest.raises(fixloop.TerminalTransition):
+            fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)
+    finally:
+        conn.close()
+
+
+def test_a_revise_terminal_lesson_cannot_be_regenerated_until_the_operator_decides(world: World) -> None:
+    for _ in range(3):
+        _revise(world)
+    conn = findings_db.connect(world.db)
+    try:
+        params, lessons = findings_db.load_parameters(), [1, 2, 3]
+        with pytest.raises(fixloop.TerminalTransition) as terminal:
+            fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)
+        assert terminal.value.reason == fixloop.REASON_REVISE
+        findings_db.record_budget_operator_decision(conn, LEVEL, SLUG, 2, "regenerate it", "operator")
+        assert fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)["lesson"] == 2
+    finally:
+        conn.close()
+
+
+def test_a_budget_decision_needs_a_decision_a_decider_and_a_known_budget(world: World) -> None:
+    conn = findings_db.connect(world.db)
+    try:
+        for args, kwargs in (
+            (("x", " "), {}),
+            ((" ", "operator"), {}),
+            (("x", "operator"), {"budget": "review_failures"}),
+        ):
+            with pytest.raises(findings_db.FindingsDbError):
+                findings_db.record_budget_operator_decision(conn, LEVEL, SLUG, 2, *args, **kwargs)
+        assert conn.execute("SELECT count(*) FROM budget_decisions").fetchone()[0] == 0
+    finally:
+        conn.close()
+
+
+def test_the_fixloop_cli_records_a_budget_decision(world: World, capsys: pytest.CaptureFixture[str]) -> None:
+    for _ in range(3):
+        _revise(world)
+    argv = ["--repo-root", str(world.root), "--db", str(world.db)]
+    assert (
+        fixloop.main([*argv, "budget-decision", LEVEL, SLUG, "2", "--decision", "one more", "--decided-by", "op"]) == 0
+    )
+    assert json.loads(capsys.readouterr().out) == {"budget": "revise_rounds", "counted": 3, "decision": "one more"}
+    assert _revise(world).accepted
+
+
 def test_an_approve_is_not_a_round(world: World) -> None:
     world.record(world.make_return(2))
     assert world.db_rows("budgets") == []

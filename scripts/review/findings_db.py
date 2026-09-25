@@ -1,7 +1,7 @@
 """The review findings database (#8430 r4, R2b-A): one SQLite file per level.
 
 ``batch_state/review-findings/<level>.sqlite``, tables ``attempts``, ``findings``,
-``budgets``, ``settle_items``, ``agreement`` and ``schema_version``, created with
+``budgets``, ``budget_decisions``, ``settle_items``, ``agreement`` and ``schema_version``, created with
 ``CREATE TABLE IF NOT EXISTS``. The record is lossless: an attempt keeps the
 validator's rejection codes and the dispatch's task id, a finding keeps every
 receipt it cites and the whole finding as the reviewer returned it. A database whose
@@ -14,6 +14,9 @@ A settle item is **open** while ``outcome IS NULL``. An item the settle seat clo
 module until the operator's decision is recorded (``operator_decided_at``). An item whose lesson
 was reviewed again on a newer manifest is closed by ``record`` as ``moot_superseded`` (the
 superseding attempt is kept in ``superseded_by``); it is not a settle decision and holds nothing.
+
+A terminal budget (a lesson's REVISE rounds past the limit, the module's regenerations spent) refuses further
+work until the operator's decision is recorded (``budget_decisions``); a decision buys one more round.
 
 The database is the source of truth. ``attempts.seq`` is a monotonic sequence (never reused: the
 column is AUTOINCREMENT), and "latest" always means the highest ``seq``, never wall time. The
@@ -106,6 +109,17 @@ CREATE TABLE IF NOT EXISTS budgets (
     disputed TEXT,
     PRIMARY KEY (level, slug, lesson_n)
 );
+CREATE TABLE IF NOT EXISTS budget_decisions (
+    seq INTEGER PRIMARY KEY AUTOINCREMENT,
+    level TEXT NOT NULL,
+    slug TEXT NOT NULL,
+    lesson_n INTEGER NOT NULL,
+    budget TEXT NOT NULL CHECK (budget IN ('revise_rounds', 'regenerations')),
+    counted INTEGER NOT NULL,
+    decision TEXT NOT NULL,
+    decided_by TEXT NOT NULL,
+    decided_at TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS settle_items (
     item_id INTEGER PRIMARY KEY AUTOINCREMENT,
     finding_ref TEXT NOT NULL,
@@ -137,7 +151,7 @@ CREATE TABLE IF NOT EXISTS agreement (
     PRIMARY KEY (level, slug, lesson_n, attempt_a, attempt_b)
 );
 """
-_TABLE_NAMES = ("attempts", "findings", "budgets", "settle_items", "agreement")
+_TABLE_NAMES = ("attempts", "findings", "budgets", "budget_decisions", "settle_items", "agreement")
 
 
 class FindingsDbError(Exception):
@@ -402,6 +416,73 @@ def mark_disputed(conn: sqlite3.Connection, level: str, slug: str, lesson_n: int
     conn.execute("INSERT OR IGNORE INTO budgets (level, slug, lesson_n) VALUES (?, ?, ?)", (level, slug, lesson_n))
     conn.execute(
         "UPDATE budgets SET disputed = ? WHERE level = ? AND slug = ? AND lesson_n = ?", (reason, level, slug, lesson_n)
+    )
+
+
+def _budget_count(conn: sqlite3.Connection, level: str, slug: str, lesson_n: int, budget: str) -> int:
+    """The counter a budget decision is about: one lesson's REVISE rounds, or the module's regenerations."""
+    if budget == "revise_rounds":
+        return module_budgets(conn, level, slug).get(lesson_n, {}).get(budget, 0)
+    if budget == "regenerations":
+        return sum(row[budget] for row in module_budgets(conn, level, slug).values())
+    raise FindingsDbError(f"budget {budget!r} takes no operator decision; one of revise_rounds, regenerations")
+
+
+def record_budget_operator_decision(
+    conn: sqlite3.Connection,
+    level: str,
+    slug: str,
+    lesson_n: int,
+    decision: str,
+    decided_by: str,
+    *,
+    budget: str = "revise_rounds",
+    decided_at: str | None = None,
+) -> int:
+    """The operator's decision on a terminal budget; it allows exactly one more round or regeneration.
+
+    The decision is tied to the count it was made at (``counted``), so it covers the next attempt only:
+    once that is recorded the counter passes it and the budget is terminal again until a new decision.
+    A ``regenerations`` budget belongs to the module (``lesson_n`` names the lesson that prompted it).
+    Returns the count the decision covers.
+    """
+    if not decision.strip() or not decided_by.strip():
+        raise FindingsDbError("a budget decision needs a decision and who decided it")
+    with transaction(conn):
+        counted = _budget_count(conn, level, slug, lesson_n, budget)
+        conn.execute(
+            "INSERT INTO budget_decisions (level, slug, lesson_n, budget, counted, decision, decided_by, decided_at)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (level, slug, lesson_n, budget, counted, decision, decided_by, decided_at or now_iso()),
+        )
+    return counted
+
+
+def _decided_at_count(conn: sqlite3.Connection, level: str, slug: str, lesson_n: int, budget: str, count: int) -> bool:
+    sql = "SELECT 1 FROM budget_decisions WHERE level = ? AND slug = ? AND budget = ? AND counted = ?"
+    args: tuple[Any, ...] = (level, slug, budget, count)
+    if budget == "revise_rounds":
+        sql, args = sql + " AND lesson_n = ?", (*args, lesson_n)
+    return conn.execute(sql + " LIMIT 1", args).fetchone() is not None
+
+
+def revise_budget_terminal(
+    conn: sqlite3.Connection, level: str, slug: str, lesson_n: int, params: dict[str, Any]
+) -> bool:
+    """A lesson is past its REVISE limit and the operator has not decided at its current count."""
+    count = _budget_count(conn, level, slug, lesson_n, "revise_rounds")
+    return count > params["max_revise_rounds"] and not _decided_at_count(
+        conn, level, slug, lesson_n, "revise_rounds", count
+    )
+
+
+def regeneration_budget_terminal(
+    conn: sqlite3.Connection, level: str, slug: str, lesson_count: int, params: dict[str, Any]
+) -> bool:
+    """The module has spent its regenerations and the operator has not decided at the current count."""
+    spent = _budget_count(conn, level, slug, 0, "regenerations")
+    return spent >= params["regeneration_factor"] * lesson_count and not _decided_at_count(
+        conn, level, slug, 0, "regenerations", spent
     )
 
 
