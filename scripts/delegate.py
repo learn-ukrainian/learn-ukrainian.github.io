@@ -8182,11 +8182,18 @@ def _dispatch(
 
     pr_number = getattr(args, "pr", None)
     pinned_head = getattr(args, "pinned_head", None)
-    if pr_number is not None and not pinned_head:
+    if pr_number is not None:
         try:
-            pr_branch, pinned_head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(_REPO_ROOT))
+            pr_branch, resolved_head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(_REPO_ROOT))
         except GeminiChangedPathListError as exc:
             print(f"❌ could not resolve PR head: {exc}", file=sys.stderr)
+            return 2
+        supplied_head = str(pinned_head).strip().lower() if pinned_head else ""
+        if supplied_head and supplied_head != resolved_head:
+            print(
+                f"❌ --pinned-head {pinned_head} is not PR #{pr_number} head {resolved_head}",
+                file=sys.stderr,
+            )
             return 2
         named_branch = getattr(args, "branch", None)
         if named_branch and named_branch != pr_branch:
@@ -8195,6 +8202,13 @@ def _dispatch(
                 file=sys.stderr,
             )
             return 2
+        if supplied_head and not named_branch:
+            print(
+                f"❌ --pr {pr_number} with --pinned-head requires --branch {pr_branch!r}",
+                file=sys.stderr,
+            )
+            return 2
+        pinned_head = resolved_head
         args.branch = pr_branch
         args.pinned_head = pinned_head
 

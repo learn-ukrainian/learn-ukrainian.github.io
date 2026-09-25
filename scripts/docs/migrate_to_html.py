@@ -8,8 +8,9 @@ user signoff.
 """
 
 import argparse
+import re
+import subprocess
 import sys
-from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -185,6 +186,95 @@ def existing_report_author(output_path: Path) -> str | None:
     return find_report_author(output_path.read_text(encoding="utf-8"))
 
 
+_ISO_DATE = re.compile(r"(20\d{2}-\d{2}-\d{2})")
+_FRONT_MATTER_DATE = re.compile(
+    r"^(?:date|created)\s*:\s*['\"]?(20\d{2}-\d{2}-\d{2})",
+    re.IGNORECASE,
+)
+_LABELED_DATE = re.compile(
+    r"(?:^|\s)(?:\*\*)?(?:date|created)(?:\*\*)?\s*:\s*(?:\*\*)?\s*(20\d{2}-\d{2}-\d{2})",
+    re.IGNORECASE,
+)
+
+
+def _front_matter_date(md_text: str) -> str | None:
+    if not md_text.startswith("---\n"):
+        return None
+    end = md_text.find("\n---", 4)
+    if end == -1:
+        return None
+    for line in md_text[4:end].splitlines():
+        match = _FRONT_MATTER_DATE.match(line.strip())
+        if match:
+            return match.group(1)
+    return None
+
+
+def _heading_date(md_text: str) -> str | None:
+    """Date on the title line, or a Date/Created label before the first body break."""
+    seen_heading = False
+    for line in md_text.splitlines():
+        stripped = line.strip()
+        if not seen_heading:
+            if stripped.startswith("# "):
+                seen_heading = True
+                match = _ISO_DATE.search(stripped)
+                if match:
+                    return match.group(1)
+            continue
+        if stripped == "---":
+            break
+        labeled = _LABELED_DATE.search(stripped)
+        if labeled:
+            return labeled.group(1)
+    return None
+
+
+def _git_commit_date(input_path: Path) -> str | None:
+    try:
+        proc = subprocess.run(
+            ["git", "log", "-1", "--format=%cs", "--", str(input_path)],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    date = (proc.stdout or "").strip()
+    if proc.returncode == 0 and _ISO_DATE.fullmatch(date):
+        return date
+    return None
+
+
+def source_report_date(input_path: Path, md_text: str) -> str:
+    """Date stamped on the report. Never the wall clock."""
+    return _front_matter_date(md_text) or _heading_date(md_text) or _git_commit_date(input_path) or ""
+
+
+def repo_relative_source(input_path: Path) -> str:
+    """Stable repo-relative path. Falls back to the path as given, never the cwd."""
+    path = input_path if input_path.is_absolute() else Path.cwd() / input_path
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=path.parent if path.parent.is_dir() else Path.cwd(),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        proc = None
+    if proc is not None and proc.returncode == 0:
+        root = Path((proc.stdout or "").strip())
+        try:
+            return path.resolve().relative_to(root.resolve()).as_posix()
+        except ValueError:
+            pass
+    return input_path.as_posix()
+
+
 def migrate(input_path: Path, output_path: Path, *, force: bool = False) -> bool:
     report_author = existing_report_author(output_path)
     if report_author and not force:
@@ -203,10 +293,10 @@ def migrate(input_path: Path, output_path: Path, *, force: bool = False) -> bool
             title = line[2:].strip()
             break
 
-    # Simple metadata extraction
+    report_date = source_report_date(input_path, md_text)
     metadata = {
         "class": "documentation",
-        "date": datetime.now().strftime("%Y-%m-%d"),
+        "date": report_date,
         "status": "migrated",
     }
 
@@ -217,12 +307,14 @@ def migrate(input_path: Path, output_path: Path, *, force: bool = False) -> bool
     final_html = template.render(
         title=title,
         metadata=metadata,
-        migrated_at=datetime.now().strftime("%Y-%m-%d %H:%M"),
-        source_file=input_path.name,
+        migrated_at=report_date,
+        source_file=repo_relative_source(input_path),
         author="Gemini (Yellow Team)",
         content=content_html,
     )
 
+    if not final_html.endswith("\n"):
+        final_html += "\n"
     output_path.write_text(final_html, encoding="utf-8")
     print(f"Migrated {input_path} to {output_path}")
     return True

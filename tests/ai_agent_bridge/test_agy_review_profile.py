@@ -846,6 +846,91 @@ def test_delegate_pr_gate_diffs_the_resolved_sha(
     assert args.branch == "feature"
 
 
+def test_delegate_pr_pinned_head_must_match_resolved_sha(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """``--pr`` plus an unrelated ``--pinned-head`` is refused, even with the right branch."""
+    from scripts import delegate
+
+    sha = "a" * 40
+    other = "b" * 40
+    payload = '{"headRefName":"feature","headRefOid":"' + sha + '","isCrossRepository":false}\n'
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command[:2] == ["gh", "pr"]:
+            return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "check-ref-format"]:
+            return subprocess.CompletedProcess(command, 0, stdout="feature\n")
+        raise AssertionError(command)
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--task-id",
+            "agy-pr-pin-mismatch",
+            "--prompt",
+            "Implement the requested dispatch guard and add regression tests.",
+            "--pr",
+            "77",
+            "--pinned-head",
+            other,
+            "--branch",
+            "feature",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert f"--pinned-head {other} is not PR #77 head {sha}" in err
+    assert args.branch == "feature"
+
+
+def test_delegate_pr_pinned_head_requires_the_pr_branch(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A pin without ``--branch`` must not fall through and start from main."""
+    from scripts import delegate
+
+    sha = "a" * 40
+    payload = '{"headRefName":"feature","headRefOid":"' + sha + '","isCrossRepository":false}\n'
+
+    def fake_run(command: list[str], **kwargs: object):
+        import subprocess
+
+        if command[:2] == ["gh", "pr"]:
+            return subprocess.CompletedProcess(command, 0, stdout=payload)
+        if command[:2] == ["git", "check-ref-format"]:
+            return subprocess.CompletedProcess(command, 0, stdout="feature\n")
+        raise AssertionError(command)
+
+    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_a, **_k: (_ for _ in ()).throw(AssertionError("spawn")))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "agy",
+            "--task-id",
+            "agy-pr-pin-no-branch",
+            "--prompt",
+            "Implement the requested dispatch guard and add regression tests.",
+            "--pr",
+            "77",
+            "--pinned-head",
+            sha,
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    err = capsys.readouterr().err
+    assert "--pr 77 with --pinned-head requires --branch 'feature'" in err
+    assert args.branch is None
+
+
 def test_dispatch_refuses_when_fetched_head_differs_from_gate_sha() -> None:
     from scripts.delegate import _refuse_if_gate_head_moved
 
