@@ -727,16 +727,15 @@ def regenerate(
     """
     if n not in lesson_ns:
         raise FixLoopError(f"lesson {n} is not a lesson of {level}/{slug}")
-    budgets = findings_db.module_budgets(conn, level, slug)
-    if findings_db.revise_budget_terminal(conn, level, slug, n, params):
-        raise TerminalTransition(
-            REASON_REVISE, f"lesson {n} has had more than {params['max_revise_rounds']} REVISE rounds"
-        )
     limit = params["regeneration_factor"] * len(lesson_ns)
-    spent = sum(row["regenerations"] for row in budgets.values())
-    if findings_db.regeneration_budget_terminal(conn, level, slug, len(lesson_ns), params):
-        raise TerminalTransition(REASON_REGENERATIONS, f"{spent} of {limit} regenerations are spent")
-    with findings_db.transaction(conn):
+    with findings_db.transaction(conn):  # the check and the increment are one write: no concurrent call overspends
+        if findings_db.revise_budget_terminal(conn, level, slug, n, params):
+            raise TerminalTransition(
+                REASON_REVISE, f"lesson {n} has had more than {params['max_revise_rounds']} REVISE rounds"
+            )
+        spent = sum(row["regenerations"] for row in findings_db.module_budgets(conn, level, slug).values())
+        if findings_db.regeneration_budget_terminal(conn, level, slug, len(lesson_ns), params):
+            raise TerminalTransition(REASON_REGENERATIONS, f"{spent} of {limit} regenerations are spent")
         findings_db.bump_budget(conn, level, slug, n, "regenerations")
     stale = dependents(closure, n) if closure is not None else [m for m in lesson_ns if m > n]
     return {"lesson": n, "regenerations": spent + 1, "limit": limit, "stale_until_re_reviewed": stale}

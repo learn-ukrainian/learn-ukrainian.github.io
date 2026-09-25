@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -597,6 +598,84 @@ def test_regeneration_is_refused_past_the_budget_until_the_operator_decides(worl
             fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)
     finally:
         conn.close()
+
+
+def _run_together(calls: list[Any]) -> list[Any]:
+    """Run each call on its own thread and return the results (an exception is returned in place of one)."""
+    results: list[Any] = [None] * len(calls)
+
+    def run(index: int) -> None:
+        try:
+            results[index] = calls[index]()
+        except BaseException as error:  # the test inspects what each contender got
+            results[index] = error
+
+    threads = [threading.Thread(target=run, args=(index,)) for index in range(len(calls))]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=60)
+    assert not any(thread.is_alive() for thread in threads)
+    return results
+
+
+def test_two_concurrent_records_at_the_budget_edge_accept_exactly_one(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _revise(world)
+    _revise(world)  # two rounds spent: one more is allowed
+    contenders = [world.make_return(2, [finding("F-01", severity="MAJOR")]) for _ in range(2)]
+    barrier = threading.Barrier(2, timeout=30)
+    checked = record._rejection_codes
+
+    def synchronized(*args: Any, **kwargs: Any) -> list[str]:
+        result = checked(*args, **kwargs)
+        barrier.wait()  # both have passed the early budget check; neither has begun the write transaction
+        return result
+
+    monkeypatch.setattr(record, "_rejection_codes", synchronized)
+    outcomes = _run_together([lambda made=made: world.record(made) for made in contenders])
+    assert all(isinstance(outcome, record.Outcome) for outcome in outcomes), outcomes
+    assert sorted(outcome.accepted for outcome in outcomes) == [False, True]
+    [refused] = [outcome for outcome in outcomes if not outcome.accepted]
+    assert refused.rejection_codes == [record.BUDGET_TERMINAL]
+    assert world.db_rows("budgets", "lesson_n = 2")[0]["revise_rounds"] == 3
+    rows = {row["attempt_id"]: row for row in world.db_rows("attempts", "lesson_n = 2")}
+    assert rows[refused.attempt_id]["verdict"] == "REJECTED"
+    assert json.loads(rows[refused.attempt_id]["rejection_codes_json"]) == [record.BUDGET_TERMINAL]
+    assert world.db_rows("findings", f"attempt_id = '{refused.attempt_id}'") == []
+
+
+def test_two_concurrent_regenerations_at_five_of_six_spend_exactly_one(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _spend_regenerations(world, 5)
+    barrier = threading.Barrier(2, timeout=30)
+    real = findings_db.transaction
+    armed = threading.local()
+
+    def synchronized(conn: sqlite3.Connection) -> Any:
+        if getattr(armed, "on", False):
+            armed.on = False
+            barrier.wait()  # both are about to open the write transaction
+        return real(conn)
+
+    monkeypatch.setattr(findings_db, "transaction", synchronized)
+    params, lessons = findings_db.load_parameters(), [1, 2, 3]
+
+    def regenerate() -> dict[str, Any]:
+        conn = findings_db.connect(world.db)
+        try:
+            armed.on = True
+            return fixloop.regenerate(conn, LEVEL, SLUG, 2, lessons, params, None)
+        finally:
+            conn.close()
+
+    results = _run_together([regenerate, regenerate])
+    assert sorted(type(result).__name__ for result in results) == ["TerminalTransition", "dict"], results
+    [spent] = [result for result in results if isinstance(result, dict)]
+    assert spent["regenerations"] == 6
+    assert sum(row["regenerations"] for row in world.db_rows("budgets")) == 6
 
 
 def test_a_revise_terminal_lesson_cannot_be_regenerated_until_the_operator_decides(world: World) -> None:
