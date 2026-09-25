@@ -425,12 +425,12 @@ Strong success criteria enable independent looping. Weak criteria ("make it work
 
 **Skip plan review** (step 2) only for trivial changes (< 50 lines, config/typo fixes).
 
-**Adversarial review command** (steps 2 & 6). Use a current cross-family
-review lane and document findings on the GH issue.
+**Adversarial code review command** (steps 2 & 6). Use a current cross-family
+review lane per `model-assignment.md` Code review row and document findings on the GH issue.
 ```bash
 printf '%s\n' "Adversarial review for #NNN. Read {path}." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
-    --task-id review-NNN --to-model gemini-3.8-flash-high --review
+  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - \
+    --task-id review-NNN --review
 ```
 
 ## Channel bridge (#1190, shipped 2026-04-12)
@@ -461,12 +461,12 @@ those.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail reviews --thread THREAD_ID
 
   # Post (short form — single recipient)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py p reviews gemini \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py p reviews claude \
   "quick question about module X"
 
   # Post (long form — multi-recipient, threading, parent/corr ids)
 .venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews \
-  "Review of #NNN" --to gemini,codex --parent MSG_ID
+  "Review of #NNN" --to claude,codex --parent MSG_ID
 
   # Multi-agent bounded discussion
 .venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture \

@@ -503,7 +503,8 @@ models:
     weaknesses: [superseded_as_default_by_3_8_flash, not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
     notes: >-
       Wave 1 SCORECARD 2026-08-23: CF #7137 pass, wall ~47s, low noise, concrete
-      finding. Fast scoped CF. Native AGY subscribed seat — never OpenRouter.
+      finding. Historical fast scoped CF evidence; AGY now reviews Ukrainian only
+      (operator 2026-09-25). Native subscribed seat — never OpenRouter.
     sources:
       - https://ai.google.dev/gemini-api/docs/models
   gemini-3.6-flash-high:
@@ -944,38 +945,6 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5
     review_profiles: [code, infra]
     capabilities: [code_review]
-  gemini-3.8-flash:
-    model_id: gemini-3.8-flash-high
-    route: agy
-    transport: agy
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.8-flash-high
-    health_keys: [gemini]
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-  gemini-3.7-flash:
-    model_id: gemini-3.7-flash-high
-    route: agy
-    transport: agy
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.7-flash-high
-    health_keys: [gemini]
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-  gemini-3.6-flash:
-    model_id: gemini-3.6-flash-high
-    route: agy
-    transport: agy
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.6-flash-high
-    health_keys: [gemini]
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-  gemini-3.1-pro:
-    model_id: gemini-3.1-pro-high
-    route: agy
-    transport: agy
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.1-pro-high
-    health_keys: [gemini]
-    review_profiles: [code, infra]
-    capabilities: [code_review]
   grok-4.7:
     model_id: grok-4.7
     route: grok
@@ -1090,14 +1059,6 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
     domain_excluded_from: [folk_content]
-  gemini-3.5-flash:
-    model_id: gemini-3.5-flash-high
-    route: agy
-    transport: agy
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.5-flash-high
-    health_keys: [gemini]
-    review_profiles: [code, infra]
-    capabilities: [code_review]
 
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
@@ -1240,8 +1201,8 @@ formal_cf_defaults:
     fallback_model_id: grok-4.7
   agy:
     # Orchestrator pin + ladder seat; not a review-pr --reviewer transport until
-    # sealed isolation (#5555). When AGY is the formal candidate, resolve-reviewer
-    # selects gemini-3.8-flash-high via the practical ladder.
+    # sealed isolation (#5555). Operator 2026-09-25 also excludes AGY from
+    # every code-review candidate and ladder; this is not a CF route.
     model_id: gemini-3.8-flash-high
     effort: high
     formal_review_eligible: false
@@ -1250,7 +1211,7 @@ formal_cf_defaults:
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.
   # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Sol high → Opus 5.5 → Sonnet → Flash / Grok / K3 / DS / pool.
+  # high/medium/low: Sol high → Opus 5.5 → Sonnet → Grok / K3 / DS / pool.
   # Fable/advisory roles stay off routine PRs. glm-5.3 is catalogued for explicit
   # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
   critical:
@@ -1261,7 +1222,6 @@ review_ladders:
     - [claude-fable-5]
     - [claude-fable-5-cursor-fallback]
     - [claude-sonnet-5]
-    - [gemini-3.8-flash]
     - [grok-4.7]
     - [grok-4.7-cursor-fallback]
     - [kimi-k3]
@@ -1269,17 +1229,15 @@ review_ladders:
     # (volume). Pro hold lifted for hard implement only — never a routine review rung.
     - [deepseek-v4.1-flash]
     - [composer-2.5]
-    - [gemini-3.1-pro]
     - [pool]
-    - [pool-xs, gemini-3.5-flash]
+    - [pool-xs]
   high: &practical_first_code_review
-    # Routine CF order: Sol high → Opus 5.5 high → Sonnet → Flash / Grok / K3…
+    # Routine CF order: Sol high → Opus 5.5 high → Sonnet → Grok / K3…
     # glm stays off automatic ladders; Fable stays critical-only.
     - [openai_frontier]
     - [claude-opus-5-5]
     - [claude-opus-5-5-cursor-fallback]
     - [claude-sonnet-5]
-    - [gemini-3.8-flash]
     - [grok-4.7]
     - [grok-4.7-cursor-fallback]
     - [kimi-k3]
@@ -1287,8 +1245,7 @@ review_ladders:
     # (volume). Pro hold lifted for hard implement only — never a routine review rung.
     - [deepseek-v4.1-flash]
     - [composer-2.5]
-    - [gemini-3.1-pro]
     - [pool]
-    - [pool-xs, gemini-3.5-flash]
+    - [pool-xs]
   medium: *practical_first_code_review
   low: *practical_first_code_review

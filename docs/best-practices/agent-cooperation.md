@@ -59,9 +59,9 @@ the independent review gate.
 | 🟢 **Зелена команда** (Green) | Codex | Main orchestrator, adversarial reviewer, bug finder, code improver |
 | ⚙️ **Review lane** | DeepSeek | Cheap code/content review and deterministic triage |
 
-Gemini is currently paused for review/merge confidence until the user re-enables
-that lane. Historical Gemini instructions in this document describe old bridge
-behavior; prefer Claude, Codex, Cursor, and DeepSeek for new orchestration work.
+Gemini/AGY handles Ukrainian-language work and review under the LANGUAGE-LANES
+rule. Code review follows `model-assignment.md` Code review row. Historical
+Gemini instructions in this document describe old bridge behavior.
 
 **Both teams are adversarial by design.** The purpose is quality through finding mistakes, not agreement. An approved module means both teams couldn't find serious problems — not that both teams were polite.
 
@@ -75,7 +75,7 @@ Self-review produces inflated scores. Observed in production: Gemini reviewing i
 
 ### Valid review paths
 - ✅ Claude reviews Gemini's content
-- ✅ Gemini reviews Claude's architecture proposals
+- ✅ Gemini reviews Claude's Ukrainian-language content
 - ✅ Codex reviews Claude or Gemini implementation work
 - ✅ Automated audit gates (no LLM bias)
 - ❌ Gemini reviews its own content
@@ -473,8 +473,9 @@ This means the broker can route among Claude, AGY, and Codex. In practice, GitHu
 ### Review Persistence
 
 Gemini CLI review auto-posting is legacy behavior and is not a current route.
-For current Gemini-family review, use AGY via the bridge and record the review
-result in the PR body or GitHub issue explicitly.
+For current Ukrainian-language review by Gemini, use AGY via the bridge and
+record the review result in the PR body or GitHub issue explicitly. Code review
+follows `model-assignment.md` Code review row.
 
 ### Passive notification (MCP send_message)
 For non-blocking FYI messages AGY sees at next session start:
@@ -818,7 +819,7 @@ Never parse Gemini's prose output for structured data.
 ### AGY Model Names
 
 Gemini CLI and Gemini Code Assist are unsupported for current project work.
-For Gemini-family review or support, use AGY through
+For Ukrainian-language Gemini-family review or support, use AGY through
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...` or
 `scripts/delegate.py dispatch --agent agy ...`.
 
