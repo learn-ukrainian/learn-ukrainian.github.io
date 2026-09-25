@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import re
 import sqlite3
+import subprocess
 import tempfile
 from pathlib import Path
 
@@ -24,11 +25,13 @@ import pytest
 
 from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     CANONICAL_CALQUE_PAIRS,
+    DEFAULT_OUTPUT_DIR,
     DEFAULT_SOURCES_DB,
     DEFAULT_ULIF_DB,
     DEFAULT_VESUM_DB,
     HELD_OUT_AUTHORS_DISPLAY,
     HELD_OUT_CURATED_CALQUE_PAIRS,
+    PROJECT_ROOT,
     SCHEMA_EVAL_PATH,
     SCHEMA_RECEIPT_PATH,
     SPACE_BEFORE_PUNCT_RE,
@@ -83,6 +86,36 @@ def _has_sources() -> bool:
         return False
 
 
+def test_held_phraseology_release_directory_has_no_tracked_files():
+    result = subprocess.run(
+        [
+            "git", "ls-files",
+            "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/",
+        ],
+        cwd=PROJECT_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert not result.stdout.strip(), result.stdout
+
+
+def test_default_output_directory_is_local_and_gitignored():
+    repo_root = PROJECT_ROOT.resolve()
+    output_dir = DEFAULT_OUTPUT_DIR.resolve()
+    assert output_dir.is_relative_to(repo_root), (
+        f"Default output directory must remain inside the repository: {output_dir}"
+    )
+
+    result = subprocess.run(
+        ["git", "check-ignore", "--quiet", str(output_dir)],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, (
+        f"Default output directory is not gitignored: {output_dir}; {result.stderr}"
+    )
 def _has_vesum() -> bool:
     if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
         return False
@@ -376,8 +409,8 @@ def test_release_receipt_schema_validation():
         dpo_man_path.write_text("{}")
 
         eval_meta = {
-            "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval",
-            "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval/manifest_eval.json",
+            "directory_path": (DEFAULT_OUTPUT_DIR / "eval").relative_to(PROJECT_ROOT).as_posix(),
+            "manifest_file": (DEFAULT_OUTPUT_DIR / "eval" / "manifest_eval.json").relative_to(PROJECT_ROOT).as_posix(),
             "manifest_sha256": "0" * 64,
             "shards_count": 3,
             "total_cases": 1500,
@@ -417,6 +450,15 @@ def test_release_receipt_schema_validation():
         assert receipt["schema_version"] == "v1_ulif_phraseology_release_receipt"
         assert receipt["issue"] == 8140
         assert receipt["parent_epic"] == 6321
+        assert receipt["evaluation_benchmark"]["directory_path"] == (
+            DEFAULT_OUTPUT_DIR / "eval"
+        ).relative_to(PROJECT_ROOT).as_posix()
+        assert receipt["sft_training_dataset"]["directory_path"] == (
+            DEFAULT_OUTPUT_DIR / "sft"
+        ).relative_to(PROJECT_ROOT).as_posix()
+        assert receipt["dpo_preference_dataset"]["directory_path"] == (
+            DEFAULT_OUTPUT_DIR / "dpo"
+        ).relative_to(PROJECT_ROOT).as_posix()
         assert receipt["invariants_verified"]["zero_train_eval_leakage"] is True
         assert receipt["verification_metrics"]["eval_target_overlap_count"] == 0
 
@@ -1077,7 +1119,7 @@ def test_splice_regex_catches_no_space_ellipsis_splices():
 
 def test_corpus_invariants_no_broken_definitions():
     """CF R10 Finding 2 & 5: Verify 0 orphaned label definitions or leading punctuation across all release shards."""
-    release_dir = Path("data/projects/open_model_data/release/uldr_v06_ulif_phraseology")
+    release_dir = DEFAULT_OUTPUT_DIR
     if not release_dir.exists():
         pytest.skip("Release shards not yet generated")
 
@@ -1100,7 +1142,7 @@ def test_corpus_invariants_no_broken_definitions():
 
 def test_corpus_invariants_no_spliced_quotes():
     """CF R10/R11/R12/R13: Verify 0 spliced quotes and 0 space-before-punct across all release shards (SFT, eval, DPO)."""
-    release_dir = Path("data/projects/open_model_data/release/uldr_v06_ulif_phraseology")
+    release_dir = DEFAULT_OUTPUT_DIR
     if not release_dir.exists():
         pytest.skip("Release shards not yet generated")
 
