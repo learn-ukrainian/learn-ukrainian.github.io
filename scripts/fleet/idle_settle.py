@@ -24,7 +24,7 @@ import json
 import sys
 import uuid
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -127,12 +127,7 @@ class ReadyItem:
     dependency_blocked: bool = False
 
     def is_fillable(self) -> bool:
-        return (
-            self.ready
-            and self.valuable
-            and self.independent
-            and not self.dependency_blocked
-        )
+        return self.ready and self.valuable and self.independent and not self.dependency_blocked
 
 
 @dataclass(frozen=True)
@@ -198,9 +193,7 @@ class ResourceCaps:
         return rows
 
     def active_constraints(self) -> tuple[str, ...]:
-        return tuple(
-            WIP_REASON_CODES[name] for name in WIP_DIMENSIONS if not self.dimension_ok(name)
-        )
+        return tuple(WIP_REASON_CODES[name] for name in WIP_DIMENSIONS if not self.dimension_ok(name))
 
 
 @dataclass(frozen=True)
@@ -216,9 +209,7 @@ class EligibilitySnapshot:
             "items": [
                 {
                     **asdict(item),
-                    "compatible_lanes": (
-                        None if item.compatible_lanes is None else list(item.compatible_lanes)
-                    ),
+                    "compatible_lanes": (None if item.compatible_lanes is None else list(item.compatible_lanes)),
                 }
                 for item in self.items
             ],
@@ -696,6 +687,19 @@ def load_events(path: Path) -> list[dict[str, Any]]:
     return events
 
 
+def events_since(events: list[dict[str, Any]], since: datetime | None) -> list[dict[str, Any]]:
+    """Keep events recorded at or after ``since``; None selects all events."""
+    if since is None:
+        return events
+    selected = []
+    for event in events:
+        recorded_at = parse_iso(str(event.get("recorded_at") or ""))
+        # Missing or unparsable timestamps stay in-window so enforcement fails closed.
+        if recorded_at is None or recorded_at >= since:
+            selected.append(event)
+    return selected
+
+
 def opportunity_seconds_since(previous: dict[str, Any] | None, now: datetime) -> float:
     if not previous or not previous.get("eligible"):
         return 0.0
@@ -905,7 +909,8 @@ def _cmd_evaluate(args: argparse.Namespace) -> int:
 
 
 def _cmd_report(args: argparse.Namespace) -> int:
-    report = build_report(load_events(args.store))
+    since = None if args.since_hours is None else datetime.now(UTC) - timedelta(hours=args.since_hours)
+    report = build_report(events_since(load_events(args.store), since))
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
     else:
@@ -927,21 +932,41 @@ def _cmd_admission(args: argparse.Namespace) -> int:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Evaluate fleet settle decisions and report idle/disposition telemetry.\n"
+            "Use at dispatch/review settle or to inspect events; reports never enforce idle time."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.fleet.idle_settle report --since-hours 24\n"
+            "  .venv/bin/python -m scripts.fleet.idle_settle admission --snapshot-json snapshot.json\n"
+            "Outputs: evaluate appends JSONL by default; report and admission print to stdout.\n"
+            "Exit codes: 0 success; 2 invalid input, rejected disposition, or blocked admission.\n"
+            "Related: agents_extensions/shared/rules/fleet-driver-routing.md; issues #6976/#6998."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
     evaluate = sub.add_parser(
         "evaluate",
         help="Evaluate one dispatch/review settle: reminder + optional JSONL record",
     )
-    evaluate.add_argument("--snapshot-json", type=Path, help="Eligibility snapshot JSON")
-    evaluate.add_argument("--task-id", default=None)
-    evaluate.add_argument("--kind", choices=sorted(SETTLE_KINDS), default=None)
-    evaluate.add_argument("--dispatched", action="store_true")
+    evaluate.add_argument(
+        "--snapshot-json",
+        type=Path,
+        help="Eligibility snapshot JSON path (default: empty snapshot; e.g. snapshot.json)",
+    )
+    evaluate.add_argument("--task-id", default=None, help="Task ID to settle (default: none; e.g. impl-8819)")
+    evaluate.add_argument(
+        "--kind", choices=sorted(SETTLE_KINDS), default=None, help="Settle kind (default: infer from task ID)"
+    )
+    evaluate.add_argument("--dispatched", action="store_true", help="Mark work dispatched (default: false)")
     evaluate.add_argument(
         "--disposition",
         default=None,
-        help="One of: " + " | ".join(sorted(DISPOSITION_CODES)),
+        help="Disposition (default: none); one of: " + " | ".join(sorted(DISPOSITION_CODES)),
     )
     evaluate.add_argument(
         "--store",
@@ -949,21 +974,47 @@ def _build_parser() -> argparse.ArgumentParser:
         default=default_store_path(),
         help="Append-only events JSONL (default: batch_state/idle_settle/events.jsonl)",
     )
-    evaluate.add_argument("--no-record", action="store_true")
-    evaluate.add_argument("--json", action="store_true")
+    evaluate.add_argument("--no-record", action="store_true", help="Skip appending an event (default: record)")
+    evaluate.add_argument("--json", action="store_true", help="Print JSON instead of text (default: text)")
     evaluate.set_defaults(func=_cmd_evaluate)
 
-    report = sub.add_parser("report", help="Print report-only idle/disposition telemetry")
-    report.add_argument("--store", type=Path, default=default_store_path())
-    report.add_argument("--json", action="store_true")
+    report = sub.add_parser(
+        "report",
+        help="Print report-only idle/disposition telemetry",
+        description="Summarize idle-settle events. Use --since-hours for a recent window; no idle-time gate runs.",
+        epilog=(
+            "Example: .venv/bin/python -m scripts.fleet.idle_settle report --since-hours 24 --json\n"
+            "Outputs: report on stdout; no files written.\n"
+            "Exit codes: 0 success; 2 invalid input or report error.\n"
+            "Related: scripts.fleet.driver_breadth_report; issue #8819."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    report.add_argument(
+        "--store",
+        type=Path,
+        default=default_store_path(),
+        help="Events JSONL path (default: shared batch_state/idle_settle/events.jsonl)",
+    )
+    report.add_argument(
+        "--since-hours",
+        type=float,
+        default=None,
+        help="Lookback window in hours, inclusive (default: all events; e.g. 24). Missing or invalid timestamps stay included",
+    )
+    report.add_argument("--json", action="store_true", help="Print JSON instead of text (default: text)")
     report.set_defaults(func=_cmd_report)
 
     admission = sub.add_parser(
         "admission",
         help="Evaluate first-class WIP admission (authoring/review/CI/worktrees/disk/integration)",
     )
-    admission.add_argument("--snapshot-json", type=Path, help="Eligibility snapshot JSON")
-    admission.add_argument("--json", action="store_true")
+    admission.add_argument(
+        "--snapshot-json",
+        type=Path,
+        help="Eligibility snapshot JSON path (default: empty snapshot; e.g. snapshot.json)",
+    )
+    admission.add_argument("--json", action="store_true", help="Print JSON instead of text (default: text)")
     admission.set_defaults(func=_cmd_admission)
     return parser
 
