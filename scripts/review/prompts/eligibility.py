@@ -11,7 +11,8 @@ to list the activity files that lesson imports.
 Each manifest kind has one table below (kind -> pin location -> the one path that location may
 have). The locations come from the manifest schemas (``schemas/lesson-review-manifest-v1.schema.json``,
 ``schemas/plan-review-manifest-v1.schema.json``) and the contract sections cited on each table.
-A later worker adds ``settle`` by adding its table; a kind without a table is refused.
+The settle task has one pinned disputed document and inline finding/search data in its own
+manifest. A kind without a table is refused.
 
 The manifest is first validated against its schema (``manifest_schema_invalid``), so every input
 the schema requires is pinned. Then each pin is judged: the writer-material and foreign-module
@@ -164,8 +165,17 @@ PLAN_LOCATIONS: _Table = {
     "inputs.pack_verify_report": lambda m, e: f"{m.state}/pack-verify\\.report\\.json",
 }
 
-#: The one table per manifest kind; a settle table is added by the worker that adds ``settle.md.j2``.
-LOCATIONS: dict[str, _Table] = {"lesson": LESSON_LOCATIONS, "plan": PLAN_LOCATIONS}
+#: Settle receives only the current disputed document. The finding, its locations and the
+#: reviewer's recorded searches are copied into the settle manifest by settle.py. This is
+#: the contract's "The settle step" and principle 4 (no other module or earlier edition).
+SETTLE_LOCATIONS: _Table = {
+    "inputs.document": lambda m, e: (
+        f"{m.pages}/{m.lesson}\\.mdx" if m.lesson is not None else f"{m.plans}/{re.escape(m.slug)}\\.yaml"
+    ),
+}
+
+#: The one table per manifest kind. A kind without a table is refused.
+LOCATIONS: dict[str, _Table] = {"lesson": LESSON_LOCATIONS, "plan": PLAN_LOCATIONS, "settle": SETTLE_LOCATIONS}
 
 #: The re-review's own pins: its diff base (inside the pinned diff) and its previous findings.
 RE_REVIEW_LOCATIONS = frozenset({"diff", "previous_attempt.review", "previous_attempt.ledger"})
@@ -257,7 +267,7 @@ def _classify(
     return refuse(PIN_OUTSIDE_MODULE_PATHS, f"{location} is not at this module's path for it")
 
 
-#: The schema each manifest kind must match; a kind without one has no table either and is refused below.
+#: The engine's review schemas. The settle task's small task manifest is checked inline below.
 SCHEMAS: dict[str, Path] = {"lesson": lesson_manifest.SCHEMA, "plan": plan_manifest.SCHEMA}
 
 
@@ -269,6 +279,75 @@ def _validator(kind: str) -> Draft202012Validator:
 def schema_refusals(manifest: dict[str, Any]) -> list[Refusal]:
     """Each way the manifest departs from its schema, so a required pin cannot simply be left out."""
     kind = manifest.get("kind")
+    if kind == "settle":
+        # Preserve the per-pin refusal when a manifest of another kind merely claims to be
+        # settle. Its disallowed pins are the useful error; genuine settle manifests below
+        # must still carry the complete task shape and their one document pin.
+        if any(location != "inputs.document" for location, _ in pinned_entries(manifest)):
+            return []
+        fields = {
+            "kind",
+            "settle_schema",
+            "item_id",
+            "level",
+            "slug",
+            "lesson",
+            "finding_ref",
+            "source_manifest_sha256",
+            "review_id",
+            "attempt_id",
+            "call_budget",
+            "finding_text",
+            "disputed_spans_text",
+            "reviewer_searches_text",
+            "inputs",
+        }
+        input_document = (
+            (manifest.get("inputs") or {}).get("document") if isinstance(manifest.get("inputs"), dict) else None
+        )
+        valid = (
+            set(manifest) == fields
+            and manifest.get("settle_schema") == 1
+            and isinstance(manifest.get("item_id"), int)
+            and not isinstance(manifest.get("item_id"), bool)
+            and manifest["item_id"] > 0
+            and (manifest.get("lesson") is None or (isinstance(manifest["lesson"], int) and manifest["lesson"] > 0))
+            and isinstance(manifest.get("call_budget"), int)
+            and not isinstance(manifest.get("call_budget"), bool)
+            and manifest["call_budget"] > 0
+            and isinstance(manifest.get("source_manifest_sha256"), str)
+            and bool(re.fullmatch(r"[0-9a-f]{64}", manifest["source_manifest_sha256"]))
+            and all(
+                isinstance(manifest.get(name), str) and manifest[name].strip()
+                for name in (
+                    "finding_ref",
+                    "review_id",
+                    "attempt_id",
+                    "finding_text",
+                    "disputed_spans_text",
+                    "reviewer_searches_text",
+                )
+            )
+            and isinstance(manifest.get("inputs"), dict)
+            and set(manifest["inputs"]) == {"document"}
+            and isinstance(input_document, dict)
+            and set(input_document) == {"path", "sha256"}
+            and isinstance(input_document.get("path"), str)
+            and isinstance(input_document.get("sha256"), str)
+            and bool(re.fullmatch(r"[0-9a-f]{64}", input_document["sha256"]))
+        )
+        return (
+            []
+            if valid
+            else [
+                Refusal(
+                    MANIFEST_SCHEMA_INVALID,
+                    "manifest",
+                    "settle",
+                    "settle task fields or document pin are missing or malformed",
+                )
+            ]
+        )
     if kind not in SCHEMAS:
         return []
     return [
