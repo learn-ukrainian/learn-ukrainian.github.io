@@ -294,7 +294,6 @@ def _write_diff(root: Path, state_dir: Path, n: int, attempt_id: str, data: byte
             stream.write(data)
             stream.flush()
             os.fsync(stream.fileno())
-        os.chmod(temporary, 0o644)
         try:
             os.link(temporary, target)  # create-exclusive: fails rather than replaces
         except FileExistsError:
