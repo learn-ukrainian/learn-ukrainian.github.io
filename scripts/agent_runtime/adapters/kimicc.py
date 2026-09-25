@@ -20,6 +20,7 @@ from scripts.review.model_catalog import (
     resolve_kimi_model,
 )
 
+from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
 from ..trail_isolation import (
     TrailIsolationError,
@@ -202,8 +203,8 @@ class KimiccHarness:
                 ]
             )
         elif tc.get("strict_mcp_config") and isinstance(tc.get("mcp_config_path"), str):
-            # Review attempts set strict_mcp_config without a Claude allowed_tools
-            # grant (that grant is agent=="claude" only). Still pin the config.
+            # Review attempts pin the stdio sources config. A kimicc review
+            # (agent kimi) receives the same --allowedTools grant as Claude.
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--strict-mcp-config"])
             if tc.get("allowed_tools"):
                 cmd.extend(["--allowedTools", str(tc["allowed_tools"])])
@@ -221,14 +222,9 @@ class KimiccHarness:
             cmd.extend(["--effort", effective_effort])
 
         env_overrides = {"KIMICC_CLAUDE_BIN": claude_bin}
-        read_only_tmp = tc.get("read_only_tmp_root")
+        read_only_tmp = validate_read_only_tmp_root(tc, cwd, mode, adapter="KimiccHarness")
         if read_only_tmp is not None:
-            if mode != "read-only":
-                raise ValueError("KimiccHarness: read_only_tmp_root requires mode='read-only'")
-            lease = Path(str(read_only_tmp))
-            if not lease.is_absolute() or lease.is_symlink() or not lease.is_dir() or lease.resolve() == cwd.resolve():
-                raise ValueError("KimiccHarness: read_only_tmp_root must be an existing directory outside cwd")
-            env_overrides["TMPDIR"] = str(lease)
+            env_overrides["TMPDIR"] = str(read_only_tmp)
         if effective_effort:
             # The wrapper derives Claude Code's environment default from this
             # value. Mirror the exact child argv so an explicit override does

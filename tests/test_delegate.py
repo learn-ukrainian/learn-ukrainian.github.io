@@ -4768,6 +4768,48 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
+def test_run_worker_grants_review_tools_to_kimicc(tmp_tasks_dir, tmp_path):
+    task_id = "worker-kimicc-review-grant"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id, "harness": "kimicc"})
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "fixture",
+            "effort": "unknown",
+            "cli_version": "fixture",
+        },
+    )()
+    allowed = ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+            review_id="rev-test",
+            attempt_id="att-test",
+            mcp_config_path=str(tmp_path / "review.mcp.json"),
+            strict_mcp_config=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert tool_config["allowed_tools"] == allowed
+    assert tool_config["harness"] == "kimicc"
+    assert mock_invoke.call_args.args[0] == "kimi"
+
+
 def _codex_worker_result():
     return type(
         "_Result",

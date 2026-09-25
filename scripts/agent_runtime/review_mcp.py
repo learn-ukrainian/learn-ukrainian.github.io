@@ -114,8 +114,12 @@ class ReviewMcpPlan:
 
 
 def review_tools_allowed_csv(harness: str) -> str | None:
-    """Return the explicit sources permission grant for Claude review attempts."""
-    if harness.lower().strip() != "claude":
+    """Return the explicit sources permission grant for Claude-Code review attempts.
+
+    KimiCC is the headless Claude Code harness, so it takes the same
+    ``--allowedTools`` names. Other harnesses have no equivalent grant.
+    """
+    if harness.lower().strip() not in {"claude", "kimicc"}:
         return None
     return ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
 

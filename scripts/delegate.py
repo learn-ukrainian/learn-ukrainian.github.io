@@ -6842,10 +6842,13 @@ def _run_worker(
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
                 tool_config["attempt_id"] = attempt_id
-            if strict_mcp_config and review_id is not None and attempt_id is not None and agent == "claude":
+            if strict_mcp_config and review_id is not None and attempt_id is not None and (
+                agent == "claude" or harness == "kimicc"
+            ):
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
-                tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
+                # kimicc keeps agent "kimi"; the grant key is the Claude-Code harness.
+                tool_config["allowed_tools"] = review_tools_allowed_csv("kimicc" if harness == "kimicc" else agent)
             if (
                 strict_mcp_config
                 and review_id is not None
