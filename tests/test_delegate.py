@@ -2738,6 +2738,134 @@ def test_run_worker_review_with_verdict_stays_done(
     assert state["no_deliverable_reason"] is None
 
 
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        (
+            "bold-label-and-token",
+            "Adversarial review complete.\n\n**Verdict**: **APPROVE**\n",
+        ),
+        (
+            "bold-token",
+            "Findings cited at scripts/foo.py:42.\n\nVERDICT: **REQUEST_CHANGES**\n",
+        ),
+        (
+            "backticked-token",
+            "Findings: none.\n\nVERDICT: `APPROVED`\n",
+        ),
+        (
+            "bold-label",
+            "**VERDICT**: CHANGES_REQUESTED\n",
+        ),
+    ],
+)
+def test_run_worker_review_with_markdown_decorated_verdict_stays_done(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    label,
+    response,
+):
+    """#8786: reviewers render the verdict in Markdown; it is still a verdict.
+
+    The live driver saw ``**Verdict**: **APPROVE**`` and
+    ``VERDICT: **REQUEST_CHANGES**`` misclassified as
+    ``review_missing_verdict_line``, so a completed read-only review was
+    reported ``no_deliverable``. Emphasis punctuation around the label or the
+    token must not hide the verdict.
+    """
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id=f"review-md-verdict-{label}",
+        mode="read-only",
+        response=response,
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=True,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["no_deliverable_reason"] is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("inline-backticked", "I will report `VERDICT: APPROVE` once the tests finish.\n"),
+        ("quoted-line", "The format is:\n> VERDICT: APPROVE\n"),
+        ("quoted-string", 'Write "VERDICT: REQUEST_CHANGES" at the end.\n'),
+        ("prose-prefix", "My final line will be VERDICT: APPROVE.\n"),
+        ("code-fence", "Example:\n```\nVERDICT: APPROVE\n```\nnothing else yet.\n"),
+        ("tilde-fence", "Example:\n~~~text\nVERDICT: BLOCKED\n~~~\n"),
+        ("fully-backticked-line", "`VERDICT: APPROVE`\n"),
+    ],
+)
+def test_parse_review_verdict_rejects_examples_and_quotes(label, response):
+    """#8786: inline, quoted, or fenced examples are not the reviewer's verdict."""
+    assert delegate.parse_review_verdict(response) is None
+    assert delegate._review_verdict_failure_reason(response) == "review_missing_verdict_line"
+
+
+def test_parse_review_verdict_accepts_bold_line():
+    assert delegate.parse_review_verdict("Findings.\n\n**VERDICT: APPROVE**\n") == "APPROVE"
+
+
+def test_parse_review_verdict_last_line_wins():
+    response = "VERDICT: APPROVE\n\nOn reflection, one blocker.\n\n**Verdict**: **REQUEST_CHANGES**\n"
+    assert delegate.parse_review_verdict(response) == "REQUEST_CHANGES"
+
+
+def test_parse_review_verdict_ignores_fenced_line_after_real_verdict():
+    response = "VERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE\n```\n"
+    assert delegate.parse_review_verdict(response) == "REQUEST_CHANGES"
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("four-space-indented-code", "Example:\n\n    VERDICT: APPROVE\n"),
+        ("tab-indented-code", "Example:\n\n\tVERDICT: APPROVE\n"),
+        ("tilde-inside-backtick-fence", "```text\n~~~\nVERDICT: APPROVE\n```\n"),
+        ("backtick-inside-tilde-fence", "~~~\n```\nVERDICT: APPROVE\n~~~\n"),
+        ("tilde-fence-with-verdict", "~~~~\nVERDICT: APPROVE\n~~~~\n"),
+        ("shorter-closer-does-not-close", "````\n```\nVERDICT: APPROVE\n````\n"),
+        ("closer-with-info-does-not-close", "```\n```python\nVERDICT: APPROVE\n```\n"),
+        ("unclosed-fence-swallows-rest", "Findings.\n```text\nVERDICT: APPROVE\n\nmore text\n"),
+    ],
+)
+def test_parse_review_verdict_follows_commonmark_code_blocks(label, response):
+    """#8786: a verdict inside a CommonMark code block (indented or fenced) is an example."""
+    assert delegate.parse_review_verdict(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        ("three-space-indent", "Findings.\n\n   VERDICT: APPROVE\n", "APPROVE"),
+        ("three-space-indent-bold", "   **VERDICT**: **BLOCKED**\n", "BLOCKED"),
+        (
+            "longer-closer-closes",
+            "```\nVERDICT: APPROVE\n`````\nVERDICT: REQUEST_CHANGES\n",
+            "REQUEST_CHANGES",
+        ),
+        (
+            "indented-fence-closes",
+            "  ~~~\nVERDICT: APPROVE\n   ~~~  \nVERDICT: CHANGES_REQUESTED\n",
+            "CHANGES_REQUESTED",
+        ),
+        (
+            "inline-code-line-is-not-a-fence",
+            "```VERDICT: x``` is inline code\nVERDICT: APPROVE\n",
+            "APPROVE",
+        ),
+    ],
+)
+def test_parse_review_verdict_accepts_commonmark_paragraph_lines(label, response, expected):
+    """#8786: up to three leading spaces is still a paragraph line; a longer closer closes."""
+    assert delegate.parse_review_verdict(response) == expected
+
+
 def test_run_worker_non_review_read_only_without_verdict_stays_done(
     tmp_tasks_dir,
     tmp_path,

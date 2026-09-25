@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from contextlib import contextmanager
 from pathlib import Path
@@ -526,6 +527,78 @@ def test_review_intent_never_reaches_the_toolless_acp_shim(
     getattr(_cli, handler_name)(args)
 
     assert captured["agent"] == command.removeprefix("ask-")
+
+
+def _capture_review_dispatch_argv(
+    command: str,
+    handler_name: str,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> list[str]:
+    """Drive one review ask and return the headless dispatch argv it built."""
+    from scripts.ai_agent_bridge import _dispatch_wrappers
+
+    result_file = tmp_path / f"{command}.md"
+    result_file.write_text("Findings: none.\nVERDICT: APPROVED\n", encoding="utf-8")
+    captured: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        if "dispatch" in cmd:
+            captured.append(list(cmd))
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                stdout=json.dumps({"status": "done", "result_file": str(result_file)}),
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(_dispatch_wrappers.subprocess, "run", fake_run)
+    args = _cli._build_parser().parse_args(
+        [command, "review this diff", "--task-id", "review-parity", "--review", "--branch", "agy/impl-8786"]
+    )
+    getattr(_cli, handler_name)(args)
+    assert captured, "review ask did not build a headless dispatch"
+    return captured[0]
+
+
+def _review_argv_without_agent_and_prompt(argv: list[str]) -> list[str]:
+    """Drop the two values that legitimately differ per lane (agent, temp prompt)."""
+    normalized: list[str] = []
+    skip = False
+    for token in argv:
+        if skip:
+            skip = False
+            continue
+        if token in {"--agent", "--prompt-file"}:
+            skip = True
+            continue
+        normalized.append(token)
+    return normalized
+
+
+def test_ask_deepseek_review_builds_same_dispatch_argv_as_ask_codex(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """#8786: ask-deepseek accepts --review/--branch and routes like ask-codex.
+
+    Both lanes must parse the review flags and build the same headless
+    read-only verdict-required dispatch, differing only in the ``--agent``
+    value (and the lane's own temp prompt path).
+    """
+    codex = _capture_review_dispatch_argv("ask-codex", "_handle_ask_codex", monkeypatch, tmp_path)
+    deepseek = _capture_review_dispatch_argv(
+        "ask-deepseek", "_handle_ask_deepseek", monkeypatch, tmp_path
+    )
+
+    assert codex[codex.index("--agent") + 1] == "codex"
+    assert deepseek[deepseek.index("--agent") + 1] == "deepseek"
+    assert _review_argv_without_agent_and_prompt(deepseek) == _review_argv_without_agent_and_prompt(codex)
+    assert "--mode" in deepseek and deepseek[deepseek.index("--mode") + 1] == "read-only"
+    assert "--worktree" in deepseek
+    assert "--require-review-verdict" in deepseek
+    assert deepseek[deepseek.index("--branch") + 1] == "agy/impl-8786"
 
 
 @pytest.mark.parametrize(("command", "handler_name", "target"), RETIRED_ASK_SEATS)
