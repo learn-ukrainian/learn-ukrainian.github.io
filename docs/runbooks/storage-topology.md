@@ -110,13 +110,19 @@ stay gitignored, and no consumer reads bulk data through them:
   with an error naming the locator kind. When no marker-valid root resolves, the
   source is reported as unmounted.
 - **VESUM release-asset cache**: `scripts/rag/build_vesum_shadow.py` downloads
-  the public, SHA-pinned `dict_uk` asset into a repository-local `data/vesum/`
-  directory unless you pass `--asset` or `--cache-dir`. This is a gitignored
-  download cache, not bulk data. The default lives in
-  `scripts/rag/vesum_reingest.py`, whose SHA-256 is pinned by the VESUM source
-  lock and the frozen ua-eval v0.1.0/v0.1.1 releases, so it is left as is. If a
-  host still has an old `data/vesum` link, the cache follows that link; pass
-  `--cache-dir` to put it somewhere else.
+  the public, SHA-pinned `dict_uk` asset into `data/vesum/` unless you pass
+  `--asset` or `--cache-dir`. This is a gitignored download cache, not bulk data.
+  - **The legacy link goes away on pull.** `data/vesum` used to be a tracked
+    symlink. Once this change lands, `git pull` deletes it from every existing
+    clone, because upstream no longer tracks it. The default then resolves to a
+    plain, gitignored directory that the builder creates on demand.
+  - **Do not recreate a symlink there.** `data/vesum` must stay a plain
+    directory; a host that wants the cache elsewhere passes `--cache-dir`,
+    which overrides the location.
+  - **The parser default is frozen.** The default lives in
+    `scripts/rag/vesum_reingest.py`, whose SHA-256 is pinned by
+    `scripts/config/vesum_source.lock.json` and the frozen ua-eval
+    v0.1.0/v0.1.1 release chain, so the `data/vesum` default is not changed.
 
 ## Outage posture
 

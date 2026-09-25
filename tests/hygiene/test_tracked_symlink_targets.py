@@ -143,3 +143,8 @@ def test_guard_fails_on_a_staged_absolute_symlink(tmp_path: Path) -> None:
         "data/absolute: absolute target",
         "data/escaping: target outside the repository",
     ]
+
+
+def test_data_vesum_is_not_tracked_as_a_symlink() -> None:
+    """``data/vesum`` is a plain gitignored cache; the legacy link must stay gone."""
+    assert "data/vesum" not in {path for path, _target in tracked_symlinks(REPO_ROOT)}
