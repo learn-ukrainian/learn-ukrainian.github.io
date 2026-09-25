@@ -500,23 +500,29 @@ def run_ask_review_dispatch(
             except OSError:
                 response = ""
         state["response"] = response
-        # #8786: a read-only review is judged by its verdict, not by a push or
-        # by the dispatch exit code — it has no branch deliverable by design.
-        # The worker already applies --require-review-verdict, but re-decide
-        # here so a stale worker that still reports no_deliverable beside a
-        # valid verdict line cannot surface as a failed review, and a reply
-        # with no verdict can never surface as a successful one (#8421).
+        # #8786: a read-only review has no branch deliverable by design, so a
+        # completed run is judged by its verdict line. Only a terminal
+        # ``done`` (clean wait) or ``no_deliverable`` (the worker's
+        # read-only "nothing pushed" outcome, which exits non-zero) can be
+        # promoted, and only with a real verdict. ``timeout``, ``failed``,
+        # ``crashed``, ``rate_limited``, ``cancelled`` etc. never become
+        # success, verdict text or not. A reply with no verdict can never
+        # surface as successful (#8421).
         from scripts import delegate as _delegate
 
+        status = state.get("status")
+        completed = (status == "done" and wait_proc.returncode == 0) or (
+            status == _delegate._NO_DELIVERABLE_STATUS
+        )
         verdict_failure = _delegate._review_verdict_failure_reason(response)
-        if verdict_failure is not None:
-            state["ok"] = False
-            state["status"] = _delegate._NO_DELIVERABLE_STATUS
-            state["no_deliverable_reason"] = verdict_failure
-        else:
+        if completed and verdict_failure is None:
             state["ok"] = True
-            if state.get("status") != "done":
-                state["status"] = "done"
+            state["status"] = "done"
+        else:
+            state["ok"] = False
+            if completed:
+                state["status"] = _delegate._NO_DELIVERABLE_STATUS
+                state["no_deliverable_reason"] = verdict_failure
         if not state["ok"] and not state.get("stderr_excerpt"):
             state["stderr_excerpt"] = f"ask-{agent} review dispatch did not complete: status={state.get('status')!r}"
         return state

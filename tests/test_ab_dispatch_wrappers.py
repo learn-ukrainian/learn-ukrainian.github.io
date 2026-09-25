@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.ai_agent_bridge import _dispatch_wrappers as wrappers
@@ -444,3 +446,72 @@ def test_run_ask_review_dispatch_judges_by_verdict_not_dispatch_exit(monkeypatch
     assert state["ok"] is True
     assert state["status"] == "done"
     assert state.get("no_deliverable_reason") is None
+
+
+def _run_review_with_wait_state(monkeypatch, tmp_path, *, status, wait_rc, response):
+    result_file = tmp_path / "result.md"
+    result_file.write_text(response, encoding="utf-8")
+
+    def fake_run(cmd, **kwargs):
+        if "dispatch" in cmd:
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            return subprocess.CompletedProcess(
+                cmd,
+                wait_rc,
+                stdout=json.dumps({"status": status, "result_file": str(result_file)}),
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    return wrappers.run_ask_review_dispatch("deepseek", "review this", task_id="review-8786")
+
+
+@pytest.mark.parametrize(
+    "status", ["timeout", "failed", "crashed", "rate_limited", "cancelled"]
+)
+def test_run_ask_review_dispatch_never_promotes_failed_terminal_status(
+    monkeypatch, tmp_path, status
+):
+    """#8786 review: a verdict beside a non-completed run is not a success.
+
+    ``delegate wait`` reported ``timeout`` (or another terminal failure) while
+    the partial result file already carried ``VERDICT: APPROVE``; the wrapper
+    used to rewrite that to ``done`` / ``ok: true`` / exit 0.
+    """
+    state = _run_review_with_wait_state(
+        monkeypatch,
+        tmp_path,
+        status=status,
+        wait_rc=1,
+        response="Partial review.\nVERDICT: APPROVE\n",
+    )
+    assert state["ok"] is False
+    assert state["status"] == status
+    assert state["stderr_excerpt"]
+
+
+def test_run_ask_review_dispatch_ignores_quoted_verdict_example(monkeypatch, tmp_path):
+    """#8786 review: a quoted example of the format is not a verdict."""
+    state = _run_review_with_wait_state(
+        monkeypatch,
+        tmp_path,
+        status="done",
+        wait_rc=0,
+        response="I will report `VERDICT: APPROVE` later.\n```\nVERDICT: APPROVE\n```\n",
+    )
+    assert state["ok"] is False
+    assert state["status"] == "no_deliverable"
+    assert state["no_deliverable_reason"] == "review_missing_verdict_line"
+
+
+def test_run_ask_review_dispatch_last_verdict_line_wins(monkeypatch, tmp_path):
+    state = _run_review_with_wait_state(
+        monkeypatch,
+        tmp_path,
+        status="no_deliverable",
+        wait_rc=1,
+        response="VERDICT: APPROVE\n\n**VERDICT: REQUEST_CHANGES**\n",
+    )
+    assert state["ok"] is True
+    assert state["status"] == "done"

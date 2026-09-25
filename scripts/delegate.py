@@ -2123,14 +2123,18 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # cf_preflight.py and the review prompts actually ask reviewers to write.
 # Reviewers routinely render the label and token in Markdown emphasis
 # (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
-# full verdicts and must not be misread as missing (#8786). Only emphasis
-# punctuation (``*``, ``_``, backtick) and whitespace may sit between the
-# label, its colon, and the token — the token still has to be one of the
-# canonical words, so a verdict-less reply keeps failing loudly.
+# full verdicts and must not be misread as missing (#8786). A verdict is a
+# whole LINE: emphasis punctuation (``*``, ``_``, backtick) and whitespace
+# may sit around the label, its colon, and the token, but nothing else may
+# share the line — so an inline or quoted example ("I will report
+# ``VERDICT: APPROVE`` later", ``> VERDICT: APPROVE``) is not a verdict.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"\bVERDICT[\s*_`]*:[\s*_`]*(?:APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)\b",
+    r"^[*_\s]*VERDICT[*_`\s]*:[*_`\s]*"
+    r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
+    r"[*_`\s]*$",
     re.IGNORECASE,
 )
+_CODE_FENCE_RE = re.compile(r"^\s*(?:```|~~~)")
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -2351,17 +2355,41 @@ def _delivery_failure_reason(
     return _NO_DELIVERABLE_NO_COMMITS_REASON
 
 
+def parse_review_verdict(response: str) -> str | None:
+    """Return the review's verdict token, or ``None`` when it states none.
+
+    The single verdict parser for the review-success contract (#8786): the
+    dispatch worker and the ask-* review wrapper both call it. Only a line
+    that is exactly a verdict (see ``_REVIEW_VERDICT_LINE_RE``) outside a code
+    fence counts, and the LAST such line wins — a report may discuss earlier
+    drafts, but its closing line is its verdict.
+    """
+    verdict: str | None = None
+    in_fence = False
+    for line in response.splitlines():
+        if _CODE_FENCE_RE.match(line):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        match = _REVIEW_VERDICT_LINE_RE.match(line)
+        if match:
+            verdict = match.group(1).upper()
+    return verdict
+
+
 def _review_verdict_failure_reason(response: str) -> str | None:
     """Return the failure reason when a review-typed reply has no verdict line.
 
     Applies only to dispatches that opt in via ``--require-review-verdict``
     (the ask-* review wrapper); ordinary asks and implement dispatches never
     require a magic marker. A review reply that never states
-    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED>`` is not a
-    completed review — on 2026-09-21 several review tasks settled ``done``
-    with a promise to wait for a background command as the whole body (#8421).
+    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED>``
+    on a line of its own is not a completed review — on 2026-09-21 several
+    review tasks settled ``done`` with a promise to wait for a background
+    command as the whole body (#8421).
     """
-    if _REVIEW_VERDICT_LINE_RE.search(response):
+    if parse_review_verdict(response) is not None:
         return None
     return _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON
 
@@ -10567,7 +10595,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Review-typed dispatch: a run that settles done without a "
-            "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED` line in the "
+            "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED` line of its own in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
             "ask-* review wrapper; ordinary dispatches are unaffected."
         ),
