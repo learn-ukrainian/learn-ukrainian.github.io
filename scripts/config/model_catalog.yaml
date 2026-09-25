@@ -472,9 +472,9 @@ models:
     tier: frontier_practical
     lifecycle: active
     aliases: [gemini-3.8-flash, gemini-3.8-flash-medium, gemini-3.8-flash-low]
-    roles: [implementation, agentic_coding, subagent_work, strong_review, multimodal_analysis]
+    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
     transports: [agy]
-    strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost, fast_scoped_cf]
+    strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
     weaknesses: [not_default_critical_authority, deep_architecture_prefers_sol]
     notes: >-
       Default AGY Flash pin (operator GO 2026-09-02). Live `agy models` probe
@@ -497,9 +497,9 @@ models:
     tier: frontier_practical
     lifecycle: active
     aliases: [gemini-3.7-flash, gemini-3.7-flash-medium, gemini-3.7-flash-low]
-    roles: [implementation, agentic_coding, subagent_work, strong_review, multimodal_analysis]
+    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
     transports: [agy]
-    strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost, fast_scoped_cf]
+    strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
     weaknesses: [superseded_as_default_by_3_8_flash, not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
     notes: >-
       Wave 1 SCORECARD 2026-08-23: CF #7137 pass, wall ~47s, low noise, concrete
@@ -512,7 +512,7 @@ models:
     tier: frontier_practical
     lifecycle: active
     aliases: [gemini-3.6-flash, gemini-3.6-flash-medium, gemini-3.6-flash-low]
-    roles: [implementation, agentic_coding, subagent_work, strong_review, multimodal_analysis]
+    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
     transports: [agy]
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
     weaknesses: [superseded_as_default_by_3_7_flash, not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
@@ -534,7 +534,7 @@ models:
     tier: strong_efficient
     lifecycle: active
     aliases: [gemini-3.5-flash]
-    roles: [implementation, subagent_work, routine_review, multimodal_analysis]
+    roles: [implementation, subagent_work, multimodal_analysis]
     transports: [agy]
     strengths: [speed, low_cost, back_compat]
     weaknesses: [superseded_as_default_by_3_7_flash, not_default_critical_authority]

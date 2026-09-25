@@ -462,7 +462,7 @@ def resolve_reviewer(selection: str, *, claude_available: bool | None = None) ->
         return choice
     raise ReviewSafetyError(
         f"unsupported_reviewer: {selection!r} "
-        f"(choose auto|codex|glm|claude|agy|grok|kimi)"
+        f"(choose auto|codex|glm|claude|grok|kimi)"
     )
 
 
@@ -1655,7 +1655,7 @@ def register_review_pr_parser(subparsers: Any) -> None:
         "--reviewer",
         default=REVIEWER_AUTO,
         help=(
-            "auto|codex|glm|claude|agy|grok|kimi (recognized semantic routes; "
+            "auto|codex|glm|claude|grok|kimi (recognized semantic routes; "
             "current sealed eligibility comes from model_catalog.yaml)"
         ),
     )

@@ -728,6 +728,17 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Gemini auth mode override for this invocation",
     )
     ask_gemini_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
+    ask_gemini_parser.add_argument(
+        "--review-profile",
+        dest="review_profile",
+        choices=("code", "ukrainian"),
+        default=None,
+        help=(
+            "Required for a Gemini review. code is refused "
+            "(Gemini reviews Ukrainian only, never code). "
+            "Ukrainian content review must pass ukrainian."
+        ),
+    )
 
     # ask-agy
     ask_agy_parser = subparsers.add_parser(
@@ -764,7 +775,20 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Review ask on the lightweight direct path "
-            "(verdict + evidence required; sealed review-pr is retired)"
+            "(verdict + evidence required; sealed review-pr is retired). "
+            "Requires --review-profile. code is refused; ukrainian is allowed."
+        ),
+    )
+    ask_agy_parser.add_argument(
+        "--review-profile",
+        dest="review_profile",
+        choices=("code", "ukrainian"),
+        default=None,
+        help=(
+            "Required with --review. code is refused "
+            "(Gemini reviews Ukrainian only, never code — operator 2026-09-25). "
+            "Ukrainian content review must pass ukrainian. "
+            "Omitting the flag refuses the review and names this flag."
         ),
     )
 
@@ -1639,6 +1663,13 @@ def _handle_acp_compat(args, target: str) -> None:
             target_desc = f"remote branch origin/{branch}"
         content = _review_target_content(target_desc, content, sha=resolved_head_sha)
         review = True
+
+    if review and target in {"agy", "gemini"}:
+        from ._agy import gemini_review_profile_error
+
+        profile_error = gemini_review_profile_error(getattr(args, "review_profile", None))
+        if profile_error is not None:
+            raise SystemExit(profile_error)
 
     if review:
         # #7155: a reviewer must be able to use tools (gh, fs, pytest) — ACP's

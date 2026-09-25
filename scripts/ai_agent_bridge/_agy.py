@@ -117,6 +117,35 @@ AGY_SEALED_REVIEW_UNSUPPORTED = (
     "AGY remains fine for advisory ask-agy *without* --review."
 )
 
+# Operator 2026-09-25: Gemini reviews Ukrainian only, never code.
+GEMINI_REVIEW_PROFILE_CHOICES = ("code", "ukrainian")
+GEMINI_REVIEW_AGENTS = frozenset({"agy", "gemini"})
+GEMINI_CODE_REVIEW_FORBIDDEN = (
+    "gemini_code_review_forbidden: operator 2026-09-25 — "
+    "Gemini reviews Ukrainian only, never code (model-assignment.md)"
+)
+AGY_REVIEW_PROFILE_REQUIRED = (
+    "agy_review_profile_required: a review request to agy/gemini requires "
+    "--review-profile {code,ukrainian}. "
+    "code is refused (Gemini reviews Ukrainian only, never code — "
+    "operator 2026-09-25, model-assignment.md). "
+    "Ukrainian content review must pass --review-profile ukrainian."
+)
+
+
+def gemini_review_profile_error(profile: str | None) -> str | None:
+    """Refuse a Gemini review unless the profile is explicitly Ukrainian.
+
+    ``None`` means the review may proceed. A missing profile names the flag.
+    ``code`` cites the operator rule. Any other value is treated as missing.
+    """
+    normalized = (profile or "").strip().lower()
+    if normalized == "ukrainian":
+        return None
+    if normalized == "code":
+        return GEMINI_CODE_REVIEW_FORBIDDEN
+    return AGY_REVIEW_PROFILE_REQUIRED
+
 
 def ask_agy(
     content: str,

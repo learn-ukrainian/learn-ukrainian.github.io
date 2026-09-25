@@ -188,6 +188,7 @@ def test_ab_discuss_accepts_agy_in_multi_participant_list(discuss_bridge, monkey
         with_agents="agy,pool",
         max_rounds=1,
         review=False,
+        review_profile="ukrainian",
         models=None,
     )
 
@@ -220,6 +221,7 @@ def test_ab_discuss_passes_registered_agy_model_pin(discuss_bridge, monkeypatch)
         with_agents="agy,pool",
         max_rounds=1,
         review=False,
+        review_profile="ukrainian",
         models="agy:gemini-3.6-flash-high",
     )
 
