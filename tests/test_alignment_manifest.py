@@ -55,7 +55,7 @@ def manifest_fixture(tmp_path: Path, monkeypatch) -> dict[str, Path]:
     curriculum_root = repo_root / "curriculum" / "l2-uk-en"
     plan_path = curriculum_root / "plans" / "a1" / "demo.yaml"
     sources_db_path = repo_root / "data" / "sources.db"
-    canonical_anchors_path = repo_root / "data" / "canonical_anchors.yaml"
+    canonical_anchors_path = repo_root / "registry" / "canonical_anchors.yaml"
     decisions_path = repo_root / "docs" / "decisions" / "decisions.yaml"
     phase_template_path = repo_root / "scripts" / "build" / "phases" / "v6-write.md"
 

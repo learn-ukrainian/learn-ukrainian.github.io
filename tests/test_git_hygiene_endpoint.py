@@ -47,7 +47,7 @@ def _init_repo(repo: Path) -> None:
 ## Exemption paths
 
 - `wiki/**` - wiki builder output
-- `data/corpus_audit/draft_tickets/*.md` - draft tickets
+- `registry/corpus_audit/draft_tickets/*.md` - draft tickets
 
 ## Other section
 """,
@@ -83,7 +83,7 @@ def _dirty_repo_with_all_buckets(tmp_path: Path) -> Path:
         (repo / "feature" / "remove" / name).unlink()
     _write(repo / "scratch" / "todo.txt", "local note\n")
     _write(repo / "wiki" / "draft.md", "wiki output\n")
-    _write(repo / "data" / "corpus_audit" / "draft_tickets" / "ticket.md", "draft\n")
+    _write(repo / "registry" / "corpus_audit" / "draft_tickets" / "ticket.md", "draft\n")
 
     return repo
 
@@ -134,7 +134,7 @@ def test_hygiene_is_clean_when_all_dirty_files_are_exempt(tmp_path: Path) -> Non
     _write(repo / "README.md", "clean base\n")
     _commit_all(repo, "initial")
     _write(repo / "wiki" / "draft.md", "wiki output\n")
-    _write(repo / "data" / "corpus_audit" / "draft_tickets" / "ticket.md", "draft\n")
+    _write(repo / "registry" / "corpus_audit" / "draft_tickets" / "ticket.md", "draft\n")
 
     result = git_hygiene_router.compute_git_hygiene(repo)
 

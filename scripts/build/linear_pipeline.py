@@ -41,9 +41,9 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 TEXTBOOK_SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
-FOLK_HERITAGE_ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "folk_heritage_attestations.yaml"
-FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "foreign_proper_noun_attestations.yaml"
-PRIMARY_TEXT_SOURCES_PATH = PROJECT_ROOT / "data" / "primary_text_sources.yaml"
+FOLK_HERITAGE_ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "folk_heritage_attestations.yaml"
+FOREIGN_PROPER_NOUN_ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "foreign_proper_noun_attestations.yaml"
+PRIMARY_TEXT_SOURCES_PATH = PROJECT_ROOT / "registry" / "primary_text_sources.yaml"
 CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 

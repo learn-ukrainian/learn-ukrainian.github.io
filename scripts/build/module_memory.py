@@ -13,6 +13,8 @@ from typing import Any
 import yaml
 from build.alignment_manifest import manifest_hash, stamp_artifact
 
+from scripts.storage.paths import artifact_path
+
 PLAN_LEVEL_ERROR_CLASSES = {
     "vocab_density",
     "pedagogical_sequence",
@@ -103,8 +105,10 @@ def find_pravopys_files(project_root: Path) -> list[Path]:
     if candidates:
         return candidates
 
-    fallback = project_root / "data" / "raw" / "pravopys.html"
-    return [fallback] if fallback.exists() else []
+    if not (project_root / "data" / "raw" / "pravopys.html").exists():
+        return []
+    # Untracked artifact (#8809 P1): resolve through the manifest so a corrupt copy fails closed.
+    return [artifact_path("raw_source", "raw/pravopys.html", repo=project_root)]
 
 
 def _tree_manifest(root: Path) -> dict[str, str]:

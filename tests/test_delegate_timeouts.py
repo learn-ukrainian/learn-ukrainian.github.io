@@ -442,11 +442,15 @@ def test_list_worktree_top_dirs_timeouts(tmp_path: Path) -> None:
 
 
 def test_apply_dispatch_sparse_checkout_timeouts(tmp_path: Path) -> None:
+    def fake_run(cmd, **kwargs):
+        del kwargs
+        if cmd[:2] == ["git", "ls-tree"]:
+            return _completed(cmd, returncode=0, stdout="")
+        raise subprocess.TimeoutExpired(["git", "sparse-checkout"], DEFAULT_GIT_TIMEOUT_S)
+
     with (
         patch("scripts.delegate._list_worktree_top_dirs", return_value=["scripts", "tests", "curriculum"]),
-        patch(
-            "subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "sparse-checkout"], DEFAULT_GIT_TIMEOUT_S)
-        ),
+        patch("subprocess.run", side_effect=fake_run),
     ):
         with pytest.raises(RuntimeError, match=r"failed to init sparse-checkout"):
             _apply_dispatch_sparse_checkout(tmp_path, full_checkout=False, sparse_include=())

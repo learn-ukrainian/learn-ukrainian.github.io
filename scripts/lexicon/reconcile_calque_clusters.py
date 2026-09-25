@@ -5,7 +5,7 @@ Systematically extracts, validates, and cross-wires decolonization alternatives
 and mutual synonyms across the Word Atlas with ZERO LLM usage.
 
 Sources:
-- data/lt_replacements.json (LanguageTool / curated replacement map)
+- registry/lt_replacements.json (LanguageTool / curated replacement map)
 - data/lexicon/heritage_pairs.yaml & heritage_pairs.wave1-calque.yaml (UA-GEC & curated pairs)
 - scripts/lexicon/calque_corrections.py (active participle / calque authority)
 - data/sources.db (textbooks_fts, style_guide, ua_gec_errors, sum11, grinchenko)
@@ -60,7 +60,7 @@ CURRENT_ENRICHMENT_VERSION = 2
 DEFAULT_SOURCES_DB = _resolve_repo_path(PROJECT_ROOT / "data" / "sources.db")
 DEFAULT_ATLAS_DB = _resolve_repo_path(PROJECT_ROOT / "data" / "atlas.db")
 DEFAULT_VESUM_DB = _resolve_repo_path(PROJECT_ROOT / "data" / "vesum.db")
-DEFAULT_LT_REPLACEMENTS = _resolve_repo_path(PROJECT_ROOT / "data" / "lt_replacements.json")
+DEFAULT_LT_REPLACEMENTS = _resolve_repo_path(PROJECT_ROOT / "registry" / "lt_replacements.json")
 DEFAULT_HERITAGE_PAIRS = _resolve_repo_path(PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.yaml")
 DEFAULT_HERITAGE_OVERLAY = _resolve_repo_path(PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.wave1-calque.yaml")
 DEFAULT_INFLOW_QUEUE = PROJECT_ROOT / "data" / "lexicon" / "calque_inflow_queue.json"

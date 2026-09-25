@@ -268,6 +268,38 @@ def test_cli_report_json(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> 
     assert payload["settle_events_missing_action"] == 1
 
 
+def test_cli_report_since_hours_windows_events(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    store = tmp_path / "events.jsonl"
+    now = datetime.now(UTC)
+    events = [
+        {"recorded_at": idle.format_iso(now - timedelta(hours=25)), "outcome": "missing_action"},
+        {"recorded_at": idle.format_iso(now - timedelta(hours=1)), "outcome": "disposed"},
+        {"outcome": "disposed", "disposition_honest": False},
+    ]
+    store.write_text("\n".join(json.dumps(event) for event in events) + "\n", encoding="utf-8")
+
+    assert idle.main(["report", "--store", str(store), "--json"]) == 0
+    all_events = json.loads(capsys.readouterr().out)
+    assert all_events["event_count"] == 3
+    assert all_events["settle_events_missing_action"] == 1
+
+    assert idle.main(["report", "--store", str(store), "--since-hours", "24", "--json"]) == 0
+    window = json.loads(capsys.readouterr().out)
+    assert window["event_count"] == 2
+    assert window["settle_events_missing_action"] == 0
+    assert window["settle_events_dishonest"] == 1
+
+
+@pytest.mark.parametrize("value", ["-1", "0", "-0.5", "nan", "inf", "abc"])
+def test_cli_report_rejects_non_positive_since_hours(
+    value: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    with pytest.raises(SystemExit) as excinfo:
+        idle.main(["report", "--store", str(tmp_path / "events.jsonl"), "--since-hours", value])
+    assert excinfo.value.code == 2
+    assert "--since-hours" in capsys.readouterr().err
+
+
 def test_infer_review_kind() -> None:
     assert idle.infer_settle_kind("review-6981") == "review"
     assert idle.infer_settle_kind("infra-6976") == "dispatch"

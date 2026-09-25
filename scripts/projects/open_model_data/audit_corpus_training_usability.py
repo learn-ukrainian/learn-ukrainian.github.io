@@ -27,7 +27,7 @@ SCHEMA_PATH = (
 )
 PROFILE_PATH = ROOT / "data/projects/open_model_data/profiles/full_corpus_profile_v1.json"
 DETECTOR_PATH = ROOT / "data/projects/open_model_data/detector/language_contact_receipt_v1.json"
-URL_MAP_PATH = ROOT / "data/pidruchnyk_urls.yaml"
+URL_MAP_PATH = ROOT / "registry/pidruchnyk_urls.yaml"
 MOJIBAKE_RE = re.compile(r"[ÂÃÐÑ]")
 LITERARY_METADATA_FIELDS = ("work", "author", "year", "genre", "language_period")
 

@@ -32,7 +32,7 @@ from scripts.wiki import historical_sources
 
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_saint_sophia_db_reconciliation_v1.schema.json"
-DENOMINATOR_PATH = ROOT / "data/historical_language_corpus_denominator.yaml"
+DENOMINATOR_PATH = ROOT / "registry/historical_language_corpus_denominator.yaml"
 COLLECTION_ID = "saint-sophia-inscriptions"
 EXPECTED_ROWS = 4_157
 EXPECTED_ID_SET_SHA256 = "44b6428c07a8f496e7b933b53fa7476b8ddd54c548c9c397f2a516f26d3e584b"

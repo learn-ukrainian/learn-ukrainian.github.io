@@ -31,7 +31,7 @@ from scripts.practice_deck.markup_integrity import (
 
 DEFAULT_DB = ROOT / "data" / "sources.db"
 DEFAULT_OUT_DIR = ROOT / "site" / "src" / "data"
-DEFAULT_MARKUP_OVERLAY = ROOT / "data" / "practice" / "zno-markup-overlay.json"
+DEFAULT_MARKUP_OVERLAY = ROOT / "registry" / "practice" / "zno-markup-overlay.json"
 DEFAULT_FILL_RESIDUAL = ROOT / "batch_state" / "practice" / "zno-fill-residual.json"
 LETTER_TO_INDEX = {"А": 0, "Б": 1, "В": 2, "Г": 3, "Д": 4}
 

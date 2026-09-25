@@ -199,7 +199,7 @@ def test_future_stem_source_files_map_by_token() -> None:
 
 
 def test_wave1_stem_url_config_slugs_map_to_canonical_subjects() -> None:
-    urls = yaml.safe_load((PROJECT_ROOT / "data/pidruchnyk_urls.yaml").read_text())
+    urls = yaml.safe_load((PROJECT_ROOT / "registry/pidruchnyk_urls.yaml").read_text())
 
     assert len(WAVE1_STEM_TEXTBOOK_SOURCE_FILES) == 24
     assert set(WAVE1_STEM_TEXTBOOK_SOURCE_FILES).issubset(urls)

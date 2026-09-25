@@ -787,3 +787,23 @@ def test_main_cli_encode_flag_wires_ingest_to_manifest(
         manifest.close()
     assert len(active) >= 1
     assert all(row.unit_key.startswith("ukrainian_wiki:") for row in active)
+
+
+def test_write_ingest_report_writes_scratch_paths_and_routes_through_write_artifact(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    scratch = tmp_path / "out" / "report.md"
+    assert ukrainian_wiki_corpus.write_ingest_report([], report_path=scratch) == scratch
+    assert scratch.read_text(encoding="utf-8").startswith("# ")
+
+    calls: list[tuple[Path, str, str]] = []
+
+    def record(target: Path, group: str, producer: str, write) -> None:
+        calls.append((target, group, producer))
+        write(tmp_path / "staged.md")
+
+    monkeypatch.setattr(ukrainian_wiki_corpus, "write_artifact", record)
+    published = tmp_path / "data/corpus_audit/ukrainian_wiki_a2_ingest_report.md"
+    ukrainian_wiki_corpus.write_ingest_report([], report_path=published)
+    assert calls == [(published, "corpus_audit_snapshots", "scripts/wiki/ukrainian_wiki_corpus.py")]
+    assert (tmp_path / "staged.md").read_text(encoding="utf-8").startswith("# ")

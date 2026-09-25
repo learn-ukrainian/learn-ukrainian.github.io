@@ -32,7 +32,7 @@ Return the JSON object now.
 
 ---END PROMPT---
 
-3. Save the JSON response to: data/translations/all-translations.json
+3. Save the JSON response to: registry/translations/all-translations.json
 4. Tell Claude: "done"
 
 NOTES:

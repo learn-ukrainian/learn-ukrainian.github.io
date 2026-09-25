@@ -211,7 +211,7 @@ describe('numeral-mechanics', () => {
   });
 
   it('evaluates all 75 committed cards across all 4 options without throwing', () => {
-    const deckPath = resolve(__dirname, '../../../data/practice/numeral_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/numeral_mechanics_deck.json');
     expect(existsSync(deckPath)).toBe(true);
 
     const content = readFileSync(deckPath, 'utf-8');
@@ -245,7 +245,7 @@ describe('numeral-mechanics', () => {
   });
 
   it('ensures register clarity and unambiguous distractors for approximate constructions', () => {
-    const deckPath = resolve(__dirname, '../../../data/practice/numeral_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/numeral_mechanics_deck.json');
     const content = readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(content);
 
@@ -272,7 +272,7 @@ describe('numeral-mechanics', () => {
   });
 
   it('ensures Card 48 uses explicit subject framing and unambiguous adult female collective restriction distractor', () => {
-    const deckPath = resolve(__dirname, '../../../data/practice/numeral_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/numeral_mechanics_deck.json');
     const content = readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(content);
 
@@ -295,7 +295,7 @@ describe('numeral-mechanics', () => {
     expect(cPlur.ruleEn).toContain('Genitive plural');
     expect(cPlur.ruleUa).toContain('чотири каченяти');
 
-    const deckPath = resolve(__dirname, '../../../data/practice/numeral_mechanics_deck.json');
+    const deckPath = resolve(__dirname, '../../../registry/practice/numeral_mechanics_deck.json');
     const content = readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(content);
 

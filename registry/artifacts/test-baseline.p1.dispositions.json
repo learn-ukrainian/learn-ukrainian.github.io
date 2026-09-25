@@ -1,0 +1,82 @@
+{
+ "needs_artifact": [
+  {
+   "id": "tests.test_navsi200_asr_bakeoff.TestAsrBakeoffLedgerAndPrivacy::test_calibration_benchmark_metrics_present",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_asr_bakeoff.TestAsrBakeoffLedgerAndPrivacy::test_honest_accounting_in_ledger",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_asr_bakeoff.TestAsrBakeoffLedgerAndPrivacy::test_privacy_no_teacher_names_in_ledger",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_asr_bakeoff.TestAsrBakeoffLedgerAndPrivacy::test_privacy_no_verbatim_transcripts_in_ledger",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_captions.TestNavsi200CaptionsLedger::test_all_catalog_videos_accounted_for",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_captions.TestNavsi200CaptionsLedger::test_ledger_file_exists",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_captions.TestNavsi200CaptionsLedger::test_ledger_metadata_shape",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_captions.TestNavsi200CaptionsLedger::test_lessons_shape_and_types",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_captions.TestNavsi200CaptionsLedger::test_priority_ordering_in_ledger",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_captions.TestNavsi200CaptionsLedger::test_privacy_no_teacher_names_in_ledger",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_captions.TestNavsi200CaptionsLedger::test_privacy_no_verbatim_captions_in_ledger",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.test_navsi200_captions.TestNavsi200CaptionsLedger::test_summary_consistency",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  },
+  {
+   "id": "tests.wiki.diagnostics.test_corpus_gaps::test_load_coverage_map_resolves_the_published_artifact",
+   "host_run": {
+    "junit": "registry/artifacts/host-run-p1.junit.xml"
+   }
+  }
+ ]
+}

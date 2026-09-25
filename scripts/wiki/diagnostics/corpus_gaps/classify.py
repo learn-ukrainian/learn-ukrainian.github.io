@@ -13,7 +13,7 @@ from wiki.diagnostics.corpus_gaps.audit import (
     COVERAGE_MAP_PATH,
     GAP_CATEGORIES_PATH,
     classify_gap_categories,
-    load_json,
+    load_coverage_map,
     render_gap_categories_markdown,
 )
 
@@ -35,7 +35,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    coverage_map = load_json(Path(args.coverage_map))
+    coverage_map = load_coverage_map(Path(args.coverage_map))
     categories = classify_gap_categories(coverage_map)
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
