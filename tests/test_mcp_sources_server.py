@@ -492,7 +492,8 @@ class TestVerifyWordsHandler:
 class TestCheckModernFormHandler:
     """CI-visible shape guard for handle_check_modern_form (#8402)."""
 
-    def test_found_word_shape(self, server_module):
+    def test_found_word_shape(self, server_module, monkeypatch):
+        monkeypatch.setattr(server_module, "_vesum_source_version", lambda: VESUM_FIXTURE_VERSION)
         mock_matches = [
             {"lemma": "сонце", "pos": "noun", "tags": "noun:inanim:n:v_naz"},
         ]
