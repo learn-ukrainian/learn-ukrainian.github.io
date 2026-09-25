@@ -12,6 +12,7 @@ from __future__ import annotations
 import logging
 import re
 import shutil
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
@@ -168,7 +169,25 @@ def _allowed_tool_names(value: Any) -> list[str] | None:
     return [name for item in items for name in re.split(r"[,\s]+", item) if name]
 
 
-def read_only_review_refusal(mode: str, tc: dict[str, Any], *, trail_isolation: bool) -> str | None:
+class ReviewRefusal(StrEnum):
+    """Why a read-only dispatch stays in plan mode.
+
+    A closed set of fixed codes: the log line emits only the code, never a
+    path, tool name or any other tool_config value (CodeQL clear-text logging).
+    """
+
+    NOT_READ_ONLY = "not_read_only"
+    TRAIL_ISOLATION = "trail_isolation"
+    MISSING_REVIEW_MARKER = "missing_review_marker"
+    STRICT_MCP_CONFIG_OFF = "strict_mcp_config_off"
+    AGENT_PROFILE = "agent_profile"
+    MISSING_MCP_CONFIG = "missing_mcp_config"
+    UNTRUSTED_MCP_CONFIG = "untrusted_mcp_config"
+    ALLOWED_TOOLS_MALFORMED = "allowed_tools_malformed"
+    TOOL_NOT_ALLOWLISTED = "tool_not_allowlisted"
+
+
+def read_only_review_refusal(mode: str, tc: dict[str, Any], *, trail_isolation: bool) -> ReviewRefusal | None:
     """Why this dispatch must stay in plan mode, or None when it may run in dontAsk.
 
     Plan mode refuses every MCP call (#8652), so a sources review has to
@@ -177,31 +196,31 @@ def read_only_review_refusal(mode: str, tc: dict[str, Any], *, trail_isolation: 
     adapter checks every condition itself instead of trusting the caller.
     """
     if mode != "read-only":
-        return f"mode is {mode!r}"
+        return ReviewRefusal.NOT_READ_ONLY
     if trail_isolation:
-        return "trail isolation keeps its own profile"
+        return ReviewRefusal.TRAIL_ISOLATION
     if tc.get(REVIEW_VERDICT_MARKER_KEY) is not True:
-        return f"no {REVIEW_VERDICT_MARKER_KEY} marker from the delegate review path"
+        return ReviewRefusal.MISSING_REVIEW_MARKER
     if tc.get("strict_mcp_config") is not True:
-        return "strict_mcp_config is not set"
+        return ReviewRefusal.STRICT_MCP_CONFIG_OFF
     if tc.get("agent"):
-        return "an --agent profile can carry its own tools and permission mode"
+        # An --agent profile can carry its own tools and permission mode.
+        return ReviewRefusal.AGENT_PROFILE
     config = tc.get("mcp_config_path")
     if not isinstance(config, str) or not config:
-        return "no mcp_config_path"
+        return ReviewRefusal.MISSING_MCP_CONFIG
     trusted = trusted_mcp_config_path()
     try:
         same = Path(config).resolve(strict=True) == trusted.resolve(strict=True)
     except OSError:
         same = False
     if not same:
-        return f"mcp_config_path {config!r} is not the trusted {str(trusted)!r}"
+        return ReviewRefusal.UNTRUSTED_MCP_CONFIG
     names = _allowed_tool_names(tc.get("allowed_tools"))
     if not names:
-        return "allowed_tools is empty or malformed"
-    outside = sorted(set(names) - READ_ONLY_REVIEW_ALLOWED_TOOLS)
-    if outside:
-        return f"allowed_tools outside the read-only allowlist: {outside}"
+        return ReviewRefusal.ALLOWED_TOOLS_MALFORMED
+    if not set(names) <= READ_ONLY_REVIEW_ALLOWED_TOOLS:
+        return ReviewRefusal.TOOL_NOT_ALLOWLISTED
     return None
 
 
@@ -295,7 +314,7 @@ class KimiccHarness:
             if refusal is None:
                 cmd.append("--read-only-review")
             elif tc.get("mcp_config_path") or tc.get("allowed_tools") or tc.get(REVIEW_VERDICT_MARKER_KEY):
-                _logger.warning("KimiccHarness: read-only dispatch stays in plan mode: %s", refusal)
+                _logger.warning("KimiccHarness: read-only dispatch stays in plan mode: %s", refusal.value)
         if trail_isolation:
             cmd.extend(
                 [

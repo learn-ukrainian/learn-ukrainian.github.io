@@ -407,45 +407,71 @@ def _untrusted_config(tmp):
     return str(other)
 
 
+_R = kimicc_adapter.ReviewRefusal
+
+
 @pytest.mark.parametrize(
     ("change", "reason"),
     [
-        (_drop(kimicc_adapter.REVIEW_VERDICT_MARKER_KEY), "marker"),
-        (_set(kimicc_adapter.REVIEW_VERDICT_MARKER_KEY, "yes"), "marker"),
-        (_drop("strict_mcp_config"), "strict_mcp_config"),
-        (_set("strict_mcp_config", False), "strict_mcp_config"),
-        (_drop("mcp_config_path"), "mcp_config_path"),
-        (_set("mcp_config_path", _untrusted_config), "not the trusted"),
-        (_set("mcp_config_path", lambda tmp: str(tmp / "missing.mcp.json")), "not the trusted"),
-        (_drop("allowed_tools"), "allowed_tools"),
-        (_set("allowed_tools", ""), "allowed_tools"),
-        (_set("allowed_tools", "mcp__sources__verify_words,mcp__github__create_pull_request"), "allowlist"),
-        (_set("allowed_tools", "mcp__sources__verify_words mcp__sources__write_note"), "allowlist"),
-        (_set("allowed_tools", "mcp__sources__verify_words,Bash"), "allowlist"),
-        (_set("allowed_tools", "mcp__sources__verify_words,Bash(git:*)"), "allowlist"),
-        (_set("allowed_tools", "mcp__sources"), "allowlist"),
-        (_set("allowed_tools", "mcp__sources__*"), "allowlist"),
-        (_set("allowed_tools", "Write"), "allowlist"),
-        (_set("agent", "reviewer"), "--agent"),
+        (_drop(kimicc_adapter.REVIEW_VERDICT_MARKER_KEY), _R.MISSING_REVIEW_MARKER),
+        (_set(kimicc_adapter.REVIEW_VERDICT_MARKER_KEY, "yes"), _R.MISSING_REVIEW_MARKER),
+        (_drop("strict_mcp_config"), _R.STRICT_MCP_CONFIG_OFF),
+        (_set("strict_mcp_config", False), _R.STRICT_MCP_CONFIG_OFF),
+        (_drop("mcp_config_path"), _R.MISSING_MCP_CONFIG),
+        (_set("mcp_config_path", _untrusted_config), _R.UNTRUSTED_MCP_CONFIG),
+        (_set("mcp_config_path", lambda tmp: str(tmp / "missing.mcp.json")), _R.UNTRUSTED_MCP_CONFIG),
+        (_drop("allowed_tools"), _R.ALLOWED_TOOLS_MALFORMED),
+        (_set("allowed_tools", ""), _R.ALLOWED_TOOLS_MALFORMED),
+        (_set("allowed_tools", "mcp__sources__verify_words,mcp__github__create_pull_request"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources__verify_words mcp__sources__write_note"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources__verify_words,Bash"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources__verify_words,Bash(git:*)"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources__*"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "Write"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("agent", "reviewer"), _R.AGENT_PROFILE),
     ],
 )
 def test_kimicc_review_profile_missing_condition_keeps_plan_mode(tmp_path, monkeypatch, caplog, change, reason):
-    """Any missing or widened condition keeps plan mode and logs why (#8652)."""
+    """Any missing or widened condition keeps plan mode and logs only a fixed code (#8652)."""
     _kimicc_ready(tmp_path, monkeypatch)
     tool_config = change(_trusted_review_grant(tmp_path, monkeypatch), tmp_path)
+    assert kimicc_adapter.read_only_review_refusal("read-only", tool_config, trail_isolation=False) is reason
 
     with caplog.at_level(logging.WARNING, logger=kimicc_adapter.__name__):
         cmd = _kimicc_review_cmd(tmp_path, tool_config)
 
     assert "--read-only-review" not in cmd
-    assert "stays in plan mode" in caplog.text
-    assert reason in caplog.text
+    messages = [record.getMessage() for record in caplog.records if record.name == kimicc_adapter.__name__]
+    assert messages == [f"KimiccHarness: read-only dispatch stays in plan mode: {reason.value}"]
+    # No tool_config value reaches the log: not a path, tool name or agent name (CodeQL).
+    logged = "\n".join(messages)
+    for value in tool_config.values():
+        for item in value if isinstance(value, list) else [value]:
+            if isinstance(item, str) and item:
+                assert item not in logged
+    assert str(tmp_path) not in logged
 
 
 def test_kimicc_review_profile_refuses_trail_isolation_directly():
     grant = {kimicc_adapter.REVIEW_VERDICT_MARKER_KEY: True, "strict_mcp_config": True}
-    assert kimicc_adapter.read_only_review_refusal("read-only", grant, trail_isolation=True)
-    assert kimicc_adapter.read_only_review_refusal("workspace-write", grant, trail_isolation=False)
+    assert kimicc_adapter.read_only_review_refusal("read-only", grant, trail_isolation=True) is _R.TRAIL_ISOLATION
+    assert kimicc_adapter.read_only_review_refusal("workspace-write", grant, trail_isolation=False) is _R.NOT_READ_ONLY
+
+
+def test_kimicc_review_refusal_codes_are_fixed_identifiers():
+    """Refusal codes are constant snake_case tokens, safe to log verbatim."""
+    assert {code.value for code in _R} == {
+        "not_read_only",
+        "trail_isolation",
+        "missing_review_marker",
+        "strict_mcp_config_off",
+        "agent_profile",
+        "missing_mcp_config",
+        "untrusted_mcp_config",
+        "allowed_tools_malformed",
+        "tool_not_allowlisted",
+    }
 
 
 def test_kimicc_review_allowlist_is_the_read_only_review_tool_set():
