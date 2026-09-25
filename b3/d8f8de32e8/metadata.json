@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b3d8f8de32e8",
+  "strategy": "manual-commit",
+  "branch": "deepseek/impl-8786a",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/ai_agent_bridge/_cli.py",
+    "scripts/ai_agent_bridge/_dispatch_wrappers.py",
+    "scripts/delegate.py",
+    "tests/ai_agent_bridge/test_ask_contract.py",
+    "tests/test_ab_dispatch_wrappers.py",
+    "tests/test_delegate.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b3/d8f8de32e8/0/metadata.json",
+      "transcript": "/b3/d8f8de32e8/0/full.jsonl",
+      "compact_transcript": "/b3/d8f8de32e8/0/transcript.jsonl",
+      "content_hash": "/b3/d8f8de32e8/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 102088,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 6577920,
+    "output_tokens": 15293,
+    "api_call_count": 81
+  }
+}
