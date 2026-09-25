@@ -413,7 +413,9 @@ def record_return(
                     seed_id=seed_id,
                     next=f"count it as a failed review: record --failure rejected_return --review-id {review_id} --attempt-id {attempt_id}",
                 )
-            outcome = _persist_accepted(conn, directory, review, row, seed_id, second, first, moment, verify_saved)
+            outcome = _persist_accepted(
+                conn, root, directory, review, row, seed_id, second, first, moment, verify_saved
+            )
         except sqlite3.IntegrityError:  # a concurrent recorder committed this attempt first
             existing = findings_db.get_attempt(conn, review_id, attempt_id)
             if existing is None:
@@ -470,6 +472,7 @@ def _rejection_codes(
 
 def _persist_accepted(
     conn: Any,
+    root: Path,
     directory: Path,
     review: dict[str, Any],
     row: dict[str, Any],
@@ -511,7 +514,7 @@ def _persist_accepted(
                     )
                 )
         if seed_id is None and not second:
-            moot, moot_note = _close_moot(conn, directory, level, slug, kind, lesson_n, moment)
+            moot, moot_note = _close_moot(conn, root, directory, level, slug, kind, lesson_n, moment)
             opened = [item for item in opened if item not in moot]
         stored = findings_db.count_findings(conn, row["review_id"], row["attempt_id"])
         if stored != len(findings):  # no finding may be dropped between the validator and the database
@@ -539,15 +542,23 @@ def _persist_accepted(
 
 
 def _close_moot(
-    conn: sqlite3.Connection, directory: Path, level: str, slug: str, kind: str, lesson_n: int | None, moment: str
+    conn: sqlite3.Connection,
+    root: Path,
+    directory: Path,
+    level: str,
+    slug: str,
+    kind: str,
+    lesson_n: int | None,
+    moment: str,
 ) -> tuple[list[int], str | None]:
     """The moot-close step (``fixloop.close_moot_items``) and, when it could not decide, the note saying so."""
-    closed, established = fixloop.close_moot_items(conn, directory, level, slug, kind, lesson_n, moment=moment)
-    if established:
+    closed, current = fixloop.close_moot_items(conn, root, directory, level, slug, kind, lesson_n, moment=moment)
+    if current.digest is not None:
         return closed, None
     return closed, (
-        f"the current manifest of {fixloop.projection_name(kind, lesson_n)} cannot be established; older settle "
-        f"items were not closed. python -m scripts.review.fixloop verdict {level} {slug} --repair-projections "
+        f"the current manifest of {fixloop.projection_name(kind, lesson_n)} cannot be established "
+        f"({current.hold}: {current.detail}); older settle items were not closed. "
+        f"python -m scripts.review.fixloop verdict {level} {slug} --repair-projections "
         "(or recording the same attempt again) closes them once it is"
     )
 
@@ -617,7 +628,7 @@ def _replay(
     if outcome.accepted and existing["role"] == "first" and existing["seed_id"] is None:
         with findings_db.transaction(conn):
             outcome.moot_items, outcome.moot_note = _close_moot(
-                conn, directory, existing["level"], existing["slug"], kind, lesson_n, moment
+                conn, root, directory, existing["level"], existing["slug"], kind, lesson_n, moment
             )
         _publish(outcome, conn, root, existing["level"], existing["slug"], kind, lesson_n)
     return outcome

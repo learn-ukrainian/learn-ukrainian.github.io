@@ -541,6 +541,20 @@ def insert_agreement(
     )
 
 
+def has_agreement_on(conn: sqlite3.Connection, level: str, slug: str, lesson_n: int, manifest_sha256: str) -> bool:
+    """Whether a second-seat comparison exists whose first-seat attempt reviewed exactly ``manifest_sha256``."""
+    return (
+        conn.execute(
+            "SELECT 1 FROM agreement g JOIN attempts a ON a.attempt_id = g.attempt_a AND a.level = g.level"
+            " AND a.slug = g.slug AND a.lesson_n = g.lesson_n"
+            " WHERE g.level = ? AND g.slug = ? AND g.lesson_n = ? AND a.role = 'first' AND a.manifest_sha256 = ?"
+            " LIMIT 1",
+            (level, slug, lesson_n, manifest_sha256),
+        ).fetchone()
+        is not None
+    )
+
+
 # --- parameters -------------------------------------------------------------------------
 
 _DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}\Z")

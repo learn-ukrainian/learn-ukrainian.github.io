@@ -24,11 +24,17 @@ report for the driver. It performs no repair and takes no automatic branch:
   ``plan-review.yaml`` are projections of the latest accepted first-seat attempt of their target
   (highest ``attempts.seq``). A missing or disagreeing file is stale: the module is HOLD
   (``verdict_projection_stale``) until ``--repair-projections`` rewrites it from the database.
-* **Current manifest** — a lesson whose current manifest cannot be established (no readable
-  ``.manifest.sha256`` sidecar, or the closure reports none) holds the module
-  (``current_manifest_unknown``); it is never approved. ``close_moot_items`` is the one moot-close step
-  (older open settle items of a target whose current manifest has an accepted attempt); ``record``, its
-  replay and ``--repair-projections`` all run it, so it is idempotent and no single moment decides it.
+* **Current manifest** — established, never asserted (``establish_current_manifest``): the
+  ``.manifest.sha256`` sidecar is a 64-hex digest, the lesson's manifest file exists and hashes to exactly
+  that digest, and the manifest is fresh (``changed_inputs`` reports nothing). Otherwise the module holds
+  with ``current_manifest_unknown`` (no, garbage or unmatched sidecar, missing manifest) or
+  ``current_manifest_stale`` (an input changed); the module verdict, ``close_moot_items`` and ``record`` all use
+  that one function. ``close_moot_items`` is the one moot-close step (older open settle items of a target whose
+  current manifest has an accepted attempt); ``record``, its replay and ``--repair-projections`` all run it, so it
+  is idempotent and no single moment decides it.
+* **Second seat** — a lesson the sampling rule selects (``second_seat.selected``, ``second_seat_divisor``) needs an
+  ``agreement`` row for its **current** manifest before the module can be APPROVE; otherwise it holds with
+  ``second_seat_pending``. A recorded disagreement takes the settle-item path.
 * **The findings database** lives in the primary checkout's ``batch_state/review-findings/`` by
   design (``findings_db.batch_root``), shared by every worktree of the repository, so a budget
   or settle item recorded from one worktree is the same one every other worktree reads.
@@ -43,7 +49,7 @@ import sqlite3
 import sys
 import unicodedata
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 import yaml
 from jsonschema import Draft202012Validator
@@ -52,7 +58,7 @@ from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.curriculum.evidence import lock
-from scripts.review import findings_db
+from scripts.review import findings_db, second_seat
 from scripts.review.validate.validate import fold_quote
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -86,6 +92,8 @@ REASON_DISPUTED = "verdict_disputed"
 
 HOLD_PROJECTION_STALE = "verdict_projection_stale"
 HOLD_CURRENT_MANIFEST_UNKNOWN = "current_manifest_unknown"
+HOLD_CURRENT_MANIFEST_STALE = "current_manifest_stale"
+HOLD_SECOND_SEAT_PENDING = "second_seat_pending"
 PROJECTION_FIELDS = ("verdict", "attempt_id", "manifest_sha256", "validated_at")
 
 MODULE_VERDICT_NAME = "module-verdict.yaml"
@@ -232,25 +240,60 @@ def publish_projection(
     return path
 
 
-def current_manifest(directory: Path, kind: str, n: int | None, closure: dict[str, Any] | None = None) -> str | None:
-    """The manifest the engine currently points at for a target, or None when that cannot be established.
+class CurrentManifest(NamedTuple):
+    """Whether a target's current manifest is established: its digest, or the hold code and the reason it is not."""
 
-    The target's ``.manifest.sha256`` sidecar must be readable and hold a digest. When the engine's closure
-    is at hand it must not report the lesson's current manifest as none either: a lesson whose current
-    manifest is unknown is never approved and never has its older settle items closed on a guess.
+    digest: str | None
+    hold: str | None = None
+    detail: str = ""
+
+
+def establish_current_manifest(
+    root: Path, directory: Path, kind: str, n: int | None, closure: dict[str, Any] | None = None
+) -> CurrentManifest:
+    """Establish (never assume) the manifest the engine currently points at for a target.
+
+    Established only when the ``.manifest.sha256`` sidecar is a 64-hex digest, the target's current
+    manifest file exists and hashes to exactly that digest, and (a lesson) the manifest is fresh: none of
+    the files it pins changed (``changed_inputs``, the engine's own freshness). When the engine's closure
+    is at hand it must not report the lesson's current manifest as none either. Otherwise ``current_manifest_unknown``
+    (no, garbage or unmatched sidecar, missing manifest) or ``current_manifest_stale`` (inputs changed).
+    One function for the module verdict, ``close_moot_items`` and ``record``: a target that is not established is
+    never approved and never has its older settle items closed on a guess. A plan manifest's freshness is the plan
+    review's own (``plan_review_status``), so only its identity is established here.
     """
-    sidecar = f"lesson-{n}.manifest.sha256" if kind == "lesson" else pm.SIDECAR_NAME
+    lesson = kind == "lesson"
+    name = f"lesson-{n}" if lesson else "plan-review"
+    unknown = HOLD_CURRENT_MANIFEST_UNKNOWN
     try:
-        digest = (Path(directory) / sidecar).read_text(encoding="ascii").strip()
+        digest = (Path(directory) / (f"{name}.manifest.sha256")).read_text(encoding="ascii").strip()
     except (OSError, ValueError):
-        return None
+        return CurrentManifest(None, unknown, f"{name} has no readable manifest sidecar")
     if not re.fullmatch(r"[0-9a-f]{64}", digest):
-        return None
-    if kind == "lesson" and closure is not None:
-        entry = next((item for item in closure["lessons"] if item["n"] == n), None)
-        if entry is None or entry["current_manifest_sha256"] is None:
-            return None
-    return digest
+        return CurrentManifest(None, unknown, f"the manifest sidecar of {name} is not a sha256 digest")
+    manifest_path = Path(directory) / (f"{name}.manifest.yaml")
+    try:
+        content = manifest_path.read_bytes()
+    except OSError:
+        return CurrentManifest(None, unknown, f"the current manifest of {name} is missing")
+    if pm.sha256_bytes(content) != digest:
+        return CurrentManifest(None, unknown, f"the current manifest of {name} does not hash to its sidecar")
+    if lesson:
+        if closure is not None:
+            entry = next((item for item in closure["lessons"] if item["n"] == n), None)
+            if entry is None or entry["current_manifest_sha256"] is None:
+                return CurrentManifest(None, unknown, f"the closure reports no current manifest for {name}")
+        try:
+            document = yaml.safe_load(content)
+            changed = changed_inputs(document, Path(root))
+        except (yaml.YAMLError, AttributeError, TypeError, KeyError) as error:
+            return CurrentManifest(None, unknown, f"the current manifest of {name} is unusable: {error}")
+        if changed:
+            named = ", ".join(f"{item['input']} ({item['entry']['path']})" for item in changed)
+            return CurrentManifest(
+                None, HOLD_CURRENT_MANIFEST_STALE, f"{name}: inputs changed since the manifest: {named}"
+            )
+    return CurrentManifest(digest)
 
 
 def _readable_closure(directory: Path) -> dict[str, Any] | None:
@@ -261,32 +304,42 @@ def _readable_closure(directory: Path) -> dict[str, Any] | None:
 
 
 def close_moot_items(
-    conn: sqlite3.Connection, directory: Path, level: str, slug: str, kind: str, n: int | None, *, moment: str
-) -> tuple[list[int], bool]:
+    conn: sqlite3.Connection,
+    root: Path,
+    directory: Path,
+    level: str,
+    slug: str,
+    kind: str,
+    n: int | None,
+    *,
+    moment: str,
+) -> tuple[list[int], CurrentManifest]:
     """Close the target's older open settle items as moot when its current manifest has an accepted attempt.
 
     The one place ``moot_superseded`` is decided: ``record``, its replay and ``verdict --repair-projections``
     all run it, so it is idempotent (an item closed once is not open again) and does not depend on the
     sidecar being present at any one moment. Runs inside the caller's transaction. Returns the closed item
-    ids and whether the current manifest was established (False: nothing was decided; a later run will).
+    ids and the current-manifest result (no digest: nothing was decided; a later run will).
     """
-    digest = current_manifest(directory, kind, n, _readable_closure(directory) if kind == "lesson" else None)
-    if digest is None:
-        return [], False
-    attempt = findings_db.accepted_attempt_on(conn, level, slug, kind, n, digest)
+    current = establish_current_manifest(
+        root, directory, kind, n, _readable_closure(directory) if kind == "lesson" else None
+    )
+    if current.digest is None:
+        return [], current
+    attempt = findings_db.accepted_attempt_on(conn, level, slug, kind, n, current.digest)
     if attempt is None:
-        return [], True
+        return [], current
     return (
         findings_db.close_superseded_items(
             conn,
             level=level,
             slug=slug,
             lesson_n=n,
-            current_manifest_sha256=digest,
+            current_manifest_sha256=current.digest,
             superseded_by=attempt["attempt_id"],
             decided_at=moment,
         ),
-        True,
+        current,
     )
 
 
@@ -307,7 +360,7 @@ def repair_projections(conn: sqlite3.Connection, root: Path, level: str, slug: s
     moot: list[str] = []
     for kind, n in projection_targets(root, level, slug):
         with findings_db.transaction(conn):
-            closed, _ = close_moot_items(conn, directory, level, slug, kind, n, moment=findings_db.now_iso())
+            closed, _ = close_moot_items(conn, root, directory, level, slug, kind, n, moment=findings_db.now_iso())
         moot += [str(item) for item in closed]
         latest = findings_db.latest_accepted(conn, level, slug, kind, n)
         if projection_problem(directory, kind, n, latest) is None:
@@ -750,12 +803,22 @@ def compute_module_verdict(
         elif row["verdict"] == "REVISE":
             holds.append({"code": "lesson_revise", "detail": f"lesson {row['n']} is REVISE"})
     for row in rows:
-        if row["state"] == "current" and current_manifest(directory, "lesson", row["n"], closure) is None:
+        if row["n"] in projection_stale:
+            continue
+        current = establish_current_manifest(root, directory, "lesson", row["n"], closure)
+        if current.digest is None:
+            holds.append({"code": current.hold, "detail": f"lesson {row['n']}: {current.detail}"})
+        elif (
+            row["state"] == "current"
+            and row["verdict"] == "APPROVE"
+            and second_seat.selected(level, slug, row["n"], params["second_seat_divisor"])
+            and not findings_db.has_agreement_on(conn, level, slug, row["n"], current.digest)
+        ):
             holds.append(
                 {
-                    "code": HOLD_CURRENT_MANIFEST_UNKNOWN,
-                    "detail": f"lesson {row['n']}: its current manifest cannot be established"
-                    " (no readable manifest sidecar, or the closure reports none)",
+                    "code": HOLD_SECOND_SEAT_PENDING,
+                    "detail": f"lesson {row['n']} is in the second-seat sample and has no second review of its"
+                    " current manifest",
                 }
             )
     by_lesson = {row["n"]: row for row in rows}

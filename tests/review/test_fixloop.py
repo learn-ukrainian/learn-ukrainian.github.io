@@ -12,16 +12,19 @@ import yaml
 from jsonschema import ValidationError
 
 from scripts.review import findings_db as db
-from scripts.review import fixloop
+from scripts.review import fixloop, second_seat
 from tests.review.test_record import ITEM, LEVEL, PROSE, SLUG, World, finding, unsupported
 
 pytestmark = pytest.mark.reads_content
 
-PARAMS = db.load_parameters()
+REAL_PARAMS = db.load_parameters()
+PARAMS = {**REAL_PARAMS, "second_seat_divisor": 10**12}  # no lesson of the fixture module is sampled
+SAMPLED = {**REAL_PARAMS, "second_seat_divisor": 10}  # the real rule: lesson 3 of the fixture is sampled
 
 
 @pytest.fixture
 def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> World:
+    monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: PARAMS)
     return World(tmp_path, monkeypatch)
 
 
@@ -632,10 +635,10 @@ def promoted(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
-def verdict(world: World, **kwargs: Any) -> dict[str, Any]:
+def verdict(world: World, params: dict[str, Any] | None = None, **kwargs: Any) -> dict[str, Any]:
     conn = db.connect(world.db)
     try:
-        return fixloop.compute_module_verdict(conn, LEVEL, SLUG, root=world.root, params=PARAMS, **kwargs)
+        return fixloop.compute_module_verdict(conn, LEVEL, SLUG, root=world.root, params=params or PARAMS, **kwargs)
     finally:
         conn.close()
 
@@ -853,13 +856,126 @@ def test_a_lesson_whose_current_manifest_is_unknown_holds_the_module(world: Worl
     assert [hold["detail"].split(":")[0] for hold in document["holds"]] == ["lesson 2"]
 
 
+def current_of(world: World, n: int) -> fixloop.CurrentManifest:
+    return fixloop.establish_current_manifest(world.root, world.state_dir, "lesson", n)
+
+
 def test_an_unreadable_manifest_sidecar_is_an_unknown_current_manifest(world: World) -> None:
     sidecar = world.state_dir / "lesson-2.manifest.sha256"
-    assert fixloop.current_manifest(world.state_dir, "lesson", 2) == world.digest(2)
+    assert current_of(world, 2).digest == world.digest(2)
     sidecar.write_text("not a digest\n", encoding="ascii")
-    assert fixloop.current_manifest(world.state_dir, "lesson", 2) is None
+    assert current_of(world, 2).hold == fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN
     sidecar.unlink()
-    assert fixloop.current_manifest(world.state_dir, "lesson", 2) is None
+    assert current_of(world, 2).hold == fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN
+
+
+def test_a_well_formed_sidecar_digest_that_names_no_manifest_holds_the_module(world: World, promoted: None) -> None:
+    approve_all(world)
+    (world.state_dir / "lesson-2.manifest.sha256").write_text("f" * 64 + "\n", encoding="ascii")
+    document = verdict(world)
+    assert document["verdict"] == "HOLD" and fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN in codes_of(document)
+    [hold] = [item for item in document["holds"] if item["code"] == fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN]
+    assert hold["detail"].startswith("lesson 2:")
+    world.closure()  # the closure recomputed from the manifests still cannot make the digest a manifest
+    assert verdict(world)["verdict"] == "HOLD"
+
+
+def test_a_manifest_edited_after_its_sidecar_was_written_holds_the_module(world: World, promoted: None) -> None:
+    approve_all(world)
+    manifest = world.manifest(2)
+    manifest.write_bytes(manifest.read_bytes() + b"# edited after the sidecar\n")
+    document = verdict(world)
+    assert document["verdict"] == "HOLD" and fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN in codes_of(document)
+    assert current_of(world, 2).digest is None and "does not hash" in current_of(world, 2).detail
+    manifest.unlink()  # a missing manifest is unknown as well
+    assert current_of(world, 2).hold == fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN
+
+
+def test_a_manifest_with_a_changed_input_is_stale_not_current(world: World, promoted: None) -> None:
+    approve_all(world)
+    (world.page_dir / "2.mdx").write_text("# Lesson 2 edited after its manifest\n", encoding="utf-8")
+    current = current_of(world, 2)
+    assert current.digest is None and current.hold == fixloop.HOLD_CURRENT_MANIFEST_STALE
+    document = verdict(world)
+    assert document["verdict"] == "HOLD" and fixloop.HOLD_CURRENT_MANIFEST_STALE in codes_of(document)
+
+
+def test_no_settle_item_is_closed_on_a_manifest_that_is_not_established(world: World) -> None:
+    world.record(world.make_return(2, [unsupported("F-01")]))
+    sidecar = world.state_dir / "lesson-2.manifest.sha256"
+    kept = sidecar.read_bytes()
+    conn = db.connect(world.db)
+    try:
+        for bad in (b"f" * 64 + b"\n", b"not a digest\n"):
+            sidecar.write_bytes(bad)
+            with db.transaction(conn):
+                closed, current = fixloop.close_moot_items(
+                    conn, world.root, world.state_dir, LEVEL, SLUG, "lesson", 2, moment=db.now_iso()
+                )
+            assert closed == [] and current.digest is None
+        sidecar.write_bytes(kept)
+        (world.page_dir / "2.mdx").write_text("# edited\n", encoding="utf-8")
+        with db.transaction(conn):
+            closed, current = fixloop.close_moot_items(
+                conn, world.root, world.state_dir, LEVEL, SLUG, "lesson", 2, moment=db.now_iso()
+            )
+        assert closed == [] and current.hold == fixloop.HOLD_CURRENT_MANIFEST_STALE
+    finally:
+        conn.close()
+
+
+def record_second_seat(world: World, n: int) -> None:
+    world.task("review-google", "agy", "gemini-3.8-flash-high")
+    assert world.record(world.make_return(n), task_id="review-google", second=True).accepted
+
+
+def test_a_sampled_lesson_without_a_second_review_holds_the_module(world: World, promoted: None, monkeypatch) -> None:
+    monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: SAMPLED)
+    assert [n for n in (1, 2, 3) if second_seat.selected(LEVEL, SLUG, n, SAMPLED["second_seat_divisor"])] == [3]
+    approve_all(world)
+    assert world.db_rows("agreement") == []
+    document = verdict(world, SAMPLED)
+    assert document["verdict"] == "HOLD" and codes_of(document) == [fixloop.HOLD_SECOND_SEAT_PENDING]
+    assert document["holds"][0]["detail"].startswith("lesson 3 ")
+    assert verdict(world)["verdict"] == "APPROVE"  # a module with no sampled lesson is not held
+
+
+def test_a_recorded_second_review_of_the_current_manifest_lets_the_sampled_module_be_approved(
+    world: World, promoted: None, monkeypatch
+) -> None:
+    monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: SAMPLED)
+    approve_all(world)
+    record_second_seat(world, 3)
+    document = verdict(world, SAMPLED)
+    assert document["verdict"] == "APPROVE" and document["holds"] == []
+
+
+def test_a_second_review_of_an_older_manifest_does_not_count(world: World, promoted: None, monkeypatch) -> None:
+    monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: SAMPLED)
+    approve_all(world)
+    record_second_seat(world, 3)
+    regenerate_lesson(world, 3)
+    assert world.record(world.make_return(3)).verdict == "APPROVE"
+    document = verdict(world, SAMPLED)
+    assert document["verdict"] == "HOLD" and codes_of(document) == [fixloop.HOLD_SECOND_SEAT_PENDING]
+    record_second_seat(world, 3)
+    assert verdict(world, SAMPLED)["verdict"] == "APPROVE"
+
+
+def test_a_recorded_second_seat_disagreement_holds_through_its_settle_item(
+    world: World, promoted: None, monkeypatch
+) -> None:
+    monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: SAMPLED)
+    for n in (1, 2):
+        assert world.record(world.make_return(n)).verdict == "APPROVE"
+    assert world.record(world.make_return(3, [finding("F-01", severity="MAJOR")])).verdict == "REVISE"
+    regenerate_lesson(world, 3)
+    assert world.record(world.make_return(3, [finding("F-02", severity="MINOR")])).verdict == "APPROVE"
+    world.task("review-google", "agy", "gemini-3.8-flash-high")
+    world.record(world.make_return(3, [finding("F-03", severity="MAJOR")]), task_id="review-google", second=True)
+    document = verdict(world, SAMPLED)
+    assert document["verdict"] == "HOLD" and "settle_open" in codes_of(document)
+    assert fixloop.HOLD_SECOND_SEAT_PENDING not in codes_of(document)
 
 
 def regenerate_lesson(world: World, n: int) -> None:
