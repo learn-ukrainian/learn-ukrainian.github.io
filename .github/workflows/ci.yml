@@ -61,7 +61,7 @@ jobs:
       shard_count: ${{ steps.classify.outputs.shard_count }}
       pytest_candidates: ${{ steps.classify.outputs.pytest_candidates }}
       # The one "should preflight run" decision (#8750): classify_changes
-      # .preflight_for. The preflight job and CI Gate both read it.
+      # .preflight_for. The fast-checks preflight step and CI Gate both read it.
       preflight: ${{ steps.classify.outputs.preflight }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -84,24 +84,6 @@ jobs:
           HEAD_REF: ${{ github.event.merge_group.head_ref }}
           HEAD: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: python3 -m scripts.ci.classify_changes
-
-  ruff:
-    name: Ruff
-    needs: [changes]
-    if: needs.changes.outputs.docs_only == 'false'
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version-file: '.python-version'
-          cache: pip
-      - run: python -m pip install "$(grep -E '^ruff==' requirements-lock.txt)"
-      - run: |
-          python -m ruff check scripts/ tests/ agents_extensions/ dashboards/
 
   secret-scan:
     name: Secret scan
@@ -145,37 +127,53 @@ jobs:
           head: ${{ steps.secret-scan-scope.outputs.trufflehog_head }}
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore --exclude-detectors=Lob
 
-  preflight:
-    # Early PR signal for repo-wide invariants (#8750). The full and selected
-    # shards still run the same repo_wide set (the backstop) and do not need
-    # this job, so a green run is no slower; a red invariant just reports
-    # minutes before the shards finish. No Postgres, npm or native apt deps:
-    # no repo_wide test uses them (see docs/runbooks/ci-gate.md).
-    name: Preflight
+  fast-checks:
+    # Short checks share one runner (#8750 phase A.2): each held a full slot
+    # under the account's concurrent-job cap while the pytest shards waited.
+    # Every check is its own step with its own id and timeout. `!cancelled()`
+    # keeps a failed check from skipping the ones after it, so one run
+    # reports every red check. CI Gate reads each step's `outcome` from the
+    # job outputs below, never its `conclusion`: under continue-on-error a
+    # failed step concludes `success`. A re-run repeats all four checks.
+    name: Fast checks
     needs: [changes]
-    if: needs.changes.outputs.preflight == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      LU_PYTEST_TMP_BUDGET_GB: "5"
-      # Registered non-repo_wide invariants that also run here, one path per
-      # line (#8750). tests/test_ci_preflight.py checks every path exists.
-      PREFLIGHT_EXTRA_TESTS: |
-        tests/curriculum/arc/test_decisions_record.py
+    # Step budgets 8 + 5 + 10 + 5 = 28, plus 7 for checkout and the preflight
+    # dependency install.
+    timeout-minutes: 35
+    outputs:
+      preflight: ${{ steps.preflight.outcome }}
+      ruff: ${{ steps.ruff.outcome }}
+      plan_validate: ${{ steps.plan_validate.outcome }}
+      typesafe: ${{ steps.typesafe.outcome }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Full history: plan-validate --strict compares _grammar.yaml
+          # against git merge-base HEAD origin/main; TypeSafe triage diffs
+          # BASE_SHA..HEAD_SHA.
+          fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version-file: '.python-version'
+          cache: pip
+      # Preflight setup. Early PR signal for repo-wide invariants (#8750). The
+      # full and selected shards still run the same repo_wide set (the
+      # backstop) and do not wait for this job, so a green run is no slower; a
+      # red invariant just reports minutes before the shards finish. No
+      # Postgres, npm or native apt deps: no repo_wide test uses them (see
+      # docs/runbooks/ci-gate.md). The venv lives in .venv; ruff,
+      # plan-validate and TypeSafe triage use the setup-python interpreter.
       - name: Set up uv
+        if: needs.changes.outputs.preflight == 'true'
         uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
           version: '0.12.9'
           enable-cache: true
           cache-dependency-glob: requirements-lock.txt
-      - name: Install Python deps
+      - name: Install preflight Python deps
+        if: needs.changes.outputs.preflight == 'true'
         run: |
           set -euo pipefail
           python -m venv .venv
@@ -186,9 +184,19 @@ jobs:
           .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
           .venv/bin/python packages/v4-runtime/build_assets.py
       - name: Hydrate Atlas lexicon manifest
+        if: needs.changes.outputs.preflight == 'true'
         run: |
           .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
-      - name: Run preflight pytest
+      - name: Preflight
+        id: preflight
+        if: ${{ !cancelled() && needs.changes.outputs.preflight == 'true' }}
+        timeout-minutes: 8
+        env:
+          LU_PYTEST_TMP_BUDGET_GB: "5"
+          # Registered non-repo_wide invariants that also run here, one path per
+          # line (#8750). tests/test_ci_preflight.py checks every path exists.
+          PREFLIGHT_EXTRA_TESTS: |
+            tests/curriculum/arc/test_decisions_record.py
         run: |
           set -euo pipefail
           # Same allowlist construction and flags as the shards' repo_wide leg.
@@ -211,6 +219,69 @@ jobs:
             -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
             --timeout-method=thread --override-ini addopts=-v || status=$?
           exit "$status"
+      - name: Ruff
+        id: ruff
+        if: ${{ !cancelled() && needs.changes.outputs.docs_only == 'false' }}
+        timeout-minutes: 5
+        run: |
+          set -euo pipefail
+          python -m pip install "$(grep -E '^ruff==' requirements-lock.txt)"
+          python -m ruff check scripts/ tests/ agents_extensions/ dashboards/
+      - name: Plan Validate (v2 plans)
+        id: plan_validate
+        # No tier condition: this check always runs. The validator is
+        # path-scoped like content-ci.yml's section7-xref (git diff inside the
+        # step): on pull_request it skips unless its inputs changed; other
+        # events (merge_group, schedule, dispatch) always run it. The arc
+        # landing check after it always runs.
+        if: ${{ !cancelled() }}
+        timeout-minutes: 10
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          python -m pip install PyYAML jsonschema
+          git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
+          validate_plans=true
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            changed=$(git diff --name-only origin/main...HEAD -- \
+              curriculum/l2-uk-en/lesson-plans \
+              curriculum/l2-uk-en/evidence \
+              schemas/module-plan-v2.schema.json \
+              scripts/curriculum/validate)
+            if [ -z "$changed" ]; then
+              echo "No v2 plan inputs changed; skipping the v2 plan validator."
+              validate_plans=false
+            fi
+          fi
+          if [ "$validate_plans" = true ]; then
+            for level_dir in curriculum/l2-uk-en/lesson-plans/*/; do
+              level=$(basename "$level_dir")
+              if find "$level_dir" -maxdepth 1 -name '*.yaml' ! -name '_*' | grep -q .; then
+                python -m scripts.curriculum.validate "$level" --all --strict
+              else
+                echo "level $level: no plans"
+              fi
+            done
+          fi
+          # Generated arc landing (a1 --check). The landing, module pages and
+          # site/src/data/arc-a1.json are generated from _arc.yaml, the plans,
+          # the scope sidecars and the build state (#8397); a stale file fails
+          # here. It runs on every event: it is cheap and its inputs (state
+          # files, site/src/content/docs) are not all under one path.
+          python -m scripts.build.build_arc_landing a1 --check
+      - name: TypeSafe triage (advisory; docs/best-practices/typesafe-jev.md)
+        id: typesafe
+        if: ${{ !cancelled() }}
+        # Advisory only (#8232): a red triage never fails this job or CI Gate.
+        continue-on-error: true
+        timeout-minutes: 5
+        env:
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
+        run: python3 -m scripts.ci.typesafe_pr_triage
 
   pytest:
     name: pytest (${{ matrix.shard }})
@@ -669,56 +740,6 @@ jobs:
           )
           PY
 
-  plan-validate:
-    name: Plan Validate (v2 plans)
-    needs: [changes]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          # Full history: --strict compares _grammar.yaml against git merge-base HEAD origin/main.
-          fetch-depth: 0
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version-file: '.python-version'
-          cache: pip
-      - name: Install plan-validate dependencies
-        run: python -m pip install PyYAML jsonschema
-      - name: Validate v2 module plans (--all --strict)
-        # Path-scoped like content-ci.yml's section7-xref (git diff inside the
-        # step): on pull_request, skip unless the validator's inputs changed.
-        # Other events (merge_group, schedule, dispatch) always run it.
-        run: |
-          set -euo pipefail
-          git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            changed=$(git diff --name-only origin/main...HEAD -- \
-              curriculum/l2-uk-en/lesson-plans \
-              curriculum/l2-uk-en/evidence \
-              schemas/module-plan-v2.schema.json \
-              scripts/curriculum/validate)
-            if [ -z "$changed" ]; then
-              echo "No v2 plan inputs changed; skipping."
-              exit 0
-            fi
-          fi
-          for level_dir in curriculum/l2-uk-en/lesson-plans/*/; do
-            level=$(basename "$level_dir")
-            if find "$level_dir" -maxdepth 1 -name '*.yaml' ! -name '_*' | grep -q .; then
-              python -m scripts.curriculum.validate "$level" --all --strict
-            else
-              echo "level $level: no plans"
-            fi
-          done
-      - name: Check generated arc landing (a1 --check)
-        # The landing, module pages and site/src/data/arc-a1.json are generated from
-        # _arc.yaml, the plans, the scope sidecars and the build state (#8397); a stale
-        # file fails here. Unlike the validator step above, it always runs: it is cheap
-        # and its inputs (state files, site/src/content/docs) are not all under one path.
-        run: python -m scripts.build.build_arc_landing a1 --check
-
   frontend:
     name: Frontend
     needs: [changes]
@@ -761,27 +782,6 @@ jobs:
       - working-directory: site
         run: npm run test:built-output
 
-  typesafe-triage:
-    name: TypeSafe triage
-    needs: [changes]
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version-file: '.python-version'
-      - name: Run TypeSafe/Jev cheap triage (advisory; docs/best-practices/typesafe-jev.md)
-        env:
-          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
-        run: python3 -m scripts.ci.typesafe_pr_triage
-
   ci-gate:
     name: CI Gate
     # always(), not `always() && !cancelled()` (#8505). A concurrency cancel
@@ -789,7 +789,7 @@ jobs:
     # treats a skipped required check as success. The step below fails the
     # job when a required dependency was cancelled or skipped unexpectedly.
     if: always()
-    needs: [changes, ruff, secret-scan, preflight, pytest, contracts, frontend, typesafe-triage, plan-validate]
+    needs: [changes, secret-scan, fast-checks, pytest, contracts, frontend]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -800,14 +800,16 @@ jobs:
           BACKEND: ${{ needs.changes.outputs.backend }}
           PREFLIGHT_SCHEDULED: ${{ needs.changes.outputs.preflight }}
           CHANGES: ${{ needs.changes.result }}
-          RUFF: ${{ needs.ruff.result }}
           SECRET: ${{ needs.secret-scan.result }}
-          PREFLIGHT: ${{ needs.preflight.result }}
+          FAST_CHECKS: ${{ needs.fast-checks.result }}
+          # Step outcomes, not conclusions (see the fast-checks job).
+          FC_PREFLIGHT: ${{ needs.fast-checks.outputs.preflight }}
+          FC_RUFF: ${{ needs.fast-checks.outputs.ruff }}
+          FC_PLAN_VALIDATE: ${{ needs.fast-checks.outputs.plan_validate }}
+          FC_TYPESAFE: ${{ needs.fast-checks.outputs.typesafe }}
           PYTEST: ${{ needs.pytest.result }}
           CONTRACTS: ${{ needs.contracts.result }}
           FRONTEND_JOB: ${{ needs.frontend.result }}
-          TYPESAFE_TRIAGE: ${{ needs.typesafe-triage.result }}
-          PLAN_VALIDATE: ${{ needs.plan-validate.result }}
         run: |
           set -euo pipefail
           ok() { [ "$1" = success ]; }
@@ -823,18 +825,65 @@ jobs:
           }
           ok "$CHANGES"
           ok "$SECRET"
-          # plan-validate self-scopes to the v2 plan inputs (git diff inside the
-          # step on pull_request; always runs on merge_group/schedule), so a
-          # skip is never legitimate here — only success.
-          ok "$PLAN_VALIDATE"
+          # fast-checks (#8750 phase A.2) runs every check as a step, so its
+          # job result alone cannot say which check applied. A cancelled or
+          # skipped job fails closed; so does any missing step outcome.
+          case "$FAST_CHECKS" in
+            success | failure) ;;
+            *)
+              echo "::error::fast-checks concluded '$FAST_CHECKS'"
+              exit 1
+              ;;
+          esac
+          # The tier flags each check condition reads; anything but true/false
+          # fails closed instead of choosing a branch.
+          for flag in "preflight=$PREFLIGHT_SCHEDULED" "docs_only=$DOCS_ONLY"; do
+            case "${flag#*=}" in
+              true | false) ;;
+              *)
+                echo "::error::Changes output ${flag%%=*} is '${flag#*=}', expected true or false"
+                exit 1
+                ;;
+            esac
+          done
+          fast_checks_ok=true
+          # expect CHECK OUTCOME WANT: a check whose condition applied must be
+          # `success`; one whose condition did not apply must be `skipped`.
+          expect() {
+            if [ -z "$2" ]; then
+              echo "::error::fast-checks output '$1' is missing"
+              fast_checks_ok=false
+            elif [ "$2" != "$3" ]; then
+              echo "::error::fast-checks step $1 concluded '$2', expected '$3'"
+              fast_checks_ok=false
+            else
+              echo "fast-checks $1: $2"
+            fi
+          }
           # Preflight (#8750): Changes decides once whether it runs. Scheduled,
-          # it must succeed (failure, cancelled or skipped all fail the gate);
-          # not scheduled, it must be skipped. merge_group, schedule and
-          # workflow_dispatch always take the second branch.
-          if [ "$PREFLIGHT_SCHEDULED" = true ]; then
-            ok "$PREFLIGHT" || { echo "::error::preflight was scheduled but concluded '$PREFLIGHT'"; exit 1; }
-          elif [ "$PREFLIGHT" != skipped ]; then
-            echo "::error::preflight was not scheduled but concluded '$PREFLIGHT'"
+          # it must succeed; not scheduled, it must be skipped. merge_group,
+          # schedule and workflow_dispatch always take the second branch.
+          if [ "$PREFLIGHT_SCHEDULED" = true ]; then want=success; else want=skipped; fi
+          expect preflight "$FC_PREFLIGHT" "$want"
+          if [ "$DOCS_ONLY" = false ]; then want=success; else want=skipped; fi
+          expect ruff "$FC_RUFF" "$want"
+          # plan-validate self-scopes to the v2 plan inputs inside the step and
+          # has no tier condition, so a skip is never legitimate here.
+          expect plan_validate "$FC_PLAN_VALIDATE" success
+          # Advisory-only (#8232): TypeSafe/Jev is not CF and not merge
+          # authority. Any outcome is logged and accepted, so a red TypeSafe
+          # step never turns CI Gate red by itself; only a missing output does.
+          if [ -z "$FC_TYPESAFE" ]; then
+            echo "::error::fast-checks output 'typesafe' is missing"
+            fast_checks_ok=false
+          else
+            echo "fast-checks typesafe (advisory): $FC_TYPESAFE"
+          fi
+          [ "$fast_checks_ok" = true ] || exit 1
+          # Every check passed its rule, yet the job failed: a setup step
+          # (checkout, Python, preflight deps) broke. Fail closed.
+          if [ "$FAST_CHECKS" = failure ]; then
+            echo "::error::fast-checks failed outside its checks; see the job log"
             exit 1
           fi
           if [ "$BACKEND" = false ]; then
@@ -843,10 +892,8 @@ jobs:
             ok "$PYTEST"
           fi
           if [ "$DOCS_ONLY" = true ]; then
-            skip_ok "$RUFF"
             skip_ok "$CONTRACTS"
           else
-            ok "$RUFF"
             ok "$CONTRACTS"
           fi
           if [ "$FRONTEND" = true ]; then
@@ -854,10 +901,4 @@ jobs:
           else
             skip_ok "$FRONTEND_JOB"
           fi
-          # Advisory-only (#8232): TypeSafe/Jev is not CF and not merge
-          # authority. First slice stays advisory until soak: success,
-          # skipped, failure, and cancelled are all accepted here, so a red
-          # or cancelled TypeSafe check never turns CI Gate red by itself.
-          advisory_ok() { [ "$1" = success ] || [ "$1" = skipped ] || [ "$1" = failure ] || [ "$1" = cancelled ]; }
-          advisory_ok "$TYPESAFE_TRIAGE"
           echo "CI Gate green"
