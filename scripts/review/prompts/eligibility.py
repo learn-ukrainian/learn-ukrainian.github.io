@@ -5,15 +5,24 @@ writer's prompt, reasoning or self-assessment, no earlier edition and no other m
 and "The review attempt manifest (r4)" makes the manifest "the complete, transitive input set".
 So the question this module answers is about *documents*, never about text: is every file the
 manifest pins one of the inputs the contract lists for this manifest kind, at this module's own
-path for the current build? It reads nothing and never looks at a file's content.
+path for the current build? It never judges a file's text; the one file it opens is the pinned lesson,
+to list the activity files that lesson imports.
 
 Each manifest kind has one table below (kind -> pin location -> the one path that location may
 have). The locations come from the manifest schemas (``schemas/lesson-review-manifest-v1.schema.json``,
 ``schemas/plan-review-manifest-v1.schema.json``) and the contract sections cited on each table.
 A later worker adds ``settle`` by adding its table; a kind without a table is refused.
 
+The manifest is first validated against its schema (``manifest_schema_invalid``), so every input
+the schema requires is pinned. Then each pin is judged: the writer-material and foreign-module
+refusals apply to every pin of every kind, before anything else can accept it. The one pin kind that
+is a *set* rather than a path, ``inputs.activity_data[]``, must equal exactly the activity files the
+pinned lesson imports (derived with the engine's own ``_activity_imports``, after the lesson's bytes
+are checked against its pin): that is the only place this module reads a file.
+
 Refusal codes, one per rule (each pin gets the first that applies):
 
+- ``manifest_schema_invalid``    the manifest does not match its schema (a required input is missing)
 - ``manifest_module_invalid``    the manifest's own level or slug is not a valid module
 - ``pin_location_not_allowed``   rule (a): the pin sits at a location the contract does not list
                                  for this manifest kind (including a kind with no table)
@@ -27,10 +36,15 @@ Refusal codes, one per rule (each pin gets the first that applies):
                                  locations, so they pass the exact-path rule)
 - ``pin_foreign_module``         another module's (or another level's) directory or file
 - ``pin_outside_module_paths``   anything else that is not this module's path for that location
+- ``pin_activity_data_mismatch`` ``inputs.activity_data[]`` is not exactly the set of activity files
+                                 the pinned lesson imports (an extra, a missing or a repeated path)
 """
 
 from __future__ import annotations
 
+import functools
+import hashlib
+import json
 import posixpath
 import re
 from collections.abc import Callable
@@ -38,12 +52,17 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.build.fresh.manifest import pinned_entries
+from jsonschema import Draft202012Validator
+
+from scripts.build.fresh import manifest as lesson_manifest
+from scripts.build.fresh import plan_manifest
+from scripts.build.fresh.manifest import _activity_imports, pinned_entries
 from scripts.build.fresh.path_guard import SLUG_RE
 from scripts.build.fresh.prompt import BAND_CARD_MAP
 
 TREE = "curriculum/l2-uk-en"
 
+MANIFEST_SCHEMA_INVALID = "manifest_schema_invalid"
 MANIFEST_MODULE_INVALID = "manifest_module_invalid"
 PIN_LOCATION_NOT_ALLOWED = "pin_location_not_allowed"
 PIN_PATH_NOT_REPO_RELATIVE = "pin_path_not_repo_relative"
@@ -52,6 +71,7 @@ PIN_WRITER_MATERIAL = "pin_writer_material"
 PIN_SUPERSEDED_SNAPSHOT = "pin_superseded_snapshot"
 PIN_FOREIGN_MODULE = "pin_foreign_module"
 PIN_OUTSIDE_MODULE_PATHS = "pin_outside_module_paths"
+PIN_ACTIVITY_DATA_MISMATCH = "pin_activity_data_mismatch"
 
 
 @dataclass(frozen=True)
@@ -104,6 +124,7 @@ LESSON_LOCATIONS: _Table = {
     "inputs.learner_state": lambda m, e: f"{m.state}/lesson-{m.lesson}\\.learner-state\\.yaml",
     "inputs.lessons_lock": lambda m, e: f"{m.state}/lessons\\.lock\\.yaml",
     "inputs.lesson": lambda m, e: f"{m.pages}/{m.lesson}\\.mdx",
+    # Coarse locality only; ``activity_data_refusals`` holds the set to exactly the lesson's imports.
     "inputs.activity_data[]": lambda m, e: f"site/src/(?!content/docs/)[^/].*|{m.pages}/[^/].*",
     "inputs.gate_report": lambda m, e: f"{m.state}/lesson-{m.lesson}\\.gates\\.yaml",
     "inputs.style_card": lambda m, e: (
@@ -183,10 +204,11 @@ def _is_v1_or_archive(parts: list[str]) -> bool:
     )
 
 
-def _is_writer_material(path: str) -> bool:
+def _is_writer_material(path: str, slug: str) -> bool:
+    """A writer file by engine name or by self-description (the module's own slug is not a description)."""
     if path.startswith(DISPATCH_TREE) and not path.startswith(RECEIPT_TREE):
         return True
-    return bool(WRITER_FILE.search(path) or WRITER_WORD.search(posixpath.basename(path)))
+    return bool(WRITER_FILE.search(path) or WRITER_WORD.search(posixpath.basename(path).replace(slug, "")))
 
 
 def _is_foreign(path: str, module: _Module) -> bool:
@@ -199,7 +221,7 @@ def _is_foreign(path: str, module: _Module) -> bool:
 
 
 def _classify(
-    path: str, location: str, module: _Module, entry: dict[str, Any], table: _Table, root: Path | None
+    path: str, location: str, module: _Module, entry: dict[str, Any], table: _Table, root: Path
 ) -> Refusal | None:
     key = re.sub(r"\[\d+\]", "[]", location)
 
@@ -215,28 +237,103 @@ def _classify(
         or "\\" in path
         or ".." in parts
         or posixpath.normpath(path) != path
-        or (root is not None and (root / path).resolve() != (root.resolve() / path))
+        or (root / path).resolve() != (root.resolve() / path)
     ):
         return refuse(PIN_PATH_NOT_REPO_RELATIVE, "not a normalised repo-relative path that resolves to itself")
     if _is_v1_or_archive(parts):
         return refuse(PIN_V1_OR_ARCHIVE_TREE, "a v1 tree, the old level tree, an archive or plans/ is never an input")
-    if re.fullmatch(table[key](module, entry), path):
-        return None
-    if _is_writer_material(path):
+    # Writer material and another module's files are refused for every pin kind, before any path can be accepted.
+    if _is_writer_material(path, module.slug):
         return refuse(PIN_WRITER_MATERIAL, "writer prompts, drafts and raw output are never an input")
-    if SUPERSEDED.search(path):
-        return refuse(PIN_SUPERSEDED_SNAPSHOT, "an earlier edition or another attempt's file is never an input")
     if _is_foreign(path, module):
         return refuse(PIN_FOREIGN_MODULE, f"not a file of module {module.level}/{module.slug}")
+    if re.fullmatch(table[key](module, entry), path):
+        return None
+    if SUPERSEDED.search(path):
+        return refuse(PIN_SUPERSEDED_SNAPSHOT, "an earlier edition or another attempt's file is never an input")
     return refuse(PIN_OUTSIDE_MODULE_PATHS, f"{location} is not at this module's path for it")
 
 
-def pin_refusals(manifest: dict[str, Any], repo_root: Path | None = None) -> list[Refusal]:
+#: The schema each manifest kind must match; a kind without one has no table either and is refused below.
+SCHEMAS: dict[str, Path] = {"lesson": lesson_manifest.SCHEMA, "plan": plan_manifest.SCHEMA}
+
+
+@functools.cache
+def _validator(kind: str) -> Draft202012Validator:
+    return Draft202012Validator(json.loads(SCHEMAS[kind].read_text(encoding="utf-8")))
+
+
+def schema_refusals(manifest: dict[str, Any]) -> list[Refusal]:
+    """Each way the manifest departs from its schema, so a required pin cannot simply be left out."""
+    kind = manifest.get("kind")
+    if kind not in SCHEMAS:
+        return []
+    return [
+        Refusal(
+            MANIFEST_SCHEMA_INVALID,
+            ".".join(str(part) for part in error.absolute_path) or "manifest",
+            SCHEMAS[kind].name,
+            error.message[:200],
+        )
+        for error in sorted(_validator(kind).iter_errors(manifest), key=lambda e: [str(p) for p in e.absolute_path])
+    ]
+
+
+def activity_data_refusals(manifest: dict[str, Any], repo_root: Path) -> list[Refusal]:
+    """``inputs.activity_data[]`` must be exactly the activity files the pinned lesson imports.
+
+    The expected set comes from the engine's own ``_activity_imports`` (what the manifest writer pinned),
+    read from the lesson only when its bytes hash to its pin; a lesson that does not is left to the hash
+    verification, which refuses it. An extra, a missing or a repeated path is refused.
+    """
+    root = repo_root.resolve()
+    pins = dict(pinned_entries(manifest))
+    lesson = pins.get("inputs.lesson")
+    if lesson is None:
+        return []
+    location = "inputs.activity_data"
+    listed = [(name, entry["path"]) for name, entry in pins.items() if name.startswith(f"{location}[")]
+    try:
+        mdx = (root / lesson["path"]).resolve()
+        if hashlib.sha256(mdx.read_bytes()).hexdigest() != lesson["sha256"]:
+            return []
+        expected = {path.relative_to(root).as_posix() for path in _activity_imports(mdx, root)}
+    except (OSError, ValueError, UnicodeDecodeError) as err:
+        return [
+            Refusal(
+                PIN_ACTIVITY_DATA_MISMATCH,
+                location,
+                lesson["path"],
+                f"the lesson's activity imports are unknown ({err})",
+            )
+        ]
+    refusals = [
+        Refusal(PIN_ACTIVITY_DATA_MISMATCH, name, path, "not an activity file the pinned lesson imports")
+        for name, path in listed
+        if path not in expected
+    ]
+    refusals += [
+        Refusal(PIN_ACTIVITY_DATA_MISMATCH, name, path, "pinned more than once")
+        for index, (name, path) in enumerate(listed)
+        if path in expected and path in {other for _, other in listed[:index]}
+    ]
+    refusals += [
+        Refusal(PIN_ACTIVITY_DATA_MISMATCH, location, path, "an activity file the pinned lesson imports is not pinned")
+        for path in sorted(expected - {path for _, path in listed})
+    ]
+    return refusals
+
+
+def pin_refusals(manifest: dict[str, Any], repo_root: Path) -> list[Refusal]:
     """Every pin that may not reach the reviewer, each with its rule's code; empty when all are eligible.
 
-    Reads nothing: it judges the recorded paths against the module the manifest names. With
-    ``repo_root`` it also refuses a path whose symlinks lead somewhere else than the path says.
+    The manifest must match its schema first. The per-pin rules judge the recorded paths against the
+    module the manifest names and read nothing; a path whose symlinks lead somewhere else than the path
+    says is refused. Only when every pin passed is the activity-data set compared with the lesson's imports.
     """
+    invalid = schema_refusals(manifest)
+    if invalid:
+        return invalid
     level, slug = manifest.get("level"), manifest.get("slug")
     if not (isinstance(level, str) and isinstance(slug, str) and SLUG_RE.fullmatch(slug) and SLUG_RE.fullmatch(level)):
         return [Refusal(MANIFEST_MODULE_INVALID, "level/slug", f"{level!r}/{slug!r}", "not a valid module identifier")]
@@ -267,4 +364,6 @@ def pin_refusals(manifest: dict[str, Any], repo_root: Path | None = None) -> lis
         refusal = _classify(path, location, module, entry, table, repo_root)
         if refusal is not None:
             refusals.append(refusal)
+    if not refusals and kind == "lesson":
+        refusals.extend(activity_data_refusals(manifest, repo_root))
     return refusals

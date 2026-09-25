@@ -24,7 +24,8 @@ from typing import Any
 
 import jinja2
 import yaml
-from jinja2 import Environment, FileSystemLoader, StrictUndefined
+from jinja2 import DictLoader, StrictUndefined
+from jinja2.sandbox import ImmutableSandboxedEnvironment
 
 from scripts.build.fresh.manifest import learner_state_sha256, pinned_entries
 from scripts.review.prompts.eligibility import Refusal, pin_refusals
@@ -93,6 +94,10 @@ class WordsLockMismatchError(RenderError):
 
 class LearnerStateMismatchError(RenderError):
     """The materialized learner state does not hash to the identity the manifest records."""
+
+
+class TemplateReadError(RenderError):
+    """A template could not be served from the fixed set of ``*.md.j2`` files (or tried to read another file)."""
 
 
 class PinIneligibleError(RenderError):
@@ -193,6 +198,37 @@ class ManifestReader:
         if not recorded or recorded[0] != self.pin(data)["sha256"]:
             raise error(f"{self.pin(data)['path']} disagrees with its lock {self.pin(lock)['path']}")
         return self.pin_text(data)
+
+
+def template_sources(prompts_dir: Path) -> dict[str, tuple[str, str]]:
+    """The fixed set of templates the renderer may use: every ``*.md.j2`` file directly in ``prompts_dir``.
+
+    Maps a template's name to its source and the sha256 of its bytes. Nothing else is ever served, so
+    a template cannot ``include``, ``import`` or ``extend`` a file that no manifest pins.
+    """
+    root = prompts_dir.resolve()
+    sources: dict[str, tuple[str, str]] = {}
+    for path in sorted(root.glob("*.md.j2")):
+        resolved = path.resolve()
+        if resolved.parent != root or not resolved.is_file():
+            raise TemplateReadError(f"template {path.name} is not a regular file of {root.as_posix()}")
+        data = resolved.read_bytes()
+        sources[path.name] = (data.decode("utf-8"), compute_sha256(data))
+    return sources
+
+
+class _RecordingLoader(DictLoader):
+    """Serves only the fixed template set and records the sha256 of every template it hands out."""
+
+    def __init__(self, sources: dict[str, tuple[str, str]]):
+        super().__init__({name: source for name, (source, _sha) in sources.items()})
+        self._sha256 = {name: sha for name, (_source, sha) in sources.items()}
+        self.loaded: dict[str, str] = {}
+
+    def get_source(self, environment: jinja2.Environment, template: str) -> Any:
+        found = super().get_source(environment, template)
+        self.loaded[template] = self._sha256[template]
+        return found
 
 
 def resolve_template_name(manifest: dict[str, Any], template_name: str | None = None) -> str:
@@ -400,8 +436,11 @@ class Rendering:
     prompt_sha256: str
     #: The same template rendered with every pinned datum replaced by ``SENTINEL``: template-produced text only.
     template_text: str
+    #: The pinned files read, then the templates rendered (each also in ``template_sha256``).
     files_read: list[Path]
     root: Path
+    #: sha256 of the bytes of every template the render used, by resolved path.
+    template_sha256: dict[Path, str]
 
 
 def render(
@@ -413,8 +452,9 @@ def render(
 ) -> Rendering:
     """Render a reviewer prompt from the manifest's pins alone.
 
-    Every pin must first be eligible (``eligibility.pin_refusals``, nothing read), then each
-    file is read only through its pin and only when its bytes hash to the pinned sha256.
+    The manifest must match its schema and every pin must be eligible (``eligibility.pin_refusals``), then each
+    file is read only through its pin and only when its bytes hash to the pinned sha256. Templates come only
+    from the fixed ``*.md.j2`` set of the prompts directory, each recorded with its sha256.
     """
     root = (repo_root or REPO_ROOT).resolve()
     p_dir = (prompts_dir or PROMPTS_DIR).resolve()
@@ -434,11 +474,13 @@ def render(
     refusals = pin_refusals(manifest_doc, root)
     if refusals:
         raise PinIneligibleError(refusals)
+    sources = template_sources(p_dir)
     reader = ManifestReader(manifest_doc, repo_root=root)
     resolved_template = resolve_template_name(manifest_doc, template_name)
 
-    env = Environment(
-        loader=FileSystemLoader(str(p_dir)),
+    loader = _RecordingLoader(sources)
+    env = ImmutableSandboxedEnvironment(
+        loader=loader,
         undefined=StrictUndefined,
         autoescape=jinja2.select_autoescape(
             enabled_extensions=("html", "htm", "xml"), default_for_string=False, default=False
@@ -455,16 +497,32 @@ def render(
         tmpl = env.get_template(resolved_template)
     except jinja2.TemplateNotFound as exc:
         raise RenderError(f"template not found in {p_dir.as_posix()}: {resolved_template}") from exc
+    except jinja2.TemplateSyntaxError as exc:
+        raise TemplateReadError(f"template {resolved_template} does not parse: {exc}") from exc
 
     context = _build_context(manifest_doc, manifest_sha256, reader)
-    rendered = tmpl.render(**context)
+    try:
+        rendered = tmpl.render(**context)
+        template_text = tmpl.render(**sentinel_context(context))
+    except jinja2.TemplateNotFound as exc:
+        raise TemplateReadError(
+            f"template {resolved_template} names a file outside the fixed template set: {exc}"
+        ) from exc
+    except jinja2.TemplateError as exc:
+        raise TemplateReadError(f"template {resolved_template} does not render: {exc}") from exc
+    template_sha256 = {(p_dir / name).resolve(): sha for name, sha in loader.loaded.items()}
     return Rendering(
         prompt=rendered,
         prompt_sha256=compute_sha256(rendered.encode("utf-8")),
-        template_text=tmpl.render(**sentinel_context(context)),
-        files_read=list(reader.files_read),
+        template_text=template_text,
+        files_read=[*reader.files_read, *template_sha256],
         root=root,
+        template_sha256=template_sha256,
     )
+
+
+def _relative(path: Path, root: Path) -> str:
+    return path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix()
 
 
 def render_prompt(
@@ -490,13 +548,12 @@ def render_prompt(
         sidecar = out.with_name(f"{out.name}.sha256")
         sidecar.write_text(f"{prompt_sha256}\n", encoding="ascii")
         files_read_sidecar = out.with_name(f"{out.name}.files_read.json")
-        rel_files: list[str] = []
-        for f in rendering.files_read:
-            try:
-                rel_files.append(f.relative_to(root).as_posix())
-            except ValueError:
-                rel_files.append(f.as_posix())
-        read_record = {"files_read": rel_files, "verifier_reads": []}  # the checker records what verification read
+        rel_files = [_relative(f, root) for f in rendering.files_read]
+        read_record = {
+            "files_read": rel_files,
+            "template_sha256": {_relative(path, root): sha for path, sha in rendering.template_sha256.items()},
+            "verifier_reads": [],  # the checker records what verification read
+        }
         files_read_sidecar.write_text(json.dumps(read_record, indent=2) + "\n", encoding="utf-8")
 
     return rendered, prompt_sha256, rendering.files_read

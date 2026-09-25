@@ -61,6 +61,15 @@ EXPECTED_RULE_SNIPPET = (
 LEARNER_STATE = {"level": "a1", "core_ids": {"W-1": {"position": 1, "lesson": 1}}}
 
 
+def _pin_reads(files_read, root: Path) -> set[str]:
+    """The reads inside the repository under test: the pinned files (the templates sit in the real repository)."""
+    return {Path(path).relative_to(root).as_posix() for path in files_read if Path(path).is_relative_to(root)}
+
+
+def _template_reads(files_read, root: Path) -> set[str]:
+    return {Path(path).name for path in files_read if not Path(path).is_relative_to(root)}
+
+
 def _write_module_manifest(root: Path, own_slug: str) -> None:
     """The module manifest the checker reads for the level's slugs: this module, a neighbour, other modules and a one-word slug the template itself uses as prose."""
     path = root / "curriculum/l2-uk-en/curriculum.yaml"
@@ -349,7 +358,7 @@ def test_lesson_rereview_prompt_rendering_and_check(tmp_path: Path, monkeypatch:
     assert "### Previous Findings" in rendered
     assert "+New sentence." in rendered  # the pinned diff, verbatim
     # the previous review and the diff are read through their pins; the ledger is pinned but not needed
-    read = {path.relative_to(tmp_path).as_posix() for path in files_read}
+    read = _pin_reads(files_read, tmp_path)
     assert {doc["diff"]["path"], doc["previous_attempt"]["review"]["path"]} <= read
     assert doc["previous_attempt"]["ledger"]["path"] not in read
 
@@ -611,7 +620,8 @@ def test_lesson_render_and_check_read_only_pinned_files(tmp_path, monkeypatch, l
     allowed = pinned | {manifest_path.resolve()} | _verifier_paths(tmp_path)
     assert read <= allowed, sorted(read - allowed)  # exactly the pins of this manifest, it, and the module manifest
     assert pinned <= read
-    assert {path.resolve() for path in box["files"]} <= pinned  # the renderer's reads: pins only
+    assert {path.resolve() for path in box["files"] if path.is_relative_to(tmp_path.resolve())} <= pinned
+    assert _template_reads(box["files"], tmp_path) == {"lesson-review.md.j2"}  # pins, and the one template used
 
 
 def test_plan_render_and_check_read_only_pinned_files(tmp_path, monkeypatch):
@@ -627,7 +637,10 @@ def test_plan_render_and_check_read_only_pinned_files(tmp_path, monkeypatch):
     allowed = pinned | {manifest_path.resolve()} | _verifier_paths(tmp_path)
     assert read <= allowed, sorted(read - allowed)  # exactly the pins of this manifest, it, and the module manifest
     assert pinned <= read
-    assert {path.resolve() for path in box["files"]} == pinned  # a plan review reads every input the manifest names
+    assert {path.resolve() for path in box["files"] if path.is_relative_to(tmp_path.resolve())} == pinned
+    assert _template_reads(box["files"], tmp_path) == {
+        "plan-review.md.j2"
+    }  # every input the manifest names, one template
 
 
 def test_lesson_review_renders_the_full_learner_state_and_the_immersion_rule(tmp_path, monkeypatch):
@@ -667,7 +680,7 @@ def test_recap_review_renders_the_built_upstream_lessons_beside_the_digest(tmp_p
     assert "the taught lessons win" in rendered
     assert "`recap`: The recap lesson reflects what lessons 1..N-1 actually taught" in rendered
     assert "  recap: clean" in rendered
-    read = {path.relative_to(tmp_path).as_posix() for path in files_read}
+    read = _pin_reads(files_read, tmp_path)
     assert {row["path"] for row in doc["upstream_lessons"]} <= read
 
     check_res = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
@@ -738,7 +751,7 @@ def test_plan_review_renders_the_full_prior_state_the_requirements_and_the_arc_s
     table = "\n".join(line for line in arc_source.splitlines() if line.startswith("|"))
     assert "| Fixture item one |" in table and table in rendered
     assert "fixture-only prose" not in rendered and "fixture decision text" not in rendered
-    read = {path.relative_to(tmp_path).as_posix() for path in files_read}
+    read = _pin_reads(files_read, tmp_path)
     assert {inputs[name]["path"] for name in ("learner_state", "requirements", "arc_source")} <= read
 
 
@@ -1049,10 +1062,16 @@ def test_activity_data_may_be_shared_site_data_or_this_modules_own_files(tmp_pat
 
 
 def test_rule_a_a_pin_at_a_location_the_contract_does_not_list_is_refused(tmp_path, monkeypatch):
+    # The schema refuses such a manifest first; with it out of the way the per-pin rule is what remains.
+    _, doc, _ = _setup_lesson_fixture(tmp_path / "schema", monkeypatch, lesson_n=2)
+    doc["inputs"]["writer_notes"] = dict(doc["inputs"]["plan"])
+    assert {r.code for r in pin_refusals(doc, tmp_path / "schema")} == {eligibility.MANIFEST_SCHEMA_INVALID}
+    monkeypatch.setattr(eligibility, "SCHEMAS", {})
     _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     doc["inputs"]["writer_notes"] = dict(doc["inputs"]["plan"])  # a real, correctly hashed file at an unlisted location
     _assert_refused(tmp_path, monkeypatch, doc, eligibility.PIN_LOCATION_NOT_ALLOWED)
 
+    monkeypatch.setattr(eligibility, "SCHEMAS", {})  # ``_assert_refused`` undoes patches when it ends
     _, doc, _ = _setup_lesson_fixture(tmp_path / "second", monkeypatch, lesson_n=2)
     doc["diff"] = dict(doc["inputs"]["plan"])  # a diff on a manifest that is not a re-review
     _assert_refused(tmp_path / "second", monkeypatch, doc, eligibility.PIN_LOCATION_NOT_ALLOWED)
@@ -1075,12 +1094,18 @@ def test_an_invalid_module_identifier_in_the_manifest_is_refused(tmp_path, monke
 
 @pytest.mark.parametrize(
     "rel",
-    ["../outside.yaml", "/etc/hostname", f"{STATE}/../fixture-module/lesson-2.gates.yaml", "site\\src\\x.mdx", ""],
+    ["../outside.yaml", "/etc/hostname", f"{STATE}/../fixture-module/lesson-2.gates.yaml", "site\\src\\x.mdx"],
 )
 def test_a_path_that_is_not_a_normalised_repo_relative_path_is_refused(tmp_path, monkeypatch, rel):
     _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     _pin(doc, "inputs.gate_report")["path"] = rel
     _assert_refused(tmp_path, monkeypatch, doc, eligibility.PIN_PATH_NOT_REPO_RELATIVE)
+
+
+def test_an_empty_pin_path_is_refused_by_the_schema(tmp_path, monkeypatch):
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    _pin(doc, "inputs.gate_report")["path"] = ""
+    assert {r.code for r in pin_refusals(doc, tmp_path)} == {eligibility.MANIFEST_SCHEMA_INVALID}
 
 
 def test_a_pin_whose_symlink_leads_elsewhere_is_refused(tmp_path, monkeypatch):
@@ -1206,10 +1231,115 @@ def test_rule_b_a_file_that_is_not_this_modules_path_for_its_location_is_refused
     _assert_refused(tmp_path, monkeypatch, doc, eligibility.PIN_OUTSIDE_MODULE_PATHS)
 
 
-def test_eligibility_reads_no_file_and_the_table_names_a_contract_section():
+def test_eligibility_reads_only_the_pinned_lesson_and_the_table_names_a_contract_section(tmp_path, monkeypatch):
     source = Path(eligibility.__file__).read_text(encoding="utf-8")
     assert "fresh-build-review-contracts.md" in source and "The review attempt manifest (r4)" in source
-    assert not re.search(r"read_(?:text|bytes)\(|\bopen\(", source)
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    read = _reads(monkeypatch, tmp_path, lambda: pin_refusals(doc, tmp_path))
+    assert read and {path.resolve() for path in read} == {(tmp_path / doc["inputs"]["lesson"]["path"]).resolve()}
+
+
+def _activity_manifest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict:
+    """A real lesson-2 manifest whose lesson imports one shared data file and one of its own."""
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
+    (tmp_path / "site/src/data").mkdir(parents=True)
+    (tmp_path / "site/src/data/activity-a.json").write_text("{}\n", encoding="utf-8")
+    (page_dir / "activity-b.json").write_text("{}\n", encoding="utf-8")
+    (page_dir / "2.mdx").write_text(
+        'import a from "@site/src/data/activity-a.json";\nimport b from "./activity-b.json";\n', encoding="utf-8"
+    )
+    doc, _ = _write(level, slug, 2, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    _write_module_manifest(tmp_path, slug)
+    return doc
+
+
+def _refusal_codes(doc: dict, root: Path) -> list[str]:
+    return [refusal.code for refusal in pin_refusals(doc, root)]
+
+
+@pytest.mark.parametrize(
+    ("rel", "codes"),
+    [
+        # the reviewer's three probes (review r4): each was accepted and each is now refused
+        ("site/src/data/other-module/answers.json", ["pin_activity_data_mismatch"] * 2),  # an extra and a missing
+        ("site/src/data/lesson-2.prompt.md", ["pin_writer_material"]),
+        (f"{PAGES}/lesson-2.self-assessment.yaml", ["pin_writer_material"]),
+        # writer files at their engine names are refused for this kind of pin too
+        (f"{PAGES}/lesson-2.draft.yaml", ["pin_writer_material"]),
+        ("site/src/data/lesson-2.raw.txt", ["pin_writer_material"]),
+        # inside this module's own page directory but not imported by the lesson
+        (f"{PAGES}/unimported.json", ["pin_activity_data_mismatch"] * 2),
+    ],
+)
+def test_activity_data_that_the_lesson_does_not_import_or_that_is_writer_material_is_refused(
+    tmp_path, monkeypatch, rel, codes
+):
+    doc = _activity_manifest(tmp_path, monkeypatch)
+    _repoint(tmp_path, doc, "inputs.activity_data[0]", rel)
+    assert _refusal_codes(doc, tmp_path) == codes
+    with pytest.raises(PinIneligibleError):
+        render_prompt(doc, repo_root=tmp_path)
+    result = check_prompt("dummy prompt", doc, repo_root=tmp_path)
+    assert not result.passed and all(err.startswith(("pin_", "manifest_")) for err in result.errors)
+
+
+def test_activity_data_must_equal_exactly_the_lessons_imports(tmp_path, monkeypatch):
+    doc = _activity_manifest(tmp_path, monkeypatch)
+    assert _refusal_codes(doc, tmp_path) == []
+    entries = doc["inputs"]["activity_data"]
+
+    missing = json.loads(json.dumps(doc))
+    del missing["inputs"]["activity_data"][1]
+    assert _refusal_codes(missing, tmp_path) == ["pin_activity_data_mismatch"]
+
+    empty = json.loads(json.dumps(doc))
+    empty["inputs"]["activity_data"] = []
+    assert _refusal_codes(empty, tmp_path) == ["pin_activity_data_mismatch"] * 2
+
+    repeated = json.loads(json.dumps(doc))
+    repeated["inputs"]["activity_data"].append(dict(entries[0]))
+    assert _refusal_codes(repeated, tmp_path) == ["pin_activity_data_mismatch"]
+
+    extra = json.loads(json.dumps(doc))
+    (tmp_path / "site/src/data/extra.json").write_text("{}\n", encoding="utf-8")
+    entry = dict(entries[0])
+    entry["path"] = "site/src/data/extra.json"
+    entry["sha256"] = hashlib.sha256(b"{}\n").hexdigest()
+    extra["inputs"]["activity_data"].append(entry)
+    assert _refusal_codes(extra, tmp_path) == ["pin_activity_data_mismatch"]
+    with pytest.raises(PinIneligibleError, match="pin_activity_data_mismatch"):
+        render_prompt(extra, repo_root=tmp_path)
+
+
+def test_the_activity_set_is_derived_with_the_engines_own_import_reader(tmp_path, monkeypatch):
+    doc = _activity_manifest(tmp_path, monkeypatch)
+    assert eligibility._activity_imports is manifest._activity_imports
+    calls = []
+    real = manifest._activity_imports
+    monkeypatch.setattr(eligibility, "_activity_imports", lambda *a: calls.append(a) or real(*a))
+    assert _refusal_codes(doc, tmp_path) == [] and len(calls) == 1
+
+
+@pytest.mark.parametrize("missing", ["lessons_lock", "decisions"])
+def test_a_required_input_the_lesson_manifest_omits_is_refused_by_the_schema(tmp_path, monkeypatch, missing):
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    assert missing in doc["inputs"] and _refusal_codes(doc, tmp_path) == []
+    del doc["inputs"][missing]
+    assert _refusal_codes(doc, tmp_path) == ["manifest_schema_invalid"]
+    with pytest.raises(PinIneligibleError, match=f"manifest_schema_invalid.*{missing}"):
+        render_prompt(doc, repo_root=tmp_path)
+    result = check_prompt("dummy prompt", doc, repo_root=tmp_path)
+    assert not result.passed and result.errors[0].startswith("manifest_schema_invalid")
+
+
+def test_a_required_input_the_plan_manifest_omits_is_refused_by_the_schema(tmp_path, monkeypatch):
+    _, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    assert _refusal_codes(doc, tmp_path) == []
+    del doc["inputs"]["decisions"]
+    assert _refusal_codes(doc, tmp_path) == ["manifest_schema_invalid"]
+    with pytest.raises(PinIneligibleError, match="decisions"):
+        render_prompt(doc, repo_root=tmp_path)
 
 
 # ---------------------------------------------------------------------------
@@ -1351,3 +1481,63 @@ def test_the_checker_says_what_it_proves_and_no_longer_scans_pinned_text():
     assert "Pinned data is never text-scanned" in source
     for removed in ("--earlier-edition", "--other-slug", "other_slugs", "earlier_editions", "LESSON_SNAPSHOT"):
         assert removed not in source
+
+
+# ---------------------------------------------------------------------------
+# Templates read nothing but the fixed template set
+# ---------------------------------------------------------------------------
+
+EXTERNAL_READ_TAGS = {
+    "include": '{% include "untracked.txt" %}',
+    "import": '{% import "untracked.txt" as x %}',
+    "from": '{% from "untracked.txt" import x %}',
+    "extends": '{% extends "untracked.txt" %}',
+    "include of a served template": '{% include "lesson-review.md.j2" %}',
+    "include out of the directory": '{% include "../untracked.txt" %}',
+}
+
+
+@pytest.mark.parametrize("name", list(EXTERNAL_READ_TAGS))
+def test_a_template_that_includes_imports_or_extends_a_file_fails_lint_and_render(tmp_path, monkeypatch, name):
+    source = EXTERNAL_READ_TAGS[name]
+    manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    prompts = _prompts_with(tmp_path, bad="Header\n" + source + "\n")
+    (prompts / "untracked.txt").write_text("UNTRACKED-SECRET\n", encoding="utf-8")
+    (tmp_path / "untracked.txt").write_text("UNTRACKED-SECRET\n", encoding="utf-8")
+
+    if name != "include of a served template":  # a served template can be included; the lint alone refuses that
+        with pytest.raises(RenderError, match=r"fixed template set|does not parse|does not render"):
+            render_prompt(manifest_path, "bad.md.j2", repo_root=tmp_path, prompts_dir=prompts)
+
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path, prompts_dir=prompts)
+    assert "UNTRACKED-SECRET" not in rendered
+    result = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read, prompts_dir=prompts)
+    assert not result.passed
+    assert any(err.startswith("template_external_read: bad.md.j2") for err in result.errors), result.errors
+    assert not any("UNTRACKED" in path for path in result.verifier_reads + result.files_read)
+
+
+def test_the_renderer_serves_only_the_fixed_template_set_and_records_each_template_used(tmp_path, monkeypatch):
+    manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    prompt_out = manifest_path.parent / "lesson-2.prompt.md"
+    render_prompt(manifest_path, repo_root=tmp_path, output_path=prompt_out)
+    record = json.loads(prompt_out.with_name(f"{prompt_out.name}.files_read.json").read_text(encoding="utf-8"))
+    real = Path(__file__).resolve().parents[2] / "scripts/review/prompts/lesson-review.md.j2"
+    template = real.as_posix()  # the repository under test is a temporary one, so the template is recorded absolute
+    assert template in record["files_read"]
+    assert record["template_sha256"] == {template: hashlib.sha256(real.read_bytes()).hexdigest()}
+    assert [path for path in record["files_read"] if path.endswith(".j2")] == [template]
+
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    ok = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert ok.passed, ok.errors
+    without = [path for path in files_read if not str(path).endswith(".j2")]
+    assert any(
+        err.startswith("template_read_not_recorded")
+        for err in check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=without).errors
+    )
+    wrong = check_prompt(
+        rendered, manifest_path, repo_root=tmp_path, files_read=files_read, template_sha256={template: "0" * 64}
+    )
+    assert any(err.startswith("template_sha256_mismatch") for err in wrong.errors)
+    assert check_main([str(prompt_out), "--manifest", str(manifest_path), "--repo-root", str(tmp_path)]) == 0

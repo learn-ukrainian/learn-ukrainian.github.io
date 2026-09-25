@@ -6,7 +6,8 @@ reasoning or self-assessment, no earlier edition, no other module's content, and
 attempt manifest does not name and hash. So this checker proves deterministic facts about documents
 and never scans the text of a pinned input for leaks:
 
-1. **Pin eligibility** (``eligibility.pin_refusals``): every pinned file is an input the contract
+1. **Manifest and pin eligibility** (``eligibility.pin_refusals``): the manifest matches its schema (every
+   required input is pinned); every pinned file is an input the contract
    lists for this manifest kind, at this module's own path for the current build. A v1 or archive
    path, another module's file, a writer file or a superseded snapshot is refused by a named code
    before anything is read.
@@ -14,7 +15,10 @@ and never scans the text of a pinned input for leaks:
    manifest through the same ``render.py`` path. The prompt file must equal that render byte for byte
    (and its ``.sha256`` sidecar its hash), so no appended or altered text, no fence trick, and no read
    of an unpinned file can pass.
-3. **Template lint**: what the *templates* say. Every ``*.md.j2`` is linted, and so is a render of the
+3. **Template lint**: what the *templates* say. The renderer serves only the fixed set of ``*.md.j2``
+   files of the prompts directory (a template cannot ``include``, ``import`` or ``extend`` anything
+   else, and the lint refuses those tags in any case), and records the sha256 of each template it
+   used beside the pinned files it read. Every ``*.md.j2`` is linted, and so is a render of the
    template in use with every pinned datum replaced by a sentinel (template-produced text only). The
    lint refuses another module's slug, a v1 path, writer or earlier-edition wording, unresolved
    placeholders and an unclosed fence. Pinned data is never text-scanned: a rebuilt lesson legitimately
@@ -41,6 +45,14 @@ import yaml
 from scripts.build.fresh.manifest import pinned_entries
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import RenderError, render, resolve_template_name
+
+#: Jinja statements that make a template read another file; none is allowed in any template.
+EXTERNAL_READ_NODES: tuple[type[jinja2.nodes.Node], ...] = (
+    jinja2.nodes.Include,
+    jinja2.nodes.Import,
+    jinja2.nodes.FromImport,
+    jinja2.nodes.Extends,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PROMPTS_DIR = Path(__file__).resolve().parent
@@ -288,10 +300,15 @@ def _lint_templates(
         verifier_reads.append(path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix())
         source = path.read_text(encoding="utf-8")
         try:
-            parser.parse(source)
+            parsed = parser.parse(source)
         except jinja2.TemplateSyntaxError as err:
             errors.append(f"template_invalid: {path.name} does not parse ({err})")
             continue
+        for node in parsed.find_all(EXTERNAL_READ_NODES):
+            errors.append(
+                f"template_external_read: {path.name} line {node.lineno} uses {type(node).__name__.lower()}, "
+                "which would read a file no manifest pins"
+            )
         _lint_template_text(
             JINJA_TAG.sub("", source),
             f"template {path.name}",
@@ -321,6 +338,7 @@ def check_prompt(
     repo_root: Path | None = None,
     files_read: list[Path | str] | None = None,
     recorded_sha256: str | None = None,
+    template_sha256: dict[str, str] | None = None,
     prompts_dir: Path | None = None,
 ) -> RenderedPromptCheckResult:
     """Validate a rendered reviewer prompt: eligible pins, exact re-render, clean templates."""
@@ -357,20 +375,16 @@ def check_prompt(
     verified = _verify_manifest_inputs(manifest_doc, root, errors)
     if errors:
         return result()
-    if files_read is not None:
-        for f in files_read:
-            fp = (root / f).resolve() if not Path(f).is_absolute() else Path(f)
-            if fp not in verified:
-                errors.append(f"unauthorized_file_read: file {fp.as_posix()} was read but is not in manifest inputs")
-
     # 3. Exact render: the same render.py path, the same manifest, byte for byte
     used_text: str | None = None
+    used_templates: dict[Path, str] = {}
     try:
         rendering = render(manifest_source, template_name, repo_root=root, prompts_dir=prompts_dir)
     except RenderError as err:
         errors.append(f"render_failed: {type(err).__name__}: {err}")
     else:
         used_text = rendering.template_text
+        used_templates = rendering.template_sha256
         if rendered_prompt != rendering.prompt:
             first = next(
                 (i for i, (a, b) in enumerate(zip(rendered_prompt, rendering.prompt, strict=False)) if a != b),
@@ -385,6 +399,18 @@ def check_prompt(
                 f"prompt_sha256_mismatch: the sidecar records {recorded_sha256}, the render of the manifest is "
                 f"{rendering.prompt_sha256}"
             )
+
+    # The recorded reads are the verified pins and the templates the render used, each template with its sha256
+    if files_read is not None:
+        recorded_paths = {(root / f).resolve() for f in files_read}
+        for fp in sorted(recorded_paths - set(verified) - set(used_templates)):
+            errors.append(f"unauthorized_file_read: file {fp.as_posix()} was read but is not in manifest inputs")
+        for fp in sorted(set(used_templates) - recorded_paths):
+            errors.append(f"template_read_not_recorded: the render used template {fp.as_posix()}, the reads omit it")
+    if template_sha256 is not None and {(root / k).resolve(): v for k, v in template_sha256.items()} != used_templates:
+        errors.append(
+            "template_sha256_mismatch: the recorded template hashes differ from the templates the render used"
+        )
 
     # 4. Template lint: the level's other slugs come from the module manifest (a verifier read)
     foreign = _level_slugs(manifest_doc, root, verifier_reads, errors)
@@ -452,8 +478,15 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         sidecar = json.loads(files_read_path.read_text(encoding="utf-8"))
-        if not isinstance(sidecar, dict) or not isinstance(sidecar.get("files_read"), list):
-            print(f"FAIL: files_read sidecar {files_read_path} is not a JSON object with a files_read list")
+        if (
+            not isinstance(sidecar, dict)
+            or not isinstance(sidecar.get("files_read"), list)
+            or not isinstance(sidecar.get("template_sha256"), dict)
+        ):
+            print(
+                f"FAIL: files_read sidecar {files_read_path} is not a JSON object with a files_read list "
+                "and a template_sha256 map"
+            )
             return 1
         files_read_list = [root / p for p in sidecar["files_read"]]
     except Exception as exc:
@@ -467,10 +500,11 @@ def main(argv: list[str] | None = None) -> int:
         repo_root=root,
         files_read=files_read_list,
         recorded_sha256=recorded,
+        template_sha256=sidecar.get("template_sha256"),
         prompts_dir=Path(args.prompts_dir) if args.prompts_dir else None,
     )
 
-    sidecar["verifier_reads"] = result.verifier_reads
+    sidecar["verifier_reads"] = [path for path in result.verifier_reads if path not in sidecar["files_read"]]
     files_read_path.write_text(json.dumps(sidecar, indent=2) + "\n", encoding="utf-8")
 
     if not result.passed:
