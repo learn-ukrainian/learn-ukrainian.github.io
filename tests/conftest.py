@@ -32,6 +32,93 @@ from tests import sparse_trees
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
+# Identity a launched agent session carries (#8778). A test that inherits it
+# keys hook dedupe, leases, and telemetry on the operator's live session.
+# tests/test_session_identity_env_isolation.py parses the export sites and
+# fails when a launcher or runtime exports a name missing here.
+SESSION_IDENTITY_ENV_VARS = (
+    # Launcher driver identity (scripts/lib/launcher_core.sh).
+    "SESSION_EPIC",
+    "SESSION_HANDOFF_AGENT",
+    # Stream lease capsule (scripts/lib/session_supervisor.sh).
+    "SESSION_STREAM_ID",
+    "SESSION_STREAM_SESSION_ID",
+    "SESSION_STREAM_LEASE_ID",
+    "SESSION_STREAM_GENERATION",
+    "SESSION_STREAM_FENCING_TOKEN",
+    "SESSION_STREAM_AGENT",
+    "SESSION_STREAM_HARNESS",
+    "SESSION_STREAM_INSTANCE_ID",
+    "SESSION_STREAM_PROCESS_ID",
+    "SESSION_STREAM_HEARTBEAT_AT",
+    "SESSION_STREAM_EXPIRES_AT",
+    "SESSION_STREAM_TTL_SECONDS",
+    "SESSION_STREAM_VERSION",
+    "SESSION_STREAM_TASK_ID",
+    "SESSION_SUPERVISOR_CAPSULE_PATH",
+    "SESSION_SUPERVISOR_WAKE_DELIVERY",
+    "SESSION_SUPERVISOR_WAKE_STREAM",
+    # Codex launcher and thread rollover (scripts/launchers/codex.sh,
+    # scripts/lib/thread_rollover_link.sh).
+    "CODEX_SESSION",
+    "CODEX_LAUNCHER_ROLLOVER_AGENT",
+    "CODEX_LAUNCHER_ROLLOVER_LINEAGE_ID",
+    "CODEX_LAUNCHER_ROLLOVER_ID",
+    # Resolved context profile (scripts/lib/profile_resolver.sh and the
+    # glmcc/kimicc route libraries).
+    "LEARN_UKRAINIAN_PROFILE_ID",
+    "LEARN_UKRAINIAN_TRANSPORT",
+    "LEARN_UKRAINIAN_MAIN_MODEL_ID",
+    "LEARN_UKRAINIAN_MAIN_CONTEXT_WINDOW_TOKENS",
+    "LEARN_UKRAINIAN_AUTO_COMPACT_CAPACITY_TOKENS",
+    "LEARN_UKRAINIAN_COLD_START_PROFILE",
+    "LEARN_UKRAINIAN_COLD_START_BUDGET_TOKENS",
+    "LEARN_UKRAINIAN_ROLLOVER_WARNING_PERCENTAGES",
+    "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID",
+    "LEARN_UKRAINIAN_REQUESTED_MODEL_ID",
+    "LEARN_UKRAINIAN_RESOLUTION_REASON",
+    "LEARN_UKRAINIAN_TRUSTED",
+    "LEARN_UKRAINIAN_MODEL_MISMATCH",
+    "LEARN_UKRAINIAN_EXPECTED_PROFILE_ID",
+    "LEARN_UKRAINIAN_EXPECTED_MAIN_MODEL_ID",
+    "LEARN_UKRAINIAN_EXPECTED_MAIN_CONTEXT_WINDOW_TOKENS",
+    "LEARN_UKRAINIAN_KIMICC_MANAGED_LAUNCH",
+    # SessionStart runtime (scripts/lib/session_record.py, session-setup.sh).
+    "LEARN_UKRAINIAN_SESSION_ID",
+    "LEARN_UKRAINIAN_SESSION_RECORD",
+    "LEARN_UKRAINIAN_TRANSCRIPT_PATH",
+    "LEARN_UKRAINIAN_OBSERVED_MODEL_ID",
+    "LEARN_UKRAINIAN_OBSERVED_CONTEXT_WINDOW_TOKENS",
+    "LEARN_UKRAINIAN_THREAD_LEASE_GENERATION",
+    # Dispatch worker identity (scripts/delegate.py ``_build_worker_env``).
+    "LEARN_UKRAINIAN_DISPATCH_TASK_ID",
+    "LEARN_UKRAINIAN_DISPATCH_AGENT",
+    "LU_X_AGENT_TRAILER",
+    "LU_RUNTIME_INITIATOR",
+    "LU_RUNTIME_INITIATOR_SOURCE",
+    "LU_RUNTIME_RUN_NONCE",
+    # Telemetry run/session ids (scripts/telemetry/emit.py).
+    "LU_RUN_ID",
+    "LU_SESSION_ID",
+    # Harness-native ids the hooks read; the harness, not a launcher, sets them.
+    "LEARN_UK_HOOK_SESSION_ID",
+    "CODEX_THREAD_ID",
+    "CODEX_SESSION_ID",
+    "CLAUDE_CODE_SESSION_ID",
+    # SessionStart env file; a leaked path lets a test append to the live session.
+    "CLAUDE_ENV_FILE",
+)
+
+
+@pytest.fixture(autouse=True)
+def _strip_live_session_identity(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Run every test without the launching agent session's identity (#8778).
+
+    Tests that need one of these variables set it themselves.
+    """
+    for name in SESSION_IDENTITY_ENV_VARS:
+        monkeypatch.delenv(name, raising=False)
+
 
 def _is_agent_runtime_shim(path: str | os.PathLike[str]) -> bool:
     parts = Path(path).parts
@@ -786,9 +873,9 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
     minimal test environments. ``create_app(production_context())`` freezes
     the root onto ``app.state.ctx`` at import. ``delegate_router._tasks_dir``
     then writes ``.task_cache.sqlite3`` under that directory. The delegate
-    ``_TASKS_DIR`` retarget does not move it, and the audit guard turns that connect into a
-    500 (``Failed`` is a ``BaseException``, so the orient section handler does
-    not catch it).
+    ``_TASKS_DIR`` retarget does not move it, and the audit guard turns that
+    connect into a 500 (``Failed`` is a ``BaseException``, so the orient
+    section handler does not catch it).
 
     ``git_hygiene_router._active_task_ids`` is not this seam: it reads
     ``project_root / "batch_state" / "tasks"`` (the checkout, via
@@ -830,6 +917,8 @@ def _retarget_loaded_task_dirs(monkeypatch: pytest.MonkeyPatch, isolated: Path) 
         except ModuleNotFoundError as exc:
             if exc.name != "learn_ukrainian_v4_runtime":
                 raise
+            # Skipped module keeps its live path; if a test later injects a stub
+            # runtime and imports it, the audit hook is the backstop.
             continue
         monkeypatch.setattr(module, attr, isolated)
 
