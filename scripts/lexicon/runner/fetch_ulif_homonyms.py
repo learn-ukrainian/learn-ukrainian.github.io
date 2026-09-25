@@ -2525,33 +2525,53 @@ def _resume_window_offset(
     anchor_page: int,
     anchor_index: int,
 ) -> int | None:
-    """Return the distance from the window start to the target page's first row.
+    """Return the distance from the window start to the target page's first row, or None.
 
-    Each anchor occurrence proposes a canonical origin for the window. A unique
-    anchor must agree with every known ledger row or the resume stops as drift.
-    A repeated anchor (a homonym run, possibly straddling the page boundary) is
-    accepted only when exactly one of its origins agrees with the ledger.
+    Every start offset k in 0..REGISTER_PAGE_SIZE is a hypothesis: the window
+    begins k rows before the target page. A hypothesis is consistent when the
+    anchor headword sits at its canonical position and every window row that
+    overlaps a recorded row (or a recorded page start/end headword) agrees with
+    the ledger. Rows nothing was recorded for disagree with no hypothesis, so a
+    visible anchor alone never proves an offset: a partly recorded homonym run
+    is consistent at several starts, and a window that really starts inside the
+    target page (k < 0) can look consistent at k=0.
+
+    The offset is returned only when exactly one k is consistent AND at least
+    one recorded row or boundary headword that differs from the anchor pins the
+    agreement; a run of identical headwords cannot pin an offset. Anything else
+    returns None and the caller fast-forwards, which is always safe.
+
+    ResumeMismatchError is raised only for clear drift: no k is consistent, the
+    anchor is visible exactly once, and the target page's recorded first row is
+    not a repeat of the anchor. Then the single sighting can only be the
+    target's first row, so the disagreement is real rather than a landing
+    inside a homonym run.
     """
-    matches = [i for i, row in enumerate(rows) if row["stressed"] == anchor_headword]
-    if not matches or len(rows) != REGISTER_PAGE_SIZE:
+    if len(rows) != REGISTER_PAGE_SIZE:
         return None
     anchor_global = (anchor_page - 1) * REGISTER_PAGE_SIZE + anchor_index
     target_global = (target_page - 1) * REGISTER_PAGE_SIZE
-    candidates = [
-        anchor_global - match
-        for match in matches
-        if anchor_global - match >= 0 and 0 <= target_global - (anchor_global - match) <= REGISTER_PAGE_SIZE
-    ]
-    if len(matches) == 1:
-        if not candidates:
-            return None
-        _verify_known_window_rows(ledger, rows, candidates[0])
-        return target_global - candidates[0]
-
-    consistent = [start for start in candidates if _known_window_drift(ledger, rows, start) is None]
-    if len(consistent) != 1:
-        return None
-    return target_global - consistent[0]
+    consistent: list[tuple[int, bool]] = []
+    first_drift: str | None = None
+    anchored = 0
+    for k in range(REGISTER_PAGE_SIZE + 1):
+        start = target_global - k
+        anchor_position = anchor_global - start
+        if start < 0 or not 0 <= anchor_position < len(rows) or rows[anchor_position]["stressed"] != anchor_headword:
+            continue
+        anchored += 1
+        drift, pinned = _known_window_agreement(ledger, rows, start, anchor_headword)
+        if drift is None:
+            consistent.append((k, pinned))
+        elif first_drift is None:
+            first_drift = drift
+    if len(consistent) == 1 and consistent[0][1]:
+        return consistent[0][0]
+    if not consistent and anchored == 1 and first_drift is not None:
+        second = next((r for r in ledger.page_rows(target_page) if int(r["row_index"]) == 1), None)
+        if second is not None and second["stressed_headword"] != anchor_headword:
+            raise ResumeMismatchError(first_drift)
+    return None
 
 
 def _verify_known_window_rows(ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int) -> None:
@@ -2563,8 +2583,21 @@ def _verify_known_window_rows(ledger: SpellingLedger, rows: list[dict[str, Any]]
 
 def _known_window_drift(ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int) -> str | None:
     """Describe the first known ledger row the window disagrees with, or None."""
+    return _known_window_agreement(ledger, rows, start_global, None)[0]
+
+
+def _known_window_agreement(
+    ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int, anchor_headword: str | None
+) -> tuple[str | None, bool]:
+    """Compare the window with the ledger when it starts at canonical index start_global.
+
+    Returns (first disagreement or None, pinned). ``pinned`` is true when a
+    recorded row or page boundary headword that differs from ``anchor_headword``
+    agreed with the window; it is only meaningful when there is no disagreement.
+    """
     known_pages: dict[int, dict[int, sqlite3.Row]] = {}
     page_records: dict[int, sqlite3.Row | None] = {}
+    pinned = False
     for i, row in enumerate(rows):
         global_index = start_global + i
         page_num, row_index = divmod(global_index, REGISTER_PAGE_SIZE)
@@ -2572,21 +2605,26 @@ def _known_window_drift(ledger: SpellingLedger, rows: list[dict[str, Any]], star
         if page_num not in known_pages:
             known_pages[page_num] = {int(r["row_index"]): r for r in ledger.page_rows(page_num)}
         expected = known_pages[page_num].get(row_index)
-        if expected is not None and (
-            row["stressed"] != expected["stressed_headword"]
-            or normalize_ulif_spelling(str(row["unstressed"])) != expected["normalized_spelling"]
-        ):
-            return (
-                f"page {page_num} row {row_index}: expected {expected['stressed_headword']}, landed {row['stressed']}"
-            )
+        if expected is not None:
+            if (
+                row["stressed"] != expected["stressed_headword"]
+                or normalize_ulif_spelling(str(row["unstressed"])) != expected["normalized_spelling"]
+            ):
+                return (
+                    f"page {page_num} row {row_index}: expected {expected['stressed_headword']}, landed {row['stressed']}",
+                    False,
+                )
+            pinned = pinned or row["stressed"] != anchor_headword
         if page_num not in page_records:
             page_records[page_num] = ledger.get_page(page_num)
         page = page_records[page_num]
         if page is not None:
             boundary = "start_headword" if row_index == 0 else "end_headword" if row_index == 24 else None
-            if boundary and page[boundary] and row["stressed"] != page[boundary]:
-                return f"page {page_num} {boundary}: expected {page[boundary]}, landed {row['stressed']}"
-    return None
+            if boundary and page[boundary]:
+                if row["stressed"] != page[boundary]:
+                    return f"page {page_num} {boundary}: expected {page[boundary]}, landed {row['stressed']}", False
+                pinned = pinned or row["stressed"] != anchor_headword
+    return None, pinned
 
 
 _UKRAINIAN_REGISTER_ALPHABET = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"

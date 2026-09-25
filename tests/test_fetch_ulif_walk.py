@@ -1768,10 +1768,10 @@ def test_resume_offset_homonym_window_with_drift_is_rejected(tmp_path: Path):
         ledger.close()
 
 
-def test_reseed_at_homonym_page_boundary_skips_fast_forward(tmp_path: Path, capsys):
+@pytest.mark.parametrize("offset", [0, 3, 20])
+def test_reseed_at_homonym_page_boundary_skips_fast_forward(tmp_path: Path, capsys, offset: int):
     # The operator's live case: page 6932 has its 25 rows recorded, so the
     # direct search settles the homonym alignment (k=3) without pagination.
-    offset = 3
     ledger = _seed_boundary_ledger(tmp_path / "ledger.sqlite")
     cache = ulif_walk.prepare_database(tmp_path / "cache.db")
     requests: list[tuple[str, dict[str, str] | None]] = []
@@ -1793,11 +1793,136 @@ def test_reseed_at_homonym_page_boundary_skips_fast_forward(tmp_path: Path, caps
         cache.close()
         ledger.close()
     assert landed_offset == offset
-    assert [row["stressed"] for row in rows[offset - 1 : offset + 1]] == ["порива́ння", "порива́ння"]
+    assert [row["stressed"] for row in rows[max(offset - 1, 0) : offset + 1]] == ["порива́ння"] * (2 if offset else 1)
     assert [method for method, _ in requests] == ["GET", "POST"]
     err = capsys.readouterr().err
     assert f"direct search page 6932, k={offset}" in err
     assert "fast-forward" not in err
+
+
+_RUN_HEAD = "порива́ння"
+
+
+def _run_pages(run: int) -> tuple[list[str], list[str], list[str]]:
+    """Previous, target and next pages; the target opens with ``run`` identical headwords."""
+    previous = [f"a{i:02d}" for i in range(25)]
+    target = [_RUN_HEAD] * run + [f"t{i:02d}" for i in range(25 - run)]
+    following = [f"n{i:02d}" for i in range(25)]
+    return previous, target, following
+
+
+def _seed_run_ledger(path: Path, *, run: int, recorded: int, pin: bool) -> SpellingLedger:
+    """Page 2 is the target. ``recorded`` leading run rows exist; ``pin`` also records every other row."""
+    previous, target, _ = _run_pages(run)
+    ledger = SpellingLedger(path)
+    ledger.ensure_page(1, start_headword=previous[0], end_headword=previous[-1], row_count=25)
+    ledger.ensure_page(2, start_headword=_RUN_HEAD)
+    for page, words in ((1, previous), (2, target)):
+        for index, word in enumerate(words):
+            if page == 2 and index >= recorded and not (pin and index >= run):
+                continue
+            ledger.ensure_row(
+                page,
+                index,
+                select_arg=f"Select${index}",
+                stressed_headword=word,
+                normalized_spelling=normalize_ulif_spelling(word),
+            )
+    return ledger
+
+
+def _run_window(run: int, landing: int) -> list[dict[str, str]]:
+    """The 25-row window that starts at target row ``landing`` (the search lands inside the homonym run)."""
+    _, target, following = _run_pages(run)
+    return parse_register_list(_register_html((target + following)[landing : landing + 25], "VS-R", register_size=100))
+
+
+_RUN_CASES = [(run, landing) for run in (2, 3) for landing in range(run)]
+
+
+@pytest.mark.parametrize(("run", "landing"), _RUN_CASES)
+@pytest.mark.parametrize("recorded", [0, 1, 2])
+def test_resume_offset_needs_a_distinct_recorded_row_in_a_homonym_run(
+    tmp_path: Path, run: int, landing: int, recorded: int
+):
+    # #8400 review: with rows 0 and 1 both the anchor and only row 0 recorded, a search that
+    # lands at row 1 showed one anchor and was accepted as k=0, shifting every later row.
+    ledger = _seed_run_ledger(tmp_path / "ledger.sqlite", run=run, recorded=recorded, pin=False)
+    try:
+        assert (
+            _resume_window_offset(
+                ledger,
+                _run_window(run, landing),
+                target_page=2,
+                anchor_headword=_RUN_HEAD,
+                anchor_page=2,
+                anchor_index=0,
+            )
+            is None
+        )
+    finally:
+        ledger.close()
+
+
+@pytest.mark.parametrize(("run", "landing"), _RUN_CASES)
+def test_resume_offset_pinned_by_distinct_row_only_at_the_true_start(tmp_path: Path, run: int, landing: int):
+    ledger = _seed_run_ledger(tmp_path / "ledger.sqlite", run=run, recorded=run, pin=True)
+    try:
+        offset = _resume_window_offset(
+            ledger,
+            _run_window(run, landing),
+            target_page=2,
+            anchor_headword=_RUN_HEAD,
+            anchor_page=2,
+            anchor_index=0,
+        )
+    finally:
+        ledger.close()
+    # Landing later in the run is never accepted (and never a hard mismatch when a run repeats).
+    assert offset == (0 if landing == 0 else None)
+
+
+def test_resume_offset_previous_page_rows_pin_a_shifted_window(tmp_path: Path):
+    ledger = _seed_run_ledger(tmp_path / "ledger.sqlite", run=2, recorded=0, pin=False)
+    try:
+        previous, target, following = _run_pages(2)
+        window = parse_register_list(_register_html((previous + target + following)[22:47], "VS-R", register_size=100))
+        # Three recorded previous-page rows precede the run, so k=3 is unique and pinned.
+        assert (
+            _resume_window_offset(
+                ledger, window, target_page=2, anchor_headword=_RUN_HEAD, anchor_page=2, anchor_index=0
+            )
+            == 3
+        )
+    finally:
+        ledger.close()
+
+
+def test_resume_offset_raises_for_clear_drift_but_not_inside_a_run(tmp_path: Path):
+    # A lone anchor followed by a recorded, different row 1 is the target's first row: drift is real.
+    ledger = _seed_run_ledger(tmp_path / "ledger.sqlite", run=1, recorded=1, pin=True)
+    try:
+        drifted = _run_window(1, 0)
+        drifted[7] = {**drifted[7], "stressed": "zz", "unstressed": "zz"}
+        with pytest.raises(ulif_walk.ResumeMismatchError, match="page 2 row 7"):
+            _resume_window_offset(
+                ledger, drifted, target_page=2, anchor_headword=_RUN_HEAD, anchor_page=2, anchor_index=0
+            )
+    finally:
+        ledger.close()
+    # The same disagreement when row 1 repeats the anchor may be a landing inside the run: no verdict.
+    ledger = _seed_run_ledger(tmp_path / "ledger2.sqlite", run=2, recorded=2, pin=True)
+    try:
+        inside = _run_window(2, 1)
+        inside[7] = {**inside[7], "stressed": "zz", "unstressed": "zz"}
+        assert (
+            _resume_window_offset(
+                ledger, inside, target_page=2, anchor_headword=_RUN_HEAD, anchor_page=2, anchor_index=0
+            )
+            is None
+        )
+    finally:
+        ledger.close()
 
 
 def _ambiguous_boundary_window(kind: str) -> list[str]:
