@@ -398,6 +398,8 @@ class SpellingLedger:
                 updated_at TEXT NOT NULL,
                 PRIMARY KEY (page_num, row_index)
             );
+            CREATE INDEX IF NOT EXISTS register_rows_normalized_spelling
+                ON register_rows (normalized_spelling);
             """
         )
         self.conn.commit()
