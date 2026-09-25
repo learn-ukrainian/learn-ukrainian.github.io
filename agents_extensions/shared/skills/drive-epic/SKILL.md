@@ -400,6 +400,9 @@ dispatch, run `capacity_pick` and pass `--check-budget` (or export
 Refuse habit-routing to hot / near_cap / CodexBar-deficit lanes when cooler seats
 are listed. `--check-budget` hard-subs via `dispatch_fallbacks` when mapped
 (e.g. `codex → cursor`); otherwise exits non-zero unless `--force-agent` + NOTE.
+Before claiming who authored work, read the `🔄 HARD AUTO-SUBSTITUTE` line (stderr) and
+the task record's `agent`/`model` in `batch_state/tasks/<id>.json` (2026-09-25). Never
+filter dispatch output down to the base-SHA line or drop stderr; that hides the substitution.
 
 Then dispatch with a numbered brief
 (worktree → work → tests → ruff → conventional commit → push → PR → **no auto-merge by
@@ -462,9 +465,9 @@ and the attested SHA equals the current PR head. Discussion on the thread is not
 catalog and the served `/api/rules` reviewer-seat rule. Do **not** hardcode Claude
 Sonnet (or any one model). The writer's family is never eligible.
 
-**Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**
-(Gemini Flash, GLM from the Cloud catalog, Grok, GPT, Kimi K3, … — whatever the
-live catalog lists that is outside the author's family). **VPS drivers** may still
+**Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**,
+chosen from the "Code review" row of `model-assignment.md` (Gemini reviews Ukrainian
+only, never code — operator 2026-09-25). **VPS drivers** may still
 use the existing `ask-<lane>` / `delegate.py` review path below; the landing order
 in §7 is the same.
 
@@ -486,11 +489,11 @@ route to a headless native CLI with tools (`delegate.py dispatch --agent <lane>
 --worktree`, `gh`/pytest available), never the tool-less `--deny-all --no-fs
 --no-terminal` chat transport. ACP stays for ordinary, non-review `ask-*`.
 
-**Read-only review asks fail silently on brief wording (#8703).** The write-shape check
-reads a wrapped brief line that starts with an imperative verb (`fix report…`, `remove a
-worktree…`) as a write directive and refuses the ask; one review was lost for ~25 min.
-Keep every line of a review brief from starting with a verb. After launching any
-`ask-*`, confirm `batch_state/tasks/<id>.json` exists before moving on.
+**Read-only review asks can be refused on brief wording (#8703).** The write-shape check
+in `delegate.py` still refuses a read-only ask when a sentence or list item starts with a
+write verb (`Fix …`, `- Remove …`). Wrapped continuation lines, questions ending in `?`,
+and fenced or `>`-quoted text pass. Quote the brief under review; phrase your own asks as
+questions. After launching any `ask-*`, confirm `batch_state/tasks/<id>.json` exists.
 
 Read the review CONTENT (not just pass/fail), apply deltas,
 re-probe gate-driving data yourself. If the head moves after APPROVE, the CF is
@@ -566,16 +569,26 @@ the `full-ci` label first so the queue run covers every shard. #8692 merged on s
 alone; a repo-wide lint test in shard 3 then failed every full-tier run for ~2.5 h and
 dequeued unrelated PRs (#8691 ×3, #8693 ×2).
 
-**Diagnose CI failures from the junit artifact, never the log view (#8701, #8705).**
+**Before opening a PR that touches launchers or hooks, run every real-launcher test
+(2026-09-25).** A worker's targeted tests are not the CI suite. List them with
+`grep -rlE 'start-[a-z0-9-]+\.sh' tests/ | xargs grep -lE 'subprocess\.(run|Popen|check_output)'`.
+
+**Diagnose pytest failures from the junit artifact first (#8701, #8705).**
 `gh run view --log-failed` and the live log truncate or stall — that read as a "silent
-shard death", cost a closed PR and 3 review rounds, and was wrong. Use
-`gh run download <run> --pattern 'pytest-junit-*'` and parse `<failure>`. Before naming
-a new failure mode, confirm it in the artifact; a FAILED test in it is a test failure.
+shard death", cost a closed PR and 3 review rounds, and was wrong. When the run has
+`pytest-junit-*` artifacts, download them to a scratch dir (never the primary checkout)
+and parse `<failure>`; a FAILED test there is a test failure, so confirm any new failure
+mode in the artifact before naming it. Lint, setup, and other jobs without that artifact:
+read `gh run view <run> --log-failed`.
+
+```bash
+gh run download <run> --pattern 'pytest-junit-*' -D "$(mktemp -d)"
+```
 
 **Main red: fix main first.** Find the breaking commit (`git log` of the failing test's
 inputs) and fix main before re-enqueueing anything. Refresh blocked PRs with
-`gh pr update-branch` — never close/reopen, which reuses stale merge refs and fails
-again. Verify parent1 == the approved head and the PR patch-id is unchanged, then get
+`gh pr update-branch <pr>` (always pass the number; bare, it targets the current
+branch's PR) — never close/reopen, which reuses stale merge refs and fails again. Verify parent1 == the approved head and the PR patch-id is unchanged, then get
 one batched exact-head re-CF per reviewer family.
 
 ### 7-rollout. Local / production proof (when the epic requires it)
