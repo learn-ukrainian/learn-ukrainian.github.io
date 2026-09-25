@@ -2516,6 +2516,221 @@ def _fast_forward_to_page(
     return current_html, landed_rows
 
 
+def _listing_rows(ledger: SpellingLedger, page_num: int) -> dict[int, str]:
+    """Headwords safe to align a resume window against.
+
+    ``ensure_row`` writes the register listing once, as ``pending``. ``mark_row``
+    only moves that row to ``completed``; it does not rewrite the headword.
+    Pending and completed rows are the same listing evidence, so both are
+    trustworthy. No other row state is written.
+
+    ``start_headword`` is the listing headword of row 0 when the page boundary
+    was stored without a row record. A stored row 0 wins over that boundary.
+    """
+    if page_num < 1:
+        return {}
+    rows = {int(row["row_index"]): str(row["stressed_headword"]) for row in ledger.page_rows(page_num)}
+    page = ledger.get_page(page_num)
+    if page is not None and page["start_headword"] and 0 not in rows:
+        rows[0] = str(page["start_headword"])
+    return rows
+
+
+def verify_ledger_continuity(path: Path, *, warn_on_overlap: bool = False) -> int:
+    """Read only: check recorded page geometry and entry-position evidence.
+
+    The ledger stores entry response hashes and their page/row positions, but
+    the response bodies and page-listing HTML live in the separate blob cache.
+    This check can compare recorded spellings with entry response metadata; it
+    cannot independently reconstruct ULIF's listing or verify response bytes.
+    """
+    with contextlib.closing(sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)) as conn:
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA query_only=ON")
+        pages = conn.execute("SELECT * FROM register_pages ORDER BY page_num").fetchall()
+        entry_positions: dict[str, list[str]] = {}
+        for response in conn.execute(
+            "SELECT register_position, spelling FROM responses WHERE role = 'entry' AND register_position != ''"
+        ):
+            position = str(response["register_position"])
+            # An interrupted row can have several entry clicks before its tabs
+            # finish and mark_row commits completion. Every attempt must still
+            # agree with the listing spelling at this position.
+            entry_positions.setdefault(position, []).append(str(response["spelling"]))
+        initial_search_recorded = (
+            conn.execute("SELECT 1 FROM responses WHERE role = 'tsearch:start' LIMIT 1").fetchone() is not None
+        )
+        checked = 0
+        previous_completed_rows: list[sqlite3.Row] | None = None
+        for page in pages:
+            number = int(page["page_num"])
+            if number != checked + 1:
+                raise ResumeMismatchError(f"page {number}: ledger page sequence has a gap before this page")
+            rows = conn.execute(
+                "SELECT row_index, stressed_headword, normalized_spelling, state FROM register_rows "
+                "WHERE page_num = ? ORDER BY row_index",
+                (number,),
+            ).fetchall()
+            indexes = [int(row["row_index"]) for row in rows]
+            if indexes != list(range(len(rows))):
+                raise ResumeMismatchError(f"page {number}: ledger rows are not contiguous from row 0")
+            words = [str(row["stressed_headword"]) for row in rows]
+            if len(rows) > REGISTER_PAGE_SIZE:
+                raise ResumeMismatchError(f"page {number}: row count exceeds page size {REGISTER_PAGE_SIZE}")
+            # The first page can be a short search landing (22 rows in the
+            # live walk); later nonterminal next-page windows have 25.
+            if (
+                page["state"] == "completed"
+                and 0 < len(rows) < REGISTER_PAGE_SIZE
+                and number != len(pages)
+                and (number != 1 or not initial_search_recorded)
+            ):
+                raise ResumeMismatchError(f"page {number}: short page before the last page")
+            if words and page["start_headword"] != words[0]:
+                raise ResumeMismatchError(f"page {number}: start headword does not match row 0")
+            if page["state"] == "completed":
+                if words and page["end_headword"] != words[-1]:
+                    raise ResumeMismatchError(f"page {number}: end headword does not match last row")
+                if int(page["row_count"]) != len(rows):
+                    raise ResumeMismatchError(f"page {number}: row count does not match recorded rows")
+                if not words or not page["end_headword"]:
+                    raise ResumeMismatchError(f"page {number}: completed page lacks listing boundaries")
+                if previous_completed_rows is not None:
+                    try:
+                        _verify_register_continuity(previous_completed_rows, rows, number)
+                    except SessionInvalid as exc:
+                        message = (
+                            f"pages {number - 1} and {number}: suspect cross-page overlap ({exc}); verify manually"
+                        )
+                        if warn_on_overlap:
+                            print(f"ledger continuity warning: {message}", file=sys.stderr)
+                        else:
+                            raise ResumeMismatchError(message) from exc
+                previous_completed_rows = rows
+            else:
+                if page["row_count"] and len(rows) > int(page["row_count"]):
+                    raise ResumeMismatchError(f"page {number}: recorded rows exceed page row count")
+                previous_completed_rows = None
+            for row in rows:
+                index = int(row["row_index"])
+                position = f"{number}:{index}"
+                if normalize_ulif_spelling(str(row["stressed_headword"])) != row["normalized_spelling"]:
+                    raise ResumeMismatchError(f"page {number} row {index}: headword differs from normalized spelling")
+                if any(
+                    str(row["normalized_spelling"]) != response_spelling
+                    for response_spelling in entry_positions.get(position, ())
+                ):
+                    raise ResumeMismatchError(f"page {number} row {index}: spelling differs from entry response")
+            checked += 1
+        orphan = conn.execute(
+            "SELECT MIN(r.page_num) FROM register_rows r LEFT JOIN register_pages p ON p.page_num = r.page_num "
+            "WHERE p.page_num IS NULL"
+        ).fetchone()[0]
+        if orphan is not None:
+            raise ResumeMismatchError(f"page {orphan}: ledger rows have no page record")
+    return checked
+
+
+def align_resume_window(
+    headwords: Sequence[str],
+    *,
+    page_size: int,
+    target_rows: Mapping[int, str],
+    previous_rows: Mapping[int, str] | None = None,
+    page_row_count: int | None = None,
+    end_headword: str | None = None,
+    target_page: int = 1,
+    nonterminal_page: bool = False,
+) -> int | None:
+    """Return where ``headwords[0]`` sits relative to the target page's row 0.
+
+    The return value is that absolute start. ``0`` is the first row of the
+    target page, a negative start is on the previous page, and a positive start
+    is a landing inside the target page. ``None`` means more than one start is
+    consistent: the caller fast-forwards.
+
+    A start is consistent when every window row that overlaps a trustworthy
+    recorded row matches it, and the window fits a known page length and end
+    headword. A short window (shorter than ``page_size``) on a page whose row
+    count is known is the tail of the register, so it must end on the last row.
+    When the recorded page precedes the terminal page, a short window can cross
+    its boundary; ``nonterminal_page`` permits that crossing.
+    A full window may cross onto the next page; those rows are not an input.
+
+    ``ResumeMismatchError`` is raised only when no start is consistent and some
+    geometrically possible start overlaps a recorded row. Page 1 has no
+    previous page; ``target_page`` also names mismatched rows.
+    """
+    if page_size < 1:
+        raise ValueError(f"page_size must be positive, got {page_size}")
+    if not headwords:
+        return None
+    previous = previous_rows or {}
+    known_count = page_row_count if page_row_count and page_row_count > 0 else None
+    limit = known_count if known_count is not None else page_size
+    short = len(headwords) < page_size
+    end = end_headword or None
+    consistent: list[int] = []
+    saw_overlap = False
+    best: tuple[tuple[int, int, int], str] | None = None
+
+    for origin in range(-page_size if target_page > 1 else 0, limit):
+        last = origin + len(headwords) - 1
+        if short and known_count is not None and not nonterminal_page and last != known_count - 1:
+            continue
+        if last >= limit and (
+            not nonterminal_page and (short or (known_count is not None and known_count < page_size))
+        ):
+            continue
+        overlaps = 0
+        mismatch_count = 0
+        mismatch: tuple[str, int, str, str] | None = None
+        for index, word in enumerate(headwords):
+            coord = origin + index
+            if coord < 0:
+                prev_index = page_size + coord
+                expected = previous.get(prev_index)
+                if expected is None:
+                    continue
+                overlaps += 1
+                if expected != word:
+                    mismatch_count += 1
+                    if mismatch is None:
+                        mismatch = ("previous", prev_index, expected, word)
+            elif coord < limit:
+                expected = target_rows.get(coord)
+                if expected is None:
+                    continue
+                overlaps += 1
+                if expected != word:
+                    mismatch_count += 1
+                    if mismatch is None:
+                        mismatch = ("target", coord, expected, word)
+        if end is not None and origin <= limit - 1 <= last and headwords[limit - 1 - origin] != end:
+            mismatch_count += 1
+            if mismatch is None:
+                mismatch = ("target", limit - 1, end, headwords[limit - 1 - origin])
+        if overlaps:
+            saw_overlap = True
+        if mismatch_count == 0:
+            consistent.append(origin)
+            continue
+        assert mismatch is not None
+        where, row_index, expected, landed = mismatch
+        page = target_page if where == "target" else target_page - 1
+        message = f"page {page} row {row_index}: expected {expected}, landed {landed}"
+        # The closest failed placement is the one with the fewest disagreements.
+        rank = (mismatch_count, 0 if where == "target" else 1, -overlaps)
+        if best is None or rank < best[0]:
+            best = (rank, message)
+
+    if len(consistent) == 1:
+        return consistent[0]
+    if not consistent and saw_overlap and best is not None and not (nonterminal_page and short):
+        raise ResumeMismatchError(best[1])
+    return None
+
+
 def _resume_window_offset(
     ledger: SpellingLedger,
     rows: list[dict[str, Any]],
@@ -2524,77 +2739,75 @@ def _resume_window_offset(
     anchor_headword: str,
     anchor_page: int,
     anchor_index: int,
+    nonterminal_page: bool = False,
 ) -> int | None:
-    """Return the distance from the window start to the target page's first row.
+    """Return how many rows the window starts before the target page, or None.
 
-    A unique stressed anchor fixes the window's canonical origin. All known
-    rows in the window must then agree with the ledger before any entry click.
+    This is the ledger adapter for :func:`align_resume_window`. The returned
+    offset is the negation of that function's absolute start, which is what
+    ``start_global = target_global - offset`` expects. The anchor arguments
+    name the search that produced the window; they do not vote on the start.
     """
-    matches = [i for i, row in enumerate(rows) if row["stressed"] == anchor_headword]
-    if len(matches) != 1 or len(rows) != REGISTER_PAGE_SIZE:
+    del anchor_headword, anchor_page, anchor_index
+    if not rows:
         return None
-    start_global = (anchor_page - 1) * REGISTER_PAGE_SIZE + anchor_index - matches[0]
-    if start_global < 0:
+    page = ledger.get_page(target_page)
+    row_count = int(page["row_count"]) if page is not None and page["row_count"] else None
+    end = str(page["end_headword"]) if page is not None and page["end_headword"] else None
+    origin = align_resume_window(
+        [str(row["stressed"]) for row in rows],
+        page_size=REGISTER_PAGE_SIZE,
+        target_rows=_listing_rows(ledger, target_page),
+        previous_rows=_listing_rows(ledger, target_page - 1),
+        page_row_count=row_count,
+        end_headword=end,
+        target_page=target_page,
+        nonterminal_page=nonterminal_page,
+    )
+    if origin is None:
         return None
-    offset = (target_page - 1) * REGISTER_PAGE_SIZE - start_global
-    if not 0 <= offset <= REGISTER_PAGE_SIZE:
-        return None
-
-    _verify_known_window_rows(ledger, rows, start_global)
-    return offset
+    return -origin
 
 
 def _verify_known_window_rows(ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int) -> None:
     """Reject drift at every canonical position already recorded in the ledger."""
-    known_pages: dict[int, dict[int, sqlite3.Row]] = {}
-    page_records: dict[int, sqlite3.Row | None] = {}
-    for i, row in enumerate(rows):
-        global_index = start_global + i
-        page_num, row_index = divmod(global_index, REGISTER_PAGE_SIZE)
+    drift = _known_window_drift(ledger, rows, start_global)
+    if drift is not None:
+        raise ResumeMismatchError(drift)
+
+
+def _known_window_drift(ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int) -> str | None:
+    """Describe the first known ledger row the window disagrees with, or None."""
+    listing: dict[int, dict[int, str]] = {}
+    recorded_norm: dict[int, dict[int, str]] = {}
+    for index, row in enumerate(rows):
+        page_num, row_index = divmod(start_global + index, REGISTER_PAGE_SIZE)
         page_num += 1
-        if page_num not in known_pages:
-            known_pages[page_num] = {int(r["row_index"]): r for r in ledger.page_rows(page_num)}
-        expected = known_pages[page_num].get(row_index)
-        if expected is not None and (
-            row["stressed"] != expected["stressed_headword"]
-            or normalize_ulif_spelling(str(row["unstressed"])) != expected["normalized_spelling"]
-        ):
-            raise ResumeMismatchError(
-                f"page {page_num} row {row_index}: expected {expected['stressed_headword']}, landed {row['stressed']}"
-            )
-        if page_num not in page_records:
-            page_records[page_num] = ledger.get_page(page_num)
-        page = page_records[page_num]
-        if page is not None:
-            boundary = "start_headword" if row_index == 0 else "end_headword" if row_index == 24 else None
-            if boundary and page[boundary] and row["stressed"] != page[boundary]:
-                raise ResumeMismatchError(
-                    f"page {page_num} {boundary}: expected {page[boundary]}, landed {row['stressed']}"
-                )
-
-
-_UKRAINIAN_REGISTER_ALPHABET = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
-_REGISTER_RANKS = {letter: index for index, letter in enumerate(_UKRAINIAN_REGISTER_ALPHABET)}
-
-
-def _register_order_key(spelling: str) -> tuple[int, ...]:
-    """Compare the first three register letters in Ukrainian order.
-
-    This key ignores spaces, hyphens, and apostrophes for the coarse boundary
-    comparison. The full key has three reversals in the recorded walk;
-    the three-letter key has none and still detects a reset to an earlier part
-    of the register. Acute marks and case do not affect the order.
-    """
-    letters = (letter for letter in spelling.casefold() if letter not in " \t-\u0301'’ʼ")
-    return tuple(
-        _REGISTER_RANKS.get(letter, len(_REGISTER_RANKS) + ord(letter)) for letter in itertools.islice(letters, 3)
-    )
+        if page_num < 1:
+            continue
+        if page_num not in listing:
+            listing[page_num] = _listing_rows(ledger, page_num)
+            recorded_norm[page_num] = {
+                int(item["row_index"]): str(item["normalized_spelling"]) for item in ledger.page_rows(page_num)
+            }
+        expected = listing[page_num].get(row_index)
+        if expected is not None and row["stressed"] != expected:
+            return f"page {page_num} row {row_index}: expected {expected}, landed {row['stressed']}"
+        norm = recorded_norm[page_num].get(row_index)
+        if norm is not None and normalize_ulif_spelling(str(row["unstressed"])) != norm:
+            return f"page {page_num} row {row_index}: expected {expected}, landed {row['stressed']}"
+        if row_index == REGISTER_PAGE_SIZE - 1:
+            page = ledger.get_page(page_num)
+            end = str(page["end_headword"]) if page is not None and page["end_headword"] else ""
+            if end and row["stressed"] != end:
+                return f"page {page_num} end_headword: expected {end}, landed {row['stressed']}"
+    return None
 
 
 def _verify_register_continuity(
     preceding: Sequence[Mapping[str, Any] | sqlite3.Row], following: Sequence[Mapping[str, Any]], page_num: int
 ) -> None:
-    """Reject backwards navigation and a repeated multi-row window before row writes."""
+    """Reject a repeated multi-row window before row writes."""
     if not preceding or not following:
         raise SessionInvalid(f"page_{page_num}_missing_continuity_anchor")
 
@@ -2604,8 +2817,6 @@ def _verify_register_continuity(
         except (KeyError, IndexError):
             return str(row["stressed_headword"])
 
-    if _register_order_key(headword(preceding[-1])) > _register_order_key(headword(following[0])):
-        raise SessionInvalid(f"page_{page_num}_register_regression")
     if len(following) >= 2:
         # Repeated homonyms can legitimately straddle a window. Two different
         # spellings repeating together are an overlap; a uniform run needs a
@@ -2661,8 +2872,23 @@ def _reseed_to_page(
     exp_start = str(p_rec["start_headword"]) if p_rec and p_rec["start_headword"] else None
     exp_end = str(p_rec["end_headword"]) if p_rec and p_rec["end_headword"] else None
 
-    # A page without a recorded start can only be anchored from the prior page.
-    search_target = exp_start or (start_headword if target_page == 1 else None)
+    target_rows = ledger.page_rows(target_page)
+    target_complete = bool(
+        p_rec and p_rec["row_count"] and p_rec["end_headword"] and len(target_rows) == int(p_rec["row_count"])
+    )
+    # An incomplete target cannot rule out starts beyond its recorded prefix.
+    # Search the last completed page's end instead and align against its full listing.
+    anchor_page = target_page
+    if target_page > 1 and not target_complete:
+        previous = ledger.get_page(target_page - 1)
+        if previous is not None and previous["state"] == "completed" and previous["end_headword"]:
+            anchor_page = target_page - 1
+    anchor_record = ledger.get_page(anchor_page)
+    search_target = (
+        str(anchor_record["end_headword"])
+        if anchor_page != target_page and anchor_record is not None
+        else exp_start or (start_headword if target_page == 1 else None)
+    )
     landed: list[dict[str, Any]] = []
     search_html = ""
     if search_target is not None:
@@ -2681,68 +2907,42 @@ def _reseed_to_page(
         if not landed:
             raise SessionInvalid(f"{marker_prefix}_missing_register")
 
-    if exp_start:
-        offset = _resume_window_offset(
+    if landed:
+        anchor_offset = _resume_window_offset(
             ledger,
             landed,
-            target_page=target_page,
-            anchor_headword=exp_start,
-            anchor_page=target_page,
+            target_page=anchor_page,
+            anchor_headword=search_target or "",
+            anchor_page=anchor_page,
             anchor_index=0,
+            nonterminal_page=anchor_page != target_page,
         )
-        if offset is not None:
+        offset = (
+            anchor_offset + REGISTER_PAGE_SIZE
+            if anchor_offset is not None and anchor_page != target_page
+            else anchor_offset
+        )
+        if anchor_page != target_page and offset is not None:
+            first = str(landed[0]["stressed"])
+            # A boundary homonym can make a target-page row look like the last
+            # completed page's suffix. The continuity check rules out a repeated
+            # distinct pair (or six identical rows), but shorter uniform runs
+            # cannot distinguish the two pages without a known target start.
+            suffix = [str(row["stressed_headword"]) for row in ledger.page_rows(anchor_page)[-offset:]]
+            distinct_pair = len(suffix) >= 2 and normalize_ulif_spelling(suffix[0]) != normalize_ulif_spelling(
+                suffix[1]
+            )
+            if (not exp_start or first == exp_start) and not (distinct_pair or len(suffix) >= 6):
+                offset = None
+        # An aligned window that ends before the target page does not locate it.
+        if offset is not None and offset < len(landed):
             if not quiet:
                 print(f"resuming: direct search page {target_page}, k={offset}", file=sys.stderr, flush=True)
             return search_html, landed, offset
-    if exp_start and exp_end:
-        if (
-            len(landed) < REGISTER_PAGE_SIZE
-            and sum(row["stressed"] == exp_start for row in landed) == 1
-            and landed[0]["stressed"] == exp_start
-            and landed[-1]["stressed"] == exp_end
-        ):
-            _verify_known_window_rows(ledger, landed, (target_page - 1) * REGISTER_PAGE_SIZE)
-            if not quiet:
-                print(f"resuming: direct search page {target_page}, k=0", file=sys.stderr, flush=True)
-            return search_html, landed, 0
-    elif target_page == 1:
+    if target_page == 1 and not exp_start and not exp_end:
         return search_html, landed, 0
 
     if target_page > 1:
-        previous = ledger.get_page(target_page - 1)
-        previous_end = str(previous["end_headword"]) if previous and previous["end_headword"] else ""
-        if previous_end and previous_end != search_target:
-            fields = _form_fields(seed_tokens, spelling=previous_end, extra=_image_click(SEARCH_BUTTON))
-            fallback_html, fallback_req = client.exchange("POST", fields)
-            _keep_walk(
-                ledger,
-                cache,
-                "",
-                f"tsearch:{marker_prefix}:previous:{target_page}",
-                fallback_html,
-                fallback_req,
-                current_page=target_page,
-            )
-            fallback_rows = parse_register_list(fallback_html)
-            if not fallback_rows:
-                raise SessionInvalid(f"{marker_prefix}_previous_missing_register")
-            offset = _resume_window_offset(
-                ledger,
-                fallback_rows,
-                target_page=target_page,
-                anchor_headword=previous_end,
-                anchor_page=target_page - 1,
-                anchor_index=24,
-            )
-            if offset is not None:
-                if not quiet:
-                    print(
-                        f"resuming: previous-page end search page {target_page}, k={offset}",
-                        file=sys.stderr,
-                        flush=True,
-                    )
-                return fallback_html, fallback_rows, offset
-
         if not quiet:
             print(
                 f"resuming: direct searches could not locate page {target_page}; using fast-forward",
@@ -2769,6 +2969,9 @@ def _reseed_to_page(
         raise ResumeMismatchError(
             f"expected {exp_start}..{exp_end}, landed {landed[0]['stressed']}..{landed[-1]['stressed']}"
         )
+
+    if target_page == 1 and exp_start:
+        raise ResumeMismatchError("page 1 recorded start has no unique resume alignment")
 
     raise SessionInvalid(f"{marker_prefix}_unable_to_reach_page_{target_page}")
 
@@ -3205,6 +3408,15 @@ def run_walk(
             _ensure_private_dir(state_dir)
             lock = RunnerLock(state_dir, break_stale=break_stale_lock, scanner=scanner)
             lock.acquire()
+
+            ledger_path = state_dir / "ledger.sqlite"
+            if ledger_path.exists():
+                try:
+                    verify_ledger_continuity(ledger_path, warn_on_overlap=True)
+                except (ResumeMismatchError, sqlite3.Error) as exc:
+                    print(f"stopping: ledger continuity error ({exc})", file=sys.stderr)
+                    stop_reason = "ledger continuity error"
+                    return EXIT_USAGE
 
             try:
                 cache = prepare_database(db_path)
@@ -4124,6 +4336,9 @@ Examples:
       --state-dir batch_state/ulif-homonyms/state \\
       --db data/sources.db --max-pages 5 --quiet
 
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms walk \\
+      --state-dir batch_state/ulif-homonyms/state --verify-ledger
+
 Outputs:
   Raw HTML responses in ulif_dictua_raw_responses (sources.db)
   Parsed homonym entries in ulif_dictua_entries and ulif_dictua_sections (sources.db)
@@ -4151,8 +4366,12 @@ Related:
     walk.add_argument(
         "--db",
         type=Path,
-        required=True,
-        help="Target SQLite database holding ulif_dictua_* tables (e.g. data/sources.db)",
+        help="Target SQLite database holding ulif_dictua_* tables (required unless --verify-ledger; e.g. data/sources.db)",
+    )
+    walk.add_argument(
+        "--verify-ledger",
+        action="store_true",
+        help="Read and check ledger.sqlite page continuity without making requests or writing files (default: False)",
     )
     walk.add_argument(
         "--delay",
@@ -4516,6 +4735,17 @@ Related:
                 with contextlib.suppress(ValueError, OSError):
                     signal.signal(signal.SIGTERM, old_sigterm)
     if args.command == "walk":
+        if args.verify_ledger:
+            ledger_path = args.state_dir / "ledger.sqlite"
+            try:
+                checked = verify_ledger_continuity(ledger_path)
+            except (ResumeMismatchError, sqlite3.Error) as exc:
+                print(f"ledger continuity error: {exc}", file=sys.stderr)
+                return EXIT_USAGE
+            print(f"ledger continuity OK: {checked} pages checked")
+            return EXIT_OK
+        if args.db is None:
+            parser.error("walk requires --db unless --verify-ledger is set")
         cmd_parts = [
             sys.executable,
             "-m",
