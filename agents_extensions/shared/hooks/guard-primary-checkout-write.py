@@ -2227,7 +2227,10 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
         first = next(i for i, part in enumerate(parts) if re.search(r"[*?\[\]{}]", part))
         prefix = Path(*parts[:first]) if first else Path(".")
         prefix = _resolve(str(prefix), getattr(word, "base", None) or base, expand_user=False).resolve()
-        may_reach_primary = prefix == main_root or prefix in main_root.parents
+        # A glob confined to the filename cannot descend from an ancestor
+        # directory into the primary checkout. Directory globs and ** can.
+        directory_glob = first < len(parts) - 1 or "**" in word
+        may_reach_primary = prefix == main_root or (directory_glob and prefix in main_root.parents)
         if main_root in prefix.parents:
             may_reach_primary = not wc.evaluate_write(prefix / "__guard_glob_probe__", cwd=base).allowed
         if may_reach_primary:

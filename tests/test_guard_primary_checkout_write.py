@@ -1003,6 +1003,26 @@ def test_issue_8785_safe_globs_remain_allowed(repo: Path, target: str):
 
 
 @pytest.mark.parametrize(
+    "template, blocked",
+    [
+        ("/tmp/out-?.txt", False),
+        ("{primary}/out-?.txt", True),
+        ("/tmp/*/main/AGENTS.md", True),
+        ("{primary}/{{a,b}}.md", True),
+        ("/tmp/{{a,b}}.txt", False),
+        ("{parent}/**/AGENTS.md", True),
+    ],
+)
+def test_issue_8785_glob_reach_depends_on_component(repo: Path, template: str, blocked: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = f"echo x > {template.format(primary=repo, parent=repo.parent)}"
+    result = _bash(repo, command, cwd=worktree)
+    assert result.returncode == (2 if blocked else 0), result.stderr
+    if blocked:
+        assert "undecidable_glob_write_target" in result.stderr
+
+
+@pytest.mark.parametrize(
     "command",
     [
         "cat /tmp/read-only",
