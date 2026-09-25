@@ -23,10 +23,12 @@ CONTRACT = REPO / "agents_extensions/shared/rules/operator-expectations.md"
 CONTRACT_REL = "agents_extensions/shared/rules/operator-expectations.md"
 
 
-def test_contract_file_exists_with_all_fourteen_items() -> None:
+def test_contract_file_exists_with_all_fifteen_items() -> None:
     body = CONTRACT.read_text(encoding="utf-8")
-    for n in range(1, 15):
+    for n in range(1, 16):
         assert re.search(rf"^{n}\. \*\*", body, re.MULTILINE), f"contract item {n} missing"
+    assert "Simplest adequate solution" in body, "simplest-adequate-solution item missing"
+    assert "adjust the code to the data, not the data to the code" in body
     assert "tie-breakers" in body
     assert "A1 is the deliberate exception" in body, "A1 immersion exception clause missing"
     assert "OUTSIDE your own model family" in body, "cross-family review clause missing"
@@ -66,6 +68,7 @@ def test_agents_md_carries_binding_digest() -> None:
     assert "independent held-out evaluation" in body, "digest lost held-out proof requirement"
     assert "NEW architecture" in body, "digest must scope item 12 to NEW decisions"
     assert "already-ordered" in body, "digest must keep item 10 for decided work"
+    assert "simplest adequate solution" in body.lower(), "digest lost simplest adequate solution"
 
 
 def test_agents_md_is_a_bounded_offline_digest() -> None:
@@ -102,6 +105,7 @@ def test_gemini_md_carries_binding_digest() -> None:
     assert "independent held-out evaluation" in body, "GEMINI.md lost held-out proof requirement"
     assert "NEW architecture" in body, "GEMINI.md digest must scope item 12 to NEW decisions"
     assert "already-ordered" in body, "GEMINI.md digest must keep item 10 for decided work"
+    assert "simplest adequate solution" in body, "GEMINI.md lost simplest adequate solution"
 
 
 def test_claude_md_carries_binding_digest() -> None:
@@ -115,6 +119,7 @@ def test_claude_md_carries_binding_digest() -> None:
     assert "independent held-out evaluation" in body, "CLAUDE.md lost held-out proof requirement"
     assert "NEW architecture" in body, "CLAUDE.md digest must scope item 12 to NEW decisions"
     assert "already-ordered" in body, "CLAUDE.md digest must keep item 10 for decided work"
+    assert "simplest adequate solution" in body, "CLAUDE.md lost simplest adequate solution"
 
 
 def test_agy_bridge_prompt_injects_contract_digest() -> None:
@@ -134,6 +139,7 @@ def test_agy_bridge_prompt_injects_contract_digest() -> None:
     assert "independent held-out evaluation" in out
     assert "NEW architecture" in out, "agy digest must scope item 12 to NEW decisions"
     assert "already-ordered" in out, "agy digest must keep item 10 for decided work"
+    assert "simplest adequate solution" in out, "agy digest lost simplest adequate solution"
 
 
 def test_epic_driver_and_v2_template_keep_prompt_adequacy_gate() -> None:

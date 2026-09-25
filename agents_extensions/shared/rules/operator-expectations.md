@@ -207,6 +207,18 @@ tie-breakers.
     criteria, or independent evaluation. A non-goal that shrinks the actual mission needs
     operator/advisor approval. Prompt review improves dispatch quality only: it never replaces
     exact-head implementation review or the independent cross-family PR gate.
+15. **Simplest adequate solution — adjust the code to the data, not the data to the code.** Before
+    building, name the smallest change that achieves the user-visible outcome, and start there.
+    Prefer changing code, config or a reader over migrating or reshaping data to fit existing code;
+    prefer existing safety nets (a restore-tested backup, the merge queue, fail-closed defaults)
+    over bespoke machinery. Add complexity only for a risk that is real and material in this
+    system, not a hypothetical one. Reviews stay adversarial (item 13) but proportionate: rank
+    every finding blocking or non-blocking by real impact and likelihood; a theoretical edge case
+    that an existing safety net already bounds is non-blocking. After two review rounds on the
+    same artifact, the driver states a stopping rule (what still blocks, what becomes a documented
+    residual). If rounds keep finding new classes of problem, step back and change the approach
+    instead of patching case by case. When two designs both meet the outcome, pick the one that is
+    easier to understand, test and undo. "Adequate" still means every quality gate above passes.
 
 ## Precedence
 
