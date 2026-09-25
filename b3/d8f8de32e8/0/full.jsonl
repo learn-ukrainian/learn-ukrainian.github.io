@@ -18,13 +18,13 @@
       "deletions": 0,
       "files": 0
     },
-    "cost": 0.058160760000000006,
+    "cost": 0.06061611,
     "tokens": {
-      "input": 102088,
-      "output": 15293,
-      "reasoning": 23230,
+      "input": 103009,
+      "output": 16389,
+      "reasoning": 23308,
       "cache": {
-        "read": 6577920,
+        "read": 7115520,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1790324792645,
-      "updated": 1790325181569
+      "updated": 1790325204669
     }
   },
   "messages": [
@@ -8335,21 +8335,24 @@
           "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a",
           "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a"
         },
-        "cost": 0,
+        "cost": 0.000541164,
         "tokens": {
-          "input": 0,
-          "output": 0,
+          "total": 134269,
+          "input": 198,
+          "output": 183,
           "reasoning": 0,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 133888
           }
         },
         "modelID": "deepseek-flash",
         "providerID": "deepseek",
         "time": {
-          "created": 1790325181566
+          "created": 1790325181566,
+          "completed": 1790325194956
         },
+        "finish": "tool-calls",
         "id": "msg_0d7b24c7d001qG2MedvH781L29",
         "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi"
       },
@@ -8366,21 +8369,302 @@
           "tool": "bash",
           "callID": "call_00_ET_TN332OtX5N8BLaPk9GOq1952",
           "state": {
-            "metadata": {
-              "output": ""
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add scripts/ai_agent_bridge/_cli.py scripts/ai_agent_bridge/_dispatch_wrappers.py scripts/delegate.py tests/ai_agent_bridge/test_ask_contract.py tests/test_ab_dispatch_wrappers.py tests/test_delegate.py && git commit -m \"fix(bridge): review asks succeed on a verdict; ask-deepseek gets the review path (#8786)\" -m \"$LU_X_AGENT_TRAILER\" 2>&1 | tail -15",
               "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a"
             },
+            "output": "block local-only private-source review exports...........................Passed\ncheck MDX source parity..............................(no files to check)Skipped\ncheck public UA-eval English document language.......(no files to check)Skipped\ncheck forward MDX parity.............................(no files to check)Skipped\ncheck no internal IDs/register in learner surfaces...(no files to check)Skipped\ncheck locked modules are not published...............(no files to check)Skipped\nlesson schema drift gate.............................(no files to check)Skipped\nAtlas lexicon fingerprint freshness gate.............(no files to check)Skipped\nAtlas manifest enrichment-depth gate.................(no files to check)Skipped\ndispatch brief .venv worktree guardrail..............(no files to check)Skipped\nlint session-state env references....................(no files to check)Skipped\nbio dossier §7 cross-track path validator............(no files to check)Skipped\ncheck staged and committed files for OPSEC leaks.........................Passed\n[deepseek/impl-8786a ec99819c31] fix(bridge): review asks succeed on a verdict; ask-deepseek gets the review path (#8786)\n 6 files changed, 215 insertions(+), 43 deletions(-)\n",
+            "metadata": {
+              "output": "block local-only private-source review exports...........................Passed\ncheck MDX source parity..............................(no files to check)Skipped\ncheck public UA-eval English document language.......(no files to check)Skipped\ncheck forward MDX parity.............................(no files to check)Skipped\ncheck no internal IDs/register in learner surfaces...(no files to check)Skipped\ncheck locked modules are not published...............(no files to check)Skipped\nlesson schema drift gate.............................(no files to check)Skipped\nAtlas lexicon fingerprint freshness gate.............(no files to check)Skipped\nAtlas manifest enrichment-depth gate.................(no files to check)Skipped\ndispatch brief .venv worktree guardrail..............(no files to check)Skipped\nlint session-state env references....................(no files to check)Skipped\nbio dossier §7 cross-track path validator............(no files to check)Skipped\ncheck staged and committed files for OPSEC leaks.........................Passed\n[deepseek/impl-8786a ec99819c31] fix(bridge): review asks succeed on a verdict; ask-deepseek gets the review path (#8786)\n 6 files changed, 215 insertions(+), 43 deletions(-)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add scripts/ai_agent_bridge/_cli.py scripts/ai_agent_bridge/_dispatch_wrappers.py scripts/delegate.py tests/ai_agent_bridge/test_ask_contract.py tests/test_ab_dispatch_wrappers.py tests/test_delegate.py && git commit -m \"fix(bridge): review asks succeed on a verdict; ask-deepseek gets the review path (#8786)\" -m \"$LU_X_AGENT_TRAILER\" 2>&1 | tail -15",
             "time": {
-              "start": 1790325183767
+              "start": 1790325183767,
+              "end": 1790325194792
             }
           },
           "id": "prt_0d7b2535e001hcSCGYVXKcDTj9",
           "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
           "messageID": "msg_0d7b24c7d001qG2MedvH781L29"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "a7a59398b0cf888695cdb0923a82aab77618607a",
+          "type": "step-finish",
+          "tokens": {
+            "total": 134269,
+            "input": 198,
+            "output": 183,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 133888
+            }
+          },
+          "cost": 0.000541164,
+          "id": "prt_0d7b2807e001EAPt0l6X9IhK2A",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b24c7d001qG2MedvH781L29"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d7ac5dba001572cpK1FSwT72Y",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a"
+        },
+        "cost": 0.000529782,
+        "tokens": {
+          "total": 134657,
+          "input": 401,
+          "output": 112,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 134144
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790325194973,
+          "completed": 1790325202236
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d7b280dd001OD0jIqdhtYkJAX",
+        "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi"
+      },
+      "parts": [
+        {
+          "snapshot": "a7a59398b0cf888695cdb0923a82aab77618607a",
+          "type": "step-start",
+          "id": "prt_0d7b28555001sB8LM75BCx0a1X",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b280dd001OD0jIqdhtYkJAX"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_ET_pKEJwIq2FkQyn6HLSzaU6538",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git push -u origin HEAD 2>&1 | tail -8; echo \"---\"; git status --porcelain; echo \"---\"; git log --oneline -1",
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a"
+            },
+            "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote.... done\nremote: \nremote: Create a pull request for 'deepseek/impl-8786a' on GitHub by visiting:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/impl-8786a        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            HEAD -> deepseek/impl-8786a\nbranch 'deepseek/impl-8786a' set up to track 'origin/deepseek/impl-8786a'.\n---\n---\nec99819c31 fix(bridge): review asks succeed on a verdict; ask-deepseek gets the review path (#8786)\n",
+            "metadata": {
+              "output": "[entire] Pushing entire/checkpoints/v1 to checkpoint remote.... done\nremote: \nremote: Create a pull request for 'deepseek/impl-8786a' on GitHub by visiting:        \nremote:      https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/new/deepseek/impl-8786a        \nremote: \nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n * [new branch]            HEAD -> deepseek/impl-8786a\nbranch 'deepseek/impl-8786a' set up to track 'origin/deepseek/impl-8786a'.\n---\n---\nec99819c31 fix(bridge): review asks succeed on a verdict; ask-deepseek gets the review path (#8786)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git push -u origin HEAD 2>&1 | tail -8; echo \"---\"; git status --porcelain; echo \"---\"; git log --oneline -1",
+            "time": {
+              "start": 1790325197228,
+              "end": 1790325202029
+            }
+          },
+          "id": "prt_0d7b288c7001znA7fposJ41Gwe",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b280dd001OD0jIqdhtYkJAX"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "a7a59398b0cf888695cdb0923a82aab77618607a",
+          "type": "step-finish",
+          "tokens": {
+            "total": 134657,
+            "input": 401,
+            "output": 112,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 134144
+            }
+          },
+          "cost": 0.000529782,
+          "id": "prt_0d7b29cd300143jE5CSYr1DL15",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b280dd001OD0jIqdhtYkJAX"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d7ac5dba001572cpK1FSwT72Y",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a"
+        },
+        "cost": 0.000533568,
+        "tokens": {
+          "total": 135010,
+          "input": 184,
+          "output": 92,
+          "reasoning": 78,
+          "cache": {
+            "write": 0,
+            "read": 134656
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790325202259,
+          "completed": 1790325204641
+        },
+        "finish": "tool-calls",
+        "id": "msg_0d7b29d53001SyPidTPaXW0ukz",
+        "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi"
+      },
+      "parts": [
+        {
+          "snapshot": "a7a59398b0cf888695cdb0923a82aab77618607a",
+          "type": "step-start",
+          "id": "prt_0d7b2a162001158U8AC9vqXot2",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b29d53001SyPidTPaXW0ukz"
+        },
+        {
+          "type": "reasoning",
+          "text": "Pushed. Status clean. Let me get the full SHA.\n\nNow let me write the final report concisely with evidence, per #M-4 evidence rule: every claim cites command and quotes raw output. I'll include:\n- root cause + fix\n- commands and outputs\n- load-bearing proof\n- pushed head SHA, clean status\n\nLet me get the full SHA.",
+          "time": {
+            "start": 1790325203772,
+            "end": 1790325204156
+          },
+          "id": "prt_0d7b2a33c001bjRmZ2YdkEThsv",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b29d53001SyPidTPaXW0ukz"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_UF0kMhDZq75Gpgo0oS852205",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git rev-parse HEAD; git status --porcelain | wc -l",
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a"
+            },
+            "output": "ec99819c31db82b4c0f23d130eb36d2f38fde57f\n0\n",
+            "metadata": {
+              "output": "ec99819c31db82b4c0f23d130eb36d2f38fde57f\n0\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git rev-parse HEAD; git status --porcelain | wc -l",
+            "time": {
+              "start": 1790325204353,
+              "end": 1790325204459
+            }
+          },
+          "id": "prt_0d7b2a4bf001uT6FbavnscHBH0",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b29d53001SyPidTPaXW0ukz"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "a7a59398b0cf888695cdb0923a82aab77618607a",
+          "type": "step-finish",
+          "tokens": {
+            "total": 135010,
+            "input": 184,
+            "output": 92,
+            "reasoning": 78,
+            "cache": {
+              "write": 0,
+              "read": 134656
+            }
+          },
+          "cost": 0.000533568,
+          "id": "prt_0d7b2a64900161yzZ7y2JkN0qZ",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b29d53001SyPidTPaXW0ukz"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0d7ac5dba001572cpK1FSwT72Y",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-8786a"
+        },
+        "cost": 0.000850836,
+        "tokens": {
+          "total": 135759,
+          "input": 138,
+          "output": 709,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 134912
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790325204666,
+          "completed": 1790325209031
+        },
+        "finish": "stop",
+        "id": "msg_0d7b2a6ba0018K0ZbgH0Q5TLD2",
+        "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi"
+      },
+      "parts": [
+        {
+          "snapshot": "a7a59398b0cf888695cdb0923a82aab77618607a",
+          "type": "step-start",
+          "id": "prt_0d7b2ab0b001ekN6mZ5Bk7v5o8",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b2a6ba0018K0ZbgH0Q5TLD2"
+        },
+        {
+          "type": "text",
+          "text": "Done. Pushed branch `deepseek/impl-8786a`, head `ec99819c31db82b4c0f23d130eb36d2f38fde57f`, `git status --porcelain` empty.\n\n## Root cause (item 1)\nThe reviewers' captured outputs (`batch_state/tasks/review-ulif-r1.result`, `review-8500-r1.result`) contained valid but Markdown-decorated verdicts: `**Verdict**: **APPROVE**` and `VERDICT: **REQUEST_CHANGES**`. The gate regex anchored the token immediately after `:`.\n\n```\n$ /home/ops/learn-ukrainian/.venv/bin/python -c \"... d._review_verdict_failure_reason(real result files) ...\"\nreview-ulif-r1.result -> None        # after fix\nreview-8500-r1.result -> None        # after fix\nplain missing -> review_missing_verdict_line\n```\nBefore the fix (revert proof) the same test showed `review_missing_verdict_line` and the new test failed `assert 1 == 0` for all 4 cases → restored.\n\n## Changes\n- `scripts/delegate.py:2124`: `_REVIEW_VERDICT_LINE_RE` now tolerates emphasis punctuation/whitespace between label, colon, and token: `\\bVERDICT[\\s*_`]*:[\\s*_`]*(?:APPROVED?|...)\\b`. Token still must be canonical, so no-verdict still fails. Only consulted under `--require-review-verdict`; write-mode `no_deliverable` untouched.\n- `scripts/ai_agent_bridge/_dispatch_wrappers.py`: `run_ask_review_dispatch` now judges by the **verdict**, not the dispatch exit code — a valid verdict → `ok=True, status=done`; no verdict → `no_deliverable` + loud failure.\n- `scripts/ai_agent_bridge/_cli.py`: extracted `_add_review_options()` (one shared helper for `--review`/`--branch`/`--pr`, mutual exclusion preserved) and added `ask_deepseek_parser` to the review loop; removed the six per-lane copies.\n\n## Verification (all with `/home/ops/learn-ukrainian/.venv/bin/python`, `-n 2`)\n```\ntests/test_delegate.py -n 2            -> 480 passed, 1 skipped in 37.22s\ntests/ai_agent_bridge/ tests/test_ab_dispatch_wrappers.py -n 2\n                                       -> 514 passed in 33.59s\nruff check <6 changed files>           -> All checks passed!\n```\nNew tests: markdown verdict variants stay `done` (4 passed); wrapper judges by verdict over a non-zero wait exit; `ask-deepseek --review --branch` parses and builds the same headless dispatch argv as `ask-codex` (only `--agent`/temp prompt differ).\n\nResidual: none in scope. `scripts/ai_agent_bridge/_review_verdict.py`'s sibling `publish-review-verdict` text parser was left unchanged (separate flow/outcome, not in this reproduction).",
+          "time": {
+            "start": 1790325206240,
+            "end": 1790325208836
+          },
+          "id": "prt_0d7b2ace00013jCPoYg7qHt3cd",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b2a6ba0018K0ZbgH0Q5TLD2"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "a7a59398b0cf888695cdb0923a82aab77618607a",
+          "type": "step-finish",
+          "tokens": {
+            "total": 135759,
+            "input": 138,
+            "output": 709,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 134912
+            }
+          },
+          "cost": 0.000850836,
+          "id": "prt_0d7b2b761001ePfz6z0cnOt6tw",
+          "sessionID": "ses_f2853a2baffeD6XYocrf0aouRi",
+          "messageID": "msg_0d7b2a6ba0018K0ZbgH0Q5TLD2"
         }
       ]
     }
