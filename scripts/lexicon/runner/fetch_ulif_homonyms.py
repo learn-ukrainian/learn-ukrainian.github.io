@@ -364,6 +364,8 @@ class SpellingLedger:
                 request_sha256 TEXT NOT NULL,
                 created_at TEXT NOT NULL
             );
+            CREATE INDEX IF NOT EXISTS idx_ulif_responses_position
+                ON responses (spelling, register_position, role, id);
             CREATE TABLE IF NOT EXISTS meta (
                 key TEXT PRIMARY KEY,
                 value TEXT NOT NULL
@@ -584,18 +586,6 @@ class SpellingLedger:
                 ORDER BY homonym_index, id
                 """,
                 (spelling,),
-            )
-        )
-
-    def tab_responses(self, spelling: str, homonym_index: int) -> list[sqlite3.Row]:
-        return list(
-            self.conn.execute(
-                """
-                SELECT * FROM responses
-                WHERE spelling = ? AND role = 'tab' AND homonym_index = ?
-                ORDER BY id
-                """,
-                (spelling, homonym_index),
             )
         )
 
@@ -1338,17 +1328,72 @@ def _load_body(cache: sqlite3.Connection, digest: str) -> str:
     return body.decode("utf-8")
 
 
+def _ledger_data_mode(ledger: SpellingLedger) -> str | None:
+    """Identify one ledger's fetch mode; reject evidence from both modes."""
+    declared = ledger.meta("mode")
+    has_walk = declared == "walk" or bool(
+        ledger.conn.execute("SELECT 1 FROM register_pages UNION ALL SELECT 1 FROM register_rows LIMIT 1").fetchone()
+    )
+    has_run = declared == "run" or bool(
+        ledger.conn.execute(
+            "SELECT 1 FROM responses WHERE role IN ('seed', 'tsearch', 'page:back', 'page:next') LIMIT 1"
+        ).fetchone()
+    )
+    if not has_walk and ledger.conn.execute("SELECT 1 FROM spellings LIMIT 1").fetchone():
+        has_run = True  # Legacy targeted ledgers did not record a mode.
+    if (
+        has_walk
+        and ledger.conn.execute(
+            "SELECT 1 FROM spellings AS s WHERE NOT EXISTS "
+            "(SELECT 1 FROM register_rows AS r WHERE r.normalized_spelling = s.spelling) LIMIT 1"
+        ).fetchone()
+    ):
+        has_run = True
+    if has_walk and has_run:
+        raise ValueError("mixed targeted run and walk data in --state-dir; use separate state directories")
+    return "walk" if has_walk else "run" if has_run else None
+
+
+def _tabs_for_entry_attempt(
+    ledger: SpellingLedger, spelling: str, register_position: str, entry_sha: str
+) -> list[sqlite3.Row]:
+    """Tabs after the completed entry response, before any later attempt at its position."""
+    entry = ledger.conn.execute(
+        "SELECT id FROM responses WHERE spelling = ? AND role = 'entry' "
+        "AND register_position = ? AND response_sha256 = ? ORDER BY id DESC LIMIT 1",
+        (spelling, register_position, entry_sha),
+    ).fetchone()
+    if entry is None:
+        raise RuntimeError(f"completed entry response missing for {spelling} at {register_position}")
+    entry_id = int(entry["id"])
+    next_entry = ledger.conn.execute(
+        "SELECT MIN(id) FROM responses WHERE spelling = ? AND role = 'entry' AND register_position = ? AND id > ?",
+        (spelling, register_position, entry_id),
+    ).fetchone()[0]
+    return list(
+        ledger.conn.execute(
+            "SELECT * FROM responses WHERE spelling = ? AND role = 'tab' "
+            "AND register_position = ? AND id > ? AND (? IS NULL OR id < ?) ORDER BY id",
+            (spelling, register_position, entry_id, next_entry, next_entry),
+        )
+    )
+
+
 def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
-    """Parse stored bodies offline and write homonym rows. Returns differing-hash count."""
+    """Parse one-mode stored bodies offline; reject mixed run/walk ledgers."""
     from scripts.wiki.sources_db import store_ulif_dictua_entry
 
+    mode = _ledger_data_mode(ledger)
     differing = 0
     spellings = [
         str(row["spelling"])
         for row in ledger.conn.execute("SELECT spelling FROM spellings WHERE state = 'stored' ORDER BY spelling")
     ]
     total_spellings = len(spellings)
+    # Walk ledgers bind each entry to a completed register row.
+    walk_mode = mode == "walk"
     entries_written = 0
+    skipped_positions = 0
     mismatch_errors = 0
 
     for idx, spelling in enumerate(spellings, start=1):
@@ -1362,16 +1407,32 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
         parsed_rows: list[dict[str, Any]] = []
         section_sets: list[dict[str, object]] = []
         raw_sets: list[dict[str, str]] = []
-        for entry in ledger.entry_responses(spelling):
-            html = _load_body(cache, str(entry["response_sha256"]))
+        if walk_mode:
+            completed_rows = ledger.completed_rows_for_spelling(spelling)
+            completed_positions = {f"{row['page_num']}:{row['row_index']}" for row in completed_rows}
+            response_positions = {str(entry["register_position"]) for entry in ledger.entry_responses(spelling)}
+            skipped_positions += len(response_positions - completed_positions)
+            entries = [
+                (index, f"{row['page_num']}:{row['row_index']}", str(row["entry_sha256"]))
+                for index, row in enumerate(completed_rows, start=1)
+            ]
+        else:
+            entries = [
+                (int(entry["homonym_index"]), str(entry["register_position"]), str(entry["response_sha256"]))
+                for entry in ledger.entry_responses(spelling)
+            ]
+        if not entries:
+            continue
+        for homonym_index, register_position, entry_sha in entries:
+            html = _load_body(cache, entry_sha)
             parsed = parse_ulif_entry(
                 html,
-                homonym_index=int(entry["homonym_index"]),
-                register_position=str(entry["register_position"]),
+                homonym_index=homonym_index,
+                register_position=register_position,
             )
             sections: dict[str, object] = {}
             raw: dict[str, str] = {}
-            for tab in ledger.tab_responses(spelling, int(entry["homonym_index"])):
+            for tab in _tabs_for_entry_attempt(ledger, spelling, register_position, entry_sha):
                 kind = str(tab["tab_kind"])
                 tab_html = _load_body(cache, str(tab["response_sha256"]))
                 raw[kind] = tab_html
@@ -1409,7 +1470,8 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
     ledger.set_meta("differing_content_hashes", str(differing))
     print(
         f"parse complete: {total_spellings} spellings parsed, {entries_written} entries written, "
-        f"{differing} groups differed, {mismatch_errors} printed_number_mismatch errors",
+        f"{differing} groups differed, {mismatch_errors} printed_number_mismatch errors, "
+        f"positions skipped: {skipped_positions}",
         file=sys.stderr,
         flush=True,
     )
@@ -1774,7 +1836,7 @@ def _commit_spelling_group(
 
         sections: dict[str, object] = {}
         raw: dict[str, str] = {}
-        for tab in ledger.tab_responses(normalized_spelling, homonym_index):
+        for tab in _tabs_for_entry_attempt(ledger, normalized_spelling, reg_pos, str(r["entry_sha256"])):
             kind = str(tab["tab_kind"])
             tab_html = _load_body(cache, str(tab["response_sha256"]))
             raw[kind] = tab_html
@@ -2143,6 +2205,14 @@ def run_fetch(
                 stop_reason = f"database error: {exc}"
             else:
                 ledger = SpellingLedger(state_dir / "ledger.sqlite")
+                try:
+                    existing_mode = _ledger_data_mode(ledger)
+                    if existing_mode == "walk":
+                        raise ValueError("walk data in --state-dir; targeted run requires a separate state directory")
+                except ValueError as exc:
+                    print(f"refusing to start: {exc}", file=sys.stderr)
+                    return EXIT_USAGE
+                ledger.set_meta("mode", "run")
                 ledger.set_meta("delay_seconds", str(delay_seconds))
                 base_requests = int(ledger.meta("requests_made", "0") or "0")
 
@@ -3411,6 +3481,16 @@ def run_walk(
 
             ledger_path = state_dir / "ledger.sqlite"
             if ledger_path.exists():
+                probe = SpellingLedger(ledger_path)
+                try:
+                    existing_mode = _ledger_data_mode(probe)
+                    if existing_mode == "run":
+                        raise ValueError("targeted run data in --state-dir; walk requires a separate state directory")
+                except ValueError as exc:
+                    print(f"refusing to start: {exc}", file=sys.stderr)
+                    return EXIT_USAGE
+                finally:
+                    probe.close()
                 try:
                     verify_ledger_continuity(ledger_path, warn_on_overlap=True)
                 except (ResumeMismatchError, sqlite3.Error) as exc:
@@ -3426,6 +3506,13 @@ def run_walk(
                 stop_reason = f"database error: {exc}"
             else:
                 ledger = SpellingLedger(state_dir / "ledger.sqlite")
+                try:
+                    existing_mode = _ledger_data_mode(ledger)
+                    if existing_mode == "run":
+                        raise ValueError("targeted run data in --state-dir; walk requires a separate state directory")
+                except ValueError as exc:
+                    print(f"refusing to start: {exc}", file=sys.stderr)
+                    return EXIT_USAGE
                 ledger.set_meta("mode", "walk")
                 ledger.set_meta("delay_seconds", str(delay_seconds))
                 base_requests = int(ledger.meta("requests_made", "0") or "0")
@@ -4269,7 +4356,7 @@ Related:
         "--state-dir",
         type=Path,
         required=True,
-        help="Directory storing runner.lock and ledger.sqlite (e.g. batch_state/ulif-homonyms/state)",
+        help="Directory storing runner.lock and ledger.sqlite; use a separate directory from walk",
     )
     run.add_argument(
         "--db",
@@ -4361,7 +4448,7 @@ Related:
         "--state-dir",
         type=Path,
         required=True,
-        help="Directory storing runner.lock and ledger.sqlite (e.g. batch_state/ulif-homonyms/state)",
+        help="Directory storing runner.lock and ledger.sqlite; use a separate directory from targeted run",
     )
     walk.add_argument(
         "--db",
@@ -4421,7 +4508,7 @@ Related:
     parse = sub.add_parser(
         "parse",
         help="Parse stored bodies offline",
-        description="Parse stored raw ULIF HTML responses into structured entries and sections.\nUse offline after fetch completes or during checkpoint verification; does not make network requests.",
+        description="Parse stored raw ULIF HTML responses into structured entries and sections.\nUse offline after fetch completes or during checkpoint verification; rejects state directories mixing targeted run and walk data.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -4811,7 +4898,11 @@ Related:
         cache = prepare_database(args.db)
         ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
         try:
-            differing = parse_stored(ledger, cache)
+            try:
+                differing = parse_stored(ledger, cache)
+            except ValueError as exc:
+                print(f"refusing to parse: {exc}", file=sys.stderr)
+                return EXIT_USAGE
         finally:
             cache.close()
             ledger.close()
