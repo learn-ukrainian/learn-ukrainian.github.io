@@ -26,7 +26,7 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.6 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
-| **curriculum-upgrade** (#7994 machinery) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic curriculum-upgrade` |
+| **curriculum-upgrade** (#7994 machinery) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic curriculum-upgrade` — **refused until a roster slot or alias exists** (`grok-curriculum-upgrade` is unregistered; launcher fails closed, #8303) |
 | **a1-upgrade** (#7995 closed 2026-09-24) | Retired selector; no driver launch | — |
 | **eval-harness** (#4913 closed 2026-09-24) | Retired selector; route new infra work through `infra` | — |
 | **folk** (curriculum track) | Grok 4.6 † | `./start-grok-driver.sh --epic folk` |

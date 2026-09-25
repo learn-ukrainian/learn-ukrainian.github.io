@@ -236,6 +236,9 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
         f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.handoff_slot_registry" ]]; then
+  exit 0  # the sandbox has no roster or bridge package; registration is covered by test_handoff_slot_registry.py
+fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   touch {os.fspath(claim_marker)!r}
   cat <<'JSON'
@@ -400,6 +403,9 @@ def _core_driver_exit_fixture(
     python_stub.parent.mkdir(parents=True)
     python_stub.write_text(
         f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.orchestration.handoff_slot_registry" ]]; then
+  exit 0  # the sandbox has no roster or bridge package; registration is covered by test_handoff_slot_registry.py
+fi
 if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:-}}" == "open" ]]; then
   cat <<'JSON'
 {{"identity":{{"lease":{{"session_id":"session-test","lease_id":"lease-test","generation":1,"fencing_token":1,"expires_at":"2026-07-23T00:00:00Z"}}}}}}
@@ -973,11 +979,12 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     assert "would select agent" not in explicit.stdout
     assert "--effort high --agent curriculum-orchestrator " in explicit.stdout
 
-    # Stream aliases (fleet_taxonomy.yaml) must not fall back to the curriculum
-    # settings default: atlas-practice canonicalizes to the atlas area (#F1, r3).
+    # A registry stream key with no roster slot would mint an unregistered handoff
+    # identity, so the launcher refuses it instead of starting the session (#8303).
     alias = run_launcher("start-claude-driver.sh", "--epic", "atlas-practice")
-    assert alias.returncode == 0, alias.stderr
-    assert "launcher: would select agent infra-orchestrator for lane atlas-practice" in alias.stdout
+    assert alias.returncode == 2
+    assert "claude-atlas-practice" in alias.stderr
+    assert "not registered" in alias.stderr
 
 
 def hermes_stub_env(tmp_path: Path, *, help_text: str | None = None) -> dict[str, str]:
