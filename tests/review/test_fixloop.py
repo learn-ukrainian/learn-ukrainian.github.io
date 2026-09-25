@@ -11,6 +11,7 @@ import pytest
 import yaml
 from jsonschema import ValidationError
 
+from scripts.build.fresh import plan_manifest as pm
 from scripts.review import findings_db as db
 from scripts.review import fixloop, second_seat
 from tests.review.test_record import ITEM, LEVEL, PROSE, SLUG, World, finding, unsupported
@@ -898,6 +899,36 @@ def test_a_manifest_with_a_changed_input_is_stale_not_current(world: World, prom
     assert current.digest is None and current.hold == fixloop.HOLD_CURRENT_MANIFEST_STALE
     document = verdict(world)
     assert document["verdict"] == "HOLD" and fixloop.HOLD_CURRENT_MANIFEST_STALE in codes_of(document)
+
+
+def supersede_manifest(world: World, n: int) -> str:
+    """A new, matching, fresh manifest for lesson ``n`` (inputs unchanged, closure not recomputed); returns its digest."""
+    manifest = world.manifest(n)
+    manifest.write_bytes(manifest.read_bytes() + b"# a newer manifest, same pinned inputs\n")
+    digest = pm.sha256_bytes(manifest.read_bytes())
+    (world.state_dir / f"lesson-{n}.manifest.sha256").write_text(digest + "\n", encoding="ascii")
+    history = world.state_dir / "manifests" / f"lesson-{n}" / f"{digest}.yaml"  # the engine keeps every manifest
+    history.write_bytes(manifest.read_bytes())
+    return digest
+
+
+def test_a_review_of_a_superseded_manifest_never_approves_the_new_current_one(world: World, promoted: None) -> None:
+    approve_all(world)
+    old = world.digest(2)
+    new = supersede_manifest(world, 2)
+    assert current_of(world, 2).digest == new != old  # established: sidecar matches its bytes, inputs unchanged
+    document = verdict(world)  # the closure on disk still names the old digest
+    assert document["verdict"] == "HOLD" and codes_of(document) == [fixloop.HOLD_REVIEW_ON_SUPERSEDED_MANIFEST]
+    [hold] = document["holds"]
+    assert hold["detail"].startswith("lesson 2:") and old in hold["detail"] and new in hold["detail"]
+    assert document["lessons"][1]["state"] == "stale"
+    world.closure()  # recomputed: the closure now names the new digest, the review is still of the old one
+    assert fixloop.HOLD_REVIEW_ON_SUPERSEDED_MANIFEST in codes_of(verdict(world))
+    assert world.record(world.make_return(2)).verdict == "APPROVE"  # re-reviewed on the new manifest
+    world.closure()
+    document = verdict(world)
+    assert document["verdict"] == "APPROVE" and document["holds"] == []
+    assert document["lessons"][1]["manifest_sha256"] == new
 
 
 def test_no_settle_item_is_closed_on_a_manifest_that_is_not_established(world: World) -> None:

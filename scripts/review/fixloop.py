@@ -32,6 +32,10 @@ report for the driver. It performs no repair and takes no automatic branch:
   that one function. ``close_moot_items`` is the one moot-close step (older open settle items of a target whose
   current manifest has an accepted attempt); ``record``, its replay and ``--repair-projections`` all run it, so it
   is idempotent and no single moment decides it.
+* **A verdict counts only on the current manifest** — a lesson counts toward APPROVE only when its latest accepted
+  verdict's ``manifest_sha256`` **equals** the established current digest; otherwise the module holds with
+  ``review_on_superseded_manifest`` naming the lesson and both digests. The closure file is an input to dependency
+  staleness only, never to this comparison. The second-seat agreement is looked up on that same digest.
 * **Second seat** — a lesson the sampling rule selects (``second_seat.selected``, ``second_seat_divisor``) needs an
   ``agreement`` row for its **current** manifest before the module can be APPROVE; otherwise it holds with
   ``second_seat_pending``. A recorded disagreement takes the settle-item path.
@@ -93,6 +97,7 @@ REASON_DISPUTED = "verdict_disputed"
 HOLD_PROJECTION_STALE = "verdict_projection_stale"
 HOLD_CURRENT_MANIFEST_UNKNOWN = "current_manifest_unknown"
 HOLD_CURRENT_MANIFEST_STALE = "current_manifest_stale"
+HOLD_REVIEW_ON_SUPERSEDED_MANIFEST = "review_on_superseded_manifest"
 HOLD_SECOND_SEAT_PENDING = "second_seat_pending"
 PROJECTION_FIELDS = ("verdict", "attempt_id", "manifest_sha256", "validated_at")
 
@@ -808,6 +813,14 @@ def compute_module_verdict(
         current = establish_current_manifest(root, directory, "lesson", row["n"], closure)
         if current.digest is None:
             holds.append({"code": current.hold, "detail": f"lesson {row['n']}: {current.detail}"})
+            continue
+        if row["manifest_sha256"] is not None and row["manifest_sha256"] != current.digest:
+            detail = (
+                f"lesson {row['n']}: the review names manifest {row['manifest_sha256']}, "
+                f"the current manifest is {current.digest}"
+            )
+            row.update(state="stale", stale=[*row["stale"], "the review is of a superseded manifest"])
+            holds.append({"code": HOLD_REVIEW_ON_SUPERSEDED_MANIFEST, "detail": detail})
         elif (
             row["state"] == "current"
             and row["verdict"] == "APPROVE"
