@@ -514,7 +514,7 @@ def test_acceptance_review_sample_receipt_and_signoff():
     assert signoff["reviewer_family"] == "claude"
 
 
-def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
+def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requires_vesum_db):
     """Verify generate_grammar_signoff_8342 rejects extra keys, index mismatch, and flags false criteria."""
     findings_file = GRAMMAR_DIR / "claude_review_findings.json"
     raw_findings = json.loads(findings_file.read_text(encoding="utf-8"))
