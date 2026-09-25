@@ -112,10 +112,14 @@ stay gitignored, and no consumer reads bulk data through them:
 - **VESUM release-asset cache**: `scripts/rag/build_vesum_shadow.py` downloads
   the public, SHA-pinned `dict_uk` asset into `data/vesum/` unless you pass
   `--asset` or `--cache-dir`. This is a gitignored download cache, not bulk data.
-  - **The legacy link goes away on pull.** `data/vesum` used to be a tracked
-    symlink. Once this change lands, `git pull` deletes it from every existing
-    clone, because upstream no longer tracks it. The default then resolves to a
-    plain, gitignored directory that the builder creates on demand.
+  - **The legacy link goes away on pull, where it is unchanged.** `data/vesum`
+    used to be a tracked symlink. Once this change lands, `git pull` deletes it
+    from clones where the link is unmodified, because upstream no longer tracks
+    it. If git refuses (`git pull --ff-only` stops because the link was changed
+    locally), the link stays. Remove it yourself with `rm data/vesum` (this
+    deletes the link only; never `rm -r` through it) and pull again. Do this
+    before running the VESUM builder. The default then resolves to a plain,
+    gitignored directory that the builder creates on demand.
   - **Do not recreate a symlink there.** `data/vesum` must stay a plain
     directory; a host that wants the cache elsewhere passes `--cache-dir`,
     which overrides the location.
