@@ -4,11 +4,12 @@ New workflow (Fable 5.1, 2026-09-03). `.github/workflows/ci.yml` is a short
 replacement, not the old two-tier merge-queue file.
 
 `CI Gate` is the only required GitHub check. Same jobs on `pull_request` and
-`merge_group`.
+`merge_group`, except Preflight, which runs on `pull_request` only.
 
 | Job | When |
 | --- | --- |
-| Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates`) |
+| Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |
+| Preflight | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |
 | Ruff | not docs-only |
 | Secret scan | always |
 | pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
@@ -166,6 +167,80 @@ its `-m repo_wide` invocation.
 
 No CF attest. No auto-arm. No landing-class classifier. No coverage floor.
 Red team review is out of band.
+
+## Early PR preflight (#8750 phase A)
+
+The `Preflight` job reports a broken repo-wide invariant (a missing
+`subprocess` timeout, the test-assertion lint, the marker invariants) in a few
+minutes instead of after a full pytest shard. Before it, the p50 time to the
+first failed job on a full PR run was about 13 minutes.
+
+**When it runs.** `scripts/ci/classify_changes.py` decides once and emits
+`preflight`. `preflight_for()` returns `true` only for a `pull_request` event
+whose tier is `full` or `selected`: the tiers whose shards run the
+`repo_wide` set. The Preflight job's `if:` and CI Gate both read that one
+output, and nothing in `ci.yml` re-derives it. The other lanes get no
+preflight:
+
+- The **docs** lane already runs `repo_wide` in its single short shard.
+- The **content** and **frontend** lanes do not run `repo_wide` at all, so a
+  preflight there would change what the gate proves.
+- **`merge_group`, `schedule` and `workflow_dispatch`** always get
+  `preflight=false`.
+
+A `full-ci` label or a classifier failure on a PR forces `full`, and so turns
+preflight on.
+
+**What it runs.** It uses the same allowlist construction and flags as the
+shards' `repo_wide` leg. An empty allowlist fails the step loudly:
+
+```
+LU_PYTEST_SHARD_FILES=<repo_wide list> pytest tests \
+  -m 'repo_wide and not slow and not atlas_release' --strict-markers \
+  -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
+  --timeout-method=thread --override-ini addopts=-v
+```
+
+A second invocation then runs the files registered in the job's
+`PREFLIGHT_EXTRA_TESTS` env, one path per line, under
+`-m 'not slow and not atlas_release'` with the same flags. These are cheap
+invariants that fail often but are not `repo_wide`. Today the list holds only
+`tests/curriculum/arc/test_decisions_record.py`, the cross-file hash
+invariant that caused 7 of the 40 sampled PR failures. On its own it takes
+about 5 s. An empty list also fails loudly. `tests/test_ci_preflight.py`
+checks that every registered path exists and is not already `repo_wide`.
+Both invocations always run, so one run reports every broken invariant; the
+step fails if either one failed.
+
+**Setup.** Preflight uses the same Python and uv install as the shards, and
+the same Atlas manifest hydrate. It leaves out the Postgres service, Node/npm
+and the native apt packages (bubblewrap, libpq, apparmor), because no
+`repo_wide` test uses them: no marked file mentions a Postgres DSN,
+`psycopg` or `bwrap`, and the one that mentions `npm` stubs it. The checkout
+is shallow. The whole selection passes in a fresh depth-1 clone with no
+Postgres DSN and no `node_modules`. `timeout-minutes: 8`.
+
+**Parallel, not gating.** No shard `needs: preflight`, and the shards still
+run the `repo_wide` tests as the backstop, so a green run is no slower.
+Nothing is cancelled when preflight fails. Preflight only makes the red
+signal arrive earlier.
+
+**CI Gate rule.** This rule lives in the gate step:
+
+- `preflight=true`: the Preflight result must be `success`. `failure`,
+  `cancelled` and `skipped` all fail the gate.
+- `preflight=false`: the Preflight result must be `skipped`.
+- If Changes itself did not succeed, the gate fails before it reaches this
+  rule.
+
+`merge_group` and nightly runs have no preflight. Their gate evaluation is
+unchanged apart from the `preflight=false → skipped` branch.
+
+**Superseded runs.** A new push to the same PR cancels the superseded run
+through the workflow `concurrency` group. CI Gate is `if: always()`, so it
+still runs for that stale SHA and fails there (see the `concurrency` comment
+in `ci.yml`). That red lands on a commit that is no longer the PR head. The
+replacement run on the new head is the one that decides the PR.
 
 ## pytest shard collection and balance (ci-shard-balance-2026-09-07)
 
