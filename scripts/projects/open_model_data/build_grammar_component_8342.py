@@ -2624,7 +2624,8 @@ def validate_candidate_rejection(
         return "ungrammatical_gold_correction"
     # Systemic gender agreement check: masculine/neuter genitive/accusative pronoun followed by feminine accusative
     if re.search(
-        r"\b(?:свого|мого|твого|цього|того)\s+(?:[а-яіїєґ']+[ую]\s*,?\s*)*(?:присутність|формулу|мети|мету)\b", c_low
+        r"\b(?:свого|мого|твого|цього|того)\s+(?:[а-яіїєґ']+[ую]\b[\s,]*){0,2}(?:присутність|формулу|мети|мету)\b",
+        c_low,
     ):
         return "gender_agreement_mismatch"
 
