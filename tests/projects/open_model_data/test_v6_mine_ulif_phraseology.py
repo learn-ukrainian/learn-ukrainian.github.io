@@ -103,6 +103,7 @@ requires_sources = pytest.mark.skipif(not _has_sources(), reason="data/sources.d
 requires_vesum = pytest.mark.skipif(not _has_vesum(), reason="data/vesum.db missing or empty")
 
 
+@pytest.mark.repo_wide
 def test_held_phraseology_release_directory_has_no_tracked_files():
     result = subprocess.run(
         [
@@ -112,6 +113,7 @@ def test_held_phraseology_release_directory_has_no_tracked_files():
         cwd=PROJECT_ROOT,
         capture_output=True,
         text=True,
+        timeout=30,
     )
     if result.returncode != 0:
         pytest.skip("git ls-files requires a Git checkout")
@@ -130,6 +132,7 @@ def test_default_output_directory_is_local_and_gitignored():
         cwd=repo_root,
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert result.returncode == 0, (
         f"Default output directory is not gitignored: {output_dir}; {result.stderr}"
@@ -145,6 +148,7 @@ def test_dpo_default_output_directory_is_gitignored():
         cwd=PROJECT_ROOT,
         capture_output=True,
         text=True,
+        timeout=30,
     )
     assert result.returncode == 0, (
         f"Default DPO output directory is not gitignored: {output_dir}; {result.stderr}"
