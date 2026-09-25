@@ -14,7 +14,6 @@ import re
 import shutil
 import subprocess
 import sys
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -128,27 +127,25 @@ def _gate(provider: str, selector: str) -> subprocess.CompletedProcess[str]:
 
 @functools.cache
 def _gate_matrix() -> tuple[dict[str, str], dict[str, dict[str, int]]]:
-    """(selector -> lane, provider -> lane -> the real launcher gate's exit code) for every candidate selector.
+    """(selector -> lane, provider -> lane -> the gate's exit code) for every candidate selector.
 
-    The gate's verdict depends only on ``<provider>-<lane>``, so it runs once per provider and lane
-    (through one representative selector), two providers at a time; every launcher provider is covered.
+    The gate's verdict depends only on ``<provider>-<lane>``.  The lane comes from the launcher's
+    real selector table (one bash call); the verdict comes from ``registry.main(["--slot", ...])``,
+    the very entry point ``launcher_require_registered_slot`` runs, evaluated in-process for the
+    whole lane x provider matrix instead of one bash + Python spawn per cell.  The real bash gate
+    is exercised end to end by the ``_gate`` / ``_launcher`` tests below, one per behaviour class.
     """
     lanes = _minted_lanes(_candidate_selectors())
-    representative = {lane: selector for selector, lane in sorted(lanes.items(), reverse=True)}
-    script = (
-        'source "$1"; shift; p="$1"; shift; '
-        'for s in "$@"; do launcher_require_registered_slot "$p" "$s" >/dev/null 2>&1; printf "%s\\t%s\\t%s\\n" "$p" "$s" "$?"; done'
-    )
-    selectors = list(representative.values())
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        results = list(pool.map(lambda provider: _bash(script, str(HANDOFF_IDENTITY), provider, *selectors), PROVIDERS))
-    gate: dict[str, dict[str, int]] = {provider: {} for provider in PROVIDERS}
-    for result in results:
-        assert result.returncode == 0, result.stderr
-        for line in result.stdout.splitlines():
-            provider, selector, code = line.split("\t")
-            gate[provider][lanes[selector]] = int(code)
+    gate = {
+        provider: {lane: registry.main(["--slot", f"{provider}-{lane}"]) for lane in sorted(set(lanes.values()))}
+        for provider in PROVIDERS
+    }
     return lanes, gate
+
+
+def _refused_selector(provider: str, lanes: dict[str, str], gate: dict[str, dict[str, int]]) -> str | None:
+    """A selector the gate refuses for ``provider`` (deterministic), or None when it accepts them all."""
+    return next((selector for selector, lane in sorted(lanes.items()) if gate[provider][lane] != 0), None)
 
 
 def test_launcher_providers_are_read_from_the_driver_entry_points() -> None:
@@ -209,13 +206,37 @@ def test_generic_registry_keys_are_registered_or_refused_for_every_provider() ->
             f"{selector}: lane '{lane}' is registered for {accepting} but the launcher refuses {refusing}"
         )
         for provider in refusing:
-            result = _gate(provider, selector)
-            assert result.returncode == 1, f"{selector} must be refused for {provider}: {result.stderr}"
-            assert f"{provider}-{lane}" in result.stderr
+            assert gate[provider][lane] == 3, f"{selector}: {provider}-{lane} refusal must be 'not registered' (3)"
 
 
-@pytest.mark.parametrize("selector", UNREGISTERED_SELECTORS)
-def test_launcher_refuses_unregistered_selector_before_starting(selector: str) -> None:
+@pytest.mark.parametrize("provider", PROVIDERS)
+def test_gate_names_the_refused_provider_slot(provider: str) -> None:
+    """The real bash gate's refusal names the provider's own slot (one real call per provider)."""
+    lanes, gate = _gate_matrix()
+    selector = _refused_selector(provider, lanes, gate)
+    if selector is None:
+        pytest.skip(f"{provider} accepts every selector")
+    result = _gate(provider, selector)
+    assert result.returncode == 1, f"{selector} must be refused for {provider}: {result.stderr}"
+    assert f"{provider}-{lanes[selector]}" in result.stderr
+
+
+REGISTERED_SELECTORS = ("infra", "devops", "monitor", "open-model-data", "atlas", "folk", "bio", "corpus", "hramatka")
+
+
+def test_gate_refuses_every_unregistered_selector_and_accepts_every_registered_one() -> None:
+    """Every selector under test resolves; the gate refuses (3) exactly the unregistered ones for claude."""
+    lanes, gate = _gate_matrix()
+    assert set(UNREGISTERED_SELECTORS) | set(REGISTERED_SELECTORS) <= set(lanes), "a selector no longer resolves"
+    accepted_wrongly = [s for s in UNREGISTERED_SELECTORS if gate["claude"][lanes[s]] != 3]
+    refused_wrongly = [s for s in REGISTERED_SELECTORS if gate["claude"][lanes[s]] != 0]
+    assert not accepted_wrongly, f"unregistered selectors the gate does not refuse: {accepted_wrongly}"
+    assert not refused_wrongly, f"registered selectors the gate refuses: {refused_wrongly}"
+
+
+def test_launcher_refuses_unregistered_selector_before_starting() -> None:
+    """End to end (one real launcher run): exit 2 before any lease or provider start."""
+    selector = "infra.atlas-practice"
     result = _launcher("--epic", selector)
     slot = f"claude-{selector.removeprefix('infra.')}"
     assert result.returncode == 2, result.stdout + result.stderr
@@ -241,11 +262,8 @@ def test_real_launch_of_unregistered_selector_never_execs_the_provider(tmp_path:
     assert not marker.exists(), "the provider binary started for an unregistered slot"
 
 
-@pytest.mark.parametrize(
-    "selector", ["infra", "devops", "monitor", "open-model-data", "atlas", "folk", "bio", "corpus", "hramatka"]
-)
-def test_registered_selectors_still_launch(selector: str) -> None:
-    result = _launcher("--epic", selector)
+def test_registered_selector_still_launches() -> None:
+    result = _launcher("--epic", "infra")
     assert result.returncode == 0, result.stderr
     assert "not registered" not in result.stderr
     assert "would exec claude" in result.stdout
