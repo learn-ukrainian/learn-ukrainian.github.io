@@ -7,6 +7,7 @@ from typing import Any
 import yaml
 
 from scripts.common.bridge_paths import configured_bridge_db_path
+from scripts.wiki.config import TEXTBOOK_PDFS_DIR
 
 # Project root is the immutable code snapshot when the API is release-served.
 # Mutable data remains reachable through the release's explicit symlinks.
@@ -37,6 +38,10 @@ MESSAGE_DB = configured_bridge_db_path(PROJECT_ROOT)
 
 # Dashboards directory (for static file serving)
 DASHBOARDS_DIR = PROJECT_ROOT / "dashboards"
+
+# Textbook PDFs live under the resolved bulk raw-source root, never a
+# repository symlink (#8803; docs/runbooks/storage-topology.md).
+TEXTBOOKS_DIR = TEXTBOOK_PDFS_DIR
 
 _KNOWN_LEVEL_NAMES = {
     "a1": "A1 - Beginner",
