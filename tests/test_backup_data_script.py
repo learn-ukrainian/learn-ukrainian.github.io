@@ -126,13 +126,20 @@ if [[ "${1:-}" == "backup" ]]; then
     mkdir -p "$(dirname "$FAKE_SNAPSHOT_DIR/$stdin_filename")"
     cat > "$FAKE_SNAPSHOT_DIR/$stdin_filename"
   else
+    if [[ -n "${FAKE_FILE_PHASE_EXIT:-}" ]]; then
+      exit "$FAKE_FILE_PHASE_EXIT"
+    fi
     mkdir -p "$FAKE_SNAPSHOT_DIR"
     cp -a "$PWD/.claude" "$PWD/.agent" "$PWD/batch_state" "$PWD/data" "$FAKE_SNAPSHOT_DIR/"
     find "$FAKE_SNAPSHOT_DIR" -type f \
       \( -name '*-wal' -o -name '*-shm' -o -name '*-journal' -o -name '.DS_Store' \) -delete
     find "$FAKE_SNAPSHOT_DIR" -type d \
       \( -name qdrant -o -name __pycache__ -o -name '*-home' \) -prune -exec find '{}' -depth -delete \;
-    find "$FAKE_SNAPSHOT_DIR" -type f \( -name '*.db' -o -name '*.sqlite*' \) -delete
+    while IFS= read -r -d '' candidate; do
+      if head -c 16 "$candidate" | cmp -s - <(printf 'SQLite format 3\0'); then
+        rm "$candidate"
+      fi
+    done < <(find "$FAKE_SNAPSHOT_DIR" -type f \( -name '*.db' -o -name '*.sqlite*' \) -print0)
   fi
 fi
 if [[ "${1:-}" == "backup" && -n "${FAKE_DB_RELATIVE:-}" && "$stdin_filename" == "$FAKE_DB_RELATIVE" ]]; then
@@ -625,15 +632,178 @@ def test_execute_rejects_a_corrupt_database_before_upload(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, staging, _legacy = backup_environment
-    (source / "corrupt.db").write_bytes(b"not a sqlite database")
+    (source / "corrupt.db").write_bytes(b"SQLite format 3\0" + b"corrupt data")
 
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode != 0
-    assert "SQLite online backup failed: data/corrupt.db" in result.stderr
+    assert "Database data/corrupt.db: SQLite online backup failed" in result.stderr
     assert "arg=<lu-part-db>" not in _log(environment)
     assert "arg=<lu-part-complete>" not in _log(environment)
     assert list(staging.iterdir()) == []
+
+
+def test_non_sqlite_candidate_is_backed_up_as_a_file(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    fence = source.parent / "batch_state" / "comms.sqlite3.pg-fence"
+    fence.write_text('{"fence": true}\n', encoding="utf-8")
+    environment["FAKE_REQUIRED_RELATIVE"] = "batch_state/comms.sqlite3.pg-fence"
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "staged_required=<batch_state/comms.sqlite3.pg-fence>" in _log(environment)
+    assert "Creating consistent SQLite snapshot: batch_state/comms.sqlite3.pg-fence" not in result.stdout
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root can read mode-000 paths")
+def test_unreadable_file_does_not_skip_database_phase(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    unreadable = source.parent / "batch_state" / "unreadable.txt"
+    unreadable.write_text("private\n", encoding="utf-8")
+    unreadable.chmod(0)
+    with sqlite3.connect(source / "healthy.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+    environment["FAKE_FILE_PHASE_EXIT"] = "3"
+
+    try:
+        result = _run(environment, "backup", "--execute")
+    finally:
+        unreadable.chmod(0o600)
+
+    assert result.returncode != 0
+    assert "batch_state/unreadable.txt" in result.stderr
+    assert "File phase: restic backup failed" in result.stderr
+    assert "arg=<lu-part-db>" in _log(environment)
+    assert "arg=<lu-part-complete>" not in _log(environment)
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root can traverse mode-000 directories")
+def test_unreadable_directory_does_not_skip_database_phase(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    unreadable = source.parent / "batch_state" / "unreadable-dir"
+    unreadable.mkdir()
+    (unreadable / "hidden.txt").write_text("private\n", encoding="utf-8")
+    with sqlite3.connect(source / "healthy.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+    unreadable.chmod(0)
+
+    try:
+        result = _run(environment, "backup", "--execute")
+    finally:
+        unreadable.chmod(0o700)
+        snapshot_copy = Path(environment["FAKE_SNAPSHOT_DIR"]) / "batch_state" / unreadable.name
+        if snapshot_copy.exists():
+            snapshot_copy.chmod(0o700)
+
+    assert result.returncode != 0
+    assert "Backup run " in result.stderr
+    assert "Unreadable paths:" in result.stderr
+    assert "batch_state/unreadable-dir" in result.stderr
+    assert "arg=<--stdin-filename> arg=<data/healthy.db>" in _log(environment)
+    assert "arg=<lu-part-complete>" not in _log(environment)
+
+
+def test_corrupt_database_does_not_skip_later_databases(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    (source / "corrupt.db").write_bytes(b"SQLite format 3\0" + b"corrupt data")
+    with sqlite3.connect(source / "healthy.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode != 0
+    assert "Database data/corrupt.db: SQLite online backup failed" in result.stderr
+    assert "arg=<--stdin-filename> arg=<data/healthy.db>" in _log(environment)
+    assert "arg=<lu-part-complete>" not in _log(environment)
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root can read mode-000 paths")
+def test_doctor_warns_about_unreadable_file(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    unreadable = source / "unreadable.txt"
+    unreadable.write_text("private\n", encoding="utf-8")
+    unreadable.chmod(0)
+
+    try:
+        result = _run(environment, "doctor")
+    finally:
+        unreadable.chmod(0o600)
+
+    assert result.returncode == 0, result.stderr
+    assert "WARNING: 1 path(s) under backup roots are unreadable" in result.stderr
+    assert str(unreadable) in result.stderr
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root can traverse mode-000 directories")
+def test_doctor_warns_about_unreadable_directory(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    unreadable = source.parent / "batch_state" / "unreadable-dir"
+    unreadable.mkdir()
+    (unreadable / "hidden.txt").write_text("private\n", encoding="utf-8")
+    unreadable.chmod(0)
+
+    try:
+        result = _run(environment, "doctor")
+    finally:
+        unreadable.chmod(0o700)
+
+    assert result.returncode == 0, result.stderr
+    assert "WARNING: 1 path(s) under backup roots are unreadable" in result.stderr
+    assert str(unreadable) in result.stderr
+    assert "Doctor checks passed." in result.stdout
+
+
+def test_find_permission_error_keeps_reported_paths_and_database_phase(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    with sqlite3.connect(source / "healthy.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+    real_find = shutil.which("find", path=os.environ["PATH"])
+    assert real_find is not None
+    environment["REAL_FIND"] = real_find
+    environment["FAKE_FIND_ROOT"] = str(source.parent / "batch_state")
+    environment["FAKE_FILE_PHASE_EXIT"] = "3"
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(
+        fake_bin / "find",
+        """#!/bin/bash
+for argument in "$@"; do
+  if [[ "$1" == "$FAKE_FIND_ROOT" && "$argument" == "-readable" ]]; then
+    printf '%s\\n' "$FAKE_FIND_ROOT/already-found.txt"
+    printf "find: '%s': Permission denied\\n" "$FAKE_FIND_ROOT/denied-dir" >&2
+    exit 1
+  fi
+done
+exec "$REAL_FIND" "$@"
+""",
+    )
+
+    doctor = _run(environment, "doctor")
+    run = _run(environment, "backup", "--execute")
+
+    assert doctor.returncode == 0, doctor.stderr
+    assert "WARNING: 2 path(s) under backup roots are unreadable" in doctor.stderr
+    assert str(source.parent / "batch_state" / "already-found.txt") in doctor.stderr
+    assert str(source.parent / "batch_state" / "denied-dir") in doctor.stderr
+    assert run.returncode != 0
+    assert "batch_state/already-found.txt" in run.stderr
+    assert "batch_state/denied-dir" in run.stderr
+    assert "arg=<--stdin-filename> arg=<data/healthy.db>" in _log(environment)
+    assert "arg=<lu-part-complete>" not in _log(environment)
 
 
 def test_receipt_counts_match_post_exclusion_snapshot_contents(

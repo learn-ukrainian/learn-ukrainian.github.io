@@ -59,6 +59,7 @@ LINUX_BASE_SNAPSHOT=""
 LINUX_PATCH_SNAPSHOT=""
 RUN_ID=""
 LINUX_MODE=0
+BACKUP_FAILURES=()
 
 write_restic_gate_receipt() {
   local snapshot_id=$1
@@ -595,20 +596,54 @@ acquire_lock() {
 list_sqlite_sources() {
   local relative database
 
-  find "$SOURCE" \
+  while IFS= read -r -d '' database; do
+    is_sqlite_database "$database" && printf '%s\0' "$database"
+  done < <(find "$SOURCE" \
     \( -path "$SOURCE/qdrant" -o -type d -name __pycache__ \) -prune -o \
     -type f \( -name '*.db' -o -name '*.sqlite*' \) \
     ! -name '*-wal' ! -name '*-shm' ! -name '*-journal' \
-    -print0
+    -print0)
   for relative in "${BACKUP_PATHS[@]}"; do
     [[ "$relative" != "data" && "$relative" != "GIT-WORKTREE.patch" && "$relative" != "BACKUP-RECEIPT.json" ]] || continue
     while IFS= read -r -d '' database; do
       is_ephemeral_home_path "$database" && continue
       [[ "$database" == */__pycache__/* ]] && continue
-      printf '%s\0' "$database"
+      is_sqlite_database "$database" && printf '%s\0' "$database"
     done < <(find "$PROJECT_ROOT/$relative" \
       -type f \( -name '*.db' -o -name '*.sqlite*' \) \
       ! -name '*-wal' ! -name '*-shm' ! -name '*-journal' -print0)
+  done
+}
+
+is_sqlite_database() {
+  local database=$1
+  head -c 16 "$database" 2>/dev/null | cmp -s - <(printf 'SQLite format 3\0')
+}
+
+unreadable_backup_paths() {
+  local relative root found path
+  for relative in "${BACKUP_PATHS[@]}"; do
+    [[ "$relative" == GIT-WORKTREE.patch || "$relative" == BACKUP-RECEIPT.json ]] && continue
+    root="$(source_for_backup_path "$relative")"
+    # Prune inaccessible directories so find can continue through other roots.
+    # Capture any remaining permission errors without propagating find's status
+    # into the caller's command substitution under set -e.
+    found="$(LC_ALL=C find "$root" \
+      \( -type d \( ! -readable -o ! -executable \) -print -prune \) -o \
+      \( -type f ! -readable -print \) 2>&1)" || true
+    [[ -n "$found" ]] || continue
+    while IFS= read -r path; do
+      if [[ "$path" == 'find: '* ]]; then
+        if [[ "$path" == *': Permission denied' ]]; then
+          path="${path#find: }"
+          path="${path%: Permission denied}"
+          path="${path:1:${#path}-2}"
+        else
+          path="$root"
+        fi
+      fi
+      printf '%s\n' "$path"
+    done <<< "$found"
   done
 }
 
@@ -1010,30 +1045,64 @@ snapshot_id_from_output() {
 }
 
 linux_backup_database() {
-  local source_db=$1 relative=$2 staged_db check_output snapshot_id source_mode
+  local source_db=$1 relative=$2 staged_db check_output snapshot_id source_mode error
   staged_db="$STAGED_ROOT/$relative"
-  check_one_db_space "$source_db" "$relative"
-  mkdir -p "$(dirname "$staged_db")"
+  if ! error="$(check_one_db_space "$source_db" "$relative" 2>&1)"; then
+    BACKUP_FAILURES+=("Database $relative: $error")
+    return 1
+  fi
+  if ! mkdir -p "$(dirname "$staged_db")"; then
+    BACKUP_FAILURES+=("Database $relative: could not create staging directory")
+    return 1
+  fi
   info "Creating consistent SQLite snapshot: $relative"
-  sqlite_backup_command "$source_db" "$staged_db" || die "SQLite online backup failed: $relative"
-  source_mode="$(file_mode "$source_db")"
-  chmod "$source_mode" "$staged_db"
-  touch -r "$source_db" "$staged_db"
-  check_output="$(sqlite3 "$(sqlite_immutable_uri "$staged_db")" 'PRAGMA integrity_check;')" ||
-    die "SQLite integrity_check failed to run: $relative"
-  [[ "$check_output" == "ok" ]] || die "SQLite integrity_check rejected staged database: $relative"
-  restic_repository_command backup --stdin --stdin-filename "$relative" \
+  if ! error="$(sqlite_backup_command "$source_db" "$staged_db" 2>&1)"; then
+    BACKUP_FAILURES+=("Database $relative: SQLite online backup failed: ${error:-unknown error}")
+    find "$staged_db" -maxdepth 0 -type f -delete
+    return 1
+  fi
+  [[ -z "$error" ]] || printf '%s\n' "$error"
+  if ! source_mode="$(file_mode "$source_db")" ||
+    ! chmod "$source_mode" "$staged_db" ||
+    ! touch -r "$source_db" "$staged_db"; then
+    BACKUP_FAILURES+=("Database $relative: could not preserve source metadata")
+    find "$staged_db" -maxdepth 0 -type f -delete
+    return 1
+  fi
+  if ! check_output="$(sqlite3 "$(sqlite_immutable_uri "$staged_db")" 'PRAGMA integrity_check;' 2>&1)"; then
+    BACKUP_FAILURES+=("Database $relative: SQLite integrity_check failed: $check_output")
+    find "$staged_db" -maxdepth 0 -type f -delete
+    return 1
+  fi
+  if [[ "$check_output" != ok ]]; then
+    BACKUP_FAILURES+=("Database $relative: SQLite integrity_check rejected staged database: $check_output")
+    find "$staged_db" -maxdepth 0 -type f -delete
+    return 1
+  fi
+  if ! restic_repository_command backup --stdin --stdin-filename "$relative" \
     --host "$BACKUP_HOST" --tag "$BACKUP_TAG" --tag "lu-run-$RUN_ID" \
-    --tag lu-part-db --json < "$staged_db" | tee "$STAGE_DIR/db-backup.jsonl"
-  snapshot_id="$(snapshot_id_from_output "$STAGE_DIR/db-backup.jsonl")"
-  LINUX_DB_SNAPSHOTS="$(jq -cn --argjson previous "$LINUX_DB_SNAPSHOTS" \
+    --tag lu-part-db --json < "$staged_db" | tee "$STAGE_DIR/db-backup.jsonl"; then
+    BACKUP_FAILURES+=("Database $relative: restic upload failed")
+    find "$staged_db" -maxdepth 0 -type f -delete
+    return 1
+  fi
+  if ! snapshot_id="$(snapshot_id_from_output "$STAGE_DIR/db-backup.jsonl" 2>&1)"; then
+    BACKUP_FAILURES+=("Database $relative: $snapshot_id")
+    find "$staged_db" -maxdepth 0 -type f -delete
+    return 1
+  fi
+  if ! LINUX_DB_SNAPSHOTS="$(jq -cn --argjson previous "$LINUX_DB_SNAPSHOTS" \
     --arg path "$relative" --arg snapshot_id "$snapshot_id" --arg mode "$source_mode" \
-    '$previous + [{path: $path, snapshot_id: $snapshot_id, mode: $mode}]')"
+    '$previous + [{path: $path, snapshot_id: $snapshot_id, mode: $mode}]')"; then
+    BACKUP_FAILURES+=("Database $relative: could not record snapshot ID")
+    find "$staged_db" -maxdepth 0 -type f -delete
+    return 1
+  fi
   find "$staged_db" -maxdepth 0 -type f -delete
 }
 
 run_linux_backup() {
-  local relative source_db snapshot_id backup_output
+  local relative source_db snapshot_id backup_output unreadable
   local -a live_paths=()
 
   LINUX_MODE=1
@@ -1056,27 +1125,56 @@ run_linux_backup() {
   done < <(list_sqlite_sources)
   info "Streaming non-database recovery files from the live tree."
   backup_output="$STAGE_DIR/base-backup.jsonl"
-  (
+  if (
     cd "$PROJECT_ROOT"
     restic_repository_command backup "${live_paths[@]}" \
       --host "$BACKUP_HOST" --tag "$BACKUP_TAG" --tag "lu-run-$RUN_ID" \
       --tag lu-part-base --json "${RESTIC_EXCLUDES[@]}"
-  ) | tee "$backup_output"
-  LINUX_BASE_SNAPSHOT="$(snapshot_id_from_output "$backup_output")"
+  ) | tee "$backup_output"; then
+    if ! LINUX_BASE_SNAPSHOT="$(snapshot_id_from_output "$backup_output" 2>&1)"; then
+      BACKUP_FAILURES+=("File phase: $LINUX_BASE_SNAPSHOT")
+      LINUX_BASE_SNAPSHOT=""
+    fi
+  else
+    BACKUP_FAILURES+=("File phase: restic backup failed")
+  fi
+  unreadable="$(unreadable_backup_paths)"
+  if [[ -n "$unreadable" ]]; then
+    BACKUP_FAILURES+=("Unreadable paths:")
+    while IFS= read -r relative; do
+      BACKUP_FAILURES+=("  ${relative#"$PROJECT_ROOT"/}")
+    done <<< "$unreadable"
+  fi
 
   while IFS= read -r -d '' source_db; do
     relative=${source_db#"$PROJECT_ROOT"/}
-    [[ "$relative" != *$'\n'* && "$relative" != *$'\t'* ]] ||
-      die "SQLite path contains a newline or tab and cannot be recorded safely."
-    linux_backup_database "$source_db" "$relative"
+    if [[ "$relative" == *$'\n'* || "$relative" == *$'\t'* ]]; then
+      BACKUP_FAILURES+=("Database path cannot be recorded safely: $relative")
+      continue
+    fi
+    linux_backup_database "$source_db" "$relative" || true
   done < <(list_sqlite_sources)
 
   if [[ -f "$STAGED_ROOT/GIT-WORKTREE.patch" ]]; then
-    restic_repository_command backup --stdin --stdin-filename GIT-WORKTREE.patch \
+    if restic_repository_command backup --stdin --stdin-filename GIT-WORKTREE.patch \
       --host "$BACKUP_HOST" --tag "$BACKUP_TAG" --tag "lu-run-$RUN_ID" \
       --tag lu-part-patch --json < "$STAGED_ROOT/GIT-WORKTREE.patch" \
-      | tee "$STAGE_DIR/patch-backup.jsonl"
-    LINUX_PATCH_SNAPSHOT="$(snapshot_id_from_output "$STAGE_DIR/patch-backup.jsonl")"
+      | tee "$STAGE_DIR/patch-backup.jsonl"; then
+      if ! LINUX_PATCH_SNAPSHOT="$(snapshot_id_from_output "$STAGE_DIR/patch-backup.jsonl" 2>&1)"; then
+        BACKUP_FAILURES+=("Patch phase: $LINUX_PATCH_SNAPSHOT")
+        LINUX_PATCH_SNAPSHOT=""
+      fi
+    else
+      BACKUP_FAILURES+=("Patch phase: restic backup failed")
+    fi
+  fi
+
+  info "Checking repository metadata after backup."
+  restic_repository_command check || BACKUP_FAILURES+=("Repository check failed")
+  if ((${#BACKUP_FAILURES[@]} > 0)); then
+    printf 'Backup run %s failed:\n' "$RUN_ID" >&2
+    printf '  %s\n' "${BACKUP_FAILURES[@]}" >&2
+    return 1
   fi
 
   write_backup_receipt
@@ -1085,7 +1183,6 @@ run_linux_backup() {
     --tag lu-part-complete --json < "$STAGED_ROOT/BACKUP-RECEIPT.json" \
     | tee "$STAGE_DIR/complete-backup.jsonl"
   snapshot_id="$(snapshot_id_from_output "$STAGE_DIR/complete-backup.jsonl")"
-  info "Checking repository metadata after backup."
   restic_repository_command check
   verify_linux_runner_mirror_and_receipt "$LINUX_BASE_SNAPSHOT"
   info "Linux backup run $RUN_ID complete; receipt snapshot $snapshot_id."
@@ -1307,7 +1404,7 @@ run_init() {
 }
 
 run_doctor() {
-  local failures=0 validation_output
+  local failures=0 validation_output unreadable unreadable_count
 
   echo "Backup source: $SOURCE"
   echo "Repository: ${REPOSITORY:-<unset>}"
@@ -1325,6 +1422,16 @@ run_doctor() {
   if [[ "$failures" -eq 0 ]]; then
     if validation_output="$( (validate_environment; validate_source) 2>&1)"; then
       [[ -z "$validation_output" ]] || printf '%s\n' "$validation_output"
+      discover_backup_paths
+      unreadable="$(unreadable_backup_paths)"
+      if [[ -n "$unreadable" ]]; then
+        unreadable_count="$(printf '%s\n' "$unreadable" | wc -l)"
+        echo "WARNING: $unreadable_count path(s) under backup roots are unreadable by the backup user:" >&2
+        printf '%s\n' "$unreadable" | sed -n '1,20p' >&2
+        if ((unreadable_count > 20)); then
+          echo "  ... $((unreadable_count - 20)) more unreadable path(s)" >&2
+        fi
+      fi
       if repository_is_initialized; then
         echo "OK: restic repository is initialized"
       else
