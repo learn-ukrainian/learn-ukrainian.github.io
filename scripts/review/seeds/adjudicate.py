@@ -25,8 +25,9 @@ and delegate appended nothing caller-controlled to that prompt (``adjudication_t
 unrelated independent dispatch cannot stand in. The lesson text and the findings are data, not instructions.
 
 **Dispatch contract (R3-C).** The runner dispatches every adjudication with the printed ``delegate.py dispatch``
-command and **no** ``--lifecycle-file`` and no ``--research-*`` flag; those add caller-controlled instructions to the
-prompt the seat receives, and ``record`` refuses such a dispatch.
+command: read-only, **no** ``--worktree``, no ``--lifecycle-file`` and no ``--research-*`` flag. Each of those makes
+delegate append a block to the prompt the seat receives (the worktree block interpolates the caller's path), so the
+adjudication dispatch has no appended blocks at all and ``record`` refuses any other dispatch.
 
 **What a valid reply is.** The reply matches its schema; it names this unit and attempt; the attempt is an accepted
 first-seat attempt of that unit; the mapping names every finding id of the attempt exactly once and no other;
@@ -61,8 +62,6 @@ SCHEMAS = {
 }
 TASKS_SUBDIR = "adjudication"
 DELEGATE = REPO_ROOT / "scripts" / "delegate.py"
-# Blocks delegate.py may append that the caller does not choose: the worktree-location note is derived from the path.
-ALLOWED_PROMPT_BLOCKS = frozenset({"worktree"})
 READ_ONLY_MODE = "read-only"
 FINDING_ID_RE = re.compile(r"F-[0-9]+\Z")
 _FENCE_RE = re.compile(r"```(?:ya?ml|json)?[ \t]*\n(.*?)```", re.DOTALL)
@@ -280,7 +279,10 @@ def write_task(subject: Subject, lesson_text: str, *, review_id: str, root: Path
 
 
 def dispatch_argv(task_file: Path, task_id: str, agent: str, *, model: str | None = None) -> list[str]:
-    """The ``delegate.py dispatch`` command that runs the task read-only on ``agent``."""
+    """The ``delegate.py dispatch`` command that runs the task read-only on ``agent``.
+
+    Deliberately no ``--worktree`` (nor lifecycle/research flags): the dispatch must append no prompt blocks.
+    """
     argv = [
         sys.executable,
         str(DELEGATE),
@@ -426,14 +428,11 @@ def check_dispatch_binding(
     ``delegate.py``) must equal the sha256 of the task file this module wrote. A record with no prompt hash cannot
     prove which prompt ran and is refused.
 
-    ``prompt_sha256`` covers only the caller's prompt; delegate then appends blocks to it. ``effective_prompt_sha256``
-    hashes what the worker received and ``prompt_blocks`` names what was appended. A lifecycle block (``--lifecycle-file``)
-    or a research block (``--research-*``) is chosen by the dispatching caller, so a matching task file dispatched
-    with either would run under instructions this module never rendered: refused. The worktree block's content
-    depends on the caller's ``--mode`` (write modes add commit/push instructions under the same label), so the
-    dispatch must also have run ``read-only``; then the worktree block is delegate's read-only location note,
-    generated from the path alone, and is the one block allowed. A record without the effective hash, the block
-    list or the mode predates the binding and cannot prove what ran.
+    An adjudication dispatch carries **no appended prompt blocks at all**: ``mode`` is ``read-only``, ``prompt_blocks``
+    is ``[]`` and ``effective_prompt_sha256`` equals ``prompt_sha256`` equals the sha256 of the task file rendered
+    here. Every block delegate can append (worktree note, lifecycle, research) is caller-influenced (the worktree
+    note interpolates the caller-chosen ``--worktree`` path), so none is allowed: dispatch read-only without
+    ``--worktree``. Anything else, or a record lacking these fields, is ``adjudication_task_mismatch``.
 
     Returns the adjudicator's identity from the same record (its ``agent`` and ``model`` must resolve).
     """
@@ -462,27 +461,22 @@ def check_dispatch_binding(
             f"(recorded prompt sha256 {dispatched.get('prompt_sha256')!r}, rendered {rendered})",
             TASK_MISMATCH,
         )
-    effective = dispatched.get("effective_prompt_sha256")
-    if not isinstance(effective, str) or not effective:
-        raise AdjudicationError(
-            f"the dispatch record of {task_id} carries no effective_prompt_sha256: it cannot prove which prompt the "
-            "seat received",
-            TASK_MISMATCH,
-        )
     if dispatched.get("mode") != READ_ONLY_MODE:
         raise AdjudicationError(
             f"the dispatch of {task_id} ran in mode {dispatched.get('mode')!r}, not {READ_ONLY_MODE!r}: a write-capable "
             "dispatch adds instructions to the adjudication prompt (dispatch it with --mode read-only)",
             TASK_MISMATCH,
         )
-    blocks = dispatched.get("prompt_blocks")
-    if not isinstance(blocks, list) or not all(isinstance(kind, str) for kind in blocks):
-        raise AdjudicationError(f"the dispatch record of {task_id} carries no valid prompt_blocks list", TASK_MISMATCH)
-    added = [kind for kind in blocks if kind not in ALLOWED_PROMPT_BLOCKS]
-    if added:
+    if dispatched.get("prompt_blocks") != []:
         raise AdjudicationError(
-            f"the dispatch of {task_id} appended caller-controlled prompt block(s) {added} to the adjudication prompt "
-            "(dispatch it without --lifecycle-file or --research-* flags)",
+            f"the dispatch of {task_id} appended prompt blocks {dispatched.get('prompt_blocks')!r} (or records none) to "
+            "the adjudication prompt: dispatch it read-only without --worktree, --lifecycle-file or --research-* flags",
+            TASK_MISMATCH,
+        )
+    if dispatched.get("effective_prompt_sha256") != rendered:
+        raise AdjudicationError(
+            f"the seat of {task_id} received a prompt other than the one rendered for {unit_id} / {attempt_id} "
+            f"(effective sha256 {dispatched.get('effective_prompt_sha256')!r}, rendered {rendered})",
             TASK_MISMATCH,
         )
     return adjudicator_identity(task_id, tasks_dir)

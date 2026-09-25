@@ -6037,6 +6037,12 @@ def test_dispatch_records_the_effective_prompt_and_its_appended_blocks(tmp_tasks
     assert state["prompt_blocks"] == []
     assert state["effective_prompt_sha256"] == source
 
+    # a read-only dispatch without --worktree (the adjudication contract) appends nothing
+    state, _ = _dispatch_recording_the_worker_prompt(tmp_path, monkeypatch, "eff-ro", ["--mode", "read-only"])
+    assert state["mode"] == "read-only"
+    assert state["prompt_blocks"] == []
+    assert state["effective_prompt_sha256"] == state["prompt_sha256"] == source
+
     # a lifecycle carrier, a worktree block and a research block, in the order they appear in the prompt
     monkeypatch.setattr(
         delegate, "_load_task_lifecycle_carrier", lambda raw: ({"lifecycle_id": "L"}, "\n[lifecycle carrier]\n")
