@@ -177,15 +177,6 @@ def _fake_branch_diff(name: str, diff_stdout: str, *, fail: str | None = None):
     def fake_run(command: list[str], **kwargs: object):
         import subprocess
 
-        if command[:2] == ["git", "check-ref-format"]:
-            assert command == ["git", "check-ref-format", "--branch", name]
-            code = 1 if fail == "check-ref-format" else 0
-            return subprocess.CompletedProcess(
-                command,
-                code,
-                stdout="" if code else f"{name}\n",
-                stderr="invalid ref" if code else "",
-            )
         if command[:2] == ["git", "fetch"]:
             assert command == ["git", "fetch", "origin", _branch_refspec(name)]
             code = 1 if fail == "fetch" else 0
@@ -604,15 +595,25 @@ def _git(repo: str, *args: str) -> None:
 
 
 # Names whose pure-Python verdict must match ``git check-ref-format --branch``.
-# ``@{-N}`` is omitted because git expands it. ``@`` is omitted because
-# ``--branch`` prints it, and the validator must still refuse that name.
+# Deliberate rejects stay off this list: ``@`` (``--branch`` prints it),
+# ``@{-N}`` (git expands it), and ``HEAD`` (some git versions accept
+# ``refs/heads/HEAD``). Prefix rules ``-`` and ``:`` are also omitted: their
+# git verdict depends on the git version.
+# Accepting names below were checked with ``git check-ref-format --branch``
+# on this host. ``a.lock/y`` was tried and rejected (a component ends in
+# ``.lock``), so it is not an accepting case.
 _GIT_BRANCH_FORMAT_AGREEMENT = (
     "valid-name",
     "cursor/task",
+    "a/b",
+    "x.lockx",
+    "a@b",
+    "é",
+    "feat/a-b_c.d",
+    "v1.2.3",
     "a..b",
     "x.lock",
     "name with space",
-    "-leading",
     "trail.",
     "trail/",
     "foo//bar",
@@ -621,7 +622,6 @@ _GIT_BRANCH_FORMAT_AGREEMENT = (
     "foo/bar.lock",
     "has~tilde",
     "has^caret",
-    "has:colon",
     "has?question",
     "has*star",
     "has[bracket",
@@ -674,7 +674,13 @@ def test_validate_plain_branch_name_real_git_refuses_unsafe_names(tmp_path) -> N
     _git(root, "commit", "-m", "init")
     _git(root, "checkout", "-b", "other")
 
-    for name in ("a..b", "x.lock", "name with space", "@{-1}", "@"):
+    for name in ("a..b", "x.lock", "name with space", "@{-1}", "@", "HEAD", "a@{b"):
+        with pytest.raises(UnsafeBranchNameError):
+            validate_plain_branch_name(name, repo_root=root)
+
+    # Prefix rules, not a git-version contract. ``-leading`` is the leading
+    # ``-`` reject; ``has:colon`` is the ``:`` reject.
+    for name in ("-leading", "has:colon"):
         with pytest.raises(UnsafeBranchNameError):
             validate_plain_branch_name(name, repo_root=root)
 

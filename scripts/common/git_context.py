@@ -50,10 +50,19 @@ _REF_FORBIDDEN_CHARS = frozenset(" ~^:?*[\\")
 def _rejects_git_branch_format(name: str) -> bool:
     """Return whether ``name`` violates ``git check-ref-format --branch`` rules.
 
-    One-level names are allowed, matching ``--branch``. ``@{-N}`` is refused
-    here; git would expand that shorthand to a previous checkout.
+    One-level names are allowed, matching ``--branch``. Three names are
+    refused on purpose, beside the format rules, because a git version may
+    accept or rewrite them:
+
+    * ``@`` — ``--branch`` prints it. It is the shorthand for the current
+      branch, not a branch name this gate may fetch.
+    * ``@{-N}`` — git expands that shorthand to a previous checkout.
+    * ``HEAD`` — it is the symbolic ref for the current commit. Some git
+      versions still accept ``refs/heads/HEAD`` from ``--branch``; a branch
+      of that name collides with the symbolic ref, so this gate refuses it
+      on every version.
     """
-    if not name or name == "@" or name.startswith("-"):
+    if not name or name in {"@", "HEAD"} or name.startswith("-"):
         return True
     if name.startswith("/") or name.endswith("/") or name.endswith("."):
         return True

@@ -94,6 +94,10 @@ def test_explicit_model_refuses_wrong_route_and_ineligible_endpoint():
         resolve_requested_review_candidate("agy", "gemini-3.8-flash-high", REVIEW_CANDIDATES)
     with pytest.raises(ReviewSafetyError, match="gemini_code_review_forbidden"):
         resolve_requested_review_candidate("auto", "gemini-3.8-flash-high", REVIEW_CANDIDATES)
+    with pytest.raises(ReviewSafetyError, match="gemini_code_review_forbidden"):
+        resolve_requested_review_candidate("auto", "google/gemini-3.8-flash-high", REVIEW_CANDIDATES)
+    with pytest.raises(ReviewSafetyError, match="gemini_code_review_forbidden"):
+        resolve_requested_review_candidate("auto", "openrouter/google/gemini-3.8-flash-high", REVIEW_CANDIDATES)
 
 
 def test_same_route_model_ambiguity_reports_catalog_repair_not_reviewer_advice():

@@ -427,6 +427,10 @@ Strong success criteria enable independent looping. Weak criteria ("make it work
 
 **Adversarial code review command** (steps 2 & 6). Use a current cross-family
 review lane per `model-assignment.md` Code review row and document findings on the GH issue.
+Gemini-family seats stay off that row. Two residuals are accepted there:
+`--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion
+with no path check, and `delegate --agent agy` without `--require-review-verdict`
+is not gated.
 ```bash
 printf '%s\n' "Adversarial review for #NNN. Read {path}." | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - \

@@ -487,7 +487,10 @@ def resolve_requested_review_candidate(
     an attested native route from a non-formal fallback carrying the same model.
     """
     model = (explicit_model or "").strip() or None
-    if reviewer_request == REVIEWER_AGY or (model is not None and model.casefold().startswith("gemini-")):
+    # Provider-prefixed ids (``google/gemini-…``, ``openrouter/google/gemini-…``)
+    # share the Gemini leaf. Compare the last slash segment, lowercased.
+    model_leaf = model.casefold().rsplit("/", 1)[-1] if model is not None else ""
+    if reviewer_request == REVIEWER_AGY or model_leaf.startswith("gemini-"):
         raise ReviewSafetyError(
             "gemini_code_review_forbidden: operator 2026-09-25 — "
             "Gemini reviews Ukrainian only, never code (model-assignment.md)"
