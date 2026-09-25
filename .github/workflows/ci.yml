@@ -491,6 +491,68 @@ jobs:
               --timeout-method=thread --override-ini addopts=-v \
               --junitxml="ci-artifacts/pytest-shard-${SHARD}-repo-wide.xml"
           fi
+      - name: Verify needs_artifact skip set
+        if: matrix.shard == '1' && needs.changes.outputs.docs_only == 'false'
+        run: |
+          set -euo pipefail
+          mkdir -p ci-artifacts
+          git ls-files | grep -E '(^|/)test_[^/]+\.py$' > ci-artifacts/needs-artifact-files.txt
+          export LU_PYTEST_SHARD_FILES=ci-artifacts/needs-artifact-files.txt
+          .venv/bin/python -m pytest --collect-only -m needs_artifact -q --strict-markers \
+            --override-ini addopts= > ci-artifacts/needs-artifact-collected.txt || collection_status=$?
+          if [ "${collection_status:-0}" -ne 0 ] && [ "$collection_status" -ne 5 ]; then
+            exit "$collection_status"
+          fi
+          set +e
+          .venv/bin/python -m pytest -m needs_artifact --strict-markers --timeout=120 \
+            --timeout-method=thread --override-ini addopts=-v \
+            --junitxml=ci-artifacts/needs-artifact-audit.xml
+          audit_status=$?
+          set -e
+          # Pytest exits 5 when P0 has no marked tests; the exact-set check
+          # below still requires the committed expected set to be empty.
+          if [ "$audit_status" -ne 0 ] && [ "$audit_status" -ne 5 ]; then
+            exit "$audit_status"
+          fi
+          .venv/bin/python - <<'PY'
+          import sys
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          from scripts.storage.test_baseline import nodeid_to_junit_id
+
+          expected_path = Path("registry/artifacts/needs-artifact-expected.txt")
+          expected = {
+              line.strip()
+              for line in expected_path.read_text(encoding="utf-8").splitlines()
+              if line.strip() and not line.lstrip().startswith("#")
+          }
+          collected = set()
+          for line in Path("ci-artifacts/needs-artifact-collected.txt").read_text(encoding="utf-8").splitlines():
+              if ".py::" not in line:
+                  continue
+              collected.add(nodeid_to_junit_id(line))
+          if collected != expected:
+              print(f"needs_artifact collection differs: missing={sorted(expected - collected)} unexpected={sorted(collected - expected)}")
+              sys.exit(1)
+          report = ET.parse("ci-artifacts/needs-artifact-audit.xml")
+          artifact_skips = set()
+          for case in report.iter("testcase"):
+              case_id = f"{case.get('classname', '')}::{case.get('name', '')}"
+              skipped = case.find("skipped")
+              reason = "" if skipped is None else skipped.get("message", "") + (skipped.text or "")
+              if "needs_artifact:" in reason:
+                  artifact_skips.add(case_id)
+          missing = sorted(expected - artifact_skips)
+          unexpected = sorted(artifact_skips - expected)
+          if missing or unexpected:
+              print("needs_artifact skip set does not match registry/artifacts/needs-artifact-expected.txt")
+              if missing:
+                  print("expected IDs not skipped:\n  " + "\n  ".join(missing))
+              if unexpected:
+                  print("unexpected artifact skips:\n  " + "\n  ".join(unexpected))
+              sys.exit(1)
+          print(f"needs_artifact collected={len(collected)} skips={len(artifact_skips)} expected={len(expected)}")
+          PY
       - name: Stop memory sampler
         if: always() && needs.changes.outputs.docs_only == 'false'
         run: |

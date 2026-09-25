@@ -1605,6 +1605,11 @@ def pytest_configure(config: pytest.Config) -> None:
         "needs_sparse_tree(tree): test reads data/projects or data/lexicon; "
         "skipped when sparse-checkout omits that tree",
     )
+    config.addinivalue_line(
+        "markers",
+        "needs_artifact(group, rel): test requires data/<rel> from artifact group; "
+        "skipped only when the artifact is absent",
+    )
     # The live app's request middleware defaults to 10s. Tests that drive
     # TestClient(api_main.app) and read the real decision/ADR tree have
     # exceeded that under xdist and come back as 504 (#8439). The assertions
@@ -1616,6 +1621,21 @@ def pytest_configure(config: pytest.Config) -> None:
 def pytest_runtest_setup(item: pytest.Item) -> None:
     if item.get_closest_marker("live_network"):
         _set_live_network_allowed(True)
+    marker = item.get_closest_marker("needs_artifact")
+    if marker is not None:
+        if len(marker.args) != 2 or marker.kwargs:
+            raise pytest.UsageError("needs_artifact marker requires exactly (group, rel)")
+        from scripts.storage.paths import DATA_ROOT, MissingArtifactError, find_entry, verify_file
+
+        group, rel = marker.args
+        try:
+            entry = find_entry(group, rel)
+            verify_file(DATA_ROOT / rel, entry, group=group, rel=rel)
+        except MissingArtifactError as error:
+            detail = error.detail.casefold()
+            if detail == "missing" or "manifest missing" in detail or "no unique manifest entry" in detail:
+                pytest.skip(f"needs_artifact: {error}")
+            raise
 
 
 def pytest_runtest_teardown(item: pytest.Item, nextitem: pytest.Item | None) -> None:
