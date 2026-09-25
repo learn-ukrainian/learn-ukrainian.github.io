@@ -5823,8 +5823,27 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 # Measured 2026-09-23 on a full working tree (du -sh, .git excluded): 1.6GB,
 # of which curriculum/ is 289MB, wiki/ 66MB, data/projects/ 633MB, and
 # data/lexicon/ 277MB. Dropping those four leaves a default dispatch under
-# 450MB. Opt back in with --sparse-include or --full-checkout. wiki/ is still
-# a top-level tree (`git ls-tree -d HEAD wiki`), so it stays excluded.
+# 450MB (re-measured 2026-09-25: 287MB). Opt back in with --sparse-include
+# or --full-checkout. wiki/ is still a top-level tree
+# (`git ls-tree -d HEAD wiki`), so it stays excluded.
+#
+# curriculum/ stays in the exclusion set, with one cone anchor so
+# ``pytest -m repo_wide`` can read the manifest. Measured 2026-09-25 in a
+# default sparse worktree (no curriculum/): that command failed 15 tests,
+# and each one read only ``curriculum/l2-uk-en/curriculum.yaml``
+# (FileNotFoundError, or ORCH_TRACK_NOT_ACTIVE because a missing manifest
+# yields no active levels). Cone mode also checks out files that sit
+# directly in every ancestor of an included directory. The anchor is
+# ``curriculum/l2-uk-en/lesson-plans`` (192K), not a smaller sibling:
+# once ``curriculum/`` exists, collection of
+# tests/curriculum/test_plan_validate_cross.py loads
+# ``lesson-plans/a1/_arc.yaml`` (tree_absent is false). An evidence-only
+# anchor (3.4M, yaml present, arc absent) died at collection with exit 2.
+# Including lesson-plans materialises the arc, curriculum.yaml, and the
+# other loose files beside the manifest (vocabulary.db,
+# module-mapping.json, callout-claims-review.md). ``du -sh`` of that
+# tree: 3.6M, not 289M. The anchor is added only when that directory
+# exists at HEAD.
 _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
     {
         "curriculum",
@@ -5833,6 +5852,7 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
         "data/lexicon",
     }
 )
+_DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE = "curriculum/l2-uk-en/lesson-plans"
 # Owned-path prefixes that re-include a default-excluded tree even when the
 # path itself is not under that tree (tests and scripts that read it).
 # Filename stems end with "_" and match tests/test_open_model_*.py. Exact
@@ -6066,8 +6086,13 @@ def _apply_dispatch_sparse_checkout(
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
     Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
-    (~633MB), and ``data/lexicon/`` (~277MB). ``--full-checkout`` disables
-    sparse mode. ``--sparse-include`` keeps a named excluded tree.
+    (~633MB), and ``data/lexicon/`` (~277MB). When ``curriculum`` stays
+    excluded and ``curriculum/l2-uk-en/lesson-plans`` exists at HEAD, that
+    directory is still cone-included so ``curriculum/l2-uk-en/curriculum.yaml``
+    and ``lesson-plans/a1/_arc.yaml`` are present (~3.6MB) without the rest
+    of ``curriculum/``.
+    ``--full-checkout`` disables sparse mode. ``--sparse-include`` keeps a
+    named excluded tree.
     """
     includes = _normalize_sparse_include(sparse_include)
     telemetry: dict[str, Any] = {
@@ -6113,6 +6138,9 @@ def _apply_dispatch_sparse_checkout(
     all_dirs = _list_worktree_top_dirs(worktree_path)
     data_children = _list_worktree_dirs(worktree_path, "data/") if "data" in all_dirs else []
     included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude)
+    manifest_cone = _DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE
+    if "curriculum" in excluded and manifest_cone in _list_worktree_dirs(worktree_path, manifest_cone):
+        included.append(manifest_cone)
     telemetry["excluded"] = excluded
     telemetry["included_dirs"] = included
 
