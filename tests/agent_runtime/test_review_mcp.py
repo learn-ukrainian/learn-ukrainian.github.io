@@ -1287,8 +1287,13 @@ def test_agy_gate_refuses_a_launch_environment_without_the_scoped_home(
         {key: value for key, value in good.items() if key != "HOME"},
         {key: value for key, value in good.items() if key != "AGY_APP_DATA_DIR"},
     ):
-        with pytest.raises(AgyReviewMcpGateError, match=r"scoped HOME/AGY_APP_DATA_DIR.*#8617"):
+        with pytest.raises(AgyReviewMcpGateError, match=r"scoped HOME/AGY_APP_DATA_DIR.*#8617") as refused:
             verify_agy_review_effective_mcp(config_path=plan.config_path, cwd=tmp_path, env=bad, agy_bin=agy_bin)
+        # The refusal names the variables, never their values (#8652).
+        message = str(refused.value)
+        for value in {bad.get("HOME"), bad.get("AGY_APP_DATA_DIR"), good["HOME"], good["AGY_APP_DATA_DIR"]} - {None}:
+            assert value not in message
+        assert str(tmp_path) not in message
     assert not log.exists(), "the CLI must not run under a launch environment that is not scoped"
 
 

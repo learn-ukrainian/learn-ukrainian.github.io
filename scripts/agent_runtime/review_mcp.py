@@ -593,10 +593,8 @@ def verify_agy_review_effective_mcp(
     agy_home = agy_review_home_path(config)
     app_data = agy_review_app_data_dir(agy_home)
     if env.get("HOME") != str(agy_home) or env.get("AGY_APP_DATA_DIR") != str(app_data):
-        raise refuse(
-            "the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR "
-            f"(HOME={env.get('HOME')!r}, AGY_APP_DATA_DIR={env.get('AGY_APP_DATA_DIR')!r})"
-        )
+        # Name the variables, never their values: the launch environment is not log-safe.
+        raise refuse("the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR")
     if (app_data / "mcp_config.json").exists() or (app_data / "mcp_config.json").is_symlink():
         raise refuse(f"the scoped home has an unexpected {app_data / 'mcp_config.json'}")
 
