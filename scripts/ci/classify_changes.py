@@ -341,7 +341,7 @@ def _frontend_only() -> dict[str, str]:
 
 # Early PR preflight (#8750): the pytest lanes whose shards run the repo_wide
 # set (#8707) — every file in full, the explicit repo_wide leg in selected.
-# Preflight repeats that set in its own job so a repo-wide failure reports
+# Preflight repeats that set as a fast-checks step so a repo-wide failure reports
 # minutes before the shards finish. The docs lane already runs it in one
 # short shard; the content and frontend lanes do not run it at all, so a
 # preflight there would change what the gate proves.

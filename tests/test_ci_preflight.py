@@ -1,10 +1,11 @@
-"""Pin the early PR preflight job (#8750, phase A).
+"""Pin the early PR preflight check (#8750, phases A and A.2).
 
 Preflight runs the ``repo_wide`` set (#8707) plus a short registered list of
 other invariants on pull_request only, in parallel with the pytest shards.
-The shards still run the same tests, so preflight only moves a red signal
-earlier; CI Gate requires it exactly when Changes scheduled it (the gate rule
-itself is exercised in tests/test_ci_pr_triggers.py).
+Since phase A.2 it is the first step of the ``fast-checks`` job, not a job of
+its own. The shards still run the same tests, so preflight only moves a red
+signal earlier; CI Gate requires it exactly when Changes scheduled it (the
+gate rule itself is exercised in tests/test_ci_pr_triggers.py).
 """
 
 from __future__ import annotations
@@ -41,44 +42,75 @@ def _step(job: dict, name: str) -> dict:
     return matches[0]
 
 
+def _step_by_id(job: dict, step_id: str) -> dict:
+    matches = [step for step in job["steps"] if step.get("id") == step_id]
+    assert len(matches) == 1, f"expected one step with id {step_id!r}"
+    return matches[0]
+
+
+def _preflight_step() -> dict:
+    return _step_by_id(_jobs()["fast-checks"], "preflight")
+
+
+def _preflight_setup_steps() -> list[dict]:
+    """The fast-checks steps that exist only for preflight."""
+    steps = _jobs()["fast-checks"]["steps"]
+    end = steps.index(_preflight_step())
+    return [step for step in steps[:end] if step.get("if") == _SCHEDULED]
+
+
 def _flat(script: str) -> str:
     """Join shell line continuations and collapse whitespace."""
     return " ".join(script.replace("\\\n", " ").split())
 
 
+_SCHEDULED = "needs.changes.outputs.preflight == 'true'"
+
+
 def _preflight_script() -> str:
-    return _step(_jobs()["preflight"], "Run preflight pytest")["run"]
+    return _preflight_step()["run"]
 
 
 def _registered_extras() -> list[str]:
-    raw = _jobs()["preflight"]["env"]["PREFLIGHT_EXTRA_TESTS"]
+    raw = _preflight_step()["env"]["PREFLIGHT_EXTRA_TESTS"]
     return [line.strip() for line in raw.splitlines() if line.strip()]
 
 
-def test_preflight_job_reads_the_single_changes_decision() -> None:
+def test_preflight_step_reads_the_single_changes_decision() -> None:
     jobs = _jobs()
-    preflight = jobs["preflight"]
-    assert _needs(preflight) == ["changes"]
-    assert preflight["if"] == "needs.changes.outputs.preflight == 'true'"
+    assert "preflight" not in jobs, "preflight is a fast-checks step since #8750 phase A.2"
+    assert _needs(jobs["fast-checks"]) == ["changes"]
+    step = _preflight_step()
+    assert step["if"] == "${{ !cancelled() && " + _SCHEDULED + " }}"
+    assert step["timeout-minutes"] == 8
+    assert "continue-on-error" not in step
     assert jobs["changes"]["outputs"]["preflight"] == "${{ steps.classify.outputs.preflight }}"
-    # Nothing else re-derives the decision from event names or other outputs.
-    assert "github.event_name" not in str(preflight["if"])
-    assert preflight["timeout-minutes"] <= 10
+    # Its setup runs only when scheduled, and nothing re-derives the decision
+    # from event names or other outputs.
+    assert [s["name"] for s in _preflight_setup_steps()] == [
+        "Set up uv",
+        "Install preflight Python deps",
+        "Hydrate Atlas lexicon manifest",
+    ]
+    for scoped in [step, *_preflight_setup_steps()]:
+        assert "github.event_name" not in str(scoped["if"])
 
 
-def test_preflight_gates_nothing_but_ci_gate() -> None:
+def test_preflight_runs_first_and_gates_nothing_but_ci_gate() -> None:
     jobs = _jobs()
-    dependants = sorted(job_id for job_id, job in jobs.items() if "preflight" in _needs(job))
+    check_ids = [step["id"] for step in jobs["fast-checks"]["steps"] if "timeout-minutes" in step]
+    assert check_ids[0] == "preflight"
+    dependants = sorted(job_id for job_id, job in jobs.items() if "fast-checks" in _needs(job))
     assert dependants == ["ci-gate"]
-    assert "preflight" not in _needs(jobs["pytest"])
+    assert _needs(jobs["pytest"]) == ["changes"]
 
 
 def test_preflight_skips_postgres_npm_and_native_deps() -> None:
-    preflight = _jobs()["preflight"]
-    assert "services" not in preflight
-    uses = [step.get("uses", "") for step in preflight["steps"]]
+    fast_checks = _jobs()["fast-checks"]
+    assert "services" not in fast_checks
+    uses = [step.get("uses", "") for step in fast_checks["steps"]]
     assert not any("setup-node" in action for action in uses)
-    text = yaml.safe_dump(preflight)
+    text = yaml.safe_dump(fast_checks)
     for needle in ("npm ", "apt-get", "LEARN_UKRAINIAN_CP_PG_DSN", "postgres"):
         assert needle not in text, needle
 
@@ -86,11 +118,15 @@ def test_preflight_skips_postgres_npm_and_native_deps() -> None:
 def test_preflight_installs_python_like_the_shards() -> None:
     jobs = _jobs()
 
-    def commands(job: dict) -> list[str]:
-        script = _step(job, "Install Python deps")["run"]
+    def commands(job: dict, name: str) -> list[str]:
+        script = _step(job, name)["run"]
         return [line.strip() for line in script.splitlines() if line.strip() and not line.strip().startswith("#")]
 
-    assert commands(jobs["preflight"]) == commands(jobs["pytest"])
+    assert commands(jobs["fast-checks"], "Install preflight Python deps") == commands(
+        jobs["pytest"], "Install Python deps"
+    )
+    hydrate = "Hydrate Atlas lexicon manifest"
+    assert commands(jobs["fast-checks"], hydrate) == commands(jobs["pytest"], hydrate)
 
 
 def test_preflight_uses_the_shard_repo_wide_allowlist_and_flags() -> None:

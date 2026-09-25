@@ -4,18 +4,21 @@ New workflow (Fable 5.1, 2026-09-03). `.github/workflows/ci.yml` is a short
 replacement, not the old two-tier merge-queue file.
 
 `CI Gate` is the only required GitHub check. Same jobs on `pull_request` and
-`merge_group`, except Preflight, which runs on `pull_request` only.
+`merge_group`. Inside Fast checks, the Preflight step runs on `pull_request`
+only.
 
 | Job | When |
 | --- | --- |
 | Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |
-| Preflight | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |
-| Ruff | not docs-only |
 | Secret scan | always |
+| Fast checks | always; one runner for four check steps, in this order (see [Fast checks](#fast-checks-8750-phase-a2)): |
+| Fast checks: Preflight step | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |
+| Fast checks: Ruff step | not docs-only |
+| Fast checks: Plan Validate step | always (the v2 plan validator self-scopes on `pull_request` to its input paths; the generated arc landing `a1 --check` always runs) |
+| Fast checks: TypeSafe triage step | always (advisory during soak, #8232: `continue-on-error`, and CI Gate accepts any outcome, so a red TypeSafe step is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the step red) |
 | pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
-| TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |
 | CI Gate | always |
 
 The Changes job uses `scripts/ci/classify_changes.py`. Ordinary PRs skip
@@ -170,7 +173,7 @@ Red team review is out of band.
 
 ## Early PR preflight (#8750 phase A)
 
-The `Preflight` job reports a broken repo-wide invariant (a missing
+The Preflight step of the `Fast checks` job reports a broken repo-wide invariant (a missing
 `subprocess` timeout, the test-assertion lint, the marker invariants) in a few
 minutes instead of after a full pytest shard. Before it, the p50 time to the
 first failed job on a full PR run was about 13 minutes.
@@ -178,8 +181,8 @@ first failed job on a full PR run was about 13 minutes.
 **When it runs.** `scripts/ci/classify_changes.py` decides once and emits
 `preflight`. `preflight_for()` returns `true` only for a `pull_request` event
 whose tier is `full` or `selected`: the tiers whose shards run the
-`repo_wide` set. The Preflight job's `if:` and CI Gate both read that one
-output, and nothing in `ci.yml` re-derives it. The other lanes get no
+`repo_wide` set. The Preflight step's `if:` (and its setup steps') and CI
+Gate both read that one output, and nothing in `ci.yml` re-derives it. The other lanes get no
 preflight:
 
 - The **docs** lane already runs `repo_wide` in its single short shard.
@@ -201,7 +204,7 @@ LU_PYTEST_SHARD_FILES=<repo_wide list> pytest tests \
   --timeout-method=thread --override-ini addopts=-v
 ```
 
-A second invocation then runs the files registered in the job's
+A second invocation then runs the files registered in the step's
 `PREFLIGHT_EXTRA_TESTS` env, one path per line, under
 `-m 'not slow and not atlas_release'` with the same flags. These are cheap
 invariants that fail often but are not `repo_wide`. Today the list holds only
@@ -216,20 +219,23 @@ step fails if either one failed.
 the same Atlas manifest hydrate. It leaves out the Postgres service, Node/npm
 and the native apt packages (bubblewrap, libpq, apparmor), because no
 `repo_wide` test uses them: no marked file mentions a Postgres DSN,
-`psycopg` or `bwrap`, and the one that mentions `npm` stubs it. The checkout
-is shallow. The whole selection passes in a fresh depth-1 clone with no
-Postgres DSN and no `node_modules`. `timeout-minutes: 8`.
+`psycopg` or `bwrap`, and the one that mentions `npm` stubs it. The whole
+selection passes in a fresh depth-1 clone with no Postgres DSN and no
+`node_modules` (the shared Fast checks checkout is full-history because
+Plan Validate and TypeSafe triage need it). The uv setup, dependency install
+and hydrate steps run only when `preflight=true`. Step
+`timeout-minutes: 8`.
 
-**Parallel, not gating.** No shard `needs: preflight`, and the shards still
+**Parallel, not gating.** No shard `needs: fast-checks`, and the shards still
 run the `repo_wide` tests as the backstop, so a green run is no slower.
 Nothing is cancelled when preflight fails. Preflight only makes the red
 signal arrive earlier.
 
 **CI Gate rule.** This rule lives in the gate step:
 
-- `preflight=true`: the Preflight result must be `success`. `failure`,
-  `cancelled` and `skipped` all fail the gate.
-- `preflight=false`: the Preflight result must be `skipped`.
+- `preflight=true`: the Preflight step outcome must be `success`. `failure`,
+  `cancelled`, `skipped` and a missing output all fail the gate.
+- `preflight=false`: the Preflight step outcome must be `skipped`.
 - If Changes itself did not succeed, the gate fails before it reaches this
   rule.
 
@@ -241,6 +247,58 @@ through the workflow `concurrency` group. CI Gate is `if: always()`, so it
 still runs for that stale SHA and fails there (see the `concurrency` comment
 in `ci.yml`). That red lands on a commit that is no longer the PR head. The
 replacement run on the new head is the one that decides the PR.
+
+## Fast checks (#8750 phase A.2)
+
+Every `ci.yml` job runs on a GitHub-hosted runner, and the account runs at
+most 20 jobs at once. Preflight, Ruff, Plan Validate and TypeSafe triage each
+took about 1 to 3 minutes, and each held a full runner slot while pytest
+shards waited for one. The `fast-checks` job (`needs: changes`) now runs them
+as steps of one job: one checkout (full history), one `setup-python` with pip
+cache, and uv plus the shard-style `.venv` install and Atlas hydrate only
+when `preflight=true`. Ruff and Plan Validate install their own small pip
+dependencies inside their steps. Four jobs became one, so every run holds
+three fewer runner slots.
+
+**Every check runs.** Each check step has `if: ${{ !cancelled() && <its
+original job condition> }}`, so a failed step does not skip the checks after
+it, and one run reports every red check. A cancelled run still skips them.
+Preflight runs first, for the earliest signal.
+
+**Timeouts.** Each check keeps its old job timeout as a step
+`timeout-minutes`: Preflight 8, Ruff 5, Plan Validate 10, TypeSafe triage 5.
+The job timeout is 35: the 28-minute sum plus 7 for checkout and the
+preflight install.
+
+**Outputs, not conclusions.** Each check step has an `id`, and the job
+exposes `steps.<id>.outcome` as the outputs `preflight`, `ruff`,
+`plan_validate` and `typesafe`. CI Gate reads those outcomes, never a step
+`conclusion`: under `continue-on-error` a failed step concludes `success`.
+A step skipped by its condition reports `skipped`.
+
+**CI Gate rule for Fast checks:**
+
+- The job result must be `success` or `failure`. `cancelled`, `skipped` or a
+  missing result fails the gate.
+- The Changes flags these rules read (`preflight`, `docs_only`) must be
+  `true` or `false`; anything else fails the gate.
+- Preflight: `success` when `preflight=true`, `skipped` otherwise.
+- Ruff: `success` when `docs_only=false`, `skipped` otherwise.
+- Plan Validate: always `success`.
+- TypeSafe triage: logged, never blocks. A missing output still fails the gate,
+  because it means the job outputs are broken.
+- The gate logs every check's outcome before it fails, so one gate log names
+  every red check.
+- If every check passed its rule but the job still failed, a setup step
+  (checkout, Python, the preflight install) broke, and the gate fails.
+
+`tests/test_ci_pr_triggers.py` runs the real gate script for every
+check × condition × outcome combination, including cancelled and missing
+outputs.
+
+**Retry trade-off.** "Re-run failed jobs" now re-runs all four checks, not
+only the red one. A Ruff fix therefore costs up to one more Preflight run
+(about 3 minutes). That is the price of freeing three runner slots per run.
 
 ## pytest shard collection and balance (ci-shard-balance-2026-09-07)
 

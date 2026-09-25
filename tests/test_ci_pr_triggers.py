@@ -30,6 +30,7 @@ from typing import Any
 import pytest
 import yaml
 
+from scripts.ci import classify_changes
 from scripts.ci.classify_changes import preflight_for
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -157,7 +158,7 @@ def _evaluate(expression: str, context: dict[str, Any]) -> Any:
                 if peek() == ",":
                     take(",")
             take(")")
-            return _call(text, args)
+            return _call(text, args, context)
         if text in {"true", "false", "null"}:
             return {"true": True, "false": False, "null": None}[text]
         value: Any = context
@@ -170,9 +171,15 @@ def _evaluate(expression: str, context: dict[str, Any]) -> Any:
     return result
 
 
-def _call(name: str, args: list[Any]) -> Any:
+def _call(name: str, args: list[Any], context: dict[str, Any]) -> Any:
     if name == "always":
         return True
+    # Step status functions read the job status so far (``job.status``):
+    # success until a step fails, cancelled once the run is cancelled.
+    status = context.get("job", {}).get("status", "success")
+    if name in {"success", "failure", "cancelled"}:
+        assert not args, name
+        return status == name
     if name == "format":
         text = str(args[0])
         for number, arg in enumerate(args[1:]):
@@ -211,6 +218,10 @@ def test_expression_evaluator_follows_github_semantics() -> None:
     assert _evaluate("true && 'x' || ''", ctx) == "x"
     assert _evaluate("!(true && false)", ctx) is True
     assert _interpolate("a-${{ 7 }}-${{ null }}", ctx) == "a-7-"
+    assert _evaluate("!cancelled() && success()", ctx) is True
+    assert _evaluate("!cancelled()", {"job": {"status": "failure"}}) is True
+    assert _evaluate("success()", {"job": {"status": "failure"}}) is False
+    assert _evaluate("!cancelled()", {"job": {"status": "cancelled"}}) is False
 
 
 # --- ci.yml job simulation -------------------------------------------------
@@ -302,9 +313,8 @@ def test_no_workflow_reruns_ci_on_a_label() -> None:
 @pytest.mark.parametrize("event", sorted(_EVENTS))
 def test_every_event_runs_every_tier_job_and_reports_ci_gate(event: str) -> None:
     results, names = _simulate(_EVENTS[event])
-    # Preflight (#8750) runs on pull_request only; every other job runs on every event.
-    expected_skips = set() if _EVENTS[event]["event_name"] == "pull_request" else {"preflight"}
-    assert {job for job, result in results.items() if result != "ran"} == expected_skips
+    # Every job runs on every event; preflight (#8750) is a fast-checks step.
+    assert {job for job, result in results.items() if result != "ran"} == set()
     assert names["ci-gate"] == "CI Gate"
     assert names["changes"] == "Changes"
 
@@ -383,20 +393,156 @@ def _run_gate(env: dict[str, str]) -> subprocess.CompletedProcess[str]:
     )
 
 
+# --- fast-checks (#8750 phase A.2) -------------------------------------------
+
+# Check step id -> (step-level timeout, the tier condition after `!cancelled()`).
+# Each timeout is the former job's timeout-minutes; each condition is the
+# former job's `if:` (plan-validate and TypeSafe triage had none).
+_FAST_CHECKS = {
+    "preflight": (8, "needs.changes.outputs.preflight == 'true'"),
+    "ruff": (5, "needs.changes.outputs.docs_only == 'false'"),
+    "plan_validate": (10, None),
+    "typesafe": (5, None),
+}
+_FAST_CHECK_SETUP_MINUTES = 7
+
+
+def _fast_checks_job() -> dict:
+    return _load("ci.yml")["jobs"]["fast-checks"]
+
+
+def _check_steps() -> dict[str, dict]:
+    return {step["id"]: step for step in _fast_checks_job()["steps"] if step.get("id") in _FAST_CHECKS}
+
+
+def test_fast_checks_replaces_the_short_check_jobs() -> None:
+    jobs = _load("ci.yml")["jobs"]
+    for removed in ("ruff", "preflight", "plan-validate", "typesafe-triage"):
+        assert removed not in jobs, removed
+    assert jobs["fast-checks"]["needs"] == ["changes"]
+    # Shards and the other lanes stay independent of fast-checks.
+    for job_id in ("pytest", "contracts", "frontend"):
+        assert jobs[job_id]["needs"] == ["changes"], job_id
+    assert "needs" not in jobs["secret-scan"]
+    assert sorted(_ci_gate_job()["needs"]) == sorted(
+        ["changes", "secret-scan", "fast-checks", "pytest", "contracts", "frontend"]
+    )
+
+
+def test_fast_checks_runs_each_check_as_one_step_in_order() -> None:
+    steps = _fast_checks_job()["steps"]
+    ordered = [step["id"] for step in steps if step.get("id") in _FAST_CHECKS]
+    assert ordered == list(_FAST_CHECKS)  # preflight first
+    # Only check steps carry a timeout; setup steps share the job budget.
+    assert [step["id"] for step in steps if "timeout-minutes" in step] == ordered
+
+
+@pytest.mark.parametrize("check", sorted(_FAST_CHECKS))
+def test_fast_check_step_condition_timeout_and_output(check: str) -> None:
+    step = _check_steps()[check]
+    timeout, condition = _FAST_CHECKS[check]
+    expected = "!cancelled()" if condition is None else f"!cancelled() && {condition}"
+    assert step["if"] == "${{ " + expected + " }}"
+    assert step["timeout-minutes"] == timeout
+    assert _fast_checks_job()["outputs"][check] == "${{ steps." + check + ".outcome }}"
+
+
+def test_fast_checks_outputs_are_step_outcomes_only() -> None:
+    outputs = _fast_checks_job()["outputs"]
+    assert set(outputs) == set(_FAST_CHECKS)
+    assert "conclusion" not in yaml.safe_dump(outputs)
+
+
+def test_only_typesafe_is_advisory() -> None:
+    advisory = [
+        step.get("id") or step.get("name") for step in _fast_checks_job()["steps"] if step.get("continue-on-error")
+    ]
+    assert advisory == ["typesafe"]
+    assert _check_steps()["typesafe"]["continue-on-error"] is True
+
+
+def test_fast_checks_job_timeout_covers_every_step_budget() -> None:
+    budget = sum(timeout for timeout, _ in _FAST_CHECKS.values()) + _FAST_CHECK_SETUP_MINUTES
+    assert budget == 35
+    assert _fast_checks_job()["timeout-minutes"] == budget
+
+
+def _changes_for(event: str, tier: dict[str, str]) -> dict[str, str]:
+    return {**tier, "preflight": classify_changes.preflight_for(event, tier)}
+
+
+_TIERS = {
+    "full": classify_changes._full(4),
+    "docs": classify_changes._docs(),
+    "content": classify_changes._content(),
+}
+
+
+def _fast_check_runs(github: dict[str, Any], tier: dict[str, str], job_status: str) -> dict[str, bool]:
+    """Evaluate each fast-checks step `if` with GitHub's implicit success()."""
+    context = {
+        "github": github,
+        "job": {"status": job_status},
+        "needs": {"changes": {"result": "success", "outputs": _changes_for(github["event_name"], tier)}},
+    }
+    runs: dict[str, bool] = {}
+    for index, step in enumerate(_fast_checks_job()["steps"]):
+        condition = step.get("if")
+        key = step.get("id") or step.get("name") or f"step-{index}"
+        if condition is None:
+            runs[key] = job_status == "success"
+        elif _STATUS_FUNCTIONS.search(str(condition)):
+            runs[key] = _condition(condition, context)
+        else:
+            runs[key] = job_status == "success" and _condition(condition, context)
+    return runs
+
+
+@pytest.mark.parametrize("tier", sorted(_TIERS))
+@pytest.mark.parametrize("event", sorted(_EVENTS))
+def test_fast_check_steps_follow_their_original_conditions(event: str, tier: str) -> None:
+    github = _EVENTS[event]
+    changes = _changes_for(github["event_name"], _TIERS[tier])
+    runs = _fast_check_runs(github, _TIERS[tier], "success")
+    expected = {
+        "preflight": github["event_name"] == "pull_request" and tier == "full",
+        "ruff": changes["docs_only"] == "false",
+        "plan_validate": True,
+        "typesafe": True,
+    }
+    assert {check: runs[check] for check in _FAST_CHECKS} == expected
+    assert runs["preflight"] == (changes["preflight"] == "true")
+
+
+@pytest.mark.parametrize("event", sorted(_EVENTS))
+def test_a_failed_check_does_not_skip_the_later_checks(event: str) -> None:
+    # After a failed step the job status is `failure`: every applicable check
+    # still runs, while plain setup steps (implicit success()) do not.
+    github = _EVENTS[event]
+    healthy = _fast_check_runs(github, _TIERS["full"], "success")
+    after_failure = _fast_check_runs(github, _TIERS["full"], "failure")
+    assert {check: after_failure[check] for check in _FAST_CHECKS} == {check: healthy[check] for check in _FAST_CHECKS}
+    cancelled = _fast_check_runs(github, _TIERS["full"], "cancelled")
+    assert not any(cancelled[check] for check in _FAST_CHECKS)
+
+
+# --- CI Gate -----------------------------------------------------------------
+
 _GREEN = {
     "DOCS_ONLY": "false",
     "FRONTEND": "false",
     "BACKEND": "true",
     "PREFLIGHT_SCHEDULED": "true",
     "CHANGES": "success",
-    "PREFLIGHT": "success",
-    "RUFF": "success",
     "SECRET": "success",
+    "FAST_CHECKS": "success",
+    "FC_PREFLIGHT": "success",
+    "FC_RUFF": "success",
+    "FC_PLAN_VALIDATE": "success",
+    "FC_TYPESAFE": "success",
     "PYTEST": "success",
     "CONTRACTS": "success",
     "FRONTEND_JOB": "skipped",
-    "TYPESAFE_TRIAGE": "success",
-    "PLAN_VALIDATE": "success",
 }
 
 
@@ -404,6 +550,8 @@ def test_ci_gate_passes_a_green_full_tier() -> None:
     result = _run_gate(_GREEN)
     assert result.returncode == 0, result.stdout + result.stderr
     assert "CI Gate green" in result.stdout
+    for check in _FAST_CHECKS:
+        assert f"fast-checks {check}" in result.stdout, check
 
 
 def test_ci_gate_fails_when_a_required_job_was_cancelled() -> None:
@@ -424,39 +572,151 @@ def test_ci_gate_fails_when_changes_was_cancelled() -> None:
     assert "CI Gate green" not in result.stdout
 
 
+_DOCS_TIER = {
+    **_GREEN,
+    "DOCS_ONLY": "true",
+    "PREFLIGHT_SCHEDULED": "false",
+    "FC_PREFLIGHT": "skipped",
+    "FC_RUFF": "skipped",
+    "CONTRACTS": "skipped",
+}
+
+
 def test_ci_gate_allows_a_tier_skip_and_rejects_cancelled_tier_skip() -> None:
-    docs = {**_GREEN, "DOCS_ONLY": "true", "RUFF": "skipped", "CONTRACTS": "skipped"}
-    assert _run_gate(docs).returncode == 0
-    cancelled = _run_gate({**docs, "RUFF": "cancelled"})
+    assert _run_gate(_DOCS_TIER).returncode == 0
+    cancelled = _run_gate({**_DOCS_TIER, "CONTRACTS": "cancelled"})
     assert cancelled.returncode != 0
     assert "cancelled" in cancelled.stdout
 
 
-_JOB_RESULTS = ("success", "failure", "cancelled", "skipped")
+_OUTCOMES = ("success", "failure", "cancelled", "skipped", "")
 
 
-@pytest.mark.parametrize("result", _JOB_RESULTS)
-@pytest.mark.parametrize("scheduled", ["true", "false"])
-def test_ci_gate_preflight_rule(scheduled: str, result: str) -> None:
-    # #8750: scheduled → only success passes; not scheduled → only skipped.
-    gate = _run_gate({**_GREEN, "PREFLIGHT_SCHEDULED": scheduled, "PREFLIGHT": result})
-    passes = result == ("success" if scheduled == "true" else "skipped")
+def _gate_env(check: str, applies: bool, outcome: str) -> dict[str, str]:
+    env = dict(_GREEN)
+    if check == "preflight":
+        env["PREFLIGHT_SCHEDULED"] = "true" if applies else "false"
+        if not applies:
+            env["FC_PREFLIGHT"] = "skipped"
+    elif check == "ruff":
+        env["DOCS_ONLY"] = "false" if applies else "true"
+        if not applies:
+            env.update(FC_RUFF="skipped", CONTRACTS="skipped")
+    env["FC_" + check.upper()] = outcome
+    # A failed blocking step fails the job; any other outcome is tested with
+    # a successful job so the gate must reject it from the output alone.
+    env["FAST_CHECKS"] = "failure" if outcome == "failure" else "success"
+    return env
+
+
+_GATED_CASES = [
+    (check, applies, outcome)
+    for check, applies_options in (("preflight", (True, False)), ("ruff", (True, False)), ("plan_validate", (True,)))
+    for applies in applies_options
+    for outcome in _OUTCOMES
+]
+
+
+@pytest.mark.parametrize(("check", "applies", "outcome"), _GATED_CASES)
+def test_ci_gate_blocking_fast_check_rule(check: str, applies: bool, outcome: str) -> None:
+    # Condition applied → only `success` passes; not applied → only `skipped`.
+    gate = _run_gate(_gate_env(check, applies, outcome))
+    passes = outcome == ("success" if applies else "skipped")
     assert (gate.returncode == 0) is passes, gate.stdout + gate.stderr
     assert ("CI Gate green" in gate.stdout) is passes
     if not passes:
-        assert "preflight was" in gate.stdout
+        assert f"fast-checks output '{check}' is missing" in gate.stdout or (
+            f"fast-checks step {check} concluded '{outcome}'" in gate.stdout
+        )
 
 
-def test_ci_gate_preflight_wiring() -> None:
+@pytest.mark.parametrize("outcome", _OUTCOMES)
+def test_ci_gate_reports_typesafe_but_never_blocks_on_it(outcome: str) -> None:
+    gate = _run_gate({**_GREEN, "FC_TYPESAFE": outcome})
+    if outcome:
+        assert gate.returncode == 0, gate.stdout + gate.stderr
+        assert f"fast-checks typesafe (advisory): {outcome}" in gate.stdout
+    else:
+        # A missing output means the wiring broke, not that TypeSafe was red.
+        assert gate.returncode != 0
+        assert "fast-checks output 'typesafe' is missing" in gate.stdout
+
+
+@pytest.mark.parametrize("job_result", ["cancelled", "skipped", ""])
+def test_ci_gate_fails_closed_on_a_cancelled_skipped_or_missing_fast_checks_job(job_result: str) -> None:
+    gate = _run_gate({**_GREEN, "FAST_CHECKS": job_result})
+    assert gate.returncode != 0
+    assert f"fast-checks concluded '{job_result}'" in gate.stdout
+    assert "CI Gate green" not in gate.stdout
+
+
+def test_ci_gate_fails_closed_when_every_output_is_missing() -> None:
+    # A job that concluded without setting its outputs (for example a broken
+    # outputs block) must not pass on its result alone.
+    missing = {key: "" for key in _GREEN if key.startswith("FC_")}
+    gate = _run_gate({**_GREEN, **missing})
+    assert gate.returncode != 0
+    for check in _FAST_CHECKS:
+        assert f"fast-checks output '{check}' is missing" in gate.stdout, check
+
+
+def test_ci_gate_fails_when_fast_checks_failed_outside_its_checks() -> None:
+    # Every check passed its rule, but a setup step (checkout, Python, the
+    # preflight install) failed the job.
+    gate = _run_gate({**_GREEN, "FAST_CHECKS": "failure"})
+    assert gate.returncode != 0
+    assert "fast-checks failed outside its checks" in gate.stdout
+
+
+def test_ci_gate_does_not_blame_a_failed_job_on_the_advisory_step() -> None:
+    # A red TypeSafe step is continue-on-error, so it cannot fail the job; a
+    # failed job with a red TypeSafe step and green blocking checks is still
+    # a setup failure and stays red.
+    gate = _run_gate({**_GREEN, "FAST_CHECKS": "failure", "FC_TYPESAFE": "failure"})
+    assert gate.returncode != 0
+    assert "fast-checks failed outside its checks" in gate.stdout
+
+
+def test_ci_gate_reports_every_red_fast_check_in_one_run() -> None:
+    gate = _run_gate({**_GREEN, "FAST_CHECKS": "failure", "FC_PREFLIGHT": "failure", "FC_RUFF": "failure"})
+    assert gate.returncode != 0
+    assert "fast-checks step preflight concluded 'failure'" in gate.stdout
+    assert "fast-checks step ruff concluded 'failure'" in gate.stdout
+    assert "fast-checks plan_validate: success" in gate.stdout
+
+
+@pytest.mark.parametrize(("flag", "value"), [("PREFLIGHT_SCHEDULED", ""), ("DOCS_ONLY", ""), ("DOCS_ONLY", "maybe")])
+def test_ci_gate_fails_closed_on_an_unknown_tier_flag(flag: str, value: str) -> None:
+    gate = _run_gate({**_GREEN, flag: value})
+    assert gate.returncode != 0
+    assert "expected true or false" in gate.stdout
+
+
+def test_ci_gate_fast_checks_wiring() -> None:
     env = _ci_gate_job()["steps"][0]["env"]
     assert env["PREFLIGHT_SCHEDULED"] == "${{ needs.changes.outputs.preflight }}"
-    assert env["PREFLIGHT"] == "${{ needs.preflight.result }}"
-    assert "preflight" in _ci_gate_job()["needs"]
+    assert env["DOCS_ONLY"] == "${{ needs.changes.outputs.docs_only }}"
+    assert env["FAST_CHECKS"] == "${{ needs.fast-checks.result }}"
+    for check in _FAST_CHECKS:
+        assert env["FC_" + check.upper()] == "${{ needs.fast-checks.outputs." + check + " }}"
+    text = yaml.safe_dump(_ci_gate_job())
+    for removed in ("needs.ruff", "needs.preflight", "needs.plan-validate", "needs.typesafe-triage", "conclusion"):
+        assert removed not in text, removed
 
 
 def test_ci_gate_still_fails_when_changes_fails_without_a_preflight_output() -> None:
-    # A failed Changes job emits no outputs; the gate must fail on CHANGES first.
+    # A failed Changes job emits no outputs and skips fast-checks; the gate
+    # must fail on CHANGES first.
     for changes in ("failure", "cancelled"):
-        gate = _run_gate({**_GREEN, "CHANGES": changes, "PREFLIGHT_SCHEDULED": "", "PREFLIGHT": "skipped"})
+        gate = _run_gate(
+            {
+                **_GREEN,
+                "CHANGES": changes,
+                "PREFLIGHT_SCHEDULED": "",
+                "DOCS_ONLY": "",
+                "FAST_CHECKS": "skipped",
+                **{key: "" for key in _GREEN if key.startswith("FC_")},
+            }
+        )
         assert gate.returncode != 0
         assert "CI Gate green" not in gate.stdout
