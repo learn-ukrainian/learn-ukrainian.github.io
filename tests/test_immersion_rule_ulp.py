@@ -271,6 +271,11 @@ Your clean morning sentence uses **я прокида́юся** before breakfast.
         encoding="utf-8",
     )
     (module_dir / "vocabulary.yaml").write_text("[]\n", encoding="utf-8")
+    (module_dir / "activities.yaml").write_text(
+        "inline:\n- type: error-correction\n  items:\n"
+        "  - sentence: Моя сімя читає.\n    error: сімя\n    correction: сім'я\n",
+        encoding="utf-8",
+    )
 
     corrected = """```module.md
 # Мій ра́нок
@@ -294,7 +299,9 @@ Your clean morning sentence uses **я прокида́юся** before breakfast.
     )
 
     assert report["passed"] is True
-    assert (module_dir / "stress_annotation.json").exists()
+    stress_annotation = json.loads((module_dir / "stress_annotation.json").read_text(encoding="utf-8"))
+    assert stress_annotation["files"]["activities.yaml"] > 0
+    assert f"correction: сім'я{STRESS_MARK}" in (module_dir / "activities.yaml").read_text(encoding="utf-8")
     correction = json.loads((module_dir / "ulp_fidelity_correction_r1.json").read_text(encoding="utf-8"))
     assert correction["correction"]["applied"] == "module_patch"
     assert correction["after"]["passed"] is True
