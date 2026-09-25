@@ -13,6 +13,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import tarfile
 import tempfile
 import time
@@ -81,11 +82,47 @@ def phase_groups(repo: Path, phase: str) -> set[str]:
     return {row["group"] for row in _rows(repo) if row["class"] == "A" and _phase(row) == phase}
 
 
-def _phase_entries(repo: Path, phase: str) -> list[tuple[str, dict]]:
+def _resolve_manifests_ref(repo: Path, ref: str) -> str:
+    """Return the commit a ``--manifests-ref`` names, or explain how to fetch it."""
+    proc = None
+    if not ref.startswith("-"):
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"],
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    if proc is None or proc.returncode != 0:
+        raise ValueError(
+            f"manifests ref {ref!r} does not resolve to a commit in {repo}; "
+            "fetch the phase branch first, for example: git fetch origin <phase-branch>"
+        )
+    return proc.stdout.strip()
+
+
+def _load_manifest(repo: Path, group: str, commit: str | None = None) -> dict:
+    """Load a group manifest from the working tree, or from ``commit`` without touching the working tree."""
+    if commit is None:
+        return paths.load_manifest(group, repo)
+    rel = paths.manifest_path(group, repo).relative_to(repo).as_posix()
+    proc = subprocess.run(["git", "show", f"{commit}:{rel}"], cwd=repo, capture_output=True, timeout=30)
+    if proc.returncode != 0:
+        raise paths.MissingArtifactError(
+            group, "*", f"check that {commit} is the phase branch head carrying {rel}", f"manifest missing at {commit}"
+        )
+    try:
+        manifest = json.loads(proc.stdout)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"invalid manifest JSON at {commit}:{rel}: {exc}") from exc
+    return paths.validate_manifest(manifest, group, f"{commit}:{rel}")
+
+
+def _phase_entries(repo: Path, phase: str, *, manifests_commit: str | None = None) -> list[tuple[str, dict]]:
     selected = {row["path"] for row in _rows(repo) if row["class"] == "A" and _phase(row) == phase}
     result = []
     for group in phase_groups(repo, phase):
-        manifest = paths.load_manifest(group, repo)
+        manifest = _load_manifest(repo, group, manifests_commit)
         result.extend((group, entry) for entry in manifest["entries"] if entry["path"] in selected)
     if len(result) != len(selected):
         raise ValueError(f"phase {phase}: manifest coverage {len(result)} != {len(selected)}")
@@ -199,13 +236,19 @@ def _store_copy(source: Path, sha: str, store: Path) -> None:
         temp.unlink(missing_ok=True)
 
 
-def snapshot(repo: Path, phase: str) -> int:
+def snapshot(repo: Path, phase: str, *, manifests_ref: str | None = None) -> int:
+    """Copy a phase's A files into the host store after disk and pre-untrack blob proof.
+
+    ``manifests_ref`` reads the phase manifests from a Git ref (the unmerged phase branch), so a checkout
+    still at the pre-phase commit can snapshot before the phase merges; the working tree is not changed.
+    """
+    commit = _resolve_manifests_ref(repo, manifests_ref) if manifests_ref is not None else None
     with _lock(repo):
-        return _snapshot_locked(repo, phase)
+        return _snapshot_locked(repo, phase, manifests_commit=commit)
 
 
-def _snapshot_locked(repo: Path, phase: str) -> int:
-    entries = _phase_entries(repo, phase)
+def _snapshot_locked(repo: Path, phase: str, *, manifests_commit: str | None = None) -> int:
+    entries = _phase_entries(repo, phase, manifests_commit=manifests_commit)
     store = paths.artifact_store_root(repo)
     for group, entry in entries:
         rel = _entry_rel(entry)
@@ -275,7 +318,7 @@ def _hydrate_one(repo: Path, group: str, entry: dict, store: Path, *, force_pres
         if target_sha == sha:
             if not valid_obj:
                 if obj.exists() or obj.is_symlink():
-                    print(f"warning: corrupt store object {sha}; repairing from target", file=__import__("sys").stderr)
+                    print(f"warning: corrupt store object {sha}; repairing from target", file=sys.stderr)
                     _quarantine_corrupt_object(obj, store)
                 _store_copy(target, sha, store)
             return
@@ -294,7 +337,7 @@ def _hydrate_one(repo: Path, group: str, entry: dict, store: Path, *, force_pres
         _restore_from_store(obj, target)
     elif blob and _blob_present(repo, blob) and _sha_blob(repo, blob) == sha:
         if obj.exists() or obj.is_symlink():
-            print(f"warning: corrupt store object {sha}; using git blob", file=__import__("sys").stderr)
+            print(f"warning: corrupt store object {sha}; using git blob", file=sys.stderr)
         _restore_from_blob(repo, blob, target, sha)
         if obj.exists() or obj.is_symlink():
             _quarantine_corrupt_object(obj, store)
@@ -348,46 +391,79 @@ def _journal_path(repo: Path, group: str, rel: str) -> Path:
     return paths.artifact_store_root(repo) / ".transactions" / f"{key}.json"
 
 
+class RecoveryError(ValueError):
+    """A publish journal cannot be recovered automatically; every artifacts command stops until it is resolved."""
+
+
+def _recovery_remediation(journal: Path) -> str:
+    command = "/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts"
+    return (
+        f"remediation: inspect {journal} (fields repo, group, rel, old_sha256, new_sha256, new_manifest_digest, "
+        "manifest) against registry/artifacts/<group>.manifest.json and data/<rel> in that repo. To let recovery "
+        "finish, restore either the prior state (manifest = the journal's 'manifest' field, target sha256 = "
+        "old_sha256) or the completed publish (manifest digest = new_manifest_digest, target sha256 = new_sha256), "
+        f"then run `{command} status`, which rolls back or clears the journal. If the journal is stale instead "
+        f"(for example the manifest changed through a later commit) and `{command} verify --group <group>` passes, "
+        f"retire it with `mv {journal} {journal}.resolved`."
+    )
+
+
 def _recover_locked(repo: Path) -> int:
     store = paths.artifact_store_root(repo)
     journal_dir = store / ".transactions"
     count = 0
     for journal in sorted(journal_dir.glob("*.json")):
-        record = json.loads(journal.read_text(encoding="utf-8"))
-        if record.get("repo") != str(repo.resolve()):
-            continue
-        group = paths.checked_group(record["group"])
-        rel = str(paths.checked_rel(record["rel"]))
-        manifest = record["manifest"]
-        if manifest.get("group") != group or not isinstance(manifest.get("entries"), list):
-            raise ValueError(f"invalid publish recovery record: {journal}")
-        old = next((item for item in manifest["entries"] if item.get("path") == f"data/{rel}"), None)
-        if old is None or old.get("sha256") != record["old_sha256"]:
-            raise ValueError(f"inconsistent publish recovery record: {journal}")
-        manifest_path = paths.manifest_path(group, repo)
-        current_digest = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
-        old_digest = _manifest_digest(manifest)
-        new_digest = record.get("new_manifest_digest")
-        if current_digest not in {old_digest, new_digest} or not isinstance(new_digest, str):
-            raise ValueError(f"publish recovery REFUSED: manifest changed after journal {journal}")
-        target = repo / "data" / rel
-        target_sha = paths.hash_file(target) if target.is_file() and not target.is_symlink() else None
-        if current_digest == new_digest and target_sha == record.get("new_sha256"):
-            journal.unlink()
-            count += 1
-            continue
-        if target_sha not in {None, old["sha256"], record.get("new_sha256")}:
-            raise ValueError(f"publish recovery REFUSED: target changed after journal {target}")
-        obj = store / old["sha256"]
-        if not obj.is_file() or obj.stat().st_size != old["size"] or paths.hash_file(obj) != old["sha256"]:
-            raise ValueError(f"missing prior store object for publish recovery: {old['sha256']}")
-        target.parent.mkdir(parents=True, exist_ok=True)
-        _restore_from_store(obj, target)
-        _json_write(manifest_path, manifest)
-        paths.verify_file(target, old, group=group, rel=rel)
-        journal.unlink()
-        count += 1
+        try:
+            count += _recover_journal(repo, store, journal)
+        except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
+            raise RecoveryError(
+                f"publish recovery failed for journal {journal}: {exc}\n{_recovery_remediation(journal)}"
+            ) from exc
     return count
+
+
+def _recover_journal(repo: Path, store: Path, journal: Path) -> int:
+    """Roll one journal back or clear it; return 1 when handled, 0 when it belongs to another checkout."""
+    record = json.loads(journal.read_text(encoding="utf-8"))
+    owner = record.get("repo")
+    if not isinstance(owner, str) or not owner:
+        raise ValueError(f"invalid publish recovery record: {journal}")
+    if owner != str(repo.resolve()):
+        if not Path(owner).exists():
+            # The checkout that wrote it was deleted (a removed worktree); nothing is left to roll back.
+            journal.unlink()
+            print(f"artifacts: pruned publish journal {journal} of deleted checkout {owner}", file=sys.stderr)
+        return 0
+    group = paths.checked_group(record["group"])
+    rel = str(paths.checked_rel(record["rel"]))
+    manifest = record["manifest"]
+    if manifest.get("group") != group or not isinstance(manifest.get("entries"), list):
+        raise ValueError(f"invalid publish recovery record: {journal}")
+    old = next((item for item in manifest["entries"] if item.get("path") == f"data/{rel}"), None)
+    if old is None or old.get("sha256") != record["old_sha256"]:
+        raise ValueError(f"inconsistent publish recovery record: {journal}")
+    manifest_path = paths.manifest_path(group, repo)
+    current_digest = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+    old_digest = _manifest_digest(manifest)
+    new_digest = record.get("new_manifest_digest")
+    if current_digest not in {old_digest, new_digest} or not isinstance(new_digest, str):
+        raise ValueError(f"publish recovery REFUSED: manifest changed after journal {journal}")
+    target = repo / "data" / rel
+    target_sha = paths.hash_file(target) if target.is_file() and not target.is_symlink() else None
+    if current_digest == new_digest and target_sha == record.get("new_sha256"):
+        journal.unlink()
+        return 1
+    if target_sha not in {None, old["sha256"], record.get("new_sha256")}:
+        raise ValueError(f"publish recovery REFUSED: target changed after journal {target}")
+    obj = store / old["sha256"]
+    if not obj.is_file() or obj.stat().st_size != old["size"] or paths.hash_file(obj) != old["sha256"]:
+        raise ValueError(f"missing prior store object for publish recovery: {old['sha256']}")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    _restore_from_store(obj, target)
+    _json_write(manifest_path, manifest)
+    paths.verify_file(target, old, group=group, rel=rel)
+    journal.unlink()
+    return 1
 
 
 def recover_incomplete(repo: Path) -> int:
@@ -592,6 +668,7 @@ def _parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts manifest build --group raw_source --pre HEAD\n"
             "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts snapshot --phase P1\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts snapshot --phase P2 --manifests-ref origin/<phase-branch>\n"
             "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group raw_source\n"
             "Outputs: tracked registry/artifacts manifests; untracked host store objects and hydrated data files.\n"
             "Exit codes: 0 = success; 1 = missing, corrupt, or failed operation; 2 = invalid arguments.\n"
@@ -610,8 +687,31 @@ def _parser() -> argparse.ArgumentParser:
     build = manifest_sub.add_parser("build", help="Build a group migration manifest after disk/blob verification.")
     build.add_argument("--group", required=True, help="Classification group, for example raw_source.")
     build.add_argument("--pre", required=True, help="Pre-untrack commit containing A files, for example origin/main.")
-    snap = sub.add_parser("snapshot", help="Copy and hash a phase's migration A files into the host store.")
+    snap = sub.add_parser(
+        "snapshot",
+        help="Copy and hash a phase's migration A files into the host store.",
+        description=(
+            "Copy a phase's A files into the host store after proving disk bytes equal the pre-untrack Git blob.\n"
+            "Run in every long-lived checkout before the phase PR merges; use --manifests-ref while the\n"
+            "phase manifests exist only on the unmerged phase branch."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example (checkout still at main, phase branch fetched first with git fetch origin <phase-branch>):\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts snapshot --phase P2 --manifests-ref origin/<phase-branch>\n"
+            "Outputs: store objects only; the working tree, index, and branch are unchanged.\n"
+            "Exit codes: 0 = every phase artifact stored; 1 = missing ref or manifest, or failed proof; 2 = invalid arguments."
+        ),
+    )
     snap.add_argument("--phase", required=True, help="Migration phase P1, P2, P3, P4, or P5.")
+    snap.add_argument(
+        "--manifests-ref",
+        metavar="REF",
+        help=(
+            "Git ref whose registry/artifacts/<group>.manifest.json files are read with git show, for example "
+            "origin/<phase-branch>; the ref must be fetched first (default: the working-tree manifests)."
+        ),
+    )
     hyd = sub.add_parser("hydrate", help="Restore current files from host store, then available Git blobs.")
     hyd.add_argument(
         "--force-preserve",
@@ -656,7 +756,7 @@ def main(argv: list[str] | None = None, *, repo: Path = ROOT) -> int:
         if args.command == "manifest":
             count = manifest_build(repo, args.group, args.pre)
         elif args.command == "snapshot":
-            count = snapshot(repo, args.phase)
+            count = snapshot(repo, args.phase, manifests_ref=args.manifests_ref)
         elif args.command == "hydrate":
             entries = (
                 _phase_entries(repo, args.phase)
@@ -689,7 +789,7 @@ def main(argv: list[str] | None = None, *, repo: Path = ROOT) -> int:
         print(f"{args.command}: {count} artifact(s)")
         return 0
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError, tarfile.TarError) as error:
-        print(f"{args.command}: {error}", file=__import__("sys").stderr)
+        print(f"{args.command}: {error}", file=sys.stderr)
         return 1
 
 

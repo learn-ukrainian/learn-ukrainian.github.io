@@ -226,3 +226,20 @@ def test_collected_node_ids_match_junit_ids_for_classes_and_parameter_colons() -
         "tests.pkg.test_mod.TestCase::test_example[param::name]"
     )
     assert nodeid_to_junit_id("scripts/test_tool.py::test_one") == "scripts.test_tool::test_one"
+
+
+def test_skipped_to_passed_is_an_improvement_but_passed_to_skipped_needs_disposition(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    old = {"jobs": {"pytest-1": {"outcomes": {"pkg::test_data": "skipped"}}}}
+    new = {"jobs": {"pytest-1": {"outcomes": {"pkg::test_data": "passed"}}}}
+    assert compare_baselines(old, new, {}) == []
+    assert "undisposed change pkg::test_data: passed -> skipped" in compare_baselines(new, old, {})[0]
+    for name, baseline in (("old", old), ("new", new)):
+        (tmp_path / f"{name}.json").write_text(json.dumps(baseline), encoding="utf-8")
+    (tmp_path / "dispositions.json").write_text("{}", encoding="utf-8")
+    argv = ["compare", "--old", str(tmp_path / "old.json"), "--new", str(tmp_path / "new.json")]
+    assert main([*argv, "--dispositions", str(tmp_path / "dispositions.json")]) == 0
+    out = capsys.readouterr().out
+    assert "0 passing addition(s), 1 improvement(s)" in out
+    assert "IMPROVED skipped -> passed pkg::test_data (job pytest-1)" in out

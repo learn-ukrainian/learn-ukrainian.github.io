@@ -394,3 +394,106 @@ def test_snapshot_hydrate_and_import_hold_publish_lock(
 
     monkeypatch.setattr(artifacts.os, "replace", locked_replace)
     assert artifacts.import_tarball(repo, bundle) == 1
+
+
+def _phase_branch_with_manifest(repo: Path) -> str:
+    """Commit the built manifest on a phase branch and return the checkout to the pre-phase commit."""
+    base = git(repo, "symbolic-ref", "--short", "HEAD")
+    git(repo, "checkout", "-qb", "phase")
+    git(repo, "add", "registry")
+    git(repo, "commit", "-qm", "phase manifests")
+    git(repo, "checkout", "-q", base)
+    return base
+
+
+def test_snapshot_reads_manifests_from_ref_before_phase_merges(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setenv("LU_ARTIFACT_STORE", str(tmp_path / "store"))
+    base = _phase_branch_with_manifest(repo)
+    manifest_file = repo / "registry/artifacts/raw_source.manifest.json"
+    assert not manifest_file.exists()
+    head = git(repo, "rev-parse", "HEAD")
+    assert artifacts.main(["snapshot", "--phase", "P1"], repo=repo) == 1
+    assert "manifest missing" in capsys.readouterr().err
+
+    assert artifacts.main(["snapshot", "--phase", "P1", "--manifests-ref", "phase"], repo=repo) == 0
+    sha = hashlib.sha256(b"alpha").hexdigest()
+    assert (tmp_path / "store" / sha).read_bytes() == b"alpha"
+    assert git(repo, "status", "--porcelain") == ""
+    assert not manifest_file.exists()
+    assert (git(repo, "symbolic-ref", "--short", "HEAD"), git(repo, "rev-parse", "HEAD")) == (base, head)
+
+
+def test_snapshot_manifests_ref_still_proves_disk_against_blob(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("LU_ARTIFACT_STORE", str(tmp_path / "store"))
+    _phase_branch_with_manifest(repo)
+    (repo / "data/raw/source.txt").write_bytes(b"omega")
+    with pytest.raises(paths.MissingArtifactError, match="sha256"):
+        artifacts.snapshot(repo, "P1", manifests_ref="phase")
+    assert not (tmp_path / "store" / hashlib.sha256(b"omega").hexdigest()).exists()
+
+
+def test_snapshot_manifests_ref_missing_ref_or_manifest_is_a_clear_error(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setenv("LU_ARTIFACT_STORE", str(tmp_path / "store"))
+    (repo / "registry/artifacts/raw_source.manifest.json").unlink()
+    assert artifacts.main(["snapshot", "--phase", "P1", "--manifests-ref", "origin/nope"], repo=repo) == 1
+    err = capsys.readouterr().err
+    assert "'origin/nope' does not resolve to a commit" in err and "git fetch origin <phase-branch>" in err
+    assert artifacts.main(["snapshot", "--phase", "P1", "--manifests-ref", "HEAD"], repo=repo) == 1
+    assert "manifest missing at" in capsys.readouterr().err
+    assert list((tmp_path / "store").glob("[0-9a-f]*")) == []
+
+
+def test_snapshot_help_documents_manifests_ref(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit, match="0"):
+        artifacts._parser().parse_args(["snapshot", "--help"])
+    out = capsys.readouterr().out
+    assert "--manifests-ref REF" in out
+    assert "snapshot --phase P2 --manifests-ref origin/<phase-branch>" in out
+
+
+def test_failed_recovery_names_journal_and_remediation_for_every_command(
+    repo: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    journal = artifacts._journal_path(repo, "raw_source", "raw/source.txt")
+    journal.parent.mkdir(parents=True)
+    journal.write_text("{not json", encoding="utf-8")
+    for argv in (["status"], ["verify"]):
+        assert artifacts.main(argv, repo=repo) == 1
+        err = capsys.readouterr().err
+        assert f"publish recovery failed for journal {journal}" in err
+        assert "remediation: inspect" in err
+        assert "scripts.storage.artifacts status" in err and "verify --group <group>" in err
+        assert f"mv {journal} {journal}.resolved" in err
+    with pytest.raises(artifacts.RecoveryError, match="remediation"):
+        artifacts.publish(repo, "raw_source", "raw/source.txt", repo / "data/raw/source.txt", "test")
+
+
+def test_recovery_prunes_journals_of_deleted_checkouts_only(
+    repo: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    journal_dir = paths.artifact_store_root(repo) / ".transactions"
+    journal_dir.mkdir(parents=True)
+    live_other = tmp_path / "other-checkout"
+    live_other.mkdir()
+    gone = journal_dir / "gone.json"
+    kept = journal_dir / "kept.json"
+    artifacts._json_write(gone, {"repo": str(tmp_path / "deleted-worktree"), "group": "raw_source"})
+    artifacts._json_write(kept, {"repo": str(live_other), "group": "raw_source"})
+    assert artifacts.recover_incomplete(repo) == 0
+    assert not gone.exists()
+    assert kept.exists()
+    assert f"pruned publish journal {gone} of deleted checkout {tmp_path / 'deleted-worktree'}" in (
+        capsys.readouterr().err
+    )
+
+
+def test_artifacts_imports_sys_plainly() -> None:
+    source = Path(artifacts.__file__).read_text(encoding="utf-8")
+    assert "__import__(" not in source
+    assert "\nimport sys\n" in source
