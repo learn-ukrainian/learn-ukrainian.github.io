@@ -53,16 +53,109 @@ def test_migration_preserves_lookups_and_swaps_cleanly(tmp_path: Path, capsys):
     assert migrate_ulif_raw.main(["--db", str(db), "--compare-lookups", str(lookup_file)]) == 0
     assert json.loads(capsys.readouterr().out.splitlines()[-1]) == {"compared": 2, "identical": True}
 
-    with sqlite3.connect(db) as source, ulif_raw_cache.open_cache(cache, create=False) as raw:
+    with closing(sqlite3.connect(db)) as source, closing(ulif_raw_cache.open_cache(cache, create=False)) as raw:
+        assert source.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
         assert source.execute("SELECT 1 FROM sqlite_master WHERE name='ulif_dictua_raw_responses'").fetchone() is None
         assert source.execute("SELECT COUNT(*) FROM ulif_dictua_entries").fetchone()[0] == 2
         rows = list(raw.execute("SELECT response_sha256, body FROM ulif_dictua_raw_responses"))
         assert len(rows) == 3
         assert all(hashlib.sha256(body).hexdigest() == sha for sha, body in rows)
     assert db.with_name("sources.db.pre-8800").is_file()
+    with closing(sqlite3.connect(db.with_name("sources.db.pre-8800"))) as post_drop:
+        assert (
+            post_drop.execute("SELECT 1 FROM sqlite_master WHERE name='ulif_dictua_raw_responses'").fetchone() is None
+        )
     assert not db.with_name("sources.db.new").exists()
     assert not Path(f"{db}-wal").exists()
     assert not Path(f"{db}-shm").exists()
+
+
+def test_writer_cannot_add_raw_row_during_copy(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    db = tmp_path / "sources.db"
+    body = b"initial"
+    sha = hashlib.sha256(body).hexdigest()
+    with closing(sqlite3.connect(db)) as source:
+        source.execute("PRAGMA journal_mode=WAL")
+        source.execute(ulif_raw_cache.RAW_SCHEMA)
+        source.execute(
+            "INSERT INTO ulif_dictua_raw_responses VALUES (?, ?, ?, ?)",
+            (sha, body, "text/html", "first"),
+        )
+        source.commit()
+    attempted = False
+    original_put = ulif_raw_cache.put
+
+    def put_during_copy(*args, **kwargs):
+        nonlocal attempted
+        if not attempted:
+            attempted = True
+            second_body = b"late writer"
+            with closing(sqlite3.connect(db, timeout=0.05)) as writer:
+                with pytest.raises(sqlite3.OperationalError, match="database is locked"):
+                    writer.execute(
+                        "INSERT INTO ulif_dictua_raw_responses VALUES (?, ?, ?, ?)",
+                        (hashlib.sha256(second_body).hexdigest(), second_body, "text/html", "late"),
+                    )
+        return original_put(*args, **kwargs)
+
+    monkeypatch.setattr(ulif_raw_cache, "put", put_during_copy)
+    report = migrate_ulif_raw.migrate(db, ulif_raw_cache.cache_path(db))
+    assert attempted
+    assert report["copied_rows"] == 1
+    with closing(ulif_raw_cache.open_cache(ulif_raw_cache.cache_path(db), create=False)) as raw:
+        assert list(raw.execute("SELECT response_sha256 FROM ulif_dictua_raw_responses")) == [(sha,)]
+
+
+def test_row_added_after_preflight_is_copied(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    db = tmp_path / "sources.db"
+    body = b"late but before lock"
+    sha = hashlib.sha256(body).hexdigest()
+    with closing(sqlite3.connect(db)) as source:
+        source.execute("PRAGMA journal_mode=WAL")
+        source.execute(ulif_raw_cache.RAW_SCHEMA)
+        source.commit()
+    original_preflight = migrate_ulif_raw._preflight
+
+    def preflight_then_insert(path: Path):
+        report = original_preflight(path)
+        with closing(sqlite3.connect(path)) as writer:
+            writer.execute(
+                "INSERT INTO ulif_dictua_raw_responses VALUES (?, ?, ?, ?)",
+                (sha, body, "text/html", "late"),
+            )
+            writer.commit()
+        return report
+
+    monkeypatch.setattr(migrate_ulif_raw, "_preflight", preflight_then_insert)
+    report = migrate_ulif_raw.migrate(db, ulif_raw_cache.cache_path(db))
+    assert report["preflight"]["raw_rows"] == 0
+    assert report["copied_rows"] == 1
+    with closing(ulif_raw_cache.open_cache(ulif_raw_cache.cache_path(db), create=False)) as raw:
+        assert raw.execute(
+            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?", (sha,)
+        ).fetchone() == (body,)
+
+
+def test_same_count_but_different_cache_row_keeps_source_table(tmp_path: Path):
+    db = tmp_path / "sources.db"
+    body = b"response"
+    sha = hashlib.sha256(body).hexdigest()
+    with closing(sqlite3.connect(db)) as source:
+        source.execute("PRAGMA journal_mode=WAL")
+        source.execute(ulif_raw_cache.RAW_SCHEMA)
+        source.execute(
+            "INSERT INTO ulif_dictua_raw_responses VALUES (?, ?, ?, ?)",
+            (sha, body, "text/html", "source timestamp"),
+        )
+        source.commit()
+    cache = ulif_raw_cache.cache_path(db)
+    ulif_raw_cache.put(sha, body, "text/html", "different timestamp", path=cache)
+
+    with pytest.raises(RuntimeError, match="raw rows differ"):
+        migrate_ulif_raw.migrate(db, cache)
+    with closing(sqlite3.connect(db)) as source:
+        assert source.execute("SELECT COUNT(*) FROM ulif_dictua_raw_responses").fetchone()[0] == 1
+    assert not db.with_name("sources.db.pre-8800").exists()
 
 
 def test_corrupt_cache_body_fails_closed(tmp_path: Path):

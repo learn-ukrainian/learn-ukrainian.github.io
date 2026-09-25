@@ -41,6 +41,18 @@ def _table_counts(conn: sqlite3.Connection, *, exclude_raw: bool = False) -> dic
     }
 
 
+def _raw_digest(conn: sqlite3.Connection) -> str:
+    digest = hashlib.sha256()
+    for row in conn.execute(
+        f"SELECT response_sha256, body, content_type, stored_at FROM {RAW_TABLE} ORDER BY response_sha256"
+    ):
+        for value in row:
+            data = bytes(value) if isinstance(value, bytes) else value.encode("utf-8")
+            digest.update(len(data).to_bytes(8, "big"))
+            digest.update(data)
+    return digest.hexdigest()
+
+
 def _no_holders(db: Path) -> None:
     paths = [str(p) for p in (db, Path(f"{db}-wal"), Path(f"{db}-shm")) if p.exists()]
     try:
@@ -97,6 +109,8 @@ def migrate(db: Path, cache: Path) -> dict:
     new = db.with_name(f"{db.name}.new")
     old = db.with_name(f"{db.name}.pre-8800")
     try:
+        # WAL readers may continue, but no writer can add a row before DROP commits.
+        conn.execute("BEGIN IMMEDIATE")
         before = _table_counts(conn, exclude_raw=True)
         cursor = conn.execute(
             f"SELECT response_sha256, body, content_type, stored_at FROM {RAW_TABLE} ORDER BY response_sha256"
@@ -110,8 +124,11 @@ def migrate(db: Path, cache: Path) -> dict:
                 raise RuntimeError("cache checkpoint busy")
             copied += len(batch)
         cache_count = int(raw.execute(f"SELECT COUNT(*) FROM {RAW_TABLE}").fetchone()[0])
-        if copied != report["preflight"]["raw_rows"] or cache_count != copied:
+        source_count = int(conn.execute(f"SELECT COUNT(*) FROM {RAW_TABLE}").fetchone()[0])
+        if copied != source_count or cache_count != source_count:
             raise RuntimeError("raw row counts differ between source and cache")
+        if _raw_digest(conn) != _raw_digest(raw):
+            raise RuntimeError("raw rows differ between source and cache")
         for sha, body in raw.execute(f"SELECT response_sha256, body FROM {RAW_TABLE}"):
             if hashlib.sha256(body).hexdigest() != sha:
                 raise RuntimeError(f"cache body hash mismatch: {sha}")
@@ -133,8 +150,17 @@ def migrate(db: Path, cache: Path) -> dict:
                 raise RuntimeError("other table counts changed during migration")
         finally:
             compact.close()
+        compact_writable = sqlite3.connect(new)
+        try:
+            mode = str(compact_writable.execute("PRAGMA journal_mode=WAL").fetchone()[0]).lower()
+            if mode != "wal":
+                raise RuntimeError(f"compact database journal_mode={mode!r}, expected 'wal'")
+        finally:
+            compact_writable.close()
         _checkpoint(conn, db)
     finally:
+        if conn.in_transaction:
+            conn.rollback()
         conn.close()
         if raw is not None:
             raw.close()
@@ -149,9 +175,17 @@ def migrate(db: Path, cache: Path) -> dict:
     except OSError:
         old.rename(db)
         raise
+    live = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    try:
+        mode = str(live.execute("PRAGMA journal_mode").fetchone()[0]).lower()
+        if mode != "wal":
+            raise RuntimeError(f"swapped sources.db journal_mode={mode!r}, expected 'wal'")
+    finally:
+        live.close()
     report["compact_bytes"] = db.stat().st_size
     report["tables_preserved"] = before
-    report["rollback_copy"] = str(old)
+    report["post_drop_copy"] = str(old)
+    report["recovery"] = "Restore the raw table from the cache and the restic backup."
     return report
 
 
@@ -219,6 +253,8 @@ def main(argv: list[str] | None = None) -> int:
   .venv/bin/python scripts/lexicon/tools/migrate_ulif_raw.py --execute
   .venv/bin/python scripts/lexicon/tools/migrate_ulif_raw.py --compare-lookups lookups.json
 Outputs: JSON preflight/report on stdout; optional lookup file; cache DB and swapped sources.db on execute.
+         sources.db.pre-8800 is the post-DROP file, not a pre-migration image.
+         Recover the raw table from the cache and the restic backup.
 Exit codes: 0 success; 1 precondition, integrity, or lookup mismatch.
 Related: issue #8800 Plan v3 and backup issue #8811.""",
     )
