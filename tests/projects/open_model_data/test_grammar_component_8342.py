@@ -31,6 +31,7 @@ from scripts.projects.open_model_data.audit_dataset_acceptance import (
 )
 from scripts.projects.open_model_data.build_grammar_component_8342 import (
     build_jaccard_firewall_matcher,
+    validate_candidate_rejection,
 )
 from scripts.projects.open_model_data.generate_grammar_signoff_8342 import (
     generate_signoff_and_receipt,
@@ -964,8 +965,6 @@ def test_clean_sentence_for_query_preserves_quoted_punctuation():
 
 def test_validator_rejection_label_accuracy():
     """Verify validate_candidate_rejection semantic label accuracy on representative checks."""
-    from scripts.projects.open_model_data.build_grammar_component_8342 import validate_candidate_rejection
-
     # 1. Tense change: акцентує (present) -> акцентував (past)
     orig_tense = "Февр акцентує на духовному житті, культурі та психології людей."
     corr_tense = "Февр акцентував на духовному житті, культурі та психології людей."
@@ -1013,8 +1012,6 @@ def test_isolated_perednia_to_peredpokii_lexical_swap_regression():
     is rejected as unwarranted_valid_to_valid_lexical_swap even when isolated
     (without an accompanying nadiahshy -> odiahnuvshy edit). Regression test for Codex R27.
     """
-    from scripts.projects.open_model_data.build_grammar_component_8342 import validate_candidate_rejection
-
     orig_text = "Він стояв у передній і розмовляв."
     corr_text = "Він стояв у передпокої і розмовляв."
     orig_tokens = ["Він", "стояв", "у", "передній", "і", "розмовляв", "."]
