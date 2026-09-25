@@ -29,6 +29,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.storage.topology import BULK_LEAF_NAME, resolve_bulk_root
+
 CONFIG_SCHEMA_VERSION = "v4_source_custody_access_config_v1"
 ITEM_SCHEMA_VERSION = "v4_source_custody_access_v1"
 MISSING_REPORT_SCHEMA_VERSION = "v4_source_custody_missing_report_v1"
@@ -168,38 +170,41 @@ def _get_search_roots(input_root: Path) -> list[Path]:
     return roots
 
 
-def _resolve_archive_mount(archive_locator: str, roots: Sequence[Path]) -> Path | None:
-    """Resolve a logical archive locator (e.g. gdrive:learn-ukrainian-data/textbooks) to a local mount directory."""
+def _resolve_archive_mount(archive_locator: str) -> Path | None:
+    """Resolve an archive locator to a directory inside the bulk raw-source root.
+
+    ``gdrive:learn-ukrainian-data/<rel>``, ``gdrive:<rel>`` and a bare ``<rel>`` all
+    name ``<rel>`` inside the retained data store, reached only through
+    ``scripts.storage.topology.resolve_bulk_root`` — never a repository symlink
+    such as ``data/textbooks`` (#8803). ``None`` when no marker-valid root resolves
+    or the directory is absent, so the source is recorded as unmounted (ACCESS-4).
+
+    Fail closed with ``CustodyAccessError`` when the locator is absolute or its
+    resolved path (symlinks followed) leaves the bulk root. Errors name the
+    locator kind, never a filesystem path.
+    """
     if not archive_locator:
         return None
-    for r in roots:
-        candidates: list[Path] = []
-        if archive_locator.startswith("gdrive:learn-ukrainian-data/"):
-            rel = archive_locator.removeprefix("gdrive:learn-ukrainian-data/")
-            candidates.extend([r / "data" / rel, r / rel])
-        elif archive_locator.startswith("gdrive:"):
-            rel = archive_locator.removeprefix("gdrive:")
-            candidates.extend([r / "data" / rel, r / rel])
-        elif archive_locator.startswith("data/"):
-            candidates.append(r / archive_locator)
-        elif Path(archive_locator).is_absolute():
-            candidates.append(Path(archive_locator))
-        else:
-            candidates.extend([r / archive_locator, r / "data" / archive_locator])
-
-        for c in candidates:
-            if c.is_dir():
-                return c
-    return None
+    kind = "gdrive" if archive_locator.startswith("gdrive:") else "archive"
+    rel = archive_locator.removeprefix("gdrive:").removeprefix(f"{BULK_LEAF_NAME}/")
+    if not rel or Path(rel).is_absolute():
+        raise CustodyAccessError(f"{kind} locator must be a non-empty path relative to the bulk root")
+    resolution = resolve_bulk_root()
+    if not resolution.available or resolution.path is None:
+        return None
+    bulk_root = resolution.path.resolve()
+    candidate = (bulk_root / rel).resolve()
+    if candidate == bulk_root or not candidate.is_relative_to(bulk_root):
+        raise CustodyAccessError(f"{kind} locator resolves outside the bulk root")
+    return candidate if candidate.is_dir() else None
 
 
 def _build_archive_cache_map(
     archive_locator: str,
     lineage_rule: str,
-    roots: Sequence[Path],
 ) -> dict[str, Path]:
     """Pre-index all files in the mounted archive directory (including grade-* subdirectories)."""
-    mount_dir = _resolve_archive_mount(archive_locator, roots)
+    mount_dir = _resolve_archive_mount(archive_locator)
     if mount_dir is None or not mount_dir.is_dir():
         return {}
     suffix = ".jsonl" if lineage_rule == "native_digital_source" else ".pdf"
@@ -220,13 +225,12 @@ def _check_archive_on_host(
     archive_locator: str,
     source_file: str,
     lineage_rule: str,
-    roots: Sequence[Path],
     cached_map: Mapping[str, Path] | None = None,
 ) -> bool:
     """Grade-aware check for an archive source file on host storage."""
     if cached_map is not None:
         return source_file in cached_map
-    mount_dir = _resolve_archive_mount(archive_locator, roots)
+    mount_dir = _resolve_archive_mount(archive_locator)
     if mount_dir is None or not mount_dir.is_dir():
         return False
     suffix = ".jsonl" if lineage_rule == "native_digital_source" else ".pdf"
@@ -768,7 +772,6 @@ def resolve_source_access(
         archive_locator=archive_locator,
         source_file=source_file,
         lineage_rule=lineage_rule,
-        roots=roots,
         cached_map=archive_cache_map,
     )
 
@@ -984,7 +987,6 @@ def build(
         archive_maps_by_cohort[cid] = _build_archive_cache_map(
             c_cfg.get("archive_locator", ""),
             c_cfg.get("lineage_rule", ""),
-            roots,
         )
 
     # Connect to database read-only
@@ -1307,7 +1309,6 @@ def verify(
         archive_maps_by_cohort[cid] = _build_archive_cache_map(
             c_cfg.get("archive_locator", ""),
             c_cfg.get("lineage_rule", ""),
-            roots,
         )
 
     # Verify receipt schema and hashes
@@ -1608,7 +1609,6 @@ def verify(
                         archive_locator=archive_locator,
                         source_file=source_file,
                         lineage_rule=lineage_rule,
-                        roots=roots,
                         cached_map=archive_maps_by_cohort.get(cohort_id),
                     )
 

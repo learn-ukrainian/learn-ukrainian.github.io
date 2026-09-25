@@ -32,6 +32,7 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
+from . import config
 from .monitor_context import MonitorContext, get_ctx, resolve_context
 
 router = APIRouter(tags=["admin"])
@@ -197,7 +198,8 @@ async def disk_usage(ctx: MonitorContext = Depends(get_ctx)):
     data_dir = _data_dir(ctx)
     dirs = {
         "textbook_images": data_dir / "textbook_images",
-        "textbooks": data_dir / "textbooks",
+        # Bulk-root PDFs (#8803); never a repository symlink.
+        "textbooks": ctx.roots.textbooks_dir or config.TEXTBOOKS_DIR,
         "literary_texts": data_dir / "literary_texts",
         "textbook_chunks": data_dir / "textbook_chunks",
         "backups": ctx.roots.backup_dir,

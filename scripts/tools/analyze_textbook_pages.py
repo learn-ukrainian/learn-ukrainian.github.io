@@ -47,11 +47,15 @@ import pymupdf
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.append(str(_REPO_ROOT))
 
 from agent_runtime.json_parse import extract_json_object
 
+from scripts.wiki.config import TEXTBOOK_PDFS_DIR
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-TEXTBOOKS_DIR = BASE_DIR / "data" / "textbooks"
+TEXTBOOKS_DIR = TEXTBOOK_PDFS_DIR
 IMAGE_DIR = BASE_DIR / "data" / "textbook_images"
 ANALYSIS_FILE = IMAGE_DIR / "page_analysis.jsonl"
 PAIRS_FILE = IMAGE_DIR / "image_text_pairs.jsonl"

@@ -1,20 +1,37 @@
 """Shared configuration for legacy RAG helpers and VESUM verification."""
+import sys
 from pathlib import Path
 
 # ── Paths ──────────────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_ROOT / "data"
-TEXTBOOKS_DIR = DATA_DIR / "textbooks"
 IMAGES_DIR = DATA_DIR / "textbook_images"
 CHUNKS_DIR = DATA_DIR / "textbook_chunks"
 
 # ── Literary text paths ───────────────────────────────────────────
 LITERARY_DIR = DATA_DIR / "literary_texts"
 
+
+
+def __getattr__(name: str) -> Path:
+    """Resolve ``TEXTBOOKS_DIR`` lazily through the storage topology resolver.
+
+    Textbook PDFs live under the bulk raw-source root (``scripts/wiki/config.py``
+    ``TEXTBOOK_PDFS_DIR``), never a repository symlink (#8803). Resolving probes
+    mounts, and most of this module's importers never need the PDFs.
+    """
+    if name == "TEXTBOOKS_DIR":
+        # Direct script runs put only scripts/ on sys.path; the resolver's
+        # package imports need the project root.
+        if str(PROJECT_ROOT) not in sys.path:
+            sys.path.append(str(PROJECT_ROOT))
+        from scripts.wiki.config import TEXTBOOK_PDFS_DIR
+
+        return TEXTBOOK_PDFS_DIR
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
 # ── VESUM morphological dictionary ──────────────────────────────
-VESUM_DIR = DATA_DIR / "vesum"
-
-
 def _resolve_vesum_db_path(default_path: Path, project_root: Path) -> Path:
     """Resolve the VESUM DB path, falling back to the primary checkout's copy.
 
