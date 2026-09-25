@@ -1736,10 +1736,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help=(
             "Load the plan and build the knowledge packet, then stop before "
-            "writer invocation (default: false). Writes nothing to disk; the "
-            "wiki completeness verdict is reported on the phase_done event. "
-            "In --upgrade mode, save lessons.yaml "
-            "and the rendered writer_prompt.md without calling any model."
+            "writer invocation (default: false). Without --upgrade, a dry "
+            "run writes nothing to disk and reports the wiki completeness "
+            "verdict on the phase_done event. With --upgrade, it writes "
+            "lessons.yaml, upgrade_inputs.json and writer_prompt.md to the "
+            "upgrade output directory and calls no model."
         ),
     )
     parser.add_argument(
