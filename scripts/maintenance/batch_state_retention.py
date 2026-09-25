@@ -15,6 +15,7 @@ import errno
 import fcntl
 import json
 import os
+import re
 import secrets
 import stat
 import sys
@@ -52,6 +53,9 @@ _PHASES = ("pre", "post")
 # a path string passed to open/stat/replace/unlink.
 _DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 _READ_FLAGS = os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC
+# ``_temp_name`` is ``.{name}.{pid}.{16 hex}.tmp``. Only that shape is ours.
+_OWN_TEMP_RE = re.compile(r"^\..+\.[0-9]+\.[0-9a-f]{16}\.tmp\Z")
+_OWN_TEMP_MAX_AGE_S = 60 * 60
 
 
 def _component(name: str) -> bool:
@@ -118,23 +122,47 @@ def _temp_name(name: str) -> str:
     return f".{name}.{os.getpid()}.{secrets.token_hex(8)}.tmp"
 
 
+def _original_mode(dir_fd: int, name: str) -> int | None:
+    """Permission bits of the regular file ``name``, from the inode ``open`` returned."""
+    try:
+        fd = os.open(name, _READ_FLAGS, dir_fd=dir_fd)
+    except OSError:
+        return None
+    try:
+        info = os.fstat(fd)
+    finally:
+        os.close(fd)
+    if not stat.S_ISREG(info.st_mode):
+        return None
+    return stat.S_IMODE(info.st_mode)
+
+
 def _write_bytes_at(dir_fd: int, name: str, raw: bytes) -> None:
     """Create or replace ``name`` inside ``dir_fd`` without a path below the root fd.
 
     The temp name is unique, so a stale ``.{name}.tmp.{pid}`` left by a killed
     run cannot make ``O_EXCL`` fail. On any failure after the temp is created,
     that temp is unlinked; a name this call did not create is left alone.
+    Replacing a regular file keeps that file's mode. A new name is owner-only.
     """
     if not _component(name):
         raise OSError(errno.EINVAL, f"refusing to write {name}: symlink or path outside batch_state")
+    preserved = _original_mode(dir_fd, name)
     tmp = _temp_name(name)
     if not _component(tmp):
         raise OSError(errno.EINVAL, f"refusing to write {tmp}")
-    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=dir_fd)
+    fd = os.open(
+        tmp,
+        os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC,
+        preserved if preserved is not None else 0o600,
+        dir_fd=dir_fd,
+    )
     try:
         view = memoryview(raw)
         while view:
             view = view[os.write(fd, view) :]
+        if preserved is not None:
+            os.fchmod(fd, preserved)
     except OSError:
         os.close(fd)
         with contextlib.suppress(OSError):
@@ -147,6 +175,36 @@ def _write_bytes_at(dir_fd: int, name: str, raw: bytes) -> None:
         with contextlib.suppress(OSError):
             os.unlink(tmp, dir_fd=dir_fd)
         raise
+
+
+def _reap_own_temps(dir_fd: int, rel_dir: str, *, now: datetime) -> list[dict[str, str]]:
+    """Unlink this sweep's temp files in ``dir_fd`` once they are older than an hour.
+
+    The name must match :func:`_temp_name` exactly. The open uses ``O_NOFOLLOW``
+    on ``dir_fd``, so a symlink of that name is left in place. A younger file
+    may belong to a live writer and is left alone.
+    """
+    cutoff = now.timestamp() - _OWN_TEMP_MAX_AGE_S
+    removed: list[dict[str, str]] = []
+    for name in _names(dir_fd):
+        if _OWN_TEMP_RE.fullmatch(name) is None:
+            continue
+        try:
+            fd = os.open(name, _READ_FLAGS, dir_fd=dir_fd)
+        except OSError:
+            continue
+        try:
+            info = os.fstat(fd)
+        finally:
+            os.close(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_mtime >= cutoff:
+            continue
+        try:
+            os.unlink(name, dir_fd=dir_fd)
+        except OSError:
+            continue
+        removed.append({"dir": rel_dir, "name": name})
+    return removed
 
 
 def _unlink_regular_at(dir_fd: int, name: str) -> None:
@@ -501,6 +559,7 @@ def _plan_open(
 ) -> dict[str, Any]:
     reclaimable_by_top: dict[str, int] = {}
     selected: list[dict[str, Any]] = []
+    temps_removed: list[dict[str, str]] = []
     tasks_fd = _open_dir(root_fd, "tasks")
     if tasks_fd is not None:
         try:
@@ -510,6 +569,7 @@ def _plan_open(
                 parents.append((f"tasks/{ARCHIVE_DIR_NAME}", archive_fd))
             try:
                 for rel_dir, parent_fd in parents:
+                    temps_removed.extend(_reap_own_temps(parent_fd, rel_dir, now=now))
                     for snapshot_name in _names(parent_fd):
                         info = _lstat_at(parent_fd, snapshot_name)
                         if (
@@ -518,6 +578,12 @@ def _plan_open(
                             or not stat.S_ISDIR(info.st_mode)
                         ):
                             continue
+                        snap_fd = _open_dir(parent_fd, snapshot_name)
+                        if snap_fd is not None:
+                            try:
+                                temps_removed.extend(_reap_own_temps(snap_fd, f"{rel_dir}/{snapshot_name}", now=now))
+                            finally:
+                                os.close(snap_fd)
                         measured = _measure_candidate(
                             parent_fd,
                             rel_dir,
@@ -579,6 +645,7 @@ def _plan_open(
             "reclaimable_bytes": sum(row["reclaimable_bytes"] for row in subtrees),
         },
         "selected": selected,
+        "temps_removed": temps_removed,
     }
 
 

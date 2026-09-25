@@ -1298,6 +1298,22 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _apply_error_counts(row: dict[str, Any]) -> dict[str, int]:
+    """Count apply-time ``error`` rows by errno name. Dry-run rows are not errors."""
+    apply = row.get("apply")
+    if not isinstance(apply, dict):
+        return {}
+    counts: dict[str, int] = {}
+    for selected in apply.get("selected") or []:
+        if not isinstance(selected, dict) or selected.get("action") != "error":
+            continue
+        key = selected.get("error")
+        if not isinstance(key, str) or not key:
+            key = "OSError"
+        counts[key] = counts.get(key, 0) + 1
+    return counts
+
+
 def build_public_summary(
     receipt: dict[str, Any],
     receipt_path: Path | str | None = None,
@@ -1357,6 +1373,7 @@ def build_public_summary(
                 "reclaimable_bytes": (row.get("dry_run") or {}).get("totals", {}).get("reclaimable_bytes", 0),
                 "selected": len((row.get("dry_run") or {}).get("selected", [])),
                 "allowlist": (row.get("dry_run") or {}).get("allowlist"),
+                "errors": _apply_error_counts(row),
             }
             for row in receipt["batch_state_retention"]
         ]

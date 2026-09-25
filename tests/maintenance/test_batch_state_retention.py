@@ -6,6 +6,7 @@ import contextlib
 import errno
 import json
 import os
+import stat
 import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
@@ -553,3 +554,110 @@ def test_one_record_oserror_does_not_abort_the_sweep_or_the_receipt(
     assert by_dir["tasks/good.snapshots"]["action"] == "digested"
     assert _names(bad) == {"read_only_checkout_pre.json", "read_only_checkout_post.json"}
     assert _names(good) == {"digest.json"}
+    public = scheduled_worktree_cleanup.build_public_summary(receipt)
+    assert public["batch_state_retention"][0]["errors"] == {errno.errorcode[code]: 1}
+    dumped = json.dumps(public["batch_state_retention"])
+    assert "bad.snapshots" not in dumped
+    assert "good.json" not in dumped
+
+
+def test_public_summary_counts_apply_errors_by_errno_and_ignores_the_dry_run() -> None:
+    receipt = {
+        "batch_state_retention": [
+            {
+                "dry_run": {
+                    "mode": "dry-run",
+                    "allowlist": ["tasks/*.snapshots"],
+                    "totals": {"reclaimable_bytes": 10},
+                    "selected": [
+                        {"action": "would_digest", "snapshot_dir": "tasks/a.snapshots"},
+                        {"action": "error", "error": "EACCES", "snapshot_dir": "tasks/ignored.snapshots"},
+                    ],
+                },
+                "apply": {
+                    "mode": "apply",
+                    "selected": [
+                        {"action": "digested", "snapshot_dir": "tasks/ok.snapshots"},
+                        {"action": "error", "error": "EACCES", "snapshot_dir": "tasks/a.snapshots"},
+                        {"action": "error", "error": "ENOSPC", "snapshot_dir": "tasks/b.snapshots"},
+                        {"action": "error", "error": "EACCES", "snapshot_dir": "tasks/c.snapshots"},
+                    ],
+                },
+            }
+        ]
+    }
+    public = scheduled_worktree_cleanup.build_public_summary(receipt)
+    assert public["batch_state_retention"] == [
+        {
+            "mode": "apply",
+            "reclaimable_bytes": 10,
+            "selected": 2,
+            "allowlist": ["tasks/*.snapshots"],
+            "errors": {"EACCES": 2, "ENOSPC": 1},
+        }
+    ]
+    dumped = json.dumps(public["batch_state_retention"])
+    assert "ignored.snapshots" not in dumped
+    assert "a.snapshots" not in dumped
+
+
+def test_sweep_reaps_its_own_stale_temps_and_reports_them(tmp_path: Path) -> None:
+    root = _batch(tmp_path)
+    tasks = root / "tasks"
+    archive = tasks / "archive"
+    archive.mkdir()
+    _write_record(tasks, "old-clean", status="done", age_days=3, run_nonce="same")
+    snapshot = _write_full_sidecars(tasks, "old-clean", entries=1)
+
+    def _plant(directory: Path, name: str, pid: int, *, age_s: float) -> Path:
+        path = directory / f".{name}.{pid}.{'ab' * 8}.tmp"
+        path.write_text("killed", encoding="utf-8")
+        stamp = (NOW - timedelta(seconds=age_s)).timestamp()
+        os.utime(path, (stamp, stamp))
+        return path
+
+    stale_record = _plant(tasks, "old-clean.json", 4242, age_s=3700)
+    stale_digest = _plant(snapshot, "digest.json", 4243, age_s=7200)
+    stale_archive = _plant(archive, "moved.json", 4244, age_s=3700)
+    young = _plant(snapshot, "digest.json", 7, age_s=600)
+    young.write_text("live", encoding="utf-8")
+    os.utime(young, ((NOW - timedelta(seconds=600)).timestamp(),) * 2)
+    foreign = snapshot / f".digest.json.tmp.{os.getpid()}"
+    foreign.write_text("other-writer", encoding="utf-8")
+    os.utime(foreign, ((NOW - timedelta(hours=5)).timestamp(),) * 2)
+    outside = tmp_path / "outside-secret"
+    outside.write_text("secret", encoding="utf-8")
+    linked = snapshot / f".digest.json.9.{'ef' * 8}.tmp"
+    linked.symlink_to(outside)
+    os.utime(linked, ((NOW - timedelta(hours=5)).timestamp(),) * 2, follow_symlinks=False)
+
+    report = plan_retention(root, min_age_days=0, apply=False, now=NOW)
+
+    assert not stale_record.exists()
+    assert not stale_digest.exists()
+    assert not stale_archive.exists()
+    assert young.read_text(encoding="utf-8") == "live"
+    assert foreign.read_text(encoding="utf-8") == "other-writer"
+    assert linked.is_symlink()
+    assert outside.read_text(encoding="utf-8") == "secret"
+    assert report["temps_removed"] == [
+        {"dir": "tasks", "name": stale_record.name},
+        {"dir": "tasks/old-clean.snapshots", "name": stale_digest.name},
+        {"dir": "tasks/archive", "name": stale_archive.name},
+    ]
+    assert _names(snapshot) >= {"read_only_checkout_pre.json", "read_only_checkout_post.json"}
+
+
+def test_rewrite_preserves_the_record_mode(tmp_path: Path) -> None:
+    root = _batch(tmp_path)
+    tasks = root / "tasks"
+    _write_record(tasks, "old-clean", status="done", age_days=3, run_nonce="same")
+    record = tasks / "old-clean.json"
+    record.chmod(0o640)
+    snapshot = _write_full_sidecars(tasks, "old-clean", entries=1)
+
+    report = plan_retention(root, min_age_days=0, apply=True, now=NOW)
+
+    assert report["selected"][0]["action"] == "digested"
+    assert stat.S_IMODE(record.stat().st_mode) == 0o640
+    assert stat.S_IMODE((snapshot / "digest.json").stat().st_mode) == 0o600
