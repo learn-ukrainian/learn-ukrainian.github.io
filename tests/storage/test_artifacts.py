@@ -147,6 +147,31 @@ def test_write_artifact_publishes_manifest_paths_and_writes_others_directly(repo
     assert entries(repo)[0][1]["sha256"] == hashlib.sha256(b"charlie").hexdigest()
 
 
+def test_write_artifact_rejects_a_target_published_under_another_group(repo: Path) -> None:
+    (repo / "data/other").mkdir()
+    (repo / "data/other/map.json").write_bytes(b"{}")
+    with (repo / "registry/artifacts/classification-v1.tsv").open("a", newline="") as stream:
+        csv.writer(stream, delimiter="\t").writerow(
+            ("data/other/map.json", "100644", "", "2", "A", "other_group", "external; preserve", "rule")
+        )
+    git(repo, "add", ".")
+    git(repo, "commit", "-qm", "second group")
+    assert artifacts.manifest_build(repo, "other_group", "HEAD") == 1
+    manifest_before = (repo / "registry/artifacts/other_group.manifest.json").read_bytes()
+
+    def write(dest: Path) -> None:
+        dest.write_bytes(b"clobbered")
+
+    with pytest.raises(ValueError, match="published artifact of group other_group, not raw_source"):
+        artifacts.write_artifact(repo / "data/other/map.json", "raw_source", "test", write, repo=repo)
+    assert (repo / "data/other/map.json").read_bytes() == b"{}"
+    assert (repo / "registry/artifacts/other_group.manifest.json").read_bytes() == manifest_before
+    assert not any(paths.artifact_store_root(repo).glob("publish-stage-*"))
+
+    artifacts.write_artifact(repo / "data/other/map.json", "other_group", "test", write, repo=repo)
+    assert (repo / "data/other/map.json").read_bytes() == b"clobbered"
+
+
 def test_write_artifact_fails_closed_when_published_target_diverged(repo: Path) -> None:
     (repo / "data/raw/source.txt").write_bytes(b"edited in place")
     with pytest.raises(paths.MissingArtifactError, match=r"size|sha256"):

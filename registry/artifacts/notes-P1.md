@@ -45,6 +45,11 @@ and writes any other path directly. Writers that can target a published A path n
 - `scripts/wiki/migrate_external_chunks.py`, `tests/test_wiki_channels.py`, `tests/test_channels_registry.py`:
   the channel registry moved; the scraped `*.jsonl` corpus stays under untracked `data/external_articles/`.
 - `scripts/storage/consumers.py` now also finds the `registry/` twin of a K path and a quoted `"data/"` prefix.
+- Review round 2: the scanner missed `ukrainian_wiki_corpus.py` and `corpus_gaps/{classify,report}.py` because it only matched joins
+  under a full artifact path and never followed a constant imported from another module. It now also matches joins that name an
+  artifact's directory (`data / "corpus_audit" / "x_report.md"`) and imports of top-level path constants
+  (`base:import:<module>:<NAME>`). `load_coverage_map()` now always resolves its default through `artifact_path()` and raises with the hydrate
+  command when the map is absent; `write_artifact()` rejects an A target owned by a different group.
 
 ## Merge-time commands for the driver (spec §4 steps 8 and 10)
 

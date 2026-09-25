@@ -123,3 +123,31 @@ def test_scan_finds_quoted_data_prefix_classifiers(tmp_path: Path) -> None:
     _git(tmp_path, "add", "registry/artifacts/classification-v1.tsv", "scripts/classify.py")
     rows = scan_inventory(tmp_path, phase="P1", table=table)
     assert {"artifact": "base:data-prefix", "consumer": "scripts/classify.py", "check": ""} in rows
+
+
+def test_scan_finds_artifact_directory_joins_and_imported_path_constants(tmp_path: Path) -> None:
+    _git(tmp_path, "init", "-q")
+    table = tmp_path / "registry/artifacts/classification-v1.tsv"
+    table.parent.mkdir(parents=True)
+    table.write_text(
+        "path\tmode\tblob\tsize\tclass\tgroup\treason\tjudgment\n"
+        "data/audit/map.json\t100644\tx\t1\tA\tsnapshots\tr\trule\n",
+        encoding="utf-8",
+    )
+    files = {
+        # Joins the artifact's directory, so the full path never appears as a literal.
+        "scripts/pkg/writer.py": 'from pathlib import Path\nROOT = Path(".")\nOUT = ROOT / "data" / "audit" / "report.md"\n',
+        # Defines a path constant through another constant, then a reader imports it.
+        "scripts/pkg/config.py": 'from pathlib import Path\nBASE = Path(".") / "data" / "audit"\nMAP_PATH = BASE / "map.json"\nOTHER = 3\n',
+        "scripts/pkg/reader.py": "from pkg.config import MAP_PATH, OTHER\n\nprint(MAP_PATH, OTHER)\n",
+        "scripts/pkg/unrelated.py": "from pkg.config import OTHER\n",
+    }
+    for name, content in files.items():
+        (tmp_path / name).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / name).write_text(content, encoding="utf-8")
+    _git(tmp_path, "add", ".")
+
+    rows = {(row["artifact"], row["consumer"]) for row in scan_inventory(tmp_path, phase="P1", table=table)}
+    assert ("base:data-segment-join", "scripts/pkg/writer.py") in rows
+    assert ("base:import:scripts.pkg.config:MAP_PATH", "scripts/pkg/reader.py") in rows
+    assert not any(consumer == "scripts/pkg/unrelated.py" for _, consumer in rows)

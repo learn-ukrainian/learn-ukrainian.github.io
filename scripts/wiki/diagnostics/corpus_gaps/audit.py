@@ -550,8 +550,13 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def load_coverage_map(path: Path = COVERAGE_MAP_PATH) -> dict[str, Any]:
-    """Load a coverage map; the default is a published artifact, so verify it against its manifest."""
-    if path == COVERAGE_MAP_PATH and path.exists():
+    """Load a coverage map.
+
+    The default path is a published artifact: it is always verified against its manifest, and an absent or
+    mismatched file raises ``MissingArtifactError`` (with the hydrate command) instead of yielding an empty map.
+    An explicit user-supplied path is read directly, and a missing one yields ``{}``.
+    """
+    if Path(path).resolve() == COVERAGE_MAP_PATH.resolve():
         path = artifact_path("corpus_audit_snapshots", "corpus_audit/coverage_map.json")
     return load_json(path)
 

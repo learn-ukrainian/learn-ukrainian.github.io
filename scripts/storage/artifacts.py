@@ -476,17 +476,21 @@ def publish(repo: Path, group: str, rel: str, source: Path, producer: str) -> st
 def write_artifact(
     target: Path, group: str, producer: str, write: Callable[[Path], object], *, repo: Path = ROOT
 ) -> Path:
-    """Run ``write`` for ``target``; publish through a staging file when it is a manifest artifact of ``group``.
+    """Run ``write`` for ``target``; publish through a staging file when it is a manifest artifact.
 
     A producer's default output may be a published A path (spec section 3: only ``publish`` writes it).
-    Any other output path, such as a scratch or test path, is written directly.
+    The target is resolved against every A manifest: a path owned by ``group`` is published, a path owned by
+    any other group raises ``ValueError`` and nothing is written. Any other output path, such as a scratch or
+    test path, is written directly.
     """
     data_root = (repo / "data").resolve()
     resolved = Path(target).resolve()
     if resolved.is_relative_to(data_root):
         rel = resolved.relative_to(data_root).as_posix()
-        entries = paths.load_manifest(group, repo)["entries"]
-        if any(entry["path"] == f"data/{rel}" for entry in entries):
+        owners = sorted({owner for owner, entry in _all_manifests(repo) if entry["path"] == f"data/{rel}"})
+        if owners and group not in owners:
+            raise ValueError(f"data/{rel} is a published artifact of group {', '.join(owners)}, not {group}")
+        if owners:
             with tempfile.TemporaryDirectory(prefix="publish-stage-") as staging:
                 staged = Path(staging) / resolved.name
                 write(staged)
