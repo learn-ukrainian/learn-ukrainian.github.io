@@ -770,6 +770,56 @@ def test_every_pair_is_reported_when_no_seat_is_named(env: Env) -> None:
     assert [(e["lessons"], e["agreement"]["k"], e["blocking_disagreements"]) for e in found] == [(1, 1, 0), (1, 0, 1)]
 
 
+def _shadow_attempt(env: Env, review_id: str, attempt_id: str, seat: str, lesson_n: int) -> None:
+    """An attempt that reuses ``attempt_id`` under another review id (the table keeps (review_id, attempt_id) unique)."""
+    model, family = SEATS[seat]
+    conn = env.connect()
+    try:
+        with findings_db.transaction(conn):
+            findings_db.insert_attempt(
+                conn,
+                {
+                    "review_id": review_id,
+                    "attempt_id": attempt_id,
+                    "kind": "lesson",
+                    "level": "a1",
+                    "slug": "agreement-course",
+                    "lesson_n": lesson_n,
+                    "manifest_sha256": f"{lesson_n:064x}",
+                    "reviewer_model": model,
+                    "reviewer_family": family,
+                    "harness": seat,
+                    "verdict": "REVISE",
+                    "validated_at": "2026-09-24T00:00:00+00:00",
+                    "task_id": f"task-{review_id}",
+                    "role": "first",
+                },
+            )
+    finally:
+        conn.close()
+
+
+def test_an_attempt_id_shared_by_two_reviews_of_a_lesson_refuses_the_agreement_report(env: Env) -> None:
+    _first_world(env)
+    # an older attempt of another seat with the same attempt id on the same lesson, under another review id
+    _shadow_attempt(env, "rev-old", "g1-first", "grok", 1)
+    _lesson_pair(env, 1, "codex", "agy")
+    with pytest.raises(score.ScoreError) as raised:
+        score.agreement_by_seat_pair(["a1"], db_path_for=env.path_for, confidence=0.95)
+    assert raised.value.code == score.AGREEMENT_AMBIGUOUS and "rev-old" in str(raised.value)
+    with pytest.raises(score.ScoreError) as raised:
+        run(env)
+    assert raised.value.code == score.AGREEMENT_AMBIGUOUS
+
+
+def test_an_attempt_id_reused_on_another_lesson_does_not_confuse_the_seat_pair(env: Env) -> None:
+    _first_world(env)
+    _shadow_attempt(env, "rev-old", "g1-first", "grok", 2)  # the same id, but a different lesson
+    _lesson_pair(env, 1, "codex", "agy")
+    [entry] = score.agreement_by_seat_pair(["a1"], db_path_for=env.path_for, confidence=0.95)
+    assert [side["harness"] for side in entry["seats"]] == ["agy", "codex"]
+
+
 def test_a_seat_pair_with_no_lesson_in_common_is_shown_as_no_paired_reviews(env: Env) -> None:
     _first_world(env)
     _lesson_pair(env, 1, "codex", "agy")

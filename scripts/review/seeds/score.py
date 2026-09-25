@@ -64,6 +64,7 @@ UNIT_NOT_ATTEMPTED = "unit_not_attempted"
 NO_ATTEMPTS = "no_attempts"
 MIXED_SEAT = "mixed_seat"
 AGREEMENT_UNATTRIBUTED = "agreement_unattributed"
+AGREEMENT_AMBIGUOUS = "agreement_ambiguous"
 CONFIRMATION_LEAK = "confirmation_leak"
 IDENTITY_MISMATCH = "seed_identity_mismatch"
 EMPTY_SET = "empty_set"
@@ -522,7 +523,9 @@ def agreement_by_seat_pair(
     pair with more than one comparison of the same lesson counts its latest. ``agreed`` over ``lessons`` carries a
     Wilson interval; ``blocking_disagreements`` counts the disagreed findings that are BLOCKER or MAJOR (the ones that
     hold a module). ``seat`` (and ``model``) keep only the pairs that include that seat. A row whose attempts are not
-    in the database cannot be attributed to a seat pair and refuses the report.
+    in the database (``agreement_unattributed``), or whose attempt id exists under more than one review id
+    (``agreement_ambiguous``: the row keeps attempt ids only), cannot be attributed to a seat pair and refuses the
+    report.
     """
     latest: dict[tuple, tuple[bool, int]] = {}
     for level in levels:
@@ -531,18 +534,28 @@ def agreement_by_seat_pair(
             for row in conn.execute("SELECT rowid, * FROM agreement ORDER BY rowid").fetchall():
                 sides = []
                 for attempt_id in (row["attempt_a"], row["attempt_b"]):
+                    # The agreement row stores attempt ids only, and (review_id, attempt_id) is what the attempts table
+                    # keeps unique: an id shared by two reviews cannot be attributed to a seat, so it refuses.
                     found = conn.execute(
-                        "SELECT harness, reviewer_model FROM attempts WHERE attempt_id = ? AND level = ? AND slug = ?"
-                        " AND lesson_n = ? ORDER BY seq LIMIT 1",
+                        "SELECT review_id, harness, reviewer_model FROM attempts WHERE attempt_id = ? AND level = ?"
+                        " AND slug = ? AND lesson_n = ? ORDER BY seq",
                         (attempt_id, row["level"], row["slug"], row["lesson_n"]),
-                    ).fetchone()
-                    if found is None:
+                    ).fetchall()
+                    if not found:
                         raise ScoreError(
                             f"agreement of {row['level']}/{row['slug']}/{row['lesson_n']} names attempt {attempt_id} "
                             "that is not in the database",
                             AGREEMENT_UNATTRIBUTED,
                         )
-                    sides.append((found["harness"], found["reviewer_model"]))
+                    review_ids = sorted({attempt["review_id"] for attempt in found})
+                    if len(review_ids) > 1:
+                        raise ScoreError(
+                            f"agreement of {row['level']}/{row['slug']}/{row['lesson_n']} names attempt {attempt_id}, "
+                            f"which exists under several reviews {review_ids}: the agreement row does not say which "
+                            "one it compared",
+                            AGREEMENT_AMBIGUOUS,
+                        )
+                    sides.append((found[0]["harness"], found[0]["reviewer_model"]))
                 pair = tuple(sorted(sides))
                 if seat is not None and not any(
                     side[0] == seat and (model is None or side[1] == model) for side in pair

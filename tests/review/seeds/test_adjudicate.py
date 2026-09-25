@@ -42,14 +42,30 @@ class Case:
         self.task_file, _ = adj.write_task(subject, LESSON_TEXT, review_id=self.review_id, root=env.root)
         self.adjudicator = self.dispatch("agy", "gemini-3.1-pro-preview")  # google
 
-    def dispatch(self, agent: str, model: str, *, task_id: str | None = None, prompt_sha256: str | None = None) -> str:
-        """Write the dispatch record of the adjudication (by default of this case's own task and its rendered prompt)."""
+    def dispatch(
+        self,
+        agent: str,
+        model: str,
+        *,
+        task_id: str | None = None,
+        prompt_sha256: str | None = None,
+        prompt_blocks: list[str] | None = None,
+    ) -> str:
+        """Write the dispatch record of the adjudication (by default of this case's own task and its rendered prompt,
+        dispatched plain: delegate appended only its worktree block)."""
         task_id = task_id or self.task_id
         sha = prompt_sha256 or hashlib.sha256(self.task_file.read_bytes()).hexdigest()
-        (self.env.tasks / f"{task_id}.json").write_text(
-            json.dumps({"task_id": task_id, "agent": agent, "model": model, "status": "done", "prompt_sha256": sha}),
-            encoding="utf-8",
-        )
+        blocks = ["worktree"] if prompt_blocks is None else prompt_blocks
+        record = {
+            "task_id": task_id,
+            "agent": agent,
+            "model": model,
+            "status": "done",
+            "prompt_sha256": sha,
+            "effective_prompt_sha256": hashlib.sha256(b"effective " + sha.encode()).hexdigest(),
+            "prompt_blocks": blocks,
+        }
+        (self.env.tasks / f"{task_id}.json").write_text(json.dumps(record), encoding="utf-8")
         return task_id
 
     def reply(self, mapping: dict[str, str], **fields: Any) -> dict[str, Any]:
@@ -399,6 +415,30 @@ def test_an_unrelated_independent_dispatch_cannot_stand_in_for_the_adjudication(
     assert code_of(seeded, good) == [adj.TASK_MISMATCH]
     # the matching dispatch is accepted
     seeded.dispatch("agy", "gemini-3.1-pro-preview")
+    assert seeded.record(good)["new"] is True
+
+
+def test_a_dispatch_with_caller_controlled_prompt_blocks_is_refused(seeded: Case) -> None:
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    # the matching task file, dispatched with a --lifecycle-file: the seat saw instructions this module never rendered
+    seeded.dispatch("agy", "gemini-3.1-pro-preview", prompt_blocks=["worktree", "lifecycle"])
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    # ... or with --research-* flags
+    seeded.dispatch("agy", "gemini-3.1-pro-preview", prompt_blocks=["worktree", "research"])
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    # a record from before the effective hash was recorded cannot prove what the seat received
+    seeded.dispatch("agy", "gemini-3.1-pro-preview")
+    path = seeded.env.tasks / f"{seeded.task_id}.json"
+    record = json.loads(path.read_text(encoding="utf-8"))
+    del record["effective_prompt_sha256"]
+    path.write_text(json.dumps(record), encoding="utf-8")
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    record["effective_prompt_sha256"] = "ab" * 32
+    del record["prompt_blocks"]
+    path.write_text(json.dumps(record), encoding="utf-8")
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    # plain (only the worktree block), or no block at all (no worktree): accepted
+    seeded.dispatch("agy", "gemini-3.1-pro-preview", prompt_blocks=[])
     assert seeded.record(good)["new"] is True
 
 

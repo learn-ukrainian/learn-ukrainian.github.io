@@ -52,6 +52,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "duration_s": float | null,
         "prompt_chars": int,
         "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
+        "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
+        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
         "stderr_excerpt": str | null,
@@ -8165,7 +8167,13 @@ def _dispatch(
     except (OSError, ValueError) as exc:
         print(f"❌ invalid --lifecycle-file: {exc}", file=sys.stderr)
         return 2
-    prompt += lifecycle_prompt
+    # Kinds of the blocks delegate adds around the caller's prompt, in the order they appear in the final prompt (the
+    # worktree block leads it, the lifecycle and research blocks follow it); recorded so a consumer can tell which
+    # instructions the worker saw beyond the source prompt.
+    prompt_blocks: list[str] = []
+    if lifecycle_prompt:
+        prompt += lifecycle_prompt
+        prompt_blocks.append("lifecycle")
 
     # ADR-011 P3 research context — explicit --research-* flags only. Validate the
     # request-side caps up front (fail fast, before any worktree side effect) so a
@@ -8889,6 +8897,8 @@ def _dispatch(
             if isinstance(worktree_telemetry.get("sparse"), dict)
             else None,
         )
+        if worktree_path is not None:
+            prompt_blocks.insert(0, "worktree")
 
         # POINTERS ONLY: inject bounded research pointers + an on-demand fetch
         # instruction (never digest bodies) when an explicit context was supplied and
@@ -8897,7 +8907,10 @@ def _dispatch(
         research_state: dict[str, Any] | None = None
         if research_ctx is not None:
             research_block, research_state = _resolve_research_injection(research_ctx, task_id)
+            if research_block:
+                prompt_blocks.append("research")
             prompt = prompt + research_block
+        effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
         start_telemetry = resolve_dispatch_start_telemetry(
             agent_name=dispatch_agent,
@@ -8947,6 +8960,8 @@ def _dispatch(
             "output_schema_path": output_schema_path,
             "output_schema_sha256": output_schema_sha256,
             "prompt_sha256": source_prompt_sha256,
+            "effective_prompt_sha256": effective_prompt_sha256,
+            "prompt_blocks": prompt_blocks,
             "pid": None,  # worker fills this
             "status": "spawning",
             "started_at": datetime.now(UTC).isoformat(),
