@@ -175,6 +175,23 @@ The `Preflight` job reports a broken repo-wide invariant (a missing
 minutes instead of after a full pytest shard. Before it, the p50 time to the
 first failed job on a full PR run was about 13 minutes.
 
+### Measured results (2026-09-25)
+
+Baseline before phase A (459 CI runs, 2026-09-22 20:24Z to 2026-09-24 23:07Z):
+89% of PR runs take the full tier; time to first failed job on failing full PR
+runs p50 13.0 min, p95 29.2 min; pytest job queue p50 1.2 min, p95 12.7 min.
+
+Held-out probe PR #8759 (a timeout-less `subprocess.run`): the preflight failed
+on `tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts`
+after 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s
+after the run started; `CI Gate` was red; the shards' repo_wide backstop also
+failed.
+
+Known limit: the preflight competes with the pytest shards for runners. All CI
+jobs are GitHub-hosted and concurrent jobs peak at the account's 20-job cap, so
+queue time can dominate. Phase A.2 (issue #8750) consolidates short checks into
+one `fast-checks` job.
+
 **When it runs.** `scripts/ci/classify_changes.py` decides once and emits
 `preflight`. `preflight_for()` returns `true` only for a `pull_request` event
 whose tier is `full` or `selected`: the tiers whose shards run the
