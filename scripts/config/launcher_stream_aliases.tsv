@@ -1,0 +1,23 @@
+# selector<TAB>stream key<TAB>launcher lane; consumed by the launcher and /api/work/v1/next.
+infra	infra-harness	infra
+harness	infra-harness	infra
+infra.fleet-comms	infra-harness	infra
+devops	devops	devops
+infra.devops	devops	devops
+monitor	monitor	monitor
+infra.monitor	monitor	monitor
+ops-api	monitor	monitor
+ops.api	monitor	monitor
+operator-api	monitor	monitor
+atlas	atlas-practice	atlas
+practice	atlas-practice	atlas
+practice-hub	atlas-practice	atlas
+atlas.practice	atlas-practice	atlas
+hramatka	hramatka	hramatka
+hramatka.lessons	hramatka	hramatka
+folk	seminars-folk	folk
+seminars-folk	seminars-folk	folk
+bio	seminars-bio	bio
+seminars-bio	seminars-bio	bio
+corpus	corpus-channels	corpus
+corpus-channels	corpus-channels	corpus

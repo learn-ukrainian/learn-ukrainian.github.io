@@ -19,6 +19,7 @@ from fastapi.responses import JSONResponse
 from scripts.api.state_helpers import cache_get, cache_get_with_age, cache_invalidate, cache_set, ctx_cache_scope
 from scripts.orchestration.fleet_taxonomy import FleetTaxonomyError, resolve_area
 from scripts.orchestration.issue_stream_audit import load_registry
+from scripts.orchestration.launcher_aliases import load_launcher_aliases
 from scripts.work.attention import is_actionable
 from scripts.work.normalize import build_public_projection
 from scripts.work.schema import (
@@ -532,13 +533,22 @@ def _item_streams(item: dict[str, Any]) -> list[str]:
 
 
 def _resolve_stream_alias(stream: str, known: list[str]) -> str | None:
-    """Resolve an area/alias name (e.g. SESSION_EPIC ``infra``) to one stream.
+    """Resolve launcher selectors first, then unambiguous taxonomy aliases.
 
-    Uses the fleet taxonomy (scripts/config/fleet_taxonomy.yaml), the same
-    resolver the session hooks use. Only an unambiguous mapping — exactly one
-    known stream among the area's id + aliases — aliases; anything else
-    returns None so the caller fails closed with 400 unknown_stream (#6984).
+    The launcher compatibility map takes precedence because taxonomy areas
+    may group different streams (``harness`` groups corpus, while the launcher
+    assigns that selector to infra). Unknown or ambiguous names fail closed.
     """
+    try:
+        launcher_alias = load_launcher_aliases().get(stream)
+    except (OSError, ValueError):
+        return None
+    if launcher_alias is not None:
+        return launcher_alias if launcher_alias in known else None
+    if stream.startswith("infra."):
+        # The launcher's generic infra.* arm resolves registry keys directly.
+        key = stream.removeprefix("infra.")
+        return key if key in known else None
     try:
         area = resolve_area(stream)
     except FleetTaxonomyError:

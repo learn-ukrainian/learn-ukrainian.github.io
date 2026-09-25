@@ -215,6 +215,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         "start-claude-driver.sh",
         "scripts/lib/handoff_identity.sh",
         "scripts/config/issue_streams.yaml",
+        "scripts/config/launcher_stream_aliases.tsv",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/session_supervisor.sh",
         # The core's deploy staleness gate sources this; without package.json
@@ -375,6 +376,7 @@ def _core_driver_exit_fixture(
         "start-claude-driver.sh",
         "scripts/lib/handoff_identity.sh",
         "scripts/config/issue_streams.yaml",
+        "scripts/config/launcher_stream_aliases.tsv",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",
@@ -709,6 +711,7 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",
         "scripts/config/issue_streams.yaml",
+        "scripts/config/launcher_stream_aliases.tsv",
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)

@@ -1000,16 +1000,45 @@ def test_next_pending_native_without_membership_is_named_in_digest(monkeypatch):
 
 
 def test_next_stream_alias_resolves_via_fleet_taxonomy(monkeypatch):
-    """#6984: drivers type SESSION_EPIC area names ('infra'); unambiguous aliases work."""
-    _patch_known_streams(monkeypatch)
+    """Launcher selectors select the same stream in /next, including harness."""
+    from scripts.orchestration.issue_stream_audit import load_registry
+
+    monkeypatch.setattr(work_router, "_known_streams", lambda *_a, **_k: list(load_registry()))
     _warm_next_cache()
 
-    response = client.get("/api/work/v1/next?stream=infra")
-    assert response.status_code == 200, response.text
-    data = response.json()
-    assert data["stream"] == "infra-harness"
-    assert data["requested_stream"] == "infra"
-    assert [r["work_id"] for r in data["queue"]] == [_wid(6004), _wid(6001)]
+    aliases = {
+        "infra": "infra-harness",
+        "harness": "infra-harness",
+        "infra.fleet-comms": "infra-harness",
+        "infra.devops": "devops",
+        "infra.monitor": "monitor",
+        "ops-api": "monitor",
+        "ops.api": "monitor",
+        "operator-api": "monitor",
+        "atlas": "atlas-practice",
+        "practice": "atlas-practice",
+        "practice-hub": "atlas-practice",
+        "atlas.practice": "atlas-practice",
+        "hramatka.lessons": "hramatka",
+        "folk": "seminars-folk",
+        "bio": "seminars-bio",
+        "corpus": "corpus-channels",
+    }
+    for selector, expected_stream in aliases.items():
+        response = client.get(f"/api/work/v1/next?stream={selector}")
+        assert response.status_code == 200, (selector, response.text)
+        data = response.json()
+        assert data["stream"] == expected_stream, selector
+        assert data["requested_stream"] == selector
+        if expected_stream == "infra-harness":
+            assert [r["work_id"] for r in data["queue"]] == [_wid(6004), _wid(6001)]
+
+    # Generic infra.<registry-key> selectors are launcher-mintable too.
+    for key in load_registry():
+        response = client.get(f"/api/work/v1/next?stream=infra.{key}")
+        assert response.status_code == 200, (key, response.text)
+        assert response.json()["stream"] == key
+        assert response.json()["requested_stream"] == f"infra.{key}"
 
     # Canonical names still pass through without a requested_stream echo.
     canonical = client.get("/api/work/v1/next?stream=infra-harness")

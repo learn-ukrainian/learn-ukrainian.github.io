@@ -1,10 +1,12 @@
-# Orchestrator — current state (curriculum-upgrade) · 2026-09-12
+# Orchestrator — 2026-09-12 curriculum-upgrade session snapshot
 
 Written at session end by claude-fable-5-1 (session 005deabf). Resume from live state; this is the pointer set.
 
+Retirement update (2026-09-24): #7995 is closed and `a1-upgrade` is no longer a launchable lane. The session notes below are historical; verify live state before resuming #7994.
+
 ## Epics and boundary
 - **#7994 `curriculum-upgrade`** — the upgrade MACHINERY (pipeline upgrade mode, `lessons.yaml` deriver, per-lesson gates, MDX assembler + nav, writer/reviewer prompts, skill edits). Stays open; rollout-found defects are fixed here.
-- **#7995 `a1-upgrade`** — CONTENT rollout of the 55 A1 modules through that machinery. Driver seat: **Grok** (orchestrates only; writers AGY/Codex; reviews cross-family). Blocked on #7994 Phase 1.
+- **#7995 `a1-upgrade`** — CONTENT rollout was planned through this machinery in this snapshot; epic closed 2026-09-24 and selector retired.
 - Operator decisions (2026-09-12): Option A (one page per lesson under a module landing) · parallel level `a1-v2`, current `/a1/` untouched until cut-over (`a1`→`a1-v1`, `a1-v2`→`/a1/`) · **upgrade, not rebuild**: input = existing built module, original prose preserved verbatim + expanded, activities added for variety · no named narrator / no «Приві́т! Я …» opener · quoting reference material only as a marked, attributed quotation listed in Ресурси · taxonomy alias `curriculum-upgrade` under `core` and skill edits (`track-completion`, `curriculum-lifecycle`, `build-monitoring`, `curriculum-writer`) still need the operator's explicit go.
 
 ## Phase 0 pilot — PR #7991 (draft, branch `agy/cu-p0-pilot-writer-things-have-gender`)

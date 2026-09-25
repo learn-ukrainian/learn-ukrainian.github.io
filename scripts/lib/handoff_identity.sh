@@ -23,6 +23,31 @@
 
 _HANDOFF_IDENTITY_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
+# Read the same compatibility map used by /api/work/v1/next. Print
+# "<stream-key><TAB><lane>" and return 0 on a hit; return 1 for a selector that
+# is not in the map (callers fall through to registry-key resolution); return 2
+# when the map is missing or malformed so callers fail closed instead of
+# silently resolving a compatibility alias like `atlas` as a raw registry key.
+_launcher_compat_alias() {
+  local selector="${1:-}"
+  local aliases="$_HANDOFF_IDENTITY_DIR/../config/launcher_stream_aliases.tsv"
+  [ -f "$aliases" ] || return 2
+  awk -F '\t' -v wanted="$selector" '
+    /^#/ || NF == 0 { next }
+    NF != 3 { invalid = 1; next }
+    $1 == wanted {
+      if (found++) invalid = 1
+      key = $2
+      lane = $3
+    }
+    END {
+      if (invalid) exit 2
+      if (!found) exit 1
+      printf "%s\t%s\n", key, lane
+    }
+  ' "$aliases"
+}
+
 # _launcher_stream_anchor_epic "<stream-key>"
 # Print the first epic number listed for that key in issue_streams.yaml.
 # Fail closed (print nothing, return 1) when the registry is missing or the
@@ -117,57 +142,39 @@ _launcher_infra_stream_id() {
 # launcher_selector_resolve "<lane-or-lane.topic>"
 # Print the canonical lane and stream id, separated by a tab.  This is the
 # single selector table shared by handoff identities and session supervision.
-# Unknown selectors return 1 and print nothing, so callers can fail closed.
+# Unknown selectors return 1 and print nothing on stdout, so callers can fail closed.
+# Retired selectors also explain the rejection on stderr.
 launcher_selector_resolve() {
   local selector="${1:-}"
   local key=""
   local lane=""
   local epic=""
+  local mapped=""
+  local alias_rc=0
 
-  # Compatibility aliases preserve the pre-registry lane identity while their
-  # stream anchor still comes from the registry.  Generic selectors below are
-  # intentionally not added here: a new registry row must work without a
-  # launcher edit.
+  # Retired selectors fail before alias and generic registry resolution.
   case "$selector" in
-    infra|harness|infra.fleet-comms)
-      key="infra-harness"
-      lane="infra"
+    eval-harness|a1-upgrade|infra.eval-harness|infra.a1-upgrade)
+      printf 'retired lane selector: %s\n' "$selector" >&2
+      return 1
       ;;
-    devops|infra.devops)
-      key="devops"
-      lane="devops"
-      ;;
-    monitor|infra.monitor|ops-api|ops.api|operator-api)
-      key="monitor"
-      lane="monitor"
-      ;;
-    atlas|practice|practice-hub|atlas.practice)
-      key="atlas-practice"
-      lane="atlas"
-      ;;
-    hramatka|hramatka.lessons)
-      key="hramatka"
-      lane="hramatka"
-      ;;
-    folk|seminars-folk)
-      key="seminars-folk"
-      lane="folk"
-      ;;
-    bio|seminars-bio)
-      key="seminars-bio"
-      lane="bio"
-      ;;
-    corpus|corpus-channels)
-      key="corpus-channels"
-      lane="corpus"
-      ;;
-    infra.*)
-      key="${selector#infra.}"
+  esac
+
+  mapped="$(_launcher_compat_alias "$selector")" && alias_rc=0 || alias_rc=$?
+  case "$alias_rc" in
+    0) IFS=$'\t' read -r key lane <<< "$mapped" ;;
+    1)
+      # Generic selectors are intentionally absent from the compatibility map:
+      # a new registry row must work without a launcher edit.
+      case "$selector" in
+        infra.*) key="${selector#infra.}" ;;
+        *) key="$selector" ;;
+      esac
       lane="$key"
       ;;
     *)
-      key="$selector"
-      lane="$key"
+      printf 'launcher alias map missing or malformed: scripts/config/launcher_stream_aliases.tsv\n' >&2
+      return 1
       ;;
   esac
 
