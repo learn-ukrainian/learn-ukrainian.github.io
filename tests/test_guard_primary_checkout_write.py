@@ -23,6 +23,7 @@ import importlib.util
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -35,9 +36,15 @@ HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-primary-ch
 # Git env vars that would hijack the throwaway repos below (inherited under
 # pre-commit / a git hook). Mirrors the module's own denylist.
 _GIT_ENV = {
-    "GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY",
-    "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_NAMESPACE", "GIT_CEILING_DIRECTORIES",
-    "GIT_DISCOVERY_ACROSS_FILESYSTEM", "GIT_COMMON_DIR",
+    "GIT_DIR",
+    "GIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_NAMESPACE",
+    "GIT_CEILING_DIRECTORIES",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+    "GIT_COMMON_DIR",
 }
 
 
@@ -164,13 +171,16 @@ def _clean_env() -> dict[str, str]:
 def _git(repo: Path, *args: str) -> None:
     subprocess.run(
         ["git", "-C", str(repo), *args],
-        check=True, capture_output=True, text=True, env=_clean_env(), timeout=10,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=_clean_env(),
+        timeout=10,
     )
 
 
 def _python() -> str:
-    venv = REPO_ROOT / ".venv" / "bin" / "python"
-    return str(venv) if venv.exists() else "python3"
+    return sys.executable
 
 
 @pytest.fixture
@@ -188,8 +198,7 @@ def repo(tmp_path: Path) -> Path:
     _git(main, "add", "curriculum/tracked.md", ".gitignore")
     _git(main, "commit", "-q", "-m", "init")
 
-    _git(main, "worktree", "add", "-q",
-         ".worktrees/dispatch/claude/task-1", "-b", "claude/task-1")
+    _git(main, "worktree", "add", "-q", ".worktrees/dispatch/claude/task-1", "-b", "claude/task-1")
     return main
 
 
@@ -197,8 +206,12 @@ def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> 
     return subprocess.run(
         [_python(), str(HOOK_PATH)],
         input=json.dumps(payload),
-        cwd=repo, check=False, capture_output=True, text=True,
-        env={**_clean_env(), **(env_extra or {})}, timeout=30,
+        cwd=repo,
+        check=False,
+        capture_output=True,
+        text=True,
+        env={**_clean_env(), **(env_extra or {})},
+        timeout=30,
     )
 
 
@@ -248,15 +261,11 @@ def test_read_only_bash_allowed(repo: Path):
         assert result.returncode == 0, f"{command!r}: {result.stderr}"
 
 
-def test_read_only_bash_redirect_is_allowed_when_jsonschema_is_masked(
-    repo: Path, tmp_path: Path
-) -> None:
+def test_read_only_bash_redirect_is_allowed_when_jsonschema_is_masked(repo: Path, tmp_path: Path) -> None:
     """Read-only commands do not depend on optional Python packages."""
     poison = tmp_path / "poison"
     poison.mkdir()
-    (poison / "jsonschema.py").write_text(
-        "raise ImportError('jsonschema deliberately masked')\n", encoding="utf-8"
-    )
+    (poison / "jsonschema.py").write_text("raise ImportError('jsonschema deliberately masked')\n", encoding="utf-8")
     env = _clean_env()
     env["PYTHONPATH"] = str(poison)
     payload = {
@@ -329,7 +338,8 @@ def test_bash_line_continuation_cannot_hide_primary_in_place_edit(repo: Path):
 
 def test_write_capable_bash_redirect_blocked(repo: Path):
     payload = {
-        "tool_name": "Bash", "cwd": str(repo),
+        "tool_name": "Bash",
+        "cwd": str(repo),
         "tool_input": {"command": "echo tampered > curriculum/tracked.md"},
     }
     result = _run(repo, payload)
@@ -339,7 +349,8 @@ def test_write_capable_bash_redirect_blocked(repo: Path):
 
 def test_write_capable_bash_tee_blocked(repo: Path):
     payload = {
-        "tool_name": "Bash", "cwd": str(repo),
+        "tool_name": "Bash",
+        "cwd": str(repo),
         "tool_input": {"command": "echo x | tee curriculum/tracked.md"},
     }
     result = _run(repo, payload)
@@ -348,7 +359,8 @@ def test_write_capable_bash_tee_blocked(repo: Path):
 
 def test_bash_redirect_to_gitignored_allowed(repo: Path):
     payload = {
-        "tool_name": "Bash", "cwd": str(repo),
+        "tool_name": "Bash",
+        "cwd": str(repo),
         "tool_input": {"command": "echo x > local_state/out.log"},
     }
     result = _run(repo, payload)
@@ -377,7 +389,8 @@ def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
     # resolved real path, not by cwd).
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     payload = {
-        "tool_name": "Bash", "cwd": str(worktree),
+        "tool_name": "Bash",
+        "cwd": str(worktree),
         "tool_input": {"command": f"echo x > {repo / 'curriculum' / 'tracked.md'}"},
     }
     result = _run(repo, payload)
@@ -392,16 +405,12 @@ def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
     [
         # Body text with `>N` (previously misread as a redirect to '15%').
         (
-            "cat > /tmp/brief.md <<'EOF'\n"
-            "... if >15% of the last 30 consecutive live passages ...\n"
-            "EOF",
+            "cat > /tmp/brief.md <<'EOF'\n... if >15% of the last 30 consecutive live passages ...\nEOF",
             ["/tmp/brief.md"],
         ),
         # Body text with markdown backtick code spans (#4855 live repro).
         (
-            "cat > /tmp/brief.md <<'EOF'\n"
-            "run `.venv/bin/python scripts/x.py` then check\n"
-            "EOF",
+            "cat > /tmp/brief.md <<'EOF'\nrun `.venv/bin/python scripts/x.py` then check\nEOF",
             ["/tmp/brief.md"],
         ),
         # Tab-indented body with <<- and a redirect-looking line.
@@ -482,7 +491,6 @@ def test_bash_git_write_intents_blocked_kinds(command, kind):
         "git status",
         "git log --oneline",
         "git stash list",
-        "git checkout -b feature",
     ],
 )
 def test_bash_git_write_intents_allowlisted_or_ignored(command):
@@ -492,9 +500,7 @@ def test_bash_git_write_intents_allowlisted_or_ignored(command):
 
 
 def test_bash_git_write_intents_honors_dash_c():
-    intents = hook.bash_git_write_intents(
-        "git -C .worktrees/dispatch/claude/task-1 apply /tmp/x.diff"
-    )
+    intents = hook.bash_git_write_intents("git -C .worktrees/dispatch/claude/task-1 apply /tmp/x.diff")
     assert len(intents) == 1
     assert intents[0]["c_path"] == ".worktrees/dispatch/claude/task-1"
     assert intents[0]["kind"] == "apply"
@@ -676,24 +682,21 @@ def test_git_mv_via_dash_c_worktree_allowed(repo: Path):
     payload = {
         "tool_name": "Bash",
         "cwd": str(repo),
-        "tool_input": {
-            "command": f"git -C {worktree} mv curriculum/tracked.md curriculum/renamed.md"
-        },
+        "tool_input": {"command": f"git -C {worktree} mv curriculum/tracked.md curriculum/renamed.md"},
     }
     result = _run(repo, payload)
     assert result.returncode == 0, result.stderr
 
 
-def test_git_checkout_branch_only_not_blocked_by_git_guard(repo: Path):
-    """Branch switch has no pathspecs — left to the branch-switch guard."""
+def test_git_checkout_branch_only_blocked_by_effective_cwd_guard(repo: Path):
+    """The write guard owns branch mutations after effective-cwd resolution."""
     payload = {
         "tool_name": "Bash",
         "cwd": str(repo),
         "tool_input": {"command": "git checkout -b feature-x"},
     }
     result = _run(repo, payload)
-    # No git-mediated path intent → this hook allows (other hooks may still fire).
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == 2, result.stderr
 
 
 def test_bash_shell_var_to_gitignored_allowed(repo: Path):
@@ -757,9 +760,7 @@ def test_bash_shell_var_reassignment_not_expanded(repo: Path):
         "tool_name": "Bash",
         "cwd": str(repo),
         "tool_input": {
-            "command": (
-                "A=curriculum/tracked.md; echo x > $A; A=local_state/ok.log"
-            ),
+            "command": ("A=curriculum/tracked.md; echo x > $A; A=local_state/ok.log"),
         },
     }
     result = _run(repo, payload)
@@ -939,6 +940,171 @@ def test_bash_read_home_shadows_inherited_home(repo: Path):
 
 
 @pytest.mark.parametrize(
+    "template, reason",
+    [
+        ("echo x > {primary_parent}/mai?/curriculum/tracked.md", "undecidable_glob_write_target"),
+        ("echo x > {primary}/curriculum/{{tracked,new}}.md", "undecidable_glob_write_target"),
+        ("cd {primary}; echo x > curriculum/tracked.md", "tracked"),
+        ("command -p tee {primary}/curriculum/tracked.md", "tracked"),
+        ("builtin tee {primary}/curriculum/tracked.md", "tracked"),
+        ("exec tee {primary}/curriculum/tracked.md", "tracked"),
+        ("cat <<EOF\n$(echo x > {primary}/curriculum/tracked.md)\nEOF", "tracked"),
+        ("echo {primary}/curriculum/tracked.md | xargs tee", "undecidable_xargs_stdin_target"),
+        ("find /tmp -maxdepth 0 -exec tee {primary}/curriculum/tracked.md \\;", "tracked"),
+        ("$(cd {primary} && tee curriculum/tracked.md)", "tracked"),
+        ("pushd {primary}; tee curriculum/tracked.md", "tracked"),
+        ("find /tmp -exec sh -c 'echo x > {primary}/curriculum/tracked.md' \\;", "tracked"),
+        ("env -i tee {primary}/curriculum/tracked.md", "tracked"),
+        (
+            "env -u HOME nice -n 2 timeout -s TERM 2 stdbuf -oL nohup sudo -u root tee {primary}/curriculum/tracked.md",
+            "tracked",
+        ),
+        ("cat <<EOF\n`echo x > {primary}/curriculum/tracked.md`\nEOF", "tracked"),
+        ("find {primary} -execdir tee relative.md \\;", "undecidable_find_execdir_target"),
+        ("cd $UNKNOWN; echo x > relative.md", "undecidable_write_target_after_cd"),
+    ],
+)
+def test_issue_8785_primary_bypasses_block(repo: Path, template: str, reason: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(primary=repo, primary_parent=repo.parent)
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+    assert reason in result.stderr
+
+
+def test_issue_8785_quoted_heredoc_body_is_inert(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = f"cat <<'EOF'\n$(echo x > {repo}/curriculum/tracked.md)\nEOF"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+def test_issue_8785_mixed_heredocs_keep_quoted_body_inert(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = f"cat <<'INERT' <<ACTIVE\n$(echo x > {repo}/curriculum/tracked.md)\nINERT\nplain text\nACTIVE"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("body", ["`cd {primary}`", "$((1 > {primary}/curriculum/tracked.md))"])
+def test_issue_8785_heredoc_nonwriting_expansion_does_not_change_parent_cwd(repo: Path, body: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = "cat <<EOF\n" + body.format(primary=repo) + "\nEOF\ntee safe.txt"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("target", ["local_state/out-?.log", ".worktrees/dispatch/claude/task-1/out-?.log"])
+def test_issue_8785_safe_globs_remain_allowed(repo: Path, target: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = f"echo x > {repo / target}"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "template, blocked",
+    [
+        ("/tmp/out-?.txt", False),
+        ("{primary}/out-?.txt", True),
+        ("{grandparent}/*/main/AGENTS.md", True),
+        ("{primary}/{{a,b}}.md", True),
+        ("/tmp/{{a,b}}.txt", False),
+        ("{parent}/**/AGENTS.md", True),
+    ],
+)
+def test_issue_8785_glob_reach_depends_on_component(repo: Path, template: str, blocked: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = f"echo x > {template.format(primary=repo, parent=repo.parent, grandparent=repo.parent.parent)}"
+    result = _bash(repo, command, cwd=worktree)
+    assert result.returncode == (2 if blocked else 0), result.stderr
+    if blocked:
+        assert "undecidable_glob_write_target" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "cp /tmp/payload {parent}/m*",
+        "cp /tmp/payload {parent}/mai?",
+        "cp -t {parent}/m* /tmp/payload",
+        "cp /tmp/payload {parent}/{{main,other}}",
+        "rm -rf {parent}/m*",
+        "chmod 700 {parent}/m*",
+        "mv {parent}/m* /tmp/x",
+        "ln -s /tmp/payload {parent}/m*",
+        "rsync -a /tmp/payload {parent}/m*",
+        "cd {parent}; rm -rf m*",
+        "cd {parent}; cp /tmp/payload m*",
+    ],
+)
+def test_issue_8785_final_component_can_match_primary(repo: Path, template: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(parent=repo.parent)
+    result = _bash(repo, command, cwd=worktree)
+    assert result.returncode == 2, (command, result.stderr)
+    assert "undecidable_glob_write_target" in result.stderr
+
+
+@pytest.mark.parametrize("pattern", ["*", "m*", "mai?", "{main,other}", "{other,ma*}", "{main,{other}}", "{other,{main,sibling}}"])
+def test_issue_8785_parent_pattern_matching_primary_blocks(repo: Path, pattern: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, f"rm -rf {repo.parent}/{pattern}", cwd=worktree)
+    assert result.returncode == 2, result.stderr
+    assert "undecidable_glob_write_target" in result.stderr
+
+
+@pytest.mark.parametrize("pattern", ["other*", "{other,sibling}", "out-?.txt", "{a,b}.txt"])
+def test_issue_8785_parent_pattern_matching_siblings_allowed(repo: Path, pattern: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, f"rm -rf {repo.parent}/{pattern}", cwd=worktree)
+    assert result.returncode == 0, result.stderr
+
+
+def test_issue_8785_hidden_component_glob_semantics():
+    assert not hook._final_component_matches("*", ".main")
+    assert not hook._final_component_matches("[.]main", ".main")
+    assert hook._final_component_matches(".m*", ".main")
+    assert hook._final_component_matches("{other,.m*}", ".main")
+    assert hook._final_component_matches("{other,{.main,sibling}}", ".main")
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cat /tmp/read-only",
+        "grep needle /tmp/read-only",
+        "find /tmp -maxdepth 0",
+        "git log -1",
+        "cd /tmp; tee scratch.txt",
+        "tee /tmp/scratch.txt",
+        "echo /tmp/scratch.txt | xargs tee",
+        "echo x > /tmp/out-?.txt",
+    ],
+)
+def test_issue_8785_safe_commands_remain_allowed(repo: Path, command: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "template, reason",
+    [
+        ("cd {primary}; git add curriculum/tracked.md", "tracked"),
+        ("pushd {primary}; git apply /tmp/change.diff", "git_mediated_primary_worktree"),
+        ("cd $UNKNOWN; git add file.txt", "undecidable_git_cwd_after_cd"),
+    ],
+)
+def test_issue_8785_git_writer_uses_effective_cwd(repo: Path, template: str, reason: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(primary=repo)
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+    assert reason in result.stderr
+
+
+@pytest.mark.parametrize(
     "command",
     [
         "eval 'HOME=/x'; echo x > ~/f",
@@ -977,3 +1143,430 @@ def test_bash_write_targets_see_through_compound_keywords():
         "/tmp/b",
     ]
     assert hook.bash_write_targets("for i in 1; do echo x | tee /tmp/a; done") == ["/tmp/a"]
+
+
+@pytest.mark.parametrize(
+    "template, reason",
+    [
+        ("CDPATH={primary} cd agents_extensions; echo x > HOOKS.md", "undecidable_write_target_after_cd"),
+        ("env -C {primary} tee AGENTS.md", "AGENTS.md"),
+        ("env --chdir={primary} tee AGENTS.md", "AGENTS.md"),
+        ("sudo env -C {primary} tee AGENTS.md", "AGENTS.md"),
+        ("echo x >& {primary}/AGENTS.md", "AGENTS.md"),
+        ("echo x &>> {primary}/AGENTS.md", "AGENTS.md"),
+        ("echo x <> {primary}/AGENTS.md", "AGENTS.md"),
+        ("cp /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("mv /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("install -m 644 /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("ln -s /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("rsync -a /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("cp -t {primary} /tmp/source", "primary"),
+        ("cp -at {primary} /tmp/source", "primary"),
+        ("cp -at{primary} /tmp/source", "primary"),
+        ("mv -ft {primary} /tmp/source", "primary"),
+        ("ln -sft {primary} /tmp/source", "primary"),
+        ("cp -S .bak -t {primary} /tmp/source", "primary"),
+        ("cp --suffix=.bak --target-directory={primary} -- /tmp/source", "primary"),
+        ("mv --suffix=.bak --target-directory={primary} /tmp/source", "primary"),
+        ("mv -- {primary}/AGENTS.md /tmp/stolen.md", "AGENTS.md"),
+        ("install -m 644 -t {primary} /tmp/source", "primary"),
+        ("install -d {primary}/newdir", "newdir"),
+        ("install -dv {primary}/newdir", "newdir"),
+        ("mv --target-directory={primary} /tmp/source", "primary"),
+        ("mv {primary}/AGENTS.md /tmp/stolen.md", "AGENTS.md"),
+        ("mv -T {primary}/AGENTS.md /tmp/stolen.md", "AGENTS.md"),
+        ("rsync --remove-source-files {primary}/AGENTS.md /tmp/stolen.md", "AGENTS.md"),
+        ("dd if=/tmp/source of={primary}/AGENTS.md", "AGENTS.md"),
+        ("eval 'echo x > {primary}/AGENTS.md'", "AGENTS.md"),
+        ("CMD='echo x > {primary}/AGENTS.md'; eval \"$CMD\"", "AGENTS.md"),
+        ('eval "$COMMAND {primary}/AGENTS.md"', "undecidable_eval_primary_target"),
+        ("eval 'git -C {primary} apply /tmp/change.diff'", "git_mediated_primary_worktree"),
+        ("echo {primary}/AGENTS.md | parallel tee", "undecidable_xargs_stdin_target"),
+        ("parallel -j 2 tee ::: {primary}/AGENTS.md", "undecidable_xargs_stdin_target"),
+        ("parallel cp /tmp/source ::: {primary}/AGENTS.md", "undecidable_xargs_stdin_target"),
+        ("cd {primary}; parallel tee ::: AGENTS.md", "undecidable_xargs_stdin_target"),
+        ("cd {primary}; echo AGENTS.md | xargs tee", "undecidable_xargs_stdin_target"),
+        ("cd {primary}; find . -exec tee {{}} \\;", "tracked_primary_checkout"),
+        ("cd {primary}; tee AGENTS.md", "AGENTS.md"),
+        ('cd {primary}; eval "$COMMAND"', "undecidable_eval_primary_target"),
+        ("rm {primary}/AGENTS.md", "AGENTS.md"),
+        ("unlink {primary}/AGENTS.md", "AGENTS.md"),
+        ("rmdir {primary}/newdir", "newdir"),
+        ("truncate -s 0 {primary}/AGENTS.md", "AGENTS.md"),
+        ("shred -u {primary}/AGENTS.md", "AGENTS.md"),
+        ("chmod 600 {primary}/AGENTS.md", "AGENTS.md"),
+        ("chown root:root {primary}/AGENTS.md", "AGENTS.md"),
+        ("touch {primary}/AGENTS.md", "AGENTS.md"),
+        ("sed -i 's/a/b/' {primary}/AGENTS.md", "AGENTS.md"),
+        ("perl -pi -e 's/a/b/' {primary}/AGENTS.md", "AGENTS.md"),
+        ("find {primary} -delete", "primary"),
+        ("cd {primary}; find . -delete", "primary"),
+        ("find {primary} -name AGENTS.md -delete", "primary"),
+        ("find -- {primary} -delete", "primary"),
+        ("pushd -n /tmp; rm -rf ../../../../AGENTS.md", "AGENTS.md"),
+        ("pushd -n /tmp; popd -n; rm -rf ../../../../AGENTS.md", "AGENTS.md"),
+        ("rsync -a --backup-dir={primary} /tmp/src /tmp/dest", "primary"),
+        ("rsync -a --log-file={primary}/AGENTS.md /tmp/a /tmp/b", "AGENTS.md"),
+        ("rsync --write-batch={primary}/AGENTS.md /tmp/a /tmp/b", "AGENTS.md"),
+        ("rsync --only-write-batch {primary}/AGENTS.md /tmp/a /tmp/b", "AGENTS.md"),
+        ("rsync --partial-dir={primary} /tmp/a /tmp/b", "primary"),
+        ("rsync --temp-dir {primary} /tmp/a /tmp/b", "primary"),
+        ("sort -o {primary}/AGENTS.md /tmp/a", "AGENTS.md"),
+        ("sort --output={primary}/AGENTS.md /tmp/a", "AGENTS.md"),
+        ("sort -o{primary}/AGENTS.md /tmp/a", "AGENTS.md"),
+        ("tar -cf {primary}/AGENTS.md /tmp/a", "AGENTS.md"),
+        ("tar --create --file={primary}/AGENTS.md /tmp/a", "AGENTS.md"),
+        ("curl -o {primary}/AGENTS.md https://example.test/a", "AGENTS.md"),
+        ("curl --output={primary}/AGENTS.md https://example.test/a", "AGENTS.md"),
+        ("cd {primary}; curl -O https://example.test/AGENTS.md", "AGENTS.md"),
+        ("wget -O {primary}/AGENTS.md https://example.test/a", "AGENTS.md"),
+        ("wget -P {primary} https://example.test/a", "primary"),
+        ("git -C {primary} archive -o AGENTS.md HEAD", "AGENTS.md"),
+        ("sqlite3 {primary}/AGENTS.md 'select 1'", "AGENTS.md"),
+        ("sqlite3 /tmp/a.db '.output {primary}/AGENTS.md'", "AGENTS.md"),
+        ("sqlite3 /tmp/a.db '.backup {primary}/AGENTS.md'", "AGENTS.md"),
+        ("git -C {primary} clean -fdx", "git_mediated_primary_worktree"),
+        ("git -C {primary} clean -e -n -fdx", "git_mediated_primary_worktree"),
+        ("git -C {primary} reset --hard", "git_mediated_primary_worktree"),
+        ("git -C {primary} reset --merge", "git_mediated_primary_worktree"),
+        ("git -C {primary} reset --keep", "git_mediated_primary_worktree"),
+        ("git -C {primary} checkout -f HEAD", "git_mediated_primary_worktree"),
+        ("git -C {primary} read-tree -u HEAD", "git_mediated_primary_worktree"),
+        ('eval "$CMD"', "undecidable_eval_primary_target"),
+    ],
+)
+def test_issue_8785_review_writers_block(repo: Path, template: str, reason: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(primary=repo)
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+    assert reason in result.stderr
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "find {primary} -exec rm {{}} \\;",
+        "find {primary} -exec rm -rf {{}} +",
+        "find {primary} -exec tee {{}} \\;",
+        "find -D exec {primary} -delete",
+        "find -D exec -O2 {primary} -delete",
+        "find -files0-from {primary}/list -delete",
+        "find /tmp -fprintf {primary}/AGENTS.md '%p'",
+        "find /tmp -fprint {primary}/AGENTS.md",
+        "find /tmp -fprint0 {primary}/AGENTS.md",
+        "find /tmp -fls {primary}/AGENTS.md",
+        "curl --output-dir {primary} -O https://example.test/a",
+        "curl --output-dir={primary} -o AGENTS.md https://example.test/a",
+        "curl -D {primary}/AGENTS.md https://example.test/a",
+        "curl -c {primary}/AGENTS.md https://example.test/a",
+        "wget -o {primary}/AGENTS.md https://example.test/a",
+        "sort -T {primary} -o /tmp/out /tmp/in",
+        "sort {primary}/AGENTS.md -o /tmp/out",  # accepted long-tail input false positive
+        "xargs sort -o {primary}/AGENTS.md",
+        "parallel sort -o {primary}/AGENTS.md ::: /tmp/a",
+        "sqlite3 /tmp/a.db '.save {primary}/AGENTS.md'",
+        'sh -c "$CMD"',
+        'bash -c "$CMD"',
+        'zsh -c "$CMD"',
+        'dash -c "$CMD"',
+        "git -C {primary} switch -f other",
+        "git -C {primary} checkout other",
+        "git -C {primary} merge other",
+        "git -C {primary} pull",
+        "git -C {primary} rebase other",
+        "git -C {primary} cherry-pick HEAD~1",
+        "git -C {primary} revert HEAD",
+        "git -C {primary} am /tmp/a.patch",
+        "git -C {primary} apply /tmp/a.patch",
+        "git -C {primary} stash pop",
+        "git -C {primary} stash apply",
+        "git -C {primary} read-tree -u HEAD",
+        "sh -c 'git -C {primary} merge other'",
+        "git worktree remove {primary}",
+        "tar -xf /tmp/x.tar -C {primary}",
+        "unzip /tmp/x.zip -d {primary}",
+        "patch -d {primary} -i /tmp/x.patch",
+        "ffmpeg -i /tmp/in.mp4 {primary}/out.mp4",
+        "convert /tmp/in.png {primary}/out.png",
+    ],
+)
+def test_issue_8785_principle_blocks_review_escapes(repo: Path, template: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(
+        repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": template.format(primary=repo)}}
+    )
+    assert result.returncode == 2, (template, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "sort -o../../../../AGENTS.md /tmp/in",
+        "curl -o../../../../AGENTS.md https://example.test/a",
+        "tar -cf../../../../AGENTS.md /tmp/a",
+        "wget -O../../../../AGENTS.md https://example.test/a",
+        "unzip /tmp/x.zip -d../../../../",
+        "patch -o../../../../AGENTS.md -i /tmp/x.patch",
+        "cd {primary}; sort -oAGENTS.md /tmp/in",
+        "cd {primary}; curl -oAGENTS.md https://example.test/a",
+        "ruff format {primary}/AGENTS.md",
+        "ruff check --fix {primary}/AGENTS.md",
+        "ruff check --fix-only {primary}/AGENTS.md",
+        "ruff check --fix --unsafe-fixes {primary}/AGENTS.md",
+        "black {primary}/AGENTS.md",
+        "isort {primary}/AGENTS.md",
+        "prettier --write {primary}/AGENTS.md",
+        "prettier -w {primary}/AGENTS.md",
+        "eslint --fix {primary}/AGENTS.md",
+        "clang-format -i {primary}/AGENTS.md",
+        "gofmt -w {primary}/AGENTS.md",
+        "gofmt -l -w {primary}/AGENTS.md",
+        "gofmt -lw {primary}/AGENTS.md",
+        "rustfmt {primary}/AGENTS.md",
+        "shfmt -w {primary}/AGENTS.md",
+        "markdownlint --fix {primary}/AGENTS.md",
+        "markdownlint-cli2 --fix {primary}/AGENTS.md",
+        "bash -lc 'echo x > {primary}/AGENTS.md'",
+        "bash -ec 'echo x > {primary}/AGENTS.md'",
+        "zsh -lc 'echo x > {primary}/AGENTS.md'",
+        "dash -ec 'echo x > {primary}/AGENTS.md'",
+        "sh -lc 'echo x > {primary}/AGENTS.md'",
+        "bash -o pipefail -lc 'echo x > {primary}/AGENTS.md'",
+        "bash +O extglob -lc 'echo x > {primary}/AGENTS.md'",
+        "bash -lc -- 'echo x > {primary}/AGENTS.md'",
+        "bash --noprofile --norc -lc 'echo x > {primary}/AGENTS.md'",
+        "bash --login --rcfile /tmp/bashrc -lc 'echo x > {primary}/AGENTS.md'",
+        "bash --init-file=/tmp/bashrc -lc 'echo x > {primary}/AGENTS.md'",
+    ],
+)
+def test_issue_8785_final_review_writers_block(repo: Path, command: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, command.format(primary=repo), cwd=worktree)
+    assert result.returncode == 2, (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "ruff check {primary}/AGENTS.md",
+        "ruff format --check {primary}/AGENTS.md",
+        "prettier --check {primary}/AGENTS.md",
+        "black --check {primary}/AGENTS.md",
+        "isort --check-only {primary}/AGENTS.md",
+        "rustfmt --check {primary}/AGENTS.md",
+        "ruff check --unsafe-fixes {primary}/AGENTS.md",
+        "bash -- -c 'echo x > {primary}/AGENTS.md'",
+        "cd {primary}; sort -o/tmp/safe-output /tmp/in",
+        "cd {primary}; tar -cf/tmp/safe-archive /tmp/in",
+        "find -files0-from /tmp/list -delete",
+        "cat /tmp/list | xargs -I{{}} sh -c 'echo x > {{}}'",
+        "sort -X../../../../AGENTS.md /tmp/in",
+    ],
+)
+def test_issue_8785_final_review_allowed(repo: Path, command: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _bash(repo, command.format(primary=repo), cwd=worktree)
+    assert result.returncode == 0, (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "shell",
+    [
+        "bash -lc",
+        "bash -o pipefail -lc",
+        "bash +O extglob -lc",
+        "bash --noprofile --norc -lc",
+        "bash --login --rcfile /tmp/bashrc -lc",
+        "bash --init-file=/tmp/bashrc -lc",
+        "sh -lc",
+        "dash -ec",
+        "zsh -lc",
+    ],
+)
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_shell_git_cluster_uses_same_extractor(repo: Path, shell: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = f"{shell} 'cd {target} && git add AGENTS.md'"
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "curl -fsSL URL -o /tmp/x",
+        "wget -O{worktree}/out https://example.test/AGENTS.md",
+        "wget -P{worktree} https://example.test/AGENTS.md",
+        "sort -k1,1 /tmp/in -o /tmp/out",
+        "shfmt -i 2 -w {worktree}/f.sh",
+        "shfmt -ln bash -p -w {worktree}/f.sh",
+        "bash -lc 'cat AGENTS.md'",
+        "git -C {worktree} status",
+        "curl -K {primary}/AGENTS.md -o /tmp/x URL",
+        "curl -T {primary}/AGENTS.md -o /tmp/x URL",
+        "patch -i {primary}/AGENTS.md -o /tmp/x",
+        "split -l 2 /tmp/in {worktree}/part",
+    ],
+)
+def test_issue_8785_primary_cwd_has_no_phantom_write_target(repo: Path, template: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(primary=repo, worktree=worktree)
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == 0, (command, result.stderr)
+
+
+def test_issue_8785_clustered_curl_remote_name_writes_in_primary_cwd(repo: Path):
+    result = _bash(repo, "curl -fsSLO https://example.test/AGENTS.md", cwd=repo)
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "curl -o{target}/AGENTS.md URL",
+        "wget -a{target}/AGENTS.md URL",
+        "sort -o{target}/AGENTS.md /tmp/in",
+        "tar -cf{target}/AGENTS.md /tmp/in",
+        "unzip /tmp/in.zip -d{target}",
+        "patch -o{target}/AGENTS.md -i /tmp/in.patch",
+        "split /tmp/in {target}/part",
+        "gofmt -lw {target}/AGENTS.md",
+        "ruff check --fix-only {target}/AGENTS.md",
+        "ruff check --fix --unsafe-fixes {target}/AGENTS.md",
+    ],
+)
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_option_destinations_follow_target_worktree(repo: Path, template: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = template.format(target=target)
+    result = _bash(repo, command, cwd=worktree)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "curl --proto=https https://example.test/a -o /tmp/x",
+        "sort --parallel=2 /tmp/in -o /tmp/out",
+        "tar --exclude=AGENTS.md -cf /tmp/out /tmp/in",
+        "tar --exclude='*.pyc' -cf /tmp/out /tmp/in",
+    ],
+)
+def test_issue_8785_unknown_long_values_do_not_write_primary(repo: Path, command: str):
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == 0, (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "curl --output={target}/AGENTS.md URL",
+        "wget --output-document={target}/AGENTS.md URL",
+        "sort --output={target}/AGENTS.md /tmp/in",
+        "tar --file={target}/AGENTS.md -c /tmp/in",
+        "patch --output={target}/AGENTS.md -i /tmp/in.patch",
+    ],
+)
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_known_long_values_follow_target(repo: Path, template: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = template.format(target=target)
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
+
+
+@pytest.mark.parametrize("flags", ["-oc", "-oce"])
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_bash_cluster_option_value_precedes_script(repo: Path, flags: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = f"bash {flags} pipefail 'echo x > {target}/AGENTS.md'"
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
+
+
+@pytest.mark.parametrize("flag", ["-l", "-e", "-r 'a -> b'"])
+@pytest.mark.parametrize("target_primary", [True, False])
+def test_issue_8785_gofmt_flag_values_follow_target(repo: Path, flag: str, target_primary: bool):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    target = repo if target_primary else worktree
+    command = f"gofmt -w {flag} {target}/f.go"
+    result = _bash(repo, command, cwd=repo)
+    assert result.returncode == (2 if target_primary else 0), (command, result.stderr)
+
+
+def test_issue_8785_inherited_cdpath_makes_bare_relative_cd_unknown(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(
+        repo,
+        {
+            "tool_name": "Bash",
+            "cwd": str(worktree),
+            "tool_input": {"command": "cd agents_extensions; echo x > HOOKS.md"},
+        },
+        {"CDPATH": str(repo)},
+    )
+    assert result.returncode == 2, result.stderr
+    assert "undecidable_write_target_after_cd" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cd {primary} & echo x > guard-probe.txt",
+        "env -C {primary} echo x > guard-probe.txt",
+        "cd {primary} | cat; echo x > guard-probe.txt",
+        "echo x | cd {primary}; echo x > guard-probe.txt",
+        "cat {primary}/AGENTS.md",
+        "git -C {primary} log -1",
+        "git -C {primary} status",
+        "git -C {primary} diff",
+        "git -C {primary} clean -nfdx",
+        "git -C {primary} clean --dry-run -fdx",
+        "git -C {primary} checkout -- AGENTS.md",
+        "git -C {primary} restore AGENTS.md",
+        "git -C {primary} stash drop",
+        "git -C {primary} stash clear",
+        "echo x > /tmp/guard-probe.txt",
+        "find . -exec grep needle {{}} \\;",
+        "echo {primary}/AGENTS.md | xargs grep needle",
+        "cat <<'EOF'\necho x > {primary}/AGENTS.md\nEOF",
+        "cp /tmp/source {worktree}/copy.txt",
+        "cp -at {worktree} /tmp/source",
+        "mv -ft {worktree} /tmp/source",
+        "ln -sft {worktree} /tmp/source",
+        "ln -s {primary}/AGENTS.md /tmp/primary-link",
+        "ln -s -T {primary}/AGENTS.md /tmp/primary-link",
+        "mv {worktree}/copy.txt /tmp/moved-copy.txt",
+        "rsync --remove-source-files {worktree}/copy.txt /tmp/moved-copy.txt",
+        "CMD='echo x > /tmp/guard-probe.txt'; eval \"$CMD\"",
+        "CMD='echo x > {worktree}/copy.txt'; eval \"$CMD\"",
+        "find /tmp -delete",
+        "rm /tmp/guard-probe.txt",
+        "mv /tmp/a /tmp/b",
+        "rsync --compare-dest={primary} /tmp/a /tmp/b",
+        "rsync --link-dest={primary} /tmp/a /tmp/b",
+        "cp /tmp/a {worktree}/copy.txt",
+        "cp --backup=numbered --suffix=.bak /tmp/a {worktree}/copy.txt",
+        "rsync -a /tmp/source {worktree}/copy.txt",
+        "CDPATH=; cd ./local_state; echo x > scratch.json",
+        "CDPATH=; cd agents_extensions; echo x > scratch.json",
+        "echo x >&1",
+        "echo x >&-",
+    ],
+)
+def test_issue_8785_review_allowed_cases(repo: Path, command: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(
+        repo,
+        {
+            "tool_name": "Bash",
+            "cwd": str(worktree),
+            "tool_input": {"command": command.format(primary=repo, worktree=worktree)},
+        },
+    )
+    assert result.returncode == 0, result.stderr

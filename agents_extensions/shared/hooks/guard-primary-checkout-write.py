@@ -13,8 +13,8 @@ target resolves to a protected file inside the primary checkout while that
 checkout sits on a protected branch (``main`` / ``master``). Everything else —
 writes into a ``.worktrees/**`` dispatch worktree, any other registered
 worktree, gitignored local/runtime state, or paths outside the repo — is
-allowed. Read-only commands (``git status``, ``git log``, ``rg``, ``cat`` …) are
-never touched because they expose no write target.
+allowed. Recognized read-only commands (``git status``, ``git log``, ``rg``,
+``cat`` …) expose no write target.
 
 Containment is **not** re-derived here: every decision defers to
 ``scripts.guardrails.worktree_containment`` (issue #4444), the single source of
@@ -27,17 +27,35 @@ Covered write surfaces
 * ``apply_patch`` and Codex ``Edit`` / ``Write`` aliases — file paths parsed from
   the ``*** Add/Update/Delete File:`` / ``*** Move to:`` headers of the patch
   body (issue #4447 verified Codex CLI fires PreToolUse for ``apply_patch``).
-* ``Bash`` — write-capable redirection (``>``, ``>>``, ``&>``), ``tee``, and
-  in-place editors (``sed -i`` / ``perl -i``). Quote-aware tokenization keeps a
+* ``Bash`` — write-capable redirection (including ``>&`` file operands and
+  ``<>``), ``tee``, ``dd of=``, copy/move/link/install/rsync destinations,
+  removed ``mv`` / ``rsync --remove-source-files`` sources, direct filesystem
+  mutators (``rm``, ``unlink``, ``rmdir``, ``truncate``, ``shred``, ``chmod``,
+  ``chown``, ``touch``), and in-place editors (``sed -i`` / ``perl -i``).
+  Quote-aware tokenization keeps a
   ``>`` inside a quoted string (e.g. a commit message) from reading as a
-  redirect.
+  redirect. Literal ``cd``/``pushd`` change the base of following relative
+  targets; uncertain navigation blocks those targets. Common command wrappers,
+  ``find -exec`` writers, and executable substitutions in unquoted heredocs
+  feed the same writer parser. Decidable ``eval`` strings are parsed
+  recursively; undecidable ones always block. ``xargs`` / ``parallel`` writers block when their
+  generated arguments can supply a primary target.
 * ``Bash`` git-mediated working-tree writes (issues #5396 / #5517) — ``git apply`` /
   ``git am``, ``git add``, ``git stash pop|apply``, ``git mv`` / ``git rm``,
   ``git checkout <ref> -- <path>``, ``git checkout <ref> <path>`` (no ``--``),
+  ``git clean`` / destructive ``reset`` / ``read-tree -u`` / forced ``checkout``,
   and ``git restore --source=…`` when the effective git worktree (payload cwd
   or ``git -C``) is the protected primary checkout. Rescue clean forms
   ``git checkout -- <path>`` and plain ``git restore <path>`` (no ``--source``)
   remain allowed so operators can discard accidental dirt.
+* Precise transfer parsing for rsync and git archive; conservative positional
+  classification for long-tail writers (curl, wget, sort, SQLite, tar, unzip,
+  patch, tee, truncate, split, csplit, ffmpeg, convert). Known short-option
+  values are parsed by command. Curl ``-K``/``-T`` and patch ``-i`` are read
+  inputs; curl ``-O`` and wget default output use a cwd-relative remote
+  filename. cp/mv ``--backup`` and
+  ``--suffix`` modify the classified destination; rsync ``--compare-dest`` and
+  ``--link-dest`` only read their paths.
 
 Shell values in Bash paths (issues #5404 / #8500)
 -------------------------------------------------
@@ -75,14 +93,29 @@ command never assigns (other than ``HOME``) are unknown too.
 
 Coverage limitations (documented, by design)
 --------------------------------------------
-* Bash write detection is heuristic. Arbitrary write vectors — ``dd of=``,
-  ``cp``/``mv`` destinations, ``python -c "open(...,'w')"``, ``$EDITOR`` — are
-  **not** parsed. Those paths rely on physical worktree isolation plus the
-  monitor tripwire (#4449) and git shim (#4450).
 * Codex Desktop direct-edit interception is unverified (#4447). Where a provider
   does not emit a hookable write event, this hook cannot enforce that path; the
   enforcement layer is #4445/#4446/#4449 instead. See
   ``docs/runbooks/codex-hooks.md``.
+
+Known residuals
+---------------
+This command parser does not model arbitrary interpreters (for example,
+``python -c``, ``node -e``, or ``perl -e`` writing files), ``$EDITOR``, or
+binaries that write without path arguments. Long-tail writers conservatively
+classify every path-like argument, including read-only inputs such as
+``sort PRIMARY/file -o /tmp/out``. Unknown ``--name=value`` options are not
+assumed to name output paths; newly added output options need explicit table
+entries. ``zsh --emulate sh -c`` is not modeled. Targets supplied only through
+stdin or an external file list with unknown contents remain invisible: for
+example, ``find -files0-from /tmp/list -delete`` and
+``cat /tmp/list | xargs -I{} sh -c 'echo x > {}'`` are allowed from a dispatch
+worktree. This is the same rule as ``cat /tmp/list | xargs tee``: fail closed
+only when a command literal names the primary checkout or the effective cwd
+is the primary checkout. Config files such as curl ``-K`` may themselves
+direct writes; their contents are not inspected. Unlisted writers and shell
+features not parsed here remain residuals. This is defense-in-depth, not a
+sandbox; physical worktree isolation and the monitor remain necessary.
 
 The primary-checkout containment layer fails **open**: any parse/import/git
 error there exits 0 (allow). Physical worktree isolation, the primary checkout
@@ -93,8 +126,10 @@ Emergency override (explicit operator only): set
 ``LEARN_UK_ALLOW_PRIMARY_GIT_WRITE=1`` to skip the git-mediated primary block
 for one shell invocation. Prefer fixing the cwd / using a worktree instead.
 """
+
 from __future__ import annotations
 
+import fnmatch
 import json
 import os
 import re
@@ -144,9 +179,7 @@ def _read_payload() -> dict:
 
 
 def _tool_name(payload: dict) -> str:
-    return str(
-        payload.get("tool_name") or payload.get("tool") or payload.get("name") or ""
-    )
+    return str(payload.get("tool_name") or payload.get("tool") or payload.get("name") or "")
 
 
 def _tool_input(payload: dict) -> dict:
@@ -196,7 +229,7 @@ def _apply_patch_targets(patch_text: str) -> list[str]:
         line = raw.strip()
         for header in _APPLY_PATCH_HEADERS:
             if line.startswith(header):
-                path = line[len(header):].strip()
+                path = line[len(header) :].strip()
                 if path:
                     targets.append(path)
                 break
@@ -256,9 +289,9 @@ def write_tool_targets(tool_input: dict) -> list[str]:
 # Control operators that separate one logical command from the next.
 _CONTROL_OPS = frozenset({"&&", "||", ";", ";;", "|", "|&", "&", "(", ")", "\n"})
 
-# Redirection operators that create/append to a *file* (as opposed to ``>&``
-# which duplicates a file descriptor). ``&>`` / ``&>>`` redirect both streams.
-_FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>"})
+# ``>&`` duplicates a descriptor only for a numeric operand (or closes it for
+# ``-``); otherwise it opens a file. ``<>`` opens read-write and can create.
+_FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>", ">&", "<>"})
 
 
 def _strip_quotes_for_heredoc(token: str) -> str:
@@ -267,7 +300,7 @@ def _strip_quotes_for_heredoc(token: str) -> str:
     return token
 
 
-def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
     try:
         lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
         lexer.whitespace_split = True
@@ -276,7 +309,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     except ValueError:
         return []
 
-    delimiters: list[tuple[str, bool]] = []
+    delimiters: list[tuple[str, bool, bool]] = []
     i = 0
     while i < len(tokens):
         if tokens[i] != "<<":
@@ -299,7 +332,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
                 delim_tok = nxt
         delimiter = _strip_quotes_for_heredoc(delim_tok)
         if delimiter:
-            delimiters.append((delimiter, strip_tabs))
+            delimiters.append((delimiter, strip_tabs, delim_tok != delimiter))
         i = j + 1
     return delimiters
 
@@ -332,15 +365,61 @@ def _strip_heredoc_bodies(command: str) -> str:
         if not pending:
             continue
         body_start = i
+        substitutions: list[str] = []
         while i < n and pending:
-            delimiter, strip_tabs = pending[0]
+            delimiter, strip_tabs, quoted = pending[0]
             candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
             if candidate == delimiter:
                 pending.pop(0)
+            elif not quoted:
+                substitutions.extend(_heredoc_substitutions(lines[i]))
             i += 1
         if pending:
             kept.extend(lines[body_start:i])
+        else:
+            # Unquoted delimiters expand command substitutions in the body.
+            # Keep only those executable fragments, never ordinary document
+            # text (which may contain redirect-looking punctuation).
+            kept.extend(substitutions)
     return "\n".join(kept)
+
+
+def _heredoc_substitutions(line: str) -> list[str]:
+    """Executable substitutions in one unquoted heredoc body line."""
+    found: list[str] = []
+    i = 0
+    while i < len(line):
+        if line[i] == "\\":
+            i += 2
+            continue
+        if line.startswith("$((", i):
+            i += 3
+            continue
+        if line.startswith("$(", i):
+            start = i
+            depth = 1
+            i += 2
+            while i < len(line) and depth:
+                if line[i] == "\\":
+                    i += 2
+                    continue
+                if line[i] == "(":
+                    depth += 1
+                elif line[i] == ")":
+                    depth -= 1
+                i += 1
+            found.append(line[start:i])
+            continue
+        if line[i] == "`":
+            start = i
+            i += 1
+            while i < len(line) and line[i] != "`":
+                i += 2 if line[i] == "\\" else 1
+            i = min(i + 1, len(line))
+            found.append("$(" + line[start + 1 : i - 1] + ")")
+            continue
+        i += 1
+    return found
 
 
 def _collapse_shell_line_continuations(command: str) -> str:
@@ -385,8 +464,27 @@ _UNMASK = str.maketrans({v: k for k, v in _LITERAL_SENTINELS.items()})
 # a run such as ``);`` or ``)&&`` as one token; the scope tracking below needs
 # each ``(`` / ``)`` and each separator on its own.
 _SHELL_OPERATORS = (
-    "&>>", "<<<", "&>", ">>", ">|", "&&", "||", ";;", "|&", "<<", "<>", ">&", "<&",
-    ">", "<", "|", "&", ";", "(", ")", "\n",
+    "&>>",
+    "<<<",
+    "&>",
+    ">>",
+    ">|",
+    "&&",
+    "||",
+    ";;",
+    "|&",
+    "<<",
+    "<>",
+    ">&",
+    "<&",
+    ">",
+    "<",
+    "|",
+    "&",
+    ";",
+    "(",
+    ")",
+    "\n",
 )
 _PUNCTUATION = frozenset("();<>|&\n")
 
@@ -449,9 +547,7 @@ def _tokenize(command: str) -> list[str]:
     """
     try:
         lexer = shlex.shlex(
-            _mask_quoted_literals(
-                _collapse_shell_line_continuations(_strip_heredoc_bodies(command))
-            ),
+            _mask_quoted_literals(_collapse_shell_line_continuations(_strip_heredoc_bodies(command))),
             posix=True,
             punctuation_chars="();<>|&\n",
         )
@@ -488,9 +584,7 @@ _BINDING_DECLARATIONS = frozenset({"export", "declare", "typeset", "readonly"})
 # Commands that can reassign any variable behind the parser's back.
 _OPAQUE_ASSIGNERS = frozenset({"source", ".", "eval", "trap"})
 # Commands whose operands name the variables they overwrite.
-_CLOBBERERS = frozenset(
-    {"read", "unset", "mapfile", "readarray", "getopts", "printf", "let", "wait", "coproc"}
-)
+_CLOBBERERS = frozenset({"read", "unset", "mapfile", "readarray", "getopts", "printf", "let", "wait", "coproc"})
 # Reserved words that open / close a compound command, and that only prefix one.
 _COMPOUND_OPENERS = frozenset({"if", "while", "until", "for", "select", "case", "{"})
 _COMPOUND_CLOSERS = frozenset({"fi", "done", "esac", "}"})
@@ -517,6 +611,8 @@ class ShellWord(str):
 
     unresolved_at: Optional[int]  # noqa: UP045 - Python 3.9 parser
     raw: str
+    base: str | None
+    decision_reason: str | None
 
     def __new__(
         cls,
@@ -527,14 +623,24 @@ class ShellWord(str):
         word = super().__new__(cls, text)
         word.unresolved_at = unresolved_at
         word.raw = text if raw is None else raw
+        word.base = None
+        word.decision_reason = None
         return word
 
     def tail(self, start: int) -> ShellWord:
         """``self[start:]`` keeping the unresolved offset (``-C<path>`` form)."""
         at = self.unresolved_at
-        return ShellWord(
-            str(self)[start:], None if at is None else max(0, at - start), self.raw
-        )
+        return ShellWord(str(self)[start:], None if at is None else max(0, at - start), self.raw)
+
+
+class ShellSegment(list):
+    """Expanded words with their shell scope and neighboring control operators."""
+
+    def __init__(self, words: list[ShellWord], scope: tuple[int, ...], prev_op: str, next_op: str) -> None:
+        super().__init__(words)
+        self.scope = scope
+        self.prev_op = prev_op
+        self.next_op = next_op
 
 
 Bindings = dict[str, Optional[str]]  # noqa: UP045 - Python 3.9 parser
@@ -605,17 +711,14 @@ class _Expander:
         self.values: dict[str, set[str]] = {}
         self.tainted: set[str] = set()
         self.frames: list[str] = []  # "paren" | "compound" | "case"
+        self.paren_serial = 0
         self.poisoned = False  # unbalanced scope: nothing after is unconditional
         self.ifs_changed = False  # unquoted values may split anywhere: none is known
         self.assigned: Optional[set[str]] = None  # noqa: UP045
         self.stable: Optional[set[str]] = None  # noqa: UP045
         if first is not None:
             self.assigned = set(first.values) | first.tainted
-            self.stable = {
-                name
-                for name, seen in first.values.items()
-                if name not in first.tainted and len(seen) == 1
-            }
+            self.stable = {name for name, seen in first.values.items() if name not in first.tainted and len(seen) == 1}
 
     # -- variable state ------------------------------------------------------
 
@@ -647,9 +750,9 @@ class _Expander:
         if match.group(2) or match.group(3) or not unconditional or self.ifs_changed:
             self._forget(name)
             return
-        word = self._expand(token[match.end():])
-        if word.unresolved_at is not None or _WHITESPACE_RE.search(word):
-            self._forget(name)  # unquoted use would word-split
+        word = self._expand(token[match.end() :])
+        if word.unresolved_at is not None:
+            self._forget(name)
             return
         if name == "IFS":
             self._forget(name)
@@ -663,18 +766,28 @@ class _Expander:
             if match:
                 self._forget(match.group(1))
 
-    def _expand(self, token: str) -> ShellWord:
+    def _expand(self, token: str, *, eval_arg: bool = False) -> ShellWord:
         for match in _ASSIGNING_EXPANSION_RE.finditer(token):
             self._forget(match.group(1))
-        return _expand_word(token, self._lookup)
+        # A quoted command string may contain spaces. Other uses of such a
+        # binding are undecidable because unquoted expansion may word-split.
+        lookup = (
+            self._lookup
+            if eval_arg
+            else lambda name: (
+                value if (value := self._lookup(name)) is not None and not _WHITESPACE_RE.search(value) else None
+            )
+        )
+        return _expand_word(token, lookup)
 
     # -- scope tracking ------------------------------------------------------
 
     def _operator(self, op: str) -> None:
         if op == "(":
-            self.frames.append("paren")
+            self.paren_serial += 1
+            self.frames.append(f"paren:{self.paren_serial}")
         elif op == ")":
-            if self.frames and self.frames[-1] == "paren":
+            if self.frames and self.frames[-1].startswith("paren:"):
                 self.frames.pop()
             elif not self.frames or self.frames[-1] != "case":  # ``pattern)`` is fine
                 self.poisoned = True
@@ -708,10 +821,7 @@ class _Expander:
         if not body:
             return []
         unconditional = (
-            not self.frames
-            and not self.poisoned
-            and prev_op in _STATEMENT_START
-            and next_op in _STATEMENT_END
+            not self.frames and not self.poisoned and prev_op in _STATEMENT_START and next_op in _STATEMENT_END
         )
         lead = 0
         while lead < len(body) and _ASSIGN_RE.match(body[lead]):
@@ -725,19 +835,20 @@ class _Expander:
             return words
 
         # Expansion sees the state from before this command's own effects.
-        words = [self._expand(tok) for tok in body]
+        cmd, cmd_index = _command_word(body)
+        words = [self._expand(tok, eval_arg=cmd == "eval" and i > cmd_index) for i, tok in enumerate(body)]
         if header:
             self._forget_leading_names(body)
         for tok in body[:lead]:  # ``S=x cmd``: cmd's environment, never a binding
             self._forget(_ASSIGN_RE.match(tok).group(1))
-        if "paren" in self.frames:  # ``(( S = 5 ))``, ``(S++)`` …
+        if any(frame.startswith("paren:") for frame in self.frames):
             self._forget_leading_names(body[lead:])
         self._command_effects(body, unconditional=unconditional)
         return words
 
     def _command_effects(self, body: list[str], *, unconditional: bool) -> None:
         cmd, idx = _command_word(body)
-        args = body[idx + 1:]
+        args = body[idx + 1 :]
         if cmd in _OPAQUE_ASSIGNERS:
             self._opaque()
         elif cmd in _DECLARATION_BUILTINS:
@@ -746,16 +857,14 @@ class _Expander:
                 return
             for tok in args:
                 if _ASSIGN_RE.match(tok):
-                    self._assign(
-                        tok, unconditional=unconditional and cmd in _BINDING_DECLARATIONS
-                    )
+                    self._assign(tok, unconditional=unconditional and cmd in _BINDING_DECLARATIONS)
                 elif cmd != "export":
                     self._forget_leading_names([tok])
         elif cmd in _CLOBBERERS:
             self._forget_leading_names(args)
 
-    def run(self) -> list[list[ShellWord]]:
-        segments: list[list[ShellWord]] = []
+    def run(self) -> list[ShellSegment]:
+        segments: list[ShellSegment] = []
         current: list[str] = []
         prev_op = ""
         for tok in [*self.tokens, ";"]:
@@ -765,7 +874,8 @@ class _Expander:
             if current:
                 words = self._segment(current, prev_op, tok)
                 if words:
-                    segments.append(words)
+                    scope = tuple(int(frame.split(":", 1)[1]) for frame in self.frames if frame.startswith("paren:"))
+                    segments.append(ShellSegment(words, scope, prev_op, tok))
                 current = []
             elif tok == "\n" and prev_op in _CONTINUING_OPS:
                 continue
@@ -774,7 +884,7 @@ class _Expander:
         return segments
 
 
-def _expanded_segments(command: str) -> list[list[ShellWord]]:
+def _expanded_segments(command: str) -> list[ShellSegment]:
     """Per-command segments of expanded words, in command order.
 
     Variable values come only from the command itself — earlier unconditional
@@ -789,14 +899,16 @@ def _expanded_segments(command: str) -> list[list[ShellWord]]:
 
 
 def _redirect_targets(tokens: list[str]) -> list[str]:
-    """Files named as the destination of a ``>``/``>>``/``&>`` redirection."""
+    """Files opened for writing by shell redirections."""
     targets: list[str] = []
     for i, tok in enumerate(tokens):
         if tok in _FILE_REDIRECTS and i + 1 < len(tokens):
             dest = tokens[i + 1]
-            # ``>&1`` / ``> &2`` duplicate a descriptor, and a bare number is a
-            # descriptor too — neither is a file write.
-            if dest.startswith("&") or dest.isdigit():
+            # ``>&1`` duplicates a descriptor; ``>&-`` closes it. Ordinary
+            # ``> 123`` writes a file named 123, so only ``>&`` gets this rule.
+            if tok == ">&" and (dest.isdigit() or dest == "-"):
+                continue
+            if tok != ">&" and dest.startswith("&"):
                 continue
             targets.append(dest)
     return targets
@@ -812,26 +924,51 @@ def _command_word(segment: list[str]) -> tuple[str, int]:
     i = 0
     while i < len(segment):
         tok = segment[i]
-        if "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier():
+        if _ASSIGN_RE.match(tok):
             i += 1  # leading environment assignment
             continue
-        if tok in {"sudo", "env", "time", "nohup", "command", "builtin", "exec"}:
+        if tok in {"time", "nohup", "builtin", "exec"}:
             i += 1
+            continue
+        if tok == "command":
+            i += 1
+            while i < len(segment) and segment[i] in {"-p", "--"}:
+                i += 1
+            continue
+        if tok == "env":
+            i += 1
+            while i < len(segment):
+                arg = segment[i]
+                if arg in {"-u", "--unset", "-C", "--chdir", "-S", "--split-string"}:
+                    i += 2
+                elif (
+                    arg in {"-i", "--ignore-environment", "-0", "--null", "--"}
+                    or arg.startswith(("--unset=", "--chdir="))
+                    or _ASSIGN_RE.match(arg)
+                ):
+                    i += 1
+                else:
+                    break
+            continue
+        if tok in {"nice", "timeout", "stdbuf", "sudo"}:
+            wrapper = tok
+            i += 1
+            value_opts = {
+                "nice": {"-n", "--adjustment"},
+                "timeout": {"-s", "--signal", "-k", "--kill-after"},
+                "sudo": {"-u", "-g", "-h", "-p", "-C", "-T"},
+                "stdbuf": {"-i", "-o", "-e"},
+            }[wrapper]
+            while i < len(segment) and segment[i].startswith("-"):
+                option = segment[i]
+                i += 2 if option in value_opts else 1
+            if wrapper == "timeout" and i < len(segment):
+                i += 1  # duration
             continue
         break
     if i >= len(segment):
         return "", i
     return Path(segment[i]).name, i
-
-
-def _tee_targets(segment: list[str], cmd_index: int) -> list[str]:
-    """Non-flag operands of a ``tee`` invocation (its output files)."""
-    targets: list[str] = []
-    for tok in segment[cmd_index + 1:]:
-        if tok.startswith("-"):
-            continue  # -a / --append / -i / -p
-        targets.append(tok)
-    return targets
 
 
 def _inplace_edit_targets(segment: list[str], cmd_index: int) -> list[str]:
@@ -842,7 +979,7 @@ def _inplace_edit_targets(segment: list[str], cmd_index: int) -> list[str]:
     ``-e``/``-f`` script every positional is a file; otherwise the first
     positional is the script and the rest are files.
     """
-    args = segment[cmd_index + 1:]
+    args = segment[cmd_index + 1 :]
     has_inplace = False
     has_explicit_script = False
     files: list[str] = []
@@ -882,21 +1019,759 @@ def _inplace_edit_targets(segment: list[str], cmd_index: int) -> list[str]:
     return files if has_inplace else []
 
 
-def bash_write_targets(command: str) -> list[str]:
+_DESTINATION_WRITERS = frozenset({"cp", "mv", "install", "ln", "rsync"})
+# GNU getopt operands: an option's value is never a source or destination.
+# Keep the short options per command; a value can follow a cluster (-at DIR)
+# or be attached to its final option (-atDIR). Long options accept =VALUE.
+_VALUE_OPTIONS: dict[str, tuple[frozenset[str], frozenset[str]]] = {
+    "cp": (frozenset("St"), frozenset({"suffix", "target-directory"})),
+    "mv": (frozenset("St"), frozenset({"suffix", "target-directory"})),
+    "ln": (frozenset("St"), frozenset({"suffix", "target-directory"})),
+    "install": (
+        frozenset("gmoSt"),
+        frozenset({"group", "mode", "owner", "suffix", "target-directory", "strip-program"}),
+    ),
+    "rsync": (
+        frozenset("e"),
+        frozenset(
+            {
+                "rsh",
+                "exclude",
+                "include",
+                "filter",
+                "files-from",
+                "exclude-from",
+                "include-from",
+                "chmod",
+                "backup-dir",
+                "temp-dir",
+                "partial-dir",
+                "log-file",
+                "write-batch",
+                "only-write-batch",
+                "out-format",
+                "bwlimit",
+                "port",
+                "address",
+                "iconv",
+                "usermap",
+                "groupmap",
+                "sockopts",
+                "rsync-path",
+            }
+        ),
+    ),
+    "rm": (frozenset(), frozenset()),
+    "unlink": (frozenset(), frozenset()),
+    "rmdir": (frozenset(), frozenset()),
+    "shred": (frozenset("ns"), frozenset({"iterations", "size"})),
+    "chmod": (frozenset(), frozenset({"reference"})),
+    "chown": (frozenset(), frozenset({"reference", "from"})),
+    "touch": (frozenset("drt"), frozenset({"date", "reference", "time"})),
+    "git-archive": (frozenset("o"), frozenset({"output"})),
+}
+
+# Only these option values name additional write destinations. cp/mv --backup
+# takes a control word, and --suffix takes a filename suffix; their output is
+# still under the already-classified destination. rsync --compare-dest and
+# --link-dest are read inputs, not write locations.
+_PATH_WRITING_OPTIONS: dict[str, frozenset[str]] = {
+    "rsync": frozenset({"backup-dir", "log-file", "write-batch", "only-write-batch", "partial-dir", "temp-dir"}),
+    "git-archive": frozenset({"o", "output"}),
+}
+
+# Commands without a complete source/destination grammar are intentionally
+# conservative. Adding a writer here covers future output options as well as
+# current ones, without maintaining another table of flags.
+_LONG_TAIL_WRITERS = frozenset(
+    {
+        "curl",
+        "wget",
+        "sort",
+        "sqlite3",
+        "tar",
+        "unzip",
+        "patch",
+        "tee",
+        "truncate",
+        "split",
+        "csplit",
+        "ffmpeg",
+        "convert",
+    }
+)
+
+
+# Short options that consume a value. True means the value may name a write
+# location; False means it is an input or a non-path control value. Positional
+# inputs remain conservatively classified by the long-tail rule above.
+_LONG_TAIL_SHORT_VALUES: dict[str, dict[str, bool]] = {
+    "curl": {**dict.fromkeys("oDc", True), **dict.fromkeys("KT", False)},
+    "wget": dict.fromkeys("OoaP", True),
+    "sort": {**dict.fromkeys("oT", True), **dict.fromkeys("kt", False)},
+    "tar": dict.fromkeys("fC", True),
+    "unzip": {"d": True},
+    "patch": {**dict.fromkeys("orBd", True), "i": False},
+    "split": dict.fromkeys("aCbln", False),
+}
+_LONG_TAIL_LONG_VALUES: dict[str, dict[str, bool]] = {
+    "curl": {
+        "output": True,
+        "output-dir": True,
+        "dump-header": True,
+        "cookie-jar": True,
+        "config": False,
+        "upload-file": False,
+    },
+    "wget": {"output-document": True, "output-file": True, "append-output": True, "directory-prefix": True},
+    "sort": {"output": True, "temporary-directory": True, "key": False, "field-separator": False},
+    "tar": {"file": True, "directory": True},
+    "unzip": {"directory": True},
+    "patch": {"output": True, "reject-file": True, "prefix": True, "directory": True, "input": False},
+}
+
+
+def _long_tail_targets(args: list[str], command: str) -> list[str]:
+    """Path-like argv words, including values attached to options and dot commands."""
+    targets: list[str] = []
+    short_values = _LONG_TAIL_SHORT_VALUES.get(command, {})
+    long_values = _LONG_TAIL_LONG_VALUES.get(command, {})
+    i = 0
+    options_done = False
+    while i < len(args):
+        arg = args[i]
+        i += 1
+        if arg == "--":
+            options_done = True
+            continue
+        words: list[str] = []
+        if not options_done and arg.startswith("--"):
+            name, sep, attached = str(arg[2:]).partition("=")
+            if sep:
+                value = arg.tail(len(name) + 3) if isinstance(arg, ShellWord) else attached
+                if long_values.get(name, False):
+                    words.append(value)
+            elif name in long_values and i < len(args):
+                value = args[i]
+                i += 1
+                if long_values[name]:
+                    words.append(value)
+        elif not options_done and arg.startswith("-") and arg != "-":
+            for offset, flag in enumerate(arg[1:], 1):
+                if flag not in short_values:
+                    continue
+                if offset + 1 < len(arg):
+                    value = arg.tail(offset + 1) if isinstance(arg, ShellWord) else arg[offset + 1 :]
+                elif i < len(args):
+                    value = args[i]
+                    i += 1
+                else:
+                    break
+                if short_values[flag]:
+                    words.append(value)
+                break
+        elif command not in {"curl", "wget"}:
+            words.append(arg)
+        # Absolute embedded values and SQLite dot commands.
+        for word in tuple(words):
+            for match in re.finditer(r"(?:^|\s|=|-[A-Za-z]+)(/[^\s]+)", word):
+                words.append(
+                    ShellWord(match.group(1), getattr(word, "unresolved_at", None), getattr(word, "raw", word))
+                )
+            if any(char.isspace() for char in word):
+                words.extend(ShellWord(part, getattr(word, "unresolved_at", None)) for part in str(word).split())
+        targets.extend(word for word in words if word and not str(word).startswith("-") and "://" not in word)
+    return list(dict.fromkeys(targets))
+
+
+def _has_short_option(args: list[str], command: str, flag: str) -> bool:
+    """Find a short flag before a value ends its option cluster."""
+    value_options = _LONG_TAIL_SHORT_VALUES.get(command, {})
+    for arg in args:
+        if arg == "--":
+            break
+        if not arg.startswith("-") or arg.startswith("--"):
+            continue
+        for letter in arg[1:]:
+            if letter == flag:
+                return True
+            if letter in value_options:
+                break
+    return False
+
+
+_INPLACE_FIXERS = frozenset(
+    {
+        "ruff",
+        "black",
+        "isort",
+        "prettier",
+        "eslint",
+        "clang-format",
+        "gofmt",
+        "rustfmt",
+        "shfmt",
+        "markdownlint",
+        "markdownlint-cli2",
+    }
+)
+
+
+def _inplace_fixer_targets(command: str, args: list[str]) -> list[str]:
+    """Primary file operands of formatters and linters in write mode."""
+    if command == "ruff":
+        if not args or args[0] not in {"format", "check"}:
+            return []
+        writing = args[0] == "format" and "--check" not in args and "--diff" not in args
+        writing |= args[0] == "check" and any(a in {"--fix", "--fix-only"} for a in args)
+        args = args[1:]
+    elif command in {"black", "isort"}:
+        writing = not any(a in {"--check", "--check-only", "--diff"} for a in args)
+    elif command == "rustfmt":
+        writing = (
+            "--check" not in args
+            and "--emit=stdout" not in args
+            and not any(args[i : i + 2] == ["--emit", "stdout"] for i in range(len(args) - 1))
+        )
+    else:
+        write_flags = {
+            "prettier": {"--write", "-w"},
+            "eslint": {"--fix"},
+            "clang-format": {"-i"},
+            "gofmt": {"-w"},
+            "shfmt": {"-w"},
+            "markdownlint": {"--fix"},
+            "markdownlint-cli2": {"--fix"},
+        }
+        writing = any(a in write_flags.get(command, ()) for a in args)
+        if command in {"gofmt", "shfmt"}:
+            writing |= any(a.startswith("-") and not a.startswith("--") and "w" in a[1:] for a in args)
+    if not writing:
+        return []
+    # These options consume a non-target value; the rest of the positional
+    # words are paths. The guard's containment layer decides which are primary.
+    value_options = {
+        "--config",
+        "--ignore-path",
+        "--stdin-filepath",
+        "--extension",
+        "--target-version",
+        "--line-length",
+        "--output-format",
+        "--range",
+        "--emit",
+        "--edition",
+        "--config-path",
+        "-c",
+    }
+    targets: list[str] = []
+    skip = False
+    options_done = False
+    for arg in args:
+        if skip:
+            skip = False
+            continue
+        if arg == "--":
+            options_done = True
+            continue
+        if not options_done and arg in value_options:
+            skip = True
+            continue
+        if not options_done and command == "shfmt" and arg in {"-i", "-ln"}:
+            skip = True
+            continue
+        if not options_done and command == "gofmt" and arg == "-r":
+            skip = True
+            continue
+        if not options_done and arg.startswith("-"):
+            continue
+        targets.append(arg)
+    return targets
+
+
+def _shell_command_script(args: list[str]) -> str | None:
+    """Return the script after a shell -c cluster, stepping over option values."""
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        if arg == "--":
+            return None
+        if arg in {"-o", "-O", "+O", "--rcfile", "--init-file"}:
+            i += 2
+            continue
+        if arg.startswith(("--rcfile=", "--init-file=")):
+            i += 1
+            continue
+        if arg.startswith("--"):
+            i += 1
+            continue
+        if arg.startswith("-") and not arg.startswith("--"):
+            script_index = i + 1
+            for flag in arg[1:]:
+                if flag in {"o", "O"}:
+                    script_index += 1
+            if "c" in arg[1:]:
+                if script_index < len(args) and args[script_index] == "--":
+                    script_index += 1
+                return args[script_index] if script_index < len(args) else None
+            i = script_index
+            continue
+        if arg.startswith(("+O", "-O")):
+            i += 1
+            continue
+        return None
+    return None
+
+
+def _operands(args: list[str], command: str) -> tuple[list[str], str | None, set[str], list[str]]:
+    """Return getopt operands, target directory, seen options and written option paths."""
+    short_values, long_values = _VALUE_OPTIONS[command]
+    positionals: list[str] = []
+    target_dir: str | None = None
+    seen: set[str] = set()
+    option_targets: list[str] = []
+    options_done = False
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        i += 1
+        if options_done or arg == "-" or not arg.startswith("-"):
+            positionals.append(arg)
+            continue
+        if arg == "--":
+            options_done = True
+            continue
+        if arg.startswith("--"):
+            name, sep, attached = str(arg[2:]).partition("=")
+            seen.add(name)
+            if name in long_values:
+                if sep:
+                    value = arg.tail(len(name) + 3) if isinstance(arg, ShellWord) else attached
+                elif i < len(args):
+                    value = args[i]
+                    i += 1
+                else:
+                    continue
+                if name == "target-directory":
+                    target_dir = value
+                if name in _PATH_WRITING_OPTIONS.get(command, ()):
+                    option_targets.append(value)
+            continue
+        for offset, flag in enumerate(arg[1:], 1):
+            seen.add(flag)
+            if flag not in short_values:
+                continue
+            if offset + 1 < len(arg):
+                value = arg.tail(offset + 1) if isinstance(arg, ShellWord) else arg[offset + 1 :]
+            elif i < len(args):
+                value = args[i]
+                i += 1
+            else:
+                break
+            if flag == "t" and command in _DESTINATION_WRITERS:
+                target_dir = value
+            if flag in _PATH_WRITING_OPTIONS.get(command, ()):
+                option_targets.append(value)
+            break
+    return positionals, target_dir, seen, option_targets
+
+
+def _destination_targets(segment: list[str], cmd_index: int, command: str) -> list[str]:
+    """Destination and removed sources of a filesystem transfer."""
+    args = segment[cmd_index + 1 :]
+    positionals, target_dir, seen, option_targets = _operands(args, command)
+    if command == "install" and ("d" in seen or "directory" in seen):
+        return [*positionals, *option_targets]
+    sources = positionals if target_dir is not None else positionals[:-1]
+    removed_sources = command == "mv" or (command == "rsync" and "remove-source-files" in seen)
+    targets = sources if removed_sources else []
+    if target_dir is not None:
+        return [*targets, target_dir, *option_targets]
+    return [*targets, positionals[-1], *option_targets] if len(positionals) >= 2 else [*targets, *option_targets]
+
+
+def _mutation_targets(segment: list[str], cmd_index: int, command: str) -> list[str]:
+    positionals, _, seen, _ = _operands(segment[cmd_index + 1 :], command)
+    if command in {"chmod", "chown"} and "reference" not in seen:
+        positionals = positionals[1:]  # mode or owner, then paths
+    return positionals
+
+
+def _dd_targets(segment: list[str], cmd_index: int) -> list[str]:
+    return [
+        arg.tail(3) if isinstance(arg, ShellWord) else arg[3:]
+        for arg in segment[cmd_index + 1 :]
+        if arg.startswith("of=")
+    ]
+
+
+def _find_start_paths(args: list[str]) -> list[str]:
+    """Parse find globals before start paths; files0 input hides start paths."""
+    i = 0
+    while i < len(args):
+        if args[i] in {"-H", "-L", "-P"} or re.fullmatch(r"-O[0-9]+", args[i]):
+            i += 1
+        elif args[i] == "-D" and i + 1 < len(args):
+            i += 2
+        else:
+            break
+    if i < len(args) and args[i] == "--":
+        i += 1
+    starts: list[str] = []
+    for arg in args[i:]:
+        if arg == "-files0-from":
+            break
+        if arg.startswith("-") or arg in {"!", "(", ")"}:
+            break
+        starts.append(arg)
+    return starts or ["."]
+
+
+def _find_targets(args: list[str], *, cwd: str | None, main_root: Path | None, depth: int) -> list[str]:
+    starts = _find_start_paths(args)
+    targets: list[str] = []
+    if "-delete" in args:
+        targets.extend(starts)
+    for i, tok in enumerate(args):
+        if tok in {"-fprint", "-fprint0", "-fprintf", "-fls"} and i + 1 < len(args):
+            targets.append(args[i + 1])
+        # The input is read, but its contents can name any start path.
+        if (
+            tok == "-files0-from"
+            and i + 1 < len(args)
+            and main_root is not None
+            and (
+                cwd is None
+                or _names_primary_literal(str(args[i + 1]), cwd, main_root)
+                or _names_primary_literal(".", cwd, main_root)
+            )
+        ):
+            unknown = ShellWord("find files0 start paths")
+            unknown.decision_reason = "undecidable_find_start_paths"
+            targets.append(unknown)
+        if tok not in {"-exec", "-execdir", "-ok", "-okdir"}:
+            continue
+        template: list[str] = []
+        for arg in args[i + 1 :]:
+            if arg in {";", "+"}:
+                break
+            template.append(arg)
+        exec_cwd = None if tok.endswith("dir") else cwd
+        if "{}" in template:
+            for start in starts:
+                instantiated = [start if word == "{}" else word for word in template]
+                nested = _writer_targets(
+                    instantiated, cwd=exec_cwd, redirect_cwd=exec_cwd, main_root=main_root, depth=depth + 1
+                )
+                for target in nested:
+                    if exec_cwd is None and not Path(target).is_absolute():
+                        target = target if isinstance(target, ShellWord) else ShellWord(str(target))
+                        target.decision_reason = "undecidable_find_execdir_target"
+                    targets.append(target)
+        else:
+            nested = _writer_targets(
+                template, cwd=exec_cwd, redirect_cwd=exec_cwd, main_root=main_root, depth=depth + 1
+            )
+            for target in nested:
+                if exec_cwd is None and not Path(target).is_absolute():
+                    target = target if isinstance(target, ShellWord) else ShellWord(str(target))
+                    target.decision_reason = "undecidable_find_execdir_target"
+                targets.append(target)
+    return targets
+
+
+def _writer_targets(
+    segment: list[str], *, cwd: str | None, redirect_cwd: str | None, main_root: Path | None, depth: int
+) -> list[str]:
+    """Targets of the writer in one expanded segment, including exec wrappers."""
+    targets = _redirect_targets(segment)
+    for target in targets:
+        if isinstance(target, ShellWord):
+            target.base = redirect_cwd
+            if redirect_cwd is None and not Path(target).is_absolute():
+                target.decision_reason = "undecidable_write_target_after_cd"
+    cmd, idx = _command_word(segment)
+    if cmd in _LONG_TAIL_WRITERS:
+        targets.extend(_long_tail_targets(segment[idx + 1 :], cmd))
+        if cmd == "curl" and (_has_short_option(segment[idx + 1 :], cmd, "O") or "--remote-name" in segment[idx + 1 :]):
+            targets.extend(
+                ShellWord(Path(str(arg).split("?", 1)[0]).name) for arg in segment[idx + 1 :] if "://" in arg
+            )
+        if cmd == "wget" and not (
+            _has_short_option(segment[idx + 1 :], cmd, "O")
+            or _has_short_option(segment[idx + 1 :], cmd, "P")
+            or any(
+                arg in {"--output-document", "--directory-prefix"}
+                or arg.startswith(("--output-document=", "--directory-prefix="))
+                for arg in segment[idx + 1 :]
+            )
+        ):
+            targets.extend(
+                ShellWord(Path(str(arg).split("?", 1)[0]).name) for arg in segment[idx + 1 :] if "://" in arg
+            )
+    elif cmd in ("sed", "perl"):
+        targets.extend(_inplace_edit_targets(segment, idx))
+    elif cmd in _INPLACE_FIXERS:
+        targets.extend(_inplace_fixer_targets(cmd, segment[idx + 1 :]))
+    elif cmd in _DESTINATION_WRITERS:
+        targets.extend(_destination_targets(segment, idx, cmd))
+    elif cmd in {"rm", "unlink", "rmdir", "shred", "chmod", "chown", "touch"}:
+        targets.extend(_mutation_targets(segment, idx, cmd))
+    elif cmd == "dd":
+        targets.extend(_dd_targets(segment, idx))
+    elif _is_git_binary(cmd):
+        c_path, rest = _git_global_prefix(segment[idx + 1 :])
+        if rest and rest[0] == "archive":
+            _, _, _, option_targets = _operands(rest[1:], "git-archive")
+            git_base = _resolve(c_path, cwd, expand_user=False) if c_path and cwd else cwd
+            for target in option_targets:
+                word = target if isinstance(target, ShellWord) else ShellWord(str(target))
+                if c_path and getattr(c_path, "unresolved_at", None) is not None and not Path(word).is_absolute():
+                    word.decision_reason = "unresolved_shell_variable"
+                word.base = str(git_base) if git_base is not None else None
+                targets.append(word)
+    elif cmd == "eval" and depth < 3:
+        args = segment[idx + 1 :]
+        if any(getattr(arg, "unresolved_at", None) is not None for arg in args):
+            unknown = ShellWord("eval dynamic target")
+            unknown.decision_reason = "undecidable_eval_primary_target"
+            targets.append(unknown)
+        else:
+            targets.extend(bash_write_targets(" ".join(args), cwd=cwd, main_root=main_root, depth=depth + 1))
+    elif cmd in {"sh", "bash", "zsh", "dash"} and depth < 3:
+        script = _shell_command_script(segment[idx + 1 :])
+        if script is not None:
+            if getattr(script, "unresolved_at", None) is not None:
+                unknown = ShellWord("dynamic shell script")
+                unknown.decision_reason = "undecidable_shell_script_target"
+                targets.append(unknown)
+            else:
+                targets.extend(bash_write_targets(str(script), cwd=cwd, main_root=main_root, depth=depth + 1))
+    elif cmd == "find" and depth < 3:
+        targets.extend(_find_targets(segment[idx + 1 :], cwd=cwd, main_root=main_root, depth=depth))
+    return targets
+
+
+def _xargs_template(segment: list[str]) -> list[str]:
+    cmd, idx = _command_word(segment)
+    if cmd not in {"xargs", "parallel"}:
+        return []
+    args = segment[idx + 1 :]
+    i = 0
+    value_opts = {
+        "-n",
+        "--max-args",
+        "-L",
+        "--max-lines",
+        "-P",
+        "--max-procs",
+        "-j",
+        "--jobs",
+        "-I",
+        "--replace",
+        "-s",
+        "--max-chars",
+        "-d",
+        "--delimiter",
+    }
+    while i < len(args) and args[i].startswith("-"):
+        i += 2 if args[i] in value_opts else 1
+    template = args[i:]
+    return template[: template.index(":::")] if ":::" in template else template
+
+
+def _xargs_writer(template: list[str]) -> bool:
+    writer, _ = _command_word(template)
+    return writer in {
+        "tee",
+        "sed",
+        "perl",
+        "dd",
+        "rm",
+        "unlink",
+        "rmdir",
+        "truncate",
+        "shred",
+        "chmod",
+        "chown",
+        "touch",
+        *_DESTINATION_WRITERS,
+        *_LONG_TAIL_WRITERS,
+        "find",
+        "sh",
+        "bash",
+        "zsh",
+        "dash",
+        "eval",
+        *_INPLACE_FIXERS,
+    }
+
+
+def _names_primary_literal(word: str, cwd: str, main_root: Path) -> bool:
+    """Whether a path-looking pipeline word identifies the primary tree."""
+    if "/" not in word and not word.startswith("."):
+        return False
+    path = _resolve(word, cwd, expand_user=False).resolve()
+    try:
+        relative = path.relative_to(main_root)
+    except ValueError:
+        return False
+    return relative.parts[:2] != (".worktrees", "dispatch")
+
+
+def _env_command_cwd(segment: list[str], cwd: str | None) -> str | None:
+    """Apply ``env -C`` / ``--chdir`` before resolving a wrapped writer."""
+    _, command_index = _command_word(segment)
+    i = 0
+    while i < command_index:
+        if segment[i] != "env":
+            i += 1
+            continue
+        i += 1
+        while i < command_index:
+            arg = segment[i]
+            if arg in {"-C", "--chdir"} and i + 1 < len(segment):
+                path = segment[i + 1]
+                i += 2
+            elif arg.startswith("--chdir="):
+                path = arg.tail(len("--chdir=")) if isinstance(arg, ShellWord) else arg.split("=", 1)[1]
+                i += 1
+            else:
+                path = None
+            if path is not None:
+                if getattr(path, "unresolved_at", None) is not None or re.search(r"[*?\[\]{}]", path):
+                    cwd = None
+                elif Path(path).is_absolute():
+                    cwd = str(Path(path).resolve())
+                elif cwd is not None:
+                    cwd = str(_resolve(path, cwd, expand_user=False).resolve())
+                continue
+            if arg in {"-u", "--unset", "-S", "--split-string"}:
+                i += 2
+            elif (
+                arg in {"-i", "--ignore-environment", "-0", "--null", "--"}
+                or arg.startswith("--unset=")
+                or _ASSIGN_RE.match(arg)
+            ):
+                i += 1
+            else:
+                break
+    return cwd
+
+
+def _cdpath_binding(segment: list[str]) -> bool | None:
+    """Return an explicit CDPATH binding, or None when untouched."""
+    cmd, idx = _command_word(segment)
+    if cmd == "unset" and "CDPATH" in segment[idx + 1 :]:
+        return True
+    for word in segment:
+        if word.startswith("CDPATH="):
+            return word == "CDPATH="
+    return None
+
+
+def _segments_with_cwd(command: str, cwd: str | None):
+    """Yield expanded segments with the cwd they execute from."""
+    scope_cwds: dict[tuple[int, ...], str | None] = {(): cwd}
+    scope_dirs: dict[tuple[int, ...], list[str | None]] = {(): []}
+    scope_cdpath_empty: dict[tuple[int, ...], bool] = {(): False}
+    for segment in _expanded_segments(command):
+        scope = segment.scope
+        if scope not in scope_cwds:
+            scope_cwds[scope] = scope_cwds.get(scope[:-1], cwd)
+            scope_dirs[scope] = list(scope_dirs.get(scope[:-1], []))
+            scope_cdpath_empty[scope] = scope_cdpath_empty.get(scope[:-1], False)
+        effective_cwd = scope_cwds[scope]
+        cmd, idx = _command_word(segment)
+        isolated = segment.prev_op in {"|", "|&"} or segment.next_op in {"|", "|&", "&"}
+        cdpath_binding = _cdpath_binding(segment)
+        cdpath_empty_here = cdpath_binding if cdpath_binding is not None else scope_cdpath_empty[scope]
+        stack_only = cmd in {"pushd", "popd"} and "-n" in segment[idx + 1 :]
+        if cmd in {"cd", "pushd"} and not isolated:
+            args = [word for word in segment[idx + 1 :] if not word.startswith("-")]
+            path = args[0] if args else None
+            if cmd == "pushd":
+                scope_dirs[scope].append(path if stack_only else effective_cwd)
+            if stack_only:
+                pass  # pushd -n changes the stack, never the process cwd.
+            elif (
+                path is None
+                or path.unresolved_at is not None
+                or re.search(r"[*?\[\]{}]", path)
+                or (not Path(path).is_absolute() and effective_cwd is None)
+                or (not Path(path).is_absolute() and not str(path).startswith(("./", "../")) and not cdpath_empty_here)
+            ):
+                scope_cwds[scope] = None
+            else:
+                scope_cwds[scope] = str(_resolve(path, effective_cwd or "/", expand_user=False).resolve())
+        elif cmd == "popd" and not isolated:
+            popped = scope_dirs[scope].pop() if scope_dirs[scope] else None
+            if not stack_only:
+                scope_cwds[scope] = popped
+        # Prefix assignments (``CDPATH= cmd``) affect only that command.
+        # Conditional assignment may not run, so it can only invalidate a
+        # known-empty binding; it cannot establish one for later commands.
+        persists = cmd == "" or cmd in _BINDING_DECLARATIONS or cmd == "unset"
+        if cdpath_binding is not None and persists and not isolated:
+            if segment.prev_op in _STATEMENT_START:
+                scope_cdpath_empty[scope] = cdpath_binding
+            elif not cdpath_binding:
+                scope_cdpath_empty[scope] = False
+        yield segment, _env_command_cwd(segment, effective_cwd), effective_cwd
+
+
+def bash_write_targets(
+    command: str, *, cwd: str | None = None, main_root: Path | None = None, depth: int = 0
+) -> list[str]:
     """Best-effort list of files a Bash command would create/modify.
 
-    Covers redirection, ``tee``, and ``sed -i``/``perl -i``. Other write
+    Covers redirection and the writer commands listed above. Other write
     vectors are intentionally out of scope (see module docstring); they rely on
     physical worktree isolation and the monitor/git-shim layers.
     """
     targets: list[str] = []
-    for segment in _expanded_segments(command):
-        targets.extend(_redirect_targets(segment))
-        cmd, idx = _command_word(segment)
-        if cmd == "tee":
-            targets.extend(_tee_targets(segment, idx))
-        elif cmd in ("sed", "perl"):
-            targets.extend(_inplace_edit_targets(segment, idx))
+    pipeline: list[str] = []
+    for segment, effective_cwd, shell_cwd in _segments_with_cwd(command, cwd):
+        if segment.prev_op not in {"|", "|&"}:
+            pipeline = []
+        pipeline.extend(segment)
+        segment_targets = _writer_targets(
+            segment, cwd=effective_cwd, redirect_cwd=shell_cwd, main_root=main_root, depth=depth
+        )
+        template = _xargs_template(segment)
+        if (
+            _xargs_writer(template)
+            and main_root is not None
+            and (
+                _names_primary_literal(".", effective_cwd or "/", main_root)
+                or any(
+                    not word.startswith("-")
+                    and _names_primary_literal(str(word), effective_cwd or cwd or "/", main_root)
+                    for word in pipeline
+                )
+            )
+        ):
+            unknown = ShellWord("xargs stdin write target")
+            unknown.decision_reason = "undecidable_xargs_stdin_target"
+            segment_targets.append(unknown)
+        if template and depth < 3:
+            segment_targets.extend(
+                _writer_targets(
+                    template, cwd=effective_cwd, redirect_cwd=effective_cwd, main_root=main_root, depth=depth + 1
+                )
+            )
+        for target in segment_targets:
+            word = target if isinstance(target, ShellWord) else ShellWord(str(target))
+            if (
+                not Path(word).is_absolute()
+                and effective_cwd is None
+                and word.decision_reason is None
+                and word.base is None
+            ):
+                word.decision_reason = "undecidable_write_target_after_cd"
+            if word.base is None and word.decision_reason is None:
+                word.base = effective_cwd
+            targets.append(word)
     return targets
 
 
@@ -927,8 +1802,20 @@ def _git_global_prefix(
             c_path = tok.tail(2) if isinstance(tok, ShellWord) else tok[2:]
             i += 1
             continue
-        if tok in {"-c", "--config-env", "--exec-path", "--git-dir", "--work-tree",
-                   "--namespace", "--super-prefix", "--list-cmds"} and i + 1 < n:
+        if (
+            tok
+            in {
+                "-c",
+                "--config-env",
+                "--exec-path",
+                "--git-dir",
+                "--work-tree",
+                "--namespace",
+                "--super-prefix",
+                "--list-cmds",
+            }
+            and i + 1 < n
+        ):
             i += 2
             continue
         if tok.startswith("-c") and len(tok) > 2 and "=" in tok:
@@ -937,9 +1824,19 @@ def _git_global_prefix(
         if tok.startswith("--") and "=" in tok:
             i += 1
             continue
-        if tok in {"--bare", "--no-replace-objects", "--literal-pathspecs",
-                   "--glob-pathspecs", "--noglob-pathspecs", "--icase-pathspecs",
-                   "--no-optional-locks", "-p", "--paginate", "-P", "--no-pager"}:
+        if tok in {
+            "--bare",
+            "--no-replace-objects",
+            "--literal-pathspecs",
+            "--glob-pathspecs",
+            "--noglob-pathspecs",
+            "--icase-pathspecs",
+            "--no-optional-locks",
+            "-p",
+            "--paginate",
+            "-P",
+            "--no-pager",
+        }:
             i += 1
             continue
         # Subcommand or unknown option starts the remainder.
@@ -951,7 +1848,7 @@ def _is_git_binary(cmd: str) -> bool:
     return cmd in {"git", "git.exe"} or cmd.endswith("/git")
 
 
-def bash_git_write_intents(command: str) -> list[dict[str, object]]:
+def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int = 0) -> list[dict[str, object]]:
     """Parse Bash for git-mediated working-tree mutations (issue #5396).
 
     Each intent is a dict::
@@ -959,6 +1856,7 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
         {
           "kind": "apply"|"add"|"stash_apply"|"path_checkout"|"restore_source",
           "c_path": str|None,          # from git -C
+          "segment_cwd": str|None,     # after literal cd/pushd
           "paths": list[str],          # pathspecs when known (may be empty)
           "summary": str,              # human-readable for the block message
           "allowlisted": bool,         # True → never block (rescue clean)
@@ -968,8 +1866,23 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
     ``--source`` (discard dirt / restore from index — rescue pattern).
     """
     intents: list[dict[str, object]] = []
-    for segment in _expanded_segments(command):
+
+    def record(intent: dict[str, object]) -> None:
+        intent["segment_cwd"] = effective_cwd
+        intents.append(intent)
+
+    for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
         cmd, idx = _command_word(segment)
+        if cmd == "eval" and depth < 3:
+            args = segment[idx + 1 :]
+            if all(getattr(arg, "unresolved_at", None) is None for arg in args):
+                intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1))
+            continue
+        if cmd in {"sh", "bash", "zsh", "dash"} and depth < 3:
+            script = _shell_command_script(segment[idx + 1 :])
+            if script is not None and getattr(script, "unresolved_at", None) is None:
+                intents.extend(bash_git_write_intents(str(script), cwd=effective_cwd, depth=depth + 1))
+            continue
         if not _is_git_binary(cmd):
             continue
         c_path, rest = _git_global_prefix(segment[idx + 1 :])
@@ -977,14 +1890,39 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
             continue
         sub = rest[0]
         sub_args = rest[1:]
+        option_args = sub_args[: sub_args.index("--")] if "--" in sub_args else sub_args
 
         if sub in {"apply", "am"}:
-            intents.append(
+            record(
                 {
                     "kind": "apply" if sub == "apply" else "am",
                     "c_path": c_path,
                     "paths": [],
                     "summary": f"git {sub}",
+                    "allowlisted": False,
+                }
+            )
+            continue
+
+        if sub in {"merge", "pull", "rebase", "cherry-pick", "revert"}:
+            record({"kind": sub, "c_path": c_path, "paths": [], "summary": f"git {sub}", "allowlisted": False})
+            continue
+
+        # This hook owns git mutations targeted at the protected worktree via
+        # effective cwd or -C. The branch-switch hook retains its separate
+        # direct-command policy for all primary checkouts.
+        if sub == "switch":
+            record({"kind": "switch", "c_path": c_path, "paths": [], "summary": "git switch", "allowlisted": False})
+            continue
+
+        if sub == "worktree" and sub_args[:1] == ["remove"]:
+            paths = [arg for arg in sub_args[1:] if not arg.startswith("-")]
+            record(
+                {
+                    "kind": "worktree_remove",
+                    "c_path": c_path,
+                    "paths": paths,
+                    "summary": "git worktree remove",
                     "allowlisted": False,
                 }
             )
@@ -1008,7 +1946,7 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                     continue
                 paths.append(tok)
                 i += 1
-            intents.append(
+            record(
                 {
                     "kind": "add",
                     "c_path": c_path,
@@ -1024,7 +1962,7 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                 continue
             action = sub_args[0]
             if action in {"pop", "apply"}:
-                intents.append(
+                record(
                     {
                         "kind": "stash_apply",
                         "c_path": c_path,
@@ -1035,19 +1973,61 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                 )
             continue
 
+        if sub == "clean":
+            dry_run = False
+            i = 0
+            while i < len(option_args):
+                tok = option_args[i]
+                if tok in {"-e", "--exclude"}:
+                    i += 2  # the following exclude pattern may itself be "-n"
+                    continue
+                if tok == "--dry-run" or (tok.startswith("-") and not tok.startswith("--") and "n" in tok[1:]):
+                    dry_run = True
+                i += 1
+            if not dry_run:
+                record({"kind": "clean", "c_path": c_path, "paths": [], "summary": "git clean", "allowlisted": False})
+            continue
+
+        if sub == "reset" and any(tok in {"--hard", "--merge", "--keep"} for tok in option_args):
+            record({"kind": "reset", "c_path": c_path, "paths": [], "summary": "git reset", "allowlisted": False})
+            continue
+
+        if sub == "read-tree" and any(
+            tok == "--update" or (tok.startswith("-") and not tok.startswith("--") and "u" in tok[1:])
+            for tok in option_args
+        ):
+            record(
+                {"kind": "read-tree", "c_path": c_path, "paths": [], "summary": "git read-tree", "allowlisted": False}
+            )
+            continue
+
         if sub == "checkout":
             # Allowlist: `git checkout -- <paths>` (restore from index/HEAD).
             # Block: `git checkout <tree-ish> -- <paths>` and the no-dashdash
             # form `git checkout <tree-ish> <path>…` (#5517).
-            # Branch-only checkouts (single non-flag arg, no paths) stay out —
-            # other guards own branch switches.
+            # Branch-only checkouts are primary worktree mutations too; the
+            # rescue targets below remain available.
+            if any(
+                tok == "--force" or (tok.startswith("-") and not tok.startswith("--") and "f" in tok[1:])
+                for tok in option_args
+            ):
+                record(
+                    {
+                        "kind": "forced_checkout",
+                        "c_path": c_path,
+                        "paths": [],
+                        "summary": "git checkout -f",
+                        "allowlisted": False,
+                    }
+                )
+                continue
             if "--" in sub_args:
                 dd = sub_args.index("--")
                 before = sub_args[:dd]
                 after = sub_args[dd + 1 :]
                 treeish = [t for t in before if not t.startswith("-")]
-                if not treeish:
-                    intents.append(
+                if not treeish and not before:
+                    record(
                         {
                             "kind": "path_checkout",
                             "c_path": c_path,
@@ -1057,7 +2037,7 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                         }
                     )
                 else:
-                    intents.append(
+                    record(
                         {
                             "kind": "path_checkout",
                             "c_path": c_path,
@@ -1070,15 +2050,22 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                 positionals = [t for t in sub_args if not t.startswith("-")]
                 if len(positionals) >= 2:
                     # tree-ish + one or more pathspecs (no `--` separator).
-                    intents.append(
+                    record(
                         {
                             "kind": "path_checkout",
                             "c_path": c_path,
                             "paths": positionals[1:],
-                            "summary": (
-                                f"git checkout {positionals[0]} "
-                                + " ".join(positionals[1:])
-                            ),
+                            "summary": (f"git checkout {positionals[0]} " + " ".join(positionals[1:])),
+                            "allowlisted": False,
+                        }
+                    )
+                elif len(positionals) == 1 and positionals[0] not in {"main", "master", "HEAD", "-"}:
+                    record(
+                        {
+                            "kind": "branch_checkout",
+                            "c_path": c_path,
+                            "paths": [],
+                            "summary": "git checkout " + str(positionals[0]),
                             "allowlisted": False,
                         }
                     )
@@ -1106,8 +2093,8 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                     continue
                 paths.append(tok)
                 i += 1
-            if source is None:
-                intents.append(
+            if source is None and paths and all(not tok.startswith("-") for tok in sub_args):
+                record(
                     {
                         "kind": "restore_source",
                         "c_path": c_path,
@@ -1117,7 +2104,7 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                     }
                 )
             else:
-                intents.append(
+                record(
                     {
                         "kind": "restore_source",
                         "c_path": c_path,
@@ -1142,7 +2129,7 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
                     continue
                 paths.append(tok)
                 i += 1
-            intents.append(
+            record(
                 {
                     "kind": "mv" if sub == "mv" else "rm",
                     "c_path": c_path,
@@ -1156,12 +2143,17 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
     return intents
 
 
-def _effective_git_cwd(intent: dict[str, object], payload_cwd: str) -> Path:
-    """Resolve the worktree a git intent would mutate (``-C`` already expanded)."""
+def _effective_git_cwd(intent: dict[str, object], payload_cwd: str) -> Path | None:
+    """Resolve a git intent's worktree, or return unknown after navigation."""
+    segment_cwd = intent.get("segment_cwd", payload_cwd)
     c_path = intent.get("c_path")
     if isinstance(c_path, str) and c_path:
-        return _resolve(c_path, payload_cwd, expand_user=False)
-    return Path(payload_cwd).expanduser().resolve()
+        if Path(c_path).is_absolute():
+            return Path(c_path).resolve()
+        if not isinstance(segment_cwd, str):
+            return None
+        return _resolve(c_path, segment_cwd, expand_user=False).resolve()
+    return Path(segment_cwd).resolve() if isinstance(segment_cwd, str) else None
 
 
 def _block_git_mediated(summary: str, main_root: Path, reason: str) -> int:
@@ -1186,6 +2178,7 @@ def _block_git_mediated(summary: str, main_root: Path, reason: str) -> int:
 # decision
 # ---------------------------------------------------------------------------
 
+
 class _UnresolvedWrite:
     """Decision for a path whose location depends on an unknown shell value."""
 
@@ -1196,6 +2189,14 @@ class _UnresolvedWrite:
         "Assign it with a literal value earlier in the same command "
         '(S=/tmp/scratch; echo x > "$S/out.txt") or use a literal path.'
     )
+
+
+class _UndecidableWrite:
+    allowed = False
+
+    def __init__(self, reason: str, message: str) -> None:
+        self.reason = reason
+        self.message = message
 
 
 def _resolve(path_str: str, cwd: str, *, expand_user: bool = True) -> Path:
@@ -1210,7 +2211,35 @@ def _resolve(path_str: str, cwd: str, *, expand_user: bool = True) -> Path:
     return path
 
 
-def _bash_path_decision(word: str, base: str, wc) -> object:
+def _final_component_matches(pattern: str, name: str) -> bool:
+    """Match a shell final-component pattern, including brace alternatives."""
+    for start, char in enumerate(pattern):
+        if char != "{":
+            continue
+        depth = 0
+        alternatives: list[str] = []
+        part_start = start + 1
+        for end in range(start, len(pattern)):
+            if pattern[end] == "{":
+                depth += 1
+            elif pattern[end] == "}":
+                depth -= 1
+                if depth == 0:
+                    alternatives.append(pattern[part_start:end])
+                    if len(alternatives) > 1:
+                        return any(
+                            _final_component_matches(pattern[:start] + alternative + pattern[end + 1 :], name)
+                            for alternative in alternatives
+                        )
+                    break
+            elif pattern[end] == "," and depth == 1:
+                alternatives.append(pattern[part_start:end])
+                part_start = end + 1
+    # Bash globs do not match a leading dot unless the pattern starts with it.
+    return (not name.startswith(".") or pattern.startswith(".")) and fnmatch.fnmatchcase(name, pattern)
+
+
+def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None) -> object:
     """Containment decision for one expanded Bash path word.
 
     A word holding any unknown expansion is blocked outright: the unknown value
@@ -1219,6 +2248,28 @@ def _bash_path_decision(word: str, base: str, wc) -> object:
     """
     if getattr(word, "unresolved_at", None) is not None:
         return _UnresolvedWrite()
+    reason = getattr(word, "decision_reason", None)
+    if reason is not None:
+        return _UndecidableWrite(reason, "Use a literal target and a known working directory.")
+    if main_root is not None and re.search(r"[*?\[\]{}]", word):
+        parts = Path(word).parts
+        first = next(i for i, part in enumerate(parts) if re.search(r"[*?\[\]{}]", part))
+        prefix = Path(*parts[:first]) if first else Path(".")
+        prefix = _resolve(str(prefix), getattr(word, "base", None) or base, expand_user=False).resolve()
+        # Directory globs and ** can descend from an ancestor. A final-component
+        # glob reaches the primary only if it matches the next path component.
+        directory_glob = first < len(parts) - 1 or "**" in word
+        may_reach_primary = prefix == main_root
+        if prefix in main_root.parents:
+            may_reach_primary = directory_glob or _final_component_matches(parts[-1], main_root.relative_to(prefix).parts[0])
+        if main_root in prefix.parents:
+            may_reach_primary = not wc.evaluate_write(prefix / "__guard_glob_probe__", cwd=base).allowed
+        if may_reach_primary:
+            return _UndecidableWrite(
+                "undecidable_glob_write_target",
+                "A glob or brace target may resolve inside the primary checkout. Use a literal path.",
+            )
+    base = getattr(word, "base", None) or base
     return wc.evaluate_write(_resolve(word, base, expand_user=False), cwd=base)
 
 
@@ -1241,7 +2292,7 @@ def main() -> int:
         command = str(tool_input.get("command") or "")
         if not command.strip():
             return 0
-        raw_targets = bash_write_targets(command)
+        raw_targets = []
     else:
         raw_targets = write_tool_targets(tool_input)
 
@@ -1250,7 +2301,7 @@ def main() -> int:
     git_intents: list[dict[str, object]] = []
     if tool_name == "Bash" and command:
         try:
-            git_intents = bash_git_write_intents(command)
+            git_intents = bash_git_write_intents(command, cwd=cwd)
         except Exception:  # pragma: no cover - defensive fail-open
             git_intents = []
 
@@ -1270,6 +2321,9 @@ def main() -> int:
     except Exception:  # pragma: no cover - defensive fail-open
         return 0
 
+    if tool_name == "Bash":
+        raw_targets = bash_write_targets(command, cwd=cwd, main_root=main_root)
+
     # --- #5396: git-mediated mutations against the primary worktree ----------
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
     if tool_name == "Bash" and command and not allow_primary_git:
@@ -1280,10 +2334,16 @@ def main() -> int:
                 summary = str(intent.get("summary") or "git write")
                 c_path = intent.get("c_path")
                 if getattr(c_path, "unresolved_at", None) is not None:
-                    return _block_git_mediated(
-                        summary, main_root, reason="unresolved_shell_variable"
-                    )
+                    return _block_git_mediated(summary, main_root, reason="unresolved_shell_variable")
                 git_cwd = _effective_git_cwd(intent, cwd)
+                if git_cwd is None:
+                    return _block_git_mediated(summary, main_root, reason="undecidable_git_cwd_after_cd")
+                if intent.get("kind") == "worktree_remove":
+                    for raw in intent.get("paths") or []:
+                        decision = _bash_path_decision(raw, str(git_cwd), wc, main_root)
+                        if not decision.allowed:
+                            return _block_git_mediated(summary, main_root, reason=decision.reason)
+                    continue
                 # Only care when the effective git worktree *is* the primary.
                 try:
                     if not wc.is_primary_checkout(git_cwd):
@@ -1293,16 +2353,12 @@ def main() -> int:
                 paths = list(intent.get("paths") or [])
                 if not paths:
                     # Whole-tree mutator (apply / am / stash pop|apply / bare add).
-                    return _block_git_mediated(
-                        summary, main_root, reason="git_mediated_primary_worktree"
-                    )
+                    return _block_git_mediated(summary, main_root, reason="git_mediated_primary_worktree")
                 # Path-scoped mutators: block if any path is a protected primary write.
                 for raw in paths:
                     decision = _bash_path_decision(raw, str(git_cwd), wc)
                     if not decision.allowed:
-                        return _block_git_mediated(
-                            summary, main_root, reason=decision.reason
-                        )
+                        return _block_git_mediated(summary, main_root, reason=decision.reason)
         except Exception:  # pragma: no cover - defensive fail-open
             pass
 
@@ -1315,7 +2371,7 @@ def main() -> int:
             if tool_name == "Bash":
                 # Words were expanded from same-command assignments (#5404 /
                 # #8500); any unknown value blocks (_bash_path_decision).
-                decision = _bash_path_decision(raw, cwd, wc)
+                decision = _bash_path_decision(raw, cwd, wc, main_root)
             else:
                 decision = wc.evaluate_write(_resolve(raw, cwd), cwd=cwd)
             decisions.append((_label(raw), decision))
