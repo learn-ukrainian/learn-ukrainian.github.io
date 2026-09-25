@@ -43,6 +43,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
@@ -81,33 +82,6 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # so ^/$ match at each line boundary.
 _CODEX_DIVIDER_LINE_RE = re.compile(r"^-{3,}\s*$", re.MULTILINE)
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
-
-
-def _read_only_tmp_root(tool_config: dict, cwd: Path, mode: str) -> Path | None:
-    """Validate the delegate-owned scratch lease before granting shell writes."""
-    raw = tool_config.get("read_only_tmp_root")
-    if raw is None:
-        return None
-    from scripts.common.scratch import resolve_scratch_root
-
-    root = Path(str(raw))
-    base = Path(os.environ.get("LU_RUNTIME_TMP_BASE_ROOT") or resolve_scratch_root())
-    resolved = root.resolve()
-    namespace = base.resolve() / "learn-ukrainian"
-    checkout = cwd.resolve()
-    if (
-        mode != "read-only"
-        or tool_config.get("review_isolation")
-        or not root.is_absolute()
-        or root.is_symlink()
-        or not root.is_dir()
-        or resolved.parent != namespace
-        or checkout.is_relative_to(resolved)
-        or resolved.is_relative_to(checkout)
-        or any(char in str(resolved) for char in "*?[]{}")
-    ):
-        raise ValueError("CodexAdapter: read_only_tmp_root must be an existing isolated runtime tmp lease")
-    return resolved
 
 
 # Codex treats an unannotated MCP tool as approval-required. Under
@@ -272,7 +246,7 @@ class CodexAdapter:
             )
 
         tc_early = tool_config or {}
-        read_only_tmp_root = _read_only_tmp_root(tc_early, cwd, mode)
+        read_only_tmp_root = validate_read_only_tmp_root(tc_early, cwd, mode, adapter="CodexAdapter")
         review_write_root: Path | None = None
         if tc_early.get("review_isolation"):
             from scripts.review.isolation import validated_review_write_root

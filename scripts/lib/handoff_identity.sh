@@ -202,9 +202,48 @@ launcher_selector_stream() {
   printf '%s' "${resolved#*$'\t'}"
 }
 
+# _handoff_slot_registry "<args for handoff_slot_registry.py>"
+# Run the slot-registry helper with the durable interpreter.  The registry is
+# scripts/config/area_assignments.yaml, read only through the bridge helpers
+# that build the inbox `--for` choices (no second parser here).  Returns the
+# helper's exit code (0 registered, 3 not registered, anything else means the
+# check could not run); returns 2 when no interpreter is available so callers
+# fail closed.
+_handoff_slot_registry() {
+  local repo_root="$_HANDOFF_IDENTITY_DIR/../.."
+  local py="${LC_DURABLE_HELPER_ROOT:-$repo_root}/.venv/bin/python"
+  [ -x "$py" ] || return 2
+  (cd "$repo_root" && "$py" -m scripts.orchestration.handoff_slot_registry "$@")
+}
+
+# launcher_require_registered_slot "<provider>" "<selector>"
+# Fail closed when "<provider>-<lane>" is not a registered handoff slot: an
+# unregistered SESSION_HANDOFF_AGENT cannot receive inbox mail, fails the
+# dispatch-lane self-test and lets rollover fall back to another lane's packet
+# pool (#8303).  Prints one error naming the selector, the slot and the
+# registered options; returns 1 (unresolvable/unregistered) or 2 (the check
+# could not run).
+launcher_require_registered_slot() {
+  local provider="${1:-}" selector="${2:-}"
+  local lane="" slot="" rc=0 options=""
+  lane="$(launcher_selector_lane "$selector")" || return 1
+  slot="$provider-$lane"
+  _handoff_slot_registry --slot "$slot" 2>/dev/null && return 0 || rc=$?
+  if [ "$rc" -eq 3 ]; then
+    options="$(_handoff_slot_registry --list "$provider" 2>/dev/null | paste -sd ' ' - || true)"
+    printf "selector '%s' resolves to handoff slot '%s', which is not registered in scripts/config/area_assignments.yaml; a session under it cannot receive inbox mail. Registered %s slots: %s\n" \
+      "$selector" "$slot" "$provider" "${options:-none}" >&2
+    return 1
+  fi
+  printf "cannot verify handoff slot '%s' for selector '%s': scripts/config/area_assignments.yaml is unreadable or the durable Python interpreter is missing; refusing to launch an unverified identity.\n" \
+    "$slot" "$selector" >&2
+  return 2
+}
+
 # launcher_selector_help
 # Keep launcher diagnostics in one place so every entry point documents the
-# exact same public selector surface.
+# exact same public selector surface.  Registry keys are listed only when the
+# launcher would accept them, i.e. when the slot they mint is registered.
 launcher_selector_help() {
   local key=""
   cat <<'EOF'
@@ -213,6 +252,9 @@ Valid lane selectors:
 EOF
   while IFS= read -r key; do
     [ -n "$key" ] || continue
+    # rc 3 = minted slot unregistered (launcher would refuse it); anything else =
+    # cannot tell, so keep the key listed rather than hide a selector on a broken host.
+    _handoff_slot_registry --slot "claude-$key" >/dev/null 2>&1 || [ "$?" -ne 3 ] || continue
     printf '    %s | infra.%s\n' "$key" "$key"
   done < <(_launcher_registry_stream_keys 2>/dev/null || true)
   cat <<'EOF'

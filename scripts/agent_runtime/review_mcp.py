@@ -114,7 +114,12 @@ class ReviewMcpPlan:
 
 
 def review_tools_allowed_csv(harness: str) -> str | None:
-    """Return the explicit sources permission grant for Claude review attempts."""
+    """Return the Claude Code ``--allowedTools`` names for the sources server.
+
+    Only Claude Code understands these names. Kimi reviews use that same
+    grant on the kimicc read-only dispatch path, which calls this with
+    ``claude`` because the headless binary is Claude Code.
+    """
     if harness.lower().strip() != "claude":
         return None
     return ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))

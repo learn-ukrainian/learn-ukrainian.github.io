@@ -113,7 +113,7 @@ def _run(
     args: list[str],
     *,
     cwd: Path,
-    timeout: int | None = None,
+    timeout: float | None = None,
     env_overrides: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
     env = sanitized_git_env()
@@ -240,8 +240,12 @@ def parse_worktree_porcelain(output: str) -> list[WorktreeInfo]:
     return entries
 
 
-def list_git_worktrees(repo_root: Path) -> list[WorktreeInfo]:
-    proc = _run(["git", "worktree", "list", "--porcelain"], cwd=repo_root)
+def list_git_worktrees(repo_root: Path, *, timeout: float | None = None) -> list[WorktreeInfo]:
+    """List registered worktrees; an expired ``timeout`` raises :class:`RuntimeError`."""
+    try:
+        proc = _run(["git", "worktree", "list", "--porcelain"], cwd=repo_root, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git worktree list timed out after {timeout:g}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"git worktree list failed: {_format_failure(proc)}")
     return parse_worktree_porcelain(proc.stdout or "")
@@ -1055,6 +1059,11 @@ _DISPATCH_HUSK_MIN_AGE_HOURS = 1.0
 # holds. A dispatch add holds that lock only briefly at this granularity, so
 # a short wait bounds the sweep without stalling it.
 _DISPATCH_HUSK_LOCK_TIMEOUT_S = 10.0
+# Bound on each git call the husk removal makes around the per-path lock. A
+# hung ``git worktree list`` would otherwise hold that lock indefinitely and a
+# waiting dispatch would fail on its own 30s lock timeout (#8748); an expired
+# bound skips the husk instead.
+_LOCKED_GIT_TIMEOUT_S = 5.0
 
 
 def _is_acp_runtime_path(repo_root: Path, path: Path) -> bool:
@@ -1268,10 +1277,13 @@ def _admin_registered_worktree_paths(common_git_dir: Path) -> set[Path]:
         raise RuntimeError(f"git worktree admin dir {admin_dir} unreadable: {exc}") from exc
     for entry in entries:
         gitdir = entry / "gitdir"
-        if not gitdir.is_file():
-            continue
+        # Only a proven absence skips an entry; ``Path.is_file()`` would also
+        # turn an untraversable entry into "no registration" on interpreters
+        # that swallow EACCES (#8748).
         try:
             raw = gitdir.read_text(encoding="utf-8", errors="surrogateescape").strip()
+        except (FileNotFoundError, NotADirectoryError):
+            continue
         except OSError as exc:
             raise RuntimeError(f"git worktree registration {gitdir} unreadable: {exc}") from exc
         if not raw:
@@ -1292,8 +1304,9 @@ def _remove_dispatch_husk_locked(repo_root: Path, *, child: Path, resolved: Path
     fresh re-check below sees it) or it waits and then finds the directory
     gone. Returns a skip reason, or ``None`` after the husk was removed.
     Raises :class:`worktree_claims.WorktreeLockError` when the lock is not
-    taken and :class:`RuntimeError` when a re-check probe fails; both callers
-    turn into a skip, never a removal.
+    taken and :class:`RuntimeError` when a re-check probe fails or a git call
+    outlives ``_LOCKED_GIT_TIMEOUT_S``; the caller turns both into a skip,
+    never a removal.
 
     The lock directory comes from the strict
     :func:`worktree_claims.control_plane_root`, like
@@ -1301,15 +1314,20 @@ def _remove_dispatch_husk_locked(repo_root: Path, *, child: Path, resolved: Path
     when the fleet catalog is unreadable, never fall back to the local
     checkout — delegate holds the lock on the public primary for a
     ``--repo`` sibling, so locking anywhere else would not exclude it
-    (#8711 review).
+    (#8711 review). A lock directory that cannot be resolved is reported
+    with the guard's :data:`worktree_claims.LOCK_UNAVAILABLE` reason.
     """
-    control_root = worktree_claims.control_plane_root(primary_checkout_root(repo_root))
-    lock_dir = _common_git_dir(control_root) / worktree_claims.LOCK_DIR_NAME
+    try:
+        control_root = worktree_claims.control_plane_root(primary_checkout_root(repo_root))
+        lock_dir = _common_git_dir(control_root, timeout=_LOCKED_GIT_TIMEOUT_S) / worktree_claims.LOCK_DIR_NAME
+    except RuntimeError as exc:
+        return f"{worktree_claims.LOCK_UNAVAILABLE} ({exc})"
+    common_git_dir = _common_git_dir(repo_root, timeout=_LOCKED_GIT_TIMEOUT_S)
     with worktree_claims.worktree_lock(child, lock_dir=lock_dir, timeout_s=_DISPATCH_HUSK_LOCK_TIMEOUT_S):
-        listing = {info.path for info in list_git_worktrees(repo_root)}
+        listing = {info.path for info in list_git_worktrees(repo_root, timeout=_LOCKED_GIT_TIMEOUT_S)}
         if resolved in listing:
             return "path registered as a git worktree during the locked re-check; a concurrent add claimed it"
-        admin_registered = _admin_registered_worktree_paths(_common_git_dir(repo_root))
+        admin_registered = _admin_registered_worktree_paths(common_git_dir)
         if resolved in admin_registered:
             return "path registered in .git/worktrees/*/gitdir during the locked re-check; a concurrent add claimed it"
         if _tree_has_any_file_or_symlink(resolved):
@@ -1771,8 +1789,11 @@ def _activity_reason(
     return None
 
 
-def _common_git_dir(repo_root: Path) -> Path:
-    proc = _run(["git", "rev-parse", "--git-common-dir"], cwd=repo_root)
+def _common_git_dir(repo_root: Path, *, timeout: float | None = None) -> Path:
+    try:
+        proc = _run(["git", "rev-parse", "--git-common-dir"], cwd=repo_root, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(f"git rev-parse --git-common-dir timed out after {timeout:g}s") from exc
     if proc.returncode != 0:
         raise RuntimeError(f"cannot resolve git common dir: {_format_failure(proc)}")
     path = Path((proc.stdout or "").strip())

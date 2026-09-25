@@ -275,8 +275,9 @@ def _kimicc_ready(tmp_path, monkeypatch):
 
 def test_kimicc_accepts_delegate_read_only_and_review_keys(tmp_path, monkeypatch):
     _kimicc_ready(tmp_path, monkeypatch)
-    lease = tmp_path / "lease"
-    lease.mkdir()
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
+    lease = tmp_path / "learn-ukrainian" / "lease"
+    lease.mkdir(parents=True)
     checkout = tmp_path / "checkout"
     checkout.mkdir()
     plan = KimiccHarness().build_invocation(
@@ -307,8 +308,45 @@ def test_kimicc_accepts_delegate_read_only_and_review_keys(tmp_path, monkeypatch
     assert "agy_home_override" not in plan.cmd
 
 
+def test_kimicc_sources_grant_argv_is_read_only_only(tmp_path, monkeypatch):
+    """mcp_config_path + allowed_tools reach the wrapper only in read-only mode."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    tool_config = {
+        "mcp_config_path": str(tmp_path / ".mcp.json"),
+        "allowed_tools": "mcp__sources__verify_word",
+    }
+    read_only = KimiccHarness().build_invocation(
+        prompt="critique",
+        mode="read-only",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimicc-sources-ro",
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert read_only.cmd[read_only.cmd.index("--mcp-config") + 1] == str(tmp_path / ".mcp.json")
+    assert read_only.cmd[read_only.cmd.index("--allowedTools") + 1] == "mcp__sources__verify_word"
+
+    write = KimiccHarness().build_invocation(
+        prompt="critique",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimicc-sources-write",
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert "--mcp-config" not in write.cmd
+    assert "--allowedTools" not in write.cmd
+
+
 def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
     _kimicc_ready(tmp_path, monkeypatch)
+    probed: list[str] = []
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: probed.append("probed"),
+    )
     with pytest.raises(ValueError, match="read_only_tmp_root"):
         KimiccHarness().build_invocation(
             prompt="critique",
@@ -319,6 +357,57 @@ def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
             session_id=None,
             tool_config={"read_only_tmp_root": str(tmp_path)},
         )
+    assert probed == []
+
+
+def _kimicc_lease_invocation(tmp_path, monkeypatch, lease: Path, checkout: Path):
+    _kimicc_ready(tmp_path, monkeypatch)
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
+    return KimiccHarness().build_invocation(
+        prompt="critique",
+        mode="read-only",
+        cwd=checkout,
+        model="k3",
+        task_id="kimicc-lease",
+        session_id=None,
+        tool_config={"read_only_tmp_root": str(lease)},
+    )
+
+
+def test_kimicc_rejects_nested_read_only_lease(tmp_path, monkeypatch):
+    checkout = tmp_path / "learn-ukrainian"
+    checkout.mkdir()
+    lease = checkout / "nested"
+    lease.mkdir()
+    with pytest.raises(ValueError, match="read_only_tmp_root"):
+        _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
+
+
+def test_kimicc_rejects_ancestor_read_only_lease(tmp_path, monkeypatch):
+    lease = tmp_path / "learn-ukrainian" / "lease"
+    lease.mkdir(parents=True)
+    checkout = lease / "checkout"
+    checkout.mkdir()
+    with pytest.raises(ValueError, match="read_only_tmp_root"):
+        _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
+
+
+def test_kimicc_rejects_glob_read_only_lease(tmp_path, monkeypatch):
+    lease = tmp_path / "learn-ukrainian" / "rev*iew"
+    lease.mkdir(parents=True)
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    with pytest.raises(ValueError, match="read_only_tmp_root"):
+        _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
+
+
+def test_kimicc_accepts_isolated_read_only_lease(tmp_path, monkeypatch):
+    lease = tmp_path / "learn-ukrainian" / "lease"
+    lease.mkdir(parents=True)
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    plan = _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
+    assert plan.env_overrides["TMPDIR"] == str(lease.resolve())
 
 
 def test_kimicc_still_rejects_unknown_tool_config_keys(tmp_path, monkeypatch):

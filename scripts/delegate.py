@@ -2121,10 +2121,29 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # scripts/ai_agent_bridge/_review_verdict.py and
 # scripts/fleet_comms/review_publication.py. REQUEST_CHANGES is the token
 # cf_preflight.py and the review prompts actually ask reviewers to write.
+# Reviewers routinely render the label and token in Markdown emphasis
+# (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
+# full verdicts and must not be misread as missing (#8786). A verdict line
+# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
+# emphasis/backticks/whitespace around its colon, then the token and a word
+# boundary. Anything may follow the token — reviewers write
+# ``**VERDICT: APPROVE.** Both issues are fixed.`` and
+# ``**VERDICT: APPROVE** (three non-blocking findings below)``. An inline or
+# quoted example ("I will report ``VERDICT: APPROVE`` later",
+# ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
+# The boundary treats ``_`` as emphasis (``__APPROVE__``) unless a letter or
+# digit follows it (``APPROVE_LATER``), so ``APPROVEX`` is not a verdict.
+# Indentation follows CommonMark: at most three leading spaces; four or more,
+# or a tab, make the line an indented code block, i.e. an example.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"\bVERDICT\s*:\s*(?:APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)\b",
+    r"^ {0,3}(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+    r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
+    r"(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
 )
+# A CommonMark fence line: at most three leading spaces, then three or more
+# backticks or tildes; group 2 is the rest of the line (info string).
+_CODE_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -2345,17 +2364,73 @@ def _delivery_failure_reason(
     return _NO_DELIVERABLE_NO_COMMITS_REASON
 
 
+def _code_fence_opener(line: str) -> str | None:
+    """Return the fence run when ``line`` opens a CommonMark code fence.
+
+    A backtick fence's info string may not contain a backtick (that line is
+    inline code, not a fence).
+    """
+    match = _CODE_FENCE_RE.match(line)
+    if match is None:
+        return None
+    fence, info = match.groups()
+    if fence[0] == "`" and "`" in info:
+        return None
+    return fence
+
+
+def _closes_code_fence(line: str, opener: str) -> bool:
+    """Return whether ``line`` closes the fence opened by ``opener``.
+
+    Per CommonMark the closer uses the opener's character, is at least as
+    long, and carries nothing but trailing spaces or tabs; any other line —
+    including a fence of the other character — is block content.
+    """
+    match = _CODE_FENCE_RE.match(line)
+    if match is None:
+        return False
+    fence, rest = match.groups()
+    return fence[0] == opener[0] and len(fence) >= len(opener) and not rest.strip(" \t")
+
+
+def parse_review_verdict(response: str) -> str | None:
+    """Return the review's verdict token, or ``None`` when it states none.
+
+    The single verdict parser for the review-success contract (#8786): the
+    dispatch worker and the ask-* review wrapper both call it. Only a line
+    that starts with a verdict (see ``_REVIEW_VERDICT_LINE_RE``) outside a
+    code block counts, and the LAST such line wins — a report may discuss earlier
+    drafts, but its closing line is its verdict. An unclosed fence runs to the
+    end of the text, as in CommonMark.
+    """
+    verdict: str | None = None
+    open_fence: str | None = None
+    for line in response.splitlines():
+        if open_fence is not None:
+            if _closes_code_fence(line, open_fence):
+                open_fence = None
+            continue
+        open_fence = _code_fence_opener(line)
+        if open_fence is not None:
+            continue
+        match = _REVIEW_VERDICT_LINE_RE.match(line)
+        if match:
+            verdict = match.group(1).upper()
+    return verdict
+
+
 def _review_verdict_failure_reason(response: str) -> str | None:
     """Return the failure reason when a review-typed reply has no verdict line.
 
     Applies only to dispatches that opt in via ``--require-review-verdict``
     (the ask-* review wrapper); ordinary asks and implement dispatches never
     require a magic marker. A review reply that never states
-    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED>`` is not a
-    completed review — on 2026-09-21 several review tasks settled ``done``
-    with a promise to wait for a background command as the whole body (#8421).
+    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED>``
+    at the start of a line is not a completed review — on 2026-09-21 several
+    review tasks settled ``done`` with a promise to wait for a background
+    command as the whole body (#8421).
     """
-    if _REVIEW_VERDICT_LINE_RE.search(response):
+    if parse_review_verdict(response) is not None:
         return None
     return _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON
 
@@ -6676,6 +6751,65 @@ def _emit_terminal_dispatch_event(
         )
 
 
+def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness: str | None) -> list[str]:
+    """Flags ``cmd_dispatch`` copies onto the ``_worker`` argv.
+
+    ``--harness`` and ``--require-review-verdict`` are how a read-only kimi
+    review reaches ``_run_worker``. Review-attempt MCP flags stay on the
+    ``review_plan`` branch and are not part of this list.
+    """
+    flags: list[str] = []
+    if requested_harness is not None:
+        flags.extend(["--harness", requested_harness])
+    if bool(getattr(args, "require_review_verdict", False)):
+        flags.append("--require-review-verdict")
+    return flags
+
+
+def _kimicc_read_only_review_grant(
+    *,
+    harness: str | None,
+    mode: str,
+    require_review_verdict: bool,
+    cwd: Path | None = None,
+) -> dict[str, Any]:
+    """Sources MCP grant for ``ask-kimi --review``.
+
+    That ask is ``dispatch --agent kimi --harness kimicc --mode read-only
+    --require-review-verdict``. The headless wrapper always passes ``--bare``,
+    and ``claude --bare`` does not load ``.mcp.json``. The config this grant
+    names is always the trusted primary checkout file ``_REPO_ROOT /
+    ".mcp.json"`` (``main``), never the ``.mcp.json`` in the worker cwd. A
+    dispatch worktree is the branch under review, so its config is untrusted:
+    a stdio entry would run the author's command, and a repointed sources URL
+    would forge verification results. ``cwd`` is accepted and ignored so
+    callers can keep passing the worker checkout. ``strict_mcp_config`` is set
+    so the kimicc adapter passes ``--strict-mcp-config`` (Claude Code: only
+    servers from ``--mcp-config``; no checkout auto-discovery). Write modes
+    and non-review read-only dispatches get nothing. A missing trusted file
+    refuses the grant instead of launching without the sources server.
+    """
+    del cwd  # untrusted; the reviewed checkout must not supply MCP config
+    if harness != "kimicc" or mode != "read-only" or not require_review_verdict:
+        return {}
+    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+
+    allowed = review_tools_allowed_csv("claude")
+    if not allowed:
+        return {}
+    mcp_config = _REPO_ROOT / ".mcp.json"
+    if not mcp_config.is_file():
+        raise ValueError(
+            "kimicc review grant refused: trusted MCP config is missing at "
+            f"{mcp_config}. Refusing to launch without it."
+        )
+    return {
+        "allowed_tools": allowed,
+        "mcp_config_path": str(mcp_config),
+        "strict_mcp_config": True,
+    }
+
+
 def _run_worker(
     task_id: str,
     agent: str,
@@ -6850,6 +6984,19 @@ def _run_worker(
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
+            # ask-kimi --review is dispatch --agent kimi --harness kimicc
+            # --mode read-only --require-review-verdict, not --review-attempt.
+            # A sealed review attempt already set strict_mcp_config and its
+            # mcp_config_path; do not overwrite those keys.
+            if not tool_config.get("strict_mcp_config"):
+                tool_config.update(
+                    _kimicc_read_only_review_grant(
+                        harness=harness,
+                        mode=mode,
+                        require_review_verdict=require_review_verdict,
+                        cwd=cwd,
+                    )
+                )
             if (
                 strict_mcp_config
                 and review_id is not None
@@ -9061,14 +9208,11 @@ def _dispatch(
             "--runtime-tmp-namespace-root",
             str(runtime_tmp_namespace_root),
         ]
-        if requested_harness is not None:
-            cmd.extend(["--harness", requested_harness])
+        cmd.extend(_dispatch_worker_identity_flags(args, requested_harness))
         if keep_worktree:
             cmd.append("--keep-worktree")
         if bool(getattr(args, "finalize_open_pr", False)):
             cmd.append("--finalize-open-pr")
-        if bool(getattr(args, "require_review_verdict", False)):
-            cmd.append("--require-review-verdict")
         if max_budget_usd is not None:
             cmd.extend(["--max-budget-usd", str(max_budget_usd)])
         if output_schema_path is not None:
@@ -10578,7 +10722,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Review-typed dispatch: a run that settles done without a "
-            "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED` line in the "
+            "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED` line of its own in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
             "ask-* review wrapper; ordinary dispatches are unaffected. "
             "On agy/gemini this also requires --review-profile ukrainian, and "

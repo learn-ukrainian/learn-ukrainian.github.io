@@ -11,6 +11,8 @@ from scripts.ai_agent_bridge._channels_cli import _gemini_review_request_error
 from scripts.ai_agent_bridge._cli import _handle_acp_compat
 from scripts.audit import llm_reviewer_dispatch
 
+pytestmark = pytest.mark.reads_content
+
 
 def test_missing_profile_names_the_flag() -> None:
     message = gemini_review_profile_error(None)
@@ -595,6 +597,7 @@ def _git(repo: str, *args: str) -> None:
         capture_output=True,
         text=True,
         env=sanitized_git_env(),
+        timeout=30,
     )
     if completed.returncode != 0:
         detail = (completed.stderr or completed.stdout or "").strip()

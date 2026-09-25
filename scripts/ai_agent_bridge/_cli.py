@@ -429,6 +429,40 @@ def _handle_codex_usage(args) -> None:
     _print_codex_usage_report(report)
 
 
+def _add_review_options(parser: argparse.ArgumentParser) -> None:
+    """Add the review-intent flags shared by every toolful ask-* lane.
+
+    One helper, not a per-lane copy (#8786): ``--review`` (or ``--type
+    review``) forces the headless read-only dispatch, and ``--branch`` /
+    ``--pr`` name the exact head under review. A lane that omits these cannot
+    be used as a formal review seat.
+    """
+    parser.add_argument(
+        "--review",
+        action="store_true",
+        help=(
+            "Review ask (same as --type review): reply must state VERDICT "
+            "grounded in evidence; sealed review-pr is retired"
+        ),
+    )
+    review_target = parser.add_mutually_exclusive_group()
+    review_target.add_argument(
+        "--branch",
+        help=(
+            "Remote branch to review via the lightweight direct path "
+            "(resolved as origin/<branch>; sealed review-pr is retired)"
+        ),
+    )
+    review_target.add_argument(
+        "--pr",
+        type=int,
+        help=(
+            "PR to review via the lightweight direct path "
+            "(same as ask-LANE - --type review; sealed review-pr is retired)"
+        ),
+    )
+
+
 def _build_parser() -> argparse.ArgumentParser:
     """Build the CLI argument parser."""
     # Recipient/inbox choices must cover EVERY valid agent, not just the
@@ -637,7 +671,6 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_claude_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
     ask_claude_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_claude_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
-    ask_claude_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     # ask-codex
     ask_codex_parser = subparsers.add_parser(
@@ -665,7 +698,6 @@ def _build_parser() -> argparse.ArgumentParser:
         metavar="ISSUE",
         help="Dispatch multiple GitHub issues sequentially (e.g. 1212 #1213 issue-1214)",
     )
-    ask_codex_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     # ask-gemini legacy compatibility shim
     ask_gemini_parser = subparsers.add_parser(
@@ -727,7 +759,6 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=["auto", "subscription", "api-key", "api"],
         help="Gemini auth mode override for this invocation",
     )
-    ask_gemini_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
     ask_gemini_parser.add_argument(
         "--review-profile",
         dest="review_profile",
@@ -770,15 +801,6 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_agy_parser.add_argument("--output-path", dest="output_path", help="Write Agy response body to a file")
     ask_agy_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout")
-    ask_agy_parser.add_argument(
-        "--review",
-        action="store_true",
-        help=(
-            "Review ask on the lightweight direct path "
-            "(verdict + evidence required; sealed review-pr is retired). "
-            "Requires --review-profile. code is refused; ukrainian is allowed."
-        ),
-    )
     ask_agy_parser.add_argument(
         "--review-profile",
         dest="review_profile",
@@ -949,7 +971,6 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_grok_build_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
-    ask_grok_build_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     ask_kimi_parser = subparsers.add_parser(
         "ask-kimi", help="Ordinary ask via two-seat ACP; reviews via toolful dispatch (use '-' for stdin)"
@@ -965,7 +986,6 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_kimi_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_kimi_parser.add_argument("--effort", choices=EFFORT_CHOICES, help="Requested reasoning effort")
     ask_kimi_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
-    ask_kimi_parser.add_argument("--review", action="store_true", help="Review ask (same as --type review): reply must state VERDICT grounded in evidence; sealed review-pr is retired")
 
     for review_parser in (
         ask_claude_parser,
@@ -974,23 +994,9 @@ def _build_parser() -> argparse.ArgumentParser:
         ask_agy_parser,
         ask_grok_build_parser,
         ask_kimi_parser,
+        ask_deepseek_parser,
     ):
-        review_target = review_parser.add_mutually_exclusive_group()
-        review_target.add_argument(
-            "--branch",
-            help=(
-                "Remote branch to review via the lightweight direct path "
-                "(resolved as origin/<branch>; sealed review-pr is retired)"
-            ),
-        )
-        review_target.add_argument(
-            "--pr",
-            type=int,
-            help=(
-                "PR to review via the lightweight direct path "
-                "(same as ask-LANE - --type review; sealed review-pr is retired)"
-            ),
-        )
+        _add_review_options(review_parser)
 
     for ask_parser in (
         ask_claude_parser,

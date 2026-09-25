@@ -436,7 +436,9 @@ def test_new_registry_stream_resolves_without_shell_edit(tmp_path: Path) -> None
         env=env,
     )
     assert help_result.returncode == 0, help_result.stderr
-    assert f"{fresh_key} | infra.{fresh_key}" in help_result.stdout
+    # The selector table still resolves it, but the launcher refuses a key with no
+    # roster slot (#8303), so help must not advertise it.
+    assert f"{fresh_key} | infra.{fresh_key}" not in help_result.stdout
 
 
 def test_launch_path_does_not_literal_mint_infra_epic() -> None:
