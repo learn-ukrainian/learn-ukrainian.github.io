@@ -1348,7 +1348,10 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
         for row in ledger.conn.execute("SELECT spelling FROM spellings WHERE state = 'stored' ORDER BY spelling")
     ]
     total_spellings = len(spellings)
+    # Targeted fetch ledgers have no register pages; walk ledgers bind each entry to a completed row.
+    walk_mode = bool(ledger.conn.execute("SELECT 1 FROM register_pages LIMIT 1").fetchone())
     entries_written = 0
+    skipped_positions = 0
     mismatch_errors = 0
 
     for idx, spelling in enumerate(spellings, start=1):
@@ -1362,16 +1365,32 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
         parsed_rows: list[dict[str, Any]] = []
         section_sets: list[dict[str, object]] = []
         raw_sets: list[dict[str, str]] = []
-        for entry in ledger.entry_responses(spelling):
-            html = _load_body(cache, str(entry["response_sha256"]))
+        if walk_mode:
+            completed_rows = ledger.completed_rows_for_spelling(spelling)
+            completed_positions = {f"{row['page_num']}:{row['row_index']}" for row in completed_rows}
+            response_positions = {str(entry["register_position"]) for entry in ledger.entry_responses(spelling)}
+            skipped_positions += len(response_positions - completed_positions)
+            entries = [
+                (index, f"{row['page_num']}:{row['row_index']}", str(row["entry_sha256"]))
+                for index, row in enumerate(completed_rows, start=1)
+            ]
+        else:
+            entries = [
+                (int(entry["homonym_index"]), str(entry["register_position"]), str(entry["response_sha256"]))
+                for entry in ledger.entry_responses(spelling)
+            ]
+        if not entries:
+            continue
+        for homonym_index, register_position, entry_sha in entries:
+            html = _load_body(cache, entry_sha)
             parsed = parse_ulif_entry(
                 html,
-                homonym_index=int(entry["homonym_index"]),
-                register_position=str(entry["register_position"]),
+                homonym_index=homonym_index,
+                register_position=register_position,
             )
             sections: dict[str, object] = {}
             raw: dict[str, str] = {}
-            for tab in ledger.tab_responses(spelling, int(entry["homonym_index"])):
+            for tab in ledger.tab_responses(spelling, homonym_index):
                 kind = str(tab["tab_kind"])
                 tab_html = _load_body(cache, str(tab["response_sha256"]))
                 raw[kind] = tab_html
@@ -1409,7 +1428,8 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
     ledger.set_meta("differing_content_hashes", str(differing))
     print(
         f"parse complete: {total_spellings} spellings parsed, {entries_written} entries written, "
-        f"{differing} groups differed, {mismatch_errors} printed_number_mismatch errors",
+        f"{differing} groups differed, {mismatch_errors} printed_number_mismatch errors, "
+        f"positions skipped: {skipped_positions}",
         file=sys.stderr,
         flush=True,
     )

@@ -494,6 +494,112 @@ def test_parse_stored_gives_identical_rows_for_both_paradigm_sources(tmp_path: P
         ledger.close()
 
 
+def test_parse_stored_uses_completed_entry_after_interrupted_retry(tmp_path: Path, monkeypatch, capsys):
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+    real_keep = ulif_walk._keep_walk
+    first_server = MockULIFServer()
+
+    def first_transport(method: str, data: dict[str, str] | None) -> HttpResult:
+        result = first_server(method, data)
+        if data and data.get("__VIEWSTATE") == "VS-p2" and data.get("__EVENTARGUMENT") == "Select$1":
+            return HttpResult(
+                result.status_code, result.text.replace("(місто в Росії)", "(STALE RETRY BODY)"), result.headers
+            )
+        return result
+
+    def interrupt_after_entry(*args, **kwargs):
+        result = real_keep(*args, **kwargs)
+        if args[3] == "entry" and kwargs.get("register_position") == "2:1":
+            raise KeyboardInterrupt
+        return result
+
+    monkeypatch.setattr(ulif_walk, "_keep_walk", interrupt_after_entry)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=db_path,
+            delay_seconds=1.0,
+            transport=first_transport,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == ulif_walk.EXIT_INTERRUPTED
+    )
+    monkeypatch.setattr(ulif_walk, "_keep_walk", real_keep)
+
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=db_path,
+            delay_seconds=1.0,
+            transport=MockULIFServer(),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    cache = sqlite3.connect(db_path)
+    try:
+        responses = list(
+            ledger.conn.execute(
+                "SELECT response_sha256, homonym_index FROM responses "
+                "WHERE spelling = 'ішим' AND role = 'entry' ORDER BY id"
+            )
+        )
+        completed = ledger.completed_rows_for_spelling("ішим")
+        assert len(responses) == 3
+        assert [row[1] for row in responses] == [1, 1, 2]
+        assert responses[0][0] != responses[1][0]
+        assert len(completed) == 2
+        assert completed[0]["entry_sha256"] == responses[1][0]
+
+        cache.execute(
+            "UPDATE ulif_dictua_entries SET canonical_headword = 'KEEP' "
+            "WHERE normalized_query = 'ішим' AND homonym_index = 1"
+        )
+        cache.commit()
+        capsys.readouterr()
+        assert parse_stored(ledger, cache) == 0
+        err = capsys.readouterr().err
+        rows = list(
+            cache.execute(
+                "SELECT homonym_index, canonical_headword FROM ulif_dictua_entries "
+                "WHERE normalized_query = 'ішим' ORDER BY homonym_index"
+            )
+        )
+        duplicate = ledger.conn.execute("SELECT duplicate_content FROM spellings WHERE spelling = 'ішим'").fetchone()[0]
+        assert rows[0] == (1, "KEEP")
+        assert len(rows) == 2
+        assert [row[0] for row in rows] == [1, 2]
+        assert duplicate == 0
+        assert ledger.meta("differing_content_hashes") == "0"
+        assert (
+            "parse complete: 5 spellings parsed, 8 entries written, 0 groups differed, "
+            "0 printed_number_mismatch errors, positions skipped: 0"
+        ) in err
+
+        ledger.record_response(
+            spelling="ішим",
+            role="entry",
+            response_sha256="orphan-response",
+            request_sha256="orphan-request",
+            homonym_index=3,
+            register_position="2:99",
+        )
+        assert parse_stored(ledger, cache) == 0
+        err = capsys.readouterr().err
+        assert (
+            "parse complete: 5 spellings parsed, 8 entries written, 0 groups differed, "
+            "0 printed_number_mismatch errors, positions skipped: 1"
+        ) in err
+    finally:
+        cache.close()
+        ledger.close()
+
+
 def test_resume_after_injected_mid_page_failure_refetches_nothing_already_stored(tmp_path: Path):
     server1 = MockULIFServer(fail_on_page2_row1=True)
     state_dir = tmp_path / "state"
