@@ -82,6 +82,36 @@ def mark_dead_worker_terminal(
         return current, True
 
 
+def _mark_orphaned_pidless_crashed(
+    path: Path,
+    observed: dict[str, Any],
+    *,
+    is_orphaned: Callable[[dict[str, Any]], bool],
+    reason: str,
+    excerpt: Callable[[dict[str, Any], str], str],
+) -> tuple[dict[str, Any], bool]:
+    """Re-prove ``is_orphaned`` under the writer lock, then mark the record ``crashed``."""
+    with task_state_lock(path):
+        try:
+            current = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return observed, False
+        if (
+            not isinstance(current, dict)
+            or current.get("run_nonce") != observed.get("run_nonce")
+            or current.get("started_at") != observed.get("started_at")
+            or not is_orphaned(current)
+        ):
+            return current if isinstance(current, dict) else observed, False
+        prior_status = current["status"]
+        current["status"] = "crashed"
+        current["finished_at"] = datetime.now(UTC).isoformat()
+        current["returncode_reason"] = reason
+        current["stderr_excerpt"] = excerpt(current, prior_status)
+        write_state_unlocked(path, current)
+        return current, True
+
+
 def mark_orphaned_worktree_prep_crashed(
     path: Path,
     observed: dict[str, Any],
@@ -96,26 +126,39 @@ def mark_orphaned_worktree_prep_crashed(
     record must still be the observed run. ``worktree_prep`` is kept: it is
     the reaper's evidence for any worktree the dispatcher's add left behind.
     """
-    with task_state_lock(path):
-        try:
-            current = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            return observed, False
-        if (
-            not isinstance(current, dict)
-            or current.get("run_nonce") != observed.get("run_nonce")
-            or current.get("started_at") != observed.get("started_at")
-            or not is_orphaned(current)
-        ):
-            return current if isinstance(current, dict) else observed, False
-        prior_status = current["status"]
-        owner = current["worktree_prep"].get("owner_pid")
-        current["status"] = "crashed"
-        current["finished_at"] = datetime.now(UTC).isoformat()
-        current["returncode_reason"] = ORPHANED_PREP_REASON
-        current["stderr_excerpt"] = (
-            f"dispatcher pid {owner} died while preparing the worktree (state said {prior_status!r}, "
-            f"no worker spawned); marked crashed by {source} probe"
-        )
-        write_state_unlocked(path, current)
-        return current, True
+    return _mark_orphaned_pidless_crashed(
+        path,
+        observed,
+        is_orphaned=is_orphaned,
+        reason=ORPHANED_PREP_REASON,
+        excerpt=lambda current, prior: (
+            f"dispatcher pid {current['worktree_prep'].get('owner_pid')} died while preparing the worktree "
+            f"(state said {prior!r}, no worker spawned); marked crashed by {source} probe"
+        ),
+    )
+
+
+def mark_orphaned_admission_hold_crashed(
+    path: Path,
+    observed: dict[str, Any],
+    *,
+    source: str,
+    is_orphaned: Callable[[dict[str, Any]], bool],
+    reason: str,
+) -> tuple[dict[str, Any], bool]:
+    """Mark an admission hold ``crashed`` once the dispatcher that was admitted is gone (#8717).
+
+    ``is_orphaned`` (normally ``dispatch_admission.is_orphaned_admission_hold``)
+    is re-proved under the writer lock, like
+    :func:`mark_orphaned_worktree_prep_crashed`.
+    """
+    return _mark_orphaned_pidless_crashed(
+        path,
+        observed,
+        is_orphaned=is_orphaned,
+        reason=reason,
+        excerpt=lambda current, prior: (
+            f"dispatcher pid {current['admission_hold'].get('owner_pid')} died after admission "
+            f"(state said {prior!r}, no worker spawned); marked crashed by {source} probe"
+        ),
+    )

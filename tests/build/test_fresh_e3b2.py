@@ -36,7 +36,13 @@ def _fixture(root: Path):
     schemas_dir = root / "schemas"
     for folder in (plan_dir, evidence_dir, state_dir, page_dir, cards, schemas_dir):
         folder.mkdir(parents=True, exist_ok=True)
-    for name in ("module-plan-v2", "resolution-receipts-v1", "learner-observed-v1", "module-digest-v1"):
+    for name in (
+        "module-plan-v2",
+        "resolution-receipts-v1",
+        "learner-observed-v1",
+        "module-digest-v1",
+        "lesson-provenance-v1",
+    ):
         (schemas_dir / f"{name}.schema.json").write_bytes(
             (Path(__file__).resolve().parents[2] / "schemas" / f"{name}.schema.json").read_bytes()
         )

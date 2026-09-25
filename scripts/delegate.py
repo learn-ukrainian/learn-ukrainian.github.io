@@ -162,6 +162,7 @@ from scripts.orchestration import (
 )
 from scripts.orchestration.dead_worker_state import (
     mark_dead_worker_terminal,
+    mark_orphaned_admission_hold_crashed,
     mark_orphaned_worktree_prep_crashed,
     task_state_lock,
     write_state_unlocked,
@@ -1512,15 +1513,35 @@ def _is_own_worktree_prep_record(state: dict[str, Any], run_nonce: str) -> bool:
     )
 
 
-def _publish_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -> None:
-    """Record this run's path reservation in its task record before git starts (#8663).
+def _is_own_admission_hold(state: dict[str, Any], run_nonce: str) -> bool:
+    """True when ``state`` is this run's admission hold (#8717), without a worktree reservation."""
+    return (
+        state.get("run_nonce") == run_nonce
+        and "worktree_prep" not in state
+        and dispatch_admission.is_admission_hold_record(state)
+    )
 
-    The record says ``spawning`` with ``pid: null`` (dispatch is preparing,
-    no worker exists yet), so claim scans treat the path as taken while the
-    add runs, and a dispatcher that dies meanwhile is detectable from the
-    recorded owner. The terminal record a failed add later writes keeps
-    ``worktree_prep`` as evidence for the reaper's report. Raises
-    ``RuntimeError`` rather than overwrite a live record of another run.
+
+def _is_own_provisional_record(state: dict[str, Any], run_nonce: str) -> bool:
+    """True for this run's pid-less admission hold or worktree reservation record."""
+    return _is_own_worktree_prep_record(state, run_nonce) or _is_own_admission_hold(state, run_nonce)
+
+
+# Fields an admission hold carries into the worktree reservation record that
+# replaces it, so the reservation keeps the admitted slot (#8717).
+_ADMISSION_HOLD_FIELDS = ("mode", "admission", dispatch_admission.ADMISSION_HOLD_KEY)
+
+
+def _publish_admission_hold(task_id: str, run_nonce: str, *, mode: str, admission: dict[str, Any]) -> None:
+    """Publish the ``spawning`` record that holds this run's admitted write slot (#8717).
+
+    Dispatch calls this under the admission lock, before any worktree side
+    effect, so a refusal leaves nothing behind. The hold names this
+    dispatcher, so admission counts it for as long as the dispatcher lives
+    (however long its worktree add takes) and heals it once the dispatcher is
+    provably gone. The worktree reservation and the full task record replace
+    it in place. Raises ``RuntimeError`` rather than overwrite a live record
+    of another run.
     """
     state_path = _state_path(task_id)
     with task_state_lock(state_path):
@@ -1528,9 +1549,10 @@ def _publish_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -
         if (
             existing is not None
             and existing.get("status") in ("running", "spawning")
-            and not _is_own_worktree_prep_record(existing, run_nonce)
+            and not _is_own_provisional_record(existing, run_nonce)
         ):
             raise RuntimeError(f"task record for {task_id!r} is {existing.get('status')}; refusing to overwrite it")
+        hold = dispatch_admission.new_admission_hold(run_nonce)
         write_state_unlocked(
             state_path,
             {
@@ -1538,6 +1560,62 @@ def _publish_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -
                 "run_nonce": run_nonce,
                 "status": "spawning",
                 "pid": None,
+                "mode": mode,
+                "started_at": hold["admitted_at"],
+                "finished_at": None,
+                "admission": admission,
+                dispatch_admission.ADMISSION_HOLD_KEY: hold,
+            },
+        )
+
+
+def _release_admission_hold(task_id: str, run_nonce: str) -> None:
+    """Drop this run's admission hold when dispatch stops before publishing any other record.
+
+    A no-op once the hold was replaced by the full task record, a failure
+    record, or a worktree reservation (kept as the reaper's evidence).
+    """
+    state_path = _state_path(task_id)
+    with contextlib.suppress(OSError), task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if existing is not None and _is_own_admission_hold(existing, run_nonce):
+            state_path.unlink(missing_ok=True)
+
+
+def _publish_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -> None:
+    """Record this run's path reservation in its task record before git starts (#8663).
+
+    The record says ``spawning`` with ``pid: null`` (dispatch is preparing,
+    no worker exists yet), so claim scans treat the path as taken while the
+    add runs, and a dispatcher that dies meanwhile is detectable from the
+    recorded owner. It replaces this run's admission hold and keeps its
+    fields, so the admitted slot stays held while the add runs (#8717). The
+    terminal record a failed add later writes keeps ``worktree_prep`` as
+    evidence for the reaper's report. Raises ``RuntimeError`` rather than
+    overwrite a live record of another run.
+    """
+    state_path = _state_path(task_id)
+    with task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if (
+            existing is not None
+            and existing.get("status") in ("running", "spawning")
+            and not _is_own_provisional_record(existing, run_nonce)
+        ):
+            raise RuntimeError(f"task record for {task_id!r} is {existing.get('status')}; refusing to overwrite it")
+        held = (
+            {key: existing[key] for key in _ADMISSION_HOLD_FIELDS if key in existing}
+            if existing is not None and _is_own_provisional_record(existing, run_nonce)
+            else {}
+        )
+        write_state_unlocked(
+            state_path,
+            {
+                "task_id": task_id,
+                "run_nonce": run_nonce,
+                "status": "spawning",
+                "pid": None,
+                **held,
                 "cwd": prep["path"],
                 "worktree_path": prep["path"],
                 "started_at": prep["reserved_at"],
@@ -1562,12 +1640,30 @@ def _retire_worktree_prep(task_id: str, run_nonce: str) -> None:
 
     Dispatch publishes the full task record next; until then no record
     claims the finished worktree, exactly as before reservations existed.
+    A reservation that replaced an admission hold reverts to that hold, so
+    the admitted slot stays held until the full record replaces it (#8717).
     """
     state_path = _state_path(task_id)
     with contextlib.suppress(OSError), task_state_lock(state_path):
         existing = _read_state_json(state_path)
-        if existing is not None and _is_own_worktree_prep_record(existing, run_nonce):
+        if existing is None or not _is_own_worktree_prep_record(existing, run_nonce):
+            return
+        hold = existing.get(dispatch_admission.ADMISSION_HOLD_KEY)
+        if not isinstance(hold, dict):
             state_path.unlink(missing_ok=True)
+            return
+        write_state_unlocked(
+            state_path,
+            {
+                "task_id": task_id,
+                "run_nonce": run_nonce,
+                "status": "spawning",
+                "pid": None,
+                **{key: existing[key] for key in _ADMISSION_HOLD_FIELDS if key in existing},
+                "started_at": hold.get("admitted_at"),
+                "finished_at": None,
+            },
+        )
 
 
 def _leave_reservation(worktree_path: Path, prep: dict[str, Any]) -> dict[str, Any]:
@@ -3917,7 +4013,9 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
     while dispatch runs ``git worktree add``) is owned by the dispatcher
     recorded in ``worktree_prep``; if the dispatcher died, no pid will ever be
     written, so it is marked ``crashed`` with reason
-    ``dispatch_died_during_worktree_prep`` (#8663).
+    ``dispatch_died_during_worktree_prep`` (#8663). An admission hold is
+    owned by the dispatcher recorded in ``admission_hold`` and is marked
+    ``crashed`` with reason ``dispatch_died_after_admission`` (#8717).
     """
     if state.get("status") not in ("running", "spawning"):
         return
@@ -3930,6 +4028,16 @@ def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> 
             state,
             source=source,
             is_orphaned=worktree_prep.is_orphaned_prep_record,
+        )
+        state.clear()
+        state.update(current)
+    elif dispatch_admission.is_orphaned_admission_hold(state):
+        current, _changed = mark_orphaned_admission_hold_crashed(
+            state_path,
+            state,
+            source=source,
+            is_orphaned=dispatch_admission.is_orphaned_admission_hold,
+            reason=dispatch_admission.ORPHANED_HOLD_REASON,
         )
         state.clear()
         state.update(current)
@@ -3948,15 +4056,17 @@ def _evaluate_dispatch_admission(
 ) -> dispatch_admission.AdmissionDecision:
     """Host admission for a ``mode`` dispatch (#8645 part A).
 
-    With ``sweep`` every running/spawning record whose pid is dead is marked
-    ``crashed`` first, so a dead worker never holds a slot and never sits
-    ``running`` until someone probes it.
+    With ``sweep`` every running/spawning record whose owner is gone (a dead
+    worker pid, or a pid-less worktree reservation or admission hold whose
+    dispatcher died) is marked ``crashed`` first by the healer ``status``,
+    ``wait``, ``list`` and reconcile use, so it never holds a slot and never
+    sits active until someone probes it (#8717).
     """
     return dispatch_admission.evaluate(
         mode,
         _TASKS_DIR,
         pid_alive=_pid_alive,
-        on_dead=(lambda path, state: _mark_crashed_task(path, state, source="admission")) if sweep else None,
+        on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
     )
 
@@ -7517,7 +7627,8 @@ def _record_worktree_prep_failure(
 
     Returns True when a record was written. Refuses to overwrite an existing
     running/spawning record (pre-write re-check closes the guard→write race),
-    except this run's own path-reservation record. ``worktree_prep`` is that
+    except this run's own admission hold or path-reservation record, whose
+    admission snapshot it keeps. ``worktree_prep`` is that
     reservation and ``worktree_prep_cleanup`` what dispatch found and did
     after a failed ``git worktree add`` (#8663); each is recorded when given.
     """
@@ -7596,12 +7707,11 @@ def _record_worktree_prep_failure(
         failed_state["worktree_prep_cleanup"] = worktree_prep_cleanup
     state_path = _state_path(task_id)
     existing = _read_state(state_path)
-    if (
-        existing is not None
-        and existing.get("status") in ("running", "spawning")
-        and not _is_own_worktree_prep_record(existing, run_nonce)
-    ):
-        return False
+    if existing is not None and existing.get("status") in ("running", "spawning"):
+        if not _is_own_provisional_record(existing, run_nonce):
+            return False
+        if isinstance(existing.get("admission"), dict):
+            failed_state["admission"] = existing["admission"]
     _write_state_atomic(state_path, failed_state)
     return True
 
@@ -7699,13 +7809,23 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
     # The stack owns the worktree lock taken before create-or-attach. Dispatch
     # releases it once the task record is published; every earlier return or
-    # exception releases it here (#8610).
-    with contextlib.ExitStack() as worktree_locks:
-        return _dispatch(args, worktree_locks=worktree_locks)
+    # exception releases it here (#8610). ``admission_holds`` drops an
+    # admission hold that no later record replaced (#8717).
+    with contextlib.ExitStack() as worktree_locks, contextlib.ExitStack() as admission_holds:
+        return _dispatch(args, worktree_locks=worktree_locks, admission_holds=admission_holds)
 
 
-def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack) -> int:
-    """Body of :func:`cmd_dispatch`; ``worktree_locks`` holds the worktree lock."""
+def _dispatch(
+    args: argparse.Namespace,
+    *,
+    worktree_locks: contextlib.ExitStack,
+    admission_holds: contextlib.ExitStack,
+) -> int:
+    """Body of :func:`cmd_dispatch`; ``worktree_locks`` holds the worktree lock.
+
+    ``admission_holds`` releases this run's admission hold on any return or
+    exception before the task record replaces it.
+    """
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
@@ -8254,10 +8374,10 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
             print(f"⚠️  every VPS worker host is {reason}; spawning on notebook", file=sys.stderr)
 
     # Host admission (#8645 part A) for the host that spawns the worker, so it
-    # follows VPS forwarding. This check fails fast before any worktree side
-    # effect; the authoritative one runs under the admission lock where the
-    # task record is published. Dry-run reports dead-pid records without
-    # marking them.
+    # follows VPS forwarding. This check fails fast before the base fetch; the
+    # authoritative one runs under the admission lock just before the first
+    # worktree or task-record side effect. Dry-run reports dead-pid records
+    # without marking them.
     try:
         admission = _evaluate_dispatch_admission(args.mode, sweep=not bool(getattr(args, "dry_run", False)))
     except ValueError as exc:
@@ -8517,6 +8637,33 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         print(task_id)
         print(run_nonce)
         return 0
+
+    # Authoritative admission (#8645 part A, #8717): count → check → publish
+    # the admission hold under one host-wide lock, so concurrent dispatches
+    # cannot all pass the check above and then exceed the cap together. It
+    # runs before the review attempt, log files, worktree and task record, so
+    # a refusal leaves none of them. The hold names this dispatcher and keeps
+    # the slot until the full task record replaces it before the spawn.
+    admission_record: dict[str, Any] | None = None
+    if not admission.exempt:
+        admission_refusal: str | None = None
+        try:
+            with dispatch_admission.admission_lock(_TASKS_DIR):
+                admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
+                if admission.admitted or force_admission_reason is not None:
+                    admission_record = admission.to_record(force_reason=force_admission_reason)
+                    _publish_admission_hold(task_id, run_nonce, mode=args.mode, admission=admission_record)
+                    admission_holds.callback(_release_admission_hold, task_id, run_nonce)
+                else:
+                    admission_refusal = admission.refusal_line()
+        except dispatch_admission.AdmissionLockTimeout as exc:
+            admission_refusal = f"dispatch admission lock unavailable: {exc}; retry the dispatch"
+        except (OSError, RuntimeError) as exc:
+            print(f"❌ could not publish the admission hold for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
+        if admission_refusal is not None:
+            print(f"❌ {admission_refusal}", file=sys.stderr)
+            return _ADMISSION_REFUSED_EXIT
 
     if review_attempt:
         from scripts.agent_runtime.review_mcp import prepare_review_attempt
@@ -8825,54 +8972,11 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 file=sys.stderr,
             )
             return 1
-        # Authoritative admission: count → check → publish the spawning record
-        # under one host-wide lock, so concurrent dispatches cannot all pass the
-        # check above and then exceed the cap together (#8645 part A).
-        admission_refusal: str | None = None
-        try:
-            with dispatch_admission.admission_lock(_TASKS_DIR) if not admission.exempt else contextlib.nullcontext():
-                if not admission.exempt:
-                    admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
-                    if admission.admitted or force_admission_reason is not None:
-                        initial_state["admission"] = admission.to_record(force_reason=force_admission_reason)
-                    else:
-                        admission_refusal = admission.refusal_line()
-                if admission_refusal is None:
-                    _write_state_atomic(state_path, initial_state)
-        except dispatch_admission.AdmissionLockTimeout as exc:
-            admission_refusal = f"dispatch admission lock unavailable: {exc}; retry the dispatch"
-        if admission_refusal is not None:
-            _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
-            if worktree_path is not None:
-                # The worktree already exists: a failed record keeps it claimed and visible.
-                _record_worktree_prep_failure(
-                    task_id=task_id,
-                    run_nonce=run_nonce,
-                    attribution=attribution,
-                    agent=dispatch_agent,
-                    mode=args.mode,
-                    prompt=prompt,
-                    error=admission_refusal,
-                    requested_model=args.model,
-                    requested_effort=getattr(args, "effort", None),
-                    requested_harness=requested_harness,
-                    lifecycle_carrier=lifecycle_carrier,
-                    worktree_path=worktree_path,
-                    worktree_branch=worktree_branch,
-                    worktree_base_sha=worktree_telemetry.get("base_sha") or resolved_worktree_base_sha,
-                    worktree_base=getattr(args, "base", None) or "main",
-                    agent_alias_note=agent_alias_note,
-                    output_schema_path=output_schema_path,
-                    output_schema_sha256=output_schema_sha256,
-                    keep_worktree=keep_worktree,
-                    hard_timeout=args.hard_timeout,
-                    silence_timeout=silence_timeout,
-                    initial_response_timeout=initial_response_timeout,
-                    max_budget_usd=max_budget_usd,
-                    returncode_reason="dispatch admission refused",
-                )
-            print(f"❌ {admission_refusal}", file=sys.stderr)
-            return _ADMISSION_REFUSED_EXIT
+        # The admission hold published under the lock is replaced in place, so
+        # the admitted slot stays held until the worker writes its pid (#8717).
+        if admission_record is not None:
+            initial_state["admission"] = admission_record
+        _write_state_atomic(state_path, initial_state)
         # The published record now claims the worktree for settle's scan, so
         # the lock is released before the worker, whose own settle takes it
         # again, is spawned. The two acquisitions never nest (#8610).

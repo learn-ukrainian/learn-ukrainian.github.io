@@ -214,14 +214,34 @@ def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
     validate_kimi_alias_consumers()
 
 
-def test_generic_model_aliases_resolve_k3_256k_and_kimicc_endpoint_lists_it() -> None:
-    """The transport-agnostic alias map must resolve every Kimi alias, including 256k."""
+def test_generic_model_aliases_resolve_k3_256k_but_kimicc_does_not_route_it() -> None:
+    """k3-256k stays a native alias. The coding endpoint rejects it, so kimicc omits it (#8745)."""
     aliases = model_aliases()
     assert aliases["kimi-code/k3-256k"] == "kimi-code/k3-256k"
     assert aliases["k3-256k"] == "kimi-code/k3-256k"
     assert aliases["kimi-k3-256k"] == "kimi-code/k3-256k"
     endpoints = load_model_catalog()["review_scheduler"]["endpoints"]
-    assert "kimi-code/k3-256k" in endpoints["kimicc"]["models"]
+    assert "kimi-code/k3-256k" not in endpoints["kimicc"]["models"]
+    assert endpoints["kimicc"]["models"][0] == "kimi-code/k3"
+
+
+def test_every_kimicc_routable_alias_has_coding_model_id() -> None:
+    catalog = load_model_catalog()
+    endpoint_ids = catalog["review_scheduler"]["endpoints"]["kimicc"]["models"]
+    aliases = kimi_model_aliases(catalog)
+    assert endpoint_ids
+    seen: set[str] = set()
+    for model_id in endpoint_ids:
+        coding_model_id = catalog["models"][model_id]["kimi_routes"]["coding_model_id"]
+        assert isinstance(coding_model_id, str) and coding_model_id.strip()
+        for alias, owner in aliases.items():
+            if owner != model_id:
+                continue
+            seen.add(alias)
+            _, route = resolve_kimi_model(alias, catalog)
+            assert isinstance(route["coding_model_id"], str) and route["coding_model_id"].strip()
+    assert "k3-256k" not in seen
+    assert "k3" in seen
 
 
 def test_glm_model_aliases_and_consumer_lint() -> None:

@@ -13,7 +13,12 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from scripts.review.model_catalog import ModelCatalogError, resolve_kimi_model
+from scripts.review.model_catalog import (
+    ModelCatalogError,
+    kimi_model_aliases,
+    load_model_catalog,
+    resolve_kimi_model,
+)
 
 from ..result import ParseResult
 from ..trail_isolation import (
@@ -72,11 +77,44 @@ _TRAIL_ISOLATION_TOOL_CONFIG_KEYS = (
 )
 
 
+def kimicc_routable_model_ids(catalog: dict[str, Any] | None = None) -> tuple[str, ...]:
+    """Canonical ids listed on the catalog's kimicc endpoint, in catalog order."""
+    source = catalog or load_model_catalog()
+    raw = source["review_scheduler"]["endpoints"]["kimicc"].get("models", [])
+    if not isinstance(raw, list) or not raw or not all(isinstance(item, str) and item.strip() for item in raw):
+        raise ValueError("KimiccHarness: catalog kimicc endpoint lists no routable models")
+    return tuple(item.strip() for item in raw)
+
+
+def kimicc_default_model(catalog: dict[str, Any] | None = None) -> str:
+    """Omitted ``--model`` on kimicc. The first routable endpoint id (kimi-code/k3 today)."""
+    return kimicc_routable_model_ids(catalog)[0]
+
+
+def kimicc_routable_aliases(catalog: dict[str, Any] | None = None) -> frozenset[str]:
+    """Every alias that resolves to a model on the kimicc endpoint."""
+    source = catalog or load_model_catalog()
+    routable_ids = set(kimicc_routable_model_ids(source))
+    names = set(routable_ids)
+    for alias, model_id in kimi_model_aliases(source).items():
+        if model_id in routable_ids:
+            names.add(alias)
+    return frozenset(names)
+
+
+def resolve_kimicc_dispatch_model(model: str | None, catalog: dict[str, Any] | None = None) -> str:
+    """Model id for a kimicc dispatch. Blank means the catalog default, not native k3-256k."""
+    if model is None or not str(model).strip():
+        return kimicc_default_model(catalog)
+    return str(model).strip()
+
+
 class KimiccHarness:
     """Build a stateless Claude Code invocation routed through KimiCC."""
 
     name = "kimicc"
-    default_model = "k3-256k"
+    # First routable id on the catalog kimicc endpoint. Not the native k3-256k default.
+    default_model = kimicc_default_model()
     supported_modes = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -98,11 +136,23 @@ class KimiccHarness:
         if not _HEADLESS_WRAPPER.is_file():
             raise RuntimeError(f"KimiccHarness wrapper not found: {_HEADLESS_WRAPPER}")
 
-        requested_model = model or self.default_model
+        requested_model = resolve_kimicc_dispatch_model(model)
         try:
-            _, route = resolve_kimi_model(requested_model)
+            model_id, route = resolve_kimi_model(requested_model)
         except ModelCatalogError as exc:
             raise ValueError(f"KimiccHarness: {exc}") from exc
+        if model_id not in kimicc_routable_model_ids():
+            raise ValueError(
+                "KimiccHarness: "
+                f"{requested_model!r} is not a routable kimicc model in the catalog "
+                f"(resolved {model_id!r}). "
+                "The coding endpoint rejects unverified ids such as k3-256k "
+                "([claude-code:unrecognized_model], #8745). "
+                f"Routable models: {list(kimicc_routable_model_ids())}."
+            )
+        coding_model_id = route.get("coding_model_id")
+        if not isinstance(coding_model_id, str) or not coding_model_id.strip():
+            raise ValueError(f"KimiccHarness: catalog model {model_id!r} has no coding_model_id")
 
         tc: dict[str, Any] = tool_config or {}
         if tc.get("review_isolation"):

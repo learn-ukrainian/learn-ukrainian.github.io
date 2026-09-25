@@ -1047,6 +1047,14 @@ _GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
 # provisioning window is seconds, and one hour bounds it with a wide margin
 # while still reaping same-day debris.
 _DISPATCH_HUSK_MIN_AGE_HOURS = 1.0
+# How long the husk sweep waits for the per-path worktree lock before it
+# skips. ``git worktree add`` writes its admin registration
+# (``.git/worktrees/<name>/gitdir``) before ``.git`` appears in the target,
+# so the sweep's listing snapshot can predate a registration that is already
+# committed (#8711); the final re-check runs under the same lock dispatch
+# holds. A dispatch add holds that lock only briefly at this granularity, so
+# a short wait bounds the sweep without stalling it.
+_DISPATCH_HUSK_LOCK_TIMEOUT_S = 10.0
 
 
 def _is_acp_runtime_path(repo_root: Path, path: Path) -> bool:
@@ -1238,6 +1246,87 @@ def _tree_newest_age_hours(root: Path, now: float | None = None) -> float | None
     return ((now or time.time()) - newest) / 3600
 
 
+def _admin_registered_worktree_paths(common_git_dir: Path) -> set[Path]:
+    """Worktree paths named by a ``.git/worktrees/*/gitdir`` registration.
+
+    ``git worktree add`` writes this admin entry before ``.git`` appears in
+    the target directory, and ``git worktree list --porcelain`` can lag it
+    (#8711), so the locked re-check reads the admin directory directly. Each
+    ``gitdir`` file holds the path of the target's ``.git`` file; git 2.48+
+    can record it relative (``worktree.useRelativePaths`` /
+    ``--relative-paths``), resolved the way git resolves it — against the
+    admin entry's own directory. Every read failure raises: the caller fails
+    closed.
+    """
+    registered: set[Path] = set()
+    admin_dir = common_git_dir / "worktrees"
+    try:
+        if not admin_dir.is_dir():
+            return registered
+        entries = list(admin_dir.iterdir())
+    except OSError as exc:
+        raise RuntimeError(f"git worktree admin dir {admin_dir} unreadable: {exc}") from exc
+    for entry in entries:
+        gitdir = entry / "gitdir"
+        if not gitdir.is_file():
+            continue
+        try:
+            raw = gitdir.read_text(encoding="utf-8", errors="surrogateescape").strip()
+        except OSError as exc:
+            raise RuntimeError(f"git worktree registration {gitdir} unreadable: {exc}") from exc
+        if not raw:
+            continue
+        target = Path(raw)
+        if not target.is_absolute():
+            target = entry / target
+        registered.add(target.parent.resolve())
+    return registered
+
+
+def _remove_dispatch_husk_locked(repo_root: Path, *, child: Path, resolved: Path) -> str | None:
+    """Re-check registration and emptiness under delegate's per-path lock, then remove (#8711).
+
+    Dispatch holds :func:`worktree_claims.worktree_lock` for the target path
+    across its whole ``git worktree add``, so while this holds the same lock
+    no add can be mid-registration: either the add registered first (and the
+    fresh re-check below sees it) or it waits and then finds the directory
+    gone. Returns a skip reason, or ``None`` after the husk was removed.
+    Raises :class:`worktree_claims.WorktreeLockError` when the lock is not
+    taken and :class:`RuntimeError` when a re-check probe fails; both callers
+    turn into a skip, never a removal.
+
+    The lock directory comes from the strict
+    :func:`worktree_claims.control_plane_root`, like
+    :func:`_enter_dispatch_worktree_guard`: a mutating caller must refuse
+    when the fleet catalog is unreadable, never fall back to the local
+    checkout — delegate holds the lock on the public primary for a
+    ``--repo`` sibling, so locking anywhere else would not exclude it
+    (#8711 review).
+    """
+    control_root = worktree_claims.control_plane_root(primary_checkout_root(repo_root))
+    lock_dir = _common_git_dir(control_root) / worktree_claims.LOCK_DIR_NAME
+    with worktree_claims.worktree_lock(child, lock_dir=lock_dir, timeout_s=_DISPATCH_HUSK_LOCK_TIMEOUT_S):
+        listing = {info.path for info in list_git_worktrees(repo_root)}
+        if resolved in listing:
+            return "path registered as a git worktree during the locked re-check; a concurrent add claimed it"
+        admin_registered = _admin_registered_worktree_paths(_common_git_dir(repo_root))
+        if resolved in admin_registered:
+            return "path registered in .git/worktrees/*/gitdir during the locked re-check; a concurrent add claimed it"
+        if _tree_has_any_file_or_symlink(resolved):
+            return "files appeared in the husk during the locked re-check; treating as in use"
+        age_hours = _tree_newest_age_hours(resolved)
+        if age_hours is None:
+            raise RuntimeError(f"could not determine husk age during the locked re-check: {resolved}")
+        if age_hours < _DISPATCH_HUSK_MIN_AGE_HOURS:
+            return (
+                f"empty placeholder husk is only {age_hours:.1f}h old "
+                f"(< {_DISPATCH_HUSK_MIN_AGE_HOURS:g}h minimum) at the locked re-check; treating as in use"
+            )
+        target = assert_delete_target(child, repo_root=repo_root)
+        shutil.rmtree(target)
+    return None
+
+
 def _reap_dispatch_husks(
     repo_root: Path,
     *,
@@ -1256,7 +1345,11 @@ def _reap_dispatch_husks(
     rule. Every other guard fails closed too: an unavailable process-CWD
     probe, a live process cwd inside, or a youngest-mtime age below
     ``_DISPATCH_HUSK_MIN_AGE_HOURS`` (measured across the whole subtree, so a
-    directory still being provisioned is never "old") all preserve.
+    directory still being provisioned is never "old") all preserve. The
+    removal itself runs under delegate's per-path worktree lock with a fresh
+    registration re-check (#8711): the ``registered`` snapshot this sweep was
+    called with can predate a concurrent ``git worktree add``, which writes
+    its admin registration before ``.git`` appears in the target.
     """
     results: list[ReapResult] = []
     dispatch_root = repo_root / ".worktrees" / "dispatch"
@@ -1372,8 +1465,31 @@ def _reap_dispatch_husks(
                 pr=None,
             )
             try:
-                target = assert_delete_target(child, repo_root=repo_root)
-                shutil.rmtree(target)
+                refusal = _remove_dispatch_husk_locked(repo_root, child=child, resolved=resolved)
+            except worktree_claims.WorktreeLockError as exc:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=f"{worktree_claims.lock_refusal(exc)} ({exc})",
+                        dirty=False,
+                        owner=owner,
+                    )
+                )
+                continue
+            except RuntimeError as exc:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=f"husk registration re-check failed closed ({exc})",
+                        dirty=False,
+                        owner=owner,
+                    )
+                )
+                continue
             except (ValueError, OSError) as exc:
                 results.append(
                     ReapResult(
@@ -1384,6 +1500,18 @@ def _reap_dispatch_husks(
                         dirty=False,
                         owner=owner,
                         error=str(exc),
+                    )
+                )
+                continue
+            if refusal is not None:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=refusal,
+                        dirty=False,
+                        owner=owner,
                     )
                 )
                 continue

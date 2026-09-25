@@ -12,6 +12,7 @@ from pathlib import Path
 import yaml
 
 from .atlas_links import atlas_href_for
+from .unit_map import EditLog
 from .utils import dump_json_for_jsx, escape_jsx
 
 
@@ -116,6 +117,13 @@ def embed_youtube_video_links(body: str) -> str:
     Also handles Jinja/Nunjucks-style ``{% youtubeVideo "url" %}`` tags that
     Gemini sometimes produces instead of markdown links.
     """
+    log = EditLog(body, record=False)
+    edit_embed_youtube_video_links(log)
+    return log.text
+
+
+def edit_embed_youtube_video_links(log: EditLog) -> None:
+    """`embed_youtube_video_links` on an `EditLog`: every replaced link is reported as an edit."""
 
     def _yt_component(url: str, label: str = "Video") -> str | None:
         """Build <YouTubeVideo> JSX if url has a valid video ID, else None."""
@@ -128,8 +136,8 @@ def embed_youtube_video_links(body: str) -> str:
     def _yt_replace(m: re.Match) -> str:
         # Don't replace YouTube links inside markdown table cells
         start = m.start()
-        line_start = body.rfind('\n', 0, start) + 1
-        line_prefix = body[line_start:start].strip()
+        line_start = m.string.rfind('\n', 0, start) + 1
+        line_prefix = m.string[line_start:start].strip()
         if line_prefix.startswith('|') or line_prefix.endswith('|'):
             return m.group(0)  # Leave table links as-is
         return _yt_component(m.group(2), m.group(1)) or m.group(0)
@@ -153,15 +161,15 @@ def embed_youtube_video_links(body: str) -> str:
         return _yt_component(watch_url) or m.group(0)
 
     # Strip [!video] callout wrappers — these are just containers for iframes
-    body = re.sub(r'>\s*\[!video\]\s*\n', '', body)
+    log.sub(r'>\s*\[!video\]\s*\n', '')
 
     # Process in order: specific patterns first, then general
-    body = _YT_IFRAME_RE.sub(_yt_iframe_replace, body)
-    body = _YT_JINJA_ID_RE.sub(_yt_jinja_id_replace, body)
-    body = _YT_JINJA_RE.sub(_yt_jinja_replace, body)
-    body = _YT_VIDEO_LINK_RE.sub(_yt_replace, body)
-    body = _YT_PLAIN_URL_RE.sub(_yt_plain_url_replace, body)
-    return _YT_BARE_URL_RE.sub(_yt_bare_url_replace, body)
+    log.sub(_YT_IFRAME_RE, _yt_iframe_replace)
+    log.sub(_YT_JINJA_ID_RE, _yt_jinja_id_replace)
+    log.sub(_YT_JINJA_RE, _yt_jinja_replace)
+    log.sub(_YT_VIDEO_LINK_RE, _yt_replace)
+    log.sub(_YT_PLAIN_URL_RE, _yt_plain_url_replace)
+    log.sub(_YT_BARE_URL_RE, _yt_bare_url_replace)
 
 
 # ---------------------------------------------------------------------------
