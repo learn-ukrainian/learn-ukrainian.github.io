@@ -21,6 +21,7 @@ import hashlib
 import json
 import os
 import re
+import stat
 import subprocess
 import sys
 import tempfile
@@ -1349,9 +1350,44 @@ def build_public_summary(
     }
     if "home_session_retention" in receipt:
         public_payload["home_session_retention"] = receipt["home_session_retention"]
+    if "batch_state_retention" in receipt:
+        public_payload["batch_state_retention"] = [
+            {
+                "mode": (row.get("apply") or row.get("dry_run") or {}).get("mode"),
+                "reclaimable_bytes": (row.get("dry_run") or {}).get("totals", {}).get("reclaimable_bytes", 0),
+                "selected": len((row.get("dry_run") or {}).get("selected", [])),
+                "allowlist": (row.get("dry_run") or {}).get("allowlist"),
+            }
+            for row in receipt["batch_state_retention"]
+        ]
     if receipt_path is not None:
         public_payload["receipt_id"] = Path(receipt_path).name
     return public_payload
+
+
+def batch_state_retention_reports(repo_roots: list[Path], *, apply: bool) -> list[dict[str, Any]]:
+    """Dry-run the snapshot allowlist, then apply it when this hygiene run applies.
+
+    The sweep rewrites only ``tasks/*.snapshots`` and ``tasks/archive/*.snapshots``.
+    Ended-session scratch is a separate cleanup and is not run here.
+    """
+    from scripts.maintenance.batch_state_retention import plan_retention
+
+    reports: list[dict[str, Any]] = []
+    for repo_root in repo_roots:
+        batch_state = Path(repo_root) / "batch_state"
+        try:
+            info = batch_state.lstat()
+        except OSError:
+            continue
+        if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode):
+            continue
+        dry = plan_retention(batch_state, apply=False)
+        entry: dict[str, Any] = {"dry_run": dry}
+        if apply:
+            entry["apply"] = plan_retention(batch_state, apply=True)
+        reports.append(entry)
+    return reports
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1360,6 +1396,7 @@ def main(argv: list[str] | None = None) -> int:
     receipt = build_receipt(repo_roots, apply=bool(args.apply))
     home_session_retention = home_session_retention_check.build_report()
     receipt["home_session_retention"] = home_session_retention
+    receipt["batch_state_retention"] = batch_state_retention_reports(repo_roots, apply=bool(args.apply))
     for line in home_session_retention_check.warning_lines(home_session_retention):
         sys.stderr.write(f"{line}\n")
     receipt_path = write_receipt(receipt, args.receipt_dir.expanduser().resolve())

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Shrink clean read-only snapshot sidecars under batch_state, and report the rest.
 
-Use this to turn old terminal ``tasks/*.snapshots/`` directories that recorded no
-checkout mutation into a ``digest.json``. Do not use it to delete manifests,
+Use this to turn old terminal ``tasks/*.snapshots/`` directories that recorded an
+explicit clean checkout into a ``digest.json``. Do not use it to delete manifests,
 atlas output, open-model data, or any other batch_state subtree: those are
 reported and left untouched. Dry-run is the default; pass ``--apply`` to write.
 """
@@ -11,7 +11,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import stat
 import sys
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -23,40 +26,140 @@ for _path in (REPO_ROOT, SCRIPTS_DIR):
         sys.path.insert(0, str(_path))
 
 from scripts import delegate
+from scripts.orchestration.dead_worker_state import task_state_lock
 from scripts.orchestration.stale_task_records import _record_age_days
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
 from scripts.orchestration.worktree_claims import RELEASED_TASK_STATUSES
 
 DEFAULT_BATCH_STATE = REPO_ROOT / "batch_state"
-DEFAULT_MIN_AGE_DAYS = 7.0
+# A clean verdict already lives on the task record, so the full JSON has no
+# forensic value after a day. Seven days reclaimed nothing: the dirs are younger.
+DEFAULT_MIN_AGE_DAYS = 1.0
 _SNAPSHOT_SUFFIX = delegate._READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX
 # Only these directory globs may be rewritten. Everything else under batch_state
 # is measured and left alone.
 _ALLOWLISTED_SNAPSHOT_PARENTS = ("", ARCHIVE_DIR_NAME)
+_PHASES = ("pre", "post")
 
 
-def _inside(root: Path, path: Path) -> bool:
+def _root_dir(batch_state: Path) -> Path:
+    """Return the real batch_state directory, refusing a symlink or any other name."""
     try:
-        path.resolve().relative_to(root.resolve())
-    except (OSError, ValueError):
-        return False
-    return True
+        info = batch_state.lstat()
+    except OSError as exc:
+        raise ValueError(f"refusing to sweep {batch_state}: path must be a directory named batch_state") from exc
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISDIR(info.st_mode) or batch_state.name != "batch_state":
+        raise ValueError(f"refusing to sweep {batch_state}: path must be a directory named batch_state")
+    root = batch_state.resolve()
+    if root.name != "batch_state":
+        raise ValueError(f"refusing to sweep {batch_state}: path must be a directory named batch_state")
+    return root
+
+
+def _nofollow(root: Path, path: Path, *, allow_missing_leaf: bool = False) -> Path | None:
+    """Return ``path`` when every component from ``root`` is a real, contained entry.
+
+    ``lstat`` rejects a symlink at any level. The leaf may be absent when the
+    caller is about to create it. ``..`` and paths outside ``root`` are refused.
+    """
+    try:
+        relative = path.absolute().relative_to(root)
+    except ValueError:
+        return None
+    if not relative.parts or any(part in {"", ".", ".."} for part in relative.parts):
+        return None
+    current = root
+    for index, part in enumerate(relative.parts):
+        current = current / part
+        leaf = index == len(relative.parts) - 1
+        try:
+            info = current.lstat()
+        except FileNotFoundError:
+            if allow_missing_leaf and leaf:
+                return current
+            return None
+        except OSError:
+            return None
+        if stat.S_ISLNK(info.st_mode):
+            return None
+    return current
+
+
+def _read_regular(root: Path, path: Path) -> bytes | None:
+    """Read a regular file with ``O_NOFOLLOW``, or return None if that is unsafe."""
+    checked = _nofollow(root, path)
+    if checked is None:
+        return None
+    try:
+        info = checked.lstat()
+    except OSError:
+        return None
+    if not stat.S_ISREG(info.st_mode):
+        return None
+    try:
+        fd = os.open(checked, os.O_RDONLY | os.O_NOFOLLOW)
+    except OSError:
+        return None
+    try:
+        chunks: list[bytes] = []
+        while True:
+            chunk = os.read(fd, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        return b"".join(chunks)
+    finally:
+        os.close(fd)
+
+
+def _write_bytes_nofollow(root: Path, path: Path, raw: bytes) -> None:
+    """Create or replace ``path`` without following a symlink at any level."""
+    checked = _nofollow(root, path, allow_missing_leaf=True)
+    if checked is None:
+        raise OSError(f"refusing to write {path}: symlink or path outside batch_state")
+    parent = _nofollow(root, checked.parent)
+    if parent is None:
+        raise OSError(f"refusing to write {path}: symlink or path outside batch_state")
+    tmp = parent / f".{checked.name}.tmp.{os.getpid()}"
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    try:
+        os.write(fd, raw)
+    finally:
+        os.close(fd)
+    os.replace(tmp, checked)
+
+
+def _unlink_regular(root: Path, path: Path) -> None:
+    checked = _nofollow(root, path)
+    if checked is None:
+        return
+    try:
+        info = checked.lstat()
+    except OSError:
+        return
+    if stat.S_ISREG(info.st_mode):
+        checked.unlink()
 
 
 def _file_bytes(path: Path) -> int:
-    if path.is_symlink() or not path.is_file():
-        return 0
     try:
-        return path.stat().st_size
+        info = path.lstat()
     except OSError:
         return 0
+    if not stat.S_ISREG(info.st_mode):
+        return 0
+    return info.st_size
 
 
 def _tree_bytes(path: Path) -> int:
-    if path.is_symlink():
+    try:
+        info = path.lstat()
+    except OSError:
         return 0
-    if path.is_file():
-        return _file_bytes(path)
+    if stat.S_ISLNK(info.st_mode):
+        return 0
+    if stat.S_ISREG(info.st_mode):
+        return info.st_size
     total = 0
     try:
         children = path.rglob("*")
@@ -67,21 +170,32 @@ def _tree_bytes(path: Path) -> int:
     return total
 
 
-def _phase_snapshots(snapshot_dir: Path) -> tuple[dict[str, str], dict[str, str]] | None:
-    """Return parsed phase maps, or None when a file is missing or not a JSON object."""
+def _phase_snapshots(root: Path, snapshot_dir: Path) -> tuple[dict[str, str], dict[str, str]] | None:
+    """Return parsed phase maps when both files are regular JSON objects under ``root``."""
     loaded: list[dict[str, str]] = []
-    for phase in ("pre", "post"):
-        path = snapshot_dir / f"read_only_checkout_{phase}.json"
-        if not path.is_file():
+    for phase in _PHASES:
+        raw = _read_regular(root, snapshot_dir / f"read_only_checkout_{phase}.json")
+        if raw is None:
             return None
         try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
+            payload = json.loads(raw)
+        except (UnicodeDecodeError, json.JSONDecodeError):
             return None
         if not isinstance(payload, dict):
             return None
         loaded.append(payload)
     return loaded[0], loaded[1]
+
+
+def _explicit_clean(record: dict[str, Any]) -> bool:
+    """True only when the record itself says the checkout was clean.
+
+    A missing key is not a clean verdict: older records predate the field and
+    must keep their full sidecars.
+    """
+    if "read_only_mutation_paths" not in record or "read_only_checkout_snapshot_error" not in record:
+        return False
+    return record["read_only_mutation_paths"] == [] and record["read_only_checkout_snapshot_error"] is None
 
 
 def _eligible(
@@ -91,35 +205,46 @@ def _eligible(
     min_age_days: float,
     now: datetime,
 ) -> bool:
-    if record is None or record.get("status") not in RELEASED_TASK_STATUSES:
+    if record is None or record.get("status") not in RELEASED_TASK_STATUSES or not _explicit_clean(record):
         return False
     try:
-        mtime_ns = record_path.stat().st_mtime_ns
+        info = record_path.lstat()
     except OSError:
         return False
-    if _record_age_days(record, mtime_ns, now) < min_age_days:
+    if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
         return False
-    mutations = record.get("read_only_mutation_paths")
-    if isinstance(mutations, list) and mutations:
-        return False
-    if not isinstance(mutations, list) and mutations is not None:
-        return False
-    return record.get("read_only_checkout_snapshot_error") is None
+    return _record_age_days(record, info.st_mtime_ns, now) >= min_age_days
 
 
-def _snapshot_candidates(tasks_dir: Path) -> list[Path]:
+def _read_record(root: Path, record_path: Path) -> dict[str, Any] | None:
+    raw = _read_regular(root, record_path)
+    if raw is None:
+        return None
+    try:
+        loaded = json.loads(raw)
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    return loaded if isinstance(loaded, dict) else None
+
+
+def _snapshot_candidates(root: Path, tasks_dir: Path) -> list[Path]:
     found: list[Path] = []
     for parent_name in _ALLOWLISTED_SNAPSHOT_PARENTS:
         parent = tasks_dir / parent_name if parent_name else tasks_dir
-        if not parent.is_dir() or parent.is_symlink():
+        if _nofollow(root, parent) is None:
             continue
         try:
             children = sorted(parent.glob(f"*{_SNAPSHOT_SUFFIX}"))
         except OSError:
             continue
         for path in children:
-            if path.is_dir() and not path.is_symlink() and path.name.endswith(_SNAPSHOT_SUFFIX):
-                found.append(path)
+            if path.name.endswith(_SNAPSHOT_SUFFIX) and _nofollow(root, path) is not None:
+                try:
+                    info = path.lstat()
+                except OSError:
+                    continue
+                if stat.S_ISDIR(info.st_mode):
+                    found.append(path)
     return found
 
 
@@ -128,46 +253,92 @@ def _record_for_snapshot(snapshot_dir: Path) -> Path:
     return snapshot_dir.with_name(f"{stem}.json")
 
 
+def _digest_bytes(pre: dict[str, str], post: dict[str, str]) -> bytes:
+    return json.dumps(delegate.read_only_snapshot_digest(pre, post), separators=(",", ":")).encode("utf-8")
+
+
+def _apply_one(
+    root: Path,
+    snapshot_dir: Path,
+    record_path: Path,
+    *,
+    observed_status: Any,
+    observed_nonce: Any,
+    min_age_days: float,
+    now: datetime,
+    crash_after: str | None,
+) -> str | None:
+    """Digest one sidecar under the task lock. Return the action, or None to skip.
+
+    The lock is the same per-task lock delegate holds while it publishes the
+    task record. Status and ``run_nonce`` are read again under that lock; a
+    re-dispatch that changed either one keeps its new sidecars.
+    """
+    with task_state_lock(record_path):
+        current = _read_record(root, record_path)
+        if current is None:
+            return None
+        if current.get("status") != observed_status or current.get("run_nonce") != observed_nonce:
+            return None
+        if not _eligible(current, record_path, min_age_days=min_age_days, now=now):
+            return None
+        phases = _phase_snapshots(root, snapshot_dir)
+        if phases is None:
+            return None
+        pre, post = phases
+        digest_raw = _digest_bytes(pre, post)
+        digest_path = snapshot_dir / delegate._READ_ONLY_SNAPSHOT_DIGEST_NAME
+        _write_bytes_nofollow(root, digest_path, digest_raw)
+        if crash_after == "digest":
+            raise RuntimeError("crash after digest")
+        current["read_only_snapshot_retention"] = delegate._READ_ONLY_SNAPSHOT_RETENTION_DIGEST
+        _write_bytes_nofollow(
+            root,
+            record_path,
+            json.dumps(current, indent=2, default=str).encode("utf-8"),
+        )
+        if crash_after == "record":
+            raise RuntimeError("crash after record")
+        for phase in _PHASES:
+            _unlink_regular(root, snapshot_dir / f"read_only_checkout_{phase}.json")
+        return "digested"
+
+
 def plan_retention(
     batch_state: Path,
     *,
     min_age_days: float = DEFAULT_MIN_AGE_DAYS,
     apply: bool = False,
     now: datetime | None = None,
+    on_before_lock: Callable[[], None] | None = None,
+    crash_after: str | None = None,
 ) -> dict[str, Any]:
     """Measure every batch_state subtree. Rewrite only eligible snapshot sidecars.
 
-    ``batch_state`` must be a directory named ``batch_state``. Paths that resolve
-    outside it are ignored. Non-terminal tasks and snapshot dirs with a recorded
-    mutation or snapshot error are left as they are.
+    ``batch_state`` must be a directory named ``batch_state``. A symlink at any
+    level, or a path that resolves outside it, is ignored. Non-terminal tasks
+    and snapshot dirs without an explicit clean verdict are left as they are.
     """
-    root = batch_state.resolve()
-    if root.name != "batch_state" or not root.is_dir():
-        raise ValueError(f"refusing to sweep {batch_state}: path must be a directory named batch_state")
+    root = _root_dir(batch_state)
     now = now or datetime.now(UTC)
     tasks_dir = root / "tasks"
     reclaimable_by_top: dict[str, int] = {}
     selected: list[dict[str, Any]] = []
 
-    if tasks_dir.is_dir() and _inside(root, tasks_dir):
-        for snapshot_dir in _snapshot_candidates(tasks_dir):
-            if not _inside(root, snapshot_dir):
-                continue
+    if _nofollow(root, tasks_dir) is not None:
+        for snapshot_dir in _snapshot_candidates(root, tasks_dir):
             record_path = _record_for_snapshot(snapshot_dir)
-            record = delegate._read_state_json(record_path) if record_path.is_file() else None
+            if _nofollow(root, record_path) is None or _nofollow(root, snapshot_dir) is None:
+                continue
+            record = _read_record(root, record_path)
             if not _eligible(record, record_path, min_age_days=min_age_days, now=now):
                 continue
-            phases = _phase_snapshots(snapshot_dir)
-            if phases is None:
+            phases = _phase_snapshots(root, snapshot_dir)
+            if phases is None or record is None:
                 continue
             pre, post = phases
-            digest_raw = json.dumps(
-                delegate.read_only_snapshot_digest(pre, post),
-                separators=(",", ":"),
-            ).encode("utf-8")
-            before = sum(
-                _file_bytes(snapshot_dir / f"read_only_checkout_{phase}.json") for phase in ("pre", "post")
-            )
+            digest_raw = _digest_bytes(pre, post)
+            before = sum(_file_bytes(snapshot_dir / f"read_only_checkout_{phase}.json") for phase in _PHASES)
             reclaimed = before - len(digest_raw)
             row = {
                 "snapshot_dir": str(snapshot_dir.relative_to(root)),
@@ -177,14 +348,23 @@ def plan_retention(
                 "action": "would_digest",
             }
             if apply:
-                delegate.collapse_read_only_snapshot_dir(snapshot_dir, pre, post)
-                if record is not None:
-                    record["read_only_snapshot_retention"] = delegate._READ_ONLY_SNAPSHOT_RETENTION_DIGEST
-                    delegate._write_state_atomic(record_path, record)
-                row["action"] = "digested"
+                if on_before_lock is not None:
+                    on_before_lock()
+                action = _apply_one(
+                    root,
+                    snapshot_dir,
+                    record_path,
+                    observed_status=record.get("status"),
+                    observed_nonce=record.get("run_nonce"),
+                    min_age_days=min_age_days,
+                    now=now,
+                    crash_after=crash_after,
+                )
+                if action is None:
+                    continue
+                row["action"] = action
             selected.append(row)
-            top = "tasks"
-            reclaimable_by_top[top] = reclaimable_by_top.get(top, 0) + reclaimed
+            reclaimable_by_top["tasks"] = reclaimable_by_top.get("tasks", 0) + reclaimed
 
     subtrees: list[dict[str, Any]] = []
     try:
@@ -192,7 +372,7 @@ def plan_retention(
     except OSError:
         entries = []
     for entry in entries:
-        if entry.is_symlink() or not _inside(root, entry):
+        if _nofollow(root, entry) is None:
             continue
         subtrees.append(
             {
@@ -221,15 +401,14 @@ def plan_retention(
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Report batch_state size and replace clean terminal read-only snapshot\n"
-            "sidecars with a digest. Dry-run unless --apply is passed. Never deletes\n"
-            "an unknown subtree, a non-terminal task, or anything outside batch_state."
+            "Report batch_state size and replace explicitly clean terminal snapshot sidecars with a digest.\n"
+            "Use it from the scheduled hygiene run; do not use it to delete any other batch_state subtree."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/maintenance/batch_state_retention.py\n"
-            "  /home/ops/learn-ukrainian/.venv/bin/python scripts/maintenance/batch_state_retention.py \\\n"
+            "  .venv/bin/python scripts/maintenance/batch_state_retention.py\n"
+            "  .venv/bin/python scripts/maintenance/batch_state_retention.py \\\n"
             "      --min-age-days 0 --apply\n"
             "\n"
             "Outputs:\n"
@@ -262,7 +441,10 @@ def _parser() -> argparse.ArgumentParser:
         default=DEFAULT_MIN_AGE_DAYS,
         help=(
             "Only digest snapshot dirs whose task record is at least this many days old "
-            f"(finished_at, else file mtime). Default: {DEFAULT_MIN_AGE_DAYS:g}. Example: 0"
+            f"(finished_at, else file mtime). Default: {DEFAULT_MIN_AGE_DAYS:g}. "
+            "A clean verdict is already on the task record, so the full JSON has no "
+            "forensic value after a day; 7 reclaimed nothing because these dirs are "
+            "younger than a week. Example: 0"
         ),
     )
     parser.add_argument(

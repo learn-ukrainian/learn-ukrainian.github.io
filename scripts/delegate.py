@@ -480,6 +480,50 @@ def read_only_snapshot_keep_full(
     return bool(mutation_paths) or snapshot_error is not None
 
 
+def _read_only_phase_paths(snapshot_dir: Path) -> list[Path]:
+    return [snapshot_dir / f"read_only_checkout_{phase}.json" for phase in ("pre", "post")]
+
+
+def stage_read_only_snapshot_digest(
+    snapshot_dir: Path,
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> int:
+    """Write ``digest.json`` and leave the phase files in place.
+
+    Returns the bytes a later discard would reclaim. Writing the digest first
+    means a crash before the task record is published still leaves the full
+    sidecars on disk.
+    """
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+    before = 0
+    for path in _read_only_phase_paths(snapshot_dir):
+        try:
+            info = path.lstat()
+        except OSError:
+            continue
+        if stat.S_ISREG(info.st_mode):
+            before += info.st_size
+    digest = read_only_snapshot_digest(pre, post)
+    digest_path = snapshot_dir / _READ_ONLY_SNAPSHOT_DIGEST_NAME
+    raw = json.dumps(digest, separators=(",", ":")).encode("utf-8")
+    tmp = digest_path.with_suffix(f".json.tmp.{os.getpid()}")
+    tmp.write_bytes(raw)
+    os.replace(tmp, digest_path)
+    return before - len(raw)
+
+
+def discard_read_only_snapshot_phases(snapshot_dir: Path) -> None:
+    """Unlink regular phase files. Symlinks are left in place."""
+    for path in _read_only_phase_paths(snapshot_dir):
+        try:
+            info = path.lstat()
+        except OSError:
+            continue
+        if stat.S_ISREG(info.st_mode):
+            path.unlink()
+
+
 def collapse_read_only_snapshot_dir(
     snapshot_dir: Path,
     pre: dict[str, str] | None,
@@ -488,22 +532,14 @@ def collapse_read_only_snapshot_dir(
     """Replace phase JSON with ``digest.json``. Return bytes reclaimed.
 
     The digest hashes the same canonical bytes ``_write_read_only_snapshot_sidecar``
-    writes. Callers that already decided the comparison was clean pass the
-    in-memory snapshots; a retention sweep passes the parsed files.
+    writes. Callers that still have to publish the task record must
+    :func:`stage_read_only_snapshot_digest`, write the record, then
+    :func:`discard_read_only_snapshot_phases`. This helper does both file steps
+    and is for a caller that has already published the record.
     """
-    snapshot_dir.mkdir(parents=True, exist_ok=True)
-    phase_paths = [snapshot_dir / f"read_only_checkout_{phase}.json" for phase in ("pre", "post")]
-    before = sum(path.stat().st_size for path in phase_paths if path.is_file())
-    digest = read_only_snapshot_digest(pre, post)
-    digest_path = snapshot_dir / _READ_ONLY_SNAPSHOT_DIGEST_NAME
-    raw = json.dumps(digest, separators=(",", ":")).encode("utf-8")
-    tmp = digest_path.with_suffix(f".json.tmp.{os.getpid()}")
-    tmp.write_bytes(raw)
-    os.replace(tmp, digest_path)
-    for path in phase_paths:
-        if path.is_file():
-            path.unlink()
-    return before - len(raw)
+    reclaimed = stage_read_only_snapshot_digest(snapshot_dir, pre, post)
+    discard_read_only_snapshot_phases(snapshot_dir)
+    return reclaimed
 
 
 def _load_read_only_snapshot_sidecar(task_id: str, phase: str) -> dict[str, str] | None:
@@ -6821,6 +6857,9 @@ def _run_worker(
     read_only_snapshot_error: str | None = None
     read_only_mutation_paths: list[str] = []
     read_only_ignored_mutation_paths: list[str] = []
+    # Set only after digest.json is on disk. Phase files stay until the
+    # terminal record that names retention=digest has been written.
+    clean_snapshots_to_discard: Path | None = None
     if mode == "read-only":
         read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
         _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
@@ -7143,15 +7182,18 @@ def _run_worker(
             if read_only_snapshot_keep_full(read_only_mutation_paths, read_only_snapshot_error):
                 final_state["read_only_snapshot_retention"] = _READ_ONLY_SNAPSHOT_RETENTION_FULL
             else:
-                collapse_read_only_snapshot_dir(
-                    _read_only_snapshot_dir_for(task_id),
+                snapshot_dir = _read_only_snapshot_dir_for(task_id)
+                stage_read_only_snapshot_digest(
+                    snapshot_dir,
                     read_only_checkout_pre,
                     read_only_checkout_post,
                 )
                 final_state["read_only_snapshot_retention"] = _READ_ONLY_SNAPSHOT_RETENTION_DIGEST
-                # Sidecars are gone, so detach will not strip hydrated copies.
+                # Drop hydrated copies so the terminal record stays small even
+                # while the phase files are still on disk.
                 final_state.pop("read_only_checkout_pre", None)
                 final_state.pop("read_only_checkout_post", None)
+                clean_snapshots_to_discard = snapshot_dir
             if read_only_mutation_paths:
                 final_status = "failed"
                 ok_outcome = False
@@ -7391,6 +7433,9 @@ def _run_worker(
         final_state["final_branch_head_commit"] = _resolve_sha(Path(worktree_path)) if worktree_path else None
         final_state["rescue_status"] = rescue_status
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
+        if clean_snapshots_to_discard is not None:
+            discard_read_only_snapshot_phases(clean_snapshots_to_discard)
+            clean_snapshots_to_discard = None
     except BaseException as interrupt_exc:
         # Defer SIGTERM across the ENTIRE handler, not just its write. A second
         # cancel arriving while the fallback was still computing raised from
@@ -7449,6 +7494,9 @@ def _run_worker(
                     ),
                 },
             )
+            if clean_snapshots_to_discard is not None:
+                discard_read_only_snapshot_phases(clean_snapshots_to_discard)
+                clean_snapshots_to_discard = None
         raise
 
     last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
