@@ -28,6 +28,7 @@ pymorphy3-dicts-uk
 # tokenize-uk is vendored at scripts/linguistics/tokenize_uk.py (#1318).
 # Intentionally NOT a pip dep — local ABBRS extensions require it.
 ukrainian-word-stress>=2,<3
+regex>=2026.5.9  # scripts/build/activity_renderer.py (Unicode-property patterns)
 
 # Testing
 pytest>=9.0.3
