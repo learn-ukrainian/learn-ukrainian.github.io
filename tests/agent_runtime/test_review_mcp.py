@@ -10,6 +10,7 @@ import re
 import shutil
 import stat
 import subprocess
+import threading
 import tomllib
 import uuid
 from collections.abc import Iterator
@@ -19,6 +20,7 @@ from unittest.mock import patch
 import pytest
 
 import scripts.agent_runtime.review_mcp as review_mcp_module
+import scripts.common.safe_open as safe_open_module
 import scripts.delegate as delegate_cli
 from scripts.agent_runtime.adapters.claude import ClaudeAdapter
 from scripts.agent_runtime.adapters.codex import CodexAdapter
@@ -45,6 +47,8 @@ from scripts.agent_runtime.review_mcp import (
     verify_review_attempt_paths,
 )
 from scripts.common.repo_root import resolve_repo_root
+from scripts.common.safe_open import UnsafeEntryError, safe_open_below
+from scripts.review.receipts import ledger as ledger_module
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 
@@ -1753,15 +1757,15 @@ def _fail_probe(monkeypatch: pytest.MonkeyPatch, exc: BaseException) -> None:
 
 
 def _fail_reads(monkeypatch: pytest.MonkeyPatch, exc: BaseException, *, name: str) -> None:
-    """Make ``Path.read_text`` fail with ``exc`` for files called ``name``."""
-    real = Path.read_text
+    """Make the gates' anchored file read fail with ``exc`` for files called ``name``."""
+    real = review_mcp_module._read_attempt_file
 
-    def read_text(self, *args, **kwargs):
-        if self.name == name:
+    def read_attempt_file(review_dir, *parts):
+        if parts[-1] == name:
             raise exc
-        return real(self, *args, **kwargs)
+        return real(review_dir, *parts)
 
-    monkeypatch.setattr(Path, "read_text", read_text)
+    monkeypatch.setattr(review_mcp_module, "_read_attempt_file", read_attempt_file)
 
 
 def _codex_probe_failure(tmp_path, manifest_file, mp, exc) -> str:
@@ -1993,7 +1997,7 @@ def test_untrusted_still_reports_size_and_fingerprint_when_the_file_cannot_be_wr
     assert "missing-dir" not in stand_in
     planted = tmp_path / "planted.diagnostics.log"
     planted.symlink_to(tmp_path / "elsewhere")
-    assert "details not saved: ELOOP" in review_mcp_module._untrusted("stderr", "x", planted)
+    assert "details not saved: unsafe directory or file" in review_mcp_module._untrusted("stderr", "x", planted)
     assert not (tmp_path / "elsewhere").exists()
 
 
@@ -2195,7 +2199,7 @@ def test_diagnostics_are_never_written_through_a_planted_directory_symlink(tmp_p
     planted = tmp_path / "review-dir"
     planted.symlink_to(outside, target_is_directory=True)
     stand_in = review_mcp_module._untrusted("stderr", "secret", planted / "att.diagnostics.log")
-    assert "details not saved: unsafe directory" in stand_in
+    assert "details not saved: unsafe directory or file" in stand_in
     assert str(tmp_path) not in stand_in
     assert list(outside.iterdir()) == []
 
@@ -2215,7 +2219,7 @@ def test_diagnostics_write_after_a_receipts_swap_stays_inside_the_root(manifest_
     (outside / "rev-codex-001").mkdir(parents=True)
     _swap_receipts_for_symlink(tmp_path, outside)
     stand_in = review_mcp_module._untrusted("stderr", "secret", review_diagnostics_path(plan.config_path))
-    assert "details not saved: unsafe directory" in stand_in
+    assert "details not saved: unsafe directory or file" in stand_in
     assert str(tmp_path) not in stand_in
     assert list((outside / "rev-codex-001").iterdir()) == []
     assert not list((tmp_path / "receipts-moved").rglob("*.diagnostics.log"))
@@ -2336,7 +2340,7 @@ def test_fallback_refuses_a_receipts_root_swapped_for_a_symlink(manifest_file: P
     assert "symlink" in str(refused.value)
     assert str(tmp_path) not in str(refused.value)
     stand_in = review_mcp_module._untrusted("stderr", "secret", review_diagnostics_path(plan.config_path))
-    assert "details not saved: unsafe directory" in stand_in
+    assert "details not saved: unsafe directory or file" in stand_in
     assert list((outside / "rev-codex-001").iterdir()) == []
     assert not list(outside.rglob("*.diagnostics.log"))
     assert not list((tmp_path / "receipts-moved").rglob("*.diagnostics.log"))
@@ -2458,3 +2462,296 @@ def test_default_root_uses_the_same_root_check(
     prepare_review_attempt(**{**kwargs, "attempt_id": "att-x-002"})
     assert stat.S_IMODE(root.stat().st_mode) == 0o755
     assert (root / "rev-x-001" / "att-x-002.jsonl").exists()
+
+
+# --- #8652 r18: every file below the anchor opens through one no-follow, non-blocking, type- and owner-checked helper ---
+
+_HANG_SECONDS = 5
+
+
+def _returns_promptly(call, *args):
+    """Run ``call`` in a daemon thread; fail (never hang) if a regression makes it block on a FIFO."""
+    outcome: dict[str, object] = {}
+
+    def run() -> None:
+        try:
+            outcome["value"] = call(*args)
+        except BaseException as exc:
+            outcome["error"] = exc
+
+    worker = threading.Thread(target=run, daemon=True)
+    worker.start()
+    worker.join(_HANG_SECONDS)
+    assert not worker.is_alive(), "the open blocked on a planted FIFO"
+    if "error" in outcome:
+        raise outcome["error"]  # type: ignore[misc]
+    return outcome.get("value")
+
+
+def _plant_fifo(path: Path) -> None:
+    path.unlink(missing_ok=True)
+    os.mkfifo(path, 0o600)
+
+
+def _open_dir(path: Path) -> int:
+    return os.open(path, os.O_RDONLY | os.O_DIRECTORY)
+
+
+def test_safe_open_normal_write_and_read_still_work(tmp_path: Path) -> None:
+    dir_fd = _open_dir(tmp_path)
+    try:
+        fd = safe_open_below(dir_fd, "note.txt", os.O_WRONLY | os.O_CREAT | os.O_APPEND)
+        assert os.get_blocking(fd)
+        os.write(fd, b"one\n")
+        os.close(fd)
+        fd = safe_open_below(dir_fd, "note.txt", os.O_WRONLY | os.O_APPEND)
+        os.write(fd, b"two\n")
+        os.close(fd)
+        fd = safe_open_below(dir_fd, "note.txt", os.O_RDONLY, blocking=False)
+        assert not os.get_blocking(fd)
+        os.close(fd)
+    finally:
+        os.close(dir_fd)
+    assert (tmp_path / "note.txt").read_text(encoding="utf-8") == "one\ntwo\n"
+    assert stat.S_IMODE((tmp_path / "note.txt").stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("flags", [os.O_WRONLY | os.O_CREAT | os.O_APPEND, os.O_RDONLY, os.O_RDWR | os.O_CREAT])
+def test_safe_open_refuses_a_planted_fifo_at_once(flags: int, tmp_path: Path) -> None:
+    _plant_fifo(tmp_path / "planted")
+    dir_fd = _open_dir(tmp_path)
+    try:
+        with pytest.raises(UnsafeEntryError) as refused:
+            _returns_promptly(safe_open_below, dir_fd, "planted", flags)
+    finally:
+        os.close(dir_fd)
+    assert str(tmp_path) not in str(refused.value)
+    assert "planted" not in str(refused.value)
+
+
+def test_safe_open_refuses_a_fifo_that_has_a_reader(tmp_path: Path) -> None:
+    """With a peer the open would succeed; the type check on the descriptor still refuses it."""
+    _plant_fifo(tmp_path / "planted")
+    reader = os.open(tmp_path / "planted", os.O_RDONLY | os.O_NONBLOCK)
+    dir_fd = _open_dir(tmp_path)
+    try:
+        with pytest.raises(UnsafeEntryError):
+            _returns_promptly(safe_open_below, dir_fd, "planted", os.O_WRONLY)
+    finally:
+        os.close(dir_fd)
+        os.close(reader)
+
+
+def test_safe_open_refuses_a_symlink_and_a_directory(tmp_path: Path) -> None:
+    (tmp_path / "target").write_text("x", encoding="utf-8")
+    (tmp_path / "link").symlink_to(tmp_path / "target")
+    (tmp_path / "dangling").symlink_to(tmp_path / "nowhere")
+    (tmp_path / "subdir").mkdir()
+    dir_fd = _open_dir(tmp_path)
+    try:
+        for name in ("link", "dangling"):
+            with pytest.raises(UnsafeEntryError):
+                safe_open_below(dir_fd, name, os.O_WRONLY | os.O_CREAT | os.O_APPEND)
+        with pytest.raises(UnsafeEntryError):
+            safe_open_below(dir_fd, "subdir", os.O_RDONLY)
+    finally:
+        os.close(dir_fd)
+    assert (tmp_path / "target").read_text(encoding="utf-8") == "x"
+    assert not (tmp_path / "nowhere").exists()
+
+
+def test_safe_open_refuses_a_foreign_owned_regular_file_and_closes_the_fd(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / "theirs").write_text("x", encoding="utf-8")
+    real_fstat = os.fstat
+    opened: list[int] = []
+
+    def foreign_fstat(fd: int) -> os.stat_result:
+        opened.append(fd)
+        info = real_fstat(fd)
+        return os.stat_result(
+            (info.st_mode, info.st_ino, info.st_dev, info.st_nlink, info.st_uid + 1, *tuple(info)[5:])
+        )
+
+    monkeypatch.setattr(safe_open_module.os, "fstat", foreign_fstat)
+    dir_fd = _open_dir(tmp_path)
+    try:
+        with pytest.raises(UnsafeEntryError):
+            safe_open_below(dir_fd, "theirs", os.O_RDONLY)
+    finally:
+        os.close(dir_fd)
+    with pytest.raises(OSError, match="Bad file descriptor"):
+        os.fstat(opened[0])
+
+
+def test_safe_open_lets_ordinary_errors_through(tmp_path: Path) -> None:
+    (tmp_path / "there").write_text("x", encoding="utf-8")
+    dir_fd = _open_dir(tmp_path)
+    try:
+        with pytest.raises(FileNotFoundError):
+            safe_open_below(dir_fd, "absent", os.O_RDONLY)
+        with pytest.raises(FileExistsError):
+            safe_open_below(dir_fd, "there", os.O_WRONLY | os.O_CREAT | os.O_EXCL)
+    finally:
+        os.close(dir_fd)
+
+
+def test_planted_fifo_at_the_note_path_never_blocks_the_root_tightening(manifest_file: Path, tmp_path: Path) -> None:
+    root = tmp_path / "receipts"
+    root.mkdir()
+    _plant_fifo(root / review_mcp_module._TIGHTENED_LOG)
+    root.chmod(0o775)
+    plan = _returns_promptly(_prepare_codex, manifest_file, tmp_path)
+    assert plan.config_path.exists()
+    assert stat.S_IMODE(root.stat().st_mode) == 0o755
+    assert stat.S_ISFIFO((root / review_mcp_module._TIGHTENED_LOG).lstat().st_mode)
+
+
+def test_note_is_written_through_the_helper_and_a_symlinked_note_is_left_alone(tmp_path: Path) -> None:
+    outside = tmp_path / "outside.txt"
+    outside.write_text("keep\n", encoding="utf-8")
+    (tmp_path / review_mcp_module._TIGHTENED_LOG).symlink_to(outside)
+    dir_fd = _open_dir(tmp_path)
+    try:
+        review_mcp_module._note_tightened(dir_fd, 0o775)
+    finally:
+        os.close(dir_fd)
+    assert outside.read_text(encoding="utf-8") == "keep\n"
+
+
+def test_planted_fifo_at_the_diagnostics_path_refuses_at_once(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    diagnostics = review_diagnostics_path(plan.config_path)
+    _plant_fifo(diagnostics)
+    stand_in = _returns_promptly(review_mcp_module._untrusted, "stderr", "secret", diagnostics)
+    assert "details not saved: unsafe directory or file" in stand_in
+    assert stat.S_ISFIFO(diagnostics.lstat().st_mode)
+
+
+def test_symlink_planted_at_the_diagnostics_path_is_not_written_through(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    diagnostics = review_diagnostics_path(plan.config_path)
+    outside = tmp_path / "outside.txt"
+    outside.write_text("keep\n", encoding="utf-8")
+    diagnostics.symlink_to(outside)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", diagnostics)
+    assert "details not saved: unsafe directory or file" in stand_in
+    assert outside.read_text(encoding="utf-8") == "keep\n"
+
+
+def test_foreign_owned_diagnostics_file_is_not_written(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    diagnostics = review_diagnostics_path(plan.config_path)
+    diagnostics.write_text("theirs\n", encoding="utf-8")
+    real_fstat = os.fstat
+
+    def foreign_files_fstat(fd: int) -> os.stat_result:
+        info = real_fstat(fd)
+        if not stat.S_ISREG(info.st_mode):
+            return info
+        return os.stat_result(
+            (info.st_mode, info.st_ino, info.st_dev, info.st_nlink, info.st_uid + 1, *tuple(info)[5:])
+        )
+
+    monkeypatch.setattr(safe_open_module.os, "fstat", foreign_files_fstat)
+    stand_in = review_mcp_module._untrusted("stderr", "secret", diagnostics)
+    assert "details not saved: unsafe directory or file" in stand_in
+    assert diagnostics.read_text(encoding="utf-8") == "theirs\n"
+
+
+def test_planted_fifo_at_the_config_path_refuses_at_once(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    _plant_fifo(plan.config_path)
+    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="wrong type"):
+        _returns_promptly(verify_review_attempt_paths, plan.config_path)
+    # The gate's own read is guarded too, not only the pre-check in front of it.
+    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="wrong type"):
+        _returns_promptly(review_mcp_module._read_attempt_file, plan.config_path.parent, plan.config_path.name)
+
+
+def test_planted_fifo_at_the_scoped_agy_config_refuses_at_once(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_agy(manifest_file, tmp_path)
+    scoped = agy_review_mcp_config_path(plan.agy_home)
+    _plant_fifo(scoped)
+    parts = scoped.relative_to(plan.agy_home.parent).parts
+    with pytest.raises(review_mcp_module.ReviewDirectoryError, match="wrong type"):
+        _returns_promptly(review_mcp_module._read_attempt_file, plan.agy_home.parent, *parts)
+
+
+def test_read_attempt_file_reads_a_regular_file(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    text = review_mcp_module._read_attempt_file(plan.config_path.parent, plan.config_path.name)
+    assert json.loads(text)["mcpServers"]["sources"]
+
+
+def test_planted_fifo_at_the_ledger_or_sidecar_path_refuses_at_once(manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    for path in (plan.ledger_path, plan.sidecar_path):
+        _plant_fifo(path)
+        with pytest.raises(review_mcp_module.ReviewDirectoryError, match="wrong type"):
+            _returns_promptly(verify_review_attempt_paths, plan.config_path)
+        _plant_fifo(path)
+
+
+def test_prepare_refuses_a_fifo_planted_at_the_ledger_path(manifest_file: Path, tmp_path: Path) -> None:
+    review_dir = tmp_path / "receipts" / "rev-codex-001"
+    review_dir.mkdir(parents=True)
+    _plant_fifo(review_dir / "att-codex-001.jsonl")
+    with pytest.raises(FileExistsError):
+        _returns_promptly(_prepare_codex, manifest_file, tmp_path)
+    assert not (review_dir / "att-codex-001.mcp.json").exists()
+
+
+def _append_one(ledger_path: Path) -> str:
+    return ledger_module.append(
+        ledger_path,
+        review_id="rev-codex-001",
+        attempt_id="att-codex-001",
+        manifest_sha256="0" * 64,
+        tool="verify_word",
+        server_version="t",
+        arguments={},
+        snapshots={},
+        status="ok",
+        result="r",
+        outcome_facts={},
+    )
+
+
+@pytest.mark.parametrize("which", ["ledger", "sidecar", "lock"])
+def test_ledger_library_refuses_a_planted_fifo_at_once(which: str, manifest_file: Path, tmp_path: Path) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    target = {
+        "ledger": plan.ledger_path,
+        "sidecar": plan.sidecar_path,
+        "lock": plan.ledger_path.with_name(plan.ledger_path.name + ".lock"),
+    }[which]
+    _plant_fifo(target)
+    action = _append_one if which == "lock" else ledger_module.records
+    with pytest.raises(ledger_module.LedgerError, match="not a regular file"):
+        _returns_promptly(action, plan.ledger_path)
+
+
+def test_ledger_library_refuses_a_symlinked_ledger_and_still_appends_normally(
+    manifest_file: Path, tmp_path: Path
+) -> None:
+    plan = _prepare_codex(manifest_file, tmp_path)
+    receipt = _append_one(plan.ledger_path)
+    assert ledger_module.lookup(plan.ledger_path, receipt)["seq"] == 1
+    real = tmp_path / "real.jsonl"
+    plan.ledger_path.rename(real)
+    plan.ledger_path.symlink_to(real)
+    with pytest.raises(ledger_module.LedgerError, match="not a regular file"):
+        ledger_module.records(plan.ledger_path)
+
+
+def test_no_open_below_the_anchor_bypasses_the_helper() -> None:
+    """Every ``os.open`` in review_mcp is a directory or anchor open; files go through ``_safe_open_below``."""
+    source = Path(review_mcp_module.__file__).read_text(encoding="utf-8")
+    file_opens = [line.strip() for line in source.splitlines() if "os.open(" in line and "O_DIRECTORY" not in line]
+    assert file_opens == ["fd = os.open(name, _DIRECTORY_FLAGS, dir_fd=dir_fd)"]
+    assert ".read_text(" not in source
+    assert ".write_text(" not in source

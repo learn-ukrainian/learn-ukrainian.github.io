@@ -46,6 +46,12 @@ In scope:
 * Every write this module makes itself after provisioning (the diagnostics file). It re-walks
   the attempt directory from the verified root and writes through ``dir_fd``, never by full
   path, so a component swapped for a symlink afterwards cannot redirect it.
+* A pre-planted FIFO, device, symlink or foreign-owned file at any file name below the anchor.
+  Every file this module or the ledger library opens there (diagnostics, the tightening note, the
+  per-attempt config, ledger, sidecar and lock, the Codex/AGY home files) goes through one helper,
+  ``scripts.common.safe_open.safe_open_below`` (``_safe_open_below`` here): ``O_NOFOLLOW |
+  O_NONBLOCK``, then an ``fstat`` on the descriptor that refuses anything but a regular file
+  owned by the current user. A FIFO therefore refuses at once instead of blocking the open.
 * A non-racy change after provisioning, caught by ``verify_review_attempt_paths``: it re-runs the
   no-follow, owner-checked walk and checks the attempt's files immediately before a path string
   is handed to a gate or launcher, and refuses with fixed wording on any mismatch.
@@ -81,6 +87,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import resolve_repo_root
+from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
@@ -201,12 +208,28 @@ _UNSAFE_DIRECTORY = (
 _TIGHTENED_LOG = "receipts-root-permissions.diagnostics.txt"
 _DEFAULT_RECEIPTS_PARTS = ("batch_state", "review-receipts")
 _DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+_ATTEMPT_PATHS_CHANGED = "a review attempt path is a symlink, has the wrong type, or is not owned by the current user"
+_UNSAFE_ATTEMPT = f"review attempt refused: {_ATTEMPT_PATHS_CHANGED} (#8652)"
+
+
+def _safe_open_below(dir_fd: int, name: str, flags: int, mode: int = 0o600) -> int:
+    """Open ``name`` below the verified ``dir_fd``: the one way this module opens any file below the anchor.
+
+    No symlink is followed, the open can never block on a planted FIFO, and the result must be a
+    regular file owned by the current user (``scripts.common.safe_open``). Anything else is refused
+    with fixed wording that never names a path. Ordinary errors (``FileExistsError``,
+    ``FileNotFoundError``) propagate so exclusive-create callers still see them.
+    """
+    try:
+        return safe_open_below(dir_fd, name, flags, mode)
+    except UnsafeEntryError:
+        raise ReviewDirectoryError(_UNSAFE_ATTEMPT) from None
 
 
 def _note_tightened(dir_fd: int, old_mode: int) -> None:
     """Best-effort note, in the tightened directory's own diagnostics file, that its mode was reduced."""
-    with contextlib.suppress(OSError):
-        fd = os.open(_TIGHTENED_LOG, os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o600, dir_fd=dir_fd)
+    with contextlib.suppress(OSError, ReviewDirectoryError):
+        fd = _safe_open_below(dir_fd, _TIGHTENED_LOG, os.O_WRONLY | os.O_CREAT | os.O_APPEND)
         try:
             os.write(
                 fd,
@@ -317,7 +340,7 @@ def _lexists(name: str, dir_fd: int) -> bool:
 
 def _create_file(name: str, dir_fd: int, payload: bytes) -> None:
     """Create ``name`` exclusively (0600) inside ``dir_fd`` and write ``payload``."""
-    fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=dir_fd)
+    fd = _safe_open_below(dir_fd, name, os.O_WRONLY | os.O_CREAT | os.O_EXCL)
     with os.fdopen(fd, "wb") as handle:
         os.fchmod(handle.fileno(), 0o600)
         handle.write(payload)
@@ -354,7 +377,7 @@ def _untrusted(label: str, text: object, diagnostics: Path) -> str:
         # prepare_review_attempt cannot redirect the write.
         dir_fd = _open_attempt_dir(diagnostics.parent)
         try:
-            fd = os.open(diagnostics.name, os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o600, dir_fd=dir_fd)
+            fd = _safe_open_below(dir_fd, diagnostics.name, os.O_WRONLY | os.O_CREAT | os.O_APPEND)
             try:
                 os.fchmod(fd, 0o600)
                 os.write(
@@ -366,12 +389,8 @@ def _untrusted(label: str, text: object, diagnostics: Path) -> str:
             os.close(dir_fd)
     except (OSError, ReviewDirectoryError) as exc:
         reason = _errno_name(exc) if isinstance(exc, OSError) else None
-        saved = f"details not saved: {reason or 'unsafe directory'}"
+        saved = f"details not saved: {reason or 'unsafe directory or file'}"
     return f"<{label}: {len(raw)} chars, sha256 {fingerprint}; {saved}>"
-
-
-_ATTEMPT_PATHS_CHANGED = "a review attempt path is a symlink, has the wrong type, or is not owned by the current user"
-_UNSAFE_ATTEMPT = f"review attempt refused: {_ATTEMPT_PATHS_CHANGED} (#8652)"
 
 
 def _check_attempt_entry(name: str, dir_fd: int, *, want_dir: bool) -> None:
@@ -410,6 +429,27 @@ def verify_review_attempt_paths(config_path: Path | str) -> None:
             _check_attempt_entry(name, dir_fd, want_dir=True)
     finally:
         os.close(dir_fd)
+
+
+def _read_attempt_file(review_dir: Path | str, *parts: str) -> str:
+    """Read a UTF-8 file at ``parts`` below an attempt's review directory, through the anchored walk.
+
+    Re-walks the attempt directory from the verified root, opens each intermediate directory
+    no-follow and owner-checked, and opens the file with ``_safe_open_below`` (so a FIFO planted at
+    the path refuses at once instead of blocking the gate). The result is the file's text.
+    """
+    *directories, filename = parts
+    fd = _open_attempt_dir(review_dir)
+    try:
+        for name in directories:
+            child = _open_owned_dir(name, dir_fd=fd)
+            os.close(fd)
+            fd = child
+        file_fd = _safe_open_below(fd, filename, os.O_RDONLY)
+    finally:
+        os.close(fd)
+    with os.fdopen(file_fd, "rb") as handle:
+        return handle.read().decode("utf-8")
 
 
 def _errno_name(exc: OSError) -> str | None:
@@ -820,7 +860,7 @@ def verify_codex_review_effective_mcp(
     except (OSError, ReviewDirectoryError):
         raise refuse(_ATTEMPT_PATHS_CHANGED) from None
     try:
-        expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
+        expected = json.loads(_read_attempt_file(config.parent, config.name))["mcpServers"]["sources"]
     except (OSError, ValueError, KeyError, TypeError) as exc:
         raise refuse(
             f"cannot read the attempt MCP config {_echo_identifier(config.name)!r}: {_exc_reason(exc, diagnostics)}"
@@ -1002,7 +1042,7 @@ def verify_agy_review_effective_mcp(
     except (OSError, ReviewDirectoryError):
         raise refuse(_ATTEMPT_PATHS_CHANGED) from None
     try:
-        expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
+        expected = json.loads(_read_attempt_file(config.parent, config.name))["mcpServers"]["sources"]
         command = expected["command"]
         args = list(expected["args"])
     except (OSError, ValueError, KeyError, TypeError) as exc:
@@ -1058,7 +1098,9 @@ def verify_agy_review_effective_mcp(
 
     scoped_config = agy_review_mcp_config_path(agy_home)
     try:
-        loaded = _strict_json_object(scoped_config.read_text(encoding="utf-8"))
+        loaded = _strict_json_object(
+            _read_attempt_file(agy_home.parent, *scoped_config.relative_to(agy_home.parent).parts)
+        )
     except (OSError, ValueError) as exc:
         raise refuse(
             f"cannot read the scoped agy MCP config (.gemini/config/mcp_config.json under the scoped HOME): "
