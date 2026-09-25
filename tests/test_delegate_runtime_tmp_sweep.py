@@ -323,12 +323,14 @@ def test_read_only_dispatch_task_record_stays_within_byte_budget(
     record_bytes = state_path.stat().st_size
     snapshot_dir = delegate._read_only_snapshot_dir_for(task_id)
     assert snapshot_dir.is_dir()
-    assert sum(path.stat().st_size for path in snapshot_dir.glob("*.json")) > record_bytes
+    assert (snapshot_dir / "digest.json").is_file()
+    assert not (snapshot_dir / "read_only_checkout_pre.json").exists()
+    assert not (snapshot_dir / "read_only_checkout_post.json").exists()
     assert record_bytes < delegate._READ_ONLY_CHECKOUT_RECORD_BYTE_BUDGET
     state = delegate._read_state(state_path)
     assert state is not None
-    assert isinstance(state.get("read_only_checkout_pre"), dict)
-    assert isinstance(state.get("read_only_checkout_post"), dict)
+    assert state["read_only_snapshot_retention"] == "digest"
+    assert "read_only_checkout_pre" not in state
     assert "read_only_checkout_pre" not in json.loads(state_path.read_text(encoding="utf-8"))
 
 

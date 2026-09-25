@@ -423,8 +423,17 @@ def _read_only_snapshot_dir_for(task_id: str) -> Path:
     return state_path.parent / f"{state_path.stem}{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"
 
 
+_READ_ONLY_SNAPSHOT_DIGEST_NAME = "digest.json"
+_READ_ONLY_SNAPSHOT_RETENTION_DIGEST = "digest"
+_READ_ONLY_SNAPSHOT_RETENTION_FULL = "full"
+
+
 def _read_only_snapshot_sidecar_path(task_id: str, phase: str) -> Path:
     return _read_only_snapshot_dir_for(task_id) / f"read_only_checkout_{phase}.json"
+
+
+def _read_only_snapshot_digest_path(task_id: str) -> Path:
+    return _read_only_snapshot_dir_for(task_id) / _READ_ONLY_SNAPSHOT_DIGEST_NAME
 
 
 def _write_read_only_snapshot_sidecar(
@@ -441,6 +450,60 @@ def _write_read_only_snapshot_sidecar(
         encoding="utf-8",
     )
     os.replace(tmp, path)
+
+
+def _canonical_snapshot_bytes(snapshot: dict[str, str] | None) -> bytes:
+    """Bytes written for a phase sidecar: compact JSON, empty object when missing."""
+    payload = snapshot if isinstance(snapshot, dict) else {}
+    return json.dumps(payload, separators=(",", ":")).encode("utf-8")
+
+
+def _snapshot_digest_phase(snapshot: dict[str, str] | None) -> dict[str, Any]:
+    raw = _canonical_snapshot_bytes(snapshot)
+    payload = snapshot if isinstance(snapshot, dict) else {}
+    return {"sha256": hashlib.sha256(raw).hexdigest(), "entries": len(payload)}
+
+
+def read_only_snapshot_digest(
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> dict[str, Any]:
+    """Content digest of the two canonical checkout snapshots."""
+    return {"pre": _snapshot_digest_phase(pre), "post": _snapshot_digest_phase(post)}
+
+
+def read_only_snapshot_keep_full(
+    mutation_paths: list[str] | None,
+    snapshot_error: str | None,
+) -> bool:
+    """Full sidecars stay only for a recorded mutation or a snapshot error."""
+    return bool(mutation_paths) or snapshot_error is not None
+
+
+def collapse_read_only_snapshot_dir(
+    snapshot_dir: Path,
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> int:
+    """Replace phase JSON with ``digest.json``. Return bytes reclaimed.
+
+    The digest hashes the same canonical bytes ``_write_read_only_snapshot_sidecar``
+    writes. Callers that already decided the comparison was clean pass the
+    in-memory snapshots; a retention sweep passes the parsed files.
+    """
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+    phase_paths = [snapshot_dir / f"read_only_checkout_{phase}.json" for phase in ("pre", "post")]
+    before = sum(path.stat().st_size for path in phase_paths if path.is_file())
+    digest = read_only_snapshot_digest(pre, post)
+    digest_path = snapshot_dir / _READ_ONLY_SNAPSHOT_DIGEST_NAME
+    raw = json.dumps(digest, separators=(",", ":")).encode("utf-8")
+    tmp = digest_path.with_suffix(f".json.tmp.{os.getpid()}")
+    tmp.write_bytes(raw)
+    os.replace(tmp, digest_path)
+    for path in phase_paths:
+        if path.is_file():
+            path.unlink()
+    return before - len(raw)
 
 
 def _load_read_only_snapshot_sidecar(task_id: str, phase: str) -> dict[str, str] | None:
@@ -4518,7 +4581,12 @@ def _is_read_only_delegate_snapshot_sidecar_path(path: str) -> bool:
     parts = normalized.split("/")
     if len(parts) < 2:
         return False
-    return parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}") and parts[-1].startswith("read_only_checkout_")
+    if not parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"):
+        return False
+    name = parts[-1]
+    if name == _READ_ONLY_SNAPSHOT_DIGEST_NAME:
+        return True
+    return name.startswith("read_only_checkout_") and name.endswith(".json")
 
 
 def _is_read_only_runtime_state_path(path: str) -> bool:
@@ -7072,6 +7140,18 @@ def _run_worker(
                 )
             final_state["read_only_ignored_mutation_paths"] = read_only_ignored_mutation_paths
             final_state["read_only_mutation_paths"] = read_only_mutation_paths
+            if read_only_snapshot_keep_full(read_only_mutation_paths, read_only_snapshot_error):
+                final_state["read_only_snapshot_retention"] = _READ_ONLY_SNAPSHOT_RETENTION_FULL
+            else:
+                collapse_read_only_snapshot_dir(
+                    _read_only_snapshot_dir_for(task_id),
+                    read_only_checkout_pre,
+                    read_only_checkout_post,
+                )
+                final_state["read_only_snapshot_retention"] = _READ_ONLY_SNAPSHOT_RETENTION_DIGEST
+                # Sidecars are gone, so detach will not strip hydrated copies.
+                final_state.pop("read_only_checkout_pre", None)
+                final_state.pop("read_only_checkout_post", None)
             if read_only_mutation_paths:
                 final_status = "failed"
                 ok_outcome = False
