@@ -129,7 +129,7 @@ def codex_review_home_path(config_path: Path | str) -> Path:
     """Return the scoped ``CODEX_HOME`` directory that pairs with an attempt's ``.mcp.json``."""
     config = Path(config_path)
     if not config.name.endswith(_MCP_CONFIG_SUFFIX):
-        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config}")
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config.name!r}")
     return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _CODEX_HOME_SUFFIX)
 
 
@@ -137,7 +137,7 @@ def agy_review_home_path(config_path: Path | str) -> Path:
     """Return the scoped AGY ``HOME`` directory that pairs with an attempt's ``.mcp.json``."""
     config = Path(config_path)
     if not config.name.endswith(_MCP_CONFIG_SUFFIX):
-        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config}")
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config.name!r}")
     return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _AGY_HOME_SUFFIX)
 
 
@@ -269,7 +269,7 @@ def prepare_review_attempt(
 
     manifest_file = Path(manifest_path).resolve()
     if not manifest_file.is_file():
-        raise FileNotFoundError(f"review manifest file not found: {manifest_file}")
+        raise FileNotFoundError(f"review manifest file not found: {manifest_file.name!r}")
 
     manifest_bytes = manifest_file.read_bytes()
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
@@ -290,7 +290,10 @@ def prepare_review_attempt(
     agy_home = agy_review_home_path(config_path) if canonical_harness == "agy" else None
     real_agy_token = _real_agy_token() if agy_home is not None else None
     if real_agy_token is not None and not real_agy_token.exists():
-        raise ValueError(f"AGY OAuth token not found for the scoped review home: {real_agy_token} (#8617)")
+        raise ValueError(
+            f"AGY OAuth token not found for the scoped review home: no {_AGY_TOKEN_NAME} in the "
+            "real AGY_APP_DATA_DIR (default ~/.gemini/antigravity-cli) (#8617)"
+        )
 
     # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
     if (
@@ -429,17 +432,18 @@ def verify_codex_review_effective_mcp(
         CodexReviewMcpGateError: on any deviation, naming #8517.
     """
     config = Path(config_path)
+    codex_home = codex_review_home_path(config)
+    log_unsafe = {"$CODEX_HOME": str(codex_home), "~": os.path.expanduser("~")}
 
     def refuse(reason: str) -> CodexReviewMcpGateError:
-        return CodexReviewMcpGateError(f"codex review attempt refused: {reason} (#8517)")
+        return CodexReviewMcpGateError(f"codex review attempt refused: {_redact(reason, log_unsafe)} (#8517)")
 
     try:
         expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        raise refuse(f"cannot read the attempt MCP config {config}: {exc}") from exc
-    codex_home = codex_review_home_path(config)
+        raise refuse(f"cannot read the attempt MCP config {config.name!r}: {_exc_reason(exc)}") from exc
     if not (codex_home / "config.toml").is_file():
-        raise refuse(f"scoped CODEX_HOME {codex_home} has no config.toml")
+        raise refuse("the scoped CODEX_HOME has no config.toml")
 
     binary = codex_bin or shutil.which("codex") or "codex"
     env = {**os.environ, "CODEX_HOME": str(codex_home)}
@@ -454,9 +458,10 @@ def verify_codex_review_effective_mcp(
             check=False,
         )
     except (OSError, subprocess.SubprocessError) as exc:
-        raise refuse(f"could not compute the effective MCP set ({type(exc).__name__}: {exc})") from exc
+        raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc)})") from exc
     if proc.returncode != 0:
-        raise refuse(f"`codex mcp list` exited {proc.returncode}: {proc.stderr.strip()[:200]}")
+        # Mask before truncating, so a cut never splits a log-unsafe value past the mask.
+        raise refuse(f"`codex mcp list` exited {proc.returncode}: {_redact(proc.stderr.strip(), log_unsafe)[:200]}")
     try:
         servers = json.loads(proc.stdout)
     except ValueError as exc:
@@ -548,6 +553,33 @@ def _agy_mcp_list_rows(stdout: str, refuse: Callable[[str], AgyReviewMcpGateErro
     return rows
 
 
+def _exc_reason(exc: BaseException) -> str:
+    """Describe an exception for a refusal without the absolute paths it may embed.
+
+    ``OSError`` carries the file name and ``SubprocessError`` the command line; both are paths
+    under the operator's home, so only the error class and OS reason are kept.
+    """
+    if isinstance(exc, OSError):
+        return f"{type(exc).__name__}: {exc.strerror or 'OS error'}"
+    if isinstance(exc, subprocess.TimeoutExpired):
+        return f"{type(exc).__name__} after {exc.timeout:g}s"
+    if isinstance(exc, subprocess.SubprocessError):
+        return type(exc).__name__
+    return f"{type(exc).__name__}: {exc}"
+
+
+def _redact(text: str, values: Mapping[str, str | None]) -> str:
+    """Replace each log-unsafe value in ``text`` with its label, longest value first.
+
+    Longest first makes a nested path (AGY_APP_DATA_DIR under HOME) collapse to its innermost
+    label. Empty and root values are skipped: masking ``/`` would mangle every path.
+    """
+    for label, value in sorted(values.items(), key=lambda item: len(item[1] or ""), reverse=True):
+        if value and value.strip("/"):
+            text = text.replace(value, label)
+    return text
+
+
 def _strict_json_object(text: str) -> Any:
     def no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
         keys = [key for key, _ in pairs]
@@ -577,16 +609,23 @@ def verify_agy_review_effective_mcp(
         AgyReviewMcpGateError: on any deviation, naming #8617.
     """
     config = Path(config_path)
+    # The launch environment is not log-safe: its HOME/AGY_APP_DATA_DIR and the operator's home
+    # can surface in probe output echoed into a refusal, so every refusal masks them.
+    log_unsafe = {
+        "$AGY_APP_DATA_DIR": env.get("AGY_APP_DATA_DIR"),
+        "$HOME": env.get("HOME"),
+        "~": os.path.expanduser("~"),
+    }
 
     def refuse(reason: str) -> AgyReviewMcpGateError:
-        return AgyReviewMcpGateError(f"agy review attempt refused: {reason} (#8617)")
+        return AgyReviewMcpGateError(f"agy review attempt refused: {_redact(reason, log_unsafe)} (#8617)")
 
     try:
         expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
         command = expected["command"]
         args = list(expected["args"])
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        raise refuse(f"cannot read the attempt MCP config {config}: {exc}") from exc
+        raise refuse(f"cannot read the attempt MCP config {config.name!r}: {_exc_reason(exc)}") from exc
     if not isinstance(expected.get("env"), dict) or set(expected["env"]) != set(ENV_KEYS):
         raise refuse("the attempt MCP config does not carry exactly the three LU_REVIEW_* variables")
 
@@ -596,7 +635,7 @@ def verify_agy_review_effective_mcp(
         # Name the variables, never their values: the launch environment is not log-safe.
         raise refuse("the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR")
     if (app_data / "mcp_config.json").exists() or (app_data / "mcp_config.json").is_symlink():
-        raise refuse(f"the scoped home has an unexpected {app_data / 'mcp_config.json'}")
+        raise refuse("the scoped AGY_APP_DATA_DIR holds an unexpected mcp_config.json")
 
     parts = [command, *args]
     if any(not isinstance(part, str) or not part or any(ch.isspace() for ch in part) for part in parts):
@@ -617,9 +656,10 @@ def verify_agy_review_effective_mcp(
             check=False,
         )
     except (OSError, subprocess.SubprocessError) as exc:
-        raise refuse(f"could not compute the effective MCP set ({type(exc).__name__}: {exc})") from exc
+        raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc)})") from exc
     if proc.returncode != 0:
-        raise refuse(f"`agy mcp list` exited {proc.returncode}: {proc.stderr.strip()[:200]}")
+        # Mask before truncating, so a cut never splits a log-unsafe value past the mask.
+        raise refuse(f"`agy mcp list` exited {proc.returncode}: {_redact(proc.stderr.strip(), log_unsafe)[:200]}")
 
     rows = _agy_mcp_list_rows(proc.stdout, refuse)
     if [row["name"] for row in rows] != ["sources"]:
@@ -636,7 +676,10 @@ def verify_agy_review_effective_mcp(
     try:
         loaded = _strict_json_object(scoped_config.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
-        raise refuse(f"cannot read the scoped agy MCP config {scoped_config}: {exc}") from exc
+        raise refuse(
+            f"cannot read the scoped agy MCP config (.gemini/config/mcp_config.json under the scoped HOME): "
+            f"{_exc_reason(exc)}"
+        ) from exc
     if not isinstance(loaded, dict) or set(loaded) != {"mcpServers"}:
         raise refuse("the scoped agy MCP config has keys other than mcpServers")
     servers = loaded["mcpServers"]

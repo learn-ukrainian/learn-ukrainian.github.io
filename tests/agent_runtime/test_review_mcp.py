@@ -1030,8 +1030,10 @@ def test_agy_missing_user_token_is_refused_before_anything_is_created(
     manifest_file: Path, tmp_path: Path, fake_agy_user_home: Path
 ) -> None:
     (fake_agy_user_home / "antigravity-oauth-token").unlink()
-    with pytest.raises(ValueError, match=r"OAuth token not found.*#8617"):
+    with pytest.raises(ValueError, match=r"OAuth token not found.*AGY_APP_DATA_DIR.*#8617") as refused:
         _prepare_agy(manifest_file, tmp_path)
+    # The refusal names the variable, never its value (#8652).
+    assert str(tmp_path) not in str(refused.value)
     assert list((tmp_path / "receipts" / "rev-agy-001").iterdir()) == []
 
 
@@ -1350,6 +1352,115 @@ def test_agy_gate_refuses_an_unreadable_attempt_config(tmp_path: Path) -> None:
         verify_agy_review_effective_mcp(
             config_path=tmp_path / "missing.mcp.json", cwd=tmp_path, env={}, agy_bin="/bin/true"
         )
+
+
+def test_agy_gate_refusals_never_embed_home_or_app_data_values(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """No refusal carries the scoped HOME / AGY_APP_DATA_DIR values or the operator's home (#8652).
+
+    Each case is one the gate used to answer with a path: its own message, an ``OSError``
+    file name, the missing binary's path, or probe output echoed back.
+    """
+    operator_home = tmp_path / "operator-home-marker-8652"
+    monkeypatch.setenv("HOME", str(operator_home))
+    plan = prepare_review_attempt(
+        review_id="rev-agy-001",
+        attempt_id="att-agy-001",
+        manifest_path=manifest_file,
+        harness="agy",
+        receipts_root=operator_home / "scoped-marker-8652" / "receipts",
+    )
+    env = _agy_env(plan)
+    app_data = Path(env["AGY_APP_DATA_DIR"])
+    scoped_config = agy_review_mcp_config_path(plan.agy_home)
+    good = _agy_table(_agy_good_rows(plan.config_path))
+    agy_bin = str(tmp_path / "fake-agy-bin" / "agy")
+    messages: list[str] = []
+
+    def refusal(*, binary: str = agy_bin, config_path: Path = plan.config_path) -> None:
+        with pytest.raises(AgyReviewMcpGateError, match=r"#8617") as refused:
+            verify_agy_review_effective_mcp(config_path=config_path, cwd=tmp_path, env=env, agy_bin=binary)
+        messages.append(str(refused.value))
+
+    _install_fake_agy(tmp_path, monkeypatch, good)
+    (app_data / "mcp_config.json").write_text("{}\n", encoding="utf-8")
+    refusal()
+    (app_data / "mcp_config.json").unlink()
+    original = scoped_config.read_text(encoding="utf-8")
+    scoped_config.unlink()
+    refusal()
+    scoped_config.write_text(original, encoding="utf-8")
+    refusal(binary=str(plan.agy_home / "no-such-agy"))
+    refusal(config_path=app_data / "missing.mcp.json")
+    _install_fake_agy(tmp_path, monkeypatch, good, body='echo "boom $HOME $AGY_APP_DATA_DIR" >&2\nexit 3\n')
+    refusal()
+    _install_fake_agy(tmp_path, monkeypatch, f"NAME TYPE {env['HOME']}\n")
+    refusal()
+    _install_fake_agy(tmp_path, monkeypatch, _agy_table([]) + f"sources  stdio  {env['AGY_APP_DATA_DIR']}\n")
+    refusal()
+
+    assert "unexpected mcp_config.json" in messages[0]
+    assert "cannot read the scoped agy MCP config" in messages[1]
+    assert "could not compute" in messages[2]
+    assert "cannot read the attempt MCP config" in messages[3]
+    # Echoed probe output keeps its shape, with each value replaced by the variable's name.
+    assert "boom $HOME $AGY_APP_DATA_DIR" in messages[4]
+    for message in messages:
+        for value in (env["HOME"], env["AGY_APP_DATA_DIR"], str(operator_home), "marker-8652", str(tmp_path)):
+            assert value not in message, message
+
+
+def test_codex_gate_refusals_never_embed_codex_home_or_home_values(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The Codex gate masks the scoped CODEX_HOME and the operator's home the same way (#8652)."""
+    operator_home = tmp_path / "operator-home-marker-8652"
+    monkeypatch.setenv("HOME", str(operator_home))
+    plan = prepare_review_attempt(
+        review_id="rev-codex-001",
+        attempt_id="att-codex-001",
+        manifest_path=manifest_file,
+        harness="codex",
+        receipts_root=operator_home / "scoped-marker-8652" / "receipts",
+    )
+    assert plan.codex_home is not None
+    bin_dir = tmp_path / "fake-bin"
+    bin_dir.mkdir()
+    script = bin_dir / "codex"
+    script.write_text('#!/bin/sh\necho "boom $CODEX_HOME $HOME" >&2\nexit 3\n', encoding="utf-8")
+    script.chmod(0o755)
+    messages: list[str] = []
+
+    def refusal(*, binary: str = str(script), config_path: Path = plan.config_path) -> None:
+        with pytest.raises(CodexReviewMcpGateError, match=r"#8517") as refused:
+            verify_codex_review_effective_mcp(config_path=config_path, cwd=tmp_path, codex_bin=binary)
+        messages.append(str(refused.value))
+
+    refusal()
+    refusal(binary=str(plan.codex_home / "no-such-codex"))
+    refusal(config_path=plan.codex_home / "missing.mcp.json")
+    (plan.codex_home / "config.toml").unlink()
+    refusal()
+
+    assert "boom $CODEX_HOME ~" in messages[0]
+    assert "could not compute" in messages[1]
+    assert "cannot read the attempt MCP config" in messages[2]
+    assert "scoped CODEX_HOME has no config.toml" in messages[3]
+    for message in messages:
+        for value in (str(plan.codex_home), str(operator_home), "marker-8652", str(tmp_path)):
+            assert value not in message, message
+
+
+def test_path_input_errors_name_the_file_never_its_directory(tmp_path: Path) -> None:
+    """Bad config names and a missing manifest are reported by file name only (#8652)."""
+    for helper in (codex_review_home_path, agy_review_home_path):
+        with pytest.raises(ValueError, match=r"must end in \.mcp\.json: 'att\.json'") as refused:
+            helper(tmp_path / "att.json")
+        assert str(tmp_path) not in str(refused.value)
+    with pytest.raises(FileNotFoundError, match=r"not found: 'missing\.yaml'") as refused:
+        prepare_review_attempt("rev-001", "att-001", tmp_path / "missing.yaml", "claude", receipts_root=tmp_path)
+    assert str(tmp_path) not in str(refused.value)
 
 
 def _agy_tool_config(plan, **extra) -> dict:
