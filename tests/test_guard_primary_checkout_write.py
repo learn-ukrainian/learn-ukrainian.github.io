@@ -1078,3 +1078,86 @@ def test_bash_write_targets_see_through_compound_keywords():
         "/tmp/b",
     ]
     assert hook.bash_write_targets("for i in 1; do echo x | tee /tmp/a; done") == ["/tmp/a"]
+
+
+@pytest.mark.parametrize(
+    "template, reason",
+    [
+        ("CDPATH={primary} cd agents_extensions; echo x > HOOKS.md", "undecidable_write_target_after_cd"),
+        ("env -C {primary} tee AGENTS.md", "AGENTS.md"),
+        ("env --chdir={primary} tee AGENTS.md", "AGENTS.md"),
+        ("sudo env -C {primary} tee AGENTS.md", "AGENTS.md"),
+        ("echo x >& {primary}/AGENTS.md", "AGENTS.md"),
+        ("echo x &>> {primary}/AGENTS.md", "AGENTS.md"),
+        ("echo x <> {primary}/AGENTS.md", "AGENTS.md"),
+        ("cp /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("mv /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("install -m 644 /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("ln -s /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("rsync -a /tmp/source {primary}/AGENTS.md", "AGENTS.md"),
+        ("cp -t {primary} /tmp/source", "primary"),
+        ("mv --target-directory={primary} /tmp/source", "primary"),
+        ("dd if=/tmp/source of={primary}/AGENTS.md", "AGENTS.md"),
+        ("eval 'echo x > {primary}/AGENTS.md'", "AGENTS.md"),
+        ('eval "$COMMAND {primary}/AGENTS.md"', "undecidable_eval_primary_target"),
+        ("eval 'git -C {primary} apply /tmp/change.diff'", "git_mediated_primary_worktree"),
+        ("echo {primary}/AGENTS.md | parallel tee", "undecidable_xargs_stdin_target"),
+        ("parallel -j 2 tee ::: {primary}/AGENTS.md", "undecidable_xargs_stdin_target"),
+        ("parallel cp /tmp/source ::: {primary}/AGENTS.md", "undecidable_xargs_stdin_target"),
+    ],
+)
+def test_issue_8785_review_writers_block(repo: Path, template: str, reason: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    command = template.format(primary=repo)
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(worktree), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+    assert reason in result.stderr
+
+
+def test_issue_8785_inherited_cdpath_makes_bare_relative_cd_unknown(repo: Path):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(
+        repo,
+        {
+            "tool_name": "Bash",
+            "cwd": str(worktree),
+            "tool_input": {"command": "cd agents_extensions; echo x > HOOKS.md"},
+        },
+        {"CDPATH": str(repo)},
+    )
+    assert result.returncode == 2, result.stderr
+    assert "undecidable_write_target_after_cd" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cd {primary} & echo x > guard-probe.txt",
+        "env -C {primary} echo x > guard-probe.txt",
+        "cd {primary} | cat; echo x > guard-probe.txt",
+        "echo x | cd {primary}; echo x > guard-probe.txt",
+        "cat {primary}/AGENTS.md",
+        "git -C {primary} log -1",
+        "echo x > /tmp/guard-probe.txt",
+        "find . -exec grep needle {{}} \\;",
+        "echo {primary}/AGENTS.md | xargs grep needle",
+        "cat <<'EOF'\necho x > {primary}/AGENTS.md\nEOF",
+        "cp /tmp/source {worktree}/copy.txt",
+        "rsync -a /tmp/source {worktree}/copy.txt",
+        "CDPATH=; cd ./local_state; echo x > scratch.json",
+        "CDPATH=; cd agents_extensions; echo x > scratch.json",
+        "echo x >&1",
+        "echo x >&-",
+    ],
+)
+def test_issue_8785_review_allowed_cases(repo: Path, command: str):
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    result = _run(
+        repo,
+        {
+            "tool_name": "Bash",
+            "cwd": str(worktree),
+            "tool_input": {"command": command.format(primary=repo, worktree=worktree)},
+        },
+    )
+    assert result.returncode == 0, result.stderr

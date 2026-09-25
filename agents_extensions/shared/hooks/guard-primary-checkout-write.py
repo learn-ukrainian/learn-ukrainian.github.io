@@ -27,14 +27,16 @@ Covered write surfaces
 * ``apply_patch`` and Codex ``Edit`` / ``Write`` aliases — file paths parsed from
   the ``*** Add/Update/Delete File:`` / ``*** Move to:`` headers of the patch
   body (issue #4447 verified Codex CLI fires PreToolUse for ``apply_patch``).
-* ``Bash`` — write-capable redirection (``>``, ``>>``, ``&>``), ``tee``, and
+* ``Bash`` — write-capable redirection (including ``>&`` file operands and
+  ``<>``), ``tee``, ``dd of=``, copy/move/link/install/rsync destinations, and
   in-place editors (``sed -i`` / ``perl -i``). Quote-aware tokenization keeps a
   ``>`` inside a quoted string (e.g. a commit message) from reading as a
   redirect. Literal ``cd``/``pushd`` change the base of following relative
   targets; uncertain navigation blocks those targets. Common command wrappers,
   ``find -exec`` writers, and executable substitutions in unquoted heredocs
-  feed the same writer parser. ``xargs`` writers with primary-path pipeline
-  literals block because stdin supplies an unknown target.
+  feed the same writer parser. Literal ``eval`` strings are parsed recursively.
+  ``xargs`` / ``parallel`` writers with primary-path literals block because
+  their generated arguments can supply an unknown target.
 * ``Bash`` git-mediated working-tree writes (issues #5396 / #5517) — ``git apply`` /
   ``git am``, ``git add``, ``git stash pop|apply``, ``git mv`` / ``git rm``,
   ``git checkout <ref> -- <path>``, ``git checkout <ref> <path>`` (no ``--``),
@@ -79,8 +81,8 @@ command never assigns (other than ``HOME``) are unknown too.
 
 Coverage limitations (documented, by design)
 --------------------------------------------
-* Bash write detection is heuristic. Arbitrary write vectors — ``dd of=``,
-  ``cp``/``mv`` destinations, ``python -c "open(...,'w')"``, ``$EDITOR`` — are
+* Bash write detection is heuristic. Arbitrary write vectors —
+  ``python -c "open(...,'w')"``, ``$EDITOR`` — are
   **not** parsed. Those paths rely on physical worktree isolation plus the
   monitor tripwire (#4449) and git shim (#4450).
 * Codex Desktop direct-edit interception is unverified (#4447). Where a provider
@@ -259,9 +261,9 @@ def write_tool_targets(tool_input: dict) -> list[str]:
 # Control operators that separate one logical command from the next.
 _CONTROL_OPS = frozenset({"&&", "||", ";", ";;", "|", "|&", "&", "(", ")", "\n"})
 
-# Redirection operators that create/append to a *file* (as opposed to ``>&``
-# which duplicates a file descriptor). ``&>`` / ``&>>`` redirect both streams.
-_FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>"})
+# ``>&`` duplicates a descriptor only for a numeric operand (or closes it for
+# ``-``); otherwise it opens a file. ``<>`` opens read-write and can create.
+_FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>", ">&", "<>"})
 
 
 def _strip_quotes_for_heredoc(token: str) -> str:
@@ -859,14 +861,16 @@ def _expanded_segments(command: str) -> list[ShellSegment]:
 
 
 def _redirect_targets(tokens: list[str]) -> list[str]:
-    """Files named as the destination of a ``>``/``>>``/``&>`` redirection."""
+    """Files opened for writing by shell redirections."""
     targets: list[str] = []
     for i, tok in enumerate(tokens):
         if tok in _FILE_REDIRECTS and i + 1 < len(tokens):
             dest = tokens[i + 1]
-            # ``>&1`` / ``> &2`` duplicate a descriptor, and a bare number is a
-            # descriptor too — neither is a file write.
-            if dest.startswith("&") or dest.isdigit():
+            # ``>&1`` duplicates a descriptor; ``>&-`` closes it. Ordinary
+            # ``> 123`` writes a file named 123, so only ``>&`` gets this rule.
+            if tok == ">&" and (dest.isdigit() or dest == "-"):
+                continue
+            if tok != ">&" and dest.startswith("&"):
                 continue
             targets.append(dest)
     return targets
@@ -987,14 +991,74 @@ def _inplace_edit_targets(segment: list[str], cmd_index: int) -> list[str]:
     return files if has_inplace else []
 
 
-def _writer_targets(segment: list[str], *, cwd: str | None, main_root: Path | None, depth: int) -> list[str]:
+_DESTINATION_WRITERS = frozenset({"cp", "mv", "install", "ln", "rsync"})
+
+
+def _destination_targets(segment: list[str], cmd_index: int, command: str) -> list[str]:
+    """Destination operand, including GNU target-directory forms where valid."""
+    args = segment[cmd_index + 1 :]
+    positionals: list[str] = []
+    target_dir: str | None = None
+    options_done = False
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        if not options_done and arg == "--":
+            options_done = True
+        elif not options_done and command != "rsync" and arg in {"-t", "--target-directory"}:
+            if i + 1 < len(args):
+                target_dir = args[i + 1]
+                i += 1
+        elif not options_done and command != "rsync" and arg.startswith("--target-directory="):
+            target_dir = arg.tail(len("--target-directory=")) if isinstance(arg, ShellWord) else arg.split("=", 1)[1]
+        elif not options_done and command != "rsync" and arg.startswith("-t") and len(arg) > 2:
+            target_dir = arg.tail(2) if isinstance(arg, ShellWord) else arg[2:]
+        elif options_done or not arg.startswith("-") or arg == "-":
+            positionals.append(arg)
+        i += 1
+    if target_dir is not None:
+        return [target_dir]
+    return [positionals[-1]] if len(positionals) >= 2 else []
+
+
+def _dd_targets(segment: list[str], cmd_index: int) -> list[str]:
+    return [
+        arg.tail(3) if isinstance(arg, ShellWord) else arg[3:]
+        for arg in segment[cmd_index + 1 :]
+        if arg.startswith("of=")
+    ]
+
+
+def _writer_targets(
+    segment: list[str], *, cwd: str | None, redirect_cwd: str | None, main_root: Path | None, depth: int
+) -> list[str]:
     """Targets of the writer in one expanded segment, including exec wrappers."""
     targets = _redirect_targets(segment)
+    for target in targets:
+        if isinstance(target, ShellWord):
+            target.base = redirect_cwd
+            if redirect_cwd is None and not Path(target).is_absolute():
+                target.decision_reason = "undecidable_write_target_after_cd"
     cmd, idx = _command_word(segment)
     if cmd == "tee":
         targets.extend(_tee_targets(segment, idx))
     elif cmd in ("sed", "perl"):
         targets.extend(_inplace_edit_targets(segment, idx))
+    elif cmd in _DESTINATION_WRITERS:
+        targets.extend(_destination_targets(segment, idx, cmd))
+    elif cmd == "dd":
+        targets.extend(_dd_targets(segment, idx))
+    elif cmd == "eval" and depth < 3:
+        args = segment[idx + 1 :]
+        if any(getattr(arg, "unresolved_at", None) is not None for arg in args):
+            if main_root is not None and any(
+                _eval_names_primary_literal(str(arg), cwd or "/", main_root) for arg in args
+            ):
+                unknown = ShellWord("eval dynamic primary target")
+                unknown.decision_reason = "undecidable_eval_primary_target"
+                targets.append(unknown)
+        else:
+            targets.extend(bash_write_targets(" ".join(args), cwd=cwd, main_root=main_root, depth=depth + 1))
     elif cmd in {"sh", "bash"} and depth < 3:
         args = segment[idx + 1 :]
         if "-c" in args:
@@ -1005,7 +1069,9 @@ def _writer_targets(segment: list[str], *, cwd: str | None, main_root: Path | No
         for i, tok in enumerate(segment[idx + 1 :], idx + 1):
             if tok in {"-exec", "-execdir", "-ok", "-okdir"}:
                 exec_cwd = None if tok.endswith("dir") else cwd
-                for target in _writer_targets(segment[i + 1 :], cwd=exec_cwd, main_root=main_root, depth=depth + 1):
+                for target in _writer_targets(
+                    segment[i + 1 :], cwd=exec_cwd, redirect_cwd=exec_cwd, main_root=main_root, depth=depth + 1
+                ):
                     if exec_cwd is None and not Path(target).is_absolute():
                         target = target if isinstance(target, ShellWord) else ShellWord(str(target))
                         if target.base is None and target.decision_reason is None:
@@ -1016,7 +1082,7 @@ def _writer_targets(segment: list[str], *, cwd: str | None, main_root: Path | No
 
 def _xargs_writer(segment: list[str]) -> bool:
     cmd, idx = _command_word(segment)
-    if cmd != "xargs":
+    if cmd not in {"xargs", "parallel"}:
         return False
     args = segment[idx + 1 :]
     i = 0
@@ -1027,6 +1093,8 @@ def _xargs_writer(segment: list[str]) -> bool:
         "--max-lines",
         "-P",
         "--max-procs",
+        "-j",
+        "--jobs",
         "-I",
         "--replace",
         "-s",
@@ -1037,7 +1105,7 @@ def _xargs_writer(segment: list[str]) -> bool:
     while i < len(args) and args[i].startswith("-"):
         i += 2 if args[i] in value_opts else 1
     writer, _ = _command_word(args[i:])
-    return writer in {"tee", "sed", "perl"}
+    return writer in {"tee", "sed", "perl", "dd", *_DESTINATION_WRITERS}
 
 
 def _names_primary_literal(word: str, cwd: str, main_root: Path) -> bool:
@@ -1052,18 +1120,87 @@ def _names_primary_literal(word: str, cwd: str, main_root: Path) -> bool:
     return relative.parts[:2] != (".worktrees", "dispatch")
 
 
+def _eval_names_primary_literal(word: str, cwd: str, main_root: Path) -> bool:
+    """Find a primary path even when a dynamic eval word has a prefix."""
+    if _names_primary_literal(word, cwd, main_root):
+        return True
+    start = word.find(str(main_root))
+    while start >= 0:
+        candidate = re.split(r"[\s'\"]", word[start:], maxsplit=1)[0]
+        if _names_primary_literal(candidate, cwd, main_root):
+            return True
+        start = word.find(str(main_root), start + 1)
+    return False
+
+
+def _env_command_cwd(segment: list[str], cwd: str | None) -> str | None:
+    """Apply ``env -C`` / ``--chdir`` before resolving a wrapped writer."""
+    _, command_index = _command_word(segment)
+    i = 0
+    while i < command_index:
+        if segment[i] != "env":
+            i += 1
+            continue
+        i += 1
+        while i < command_index:
+            arg = segment[i]
+            if arg in {"-C", "--chdir"} and i + 1 < len(segment):
+                path = segment[i + 1]
+                i += 2
+            elif arg.startswith("--chdir="):
+                path = arg.tail(len("--chdir=")) if isinstance(arg, ShellWord) else arg.split("=", 1)[1]
+                i += 1
+            else:
+                path = None
+            if path is not None:
+                if getattr(path, "unresolved_at", None) is not None or re.search(r"[*?\[\]{}]", path):
+                    cwd = None
+                elif Path(path).is_absolute():
+                    cwd = str(Path(path).resolve())
+                elif cwd is not None:
+                    cwd = str(_resolve(path, cwd, expand_user=False).resolve())
+                continue
+            if arg in {"-u", "--unset", "-S", "--split-string"}:
+                i += 2
+            elif (
+                arg in {"-i", "--ignore-environment", "-0", "--null", "--"}
+                or arg.startswith("--unset=")
+                or _ASSIGN_RE.match(arg)
+            ):
+                i += 1
+            else:
+                break
+    return cwd
+
+
+def _cdpath_binding(segment: list[str]) -> bool | None:
+    """Return an explicit CDPATH binding, or None when untouched."""
+    cmd, idx = _command_word(segment)
+    if cmd == "unset" and "CDPATH" in segment[idx + 1 :]:
+        return True
+    for word in segment:
+        if word.startswith("CDPATH="):
+            return word == "CDPATH="
+    return None
+
+
 def _segments_with_cwd(command: str, cwd: str | None):
     """Yield expanded segments with the cwd they execute from."""
     scope_cwds: dict[tuple[int, ...], str | None] = {(): cwd}
     scope_dirs: dict[tuple[int, ...], list[str | None]] = {(): []}
+    scope_cdpath_empty: dict[tuple[int, ...], bool] = {(): False}
     for segment in _expanded_segments(command):
         scope = segment.scope
         if scope not in scope_cwds:
             scope_cwds[scope] = scope_cwds.get(scope[:-1], cwd)
             scope_dirs[scope] = list(scope_dirs.get(scope[:-1], []))
+            scope_cdpath_empty[scope] = scope_cdpath_empty.get(scope[:-1], False)
         effective_cwd = scope_cwds[scope]
         cmd, idx = _command_word(segment)
-        if cmd in {"cd", "pushd"} and segment.prev_op not in {"|", "|&"} and segment.next_op not in {"|", "|&"}:
+        isolated = segment.prev_op in {"|", "|&"} or segment.next_op in {"|", "|&", "&"}
+        cdpath_binding = _cdpath_binding(segment)
+        cdpath_empty_here = cdpath_binding if cdpath_binding is not None else scope_cdpath_empty[scope]
+        if cmd in {"cd", "pushd"} and not isolated:
             args = [word for word in segment[idx + 1 :] if not word.startswith("-")]
             path = args[0] if args else None
             if cmd == "pushd":
@@ -1073,13 +1210,23 @@ def _segments_with_cwd(command: str, cwd: str | None):
                 or path.unresolved_at is not None
                 or re.search(r"[*?\[\]{}]", path)
                 or (not Path(path).is_absolute() and effective_cwd is None)
+                or (not Path(path).is_absolute() and not str(path).startswith(("./", "../")) and not cdpath_empty_here)
             ):
                 scope_cwds[scope] = None
             else:
                 scope_cwds[scope] = str(_resolve(path, effective_cwd or "/", expand_user=False).resolve())
-        elif cmd == "popd" and segment.prev_op not in {"|", "|&"} and segment.next_op not in {"|", "|&"}:
+        elif cmd == "popd" and not isolated:
             scope_cwds[scope] = scope_dirs[scope].pop() if scope_dirs[scope] else None
-        yield segment, effective_cwd
+        # Prefix assignments (``CDPATH= cmd``) affect only that command.
+        # Conditional assignment may not run, so it can only invalidate a
+        # known-empty binding; it cannot establish one for later commands.
+        persists = cmd == "" or cmd in _BINDING_DECLARATIONS or cmd == "unset"
+        if cdpath_binding is not None and persists and not isolated:
+            if segment.prev_op in _STATEMENT_START:
+                scope_cdpath_empty[scope] = cdpath_binding
+            elif not cdpath_binding:
+                scope_cdpath_empty[scope] = False
+        yield segment, _env_command_cwd(segment, effective_cwd), effective_cwd
 
 
 def bash_write_targets(
@@ -1087,17 +1234,19 @@ def bash_write_targets(
 ) -> list[str]:
     """Best-effort list of files a Bash command would create/modify.
 
-    Covers redirection, ``tee``, and ``sed -i``/``perl -i``. Other write
+    Covers redirection and the writer commands listed above. Other write
     vectors are intentionally out of scope (see module docstring); they rely on
     physical worktree isolation and the monitor/git-shim layers.
     """
     targets: list[str] = []
     pipeline: list[str] = []
-    for segment, effective_cwd in _segments_with_cwd(command, cwd):
+    for segment, effective_cwd, shell_cwd in _segments_with_cwd(command, cwd):
         if segment.prev_op not in {"|", "|&"}:
             pipeline = []
         pipeline.extend(segment)
-        segment_targets = _writer_targets(segment, cwd=effective_cwd, main_root=main_root, depth=depth)
+        segment_targets = _writer_targets(
+            segment, cwd=effective_cwd, redirect_cwd=shell_cwd, main_root=main_root, depth=depth
+        )
         if (
             _xargs_writer(segment)
             and main_root is not None
@@ -1197,7 +1346,7 @@ def _is_git_binary(cmd: str) -> bool:
     return cmd in {"git", "git.exe"} or cmd.endswith("/git")
 
 
-def bash_git_write_intents(command: str, *, cwd: str | None = None) -> list[dict[str, object]]:
+def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int = 0) -> list[dict[str, object]]:
     """Parse Bash for git-mediated working-tree mutations (issue #5396).
 
     Each intent is a dict::
@@ -1220,8 +1369,13 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None) -> list[dict
         intent["segment_cwd"] = effective_cwd
         intents.append(intent)
 
-    for segment, effective_cwd in _segments_with_cwd(command, cwd):  # noqa: B007 - record captures cwd
+    for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
         cmd, idx = _command_word(segment)
+        if cmd == "eval" and depth < 3:
+            args = segment[idx + 1 :]
+            if all(getattr(arg, "unresolved_at", None) is None for arg in args):
+                intents.extend(bash_git_write_intents(" ".join(args), cwd=effective_cwd, depth=depth + 1))
+            continue
         if not _is_git_binary(cmd):
             continue
         c_path, rest = _git_global_prefix(segment[idx + 1 :])
