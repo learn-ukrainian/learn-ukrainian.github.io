@@ -24,6 +24,8 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
+pytestmark = pytest.mark.repo_wide
+
 # Symbols KILLed by PR-A/PR-B/PR-C/PR-D. Present in scripts/build/ → test fails.
 FORBIDDEN_SYMBOLS_ACTIVE: tuple[str, ...] = (
     # PR-A (M1/M2/M3 convergence tiers)

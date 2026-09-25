@@ -8,10 +8,10 @@ replacement, not the old two-tier merge-queue file.
 
 | Job | When |
 | --- | --- |
-| Changes | always (`docs_only` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates`) |
+| Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates`) |
 | Ruff | not docs-only |
 | Secret scan | always |
-| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates; `docs` → 1 `docs_skills` shard; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
+| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
 | TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |
@@ -79,6 +79,90 @@ test files, empty or ≥80 candidates, and anything outside the allowlist stay
 `docs_only=false`. After merge, the CI stream owner tracks one week of
 `ci_timings` on the private work item (selected may be rare under on-disk stem
 collision conservatism).
+
+## Repo-wide tests always run in the selected and docs tiers (#8707)
+
+Import selection can never pick a test that scans the repository's own trees:
+the Changes job links a changed `scripts/foo.py` to `tests/**/test_foo*.py` (and
+a changed `tests/test_x.py` to itself), but a test scanning `tests/` or
+`scripts/` has no import edge to the changed module. That is how PR #8692
+merged green on the selected tier and then turned `main` red on shard 3 for
+every full-tier run: `tests/test_lint_test_assertions.py::test_repo_test_suite_is_clean`
+scans all of `tests/` and was never selected for a `tests/orchestration/test_thread_handoff.py`
+change.
+
+Such tests carry the `repo_wide` marker (registered in `pyproject.toml`). After
+the candidate run, a `selected` shard runs the marked set under its own narrow
+allowlist:
+
+```
+git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
+  | xargs -r grep -lE 'pytest\.mark\.repo_wide' | sort
+LU_PYTEST_SHARD_FILES=<that list> pytest tests \
+  -m 'repo_wide and not slow and not atlas_release' -n logical --dist=loadfile ...
+```
+
+The narrow allowlist keeps collection cheap (the full tree is ~2 minutes to
+collect); the known set currently runs ~400 tests in under two minutes. An
+empty list fails the step loudly. The grep matches the exact marker
+declaration, not a bare `repo_wide` mention, so a comment or an unrelated
+string cannot pull a file into the allowlist (the `-m` filter would skip it
+anyway, but the list stays honest).
+
+The **docs lane** runs the same `-m repo_wide` invocation after its
+`docs_skills` run. Docs-lane PRs reach no other pytest leg, and several
+repo-wide scanners read `docs/`: `tests/test_work_privacy.py`,
+`tests/test_agent_fleet_tooling_guardrails.py`, and
+`tests/test_public_tree_no_baked_host_run_root.py`. A docs-only PR that adds a
+baked host path under `docs/` is therefore caught before merge.
+
+The **content lane** deliberately runs no `-m repo_wide` leg: content mode runs
+`-m 'reads_content and not slow and not atlas_release'` (plus the shard safety
+net), so a scanner of a content root is selected by its `reads_content` marker
+without a repo-wide pass. Which lane a content-only PR reaches decides whether
+that marker is enough:
+
+- A PR whose paths are all content-class and include a `site/src/content/docs/`
+  path lands on the **content lane**, which runs `reads_content`: scanners of
+  that tree, for example `tests/test_site_links.py`, run here.
+- A PR touching only `curriculum/` or `wiki/` — no `site/src/content/docs/`
+  path — is docs-only and lands on the **docs lane**. Since #8720 the docs lane
+  also runs `-m 'reads_content and not slow and not atlas_release'` (under the
+  same narrow allowlist as the `repo_wide` leg) whenever the flag
+  `docs_reads_content` is `true`, which `classify_changes.py` sets only for a
+  docs-lane result with some path under `curriculum/` or `wiki/`. This closes
+  the gap that let PR #8712 (a docs-only change) merge green and turn `main`
+  red on the next full-tier run: `docs/epics/fresh-build-build-program.md` is a
+  hashed source of every `curriculum/l2-uk-en/lesson-plans/<lvl>/_decisions.yaml`,
+  and `tests/curriculum/arc/test_decisions_record.py` (a `reads_content` module)
+  went red on `main`. A few curriculum and wiki scanners are marked `repo_wide`
+  and ran there before #8720: `tests/test_ohoiko_source_inventory_scope.py`,
+  `tests/test_prompt_template_render.py`, `tests/test_a1_review_scores.py`,
+  `tests/test_aggregate_findings.py`, `tests/test_schema_validation.py`
+  (`test_a2_plans_match_module_schema`), and the reference checks in
+  `tests/test_skill_instruction_routes.py`; the new `reads_content` leg is what
+  covers the rest.
+
+Repo-wide tests that read a content tree and must also run on the content lane
+carry `reads_content` as well: `tests/test_llm_reviewer_dispatch.py`,
+`tests/test_threshold_source_of_truth.py`, `tests/test_sparse_collection_guard.py`,
+`tests/test_public_tree_no_baked_host_run_root.py`,
+`tests/api/test_app_factory.py`, and
+`tests/test_curriculum_upgrade_no_host_run_root.py` are marked both ways, and
+none is `slow`/`atlas_release`.
+
+`tests/test_repo_wide_marker_invariant.py` keeps the marker honest. Marker
+detection is syntactic and per-function (AST): a test counts only when its own
+`@pytest.mark.repo_wide` decorator, its class decorator, or a module-level
+`pytestmark` contains `pytest.mark.repo_wide`, so decorator order and comments
+do not matter and a module with two scanners and one marker fails. The
+authoritative guarantee is the explicit registry of known repo-wide
+modules/functions plus a reasoned `NOT_REPO_WIDE` escape hatch; the AST
+heuristic over each test module (repo-rooted `.glob`/`.rglob`,
+`os.walk`/`os.scandir`, `git ls-files`/`ls-tree` through `subprocess`, and
+known whole-tree linters, propagated through helper calls) is a best-effort
+net. The invariant also fails when the selected tier or the docs lane drops
+its `-m repo_wide` invocation.
 
 No CF attest. No auto-arm. No landing-class classifier. No coverage floor.
 Red team review is out of band.

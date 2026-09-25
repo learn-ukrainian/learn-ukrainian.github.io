@@ -96,6 +96,9 @@ class ActiveDatabaseResolution:
     is_local: bool
     refused_network: bool
     reason: str
+    size_bytes: int | None = None
+    journal_mode: str | None = None
+    wal_bytes: int | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -104,7 +107,38 @@ class ActiveDatabaseResolution:
             "is_local": self.is_local,
             "refused_network": self.refused_network,
             "reason": self.reason,
+            "size_bytes": self.size_bytes,
+            "journal_mode": self.journal_mode,
+            "wal_bytes": self.wal_bytes,
         }
+
+
+def _sqlite_header_journal_mode(path: Path) -> str | None:
+    """Read-only journal-mode probe from SQLite header bytes 18-19 (2,2 = WAL; 1,1 = rollback journal)."""
+    try:
+        with path.open("rb") as stream:
+            header = stream.read(20)
+    except OSError:
+        return None
+    if len(header) < 20 or header[:16] != b"SQLite format 3\x00":
+        return None
+    if header[18] == 2 and header[19] == 2:
+        return "wal"
+    if header[18] == 1 and header[19] == 1:
+        return "delete"
+    return "unknown"
+
+
+def _database_facts(path: Path) -> dict[str, Any]:
+    """Size, journal mode, and WAL sidecar size of an on-disk SQLite file (never opens a connection)."""
+    if not path.is_file():
+        return {"size_bytes": None, "journal_mode": None, "wal_bytes": None}
+    wal = path.with_name(f"{path.name}-wal")
+    return {
+        "size_bytes": path.stat().st_size,
+        "journal_mode": _sqlite_header_journal_mode(path),
+        "wal_bytes": wal.stat().st_size if wal.is_file() else 0,
+    }
 
 
 @dataclass(frozen=True)
@@ -477,6 +511,7 @@ def resolve_active_sources_db(
             is_local=not is_network_filesystem_path(path),
             refused_network=False,
             reason="LU_SOURCES_DB",
+            **_database_facts(path),
         )
 
     path = root / "data" / "sources.db"
@@ -495,6 +530,7 @@ def resolve_active_sources_db(
         is_local=not network,
         refused_network=False,
         reason="repository_local_data_sources_db",
+        **_database_facts(path),
     )
 
 

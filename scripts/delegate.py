@@ -145,11 +145,27 @@ from scripts.common.scratch import (
     resolve_scratch_root,
     scratch_scan_roots,
 )
+from scripts.config import (
+    DELEGATE_WORKTREE_ADD_MAX_S,
+    DELEGATE_WORKTREE_ADD_STALL_S,
+    DELEGATE_WORKTREE_ADD_TIMEOUT_S,
+)
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
-from scripts.orchestration import dispatch_admission, reaper_lifecycle, task_record_store, worktree_claims
-from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal, task_state_lock, write_state_unlocked
+from scripts.orchestration import (
+    dispatch_admission,
+    reaper_lifecycle,
+    task_record_store,
+    worktree_claims,
+    worktree_prep,
+)
+from scripts.orchestration.dead_worker_state import (
+    mark_dead_worker_terminal,
+    mark_orphaned_worktree_prep_crashed,
+    task_state_lock,
+    write_state_unlocked,
+)
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
@@ -1301,6 +1317,452 @@ def _auto_worktree_path(agent: str, task_id: str, *, repo_root: Path | None = No
     return root / ".worktrees" / "dispatch" / agent / safe
 
 
+# ``git worktree add`` bounds, configurable in scripts/config.py (#8663). Tests
+# shrink them here instead of generating host load.
+_WORKTREE_ADD_TIMEOUT_S: float = DELEGATE_WORKTREE_ADD_TIMEOUT_S
+_WORKTREE_ADD_STALL_S: float = DELEGATE_WORKTREE_ADD_STALL_S
+_WORKTREE_ADD_MAX_S: float = DELEGATE_WORKTREE_ADD_MAX_S
+# How often a slow add's checkout is re-counted once the base window has passed.
+_WORKTREE_ADD_POLL_S: float = 5.0
+# How long a stopped add gets to run git's own cleanup after SIGTERM, and to
+# exit after SIGKILL.
+_WORKTREE_ADD_STOP_GRACE_S: float = 30.0
+
+_GIT_INITIALIZING_LOCK_REASON = worktree_prep.INITIALIZING_LOCK_REASON
+
+
+class WorktreeAddFailed(RuntimeError):
+    """``git worktree add`` failed or timed out before any worker was spawned (#8663).
+
+    ``cleanup`` records what dispatch found and did after the add; the failed
+    task record carries it as ``worktree_prep_cleanup``. ``prep`` is this
+    call's path reservation, stored as ``worktree_prep``, or ``None`` when the
+    path could not be reserved.
+    """
+
+    def __init__(self, message: str, *, cleanup: dict[str, Any], prep: dict[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.cleanup = cleanup
+        self.prep = prep
+
+
+class WorktreeAddTimeout(subprocess.TimeoutExpired):
+    """A stopped ``git worktree add``; ``git_exited`` says whether its exit was confirmed."""
+
+    def __init__(self, cmd: list[str], timeout: float, *, git_exited: bool) -> None:
+        super().__init__(cmd, timeout)
+        self.git_exited = git_exited
+
+
+def _checkout_entry_count(path: Path) -> int:
+    """Count the files and directories under ``path``, skipping ``.git``.
+
+    The progress signal for a slow ``git worktree add``: a checkout that is
+    still being written keeps gaining entries. Entries that vanish mid-walk
+    are skipped; a missing ``path`` counts as zero.
+    """
+    count = 0
+    pending = [path]
+    while pending:
+        try:
+            with os.scandir(pending.pop()) as entries:
+                for entry in entries:
+                    if entry.name == ".git":
+                        continue
+                    count += 1
+                    try:
+                        if entry.is_dir(follow_symlinks=False):
+                            pending.append(Path(entry.path))
+                    except OSError:
+                        continue
+        except OSError:
+            continue
+    return count
+
+
+def _stop_worktree_add(proc: subprocess.Popen[str]) -> bool:
+    """Stop a slow ``git worktree add`` and its checkout child.
+
+    SIGTERM goes to the whole process group first, and git gets
+    :data:`_WORKTREE_ADD_STOP_GRACE_S` to run its own signal cleanup, which
+    deletes the worktree directory and admin directory it was building.
+    SIGKILL follows only after that grace. Returns whether the add was
+    confirmed exited; a process that outlives even SIGKILL (for example one
+    stuck in uninterruptible I/O) may still write, so nothing may be touched
+    while this is False.
+    """
+    for sig in (signal.SIGTERM, signal.SIGKILL):
+        with contextlib.suppress(ProcessLookupError, PermissionError):
+            os.killpg(proc.pid, sig)
+        try:
+            proc.communicate(timeout=_WORKTREE_ADD_STOP_GRACE_S)
+            return True
+        except subprocess.TimeoutExpired:
+            continue
+    return False
+
+
+def _run_worktree_add(
+    add_command: list[str],
+    *,
+    cwd: Path,
+    worktree_path: Path,
+    env: dict[str, str] | None = None,
+    on_spawn: Callable[[int], None] | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run ``git worktree add`` with a progress-aware bound (#8663).
+
+    The add always gets :data:`_WORKTREE_ADD_TIMEOUT_S`. After that it keeps
+    running while the checkout at ``worktree_path`` is still gaining entries,
+    is stopped once it gains none for :data:`_WORKTREE_ADD_STALL_S`, and is
+    never allowed past :data:`_WORKTREE_ADD_MAX_S`. A stopped add (see
+    :func:`_stop_worktree_add`) raises :class:`WorktreeAddTimeout`. The add
+    runs in the C locale so the lock reason git holds during it is the
+    literal ``initializing``. ``on_spawn`` receives git's pid as soon as it
+    is spawned.
+    """
+    add_env = dict(os.environ if env is None else env)
+    add_env["LC_ALL"] = "C"
+    add_env.pop("LANGUAGE", None)
+    proc = subprocess.Popen(
+        add_command,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=add_env,
+        # Its own process group, so a stop also reaches the checkout child.
+        start_new_session=True,
+    )
+    started = time.monotonic()
+    if on_spawn is not None:
+        on_spawn(proc.pid)
+    poll_s = max(min(_WORKTREE_ADD_POLL_S, _WORKTREE_ADD_STALL_S), 0.01)
+    last_count: int | None = None
+    last_growth = started
+    while True:
+        elapsed = time.monotonic() - started
+        if elapsed < _WORKTREE_ADD_TIMEOUT_S:
+            wait_s = min(_WORKTREE_ADD_TIMEOUT_S, _WORKTREE_ADD_MAX_S) - elapsed
+        else:
+            wait_s = min(poll_s, _WORKTREE_ADD_MAX_S - elapsed)
+        try:
+            stdout, stderr = proc.communicate(timeout=max(wait_s, 0.01))
+        except subprocess.TimeoutExpired:
+            pass
+        else:
+            return subprocess.CompletedProcess(add_command, proc.returncode, stdout, stderr)
+        now = time.monotonic()
+        if now - started >= _WORKTREE_ADD_MAX_S:
+            break
+        if now - started < _WORKTREE_ADD_TIMEOUT_S:
+            continue
+        count = _checkout_entry_count(worktree_path)
+        if last_count is None or count > last_count:
+            last_count = count
+            last_growth = now
+        elif now - last_growth >= _WORKTREE_ADD_STALL_S:
+            break
+    git_exited = _stop_worktree_add(proc)
+    raise WorktreeAddTimeout(add_command, time.monotonic() - started, git_exited=git_exited)
+
+
+def _worktree_registration(repo_root: Path, worktree_path: Path) -> tuple[bool, str | None] | None:
+    """Return whether ``repo_root`` registers ``worktree_path`` and its lock reason.
+
+    The lock reason is ``None`` for an unlocked worktree and ``""`` for a lock
+    without a reason. Returns ``None`` when git cannot list its worktrees.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+            env=_sanitized_git_env(),
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    target = worktree_path.resolve()
+    registered = False
+    lock_reason: str | None = None
+    for line in (proc.stdout or "").splitlines():
+        if line.startswith("worktree "):
+            if registered:
+                break
+            registered = Path(line.removeprefix("worktree ")).resolve() == target
+            lock_reason = None
+        elif registered and (line == "locked" or line.startswith("locked ")):
+            lock_reason = line.removeprefix("locked").strip()
+    return registered, lock_reason if registered else None
+
+
+def _is_own_worktree_prep_record(state: dict[str, Any], run_nonce: str) -> bool:
+    """True when ``state`` is this run's pre-``git worktree add`` reservation record."""
+    prep = state.get("worktree_prep")
+    return (
+        state.get("run_nonce") == run_nonce
+        and state.get("pid", False) is None
+        and isinstance(prep, dict)
+        and prep.get("run_nonce") == run_nonce
+    )
+
+
+def _publish_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -> None:
+    """Record this run's path reservation in its task record before git starts (#8663).
+
+    The record says ``spawning`` with ``pid: null`` (dispatch is preparing,
+    no worker exists yet), so claim scans treat the path as taken while the
+    add runs, and a dispatcher that dies meanwhile is detectable from the
+    recorded owner. The terminal record a failed add later writes keeps
+    ``worktree_prep`` as evidence for the reaper's report. Raises
+    ``RuntimeError`` rather than overwrite a live record of another run.
+    """
+    state_path = _state_path(task_id)
+    with task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if (
+            existing is not None
+            and existing.get("status") in ("running", "spawning")
+            and not _is_own_worktree_prep_record(existing, run_nonce)
+        ):
+            raise RuntimeError(f"task record for {task_id!r} is {existing.get('status')}; refusing to overwrite it")
+        write_state_unlocked(
+            state_path,
+            {
+                "task_id": task_id,
+                "run_nonce": run_nonce,
+                "status": "spawning",
+                "pid": None,
+                "cwd": prep["path"],
+                "worktree_path": prep["path"],
+                "started_at": prep["reserved_at"],
+                "finished_at": None,
+                "worktree_prep": prep,
+            },
+        )
+
+
+def _update_worktree_prep(task_id: str, run_nonce: str, prep: dict[str, Any]) -> None:
+    """Rewrite ``worktree_prep`` in this run's provisional record; best effort."""
+    state_path = _state_path(task_id)
+    with contextlib.suppress(OSError), task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if existing is not None and _is_own_worktree_prep_record(existing, run_nonce):
+            existing["worktree_prep"] = dict(prep)
+            write_state_unlocked(state_path, existing)
+
+
+def _retire_worktree_prep(task_id: str, run_nonce: str) -> None:
+    """Drop this run's reservation record once its ``git worktree add`` succeeded.
+
+    Dispatch publishes the full task record next; until then no record
+    claims the finished worktree, exactly as before reservations existed.
+    """
+    state_path = _state_path(task_id)
+    with contextlib.suppress(OSError), task_state_lock(state_path):
+        existing = _read_state_json(state_path)
+        if existing is not None and _is_own_worktree_prep_record(existing, run_nonce):
+            state_path.unlink(missing_ok=True)
+
+
+def _leave_reservation(worktree_path: Path, prep: dict[str, Any]) -> dict[str, Any]:
+    """Report the reserved directory a failed add left unregistered; never remove it (#8663).
+
+    Git 2.53 can write another add's admin registration while this path is
+    still empty and before its ``.git`` exists, so no ``rmdir`` of the
+    reservation is safe. The directory stays as it is, empty or not, and
+    ``reserved_dir_left`` is recorded in ``prep`` and the returned report.
+    An empty, unregistered one is swept later by the reaper's existing
+    dispatch-husk rule (``reap_worktrees._reap_dispatch_husks``).
+    """
+    left = os.path.lexists(worktree_path)
+    prep["reserved_dir_left"] = left
+    report: dict[str, Any] = {"error": None, "reserved_dir_left": left}
+    if not left:
+        return {**report, "action": "none", "reason": "git left no worktree behind"}
+    if not worktree_prep.identity_matches(prep, worktree_path):
+        reason = "path holds a directory this run did not reserve (device/inode differ); never removed"
+    else:
+        reason = "git registered no worktree; reserved directory left in place, never removed automatically"
+    return {**report, "action": "skipped", "reason": reason}
+
+
+def _settle_failed_worktree_add(
+    worktree_path: Path,
+    *,
+    repo_root: Path,
+    git_exited: bool,
+    prep: dict[str, Any],
+) -> dict[str, Any]:
+    """Record what this run's failed ``git worktree add`` left; remove nothing (#8663).
+
+    A stopped add got SIGTERM first, so git normally deleted its own partial
+    worktree and admin directory. Whatever remains stays: a reserved
+    directory git left unregistered is reported with ``reserved_dir_left``
+    (see :func:`_leave_reservation`). A worktree git left
+    registered is never removed, unlocked or pruned here: it is reported, as
+    :data:`worktree_prep.LEFTOVER_KIND` when git still holds its
+    ``initializing`` lock, with a removal command to run only after
+    verification. Returns the record stored as ``worktree_prep_cleanup``;
+    never raises.
+    """
+    prep["reserved_dir_left"] = os.path.lexists(worktree_path)
+    base: dict[str, Any] = {
+        "path": str(worktree_path),
+        "branch_ref_kept": True,
+        "reserved_dir_left": prep["reserved_dir_left"],
+    }
+    if not git_exited:
+        return {
+            **base,
+            "action": "skipped",
+            "reason": "git worktree add not confirmed exited after SIGKILL; nothing touched",
+            "error": None,
+            "git_exited": False,
+        }
+    registration = _worktree_registration(repo_root, worktree_path)
+    if registration is None:
+        return {**base, "action": "error", "reason": "could not list git worktrees; nothing touched", "error": None}
+    registered, lock_reason = registration
+    if not registered:
+        return {**base, **_leave_reservation(worktree_path, prep)}
+    report = {
+        **base,
+        "action": "skipped",
+        "error": None,
+        "lock_reason": lock_reason,
+        "command": worktree_prep.verify_first_command(repo_root, worktree_path),
+    }
+    if lock_reason == _GIT_INITIALIZING_LOCK_REASON:
+        return {
+            **report,
+            "needs_attention": worktree_prep.LEFTOVER_KIND,
+            "reason": "git left a registered worktree locked 'initializing'; never removed automatically",
+        }
+    return {**report, "reason": f"git left a registered worktree (lock={lock_reason!r}); never removed automatically"}
+
+
+def _resolve_commit(repo_root: Path, ref: str, env: dict[str, str] | None) -> str | None:
+    """Resolve ``ref`` to a commit SHA in ``repo_root``, or ``None``."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+            env=_sanitized_git_env() if env is None else env,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    sha = (proc.stdout or "").strip()
+    return sha if proc.returncode == 0 and sha else None
+
+
+def _add_reserved_worktree(
+    add_command: list[str],
+    *,
+    repo_root: Path,
+    worktree_path: Path,
+    task_id: str,
+    run_nonce: str | None = None,
+    env: dict[str, str] | None = None,
+    base_sha: str | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run this dispatch's ``git worktree add`` into a freshly reserved path (#8663).
+
+    The path is first reserved with ``mkdir``, which fails when anything is
+    already there (git accepts the empty directory). A path that cannot be
+    reserved is never passed to git and never removed. ``base_sha`` is the
+    commit the add checks out; without it, the last element of
+    ``add_command`` is resolved.
+
+    The reservation (see :mod:`scripts.orchestration.worktree_prep`) records
+    the reserved directory's device and inode, the base commit, this
+    dispatcher's pid and start time, and git's as soon as it is spawned. With
+    ``run_nonce``, it is published as ``worktree_prep`` in the task record
+    before git starts.
+
+    Returns the completed process on success. On a timeout or a non-zero
+    exit, reports what the add left (see :func:`_settle_failed_worktree_add`),
+    removing nothing, and raises :class:`WorktreeAddFailed`.
+    """
+    try:
+        os.mkdir(worktree_path)
+    except OSError as exc:
+        exists = isinstance(exc, FileExistsError)
+        raise WorktreeAddFailed(
+            f"could not reserve worktree path {worktree_path}: {type(exc).__name__}: {exc}",
+            cleanup={
+                "path": str(worktree_path),
+                "action": "skipped" if exists else "none",
+                "reason": "path existed before this dispatch reserved it; never removed"
+                if exists
+                else "path could not be reserved; git was not run",
+                "error": None,
+                "branch_ref_kept": True,
+            },
+        ) from exc
+    identity = worktree_prep.directory_identity(worktree_path)
+    owner = worktree_prep.process_identity(os.getpid())
+    prep: dict[str, Any] = {
+        "path": str(worktree_path),
+        "run_nonce": run_nonce,
+        "reserved_by_mkdir": True,
+        "reserved_at": datetime.now(UTC).isoformat(),
+        "dir_dev": identity[0] if identity else None,
+        "dir_ino": identity[1] if identity else None,
+        "base_sha": base_sha or _resolve_commit(repo_root, add_command[-1], env),
+        "git_pid": None,
+        "git_start": None,
+        "owner_pid": owner["pid"],
+        "owner_start": owner["start"],
+    }
+
+    def record_git(pid: int) -> None:
+        git_identity = worktree_prep.process_identity(pid)
+        prep["git_pid"] = git_identity["pid"]
+        prep["git_start"] = git_identity["start"]
+        if run_nonce is not None:
+            _update_worktree_prep(task_id, run_nonce, prep)
+
+    if run_nonce is not None:
+        try:
+            _publish_worktree_prep(task_id, run_nonce, prep)
+        except (OSError, RuntimeError) as exc:
+            left = _leave_reservation(worktree_path, prep)
+            raise WorktreeAddFailed(
+                f"could not record the reservation of {worktree_path}: {exc}",
+                cleanup={"path": str(worktree_path), **left, "branch_ref_kept": True},
+                prep=dict(prep),
+            ) from exc
+    git_exited = True
+    try:
+        proc = _run_worktree_add(add_command, cwd=repo_root, worktree_path=worktree_path, env=env, on_spawn=record_git)
+    except subprocess.TimeoutExpired as exc:
+        # Only a stop that saw git exit proves it can no longer write.
+        git_exited = getattr(exc, "git_exited", False)
+        message = f"git worktree add timed out after {exc.timeout:.1f}s"
+    except OSError as exc:
+        message = f"git worktree add could not start: {type(exc).__name__}: {exc}"
+    else:
+        if proc.returncode == 0:
+            if run_nonce is not None:
+                _retire_worktree_prep(task_id, run_nonce)
+            return proc
+        message = (proc.stderr or proc.stdout or "git worktree add failed").strip()
+    cleanup = _settle_failed_worktree_add(worktree_path, repo_root=repo_root, git_exited=git_exited, prep=prep)
+    if run_nonce is not None:
+        _update_worktree_prep(task_id, run_nonce, prep)
+    raise WorktreeAddFailed(message, cleanup=cleanup, prep=dict(prep))
+
+
 def _ensure_sibling_repo_worktree(
     *,
     repo_root: Path,
@@ -1309,6 +1771,7 @@ def _ensure_sibling_repo_worktree(
     raw_path: str,
     base: str = "main",
     dry_run: bool = False,
+    run_nonce: str | None = None,
 ) -> tuple[Path, str, dict[str, Any]]:
     """Create or reuse a layout-A worktree under an allowlisted sibling checkout.
 
@@ -1376,21 +1839,14 @@ def _ensure_sibling_repo_worktree(
         raise RuntimeError(f"{origin_ref} unresolvable in sibling repo {root} after fetch")
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
     add_command = ["git", "worktree", "add", "-b", worktree_branch, str(worktree_path), origin_ref]
-    try:
-        proc = subprocess.run(
-            add_command,
-            cwd=root,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-            env=_sanitized_git_env(),
-        )
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
-    if proc.returncode != 0:
-        stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
-        raise RuntimeError(stderr)
+    _add_reserved_worktree(
+        add_command,
+        repo_root=root,
+        worktree_path=worktree_path,
+        task_id=task_id,
+        run_nonce=run_nonce,
+        env=_sanitized_git_env(),
+    )
     actual_sha = _resolve_sha(worktree_path)
     if actual_sha is None:
         raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
@@ -1432,15 +1888,19 @@ _WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
 # ordinary read-only discussion of a proposed change as write intent.
 _WRITE_SHAPED_PROMPT_RE = re.compile(
     r"""(?imx)
-    ^\s*(?:[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
-    (?:implement|fix|add|update|modify|edit|remove|delete|refactor|rename|create|build)\b
-    |
-    ^\s*(?:[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
-    write\s+(?:(?:new|the)\s+)?(?:code|tests?|scripts?|files?|documentation|docs?)\b
+    ^\s*(?P<prefix>[-*+]\s+|\d+[.)]\s+|\#{1,6}\s+)?(?:please\s+)?
+    (?:
+        (?:implement|fix|add|update|modify|edit|remove|delete|refactor|rename|create|build)\b
+        |
+        write\s+(?:(?:new|the)\s+)?(?:code|tests?|scripts?|files?|documentation|docs?)\b
+    )
     """,
 )
 _FENCED_BLOCK_RE = re.compile(r"^(`{3,}|~{3,}).*?^\1", re.DOTALL | re.MULTILINE)
 _BLOCKQUOTE_LINE_RE = re.compile(r"^\s*>.*$", re.MULTILINE)
+_HEADING_BOUNDARY_RE = re.compile(r"^\s*\#{1,6}\s+")
+_LIST_BOUNDARY_RE = re.compile(r"^\s*(?:[-*+]\s+|\d+[.)]\s+)")
+_THEMATIC_BREAK_RE = re.compile(r"^\s*[-*_]{3,}\s*$")
 _NO_DELIVERABLE_STATUS = "no_deliverable"
 # A clean read-only checkout holds no uncommitted deliverable. Every terminal
 # status the worker can persist is enough to drop it (#8536). Write-capable
@@ -1605,6 +2065,75 @@ def _strip_quoted_content(prompt: str) -> str:
     return _BLOCKQUOTE_LINE_RE.sub("", without_fences)
 
 
+def _is_list_or_heading_boundary(line: str) -> bool:
+    """Return True if line is a markdown heading, list item, or thematic break."""
+    return bool(_HEADING_BOUNDARY_RE.match(line) or _LIST_BOUNDARY_RE.match(line) or _THEMATIC_BREAK_RE.match(line))
+
+
+def _is_write_directive(line: str, prev_non_empty: str | None) -> bool:
+    """Classify whether a line in a prompt is a write directive (#8703).
+
+    A line is a directive only if:
+    1. It matches the write verb action pattern.
+    2. It does not end in '?' (which indicates a question to the reviewer).
+    3. It starts a sentence:
+       - The line itself is a numbered/bulleted item or heading; OR
+       - The previous non-empty line is absent (e.g. first line of the prompt); OR
+       - The previous non-empty line ends in '.', ':', '!', '?'; OR
+       - The previous non-empty line is a list item or heading boundary.
+    A line that continues the previous line's sentence is prose, not a directive.
+    """
+    match = _WRITE_SHAPED_PROMPT_RE.match(line)
+    if not match:
+        return False
+
+    # A line ending in '?' is a question to the reviewer, not a directive.
+    stripped = line.rstrip()
+    if stripped.endswith("?") or stripped.rstrip("\"'`").endswith("?"):
+        return False
+
+    # A numbered or bulleted item (or heading) starting with a write verb is a directive.
+    if match.group("prefix"):
+        return True
+
+    # Continuation rule: a line without a list/heading prefix is a directive
+    # only if it starts a sentence (the previous non-empty line is absent,
+    # ends in '.', ':', '!', '?', or is a list item / heading boundary).
+    # A line that continues the previous line's sentence is prose, not a directive.
+    if prev_non_empty is None:
+        return True
+
+    prev_stripped = prev_non_empty.rstrip()
+    if prev_stripped.rstrip("\"')`").endswith((".", ":", "!", "?")):
+        return True
+
+    if _HEADING_BOUNDARY_RE.match(prev_stripped) or _THEMATIC_BREAK_RE.match(prev_stripped):
+        return True
+
+    if _LIST_BOUNDARY_RE.match(prev_stripped):
+        # Indented line under an unpunctuated list item continues that item's sentence
+        is_indented_continuation = line.startswith(("  ", "\t")) and not prev_stripped.rstrip("\"')`").endswith(
+            (".", ":", "!", "?")
+        )
+        return not is_indented_continuation
+
+    return False
+
+
+def _has_write_directive(prompt: str) -> bool:
+    """Scan stripped prompt lines for an unquoted write directive (#8703)."""
+    stripped_prompt = _strip_quoted_content(prompt)
+    prev_non_empty: str | None = None
+    for line in stripped_prompt.splitlines():
+        if not line.strip():
+            prev_non_empty = None
+            continue
+        if _is_write_directive(line, prev_non_empty):
+            return True
+        prev_non_empty = line
+    return False
+
+
 def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
     """Reject clearly write-shaped briefs before a read-only worker starts.
 
@@ -1615,11 +2144,12 @@ def _read_only_write_intent_error(*, mode: str, prompt: str) -> str | None:
     requires an instruction-shaped line, rather than matching incidental
     words such as "changes" in a review prompt.  Fenced blocks and blockquote
     lines are excluded from the scan: they carry the brief under critique,
-    not the worker's own instructions.
+    not the worker's own instructions.  Wrapped continuation prose and
+    review questions ending in '?' are not classified as directives (#8703).
     """
     if mode != "read-only":
         return None
-    if not _WRITE_SHAPED_PROMPT_RE.search(_strip_quoted_content(prompt)):
+    if not _has_write_directive(prompt):
         return None
     return (
         "❌ write-shaped prompt cannot run with --mode read-only. "
@@ -3378,6 +3908,31 @@ def _mark_crashed_task(state_path: Path, state: dict[str, Any], *, source: str) 
     )
     state.clear()
     state.update(_hydrate_read_only_checkout_snapshots(current))
+
+
+def _heal_dead_task(state_path: Path, state: dict[str, Any], *, source: str) -> None:
+    """Mark an active record ``crashed`` when the process that owns it is gone.
+
+    A worker record's owner is its pid. A worktree-prep record (``pid: null``
+    while dispatch runs ``git worktree add``) is owned by the dispatcher
+    recorded in ``worktree_prep``; if the dispatcher died, no pid will ever be
+    written, so it is marked ``crashed`` with reason
+    ``dispatch_died_during_worktree_prep`` (#8663).
+    """
+    if state.get("status") not in ("running", "spawning"):
+        return
+    pid = state.get("pid")
+    if pid and not _pid_alive(int(pid)):
+        _mark_crashed_task(state_path, state, source=source)
+    elif worktree_prep.is_orphaned_prep_record(state):
+        current, _changed = mark_orphaned_worktree_prep_crashed(
+            state_path,
+            state,
+            source=source,
+            is_orphaned=worktree_prep.is_orphaned_prep_record,
+        )
+        state.clear()
+        state.update(current)
 
 
 # Exit code for a dispatch refused by host admission: retryable once a worker
@@ -5467,8 +6022,12 @@ def _ensure_worktree(
     dry_run: bool = False,
     full_checkout: bool = False,
     sparse_include: Sequence[str] = (),
+    run_nonce: str | None = None,
 ) -> tuple[Path, str, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
+
+    ``run_nonce`` names the dispatch run a fresh worktree's path reservation
+    is recorded under (see :func:`_add_reserved_worktree`).
 
     The telemetry dict (third tuple element) carries:
     - ``base_sha``: the SHA the worktree was branched from (or is currently
@@ -5630,20 +6189,14 @@ def _ensure_worktree(
         add_command.extend(["-B", requested_branch, str(worktree_path), worktree_base_ref])
     else:
         add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
-    try:
-        proc = subprocess.run(
-            add_command,
-            cwd=_REPO_ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_S}s") from exc
-    if proc.returncode != 0:
-        stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
-        raise RuntimeError(stderr)
+    _add_reserved_worktree(
+        add_command,
+        repo_root=_REPO_ROOT,
+        worktree_path=worktree_path,
+        task_id=task_id,
+        run_nonce=run_nonce,
+        base_sha=resolved_base_sha,
+    )
     actual_sha = _resolve_sha(worktree_path)
     if actual_sha is None:
         raise RuntimeError(f"could not resolve HEAD for created worktree {worktree_path}")
@@ -6957,11 +7510,16 @@ def _record_worktree_prep_failure(
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
     returncode_reason: str = "worktree preparation failed",
+    worktree_prep_cleanup: dict[str, Any] | None = None,
+    worktree_prep: dict[str, Any] | None = None,
 ) -> bool:
     """Persist a terminal failed task record when worktree provisioning is refused.
 
     Returns True when a record was written. Refuses to overwrite an existing
-    running/spawning record (pre-write re-check closes the guard→write race).
+    running/spawning record (pre-write re-check closes the guard→write race),
+    except this run's own path-reservation record. ``worktree_prep`` is that
+    reservation and ``worktree_prep_cleanup`` what dispatch found and did
+    after a failed ``git worktree add`` (#8663); each is recorded when given.
     """
     if str(_REPO_ROOT / "scripts") not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT / "scripts"))
@@ -7032,9 +7590,17 @@ def _record_worktree_prep_failure(
         failed_state["harness"] = requested_harness
     if lifecycle_carrier is not None:
         failed_state["task_lifecycle"] = lifecycle_carrier
+    if worktree_prep is not None:
+        failed_state["worktree_prep"] = worktree_prep
+    if worktree_prep_cleanup is not None:
+        failed_state["worktree_prep_cleanup"] = worktree_prep_cleanup
     state_path = _state_path(task_id)
     existing = _read_state(state_path)
-    if existing is not None and existing.get("status") in ("running", "spawning"):
+    if (
+        existing is not None
+        and existing.get("status") in ("running", "spawning")
+        and not _is_own_worktree_prep_record(existing, run_nonce)
+    ):
         return False
     _write_state_atomic(state_path, failed_state)
     return True
@@ -8011,6 +8577,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     resolved_base_sha=resolved_worktree_base_sha,
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
+                    run_nonce=run_nonce,
                 )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(
@@ -8019,6 +8586,7 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                     task_id=task_id,
                     raw_path=resolved_raw,
                     base=getattr(args, "base", None) or "main",
+                    run_nonce=run_nonce,
                 )
                 if fleet_repo_meta is not None:
                     worktree_telemetry["fleet_repo"] = fleet_repo_meta
@@ -8055,8 +8623,25 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
                 silence_timeout=silence_timeout,
                 initial_response_timeout=initial_response_timeout,
                 max_budget_usd=max_budget_usd,
+                worktree_prep_cleanup=exc.cleanup if isinstance(exc, WorktreeAddFailed) else None,
+                worktree_prep=exc.prep if isinstance(exc, WorktreeAddFailed) else None,
             )
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
+            if isinstance(exc, WorktreeAddFailed):
+                print(
+                    f"   worktree cleanup: {exc.cleanup.get('action')} — {exc.cleanup.get('reason')}",
+                    file=sys.stderr,
+                )
+                if exc.cleanup.get("reserved_dir_left"):
+                    print(
+                        f"   reserved_dir_left: {exc.cleanup.get('path')} — left in place, never removed automatically",
+                        file=sys.stderr,
+                    )
+                if exc.cleanup.get("needs_attention"):
+                    print(
+                        f"   needs_attention: {exc.cleanup['needs_attention']} — {exc.cleanup.get('command')}",
+                        file=sys.stderr,
+                    )
             return 1
     elif args.cwd:
         candidate_cwd = _resolve_cwd_path(args.cwd)
@@ -8538,11 +9123,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     # crashed (OOM, SIGKILL, reboot, etc.) and never got to update the
     # state file. Mark as "crashed" and persist the correction so
     # subsequent status calls get the right answer without redoing the check.
-    prior_status = state.get("status")
-    if prior_status in ("running", "spawning"):
-        pid = state.get("pid")
-        if pid and not _pid_alive(int(pid)):
-            _mark_crashed_task(state_path, state, source="status")
+    _heal_dead_task(state_path, state, source="status")
 
     # Elapsed time for still-running tasks
     if state.get("status") == "running" and state.get("started_at"):
@@ -9328,11 +9909,7 @@ def cmd_wait(args: argparse.Namespace) -> int:
             continue
 
         # Zombie probe (same logic as cmd_status)
-        prior_status = state.get("status")
-        if prior_status in ("running", "spawning"):
-            pid = state.get("pid")
-            if pid and not _pid_alive(int(pid)):
-                _mark_crashed_task(state_path, state, source="wait")
+        _heal_dead_task(state_path, state, source="wait")
 
         status = state.get("status")
         if status in _TERMINAL_STATUSES:
@@ -9448,10 +10025,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         if state is None:
             continue
         # Zombie probe inline for running tasks
-        if state.get("status") in ("running", "spawning"):
-            pid = state.get("pid")
-            if pid and not _pid_alive(int(pid)):
-                _mark_crashed_task(state_file, state, source="list")
+        _heal_dead_task(state_file, state, source="list")
         if args.status and state.get("status") != args.status:
             continue
         # Fix 4 (#1476): classify worktree layout so operators can see at

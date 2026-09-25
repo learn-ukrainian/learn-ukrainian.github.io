@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.repo_wide
+
 ROOT = Path(__file__).resolve().parents[1]
 SESSION = ROOT / "docs" / "session-state"
 KEPT = {

@@ -88,6 +88,14 @@ def test_gc_sweep_runs_and_exposes_summary(monkeypatch: pytest.MonkeyPatch) -> N
         ReapResult(path="/wt/2", branch="b2", action="removed", reason="merged", dirty=False),
         ReapResult(path="/wt/3", branch="b3", action="skipped", reason="dirty", dirty=True),
         ReapResult(path="/wt/4", branch="b4", action="error", reason="fail", dirty=False, error="err"),
+        ReapResult(
+            path="/wt/5",
+            branch="b5",
+            action="skipped",
+            reason="needs_attention: initializing_leftover; ...",
+            dirty=None,
+            needs_attention={"kind": "initializing_leftover", "command": "verify first: git ...", "evidence": {}},
+        ),
     ]
 
     monkeypatch.setattr(api_main, "reap_worktrees", lambda **kwargs: fake_results)
@@ -100,8 +108,12 @@ def test_gc_sweep_runs_and_exposes_summary(monkeypatch: pytest.MonkeyPatch) -> N
     assert "worktree_gc" in runtime
     summary = runtime["worktree_gc"]
     assert summary["removed"] == 2
-    assert summary["skipped"] == 1
+    assert summary["skipped"] == 2
     assert summary["errors"] == 1
+    # #8663: report-only findings reach the Monitor summary with their command.
+    assert summary["needs_attention"] == [
+        {"path": "/wt/5", "kind": "initializing_leftover", "command": "verify first: git ..."}
+    ]
     assert "time" in summary
 
 

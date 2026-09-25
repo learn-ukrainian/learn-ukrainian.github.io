@@ -17,7 +17,8 @@ import pytest
 from scripts.common.acp_runtime_lock import build_lock_reason, process_start_time
 from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
-from scripts.orchestration import reaper_lifecycle, worktree_claims
+from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
+from tests.worktree_prep_helpers import exited_process_identity, half_built_prep, leave_half_built
 
 _REAL_RUN = subprocess.run
 
@@ -3792,6 +3793,245 @@ def test_dispatch_husk_removal_and_skip_are_journaled(
     assert any(row["event"] == "skip" for row in young_rows)
 
 
+# --- #8711: a husk a concurrent git worktree add just registered is kept ---
+
+
+def test_dispatch_husk_claimed_by_a_real_concurrent_add_is_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8711: the reaper waits out a real ``git worktree add`` holding the per-path lock, then skips.
+
+    A second thread takes the same per-path worktree lock dispatch takes and,
+    once the sweep has passed its last pre-lock husk check (the age probe),
+    runs a real ``git worktree add`` into the empty husk. The reaper's lock
+    timeout (10s) far exceeds the add, so it waits the add out, and its locked
+    re-listing must then show the fresh worktree. On pre-#8711 code (no lock,
+    no re-check) the sweep instead removes the husk from under the running
+    add.
+    """
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-addrace"
+    husk.mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    lock_dir = repo / ".git" / worktree_claims.LOCK_DIR_NAME
+    lock_held = threading.Event()
+    add_start = threading.Event()
+    add_errors: list[str] = []
+
+    real_age = rw._tree_newest_age_hours
+
+    def signalling_age(root: Path, now: float | None = None) -> float | None:
+        # The sweep's age probe is its last look at the pristine husk before
+        # it reaches for the lock; start the concurrent add then.
+        if Path(root).resolve() == husk.resolve():
+            add_start.set()
+        return real_age(root, now=now)
+
+    monkeypatch.setattr(rw, "_tree_newest_age_hours", signalling_age)
+
+    def add() -> None:
+        try:
+            with worktree_claims.worktree_lock(husk, lock_dir=lock_dir):
+                lock_held.set()
+                if not add_start.wait(10):
+                    add_errors.append("reaper never probed the husk's age")
+                    return
+                git(repo, "worktree", "add", "-b", "codex/ww-addrace", str(husk), "main")
+        except Exception as exc:  # surfaced in the main thread below
+            add_errors.append(repr(exc))
+
+    adder = threading.Thread(target=add, daemon=True)
+    adder.start()
+    assert lock_held.wait(10)
+    try:
+        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    finally:
+        adder.join(15)
+
+    assert not add_errors
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "registered as a git worktree during the locked re-check" in result.reason
+    assert (husk / ".git").is_file()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_dispatch_husk_is_kept_when_the_fleet_catalog_is_unreadable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8711 review: the husk lock dir must fail closed like the removal guard does.
+
+    With the catalog unreadable the reaper cannot tell whether ``--repo``
+    made this checkout a sibling whose locks live on the public primary, so
+    it must skip rather than lock a directory delegate never contends on.
+    """
+    _public, sibling = _fleet_layout(tmp_path, monkeypatch)
+    husk = sibling / ".worktrees" / "dispatch" / "codex" / "ww-nocatalog"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    def unreadable() -> dict[str, Any]:
+        raise worktree_claims.FleetRepoError("catalog missing")
+
+    monkeypatch.setattr(worktree_claims, "load_fleet_repos", unreadable)
+
+    results = rw.reap_worktrees(repo_root=sibling, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "fleet repository catalog unreadable" in result.reason
+    assert husk.exists()
+
+
+def test_admin_registered_paths_resolve_a_gitdir_relative_to_the_admin_entry(
+    tmp_path: Path,
+) -> None:
+    """git 2.48+ can record the gitdir relative to ``.git/worktrees/<id>/`` (#8711 review)."""
+    repo = init_repo(tmp_path)
+    target = repo / ".worktrees" / "dispatch" / "codex" / "ww-relative"
+    target.mkdir(parents=True)
+    admin = repo / ".git" / "worktrees" / "ww-relative"
+    admin.mkdir(parents=True)
+    relative = os.path.relpath(target / ".git", admin)
+    assert not Path(relative).is_absolute()
+    (admin / "gitdir").write_text(f"{relative}\n", encoding="utf-8")
+
+    assert rw._admin_registered_worktree_paths(repo / ".git") == {target.resolve()}
+
+
+def test_dispatch_husk_named_by_a_relative_gitdir_entry_is_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-relkeep"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    admin = repo / ".git" / "worktrees" / "ww-relkeep"
+    admin.mkdir(parents=True)
+    (admin / "gitdir").write_text(f"{os.path.relpath(husk / '.git', admin)}\n", encoding="utf-8")
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert husk.exists()
+
+
+def test_dispatch_husk_is_removed_when_a_relative_gitdir_entry_points_elsewhere(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """One relative entry must not poison the admin read for every husk (#8711 review)."""
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-relclean"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    elsewhere = repo / "elsewhere-wt"
+    admin = repo / ".git" / "worktrees" / "elsewhere-wt"
+    admin.mkdir(parents=True)
+    (admin / "gitdir").write_text(
+        f"{os.path.relpath(elsewhere / '.git', admin)}\n", encoding="utf-8"
+    )
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "removed"
+    assert not husk.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_dispatch_husk_turned_young_during_the_locked_recheck_is_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8711 review: age is re-proved under the lock, not only at the sweep's snapshot."""
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-rejuvenated"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    real_age = rw._tree_newest_age_hours
+    calls = 0
+
+    def stale_then_fresh(root: Path, now: float | None = None) -> float | None:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return real_age(root, now=now)
+        # The locked re-check: a lock holder left only fresh empty subdirs.
+        return 0.0
+
+    monkeypatch.setattr(rw, "_tree_newest_age_hours", stale_then_fresh)
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "at the locked re-check" in result.reason
+    assert husk.exists()
+
+
+def test_dispatch_husk_is_kept_while_another_process_holds_its_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-locked"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_DISPATCH_HUSK_LOCK_TIMEOUT_S", 0.2)
+    lock_dir = repo / ".git" / worktree_claims.LOCK_DIR_NAME
+    entered = threading.Event()
+    release = threading.Event()
+
+    def hold() -> None:
+        with worktree_claims.worktree_lock(husk, lock_dir=lock_dir):
+            entered.set()
+            release.wait(10)
+
+    holder = threading.Thread(target=hold, daemon=True)
+    holder.start()
+    assert entered.wait(5)
+    try:
+        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    finally:
+        release.set()
+        holder.join(5)
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert worktree_claims.LOCK_BUSY in result.reason
+    assert husk.exists()
+
+
+def test_dispatch_husk_still_removed_when_truly_unregistered(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-clean"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "removed"
+    assert not husk.exists()
+    assert_main_checkout_unchanged(repo)
+
+
 def test_acp_runtime_cleanup_recheck_failure_deletes_nothing(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -3816,3 +4056,248 @@ def test_acp_runtime_cleanup_recheck_failure_deletes_nothing(
     assert result.action == "skipped"
     assert result.reason == "injected recheck failure"
     assert worktree.exists()
+
+
+# --- #8663: worktrees an interrupted `git worktree add` left are reported, never removed ---
+
+
+def add_half_built_dispatch(repo: Path, task_id: str) -> Path:
+    """Leave the state a killed ``git worktree add`` leaves: locked, no index, partial checkout."""
+    (repo / "b.txt").write_text("b\n", encoding="utf-8")
+    git(repo, "add", "b.txt")
+    git(repo, "commit", "-m", "second file")
+    worktree = add_worktree(repo, f"claude/{task_id}", path=repo / ".worktrees" / "dispatch" / "claude" / task_id)
+    leave_half_built(worktree, drop=("b.txt",))
+    return worktree
+
+
+def _reserved_record(
+    worktree: Path,
+    *,
+    run_nonce: str = "nonce-8663",
+    prep: dict[str, Any] | None = None,
+    **fields: Any,
+) -> dict[str, Any]:
+    """The failed record dispatch writes after reserving ``worktree`` and losing its add."""
+    record: dict[str, Any] = {
+        "status": "failed",
+        "pid": None,
+        "run_nonce": run_nonce,
+        "worktree_path": str(worktree),
+        "worktree_prep": prep if prep is not None else half_built_prep(worktree, run_nonce=run_nonce),
+    }
+    record.update(fields)
+    return record
+
+
+def _reap_apply(repo: Path, monkeypatch: pytest.MonkeyPatch) -> list[rw.ReapResult]:
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    return rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+
+
+def _assert_untouched(repo: Path, worktree: Path) -> None:
+    info = next(item for item in rw.list_git_worktrees(repo) if item.path.resolve() == worktree.resolve())
+    assert info.locked_reason == "initializing"
+    assert worktree.is_dir()
+
+
+def test_initializing_leftover_is_reported_with_evidence_and_never_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-r5")
+    head = git(repo, "rev-parse", "refs/heads/claude/impl-8663-r5")
+    record = _reserved_record(worktree)
+    _write_task_record(repo, "impl-8663-r5", **record)
+
+    results = _reap_apply(repo, monkeypatch)
+
+    result = result_for(results, worktree)
+    command = worktree_prep.verify_first_command(repo, worktree)
+    assert result.action == "skipped"
+    assert result.reason == (
+        "needs_attention: initializing_leftover; task-id=impl-8663-r5 status=failed; "
+        f"git worktree add left this worktree locked 'initializing'; never removed automatically; {command}"
+    )
+    assert rw.classify_preservation(result) == "needs_attention"
+    finding = result.needs_attention
+    assert finding is not None
+    assert finding["kind"] == "initializing_leftover"
+    assert finding["task_id"] == "impl-8663-r5"
+    assert finding["worktree_prep"] == record["worktree_prep"]
+    assert finding["command"] == command
+    assert command.startswith(f"verify first: git -C {repo} worktree unlock {worktree} && ")
+    evidence = finding["evidence"]
+    assert evidence["reserved_directory_intact"] is True
+    assert evidence["git_add_exited"] is True
+    assert evidence["dispatcher_exited"] is False
+    assert evidence["head"] == head
+    assert evidence["head_is_base"] is True
+    # No index was written: every tracked file reads as deleted, the two written as untracked.
+    assert {key: evidence["status"][key] for key in ("deleted", "untracked", "changed")} == {
+        "deleted": 3,
+        "untracked": 2,
+        "changed": 0,
+    }
+    _assert_untouched(repo, worktree)
+    assert git(repo, "rev-parse", "--verify", "refs/heads/claude/impl-8663-r5") == head
+
+    journal = [json.loads(line) for line in reaper_lifecycle.journal_path(repo).read_text().splitlines()]
+    [event] = [row for row in journal if row["path"] == str(worktree)]
+    assert event["event"] == "needs_attention"
+    assert event["needs_attention"]["command"] == command
+
+    counts = rw.aggregate_counts(results)
+    assert counts["by_preservation_class"]["needs_attention"] == 1
+    assert counts["needs_attention"] == [{"path": str(worktree), "kind": "initializing_leftover", "command": command}]
+    aggregate = rw.format_aggregate_results(counts, apply=True)
+    assert "Needs attention (never removed automatically):" in aggregate
+    assert command in aggregate
+    assert "1 need(s) attention" in rw.format_text_results(results, apply=True).splitlines()[0]
+    assert_main_checkout_unchanged(repo)
+
+
+def _with_prep(record: dict[str, Any], **changes: Any) -> dict[str, Any]:
+    return {**record, "worktree_prep": {**record["worktree_prep"], **changes}}
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(lambda record: {**record, "pid": 424242}, id="worker-pid-recorded"),
+        pytest.param(lambda record: {**record, "run_nonce": "another-run"}, id="run-nonce-mismatch"),
+        pytest.param(
+            lambda record: _with_prep(record, dir_ino=record["worktree_prep"]["dir_ino"] + 1), id="another-inode"
+        ),
+        pytest.param(lambda record: _with_prep(record, git_start=None), id="git-liveness-unknown"),
+        pytest.param(lambda record: _with_prep(record, base_sha="0" * 40), id="head-is-not-the-base"),
+    ],
+)
+def test_leftover_evidence_never_turns_into_a_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mutate: Any,
+) -> None:
+    """Whatever the evidence says, the class only reports."""
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-guard")
+    _write_task_record(repo, "impl-8663-guard", **mutate(_reserved_record(worktree)))
+
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert result.needs_attention is not None
+    _assert_untouched(repo, worktree)
+
+
+def test_leftover_while_git_still_runs_reports_it_alive(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-stuck")
+    stuck_git = subprocess.Popen(["sleep", "30"], start_new_session=True)
+    try:
+        start = process_start_time(stuck_git.pid)
+        assert start is not None
+        prep = half_built_prep(worktree, run_nonce="nonce-8663", git=(stuck_git.pid, start))
+        _write_task_record(repo, "impl-8663-stuck", **_reserved_record(worktree, prep=prep))
+
+        result = result_for(_reap_apply(repo, monkeypatch), worktree)
+    finally:
+        stuck_git.kill()
+        stuck_git.wait()
+
+    assert result.needs_attention is not None
+    assert result.needs_attention["evidence"]["git_add_exited"] is False
+    _assert_untouched(repo, worktree)
+
+
+def test_leftover_of_a_dispatch_still_running_its_add_is_active(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-live")
+    # The provisional record dispatch holds while its add runs; the dispatcher (this process) lives.
+    _write_task_record(repo, "impl-8663-live", **_reserved_record(worktree, status="spawning"))
+
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == (
+        "active dispatch task-id=impl-8663-live status=spawning: git worktree add may still be running"
+    )
+    assert rw.classify_preservation(result) == "active_dispatch"
+    assert result.needs_attention is None
+    _assert_untouched(repo, worktree)
+
+
+def test_leftover_of_a_dispatcher_that_died_mid_add_is_reported(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-orphan")
+    dead_pid, dead_start = exited_process_identity()
+    record = _with_prep(_reserved_record(worktree, status="spawning"), owner_pid=dead_pid, owner_start=dead_start)
+    _write_task_record(repo, "impl-8663-orphan", **record)
+
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
+
+    assert result.needs_attention is not None
+    assert result.needs_attention["task_status"] == "spawning"
+    assert result.needs_attention["evidence"]["dispatcher_exited"] is True
+    _assert_untouched(repo, worktree)
+
+
+@pytest.mark.parametrize(
+    "work",
+    [
+        pytest.param(lambda wt: (wt / "README.md").write_text("uncommitted edit\n", encoding="utf-8"), id="modified"),
+        pytest.param(lambda wt: (wt / "notes.txt").write_text("new work\n", encoding="utf-8"), id="new-file"),
+    ],
+)
+def test_completed_worktree_locked_initializing_by_hand_is_kept_and_its_work_reported(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, work: Any
+) -> None:
+    """Round-3 blocker: a finished checkout under a manual ``initializing`` lock is never reaped."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/impl-8663-done", path=repo / ".worktrees" / "dispatch" / "claude" / "done")
+    git(repo, "worktree", "lock", "--reason", "initializing", str(worktree))
+    work(worktree)
+    before = {entry.name: entry.read_bytes() for entry in worktree.iterdir() if entry.is_file()}
+    _write_task_record(repo, "done", **_reserved_record(worktree))
+
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert result.needs_attention is not None
+    status = result.needs_attention["evidence"]["status"]
+    assert status["changed"] + status["untracked"] == 1
+    assert {entry.name: entry.read_bytes() for entry in worktree.iterdir() if entry.is_file()} == before
+    _assert_untouched(repo, worktree)
+
+
+def test_initializing_lock_without_a_reservation_is_not_reported_or_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A failed attempt to reuse a worktree someone else made is not this class."""
+    repo = init_repo(tmp_path)
+    worktree = add_half_built_dispatch(repo, "impl-8663-reuse")
+    (worktree / "uncommitted-human-work.txt").write_text("keep me\n", encoding="utf-8")
+    _write_task_record(
+        repo,
+        "impl-8663-reuse",
+        status="failed",
+        pid=None,
+        run_nonce="nonce-reuse",
+        worktree_path=str(worktree),
+        worktree_reused=False,
+        returncode_reason="worktree preparation failed",
+    )
+
+    result = result_for(_reap_apply(repo, monkeypatch), worktree)
+
+    assert result.action != "removed"
+    assert result.needs_attention is None
+    assert (worktree / "uncommitted-human-work.txt").read_text(encoding="utf-8") == "keep me\n"
+    _assert_untouched(repo, worktree)

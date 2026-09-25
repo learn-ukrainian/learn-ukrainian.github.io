@@ -92,3 +92,30 @@ def collapse_status_rollup(rollup: list[Any]) -> list[Any]:
         latest = max(stamp for stamp in stamps if stamp is not None)
         kept.extend(entry for entry, stamp in zip(group, stamps, strict=True) if stamp == latest)
     return kept
+
+
+def group_collapsed_by_name(rollup: list[Any]) -> tuple[dict[str, list[dict[str, Any]]], list[Any]]:
+    """Collapse, then keep every surviving row under its check name.
+
+    The dict maps ``name`` or ``context`` to every row the collapse kept for
+    that label, including timestamp ties and rows with no workflow. The list
+    holds surviving values that are not named check dicts. Callers must fail
+    a name when any of its rows is red or pending; list order is not a winner.
+    """
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    order: list[str] = []
+    other: list[Any] = []
+    for entry in collapse_status_rollup(list(rollup)):
+        if not isinstance(entry, dict):
+            other.append(entry)
+            continue
+        raw = entry.get("name") or entry.get("context")
+        name = raw.strip() if isinstance(raw, str) else ""
+        if not name:
+            other.append(entry)
+            continue
+        if name not in grouped:
+            order.append(name)
+            grouped[name] = []
+        grouped[name].append(entry)
+    return {name: grouped[name] for name in order}, other

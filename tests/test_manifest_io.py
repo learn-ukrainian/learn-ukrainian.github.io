@@ -559,6 +559,7 @@ def _inplace_manifest_writers(root: Path) -> list[str]:
     return found
 
 
+@pytest.mark.repo_wide
 def test_lexicon_scripts_do_not_open_manifest_inplace() -> None:
     sample = ast.parse(
         "def write(path):\n"
