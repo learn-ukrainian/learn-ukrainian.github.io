@@ -39,6 +39,40 @@ Covered write surfaces
   ``git checkout -- <path>`` and plain ``git restore <path>`` (no ``--source``)
   remain allowed so operators can discard accidental dirt.
 
+Shell values in Bash paths (issues #5404 / #8500)
+-------------------------------------------------
+Every Bash word is expanded before classification, in command order.
+``$NAME`` / ``${NAME}`` take a value only when the variable is **known**, and
+``~`` / ``$HOME`` expand as the shell would. Quoted or backslash-escaped ``$``/``~``
+stay literal.
+
+A variable is KNOWN only when its last assignment before the use is an
+unconditional, top-level, literal assignment: it starts a statement (after
+start-of-command, ``;`` or a newline — never after ``&&``/``||``/``|``/``&``) and
+no ``|``/``&`` follows it. The first element of an ``&&``/``||`` chain
+(``S=/tmp/x && …``, ``S=/tmp/x || true``) qualifies because it always runs;
+``export``/``declare``/``typeset``/``readonly NAME=literal`` count as assignments.
+A value with whitespace is not known (an unquoted use would word-split).
+
+Everything else makes the variable UNKNOWN for the rest of the command, and
+UNKNOWN shadows the inherited environment (no fallback — ``HOME`` included):
+an assignment inside an ``&&``/``||`` branch, ``if``/``case``/loop body, ``{ }``
+group, subshell / ``$(...)``, pipeline stage, background job or function;
+``NAME+=``, ``NAME[i]=``, ``S=x cmd`` prefix assignments, ``${NAME:=x}``; a
+value from ``$(...)``/backticks/another unknown; ``read``, ``for``/``select``,
+``unset``, ``mapfile``/``readarray``, ``getopts``, ``printf -v``, ``let``,
+``(( … ))``, ``declare``/``local`` without a top-level literal value; ``IFS``
+changes, ``source``/``eval``/``trap`` and ``declare -n`` (these reach any
+variable). Inside loop, function or subshell bodies — which can run again or
+later — a variable is usable only if it never became unknown and only ever held
+one literal value in the whole command.
+
+A path containing any unknown expansion is BLOCKED as
+``unresolved_shell_variable``: the unknown value may be absolute, empty or hold
+``..``, so no literal prefix proves it stays out of the primary. ``git -C``
+directories and git pathspecs follow the same rule. Inherited variables that the
+command never assigns (other than ``HOME``) are unknown too.
+
 Coverage limitations (documented, by design)
 --------------------------------------------
 * Bash write detection is heuristic. Arbitrary write vectors — ``dd of=``,
@@ -66,6 +100,7 @@ import os
 import re
 import shlex
 import sys
+from collections.abc import Callable
 from pathlib import Path
 from typing import Optional
 
@@ -219,7 +254,7 @@ def write_tool_targets(tool_input: dict) -> list[str]:
 # ---------------------------------------------------------------------------
 
 # Control operators that separate one logical command from the next.
-_CONTROL_OPS = frozenset({"&&", "||", ";", "|", "&", "(", ")", "\n"})
+_CONTROL_OPS = frozenset({"&&", "||", ";", ";;", "|", "|&", "&", "(", ")", "\n"})
 
 # Redirection operators that create/append to a *file* (as opposed to ``>&``
 # which duplicates a file descriptor). ``&>`` / ``&>>`` redirect both streams.
@@ -339,6 +374,68 @@ def _collapse_shell_line_continuations(command: str) -> str:
     return "".join(collapsed)
 
 
+# Characters the shell keeps literal inside quotes (or after a backslash) but
+# that the expansion pass below would act on. They are swapped for private-use
+# sentinels before shlex strips the quotes, so ``'$HOME/x'``, ``"~/x"`` and
+# ``"A=b"`` stay literal, and are restored in every emitted word (#8500).
+_LITERAL_SENTINELS = {"$": "", "`": "", "~": "", "=": ""}
+_UNMASK = str.maketrans({v: k for k, v in _LITERAL_SENTINELS.items()})
+
+# Shell operators a punctuation run is split into, longest first. shlex returns
+# a run such as ``);`` or ``)&&`` as one token; the scope tracking below needs
+# each ``(`` / ``)`` and each separator on its own.
+_SHELL_OPERATORS = (
+    "&>>", "<<<", "&>", ">>", ">|", "&&", "||", ";;", "|&", "<<", "<>", ">&", "<&",
+    ">", "<", "|", "&", ";", "(", ")", "\n",
+)
+_PUNCTUATION = frozenset("();<>|&\n")
+
+
+def _mask_quoted_literals(command: str) -> str:
+    """Replace quote- or backslash-protected ``$ ` ~ =`` with sentinels.
+
+    Inside single quotes all four are literal; inside double quotes ``~`` and
+    ``=`` are (``$`` and backtick still expand); a backslash protects ``$`` and
+    backtick anywhere outside single quotes and ``~`` / ``=`` outside quotes.
+    """
+    out: list[str] = []
+    in_single = False
+    in_double = False
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and not in_single and i + 1 < len(command):
+            following = command[i + 1]
+            if following in "$`" or (not in_double and following in "~="):
+                out.append(_LITERAL_SENTINELS[following])
+            else:
+                out.extend((char, following))
+            i += 2
+            continue
+        if char == "'" and not in_double:
+            in_single = not in_single
+        elif char == '"' and not in_single:
+            in_double = not in_double
+        elif char in _LITERAL_SENTINELS and (in_single or (in_double and char in "~=")):
+            char = _LITERAL_SENTINELS[char]
+        out.append(char)
+        i += 1
+    return "".join(out)
+
+
+def _split_operator_run(token: str) -> list[str]:
+    """Split a pure-punctuation token into shell operators (``);`` → ``)``, ``;``)."""
+    if token in _SHELL_OPERATORS or not token or not set(token) <= _PUNCTUATION:
+        return [token]
+    parts: list[str] = []
+    i = 0
+    while i < len(token):
+        op = next(o for o in _SHELL_OPERATORS if token.startswith(o, i))
+        parts.append(op)
+        i += len(op)
+    return parts
+
+
 def _tokenize(command: str) -> list[str]:
     """Quote-aware tokens with redirection/control operators kept separate.
 
@@ -346,11 +443,15 @@ def _tokenize(command: str) -> list[str]:
     tokens while still respecting quotes, so ``echo a>b`` yields
     ``['echo','a','>','b']`` but ``echo "a>b"`` keeps ``a>b`` intact — the whole
     reason this is Python and not a grep. Heredoc bodies are stripped first:
-    document text carries no write targets (#4538).
+    document text carries no write targets (#4538). Quote-protected expansion
+    characters come back masked (see ``_mask_quoted_literals``); only
+    ``_expand_word`` turns tokens into the text the guard classifies.
     """
     try:
         lexer = shlex.shlex(
-            _collapse_shell_line_continuations(_strip_heredoc_bodies(command)),
+            _mask_quoted_literals(
+                _collapse_shell_line_continuations(_strip_heredoc_bodies(command))
+            ),
             posix=True,
             punctuation_chars="();<>|&\n",
         )
@@ -360,27 +461,331 @@ def _tokenize(command: str) -> list[str]:
         # command's option (for example `find -print`) can be mistaken for an
         # earlier `sed` invocation's `-i` flag and produce bogus write targets.
         lexer.whitespace = " \t\r"
-        return list(lexer)
+        return [part for token in lexer for part in _split_operator_run(token)]
     except ValueError:
         # Unbalanced quotes / un-tokenizable — fail open (the shell will reject
         # the malformed command itself).
         return []
 
 
-def _segments(tokens: list[str]) -> list[list[str]]:
-    """Split a token stream into per-command segments on control operators."""
-    segments: list[list[str]] = []
-    current: list[str] = []
-    for tok in tokens:
-        if tok in _CONTROL_OPS:
+# ---------------------------------------------------------------------------
+# same-command shell variable expansion (issues #5404 / #8500)
+# ---------------------------------------------------------------------------
+
+_VAR_REF_RE = re.compile(r"\$(?:([A-Za-z_][A-Za-z0-9_]*)|\{([A-Za-z_][A-Za-z0-9_]*)\})")
+# ``NAME=``, ``NAME+=`` and ``NAME[i]=`` (group 2 subscript, group 3 ``+``).
+_ASSIGN_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(\[[^\]]*\])?(\+?)=", re.DOTALL)
+# The identifier a token starts with when an operator or the end follows it.
+_LEADING_NAME_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(?=$|[\s=+\[\-*/%<>^|&!,:])")
+# ``${NAME=x}`` / ``${NAME:=x}`` assign as a side effect of expanding.
+_ASSIGNING_EXPANSION_RE = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*):?=")
+_WHITESPACE_RE = re.compile(r"\s")
+
+# Builtins whose ``NAME=value`` operands assign in the current shell.
+_DECLARATION_BUILTINS = frozenset({"export", "declare", "typeset", "local", "readonly"})
+# Of those, the ones that bind a variable in the current (top-level) shell.
+_BINDING_DECLARATIONS = frozenset({"export", "declare", "typeset", "readonly"})
+# Commands that can reassign any variable behind the parser's back.
+_OPAQUE_ASSIGNERS = frozenset({"source", ".", "eval", "trap"})
+# Commands whose operands name the variables they overwrite.
+_CLOBBERERS = frozenset(
+    {"read", "unset", "mapfile", "readarray", "getopts", "printf", "let", "wait", "coproc"}
+)
+# Reserved words that open / close a compound command, and that only prefix one.
+_COMPOUND_OPENERS = frozenset({"if", "while", "until", "for", "select", "case", "{"})
+_COMPOUND_CLOSERS = frozenset({"fi", "done", "esac", "}"})
+_COMPOUND_PREFIXES = frozenset({"!", "then", "else", "elif", "do", "time"})
+# An assignment is unconditional only when it runs whenever the command does: it
+# starts a statement (not after ``&&`` / ``||`` / a pipe) and no pipe or
+# background operator follows it. ``S=x && cmd`` and ``S=x || cmd`` qualify
+# because their first element always runs.
+_STATEMENT_START = frozenset({"", ";", "\n"})
+_STATEMENT_END = frozenset({";", "\n", "&&", "||"})
+# After these a newline continues the list rather than starting a new statement.
+_CONTINUING_OPS = frozenset({"&&", "||", "|", "|&"})
+
+
+class ShellWord(str):
+    """A Bash word after same-command expansion; compares equal to its text.
+
+    The string value is the word as the shell would see it. ``unresolved_at`` is
+    the offset of the first expansion whose value the guard cannot know
+    (``None`` when the word resolved completely); from that offset on the text
+    is the raw, unexpanded remainder, kept for messages. ``raw`` is the word as
+    written.
+    """
+
+    unresolved_at: Optional[int]  # noqa: UP045 - Python 3.9 parser
+    raw: str
+
+    def __new__(
+        cls,
+        text: str,
+        unresolved_at: Optional[int] = None,  # noqa: UP045 - Python 3.9 parser
+        raw: Optional[str] = None,  # noqa: UP045 - Python 3.9 parser
+    ) -> ShellWord:
+        word = super().__new__(cls, text)
+        word.unresolved_at = unresolved_at
+        word.raw = text if raw is None else raw
+        return word
+
+    def tail(self, start: int) -> ShellWord:
+        """``self[start:]`` keeping the unresolved offset (``-C<path>`` form)."""
+        at = self.unresolved_at
+        return ShellWord(
+            str(self)[start:], None if at is None else max(0, at - start), self.raw
+        )
+
+
+Bindings = dict[str, Optional[str]]  # noqa: UP045 - Python 3.9 parser
+Lookup = Callable[[str], Optional[str]]  # noqa: UP045 - Python 3.9 parser
+
+
+def _expand_word(token: str, lookup: Lookup) -> ShellWord:
+    """Expand ``~``, ``$NAME`` and ``${NAME}`` in one masked token.
+
+    ``lookup`` returns a variable's known value or ``None``. Anything else that
+    expands — ``$(...)``, backticks, ``${NAME:-x}``, positional/special
+    parameters, a name without a known value — stops the expansion there and
+    marks the word unresolved at that offset.
+    """
+    raw = token.translate(_UNMASK)
+    out: list[str] = []
+    i = 0
+    if token.startswith("~"):
+        end = token.find("/")
+        end = len(token) if end < 0 else end
+        user = token[1:end]
+        if not user:
+            home = lookup("HOME")
+            if home is None:
+                return ShellWord(raw, 0, raw)
+            out.append(home)
+            i = end
+        elif re.fullmatch(r"[A-Za-z0-9._-]+", user):
+            home = os.path.expanduser(token[:end])
+            if home != token[:end]:  # unknown user: bash keeps ~user literal
+                out.append(home)
+                i = end
+    while i < len(token):
+        char = token[i]
+        if char in "$`":
+            match = _VAR_REF_RE.match(token, i) if char == "$" else None
+            value = lookup(match.group(1) or match.group(2)) if match else None
+            if match is None or value is None:
+                prefix = "".join(out).translate(_UNMASK)
+                return ShellWord(prefix + token[i:].translate(_UNMASK), len(prefix), raw)
+            out.append(value)
+            i = match.end()
+            continue
+        out.append(char)
+        i += 1
+    return ShellWord("".join(out).translate(_UNMASK), None, raw)
+
+
+class _Expander:
+    """Walks the tokens once, tracking which variables hold a *known* value.
+
+    A variable is known only while its last assignment is an unconditional,
+    top-level literal one (see the module docstring). Every other way a value
+    can change — an assignment in a branch, compound command, subshell, pipeline
+    stage or function; ``read``/``for``/``unset``/…; ``$(...)``; ``source`` — makes
+    it unknown *from that point on*, and an unknown value shadows the
+    inherited environment (``$HOME`` included).
+
+    The walk runs twice. The first pass only collects which names are ever
+    assigned and how; the second uses that for code that can run again or later
+    (loop bodies, function bodies, subshells): a variable is usable there only
+    if it was never made unknown and only ever held one literal value.
+    """
+
+    def __init__(self, tokens: list[str], first: Optional[_Expander] = None) -> None:  # noqa: UP045
+        self.tokens = tokens
+        self.bindings: Bindings = {}
+        self.values: dict[str, set[str]] = {}
+        self.tainted: set[str] = set()
+        self.frames: list[str] = []  # "paren" | "compound" | "case"
+        self.poisoned = False  # unbalanced scope: nothing after is unconditional
+        self.ifs_changed = False  # unquoted values may split anywhere: none is known
+        self.assigned: Optional[set[str]] = None  # noqa: UP045
+        self.stable: Optional[set[str]] = None  # noqa: UP045
+        if first is not None:
+            self.assigned = set(first.values) | first.tainted
+            self.stable = {
+                name
+                for name, seen in first.values.items()
+                if name not in first.tainted and len(seen) == 1
+            }
+
+    # -- variable state ------------------------------------------------------
+
+    def _lookup(self, name: str) -> Optional[str]:  # noqa: UP045
+        replayable = self.assigned is not None and (self.frames or self.poisoned)
+        if replayable and name in self.assigned:
+            return self.bindings.get(name) if name in (self.stable or ()) else None
+        if name in self.bindings:
+            return self.bindings[name]
+        if name == "HOME":
+            return os.environ.get("HOME") or None
+        return None
+
+    def _forget(self, name: str) -> None:
+        self.bindings[name] = None
+        self.tainted.add(name)
+        if name == "IFS":
+            self.ifs_changed = True
+            self._opaque()
+
+    def _opaque(self) -> None:
+        for name in {*self.bindings, "HOME"}:
+            self.bindings[name] = None
+            self.tainted.add(name)
+
+    def _assign(self, token: str, *, unconditional: bool) -> None:
+        match = _ASSIGN_RE.match(token)
+        name = match.group(1)
+        if match.group(2) or match.group(3) or not unconditional or self.ifs_changed:
+            self._forget(name)
+            return
+        word = self._expand(token[match.end():])
+        if word.unresolved_at is not None or _WHITESPACE_RE.search(word):
+            self._forget(name)  # unquoted use would word-split
+            return
+        if name == "IFS":
+            self._forget(name)
+            return
+        self.values.setdefault(name, set()).add(str(word))
+        self.bindings[name] = str(word)
+
+    def _forget_leading_names(self, tokens: list[str]) -> None:
+        for tok in tokens:
+            match = _LEADING_NAME_RE.match(tok)
+            if match:
+                self._forget(match.group(1))
+
+    def _expand(self, token: str) -> ShellWord:
+        for match in _ASSIGNING_EXPANSION_RE.finditer(token):
+            self._forget(match.group(1))
+        return _expand_word(token, self._lookup)
+
+    # -- scope tracking ------------------------------------------------------
+
+    def _operator(self, op: str) -> None:
+        if op == "(":
+            self.frames.append("paren")
+        elif op == ")":
+            if self.frames and self.frames[-1] == "paren":
+                self.frames.pop()
+            elif not self.frames or self.frames[-1] != "case":  # ``pattern)`` is fine
+                self.poisoned = True
+
+    def _strip_reserved(self, tokens: list[str]) -> tuple[list[str], str]:
+        """Drop leading reserved words (tracking scope); return rest + loop header."""
+        header = ""
+        i = 0
+        while i < len(tokens):
+            tok = tokens[i]
+            if tok in _COMPOUND_OPENERS:
+                self.frames.append("case" if tok == "case" else "compound")
+                if tok in ("for", "select"):
+                    header = tok
+            elif tok in _COMPOUND_CLOSERS:
+                if self.frames and self.frames[-1] in ("compound", "case"):
+                    self.frames.pop()
+                else:
+                    self.poisoned = True
+            elif tok == "function":
+                i += 1  # its name
+            elif tok not in _COMPOUND_PREFIXES:
+                break
+            i += 1
+        return tokens[i:], header
+
+    # -- segments ------------------------------------------------------------
+
+    def _segment(self, tokens: list[str], prev_op: str, next_op: str) -> list[ShellWord]:
+        body, header = self._strip_reserved(tokens)
+        if not body:
+            return []
+        unconditional = (
+            not self.frames
+            and not self.poisoned
+            and prev_op in _STATEMENT_START
+            and next_op in _STATEMENT_END
+        )
+        lead = 0
+        while lead < len(body) and _ASSIGN_RE.match(body[lead]):
+            lead += 1
+        if lead == len(body):
+            # Pure assignment statement: bash assigns left to right.
+            words = []
+            for tok in body:
+                words.append(self._expand(tok))
+                self._assign(tok, unconditional=unconditional)
+            return words
+
+        # Expansion sees the state from before this command's own effects.
+        words = [self._expand(tok) for tok in body]
+        if header:
+            self._forget_leading_names(body)
+        for tok in body[:lead]:  # ``S=x cmd``: cmd's environment, never a binding
+            self._forget(_ASSIGN_RE.match(tok).group(1))
+        if "paren" in self.frames:  # ``(( S = 5 ))``, ``(S++)`` …
+            self._forget_leading_names(body[lead:])
+        self._command_effects(body, unconditional=unconditional)
+        return words
+
+    def _command_effects(self, body: list[str], *, unconditional: bool) -> None:
+        cmd, idx = _command_word(body)
+        args = body[idx + 1:]
+        if cmd in _OPAQUE_ASSIGNERS:
+            self._opaque()
+        elif cmd in _DECLARATION_BUILTINS:
+            if cmd != "export" and any(t.startswith("-") and "n" in t[1:] for t in args):
+                self._opaque()  # namerefs alias an arbitrary variable
+                return
+            for tok in args:
+                if _ASSIGN_RE.match(tok):
+                    self._assign(
+                        tok, unconditional=unconditional and cmd in _BINDING_DECLARATIONS
+                    )
+                elif cmd != "export":
+                    self._forget_leading_names([tok])
+        elif cmd in _CLOBBERERS:
+            self._forget_leading_names(args)
+
+    def run(self) -> list[list[ShellWord]]:
+        segments: list[list[ShellWord]] = []
+        current: list[str] = []
+        prev_op = ""
+        for tok in [*self.tokens, ";"]:
+            if tok not in _CONTROL_OPS:
+                current.append(tok)
+                continue
             if current:
-                segments.append(current)
+                words = self._segment(current, prev_op, tok)
+                if words:
+                    segments.append(words)
                 current = []
-        else:
-            current.append(tok)
-    if current:
-        segments.append(current)
-    return segments
+            elif tok == "\n" and prev_op in _CONTINUING_OPS:
+                continue
+            self._operator(tok)
+            prev_op = tok
+        return segments
+
+
+def _expanded_segments(command: str) -> list[list[ShellWord]]:
+    """Per-command segments of expanded words, in command order.
+
+    Variable values come only from the command itself — earlier unconditional
+    top-level literal assignments — plus ``$HOME``/``~`` from the environment
+    while nothing in the command touches ``HOME``. Words whose value is unknown
+    carry ``unresolved_at``; ``_bash_path_decision`` blocks those.
+    """
+    tokens = _tokenize(command)
+    first = _Expander(tokens)
+    first.run()
+    return _Expander(tokens, first=first).run()
 
 
 def _redirect_targets(tokens: list[str]) -> list[str]:
@@ -485,9 +890,7 @@ def bash_write_targets(command: str) -> list[str]:
     physical worktree isolation and the monitor/git-shim layers.
     """
     targets: list[str] = []
-    for segment in _segments(_tokenize(command)):
-        if not segment:
-            continue
+    for segment in _expanded_segments(command):
         targets.extend(_redirect_targets(segment))
         cmd, idx = _command_word(segment)
         if cmd == "tee":
@@ -521,7 +924,7 @@ def _git_global_prefix(
             i += 2
             continue
         if tok.startswith("-C") and len(tok) > 2:
-            c_path = tok[2:]
+            c_path = tok.tail(2) if isinstance(tok, ShellWord) else tok[2:]
             i += 1
             continue
         if tok in {"-c", "--config-env", "--exec-path", "--git-dir", "--work-tree",
@@ -565,9 +968,7 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
     ``--source`` (discard dirt / restore from index — rescue pattern).
     """
     intents: list[dict[str, object]] = []
-    for segment in _segments(_tokenize(command)):
-        if not segment:
-            continue
+    for segment in _expanded_segments(command):
         cmd, idx = _command_word(segment)
         if not _is_git_binary(cmd):
             continue
@@ -756,10 +1157,10 @@ def bash_git_write_intents(command: str) -> list[dict[str, object]]:
 
 
 def _effective_git_cwd(intent: dict[str, object], payload_cwd: str) -> Path:
-    """Resolve the worktree a git intent would mutate."""
+    """Resolve the worktree a git intent would mutate (``-C`` already expanded)."""
     c_path = intent.get("c_path")
     if isinstance(c_path, str) and c_path:
-        return _resolve(c_path, payload_cwd)
+        return _resolve(c_path, payload_cwd, expand_user=False)
     return Path(payload_cwd).expanduser().resolve()
 
 
@@ -785,72 +1186,45 @@ def _block_git_mediated(summary: str, main_root: Path, reason: str) -> int:
 # decision
 # ---------------------------------------------------------------------------
 
-# ---------------------------------------------------------------------------
-# shell variable expansion for Bash write targets (issue #5404)
-# ---------------------------------------------------------------------------
+class _UnresolvedWrite:
+    """Decision for a path whose location depends on an unknown shell value."""
 
-_SHELL_ASSIGN_RE = re.compile(
-    r"(?:^|[;\n&|]\s*|\(\s*)([A-Za-z_][A-Za-z0-9_]*)="
-    r"(?:'([^']*)'|\"([^\"]*)\"|([^\s;|&]+))"
-)
-_SHELL_VAR_RE = re.compile(r"^\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?$")
+    allowed = False
+    reason = "unresolved_shell_variable"
+    message = (
+        "The write target depends on a shell value the guard cannot resolve. "
+        "Assign it with a literal value earlier in the same command "
+        '(S=/tmp/scratch; echo x > "$S/out.txt") or use a literal path.'
+    )
 
 
-def parse_shell_assignments(command: str) -> tuple[dict[str, str], set[str]]:
-    """Best-effort VAR=value map from a Bash command string (issue #5404).
+def _resolve(path_str: str, cwd: str, *, expand_user: bool = True) -> Path:
+    """Resolve a possibly-relative target against the payload cwd.
 
-    Returns ``(assignments, ambiguous_names)``. A name is ambiguous when it is
-    assigned more than one distinct value in the command — last-wins expansion
-    would disagree with bash ordering at the write site (Claude CF F001).
+    Bash words arrive already tilde-expanded (``_expand_word``), so they pass
+    ``expand_user=False``: a ``~`` still present there was quoted and is literal.
     """
-    out: dict[str, str] = {}
-    ambiguous: set[str] = set()
-    for m in _SHELL_ASSIGN_RE.finditer(command or ""):
-        name = m.group(1)
-        if m.group(2) is not None:
-            val = m.group(2)
-        elif m.group(3) is not None:
-            val = m.group(3)
-        else:
-            val = m.group(4) or ""
-        if name in out and out[name] != val:
-            ambiguous.add(name)
-        out[name] = val
-    return out, ambiguous
-
-
-def expand_shell_target(
-    target: str,
-    assignments: dict[str, str],
-    *,
-    ambiguous: Optional[set[str]] = None,  # noqa: UP045 - Python 3.9 parser
-) -> str:
-    """Expand a pure ``$VAR`` / ``${VAR}`` write target when assignment is known.
-
-    Ambiguous multi-assign names are left unexpanded so the caller blocks with
-    ``unresolved_shell_variable`` rather than allowing a reassignment bypass.
-    """
-    m = _SHELL_VAR_RE.match((target or "").strip())
-    if not m:
-        return target
-    name = m.group(1)
-    if ambiguous and name in ambiguous:
-        return target
-    if assignments.get(name):
-        return assignments[name]
-    return target
-
-
-def is_unresolved_shell_var(target: str) -> bool:
-    return bool(_SHELL_VAR_RE.match((target or "").strip()))
-
-
-def _resolve(path_str: str, cwd: str) -> Path:
-    """Resolve a possibly-relative target against the payload cwd."""
-    path = Path(path_str).expanduser()
+    path = Path(path_str).expanduser() if expand_user else Path(path_str)
     if not path.is_absolute():
         path = Path(cwd) / path
     return path
+
+
+def _bash_path_decision(word: str, base: str, wc) -> object:
+    """Containment decision for one expanded Bash path word.
+
+    A word holding any unknown expansion is blocked outright: the unknown value
+    may be absolute, empty or contain ``..``, so no literal prefix proves the
+    path stays out of the primary checkout.
+    """
+    if getattr(word, "unresolved_at", None) is not None:
+        return _UnresolvedWrite()
+    return wc.evaluate_write(_resolve(word, base, expand_user=False), cwd=base)
+
+
+def _label(word: str) -> str:
+    raw = getattr(word, "raw", word)
+    return word if raw == word else f"{raw}→{word}"
 
 
 def main() -> int:
@@ -903,6 +1277,12 @@ def main() -> int:
             for intent in git_intents:
                 if intent.get("allowlisted"):
                     continue
+                summary = str(intent.get("summary") or "git write")
+                c_path = intent.get("c_path")
+                if getattr(c_path, "unresolved_at", None) is not None:
+                    return _block_git_mediated(
+                        summary, main_root, reason="unresolved_shell_variable"
+                    )
                 git_cwd = _effective_git_cwd(intent, cwd)
                 # Only care when the effective git worktree *is* the primary.
                 try:
@@ -911,7 +1291,6 @@ def main() -> int:
                 except Exception:
                     continue
                 paths = list(intent.get("paths") or [])
-                summary = str(intent.get("summary") or "git write")
                 if not paths:
                     # Whole-tree mutator (apply / am / stash pop|apply / bare add).
                     return _block_git_mediated(
@@ -919,7 +1298,7 @@ def main() -> int:
                     )
                 # Path-scoped mutators: block if any path is a protected primary write.
                 for raw in paths:
-                    decision = wc.evaluate_write(_resolve(raw, str(git_cwd)), cwd=str(git_cwd))
+                    decision = _bash_path_decision(raw, str(git_cwd), wc)
                     if not decision.allowed:
                         return _block_git_mediated(
                             summary, main_root, reason=decision.reason
@@ -930,42 +1309,16 @@ def main() -> int:
     if not raw_targets:
         return 0
 
-    # #5404: expand $VAR write targets from same-command assignments so
-    # gitignored lane-state is not mis-classified against the literal "$A".
-    if tool_name == "Bash":
-        assignments, ambiguous = parse_shell_assignments(command)
-    else:
-        assignments, ambiguous = {}, set()
-
     try:
         decisions: list[tuple[str, object]] = []
         for raw in raw_targets:
-            expanded = expand_shell_target(raw, assignments, ambiguous=ambiguous)
-            if is_unresolved_shell_var(expanded):
-                decisions.append(
-                    (
-                        raw,
-                        type(
-                            "_UnresolvedVar",
-                            (),
-                            {
-                                "allowed": False,
-                                "reason": "unresolved_shell_variable",
-                                "message": (
-                                    "Shell variable write target is unresolved. "
-                                    "Expand it in the same command "
-                                    '(A=.claude/<epic>/file; echo x > "$A") '
-                                    "or use a literal gitignored path."
-                                ),
-                            },
-                        )(),
-                    )
-                )
-                continue
-            label = raw if expanded == raw else f"{raw}→{expanded}"
-            decisions.append(
-                (label, wc.evaluate_write(_resolve(expanded, cwd), cwd=cwd))
-            )
+            if tool_name == "Bash":
+                # Words were expanded from same-command assignments (#5404 /
+                # #8500); any unknown value blocks (_bash_path_decision).
+                decision = _bash_path_decision(raw, cwd, wc)
+            else:
+                decision = wc.evaluate_write(_resolve(raw, cwd), cwd=cwd)
+            decisions.append((_label(raw), decision))
     except Exception:  # pragma: no cover - defensive fail-open
         return 0
 
