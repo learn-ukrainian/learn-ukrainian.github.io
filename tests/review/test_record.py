@@ -21,7 +21,7 @@ from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.plan_promote import promote_plan
 from scripts.curriculum.evidence import lock
-from scripts.review import findings_db, record, second_seat
+from scripts.review import findings_db, fixloop, record, second_seat
 from scripts.review.receipts.ledger import create_empty_ledger
 from scripts.review.validate import codes
 from tests.build.test_fresh_e3b2 import _fake_state, _fixture, _write
@@ -1084,15 +1084,64 @@ def test_a_reserved_return_replaced_before_the_insert_is_refused(world: World, m
     a, b = two_returns_of_one_attempt(world)
     real = record._rejection_codes
 
-    def swapping(root: Path, manifest: Any, manifest_sha: str, kind: str, saved: Path, *rest: Any) -> list[str]:
-        codes_ = real(root, manifest, manifest_sha, kind, saved, *rest)
-        lock.atomic_write(saved, b["review"].read_bytes())  # the file is replaced under the validation
+    def swapping(*args: Any, **kwargs: Any) -> list[str]:
+        codes_ = real(*args, **kwargs)
+        lock.atomic_write(saved_return(world, a), b["review"].read_bytes())  # replaced after the validation
         return codes_
 
     monkeypatch.setattr(record, "_rejection_codes", swapping)
     with pytest.raises(record.RecordError, match=record.ATTEMPT_RETURN_CONFLICT):
         world.record(a)
     assert world.db_rows("attempts") == [] and not world.verdict_file(2).exists()
+
+
+def test_a_reserved_return_replaced_during_the_insert_rolls_the_transaction_back(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    a, b = two_returns_of_one_attempt(world)
+    real = findings_db.insert_attempt
+
+    def swapping(conn: Any, row: dict[str, Any]) -> None:
+        real(conn, row)
+        lock.atomic_write(saved_return(world, a), b["review"].read_bytes())  # replaced after the row is written
+
+    monkeypatch.setattr(findings_db, "insert_attempt", swapping)
+    with pytest.raises(record.RecordError, match=record.ATTEMPT_RETURN_CONFLICT):
+        world.record(a)
+    assert world.db_rows("attempts") == [] and world.db_rows("findings") == [] and not world.verdict_file(2).exists()
+
+
+def test_a_reserved_return_swapped_during_validation_and_restored_is_not_what_is_validated(
+    world: World, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    ids = ("review-x", "attempt-x")
+    bad = world.make_return(
+        2, [finding("F-01", locations=[{"tab": "urok", "quote": "no such text in the unit"}])], ids=ids
+    )
+    bad_bytes = bad["review"].read_bytes()
+    kept_bad = world.out / "bad.return.yaml"
+    kept_bad.write_bytes(bad_bytes)
+    good = world.make_return(2, [finding("F-01")], ids=ids)  # valid on its own, same attempt id
+    good_bytes = good["review"].read_bytes()
+    assert good_bytes != bad_bytes
+    reserved = saved_return(world, bad)
+    real = record.validate_review
+
+    def swapping(path: Path, **kwargs: Any) -> Any:
+        assert Path(path) != reserved  # the validator is never pointed at the reserved name
+        lock.atomic_write(reserved, good_bytes)  # a valid return sits under the name while validating...
+        try:
+            return real(path, **kwargs)
+        finally:
+            lock.atomic_write(reserved, bad_bytes)  # ...and the recorded bytes are back before the hash check
+
+    monkeypatch.setattr(record, "validate_review", swapping)
+    outcome = world.record({**bad, "review": kept_bad})
+    assert not outcome.accepted and outcome.verdict == "REJECTED"
+    assert codes.QUOTE_NOT_IN_UNIT in outcome.rejection_codes
+    assert world.db_rows("findings") == []
+    [attempt] = world.db_rows("attempts")
+    assert attempt["verdict"] == "REJECTED" and attempt["return_sha256"] == hashlib.sha256(bad_bytes).hexdigest()
 
 
 def test_a_different_return_under_a_reserved_name_is_refused_even_with_no_row(world: World) -> None:
@@ -1158,6 +1207,35 @@ def test_nothing_is_closed_when_the_attempts_manifest_is_not_the_current_one(wor
     world.record(world.make_return(2, [unsupported("F-01")]))
     regenerate_lesson_two(world)
     newer = world.make_return(2)
-    (world.state_dir / "lesson-2.manifest.sha256").unlink()  # the engine's pointer is gone: current is unknown
-    assert world.record(newer).accepted
+    sidecar = world.state_dir / "lesson-2.manifest.sha256"
+    kept = sidecar.read_bytes()
+    sidecar.unlink()  # the engine's pointer is gone: current is unknown
+    outcome = world.record(newer)
+    assert outcome.accepted and outcome.moot_items == [] and "cannot be established" in outcome.moot_note
     assert [row["outcome"] for row in world.db_rows("settle_items")] == [None]
+    sidecar.write_bytes(kept)  # the pointer is back; the attempt is replayed and now closes what it made moot
+    replayed = world.record(newer)
+    assert replayed.replay and len(replayed.moot_items) == 1 and replayed.moot_note is None
+    [closed] = world.db_rows("settle_items")
+    assert closed["outcome"] == findings_db.MOOT_SUPERSEDED and closed["superseded_by"] == newer["attempt_id"]
+    assert world.record(newer).moot_items == []  # idempotent: nothing is left to close
+
+
+def test_repair_projections_closes_the_items_record_could_not(world: World) -> None:
+    world.record(world.make_return(2, [unsupported("F-01")]))
+    regenerate_lesson_two(world)
+    newer = world.make_return(2)
+    sidecar = world.state_dir / "lesson-2.manifest.sha256"
+    kept = sidecar.read_bytes()
+    sidecar.unlink()
+    world.record(newer)
+    sidecar.write_bytes(kept)
+    conn = findings_db.connect(world.db)
+    try:
+        repair = fixloop.repair_projections(conn, world.root, LEVEL, SLUG)
+        again = fixloop.repair_projections(conn, world.root, LEVEL, SLUG)
+    finally:
+        conn.close()
+    [item] = world.db_rows("settle_items")
+    assert repair["moot_closed"] == [str(item["item_id"])] and again["moot_closed"] == []
+    assert item["outcome"] == findings_db.MOOT_SUPERSEDED

@@ -350,6 +350,17 @@ def latest_accepted(
     ).fetchone()
 
 
+def accepted_attempt_on(
+    conn: sqlite3.Connection, level: str, slug: str, kind: str, lesson_n: int | None, manifest_sha256: str
+) -> sqlite3.Row | None:
+    """The latest accepted first-seat, non-seeded attempt of the target that reviewed exactly ``manifest_sha256``."""
+    return conn.execute(
+        "SELECT * FROM attempts WHERE level = ? AND slug = ? AND kind = ? AND lesson_n IS ? AND role = 'first'"
+        " AND seed_id IS NULL AND verdict IN ('APPROVE', 'REVISE') AND manifest_sha256 = ? ORDER BY seq DESC LIMIT 1",
+        (level, slug, kind, lesson_n, manifest_sha256),
+    ).fetchone()
+
+
 def module_findings(conn: sqlite3.Connection, level: str, slug: str) -> list[sqlite3.Row]:
     """Findings of every accepted, non-seeded first-seat attempt of the module, with the attempt's lesson."""
     return conn.execute(

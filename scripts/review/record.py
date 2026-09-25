@@ -7,11 +7,16 @@ rejections is re-implemented), then:
 1. reserves ``lesson-<n>.review.<attempt_id>.yaml`` (a plan review: ``plan-review.<attempt_id>.yaml``) in the
    module's ``_state`` directory with create-exclusive semantics and writes the return's bytes to it (fsynced
    before the name appears). The bytes validated, hashed (``return_sha256``) and stored are the in-memory
-   bytes; the file is re-hashed against them before the row is inserted. The same attempt id with different
-   bytes is refused (``attempt_return_conflict``), the same bytes again are idempotent;
+   bytes; they are read once, validated from a private copy only this process knows (never the reserved
+   name) and the reserved file is re-hashed against them inside the transaction that inserts the row, which
+   is rolled back when it differs. The same attempt id with different bytes is refused
+   (``attempt_return_conflict``), the same bytes again are idempotent;
 2. **accepted** — writes the ``attempts`` row and one ``findings`` row per finding, one settle item per
    active ``unsupported_by_source`` finding, closes the lesson's older open settle items as
-   ``moot_superseded`` when the attempt is on the lesson's current manifest, and counts a REVISE round.
+   ``moot_superseded`` (``fixloop.close_moot_items``, the step replay and ``fixloop verdict
+   --repair-projections`` also run) when its current manifest has an accepted attempt, and counts a REVISE
+   round. When the current manifest cannot be established the attempt is still recorded, the close is skipped
+   with a note (``moot_note``), and the next replay or repair closes the items.
    **After the commit** it projects the database's latest accepted attempt of the target into the verdict
    file the landing reads (``lesson-<n>.verdict.yaml``, a plan: ``plan-review.yaml``; temp file + atomic
    rename). The file is a projection, never a source: if the write fails the attempt stays recorded, the
@@ -40,6 +45,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import functools
 import hashlib
 import json
 import os
@@ -47,13 +53,13 @@ import re
 import sqlite3
 import sys
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-from scripts.build.fresh import plan_manifest as pm
 from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.review import findings_db, fixloop, second_seat
@@ -62,7 +68,6 @@ from scripts.review.validate.validate import validate_review
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TREE = "curriculum/l2-uk-en"
 TOKEN_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
-SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
 
 # record's own rejection codes, beside the validator's (scripts/review/validate/codes.py).
 MANIFEST_INPUTS_STALE = "manifest_inputs_stale"
@@ -97,6 +102,7 @@ class Outcome:
     replay: bool = False
     seed_id: str | None = None
     moot_items: list[int] = field(default_factory=list)
+    moot_note: str | None = None
     projection_error: str | None = None
     next: str | None = None
 
@@ -184,20 +190,18 @@ def _reserve_return(root: Path, directory: Path, name: str, data: bytes) -> tupl
     return target, digest
 
 
+def _validate_private_copy(name: str, data: bytes, **kwargs: Any) -> Any:
+    """Run the validator on ``data`` itself: a copy in a private directory, never the reserved file."""
+    with tempfile.TemporaryDirectory(prefix=".review-return.") as private:
+        copy = Path(private) / name
+        copy.write_bytes(data)
+        return validate_review(copy, **kwargs)
+
+
 def _require_saved(target: Path, digest: str, name: str) -> None:
     """The reserved file must still hold exactly the bytes being recorded."""
     if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
         raise RecordError(f"{name} holds a different return for this attempt", ATTEMPT_RETURN_CONFLICT)
-
-
-def _current_manifest(directory: Path, kind: str, lesson_n: int | None) -> str | None:
-    """The manifest the engine currently points at for the target (its ``.sha256`` sidecar), or None."""
-    sidecar = f"lesson-{lesson_n}.manifest.sha256" if kind == "lesson" else pm.SIDECAR_NAME
-    try:
-        digest = (Path(directory) / sidecar).read_text(encoding="ascii").strip()
-    except (OSError, ValueError):
-        return None
-    return digest if SHA_RE.fullmatch(digest) else None
 
 
 def _publish(
@@ -325,8 +329,9 @@ def record_return(
                 raise RecordError(str(error), WRITER_IDENTITY_UNKNOWN) from error
         name = f"lesson-{lesson_n}.review.{attempt_id}.yaml" if kind == "lesson" else f"plan-review.{attempt_id}.yaml"
         saved, return_sha = _reserve_return(root, directory, name, data)
+        verify_saved = functools.partial(_require_saved, saved, return_sha, name)
         if existing is not None:
-            return _replay(conn, root, directory, existing, return_sha, saved, kind, lesson_n)
+            return _replay(conn, root, directory, existing, return_sha, saved, kind, lesson_n, moment)
         first = None
         preset: list[str] = []
         if writer is not None and identity["family"] == writer:
@@ -355,7 +360,8 @@ def record_return(
                         manifest,
                         manifest_sha,
                         kind,
-                        saved,
+                        name,
+                        data,
                         manifest_path,
                         document_path,
                         ledger_path,
@@ -391,11 +397,11 @@ def record_return(
             "writer_family": writer,
             "return_sha256": return_sha,
         }
-        _require_saved(saved, return_sha, name)  # what is stored is what was validated and hashed
         try:
             if codes:
                 with findings_db.transaction(conn):
                     findings_db.insert_attempt(conn, row)
+                    verify_saved()  # what is stored is what was validated and hashed, or nothing is recorded
                 return Outcome(
                     False,
                     "REJECTED",
@@ -407,12 +413,12 @@ def record_return(
                     seed_id=seed_id,
                     next=f"count it as a failed review: record --failure rejected_return --review-id {review_id} --attempt-id {attempt_id}",
                 )
-            outcome = _persist_accepted(conn, directory, review, row, seed_id, second, first, moment)
+            outcome = _persist_accepted(conn, directory, review, row, seed_id, second, first, moment, verify_saved)
         except sqlite3.IntegrityError:  # a concurrent recorder committed this attempt first
             existing = findings_db.get_attempt(conn, review_id, attempt_id)
             if existing is None:
                 raise
-            return _replay(conn, root, directory, existing, return_sha, saved, kind, lesson_n)
+            return _replay(conn, root, directory, existing, return_sha, saved, kind, lesson_n, moment)
         outcome.saved_return = _rel(root, saved)
         if seed_id is None and not second:
             _publish(outcome, conn, root, level, slug, kind, lesson_n)
@@ -434,7 +440,8 @@ def _rejection_codes(
     manifest: dict[str, Any],
     manifest_sha: str,
     kind: str,
-    saved: Path,
+    name: str,
+    data: bytes,
     manifest_path: Path,
     document_path: Path | None,
     ledger_path: Path,
@@ -448,8 +455,9 @@ def _rejection_codes(
             codes.append(ATTEMPT_IDENTITY_MISMATCH)
     if kind == "lesson" and _stale_message(root, manifest) is not None:
         codes.append(MANIFEST_INPUTS_STALE)
-    result = validate_review(
-        saved,
+    result = _validate_private_copy(
+        name,
+        data,
         manifest_path=Path(manifest_path),
         document_path=document_path,
         ledger_path=Path(ledger_path),
@@ -469,6 +477,7 @@ def _persist_accepted(
     second: bool,
     first: Any,
     moment: str,
+    verify_saved: Callable[[], None],
 ) -> Outcome:
     kind, level, slug, lesson_n = row["kind"], row["level"], row["slug"], row["lesson_n"]
     findings = review["findings"]
@@ -480,20 +489,11 @@ def _persist_accepted(
             provenance = None
     opened: list[int] = []
     moot: list[int] = []
+    moot_note = None
     agreement = None
     with findings_db.transaction(conn):
         findings_db.insert_attempt(conn, row)
-        if seed_id is None and not second and row["manifest_sha256"] == _current_manifest(directory, kind, lesson_n):
-            # a review of the target's current manifest is accepted: claims raised against an older one are moot
-            moot = findings_db.close_superseded_items(
-                conn,
-                level=level,
-                slug=slug,
-                lesson_n=lesson_n,
-                current_manifest_sha256=row["manifest_sha256"],
-                superseded_by=row["attempt_id"],
-                decided_at=moment,
-            )
+        verify_saved()  # what is stored is what was validated and hashed, or nothing is recorded
         for finding in findings:
             layer = None if seed_id is not None else fixloop.layer_for_finding(finding, provenance, kind=kind)
             findings_db.insert_finding(conn, row["review_id"], row["attempt_id"], finding, layer=layer, seed_id=seed_id)
@@ -510,6 +510,9 @@ def _persist_accepted(
                         opened_at=moment,
                     )
                 )
+        if seed_id is None and not second:
+            moot, moot_note = _close_moot(conn, directory, level, slug, kind, lesson_n, moment)
+            opened = [item for item in opened if item not in moot]
         stored = findings_db.count_findings(conn, row["review_id"], row["attempt_id"])
         if stored != len(findings):  # no finding may be dropped between the validator and the database
             raise RecordError(f"{len(findings)} findings validated but {stored} stored; nothing was recorded")
@@ -531,6 +534,21 @@ def _persist_accepted(
         agreement=agreement,
         seed_id=seed_id,
         moot_items=moot,
+        moot_note=moot_note,
+    )
+
+
+def _close_moot(
+    conn: sqlite3.Connection, directory: Path, level: str, slug: str, kind: str, lesson_n: int | None, moment: str
+) -> tuple[list[int], str | None]:
+    """The moot-close step (``fixloop.close_moot_items``) and, when it could not decide, the note saying so."""
+    closed, established = fixloop.close_moot_items(conn, directory, level, slug, kind, lesson_n, moment=moment)
+    if established:
+        return closed, None
+    return closed, (
+        f"the current manifest of {fixloop.projection_name(kind, lesson_n)} cannot be established; older settle "
+        f"items were not closed. python -m scripts.review.fixloop verdict {level} {slug} --repair-projections "
+        "(or recording the same attempt again) closes them once it is"
     )
 
 
@@ -573,8 +591,9 @@ def _replay(
     saved: Path,
     kind: str,
     lesson_n: int | None,
+    moment: str,
 ) -> Outcome:
-    """The same return recorded again: change no row, and re-project the database's latest attempt.
+    """The same return recorded again: change no attempt or finding, close what is moot, re-project the latest attempt.
 
     The verdict file is rewritten from the latest accepted attempt of the target, never from ``existing``:
     replaying an older attempt cannot bring back a verdict a newer one replaced.
@@ -596,6 +615,10 @@ def _replay(
         seed_id=existing["seed_id"],
     )
     if outcome.accepted and existing["role"] == "first" and existing["seed_id"] is None:
+        with findings_db.transaction(conn):
+            outcome.moot_items, outcome.moot_note = _close_moot(
+                conn, directory, existing["level"], existing["slug"], kind, lesson_n, moment
+            )
         _publish(outcome, conn, root, existing["level"], existing["slug"], kind, lesson_n)
     return outcome
 
@@ -773,6 +796,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {error}", file=sys.stderr)
         return 2
     print(json.dumps(outcome.payload(), indent=2, sort_keys=True, ensure_ascii=False))
+    if outcome.moot_note:
+        print(f"note: {outcome.moot_note}", file=sys.stderr)
     if outcome.projection_error:
         print(f"error: {outcome.projection_error}", file=sys.stderr)
         return 2

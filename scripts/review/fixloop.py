@@ -24,6 +24,11 @@ report for the driver. It performs no repair and takes no automatic branch:
   ``plan-review.yaml`` are projections of the latest accepted first-seat attempt of their target
   (highest ``attempts.seq``). A missing or disagreeing file is stale: the module is HOLD
   (``verdict_projection_stale``) until ``--repair-projections`` rewrites it from the database.
+* **Current manifest** — a lesson whose current manifest cannot be established (no readable
+  ``.manifest.sha256`` sidecar, or the closure reports none) holds the module
+  (``current_manifest_unknown``); it is never approved. ``close_moot_items`` is the one moot-close step
+  (older open settle items of a target whose current manifest has an accepted attempt); ``record``, its
+  replay and ``--repair-projections`` all run it, so it is idempotent and no single moment decides it.
 * **The findings database** lives in the primary checkout's ``batch_state/review-findings/`` by
   design (``findings_db.batch_root``), shared by every worktree of the repository, so a budget
   or settle item recorded from one worktree is the same one every other worktree reads.
@@ -80,6 +85,7 @@ REASON_UNSUPPORTED_LESSONS = "unsupported_claim_in_three_lessons"
 REASON_DISPUTED = "verdict_disputed"
 
 HOLD_PROJECTION_STALE = "verdict_projection_stale"
+HOLD_CURRENT_MANIFEST_UNKNOWN = "current_manifest_unknown"
 PROJECTION_FIELDS = ("verdict", "attempt_id", "manifest_sha256", "validated_at")
 
 MODULE_VERDICT_NAME = "module-verdict.yaml"
@@ -226,6 +232,64 @@ def publish_projection(
     return path
 
 
+def current_manifest(directory: Path, kind: str, n: int | None, closure: dict[str, Any] | None = None) -> str | None:
+    """The manifest the engine currently points at for a target, or None when that cannot be established.
+
+    The target's ``.manifest.sha256`` sidecar must be readable and hold a digest. When the engine's closure
+    is at hand it must not report the lesson's current manifest as none either: a lesson whose current
+    manifest is unknown is never approved and never has its older settle items closed on a guess.
+    """
+    sidecar = f"lesson-{n}.manifest.sha256" if kind == "lesson" else pm.SIDECAR_NAME
+    try:
+        digest = (Path(directory) / sidecar).read_text(encoding="ascii").strip()
+    except (OSError, ValueError):
+        return None
+    if not re.fullmatch(r"[0-9a-f]{64}", digest):
+        return None
+    if kind == "lesson" and closure is not None:
+        entry = next((item for item in closure["lessons"] if item["n"] == n), None)
+        if entry is None or entry["current_manifest_sha256"] is None:
+            return None
+    return digest
+
+
+def _readable_closure(directory: Path) -> dict[str, Any] | None:
+    try:
+        return read_closure(directory)
+    except (OSError, ValueError, yaml.YAMLError):
+        return None
+
+
+def close_moot_items(
+    conn: sqlite3.Connection, directory: Path, level: str, slug: str, kind: str, n: int | None, *, moment: str
+) -> tuple[list[int], bool]:
+    """Close the target's older open settle items as moot when its current manifest has an accepted attempt.
+
+    The one place ``moot_superseded`` is decided: ``record``, its replay and ``verdict --repair-projections``
+    all run it, so it is idempotent (an item closed once is not open again) and does not depend on the
+    sidecar being present at any one moment. Runs inside the caller's transaction. Returns the closed item
+    ids and whether the current manifest was established (False: nothing was decided; a later run will).
+    """
+    digest = current_manifest(directory, kind, n, _readable_closure(directory) if kind == "lesson" else None)
+    if digest is None:
+        return [], False
+    attempt = findings_db.accepted_attempt_on(conn, level, slug, kind, n, digest)
+    if attempt is None:
+        return [], True
+    return (
+        findings_db.close_superseded_items(
+            conn,
+            level=level,
+            slug=slug,
+            lesson_n=n,
+            current_manifest_sha256=digest,
+            superseded_by=attempt["attempt_id"],
+            decided_at=moment,
+        ),
+        True,
+    )
+
+
 def projection_targets(root: Path, level: str, slug: str) -> list[tuple[str, int | None]]:
     return [("plan", None), *(("lesson", item["n"]) for item in plan_lessons(root, level, slug))]
 
@@ -234,12 +298,17 @@ def repair_projections(conn: sqlite3.Connection, root: Path, level: str, slug: s
     """Rewrite every stale or missing verdict file of the module from the database.
 
     A file with no accepted attempt behind it cannot be repaired (there is nothing to project); it
-    is returned under ``unrepairable`` and keeps holding the module.
+    is returned under ``unrepairable`` and keeps holding the module. It also runs the moot-close step
+    (``close_moot_items``) for every target, so items ``record`` could not close are closed here.
     """
     directory = state_dir(root, level, slug)
     repaired: list[str] = []
     unrepairable: list[str] = []
+    moot: list[str] = []
     for kind, n in projection_targets(root, level, slug):
+        with findings_db.transaction(conn):
+            closed, _ = close_moot_items(conn, directory, level, slug, kind, n, moment=findings_db.now_iso())
+        moot += [str(item) for item in closed]
         latest = findings_db.latest_accepted(conn, level, slug, kind, n)
         if projection_problem(directory, kind, n, latest) is None:
             continue
@@ -248,7 +317,7 @@ def repair_projections(conn: sqlite3.Connection, root: Path, level: str, slug: s
         else:
             publish_projection(conn, root, level, slug, kind, n)
             repaired.append(projection_name(kind, n))
-    return {"repaired": repaired, "unrepairable": unrepairable}
+    return {"repaired": repaired, "unrepairable": unrepairable, "moot_closed": moot}
 
 
 # --- layer assignment -----------------------------------------------------------------------
@@ -378,8 +447,12 @@ def gate_candidates(rows: list[sqlite3.Row], pattern: str) -> list[dict[str, Any
 
 
 def normalize_claim(text: str) -> str:
-    """A disputed object compared as words: stress marks dropped, case folded, whitespace collapsed, ends trimmed."""
-    folded = fold_quote(unicodedata.normalize("NFC", text)).casefold()
+    """A disputed object compared as words: NFC, case folded, whitespace collapsed, ends trimmed.
+
+    Stress marks (U+0301) are kept: which syllable carries the stress is what a stress claim disputes, so
+    two forms that differ only in stress are two claims.
+    """
+    folded = unicodedata.normalize("NFC", text).casefold()
     return " ".join(folded.split()).strip(" \t.,;:!?\"'«»“”„()[]")
 
 
@@ -676,6 +749,15 @@ def compute_module_verdict(
             holds.append({"code": "lesson_review_stale", "detail": f"lesson {row['n']}: " + "; ".join(row["stale"])})
         elif row["verdict"] == "REVISE":
             holds.append({"code": "lesson_revise", "detail": f"lesson {row['n']} is REVISE"})
+    for row in rows:
+        if row["state"] == "current" and current_manifest(directory, "lesson", row["n"], closure) is None:
+            holds.append(
+                {
+                    "code": HOLD_CURRENT_MANIFEST_UNKNOWN,
+                    "detail": f"lesson {row['n']}: its current manifest cannot be established"
+                    " (no readable manifest sidecar, or the closure reports none)",
+                }
+            )
     by_lesson = {row["n"]: row for row in rows}
     open_items, waiting, pending_fix = [], [], []
     for item in findings_db.module_settle_items(conn, level, slug):
@@ -923,7 +1005,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.command in ("report", "verdict") and args.repair_projections:
             repair = repair_projections(conn, root, args.level, args.slug)
             print(
-                f"repaired verdict files: {repair['repaired']}; unrepairable: {repair['unrepairable']}", file=sys.stderr
+                f"repaired verdict files: {repair['repaired']}; unrepairable: {repair['unrepairable']};"
+                f" moot items closed: {repair['moot_closed']}",
+                file=sys.stderr,
             )
         if args.command == "report":
             report = build_report(conn, args.level, args.slug, root=root, params=params)

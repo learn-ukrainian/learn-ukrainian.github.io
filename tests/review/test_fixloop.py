@@ -436,6 +436,26 @@ def test_claim_identity_is_dimension_sub_dimension_and_object() -> None:
     assert fixloop.claim_key({**base, "locations": [{"tab": "urok", "quote": "q"}]}) == fixloop.claim_key(base)
 
 
+def test_claims_that_differ_only_in_stress_are_different_claims(world: World) -> None:
+    # built from code points: the acute (U+0301) sits on the first vowel or on the second one
+    front = "\u0437\u0430\u0301\u043c\u043e\u043a"
+    back = "\u0437\u0430\u043c\u043e\u0301\u043a"
+    assert (
+        front != back
+        and fixloop.normalize_claim(front) == front
+        and fixloop.claim_key({"dimension": "language", "claim": front})
+        != fixloop.claim_key({"dimension": "language", "claim": back})
+    )
+    for n, claim in ((1, front), (2, back), (3, front)):
+        world.record(world.make_return(n, [quoted_unsupported(claim, PROSE)]))
+    conn = db.connect(world.db)
+    try:
+        [group] = fixloop.unsupported_claim_counts(conn, 3)
+    finally:
+        conn.close()
+    assert group["claim"] == front and len(group["lessons"]) == 2 and group["to_operator"] is False
+
+
 def test_a_claim_a_regenerated_lesson_no_longer_makes_is_not_a_recurrence(world: World) -> None:
     for n in (1, 2, 3):
         world.record(world.make_return(n, [unsupported("F-01")]))
@@ -821,6 +841,27 @@ def test_a_seeded_review_never_reaches_the_module_verdict(world: World, promoted
 # --- moot settle items ------------------------------------------------------------------------------------------------
 
 
+def test_a_lesson_whose_current_manifest_is_unknown_holds_the_module(world: World, promoted: None) -> None:
+    approve_all(world)
+    assert verdict(world)["verdict"] == "APPROVE"
+    (world.state_dir / "lesson-2.manifest.sha256").unlink()
+    document = verdict(world)  # the closure on disk is the one written while the sidecar existed
+    assert document["verdict"] == "HOLD" and fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN in codes_of(document)
+    world.closure()  # recomputed: the closure now reports no current manifest for lesson 2 either
+    document = verdict(world)
+    assert document["verdict"] == "HOLD" and fixloop.HOLD_CURRENT_MANIFEST_UNKNOWN in codes_of(document)
+    assert [hold["detail"].split(":")[0] for hold in document["holds"]] == ["lesson 2"]
+
+
+def test_an_unreadable_manifest_sidecar_is_an_unknown_current_manifest(world: World) -> None:
+    sidecar = world.state_dir / "lesson-2.manifest.sha256"
+    assert fixloop.current_manifest(world.state_dir, "lesson", 2) == world.digest(2)
+    sidecar.write_text("not a digest\n", encoding="ascii")
+    assert fixloop.current_manifest(world.state_dir, "lesson", 2) is None
+    sidecar.unlink()
+    assert fixloop.current_manifest(world.state_dir, "lesson", 2) is None
+
+
 def regenerate_lesson(world: World, n: int) -> None:
     (world.page_dir / f"{n}.mdx").write_text(f"# Lesson {n} regenerated\n", encoding="utf-8")
     world.write_manifests((n,))
@@ -908,7 +949,7 @@ def test_a_verdict_write_that_failed_after_the_commit_holds_the_module_until_it_
     capsys.readouterr()
     assert run(world, "verdict", LEVEL, SLUG, "--repair-projections") == 0
     printed = json.loads(capsys.readouterr().out)
-    assert printed["projections"] == {"repaired": ["lesson-2.verdict.yaml"], "unrepairable": []}
+    assert printed["projections"] == {"repaired": ["lesson-2.verdict.yaml"], "unrepairable": [], "moot_closed": []}
     assert published(world, 2) == latest_projection(world, 2) and published(world, 2)["verdict"] == "REVISE"
     repaired = verdict(world)
     assert fixloop.HOLD_PROJECTION_STALE not in codes_of(repaired) and "lesson_revise" in codes_of(repaired)
@@ -947,6 +988,7 @@ def test_a_missing_or_disagreeing_verdict_file_is_stale_with_a_named_reason_and_
         assert fixloop.repair_projections(conn, world.root, LEVEL, SLUG) == {
             "repaired": ["lesson-2.verdict.yaml"],
             "unrepairable": [],
+            "moot_closed": [],
         }
     finally:
         conn.close()
@@ -962,7 +1004,11 @@ def test_a_verdict_file_with_no_accepted_attempt_behind_it_holds_and_cannot_be_r
     held = verdict(world)
     assert held["verdict"] == "HOLD" and "plan-review.yaml" in held["holds"][0]["detail"]
     assert run(world, "verdict", LEVEL, SLUG, "--repair-projections") == 0
-    assert json.loads(capsys.readouterr().out)["projections"] == {"repaired": [], "unrepairable": ["plan-review.yaml"]}
+    assert json.loads(capsys.readouterr().out)["projections"] == {
+        "repaired": [],
+        "unrepairable": ["plan-review.yaml"],
+        "moot_closed": [],
+    }
     assert plan_review.exists()  # nothing to project from: the file is left for the operator, and it keeps holding
 
 
