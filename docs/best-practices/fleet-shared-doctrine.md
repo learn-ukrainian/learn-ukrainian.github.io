@@ -169,6 +169,7 @@ Authoritative CF quality ladder remains in `model-assignment.md`; this doctrine 
 
 - **LANGUAGE-LANES** for load-bearing Ukrainian judgment: `agy` / `codex` / `claude` / `grok-4.6` only (see model-assignment).
 - **Gemini 3.1 Pro via AGY** is the designated UA specialist; outputs remain **hypotheses until VESUM/`sources`-backed**.
+- Code review and CF seat eligibility follow `model-assignment.md` Code review row.
 - VESUM validates **morphology/attestation** — not arbitrary cultural or historical claims.
 - FOLK: GPT↔Claude cultural gate; **no DeepSeek** for folk culture.
 

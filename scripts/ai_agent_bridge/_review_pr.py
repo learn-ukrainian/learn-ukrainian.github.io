@@ -462,7 +462,7 @@ def resolve_reviewer(selection: str, *, claude_available: bool | None = None) ->
         return choice
     raise ReviewSafetyError(
         f"unsupported_reviewer: {selection!r} "
-        f"(choose auto|codex|glm|claude|agy|grok|kimi)"
+        f"(choose auto|codex|glm|claude|grok|kimi)"
     )
 
 
@@ -487,6 +487,14 @@ def resolve_requested_review_candidate(
     an attested native route from a non-formal fallback carrying the same model.
     """
     model = (explicit_model or "").strip() or None
+    # Provider-prefixed ids (``google/gemini-…``, ``openrouter/google/gemini-…``)
+    # share the Gemini leaf. Compare the last slash segment, lowercased.
+    model_leaf = model.casefold().rsplit("/", 1)[-1] if model is not None else ""
+    if reviewer_request == REVIEWER_AGY or model_leaf.startswith("gemini-"):
+        raise ReviewSafetyError(
+            "gemini_code_review_forbidden: operator 2026-09-25 — "
+            "Gemini reviews Ukrainian only, never code (model-assignment.md)"
+        )
     default_name = None
     requested_route = None
     if reviewer_request != REVIEWER_AUTO:
@@ -1650,7 +1658,7 @@ def register_review_pr_parser(subparsers: Any) -> None:
         "--reviewer",
         default=REVIEWER_AUTO,
         help=(
-            "auto|codex|glm|claude|agy|grok|kimi (recognized semantic routes; "
+            "auto|codex|glm|claude|grok|kimi (recognized semantic routes; "
             "current sealed eligibility comes from model_catalog.yaml)"
         ),
     )

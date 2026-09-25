@@ -3204,7 +3204,9 @@ def _warn_if_monitor_api_unreachable() -> None:
 
 def _origin_tracking_refspec(branch: str) -> str:
     """Explicit fetch mapping that lands ``branch`` under refs/remotes/origin."""
-    return f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
+    from scripts.common.git_context import origin_tracking_refspec
+
+    return origin_tracking_refspec(branch)
 
 
 def _fetch_remote_branch(remote: str, branch: str) -> subprocess.CompletedProcess[str] | None:
@@ -3381,14 +3383,16 @@ def _fetch_base(base: str) -> bool:
 
 
 def _validate_branch_reuse_name(branch: str) -> str:
-    """Reject unsafe or ambiguous ``--branch`` values before touching git."""
-    normalized = branch.strip()
-    if not normalized:
-        raise ValueError("--branch must name an existing non-protected branch")
-    if normalized.startswith(("origin/", "refs/", "github/")):
+    """Reject unsafe or ambiguous ``--branch`` values before attaching a worktree."""
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        normalized = validate_plain_branch_name(branch, repo_root=_REPO_ROOT)
+    except UnsafeBranchNameError as exc:
         raise ValueError(
-            f"--branch must be a local branch name without origin/, github/, or refs/ prefixes: got {branch!r}"
-        )
+            "--branch must be a local branch name without origin/, github/, or refs/ "
+            f"prefixes, and a valid git branch: got {branch!r} ({exc})"
+        ) from exc
 
     containment = _load_worktree_containment()
     if normalized in containment.PROTECTED_BRANCHES:
@@ -8155,6 +8159,19 @@ def _dispatch(
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
+    from scripts.ai_agent_bridge._agy import gemini_review_verdict_dispatch_error
+
+    gemini_review_error = gemini_review_verdict_dispatch_error(
+        agent=str(args.agent),
+        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
+        profile=getattr(args, "review_profile", None),
+        pr_number=getattr(args, "pr", None),
+        branch=getattr(args, "branch", None),
+        repo_root=str(_REPO_ROOT),
+    )
+    if gemini_review_error is not None:
+        print(f"❌ {gemini_review_error}", file=sys.stderr)
+        return 2
     try:
         requested_harness = _resolve_dispatch_harness(args.agent, getattr(args, "harness", None))
     except ValueError as exc:
@@ -10843,7 +10860,19 @@ def build_parser() -> argparse.ArgumentParser:
             "Review-typed dispatch: a run that settles done without a "
             "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED` line of its own in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
-            "ask-* review wrapper; ordinary dispatches are unaffected."
+            "ask-* review wrapper; ordinary dispatches are unaffected. "
+            "On agy/gemini this also requires --review-profile ukrainian, and "
+            "a --branch target must be a Ukrainian-content diff."
+        ),
+    )
+    d.add_argument(
+        "--review-profile",
+        default=None,
+        choices=("code", "ukrainian"),
+        help=(
+            "Required with --require-review-verdict when --agent is agy or gemini. "
+            "code is refused (Gemini reviews Ukrainian only, never code — "
+            "operator 2026-09-25). Ukrainian content review must pass ukrainian."
         ),
     )
     d.add_argument(

@@ -99,8 +99,8 @@ Current adapter policy for discussion calls:
 .venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline "full form with --to options" --to agy,codex
 .venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline "reply" --parent MESSAGE_ID
 
-# Multi-agent discussion (B.4)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture "should we refactor X?" --with claude,agy,codex --max-rounds 2
+# Multi-agent discussion (B.4). Agy joins only with --review-profile ukrainian.
+.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture "should we refactor X?" --with claude,codex --max-rounds 2
 ```
 
 ## Desktop Participation
@@ -178,8 +178,7 @@ is the **canonical formal PR review entry** (Sol fleet-comms Phase 0–3):
   same-route model plus `--override-reason` for an exceptional operator pin,
   for example `--reviewer claude --model claude-fable-5` or
   `--reviewer codex --model gpt-5.6-sol`.
-- `agy` and `kimi` remain recognized request identities but fail closed until
-  their catalog endpoints satisfy sealed-review eligibility. GLM-5.3 is
+- `kimi` remains a recognized request identity but fails closed until its catalog endpoint satisfies sealed-review eligibility. `agy` is not a code-review reviewer (Gemini reviews Ukrainian only, never code). GLM-5.3 is
   **LOCAL-ONLY** / China egress and requires the matching egress policy.
 - `--no-claude-available` is a deprecated compatibility hint and never routes.
 - Do **not** identify the reviewer as “Hermes”; record model + family + harness.
@@ -199,9 +198,13 @@ already wrote a formal review wastes work when the agent did not know to use
 steering warning with `BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1`.
 
 **Phase 4 residual (#5485):** migrate runbooks and dispatch briefs that still say
-`ask-agy --review` / `ask-codex --review` for PR gates to `review-pr` +
-`publish-review-verdict`. `scripts/audit/llm_reviewer_dispatch.py` content-review
-routes remain `ask-* --review` (module QG, not PR CF).
+`ask-codex --review` for PR gates to `review-pr` +
+`publish-review-verdict`. `ask-agy --review` is not a code-review route
+(operator 2026-09-25): a missing `--review-profile` is refused, `code` is
+refused, and Ukrainian content review must pass `--review-profile ukrainian`.
+`scripts/audit/llm_reviewer_dispatch.py` content-review routes remain
+`ask-* --review` (module QG, not PR CF), with that Ukrainian profile on the
+AGY factual route.
 
 After a reviewer writes canonical `code-review-findings.v1` JSON, publish it
 with exactly one PR comment. The publisher retains the overall explanation and
@@ -318,7 +321,7 @@ and you have another way to detect parked sessions.
 | Need a 2-3 agent debate on a design | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` |
 | Sharing context across many delegations | Pin it in `docs/agent-channels/{topic}/context.md` |
 | Formal PR review (CF gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>` |
-| Code review discussion (non-gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ...` |
+| Code review discussion (non-gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ... --to` a non-Gemini seat |
 | Want the post visible in the dashboard | Channels only (the legacy `messages` table has its own UI) |
 
 ## The hygiene rule
@@ -328,10 +331,12 @@ agent.** Per channel conventions:
 
 1. Write code → stage with `git add`
 2. `git diff --cached > /tmp/diff.txt`
-3. `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews "Review request for #NNN" --to agy`
+3. `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews "Review request for #NNN" --to codex`
 4. Apply feedback or argue back in writing
 5. Commit only after the review is CLEAN or BLOCKING is resolved
-6. Commit message includes `Reviewed-By: AGY Gemini 3.1 Pro (High) (task-id)` trailer
+6. Commit message includes `Reviewed-By: <non-Gemini reviewer> (task-id)` trailer
+
+Gemini reviews Ukrainian only, never code (operator 2026-09-25). A `post reviews --to agy` or `discuss --with agy` call is refused unless `--review-profile ukrainian` is set. `--review-profile code` is refused and names the rule. Code review uses a non-Gemini seat.
 
 This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.

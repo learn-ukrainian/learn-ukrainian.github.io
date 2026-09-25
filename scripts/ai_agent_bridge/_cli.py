@@ -759,6 +759,17 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=["auto", "subscription", "api-key", "api"],
         help="Gemini auth mode override for this invocation",
     )
+    ask_gemini_parser.add_argument(
+        "--review-profile",
+        dest="review_profile",
+        choices=("code", "ukrainian"),
+        default=None,
+        help=(
+            "Required for a Gemini review. code is refused "
+            "(Gemini reviews Ukrainian only, never code). "
+            "Ukrainian content review must pass ukrainian."
+        ),
+    )
 
     # ask-agy
     ask_agy_parser = subparsers.add_parser(
@@ -790,6 +801,18 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ask_agy_parser.add_argument("--output-path", dest="output_path", help="Write Agy response body to a file")
     ask_agy_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout")
+    ask_agy_parser.add_argument(
+        "--review-profile",
+        dest="review_profile",
+        choices=("code", "ukrainian"),
+        default=None,
+        help=(
+            "Required with --review. code is refused "
+            "(Gemini reviews Ukrainian only, never code — operator 2026-09-25). "
+            "Ukrainian content review must pass ukrainian. "
+            "Omitting the flag refuses the review and names this flag."
+        ),
+    )
 
     # ask-hermes
     ask_hermes_parser = subparsers.add_parser(
@@ -1538,12 +1561,15 @@ def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
         raise SystemExit(
             f"ask --pr {pr_number}: PR payload has no head branch; refusing to review main"
         )
-    branch = branch.strip()
-    if branch.startswith(("-", "origin/", "refs/", "github/")):
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        branch = validate_plain_branch_name(branch, repo_root=REPO_ROOT)
+    except UnsafeBranchNameError as exc:
         raise SystemExit(
             f"ask --pr {pr_number}: PR head branch {branch!r} is not a local branch name; "
-            "refusing to review main"
-        )
+            f"refusing to review main ({exc})"
+        ) from exc
     if not _is_full_git_sha(head_sha):
         raise SystemExit(
             f"ask --pr {pr_number}: PR payload has no full head SHA; refusing to review main"
@@ -1647,6 +1673,21 @@ def _handle_acp_compat(args, target: str) -> None:
         content = _review_target_content(target_desc, content, sha=resolved_head_sha)
         review = True
 
+    if review and target in {"agy", "gemini"}:
+        from ._agy import gemini_pr_or_branch_content_error, gemini_review_profile_error
+
+        profile_error = gemini_review_profile_error(getattr(args, "review_profile", None))
+        if profile_error is not None:
+            raise SystemExit(profile_error)
+        if pr_number is not None or branch is not None:
+            content_error = gemini_pr_or_branch_content_error(
+                pr_number=int(pr_number) if pr_number is not None else None,
+                branch=branch,
+                repo_root=str(REPO_ROOT),
+            )
+            if content_error is not None:
+                raise SystemExit(content_error)
+
     if review:
         # #7155: a reviewer must be able to use tools (gh, fs, pytest) — ACP's
         # `--deny-all --no-fs --no-terminal` chat transport cannot (Terra
@@ -1672,6 +1713,7 @@ def _handle_acp_compat(args, target: str) -> None:
             branch=branch,
             resolved_head_sha=resolved_head_sha,
             pr_number=int(pr_number) if pr_number is not None else None,
+            review_profile=getattr(args, "review_profile", None),
         )
         return
 
@@ -1736,6 +1778,7 @@ def _dispatch_headless_review(
     branch: str | None = None,
     resolved_head_sha: str | None = None,
     pr_number: int | None = None,
+    review_profile: str | None = None,
 ) -> None:
     """Run a review-intent ask-* through the headless native-CLI dispatch path.
 
@@ -1767,6 +1810,7 @@ def _dispatch_headless_review(
             effort=effort,
             hard_timeout=hard_timeout,
             branch=branch,
+            review_profile=review_profile,
         )
     except RuntimeError as exc:
         missing = _missing_origin_branch_message(exc, branch=branch, pr_number=pr_number)

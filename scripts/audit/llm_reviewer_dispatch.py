@@ -326,7 +326,14 @@ GEMMA_SURFACE_ROUTE = ReviewerRoute(
 # class documented in docs/projects/qg-quality-gate/model-evidence.md.
 FRONTIER_FACTUAL_ROUTE = ReviewerRoute(
     route_name="agy_frontier",
-    bridge_command=("ask-agy", "--to-model", FRONTIER_MODEL_ID, "--review"),
+    bridge_command=(
+        "ask-agy",
+        "--to-model",
+        FRONTIER_MODEL_ID,
+        "--review",
+        "--review-profile",
+        "ukrainian",
+    ),
     reviewer_model_id=FRONTIER_MODEL_ID,
     reviewer_family="google",
     purpose="Seminar, contested-gold, or factual-sensitive review",
@@ -814,6 +821,8 @@ def invoke_bridge_route(
                 "--to-model",
                 route.reviewer_model_id,
                 "--review",
+                "--review-profile",
+                "ukrainian",
                 "--stdout-only",
                 "--output-path",
             ],

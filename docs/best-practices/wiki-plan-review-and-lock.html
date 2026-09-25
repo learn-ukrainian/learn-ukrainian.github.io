@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-05-09" />
+<meta name="report-date" content="2026-09-25" />
 
 <meta name="report-status" content="migrated" />
 
@@ -116,10 +116,10 @@
   <header class="hero">
     <div class="title-block">
       <h1>Review-and-Lock: Wiki + Plan</h1>
-      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+      <div class="sub">Migrated from Markdown on 2026-09-25 09:00</div>
     </div>
     <div class="meta">
-      <div>Source: wiki-plan-review-and-lock.html</div>
+      <div>Source: wiki-plan-review-and-lock.md</div>
       <div>Author: Gemini (Yellow Team)</div>
     </div>
   </header>
@@ -270,17 +270,30 @@ review_notes: &gt;-
 <li>For terminology that differs between wiki and plan (e.g. <code>кав'ярня</code> vs <code>кафе</code>) — flag as a writer-facing note in the plan, not as a defect. Two standard Ukrainian words are not a drift; two <em>conflicting</em> words are.</li>
 </ol>
 <hr />
-<h2>AC-4 — Adversarial review (Gemini) before PR</h2>
-<p>Spawn Gemini via the bridge:</p>
-<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
-  &quot;Adversarial review of #&lt;N&gt; review-and-lock for &lt;slug&gt; wiki + plan. \
-   Read the diff. Look for: \
-   (1) wiki fixes that introduce NEW gaps while closing documented ones, \
-   (2) lifecycle field naming colliding with existing plan schema fields, \
-   (3) plan-review checklist missing categories that the latest systemic audit would have caught, \
-   (4) this rubric doc drifting from what was actually applied (worked example must match rubric step-for-step), \
-   (5) hallucinated vocab not verifiable in VESUM.&quot; \
-  --task-id &lt;N&gt;-review --to-model gemini-3.8-flash-high
+<h2>AC-4 — Adversarial review before PR</h2>
+<p>Two rows. Infra and rubric drift are code review. Vocabulary stays with AGY.</p>
+<p>| Row | What | Seat |
+| --- | --- | --- |
+| Code review | (1) wiki fixes that open new gaps, (2) lifecycle field names colliding with the plan schema, (3) checklist categories the latest audit would have caught, (4) this rubric drifting from what was applied | Non-Gemini code-review seat (<code>ask-codex</code> / <code>ask-claude</code> <code>--type review</code>) |
+| Ukrainian factual | (5) hallucinated vocab not verifiable in VESUM | AGY, <code>--review-profile ukrainian</code> only |</p>
+<pre><code class="language-bash"># Code review — non-Gemini seat
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - \
+  --task-id &lt;N&gt;-review --type review &lt;&lt;'EOF'
+Adversarial review of #&lt;N&gt; review-and-lock for &lt;slug&gt; wiki + plan.
+Read the diff. Look for:
+(1) wiki fixes that introduce NEW gaps while closing documented ones,
+(2) lifecycle field naming colliding with existing plan schema fields,
+(3) plan-review checklist missing categories that the latest systemic audit would have caught,
+(4) this rubric doc drifting from what was actually applied (worked example must match rubric step-for-step).
+EOF
+
+# VESUM / vocabulary — AGY, Ukrainian profile required
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
+  --task-id &lt;N&gt;-vesum --review --review-profile ukrainian \
+  --to-model gemini-3.8-flash-high &lt;&lt;'EOF'
+Check hallucinated vocab in the &lt;slug&gt; wiki + plan diff.
+Every new right-column token must be verifiable in VESUM.
+EOF
 </code></pre>
 <p>Address findings. If non-trivial, a second round is expected — don't short-circuit.</p>
 <hr />
@@ -333,7 +346,7 @@ review_notes: &gt;-
 <li>Wiki &quot;Типові помилки L2&quot; table → plan new fill-in activity (7 of 8 pairs; <code>приймати замовлення</code> left implicit because the plan doesn't use the verb <code>приймати</code> for orders anywhere) ✓</li>
 <li>Wiki uses <code>кав'ярня</code>, plan uses <code>кафе</code>. Both standard. Added <code>кав'ярня</code> to plan's <code>recommended</code> vocab as near-synonym with writer-note. ✓</li>
 </ul>
-<h3>AC-4 (Gemini)</h3>
+<h3>AC-4 (code review + VESUM)</h3>
 <p>See PR #1412 body for the Gemini round(s) and what was addressed.</p>
 <hr />
 <h2>Lint / verification commands</h2>

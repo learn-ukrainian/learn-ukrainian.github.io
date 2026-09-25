@@ -1620,10 +1620,16 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 | Claude | `--to-model` | omit (auto-selects per active session); override only when routing to a specific Opus/Sonnet tier |
 
 ```bash
-# AGY — Gemini-family adversarial review
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Adversarial review for #NNN. Read {path}." \
+# AGY — Ukrainian content review (Gemini reviews Ukrainian only, never code)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Перевір наголос і відмінювання в curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
+  --review \
+  --review-profile ukrainian \
   --to-model gemini-3.1-pro-high
+
+# Codex — code / adversarial review
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex "Adversarial review for #NNN. Read {path}." \
+  --task-id issue-NNN
 
 # Codex — quick question
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex "Review posted on #1177. Please read and respond." \
@@ -1643,8 +1649,8 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 AGY examples:
 
 ```bash
-# Default: AGY bridge call
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Review #NNN." \
+# Default: AGY bridge call (not a code review)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Quick check of the greeting in curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
   --to-model gemini-3.1-pro-high
 

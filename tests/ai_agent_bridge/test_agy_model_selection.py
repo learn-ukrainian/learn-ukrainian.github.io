@@ -19,7 +19,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.result import Result
 
-from scripts.ai_agent_bridge._agy import _extract_target_model, process_for_agy
+from scripts.ai_agent_bridge import _agy
+from scripts.ai_agent_bridge._agy import _extract_target_model, ask_agy, process_for_agy
 from scripts.ai_agent_bridge._config import REPO_ROOT
 from scripts.ai_agent_bridge._review_worktree import (
     ProvisionedReviewWorktree,
@@ -30,6 +31,32 @@ from scripts.ai_agent_bridge._review_worktree import (
 def test_pro_slug_round_trips_from_data_blob():
     msg = {"id": 1, "data": json.dumps({"to_model": "gemini-3.1-pro-high"})}
     assert _extract_target_model(msg) == "gemini-3.1-pro-high"
+
+
+def test_ukrainian_content_review_can_still_route_to_agy(monkeypatch):
+    sent = {}
+
+    def record_message(*args, **kwargs):
+        sent["args"] = args
+        sent.update(kwargs)
+        return 41
+
+    monkeypatch.setattr(_agy, "send_message", record_message)
+    monkeypatch.setattr(_agy, "register_ask", lambda _message_id: None)
+    monkeypatch.setattr(_agy, "launch_background_ask", lambda *_args, **_kwargs: None)
+
+    message_id = ask_agy(
+        "Review Ukrainian morphology against VESUM",
+        msg_type="review",
+        to_model="gemini-3.8-flash-high",
+        background=True,
+    )
+
+    assert message_id == 41
+    assert sent["args"][2] == "review"
+    assert sent["to_llm"] == "agy"
+    assert sent["to_model"] == "gemini-3.8-flash-high"
+    assert sent["review_target"] is None
 
 
 def test_display_label_round_trips():
