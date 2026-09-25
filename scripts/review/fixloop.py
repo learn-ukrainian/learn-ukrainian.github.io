@@ -674,7 +674,7 @@ def terminal_transitions(
     budgets = findings_db.module_budgets(conn, level, slug)
     for n, row in sorted(budgets.items()):
         where = "the plan review" if n == findings_db.PLAN_LESSON_N else f"lesson {n}"
-        if row["revise_rounds"] > params["max_revise_rounds"]:
+        if findings_db.revise_budget_terminal(conn, level, slug, n, params):
             found.append(
                 _terminal(
                     REASON_REVISE,
@@ -694,7 +694,7 @@ def terminal_transitions(
             found.append(_terminal(REASON_DISPUTED, f"{where}: {row['disputed']}", n))
     limit = params["regeneration_factor"] * len(lesson_ns)
     spent = sum(row["regenerations"] for row in budgets.values())
-    if spent >= limit and needs_regeneration:
+    if needs_regeneration and findings_db.regeneration_budget_terminal(conn, level, slug, len(lesson_ns), params):
         found.append(
             _terminal(
                 REASON_REGENERATIONS, f"{spent} of {limit} regenerations spent and a lesson still needs one", None
@@ -728,13 +728,13 @@ def regenerate(
     if n not in lesson_ns:
         raise FixLoopError(f"lesson {n} is not a lesson of {level}/{slug}")
     budgets = findings_db.module_budgets(conn, level, slug)
-    if budgets.get(n, {}).get("revise_rounds", 0) > params["max_revise_rounds"]:
+    if findings_db.revise_budget_terminal(conn, level, slug, n, params):
         raise TerminalTransition(
             REASON_REVISE, f"lesson {n} has had more than {params['max_revise_rounds']} REVISE rounds"
         )
     limit = params["regeneration_factor"] * len(lesson_ns)
     spent = sum(row["regenerations"] for row in budgets.values())
-    if spent >= limit:
+    if findings_db.regeneration_budget_terminal(conn, level, slug, len(lesson_ns), params):
         raise TerminalTransition(REASON_REGENERATIONS, f"{spent} of {limit} regenerations are spent")
     with findings_db.transaction(conn):
         findings_db.bump_budget(conn, level, slug, n, "regenerations")
@@ -1030,9 +1030,11 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.review.fixloop regenerate a1 my-module 2\n"
             "  .venv/bin/python -m scripts.review.fixloop dispute a1 my-module 2 --reason 'writer lane disputes'\n"
             "  .venv/bin/python -m scripts.review.fixloop operator-decision a1 7 --decision 'keep: attested'\n"
+            "  .venv/bin/python -m scripts.review.fixloop budget-decision a1 my-module 2 --decision 'one more round'"
+            " --decided-by operator\n"
             "\nOutputs: report prints text (--json: one object); verdict writes\n"
-            "curriculum/l2-uk-en/evidence/<level>/_state/<slug>/module-verdict.yaml; regenerate, dispute and\n"
-            "operator-decision update batch_state/review-findings/<level>.sqlite. With --repair-projections,\n"
+            "curriculum/l2-uk-en/evidence/<level>/_state/<slug>/module-verdict.yaml; regenerate, dispute,\n"
+            "operator-decision and budget-decision update batch_state/review-findings/<level>.sqlite. With --repair-projections,\n"
             "report and verdict first rewrite lesson-<n>.verdict.yaml and plan-review.yaml from the database.\n"
             "Exit codes: 0 done; 3 a terminal transition (the module goes to the operator); 2 usage or data error."
         ),
@@ -1064,6 +1066,15 @@ def build_parser() -> argparse.ArgumentParser:
     dispute.add_argument("slug")
     dispute.add_argument("n", type=int)
     dispute.add_argument("--reason", required=True)
+    budget = sub.add_parser(
+        "budget-decision", help="record the operator's decision on a terminal budget (one more round or regeneration)"
+    )
+    budget.add_argument("level")
+    budget.add_argument("slug")
+    budget.add_argument("n", type=int, help="the lesson whose budget is terminal")
+    budget.add_argument("--budget", choices=("revise_rounds", "regenerations"), default="revise_rounds")
+    budget.add_argument("--decision", required=True)
+    budget.add_argument("--decided-by", required=True)
     decision = sub.add_parser("operator-decision", help="record the operator's decision on a settle item sent to them")
     decision.add_argument("level")
     decision.add_argument("item_id", type=int)
@@ -1125,6 +1136,12 @@ def main(argv: list[str] | None = None) -> int:
                 json.dumps({"transition": TERMINAL, "reason": REASON_DISPUTED, "detail": args.reason}, sort_keys=True)
             )
             return 3
+        if args.command == "budget-decision":
+            counted = findings_db.record_budget_operator_decision(
+                conn, args.level, args.slug, args.n, args.decision, args.decided_by, budget=args.budget
+            )
+            print(json.dumps({"budget": args.budget, "counted": counted, "decision": args.decision}, sort_keys=True))
+            return 0
         findings_db.record_operator_decision(conn, args.item_id, args.decision)
         print(json.dumps({"item_id": args.item_id, "operator_decision": args.decision}, sort_keys=True))
         return 0
