@@ -486,7 +486,6 @@ def test_delegate_review_verdict_content_branch_passes_the_gate(
     assert "write-shaped prompt" in err
     assert "gemini_code_review_forbidden" not in err
     assert listed == [
-        ["git", "check-ref-format", "--branch", "feature"],
         ["git", "fetch", "origin", _branch_refspec("feature")],
         ["git", "rev-parse", "--verify", "refs/remotes/origin/feature"],
         ["git", "diff", "--name-only", f"origin/main...{_REMOTE_SHA}"],
@@ -604,12 +603,63 @@ def _git(repo: str, *args: str) -> None:
         raise AssertionError(f"git {' '.join(args)} failed: {detail}")
 
 
+# Names whose pure-Python verdict must match ``git check-ref-format --branch``.
+# ``@{-N}`` is omitted because git expands it. ``@`` is omitted because
+# ``--branch`` prints it, and the validator must still refuse that name.
+_GIT_BRANCH_FORMAT_AGREEMENT = (
+    "valid-name",
+    "cursor/task",
+    "a..b",
+    "x.lock",
+    "name with space",
+    "-leading",
+    "trail.",
+    "trail/",
+    "foo//bar",
+    ".hidden",
+    "foo/.bar",
+    "foo/bar.lock",
+    "has~tilde",
+    "has^caret",
+    "has:colon",
+    "has?question",
+    "has*star",
+    "has[bracket",
+    "has\\backslash",
+    "a\nb",
+    "lead/",
+)
+
+
+def _git_check_ref_format_branch(repo: str, name: str) -> str | None:
+    """Return the name git prints, or None when ``--branch`` rejects it."""
+    import subprocess
+
+    from scripts.common.git_context import sanitized_git_env
+
+    completed = subprocess.run(
+        ["git", "check-ref-format", "--branch", name],
+        cwd=repo,
+        check=False,
+        capture_output=True,
+        text=True,
+        env=sanitized_git_env(),
+        timeout=30,
+    )
+    if completed.returncode != 0:
+        return None
+    confirmed = (completed.stdout or "").strip()
+    if not confirmed or "\n" in confirmed or confirmed != name:
+        return None
+    return confirmed
+
+
 def test_validate_plain_branch_name_real_git_refuses_unsafe_names(tmp_path) -> None:
-    """``a..b``, ``x.lock``, a space, and ``@{-1}`` are refused; one plain name is kept.
+    """Unsafe names are refused, and the pure rules agree with git on a fixed list.
 
     ``@{-1}`` is a previous checkout in this repo, so ``check-ref-format --branch``
-    would expand it. The validator must refuse that shorthand instead of returning
-    the expanded name.
+    expands it. The validator must refuse that shorthand instead of returning the
+    expanded name. Git runs only in this test, with a timeout.
     """
     from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
 
@@ -624,11 +674,34 @@ def test_validate_plain_branch_name_real_git_refuses_unsafe_names(tmp_path) -> N
     _git(root, "commit", "-m", "init")
     _git(root, "checkout", "-b", "other")
 
-    for name in ("a..b", "x.lock", "name with space", "@{-1}"):
+    for name in ("a..b", "x.lock", "name with space", "@{-1}", "@"):
         with pytest.raises(UnsafeBranchNameError):
             validate_plain_branch_name(name, repo_root=root)
 
     assert validate_plain_branch_name("valid-name", repo_root=root) == "valid-name"
+    import subprocess
+
+    from scripts.common.git_context import sanitized_git_env
+
+    expanded = subprocess.run(
+        ["git", "check-ref-format", "--branch", "@{-1}"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+        text=True,
+        env=sanitized_git_env(),
+        timeout=30,
+    )
+    assert expanded.returncode == 0
+    assert expanded.stdout.strip() == "valid-name"
+
+    for name in _GIT_BRANCH_FORMAT_AGREEMENT:
+        git_name = _git_check_ref_format_branch(root, name)
+        if git_name is None:
+            with pytest.raises(UnsafeBranchNameError):
+                validate_plain_branch_name(name, repo_root=root)
+        else:
+            assert validate_plain_branch_name(name, repo_root=root) == git_name
 
 
 def test_branch_changed_paths_ignore_hostile_git_dir(monkeypatch: pytest.MonkeyPatch, tmp_path) -> None:

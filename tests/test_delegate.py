@@ -7344,7 +7344,7 @@ def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkey
             raw_path=str(tmp_path / "unsafe"),
             branch="main",
         )
-    assert calls == [["git", "check-ref-format", "--branch", "main"]]
+    assert calls == []
 
 
 def test_branch_reuse_refuses_branch_checked_out_in_another_worktree(tmp_path, monkeypatch):

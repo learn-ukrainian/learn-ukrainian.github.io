@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import subprocess
 from pathlib import Path
 
 GIT_REDIRECT_ENV_KEYS = (
@@ -44,50 +43,48 @@ def origin_tracking_refspec(branch: str) -> str:
     return f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
 
 
+# git-check-ref-format(1): no ASCII controls, space, or these punctuation bytes.
+_REF_FORBIDDEN_CHARS = frozenset(" ~^:?*[\\")
+
+
+def _rejects_git_branch_format(name: str) -> bool:
+    """Return whether ``name`` violates ``git check-ref-format --branch`` rules.
+
+    One-level names are allowed, matching ``--branch``. ``@{-N}`` is refused
+    here; git would expand that shorthand to a previous checkout.
+    """
+    if not name or name == "@" or name.startswith("-"):
+        return True
+    if name.startswith("/") or name.endswith("/") or name.endswith("."):
+        return True
+    if ".." in name or "@{" in name or "//" in name:
+        return True
+    for char in name:
+        if ord(char) < 0x20 or ord(char) == 0x7F or char in _REF_FORBIDDEN_CHARS:
+            return True
+    for component in name.split("/"):
+        if not component or component.startswith(".") or component.endswith(".lock"):
+            return True
+    return False
+
+
 def validate_plain_branch_name(branch: str, *, repo_root: str | Path) -> str:
-    """Reject an unsafe branch name, then confirm it with ``git check-ref-format``.
+    """Reject an unsafe branch name using pure ``check-ref-format --branch`` rules.
 
     Shared by the Gemini remote-branch gate, ``ask --pr`` head resolution, and
-    ``delegate --branch`` reuse. Prefix, ``:``, and ``@{`` checks run before git
-    so a refspec or ``@{-N}`` shorthand never becomes a command argument.
-    ``check-ref-format --branch`` expands ``@{-N}`` to a previous checkout and
-    prints that name; the value returned is git's stdout, the name git accepted.
+    ``delegate --branch`` reuse. Prefix rejects (``origin/``, ``refs/``,
+    ``github/``, ``+``, ``-``, and ``:``) run first. The rest follows
+    git-check-ref-format(1) in-process so a hung or redirected ``git`` cannot
+    fail the check. ``repo_root`` stays in the signature for those callers; this
+    function does not read it or invoke git.
     """
+    del repo_root
     normalized = branch.strip()
     if (
         not normalized
         or normalized.startswith(_UNSAFE_BRANCH_PREFIXES)
         or ":" in normalized
-        or "@{" in normalized
-        or "\n" in normalized
-        or "\x00" in normalized
+        or _rejects_git_branch_format(normalized)
     ):
         raise UnsafeBranchNameError(f"refusing branch name {branch!r}")
-    try:
-        proc = subprocess.run(
-            ["git", "check-ref-format", "--branch", normalized],
-            cwd=str(repo_root),
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=30,
-            env=sanitized_git_env(),
-        )
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        raise UnsafeBranchNameError(f"refusing branch name {branch!r}: {exc}") from exc
-    if proc.returncode != 0:
-        detail = (proc.stderr or proc.stdout or "").strip().replace("\n", " ")
-        raise UnsafeBranchNameError(
-            f"refusing branch name {branch!r}: {detail or f'exit {proc.returncode}'}"
-        )
-    confirmed = (proc.stdout or "").strip()
-    if (
-        not confirmed
-        or "\n" in confirmed
-        or confirmed.startswith(_UNSAFE_BRANCH_PREFIXES)
-        or ":" in confirmed
-        or "@{" in confirmed
-        or "\x00" in confirmed
-    ):
-        raise UnsafeBranchNameError(f"refusing branch name {branch!r}: git confirmed {confirmed!r}")
-    return confirmed
+    return normalized
