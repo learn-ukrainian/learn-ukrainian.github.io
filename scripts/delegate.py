@@ -6693,34 +6693,41 @@ def _kimicc_read_only_review_grant(
     mode: str,
     require_review_verdict: bool,
     cwd: Path | None = None,
-) -> dict[str, str]:
+) -> dict[str, Any]:
     """Sources MCP grant for ``ask-kimi --review``.
 
     That ask is ``dispatch --agent kimi --harness kimicc --mode read-only
     --require-review-verdict``. The headless wrapper always passes ``--bare``,
-    and ``claude --bare`` does not load ``.mcp.json``. A review that is not
-    bare discovers that file from the checkout it is running in. When this
-    worker's cwd is a dispatch worktree, pass that worktree's ``.mcp.json``:
-    the worktree can be a different commit from the primary checkout, so the
-    sources server the review should see is the one checked out there. Any
-    other cwd (the primary checkout, or a path that is not a dispatch
-    worktree) gets ``_REPO_ROOT / ".mcp.json"``. Write modes and non-review
-    read-only dispatches get nothing.
+    and ``claude --bare`` does not load ``.mcp.json``. The config this grant
+    names is always the trusted primary checkout file ``_REPO_ROOT /
+    ".mcp.json"`` (``main``), never the ``.mcp.json`` in the worker cwd. A
+    dispatch worktree is the branch under review, so its config is untrusted:
+    a stdio entry would run the author's command, and a repointed sources URL
+    would forge verification results. ``cwd`` is accepted and ignored so
+    callers can keep passing the worker checkout. ``strict_mcp_config`` is set
+    so the kimicc adapter passes ``--strict-mcp-config`` (Claude Code: only
+    servers from ``--mcp-config``; no checkout auto-discovery). Write modes
+    and non-review read-only dispatches get nothing. A missing trusted file
+    refuses the grant instead of launching without the sources server.
     """
+    del cwd  # untrusted; the reviewed checkout must not supply MCP config
     if harness != "kimicc" or mode != "read-only" or not require_review_verdict:
         return {}
     from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
-    from scripts.guardrails.worktree_containment import is_dispatch_worktree
 
     allowed = review_tools_allowed_csv("claude")
     if not allowed:
         return {}
     mcp_config = _REPO_ROOT / ".mcp.json"
-    if cwd is not None and is_dispatch_worktree(cwd):
-        mcp_config = Path(cwd) / ".mcp.json"
+    if not mcp_config.is_file():
+        raise ValueError(
+            "kimicc review grant refused: trusted MCP config is missing at "
+            f"{mcp_config}. Refusing to launch without it."
+        )
     return {
         "allowed_tools": allowed,
         "mcp_config_path": str(mcp_config),
+        "strict_mcp_config": True,
     }
 
 
@@ -6900,14 +6907,17 @@ def _run_worker(
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
             # ask-kimi --review is dispatch --agent kimi --harness kimicc
             # --mode read-only --require-review-verdict, not --review-attempt.
-            tool_config.update(
-                _kimicc_read_only_review_grant(
-                    harness=harness,
-                    mode=mode,
-                    require_review_verdict=require_review_verdict,
-                    cwd=cwd,
+            # A sealed review attempt already set strict_mcp_config and its
+            # mcp_config_path; do not overwrite those keys.
+            if not tool_config.get("strict_mcp_config"):
+                tool_config.update(
+                    _kimicc_read_only_review_grant(
+                        harness=harness,
+                        mode=mode,
+                        require_review_verdict=require_review_verdict,
+                        cwd=cwd,
+                    )
                 )
-            )
             if (
                 strict_mcp_config
                 and review_id is not None
