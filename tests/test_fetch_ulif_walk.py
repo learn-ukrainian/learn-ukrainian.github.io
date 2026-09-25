@@ -649,9 +649,10 @@ def test_completed_attempt_is_the_only_source_of_tabs_in_offline_and_live_paths(
             ref = cache.execute(
                 "SELECT raw_response_ref FROM ulif_dictua_entries WHERE normalized_query = ?", (spelling,)
             ).fetchone()[0]
-            manifest = cache.execute(
-                "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?", (ref.removeprefix("sha256:"),)
-            ).fetchone()[0]
+            from scripts.lexicon import ulif_raw_cache
+
+            manifest = ulif_raw_cache.resolve_ref(ref, path=ulif_raw_cache.cache_path(tmp_path / "cache.db"))
+            assert manifest is not None
             return set(json.loads(manifest))
 
         assert parse_stored(ledger, cache) == 0

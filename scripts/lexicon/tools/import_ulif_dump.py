@@ -2,8 +2,9 @@
 """Import crawled ULIF DictUA dump into sources.db (ulif_dictua_* tables).
 
 Reads entries from the standalone crawler SQLite database (e.g. data/ulif_dump_all.db)
-and transactionally streams them into the canonical sources.db tables
-(ulif_dictua_entries and ulif_dictua_sections).
+and transactionally streams parsed rows into the canonical sources.db tables
+(ulif_dictua_entries and ulif_dictua_sections). Raw bodies commit first to
+the separate cache database.
 
 Supports one-shot execution or continuous `--watch` mode to progressively ingest
 entries while dump_ulif.py is crawling in the background.
@@ -20,6 +21,11 @@ import sys
 import time
 from pathlib import Path
 from typing import Any
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.lexicon import ulif_raw_cache
 
 ULIF_SECTION_KINDS = ("paradigm", "synonyms", "antonyms", "phraseology")
 
@@ -68,17 +74,21 @@ def import_batch(
 ) -> dict[str, int]:
     """Import new or updated entries from dump_db to target_db."""
     require_homonym_schema(target_conn)
+    raw_cache_path = None
+    if not dry_run:
+        target_name = target_conn.execute("PRAGMA database_list").fetchone()[2]
+        if not target_name:
+            raise ValueError("ULIF import requires a file-backed sources database")
+        raw_cache_path = ulif_raw_cache.cache_path(Path(target_name))
     # Find existing entries in target to skip identical ones
     existing_records = {
         (row[0], row[1]): row[2]
-        for row in target_conn.execute(
-            "SELECT normalized_query, homonym_index, retrieved_at FROM ulif_dictua_entries"
-        )
+        for row in target_conn.execute("SELECT normalized_query, homonym_index, retrieved_at FROM ulif_dictua_entries")
     }
 
     query = (
         "SELECT lemma, canonical_headword, status, retrieved_at, "
-        "paradigm_json, synonyms_json, phraseology_json, antonyms_json "
+        "paradigm_json, synonyms_json, phraseology_json, antonyms_json, raw_html_json "
         "FROM ulif_entries "
         "WHERE status IN ('ok', 'not_found', 'parse_error') "
         "ORDER BY rowid ASC"
@@ -89,7 +99,7 @@ def import_batch(
     cursor = dump_conn.execute(query)
     tally = {"scanned": 0, "inserted": 0, "updated": 0, "skipped": 0, "sections": 0}
 
-    entries_to_insert: list[tuple[str, str, str, str, str, str, str, dict[str, Any]]] = []
+    entries_to_insert: list[tuple] = []
 
     for row in cursor:
         tally["scanned"] += 1
@@ -101,6 +111,7 @@ def import_batch(
         synonyms_json = row[5]
         phraseology_json = row[6]
         antonyms_json = row[7]
+        raw_html_json = row[8]
 
         normalized = normalize_query(lemma)
         if not normalized:
@@ -126,15 +137,43 @@ def import_batch(
             with contextlib.suppress(Exception):
                 sections_dict["antonyms"] = json.loads(antonyms_json)
 
-        digest = hashlib.sha256(
-            f"{lemma}:{canonical_headword}:{status}:{retrieved_at}".encode()
-        ).hexdigest()
+        blobs: list[tuple[str, bytes]] = []
+        if raw_html_json:
+            responses = json.loads(raw_html_json)
+            if not isinstance(responses, dict) or not all(isinstance(value, str) for value in responses.values()):
+                raise ValueError("dump raw_html_json must map response kinds to HTML strings")
+            refs = {}
+            for kind, html in sorted(responses.items()):
+                body = html.encode("utf-8")
+                sha = hashlib.sha256(body).hexdigest()
+                blobs.append((sha, body))
+                refs[kind] = f"sha256:{sha}"
+            raw_body = json.dumps(refs, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        else:
+            raw_body = json.dumps(
+                dict(
+                    lemma=lemma,
+                    canonical_headword=canonical_headword,
+                    status=status,
+                    retrieved_at=retrieved_at,
+                    paradigm_json=paradigm_json,
+                    synonyms_json=synonyms_json,
+                    phraseology_json=phraseology_json,
+                    antonyms_json=antonyms_json,
+                ),
+                ensure_ascii=False,
+                sort_keys=True,
+            ).encode("utf-8")
+        digest = hashlib.sha256(raw_body).hexdigest()
+        if raw_cache_path is not None:
+            for sha, body in blobs:
+                ulif_raw_cache.put(sha, body, "text/html; charset=utf-8", retrieved_at, path=raw_cache_path)
+            ulif_raw_cache.put(digest, raw_body, "application/json", retrieved_at, path=raw_cache_path)
 
         entries_to_insert.append(
             (
                 normalized,
                 canonical_headword,
-                "dump_ulif",
                 retrieved_at,
                 digest,
                 "1.0",
@@ -150,7 +189,6 @@ def import_batch(
         for (
             normalized,
             canonical_headword,
-            raw_ref,
             retrieved_at,
             digest,
             version,
@@ -178,7 +216,7 @@ def import_batch(
                     normalized,
                     canonical_headword,
                     digest,
-                    raw_ref,
+                    f"sha256:{digest}",
                     retrieved_at,
                     digest,
                     version,
@@ -196,9 +234,7 @@ def import_batch(
                 continue
             entry_id = entry_row[0]
 
-            target_conn.execute(
-                "DELETE FROM ulif_dictua_sections WHERE entry_id = ?", (entry_id,)
-            )
+            target_conn.execute("DELETE FROM ulif_dictua_sections WHERE entry_id = ?", (entry_id,))
 
             if status == "ok":
                 for kind in ULIF_SECTION_KINDS:
@@ -236,37 +272,44 @@ def import_batch(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Stream entries from ULIF crawler dump DB into sources.db."
+        description="Stream parsed ULIF dump entries into sources.db and exact HTML into the raw cache.\nUse for an existing crawler dump; do not use during a sources.db migration window.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/lexicon/tools/import_ulif_dump.py --dump-db data/ulif_dump_all.db --sources-db data/sources.db
+  .venv/bin/python scripts/lexicon/tools/import_ulif_dump.py --dump-db data/ulif_dump_all.db --dry-run
+Outputs: parsed entries and sections in sources.db; raw responses in data/lexicon/cache/ulif_raw.sqlite.
+Exit codes: 0 success; 1 missing dump or incompatible target schema.
+Related: issue #8800 Plan v3; scripts/lexicon/tools/dump_ulif.py.""",
     )
     parser.add_argument(
         "--dump-db",
         type=Path,
         default=Path("data/ulif_dump_all.db"),
-        help="Path to SQLite database created by dump_ulif.py",
+        help="Crawler SQLite input (default: data/ulif_dump_all.db)",
     )
     parser.add_argument(
         "--sources-db",
         type=Path,
         default=Path("data/sources.db"),
-        help="Path to canonical sources.db",
+        help="Parsed-entry SQLite target (default: data/sources.db)",
     )
     parser.add_argument(
         "--limit",
         type=int,
         default=None,
-        help="Maximum entries to process in this run",
+        help="Maximum dump entries per scan, e.g. 1000 (default: all)",
     )
     parser.add_argument(
         "--watch",
         type=int,
         metavar="SECONDS",
         default=None,
-        help="Poll interval in seconds for continuous incremental ingestion",
+        help="Poll interval in seconds, e.g. 60 (default: one pass)",
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Scan and report counts without modifying sources.db",
+        help="Scan and report without writing either DB (default: off)",
     )
 
     args = parser.parse_args(argv)
@@ -283,9 +326,7 @@ def main(argv: list[str] | None = None) -> int:
         ensure_target_schema(target_conn)
         while True:
             t0 = time.monotonic()
-            tally = import_batch(
-                dump_conn, target_conn, limit=args.limit, dry_run=args.dry_run
-            )
+            tally = import_batch(dump_conn, target_conn, limit=args.limit, dry_run=args.dry_run)
             elapsed = time.monotonic() - t0
             print(
                 f"Import complete in {elapsed:.2f}s: "

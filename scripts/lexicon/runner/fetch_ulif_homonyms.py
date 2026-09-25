@@ -8,9 +8,8 @@ tab postbacks. Response bodies and redacted request payloads are stored
 before parsing. ``parse`` is a separate offline pass over those bodies.
 
 The declared user agent is ``DictUAClient`` in ``fetch_ulif_20k.py``. Raw
-bodies use the ``ulif_dictua_raw_responses`` table: sha256 of the bytes,
-uncompressed, the same content-addressing ``store_ulif_dictua_entry`` already
-uses. View-state fields are replaced by their sha256 in the stored payload.
+bodies use the separate ULIF raw cache: sha256 of the bytes, uncompressed.
+View-state fields are replaced by their sha256 in the stored payload.
 """
 
 from __future__ import annotations
@@ -37,6 +36,7 @@ from typing import Any
 
 from bs4 import BeautifulSoup
 
+from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner.fetch_ulif_20k import ULIF_URL, DictUAClient
 from scripts.lexicon.runner.ulif_dictua_parse import (
     ULIF_PARSER_VERSION,
@@ -980,13 +980,12 @@ def _sha256(data: bytes) -> str:
 
 
 def _store_blob(conn: sqlite3.Connection, digest: str, body: bytes, content_type: str) -> None:
-    conn.execute(
-        """
-        INSERT OR IGNORE INTO ulif_dictua_raw_responses
-            (response_sha256, body, content_type, stored_at)
-        VALUES (?, ?, ?, ?)
-        """,
-        (digest, body, content_type, _now_iso()),
+    ulif_raw_cache.put(
+        digest,
+        body,
+        content_type,
+        _now_iso(),
+        path=ulif_raw_cache.cache_path(_db_path(conn)),
     )
 
 
@@ -1320,13 +1319,9 @@ def _dedupe_register_rows(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, A
 
 
 def _load_body(cache: sqlite3.Connection, digest: str) -> str:
-    row = cache.execute(
-        "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
-        (digest,),
-    ).fetchone()
-    if row is None:
+    body = ulif_raw_cache.get(digest, path=ulif_raw_cache.cache_path(_db_path(cache)))
+    if body is None:
         raise RuntimeError(f"missing raw response {digest}")
-    body = bytes(row[0])
     return body.decode("utf-8")
 
 
@@ -4300,7 +4295,7 @@ Examples:
       --state-dir batch_state/ulif-homonyms/state
 
 Outputs:
-  Raw response blobs in ulif_dictua_raw_responses (sources.db)
+  Raw response blobs in the ULIF cache DB
   Parsed homonym entries in ulif_dictua_entries and ulif_dictua_sections
   Progress ledger in <state-dir>/ledger.sqlite
 
@@ -4332,7 +4327,7 @@ Examples:
       --db data/sources.db --delay 1.0
 
 Outputs:
-  Raw HTML responses in ulif_dictua_raw_responses (sources.db)
+  Raw HTML responses in the ULIF cache DB
   Progress and attempt state in <state-dir>/ledger.sqlite
 
 Exit codes:
@@ -4429,7 +4424,7 @@ Examples:
       --state-dir batch_state/ulif-homonyms/state --verify-ledger
 
 Outputs:
-  Raw HTML responses in ulif_dictua_raw_responses (sources.db)
+  Raw HTML responses in the ULIF cache DB
   Parsed homonym entries in ulif_dictua_entries and ulif_dictua_sections (sources.db)
   Walk progress and register pages/rows in <state-dir>/ledger.sqlite
 
@@ -4541,7 +4536,7 @@ Related:
         "--db",
         type=Path,
         required=True,
-        help="SQLite database containing ulif_dictua_raw_responses to parse into entries (e.g. data/sources.db)",
+        help="Sources SQLite database receiving parsed entries (raw bodies are in the ULIF cache; e.g. data/sources.db)",
     )
 
     status = sub.add_parser(
