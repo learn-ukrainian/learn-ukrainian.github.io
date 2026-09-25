@@ -56,12 +56,19 @@ def test_isolate_dispatch_task_store_is_not_the_live_dir(
     _isolate_dispatch_task_store: Path,
 ) -> None:
     """The autouse redirect is ``<session base>/<n>/tasks``, so its parent is also per-test."""
+    import scripts.api.config as api_config
+    import scripts.api.delegate_router as delegate_router
+    import scripts.api.main as api_main
     import scripts.delegate as delegate_mod
 
     assert _isolate_dispatch_task_store != _REAL_TASKS_DIR
     assert _isolate_dispatch_task_store.name == "tasks"
     assert _isolate_dispatch_task_store == delegate_mod._TASKS_DIR
     assert _isolate_dispatch_task_store.parent != _REAL_TASKS_DIR.parent
+    assert _isolate_dispatch_task_store.parent == api_config.BATCH_STATE_DIR
+    assert _isolate_dispatch_task_store.parent == api_main.app.state.ctx.roots.batch_state_dir
+    assert delegate_router._tasks_dir(api_main.app.state.ctx) == _isolate_dispatch_task_store
+    assert delegate_router._tasks_dir(None) == _isolate_dispatch_task_store
     assert _REAL_TASKS_DIR not in delegate_mod._state_path("t-isolated").parents
     fast_fail = delegate_mod._TASKS_DIR.parent / "preflight_fast_fail.jsonl"
     assert _REAL_TASKS_DIR.parent not in fast_fail.resolve().parents

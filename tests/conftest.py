@@ -766,6 +766,39 @@ def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
 sys.addaudithook(_task_store_write_hook)
 
 
+def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path) -> None:
+    """Point Monitor's task-store root at this test's ``batch_state``.
+
+    ``create_app(production_context())`` freezes ``config.BATCH_STATE_DIR`` onto
+    ``app.state.ctx`` at import. ``delegate_router._tasks_dir`` then writes
+    ``.task_cache.sqlite3`` under that directory. The delegate ``_TASKS_DIR``
+    retarget does not move it, and the audit guard turns that connect into a
+    500 (``Failed`` is a ``BaseException``, so the orient section handler does
+    not catch it).
+
+    ``git_hygiene_router._active_task_ids`` is not this seam: it reads
+    ``project_root / "batch_state" / "tasks"`` (the checkout, via
+    ``live_repo_root``), and only opens task JSON read-only. It never opens
+    the task-cache database. Pointing ``live_repo_root`` at the temp store
+    would detach git-backed API tests from the repo.
+
+    ``hramatka_router`` binds ``BATCH_STATE_DIR / "hramatka"`` at import. That
+    is the lesson store, not ``tasks/``, and this guard does not watch it.
+    """
+    import scripts.api.config as api_config
+    from scripts.api.monitor_context import production_context
+
+    monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
+    production_context.cache_clear()
+    api_main = sys.modules.get("scripts.api.main")
+    if api_main is None:
+        return
+    app = vars(api_main).get("app")
+    context = getattr(getattr(app, "state", None), "ctx", None)
+    if context is not None:
+        monkeypatch.setattr(app.state, "ctx", context.with_roots(batch_state_dir=batch_state))
+
+
 def _retarget_loaded_task_dirs(monkeypatch: pytest.MonkeyPatch, isolated: Path) -> None:
     """Import each known task-store module and point its constant at ``isolated``.
 
@@ -804,12 +837,16 @@ def _isolate_dispatch_task_store(
     assert their tmp dir starts empty (see ``_isolate_write_ownership_ledger``).
     Nothing is copied out of the live store. A test that sets ``_TASKS_DIR``
     itself runs after this autouse fixture, so that override wins.
+    The same directory's parent becomes ``config.BATCH_STATE_DIR`` and
+    ``app.state.ctx.roots.batch_state_dir``, so Monitor requests do not open
+    the live ``.task_cache.sqlite3``.
     """
     isolated = _dispatch_task_store_base / str(next(_DISPATCH_STORE_SEQ)) / "tasks"
     isolated.mkdir(parents=True)
     import scripts.delegate as delegate_mod
 
     monkeypatch.setattr(delegate_mod, "_TASKS_DIR", isolated)
+    _retarget_api_batch_state(monkeypatch, isolated.parent)
     # Tests put ``scripts/`` on ``sys.path`` and ``import delegate``. That is a
     # second module object with its own ``_TASKS_DIR``, not ``scripts.delegate``.
     flat_delegate = sys.modules.get("delegate")
