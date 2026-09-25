@@ -2,6 +2,10 @@
 
 Aggregates recorded decisions across lessons 1...n-1 of a module.
 Infers nothing; copies and counts from observed, resolutions, provenance, plan v2, and MDX.
+Span attribution: receipt offsets are relative to the plain text of one resolver unit (= one
+provenance span); `align_receipt_tokens` reproduces the receipt token sequence from the spans
+of a provenance unit and converts each offset to the unit's rendered text before the token is
+matched to the span whose `[start, end)` contains it. Any disagreement fails closed.
 The repository root is caller-selected and resolved once at entry (strict=True); symlink-free containment is enforced on all path components below it.
 """
 
@@ -17,6 +21,8 @@ from typing import Any
 import yaml
 
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.resolver.classify import GLOSS_ID_RE
+from scripts.curriculum.resolver.tokenize import tokenize
 
 from . import codes
 from .error import DigestError
@@ -24,6 +30,7 @@ from .schema import (
     validate_digest,
     validate_observed_schema,
     validate_plan_schema,
+    validate_provenance_schema,
     validate_resolutions_schema,
 )
 
@@ -36,7 +43,7 @@ def resolve_repo_root(repo_root: Path | str | None = None) -> Path:
     return Path(root).resolve(strict=True)
 
 
-GENERATOR_VERSION: str = "1"
+GENERATOR_VERSION: str = "3"
 DIGEST_SCHEMA: int = 1
 
 ALLOWED_LEVELS: tuple[str, ...] = ("a1", "a2", "b1", "b2", "c1", "c2")
@@ -86,11 +93,7 @@ def _is_allowed_repo_rel_path(rel: Path) -> bool:
         return True
 
     # 2. curriculum/l2-uk-en/lesson-plans/<level>/...
-    if (
-        len(parts) >= 5
-        and parts[0:3] == ("curriculum", "l2-uk-en", "lesson-plans")
-        and parts[3] in ALLOWED_LEVELS
-    ):
+    if len(parts) >= 5 and parts[0:3] == ("curriculum", "l2-uk-en", "lesson-plans") and parts[3] in ALLOWED_LEVELS:
         return True
 
     # 3. site/src/content/docs/<level>/<slug>/...
@@ -188,6 +191,104 @@ def _sort_val(v: Any) -> tuple[int, Any]:
     return (2, str(v))
 
 
+LocatorKey = tuple[Any, Any, Any, Any, Any]
+
+
+def _locator_key(loc: dict[str, Any]) -> LocatorKey:
+    return (loc.get("tab"), loc.get("step"), loc.get("activity"), loc.get("item"), loc.get("block"))
+
+
+def _strip_accents(text: str) -> str:
+    return text.replace("\u0300", "").replace("\u0301", "")
+
+
+def plain_to_rendered_offset(rendered: str, plain_offset: int) -> int:
+    """Offset in `rendered` of the character at `plain_offset` in its accent-stripped text."""
+    seen = 0
+    for idx, ch in enumerate(rendered):
+        if ch in ("\u0300", "\u0301"):
+            continue
+        if seen == plain_offset:
+            return idx
+        seen += 1
+    if seen == plain_offset:
+        return len(rendered)
+    raise ValueError(f"plain offset {plain_offset} is beyond {rendered!r}")
+
+
+def expected_receipt_tokens(spans: list[dict[str, Any]]) -> list[tuple[int, int, str]]:
+    """The receipt token sequence a unit's spans produce: (span index, plain offset, token).
+
+    Mirrors the resolver: every resolver unit (= one span) is tokenized on its plain text in
+    document order; a `gloss_ref` unit yields its W- ids from the `{{gloss:W-n}}` marker the
+    writer typed, which the page replaces by the record's lemma and gloss.
+    """
+    expected: list[tuple[int, int, str]] = []
+    for span in spans:
+        span_idx = int(span["span"])
+        if span.get("role") == "gloss_ref":
+            marker = "{{gloss:" + str(span.get("ref") or "") + "}}"
+            matches = list(GLOSS_ID_RE.finditer(marker))
+            if matches:
+                expected.extend((span_idx, m.start(), m.group(0)) for m in matches)
+            else:
+                expected.append((span_idx, 0, marker))
+            continue
+        plain = _strip_accents(str(span.get("text", "")))
+        expected.extend((span_idx, token.start, token.text) for token in tokenize(plain))
+    return expected
+
+
+def align_receipt_tokens(
+    spans: list[dict[str, Any]], receipt_tokens: list[dict[str, Any]], *, where: str = ""
+) -> list[tuple[int, int]]:
+    """Convert receipt offsets (plain text, relative to the resolver unit = one span) into
+    unit-relative offsets in the unit's rendered text.
+
+    Returns, per receipt token in order, (span index, unit offset). The receipts list every
+    token of the unit in document order, so the sequence must equal the one the spans
+    reproduce; any difference fails closed with RECEIPT_SPAN_ALIGNMENT_FAILED.
+    """
+    ordered = sorted(spans, key=lambda s: int(s["span"]))
+    by_index = {int(s["span"]): s for s in ordered}
+    expected = expected_receipt_tokens(ordered)
+    if len(expected) != len(receipt_tokens):
+        raise DigestError(
+            codes.RECEIPT_SPAN_ALIGNMENT_FAILED,
+            f"{where}: {len(receipt_tokens)} receipt token(s) but the provenance spans tokenize to {len(expected)}",
+        )
+    aligned: list[tuple[int, int]] = []
+    for (span_idx, plain_offset, text), token in zip(expected, receipt_tokens, strict=True):
+        if token.get("offset") != plain_offset or str(token.get("token", "")) != text:
+            raise DigestError(
+                codes.RECEIPT_SPAN_ALIGNMENT_FAILED,
+                f"{where}: receipt token {token.get('token')!r} at offset {token.get('offset')} does not match "
+                f"the span {span_idx} token {text!r} at offset {plain_offset}",
+            )
+        span = by_index[span_idx]
+        if span.get("role") == "gloss_ref":
+            unit_offset = int(span["start"])
+        else:
+            unit_offset = int(span["start"]) + plain_to_rendered_offset(str(span.get("text", "")), plain_offset)
+        aligned.append((span_idx, unit_offset))
+    return aligned
+
+
+def _check_spans_partition_unit(spans: list[dict[str, Any]], where: str) -> None:
+    ordered = sorted(spans, key=lambda s: int(s["span"]))
+    cursor = 0
+    for position, span in enumerate(ordered):
+        if int(span["span"]) != position or int(span["start"]) != cursor:
+            raise DigestError(
+                codes.PROVENANCE_INVALID,
+                f"{where}: spans do not partition the unit (span {span.get('span')} starts at {span.get('start')}, "
+                f"expected span {position} at {cursor})",
+            )
+        if int(span["end"]) - int(span["start"]) != len(str(span.get("text", ""))):
+            raise DigestError(codes.PROVENANCE_INVALID, f"{where}: span {position} end does not match its text length")
+        cursor = int(span["end"])
+
+
 def _sort_key_locator(item: dict[str, Any]) -> tuple:
     """Sort key matching (locator.tab, step, activity, item, block, offset) with null first."""
     loc = item["locator"]
@@ -266,9 +367,7 @@ def build_digest(
 
     validate_plan_schema(plan_doc, plan_path, repo_root=root)
 
-    plan_lessons_by_n: dict[int, dict[str, Any]] = {
-        l["n"]: l for l in plan_doc["lessons"]
-    }
+    plan_lessons_by_n: dict[int, dict[str, Any]] = {l["n"]: l for l in plan_doc["lessons"]}
 
     sources: list[dict[str, Any]] = []
     lessons: list[dict[str, Any]] = []
@@ -294,7 +393,7 @@ def build_digest(
         except ValueError as exc:
             msg = str(exc)
             if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
-                msg = msg[len(codes.LOCK_MISMATCH) + 2:]
+                msg = msg[len(codes.LOCK_MISMATCH) + 2 :]
             raise DigestError(codes.LOCK_MISMATCH, msg) from exc
         obs_sha256 = compute_file_sha256(obs_path)
         try:
@@ -316,7 +415,7 @@ def build_digest(
         except ValueError as exc:
             msg = str(exc)
             if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
-                msg = msg[len(codes.LOCK_MISMATCH) + 2:]
+                msg = msg[len(codes.LOCK_MISMATCH) + 2 :]
             raise DigestError(codes.LOCK_MISMATCH, msg) from exc
         res_sha256 = compute_file_sha256(res_path)
         try:
@@ -340,6 +439,7 @@ def build_digest(
             raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {prov_path} is not a YAML mapping")
         if "spans" not in prov_doc or not isinstance(prov_doc["spans"], list):
             raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {prov_path} missing 'spans' list")
+        validate_provenance_schema(prov_doc, prov_path, repo_root=root)
 
         sources.append(
             {
@@ -351,25 +451,31 @@ def build_digest(
             }
         )
 
-        prov_map: dict[tuple[Any, Any, Any, Any, Any], dict[str, Any]] = {}
+        prov_by_loc: dict[LocatorKey, list[dict[str, Any]]] = {}
         for span in prov_doc["spans"]:
-            if isinstance(span, dict):
-                key = (
-                    span.get("tab"),
-                    span.get("step"),
-                    span.get("activity"),
-                    span.get("item"),
-                    span.get("block"),
-                )
-                if key not in prov_map:
-                    prov_map[key] = {
-                        "source": span.get("source"),
-                        "ref": span.get("ref"),
-                    }
+            prov_by_loc.setdefault(_locator_key(span), []).append(span)
+        for loc_key, loc_spans in prov_by_loc.items():
+            _check_spans_partition_unit(loc_spans, f"provenance {prov_path} unit {loc_key}")
 
-        observed_roles: dict[str, str] = {
-            rec["id"]: rec["role"] for rec in obs_doc["records"]
-        }
+        # Receipt offsets are span-relative plain offsets; convert them once per unit into
+        # unit-relative rendered offsets (the provenance origin) before matching [start, end).
+        receipt_tokens_by_loc: dict[LocatorKey, list[dict[str, Any]]] = {}
+        for token in res_doc["tokens"]:
+            receipt_tokens_by_loc.setdefault(_locator_key(token["unit"]), []).append(token)
+        aligned_by_token_id: dict[int, tuple[int, int]] = {}
+        for loc_key, loc_tokens in receipt_tokens_by_loc.items():
+            if loc_key not in prov_by_loc:
+                raise DigestError(
+                    codes.UNIT_NOT_IN_PROVENANCE,
+                    f"token unit {loc_key} not found in provenance spans of {prov_path}",
+                )
+            aligned = align_receipt_tokens(
+                prov_by_loc[loc_key], loc_tokens, where=f"receipts {res_path} unit {loc_key}"
+            )
+            for token, pair in zip(loc_tokens, aligned, strict=True):
+                aligned_by_token_id[id(token)] = pair
+
+        observed_roles: dict[str, str] = {rec["id"]: rec["role"] for rec in obs_doc["records"]}
 
         occurrences: list[dict[str, Any]] = []
         names: list[dict[str, Any]] = []
@@ -379,6 +485,11 @@ def build_digest(
         for token in tokens:
             selected = token["selected"]
             if not selected:
+                continue
+            if token.get("surface") == "gloss_ref":
+                # A `{{gloss:W-n}}` reference resolves to a record but to no form: the page prints
+                # the record's lemma and gloss. It is aligned to its span above but reports no
+                # occurrence (the schema requires a pos and forms of a surface token).
                 continue
             rec_id = selected["record"]
             forms = selected["forms"]
@@ -408,21 +519,22 @@ def build_digest(
                 "block": unit["block"],
             }
 
-            tok_key = (
-                locator["tab"],
-                locator["step"],
-                locator["activity"],
-                locator["item"],
-                locator["block"],
+            tok_key = _locator_key(locator)
+            span_idx, unit_offset = aligned_by_token_id[id(token)]
+            span_info = next(
+                (cand for cand in prov_by_loc[tok_key] if int(cand["start"]) <= unit_offset < int(cand["end"])),
+                None,
             )
-            if tok_key not in prov_map:
+            if span_info is None or int(span_info["span"]) != span_idx:
                 raise DigestError(
-                    codes.UNIT_NOT_IN_PROVENANCE,
-                    f"token unit {locator} not found in provenance spans of {prov_path}",
+                    codes.RECEIPT_SPAN_ALIGNMENT_FAILED,
+                    f"receipts {res_path} unit {tok_key}: unit offset {unit_offset} of token "
+                    f"{token.get('token')!r} lies in no provenance span",
                 )
-            span_info = prov_map[tok_key]
+
             span_source = span_info.get("source")
             span_ref = span_info.get("ref")
+            locator["span"] = span_info["span"]
 
             offset = token["offset"]
             length = len(token["token"])
@@ -513,10 +625,7 @@ def build_digest(
                     codes.PLAN_INVALID,
                     f"lesson {k} dialogue missing required 'step' in module plan {plan_path}",
                 )
-            places = [
-                p["name"]
-                for p in plan_dialogue.get("places") or []
-            ]
+            places = [p["name"] for p in plan_dialogue.get("places") or []]
             speakers = [
                 {
                     "name": s["name"],

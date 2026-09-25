@@ -588,3 +588,32 @@ def test_reconcile_sweep_keeps_prep_record_without_proof_its_dispatcher_died(
     assert report.unparseable_tasks == []
     assert json.loads(task_file.read_text(encoding="utf-8"))["status"] == "spawning"
     assert _task_still_active("preparing", None, task_dir) is True
+
+
+def test_reconcile_sweep_crashes_admission_hold_whose_dispatcher_died(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#8717: an admission hold left by a dispatcher that died before the worktree is healed, not unparseable."""
+    from scripts import delegate
+    from scripts.guardrails.delegate_ownership import _task_still_active
+    from scripts.orchestration import dispatch_admission
+    from tests.worktree_prep_helpers import exited_process_identity
+
+    task_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate, "_TASKS_DIR", task_dir)
+    delegate._publish_admission_hold("died-after-admission", "nonce-h", mode="danger", admission={"admitted": True})
+    task_file = task_dir / "died-after-admission.json"
+    state = json.loads(task_file.read_text(encoding="utf-8"))
+    pid, start = exited_process_identity()
+    state[dispatch_admission.ADMISSION_HOLD_KEY].update(owner_pid=pid, owner_start=start)
+    task_file.write_text(json.dumps(state), encoding="utf-8")
+    ledger = OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir)
+    assert _task_still_active("died-after-admission", None, task_dir) is False
+
+    applied = reconcile_sweep.run_reconcile_sweep(apply=True, task_dir=task_dir, ledger=ledger)
+
+    assert applied.zombie_tasks == ["died-after-admission"]
+    assert applied.unparseable_tasks == []
+    healed = json.loads(task_file.read_text(encoding="utf-8"))
+    assert healed["status"] == "crashed"
+    assert healed["returncode_reason"] == "dispatch_died_after_admission"

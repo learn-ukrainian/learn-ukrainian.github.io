@@ -175,7 +175,11 @@ review_scheduler:
     kimicc:
       formal_review_eligible: false
       formal_review_exclusion_reason: authenticated K3 sealed MCP canary has not completed
-      models: [kimi-code/k3, kimi-code/k3-256k]
+      # Routable kimicc models only. kimi-code/k3-256k is omitted: the live
+      # coding endpoint rejects coding_model_id k3-256k with
+      # [claude-code:unrecognized_model] (#8745). No replacement 256k id.
+      # The first entry is the omitted-model default (kimi-code/k3).
+      models: [kimi-code/k3, kimi-k3-max, kimi-code/kimi-for-coding, kimi-code/kimi-for-coding-highspeed]
       participant: kimicc
       adapter_transport: acp
       # Native `kimi` CLI subscription path only. OpenRouter is not a Kimi worker bus.
@@ -619,6 +623,11 @@ models:
     # release-note claims, not independently measured on this fleet — treat
     # as provisional until a side-by-side run confirms them (mirrors the
     # public_context_spec_is_not_verified caveat on kimi-code/k3 above).
+    # Not a kimicc route (#8745): the coding endpoint rejects the id k3-256k
+    # with [claude-code:unrecognized_model]. Native kimi still uses this
+    # model. The route block stays because native_kimi requires it; the
+    # kimicc endpoint model list above does not include this id, and the
+    # harness refuses it. Do not invent a replacement 256k coding id.
     aliases: [k3-256k, kimi-k3-256k]
     kimi_routes:
       kimicc_alias: k3-256k

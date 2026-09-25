@@ -34,7 +34,7 @@ from scripts.guardrails.delegate_ownership import (
     _task_still_active,
     default_ledger_path,
 )
-from scripts.orchestration import dispatch_settle, worktree_prep
+from scripts.orchestration import dispatch_admission, dispatch_settle
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
@@ -148,11 +148,19 @@ def run_reconcile_sweep(
             if status in ("running", "spawning"):
                 raw_pid = state.get("pid")
                 pid = _parse_pid(raw_pid)
-                if pid is None and raw_pid is None and isinstance(state.get("worktree_prep"), dict):
-                    # #8663: dispatch publishes ``pid: null`` while its git
-                    # worktree add runs; the dispatcher recorded in
+                if (
+                    pid is None
+                    and raw_pid is None
+                    and (
+                        isinstance(state.get("worktree_prep"), dict)
+                        or dispatch_admission.is_admission_hold_record(state)
+                    )
+                ):
+                    # #8663/#8717: dispatch publishes ``pid: null`` after
+                    # admission and while its git worktree add runs; the
+                    # dispatcher recorded in ``admission_hold`` or
                     # ``worktree_prep`` owns the record until a worker exists.
-                    pid_alive = not worktree_prep.is_orphaned_prep_record(state)
+                    pid_alive = not dispatch_admission.is_orphaned_pidless_record(state)
                 elif pid is None:
                     unparseable_tasks.append(task_id)
                     continue
@@ -212,7 +220,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Outputs:\n"
             "  Stdout: one-line summary line (and optional JSON payload).\n"
             "  In --apply mode: updates batch_state/tasks/*.json statuses to 'crashed' via delegate.py status\n"
-            "  (including worktree-prep records whose dispatcher died: dispatch_died_during_worktree_prep)\n"
+            "  (including worktree-prep records and admission holds whose dispatcher died:\n"
+            "  dispatch_died_during_worktree_prep, dispatch_died_after_admission)\n"
             "  and removes stale rows from write-ownership.sqlite3.\n\n"
             "Exit codes:\n"
             "  0 on successful sweep (in dry-run or apply mode);\n"
