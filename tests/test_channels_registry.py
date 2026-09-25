@@ -12,14 +12,12 @@ import yaml
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
 from wiki.channels import (
+    EXTERNAL_CORPUS_DIR,
     TRACK_CHANNEL_AFFINITY,
     get_track_affinity,
     load_channels,
     rank_external_hits,
 )
-
-# The scraped corpus is untracked local data; only the channel registry moved to registry/.
-EXTERNAL_CORPUS_DIR = Path(__file__).resolve().parents[1] / "data" / "external_articles"
 
 
 def test_registry_covers_all_external_source_files():
