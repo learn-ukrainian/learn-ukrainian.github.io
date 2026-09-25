@@ -12,7 +12,7 @@ modules.
 | Adapter | Source | Confidence |
 | --- | --- | --- |
 | `DeterministicRuleAdapter` | `scan_curriculum_module()`, `check_russicisms()`, and #912 `scan_plan_for_russianisms()` | `deterministic` |
-| `UaGecGoldFixtureAdapter` | `data/ua-gec-gold/ua-gec-gold.json` curated rows | `lookup_heuristic` |
+| `UaGecGoldFixtureAdapter` | `registry/ua-gec-gold/ua-gec-gold.json` curated rows | `lookup_heuristic` |
 | `LlmJudgmentAdapter` | Pre-supplied structured placeholder judgments only | `llm_judgment` |
 
 ## Deterministic Before LLM

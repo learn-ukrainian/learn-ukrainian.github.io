@@ -45,7 +45,7 @@ from _judge_eval_lib import CYRILLIC_TOKEN_RE, UA_GEC_ANN_RE
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_UA_GEC_ROOT = PROJECT_ROOT / "data" / "ua-gec"
-DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "data" / "ua-gec-gold" / "ua-gec-gold.json"
+DEFAULT_OUTPUT_PATH = PROJECT_ROOT / "registry" / "ua-gec-gold" / "ua-gec-gold.json"
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 TARGET_TAGS = ("F/Calque", "G/Case", "G/Gender")

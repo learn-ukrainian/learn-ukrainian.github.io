@@ -50,7 +50,7 @@ FTS5 index `external_fts` wraps it.
 
 ## Target architecture
 
-### Channel registry — `data/external_articles/channels.yaml`
+### Channel registry — `registry/external_articles/channels.yaml`
 
 Hand-labeled, checked into git. Single source of truth for per-channel metadata:
 
@@ -200,7 +200,7 @@ Handler returns:
 
 ### New files
 
-1. `data/external_articles/channels.yaml` — hand-populated registry for all 7 current `source_file` values + template comment for adding channels later
+1. `registry/external_articles/channels.yaml` — hand-populated registry for all 7 current `source_file` values + template comment for adding channels later
 2. `scripts/wiki/channels.py` — load/validate `channels.yaml`, provide `get_channel(source_file)`, `get_track_affinity(channel_id, track)`, `TRACK_CHANNEL_AFFINITY`
 3. `scripts/wiki/migrate_external_chunks.py` — one-shot: re-ingest `*.jsonl` → chunked rows → enriched schema → rebuild FTS5
 4. `tests/test_channels_registry.py` — schema validation, coverage of all source_files, affinity-lookup determinism
@@ -238,7 +238,7 @@ Track affinity matrix: use best judgment per channel based on its domain. Mark `
 
 ## Success criteria
 
-- [ ] `data/external_articles/channels.yaml` has entries for all 7 `source_file` values, passes schema validation
+- [ ] `registry/external_articles/channels.yaml` has entries for all 7 `source_file` values, passes schema validation
 - [ ] Schema migration idempotent: running twice doesn't double-add columns or duplicate rows
 - [ ] Post-migration: `SELECT COUNT(*) FROM external_articles` ≈ 18K chunks (vs current 1199 whole videos)
 - [ ] Post-migration: `SELECT AVG(char_count) FROM external_articles` ≈ 2000 (vs current 18159)

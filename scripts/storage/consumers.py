@@ -8,11 +8,13 @@ reader or writer constructs an artifact path without a literal full path.
 from __future__ import annotations
 
 import argparse
+import ast
 import csv
 import io
 import re
 import subprocess
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 CLASSIFICATION = Path("registry/artifacts/classification-v1.tsv")
@@ -105,9 +107,86 @@ def _artifact_paths(table: Path, phase: str) -> list[str]:
         raise ConsumerInventoryError(f"cannot read classification table {table}: {exc}") from exc
 
 
+def _kept_paths(table: Path, artifacts: list[str]) -> set[str]:
+    """Return the K artifacts, which reappear under ``registry/`` after their phase."""
+    with table.open(encoding="utf-8", newline="") as stream:
+        kept = {row["path"] for row in csv.DictReader(stream, delimiter="\t") if row.get("class") == "K"}
+    return kept & set(artifacts)
+
+
 def _tracked_files(repo_root: Path) -> list[Path]:
     result = subprocess.run(["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, timeout=30)
     return [repo_root / name.decode("utf-8") for name in result.stdout.split(b"\0") if name]
+
+
+_SCANNED_SUFFIXES = {".py", ".sh", ".ts", ".tsx", ".js", ".mjs", ".yaml", ".yml", ".toml", ".md"}
+_SKIPPED_PREFIXES = ("registry/artifacts/", "data/", "curriculum/", "wiki/")
+
+
+def _under_roots(segments: list[str], roots: tuple[str, ...]) -> bool:
+    """Whether joined path segments name a root or something beneath it (``registry`` counts as ``data``)."""
+    joined = "/".join(["data" if segments[0] == "registry" else segments[0], *segments[1:]])
+    return any(joined == root or joined.startswith(root + "/") for root in roots)
+
+
+def _module_name(relative: str) -> str:
+    return relative.removesuffix(".py").replace("/", ".")
+
+
+def _path_constants(sources: dict[str, str], is_path_expr: Callable[[str], bool]) -> dict[str, set[str]]:
+    """Map each module to its top-level names that resolve to an artifact path.
+
+    A name qualifies when its value builds a data/registry path, or when it is built from a name that qualifies in
+    the same module (``COVERAGE_MAP_PATH = OUTPUT_DIR / "coverage_map.json"``). Readers that import such a name
+    reach the artifact without any literal path, so ``scan_inventory`` flags them.
+    """
+    constants: dict[str, set[str]] = {}
+    for relative, text in sources.items():
+        if not relative.endswith(".py"):
+            continue
+        try:
+            tree = ast.parse(text)
+        except SyntaxError:
+            continue
+        assigned: list[tuple[str, str, set[str]]] = []
+        for node in tree.body:
+            if isinstance(node, ast.Assign):
+                targets = [t.id for t in node.targets if isinstance(t, ast.Name)]
+            elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+                targets = [node.target.id]
+            else:
+                continue
+            if node.value is None:
+                continue
+            source = ast.get_source_segment(text, node.value) or ""
+            used = {n.id for n in ast.walk(node.value) if isinstance(n, ast.Name)}
+            assigned.extend((name, source, used) for name in targets)
+        names = {name for name, source, _ in assigned if is_path_expr(source)}
+        while True:
+            more = {name for name, _, used in assigned if name not in names and used & names}
+            if not more:
+                break
+            names |= more
+        if names:
+            constants[relative] = names
+    return constants
+
+
+def _imported_path_constants(text: str, constants: dict[str, set[str]]) -> set[str]:
+    """Return ``module:NAME`` labels for artifact-path constants a Python file imports from a scanned module."""
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return set()
+    modules = {_module_name(relative): names for relative, names in constants.items()}
+    found: set[str] = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.ImportFrom) or not node.module:
+            continue
+        for module, names in modules.items():
+            if module == node.module or module.endswith("." + node.module):
+                found.update(f"{module}:{alias.name}" for alias in node.names if alias.name in names)
+    return found
 
 
 def scan_inventory(repo_root: Path, *, phase: str, table: Path | None = None) -> list[dict[str, str]]:
@@ -124,54 +203,74 @@ def scan_inventory(repo_root: Path, *, phase: str, table: Path | None = None) ->
         re.IGNORECASE,
     )
     file_join_pattern = re.compile(r"Path\(__file__\)[^\n]{0,160}['" "](?:data|registry)(?:/|['" "])", re.IGNORECASE)
+    kept = _kept_paths(table_path, artifacts)
     literal_pattern = re.compile("|".join(re.escape(path) for path in sorted(artifacts, key=len, reverse=True)))
     phase_roots = {
         "P2": ("data/lexicon",),
         "P3": ("data/projects/open_model_data",),
         "P4": ("data/projects/ua_eval_harness", "data/projects/ua_open_weight_eval", "data/processed", "data/datasets"),
     }.get(phase, tuple(sorted({"/".join(path.split("/")[:3]) for path in artifacts})))
-    prefix_pattern = re.compile("|".join(re.escape(root) + r"(?:/|['\"]|$)" for root in phase_roots))
-    segment_join = re.compile(r"['\"]data['\"]\s*(?:(?:/|,)\s*['\"][^'\"\n]+['\"]\s*){1,5}")
+    prefix_pattern = re.compile(
+        "|".join(
+            re.escape(root) + r"(?:/|['\"]|$)"
+            for root in (*phase_roots, *("registry/" + root.removeprefix("data/") for root in phase_roots))
+        )
+    )
+    # A join such as ``data / "corpus_audit" / "x_report.md"`` names a directory holding artifacts, not a full path.
+    artifact_dirs = {"/".join(path.split("/")[:-1]) for path in artifacts if path.count("/") >= 2}
+    join_roots = tuple(sorted({*phase_roots, *artifact_dirs}))
+    segment_join = re.compile(r"['\"](?:data|registry)['\"]\s*(?:(?:/|,)\s*['\"][^'\"\n]+['\"]\s*){1,5}")
+    # A quoted "data/" prefix classifies or lists whole trees (for example the Pages auto-deploy denylist).
+    bare_data_prefix = re.compile(r"['\"]data/['\"]")
     path_import = (
         re.compile(r"\b(?:from|import)\s+(?:scripts\.projects\.)?open_model_data(?:\.paths\b|\s+import\s+paths\b)")
         if phase == "P3"
         else None
     )
-    rows: list[dict[str, str]] = []
+
+    def builds_artifact_path(source: str) -> bool:
+        if literal_pattern.search(source) or root_join_pattern.search(source) or file_join_pattern.search(source):
+            return True
+        return any(
+            _under_roots(re.findall(r"['\"]([^'\"]+)['\"]", match.group()), join_roots)
+            for match in segment_join.finditer(source)
+        )
+
+    sources: dict[str, str] = {}
     for file_path in _tracked_files(repo_root):
         if not file_path.is_file() or file_path == table_path:
             continue
         relative = file_path.relative_to(repo_root).as_posix()
-        if relative.startswith(("registry/artifacts/", "data/", "curriculum/", "wiki/")) or file_path.suffix not in {
-            ".py",
-            ".sh",
-            ".ts",
-            ".tsx",
-            ".js",
-            ".mjs",
-            ".yaml",
-            ".yml",
-            ".toml",
-            ".md",
-        }:
+        if relative.startswith(_SKIPPED_PREFIXES) or file_path.suffix not in _SCANNED_SUFFIXES:
             continue
         try:
-            text = file_path.read_text(encoding="utf-8")
+            sources[relative] = file_path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             continue
+    path_constants = _path_constants(sources, builds_artifact_path)
+    rows: list[dict[str, str]] = []
+    for relative, text in sources.items():
         found = set(literal_pattern.findall(text))
+        if "registry/" in text:
+            # A K path is referenced as registry/<rel> once moved; it stays labelled by its table path.
+            found.update(set(literal_pattern.findall(text.replace("registry/", "data/"))) & kept)
         if prefix_pattern.search(text):
             found.add("base:phase-directory-prefix")
         for match in segment_join.finditer(text):
             segments = re.findall(r"['\"]([^'\"]+)['\"]", match.group())
-            if any("/".join(segments).startswith(root + "/") or "/".join(segments) == root for root in phase_roots):
+            segments = ["data" if segments[0] == "registry" else segments[0], *segments[1:]]
+            if _under_roots(segments, join_roots):
                 found.add("base:data-segment-join")
+        if bare_data_prefix.search(text):
+            found.add("base:data-prefix")
         if path_import and path_import.search(text):
             found.add("base:open_model_data.paths")
         found.update(f"base:{name}" for name in dynamic_pattern.findall(text))
         found.update(f"base:{name}:data-join" for name in root_join_pattern.findall(text))
         if file_join_pattern.search(text):
             found.add("base:Path(__file__):data-join")
+        if relative.endswith(".py"):
+            found.update(f"base:import:{label}" for label in _imported_path_constants(text, path_constants))
         for label in sorted(found):
             rows.append({"artifact": label, "consumer": relative, "check": ""})
     return sorted(rows, key=lambda row: (row["artifact"], row["consumer"]))

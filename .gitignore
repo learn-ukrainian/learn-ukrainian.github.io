@@ -354,16 +354,17 @@ data/raw/orphan-ocr/
 
 .build.lock
 
-# Corpus gap audit working files — only the human-reviewed deliverables land in git
-data/corpus_audit/*
-!data/corpus_audit/coverage_map.json
-!data/corpus_audit/gap_categories.md
-!data/corpus_audit/ingestion_roadmap.md
-!data/corpus_audit/draft_tickets/
-!data/corpus_audit/draft_tickets/*.md
-!data/corpus_audit/navsi200-catalog.json
-!data/corpus_audit/navsi200-captions-ledger.json
-!data/corpus_audit/navsi200-asr-bakeoff-ledger.json
+# Corpus gap audit working files. The human-reviewed deliverables (draft tickets,
+# gap categories, roadmap, navsi200 catalog) live under registry/corpus_audit/ (#8809 P1);
+# the coverage map, ledgers and ingest report stay here as untracked artifacts
+# (registry/artifacts/corpus_audit_snapshots.manifest.json).
+data/corpus_audit/
+
+# Untracked artifact bytes migrated out of git in #8809 P1 (restorable via
+# `scripts.storage.artifacts hydrate`; manifests under registry/artifacts/).
+data/raw/pravopys.html
+data/references/interference-patterns-walexy.json
+data/youtube_discovery/ulp_grammar_guide_backfill.jsonl
 
 
 .gemini/

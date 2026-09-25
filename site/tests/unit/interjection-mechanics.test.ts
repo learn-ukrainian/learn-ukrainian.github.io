@@ -134,7 +134,7 @@ describe('interjection-mechanics', () => {
   it('evaluates all 60 committed cards across all 4 options without throwing', () => {
     const deckPath = path.resolve(
       __dirname,
-      '../../../data/practice/interjection_mechanics_deck.json',
+      '../../../registry/practice/interjection_mechanics_deck.json',
     );
     expect(fs.existsSync(deckPath)).toBe(true);
 
@@ -178,7 +178,7 @@ describe('interjection-mechanics', () => {
   it('verifies Card 45 does not reject valid interjection Стук-стук and correctly evaluates Тік-так', () => {
     const deckPath = path.resolve(
       __dirname,
-      '../../../data/practice/interjection_mechanics_deck.json',
+      '../../../registry/practice/interjection_mechanics_deck.json',
     );
     const rawData = fs.readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(rawData) as InterjectionMechanicsDeckPayload;
@@ -206,7 +206,7 @@ describe('interjection-mechanics', () => {
 
     const deckPath = path.resolve(
       __dirname,
-      '../../../data/practice/interjection_mechanics_deck.json',
+      '../../../registry/practice/interjection_mechanics_deck.json',
     );
     const rawData = fs.readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(rawData) as InterjectionMechanicsDeckPayload;

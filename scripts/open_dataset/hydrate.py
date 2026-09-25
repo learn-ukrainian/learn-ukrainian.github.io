@@ -15,7 +15,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_ROOT = ROOT / "data" / "lexicon-dataset"
-DEFAULT_POINTER = ROOT / "data" / "lexicon-dataset.pointer.json"
+DEFAULT_POINTER = ROOT / "registry" / "lexicon-dataset.pointer.json"
 ASSET_NAME = "lexicon-open-dataset.json.gz"
 GH_RELEASE_DOWNLOAD_TIMEOUT_SECONDS = 180.0
 REQUIRED_POINTER_KEYS = (

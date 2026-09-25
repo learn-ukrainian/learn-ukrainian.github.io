@@ -1168,7 +1168,7 @@ hash.
 Curates the small tracked UA-GEC fixture for the #2156 eval harness. It reads
 the local ignored `data/sources.db` table `ua_gec_errors`, recovers sentence
 context/spans from the local `data/ua-gec` clone, maps tags through
-`scripts/audit/qg_schema.py`, and writes `data/ua-gec-gold/ua-gec-gold.json`
+`scripts/audit/qg_schema.py`, and writes `registry/ua-gec-gold/ua-gec-gold.json`
 with top-level CC-BY-4.0 attribution and per-row `build_ua_gec_finding` output.
 
 Run the dry-run first; it prints candidate totals, per-tag/source-language

@@ -51,7 +51,7 @@ def _resolve_channel(channel: str):
 def main() -> int:
     parser = argparse.ArgumentParser(description="Discover YouTube videos by title regex pattern set")
     parser.add_argument("--channel", required=True, help='YouTube channel handle or URL, e.g. "@UkrainianLessons"')
-    parser.add_argument("--pattern-set", required=True, help="Pattern set key from data/youtube_discovery/patterns.yaml")
+    parser.add_argument("--pattern-set", required=True, help="Pattern set key from registry/youtube_discovery/patterns.yaml")
     parser.add_argument(
         "--output",
         type=Path,

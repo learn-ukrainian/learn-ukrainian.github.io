@@ -28,7 +28,7 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 SOURCES_DB = ROOT / "data" / "sources.db"
-LT_REPLACEMENTS = ROOT / "data" / "lt_replacements.json"
+LT_REPLACEMENTS = ROOT / "registry" / "lt_replacements.json"
 HERITAGE_PAIRS_YAML = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
 
 _CYRILLIC_WORD_CHARS = "A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-"

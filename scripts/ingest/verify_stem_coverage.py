@@ -69,7 +69,7 @@ def census(db_path: Path) -> dict:
             "schema_version": "stem_sqlite_census.v1",
             "observed_at": datetime.now(UTC).isoformat(),
             "scope": "SQLite presence and FTS hits only; not edition, text-quality, or curriculum-completeness proof",
-            "grade_denominator": "data/textbook_curriculum_denominator.yaml",
+            "grade_denominator": "registry/textbook_curriculum_denominator.yaml",
             "total_textbook_chunks": total,
             "subjects": subjects,
             "fts_probes": probes,
@@ -92,7 +92,7 @@ def main(argv: list[str] | None = None) -> int:
             "Outputs: JSON on stdout; no files written or database changes.\n"
             "Exit codes: 0 = census read successfully (gaps may remain); 2 = database/read failure.\n"
             "Related: #4593; scripts/ingest/incremental_textbook_ingest.py; "
-            "data/textbook_curriculum_denominator.yaml"
+            "registry/textbook_curriculum_denominator.yaml"
         ),
     )
     parser.add_argument(

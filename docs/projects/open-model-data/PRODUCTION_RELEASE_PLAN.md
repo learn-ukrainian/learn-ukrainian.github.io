@@ -123,7 +123,7 @@ To eliminate data leakage and ensure held-out metrics measure genuine generaliza
 ## 5. Architectural References
 
 - Canonical Diglossia Model: [`docs/research/UKRAINIAN_HISTORICAL_DIGLOSSIA_AND_CHURCH_SLAVONIC_MODEL.md`](../../research/UKRAINIAN_HISTORICAL_DIGLOSSIA_AND_CHURCH_SLAVONIC_MODEL.md)
-- Denominator Contract: [`data/historical_language_corpus_denominator.yaml`](../../../data/historical_language_corpus_denominator.yaml)
+- Denominator Contract: [`registry/historical_language_corpus_denominator.yaml`](../../../registry/historical_language_corpus_denominator.yaml)
 - Dialect Protection Suite: [`docs/projects/open-model-data/PHASE_5_2_DIALECT_HISTORICAL_PROTECTION.md`](./PHASE_5_2_DIALECT_HISTORICAL_PROTECTION.md)
 - Held-Out Evaluation Suite ($N = 1,000$ cases): `data/projects/open_model_data/decolonization/partitions/heldout_evaluation_suite_1000.jsonl`
 - Protection Suite ($N = 600$ cases): `data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl`

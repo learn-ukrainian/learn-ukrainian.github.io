@@ -223,7 +223,7 @@ def test_export_function_word_deck(tmp_path: Path):
 
     # Verify committed deck matches fresh export
     repo_root = Path(__file__).resolve().parent.parent
-    committed_deck_file = repo_root / "data" / "practice" / "function_words_deck.json"
+    committed_deck_file = repo_root / "registry" / "practice" / "function_words_deck.json"
     assert committed_deck_file.exists(), f"Committed deck missing at {committed_deck_file}"
     with open(committed_deck_file, encoding="utf-8") as f:
         committed_deck = json.load(f)

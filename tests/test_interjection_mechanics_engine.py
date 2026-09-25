@@ -8,7 +8,7 @@ Covers:
 - Syntax & punctuation: vocative particle О/Ой without comma vs independent interjection with comma
 - VESUM token validation: rejection of malformed tokens and bad tags, acceptance of compounds
 - VESUM verification with CI skip guard
-- JSON export parity with committed data/practice/interjection_mechanics_deck.json
+- JSON export parity with committed registry/practice/interjection_mechanics_deck.json
 - CLI --verify-vesum and --export flags
 """
 
@@ -362,8 +362,8 @@ def test_interjection_deck_json_export_and_file_parity(tmp_path: Path):
     assert len(payload["categories"]) == 12
     assert len(payload["cards"]) == 60
 
-    committed_path = Path(__file__).resolve().parents[1] / "data/practice/interjection_mechanics_deck.json"
-    assert committed_path.exists(), "Committed data/practice/interjection_mechanics_deck.json does not exist"
+    committed_path = Path(__file__).resolve().parents[1] / "registry/practice/interjection_mechanics_deck.json"
+    assert committed_path.exists(), "Committed registry/practice/interjection_mechanics_deck.json does not exist"
 
     with open(committed_path, encoding="utf-8") as f:
         committed_data = json.load(f)

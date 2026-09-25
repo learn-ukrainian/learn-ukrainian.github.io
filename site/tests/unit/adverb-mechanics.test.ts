@@ -132,7 +132,7 @@ describe('adverb-mechanics', () => {
   });
 
   it('evaluates all 75 committed cards across all 4 options without throwing', () => {
-    const deckPath = path.resolve(__dirname, '../../../data/practice/adverb_mechanics_deck.json');
+    const deckPath = path.resolve(__dirname, '../../../registry/practice/adverb_mechanics_deck.json');
     expect(fs.existsSync(deckPath)).toBe(true);
 
     const rawData = fs.readFileSync(deckPath, 'utf-8');

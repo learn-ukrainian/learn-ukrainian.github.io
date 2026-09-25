@@ -1251,7 +1251,7 @@ def main() -> int:
 
     print(f"✅ Successfully validated {len(cards)} Function Word practice cards with 0 collisions.")
 
-    default_output = PROJECT_ROOT / "data" / "practice" / "function_words_deck.json"
+    default_output = PROJECT_ROOT / "registry" / "practice" / "function_words_deck.json"
     target_output = args.output or (default_output if not args.validate_only else None)
 
     if target_output:
