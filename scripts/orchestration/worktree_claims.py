@@ -439,7 +439,13 @@ def worktree_is_dirty(worktree: Path) -> bool | None:
     return bool((proc.stdout or "").strip())
 
 
-def git_worktree_remove(repo_root: Path, worktree: Path, *, force: bool) -> str | None:
+def git_worktree_remove(
+    repo_root: Path,
+    worktree: Path,
+    *,
+    force: bool,
+    timeout: float | None = None,
+) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
     Only :func:`remove_unclaimed_worktree` and the scheduled reaper's guarded
@@ -448,8 +454,10 @@ def git_worktree_remove(repo_root: Path, worktree: Path, *, force: bool) -> str 
     then runs ``git worktree remove --force``, which a clean porcelain tree
     still needs when it holds ignored residue such as a worker ``.venv``.
     Without ``force`` git itself refuses a checkout with modified or untracked
-    files, and a locked one. The removal is bounded by
-    :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`; a timeout is an error, never a
+    files, and a locked one. The removal is bounded by ``timeout`` when the
+    caller passes one, otherwise by :data:`GIT_WORKTREE_REMOVE_TIMEOUT_S`.
+    The reaper does not pass a timeout: removal keeps that 120s bound and is
+    not clipped to the locked-region deadline. A timeout is an error, never a
     removal, since the killed git may leave a half-deleted checkout behind.
     """
     target = worktree
@@ -459,6 +467,7 @@ def git_worktree_remove(repo_root: Path, worktree: Path, *, force: bool) -> str 
         except ValueError as exc:
             return f"delete guard refused worktree target: {exc}"
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]
+    bound = GIT_WORKTREE_REMOVE_TIMEOUT_S if timeout is None else timeout
     try:
         proc = subprocess.run(
             argv,
@@ -467,10 +476,10 @@ def git_worktree_remove(repo_root: Path, worktree: Path, *, force: bool) -> str 
             text=True,
             check=False,
             env=sanitized_git_env(),
-            timeout=GIT_WORKTREE_REMOVE_TIMEOUT_S,
+            timeout=bound,
         )
     except subprocess.TimeoutExpired:
-        return f"git worktree remove timed out after {GIT_WORKTREE_REMOVE_TIMEOUT_S:g}s"
+        return f"git worktree remove timed out after {bound:g}s"
     except PermissionError as exc:
         return f"permission denied removing worktree: {exc}"
     except OSError as exc:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import fcntl
 import inspect
 import json
@@ -2862,7 +2863,7 @@ def test_permission_error_retained_as_exception(tmp_path: Path, monkeypatch: pyt
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {branch: []})
 
-    def fake_remove(repo_root: Path, worktree: Path, *, force: bool) -> str:
+    def fake_remove(repo_root: Path, worktree: Path, *, force: bool, timeout: float | None = None) -> str:
         return "permission denied removing worktree: [Errno 13] Permission denied"
 
     monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", fake_remove)
@@ -4078,6 +4079,71 @@ def test_dispatch_husk_is_kept_when_an_admin_entry_is_untraversable(
     assert husk.exists()
 
 
+@pytest.mark.skipif(os.geteuid() == 0, reason="root traverses a mode-000 directory")
+def test_dispatch_husk_is_kept_when_the_admin_dir_is_untraversable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: an untraversable ``.git/worktrees`` might register the husk; skip, never remove.
+
+    ``Path.is_dir()`` answers False on EACCES, so the registration re-check
+    must ``iterdir()`` the admin directory directly: only a proven absence
+    may read as "no registrations".
+    """
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-hidden-admindir"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    admin = repo / ".git" / "worktrees"
+    admin.mkdir(exist_ok=True)
+    admin.chmod(0)
+    try:
+        results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    finally:
+        admin.chmod(0o755)
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "husk registration re-check failed closed" in result.reason
+    assert "unreadable" in result.reason
+    assert husk.exists()
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root traverses a mode-000 directory")
+def test_admin_registered_worktree_paths_raises_when_untraversable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: an untraversable admin dir raises; it never reads as "no registrations".
+
+    Interpreters that swallow EACCES answer ``Path.is_dir()`` False for an
+    untraversable directory; emulating that here pins the contract that only
+    a proven absence (``FileNotFoundError``/``NotADirectoryError`` from
+    ``iterdir()``) may read as "no registrations".
+    """
+    real_is_dir = Path.is_dir
+
+    def eacces_swallowing_is_dir(self: Path, *args: Any, **kwargs: Any) -> bool:
+        try:
+            return real_is_dir(self, *args, **kwargs)
+        except PermissionError:
+            return False
+
+    monkeypatch.setattr(Path, "is_dir", eacces_swallowing_is_dir)
+    common = tmp_path / ".git"
+    admin = common / "worktrees"
+    (admin / "entry").mkdir(parents=True)
+    # Mode-000 on the parent makes even ``stat`` of the admin dir see EACCES,
+    # the case ``is_dir()`` reads as absence on EACCES-swallowing interpreters.
+    common.chmod(0)
+    try:
+        with pytest.raises(RuntimeError, match="unreadable"):
+            rw._admin_registered_worktree_paths(common)
+    finally:
+        common.chmod(0o755)
+
+
 def test_dispatch_husk_is_kept_when_git_hangs_under_the_lock(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -4172,6 +4238,446 @@ def test_acp_runtime_cleanup_recheck_failure_deletes_nothing(
     assert result.action == "skipped"
     assert result.reason == "injected recheck failure"
     assert worktree.exists()
+
+
+def test_qualified_reap_skips_when_git_hangs_under_the_guard(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: a hung git under the qualified-reap guard times out into a skip.
+
+    A fake ``git`` on PATH delegates to the real one until the sweep enters
+    delegate's per-worktree guard, then makes ``git worktree list`` — the ACP
+    runtime cleanup re-check's probe — sleep well past the locked-call bound.
+    Without the bound the sweep holds the guard for the whole sleep, past a
+    concurrent dispatch's 30s lock timeout, and then deletes.
+    """
+    repo = init_repo(tmp_path)
+    worktree = add_acp_runtime(
+        repo,
+        "runtime-hung-git",
+        build_lock_reason("ask-8748", pid=_dead_pid(), start_time=1),
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(rw, "_LOCKED_GIT_TIMEOUT_S", 0.5)
+    real_git = shutil.which("git")
+    assert real_git
+    hang_marker = tmp_path / "hang-git"
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    fake_git = fake_bin / "git"
+    fake_git.write_text(
+        "#!/bin/sh\n"
+        f'if [ -e "{hang_marker}" ] && [ "$1" = worktree ] && [ "$2" = list ]; then exec sleep 5; fi\n'
+        f'exec "{real_git}" "$@"\n',
+        encoding="utf-8",
+    )
+    fake_git.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
+
+    real_guard = rw._enter_dispatch_worktree_guard
+
+    def arm_hang(
+        stack: contextlib.ExitStack,
+        *,
+        repo_root: Path,
+        info: rw.WorktreeInfo,
+    ) -> str | None:
+        hang_marker.touch()
+        return real_guard(stack, repo_root=repo_root, info=info)
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", arm_hang)
+
+    started = time.monotonic()
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+    elapsed = time.monotonic() - started
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert "timed out" in result.reason
+    assert worktree.exists()
+    assert elapsed < 4
+
+
+def test_removed_then_branch_prune_timeout_reports_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: a hang on ``git branch -D`` after removal is a prune error, not a skip.
+
+    The worktree is already gone, so the result stays ``action="removed"``,
+    keeps ``recovery_ref``, and still counts toward the daily cap.
+    """
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/prune-hang")
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {"codex/prune-hang": [{"number": 87, "state": "MERGED", "headRefOid": head}]})
+    monkeypatch.setattr(rw, "_LOCKED_GIT_TIMEOUT_S", 0.5)
+    recorded: list[Path] = []
+    monkeypatch.setattr(
+        rw.reaper_lifecycle,
+        "record_reap_for_cap",
+        lambda repo_root, now=None: recorded.append(repo_root),
+    )
+    real_git = shutil.which("git")
+    assert real_git
+    hang_marker = tmp_path / "hang-git"
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    fake_git = fake_bin / "git"
+    fake_git.write_text(
+        "#!/bin/sh\n"
+        f'if [ -e "{hang_marker}" ] && [ "$1" = branch ] && [ "$2" = -D ]; then exec sleep 5; fi\n'
+        f'exec "{real_git}" "$@"\n',
+        encoding="utf-8",
+    )
+    fake_git.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
+
+    real_guard = rw._enter_dispatch_worktree_guard
+
+    def arm_hang(
+        stack: contextlib.ExitStack,
+        *,
+        repo_root: Path,
+        info: rw.WorktreeInfo,
+    ) -> str | None:
+        hang_marker.touch()
+        return real_guard(stack, repo_root=repo_root, info=info)
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", arm_hang)
+
+    started = time.monotonic()
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            prune_merged_branches=True,
+        ),
+        worktree,
+    )
+    elapsed = time.monotonic() - started
+
+    assert result.action == "removed"
+    assert result.recovery_ref
+    assert result.error is not None and "timed out" in result.error
+    assert "branch prune failed" in result.reason
+    assert not worktree.exists()
+    assert recorded == [repo]
+    assert elapsed < 4
+
+
+def test_locked_region_deadline_clips_an_explicit_timeout(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """One region deadline caps even a call that brought its own longer timeout."""
+    monkeypatch.setattr(rw, "_locked_region_budget_s", lambda: 0.4)
+    started = time.monotonic()
+    with rw._bounded_locked_git():
+        with pytest.raises(subprocess.TimeoutExpired):
+            rw._run(["sleep", "5"], cwd=tmp_path, timeout=30)
+    assert time.monotonic() - started < 2
+
+
+def test_qualified_reap_skips_when_the_region_deadline_expires(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A status probe with a 15s cap still ends when the region deadline is shorter."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/region-deadline")
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(
+        monkeypatch,
+        {"codex/region-deadline": [{"number": 88, "state": "MERGED", "headRefOid": head}]},
+    )
+    monkeypatch.setattr(rw, "_locked_region_budget_s", lambda: 0.4)
+    real_git = shutil.which("git")
+    assert real_git
+    hang_marker = tmp_path / "hang-git"
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    fake_git = fake_bin / "git"
+    fake_git.write_text(
+        "#!/bin/sh\n"
+        f'if [ -e "{hang_marker}" ] && [ "$1" = status ]; then exec sleep 5; fi\n'
+        f'exec "{real_git}" "$@"\n',
+        encoding="utf-8",
+    )
+    fake_git.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
+    real_guard = rw._enter_dispatch_worktree_guard
+
+    def arm_hang(
+        stack: contextlib.ExitStack,
+        *,
+        repo_root: Path,
+        info: rw.WorktreeInfo,
+    ) -> str | None:
+        hang_marker.touch()
+        return real_guard(stack, repo_root=repo_root, info=info)
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", arm_hang)
+
+    started = time.monotonic()
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        worktree,
+    )
+    elapsed = time.monotonic() - started
+
+    assert result.action == "skipped"
+    assert "timed out" in result.reason
+    assert worktree.exists()
+    assert elapsed < 3
+
+
+def test_removal_keeps_its_own_bound_when_the_region_deadline_is_nearly_spent(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8748: a nearly spent region deadline does not start a clipped removal.
+
+    Once the pre-removal checks finish, leftover deadline time used to become
+    the ``git worktree remove`` timeout, so a remove could start with a
+    fraction of a second and be killed mid-delete. Removal now keeps its own
+    120s bound. A remove that outlasts the leftover deadline still finishes,
+    and the per-worktree lock is already released before branch prune and the
+    daily-cap write.
+    """
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/own-bound")
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {"codex/own-bound": [{"number": 91, "state": "MERGED", "headRefOid": head}]})
+    real_recovery = rw.reaper_lifecycle.create_recovery_ref
+
+    def expire_after_recovery(*args: Any, **kwargs: Any):
+        result = real_recovery(*args, **kwargs)
+        rw._LOCKED_REGION_DEADLINE.set(time.monotonic() + 0.05)
+        return result
+
+    monkeypatch.setattr(rw.reaper_lifecycle, "create_recovery_ref", expire_after_recovery)
+    remove_timeouts: list[float | None] = []
+    held_during_remove: list[bool] = []
+    held_during_prune: list[bool] = []
+    held_during_record: list[bool] = []
+    real_remove = worktree_claims.git_worktree_remove
+    real_prune = rw._prune_branch
+    real_record = rw.reaper_lifecycle.record_reap_for_cap
+
+    def spy_remove(*args: Any, **kwargs: Any):
+        remove_timeouts.append(kwargs.get("timeout"))
+        held_during_remove.append(bool(worktree_claims._HELD_LOCKS))
+        return real_remove(*args, **kwargs)
+
+    def spy_prune(*args: Any, **kwargs: Any):
+        held_during_prune.append(bool(worktree_claims._HELD_LOCKS))
+        return real_prune(*args, **kwargs)
+
+    def spy_record(*args: Any, **kwargs: Any):
+        held_during_record.append(bool(worktree_claims._HELD_LOCKS))
+        return real_record(*args, **kwargs)
+
+    monkeypatch.setattr(worktree_claims, "git_worktree_remove", spy_remove)
+    monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", spy_remove)
+    monkeypatch.setattr(rw, "_prune_branch", spy_prune)
+    monkeypatch.setattr(rw.reaper_lifecycle, "record_reap_for_cap", spy_record)
+    real_git = shutil.which("git")
+    assert real_git
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    fake_git = fake_bin / "git"
+    fake_git.write_text(
+        "#!/bin/sh\n"
+        'if [ "$1" = worktree ] && [ "$2" = remove ]; then sleep 0.4; fi\n'
+        f'exec "{real_git}" "$@"\n',
+        encoding="utf-8",
+    )
+    fake_git.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}{os.pathsep}{os.environ['PATH']}")
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            prune_merged_branches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert result.recovery_ref
+    assert not worktree.exists()
+    assert remove_timeouts == [None]
+    assert held_during_remove == [True]
+    assert held_during_prune == [False]
+    assert held_during_record == [False]
+
+
+def test_timeout_after_recovery_ref_keeps_the_ref(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A region timeout after the rescue ref exists skips removal and names the ref."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/rescue-timeout")
+    patch_gh(
+        monkeypatch,
+        {"codex/rescue-timeout": [{"number": 92, "state": "MERGED", "headRefOid": "b" * 40}]},
+    )
+    real_recovery = rw.reaper_lifecycle.create_recovery_ref
+
+    def expire_after_recovery(*args: Any, **kwargs: Any):
+        result = real_recovery(*args, **kwargs)
+        rw._LOCKED_REGION_DEADLINE.set(time.monotonic() - 1)
+        return result
+
+    monkeypatch.setattr(rw.reaper_lifecycle, "create_recovery_ref", expire_after_recovery)
+    started_remove = False
+    real_remove = worktree_claims.git_worktree_remove
+
+    def spy_remove(*args: Any, **kwargs: Any):
+        nonlocal started_remove
+        started_remove = True
+        return real_remove(*args, **kwargs)
+
+    monkeypatch.setattr(worktree_claims, "git_worktree_remove", spy_remove)
+    monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", spy_remove)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            prune_merged_branches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert "timed out" in result.reason
+    assert result.recovery_ref
+    assert worktree.exists()
+    assert started_remove is False
+
+
+def test_network_probes_run_before_the_per_worktree_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """``ls-remote`` and ``gh`` finish before the lock; the lock does not call them again."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(
+        repo,
+        "codex/cycle006-public",
+        path=repo / ".worktrees" / "dispatch" / "codex" / "cycle006-public",
+    )
+    os.utime(worktree, (time.time() - 7 * 3600, time.time() - 7 * 3600))
+    patch_gh(monkeypatch, {"codex/cycle006-public": []})
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    in_guard = False
+    order: list[str] = []
+
+    real_guard = rw._enter_dispatch_worktree_guard
+    real_prs = rw._query_pr_states
+    real_live = rw._live_origin_heads_present
+
+    def guard(
+        stack: contextlib.ExitStack,
+        *,
+        repo_root: Path,
+        info: rw.WorktreeInfo,
+    ) -> str | None:
+        nonlocal in_guard
+        order.append("guard")
+        in_guard = True
+        try:
+            return real_guard(stack, repo_root=repo_root, info=info)
+        finally:
+            in_guard = False
+
+    def prs(repo_root: Path, branch: str | None):
+        order.append("gh-in-lock" if in_guard else "gh")
+        return real_prs(repo_root, branch)
+
+    def live(path: Path, branch: str | None) -> bool | None:
+        order.append("ls-remote-in-lock" if in_guard else "ls-remote")
+        return real_live(path, branch)
+
+    monkeypatch.setattr(rw, "_enter_dispatch_worktree_guard", guard)
+    monkeypatch.setattr(rw, "_query_pr_states", prs)
+    monkeypatch.setattr(rw, "_live_origin_heads_present", live)
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            include_terminal_dispatches=True,
+        ),
+        worktree,
+    )
+
+    assert result.action == "removed"
+    assert order.index("ls-remote") < order.index("guard")
+    assert "ls-remote-in-lock" not in order
+    assert "gh-in-lock" not in order
+    assert "gh" in order
+
+
+def test_stale_index_lock_is_named_and_left_in_place(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A dead preserve leaves ``<admin>/index.lock``; a later sweep names it and does not delete it."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/stale-lock")
+    (worktree / "dirty.txt").write_text("not committed\n", encoding="utf-8")
+    patch_gh(monkeypatch, {"codex/stale-lock": [{"number": 89, "state": "MERGED"}]})
+    gitdir_line = (worktree / ".git").read_text(encoding="utf-8").splitlines()[0]
+    git_dir = Path(gitdir_line.split(":", 1)[1].strip())
+    lock = git_dir / "index.lock"
+    lock.write_text("", encoding="utf-8")
+    old = time.time() - rw._STALE_INDEX_LOCK_MIN_AGE_S - 60
+    os.utime(lock, (old, old))
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, preserve_then_reap=True),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert f"stale index.lock at {lock}" in result.reason
+    assert worktree.exists()
+    assert lock.is_file()
+
+
+def test_fresh_index_lock_is_not_called_stale(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/fresh-lock")
+    (worktree / "dirty.txt").write_text("not committed\n", encoding="utf-8")
+    patch_gh(monkeypatch, {"codex/fresh-lock": [{"number": 90, "state": "MERGED"}]})
+    gitdir_line = (worktree / ".git").read_text(encoding="utf-8").splitlines()[0]
+    git_dir = Path(gitdir_line.split(":", 1)[1].strip())
+    lock = git_dir / "index.lock"
+    lock.write_text("", encoding="utf-8")
+
+    result = result_for(
+        rw.reap_worktrees(repo_root=repo, apply=True, preserve_then_reap=True),
+        worktree,
+    )
+
+    assert "stale index.lock" not in (result.reason or "")
+    assert worktree.exists()
+    assert lock.is_file()
 
 
 # --- #8663: worktrees an interrupted `git worktree add` left are reported, never removed ---
