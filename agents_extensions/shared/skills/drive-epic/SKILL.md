@@ -572,8 +572,14 @@ dequeued unrelated PRs (#8691 ×3, #8693 ×2).
 **Before opening a PR that touches launchers or hooks, run every real-launcher test
 (2026-09-25).** A worker's targeted tests are not the CI suite. Most launcher tests call
 the shared `run_launcher` helper (`tests/test_launcher_contract.py`) instead of
-`subprocess`, so select on launcher names and helpers, never on `subprocess`:
-`.venv/bin/python -m pytest -q $(grep -rlE 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|scripts/launchers/|\brun_launcher\b' tests/)`.
+`subprocess`, so select on launcher names and helpers, never on `subprocess`. Run it from
+the checkout root; dispatch worktrees have no `.venv`, so resolve the primary checkout's
+interpreter:
+
+```bash
+PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
+"$PRIMARY_REPO/.venv/bin/python" -m pytest -q $(grep -rlE 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|scripts/launchers/|\brun_launcher\b' tests/)
+```
 
 **Diagnose pytest failures from the junit artifact first (#8701, #8705).**
 `gh run view --log-failed` and the live log truncate or stall — that read as a "silent
