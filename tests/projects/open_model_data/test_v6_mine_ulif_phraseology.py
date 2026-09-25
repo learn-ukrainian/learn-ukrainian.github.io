@@ -13,6 +13,7 @@ Verifies:
 
 from __future__ import annotations
 
+import inspect
 import json
 import re
 import sqlite3
@@ -86,6 +87,22 @@ def _has_sources() -> bool:
         return False
 
 
+def _has_vesum() -> bool:
+    if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
+        return False
+    try:
+        with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
+            r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='forms_all'").fetchone()
+            return r is not None
+    except Exception:
+        return False
+
+
+requires_ulif = pytest.mark.skipif(not _has_ulif(), reason="data/ulif_dump_all.db missing or empty")
+requires_sources = pytest.mark.skipif(not _has_sources(), reason="data/sources.db missing or empty")
+requires_vesum = pytest.mark.skipif(not _has_vesum(), reason="data/vesum.db missing or empty")
+
+
 def test_held_phraseology_release_directory_has_no_tracked_files():
     result = subprocess.run(
         [
@@ -93,10 +110,11 @@ def test_held_phraseology_release_directory_has_no_tracked_files():
             "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/",
         ],
         cwd=PROJECT_ROOT,
-        check=True,
         capture_output=True,
         text=True,
     )
+    if result.returncode != 0:
+        pytest.skip("git ls-files requires a Git checkout")
     assert not result.stdout.strip(), result.stdout
 
 
@@ -116,20 +134,21 @@ def test_default_output_directory_is_local_and_gitignored():
     assert result.returncode == 0, (
         f"Default output directory is not gitignored: {output_dir}; {result.stderr}"
     )
-def _has_vesum() -> bool:
-    if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
-        return False
-    try:
-        with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
-            r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='forms_all'").fetchone()
-            return r is not None
-    except Exception:
-        return False
 
 
-requires_ulif = pytest.mark.skipif(not _has_ulif(), reason="data/ulif_dump_all.db missing or empty")
-requires_sources = pytest.mark.skipif(not _has_sources(), reason="data/sources.db missing or empty")
-requires_vesum = pytest.mark.skipif(not _has_vesum(), reason="data/vesum.db missing or empty")
+def test_dpo_default_output_directory_is_gitignored():
+    output_dir = inspect.signature(generate_dpo_dataset).parameters["output_dir"].default
+    assert output_dir == DEFAULT_OUTPUT_DIR / "dpo"
+
+    result = subprocess.run(
+        ["git", "check-ignore", "--quiet", str(output_dir.resolve())],
+        cwd=PROJECT_ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, (
+        f"Default DPO output directory is not gitignored: {output_dir}; {result.stderr}"
+    )
 
 
 # =========================================================================
@@ -400,8 +419,10 @@ def test_release_receipt_schema_validation():
     schema = json.loads(SCHEMA_RECEIPT_PATH.read_text(encoding="utf-8"))
     validator = jsonschema.Draft202012Validator(schema)
 
-    with tempfile.TemporaryDirectory() as tmpdir:
+    with tempfile.TemporaryDirectory(dir=PROJECT_ROOT) as tmpdir:
         td = Path(tmpdir)
+        output_dir = td / "custom-release"
+        output_dir.mkdir()
         sft_man_path = td / "manifest_sft.json"
         sft_man_path.write_text("{}")
 
@@ -409,8 +430,8 @@ def test_release_receipt_schema_validation():
         dpo_man_path.write_text("{}")
 
         eval_meta = {
-            "directory_path": (DEFAULT_OUTPUT_DIR / "eval").relative_to(PROJECT_ROOT).as_posix(),
-            "manifest_file": (DEFAULT_OUTPUT_DIR / "eval" / "manifest_eval.json").relative_to(PROJECT_ROOT).as_posix(),
+            "directory_path": (output_dir / "eval").relative_to(PROJECT_ROOT).as_posix(),
+            "manifest_file": (output_dir / "eval" / "manifest_eval.json").relative_to(PROJECT_ROOT).as_posix(),
             "manifest_sha256": "0" * 64,
             "shards_count": 3,
             "total_cases": 1500,
@@ -443,7 +464,8 @@ def test_release_receipt_schema_validation():
             unique_calques=2500,
             unique_idioms=20000,
             unique_synonyms=10000,
-            output_path=td / "receipt.json",
+            output_path=output_dir / "receipt.json",
+            output_dir=output_dir,
         )
 
         validator.validate(receipt)
@@ -451,13 +473,22 @@ def test_release_receipt_schema_validation():
         assert receipt["issue"] == 8140
         assert receipt["parent_epic"] == 6321
         assert receipt["evaluation_benchmark"]["directory_path"] == (
-            DEFAULT_OUTPUT_DIR / "eval"
+            output_dir / "eval"
+        ).relative_to(PROJECT_ROOT).as_posix()
+        assert receipt["evaluation_benchmark"]["manifest_file"] == (
+            output_dir / "eval" / "manifest_eval.json"
         ).relative_to(PROJECT_ROOT).as_posix()
         assert receipt["sft_training_dataset"]["directory_path"] == (
-            DEFAULT_OUTPUT_DIR / "sft"
+            output_dir / "sft"
+        ).relative_to(PROJECT_ROOT).as_posix()
+        assert receipt["sft_training_dataset"]["manifest_file"] == (
+            output_dir / "sft" / "manifest_sft.json"
         ).relative_to(PROJECT_ROOT).as_posix()
         assert receipt["dpo_preference_dataset"]["directory_path"] == (
-            DEFAULT_OUTPUT_DIR / "dpo"
+            output_dir / "dpo"
+        ).relative_to(PROJECT_ROOT).as_posix()
+        assert receipt["dpo_preference_dataset"]["manifest_file"] == (
+            output_dir / "dpo" / "manifest_dpo.json"
         ).relative_to(PROJECT_ROOT).as_posix()
         assert receipt["invariants_verified"]["zero_train_eval_leakage"] is True
         assert receipt["verification_metrics"]["eval_target_overlap_count"] == 0
