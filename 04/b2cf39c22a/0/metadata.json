@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "04b2cf39c22a",
+  "session_id": "ses_f27717976ffe806MedXcHnsdlu",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-25T12:43:51.589336803Z",
+  "branch": "deepseek/impl-ulif-spelling-index",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/fetch_ulif_homonyms.py",
+    "tests/test_fetch_ulif_homonyms.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "fddaa56a891b",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 51042,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 976256,
+    "output_tokens": 4642,
+    "api_call_count": 25
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-25T12:43:51.498098172Z",
+    "agent_lines": 49,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 49,
+    "total_lines_changed": 49,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "04b2cf39c22a",
+  "strategy": "manual-commit",
+  "branch": "deepseek/impl-ulif-spelling-index",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "scripts/lexicon/runner/fetch_ulif_homonyms.py",
+    "tests/test_fetch_ulif_homonyms.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/04/b2cf39c22a/0/metadata.json",
+      "transcript": "/04/b2cf39c22a/0/full.jsonl",
+      "compact_transcript": "/04/b2cf39c22a/0/transcript.jsonl",
+      "content_hash": "/04/b2cf39c22a/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 51042,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 976256,
+    "output_tokens": 4642,
+    "api_call_count": 25
+  }
+}
