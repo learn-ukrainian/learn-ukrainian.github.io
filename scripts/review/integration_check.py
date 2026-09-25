@@ -9,10 +9,13 @@ repository's content trees, and drives the product paths through their own comma
 
 ``run-crafted``   cases (iii) layers, (v) second seat, (vi) staleness, (vii) budgets and signal, (viii) module
                   verdict, with crafted returns that pass the real validator (built from the fixture's own spans
-                  and receipts of a fixture ledger; nothing of the validator is faked).
+                  and receipts of a fixture ledger; nothing of the validator is faked). Case (iii) reads the spans of
+                  a lesson the engine itself assembled (``runner.run_lesson``: page, expanded document, provenance).
 ``prepare-real``  renders and checks the prompts of cases (i) plan review, (ii) lesson 2 review and (iv) the settle
                   item, and writes one dispatch card each. It dispatches nothing: the driver does.
-``finish-real``   after the driver recorded the real returns: the remaining assertions of (i), (ii) and (iv).
+``finish-real``   after the driver recorded the real returns: the remaining assertions of (i), (ii) and (iv)
+                  (every stored finding equals the returned one; the settle seat's dispatch record, ``decided_by``
+                  and receipts belong to the card's task).
 
 This proves the tooling, not reviewer quality (admitting a reviewer is the seeded-defect measurement, R3).
 Stand-ins, named: ``planned_state`` (lesson manifests) and ``pack-verify --strict`` (plan review) are replaced at
@@ -42,18 +45,28 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.agent_runtime import review_mcp
-from scripts.build.fresh import plan_manifest
+from scripts.build.fresh import assemble, plan_manifest, runner
 from scripts.build.fresh.cli import main as fresh_cli
 from scripts.common.repo_root import resolve_repo_root
+from scripts.curriculum.evidence import lock
+from scripts.curriculum.learner_state.inventory_gate import GateReport
+from scripts.curriculum.resolver.inputs import Allowlist
 from scripts.curriculum.validate.validate import main as validate_main
 from scripts.review import findings_db, fixloop, record, second_seat, settle
 from scripts.review.prompts import check as prompt_check
 from scripts.review.prompts import render as prompt_render
-from scripts.review.receipts.ledger import create_empty_ledger
+from scripts.review.receipts.ledger import LedgerError, create_empty_ledger, records
+from tests.build.test_fresh_assemble import (
+    make_text_record,
+    validate_fixture_draft,
+    validate_fixture_pack,
+    validate_fixture_plan,
+)
 from tests.build.test_fresh_plan_review import fake_verify
+from tests.build.test_fresh_runner import _fixture as engine_fixture
+from tests.build.test_fresh_runner import _FixtureSources
 from tests.curriculum import test_plan_validate as plan_fixture
 from tests.helpers import plan_review_world
-from tests.review.test_fixloop import span
 from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _dump, _review
 from tests.review.test_record import LEVEL, PROSE, SLUG, World, finding, unsupported
 
@@ -64,18 +77,11 @@ RECEIPTS_ROOT = resolve_repo_root(Path(review_mcp.__file__), 2) / "batch_state" 
 TASKS_DIR = PRIMARY / "batch_state" / "tasks"  # where the dispatcher writes the task records identities come from
 PYTHON = PRIMARY / ".venv" / "bin" / "python"
 STATE_NAME = "integration-state.json"
+BUDGET_TERMINAL = "budget_terminal"  # the named refusal of a review past a terminal budget (#8774), pinned by name
 
-# The fixture lesson's units: ASCII placeholders only, one per layer the fix loop tells apart.
-RECORD_QUOTE = "pack-quote-alpha"
-WORD_ENTRY = "word-entry-gamma"
-ITEM = "alpha-item-text"  # the incorrect side of an error record
-TYPED_OPTION = "typed-option-delta"  # a distractor the writer typed
+# The units of the generic fixture lesson (lessons 1 and 3 always; lesson 2 unless the engine assembles it).
 UNITS: list[dict[str, Any]] = [
     {"tab": "urok", "activity": None, "item": None, "block": 0, "role": "narration", "text": PROSE},
-    {"tab": "urok", "activity": None, "item": None, "block": 1, "role": "quoted_term", "text": RECORD_QUOTE},
-    {"tab": "slovnyk", "activity": None, "item": None, "block": 0, "role": "gloss", "text": WORD_ENTRY},
-    {"tab": "vpravy", "activity": "act-1", "item": 0, "block": 0, "role": "item_prompt", "text": ITEM},
-    {"tab": "vpravy", "activity": "act-2", "item": 0, "block": 0, "role": "option", "text": TYPED_OPTION},
 ]
 SECOND_SEAT_MODEL = ("agy", "gemini-3.8-flash-high")  # the third family: the writer is openai, the first seat anthropic
 
@@ -114,6 +120,131 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+# --- a lesson the engine assembled ----------------------------------------------------------------
+
+
+@dataclass
+class EngineLesson:
+    """The files ``runner.run_lesson`` wrote for one lesson: its page, expanded document and provenance."""
+
+    n: int
+    page: Path
+    expanded: Path
+    provenance: Path
+
+    def spans(self) -> list[dict[str, Any]]:
+        return yaml.safe_load(self.provenance.read_bytes())["spans"]
+
+
+def engine_lesson(scratch: Path, n: int) -> EngineLesson:
+    """Build one lesson through the engine's own assembly (draft -> checks 1-9 -> page, expanded, provenance).
+
+    The lesson carries one span of every kind the fix loop tells apart: a pack quote, a word-store entry (Slovnyk),
+    the incorrect side of an error record, a writer-typed distractor that is not the key, and writer prose. Its
+    Ukrainian text is the runner fixture's own (the one lemma and its plural form, taken from the word store), so
+    no word is invented here. The sources database and the stress oracle are the runner tests' stand-ins.
+    """
+    draft, plan, pack, words = engine_fixture()
+    word = words["words"][0]["lemma"]
+    plural, wrong = word[:-1] + "\u0430", word[:-1] + "\u0435"
+    form = {
+        **words["words"][0]["forms"][0],
+        "form": plural,
+        "stressed": plural + "\u0301",
+        "tags": "noun:inanim:n:v_rod",
+    }
+    words["words"][0]["forms"].append(form)
+    lesson = plan["lessons"][0]
+    lesson["inventory"]["vocabulary"]["core"][0]["forms"].append(form["tags"])
+    pack["module"] = f"{LEVEL}/{SLUG}"
+    pack["texts"] = [make_text_record(1, f"{word} {plural}")]
+    pack["errors"] = [
+        {
+            "id": "E-001",
+            "source": {"table": "ua_gec_errors", "id": 1},
+            "incorrect": wrong,
+            "correct": word,
+            "error_type": "form",
+            "pattern": "fixture",
+        }
+    ]
+    lesson["n"] = n
+    plan["module"] = plan["slug"] = SLUG
+    step = lesson["steps"][0]
+    step["evidence"], step["practice"] = ["W-1", "T-1"], ["a1", "a2"]
+    lesson["activities"] = [
+        {"id": "a1", "type": "error-correction", "placement": "inline", "focus": "Correct", "error_refs": ["E-001"]},
+        {"id": "a2", "type": "quiz", "placement": "inline", "focus": "Quiz"},
+    ]
+    draft["lesson"] = {"module": f"{LEVEL}/{SLUG}", "n": n}
+    draft["steps"][0]["blocks"].extend(
+        [{"kind": "quote", "ref": "T-1"}, {"kind": "activity", "ref": "a1"}, {"kind": "activity", "ref": "a2"}]
+    )
+    draft["activities"] = [
+        {
+            "id": "a1",
+            "instruction": "Correct the error",
+            "items": [
+                {"sentence": wrong, "error": wrong, "correction": word, "explanation": "Correct", "error_ref": "E-001"}
+            ],
+        },
+        {
+            "id": "a2",
+            "instruction": "Quiz instruction",
+            "items": [{"question": word, "options": [word, plural], "correct": 0, "explanation": "Explanation"}],
+        },
+    ]
+    validate_fixture_pack(pack)
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    state = scratch / "state"
+    state.mkdir(parents=True)
+    (state / f"lesson-{n}.draft.yaml").write_bytes(lock.yaml_bytes(draft))
+
+    def answer(batch: dict[str, Any], seat: str) -> dict[str, Any]:  # the question seat: the first candidate of each
+        return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]} for q in batch["questions"]]}
+
+    mp = pytest.MonkeyPatch()
+    try:  # the seams the runner tests use: the learner state and the lesson lock need the sources database
+        mp.setattr(
+            assemble,
+            "planned_state",
+            lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})(),
+        )
+        mp.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
+        mp.setattr(
+            assemble.lesson_lock,
+            "compute_lesson_lock",
+            lambda *a, **kw: {"lessons": [{"n": n, "entry_sha256": "0" * 64}]},
+        )
+        mp.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": LEVEL})())
+        mp.setattr(runner, "write_manifest", lambda *a, **kw: ({"recap": False}, "a" * 64))
+        report = runner.run_lesson(
+            LEVEL, SLUG, n,
+            draft=draft, plan=plan, pack=pack, words=words, state_dir=state,
+            repo_root=scratch, plans_dir=scratch, evidence_dir=scratch,
+            question_seat="agy:fixture", question_dispatch=answer, sources=_FixtureSources(),
+            allowlist=Allowlist.from_records(words["words"], gloss_ids=frozenset(), words_lock="f" * 64),
+            site_dir=scratch / "site",
+            inventory_gate=lambda *a, **kw: GateReport(LEVEL, SLUG, n, ()),
+            observed_writer=lambda *a, **kw: None,
+            render_check=lambda *a, **kw: assemble.CheckResult(
+                check=11, passed=True, artifacts={"verify_shippable": {"shippable": True}}
+            ),
+        )  # fmt: skip
+    finally:
+        mp.undo()
+    failed = [row for row in report["checks"] if row["status"] == "failed"]
+    if failed:
+        raise RuntimeError(f"the engine did not assemble lesson {n}: {failed[0]}")
+    built = EngineLesson(
+        n, scratch / "site" / f"{n}.mdx", state / f"lesson-{n}.expanded.yaml", state / f"lesson-{n}.provenance.yaml"
+    )
+    if not lock.check(built.provenance):
+        raise RuntimeError("the engine's provenance file does not match its lock sidecar")
+    return built
+
+
 # --- the module world -----------------------------------------------------------------------------
 
 
@@ -126,14 +257,17 @@ class ModuleWorld(World):
     real seats start there).
     """
 
-    def __init__(self, root: Path, mp: pytest.MonkeyPatch, *, promote: bool) -> None:
+    def __init__(self, root: Path, mp: pytest.MonkeyPatch, *, promote: bool, engine: int | None = None) -> None:
         self._deferred = True  # World.__init__ writes manifests; here they wait for the plan
         super().__init__(root, mp)
         self._deferred = False
         self.mp = mp
         self.expanded_dir = root / "out" / "expanded"
         self.plan_review_digest = ""
+        self.engine: EngineLesson | None = None
         self._write_pages()
+        if engine is not None:
+            self._install_engine_lesson(engine)
         self._overlay_plan_world()
         mp.setattr(plan_manifest, "verify_pack_strict", fake_verify())
         self.plan_review_digest = self._plan_manifest()
@@ -169,7 +303,16 @@ class ModuleWorld(World):
         for n in (1, 2, 3):
             (self.page_dir / f"{n}.mdx").write_text(f"# Lesson {n}\n\n{body}\n{suffix}", encoding="utf-8")
 
+    def _install_engine_lesson(self, n: int) -> None:
+        """Lesson ``n`` is the engine's own: its page, its expanded document, its provenance file (and lock)."""
+        self.engine = built = engine_lesson(self.root.parent / f"{self.root.name}.engine", n)
+        shutil.copyfile(built.page, self.page_dir / f"{n}.mdx")
+        for suffix in ("", ".lock"):
+            shutil.copyfile(f"{built.provenance}{suffix}", self.state_dir / f"lesson-{n}.provenance.yaml{suffix}")
+
     def expanded(self, n: int) -> Path:
+        if self.engine is not None and self.engine.n == n:
+            return self.engine.expanded
         path = self.out / f"lesson-{n}.expanded.yaml"
         _dump(path, {"lesson": {"level": LEVEL, "slug": SLUG, "n": n}, "units": copy.deepcopy(UNITS)})
         return path
@@ -325,10 +468,10 @@ class ModuleWorld(World):
 
 
 @contextlib.contextmanager
-def module_world(root: Path, *, promote: bool) -> Iterator[ModuleWorld]:
+def module_world(root: Path, *, promote: bool, engine: int | None = None) -> Iterator[ModuleWorld]:
     mp = pytest.MonkeyPatch()
     try:
-        yield ModuleWorld(root, mp, promote=promote)
+        yield ModuleWorld(root, mp, promote=promote, engine=engine)
     finally:
         mp.undo()
 
@@ -374,36 +517,38 @@ def db_rows(world: ModuleWorld, table: str, where: str = "1=1") -> list[sqlite3.
 
 
 def case_layers(c: Case) -> None:
-    """(iii) a sourced finding on an engine-printed record span gets that record's layer; never-blamed spans are not."""
-    with module_world(c.base / "iii-layers", promote=True) as w:
-        w.provenance(
-            2,
-            [
-                span(PROSE, source="writer_prose", block=0),
-                span(RECORD_QUOTE, kind="quote", block=1),
-                span(WORD_ENTRY, tab="slovnyk", kind="word"),
-                span(ITEM, tab="vpravy", activity="act-1", item=0, kind="error", side="incorrect"),
-                span(
-                    TYPED_OPTION,
-                    tab="vpravy",
-                    activity="act-2",
-                    item=0,
-                    source="writer_prose",
-                    origin="writer_typed",
-                    key=False,
-                ),
-            ],
+    """(iii) a finding on a span the engine printed gets that span's layer; never-blamed spans and prose do not."""
+    with module_world(c.base / "iii-layers", promote=True, engine=2) as w:
+        assert w.engine is not None
+        spans = w.engine.spans()
+
+        def printed(what: str, **want: Any) -> dict[str, Any]:
+            """The one span of the engine's provenance file that has these fields; the finding targets its text."""
+            found = [item for item in spans if all(item.get(key) == value for key, value in want.items())]
+            if not c.expect(len(found) == 1, f"the engine's provenance has {len(found)} spans for {what}: {want}"):
+                raise RuntimeError(f"cannot target {what}")
+            return found[0]
+
+        def at(item: dict[str, Any]) -> list[dict[str, Any]]:
+            """The location of a span, read from the provenance file: its tab, activity, item and its own text."""
+            place = {"tab": item["tab"], "activity": item["activity"], "item": item["item"]}
+            return [{**{key: value for key, value in place.items() if value is not None}, "quote": item["text"]}]
+
+        quote = printed("a pack quote", source="record", record_kind="quote", tab="urok")
+        word = printed("a word-store entry", source="record", record_kind="word", tab="slovnyk")
+        incorrect = printed("the incorrect side", record_kind="error", record_side="incorrect", block="prompt")
+        typed = printed("a writer-typed distractor", option_origin="writer_typed", is_key=False)
+        prose = printed("writer prose", source="writer_prose", tab="urok", block=0)
+        c.expect(
+            lock.check(w.state_dir / "lesson-2.provenance.yaml"),
+            "the provenance file the check reads is not the engine's (lock sidecar)",
         )
-
-        def at(quote: str, **place: Any) -> list[dict[str, Any]]:
-            return [{"tab": place.pop("tab", "urok"), **place, "quote": quote}]
-
         findings = [
-            finding("F-01", locations=at(RECORD_QUOTE)),
-            finding("F-02", locations=at(WORD_ENTRY, tab="slovnyk")),
-            finding("F-03", dimension="activity", locations=at(ITEM, tab="vpravy", activity="act-1", item=0)),
-            finding("F-04", dimension="activity", locations=at(TYPED_OPTION, tab="vpravy", activity="act-2", item=0)),
-            finding("F-05", locations=at(PROSE)),
+            finding("F-01", locations=at(quote)),
+            finding("F-02", locations=at(word)),
+            finding("F-03", dimension="activity", locations=at(incorrect)),
+            finding("F-04", dimension="activity", locations=at(typed)),
+            finding("F-05", locations=at(prose)),
         ]
         made = w.make_return(2, findings)
         done = w.record_cli(made)
@@ -437,6 +582,11 @@ def case_layers(c: Case) -> None:
         )
         saved = w.state_dir / f"lesson-2.review.{made['attempt_id']}.yaml"
         c.note(f"return {c.rel(saved)} sha256={sha256(saved)[:12]}")
+        c.note(
+            f"engine provenance {c.rel(w.engine.provenance)} sha256={sha256(w.engine.provenance)[:12]} spans "
+            f"(kind, side, origin, key): quote={(quote['record_kind'], quote['record_side'], quote['option_origin'], quote['is_key'])} "
+            f"word={word['record_kind']} incorrect={incorrect['record_side']} typed={(typed['option_origin'], typed['is_key'])} prose={prose['source']}"
+        )
         c.note(f"db {c.rel(w.db)} findings={len(db_rows(w, 'findings'))} layers={layers}")
 
 
@@ -606,6 +756,32 @@ def case_budgets_and_signal(c: Case) -> None:
         )
         budgets = {row["lesson_n"]: (row["revise_rounds"], row["regenerations"]) for row in db_rows(w, "budgets")}
         c.expect(budgets.get(2) == (3, 0), f"lesson 2 budgets {budgets.get(2)}: the refused regeneration was spent")
+        # #8774: past the terminal round a further review is refused as well, not counted as a fourth round
+        verdict_of_record = w.verdict_file(2).read_bytes()
+        stored = (len(db_rows(w, "findings")), len(db_rows(w, "settle_items")))
+        fourth = w.record_cli(w.make_return(2, [finding("F-01", severity="MAJOR")]))
+        c.expect(
+            fourth.code != 0
+            and fourth.json().get("accepted") is False
+            and fourth.json().get("verdict") == "REJECTED"
+            and BUDGET_TERMINAL in fourth.json().get("rejection_codes", []),
+            f"a fourth review of lesson 2 past the terminal REVISE round: exit {fourth.code} {fourth.out.strip()[-300:]}",
+        )
+        c.expect(
+            {row["lesson_n"]: row["revise_rounds"] for row in db_rows(w, "budgets")}.get(2) == 3,
+            "the refused fourth review was counted as a REVISE round",
+        )
+        c.expect(
+            w.verdict_file(2).read_bytes() == verdict_of_record
+            and stored == (len(db_rows(w, "findings")), len(db_rows(w, "settle_items"))),
+            "the refused review changed the verdict of record, the findings or the settle items",
+        )
+        last_attempt = db_rows(w, "attempts", "lesson_n = 2")[-1]
+        c.expect(
+            last_attempt["verdict"] == "REJECTED"
+            and BUDGET_TERMINAL in json.loads(last_attempt["rejection_codes_json"]),
+            "the refused review has no REJECTED attempt row naming budget_terminal",
+        )
         held = w.verdict()
         c.expect(
             "terminal_operator" in hold_codes(held),
@@ -625,11 +801,26 @@ def case_budgets_and_signal(c: Case) -> None:
             f"the seventh regeneration: exit {last.code} {last.out.strip()}",
         )
         spent_now = {row["lesson_n"]: (row["revise_rounds"], row["regenerations"]) for row in db_rows(w, "budgets")}
+        c.expect(
+            sum(count[1] for count in spent_now.values()) == 6, f"the seventh regeneration was counted: {spent_now}"
+        )
+        # lesson 1 is still REVISE on its manifest and the module's regenerations are spent: another review of it only cycles
+        again = w.record_cli(w.make_return(1, [finding("F-01", **calque)]))
+        c.expect(
+            again.code != 0
+            and again.json().get("accepted") is False
+            and BUDGET_TERMINAL in again.json().get("rejection_codes", []),
+            f"a review of REVISE lesson 1 after the regenerations are spent: exit {again.code} {again.out.strip()[-300:]}",
+        )
+        after = {row["lesson_n"]: (row["revise_rounds"], row["regenerations"]) for row in db_rows(w, "budgets")}
+        c.expect(after == spent_now, f"the refused review moved a budget: {spent_now} -> {after}")
         first_terminal = terminal[0] if terminal else {}
         c.note(
             f"signal printed; lesson 2 revise_rounds=3 -> {first_terminal.get('transition')}:{first_terminal.get('reason')} "
-            f"(record exit {rounds[1].code}, regenerate exit {refused.code}); regenerations 6/6 then "
-            f"{last.json().get('reason')} (exit {last.code}); db {c.rel(w.db)} budgets (revise, regenerations)={spent_now}"
+            f"(record exit {rounds[1].code}, regenerate exit {refused.code}); a fourth review refused "
+            f"{BUDGET_TERMINAL} (exit {fourth.code}, count stays 3); regenerations 6/6 then "
+            f"{last.json().get('reason')} (exit {last.code}), a review of REVISE lesson 1 refused "
+            f"{BUDGET_TERMINAL} (exit {again.code}); db {c.rel(w.db)} budgets (revise, regenerations)={spent_now}"
         )
 
 
@@ -698,9 +889,13 @@ def prepare_out(out: Path) -> Path:
     return out
 
 
+def run_all(base: Path) -> list[Case]:
+    """The whole crafted suite, every case in its own subdirectory of ``base``."""
+    return [run_case(key, title, function, base) for key, title, function in CRAFTED_CASES]
+
+
 def run_crafted(out: Path) -> int:
-    base = prepare_out(out)
-    cases = [run_case(key, title, function, base) for key, title, function in CRAFTED_CASES]
+    cases = run_all(prepare_out(out))
     for case in cases:
         print(case.line())
     failed = [case.key for case in cases if not case.passed]
@@ -889,10 +1084,8 @@ def prepare_plan_card(out: Path, token: str, agent: str) -> tuple[dict[str, Any]
         return card, state
 
 
-def prepare_module_cards(
-    out: Path, token: str, lesson_agent: str, settle_agent: str
-) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
-    """(ii) lesson 2 and (iv) the settle item, in the module world (plan promoted, lessons built on it)."""
+def prepare_lesson_card(out: Path, token: str, lesson_agent: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    """(ii) lesson 2, in the module world (plan promoted, lessons built on it)."""
     with module_world(out / "module-world", promote=True) as w:
         seat = Seat.of(token, "lesson2")
         manifest = w.manifest(2)
@@ -911,29 +1104,50 @@ def prepare_module_cards(
         )
         if lesson["manifest_sha256"] != w.digest(2):
             raise RuntimeError("the lesson manifest's sha256 is not its sidecar digest")
-        lesson_state = {
+        return lesson, {
             "world": str(w.root),
             "db": str(w.db),
             "review_id": seat.review_id,
             "attempt_id": seat.attempt_id,
             "manifest_sha256": lesson["manifest_sha256"],
             "task_id": seat.task_id,
+            "tasks_dir": str(TASKS_DIR),
         }
-        # (iv) a crafted first review of lesson 1 that carries one unsupported_by_source finding opens the item
+
+
+def prepare_settle_card(out: Path, token: str, settle_agent: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    """(iv) one open settle item and nothing else holding the module.
+
+    Lessons 2 and 3 are reviewed APPROVE on their current manifests (lesson 3, the sampled one, by the second seat
+    too) and lesson 1 is approved with one unsupported_by_source finding, which opens the item. The module verdict
+    while it is open must hold for that item alone (``settle_open``), so that after the seat decided it the only
+    thing that can still hold the module is the outcome's own consequence.
+    """
+    with module_world(out / "settle-world", promote=True) as w:
         crafted = w.make_return(1, [unsupported("F-01")])
         recorded = w.record_cli(crafted)
         items = recorded.json().get("settle_items") or []
-        if recorded.code != 0 or len(items) != 1:
+        if recorded.code != 0 or recorded.json().get("verdict") != "APPROVE" or len(items) != 1:
             raise RuntimeError(
                 f"the crafted first review opened settle items {items}: {recorded.out[-300:]}{recorded.err}"
+            )
+        for n in (2, 3):
+            done = w.record_cli(w.make_return(n))
+            if done.code != 0 or done.json().get("verdict") != "APPROVE":
+                raise RuntimeError(f"lesson {n} was not approved: {done.out[-300:]} {done.err.strip()}")
+        second = w.record_cli(w.make_return(3), task_id=w.second_seat_task(), second=True)
+        if second.code != 0:
+            raise RuntimeError(
+                f"the second seat of lesson 3 was not recorded: {second.out[-300:]} {second.err.strip()}"
             )
         item_id = items[0]
         open_verdict = w.verdict()
         kept = out / "module-verdict.while-open.yaml"
         shutil.copyfile(w.state_dir / fixloop.MODULE_VERDICT_NAME, kept)
-        if open_verdict["verdict"] == "APPROVE" or "settle_open" not in hold_codes(open_verdict):
+        if open_verdict["verdict"] != "HOLD" or hold_codes(open_verdict) != ["settle_open"]:
             raise RuntimeError(
-                f"the module verdict is {open_verdict['verdict']} {hold_codes(open_verdict)} with the item open"
+                f"the module verdict is {open_verdict['verdict']} {hold_codes(open_verdict)} with the item open; "
+                "expected HOLD for settle_open alone"
             )
         seat = Seat.of(token, "settle")
         manifest = out / "cards" / "iv-settle.manifest.yaml"
@@ -980,16 +1194,20 @@ def prepare_module_cards(
             record_argv=record_argv,
             item_id=item_id,
         )
-        settle_state = {
+        return settled, {
             "world": str(w.root),
             "db": str(w.db),
             "item_id": item_id,
+            "review_id": seat.review_id,
+            "attempt_id": seat.attempt_id,
+            "task_id": seat.task_id,
+            "ledger": str(seat.ledger),
+            "tasks_dir": str(TASKS_DIR),
             "manifest_sha256": settled["manifest_sha256"],
             "while_open_verdict": str(kept),
             "open_verdict": open_verdict["verdict"],
             "open_holds": hold_codes(open_verdict),
         }
-        return [lesson, settled], lesson_state, settle_state
 
 
 def prepare_real(out: Path, *, plan_agent: str, lesson_agent: str, settle_agent: str) -> int:
@@ -997,13 +1215,14 @@ def prepare_real(out: Path, *, plan_agent: str, lesson_agent: str, settle_agent:
     token = token_of(out)
     try:
         plan_card, plan_state = prepare_plan_card(out, token, plan_agent)
-        module_cards, lesson_state, settle_state = prepare_module_cards(out, token, lesson_agent, settle_agent)
+        lesson_card, lesson_state = prepare_lesson_card(out, token, lesson_agent)
+        settle_card, settle_state = prepare_settle_card(out, token, settle_agent)
     except RuntimeError as error:
         print(f"PREPARE FAILED: {error}", file=sys.stderr)
         return 1
     state = {"schema": 1, "token": token, "cases": {"i": plan_state, "ii": lesson_state, "iv": settle_state}}
     (out / STATE_NAME).write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print("\n\n".join(render_card(out, card) for card in [plan_card, *module_cards]))
+    print("\n\n".join(render_card(out, card) for card in [plan_card, lesson_card, settle_card]))
     print(
         f"\nprepared under {out} (state {STATE_NAME}); the driver dispatches the three seats; nothing was dispatched here"
     )
@@ -1035,6 +1254,26 @@ def _rows(db: Path, sql: str, *args: Any) -> list[sqlite3.Row]:
         conn.close()
 
 
+def finding_problems(stored: list[sqlite3.Row], returned: list[dict[str, Any]]) -> list[str]:
+    """Where the database's findings are not the return's: every finding equal, by its canonical JSON, one for one."""
+    by_id = {row["finding_id"]: row for row in stored}
+    problems = []
+    if len(stored) != len(returned) or set(by_id) != {item["id"] for item in returned}:
+        problems.append(
+            f"the database has findings {sorted(by_id)}, the return {sorted(item['id'] for item in returned)}"
+        )
+    for item in returned:
+        row = by_id.get(item["id"])
+        if row is None:
+            continue
+        if row["finding_json"] != findings_db.dumps(item):
+            problems.append(f"finding {item['id']} is stored as {row['finding_json'][:120]}, not as returned")
+        columns = {key: row[key] for key in ("status", "dimension", "severity", "claim")}
+        if columns != {key: item[key] for key in columns}:
+            problems.append(f"finding {item['id']}: the stored columns {columns} are not the returned ones")
+    return problems
+
+
 def finish_plan(c: Case, info: dict[str, Any]) -> None:
     root = Path(info["world"])
     state, db, _ = _attached(root)
@@ -1052,10 +1291,8 @@ def finish_plan(c: Case, info: dict[str, Any]) -> None:
     c.expect(written["attempt_id"] == info["attempt_id"], "plan-review.yaml names another attempt")
     [attempt] = _rows(db, "SELECT * FROM attempts WHERE kind = 'plan' AND attempt_id = ?", info["attempt_id"])
     findings = yaml.safe_load(saved.read_bytes()).get("findings") or []
-    c.expect(
-        len(_rows(db, "SELECT * FROM findings WHERE attempt_id = ?", info["attempt_id"])) == len(findings),
-        "the database's findings are not the return's findings",
-    )
+    problems = finding_problems(_rows(db, "SELECT * FROM findings WHERE attempt_id = ?", info["attempt_id"]), findings)
+    c.expect(not problems, "the database's findings are not the return's findings: " + "; ".join(problems))
     c.note(
         f"plan-review.yaml verdict={written['verdict']} attempt={written['attempt_id']} manifest={written['manifest_sha256'][:12]} findings={len(findings)} harness={attempt['harness']}"
     )
@@ -1099,11 +1336,8 @@ def finish_lesson(c: Case, info: dict[str, Any]) -> None:
     c.expect(written["attempt_id"] == info["attempt_id"], "the verdict file names another attempt")
     returned = yaml.safe_load(saved.read_bytes()).get("findings") or []
     stored = _rows(db, "SELECT * FROM findings WHERE attempt_id = ?", info["attempt_id"])
-    c.expect(len(stored) == len(returned), f"database findings {len(stored)} != return findings {len(returned)}")
-    c.expect(
-        sorted(row["finding_id"] for row in stored) == sorted(item["id"] for item in returned),
-        "the database's finding ids are not the return's",
-    )
+    problems = finding_problems(stored, returned)
+    c.expect(not problems, "database findings are not the return's findings: " + "; ".join(problems))
     [attempt] = _rows(db, "SELECT * FROM attempts WHERE attempt_id = ?", info["attempt_id"])
     c.note(
         f"{c.rel(verdict_file)} verdict={written['verdict']} manifest={written['manifest_sha256'][:12]}=sha256({c.rel(manifest)}); "
@@ -1115,23 +1349,46 @@ def finish_settle(c: Case, info: dict[str, Any]) -> None:
     root = Path(info["world"])
     state, db, _ = _attached(root)
     c.expect(
-        info["open_verdict"] != "APPROVE" and "settle_open" in info["open_holds"],
-        f"while open the module verdict was {info['open_verdict']} {info['open_holds']}",
+        info["open_verdict"] == "HOLD" and info["open_holds"] == ["settle_open"],
+        f"while open the module verdict was {info['open_verdict']} {info['open_holds']}, not HOLD for settle_open alone",
     )
     [item] = _rows(db, "SELECT * FROM settle_items WHERE item_id = ?", info["item_id"])
-    c.expect(
+    if not c.expect(
         item["outcome"] in findings_db.SEAT_OUTCOMES,
         f"the settle item has outcome {item['outcome']}: no validated outcome was recorded",
-    )
+    ):
+        return
     saved = state / f"settle-{info['item_id']}.reply.yaml"
     c.expect(saved.is_file(), "the settle reply was not saved")
-    if item["outcome"] in findings_db.OPERATOR_OUTCOMES:
-        c.expect(item["needs_operator"] == 1, "a source_conflict/unresolved outcome is not marked for the operator")
-        c.note(f"item {item['item_id']} outcome={item['outcome']} marked for the operator")
-    else:
-        c.note(
-            f"item {item['item_id']} outcome={item['outcome']} decided_by={item['decided_by']} receipts={item['receipts_json']}"
+    # the real seat: a dispatch record of the card's task, the decision made under that task, receipts of its ledger
+    try:
+        seat = record.resolve_reviewer_identity(info["task_id"], Path(info["tasks_dir"]))
+    except record.RecordError as error:
+        c.expect(False, f"no settle dispatch task record for {info['task_id']}: {error}")
+        seat = {"harness": "?", "model": "?", "family": "?"}
+    c.expect(
+        item["decided_by"] == info["task_id"],
+        f"decided_by {item['decided_by']!r} is not the card's task {info['task_id']!r}",
+    )
+    receipts = json.loads(item["receipts_json"] or "[]")
+    c.expect(bool(receipts), "the outcome cites no receipt")
+    ledger_path = Path(info["ledger"])
+    try:
+        held = {row["receipt_id"]: row for row in records(ledger_path)}
+    except (OSError, LedgerError) as error:
+        c.expect(False, f"the settle seat's ledger is unreadable: {error}")
+        held = {}
+    for receipt in receipts:
+        row = held.get(receipt)
+        c.expect(
+            row is not None
+            and (row.get("review_id"), row.get("attempt_id")) == (info["review_id"], info["attempt_id"])
+            and row.get("manifest_sha256") == info["manifest_sha256"],
+            f"receipt {receipt} is not in the ledger of task {info['task_id']} ({ledger_path.name}) on the settle manifest",
         )
+    operator = item["outcome"] in findings_db.OPERATOR_OUTCOMES
+    if operator:
+        c.expect(item["needs_operator"] == 1, "a source_conflict/unresolved outcome is not marked for the operator")
     mp = pytest.MonkeyPatch()
     try:
         mp.setattr(plan_manifest, "verify_pack_strict", fake_verify())
@@ -1142,9 +1399,29 @@ def finish_settle(c: Case, info: dict[str, Any]) -> None:
             conn.close()
     finally:
         mp.undo()
-    c.expect("settle_open" not in hold_codes(after), "the decided item still holds the module as open")
+    # the item was the module's only hold, so what is left is exactly what the outcome itself implies
+    expected = {
+        "refuted": [],
+        "supported_defect": ["settle_supported_defect"],
+        "source_conflict": ["settle_operator_pending", "terminal_operator"],  # terminal: fixloop.REASON_SETTLE
+        "unresolved": ["settle_operator_pending", "terminal_operator"],
+    }[item["outcome"]]
+    c.expect(
+        [item["reason"] for item in after["terminal"]] == ([fixloop.REASON_SETTLE] if operator else []),
+        f"after {item['outcome']} the terminal transitions are {after['terminal']}",
+    )
+    c.expect(
+        hold_codes(after) == expected and (after["verdict"] == "APPROVE") == (not expected),
+        f"after {item['outcome']} the module verdict is {after['verdict']} {hold_codes(after)}, expected holds {expected}",
+    )
     c.note(
-        f"while open: {info['open_verdict']} {info['open_holds']} ({c.rel(Path(info['while_open_verdict']))}); after: {after['verdict']} {hold_codes(after)}"
+        f"item {item['item_id']} outcome={item['outcome']} decided_by={item['decided_by']} "
+        f"seat={seat['harness']}/{seat['model']}/{seat['family']} receipts={receipts} in {ledger_path.name}"
+        + (" marked for the operator" if operator else "")
+    )
+    c.note(
+        f"while open: {info['open_verdict']} {info['open_holds']} ({c.rel(Path(info['while_open_verdict']))}); "
+        f"after: {after['verdict']} {hold_codes(after)}"
     )
 
 

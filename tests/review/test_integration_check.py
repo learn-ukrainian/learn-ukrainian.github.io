@@ -1,9 +1,10 @@
 """The R2b integration check harness (#8430): its own behaviour, with negative controls.
 
-``run-crafted`` must pass on the code as it is and must FAIL when the product path it proves is broken (each
-control below breaks one seam and expects exactly that case to fail). ``prepare-real`` + ``finish-real`` are
-exercised with crafted returns standing in for the real seats: the ledgers and dispatch records are redirected
-to a temporary tree, so nothing of ``batch_state`` is touched.
+``run-crafted`` must pass on the code as it is and must FAIL when the product path it proves is broken: each
+negative control breaks one seam, runs the WHOLE crafted suite and expects exactly the cases that depend on
+that seam to fail (and every other case to pass). ``prepare-real`` + ``finish-real`` are exercised with crafted
+returns standing in for the real seats: the ledgers and dispatch records are redirected to a temporary tree, so
+nothing of ``batch_state`` is touched.
 """
 
 from __future__ import annotations
@@ -12,12 +13,14 @@ import hashlib
 import json
 import re
 import shutil
+import sqlite3
 from pathlib import Path
 from typing import Any
 
 import pytest
 import yaml
 
+from scripts.build.fresh import assemble
 from scripts.build.fresh import plan_manifest as pm
 from scripts.review import findings_db, fixloop, record, second_seat, settle
 from scripts.review import integration_check as ic
@@ -69,29 +72,55 @@ def test_the_module_verdict_the_check_reports_is_the_engines_own_file(crafted: t
     assert not (Path(ic.REPO_ROOT) / "curriculum" / "l2-uk-en" / "evidence" / "a1" / "_state" / SLUG).exists()
 
 
-def only(case_key: str, tmp_path: Path) -> ic.Case:
-    key, title, function = next(item for item in ic.CRAFTED_CASES if item[0] == case_key)
-    return ic.run_case(key, title, function, tmp_path)
+REAL_KIND = assemble.derive_record_kind
+
+# each control: (what is broken, module, attribute, replacement, the cases that must then FAIL)
+CONTROLS = [
+    ("every span is blamed on the writer", fixloop, "span_layer", lambda span: fixloop.REGENERATE, {"iii"}),
+    (
+        "the engine prints no word record kind",
+        assemble,
+        "derive_record_kind",
+        lambda ref, tab=None: "note" if ref.startswith("W-") else REAL_KIND(ref, tab),
+        {"iii"},
+    ),
+    # the sampling rule also decides whether (vi) and (viii) need a second seat before APPROVE
+    ("nothing is sampled for a second seat", second_seat, "selected", lambda *a, **kw: False, {"v", "vi", "viii"}),
+    ("a regeneration stales nobody", fixloop, "dependents", lambda closure, n: [], {"vi"}),
+    ("no budget is terminal for the module verdict", fixloop, "terminal_transitions", lambda *a, **kw: [], {"vii"}),
+    # #8774: without the refusal a review past the terminal budget is accepted and counted as one more round
+    ("a review past a terminal budget is accepted", record, "_terminal_budget", lambda *a, **kw: None, {"vii"}),
+    # the plan gate is part of every APPROVE of the module verdict
+    (
+        "the plan is never reviewed",
+        pm,
+        "plan_review_status",
+        lambda *a, **kw: {"state": "unreviewed", "stale": {}},
+        {"v", "vi", "viii"},
+    ),
+]
+
+
+def test_the_whole_crafted_suite_passes_before_any_break(tmp_path: Path) -> None:
+    assert [(case.key, case.passed) for case in ic.run_all(tmp_path)] == [(key, True) for key, _, _ in ic.CRAFTED_CASES]
 
 
 @pytest.mark.parametrize(
-    ("case_key", "target", "attribute", "replacement"),
-    [
-        ("iii", fixloop, "span_layer", lambda span: fixloop.REGENERATE),  # blame every span on the writer
-        ("v", second_seat, "selected", lambda *a, **kw: False),  # the sampling rule selects nothing
-        ("vi", fixloop, "dependents", lambda closure, n: []),  # regeneration stales nobody
-        ("vii", fixloop, "terminal_transitions", lambda *a, **kw: []),  # no budget is ever terminal
-        ("viii", pm, "plan_review_status", lambda *a, **kw: {"state": "unreviewed", "stale": {}}),
-    ],
+    ("broken", "target", "attribute", "replacement", "failing"), CONTROLS, ids=[c[0] for c in CONTROLS]
 )
-def test_breaking_the_product_path_fails_exactly_its_case(
-    case_key: str, target: Any, attribute: str, replacement: Any, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+def test_breaking_a_product_path_fails_exactly_the_cases_that_prove_it(
+    broken: str,
+    target: Any,
+    attribute: str,
+    replacement: Any,
+    failing: set[str],
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    assert only(case_key, tmp_path / "control").passed is True  # the control: it passes before the break
     monkeypatch.setattr(target, attribute, replacement)
-    broken = only(case_key, tmp_path / "broken")
-    assert not broken.passed, broken.line()
-    assert broken.line().startswith(f"FAIL ({case_key})")
+    cases = ic.run_all(tmp_path)
+    assert {case.key for case in cases if not case.passed} == failing, "\n".join(case.line() for case in cases)
+    assert all(case.line().startswith("FAIL") for case in cases if case.key in failing)
 
 
 def test_a_crash_inside_a_case_is_a_failure_with_its_location(tmp_path: Path) -> None:
@@ -123,10 +152,8 @@ def test_the_help_states_use_and_exit_codes(capsys: pytest.CaptureFixture[str]) 
 # --- prepare-real / finish-real ----------------------------------------------------------------------
 
 
-@pytest.fixture(scope="module")
-def prepared(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Path, Path]:
+def prepare(root: Path) -> tuple[Path, Path, Path]:
     """prepare-real with the ledgers and dispatch records redirected to a temporary tree."""
-    root = tmp_path_factory.mktemp("real")
     receipts, tasks = root / "receipts", root / "tasks"
     receipts.mkdir()
     tasks.mkdir()
@@ -140,8 +167,18 @@ def prepared(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Path, Path
     return root / "out", receipts, tasks
 
 
+@pytest.fixture(scope="module")
+def prepared(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Path, Path]:
+    """A prepared check whose seats never answered (nothing here is ever recorded)."""
+    return prepare(tmp_path_factory.mktemp("real"))
+
+
 def card(out: Path, key: str) -> dict[str, Any]:
     return json.loads((out / "cards" / f"{key}.json").read_text(encoding="utf-8"))
+
+
+def state_of(out: Path, key: str) -> dict[str, Any]:
+    return json.loads((out / STATE).read_text(encoding="utf-8"))["cases"][key]
 
 
 def test_prepare_writes_three_cards_with_exact_hashes_and_commands(prepared: tuple[Path, Path, Path]) -> None:
@@ -172,21 +209,31 @@ def test_prepare_writes_three_cards_with_exact_hashes_and_commands(prepared: tup
         assert one["record"][2] == ("scripts.review.settle" if kind == "settle" else "scripts.review.record")
         assert one["return_path"] in one["record"] and one["record_cmd"].startswith("cd ")
     assert card(out, "ii")["record"][card(out, "ii")["record"].index("--lesson") + 1].endswith("lesson-2.expanded.yaml")
-    text = (out / STATE).read_text(encoding="utf-8")
-    assert json.loads(text)["cases"]["iv"]["open_verdict"] != "APPROVE"
+    iv = card(out, "iv")
+    assert iv["record"][iv["record"].index("--decided-by") + 1] == iv["task_id"]  # the decision is made under the task
+    assert state_of(out, "iv")["ledger"] == iv["ledger"] and state_of(out, "iv")["tasks_dir"] == str(tasks)
 
 
-def test_the_settle_item_is_open_and_holds_the_module_while_the_seat_has_not_answered(
+def test_the_settle_item_alone_holds_the_module_while_the_seat_has_not_answered(
     prepared: tuple[Path, Path, Path],
 ) -> None:
     out, _, _ = prepared
-    info = json.loads((out / STATE).read_text(encoding="utf-8"))["cases"]["iv"]
+    info = state_of(out, "iv")
     held = yaml.safe_load(Path(info["while_open_verdict"]).read_bytes())
-    assert held["verdict"] != "APPROVE" and [item["item_id"] for item in held["settle_items"]["open"]] == [
-        info["item_id"]
+    assert held["verdict"] == "HOLD" and [item["item_id"] for item in held["settle_items"]["open"]] == [info["item_id"]]
+    assert [hold["code"] for hold in held["holds"]] == [
+        "settle_open"
+    ]  # nothing else holds it: lessons, plan, second seat
+    assert [(row["n"], row["state"], row["verdict"]) for row in held["lessons"]] == [
+        (n, "current", "APPROVE") for n in (1, 2, 3)
     ]
+    assert held["plan"]["state"] == "reviewed_promoted"
+    assert info["open_verdict"] == "HOLD" and info["open_holds"] == ["settle_open"]
     rows = ic._rows(Path(info["db"]), "SELECT kind, outcome, lesson_n FROM settle_items")
     assert [tuple(row) for row in rows] == [("unsupported_by_source", None, 1)]
+    assert [row["role"] for row in ic._rows(Path(info["db"]), "SELECT role FROM attempts WHERE role = 'second'")] == [
+        "second"
+    ]
 
 
 def test_finish_fails_every_real_case_before_any_return_is_recorded(
@@ -198,7 +245,12 @@ def test_finish_fails_every_real_case_before_any_return_is_recorded(
     assert [line.split()[:2] for line in lines] == [["FAIL", "(i)"], ["FAIL", "(ii)"], ["FAIL", "(iv)"]]
 
 
-def simulate_seats(out: Path, receipts: Path, tasks: Path, *, settle_outcome: str = "refuted") -> None:
+def seat_record(tasks: Path, task_id: str, model: str = "claude-sonnet-5") -> None:
+    """The dispatch record ``delegate.py dispatch`` writes for a seat: what its identity is resolved from."""
+    (tasks / f"{task_id}.json").write_text(json.dumps({"agent": "claude", "model": model}), encoding="utf-8")
+
+
+def simulate_seats(out: Path, tasks: Path, *, settle_outcome: str = "refuted", settle_dispatched: bool = True) -> None:
     """What the driver does after the seats answered: the returns saved where the cards say, then the record commands."""
     mp = pytest.MonkeyPatch()
     try:
@@ -217,9 +269,7 @@ def simulate_seats(out: Path, receipts: Path, tasks: Path, *, settle_outcome: st
                 review_id=plan["review_id"],
             ),
         )
-        (tasks / f"{plan['task_id']}.json").write_text(
-            json.dumps({"agent": "claude", "model": "claude-sonnet-5"}), encoding="utf-8"
-        )
+        seat_record(tasks, plan["task_id"])
         mp.setattr(pm, "verify_pack_strict", fake_verify())
         assert record.main(plan["record"][3:]) == 0
         # (ii) lesson 2
@@ -230,11 +280,9 @@ def simulate_seats(out: Path, receipts: Path, tasks: Path, *, settle_outcome: st
         for suffix in ("", ".sha256"):
             shutil.copyfile(f"{made['ledger']}{suffix}", f"{lesson['ledger']}{suffix}")
         shutil.copyfile(made["review"], lesson["return_path"])
-        (tasks / f"{lesson['task_id']}.json").write_text(
-            json.dumps({"agent": "claude", "model": "claude-sonnet-5"}), encoding="utf-8"
-        )
+        seat_record(tasks, lesson["task_id"])
         assert record.main(lesson["record"][3:]) == 0
-        # (iv) the settle seat: two hit receipts of two sources for a source_conflict, one hit for a refutation
+        # (iv) the settle seat: two hit receipts of two sources for a source_conflict, one hit otherwise
         item = card(out, "iv")
         ledger.create_empty_ledger(Path(item["ledger"]))
         manifest_sha = item["manifest_sha256"]
@@ -255,72 +303,192 @@ def simulate_seats(out: Path, receipts: Path, tasks: Path, *, settle_outcome: st
             "broadened_searches": [],
         }  # fmt: skip
         Path(item["return_path"]).write_text(yaml.safe_dump(reply, sort_keys=False), encoding="utf-8")
+        if settle_dispatched:
+            seat_record(tasks, item["task_id"])
         assert settle.main(item["record"][3:]) == 0
     finally:
         mp.undo()
 
 
-def test_finish_passes_when_the_seats_returns_were_recorded(
-    prepared: tuple[Path, Path, Path], capsys: pytest.CaptureFixture[str]
-) -> None:
-    out, receipts, tasks = prepared
-    simulate_seats(out, receipts, tasks)
+@pytest.fixture(scope="module")
+def finished(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Path]:
+    """A prepared check whose three seats answered and were recorded (tests that break it restore it)."""
+    out, _, tasks = prepare(tmp_path_factory.mktemp("finished"))
+    simulate_seats(out, tasks)
+    return out, tasks
+
+
+def finish(out: Path, capsys: pytest.CaptureFixture[str]) -> tuple[int, str]:
     capsys.readouterr()
-    assert ic.main(["finish-real", "--out", str(out)]) == 0
-    text = capsys.readouterr().out
-    assert [line.split()[:2] for line in text.splitlines() if line.startswith(("PASS", "FAIL"))] == [
-        ["PASS", "(i)"],
-        ["PASS", "(ii)"],
-        ["PASS", "(iv)"],
-    ]
-    plan = card(out, "i")
+    code = ic.main(["finish-real", "--out", str(out)])
+    return code, capsys.readouterr().out
+
+
+def verdicts(text: str) -> dict[str, str]:
+    return {
+        line.split()[1].strip("()"): line.split()[0] for line in text.splitlines() if line.startswith(("PASS", "FAIL"))
+    }
+
+
+def test_finish_passes_when_the_seats_returns_were_recorded(
+    finished: tuple[Path, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    out, _ = finished
+    code, text = finish(out, capsys)
+    assert code == 0 and verdicts(text) == {"i": "PASS", "ii": "PASS", "iv": "PASS"}, text
+    plan, lesson, item = card(out, "i"), card(out, "ii"), card(out, "iv")
     assert "reviewed_promoted" in text and "plan-review.yaml verdict=APPROVE" in text
-    lesson = card(out, "ii")
     state = Path(lesson["world"]) / "curriculum/l2-uk-en/evidence/a1/_state" / SLUG
     written = yaml.safe_load((state / "lesson-2.verdict.yaml").read_bytes())
     assert written["manifest_sha256"] == lesson["manifest_sha256"] and plan["attempt_id"] == "a1"
-    assert "outcome=refuted" in text and "findings db=1 return=1" in text
+    assert "findings db=1 return=1" in text
+    # the settle seat: outcome, the decision made under the card's task, its receipts, the verdict after (APPROVE)
+    assert (
+        "outcome=refuted" in text and f"decided_by={item['task_id']}" in text and "seat=claude/claude-sonnet-5" in text
+    )
+    assert "while open: HOLD ['settle_open']" in text and "after: APPROVE []" in text
 
 
 def test_finish_rejects_a_verdict_file_naming_another_manifest(
-    prepared: tuple[Path, Path, Path], capsys: pytest.CaptureFixture[str]
+    finished: tuple[Path, Path], capsys: pytest.CaptureFixture[str]
 ) -> None:
-    out, _, _ = prepared
+    out, _ = finished
     lesson = card(out, "ii")
-    state = Path(lesson["world"]) / "curriculum/l2-uk-en/evidence/a1/_state" / SLUG
-    path = state / "lesson-2.verdict.yaml"
+    path = Path(lesson["world"]) / "curriculum/l2-uk-en/evidence/a1/_state" / SLUG / "lesson-2.verdict.yaml"
     original = path.read_bytes()
     try:
         document = yaml.safe_load(original)
         document["manifest_sha256"] = "0" * 64
         path.write_text(yaml.safe_dump(document), encoding="utf-8")
-        assert ic.main(["finish-real", "--out", str(out)]) == 1
-        assert "not the manifest's sha256" in capsys.readouterr().out
+        code, text = finish(out, capsys)
+        assert code == 1 and "not the manifest's sha256" in text and verdicts(text)["ii"] == "FAIL"
     finally:
         path.write_bytes(original)
 
 
-def test_a_source_conflict_is_marked_for_the_operator(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    receipts, tasks = tmp_path / "receipts", tmp_path / "tasks"
-    receipts.mkdir()
-    tasks.mkdir()
-    patch = pytest.MonkeyPatch()
-    patch.setattr(ic, "RECEIPTS_ROOT", receipts)
-    patch.setattr(ic, "TASKS_DIR", tasks)
+def altered(db: Path, sql: str, *args: Any) -> None:
+    conn = sqlite3.connect(db)
     try:
-        assert ic.main(["prepare-real", "--out", str(tmp_path / "out")]) == 0
-        simulate_seats(tmp_path / "out", receipts, tasks, settle_outcome="source_conflict")
-        capsys.readouterr()
-        assert ic.main(["finish-real", "--out", str(tmp_path / "out")]) == 0
-        assert "marked for the operator" in capsys.readouterr().out
-        [item] = ic._rows(
-            Path(card(tmp_path / "out", "iv")["world"]) / "batch_state/review-findings/a1.sqlite",
-            "SELECT * FROM settle_items",
-        )
-        assert item["outcome"] == "source_conflict" and item["needs_operator"] == 1
-        assert item["outcome"] in findings_db.OPERATOR_OUTCOMES and LEVEL == "a1"
+        conn.execute(sql, args)
+        conn.commit()
     finally:
-        patch.undo()
+        conn.close()
+
+
+@pytest.mark.parametrize("what", ["finding_json", "claim column", "another id"])
+def test_a_stored_finding_that_differs_from_the_returned_one_fails_case_ii(
+    what: str, finished: tuple[Path, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    """(ii) "database findings = return findings" is full equality of each finding, not ids or counts."""
+    out, _ = finished
+    db = Path(card(out, "ii")["world"]) / "batch_state/review-findings/a1.sqlite"
+    attempt = card(out, "ii")["attempt_id"]
+    [row] = ic._rows(db, "SELECT * FROM findings WHERE attempt_id = ?", attempt)
+    stored = json.loads(row["finding_json"])
+    stored["claim"] = "A different claim."
+    updates = {
+        "finding_json": ("UPDATE findings SET finding_json = ? WHERE attempt_id = ?", json.dumps(stored)),
+        "claim column": ("UPDATE findings SET claim = ? WHERE attempt_id = ?", "A different claim."),
+        "another id": ("UPDATE findings SET finding_id = ? WHERE attempt_id = ?", "F-99"),
+    }
+    sql, value = updates[what]
+    try:
+        altered(db, sql, value, attempt)
+        code, text = finish(out, capsys)
+        assert code == 1 and verdicts(text) == {"i": "PASS", "ii": "FAIL", "iv": "PASS"}, text
+        assert "database findings are not the return's findings" in text
+    finally:
+        altered(
+            db,
+            "UPDATE findings SET finding_json = ?, claim = ?, finding_id = ? WHERE attempt_id = ?",
+            row["finding_json"],
+            row["claim"],
+            row["finding_id"],
+            attempt,
+        )
+    assert finish(out, capsys)[0] == 0
+
+
+def test_finish_needs_the_settle_seats_dispatch_record(
+    finished: tuple[Path, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    out, tasks = finished
+    path = tasks / f"{card(out, 'iv')['task_id']}.json"
+    kept = path.read_bytes()
+    try:
+        path.unlink()  # a settle outcome recorded by hand, with no dispatch behind it
+        code, text = finish(out, capsys)
+        assert code == 1 and verdicts(text) == {"i": "PASS", "ii": "PASS", "iv": "FAIL"}, text
+        assert "no settle dispatch task record" in text
+        path.write_text(json.dumps({"agent": "claude", "model": "zzz-model"}), encoding="utf-8")  # no resolvable model
+        assert verdicts(finish(out, capsys)[1])["iv"] == "FAIL"
+    finally:
+        path.write_bytes(kept)
+    assert finish(out, capsys)[0] == 0
+
+
+@pytest.mark.parametrize("what", ["decided_by", "receipt not in the ledger", "receipt of another attempt"])
+def test_the_settle_decision_must_belong_to_the_cards_task_and_its_ledger(
+    what: str, finished: tuple[Path, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    out, _ = finished
+    info = state_of(out, "iv")
+    db = Path(info["db"])
+    [row] = ic._rows(db, "SELECT * FROM settle_items WHERE item_id = ?", info["item_id"])
+    changes = {
+        "decided_by": ("decided_by", "some-other-task"),
+        "receipt not in the ledger": ("receipts_json", '["r-not-in-the-ledger"]'),
+        "receipt of another attempt": ("receipts_json", "[]"),
+    }
+    column, value = changes[what]
+    ledger_path = Path(info["ledger"])
+    prior_ledger = ledger_path.read_bytes(), Path(f"{ledger_path}.sha256").read_bytes()
+    try:
+        if what == "receipt of another attempt":  # a real receipt, but of a ledger record naming another attempt
+            first = json.loads(prior_ledger[0].splitlines()[0])["receipt_id"]
+            other = tmp_ledger_with_other_attempt(ledger_path, first)
+            value = json.dumps([other])
+        altered(db, f"UPDATE settle_items SET {column} = ? WHERE item_id = ?", value, info["item_id"])
+        code, text = finish(out, capsys)
+        assert code == 1 and verdicts(text) == {"i": "PASS", "ii": "PASS", "iv": "FAIL"}, text
+    finally:
+        altered(db, f"UPDATE settle_items SET {column} = ? WHERE item_id = ?", row[column], info["item_id"])
+        ledger_path.write_bytes(prior_ledger[0])
+        Path(f"{ledger_path}.sha256").write_bytes(prior_ledger[1])
+    assert finish(out, capsys)[0] == 0
+
+
+def tmp_ledger_with_other_attempt(ledger_path: Path, receipt_id: str) -> str:
+    """Append a receipt to the seat's ledger that names another attempt; returns its id."""
+    return ledger.append(
+        ledger_path, review_id="r-other", attempt_id="a-other", manifest_sha256="0" * 64,
+        tool="query_sum20", server_version="fixture", arguments={}, snapshots={}, status="ok", result="x",
+        outcome_facts={"call_status": "ok", "hits": 1, "status": "hits_found", "unavailable": False},
+    )  # fmt: skip
+
+
+@pytest.mark.parametrize(
+    ("outcome", "holds", "operator"),
+    [
+        ("source_conflict", ["settle_operator_pending", "terminal_operator"], True),
+        ("supported_defect", ["settle_supported_defect"], False),
+    ],
+)
+def test_what_the_module_verdict_keeps_after_a_settle_outcome(
+    outcome: str, holds: list[str], operator: bool, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The item was the only hold; after the seat decided it, exactly the outcome's own consequence remains."""
+    out, _, tasks = prepare(tmp_path)
+    simulate_seats(out, tasks, settle_outcome=outcome)
+    code, text = finish(out, capsys)
+    assert code == 0 and verdicts(text)["iv"] == "PASS", text
+    assert f"after: {'HOLD' if operator else 'REVISE'} {holds}" in text
+    [item] = ic._rows(
+        Path(card(out, "iv")["world"]) / "batch_state/review-findings/a1.sqlite", "SELECT * FROM settle_items"
+    )
+    assert item["outcome"] == outcome and item["needs_operator"] == int(operator)
+    assert ("marked for the operator" in text) is operator
+    assert (item["outcome"] in findings_db.OPERATOR_OUTCOMES) is operator and LEVEL == "a1"
 
 
 # --- no Ukrainian typed --------------------------------------------------------------------------------
