@@ -56,3 +56,58 @@ gate_candidate_pattern:
   value: "^yes .+$"
   decided: "2026-09-22"
   basis: "schemas/review-v1.schema.json could_be_a_gate (#8430 r4)"
+
+# --- R3: seeded-defect measurement (#8430 Part R3) -------------------------------------------
+
+# Operator decision 2 (2026-09-21): about 22 planted defects per dimension. A report is
+# threshold-eligible only when every dimension has at least this many scored planted defects
+# on real built lessons.
+min_planted_per_dimension:
+  value: 22
+  decided: "2026-09-21"
+  basis: "#8430 operator decision 2 (about 22 planted defects per dimension)"
+
+# Operator decision 2: at least 30 clean lessons per seat.
+min_clean_lessons:
+  value: 30
+  decided: "2026-09-21"
+  basis: "#8430 operator decision 2 (at least 30 clean lessons per seat)"
+
+# Rolling measurement: one seeded lesson in N of the production stream, per seat (r4 contract).
+rolling_one_in:
+  value: 30
+  decided: "2026-09-22"
+  basis: "#8430 r4 'Threshold and admission' (1 in 30), accepted by the operator 2026-09-22"
+
+# Confidence of every interval in a measurement report, as a whole percent (95 = 95 %).
+interval_confidence_percent:
+  value: 95
+  decided: "2026-09-25"
+  basis: "driver-set (R3 header r2.1); the contract fixes that intervals are reported, not their level"
+
+# Interval for a proportion (recall, share falsely blocked, evidence validation rate): the unit
+# is the seed or the clean lesson.
+interval_method_proportion:
+  value: "wilson"
+  decided: "2026-09-25"
+  basis: "R3 header r2.1 'The user-visible outcome' (Wilson intervals, unit = seed)"
+
+# Interval for findings per clean lesson: a count over a number of lessons.
+interval_method_rate:
+  value: "poisson_exact"
+  decided: "2026-09-25"
+  basis: "R3 header r2.1 'The user-visible outcome' (Poisson exact, unit = clean lesson)"
+
+# Paired comparison of two seats on the same seeds.
+paired_test:
+  value: "mcnemar_exact"
+  decided: "2026-09-25"
+  basis: "R3 header r2.1 'The user-visible outcome' (exact McNemar on discordant pairs)"
+
+# The admission threshold a seat must reach. The operator's, chosen only from a
+# threshold-eligible report; null until he writes it. `decided` here is the date the parameter was
+# defined as unset. A runner in --set confirmation refuses to run while the value is null.
+admission_threshold:
+  value: null
+  decided: "2026-09-25"
+  basis: "unset until the operator writes it (#8430 'Threshold and admission'; R3 header r2.1)"
