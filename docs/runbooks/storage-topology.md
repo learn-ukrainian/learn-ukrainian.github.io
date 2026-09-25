@@ -96,6 +96,25 @@ an accident of whichever ingest last touched the file (#8527):
 - **Never** run a long-lived read transaction against a DELETE-mode `sources.db` while
   the walk runs, and never switch the live file back to DELETE mode.
 
+## Bulk consumers and the old `data/` links (#8803)
+
+`data/textbooks` and `data/vesum` are no longer tracked symlinks. Both paths
+stay gitignored, and no consumer reads bulk data through them:
+
+- **Textbook PDFs** are read from `textbooks/` under the resolved bulk root
+  (`scripts/wiki/config.py` `TEXTBOOK_PDFS_DIR`).
+- **Custody-access archive locators** (`gdrive:learn-ukrainian-data/<rel>` and
+  `gdrive:<rel>`) resolve to `<rel>` under the bulk root. When no marker-valid
+  root resolves, the source is reported as unmounted.
+- **VESUM release-asset cache**: `scripts/rag/build_vesum_shadow.py` downloads
+  the public, SHA-pinned `dict_uk` asset into a repository-local `data/vesum/`
+  directory unless you pass `--asset` or `--cache-dir`. This is a gitignored
+  download cache, not bulk data. The default lives in
+  `scripts/rag/vesum_reingest.py`, whose SHA-256 is pinned by the VESUM source
+  lock and the frozen ua-eval v0.1.0/v0.1.1 releases, so it is left as is. If a
+  host still has an old `data/vesum` link, the cache follows that link; pass
+  `--cache-dir` to put it somewhere else.
+
 ## Outage posture
 
 | Failure | Expected behavior |

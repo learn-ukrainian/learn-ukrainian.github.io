@@ -17,6 +17,7 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import v4_source_custody_access as custody
+from scripts.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG_PATH = Path("data/projects/open_model_data/custody/v4_source_custody_access_config_v1.json")
@@ -980,6 +981,42 @@ def test_check_chunk_file_lineage_preserves_excluded_mode(tmp_path: Path) -> Non
     assert mode == "scanned_image"
     assert is_ocr is True
     assert count == 1
+
+
+def _fake_bulk_root(root: Path) -> Path:
+    for marker in REQUIRED_BULK_MARKERS:
+        (root / marker).mkdir(parents=True)
+    return root
+
+
+def test_archive_locator_resolves_through_bulk_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """#8803: gdrive locators name the bulk root, found via the storage resolver."""
+    bulk = _fake_bulk_root(tmp_path / "bulk")
+    (bulk / "textbooks" / "grade-5").mkdir(parents=True)
+    (bulk / "textbooks" / "grade-5" / "tb_one.pdf").write_bytes(b"%PDF-")
+    monkeypatch.setenv(ENV_BULK_ROOT, str(bulk))
+    roots = [tmp_path / "repo"]
+
+    for locator in ("gdrive:learn-ukrainian-data/textbooks", "gdrive:textbooks"):
+        assert custody._resolve_archive_mount(locator, roots) == bulk / "textbooks"
+    archive_map = custody._build_archive_cache_map("gdrive:learn-ukrainian-data/textbooks", "native_pdf_text", roots)
+    assert archive_map == {"tb_one": bulk / "textbooks" / "grade-5" / "tb_one.pdf"}
+    assert custody._check_archive_on_host("gdrive:learn-ukrainian-data/textbooks", "tb_one", "native_pdf_text", roots)
+
+
+def test_archive_locator_ignores_repository_data_link(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A repository-relative ``data/textbooks`` is never a stand-in for the bulk root."""
+    repo = tmp_path / "repo"
+    (repo / "data" / "textbooks").mkdir(parents=True)
+    (repo / "data" / "textbooks" / "tb_one.pdf").write_bytes(b"%PDF-")
+    (repo / "textbooks").mkdir()
+    # An LU_BULK_ROOT without markers makes the bulk root unavailable (fail closed).
+    monkeypatch.setenv(ENV_BULK_ROOT, str(tmp_path / "not-a-bulk-root"))
+
+    locator = "gdrive:learn-ukrainian-data/textbooks"
+    assert custody._resolve_archive_mount(locator, [repo]) is None
+    assert custody._build_archive_cache_map(locator, "native_pdf_text", [repo]) == {}
+    assert not custody._check_archive_on_host(locator, "tb_one", "native_pdf_text", [repo])
 
 
 def test_input_root_takes_precedence_over_cwd(tmp_path: Path) -> None:
@@ -2050,9 +2087,11 @@ def test_verify_detects_unmounted_textbook_tampered_as_accessible(
         custody.verify(CONFIG_PATH, input_root=repo_root, output_root=tampered_out, require_database=True)
 
 
-def test_archive_locator_grade_tree_and_mount_resolution(tmp_path: Path) -> None:
+def test_archive_locator_grade_tree_and_mount_resolution(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """_resolve_archive_mount, _build_archive_cache_map, and _check_archive_on_host resolve across grade directories and logical locators (Finding 2)."""
-    tb_dir = tmp_path / "data" / "textbooks"
+    bulk = _fake_bulk_root(tmp_path / "bulk")
+    monkeypatch.setenv(ENV_BULK_ROOT, str(bulk))
+    tb_dir = bulk / "textbooks"
     tb_dir.mkdir(parents=True)
     (tb_dir / "top_book.pdf").touch()
     (tb_dir / "grade-10").mkdir()
@@ -2069,8 +2108,6 @@ def test_archive_locator_grade_tree_and_mount_resolution(tmp_path: Path) -> None
     # Test _resolve_archive_mount
     m1 = custody._resolve_archive_mount("gdrive:learn-ukrainian-data/textbooks", roots)
     assert m1 == tb_dir
-    m2 = custody._resolve_archive_mount("data/textbooks", roots)
-    assert m2 == tb_dir
     m3 = custody._resolve_archive_mount("data/lit_archive", roots)
     assert m3 == lit_dir
     assert custody._resolve_archive_mount("", roots) is None

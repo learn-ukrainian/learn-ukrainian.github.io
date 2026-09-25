@@ -29,6 +29,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.storage.topology import BULK_LEAF_NAME, resolve_bulk_root
+
 CONFIG_SCHEMA_VERSION = "v4_source_custody_access_config_v1"
 ITEM_SCHEMA_VERSION = "v4_source_custody_access_v1"
 MISSING_REPORT_SCHEMA_VERSION = "v4_source_custody_missing_report_v1"
@@ -168,19 +170,32 @@ def _get_search_roots(input_root: Path) -> list[Path]:
     return roots
 
 
+def _bulk_archive_dir(archive_locator: str) -> Path | None:
+    """Resolve a ``gdrive:`` locator inside the bulk raw-source root.
+
+    ``gdrive:learn-ukrainian-data/<rel>`` and the shorter ``gdrive:<rel>`` both
+    name ``<rel>`` inside the retained data store, which is reached only through
+    ``scripts.storage.topology.resolve_bulk_root`` — never a repository symlink
+    such as ``data/textbooks`` (#8803). ``None`` when no marker-valid root
+    resolves, so the source is recorded as unmounted (ACCESS-4).
+    """
+    rel = archive_locator.removeprefix("gdrive:").removeprefix(f"{BULK_LEAF_NAME}/")
+    resolution = resolve_bulk_root()
+    if not resolution.available or resolution.path is None:
+        return None
+    candidate = resolution.path / rel
+    return candidate if candidate.is_dir() else None
+
+
 def _resolve_archive_mount(archive_locator: str, roots: Sequence[Path]) -> Path | None:
     """Resolve a logical archive locator (e.g. gdrive:learn-ukrainian-data/textbooks) to a local mount directory."""
     if not archive_locator:
         return None
+    if archive_locator.startswith("gdrive:"):
+        return _bulk_archive_dir(archive_locator)
     for r in roots:
         candidates: list[Path] = []
-        if archive_locator.startswith("gdrive:learn-ukrainian-data/"):
-            rel = archive_locator.removeprefix("gdrive:learn-ukrainian-data/")
-            candidates.extend([r / "data" / rel, r / rel])
-        elif archive_locator.startswith("gdrive:"):
-            rel = archive_locator.removeprefix("gdrive:")
-            candidates.extend([r / "data" / rel, r / rel])
-        elif archive_locator.startswith("data/"):
+        if archive_locator.startswith("data/"):
             candidates.append(r / archive_locator)
         elif Path(archive_locator).is_absolute():
             candidates.append(Path(archive_locator))

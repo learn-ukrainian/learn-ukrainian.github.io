@@ -9,6 +9,7 @@ instead (``docs/runbooks/storage-topology.md``).
 
 from __future__ import annotations
 
+import ntpath
 import posixpath
 import re
 import subprocess
@@ -81,7 +82,8 @@ def test_repository_has_no_escaping_or_absolute_tracked_symlinks() -> None:
 
 def test_untracked_data_links_stay_ignored() -> None:
     """Host-local links at the old paths must never be re-added by ``git add``."""
-    for path in ("data/textbooks", "data/vesum"):
+    # The VESUM builder's default download cache lives under data/vesum/.
+    for path in ("data/textbooks", "data/vesum", "data/vesum/dict_corp_vis.txt.bz2"):
         result = subprocess.run(
             ["git", "-C", str(REPO_ROOT), "check-ignore", "-q", "--no-index", path],
             check=False,
@@ -90,19 +92,30 @@ def test_untracked_data_links_stay_ignored() -> None:
         assert result.returncode == 0, f"{path} is not gitignored"
 
 
+# Absolute sample targets are assembled at runtime so no host-shaped absolute
+# path is committed, even as test data.
+_ABSOLUTE_TARGETS = {
+    "posix": lambda: posixpath.join(posixpath.sep, "bulk", "textbooks"),
+    "home": lambda: posixpath.join("~", "bulk", "vesum"),
+    "windows-drive": lambda: ntpath.join("C:" + ntpath.sep, "bulk", "vesum"),
+    "windows-unc": lambda: ntpath.sep * 2 + ntpath.join("share", "bulk"),
+}
+
+
+@pytest.mark.parametrize("kind", sorted(_ABSOLUTE_TARGETS))
+def test_absolute_targets_are_detected(kind: str) -> None:
+    assert symlink_violation("data/link", _ABSOLUTE_TARGETS[kind]()) == "absolute target"
+
+
 @pytest.mark.parametrize(
     ("path", "target"),
     [
-        ("data/textbooks", "/srv/bulk/learn-ukrainian-data/textbooks"),
-        ("data/vesum", "~/bulk/vesum"),
-        ("data/win", "C:\\bulk\\vesum"),
-        ("data/unc", "\\\\share\\bulk"),
         ("data/up", "../../outside"),
         ("top", ".."),
     ],
 )
-def test_violations_are_detected(path: str, target: str) -> None:
-    assert symlink_violation(path, target) is not None
+def test_escaping_targets_are_detected(path: str, target: str) -> None:
+    assert symlink_violation(path, target) == "target outside the repository"
 
 
 @pytest.mark.parametrize(
@@ -122,7 +135,7 @@ def test_guard_fails_on_a_staged_absolute_symlink(tmp_path: Path) -> None:
     _git(tmp_path, "init", "-q")
     (tmp_path / "data").mkdir()
     (tmp_path / "data" / "inside").symlink_to("../README")
-    (tmp_path / "data" / "absolute").symlink_to("/srv/bulk/textbooks")
+    (tmp_path / "data" / "absolute").symlink_to(tmp_path / "bulk" / "textbooks")
     (tmp_path / "data" / "escaping").symlink_to("../../elsewhere")
     _git(tmp_path, "add", "data")
 

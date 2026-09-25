@@ -535,7 +535,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "prefix",
         "http",
         "Textbook image catalog, page rendering, annotations, stats, cleanup, and reload.",
-        "data/textbook_images/**, data/textbooks/**, and annotation JSONL.",
+        "data/textbook_images/**, bulk-root textbooks/** (storage topology), and annotation JSONL.",
         "Lazy in-memory image index; PDF pool and page-render LRU cache; /reload resets the index.",
         ("image-explorer.html",),
         "Complements /api/sources image search.",
