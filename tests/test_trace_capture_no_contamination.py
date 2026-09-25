@@ -113,6 +113,21 @@ def test_claude_text_output_fails_closed(tmp_path: Path) -> None:
         )
 
 
+def test_claude_output_format_refusal_never_echoes_the_value(tmp_path: Path) -> None:
+    sentinel = "tool-config-value-sentinel-8652"
+    with pytest.raises(ValueError, match="output_format='stream-json'") as refused:
+        ClaudeAdapter().build_invocation(
+            prompt="hello",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config={"cmd_prefix": ["true"], "output_format": sentinel},
+        )
+    assert sentinel not in str(refused.value)
+
+
 def test_codex_rollout_trace_still_records_real_tool_calls(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

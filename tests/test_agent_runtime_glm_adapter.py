@@ -124,6 +124,16 @@ def test_glm_adapter_ci_refusal_guard(tmp_path, monkeypatch):
         monkeypatch.delenv(var, raising=False)
 
 
+def test_glm_ci_refusal_names_the_variable_never_its_value(tmp_path, monkeypatch):
+    for var in _CI_ENV_VARS:
+        monkeypatch.delenv(var, raising=False)
+    sentinel = "https://ci.example.invalid/secret-token-8652"
+    monkeypatch.setenv("JENKINS_URL", sentinel)
+    with pytest.raises(GlmEgressForbiddenError, match="JENKINS_URL") as refused:
+        _build("Should fail in CI", tmp_path)
+    assert sentinel not in str(refused.value)
+
+
 def test_glm_ci_guard_mutation_check(tmp_path, monkeypatch):
     """Mutation check: disabling guard allows execution in CI, restoring it blocks."""
     monkeypatch.setenv("CI", "true")

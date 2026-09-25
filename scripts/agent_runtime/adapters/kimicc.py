@@ -9,10 +9,14 @@ makes this stateless: long calls must be relaunched before the roughly
 
 from __future__ import annotations
 
+import logging
+import re
 import shutil
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
+from scripts.common.repo_root import resolve_repo_root
 from scripts.review.model_catalog import (
     ModelCatalogError,
     kimi_model_aliases,
@@ -30,7 +34,41 @@ from ..trail_isolation import (
 from .base import InvocationPlan
 from .claude import ClaudeAdapter, _default_claude_bin, _ensure_supported_claude_cli_version
 
+_logger = logging.getLogger(__name__)
+
 _HEADLESS_WRAPPER = Path(__file__).resolve().parents[1] / "kimicc_headless.sh"
+# Set to True by delegate's ask-kimi --review grant (dispatch --agent kimi
+# --harness kimicc --mode read-only --require-review-verdict). It is one of the
+# conditions for leaving plan mode, not a grant on its own.
+REVIEW_VERDICT_MARKER_KEY = "review_verdict_required"
+# The only tools a review may pre-approve once it leaves plan mode: the read-only
+# sources lookups (the receipt ledger's REVIEW_TOOLS) and the read/search
+# built-ins. Fixed here rather than derived, so a new server-side tool cannot
+# widen the boundary without an adapter change (#8652).
+_READ_ONLY_REVIEW_SOURCES_TOOLS = frozenset(
+    {
+        "check_russian_shadow",
+        "check_text",
+        "inspect_word",
+        "inspect_words",
+        "query_cefr_level",
+        "query_grac",
+        "query_pravopys",
+        "query_r2u",
+        "query_sum20",
+        "query_ulif",
+        "search_heritage",
+        "search_style_guide",
+        "search_text",
+        "search_ua_gec_errors",
+        "verify_quote",
+        "verify_stress",
+        "verify_words",
+    }
+)
+READ_ONLY_REVIEW_ALLOWED_TOOLS = frozenset(
+    {f"mcp__sources__{name}" for name in _READ_ONLY_REVIEW_SOURCES_TOOLS} | {"Read", "Grep", "Glob", "LS"}
+)
 # Keys delegate.py adds on read-only and review attempts. Agent-specific
 # homes (codex/agy) are ignored here; rejecting them would make a shared
 # review tool_config unusable on this harness.
@@ -41,6 +79,7 @@ _DELEGATE_READ_ONLY_AND_REVIEW_KEYS = frozenset(
         "codex_home_override",
         "mcp_server_names",
         "read_only_tmp_root",
+        REVIEW_VERDICT_MARKER_KEY,
         "review_id",
     }
 )
@@ -108,6 +147,98 @@ def resolve_kimicc_dispatch_model(model: str | None, catalog: dict[str, Any] | N
     if model is None or not str(model).strip():
         return kimicc_default_model(catalog)
     return str(model).strip()
+
+
+def trusted_mcp_config_path() -> Path:
+    """The primary checkout's ``.mcp.json``, never a worktree copy.
+
+    A dispatch worktree is the branch under review, so its config is
+    untrusted (a stdio entry would run the author's command).
+    """
+    return resolve_repo_root(Path(__file__), 3) / ".mcp.json"
+
+
+def _allowed_tool_names(value: Any) -> list[str] | None:
+    """Tool names from an ``allowed_tools`` value, or None when it is malformed.
+
+    A string is the Claude CLI's own format (commas and/or spaces between names). A list is one
+    name per element: an element holding a comma or whitespace is ambiguous once the names are
+    joined for ``--allowedTools``, so it is malformed rather than silently split.
+    """
+    if isinstance(value, str):
+        return [name for name in re.split(r"[,\s]+", value) if name]
+    if isinstance(value, (list, tuple)) and all(isinstance(item, str) for item in value):
+        if any(not item or re.search(r"[,\s]", item) for item in value):
+            return None
+        return list(value)
+    return None
+
+
+def _allowed_tools_arg(value: Any) -> str:
+    """The one ``--allowedTools`` argument for a validated ``allowed_tools`` value.
+
+    ``claude --help``: "Comma or space-separated list of tool names". The names are forwarded
+    comma-joined, never as the Python repr of a list.
+    """
+    names = _allowed_tool_names(value)
+    if not names:
+        raise ValueError("KimiccHarness: allowed_tools must be tool names as a string or a list of strings")
+    return ",".join(names)
+
+
+class ReviewRefusal(StrEnum):
+    """Why a read-only dispatch stays in plan mode.
+
+    A closed set of fixed codes: the log line emits only the code, never a
+    path, tool name or any other tool_config value (CodeQL clear-text logging).
+    """
+
+    NOT_READ_ONLY = "not_read_only"
+    TRAIL_ISOLATION = "trail_isolation"
+    MISSING_REVIEW_MARKER = "missing_review_marker"
+    STRICT_MCP_CONFIG_OFF = "strict_mcp_config_off"
+    AGENT_PROFILE = "agent_profile"
+    MISSING_MCP_CONFIG = "missing_mcp_config"
+    UNTRUSTED_MCP_CONFIG = "untrusted_mcp_config"
+    ALLOWED_TOOLS_MALFORMED = "allowed_tools_malformed"
+    TOOL_NOT_ALLOWLISTED = "tool_not_allowlisted"
+
+
+def read_only_review_refusal(mode: str, tc: dict[str, Any], *, trail_isolation: bool) -> ReviewRefusal | None:
+    """Why this dispatch must stay in plan mode, or None when it may run in dontAsk.
+
+    Plan mode refuses every MCP call (#8652), so a sources review has to
+    leave it. ``--tools`` restricts only the built-ins; the MCP boundary is
+    ``--strict-mcp-config`` plus the pre-approved ``--allowedTools``. The
+    adapter checks every condition itself instead of trusting the caller.
+    """
+    if mode != "read-only":
+        return ReviewRefusal.NOT_READ_ONLY
+    if trail_isolation:
+        return ReviewRefusal.TRAIL_ISOLATION
+    if tc.get(REVIEW_VERDICT_MARKER_KEY) is not True:
+        return ReviewRefusal.MISSING_REVIEW_MARKER
+    if tc.get("strict_mcp_config") is not True:
+        return ReviewRefusal.STRICT_MCP_CONFIG_OFF
+    if tc.get("agent"):
+        # An --agent profile can carry its own tools and permission mode.
+        return ReviewRefusal.AGENT_PROFILE
+    config = tc.get("mcp_config_path")
+    if not isinstance(config, str) or not config:
+        return ReviewRefusal.MISSING_MCP_CONFIG
+    trusted = trusted_mcp_config_path()
+    try:
+        same = Path(config).resolve(strict=True) == trusted.resolve(strict=True)
+    except OSError:
+        same = False
+    if not same:
+        return ReviewRefusal.UNTRUSTED_MCP_CONFIG
+    names = _allowed_tool_names(tc.get("allowed_tools"))
+    if not names:
+        return ReviewRefusal.ALLOWED_TOOLS_MALFORMED
+    if not set(names) <= READ_ONLY_REVIEW_ALLOWED_TOOLS:
+        return ReviewRefusal.TOOL_NOT_ALLOWLISTED
+    return None
 
 
 class KimiccHarness:
@@ -191,13 +322,23 @@ class KimiccHarness:
             "--prompt",
             prompt,
         ]
+        # Leave plan mode only for a verified read-only review profile. The
+        # wrapper then runs dontAsk: only the pre-approved read-only tools run,
+        # and Write/Edit/NotebookEdit/Bash stay denied. Everything else,
+        # including write modes, keeps its previous permission mode.
+        if mode == "read-only" and not trail_isolation:
+            refusal = read_only_review_refusal(mode, tc, trail_isolation=trail_isolation)
+            if refusal is None:
+                cmd.append("--read-only-review")
+            elif tc.get("mcp_config_path") or tc.get("allowed_tools") or tc.get(REVIEW_VERDICT_MARKER_KEY):
+                _logger.warning("KimiccHarness: read-only dispatch stays in plan mode: %s", refusal.value)
         if trail_isolation:
             cmd.extend(
                 [
                     "--mcp-config",
                     str(tc["mcp_config_path"]),
                     "--allowedTools",
-                    str(tc["allowed_tools"]),
+                    _allowed_tools_arg(tc["allowed_tools"]),
                     "--tools",
                     str(tc["tools"]),
                     "--strict-mcp-config",
@@ -208,17 +349,15 @@ class KimiccHarness:
         elif tc.get("strict_mcp_config") and isinstance(tc.get("mcp_config_path"), str):
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--strict-mcp-config"])
             if tc.get("allowed_tools"):
-                cmd.extend(["--allowedTools", str(tc["allowed_tools"])])
-        elif (
-            mode == "read-only"
-            and isinstance(tc.get("mcp_config_path"), str)
-            and tc.get("allowed_tools")
-        ):
+                cmd.extend(["--allowedTools", _allowed_tools_arg(tc["allowed_tools"])])
+        elif mode == "read-only" and isinstance(tc.get("mcp_config_path"), str) and tc.get("allowed_tools"):
             # Local boundary, not only the delegate grant. --bare does not
             # load .mcp.json, so a read-only review passes the checkout file
             # plus the sources --allowedTools grant. A write mode that still
             # carries these keys must not emit them.
-            cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--allowedTools", str(tc["allowed_tools"])])
+            cmd.extend(
+                ["--mcp-config", str(tc["mcp_config_path"]), "--allowedTools", _allowed_tools_arg(tc["allowed_tools"])]
+            )
         if tc.get("agent"):
             cmd.extend(["--agent", str(tc["agent"])])
         if tc.get("max_budget_usd") is not None:

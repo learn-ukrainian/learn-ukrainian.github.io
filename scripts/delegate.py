@@ -6934,6 +6934,9 @@ def _kimicc_read_only_review_grant(
         "allowed_tools": allowed,
         "mcp_config_path": str(mcp_config),
         "strict_mcp_config": True,
+        # The adapter leaves plan mode only with this marker plus its own
+        # checks of the config path and the tool allowlist (#8652).
+        "review_verdict_required": True,
     }
 
 
@@ -7185,6 +7188,13 @@ def _run_worker(
                         cursor_mcp_backup = cursor_mcp_path.read_bytes()
                     except OSError as exc:
                         raise RuntimeError(f"failed to back up {cursor_mcp_path}: {exc}") from exc
+
+            if strict_mcp_config and review_id is not None and attempt_id is not None and mcp_config_path is not None:
+                # Last check before the path strings reach the launcher: re-walk the attempt
+                # directory no-follow and owner-checked (#8652). It narrows, not closes, the window.
+                from scripts.agent_runtime.review_mcp import verify_review_attempt_paths
+
+                verify_review_attempt_paths(mcp_config_path)
 
             result = runtime_invoke(
                 agent,

@@ -127,6 +127,16 @@ def test_assert_glm_egress_allowed_raises_under_ci(monkeypatch, var):
         _assert_glm_egress_allowed()
 
 
+def test_assert_glm_egress_refusal_names_the_variable_never_its_value(monkeypatch):
+    for other in _CI_ENV_VARS:
+        monkeypatch.delenv(other, raising=False)
+    sentinel = "https://ci.example.invalid/secret-token-8652"
+    monkeypatch.setenv("JENKINS_URL", sentinel)
+    with pytest.raises(SystemExit, match="JENKINS_URL") as refused:
+        _assert_glm_egress_allowed()
+    assert sentinel not in str(refused.value)
+
+
 def test_ask_glm_refuses_under_ci_before_any_egress(monkeypatch):
     # Guard must fire before send_message / subprocess — i.e. no DB or network.
     for other in _CI_ENV_VARS:

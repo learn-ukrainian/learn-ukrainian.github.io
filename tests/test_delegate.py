@@ -4950,7 +4950,7 @@ def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypa
         "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
         lambda _: None,
     )
-    from scripts.agent_runtime.adapters.kimicc import KimiccHarness
+    from scripts.agent_runtime.adapters.kimicc import REVIEW_VERDICT_MARKER_KEY, KimiccHarness
 
     dispatch = delegate.build_parser().parse_args(
         [
@@ -5000,6 +5000,9 @@ def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypa
     assert "mcp__sources__verify_words" in allowed.split(",")
     assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(delegate._REPO_ROOT / ".mcp.json")
     assert "--strict-mcp-config" in plan.cmd
+    assert grant[REVIEW_VERDICT_MARKER_KEY] is True
+    # The wrapper runs this profile in dontAsk, not plan mode, which refuses MCP calls (#8652).
+    assert "--read-only-review" in plan.cmd
 
     plain = delegate.build_parser().parse_args(
         [
@@ -5016,11 +5019,24 @@ def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypa
             "What does this function do?",
         ]
     )
-    assert delegate._kimicc_read_only_review_grant(
-        harness=plain.harness,
+    assert (
+        delegate._kimicc_read_only_review_grant(
+            harness=plain.harness,
+            mode=plain.mode,
+            require_review_verdict=plain.require_review_verdict,
+        )
+        == {}
+    )
+    plain_plan = KimiccHarness().build_invocation(
+        prompt="What does this function do?",
         mode=plain.mode,
-        require_review_verdict=plain.require_review_verdict,
-    ) == {}
+        cwd=tmp_path,
+        model="k3",
+        task_id=plain.task_id,
+        session_id=None,
+        tool_config={"harness": plain.harness},
+    )
+    assert "--read-only-review" not in plain_plan.cmd
     write_review = delegate._kimicc_read_only_review_grant(
         harness="kimicc",
         mode="workspace-write",
@@ -5087,6 +5103,19 @@ def test_kimicc_read_only_review_grant_uses_trusted_mcp_not_worktree(tmp_path, m
     assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(trusted)
     assert str(malicious) not in plan.cmd
     assert "--strict-mcp-config" in plan.cmd
+    # The adapter trusts only the primary .mcp.json; here the fixture repo stands in for it.
+    assert "--read-only-review" not in plan.cmd
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc.trusted_mcp_config_path", lambda: trusted)
+    trusted_plan = KimiccHarness().build_invocation(
+        prompt="Review the diff and call mcp__sources__verify_word once.",
+        mode="read-only",
+        cwd=worktree,
+        model="k3",
+        task_id="kimi-review-trusted-mcp",
+        session_id=None,
+        tool_config={"harness": "kimicc", **grant},
+    )
+    assert "--read-only-review" in trusted_plan.cmd
 
     outside = tmp_path / "outside"
     outside.mkdir()

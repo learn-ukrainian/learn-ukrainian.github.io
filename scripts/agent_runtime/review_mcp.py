@@ -31,6 +31,41 @@ symlink to the OAuth token (the only credential ``agy -p`` needs). The launch ru
 refuses the attempt unless ``agy mcp list`` under that same environment shows exactly
 that one server.
 
+Threat model (#8652)
+--------------------
+In scope:
+
+* A stale or pre-planted symlink, or a component owned by another user, at or **below the trust
+  anchor**. The anchor is the ``receipts_root`` itself (the default ``batch_state/review-receipts``
+  or an explicit one), opened ``O_DIRECTORY | O_NOFOLLOW`` and refused if it is a symlink, not a
+  directory or not owned by the current user (a group/world-writable root we own is tightened in place with ``fchmod`` on the fd). Every component below it is
+  created or opened one level at a time with ``O_DIRECTORY | O_NOFOLLOW`` relative to its parent's
+  descriptor and owner-checked, and every per-attempt file is created relative to the final
+  descriptor. Provisioning, the diagnostics write and the pre-launch re-check share one helper
+  (``_open_attempt_dir``), so an attempt provisioned by another process is checked identically.
+* Every write this module makes itself after provisioning (the diagnostics file). It re-walks
+  the attempt directory from the verified root and writes through ``dir_fd``, never by full
+  path, so a component swapped for a symlink afterwards cannot redirect it.
+* A pre-planted FIFO, device, symlink or foreign-owned file at any file name below the anchor.
+  Every file this module or the ledger library opens there (diagnostics, the tightening note, the
+  per-attempt config, ledger, sidecar and lock, the Codex/AGY home files) goes through one helper,
+  ``scripts.common.safe_open.safe_open_below`` (``_safe_open_below`` here): ``O_NOFOLLOW |
+  O_NONBLOCK``, then an ``fstat`` on the descriptor that refuses anything but a regular file
+  owned by the current user. A FIFO therefore refuses at once instead of blocking the open.
+* A non-racy change after provisioning, caught by ``verify_review_attempt_paths``: it re-runs the
+  no-follow, owner-checked walk and checks the attempt's files immediately before a path string
+  is handed to a gate or launcher, and refuses with fixed wording on any mismatch.
+
+Out of scope, by decision:
+
+* A process running as the **same uid** that swaps components after provisioning. It could
+  equally edit the config file itself, so a symlink gives it no extra capability. The external
+  CLIs (``codex``, ``agy``, ``claude``) take path strings, so no in-process fix removes that
+  window; the re-check only narrows it.
+* Symlinks in the **ancestors of** ``receipts_root``. Following them is intended: hosts
+  legitimately symlink ``/home`` and similar paths. The root itself and everything below it stay
+  no-follow, and a ``receipts_root`` that is itself a symlink is refused.
+
 Note: Ledger creation and sidecar management will be consolidated once R1
 (cursor/impl-review-r1-schema-ledger) merges to main.
 """
@@ -38,11 +73,13 @@ Note: Ledger creation and sidecar management will be consolidated once R1
 from __future__ import annotations
 
 import contextlib
+import errno
 import hashlib
 import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
@@ -50,6 +87,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import resolve_repo_root
+from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
@@ -78,7 +116,359 @@ _CODEX_MCP_LIST_TIMEOUT_S = 60.0
 _AGY_HOME_SUFFIX = ".agy-home"
 _AGY_MCP_LIST_TIMEOUT_S = 60.0
 _AGY_TOKEN_NAME = "antigravity-oauth-token"
+_LINK_ELSEWHERE = "points elsewhere"
 _AGY_MCP_LIST_COLUMNS = ("NAME", "TYPE", "STATUS", "COMMAND/URL")
+
+_LISTED_NAMES = 5
+_DIAGNOSTICS_SUFFIX = ".diagnostics.log"
+_FINGERPRINT_LEN = 12
+# The only shape an untrusted identifier may echo in a refusal. No ``/``, ``\``, ``%`` or ``~``
+# by construction, so a path in any encoding (relative, URL-encoded, ``file://``, unicode slash) fails.
+_ECHO_IDENTIFIER_RE = re.compile(r"[A-Za-z0-9_.:-]{1,64}")
+_MIN_MASKED_VALUE_LEN = 3
+_PATH_MASK = "<path>"
+# Anything path-shaped, run to the next delimiter so a path with spaces is masked whole:
+# ``C:\x`` / ``C:/x``, UNC ``\\host``, ``~/x`` / ``~user/x``, ``./x`` / ``../x`` and ``/x``.
+_PATH_SHAPED_RE = re.compile(
+    r"""(?:
+        (?<![\w])[A-Za-z]:[\\/]
+      | \\\\(?=[^\s\\])
+      | (?<![\w.~])~[\w.-]*[\\/]
+      | (?<![\w.])\.{1,2}[\\/]
+      | (?<![\w.~])/(?=\S)
+    )[^'"`,;<>|)\]}\r\n]*""",
+    re.VERBOSE,
+)
+
+
+def _known_values(extra: Mapping[str, str | None] | None = None) -> dict[str, str | None]:
+    """The values a refusal must never carry: the operator home and the scoped-launch env values."""
+    values: dict[str, str | None] = {
+        "~": os.path.expanduser("~"),
+        "$HOME": os.environ.get("HOME"),
+        "$CODEX_HOME": os.environ.get("CODEX_HOME"),
+        "$AGY_APP_DATA_DIR": os.environ.get("AGY_APP_DATA_DIR"),
+    }
+    values.update(extra or {})
+    return values
+
+
+def _mask(text: object, values: Mapping[str, str | None] | None = None) -> str:
+    """Mask the log-unsafe values and path shapes in ``text`` and flatten whitespace.
+
+    Masks each known log-unsafe value with its label (longest first, so a nested path collapses to
+    its innermost label; empty, root and tiny values are skipped, since masking ``/`` or ``1`` would
+    mangle everything), then masks anything path-shaped. This is a blocklist, so it is only a
+    whole-message safety net over refusals that already carry no untrusted free text: those never
+    interpolate stderr, stdout, exception strings, ``strerror``, config or table text (see
+    ``_untrusted``) and show an untrusted identifier only through ``_echo_identifier``.
+    """
+    cleaned = str(text)
+    for label, value in sorted(_known_values(values).items(), key=lambda item: len(item[1] or ""), reverse=True):
+        if value and len(value.strip("/")) >= _MIN_MASKED_VALUE_LEN:
+            cleaned = cleaned.replace(value, label)
+    cleaned = _PATH_SHAPED_RE.sub(_PATH_MASK, cleaned)
+    return " ".join("".join(ch if ch.isprintable() else " " for ch in cleaned).split())
+
+
+def _echo_identifier(value: object) -> str:
+    """An untrusted identifier (server/tool name, table cell, id, harness) as a refusal may show it.
+
+    An allowlist: the value is echoed only when it fully matches ``_ECHO_IDENTIFIER_RE``. Anything
+    else (a path in any encoding, a URL, a secret, free text, a non-string) is shown as its size
+    only, so no encoding of a path can slip past a blocklist.
+    """
+    if not isinstance(value, str):
+        return f"<redacted: a {type(value).__name__}>"
+    if _ECHO_IDENTIFIER_RE.fullmatch(value):
+        return value
+    return f"<redacted: {len(value)} chars>"
+
+
+def review_diagnostics_path(config_path: Path | str) -> Path:
+    """Return the local diagnostics file that pairs with an attempt's ``.mcp.json``.
+
+    It sits beside the attempt's ledger under the ignored ``batch_state/`` runtime tree (never
+    committed) and holds the full untrusted text a refusal deliberately does not echo.
+    """
+    config = Path(config_path)
+    if not config.name.endswith(_MCP_CONFIG_SUFFIX):
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {_echo_identifier(config.name)!r}")
+    return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _DIAGNOSTICS_SUFFIX)
+
+
+class ReviewDirectoryError(ValueError):
+    """A review runtime directory is a symlink, not a directory, or not owned by the current user."""
+
+
+_UNSAFE_DIRECTORY = (
+    "review attempt refused: a review runtime directory is a symlink, is not a directory, "
+    "or is not owned by the current user (#8652)"
+)
+_TIGHTENED_LOG = "receipts-root-permissions.diagnostics.txt"
+_DEFAULT_RECEIPTS_PARTS = ("batch_state", "review-receipts")
+_DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+_ATTEMPT_PATHS_CHANGED = "a review attempt path is a symlink, has the wrong type, or is not owned by the current user"
+_UNSAFE_ATTEMPT = f"review attempt refused: {_ATTEMPT_PATHS_CHANGED} (#8652)"
+
+
+def _safe_open_below(dir_fd: int, name: str, flags: int, mode: int = 0o600) -> int:
+    """Open ``name`` below the verified ``dir_fd``: the one way this module opens any file below the anchor.
+
+    No symlink is followed, the open can never block on a planted FIFO, and the result must be a
+    regular file owned by the current user (``scripts.common.safe_open``). Anything else is refused
+    with fixed wording that never names a path. Ordinary errors (``FileExistsError``,
+    ``FileNotFoundError``) propagate so exclusive-create callers still see them.
+    """
+    try:
+        return safe_open_below(dir_fd, name, flags, mode)
+    except UnsafeEntryError:
+        raise ReviewDirectoryError(_UNSAFE_ATTEMPT) from None
+
+
+def _note_tightened(dir_fd: int, old_mode: int) -> None:
+    """Best-effort note, in the tightened directory's own diagnostics file, that its mode was reduced."""
+    with contextlib.suppress(OSError, ReviewDirectoryError):
+        fd = _safe_open_below(dir_fd, _TIGHTENED_LOG, os.O_WRONLY | os.O_CREAT | os.O_APPEND)
+        try:
+            os.write(
+                fd,
+                f"tightened receipts root {oct(stat.S_IMODE(old_mode))} -> {oct(stat.S_IMODE(old_mode) & ~0o022)}\n".encode(
+                    "ascii"
+                ),
+            )
+        finally:
+            os.close(fd)
+
+
+def _open_owned_dir(name: Path | str, *, dir_fd: int | None = None, private: bool = False) -> int:
+    """Open ``name`` as a directory without following a symlink; refuse unless the caller owns it.
+
+    ``private=True`` also tightens a group- or world-writable directory we own in place, with
+    ``fchmod`` on the verified descriptor (never the path, so a swap cannot redirect it). Other
+    tools on the host create these directories under umask 002, so refusing would refuse every
+    review; the tightening is noted once in a 0600 diagnostics file inside the directory.
+
+    ``O_NOFOLLOW`` guards only the final component, so callers walk a path one component at a
+    time with ``dir_fd``. The owner check runs on the opened descriptor (``fstat``), so it
+    describes the very directory that is then used, whatever happens to the path afterwards.
+    The refusal is fixed wording: it never names the path.
+    """
+    try:
+        fd = os.open(name, _DIRECTORY_FLAGS, dir_fd=dir_fd)
+    except OSError as exc:
+        if exc.errno in (errno.ELOOP, errno.ENOTDIR):
+            raise ReviewDirectoryError(_UNSAFE_DIRECTORY) from None
+        raise
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.geteuid():
+            raise ReviewDirectoryError(_UNSAFE_DIRECTORY)
+        if private and info.st_mode & (stat.S_IWGRP | stat.S_IWOTH):
+            os.fchmod(fd, stat.S_IMODE(info.st_mode) & ~0o022)
+            _note_tightened(fd, info.st_mode)
+    except BaseException:
+        os.close(fd)
+        raise
+    return fd
+
+
+def _open_receipts_root(root: Path, *, create: bool) -> int:
+    """Open the receipts root: the trust anchor of every attempt directory under it.
+
+    The root itself is opened ``O_DIRECTORY | O_NOFOLLOW`` and refused if it is a symlink, is not a
+    directory or is not owned by the current user (group/world-writable bits on our own root are removed in place). For an explicit root its
+    ancestors are followed by design (see the module's threat model); the default root
+    (``<primary checkout>/batch_state/review-receipts``) is additionally walked no-follow from the
+    primary checkout, as before. ``create=True`` makes what is missing (mode 0700); ``create=False``
+    never creates anything.
+    """
+    root = Path(os.path.abspath(root))
+    primary_root = resolve_repo_root(Path(__file__), 2)
+    if root == primary_root / _DEFAULT_RECEIPTS_PARTS[0] / _DEFAULT_RECEIPTS_PARTS[1]:
+        fd = os.open(primary_root, os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+        try:
+            for name in _DEFAULT_RECEIPTS_PARTS:
+                if create:
+                    with contextlib.suppress(FileExistsError):
+                        os.mkdir(name, 0o700, dir_fd=fd)
+                child = _open_owned_dir(name, dir_fd=fd, private=name == _DEFAULT_RECEIPTS_PARTS[-1])
+                os.close(fd)
+                fd = child
+        except BaseException:
+            os.close(fd)
+            raise
+        return fd
+    if create:
+        root.parent.mkdir(parents=True, exist_ok=True)
+        with contextlib.suppress(FileExistsError):
+            os.mkdir(root, 0o700)
+    return _open_owned_dir(root, private=True)
+
+
+def _open_runtime_dir(root: Path, components: Sequence[str], *, create: bool = True) -> int:
+    """Open ``components`` under the verified receipts ``root`` (creating them if ``create``), never following a symlink.
+
+    Each component is made with ``mkdir`` (mode 0700) relative to its parent's descriptor, then
+    opened ``O_DIRECTORY | O_NOFOLLOW`` and checked for ownership, so a symlink planted at any
+    level (or swapped in later) is refused rather than followed. ``create=False`` only re-walks what
+    provisioning made and never creates. Returns the last directory's fd.
+    """
+    fd = _open_receipts_root(root, create=create)
+    try:
+        for name in components:
+            if create:
+                with contextlib.suppress(FileExistsError):
+                    os.mkdir(name, 0o700, dir_fd=fd)
+            child = _open_owned_dir(name, dir_fd=fd)
+            os.close(fd)
+            fd = child
+    except BaseException:
+        os.close(fd)
+        raise
+    return fd
+
+
+def _lexists(name: str, dir_fd: int) -> bool:
+    """Whether ``name`` exists in ``dir_fd`` (a dangling symlink counts; nothing is followed)."""
+    try:
+        os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
+    except FileNotFoundError:
+        return False
+    return True
+
+
+def _create_file(name: str, dir_fd: int, payload: bytes) -> None:
+    """Create ``name`` exclusively (0600) inside ``dir_fd`` and write ``payload``."""
+    fd = _safe_open_below(dir_fd, name, os.O_WRONLY | os.O_CREAT | os.O_EXCL)
+    with os.fdopen(fd, "wb") as handle:
+        os.fchmod(handle.fileno(), 0o600)
+        handle.write(payload)
+
+
+def _open_attempt_dir(review_dir: Path | str, *, create: bool = False) -> int:
+    """Open an attempt directory as ``<receipts_root>/<review_id>``, anchored at the verified root.
+
+    Provisioning (``create=True``) and every later re-check or diagnostics write share this one
+    walk, so a directory provisioned by another process is checked exactly like one provisioned
+    here: the parent is the receipts root, verified itself (no symlink, owner, mode), and the
+    attempt directory is opened no-follow below it.
+    """
+    location = Path(os.path.abspath(review_dir))
+    return _open_runtime_dir(location.parent, (location.name,), create=create)
+
+
+def _untrusted(label: str, text: object, diagnostics: Path) -> str:
+    """The stand-in a refusal shows for untrusted free text: its size and fingerprint, never its content.
+
+    Untrusted free text (tool stderr/stdout, exception strings, ``strerror``, config and table text)
+    is never echoed, in whole or in part, because no filter can prove a fragment of it path-free.
+    The refusal carries our fixed wording, the text's length, ``sha256(text)[:12]`` for correlation
+    and the diagnostics file's basename; the full text is appended to that file (mode 0600).
+    ``label`` is fixed wording from our code.
+    """
+    raw = text if isinstance(text, str) else str(text)
+    payload = raw.encode("utf-8", errors="backslashreplace")
+    fingerprint = hashlib.sha256(payload).hexdigest()[:_FINGERPRINT_LEN]
+    saved = f"details in {diagnostics.name}"
+    try:
+        # Re-walk the attempt directory from its anchor descriptor (no symlink followed at any
+        # component) and create the file relative to it, so a component swapped in after
+        # prepare_review_attempt cannot redirect the write.
+        dir_fd = _open_attempt_dir(diagnostics.parent)
+        try:
+            fd = _safe_open_below(dir_fd, diagnostics.name, os.O_WRONLY | os.O_CREAT | os.O_APPEND)
+            try:
+                os.fchmod(fd, 0o600)
+                os.write(
+                    fd, f"--- {label} ({len(raw)} chars, sha256 {fingerprint}) ---\n".encode("ascii") + payload + b"\n"
+                )
+            finally:
+                os.close(fd)
+        finally:
+            os.close(dir_fd)
+    except (OSError, ReviewDirectoryError) as exc:
+        reason = _errno_name(exc) if isinstance(exc, OSError) else None
+        saved = f"details not saved: {reason or 'unsafe directory or file'}"
+    return f"<{label}: {len(raw)} chars, sha256 {fingerprint}; {saved}>"
+
+
+def _check_attempt_entry(name: str, dir_fd: int, *, want_dir: bool) -> None:
+    """Refuse ``name`` in ``dir_fd`` unless it is a real (never a symlink) file or directory we own."""
+    try:
+        info = os.stat(name, dir_fd=dir_fd, follow_symlinks=False)
+    except FileNotFoundError:
+        return
+    kind_ok = stat.S_ISDIR(info.st_mode) if want_dir else stat.S_ISREG(info.st_mode)
+    if not kind_ok or info.st_uid != os.geteuid():
+        raise ReviewDirectoryError(_UNSAFE_ATTEMPT)
+
+
+def verify_review_attempt_paths(config_path: Path | str) -> None:
+    """Re-check an attempt's paths just before a path string is handed to a gate or launcher.
+
+    Re-runs the no-follow, owner-checked component walk from the trusted anchor and checks that the
+    attempt's ``.mcp.json``, ledger and sidecar (when present) are regular files, and its scoped
+    Codex/AGY homes (when present) are real directories, all owned by the current user. This catches
+    a symlink or foreign owner swapped in after ``prepare_review_attempt``; it cannot close the
+    window between this check and the external CLI opening the path (see the threat model).
+
+    Raises:
+        ReviewDirectoryError: on any mismatch, with fixed wording that never names a path.
+    """
+    config = Path(config_path)
+    if not config.name.endswith(_MCP_CONFIG_SUFFIX):
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {_echo_identifier(config.name)!r}")
+    stem = config.name[: -len(_MCP_CONFIG_SUFFIX)]
+    dir_fd = _open_attempt_dir(config.parent)
+    try:
+        _check_attempt_entry(config.name, dir_fd, want_dir=False)
+        for name in (f"{stem}.jsonl", f"{stem}.jsonl.sha256"):
+            _check_attempt_entry(name, dir_fd, want_dir=False)
+        for name in (f"{stem}{_CODEX_HOME_SUFFIX}", f"{stem}{_AGY_HOME_SUFFIX}"):
+            _check_attempt_entry(name, dir_fd, want_dir=True)
+    finally:
+        os.close(dir_fd)
+
+
+def _read_attempt_file(review_dir: Path | str, *parts: str) -> str:
+    """Read a UTF-8 file at ``parts`` below an attempt's review directory, through the anchored walk.
+
+    Re-walks the attempt directory from the verified root, opens each intermediate directory
+    no-follow and owner-checked, and opens the file with ``_safe_open_below`` (so a FIFO planted at
+    the path refuses at once instead of blocking the gate). The result is the file's text.
+    """
+    *directories, filename = parts
+    fd = _open_attempt_dir(review_dir)
+    try:
+        for name in directories:
+            child = _open_owned_dir(name, dir_fd=fd)
+            os.close(fd)
+            fd = child
+        file_fd = _safe_open_below(fd, filename, os.O_RDONLY)
+    finally:
+        os.close(fd)
+    with os.fdopen(file_fd, "rb") as handle:
+        return handle.read().decode("utf-8")
+
+
+def _errno_name(exc: OSError) -> str | None:
+    """The symbolic errno (``ENOENT``) of an ``OSError``, or ``None`` when it carries none."""
+    code = exc.errno
+    return errno.errorcode.get(code) if isinstance(code, int) else None
+
+
+def _describe_identifier(value: object) -> str:
+    """Describe an invalid identifier: verbatim only if it is allowlist-clean, else its size only."""
+    return _echo_identifier(value)
+
+
+def _describe_names(names: Sequence[object]) -> str:
+    """List server names for a refusal: a bounded count of allowlisted-or-redacted names."""
+    shown = [_echo_identifier(name) for name in names[:_LISTED_NAMES]]
+    if len(names) > _LISTED_NAMES:
+        shown.append(f"... {len(names) - _LISTED_NAMES} more")
+    return repr(shown)
 
 
 class CodexReviewMcpGateError(ValueError):
@@ -129,7 +519,7 @@ def codex_review_home_path(config_path: Path | str) -> Path:
     """Return the scoped ``CODEX_HOME`` directory that pairs with an attempt's ``.mcp.json``."""
     config = Path(config_path)
     if not config.name.endswith(_MCP_CONFIG_SUFFIX):
-        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config}")
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {_echo_identifier(config.name)!r}")
     return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _CODEX_HOME_SUFFIX)
 
 
@@ -137,7 +527,7 @@ def agy_review_home_path(config_path: Path | str) -> Path:
     """Return the scoped AGY ``HOME`` directory that pairs with an attempt's ``.mcp.json``."""
     config = Path(config_path)
     if not config.name.endswith(_MCP_CONFIG_SUFFIX):
-        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {config}")
+        raise ValueError(f"review MCP config path must end in {_MCP_CONFIG_SUFFIX}: {_echo_identifier(config.name)!r}")
     return config.with_name(config.name[: -len(_MCP_CONFIG_SUFFIX)] + _AGY_HOME_SUFFIX)
 
 
@@ -174,11 +564,11 @@ def _render_codex_review_config(python_bin: Path, sources_server: Path, env: dic
     return "\n".join(lines) + "\n"
 
 
-def _link_codex_auth(codex_home: Path) -> None:
-    """Symlink the user's Codex ``auth.json`` (as ``_ensure_codex_writer_home`` does)."""
+def _link_codex_auth(home_fd: int) -> None:
+    """Symlink the user's Codex ``auth.json`` into the scoped home (as ``_ensure_codex_writer_home`` does)."""
     real_auth = Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex") / "auth.json"
     if real_auth.exists():
-        (codex_home / "auth.json").symlink_to(real_auth)
+        os.symlink(real_auth, "auth.json", dir_fd=home_fd)
 
 
 def _real_agy_token() -> Path:
@@ -187,24 +577,33 @@ def _real_agy_token() -> Path:
     return Path(app_data) / _AGY_TOKEN_NAME
 
 
-def _populate_agy_review_home(agy_home: Path, real_token: Path, config_bytes: bytes) -> None:
-    """Fill a freshly created scoped AGY home: the sources-only MCP config and a linked OAuth token.
+def _populate_agy_review_home(home_fd: int, real_token: Path, config_bytes: bytes) -> None:
+    """Fill a freshly created scoped AGY home (open as ``home_fd``): the sources-only MCP config and a linked token.
 
     Only the OAuth token is linked (never copied): the #8617 spike proved it is the
     sole credential ``agy -p`` needs. Everything else agy wants it creates itself.
+    Every directory and file is made relative to descriptors, never by path.
     """
-    app_data = agy_review_app_data_dir(agy_home)
-    mcp_config = agy_review_mcp_config_path(agy_home)
-    for directory in (agy_home / ".gemini", mcp_config.parent, app_data):
-        os.mkdir(directory, 0o700)
-    fd_config = os.open(mcp_config, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-    with os.fdopen(fd_config, "wb") as handle:
-        handle.write(config_bytes)
-    # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
-    # token) must land in the real token file. A refreshed copy would leave the real
-    # token stale or invalidated and break every other AGY lane. "Nothing written to the
-    # real ~/.gemini" means configuration; agy_oauth_link_problem() guards the link itself.
-    (app_data / _AGY_TOKEN_NAME).symlink_to(real_token)
+    parts = agy_review_app_data_dir(Path()).parts  # .gemini / antigravity-cli
+    config_parts = agy_review_mcp_config_path(Path()).parts  # .gemini / config / mcp_config.json
+    gemini_fd = config_fd = app_data_fd = None
+    try:
+        os.mkdir(parts[0], 0o700, dir_fd=home_fd)
+        gemini_fd = _open_owned_dir(parts[0], dir_fd=home_fd)
+        os.mkdir(config_parts[1], 0o700, dir_fd=gemini_fd)
+        config_fd = _open_owned_dir(config_parts[1], dir_fd=gemini_fd)
+        os.mkdir(parts[1], 0o700, dir_fd=gemini_fd)
+        app_data_fd = _open_owned_dir(parts[1], dir_fd=gemini_fd)
+        _create_file(config_parts[2], config_fd, config_bytes)
+        # A symlink, not a copy, by design: a token refresh (which may rotate the refresh
+        # token) must land in the real token file. A refreshed copy would leave the real
+        # token stale or invalidated and break every other AGY lane. "Nothing written to the
+        # real ~/.gemini" means configuration; agy_oauth_link_problem() guards the link itself.
+        os.symlink(real_token, _AGY_TOKEN_NAME, dir_fd=app_data_fd)
+    finally:
+        for fd in (app_data_fd, config_fd, gemini_fd):
+            if fd is not None:
+                os.close(fd)
 
 
 def agy_oauth_link_problem(config_path: Path | str) -> str | None:
@@ -221,11 +620,20 @@ def agy_oauth_link_problem(config_path: Path | str) -> str | None:
     # names the scoped link relative to the attempt directory and the real token only by a label:
     # no absolute path (which would expose the operator's home directory) is ever included.
     link_label = link.relative_to(agy_home.parent)
+    state = _agy_oauth_link_state(link, real_token)
+    if state is None:
+        return None
+    if state == _LINK_ELSEWHERE:
+        return f"{link_label} {state}, not to the real AGY OAuth token"
+    return f"{link_label} {state}, not a symlink to the real AGY OAuth token"
+
+
+def _agy_oauth_link_state(link: Path, real_token: Path) -> str | None:
+    """Fixed wording for how ``link`` deviates from the real token (``None`` when intact)."""
     if not link.is_symlink():
-        kind = "a regular file" if link.exists() else "missing"
-        return f"{link_label} is {kind}, not a symlink to the real AGY OAuth token"
+        return "is a regular file" if link.exists() else "is missing"
     if os.path.realpath(link) != os.path.realpath(real_token):
-        return f"{link_label} points elsewhere, not to the real AGY OAuth token"
+        return _LINK_ELSEWHERE
     return None
 
 
@@ -255,9 +663,9 @@ def prepare_review_attempt(
         FileNotFoundError: If manifest_path does not exist.
     """
     if not isinstance(review_id, str) or not _TOKEN_RE.match(review_id):
-        raise ValueError(f"invalid review_id: {review_id!r}")
+        raise ValueError(f"invalid review_id: must match {_TOKEN_RE.pattern} (got {_describe_identifier(review_id)})")
     if not isinstance(attempt_id, str) or not _TOKEN_RE.match(attempt_id):
-        raise ValueError(f"invalid attempt_id: {attempt_id!r}")
+        raise ValueError(f"invalid attempt_id: must match {_TOKEN_RE.pattern} (got {_describe_identifier(attempt_id)})")
 
     canonical_harness = (harness or "").lower().strip()
     if canonical_harness in UNSUPPORTED_HARNESS_REASONS:
@@ -265,11 +673,14 @@ def prepare_review_attempt(
             f"review attempt refused for {canonical_harness}: {UNSUPPORTED_HARNESS_REASONS[canonical_harness]} (#8517)"
         )
     if canonical_harness not in SUPPORTED_HARNESSES:
-        raise ValueError(f"review attempt refused for unsupported harness {canonical_harness!r} (#8517)")
+        raise ValueError(
+            f"review attempt refused for unsupported harness (supported: {', '.join(sorted(SUPPORTED_HARNESSES))}; "
+            f"got {_describe_identifier(canonical_harness)}) (#8517)"
+        )
 
     manifest_file = Path(manifest_path).resolve()
     if not manifest_file.is_file():
-        raise FileNotFoundError(f"review manifest file not found: {manifest_file}")
+        raise FileNotFoundError(f"review manifest file not found: {_echo_identifier(manifest_file.name)!r}")
 
     manifest_bytes = manifest_file.read_bytes()
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
@@ -279,28 +690,28 @@ def prepare_review_attempt(
     python_bin = primary_root / ".venv" / "bin" / "python"
     sources_server = primary_root / ".mcp" / "servers" / "sources" / "server.py"
 
-    base_dir = receipts_root if receipts_root is not None else (primary_root / "batch_state" / "review-receipts")
+    # The receipts root (default or explicit) is the trust anchor: verified itself, with
+    # everything below it walked no-follow. Its ancestors are followed by design.
+    if receipts_root is None:
+        base_dir = primary_root.joinpath(*_DEFAULT_RECEIPTS_PARTS)
+    else:
+        base_dir = Path(os.path.abspath(receipts_root))
     review_dir = base_dir / review_id
-    review_dir.mkdir(parents=True, exist_ok=True)
 
-    ledger_path = review_dir / f"{attempt_id}.jsonl"
-    sidecar_path = review_dir / f"{attempt_id}.jsonl.sha256"
-    config_path = review_dir / f"{attempt_id}.mcp.json"
+    ledger_name = f"{attempt_id}.jsonl"
+    sidecar_name = f"{attempt_id}.jsonl.sha256"
+    config_name = f"{attempt_id}.mcp.json"
+    ledger_path = review_dir / ledger_name
+    sidecar_path = review_dir / sidecar_name
+    config_path = review_dir / config_name
     codex_home = codex_review_home_path(config_path) if canonical_harness == "codex" else None
     agy_home = agy_review_home_path(config_path) if canonical_harness == "agy" else None
     real_agy_token = _real_agy_token() if agy_home is not None else None
     if real_agy_token is not None and not real_agy_token.exists():
-        raise ValueError(f"AGY OAuth token not found for the scoped review home: {real_agy_token} (#8617)")
-
-    # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
-    if (
-        ledger_path.exists()
-        or sidecar_path.exists()
-        or config_path.exists()
-        or (codex_home is not None and (codex_home.exists() or codex_home.is_symlink()))
-        or (agy_home is not None and (agy_home.exists() or agy_home.is_symlink()))
-    ):
-        raise FileExistsError(f"review attempt {attempt_id!r} already exists for review {review_id!r}")
+        raise ValueError(
+            f"AGY OAuth token not found for the scoped review home: no {_AGY_TOKEN_NAME} in the "
+            "real AGY_APP_DATA_DIR (default ~/.gemini/antigravity-cli) (#8617)"
+        )
 
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
     config_payload = {
@@ -318,62 +729,70 @@ def prepare_review_attempt(
     }
     config_bytes = (json.dumps(config_payload, indent=2) + "\n").encode("utf-8")
 
-    created_paths: list[Path] = []
+    # Create or open each runtime directory without following symlinks (refusing any that is a
+    # symlink or foreign-owned), then create every per-attempt file relative to this descriptor
+    # so a component swapped in after the check cannot redirect them (#8652).
+    review_fd = _open_attempt_dir(review_dir, create=True)
+    created: list[str] = []
 
     def _rollback() -> None:
-        for path in reversed(created_paths):
+        for name in reversed(created):
             with contextlib.suppress(OSError):
-                if path.is_dir() and not path.is_symlink():
-                    shutil.rmtree(path, ignore_errors=True)
+                if stat.S_ISDIR(os.stat(name, dir_fd=review_fd, follow_symlinks=False).st_mode):
+                    shutil.rmtree(name, ignore_errors=True, dir_fd=review_fd)
                 else:
-                    path.unlink(missing_ok=True)
+                    os.unlink(name, dir_fd=review_fd)
+
+    def _already_exists() -> FileExistsError:
+        return FileExistsError(
+            f"review attempt {_echo_identifier(attempt_id)!r} already exists for review {_echo_identifier(review_id)!r}"
+        )
 
     try:
-        # Create empty ledger (0 bytes, 0o600) exclusively
-        fd_ledger = os.open(ledger_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        os.close(fd_ledger)
-        created_paths.append(ledger_path)
+        # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
+        existing = [ledger_name, sidecar_name, config_name]
+        existing += [home.name for home in (codex_home, agy_home) if home is not None]
+        if any(_lexists(name, review_fd) for name in existing):
+            raise _already_exists()
 
-        # Create sidecar containing empty SHA-256 + newline exclusively
-        fd_sidecar = os.open(sidecar_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        with os.fdopen(fd_sidecar, "wb") as handle:
-            handle.write(sidecar_bytes)
-        created_paths.append(sidecar_path)
-
-        # Create config exclusively
-        fd_config = os.open(config_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        with os.fdopen(fd_config, "wb") as handle:
-            handle.write(config_bytes)
-        created_paths.append(config_path)
-
-        for target in created_paths:
-            if (target.stat().st_mode & 0o777) != 0o600:
-                os.chmod(target, 0o600)
+        for name, payload in ((ledger_name, b""), (sidecar_name, sidecar_bytes), (config_name, config_bytes)):
+            _create_file(name, review_fd, payload)
+            created.append(name)
 
         if codex_home is not None:
             # Exclusive mkdir: refuses a pre-existing (or pre-planted) home.
-            os.mkdir(codex_home, 0o700)
-            created_paths.append(codex_home)
-            fd_toml = os.open(codex_home / "config.toml", os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-            with os.fdopen(fd_toml, "w", encoding="utf-8") as handle:
-                handle.write(
+            os.mkdir(codex_home.name, 0o700, dir_fd=review_fd)
+            created.append(codex_home.name)
+            home_fd = _open_owned_dir(codex_home.name, dir_fd=review_fd)
+            try:
+                _create_file(
+                    "config.toml",
+                    home_fd,
                     _render_codex_review_config(
                         python_bin, sources_server, config_payload["mcpServers"]["sources"]["env"]
-                    )
+                    ).encode("utf-8"),
                 )
-            _link_codex_auth(codex_home)
+                _link_codex_auth(home_fd)
+            finally:
+                os.close(home_fd)
 
         if agy_home is not None and real_agy_token is not None:
             # Exclusive mkdir: refuses a pre-existing (or pre-planted) home.
-            os.mkdir(agy_home, 0o700)
-            created_paths.append(agy_home)
-            _populate_agy_review_home(agy_home, real_agy_token, config_bytes)
+            os.mkdir(agy_home.name, 0o700, dir_fd=review_fd)
+            created.append(agy_home.name)
+            home_fd = _open_owned_dir(agy_home.name, dir_fd=review_fd)
+            try:
+                _populate_agy_review_home(home_fd, real_agy_token, config_bytes)
+            finally:
+                os.close(home_fd)
     except FileExistsError as exc:
         _rollback()
-        raise FileExistsError(f"review attempt {attempt_id!r} already exists for review {review_id!r}") from exc
+        raise _already_exists() from exc
     except BaseException:
         _rollback()
         raise
+    finally:
+        os.close(review_fd)
 
     adapter_options: dict[str, Any] = {
         "mcp_config_path": str(config_path),
@@ -429,17 +848,25 @@ def verify_codex_review_effective_mcp(
         CodexReviewMcpGateError: on any deviation, naming #8517.
     """
     config = Path(config_path)
+    codex_home = codex_review_home_path(config)
+    log_unsafe = {"$CODEX_HOME": str(codex_home), "~": os.path.expanduser("~")}
+    diagnostics = review_diagnostics_path(config)
 
     def refuse(reason: str) -> CodexReviewMcpGateError:
-        return CodexReviewMcpGateError(f"codex review attempt refused: {reason} (#8517)")
+        return CodexReviewMcpGateError(f"codex review attempt refused: {_mask(reason, log_unsafe)} (#8517)")
 
     try:
-        expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
+        verify_review_attempt_paths(config)
+    except (OSError, ReviewDirectoryError):
+        raise refuse(_ATTEMPT_PATHS_CHANGED) from None
+    try:
+        expected = json.loads(_read_attempt_file(config.parent, config.name))["mcpServers"]["sources"]
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        raise refuse(f"cannot read the attempt MCP config {config}: {exc}") from exc
-    codex_home = codex_review_home_path(config)
+        raise refuse(
+            f"cannot read the attempt MCP config {_echo_identifier(config.name)!r}: {_exc_reason(exc, diagnostics)}"
+        ) from exc
     if not (codex_home / "config.toml").is_file():
-        raise refuse(f"scoped CODEX_HOME {codex_home} has no config.toml")
+        raise refuse("the scoped CODEX_HOME has no config.toml")
 
     binary = codex_bin or shutil.which("codex") or "codex"
     env = {**os.environ, "CODEX_HOME": str(codex_home)}
@@ -454,25 +881,28 @@ def verify_codex_review_effective_mcp(
             check=False,
         )
     except (OSError, subprocess.SubprocessError) as exc:
-        raise refuse(f"could not compute the effective MCP set ({type(exc).__name__}: {exc})") from exc
+        raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc, diagnostics)})") from exc
     if proc.returncode != 0:
-        raise refuse(f"`codex mcp list` exited {proc.returncode}: {proc.stderr.strip()[:200]}")
+        raise refuse(f"`codex mcp list` exited {proc.returncode}: {_untrusted('stderr', proc.stderr, diagnostics)}")
     try:
         servers = json.loads(proc.stdout)
     except ValueError as exc:
-        raise refuse(f"`codex mcp list --json` did not return JSON: {exc}") from exc
+        raise refuse(
+            f"`codex mcp list --json` did not return JSON: {_exc_reason(exc, diagnostics)}; "
+            f"{_untrusted('stdout', proc.stdout, diagnostics)}"
+        ) from exc
     if not isinstance(servers, list):
         raise refuse("`codex mcp list --json` did not return a list")
 
     names = sorted(str(item.get("name")) if isinstance(item, dict) else repr(item) for item in servers)
     if names != ["sources"]:
-        raise refuse(f"effective MCP servers are {names!r}; exactly ['sources'] is allowed")
+        raise refuse(f"effective MCP servers are {_describe_names(names)}; exactly ['sources'] is allowed")
     server = servers[0]
     transport = server.get("transport") or {}
     if server.get("enabled") is not True:
         raise refuse("the sources server is not enabled")
     if transport.get("type") != "stdio":
-        raise refuse(f"the sources server transport is {transport.get('type')!r}, not stdio")
+        raise refuse(f"the sources server transport is {_echo_identifier(transport.get('type'))!r}, not stdio")
     if transport.get("command") != expected["command"] or list(transport.get("args") or []) != expected["args"]:
         raise refuse("the sources server command/args differ from the attempt's .mcp.json")
     if dict(transport.get("env") or {}) != expected["env"]:
@@ -514,7 +944,9 @@ def verify_codex_review_launch(
             Path(plan.output_file).unlink(missing_ok=True)
 
 
-def _agy_mcp_list_rows(stdout: str, refuse: Callable[[str], AgyReviewMcpGateError]) -> list[dict[str, str]]:
+def _agy_mcp_list_rows(
+    stdout: str, refuse: Callable[[str], AgyReviewMcpGateError], diagnostics: Path
+) -> list[dict[str, str]]:
     """Strictly parse ``agy mcp list`` (a padded text table with no JSON mode).
 
     The header must be exactly ``NAME TYPE STATUS COMMAND/URL``; every other non-empty
@@ -525,34 +957,50 @@ def _agy_mcp_list_rows(stdout: str, refuse: Callable[[str], AgyReviewMcpGateErro
     if not lines:
         raise refuse("`agy mcp list` printed no table")
     header = re.fullmatch(r"(NAME)(\s+)(TYPE)(\s+)(STATUS)(\s+)(COMMAND/URL)", lines[0])
-    if header is None:
-        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {lines[0]!r}")
+    if header is None or header.start(1) != 0:
+        raise refuse(
+            f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: "
+            f"{_untrusted('header', lines[0], diagnostics)}"
+        )
     offsets = [header.start(group) for group in (1, 3, 5, 7)]
-    if offsets[0] != 0:
-        raise refuse(f"`agy mcp list` header is not {' '.join(_AGY_MCP_LIST_COLUMNS)!r}: {lines[0]!r}")
 
     rows: list[dict[str, str]] = []
     for line in lines[1:]:
         if len(line) <= offsets[3] or any(line[offset - 1] != " " or line[offset] == " " for offset in offsets[1:]):
-            raise refuse(f"`agy mcp list` row is truncated or misaligned: {line!r}")
+            raise refuse(f"`agy mcp list` row is truncated or misaligned: {_untrusted('row', line, diagnostics)}")
         name = line[offsets[0] : offsets[1]].strip()
         kind = line[offsets[1] : offsets[2]].strip()
         status = line[offsets[2] : offsets[3]].strip()
         target = line[offsets[3] :].strip()
         if any(not cell or any(ch.isspace() for ch in cell) for cell in (name, kind, status)):
-            raise refuse(f"`agy mcp list` row cannot be parsed: {line!r}")
+            raise refuse(f"`agy mcp list` row cannot be parsed: {_untrusted('row', line, diagnostics)}")
         rows.append({"name": name, "type": kind, "status": status, "target": target})
     names = [row["name"] for row in rows]
     if len(set(names)) != len(names):
-        raise refuse(f"`agy mcp list` repeats a server name: {names!r}")
+        raise refuse(f"`agy mcp list` repeats a server name: {_describe_names(names)}")
     return rows
+
+
+def _exc_reason(exc: BaseException, diagnostics: Path) -> str:
+    """Describe an exception for a refusal: its class, its errno code and a fingerprint, never its text.
+
+    ``str(exc)`` is untrusted (``OSError`` carries the file name and ``strerror``, ``SubprocessError``
+    the command line, a parser error a slice of the input), so it goes to the diagnostics file and
+    the refusal shows only the class name, ``errno.errorcode[exc.errno]`` (e.g. ``ENOENT``) when
+    present, and ``_untrusted``'s length and fingerprint.
+    """
+    code = _errno_name(exc) if isinstance(exc, OSError) else None
+    head = f"{type(exc).__name__} ({code})" if code else type(exc).__name__
+    if isinstance(exc, subprocess.TimeoutExpired):
+        head = f"{head} after {exc.timeout:g}s"
+    return f"{head}: {_untrusted('exception', exc, diagnostics)}"
 
 
 def _strict_json_object(text: str) -> Any:
     def no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
         keys = [key for key, _ in pairs]
         if len(set(keys)) != len(keys):
-            raise ValueError(f"duplicate JSON keys: {keys!r}")
+            raise ValueError(f"duplicate JSON keys: {_describe_names(keys)}")
         return dict(pairs)
 
     return json.loads(text, object_pairs_hook=no_duplicates)
@@ -577,28 +1025,40 @@ def verify_agy_review_effective_mcp(
         AgyReviewMcpGateError: on any deviation, naming #8617.
     """
     config = Path(config_path)
+    # The launch environment is not log-safe: its HOME/AGY_APP_DATA_DIR and the operator's home
+    # can surface in probe output echoed into a refusal, so every refusal masks them.
+    log_unsafe = {
+        "$AGY_APP_DATA_DIR": env.get("AGY_APP_DATA_DIR"),
+        "$HOME": env.get("HOME"),
+        "~": os.path.expanduser("~"),
+    }
+    diagnostics = review_diagnostics_path(config)
 
     def refuse(reason: str) -> AgyReviewMcpGateError:
-        return AgyReviewMcpGateError(f"agy review attempt refused: {reason} (#8617)")
+        return AgyReviewMcpGateError(f"agy review attempt refused: {_mask(reason, log_unsafe)} (#8617)")
 
     try:
-        expected = json.loads(config.read_text(encoding="utf-8"))["mcpServers"]["sources"]
+        verify_review_attempt_paths(config)
+    except (OSError, ReviewDirectoryError):
+        raise refuse(_ATTEMPT_PATHS_CHANGED) from None
+    try:
+        expected = json.loads(_read_attempt_file(config.parent, config.name))["mcpServers"]["sources"]
         command = expected["command"]
         args = list(expected["args"])
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        raise refuse(f"cannot read the attempt MCP config {config}: {exc}") from exc
+        raise refuse(
+            f"cannot read the attempt MCP config {_echo_identifier(config.name)!r}: {_exc_reason(exc, diagnostics)}"
+        ) from exc
     if not isinstance(expected.get("env"), dict) or set(expected["env"]) != set(ENV_KEYS):
         raise refuse("the attempt MCP config does not carry exactly the three LU_REVIEW_* variables")
 
     agy_home = agy_review_home_path(config)
     app_data = agy_review_app_data_dir(agy_home)
     if env.get("HOME") != str(agy_home) or env.get("AGY_APP_DATA_DIR") != str(app_data):
-        raise refuse(
-            "the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR "
-            f"(HOME={env.get('HOME')!r}, AGY_APP_DATA_DIR={env.get('AGY_APP_DATA_DIR')!r})"
-        )
+        # Name the variables, never their values: the launch environment is not log-safe.
+        raise refuse("the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR")
     if (app_data / "mcp_config.json").exists() or (app_data / "mcp_config.json").is_symlink():
-        raise refuse(f"the scoped home has an unexpected {app_data / 'mcp_config.json'}")
+        raise refuse("the scoped AGY_APP_DATA_DIR holds an unexpected mcp_config.json")
 
     parts = [command, *args]
     if any(not isinstance(part, str) or not part or any(ch.isspace() for ch in part) for part in parts):
@@ -619,26 +1079,33 @@ def verify_agy_review_effective_mcp(
             check=False,
         )
     except (OSError, subprocess.SubprocessError) as exc:
-        raise refuse(f"could not compute the effective MCP set ({type(exc).__name__}: {exc})") from exc
+        raise refuse(f"could not compute the effective MCP set ({_exc_reason(exc, diagnostics)})") from exc
     if proc.returncode != 0:
-        raise refuse(f"`agy mcp list` exited {proc.returncode}: {proc.stderr.strip()[:200]}")
+        raise refuse(f"`agy mcp list` exited {proc.returncode}: {_untrusted('stderr', proc.stderr, diagnostics)}")
 
-    rows = _agy_mcp_list_rows(proc.stdout, refuse)
+    rows = _agy_mcp_list_rows(proc.stdout, refuse, diagnostics)
     if [row["name"] for row in rows] != ["sources"]:
-        raise refuse(f"effective MCP servers are {[row['name'] for row in rows]!r}; exactly ['sources'] is allowed")
+        raise refuse(
+            f"effective MCP servers are {_describe_names([row['name'] for row in rows])}; exactly ['sources'] is allowed"
+        )
     row = rows[0]
     if row["type"] != "stdio":
-        raise refuse(f"the sources server type is {row['type']!r}, not stdio")
+        raise refuse(f"the sources server type is {_echo_identifier(row['type'])!r}, not stdio")
     if row["status"] != "enabled":
-        raise refuse(f"the sources server status is {row['status']!r}, not enabled")
+        raise refuse(f"the sources server status is {_echo_identifier(row['status'])!r}, not enabled")
     if row["target"] != expected_target:
         raise refuse("the sources server command/args differ from the attempt's .mcp.json")
 
     scoped_config = agy_review_mcp_config_path(agy_home)
     try:
-        loaded = _strict_json_object(scoped_config.read_text(encoding="utf-8"))
+        loaded = _strict_json_object(
+            _read_attempt_file(agy_home.parent, *scoped_config.relative_to(agy_home.parent).parts)
+        )
     except (OSError, ValueError) as exc:
-        raise refuse(f"cannot read the scoped agy MCP config {scoped_config}: {exc}") from exc
+        raise refuse(
+            f"cannot read the scoped agy MCP config (.gemini/config/mcp_config.json under the scoped HOME): "
+            f"{_exc_reason(exc, diagnostics)}"
+        ) from exc
     if not isinstance(loaded, dict) or set(loaded) != {"mcpServers"}:
         raise refuse("the scoped agy MCP config has keys other than mcpServers")
     servers = loaded["mcpServers"]
@@ -664,9 +1131,12 @@ def verify_agy_review_launch(
     from scripts.agent_runtime.adapters.agy import AgyAdapter
     from scripts.agent_runtime.env_sanitize import build_agent_env
 
-    link_problem = agy_oauth_link_problem(config_path)
-    if link_problem is not None:
-        raise AgyReviewMcpGateError(f"agy review attempt refused: OAuth link not intact: {link_problem} (#8617)")
+    agy_home = agy_review_home_path(config_path)
+    link_state = _agy_oauth_link_state(agy_review_app_data_dir(agy_home) / _AGY_TOKEN_NAME, _real_agy_token())
+    if link_state is not None:
+        raise AgyReviewMcpGateError(
+            f"agy review attempt refused: OAuth link not intact: the scoped {_AGY_TOKEN_NAME} {link_state} (#8617)"
+        )
 
     plan = AgyAdapter().build_invocation(
         prompt="",
