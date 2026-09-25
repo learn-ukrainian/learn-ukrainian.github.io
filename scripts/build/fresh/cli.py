@@ -24,7 +24,7 @@ from typing import Any
 import yaml
 
 from scripts.build.fresh.draft_schema import LEVELS
-from scripts.build.fresh.immersion import compute_immersion_payload
+from scripts.build.fresh.immersion import lesson_immersion_payload
 from scripts.build.fresh.path_guard import checked_existing_path, checked_path, validate_module
 from scripts.build.fresh.preflight import preflight_lesson
 from scripts.build.fresh.prompt import (
@@ -725,9 +725,7 @@ def main(argv: list[str] | None = None) -> int:
             plans_dir=paths["plan"].parent,
             evidence_dir=paths["words"].parent,
         )
-        imm_payload = compute_immersion_payload(
-            args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
-        )
+        imm_payload = lesson_immersion_payload(args.level, pos, args.lesson, p_state)
 
         # Load real cited records from pack and word store (Finding 1)
         cited_records = _load_cited_records(lesson_entry, pack_dict, words_dict)
@@ -861,9 +859,7 @@ def main(argv: list[str] | None = None) -> int:
             plans_dir=paths["plan"].parent,
             evidence_dir=paths["words"].parent,
         )
-        imm_payload = compute_immersion_payload(
-            args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
-        )
+        imm_payload = lesson_immersion_payload(args.level, pos, args.lesson, p_state)
 
         out_dir = args.output_dir or (paths["state_dir"] / args.slug)
         out_dir.mkdir(parents=True, exist_ok=True)

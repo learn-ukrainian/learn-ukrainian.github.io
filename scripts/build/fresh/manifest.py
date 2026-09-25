@@ -1,21 +1,53 @@
-"""Content-addressed, review-eligible fresh lesson attempt manifests."""
+"""Content-addressed, review-eligible fresh lesson attempt manifests.
+
+The manifest names every file a reviewer receives, each with its sha256: the
+plan, the evidence pack and word store (verified against their locks before they
+are recorded), the built lesson and its activity data, the gate report, the style
+card, the decisions record, the module digest, the materialized planned learner
+state and the built lessons 1..N-1 (``upstream_lessons``).
+
+The learner state has two forms. ``learner_state.sha256`` is its identity: the
+canonical-JSON hash of ``planned_state(...).to_dict()``, independent of YAML
+formatting. ``inputs.learner_state`` is the readable form the reviewer opens: a
+deterministic YAML document written next to the manifest holding that same
+``to_dict()`` under ``learner_state`` and the lesson's immersion rule (the
+``lesson_immersion_payload`` result the writer received) under ``immersion``.
+Both derive from one ``planned_state`` result.
+
+A re-review (Contract 2) also names the previous attempt: its review file and its
+receipt ledger (both hashed and refused when they no longer match) and the unified
+diff between the lesson that attempt was shown and the current one. The previous
+lesson's bytes come from the content-addressed snapshot every manifest write keeps
+next to its history (``manifests/lesson-<n>/lesson.<sha256>.mdx``), so a rebuild
+in place never loses them. ``previous_attempt`` and ``diff`` are both ``null`` on a
+first review.
+"""
 
 from __future__ import annotations
 
+import difflib
 import hashlib
 import json
+import os
 import re
+import tempfile
 from pathlib import Path
 from typing import Any
 
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts.build.fresh.path_guard import checked_existing_path
+from scripts.build.fresh.immersion import lesson_immersion_payload
+from scripts.build.fresh.path_guard import checked_existing_path, checked_path
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import planned_state
 from scripts.review.digest.generator import GENERATOR_VERSION, build_digest, write_digest
+from scripts.review.receipts.ledger import LedgerError
+from scripts.review.validate.validate import index_ledger, review_schema_errors
 
+ATTEMPT_TOKEN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
+SHA_RE = re.compile(r"[0-9a-f]{64}\Z")
+EVIDENCE_ROOT = "curriculum/l2-uk-en/evidence"
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "lesson-review-manifest-v1.schema.json"
 
 
@@ -59,6 +91,220 @@ def _input(path: Path, repo_root: Path) -> dict[str, str]:
     return {"path": relative, "sha256": sha256(path)}
 
 
+def _locked_input(path: Path, repo_root: Path) -> dict[str, str]:
+    """A file input whose bytes must agree with its lock sidecar; fails naming the path."""
+    entry = _input(path, repo_root)
+    if not lock.check(path):
+        raise ManifestInputError(path, "lock mismatch", repo_root)
+    return entry
+
+
+def _is_pin(value: Any) -> bool:
+    """The shape every recorded file input has: a string ``path`` and a sha256 hex digest."""
+    return (
+        isinstance(value, dict)
+        and isinstance(value.get("path"), str)
+        and isinstance(value.get("sha256"), str)
+        and SHA_RE.fullmatch(value["sha256"]) is not None
+    )
+
+
+def pinned_entries(doc: Any, location: str = "") -> list[tuple[str, dict[str, Any]]]:
+    """Every pinned file anywhere in the manifest, with its location (``inputs.pack``, ``module_digest``, ``diff``,
+    ``previous_attempt.review``, ``upstream_lessons[0]``).
+
+    The walk is structural: any object carrying a ``path`` and a ``sha256`` is a pin,
+    so a field the writer adds later is covered without a change here.
+    """
+    if _is_pin(doc):
+        return [(location, doc)]
+    if isinstance(doc, dict):
+        children = ((f"{location}.{key}" if location else str(key), value) for key, value in doc.items())
+    elif isinstance(doc, list):
+        children = ((f"{location}[{index}]", value) for index, value in enumerate(doc))
+    else:
+        return []
+    return [pin for name, value in children for pin in pinned_entries(value, name)]
+
+
+def changed_inputs(doc: dict[str, Any], repo_root: Path) -> list[dict[str, Any]]:
+    """The pinned files whose bytes now differ from what the manifest recorded.
+
+    One record per changed pin: ``input`` (its location in the manifest), ``entry``
+    (the recorded pin) and ``current_sha256`` (``None`` when the file is gone or no
+    longer resolves to the recorded path). Every pin in the manifest is recorded
+    through ``_input``, so it is read back through ``_input`` too and recording and
+    freshness cannot disagree about what a path holds.
+    """
+    root = repo_root.resolve()
+    changed = []
+    for name, entry in pinned_entries(doc):
+        try:
+            now = _input(root / entry["path"], root)
+        except (FileNotFoundError, ValueError):
+            now = None
+        current = now["sha256"] if now and now["path"] == entry["path"] else None
+        if current != entry["sha256"]:
+            changed.append({"input": name, "entry": entry, "current_sha256": current})
+    return changed
+
+
+def learner_state_document(state: Any, immersion: Any | None = None) -> dict[str, Any]:
+    """The readable learner-state document; the identity hash covers only ``learner_state``."""
+    document: dict[str, Any] = {"learner_state": state.to_dict()}
+    if immersion is not None:
+        document["immersion"] = immersion.to_dict()
+    return document
+
+
+def materialize_learner_state(path: Path, document: dict[str, Any], repo_root: Path) -> dict[str, str]:
+    """Write the document as deterministic YAML with its lock sidecar; return the manifest input entry."""
+    root = repo_root.resolve()
+    target = checked_path(root, path.resolve().relative_to(root), "curriculum/l2-uk-en/evidence")
+    lock.write(target, lock.yaml_bytes(document))
+    return _input(target, root)
+
+
+def lesson_snapshot_path(state_dir: Path, n: int, digest: str) -> Path:
+    return state_dir / "manifests" / f"lesson-{n}" / f"lesson.{digest}.mdx"
+
+
+def _keep_lesson_snapshot(root: Path, state_dir: Path, n: int, page: Path, entry: dict[str, str]) -> None:
+    """Keep the exact bytes of the lesson this manifest records, addressed by their sha256."""
+    data = page.read_bytes()
+    if hashlib.sha256(data).hexdigest() != entry["sha256"]:
+        raise ManifestInputError(page, "lesson changed while the manifest was written", root)
+    target = checked_existing_path(root, lesson_snapshot_path(state_dir, n, entry["sha256"]), EVIDENCE_ROOT)
+    if target.exists() and target.read_bytes() != data:
+        raise ManifestInputError(target, "lesson snapshot collision", root)
+    if not target.exists():
+        lock.atomic_write(target, data)
+
+
+def _pinned_file(root: Path, recorded: Any, expected: Path, what: str) -> tuple[Path, bytes]:
+    """A previous-attempt file: at the path the layout dictates, bytes equal to the recorded sha256."""
+    if not isinstance(recorded, dict) or set(recorded) != {"path", "sha256"}:
+        raise ManifestInputError(expected, f"previous {what} must be {{path, sha256}}", root)
+    path = checked_existing_path(root, expected, _allowed(root, expected))
+    if recorded["path"] != path.relative_to(root).as_posix():
+        raise ManifestInputError(path, f"previous {what} is not at its expected path", root)
+    if not path.is_file():
+        raise ManifestInputError(path, f"previous {what} missing", root)
+    data = path.read_bytes()
+    if not isinstance(recorded["sha256"], str) or hashlib.sha256(data).hexdigest() != recorded["sha256"]:
+        raise ManifestInputError(path, f"previous {what} changed since it was recorded", root)
+    return path, data
+
+
+def _allowed(root: Path, path: Path) -> str:
+    parts = path.relative_to(root).parts
+    return EVIDENCE_ROOT if parts[:2] == ("curriculum", "l2-uk-en") else parts[0] + "/review-receipts"
+
+
+def _previous_attempt_inputs(
+    previous: dict[str, Any], *, level: str, slug: str, n: int, state_dir: Path, root: Path, page: Path
+) -> tuple[dict[str, Any], bytes]:
+    """The manifest's ``previous_attempt`` object and the unified diff bytes for a re-review.
+
+    Every input is verified before it is recorded: the review and ledger files
+    against their recorded hashes and expected paths, the review's attempt block
+    against the attempt id, the previous manifest against its content address, and
+    the previous lesson snapshot against the hash that manifest recorded.
+    """
+    attempt_id = previous.get("attempt_id") if isinstance(previous, dict) else None
+    if not isinstance(attempt_id, str) or not ATTEMPT_TOKEN.fullmatch(attempt_id):
+        raise ManifestInputError(state_dir, "previous attempt id invalid", root)
+    if set(previous) != {"attempt_id", "review", "ledger"}:
+        raise ManifestInputError(state_dir, "previous attempt must be {attempt_id, review, ledger}", root)
+    review_path, review_bytes = _pinned_file(
+        root, previous["review"], state_dir / f"lesson-{n}.review.{attempt_id}.yaml", "review"
+    )
+    try:
+        review = yaml.safe_load(review_bytes)
+    except yaml.YAMLError as err:
+        raise ManifestInputError(review_path, "previous review is not valid YAML", root) from err
+    invalid = review_schema_errors(review)
+    if invalid:
+        raise ManifestInputError(
+            review_path,
+            f"previous review does not conform to review-v1 ({len(invalid)} errors, first: {invalid[0]})",
+            root,
+        )
+    attempt = review["attempt"]
+    review_id, manifest_sha = attempt["review_id"], attempt["manifest_sha256"]
+    if (
+        review.get("kind") != "lesson"
+        or attempt.get("attempt_id") != attempt_id
+        or not isinstance(review_id, str)
+        or not ATTEMPT_TOKEN.fullmatch(review_id)
+        or not isinstance(manifest_sha, str)
+        or not SHA_RE.fullmatch(manifest_sha)
+    ):
+        raise ManifestInputError(review_path, "previous review is not a lesson review of that attempt", root)
+    ledger_path, _ = _pinned_file(
+        root, previous["ledger"], root / "batch_state" / "review-receipts" / review_id / f"{attempt_id}.jsonl", "ledger"
+    )
+    try:
+        index_ledger(ledger_path)
+    except (LedgerError, ValueError, OSError) as err:  # JSONDecodeError is a ValueError
+        raise ManifestInputError(ledger_path, f"previous ledger not verified ({err})", root) from err
+    history = checked_existing_path(
+        root, state_dir / "manifests" / f"lesson-{n}" / f"{manifest_sha}.yaml", EVIDENCE_ROOT
+    )
+    if not history.is_file() or sha256(history) != manifest_sha:
+        raise ManifestInputError(history, "previous attempt manifest missing or not at its content address", root)
+    earlier = yaml.safe_load(history.read_bytes())
+    if (earlier.get("level"), earlier.get("slug"), earlier.get("lesson")) != (level, slug, n):
+        raise ManifestInputError(history, "previous attempt manifest is for another lesson", root)
+    old = earlier["inputs"]["lesson"]
+    snapshot = checked_existing_path(root, lesson_snapshot_path(state_dir, n, old["sha256"]), EVIDENCE_ROOT)
+    if not snapshot.is_file() or sha256(snapshot) != old["sha256"]:
+        raise ManifestInputError(snapshot, "previous lesson snapshot missing or altered", root)
+    lines = difflib.unified_diff(
+        snapshot.read_text(encoding="utf-8").splitlines(keepends=True),
+        page.read_text(encoding="utf-8").splitlines(keepends=True),
+        fromfile=f"a/{old['path']}@{old['sha256'][:12]}",
+        tofile=f"b/{page.resolve().relative_to(root).as_posix()}",
+    )
+    entry = {
+        "attempt_id": attempt_id,
+        "review": {"path": review_path.relative_to(root).as_posix(), "sha256": previous["review"]["sha256"]},
+        "ledger": {"path": ledger_path.relative_to(root).as_posix(), "sha256": previous["ledger"]["sha256"]},
+    }
+    return entry, "".join(lines).encode("utf-8")
+
+
+def _write_diff(root: Path, state_dir: Path, n: int, attempt_id: str, data: bytes) -> Path:
+    """Write the re-review diff at a path addressed by its own bytes; never replace an existing file.
+
+    Two rebuilds against one previous attempt produce different diffs, so each gets
+    its own path and the manifest that pinned an earlier one stays valid. The same
+    bytes are reused; different bytes at an existing path are refused.
+    """
+    digest = hashlib.sha256(data).hexdigest()
+    target = checked_existing_path(root, state_dir / f"lesson-{n}.diff.{attempt_id}.{digest[:16]}.patch", EVIDENCE_ROOT)
+    if target.exists():
+        if target.read_bytes() != data:
+            raise ManifestInputError(target, "diff path collision", root)
+        return target
+    target.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{target.name}.", dir=target.parent)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.chmod(temporary, 0o644)
+        try:
+            os.link(temporary, target)  # create-exclusive: fails rather than replaces
+        except FileExistsError:
+            if target.read_bytes() != data:
+                raise ManifestInputError(target, "diff path collision", root) from None
+    finally:
+        os.unlink(temporary)
+    return target
+
+
 def _activity_imports(mdx_path: Path, repo_root: Path) -> list[Path]:
     text = mdx_path.read_text(encoding="utf-8")
     imports = re.findall(r"(?m)^\s*import\s+(?:[^\n]*?\s+from\s+)?[\"']([^\"']+)[\"']", text)
@@ -90,6 +336,7 @@ def write_manifest(
     evidence_dir: Path,
     position: int,
     site_dir: Path | None = None,
+    previous_attempt: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], str]:
     root = repo_root.resolve()
     page_dir = site_dir or root / "site/src/content/docs" / level / slug
@@ -125,9 +372,23 @@ def write_manifest(
     entry = next((item for item in lock_doc["lessons"] if item["n"] == n), None)
     if not entry or not entry.get("entry_sha256"):
         raise ValueError(f"missing lesson lock entry {n}: {lock_path}")
-    upstream = []
-    for k in range(1, n):
-        upstream.append({"n": k, "sha256": _input(page.parent / f"{k}.mdx", root)["sha256"]})
+    upstream = [{"n": k, **_input(page.parent / f"{k}.mdx", root)} for k in range(1, n)]
+    state = planned_state(level, position, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    state_path = state_dir / f"lesson-{n}.learner-state.yaml"
+    try:
+        immersion = lesson_immersion_payload(level, position, n, state)
+    except Exception as err:
+        raise ManifestInputError(state_path, f"immersion rule unavailable ({err})", root) from err
+    state_input = materialize_learner_state(state_path, learner_state_document(state, immersion), root)
+    lesson_input = _input(page, root)
+    previous_doc: dict[str, Any] | None = None
+    diff_input: dict[str, str] | None = None
+    if previous_attempt is not None:
+        previous_doc, diff_bytes = _previous_attempt_inputs(
+            previous_attempt, level=level, slug=slug, n=n, state_dir=state_dir, root=root, page=page
+        )
+        diff_input = _input(_write_diff(root, state_dir, n, previous_doc["attempt_id"], diff_bytes), root)
+    _keep_lesson_snapshot(root, state_dir, n, page, lesson_input)
     doc = {
         "manifest_schema": 1,
         "kind": "lesson",
@@ -140,10 +401,13 @@ def write_manifest(
         "blocked_by": [],
         "inputs": {
             "plan": _input(plan_path, root),
+            "pack": _locked_input(pack_path, root),
             "pack_lock": _input(Path(f"{pack_path}.lock"), root),
+            "words": _locked_input(words_path, root),
             "words_lock": _input(Path(f"{words_path}.lock"), root),
+            "learner_state": state_input,
             "lessons_lock": _input(lock_path, root),
-            "lesson": _input(page, root),
+            "lesson": lesson_input,
             "activity_data": [_input(path, root) for path in _activity_imports(page, root)],
             "gate_report": _input(gate_path, root),
             "style_card": _input(card_path, root),
@@ -154,19 +418,12 @@ def write_manifest(
             "lesson": n,
             "entry_sha256": entry["entry_sha256"],
         },
-        "learner_state": {
-            "sha256": learner_state_sha256(
-                planned_state(
-                    level, position, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=evidence_dir
-                )
-            ),
-            "source": "planned_state",
-        },
+        "learner_state": {"sha256": learner_state_sha256(state), "source": "planned_state"},
         "module_digest": _input(digest_path, root),
         "digest_generator_version": GENERATOR_VERSION,
         "upstream_lessons": upstream,
-        "previous_attempt": None,
-        "diff_sha256": None,
+        "previous_attempt": previous_doc,
+        "diff": diff_input,
     }
     Draft202012Validator(
         json.loads(checked_existing_path(SCHEMA.parents[1], SCHEMA, "schemas").read_text(encoding="utf-8"))
