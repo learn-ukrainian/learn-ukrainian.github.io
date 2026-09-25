@@ -385,11 +385,39 @@ def test_kimicc_review_profile_needs_read_only_mode(tmp_path, monkeypatch, mode)
     assert ("--read-only-review" in _kimicc_review_cmd(tmp_path, grant, mode=mode)) is (mode == "read-only")
 
 
-def test_kimicc_review_profile_accepts_list_form_allowlist(tmp_path, monkeypatch):
+def test_kimicc_review_profile_forwards_a_list_allowlist_as_comma_joined_names(tmp_path, monkeypatch):
+    """A list is forwarded as names, never as its Python repr (``claude --help``: comma or space separated)."""
     _kimicc_ready(tmp_path, monkeypatch)
     grant = _trusted_review_grant(tmp_path, monkeypatch)
-    grant["allowed_tools"] = ["mcp__sources__verify_words", "Read Grep"]
+    grant["allowed_tools"] = ["mcp__sources__verify_words", "Read"]
     assert kimicc_adapter.read_only_review_refusal("read-only", grant, trail_isolation=False) is None
+    cmd = _kimicc_review_cmd(tmp_path, grant)
+    assert "--read-only-review" in cmd
+    assert cmd.count("--allowedTools") == 1
+    assert cmd[cmd.index("--allowedTools") + 1] == "mcp__sources__verify_words,Read"
+    assert "[" not in " ".join(cmd)
+
+
+def test_kimicc_review_profile_forwards_a_space_separated_string_as_comma_joined_names(tmp_path, monkeypatch):
+    _kimicc_ready(tmp_path, monkeypatch)
+    grant = _trusted_review_grant(tmp_path, monkeypatch)
+    grant["allowed_tools"] = "mcp__sources__verify_words Read,Grep"
+    cmd = _kimicc_review_cmd(tmp_path, grant)
+    assert "--read-only-review" in cmd
+    assert cmd[cmd.index("--allowedTools") + 1] == "mcp__sources__verify_words,Read,Grep"
+
+
+@pytest.mark.parametrize("element", ["Read Grep", "Read,Grep", " Read", ""])
+def test_kimicc_review_profile_rejects_a_list_element_that_holds_several_names(tmp_path, monkeypatch, element):
+    """One list element is one tool name; an element with a comma or space is ambiguous once joined."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    grant = _trusted_review_grant(tmp_path, monkeypatch)
+    grant["allowed_tools"] = ["mcp__sources__verify_words", element]
+    assert kimicc_adapter.read_only_review_refusal("read-only", grant, trail_isolation=False) is (
+        kimicc_adapter.ReviewRefusal.ALLOWED_TOOLS_MALFORMED
+    )
+    with pytest.raises(ValueError, match="allowed_tools must be tool names"):
+        _kimicc_review_cmd(tmp_path, grant)
 
 
 def _drop(key):

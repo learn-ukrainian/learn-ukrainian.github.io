@@ -1588,6 +1588,13 @@ _MARKER_PATHS = [
     pytest.param(f"~/{_MARKER}", id="tilde"),
     pytest.param(f"C:\\{_MARKER}\\x", id="windows"),
     pytest.param(f"/srv/with space/{_MARKER}/secret.json", id="absolute-with-spaces"),
+    pytest.param(f"x/srv/{_MARKER}/x", id="relative"),
+    pytest.param(f"%2Fsrv%2F{_MARKER}%2Fx", id="url-encoded-slash"),
+    pytest.param(f"C%3A%5C{_MARKER}%5Cx", id="url-encoded-backslash"),
+    pytest.param(f"%252Fsrv%252F{_MARKER}%252Fx", id="double-encoded-slash"),
+    pytest.param(f"file:///srv/{_MARKER}/x", id="file-url"),
+    pytest.param(f"srv\u2215{_MARKER}\u2215x", id="unicode-division-slash"),
+    pytest.param(f"srv\uff0f{_MARKER}\uff0fx", id="unicode-fullwidth-slash"),
 ]
 
 
@@ -1757,19 +1764,45 @@ def test_invalid_identifier_refusal_names_the_rule_and_a_short_prefix_only(
     assert len(message) < 200
 
 
-def test_sanitizer_bounds_length_and_masks_known_values_and_the_operator_home(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    from scripts.agent_runtime.review_mcp import _sanitize
+def test_echo_identifier_shows_clean_names_verbatim_and_redacts_everything_else() -> None:
+    from scripts.agent_runtime.review_mcp import _echo_identifier
 
-    assert len(_sanitize("x" * 1000)) == 83
-    assert _sanitize("x" * 1000, limit=None) == "x" * 1000
-    assert _sanitize("secret-token-value here", {"$TOKEN": "secret-token-value"}) == "$TOKEN here"
-    assert _sanitize("line one\nline\ttwo\x00") == "line one line two"
+    for clean in ("sources", "mcp__sources__verify_words", "att-001", "a.b:c_d-9", "x" * 64):
+        assert _echo_identifier(clean) == clean
+    for unclean, size in (("x" * 65, 65), ("", 0), ("a b", 3), ("a/b", 3), ("a\\b", 3), ("a%2Fb", 5), ("~x", 2)):
+        assert _echo_identifier(unclean) == f"<redacted: {size} chars>"
+    assert _echo_identifier("sources\n") == "<redacted: 8 chars>"  # fullmatch, not ``$``
+    assert _echo_identifier("sourc\u0435s") == "<redacted: 7 chars>"  # non-ASCII look-alike
+    assert _echo_identifier(None) == "<redacted: a NoneType>"
+
+
+def test_free_text_reduces_to_the_allowlist_and_masks_known_values(monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.agent_runtime.review_mcp import _free_text
+
+    assert _free_text("x" * 1000) == "…"  # an over-long token collapses whole
+    assert len(_free_text("ab " * 1000)) == 83
+    assert _free_text("secret-token-value here", {"$TOKEN": "secret-token-value"}) == "$TOKEN here"
+    assert _free_text("line one\nline\ttwo\x00") == "line one line two"
     monkeypatch.setenv("HOME", "/srv/operator-home")
-    assert "operator-home" not in _sanitize("home is /srv/operator-home ok")
-    # Relative words are not path-shaped: labels and column names survive.
-    assert (
-        _sanitize("NAME TYPE STATUS COMMAND/URL and/or $CODEX_HOME")
-        == "NAME TYPE STATUS COMMAND/URL and/or $CODEX_HOME"
+    assert "operator-home" not in _free_text("home is /srv/operator-home ok")
+    assert _free_text("boom x/srv/a b/c d%2Fe ok") == "boom … ok"
+    assert _free_text("Expecting value: line 1 column 1 (char 0)") == "Expecting value: line 1 column 1 (char 0)"
+
+
+def test_refusals_keep_allowlisted_names_and_counts_verbatim(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A clean name still appears, so a refusal stays actionable; an unclean one shows its size."""
+    message = _codex_refusal(
+        tmp_path,
+        manifest_file,
+        monkeypatch,
+        [{"name": "rogue-server", "enabled": True}, {"name": "a/b", "enabled": True}],
     )
+    assert "'rogue-server'" in message
+    assert "'<redacted: 3 chars>'" in message
+    assert "exactly ['sources'] is allowed" in message
+    message = _refusal_from_prepare(tmp_path, manifest_file, harness="mystery-harness")
+    assert "got mystery-harness" in message
+    message = _refusal_from_prepare(tmp_path, manifest_file, harness="a/b")
+    assert "got <redacted: 3 chars>" in message

@@ -159,14 +159,31 @@ def trusted_mcp_config_path() -> Path:
 
 
 def _allowed_tool_names(value: Any) -> list[str] | None:
-    """Split an ``--allowedTools`` value the way Claude Code does (commas or spaces)."""
+    """Tool names from an ``allowed_tools`` value, or None when it is malformed.
+
+    A string is the Claude CLI's own format (commas and/or spaces between names). A list is one
+    name per element: an element holding a comma or whitespace is ambiguous once the names are
+    joined for ``--allowedTools``, so it is malformed rather than silently split.
+    """
     if isinstance(value, str):
-        items = [value]
-    elif isinstance(value, (list, tuple)) and all(isinstance(item, str) for item in value):
-        items = list(value)
-    else:
-        return None
-    return [name for item in items for name in re.split(r"[,\s]+", item) if name]
+        return [name for name in re.split(r"[,\s]+", value) if name]
+    if isinstance(value, (list, tuple)) and all(isinstance(item, str) for item in value):
+        if any(not item or re.search(r"[,\s]", item) for item in value):
+            return None
+        return list(value)
+    return None
+
+
+def _allowed_tools_arg(value: Any) -> str:
+    """The one ``--allowedTools`` argument for a validated ``allowed_tools`` value.
+
+    ``claude --help``: "Comma or space-separated list of tool names". The names are forwarded
+    comma-joined, never as the Python repr of a list.
+    """
+    names = _allowed_tool_names(value)
+    if not names:
+        raise ValueError("KimiccHarness: allowed_tools must be tool names as a string or a list of strings")
+    return ",".join(names)
 
 
 class ReviewRefusal(StrEnum):
@@ -321,7 +338,7 @@ class KimiccHarness:
                     "--mcp-config",
                     str(tc["mcp_config_path"]),
                     "--allowedTools",
-                    str(tc["allowed_tools"]),
+                    _allowed_tools_arg(tc["allowed_tools"]),
                     "--tools",
                     str(tc["tools"]),
                     "--strict-mcp-config",
@@ -332,13 +349,15 @@ class KimiccHarness:
         elif tc.get("strict_mcp_config") and isinstance(tc.get("mcp_config_path"), str):
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--strict-mcp-config"])
             if tc.get("allowed_tools"):
-                cmd.extend(["--allowedTools", str(tc["allowed_tools"])])
+                cmd.extend(["--allowedTools", _allowed_tools_arg(tc["allowed_tools"])])
         elif mode == "read-only" and isinstance(tc.get("mcp_config_path"), str) and tc.get("allowed_tools"):
             # Local boundary, not only the delegate grant. --bare does not
             # load .mcp.json, so a read-only review passes the checkout file
             # plus the sources --allowedTools grant. A write mode that still
             # carries these keys must not emit them.
-            cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--allowedTools", str(tc["allowed_tools"])])
+            cmd.extend(
+                ["--mcp-config", str(tc["mcp_config_path"]), "--allowedTools", _allowed_tools_arg(tc["allowed_tools"])]
+            )
         if tc.get("agent"):
             cmd.extend(["--agent", str(tc["agent"])])
         if tc.get("max_budget_usd") is not None:
