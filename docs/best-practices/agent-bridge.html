@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-05-09" />
+<meta name="report-date" content="2026-09-25" />
 
 <meta name="report-status" content="migrated" />
 
@@ -116,28 +116,33 @@
   <header class="hero">
     <div class="title-block">
       <h1>Agent Bridge — Channel Communication</h1>
-      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+      <div class="sub">Migrated from Markdown on 2026-09-25 09:00</div>
     </div>
     <div class="meta">
-      <div>Source: agent-bridge.html</div>
+      <div>Source: agent-bridge.md</div>
       <div>Author: Gemini (Yellow Team)</div>
     </div>
   </header>
 
   <main>
     <h1>Agent Bridge — Channel Communication</h1>
-<p>The agent bridge is how Claude, Gemini, and Codex (and you, the
+<blockquote>
+<p><strong>Fleet roles:</strong> operator doctrine and living scorecard live in
+<a href="fleet-shared-doctrine.md"><code>fleet-shared-doctrine.md</code></a> and
+<a href="fleet-role-scorecard.md"><code>fleet-role-scorecard.md</code></a>. Machine routing remains
+<code>agents_extensions/shared/rules/model-assignment.md</code> (takes precedence on conflict).</p>
+</blockquote>
+<p>The agent bridge is how Claude, AGY, and Codex (and you, the
 human) communicate across invocations. The new <strong>channel bridge</strong>
 (added in #1190) replaces the old 1:1 <code>ask-*</code> pattern with topic-
 scoped channels, pinned context, and character-budget history
 truncation — the token waste from re-explaining project setup on
 every delegation drops from ~15KB to ~6KB per post.</p>
 <blockquote>
-<p><strong>Note on the legacy <code>ask-*</code> commands.</strong> They still work and are
-the simplest way to fire a one-shot delegation with no history
-tracking. They're <strong>not deprecated</strong> and won't be. Channels are
-the right primitive for sustained, topic-scoped conversations;
-<code>ask-*</code> is the right primitive for one-off questions. Use both.</p>
+<p><strong>Current tooling note.</strong> Use <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py ...</code> for bridge commands. Do not use
+bare <code>ab ...</code> examples; <code>ab</code> resolves to ApacheBench on the user's machine.
+Gemini CLI and Gemini Code Assist are unsupported. Use AGY for
+Gemini-family work.</p>
 </blockquote>
 <h2>Mental model</h2>
 <p>A <strong>channel</strong> is a topic — <code>pipeline</code>, <code>content</code>, <code>architecture</code>,
@@ -166,27 +171,31 @@ is an outbound state machine, replies are new messages with parent_id)</li>
 <p>A <strong>reply</strong> is just a new post with <code>parent_id</code> set. Replies inherit
 the thread_id and get <code>round_index = parent.round_index + 1</code>.</p>
 <h2>Discussion vs execution</h2>
-<p><code>ab discuss</code> is deliberation, not implementation. The bridge invokes
+<p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> is
+deliberation, not implementation. The bridge invokes
 participants in read-only mode, passes the <code>AB_DISCUSS_READONLY=1</code>
 contract through the adapter layer, and fails the round if the git
 working tree changes while participants are running. A failed round
 posts a loud system warning into the thread before returning non-zero,
 including <code>READ_ONLY_VIOLATION: &lt;agent&gt;</code> for the agent family that must
 be treated as the write source. Filesystem writes during discussion are
-a hard stop; dispatch the work as a separate <code>delegate.py dispatch</code>
+a hard stop; dispatch the work as a separate <code>scripts/delegate.py dispatch</code>
 brief.</p>
-<p><code>ab post</code> creates channel messages and delivery rows. Its default
+<p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post</code> creates channel
+messages and delivery rows. Its default
 delivery mode is read-only, and the inbox worker applies the same
 discussion read-only adapter contract to those default deliveries. Use
 write-capable modes only when the post is explicitly an execution
 request. Implementation work that needs file edits, commits, pushes, or
-a PR should normally go through <code>delegate.py dispatch</code> or
-<code>ab dispatch-fix</code>, not through discussion.</p>
+a PR should normally go through <code>scripts/delegate.py dispatch</code> or
+<code>.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix</code>, not
+through discussion.</p>
 <p>Current adapter policy for discussion calls:</p>
 <ul>
 <li>Codex: <code>read-only</code> maps to <code>codex exec -s read-only</code>.</li>
-<li>Gemini: discussion calls add <code>--approval-mode plan</code>; plain read-only
-CLI defaults were not enough in trusted workspaces.</li>
+<li>AGY: discussion calls route through the AGY adapter. Direct <code>agy --model</code>
+uses display labels such as <code>Gemini 3.1 Pro (High)</code>; bridge/runtime calls
+may pass slugs such as <code>gemini-3.1-pro-high</code> for adapter mapping.</li>
 <li>Claude: discussion calls restrict built-in tools to read/list/search
 tools. They do not use Claude plan mode because discussion replies are
 comments, not implementation plans; the restricted tool list plus the
@@ -197,41 +206,165 @@ returns non-zero without accepting that round's agent replies.</li>
 </ul>
 <h2>CLI quick reference</h2>
 <pre><code class="language-bash"># Channel management
-ab channel new pipeline --include shared --agents claude,gemini,codex
-ab channel list
-ab channel info pipeline
-ab channel context pipeline --edit     # opens $EDITOR on context.md
-ab channel tail pipeline -n 20         # last 20 messages
-ab channel tail pipeline --thread ABC  # full thread
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new pipeline --include shared --agents claude,agy,codex
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel list
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel info pipeline
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel context pipeline --edit
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail pipeline -n 20
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail pipeline --thread ABC
 
 # Posting (short + long form)
-ab p pipeline gemini &quot;quick question about X&quot;
-ab post pipeline &quot;full form with --to options&quot; --to gemini,codex
-ab post pipeline &quot;reply&quot; --parent MESSAGE_ID
+.venv/bin/python scripts/ai_agent_bridge/__main__.py p pipeline agy &quot;quick question about X&quot;
+.venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline &quot;full form with --to options&quot; --to agy,codex
+.venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline &quot;reply&quot; --parent MESSAGE_ID
 
-# Multi-agent discussion (B.4)
-ab discuss architecture &quot;should we refactor X?&quot; --with claude,gemini,codex --max-rounds 2
+# Multi-agent discussion (B.4). Agy joins only with --review-profile ukrainian.
+.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture &quot;should we refactor X?&quot; --with claude,codex --max-rounds 2
 </code></pre>
+<h2>Desktop Participation</h2>
+<p>Desktop participation is currently an MVP flat-string identity, not the
+full Multi-UI identity model. The bridge accepts <code>codex-desktop</code> and
+<code>claude-desktop</code> as post authors and delivery targets, but it does not
+spawn them as subprocesses. Their registry entries have
+<code>cli_available=False</code>, so Desktop participation is human-invoked from
+the Desktop session.</p>
+<p>Orchestrator dispatch to Codex Desktop:</p>
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py post desktop-tasks &quot;&lt;brief&gt;&quot; --to codex-desktop --from-agent claude
+</code></pre>
+<p>Codex Desktop watches the task channel from its own session:</p>
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail desktop-tasks --follow
+</code></pre>
+<p>Codex Desktop can also pull its pending inbox:</p>
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox show codex-desktop
+</code></pre>
+<h3>Explicit ack: <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox ack &lt;delivery_id&gt;</code></h3>
+<p>When an external worker processes a delivery without going through
+<code>.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run</code>, ack it explicitly:</p>
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox ack &lt;delivery_id&gt; [--error &quot;processed by &lt;thing&gt;&quot;]
+</code></pre>
+<p>Without an explicit ack, deliveries stay <code>pending</code> forever and the inbox
+warning recurs. Bridge discussion acks its own deliveries on round convergence
+automatically, so no manual intervention is needed for that path.</p>
+<p>Codex Desktop posts replies with its own sender identity:</p>
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py post desktop-tasks &quot;&lt;status&gt;&quot; --from-agent codex-desktop
+</code></pre>
+<p>Limitation: this MVP stores a flat sender/recipient string. The pending
+Multi-UI ADR remains the future design for 4-tuple identity
+(<code>agent_family</code>, <code>ui_surface</code>, <code>client_id</code>, <code>instance_id</code>), claims,
+SSE replay, and attachments.</p>
 <h2>Dispatch wrappers</h2>
 <p>Use these wrappers when the task needs the project-standard model/mode
 assignment enforced by tooling instead of memory.</p>
-<p><code>ab dispatch-fix &lt;issue-or-task-id&gt; [--brief-file PATH]</code> dispatches a
+<p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix &lt;issue-or-task-id&gt; [--brief-file PATH]</code> dispatches a
 Codex worktree implementation run for &quot;fix this and ship a PR&quot; tasks.
-It hardcodes <code>delegate.py dispatch --agent codex --mode danger --worktree --base origin/main --effort high</code>, and every generated
+It hardcodes <code>scripts/delegate.py dispatch --agent codex --mode danger --worktree --base origin/main --effort high</code>, and every generated
 brief includes the commit, push, and PR checklist. If <code>--brief-file</code>
 is omitted, the wrapper builds <code>/tmp/dispatch-fix-&lt;task-id&gt;.md</code> from
 <code>gh issue view &lt;issue&gt; --json title,body</code>.</p>
-<p><code>ab review-deep &lt;PR-or-path&gt; [--effort xhigh]</code> dispatches an
+<p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr &lt;PR&gt; [--reviewer auto|codex|claude|glm|grok] [--model MODEL]</code>
+is the <strong>canonical formal PR review entry</strong> (Sol fleet-comms Phase 0–3):</p>
+<ul>
+<li><strong>Pointer-only</strong> prompt (PR URL + checklist + mandatory read-only contract).</li>
+<li>Hard size caps — refuse fat pasted diffs/inventory YAML.</li>
+<li>Default <code>--reviewer auto</code> uses the deterministic suitability-first scheduler;
+no provider is an unconditional default.</li>
+<li>A reviewer alias selects its practical default. Add a formally eligible
+same-route model plus <code>--override-reason</code> for an exceptional operator pin,
+for example <code>--reviewer claude --model claude-fable-5</code> or
+<code>--reviewer codex --model gpt-5.6-sol</code>.</li>
+<li><code>kimi</code> remains a recognized request identity but fails closed until its catalog endpoint satisfies sealed-review eligibility. <code>agy</code> is not a code-review reviewer (Gemini reviews Ukrainian only, never code). GLM-5.3 is
+<strong>LOCAL-ONLY</strong> / China egress and requires the matching egress policy.</li>
+<li><code>--no-claude-available</code> is a deprecated compatibility hint and never routes.</li>
+<li>Do <strong>not</strong> identify the reviewer as “Hermes”; record model + family + harness.</li>
+</ul>
+<p>Formal reviews stay thin in both directions (Phase 4–5). Do not paste a review
+body over 4 KiB or attach evidence over 64 KiB to an <code>ask-*</code> review job; the
+bridge rejects it and points to <code>review-pr &lt;N&gt;</code>. Prefer a PR target over a
+manual review ask.</p>
+<p><strong>Phase 5 steer (warn-not-reject, #5486):</strong> if an <code>ask-* --review</code> payload looks
+like a <strong>formal CF PR review</strong> (GitHub PR URL / <code>PR #N</code> / cross-family formal
+wording) and has <strong>no</strong> sealed <code>review_pr</code> / <code>review_branch</code> target, the bridge
+prints a <strong>warning</strong> and still delivers the ask — rejecting after the agent
+already wrote a formal review wastes work when the agent did not know to use
+<code>review-pr</code>. Prefer <code>review-pr &lt;N&gt;</code> then <code>publish-review-verdict</code> for new work.
+<strong>Size caps remain fail-closed</strong> for oversized bodies/attachments. Silence the
+steering warning with <code>BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1</code>.</p>
+<p><strong>Phase 4 residual (#5485):</strong> migrate runbooks and dispatch briefs that still say
+<code>ask-codex --review</code> for PR gates to <code>review-pr</code> +
+<code>publish-review-verdict</code>. <code>ask-agy --review</code> is not a code-review route
+(operator 2026-09-25): a missing <code>--review-profile</code> is refused, <code>code</code> is
+refused, and Ukrainian content review must pass <code>--review-profile ukrainian</code>.
+<code>scripts/audit/llm_reviewer_dispatch.py</code> content-review routes remain
+<code>ask-* --review</code> (module QG, not PR CF), with that Ukrainian profile on the
+AGY factual route.</p>
+<p>After a reviewer writes canonical <code>code-review-findings.v1</code> JSON, publish it
+with exactly one PR comment. The publisher retains the overall explanation and
+every finding; it derives the gate verdict from the canonical evidence rather
+than treating a detached verdict line as proof:</p>
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
+  --pr 5458 --findings-json /tmp/review-findings.json \
+  --model gpt-5.6-terra --family openai --harness codex
+</code></pre>
+<p>The comment keeps <code>VERDICT</code>, the PR head SHA, and reviewer provenance, then
+renders the explanation and each finding's priority, path/line, description,
+rationale, smallest fix, and sources. A verdict with no explanation and no
+findings is marked <strong>NO EVIDENCE SUPPLIED</strong> in the published comment. If a
+review is too large for GitHub, the publisher retains the overall explanation,
+truncates findings last, and names the full structured record. The command
+prints a ≤2 KiB status summary; use <code>--dry-run</code> to verify the payload locally.</p>
+<p>For a sealed <code>APPROVED</code> verdict, the publisher re-reads the live PR head before
+it publishes <code>fleet/cross-family-review=success</code>. A head change invalidates the
+review publication and requires review evidence for the new head.</p>
+<p><code>--verdict-file</code> remains a legacy escape hatch, but its published comment
+explicitly says that no review evidence was supplied. It is not equivalent to
+a canonical review.</p>
+<p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-deep &lt;PR-or-path&gt; [--effort xhigh]</code> dispatches an
 adversarial Claude review run. It hardcodes <code>--agent claude --mode read-only --model claude-opus-4-7 --effort xhigh</code> unless an explicit
 effort override is passed, then builds a review prompt from either
 <code>gh pr view</code> plus <code>gh pr diff</code> or the target file/directory contents.
-Use it for blocking logic/security/test review, not for stylistic
-preferences.</p>
+Use <strong>three-dot</strong> evidence only (<code>gh pr diff</code>, <code>gh pr view --json files</code>,
+or merge-base…HEAD) — never two-dot <code>base-tip..HEAD</code> against a moved base
+(#5802). Prefer <code>review-pr</code> for ordinary formal CF review.</p>
+<h3>Worktree cleanup (post-merge painpoint)</h3>
+<p>After a PR merges, do <strong>not</strong> leave dispatch worktrees forever:</p>
+<pre><code class="language-bash"># Safe default (dry-run):
+.venv/bin/python scripts/orchestration/reap_worktrees.py
+
+# Recommended post-merge cleanup (dirty worktrees are preserved):
+.venv/bin/python scripts/orchestration/reap_worktrees.py --apply --merged
+</code></pre>
+<p><code>--merged</code> restricts cleanup to exact merged-PR heads and enables branch
+pruning. Dirty trees remain untouched unless a human explicitly adds
+<code>--preserve-then-reap</code>. Open PRs are never reaped just because HEAD matches
+<code>origin/&lt;branch&gt;</code>.</p>
+<p>Every worktree remover (settle, dispatch's superseded-review and
+stale-branch-holder release, this reaper, task-family cleanup, ACP runtime
+cleanup, <code>scripts/wt.sh clean</code>, and the RB2 trail's cleanup step) goes through
+one chokepoint in <code>scripts/orchestration/worktree_claims.py</code> (#8610). It takes
+the per-worktree lock in <code>&lt;git common dir&gt;/lu-worktree-locks/</code> that dispatch
+holds from attach until its task record is published, and under that lock it
+refuses while another task's unfinished record names the checkout. The skip
+reasons are <code>worktree lock busy</code> and <code>worktree claimed by active task &lt;id&gt;</code>.
+Finish or cancel that task, then rerun the cleanup. From a shell, remove a
+worktree with <code>.venv/bin/python -m scripts.orchestration.worktree_claims remove PATH</code>, never raw <code>git worktree remove</code>; a repo-wide test rejects any
+other removal call site under <code>scripts/</code>. Dispatch never attaches to
+<code>.worktrees/dispatch/acp/</code>, where the ACP bridge's runtimes live.</p>
+<h3>Hermes / DeepSeek isolation (Sol #213 class)</h3>
+<p><code>ask-hermes</code> is tool-capable. It <strong>must not</strong> inherit the operator primary
+checkout as <code>cwd</code>. Review-class asks always:</p>
+<ol>
+<li>run under a <strong>neutral temp scratch</strong> (or sealed snapshot for Codex path);</li>
+<li>prepend the <strong>READ-ONLY REVIEW CONTRACT</strong>;</li>
+<li>enforce content/attachment size caps.</li>
+</ol>
+<p>Escape hatch <code>BRIDGE_ALLOW_PRIMARY_HERMES=1</code> is <strong>non-review only</strong> and
+logged. A red-team test proves a hostile hermes that only attacks <code>cwd</code>
+cannot change primary <code>HEAD</code>/<code>status</code>.</p>
 <p>Both wrappers support <code>--dry-run</code>, which writes the prompt and a
 <code>batch_state/tasks/&lt;task-id&gt;.json</code> preview without launching the
 delegate worker.</p>
 <h2>Silence-timeout vs hard-timeout</h2>
-<p><code>delegate.py dispatch</code> has two watchdogs with different jobs.
+<p><code>scripts/delegate.py dispatch</code> has two watchdogs with different jobs.
 <code>--hard-timeout</code> is the absolute wall-clock fallback for the worker.
 <code>--silence-timeout</code> is narrower: it kills the agent CLI when no watchdog
 activity arrives within the configured window, then marks the task
@@ -250,11 +383,12 @@ and you have another way to detect parked sessions.</p>
 <h2>When to use channels vs <code>ask-*</code></h2>
 <p>| Situation | Use |
 | --- | --- |
-| One-off question, no history needed | <code>ask-claude/gemini/codex</code> |
-| Sustained discussion on a topic | <code>ab post</code> to a channel |
-| Need a 2-3 agent debate on a design | <code>ab discuss</code> |
+| One-off question, no history needed | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...</code> / <code>ask-claude</code> / <code>ask-codex</code> |
+| Sustained discussion on a topic | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post</code> to a channel |
+| Need a 2-3 agent debate on a design | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> |
 | Sharing context across many delegations | Pin it in <code>docs/agent-channels/{topic}/context.md</code> |
-| Code review with adversarial feedback | <code>ab post reviews ...</code> |
+| Formal PR review (CF gate) | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr &lt;N&gt;</code> |
+| Code review discussion (non-gate) | <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ... --to</code> a non-Gemini seat |
 | Want the post visible in the dashboard | Channels only (the legacy <code>messages</code> table has its own UI) |</p>
 <h2>The hygiene rule</h2>
 <p><strong>Nothing commits or merges without adversarial review from another
@@ -262,11 +396,12 @@ agent.</strong> Per channel conventions:</p>
 <ol>
 <li>Write code → stage with <code>git add</code></li>
 <li><code>git diff --cached &gt; /tmp/diff.txt</code></li>
-<li><code>ab post reviews &quot;Review request for #NNN&quot; --to gemini</code> (or ask-gemini with the diff attached)</li>
+<li><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews &quot;Review request for #NNN&quot; --to codex</code></li>
 <li>Apply feedback or argue back in writing</li>
 <li>Commit only after the review is CLEAN or BLOCKING is resolved</li>
-<li>Commit message includes <code>Reviewed-By: gemini-3.1-pro-preview (task-id)</code> trailer</li>
+<li>Commit message includes <code>Reviewed-By: &lt;non-Gemini reviewer&gt; (task-id)</code> trailer</li>
 </ol>
+<p>Gemini reviews Ukrainian only, never code (operator 2026-09-25). A <code>post reviews --to agy</code> or <code>discuss --with agy</code> call is refused unless <code>--review-profile ukrainian</code> is set. <code>--review-profile code</code> is refused and names the rule. Code review uses a non-Gemini seat.</p>
 <p>This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.</p>
 <h2>Spawned-agent env hygiene</h2>
@@ -350,27 +485,26 @@ that channels would otherwise pin). Six rounds × ~12KB = <strong>~72KB
 of repeated context avoided</strong> on this one issue alone — and the
 savings grow roughly linearly with round count.</p>
 <p><strong>Compound wins on multi-round debates:</strong> the same trick applies to
-<code>ab discuss</code> round 2+. When an agent is handed their own prior
+<code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> round 2+. When an agent is handed their own prior
 response via <code>_channels.build_agent_prompt</code> it doesn't need to be
 re-typed. The B.2 prompt assembler caps history at 5KB (configurable
 via <code>DEFAULT_MAX_HISTORY_CHARS</code>), so even a 4-round, 4-agent
 discussion stays inside a ~12KB budget per call instead of exploding
 to 40–60KB of copy-pasted transcript.</p>
-<p>For ordinary inter-agent communication, <code>ask-*</code> uses the durable ACP
-controller with exactly two enabled seats: sender and recipient. Pass
-<code>--from</code> explicitly from a plain shell; launchers can supply the sender
-identity. <code>discuss</code> also requires exactly two enabled seats. Neither
-surface falls back to a one-shot provider process on failure.</p>
-<p>Use <code>delegate.py dispatch --worktree</code> for planning, creation, design,
-or other toolful work. Explicit <code>ask-* --type review</code>,
-<code>--review</code>, and <code>--pr</code> requests retain their headless toolful
-dispatch path. The <code>process-*</code> commands exist to drain old queued
-messages; do not create new one-shot jobs for them. Ordinary queued asks use ACP,
-including detached <code>process-ask</code> workers.</p>
+<p>For ordinary inter-agent communication, <code>ask-*</code> uses the durable ACP controller
+with exactly two enabled seats: sender and recipient. Pass <code>--from</code> explicitly
+from a plain shell; launchers can supply the sender identity. <code>discuss</code>
+accepts 2 to 4 distinct enabled seats. Neither surface falls back to a one-shot
+provider process on failure.</p>
+<p>Use <code>delegate.py dispatch --worktree</code> for planning, creation, design, or other
+toolful work. Explicit <code>ask-* --type review</code>, <code>--review</code>, and <code>--pr</code> requests
+retain their headless toolful dispatch path. The <code>process-*</code> commands exist to
+drain old queued messages; do not create new one-shot jobs for them. Ordinary
+queued asks use ACP, including detached <code>process-ask</code> workers.</p>
 <p>Bridge telemetry, Broker Ops, and legacy HTTP routes remain in place. #6106
 stays open until measured zero use and operator approval permit retirement.</p>
 <h2>Web dashboard</h2>
-<p><code>playgrounds/channels.html</code> — read-only monitor plus post form,
+<p><code>dashboards/channels.html</code> — read-only monitor plus post form,
 localhost only. Shows:</p>
 <ul>
 <li>All channels with message counts + pending deliveries + last activity</li>
@@ -381,7 +515,7 @@ localhost only. Shows:</p>
 <p>Served by <code>scripts/api/main.py</code> at <code>http://localhost:8765</code>. The
 browser POST endpoint is <code>/api/comms/channels/{name}/post</code> — user-only,
 gated by localhost binding. Agents still post via CLI.</p>
-<p><code>playgrounds/comms.html</code> is the legacy operational dashboard for live
+<p><code>dashboards/comms.html</code> is the legacy operational dashboard for live
 activity, DM-style broker messages, zombie detection, and batch progress.
 Its hot message endpoints are bounded by server-side <code>limit</code> defaults
 and keyset cursors; keep client polling paced so heavy views refresh no
@@ -421,7 +555,7 @@ threshold, then runs <code>VACUUM</code> to reclaim disk space.</p>
 <h2>When channels drift</h2>
 <p>If <code>context.md</code> for a channel goes stale (the rules no longer match
 reality), fix it immediately:</p>
-<pre><code class="language-bash">ab channel context pipeline --edit
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py channel context pipeline --edit
 </code></pre>
 <p>This bumps the sha256, and the next post will record the new rev.
 Older messages still have their original <code>context_rev_*</code> values for
@@ -440,12 +574,12 @@ does not roll back the message or delivery insert.</p>
 <p>Who reads:</p>
 <ul>
 <li>Any external watcher you configure locally</li>
-<li><code>ab sync</code> if you prefer manual draining instead of OS integration</li>
+<li><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py sync</code> if you prefer manual draining instead of OS integration</li>
 </ul>
 <p>Recommended mental model:</p>
 <ul>
 <li>The SQLite <code>deliveries</code> table is the source of truth</li>
-<li>Wake files are only a nudge to run <code>ab inbox run &lt;agent&gt;</code></li>
+<li>Wake files are only a nudge to run <code>.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run &lt;agent&gt;</code></li>
 <li>Missing a wake is safe because the work is still pending in SQLite</li>
 </ul>
 <p>Example launchd <code>.plist</code> (<code>docs/examples/learn-ukrainian.codex-inbox.plist</code>):</p>
@@ -485,8 +619,8 @@ WorkingDirectory=%h/projects/learn-ukrainian
 ExecStart=%h/projects/learn-ukrainian/.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run codex --until-idle
 </code></pre>
 <p>If you do not want OS-level watchers, use the manual fallback:</p>
-<pre><code class="language-bash">ab sync claude
-ab sync --all
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py sync claude
+.venv/bin/python scripts/ai_agent_bridge/__main__.py sync --all
 </code></pre>
 <p>That path reads the same <code>deliveries</code> queue and drains it on demand.</p>
 <h2>See also</h2>
