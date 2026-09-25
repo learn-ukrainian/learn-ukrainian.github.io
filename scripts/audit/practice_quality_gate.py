@@ -3,7 +3,7 @@
 
 Audits active Practice Hub assets:
 1. Teacher Cloze deck (site/src/data/lexicon-teacher-cloze.json)
-2. Textbook Error Correction drills (data/practice/textbook-error-corrections.json)
+2. Textbook Error Correction drills (registry/practice/textbook-error-corrections.json)
 3. Lexicon Sentence Inventory (site/src/data/lexicon-sentence-inventory.json)
 4. Practice Deck Shards across all modes (site/public/lexicon/practice-*.json)
 
@@ -53,7 +53,7 @@ except ImportError:
     from practice_linguistic import INTENTIONAL_ERROR_PATTERNS
 
 DEFAULT_TEACHER_CLOZE = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
-DEFAULT_ERROR_CORRECTIONS = PROJECT_ROOT / "data/practice/textbook-error-corrections.json"
+DEFAULT_ERROR_CORRECTIONS = PROJECT_ROOT / "registry/practice/textbook-error-corrections.json"
 DEFAULT_SENTENCE_INVENTORY = PROJECT_ROOT / "site/src/data/lexicon-sentence-inventory.json"
 DEFAULT_SHARDS_DIR = PROJECT_ROOT / "site/public/lexicon"
 

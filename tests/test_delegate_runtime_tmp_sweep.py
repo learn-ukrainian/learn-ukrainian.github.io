@@ -25,7 +25,7 @@ LEGACY_LEASE_DIR_COUNT = 3
 @pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
     monkeypatch.setattr(delegate, "scratch_scan_roots", lambda: [tmp_path])
     return tasks_dir
@@ -82,7 +82,7 @@ def _count_task_record_reads(monkeypatch) -> dict[str, int]:
     original_read_state_json = delegate._read_state_json
 
     def counting_read_state_json(path: Path):
-        if path.parent == delegate._TASKS_DIR and path.suffix == ".json":
+        if path.parent == delegate.tasks_dir() and path.suffix == ".json":
             counts["read_state_json"] += 1
         return original_read_state_json(path)
 
@@ -93,7 +93,7 @@ def _count_task_record_reads(monkeypatch) -> dict[str, int]:
 def _old_runtime_tmp_state_for_lease(lease_name: str) -> dict | None:
     """Pre-#7203 behaviour: scan every task record for each lease."""
     try:
-        state_files = tuple(delegate._TASKS_DIR.glob("*.json")) if delegate._TASKS_DIR.is_dir() else ()
+        state_files = tuple(delegate.tasks_dir().glob("*.json")) if delegate.tasks_dir().is_dir() else ()
     except OSError:
         return None
     for state_path in state_files:
@@ -200,7 +200,7 @@ def test_runtime_tmp_orphan_sweep_stem_index_mutation_check(
 
     def _sorted_glob(self: Path, pattern: str):
         found = original_glob(self, pattern)
-        if self == delegate._TASKS_DIR:
+        if self == delegate.tasks_dir():
             return iter(sorted(found, key=lambda path: path.name))
         return found
 
@@ -323,12 +323,14 @@ def test_read_only_dispatch_task_record_stays_within_byte_budget(
     record_bytes = state_path.stat().st_size
     snapshot_dir = delegate._read_only_snapshot_dir_for(task_id)
     assert snapshot_dir.is_dir()
-    assert sum(path.stat().st_size for path in snapshot_dir.glob("*.json")) > record_bytes
+    assert (snapshot_dir / "digest.json").is_file()
+    assert not (snapshot_dir / "read_only_checkout_pre.json").exists()
+    assert not (snapshot_dir / "read_only_checkout_post.json").exists()
     assert record_bytes < delegate._READ_ONLY_CHECKOUT_RECORD_BYTE_BUDGET
     state = delegate._read_state(state_path)
     assert state is not None
-    assert isinstance(state.get("read_only_checkout_pre"), dict)
-    assert isinstance(state.get("read_only_checkout_post"), dict)
+    assert state["read_only_snapshot_retention"] == "digest"
+    assert "read_only_checkout_pre" not in state
     assert "read_only_checkout_pre" not in json.loads(state_path.read_text(encoding="utf-8"))
 
 

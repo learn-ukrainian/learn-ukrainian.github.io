@@ -230,10 +230,14 @@ def test_successor_capsule_refuses_lost_live_authority(tmp_path: Path, mismatch)
         current["fencing_token"] = 2
     elif mismatch == "session_id":
         current["session_id"] = "successor-session"
-    client = RemoteEpicClient(opener=lambda *a, **kw: _Response({
-        "lease": None if mismatch == "missing" else current,
-        "digest": {"stream_id": "epic:7178", "limit": 20, "pinned": [], "recent": []},
-    }))
+    client = RemoteEpicClient(
+        opener=lambda *a, **kw: _Response(
+            {
+                "lease": None if mismatch == "missing" else current,
+                "digest": {"stream_id": "epic:7178", "limit": 20, "pinned": [], "recent": []},
+            }
+        )
+    )
     holder = LeaseHolder(agent="codex", harness="cli", instance_id="fixture", process_id=1234)
     lease = client._lease_from_response(original, holder)
     supervisor = SessionSupervisor(None, repo_root=tmp_path, remote=client)
@@ -253,16 +257,28 @@ def test_remote_successor_real_api_cycle_preserves_handoff_and_fences_predecesso
     second = LeaseHolder("codex", "cli", "successor", process_id=5678, host_id="other-fixture")
     with epics_monitor_stub(store) as base:
         supervisor = SessionSupervisor(store, repo_root=tmp_path, remote=RemoteEpicClient(base=base))
-        lease = supervisor.open_driver(role="driver", stream_id="epic:7178", holder=first, lineage_id="cycle", ttl_seconds=900)
-        entry = supervisor.handoff_driver(role="driver", lease=lease, entry_type="state", body="Prepared continuity: verify outstanding work before dispatch.", idempotency_key="cycle-handoff")
+        lease = supervisor.open_driver(
+            role="driver", stream_id="epic:7178", holder=first, lineage_id="cycle", ttl_seconds=900
+        )
+        entry = supervisor.handoff_driver(
+            role="driver",
+            lease=lease,
+            entry_type="state",
+            body="Prepared continuity: verify outstanding work before dispatch.",
+            idempotency_key="cycle-handoff",
+        )
         before = store.dump_stream(lease.stream_id)
         with pytest.raises(RemoteSupervisorError, match="live session"):
-            supervisor.open_driver(role="driver", stream_id=lease.stream_id, holder=second, lineage_id="cycle", ttl_seconds=900)
+            supervisor.open_driver(
+                role="driver", stream_id=lease.stream_id, holder=second, lineage_id="cycle", ttl_seconds=900
+            )
         with pytest.raises(SupervisorError, match="remote recovery"):
             supervisor.recover_expired_driver(role="driver", stream_id=lease.stream_id, holder=second)
         assert store.dump_stream(lease.stream_id) == before
         assert supervisor.close_driver(role="driver", lease=lease) == "closed"
-        successor = supervisor.open_driver(role="driver", stream_id=lease.stream_id, holder=second, lineage_id="cycle", ttl_seconds=900)
+        successor = supervisor.open_driver(
+            role="driver", stream_id=lease.stream_id, holder=second, lineage_id="cycle", ttl_seconds=900
+        )
         capsule = supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=successor)
         assert successor.generation == lease.generation + 1
         assert any(item.entry_id == entry["entry"]["entry_id"] for item in capsule.digest.recent)
@@ -291,18 +307,25 @@ def _supervisory_event(service, *, action="restart", generation=1, key="restart-
     from scripts.ai_agent_bridge._inbox_watch import supervisory_recipient
 
     return service.publish_message(
-        sender="fixture-operator", recipients=(supervisory_recipient("epic:7178"),),
-        body=json.dumps({"schema": "supervisory-wake.v1", "action": action,
-                         "stream_id": "epic:7178", "generation": generation}),
-        kind="supervisory-request", correlation_id="fixture-cycle", idempotency_key=key,
+        sender="fixture-operator",
+        recipients=(supervisory_recipient("epic:7178"),),
+        body=json.dumps(
+            {"schema": "supervisory-wake.v1", "action": action, "stream_id": "epic:7178", "generation": generation}
+        ),
+        kind="supervisory-request",
+        correlation_id="fixture-cycle",
+        idempotency_key=key,
     ).delivery_ids[0]
 
 
 def _open_supervisory_driver(supervisor, *, instance="predecessor", session_id=None):
     return supervisor.open_driver(
-        role="driver", stream_id="epic:7178",
+        role="driver",
+        stream_id="epic:7178",
         holder=LeaseHolder("codex", "cli", instance, process_id=1234, host_id="fixture-host"),
-        lineage_id="wake-cycle", ttl_seconds=900, session_id=session_id,
+        lineage_id="wake-cycle",
+        ttl_seconds=900,
+        session_id=session_id,
     )
 
 
@@ -318,8 +341,14 @@ def test_supervisory_duplicate_wake_never_starts_second_live_driver(supervisory_
     start = Mock()
     for _ in range(2):
         assert supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id) is None
-        assert not wake_driver_once(service, supervisor.remote, stream_id=lease.stream_id,
-                                    launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
+        assert not wake_driver_once(
+            service,
+            supervisor.remote,
+            stream_id=lease.stream_id,
+            launcher=Path("start-codex-driver.sh"),
+            epic="fixture",
+            run=start,
+        )
     start.assert_not_called()
     with pytest.raises(RemoteSupervisorError, match="live session"):
         _open_supervisory_driver(supervisor, instance="duplicate")
@@ -354,16 +383,32 @@ def test_supervisory_consumed_released_generation_starts_exactly_one_successor(s
         assert argv == ["start-codex-driver.sh", "--epic", "fixture"]
         assert env["SESSION_SUPERVISOR_WAKE_DELIVERY"] == did
         assert not any(name.startswith("SESSION_STREAM_") for name in env)
-        starts.append(_open_supervisory_driver(
-            supervisor, instance="successor", session_id=plan.successor_session_id,
-        ))
+        starts.append(
+            _open_supervisory_driver(
+                supervisor,
+                instance="successor",
+                session_id=plan.successor_session_id,
+            )
+        )
         return SimpleNamespace(returncode=0)
 
-    assert wake_driver_once(service, supervisor.remote, stream_id=lease.stream_id,
-                            launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
-    assert not wake_driver_once(service, supervisor.remote, stream_id=lease.stream_id,
-                                launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
-    successor, = starts
+    assert wake_driver_once(
+        service,
+        supervisor.remote,
+        stream_id=lease.stream_id,
+        launcher=Path("start-codex-driver.sh"),
+        epic="fixture",
+        run=start,
+    )
+    assert not wake_driver_once(
+        service,
+        supervisor.remote,
+        stream_id=lease.stream_id,
+        launcher=Path("start-codex-driver.sh"),
+        epic="fixture",
+        run=start,
+    )
+    (successor,) = starts
     assert successor.generation == lease.generation + 1
     assert supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id) is None
     # Reclamation is via the delivery API's TTL/fence, never a copied old token.
@@ -372,8 +417,14 @@ def test_supervisory_consumed_released_generation_starts_exactly_one_successor(s
     assert service.get_delivery(did).fence_token == 2
     assert supervisor.close_driver(role="driver", lease=successor) == "closed"
     assert supervisory_launch_plan(service, supervisor.remote, did, lease.stream_id) is None
-    assert not wake_driver_once(service, supervisor.remote, stream_id=lease.stream_id,
-                                launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
+    assert not wake_driver_once(
+        service,
+        supervisor.remote,
+        stream_id=lease.stream_id,
+        launcher=Path("start-codex-driver.sh"),
+        epic="fixture",
+        run=start,
+    )
     assert len(starts) == 1
 
 
@@ -404,7 +455,9 @@ def test_supervisory_stale_envelope_cannot_consume_or_prepare(supervisory_cycle)
 
 @pytest.mark.parametrize("released_before_crash", [False, True])
 def test_prepared_restart_survives_process_loss_without_early_takeover(
-    tmp_path, monkeypatch, released_before_crash,
+    tmp_path,
+    monkeypatch,
+    released_before_crash,
 ):
     from datetime import timedelta
     from types import SimpleNamespace
@@ -442,13 +495,18 @@ def test_prepared_restart_survives_process_loss_without_early_takeover(
         def start(_argv, *, env, check):
             assert env["SESSION_SUPERVISOR_WAKE_DELIVERY"] == did
             assert check is False
-            starts.append(_open_supervisory_driver(
-                supervisor, instance="successor", session_id=request.successor_session_id,
-            ))
+            starts.append(
+                _open_supervisory_driver(
+                    supervisor,
+                    instance="successor",
+                    session_id=request.successor_session_id,
+                )
+            )
             return SimpleNamespace(returncode=0)
 
-        wake_args = dict(stream_id=predecessor.stream_id, launcher=Path("start-codex-driver.sh"),
-                         epic="fixture", run=start)
+        wake_args = dict(
+            stream_id=predecessor.stream_id, launcher=Path("start-codex-driver.sh"), epic="fixture", run=start
+        )
         if not released_before_crash:
             before = store.dump_stream(predecessor.stream_id)
             assert not wake_driver_once(service, supervisor.remote, **wake_args)
@@ -458,13 +516,19 @@ def test_prepared_restart_survives_process_loss_without_early_takeover(
             now += timedelta(seconds=901)
 
         assert wake_driver_once(service, supervisor.remote, **wake_args)
-        successor, = starts
+        (successor,) = starts
         assert successor.generation == predecessor.generation + 1
         capsule = supervisor.build_capsule(role="driver", stream_id=successor.stream_id, lease=successor)
         assert sum(entry.body == request.prepared_body for entry in capsule.digest.recent) == 1
-        assert consume_supervisory_event(
-            service, supervisor, successor, now=(now + timedelta(seconds=61)).isoformat(),
-        ) is None
+        assert (
+            consume_supervisory_event(
+                service,
+                supervisor,
+                successor,
+                now=(now + timedelta(seconds=61)).isoformat(),
+            )
+            is None
+        )
         assert service.supervisory_delivery_status(did) == "acted_on"
         assert supervisor.close_driver(role="driver", lease=successor) == "closed"
         assert not wake_driver_once(service, supervisor.remote, **wake_args)
@@ -511,8 +575,14 @@ def test_supervisory_wake_refuses_event_file_database_drift(supervisory_cycle, d
         artifact.blob_path.write_bytes(changed)
     start = Mock(side_effect=AssertionError("corrupt event must not reach the launcher"))
     with pytest.raises(ArtifactStoreError, match=r"missing blob|blob digest mismatch"):
-        wake_driver_once(service, supervisor.remote, stream_id="epic:7178",  # allow-hardcoded-epic: remote supervisor request fixture
-                         launcher=Path("start-codex-driver.sh"), epic="fixture", run=start)
+        wake_driver_once(
+            service,
+            supervisor.remote,
+            stream_id="epic:7178",  # allow-hardcoded-epic: remote supervisor request fixture
+            launcher=Path("start-codex-driver.sh"),
+            epic="fixture",
+            run=start,
+        )
     start.assert_not_called()
     assert service.get_delivery(did) == delivery
     # Cross a second boundary in the backing clock: the projection must stay pinned.
@@ -533,13 +603,25 @@ def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_p
 
     repo = tmp_path / "worker"
     repo.mkdir()
-    for args in (["init", "-b", "main"], ["-c", "user.name=Fixture", "-c",
-                 "user.email=fixture@example.invalid", "commit", "--allow-empty", "-m", "fixture"],
-                 ["update-ref", "refs/remotes/origin/main", "HEAD"]):
-        subprocess.run(["git", *args], cwd=repo, env=delegate._sanitized_git_env(),
-                       check=True, capture_output=True, timeout=10)
+    for args in (
+        ["init", "-b", "main"],
+        [
+            "-c",
+            "user.name=Fixture",
+            "-c",
+            "user.email=fixture@example.invalid",
+            "commit",
+            "--allow-empty",
+            "-m",
+            "fixture",
+        ],
+        ["update-ref", "refs/remotes/origin/main", "HEAD"],
+    ):
+        subprocess.run(
+            ["git", *args], cwd=repo, env=delegate._sanitized_git_env(), check=True, capture_output=True, timeout=10
+        )
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "tasks")
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **kwargs: None)
     # Host diagnostics are outside this fixture; settlement and Git checks stay real.
     for module in ("primary", "node_modules", "venv", "worktree_cleanup"):
@@ -554,17 +636,31 @@ def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_p
         # result comes from its exit code; no worker completion result is mocked.
         child = subprocess.run(
             [sys.executable, "-c", "from pathlib import Path; Path('work.txt').write_text('retain me')"],
-            cwd=kwargs["cwd"], check=False, capture_output=True, text=True, timeout=10,
+            cwd=kwargs["cwd"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
-        return SimpleNamespace(ok=child.returncode == 0, returncode=child.returncode,
-                               response=child.stdout, stderr_excerpt=child.stderr, rate_limited=False)
+        return SimpleNamespace(
+            ok=child.returncode == 0,
+            returncode=child.returncode,
+            response=child.stdout,
+            stderr_excerpt=child.stderr,
+            rate_limited=False,
+        )
 
     monkeypatch.setattr("agent_runtime.runner.invoke", synthetic_provider)
     state_path = delegate._state_path("held-out-worker")
-    delegate._write_state_atomic(state_path, {
-        "task_id": "held-out-worker", "worktree_path": str(repo), "worktree_base": "main",
-        "cli_version": "synthetic",
-    })
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "held-out-worker",
+            "worktree_path": str(repo),
+            "worktree_base": "main",
+            "cli_version": "synthetic",
+        },
+    )
     service, supervisor = supervisory_cycle
     job = service.enqueue_request(recipient="worker", body="synthetic work", idempotency_key="held-out-worker")
     job_lease = service.claim_job(job.job_id, "fixture-worker")
@@ -575,10 +671,18 @@ def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_p
     assert request is not None
     previous_handler = signal.getsignal(signal.SIGTERM)
     try:
-        assert delegate._run_worker(
-            task_id="held-out-worker", agent="codex", prompt="synthetic work",
-            mode="workspace-write", cwd_str=str(repo), model="gpt-6-astra", hard_timeout=10,
-        ) == 1
+        assert (
+            delegate._run_worker(
+                task_id="held-out-worker",
+                agent="codex",
+                prompt="synthetic work",
+                mode="workspace-write",
+                cwd_str=str(repo),
+                model="gpt-6-astra",
+                hard_timeout=10,
+            )
+            == 1
+        )
     finally:
         signal.signal(signal.SIGTERM, previous_handler)
     settled = json.loads(state_path.read_text())
@@ -589,19 +693,28 @@ def test_successor_preserves_real_worker_needs_finalize(supervisory_cycle, tmp_p
     before = state_path.read_bytes()
     # Publish measured settlement, not a fabricated worker "done" response.
     # Transport completion must retain the distinct needs_finalize outcome.
-    service.finish_job(job.job_id, worker_id="fixture-worker", fence_token=job_lease.fence_token,
-                       state="complete", result=before)
+    service.finish_job(
+        job.job_id, worker_id="fixture-worker", fence_token=job_lease.fence_token, state="complete", result=before
+    )
 
     assert supervisor.close_driver(role="driver", lease=predecessor) == "closed"
     successor = _open_supervisory_driver(
-        supervisor, instance="successor", session_id=request.successor_session_id,
+        supervisor,
+        instance="successor",
+        session_id=request.successor_session_id,
     )
     # Reopen the message database as a successor would, then consume the delayed
     # delivery. Its restart acknowledgment must not finalize the worker's work.
     with AuthorityService(root=service.store.root) as reopened:
-        assert consume_supervisory_event(
-            reopened, supervisor, successor, now=(now + timedelta(seconds=61)).isoformat(),
-        ) is None
+        assert (
+            consume_supervisory_event(
+                reopened,
+                supervisor,
+                successor,
+                now=(now + timedelta(seconds=61)).isoformat(),
+            )
+            is None
+        )
         assert reopened.supervisory_delivery_status(did) == "acted_on"
         assert reopened.read_job_result(job.job_id) == before
         assert json.loads(reopened.read_job_result(job.job_id))["needs_finalize"] is True
@@ -630,7 +743,9 @@ def test_delayed_event_after_successor_exit_cannot_restart_again(supervisory_cyc
 
     def start(_argv, **_kwargs):
         successor = _open_supervisory_driver(
-            supervisor, instance="short-lived-successor", session_id=request.successor_session_id,
+            supervisor,
+            instance="short-lived-successor",
+            session_id=request.successor_session_id,
         )
         starts.append(successor)
         assert supervisor.close_driver(role="driver", lease=successor) == "closed"
@@ -647,9 +762,15 @@ def test_delayed_event_after_successor_exit_cannot_restart_again(supervisory_cyc
         forbidden_start.assert_not_called()
         later = _open_supervisory_driver(supervisor, instance="independent-later-driver")
         assert later.generation == starts[0].generation + 1
-        assert consume_supervisory_event(
-            reopened, supervisor, later, now=(now + timedelta(seconds=61)).isoformat(),
-        ) is None
+        assert (
+            consume_supervisory_event(
+                reopened,
+                supervisor,
+                later,
+                now=(now + timedelta(seconds=61)).isoformat(),
+            )
+            is None
+        )
         assert reopened.supervisory_delivery_status(did) == "refused"
         assert supervisor.close_driver(role="driver", lease=later) == "closed"
     assert len(starts) == 1

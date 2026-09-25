@@ -157,9 +157,9 @@ describe('adjective-mechanics', () => {
 
   it('validates committed adjective mechanics deck parity and type adherence', () => {
     const candidates = [
-      resolve(__dirname, '../../../data/practice/adjective_mechanics_deck.json'),
-      resolve(process.cwd(), '../data/practice/adjective_mechanics_deck.json'),
-      resolve(process.cwd(), 'data/practice/adjective_mechanics_deck.json'),
+      resolve(__dirname, '../../../registry/practice/adjective_mechanics_deck.json'),
+      resolve(process.cwd(), '../registry/practice/adjective_mechanics_deck.json'),
+      resolve(process.cwd(), 'registry/practice/adjective_mechanics_deck.json'),
     ];
     const deckPath = candidates.find((p) => existsSync(p));
     expect(deckPath).toBeDefined();

@@ -235,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "77cd669ac68372156bbdf39c645c8222425586f18d60542b7bec524de2486329"
+        "sha256": "01b448eb8a79197923fdeb64c1a735a8c2c5a3714e7b30b5c2bb87e40bf85e28"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",
@@ -319,7 +319,7 @@
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",
-        "sha256": "91044a751a82e7e35b1d0b2ddf0ea1f90a051b91a143a741b07d92a1a3726807"
+        "sha256": "43859212a0adeaf3d816c90693d968191413b5c55aa3292d304e18435ee65859"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",

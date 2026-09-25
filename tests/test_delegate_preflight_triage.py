@@ -112,7 +112,7 @@ def test_hook_fast_fail_returns_distinct_code(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(pt, "load_api_key", lambda: KEY)
     real = pt.run_preflight
     monkeypatch.setattr(pt, "run_preflight", lambda *a: real(*a, system_one=_fake("broken", 0.95)))
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path / "state" / "tasks")
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "state" / "tasks"))
     assert delegate._run_preflight_triage(_ns(repo), worktree_arg=None) == pt.FAST_FAIL_EXIT_CODE
     assert (tmp_path / "state" / "preflight_fast_fail.jsonl").exists()
 

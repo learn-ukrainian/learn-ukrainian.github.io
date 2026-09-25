@@ -376,6 +376,8 @@ def build_ask_review_dispatch_command(
     model: str | None,
     effort: str | None,
     branch: str | None = None,
+    review_profile: str | None = None,
+    pinned_head: str | None = None,
 ) -> list[str]:
     """Headless dispatch command for one review-intent ask-*.
 
@@ -409,6 +411,10 @@ def build_ask_review_dispatch_command(
     ]
     if branch:
         cmd.extend(["--branch", branch])
+    if pinned_head:
+        cmd.extend(["--pinned-head", pinned_head])
+    if review_profile:
+        cmd.extend(["--review-profile", review_profile])
     if model:
         cmd += ["--model", model]
     if effort:
@@ -432,6 +438,8 @@ def run_ask_review_dispatch(
     effort: str | None = None,
     hard_timeout: int | None = None,
     branch: str | None = None,
+    review_profile: str | None = None,
+    pinned_head: str | None = None,
 ) -> dict[str, Any]:
     """Dispatch one review-intent ask-* to the headless native CLI and block for it.
 
@@ -448,7 +456,14 @@ def run_ask_review_dispatch(
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
         prompt_path.write_text(content, encoding="utf-8")
         dispatch_command = build_ask_review_dispatch_command(
-            agent, task_id, prompt_path, model=model, effort=effort, branch=branch,
+            agent,
+            task_id,
+            prompt_path,
+            model=model,
+            effort=effort,
+            branch=branch,
+            review_profile=review_profile,
+            pinned_head=pinned_head,
         )
         try:
             dispatch_proc = subprocess.run(
@@ -500,18 +515,26 @@ def run_ask_review_dispatch(
             except OSError:
                 response = ""
         state["response"] = response
-        state["ok"] = wait_proc.returncode == 0
-        if state["ok"]:
-            # #8421: transport-ok must not mask a verdict-less review. The
-            # worker already terminalizes such runs as no_deliverable via
-            # --require-review-verdict; re-check here so a stale worker that
-            # still reports done cannot surface as a successful review.
-            from scripts import delegate as _delegate
+        # #8786: a read-only review has no branch deliverable by design, so a
+        # completed run is judged by its verdict line. Only a terminal
+        # ``done`` (clean wait) or ``no_deliverable`` (the worker's
+        # read-only "nothing pushed" outcome, which exits non-zero) can be
+        # promoted, and only with a real verdict. ``timeout``, ``failed``,
+        # ``crashed``, ``rate_limited``, ``cancelled`` etc. never become
+        # success, verdict text or not. A reply with no verdict can never
+        # surface as successful (#8421).
+        from scripts import delegate as _delegate
 
-            verdict_failure = _delegate._review_verdict_failure_reason(response)
-            if verdict_failure is not None:
+        status = state.get("status")
+        completed = (status == "done" and wait_proc.returncode == 0) or (status == _delegate._NO_DELIVERABLE_STATUS)
+        verdict_failure = _delegate._review_verdict_failure_reason(response)
+        if completed and verdict_failure is None:
+            state["ok"] = True
+            state["status"] = "done"
+        else:
+            state["ok"] = False
+            if completed:
                 state["status"] = _delegate._NO_DELIVERABLE_STATUS
-                state["ok"] = False
                 state["no_deliverable_reason"] = verdict_failure
         if not state["ok"] and not state.get("stderr_excerpt"):
             state["stderr_excerpt"] = f"ask-{agent} review dispatch did not complete: status={state.get('status')!r}"

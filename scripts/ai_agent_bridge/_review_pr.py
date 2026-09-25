@@ -462,7 +462,7 @@ def resolve_reviewer(selection: str, *, claude_available: bool | None = None) ->
         return choice
     raise ReviewSafetyError(
         f"unsupported_reviewer: {selection!r} "
-        f"(choose auto|codex|glm|claude|agy|grok|kimi)"
+        f"(choose auto|codex|glm|claude|grok|kimi)"
     )
 
 
@@ -471,6 +471,29 @@ def formal_cf_pin(reviewer: str) -> tuple[str, str]:
     model = FORMAL_CF_MODEL[reviewer]
     effort = FORMAL_CF_EFFORT[reviewer]
     return model, effort
+
+
+# Short names that are Gemini-family without a ``gemini-`` version leaf.
+# ``gemini-flash`` and every other ``gemini-…`` id match the prefix below.
+_GEMINI_MODEL_ALIASES = frozenset({"gemini", "gemini-flash", "gemini-pro"})
+
+
+def gemini_model_leaf(model: str | None) -> str:
+    """Last slash segment of a model id, lowercased.
+
+    ``google/gemini-3.1-pro`` and ``openrouter/google/gemini-3.1-pro`` share
+    the leaf ``gemini-3.1-pro``.
+    """
+    text = (model or "").strip()
+    if not text:
+        return ""
+    return text.casefold().rsplit("/", 1)[-1]
+
+
+def is_gemini_family_model(model: str | None) -> bool:
+    """True when the model id is Gemini-family, including provider-prefixed ids."""
+    leaf = gemini_model_leaf(model)
+    return leaf.startswith("gemini-") or leaf in _GEMINI_MODEL_ALIASES
 
 
 def resolve_requested_review_candidate(
@@ -487,6 +510,11 @@ def resolve_requested_review_candidate(
     an attested native route from a non-formal fallback carrying the same model.
     """
     model = (explicit_model or "").strip() or None
+    if reviewer_request == REVIEWER_AGY or is_gemini_family_model(model):
+        raise ReviewSafetyError(
+            "gemini_code_review_forbidden: operator 2026-09-25 — "
+            "Gemini reviews Ukrainian only, never code (model-assignment.md)"
+        )
     default_name = None
     requested_route = None
     if reviewer_request != REVIEWER_AUTO:
@@ -1650,7 +1678,7 @@ def register_review_pr_parser(subparsers: Any) -> None:
         "--reviewer",
         default=REVIEWER_AUTO,
         help=(
-            "auto|codex|glm|claude|agy|grok|kimi (recognized semantic routes; "
+            "auto|codex|glm|claude|grok|kimi (recognized semantic routes; "
             "current sealed eligibility comes from model_catalog.yaml)"
         ),
     )

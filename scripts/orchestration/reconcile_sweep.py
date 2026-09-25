@@ -16,6 +16,7 @@ import argparse
 import contextlib
 import io
 import json
+import os
 import sqlite3
 import sys
 from dataclasses import asdict, dataclass, field
@@ -29,6 +30,7 @@ for path in (PROJECT_ROOT, SCRIPTS_DIR):
         sys.path.insert(0, str(path))
 
 from scripts import delegate
+from scripts.common.task_store_paths import tasks_dir
 from scripts.guardrails.delegate_ownership import (
     OwnershipLedger,
     _task_still_active,
@@ -38,8 +40,7 @@ from scripts.orchestration import dispatch_admission, dispatch_settle
 
 
 def default_task_dir(repo_root: Path | None = None) -> Path:
-    root = repo_root or PROJECT_ROOT
-    return root / "batch_state" / "tasks"
+    return repo_root / "batch_state" / "tasks" if repo_root is not None else tasks_dir()
 
 
 @dataclass
@@ -175,16 +176,19 @@ def run_reconcile_sweep(
                     zombie_tasks.append(task_id)
                     if apply:
                         # Invoke lazy heal path via delegate.cmd_status
-                        saved_tasks_dir = delegate._TASKS_DIR
+                        saved_tasks_dir = os.environ.get("LU_TASKS_DIR")
                         try:
-                            delegate._TASKS_DIR = tdir
+                            os.environ["LU_TASKS_DIR"] = str(tdir)
                             with (
                                 contextlib.redirect_stdout(io.StringIO()),
                                 contextlib.redirect_stderr(io.StringIO()),
                             ):
                                 delegate.cmd_status(argparse.Namespace(task_id=task_id, run_nonce=None))
                         finally:
-                            delegate._TASKS_DIR = saved_tasks_dir
+                            if saved_tasks_dir is None:
+                                os.environ.pop("LU_TASKS_DIR", None)
+                            else:
+                                os.environ["LU_TASKS_DIR"] = saved_tasks_dir
                 else:
                     live_tasks.append(task_id)
         except Exception:

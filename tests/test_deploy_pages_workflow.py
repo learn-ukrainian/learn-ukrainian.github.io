@@ -122,7 +122,7 @@ def test_auto_deploy_allows_release_pointer_bumps_not_bulk_data() -> None:
 
 
 def test_auto_deploy_dispositions_activity_kit_and_data_paths() -> None:
-    """#8306: packages/activity-kit is site code, data/ is content drift."""
+    """#8306: packages/activity-kit is site code, data/ and registry/ are content drift."""
     # activity-kit alone or mixed with site code is allowed
     ak_component = "packages/activity-kit/src/components/TrueFalse.tsx"
     ak_package = "packages/activity-kit/package.json"
@@ -135,8 +135,8 @@ def test_auto_deploy_dispositions_activity_kit_and_data_paths() -> None:
     assert mixed_site_and_ak.deploy is True
     assert mixed_site_and_ak.reason == "site_code_only"
 
-    # data/ is content drift, denying auto-deploy
-    data_deck = "data/practice/noun_mechanics_deck.json"
+    # data/ and its tracked successor registry/ are content drift, denying auto-deploy
+    data_deck = "registry/practice/noun_mechanics_deck.json"
     data_db = "data/sources.db"
     data_decision = decide_auto_deploy([data_deck, data_db])
     assert data_decision.deploy is False
@@ -159,13 +159,13 @@ def test_auto_deploy_step_summary_and_cli(tmp_path: Path, capsys: pytest.Capture
     skipped_drift = AutoDeployDecision(
         deploy=False,
         reason="content_drift",
-        offending_paths=("data/practice/deck.json", "curriculum/l2/01.md"),
+        offending_paths=("registry/practice/deck.json", "curriculum/l2/01.md"),
     )
     drift_summary = format_step_summary(skipped_drift)
     assert "### ⚠️ Pages Auto-Deploy: Skipped" in drift_summary
     assert "- **Decision**: `content_drift`" in drift_summary
     assert "- **Offending Paths (2)**:" in drift_summary
-    assert "  - `data/practice/deck.json`" in drift_summary
+    assert "  - `registry/practice/deck.json`" in drift_summary
     assert "  - `curriculum/l2/01.md`" in drift_summary
 
     # Test summary truncation past 20 items

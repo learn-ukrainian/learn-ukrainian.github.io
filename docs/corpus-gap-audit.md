@@ -182,7 +182,7 @@ only matching files were `scripts/lexicon/content_lexicon_reconciler.py` and
 
 Atlas coverage is NOT COMPUTED: `site/src/data/lexicon-manifest.json` is absent in this
 worktree. `site/src/data/lexicon-manifest.pointer.json` and
-`data/lexicon-dataset.pointer.json` are present, but pointer metadata does not contain
+`registry/lexicon-dataset.pointer.json` are present, but pointer metadata does not contain
 the lemma set needed for coverage.
 
 Fallback method: deterministic sampled exact FTS alnum-token phrase attestation. For each
@@ -561,7 +561,7 @@ find . -iname '*lexicon*reconc*' -o -iname '*reconc*lexicon*' -o -iname '*conten
 .venv/bin/python - <<'PY'
 import json
 from pathlib import Path
-for p in [Path('site/src/data/lexicon-manifest.json'), Path('site/src/data/lexicon-manifest.pointer.json'), Path('data/lexicon-dataset.pointer.json')]:
+for p in [Path('site/src/data/lexicon-manifest.json'), Path('site/src/data/lexicon-manifest.pointer.json'), Path('registry/lexicon-dataset.pointer.json')]:
     print(p, p.exists(), p.stat().st_size if p.exists() else 'NA')
     if p.exists() and p.suffix == '.json':
         try:
@@ -576,7 +576,7 @@ PY
 site/src/data/lexicon-manifest.json False NA
 site/src/data/lexicon-manifest.pointer.json True 720
 keys ['asset_url', 'fingerprint_schema_version', 'generated_at', 'gz_bytes', 'gz_sha256', 'json_bytes', 'json_sha256', 'manifest_fingerprint', 'manifest_version', 'note']
-data/lexicon-dataset.pointer.json True 6516
+registry/lexicon-dataset.pointer.json True 6516
 keys ['asset_url', 'file_count', 'files', 'generated_at', 'gz_bytes', 'gz_sha256', 'manifest_stats', 'manifest_version', 'note', 'package_bytes']
 ```
 

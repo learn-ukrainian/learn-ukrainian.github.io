@@ -117,6 +117,307 @@ AGY_SEALED_REVIEW_UNSUPPORTED = (
     "AGY remains fine for advisory ask-agy *without* --review."
 )
 
+# Operator 2026-09-25: Gemini reviews Ukrainian only, never code.
+GEMINI_REVIEW_PROFILE_CHOICES = ("code", "ukrainian")
+GEMINI_REVIEW_AGENTS = frozenset({"agy", "gemini"})
+GEMINI_CODE_REVIEW_FORBIDDEN = (
+    "gemini_code_review_forbidden: operator 2026-09-25 — "
+    "Gemini reviews Ukrainian only, never code (model-assignment.md)"
+)
+AGY_REVIEW_PROFILE_REQUIRED = (
+    "agy_review_profile_required: a review request to agy/gemini requires "
+    "--review-profile {code,ukrainian}. "
+    "code is refused (Gemini reviews Ukrainian only, never code — "
+    "operator 2026-09-25, model-assignment.md). "
+    "Ukrainian content review must pass --review-profile ukrainian."
+)
+
+
+def gemini_review_profile_error(profile: str | None) -> str | None:
+    """Refuse a Gemini review unless the profile is explicitly Ukrainian.
+
+    ``None`` means the review may proceed. A missing profile names the flag.
+    ``code`` cites the operator rule. Any other value is treated as missing.
+    """
+    normalized = (profile or "").strip().lower()
+    if normalized == "ukrainian":
+        return None
+    if normalized == "code":
+        return GEMINI_CODE_REVIEW_FORBIDDEN
+    return AGY_REVIEW_PROFILE_REQUIRED
+
+
+class GeminiChangedPathListError(RuntimeError):
+    """The changed-file list for a Gemini PR or branch review could not be read."""
+
+
+def gemini_content_paths_error(paths: list[str]) -> str | None:
+    """Allow a Gemini PR/branch review only when every path is Ukrainian content.
+
+    The classifier is ``scripts.ci.classify_changes.is_content_class_path``.
+    An empty list is a listing failure: there is nothing to prove the diff
+    is content. The first non-content path is named in listed order.
+    """
+    from scripts.ci.classify_changes import is_content_class_path
+
+    if not paths:
+        raise GeminiChangedPathListError("changed-file list was empty")
+    for path in paths:
+        normalized = str(path).strip().replace("\\", "/")
+        if not normalized or not is_content_class_path(normalized):
+            shown = normalized or "<empty>"
+            return f"{GEMINI_CODE_REVIEW_FORBIDDEN}; first non-content path: {shown}"
+    return None
+
+
+def _run_changed_path_command(
+    command: list[str],
+    *,
+    cwd: str,
+    env: dict[str, str] | None = None,
+) -> str:
+    import subprocess
+
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=60,
+            env=env,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise GeminiChangedPathListError(str(exc)) from exc
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "").strip().replace("\n", " ")
+        raise GeminiChangedPathListError(detail or f"exit {proc.returncode}")
+    return proc.stdout or ""
+
+
+def resolve_same_repo_pr_head(pr_number: int, *, repo_root: str) -> tuple[str, str]:
+    """Return ``(head branch, full head SHA)`` from one ``gh pr view``.
+
+    The SHA is the only commit the path gate and the later dispatch may use.
+    A second lookup is a different moment: callers keep this pair and pass the
+    SHA through instead of asking GitHub again.
+    """
+    number = int(pr_number)
+    if number < 1:
+        raise GeminiChangedPathListError(f"refusing to list files for PR {pr_number!r}")
+    raw = _run_changed_path_command(
+        [
+            "gh",
+            "pr",
+            "view",
+            str(number),
+            "--json",
+            "headRefName,headRefOid,isCrossRepository",
+        ],
+        cwd=repo_root,
+    )
+    import json
+
+    try:
+        payload = json.loads(raw or "")
+    except json.JSONDecodeError as exc:
+        raise GeminiChangedPathListError("gh pr view returned invalid JSON") from exc
+    if not isinstance(payload, dict):
+        raise GeminiChangedPathListError("gh pr view returned a non-object payload")
+    if payload.get("isCrossRepository") is not False:
+        raise GeminiChangedPathListError("cross-repository PR")
+    branch = payload.get("headRefName")
+    sha = _full_git_sha(str(payload.get("headRefOid") or ""))
+    if not isinstance(branch, str) or not branch.strip() or sha is None:
+        raise GeminiChangedPathListError("PR payload has no head branch and full head SHA")
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        branch = validate_plain_branch_name(branch, repo_root=repo_root)
+    except UnsafeBranchNameError as exc:
+        raise GeminiChangedPathListError(f"PR head branch {branch!r} is not a local branch name: {exc}") from exc
+    return branch, sha
+
+
+def list_commit_changed_paths(sha: str, *, repo_root: str) -> list[str]:
+    """Changed paths of one fetched commit against ``origin/main``.
+
+    ``git fetch origin <sha>`` downloads that commit and does not move a branch
+    ref. ``--no-renames`` keeps the pre-rename path, so a rename of
+    ``scripts/x.py`` onto a content path still reports the old name.
+    """
+    pinned = _full_git_sha(sha)
+    if pinned is None:
+        raise GeminiChangedPathListError(f"refusing to diff non-SHA {sha!r}")
+    from scripts.common.git_context import sanitized_git_env
+
+    git_env = sanitized_git_env()
+    _run_changed_path_command(
+        ["git", "fetch", "origin", pinned],
+        cwd=repo_root,
+        env=git_env,
+    )
+    raw = _run_changed_path_command(
+        ["git", "diff", "--name-only", "--no-renames", f"origin/main...{pinned}"],
+        cwd=repo_root,
+        env=git_env,
+    )
+    return [line.strip() for line in raw.splitlines() if line.strip()]
+
+
+def _full_git_sha(value: str) -> str | None:
+    sha = value.strip().lower()
+    if len(sha) == 40 and all(char in "0123456789abcdef" for char in sha):
+        return sha
+    return None
+
+
+def list_branch_changed_paths(
+    branch: str,
+    *,
+    repo_root: str,
+    head_out: list[str] | None = None,
+) -> list[str]:
+    """Changed paths on the remote branch Gemini actually reads.
+
+    ``ask-agy --branch`` and ``delegate --branch`` mean the remote head.
+    Fetch with an explicit refspec so a narrow clone updates
+    ``refs/remotes/origin/<name>`` instead of only FETCH_HEAD, then diff the
+    SHA that fetch resolved. A stale tracking ref is never the diff base.
+    """
+    from scripts.common.git_context import (
+        UnsafeBranchNameError,
+        origin_tracking_refspec,
+        sanitized_git_env,
+        validate_plain_branch_name,
+    )
+
+    try:
+        name = validate_plain_branch_name(branch, repo_root=repo_root)
+    except UnsafeBranchNameError as exc:
+        raise GeminiChangedPathListError(f"refusing to diff branch {branch!r}: {exc}") from exc
+    git_env = sanitized_git_env()
+    _run_changed_path_command(
+        ["git", "fetch", "origin", origin_tracking_refspec(name)],
+        cwd=repo_root,
+        env=git_env,
+    )
+    sha = _full_git_sha(
+        _run_changed_path_command(
+            ["git", "rev-parse", "--verify", f"refs/remotes/origin/{name}"],
+            cwd=repo_root,
+            env=git_env,
+        )
+    )
+    if sha is None:
+        raise GeminiChangedPathListError(f"fetch of {name!r} did not resolve an exact SHA")
+    if head_out is not None:
+        head_out.append(sha)
+    # ``--no-renames`` keeps the pre-rename path. Without it, a rename of
+    # ``scripts/x.py`` onto a content path reports only the new name.
+    raw = _run_changed_path_command(
+        ["git", "diff", "--name-only", "--no-renames", f"origin/main...{sha}"],
+        cwd=repo_root,
+        env=git_env,
+    )
+    return [line.strip() for line in raw.splitlines() if line.strip()]
+
+
+def gemini_pr_or_branch_content_error(
+    *,
+    pr_number: int | None,
+    branch: str | None,
+    repo_root: str,
+    head_out: list[str] | None = None,
+    head_sha: str | None = None,
+) -> str | None:
+    """Refuse a Gemini PR/branch target unless every changed path is content.
+
+    A PR head is resolved once. The changed paths are ``git diff`` of that
+    exact SHA (``origin/main...<sha>``), never a file list that can move
+    between the request and the checkout. ``head_sha`` is that already
+    resolved commit; when it is omitted and a PR number is set, this resolves
+    it once. A branch with no PR fetches that remote head by explicit refspec
+    and diffs the SHA the fetch resolved. ``head_out`` receives the SHA the
+    diff used. Any failure to list files refuses. ``None`` means the target
+    may proceed.
+    """
+    if head_sha is None and pr_number is None and not (branch and str(branch).strip()):
+        return None
+    try:
+        if pr_number is not None and int(pr_number) < 1:
+            raise GeminiChangedPathListError(f"refusing to list files for PR {pr_number!r}")
+        if head_sha is not None or pr_number is not None:
+            pinned = _full_git_sha(head_sha or "")
+            if pinned is None:
+                if pr_number is None:
+                    raise GeminiChangedPathListError(f"refusing to diff non-SHA {head_sha!r}")
+                _branch, pinned = resolve_same_repo_pr_head(int(pr_number), repo_root=repo_root)
+            if head_out is not None:
+                head_out.append(pinned)
+            paths = list_commit_changed_paths(pinned, repo_root=repo_root)
+        else:
+            paths = list_branch_changed_paths(str(branch), repo_root=repo_root, head_out=head_out)
+        return gemini_content_paths_error(paths)
+    except GeminiChangedPathListError as exc:
+        return f"{GEMINI_CODE_REVIEW_FORBIDDEN}; could not list changed files: {exc}"
+
+
+def gemini_review_targets_model(
+    *,
+    agent: str,
+    model: str | None = None,
+    resolved_model: str | None = None,
+) -> bool:
+    """True when this review would run a Gemini-family model on any harness."""
+    from ._review_pr import is_gemini_family_model
+
+    if (agent or "").strip().lower() in GEMINI_REVIEW_AGENTS:
+        return True
+    return is_gemini_family_model(model) or is_gemini_family_model(resolved_model)
+
+
+def gemini_review_verdict_dispatch_error(
+    *,
+    agent: str,
+    require_review_verdict: bool,
+    profile: str | None,
+    pr_number: int | None,
+    branch: str | None,
+    repo_root: str,
+    model: str | None = None,
+    resolved_model: str | None = None,
+    review: bool = False,
+    head_out: list[str] | None = None,
+    head_sha: str | None = None,
+) -> str | None:
+    """Gate a review-typed dispatch whose agent or model is Gemini-family.
+
+    Review-typed means ``--require-review-verdict``, ``--review`` / ``--type review``,
+    or ``--pr``. The requested model and the model after fallback substitution
+    are both checked, on every agent. A matching dispatch needs
+    ``--review-profile ukrainian``. When it also names a PR or branch, every
+    changed path must be Ukrainian content. ``head_sha``, when set, is the
+    commit that diff covers; otherwise a PR number is resolved once.
+    ``head_out`` receives that SHA. Implementation dispatches pass.
+    """
+    review_typed = require_review_verdict or review or pr_number is not None
+    if not review_typed:
+        return None
+    if not gemini_review_targets_model(agent=agent, model=model, resolved_model=resolved_model):
+        return None
+    profile_error = gemini_review_profile_error(profile)
+    if profile_error is not None:
+        return profile_error
+    return gemini_pr_or_branch_content_error(
+        pr_number=pr_number,
+        branch=branch,
+        repo_root=repo_root,
+        head_out=head_out,
+        head_sha=head_sha,
+    )
+
 
 def ask_agy(
     content: str,

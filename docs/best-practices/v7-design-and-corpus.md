@@ -135,12 +135,12 @@ User direction 2026-05-23: *"we have a huge ukrainian corpus plus we gathered ex
 
 ### 2.3 YouTube + extended corpus
 
-- `data/youtube_discovery/patterns.yaml` + `ulp_grammar_guide_backfill.jsonl` — discovery + backfill
+- `registry/youtube_discovery/patterns.yaml` + `ulp_grammar_guide_backfill.jsonl` — discovery + backfill
 - `data/processed/esum_vol{1-6}.jsonl` — full ESUM (vol 1 indexed in sources.db; vols 2-6 JSONL-only)
 - `data/literary_texts/` — raw literary corpus before FTS indexing
 - `data/ubertext-freq/` — Ubertext frequency map (vocabulary sequencing signal)
 - `data/zno/` — ZNO standardized test materials (exercise design reference)
-- `data/translations/` — bilingual translation pairs
+- `registry/translations/` — bilingual translation pairs
 - `data/embeddings/modern_literary/` — vector embeddings
 - `data/qdrant_db/` — Qdrant vector DB
 - `data/references/private/` — ULP S1-S6 transcripts + 1000 Ukrainian Words + 500 Ukrainian Verbs + Ohoiko June book (gitignored, local only)

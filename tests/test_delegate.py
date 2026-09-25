@@ -44,10 +44,10 @@ from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 @pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
-    """Redirect delegate._TASKS_DIR to a tmp path so tests don't pollute
+    """Redirect delegate.tasks_dir() to a tmp path so tests don't pollute
     the real batch_state/tasks/ directory."""
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     return tasks_dir
 
 
@@ -2738,6 +2738,177 @@ def test_run_worker_review_with_verdict_stays_done(
     assert state["no_deliverable_reason"] is None
 
 
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        (
+            "bold-label-and-token",
+            "Adversarial review complete.\n\n**Verdict**: **APPROVE**\n",
+        ),
+        (
+            "bold-token",
+            "Findings cited at scripts/foo.py:42.\n\nVERDICT: **REQUEST_CHANGES**\n",
+        ),
+        (
+            "backticked-token",
+            "Findings: none.\n\nVERDICT: `APPROVED`\n",
+        ),
+        (
+            "bold-label",
+            "**VERDICT**: CHANGES_REQUESTED\n",
+        ),
+    ],
+)
+def test_run_worker_review_with_markdown_decorated_verdict_stays_done(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    label,
+    response,
+):
+    """#8786: reviewers render the verdict in Markdown; it is still a verdict.
+
+    The live driver saw ``**Verdict**: **APPROVE**`` and
+    ``VERDICT: **REQUEST_CHANGES**`` misclassified as
+    ``review_missing_verdict_line``, so a completed read-only review was
+    reported ``no_deliverable``. Emphasis punctuation around the label or the
+    token must not hide the verdict.
+    """
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id=f"review-md-verdict-{label}",
+        mode="read-only",
+        response=response,
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=True,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["no_deliverable_reason"] is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("inline-backticked", "I will report `VERDICT: APPROVE` once the tests finish.\n"),
+        ("quoted-line", "The format is:\n> VERDICT: APPROVE\n"),
+        ("quoted-string", 'Write "VERDICT: REQUEST_CHANGES" at the end.\n'),
+        ("prose-prefix", "My final line will be VERDICT: APPROVE.\n"),
+        ("code-fence", "Example:\n```\nVERDICT: APPROVE\n```\nnothing else yet.\n"),
+        ("tilde-fence", "Example:\n~~~text\nVERDICT: BLOCKED\n~~~\n"),
+        ("fully-backticked-line", "`VERDICT: APPROVE`\n"),
+    ],
+)
+def test_parse_review_verdict_rejects_examples_and_quotes(label, response):
+    """#8786: inline, quoted, or fenced examples are not the reviewer's verdict."""
+    assert delegate.parse_review_verdict(response) is None
+    assert delegate._review_verdict_failure_reason(response) == "review_missing_verdict_line"
+
+
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        # Live 2026-09-25 (review-nogem-r5, claude-sonnet-5): both approvals
+        # were reported ``no_deliverable`` because prose followed the token.
+        (
+            "bold-sentence-then-prose",
+            "Findings resolved.\n\n**VERDICT: APPROVE.** Both issues from my earlier review are fixed.\n",
+            "APPROVE",
+        ),
+        (
+            "bold-then-parenthetical",
+            "**VERDICT: APPROVE** (three non-blocking findings below)\n\n1. Nit.\n",
+            "APPROVE",
+        ),
+        ("bold-label-bold-token-dash", "**Verdict**: **APPROVE** — see below\n", "APPROVE"),
+        ("double-underscore-token", "VERDICT: __REQUEST_CHANGES__\n", "REQUEST_CHANGES"),
+        ("token-then-comma", "VERDICT: BLOCKED, the migration drops data.\n", "BLOCKED"),
+    ],
+)
+def test_parse_review_verdict_accepts_trailing_prose(label, response, expected):
+    """#8786: a verdict line may carry punctuation, emphasis, or prose after the token."""
+    assert delegate.parse_review_verdict(response) == expected
+    assert delegate._review_verdict_failure_reason(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("no-word-boundary", "VERDICT: APPROVEX\n"),
+        ("no-word-boundary-underscore", "VERDICT: APPROVE_LATER\n"),
+        ("no-word-boundary-cyrillic", "VERDICT: APPROVEд\n"),
+        ("inline-with-prose-after", "I will report VERDICT: APPROVE later, after CI.\n"),
+        ("quoted-with-prose-after", "> **VERDICT: APPROVE.** Looks good.\n"),
+        ("indented-with-prose-after", "Example:\n\n    VERDICT: APPROVE — fine\n"),
+        ("fenced-with-prose-after", "```\n**VERDICT: APPROVE** (see below)\n```\n"),
+    ],
+)
+def test_parse_review_verdict_rejects_non_verdict_lines_with_trailing_text(label, response):
+    """#8786: trailing text is allowed, but the line must still start with the label."""
+    assert delegate.parse_review_verdict(response) is None
+
+
+def test_parse_review_verdict_accepts_bold_line():
+    assert delegate.parse_review_verdict("Findings.\n\n**VERDICT: APPROVE**\n") == "APPROVE"
+
+
+def test_parse_review_verdict_last_line_wins():
+    response = "VERDICT: APPROVE\n\nOn reflection, one blocker.\n\n**Verdict**: **REQUEST_CHANGES**\n"
+    assert delegate.parse_review_verdict(response) == "REQUEST_CHANGES"
+
+
+def test_parse_review_verdict_ignores_fenced_line_after_real_verdict():
+    response = "VERDICT: REQUEST_CHANGES\n```\nVERDICT: APPROVE\n```\n"
+    assert delegate.parse_review_verdict(response) == "REQUEST_CHANGES"
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("four-space-indented-code", "Example:\n\n    VERDICT: APPROVE\n"),
+        ("tab-indented-code", "Example:\n\n\tVERDICT: APPROVE\n"),
+        ("tilde-inside-backtick-fence", "```text\n~~~\nVERDICT: APPROVE\n```\n"),
+        ("backtick-inside-tilde-fence", "~~~\n```\nVERDICT: APPROVE\n~~~\n"),
+        ("tilde-fence-with-verdict", "~~~~\nVERDICT: APPROVE\n~~~~\n"),
+        ("shorter-closer-does-not-close", "````\n```\nVERDICT: APPROVE\n````\n"),
+        ("closer-with-info-does-not-close", "```\n```python\nVERDICT: APPROVE\n```\n"),
+        ("unclosed-fence-swallows-rest", "Findings.\n```text\nVERDICT: APPROVE\n\nmore text\n"),
+    ],
+)
+def test_parse_review_verdict_follows_commonmark_code_blocks(label, response):
+    """#8786: a verdict inside a CommonMark code block (indented or fenced) is an example."""
+    assert delegate.parse_review_verdict(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        ("three-space-indent", "Findings.\n\n   VERDICT: APPROVE\n", "APPROVE"),
+        ("three-space-indent-bold", "   **VERDICT**: **BLOCKED**\n", "BLOCKED"),
+        (
+            "longer-closer-closes",
+            "```\nVERDICT: APPROVE\n`````\nVERDICT: REQUEST_CHANGES\n",
+            "REQUEST_CHANGES",
+        ),
+        (
+            "indented-fence-closes",
+            "  ~~~\nVERDICT: APPROVE\n   ~~~  \nVERDICT: CHANGES_REQUESTED\n",
+            "CHANGES_REQUESTED",
+        ),
+        (
+            "inline-code-line-is-not-a-fence",
+            "```VERDICT: x``` is inline code\nVERDICT: APPROVE\n",
+            "APPROVE",
+        ),
+    ],
+)
+def test_parse_review_verdict_accepts_commonmark_paragraph_lines(label, response, expected):
+    """#8786: up to three leading spaces is still a paragraph line; a longer closer closes."""
+    assert delegate.parse_review_verdict(response) == expected
+
+
 def test_run_worker_non_review_read_only_without_verdict_stays_done(
     tmp_tasks_dir,
     tmp_path,
@@ -2889,9 +3060,9 @@ def test_run_worker_does_not_flag_read_only_tiny_response(
     assert state["status"] == "done"
     assert state["needs_finalize"] is False
     assert state["no_deliverable_reason"] is None
-    assert state["read_only_checkout_pre"] == {}
-    assert state["read_only_checkout_post"] == {}
+    assert state["read_only_snapshot_retention"] == "digest"
     assert state["read_only_mutation_paths"] == []
+    assert "read_only_checkout_pre" not in json.loads(delegate._state_path("read-only-tiny-response").read_text())
 
 
 def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
@@ -2946,6 +3117,8 @@ def test_read_only_seminar_review_fails_and_records_exact_leaked_artifacts(
     assert state is not None
     assert state["status"] == "failed"
     assert state["read_only_checkout_pre"] == {}
+    assert state["read_only_snapshot_retention"] == "full"
+    assert (delegate._read_only_snapshot_dir_for("read-only-seminar-leak") / "read_only_checkout_post.json").is_file()
     assert state["read_only_mutation_paths"] == leaked_paths
     assert state["read_only_ignored_mutation_paths"] == ignored_paths
     assert state["read_only_checkout_post"] == {
@@ -3087,8 +3260,8 @@ def test_read_only_dispatch_allows_entire_harness_telemetry(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     for relative_path in _ENTIRE_HARNESS_TELEMETRY_PATHS:
-        assert state["read_only_checkout_post"][relative_path] == "!!"
         assert (checkout / relative_path).exists()
 
 
@@ -3339,8 +3512,8 @@ def test_read_only_dispatch_allows_harness_runtime_state(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     for relative_path in _READ_ONLY_RUNTIME_STATE_PATHS:
-        assert state["read_only_checkout_post"][relative_path] == "!!"
         assert (checkout / relative_path).exists()
 
 
@@ -3386,7 +3559,7 @@ def test_read_only_dispatch_allows_gitignored_cache_write(
     assert state["read_only_mutation_paths"] == []
     assert state["read_only_ignored_mutation_paths"] == [cache_path]
     assert state["last_error"] is None
-    assert state["read_only_checkout_post"][cache_path] == "!!"
+    assert state["read_only_snapshot_retention"] == "digest"
     assert (checkout / cache_path).exists()
 
 
@@ -3627,9 +3800,8 @@ def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     assert sibling.exists()
-    post = state["read_only_checkout_post"]
-    assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in post)
 
 
 def test_read_only_dispatch_still_fails_on_task_authored_write_with_sibling_worktree(
@@ -4768,6 +4940,326 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
+def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypatch):
+    """ask-kimi --review is dispatch parsing through to the kimicc argv."""
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: None,
+    )
+    from scripts.agent_runtime.adapters.kimicc import REVIEW_VERDICT_MARKER_KEY, KimiccHarness
+
+    dispatch = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "kimi",
+            "--harness",
+            "kimicc",
+            "--mode",
+            "read-only",
+            "--task-id",
+            "kimi-review-sources",
+            "--prompt",
+            "Review the diff and call mcp__sources__verify_word once.",
+            "--require-review-verdict",
+        ]
+    )
+    worker = delegate.build_parser().parse_args(
+        [
+            "_worker",
+            "--task-id",
+            dispatch.task_id,
+            "--agent",
+            dispatch.agent,
+            "--mode",
+            dispatch.mode,
+            "--cwd",
+            str(tmp_path),
+            *delegate._dispatch_worker_identity_flags(dispatch, dispatch.harness),
+        ]
+    )
+    grant = delegate._kimicc_read_only_review_grant(
+        harness=worker.harness,
+        mode=worker.mode,
+        require_review_verdict=worker.require_review_verdict,
+    )
+    plan = KimiccHarness().build_invocation(
+        prompt="Review the diff and call mcp__sources__verify_word once.",
+        mode=worker.mode,
+        cwd=tmp_path,
+        model="k3",
+        task_id=worker.task_id,
+        session_id=None,
+        tool_config={"harness": worker.harness, **grant},
+    )
+    allowed = plan.cmd[plan.cmd.index("--allowedTools") + 1]
+    assert "mcp__sources__verify_words" in allowed.split(",")
+    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(delegate._REPO_ROOT / ".mcp.json")
+    assert "--strict-mcp-config" in plan.cmd
+    assert grant[REVIEW_VERDICT_MARKER_KEY] is True
+    # The wrapper runs this profile in dontAsk, not plan mode, which refuses MCP calls (#8652).
+    assert "--read-only-review" in plan.cmd
+
+    plain = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "kimi",
+            "--harness",
+            "kimicc",
+            "--mode",
+            "read-only",
+            "--task-id",
+            "kimi-not-a-review",
+            "--prompt",
+            "What does this function do?",
+        ]
+    )
+    assert (
+        delegate._kimicc_read_only_review_grant(
+            harness=plain.harness,
+            mode=plain.mode,
+            require_review_verdict=plain.require_review_verdict,
+        )
+        == {}
+    )
+    plain_plan = KimiccHarness().build_invocation(
+        prompt="What does this function do?",
+        mode=plain.mode,
+        cwd=tmp_path,
+        model="k3",
+        task_id=plain.task_id,
+        session_id=None,
+        tool_config={"harness": plain.harness},
+    )
+    assert "--read-only-review" not in plain_plan.cmd
+    write_review = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="workspace-write",
+        require_review_verdict=True,
+    )
+    assert write_review == {}
+
+
+def test_kimicc_read_only_review_grant_uses_trusted_mcp_not_worktree(tmp_path, monkeypatch):
+    """A dispatch worktree's .mcp.json never reaches the kimicc review argv."""
+    import json
+
+    from scripts.agent_runtime.adapters.kimicc import KimiccHarness
+    from scripts.guardrails.worktree_containment import is_dispatch_worktree
+
+    # Throwaway repo: is_dispatch_worktree resolves the primary root from git,
+    # and the grant names delegate._REPO_ROOT / ".mcp.json". Both point here,
+    # never at the live checkout.
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _init_git_repo_for_test(repo, monkeypatch)
+    trusted = repo / ".mcp.json"
+    trusted.write_text(
+        json.dumps({"mcpServers": {"sources": {"command": "trusted-stdio"}}}),
+        encoding="utf-8",
+    )
+    worktree = repo / ".worktrees" / "dispatch" / "cursor" / "grant-fixture"
+    worktree.mkdir(parents=True)
+    malicious = worktree / ".mcp.json"
+    malicious.write_text(
+        json.dumps({"mcpServers": {"sources": {"command": "evil-stdio", "args": ["--forge"]}}}),
+        encoding="utf-8",
+    )
+    assert is_dispatch_worktree(worktree) is True
+    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
+
+    grant = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="read-only",
+        require_review_verdict=True,
+        cwd=worktree,
+    )
+    assert grant["mcp_config_path"] == str(trusted)
+    assert grant["mcp_config_path"] != str(malicious)
+    assert grant["strict_mcp_config"] is True
+
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: None,
+    )
+    plan = KimiccHarness().build_invocation(
+        prompt="Review the diff and call mcp__sources__verify_word once.",
+        mode="read-only",
+        cwd=worktree,
+        model="k3",
+        task_id="kimi-review-trusted-mcp",
+        session_id=None,
+        tool_config={"harness": "kimicc", **grant},
+    )
+    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(trusted)
+    assert str(malicious) not in plan.cmd
+    assert "--strict-mcp-config" in plan.cmd
+    # The adapter trusts only the primary .mcp.json; here the fixture repo stands in for it.
+    assert "--read-only-review" not in plan.cmd
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc.trusted_mcp_config_path", lambda: trusted)
+    trusted_plan = KimiccHarness().build_invocation(
+        prompt="Review the diff and call mcp__sources__verify_word once.",
+        mode="read-only",
+        cwd=worktree,
+        model="k3",
+        task_id="kimi-review-trusted-mcp",
+        session_id=None,
+        tool_config={"harness": "kimicc", **grant},
+    )
+    assert "--read-only-review" in trusted_plan.cmd
+
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / ".mcp.json").write_text(
+        json.dumps({"mcpServers": {"sources": {"command": "evil-stdio"}}}),
+        encoding="utf-8",
+    )
+    outside_grant = delegate._kimicc_read_only_review_grant(
+        harness="kimicc",
+        mode="read-only",
+        require_review_verdict=True,
+        cwd=outside,
+    )
+    assert outside_grant["mcp_config_path"] == str(trusted)
+
+
+def test_kimicc_read_only_review_grant_refuses_missing_trusted_mcp(tmp_path, monkeypatch):
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    with pytest.raises(ValueError, match="trusted MCP config is missing"):
+        delegate._kimicc_read_only_review_grant(
+            harness="kimicc",
+            mode="read-only",
+            require_review_verdict=True,
+            cwd=tmp_path,
+        )
+
+
+def _kimicc_worker_result(response: str):
+    return type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": response,
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "fixture",
+            "effort": "unknown",
+            "cli_version": "fixture",
+        },
+    )()
+
+
+def test_run_worker_kimicc_read_only_review_grants_sources(tmp_tasks_dir, tmp_path):
+    """The _run_worker update seam, not a hand-built grant, sets the sources tools."""
+    task_id = "worker-kimicc-review-grant"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch(
+        "agent_runtime.runner.invoke",
+        return_value=_kimicc_worker_result("Reviewed.\nVERDICT: APPROVE\n"),
+    ) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Review the diff and call mcp__sources__verify_word once.",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+            require_review_verdict=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert "mcp__sources__verify_words" in tool_config["allowed_tools"].split(",")
+    assert tool_config["mcp_config_path"] == str(delegate._REPO_ROOT / ".mcp.json")
+    assert tool_config["strict_mcp_config"] is True
+
+
+def test_run_worker_kimicc_review_attempt_keeps_sealed_mcp(tmp_tasks_dir, tmp_path):
+    """A sealed review-attempt config is not replaced by the kimicc grant."""
+    task_id = "worker-kimicc-sealed-review"
+    sealed = tmp_path / "sealed.mcp.json"
+    sealed.write_text('{"mcpServers":{"sources":{"url":"http://127.0.0.1/sealed"}}}\n', encoding="utf-8")
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch(
+        "agent_runtime.runner.invoke",
+        return_value=_kimicc_worker_result("Reviewed.\nVERDICT: APPROVE\n"),
+    ) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Review the diff.",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+            require_review_verdict=True,
+            review_id="rev-sealed",
+            attempt_id="att-sealed",
+            mcp_config_path=str(sealed),
+            strict_mcp_config=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert tool_config["mcp_config_path"] == str(sealed)
+    assert tool_config["strict_mcp_config"] is True
+    assert tool_config["review_id"] == "rev-sealed"
+    assert tool_config["attempt_id"] == "att-sealed"
+    assert "allowed_tools" not in tool_config
+
+
+def test_run_worker_kimicc_workspace_write_review_grants_nothing(tmp_tasks_dir, tmp_path, monkeypatch):
+    task_id = "worker-kimicc-write-review"
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+    _init_git_repo_for_test(worktree, monkeypatch)
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {"task_id": task_id, "worktree_path": str(worktree), "worktree_base": "main"},
+    )
+    response = (
+        "VERDICT: APPROVE\n"
+        'DELIVERABLE: {"outcome":"no_change","reason":"write mode must not receive the sources grant"}\n'
+    )
+
+    with (
+        patch("agent_runtime.runner.invoke", return_value=_kimicc_worker_result(response)) as mock_invoke,
+        patch.object(delegate, "_count_commits_ahead", return_value=0),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Review the diff.",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+            require_review_verdict=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert "allowed_tools" not in tool_config
+    assert "mcp_config_path" not in tool_config
+
+
 def _codex_worker_result():
     return type(
         "_Result",
@@ -5603,8 +6095,12 @@ def _make_run_stub(
             # Default dirs for sparse-checkout tests / ensure_worktree.
             # ``data/`` is listed separately so nested exclusions can drop
             # data/projects and data/lexicon while keeping sibling data dirs.
+            # The curriculum manifest cone exists so a default worktree keeps
+            # curriculum/l2-uk-en/curriculum.yaml without the rest of the tree.
             if cmd[-1:] == ["data/"]:
                 listing = "data/corpus_audit\ndata/lexicon\ndata/projects\ndata/raw\n"
+            elif cmd[-1:] == ["curriculum/l2-uk-en/lesson-plans"]:
+                listing = "curriculum/l2-uk-en/lesson-plans\n"
             else:
                 listing = "curriculum\ndata\ndocs\nscripts\nsite\ntests\nwiki\n"
             return subprocess.CompletedProcess(cmd, 0, listing, "")
@@ -6858,7 +7354,7 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
     assert lines[1] == state["run_nonce"]
 
 
-def test_branch_reuse_refuses_protected_branch_before_git_calls(tmp_path, monkeypatch):
+def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkeypatch):
     calls: list[list[str]] = []
 
     def fake_run(cmd, **kwargs):
@@ -7323,6 +7819,7 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     set_calls = [c for c in sparse_calls if c[:3] == ["git", "sparse-checkout", "set"]]
     assert set_calls, "default dispatch worktree must apply sparse-checkout set"
     assert "curriculum" not in set_calls[0]
+    assert "curriculum/l2-uk-en/lesson-plans" in set_calls[0]
     assert "wiki" not in set_calls[0]
     assert "data/projects" not in set_calls[0]
     assert "data/lexicon" not in set_calls[0]
@@ -9114,6 +9611,80 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert (worktree / "data" / "lexicon" / "f.txt").is_file()
 
 
+def test_apply_dispatch_sparse_checkout_keeps_curriculum_manifest(tmp_path):
+    """Default cone keeps curriculum.yaml via the evidence anchor, not the tree."""
+    import os
+    import subprocess
+
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    clean_env = {
+        k: v
+        for k, v in os.environ.items()
+        if k
+        not in {
+            "GIT_DIR",
+            "GIT_WORK_TREE",
+            "GIT_INDEX_FILE",
+            "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+            "GIT_COMMON_DIR",
+            "GIT_NAMESPACE",
+        }
+    }
+    clean_env["GIT_CEILING_DIRECTORIES"] = str(tmp_path)
+
+    def git(*args, cwd=primary):
+        return subprocess.run(
+            ["git", *args],
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=clean_env,
+            timeout=30,
+        )
+
+    git("init", "-b", "main")
+    git("config", "user.email", "test@example.com")
+    git("config", "user.name", "Test")
+    manifest = primary / "curriculum" / "l2-uk-en" / "curriculum.yaml"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text("levels: {}\n", encoding="utf-8")
+    arc = primary / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "_arc.yaml"
+    arc.parent.mkdir(parents=True)
+    arc.write_text("level: a1\n", encoding="utf-8")
+    plans = primary / "curriculum" / "l2-uk-en" / "plans" / "a2" / "x.yaml"
+    plans.parent.mkdir(parents=True)
+    plans.write_text("slug: x\n", encoding="utf-8")
+    other = primary / "curriculum" / "l2-uk-direct" / "manifest.yaml"
+    other.parent.mkdir(parents=True)
+    other.write_text("tracks: []\n", encoding="utf-8")
+    wiki = primary / "wiki" / "f.txt"
+    wiki.parent.mkdir(parents=True)
+    wiki.write_text("wiki\n", encoding="utf-8")
+    scripts = primary / "scripts" / "f.txt"
+    scripts.parent.mkdir(parents=True)
+    scripts.write_text("scripts\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-m", "init")
+
+    worktree = tmp_path / "wt"
+    git("worktree", "add", str(worktree), "HEAD")
+
+    meta = delegate._apply_dispatch_sparse_checkout(worktree)
+    assert meta["applied"] is True
+    assert "curriculum" in meta["excluded"]
+    assert "curriculum/l2-uk-en/lesson-plans" in meta["included_dirs"]
+    assert (worktree / "curriculum" / "l2-uk-en" / "curriculum.yaml").is_file()
+    assert (worktree / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "_arc.yaml").is_file()
+    assert not (worktree / "curriculum" / "l2-uk-en" / "plans").exists()
+    assert not (worktree / "curriculum" / "l2-uk-direct").exists()
+    assert not (worktree / "wiki").exists()
+    assert (worktree / "scripts" / "f.txt").is_file()
+    assert (primary / "curriculum" / "l2-uk-en" / "plans" / "a2" / "x.yaml").is_file()
+
+
 def test_count_commits_ahead_treats_a_vanished_worktree_as_unknown(tmp_path):
     """A missing worktree is "cannot count", not an exception.
 
@@ -9973,10 +10544,10 @@ def _delegate_claim_refusal(worktree, *, task_id):
     """Run the shared claim scan over delegate's task records, exempting ``task_id``."""
     return worktree_claims.active_worktree_claim_refusal(
         worktree,
-        tasks_dir=delegate._TASKS_DIR,
+        tasks_dir=delegate.tasks_dir(),
         repo_root=delegate._REPO_ROOT,
         owner_task_id=task_id,
-        owner_state_file=worktree_claims.task_record_path(delegate._TASKS_DIR, task_id),
+        owner_state_file=worktree_claims.task_record_path(delegate.tasks_dir(), task_id),
     )
 
 

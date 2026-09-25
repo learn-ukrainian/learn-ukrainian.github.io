@@ -37,7 +37,7 @@ try:
 except ImportError:  # pragma: no cover - script path fallback
     from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES  # type: ignore
 
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration import dispatch_admission
 
 # Subscription + free seats drivers may pick for code implement. "gemini" and
@@ -74,8 +74,7 @@ _CODE_LANE_PRIORITY = {
     "deepseek": 8,
 }
 _MONITOR_DEFAULT = "http://127.0.0.1:8765"
-# delegate.py's task records, anchored to the primary checkout like delegate's _TASKS_DIR.
-_TASKS_DIR = resolve_repo_root(Path(__file__), 2) / "batch_state" / "tasks"
+# delegate.py's task records, anchored to the primary checkout.
 
 
 def _monitor_base() -> str:
@@ -177,9 +176,7 @@ _SHARED_QUOTA_SOURCES: dict[str, str] = {
 }
 
 
-def _mirror_retired_quota(
-    agents: dict[str, Any], lane: str, info: dict[str, Any]
-) -> tuple[dict[str, Any], str | None]:
+def _mirror_retired_quota(agents: dict[str, Any], lane: str, info: dict[str, Any]) -> tuple[dict[str, Any], str | None]:
     """Mirror a shared-subscription probe onto its live dispatch lane.
 
     ``PROVIDER_TO_LANE`` keys AGY usage under ``gemini``, while
@@ -249,7 +246,11 @@ def build_lane_rows(
             # lane-health record so is_avoid_lane can demote it.
             if isinstance(account.get("health"), dict):
                 info["health"] = account["health"]
-            if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
+            if (
+                status not in {"cool", "warm"}
+                or account.get("is_available") is False
+                or account.get("status") == "near_cap"
+            ):
                 info["eligible"] = False
         else:
             info, quota_source = _mirror_retired_quota(agents, lane, info)
@@ -391,15 +392,14 @@ def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
     return [
         str(row["lane"])
         for row in rows
-        if not row.get("avoid")
-        and (row.get("status") in _COOL_STATUSES or row.get("reset_reserve_eligible"))
+        if not row.get("avoid") and (row.get("status") in _COOL_STATUSES or row.get("reset_reserve_eligible"))
     ]
 
 
 def admission_status(tasks_dir: Path | None = None) -> dict[str, Any]:
     """Would ``delegate.py dispatch`` admit a write worker now? Report only: dead pids are not swept."""
     try:
-        decision = dispatch_admission.evaluate("workspace-write", tasks_dir or _TASKS_DIR)
+        decision = dispatch_admission.evaluate("workspace-write", tasks_dir or default_tasks_dir())
     except ValueError as exc:
         return {"admitted": None, "line": f"admission (write dispatch): unknown — invalid threshold: {exc}"}
     record = decision.to_record()

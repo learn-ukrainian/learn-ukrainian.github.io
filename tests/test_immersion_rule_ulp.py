@@ -233,8 +233,10 @@ The word **вода́** is useful in the morning because you see it in routines,
 # (`-m "not atlas_release and not slow"`) excludes it; it still runs in the slow/nightly path.
 @pytest.mark.slow
 def test_ulp_fidelity_correction_reruns_stress_and_gate(tmp_path: Path) -> None:
-    module_dir = tmp_path / "module"
-    module_dir.mkdir()
+    # Path must contain an `a1` segment so validate_activity_yaml_file selects
+    # the A1 schema (which permits error_ref) instead of the base schema.
+    module_dir = tmp_path / "a1" / "module"
+    module_dir.mkdir(parents=True)
     plan_path = tmp_path / "plan.yaml"
     plan_path.write_text(
         "\n".join(
@@ -271,6 +273,21 @@ Your clean morning sentence uses **я прокида́юся** before breakfast.
         encoding="utf-8",
     )
     (module_dir / "vocabulary.yaml").write_text("[]\n", encoding="utf-8")
+    # Minimal schema-valid A1 error-correction activity
+    # (schemas/activities-a1.schema.json → error-correction-a1).
+    (module_dir / "activities.yaml").write_text(
+        "inline:\n"
+        "- id: act-1\n"
+        "  type: error-correction\n"
+        "  instruction: Fix the spelling mistake.\n"
+        "  items:\n"
+        "  - sentence: Моя сімя читає.\n"
+        "    error: сімя\n"
+        "    correction: сім'я\n"
+        "    explanation: The family word takes an apostrophe.\n"
+        "    error_ref: E-001\n",
+        encoding="utf-8",
+    )
 
     corrected = """```module.md
 # Мій ра́нок
@@ -294,7 +311,12 @@ Your clean morning sentence uses **я прокида́юся** before breakfast.
     )
 
     assert report["passed"] is True
-    assert (module_dir / "stress_annotation.json").exists()
+    stress_annotation = json.loads((module_dir / "stress_annotation.json").read_text(encoding="utf-8"))
+    assert stress_annotation["files"]["activities.yaml"] > 0
+    activities = (module_dir / "activities.yaml").read_text(encoding="utf-8")
+    assert f"correction: сім'я{STRESS_MARK}" in activities
+    # #8298 protection: the error chip itself must stay unannotated.
+    assert "error: сімя\n" in activities
     correction = json.loads((module_dir / "ulp_fidelity_correction_r1.json").read_text(encoding="utf-8"))
     assert correction["correction"]["applied"] == "module_patch"
     assert correction["after"]["passed"] is True

@@ -29,7 +29,7 @@ SCRIPTS_DIR = ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-DEFAULT_GOLD_FIXTURE = ROOT / "data" / "ua-gec-gold" / "ua-gec-gold.json"
+DEFAULT_GOLD_FIXTURE = ROOT / "registry" / "ua-gec-gold" / "ua-gec-gold.json"
 DEFAULT_TAXONOMY_PATH = (
     ROOT / "data" / "projects" / "ua_eval_harness" / "development" / "taxonomy.yaml"
 )

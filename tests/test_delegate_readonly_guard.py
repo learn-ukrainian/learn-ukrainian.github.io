@@ -108,16 +108,14 @@ def _finalize_mock_result():
 def tmp_tasks_dir(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
     tasks_dir.mkdir()
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     return tasks_dir
 
 
 def test_read_only_snapshot_excluded_path_classification():
     """#7124: every ``.worktrees/`` path is out of snapshot scope."""
     assert delegate._is_read_only_snapshot_excluded_path(".worktrees")
-    assert delegate._is_read_only_snapshot_excluded_path(
-        ".worktrees/dispatch/other-lane/other-task/scripts/foo.py"
-    )
+    assert delegate._is_read_only_snapshot_excluded_path(".worktrees/dispatch/other-lane/other-task/scripts/foo.py")
     assert delegate._is_read_only_snapshot_excluded_path("./.worktrees/dispatch/a/b/")
     assert not delegate._is_read_only_snapshot_excluded_path("tracked.txt")
     assert not delegate._is_read_only_snapshot_excluded_path("sub/.worktrees/file")
@@ -136,12 +134,10 @@ def test_real_delegate_snapshot_sidecar_is_runtime_state_via_batch_state(tmp_pat
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True)
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     abs_path = delegate._read_only_snapshot_sidecar_path("read-only-task", "pre")
     sidecar = str(abs_path.relative_to(delegate._REPO_ROOT)).replace("\\", "/")
-    assert sidecar == (
-        "batch_state/tasks/read-only-task.snapshots/read_only_checkout_pre.json"
-    )
+    assert sidecar == ("batch_state/tasks/read-only-task.snapshots/read_only_checkout_pre.json")
     assert delegate._is_read_only_runtime_state_path(sidecar)
     assert not delegate._is_read_only_runtime_telemetry_path(sidecar)
 
@@ -153,7 +149,10 @@ def test_read_only_delegate_snapshot_sidecar_path_is_runtime_state():
     ``tests/test_delegate.py`` ``[repo-root]`` cases.
     """
     sidecar = "tasks/read-only-task.snapshots/read_only_checkout_pre.json"
+    digest = "tasks/read-only-task.snapshots/digest.json"
     assert delegate._is_read_only_delegate_snapshot_sidecar_path(sidecar)
+    assert delegate._is_read_only_delegate_snapshot_sidecar_path(digest)
+    assert delegate._is_read_only_runtime_state_path(digest)
     assert delegate._is_read_only_runtime_state_path(sidecar)
     assert not delegate._is_read_only_runtime_telemetry_path(sidecar)
 
@@ -173,14 +172,10 @@ def test_read_only_checkout_snapshot_excludes_worktrees_tree(tmp_path, monkeypat
     assert error is None
     assert snapshot is not None
     assert "untracked.txt" in snapshot
-    assert not any(
-        delegate._is_read_only_snapshot_excluded_path(path) for path in snapshot
-    )
+    assert not any(delegate._is_read_only_snapshot_excluded_path(path) for path in snapshot)
 
 
-def test_read_only_checkout_snapshot_keeps_rename_source_into_worktrees(
-    tmp_path, monkeypatch
-):
+def test_read_only_checkout_snapshot_keeps_rename_source_into_worktrees(tmp_path, monkeypatch):
     """#7147: renaming a tracked file INTO ``.worktrees/`` keeps the source.
 
     ``git mv tracked.txt .worktrees/lane/tracked.txt`` is a mutation of the
@@ -282,11 +277,8 @@ def test_read_only_dispatch_allows_concurrent_sibling_worktree_add(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
+    assert state["read_only_snapshot_retention"] == "digest"
     assert sibling.exists()
-    post = state["read_only_checkout_post"]
-    assert not any(
-        delegate._is_read_only_snapshot_excluded_path(path) for path in post
-    )
 
 
 def test_read_only_dispatch_ignores_other_lane_worktree_activity(
@@ -347,10 +339,7 @@ def test_read_only_dispatch_ignores_other_lane_worktree_activity(
     assert state["status"] == "done"
     assert state["read_only_mutation_paths"] == []
     assert state["last_error"] is None
-    post = state["read_only_checkout_post"]
-    assert not any(
-        delegate._is_read_only_snapshot_excluded_path(path) for path in post
-    )
+    assert state["read_only_snapshot_retention"] == "digest"
 
 
 def test_read_only_failed_worker_keeps_real_error_alongside_mutation(
@@ -386,9 +375,7 @@ def test_read_only_failed_worker_keeps_real_error_alongside_mutation(
     )()
 
     def sigkill_with_mutation(*_args, **_kwargs):
-        (checkout / "tracked.txt").write_text(
-            "partial write before kill\n", encoding="utf-8"
-        )
+        (checkout / "tracked.txt").write_text("partial write before kill\n", encoding="utf-8")
         return sigkill_result
 
     with patch("agent_runtime.runner.invoke", side_effect=sigkill_with_mutation):
@@ -407,9 +394,7 @@ def test_read_only_failed_worker_keeps_real_error_alongside_mutation(
     assert state is not None
     assert state["status"] == "failed"
     assert state["returncode"] == -9
-    assert state["returncode_reason"] == (
-        "worker subprocess terminated by SIGKILL (returncode -9)"
-    )
+    assert state["returncode_reason"] == ("worker subprocess terminated by SIGKILL (returncode -9)")
     assert state["read_only_mutation_paths"] == ["tracked.txt"]
     last_error = state["last_error"]
     assert "worker killed: out of memory" in last_error

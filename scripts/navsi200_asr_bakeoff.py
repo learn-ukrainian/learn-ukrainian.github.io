@@ -18,22 +18,29 @@ import csv
 import json
 import logging
 import re
+import sys
 import time
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.storage.artifacts import write_artifact
+from scripts.storage.paths import artifact_path
+
 logger = logging.getLogger(__name__)
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_CATALOG_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "navsi200-catalog.json"
+DEFAULT_CATALOG_PATH = PROJECT_ROOT / "registry" / "corpus_audit" / "navsi200-catalog.json"
 DEFAULT_CAPTIONS_LEDGER_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "navsi200-captions-ledger.json"
 DEFAULT_BAKEOFF_LEDGER_PATH = PROJECT_ROOT / "data" / "corpus_audit" / "navsi200-asr-bakeoff-ledger.json"
 DEFAULT_CAPTIONS_DIR = PROJECT_ROOT / "data" / "native-reviewer-lessons" / "navsi200-captions"
 DEFAULT_AUDIO_DIR = PROJECT_ROOT / "data" / "native-reviewer-lessons" / "navsi200-audio"
 DEFAULT_RAW_DUMPS_DIR = PROJECT_ROOT / "data" / "native-reviewer-lessons" / "navsi200-asr-dumps"
-DEFAULT_RUSSIANISMS_PATH = PROJECT_ROOT / "data" / "russianism-patterns-ua-gec.csv"
+DEFAULT_RUSSIANISMS_PATH = PROJECT_ROOT / "registry" / "russianism-patterns-ua-gec.csv"
 DEFAULT_SAMPLE_AUDIO_PATH = PROJECT_ROOT / "tests" / "fixtures" / "audio" / "pronunciation.wav"
 DEFAULT_SAMPLE_REF = "або"
 
@@ -224,7 +231,7 @@ def load_russianism_patterns(csv_path: Path | str | None = None) -> list[str]:
     """Load bad Russianism/calque patterns from repo lookup CSV if present.
 
     Args:
-        csv_path: Path to CSV file. Defaults to `data/russianism-patterns-ua-gec.csv`.
+        csv_path: Path to CSV file. Defaults to `registry/russianism-patterns-ua-gec.csv`.
 
     Returns:
         List of lowercased Russianism patterns.
@@ -550,7 +557,10 @@ def build_asr_bakeoff_ledger(
     with Path(catalog_path).open("r", encoding="utf-8") as f:
         catalog_data = json.load(f)
 
-    with Path(captions_ledger_path).open("r", encoding="utf-8") as f:
+    captions_ledger_file = Path(captions_ledger_path)
+    if captions_ledger_file == DEFAULT_CAPTIONS_LEDGER_PATH:
+        captions_ledger_file = artifact_path("corpus_audit_snapshots", "corpus_audit/navsi200-captions-ledger.json")
+    with captions_ledger_file.open("r", encoding="utf-8") as f:
         captions_ledger = json.load(f)
 
     captions_by_id = {entry["video_id"]: entry for entry in captions_ledger.get("lessons", [])}
@@ -677,10 +687,15 @@ def save_asr_bakeoff_ledger(ledger: dict[str, Any], path: Path | str | None = No
         Path of written file.
     """
     target = Path(path) if path else DEFAULT_BAKEOFF_LEDGER_PATH
-    target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open("w", encoding="utf-8") as f:
-        json.dump(ledger, f, ensure_ascii=False, indent=2)
-        f.write("\n")
+
+    def _write(dest: Path) -> None:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        with dest.open("w", encoding="utf-8") as f:
+            json.dump(ledger, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+
+    # The default ledger is an untracked published artifact (#8809 P1): only `publish` writes it.
+    write_artifact(target, "corpus_audit_snapshots", "scripts/navsi200_asr_bakeoff.py", _write)
     return target
 
 
@@ -705,7 +720,7 @@ Related: scripts/navsi200_captions.py; scripts/navsi200_catalog.py; #4705.
         "--catalog",
         type=Path,
         default=DEFAULT_CATALOG_PATH,
-        help="Catalog JSON path (default: data/corpus_audit/navsi200-catalog.json)",
+        help="Catalog JSON path (default: registry/corpus_audit/navsi200-catalog.json)",
     )
     parser.add_argument(
         "--captions-ledger",

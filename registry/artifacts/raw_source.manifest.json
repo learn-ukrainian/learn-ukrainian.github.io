@@ -1,0 +1,20 @@
+{
+  "entries": [
+    {
+      "git_blob": "02db91b63fa6a4709543d5bb62d469fbfa8c0e44",
+      "migrated_at": "2026-09-25T19:37:45.736802+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790365017101401031,
+      "path": "data/raw/pravopys.html",
+      "pre_untrack_sha256": "bbe776e5745ca2077d6ddd07fe0e7199bc173a464e67f0428ce8cb18209c0282",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "bbe776e5745ca2077d6ddd07fe0e7199bc173a464e67f0428ce8cb18209c0282",
+      "size": 36769,
+      "store": "bbe776e5745ca2077d6ddd07fe0e7199bc173a464e67f0428ce8cb18209c0282"
+    }
+  ],
+  "group": "raw_source",
+  "schema": 1
+}

@@ -90,8 +90,14 @@ def test_explicit_model_refuses_wrong_route_and_ineligible_endpoint():
         resolve_requested_review_candidate("codex", "gpt-5.6-terra", REVIEW_CANDIDATES)
     with pytest.raises(ReviewSafetyError, match="model_not_formal_review_eligible"):
         resolve_requested_review_candidate("claude", "gpt-5.6-sol", REVIEW_CANDIDATES)
-    with pytest.raises(ReviewSafetyError, match="reviewer_not_formal_review_eligible"):
+    with pytest.raises(ReviewSafetyError, match="gemini_code_review_forbidden"):
         resolve_requested_review_candidate("agy", "gemini-3.8-flash-high", REVIEW_CANDIDATES)
+    with pytest.raises(ReviewSafetyError, match="gemini_code_review_forbidden"):
+        resolve_requested_review_candidate("auto", "gemini-3.8-flash-high", REVIEW_CANDIDATES)
+    with pytest.raises(ReviewSafetyError, match="gemini_code_review_forbidden"):
+        resolve_requested_review_candidate("auto", "google/gemini-3.8-flash-high", REVIEW_CANDIDATES)
+    with pytest.raises(ReviewSafetyError, match="gemini_code_review_forbidden"):
+        resolve_requested_review_candidate("auto", "openrouter/google/gemini-3.8-flash-high", REVIEW_CANDIDATES)
 
 
 def test_same_route_model_ambiguity_reports_catalog_repair_not_reviewer_advice():
@@ -108,9 +114,9 @@ def test_same_route_model_ambiguity_reports_catalog_repair_not_reviewer_advice()
     assert "add --reviewer" not in str(exc_info.value)
 
 
-@pytest.mark.parametrize("reviewer", ["agy", "kimi"])
-def test_ineligible_reviewer_default_refuses_before_provider_spawn(reviewer: str):
-    with pytest.raises(ReviewSafetyError, match="reviewer_not_formal_review_eligible"):
+@pytest.mark.parametrize("reviewer, reason", [("agy", "gemini_code_review_forbidden"), ("kimi", "reviewer_not_formal_review_eligible")])
+def test_ineligible_reviewer_default_refuses_before_provider_spawn(reviewer: str, reason: str):
+    with pytest.raises(ReviewSafetyError, match=reason):
         resolve_requested_review_candidate(reviewer, None, REVIEW_CANDIDATES)
 
 

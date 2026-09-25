@@ -514,7 +514,7 @@ def validate_morphology(
 # ---------------------------------------------------------------------------
 
 _LT_REPLACEMENTS: dict[str, dict] | None = None
-_LT_PATH = Path(__file__).resolve().parent.parent.parent.parent / "data" / "lt_replacements.json"
+_LT_PATH = Path(__file__).resolve().parent.parent.parent.parent / "registry" / "lt_replacements.json"
 
 
 def _load_replacements() -> dict[str, dict]:

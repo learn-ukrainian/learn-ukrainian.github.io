@@ -177,7 +177,7 @@ def folk_micro_genres_yaml(tmp_path):
              "difficulty": "A2", "source": "Большакова, 2 клас"},
         ],
     }
-    yaml_path = tmp_path / "data" / "folk_micro_genres.yaml"
+    yaml_path = tmp_path / "registry" / "folk_micro_genres.yaml"
     yaml_path.parent.mkdir(parents=True)
     with open(yaml_path, "w", encoding="utf-8") as f:
         yaml.dump(data, f, allow_unicode=True)

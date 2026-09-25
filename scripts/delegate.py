@@ -145,6 +145,7 @@ from scripts.common.scratch import (
     resolve_scratch_root,
     scratch_scan_roots,
 )
+from scripts.common.task_store_paths import tasks_dir
 from scripts.config import (
     DELEGATE_WORKTREE_ADD_MAX_S,
     DELEGATE_WORKTREE_ADD_STALL_S,
@@ -169,7 +170,6 @@ from scripts.orchestration.dead_worker_state import (
 )
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
-_TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 # The Gemini-family seat is intentionally absent in BOTH spellings: the
 # retired ``gemini`` alias resolves to ``agy`` before Popen (#7041), so the
@@ -362,10 +362,10 @@ DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
 
 
 def _state_path(task_id: str) -> Path:
-    _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+    tasks_dir().mkdir(parents=True, exist_ok=True)
     # task-ids with slashes would break paths; sanitize
     safe = task_id.replace("/", "_").replace("\\", "_")
-    return _TASKS_DIR / f"{safe}.json"
+    return tasks_dir() / f"{safe}.json"
 
 
 def _result_path(task_id: str) -> Path:
@@ -378,7 +378,7 @@ def _archived_state_path(task_id: str) -> Path:
     Only terminal records are archived. By-id readers (status, wait, task-id
     reuse) fall back to this path; the worktree claim scan never needs it.
     """
-    return task_record_store.archived_task_record_path(_TASKS_DIR, task_id)
+    return task_record_store.archived_task_record_path(tasks_dir(), task_id)
 
 
 def _read_state_or_archived(task_id: str) -> tuple[Path, dict[str, Any] | None]:
@@ -423,8 +423,17 @@ def _read_only_snapshot_dir_for(task_id: str) -> Path:
     return state_path.parent / f"{state_path.stem}{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"
 
 
+_READ_ONLY_SNAPSHOT_DIGEST_NAME = "digest.json"
+_READ_ONLY_SNAPSHOT_RETENTION_DIGEST = "digest"
+_READ_ONLY_SNAPSHOT_RETENTION_FULL = "full"
+
+
 def _read_only_snapshot_sidecar_path(task_id: str, phase: str) -> Path:
     return _read_only_snapshot_dir_for(task_id) / f"read_only_checkout_{phase}.json"
+
+
+def _read_only_snapshot_digest_path(task_id: str) -> Path:
+    return _read_only_snapshot_dir_for(task_id) / _READ_ONLY_SNAPSHOT_DIGEST_NAME
 
 
 def _write_read_only_snapshot_sidecar(
@@ -441,6 +450,96 @@ def _write_read_only_snapshot_sidecar(
         encoding="utf-8",
     )
     os.replace(tmp, path)
+
+
+def _canonical_snapshot_bytes(snapshot: dict[str, str] | None) -> bytes:
+    """Bytes written for a phase sidecar: compact JSON, empty object when missing."""
+    payload = snapshot if isinstance(snapshot, dict) else {}
+    return json.dumps(payload, separators=(",", ":")).encode("utf-8")
+
+
+def _snapshot_digest_phase(snapshot: dict[str, str] | None) -> dict[str, Any]:
+    raw = _canonical_snapshot_bytes(snapshot)
+    payload = snapshot if isinstance(snapshot, dict) else {}
+    return {"sha256": hashlib.sha256(raw).hexdigest(), "entries": len(payload)}
+
+
+def read_only_snapshot_digest(
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> dict[str, Any]:
+    """Content digest of the two canonical checkout snapshots."""
+    return {"pre": _snapshot_digest_phase(pre), "post": _snapshot_digest_phase(post)}
+
+
+def read_only_snapshot_keep_full(
+    mutation_paths: list[str] | None,
+    snapshot_error: str | None,
+) -> bool:
+    """Full sidecars stay only for a recorded mutation or a snapshot error."""
+    return bool(mutation_paths) or snapshot_error is not None
+
+
+def _read_only_phase_paths(snapshot_dir: Path) -> list[Path]:
+    return [snapshot_dir / f"read_only_checkout_{phase}.json" for phase in ("pre", "post")]
+
+
+def stage_read_only_snapshot_digest(
+    snapshot_dir: Path,
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> int:
+    """Write ``digest.json`` and leave the phase files in place.
+
+    Returns the bytes a later discard would reclaim. Writing the digest first
+    means a crash before the task record is published still leaves the full
+    sidecars on disk.
+    """
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+    before = 0
+    for path in _read_only_phase_paths(snapshot_dir):
+        try:
+            info = path.lstat()
+        except OSError:
+            continue
+        if stat.S_ISREG(info.st_mode):
+            before += info.st_size
+    digest = read_only_snapshot_digest(pre, post)
+    digest_path = snapshot_dir / _READ_ONLY_SNAPSHOT_DIGEST_NAME
+    raw = json.dumps(digest, separators=(",", ":")).encode("utf-8")
+    tmp = digest_path.with_suffix(f".json.tmp.{os.getpid()}")
+    tmp.write_bytes(raw)
+    os.replace(tmp, digest_path)
+    return before - len(raw)
+
+
+def discard_read_only_snapshot_phases(snapshot_dir: Path) -> None:
+    """Unlink regular phase files. Symlinks are left in place."""
+    for path in _read_only_phase_paths(snapshot_dir):
+        try:
+            info = path.lstat()
+        except OSError:
+            continue
+        if stat.S_ISREG(info.st_mode):
+            path.unlink()
+
+
+def collapse_read_only_snapshot_dir(
+    snapshot_dir: Path,
+    pre: dict[str, str] | None,
+    post: dict[str, str] | None,
+) -> int:
+    """Replace phase JSON with ``digest.json``. Return bytes reclaimed.
+
+    The digest hashes the same canonical bytes ``_write_read_only_snapshot_sidecar``
+    writes. Callers that still have to publish the task record must
+    :func:`stage_read_only_snapshot_digest`, write the record, then
+    :func:`discard_read_only_snapshot_phases`. This helper does both file steps
+    and is for a caller that has already published the record.
+    """
+    reclaimed = stage_read_only_snapshot_digest(snapshot_dir, pre, post)
+    discard_read_only_snapshot_phases(snapshot_dir)
+    return reclaimed
 
 
 def _load_read_only_snapshot_sidecar(task_id: str, phase: str) -> dict[str, str] | None:
@@ -470,22 +569,30 @@ def _hydrate_read_only_checkout_snapshots(state: dict[str, Any]) -> dict[str, An
 
 
 def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[Path]:
-    """Move the prior record and result aside. Never overwrite an archive."""
+    """Move the prior record and result aside. Never overwrite an archive.
+
+    Holds the per-task lock for the whole rename. The retention sweep holds
+    that same lock across its digest and record write; without it, this move
+    can land after the sweep's hot-name recheck and the sweep then creates a
+    new hot record whose sidecar is already gone.
+    """
     stamp = stamp or _archive_stamp()
+    state_path = _state_path(task_id)
     archived: list[Path] = []
-    for path in (_state_path(task_id), _result_path(task_id)):
-        if not path.exists():
-            continue
-        dest = _archived_artifact_path(path, stamp)
-        os.replace(path, dest)
-        archived.append(dest)
-    snapshot_dir = _read_only_snapshot_dir_for(task_id)
-    if snapshot_dir.is_dir():
-        dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.archived"
-        if dest.exists():
-            dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
-        os.replace(snapshot_dir, dest)
-        archived.append(dest)
+    with task_state_lock(state_path):
+        for path in (state_path, _result_path(task_id)):
+            if not path.exists():
+                continue
+            dest = _archived_artifact_path(path, stamp)
+            os.replace(path, dest)
+            archived.append(dest)
+        snapshot_dir = state_path.parent / f"{state_path.stem}{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"
+        if snapshot_dir.is_dir():
+            dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.archived"
+            if dest.exists():
+                dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
+            os.replace(snapshot_dir, dest)
+            archived.append(dest)
     return archived
 
 
@@ -640,10 +747,10 @@ def _append_dispatch_event(event: str, **fields: Any) -> None:
         **fields,
     }
     try:
-        _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+        tasks_dir().mkdir(parents=True, exist_ok=True)
         line = (json.dumps(payload, ensure_ascii=False, default=str) + "\n").encode("utf-8")
         fd = os.open(
-            str(_TASKS_DIR / "dispatch_events.jsonl"),
+            str(tasks_dir() / "dispatch_events.jsonl"),
             os.O_APPEND | os.O_CREAT | os.O_WRONLY,
             0o600,
         )
@@ -802,7 +909,7 @@ def _worktree_lock_dir() -> Path:
     if _WORKTREE_LOCK_DIR is not None:
         return _WORKTREE_LOCK_DIR
     common_dir = _git_common_dir(_REPO_ROOT)
-    return (common_dir if common_dir is not None else _TASKS_DIR.parent) / worktree_claims.LOCK_DIR_NAME
+    return (common_dir if common_dir is not None else tasks_dir().parent) / worktree_claims.LOCK_DIR_NAME
 
 
 def _worktree_lock_path(path: Path | str) -> tuple[str, Path]:
@@ -1044,7 +1151,7 @@ def _build_runtime_tmp_legacy_stem_index() -> dict[str, str]:
     """Map lease names to task-record stems without opening any JSON."""
     index: dict[str, str] = {}
     try:
-        state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
+        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
     except OSError:
         return index
     for state_path in state_files:
@@ -1063,9 +1170,9 @@ def _read_runtime_tmp_state_for_legacy_lease(
     """Resolve one marker-less lease, falling back to a bounded record scan."""
     stem = legacy_stem_index.get(lease_name)
     if stem is not None:
-        return _read_state_json(_TASKS_DIR / f"{stem}.json")
+        return _read_state_json(tasks_dir() / f"{stem}.json")
     try:
-        state_files = tuple(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else ()
+        state_files = tuple(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else ()
     except OSError:
         return None
     for state_path in state_files:
@@ -2121,10 +2228,29 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # scripts/ai_agent_bridge/_review_verdict.py and
 # scripts/fleet_comms/review_publication.py. REQUEST_CHANGES is the token
 # cf_preflight.py and the review prompts actually ask reviewers to write.
+# Reviewers routinely render the label and token in Markdown emphasis
+# (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are
+# full verdicts and must not be misread as missing (#8786). A verdict line
+# STARTS with the label: optional emphasis (``*``, ``_``), ``VERDICT``, then
+# emphasis/backticks/whitespace around its colon, then the token and a word
+# boundary. Anything may follow the token — reviewers write
+# ``**VERDICT: APPROVE.** Both issues are fixed.`` and
+# ``**VERDICT: APPROVE** (three non-blocking findings below)``. An inline or
+# quoted example ("I will report ``VERDICT: APPROVE`` later",
+# ``> VERDICT: APPROVE``) does not start with the label, so is not a verdict.
+# The boundary treats ``_`` as emphasis (``__APPROVE__``) unless a letter or
+# digit follows it (``APPROVE_LATER``), so ``APPROVEX`` is not a verdict.
+# Indentation follows CommonMark: at most three leading spaces; four or more,
+# or a tab, make the line an indented code block, i.e. an example.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"\bVERDICT\s*:\s*(?:APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)\b",
+    r"^ {0,3}(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+    r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
+    r"(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
 )
+# A CommonMark fence line: at most three leading spaces, then three or more
+# backticks or tildes; group 2 is the rest of the line (info string).
+_CODE_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -2345,17 +2471,73 @@ def _delivery_failure_reason(
     return _NO_DELIVERABLE_NO_COMMITS_REASON
 
 
+def _code_fence_opener(line: str) -> str | None:
+    """Return the fence run when ``line`` opens a CommonMark code fence.
+
+    A backtick fence's info string may not contain a backtick (that line is
+    inline code, not a fence).
+    """
+    match = _CODE_FENCE_RE.match(line)
+    if match is None:
+        return None
+    fence, info = match.groups()
+    if fence[0] == "`" and "`" in info:
+        return None
+    return fence
+
+
+def _closes_code_fence(line: str, opener: str) -> bool:
+    """Return whether ``line`` closes the fence opened by ``opener``.
+
+    Per CommonMark the closer uses the opener's character, is at least as
+    long, and carries nothing but trailing spaces or tabs; any other line —
+    including a fence of the other character — is block content.
+    """
+    match = _CODE_FENCE_RE.match(line)
+    if match is None:
+        return False
+    fence, rest = match.groups()
+    return fence[0] == opener[0] and len(fence) >= len(opener) and not rest.strip(" \t")
+
+
+def parse_review_verdict(response: str) -> str | None:
+    """Return the review's verdict token, or ``None`` when it states none.
+
+    The single verdict parser for the review-success contract (#8786): the
+    dispatch worker and the ask-* review wrapper both call it. Only a line
+    that starts with a verdict (see ``_REVIEW_VERDICT_LINE_RE``) outside a
+    code block counts, and the LAST such line wins — a report may discuss earlier
+    drafts, but its closing line is its verdict. An unclosed fence runs to the
+    end of the text, as in CommonMark.
+    """
+    verdict: str | None = None
+    open_fence: str | None = None
+    for line in response.splitlines():
+        if open_fence is not None:
+            if _closes_code_fence(line, open_fence):
+                open_fence = None
+            continue
+        open_fence = _code_fence_opener(line)
+        if open_fence is not None:
+            continue
+        match = _REVIEW_VERDICT_LINE_RE.match(line)
+        if match:
+            verdict = match.group(1).upper()
+    return verdict
+
+
 def _review_verdict_failure_reason(response: str) -> str | None:
     """Return the failure reason when a review-typed reply has no verdict line.
 
     Applies only to dispatches that opt in via ``--require-review-verdict``
     (the ask-* review wrapper); ordinary asks and implement dispatches never
     require a magic marker. A review reply that never states
-    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED>`` is not a
-    completed review — on 2026-09-21 several review tasks settled ``done``
-    with a promise to wait for a background command as the whole body (#8421).
+    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED>``
+    at the start of a line is not a completed review — on 2026-09-21 several
+    review tasks settled ``done`` with a promise to wait for a background
+    command as the whole body (#8421).
     """
-    if _REVIEW_VERDICT_LINE_RE.search(response):
+    if parse_review_verdict(response) is not None:
         return None
     return _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON
 
@@ -2873,7 +3055,7 @@ def _resolve_primary_integrity_error(*, mode: str) -> str | None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_primary_integrity import check_primary_integrity
 
-        ok, message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=_TASKS_DIR)
+        ok, message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  primary-integrity watchdog errored ({type(exc).__name__}: {exc}); "
@@ -2914,7 +3096,7 @@ def _warn_venv_integrity() -> None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_venv_integrity import check_venv_integrity
 
-        ok, message = check_venv_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        ok, message = check_venv_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  venv-integrity probe errored ({type(exc).__name__}: {exc}); "
@@ -2948,7 +3130,7 @@ def _warn_worktree_cleanup_integrity() -> None:
                 check_worktree_cleanup_integrity,
             )
 
-        ok, message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        ok, message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  worktree-cleanup-integrity probe errored ({type(exc).__name__}: {exc}); "
@@ -2981,7 +3163,7 @@ def _warn_node_modules_integrity() -> None:
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_node_modules_integrity import check_node_modules_integrity
 
-        ok, message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        ok, message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
     except Exception as exc:
         print(
             f"⚠️  node_modules-integrity probe errored ({type(exc).__name__}: {exc}); "
@@ -3022,7 +3204,9 @@ def _warn_if_monitor_api_unreachable() -> None:
 
 def _origin_tracking_refspec(branch: str) -> str:
     """Explicit fetch mapping that lands ``branch`` under refs/remotes/origin."""
-    return f"+refs/heads/{branch}:refs/remotes/origin/{branch}"
+    from scripts.common.git_context import origin_tracking_refspec
+
+    return origin_tracking_refspec(branch)
 
 
 def _fetch_remote_branch(remote: str, branch: str) -> subprocess.CompletedProcess[str] | None:
@@ -3199,14 +3383,16 @@ def _fetch_base(base: str) -> bool:
 
 
 def _validate_branch_reuse_name(branch: str) -> str:
-    """Reject unsafe or ambiguous ``--branch`` values before touching git."""
-    normalized = branch.strip()
-    if not normalized:
-        raise ValueError("--branch must name an existing non-protected branch")
-    if normalized.startswith(("origin/", "refs/", "github/")):
+    """Reject unsafe or ambiguous ``--branch`` values before attaching a worktree."""
+    from scripts.common.git_context import UnsafeBranchNameError, validate_plain_branch_name
+
+    try:
+        normalized = validate_plain_branch_name(branch, repo_root=_REPO_ROOT)
+    except UnsafeBranchNameError as exc:
         raise ValueError(
-            f"--branch must be a local branch name without origin/, github/, or refs/ prefixes: got {branch!r}"
-        )
+            "--branch must be a local branch name without origin/, github/, or refs/ "
+            f"prefixes, and a valid git branch: got {branch!r} ({exc})"
+        ) from exc
 
     containment = _load_worktree_containment()
     if normalized in containment.PROTECTED_BRANCHES:
@@ -3401,7 +3587,7 @@ def _task_state_for_worktree(path: Path) -> tuple[str | None, dict[str, Any] | N
     resolved = path.resolve()
     # 1) Authoritative: scan states for worktree_path match.
     try:
-        state_files = list(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else []
+        state_files = list(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else []
     except OSError:
         state_files = []
     for state_file in state_files:
@@ -4064,7 +4250,7 @@ def _evaluate_dispatch_admission(
     """
     return dispatch_admission.evaluate(
         mode,
-        _TASKS_DIR,
+        tasks_dir(),
         pid_alive=_pid_alive,
         on_dead=(lambda path, state: _heal_dead_task(path, state, source="admission")) if sweep else None,
         thresholds=thresholds,
@@ -4518,7 +4704,12 @@ def _is_read_only_delegate_snapshot_sidecar_path(path: str) -> bool:
     parts = normalized.split("/")
     if len(parts) < 2:
         return False
-    return parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}") and parts[-1].startswith("read_only_checkout_")
+    if not parts[-2].endswith(f"{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"):
+        return False
+    name = parts[-1]
+    if name == _READ_ONLY_SNAPSHOT_DIGEST_NAME:
+        return True
+    return name.startswith("read_only_checkout_") and name.endswith(".json")
 
 
 def _is_read_only_runtime_state_path(path: str) -> bool:
@@ -5229,7 +5420,7 @@ def cmd_rescue(args: argparse.Namespace) -> int:
         except (TypeError, ValueError):
             print("--older-than must be a non-negative hour duration, such as 6h", file=sys.stderr)
             return 2
-        paths = sorted(_TASKS_DIR.glob("*.json")) if _TASKS_DIR.is_dir() else []
+        paths = sorted(tasks_dir().glob("*.json")) if tasks_dir().is_dir() else []
     elif args.task_id:
         paths = [_state_path(args.task_id)]
         min_age_hours = 0
@@ -5374,7 +5565,7 @@ def _remove_dispatch_worktree(
         owner_task_id=owner_task_id,
         releasable=releasable,
         force=force,
-        tasks_dir=_TASKS_DIR,
+        tasks_dir=tasks_dir(),
         lock_dir=_worktree_lock_dir(),
         lock_timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if lock_timeout_s is None else lock_timeout_s,
     )
@@ -5632,8 +5823,27 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 # Measured 2026-09-23 on a full working tree (du -sh, .git excluded): 1.6GB,
 # of which curriculum/ is 289MB, wiki/ 66MB, data/projects/ 633MB, and
 # data/lexicon/ 277MB. Dropping those four leaves a default dispatch under
-# 450MB. Opt back in with --sparse-include or --full-checkout. wiki/ is still
-# a top-level tree (`git ls-tree -d HEAD wiki`), so it stays excluded.
+# 450MB (re-measured 2026-09-25: 287MB). Opt back in with --sparse-include
+# or --full-checkout. wiki/ is still a top-level tree
+# (`git ls-tree -d HEAD wiki`), so it stays excluded.
+#
+# curriculum/ stays in the exclusion set, with one cone anchor so
+# ``pytest -m repo_wide`` can read the manifest. Measured 2026-09-25 in a
+# default sparse worktree (no curriculum/): that command failed 15 tests,
+# and each one read only ``curriculum/l2-uk-en/curriculum.yaml``
+# (FileNotFoundError, or ORCH_TRACK_NOT_ACTIVE because a missing manifest
+# yields no active levels). Cone mode also checks out files that sit
+# directly in every ancestor of an included directory. The anchor is
+# ``curriculum/l2-uk-en/lesson-plans`` (192K), not a smaller sibling:
+# once ``curriculum/`` exists, collection of
+# tests/curriculum/test_plan_validate_cross.py loads
+# ``lesson-plans/a1/_arc.yaml`` (tree_absent is false). An evidence-only
+# anchor (3.4M, yaml present, arc absent) died at collection with exit 2.
+# Including lesson-plans materialises the arc, curriculum.yaml, and the
+# other loose files beside the manifest (vocabulary.db,
+# module-mapping.json, callout-claims-review.md). ``du -sh`` of that
+# tree: 3.6M, not 289M. The anchor is added only when that directory
+# exists at HEAD.
 _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
     {
         "curriculum",
@@ -5642,6 +5852,7 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
         "data/lexicon",
     }
 )
+_DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE = "curriculum/l2-uk-en/lesson-plans"
 # Owned-path prefixes that re-include a default-excluded tree even when the
 # path itself is not under that tree (tests and scripts that read it).
 # Filename stems end with "_" and match tests/test_open_model_*.py. Exact
@@ -5875,8 +6086,13 @@ def _apply_dispatch_sparse_checkout(
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
     Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
-    (~633MB), and ``data/lexicon/`` (~277MB). ``--full-checkout`` disables
-    sparse mode. ``--sparse-include`` keeps a named excluded tree.
+    (~633MB), and ``data/lexicon/`` (~277MB). When ``curriculum`` stays
+    excluded and ``curriculum/l2-uk-en/lesson-plans`` exists at HEAD, that
+    directory is still cone-included so ``curriculum/l2-uk-en/curriculum.yaml``
+    and ``lesson-plans/a1/_arc.yaml`` are present (~3.6MB) without the rest
+    of ``curriculum/``.
+    ``--full-checkout`` disables sparse mode. ``--sparse-include`` keeps a
+    named excluded tree.
     """
     includes = _normalize_sparse_include(sparse_include)
     telemetry: dict[str, Any] = {
@@ -5922,6 +6138,9 @@ def _apply_dispatch_sparse_checkout(
     all_dirs = _list_worktree_top_dirs(worktree_path)
     data_children = _list_worktree_dirs(worktree_path, "data/") if "data" in all_dirs else []
     included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude)
+    manifest_cone = _DISPATCH_SPARSE_CURRICULUM_MANIFEST_CONE
+    if "curriculum" in excluded and manifest_cone in _list_worktree_dirs(worktree_path, manifest_cone):
+        included.append(manifest_cone)
     telemetry["excluded"] = excluded
     telemetry["included_dirs"] = included
 
@@ -6012,6 +6231,15 @@ def _record_worktree_local_venv_warning(
         )
 
 
+def _refuse_if_gate_head_moved(origin_sha: str, pinned_head_sha: str | None) -> None:
+    """Refuse when a later fetch is not the SHA the Gemini path gate checked."""
+    if pinned_head_sha is not None and origin_sha != pinned_head_sha:
+        raise RuntimeError(
+            "refusing dispatch: fetched branch head "
+            f"{origin_sha} differs from the Gemini path-gate SHA {pinned_head_sha}"
+        )
+
+
 def _resolve_worktree_base_sha(
     *,
     agent: str,
@@ -6020,6 +6248,7 @@ def _resolve_worktree_base_sha(
     base: str,
     branch: str | None,
     allow_rebase: bool = True,
+    pinned_head_sha: str | None = None,
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -6053,7 +6282,10 @@ def _resolve_worktree_base_sha(
             # Validate only after the dirty check above, so a dirty checkout
             # always receives the most actionable refusal.
             _fetch_existing_branch(requested_branch)
-            _require_local_branch_is_ancestor_of_origin(requested_branch)
+            _refuse_if_gate_head_moved(
+                _require_local_branch_is_ancestor_of_origin(requested_branch),
+                pinned_head_sha,
+            )
         resolved = _resolve_sha(worktree_path)
         if resolved is None:
             raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
@@ -6061,7 +6293,9 @@ def _resolve_worktree_base_sha(
 
     if requested_branch:
         _fetch_existing_branch(requested_branch)
-        return _require_local_branch_is_ancestor_of_origin(requested_branch)
+        origin_sha = _require_local_branch_is_ancestor_of_origin(requested_branch)
+        _refuse_if_gate_head_moved(origin_sha, pinned_head_sha)
+        return pinned_head_sha or origin_sha
 
     origin_ref = _origin_base_ref(base)
     if _fetch_base(base):
@@ -6672,6 +6906,68 @@ def _emit_terminal_dispatch_event(
         )
 
 
+def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness: str | None) -> list[str]:
+    """Flags ``cmd_dispatch`` copies onto the ``_worker`` argv.
+
+    ``--harness`` and ``--require-review-verdict`` are how a read-only kimi
+    review reaches ``_run_worker``. Review-attempt MCP flags stay on the
+    ``review_plan`` branch and are not part of this list.
+    """
+    flags: list[str] = []
+    if requested_harness is not None:
+        flags.extend(["--harness", requested_harness])
+    if bool(getattr(args, "require_review_verdict", False)):
+        flags.append("--require-review-verdict")
+    return flags
+
+
+def _kimicc_read_only_review_grant(
+    *,
+    harness: str | None,
+    mode: str,
+    require_review_verdict: bool,
+    cwd: Path | None = None,
+) -> dict[str, Any]:
+    """Sources MCP grant for ``ask-kimi --review``.
+
+    That ask is ``dispatch --agent kimi --harness kimicc --mode read-only
+    --require-review-verdict``. The headless wrapper always passes ``--bare``,
+    and ``claude --bare`` does not load ``.mcp.json``. The config this grant
+    names is always the trusted primary checkout file ``_REPO_ROOT /
+    ".mcp.json"`` (``main``), never the ``.mcp.json`` in the worker cwd. A
+    dispatch worktree is the branch under review, so its config is untrusted:
+    a stdio entry would run the author's command, and a repointed sources URL
+    would forge verification results. ``cwd`` is accepted and ignored so
+    callers can keep passing the worker checkout. ``strict_mcp_config`` is set
+    so the kimicc adapter passes ``--strict-mcp-config`` (Claude Code: only
+    servers from ``--mcp-config``; no checkout auto-discovery). Write modes
+    and non-review read-only dispatches get nothing. A missing trusted file
+    refuses the grant instead of launching without the sources server.
+    """
+    del cwd  # untrusted; the reviewed checkout must not supply MCP config
+    if harness != "kimicc" or mode != "read-only" or not require_review_verdict:
+        return {}
+    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+
+    allowed = review_tools_allowed_csv("claude")
+    if not allowed:
+        return {}
+    mcp_config = _REPO_ROOT / ".mcp.json"
+    if not mcp_config.is_file():
+        raise ValueError(
+            "kimicc review grant refused: trusted MCP config is missing at "
+            f"{mcp_config}. Refusing to launch without it."
+        )
+    return {
+        "allowed_tools": allowed,
+        "mcp_config_path": str(mcp_config),
+        "strict_mcp_config": True,
+        # The adapter leaves plan mode only with this marker plus its own
+        # checks of the config path and the tool allowlist (#8652).
+        "review_verdict_required": True,
+    }
+
+
 def _run_worker(
     task_id: str,
     agent: str,
@@ -6753,6 +7049,9 @@ def _run_worker(
     read_only_snapshot_error: str | None = None
     read_only_mutation_paths: list[str] = []
     read_only_ignored_mutation_paths: list[str] = []
+    # Set only after digest.json is on disk. Phase files stay until the
+    # terminal record that names retention=digest has been written.
+    clean_snapshots_to_discard: Path | None = None
     if mode == "read-only":
         read_only_checkout_pre, read_only_snapshot_error = _read_only_checkout_snapshot(cwd)
         _write_read_only_snapshot_sidecar(task_id, "pre", read_only_checkout_pre)
@@ -6846,6 +7145,19 @@ def _run_worker(
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
+            # ask-kimi --review is dispatch --agent kimi --harness kimicc
+            # --mode read-only --require-review-verdict, not --review-attempt.
+            # A sealed review attempt already set strict_mcp_config and its
+            # mcp_config_path; do not overwrite those keys.
+            if not tool_config.get("strict_mcp_config"):
+                tool_config.update(
+                    _kimicc_read_only_review_grant(
+                        harness=harness,
+                        mode=mode,
+                        require_review_verdict=require_review_verdict,
+                        cwd=cwd,
+                    )
+                )
             if (
                 strict_mcp_config
                 and review_id is not None
@@ -6904,6 +7216,13 @@ def _run_worker(
                         cursor_mcp_backup = cursor_mcp_path.read_bytes()
                     except OSError as exc:
                         raise RuntimeError(f"failed to back up {cursor_mcp_path}: {exc}") from exc
+
+            if strict_mcp_config and review_id is not None and attempt_id is not None and mcp_config_path is not None:
+                # Last check before the path strings reach the launcher: re-walk the attempt
+                # directory no-follow and owner-checked (#8652). It narrows, not closes, the window.
+                from scripts.agent_runtime.review_mcp import verify_review_attempt_paths
+
+                verify_review_attempt_paths(mcp_config_path)
 
             result = runtime_invoke(
                 agent,
@@ -7072,6 +7391,21 @@ def _run_worker(
                 )
             final_state["read_only_ignored_mutation_paths"] = read_only_ignored_mutation_paths
             final_state["read_only_mutation_paths"] = read_only_mutation_paths
+            if read_only_snapshot_keep_full(read_only_mutation_paths, read_only_snapshot_error):
+                final_state["read_only_snapshot_retention"] = _READ_ONLY_SNAPSHOT_RETENTION_FULL
+            else:
+                snapshot_dir = _read_only_snapshot_dir_for(task_id)
+                stage_read_only_snapshot_digest(
+                    snapshot_dir,
+                    read_only_checkout_pre,
+                    read_only_checkout_post,
+                )
+                final_state["read_only_snapshot_retention"] = _READ_ONLY_SNAPSHOT_RETENTION_DIGEST
+                # Drop hydrated copies so the terminal record stays small even
+                # while the phase files are still on disk.
+                final_state.pop("read_only_checkout_pre", None)
+                final_state.pop("read_only_checkout_post", None)
+                clean_snapshots_to_discard = snapshot_dir
             if read_only_mutation_paths:
                 final_status = "failed"
                 ok_outcome = False
@@ -7311,6 +7645,9 @@ def _run_worker(
         final_state["final_branch_head_commit"] = _resolve_sha(Path(worktree_path)) if worktree_path else None
         final_state["rescue_status"] = rescue_status
         _write_state_atomic(state_path, {**final_state, **core_terminal_state})
+        if clean_snapshots_to_discard is not None:
+            discard_read_only_snapshot_phases(clean_snapshots_to_discard)
+            clean_snapshots_to_discard = None
     except BaseException as interrupt_exc:
         # Defer SIGTERM across the ENTIRE handler, not just its write. A second
         # cancel arriving while the fallback was still computing raised from
@@ -7369,6 +7706,9 @@ def _run_worker(
                     ),
                 },
             )
+            if clean_snapshots_to_discard is not None:
+                discard_read_only_snapshot_phases(clean_snapshots_to_discard)
+                clean_snapshots_to_discard = None
         raise
 
     last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
@@ -7477,7 +7817,7 @@ def _run_worker(
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_primary_integrity import check_primary_integrity
 
-        pi_ok, pi_message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=_TASKS_DIR)
+        pi_ok, pi_message = check_primary_integrity(_REPO_ROOT, fix=False, tasks_dir=tasks_dir())
         if not pi_ok:
             _append_dispatch_event(
                 "primary_integrity_post_worker",
@@ -7505,7 +7845,7 @@ def _run_worker(
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_node_modules_integrity import check_node_modules_integrity
 
-        nmi_ok, nmi_message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        nmi_ok, nmi_message = check_node_modules_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
         if not nmi_ok:
             _append_dispatch_event(
                 "node_modules_integrity_post_worker",
@@ -7530,7 +7870,7 @@ def _run_worker(
         except ImportError:  # path-flavoured import for test/script contexts
             from audit.check_venv_integrity import check_venv_integrity
 
-        vi_ok, vi_message = check_venv_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        vi_ok, vi_message = check_venv_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
         if not vi_ok:
             _append_dispatch_event(
                 "venv_integrity_post_worker",
@@ -7558,7 +7898,7 @@ def _run_worker(
                 check_worktree_cleanup_integrity,
             )
 
-        wci_ok, wci_message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=_TASKS_DIR)
+        wci_ok, wci_message = check_worktree_cleanup_integrity(_REPO_ROOT, tasks_dir=tasks_dir())
         if not wci_ok:
             _append_dispatch_event(
                 "worktree_cleanup_integrity_post_worker",
@@ -7801,7 +8141,7 @@ def _run_preflight_triage(args: argparse.Namespace, *, worktree_arg: str | None)
     print(result.message, file=sys.stderr)
     if not result.fast_fail:
         return None
-    pt.record_fast_fail(args.task_id, result, _TASKS_DIR.parent / "preflight_fast_fail.jsonl")
+    pt.record_fast_fail(args.task_id, result, tasks_dir().parent / "preflight_fast_fail.jsonl")
     return pt.FAST_FAIL_EXIT_CODE
 
 
@@ -7871,6 +8211,61 @@ def _dispatch(
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
+        return 2
+    from scripts.ai_agent_bridge._agy import (
+        GeminiChangedPathListError,
+        gemini_review_verdict_dispatch_error,
+        resolve_same_repo_pr_head,
+    )
+
+    pr_number = getattr(args, "pr", None)
+    pinned_head = getattr(args, "pinned_head", None)
+    if pr_number is not None:
+        try:
+            pr_branch, resolved_head = resolve_same_repo_pr_head(int(pr_number), repo_root=str(_REPO_ROOT))
+        except GeminiChangedPathListError as exc:
+            print(f"❌ could not resolve PR head: {exc}", file=sys.stderr)
+            return 2
+        supplied_head = str(pinned_head).strip().lower() if pinned_head else ""
+        if supplied_head and supplied_head != resolved_head:
+            print(
+                f"❌ --pinned-head {pinned_head} is not PR #{pr_number} head {resolved_head}",
+                file=sys.stderr,
+            )
+            return 2
+        named_branch = getattr(args, "branch", None)
+        if named_branch and named_branch != pr_branch:
+            print(
+                f"❌ --branch {named_branch!r} is not PR #{pr_number} head {pr_branch!r}",
+                file=sys.stderr,
+            )
+            return 2
+        if supplied_head and not named_branch:
+            print(
+                f"❌ --pr {pr_number} with --pinned-head requires --branch {pr_branch!r}",
+                file=sys.stderr,
+            )
+            return 2
+        pinned_head = resolved_head
+        args.branch = pr_branch
+        args.pinned_head = pinned_head
+
+    gemini_checked_heads: list[str] = []
+    gemini_review_error = gemini_review_verdict_dispatch_error(
+        agent=str(args.agent),
+        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
+        profile=getattr(args, "review_profile", None),
+        pr_number=pr_number,
+        branch=getattr(args, "branch", None),
+        repo_root=str(_REPO_ROOT),
+        model=getattr(args, "model", None),
+        review=bool(getattr(args, "review", False))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+        head_out=gemini_checked_heads,
+        head_sha=pinned_head,
+    )
+    if gemini_review_error is not None:
+        print(f"❌ {gemini_review_error}", file=sys.stderr)
         return 2
     try:
         requested_harness = _resolve_dispatch_harness(args.agent, getattr(args, "harness", None))
@@ -8288,6 +8683,31 @@ def _dispatch(
         )
         args.model = None
 
+    from agent_runtime.telemetry import _resolve_model_from_defaults
+
+    resolved_model = _resolve_model_from_defaults(
+        dispatch_agent,
+        getattr(args, "model", None),
+        harness=requested_harness,
+    )
+    gemini_review_error = gemini_review_verdict_dispatch_error(
+        agent=str(dispatch_agent),
+        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
+        profile=getattr(args, "review_profile", None),
+        pr_number=pr_number,
+        branch=getattr(args, "branch", None),
+        repo_root=str(_REPO_ROOT),
+        model=getattr(args, "model", None),
+        resolved_model=resolved_model,
+        review=bool(getattr(args, "review", False))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+        head_out=gemini_checked_heads,
+        head_sha=getattr(args, "pinned_head", None) or pinned_head,
+    )
+    if gemini_review_error is not None:
+        print(f"❌ {gemini_review_error}", file=sys.stderr)
+        return 2
+
     try:
         _validate_dispatch_effort(dispatch_agent, getattr(args, "effort", None))
     except ValueError as exc:
@@ -8424,6 +8844,10 @@ def _dispatch(
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     allow_rebase=not bool(getattr(args, "dry_run", False)),
+                    pinned_head_sha=(
+                        getattr(args, "pinned_head", None)
+                        or (gemini_checked_heads[-1] if gemini_checked_heads else None)
+                    ),
                 )
             else:
                 # Sibling repos resolve the base SHA at create time inside
@@ -8648,7 +9072,7 @@ def _dispatch(
     if not admission.exempt:
         admission_refusal: str | None = None
         try:
-            with dispatch_admission.admission_lock(_TASKS_DIR):
+            with dispatch_admission.admission_lock(tasks_dir()):
                 admission = _evaluate_dispatch_admission(args.mode, sweep=True, thresholds=admission.thresholds)
                 if admission.admitted or force_admission_reason is not None:
                     admission_record = admission.to_record(force_reason=force_admission_reason)
@@ -8683,7 +9107,7 @@ def _dispatch(
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch
     # side effects behind.
-    log_dir = _TASKS_DIR / "logs"
+    log_dir = tasks_dir() / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
     stdout_log = log_dir / f"{task_id}.stdout.log"
     stderr_log = log_dir / f"{task_id}.stderr.log"
@@ -9044,14 +9468,11 @@ def _dispatch(
             "--runtime-tmp-namespace-root",
             str(runtime_tmp_namespace_root),
         ]
-        if requested_harness is not None:
-            cmd.extend(["--harness", requested_harness])
+        cmd.extend(_dispatch_worker_identity_flags(args, requested_harness))
         if keep_worktree:
             cmd.append("--keep-worktree")
         if bool(getattr(args, "finalize_open_pr", False)):
             cmd.append("--finalize-open-pr")
-        if bool(getattr(args, "require_review_verdict", False)):
-            cmd.append("--require-review-verdict")
         if max_budget_usd is not None:
             cmd.extend(["--max-budget-usd", str(max_budget_usd)])
         if output_schema_path is not None:
@@ -9874,8 +10295,8 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         target_norm = normalize_agent_name(dispatch_agent) or target_norm
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
-        if _TASKS_DIR.is_dir():
-            for state_file in _TASKS_DIR.glob("*.json"):
+        if tasks_dir().is_dir():
+            for state_file in tasks_dir().glob("*.json"):
                 state = _read_state(state_file)
                 if not state or state.get("status") not in ("running", "spawning"):
                     continue
@@ -9892,7 +10313,7 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
 
         health: dict[str, Any] = {}
         with contextlib.suppress(Exception):
-            health = compute_lane_health(_TASKS_DIR)
+            health = compute_lane_health(tasks_dir())
 
         idle_lanes = [
             lane
@@ -10120,11 +10541,11 @@ def cmd_list(args: argparse.Namespace) -> int:
     too, marked ``"archived": true``. Without ``--all`` a stderr note counts the
     archived records left out.
     """
-    _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+    tasks_dir().mkdir(parents=True, exist_ok=True)
     include_archive = bool(getattr(args, "all", False))
     tasks: list[dict[str, Any]] = []
     flat_tasks: list[str] = []
-    for state_file in task_record_store.iter_task_records(_TASKS_DIR, include_archive=include_archive):
+    for state_file in task_record_store.iter_task_records(tasks_dir(), include_archive=include_archive):
         state = _read_state(state_file)
         if state is None:
             continue
@@ -10156,7 +10577,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         )
     print(json.dumps(tasks, indent=2, default=str))
     if not include_archive:
-        archive_dir = _TASKS_DIR / task_record_store.ARCHIVE_DIR_NAME
+        archive_dir = tasks_dir() / task_record_store.ARCHIVE_DIR_NAME
         archived = sum(1 for _ in task_record_store.iter_task_records(archive_dir, include_archive=False))
         if archived:
             print(
@@ -10190,12 +10611,12 @@ def cmd_backfill_repository(args: argparse.Namespace) -> int:
     be proven stay unclassified.
     """
     apply_changes = bool(getattr(args, "apply", False))
-    if not _TASKS_DIR.is_dir():
-        print(f"❌ tasks dir not found: {_TASKS_DIR}", file=sys.stderr)
+    if not tasks_dir().is_dir():
+        print(f"❌ tasks dir not found: {tasks_dir()}", file=sys.stderr)
         return 1
     scanned = stamped = already = unresolved = conflicts = errors = 0
     # Archived records (#8625) are history too; they are stamped where they lie.
-    for state_file in task_record_store.iter_task_records(_TASKS_DIR, include_archive=True):
+    for state_file in task_record_store.iter_task_records(tasks_dir(), include_archive=True):
         state = _read_state(state_file)
         if state is None:
             continue
@@ -10531,6 +10952,24 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--pr",
+        type=int,
+        default=None,
+        help=(
+            "Review this same-repo PR. The head SHA is resolved once and pinned; "
+            "a later fetch of a different tip refuses the dispatch."
+        ),
+    )
+    d.add_argument(
+        "--pinned-head",
+        default=None,
+        metavar="SHA",
+        help=(
+            "Exact commit the worktree must check out. A fetched branch tip that "
+            "differs from this SHA refuses the dispatch."
+        ),
+    )
+    d.add_argument(
         "--branch",
         default=None,
         metavar="EXISTING",
@@ -10561,9 +11000,21 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Review-typed dispatch: a run that settles done without a "
-            "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED` line in the "
+            "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED` line of its own in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
-            "ask-* review wrapper; ordinary dispatches are unaffected."
+            "ask-* review wrapper; ordinary dispatches are unaffected. "
+            "On agy/gemini this also requires --review-profile ukrainian, and "
+            "a --branch target must be a Ukrainian-content diff."
+        ),
+    )
+    d.add_argument(
+        "--review-profile",
+        default=None,
+        choices=("code", "ukrainian"),
+        help=(
+            "Required with --require-review-verdict when --agent is agy or gemini. "
+            "code is refused (Gemini reviews Ukrainian only, never code — "
+            "operator 2026-09-25). Ukrainian content review must pass ukrainian."
         ),
     )
     d.add_argument(

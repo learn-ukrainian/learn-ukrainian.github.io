@@ -183,6 +183,7 @@ private-source-review/
 **/atlas-private-teacher-lesson-bulk-triage.md
 data/lexicon/intake/*_journal.json
 data/lexicon/intake/*.lock
+data/.artifact-store/
 
 # Temporary markdown files (root folder)
 temp*.md
@@ -263,8 +264,9 @@ _archive/
 # Test artifacts
 test_git_mtime/
 
-# Downloaded textbook PDFs (561 MB+, not for version control)
-data/textbooks/
+# Downloaded textbook PDFs (561 MB+, not for version control). No trailing slash:
+# a host-local symlink to the bulk root must stay ignored too (#8803).
+data/textbooks
 
 # RAG pipeline artifacts (generated at runtime)
 data/qdrant/
@@ -273,7 +275,7 @@ data/textbook_images/
 data/textbook_chunks
 data/literary_texts/*.bin
 data/literary_texts/*.npy
-data/vesum/
+data/vesum
 data/vesum.db
 data/backups/
 data/esu/urls.jsonl
@@ -352,16 +354,17 @@ data/raw/orphan-ocr/
 
 .build.lock
 
-# Corpus gap audit working files — only the human-reviewed deliverables land in git
-data/corpus_audit/*
-!data/corpus_audit/coverage_map.json
-!data/corpus_audit/gap_categories.md
-!data/corpus_audit/ingestion_roadmap.md
-!data/corpus_audit/draft_tickets/
-!data/corpus_audit/draft_tickets/*.md
-!data/corpus_audit/navsi200-catalog.json
-!data/corpus_audit/navsi200-captions-ledger.json
-!data/corpus_audit/navsi200-asr-bakeoff-ledger.json
+# Corpus gap audit working files. The human-reviewed deliverables (draft tickets,
+# gap categories, roadmap, navsi200 catalog) live under registry/corpus_audit/ (#8809 P1);
+# the coverage map, ledgers and ingest report stay here as untracked artifacts
+# (registry/artifacts/corpus_audit_snapshots.manifest.json).
+data/corpus_audit/
+
+# Untracked artifact bytes migrated out of git in #8809 P1 (restorable via
+# `scripts.storage.artifacts hydrate`; manifests under registry/artifacts/).
+data/raw/pravopys.html
+data/references/interference-patterns-walexy.json
+data/youtube_discovery/ulp_grammar_guide_backfill.jsonl
 
 
 .gemini/

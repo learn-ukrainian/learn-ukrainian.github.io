@@ -23,7 +23,7 @@ from wiki.channels import load_channels
 
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
-CHANNELS_PATH = EXTERNAL_DIR / "channels.yaml"
+CHANNELS_PATH = PROJECT_ROOT / "registry" / "external_articles" / "channels.yaml"
 
 TARGET_CHARS = 2000
 OVERLAP_CHARS = 200

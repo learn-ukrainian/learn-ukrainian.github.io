@@ -456,7 +456,26 @@ def test_bridge_only_reviewers_expose_executable_invocations():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["pool"]["invocation"].endswith("ask-pool")
     assert candidates["glm-5.3"]["invocation"].endswith("ask-glm")
-    assert candidates["gemini-3.1-pro"]["health_keys"] == ["gemini"]
+
+
+def test_gemini_remains_available_for_ukrainian_but_not_code_review():
+    catalog = load_model_catalog()
+    assert catalog["models"]["gemini-3.8-flash-high"]["lifecycle"] == "active"
+    assert catalog["orchestrator_seats"]["agy"]["model_id"] == "gemini-3.8-flash-high"
+    assert all(
+        not candidate["model_id"].startswith("gemini-")
+        for candidate in catalog["review_candidates"].values()
+    )
+
+
+def test_catalog_refuses_gemini_code_review_candidate():
+    broken = deepcopy(load_model_catalog())
+    broken["review_candidates"]["google_review"] = {
+        **broken["review_candidates"]["openai_frontier"],
+        "model_id": "gemini-3.8-flash-high",
+    }
+    with pytest.raises(ModelCatalogError, match="Gemini reviews Ukrainian only, never code"):
+        validate_catalog(broken)
 
 
 def test_formal_review_candidates_declare_supported_profiles_and_concrete_cursor_model():

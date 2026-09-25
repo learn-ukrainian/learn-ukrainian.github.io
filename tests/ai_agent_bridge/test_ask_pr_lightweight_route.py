@@ -37,10 +37,7 @@ def _install_fake_gh(
     bin_dir.mkdir()
     script = bin_dir / "gh"
     script.write_text(
-        "#!/bin/sh\n"
-        f"printf '%s' {json.dumps(stdout)}\n"
-        f"printf '%s' {json.dumps(stderr)} >&2\n"
-        f"exit {int(code)}\n",
+        f"#!/bin/sh\nprintf '%s' {json.dumps(stdout)}\nprintf '%s' {json.dumps(stderr)} >&2\nexit {int(code)}\n",
         encoding="utf-8",
     )
     script.chmod(script.stat().st_mode | stat.S_IEXEC)
@@ -87,6 +84,7 @@ def captured_dispatch(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
             "ok": True,
             "status": "done",
             "response": "VERDICT: APPROVED\nEvidence: reviewed the diff at scripts/foo.py:1.",
+            "worktree_base_sha": _HEAD_SHA,
         }
 
     monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", fake_dispatch)
@@ -132,9 +130,7 @@ def test_ask_branch_routes_to_headless_dispatch_not_acp(
 
 def test_ask_pr_and_branch_remain_mutually_exclusive() -> None:
     with pytest.raises(SystemExit):
-        _cli._build_parser().parse_args(
-            ["ask-claude", "body", "--task-id", "t", "--pr", "1", "--branch", "b"]
-        )
+        _cli._build_parser().parse_args(["ask-claude", "body", "--task-id", "t", "--pr", "1", "--branch", "b"])
 
 
 def test_ask_pr_no_longer_refuses_with_review_pr_circle(
@@ -227,6 +223,7 @@ def test_ask_pr_dispatches_the_pr_head_branch_and_sha(
 
     assert acp_guard["count"] == 0
     assert captured_dispatch["branch"] == _HEAD_BRANCH
+    assert captured_dispatch["pinned_head"] == _HEAD_SHA
     assert f"exact head {_HEAD_SHA}" in str(captured_dispatch["content"])
 
 
@@ -280,10 +277,9 @@ def test_ask_branch_does_not_consult_gh(
     assert "git rev-parse HEAD" not in str(captured_dispatch["content"])
 
 
-def test_ask_pr_reports_when_dispatch_base_sha_moved(
+def test_ask_pr_refuses_when_dispatch_base_sha_moved(
     same_repo_pr_gh: None,
     captured_dispatch: dict[str, object],
-    capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     def moved_dispatch(agent, content, **kwargs):
@@ -302,11 +298,13 @@ def test_ask_pr_reports_when_dispatch_base_sha_moved(
         ["ask-claude", "review this change", "--task-id", "review-moved", "--pr", "8706", "--from", "test"]
     )
 
-    _cli._handle_ask_claude(args)
+    with pytest.raises(SystemExit, match="refusing dispatch") as exc_info:
+        _cli._handle_ask_claude(args)
 
-    err = capsys.readouterr().err
-    assert f"resolved {_HEAD_SHA}" in err
-    assert f"dispatch record base {_MOVED_SHA}" in err
+    message = str(exc_info.value)
+    assert captured_dispatch["pinned_head"] == _HEAD_SHA
+    assert f"resolved {_HEAD_SHA}" in message
+    assert f"dispatch record base {_MOVED_SHA}" in message
 
 
 def test_branch_prompt_binds_sha_only_when_known() -> None:

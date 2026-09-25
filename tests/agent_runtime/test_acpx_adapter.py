@@ -544,6 +544,16 @@ def test_build_invocation_refuses_unknown_flag_value(tmp_path, monkeypatch):
         _build(adapter, cwd=tmp_path)
 
 
+def test_flag_refusal_names_the_variable_never_its_value(tmp_path, monkeypatch):
+    sentinel = "env-value-sentinel-8652"
+    monkeypatch.setenv(acpx_module.TRANSPORT_ENV, sentinel)
+    _stub_binary(monkeypatch, tmp_path)
+
+    with pytest.raises(AcpxShadowRefusalError, match=acpx_module.TRANSPORT_ENV) as refused:
+        _build(AcpxAdapter(), cwd=tmp_path)
+    assert sentinel not in str(refused.value)
+
+
 def test_build_invocation_succeeds_when_flag_shadow(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
@@ -630,6 +640,25 @@ def test_build_invocation_rejects_non_codex_target(tmp_path, monkeypatch):
             cwd=tmp_path,
             tool_config={"acpx_shadow": True, "target_agent": "claude"},
         )
+
+
+def test_refusals_name_tool_config_keys_never_their_values(tmp_path, monkeypatch):
+    _shadow_env(monkeypatch)
+    _stub_binary(monkeypatch, tmp_path)
+    sentinel = "tool-config-value-sentinel-8652"
+
+    with pytest.raises(AcpxShadowRefusalError, match="target_agent") as refused:
+        _build(AcpxAdapter(), cwd=tmp_path, tool_config={"acpx_shadow": True, "target_agent": sentinel})
+    assert sentinel not in str(refused.value)
+
+    unsafe = f"{sentinel} with spaces"
+    with pytest.raises(AcpxShadowRefusalError, match="correlation_id") as refused:
+        _build(
+            AcpxAdapter(),
+            cwd=tmp_path,
+            tool_config={"acpx_shadow": True, "correlation_id": unsafe, "idempotency_key": "idem-1"},
+        )
+    assert sentinel not in str(refused.value)
 
 
 # ---------------------------------------------------------------------------

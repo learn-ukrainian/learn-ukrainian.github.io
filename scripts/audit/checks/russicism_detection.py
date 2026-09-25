@@ -316,7 +316,7 @@ _COMPILED_RUSSICISMS = [
 # Tracks where Russicisms might appear in quoted historical sources
 _EXEMPT_TRACKS = {"oes", "ruth"}
 
-_UA_GEC_CALQUE_CSV = Path(__file__).resolve().parents[3] / "data" / "russianism-patterns-ua-gec.csv"
+_UA_GEC_CALQUE_CSV = Path(__file__).resolve().parents[3] / "registry" / "russianism-patterns-ua-gec.csv"
 _UA_GEC_ATTRIBUTION = "UA-GEC v2 (CC-BY-4.0)"
 _UA_GEC_TOKEN_RE = re.compile(r"\b[\w'’ʼ-]+\b")
 _UA_GEC_BOUNDARY_CHARS = r"\w'’ʼ\-"

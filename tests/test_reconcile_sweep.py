@@ -515,7 +515,7 @@ def _publish_prep_record(
     """Write the provisional record dispatch publishes before ``git worktree add``."""
     from scripts import delegate
 
-    monkeypatch.setattr(delegate, "_TASKS_DIR", task_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(task_dir))
     prep = {
         "path": str(task_dir / "wt" / task_id),
         "run_nonce": f"nonce-{task_id}",
@@ -600,7 +600,7 @@ def test_reconcile_sweep_crashes_admission_hold_whose_dispatcher_died(
     from tests.worktree_prep_helpers import exited_process_identity
 
     task_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate, "_TASKS_DIR", task_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(task_dir))
     delegate._publish_admission_hold("died-after-admission", "nonce-h", mode="danger", admission={"admitted": True})
     task_file = task_dir / "died-after-admission.json"
     state = json.loads(task_file.read_text(encoding="utf-8"))

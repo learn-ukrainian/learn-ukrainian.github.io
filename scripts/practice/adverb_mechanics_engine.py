@@ -2731,7 +2731,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Adverb Deep Mechanics Practice Engine")
     parser.add_argument("--verify-vesum", action="store_true", help="Verify targets against VESUM")
     parser.add_argument("--export", action="store_true", help="Export canonical JSON deck")
-    parser.add_argument("--output", type=str, default="data/practice/adverb_mechanics_deck.json", help="Output path")
+    parser.add_argument(
+        "--output", type=str, default="registry/practice/adverb_mechanics_deck.json", help="Output path"
+    )
     parser.add_argument("--json", action="store_true", help="Output JSON results to stdout")
     args = parser.parse_args()
 

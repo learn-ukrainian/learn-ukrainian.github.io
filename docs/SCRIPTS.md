@@ -1168,7 +1168,7 @@ hash.
 Curates the small tracked UA-GEC fixture for the #2156 eval harness. It reads
 the local ignored `data/sources.db` table `ua_gec_errors`, recovers sentence
 context/spans from the local `data/ua-gec` clone, maps tags through
-`scripts/audit/qg_schema.py`, and writes `data/ua-gec-gold/ua-gec-gold.json`
+`scripts/audit/qg_schema.py`, and writes `registry/ua-gec-gold/ua-gec-gold.json`
 with top-level CC-BY-4.0 attribution and per-row `build_ua_gec_finding` output.
 
 Run the dry-run first; it prints candidate totals, per-tag/source-language
@@ -1620,10 +1620,16 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 | Claude | `--to-model` | omit (auto-selects per active session); override only when routing to a specific Opus/Sonnet tier |
 
 ```bash
-# AGY — Gemini-family adversarial review
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Adversarial review for #NNN. Read {path}." \
+# AGY — Ukrainian content review (Gemini reviews Ukrainian only, never code)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Перевір наголос і відмінювання в curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
+  --review \
+  --review-profile ukrainian \
   --to-model gemini-3.1-pro-high
+
+# Codex — code / adversarial review
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex "Adversarial review for #NNN. Read {path}." \
+  --task-id issue-NNN
 
 # Codex — quick question
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex "Review posted on #1177. Please read and respond." \
@@ -1643,8 +1649,8 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 AGY examples:
 
 ```bash
-# Default: AGY bridge call
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Review #NNN." \
+# Default: AGY bridge call (not a code review)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Quick check of the greeting in curriculum/l2-uk-en/a1/hello.md." \
   --task-id issue-NNN \
   --to-model gemini-3.1-pro-high
 
@@ -1769,4 +1775,4 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 
 ### Dispatch settle (Luna handoff)
 
-`.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `driver_breadth_report --enforce` fails MISSING/DISHONEST idle dispositions (never raw idle seconds) after the #6998 telemetry trust window.
+`.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> --push --open-pr` — heal zombie task state, release inactive write claims, optionally push/open PR. Formal CF stays orchestrator-owned. After closeout it evaluates the #6976 settle reminder when `--idle-snapshot-json` is supplied (`--dispatched` or `--disposition <code>`). Standalone: `.venv/bin/python -m scripts.fleet.idle_settle evaluate|report|admission`. `idle_settle report --since-hours 24` includes events recorded in the last 24 hours and events without a valid timestamp; without the flag it includes all events. `driver_breadth_report --enforce` uses its `--since-hours` window for tasks and idle events, failing on in-window MISSING/DISHONEST dispositions (never raw idle seconds).
