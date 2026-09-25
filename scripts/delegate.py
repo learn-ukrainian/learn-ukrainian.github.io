@@ -6672,6 +6672,65 @@ def _emit_terminal_dispatch_event(
         )
 
 
+def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness: str | None) -> list[str]:
+    """Flags ``cmd_dispatch`` copies onto the ``_worker`` argv.
+
+    ``--harness`` and ``--require-review-verdict`` are how a read-only kimi
+    review reaches ``_run_worker``. Review-attempt MCP flags stay on the
+    ``review_plan`` branch and are not part of this list.
+    """
+    flags: list[str] = []
+    if requested_harness is not None:
+        flags.extend(["--harness", requested_harness])
+    if bool(getattr(args, "require_review_verdict", False)):
+        flags.append("--require-review-verdict")
+    return flags
+
+
+def _kimicc_read_only_review_grant(
+    *,
+    harness: str | None,
+    mode: str,
+    require_review_verdict: bool,
+    cwd: Path | None = None,
+) -> dict[str, Any]:
+    """Sources MCP grant for ``ask-kimi --review``.
+
+    That ask is ``dispatch --agent kimi --harness kimicc --mode read-only
+    --require-review-verdict``. The headless wrapper always passes ``--bare``,
+    and ``claude --bare`` does not load ``.mcp.json``. The config this grant
+    names is always the trusted primary checkout file ``_REPO_ROOT /
+    ".mcp.json"`` (``main``), never the ``.mcp.json`` in the worker cwd. A
+    dispatch worktree is the branch under review, so its config is untrusted:
+    a stdio entry would run the author's command, and a repointed sources URL
+    would forge verification results. ``cwd`` is accepted and ignored so
+    callers can keep passing the worker checkout. ``strict_mcp_config`` is set
+    so the kimicc adapter passes ``--strict-mcp-config`` (Claude Code: only
+    servers from ``--mcp-config``; no checkout auto-discovery). Write modes
+    and non-review read-only dispatches get nothing. A missing trusted file
+    refuses the grant instead of launching without the sources server.
+    """
+    del cwd  # untrusted; the reviewed checkout must not supply MCP config
+    if harness != "kimicc" or mode != "read-only" or not require_review_verdict:
+        return {}
+    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+
+    allowed = review_tools_allowed_csv("claude")
+    if not allowed:
+        return {}
+    mcp_config = _REPO_ROOT / ".mcp.json"
+    if not mcp_config.is_file():
+        raise ValueError(
+            "kimicc review grant refused: trusted MCP config is missing at "
+            f"{mcp_config}. Refusing to launch without it."
+        )
+    return {
+        "allowed_tools": allowed,
+        "mcp_config_path": str(mcp_config),
+        "strict_mcp_config": True,
+    }
+
+
 def _run_worker(
     task_id: str,
     agent: str,
@@ -6846,6 +6905,19 @@ def _run_worker(
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
+            # ask-kimi --review is dispatch --agent kimi --harness kimicc
+            # --mode read-only --require-review-verdict, not --review-attempt.
+            # A sealed review attempt already set strict_mcp_config and its
+            # mcp_config_path; do not overwrite those keys.
+            if not tool_config.get("strict_mcp_config"):
+                tool_config.update(
+                    _kimicc_read_only_review_grant(
+                        harness=harness,
+                        mode=mode,
+                        require_review_verdict=require_review_verdict,
+                        cwd=cwd,
+                    )
+                )
             if (
                 strict_mcp_config
                 and review_id is not None
@@ -9044,14 +9116,11 @@ def _dispatch(
             "--runtime-tmp-namespace-root",
             str(runtime_tmp_namespace_root),
         ]
-        if requested_harness is not None:
-            cmd.extend(["--harness", requested_harness])
+        cmd.extend(_dispatch_worker_identity_flags(args, requested_harness))
         if keep_worktree:
             cmd.append("--keep-worktree")
         if bool(getattr(args, "finalize_open_pr", False)):
             cmd.append("--finalize-open-pr")
-        if bool(getattr(args, "require_review_verdict", False)):
-            cmd.append("--require-review-verdict")
         if max_budget_usd is not None:
             cmd.extend(["--max-budget-usd", str(max_budget_usd)])
         if output_schema_path is not None:

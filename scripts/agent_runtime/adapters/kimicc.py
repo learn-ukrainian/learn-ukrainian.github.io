@@ -20,6 +20,7 @@ from scripts.review.model_catalog import (
     resolve_kimi_model,
 )
 
+from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
 from ..trail_isolation import (
     TrailIsolationError,
@@ -170,6 +171,9 @@ class KimiccHarness:
         unsupported = sorted(set(tc) - _SUPPORTED_TOOL_CONFIG_KEYS - {"harness"})
         if unsupported:
             raise ValueError(f"KimiccHarness: unsupported tool_config keys: {unsupported}")
+        # Same order as CodexAdapter: refuse a bad read-only lease before any
+        # CLI probe, next to the isolation checks above.
+        read_only_tmp = validate_read_only_tmp_root(tc, cwd, mode, adapter="KimiccHarness")
 
         # The headless wrapper invokes the native Claude binary itself, but
         # resolve it here so a missing harness fails before a task is spawned.
@@ -202,12 +206,18 @@ class KimiccHarness:
                 ]
             )
         elif tc.get("strict_mcp_config") and isinstance(tc.get("mcp_config_path"), str):
-            # Review attempts set strict_mcp_config without a Claude allowed_tools
-            # grant (that grant is agent=="claude" only). Still pin the config.
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--strict-mcp-config"])
             if tc.get("allowed_tools"):
                 cmd.extend(["--allowedTools", str(tc["allowed_tools"])])
-        elif isinstance(tc.get("mcp_config_path"), str) and tc.get("allowed_tools"):
+        elif (
+            mode == "read-only"
+            and isinstance(tc.get("mcp_config_path"), str)
+            and tc.get("allowed_tools")
+        ):
+            # Local boundary, not only the delegate grant. --bare does not
+            # load .mcp.json, so a read-only review passes the checkout file
+            # plus the sources --allowedTools grant. A write mode that still
+            # carries these keys must not emit them.
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--allowedTools", str(tc["allowed_tools"])])
         if tc.get("agent"):
             cmd.extend(["--agent", str(tc["agent"])])
@@ -221,14 +231,8 @@ class KimiccHarness:
             cmd.extend(["--effort", effective_effort])
 
         env_overrides = {"KIMICC_CLAUDE_BIN": claude_bin}
-        read_only_tmp = tc.get("read_only_tmp_root")
         if read_only_tmp is not None:
-            if mode != "read-only":
-                raise ValueError("KimiccHarness: read_only_tmp_root requires mode='read-only'")
-            lease = Path(str(read_only_tmp))
-            if not lease.is_absolute() or lease.is_symlink() or not lease.is_dir() or lease.resolve() == cwd.resolve():
-                raise ValueError("KimiccHarness: read_only_tmp_root must be an existing directory outside cwd")
-            env_overrides["TMPDIR"] = str(lease)
+            env_overrides["TMPDIR"] = str(read_only_tmp)
         if effective_effort:
             # The wrapper derives Claude Code's environment default from this
             # value. Mirror the exact child argv so an explicit override does
