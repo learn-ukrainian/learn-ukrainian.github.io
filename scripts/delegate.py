@@ -2128,13 +2128,17 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # may sit around the label, its colon, and the token, but nothing else may
 # share the line — so an inline or quoted example ("I will report
 # ``VERDICT: APPROVE`` later", ``> VERDICT: APPROVE``) is not a verdict.
+# Indentation follows CommonMark: at most three leading spaces; four or more,
+# or a tab, make the line an indented code block, i.e. an example.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^[*_\s]*VERDICT[*_`\s]*:[*_`\s]*"
+    r"^ {0,3}(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
     r"[*_`\s]*$",
     re.IGNORECASE,
 )
-_CODE_FENCE_RE = re.compile(r"^\s*(?:```|~~~)")
+# A CommonMark fence line: at most three leading spaces, then three or more
+# backticks or tildes; group 2 is the rest of the line (info string).
+_CODE_FENCE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -2355,22 +2359,54 @@ def _delivery_failure_reason(
     return _NO_DELIVERABLE_NO_COMMITS_REASON
 
 
+def _code_fence_opener(line: str) -> str | None:
+    """Return the fence run when ``line`` opens a CommonMark code fence.
+
+    A backtick fence's info string may not contain a backtick (that line is
+    inline code, not a fence).
+    """
+    match = _CODE_FENCE_RE.match(line)
+    if match is None:
+        return None
+    fence, info = match.groups()
+    if fence[0] == "`" and "`" in info:
+        return None
+    return fence
+
+
+def _closes_code_fence(line: str, opener: str) -> bool:
+    """Return whether ``line`` closes the fence opened by ``opener``.
+
+    Per CommonMark the closer uses the opener's character, is at least as
+    long, and carries nothing but trailing spaces or tabs; any other line —
+    including a fence of the other character — is block content.
+    """
+    match = _CODE_FENCE_RE.match(line)
+    if match is None:
+        return False
+    fence, rest = match.groups()
+    return fence[0] == opener[0] and len(fence) >= len(opener) and not rest.strip(" \t")
+
+
 def parse_review_verdict(response: str) -> str | None:
     """Return the review's verdict token, or ``None`` when it states none.
 
     The single verdict parser for the review-success contract (#8786): the
     dispatch worker and the ask-* review wrapper both call it. Only a line
     that is exactly a verdict (see ``_REVIEW_VERDICT_LINE_RE``) outside a code
-    fence counts, and the LAST such line wins — a report may discuss earlier
-    drafts, but its closing line is its verdict.
+    block counts, and the LAST such line wins — a report may discuss earlier
+    drafts, but its closing line is its verdict. An unclosed fence runs to the
+    end of the text, as in CommonMark.
     """
     verdict: str | None = None
-    in_fence = False
+    open_fence: str | None = None
     for line in response.splitlines():
-        if _CODE_FENCE_RE.match(line):
-            in_fence = not in_fence
+        if open_fence is not None:
+            if _closes_code_fence(line, open_fence):
+                open_fence = None
             continue
-        if in_fence:
+        open_fence = _code_fence_opener(line)
+        if open_fence is not None:
             continue
         match = _REVIEW_VERDICT_LINE_RE.match(line)
         if match:

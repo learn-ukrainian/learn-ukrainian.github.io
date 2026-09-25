@@ -2821,6 +2821,51 @@ def test_parse_review_verdict_ignores_fenced_line_after_real_verdict():
     assert delegate.parse_review_verdict(response) == "REQUEST_CHANGES"
 
 
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("four-space-indented-code", "Example:\n\n    VERDICT: APPROVE\n"),
+        ("tab-indented-code", "Example:\n\n\tVERDICT: APPROVE\n"),
+        ("tilde-inside-backtick-fence", "```text\n~~~\nVERDICT: APPROVE\n```\n"),
+        ("backtick-inside-tilde-fence", "~~~\n```\nVERDICT: APPROVE\n~~~\n"),
+        ("tilde-fence-with-verdict", "~~~~\nVERDICT: APPROVE\n~~~~\n"),
+        ("shorter-closer-does-not-close", "````\n```\nVERDICT: APPROVE\n````\n"),
+        ("closer-with-info-does-not-close", "```\n```python\nVERDICT: APPROVE\n```\n"),
+        ("unclosed-fence-swallows-rest", "Findings.\n```text\nVERDICT: APPROVE\n\nmore text\n"),
+    ],
+)
+def test_parse_review_verdict_follows_commonmark_code_blocks(label, response):
+    """#8786: a verdict inside a CommonMark code block (indented or fenced) is an example."""
+    assert delegate.parse_review_verdict(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        ("three-space-indent", "Findings.\n\n   VERDICT: APPROVE\n", "APPROVE"),
+        ("three-space-indent-bold", "   **VERDICT**: **BLOCKED**\n", "BLOCKED"),
+        (
+            "longer-closer-closes",
+            "```\nVERDICT: APPROVE\n`````\nVERDICT: REQUEST_CHANGES\n",
+            "REQUEST_CHANGES",
+        ),
+        (
+            "indented-fence-closes",
+            "  ~~~\nVERDICT: APPROVE\n   ~~~  \nVERDICT: CHANGES_REQUESTED\n",
+            "CHANGES_REQUESTED",
+        ),
+        (
+            "inline-code-line-is-not-a-fence",
+            "```VERDICT: x``` is inline code\nVERDICT: APPROVE\n",
+            "APPROVE",
+        ),
+    ],
+)
+def test_parse_review_verdict_accepts_commonmark_paragraph_lines(label, response, expected):
+    """#8786: up to three leading spaces is still a paragraph line; a longer closer closes."""
+    assert delegate.parse_review_verdict(response) == expected
+
+
 def test_run_worker_non_review_read_only_without_verdict_stays_done(
     tmp_tasks_dir,
     tmp_path,
