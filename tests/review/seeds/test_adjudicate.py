@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import stat
 from pathlib import Path
@@ -32,7 +33,24 @@ class Case:
         self.unit_id = env.add(unit)
         self.ids = env.attempt(unit, "codex", verdict, findings)
         self.review_id, self.attempt_id = self.ids
-        self.adjudicator = env.dispatch_record("adj-task", "agy", "gemini-3.1-pro-preview")  # google
+        self.task_id = adj.task_id_for(self.unit_id, self.review_id, self.attempt_id)
+        conn = env.connect()
+        try:
+            subject = adj.load_subject(conn, self.unit_id, self.review_id, self.attempt_id, env.root)
+        finally:
+            conn.close()
+        self.task_file, _ = adj.write_task(subject, LESSON_TEXT, review_id=self.review_id, root=env.root)
+        self.adjudicator = self.dispatch("agy", "gemini-3.1-pro-preview")  # google
+
+    def dispatch(self, agent: str, model: str, *, task_id: str | None = None, prompt_sha256: str | None = None) -> str:
+        """Write the dispatch record of the adjudication (by default of this case's own task and its rendered prompt)."""
+        task_id = task_id or self.task_id
+        sha = prompt_sha256 or hashlib.sha256(self.task_file.read_bytes()).hexdigest()
+        (self.env.tasks / f"{task_id}.json").write_text(
+            json.dumps({"task_id": task_id, "agent": agent, "model": model, "status": "done", "prompt_sha256": sha}),
+            encoding="utf-8",
+        )
+        return task_id
 
     def reply(self, mapping: dict[str, str], **fields: Any) -> dict[str, Any]:
         clean = isinstance(self.unit, sm.Clean)
@@ -224,7 +242,7 @@ def test_a_valid_seeded_reply_is_recorded_with_the_adjudicators_recorded_identit
     # the identity is the dispatch record's, not the reply's self-report
     assert (row["adjudicator_model"], row["adjudicator_family"]) == ("gemini-3.1-pro-preview", "google")
     assert seeded.rows("clean_results") == []
-    saved = seeded.env.root / "batch_state" / "review-measurement" / "adjudication" / "adj-task.reply.txt"
+    saved = seeded.env.root / "batch_state" / "review-measurement" / "adjudication" / f"{seeded.task_id}.reply.txt"
     assert stat.S_IMODE(saved.stat().st_mode) == 0o600 and saved.exists()
 
 
@@ -350,14 +368,44 @@ def test_planted_blocking_is_read_from_the_findings_severity_not_asserted(seeded
 
 def test_the_adjudicator_must_be_known_and_independent(seeded: Case) -> None:
     good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
-    assert code_of(seeded, good, task_id="adj-no-record") == [adj.ADJUDICATOR_UNKNOWN]
-    seeded.env.dispatch_record("adj-unattested", "cursor", "auto")
-    assert code_of(seeded, good, task_id="adj-unattested") == [adj.ADJUDICATOR_UNKNOWN]
+    (seeded.env.tasks / f"{seeded.task_id}.json").unlink()
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]  # no dispatch record at all: nothing binds a task to this
+    seeded.dispatch("cursor", "auto")
+    assert code_of(seeded, good) == [adj.ADJUDICATOR_UNKNOWN]
     # the writer's family (anthropic) and the reviewer's family (openai) may not adjudicate, whatever the reply claims
-    seeded.env.dispatch_record("adj-writer", "claude", "claude-sonnet-5")
-    assert code_of(seeded, good, task_id="adj-writer") == [sm.ADJUDICATOR_IS_WRITER]
-    seeded.env.dispatch_record("adj-reviewer", "codex", "gpt-6-astra")
-    assert code_of(seeded, good, task_id="adj-reviewer") == [sm.ADJUDICATOR_IS_REVIEWER]
+    seeded.dispatch("claude", "claude-sonnet-5")
+    assert code_of(seeded, good) == [sm.ADJUDICATOR_IS_WRITER]
+    seeded.dispatch("codex", "gpt-6-astra")
+    assert code_of(seeded, good) == [sm.ADJUDICATOR_IS_REVIEWER]
+
+
+def test_an_unrelated_independent_dispatch_cannot_stand_in_for_the_adjudication(seeded: Case) -> None:
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    # an independent (google) dispatch of some other task: right family, wrong task
+    other = seeded.dispatch("agy", "gemini-3.1-pro-preview", task_id="adj-task")
+    assert code_of(seeded, good, task_id=other) == [adj.TASK_MISMATCH]
+    # the right task id whose record ran some other prompt
+    seeded.dispatch("agy", "gemini-3.1-pro-preview", prompt_sha256=hashlib.sha256(b"another prompt").hexdigest())
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    # the right task id, a record that carries no prompt hash: it cannot prove which prompt ran
+    path = seeded.env.tasks / f"{seeded.task_id}.json"
+    record = json.loads(path.read_text(encoding="utf-8"))
+    del record["prompt_sha256"]
+    path.write_text(json.dumps(record), encoding="utf-8")
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    # a record for this task id that names another task
+    record.update(task_id="adj-task", prompt_sha256=hashlib.sha256(seeded.task_file.read_bytes()).hexdigest())
+    path.write_text(json.dumps(record), encoding="utf-8")
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
+    # the matching dispatch is accepted
+    seeded.dispatch("agy", "gemini-3.1-pro-preview")
+    assert seeded.record(good)["new"] is True
+
+
+def test_a_rendered_prompt_that_was_changed_after_dispatch_is_refused(seeded: Case) -> None:
+    good = seeded.reply({"F-01": "planted", "F-02": "false", "F-03": "false"})
+    seeded.task_file.write_bytes(seeded.task_file.read_bytes() + b"\nchanged")
+    assert code_of(seeded, good) == [adj.TASK_MISMATCH]
 
 
 # --- clean lessons ------------------------------------------------------------------------------------------------------

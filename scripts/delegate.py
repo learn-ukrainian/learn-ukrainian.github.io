@@ -51,6 +51,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "finished_at": iso-8601 UTC | null,
         "duration_s": float | null,
         "prompt_chars": int,
+        "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
         "stderr_excerpt": str | null,
@@ -8149,6 +8150,9 @@ def _dispatch(
     else:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
+    # What the caller handed in, before the lifecycle, worktree and research blocks are appended: a caller that
+    # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
+    source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
     # stdin prompts were unavailable to the earlier side-effect-free check.
     write_intent_error = _read_only_write_intent_error(mode=args.mode, prompt=prompt)
@@ -8942,6 +8946,7 @@ def _dispatch(
             "max_budget_usd": max_budget_usd,
             "output_schema_path": output_schema_path,
             "output_schema_sha256": output_schema_sha256,
+            "prompt_sha256": source_prompt_sha256,
             "pid": None,  # worker fills this
             "status": "spawning",
             "started_at": datetime.now(UTC).isoformat(),

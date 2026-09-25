@@ -32,7 +32,7 @@ import pytest
 from scripts.review import findings_db
 from scripts.review.seeds import manifest as sm
 from scripts.review.seeds import score
-from tests.review.seeds.fixtures import Env, clean_lesson, finding, linguistic_seed, mechanical_seed
+from tests.review.seeds.fixtures import SEATS, Env, clean_lesson, finding, linguistic_seed, mechanical_seed
 
 TODAY = date(2026, 9, 25)
 NEAR = pytest.approx
@@ -673,6 +673,120 @@ def _stub_report() -> dict:
         findings_db.load_parameters(),
         today=TODAY,
     )
+
+
+# --- agreement per seat pair -------------------------------------------------------------------------------------------
+
+
+def _first_world(env: Env) -> None:
+    for name in ("conf-1", "conf-2"):
+        env.add(mechanical_seed(f"seed-{name}"))
+    build_first_set(env)
+    sm.freeze_confirmation(["seed-conf-1", "seed-conf-2"], env.root)
+
+
+def _lesson_pair(env: Env, n: int, first: str, second: str, disagreed: list[dict] | None = None) -> None:
+    """Two seats' accepted attempts on real lesson ``n`` of a1/agreement-course and their ``agreement`` row."""
+    conn = env.connect()
+    try:
+        with findings_db.transaction(conn):
+            for role, seat, attempt_id in (("first", first, f"g{n}-first"), ("second", second, f"g{n}-second")):
+                model, family = SEATS[seat]
+                findings_db.insert_attempt(
+                    conn,
+                    {
+                        "review_id": f"rev-g{n}-{role}",
+                        "attempt_id": attempt_id,
+                        "kind": "lesson",
+                        "level": "a1",
+                        "slug": "agreement-course",
+                        "lesson_n": n,
+                        "manifest_sha256": f"{n:064x}",
+                        "reviewer_model": model,
+                        "reviewer_family": family,
+                        "harness": seat,
+                        "verdict": "REVISE",
+                        "validated_at": "2026-09-25T00:00:00+00:00",
+                        "task_id": f"task-g{n}-{role}",
+                        "role": role,
+                    },
+                )
+            findings_db.insert_agreement(
+                conn,
+                level="a1",
+                slug="agreement-course",
+                lesson_n=n,
+                attempt_a=f"g{n}-first",
+                attempt_b=f"g{n}-second",
+                agreed=not disagreed,
+                disagreed=disagreed or [],
+            )
+    finally:
+        conn.close()
+
+
+def _disagreement(finding_id: str, severity: str, blocking: bool) -> dict:
+    return {
+        "side": "a",
+        "finding_id": finding_id,
+        "dimension": "language",
+        "severity": severity,
+        "reason": "no_match",
+        "blocking": blocking,
+    }
+
+
+def test_agreement_is_reported_per_seat_pair_with_its_interval_and_the_blocking_disagreements(env: Env) -> None:
+    _first_world(env)
+    _lesson_pair(env, 1, "codex", "agy")  # agreed
+    _lesson_pair(
+        env, 2, "agy", "codex", [_disagreement("F-01", "BLOCKER", True), _disagreement("F-02", "MINOR", False)]
+    )
+    _lesson_pair(env, 3, "agy", "grok")  # a pair the codex seat is not part of
+    result = run(env)
+    [entry] = result.report["agreement_by_seat_pair"]
+    # the same two seats pool whichever of them was first; 1 of 2 lessons agreed, Wilson 95 % for 1/2
+    assert [(side["harness"], side["model"]) for side in entry["seats"]] == [
+        ("agy", "gemini-3.1-pro-preview"),
+        ("codex", "gpt-6-astra"),
+    ]
+    assert entry["lessons"] == 2 and entry["agreement"]["k"] == 1 and entry["blocking_disagreements"] == 1
+    assert near(entry["agreement"]["point"], 0.5)
+    assert near(entry["agreement"]["low"], 0.0945) and near(entry["agreement"]["high"], 0.9055)
+    text = score.render_report(result)
+    assert "## Agreement per seat pair" in text
+    assert (
+        "agy:gemini-3.1-pro-preview/codex:gpt-6-astra: 1/2 = 50.0 % [9.5 %, 90.5 %] lessons agreed; 1 disagreements"
+        in text
+    )
+    assert "grok" not in text.split("## Agreement per seat pair")[1].split("## Reading the size")[0]
+
+
+def test_every_pair_is_reported_when_no_seat_is_named(env: Env) -> None:
+    _first_world(env)
+    _lesson_pair(env, 1, "codex", "agy")
+    _lesson_pair(env, 2, "agy", "grok", [_disagreement("F-01", "MAJOR", True)])
+    found = score.agreement_by_seat_pair(["a1"], db_path_for=env.path_for, confidence=0.95)
+    assert [(e["lessons"], e["agreement"]["k"], e["blocking_disagreements"]) for e in found] == [(1, 1, 0), (1, 0, 1)]
+
+
+def test_a_seat_pair_with_no_lesson_in_common_is_shown_as_no_paired_reviews(env: Env) -> None:
+    _first_world(env)
+    _lesson_pair(env, 1, "codex", "agy")
+    result = run(env)
+    paired = {
+        "seat_a": "codex",
+        "seat_b": "grok",
+        "paired_seeds": 0,
+        "both_detected": 0,
+        "only_a_detected": 0,
+        "only_b_detected": 0,
+        "neither_detected": 0,
+        "p_value": None,
+    }
+    assert "- codex + grok: no paired reviews." in score.render_report(result, paired)
+    assert "codex + agy: no paired reviews" not in score.render_report(result, {**paired, "seat_b": "agy"})
+    assert "- no paired reviews." in score.render_report(score.SeatScore("codex", "first", {}, _stub_report()))
 
 
 # --- the CLI ---------------------------------------------------------------------------------------------------------------

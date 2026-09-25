@@ -14,6 +14,7 @@ import argparse
 import contextlib
 import errno
 import fcntl
+import hashlib
 import json
 import os
 import signal
@@ -5977,6 +5978,31 @@ def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
     cmd = recorded["cmd"]
     assert isinstance(cmd, list)
     assert cmd[cmd.index("--runtime-tmp-root") + 1] == str(lease_root)
+
+
+def test_dispatch_records_the_sha256_of_the_prompt_file_it_was_given(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A caller that rendered its prompt to a file can prove the task ran exactly that file (R3 adjudication)."""
+
+    class _FakeProc:
+        pid = 24682
+
+        class stdin:
+            write = staticmethod(lambda _data: None)
+            close = staticmethod(lambda: None)
+
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda cmd, **kwargs: _FakeProc())
+    prompt_file = tmp_path / "prompt.md"
+    prompt_file.write_text("адуджикація\nline two\n", encoding="utf-8")
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "codex", "--task-id", "prompt-sha", "--prompt-file", str(prompt_file)]
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    state = delegate._read_state(delegate._state_path("prompt-sha"))
+    assert state is not None
+    assert state["prompt_sha256"] == hashlib.sha256(prompt_file.read_bytes()).hexdigest()
 
 
 def test_dispatch_persists_and_forwards_output_schema(

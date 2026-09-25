@@ -19,7 +19,9 @@ seat is not falsity.
 **Blinding and trust.** The prompt carries the record of the lesson and the findings, never the reviewer's model,
 family, harness or receipts, and never who planted or gold-checked the seed. The adjudicator's identity is read
 from its dispatch record (``batch_state/tasks/<task-id>.json``), not from the reply's self-report, and the reply is
-refused when its family is the lesson writer's or the reviewer's. The lesson text and the findings are data, not
+refused when its family is the lesson writer's or the reviewer's. The record must be this adjudication's own: its
+task id is the one derived for this unit and attempt and its ``prompt_sha256`` is that of the task file rendered here
+(``adjudication_task_mismatch`` otherwise), so an unrelated independent dispatch cannot stand in. The lesson text and the findings are data, not
 instructions.
 
 **What a valid reply is.** The reply matches its schema; it names this unit and attempt; the attempt is an accepted
@@ -69,6 +71,7 @@ MAPPING_DUPLICATE = "mapping_duplicate_finding"
 PLANTED_FOUND_INCONSISTENT = "planted_found_inconsistent"
 PLANTED_BLOCKING_INCONSISTENT = "planted_blocking_inconsistent"
 ADJUDICATOR_UNKNOWN = "adjudicator_identity_unknown"
+TASK_MISMATCH = "adjudication_task_mismatch"
 ALREADY_RECORDED = "adjudication_already_recorded"
 REPLY_UNREADABLE = "adjudication_reply_unreadable"
 
@@ -406,6 +409,43 @@ def adjudicator_identity(task_id: str, tasks_dir: Path) -> dict[str, str]:
         raise AdjudicationError(str(error), ADJUDICATOR_UNKNOWN) from error
 
 
+def check_dispatch_binding(
+    unit_id: str, review_id: str, attempt_id: str, task_id: str, tasks_dir: Path, root: Path | None = None
+) -> None:
+    """The dispatch record is this adjudication's own task, and it ran the prompt this module rendered for it.
+
+    An independent dispatch of some other task must not be able to stand in for the adjudicator: its task id must be
+    the id derived for this unit and attempt, and the ``prompt_sha256`` its record carries (the prompt as handed to
+    ``delegate.py``) must equal the sha256 of the task file this module wrote. A record with no prompt hash cannot
+    prove which prompt ran and is refused.
+    """
+    expected = task_id_for(unit_id, review_id, attempt_id)
+    if task_id != expected:
+        raise AdjudicationError(
+            f"task {task_id!r} is not the adjudication task of {unit_id} / {attempt_id} ({expected!r})",
+            TASK_MISMATCH,
+        )
+    try:
+        dispatched = json.loads((Path(tasks_dir) / f"{task_id}.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        raise AdjudicationError(f"the dispatch record of {task_id} is unreadable ({error})", TASK_MISMATCH) from error
+    if not isinstance(dispatched, dict) or dispatched.get("task_id") != expected:
+        raise AdjudicationError(f"the dispatch record does not name task {expected!r}", TASK_MISMATCH)
+    task_file = seed_manifest.measurement_dir(root) / TASKS_SUBDIR / f"{expected}.task.md"
+    try:
+        rendered = hashlib.sha256(task_file.read_bytes()).hexdigest()
+    except OSError as error:
+        raise AdjudicationError(
+            f"the rendered adjudication prompt {task_file} is unreadable ({error})", TASK_MISMATCH
+        ) from error
+    if dispatched.get("prompt_sha256") != rendered:
+        raise AdjudicationError(
+            f"the dispatch of {task_id} did not run the adjudication prompt rendered for {unit_id} / {attempt_id} "
+            f"(recorded prompt sha256 {dispatched.get('prompt_sha256')!r}, rendered {rendered})",
+            TASK_MISMATCH,
+        )
+
+
 def check_independence(subject: Subject, adjudicator_family: str) -> None:
     """The adjudicator is neither the lesson writer's nor the reviewer's family."""
     violations = seed_manifest.adjudicator_violations(
@@ -483,9 +523,9 @@ def record_adjudication(
     try:
         subject = load_subject(conn, unit_id, review_id, attempt_id, root)
         verdict = validate_reply(extract_reply(reply_text), subject)
-        adjudicator = adjudicator_identity(
-            task_id, Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
-        )
+        tasks_path = Path(tasks_dir) if tasks_dir else findings_db.batch_root(root) / "batch_state" / "tasks"
+        check_dispatch_binding(unit_id, review_id, attempt_id, task_id, tasks_path, root)
+        adjudicator = adjudicator_identity(task_id, tasks_path)
         check_independence(subject, adjudicator["family"])
         new = record_verdict(conn, subject, verdict, adjudicator)
     finally:

@@ -21,7 +21,11 @@ allows a partial report, which then lists it.
 * share of clean lessons falsely blocked: Wilson;
 * evidence validation rate: accepted first attempts over all first attempts, rejected and failed ones in the
   denominator: Wilson;
-* paired comparison of two seats on the same seeds: exact McNemar on the discordant pairs.
+* paired comparison of two seats on the same seeds: exact McNemar on the discordant pairs;
+* agreement per seat pair: for each pair of recorded (harness, model) seats that reviewed the same real lesson, the
+  lessons they agreed on over the lessons both reviewed (Wilson), and how many of their disagreements were on a
+  BLOCKER or MAJOR finding. Read from the second-seat ``agreement`` table; the unit is the lesson (one row per lesson
+  and pair, the latest), and a pair that reviewed no lesson together is shown as having no paired reviews.
 
 **Sets.** ``first`` and ``confirmation`` runs verify the confirmation lock (its hash, its units, its assignments)
 before anything is scored; a ``first`` report never contains a locked unit. A seat is scored only on units its
@@ -59,6 +63,7 @@ ADJUDICATION_PENDING = "adjudication_pending"
 UNIT_NOT_ATTEMPTED = "unit_not_attempted"
 NO_ATTEMPTS = "no_attempts"
 MIXED_SEAT = "mixed_seat"
+AGREEMENT_UNATTRIBUTED = "agreement_unattributed"
 CONFIRMATION_LEAK = "confirmation_leak"
 IDENTITY_MISMATCH = "seed_identity_mismatch"
 EMPTY_SET = "empty_set"
@@ -258,7 +263,7 @@ def collect(
 
     Returns ``(observations, excluded, lock)``. ``excluded`` has ``not_applicable`` (unit -> the independence codes
     that keep this seat off it), ``not_attempted`` and ``pending`` (accepted, not adjudicated) lists, and the seat's
-    ``family`` and ``models``.
+    ``family`` and ``models``, and the ``levels`` the set's units are in.
     """
     partial_ok = set_name == "rolling" if allow_partial is None else allow_partial
     units, lock = _units_of(set_name, repo_root)
@@ -301,6 +306,7 @@ def collect(
             "pending": [],
             "family": family,
             "models": models,
+            "levels": sorted({record.level for record in records.values()}),
         }
         observations: dict[str, Observation] = {}
         for unit, record in records.items():
@@ -501,6 +507,65 @@ def compute_report(
     }
 
 
+def agreement_by_seat_pair(
+    levels: list[str],
+    *,
+    seat: str | None = None,
+    model: str | None = None,
+    db_path_for: Callable[[str], Path],
+    confidence: float,
+) -> list[dict[str, Any]]:
+    """Agreement of the second-seat comparisons, grouped by the recorded ``(harness, model)`` pair of the two seats.
+
+    Each ``agreement`` row is joined to both of its attempts; the pair is the two attempts' recorded harness and
+    model (unordered, so the same two seats pool whichever was first). The unit is the lesson reviewed by both: a
+    pair with more than one comparison of the same lesson counts its latest. ``agreed`` over ``lessons`` carries a
+    Wilson interval; ``blocking_disagreements`` counts the disagreed findings that are BLOCKER or MAJOR (the ones that
+    hold a module). ``seat`` (and ``model``) keep only the pairs that include that seat. A row whose attempts are not
+    in the database cannot be attributed to a seat pair and refuses the report.
+    """
+    latest: dict[tuple, tuple[bool, int]] = {}
+    for level in levels:
+        conn = findings_db.connect(db_path_for(level))
+        try:
+            for row in conn.execute("SELECT rowid, * FROM agreement ORDER BY rowid").fetchall():
+                sides = []
+                for attempt_id in (row["attempt_a"], row["attempt_b"]):
+                    found = conn.execute(
+                        "SELECT harness, reviewer_model FROM attempts WHERE attempt_id = ? AND level = ? AND slug = ?"
+                        " AND lesson_n = ? ORDER BY seq LIMIT 1",
+                        (attempt_id, row["level"], row["slug"], row["lesson_n"]),
+                    ).fetchone()
+                    if found is None:
+                        raise ScoreError(
+                            f"agreement of {row['level']}/{row['slug']}/{row['lesson_n']} names attempt {attempt_id} "
+                            "that is not in the database",
+                            AGREEMENT_UNATTRIBUTED,
+                        )
+                    sides.append((found["harness"], found["reviewer_model"]))
+                pair = tuple(sorted(sides))
+                if seat is not None and not any(
+                    side[0] == seat and (model is None or side[1] == model) for side in pair
+                ):
+                    continue
+                blocking = sum(1 for entry in json.loads(row["disagreed_json"]) if entry.get("blocking"))
+                latest[(pair, row["level"], row["slug"], row["lesson_n"])] = (bool(row["agreed"]), blocking)
+        finally:
+            conn.close()
+    grouped: dict[tuple, list[tuple[bool, int]]] = {}
+    for (pair, *_), outcome in latest.items():
+        grouped.setdefault(pair, []).append(outcome)
+    return [
+        {
+            "seats": [{"harness": harness, "model": name} for harness, name in pair],
+            "lessons": len(outcomes),
+            "agreement": proportion(sum(agreed for agreed, _ in outcomes), len(outcomes), confidence),
+            "blocking_disagreements": sum(blocking for _, blocking in outcomes),
+        }
+        for pair, outcomes in sorted(grouped.items())
+    ]
+
+
 def score_seat(
     seat: str,
     set_name: str,
@@ -525,6 +590,13 @@ def score_seat(
     partial = bool(excluded["not_attempted"] or excluded["pending"])
     report = compute_report(
         seat, set_name, observations, excluded, lock, parameters, today=today, partial=partial and partial_ok
+    )
+    report["agreement_by_seat_pair"] = agreement_by_seat_pair(
+        excluded["levels"],
+        seat=seat,
+        model=model,
+        db_path_for=db_path_for or _default_db_path_for(repo_root),
+        confidence=report["confidence"],
     )
     return SeatScore(seat, set_name, observations, report)
 
@@ -582,6 +654,10 @@ def _cell(item: dict[str, Any]) -> str:
     if item["n"] == 0:
         return "no units"
     return f"{item['k']}/{item['n']} = {_pct(item['point'])} [{_pct(item['low'])}, {_pct(item['high'])}]"
+
+
+def _agreement_cell(entry: dict[str, Any]) -> str:
+    return "no paired reviews" if entry["lessons"] == 0 else _cell(entry["agreement"]) + " lessons agreed"
 
 
 def render_report(score: SeatScore, paired: dict[str, Any] | None = None) -> str:
@@ -669,6 +745,23 @@ def render_report(score: SeatScore, paired: dict[str, Any] | None = None) -> str
             lines.append(f"- Not attempted: {', '.join(excluded['not_attempted'])}")
         if excluded["pending_adjudication"]:
             lines.append(f"- Accepted, not adjudicated yet: {', '.join(excluded['pending_adjudication'])}")
+    lines += ["", "## Agreement per seat pair (second-seat comparisons)", ""]
+    pairs = report.get("agreement_by_seat_pair", [])
+    named = {"/".join(f"{side['harness']}:{side['model']}" for side in entry["seats"]): entry for entry in pairs}
+    for label, entry in named.items():
+        lines.append(
+            f"- {label}: {_agreement_cell(entry)}; {entry['blocking_disagreements']} disagreements on a BLOCKER or MAJOR."
+        )
+    if paired is not None and not any(
+        {paired["seat_a"], paired["seat_b"]} == {side["harness"] for side in entry["seats"]} for entry in pairs
+    ):
+        lines.append(f"- {paired['seat_a']} + {paired['seat_b']}: no paired reviews.")
+    if not pairs and paired is None:
+        lines.append("- no paired reviews.")
+    lines.append(
+        "  Unit: a lesson reviewed by both seats of the pair; agreed over lessons, Wilson interval; the second-seat "
+        "comparison matches findings by dimension and location."
+    )
     if paired is not None:
         p_value = "no discordant pairs" if paired["p_value"] is None else f"p = {paired['p_value']:.4f}"
         lines += [
