@@ -271,9 +271,19 @@ Your clean morning sentence uses **я прокида́юся** before breakfast.
         encoding="utf-8",
     )
     (module_dir / "vocabulary.yaml").write_text("[]\n", encoding="utf-8")
+    # Minimal schema-valid A1 error-correction activity
+    # (schemas/activities-a1.schema.json → error-correction-a1).
     (module_dir / "activities.yaml").write_text(
-        "inline:\n- type: error-correction\n  items:\n"
-        "  - sentence: Моя сімя читає.\n    error: сімя\n    correction: сім'я\n",
+        "inline:\n"
+        "- id: act-1\n"
+        "  type: error-correction\n"
+        "  instruction: Fix the spelling mistake.\n"
+        "  items:\n"
+        "  - sentence: Моя сімя читає.\n"
+        "    error: сімя\n"
+        "    correction: сім'я\n"
+        "    explanation: The family word takes an apostrophe.\n"
+        "    error_ref: E-001\n",
         encoding="utf-8",
     )
 
@@ -301,7 +311,10 @@ Your clean morning sentence uses **я прокида́юся** before breakfast.
     assert report["passed"] is True
     stress_annotation = json.loads((module_dir / "stress_annotation.json").read_text(encoding="utf-8"))
     assert stress_annotation["files"]["activities.yaml"] > 0
-    assert f"correction: сім'я{STRESS_MARK}" in (module_dir / "activities.yaml").read_text(encoding="utf-8")
+    activities = (module_dir / "activities.yaml").read_text(encoding="utf-8")
+    assert f"correction: сім'я{STRESS_MARK}" in activities
+    # #8298 protection: the error chip itself must stay unannotated.
+    assert "error: сімя\n" in activities
     correction = json.loads((module_dir / "ulp_fidelity_correction_r1.json").read_text(encoding="utf-8"))
     assert correction["correction"]["applied"] == "module_patch"
     assert correction["after"]["passed"] is True
