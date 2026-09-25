@@ -5,7 +5,9 @@ from __future__ import annotations
 import argparse
 import csv
 import fnmatch
+import hashlib
 import io
+import json
 import os
 import subprocess
 import sys
@@ -15,10 +17,10 @@ from pathlib import Path
 
 # First match wins. Keep this as a single reviewable table: specific exceptions
 # precede their named audit groups. There is deliberately no catch-all rule.
-# Each A reason identifies a producer and whether its bytes can be regenerated.
-RULES: tuple[tuple[str, str, str, str], ...] = (
-    ("data/textbooks", "S", "local_links", "tracked local directory symlink; preserve as special"),
-    ("data/vesum", "S", "local_links", "tracked local directory symlink; preserve as special"),
+# A fifth field explicitly identifies a judgment call; omitted fields mean
+# the disposition follows the named rule. Each A reason describes provenance.
+Rule = tuple[str, str, str, str] | tuple[str, str, str, str, str]
+RULES: tuple[Rule, ...] = (
     ("data/.gitignore", "S", "placeholders", "tracked ignore control; handle at seal"),
     ("data/.gitkeep", "S", "placeholders", "tracked directory placeholder; handle at seal"),
     ("data/**/.gitignore", "S", "placeholders", "tracked ignore control; handle at seal"),
@@ -62,16 +64,23 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "external; regenerable with source corpus and audit tooling",
     ),
     (
-        "data/corpus_audit/*-report.md",
+        "data/corpus_audit/*_report.md",
         "A",
         "corpus_audit_snapshots",
         "external; regenerable with source corpus and audit tooling",
     ),
     (
-        "data/corpus_audit/*_report.md",
+        "data/corpus_audit/navsi200-catalog.json",
+        "K",
+        "corpus_audit_controls",
+        "frozen scraped snapshot, no committed producer",
+        "judgment",
+    ),
+    (
+        "data/lexicon/source-inventory/grade-*/*-headwords-[0-9].yaml",
         "A",
-        "corpus_audit_snapshots",
-        "external; regenerable with source corpus and audit tooling",
+        "lexicon_headword_candidates",
+        "extract_textbook_chunk_headword_inventory.py; regenerable with external textbook chunks and VESUM",
     ),
     (
         "data/lexicon/source-inventory/grade-*/*-headwords.yaml",
@@ -137,7 +146,8 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "data/projects/open_model_data/decolonization/seeds/human_gold_seeds_150_*.jsonl",
         "K",
         "open_model_controls",
-        "judgment: frozen human-reviewed gold seed input, not a disposable materialized index",
+        "frozen human-reviewed gold seed input, not a disposable materialized index",
+        "judgment",
     ),
     (
         "data/projects/open_model_data/components/*/*_train*.jsonl",
@@ -170,16 +180,40 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "build_grammar_component_8342.py; regenerable with external corpus",
     ),
     (
-        "data/projects/open_model_data/release/**/*.jsonl",
+        "data/projects/open_model_data/release/correction_protection_v1/*.jsonl",
         "A",
         "open_model_release_payload",
-        "v6_mine_general_assistant_textbooks.py or v6_mine_grammar_valency.py or correction_protection_consumer.py; regenerable with external source inputs",
+        "correction_protection_consumer.py; regenerable with external source inputs",
     ),
     (
-        "data/projects/open_model_data/archive/**/*.jsonl",
+        "data/projects/open_model_data/release/uldr_v03_dialect/*.jsonl",
+        "A",
+        "open_model_release_payload",
+        "v5_mine_dialect_corpus.py; regenerable with external source inputs",
+    ),
+    (
+        "data/projects/open_model_data/release/uldr_v05_grammar_valency/*.jsonl",
+        "A",
+        "open_model_release_payload",
+        "v6_mine_grammar_valency.py; regenerable with external source inputs",
+    ),
+    (
+        "data/projects/open_model_data/release/uldr_v06_general_assistant/**/*.jsonl",
+        "A",
+        "open_model_release_payload",
+        "v6_mine_general_assistant_textbooks.py; regenerable with external source inputs",
+    ),
+    (
+        "data/projects/open_model_data/archive/quarantined_historical/**/*.jsonl",
         "A",
         "open_model_archive_payload",
         "v5_mine_kyivan_rus_epigraphy.py or v5_mine_middle_ukrainian.py; regenerable with external sources; quarantined",
+    ),
+    (
+        "data/projects/open_model_data/archive/uldr_v1_production/**/*.jsonl",
+        "A",
+        "open_model_archive_payload",
+        "v4_production_shards_assembly.py; regenerable with external source inputs; archived",
     ),
     (
         "data/projects/open_model_data/evidence/source_universe_v1/*.units.jsonl",
@@ -258,6 +292,12 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "A",
         "open_model_other_indexes",
         "external; not regenerable from tracked inputs alone; preserve model adapter",
+    ),
+    (
+        "data/projects/open_model_data/canary/*training_log.jsonl",
+        "A",
+        "open_model_other_indexes",
+        "external; not regenerable from tracked inputs alone; preserve canary training log",
     ),
     (
         "data/projects/open_model_data/canary/*.jsonl",
@@ -367,12 +407,20 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "open_model_other_indexes",
         "external; regenerable with source trajectories and verification inputs",
     ),
+    ("data/projects/open_model_data/contracts/*.md", "K", "open_model_contracts", "reviewed prompt contract"),
     ("data/projects/open_model_data/contracts/**", "K", "open_model_contracts", "hand-authored schemas and contracts"),
     (
         "data/projects/open_model_data/components/*/acceptance_review_sample.receipt.json",
         "K",
         "open_model_components",
-        "judgment: independent human review receipt binds sample hashes and verdicts",
+        "independent human review receipt binds sample hashes and verdicts",
+        "judgment",
+    ),
+    (
+        "data/projects/open_model_data/components/**/*signoff_template.json",
+        "K",
+        "open_model_components",
+        "human review signoff template",
     ),
     (
         "data/projects/open_model_data/components/**",
@@ -381,16 +429,41 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "reviewed cases and judgments or compact documentation and manifests",
     ),
     (
+        "data/projects/open_model_data/release/**/TOMBSTONE.md",
+        "K",
+        "open_model_release_evidence",
+        "release tombstone documents withdrawn payload",
+    ),
+    (
+        "data/projects/open_model_data/release/**/coverage.json",
+        "K",
+        "open_model_release_evidence",
+        "release coverage evidence",
+    ),
+    (
         "data/projects/open_model_data/release/**",
         "K",
         "open_model_release_evidence",
         "frozen release receipt manifest hash or review evidence",
+    ),
+    ("data/projects/open_model_data/archive/**/README.md", "K", "open_model_archive_evidence", "archive documentation"),
+    (
+        "data/projects/open_model_data/archive/**/TOMBSTONE.md",
+        "K",
+        "open_model_archive_evidence",
+        "archive tombstone documents withdrawn payload",
     ),
     (
         "data/projects/open_model_data/archive/**",
         "K",
         "open_model_archive_evidence",
         "quarantine decision receipt manifest or hash",
+    ),
+    (
+        "data/projects/open_model_data/evidence/*config*.json",
+        "K",
+        "open_model_evidence_controls",
+        "evidence source configuration",
     ),
     (
         "data/projects/open_model_data/evidence/**",
@@ -403,6 +476,12 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "K",
         "open_model_study_recipes",
         "hand-authored recipe or reviewed acceptance template",
+    ),
+    (
+        "data/projects/open_model_data/adjudication/*pending*.json",
+        "K",
+        "open_model_controls",
+        "pending adjudication plan",
     ),
     ("data/projects/open_model_data/adjudication/**", "K", "open_model_controls", "reviewed adjudication record"),
     ("data/projects/open_model_data/admission/**", "K", "open_model_controls", "source admission decision or receipt"),
@@ -420,12 +499,37 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "dataset manifest or receipt binding payload hashes",
     ),
     (
+        "data/projects/open_model_data/decolonization/partitions/*summary.json",
+        "K",
+        "open_model_controls",
+        "partition audit summary",
+    ),
+    (
+        "data/projects/open_model_data/decolonization/partitions/*custody.json",
+        "K",
+        "open_model_controls",
+        "partition source custody record",
+    ),
+    (
+        "data/projects/open_model_data/decolonization/**/*receipt*.json",
+        "K",
+        "open_model_controls",
+        "decolonization review or release receipt",
+    ),
+    (
+        "data/projects/open_model_data/decolonization/**/*.sha256",
+        "K",
+        "open_model_controls",
+        "decolonization payload hash",
+    ),
+    (
         "data/projects/open_model_data/decolonization/**",
         "K",
         "open_model_controls",
         "seed or manifest binding generated payload",
     ),
     ("data/projects/open_model_data/delivery/**", "K", "open_model_controls", "delivery reproduction receipt"),
+    ("data/projects/open_model_data/detector/*receipt*.json", "K", "open_model_controls", "detector receipt"),
     (
         "data/projects/open_model_data/detector/**",
         "K",
@@ -447,7 +551,20 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "open_model_controls",
         "language-usage configuration or receipt",
     ),
-    ("data/projects/open_model_data/model_views/**", "K", "open_model_controls", "model-view recipe audit or receipt"),
+    (
+        "data/projects/open_model_data/model_views/*diagnostics*.json",
+        "K",
+        "open_model_controls",
+        "model-view tokenizer diagnostics",
+    ),
+    (
+        "data/projects/open_model_data/model_views/*production*.json",
+        "K",
+        "open_model_controls",
+        "model-view production plan or audit",
+    ),
+    ("data/projects/open_model_data/model_views/*audit*.json", "K", "open_model_controls", "model-view audit"),
+    ("data/projects/open_model_data/model_views/**", "K", "open_model_controls", "model-view recipe or receipt"),
     (
         "data/projects/open_model_data/pilot/**",
         "K",
@@ -466,22 +583,43 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "open_model_controls",
         "provenance configuration receipt or unresolved decision",
     ),
+    ("data/projects/open_model_data/reference/*handoff*.json", "K", "open_model_controls", "reference handoff record"),
     (
         "data/projects/open_model_data/reference/**",
         "K",
         "open_model_controls",
-        "reference configuration observation or summary",
+        "reference configuration or public summary",
     ),
     ("data/projects/open_model_data/silver/**", "K", "open_model_controls", "silver release configuration or receipt"),
     ("data/projects/open_model_data/soviet_candidates/**", "K", "open_model_controls", "candidate manifest or receipt"),
     ("data/projects/open_model_data/splits/**", "K", "open_model_controls", "split configuration or receipt"),
     ("data/projects/open_model_data/trajectories/**", "K", "open_model_controls", "trajectory verification receipt"),
     (
+        "data/projects/open_model_data/treatments/*manifest*.json",
+        "K",
+        "open_model_controls",
+        "treatment model snapshot manifest",
+    ),
+    ("data/projects/open_model_data/treatments/*receipt*.json", "K", "open_model_controls", "treatment probe receipt"),
+    (
+        "data/projects/open_model_data/treatments/*diagnostics*.json",
+        "K",
+        "open_model_controls",
+        "treatment tokenizer diagnostics",
+    ),
+    (
+        "data/projects/open_model_data/treatments/*preflight*.json",
+        "K",
+        "open_model_controls",
+        "treatment preflight record",
+    ),
+    (
         "data/projects/open_model_data/treatments/**",
         "K",
         "open_model_controls",
         "treatment plan config or preregistration",
     ),
+    ("data/projects/open_model_data/trust/*profile*.json", "K", "open_model_controls", "child trust profile"),
     ("data/projects/open_model_data/trust/**", "K", "open_model_controls", "review rubric or trust policy"),
     (
         "data/lexicon/source-inventory/grade-*/*-glossary.yaml",
@@ -489,36 +627,41 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "lexicon_glossaries",
         "admitted source-backed glosses with nonregenerable review selection",
     ),
-    ("data/lexicon/source-inventory/grade-*/**", "K", "lexicon_glossaries", "decision-bound textbook inventory"),
+    ("data/lexicon/source-inventory/grade-*/README.md", "K", "lexicon_glossaries", "textbook inventory guidance"),
     (
         "data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml",
         "K",
         "lexicon_source_inventories",
-        "judgment: committed source seed required by review validation, unlike generated headword pools",
+        "committed source seed required by review validation, unlike generated headword pools",
+        "judgment",
     ),
     (
         "data/lexicon/source-inventory/oneshot/*residual-census-6371.*",
         "K",
         "lexicon_source_inventories",
-        "judgment: frozen issue #6371 denominator and closure evidence, retained with its source inventories",
+        "frozen issue #6371 denominator and closure evidence, retained with its source inventories",
+        "judgment",
     ),
     (
         "data/lexicon/source-inventory/oneshot/*bulk.summary.md",
         "K",
         "lexicon_source_inventories",
-        "judgment: committed intake summary records reviewed source selection and historical counts",
+        "committed intake summary records reviewed source selection and historical counts",
+        "judgment",
     ),
     (
         "data/lexicon/source-inventory/oneshot/**",
         "K",
         "lexicon_source_inventories",
-        "judgment: preserve decision-bound one-shot source records even when extraction contributed",
+        "preserve decision-bound one-shot source records even when extraction contributed",
+        "judgment",
     ),
     (
         "data/lexicon/esum_garbled_etymologies.json",
         "K",
         "lexicon_curated",
-        "judgment: hand-curated OCR correction choices used by fix_esum_garbled_etymologies.py",
+        "hand-curated OCR correction choices used by fix_esum_garbled_etymologies.py",
+        "judgment",
     ),
     (
         "data/lexicon/source-inventory/**",
@@ -532,6 +675,7 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "lexicon_review_decisions",
         "irreplaceable reviewed decision ledger",
     ),
+    ("data/lexicon/grow-triage-ledgers/README.md", "K", "lexicon_review_decisions", "adjudication ledger guidance"),
     ("data/lexicon/grow-triage-ledgers/**", "K", "lexicon_review_decisions", "human or agent adjudication ledger"),
     ("data/lexicon/intake/**", "K", "lexicon_review_decisions", "reviewed source intake decision"),
     ("data/lexicon/recovery-audit/**", "K", "lexicon_review_decisions", "manual recovery judgment"),
@@ -544,26 +688,54 @@ RULES: tuple[tuple[str, str, str, str], ...] = (
         "human practice creation review ledger",
     ),
     ("data/lexicon/vesum_inflection_aliases.json", "K", "lexicon_curated", "curated inflection alias record"),
+    ("data/projects/ua_eval_harness/**/*.md", "K", "evaluation_frozen", "evaluation baseline documentation"),
+    ("data/projects/ua_eval_harness/*config*schema*.json", "K", "evaluation_frozen", "evaluation configuration schema"),
+    ("data/projects/ua_eval_harness/*config*.json", "K", "evaluation_frozen", "evaluation configuration"),
+    ("data/projects/ua_eval_harness/**/*config*.json", "K", "evaluation_frozen", "evaluation configuration"),
+    ("data/projects/ua_eval_harness/*.txt", "K", "evaluation_frozen", "evaluation prompt or instructions"),
+    ("data/projects/ua_eval_harness/**/*.txt", "K", "evaluation_frozen", "evaluation prompt or instructions"),
     (
         "data/projects/ua_eval_harness/**",
         "K",
         "evaluation_frozen",
-        "frozen evaluation gold schema baseline or run evidence",
+        "frozen evaluation input, schema, baseline, or run evidence",
+    ),
+    (
+        "data/projects/ua_open_weight_eval/**/*config*.json",
+        "K",
+        "evaluation_frozen",
+        "open-weight evaluation configuration",
+    ),
+    (
+        "data/projects/ua_open_weight_eval/**/*schema*.json",
+        "K",
+        "evaluation_frozen",
+        "open-weight evaluation response schema",
+    ),
+    (
+        "data/projects/ua_open_weight_eval/runs/*.json",
+        "K",
+        "evaluation_frozen",
+        "open-weight evaluation run record or disposition",
     ),
     (
         "data/projects/ua_open_weight_eval/**",
         "K",
         "evaluation_frozen",
-        "frozen cases seeds authorization or disposition",
+        "frozen evaluation cases, controlled seeds, or release receipt",
     ),
     ("data/datasets/**", "K", "dataset_cards", "hand-authored dataset status card"),
     ("data/corpus_audit/**", "K", "corpus_audit_controls", "authored audit plan catalog or decision"),
+    ("data/practice/zno-markup-overlay.json", "K", "practice_reviewed", "reviewed ZNO markup overlay"),
     (
         "data/practice/**",
         "K",
         "practice_reviewed",
         "committed deck or reviewed practice correction used by parity gates",
     ),
+    ("data/translations/README.md", "K", "translation_archive", "translation archive guidance"),
+    ("data/translations/input/*.sh", "K", "translation_archive", "translation prompt helper"),
+    ("data/translations/input/**", "K", "translation_archive", "translation source batch or instructions"),
     ("data/translations/**", "K", "translation_archive", "nonregenerable translation reapplication record"),
     ("data/ua-gec-gold/**", "K", "reference_inputs", "frozen UA-GEC gold input"),
     ("data/miyklas/**", "K", "reference_inputs", "curated MiyKlas grammar index"),
@@ -594,10 +766,14 @@ def git(repo: Path, *args: str, env: dict[str, str] | None = None) -> bytes:
     ).stdout
 
 
-def classify(path: str) -> tuple[str, str, str] | None:
-    for glob, classification, group, reason in RULES:
+def classify(path: str) -> tuple[str, str, str, str] | None:
+    for rule in RULES:
+        glob, classification, group, reason = rule[:4]
         if fnmatch.fnmatchcase(path, glob):
-            return classification, group, reason
+            judgment = rule[4] if len(rule) == 5 else "rule"
+            if judgment not in {"rule", "judgment"}:
+                raise ValueError(f"invalid judgment for {glob}: {judgment}")
+            return classification, group, reason, judgment
     return None
 
 
@@ -610,7 +786,7 @@ def build(repo: Path, base: str) -> tuple[str, Counter[str], Counter[str]]:
         env = {**os.environ, "GIT_INDEX_FILE": str(Path(scratch) / "index")}
         git(repo, "read-tree", commit, env=env)
         entries = git(repo, "ls-files", "-s", "-z", "--", "data", env=env).split(b"\0")
-    rows: list[tuple[str, str, str, str, str, str, str]] = []
+    rows: list[tuple[str, str, str, str, str, str, str, str]] = []
     unmatched: list[str] = []
     sizes: dict[str, int] = {}
     counts: Counter[str] = Counter()
@@ -627,14 +803,14 @@ def build(repo: Path, base: str) -> tuple[str, Counter[str], Counter[str]]:
         if disposition is None:
             unmatched.append(path)
             continue
-        classification, group, reason = disposition
+        classification, group, reason, judgment = disposition
         if (mode == "120000") != (path in {"data/textbooks", "data/vesum"}):
             raise ValueError(f"unexpected symlink mode for {path}: {mode}")
         blob = raw_blob
         if blob not in sizes:
             sizes[blob] = int(git(repo, "cat-file", "-s", blob))
         size = sizes[blob]
-        rows.append((path, mode, blob, str(size), classification, group, reason))
+        rows.append((path, mode, blob, str(size), classification, group, reason, judgment))
         counts[classification] += 1
         byte_counts[classification] += size
     if unmatched:
@@ -642,9 +818,28 @@ def build(repo: Path, base: str) -> tuple[str, Counter[str], Counter[str]]:
     rows.sort(key=lambda row: row[0])
     output = io.StringIO(newline="")
     writer = csv.writer(output, delimiter="\t", lineterminator="\n")
-    writer.writerow(("path", "mode", "blob", "size", "class", "group", "reason"))
+    writer.writerow(("path", "mode", "blob", "size", "class", "group", "reason", "judgment"))
     writer.writerows(rows)
     return output.getvalue(), counts, byte_counts
+
+
+def build_metadata(
+    repo: Path, base: str, table: str, counts: Counter[str], byte_counts: Counter[str]
+) -> dict[str, object]:
+    repo = repo.resolve()
+    base_commit = git(repo, "rev-parse", "--verify", f"{base}^{{commit}}").decode().strip()
+    generator_blob = git(repo, "hash-object", str(Path(__file__).resolve())).decode().strip()
+    return {
+        "base_commit": base_commit,
+        "rows": sum(counts.values()),
+        "bytes": sum(byte_counts.values()),
+        "classes": {
+            classification: {"rows": counts[classification], "bytes": byte_counts[classification]}
+            for classification in ("K", "A", "S")
+        },
+        "generator_blob": generator_blob,
+        "table_sha256": hashlib.sha256(table.encode("utf-8")).hexdigest(),
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -658,9 +853,10 @@ def main(argv: list[str] | None = None) -> int:
             "Examples:\n"
             "  /home/ops/learn-ukrainian/.venv/bin/python scripts/storage/build_classification_table.py --base origin/main --output registry/artifacts/classification-v1.tsv\n"
             "  /home/ops/learn-ukrainian/.venv/bin/python scripts/storage/build_classification_table.py --base HEAD > /tmp/classification.tsv\n"
-            "\nOutputs: TSV to stdout or --output; counts and byte totals to stderr. No network use.\n"
+            "\nOutputs: TSV to stdout or --output; with --output also writes the sibling .meta.json.\n"
+            "Counts and byte totals go to stderr. No network use.\n"
             "Exit codes: 0 = table generated; 1 = unmatched path or Git/IO error; 2 = invalid arguments.\n"
-            "Related: issue #8809 spec v2 section 2; issue #8804 tracked-data audit."
+            "Related: issue #8809 spec v3 section 2; issue #8804 tracked-data audit."
         ),
     )
     parser.add_argument("--base", required=True, help="Commit to classify, e.g. origin/main or a full SHA.")
@@ -674,6 +870,10 @@ def main(argv: list[str] | None = None) -> int:
         if args.output:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(table, encoding="utf-8", newline="")
+            metadata = build_metadata(args.repo, args.base, table, counts, byte_counts)
+            args.output.with_suffix(".meta.json").write_text(
+                json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
         else:
             sys.stdout.write(table)
         print(f"rows={sum(counts.values())} bytes={sum(byte_counts.values())}", file=sys.stderr)

@@ -1,0 +1,21 @@
+{
+  "base_commit": "10b39479b1ca8f97c3f7cf7547e71d58141947b1",
+  "bytes": 993288299,
+  "classes": {
+    "A": {
+      "bytes": 855024160,
+      "rows": 605
+    },
+    "K": {
+      "bytes": 138264132,
+      "rows": 1099
+    },
+    "S": {
+      "bytes": 7,
+      "rows": 2
+    }
+  },
+  "generator_blob": "2d6fddb88a4852f62ceff08ca842d64592aaeeac",
+  "rows": 1706,
+  "table_sha256": "5b16c0325b2f4a088c84eca91af177ee9b2b1cf9e31c8ba10da2de772e85fcf9"
+}
