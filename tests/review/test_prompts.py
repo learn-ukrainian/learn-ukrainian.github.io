@@ -34,16 +34,23 @@ import pytest
 import yaml
 
 from scripts.build.fresh import manifest, plan_manifest
+from scripts.curriculum.evidence import lock
 from scripts.review.prompts.check import check_prompt
 from scripts.review.prompts.check import main as check_main
 from scripts.review.prompts.render import (
     InputHashMismatchError,
+    LearnerStateMismatchError,
     ManifestReader,
+    PackLockMismatchError,
+    RenderError,
     UnauthorizedFileReadError,
+    WordsLockMismatchError,
     data_fence,
+    dump_yaml,
     render_prompt,
 )
 from scripts.review.receipts import REVIEW_TOOLS
+from tests.build.test_fresh_e3b2 import _fake_state, _rereview_setup, _write
 from tests.build.test_fresh_e3b2 import _fixture as lesson_fixture
 from tests.build.test_fresh_plan_review import fake_verify
 from tests.helpers.plan_review_world import LEVEL, SLUG, build_env, validate_provisional
@@ -58,25 +65,15 @@ EXPECTED_RULE_SNIPPET = (
 )
 
 
+LEARNER_STATE = {"level": "a1", "core_ids": {"W-1": {"position": 1, "lesson": 1}}}
+
+
 def _setup_lesson_fixture(root: Path, monkeypatch: pytest.MonkeyPatch, lesson_n: int = 2) -> tuple[Path, dict, str]:
+    """A real lesson manifest from the engine's three-lesson fixture (lesson 3 is the recap)."""
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(root)
-    monkeypatch.setattr(
-        manifest, "planned_state", lambda *a, **kw: type("State", (), {"to_dict": lambda self: {"b": 2, "a": 1}})()
-    )
-    doc, digest = manifest.write_manifest(
-        level,
-        slug,
-        lesson_n,
-        lesson_kind="lesson",
-        state_dir=state_dir,
-        repo_root=root,
-        plans_dir=plan_dir,
-        evidence_dir=evidence_dir,
-        position=1,
-        site_dir=page_dir,
-    )
-    manifest_path = state_dir / f"lesson-{lesson_n}.manifest.yaml"
-    return manifest_path, doc, digest
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
+    doc, digest = _write(level, slug, lesson_n, state_dir, plan_dir, evidence_dir, page_dir, root)
+    return state_dir / f"lesson-{lesson_n}.manifest.yaml", doc, digest
 
 
 def _setup_plan_fixture(root: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, dict, str]:
@@ -399,66 +396,53 @@ def test_no_cyrillic_characters_in_templates_or_code():
 # ---------------------------------------------------------------------------
 
 
-def test_lesson_rereview_prompt_rendering_and_check(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    manifest_path, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
-    state_dir = manifest_path.parent
-
-    # Create dummy diff and previous findings files
-    diff_file = state_dir / "lesson-2.diff"
-    diff_file.write_text("--- lesson-2.prev\n+++ lesson-2.curr\n@@ -1 +1 @@\n-old\n+new\n", encoding="utf-8")
-    diff_sha = hashlib.sha256(diff_file.read_bytes()).hexdigest()
-
-    prev_file = state_dir / "previous-findings.yaml"
-    prev_file.write_text(
-        yaml.safe_dump(
-            [
-                {
-                    "id": "F-01",
-                    "status": "persisting",
-                    "locations": [{"tab": "urok", "activity": "a1", "item": 0, "quote": "test"}],
-                    "dimension": "language",
-                    "sub_dimension": "stress",
-                    "severity": "MINOR",
-                    "claim": "Minor stress note.",
-                    "evidence": {"receipt": "R-100"},
-                }
-            ]
-        ),
-        encoding="utf-8",
+def _write_rereview(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """A real re-review manifest: lesson 2 reviewed once, rebuilt with different text, the diff and previous review pinned."""
+    (level, slug, plan_dir, evidence_dir, state_dir, page_dir), _first, previous, _review = _rereview_setup(
+        tmp_path, monkeypatch
     )
-    prev_sha = hashlib.sha256(prev_file.read_bytes()).hexdigest()
-
-    # Create re-review manifest
-    rereview_doc = dict(doc)
-    rereview_doc["previous_attempt"] = "attempt-001"
-    rereview_doc["diff_sha256"] = diff_sha
-    rereview_doc["inputs"]["diff"] = {"path": diff_file.relative_to(tmp_path).as_posix(), "sha256": diff_sha}
-    rereview_doc["inputs"]["previous_findings"] = {
-        "path": prev_file.relative_to(tmp_path).as_posix(),
-        "sha256": prev_sha,
-    }
-
-    rereview_manifest = state_dir / "lesson-2.rereview.manifest.yaml"
-    rereview_manifest.write_text(yaml.safe_dump(rereview_doc), encoding="utf-8")
-
-    rendered, _prompt_sha, files_read = render_prompt(
-        rereview_manifest,
-        template_name="lesson-rereview.md.j2",
+    doc, _digest = manifest.write_manifest(
+        level,
+        slug,
+        2,
+        lesson_kind="lesson",
+        state_dir=state_dir,
         repo_root=tmp_path,
+        plans_dir=plan_dir,
+        evidence_dir=evidence_dir,
+        position=1,
+        site_dir=page_dir,
+        previous_attempt=previous,
     )
+    return state_dir / "lesson-2.manifest.yaml", doc
 
-    assert "Previous Attempt ID: attempt-001" in rendered
+
+def test_lesson_rereview_prompt_rendering_and_check(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    manifest_path, doc = _write_rereview(tmp_path, monkeypatch)
+
+    rendered, _prompt_sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+
+    assert "Previous Attempt ID: attempt-1" in rendered
     assert "### Diff from Previous Attempt" in rendered
     assert "### Previous Findings" in rendered
+    assert "+New sentence." in rendered  # the pinned diff, verbatim
+    # the previous review and the diff are read through their pins; the ledger is pinned but not needed
+    read = {path.relative_to(tmp_path).as_posix() for path in files_read}
+    assert {doc["diff"]["path"], doc["previous_attempt"]["review"]["path"]} <= read
+    assert doc["previous_attempt"]["ledger"]["path"] not in read
 
-    check_res = check_prompt(
-        rendered,
-        rereview_manifest,
-        template_name="lesson-rereview.md.j2",
-        repo_root=tmp_path,
-        files_read=files_read,
-    )
+    check_res = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
     assert check_res.passed, f"check failed: {check_res.errors}"
+
+
+def test_rereview_refuses_a_diff_or_previous_review_that_changed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    manifest_path, doc = _write_rereview(tmp_path, monkeypatch)
+    diff_path = tmp_path / doc["diff"]["path"]
+    diff_path.write_bytes(diff_path.read_bytes() + b"+smuggled line\n")
+    with pytest.raises(InputHashMismatchError):
+        render_prompt(manifest_path, repo_root=tmp_path)
+    res = check_prompt("dummy", manifest_path, repo_root=tmp_path)
+    assert any("input_hash_mismatch" in err and doc["diff"]["path"] in err for err in res.errors)
 
 
 def test_extensibility_to_custom_templates_such_as_settle(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -556,7 +540,7 @@ def test_plan_prompt_fences_arc_specification(tmp_path: Path, monkeypatch: pytes
 
 def test_plan_context_contract_receives_survives(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     """MAJOR: Plan review receives position and neighbours, system-or-chunk, requirements, grammar, scope, validate report."""
-    manifest_path, _doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    manifest_path, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
     rendered, _sha, files_read = render_prompt(
         manifest_path,
         template_name="plan-review.md.j2",
@@ -582,9 +566,10 @@ def test_plan_context_contract_receives_survives(tmp_path: Path, monkeypatch: py
 
     # 6. Plan validate report with failures, not_checked, notes
     assert "### Plan Validate Report" in rendered
-    assert "failures:" in rendered
-    assert "not_checked:" in rendered
-    assert "notes:" in rendered
+    report = json.loads((tmp_path / doc["inputs"]["validate_report"]["path"]).read_text(encoding="utf-8"))
+    assert {"failures", "not_checked", "notes"} <= set(report)
+    for key in ("failures", "not_checked", "notes"):
+        assert f'"{key}"' in rendered
 
     # 7. Exclude other modules' content (no plans or lessons for mod-zero)
     assert "lesson_plans/a1/mod-zero" not in rendered
@@ -638,22 +623,37 @@ def test_check_fails_on_paraphrased_writer_direction(tmp_path: Path, monkeypatch
         )
 
 
-def test_check_fails_on_unknown_foreign_slug_derived_from_level(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    """MAJOR: check.py derives foreign slugs from the level curriculum without other_slugs."""
+def test_check_fails_on_a_foreign_module_locator_without_other_slugs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """MAJOR: a path into another module is caught from the prompt itself; no unpinned file is read."""
     manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
 
-    # In our fixture, curriculum.yaml or arc can be populated with an unknown foreign slug
-    curriculum_path = tmp_path / "curriculum/l2-uk-en/curriculum.yaml"
-    curr_data = {"levels": {"a1": {"modules": ["fixture-module", "unknown-foreign-module"]}}}
-    curriculum_path.parent.mkdir(parents=True, exist_ok=True)
-    curriculum_path.write_text(yaml.safe_dump(curr_data), encoding="utf-8")
+    for locator in (
+        "curriculum/l2-uk-en/lesson-plans/a1/unknown-foreign-module.yaml",
+        "curriculum/l2-uk-en/evidence/a1/unknown-foreign-module.yaml",
+        "site/src/content/docs/a1/unknown-foreign-module/1.mdx",
+    ):
+        res = check_prompt(f"{rendered}\n{locator}\n", manifest_path, repo_root=tmp_path, files_read=files_read)
+        assert not res.passed, locator
+        assert any("forbidden_module_slug" in err and "unknown-foreign-module" in err for err in res.errors)
 
-    # Pollute prompt with the derived foreign slug
-    polluted = f"{rendered}\n\nRefer to unknown-foreign-module for details.\n"
-    res = check_prompt(polluted, manifest_path, repo_root=tmp_path, files_read=files_read)
-    assert not res.passed
-    assert any("forbidden_module_slug" in err and "unknown-foreign-module" in err for err in res.errors)
+
+def test_check_derives_foreign_slugs_from_the_pinned_arc_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """A plan review: a neighbour's slug is context, a far position's slug is another module."""
+    _, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    arc_path = tmp_path / doc["inputs"]["arc"]["path"]
+    arc = yaml.safe_load(arc_path.read_text(encoding="utf-8"))
+    neighbour = arc["positions"][0]["slug"]
+    arc["positions"].append({**arc["positions"][0], "position": 9, "slug": "far-away-module"})
+    arc_path.write_bytes(lock.yaml_bytes(arc))
+    doc["inputs"]["arc"]["sha256"] = hashlib.sha256(arc_path.read_bytes()).hexdigest()
+    rendered, _sha, files_read = render_prompt(doc, repo_root=tmp_path)
+    assert neighbour in rendered and "far-away-module" not in rendered
+
+    ok = check_prompt(rendered, doc, repo_root=tmp_path, files_read=files_read)
+    assert ok.passed, ok.errors
+    polluted = check_prompt(f"{rendered}\nSee far-away-module.\n", doc, repo_root=tmp_path, files_read=files_read)
+    assert any("forbidden_module_slug" in err and "far-away-module" in err for err in polluted.errors)
 
 
 def test_check_fails_on_earlier_full_lesson_bytes_without_phrase_marker(
@@ -670,14 +670,18 @@ def test_check_fails_on_earlier_full_lesson_bytes_without_phrase_marker(
 
     # Plant the exact earlier bytes into rendered prompt with no phrase markers
     polluted = f"{rendered}\n\n{earlier_content}\n"
-    res = check_prompt(polluted, manifest_path, repo_root=tmp_path, files_read=files_read)
+    res = check_prompt(
+        polluted, manifest_path, repo_root=tmp_path, files_read=files_read, earlier_editions=[old_attempt_file]
+    )
     assert not res.passed
     assert any("earlier_edition" in err and "unmanifested earlier edition" in err for err in res.errors)
 
     # Also test planting earlier file sha256
     earlier_sha = hashlib.sha256(earlier_content.encode("utf-8")).hexdigest()
     polluted_sha = f"{rendered}\n\nHash: {earlier_sha}\n"
-    res_sha = check_prompt(polluted_sha, manifest_path, repo_root=tmp_path, files_read=files_read)
+    res_sha = check_prompt(
+        polluted_sha, manifest_path, repo_root=tmp_path, files_read=files_read, earlier_editions=[old_attempt_file]
+    )
     assert not res_sha.passed
     assert any("earlier_edition" in err and earlier_sha in err for err in res_sha.errors)
 
@@ -714,3 +718,200 @@ def test_check_cli_runs_and_enforces_files_read_sidecar(tmp_path: Path, monkeypa
 
     ret_unauth = check_main([str(prompt_out), "--manifest", str(manifest_path), "--repo-root", str(tmp_path)])
     assert ret_unauth != 0
+
+
+# ---------------------------------------------------------------------------
+# Review r1 BLOCKERs 1 and 2: read only pinned files, render the required content
+# ---------------------------------------------------------------------------
+
+
+def _read_paths_during(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, run) -> set[Path]:
+    """Every file read through Path.read_bytes/read_text while `run` executes (the renderer's only read APIs)."""
+    seen: set[Path] = set()
+    read_bytes, read_text = Path.read_bytes, Path.read_text
+
+    def spy_bytes(self):
+        seen.add(self.resolve())
+        return read_bytes(self)
+
+    def spy_text(self, *args, **kwargs):
+        seen.add(self.resolve())
+        return read_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_bytes", spy_bytes)
+    monkeypatch.setattr(Path, "read_text", spy_text)
+    run()
+    monkeypatch.undo()
+    return {path for path in seen if path.is_relative_to(tmp_path.resolve())}
+
+
+def _pinned_paths(doc: dict, root: Path) -> set[Path]:
+    return {(root / entry["path"]).resolve() for _, entry in manifest.pinned_entries(doc)}
+
+
+def test_no_e3d_placeholder_markers_are_left():
+    text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (Path(__file__).resolve().parents[2] / "scripts/review/prompts").glob("*.py")
+    )
+    assert "E3d:" not in text
+    assert "curriculum.yaml" not in text
+
+
+@pytest.mark.parametrize("lesson_n", [2, 3])
+def test_lesson_render_and_check_read_only_pinned_files(tmp_path, monkeypatch, lesson_n):
+    manifest_path, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=lesson_n)
+    pinned = _pinned_paths(doc, tmp_path)
+    box = {}
+
+    def run():
+        box["rendered"], _sha, box["files"] = render_prompt(manifest_path, repo_root=tmp_path)
+        assert check_prompt(box["rendered"], manifest_path, repo_root=tmp_path, files_read=box["files"]).passed
+
+    read = _read_paths_during(tmp_path, monkeypatch, run)
+    assert read <= pinned | {manifest_path.resolve()}, sorted(read - pinned)
+    assert {path.resolve() for path in box["files"]} <= pinned
+
+
+def test_plan_render_and_check_read_only_pinned_files(tmp_path, monkeypatch):
+    manifest_path, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    pinned = _pinned_paths(doc, tmp_path)
+    box = {}
+
+    def run():
+        box["rendered"], _sha, box["files"] = render_prompt(manifest_path, repo_root=tmp_path)
+        assert check_prompt(box["rendered"], manifest_path, repo_root=tmp_path, files_read=box["files"]).passed
+
+    read = _read_paths_during(tmp_path, monkeypatch, run)
+    assert read <= pinned | {manifest_path.resolve()}, sorted(read - pinned)
+    assert {path.resolve() for path in box["files"]} == pinned  # a plan review reads every input the manifest names
+
+
+def test_lesson_review_renders_the_full_learner_state_and_the_immersion_rule(tmp_path, monkeypatch):
+    manifest_path, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    rendered, _sha, _files = render_prompt(manifest_path, repo_root=tmp_path)
+    document = yaml.safe_load((tmp_path / doc["inputs"]["learner_state"]["path"]).read_text(encoding="utf-8"))
+
+    assert "### Learner State Before This Lesson (Planned, Complete)" in rendered
+    assert dump_yaml(document["learner_state"]) in rendered  # the content, not only its hash
+    assert "W-1" in rendered
+    assert "### Immersion Rule For This Lesson" in rendered
+    assert dump_yaml(document["immersion"]) in rendered
+    assert "permitted_languages" in rendered
+    # not a first-review recap: no upstream lessons and no recap check
+    assert "### Built Lessons 1..N-1 (Recap Only)" not in rendered
+    assert "`recap`: The recap lesson" not in rendered
+
+
+def test_recap_review_renders_the_built_upstream_lessons_beside_the_digest(tmp_path, monkeypatch):
+    """Review r1 BLOCKER 2: the recap reviewer compares lessons 1..N-1 with the digest, from a real recap manifest."""
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
+    (page_dir / "1.mdx").write_text("# Lesson 1\nUPSTREAM-ONE names the first taught form.\n", encoding="utf-8")
+    (page_dir / "2.mdx").write_text("# Lesson 2\nUPSTREAM-TWO names the second taught form.\n", encoding="utf-8")
+    doc, _ = _write(level, slug, 3, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    assert doc["recap"] is True and [row["n"] for row in doc["upstream_lessons"]] == [1, 2]
+    manifest_path = state_dir / "lesson-3.manifest.yaml"
+
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+
+    assert "### Built Lessons 1..N-1 (Recap Only)" in rendered
+    assert "#### Built Lesson 1" in rendered and "#### Built Lesson 2" in rendered
+    assert "UPSTREAM-ONE names the first taught form." in rendered
+    assert "UPSTREAM-TWO names the second taught form." in rendered
+    assert rendered.index("### Module Digest") < rendered.index("### Built Lessons 1..N-1 (Recap Only)")
+    assert "the taught lessons win" in rendered
+    assert "`recap`: The recap lesson reflects what lessons 1..N-1 actually taught" in rendered
+    assert "  recap: clean" in rendered
+    read = {path.relative_to(tmp_path).as_posix() for path in files_read}
+    assert {row["path"] for row in doc["upstream_lessons"]} <= read
+
+    check_res = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert check_res.passed, check_res.errors
+
+
+def test_recap_upstream_lesson_changed_after_the_manifest_is_refused(tmp_path, monkeypatch):
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
+    doc, _ = _write(level, slug, 3, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    (page_dir / "1.mdx").write_text("# Lesson 1\nrewritten after the manifest\n", encoding="utf-8")
+    with pytest.raises(InputHashMismatchError, match=r"1\.mdx"):
+        render_prompt(state_dir / "lesson-3.manifest.yaml", repo_root=tmp_path)
+    res = check_prompt("dummy", state_dir / "lesson-3.manifest.yaml", repo_root=tmp_path)
+    assert any("input_hash_mismatch" in err and "1.mdx" in err for err in res.errors)
+    assert doc["recap"] is True
+
+
+def test_a_recap_manifest_without_its_upstream_lessons_is_refused(tmp_path, monkeypatch):
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=3)
+    doc["upstream_lessons"] = doc["upstream_lessons"][:1]
+    with pytest.raises(RenderError, match="upstream_lessons"):
+        render_prompt(doc, repo_root=tmp_path)
+
+
+def test_a_required_pin_the_manifest_lacks_is_refused_by_name(tmp_path, monkeypatch):
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    del doc["module_digest"]
+    with pytest.raises(RenderError, match="module_digest"):
+        render_prompt(doc, repo_root=tmp_path)
+
+
+def test_learner_state_content_that_does_not_match_its_identity_hash_is_refused(tmp_path, monkeypatch):
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    state_path = tmp_path / doc["inputs"]["learner_state"]["path"]
+    document = yaml.safe_load(state_path.read_text(encoding="utf-8"))
+    document["learner_state"]["core_ids"]["W-999"] = {"position": 9, "lesson": 9}
+    state_path.write_bytes(lock.yaml_bytes(document))
+    doc["inputs"]["learner_state"]["sha256"] = hashlib.sha256(state_path.read_bytes()).hexdigest()  # re-pinned
+    with pytest.raises(LearnerStateMismatchError):
+        render_prompt(doc, repo_root=tmp_path)
+
+
+@pytest.mark.parametrize("data, error", [("pack", PackLockMismatchError), ("words", WordsLockMismatchError)])
+def test_a_pinned_file_that_disagrees_with_its_pinned_lock_is_refused(tmp_path, monkeypatch, data, error):
+    _, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    data_path = tmp_path / doc["inputs"][data]["path"]
+    data_path.write_bytes(data_path.read_bytes() + b"# edited after locking\n")
+    doc["inputs"][data]["sha256"] = hashlib.sha256(data_path.read_bytes()).hexdigest()  # the pin follows the file
+    with pytest.raises(error, match="disagrees with its lock"):
+        render_prompt(doc, repo_root=tmp_path)
+    res = check_prompt("dummy", doc, repo_root=tmp_path)
+    assert any("input_hash_mismatch" in err and "its lock" in err for err in res.errors)
+
+
+def test_plan_review_renders_the_full_prior_state_the_requirements_and_the_arc_source(tmp_path, monkeypatch):
+    manifest_path, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
+    inputs = doc["inputs"]
+    document = yaml.safe_load((tmp_path / inputs["learner_state"]["path"]).read_text(encoding="utf-8"))
+
+    assert "### Full Prior Planned Learner State (Before This Position)" in rendered
+    assert dump_yaml(document["learner_state"]) in rendered
+    assert "immersion" not in document  # a plan review carries the state only
+    requirements = (tmp_path / inputs["requirements"]["path"]).read_text(encoding="utf-8").strip()
+    assert requirements and requirements in rendered
+    arc_source = (tmp_path / inputs["arc_source"]["path"]).read_text(encoding="utf-8").strip()
+    assert arc_source and arc_source in rendered
+    read = {path.relative_to(tmp_path).as_posix() for path in files_read}
+    assert {inputs[name]["path"] for name in ("learner_state", "requirements", "arc_source")} <= read
+
+
+def test_the_arc_source_renders_its_system_or_chunk_section_only(tmp_path, monkeypatch):
+    _, doc, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    source_path = tmp_path / doc["inputs"]["arc_source"]["path"]
+    source_path.write_text(
+        "# Arc\n\n## 2. Decisions\nSECTION-TWO-TEXT\n\n## 3. Grammar at A1: system or chunk\n"
+        "| Item | Status |\n| --- | --- |\n| Genitive | chunk |\n\n## 5. The positions\nSECTION-FIVE-TEXT\n",
+        encoding="utf-8",
+    )
+    doc["inputs"]["arc_source"]["sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
+    rendered, _sha, _files = render_prompt(doc, repo_root=tmp_path)
+    assert "| Genitive | chunk |" in rendered
+    assert "SECTION-TWO-TEXT" not in rendered and "SECTION-FIVE-TEXT" not in rendered
+
+
+def test_pack_quotes_come_from_the_pinned_pack_bytes(tmp_path, monkeypatch):
+    manifest_path, doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
+    rendered, _sha, _files = render_prompt(manifest_path, repo_root=tmp_path)
+    pack_text = (tmp_path / doc["inputs"]["pack"]["path"]).read_text(encoding="utf-8").strip()
+    assert pack_text in rendered

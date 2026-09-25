@@ -1,8 +1,13 @@
 """Content-addressed reviewer prompt renderer (#8430 Part R2 item 1).
 
-Renders reviewer prompts strictly from the inputs named and hashed by the review
-attempt manifest (plan review, lesson review, lesson re-review, or settle).
-Every file read is verified against its manifest sha256 before use.
+Renders reviewer prompts strictly from the inputs the review attempt manifest names
+and hashes (plan review, lesson review, lesson re-review, or settle). The pinned
+files are found the way the engine records them: any object carrying a ``path`` and
+a ``sha256`` anywhere in the manifest is a pin (``scripts.build.fresh.manifest
+.pinned_entries``), so ``inputs.*``, ``module_digest``, ``diff``,
+``previous_attempt.*`` and ``upstream_lessons[*]`` are read alike. A file is read
+only through a pin, only after its bytes match the pin's sha256, and no path is
+derived from another path.
 """
 
 from __future__ import annotations
@@ -12,16 +17,51 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import jinja2
 import yaml
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+from scripts.build.fresh.manifest import learner_state_sha256, pinned_entries
 from scripts.review.receipts import REVIEW_TOOLS
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PROMPTS_DIR = Path(__file__).resolve().parent
+
+#: Pins a first-class review needs, by manifest kind; a missing one is refused by name
+#: rather than rendered as an empty section.
+REQUIRED_PINS: dict[str, tuple[str, ...]] = {
+    "lesson": (
+        "inputs.plan",
+        "inputs.pack",
+        "inputs.pack_lock",
+        "inputs.words",
+        "inputs.words_lock",
+        "inputs.learner_state",
+        "inputs.lesson",
+        "inputs.gate_report",
+        "inputs.style_card",
+        "module_digest",
+    ),
+    "plan": (
+        "inputs.plan",
+        "inputs.pack",
+        "inputs.pack_lock",
+        "inputs.words",
+        "inputs.words_lock",
+        "inputs.learner_state",
+        "inputs.requirements",
+        "inputs.arc",
+        "inputs.arc_source",
+        "inputs.decisions",
+        "inputs.scope",
+        "inputs.grammar",
+        "inputs.validate_report",
+        "inputs.pack_verify_report",
+    ),
+}
 
 
 class RenderError(Exception):
@@ -48,8 +88,17 @@ class WordsLockMismatchError(RenderError):
     """Words file hash does not match its lock sidecar."""
 
 
+class LearnerStateMismatchError(RenderError):
+    """The materialized learner state does not hash to the identity the manifest records."""
+
+
 def compute_sha256(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
+
+
+def dump_yaml(content: Any) -> str:
+    """Readable YAML for parsed data: Ukrainian kept as written, nothing folded across lines."""
+    return yaml.safe_dump(content, allow_unicode=True, sort_keys=False, width=1 << 30).strip()
 
 
 def data_fence(content: Any, lang: str = "") -> str:
@@ -63,7 +112,7 @@ def data_fence(content: Any, lang: str = "") -> str:
     elif content is None:
         text = ""
     else:
-        text = yaml.safe_dump(content, allow_unicode=False, sort_keys=False)
+        text = dump_yaml(content)
 
     runs = re.findall(r"`+", text)
     max_run = max((len(r) for r in runs), default=0)
@@ -74,59 +123,29 @@ def data_fence(content: Any, lang: str = "") -> str:
 
 
 class ManifestReader:
-    """Enforces that only manifest-declared files are read and verified."""
+    """Reads only files the manifest pins, each verified against its pinned sha256 before use."""
 
     def __init__(self, manifest: dict[str, Any], repo_root: Path):
         self.manifest = manifest
         self.repo_root = repo_root.resolve()
+        self.pins: dict[str, dict[str, Any]] = dict(pinned_entries(manifest))
         self.allowed_paths: dict[Path, str] = {}
         self.files_read: list[Path] = []
-        self._register_allowed_inputs()
+        for location, entry in self.pins.items():
+            path = (self.repo_root / entry["path"]).resolve()
+            if not path.is_relative_to(self.repo_root):
+                raise UnauthorizedFileReadError(f"pinned path escapes the repository ({location}): {entry['path']}")
+            recorded = self.allowed_paths.setdefault(path, str(entry["sha256"]))
+            if recorded != str(entry["sha256"]):
+                raise RenderError(f"manifest pins {entry['path']} with two different hashes ({location})")
 
-    def _register_allowed_inputs(self) -> None:
-        inputs = self.manifest.get("inputs", {})
-        for _key, val in inputs.items():
-            if isinstance(val, dict) and "path" in val and "sha256" in val:
-                p = (self.repo_root / val["path"]).resolve()
-                self.allowed_paths[p] = str(val["sha256"])
-            elif isinstance(val, list):
-                for item in val:
-                    if isinstance(item, dict) and "path" in item and "sha256" in item:
-                        p = (self.repo_root / item["path"]).resolve()
-                        self.allowed_paths[p] = str(item["sha256"])
+    def has(self, location: str) -> bool:
+        return location in self.pins
 
-        # Top-level manifest files (module_digest, diff, previous_findings)
-        # E3d: manifest["inputs"]["module_digest"]
-        if "module_digest" in self.manifest and isinstance(self.manifest["module_digest"], dict):
-            md = self.manifest["module_digest"]
-            if "path" in md and "sha256" in md:
-                p = (self.repo_root / md["path"]).resolve()
-                self.allowed_paths[p] = str(md["sha256"])
-
-        # E3d: manifest["inputs"]["diff"]
-        if "diff_path" in self.manifest and "diff_sha256" in self.manifest:
-            p = (self.repo_root / self.manifest["diff_path"]).resolve()
-            self.allowed_paths[p] = str(self.manifest["diff_sha256"])
-
-        # Pack and words locks authorize their corresponding unlocked data files
-        # Verify the lock files first so we can register the unlocked targets
-        if "pack_lock" in inputs and isinstance(inputs["pack_lock"], dict):
-            # E3d: manifest["inputs"]["pack"]
-            lock_rel = inputs["pack_lock"]["path"]
-            lock_path = (self.repo_root / lock_rel).resolve()
-            lock_bytes = self.read_bytes(lock_path)
-            pack_sha = lock_bytes.decode("ascii").strip().split()[0]
-            pack_path = Path(str(lock_path)[:-5]) if str(lock_path).endswith(".lock") else lock_path.with_suffix("")
-            self.allowed_paths[pack_path] = pack_sha
-
-        if "words_lock" in inputs and isinstance(inputs["words_lock"], dict):
-            # E3d: manifest["inputs"]["words"]
-            wlock_rel = inputs["words_lock"]["path"]
-            wlock_path = (self.repo_root / wlock_rel).resolve()
-            wlock_bytes = self.read_bytes(wlock_path)
-            words_sha = wlock_bytes.decode("ascii").strip().split()[0]
-            words_path = Path(str(wlock_path)[:-5]) if str(wlock_path).endswith(".lock") else wlock_path.with_suffix("")
-            self.allowed_paths[words_path] = words_sha
+    def pin(self, location: str) -> dict[str, Any]:
+        if location not in self.pins:
+            raise RenderError(f"manifest names no {location} input")
+        return self.pins[location]
 
     def read_bytes(self, target: Path | str) -> bytes:
         p = (self.repo_root / target).resolve() if not isinstance(target, Path) or not target.is_absolute() else target
@@ -148,11 +167,21 @@ class ManifestReader:
     def read_text(self, target: Path | str) -> str:
         return self.read_bytes(target).decode("utf-8")
 
-    def read_yaml(self, target: Path | str) -> Any:
-        return yaml.safe_load(self.read_text(target))
+    def pin_text(self, location: str) -> str:
+        return self.read_text(self.pin(location)["path"])
 
-    def read_json(self, target: Path | str) -> Any:
-        return json.loads(self.read_text(target))
+    def pin_yaml(self, location: str) -> Any:
+        return yaml.safe_load(self.pin_text(location))
+
+    def pin_json(self, location: str) -> Any:
+        return json.loads(self.pin_text(location))
+
+    def locked_text(self, data: str, lock: str, error: type[RenderError]) -> str:
+        """A pinned data file whose lock (also pinned) records the same sha256 as the pin."""
+        recorded = self.pin_text(lock).split()
+        if not recorded or recorded[0] != self.pin(data)["sha256"]:
+            raise error(f"{self.pin(data)['path']} disagrees with its lock {self.pin(lock)['path']}")
+        return self.pin_text(data)
 
 
 def resolve_template_name(manifest: dict[str, Any], template_name: str | None = None) -> str:
@@ -167,217 +196,129 @@ def resolve_template_name(manifest: dict[str, Any], template_name: str | None = 
     if kind == "plan":
         return "plan-review.md.j2"
     if kind == "lesson":
-        if manifest.get("previous_attempt") or manifest.get("diff_sha256"):
-            return "lesson-rereview.md.j2"
-        return "lesson-review.md.j2"
+        return "lesson-rereview.md.j2" if manifest.get("previous_attempt") else "lesson-review.md.j2"
     if kind == "settle":
         return "settle.md.j2"
 
     raise RenderError(f"unable to infer template for manifest kind: {kind!r}")
 
 
+def _arc_section(arc_source: str) -> str:
+    """Section 3 of the arc source document (the system-or-chunk table), or the whole document without one."""
+    match = re.search(r"(?m)^## 3\..*?(?=^## |\Z)", arc_source, flags=re.DOTALL)
+    return match.group(0).strip() if match else arc_source.strip()
+
+
+def _neighbour_positions(arc: Any, position: Any) -> list[Any]:
+    positions = arc.get("positions", []) if isinstance(arc, dict) else []
+    if position is None:
+        return positions
+    return [
+        item
+        for item in positions
+        if isinstance(item, dict)
+        and isinstance(item.get("position"), int)
+        and abs(item["position"] - int(position)) <= 1
+    ]
+
+
+def _learner_state_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str, Any]:
+    text = reader.pin_text("inputs.learner_state")
+    document = yaml.safe_load(text)
+    if not isinstance(document, dict) or "learner_state" not in document:
+        raise RenderError(f"{reader.pin('inputs.learner_state')['path']} holds no learner_state")
+    identity = learner_state_sha256(SimpleNamespace(to_dict=lambda: document["learner_state"]))
+    recorded = (manifest.get("learner_state") or {}).get("sha256")
+    if recorded != identity:
+        raise LearnerStateMismatchError(
+            f"learner state hashes to {identity}, the manifest records {recorded}: {reader.pin('inputs.learner_state')['path']}"
+        )
+    context = {
+        "learner_state_sha256": identity,
+        "learner_state_yaml": dump_yaml(document["learner_state"]),
+    }
+    if manifest.get("kind") == "lesson":
+        if "immersion" not in document:
+            raise RenderError(f"{reader.pin('inputs.learner_state')['path']} holds no immersion rule")
+        context["immersion_yaml"] = dump_yaml(document["immersion"])
+    return context
+
+
+def _lesson_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str, Any]:
+    context: dict[str, Any] = {}
+    plan = reader.pin_yaml("inputs.plan")
+    entry = next((row for row in plan.get("lessons", []) if row.get("n") == int(manifest["lesson"])), None)
+    if entry is None:
+        raise RenderError(f"the pinned plan has no lesson {manifest['lesson']}")
+    context["lesson_plan_yaml"] = dump_yaml(entry)
+    context["pack_text"] = reader.locked_text("inputs.pack", "inputs.pack_lock", PackLockMismatchError)
+    context["words_text"] = reader.locked_text("inputs.words", "inputs.words_lock", WordsLockMismatchError)
+    context.update(_learner_state_context(reader, manifest))
+    context["lesson_content"] = reader.pin_text("inputs.lesson")
+    context["activity_data_files"] = [
+        {"path": item["path"], "content": reader.read_text(item["path"])}
+        for item in manifest["inputs"].get("activity_data", [])
+    ]
+    context["gate_report_text"] = reader.pin_text("inputs.gate_report")
+    context["style_card_content"] = reader.pin_text("inputs.style_card")
+    context["module_digest_text"] = reader.pin_text("module_digest")
+    if reader.has("inputs.decisions"):
+        context["decisions_text"] = reader.pin_text("inputs.decisions")
+
+    upstream = manifest.get("upstream_lessons") or []
+    if manifest.get("recap"):
+        if [row["n"] for row in upstream] != list(range(1, int(manifest["lesson"]))):
+            raise RenderError("a recap manifest must pin the built lessons 1..N-1 as upstream_lessons")
+        context["upstream_lessons"] = [
+            {"n": row["n"], "path": row["path"], "content": reader.read_text(row["path"])} for row in upstream
+        ]
+    else:
+        context["upstream_lessons"] = []
+
+    context["previous_attempt_id"] = None
+    if manifest.get("previous_attempt"):
+        context["previous_attempt_id"] = manifest["previous_attempt"]["attempt_id"]
+        context["diff_content"] = reader.pin_text("diff")
+        previous = reader.pin_yaml("previous_attempt.review")
+        context["previous_findings_yaml"] = dump_yaml(
+            {"checks": previous.get("checks", {}), "findings": previous.get("findings", [])}
+        )
+    return context
+
+
+def _plan_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str, Any]:
+    context: dict[str, Any] = {
+        "plan_text": reader.pin_text("inputs.plan"),
+        "pack_text": reader.locked_text("inputs.pack", "inputs.pack_lock", PackLockMismatchError),
+        "words_text": reader.locked_text("inputs.words", "inputs.words_lock", WordsLockMismatchError),
+        "requirements_text": reader.pin_text("inputs.requirements"),
+        "arc_system_or_chunk_text": _arc_section(reader.pin_text("inputs.arc_source")),
+        "decisions_text": reader.pin_text("inputs.decisions"),
+        "scope_text": reader.pin_text("inputs.scope"),
+        "grammar_text": reader.pin_text("inputs.grammar"),
+        "validate_report_text": reader.pin_text("inputs.validate_report"),
+        "pack_verify_report_text": reader.pin_text("inputs.pack_verify_report"),
+    }
+    context.update(_learner_state_context(reader, manifest))
+    arc = reader.pin_yaml("inputs.arc")
+    context["arc_positions_yaml"] = dump_yaml(_neighbour_positions(arc, manifest.get("position")))
+    return context
+
+
 def _build_context(manifest: dict[str, Any], manifest_sha256: str, reader: ManifestReader) -> dict[str, Any]:
-    inputs = manifest.get("inputs", {})
+    kind = manifest.get("kind")
+    missing = [location for location in REQUIRED_PINS.get(str(kind), ()) if not reader.has(location)]
+    if missing:
+        raise RenderError(f"manifest names no {', '.join(missing)} input")
     context: dict[str, Any] = {
         "manifest": manifest,
         "manifest_sha256": manifest_sha256,
         "review_tools": sorted(REVIEW_TOOLS),
     }
-
-    # Load plan if present
-    if "plan" in inputs:
-        plan_doc = reader.read_yaml(inputs["plan"]["path"])
-        context["plan"] = plan_doc
-        context["plan_yaml"] = yaml.safe_dump(plan_doc, allow_unicode=False, sort_keys=False).strip()
-
-        # For lesson review, extract lesson plan entry
-        if "lesson" in manifest:
-            lesson_n = int(manifest["lesson"])
-            lessons = plan_doc.get("lessons", [])
-            lesson_entry = next((item for item in lessons if item.get("n") == lesson_n), None)
-            context["lesson_plan"] = lesson_entry
-            context["lesson_plan_yaml"] = (
-                yaml.safe_dump(lesson_entry, allow_unicode=False, sort_keys=False).strip()
-                if lesson_entry is not None
-                else ""
-            )
-
-    # Load decisions if present
-    if "decisions" in inputs:
-        decisions_doc = reader.read_yaml(inputs["decisions"]["path"])
-        context["decisions"] = decisions_doc
-        context["decisions_yaml"] = yaml.safe_dump(decisions_doc, allow_unicode=False, sort_keys=False).strip()
-
-    # Load scope if present
-    if "scope" in inputs:
-        scope_doc = reader.read_yaml(inputs["scope"]["path"])
-        context["scope"] = scope_doc
-        context["scope_yaml"] = yaml.safe_dump(scope_doc, allow_unicode=False, sort_keys=False).strip()
-
-    # Load arc if present
-    if "arc" in inputs:
-        arc_doc = reader.read_yaml(inputs["arc"]["path"])
-        context["arc"] = arc_doc
-        context["arc_yaml"] = yaml.safe_dump(arc_doc, allow_unicode=False, sort_keys=False).strip()
-
-        # Contract 1: arc record of the position and its neighbours
-        pos_num = manifest.get("position")
-        if pos_num is None and "plan" in context and isinstance(context["plan"], dict):
-            pos_num = context["plan"].get("arc_ref", {}).get("position")
-
-        all_positions = arc_doc.get("positions", []) if isinstance(arc_doc, dict) else []
-        if pos_num is not None:
-            target_pos = int(pos_num)
-            neighbour_positions = [
-                p for p in all_positions if isinstance(p, dict) and abs(p.get("position", -999) - target_pos) <= 1
-            ]
-        else:
-            neighbour_positions = all_positions
-
-        context["arc_positions"] = neighbour_positions
-        context["arc_positions_yaml"] = yaml.safe_dump(
-            neighbour_positions, allow_unicode=False, sort_keys=False
-        ).strip()
-
-        # Arc system-or-chunk table
-        soc_data = None
-        if isinstance(arc_doc, dict):
-            for k in ("system_or_chunk", "system_or_chunk_table", "chunks"):
-                if k in arc_doc:
-                    soc_data = arc_doc[k]
-                    break
-        if "system_or_chunk" in inputs:
-            soc_data = reader.read_yaml(inputs["system_or_chunk"]["path"])
-        elif "system_or_chunk" in manifest:
-            soc_data = manifest["system_or_chunk"]
-
-        if soc_data is not None:
-            context["arc_system_or_chunk"] = soc_data
-            context["arc_system_or_chunk_yaml"] = yaml.safe_dump(soc_data, allow_unicode=False, sort_keys=False).strip()
-        else:
-            context["arc_system_or_chunk"] = None
-            context["arc_system_or_chunk_yaml"] = ""
-
-    # Load requirements if present
-    req_data = None
-    if "requirements" in inputs:
-        req_entry = inputs["requirements"]
-        if isinstance(req_entry, dict) and "path" in req_entry:
-            req_data = reader.read_yaml(req_entry["path"])
-    elif "requirements" in manifest:
-        req_data = manifest["requirements"]
-    elif "plan" in context and isinstance(context["plan"], dict) and "requirements" in context["plan"]:
-        req_data = context["plan"]["requirements"]
-    elif "arc" in context and isinstance(context["arc"], dict) and "requirements" in context["arc"]:
-        req_data = context["arc"]["requirements"]
-
-    if req_data is not None:
-        context["requirements"] = req_data
-        context["requirements_yaml"] = (
-            req_data.strip()
-            if isinstance(req_data, str)
-            else yaml.safe_dump(req_data, allow_unicode=False, sort_keys=False).strip()
-        )
-    else:
-        context["requirements"] = None
-        context["requirements_yaml"] = ""
-
-    # Load grammar registry if present
-    if "grammar" in inputs:
-        grammar_doc = reader.read_yaml(inputs["grammar"]["path"])
-        context["grammar"] = grammar_doc
-        context["grammar_yaml"] = yaml.safe_dump(grammar_doc, allow_unicode=False, sort_keys=False).strip()
-
-    # Load validate report if present
-    if "validate_report" in inputs:
-        val_doc = reader.read_json(inputs["validate_report"]["path"])
-        context["validate_report"] = val_doc
-        context["validate_report_json"] = json.dumps(val_doc, indent=2)
-        context["validate_report_yaml"] = yaml.safe_dump(val_doc, allow_unicode=False, sort_keys=False).strip()
-
-    # Load pack verify report if present
-    if "pack_verify_report" in inputs:
-        pv_doc = reader.read_json(inputs["pack_verify_report"]["path"])
-        context["pack_verify_report"] = pv_doc
-        context["pack_verify_report_json"] = json.dumps(pv_doc, indent=2)
-
-    # Load pack records from pack locked by pack_lock
-    # E3d: manifest["inputs"]["pack"]
-    if "pack_lock" in inputs:
-        lock_rel = inputs["pack_lock"]["path"]
-        lock_path = (reader.repo_root / lock_rel).resolve()
-        pack_path = Path(str(lock_path)[:-5]) if str(lock_path).endswith(".lock") else lock_path.with_suffix("")
-        pack_doc = reader.read_yaml(pack_path)
-        pack_records = pack_doc.get("records", []) if isinstance(pack_doc, dict) else pack_doc
-        context["pack_records"] = pack_records
-        context["pack_records_yaml"] = yaml.safe_dump(pack_records, allow_unicode=False, sort_keys=False).strip()
-
-    # Load words from words locked by words_lock
-    # E3d: manifest["inputs"]["words"]
-    if "words_lock" in inputs:
-        wlock_rel = inputs["words_lock"]["path"]
-        wlock_path = (reader.repo_root / wlock_rel).resolve()
-        words_path = Path(str(wlock_path)[:-5]) if str(wlock_path).endswith(".lock") else wlock_path.with_suffix("")
-        words_doc = reader.read_yaml(words_path)
-        words_list = words_doc.get("words", []) if isinstance(words_doc, dict) else words_doc
-        context["words"] = words_list
-        context["words_yaml"] = yaml.safe_dump(words_list, allow_unicode=False, sort_keys=False).strip()
-
-    # Load lesson content if present
-    if "lesson" in inputs:
-        context["lesson_content"] = reader.read_text(inputs["lesson"]["path"])
-
-    # Load activity data if present
-    if "activity_data" in inputs:
-        act_files = []
-        for act in inputs["activity_data"]:
-            if isinstance(act, dict) and "path" in act:
-                act_files.append({"path": act["path"], "content": reader.read_text(act["path"])})
-        context["activity_data_files"] = act_files
-
-    # Load gate report if present
-    if "gate_report" in inputs:
-        gate_doc = reader.read_yaml(inputs["gate_report"]["path"])
-        context["gate_report"] = gate_doc
-        context["gate_report_yaml"] = yaml.safe_dump(gate_doc, allow_unicode=False, sort_keys=False).strip()
-
-    # Load style card if present
-    if "style_card" in inputs:
-        context["style_card_content"] = reader.read_text(inputs["style_card"]["path"])
-
-    # Load module digest if present
-    # E3d: manifest["inputs"]["module_digest"]
-    if "module_digest" in manifest and isinstance(manifest["module_digest"], dict):
-        md = manifest["module_digest"]
-        if "path" in md:
-            digest_doc = reader.read_yaml(md["path"])
-            context["module_digest"] = digest_doc
-            context["module_digest_yaml"] = yaml.safe_dump(digest_doc, allow_unicode=False, sort_keys=False).strip()
-
-    # Upstream lessons (for recap)
-    # E3d: manifest["inputs"]["upstream_lessons"]
-    context["upstream_lessons"] = manifest.get("upstream_lessons", [])
-
-    # Learner state
-    # E3d: manifest["inputs"]["learner_state"]
-    l_state = manifest.get("learner_state", {})
-    context["learner_state_sha256"] = l_state.get("sha256", "") if isinstance(l_state, dict) else ""
-
-    # Re-review fields
-    if "diff" in inputs:
-        context["diff_content"] = reader.read_text(inputs["diff"]["path"])
-        context["diff_sha256"] = str(inputs["diff"]["sha256"])
-    elif manifest.get("diff_sha256"):
-        context["diff_sha256"] = str(manifest["diff_sha256"])
-        context["diff_content"] = ""
-
-    if "previous_findings" in inputs:
-        prev_doc = reader.read_yaml(inputs["previous_findings"]["path"])
-        context["previous_findings"] = prev_doc
-        context["previous_findings_yaml"] = yaml.safe_dump(prev_doc, allow_unicode=False, sort_keys=False).strip()
-
-    context["previous_attempt_id"] = manifest.get("previous_attempt")
-
+    if kind == "lesson":
+        context.update(_lesson_context(reader, manifest))
+    elif kind == "plan":
+        context.update(_plan_context(reader, manifest))
     return context
 
 

@@ -6,7 +6,11 @@ Validates:
 - No writer prompt or writer self-assessment leakage
 - No earlier edition of the lesson (except re-review's diff and previous findings)
 - No unresolved Jinja placeholders ({%, %}, {{, }}, TODO, : None)
-- Every file read was declared in manifest inputs and its sha256 matched
+- Every file read was a pin the manifest names and its sha256 matched
+
+Pins are found the way the engine records them (``pinned_entries``): any object with a
+``path`` and a ``sha256`` anywhere in the manifest. The check reads only pinned files;
+it derives no path from another path and reads no file the manifest does not name.
 """
 
 from __future__ import annotations
@@ -20,6 +24,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+from scripts.build.fresh.manifest import pinned_entries
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PROMPTS_DIR = Path(__file__).resolve().parent
@@ -106,126 +112,43 @@ def compute_sha256(content: bytes) -> str:
 
 
 def _collect_allowed_manifest_paths(manifest: dict[str, Any], repo_root: Path) -> dict[Path, str]:
+    """Every pinned file, by resolved path, with the sha256 the manifest records."""
     root = repo_root.resolve()
-    allowed: dict[Path, str] = {}
-    inputs = manifest.get("inputs", {})
+    return {(root / entry["path"]).resolve(): str(entry["sha256"]) for _, entry in pinned_entries(manifest)}
 
-    for _key, val in inputs.items():
-        if isinstance(val, dict) and "path" in val and "sha256" in val:
-            p = (root / val["path"]).resolve()
-            allowed[p] = str(val["sha256"])
-        elif isinstance(val, list):
-            for item in val:
-                if isinstance(item, dict) and "path" in item and "sha256" in item:
-                    p = (root / item["path"]).resolve()
-                    allowed[p] = str(item["sha256"])
 
-    # E3d: manifest["inputs"]["module_digest"]
-    if "module_digest" in manifest and isinstance(manifest["module_digest"], dict):
-        md = manifest["module_digest"]
-        if "path" in md and "sha256" in md:
-            p = (root / md["path"]).resolve()
-            allowed[p] = str(md["sha256"])
-
-    # E3d: manifest["inputs"]["diff"]
-    if "diff_path" in manifest and "diff_sha256" in manifest:
-        p = (root / manifest["diff_path"]).resolve()
-        allowed[p] = str(manifest["diff_sha256"])
-
-    # Authorized lock targets
-    # E3d: manifest["inputs"]["pack"]
-    if "pack_lock" in inputs and isinstance(inputs["pack_lock"], dict):
-        lock_p = (root / inputs["pack_lock"]["path"]).resolve()
-        if lock_p.is_file():
-            lock_text = lock_p.read_text(encoding="ascii").strip()
-            pack_sha = lock_text.split()[0] if lock_text else ""
-            pack_p = Path(str(lock_p)[:-5]) if str(lock_p).endswith(".lock") else lock_p.with_suffix("")
-            allowed[pack_p] = pack_sha
-
-    # E3d: manifest["inputs"]["words"]
-    if "words_lock" in inputs and isinstance(inputs["words_lock"], dict):
-        wlock_p = (root / inputs["words_lock"]["path"]).resolve()
-        if wlock_p.is_file():
-            wlock_text = wlock_p.read_text(encoding="ascii").strip()
-            words_sha = wlock_text.split()[0] if wlock_text else ""
-            words_p = Path(str(wlock_p)[:-5]) if str(wlock_p).endswith(".lock") else wlock_p.with_suffix("")
-            allowed[words_p] = words_sha
-
-    return allowed
+def _lock_first_token(path: Path) -> str:
+    text = path.read_text(encoding="ascii").strip()
+    return text.split()[0] if text else ""
 
 
 def _verify_manifest_inputs(manifest: dict[str, Any], repo_root: Path, errors: list[str]) -> None:
+    """Every pin exists inside the repository and hashes to its recorded sha256; each lock agrees with its data pin."""
     root = repo_root.resolve()
-    inputs = manifest.get("inputs", {})
+    pins = dict(pinned_entries(manifest))
 
-    for _key, val in inputs.items():
-        if isinstance(val, dict) and "path" in val and "sha256" in val:
-            p = (root / val["path"]).resolve()
-            if not p.is_file():
-                errors.append(f"input_missing: {val['path']} does not exist")
-                continue
+    for location, entry in pins.items():
+        p = (root / entry["path"]).resolve()
+        if not p.is_relative_to(root):
+            errors.append(f"unauthorized_file_read: pin {location} escapes the repository: {entry['path']}")
+        elif not p.is_file():
+            errors.append(f"input_missing: {entry['path']} does not exist")
+        else:
             actual = compute_sha256(p.read_bytes())
-            if actual != str(val["sha256"]):
-                errors.append(f"input_hash_mismatch: {val['path']} expected {val['sha256']}, actual {actual}")
-        elif isinstance(val, list):
-            for item in val:
-                if isinstance(item, dict) and "path" in item and "sha256" in item:
-                    p = (root / item["path"]).resolve()
-                    if not p.is_file():
-                        errors.append(f"input_missing: {item['path']} does not exist")
-                        continue
-                    actual = compute_sha256(p.read_bytes())
-                    if actual != str(item["sha256"]):
-                        errors.append(f"input_hash_mismatch: {item['path']} expected {item['sha256']}, actual {actual}")
+            if actual != str(entry["sha256"]):
+                errors.append(f"input_hash_mismatch: {entry['path']} expected {entry['sha256']}, actual {actual}")
 
-    # Check pack lock and pack file
-    # E3d: manifest["inputs"]["pack"]
-    if "pack_lock" in inputs and isinstance(inputs["pack_lock"], dict):
-        lock_p = (root / inputs["pack_lock"]["path"]).resolve()
-        if lock_p.is_file():
-            pack_p = Path(str(lock_p)[:-5]) if str(lock_p).endswith(".lock") else lock_p.with_suffix("")
-            if not pack_p.is_file():
-                errors.append(f"input_missing: locked pack file {pack_p.as_posix()} does not exist")
-            else:
-                expected_sha = lock_p.read_text(encoding="ascii").strip().split()[0]
-                actual_sha = compute_sha256(pack_p.read_bytes())
-                if actual_sha != expected_sha:
-                    errors.append(
-                        f"input_hash_mismatch: pack file {pack_p.as_posix()} hash mismatch with lock: "
-                        f"recorded {expected_sha}, actual {actual_sha}"
-                    )
-
-    # Check words lock and words file
-    # E3d: manifest["inputs"]["words"]
-    if "words_lock" in inputs and isinstance(inputs["words_lock"], dict):
-        wlock_p = (root / inputs["words_lock"]["path"]).resolve()
-        if wlock_p.is_file():
-            words_p = Path(str(wlock_p)[:-5]) if str(wlock_p).endswith(".lock") else wlock_p.with_suffix("")
-            if not words_p.is_file():
-                errors.append(f"input_missing: locked words file {words_p.as_posix()} does not exist")
-            else:
-                expected_w_sha = wlock_p.read_text(encoding="ascii").strip().split()[0]
-                actual_w_sha = compute_sha256(words_p.read_bytes())
-                if actual_w_sha != expected_w_sha:
-                    errors.append(
-                        f"input_hash_mismatch: words file {words_p.as_posix()} hash mismatch with lock: "
-                        f"recorded {expected_w_sha}, actual {actual_w_sha}"
-                    )
-
-    # Check module_digest if present
-    # E3d: manifest["inputs"]["module_digest"]
-    if "module_digest" in manifest and isinstance(manifest["module_digest"], dict):
-        md = manifest["module_digest"]
-        if "path" in md and "sha256" in md:
-            mdp = (root / md["path"]).resolve()
-            if not mdp.is_file():
-                errors.append(f"input_missing: module digest {md['path']} does not exist")
-            else:
-                actual_md = compute_sha256(mdp.read_bytes())
-                if actual_md != str(md["sha256"]):
-                    errors.append(
-                        f"input_hash_mismatch: module digest {md['path']} expected {md['sha256']}, actual {actual_md}"
-                    )
+    for data, lock in (("inputs.pack", "inputs.pack_lock"), ("inputs.words", "inputs.words_lock")):
+        if data not in pins or lock not in pins:
+            continue
+        lock_path = (root / pins[lock]["path"]).resolve()
+        if lock_path.is_file() and lock_path.is_relative_to(root):
+            recorded = _lock_first_token(lock_path)
+            if recorded != pins[data]["sha256"]:
+                errors.append(
+                    f"input_hash_mismatch: {pins[data]['path']} pinned at {pins[data]['sha256']}, "
+                    f"its lock {pins[lock]['path']} records {recorded}"
+                )
 
 
 TAXONOMY_EXEMPT_WORDS: frozenset[str] = frozenset(
@@ -253,65 +176,46 @@ def _is_taxonomy_boilerplate_line(line: str) -> bool:
     )
 
 
+#: A module locator: the level directory of a plan, evidence pack, scope sidecar or built page, then the slug.
+MODULE_LOCATOR = re.compile(
+    r"(?:lesson-plans|_scope|evidence|site/src/content/docs)/(?:[a-z0-9]+-)?[a-z0-9]+/(?P<slug>[A-Za-z0-9][A-Za-z0-9-]*)"
+)
+
+
+def _pinned_arc_positions(manifest_doc: dict[str, Any], repo_root: Path) -> list[dict[str, Any]]:
+    """The positions of the pinned arc (``inputs.arc``); empty when the manifest pins none."""
+    entry = dict(pinned_entries(manifest_doc)).get("inputs.arc")
+    if entry is None:
+        return []
+    arc_path = (repo_root / entry["path"]).resolve()
+    if not arc_path.is_file() or not arc_path.is_relative_to(repo_root):
+        return []
+    try:
+        arc = yaml.safe_load(arc_path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError):
+        return []
+    positions = arc.get("positions", []) if isinstance(arc, dict) else []
+    return [item for item in positions if isinstance(item, dict)]
+
+
 def _derive_foreign_slugs(
     manifest_doc: dict[str, Any],
     repo_root: Path,
     other_slugs: set[str] | list[str] | None = None,
+    rendered_prompt: str = "",
 ) -> set[str]:
-    """Derive foreign module slugs for the level via hashed reads from curriculum.yaml and the arc."""
-    root = repo_root.resolve()
+    """Foreign module slugs from what the manifest pins, the prompt's own module locators, and the caller.
+
+    Three sources, none of them a file the manifest does not name: the positions of the pinned
+    arc (plan reviews), any module locator in the rendered text whose slug is not this module's,
+    and ``other_slugs`` supplied by the driver.
+    """
     current_slug = manifest_doc.get("slug")
-    level = manifest_doc.get("level")
     slugs: set[str] = set(other_slugs or [])
-
-    # 1. Hashed read of curriculum/l2-uk-en/curriculum.yaml for this level
-    curriculum_path = root / "curriculum/l2-uk-en/curriculum.yaml"
-    if not curriculum_path.is_file() and root != REPO_ROOT:
-        curriculum_path = REPO_ROOT / "curriculum/l2-uk-en/curriculum.yaml"
-    if curriculum_path.is_file():
-        c_bytes = curriculum_path.read_bytes()
-        _ = compute_sha256(c_bytes)
-        try:
-            c_doc = yaml.safe_load(c_bytes.decode("utf-8"))
-            if isinstance(c_doc, dict):
-                levels = c_doc.get("levels", {})
-                level_keys = [level, f"{level}-v1"] if level else list(levels.keys())
-                for lvl_key in level_keys:
-                    lvl_val = levels.get(lvl_key)
-                    if isinstance(lvl_val, dict) and "modules" in lvl_val:
-                        for mod in lvl_val["modules"]:
-                            if isinstance(mod, str):
-                                slugs.add(mod)
-        except Exception:
-            pass
-
-    # 2. Hashed read of arc
-    inputs = manifest_doc.get("inputs", {})
-    arc_path = None
-    if "arc" in inputs and isinstance(inputs["arc"], dict) and "path" in inputs["arc"]:
-        arc_path = (root / inputs["arc"]["path"]).resolve()
-    elif level:
-        cand = root / f"curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml"
-        if cand.is_file():
-            arc_path = cand
-        elif root != REPO_ROOT and (REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml").is_file():
-            arc_path = REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml"
-
-    if arc_path and arc_path.is_file():
-        a_bytes = arc_path.read_bytes()
-        _ = compute_sha256(a_bytes)
-        try:
-            a_doc = yaml.safe_load(a_bytes.decode("utf-8"))
-            if isinstance(a_doc, dict):
-                for pos in a_doc.get("positions", []):
-                    if isinstance(pos, dict) and pos.get("slug"):
-                        slugs.add(str(pos["slug"]))
-        except Exception:
-            pass
-
+    slugs.update(str(pos["slug"]) for pos in _pinned_arc_positions(manifest_doc, repo_root) if pos.get("slug"))
+    slugs.update(match.group("slug") for match in MODULE_LOCATOR.finditer(rendered_prompt))
     if current_slug:
         slugs.discard(current_slug)
-
     return slugs
 
 
@@ -367,44 +271,16 @@ def check_prompt(
                 f"forbidden_v1_path: prompt contains v1 path reference matching {pat.pattern!r}: {match.group(0)!r}"
             )
 
-    # 4. Foreign module detection (hashed reads)
+    # 4. Foreign module detection (the pinned arc, the prompt's own module locators, the driver's list)
     allowed_neighbour_slugs: set[str] = set()
-    if manifest_doc.get("kind") == "plan":
-        pos_num = manifest_doc.get("position")
-        if pos_num is None and "plan" in manifest_doc.get("inputs", {}):
-            plan_in = manifest_doc["inputs"]["plan"]
-            if isinstance(plan_in, dict) and "path" in plan_in:
-                try:
-                    p_doc = yaml.safe_load((root / plan_in["path"]).read_text(encoding="utf-8"))
-                    pos_num = p_doc.get("arc_ref", {}).get("position")
-                except Exception:
-                    pass
-        if pos_num is not None:
-            inputs = manifest_doc.get("inputs", {})
-            arc_p = None
-            if "arc" in inputs and isinstance(inputs["arc"], dict) and "path" in inputs["arc"]:
-                arc_p = (root / inputs["arc"]["path"]).resolve()
-            elif manifest_doc.get("level"):
-                cand = root / f"curriculum/l2-uk-en/lesson-plans/{manifest_doc['level']}/_arc.yaml"
-                if cand.is_file():
-                    arc_p = cand
-                elif (
-                    root != REPO_ROOT
-                    and (REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{manifest_doc['level']}/_arc.yaml").is_file()
-                ):
-                    arc_p = REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{manifest_doc['level']}/_arc.yaml"
-            if arc_p and arc_p.is_file():
-                try:
-                    a_doc = yaml.safe_load(arc_p.read_text(encoding="utf-8"))
-                    for pos in a_doc.get("positions", []):
-                        if isinstance(pos, dict):
-                            p_num = pos.get("position")
-                            if p_num is not None and abs(int(p_num) - int(pos_num)) <= 1 and pos.get("slug"):
-                                allowed_neighbour_slugs.add(str(pos["slug"]))
-                except Exception:
-                    pass
+    pos_num = manifest_doc.get("position")
+    if manifest_doc.get("kind") == "plan" and pos_num is not None:
+        for pos in _pinned_arc_positions(manifest_doc, root):
+            p_num = pos.get("position")
+            if isinstance(p_num, int) and abs(p_num - int(pos_num)) <= 1 and pos.get("slug"):
+                allowed_neighbour_slugs.add(str(pos["slug"]))
 
-    foreign_slugs = _derive_foreign_slugs(manifest_doc, root, other_slugs)
+    foreign_slugs = _derive_foreign_slugs(manifest_doc, root, other_slugs, rendered_prompt)
     prompt_lines = rendered_prompt.splitlines()
 
     for s in foreign_slugs:
@@ -434,62 +310,36 @@ def check_prompt(
 
     # 6. Check for earlier edition of the lesson
     t_name = template_name or ""
-    is_rereview = (
-        "rereview" in t_name or bool(manifest_doc.get("previous_attempt")) or bool(manifest_doc.get("diff_sha256"))
-    )
+    is_rereview = "rereview" in t_name or bool(manifest_doc.get("previous_attempt"))
 
-    earlier_files: list[Path] = []
-    if earlier_editions:
-        for item in earlier_editions:
-            if isinstance(item, (str, Path)):
-                p = (root / item).resolve() if not Path(item).is_absolute() else Path(item)
-                if p.is_file():
-                    earlier_files.append(p)
-                else:
-                    raw_text = str(item).strip()
-                    if raw_text:
-                        raw_sha = compute_sha256(raw_text.encode("utf-8"))
-                        if raw_sha in rendered_prompt:
-                            errors.append(
-                                f"earlier_edition: prompt contains unmanifested earlier edition hash {raw_sha}"
-                            )
-                        if len(raw_text) >= 10 and raw_text in rendered_prompt:
-                            errors.append("earlier_edition: prompt contains unmanifested earlier edition bytes")
+    pinned_paths = _collect_allowed_manifest_paths(manifest_doc, root)
+    pinned_texts = [
+        path.read_text(encoding="utf-8", errors="replace")
+        for path, digest in pinned_paths.items()
+        if path.is_file() and compute_sha256(path.read_bytes()) == digest
+    ]
 
-    level = manifest_doc.get("level")
-    current_slug = manifest_doc.get("slug")
-    if level and current_slug:
-        state_dir = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{current_slug}"
-        if state_dir.is_dir():
-            for p in state_dir.glob("*"):
-                if p.is_file() and any(k in p.name.lower() for k in ("prev", "old", "attempt", "draft", "edition")):
-                    earlier_files.append(p)
-
-    named_paths: set[Path] = set()
-    inputs = manifest_doc.get("inputs", {})
-    for k in ("diff", "previous_findings", "lesson", "plan"):
-        if k in inputs and isinstance(inputs[k], dict) and "path" in inputs[k]:
-            named_paths.add((root / inputs[k]["path"]).resolve())
-    if "diff_path" in manifest_doc:
-        named_paths.add((root / manifest_doc["diff_path"]).resolve())
-
-    for ef in earlier_files:
-        if ef.resolve() in named_paths or ef.name.endswith(".sha256"):
+    # Earlier editions come from the driver (the content-addressed snapshot of the lesson the previous attempt saw);
+    # the check names no path of its own. Text that a pinned file also holds (the current lesson, the diff, the
+    # previous findings) is manifested, so it is never a leak.
+    for item in earlier_editions or []:
+        candidate = (root / item).resolve() if not Path(item).is_absolute() else Path(item)
+        if candidate.is_file():
+            earlier_bytes = candidate.read_bytes()
+            label = candidate.name
+        else:
+            earlier_bytes = str(item).encode("utf-8")
+            label = "supplied text"
+        earlier_text = earlier_bytes.decode("utf-8", errors="replace").strip()
+        if not earlier_text or any(earlier_text in text for text in pinned_texts):
             continue
-        try:
-            ef_bytes = ef.read_bytes()
-            if not ef_bytes:
-                continue
-            ef_sha = compute_sha256(ef_bytes)
-            if ef_sha in rendered_prompt:
-                errors.append(
-                    f"earlier_edition: prompt contains unmanifested earlier edition hash {ef_sha} from {ef.name}"
-                )
-            ef_text = ef_bytes.decode("utf-8", errors="replace").strip()
-            if len(ef_text) >= 10 and ef_text in rendered_prompt:
-                errors.append(f"earlier_edition: prompt contains unmanifested earlier edition bytes from {ef.name}")
-        except Exception:
-            pass
+        earlier_sha = compute_sha256(earlier_bytes)
+        if earlier_sha in rendered_prompt:
+            errors.append(
+                f"earlier_edition: prompt contains unmanifested earlier edition hash {earlier_sha} from {label}"
+            )
+        if len(earlier_text) >= 10 and earlier_text in rendered_prompt:
+            errors.append(f"earlier_edition: prompt contains unmanifested earlier edition bytes from {label}")
 
     if is_rereview:
         for pat in REREVIEW_FULL_EDITION_PATTERNS:
@@ -544,6 +394,15 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Path to files_read sidecar (default: <prompt_file>.files_read.json)",
     )
+    parser.add_argument(
+        "--earlier-edition",
+        action="append",
+        default=[],
+        help="Path to an earlier edition of the lesson the prompt must not carry (repeatable)",
+    )
+    parser.add_argument(
+        "--other-slug", action="append", default=[], help="Another module's slug the prompt must not name (repeatable)"
+    )
     args = parser.parse_args(argv)
 
     root = Path(args.repo_root) if args.repo_root else REPO_ROOT
@@ -588,6 +447,8 @@ def main(argv: list[str] | None = None) -> int:
         template_name=args.template,
         repo_root=root,
         files_read=files_read_list,
+        other_slugs=set(args.other_slug),
+        earlier_editions=list(args.earlier_edition),
         prompts_dir=Path(args.prompts_dir) if args.prompts_dir else None,
     )
 
