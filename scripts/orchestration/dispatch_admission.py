@@ -264,6 +264,12 @@ def read_host(proc_root: Path) -> HostProbe:
 
 def probe_host() -> HostProbe:
     """This host's probe, read from ``/proc``. The one seam tests replace."""
+    if (
+        os.environ.get("PYTEST_CURRENT_TEST")
+        and os.environ.get("LU_TEST_DISPATCH_HEALTHY_HOST") == "1"
+        and Path("/proc") == PROC_ROOT
+    ):
+        return HostProbe(mem_available_bytes=64 * _GIB, load1=0.0, cpu_count=8, proc_available=True)
     return read_host(PROC_ROOT)
 
 

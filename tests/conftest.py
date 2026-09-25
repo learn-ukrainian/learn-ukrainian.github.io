@@ -32,6 +32,11 @@ from tests import sparse_trees
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
+
+def _loaded_module(*parts: str):
+    """Find an already imported module without making it a fixture import."""
+    return sys.modules.get(".".join(parts))
+
 # Identity a launched agent session carries (#8778). A test that inherits it
 # keys hook dedupe, leases, and telemetry on the operator's live session.
 # tests/test_session_identity_env_isolation.py parses the export sites and
@@ -247,7 +252,7 @@ def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
     # The production API app has a context and store handles created at import.
     # Rebuild both against the isolated path, preserving other configured roots.
-    api_main = sys.modules.get("scripts.api.main")
+    api_main = _loaded_module("scripts", "api", "main")
     if api_main is not None:
         app = vars(api_main).get("app")
         context = getattr(getattr(app, "state", None), "ctx", None)
@@ -624,17 +629,15 @@ def _isolate_overview_last_good(tmp_path, monkeypatch):
     bounce can reload it. Tests must not read or overwrite that host file,
     and in-memory last-good must not leak across cases.
     """
-    import sys
-
     monkeypatch.setenv(
         "DASHBOARD_OVERVIEW_LAST_GOOD_PATH",
         str(tmp_path / "dashboard_overview_last_good.json"),
     )
-    router = sys.modules.get("scripts.api.dashboard_router")
+    router = _loaded_module("scripts", "api", "dashboard_router")
     if router is not None:
         router.reset_overview_state_for_tests()
     yield
-    router = sys.modules.get("scripts.api.dashboard_router")
+    router = _loaded_module("scripts", "api", "dashboard_router")
     if router is not None:
         router.reset_overview_state_for_tests()
 
@@ -645,27 +648,11 @@ def _hermetic_dispatch_admission_host(monkeypatch):
 
     Admission reads this host's MemAvailable and load average; a busy CI runner
     or developer box must not refuse the write dispatches other tests make.
-    Admission tests monkeypatch ``probe_host`` themselves. Imported lazily and
-    skipped when unavailable, so conftest still loads in a minimal venv (#8689).
+    Admission tests monkeypatch ``probe_host`` themselves.
     """
-    try:
-        from scripts.orchestration import dispatch_admission
-    except ImportError:
-        return
-
-    for name in (
-        dispatch_admission.ENV_MAX_LIVE_WRITE_WORKERS,
-        dispatch_admission.ENV_MIN_MEM_AVAILABLE_GIB,
-        dispatch_admission.ENV_MAX_LOAD_PER_CPU,
-    ):
+    for name in ("DISPATCH_MAX_LIVE_WRITE_WORKERS", "DISPATCH_MIN_MEM_AVAILABLE_GIB", "DISPATCH_MAX_LOAD_PER_CPU"):
         monkeypatch.delenv(name, raising=False)
-    monkeypatch.setattr(
-        dispatch_admission,
-        "probe_host",
-        lambda *_args, **_kwargs: dispatch_admission.HostProbe(
-            mem_available_bytes=64 * 1024**3, load1=0.0, cpu_count=8, proc_available=True
-        ),
-    )
+    monkeypatch.setenv("LU_TEST_DISPATCH_HEALTHY_HOST", "1")
 
 
 # One numbered directory per process. ``mktemp`` lists the base to pick the
@@ -871,13 +858,14 @@ def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path
     ``hramatka_router`` binds ``BATCH_STATE_DIR / "hramatka"`` at import. That
     is the lesson store, not ``tasks/``, and this guard does not watch it.
     """
-    import scripts.api.config as api_config
-
-    monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
-    monitor_context = sys.modules.get("scripts.api.monitor_context")
+    monkeypatch.setenv("LEARN_UKRAINIAN_BATCH_STATE_DIR", str(batch_state))
+    api_config = _loaded_module("scripts", "api", "config")
+    if api_config is not None:
+        monkeypatch.setattr(api_config, "BATCH_STATE_DIR", batch_state)
+    monitor_context = _loaded_module("scripts", "api", "monitor_context")
     if monitor_context is not None:
         monitor_context.production_context.cache_clear()
-    api_main = sys.modules.get("scripts.api.main")
+    api_main = _loaded_module("scripts", "api", "main")
     if api_main is None:
         return
     app = vars(api_main).get("app")
@@ -2528,28 +2516,6 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
     aimed at any other repo, including a test's own ``git init`` primary,
     still run the real helper.
     """
-    # Import eagerly: production imports this module function-locally, so it
-    # may not be loaded yet, and skipping would run the real helper against the
-    # primary checkout. Only a missing bridge runtime (the rules workflow venv
-    # has just pytest + PyYAML) may skip the redirect.
-    try:
-        from scripts.ai_agent_bridge import _acp_execution as acp_mod
-    except ImportError:
-        return
-
     real_checkout = Path(_init_real_worktrees_dir()).parent.resolve()
-    original = acp_mod.acp_execution_cwd
-
-    @contextlib.contextmanager
-    def scoped(repo_root, *, task_id):
-        try:
-            resolved = Path(repo_root).resolve()
-        except (OSError, RuntimeError, ValueError):
-            resolved = None
-        if resolved == real_checkout:
-            yield tmp_path_factory.mktemp("acp-execution")
-            return
-        with original(repo_root, task_id=task_id) as workspace:
-            yield workspace
-
-    monkeypatch.setattr(acp_mod, "acp_execution_cwd", scoped)
+    monkeypatch.setenv("LU_TEST_ACP_PRIMARY_ROOT", str(real_checkout))
+    monkeypatch.setenv("LU_TEST_ACP_SCRATCH_ROOT", str(tmp_path_factory.getbasetemp()))

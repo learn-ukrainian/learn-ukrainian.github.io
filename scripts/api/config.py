@@ -128,7 +128,7 @@ LEVELS = load_levels()
 SEMINAR_TRACK_IDS = load_seminar_track_ids()
 
 # Batch state directory
-BATCH_STATE_DIR = PROJECT_ROOT / "batch_state"
+BATCH_STATE_DIR = Path(os.environ.get("LEARN_UKRAINIAN_BATCH_STATE_DIR", PROJECT_ROOT / "batch_state"))
 
 # Server settings
 API_HOST = "127.0.0.1"  # nosec B104 — bind to localhost only
