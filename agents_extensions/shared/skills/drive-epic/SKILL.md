@@ -570,8 +570,10 @@ alone; a repo-wide lint test in shard 3 then failed every full-tier run for ~2.5
 dequeued unrelated PRs (#8691 ×3, #8693 ×2).
 
 **Before opening a PR that touches launchers or hooks, run every real-launcher test
-(2026-09-25).** A worker's targeted tests are not the CI suite. List them with
-`grep -rlE 'start-[a-z0-9-]+\.sh' tests/ | xargs grep -lE 'subprocess\.(run|Popen|check_output)'`.
+(2026-09-25).** A worker's targeted tests are not the CI suite. Most launcher tests call
+the shared `run_launcher` helper (`tests/test_launcher_contract.py`) instead of
+`subprocess`, so select on launcher names and helpers, never on `subprocess`:
+`.venv/bin/python -m pytest -q $(grep -rlE 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|scripts/launchers/|\brun_launcher\b' tests/)`.
 
 **Diagnose pytest failures from the junit artifact first (#8701, #8705).**
 `gh run view --log-failed` and the live log truncate or stall — that read as a "silent
