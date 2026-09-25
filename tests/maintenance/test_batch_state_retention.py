@@ -631,7 +631,25 @@ def test_sweep_reaps_its_own_stale_temps_and_reports_them(tmp_path: Path) -> Non
     linked.symlink_to(outside)
     os.utime(linked, ((NOW - timedelta(hours=5)).timestamp(),) * 2, follow_symlinks=False)
 
-    report = plan_retention(root, min_age_days=0, apply=False, now=NOW)
+    expected = [
+        {"dir": "tasks", "name": stale_record.name},
+        {"dir": "tasks/old-clean.snapshots", "name": stale_digest.name},
+        {"dir": "tasks/archive", "name": stale_archive.name},
+    ]
+    dry = plan_retention(root, min_age_days=0, apply=False, now=NOW)
+
+    assert stale_record.read_text(encoding="utf-8") == "killed"
+    assert stale_digest.read_text(encoding="utf-8") == "killed"
+    assert stale_archive.read_text(encoding="utf-8") == "killed"
+    assert young.read_text(encoding="utf-8") == "live"
+    assert foreign.read_text(encoding="utf-8") == "other-writer"
+    assert linked.is_symlink()
+    assert outside.read_text(encoding="utf-8") == "secret"
+    assert dry["temps_would_remove"] == expected
+    assert dry["temps_removed"] == []
+    assert _names(snapshot) >= {"read_only_checkout_pre.json", "read_only_checkout_post.json"}
+
+    applied = plan_retention(root, min_age_days=0, apply=True, now=NOW)
 
     assert not stale_record.exists()
     assert not stale_digest.exists()
@@ -640,12 +658,71 @@ def test_sweep_reaps_its_own_stale_temps_and_reports_them(tmp_path: Path) -> Non
     assert foreign.read_text(encoding="utf-8") == "other-writer"
     assert linked.is_symlink()
     assert outside.read_text(encoding="utf-8") == "secret"
-    assert report["temps_removed"] == [
-        {"dir": "tasks", "name": stale_record.name},
-        {"dir": "tasks/old-clean.snapshots", "name": stale_digest.name},
-        {"dir": "tasks/archive", "name": stale_archive.name},
-    ]
-    assert _names(snapshot) >= {"read_only_checkout_pre.json", "read_only_checkout_post.json"}
+    assert applied["temps_removed"] == expected
+    assert applied["temps_would_remove"] == []
+    assert (snapshot / "digest.json").is_file()
+    assert "read_only_checkout_pre.json" not in _names(snapshot)
+    assert "read_only_checkout_post.json" not in _names(snapshot)
+
+
+def _tree_fingerprint(root: Path) -> list[tuple[str, int, int, int]]:
+    """Every path under ``root``, with size, mtime, and mode from ``lstat``."""
+    rows: list[tuple[str, int, int, int]] = []
+
+    def walk(directory: Path, rel: str) -> None:
+        info = directory.lstat()
+        rows.append((rel, info.st_size, info.st_mtime_ns, info.st_mode))
+        for name in sorted(os.listdir(directory)):
+            path = directory / name
+            child = name if not rel else f"{rel}/{name}"
+            st = path.lstat()
+            if stat.S_ISDIR(st.st_mode) and not stat.S_ISLNK(st.st_mode):
+                walk(path, child)
+            else:
+                rows.append((child, st.st_size, st.st_mtime_ns, st.st_mode))
+
+    walk(root, "")
+    return rows
+
+
+def test_dry_run_leaves_the_whole_batch_state_tree_unchanged(tmp_path: Path) -> None:
+    root = _batch(tmp_path)
+    tasks = root / "tasks"
+    archive = tasks / "archive"
+    archive.mkdir()
+    _write_record(tasks, "old-clean", status="done", age_days=3, run_nonce="same")
+    snapshot = _write_full_sidecars(tasks, "old-clean", entries=4)
+    _write_record(archive, "moved", status="done", age_days=9, run_nonce="same")
+    archived = _write_full_sidecars(archive, "moved", entries=2)
+    other = root / "open-model-data"
+    other.mkdir()
+    (other / "blob.bin").write_bytes(b"x" * 64)
+    stray = root / "stray.snapshots"
+    stray.mkdir()
+    (stray / "read_only_checkout_pre.json").write_text("{}", encoding="utf-8")
+
+    def _plant(directory: Path, name: str, pid: int, *, age_s: float, body: str) -> None:
+        path = directory / f".{name}.{pid}.{'ab' * 8}.tmp"
+        path.write_text(body, encoding="utf-8")
+        stamp = (NOW - timedelta(seconds=age_s)).timestamp()
+        os.utime(path, (stamp, stamp))
+
+    _plant(tasks, "old-clean.json", 4242, age_s=3700, body="killed")
+    _plant(snapshot, "digest.json", 4243, age_s=7200, body="killed")
+    _plant(archive, "moved.json", 4244, age_s=3700, body="killed")
+    _plant(archived, "digest.json", 7, age_s=600, body="live")
+    outside = tmp_path / "outside-secret"
+    outside.write_text("secret", encoding="utf-8")
+    linked = snapshot / f".digest.json.9.{'ef' * 8}.tmp"
+    linked.symlink_to(outside)
+
+    before = _tree_fingerprint(root)
+    report = plan_retention(root, min_age_days=0, apply=False, now=NOW)
+
+    assert report["mode"] == "dry-run"
+    assert _tree_fingerprint(root) == before
+    assert report["temps_removed"] == []
+    assert report["temps_would_remove"]
 
 
 def test_rewrite_preserves_the_record_mode(tmp_path: Path) -> None:

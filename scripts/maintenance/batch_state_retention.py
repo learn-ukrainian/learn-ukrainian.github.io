@@ -177,15 +177,16 @@ def _write_bytes_at(dir_fd: int, name: str, raw: bytes) -> None:
         raise
 
 
-def _reap_own_temps(dir_fd: int, rel_dir: str, *, now: datetime) -> list[dict[str, str]]:
-    """Unlink this sweep's temp files in ``dir_fd`` once they are older than an hour.
+def _reap_own_temps(dir_fd: int, rel_dir: str, *, now: datetime, apply: bool) -> list[dict[str, str]]:
+    """Report this sweep's temp files in ``dir_fd`` once they are older than an hour.
 
-    The name must match :func:`_temp_name` exactly. The open uses ``O_NOFOLLOW``
-    on ``dir_fd``, so a symlink of that name is left in place. A younger file
-    may belong to a live writer and is left alone.
+    Unlink them only when ``apply`` is true. Dry-run reports the same names and
+    leaves every inode in place. The name must match :func:`_temp_name` exactly.
+    The open uses ``O_NOFOLLOW`` on ``dir_fd``, so a symlink of that name is
+    left in place. A younger file may belong to a live writer and is left alone.
     """
     cutoff = now.timestamp() - _OWN_TEMP_MAX_AGE_S
-    removed: list[dict[str, str]] = []
+    matched: list[dict[str, str]] = []
     for name in _names(dir_fd):
         if _OWN_TEMP_RE.fullmatch(name) is None:
             continue
@@ -199,12 +200,30 @@ def _reap_own_temps(dir_fd: int, rel_dir: str, *, now: datetime) -> list[dict[st
             os.close(fd)
         if not stat.S_ISREG(info.st_mode) or info.st_mtime >= cutoff:
             continue
-        try:
-            os.unlink(name, dir_fd=dir_fd)
-        except OSError:
-            continue
-        removed.append({"dir": rel_dir, "name": name})
-    return removed
+        if apply:
+            try:
+                os.unlink(name, dir_fd=dir_fd)
+            except OSError:
+                continue
+        matched.append({"dir": rel_dir, "name": name})
+    return matched
+
+
+def _collect_own_temps(
+    temps_removed: list[dict[str, str]],
+    temps_would_remove: list[dict[str, str]],
+    dir_fd: int,
+    rel_dir: str,
+    *,
+    now: datetime,
+    apply: bool,
+) -> None:
+    """Record stale own-temps. Only the apply pass unlinks them."""
+    found = _reap_own_temps(dir_fd, rel_dir, now=now, apply=apply)
+    if apply:
+        temps_removed.extend(found)
+    else:
+        temps_would_remove.extend(found)
 
 
 def _unlink_regular_at(dir_fd: int, name: str) -> None:
@@ -560,6 +579,7 @@ def _plan_open(
     reclaimable_by_top: dict[str, int] = {}
     selected: list[dict[str, Any]] = []
     temps_removed: list[dict[str, str]] = []
+    temps_would_remove: list[dict[str, str]] = []
     tasks_fd = _open_dir(root_fd, "tasks")
     if tasks_fd is not None:
         try:
@@ -569,7 +589,7 @@ def _plan_open(
                 parents.append((f"tasks/{ARCHIVE_DIR_NAME}", archive_fd))
             try:
                 for rel_dir, parent_fd in parents:
-                    temps_removed.extend(_reap_own_temps(parent_fd, rel_dir, now=now))
+                    _collect_own_temps(temps_removed, temps_would_remove, parent_fd, rel_dir, now=now, apply=apply)
                     for snapshot_name in _names(parent_fd):
                         info = _lstat_at(parent_fd, snapshot_name)
                         if (
@@ -581,7 +601,14 @@ def _plan_open(
                         snap_fd = _open_dir(parent_fd, snapshot_name)
                         if snap_fd is not None:
                             try:
-                                temps_removed.extend(_reap_own_temps(snap_fd, f"{rel_dir}/{snapshot_name}", now=now))
+                                _collect_own_temps(
+                                    temps_removed,
+                                    temps_would_remove,
+                                    snap_fd,
+                                    f"{rel_dir}/{snapshot_name}",
+                                    now=now,
+                                    apply=apply,
+                                )
                             finally:
                                 os.close(snap_fd)
                         measured = _measure_candidate(
@@ -646,6 +673,7 @@ def _plan_open(
         },
         "selected": selected,
         "temps_removed": temps_removed,
+        "temps_would_remove": temps_would_remove,
     }
 
 
