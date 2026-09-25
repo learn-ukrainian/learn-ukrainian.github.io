@@ -569,22 +569,30 @@ def _hydrate_read_only_checkout_snapshots(state: dict[str, Any]) -> dict[str, An
 
 
 def _archive_task_artifacts(task_id: str, *, stamp: str | None = None) -> list[Path]:
-    """Move the prior record and result aside. Never overwrite an archive."""
+    """Move the prior record and result aside. Never overwrite an archive.
+
+    Holds the per-task lock for the whole rename. The retention sweep holds
+    that same lock across its digest and record write; without it, this move
+    can land after the sweep's hot-name recheck and the sweep then creates a
+    new hot record whose sidecar is already gone.
+    """
     stamp = stamp or _archive_stamp()
+    state_path = _state_path(task_id)
     archived: list[Path] = []
-    for path in (_state_path(task_id), _result_path(task_id)):
-        if not path.exists():
-            continue
-        dest = _archived_artifact_path(path, stamp)
-        os.replace(path, dest)
-        archived.append(dest)
-    snapshot_dir = _read_only_snapshot_dir_for(task_id)
-    if snapshot_dir.is_dir():
-        dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.archived"
-        if dest.exists():
-            dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
-        os.replace(snapshot_dir, dest)
-        archived.append(dest)
+    with task_state_lock(state_path):
+        for path in (state_path, _result_path(task_id)):
+            if not path.exists():
+                continue
+            dest = _archived_artifact_path(path, stamp)
+            os.replace(path, dest)
+            archived.append(dest)
+        snapshot_dir = state_path.parent / f"{state_path.stem}{_READ_ONLY_CHECKOUT_SNAPSHOT_SUFFIX}"
+        if snapshot_dir.is_dir():
+            dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.archived"
+            if dest.exists():
+                dest = snapshot_dir.parent / f"{snapshot_dir.name}.{stamp}.{os.getpid()}.archived"
+            os.replace(snapshot_dir, dest)
+            archived.append(dest)
     return archived
 
 

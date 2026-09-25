@@ -99,6 +99,7 @@ for _path in (PROJECT_ROOT, PROJECT_ROOT / "scripts"):
 from scripts import delegate, secret_redactor
 from scripts.common.git_context import sanitized_git_env
 from scripts.orchestration import fleet_repos, task_record_store, worktree_claims
+from scripts.orchestration.dead_worker_state import task_state_lock
 
 SETTLED_BY = "settle-stale"
 ARCHIVE_DIR_NAME = task_record_store.ARCHIVE_DIR_NAME
@@ -1311,10 +1312,16 @@ def _restore_group(group: list[Path], tasks_dir: Path, row: dict[str, Any]) -> N
     The clash check before this is advisory: a writer can create the hot record
     after it. Every move is :func:`_move_no_replace`, so that writer's file is
     kept and the archived copy (a snapshot directory whole) stays where it is.
+
+    The record move holds the per-task lock on the archived record — the same
+    ``<record>.json.lock`` the retention sweep holds while it rewrites
+    ``tasks/archive``. Without it, the sweep can write that name back after
+    this move.
     """
     record_path, *sidecars = group
     try:
-        _move_no_replace(record_path, tasks_dir / record_path.name)
+        with task_state_lock(record_path):
+            _move_no_replace(record_path, tasks_dir / record_path.name)
     except FileExistsError:
         row["action"] = "skipped"
         row["skip_reason"] = f"a writer created {record_path.name} in the hot directory first; archived copy kept"

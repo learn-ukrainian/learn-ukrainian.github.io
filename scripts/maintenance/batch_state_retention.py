@@ -11,9 +11,11 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import errno
 import fcntl
 import json
 import os
+import secrets
 import stat
 import sys
 from collections.abc import Callable, Iterator
@@ -111,11 +113,23 @@ def _read_regular_at(dir_fd: int, name: str) -> bytes | None:
         os.close(fd)
 
 
+def _temp_name(name: str) -> str:
+    """A private name inside one directory fd. A leftover ``.{name}.tmp.{pid}`` does not match it."""
+    return f".{name}.{os.getpid()}.{secrets.token_hex(8)}.tmp"
+
+
 def _write_bytes_at(dir_fd: int, name: str, raw: bytes) -> None:
-    """Create or replace ``name`` inside ``dir_fd`` without a path below the root fd."""
+    """Create or replace ``name`` inside ``dir_fd`` without a path below the root fd.
+
+    The temp name is unique, so a stale ``.{name}.tmp.{pid}`` left by a killed
+    run cannot make ``O_EXCL`` fail. On any failure after the temp is created,
+    that temp is unlinked; a name this call did not create is left alone.
+    """
     if not _component(name):
-        raise OSError(f"refusing to write {name}: symlink or path outside batch_state")
-    tmp = f".{name}.tmp.{os.getpid()}"
+        raise OSError(errno.EINVAL, f"refusing to write {name}: symlink or path outside batch_state")
+    tmp = _temp_name(name)
+    if not _component(tmp):
+        raise OSError(errno.EINVAL, f"refusing to write {tmp}")
     fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=dir_fd)
     try:
         view = memoryview(raw)
@@ -301,16 +315,29 @@ def _apply_one(
     now: datetime,
     crash_after: str | None,
     on_after_digest: Callable[[], None] | None,
-) -> str | None:
-    """Digest one sidecar. Return the action, or None to skip.
+) -> dict[str, str] | None:
+    """Digest one sidecar. Return the action row, or None to skip.
 
-    Lock order, global with dispatch and archive (checkout, then the per-task
-    record lock). Archive holds only the checkout lock (:func:`_record_lock_target`)
-    while it renames the record and its sidecar. Dispatch holds that same
-    checkout lock and then the per-task lock. Taking the per-task lock first
-    would deadlock against dispatch. Under both locks the record and the
-    snapshot directory must still be the hot names; if archive has already
-    moved them, this returns without writing a hot record back.
+    Lock order is the checkout lock, then the per-task record lock
+    (``<record>.json.lock``, the file :func:`task_state_lock` uses). Every
+    mover of a task record:
+
+    * this sweep: checkout lock, then the per-task lock, for the whole rewrite
+    * dispatch (``_write_state_atomic``): the checkout lock, then the per-task lock
+    * ``delegate._archive_task_artifacts`` (``--force-new``): the per-task lock
+      around the rename, released before dispatch takes the checkout lock
+    * ``stale_task_records._restore_group``: the per-task lock on the archived
+      record around that record's move
+    * ``stale_task_records.archive_terminal``: the checkout lock
+      (:func:`_record_lock_target`) while it renames the record and its sidecar
+
+    Taking the per-task lock and then waiting on the checkout lock deadlocks
+    a holder that already has the checkout lock and is waiting for the per-task
+    lock. ``_archive_task_artifacts`` does not do that: it drops the per-task
+    lock before dispatch acquires the checkout lock. Under both locks the
+    record and the snapshot directory must still be the hot names; if a mover
+    has already moved them, this returns without writing a hot record back.
+    One record's ``OSError`` is that record's error; it does not abort the sweep.
     """
     try:
         with (
@@ -354,11 +381,13 @@ def _apply_one(
                     raise RuntimeError("crash after record")
                 for phase in _PHASES:
                     _unlink_regular_at(snap_fd, f"read_only_checkout_{phase}.json")
-                return "digested"
+                return {"action": "digested"}
             finally:
                 os.close(snap_fd)
     except WorktreeLockError:
         return None
+    except OSError as exc:
+        return {"action": "error", "error": errno.errorcode.get(exc.errno or 0, "OSError")}
 
 
 def _measure_candidate(
@@ -404,7 +433,7 @@ def _measure_candidate(
     if apply:
         if on_before_lock is not None:
             on_before_lock()
-        action = _apply_one(
+        outcome = _apply_one(
             parent_fd,
             snapshot_name,
             record_name,
@@ -417,9 +446,12 @@ def _measure_candidate(
             crash_after=crash_after,
             on_after_digest=on_after_digest,
         )
-        if action is None:
+        if outcome is None:
             return None
-        row["action"] = action
+        row["action"] = outcome["action"]
+        if outcome["action"] == "error":
+            row["error"] = outcome["error"]
+            return row, 0
     return row, reclaimed
 
 
@@ -567,7 +599,7 @@ def _parser() -> argparse.ArgumentParser:
             "  JSON on stdout: per-subtree bytes, reclaimable bytes, and selected snapshot dirs.\n"
             "  With --apply, eligible tasks/*.snapshots and tasks/archive/*.snapshots dirs lose\n"
             "  read_only_checkout_{pre,post}.json and gain digest.json. The task record's\n"
-            "  read_only_snapshot_retention field becomes \"digest\".\n"
+            '  read_only_snapshot_retention field becomes "digest".\n'
             "\n"
             "Exit codes:\n"
             "  0  report written (dry-run or apply)\n"

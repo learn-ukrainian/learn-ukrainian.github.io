@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import errno
 import json
 import os
 import subprocess
@@ -14,7 +15,7 @@ import pytest
 
 from scripts import delegate
 from scripts.maintenance.batch_state_retention import DEFAULT_MIN_AGE_DAYS, plan_retention
-from scripts.orchestration import stale_task_records
+from scripts.orchestration import scheduled_worktree_cleanup, stale_task_records
 from scripts.orchestration.scheduled_worktree_cleanup import batch_state_retention_reports
 
 NOW = datetime(2026, 9, 25, 12, 0, tzinfo=UTC)
@@ -373,11 +374,7 @@ def test_parent_swap_to_symlink_between_check_and_open_touches_nothing_outside(
     (outside_snap / "digest.json").write_text("OUTSIDE-DIGEST", encoding="utf-8")
     (outside / "swap.json").write_text((tasks / "swap.json").read_text(encoding="utf-8"), encoding="utf-8")
     (outside / "untouched.txt").write_bytes(b"leave-me")
-    before = {
-        path.relative_to(outside).as_posix(): path.read_bytes()
-        for path in outside.rglob("*")
-        if path.is_file()
-    }
+    before = {path.relative_to(outside).as_posix(): path.read_bytes() for path in outside.rglob("*") if path.is_file()}
     swapped = False
     real_open = os.open
 
@@ -403,11 +400,7 @@ def test_parent_swap_to_symlink_between_check_and_open_touches_nothing_outside(
     report = plan_retention(root, min_age_days=0, apply=True, now=NOW)
 
     assert report["selected"] == []
-    after = {
-        path.relative_to(outside).as_posix(): path.read_bytes()
-        for path in outside.rglob("*")
-        if path.is_file()
-    }
+    after = {path.relative_to(outside).as_posix(): path.read_bytes() for path in outside.rglob("*") if path.is_file()}
     assert after == before
 
 
@@ -427,3 +420,136 @@ def test_help_is_two_lines_and_has_no_host_path() -> None:
     assert "replace explicitly clean terminal snapshot sidecars with a digest." in collapsed
     assert "do not use it to delete any other batch_state subtree." in collapsed
     assert ".venv/bin/python scripts/maintenance/batch_state_retention.py" in text
+
+
+def test_force_new_archive_after_digest_does_not_recreate_the_hot_record(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _batch(tmp_path)
+    tasks = root / "tasks"
+    _write_record(tasks, "moving", status="done", age_days=20, run_nonce="same")
+    _write_full_sidecars(tasks, "moving", entries=2)
+    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks)
+    locked: list[Path] = []
+
+    @contextlib.contextmanager
+    def _record_lock(path: Path):
+        # The sweep already holds this lock. Drop it so the rename lands
+        # between the digest write and the record write.
+        locked.append(path)
+        yield
+
+    monkeypatch.setattr(delegate, "task_state_lock", _record_lock)
+
+    def _archive_midway() -> None:
+        delegate._archive_task_artifacts("moving", stamp="fixed")
+
+    report = plan_retention(root, min_age_days=0, apply=True, now=NOW, on_after_digest=_archive_midway)
+
+    assert locked == [tasks / "moving.json"]
+    assert not (tasks / "moving.json").exists()
+    assert not (tasks / "moving.snapshots").exists()
+    assert report["selected"] == []
+    archived = json.loads((tasks / "moving.fixed.archived.json").read_text(encoding="utf-8"))
+    assert "read_only_snapshot_retention" not in archived
+    assert (tasks / "moving.snapshots.fixed.archived" / "digest.json").is_file()
+
+
+def test_restore_after_digest_does_not_recreate_the_archived_record(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = _batch(tmp_path)
+    tasks = root / "tasks"
+    archive = tasks / "archive"
+    archive.mkdir()
+    _write_record(archive, "moving", status="done", age_days=20, run_nonce="same")
+    _write_full_sidecars(archive, "moving", entries=2)
+    locked: list[Path] = []
+
+    @contextlib.contextmanager
+    def _record_lock(path: Path):
+        locked.append(path)
+        yield
+
+    monkeypatch.setattr(stale_task_records, "task_state_lock", _record_lock)
+
+    def _restore_midway() -> None:
+        stale_task_records.restore_archived(tasks, ["moving"], apply=True)
+
+    report = plan_retention(root, min_age_days=0, apply=True, now=NOW, on_after_digest=_restore_midway)
+
+    assert locked == [archive / "moving.json"]
+    assert not (archive / "moving.json").exists()
+    assert report["selected"] == []
+    restored = json.loads((tasks / "moving.json").read_text(encoding="utf-8"))
+    assert "read_only_snapshot_retention" not in restored
+
+
+def test_stale_pid_temp_does_not_block_or_get_deleted(tmp_path: Path) -> None:
+    root = _batch(tmp_path)
+    tasks = root / "tasks"
+    _write_record(tasks, "old-clean", status="done", age_days=3, run_nonce="same")
+    snapshot = _write_full_sidecars(tasks, "old-clean", entries=1)
+    stale = snapshot / f".digest.json.tmp.{os.getpid()}"
+    stale.write_text("killed-run", encoding="utf-8")
+
+    report = plan_retention(root, min_age_days=0, apply=True, now=NOW)
+
+    assert report["selected"][0]["action"] == "digested"
+    assert (snapshot / "digest.json").is_file()
+    assert stale.read_text(encoding="utf-8") == "killed-run"
+    assert not list(snapshot.glob(".digest.json.*.tmp"))
+
+
+def _hygiene_receipt(root: Path, receipt_dir: Path, monkeypatch: pytest.MonkeyPatch) -> dict:
+    monkeypatch.setattr(
+        scheduled_worktree_cleanup,
+        "build_receipt",
+        lambda *_args, **_kwargs: {
+            "schema_version": 2,
+            "observed_at": "2026-09-25T12:00:00+00:00",
+            "mode": "apply",
+            "summary": {"errors": 0},
+            "repositories": [],
+        },
+    )
+    monkeypatch.setattr(scheduled_worktree_cleanup.home_session_retention_check, "build_report", lambda: {})
+    monkeypatch.setattr(scheduled_worktree_cleanup.home_session_retention_check, "warning_lines", lambda _report: [])
+    assert (
+        scheduled_worktree_cleanup.main(["--repo-root", str(root.parent), "--apply", "--receipt-dir", str(receipt_dir)])
+        == 0
+    )
+    receipts = list(receipt_dir.glob("*.json"))
+    assert len(receipts) == 1
+    return json.loads(receipts[0].read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("code", [errno.ELOOP, errno.EACCES, errno.EEXIST, errno.ENOSPC])
+def test_one_record_oserror_does_not_abort_the_sweep_or_the_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, code: int
+) -> None:
+    root = _batch(tmp_path)
+    tasks = root / "tasks"
+    _write_record(tasks, "bad", status="done", age_days=3, run_nonce="same")
+    bad = _write_full_sidecars(tasks, "bad", entries=1)
+    _write_record(tasks, "good", status="done", age_days=3, run_nonce="same")
+    good = _write_full_sidecars(tasks, "good", entries=1)
+    real_open = os.open
+
+    def _open(path, flags, mode=0o777, *, dir_fd=None):
+        if path == "bad.json.lock":
+            raise OSError(code, os.strerror(code))
+        if dir_fd is None:
+            return real_open(path, flags, mode)
+        return real_open(path, flags, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(os, "open", _open)
+    receipt = _hygiene_receipt(root, tmp_path / "receipts", monkeypatch)
+
+    applied = receipt["batch_state_retention"][0]["apply"]["selected"]
+    by_dir = {row["snapshot_dir"]: row for row in applied}
+    assert by_dir["tasks/bad.snapshots"]["action"] == "error"
+    assert by_dir["tasks/bad.snapshots"]["error"] == errno.errorcode[code]
+    assert by_dir["tasks/good.snapshots"]["action"] == "digested"
+    assert _names(bad) == {"read_only_checkout_pre.json", "read_only_checkout_post.json"}
+    assert _names(good) == {"digest.json"}
