@@ -18,14 +18,20 @@ try:
     # Repo-root imports (scripts.api.main, audit chain) resolve the package form.
     from scripts.build.activity_renderer import (
         error_correction_render_values,
+        group_sort_group_name,
         image_to_letter_render_values,
+        order_correct_indices,
+        quiz_correct_indices,
         unique_error_correction_options,
         unjumble_tokens,
     )
 except ImportError:  # pragma: no cover - scripts/-rooted callers (MDX generator)
     from build.activity_renderer import (
         error_correction_render_values,
+        group_sort_group_name,
         image_to_letter_render_values,
+        order_correct_indices,
+        quiz_correct_indices,
         unique_error_correction_options,
         unjumble_tokens,
     )
@@ -821,21 +827,17 @@ class ActivityParser:
 
     def _parse_quiz(self, data: dict) -> QuizActivity:
         items = []
-        for item_data in self._item_rows(data):
+        for item_index, item_data in enumerate(self._item_rows(data)):
             raw_options = item_data.get('options', [])
-            correct_answer = item_data.get('answer')
-            correct_index = item_data.get('correct')  # V2: integer index
+            correct = set(quiz_correct_indices(item_data, item_index))
             options = []
             for i, opt in enumerate(raw_options):
                 if isinstance(opt, str):
-                    # V2: correct is integer index; V1: match by answer string
-                    # Use type() not isinstance() — bool is subclass of int in Python
-                    is_correct = i == correct_index if type(correct_index) is int else opt == correct_answer
-                    options.append(QuizOption(text=opt, correct=is_correct))
+                    options.append(QuizOption(text=opt, correct=i in correct))
                 else:
                     options.append(QuizOption(
                         text=opt['text'],
-                        correct=opt.get('correct', False),
+                        correct=i in correct,
                         intentional_error=opt.get('intentional_error', False)
                     ))
             question = item_data.get('question') or item_data.get('prompt', '')
@@ -949,7 +951,7 @@ class ActivityParser:
         return MatchUpActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), pairs=pairs)
 
     def _parse_group_sort(self, data: dict) -> GroupSortActivity:
-        groups = [GroupSortGroup(name=g.get('name', g.get('label', '')), items=g.get('items', [])) for g in data.get('groups', [])]
+        groups = [GroupSortGroup(name=group_sort_group_name(g, i), items=g.get('items', [])) for i, g in enumerate(data.get('groups', []))]
         return GroupSortActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), groups=groups)
 
     def _parse_unjumble(self, data: dict) -> UnjumbleActivity:
@@ -1502,21 +1504,7 @@ class ActivityParser:
             raise ValueError("order requires non-empty correct_order list")
         if not isinstance(is_ukrainian, bool):
             raise TypeError("order is_ukrainian must be a boolean")
-        # Writers (e.g. codex on m20 a1/my-morning act-3) commonly express the
-        # answer as the ordered ITEM STRINGS rather than integer indices into
-        # `items`. When correct_order is an exact permutation of UNIQUE items,
-        # resolve each string to its index — unambiguous, and a natural
-        # authoring form we accept rather than HARD-fail at MDX assembly.
-        str_items = [str(item) for item in items]
-        if (all(isinstance(entry, str) for entry in correct_order)
-                and len(str_items) == len(set(str_items))
-                and len(correct_order) == len(str_items)
-                and set(correct_order) == set(str_items)):
-            correct_order = [str_items.index(entry) for entry in correct_order]
-        if not all(isinstance(index, int) for index in correct_order):
-            raise TypeError("order correct_order must contain integers")
-        if any(index < 0 or index >= len(items) for index in correct_order):
-            raise ValueError("order correct_order index out of range")
+        correct_order = order_correct_indices(items, correct_order)
         return OrderActivity(
             title=data.get('title', ''),
             instruction=data.get('instruction', ''),

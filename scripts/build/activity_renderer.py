@@ -149,6 +149,77 @@ def _component(name: str, props: str) -> str:
 # Core activity renderers
 # ---------------------------------------------------------------------------
 
+class QuizCorrectnessError(ValueError):
+    """A quiz item's inputs contradict each other or name no correct option."""
+
+
+def quiz_correct_indices(item: Any, index: int = 0) -> list[int]:
+    """Return the indices of the correct option(s) of one quiz item.
+
+    The schema lets three inputs name the answer: ``options[].correct`` flags,
+    the ``correct`` index and the ``answer`` text. Every input present is a
+    claim about which options are correct; the result is what all claims
+    agree on. Contradicting claims, or no claim at all, raise
+    ``QuizCorrectnessError`` -- the first choice is never assumed.
+    """
+    where = f"quiz item {index}"
+    if not isinstance(item, dict):
+        raise QuizCorrectnessError(f"{where} is not a mapping: {type(item).__name__}")
+    options = item.get("options")
+    if not isinstance(options, list) or not options:
+        raise QuizCorrectnessError(f"{where} has no options list")
+    texts = [opt.get("text") if isinstance(opt, dict) else opt for opt in options]
+
+    claims: dict[str, set[int]] = {}
+    flagged = {i for i, opt in enumerate(options) if isinstance(opt, dict) and opt.get("correct")}
+    # Flags on a mix of bare strings and objects cannot mark the strings, so
+    # they only count as a claim when they name something or cover every option.
+    if flagged or all(isinstance(opt, dict) for opt in options):
+        claims["options[].correct"] = flagged
+    index_claim = item.get("correct")
+    if type(index_claim) is int:
+        if not 0 <= index_claim < len(options):
+            raise QuizCorrectnessError(
+                f"{where}: correct={index_claim} out of range (0-{len(options) - 1})"
+            )
+        claims["correct"] = {index_claim}
+    answer = item.get("answer")
+    if isinstance(answer, str):
+        claims["answer"] = {i for i, text in enumerate(texts) if text == answer}
+
+    if not claims:
+        raise QuizCorrectnessError(
+            f"{where} names no correct option (needs options[].correct, correct or answer)"
+        )
+    agreed = set.intersection(*claims.values())
+    if not agreed:
+        named = "; ".join(f"{name} -> {sorted(found) or 'none'}" for name, found in claims.items())
+        raise QuizCorrectnessError(
+            f"{where}: correct option is contradicted or unnamed ({named})"
+        )
+    return sorted(agreed)
+
+
+class GroupSortNameError(ValueError):
+    """A group-sort group carries two different category names."""
+
+
+def group_sort_group_name(group: Any, index: int = 0) -> str:
+    """Return the category name of one group-sort group (``label`` or ``name``).
+
+    When both keys are present they must agree; otherwise whichever is present
+    is used.
+    """
+    if not isinstance(group, dict):
+        raise GroupSortNameError(f"group-sort group {index} is not a mapping: {type(group).__name__}")
+    label, name = group.get("label"), group.get("name")
+    if label and name and label != name:
+        raise GroupSortNameError(
+            f"group-sort group {index} has label {label!r} and name {name!r}; keep only one"
+        )
+    return label or name or ""
+
+
 def _render_quiz(act: dict) -> str:
     """quiz → <Quiz questions={[...]} instruction="..." />
 
@@ -157,19 +228,12 @@ def _render_quiz(act: dict) -> str:
     explanation?}.
     """
     questions = []
-    for item in act.get("items", []):
-        correct_idx = item.get("correct")
-        correct_answer = item.get("answer")
-        options = []
-        for i, opt in enumerate(item.get("options", [])):
-            if isinstance(opt, dict):
-                options.append({"text": opt.get("text", ""), "correct": bool(opt.get("correct", False))})
-            elif type(correct_idx) is int:
-                options.append({"text": opt, "correct": i == correct_idx})
-            elif correct_answer is not None:
-                options.append({"text": opt, "correct": opt == correct_answer})
-            else:
-                options.append({"text": opt, "correct": i == 0})
+    for index, item in enumerate(act.get("items", [])):
+        correct = set(quiz_correct_indices(item, index))
+        options = [
+            {"text": opt.get("text", "") if isinstance(opt, dict) else opt, "correct": i in correct}
+            for i, opt in enumerate(item["options"])
+        ]
         q: dict[str, Any] = {
             "question": item.get("question") or item.get("prompt", ""),
             "options": options,
@@ -223,8 +287,8 @@ def _render_group_sort(act: dict) -> str:
     React: groups is {label: items[]} dict.
     """
     groups = {}
-    for g in act.get("groups", []):
-        groups[g.get("label") or g.get("name", "")] = g.get("items", [])
+    for index, g in enumerate(act.get("groups", [])):
+        groups[group_sort_group_name(g, index)] = g.get("items", [])
 
     props = _prop("groups", groups)
     props += _opt_prop("instruction", act.get("instruction"))
@@ -614,13 +678,36 @@ def _render_unjumble(act: dict) -> str:
     return _component("Unjumble", props)
 
 
+def order_correct_indices(items: list, correct_order: list) -> list[int]:
+    """Resolve an order item's ``correct_order`` to zero-based indices into ``items``.
+
+    Writers (e.g. codex on m20 a1/my-morning act-3) commonly express the
+    answer as the ordered ITEM STRINGS rather than integer indices into
+    ``items``. When ``correct_order`` is an exact permutation of UNIQUE items,
+    resolve each string to its index -- unambiguous, and a natural authoring
+    form we accept rather than HARD-fail at MDX assembly.
+    """
+    str_items = [str(item) for item in items]
+    if (all(isinstance(entry, str) for entry in correct_order)
+            and len(str_items) == len(set(str_items))
+            and len(correct_order) == len(str_items)
+            and set(correct_order) == set(str_items)):
+        correct_order = [str_items.index(entry) for entry in correct_order]
+    if not all(isinstance(index, int) for index in correct_order):
+        raise TypeError("order correct_order must contain integers")
+    if any(index < 0 or index >= len(items) for index in correct_order):
+        raise ValueError("order correct_order index out of range")
+    return list(correct_order)
+
+
 def _render_order(act: dict) -> str:
     """order → <Order items={[...]} correct_order={[...]} instruction="..." />
 
     For dialogue/sequence ordering. Items displayed shuffled, learner clicks to reorder.
     """
-    props = _prop("items", act.get("items", []))
-    props += _prop("correct_order", act.get("correct_order", []))
+    items = act.get("items", [])
+    props = _prop("items", items)
+    props += _prop("correct_order", order_correct_indices(items, act.get("correct_order", [])))
     props += _opt_prop("instruction", act.get("instruction"))
     return _component("Order", props)
 
@@ -764,7 +851,20 @@ class ImageToLetterShapeError(ValueError):
 
 
 _IMAGE_ASSET_PATH = re.compile(r"[A-Za-z0-9_./-]+\.(?:png|jpe?g|webp|svg)")
-_EMOJI_LEAD = regex.compile(r"[\p{Extended_Pictographic}\p{Regional_Indicator}]")
+_FLAG = regex.compile(r"\p{Regional_Indicator}{2}")
+_EMOJI_LEAD = regex.compile(r"\p{Extended_Pictographic}")
+_EMOJI_PRESENTATION = regex.compile(r"\p{Emoji_Presentation}")
+_VS16 = "\N{VARIATION SELECTOR-16}"
+
+
+def _is_emoji_cluster(cluster: str) -> bool:
+    """One grapheme cluster that renders as a colour picture (flag or emoji)."""
+    if _FLAG.fullmatch(cluster):
+        return True
+    if not _EMOJI_LEAD.match(cluster):
+        return False
+    # Text-default pictographs (bare (c), (tm)) only render as emoji with U+FE0F.
+    return bool(_EMOJI_PRESENTATION.match(cluster)) or cluster[1:2] == _VS16
 
 
 def image_to_letter_image_kind(value: Any) -> str | None:
@@ -772,16 +872,18 @@ def image_to_letter_image_kind(value: Any) -> str | None:
 
     JSON Schema cannot express "exactly one emoji", so this function is the
     authoritative rule (the schema only states it in prose): an asset path, or
-    exactly one extended grapheme cluster whose first code point is
-    Extended_Pictographic or a Regional_Indicator (ZWJ sequences, skin tones
-    and flags each form one cluster).
+    exactly one extended grapheme cluster that is a Regional_Indicator pair
+    (a flag) or starts with an Extended_Pictographic code point that renders
+    as emoji -- Emoji_Presentation, or followed by U+FE0F -- so ZWJ sequences
+    and skin tones qualify while bare text-default symbols such as the
+    copyright sign do not.
     """
     if not isinstance(value, str) or not value:
         return None
     if _IMAGE_ASSET_PATH.fullmatch(value):
         return "asset"
     clusters = regex.findall(r"\X", value)
-    if len(clusters) == 1 and _EMOJI_LEAD.match(clusters[0]):
+    if len(clusters) == 1 and _is_emoji_cluster(clusters[0]):
         return "emoji"
     return None
 

@@ -590,7 +590,7 @@
               "image": {
                 "type": "string",
                 "minLength": 1,
-                "description": "Either an asset path (letters, digits, _ . / - ending in .png, .jpg, .jpeg, .webp or .svg) or exactly one emoji (a single grapheme cluster starting with an Extended_Pictographic or Regional_Indicator code point; ZWJ sequences, skin tones and flags count as one). JSON Schema cannot express this; image_to_letter_image_kind() in scripts/build/activity_renderer.py is the authoritative check."
+                "description": "Either an asset path (letters, digits, _ . / - ending in .png, .jpg, .jpeg, .webp or .svg) or exactly one emoji (a single grapheme cluster that is a Regional_Indicator pair, or starts with an Extended_Pictographic code point that renders as emoji, i.e. has Emoji_Presentation or is followed by U+FE0F; ZWJ sequences, skin tones and flags count as one, bare text-default symbols such as the copyright sign do not). JSON Schema cannot express this; image_to_letter_image_kind() in scripts/build/activity_renderer.py is the authoritative check."
               },
               "letter": {
                 "type": "string",

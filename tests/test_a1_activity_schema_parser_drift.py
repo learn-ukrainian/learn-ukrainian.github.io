@@ -29,8 +29,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 from yaml_activities import ActivityParser
 
 from scripts.build.activity_renderer import (
+    GroupSortNameError,
     ImageToLetterShapeError,
+    QuizCorrectnessError,
+    group_sort_group_name,
     image_to_letter_image_kind,
+    quiz_correct_indices,
     render_activity_to_jsx,
 )
 
@@ -48,46 +52,84 @@ INTERNAL_ONLY = {"error_ref"}
 PARSER_REJECTS: dict[str, str] = {}
 
 
-def _variants(node: dict, path: str, counter) -> list:
-    """Minimal valid instances of ``node``; one per anyOf-required alternative."""
+def _schema_branch_paths(node, path: str = "") -> set[str]:
+    """Every ``oneOf``/``anyOf`` branch path in ``node``, walked from the schema itself."""
+    found: set[str] = set()
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key in ("oneOf", "anyOf") and isinstance(value, list):
+                found.update(f"{path}/{key}[{i}]" for i in range(len(value)))
+            found |= _schema_branch_paths(value, f"{path}/{key}")
+    elif isinstance(node, list):
+        for i, value in enumerate(node):
+            found |= _schema_branch_paths(value, f"{path}[{i}]")
+    return found
+
+
+def _variants(node: dict, path: str, counter, where: str) -> list[tuple[object, frozenset[str]]]:
+    """Minimal instances of ``node`` paired with the branch paths each was built for.
+
+    One instance per ``oneOf``/``anyOf`` branch; ``where`` is the schema path of
+    ``node`` (the same naming ``_schema_branch_paths`` uses). Instances that a
+    branch's extra constraint leaves invalid are dropped by ``_cases``.
+    """
     if "$ref" in node:
-        return _variants(DEFS[node["$ref"].split("/")[-1]], path, counter)
+        name = node["$ref"].split("/")[-1]
+        return _variants(DEFS[name], path, counter, name)
     for key in ("oneOf", "anyOf"):
         if key in node and "properties" not in node:
-            return [v for branch in node[key] for v in _variants(branch, path, counter)]
+            return [
+                (value, tags | {f"{where}/{key}[{i}]"})
+                for i, branch in enumerate(node[key])
+                for value, tags in _variants(branch, path, counter, f"{where}/{key}[{i}]")
+            ]
     if "const" in node:
-        return [node["const"]]
+        return [(node["const"], frozenset())]
     if node.get("pattern") == "^E-[0-9]{3,}$":
-        return ["E-001"]
+        return [("E-001", frozenset())]
     if path == "image" or "png|jpe?g|webp|svg" in node.get("pattern", ""):
-        return [f"SENT{next(counter)}_{path}.svg"]
+        return [(f"SENT{next(counter)}_{path}.svg", frozenset())]
     if "enum" in node:
-        return [node["enum"][0]]
+        return [(node["enum"][0], frozenset())]
     kind = node.get("type")
     if kind == "object":
         props = node.get("properties", {})
-        groups = [node.get("anyOf", []), *(a.get("anyOf", []) for a in node.get("allOf", []))]
-        groups = [[a["required"] for a in g if "required" in a] for g in groups if g]
-        alternatives = [list(itertools.chain.from_iterable(combo)) for combo in itertools.product(*groups)] or [[]]
+        # Each anyOf (on the node or under allOf) contributes one alternative
+        # per branch; a branch without ``required`` adds no fields of its own.
+        anyofs = [(node["anyOf"], f"{where}/anyOf")] if "anyOf" in node else []
+        anyofs += [(a["anyOf"], f"{where}/allOf[{i}]/anyOf") for i, a in enumerate(node.get("allOf", [])) if "anyOf" in a]
+        groups = [
+            [(branch.get("required", []), f"{group_path}[{i}]") for i, branch in enumerate(branches)]
+            for branches, group_path in anyofs
+        ]
         out = []
-        for alt in alternatives:
-            fields = list(dict.fromkeys([*node.get("required", []), *alt]))
+        for combo in itertools.product(*groups):
+            fields = list(dict.fromkeys([*node.get("required", []), *itertools.chain.from_iterable(c[0] for c in combo)]))
+            alt_tags = frozenset(c[1] for c in combo)
             per_field = [
-                [(name, v) for v in _variants(props.get(name, {"type": "string"}), name, counter)] for name in fields
+                [
+                    (name, value, tags)
+                    for value, tags in _variants(props.get(name, {"type": "string"}), name, counter, f"{where}/properties/{name}")
+                ]
+                for name in fields
             ]
-            out.extend(dict(combo) for combo in itertools.product(*per_field))
+            for field_combo in itertools.product(*per_field):
+                out.append((
+                    {name: value for name, value, _ in field_combo},
+                    alt_tags.union(*(tags for _, _, tags in field_combo)),
+                ))
         return out
     if kind == "array":
         size = max(node.get("minItems", 1), 1)
         return [
-            [_fresh(v, counter) for _ in range(size)]
-            for v in _variants(node.get("items", {"type": "string"}), path, counter)
+            ([_fresh(value, counter) for _ in range(size)], tags)
+            for value, tags in _variants(node.get("items", {"type": "string"}), path, counter, f"{where}/items")
         ]
     if kind == "integer":
-        return [max(node.get("minimum", 0), 0)]
+        return [(max(node.get("minimum", 0), 0), frozenset())]
     if kind == "boolean":
-        return [True]
-    return [f"SENT{next(counter)}_{path}"]
+        return [(True, frozenset())]
+    return [(f"SENT{next(counter)}_{path}", frozenset())]
 
 
 def _fresh(value, counter):
@@ -117,6 +159,11 @@ def _make_answers_meaningful(instance) -> None:
                 row["answer"] = first["text"] if isinstance(first, dict) else first
         if "letter" in row and "options" in row:
             row["letter"] = row["options"][0]
+        # A quiz marks exactly one object option correct, the first.
+        if instance.get("type") == "quiz":
+            for position, option in enumerate(row.get("options", [])):
+                if isinstance(option, dict):
+                    option["correct"] = position == 0
     items = instance.get("items")
     order = instance.get("correct_order")
     # String `correct_order` must be a permutation of the item strings.
@@ -128,13 +175,18 @@ def _cases() -> list[tuple[str, int, dict]]:
     cases = []
     for name, node in DEFS.items():
         counter = itertools.count(1)
-        for index, instance in enumerate(_variants(node, "", counter)):
+        for index, (instance, tags) in enumerate(_variants(node, "", counter, name)):
             _make_answers_meaningful(instance)
-            cases.append((name.removesuffix("-a1"), index, instance))
+            # A branch's extra constraint (quiz: some option carries
+            # ``correct: true``) can leave a variant built for another branch
+            # invalid; branch coverage below proves nothing is lost.
+            if VALIDATOR.is_valid([instance]):
+                cases.append((name.removesuffix("-a1"), index, instance, tags))
     return cases
 
 
-CASES = _cases()
+_ALL_CASES = _cases()
+CASES = [(name, index, instance) for name, index, instance, _ in _ALL_CASES]
 
 
 def test_generated_examples_are_schema_valid():
@@ -158,8 +210,17 @@ def _dropped(example: dict, *outputs: str) -> set[str]:
 
 def test_every_a1_type_and_branch_is_generated():
     assert {c[0] for c in CASES} == {n.removesuffix("-a1") for n in DEFS}
-    # Branch enumeration must widen coverage beyond one case per type.
-    assert len(CASES) > len(DEFS)
+    schema_branches = set().union(*(_schema_branch_paths(node, name) for name, node in DEFS.items()))
+    covered = set().union(*(tags for *_, tags in _ALL_CASES))
+    assert schema_branches, "the schema must expose oneOf/anyOf branches"
+    assert covered == schema_branches, (
+        f"branches never generated: {sorted(schema_branches - covered)}; "
+        f"generated but not in the schema: {sorted(covered - schema_branches)}"
+    )
+    # The quiz branch where options[].correct alone supplies correctness.
+    assert any(
+        c[0] == "quiz" and all("correct" not in row and "answer" not in row for row in c[2]["items"]) for c in CASES
+    )
 
 
 @pytest.mark.parametrize(("activity_type", "index", "example"), PARSED_CASES, ids=PARSED_IDS)
@@ -293,12 +354,32 @@ GOOD_IMAGES = [
     "👨‍👩‍👧‍👦",
     "🇺🇦",
     "🍎",
+    "\u00a9\ufe0f",  # copyright sign with emoji presentation
+    "\u2122\ufe0f",
+    "\u25b6\ufe0f",
     "assets/apple.png",
     "img/flag.svg",
     "symbols/star.webp",
     "path/to/pic.jpg",
 ]
-BAD_IMAGES = [CYRILLIC_WORD, "!!!", "🍎🍎", "🍎🍌", "A", "apple-emoji", "not an image", "cat.txt", " 🍎"]
+BAD_IMAGES = [
+    CYRILLIC_WORD,
+    "!!!",
+    "🍎🍎",
+    "🍎🍌",
+    "A",
+    "apple-emoji",
+    "not an image",
+    "cat.txt",
+    " 🍎",
+    "\u00a9",  # bare text-default symbols are not a picture
+    "\u2122",
+    "\u25b6",
+    "🕷",  # text-default pictograph without U+FE0F
+    "🇺",  # a lone Regional_Indicator is half a flag
+    "1\ufe0f\u20e3",  # keycap
+    "\U0001f3fe",  # lone skin-tone modifier
+]
 
 
 @pytest.mark.parametrize("good_image", GOOD_IMAGES)
@@ -517,3 +598,179 @@ def test_phrase_table_mdx_emission():
 @pytest.mark.parametrize("value", ["", None, 7, ["🍎"]])
 def test_image_to_letter_image_kind_rejects_non_strings_and_empty(value):
     assert image_to_letter_image_kind(value) is None
+
+
+# ---------------------------------------------------------------------------
+# quiz: one resolver names the correct option for both emitters and the validator
+# ---------------------------------------------------------------------------
+
+
+def _quiz_activity(**item) -> dict:
+    row = {"question": "Q?", "explanation": "e", **item}
+    return {"type": "quiz", "instruction": "Pick one.", "items": [row]}
+
+
+def _obj(*flags: bool) -> list[dict]:
+    return [{"text": f"opt{i}", "correct": flag} for i, flag in enumerate(flags)]
+
+
+def _marked_by_emitters(activity: dict) -> tuple[list[str], list[str]]:
+    """Texts each emitter marks correct for the first quiz item."""
+    parser = ActivityParser()
+    mdx = parser.to_mdx([parser._parse_activity(activity)])
+    parsed = json.loads(re.search(r"questions=\{JSON\.parse\(`(.*?)`\)\}", mdx, re.S).group(1))
+    jsx = render_activity_to_jsx(activity)
+    rendered, _ = json.JSONDecoder().raw_decode(jsx[jsx.index("questions={") + len("questions=") + 1 :])
+    return (
+        [o["text"] for o in parsed[0]["options"] if o["correct"]],
+        [o["text"] for o in rendered[0]["options"] if o["correct"]],
+    )
+
+
+CONSISTENT_QUIZZES = {
+    "index": ({"options": ["a", "b", "c"], "correct": 1}, ["b"]),
+    "index-zero": ({"options": ["a", "b", "c"], "correct": 0}, ["a"]),
+    "answer": ({"options": ["a", "b", "c"], "answer": "c"}, ["c"]),
+    "index+answer": ({"options": ["a", "b", "c"], "correct": 2, "answer": "c"}, ["c"]),
+    "flags-only": ({"options": _obj(False, True, False)}, ["opt1"]),
+    "flags+index": ({"options": _obj(False, True, False), "correct": 1}, ["opt1"]),
+    "flags+answer": ({"options": _obj(True, False), "answer": "opt0"}, ["opt0"]),
+    "flags+index+answer": ({"options": _obj(False, False, True), "correct": 2, "answer": "opt2"}, ["opt2"]),
+    "mixed-index-on-string": ({"options": ["a", {"text": "b", "correct": False}], "correct": 0}, ["a"]),
+    "several-flags": ({"options": _obj(True, True, False)}, ["opt0", "opt1"]),
+}
+
+
+@pytest.mark.parametrize(("item", "expected"), CONSISTENT_QUIZZES.values(), ids=CONSISTENT_QUIZZES)
+def test_quiz_marks_the_named_correct_option_in_both_emitters(item, expected):
+    activity = _quiz_activity(**item)
+    assert VALIDATOR.is_valid([activity])
+    assert _marked_by_emitters(activity) == (expected, expected)
+
+
+CONTRADICTORY_QUIZZES = {
+    "all-false-flags+index": {"options": _obj(False, False, False), "correct": 1},
+    "all-false-flags+answer": {"options": _obj(False, False), "answer": "opt1"},
+    "all-false-flags-alone": {"options": _obj(False, False)},
+    "flag-vs-index": {"options": _obj(True, False), "correct": 1},
+    "flag-vs-answer": {"options": _obj(True, False), "answer": "opt1"},
+    "index-vs-answer": {"options": ["a", "b", "c"], "correct": 0, "answer": "b"},
+    "answer-names-no-option": {"options": ["a", "b"], "answer": "z"},
+    "no-input-names-an-option": {"options": ["a", "b"]},
+    "index-out-of-range": {"options": ["a", "b"], "correct": 5},
+}
+
+
+@pytest.mark.parametrize("item", CONTRADICTORY_QUIZZES.values(), ids=CONTRADICTORY_QUIZZES)
+def test_quiz_with_contradicting_or_unnamed_answer_is_rejected_never_first_choice(item):
+    activity = _quiz_activity(**item)
+    with pytest.raises(QuizCorrectnessError, match="quiz item 0"):
+        quiz_correct_indices(activity["items"][0])
+    with pytest.raises(QuizCorrectnessError, match="quiz item 0"):
+        ActivityParser()._parse_activity(activity)
+    with pytest.raises(QuizCorrectnessError, match="quiz item 0"):
+        render_activity_to_jsx(activity)
+
+
+def _validate(tmp_path, *activities: dict):
+    import yaml
+    from build.activity_validator import validate_activities  # scripts/ is on sys.path
+
+    path = tmp_path / "module.yaml"
+    path.write_text(yaml.safe_dump({"inline": list(activities)}, allow_unicode=True), encoding="utf-8")
+    return validate_activities(path)
+
+
+@pytest.mark.parametrize("item", CONTRADICTORY_QUIZZES.values(), ids=CONTRADICTORY_QUIZZES)
+def test_validator_rejects_quiz_with_contradicting_or_unnamed_answer(tmp_path, item):
+    issues = [i for i in _validate(tmp_path, _quiz_activity(**item)) if i.activity_type == "quiz"]
+    assert issues
+    assert all(i.severity == "error" for i in issues)
+    assert any("quiz item 0" in i.message or "out of range" in i.message for i in issues)
+
+
+@pytest.mark.parametrize(("item", "expected"), CONSISTENT_QUIZZES.values(), ids=CONSISTENT_QUIZZES)
+def test_validator_accepts_every_consistent_quiz_shape(tmp_path, item, expected):
+    assert _validate(tmp_path, _quiz_activity(**item)) == []
+
+
+# ---------------------------------------------------------------------------
+# group-sort: one resolver names the category for both emitters and the validator
+# ---------------------------------------------------------------------------
+
+
+def _group_sort(*groups: dict) -> dict:
+    return {"type": "group-sort", "instruction": "Sort.", "groups": list(groups)}
+
+
+def _group_keys(activity: dict) -> tuple[list[str], list[str]]:
+    parser = ActivityParser()
+    mdx = parser.to_mdx([parser._parse_activity(activity)])
+    parsed = json.loads(re.search(r"groups=\{JSON\.parse\(`(.*?)`\)\}", mdx, re.S).group(1))
+    jsx = render_activity_to_jsx(activity)
+    rendered, _ = json.JSONDecoder().raw_decode(jsx[jsx.index("groups={") + len("groups=") + 1 :])
+    return list(parsed), list(rendered)
+
+
+@pytest.mark.parametrize(
+    ("first", "second", "expected"),
+    [
+        ({"label": "L1", "items": ["x"]}, {"label": "L2", "items": ["y"]}, ["L1", "L2"]),
+        ({"name": "N1", "items": ["x"]}, {"name": "N2", "items": ["y"]}, ["N1", "N2"]),
+        ({"label": "S", "name": "S", "items": ["x"]}, {"name": "N2", "items": ["y"]}, ["S", "N2"]),
+    ],
+    ids=["label", "name", "label-equals-name"],
+)
+def test_group_sort_category_name_is_the_same_in_both_emitters(first, second, expected):
+    activity = _group_sort(first, second)
+    assert VALIDATOR.is_valid([activity])
+    assert _group_keys(activity) == (expected, expected)
+
+
+def test_group_sort_label_and_name_that_differ_are_rejected(tmp_path):
+    activity = _group_sort({"label": "L", "name": "N", "items": ["x"]}, {"label": "M", "items": ["y"]})
+    assert VALIDATOR.is_valid([activity])  # the schema allows either key; Python decides
+    with pytest.raises(GroupSortNameError, match="group-sort group 0"):
+        group_sort_group_name(activity["groups"][0])
+    with pytest.raises(GroupSortNameError, match="group-sort group 0"):
+        ActivityParser()._parse_activity(activity)
+    with pytest.raises(GroupSortNameError, match="group-sort group 0"):
+        render_activity_to_jsx(activity)
+    issues = [i for i in _validate(tmp_path, activity) if i.activity_type == "group-sort"]
+    assert len(issues) == 1
+    assert issues[0].severity == "error"
+    assert issues[0].item_index == 0
+    assert "label 'L' and name 'N'" in issues[0].message
+
+
+# ---------------------------------------------------------------------------
+# order: the emitted correct_order prop itself carries the answer
+# ---------------------------------------------------------------------------
+
+
+def _order_props(activity: dict) -> tuple[list, list]:
+    parser = ActivityParser()
+    mdx = parser.to_mdx([parser._parse_activity(activity)])
+    parsed = json.loads(re.search(r"correct_order=\{JSON\.parse\(`(.*?)`\)\}", mdx, re.S).group(1))
+    jsx = render_activity_to_jsx(activity)
+    rendered, _ = json.JSONDecoder().raw_decode(jsx[jsx.index("correct_order={") + len("correct_order=") + 1 :])
+    return parsed, rendered
+
+
+@pytest.mark.parametrize(
+    ("correct_order", "expected"),
+    [([2, 0, 1], [2, 0, 1]), (["C", "A", "B"], [2, 0, 1])],
+    ids=["indices", "item-strings"],
+)
+def test_order_emits_correct_order_prop_as_indices_in_both_emitters(correct_order, expected):
+    activity = {"type": "order", "instruction": "Order.", "items": ["A", "B", "C"], "correct_order": correct_order}
+    assert VALIDATOR.is_valid([activity])
+    assert _order_props(activity) == (expected, expected)
+
+
+def test_order_with_unresolvable_correct_order_is_rejected_by_both_emitters():
+    activity = {"type": "order", "instruction": "Order.", "items": ["A", "B", "C"], "correct_order": ["C", "A", "Z"]}
+    with pytest.raises(TypeError, match="must contain integers"):
+        ActivityParser()._parse_activity(activity)
+    with pytest.raises(TypeError, match="must contain integers"):
+        render_activity_to_jsx(activity)
