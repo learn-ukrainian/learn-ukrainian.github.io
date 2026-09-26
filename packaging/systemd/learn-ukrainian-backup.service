@@ -1,11 +1,6 @@
 [Unit]
 Description=Learn Ukrainian data backup (restic via rclone remote)
 After=network.target
-# TODO(#8804): when the guarded-start data-volume drop-in mechanism
-# (branch codex/impl-8804-guarded-start) merges to main, wire
-# scripts/storage/data_volume_guard.sh here the same way the loopback
-# service drop-ins do, so the backup refuses to run when data/ is not on
-# its configured volume.
 
 [Service]
 Type=oneshot

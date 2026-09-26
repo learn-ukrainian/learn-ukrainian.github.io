@@ -1,8 +1,6 @@
 [Unit]
 Description=Learn Ukrainian backup retention (weekly restic forget --prune)
 After=network.target
-# TODO(#8804): same data-volume guard drop-in as learn-ukrainian-backup.service
-# once the guarded-start mechanism merges to main.
 
 [Service]
 Type=oneshot

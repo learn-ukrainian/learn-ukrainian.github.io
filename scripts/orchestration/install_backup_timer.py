@@ -111,10 +111,16 @@ def apply(rendered: dict[str, str], unit_dir: Path, enable: bool) -> int:
     changed = []
     for name, text in rendered.items():
         destination = unit_dir / name
-        if destination.is_file() and destination.read_text(encoding="utf-8") == text:
+        if (
+            destination.is_file()
+            and destination.read_text(encoding="utf-8") == text
+            and destination.stat().st_mode & 0o777 == 0o600
+        ):
             continue
+        # User units reference a private environment file; keep the units owner-only.
+        destination.touch(mode=0o600, exist_ok=True)
+        os.chmod(destination, 0o600)
         destination.write_text(text, encoding="utf-8")
-        os.chmod(destination, 0o644)
         changed.append(name)
     reload = systemctl_user("daemon-reload")
     if reload.returncode != 0:

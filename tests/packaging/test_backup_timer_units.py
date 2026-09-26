@@ -34,9 +34,11 @@ def test_backup_service_contract() -> None:
     assert "IOSchedulingClass=idle" in service
     assert "TimeoutStartSec=" in service
     assert "run_scheduled_backup.sh" in service
-    # #8804 guarded-start is not on main: the data-volume guard must remain a
-    # visible TODO until the drop-in mechanism merges.
-    assert "TODO(#8804)" in service
+    dropin = (PACKAGING / "dropins/learn-ukrainian-backup.service.d/data-volume.conf").read_text(encoding="utf-8")
+    assert (
+        "data_volume_guard.sh -- /usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh\n"
+        in dropin
+    )
 
 
 def test_backup_timer_contract() -> None:
@@ -52,6 +54,13 @@ def test_retention_units_run_weekly_tag_scoped_forget() -> None:
     assert "Type=oneshot" in service
     assert "run_scheduled_backup.sh retention" in service
     assert "EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env" in service
+    dropin = (PACKAGING / "dropins/learn-ukrainian-backup-retention.service.d/data-volume.conf").read_text(
+        encoding="utf-8"
+    )
+    assert (
+        "data_volume_guard.sh -- /usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh retention\n"
+        in dropin
+    )
     timer = _render("learn-ukrainian-backup-retention.timer")
     assert timer.count("OnCalendar=") == 1
     assert "OnCalendar=Sun" in timer
@@ -73,6 +82,27 @@ def test_installer_accepts_primary_checkout_and_rejects_linked_worktree(
     assert install_backup_timer.main(["--repo-root", str(primary), "--unit-dir", str(tmp_path / "units")]) == 0
     with pytest.raises(install_backup_timer.InstallError, match="must be the primary checkout"):
         install_backup_timer.main(["--repo-root", str(linked), "--unit-dir", str(tmp_path / "units")])
+
+
+def test_installer_writes_owner_only_units_and_repairs_existing_mode(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    unit_dir = tmp_path / "units"
+    unit_dir.mkdir()
+    existing = unit_dir / "learn-ukrainian-backup.service"
+    existing.write_text("unchanged", encoding="utf-8")
+    existing.chmod(0o644)
+    monkeypatch.setattr(
+        install_backup_timer,
+        "systemctl_user",
+        lambda *_args: subprocess.CompletedProcess(args=[], returncode=0, stdout="", stderr=""),
+    )
+
+    assert install_backup_timer.apply({existing.name: "unchanged"}, unit_dir, enable=False) == 0
+    assert existing.stat().st_mode & 0o777 == 0o600
+
+    assert install_backup_timer.apply({"learn-ukrainian-backup.timer": "new"}, unit_dir, enable=False) == 0
+    assert (unit_dir / "learn-ukrainian-backup.timer").stat().st_mode & 0o777 == 0o600
 
 
 @pytest.mark.skipif(shutil.which("systemd-analyze") is None, reason="systemd-analyze unavailable")
