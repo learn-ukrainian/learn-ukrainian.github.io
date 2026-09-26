@@ -57,15 +57,59 @@ defaults outside the repository and rejects repository output paths; it does
 not write its historical A row. The two generic grow-candidate writers target
 unclassified ignored host state, outside the 173 P2 A rows.
 
+## Review follow-up sweep
+
+The follow-up searched Kaikki constants and defaults, f-string and path-join
+constructions containing `lexicon`, and `OSError`/`FileNotFoundError` handlers
+that return an empty value. The regenerated 505-row consumer census records
+P2 readers and writers with executed checks, including two manually listed
+Kaikki readers that its syntax scan does not detect.
+
+- Physical K output: `curated_textbook_jsonl_repromote.py` now defaults to its
+  existing registry inventory; `INV_REL` remains a provenance identifier.
+  K joins in `build_data_manifest.py`, `esum_garbled.py`,
+  `generate_vesum_aliases.py`, `anchor_curation_evidence.py`,
+  `apply_anchor_worksheet.py`, `atlas_intake_core.py`,
+  `curriculum_atlas_intake.py`, `ohoiko_atlas_intake.py`, and
+  `atlas_source_census.py` already target `registry/`. The first two K readers
+  now propagate missing or malformed file errors.
+- Kaikki A paths: `fill_local.py`, `reenrich_thin_manifest_entries.py`, and
+  `repair_plural_noun_aliases.py` now use the verified default and fail when
+  unhydrated. `enrich_manifest.py`, `admit_teacher_table.py`,
+  `runner/enrich_offline_20k.py`, `runner/reduce_ulif_20k.py`,
+  `runner/worker_enrich.py`, `admit_fmu_boosters.py`,
+  `admit_stem_slice_2a.py`, `promote_teacher_lesson_intake.py`,
+  `grow_lexicon_from_content.py`, `audit/grow_lexicon_from_sources.py`, and
+  `audit/grow_lexicon_from_lemmas.py` already use the verified default on
+  their execution paths. `build_kaikki_lookup.py` is the declared writer;
+  `build_classification_table.py` contains the frozen logical path.
+- Other A paths: `source_inventory_review_decisions.py` and
+  `load_relation_candidates.py` resolve dynamic candidate paths through
+  `artifact_path()`. Declared writers above use `write_artifact()`;
+  unregistered new outputs under the migrated tree now raise before writing.
+  The specific `.gitignore` rules preserve host state in `cache/`,
+  `slovnyk_cache/`, `runner-mirror/`, intake journals and locks, and named
+  local grow, triage, and private-intake outputs. Remaining `data/lexicon`
+  joins in grow, runner, cache, and report scripts target that host state.
+  Joins under `site/public/lexicon`, `/lexicon/` URLs, and other `data/`
+  trees do not resolve P2 files.
+- Remaining silent-empty catches: `enrich_manifest.py` handles the mutable
+  Slovnyk cache, `promote_teacher_lesson_intake.py` a resumable journal,
+  `heritage_classifier.py` an unrelated registry lookup and optional DB,
+  `runner/finalize.py` optional process metrics, and
+  `check_manifest_vocabulary_coverage.py` a Git-diff failure that triggers
+  full coverage. None reads a P2 K or A artifact.
+
 ## CI test-ID reference
 
 Main changed test IDs after the P1 baseline, so the pre-phase reference is the
 full-tier base CI capture in `test-baseline.p2.pre.json` (run 36243687964,
 source commit `526a1055ea3c01193f9cd19d0cda260c1867255a`). The final P2
-capture in `test-baseline.p2.json` is from full-tier branch CI run 36248549299
-on code commit `2b7d00a0a50ccc6efb2cd8a267f6d916cbce280f`.
-Comparing pre-phase to P2 passes with two sparse-test renames and two
-`needs_artifact` dispositions, both proven by `host-run-p2.junit.xml`.
+capture in `test-baseline.p2.json` is from full-tier branch CI run 36258686968
+on final code commit `9c87ac00a94162e403340d183dcda77f99c205a1`.
+Comparing pre-phase to P2 passes with eight new passing review tests, two
+sparse-test renames, and two `needs_artifact` dispositions. Both artifact
+cases were proven by `host-run-p2.junit.xml`.
 
 A direct P1-to-P2 comparison still reports three test IDs renamed on main
 between P1 and the base commit, plus a new restore test that CI skips when its
