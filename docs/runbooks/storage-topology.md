@@ -23,6 +23,13 @@ Hetzner Cloud Volume and bind-mounts it back at `<repo>/data`. Application paths
 stay the same, and SQLite remains on a local filesystem. The Mac and hosts
 before migration have no `/etc/learn-ukrainian/data-volume.uuid` file.
 
+Before writing the UUID marker, make `/etc/learn-ukrainian` searchable by the
+service user (for example, mode 0755 or membership in its access group) and
+make the marker readable by that user. An unreadable marker or parent refuses
+service starts with exit 78. After the volume and bind mount are verified, the
+driver restarts the four listener services; a guard refusal does not retry
+automatically. Restart any timer service that failed before the mount as well.
+
 Once the UUID file exists, `scripts/storage/data_volume_guard.sh` checks the
 UUID reported by `findmnt -no UUID,SOURCE -T <repo>/data`. It exits 78 if the
 mount is absent, unreadable, or from a different volume. `services.sh`
@@ -35,8 +42,11 @@ each original `ExecStart` with the same guard and set
 four timer-triggered services, without changing the timer files. Preview
 the rendered `/etc/systemd/user/` files with
 `<primary-checkout>/.venv/bin/python scripts/storage/install_data_volume_dropins.py`;
-the driver uses `--apply` during the migration window, then reloads the user
-manager. The installer does not mount, move data, reload, or start services.
+the driver runs `--apply` from the primary checkout during the migration window,
+then reloads the user manager. `--apply` refuses dispatch worktrees. The
+installer does not mount, move data, reload, or start services. The reporter
+drop-in uses the resolved primary checkout for its guard, command, and working
+directory.
 
 ## Agent / developer commands (Mac)
 

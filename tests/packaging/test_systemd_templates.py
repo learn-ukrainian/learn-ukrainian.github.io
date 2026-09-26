@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts.storage import install_data_volume_dropins as installer
+
 PACKAGING = Path(__file__).resolve().parents[2] / "packaging" / "systemd"
 UNITS = (
     "learn-ukrainian-api.service",
@@ -60,11 +62,14 @@ def test_data_volume_dropins_cover_all_services_and_preserve_commands() -> None:
         command = next(line.removeprefix("ExecStart=") for line in original.splitlines() if line.startswith("ExecStart="))
         dropin = (DROPINS / f"{unit}.d/data-volume.conf").read_text(encoding="utf-8")
         assert "ExecStart=\n" in dropin
+        if unit == "learn-ukrainian-project-state-reporter.service":
+            command = command.replace("%h/projects/learn-ukrainian", "@REPO_ROOT@")
+            assert "WorkingDirectory=@REPO_ROOT@" in dropin
         assert f"/data_volume_guard.sh -- {command}" in dropin
         assert "RestartPreventExitStatus=78" in dropin
 
 
-def test_data_volume_dropin_installer_previews_then_applies(tmp_path: Path) -> None:
+def test_data_volume_dropin_installer_previews_and_refuses_worktree_apply(tmp_path: Path) -> None:
     destination = tmp_path / "user"
     command = [
         sys.executable,
@@ -75,8 +80,24 @@ def test_data_volume_dropin_installer_previews_then_applies(tmp_path: Path) -> N
     preview = subprocess.run(command, text=True, capture_output=True, check=True)
     assert "data_volume_guard.sh" in preview.stdout
     assert not destination.exists()
-    applied = subprocess.run([*command, "--apply"], text=True, capture_output=True, check=True)
-    assert applied.stdout == preview.stdout
+    assert "@REPO_ROOT@" not in preview.stdout
+    applied = subprocess.run([*command, "--apply"], text=True, capture_output=True)
+    assert applied.returncode == 2
+    assert "--apply must run from the primary checkout" in applied.stderr
+    assert not destination.exists()
+
+
+def test_data_volume_dropin_installer_applies_from_primary_checkout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    destination = tmp_path / "user"
+    monkeypatch.setattr(installer, "_is_primary_checkout", lambda: True)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["install_data_volume_dropins.py", "--destination", str(destination), "--apply"],
+    )
+    assert installer.main() == 0
     files = list(destination.glob("*.service.d/data-volume.conf"))
     assert len(files) == 8
     assert all("@REPO_ROOT@" not in file.read_text(encoding="utf-8") for file in files)

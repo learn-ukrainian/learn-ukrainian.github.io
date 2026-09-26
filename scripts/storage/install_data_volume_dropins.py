@@ -10,6 +10,10 @@ TEMPLATE_ROOT = REPO_ROOT / "packaging" / "systemd" / "dropins"
 DEFAULT_DESTINATION = Path("/etc/systemd/user")
 
 
+def _is_primary_checkout() -> bool:
+    return ".worktrees" not in REPO_ROOT.parts and (REPO_ROOT / ".git").is_dir()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
@@ -45,6 +49,9 @@ def main() -> int:
         help="Systemd user-unit directory (default: /etc/systemd/user; example: /tmp/user-units).",
     )
     args = parser.parse_args()
+
+    if args.apply and not _is_primary_checkout():
+        parser.error("--apply must run from the primary checkout, not a dispatch worktree")
 
     root = str(REPO_ROOT)
     private_root = str(REPO_ROOT.parent / "learn-ukrainian-infra-private")

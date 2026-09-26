@@ -39,21 +39,25 @@ case "${1:-}" in
     *) usage >&2; exit 2 ;;
 esac
 
-if [[ ! -e "$UUID_FILE" ]]; then
-    if [[ -L "$UUID_FILE" ]]; then
-        echo "data volume guard: UUID file is a dangling symlink" >&2
-        exit "$EX_CONFIG"
-    fi
+if stat_error="$(LC_ALL=C stat -L -- "$UUID_FILE" 2>&1 >/dev/null)"; then
+    :
+elif [[ "$stat_error" == *'No such file or directory'* && ! -L "$UUID_FILE" ]]; then
     [[ "$mode" == status ]] && echo 'data: root disk'
     [[ "$mode" == exec ]] && exec "$@"
     exit 0
+else
+    echo "data volume guard: cannot check UUID file: $stat_error" >&2
+    exit "$EX_CONFIG"
 fi
 
 if [[ ! -f "$UUID_FILE" || ! -r "$UUID_FILE" ]]; then
     echo "data volume guard: cannot read UUID file" >&2
     exit "$EX_CONFIG"
 fi
-expected="$(tr -d '[:space:]' < "$UUID_FILE")"
+expected="$(tr -d '[:space:]' < "$UUID_FILE")" || {
+    echo "data volume guard: cannot read UUID file" >&2
+    exit "$EX_CONFIG"
+}
 if [[ ! "$expected" =~ ^[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}$ ]]; then
     echo "data volume guard: UUID file is invalid" >&2
     exit "$EX_CONFIG"

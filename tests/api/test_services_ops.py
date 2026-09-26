@@ -39,6 +39,20 @@ def isolate_systemd_user_manager(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     fake.write_text("#!/bin/sh\nif [ \"$1\" = --user ] && [ \"$2\" = show ]; then echo not-found; fi\n")
     fake.chmod(0o755)
     monkeypatch.setenv("SVC_SYSTEMCTL_BIN", str(fake))
+    # These lifecycle tests exercise services.sh against an absent marker,
+    # independent of the host's protected /etc configuration.
+    fake_stat = tmp_path / "stat"
+    fake_stat.write_text(
+        "#!/bin/sh\n"
+        "if [ \"$*\" = '-L -- /etc/learn-ukrainian/data-volume.uuid' ]; then\n"
+        "  echo 'stat: cannot stat UUID file: No such file or directory' >&2\n"
+        "  exit 1\n"
+        "fi\n"
+        "exec /usr/bin/stat \"$@\"\n",
+        encoding="utf-8",
+    )
+    fake_stat.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{tmp_path}:{os.environ['PATH']}")
 
 def find_free_port() -> int:
     """Find a free TCP port on localhost."""

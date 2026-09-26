@@ -20,7 +20,15 @@ def harness(tmp_path: Path):
     script.chmod(0o755)
     guard = tmp_path / "scripts/storage/data_volume_guard.sh"
     guard.parent.mkdir(parents=True)
-    guard.write_bytes((ROOT / "scripts/storage/data_volume_guard.sh").read_bytes())
+    guard.write_text(
+        (ROOT / "scripts/storage/data_volume_guard.sh")
+        .read_text(encoding="utf-8")
+        .replace(
+            "UUID_FILE=/etc/learn-ukrainian/data-volume.uuid",
+            f"UUID_FILE={tmp_path / 'data-volume.uuid'}",
+        ),
+        encoding="utf-8",
+    )
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     ps = bin_dir / "ps"
