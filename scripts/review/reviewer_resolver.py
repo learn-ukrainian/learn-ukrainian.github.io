@@ -37,7 +37,7 @@ from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS, loa
 from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
-_SEALED_REVIEW_EXECUTABLE = "scripts.ai_agent_bridge._review_pr:invoke_inter_agent"
+_SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
 
 # --- family resolution -------------------------------------------------------
 
@@ -468,7 +468,7 @@ def _hard_exclusion_reason(candidate: ReviewerCandidate, inputs: ResolverInputs)
         if candidate.adapter_transport != "acp":
             return "formal-review candidate is not bound to the ACP adapter transport"
         if candidate.sealed_executable != _SEALED_REVIEW_EXECUTABLE:
-            return "candidate is not bound to the sealed review-pr ACP executable"
+            return "candidate is not bound to the sealed ACP executable"
         if candidate.participant not in ACPX_SUPPORTED_PARTICIPANTS:
             return "candidate ACP participant is not enabled by the runner-owned adapter registry"
         if ACPX_PARTICIPANT_CATALOG_TRANSPORTS.get(candidate.participant) != candidate.catalog_transport:

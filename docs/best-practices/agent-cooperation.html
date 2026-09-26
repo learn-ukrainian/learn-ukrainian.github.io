@@ -183,7 +183,7 @@ Buzz deferred; Kimi native max-only vs KimiCC high default; formal CF via
 </tbody>
 </table>
 <p><strong>Discussion is not formal review.</strong> Design panels and same-family helpers do not
-seal PRs. Formal CF (shielded <code>review-pr</code> / <code>publish-review-verdict</code> RETIRED):</p>
+seal PRs. Formal CF (shielded <code>review-pr</code> / <code>publish-review-verdict</code> removed in #8520):</p>
 <pre><code class="language-bash">printf '%s\n' &quot;Cross-family review of PR &lt;N&gt; at exact head &lt;SHA&gt;: VERDICT + findings.&quot; \
   | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-&lt;lane&gt; - \
       --task-id review-&lt;N&gt; --type review
@@ -676,7 +676,7 @@ follows <code>model-assignment.md</code> Code review row.</p>
 <p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss</code> runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with <code>[AGREE]</code>. Transcript lands in the named channel with <code>parent_id</code> threading.</p>
 <p><strong>It is NOT formal cross-family review.</strong> Discussion output is design input only.
 Independent PR CF is <code>ask-&lt;lane&gt; --type review</code> with the verdict posted on the PR
-(shielded <code>review-pr</code> / <code>publish-review-verdict</code> RETIRED — see ownership matrix in
+(shielded <code>review-pr</code> / <code>publish-review-verdict</code> removed in #8520 — see ownership matrix in
 <a href="../runbooks/agent-seat-onboarding.md"><code>agent-seat-onboarding.md</code></a>).</p>
 <p><strong>It is NOT a quorum mechanism.</strong> Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have <strong>correlated blind spots</strong> (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.</p>
 <p><strong>What it actually delivers:</strong></p>

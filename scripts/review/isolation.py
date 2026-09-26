@@ -172,17 +172,7 @@ def create_review_temp_root(
     dir: str | os.PathLike[str] | None = None,
     context: dict[str, Any] | None = None,
 ) -> Path:
-    """Create a private review root whose cleanup identity is its sentinel.
-
-    Production shielded formal CF is retired (operator 2026-08-07). Creating
-    ``lu-review-*`` roots requires ``LU_FORMAL_SHIELDED_CF=1`` (unit tests only).
-    """
-    if prefix.startswith(REVIEW_TEMP_ROOT_PREFIXES) and not _formal_shielded_cf_temps_allowed():
-        raise OSError(
-            "shielded formal CF temp roots are retired; "
-            "set LU_FORMAL_SHIELDED_CF=1 only for unit tests. "
-            "Use direct ask-* cross-family review on the PR instead of review-pr."
-        )
+    """Create a private review root whose cleanup identity is its sentinel."""
     if dir is None:
         # #7164: sizeable review extractions go to the disk-backed fleet
         # scratch root, not tmpfs /tmp (per-user quota exhaustion there
@@ -198,15 +188,6 @@ def create_review_temp_root(
             shutil.rmtree(root)
         raise
     return root
-
-
-def _formal_shielded_cf_temps_allowed() -> bool:
-    return os.environ.get("LU_FORMAL_SHIELDED_CF", "").strip().lower() in {
-        "1",
-        "true",
-        "yes",
-        "on",
-    }
 
 
 def _has_review_temp_root_marker(root: Path) -> bool:
@@ -3805,20 +3786,22 @@ def prepare_isolated_review_launch(
         raise ReviewIsolationError(
             "kimi_isolated_review_unsupported: sealed formal CF isolation is not proven "
             "for native Kimi Code (project instructions / MCP / hooks / nested reviewers). "
-            "Use review-pr --reviewer claude|glm|codex. See #5556 / docs/runbooks/kimi-formal-cf-isolation.md."
+            "Use direct ask-* cross-family review on the PR (sealed review-pr was removed in #8520). "
+            "See #5556 / docs/runbooks/kimi-formal-cf-isolation.md."
         )
     if engine_key == "agy":
         raise ReviewIsolationError(
             "agy_isolated_review_unsupported: native project-instruction, MCP, "
             "hook, and nested-reviewer suppression is not proven. "
             "AGY may orchestrate (gemini-3.8-flash-high) but must request formal CF via "
-            "review-pr --reviewer claude|glm|codex. See #5555 / docs/runbooks/agy-formal-cf-isolation.md."
+            "direct ask-* cross-family review on the PR (sealed review-pr was removed in #8520). "
+            "See #5555 / docs/runbooks/agy-formal-cf-isolation.md."
         )
     if engine_key == "grok":
         raise ReviewIsolationError(
             "grok_isolated_review_unsupported: native OAuth credentials cannot "
             "be hidden from the required Read/Grep/Glob tools. "
-            "Use review-pr --reviewer claude|glm|codex. "
+            "Use direct ask-* cross-family review on the PR (sealed review-pr was removed in #8520). "
             "See #5557 / docs/runbooks/grok-formal-cf-isolation.md."
         )
     snap = snapshot_root.resolve()

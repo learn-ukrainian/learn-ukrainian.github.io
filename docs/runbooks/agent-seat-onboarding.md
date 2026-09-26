@@ -256,7 +256,7 @@ ACP/ACPX transport is toolless and cannot ground a tree review. Follow the canon
 and [local-code-review workflow](../../agents_extensions/shared/skills/local-code-review/SKILL.md).
 
 Sealed `review-pr`, `publish-review-verdict`, and `lu-review-*` trees are
-**retired — do not use**. Do not enable a test-only bypass. Resolve current
+**retired — do not use** (removed in #8520). Do not enable a test-only bypass. Resolve current
 model/family/harness identity from the live catalog; unknown identity cannot
 establish cross-family independence. Same-family helpers, design panels, and
 channel chat do not satisfy the review gate. Required CI and the exact-head

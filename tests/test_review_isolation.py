@@ -2491,10 +2491,11 @@ def _valid_capability_fields(engine: str = "claude") -> dict:
     from scripts.review.isolation import required_capabilities_for
 
     caps = sorted(required_capabilities_for(engine))
+    true_bin = str(Path("/usr/bin/true").resolve())
     proof = {
         "engine": engine if engine != "grok-build" else "grok",
-        "binary": "/usr/bin/true",
-        "binary_sha256": hashlib.sha256(Path("/usr/bin/true").read_bytes()).hexdigest(),
+        "binary": true_bin,
+        "binary_sha256": hashlib.sha256(Path(true_bin).read_bytes()).hexdigest(),
         "capabilities": caps,
         "missing": [],
         "version_sha256": "a" * 64,

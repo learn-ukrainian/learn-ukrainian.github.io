@@ -1556,7 +1556,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | One-off drive-by question to another agent | **Legacy `ask-*` compatibility command** pending single-seat ACP cutover | No by default; opt-in via `--allow-write` only on legacy paths |
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
-| Formal cross-family PR review | **`review-pr` / `publish-review-verdict`** | No (review evidence) |
+| Formal cross-family PR review | **Direct `ask-* --type review` + PR comment** (sealed `review-pr` / `publish-review-verdict` removed in #8520) | No (review evidence) |
 | Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Kimi/K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
@@ -1571,7 +1571,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
   and initiator/quota telemetry land. Do not add new provider launch logic
   there. `ask-gemini` is retired; AGY is the Gemini-family route.
 - `ai_agent_bridge` is for **communication**. `delegate.py dispatch` is for **execution**. Don't confuse them.
-- **`discuss` is not formal review.** Use `review-pr` / `publish-review-verdict` for CF.
+- **`discuss` is not formal review.** Use direct `ask-* --type review` + PR comment for CF (sealed `review-pr` / `publish-review-verdict` removed in #8520).
 - Query `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code a live plane mode.
 - ACPX is the structured transport for supported bounded 2-to-4-seat panels;
   rollback is feature-flag off + native runtime. It is

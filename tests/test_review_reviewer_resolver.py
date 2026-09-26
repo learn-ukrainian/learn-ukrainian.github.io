@@ -973,7 +973,7 @@ def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing()
     assert selected is not None
     assert selected.participant == "codex"
     assert selected.adapter_transport == "acp"
-    assert selected.sealed_executable == "scripts.ai_agent_bridge._review_pr:invoke_inter_agent"
+    assert selected.sealed_executable == "agent_runtime.runner:invoke_inter_agent"
     assert selected.quota_bucket == "codex"
     assert selected.credential_bucket == "codex"
     assert selected.quota_limit == selected.credential_limit == 1

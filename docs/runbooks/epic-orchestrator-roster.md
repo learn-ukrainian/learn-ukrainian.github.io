@@ -220,7 +220,7 @@ teaches the message-plane and cross-family review loop.
   files still carry continuity, not competing message or lease authority.
   `dual_write` is a compatibility soak/rollback mode, not normal operation.
 - Sealed formal CF (`review-pr`, `publish-review-verdict`, `lu-review-*` trees)
-  is **retired — do not use**. Use a qualified native toolful cross-family
+  is **retired — do not use** (removed in #8520). Use a qualified native toolful cross-family
   reviewer and post its verdict and findings on the PR at the exact head SHA,
   following the [local-code-review workflow](../../agents_extensions/shared/skills/local-code-review/SKILL.md).
 - Plane, retention, and review-eligibility changes remain infra/harness actions

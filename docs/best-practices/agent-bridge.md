@@ -190,48 +190,18 @@ manual review ask.
 
 **Phase 5 steer (warn-not-reject, #5486):** if an `ask-* --review` payload looks
 like a **formal CF PR review** (GitHub PR URL / `PR #N` / cross-family formal
-wording) and has **no** sealed `review_pr` / `review_branch` target, the bridge
+wording) and has **no** named PR target or head SHA, the bridge
 prints a **warning** and still delivers the ask — rejecting after the agent
-already wrote a formal review wastes work when the agent did not know to use
-`review-pr`. Prefer `review-pr <N>` then `publish-review-verdict` for new work.
+already wrote a formal review wastes work (sealed `review-pr` and `publish-review-verdict` were removed in #8520; the direct `ask-<lane> --type review` round is the formal path).
 **Size caps remain fail-closed** for oversized bodies/attachments. Silence the
 steering warning with `BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1`.
 
-**Phase 4 residual (#5485):** migrate runbooks and dispatch briefs that still say
-`ask-codex --review` for PR gates to `review-pr` +
-`publish-review-verdict`. `ask-agy --review` is not a code-review route
+**Formal CF PR review:** request formal CF via direct `ask-<lane> - --type review --pr <N>` or `ask-<lane> - --task-id review-<N> --type review`, then post the resulting verdict and findings as a PR comment (`gh pr comment` or `gh pr review`) bound to the exact head SHA (sealed `review-pr` and `publish-review-verdict` were removed in #8520). `ask-agy --review` is not a code-review route
 (operator 2026-09-25): a missing `--review-profile` is refused, `code` is
 refused, and Ukrainian content review must pass `--review-profile ukrainian`.
 `scripts/audit/llm_reviewer_dispatch.py` content-review routes remain
 `ask-* --review` (module QG, not PR CF), with that Ukrainian profile on the
 AGY factual route.
-
-After a reviewer writes canonical `code-review-findings.v1` JSON, publish it
-with exactly one PR comment. The publisher retains the overall explanation and
-every finding; it derives the gate verdict from the canonical evidence rather
-than treating a detached verdict line as proof:
-
-```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
-  --pr 5458 --findings-json /tmp/review-findings.json \
-  --model gpt-5.6-terra --family openai --harness codex
-```
-
-The comment keeps `VERDICT`, the PR head SHA, and reviewer provenance, then
-renders the explanation and each finding's priority, path/line, description,
-rationale, smallest fix, and sources. A verdict with no explanation and no
-findings is marked **NO EVIDENCE SUPPLIED** in the published comment. If a
-review is too large for GitHub, the publisher retains the overall explanation,
-truncates findings last, and names the full structured record. The command
-prints a ≤2 KiB status summary; use `--dry-run` to verify the payload locally.
-
-For a sealed `APPROVED` verdict, the publisher re-reads the live PR head before
-it publishes `fleet/cross-family-review=success`. A head change invalidates the
-review publication and requires review evidence for the new head.
-
-`--verdict-file` remains a legacy escape hatch, but its published comment
-explicitly says that no review evidence was supplied. It is not equivalent to
-a canonical review.
 
 `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-deep <PR-or-path> [--effort xhigh]` dispatches an
 adversarial Claude review run. It hardcodes `--agent claude --mode

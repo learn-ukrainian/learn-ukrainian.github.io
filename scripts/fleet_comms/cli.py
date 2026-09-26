@@ -14,9 +14,8 @@ Usage::
     .venv/bin/python -m scripts.fleet_comms github-metrics
     .venv/bin/python -m scripts.fleet_comms authority-import --legacy-db /path/to/messages.db --source legacy-broker
 
-``formal-job accept`` is the post-``review-pr`` glue (create/reuse job + sealed
-verdict accept). Optional ``--publish`` posts GitHub comment/status via PR-G.
-Does not cut over ``review-pr`` itself.
+``formal-job accept`` is post-review glue (create/reuse job + sealed
+verdict accept; sealed review-pr was removed in #8520). Optional ``--publish`` posts GitHub comment/status via PR-G.
 
 ``metrics`` / ``backlog`` / ``dead-letters`` are Sol PR-M efficiency surfaces
 (metadata only; never message content). In plane mode ``authority`` they read
@@ -1274,7 +1273,7 @@ def build_parser() -> argparse.ArgumentParser:
         "accept",
         help=(
             "Create/reuse formal job for PR head, accept sealed verdict, "
-            "optionally publish (post-review-pr glue)"
+            "optionally publish (post-review glue; review-pr removed in #8520)"
         ),
     )
     formal_accept.add_argument("--pr", type=int, required=True, help="Pull request number")
