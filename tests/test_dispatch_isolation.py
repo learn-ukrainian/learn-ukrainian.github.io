@@ -26,13 +26,6 @@ _MEMORY_MAX = str(iso.MEMORY_MAX_BYTES)
 _MEMORY_SWAP = str(iso.MEMORY_SWAP_MAX_BYTES)
 
 
-@pytest.fixture(autouse=True)
-def _clear_probe_cache():
-    iso.clear_probe_cache()
-    yield
-    iso.clear_probe_cache()
-
-
 def _write_exe(path: Path, body: str) -> None:
     path.write_text(f"#!{_PY}\n" + textwrap.dedent(body).lstrip("\n"), encoding="utf-8")
     path.chmod(0o755)
@@ -45,10 +38,6 @@ def _install_fakes(tmp_path: Path) -> Path:
         bindir / "systemctl",
         """
         import os, sys, time
-        count = os.environ.get("FAKE_SYSTEMCTL_COUNT")
-        if count:
-            seen = int(open(count, encoding="ascii").read() or "0") if os.path.exists(count) else 0
-            open(count, "w", encoding="ascii").write(str(seen + 1))
         mode = os.environ.get("FAKE_SYSTEMCTL", "ok")
         if mode == "timeout":
             time.sleep(30)
@@ -137,11 +126,18 @@ def _subtree(tmp_path: Path, text: str = "cpu memory pids\n") -> Path:
 
 
 def _probe(env: dict[str, str], subtree: Path, *, timeout_s: float = iso.PROBE_TIMEOUT_S) -> iso.ProbeResult:
-    return iso.probe_isolation(env, use_cache=False, timeout_s=timeout_s, subtree_path=subtree)
+    return iso.probe_isolation(env, timeout_s=timeout_s, subtree_path=subtree)
+
+
+def _hex_token(unit: str, prefix: str) -> str:
+    token = unit.removeprefix(prefix)
+    assert len(token) == 8
+    assert all(char in "0123456789abcdef" for char in token)
+    return token
 
 
 def test_scope_argv_names_the_slice_unit_and_collect():
-    unit = iso.scope_unit_name("codex/task id", "abc123nonce", 2)
+    unit = iso.scope_unit_name("codex/task id", "abc123nonce")
     argv = iso.build_scope_argv([_PY, "delegate.py", "_worker"], unit=unit)
 
     assert argv[:8] == [
@@ -155,8 +151,11 @@ def test_scope_argv_names_the_slice_unit_and_collect():
         "--",
     ]
     assert argv[8:] == [_PY, "delegate.py", "_worker"]
-    assert unit == "lu-worker-codex-task-id-abc123nonce-2"
+    prefix = "lu-worker-codex-task-id-abc123nonce-"
+    assert unit.startswith(prefix)
+    _hex_token(unit, prefix)
     assert "/" not in unit and " " not in unit
+    assert len(unit) + len(".scope") <= 255
     assert iso.MEMORY_MAX_BYTES == 11 * 1024**3
     assert iso.MEMORY_SWAP_MAX_BYTES == 1 * 1024**3
     assert iso.MEMORY_HIGH_BYTES == 10 * 1024**3
@@ -285,15 +284,19 @@ def test_systemd_run_failure_relaunches_once_with_popen(tmp_path: Path, capsys: 
     assert "launching the worker with plain Popen" in capsys.readouterr().err
 
 
-def test_systemd_run_timeout_relaunches_with_popen(tmp_path: Path):
+def test_systemd_run_timeout_does_not_relaunch(tmp_path: Path):
+    """A scope still alive at the timeout is not proof the worker never started."""
     bindir = _install_fakes(tmp_path)
     env = _env(bindir, FAKE_SYSTEMD_RUN="timeout")
     fallback: list[list[str]] = []
+    held: list[subprocess.Popen[bytes]] = []
     real_popen = subprocess.Popen
 
     def popen(argv, **kwargs):
         if argv[0] == "systemd-run":
-            return real_popen(argv, **kwargs)
+            proc = real_popen(argv, **kwargs)
+            held.append(proc)
+            return proc
         fallback.append(list(argv))
 
         class _Proc:
@@ -302,24 +305,97 @@ def test_systemd_run_timeout_relaunches_with_popen(tmp_path: Path):
 
         return _Proc()
 
-    _proc, launch = iso.spawn_detached_worker(
-        [_PY, "-c", "print('fallback')"],
-        task_id="slow-start",
-        run_nonce="nonce-slow",
-        popen=popen,
-        env=env,
-        probe_env=env,
-        stderr=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stdin=subprocess.DEVNULL,
-        subtree_path=_subtree(tmp_path),
-        timeout_s=0.3,
-    )
+    try:
+        with pytest.raises(iso.DispatchIsolationError, match="startup is ambiguous") as raised:
+            iso.spawn_detached_worker(
+                [_PY, "-c", "print('fallback')"],
+                task_id="slow-start",
+                run_nonce="nonce-slow",
+                popen=popen,
+                env=env,
+                probe_env=env,
+                stderr=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stdin=subprocess.DEVNULL,
+                subtree_path=_subtree(tmp_path),
+                timeout_s=0.3,
+            )
+    finally:
+        for proc in held:
+            if proc.poll() is None:
+                with suppress(ProcessLookupError):
+                    os.killpg(proc.pid, signal.SIGKILL)
+                proc.wait(timeout=5)
 
-    assert launch.mode == iso.LAUNCH_FALLBACK
-    assert launch.fallback_reason is not None
-    assert "did not exec the worker" in launch.fallback_reason
-    assert fallback == [[_PY, "-c", "print('fallback')"]]
+    assert "will not be relaunched" in str(raised.value)
+    assert fallback == []
+    assert held
+    assert held[0].poll() is not None
+
+
+def test_late_start_marker_runs_exactly_one_worker(tmp_path: Path):
+    """A marker written between the timeout and the kill must not start a second worker."""
+    stamp = tmp_path / "worker-ran"
+    cmd = [
+        _PY,
+        "-c",
+        f"from pathlib import Path; Path({str(stamp)!r}).write_text('once', encoding='ascii')",
+    ]
+    fallback: list[list[str]] = []
+    started: list[subprocess.Popen[bytes]] = []
+    pid_max = int(Path("/proc/sys/kernel/pid_max").read_text(encoding="ascii"))
+
+    class _Scope:
+        def __init__(self, write_fd: int):
+            self.write_fd = write_fd
+            self.pid = pid_max + 1000
+            self.returncode: int | None = None
+
+        def poll(self) -> int | None:
+            return self.returncode
+
+        def kill(self) -> None:
+            # The byte lands as the scope is stopped: after select timed out
+            # and before the stop finishes.
+            os.write(self.write_fd, b"1")
+            started.append(subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
+            self.returncode = -signal.SIGKILL
+
+        def wait(self, timeout: float | None = None) -> int:
+            self.returncode = -signal.SIGKILL
+            return self.returncode
+
+    def popen(argv, **kwargs):
+        if argv[0] == "systemd-run":
+            return _Scope(kwargs["pass_fds"][0])
+        fallback.append(list(argv))
+
+        class _Unused:
+            pid = 3
+            stdin = None
+
+        return _Unused()
+
+    try:
+        with pytest.raises(iso.DispatchIsolationError, match="worker start marker arrived") as raised:
+            iso.spawn_detached_worker(
+                cmd,
+                task_id="late-marker",
+                run_nonce="nonce-late",
+                popen=popen,
+                check_probe=False,
+                timeout_s=0,
+            )
+        assert "will not be relaunched" in str(raised.value)
+        assert len(started) == 1
+        assert started[0].wait(timeout=5) == 0
+        assert stamp.read_text(encoding="ascii") == "once"
+        assert fallback == []
+    finally:
+        for proc in started:
+            if proc.poll() is None:
+                proc.kill()
+                proc.wait(timeout=5)
 
 
 def test_scope_passes_the_environment_and_records_the_unit(tmp_path: Path):
@@ -344,7 +420,8 @@ def test_scope_passes_the_environment_and_records_the_unit(tmp_path: Path):
     )
 
     assert launch.mode == iso.LAUNCH_SCOPE
-    assert launch.unit == "lu-worker-codex-env-task-abc123-1"
+    assert launch.unit is not None
+    _hex_token(launch.unit, "lu-worker-codex-env-task-abc123-")
     assert proc.stdout is not None
     assert proc.stdout.readline().decode() == "from-parent\n"
     proc.wait(timeout=5)
@@ -390,20 +467,85 @@ def test_worker_that_starts_and_exits_is_not_relaunched(tmp_path: Path):
     assert proc.wait(timeout=5) == 3
 
 
-def test_probe_cache_avoids_a_second_systemctl(tmp_path: Path):
-    bindir = _install_fakes(tmp_path)
-    counter = tmp_path / "systemctl-calls"
-    env = _env(bindir, FAKE_SYSTEMCTL_COUNT=str(counter))
-    subtree = _subtree(tmp_path)
-    first = iso.probe_isolation(env, use_cache=True, subtree_path=subtree)
-    second = iso.probe_isolation(env, use_cache=True, subtree_path=subtree)
+def test_scope_unit_names_differ_for_the_same_task_and_nonce():
+    first = iso.scope_unit_name("same-task", "reused-nonce")
+    second = iso.scope_unit_name("same-task", "reused-nonce")
+    prefix = "lu-worker-same-task-reused-nonce-"
 
-    assert first.ready and second.ready
-    assert counter.read_text(encoding="ascii") == "1"
-    iso.clear_probe_cache()
-    third = iso.probe_isolation(env, use_cache=True, subtree_path=subtree)
-    assert third.ready
-    assert counter.read_text(encoding="ascii") == "2"
+    assert first != second
+    _hex_token(first, prefix)
+    _hex_token(second, prefix)
+    long_name = iso.scope_unit_name("t" * 500, "n" * 80 + "/bad")
+    assert len(long_name) + len(".scope") <= 255
+    assert "t" * 40 in long_name
+    assert "/" not in long_name
+
+
+def test_scope_start_failure_reads_a_bounded_stderr_excerpt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    bindir = _install_fakes(tmp_path)
+    env = _env(bindir, FAKE_SYSTEMD_RUN="fail")
+    log = tmp_path / "stderr.log"
+    token = b"PREEXISTING-LOG-MUST-NOT-BE-READ\n"
+    prefix_len = 8 * 1024 * 1024
+    log.write_bytes(token + b"x" * (prefix_len - len(token)))
+    stderr_fd = os.open(str(log), os.O_CREAT | os.O_APPEND | os.O_WRONLY, 0o644)
+    reads: list[int] = []
+    real_open = Path.open
+
+    def tracking_open(self: Path, mode: str = "r", *args: object, **kwargs: object):
+        handle = real_open(self, mode, *args, **kwargs)
+        if self == log and "b" in str(mode):
+            original = handle.read
+
+            def bounded(n: int = -1) -> bytes:
+                blob = original(n)
+                if isinstance(blob, bytes):
+                    reads.append(len(blob))
+                    if n < 0 or len(blob) > iso._STDERR_EXCERPT_BYTES:
+                        raise AssertionError(f"unbounded stderr read ({len(blob)} bytes, n={n})")
+                return blob
+
+            handle.read = bounded  # type: ignore[method-assign]
+        return handle
+
+    monkeypatch.setattr(Path, "open", tracking_open)
+    fallback: list[list[str]] = []
+    real_popen = subprocess.Popen
+
+    def popen(argv, **kwargs):
+        if argv[0] == "systemd-run":
+            return real_popen(argv, **kwargs)
+        fallback.append(list(argv))
+
+        class _Proc:
+            pid = 13
+            stdin = None
+
+        return _Proc()
+
+    try:
+        _proc, launch = iso.spawn_detached_worker(
+            [_PY, "-c", "print('should-not-run')"],
+            task_id="big-log",
+            run_nonce="nonce-big",
+            popen=popen,
+            env=env,
+            probe_env=env,
+            stderr=stderr_fd,
+            stderr_log=log,
+            subtree_path=_subtree(tmp_path),
+            timeout_s=2,
+        )
+    finally:
+        os.close(stderr_fd)
+
+    assert launch.mode == iso.LAUNCH_FALLBACK
+    assert launch.fallback_reason is not None
+    assert "Unit name already exists" in launch.fallback_reason
+    assert "PREEXISTING-LOG-MUST-NOT-BE-READ" not in launch.fallback_reason
+    assert reads
+    assert sum(reads) <= iso._STDERR_EXCERPT_BYTES
+    assert fallback == [[_PY, "-c", "print('should-not-run')"]]
 
 
 def test_launch_fields_remain_beside_peak_rss(monkeypatch: pytest.MonkeyPatch):

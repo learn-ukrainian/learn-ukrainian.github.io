@@ -74,12 +74,16 @@ seats. Three PRs, in this order:
    (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`; unit file
    `packaging/systemd/lu-dispatch.slice`), driver outside it. Each detached
    worker is `systemd-run --user --scope --slice=lu-dispatch.slice
-   --unit=lu-worker-<task>-<nonce>-<attempt> --collect`. `--scope` execs the
+   --unit=lu-worker-<task>-<nonce>-<8 hex> --collect`. `--scope` execs the
    worker in place, so the dispatch pid, pipes, and cancel signal stay the
-   worker's. If the user manager, cgroup2 memory delegation, the slice
-   limits, or linger is missing, or if `systemd-run` fails before that exec,
+   worker's. The 8 hex characters are new on every launch, so a reused nonce
+   cannot collide with a unit systemd still has registered. If the user
+   manager, cgroup2 memory delegation, the slice limits, or linger is missing,
+   or if `systemd-run` exits before the worker writes its start marker,
    dispatch falls back to plain Popen, prints one warning, and records
-   `launch_mode` (`scope` or `popen-fallback`) on the task record. Running
+   `launch_mode` (`scope` or `popen-fallback`) on the task record. A marker
+   that arrives only as that scope is stopped, or a scope still running when
+   the startup window ends, fails the dispatch instead of relaunching. Running
    without the slice installed is supported. Per-worker limits stay out
    until sibling starvation shows up.
 

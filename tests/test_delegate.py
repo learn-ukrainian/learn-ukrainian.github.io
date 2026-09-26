@@ -1369,6 +1369,40 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     assert "failed to spawn" in captured.err
 
 
+def test_dispatch_ambiguous_scope_start_marks_task_failed(tmp_tasks_dir, capsys):
+    """A late scope start must fail the task instead of leaving it spawning."""
+    path = delegate._state_path("ambiguous-scope")
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="ambiguous-scope",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+    )
+
+    def explode(*_args, **_kwargs):
+        raise delegate.dispatch_isolation.DispatchIsolationError(
+            "systemd-run: worker start marker arrived after the startup timeout (2s) "
+            "for unit lu-worker-ambiguous-scope; the scope was stopped and will not be relaunched"
+        )
+
+    with patch("delegate.dispatch_isolation.spawn_detached_worker", side_effect=explode):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 1
+    state = delegate._read_state(path)
+    assert state is not None
+    assert state["status"] == "failed"
+    assert state["returncode"] is None
+    assert state["returncode_reason"] == "scoped worker startup was ambiguous; not relaunched"
+    assert "will not be relaunched" in (state.get("stderr_excerpt") or "")
+    assert "failed to spawn" in capsys.readouterr().err
+
+
 def test_dispatch_popen_failure_records_worktree_head(tmp_tasks_dir, tmp_path, monkeypatch):
     _primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id="popen-head")
     monkeypatch.setattr(

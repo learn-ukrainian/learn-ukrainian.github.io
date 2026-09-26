@@ -9539,7 +9539,7 @@ def _dispatch(
                 stderr_log=stderr_log,
             )
             spawned = True
-        except (OSError, FileNotFoundError, ValueError) as exc:
+        except (OSError, FileNotFoundError, ValueError, dispatch_isolation.DispatchIsolationError) as exc:
             # Popen itself failed — typically because the Python
             # interpreter isn't where we expected, or the file
             # descriptors are somehow invalid. Without this handler
@@ -9547,7 +9547,14 @@ def _dispatch(
             # pid=None and no zombie detection could rescue it
             # (because zombie detection is gated on `pid and not alive`).
             # Codex 2026-04-10 audit finding.
-            spawn_error = f"Popen failed: {type(exc).__name__}: {exc}"[:500]
+            # DispatchIsolationError is the scoped-start race: the worker may
+            # already have run, so the task is failed and not relaunched.
+            if isinstance(exc, dispatch_isolation.DispatchIsolationError):
+                spawn_error = f"dispatch isolation: {exc}"[:500]
+                returncode_reason = "scoped worker startup was ambiguous; not relaunched"
+            else:
+                spawn_error = f"Popen failed: {type(exc).__name__}: {exc}"[:500]
+                returncode_reason = "worker process was not started"
             failed_state = _read_state(state_path) or initial_state
             failed_state.update(
                 {
@@ -9555,7 +9562,7 @@ def _dispatch(
                     "finished_at": datetime.now(UTC).isoformat(),
                     "stderr_excerpt": spawn_error,
                     "returncode": None,
-                    "returncode_reason": "worker process was not started",
+                    "returncode_reason": returncode_reason,
                     "last_error": _first_error_line(spawn_error),
                     "exit_code": None,
                 }
@@ -10822,6 +10829,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  snapshot; `launch_mode` is `scope` or `popen-fallback`; terminal records carry `peak_rss_mib`);\n"
             "  worker logs under batch_state/tasks/logs/. Workers run in the user slice lu-dispatch.slice when\n"
             "  that slice is installed with its memory limits; otherwise dispatch warns and uses plain Popen.\n"
+            "  A scoped start that does not prove the worker never started is marked failed and is not relaunched.\n"
             "  LU_DISPATCH_ISOLATION=fallback forces the plain Popen path. See packaging/systemd/README.md.\n\n"
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"

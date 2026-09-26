@@ -834,7 +834,10 @@ is the worker and `delegate.py cancel` still signals it. The task record's `laun
 is `scope` (with `launch_unit`) or `popen-fallback` (with `launch_fallback_reason`).
 Fallback is the supported path when no user manager is reachable, linger is off, cgroup
 v2 memory is not delegated, or the slice is missing or does not have those limits:
-dispatch prints one warning and uses plain `Popen`. `LU_DISPATCH_ISOLATION=fallback`
+dispatch prints one warning and uses plain `Popen`. The same fallback is used when
+`systemd-run` exits before the worker writes its start marker. If that marker arrives
+only as the scope is stopped, or the scope is still running when the startup window
+ends, the task is marked failed and is not started again. `LU_DISPATCH_ISOLATION=fallback`
 forces that path. Install steps and the linger/cgroup prerequisites are in
 `packaging/systemd/README.md`. When the slice is active, the admission line adds its
 current memory use against `MemoryMax`. An inactive or missing slice is left off the

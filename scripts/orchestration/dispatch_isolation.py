@@ -15,10 +15,10 @@ base 1024 (``systemd.resource-control(5)``).
 
 from __future__ import annotations
 
-import hashlib
 import os
 import pwd
 import re
+import secrets
 import select
 import signal
 import subprocess
@@ -39,7 +39,16 @@ LAUNCH_FALLBACK = "popen-fallback"
 
 # One bound for the readiness probe and for systemd-run's own start.
 PROBE_TIMEOUT_S = 2.0
-PROBE_CACHE_TTL_S = 15.0
+
+# systemd.unit(5): the unit name including its type suffix must not exceed 255
+# characters. ``--scope`` appends ``.scope`` when the name does not end with it.
+_UNIT_NAME_MAX = 255
+_SCOPE_SUFFIX = ".scope"
+_UNIT_TOKEN_BYTES = 4
+
+# New stderr appended after a failed scope start. The log is append-only, so
+# the read starts at the saved offset and stops after a few KiB.
+_STDERR_EXCERPT_BYTES = 4096
 
 ENV_ISOLATION = "LU_DISPATCH_ISOLATION"
 _FORCE_FALLBACK = frozenset({"fallback", "popen", "off", "0"})
@@ -60,7 +69,12 @@ _MARKER_CODE = (
 
 
 class DispatchIsolationError(RuntimeError):
-    """``systemd-run`` did not exec the worker, and fallback was refused."""
+    """A second worker must not be started.
+
+    Raised when fallback was refused, and when a scoped start did not prove
+    that the worker never ran (late start marker, or the scope was still alive
+    at the startup timeout). The dispatch is failed instead of relaunched.
+    """
 
 
 @dataclass(frozen=True)
@@ -76,9 +90,6 @@ class ProbeResult:
             return None
         name, _sep, _rest = self.reason.partition(":")
         return name or None
-
-
-_cache: tuple[float, ProbeResult] | None = None
 
 
 @dataclass(frozen=True)
@@ -98,32 +109,25 @@ class WorkerLaunch:
         return state
 
 
-def clear_probe_cache() -> None:
-    """Drop the cached readiness result. Tests call this around PATH fakes."""
-    global _cache
-    _cache = None
+def scope_unit_name(task_id: str, run_nonce: str) -> str:
+    """Unit name unique to this launch.
 
-
-def scope_unit_name(task_id: str, run_nonce: str, attempt: int = 1) -> str:
-    """Unit name unique to this dispatch attempt.
-
-    A re-dispatch or ``--force-new`` carries a new ``run_nonce``. The attempt
-    fragment keeps a second start in the same process from colliding with a
-    unit ``systemd-run`` already registered. systemd appends ``.scope``.
+    Every call adds 8 hex characters from ``secrets.token_hex``, so a
+    re-dispatch that reuses ``run_nonce`` cannot collide with a unit systemd
+    still has registered. systemd appends ``.scope``; the full name stays
+    within the 255-character limit from ``systemd.unit(5)``.
     """
+    token = secrets.token_hex(_UNIT_TOKEN_BYTES)
+    nonce = _unit_piece(run_nonce, 32)
+    overhead = len("lu-worker-") + 1 + len(nonce) + 1 + len(token) + len(_SCOPE_SUFFIX)
+    task = _unit_piece(task_id, _UNIT_NAME_MAX - overhead)
+    return f"lu-worker-{task}-{nonce}-{token}"
 
-    def piece(value: str, limit: int) -> str:
-        cleaned = _UNIT_UNSAFE.sub("-", value).strip("-._")
-        return (cleaned or "x")[:limit]
 
-    attempt_n = int(attempt)
-    if attempt_n < 1:
-        raise ValueError(f"attempt must be >= 1, got {attempt}")
-    name = f"lu-worker-{piece(task_id, 80)}-{piece(run_nonce, 32)}-{attempt_n}"
-    if len(name) > 200:
-        digest = hashlib.sha256(task_id.encode()).hexdigest()[:12]
-        name = f"lu-worker-{digest}-{piece(run_nonce, 32)}-{attempt_n}"
-    return name
+def _unit_piece(value: str, limit: int) -> str:
+    cleaned = _UNIT_UNSAFE.sub("-", value).strip("-._")
+    piece = (cleaned or "x")[:limit]
+    return piece or "x"
 
 
 def build_scope_argv(
@@ -149,31 +153,20 @@ def build_scope_argv(
 def probe_isolation(
     env: Mapping[str, str] | None = None,
     *,
-    use_cache: bool | None = None,
     timeout_s: float = PROBE_TIMEOUT_S,
     cgroup_mount: Path = Path("/sys/fs/cgroup"),
     subtree_path: Path | None = None,
 ) -> ProbeResult:
     """Return whether ``lu-dispatch.slice`` can contain a worker right now.
 
-    The first failed check wins. A full probe is cached for
-    :data:`PROBE_CACHE_TTL_S` when ``env`` is the process environment; an
-    explicit ``env`` (tests) is not cached. ``LU_DISPATCH_ISOLATION=fallback``
-    is always re-read and is never cached over a ready result.
+    The first failed check wins. ``LU_DISPATCH_ISOLATION=fallback`` forces a
+    not-ready result without probing.
     """
     source = os.environ if env is None else env
     forced = _forced_fallback(source)
     if forced is not None:
         return forced
-    cache = (env is None) if use_cache is None else use_cache
-    if cache:
-        cached = _read_cache()
-        if cached is not None:
-            return cached
-    result = _probe_uncached(source, timeout_s=timeout_s, cgroup_mount=cgroup_mount, subtree_path=subtree_path)
-    if cache:
-        _write_cache(result)
-    return result
+    return _probe_uncached(source, timeout_s=timeout_s, cgroup_mount=cgroup_mount, subtree_path=subtree_path)
 
 
 def spawn_detached_worker(
@@ -188,7 +181,6 @@ def spawn_detached_worker(
     stderr: Any = None,
     stderr_log: Path | None = None,
     slice_unit: str = SLICE_UNIT,
-    attempt: int = 1,
     check_probe: bool = True,
     allow_fallback: bool = True,
     probe_env: Mapping[str, str] | None = None,
@@ -200,9 +192,12 @@ def spawn_detached_worker(
 
     ``popen`` is the caller's ``subprocess.Popen`` (so ``delegate`` tests that
     patch ``delegate.subprocess.Popen`` still see the fallback spawn). The
-    scope attempt uses a one-byte start marker. ``systemd-run`` failing before
-    exec does not write it; the worker is then started once with plain
-    ``Popen``. ``start_new_session=True`` matches the historical spawn.
+    scope attempt uses a one-byte start marker. Plain ``Popen`` is used only
+    when that marker is absent and ``systemd-run`` has already exited on its
+    own. A marker that arrives as the scope is stopped, or a scope that is
+    still running when the startup window ends, raises
+    :class:`DispatchIsolationError` instead of starting a second worker.
+    ``start_new_session=True`` matches the historical spawn.
     """
     if not cmd:
         raise ValueError("worker command is empty")
@@ -226,7 +221,7 @@ def spawn_detached_worker(
                 allow_fallback=allow_fallback,
             )
 
-    unit = scope_unit_name(task_id, run_nonce, attempt)
+    unit = scope_unit_name(task_id, run_nonce)
     proc, failure = _try_scope(
         cmd,
         popen=popen,
@@ -336,9 +331,25 @@ def _try_scope(
             return None, f"systemd-run: {type(exc).__name__}: {exc}"
         if _marker_seen(proc, read_fd, timeout_s):
             return proc, None
-        reason = _scope_failure_reason(proc, stderr_log, start, timeout_s)
+        # The marker can arrive after select returns. An already-exited
+        # process with no marker is systemd-run's own failure: the worker
+        # never started. A process that is still alive is not that proof.
+        if proc.poll() is not None:
+            if _consume_marker(read_fd):
+                return proc, None
+            return None, _scope_failure_reason(proc, stderr_log, start)
         _kill_if_alive(proc)
-        return None, reason
+        if _consume_marker(read_fd):
+            raise DispatchIsolationError(
+                "systemd-run: worker start marker arrived after the startup "
+                f"timeout ({timeout_s:g}s) for unit {unit}; the scope was stopped "
+                "and will not be relaunched"
+            )
+        raise DispatchIsolationError(
+            "systemd-run: did not exec the worker within "
+            f"{timeout_s:g}s for unit {unit}; startup is ambiguous and the worker "
+            "will not be relaunched"
+        )
     finally:
         os.close(write_fd)
         os.close(read_fd)
@@ -375,10 +386,7 @@ def _scope_failure_reason(
     proc: subprocess.Popen[Any],
     stderr_log: Path | None,
     start: int,
-    timeout_s: float,
 ) -> str:
-    if proc.poll() is None:
-        return f"systemd-run: did not exec the worker within {timeout_s:g}s"
     detail = _stderr_delta(stderr_log, start)
     reason = f"systemd-run: exited {proc.returncode} before the worker started"
     if detail:
@@ -386,14 +394,27 @@ def _scope_failure_reason(
     return reason
 
 
+def _consume_marker(read_fd: int) -> bool:
+    """Read a start marker that arrived after the startup ``select`` returned."""
+    readable, _w, _x = select.select([read_fd], [], [], 0)
+    if not readable:
+        return False
+    try:
+        return bool(os.read(read_fd, 16))
+    except OSError:
+        return False
+
+
 def _stderr_delta(path: Path | None, start: int) -> str:
     if path is None or not path.is_file():
         return ""
     try:
-        data = path.read_bytes()
+        with path.open("rb") as handle:
+            handle.seek(start)
+            data = handle.read(_STDERR_EXCERPT_BYTES)
     except OSError:
         return ""
-    text = data[start:].decode("utf-8", errors="replace").strip()
+    text = data.decode("utf-8", errors="replace").strip()
     if not text:
         return ""
     return text.splitlines()[0][:300]
@@ -589,18 +610,3 @@ def _run(argv: Sequence[str], env: Mapping[str, str], timeout_s: float) -> subpr
         stdout, stderr = proc.communicate()
         raise subprocess.TimeoutExpired(list(argv), timeout_s, output=stdout, stderr=stderr) from None
     return subprocess.CompletedProcess(list(argv), int(proc.returncode or 0), stdout, stderr)
-
-
-def _read_cache() -> ProbeResult | None:
-    cached = _cache
-    if cached is None:
-        return None
-    stored_at, result = cached
-    if time.monotonic() - stored_at > PROBE_CACHE_TTL_S:
-        return None
-    return result
-
-
-def _write_cache(result: ProbeResult) -> None:
-    global _cache
-    _cache = (time.monotonic(), result)
