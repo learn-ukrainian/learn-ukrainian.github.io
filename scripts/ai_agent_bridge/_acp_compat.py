@@ -124,11 +124,118 @@ def ask_hard_timeout(command_target: str) -> int:
     return ASK_HARD_TIMEOUT_PROFILES.get(command_target, ASK_HARD_TIMEOUT_DEFAULT_S)
 
 
+_FALLBACK_SUBS_PATH = REPO_ROOT / "scripts" / "config" / "agent_fallback_substitutions.yaml"
+
+# Post-#8655 a provider quota/rate-limit refusal arrives as a parsed ACP error
+# whose bounded diagnostic keeps the provider's own words (e.g. "acpx RUNTIME:
+# provider quota exhausted"); the acpx parser deliberately stays schema-only,
+# so the quota signal is matched here on that excerpt with the same pattern
+# family the runner failover classifier and adapter rate-limit regexes use.
+_QUOTA_FAILURE_RE = re.compile(
+    r"rate[ _-]?limit|quota|usage limit|too many requests|"
+    r"resource[_ ]?exhausted|\b429\b",
+    re.IGNORECASE,
+)
+
+
+def _quota_failure_reason(*, error: BaseException | None = None, result: object | None = None) -> str | None:
+    """Return the quota/rate-limit class of one failed ask, or None.
+
+    Only provider-capacity failures count: the runner's rate-limit
+    classification (exception, result flag, transport outcome, or
+    usage-record failure code) or provider quota wording in the bounded
+    diagnostic. Timeouts, admission refusals, and parse failures never
+    substitute.
+    """
+    if error is not None:
+        if type(error).__name__ == "RateLimitedError":
+            return "rate_limited"
+        return None
+    if result is None:
+        return None
+    if bool(getattr(result, "rate_limited", False)):
+        return "rate_limited"
+    outcome = str(getattr(result, "transport_outcome", "") or "").casefold()
+    if outcome == "rate_limited":
+        return "rate_limited"
+    usage_record = getattr(result, "usage_record", None)
+    code = usage_record.get("failure_code") if isinstance(usage_record, dict) else None
+    if code == "rate_limited":
+        return "rate_limited"
+    if _QUOTA_FAILURE_RE.search(str(getattr(result, "stderr_excerpt", "") or "")):
+        return "provider_quota"
+    return None
+
+
+def _resolve_quota_substitution(seat: str, reason: str, *, already_substituted: bool) -> str | None:
+    """Return the mapped ACP substitute seat, or None with a loud stderr note.
+
+    At most one substitution per ask (#8499): a substitute that is itself out
+    of quota fails loudly — no second hop, and never a bridge or provider
+    fallback (fleet-comms-coordination ACP-only route policy).
+    """
+    if already_substituted:
+        print(
+            f"ACP substitution exhausted: substitute seat '{seat}' is also over "
+            f"quota/rate-limited (reason: {reason}); refusing a second substitution "
+            "and any bridge/provider fallback.",
+            file=sys.stderr,
+        )
+        return None
+    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+
+    substitute = load_dispatch_fallbacks(_FALLBACK_SUBS_PATH).get(seat)
+    if not substitute or substitute == seat:
+        print(
+            f"ACP seat '{seat}' is over quota/rate-limited (reason: {reason}) and "
+            "agent_fallback_substitutions.yaml dispatch_fallbacks has no substitute "
+            "for it; failing without bridge/provider fallback.",
+            file=sys.stderr,
+        )
+        return None
+    if substitute not in set(_TARGETS.values()):
+        print(
+            f"ACP seat '{seat}' is over quota/rate-limited (reason: {reason}) but "
+            f"dispatch_fallbacks maps it to '{substitute}', which is not an enabled "
+            "ACP ask seat; failing without bridge/provider fallback.",
+            file=sys.stderr,
+        )
+        return None
+    return substitute
+
+
+def _announce_substitution(
+    from_seat: str,
+    to_seat: str,
+    reason: str,
+    *,
+    model: str | None,
+    effort: str | None,
+) -> dict[str, str]:
+    """Emit the operator-visible substitution line and return the record."""
+    note = f"ACP substitution: {from_seat} -> {to_seat} (reason: {reason})"
+    if model or effort:
+        note += "; explicit model/effort overrides dropped — the substitute's registered pins apply"
+    print(note, file=sys.stderr)
+    return {"from": from_seat, "to": to_seat, "reason": reason}
+
+
+def _with_substitution_record(result: object, substitution: dict[str, str]) -> object:
+    """Stamp the seat substitution on a returned Result; other shapes pass through."""
+    from dataclasses import replace
+
+    try:
+        return replace(result, substitution=substitution)
+    except TypeError:
+        return result
+
+
 def _result_receipt(
     result: object,
     *,
     model_requested: str | None = None,
     effort_requested: str | None = None,
+    substitution: dict[str, str] | None = None,
 ) -> bytes:
     actual_model = str(getattr(result, "model", ""))
     raw_effort = getattr(result, "effort", None)
@@ -155,6 +262,8 @@ def _result_receipt(
         "transport_metadata": getattr(result, "transport_metadata", None),
         "transport_outcome": getattr(result, "transport_outcome", None),
     }
+    if substitution is not None:
+        payload["substitution"] = substitution
     return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
@@ -193,6 +302,11 @@ def _replay_result(raw: bytes) -> object:
         "harness": payload.get("harness") or "acp",
     }
     provenance.update({"replayed": True, "transport": "acp"})
+    substitution = payload.get("substitution")
+    if not isinstance(substitution, dict):
+        substitution = None
+    if substitution is not None:
+        provenance["substitution"] = substitution
     if not payload["ok"]:
         return Result(
             ok=False,
@@ -208,6 +322,7 @@ def _replay_result(raw: bytes) -> object:
             returncode=payload.get("returncode"),
             effort=str(payload["effort"]),
             usage_record=provenance,
+            substitution=substitution,
             transport_metadata=payload.get("transport_metadata"),
             transport_outcome=payload.get("transport_outcome"),
         )
@@ -225,6 +340,7 @@ def _replay_result(raw: bytes) -> object:
         returncode=payload.get("returncode"),
         effort=str(payload["effort"]),
         usage_record=provenance,
+        substitution=substitution,
         transport_metadata=payload.get("transport_metadata"),
         transport_outcome=payload.get("transport_outcome"),
     )
@@ -293,6 +409,11 @@ def _failure_metadata(
         # with a fresh task-id or reroute the seat.
         return {"phase": "postprocess", "code": "non_evidentiary", "retryable": False}
     if outcome == "rate_limited" or bool(getattr(result, "rate_limited", False)):
+        return {"phase": "provider", "code": "rate_limited", "retryable": True}
+    if _QUOTA_FAILURE_RE.search(str(getattr(result, "stderr_excerpt", "") or "")):
+        # Post-#8655 a provider quota refusal parses as a transport_error-coded
+        # result whose excerpt keeps the provider's words; record the durable
+        # failure under the capacity class the substitution decision used.
         return {"phase": "provider", "code": "rate_limited", "retryable": True}
     usage_record = getattr(result, "usage_record", None)
     code = usage_record.get("failure_code") if isinstance(usage_record, dict) else None
@@ -470,6 +591,14 @@ def _run_compat_ask_impl(
 
     On a notebook whose local plane is retired (#7172), ordinary asks forward
     over SSH to the job-host plane instead of opening local sqlite.
+
+    Quota substitution (#8499): when the targeted ACP seat fails with a
+    quota/rate-limit class, the ask retries once on the seat mapped by
+    ``agent_fallback_substitutions.yaml`` ``dispatch_fallbacks`` — ACP to ACP
+    only, never the bridge or provider execution. The failed seat's job is
+    terminalized durably before the substitute runs; a substitute that is
+    itself out of quota fails loudly with no second hop. Every other failure
+    class is unchanged.
     """
     participant = require_compat_target(command_target)
     if not task_id or not task_id.strip():
@@ -505,6 +634,92 @@ def _run_compat_ask_impl(
     if data:
         prompt += "\n\n--- attached inert text ---\n" + data
 
+    seat = participant
+    seat_model = model
+    seat_effort = effort
+    substitution: dict[str, str] | None = None
+    while True:
+        try:
+            result, terminalization_error = _run_single_acp_job(
+                seat,
+                prompt,
+                task_id=task_id,
+                source=source,
+                model=seat_model,
+                effort=seat_effort,
+                review=review,
+                hard_timeout=hard_timeout,
+                substitution=substitution,
+            )
+        except BaseException as exc:
+            reason = _quota_failure_reason(error=exc)
+            substitute = (
+                None
+                if reason is None
+                else _resolve_quota_substitution(seat, reason, already_substituted=substitution is not None)
+            )
+            if substitute is None:
+                raise
+            substitution = _announce_substitution(seat, substitute, reason, model=seat_model, effort=seat_effort)
+            seat, seat_model, seat_effort = substitute, None, None
+            continue
+        reason = (
+            None
+            if terminalization_error is not None or bool(getattr(result, "ok", False))
+            else _quota_failure_reason(result=result)
+        )
+        substitute = (
+            None
+            if reason is None
+            else _resolve_quota_substitution(seat, reason, already_substituted=substitution is not None)
+        )
+        if substitute is None:
+            break
+        substitution = _announce_substitution(seat, substitute, reason, model=seat_model, effort=seat_effort)
+        seat, seat_model, seat_effort = substitute, None, None
+
+    if substitution is not None:
+        result = _with_substitution_record(result, substitution)
+    response = str(getattr(result, "response", ""))
+    if output_path:
+        Path(output_path).write_text(response, encoding="utf-8")
+    if stdout_only or response:
+        print(response)
+    print(
+        f"deprecated ask-{command_target}: ACP transport; "
+        f"outcome={getattr(result, 'transport_outcome', None) or 'error'}",
+        file=sys.stderr,
+    )
+    if terminalization_error is not None:
+        message = (
+            "ACP terminal bookkeeping failed after provider response: "
+            f"{terminalization_error}"
+        )
+        print(message, file=sys.stderr)
+        raise RuntimeError(message) from terminalization_error
+    return result
+
+
+def _run_single_acp_job(
+    participant: str,
+    prompt: str,
+    *,
+    task_id: str,
+    source: str | None,
+    model: str | None,
+    effort: str | None,
+    review: bool,
+    hard_timeout: int,
+    substitution: dict[str, str] | None = None,
+) -> tuple[object, Exception | None]:
+    """Run one authority-job ACP attempt against ``participant``.
+
+    Returns ``(result, terminalization_error)``. The job is terminalized
+    durably before this returns or raises, so a quota failure is recorded
+    against the seat that actually failed before any substitution is
+    attempted (#8499). When ``substitution`` is set this attempt is the
+    substitute seat: its job metadata and result receipt carry the record.
+    """
     from agent_runtime.runner import invoke_inter_agent
 
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
@@ -518,17 +733,20 @@ def _run_compat_ask_impl(
     )
     worker_id = f"acp-compat:{os.getpid()}"
     terminalization_error: Exception | None = None
+    metadata: dict[str, object] = {
+        "task_id": task_id,
+        "requested_model": model,
+        "requested_effort": effort,
+        "transport": "acp",
+    }
+    if substitution is not None:
+        metadata["substitution"] = substitution
     with AuthorityService() as authority:
         job = authority.enqueue_request(
             recipient=participant,
             body=prompt,
             sender=source or "operator",
-            metadata={
-                "task_id": task_id,
-                "requested_model": model,
-                "requested_effort": effort,
-                "transport": "acp",
-            },
+            metadata=metadata,
             idempotency_key=key,
         )
         terminal_states = {"complete", "failed", "expired", "dead_lettered"}
@@ -583,33 +801,31 @@ def _run_compat_ask_impl(
                         hard_timeout=hard_timeout,
                     )
             except BaseException as exc:
+                failure_receipt: dict[str, object] = {
+                    "ok": False,
+                    "agent": participant,
+                    "model": model or f"{participant}-bridge-error",
+                    "response": "",
+                    "stderr_excerpt": (f"{type(exc).__name__}: terminal ACP invocation failed"),
+                    "duration_s": 0.0,
+                    "returncode": 1,
+                    "effort": effort or "unknown",
+                    "from_model": model or f"{participant}-bridge-error",
+                    "model_requested": model or f"{participant}-bridge-error",
+                    "effort_requested": effort,
+                    "effort_applied": None,
+                    "harness": "acp",
+                    "transport_metadata": None,
+                    "transport_outcome": "error",
+                }
+                if substitution is not None:
+                    failure_receipt["substitution"] = substitution
                 authority.finish_job(
                     job.job_id,
                     worker_id=worker_id,
                     fence_token=lease.fence_token,
                     state="failed",
-                    result=json.dumps(
-                        {
-                            "ok": False,
-                            "agent": participant,
-                            "model": model or f"{participant}-bridge-error",
-                            "response": "",
-                            "stderr_excerpt": (
-                                f"{type(exc).__name__}: terminal ACP invocation failed"
-                            ),
-                            "duration_s": 0.0,
-                            "returncode": 1,
-                            "effort": effort or "unknown",
-                            "from_model": model or f"{participant}-bridge-error",
-                            "model_requested": model or f"{participant}-bridge-error",
-                            "effort_requested": effort,
-                            "effort_applied": None,
-                            "harness": "acp",
-                            "transport_metadata": None,
-                            "transport_outcome": "error",
-                        },
-                        sort_keys=True,
-                    ).encode("utf-8"),
+                    result=json.dumps(failure_receipt, sort_keys=True).encode("utf-8"),
                     failure=_failure_metadata(error=exc),
                 )
                 raise
@@ -637,6 +853,7 @@ def _run_compat_ask_impl(
                         result,
                         model_requested=model,
                         effort_requested=effort,
+                        substitution=substitution,
                     ),
                     failure=(
                         None
@@ -649,21 +866,4 @@ def _run_compat_ask_impl(
                 # a concurrent terminalizer or another authority failure rejects
                 # bookkeeping after a completed invocation.
                 terminalization_error = exc
-    response = str(getattr(result, "response", ""))
-    if output_path:
-        Path(output_path).write_text(response, encoding="utf-8")
-    if stdout_only or response:
-        print(response)
-    print(
-        f"deprecated ask-{command_target}: ACP transport; "
-        f"outcome={getattr(result, 'transport_outcome', None) or 'error'}",
-        file=sys.stderr,
-    )
-    if terminalization_error is not None:
-        message = (
-            "ACP terminal bookkeeping failed after provider response: "
-            f"{terminalization_error}"
-        )
-        print(message, file=sys.stderr)
-        raise RuntimeError(message) from terminalization_error
-    return result
+    return result, terminalization_error

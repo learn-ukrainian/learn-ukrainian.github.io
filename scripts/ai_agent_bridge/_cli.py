@@ -10,7 +10,7 @@ from pathlib import Path
 
 from agent_runtime import usage as runtime_usage
 from agent_runtime.attribution import resolve_invocation_attribution
-from agent_runtime.errors import AgentTimeoutError
+from agent_runtime.errors import AgentTimeoutError, RateLimitedError
 from agent_runtime.runner import InterAgentTransportError
 
 from ._ask_contract import EFFORT_CHOICES
@@ -1755,6 +1755,10 @@ def _handle_acp_compat(args, target: str) -> None:
         if not bool(getattr(result, "ok", False)):
             raise SystemExit(getattr(result, "stderr_excerpt", None) or "ACP ask failed without a diagnostic")
     except (ValueError, InterAgentTransportError) as exc:
+        raise SystemExit(str(exc)) from exc
+    except RateLimitedError as exc:
+        # Reached only when no ACP substitution was mapped (or the substitute
+        # was also over quota): _acp_compat already printed the reason.
         raise SystemExit(str(exc)) from exc
     except AgentTimeoutError as exc:
         raise SystemExit(
