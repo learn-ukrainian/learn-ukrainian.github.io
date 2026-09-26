@@ -311,15 +311,57 @@ from functools import wraps
 _validation_scope = ContextVar("v4_package_validation_scope", default=None)
 
 
+def _session_key(function, args, kwargs):
+    """Content key for one exact validation inside a single session scope.
+
+    Keys only the immutable call inputs (receipt payload and root); a call
+    whose inputs cannot be canonically serialized is never memoized, so the
+    strict re-validation behavior below is the fallback, never the reverse.
+    """
+
+    def norm(value):
+        if value is None or isinstance(value, (str, int, float, bool)):
+            return value
+        if isinstance(value, dict):
+            return {key: norm(item) for key, item in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [norm(item) for item in value]
+        return [type(value).__qualname__, str(value)]
+
+    try:
+        raw = _canonical(
+            [function.__module__, function.__qualname__, [norm(arg) for arg in args], norm(kwargs)]
+        )
+    except (TypeError, ValueError):
+        return None
+    return "session:" + _sha(raw)
+
+
 def validation_session(function):
+    """Scope one nested validation call tree; never cache across operations.
+
+    Within a single session the identical validation of the identical receipt
+    against the identical root is a pure read-only re-derivation, so a repeat
+    node of the upstream DAG is skipped only after it already succeeded once
+    in this same call tree. Failures are never memoized: a refused receipt
+    re-derives and re-raises at every node, exactly as an unscoped run.
+    """
+
     @wraps(function)
     def validate(*args, **kwargs):
-        if _validation_scope.get() is not None:
-            return function(*args, **kwargs)
-        token = _validation_scope.set({})
-        try:
-            return function(*args, **kwargs)
-        finally:
-            _validation_scope.reset(token)
+        scope = _validation_scope.get()
+        if scope is None:
+            token = _validation_scope.set({})
+            try:
+                return validate(*args, **kwargs)
+            finally:
+                _validation_scope.reset(token)
+        key = _session_key(function, args, kwargs)
+        if key is not None and key in scope:
+            return None
+        result = function(*args, **kwargs)
+        if key is not None:
+            scope[key] = True
+        return result
 
     return validate
