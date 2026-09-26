@@ -1,0 +1,44 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a69b8be4118e",
+  "session_id": "ses_f2081b25fffeWy0pojZjL6yQjU",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-26T20:55:05.59694345Z",
+  "branch": "cursor/impl-launcher-curriculum-upgrade-slot",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_handoff_slot_registry.py"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "e1f6321ad1e4",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 35708,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 527232,
+    "output_tokens": 3349,
+    "api_call_count": 17
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-26T20:55:05.561745998Z",
+    "agent_lines": 25,
+    "agent_removed": 8,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 25,
+    "total_lines_changed": 33,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "a69b8be4118e",
+  "strategy": "manual-commit",
+  "branch": "cursor/impl-launcher-curriculum-upgrade-slot",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_handoff_slot_registry.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/a6/9b8be4118e/0/metadata.json",
+      "transcript": "/a6/9b8be4118e/0/full.jsonl",
+      "compact_transcript": "/a6/9b8be4118e/0/transcript.jsonl",
+      "content_hash": "/a6/9b8be4118e/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 35708,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 527232,
+    "output_tokens": 3349,
+    "api_call_count": 17
+  }
+}
