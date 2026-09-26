@@ -61,33 +61,10 @@ async def search_text(
     try:
         return _run_sources_query(
             ctx,
-            lambda: _search_text(
-                q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit
-            ),
+            lambda: _search_text(q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit),
         )
     except FileNotFoundError:
         return []
-
-
-@router.get("/search_images")
-async def search_images(
-    q: str = Query(..., description="Search query in Ukrainian"),
-    grade: int | None = Query(None, description="Filter by grade"),
-    teaching_value: str | None = Query(None, description="Filter: high/medium/low/none"),
-    subject: str | None = Query(None, description="Filter by subject"),
-    limit: int = Query(5, ge=1, le=20),
-    ctx: MonitorContext = Depends(get_ctx),
-):
-    from rag.query import search_images as _search_images  # noqa: PLC0415 — optional RAG dependency
-
-    del ctx
-    return _search_images(
-        q,
-        grade=grade,
-        teaching_value=teaching_value,
-        subject=subject,
-        limit=limit,
-    )
 
 
 @router.get("/search_literary")

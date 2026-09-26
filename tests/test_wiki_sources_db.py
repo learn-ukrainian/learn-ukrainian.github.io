@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import os
 import re
 import sqlite3
+import subprocess
 import sys
 from pathlib import Path
 
@@ -188,3 +190,28 @@ def test_search_sections_fts5_results_route_to_textbook_attribution(textbook_sec
 
     assert attribution["type"] == "textbook"
     assert re.fullmatch(r"^\d+-klas-.+_s\d+$", attribution["file"])
+
+
+def test_build_fts_query_is_identical_under_two_hash_seeds() -> None:
+    repo = Path(__file__).resolve().parents[1]
+    code = (
+        "import sys\n"
+        "from pathlib import Path\n"
+        f"sys.path.insert(0, {str(repo / 'scripts')!r})\n"
+        "from wiki.sources_db import _build_fts_query\n"
+        "print(_build_fts_query({'яблуко', 'а', 'мова', 'дім', 'bb', 'школа'}))\n"
+    )
+    outputs = []
+    for seed in ("1", "2"):
+        env = os.environ.copy()
+        env["PYTHONHASHSEED"] = seed
+        completed = subprocess.run(
+            [sys.executable, "-c", code],
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+        )
+        outputs.append(completed.stdout)
+    assert outputs[0] == outputs[1]
+    assert outputs[0].strip() == '"дім" OR "мова" OR "школа" OR "яблуко"'

@@ -233,7 +233,7 @@ routers (§4.2 core-router-last ordering).
 | **7** | `docs_router`, `artifacts_router`, `images_router` | 1,949 | Docs `EFFECTIVE_ROOTS` + curriculum artifacts + image/textbook stores |
 | **8** | `admin_router`, `ops_router`, `git_hygiene_router` | 1,200 | Admin backup/MCP roots + retention plan dir + git hygiene |
 | **9** | `dashboard_router` | 996 | Large; dashboard aggregation over curriculum + comms |
-| **10** | `sources_router` (`rag_router.py`) | 139 | Sources DB (`SOURCES_DB_PATH`) + #7284 connect guard |
+| **10** | `sources_router` (`rag_router.py`) | 168 | Sources DB (`SOURCES_DB_PATH`) + #7284 connect guard |
 | **11** | `contracts_router` (`route_contracts.py`) | 1,356 | Large; route-contract registry (1 handler, heavy logic) |
 | **12a** | `atlas_jobs_router`, `blue_router`, `build_events_router`, `coordination_router`, `cost_router` | 1,119 | Small curriculum/batch-state cluster |
 | **12b** | `consultation_router`, `decisions_router`, `delegate_router`, `discussions_router`, `gold_router` | 1,690 | Consultation queue dirs + delegate tasks + `MESSAGE_DB` discussions |
@@ -409,7 +409,7 @@ not individually listed as `path_loop` entries).
 
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
-| `rag_router.py` (`sources_router`) | `/api/sources`, `/api/rag` (deprecated) | 5 | 139 | `PROJECT_ROOT` | `IMAGE_DIR` | 5 | 10 |
+| `rag_router.py` (`sources_router`) | `/api/sources`, `/api/rag` (deprecated) | 4 | 168 | `PROJECT_ROOT` | `IMAGE_DIR` | 5 | 10 |
 
 **`sources_router` seams (5):** `sources_db.SOURCES_DB_PATH`, `_conn`, `_get_conn`;
 `rag_query.sources_db` mirror paths; `path_loop` for `rag_router` globals.

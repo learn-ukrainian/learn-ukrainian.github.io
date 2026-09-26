@@ -538,7 +538,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "data/textbook_images/**, bulk-root textbooks/** (storage topology), and annotation JSONL.",
         "Lazy in-memory image index; PDF pool and page-render LRU cache; /reload resets the index.",
         ("image-explorer.html",),
-        "Complements /api/sources image search.",
+        "Complements on-disk textbook image browse at /api/sources/browse_images.",
         "low; mutating annotation/cleanup/reload routes are local-only",
         "keep",
     ),
@@ -558,7 +558,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "/api/sources",
         "prefix",
         "http",
-        "Source text, image, and literary search plus collection stats.",
+        "Source text and literary search, collection stats, and on-disk textbook image browse.",
         "Local SQLite source databases, textbook images, and corpus indexes.",
         "No Monitor route cache; search backend freshness follows database and collection state.",
         ("image-explorer.html", "agents"),
@@ -570,7 +570,7 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "/api/rag",
         "prefix",
         "http",
-        "Retired legacy alias for /api/sources text, image, and literary search.",
+        "Retired legacy alias for /api/sources text and literary search.",
         "Local SQLite source databases, textbook images, and corpus indexes.",
         "Retired route; mirrors canonical /api/sources.",
         ("image-explorer.html (legacy)", "agents"),
@@ -1377,8 +1377,6 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
 )
 
 router = APIRouter(tags=["contracts"])
-
-
 
 
 def contracts_for_route(path: str, kind: ContractKind = "http") -> list[RouteContract]:

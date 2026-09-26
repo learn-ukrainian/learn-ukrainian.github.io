@@ -147,6 +147,26 @@ def test_inspect_words_hoists_shared_provenance(server_module):
     assert payload["words"]["кіт"]["clean_analyses"] == [{"lemma": "кіт", "pos": "noun", "tags": "noun"}]
     assert "source_version" not in payload["words"]["кіт"]
     assert "pipeline_identity" not in payload["words"]["вода"]
+    assert "submitted" not in payload
+    assert "checked" not in payload
+
+
+def test_inspect_words_caps_at_500_and_reports_counts(server_module):
+    submitted = [f"слово-{index}" for index in range(501)]
+    seen: dict[str, list[str]] = {}
+
+    def fake(words, pos_filter=None):
+        del pos_filter
+        seen["words"] = list(words)
+        return {}
+
+    with patch("scripts.verification.vesum.inspect_words", side_effect=fake):
+        content = _run(server_module.handle_inspect_words({"words": submitted}))
+    assert seen["words"] == submitted[:500]
+    payload = json.loads(content[0].text.split("Raw payload:\n", 1)[1])
+    assert payload["submitted"] == 501
+    assert payload["checked"] == 500
+    assert content[0].text.startswith("Batch inspection: 500 words")
 
 
 def test_query_pravopys_empty_topic_is_a_structured_error(server_module):

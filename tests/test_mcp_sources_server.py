@@ -1094,6 +1094,48 @@ class TestDictSearchQuoteBalance:
         assert '"terms"' in text
 
 
+class TestWikipediaExtractCap:
+    """mode=extract stays inside the 3,000-character text cap (#8524)."""
+
+    def _extract(self, server_module, body: str, *, query: str = "Стаття"):
+        article = {
+            "title": query,
+            "url": f"https://uk.wikipedia.org/wiki/{query}",
+            "extract": body,
+        }
+        with (
+            patch("rag.wiki_cache.WikiCache") as cache_cls,
+            patch("rag.source_query.wikipedia_extract", return_value=article) as extract,
+        ):
+            cache_cls.return_value.get.return_value = None
+            content = _run(
+                server_module.handle_query_wikipedia(
+                    {
+                        "query": query,
+                        "mode": "extract",
+                        "force_refresh": True,
+                    }
+                )
+            )
+        extract.assert_called_once()
+        return content[0].text
+
+    def test_short_article_sets_truncated_false(self, server_module):
+        body = "Короткий абзац про мову."
+        text = self._extract(server_module, body)
+        assert "**Truncated**: false" in text
+        assert body in text
+        assert text.split("\n\n", 1)[1] == body
+
+    def test_long_article_caps_at_3000_and_sets_truncated_true(self, server_module):
+        body = "А" * 4500
+        text = self._extract(server_module, body)
+        assert "**Truncated**: true" in text
+        article = text.split("\n\n", 1)[1]
+        assert article == "А" * 3000
+        assert len(article) == server_module._WIKIPEDIA_EXTRACT_CHAR_CAP
+
+
 class TestHealthEndpoint:
     """Test health endpoint contract (#7026)."""
 
@@ -1117,6 +1159,20 @@ class TestHealthEndpoint:
         assert "commit_sha" in data
         assert "db_path" in data
         assert "sources.db" in data["db_path"]
+
+    def test_repeated_health_calls_do_not_spawn_git(self, server_module):
+        app = server_module.create_http_app()
+        while not hasattr(app, "routes"):
+            app = app.app
+        endpoint = next(route.endpoint for route in app.routes if getattr(route, "path", None) == "/health")
+        with patch("subprocess.run") as spawned:
+            first = _run(endpoint(None))
+            second = _run(endpoint(None))
+        assert spawned.call_count == 0
+        first_body = json.loads(first.body)
+        second_body = json.loads(second.body)
+        assert first_body["commit_sha"] == second_body["commit_sha"] == server_module._SERVER_GIT_COMMIT
+        assert first_body["commit_sha"]
 
 
 class TestCollectionStatsHandler:

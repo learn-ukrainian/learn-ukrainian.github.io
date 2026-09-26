@@ -1362,15 +1362,16 @@ curl -s http://localhost:8765/api/dashboard/comms
 
 ## Sources & Search Endpoints — `/api/sources/`
 
-Public Monitor endpoints for SQLite FTS5 source corpora, textbook chunks, literary texts, and image indexing.
+Public Monitor endpoints for SQLite FTS5 source corpora, textbook chunks, literary texts, and on-disk textbook image browse.
 
 | Method | Path | Description |
 | --- | --- | --- |
 | GET | `/api/sources/stats` | SQLite source database status, point counts, and table list |
 | GET | `/api/sources/search_text?q=...[&grade=...][&subject=...][&trust_tier=...][&limit=5]` | Search Ukrainian school textbook chunks (Grades 1–11) |
-| GET | `/api/sources/search_images?q=...[&grade=...][&teaching_value=...][&subject=...][&limit=5]` | Search textbook image metadata |
 | GET | `/api/sources/search_literary?q=...[&work=...][&genre=...][&period=...][&limit=5]` | Search literary and primary texts |
 | GET | `/api/sources/browse_images[?grade=...][&sort=size|name|grade][&page=0][&per_page=100]` | Browse textbook images on disk with pagination |
+
+`GET /api/sources/search_images` was removed in #8524. The vector image index behind it is retired. Nothing in the API logs for the previous 30 days called it, and on-disk browse stays at `/api/sources/browse_images`.
 
 ### Retired Legacy Alias — `/api/rag/*` (HTTP 404)
 
