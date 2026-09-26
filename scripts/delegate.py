@@ -127,7 +127,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-import yaml
 from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 
 # Resolve repo root from this file's location so we work from any cwd —
@@ -9742,14 +9741,9 @@ def _fetch_routing_budget() -> dict[str, Any]:
 
 
 def _load_dispatch_fallbacks() -> dict[str, str]:
-    try:
-        data = yaml.safe_load(_FALLBACK_SUBS_PATH.read_text(encoding="utf-8")) or {}
-    except Exception:
-        return {}
-    subs = data.get("dispatch_fallbacks") if isinstance(data, dict) else {}
-    if isinstance(subs, dict):
-        return {str(k).lower(): str(v).lower() for k, v in subs.items() if v}
-    return {}
+    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+
+    return load_dispatch_fallbacks(_FALLBACK_SUBS_PATH)
 
 
 def _budget_lane_status(agent: str, agent_info: dict[str, Any]) -> str | None:
