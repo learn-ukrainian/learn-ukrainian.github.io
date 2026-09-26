@@ -6,10 +6,15 @@ observations are produced in ``test_v4_runner_origin_mechanism.py``.
 
 from __future__ import annotations
 
+import atexit
+import json
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Any
 
 import _v4_a7_real_slot_fixture as fx
+import _v4_packaged_runtime_fixture as _packaged_runtime
 import pytest
 from test_v4_runner_origin_mechanism import (
     FIXTURE_MODEL,
@@ -71,6 +76,59 @@ _OWNED_WHEEL = None
 def _owned_resources(pg_cluster, built_wheel, monkeypatch):
     monkeypatch.setitem(globals(), "_OWNED_PG", pg_cluster)
     monkeypatch.setitem(globals(), "_OWNED_WHEEL", built_wheel)
+
+
+# ``pinned_profile`` rebuilds a byte-identical CPython runtime closure (stdlib
+# zip, ``ldd`` discovery, interpreter copies, sha256 digests) on every call --
+# ~1.3s per test for bytes that never change. Only ``sources_url`` varies, so
+# the closure is built once per process and every caller still receives its own
+# fresh ``profile.json`` (fresh URL, fresh digest) referencing the shared
+# read-only closure. Tests corrupt PG rows and records, never the closure.
+_REAL_PINNED_PROFILE = _packaged_runtime.pinned_profile
+_PROFILE_CLOSURES: dict[tuple[bool, bool, bool, bool], dict[str, Any]] = {}
+_PROFILE_CLOSURE_ROOT: Path | None = None
+
+
+def _profile_closure_root() -> Path:
+    global _PROFILE_CLOSURE_ROOT
+    if _PROFILE_CLOSURE_ROOT is None:
+        _PROFILE_CLOSURE_ROOT = Path(tempfile.mkdtemp(prefix="v4-profile-closure-"))
+        atexit.register(shutil.rmtree, _PROFILE_CLOSURE_ROOT, ignore_errors=True)
+    return _PROFILE_CLOSURE_ROOT
+
+
+def _shared_closure_pinned_profile(
+    root: Path,
+    *,
+    sources_url: str,
+    defect: bool = False,
+    reviewer_sources: bool = True,
+    reviewer_negative: bool = False,
+    reviewer_invalid: bool = False,
+) -> Path:
+    key = (defect, reviewer_sources, reviewer_negative, reviewer_invalid)
+    profile = _PROFILE_CLOSURES.get(key)
+    if profile is None:
+        closure_root = _profile_closure_root() / f"closure-{len(_PROFILE_CLOSURES)}"
+        closure_root.mkdir(parents=True)
+        built = _REAL_PINNED_PROFILE(
+            closure_root,
+            sources_url=sources_url,
+            defect=defect,
+            reviewer_sources=reviewer_sources,
+            reviewer_negative=reviewer_negative,
+            reviewer_invalid=reviewer_invalid,
+        )
+        profile = json.loads(built.read_text(encoding="utf-8"))
+        _PROFILE_CLOSURES[key] = profile
+    path = Path(root) / "profile.json"
+    path.write_text(json.dumps({**profile, "sources_url": sources_url}), encoding="utf-8")
+    return path
+
+
+@pytest.fixture(autouse=True)
+def _share_profile_closure(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(_packaged_runtime, "pinned_profile", _shared_closure_pinned_profile)
 
 
 def _run_author_via_runner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
