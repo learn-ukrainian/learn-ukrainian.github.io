@@ -871,6 +871,36 @@ _SUBISSUES_NEXT_PAGE_QUERY = (
 _MAX_SUBISSUE_PAGES = 50
 _MAX_SUBISSUE_DEPTH = 8
 _SUBISSUE_BATCH_SIZE = 20
+# Per-node fallback budget (#8661 review): a failed 20-parent batch used to
+# trigger up to 20 single-parent retries per page — ~1,050 calls across 50
+# pages, repeatable at every depth. Each failed batch position is retried
+# singly at most once, and one audit run spends at most this many singleton
+# calls; anything still unread afterwards is marked traversal-incomplete.
+_MAX_SINGLE_RETRIES_PER_AUDIT = 25
+
+
+class _IncompleteNode:
+    """Sentinel for a node whose page was NEVER read — transport error,
+    timeout, invalid JSON, or a GraphQL error touching the response — as
+    opposed to ``None``, which means GitHub answered and the node is genuinely
+    absent (a ``null`` alias in a successful, error-free response). An unread
+    subtree can hide duplicate membership, so consumers must fail closed on
+    this marker rather than treat the node as skippable."""
+
+    __slots__ = ()
+
+    def __repr__(self) -> str:
+        return "INCOMPLETE_NODE"
+
+
+INCOMPLETE_NODE = _IncompleteNode()
+
+
+class _RetryBudget:
+    """Shared cap on single-parent fallback retries across one audit run."""
+
+    def __init__(self, limit: int = _MAX_SINGLE_RETRIES_PER_AUDIT) -> None:
+        self.remaining = limit
 
 
 def _fetch_subissues_page(epic: int, cursor: str | None, repo_root: Path = ROOT) -> dict:
@@ -941,14 +971,26 @@ def _fetch_subissue_batch(
     cursors: dict[int, str | None],
     repo_root: Path = ROOT,
     body_roots: set[int] | None = None,
-) -> dict[int, dict | None]:
+    retry_budget: _RetryBudget | None = None,
+) -> dict[int, dict | _IncompleteNode | None]:
     """Fetch one page for each parent in a bounded GraphQL alias batch.
 
-    Returns one entry per requested issue number; the value is ``None`` when
-    the node no longer resolves in this repository (deleted/transferred issue)
-    or its individual lookup failed, so the caller can warn and skip that node
-    instead of losing the whole audit to one bad descendant.
+    Returns one entry per requested issue number. The value is ``None`` ONLY
+    when GitHub answered and the node is genuinely absent in this repository
+    (a ``null`` alias in a successful, error-free response — a deleted or
+    transferred issue), so the caller can warn and skip that node instead of
+    losing the whole audit to one bad descendant. Any fetch failure —
+    transport error, timeout, invalid JSON, or a GraphQL ``errors`` payload —
+    yields ``INCOMPLETE_NODE``: the subtree was never read, and an unread
+    subtree can hide membership the audit must not certify (#8661).
+
+    A failed multi-parent batch degrades per node so one poisoned descendant
+    does not fail the batch: each parent is retried ONCE on its own, bounded
+    by ``retry_budget`` — parents beyond the budget come back
+    ``INCOMPLETE_NODE`` without a network call.
     """
+    if retry_budget is None:
+        retry_budget = _RetryBudget()
     owner, name = _repo_owner_name(repo_root)
     fields = []
     for number, cursor in cursors.items():
@@ -966,13 +1008,19 @@ def _fetch_subissue_batch(
             cwd=repo_root,
         )
     except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
+        data = None
+    # A GraphQL ``errors`` payload (even with partial ``data``) means a ``null``
+    # alias cannot be trusted as "genuinely absent" — degrade like a failure.
+    if data is None or data.get("errors"):
         if len(cursors) <= 1:
-            return {number: None for number in cursors}
-        # Degrade per node: one poisoned descendant must not fail the batch —
-        # retry each parent on its own so only the failing node comes back None.
-        pages: dict[int, dict | None] = {}
+            return {number: INCOMPLETE_NODE for number in cursors}
+        pages: dict[int, dict | _IncompleteNode | None] = {}
         for number, cursor in cursors.items():
-            pages.update(_fetch_subissue_batch({number: cursor}, repo_root, body_roots))
+            if retry_budget.remaining <= 0:
+                pages[number] = INCOMPLETE_NODE
+                continue
+            retry_budget.remaining -= 1
+            pages.update(_fetch_subissue_batch({number: cursor}, repo_root, body_roots, retry_budget))
         return pages
     repository = (data.get("data") or {}).get("repository") or {}
     return {number: repository.get(f"i{number}") for number in cursors}
@@ -980,7 +1028,7 @@ def _fetch_subissue_batch(
 
 def _tree_membership(
     roots: set[int],
-    fetch_batch: Callable[[dict[int, str | None]], dict[int, dict | None]],
+    fetch_batch: Callable[[dict[int, str | None]], dict[int, dict | _IncompleteNode | None]],
     warnings: list[dict] | None = None,
     repo_slug: str | None = None,
 ) -> dict[int, tuple[set[int], set[int]]]:
@@ -990,11 +1038,16 @@ def _tree_membership(
     retained so each root can independently claim a shared descendant, but
     descent stops at another registered root's subtree.
 
-    Degradation is per node: a fetched issue that comes back ``None`` (no
-    longer resolves in this repository) is skipped with a warning naming it,
+    Degradation is per node, in two tiers (#8661): a fetched issue that comes
+    back ``None`` (GitHub answered; the node no longer resolves in this
+    repository) is skipped with an ``unresolved_subissue`` warning naming it,
     and a child node whose ``repository.nameWithOwner`` differs from
     ``repo_slug`` is a cross-repo sub-issue — reported as a warning, never
-    followed (its number belongs to another repository's namespace).
+    followed (its number belongs to another repository's namespace). Both keep
+    the audit green. A node that comes back ``INCOMPLETE_NODE`` was NEVER
+    read (transport/timeout/JSON/GraphQL failure); it is recorded as
+    ``traversal_incomplete`` and the caller must fail the audit closed — an
+    unread subtree can hide a duplicate membership.
     """
     children: dict[int, set[int]] = {}
     child_totals: dict[int, int] = {}
@@ -1015,6 +1068,11 @@ def _tree_membership(
                 issues = fetch_batch(pending)
                 next_pending = {}
                 for number, issue in issues.items():
+                    if issue is INCOMPLETE_NODE:
+                        if warnings is not None:
+                            warnings.append({"code": "traversal_incomplete", "issue": number})
+                        children.setdefault(number, set())
+                        continue
                     if issue is None:
                         if warnings is not None:
                             warnings.append({"code": "unresolved_subissue", "issue": number})
@@ -1080,9 +1138,10 @@ def fetch_tree_membership(
     roots: set[int], repo_root: Path = ROOT, warnings: list[dict] | None = None
 ) -> dict[int, tuple[set[int], set[int]]]:
     owner, name = _repo_owner_name(repo_root)
+    retry_budget = _RetryBudget()
     return _tree_membership(
         roots,
-        lambda batch: _fetch_subissue_batch(batch, repo_root, roots),
+        lambda batch: _fetch_subissue_batch(batch, repo_root, roots, retry_budget),
         warnings,
         repo_slug=f"{owner}/{name}",
     )
@@ -1236,6 +1295,14 @@ def run_audit(
         {epic for epics in registry.values() for epic in epics}, root, traversal_warnings
     )
     report = classify(open_issues, registry, membership)
+    if any(w["code"] == "traversal_incomplete" for w in traversal_warnings):
+        # Fail closed (#8661): an unread subtree can hide a duplicate
+        # membership, so an incomplete traversal must not be green even when
+        # every node we DID read classifies clean. ``ok: false`` is the status
+        # the existing consumers already treat as not-OK (the ``--check`` CLI
+        # gate exits 1 and the cold-start cache path reads this key), so no
+        # consumer change is needed.
+        report["ok"] = False
     milestone_rows = load_milestone_rows(root / "docs" / "WORKSTREAMS.md")
     milestone_numbers = {
         number for row in milestone_rows for number in row["issue_numbers"]
@@ -1531,6 +1598,11 @@ def human_summary(report: dict) -> str:
             )
         elif warning["code"] == "unresolved_subissue":
             lines.append(f"WARN: sub-issue #{warning['issue']} no longer resolves in this repository; skipped")
+        elif warning["code"] == "traversal_incomplete":
+            lines.append(
+                f"WARN: sub-issue #{warning['issue']} could not be fetched; its subtree "
+                "was never read — the audit is incomplete and fails closed (ok: false)"
+            )
         elif warning["code"] == "cross_repo_subissue":
             lines.append(
                 f"WARN: cross-repo sub-issue {warning['repository']}#{warning['issue']} "

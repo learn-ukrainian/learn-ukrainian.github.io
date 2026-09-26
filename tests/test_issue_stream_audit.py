@@ -1388,7 +1388,10 @@ def test_subissue_batch_returns_none_for_null_node_and_scopes_repo(monkeypatch):
 
 def test_subissue_batch_degrades_per_node_when_batch_query_fails(monkeypatch):
     """A ``gh api graphql`` error on the combined batch must not fail the whole
-    audit: retry each parent alone so only the poisoned node comes back None."""
+    audit: retry each parent alone so only the poisoned node degrades. A
+    failed singleton was never read, so it comes back ``INCOMPLETE_NODE``
+    (fail closed, #8661) — not ``None``, which is reserved for a node GitHub
+    confirmed absent."""
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
     def fake_gh_json(args, *, cwd):
@@ -1400,7 +1403,44 @@ def test_subissue_batch_degrades_per_node_when_batch_query_fails(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
     pages = issue_stream_audit._fetch_subissue_batch({100: None, 200: None})
     assert pages[100]["subIssues"]["nodes"][0]["number"] == 10
-    assert pages[200] is None
+    assert pages[200] is issue_stream_audit.INCOMPLETE_NODE
+
+
+def test_subissue_batch_graphql_errors_are_incomplete_not_absent(monkeypatch):
+    """A response carrying a GraphQL ``errors`` payload cannot be trusted: its
+    ``null`` alias might be the error, not a genuinely absent node. Degrade
+    per node; a singleton that still returns errors is INCOMPLETE_NODE."""
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
+
+    def fake_gh_json(args, *, cwd):
+        query = args[-1]
+        if "i200:issue" in query:
+            return {"data": {"repository": {"i200": None}}, "errors": [{"message": "boom"}]}
+        return {"data": {"repository": {"i100": _page([10], False)}}}
+
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
+    pages = issue_stream_audit._fetch_subissue_batch({100: None, 200: None})
+    assert pages[100]["subIssues"]["nodes"][0]["number"] == 10
+    assert pages[200] is issue_stream_audit.INCOMPLETE_NODE
+
+
+def test_subissue_batch_caps_singleton_retries_with_budget(monkeypatch):
+    """The per-node fallback is bounded (#8661): once the shared budget is
+    spent, remaining parents come back INCOMPLETE_NODE with no ``gh`` call."""
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
+    calls = []
+
+    def fake_gh_json(args, *, cwd):
+        calls.append(args)
+        raise RuntimeError("gh api graphql… failed")
+
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
+    budget = issue_stream_audit._RetryBudget(limit=2)
+    pages = issue_stream_audit._fetch_subissue_batch({number: None for number in (1, 2, 3, 4, 5)}, retry_budget=budget)
+    # 1 failed batch + exactly 2 singleton retries; parents 3–5 never hit the network.
+    assert len(calls) == 3
+    assert budget.remaining == 0
+    assert all(pages[n] is issue_stream_audit.INCOMPLETE_NODE for n in (1, 2, 3, 4, 5))
 
 
 def _run_audit_fake_gh(calls, *, owner: str, name: str, open_issues: list[dict], tree: dict):
@@ -1505,6 +1545,123 @@ def test_run_audit_reports_cross_repo_child_without_following_it(tmp_path, monke
     # The foreign number was never looked up in THIS repository.
     assert not any("i77:issue" in args[-1] for args, _cwd in calls if args[1:2] == ["api"])
     assert report["ok"] is True
+
+
+def _run_audit_fake_gh_failing_nodes(
+    calls, *, owner: str, name: str, open_issues: list[dict], tree: dict, failing: set[int]
+):
+    """Like ``_run_audit_fake_gh``, but any GraphQL query whose aliases include
+    a number in ``failing`` exits non-zero (transport/GitHub failure)."""
+
+    def _run(args, capture_output, text, timeout, cwd):
+        calls.append((tuple(args), cwd))
+        assert args[0] == "gh"
+        if args[1:3] == ["issue", "list"]:
+            return _FakeCompletedProcess(json.dumps(open_issues))
+        if args[1:3] == ["repo", "view"]:
+            return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
+        if args[1:3] == ["issue", "view"]:
+            return _FakeCompletedProcess(json.dumps({"number": int(args[3]), "state": "CLOSED"}))
+        if args[1] == "api" and args[2] == "graphql":
+            numbers = [int(n) for n in re.findall(r"i(\d+):issue\(number:", args[-1])]
+            if failing & set(numbers):
+                failed = _FakeCompletedProcess("")
+                failed.returncode = 1
+                failed.stderr = "connection refused"
+                return failed
+            repo = {}
+            for number in numbers:
+                nodes = tree.get(number, [])
+                if nodes is None:
+                    repo[f"i{number}"] = None
+                else:
+                    repo[f"i{number}"] = {
+                        "body": "",
+                        "subIssues": {
+                            "nodes": nodes,
+                            "pageInfo": {"hasNextPage": False, "endCursor": None},
+                        },
+                    }
+            return _FakeCompletedProcess(json.dumps({"data": {"repository": repo}}))
+        raise AssertionError(f"unexpected gh invocation: {args}")
+
+    return _run
+
+
+def test_run_audit_incomplete_traversal_is_not_green(tmp_path, monkeypatch):
+    """Blocking #8661 fix: a transport failure on one parent leaves its
+    subtree UNREAD — it could hide a duplicate membership — so the audit must
+    fail closed (``ok: false``) even though everything read classifies clean."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo(root, epics=[100])
+
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _run_audit_fake_gh_failing_nodes(
+            [],
+            owner="acme",
+            name="repo",
+            open_issues=_issues(100, 10),
+            tree={100: [_node(10, "acme", "repo", total=1)]},
+            failing={10},
+        ),
+    )
+
+    report = run_audit(root)
+
+    # #10 is natively linked under #100: no orphan, no multi-home — the ONLY
+    # reason this audit is not green is the incomplete traversal.
+    assert report["orphans"] == []
+    assert report["multi_homed"] == []
+    assert {"code": "traversal_incomplete", "issue": 10} in report["warnings"]
+    assert report["ok"] is False
+    summary = issue_stream_audit.human_summary(report)
+    assert "WARN: sub-issue #10 could not be fetched; its subtree was never read" in summary
+    assert "ok: False" in summary
+
+
+def test_run_audit_singleton_retry_budget_is_shared_per_run(tmp_path, monkeypatch):
+    """Non-blocking #8661 fix: one audit run spends at most
+    ``_MAX_SINGLE_RETRIES_PER_AUDIT`` singleton retries across ALL failed
+    batches; parents beyond the budget are marked incomplete without a call."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo(root, epics=[100])
+    failing = set(range(101, 131))  # 30 unreadable children: two batches (20 + 10)
+
+    calls = []
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _run_audit_fake_gh_failing_nodes(
+            calls,
+            owner="acme",
+            name="repo",
+            open_issues=_issues(100),
+            tree={100: [_node(n, "acme", "repo", total=1) for n in sorted(failing)]},
+            failing=failing,
+        ),
+    )
+
+    report = run_audit(root)
+
+    singleton_retries = [
+        args
+        for args, _cwd in calls
+        if list(args[1:3]) == ["api", "graphql"]
+        and len(re.findall(r"i(\d+):issue\(number:", args[-1])) == 1
+        and int(re.search(r"i(\d+):issue\(number:", args[-1]).group(1)) in failing
+    ]
+    # All 30 children fail: batch of 20 → 20 singleton retries, batch of 10 →
+    # only 5 more before the shared per-run budget is spent; the remaining 5
+    # are marked incomplete with no network call.
+    assert len(singleton_retries) == issue_stream_audit._MAX_SINGLE_RETRIES_PER_AUDIT
+    incomplete = [w["issue"] for w in report["warnings"] if w["code"] == "traversal_incomplete"]
+    assert sorted(incomplete) == sorted(failing)
+    assert report["ok"] is False
+
 
 
 def _make_repo_with_closed_epic(root) -> None:
