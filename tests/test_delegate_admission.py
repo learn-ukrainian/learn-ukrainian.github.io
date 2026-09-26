@@ -499,6 +499,7 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
     _running_record(tasks, "busy", pid=515151)
     dead = _running_record(tasks, "gone", pid=424242)
     monkeypatch.setattr(dispatch_admission, "process_alive", lambda pid: pid == 515151)
+    monkeypatch.setattr(dispatch_admission, "slice_usage_clause", lambda: None)
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
     monkeypatch.setattr(

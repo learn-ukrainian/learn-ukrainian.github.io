@@ -5,6 +5,56 @@ Templates only — do not commit machine-specific paths. Copy a unit into
 `/etc/systemd/system/`, replace `@REPO_ROOT@` / `@PRIVATE_ROOT@`, run
 `systemctl --user daemon-reload`, then enable/start.
 
+## Dispatch worker slice (`lu-dispatch.slice`)
+
+One slice for every detached worker `scripts/delegate.py` launches (#8645). The
+driver stays outside it. A runaway worker is killed inside the slice; the driver
+and the host services are not in that cgroup.
+
+`MemoryHigh=10G` is the throttling line and `MemoryMax=11G` is the last line of
+defense. `systemd.resource-control(5)` (this host's systemd 259 man page) says to
+use `MemoryHigh=` as the main control and `MemoryMax=` only as the last line of
+defense, so `MemoryHigh` sits just under `MemoryMax` (10GiB / 11GiB). `MemoryMax=`
+does not cap swap — the 2026-09-24 scope used 6.3GiB of swap — so the unit also
+sets `MemorySwapMax=1G`. The limits are the unit file. There is no environment
+override.
+
+Running without the slice is supported. Dispatch then prints one warning and
+starts the worker with plain `Popen`, and the task record's `launch_mode` is
+`popen-fallback`. `LU_DISPATCH_ISOLATION=fallback` forces that path.
+
+### Prerequisites
+
+All of these have to hold or dispatch will not use the slice:
+
+- Linger is on: `loginctl show-user "$USER" -p Linger` prints `Linger=yes`.
+  Without linger the user manager, and every scoped worker, die when the
+  session ends (`loginctl enable-linger "$USER"`).
+- `/sys/fs/cgroup` is cgroup v2: `stat -f -c %T /sys/fs/cgroup` prints `cgroup2fs`.
+- The user manager has the memory controller:
+  `/sys/fs/cgroup/user.slice/user-$(id -u).slice/user@$(id -u).service/cgroup.subtree_control`
+  contains `memory`.
+- After install, `systemctl --user show -p MemoryMax,MemorySwapMax lu-dispatch.slice`
+  prints `MemoryMax=11811160064` and `MemorySwapMax=1073741824` (11GiB and 1GiB,
+  base 1024). A slice name systemd synthesized with `MemoryMax=infinity` does
+  not count.
+
+### Install
+
+Do not commit a machine path. From a checkout:
+
+```bash
+mkdir -p ~/.config/systemd/user
+cp packaging/systemd/lu-dispatch.slice ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user show -p LoadState,MemoryHigh,MemoryMax,MemorySwapMax lu-dispatch.slice
+```
+
+No `enable` is required. The slice is started when a worker scope is placed in
+it. Confirm a live worker with `systemctl --user status <launch_unit>.scope`
+or `/proc/<pid>/cgroup`. `--collect` drops the scope unit after the worker
+exits.
+
 ## Loopback Services
 
 Services bind `127.0.0.1` only. Reach them from another machine with an SSH

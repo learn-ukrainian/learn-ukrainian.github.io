@@ -1585,6 +1585,50 @@ def test_dispatch_persists_and_forwards_max_budget_usd(tmp_tasks_dir):
     assert cmd[cmd.index("--max-budget-usd") + 1] == "0.5"
 
 
+def test_dispatch_records_forced_popen_fallback(tmp_tasks_dir, monkeypatch, capsys):
+    """Isolation can be forced off; the worker argv and pid tracking stay the old spawn."""
+    monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", "isolation-fallback", "--prompt", "hi"]
+    )
+    captured: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 4242
+        stdin = _FakeStdin()
+
+    def fake_popen(cmd, **kwargs):
+        captured["cmd"] = cmd
+        captured["kwargs"] = kwargs
+        return _FakeProc()
+
+    with patch("delegate.subprocess.Popen", side_effect=fake_popen):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("isolation-fallback"))
+    assert state is not None
+    assert state["pid"] == 4242
+    assert state["launch_mode"] == "popen-fallback"
+    assert "LU_DISPATCH_ISOLATION=fallback" in state["launch_fallback_reason"]
+    assert "launch_unit" not in state
+    cmd = captured["cmd"]
+    assert isinstance(cmd, list)
+    assert "_worker" in cmd
+    assert "systemd-run" not in cmd
+    kwargs = captured["kwargs"]
+    assert isinstance(kwargs, dict)
+    assert kwargs["start_new_session"] is True
+    assert "launching the worker with plain Popen" in capsys.readouterr().err
+
+
 def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
     """Dispatch should persist model/effort/cli_version immediately."""
     import argparse

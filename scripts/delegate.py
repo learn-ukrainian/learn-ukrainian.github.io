@@ -55,7 +55,11 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "result_file": str | null,   # path to the full response text
         "stderr_excerpt": str | null,
         "returncode": int | null,
-        "returncode_reason": str | null
+        "returncode_reason": str | null,
+        "launch_mode": "scope" | "popen-fallback",  # #8645 part C
+        "launch_unit": str | null,                  # scope unit when launch_mode is scope
+        "launch_fallback_reason": str | null,
+        "peak_rss_mib": float | null                # terminal records; largest reaped child
     }
 
 Design notes:
@@ -156,6 +160,7 @@ from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_r
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.orchestration import (
     dispatch_admission,
+    dispatch_isolation,
     reaper_lifecycle,
     task_record_store,
     worktree_claims,
@@ -9520,14 +9525,18 @@ def _dispatch(
             allow_merge=bool(getattr(args, "allow_merge", False)),
         )
         try:
-            proc = subprocess.Popen(
+            # Scoped when lu-dispatch.slice is really in force; plain Popen
+            # otherwise. The recorded pid is the worker in both cases (#8645).
+            proc, launch = dispatch_isolation.spawn_detached_worker(
                 cmd,
+                task_id=task_id,
+                run_nonce=run_nonce,
+                popen=subprocess.Popen,
+                env=worker_env,
                 stdin=subprocess.PIPE,
                 stdout=stdout_fd,
                 stderr=stderr_fd,
-                env=worker_env,
-                start_new_session=True,  # detach from our process group
-                close_fds=True,
+                stderr_log=stderr_log,
             )
             spawned = True
         except (OSError, FileNotFoundError, ValueError) as exc:
@@ -9576,6 +9585,7 @@ def _dispatch(
         # Fixed after Gemini review 2026-04-10.
         state_with_pid = _read_state(state_path) or initial_state
         state_with_pid["pid"] = proc.pid
+        state_with_pid.update(launch.as_state())
         _write_state_atomic(state_path, state_with_pid)
         # Bind ownership ledger rows to the long-lived worker PID (not the
         # short-lived dispatch CLI). Best-effort: WARN path must not fail spawn.
@@ -10809,7 +10819,10 @@ def build_parser() -> argparse.ArgumentParser:
             "  is published. Preview the decision with: .venv/bin/python -m scripts.fleet.capacity_pick\n\n"
             "Outputs:\n"
             "  stdout `<task_id>\\n<run_nonce>`; batch_state/tasks/<task_id>.json (write modes carry an `admission`\n"
-            "  snapshot; terminal records carry `peak_rss_mib`); worker logs under batch_state/tasks/logs/.\n\n"
+            "  snapshot; `launch_mode` is `scope` or `popen-fallback`; terminal records carry `peak_rss_mib`);\n"
+            "  worker logs under batch_state/tasks/logs/. Workers run in the user slice lu-dispatch.slice when\n"
+            "  that slice is installed with its memory limits; otherwise dispatch warns and uses plain Popen.\n"
+            "  LU_DISPATCH_ISOLATION=fallback forces the plain Popen path. See packaging/systemd/README.md.\n\n"
             "Exit codes:\n"
             "  0 dispatched, or --dry-run validated; 1 worktree, lease, or spawn failure;\n"
             "  2 invalid request or another guard refused; 3 host admission refused (retry later or --force-admission).\n\n"

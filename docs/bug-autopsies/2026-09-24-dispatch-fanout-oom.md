@@ -70,17 +70,24 @@ seats. Three PRs, in this order:
    reported in `capacity_pick`; per-worker peak RSS recorded in the task
    record; a liveness sweep that marks a dead pid `crashed` within one
    sweep interval. Lands after #8508.
-3. **C — isolation:** a single `lu-dispatch.slice` for all workers
-   (`MemoryMax≈11G`, `MemorySwapMax=1G`), driver outside it. Workers are
-   launched as transient services in that slice
-   (`systemd-run --user --slice=lu-dispatch.slice --unit=lu-worker-<task>
-   --collect`, environment passed explicitly). Real, tested fallback to
-   plain Popen, with a loud warning, when no user manager or bus is
-   reachable. Per-worker limits come later, only if sibling starvation is
-   observed.
+3. **C — isolation (landed):** a single `lu-dispatch.slice` for all workers
+   (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`; unit file
+   `packaging/systemd/lu-dispatch.slice`), driver outside it. Each detached
+   worker is `systemd-run --user --scope --slice=lu-dispatch.slice
+   --unit=lu-worker-<task>-<nonce>-<attempt> --collect`. `--scope` execs the
+   worker in place, so the dispatch pid, pipes, and cancel signal stay the
+   worker's. If the user manager, cgroup2 memory delegation, the slice
+   limits, or linger is missing, or if `systemd-run` fails before that exec,
+   dispatch falls back to plain Popen, prints one warning, and records
+   `launch_mode` (`scope` or `popen-fallback`) on the task record. Running
+   without the slice installed is supported. Per-worker limits stay out
+   until sibling starvation shows up.
 
-Until those land, the driver rule stays: at most 7 live workers, targeted
-tests only, `-n 2` at most.
+Parts A and B have landed (admission, liveness, the pytest fan-out cap).
+Part C is in the launcher; the slice limits apply only after
+`packaging/systemd/lu-dispatch.slice` is installed in the user manager.
+Until that install, and whenever the probe falls back, keep the driver
+rule that survived the incident: targeted tests only, `-n 2` at most.
 
 ## Detection and lessons
 
