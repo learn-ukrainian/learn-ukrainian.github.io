@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-09-25" />
+<meta name="report-date" content="2026-09-26" />
 
 <meta name="report-status" content="migrated" />
 
@@ -116,7 +116,7 @@
   <header class="hero">
     <div class="title-block">
       <h1>Agent Bridge — Channel Communication</h1>
-      <div class="sub">Migrated from Markdown on 2026-09-25</div>
+      <div class="sub">Migrated from Markdown on 2026-09-26</div>
     </div>
     <div class="meta">
       <div>Source: docs/best-practices/agent-bridge.md</div>
@@ -261,13 +261,14 @@ It hardcodes <code>scripts/delegate.py dispatch --agent codex --mode danger --wo
 brief includes the commit, push, and PR checklist. If <code>--brief-file</code>
 is omitted, the wrapper builds <code>/tmp/dispatch-fix-&lt;task-id&gt;.md</code> from
 <code>gh issue view &lt;issue&gt; --json title,body</code>.</p>
-<p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr &lt;PR&gt; [--reviewer auto|codex|claude|glm|grok] [--model MODEL]</code>
-is the <strong>canonical formal PR review entry</strong> (Sol fleet-comms Phase 0–3):</p>
+<p>Exact-head cross-family review through <code>ask-&lt;lane&gt; --type review</code> (headless dispatch via
+<code>scripts/delegate.py dispatch --agent &lt;reviewer&gt; --mode read-only --worktree --branch &lt;branch&gt;</code>)
+is the <strong>canonical formal PR review entry</strong> (sealed <code>review-pr</code> and <code>publish-review-verdict</code>
+were removed in #8520):</p>
 <ul>
 <li><strong>Pointer-only</strong> prompt (PR URL + checklist + mandatory read-only contract).</li>
 <li>Hard size caps — refuse fat pasted diffs/inventory YAML.</li>
-<li>Default <code>--reviewer auto</code> uses the deterministic suitability-first scheduler;
-no provider is an unconditional default.</li>
+<li>An independent cross-family reviewer outside the author's model family must be selected.</li>
 <li>A reviewer alias selects its practical default. Add a formally eligible
 same-route model plus <code>--override-reason</code> for an exceptional operator pin,
 for example <code>--reviewer claude --model claude-fable-5</code> or
@@ -277,6 +278,10 @@ for example <code>--reviewer claude --model claude-fable-5</code> or
 <li><code>--no-claude-available</code> is a deprecated compatibility hint and never routes.</li>
 <li>Do <strong>not</strong> identify the reviewer as “Hermes”; record model + family + harness.</li>
 </ul>
+<p>Formal reviews stay thin in both directions (Phase 4–5). Do not paste a review
+body over 4 KiB or attach evidence over 64 KiB to an <code>ask-*</code> review job; the
+bridge rejects it. Prefer exact-head cross-family review through <code>ask-&lt;lane&gt; --type review</code>
+(headless dispatch) over a manual review ask (sealed <code>review-pr</code> was removed in #8520).</p>
 <p><strong>Phase 5 steer (warn-not-reject, #5486):</strong> if an <code>ask-* --review</code> payload looks
 like a <strong>formal CF PR review</strong> (GitHub PR URL / <code>PR #N</code> / cross-family formal
 wording) and has <strong>no</strong> named PR target or head SHA, the bridge
@@ -296,7 +301,7 @@ effort override is passed, then builds a review prompt from either
 <code>gh pr view</code> plus <code>gh pr diff</code> or the target file/directory contents.
 Use <strong>three-dot</strong> evidence only (<code>gh pr diff</code>, <code>gh pr view --json files</code>,
 or merge-base…HEAD) — never two-dot <code>base-tip..HEAD</code> against a moved base
-(#5802). Prefer <code>review-pr</code> for ordinary formal CF review.</p>
+(#5802). Prefer exact-head cross-family review through <code>ask-&lt;lane&gt; --type review</code> (headless dispatch) for ordinary formal CF review (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520).</p>
 <h3>Worktree cleanup (post-merge painpoint)</h3>
 <p>After a PR merges, do <strong>not</strong> leave dispatch worktrees forever:</p>
 <pre><code class="language-bash"># Safe default (dry-run):
@@ -379,7 +384,7 @@ and you have another way to detect parked sessions.</p>
 </tr>
 <tr>
 <td>Formal PR review (CF gate)</td>
-<td><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr &lt;N&gt;</code></td>
+<td>Direct <code>ask-&lt;lane&gt; --type review</code> (headless dispatch; sealed <code>review-pr</code> removed in #8520)</td>
 </tr>
 <tr>
 <td>Code review discussion (non-gate)</td>

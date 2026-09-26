@@ -25,9 +25,9 @@ Kimi is not a sealed formal CF reviewer; substitute seats remain the product pat
 ## Substitute formal CF
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm   # local
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer codex
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude
+# Direct ask-* cross-family review (replaces removed review-pr):
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - --type review --pr <N> --task-id review-<N> < prompt.md
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --type review --pr <N> --task-id review-<N> < prompt.md
 ```
 
 ## Flip criteria (do not skip)

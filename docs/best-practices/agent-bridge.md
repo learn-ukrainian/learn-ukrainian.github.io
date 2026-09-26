@@ -167,13 +167,14 @@ brief includes the commit, push, and PR checklist. If `--brief-file`
 is omitted, the wrapper builds `/tmp/dispatch-fix-<task-id>.md` from
 `gh issue view <issue> --json title,body`.
 
-`.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <PR> [--reviewer auto|codex|claude|glm|grok] [--model MODEL]`
-is the **canonical formal PR review entry** (Sol fleet-comms Phase 0–3):
+Exact-head cross-family review through `ask-<lane> --type review` (headless dispatch via
+`scripts/delegate.py dispatch --agent <reviewer> --mode read-only --worktree --branch <branch>`)
+is the **canonical formal PR review entry** (sealed `review-pr` and `publish-review-verdict`
+were removed in #8520):
 
 - **Pointer-only** prompt (PR URL + checklist + mandatory read-only contract).
 - Hard size caps — refuse fat pasted diffs/inventory YAML.
-- Default `--reviewer auto` uses the deterministic suitability-first scheduler;
-  no provider is an unconditional default.
+- An independent cross-family reviewer outside the author's model family must be selected.
 - A reviewer alias selects its practical default. Add a formally eligible
   same-route model plus `--override-reason` for an exceptional operator pin,
   for example `--reviewer claude --model claude-fable-5` or
@@ -185,8 +186,8 @@ is the **canonical formal PR review entry** (Sol fleet-comms Phase 0–3):
 
 Formal reviews stay thin in both directions (Phase 4–5). Do not paste a review
 body over 4 KiB or attach evidence over 64 KiB to an `ask-*` review job; the
-bridge rejects it and points to `review-pr <N>`. Prefer a PR target over a
-manual review ask.
+bridge rejects it. Prefer exact-head cross-family review through `ask-<lane> --type review`
+(headless dispatch) over a manual review ask (sealed `review-pr` was removed in #8520).
 
 **Phase 5 steer (warn-not-reject, #5486):** if an `ask-* --review` payload looks
 like a **formal CF PR review** (GitHub PR URL / `PR #N` / cross-family formal
@@ -210,7 +211,7 @@ effort override is passed, then builds a review prompt from either
 `gh pr view` plus `gh pr diff` or the target file/directory contents.
 Use **three-dot** evidence only (`gh pr diff`, `gh pr view --json files`,
 or merge-base…HEAD) — never two-dot `base-tip..HEAD` against a moved base
-(#5802). Prefer `review-pr` for ordinary formal CF review.
+(#5802). Prefer exact-head cross-family review through `ask-<lane> --type review` (headless dispatch) for ordinary formal CF review (sealed `review-pr` and `publish-review-verdict` were removed in #8520).
 
 ### Worktree cleanup (post-merge painpoint)
 
@@ -290,7 +291,7 @@ and you have another way to detect parked sessions.
 | Sustained discussion on a topic | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post` to a channel |
 | Need a 2-3 agent debate on a design | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` |
 | Sharing context across many delegations | Pin it in `docs/agent-channels/{topic}/context.md` |
-| Formal PR review (CF gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>` |
+| Formal PR review (CF gate) | Direct `ask-<lane> --type review` (headless dispatch; sealed `review-pr` removed in #8520) |
 | Code review discussion (non-gate) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ... --to` a non-Gemini seat |
 | Want the post visible in the dashboard | Channels only (the legacy `messages` table has its own UI) |
 

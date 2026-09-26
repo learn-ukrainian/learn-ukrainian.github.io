@@ -1088,3 +1088,29 @@ def test_actual_catalog_resolver_imports_and_selects_approved_codex_model():
     result = resolve_reviewer(ResolverInputs(author_model="claude", risk="medium"))
     assert result.selected is not None
     assert result.selected.concrete_model == "gpt-6-sol"
+
+
+def test_sealed_executable_catalog_and_resolver_parity():
+    import dataclasses
+
+    from scripts.review.reviewer_resolver import _SEALED_REVIEW_EXECUTABLE, _hard_exclusion_reason
+
+    assert _SEALED_REVIEW_EXECUTABLE == "agent_runtime.runner:invoke_inter_agent"
+    for name, candidate in REVIEW_CANDIDATES.items():
+        if candidate.formal_review_eligible:
+            assert candidate.sealed_executable == _SEALED_REVIEW_EXECUTABLE, (
+                f"{name} sealed_executable {candidate.sealed_executable!r} != {_SEALED_REVIEW_EXECUTABLE!r}"
+            )
+            # Normal inputs pass sealed_executable hard exclusion
+            inputs = ResolverInputs(
+                author_model="gemini",
+                risk="medium",
+                formal_review=True,
+                review_profile="code",
+            )
+            reason = _hard_exclusion_reason(candidate, inputs)
+            assert reason != "candidate is not bound to the sealed ACP executable"
+
+            # Tampered executable is rejected
+            mismatched = dataclasses.replace(candidate, sealed_executable="other.module:func")
+            assert _hard_exclusion_reason(mismatched, inputs) == "candidate is not bound to the sealed ACP executable"

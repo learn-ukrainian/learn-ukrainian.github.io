@@ -32,8 +32,8 @@ AGY **is** an orchestrator seat for fleet-comms (#5512):
 | Deep escalate | `gemini-3.8-flash-high` @ high | Same SKU escalation (`orchestrator_seats.agy`) |
 | Sealed formal CF *reviewer* | — | **Blocked** until isolation proof (#5555) |
 
-When AGY orchestrates, it **requests** CF via `review-pr`
-(codex|claude|glm|grok). It must not treat `ask-agy --review` as sealed formal CF.
+When AGY orchestrates, it **requests** CF via direct `ask-<lane> --type review`
+(codex|claude|glm|grok; sealed `review-pr` removed in #8520). It must not treat `ask-agy --review` as sealed formal CF.
 
 ## Live lane (non-formal / orchestrator)
 
@@ -47,9 +47,9 @@ When AGY orchestrates, it **requests** CF via `review-pr`
 ## Substitute formal CF
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm
+# Direct ask-* cross-family review (replaces removed review-pr):
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - --type review --pr <N> --task-id review-<N> < prompt.md
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --type review --pr <N> --task-id review-<N> < prompt.md
 ```
 
 ## Flip criteria (do not skip)

@@ -397,7 +397,7 @@ class CandidateResult:
 
     @property
     def sealed_executable(self) -> str:
-        """Canonical review-pr execution boundary that invokes the participant."""
+        """Canonical sealed execution boundary that invokes the participant."""
         endpoint = _MODEL_CATALOG["review_scheduler"]["endpoints"].get(self.route, {})
         return str(endpoint.get("sealed_executable", ""))
 

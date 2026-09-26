@@ -3821,3 +3821,29 @@ def test_codex_npm_user_prefix_install_is_a_trusted_reviewer_root(
     )
 
     assert resolved == real.resolve()
+
+
+def test_create_review_temp_root_behavior_and_sentinel(tmp_path: Path, monkeypatch) -> None:
+    """Show create_review_temp_root creates sentinel-marked private roots for
+    review and custom prefixes without LU_FORMAL_SHIELDED_CF."""
+    from scripts.review.isolation import (
+        REVIEW_TEMP_ROOT_MARKER_NAME,
+        REVIEW_TEMP_ROOT_PREFIXES,
+        create_review_temp_root,
+        remove_review_temp_tree,
+    )
+
+    # Ensure LU_FORMAL_SHIELDED_CF is unset
+    monkeypatch.delenv("LU_FORMAL_SHIELDED_CF", raising=False)
+
+    for prefix in (*REVIEW_TEMP_ROOT_PREFIXES, "custom-prefix-"):
+        root = create_review_temp_root(prefix=prefix, dir=tmp_path)
+        try:
+            assert root.is_dir()
+            assert root.name.startswith(prefix)
+            marker = root / REVIEW_TEMP_ROOT_MARKER_NAME
+            assert marker.is_file()
+            assert marker.stat().st_size > 0
+        finally:
+            remove_review_temp_tree(root)
+        assert not root.exists()
