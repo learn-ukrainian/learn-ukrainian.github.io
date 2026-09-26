@@ -24,7 +24,6 @@ def test_scripts_config_resolves_to_module() -> None:
     assert scripts.config.__file__.rstrip("c").endswith("scripts/config.py")
 
 
-
 def _write_yaml(path: Any, data: dict[str, Any]) -> None:
     path.write_text(yaml.dump(data), encoding="utf-8")
 
@@ -34,7 +33,7 @@ def test_happy_path_real_files() -> None:
     res = validate_fleet_taxonomy()
     assert res["ok"] is True
     assert res["areas_count"] == 9
-    assert res["epics_count"] == 21
+    assert res["epics_count"] == 20
     assert res["assignments_count"] == 9
 
 

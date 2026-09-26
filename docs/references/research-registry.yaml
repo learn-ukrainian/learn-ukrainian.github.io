@@ -78,7 +78,7 @@ records:
       Ukrainian minimal-edit prompting with a 16-category taxonomy and five
       over-correction patterns/cautions; deferred until a stream-owned implementation
       issue and a validated reviewer-prompt consumer exist.
-    content_hash: "sha256:fdf5a0b55492127e2c96873d380b67c0f8a2595f6465835785fa3eade2b883d6"
+    content_hash: "sha256:371ade61d34d1288b21a79f1d1471843e0e045890d873acad95b4fa63771044f"
     state: deferred
     provenance:
       digest: docs/references/research-digests/unlp-2026-gec-minimal-edit.md

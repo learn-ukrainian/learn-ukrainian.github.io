@@ -1051,6 +1051,57 @@ def test_next_stream_alias_resolves_via_fleet_taxonomy(monkeypatch):
     assert bad.json()["error"] == "unknown_stream"
 
 
+def test_next_rejects_retired_benchmark_alias_and_keeps_live_alias(monkeypatch):
+    from scripts.orchestration.issue_stream_audit import load_registry
+
+    monkeypatch.setattr(work_router, "_known_streams", lambda *_a, **_k: list(load_registry()))
+    _warm_next_cache()
+
+    for selector in ("benchmark-2156", "epic:4639"):
+        retired = client.get(f"/api/work/v1/next?stream={selector}")
+        assert retired.status_code == 400
+        assert retired.json()["error"] == "unknown_stream"
+        assert retired.json()["valid_streams"] == list(load_registry())
+
+    live = client.get("/api/work/v1/next?stream=infra")
+    assert live.status_code == 200, live.text
+    assert live.json()["stream"] == "infra-harness"
+
+    live_corpus = client.get("/api/work/v1/next?stream=epic:4706")
+    assert live_corpus.status_code == 200, live_corpus.text
+    assert live_corpus.json()["stream"] == "corpus-channels"
+
+
+@pytest.mark.parametrize("alias_file_state", ["missing", "malformed"])
+def test_next_diagnoses_broken_launcher_alias_file(monkeypatch, tmp_path, request, caplog, alias_file_state):
+    from scripts.orchestration import launcher_aliases
+
+    alias_file = tmp_path / "launcher_stream_aliases.tsv"
+    if alias_file_state == "malformed":
+        alias_file.write_text("infra\ttoo-few-fields\n", encoding="utf-8")
+    monkeypatch.setattr(launcher_aliases, "ALIASES_PATH", alias_file)
+    launcher_aliases.load_launcher_aliases.cache_clear()
+    request.addfinalizer(launcher_aliases.load_launcher_aliases.cache_clear)
+    _patch_known_streams(monkeypatch)
+
+    response = client.get("/api/work/v1/next?stream=infra")
+
+    assert response.status_code == 400
+    body = response.json()
+    assert body["error"] == "unknown_stream"
+    assert body["valid_streams"] == NEXT_STREAMS
+    assert "launcher_stream_aliases.tsv" in body["diagnostic"]
+    assert caplog.records
+    warning = next(record for record in caplog.records if record.levelname == "WARNING")
+    assert "launcher_stream_aliases.tsv" in warning.message
+    if alias_file_state == "missing":
+        assert "FileNotFoundError" in body["diagnostic"]
+        assert "No such file" in warning.message
+    else:
+        assert "ValueError" in body["diagnostic"]
+        assert "invalid launcher alias row 1" in warning.message
+
+
 def test_next_successful_background_refresh_resets_age(monkeypatch):
     """#6984: a kicked refresh that finishes re-warms the cache; the retry is 200."""
     import time
