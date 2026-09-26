@@ -5005,7 +5005,6 @@ def test_detached_clean_contained_tolerates_cache_only_ignored_residue(
     worktree = _detached_dispatch_worktree(repo)
     (worktree / "pkg" / "__pycache__").mkdir(parents=True)
     (worktree / "pkg" / "__pycache__" / "m.pyc").write_bytes(b"\0")
-    (worktree / "loose.pyc").write_bytes(b"\0")
     (worktree / ".pytest_cache" / "v" / "cache").mkdir(parents=True)
     (worktree / ".pytest_cache" / "v" / "cache" / "lastfailed").write_text("{}", encoding="utf-8")
     (worktree / ".ruff_cache").mkdir()
@@ -5207,6 +5206,131 @@ def test_detached_clean_contained_preserves_cache_dir_next_to_unlisted_work(
 
     assert result.action == "skipped"
     assert (worktree / "notes.pyc.txt").exists()
+
+
+def test_detached_clean_contained_preserves_staged_new_pyc(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Only status ``!!`` is tolerated: a staged ``A `` entry is the only copy of work."""
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "only-copy.pyc").write_bytes(b"only copy")
+    git(worktree, "add", "-f", "only-copy.pyc")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "only-copy.pyc").read_bytes() == b"only copy"
+
+
+def test_detached_clean_contained_preserves_untracked_file_in_venv_pycache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    target = worktree / ".venv" / "__pycache__" / "notes.txt"
+    target.parent.mkdir(parents=True)
+    target.write_text("only copy", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert target.read_text(encoding="utf-8") == "only copy"
+
+
+def test_detached_clean_contained_preserves_ignored_pyc_under_node_modules(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\nnode_modules/\n__pycache__/\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore node_modules")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    target = worktree / "node_modules" / "__pycache__" / "x.pyc"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"\0")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert target.exists()
+
+
+def test_detached_clean_contained_preserves_loose_ignored_pyc_outside_pycache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n*.pyc\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore pyc")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "x.pyc").write_bytes(b"\0")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "x.pyc").exists()
+
+
+def test_detached_clean_contained_reaps_ignored_pycache_pyc(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n__pycache__/\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore pycache")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "__pycache__").mkdir()
+    (worktree / "__pycache__" / "m.cpython-313.pyc").write_bytes(b"\0")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "removed", result.reason
+    assert not worktree.exists()
+
+
+def test_detached_clean_contained_reaps_ignored_toplevel_pytest_cache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n.pytest_cache/\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore pytest cache")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / ".pytest_cache" / "v").mkdir(parents=True)
+    (worktree / ".pytest_cache" / "v" / "x").write_text("{}", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "removed", result.reason
+    assert not worktree.exists()
+
+
+def test_detached_clean_contained_preserves_when_git_status_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    real_run = rw._run
+
+    def failing_status(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[:2] == ["git", "status"] and "--ignored" in args:
+            return subprocess.CompletedProcess(args, 128, stdout="", stderr="fatal: boom")
+        return real_run(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", failing_status)
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
 
 
 def test_detached_clean_contained_preserves_tracked_change_to_a_cache_named_file(

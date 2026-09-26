@@ -2089,25 +2089,35 @@ def _terminal_dispatch_reason(
 # Tool-regenerated caches a worker leaves behind. They are the only paths a
 # clean detached checkout may hold and still be reaped; everything else,
 # ``.venv/`` and ``node_modules/`` included, may hold an only copy of work.
-_REGENERABLE_CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"})
+_PYCACHE_DIR = "__pycache__"
+_TOPLEVEL_CACHE_PREFIXES = (".pytest_cache/", ".ruff_cache/", ".mypy_cache/")
+_ENV_DIRS = frozenset({".venv", "node_modules"})
 
 _DETACHED_CLEAN_CONTAINED_PREFIX = "detached clean contained"
 
 
 def _is_regenerable_cache_path(path: str) -> bool:
-    """True for a ``.pyc`` file or any path inside a known cache directory."""
+    """True for a path inside a ``__pycache__/`` or a top-level tool cache.
+
+    Any ``.venv`` or ``node_modules`` segment disqualifies the path, and a loose
+    ``*.pyc`` outside ``__pycache__/`` is not a cache. A hand-made file placed
+    inside an ignored cache directory is treated as disposable (documented
+    residual in the worktree-cleanup runbook).
+    """
     segments = path.split("/")
-    return segments[-1].endswith(".pyc") or bool(_REGENERABLE_CACHE_DIRS.intersection(segments[:-1]))
+    if _ENV_DIRS.intersection(segments):
+        return False
+    return _PYCACHE_DIR in segments or path.startswith(_TOPLEVEL_CACHE_PREFIXES)
 
 
 def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:
-    """True only when every path git lists in ``path`` is a regenerable cache.
+    """True only when every entry git lists in ``path`` is an ignored regenerable cache.
 
-    Deliberately stricter than :func:`_worktree_clean`: tracked changes,
-    untracked and ignored paths all count, and no directory is tolerated
-    wholesale (``.venv/`` and ``node_modules/`` included), so the answer never
-    depends on ``.gitignore`` or ``info/exclude`` contents. A git failure is
-    not proof, so it reads as "not disposable".
+    Deliberately stricter than :func:`_worktree_clean`: only status ``!!``
+    (ignored) is tolerated, so any staged, modified, renamed or untracked entry
+    preserves the tree, and the cache allowlist is fixed rather than read from
+    ``.gitignore`` or ``info/exclude``. A git failure is not proof, so it reads
+    as "not disposable".
     """
     status = _run(
         ["git", "status", "--porcelain=v1", "-z", "--ignored", "--untracked-files=all"],
@@ -2116,17 +2126,11 @@ def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = N
     )
     if status.returncode != 0:
         return False
-    entries = iter((status.stdout or "").split("\0"))
-    for entry in entries:
+    for entry in (status.stdout or "").split("\0"):
         if not entry:
             continue
-        # ``XY <path>``; a rename or copy is followed by its origin path.
-        if len(entry) < 4 or entry[2] != " ":
-            return False
-        paths = [entry[3:]]
-        if "R" in entry[:2] or "C" in entry[:2]:
-            paths.append(next(entries, ""))
-        if not all(_is_regenerable_cache_path(p) for p in paths):
+        # ``XY <path>``; rename/copy entries carry a status other than ``!!``.
+        if not entry.startswith("!! ") or not _is_regenerable_cache_path(entry[3:]):
             return False
     return True
 

@@ -206,14 +206,16 @@ disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
 
 - it is exactly `.worktrees/dispatch/<agent>/<task>/` with a detached HEAD,
   and is not an ACP runtime worktree;
-- `git status --porcelain=v1 --ignored --untracked-files=all` lists nothing
-  except regenerable caches: a path with a `__pycache__/`, `.pytest_cache/`,
-  `.ruff_cache/` or `.mypy_cache/` directory segment, or a `*.pyc` file. The
-  allowlist is fixed and covers tracked-modified, untracked and ignored paths
-  alike; it never consults `.gitignore` or `info/exclude`. Nothing else is
-  tolerated, so any file under `.venv/` or `node_modules/` (ignored or not),
-  any other ignored file (for example under `data/`), and any tracked or
-  untracked change preserves it;
+- `git status --porcelain=v1 -z --ignored --untracked-files=all` succeeds and
+  every entry is an **ignored** (`!!`) regenerable cache: a path with a
+  `__pycache__/` directory segment, or one under a top-level `.pytest_cache/`,
+  `.ruff_cache/` or `.mypy_cache/`. Any staged, modified, renamed or untracked
+  entry preserves the checkout, as does any path with a `.venv` or
+  `node_modules` segment (even inside a `__pycache__/`) and a loose `*.pyc`
+  outside `__pycache__/`. The allowlist is fixed and never consults
+  `.gitignore` or `info/exclude`; a git failure preserves. Documented residual:
+  a hand-made file placed inside an ignored `__pycache__/` or top-level cache
+  directory is treated as disposable;
 - HEAD is an ancestor of `origin/main` or contained in some
   `refs/remotes/origin/*` ref (no age threshold, no task record needed);
 - it is not locked, no live process has its working directory inside it, and
