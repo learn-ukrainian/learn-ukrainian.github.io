@@ -767,6 +767,8 @@ def test_streams_loader_derives_public_membership_and_strips_private_index():
             "multi_homed": [],
             "pending_native_link": [],
             "ok": True,
+            "membership_complete": True,
+            "incomplete_nodes": [],
             "effective_membership": {
                 "6001": {
                     "epics": [6900],
@@ -818,6 +820,8 @@ def test_streams_loader_allowlists_derived_and_preset_membership():
             ],
             "pending_native_link": [],
             "ok": True,
+            "membership_complete": True,
+            "incomplete_nodes": [],
             "effective_membership": {
                 "6001": {
                     "epics": [6900],
@@ -893,6 +897,54 @@ def test_streams_loader_allowlists_derived_and_preset_membership():
     assert by_id[_wid(6001)]["projections"]["stream"]["streams"] == ["infra-harness"]
     assert by_id[_wid(6004)]["projections"]["stream"]["streams"] == ["infra-harness"]
     assert "bogus-stream" not in json.dumps(projection)
+
+
+def test_streams_default_loader_drops_membership_from_incomplete_or_unflagged_audit(monkeypatch):
+    """An incomplete or pre-flag audit keeps ``ok`` visible and publishes no membership map."""
+    from scripts.orchestration import issue_stream_audit as audit
+    from scripts.work.sources_public import fetch_streams_projection
+
+    incomplete = {
+        "generated_at": 1,
+        "open_total": 2,
+        "ok": False,
+        "streams": {"infra-harness": [10]},
+        "orphans": [],
+        "multi_homed": [],
+        "pending_native_link": [],
+        "membership_complete": False,
+        "incomplete_nodes": [20],
+        "warnings": [{"code": "traversal_incomplete", "issue": 20}],
+        "effective_membership": {
+            "500": {
+                "epics": [10],
+                "streams": ["infra-harness"],
+                "via": "body",
+                "unique_stream": True,
+            }
+        },
+        "open_issue_numbers": [10, 500],
+        "open_stream_membership": {"500": ["infra-harness"]},
+    }
+    monkeypatch.setattr(audit, "read_cache", lambda max_age_s: incomplete)
+    monkeypatch.setattr(audit, "read_refresh_state", audit._default_refresh_state)
+
+    section = fetch_streams_projection()
+    assert section.payload["ok"] is False
+    assert "open_stream_membership" not in section.payload
+    assert "effective_membership" not in section.payload
+    assert "500" not in json.dumps(section.payload)
+
+    unflagged = {
+        key: value
+        for key, value in incomplete.items()
+        if key not in {"membership_complete", "incomplete_nodes", "warnings"}
+    }
+    unflagged["ok"] = True
+    monkeypatch.setattr(audit, "read_cache", lambda max_age_s: unflagged)
+    unflagged_section = fetch_streams_projection()
+    assert "open_stream_membership" not in unflagged_section.payload
+    assert "500" not in json.dumps(unflagged_section.payload)
 
 
 # ---------------------------------------------------------------------------
@@ -1274,9 +1326,13 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
     monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
     monkeypatch.setattr(work_router, "NEXT_MAX_STALE_S", 1.0)
     for name in (
-        "preload_all", "install_signal_logging", "ensure_broker_db_ready",
-        "seed_manifest_inventory", "warm_projection_cache",
-        "start_periodic_refresh", "stop_periodic_refresh",
+        "preload_all",
+        "install_signal_logging",
+        "ensure_broker_db_ready",
+        "seed_manifest_inventory",
+        "warm_projection_cache",
+        "start_periodic_refresh",
+        "stop_periodic_refresh",
     ):
         monkeypatch.setattr(api_main, name, Mock())
     monkeypatch.setattr(api_main.isa, "schedule_refresh", Mock())
