@@ -17,8 +17,6 @@ from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, digest
 from learn_ukrainian_v4_runtime.provenance import verify_current_identity
 from test_v4_installed_release import REPO_ROOT
 
-pytest_plugins = ("test_v4_installed_release",)
-
 POLICY_RAW_SHA256 = "847f14c4ef30ed1755612eef0614bcf606de2967b1ae6ac5c0ede2ade2b4ce72"
 PROFILE_RAW_SHA256 = "462d73fefcc49a22776d4f2fe071146e7759f2184779d2ecc1325302f1a81088"
 

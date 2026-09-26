@@ -30,6 +30,16 @@ VENV_PYTHON = Path(
         main_checkout_root(PROJECT_ROOT) / ".venv" / "bin" / "python",
     )
 )
+
+
+@pytest.fixture(autouse=True)
+def isolate_systemd_user_manager(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Never let lifecycle tests control the host's real user units."""
+    fake = tmp_path / "systemctl-not-found"
+    fake.write_text("#!/bin/sh\nif [ \"$1\" = --user ] && [ \"$2\" = show ]; then echo not-found; fi\n")
+    fake.chmod(0o755)
+    monkeypatch.setenv("SVC_SYSTEMCTL_BIN", str(fake))
+
 def find_free_port() -> int:
     """Find a free TCP port on localhost."""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

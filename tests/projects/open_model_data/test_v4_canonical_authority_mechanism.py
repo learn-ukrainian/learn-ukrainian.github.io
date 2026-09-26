@@ -73,9 +73,6 @@ def _owned_resources(pg_cluster, built_wheel, monkeypatch):
     monkeypatch.setitem(globals(), "_OWNED_WHEEL", built_wheel)
 
 
-pytest_plugins = ("test_v4_protected_parent_mechanism",)
-
-
 def _run_author_via_runner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[dict[str, Any], dict[str, Any]]:
     """Compatibility helper now produces actual parent-owned PG observations."""
     from _v4_packaged_runtime_fixture import produce_author_record
