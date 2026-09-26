@@ -6,7 +6,7 @@ Approved layout for bulk sources, active SQLite, and agent-safe fallbacks.
 
 | Role | Location | Notes |
 | --- | --- | --- |
-| Active SQLite | Repository `data/sources.db` | **Always local.** Never open from SMB/network FS. Sources MCP reads this file only. |
+| Active SQLite | Repository `data/sources.db` | **Always on a local filesystem.** On the Linux service host, repository `data/` moves to the attached volume at the same path; never open from SMB/network FS. Sources MCP reads this file only. |
 | Bulk raw sources (primary) | Windows NTFS share **UkrainianData** → `raw-sources/learn-ukrainian-data` | Full materialized mirror. Mac mounts as `/Volumes/UkrainianData/…` when available. |
 | Bulk raw sources (fallback) | Google Drive File Provider `My Drive/Projects/learn-ukrainian-data` | On-demand retrieval when SMB is absent. |
 | Mac working set | Git repo + active DBs + small shards | Keep hot runtime artifacts local. |
@@ -15,6 +15,38 @@ Approved layout for bulk sources, active SQLite, and agent-safe fallbacks.
 **Marker-valid bulk root:** top-level directories `literary_texts/` and
 `textbook_chunks/` must both exist. Ambiguous multi-match roots are treated as
 unavailable (no guessing).
+
+## Linux repository data volume (#8804)
+
+The migration window moves the entire repository `data/` tree to a 40 GB
+Hetzner Cloud Volume and bind-mounts it back at `<repo>/data`. Application paths
+stay the same, and SQLite remains on a local filesystem. The Mac and hosts
+before migration have no `/etc/learn-ukrainian/data-volume.uuid` file.
+
+Before writing the UUID marker, make `/etc/learn-ukrainian` searchable by the
+service user (for example, mode 0755 or membership in its access group) and
+make the marker readable by that user. An unreadable marker or parent refuses
+service starts with exit 78. After the volume and bind mount are verified, the
+driver restarts the four listener services; a guard refusal does not retry
+automatically. Restart any timer service that failed before the mount as well.
+
+Once the UUID file exists, `scripts/storage/data_volume_guard.sh` checks the
+UUID reported by `findmnt -no UUID,SOURCE -T <repo>/data`. It exits 78 if the
+mount is absent, unreadable, or from a different volume. `services.sh`
+checks before `start`, `restart`, and `fix` on both systemd and direct-process
+paths; `status` prints the observed `data: volume <uuid>` or
+`data: root disk` (and `data: unknown` if mount identity cannot be read).
+The eight systemd user-service drop-ins in `packaging/systemd/dropins/` wrap
+each original `ExecStart` with the same guard and set
+`RestartPreventExitStatus=78`. This covers four loopback listeners and all
+four timer-triggered services, without changing the timer files. Preview
+the rendered `/etc/systemd/user/` files with
+`<primary-checkout>/.venv/bin/python scripts/storage/install_data_volume_dropins.py`;
+the driver runs `--apply` from the primary checkout during the migration window,
+then reloads the user manager. `--apply` refuses dispatch worktrees. The
+installer does not mount, move data, reload, or start services. The reporter
+drop-in uses the resolved primary checkout for its guard, command, and working
+directory.
 
 ## Agent / developer commands (Mac)
 

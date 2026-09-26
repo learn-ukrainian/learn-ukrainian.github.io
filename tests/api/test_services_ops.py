@@ -39,6 +39,20 @@ def isolate_systemd_user_manager(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     fake.write_text("#!/bin/sh\nif [ \"$1\" = --user ] && [ \"$2\" = show ]; then echo not-found; fi\n")
     fake.chmod(0o755)
     monkeypatch.setenv("SVC_SYSTEMCTL_BIN", str(fake))
+    # These lifecycle tests exercise services.sh against an absent marker,
+    # independent of the host's protected /etc configuration.
+    fake_stat = tmp_path / "stat"
+    fake_stat.write_text(
+        "#!/bin/sh\n"
+        "if [ \"$*\" = '-L -- /etc/learn-ukrainian/data-volume.uuid' ]; then\n"
+        "  echo 'stat: cannot stat UUID file: No such file or directory' >&2\n"
+        "  exit 1\n"
+        "fi\n"
+        "exec /usr/bin/stat \"$@\"\n",
+        encoding="utf-8",
+    )
+    fake_stat.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{tmp_path}:{os.environ['PATH']}")
 
 def find_free_port() -> int:
     """Find a free TCP port on localhost."""
@@ -203,6 +217,13 @@ def _patch_script_pids_dir(script_path: Path, pids_dir: Path) -> None:
         f'PIDS_DIR="{pids_dir}"',
     )
     script_path.write_text(content, encoding="utf-8")
+
+
+def _copy_data_volume_guard(script_path: Path) -> None:
+    """A copied services.sh needs the adjacent guard used by its early preflight."""
+    guard = script_path.parent / "scripts/storage/data_volume_guard.sh"
+    guard.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(PROJECT_ROOT / "scripts/storage/data_volume_guard.sh", guard)
 
 
 def test_pid_reconciliation(temp_services_sh, mock_lsof_env, tmp_path):
@@ -644,6 +665,8 @@ def test_work_status_reports_ssh_tunnel_when_health_ok(tmp_path, mock_lsof_env) 
     )
     script_path.chmod(0o755)
 
+    _copy_data_volume_guard(script_path)
+
     health = subprocess.Popen(
         [
             str(VENV_PYTHON),
@@ -708,6 +731,8 @@ def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> No
         encoding="utf-8",
     )
     script_path.chmod(0o755)
+
+    _copy_data_volume_guard(script_path)
 
     private_root = tmp_path / "private"
     (private_root / ".git").mkdir(parents=True)
