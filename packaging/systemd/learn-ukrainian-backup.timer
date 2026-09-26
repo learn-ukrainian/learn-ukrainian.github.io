@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian daily data backup timer
+
+[Timer]
+OnCalendar=*-*-* 03:30:00 UTC
+Persistent=true
+RandomizedDelaySec=15min
+Unit=learn-ukrainian-backup.service
+
+[Install]
+WantedBy=timers.target

@@ -532,7 +532,7 @@ def _item_streams(item: dict[str, Any]) -> list[str]:
     return [s for s in streams if isinstance(s, str) and s]
 
 
-def _resolve_stream_alias(stream: str, known: list[str]) -> str | None:
+def _resolve_stream_alias(stream: str, known: list[str]) -> tuple[str | None, str | None]:
     """Resolve launcher selectors first, then unambiguous taxonomy aliases.
 
     The launcher compatibility map takes precedence because taxonomy areas
@@ -541,20 +541,21 @@ def _resolve_stream_alias(stream: str, known: list[str]) -> str | None:
     """
     try:
         launcher_alias = load_launcher_aliases().get(stream)
-    except (OSError, ValueError):
-        return None
+    except (OSError, ValueError) as exc:
+        log.warning("Could not load launcher_stream_aliases.tsv: %s", exc)
+        return None, f"launcher_stream_aliases.tsv load failed ({type(exc).__name__})"
     if launcher_alias is not None:
-        return launcher_alias if launcher_alias in known else None
+        return (launcher_alias if launcher_alias in known else None), None
     if stream.startswith("infra."):
         # The launcher's generic infra.* arm resolves registry keys directly.
         key = stream.removeprefix("infra.")
-        return key if key in known else None
+        return (key if key in known else None), None
     try:
         area = resolve_area(stream)
     except FleetTaxonomyError:
-        return None
+        return None, None
     candidates = [name for name in (area.id, *area.aliases) if name in known]
-    return candidates[0] if len(candidates) == 1 else None
+    return (candidates[0] if len(candidates) == 1 else None), None
 
 
 def _next_rank_key(item: dict[str, Any]) -> tuple[int, str]:
@@ -598,19 +599,20 @@ async def work_next(
             headers={"Retry-After": str(int(NEXT_RETRY_AFTER_S))},
         )
     requested_stream = stream
+    alias_diagnostic = None
     if stream not in known:
-        aliased = _resolve_stream_alias(stream, known)
+        aliased, alias_diagnostic = _resolve_stream_alias(stream, known)
         if aliased is not None:
             stream = aliased
     if stream not in known:
-        return _next_error(
-            400,
-            {
-                "error": "unknown_stream",
-                "message": f"unknown stream {requested_stream!r}",
-                "valid_streams": known,
-            },
-        )
+        body = {
+            "error": "unknown_stream",
+            "message": f"unknown stream {requested_stream!r}",
+            "valid_streams": known,
+        }
+        if alias_diagnostic is not None:
+            body["diagnostic"] = alias_diagnostic
+        return _next_error(400, body)
 
     key = projection_cache_key({}, ctx)
     cached = cache_get_with_age(key, float("inf"))

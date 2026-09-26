@@ -959,10 +959,12 @@ def test_retired_names_are_absent_from_tracked_content() -> None:
     ).stdout.splitlines()
     for retired in RETIRED:
         assert not (REPO / retired).exists()
-        for relative in tracked:
-            path = REPO / relative
-            if path.is_file() and path.suffix not in {".png", ".jpg", ".jpeg", ".gif", ".pdf"}:
-                assert retired not in path.read_text(encoding="utf-8", errors="ignore"), relative
+    for relative in tracked:
+        path = REPO / relative
+        if path.is_file() and path.suffix not in {".png", ".jpg", ".jpeg", ".gif", ".pdf"}:
+            content = path.read_text(encoding="utf-8", errors="ignore")
+            for retired in RETIRED:
+                assert retired not in content, relative
 
 
 def test_claude_driver_injects_lane_agent_type() -> None:

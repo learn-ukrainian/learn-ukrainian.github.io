@@ -6,10 +6,11 @@ Two layers:
   driven directly with strings/dicts (no git), covering redirection, ``tee``,
   in-place edits, quoted false-positives, and the Write/Edit/apply_patch
   payload shapes.
-* **End-to-end decision** — the hook is run as a subprocess with a JSON payload
-  on stdin against a *real* git repo (primary checkout on ``main`` + a
-  registered ``.worktrees/dispatch/**`` worktree + gitignored state), asserting
-  the exit code and worktree-hint message. The decision itself is delegated to
+* **End-to-end decision** — the hook's real ``main`` receives JSON on stdin
+  against a fresh git repo per case (primary checkout on ``main`` + a registered
+  ``.worktrees/dispatch/**`` worktree + gitignored state), asserting the exit
+  code and worktree-hint message. Explicit subprocess cases also pin process
+  isolation. The decision itself is delegated to
   ``scripts.guardrails.worktree_containment`` (#4444); these tests prove the
   provider payloads map onto it correctly.
 
@@ -20,11 +21,15 @@ Only module-level defs run on import (``main`` is ``__main__``-guarded).
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import os
+import shutil
 import subprocess
 import sys
+from contextlib import chdir, redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -183,10 +188,10 @@ def _python() -> str:
     return sys.executable
 
 
-@pytest.fixture
-def repo(tmp_path: Path) -> Path:
-    """Primary checkout on ``main`` + a dispatch worktree + gitignored state."""
-    main = tmp_path / "main"
+@pytest.fixture(scope="module")
+def repo_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Immutable Git fixture; each case receives its own copied checkout."""
+    main = tmp_path_factory.mktemp("guard-repo-template") / "main"
     main.mkdir()
     _git(main, "init", "-q", "-b", "main")
     _git(main, "config", "user.email", "test@example.com")
@@ -202,16 +207,32 @@ def repo(tmp_path: Path) -> Path:
     return main
 
 
+@pytest.fixture
+def repo(tmp_path: Path, repo_template: Path) -> Path:
+    """Fresh primary checkout and registered worktree for each case."""
+    main = tmp_path / "main"
+    shutil.copytree(repo_template, main)
+    worktree = main / ".worktrees/dispatch/claude/task-1"
+    gitdir = main / ".git/worktrees/task-1"
+    (worktree / ".git").write_text(f"gitdir: {gitdir}\n", encoding="utf-8")
+    (gitdir / "gitdir").write_text(f"{worktree / '.git'}\n", encoding="utf-8")
+    return main
+
+
 def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        [_python(), str(HOOK_PATH)],
-        input=json.dumps(payload),
-        cwd=repo,
-        check=False,
-        capture_output=True,
-        text=True,
-        env={**_clean_env(), **(env_extra or {})},
-        timeout=30,
+    # Drive the actual hook entry point with the same stdin, cwd, and env as
+    # the subprocess cases below. No parsed decision or Git state is cached.
+    stdout, stderr = io.StringIO(), io.StringIO()
+    with (
+        chdir(repo),
+        patch.dict(os.environ, {**_clean_env(), **(env_extra or {})}, clear=True),
+        patch.object(sys, "stdin", io.StringIO(json.dumps(payload))),
+        redirect_stdout(stdout),
+        redirect_stderr(stderr),
+    ):
+        returncode = hook.main()
+    return subprocess.CompletedProcess(
+        [_python(), str(HOOK_PATH)], returncode, stdout.getvalue(), stderr.getvalue()
     )
 
 
