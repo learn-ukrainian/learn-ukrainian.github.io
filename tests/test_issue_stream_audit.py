@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import textwrap
 import threading
@@ -281,7 +282,7 @@ def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
     query = calls[0][0][-1]
     assert "i100:issue(number:100){body subIssues(first:100)" in query
     assert 'i200:issue(number:200){subIssues(first:100,after:"cursor")' in query
-    assert "nodes{number subIssuesSummary{total}}" in query
+    assert "nodes{number repository{nameWithOwner} subIssuesSummary{total}}" in query
     assert {number: page["subIssues"]["nodes"][0]["number"] for number, page in pages.items()} == {100: 10, 200: 20}
 
 
@@ -1237,3 +1238,338 @@ def test_private_cache_keys_includes_open_issue_titles():
         "open_issue_numbers",
         "open_issue_titles",
     )
+
+
+# --------------------------------------------------------------------------- #
+# #8661 — PR #8660 cross-family review follow-ups: registry validation branch
+# tests, per-node traversal degradation, closed_epics upkeep warning, and the
+# research-registry adoption pointer.
+# --------------------------------------------------------------------------- #
+def _write_streams(tmp_path, body: str):
+    path = tmp_path / "issue_streams.yaml"
+    path.write_text(textwrap.dedent(body), encoding="utf-8")
+    return path
+
+
+def test_registry_rejects_non_bool_retired(tmp_path):
+    path = _write_streams(
+        tmp_path,
+        """
+        streams:
+          broken:
+            title: x
+            epics: [100]
+            retired: "soon"
+        """,
+    )
+    with pytest.raises(ValueError, match=r"broken.*retired"):
+        load_registry(path)
+
+
+def test_registry_rejects_closed_epics_outside_epic_list(tmp_path):
+    path = _write_streams(
+        tmp_path,
+        """
+        streams:
+          broken:
+            title: x
+            epics: [100]
+            closed_epics: [999]
+        """,
+    )
+    with pytest.raises(ValueError, match=r"broken.*closed epics outside"):
+        load_registry(path)
+
+
+def test_retired_stream_stays_registered_but_is_not_an_audit_root(tmp_path):
+    path = _write_streams(
+        tmp_path,
+        """
+        streams:
+          live:
+            title: x
+            epics: [100]
+          old:
+            title: y
+            epics: [200]
+            retired: true
+        """,
+    )
+    assert load_registry(path) == {"live": [100], "old": [200]}
+    assert load_registry(path, audit_only=True) == {"live": [100]}
+
+
+def test_research_registry_adoption_guidance_points_at_live_stream():
+    """The deferred GEC record must not send readers to the retired eval-harness
+    epic #4913: the #8305 decision records that "model evaluation authority now
+    lives in open-model-data #6321", so the adoption pointer is #6321."""
+    import yaml
+
+    doc = yaml.safe_load(
+        (issue_stream_audit.ROOT / "docs" / "references" / "research-registry.yaml").read_text(encoding="utf-8")
+    )
+    record = next(r for r in doc["records"] if r["id"] == "unlp-2026-gec-minimal-edit")
+    reason = record["reason"]
+    assert "#4913 is closed" not in reason
+    assert "#6321" in reason
+    live_roots = {
+        epic for epics in load_registry(issue_stream_audit.REGISTRY_PATH, audit_only=True).values() for epic in epics
+    }
+    assert 6321 in live_roots
+    assert 4913 not in live_roots
+
+
+def test_tree_membership_skips_unresolved_node_with_warning():
+    edges = {100: [10, 11]}
+
+    def fetch_batch(cursors):
+        return {number: (None if number == 10 else _page(edges.get(number, []), False)) for number in cursors}
+
+    warnings = []
+    membership = _tree_membership({100}, fetch_batch, warnings)
+    # The link itself is still membership; only the dead node's subtree is lost.
+    assert membership[100][0] == {10, 11}
+    assert warnings == [{"code": "unresolved_subissue", "issue": 10}]
+    assert "WARN: sub-issue #10 no longer resolves" in issue_stream_audit.human_summary(
+        {**classify(_issues(100, 10, 11), {"product": [100]}, membership), "warnings": warnings}
+    )
+
+
+def test_tree_membership_does_not_follow_cross_repo_child():
+    queried = []
+
+    def fetch_batch(cursors):
+        queried.append(set(cursors))
+        pages = {}
+        for number in cursors:
+            if number == 100:
+                pages[number] = {
+                    "body": "",
+                    "subIssues": {
+                        "nodes": [
+                            {"number": 10, "repository": {"nameWithOwner": "acme/repo"}},
+                            {"number": 77, "repository": {"nameWithOwner": "other/foreign"}},
+                        ],
+                        "pageInfo": {"hasNextPage": False, "endCursor": None},
+                    },
+                }
+            else:
+                pages[number] = _page([], False)
+        return pages
+
+    warnings = []
+    membership = _tree_membership({100}, fetch_batch, warnings, repo_slug="acme/repo")
+    assert membership[100][0] == {10}
+    assert warnings == [{"code": "cross_repo_subissue", "parent": 100, "issue": 77, "repository": "other/foreign"}]
+    assert all(77 not in batch for batch in queried)
+    report = classify(_issues(100, 10), {"product": [100]}, membership)
+    assert "WARN: cross-repo sub-issue other/foreign#77 under #100 not followed" in (
+        issue_stream_audit.human_summary({**report, "warnings": warnings})
+    )
+
+
+def test_subissue_batch_returns_none_for_null_node_and_scopes_repo(monkeypatch):
+    """A fake ``gh`` answering one alias with a null node: the batch must
+    return ``None`` for exactly that node and keep the others."""
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
+    calls = []
+
+    def fake_gh_json(args, *, cwd):
+        calls.append(args)
+        return {"data": {"repository": {"i100": None, "i200": _page([20], False)}}}
+
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
+    pages = issue_stream_audit._fetch_subissue_batch({100: None, 200: None})
+    assert pages[100] is None
+    assert pages[200]["subIssues"]["nodes"][0]["number"] == 20
+    # Node lookups carry their repository so cross-repo children are detectable.
+    assert "repository{nameWithOwner}" in calls[0][-1]
+
+
+def test_subissue_batch_degrades_per_node_when_batch_query_fails(monkeypatch):
+    """A ``gh api graphql`` error on the combined batch must not fail the whole
+    audit: retry each parent alone so only the poisoned node comes back None."""
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
+
+    def fake_gh_json(args, *, cwd):
+        query = args[-1]
+        if "i200:issue" in query:
+            raise RuntimeError("gh api graphql… failed: errors present")
+        return {"data": {"repository": {"i100": _page([10], False)}}}
+
+    monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
+    pages = issue_stream_audit._fetch_subissue_batch({100: None, 200: None})
+    assert pages[100]["subIssues"]["nodes"][0]["number"] == 10
+    assert pages[200] is None
+
+
+def _run_audit_fake_gh(calls, *, owner: str, name: str, open_issues: list[dict], tree: dict):
+    """``subprocess.run`` stand-in for ``run_audit`` over a native-link tree.
+
+    ``tree`` maps an issue number to a list of sub-issue node dicts, or to
+    ``None`` when that issue no longer resolves (null GraphQL node).
+    """
+
+    def _run(args, capture_output, text, timeout, cwd):
+        calls.append((tuple(args), cwd))
+        assert args[0] == "gh"
+        if args[1:3] == ["issue", "list"]:
+            return _FakeCompletedProcess(json.dumps(open_issues))
+        if args[1:3] == ["repo", "view"]:
+            return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
+        if args[1:3] == ["issue", "view"]:
+            return _FakeCompletedProcess(json.dumps({"number": int(args[3]), "state": "CLOSED"}))
+        if args[1] == "api" and args[2] == "graphql":
+            repo = {}
+            for number_text in re.findall(r"i(\d+):issue\(number:", args[-1]):
+                number = int(number_text)
+                nodes = tree.get(number, [])
+                if nodes is None:
+                    repo[f"i{number}"] = None
+                else:
+                    repo[f"i{number}"] = {
+                        "body": "",
+                        "subIssues": {
+                            "nodes": nodes,
+                            "pageInfo": {"hasNextPage": False, "endCursor": None},
+                        },
+                    }
+            return _FakeCompletedProcess(json.dumps({"data": {"repository": repo}}))
+        raise AssertionError(f"unexpected gh invocation: {args}")
+
+    return _run
+
+
+def _node(number: int, owner: str, name: str, total: int = 0, repo: str | None = None) -> dict:
+    return {
+        "number": number,
+        "repository": {"nameWithOwner": repo or f"{owner}/{name}"},
+        "subIssuesSummary": {"total": total},
+    }
+
+
+def test_run_audit_degrades_on_unresolvable_descendant(tmp_path, monkeypatch):
+    """Cold-start robustness (#8661 item 3): one descendant that no longer
+    resolves must degrade to a per-node warning, not fail the whole audit."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo(root, epics=[100])
+
+    calls = []
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _run_audit_fake_gh(
+            calls,
+            owner="acme",
+            name="repo",
+            open_issues=_issues(100, 10),
+            tree={100: [_node(10, "acme", "repo", total=1)], 10: None},
+        ),
+    )
+
+    report = run_audit(root)
+
+    assert {"code": "unresolved_subissue", "issue": 10} in report["warnings"]
+    assert report["orphans"] == []
+    assert report["ok"] is True
+    assert "WARN: sub-issue #10 no longer resolves" in issue_stream_audit.human_summary(report)
+
+
+def test_run_audit_reports_cross_repo_child_without_following_it(tmp_path, monkeypatch):
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo(root, epics=[100])
+
+    calls = []
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _run_audit_fake_gh(
+            calls,
+            owner="acme",
+            name="repo",
+            open_issues=_issues(100),
+            tree={100: [_node(77, "acme", "repo", repo="other/foreign")]},
+        ),
+    )
+
+    report = run_audit(root)
+
+    assert {
+        "code": "cross_repo_subissue",
+        "parent": 100,
+        "issue": 77,
+        "repository": "other/foreign",
+    } in report["warnings"]
+    # The foreign number was never looked up in THIS repository.
+    assert not any("i77:issue" in args[-1] for args, _cwd in calls if args[1:2] == ["api"])
+    assert report["ok"] is True
+
+
+def _make_repo_with_closed_epic(root) -> None:
+    (root / "scripts" / "config").mkdir(parents=True)
+    (root / "scripts" / "config" / "issue_streams.yaml").write_text(
+        "streams:\n  s:\n    title: s\n    epics: [100, 200]\n    closed_epics: [200]\n",
+        encoding="utf-8",
+    )
+    (root / "docs").mkdir()
+    (root / "docs" / "WORKSTREAMS.md").write_text(
+        "## Stream milestones (the focus layer)\n\n"
+        "| Stream | State | Current milestone | Done when |\n"
+        "| --- | --- | --- | --- |\n"
+        "| s | ACTIVE | No issue references | — |\n",
+        encoding="utf-8",
+    )
+
+
+def test_run_audit_warns_when_closed_epic_is_actually_open(tmp_path, monkeypatch):
+    """closed_epics is hand-maintained (#8661 item 4): a listed epic that is
+    OPEN on GitHub must warn, not silently drop out of the audit."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo_with_closed_epic(root)
+
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _run_audit_fake_gh(
+            [],
+            owner="acme",
+            name="repo",
+            open_issues=_issues(100, 200),
+            tree={100: []},
+        ),
+    )
+
+    report = run_audit(root)
+
+    assert {"code": "closed_epic_reopened", "stream": "s", "epic": 200} in report["warnings"]
+    assert "WARN: registry closed_epics lists #200 (stream s) but it is OPEN" in (
+        issue_stream_audit.human_summary(report)
+    )
+    # The hand-listed epic is still not an audit root.
+    assert report["streams"] == {"s": [100]}
+
+
+def test_run_audit_quiet_when_closed_epic_is_really_closed(tmp_path, monkeypatch):
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo_with_closed_epic(root)
+
+    monkeypatch.setattr(
+        issue_stream_audit.subprocess,
+        "run",
+        _run_audit_fake_gh(
+            [],
+            owner="acme",
+            name="repo",
+            open_issues=_issues(100),
+            tree={100: []},
+        ),
+    )
+
+    report = run_audit(root)
+
+    assert [w for w in report["warnings"] if w["code"] == "closed_epic_reopened"] == []
+    assert report["ok"] is True

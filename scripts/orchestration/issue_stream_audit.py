@@ -597,9 +597,12 @@ def _run_refresh_worker(run_id: str) -> int:
 
 
 def load_registry(path: Path = REGISTRY_PATH, *, audit_only: bool = False) -> dict[str, list[int]]:
-    """Return registered epics, optionally excluding closed audit roots.
+    """Return registered epics, optionally excluding retired/closed audit roots.
 
     The default preserves the full registry for launcher and session consumers.
+    A stream may carry ``retired: true`` to stay registered for those consumers
+    without remaining an audit root; any non-boolean ``retired`` marker is
+    rejected so a typo cannot silently change audit scope.
     """
     doc = yaml.safe_load(path.read_text(encoding="utf-8"))
     streams = doc.get("streams") or {}
@@ -608,15 +611,36 @@ def load_registry(path: Path = REGISTRY_PATH, *, audit_only: bool = False) -> di
         epics = [int(n) for n in (spec.get("epics") or [])]
         if not epics:
             raise ValueError(f"stream {key!r} has no epics")
+        retired = spec.get("retired", False)
+        if not isinstance(retired, bool):
+            raise ValueError(f"stream {key!r} has invalid retired marker")
         closed = [int(n) for n in (spec.get("closed_epics") or [])]
         if not set(closed) <= set(epics):
             raise ValueError(f"stream {key!r} has closed epics outside its epic list")
+        if retired and audit_only:
+            continue
         active_epics = [n for n in epics if n not in closed] if audit_only else epics
         if active_epics:
             registry[key] = active_epics
     if not registry:
         raise ValueError("issue_streams.yaml defines no streams")
     return registry
+
+
+def load_closed_epics(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
+    """Return {stream_key: [closed_epic_numbers]} declared via ``closed_epics``.
+
+    The list is hand-maintained, so the auditor re-checks each entry against
+    live issue state and warns when a supposedly closed epic is actually open
+    (see ``run_audit``).
+    """
+    doc = yaml.safe_load(path.read_text(encoding="utf-8"))
+    streams = doc.get("streams") or {}
+    return {
+        key: [int(n) for n in (spec.get("closed_epics") or [])]
+        for key, spec in streams.items()
+        if spec.get("closed_epics")
+    }
 
 
 def _table_cells(line: str) -> list[str]:
@@ -917,8 +941,14 @@ def _fetch_subissue_batch(
     cursors: dict[int, str | None],
     repo_root: Path = ROOT,
     body_roots: set[int] | None = None,
-) -> dict[int, dict]:
-    """Fetch one page for each parent in a bounded GraphQL alias batch."""
+) -> dict[int, dict | None]:
+    """Fetch one page for each parent in a bounded GraphQL alias batch.
+
+    Returns one entry per requested issue number; the value is ``None`` when
+    the node no longer resolves in this repository (deleted/transferred issue)
+    or its individual lookup failed, so the caller can warn and skip that node
+    instead of losing the whole audit to one bad descendant.
+    """
     owner, name = _repo_owner_name(repo_root)
     fields = []
     for number, cursor in cursors.items():
@@ -926,27 +956,45 @@ def _fetch_subissue_batch(
         body = "body " if number in (body_roots or set()) and cursor is None else ""
         fields.append(
             f"i{number}:issue(number:{number}){{{body}subIssues(first:100{after})"
-            "{nodes{number subIssuesSummary{total}} pageInfo{hasNextPage endCursor}}}"
+            "{nodes{number repository{nameWithOwner} subIssuesSummary{total}}"
+            " pageInfo{hasNextPage endCursor}}}"
         )
     query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){" + " ".join(fields) + "}}"
-    data = _gh_json(
-        ["api", "graphql", "-f", f"owner={owner}", "-f", f"name={name}", "-f", f"query={query}"],
-        cwd=repo_root,
-    )
+    try:
+        data = _gh_json(
+            ["api", "graphql", "-f", f"owner={owner}", "-f", f"name={name}", "-f", f"query={query}"],
+            cwd=repo_root,
+        )
+    except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
+        if len(cursors) <= 1:
+            return {number: None for number in cursors}
+        # Degrade per node: one poisoned descendant must not fail the batch —
+        # retry each parent on its own so only the failing node comes back None.
+        pages: dict[int, dict | None] = {}
+        for number, cursor in cursors.items():
+            pages.update(_fetch_subissue_batch({number: cursor}, repo_root, body_roots))
+        return pages
     repository = (data.get("data") or {}).get("repository") or {}
-    return {number: repository.get(f"i{number}") or {} for number in cursors}
+    return {number: repository.get(f"i{number}") for number in cursors}
 
 
 def _tree_membership(
     roots: set[int],
-    fetch_batch: Callable[[dict[int, str | None]], dict[int, dict]],
+    fetch_batch: Callable[[dict[int, str | None]], dict[int, dict | None]],
     warnings: list[dict] | None = None,
+    repo_slug: str | None = None,
 ) -> dict[int, tuple[set[int], set[int]]]:
     """Traverse native links by level, assigning descendants to their roots.
 
     A parent is fetched once even when two roots reach it. Its adjacency is
     retained so each root can independently claim a shared descendant, but
     descent stops at another registered root's subtree.
+
+    Degradation is per node: a fetched issue that comes back ``None`` (no
+    longer resolves in this repository) is skipped with a warning naming it,
+    and a child node whose ``repository.nameWithOwner`` differs from
+    ``repo_slug`` is a cross-repo sub-issue — reported as a warning, never
+    followed (its number belongs to another repository's namespace).
     """
     children: dict[int, set[int]] = {}
     child_totals: dict[int, int] = {}
@@ -967,19 +1015,35 @@ def _tree_membership(
                 issues = fetch_batch(pending)
                 next_pending = {}
                 for number, issue in issues.items():
+                    if issue is None:
+                        if warnings is not None:
+                            warnings.append({"code": "unresolved_subissue", "issue": number})
+                        children.setdefault(number, set())
+                        continue
                     if page == 0 and number in roots:
                         bodies[number] = issue.get("body") or ""
                     sub_issues = issue.get("subIssues") or {}
+                    own_children: set[int] = set()
                     for node in sub_issues.get("nodes") or []:
-                        if isinstance(node, dict) and _is_positive_int(node.get("number")):
-                            total = (node.get("subIssuesSummary") or {}).get("total")
-                            if isinstance(total, int) and total >= 0:
-                                child_totals[node["number"]] = total
-                    children.setdefault(number, set()).update(
-                        node["number"]
-                        for node in sub_issues.get("nodes") or []
-                        if isinstance(node, dict) and _is_positive_int(node.get("number"))
-                    )
+                        if not (isinstance(node, dict) and _is_positive_int(node.get("number"))):
+                            continue
+                        node_repo = (node.get("repository") or {}).get("nameWithOwner")
+                        if repo_slug and isinstance(node_repo, str) and node_repo.casefold() != repo_slug.casefold():
+                            if warnings is not None:
+                                warnings.append(
+                                    {
+                                        "code": "cross_repo_subissue",
+                                        "parent": number,
+                                        "issue": node["number"],
+                                        "repository": node_repo,
+                                    }
+                                )
+                            continue
+                        total = (node.get("subIssuesSummary") or {}).get("total")
+                        if isinstance(total, int) and total >= 0:
+                            child_totals[node["number"]] = total
+                        own_children.add(node["number"])
+                    children.setdefault(number, set()).update(own_children)
                     page_info = sub_issues.get("pageInfo") or {}
                     cursor = page_info.get("endCursor")
                     if page_info.get("hasNextPage") and cursor:
@@ -1015,7 +1079,13 @@ def _tree_membership(
 def fetch_tree_membership(
     roots: set[int], repo_root: Path = ROOT, warnings: list[dict] | None = None
 ) -> dict[int, tuple[set[int], set[int]]]:
-    return _tree_membership(roots, lambda batch: _fetch_subissue_batch(batch, repo_root, roots), warnings)
+    owner, name = _repo_owner_name(repo_root)
+    return _tree_membership(
+        roots,
+        lambda batch: _fetch_subissue_batch(batch, repo_root, roots),
+        warnings,
+        repo_slug=f"{owner}/{name}",
+    )
 
 
 def classify(
@@ -1157,7 +1227,9 @@ def run_audit(
     module's own repo instead.
     """
     root = repo_root.resolve() if repo_root is not None else ROOT
-    registry = load_registry(root / "scripts" / "config" / "issue_streams.yaml", audit_only=True)
+    registry_path = root / "scripts" / "config" / "issue_streams.yaml"
+    registry = load_registry(registry_path, audit_only=True)
+    closed_epics = load_closed_epics(registry_path)
     open_issues = fetch_open_issues(root)
     traversal_warnings: list[dict] = []
     membership = fetch_tree_membership(
@@ -1173,16 +1245,30 @@ def run_audit(
         for issue in open_issues
         if isinstance(issue.get("number"), int)
     }
+    closed_epic_numbers = {n for numbers in closed_epics.values() for n in numbers}
     issue_states, unavailable_numbers = fetch_issue_states(
-        milestone_numbers,
+        milestone_numbers | closed_epic_numbers,
         root,
         known_open_issue_numbers=open_issue_numbers,
     )
-    report["warnings"] = traversal_warnings + milestone_warnings(
-        milestone_rows,
-        issue_states,
-        unavailable_issue_numbers=unavailable_numbers,
-        max_confirmed_age_days=max_confirmed_age_days,
+    # closed_epics is hand-maintained: a listed epic that is actually OPEN on
+    # GitHub must surface as a warning instead of silently dropping out of the
+    # audit (it is excluded from audit roots above either way).
+    reopened_warnings = [
+        {"code": "closed_epic_reopened", "stream": key, "epic": number}
+        for key, numbers in sorted(closed_epics.items())
+        for number in numbers
+        if issue_states.get(number) == "OPEN"
+    ]
+    report["warnings"] = (
+        traversal_warnings
+        + reopened_warnings
+        + milestone_warnings(
+            milestone_rows,
+            issue_states,
+            unavailable_issue_numbers=unavailable_numbers,
+            max_confirmed_age_days=max_confirmed_age_days,
+        )
     )
     cache_path = root / "batch_state" / "issue_stream_audit.json"
     cache_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1442,6 +1528,19 @@ def human_summary(report: dict) -> str:
             lines.append(
                 f"WARN: native sub-issue traversal truncated at depth {warning['depth']} "
                 f"with {len(warning['frontier'])} parents still to inspect"
+            )
+        elif warning["code"] == "unresolved_subissue":
+            lines.append(f"WARN: sub-issue #{warning['issue']} no longer resolves in this repository; skipped")
+        elif warning["code"] == "cross_repo_subissue":
+            lines.append(
+                f"WARN: cross-repo sub-issue {warning['repository']}#{warning['issue']} "
+                f"under #{warning['parent']} not followed"
+            )
+        elif warning["code"] == "closed_epic_reopened":
+            lines.append(
+                f"WARN: registry closed_epics lists #{warning['epic']} "
+                f"(stream {warning['stream']}) but it is OPEN on GitHub — "
+                "update issue_streams.yaml"
             )
         elif warning["code"] == "milestone_row_marked":
             lines.append(
