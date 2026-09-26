@@ -194,11 +194,11 @@ def test_zamok_group_stores_three_entries_and_tab_sets(tmp_path):
         ]
         request = ledger.conn.execute("SELECT request_sha256 FROM responses WHERE role = 'entry' LIMIT 1").fetchone()
         cache = sqlite3.connect(tmp_path / "cache.db")
-        payload = cache.execute(
-            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
-            (request["request_sha256"],),
-        ).fetchone()[0]
-        text = bytes(payload).decode("utf-8")
+        from scripts.lexicon import ulif_raw_cache
+
+        payload = ulif_raw_cache.get(request["request_sha256"], path=ulif_raw_cache.cache_path(tmp_path / "cache.db"))
+        assert payload is not None
+        text = payload.decode("utf-8")
         assert "__VIEWSTATE" in text
         assert "/wEPDw" not in text
         differing = parse_stored(ledger, cache)
@@ -237,11 +237,11 @@ def test_invariable_duzhe_records_one_entry_and_its_tabs(tmp_path):
         digest = ledger.conn.execute("SELECT response_sha256 FROM responses WHERE role = 'entry'").fetchone()[
             "response_sha256"
         ]
-        body = cache.execute(
-            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
-            (digest,),
-        ).fetchone()[0]
-        parsed = parse_ulif_entry(bytes(body).decode("utf-8"), homonym_index=1)
+        from scripts.lexicon import ulif_raw_cache
+
+        body = ulif_raw_cache.get(digest, path=ulif_raw_cache.cache_path(tmp_path / "cache.db"))
+        assert body is not None
+        parsed = parse_ulif_entry(body.decode("utf-8"), homonym_index=1)
         tabs = [
             row["tab_kind"]
             for row in ledger.conn.execute("SELECT tab_kind FROM responses WHERE role = 'tab' ORDER BY tab_kind")
@@ -962,11 +962,9 @@ def test_walk_printed_number_mismatch_records_and_saves_group(tmp_path, monkeypa
             },
         ]
         for h_idx in (1, 2):
-            digest = f"digest{h_idx}"
-            cache.execute(
-                "INSERT INTO ulif_dictua_raw_responses (response_sha256, body) VALUES (?, ?)",
-                (digest, _html(f"ishym-entry-{h_idx}.html").encode("utf-8")),
-            )
+            body = _html(f"ishym-entry-{h_idx}.html").encode("utf-8")
+            digest = runner._sha256(body)
+            runner._store_blob(cache, digest, body, "text/html; charset=utf-8")
             ledger.conn.execute(
                 """
                 INSERT INTO register_rows (page_num, row_index, normalized_spelling, homonym_index, select_arg, stressed_headword, state, entry_sha256, created_at, updated_at)
@@ -1026,11 +1024,9 @@ def test_walk_printed_number_mismatch_retry_idempotent(tmp_path, monkeypatch):
 
         prepare_database(tmp_path / "cache.db").close()
         for h_idx in (1, 2):
-            digest = f"digest{h_idx}"
-            cache.execute(
-                "INSERT INTO ulif_dictua_raw_responses (response_sha256, body) VALUES (?, ?)",
-                (digest, _html(f"ishym-entry-{h_idx}.html").encode("utf-8")),
-            )
+            body = _html(f"ishym-entry-{h_idx}.html").encode("utf-8")
+            digest = runner._sha256(body)
+            runner._store_blob(cache, digest, body, "text/html; charset=utf-8")
             ledger.conn.execute(
                 """
                 INSERT INTO register_rows (page_num, row_index, normalized_spelling, homonym_index, select_arg, stressed_headword, state, entry_sha256, created_at, updated_at)

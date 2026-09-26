@@ -366,6 +366,10 @@
         "sha256": "412f7456d42f6adcfbc3f44157d2bbfb9d35b22b879620e258bf76ff3c2091eb"
       },
       {
+        "path": "scripts/lexicon/ulif_raw_cache.py",
+        "sha256": "acfd8d7bc8def31e9dab2a4dec86d34199055a2e4f5f191e7ca56afdfd71eda4"
+      },
+      {
         "path": "scripts/lexicon/ulp_taught_pair_extractor.py",
         "sha256": "566d9ecd75ae6d93d9028893fbcd3d2a0b5d24c950b29e3959555e0927710061"
       },

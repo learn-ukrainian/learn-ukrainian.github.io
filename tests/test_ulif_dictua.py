@@ -11,6 +11,8 @@ import pytest
 import requests
 from bs4 import BeautifulSoup
 
+from scripts.lexicon import ulif_raw_cache
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
@@ -349,7 +351,9 @@ def test_legacy_ulif_paradigm_shape_uses_the_unified_cache(tmp_path, monkeypatch
     }
     conn = sqlite3.connect(str(db_path))
     try:
-        assert conn.execute("SELECT COUNT(*) FROM ulif_dictua_raw_responses").fetchone()[0] == 2
+        assert conn.execute("SELECT 1 FROM sqlite_master WHERE name='ulif_dictua_raw_responses'").fetchone() is None
+        with ulif_raw_cache.open_cache(ulif_raw_cache.cache_path(db_path), create=False) as raw:
+            assert raw.execute("SELECT COUNT(*) FROM ulif_dictua_raw_responses").fetchone()[0] == 2
     finally:
         conn.close()
 
@@ -1131,12 +1135,6 @@ def _entry_table(conn: sqlite3.Connection, columns: str) -> None:
     conn.executescript(
         f"""
         CREATE TABLE ulif_dictua_entries ({columns});
-        CREATE TABLE ulif_dictua_raw_responses (
-            response_sha256 TEXT PRIMARY KEY,
-            body BLOB NOT NULL,
-            content_type TEXT NOT NULL DEFAULT 'text/html',
-            stored_at TEXT NOT NULL DEFAULT ''
-        );
         CREATE TABLE ulif_dictua_sections (
             id INTEGER PRIMARY KEY,
             entry_id INTEGER NOT NULL,
@@ -1163,12 +1161,6 @@ def test_snapshot_extract_restore_width_14(tmp_path):
     source.executescript(ulif_store.ULIF_DICTUA_ENTRIES_DDL)
     source.executescript(
         """
-        CREATE TABLE ulif_dictua_raw_responses (
-            response_sha256 TEXT PRIMARY KEY,
-            body BLOB NOT NULL,
-            content_type TEXT NOT NULL DEFAULT 'text/html',
-            stored_at TEXT NOT NULL DEFAULT ''
-        );
         CREATE TABLE ulif_dictua_sections (
             id INTEGER PRIMARY KEY,
             entry_id INTEGER NOT NULL,
@@ -1250,12 +1242,6 @@ def test_snapshot_extract_restore_width_8(tmp_path):
     source.executescript(_OLD_ULIF_ENTRIES)
     source.executescript(
         """
-        CREATE TABLE ulif_dictua_raw_responses (
-            response_sha256 TEXT PRIMARY KEY,
-            body BLOB NOT NULL,
-            content_type TEXT NOT NULL DEFAULT 'text/html',
-            stored_at TEXT NOT NULL DEFAULT ''
-        );
         CREATE TABLE ulif_dictua_sections (
             id INTEGER PRIMARY KEY,
             entry_id INTEGER NOT NULL,
