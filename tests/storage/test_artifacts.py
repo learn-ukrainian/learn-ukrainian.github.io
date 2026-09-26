@@ -506,7 +506,7 @@ def test_recovery_remediation_first_command_does_not_trip_recovery(repo: Path) -
     message = str(excinfo.value)
     first = re.search(r"1\. .*?`([^`]+)`", message).group(1)
     assert "scripts.storage.artifacts" not in first
-    result = subprocess.run(shlex.split(first), capture_output=True, text=True, check=False)
+    result = subprocess.run(shlex.split(first), capture_output=True, text=True, check=False, timeout=30)
     assert result.returncode == 0 and result.stdout == "{not json"
     assert message.index(first) < message.index("scripts.storage.artifacts status")
     assert message.index("mv ") < message.index("verify --group <group>")
