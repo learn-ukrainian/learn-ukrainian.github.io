@@ -8,6 +8,9 @@ import hashlib
 import io
 import json
 import os
+import re
+import shlex
+import shutil
 import signal
 import subprocess
 import sys
@@ -467,9 +470,10 @@ def test_failed_recovery_names_journal_and_remediation_for_every_command(
         assert artifacts.main(argv, repo=repo) == 1
         err = capsys.readouterr().err
         assert f"publish recovery failed for journal {journal}" in err
-        assert "remediation: inspect" in err
+        assert "remediation: every" in err
         assert "scripts.storage.artifacts status" in err and "verify --group <group>" in err
         assert f"mv {journal} {journal}.resolved" in err
+        assert "sha256sum" in err and "cat " in err
     with pytest.raises(artifacts.RecoveryError, match="remediation"):
         artifacts.publish(repo, "raw_source", "raw/source.txt", repo / "data/raw/source.txt", "test")
 
@@ -491,6 +495,81 @@ def test_recovery_prunes_journals_of_deleted_checkouts_only(
     assert f"pruned publish journal {gone} of deleted checkout {tmp_path / 'deleted-worktree'}" in (
         capsys.readouterr().err
     )
+
+
+def test_recovery_remediation_first_command_does_not_trip_recovery(repo: Path) -> None:
+    journal = artifacts._journal_path(repo, "raw_source", "raw/source.txt")
+    journal.parent.mkdir(parents=True)
+    journal.write_text("{not json", encoding="utf-8")
+    with pytest.raises(artifacts.RecoveryError) as excinfo:
+        artifacts.recover_incomplete(repo)
+    message = str(excinfo.value)
+    first = re.search(r"1\. .*?`([^`]+)`", message).group(1)
+    assert "scripts.storage.artifacts" not in first
+    result = subprocess.run(shlex.split(first), capture_output=True, text=True, check=False, timeout=30)
+    assert result.returncode == 0 and result.stdout == "{not json"
+    assert message.index(first) < message.index("scripts.storage.artifacts status")
+    assert message.index("mv ") < message.index("verify --group <group>")
+    journal.rename(journal.with_name(journal.name + ".resolved"))
+    assert artifacts.recover_incomplete(repo) == 0
+
+
+def _orphan_journal(repo: Path, owner: Path) -> Path:
+    journal = paths.artifact_store_root(repo) / ".transactions" / "orphan.json"
+    journal.parent.mkdir(parents=True, exist_ok=True)
+    artifacts._json_write(journal, {"repo": str(owner), "group": "raw_source"})
+    return journal
+
+
+def test_orphan_journal_kept_when_parent_missing_or_unreadable(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    owner = tmp_path / "unmounted" / "checkout"
+    journal = _orphan_journal(repo, owner)
+    assert artifacts.recover_incomplete(repo) == 0
+    assert journal.exists()
+    assert f"kept publish journal {journal}" in capsys.readouterr().err
+
+    readable_parent = tmp_path / "locked"
+    readable_parent.mkdir()
+    owner = readable_parent / "checkout"
+    journal = _orphan_journal(repo, owner)
+    real_access = os.access
+    monkeypatch.setattr(
+        artifacts.os, "access", lambda path, mode: False if Path(path) == readable_parent else real_access(path, mode)
+    )
+    assert artifacts.recover_incomplete(repo) == 0
+    assert journal.exists()
+    assert "unreadable" in capsys.readouterr().err
+
+
+def test_orphan_journal_pruned_when_parent_present_and_checkout_absent(repo: Path, tmp_path: Path) -> None:
+    journal = _orphan_journal(repo, tmp_path / "deleted-worktree")
+    assert artifacts.recover_incomplete(repo) == 0
+    assert not journal.exists()
+
+
+def test_orphan_journal_kept_for_live_checkout(repo: Path, tmp_path: Path) -> None:
+    live = tmp_path / "live"
+    live.mkdir()
+    journal = _orphan_journal(repo, live)
+    assert artifacts.recover_incomplete(repo) == 0
+    assert journal.exists()
+
+
+def test_orphan_journal_kept_while_worktree_still_registered(
+    repo: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    unmounted = tmp_path / "wt"
+    git(repo, "worktree", "add", "-q", "-b", "wt-branch", str(unmounted))
+    shutil.rmtree(unmounted)
+    journal = _orphan_journal(repo, unmounted)
+    assert artifacts.recover_incomplete(repo) == 0
+    assert journal.exists()
+    assert "git worktree list" in capsys.readouterr().err
+    git(repo, "worktree", "prune")
+    assert artifacts.recover_incomplete(repo) == 0
+    assert not journal.exists()
 
 
 def test_artifacts_imports_sys_plainly() -> None:
