@@ -14,6 +14,7 @@ Cyrillic scan, re-review and custom-template extensibility, and the read discipl
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import re
@@ -44,6 +45,7 @@ from scripts.review.prompts.render import (
     render_prompt,
 )
 from scripts.review.receipts import REVIEW_TOOLS
+from tests.build import test_fresh_runner as fresh_runner_tests
 from tests.build.test_fresh_e3b2 import _fake_state, _rereview_setup, _write
 from tests.build.test_fresh_e3b2 import _fixture as lesson_fixture
 from tests.build.test_fresh_plan_review import fake_verify
@@ -57,6 +59,23 @@ EXPECTED_RULE_SNIPPET = (
     "not the seat's memory of the source; never paraphrase, normalise, re-stress, translate or summarise it; "
     "an unsupported_by_source finding carries no expected."
 )
+
+
+@pytest.fixture(scope="module")
+def _runner_fixture_inputs():
+    """The engine's real ``_fixture()`` (pack, words, plan and draft, each schema-validated) built once per module."""
+    return fresh_runner_tests._fixture()
+
+
+@pytest.fixture(autouse=True)
+def _fresh_copy_of_runner_fixture(monkeypatch: pytest.MonkeyPatch, _runner_fixture_inputs) -> None:
+    """Hand every test its own deep copy of the once-built engine fixture instead of rebuilding and re-validating it."""
+    build = fresh_runner_tests._fixture
+
+    def fixture(*args, **kwargs):
+        return build(*args, **kwargs) if args or kwargs else copy.deepcopy(_runner_fixture_inputs)
+
+    monkeypatch.setattr(fresh_runner_tests, "_fixture", fixture)
 
 
 LEARNER_STATE = {"level": "a1", "core_ids": {"W-1": {"position": 1, "lesson": 1}}}
