@@ -2,11 +2,6 @@
 
 from __future__ import annotations
 
-import shutil
-import subprocess
-import tempfile
-from pathlib import Path
-
 import psycopg
 import pytest
 from learn_ukrainian_v4_runtime.operation_auth import (
@@ -16,8 +11,6 @@ from learn_ukrainian_v4_runtime.operation_auth import (
     canonical_bytes,
     parse_request,
 )
-from learn_ukrainian_v4_runtime.pg_schema import apply_pg_schema
-from psycopg.rows import dict_row
 
 
 @pytest.mark.parametrize(
@@ -48,58 +41,6 @@ def test_exact_bodies():
     assert parse_request(canonical_bytes({"schema": AUTHORIZE_SCHEMA}), execution=False) == {"schema": AUTHORIZE_SCHEMA}
     value = {"schema": EXECUTE_SCHEMA, "authorization_id": "A" * 43}
     assert parse_request(canonical_bytes(value), execution=True) == value
-
-
-@pytest.fixture(scope="module")
-def pg_cluster(tmp_path_factory):
-    root = tmp_path_factory.mktemp("v4-pg")
-    data = root / "data"
-    sock = Path(tempfile.mkdtemp(prefix="v4pg-", dir="/tmp"))
-    reported = Path(
-        subprocess.run(
-            ["pg_config", "--bindir"], check=True, capture_output=True, text=True, timeout=30
-        ).stdout.strip()
-    )
-    # CI declares server 16; a newer libpq-dev can report a different bindir.
-    binary = next((path for path in (reported, Path("/usr/lib/postgresql/16/bin")) if all((path / tool).is_file() for tool in ("initdb", "pg_ctl"))), None)
-    assert binary is not None, "install the PostgreSQL server test dependency"
-    subprocess.run(
-        [str(binary / "initdb"), "-D", str(data), "--encoding=UTF8", "--locale=C", "--auth=trust"],
-        check=True,
-        capture_output=True,
-        timeout=60,
-    )
-    subprocess.run(
-        [
-            str(binary / "pg_ctl"),
-            "-D",
-            str(data),
-            "-l",
-            str(root / "server.log"),
-            "-o",
-            f'-k {sock} -h "" -p 55439',
-            "-w",
-            "start",
-        ],
-        check=True,
-        capture_output=True,
-        timeout=60,
-    )
-    try:
-        conn = psycopg.connect(host=str(sock), port=55439, dbname="postgres", autocommit=True, row_factory=dict_row)
-        try:
-            assert apply_pg_schema(conn) == 6
-            yield conn
-        finally:
-            conn.close()
-    finally:
-        subprocess.run(
-            [str(binary / "pg_ctl"), "-D", str(data), "-m", "immediate", "-w", "stop"],
-            check=True,
-            capture_output=True,
-            timeout=60,
-        )
-        shutil.rmtree(sock)
 
 
 def test_pg_scoped_role_acl(pg_cluster):

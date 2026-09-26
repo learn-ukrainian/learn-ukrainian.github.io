@@ -16,7 +16,6 @@ from pathlib import Path
 import _v4_a7_real_slot_fixture as fx
 import _v4_synthetic_chain_fixture as base_fixture
 import pytest
-from test_v4_operation_lifecycle import prepared as prepared
 
 from scripts.fleet_comms import v4_canonical_authority_store as v4_store
 from scripts.fleet_comms.artifacts import ArtifactStore
@@ -191,16 +190,6 @@ def test_sources_echoed_lexical_argument_is_not_the_identifier() -> None:
     assert identifier.startswith("vesum:")
     assert identifier != "книга"
     assert "книга" not in identifier
-
-
-# Register the owners of every cross-module fixture explicitly. This test must
-# collect the real PostgreSQL cluster and prepared operation without depending
-# on another module's collection order.
-pytest_plugins = (
-    "test_v4_packaged_operation_boundary",
-    "test_v4_operation_lifecycle",
-    "test_v4_protected_parent_mechanism",
-)
 
 
 @pytest.fixture
