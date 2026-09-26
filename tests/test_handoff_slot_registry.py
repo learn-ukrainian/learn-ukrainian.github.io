@@ -19,6 +19,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from agents_extensions.shared.session_streams.inventory import stream_anchor_id
 from scripts.ai_agent_bridge import _channels
 from scripts.orchestration import handoff_slot_registry as registry
 
@@ -27,9 +28,15 @@ HANDOFF_IDENTITY = REPO / "scripts" / "lib" / "handoff_identity.sh"
 ALIASES = REPO / "scripts" / "config" / "launcher_stream_aliases.tsv"
 ISSUE_STREAMS = REPO / "scripts" / "config" / "issue_streams.yaml"
 
+# The live anchor epic for curriculum-upgrade, derived from the registry the launcher
+# itself reads (inventory.stream_anchor_id) so epic succession needs no test edit.
+CURRICULUM_UPGRADE_STREAM = stream_anchor_id("curriculum-upgrade", REPO)
+
 # Registry stream keys that no compatibility alias covers and no roster row backs.
 # Each must be refused, never minted (#8303).  Widening the roster or adding an alias
 # removes a key from this list; it must never be silently accepted while unregistered.
+# ``infra.curriculum-upgrade`` is not the alias (which mints the core lane); generic
+# resolution would mint claude-curriculum-upgrade, which is not a registered slot.
 UNREGISTERED_SELECTORS = (
     "atlas-practice",
     "core-quality",
@@ -37,6 +44,7 @@ UNREGISTERED_SELECTORS = (
     "infra-harness",
     "seminars-cross",
     "infra.atlas-practice",
+    "infra.curriculum-upgrade",
 )
 
 pytestmark = pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
@@ -120,6 +128,19 @@ def _minted_lanes(selectors: list[str]) -> dict[str, str]:
     return dict(line.split("\t") for line in result.stdout.splitlines())
 
 
+def _session_epic_and_lane(selectors: list[str]) -> dict[str, tuple[str, str]]:
+    """selector -> (SESSION_EPIC, lane) from the real launcher table (one bash call)."""
+    script = (
+        'source "$1"; shift; for s in "$@"; do '
+        'printf "%s\\t%s\\t%s\\n" "$s" "$(launcher_session_epic "$s")" "$(launcher_selector_lane "$s")"; '
+        "done"
+    )
+    result = _bash(script, str(HANDOFF_IDENTITY), *selectors)
+    assert result.returncode == 0, result.stderr
+    fields = (line.split("\t") for line in result.stdout.splitlines())
+    return {selector: (session_epic, lane) for selector, session_epic, lane in fields}
+
+
 def _gate(provider: str, selector: str) -> subprocess.CompletedProcess[str]:
     return _bash('source "$1"; launcher_require_registered_slot "$2" "$3"', str(HANDOFF_IDENTITY), provider, selector)
 
@@ -163,6 +184,25 @@ def test_every_alias_selector_mints_a_registered_slot_for_every_provider() -> No
         if gate[provider][lanes[selector]] != 0
     ]
     assert not refused, f"aliases mint slots the launcher gate refuses: {refused}"
+
+
+def test_alias_table_session_epic_matches_lane_except_curriculum_upgrade() -> None:
+    """Table-wide invariant: every alias row's SESSION_EPIC is its launcher lane.
+
+    SESSION_EPIC names the file-handoff directory (``.claude/<SESSION_EPIC>-epic/``), so it
+    must stay on the stream's own directory.  ``launcher_session_epic`` returns the lane only
+    when that lane re-resolves the same stream; ``curriculum-upgrade`` is the one deliberate
+    exception (lane ``core``, stream epic anchor) so its handoff stays curriculum-upgrade-epic/.
+    """
+    observed = _session_epic_and_lane(_alias_selectors())
+    assert set(observed) == set(_alias_selectors()), "an alias selector no longer resolves"
+    mismatched = [
+        (selector, session_epic, lane)
+        for selector, (session_epic, lane) in sorted(observed.items())
+        if selector != "curriculum-upgrade" and session_epic != lane
+    ]
+    assert not mismatched, f"alias rows whose SESSION_EPIC moved off their lane: {mismatched}"
+    assert observed["curriculum-upgrade"] == ("curriculum-upgrade", "core")
 
 
 def test_every_registered_slot_is_reachable_from_a_selector_for_its_provider() -> None:
@@ -278,7 +318,7 @@ def test_gate_fails_closed_when_the_registry_cannot_be_read(tmp_path: Path) -> N
 
 @pytest.mark.parametrize("provider", PROVIDERS)
 def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str) -> None:
-    """curriculum-upgrade mints <provider>-core and stream epic:7994, and keeps its handoff directory."""
+    """curriculum-upgrade mints <provider>-core and its registry anchor stream, and keeps its handoff directory."""
     lanes, gate = _gate_matrix()
     assert lanes["curriculum-upgrade"] == "core"
     assert gate[provider]["core"] == 0
@@ -291,7 +331,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str) -> None:
         "curriculum-upgrade",
     )
     assert stream.returncode == 0, stream.stderr
-    assert stream.stdout.strip() == "epic:7994"
+    assert stream.stdout.strip() == CURRICULUM_UPGRADE_STREAM
 
     session = _bash(
         'source "$1"; printf "%s|%s|%s" "$(launcher_session_epic curriculum-upgrade)" "$(launcher_session_epic harness)" "$(launcher_session_epic seminars-folk)"',
@@ -310,7 +350,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str) -> None:
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "would claim lease stream=epic:7994" in result.stdout
+    assert f"would claim lease stream={CURRICULUM_UPGRADE_STREAM}" in result.stdout
     handoff = ".claude/curriculum-upgrade-epic/CLAUDE-DRIVER-HANDOFF.md"
     assert f"session epic=curriculum-upgrade slot={provider}-core handoff={handoff}" in result.stdout
     assert "core-epic" not in result.stdout
