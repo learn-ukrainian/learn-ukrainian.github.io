@@ -320,9 +320,12 @@ checkout (preview by default; writes only with `--apply`):
 .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD" --apply --enable
 ```
 
-The units read `~/.secrets/learn-ukrainian-backup.env` via `EnvironmentFile=`
-and never log secret values: validation failures name the variable and the
-condition, not the configured value. `scripts/orchestration/run_scheduled_backup.sh`
+The units read `~/.secrets/learn-ukrainian-backup.env` via `EnvironmentFile=`.
+Validation errors name the variable and condition without its value. The
+scheduled backup wrapper replaces the configured repository value and password-file
+path in backup output before sending it to the journal or captured log. The
+retention service calls `backup-data.sh` directly, so restic error output there
+does not have that wrapper redaction. `scripts/orchestration/run_scheduled_backup.sh`
 writes `batch_state/backups/last-run.json` on success and on failure (UTC
 start/end, exit status, restic run id, snapshot count, bytes added). A failed
 run exits non-zero, and so does a failed log capture or a failed

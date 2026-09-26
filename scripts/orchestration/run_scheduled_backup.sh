@@ -70,11 +70,11 @@ write_last_run() {
   local status=$1 started=$2 finished=$3 log=$4 output=$5
   local run_id bytes_added snapshot_count temporary
 
-  run_id="$(parse_run_id "$log")"
-  bytes_added="$(parse_bytes_added "$log")"
-  snapshot_count="$(query_snapshot_count)"
+  run_id="$(parse_run_id "$log")" || return 1
+  bytes_added="$(parse_bytes_added "$log")" || return 1
+  snapshot_count="$(query_snapshot_count)" || return 1
 
-  mkdir -p "$(dirname "$output")"
+  mkdir -p "$(dirname "$output")" || return 1
   temporary="$output.tmp.$$"
   jq -n \
     --arg started "$started" \
@@ -91,9 +91,24 @@ write_last_run() {
       run_id: (if $run_id == "" then null else $run_id end),
       snapshot_count: (if $snapshot_count == "" then null else ($snapshot_count | tonumber) end),
       bytes_added: (if $bytes_added == "" then null else ($bytes_added | tonumber) end)
-    }' > "$temporary"
-  mv "$temporary" "$output"
-  chmod 600 "$output"
+    }' > "$temporary" || { rm -f "$temporary"; return 1; }
+  mv "$temporary" "$output" || { rm -f "$temporary"; return 1; }
+  chmod 600 "$output" || return 1
+}
+
+# Redact backup output once, before it reaches either the journal or the
+# captured log used to build last-run.json. Split/join replaces literal values,
+# including regex metacharacters in rclone paths, without treating them as code.
+redact_backup_output() {
+  jq -Rr --unbuffered \
+    --arg repository "${LU_BACKUP_REPOSITORY:-${RESTIC_REPOSITORY:-}}" \
+    --arg password_file "${RESTIC_PASSWORD_FILE:-}" '
+      reduce ([
+        {value: $repository, replacement: "<repository>"},
+        {value: $password_file, replacement: "<password-file>"}
+      ] | map(select(.value != "")) | sort_by(.value | length) | reverse)[] as $item
+        (. ; split($item.value) | join($item.replacement))
+    '
 }
 
 run_record() {
@@ -146,7 +161,7 @@ run_record() {
 }
 
 run_backup_and_record() {
-  local started finished log status tee_status exit_status output
+  local started finished log status redact_status tee_status exit_status output
   local -a pipe_status
 
   command -v jq >/dev/null 2>&1 ||
@@ -164,20 +179,26 @@ run_backup_and_record() {
 
   started="$(utc_now)"
   status=0
+  redact_status=0
   tee_status=0
   # pipefail makes the pipeline fail when either side fails; capture PIPESTATUS
   # in one assignment (any simple command resets it) so the receipt keeps the
   # backup's own exit status even when tee also failed.
-  "$BACKUP_SCRIPT" backup --execute 2>&1 | tee "$log" || {
+  "$BACKUP_SCRIPT" backup --execute 2>&1 | redact_backup_output | tee "$log" || {
     pipe_status=("${PIPESTATUS[@]}")
     status=${pipe_status[0]}
-    tee_status=${pipe_status[1]}
+    redact_status=${pipe_status[1]}
+    tee_status=${pipe_status[2]}
   }
   finished="$(utc_now)"
 
   # The receipt records the backup command's own status; the service exit
   # additionally fails when the log capture or the receipt write failed.
   exit_status=$status
+  if [[ "$redact_status" -ne 0 ]]; then
+    echo "ERROR: could not redact the backup log (filter exited $redact_status)." >&2
+    [[ "$exit_status" -ne 0 ]] || exit_status=1
+  fi
   if [[ "$tee_status" -ne 0 ]]; then
     echo "ERROR: could not capture the backup log (tee exited $tee_status)." >&2
     [[ "$exit_status" -ne 0 ]] || exit_status=1

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -40,11 +41,7 @@ def writer_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path]:
     project.mkdir()
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
-    environment = {
-        key: value
-        for key, value in os.environ.items()
-        if not key.startswith(("RESTIC_", "LU_BACKUP_"))
-    }
+    environment = {key: value for key, value in os.environ.items() if not key.startswith(("RESTIC_", "LU_BACKUP_"))}
     environment.update(
         {
             "PATH": f"{fake_bin}:{environment['PATH']}",
@@ -56,9 +53,7 @@ def writer_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path]:
     return environment, project, fake_bin
 
 
-def _run_wrapper(
-    environment: dict[str, str], *arguments: str
-) -> subprocess.CompletedProcess[str]:
+def _run_wrapper(environment: dict[str, str], *arguments: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["/bin/bash", str(WRAPPER), *arguments],
         check=False,
@@ -73,15 +68,13 @@ def _fake_restic(fake_bin: Path, body: str) -> None:
     _write_executable(fake_bin / "restic", body)
 
 
-def test_record_writes_success_receipt(
-    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
-) -> None:
+def test_record_writes_success_receipt(writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path) -> None:
     environment, project, fake_bin = writer_environment
     log = tmp_path / "backup.log"
     log.write_text(SUCCESS_LOG, encoding="utf-8")
     _fake_restic(
         fake_bin,
-        "#!/bin/bash\nprintf '%s\\n' '[{\"id\":\"one\"},{\"id\":\"two\"}]'\n",
+        '#!/bin/bash\nprintf \'%s\\n\' \'[{"id":"one"},{"id":"two"}]\'\n',
     )
 
     result = _run_wrapper(
@@ -134,9 +127,7 @@ def test_record_writes_failure_receipt_without_repository(
     )
 
     assert result.returncode == 0, result.stderr
-    receipt = json.loads(
-        (project / "batch_state" / "backups" / "last-run.json").read_text(encoding="utf-8")
-    )
+    receipt = json.loads((project / "batch_state" / "backups" / "last-run.json").read_text(encoding="utf-8"))
     assert receipt["exit_status"] == 1
     assert receipt["run_id"] == "20260926T033000Z-ab12cd34"
     assert receipt["snapshot_count"] is None
@@ -227,3 +218,74 @@ exit 0
 
     assert result.returncode != 0
     assert "could not write the last-run receipt" in result.stderr
+
+
+@pytest.mark.parametrize("failed_command", ["jq", "mv"])
+def test_run_fails_when_status_write_command_fails(
+    writer_environment: tuple[dict[str, str], Path, Path],
+    tmp_path: Path,
+    failed_command: str,
+) -> None:
+    environment, _project, fake_bin = writer_environment
+    last_run = tmp_path / "last-run.json"
+    fake_backup = tmp_path / "fake-backup-data.sh"
+    _write_executable(fake_backup, "#!/bin/bash\nprintf '%s\\n' 'backup succeeded'\n")
+    _fake_restic(fake_bin, "#!/bin/bash\nexit 1\n")
+    if failed_command == "jq":
+        environment["REAL_JQ"] = shutil.which("jq") or ""
+        assert environment["REAL_JQ"]
+        _write_executable(
+            fake_bin / "jq",
+            '#!/bin/bash\nif [[ "$1" == "-n" ]]; then exit 42; fi\nexec "$REAL_JQ" "$@"\n',
+        )
+    else:
+        _write_executable(fake_bin / "mv", "#!/bin/bash\nexit 42\n")
+    environment["LU_BACKUP_SCRIPT"] = str(fake_backup)
+    environment["LU_BACKUP_LAST_RUN"] = str(last_run)
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode != 0
+    assert "could not write the last-run receipt" in result.stderr
+    assert not last_run.exists()
+
+
+def test_run_redacts_repository_and_password_path_before_journal_and_receipt(
+    writer_environment: tuple[dict[str, str], Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _project, fake_bin = writer_environment
+    repository = "rclone:review.remote:/var/tmp/lu/nonexistent[review]"
+    password_file = "/tmp/secret[review].file"
+    last_run = tmp_path / "last-run.json"
+    fake_backup = tmp_path / "fake-backup-data.sh"
+    _write_executable(
+        fake_backup,
+        "#!/bin/bash\n"
+        'printf "Fatal: repository does not exist: %s\\n" "$LU_BACKUP_REPOSITORY" >&2\n'
+        'printf "Password file: %s\\n" "$RESTIC_PASSWORD_FILE"\n'
+        'printf "%s\\n" "Backup run 20260926T033000Z-ab12cd34 failed:"\n'
+        "exit 3\n",
+    )
+    _fake_restic(fake_bin, "#!/bin/bash\nexit 1\n")
+    environment.update(
+        {
+            "LU_BACKUP_SCRIPT": str(fake_backup),
+            "LU_BACKUP_LAST_RUN": str(last_run),
+            "LU_BACKUP_REPOSITORY": repository,
+            "RESTIC_PASSWORD_FILE": password_file,
+        }
+    )
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 3
+    journal_stream = result.stdout + result.stderr
+    assert repository not in journal_stream
+    assert password_file not in journal_stream
+    assert "<repository>" in journal_stream
+    assert "<password-file>" in journal_stream
+    receipt_text = last_run.read_text(encoding="utf-8")
+    assert repository not in receipt_text
+    assert password_file not in receipt_text
+    assert json.loads(receipt_text)["exit_status"] == 3

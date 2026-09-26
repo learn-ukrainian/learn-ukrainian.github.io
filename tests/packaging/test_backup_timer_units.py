@@ -19,9 +19,7 @@ RENDERED_ROOT = "/srv/learn-ukrainian"
 
 
 def _render(name: str) -> str:
-    return (PACKAGING / name).read_text(encoding="utf-8").replace(
-        "@REPO_ROOT@", RENDERED_ROOT
-    )
+    return (PACKAGING / name).read_text(encoding="utf-8").replace("@REPO_ROOT@", RENDERED_ROOT)
 
 
 def test_backup_service_contract() -> None:
@@ -58,9 +56,7 @@ def test_retention_units_run_weekly_tag_scoped_forget() -> None:
     assert "Persistent=true" in timer
 
 
-@pytest.mark.skipif(
-    shutil.which("systemd-analyze") is None, reason="systemd-analyze unavailable"
-)
+@pytest.mark.skipif(shutil.which("systemd-analyze") is None, reason="systemd-analyze unavailable")
 def test_rendered_units_pass_systemd_analyze_verify(tmp_path: Path) -> None:
     paths = []
     for name in UNITS:

@@ -1632,17 +1632,22 @@ run_init() {
 # progress, or a failed run worth inspecting). Whole runs are dropped, so a
 # retained receipt never loses a snapshot it references. An empty list or a
 # list with no completed run errors out so the caller forgets nothing.
-# Snapshot times may carry fractional seconds and a numeric offset; the offset
-# is stripped and wall time is bucketed as UTC, which only shifts bucket
-# boundaries by the offset, never which runs are complete or protected.
+# Snapshot times may carry fractional seconds and a numeric offset. Convert
+# each RFC 3339 timestamp to a UTC epoch before ordering or bucketing runs.
 # shellcheck disable=SC2016  # $daily/$run/... are jq variables, not shell.
 readonly RETENTION_PLAN_JQ='
 def run_key:
   ([.tags[]? | select(startswith("lu-run-"))][0]) // ("snapshot:" + .id);
 def epoch_seconds:
-  sub("\\.[0-9]+(Z|[+-][0-9]{2}:[0-9]{2})$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | mktime;
+  capture("^(?<base>[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2})(?:\\.(?<fraction>[0-9]+))?(?<zone>Z|[+-][0-9]{2}:[0-9]{2})$") as $timestamp
+  | (($timestamp.base + "Z" | strptime("%Y-%m-%dT%H:%M:%SZ") | mktime)
+     + ("0." + ($timestamp.fraction // "0") | tonumber)
+     - (if $timestamp.zone == "Z" then 0 else
+          (if $timestamp.zone[0:1] == "+" then 1 else -1 end)
+          * (($timestamp.zone[1:3] | tonumber) * 3600 + ($timestamp.zone[4:6] | tonumber) * 60)
+        end));
 def week_bucket:
-  (((.time | epoch_seconds) + 259200) / 604800 | floor);
+  ((.epoch + 259200) / 604800 | floor);
 def newest_per_bucket(bucket; limit):
   reduce .[] as $run ({seen: [], keep: []};
     ($run | bucket) as $value
@@ -1655,21 +1660,22 @@ def newest_per_bucket(bucket; limit):
  | group_by(.run)
  | map({
      run: .[0].run,
-     time: ([.[].time] | max),
+     time: (max_by(.time | epoch_seconds) | .time),
+     epoch: (map(.time | epoch_seconds) | max),
      complete: (any(.[]; (.tags // []) | any(. == "lu-part-complete"))
                 or (.[0].run | startswith("snapshot:"))),
      snapshots: [.[].id]
    })
- | sort_by(.time)) as $runs
+ | sort_by(.epoch)) as $runs
 | if ($runs | length) == 0 then error("snapshot list is empty") else . end
 | ([$runs[] | select(.complete)]) as $completed
 | if ($completed | length) == 0 then error("no completed backup runs in snapshot list") else . end
-| ($completed | last | .time) as $newest_completed
-| ([$runs[] | select(.time >= $newest_completed) | .run] | unique) as $protected
+| ($completed | last | .epoch) as $newest_completed
+| ([$runs[] | select(.epoch >= $newest_completed) | .run] | unique) as $protected
 | ($completed | reverse) as $newest_first
-| ($newest_first | newest_per_bucket(.time[0:10]; $daily)) as $daily_keep
+| ($newest_first | newest_per_bucket(.epoch | strftime("%Y-%m-%d"); $daily)) as $daily_keep
 | ($newest_first | newest_per_bucket(week_bucket; $weekly)) as $weekly_keep
-| ($newest_first | newest_per_bucket(.time[0:7]; $monthly)) as $monthly_keep
+| ($newest_first | newest_per_bucket(.epoch | strftime("%Y-%m"); $monthly)) as $monthly_keep
 | (($daily_keep + $weekly_keep + $monthly_keep + $protected) | unique) as $keep_runs
 | {
     keep: [$runs[] | select(.run as $r | ($keep_runs | any(. == $r)))
