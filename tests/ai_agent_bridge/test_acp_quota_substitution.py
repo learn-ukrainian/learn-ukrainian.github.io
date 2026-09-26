@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import sys
 from contextlib import contextmanager
+from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
@@ -84,6 +85,26 @@ def _non_quota_result(participant: str) -> Result:
         returncode=1,
         effort="high",
         usage_record={"failure_code": "transport_error"},
+        transport_outcome="error",
+    )
+
+
+def _typed_failure_result(participant: str, *, failure_code: str, excerpt: str) -> Result:
+    """A parser-typed failure whose bounded excerpt happens to mention quota."""
+    return Result(
+        ok=False,
+        agent=participant,
+        model=f"{participant}-model",
+        mode="read-only",
+        response="",
+        stderr_excerpt=excerpt,
+        duration_s=0.5,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=1,
+        effort="high",
+        usage_record={"failure_code": failure_code},
         transport_outcome="error",
     )
 
@@ -377,6 +398,213 @@ def test_substitution_record_survives_receipt_replay() -> None:
     assert replay.ok is True
     assert replay.substitution == substitution
     assert replay.usage_record["substitution"] == substitution
+
+
+@pytest.mark.parametrize(
+    ("failure_code", "excerpt"),
+    [
+        (
+            "acp_auth_required",
+            "acpx AUTH_REQUIRED: login required\n[acpx stderr]\nquota usage report follows",
+        ),
+        (
+            "result_invalid",
+            "unrecognized terminal stopReason schema: 'quota'\n[acpx stderr]\nquota",
+        ),
+        (
+            "acp_agent_disconnected",
+            "acpx AGENT_DISCONNECTED: connection dropped; quota state unknown",
+        ),
+        (
+            # The parser's untyped catch-all with appended stderr that mentions
+            # quota without a provider capacity phrasing is still not capacity.
+            "transport_error",
+            "acpx exec exited rc=1 despite stopReason='end_turn'\n[acpx stderr]\nsee quota docs",
+        ),
+    ],
+    ids=["auth", "schema", "network", "generic-with-bare-quota-word"],
+)
+def test_typed_non_capacity_failure_mentioning_quota_is_not_substituted(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    failure_code: str,
+    excerpt: str,
+) -> None:
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {"codex": _typed_failure_result("codex", failure_code=failure_code, excerpt=excerpt)},
+        tmp_path=tmp_path,
+    )
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id=f"typed-{failure_code}")
+
+    assert result.ok is False
+    assert invoke.call_count == 1
+    assert result.substitution is None
+    assert "ACP substitution" not in capsys.readouterr().err
+
+
+def test_typed_capacity_failure_code_substitutes(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {
+            "codex": _typed_failure_result("codex", failure_code="rate_limited", excerpt="acpx RUNTIME: throttled"),
+            "cursor": _ok_result("cursor"),
+        },
+        tmp_path=tmp_path,
+    )
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="typed-capacity-code")
+
+    assert result.ok is True
+    assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
+    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert authority.finished[0]["failure"] == {
+        "phase": "provider",
+        "code": "rate_limited",
+        "retryable": True,
+    }
+    assert "reason: rate_limited" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("overrides",),
+    [
+        ({"rate_limited": True, "transport_outcome": "rate_limited"},),
+        ({"transport_outcome": "rate_limited"},),
+    ],
+    ids=["rate-limited-flag", "rate-limited-outcome"],
+)
+def test_runner_typed_rate_limit_signals_substitute(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    overrides: dict[str, object],
+) -> None:
+    failure = _non_quota_result("codex")
+    failure = replace(failure, **overrides)
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {"codex": failure, "cursor": _ok_result("cursor")},
+        tmp_path=tmp_path,
+    )
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="typed-rl-signal")
+
+    assert result.ok is True
+    assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
+    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert "reason: rate_limited" in capsys.readouterr().err
+
+
+class _DurableAuthority:
+    """Persists jobs across runs and enforces the real idempotency rule:
+
+    a re-enqueue under an existing key must carry an identical payload, else
+    AuthorityServiceError, mirroring authority.py's _assert_job_payload.
+    """
+
+    def __init__(self, store: dict[str, object]) -> None:
+        self.store = store
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_args):
+        return None
+
+    def enqueue_request(self, *, recipient, body, sender, metadata, idempotency_key):
+        payload = {"recipient": recipient, "metadata": metadata, "body": body}
+        jobs = self.store["jobs"]
+        existing = self.store["by_key"].get(idempotency_key)
+        if existing is not None:
+            job = jobs[existing]
+            if job["payload"] != payload:
+                from scripts.fleet_comms.authority import AuthorityServiceError
+
+                raise AuthorityServiceError("idempotency_key_reused_with_different_payload")
+            return SimpleNamespace(job_id=job["job_id"], state=job["state"])
+        job_id = f"job-{len(jobs) + 1}"
+        jobs[job_id] = {"job_id": job_id, "payload": payload, "state": "queued", "result": None}
+        self.store["by_key"][idempotency_key] = job_id
+        return SimpleNamespace(job_id=job_id, state="queued")
+
+    def claim_job(self, job_id, *_args, **_kwargs):
+        if job_id in self.store.get("crash_job_ids", ()):
+            raise KeyboardInterrupt("simulated crash after the substitute was enqueued")
+        return SimpleNamespace(fence_token=1)
+
+    def get_job(self, job_id):
+        job = self.store["jobs"][job_id]
+        return SimpleNamespace(job_id=job_id, state=job["state"])
+
+    def read_job_result(self, job_id):
+        return self.store["jobs"][job_id]["result"]
+
+    def finish_job(self, job_id, *, state, result, failure, **_kwargs):
+        job = self.store["jobs"][job_id]
+        job["state"] = state
+        job["result"] = result
+        job["failure"] = failure
+
+
+def test_retry_after_crash_replays_the_stored_reason_and_completes(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Live run classifies RateLimitedError as rate_limited, enqueues the
+    substitute, then crashes. The retry replays the stored receipt and must
+    derive the same reason, or the substitute's re-enqueue under the same
+    idempotency key carries different substitution metadata and is rejected.
+    """
+    store: dict[str, object] = {"jobs": {}, "by_key": {}, "crash_job_ids": {"job-2"}}
+    invoke = _wire(
+        monkeypatch,
+        _DurableAuthority(store),
+        {
+            "codex": RateLimitedError("codex", "gpt-6-astra", "usage limit reached"),
+            "cursor": _ok_result("cursor", "cursor answer"),
+        },
+        tmp_path=tmp_path,
+    )
+
+    with pytest.raises(KeyboardInterrupt):
+        _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-crash")
+
+    # The substitute was enqueued under the live reason before the crash, and
+    # the failed seat's receipt persisted the canonical reason for replay.
+    jobs = store["jobs"]
+    assert jobs["job-2"]["payload"]["metadata"]["substitution"] == {
+        "from": "codex",
+        "to": "cursor",
+        "reason": "rate_limited",
+    }
+    receipt = json.loads(jobs["job-1"]["result"])
+    assert receipt["transport_outcome"] == "rate_limited"
+    # codex's invocation raised; the crash hit before cursor was invoked.
+    assert [call.args[0] for call in invoke.call_args_list] == ["codex"]
+    assert "reason: rate_limited" in capsys.readouterr().err
+
+    store["crash_job_ids"] = set()
+    invoke.reset_mock()
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-crash")
+
+    # No idempotency rejection: the replayed reason matched the live reason,
+    # so the substitute's payload was identical and the queued job resumed.
+    assert result.ok is True
+    assert result.response == "cursor answer"
+    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert [call.args[0] for call in invoke.call_args_list] == ["cursor"]
+    assert jobs["job-2"]["state"] == "complete"
 
 
 def test_delegate_dispatch_fallbacks_use_the_same_shared_table() -> None:

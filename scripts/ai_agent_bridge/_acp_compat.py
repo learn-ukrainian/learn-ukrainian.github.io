@@ -129,23 +129,45 @@ _FALLBACK_SUBS_PATH = REPO_ROOT / "scripts" / "config" / "agent_fallback_substit
 # Post-#8655 a provider quota/rate-limit refusal arrives as a parsed ACP error
 # whose bounded diagnostic keeps the provider's own words (e.g. "acpx RUNTIME:
 # provider quota exhausted"); the acpx parser deliberately stays schema-only,
-# so the quota signal is matched here on that excerpt with the same pattern
-# family the runner failover classifier and adapter rate-limit regexes use.
-_QUOTA_FAILURE_RE = re.compile(
-    r"rate[ _-]?limit|quota|usage limit|too many requests|"
+# so its typed failure code for such a refusal is the generic transport
+# bucket. The capacity decision here is therefore typed-first (#8499): a
+# specific parser code (auth, schema, network, permission, ...) decides the
+# class on its own and never falls back to message text — the parser may
+# append acpx stderr to the excerpt, and stderr can mention "quota" for
+# unrelated reasons. Only when there is no typed code at all, or the code is
+# the parser's untyped catch-all, does the provider's own capacity wording
+# decide, matched on the exact phrasings the adapter rate-limit regexes and
+# the runner failover classifier emit — never a bare "quota" substring.
+_PROVIDER_CAPACITY_RE = re.compile(
+    r"rate[ _-]?limit|usage limit|quota (?:exceeded|exhausted)|too many requests|"
     r"resource[_ ]?exhausted|\b429\b",
     re.IGNORECASE,
 )
+
+# Closed failure-code vocabulary (runner._SAFE_ACP_FAILURE_CODES). Only
+# "rate_limited" is a provider-capacity class; the generic buckets carry no
+# class information, so only they may fall back to the provider's wording.
+_CAPACITY_FAILURE_CODES = frozenset({"rate_limited"})
+_GENERIC_FAILURE_CODES = frozenset({"transport_error", "unknown"})
+
+
+def _result_failure_code(result: object) -> str | None:
+    usage_record = getattr(result, "usage_record", None)
+    code = usage_record.get("failure_code") if isinstance(usage_record, dict) else None
+    return str(code) if code else None
 
 
 def _quota_failure_reason(*, error: BaseException | None = None, result: object | None = None) -> str | None:
     """Return the quota/rate-limit class of one failed ask, or None.
 
-    Only provider-capacity failures count: the runner's rate-limit
-    classification (exception, result flag, transport outcome, or
-    usage-record failure code) or provider quota wording in the bounded
-    diagnostic. Timeouts, admission refusals, and parse failures never
-    substitute.
+    Only provider-capacity failures count, decided typed-first: the runner's
+    rate-limit classification (exception, result flag, transport outcome) or
+    a typed capacity failure code from the parser. A specific non-capacity
+    code (auth, schema, network, ...) is authoritative — such failures keep
+    their original behavior even when the bounded excerpt mentions quota.
+    Only with no typed code at all, or the parser's untyped catch-all bucket,
+    does the provider's own capacity wording in the excerpt decide. Timeouts,
+    admission refusals, and parse failures never substitute.
     """
     if error is not None:
         if type(error).__name__ == "RateLimitedError":
@@ -158,11 +180,10 @@ def _quota_failure_reason(*, error: BaseException | None = None, result: object 
     outcome = str(getattr(result, "transport_outcome", "") or "").casefold()
     if outcome == "rate_limited":
         return "rate_limited"
-    usage_record = getattr(result, "usage_record", None)
-    code = usage_record.get("failure_code") if isinstance(usage_record, dict) else None
-    if code == "rate_limited":
-        return "rate_limited"
-    if _QUOTA_FAILURE_RE.search(str(getattr(result, "stderr_excerpt", "") or "")):
+    code = _result_failure_code(result)
+    if code is not None and code not in _GENERIC_FAILURE_CODES:
+        return "rate_limited" if code in _CAPACITY_FAILURE_CODES else None
+    if _PROVIDER_CAPACITY_RE.search(str(getattr(result, "stderr_excerpt", "") or "")):
         return "provider_quota"
     return None
 
@@ -410,13 +431,19 @@ def _failure_metadata(
         return {"phase": "postprocess", "code": "non_evidentiary", "retryable": False}
     if outcome == "rate_limited" or bool(getattr(result, "rate_limited", False)):
         return {"phase": "provider", "code": "rate_limited", "retryable": True}
-    if _QUOTA_FAILURE_RE.search(str(getattr(result, "stderr_excerpt", "") or "")):
-        # Post-#8655 a provider quota refusal parses as a transport_error-coded
-        # result whose excerpt keeps the provider's words; record the durable
-        # failure under the capacity class the substitution decision used.
+    code = _result_failure_code(result)
+    if code in _CAPACITY_FAILURE_CODES:
         return {"phase": "provider", "code": "rate_limited", "retryable": True}
-    usage_record = getattr(result, "usage_record", None)
-    code = usage_record.get("failure_code") if isinstance(usage_record, dict) else None
+    # Post-#8655 a provider quota refusal parses into the parser's untyped
+    # catch-all whose excerpt keeps the provider's words; record the durable
+    # failure under the capacity class the substitution decision used. A
+    # specific typed code below is authoritative on its own — acpx stderr
+    # appended to the excerpt mentioning quota never reclassifies an
+    # auth/schema/network failure.
+    if (code is None or code in _GENERIC_FAILURE_CODES) and _PROVIDER_CAPACITY_RE.search(
+        str(getattr(result, "stderr_excerpt", "") or "")
+    ):
+        return {"phase": "provider", "code": "rate_limited", "retryable": True}
     if code == "protocol_output_limit":
         return {"phase": "transport", "code": code, "retryable": False}
     if code == "timeout":
@@ -801,6 +828,13 @@ def _run_single_acp_job(
                         hard_timeout=hard_timeout,
                     )
             except BaseException as exc:
+                # Persist the canonical capacity reason on the receipt (#8499):
+                # a post-crash retry replays this receipt instead of seeing the
+                # live exception, and the replayed reason must classify
+                # identically — otherwise the substitute's re-enqueue under the
+                # same idempotency key carries different substitution metadata
+                # and the authority rejects it, stranding the job.
+                capacity_reason = _quota_failure_reason(error=exc)
                 failure_receipt: dict[str, object] = {
                     "ok": False,
                     "agent": participant,
@@ -816,7 +850,7 @@ def _run_single_acp_job(
                     "effort_applied": None,
                     "harness": "acp",
                     "transport_metadata": None,
-                    "transport_outcome": "error",
+                    "transport_outcome": "rate_limited" if capacity_reason is not None else "error",
                 }
                 if substitution is not None:
                     failure_receipt["substitution"] = substitution
