@@ -19,7 +19,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from agents_extensions.shared.session_streams.inventory import stream_anchor_id
+from agents_extensions.shared.session_streams.inventory import stream_anchor_id, stream_map
 from scripts.ai_agent_bridge import _channels
 from scripts.orchestration import handoff_slot_registry as registry
 
@@ -27,10 +27,6 @@ REPO = Path(__file__).resolve().parents[1]
 HANDOFF_IDENTITY = REPO / "scripts" / "lib" / "handoff_identity.sh"
 ALIASES = REPO / "scripts" / "config" / "launcher_stream_aliases.tsv"
 ISSUE_STREAMS = REPO / "scripts" / "config" / "issue_streams.yaml"
-
-# The live anchor epic for curriculum-upgrade, derived from the registry the launcher
-# itself reads (inventory.stream_anchor_id) so epic succession needs no test edit.
-CURRICULUM_UPGRADE_STREAM = stream_anchor_id("curriculum-upgrade", REPO)
 
 # Registry stream keys that no compatibility alias covers and no roster row backs.
 # Each must be refused, never minted (#8303).  Widening the roster or adding an alias
@@ -316,8 +312,29 @@ def test_gate_fails_closed_when_the_registry_cannot_be_read(tmp_path: Path) -> N
     assert registry.main(["--slot", "claude-not-a-lane"]) == 3
 
 
+@pytest.fixture
+def curriculum_upgrade_stream() -> str:
+    """The live anchor stream for curriculum-upgrade, read from the Python inventory.
+
+    The value comes from the Python inventory reader of the same
+    ``scripts/config/issue_streams.yaml`` (``inventory.stream_anchor_id``), not the
+    launcher's own awk parser.  The two readers can disagree: the Python reader
+    returns the *smallest* epic (``sorted(set(ints))``) while the launcher's
+    ``_launcher_stream_anchor_epic`` returns the *first listed*.  They agree only
+    while the stream lists a single epic, which this fixture pins.
+    """
+    epics = stream_map(REPO)["curriculum-upgrade"]
+    assert len(epics) == 1, (
+        "curriculum-upgrade now lists multiple epics "
+        f"({epics}), so the Python-vs-launcher anchor ordering "
+        "(smallest/sorted vs first-listed) can disagree; "
+        "see issue for stream_anchor_id ordering"
+    )
+    return stream_anchor_id("curriculum-upgrade", REPO)
+
+
 @pytest.mark.parametrize("provider", PROVIDERS)
-def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str) -> None:
+def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str, curriculum_upgrade_stream: str) -> None:
     """curriculum-upgrade mints <provider>-core and its registry anchor stream, and keeps its handoff directory."""
     lanes, gate = _gate_matrix()
     assert lanes["curriculum-upgrade"] == "core"
@@ -331,7 +348,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str) -> None:
         "curriculum-upgrade",
     )
     assert stream.returncode == 0, stream.stderr
-    assert stream.stdout.strip() == CURRICULUM_UPGRADE_STREAM
+    assert stream.stdout.strip() == curriculum_upgrade_stream
 
     session = _bash(
         'source "$1"; printf "%s|%s|%s" "$(launcher_session_epic curriculum-upgrade)" "$(launcher_session_epic harness)" "$(launcher_session_epic seminars-folk)"',
@@ -350,7 +367,7 @@ def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str) -> None:
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert f"would claim lease stream={CURRICULUM_UPGRADE_STREAM}" in result.stdout
+    assert f"would claim lease stream={curriculum_upgrade_stream}" in result.stdout
     handoff = ".claude/curriculum-upgrade-epic/CLAUDE-DRIVER-HANDOFF.md"
     assert f"session epic=curriculum-upgrade slot={provider}-core handoff={handoff}" in result.stdout
     assert "core-epic" not in result.stdout
