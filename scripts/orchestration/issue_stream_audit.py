@@ -17,6 +17,14 @@ every live run; the session-setup hook and /api/state/issues-health read it.
 
 GH incident #4708: manual epic checklists rot (fixed-but-open issues, auto-closed
 issues orphaning scope). This gate makes drift visible at every cold start.
+
+Degradation & worst-case timing (#8661):
+Multi-parent GraphQL batches degrade per node upon failure. Failed parents are
+retried individually up to _MAX_SINGLE_RETRIES_PER_AUDIT = 25 calls per audit run.
+In the worst case where GitHub experiences a partial outage and all 25 singleton
+retries time out (30s each), this introduces up to 25 × 30s ≈ 12.5 minutes of delay.
+Because refreshes execute inside a detached background worker process, this worst-case
+delay never stalls interactive or foreground callers.
 """
 
 from __future__ import annotations
@@ -33,7 +41,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from datetime import date
 from pathlib import Path
 
@@ -131,12 +139,7 @@ def _default_refresh_state() -> dict:
 
 def _is_finite_epoch(val: object) -> bool:
     """True for a real (non-bool) int/float >= 0 suitable as a UTC epoch."""
-    return (
-        isinstance(val, (int, float))
-        and not isinstance(val, bool)
-        and math.isfinite(val)
-        and val >= 0
-    )
+    return isinstance(val, (int, float)) and not isinstance(val, bool) and math.isfinite(val) and val >= 0
 
 
 def _validate_refresh_state(raw: object) -> dict | None:
@@ -407,8 +410,10 @@ def _spawn_worker(run_id: str) -> bool:
         subprocess.Popen(
             [
                 _venv_python(),
-                "-m", "scripts.orchestration.issue_stream_audit",
-                "--refresh-worker", run_id,
+                "-m",
+                "scripts.orchestration.issue_stream_audit",
+                "--refresh-worker",
+                run_id,
             ],
             cwd=str(ROOT),
             stdout=subprocess.DEVNULL,
@@ -503,9 +508,7 @@ def schedule_refresh(*, force: bool = False) -> dict:
             "started_at": None,
             "last_outcome": reconciled.get("last_outcome", "none"),
             "last_outcome_at": reconciled.get("last_outcome_at"),
-            "failure_code": reconciled.get("failure_code")
-            if reconciled.get("last_outcome") == "failed"
-            else None,
+            "failure_code": reconciled.get("failure_code") if reconciled.get("last_outcome") == "failed" else None,
             # A retry is now active, so an earlier terminal failure no longer
             # has a future retry gate even though its outcome remains visible.
             "cooldown_until": None,
@@ -563,34 +566,38 @@ def _run_refresh_worker(run_id: str) -> int:
             current = _validate_refresh_state(_read_refresh_state_raw())
             if current is None or current.get("run_id") != run_id:
                 return 0
-            _write_refresh_state_atomic({
-                "schema_version": 1,
-                "run_id": None,
-                "phase": "idle",
-                "requested_at": None,
-                "started_at": None,
-                "last_outcome": "failed",
-                "last_outcome_at": fail_ts,
-                "failure_code": code,
-                "cooldown_until": fail_ts + FAILURE_COOLDOWN_S,
-            })
+            _write_refresh_state_atomic(
+                {
+                    "schema_version": 1,
+                    "run_id": None,
+                    "phase": "idle",
+                    "requested_at": None,
+                    "started_at": None,
+                    "last_outcome": "failed",
+                    "last_outcome_at": fail_ts,
+                    "failure_code": code,
+                    "cooldown_until": fail_ts + FAILURE_COOLDOWN_S,
+                }
+            )
             return 1
 
         current = _validate_refresh_state(_read_refresh_state_raw())
         if current is None or current.get("run_id") != run_id:
             return 0
         ok_ts = int(time.time())
-        _write_refresh_state_atomic({
-            "schema_version": 1,
-            "run_id": None,
-            "phase": "idle",
-            "requested_at": None,
-            "started_at": None,
-            "last_outcome": "succeeded",
-            "last_outcome_at": ok_ts,
-            "failure_code": None,
-            "cooldown_until": None,
-        })
+        _write_refresh_state_atomic(
+            {
+                "schema_version": 1,
+                "run_id": None,
+                "phase": "idle",
+                "requested_at": None,
+                "started_at": None,
+                "last_outcome": "succeeded",
+                "last_outcome_at": ok_ts,
+                "failure_code": None,
+                "cooldown_until": None,
+            }
+        )
         return 0
     finally:
         _release_lock(fd)
@@ -781,18 +788,25 @@ def milestone_warnings(
 
 
 def _gh_json(args: list[str], timeout_s: float = 30.0, *, cwd: Path = ROOT):
-    proc = subprocess.run(
-        ["gh", *args], capture_output=True, text=True, timeout=timeout_s, cwd=cwd
-    )
+    proc = subprocess.run(["gh", *args], capture_output=True, text=True, timeout=timeout_s, cwd=cwd)
     if proc.returncode != 0:
+        # gh api graphql exits 1 when GraphQL errors are present in the response
+        # (e.g. NOT_FOUND for a deleted/transferred issue), even if valid partial
+        # JSON was emitted in stdout.
+        if args[:2] == ["api", "graphql"] and proc.stdout:
+            try:
+                data = json.loads(proc.stdout)
+                if isinstance(data, dict) and "data" in data:
+                    return data
+            except ValueError:
+                pass
         raise RuntimeError(f"gh {' '.join(args[:3])}… failed: {proc.stderr.strip()[:200]}")
     return json.loads(proc.stdout)
 
 
 def fetch_open_issues(repo_root: Path = ROOT) -> list[dict]:
     return _gh_json(
-        ["issue", "list", "--state", "open", "--limit", "500",
-         "--json", "number,title"],
+        ["issue", "list", "--state", "open", "--limit", "500", "--json", "number,title"],
         cwd=repo_root,
     )
 
@@ -817,9 +831,7 @@ def fetch_issue_states(
             states[number] = "OPEN"
             continue
         try:
-            issue = _gh_json(
-                ["issue", "view", str(number), "--json", "number,state"], cwd=repo_root
-            )
+            issue = _gh_json(["issue", "view", str(number), "--json", "number,state"], cwd=repo_root)
         except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
             unavailable.add(number)
             continue
@@ -908,24 +920,33 @@ def _fetch_subissues_page(epic: int, cursor: str | None, repo_root: Path = ROOT)
     owner, name = _repo_owner_name(repo_root)
     if cursor is None:
         args = [
-            "-F", "number=" + str(epic),
-            "-f", f"owner={owner}", "-f", f"name={name}",
-            "-f", _SUBISSUES_FIRST_PAGE_QUERY,
+            "-F",
+            "number=" + str(epic),
+            "-f",
+            f"owner={owner}",
+            "-f",
+            f"name={name}",
+            "-f",
+            _SUBISSUES_FIRST_PAGE_QUERY,
         ]
     else:
         args = [
-            "-F", "number=" + str(epic),
-            "-f", f"owner={owner}", "-f", f"name={name}",
-            "-f", f"cursor={cursor}",
-            "-f", _SUBISSUES_NEXT_PAGE_QUERY,
+            "-F",
+            "number=" + str(epic),
+            "-f",
+            f"owner={owner}",
+            "-f",
+            f"name={name}",
+            "-f",
+            f"cursor={cursor}",
+            "-f",
+            _SUBISSUES_NEXT_PAGE_QUERY,
         ]
     data = _gh_json(["api", "graphql", *args], cwd=repo_root)
     return (data.get("data") or {}).get("repository", {}).get("issue") or {}
 
 
-def _paginate_subissues(
-    epic: int, fetch_page: Callable[[int, str | None], dict]
-) -> tuple[set[int], str]:
+def _paginate_subissues(epic: int, fetch_page: Callable[[int, str | None], dict]) -> tuple[set[int], str]:
     """Drive cursor pagination over ``fetch_page`` and return (native, body).
 
     ``fetch_page`` is injected so this is testable without any network or
@@ -943,7 +964,8 @@ def _paginate_subissues(
             body = issue.get("body") or ""
         sub_issues = issue.get("subIssues") or {}
         native.update(
-            n["number"] for n in (sub_issues.get("nodes") or [])
+            n["number"]
+            for n in (sub_issues.get("nodes") or [])
             if isinstance(n, dict) and isinstance(n.get("number"), int)
         )
         page_info = sub_issues.get("pageInfo") or {}
@@ -960,9 +982,7 @@ def fetch_epic_membership(epic: int, repo_root: Path = ROOT) -> tuple[set[int], 
     Native sub-issues are paginated (see ``_paginate_subissues``) so an epic
     with more than 100 children is not silently truncated to its first page.
     """
-    native, body = _paginate_subissues(
-        epic, lambda e, c: _fetch_subissues_page(e, c, repo_root)
-    )
+    native, body = _paginate_subissues(epic, lambda e, c: _fetch_subissues_page(e, c, repo_root))
     refs = {int(m) for m in ISSUE_REF_RE.findall(body)}
     return native, refs
 
@@ -977,12 +997,13 @@ def _fetch_subissue_batch(
 
     Returns one entry per requested issue number. The value is ``None`` ONLY
     when GitHub answered and the node is genuinely absent in this repository
-    (a ``null`` alias in a successful, error-free response — a deleted or
-    transferred issue), so the caller can warn and skip that node instead of
-    losing the whole audit to one bad descendant. Any fetch failure —
-    transport error, timeout, invalid JSON, or a GraphQL ``errors`` payload —
-    yields ``INCOMPLETE_NODE``: the subtree was never read, and an unread
-    subtree can hide membership the audit must not certify (#8661).
+    (a clean ``NOT_FOUND`` error on the alias or a ``null`` alias in a
+    successful response without untrusted errors — a deleted or transferred
+    issue), so the caller can warn and skip that node instead of losing the
+    whole audit to one bad descendant. Any fetch failure — transport error,
+    timeout, invalid JSON, or untrusted GraphQL errors — yields
+    ``INCOMPLETE_NODE``: the subtree was never read, and an unread subtree can
+    hide membership the audit must not certify (#8661).
 
     A failed multi-parent batch degrades per node so one poisoned descendant
     does not fail the batch: each parent is retried ONCE on its own, bounded
@@ -1009,9 +1030,8 @@ def _fetch_subissue_batch(
         )
     except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
         data = None
-    # A GraphQL ``errors`` payload (even with partial ``data``) means a ``null``
-    # alias cannot be trusted as "genuinely absent" — degrade like a failure.
-    if data is None or data.get("errors"):
+
+    if data is None:
         if len(cursors) <= 1:
             return {number: INCOMPLETE_NODE for number in cursors}
         pages: dict[int, dict | _IncompleteNode | None] = {}
@@ -1022,8 +1042,45 @@ def _fetch_subissue_batch(
             retry_budget.remaining -= 1
             pages.update(_fetch_subissue_batch({number: cursor}, repo_root, body_roots, retry_budget))
         return pages
+
+    errors = data.get("errors") or []
+    not_found_numbers: set[int] = set()
+    has_untrusted_errors = False
+    for err in errors:
+        path = err.get("path")
+        if (
+            err.get("type") == "NOT_FOUND"
+            and isinstance(path, list)
+            and len(path) == 2
+            and path[0] == "repository"
+            and isinstance(path[1], str)
+            and path[1].startswith("i")
+            and path[1][1:].isdigit()
+        ):
+            not_found_numbers.add(int(path[1][1:]))
+        else:
+            has_untrusted_errors = True
+
+    if has_untrusted_errors:
+        if len(cursors) <= 1:
+            return {number: INCOMPLETE_NODE for number in cursors}
+        pages = {}
+        for number, cursor in cursors.items():
+            if retry_budget.remaining <= 0:
+                pages[number] = INCOMPLETE_NODE
+                continue
+            retry_budget.remaining -= 1
+            pages.update(_fetch_subissue_batch({number: cursor}, repo_root, body_roots, retry_budget))
+        return pages
+
     repository = (data.get("data") or {}).get("repository") or {}
-    return {number: repository.get(f"i{number}") for number in cursors}
+    pages = {}
+    for number in cursors:
+        if number in not_found_numbers:
+            pages[number] = None
+        else:
+            pages[number] = repository.get(f"i{number}")
+    return pages
 
 
 def _tree_membership(
@@ -1069,7 +1126,9 @@ def _tree_membership(
                 next_pending = {}
                 for number, issue in issues.items():
                     if issue is INCOMPLETE_NODE:
-                        if warnings is not None:
+                        if warnings is not None and not any(
+                            w.get("code") == "traversal_incomplete" and w.get("issue") == number for w in warnings
+                        ):
                             warnings.append({"code": "traversal_incomplete", "issue": number})
                         children.setdefault(number, set())
                         continue
@@ -1104,9 +1163,22 @@ def _tree_membership(
                     children.setdefault(number, set()).update(own_children)
                     page_info = sub_issues.get("pageInfo") or {}
                     cursor = page_info.get("endCursor")
-                    if page_info.get("hasNextPage") and cursor:
-                        next_pending[number] = cursor
+                    if page_info.get("hasNextPage"):
+                        if cursor:
+                            next_pending[number] = cursor
+                        else:
+                            if warnings is not None and not any(
+                                w.get("code") == "traversal_incomplete" and w.get("issue") == number for w in warnings
+                            ):
+                                warnings.append({"code": "traversal_incomplete", "issue": number})
                 pending = next_pending
+            if pending:
+                # Pagination truncated at _MAX_SUBISSUE_PAGES with hasNextPage still true (#8661 finding 4)
+                for number in sorted(pending):
+                    if warnings is not None and not any(
+                        w.get("code") == "traversal_incomplete" and w.get("issue") == number for w in warnings
+                    ):
+                        warnings.append({"code": "traversal_incomplete", "issue": number})
         fetched.update(parents)
         frontier = {
             number
@@ -1151,6 +1223,8 @@ def classify(
     open_issues: list[dict],
     registry: dict[str, list[int]],
     membership: dict[int, tuple[set[int], set[int]]],
+    *,
+    incomplete_nodes: Collection[int] | None = None,
 ) -> dict:
     """Pure classification — unit-testable without network."""
     epic_numbers = {e for epics in registry.values() for e in epics}
@@ -1171,25 +1245,19 @@ def classify(
     # epics in the SAME stream are still two owners and must be ambiguous, not
     # silently collapsed to "one stream, therefore fine" (codex/gemini review).
     owning_epics: dict[int, set[int]] = {
-        n: (native_epics.get(n) or body_epics.get(n) or set())
-        for n in set(native_epics) | set(body_epics)
+        n: (native_epics.get(n) or body_epics.get(n) or set()) for n in set(native_epics) | set(body_epics)
     }
 
     open_numbers = {i["number"] for i in open_issues}
     titles = {i["number"]: i["title"] for i in open_issues}
 
-    orphans = sorted(
-        n for n in open_numbers if n not in epic_numbers and not owning_epics.get(n)
-    )
-    multi_homed = sorted(
-        n for n in open_numbers
-        if n not in epic_numbers and len(owning_epics.get(n, ())) > 1
-    )
+    orphans = sorted(n for n in open_numbers if n not in epic_numbers and not owning_epics.get(n))
+    multi_homed = sorted(n for n in open_numbers if n not in epic_numbers and len(owning_epics.get(n, ())) > 1)
     body_only = sorted(
-        n for n in open_numbers
-        if n not in epic_numbers and owning_epics.get(n) and n not in native_linked
+        n for n in open_numbers if n not in epic_numbers and owning_epics.get(n) and n not in native_linked
     )
     missing_epics = sorted(e for e in epic_numbers if e not in open_numbers)
+    incomplete = sorted({int(n) for n in (incomplete_nodes or ()) if _is_positive_int(n)})
 
     return {
         "generated_at": int(time.time()),
@@ -1208,16 +1276,17 @@ def classify(
         "closed_or_missing_epics": missing_epics,
         # The invariant is EXACTLY ONE EFFECTIVE EPIC — multi-homed violates it
         # (codex F1), including two epics that happen to share one stream.
-        "ok": not orphans and not missing_epics and not multi_homed,
+        # An incomplete traversal must also never report green (fail closed #8661).
+        "ok": not orphans and not missing_epics and not multi_homed and not incomplete,
+        "membership_complete": not bool(incomplete),
+        "incomplete_nodes": incomplete,
         # ADR-011 P4 private index (stripped from the public API): the exact
         # effective issue→epic membership, native winning over body refs, plus the
         # bounded open-issue set. Carries enough state to reject closed (absent
         # key), wrong (epic not in ``epics``), and ambiguous (``unique_stream``
         # false — more than one effective epic, even within one stream) ownership
         # without any live network call.
-        "effective_membership": _effective_membership(
-            epic_numbers, stream_of_epic, membership
-        ),
+        "effective_membership": _effective_membership(epic_numbers, stream_of_epic, membership),
         "open_issue_numbers": sorted(open_numbers),
         "open_issue_titles": {str(k): v for k, v in titles.items()},
     }
@@ -1294,24 +1363,24 @@ def run_audit(
     membership = fetch_tree_membership(
         {epic for epics in registry.values() for epic in epics}, root, traversal_warnings
     )
-    report = classify(open_issues, registry, membership)
-    if any(w["code"] == "traversal_incomplete" for w in traversal_warnings):
+    incomplete_nodes = sorted(
+        {
+            w["issue"]
+            for w in traversal_warnings
+            if w.get("code") == "traversal_incomplete" and _is_positive_int(w.get("issue"))
+        }
+    )
+    report = classify(open_issues, registry, membership, incomplete_nodes=incomplete_nodes)
+    if incomplete_nodes:
         # Fail closed (#8661): an unread subtree can hide a duplicate
         # membership, so an incomplete traversal must not be green even when
-        # every node we DID read classifies clean. ``ok: false`` is the status
-        # the existing consumers already treat as not-OK (the ``--check`` CLI
-        # gate exits 1 and the cold-start cache path reads this key), so no
-        # consumer change is needed.
+        # every node we DID read classifies clean.
         report["ok"] = False
+        report["membership_complete"] = False
+        report["incomplete_nodes"] = incomplete_nodes
     milestone_rows = load_milestone_rows(root / "docs" / "WORKSTREAMS.md")
-    milestone_numbers = {
-        number for row in milestone_rows for number in row["issue_numbers"]
-    }
-    open_issue_numbers = {
-        issue["number"]
-        for issue in open_issues
-        if isinstance(issue.get("number"), int)
-    }
+    milestone_numbers = {number for row in milestone_rows for number in row["issue_numbers"]}
+    open_issue_numbers = {issue["number"] for issue in open_issues if isinstance(issue.get("number"), int)}
     closed_epic_numbers = {n for numbers in closed_epics.values() for n in numbers}
     issue_states, unavailable_numbers = fetch_issue_states(
         milestone_numbers | closed_epic_numbers,
@@ -1391,9 +1460,7 @@ def _valid_membership_entry(entry: object) -> bool:
     unique = entry.get("unique_stream")
     if not isinstance(epics, list) or not epics or not all(_is_positive_int(e) for e in epics):
         return False
-    if not isinstance(streams, list) or not streams or not all(
-        isinstance(s, str) and s for s in streams
-    ):
+    if not isinstance(streams, list) or not streams or not all(isinstance(s, str) and s for s in streams):
         return False
     if via not in _VALID_VIA:
         return False
@@ -1437,6 +1504,17 @@ def validate_membership_report(report: object, max_age_s: int) -> dict | None:
         return None
     age = time.time() - generated_at
     if age > max_age_s or age < -CACHE_FUTURE_SKEW_S:
+        return None
+
+    # Completeness gate (#8661): an incomplete traversal must never certify
+    # membership proof. Reject an incomplete report for membership decisions.
+    incomplete_nodes = set()
+    if isinstance(report.get("incomplete_nodes"), list):
+        incomplete_nodes.update(n for n in report["incomplete_nodes"] if _is_positive_int(n))
+    for w in report.get("warnings") or []:
+        if isinstance(w, dict) and w.get("code") == "traversal_incomplete" and _is_positive_int(w.get("issue")):
+            incomplete_nodes.add(w["issue"])
+    if report.get("membership_complete") is False or incomplete_nodes:
         return None
 
     index = report.get("effective_membership")
@@ -1518,9 +1596,7 @@ def make_issue_resolver(report: dict) -> Callable[[str], bool]:
 
 
 def _node_id(number: int) -> str:
-    data = _gh_json([
-        "api", f"repos/{{owner}}/{{repo}}/issues/{number}", "--jq", "{node_id}"
-    ])
+    data = _gh_json(["api", f"repos/{{owner}}/{{repo}}/issues/{number}", "--jq", "{node_id}"])
     return data["node_id"]
 
 
@@ -1535,34 +1611,35 @@ def migrate(report: dict) -> int:
     ambiguous = {m["number"] for m in report.get("multi_homed", [])}
     if ambiguous:
         print(
-            "skipping ambiguous multi-homed (resolve manually): "
-            + ", ".join(f"#{n}" for n in sorted(ambiguous)),
+            "skipping ambiguous multi-homed (resolve manually): " + ", ".join(f"#{n}" for n in sorted(ambiguous)),
             file=sys.stderr,
         )
     created = 0
     for stream_key, epics in registry.items():
         for epic in epics:
             native, refs = fetch_epic_membership(epic)
-            pending = sorted(
-                refs - native - ambiguous
-                - {e for es in registry.values() for e in es}
-            )
+            pending = sorted(refs - native - ambiguous - {e for es in registry.values() for e in es})
             if not pending:
                 continue
             epic_node = _node_id(epic)
             for n in pending:
-                if n not in {x if isinstance(x, int) else x["number"]
-                             for x in report.get("pending_native_link", [])}:
+                if n not in {x if isinstance(x, int) else x["number"] for x in report.get("pending_native_link", [])}:
                     continue
                 try:
                     child_node = _node_id(n)
-                    _gh_json([
-                        "api", "graphql",
-                        "-f",
-                        "query=mutation($p:ID!,$c:ID!){addSubIssue(input:{issueId:$p,"
-                        "subIssueId:$c}){issue{number}}}",
-                        "-f", f"p={epic_node}", "-f", f"c={child_node}",
-                    ])
+                    _gh_json(
+                        [
+                            "api",
+                            "graphql",
+                            "-f",
+                            "query=mutation($p:ID!,$c:ID!){addSubIssue(input:{issueId:$p,"
+                            "subIssueId:$c}){issue{number}}}",
+                            "-f",
+                            f"p={epic_node}",
+                            "-f",
+                            f"c={child_node}",
+                        ]
+                    )
                     created += 1
                     print(f"linked #{n} → epic #{epic} ({stream_key})")
                 except RuntimeError as exc:
@@ -1571,23 +1648,15 @@ def migrate(report: dict) -> int:
 
 
 def human_summary(report: dict) -> str:
-    lines = [
-        f"open issues: {report['open_total']} · streams: {len(report['streams'])}"
-        f" · ok: {report['ok']}"
-    ]
+    lines = [f"open issues: {report['open_total']} · streams: {len(report['streams'])} · ok: {report['ok']}"]
     if report["orphans"]:
         lines.append(f"ORPHANS ({len(report['orphans'])} — no stream epic):")
         lines += [f"  #{o['number']} {o['title'][:80]}" for o in report["orphans"]]
     if report["multi_homed"]:
         lines.append(f"multi-homed ({len(report['multi_homed'])}):")
-        lines += [
-            f"  #{m['number']} in {', '.join(m['streams'])}" for m in report["multi_homed"]
-        ]
+        lines += [f"  #{m['number']} in {', '.join(m['streams'])}" for m in report["multi_homed"]]
     if report["pending_native_link"]:
-        lines.append(
-            f"pending native sub-issue link: {len(report['pending_native_link'])}"
-            " (run --migrate)"
-        )
+        lines.append(f"pending native sub-issue link: {len(report['pending_native_link'])} (run --migrate)")
     if report["closed_or_missing_epics"]:
         lines.append(f"⚠️ stream epics not open: {report['closed_or_missing_epics']}")
     for warning in report.get("warnings") or []:
@@ -1615,18 +1684,12 @@ def human_summary(report: dict) -> str:
                 "update issue_streams.yaml"
             )
         elif warning["code"] == "milestone_row_marked":
-            lines.append(
-                f"WARN: stream milestone {warning['stream']} marked {warning['marker']}"
-            )
+            lines.append(f"WARN: stream milestone {warning['stream']} marked {warning['marker']}")
         elif warning["code"] == "milestone_closed_issue":
-            lines.append(
-                f"WARN: stream milestone {warning['stream']} references closed "
-                f"issue #{warning['issue']}"
-            )
+            lines.append(f"WARN: stream milestone {warning['stream']} references closed issue #{warning['issue']}")
         elif warning["code"] == "milestone_issue_state_unavailable":
             lines.append(
-                f"WARN: stream milestone {warning['stream']} could not verify "
-                f"issue #{warning['issue']} status"
+                f"WARN: stream milestone {warning['stream']} could not verify issue #{warning['issue']} status"
             )
         elif warning["code"] == "milestone_confirmed_at_stale":
             lines.append(
@@ -1652,8 +1715,7 @@ def main(argv: list[str] | None = None) -> int:
         type=int,
         default=DEFAULT_MAX_CONFIRMED_AGE_DAYS,
         help=(
-            "warn when an explicit confirmed-at: YYYY-MM-DD marker is older than this "
-            "many days (default: %(default)s)"
+            "warn when an explicit confirmed-at: YYYY-MM-DD marker is older than this many days (default: %(default)s)"
         ),
     )
     parser.add_argument("--migrate", action="store_true")
@@ -1678,8 +1740,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"created {created} native sub-issue link(s)")
         report = run_audit(max_confirmed_age_days=args.max_confirmed_age_days)
 
-    print(json.dumps(report, ensure_ascii=False, indent=1) if args.json
-          else human_summary(report))
+    print(json.dumps(report, ensure_ascii=False, indent=1) if args.json else human_summary(report))
     return 0 if (report["ok"] or not args.check) else 1
 
 

@@ -88,9 +88,7 @@ _ROOT = Path(__file__).resolve().parents[2]
 _SCHEMA_PATH = _ROOT / "agents_extensions" / "shared" / "schemas" / "task-lifecycle.v1.schema.json"
 _SCHEMA = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
 _VALIDATOR = Draft202012Validator(_SCHEMA, format_checker=FormatChecker())
-_AC_RE = re.compile(
-    r"^- \[(?P<checked>[ xX])\] \*\*(?P<id>[A-Z][A-Z0-9_-]{1,31})\*\*\s+[—-]\s+(?P<text>.+?)\s*$"
-)
+_AC_RE = re.compile(r"^- \[(?P<checked>[ xX])\] \*\*(?P<id>[A-Z][A-Z0-9_-]{1,31})\*\*\s+[—-]\s+(?P<text>.+?)\s*$")
 _SAFE_FAMILY_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$")
 
 
@@ -199,11 +197,35 @@ def resolve_membership(
             "epic": native_parent_epic,
             "generated_at": None,
             "digest": None,
-            "reason": (
-                "issue has a native parent epic that differs from the identity's "
-                "exact registered stream epic"
-            ),
+            "reason": ("issue has a native parent epic that differs from the identity's exact registered stream epic"),
         }
+    if isinstance(membership_report, dict):
+        incomplete_nodes = set()
+        if isinstance(membership_report.get("incomplete_nodes"), list):
+            incomplete_nodes.update(
+                n
+                for n in membership_report["incomplete_nodes"]
+                if isinstance(n, int) and not isinstance(n, bool) and n > 0
+            )
+        for w in membership_report.get("warnings") or []:
+            if (
+                isinstance(w, dict)
+                and w.get("code") == "traversal_incomplete"
+                and isinstance(w.get("issue"), int)
+                and not isinstance(w.get("issue"), bool)
+                and w["issue"] > 0
+            ):
+                incomplete_nodes.add(w["issue"])
+        if membership_report.get("membership_complete") is False or incomplete_nodes:
+            nodes_desc = ", ".join(f"#{n}" for n in sorted(incomplete_nodes)) if incomplete_nodes else "unknown"
+            return {
+                "valid": False,
+                "method": None,
+                "epic": None,
+                "generated_at": None,
+                "digest": None,
+                "reason": (f"fresh issue-stream membership audit traversal is incomplete (unread nodes: {nodes_desc})"),
+            }
     validated_report = issue_stream_audit.validate_membership_report(membership_report, max_age_s)
     if validated_report is None:
         return {
@@ -234,10 +256,7 @@ def resolve_membership(
             "epic": None,
             "generated_at": generated_at,
             "digest": evidence_digest,
-            "reason": (
-                "membership audit resolves the issue to a different epic than the "
-                "identity's exact stream epic"
-            ),
+            "reason": ("membership audit resolves the issue to a different epic than the identity's exact stream epic"),
         }
     return {
         "valid": True,
@@ -418,14 +437,11 @@ def _receipt_event_payload(record: Mapping[str, Any]) -> dict[str, Any]:
 def _validate_behavior_proof_reference_shape(details: Mapping[str, Any]) -> dict[str, str]:
     reference = details.get("behavior_proof_receipt")
     if not isinstance(reference, Mapping):
-        raise LifecycleError(
-            "behavior-proof evidence requires details.behavior_proof_receipt"
-        )
+        raise LifecycleError("behavior-proof evidence requires details.behavior_proof_receipt")
     required = {"receipt_path", "receipt_sha256", "input_sha256", "target_sha"}
     if set(reference) != required:
         raise LifecycleError(
-            "behavior-proof receipt reference requires only receipt_path, receipt_sha256, "
-            "input_sha256, and target_sha"
+            "behavior-proof receipt reference requires only receipt_path, receipt_sha256, input_sha256, and target_sha"
         )
     normalized = {key: str(reference.get(key) or "") for key in sorted(required)}
     receipt_path = Path(normalized["receipt_path"]).expanduser()
@@ -467,12 +483,8 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
     if snapshot["content_hash"] != ac_content_hash(criteria):
         raise LifecycleError("AC snapshot content hash is stale or forged")
     for criterion in criteria:
-        if criterion["behavior_proof_required"] and "behavior_proof" not in criterion[
-            "required_evidence"
-        ]:
-            raise LifecycleError(
-                f"{criterion['id']}: behavior-proof-required AC must require behavior_proof evidence"
-            )
+        if criterion["behavior_proof_required"] and "behavior_proof" not in criterion["required_evidence"]:
+            raise LifecycleError(f"{criterion['id']}: behavior-proof-required AC must require behavior_proof evidence")
     criteria_by_id = {item["id"]: item for item in criteria}
     evidence_ids: set[str] = set()
     for record in ledger["evidence"]:
@@ -504,9 +516,7 @@ def validate_lifecycle(payload: Mapping[str, Any]) -> dict[str, Any]:
         if record["type"] == "behavior_proof":
             reference = _validate_behavior_proof_reference_shape(record["details"])
             if subject["commit"] is None or reference["target_sha"] != subject["commit"]:
-                raise LifecycleError(
-                    "behavior-proof receipt target SHA does not match its evidence subject"
-                )
+                raise LifecycleError("behavior-proof receipt target SHA does not match its evidence subject")
     for evidence_id in ledger["remaining_scope"]["evidence_ids"]:
         if evidence_id not in evidence_ids:
             raise LifecycleError("remaining-scope evidence ID is not present in the evidence ledger")
@@ -720,14 +730,9 @@ def _run_git(repo_root: Path, args: list[str]) -> str:
     return completed.stdout.strip()
 
 
-
 def protected_paths(paths: list[str]) -> list[str]:
     return sorted(
-        {
-            path
-            for path in paths
-            if any(fnmatch.fnmatch(path, pattern) for pattern in PROTECTED_PATH_PATTERNS)
-        }
+        {path for path in paths if any(fnmatch.fnmatch(path, pattern) for pattern in PROTECTED_PATH_PATTERNS)}
     )
 
 
@@ -762,21 +767,16 @@ def observe_local_git(
         (
             record
             for record in worktree_records
-            if resolved_worktree
-            and str(Path(record.get("worktree", "")).resolve()) == resolved_worktree
+            if resolved_worktree and str(Path(record.get("worktree", "")).resolve()) == resolved_worktree
         ),
         None,
     )
     worktree_present = selected_worktree is not None
     actual_worktree_branch = (
-        str(selected_worktree.get("branch") or "").removeprefix("refs/heads/")
-        if selected_worktree
-        else None
+        str(selected_worktree.get("branch") or "").removeprefix("refs/heads/") if selected_worktree else None
     ) or None
     worktree_branch_matches = bool(
-        worktree_present
-        and actual_worktree_branch
-        and (not branch or actual_worktree_branch == branch)
+        worktree_present and actual_worktree_branch and (not branch or actual_worktree_branch == branch)
     )
     dispatch_worktree_used = bool(
         worktree_present
@@ -787,9 +787,7 @@ def observe_local_git(
     local_branch_present = False
     remote_branch_present = False
     if branch:
-        local_branch_present = bool(
-            _run_git(primary, ["for-each-ref", "--format=%(refname)", f"refs/heads/{branch}"])
-        )
+        local_branch_present = bool(_run_git(primary, ["for-each-ref", "--format=%(refname)", f"refs/heads/{branch}"]))
         remote_branch_present = bool(
             _run_git(primary, ["for-each-ref", "--format=%(refname)", f"refs/remotes/origin/{branch}"])
         )
@@ -807,9 +805,7 @@ def observe_local_git(
                     continue
                 sha, message = record.strip().split("\x1f", 1)
                 trailers = [
-                    line.strip()
-                    for line in message.splitlines()
-                    if line.strip().lower().startswith("x-agent:")
+                    line.strip() for line in message.splitlines() if line.strip().lower().startswith("x-agent:")
                 ]
                 commits.append({"sha": sha, "x_agent_trailers": trailers})
         except LifecycleError:
@@ -857,9 +853,7 @@ def _ledger_projection_material(ledger: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _behavior_proof_reference_error(
-    record: Mapping[str, Any], *, head_sha: str | None
-) -> str | None:
+def _behavior_proof_reference_error(record: Mapping[str, Any], *, head_sha: str | None) -> str | None:
     try:
         reference = _validate_behavior_proof_reference_shape(record["details"])
     except LifecycleError as exc:
@@ -907,8 +901,7 @@ def _behavior_proof_reference_error(
         if surface["status"] == "pass":
             clauses = surface.get("clauses")
             if not isinstance(clauses, list) or not any(
-                isinstance(clause, dict)
-                and clause.get("target_input_sha256") == reference["input_sha256"]
+                isinstance(clause, dict) and clause.get("target_input_sha256") == reference["input_sha256"]
                 for clause in clauses
             ):
                 return f"behavior-proof receipt {surface_name} clauses are not target-bound"
@@ -1006,9 +999,7 @@ def _checks_status(required: list[str], checks: list[Mapping[str, Any]]) -> tupl
     named, _other = group_collapsed_by_name([dict(check) for check in checks if isinstance(check, Mapping)])
     missing = [name for name in required if name not in named]
     pending = [
-        name
-        for name in required
-        if name in named and any(row.get("status") != "COMPLETED" for row in named[name])
+        name for name in required if name in named and any(row.get("status") != "COMPLETED" for row in named[name])
     ]
     failed = [
         name
@@ -1057,8 +1048,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
     )
     if not membership["valid"]:
         hard.append(
-            "issue membership does not resolve to the identity's exact registered "
-            f"stream epic: {membership['reason']}"
+            f"issue membership does not resolve to the identity's exact registered stream epic: {membership['reason']}"
         )
 
     issue_criteria: list[dict[str, Any]] = []
@@ -1067,10 +1057,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
     except LifecycleError as exc:
         hard.append(str(exc))
     if issue_criteria:
-        snapshot_projection = [
-            {"id": item["id"], "text": item["text"]}
-            for item in ledger["ac_snapshot"]["criteria"]
-        ]
+        snapshot_projection = [{"id": item["id"], "text": item["text"]} for item in ledger["ac_snapshot"]["criteria"]]
         issue_projection = [{"id": item["id"], "text": item["text"]} for item in issue_criteria]
         if issue_projection != snapshot_projection:
             hard.append("issue acceptance criteria drift from the immutable AC snapshot")
@@ -1084,23 +1071,17 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
         for comment in github.get("comments") or []
         if isinstance(comment, Mapping) and comment.get("url")
     }
-    valid_evidence, invalid_evidence = _evidence_status(
-        ledger, head_sha=head_sha, comment_urls=comment_urls
-    )
+    valid_evidence, invalid_evidence = _evidence_status(ledger, head_sha=head_sha, comment_urls=comment_urls)
     hard.extend(invalid_evidence)
 
     readiness_local = local
     prior_local = _latest_premerge_local(ledger)
     if prior_local is not None and (
-        not local.get("commits")
-        or not local.get("worktree_present")
-        or not local.get("worktree_branch_matches")
+        not local.get("commits") or not local.get("worktree_present") or not local.get("worktree_branch_matches")
     ):
         readiness_local = prior_local
     readiness_blockers = _local_readiness(readiness_local)
-    readiness_blockers.extend(
-        _criteria_due_blockers(ledger, valid_evidence, target_state="IMPLEMENTATION_READY")
-    )
+    readiness_blockers.extend(_criteria_due_blockers(ledger, valid_evidence, target_state="IMPLEMENTATION_READY"))
     if not readiness_blockers and last_success == "ACS_FINALIZED":
         last_success = "IMPLEMENTATION_READY"
     elif last_success == "ACS_FINALIZED":
@@ -1130,9 +1111,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                 waiting.append("independent outside-author-family review is pending")
                 actions.append("record a current-head outside-family review receipt")
             else:
-                review_due = _criteria_due_blockers(
-                    ledger, valid_evidence, target_state="REVIEW_PASSED"
-                )
+                review_due = _criteria_due_blockers(ledger, valid_evidence, target_state="REVIEW_PASSED")
                 if review_due:
                     hard.extend(review_due)
                 else:
@@ -1141,8 +1120,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                     review_times = [
                         record["recorded_at"]
                         for record in ledger["evidence"]
-                        if record["type"] == "review"
-                        and "review" in valid_evidence.get(record["ac_id"], set())
+                        if record["type"] == "review" and "review" in valid_evidence.get(record["ac_id"], set())
                     ]
                     if auto_enabled and review_times and auto_enabled < max(review_times):
                         hard.append("auto-merge was armed before the verified review gate")
@@ -1154,9 +1132,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                 elif checks_waiting:
                     waiting.append("required CI is pending")
                 elif checks_ok:
-                    ci_due = _criteria_due_blockers(
-                        ledger, valid_evidence, target_state="CI_PASSED"
-                    )
+                    ci_due = _criteria_due_blockers(ledger, valid_evidence, target_state="CI_PASSED")
                     if ci_due:
                         hard.extend(ci_due)
                     else:
@@ -1176,8 +1152,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
                 review_times = [
                     record["recorded_at"]
                     for record in ledger["evidence"]
-                    if record["type"] == "review"
-                    and "review" in valid_evidence.get(record["ac_id"], set())
+                    if record["type"] == "review" and "review" in valid_evidence.get(record["ac_id"], set())
                 ]
                 if auto_enabled and review_times and auto_enabled < max(review_times):
                     hard.append("auto-merge was armed before the verified review gate")
@@ -1188,15 +1163,9 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             if not pr.get("merge_sha"):
                 hard.append("GitHub reports merged PR without a merge commit")
             elif review_ok and checks_ok:
-                review_due = _criteria_due_blockers(
-                    ledger, valid_evidence, target_state="REVIEW_PASSED"
-                )
-                ci_due = _criteria_due_blockers(
-                    ledger, valid_evidence, target_state="CI_PASSED"
-                )
-                merged_due = _criteria_due_blockers(
-                    ledger, valid_evidence, target_state="MERGED"
-                )
+                review_due = _criteria_due_blockers(ledger, valid_evidence, target_state="REVIEW_PASSED")
+                ci_due = _criteria_due_blockers(ledger, valid_evidence, target_state="CI_PASSED")
+                merged_due = _criteria_due_blockers(ledger, valid_evidence, target_state="MERGED")
                 boundary_due = list(dict.fromkeys([*review_due, *ci_due, *merged_due]))
                 if boundary_due:
                     hard.extend(boundary_due)
@@ -1214,9 +1183,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
     )
     if last_success == "MERGED" and goal in {"deploy", "certify"}:
         if deployed:
-            deploy_due = _criteria_due_blockers(
-                ledger, valid_evidence, target_state="DEPLOYED"
-            )
+            deploy_due = _criteria_due_blockers(ledger, valid_evidence, target_state="DEPLOYED")
             if deploy_due:
                 hard.extend(deploy_due)
             else:
@@ -1225,15 +1192,12 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             waiting.append("terminal goal requires deployment")
             actions.append("deploy the merged commit and record authoritative evidence")
     certified = any(
-        record["type"] == "certification"
-        and "certification" in valid_evidence.get(record["ac_id"], set())
+        record["type"] == "certification" and "certification" in valid_evidence.get(record["ac_id"], set())
         for record in ledger["evidence"]
     )
     if last_success == "DEPLOYED" and goal == "certify":
         if certified:
-            certify_due = _criteria_due_blockers(
-                ledger, valid_evidence, target_state="CERTIFIED"
-            )
+            certify_due = _criteria_due_blockers(ledger, valid_evidence, target_state="CERTIFIED")
             if certify_due:
                 hard.extend(certify_due)
             else:
@@ -1268,9 +1232,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             hard.append("original and follow-up issues are not reciprocally linked")
 
     checked = {item["id"]: item["checked"] for item in issue_criteria}
-    preclose_missing = _criteria_due_blockers(
-        ledger, valid_evidence, target_state=remote_goal_state
-    )
+    preclose_missing = _criteria_due_blockers(ledger, valid_evidence, target_state=remote_goal_state)
     preclose_unchecked = [
         item["id"]
         for item in ledger["ac_snapshot"]["criteria"]
@@ -1283,9 +1245,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             hard.append("issue closed before terminal goal and pre-close AC proof were complete")
         else:
             last_success = "ISSUE_CLOSED"
-            close_due = _criteria_due_blockers(
-                ledger, valid_evidence, target_state="ISSUE_CLOSED"
-            )
+            close_due = _criteria_due_blockers(ledger, valid_evidence, target_state="ISSUE_CLOSED")
             if close_due:
                 hard.extend(close_due)
     elif goal_reached:
@@ -1299,9 +1259,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
     )
     if last_success == "ISSUE_CLOSED":
         if cleanup_ok:
-            cleanup_due = _criteria_due_blockers(
-                ledger, valid_evidence, target_state="CLEANED_UP"
-            )
+            cleanup_due = _criteria_due_blockers(ledger, valid_evidence, target_state="CLEANED_UP")
             all_unchecked = [
                 item["id"]
                 for item in ledger["ac_snapshot"]["criteria"]
@@ -1318,9 +1276,7 @@ def evaluate(payload: Mapping[str, Any], observation: Mapping[str, Any]) -> dict
             actions.append("remove the exact worktree and local/remote task branches")
 
     if hard and not actions:
-        actions.append(
-            f"owner {ledger['author_family']}: resolve the listed hard blockers and reconcile again"
-        )
+        actions.append(f"owner {ledger['author_family']}: resolve the listed hard blockers and reconcile again")
     if hard:
         state = "BLOCKED_WITH_RECEIPT"
         disposition = "blocked"

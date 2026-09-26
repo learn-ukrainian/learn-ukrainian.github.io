@@ -308,8 +308,12 @@ def test_closed_epic_remains_registered_but_is_not_an_audit_root():
 def test_retired_stream_launchers_fail_closed(selector):
     result = subprocess.run(
         [
-            "bash", "-c", 'source "$1"; launcher_selector_resolve "$2"', "bash",
-            str(issue_stream_audit.ROOT / "scripts/lib/handoff_identity.sh"), selector,
+            "bash",
+            "-c",
+            'source "$1"; launcher_selector_resolve "$2"',
+            "bash",
+            str(issue_stream_audit.ROOT / "scripts/lib/handoff_identity.sh"),
+            selector,
         ],
         cwd=issue_stream_audit.ROOT,
         capture_output=True,
@@ -585,17 +589,16 @@ def test_effective_membership_excludes_only_epics_not_closed_children(registry):
     assert index["5"]["epics"] == [100]
     # 99 is closed (not in the open-issues list) but still uniquely owned —
     # ownership proof must accept it.
-    assert index["99"] == {
-        "epics": [100], "streams": ["product"], "via": "native", "unique_stream": True
-    }
+    assert index["99"] == {"epics": [100], "streams": ["product"], "via": "native", "unique_stream": True}
     assert make_membership_resolver(report)(99, 100) is True
     # But 99 is NOT open, so it must never resolve as a live issue consumer.
     assert make_issue_resolver(report)("99") is False
 
 
 def test_issue_resolver_only_open_issues(registry):
-    report = classify(_issues(100, 150, 200, 42), registry,
-                      {100: ({42}, set()), 150: (set(), set()), 200: (set(), set())})
+    report = classify(
+        _issues(100, 150, 200, 42), registry, {100: ({42}, set()), 150: (set(), set()), 200: (set(), set())}
+    )
     resolve = make_issue_resolver(report)
     assert resolve("42") is True
     assert resolve("999") is False  # not open
@@ -605,16 +608,16 @@ def test_issue_resolver_only_open_issues(registry):
 def test_issue_resolver_rejects_open_orphan_issue(registry):
     """An open issue with NO stream ownership at all must not resolve as a
     consumer — being in the open set alone is not proof of adoption."""
-    report = classify(_issues(100, 150, 200, 42), registry,
-                      {100: (set(), set()), 150: (set(), set()), 200: (set(), set())})
+    report = classify(
+        _issues(100, 150, 200, 42), registry, {100: (set(), set()), 150: (set(), set()), 200: (set(), set())}
+    )
     assert make_issue_resolver(report)("42") is False
 
 
 def test_issue_resolver_rejects_ambiguously_owned_issue(registry):
     """An open issue that IS in the open set but is ambiguously multi-homed
     (unique_stream False) must not resolve — same proof the ownership gate uses."""
-    report = classify(_issues(100, 150, 200, 8), registry,
-                      {100: ({8}, set()), 150: (set(), set()), 200: ({8}, set())})
+    report = classify(_issues(100, 150, 200, 8), registry, {100: ({8}, set()), 150: (set(), set()), 200: ({8}, set())})
     assert make_issue_resolver(report)("8") is False
 
 
@@ -644,8 +647,9 @@ def test_read_membership_index_freshness(tmp_path, registry):
     import time
 
     cache = tmp_path / "issue_stream_audit.json"
-    report = classify(_issues(100, 150, 200, 42), registry,
-                      {100: ({42}, set()), 150: (set(), set()), 200: (set(), set())})
+    report = classify(
+        _issues(100, 150, 200, 42), registry, {100: ({42}, set()), 150: (set(), set()), 200: (set(), set())}
+    )
     # Fresh cache → returned.
     report["generated_at"] = int(time.time())
     cache.write_text(json.dumps(report), encoding="utf-8")
@@ -821,6 +825,7 @@ def test_paginate_subissues_walks_multiple_pages_past_100():
 def test_paginate_subissues_stops_without_end_cursor():
     """``hasNextPage: true`` with no ``endCursor`` must stop, not loop forever
     or crash trying to use a null cursor."""
+
     def fetch_page(epic, cursor):
         return _page([1], has_next=True, end_cursor=None)
 
@@ -850,10 +855,10 @@ def test_paginate_subissues_bounded_against_runaway_pagination():
 # proven, not assumed.
 # --------------------------------------------------------------------------- #
 class _FakeCompletedProcess:
-    def __init__(self, stdout: str) -> None:
+    def __init__(self, stdout: str, returncode: int = 0, stderr: str = "") -> None:
         self.stdout = stdout
-        self.stderr = ""
-        self.returncode = 0
+        self.stderr = stderr
+        self.returncode = returncode
 
 
 def _make_repo(root, *, epics: list[int]) -> None:
@@ -883,9 +888,7 @@ def _fake_gh_run(calls, *, owner: str, name: str, open_issues: list[dict]):
         if args[1:3] == ["issue", "list"]:
             return _FakeCompletedProcess(json.dumps(open_issues))
         if args[1:3] == ["repo", "view"]:
-            return _FakeCompletedProcess(
-                json.dumps({"owner": {"login": owner}, "name": name})
-            )
+            return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
         if args[1] == "api" and args[2] == "graphql":
             return _FakeCompletedProcess(
                 json.dumps(
@@ -912,9 +915,7 @@ def _fake_gh_run(calls, *, owner: str, name: str, open_issues: list[dict]):
     return _run
 
 
-def test_run_audit_scopes_registry_gh_execution_and_cache_to_explicit_root(
-    tmp_path, monkeypatch
-):
+def test_run_audit_scopes_registry_gh_execution_and_cache_to_explicit_root(tmp_path, monkeypatch):
     """A non-default ``repo_root`` passed to ``run_audit`` must be honored for
     the registry, every ``gh`` call's cwd, and the cache write — never the
     auditor module's own ``ROOT`` (finding F001: a closeout invocation
@@ -1048,9 +1049,7 @@ def test_refresh_missing_and_malformed_state_fail_safe_idle(tmp_path, monkeypatc
     assert issue_stream_audit.read_refresh_state(now=100)["phase"] == "idle"
 
     state_path.write_text('{"phase":"running","run_id":"secret"', encoding="utf-8")
-    public = issue_stream_audit.public_refresh_view(
-        issue_stream_audit.read_refresh_state(now=100)
-    )
+    public = issue_stream_audit.public_refresh_view(issue_stream_audit.read_refresh_state(now=100))
     assert public == {
         "phase": "idle",
         "requested_at": None,
@@ -1063,15 +1062,11 @@ def test_refresh_missing_and_malformed_state_fail_safe_idle(tmp_path, monkeypatc
     assert "run_id" not in public
 
 
-def test_schedule_refresh_is_single_flight_and_preserves_previous_outcome(
-    tmp_path, monkeypatch
-):
+def test_schedule_refresh_is_single_flight_and_preserves_previous_outcome(tmp_path, monkeypatch):
     state_path = _refresh_paths(tmp_path, monkeypatch)
     spawned = []
     monkeypatch.setattr(issue_stream_audit.time, "time", lambda: 100.0)
-    monkeypatch.setattr(
-        issue_stream_audit, "_spawn_worker", lambda run_id: spawned.append(run_id) or True
-    )
+    monkeypatch.setattr(issue_stream_audit, "_spawn_worker", lambda run_id: spawned.append(run_id) or True)
 
     first = issue_stream_audit.schedule_refresh()
     second = issue_stream_audit.schedule_refresh(force=True)
@@ -1167,9 +1162,7 @@ def test_worker_failure_then_success_is_fenced_and_truthful(tmp_path, monkeypatc
 
     scheduled = issue_stream_audit.schedule_refresh()
     run_id = scheduled["run_id"]
-    monkeypatch.setattr(
-        issue_stream_audit, "run_audit", lambda: (_ for _ in ()).throw(RuntimeError("secret"))
-    )
+    monkeypatch.setattr(issue_stream_audit, "run_audit", lambda: (_ for _ in ()).throw(RuntimeError("secret")))
     assert issue_stream_audit._run_refresh_worker(run_id) == 1
     failed = json.loads(state_path.read_text(encoding="utf-8"))
     assert failed["phase"] == "idle" and failed["failure_code"] == "source_error"
@@ -1663,7 +1656,6 @@ def test_run_audit_singleton_retry_budget_is_shared_per_run(tmp_path, monkeypatc
     assert report["ok"] is False
 
 
-
 def _make_repo_with_closed_epic(root) -> None:
     (root / "scripts" / "config").mkdir(parents=True)
     (root / "scripts" / "config" / "issue_streams.yaml").write_text(
@@ -1730,3 +1722,151 @@ def test_run_audit_quiet_when_closed_epic_is_really_closed(tmp_path, monkeypatch
 
     assert [w for w in report["warnings"] if w["code"] == "closed_epic_reopened"] == []
     assert report["ok"] is True
+
+
+def test_tree_membership_pagination_truncation_counts_as_incomplete():
+    """Finding 4 (#8661): when pagination hits _MAX_SUBISSUE_PAGES with hasNextPage
+    still true, the truncation must be marked as traversal_incomplete."""
+
+    # Parent 100 always returns hasNextPage=True with a cursor
+    def fetch_batch(pending):
+        return {
+            num: {
+                "body": "",
+                "subIssues": {
+                    "nodes": [{"number": num * 10}],
+                    "pageInfo": {"hasNextPage": True, "endCursor": "cursor-xyz"},
+                },
+            }
+            for num in pending
+        }
+
+    warnings = []
+    membership = issue_stream_audit._tree_membership({100}, fetch_batch, warnings)
+    assert any(w["code"] == "traversal_incomplete" and w["issue"] == 100 for w in warnings)
+    assert 100 in membership
+
+
+def test_subissue_batch_real_github_not_found_error_is_absent_not_incomplete(monkeypatch):
+    """Finding 2 (#8661): real GitHub GraphQL returns exit code 1 with a NOT_FOUND
+    error payload when an issue does not exist. _fetch_subissue_batch must recognize
+    this as genuinely absent (None), not INCOMPLETE_NODE, while preserving intact nodes."""
+    monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
+
+    def fake_subprocess_run(args, capture_output, text, timeout, cwd):
+        assert args[0] == "gh"
+        if args[1:3] == ["api", "graphql"]:
+            query = args[-1]
+            if "i999:issue" in query and "i100:issue" in query:
+                # Batch with one present and one deleted issue
+                stdout = json.dumps(
+                    {
+                        "data": {
+                            "repository": {
+                                "i100": {
+                                    "body": "",
+                                    "subIssues": {
+                                        "nodes": [{"number": 10}],
+                                        "pageInfo": {"hasNextPage": False, "endCursor": None},
+                                    },
+                                },
+                                "i999": None,
+                            }
+                        },
+                        "errors": [
+                            {
+                                "type": "NOT_FOUND",
+                                "path": ["repository", "i999"],
+                                "message": "Could not resolve to an Issue with the number of 999.",
+                            }
+                        ],
+                    }
+                )
+                return _FakeCompletedProcess(stdout, returncode=1, stderr="gh: Could not resolve...")
+            if "i999:issue" in query:
+                # Singleton retry for deleted issue
+                stdout = json.dumps(
+                    {
+                        "data": {"repository": {"i999": None}},
+                        "errors": [
+                            {
+                                "type": "NOT_FOUND",
+                                "path": ["repository", "i999"],
+                                "message": "Could not resolve to an Issue with the number of 999.",
+                            }
+                        ],
+                    }
+                )
+                return _FakeCompletedProcess(stdout, returncode=1, stderr="gh: Could not resolve...")
+        raise AssertionError(f"unexpected invocation: {args}")
+
+    monkeypatch.setattr(issue_stream_audit.subprocess, "run", fake_subprocess_run)
+    pages = issue_stream_audit._fetch_subissue_batch({100: None, 999: None})
+    assert pages[100]["subIssues"]["nodes"][0]["number"] == 10
+    assert pages[999] is None
+
+
+def test_validate_membership_report_and_read_membership_index_reject_incomplete_cache(tmp_path):
+    """Finding 1 (issue #8661): an incomplete traversal report/cache must be rejected
+    by validate_membership_report and read_membership_index."""
+    import time
+
+    now = time.time()
+    incomplete_report = {
+        "generated_at": now,
+        "membership_complete": False,
+        "incomplete_nodes": [20],
+        "warnings": [{"code": "traversal_incomplete", "issue": 20}],
+        "effective_membership": {
+            "42": {"epics": [100], "streams": ["product"], "via": "native", "unique_stream": True}
+        },
+        "open_issue_numbers": [42, 100],
+    }
+    assert validate_membership_report(incomplete_report, 3600) is None
+
+    cache_file = tmp_path / "cache.json"
+    cache_file.write_text(json.dumps(incomplete_report), encoding="utf-8")
+    assert read_membership_index(3600, cache_path=cache_file) is None
+
+    # Complete report must validate successfully
+    complete_report = {
+        "generated_at": now,
+        "membership_complete": True,
+        "incomplete_nodes": [],
+        "warnings": [],
+        "effective_membership": {
+            "42": {"epics": [100], "streams": ["product"], "via": "native", "unique_stream": True}
+        },
+        "open_issue_numbers": [42, 100],
+    }
+    assert validate_membership_report(complete_report, 3600) == complete_report
+    cache_file.write_text(json.dumps(complete_report), encoding="utf-8")
+    assert read_membership_index(3600, cache_path=cache_file) is not None
+
+
+def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_path, monkeypatch):
+    """Finding 1 (issue #8661): run_audit with incomplete nodes writes membership_complete=False
+    and incomplete_nodes, and the resulting cache fails closed."""
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo(root, epics=[100])
+
+    def fake_fetch_tree(roots, repo_root, warnings):
+        warnings.append({"code": "traversal_incomplete", "issue": 20})
+        return {100: ({42}, set())}
+
+    monkeypatch.setattr(issue_stream_audit, "fetch_tree_membership", fake_fetch_tree)
+    monkeypatch.setattr(issue_stream_audit, "fetch_open_issues", lambda _r: _issues(100, 42))
+    monkeypatch.setattr(
+        issue_stream_audit, "fetch_issue_states", lambda nums, _r, **_k: ({n: "OPEN" for n in nums}, set())
+    )
+
+    report = run_audit(root)
+    assert report["ok"] is False
+    assert report["membership_complete"] is False
+    assert report["incomplete_nodes"] == [20]
+
+    cache_file = root / "batch_state" / "issue_stream_audit.json"
+    assert cache_file.exists()
+    assert read_membership_index(3600, cache_path=cache_file) is None
+    assert validate_membership_report(report, 3600) is None

@@ -155,9 +155,7 @@ def _behavior_receipt_reference(tmp_path: Path) -> dict:
         "exit_code": 0,
     }
     path = (tmp_path / "behavior-proof-receipt.json").resolve()
-    receipt_bytes = (
-        json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-    ).encode()
+    receipt_bytes = (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
     path.write_bytes(receipt_bytes)
     return {
         "behavior_proof_receipt": {
@@ -216,11 +214,7 @@ def _observation(
                 "body": "Refs #42",
             },
             "comments": [{"url": REVIEW_URL, "body": "PASS", "created_at": NOW}],
-            "deployments": [
-                {"environment": "production", "state": "SUCCESS", "sha": MERGE}
-            ]
-            if deployed
-            else [],
+            "deployments": [{"environment": "production", "state": "SUCCESS", "sha": MERGE}] if deployed else [],
             "follow_up": None,
         },
         "local": {
@@ -311,9 +305,7 @@ def test_all_evidence_issue_close_and_cleanup_are_terminal() -> None:
 
     result = task_lifecycle.evaluate(
         ledger,
-        _observation(
-            _body(checked=True), issue_state="CLOSED", pr_state="MERGED", clean=True
-        ),
+        _observation(_body(checked=True), issue_state="CLOSED", pr_state="MERGED", clean=True),
     )
 
     assert result["state"] == "CLEANED_UP"
@@ -346,9 +338,7 @@ def test_first_postmerge_reconcile_requires_retained_git_proof() -> None:
         ("certify", True, False, "DEPLOYED"),
     ],
 )
-def test_terminal_goals_cannot_degrade(
-    goal: str, deployment: bool, certification: bool, expected: str
-) -> None:
+def test_terminal_goals_cannot_degrade(goal: str, deployment: bool, certification: bool, expected: str) -> None:
     ledger = _ready_evidence(_ledger(goal))
     ledger = _add(ledger, "AC-MERGE", "github")
     if deployment:
@@ -482,9 +472,7 @@ def test_identical_reconcile_is_idempotent() -> None:
 def test_evidence_for_other_commit_is_stale() -> None:
     ledger = _ready_evidence(_ledger())
     ledger["evidence"][0]["subject"]["commit"] = "c" * 40
-    ledger["evidence"][0]["id"] = task_lifecycle.digest(
-        task_lifecycle._evidence_payload(ledger["evidence"][0])
-    )
+    ledger["evidence"][0]["id"] = task_lifecycle.digest(task_lifecycle._evidence_payload(ledger["evidence"][0]))
     ledger = task_lifecycle.validate_lifecycle(ledger)
 
     result = task_lifecycle.evaluate(ledger, _observation(_body()))
@@ -622,18 +610,14 @@ def test_legacy_migration_preserves_proof_lists() -> None:
 def test_schema_round_trip_is_strict() -> None:
     ledger = _ledger()
     schema = json.loads(
-        Path("agents_extensions/shared/schemas/task-lifecycle.v1.schema.json").read_text(
-            encoding="utf-8"
-        )
+        Path("agents_extensions/shared/schemas/task-lifecycle.v1.schema.json").read_text(encoding="utf-8")
     )
     assert schema["additionalProperties"] is False
     assert task_lifecycle.validate_lifecycle(ledger) == ledger
 
 
 @pytest.mark.parametrize("state", task_lifecycle.STATES)
-def test_every_lifecycle_boundary_survives_durable_resume(
-    tmp_path: Path, state: str
-) -> None:
+def test_every_lifecycle_boundary_survives_durable_resume(tmp_path: Path, state: str) -> None:
     ledger = _ledger()
     ledger["current_state"] = state
     path = tmp_path / f"{state.lower()}.json"
@@ -679,9 +663,7 @@ def test_resolve_membership_unique_body_success() -> None:
     import time
 
     now = time.time()
-    report = _fresh_report(
-        now, {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}}
-    )
+    report = _fresh_report(now, {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}})
 
     result = task_lifecycle.resolve_membership(
         issue_number=42,
@@ -831,6 +813,70 @@ def test_resolve_membership_rejects_multi_home() -> None:
     assert "ambiguously multi-homed" in result["reason"]
 
 
+def test_resolve_membership_reviewer_case_fails_closed_on_incomplete_traversal() -> None:
+    """Opus 5.5 review finding 1 (issue #8661): root #10 references #500,
+    root #20 references #500, but #20's traversal was incomplete.
+    Even though #500 is in effective_membership under #10 with unique_stream: True,
+    resolve_membership must fail closed naming unread node #20."""
+    import time
+
+    incomplete_report = {
+        "generated_at": time.time(),
+        "membership_complete": False,
+        "incomplete_nodes": [20],
+        "warnings": [{"code": "traversal_incomplete", "issue": 20}],
+        "effective_membership": {
+            "500": {
+                "epics": [10],
+                "streams": ["stream10"],
+                "via": "body",
+                "unique_stream": True,
+            }
+        },
+        "open_issue_numbers": [10, 500],
+    }
+    result = task_lifecycle.resolve_membership(
+        issue_number=500,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10, 20],
+        membership_report=incomplete_report,
+    )
+    assert result["valid"] is False
+    assert "#20" in result["reason"]
+    assert "incomplete" in result["reason"]
+
+
+def test_resolve_membership_accepts_complete_traversal_report() -> None:
+    import time
+
+    complete_report = {
+        "generated_at": time.time(),
+        "membership_complete": True,
+        "incomplete_nodes": [],
+        "warnings": [],
+        "effective_membership": {
+            "500": {
+                "epics": [10],
+                "streams": ["stream10"],
+                "via": "body",
+                "unique_stream": True,
+            }
+        },
+        "open_issue_numbers": [10, 500],
+    }
+    result = task_lifecycle.resolve_membership(
+        issue_number=500,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10, 20],
+        membership_report=complete_report,
+    )
+    assert result["valid"] is True
+    assert result["method"] == "body"
+    assert result["epic"] == 10
+
+
 def test_resolve_membership_rejects_unregistered_stream_epic() -> None:
     result = task_lifecycle.resolve_membership(
         issue_number=42,
@@ -953,9 +999,7 @@ def test_membership_drift_blocks_a_later_reconcile() -> None:
     drifted_observation["github"]["issue"]["parent_epic"] = None
     drifted_observation["github"]["membership_audit"] = None
 
-    ledger, second_receipt, replayed = task_lifecycle.reconcile(
-        ledger, drifted_observation, now="2026-07-16T11:00:00Z"
-    )
+    ledger, second_receipt, replayed = task_lifecycle.reconcile(ledger, drifted_observation, now="2026-07-16T11:00:00Z")
 
     assert replayed is False
     assert second_receipt["state"] == "BLOCKED_WITH_RECEIPT"
