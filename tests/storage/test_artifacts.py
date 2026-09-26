@@ -195,6 +195,18 @@ def test_write_artifact_refuses_unregistered_migrated_tree_but_keeps_host_state(
             unregistered, "lexicon_parked", "test", lambda dest: dest.write_bytes(b"new"), repo=repo
         )
     assert not unregistered.exists()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (repo / "data/lexicon/parked/linked").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="no manifest entry; register"):
+        artifacts.write_artifact(
+            repo / "data/lexicon/parked/linked/new.json",
+            "lexicon_parked",
+            "test",
+            lambda dest: dest.write_bytes(b"escaped"),
+            repo=repo,
+        )
+    assert not (outside / "new.json").exists()
 
     published = repo / "data/lexicon/parked/original.json"
     artifacts.write_artifact(published, "lexicon_parked", "test", lambda dest: dest.write_bytes(b"new"), repo=repo)
