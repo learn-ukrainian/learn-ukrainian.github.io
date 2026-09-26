@@ -824,7 +824,7 @@ def test_acp_only_wiring_refuses_bridge_and_provider_execution(monkeypatch: pyte
     with pytest.raises(AssertionError, match=r"runner\.invoke"):
         runner.invoke("codex", "prompt")
     with pytest.raises(AssertionError, match=r"subprocess\.run"):
-        subprocess.run(["false"])
+        subprocess.run(["false"], timeout=5)
     with pytest.raises(AssertionError, match=r"subprocess\.Popen"):
         subprocess.Popen(["false"])
     with pytest.raises(AssertionError, match=r"_cli\._dispatch_headless_review"):
