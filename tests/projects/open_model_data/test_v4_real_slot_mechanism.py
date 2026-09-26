@@ -19,18 +19,11 @@ every load-bearing path (repair C), the exact project-row rights binding
 
 from __future__ import annotations
 
-import atexit
 import copy
 import dataclasses
 import inspect
 import json
-import os
-import shutil
-import stat
-import tempfile
-from collections.abc import Callable
 from pathlib import Path
-from typing import Any
 
 import _v4_a7_real_slot_fixture as fx
 import pytest
@@ -130,167 +123,11 @@ def _replay_kwargs(tmp_root: Path, info: dict) -> dict:
     }
 
 
-# --- per-process arrange-phase input cache -----------------------------------
-#
-# Each base tree below is a pure, deterministic function of the fixture's
-# fixed constants (module-import keypairs, pinned salts and nonces): repeated
-# fresh builds are byte-identical and embed no absolute paths (every receipt
-# binds relative ``data/...`` paths only). The cached base therefore holds
-# only immutable arrange-phase INPUTS. Every test receives its own private
-# view of the tree plus deep copies of every in-memory value, so the file
-# passes in any order. Nothing here caches a validation or verification
-# OUTCOME: each test's act phase (``construct_completion``,
-# ``verify_private_replay``, ``validate_receipt_independently``) still runs
-# for real against the per-test view, including every tampered variant.
-#
-# Two pieces of per-test state from the original in-test builds must be
-# reproduced exactly:
-#
-# * ``SyntheticResources.overrides`` -- ``install_seal`` (called inside
-#   ``build_sealed_receipt_and_packet``) registers the fixture seal receipt
-#   in the ACTIVE provenance resource bundle, and every act-phase seal
-#   validation reads that bundle. The overrides computed once during the
-#   base build are re-installed into each test's own fresh bundle
-#   (``_install_base_overrides``); they are derived exclusively from the
-#   immutable base tree bytes, so every test sees byte-identical resources.
-# * Writable receipt files -- admission receipts (which tests rewrite or
-#   unlink) and the private 0o600 artifacts (ledger, membership, packet --
-#   mode-checked by the runtime on every load) are always real,
-#   mode-preserving per-test copies, never linked.
-#
-# The remaining ~640 MB of each tree (synthetic source-universe mirrors that
-# no test or act-phase code path ever writes) is cloned as hard links into
-# the per-test ``tmp_path``: near-instant and near-free on disk. Shared
-# inodes are safe because those files are frozen read-only
-# (``_freeze_read_only``) right after the base build -- any unexpected
-# in-place write fails loudly instead of silently corrupting shared state.
-# Cross-filesystem fallback: real bytes are copied when hard links are
-# unavailable.
-
-_ARRANGE_BASES: dict[str, tuple[Path, Any, dict]] = {}
-_FROZEN_MODE = 0o444
-_ADMISSION_RELATIVE = Path("data/projects/open_model_data/admission")
-
-
-def _arrange_base(kind: str, builder: Callable[[Path], Any]) -> tuple[Path, Any, dict]:
-    entry = _ARRANGE_BASES.get(kind)
-    if entry is None:
-        from _v4_provenance_resource_fixture import ACTIVE
-
-        base = Path(tempfile.mkdtemp(prefix=f"v4-real-slot-{kind}-"))
-        atexit.register(shutil.rmtree, base, ignore_errors=True)
-        with fx.installed_fixture_policy():
-            built = builder(base)
-            bundle = ACTIVE.get()
-            overrides = dict(bundle.overrides) if bundle is not None else {}
-        _freeze_read_only(base)
-        entry = (base, built, overrides)
-        _ARRANGE_BASES[kind] = entry
-    return entry
-
-
-def _install_base_overrides(overrides: dict) -> None:
-    """Re-apply the base build's resource overrides (the fixture seal
-    registration) to the current test's own ACTIVE bundle -- the exact state
-    the original in-test ``install_seal`` call left behind."""
-    from _v4_provenance_resource_fixture import ACTIVE
-
-    bundle = ACTIVE.get()
-    if bundle is not None:
-        bundle.overrides = dict(overrides)
-
-
-def _freeze_read_only(base: Path) -> None:
-    for item in base.rglob("*"):
-        # Admission receipts stay writable (tests rewrite/unlink them) and
-        # private artifacts keep their runtime-enforced 0o600; the remaining
-        # public mirror files (0o644/0o664, depending on the source
-        # checkout) are frozen. Anything else (e.g. 0o755 executables) is
-        # left alone and real-copied per test instead of linked.
-        if item.is_file() and not item.is_symlink() and _ADMISSION_RELATIVE not in item.relative_to(base).parents and stat.S_IMODE(item.stat().st_mode) in (0o644, 0o664):
-            item.chmod(_FROZEN_MODE)
-
-
-def _clone_file(source: str | Path, target: str | Path) -> None:
-    if stat.S_IMODE(os.stat(source).st_mode) == _FROZEN_MODE:
-        try:
-            os.link(source, target)
-            return
-        except OSError:  # cross-device or unsupported filesystem: copy real bytes
-            pass
-    shutil.copy2(source, target)
-
-
-def _copy_base_tree(base: Path, tmp_path: Path) -> None:
-    for item in base.iterdir():
-        if item.is_dir():
-            shutil.copytree(item, tmp_path / item.name, copy_function=_clone_file)
-        else:
-            _clone_file(item, tmp_path / item.name)
-
-
-def _relocate(path: Path, base: Path, tmp_path: Path) -> Path:
-    return tmp_path / path.relative_to(base)
-
-
-def _relocated_sealed(sealed: dict, base: Path, tmp_path: Path) -> dict:
-    return {
-        "seal_receipt_path": _relocate(sealed["seal_receipt_path"], base, tmp_path),
-        "membership_dir": _relocate(sealed["membership_dir"], base, tmp_path),
-        "packet_dir": _relocate(sealed["packet_dir"], base, tmp_path),
-        "seal_receipt": copy.deepcopy(sealed["seal_receipt"]),
-    }
-
-
-def _real_slot_root(tmp_path: Path) -> tuple[Path, dict]:
-    """Per-test private copy of the once-per-process ``fx.build_real_slot_root`` output."""
-    base, info, overrides = _arrange_base("full", lambda base_dir: fx.build_real_slot_root(base_dir)[1])
-    _copy_base_tree(base, tmp_path)
-    _install_base_overrides(overrides)
-    return tmp_path, {
-        "completion": copy.deepcopy(info["completion"]),
-        "a6_receipt": copy.deepcopy(info["a6_receipt"]),
-        "a7_receipt": copy.deepcopy(info["a7_receipt"]),
-        "a8_receipt": copy.deepcopy(info["a8_receipt"]),
-        "a9_receipt": copy.deepcopy(info["a9_receipt"]),
-        "ledger_path": _relocate(info["ledger_path"], base, tmp_path),
-        "sealed": _relocated_sealed(info["sealed"], base, tmp_path),
-    }
-
-
-def _synthetic_chain_root(tmp_path: Path) -> Path:
-    """Per-test private copy of the once-per-process synthetic chain root."""
-    base, _, overrides = _arrange_base("chain", lambda base_dir: fx.base_fixture.build_synthetic_chain_root(base_dir, resolved_stratum="standard_correct"))
-    _copy_base_tree(base, tmp_path)
-    _install_base_overrides(overrides)
-    return tmp_path
-
-
-def _build_kwargs_base(base: Path) -> dict:
-    fx.base_fixture.build_synthetic_chain_root(base, resolved_stratum="standard_correct")
-    sealed = fx.build_sealed_receipt_and_packet(base)
-    return _real_slot_construction_kwargs(base, sealed)
-
-
-def _standard_construction_kwargs(tmp_path: Path) -> tuple[Path, dict]:
-    """Per-test private copy of the chain root plus the full, valid
-    ``construct_completion`` kwargs -- callers override only what they tamper
-    with, exactly as with ``_real_slot_construction_kwargs``."""
-    base, kwargs, overrides = _arrange_base("kwargs", _build_kwargs_base)
-    _copy_base_tree(base, tmp_path)
-    _install_base_overrides(overrides)
-    fresh = copy.deepcopy(kwargs)
-    fresh["seal_receipt_path"] = _relocate(kwargs["seal_receipt_path"], base, tmp_path)
-    fresh["membership_dir"] = _relocate(kwargs["membership_dir"], base, tmp_path)
-    fresh["packet_dir"] = _relocate(kwargs["packet_dir"], base, tmp_path)
-    return tmp_path, fresh
-
-
 # --- acceptance proof: exactly 1/99 at A7 and A8, 0/100 at A9 --------------
 
 
 def test_synthetic_chain_reaches_exactly_one_completion_at_a7_and_a8_and_stays_zero_at_a9(tmp_path: Path) -> None:
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
 
     a7_gate = info["a7_receipt"]["factory_gate"]
     assert a7_gate["slots_prerequisite_eligible"] == 15
@@ -320,7 +157,7 @@ def test_synthetic_chain_reaches_exactly_one_completion_at_a7_and_a8_and_stays_z
 
 
 def test_private_replay_succeeds_against_the_synthetic_private_ledger(tmp_path: Path) -> None:
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     ledger.verify_private_replay(info["a7_receipt"], stored_ledger, **_replay_kwargs(tmp_root, info))
 
@@ -330,7 +167,7 @@ def test_private_replay_succeeds_with_full_a3_role_reference_check_replay(tmp_pa
     so the reference-check receipt's gate *results* (not just its own
     internal self-consistency) are independently reproduced from the real
     candidate text, the real reference-text set, and the real A3 salt."""
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
 
     def _verifier(candidate_text: str, receipt: dict) -> None:
@@ -345,7 +182,7 @@ def test_fresh_checkout_public_validation_needs_no_batch_state(tmp_path: Path) -
     is separate from (and does not require) the private replay."""
     import shutil
 
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     batch_state_dir = tmp_path / "batch_state"
     assert batch_state_dir.is_dir()  # the private ledger really was written under tmp_path/batch_state
     shutil.rmtree(batch_state_dir)
@@ -355,7 +192,7 @@ def test_fresh_checkout_public_validation_needs_no_batch_state(tmp_path: Path) -
 
 
 def test_no_forbidden_public_terms_leak_into_a7_or_a8_receipts(tmp_path: Path) -> None:
-    _, info = _real_slot_root(tmp_path)
+    _, info = fx.build_real_slot_root(tmp_path)
     for receipt in (info["a7_receipt"], info["a8_receipt"]):
         serialized = json.dumps(receipt, ensure_ascii=False, sort_keys=True)
         for needle in FORBIDDEN_PUBLIC_TERMS:
@@ -395,7 +232,7 @@ def test_a7_ledger_and_review_receipts_carry_no_source_or_membership_fields(tmp_
     authorship/review receipts -- including the embedded fleet-execution
     receipt -- never carry a source-unit id, family id, held-out membership
     boolean, or eligible-unit list."""
-    _, info = _real_slot_root(tmp_path)
+    _, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
     for receipt_key in ("authorship_receipt", "review_receipt"):
@@ -467,11 +304,13 @@ def test_lineage_id_colliding_with_an_a4_commitment_refuses() -> None:
 
 
 def test_real_construction_refuses_when_lineage_collides_with_a4_commitment(tmp_path: Path) -> None:
-    tmp_root, kwargs = _standard_construction_kwargs(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
     real_commitments = fx.a4_unit_commitments(tmp_root)
     salt = fx.TEST_SALT
     bound_unit = ledger.pick_bound_unit(salt, fx.TARGET_SLOT_ID, fx.CANDIDATE_UNIT_IDS)
     real_lineage_id = ledger.per_row_lineage_id(salt, fx.TARGET_SLOT_ID, bound_unit)
+    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
     kwargs["a4_unit_commitments"] = [*real_commitments, real_lineage_id]
     with pytest.raises(ledger.PrivateLedgerError, match="unit_commitments"):
         ledger.construct_completion(**kwargs)
@@ -481,7 +320,7 @@ def test_real_construction_refuses_when_lineage_collides_with_a4_commitment(tmp_
 
 
 def test_verify_private_replay_refuses_a_completion_with_no_matching_ledger_entry(tmp_path: Path) -> None:
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     forged_receipt = copy.deepcopy(info["a7_receipt"])
     forged_completion = copy.deepcopy(forged_receipt["a7_completions"][0])
     forged_completion["slot_id"] = "v4p-standard-correct-002"
@@ -493,7 +332,7 @@ def test_verify_private_replay_refuses_a_completion_with_no_matching_ledger_entr
 
 
 def test_verify_private_replay_refuses_a_hash_mismatch_against_the_ledger(tmp_path: Path) -> None:
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     forged_receipt = copy.deepcopy(info["a7_receipt"])
     forged_receipt["a7_completions"][0]["row_content_sha256"] = "0" * 64
     stored_ledger = ledger.load_ledger(info["ledger_path"])
@@ -504,7 +343,7 @@ def test_verify_private_replay_refuses_a_hash_mismatch_against_the_ledger(tmp_pa
 def test_verify_private_replay_refuses_a_tampered_authorship_receipt_field(tmp_path: Path) -> None:
     """Flip a stored authorship receipt field without recomputing its
     receipt_id -- the recomputed receipt_id must no longer match."""
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
     entry["authorship_receipt"] = {**entry["authorship_receipt"], "session_id": "tampered-session"}
@@ -515,7 +354,7 @@ def test_verify_private_replay_refuses_a_tampered_authorship_receipt_field(tmp_p
 def test_verify_private_replay_refuses_a_tampered_evidence_receipt_grade(tmp_path: Path) -> None:
     """Flip a stored evidence receipt's production_capable flag without
     recomputing its receipt_id -- the integrity recheck must catch it."""
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
     entry["evidence_receipt"] = {**entry["evidence_receipt"], "production_capable": False}
@@ -526,7 +365,7 @@ def test_verify_private_replay_refuses_a_tampered_evidence_receipt_grade(tmp_pat
 def test_verify_private_replay_refuses_an_ineligible_bound_unit(tmp_path: Path) -> None:
     """Flip the ledger's own stored bound_unit_id to the held-out sentinel
     -- membership re-verification against the A3 packet must catch it."""
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
     entry["bound_unit_id"] = fx.HELDOUT_SENTINEL_UNIT_ID
@@ -543,7 +382,7 @@ def test_verify_private_replay_refuses_a_same_count_reference_swap_on_the_defaul
     replay attestation is bound to the original receipt's exact digest, so
     swapping the receipt without also forging a valid A3 signature over the
     new digest is refused."""
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
 
@@ -569,7 +408,7 @@ def test_verify_private_replay_refuses_a_same_count_reference_swap_on_the_defaul
 
 
 def test_a7_factory_gate_closed_when_the_a3_seal_receipt_is_missing(tmp_path: Path) -> None:
-    tmp_root = _synthetic_chain_root(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
     (tmp_root / a7.A3_SEAL_RECEIPT_RELATIVE).unlink()
     gate = a7.check_factory_gate(tmp_root)
     assert gate["factory_slice_ready"] is False
@@ -577,14 +416,18 @@ def test_a7_factory_gate_closed_when_the_a3_seal_receipt_is_missing(tmp_path: Pa
 
 
 def test_construct_completion_refuses_an_ineligible_candidate_unit(tmp_path: Path) -> None:
-    _, kwargs = _standard_construction_kwargs(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
+    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
     kwargs["candidate_unit_ids"] = [fx.HELDOUT_SENTINEL_UNIT_ID]
     with pytest.raises(ledger.PrivateLedgerError, match="outside the A3-verified builder-eligible set"):
         ledger.construct_completion(**kwargs)
 
 
 def test_construct_completion_refuses_an_arbitrary_unit_mixed_with_an_eligible_one(tmp_path: Path) -> None:
-    _, kwargs = _standard_construction_kwargs(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
+    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
     kwargs["candidate_unit_ids"] = [fx.CANDIDATE_UNIT_IDS[0], "completely-arbitrary-unrecognized-unit-id"]
     with pytest.raises(ledger.PrivateLedgerError, match="outside the A3-verified builder-eligible set"):
         ledger.construct_completion(**kwargs)
@@ -744,7 +587,9 @@ def test_construct_completion_has_no_synthetic_admission_switch() -> None:
 
 
 def test_construct_completion_refuses_a_non_production_capable_evidence_receipt(tmp_path: Path) -> None:
-    _, kwargs = _standard_construction_kwargs(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
+    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
     kwargs["evidence_receipt"] = fx.build_synthetic_fixture_evidence_receipt(kwargs["evidence_receipt"]["row_content_sha256"], list(fx.VESUM_IDS))
     with pytest.raises(ledger.PrivateLedgerError, match="not production_capable"):
         ledger.construct_completion(**kwargs)
@@ -819,7 +664,7 @@ def test_a7_factory_gate_refuses_a_directly_assigned_manifest_that_fails_d1(tmp_
     """Directly changing a synthetic manifest to ASSIGNED with one
     supporting family (never through reissue, and never through this
     fixture's own D1-compliant top-up) must fail A7's own gate."""
-    tmp_root = _synthetic_chain_root(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
     a2_path = tmp_root / "data/projects/open_model_data/admission/dataset_v4_a2_source_operation_admission_receipt_v1.json"
     a2_receipt = json.loads(a2_path.read_text(encoding="utf-8"))
     for coverage in a2_receipt["stratum_coverage_map"]:
@@ -831,7 +676,9 @@ def test_a7_factory_gate_refuses_a_directly_assigned_manifest_that_fails_d1(tmp_
 
 
 def test_construct_completion_refuses_when_the_manifest_fails_d1(tmp_path: Path) -> None:
-    _, kwargs = _standard_construction_kwargs(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
+    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
     kwargs["manifest"] = {"slot_series": [{"stratum": "standard_correct", "id_prefix": "v4p-standard-correct", "start": 1, "count": 15, "assignment_state": "ASSIGNED"}]}
     kwargs["a2_receipt"] = {"stratum_coverage_map": [{"stratum": "standard_correct", "supporting_existing_source_unit_ids": ["db.textbooks.public"]}]}
     with pytest.raises(ledger.PrivateLedgerError, match="Invariant D1"):
@@ -839,7 +686,7 @@ def test_construct_completion_refuses_when_the_manifest_fails_d1(tmp_path: Path)
 
 
 def test_verify_private_replay_refuses_when_the_manifest_fails_d1(tmp_path: Path) -> None:
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     replay_kwargs = _replay_kwargs(tmp_root, info)
     replay_kwargs["manifest"] = {"slot_series": [{"stratum": "standard_correct", "id_prefix": "v4p-standard-correct", "start": 1, "count": 15, "assignment_state": "ASSIGNED"}]}
@@ -982,14 +829,18 @@ def test_build_admission_input_row_accepts_the_exact_derived_rights_receipt_id()
     ],
 )
 def test_construct_completion_refuses_a_wrong_rights_receipt_id(tmp_path: Path, bad_rights_receipt_id: str) -> None:
-    _, kwargs = _standard_construction_kwargs(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
+    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
     kwargs["rights_receipt_id"] = bad_rights_receipt_id
     with pytest.raises(ledger.PrivateLedgerError, match="rights_receipt_id"):
         ledger.construct_completion(**kwargs)
 
 
 def test_construct_completion_refuses_a_one_nibble_mutated_rights_receipt_id(tmp_path: Path) -> None:
-    _, kwargs = _standard_construction_kwargs(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
+    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
     mutated = fx.RIGHTS_RECEIPT_ID[:-1] + ("0" if fx.RIGHTS_RECEIPT_ID[-1] != "0" else "1")
     kwargs["rights_receipt_id"] = mutated
     with pytest.raises(ledger.PrivateLedgerError, match="rights_receipt_id"):
@@ -1001,7 +852,7 @@ def test_private_replay_refuses_a_forged_ledger_with_a_recomputed_wrong_rights_r
     recomputed) where the rights identifier was swapped for the prohibited
     zero digest must still refuse, because ``build_admission_input_row``
     re-derives and asserts the exact identifier on every replay."""
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
     entry["admission_input_row"] = {
@@ -1300,7 +1151,7 @@ def test_verify_refuses_an_uppercase_hex_signature() -> None:
 
 
 def test_verify_private_replay_refuses_a_same_task_run_author_and_reviewer(tmp_path: Path) -> None:
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     stored_ledger = ledger.load_ledger(info["ledger_path"])
     entry = stored_ledger["entries"][fx.TARGET_SLOT_ID]
     entry["review_receipt"] = {
@@ -1314,7 +1165,7 @@ def test_verify_private_replay_refuses_a_same_task_run_author_and_reviewer(tmp_p
 def test_construct_completion_produces_a_completion_that_validates_empty_receipts_without_a_signer(tmp_path: Path) -> None:
     """Empty production completion sets continue to verify without
     requiring a signer -- the frozen 0/100/0 production state."""
-    tmp_root = _synthetic_chain_root(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
     empty_receipt = a7.build_receipt(tmp_root, a7_completions=[])
     a7.validate_receipt_independently(empty_receipt, tmp_root)
     assert empty_receipt["a7_completions"] == []
@@ -1340,7 +1191,7 @@ def test_a7_completion_residual_gap_refuses() -> None:
 
 
 def test_real_a7_receipt_refuses_an_overlapping_residual_for_its_own_completed_slot(tmp_path: Path) -> None:
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     tampered = copy.deepcopy(info["a7_receipt"])
     extra_residual = copy.deepcopy(tampered["a7_residuals"][0])
     extra_residual["residual_id"] = "a7-residual-stage-completion-not-yet-available-v4p-standard-correct-001"
@@ -1351,7 +1202,7 @@ def test_real_a7_receipt_refuses_an_overlapping_residual_for_its_own_completed_s
 
 
 def test_real_a7_receipt_refuses_a_dropped_residual_for_a_gap_slot(tmp_path: Path) -> None:
-    tmp_root, info = _real_slot_root(tmp_path)
+    tmp_root, info = fx.build_real_slot_root(tmp_path)
     tampered = copy.deepcopy(info["a7_receipt"])
     tampered["a7_residuals"] = [r for r in tampered["a7_residuals"] if r["subject_id"] != "v4p-standard-correct-002"]
     with pytest.raises(a7.OriginalRowFactoryError, match="a7_residuals does not exactly cover"):
@@ -1484,7 +1335,9 @@ def test_replay_attestation_refuses_an_unknown_a3_signer_key() -> None:
 
 
 def test_construct_completion_refuses_a_nonempty_call_with_no_replay_attestation(tmp_path: Path) -> None:
-    _, kwargs = _standard_construction_kwargs(tmp_path)
+    tmp_root = fx.base_fixture.build_synthetic_chain_root(tmp_path, resolved_stratum="standard_correct")
+    sealed = fx.build_sealed_receipt_and_packet(tmp_path)
+    kwargs = _real_slot_construction_kwargs(tmp_root, sealed)
     kwargs["replay_attestation"] = {}
     with pytest.raises(ledger.PrivateLedgerError, match="A3 reference-check signed authenticity failed"):
         ledger.construct_completion(**kwargs)
