@@ -829,8 +829,9 @@ thresholds.
 
 **Worker isolation (#8645 part C):** the detached worker runs in the user slice
 `lu-dispatch.slice` (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`) via
-`systemd-run --user --scope`. The scope execs the worker in place, so the recorded pid
-is the worker and `delegate.py cancel` still signals it. The task record's `launch_mode`
+`systemd-run --user --scope --expand-environment=no`. The scope execs the worker in place, so the recorded pid
+is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
+arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
 is `scope` (with `launch_unit`) or `popen-fallback` (with `launch_fallback_reason`).
 Fallback is the supported path when no user manager is reachable, linger is off, cgroup
 v2 memory is not delegated, or the slice is missing or does not have those limits:

@@ -2,8 +2,12 @@
 
 On 2026-09-24 a dispatch fan-out OOM-killed the driver because every worker
 shared the driver's cgroup (``docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md``).
-``systemd-run --user --scope`` execs the worker in place, so the ``Popen`` pid,
-pipes, return code, and ``cancel`` signal stay the worker's. When the user
+``systemd-run --user --scope --expand-environment=no`` execs the worker in
+place, so the ``Popen`` pid, pipes, return code, and ``cancel`` signal stay
+the worker's. The flag keeps ``$NAME`` and ``${NAME}`` in worker arguments
+literal: scope mode otherwise expands them before exec (``systemd-run(1)``,
+added in 254). A systemd that rejects the option exits
+before the worker starts, and that failure uses plain ``Popen``. When the user
 manager, cgroup2 memory delegation, the slice limits, or linger is missing,
 or ``systemd-run`` exits or is still that program when the startup window
 ends, dispatch stops it and uses plain ``Popen``, recording ``popen-fallback``.
@@ -139,11 +143,18 @@ def build_scope_argv(
     unit: str,
     slice_unit: str = SLICE_UNIT,
 ) -> list[str]:
-    """``systemd-run`` argv. ``--scope`` execs ``cmd`` in place after ``--``."""
+    """``systemd-run`` argv. ``--scope`` execs ``cmd`` in place after ``--``.
+
+    ``--expand-environment=no`` is required. Without it, systemd 259 expands
+    ``$NAME`` and ``${NAME}`` in these arguments before exec, so a ``--cwd``
+    path that contains ``$`` would reach the worker changed. Plain ``Popen``
+    does not expand them.
+    """
     return [
         "systemd-run",
         "--user",
         "--scope",
+        "--expand-environment=no",
         f"--slice={slice_unit}",
         f"--unit={unit}",
         "--collect",

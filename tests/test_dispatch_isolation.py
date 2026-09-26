@@ -148,17 +148,18 @@ def test_scope_argv_names_the_slice_unit_and_collect():
     unit = iso.scope_unit_name("codex/task id", "abc123nonce")
     argv = iso.build_scope_argv([_PY, "delegate.py", "_worker"], unit=unit)
 
-    assert argv[:8] == [
+    assert argv[:9] == [
         "systemd-run",
         "--user",
         "--scope",
+        "--expand-environment=no",
         f"--slice={iso.SLICE_UNIT}",
         f"--unit={unit}",
         "--collect",
         "--quiet",
         "--",
     ]
-    assert argv[8:] == [_PY, "delegate.py", "_worker"]
+    assert argv[9:] == [_PY, "delegate.py", "_worker"]
     prefix = "lu-worker-codex-task-id-abc123nonce-"
     assert unit.startswith(prefix)
     _hex_token(unit, prefix)
@@ -714,6 +715,7 @@ def test_scope_passes_the_environment_and_records_the_unit(tmp_path: Path):
     proc.wait(timeout=5)
     recorded = argv_log.read_text(encoding="utf-8").splitlines()
     assert "--scope" in recorded
+    assert "--expand-environment=no" in recorded
     assert "--collect" in recorded
     assert "--quiet" in recorded
     assert f"--slice={iso.SLICE_UNIT}" in recorded
@@ -949,10 +951,14 @@ def test_real_scope_puts_the_popen_pid_in_a_throwaway_slice(monkeypatch: pytest.
     before = _show_dispatch_slice()
     nonce = uuid.uuid4().hex[:12]
     slice_unit = f"probe8645c{nonce}.slice"
+    # systemd 259 scope mode expands these before exec unless
+    # --expand-environment=no is set. The child must see this argument unchanged.
+    literal = "${HOME} $PATH"
     code = (
         "import os, sys\n"
         "from pathlib import Path\n"
         "sys.stdout.write(os.environ.get('LU_SCOPE_MARKER_8645', '') + '\\n')\n"
+        "sys.stdout.write(sys.argv[1] + '\\n')\n"
         "sys.stdout.write(Path('/proc/self/cgroup').read_text().strip() + '\\n')\n"
         "sys.stdout.flush()\n"
         "if os.environ.get('LU_HOLD') == '1':\n"
@@ -965,7 +971,7 @@ def test_real_scope_puts_the_popen_pid_in_a_throwaway_slice(monkeypatch: pytest.
     held: list[subprocess.Popen[bytes]] = []
     try:
         proc, launch = iso.spawn_detached_worker(
-            [_PY, "-c", code],
+            [_PY, "-c", code, literal],
             task_id=f"probe8645c{nonce}",
             run_nonce=nonce,
             env=env,
@@ -981,6 +987,7 @@ def test_real_scope_puts_the_popen_pid_in_a_throwaway_slice(monkeypatch: pytest.
         assert launch.unit is not None
         assert proc.stdout is not None
         assert proc.stdout.readline().decode() == "yes\n"
+        assert proc.stdout.readline().decode() == f"{literal}\n"
         child_cgroup = proc.stdout.readline().decode()
         parent_cgroup = Path(f"/proc/{proc.pid}/cgroup").read_text(encoding="utf-8")
         cmdline = Path(f"/proc/{proc.pid}/cmdline").read_bytes().replace(b"\0", b" ")
@@ -993,7 +1000,7 @@ def test_real_scope_puts_the_popen_pid_in_a_throwaway_slice(monkeypatch: pytest.
 
         env["LU_HOLD"] = "0"
         finished, finished_launch = iso.spawn_detached_worker(
-            [_PY, "-c", code],
+            [_PY, "-c", code, literal],
             task_id=f"probe8645c{nonce}x",
             run_nonce=f"{nonce}x",
             env=env,

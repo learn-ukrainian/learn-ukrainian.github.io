@@ -73,7 +73,7 @@ seats. Three PRs, in this order:
 3. **C — isolation (landed):** a single `lu-dispatch.slice` for all workers
    (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`; unit file
    `packaging/systemd/lu-dispatch.slice`), driver outside it. Each detached
-   worker is `systemd-run --user --scope --slice=lu-dispatch.slice
+   worker is `systemd-run --user --scope --expand-environment=no --slice=lu-dispatch.slice
    --unit=lu-worker-<task>-<nonce>-<8 hex> --collect`. `--scope` execs the
    worker in place, so the dispatch pid, pipes, and cancel signal stay the
    worker's. The 8 hex characters are new on every launch, so a reused nonce
