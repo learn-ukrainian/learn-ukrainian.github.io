@@ -442,7 +442,7 @@ def _add_review_options(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help=(
             "Review ask (same as --type review): reply must state VERDICT "
-            "grounded in evidence; sealed review-pr is retired"
+            "grounded in evidence; sealed review-pr was removed in #8520"
         ),
     )
     review_target = parser.add_mutually_exclusive_group()
@@ -450,7 +450,7 @@ def _add_review_options(parser: argparse.ArgumentParser) -> None:
         "--branch",
         help=(
             "Remote branch to review via the lightweight direct path "
-            "(resolved as origin/<branch>; sealed review-pr is retired)"
+            "(resolved as origin/<branch>; sealed review-pr was removed in #8520)"
         ),
     )
     review_target.add_argument(
@@ -458,7 +458,7 @@ def _add_review_options(parser: argparse.ArgumentParser) -> None:
         type=int,
         help=(
             "PR to review via the lightweight direct path "
-            "(same as ask-LANE - --type review; sealed review-pr is retired)"
+            "(same as ask-LANE - --type review; sealed review-pr was removed in #8520)"
         ),
     )
 
@@ -1131,12 +1131,6 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Write the prompt/state preview and print the delegate.py command without dispatching.",
     )
 
-    from ._review_pr import register_review_pr_parser
-    from ._review_verdict import register_publish_review_verdict_parser
-
-    register_review_pr_parser(subparsers)
-    register_publish_review_verdict_parser(subparsers)
-
     review_deep_parser = subparsers.add_parser(
         "review-deep",
         help="Dispatch an adversarial Claude Opus read-only review run",
@@ -1436,14 +1430,6 @@ def _dispatch_command(args):
         _handle_codex_usage(args)
     elif args.command == "dispatch-fix":
         sys.exit(handle_dispatch_fix(args))
-    elif args.command == "review-pr":
-        from ._review_pr import handle_review_pr
-
-        sys.exit(handle_review_pr(args))
-    elif args.command == "publish-review-verdict":
-        from ._review_verdict import handle_publish_review_verdict
-
-        sys.exit(handle_publish_review_verdict(args))
     elif args.command == "review-deep":
         sys.exit(handle_review_deep(args))
     elif args.command == "check-model":
@@ -1662,7 +1648,7 @@ def _handle_acp_compat(args, target: str) -> None:
     branch = getattr(args, "branch", None)
     resolved_head_sha: str | None = None
     if pr_number is not None or branch is not None:
-        # #7010: sealed review-pr is retired (operator 2026-08-07). Route
+        # #7010: sealed review-pr was removed in #8520. Route
         # --pr/--branch to the same lightweight direct path as
         # `ask-LANE - --type review`: the target is folded into the prompt and
         # review mode is forced so the reply still needs a grounded verdict.
@@ -1675,7 +1661,7 @@ def _handle_acp_compat(args, target: str) -> None:
         content = _review_target_content(target_desc, content, sha=resolved_head_sha)
         review = True
 
-    from ._review_pr import is_gemini_family_model
+    from ._agy import is_gemini_family_model
 
     if review and (target in {"agy", "gemini"} or is_gemini_family_model(model)):
         from ._agy import gemini_pr_or_branch_content_error, gemini_review_profile_error

@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-09-25" />
+<meta name="report-date" content="2026-09-26" />
 
 <meta name="report-status" content="migrated" />
 
@@ -116,7 +116,7 @@
   <header class="hero">
     <div class="title-block">
       <h1>Agent Bridge — Channel Communication</h1>
-      <div class="sub">Migrated from Markdown on 2026-09-25</div>
+      <div class="sub">Migrated from Markdown on 2026-09-26</div>
     </div>
     <div class="meta">
       <div>Source: docs/best-practices/agent-bridge.md</div>
@@ -261,13 +261,14 @@ It hardcodes <code>scripts/delegate.py dispatch --agent codex --mode danger --wo
 brief includes the commit, push, and PR checklist. If <code>--brief-file</code>
 is omitted, the wrapper builds <code>/tmp/dispatch-fix-&lt;task-id&gt;.md</code> from
 <code>gh issue view &lt;issue&gt; --json title,body</code>.</p>
-<p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr &lt;PR&gt; [--reviewer auto|codex|claude|glm|grok] [--model MODEL]</code>
-is the <strong>canonical formal PR review entry</strong> (Sol fleet-comms Phase 0–3):</p>
+<p>Exact-head cross-family review through <code>ask-&lt;lane&gt; --type review</code> (headless dispatch via
+<code>scripts/delegate.py dispatch --agent &lt;reviewer&gt; --mode read-only --worktree --branch &lt;branch&gt;</code>)
+is the <strong>canonical formal PR review entry</strong> (sealed <code>review-pr</code> and <code>publish-review-verdict</code>
+were removed in #8520):</p>
 <ul>
 <li><strong>Pointer-only</strong> prompt (PR URL + checklist + mandatory read-only contract).</li>
 <li>Hard size caps — refuse fat pasted diffs/inventory YAML.</li>
-<li>Default <code>--reviewer auto</code> uses the deterministic suitability-first scheduler;
-no provider is an unconditional default.</li>
+<li>An independent cross-family reviewer outside the author's model family must be selected.</li>
 <li>A reviewer alias selects its practical default. Add a formally eligible
 same-route model plus <code>--override-reason</code> for an exceptional operator pin,
 for example <code>--reviewer claude --model claude-fable-5</code> or
@@ -279,52 +280,28 @@ for example <code>--reviewer claude --model claude-fable-5</code> or
 </ul>
 <p>Formal reviews stay thin in both directions (Phase 4–5). Do not paste a review
 body over 4 KiB or attach evidence over 64 KiB to an <code>ask-*</code> review job; the
-bridge rejects it and points to <code>review-pr &lt;N&gt;</code>. Prefer a PR target over a
-manual review ask.</p>
+bridge rejects it. Prefer exact-head cross-family review through <code>ask-&lt;lane&gt; --type review</code>
+(headless dispatch) over a manual review ask (sealed <code>review-pr</code> was removed in #8520).</p>
 <p><strong>Phase 5 steer (warn-not-reject, #5486):</strong> if an <code>ask-* --review</code> payload looks
 like a <strong>formal CF PR review</strong> (GitHub PR URL / <code>PR #N</code> / cross-family formal
-wording) and has <strong>no</strong> sealed <code>review_pr</code> / <code>review_branch</code> target, the bridge
+wording) and has <strong>no</strong> named PR target or head SHA, the bridge
 prints a <strong>warning</strong> and still delivers the ask — rejecting after the agent
-already wrote a formal review wastes work when the agent did not know to use
-<code>review-pr</code>. Prefer <code>review-pr &lt;N&gt;</code> then <code>publish-review-verdict</code> for new work.
+already wrote a formal review wastes work (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520; the direct <code>ask-&lt;lane&gt; --type review</code> round is the formal path).
 <strong>Size caps remain fail-closed</strong> for oversized bodies/attachments. Silence the
 steering warning with <code>BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1</code>.</p>
-<p><strong>Phase 4 residual (#5485):</strong> migrate runbooks and dispatch briefs that still say
-<code>ask-codex --review</code> for PR gates to <code>review-pr</code> +
-<code>publish-review-verdict</code>. <code>ask-agy --review</code> is not a code-review route
+<p><strong>Formal CF PR review:</strong> request formal CF via direct <code>ask-&lt;lane&gt; - --type review --pr &lt;N&gt;</code> or <code>ask-&lt;lane&gt; - --task-id review-&lt;N&gt; --type review</code>, then post the resulting verdict and findings as a PR comment (<code>gh pr comment</code> or <code>gh pr review</code>) bound to the exact head SHA (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520). <code>ask-agy --review</code> is not a code-review route
 (operator 2026-09-25): a missing <code>--review-profile</code> is refused, <code>code</code> is
 refused, and Ukrainian content review must pass <code>--review-profile ukrainian</code>.
 <code>scripts/audit/llm_reviewer_dispatch.py</code> content-review routes remain
 <code>ask-* --review</code> (module QG, not PR CF), with that Ukrainian profile on the
 AGY factual route.</p>
-<p>After a reviewer writes canonical <code>code-review-findings.v1</code> JSON, publish it
-with exactly one PR comment. The publisher retains the overall explanation and
-every finding; it derives the gate verdict from the canonical evidence rather
-than treating a detached verdict line as proof:</p>
-<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py publish-review-verdict \
-  --pr 5458 --findings-json /tmp/review-findings.json \
-  --model gpt-5.6-terra --family openai --harness codex
-</code></pre>
-<p>The comment keeps <code>VERDICT</code>, the PR head SHA, and reviewer provenance, then
-renders the explanation and each finding's priority, path/line, description,
-rationale, smallest fix, and sources. A verdict with no explanation and no
-findings is marked <strong>NO EVIDENCE SUPPLIED</strong> in the published comment. If a
-review is too large for GitHub, the publisher retains the overall explanation,
-truncates findings last, and names the full structured record. The command
-prints a ≤2 KiB status summary; use <code>--dry-run</code> to verify the payload locally.</p>
-<p>For a sealed <code>APPROVED</code> verdict, the publisher re-reads the live PR head before
-it publishes <code>fleet/cross-family-review=success</code>. A head change invalidates the
-review publication and requires review evidence for the new head.</p>
-<p><code>--verdict-file</code> remains a legacy escape hatch, but its published comment
-explicitly says that no review evidence was supplied. It is not equivalent to
-a canonical review.</p>
 <p><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-deep &lt;PR-or-path&gt; [--effort xhigh]</code> dispatches an
 adversarial Claude review run. It hardcodes <code>--agent claude --mode read-only --model claude-opus-4-7 --effort xhigh</code> unless an explicit
 effort override is passed, then builds a review prompt from either
 <code>gh pr view</code> plus <code>gh pr diff</code> or the target file/directory contents.
 Use <strong>three-dot</strong> evidence only (<code>gh pr diff</code>, <code>gh pr view --json files</code>,
 or merge-base…HEAD) — never two-dot <code>base-tip..HEAD</code> against a moved base
-(#5802). Prefer <code>review-pr</code> for ordinary formal CF review.</p>
+(#5802). Prefer exact-head cross-family review through <code>ask-&lt;lane&gt; --type review</code> (headless dispatch) for ordinary formal CF review (sealed <code>review-pr</code> and <code>publish-review-verdict</code> were removed in #8520).</p>
 <h3>Worktree cleanup (post-merge painpoint)</h3>
 <p>After a PR merges, do <strong>not</strong> leave dispatch worktrees forever:</p>
 <pre><code class="language-bash"># Safe default (dry-run):
@@ -407,7 +384,7 @@ and you have another way to detect parked sessions.</p>
 </tr>
 <tr>
 <td>Formal PR review (CF gate)</td>
-<td><code>.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr &lt;N&gt;</code></td>
+<td>Direct <code>ask-&lt;lane&gt; --type review</code> (headless dispatch; sealed <code>review-pr</code> removed in #8520)</td>
 </tr>
 <tr>
 <td>Code review discussion (non-gate)</td>

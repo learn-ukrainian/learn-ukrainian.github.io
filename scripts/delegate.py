@@ -2225,8 +2225,8 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # Verdict vocabulary mirrors the live review parsers — no third vocabulary
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
 # APPROVED / CHANGES_REQUESTED / BLOCKED by
-# scripts/ai_agent_bridge/_review_verdict.py and
-# scripts/fleet_comms/review_publication.py. REQUEST_CHANGES is the token
+# scripts/fleet_comms/review_publication.py (and formerly
+# scripts/ai_agent_bridge/_review_verdict.py, removed in #8520). REQUEST_CHANGES is the token
 # cf_preflight.py and the review prompts actually ask reviewers to write.
 # Reviewers routinely render the label and token in Markdown emphasis
 # (``**Verdict**: **APPROVE**``, ``VERDICT: **REQUEST_CHANGES**``); those are

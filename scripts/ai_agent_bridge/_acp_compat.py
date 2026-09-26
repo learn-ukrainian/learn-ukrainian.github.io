@@ -462,8 +462,9 @@ def _run_compat_ask_impl(
 
     ``review=True`` runs as a normal ask: the review of record is one direct
     cross-family round with the verdict posted on the PR by the requester
-    (operator order 2026-08-06). The sealed ``review-pr`` path is opt-in for
-    high-risk code only.
+    (operator order 2026-08-06). Exact-head cross-family review through
+    ``ask-<lane> --type review`` (headless dispatch) replaced the removed
+    sealed ``review-pr`` path (removed in #8520).
 
     ``hard_timeout=None`` resolves the seat's profile default (#6877); an
     explicit value always wins.

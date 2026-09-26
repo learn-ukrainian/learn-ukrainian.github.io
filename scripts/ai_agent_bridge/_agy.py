@@ -364,6 +364,27 @@ def gemini_pr_or_branch_content_error(
         return f"{GEMINI_CODE_REVIEW_FORBIDDEN}; could not list changed files: {exc}"
 
 
+_GEMINI_MODEL_ALIASES = frozenset({"gemini", "gemini-flash", "gemini-pro"})
+
+
+def gemini_model_leaf(model: str | None) -> str:
+    """Last slash segment of a model id, lowercased.
+
+    ``google/gemini-3.1-pro`` and ``openrouter/google/gemini-3.1-pro`` share
+    the leaf ``gemini-3.1-pro``.
+    """
+    text = (model or "").strip()
+    if not text:
+        return ""
+    return text.casefold().rsplit("/", 1)[-1]
+
+
+def is_gemini_family_model(model: str | None) -> bool:
+    """True when the model id is Gemini-family, including provider-prefixed ids."""
+    leaf = gemini_model_leaf(model)
+    return leaf.startswith("gemini-") or leaf in _GEMINI_MODEL_ALIASES
+
+
 def gemini_review_targets_model(
     *,
     agent: str,
@@ -371,8 +392,6 @@ def gemini_review_targets_model(
     resolved_model: str | None = None,
 ) -> bool:
     """True when this review would run a Gemini-family model on any harness."""
-    from ._review_pr import is_gemini_family_model
-
     if (agent or "").strip().lower() in GEMINI_REVIEW_AGENTS:
         return True
     return is_gemini_family_model(model) or is_gemini_family_model(resolved_model)
