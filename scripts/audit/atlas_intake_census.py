@@ -13,10 +13,11 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
-if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
-    sys.path.pop(0)
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __name__ == "__main__":
+    if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
+        sys.path.pop(0)
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit.atlas_intake_gate import (
     classification_counts,
@@ -82,9 +83,7 @@ def build_census(
             "source_units": _source_unit_count(records),
             "source_rows": len(records),
             "deduped_candidates": len(candidates),
-            "registered_source_rows": sum(
-                1 for record in records if is_registered_source_family(record.source_family)
-            ),
+            "registered_source_rows": sum(1 for record in records if is_registered_source_family(record.source_family)),
             "unknown_source_rows": sum(
                 1 for record in records if not is_registered_source_family(record.source_family)
             ),
@@ -94,8 +93,7 @@ def build_census(
             "classification_counts": classification_counts(gate_results),
         },
         "by_family": {
-            family: _family_payload(rows, registered=family in registered)
-            for family, rows in sorted(by_family.items())
+            family: _family_payload(rows, registered=family in registered) for family, rows in sorted(by_family.items())
         },
         "inventory_files": inventory_rows,
         "safety": {

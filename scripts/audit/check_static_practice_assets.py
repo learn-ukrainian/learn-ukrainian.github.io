@@ -56,12 +56,24 @@ def _audit_dir_off_sys_path() -> Iterator[None]:
     inside ``check_assets`` must not see it.
     """
     audit_dir = AUDIT_DIR.resolve()
-    saved = sys.path[:]
-    sys.path[:] = [entry for entry in saved if not entry or Path(entry).resolve() != audit_dir]
+    removed: list[tuple[int, str]] = []
+    for idx, entry in enumerate(sys.path):
+        if not entry:
+            continue
+        try:
+            if Path(entry).resolve() == audit_dir:
+                removed.append((idx, entry))
+        except (OSError, ValueError):
+            continue
+
+    for idx, _ in reversed(removed):
+        del sys.path[idx]
+
     try:
         yield
     finally:
-        sys.path[:] = saved
+        for idx, entry in removed:
+            sys.path.insert(min(idx, len(sys.path)), entry)
 
 
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")

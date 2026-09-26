@@ -13,13 +13,14 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# Ensure project root is in sys.path when executed directly
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _SCRIPT_DIR = str(Path(__file__).resolve().parent)
-if _SCRIPT_DIR in sys.path:
-    sys.path.remove(_SCRIPT_DIR)
-if str(_PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_ROOT))
+if __name__ == "__main__":
+    # Ensure project root is in sys.path when executed directly
+    if _SCRIPT_DIR in sys.path:
+        sys.path.remove(_SCRIPT_DIR)
+    if str(_PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(_PROJECT_ROOT))
 
 import yaml
 
@@ -44,9 +45,7 @@ DEFAULT_SOURCE_LEDGER = (
     / f"2026-07-23-{_LATIN_STEM}-full-document-intake.yaml"
 )
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions"
-DEFAULT_SCRUBBED_PATH = (
-    "data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-full.yaml"
-)
+DEFAULT_SCRUBBED_PATH = "data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-full.yaml"
 DEFAULT_NUM_SHARDS = 10
 
 
@@ -131,9 +130,7 @@ def generate_scrubbed_shards(
                     absent_inventories={scrubbed_inventory_path},
                 )
             except SourceInventoryError as exc:
-                raise ValueError(
-                    f"Scrubbed row {idx_row} breaks validation semantics: {exc}"
-                ) from exc
+                raise ValueError(f"Scrubbed row {idx_row} breaks validation semantics: {exc}") from exc
 
         shard_payload = {
             "version": payload.get("version", 1),
@@ -251,7 +248,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    if not args.source_ledger.is_file() and not list(args.output_dir.glob("2026-07-23-teacher-lesson-full-document-intake-batch-*.yaml")):
+    if not args.source_ledger.is_file() and not list(
+        args.output_dir.glob("2026-07-23-teacher-lesson-full-document-intake-batch-*.yaml")
+    ):
         print(f"Error: source ledger not found at {args.source_ledger}", file=sys.stderr)
         return 1
 

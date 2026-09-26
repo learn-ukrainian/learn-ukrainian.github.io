@@ -1,5 +1,12 @@
 from __future__ import annotations
 
+import importlib
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
 from scripts.audit.apply_source_inventory_provenance import apply_existing_provenance_overlay
 from scripts.audit.plan_source_inventory_promotion import ApprovedDecision, CandidateMatch
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
@@ -150,3 +157,32 @@ def test_overlay_only_adds_approved_duplicate_source_ref() -> None:
 
     assert result["counts"]["added_provenance_refs"] == 1
     assert manifest["entries"][0]["source_provenance"] == [candidate.entry["source_provenance"][0]]
+
+
+def test_importing_apply_source_inventory_provenance_leaves_sys_path_unchanged(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    audit_dir = str((Path(__file__).resolve().parents[1] / "scripts" / "audit").resolve())
+    monkeypatch.setattr(sys, "path", [audit_dir, *[p for p in sys.path if p != audit_dir]])
+    original_path = list(sys.path)
+
+    monkeypatch.delitem(
+        sys.modules,
+        "scripts.audit.apply_source_inventory_provenance",
+        raising=False,
+    )
+    importlib.import_module("scripts.audit.apply_source_inventory_provenance")
+
+    assert sys.path == original_path
+
+
+def test_apply_source_inventory_provenance_cli_help() -> None:
+    script_path = Path(__file__).resolve().parents[1] / "scripts" / "audit" / "apply_source_inventory_provenance.py"
+    result = subprocess.run(
+        [sys.executable, str(script_path), "--help"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0
+    assert "Attach approved source-inventory provenance" in result.stdout

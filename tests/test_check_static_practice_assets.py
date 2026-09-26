@@ -886,6 +886,37 @@ def test_check_assets_runs_qa_gate_after_audit_dir_removed_from_sys_path(
     assert any("practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in err for err in summary["errors"])
 
 
+def test_audit_dir_off_sys_path_preserves_added_entries(monkeypatch: pytest.MonkeyPatch) -> None:
+    audit_dir = str(check_static_practice_assets.AUDIT_DIR.resolve())
+    sentinel = "/existing/sentinel/path"
+    monkeypatch.setattr(sys, "path", [audit_dir, sentinel])
+    added_entry = "/added/during/import"
+
+    with check_static_practice_assets._audit_dir_off_sys_path():
+        assert audit_dir not in sys.path
+        sys.path.insert(0, added_entry)
+
+    assert sys.path[0] == audit_dir
+    assert sys.path[1] == added_entry
+    assert sentinel in sys.path
+
+
+def test_audit_dir_off_sys_path_restores_on_exception(monkeypatch: pytest.MonkeyPatch) -> None:
+    audit_dir = str(check_static_practice_assets.AUDIT_DIR.resolve())
+    sentinel = "/existing/sentinel/path"
+    monkeypatch.setattr(sys, "path", [audit_dir, sentinel])
+    added_entry = "/added/before/error"
+
+    with pytest.raises(RuntimeError, match="guarded import failed"):
+        with check_static_practice_assets._audit_dir_off_sys_path():
+            sys.path.insert(0, added_entry)
+            raise RuntimeError("guarded import failed")
+
+    assert sys.path[0] == audit_dir
+    assert sys.path[1] == added_entry
+    assert sentinel in sys.path
+
+
 def test_cli_runs_qa_gate_with_fixtures(tmp_path: Path) -> None:
     """Verify CLI forwards --run-qa-gate and catches QA violations on fixtures."""
     daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
