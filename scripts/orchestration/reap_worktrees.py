@@ -2086,54 +2086,47 @@ def _terminal_dispatch_reason(
     return f"settled dispatch task-id={task_id} status={task_status}"
 
 
-# Ignored (never tracked) residue a worker leaves behind that is regenerable,
-# so it does not make a checkout worth preserving. Any other ignored path
-# (``data/``, local notes, build outputs) may hold unique work.
-_DISPOSABLE_IGNORED_NAMES = frozenset(
-    {".venv", "node_modules", "__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"}
-)
+# Tool-regenerated caches a worker leaves behind. They are the only paths a
+# clean detached checkout may hold and still be reaped; everything else,
+# ``.venv/`` and ``node_modules/`` included, may hold an only copy of work.
+_REGENERABLE_CACHE_DIRS = frozenset({"__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"})
 
 _DETACHED_CLEAN_CONTAINED_PREFIX = "detached clean contained"
 
 
-def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:
-    """True only when ``path`` holds no work a reap could destroy.
+def _is_regenerable_cache_path(path: str) -> bool:
+    """True for a ``.pyc`` file or any path inside a known cache directory."""
+    segments = path.split("/")
+    return segments[-1].endswith(".pyc") or bool(_REGENERABLE_CACHE_DIRS.intersection(segments[:-1]))
 
-    Stricter than :func:`_worktree_clean`, which skips untracked files under
-    ``.venv/`` and ``node_modules/``: here *any* tracked change or untracked
-    non-ignored path, anywhere, preserves the tree. The only tolerated
-    residue is files the repo's own ``.gitignore`` ignores AND that sit under
-    a known cache directory (or are ``.pyc``). A git failure is not proof, so
-    it reads as "not disposable".
+
+def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:
+    """True only when every path git lists in ``path`` is a regenerable cache.
+
+    Deliberately stricter than :func:`_worktree_clean`: tracked changes,
+    untracked and ignored paths all count, and no directory is tolerated
+    wholesale (``.venv/`` and ``node_modules/`` included), so the answer never
+    depends on ``.gitignore`` or ``info/exclude`` contents. A git failure is
+    not proof, so it reads as "not disposable".
     """
     status = _run(
-        ["git", "status", "--porcelain", "--untracked-files=all"],
+        ["git", "status", "--porcelain=v1", "-z", "--ignored", "--untracked-files=all"],
         cwd=path,
         timeout=timeout,
     )
-    if status.returncode != 0 or (status.stdout or "").strip():
+    if status.returncode != 0:
         return False
-    # Everything git ignores must be ignored by the repo's ``.gitignore``
-    # itself: ``--exclude-standard`` also honours ``info/exclude`` and a
-    # user-global excludes file, which are not part of the repo's contract.
-    def ignored_paths(*exclude_args: str) -> set[str] | None:
-        proc = _run(
-            ["git", "ls-files", "--others", "--ignored", *exclude_args, "-z"],
-            cwd=path,
-            timeout=timeout,
-        )
-        if proc.returncode != 0:
-            return None
-        return {entry for entry in (proc.stdout or "").split("\0") if entry}
-
-    everything = ignored_paths("--exclude-standard")
-    by_gitignore = ignored_paths("--exclude-per-directory=.gitignore")
-    if everything is None or by_gitignore is None or not everything <= by_gitignore:
-        return False
-    for entry in everything:
-        if entry.endswith(".pyc"):
+    entries = iter((status.stdout or "").split("\0"))
+    for entry in entries:
+        if not entry:
             continue
-        if not _DISPOSABLE_IGNORED_NAMES.intersection(entry.split("/")):
+        # ``XY <path>``; a rename or copy is followed by its origin path.
+        if len(entry) < 4 or entry[2] != " ":
+            return False
+        paths = [entry[3:]]
+        if "R" in entry[:2] or "C" in entry[:2]:
+            paths.append(next(entries, ""))
+        if not all(_is_regenerable_cache_path(p) for p in paths):
             return False
     return True
 

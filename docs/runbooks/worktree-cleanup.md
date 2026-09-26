@@ -206,13 +206,14 @@ disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
 
 - it is exactly `.worktrees/dispatch/<agent>/<task>/` with a detached HEAD,
   and is not an ACP runtime worktree;
-- `git status --porcelain --untracked-files=all` is empty, and every
-  git-ignored path is a regenerable cache (`.venv`, `node_modules`,
-  `__pycache__`, `.pytest_cache`, `.ruff_cache`, `.mypy_cache`, `*.pyc`) that the
-  repo's own `.gitignore` ignores. Any untracked non-ignored path anywhere
-  (including under `.venv/` or `node_modules/`), any other ignored file (for
-  example under `data/`), and any cache ignored only by a local exclude
-  preserves it;
+- `git status --porcelain=v1 --ignored --untracked-files=all` lists nothing
+  except regenerable caches: a path with a `__pycache__/`, `.pytest_cache/`,
+  `.ruff_cache/` or `.mypy_cache/` directory segment, or a `*.pyc` file. The
+  allowlist is fixed and covers tracked-modified, untracked and ignored paths
+  alike; it never consults `.gitignore` or `info/exclude`. Nothing else is
+  tolerated, so any file under `.venv/` or `node_modules/` (ignored or not),
+  any other ignored file (for example under `data/`), and any tracked or
+  untracked change preserves it;
 - HEAD is an ancestor of `origin/main` or contained in some
   `refs/remotes/origin/*` ref (no age threshold, no task record needed);
 - it is not locked, no live process has its working directory inside it, and

@@ -4997,16 +4997,22 @@ def test_detached_clean_contained_tolerates_cache_only_ignored_residue(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo = init_repo(tmp_path)
-    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n.venv/\n__pycache__/\ndata/\n", encoding="utf-8")
+    (repo / ".gitignore").write_text(
+        ".worktrees/\nbatch_state/\n__pycache__/\n*.pyc\n.pytest_cache/\n.ruff_cache/\n", encoding="utf-8"
+    )
     git(repo, "commit", "-am", "ignore caches")
     git(repo, "push", "origin", "main")
     worktree = _detached_dispatch_worktree(repo)
     (worktree / "pkg" / "__pycache__").mkdir(parents=True)
     (worktree / "pkg" / "__pycache__" / "m.pyc").write_bytes(b"\0")
-    (worktree / ".venv" / "lib").mkdir(parents=True)
-    (worktree / ".venv" / "lib" / "x").write_text("x", encoding="utf-8")
+    (worktree / "loose.pyc").write_bytes(b"\0")
+    (worktree / ".pytest_cache" / "v" / "cache").mkdir(parents=True)
+    (worktree / ".pytest_cache" / "v" / "cache" / "lastfailed").write_text("{}", encoding="utf-8")
+    (worktree / ".ruff_cache").mkdir()
+    (worktree / ".ruff_cache" / "CACHEDIR.TAG").write_text("x", encoding="utf-8")
 
-    assert result_for(_reap_contained(repo, monkeypatch), worktree).action == "removed"
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+    assert result.action == "removed", result.reason
     assert not worktree.exists()
 
 
@@ -5161,40 +5167,63 @@ def test_detached_clean_contained_ignores_non_dispatch_and_branch_checkouts(
     assert on_branch.exists()
 
 
-def test_detached_clean_contained_preserves_unignored_file_under_venv(
+@pytest.mark.parametrize("ignore_in_gitignore", [False, True])
+@pytest.mark.parametrize("rel", [".venv/notes.txt", ".venv/lib/x", "node_modules/x", "web/node_modules/pkg/index.js"])
+def test_detached_clean_contained_preserves_files_under_venv_and_node_modules(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    ignore_in_gitignore: bool,
+    rel: str,
 ) -> None:
-    """``.venv/`` is only disposable when ignored; an unignored file there is work."""
+    """No directory is tolerated wholesale, whether or not ``.gitignore`` ignores it."""
     repo = init_repo(tmp_path)
+    if ignore_in_gitignore:
+        (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n.venv/\nnode_modules/\n", encoding="utf-8")
+        git(repo, "commit", "-am", "ignore envs")
+        git(repo, "push", "origin", "main")
     worktree = _detached_dispatch_worktree(repo)
-    (worktree / ".venv").mkdir()
-    (worktree / ".venv" / "notes.txt").write_text("only copy", encoding="utf-8")
+    target = worktree / rel
+    target.parent.mkdir(parents=True)
+    target.write_text("only copy", encoding="utf-8")
 
     result = result_for(_reap_contained(repo, monkeypatch), worktree)
 
     assert result.action == "skipped"
-    assert (worktree / ".venv" / "notes.txt").read_text(encoding="utf-8") == "only copy"
+    assert target.read_text(encoding="utf-8") == "only copy"
 
 
-def test_detached_clean_contained_preserves_cache_dir_ignored_only_by_local_exclude(
+def test_detached_clean_contained_preserves_cache_dir_next_to_unlisted_work(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Cache residue counts only when the repo's ``.gitignore`` ignores it."""
+    """One non-cache path preserves the tree even when caches are present."""
     repo = init_repo(tmp_path)
     worktree = _detached_dispatch_worktree(repo)
-    exclude = Path(git(worktree, "rev-parse", "--git-path", "info/exclude"))
-    exclude = exclude if exclude.is_absolute() else worktree / exclude
-    exclude.parent.mkdir(parents=True, exist_ok=True)
-    exclude.write_text(".venv/\n", encoding="utf-8")
-    (worktree / ".venv").mkdir()
-    (worktree / ".venv" / "notes.txt").write_text("only copy", encoding="utf-8")
+    (worktree / "__pycache__").mkdir()
+    (worktree / "__pycache__" / "m.pyc").write_bytes(b"\0")
+    (worktree / "notes.pyc.txt").write_text("only copy", encoding="utf-8")
 
     result = result_for(_reap_contained(repo, monkeypatch), worktree)
 
     assert result.action == "skipped"
-    assert (worktree / ".venv" / "notes.txt").exists()
+    assert (worktree / "notes.pyc.txt").exists()
+
+
+def test_detached_clean_contained_preserves_tracked_change_to_a_cache_named_file(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The allowlist covers untracked/ignored residue; a tracked change is never tolerated."""
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "README.md").write_text("edited\n", encoding="utf-8")
+    (worktree / "__pycache__").mkdir()
+    (worktree / "__pycache__" / "m.pyc").write_bytes(b"\0")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "README.md").read_text(encoding="utf-8") == "edited\n"
 
 
 def test_detached_clean_contained_preserves_when_active_task_probe_unavailable(
