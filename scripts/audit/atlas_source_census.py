@@ -28,10 +28,11 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
-if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
-    sys.path.pop(0)
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __name__ == "__main__":
+    if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
+        sys.path.pop(0)
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit.source_inventory_intake import (
     SourceInventoryError,
@@ -52,12 +53,8 @@ DEFAULT_TEXTBOOK_TXT_ROOT = PROJECT_ROOT / "docs" / "references" / "private" / "
 DEFAULT_TEXTBOOK_PDF_ROOT = TEXTBOOK_PDFS_DIR
 DEFAULT_TEXTBOOK_JSONL_ROOT = PROJECT_ROOT / "data" / "textbook_chunks"
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
-DEFAULT_OHOIKO_PRIVATE_ROOT = (
-    PROJECT_ROOT / "docs" / "references" / "private" / "ohoiko-june-a1-book" / "notes"
-)
-DEFAULT_OHOIKO_INVENTORIES = (
-    PROJECT_ROOT / "data" / "lexicon" / "source-inventory" / "ohoiko-abetka-keywords.yaml",
-)
+DEFAULT_OHOIKO_PRIVATE_ROOT = PROJECT_ROOT / "docs" / "references" / "private" / "ohoiko-june-a1-book" / "notes"
+DEFAULT_OHOIKO_INVENTORIES = (PROJECT_ROOT / "data" / "lexicon" / "source-inventory" / "ohoiko-abetka-keywords.yaml",)
 DEFAULT_TEXTBOOK_INVENTORIES = (
     PROJECT_ROOT / "data" / "lexicon" / "source-inventory" / "bolshakova-bukvar-keywords.yaml",
     PROJECT_ROOT / "data" / "lexicon" / "source-inventory" / "vashulenko-grade3-headwords.yaml",
@@ -302,7 +299,9 @@ def scan_textbook_text_root(root: Path, census: AtlasSourceCensus, text_root: Pa
     """Scan extracted textbook text files."""
     source_root = _resolve_path(text_root, root)
     stats = census.surfaces.setdefault(TEXTBOOK_TXT, SurfaceStats())
-    files = sorted(path for path in source_root.glob("**/*") if path.is_file() and path.suffix.lower() in TEXTBOOK_TXT_SUFFIXES)
+    files = sorted(
+        path for path in source_root.glob("**/*") if path.is_file() and path.suffix.lower() in TEXTBOOK_TXT_SUFFIXES
+    )
     for path in files:
         grade = _textbook_grade(path)
         text = path.read_text(encoding="utf-8", errors="replace")
@@ -321,7 +320,9 @@ def scan_textbook_pdf_root(root: Path, census: AtlasSourceCensus, pdf_root: Path
     """Extract and scan PDFs with pdftotext when local PDFs are available."""
     source_root = _resolve_path(pdf_root, root)
     stats = census.surfaces.setdefault(TEXTBOOK_PDF, SurfaceStats())
-    files = sorted(path for path in source_root.glob("**/*") if path.is_file() and path.suffix.lower() in TEXTBOOK_PDF_SUFFIXES)
+    files = sorted(
+        path for path in source_root.glob("**/*") if path.is_file() and path.suffix.lower() in TEXTBOOK_PDF_SUFFIXES
+    )
     pdftotext = _pdftotext_path()
     if not files or not pdftotext:
         census.source_inputs[TEXTBOOK_PDF] = {
@@ -478,8 +479,7 @@ def public_census_payload(census: AtlasSourceCensus) -> dict[str, Any]:
             for surface_id, stats in sorted(census.surfaces.items())
         },
         "modules_by_track": {
-            track: _public_stats_payload(stats, atlas.lemma_keys)
-            for track, stats in sorted(census.by_track.items())
+            track: _public_stats_payload(stats, atlas.lemma_keys) for track, stats in sorted(census.by_track.items())
         },
         "textbooks_by_grade": {
             grade: _public_stats_payload(stats, atlas.lemma_keys)
@@ -979,7 +979,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.json_out:
             write_public_json(census, args.json_out if args.json_out.is_absolute() else root / args.json_out)
         if args.markdown_out:
-            write_public_markdown(census, args.markdown_out if args.markdown_out.is_absolute() else root / args.markdown_out)
+            write_public_markdown(
+                census, args.markdown_out if args.markdown_out.is_absolute() else root / args.markdown_out
+            )
         if args.detail_out:
             write_detail_json(census, args.detail_out, project_root=root, limit=args.detail_limit)
     except (OSError, json.JSONDecodeError, yaml.YAMLError, SourceInventoryError) as exc:

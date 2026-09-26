@@ -22,15 +22,16 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-# A bare script invocation puts ``scripts/audit`` (not the repository root) on
-# sys.path.  Keep the documented ``.venv/bin/python scripts/audit/...`` command
-# usable without caller-specific PYTHONPATH configuration.  Remove that audit
-# directory first: its ``config.py`` would otherwise shadow ``scripts/config.py``
-# while importing the audit package.
 AUDIT_DIR = Path(__file__).resolve().parent
-sys.path[:] = [entry for entry in sys.path if Path(entry or ".").resolve() != AUDIT_DIR]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __name__ == "__main__":
+    # A bare script invocation puts ``scripts/audit`` (not the repository root) on
+    # sys.path.  Keep the documented ``.venv/bin/python scripts/audit/...`` command
+    # usable without caller-specific PYTHONPATH configuration.  Remove that audit
+    # directory first: its ``config.py`` would otherwise shadow ``scripts/config.py``
+    # while importing the audit package.
+    sys.path[:] = [entry for entry in sys.path if Path(entry or ".").resolve() != AUDIT_DIR]
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
 from fastapi.testclient import TestClient
 
