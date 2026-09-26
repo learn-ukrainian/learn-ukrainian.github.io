@@ -11,7 +11,7 @@ future isolation engineering). For **fleet-comms v1 (#5512)**, AGY remains a liv
 | Project instructions suppress | **Unproven** for sealed review | Fail-closed |
 | Ambient MCP / hooks / nested reviewers | **Unproven** | Fail-closed |
 | Sealed snapshot cwd only | Hard raise in `prepare_isolated_review_launch` | Refuse |
-| `review-pr --reviewer agy` | **Not implemented** | Use substitute seats |
+| `review-pr --reviewer agy` | Retired (#8520) | Replaced by direct `ask-* --type review` substitute seats |
 | Registry `formal_review_eligible` | `false` for `agy` | **v1 complete residual** |
 | Wire #5615 / enable #5616 | Residual closeout | Reopen only with Option A/B proof |
 
@@ -32,8 +32,8 @@ AGY **is** an orchestrator seat for fleet-comms (#5512):
 | Deep escalate | `gemini-3.8-flash-high` @ high | Same SKU escalation (`orchestrator_seats.agy`) |
 | Sealed formal CF *reviewer* | — | **Blocked** until isolation proof (#5555) |
 
-When AGY orchestrates, it **requests** CF via `review-pr`
-(codex|claude|glm|grok). It must not treat `ask-agy --review` as sealed formal CF.
+When AGY orchestrates, it **requests** CF via direct `ask-<lane> --type review`
+(codex|claude|glm|grok; sealed `review-pr` removed in #8520). It must not treat `ask-agy --review` as sealed formal CF.
 
 ## Live lane (non-formal / orchestrator)
 
@@ -47,16 +47,16 @@ When AGY orchestrates, it **requests** CF via `review-pr`
 ## Substitute formal CF
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm
+# Direct ask-* cross-family review (replaces removed review-pr):
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - --type review --pr <N> --task-id review-<N> < prompt.md
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --type review --pr <N> --task-id review-<N> < prompt.md
 ```
 
 ## Flip criteria (do not skip)
 
 1. Isolation matrix: project-instruction / MCP / hooks / nested-reviewer suppression proven.
 2. `prepare_isolated_review_launch(engine="agy")` positive + negative tests.
-3. Sealed transport registration (`review-pr --reviewer agy` or equivalent) with receipts.
+3. Sealed transport registration (`ask-agy --type review` or equivalent) with receipts.
 4. Smoke formal CF on a non-Google-family-authored PR.
 5. Flip `formal_review_eligible: true` via CF'd enablement PR.
 

@@ -11,7 +11,7 @@ through the hash-pinned ACP profile. The model catalog remains the authority.
 | Authentication | Cached native selector; ambient API-key selectors scrubbed | Auth material is not staged into the sealed snapshot |
 | Sealed evidence | Parent-owned MCP plus hash-pinned `acpx-grok-sealed-review.md` | Only the sealed review tools are exposed |
 | Sealed snapshot cwd + OS sandbox | Active through ACPX confinement | No primary-checkout or general filesystem access |
-| `review-pr --reviewer grok` | Implemented | Same reservation, authority, and publication path |
+| `review-pr --reviewer grok` | Retired (#8520) | Replaced by direct `ask-* --type review` (sealed `review-pr` removed in #8520) |
 | Registry `formal_review_eligible` | `true` for native `grok-4.6` | Catalog endpoint is authoritative |
 | Cursor explicit `grok-4.6` | Live for **orchestrator / implement / advisory** when native dark | Still **not** sealed formal CF |
 
@@ -20,7 +20,6 @@ through the hash-pinned ACP profile. The model catalog remains the authority.
 ```bash
 .venv/bin/python -m pytest \
   tests/agent_runtime/test_acpx_adapter.py \
-  tests/ai_agent_bridge/test_review_pr.py \
   -k 'grok and sealed' -q
 ```
 
@@ -38,15 +37,15 @@ fallback and is not an interchangeable formal-review route.
 - `ai_agent_bridge ask-grok` / `ask-grok-build`
 - Native Grok Build TUI / CLI cold-start
 - Cursor **explicit** `--model grok-4.6` if native path dark (never Cursor `auto` as identity)
-- **Orchestrator seat** (fleet-comms): same pin; requests CF via `review-pr`, does not self-seal
+- **Orchestrator seat** (fleet-comms): same pin; requests CF via direct `ask-* --type review` (sealed `review-pr` removed in #8520), does not self-seal
 
 ## Substitute formal CF
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>              # codex / gpt-6-sol @ high
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude  # claude-sonnet-5 @ high
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm     # LOCAL-ONLY
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer grok    # grok-4.6 @ high
+# Direct ask-* cross-family review (replaces removed review-pr):
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --type review --pr <N> --task-id review-<N> < prompt.md
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude - --type review --pr <N> --task-id review-<N> < prompt.md
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-grok - --type review --pr <N> --task-id review-<N> < prompt.md
 ```
 
 ## Invariants

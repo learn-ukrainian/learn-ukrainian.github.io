@@ -99,7 +99,7 @@ Never use a fixed unordered list that can pick the author’s family.
 1. Thin orchestrator decision (route + stop/go)
 2. 200–500 LOC infra fix with tests
 3. UI component (Practice/Atlas chrome)
-4. CF code review of a known PR (sealed `review-pr`)
+4. CF code review of a known PR (exact-head `ask-* --type review`)
 5. UA lemma/stress sample with `sources` MCP
 
 ### 4.3 Thresholds (starting policy)

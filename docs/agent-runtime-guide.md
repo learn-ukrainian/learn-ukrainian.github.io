@@ -237,7 +237,7 @@ conversation. A token field named
 `size` is context-window capacity, never consumed-token accounting.
 
 This is deliberation transport, not formal cross-family review. It does not
-produce review authority or replace `review-pr` / `publish-review-verdict`.
+produce review authority or replace formal cross-family review (sealed `review-pr` / `publish-review-verdict` removed in #8520).
 
 Do **not** invent ACPX CLI flags, endpoints, or review-eligibility changes in
 callers — the adapter's argv is fully confined and callers only ever set
