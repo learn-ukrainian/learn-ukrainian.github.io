@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import signal
@@ -402,24 +403,83 @@ def test_killed_wrapper_with_live_child_is_preserved_then_recovered(tmp_path: Pa
 
 
 def test_leader_exit_with_surviving_grandchild_preserves_until_group_dead(tmp_path: Path) -> None:
+    # The running lease is fsynced before the launch gate opens. Killing the
+    # wrapper on that lease alone often aborts the payload, so the recorded
+    # group is empty (#8848). Wait until the grandchild has published its pid
+    # and blocked; only then is it actually in the group.
     root = tmp_path / "root"
-    proc = _spawn_cli(root, "grandchild", ["bash", "-c", "sleep 30 & sleep 2"])
-    name, lease = _wait_running_lease(root)
-    leader = lease["child"]["pid"]
-    proc.kill()
-    proc.wait(timeout=15)
-    _wait_for(lambda: not _pid_alive(leader), what="leader to exit")
-    probe = ts.probe_process_group(lease["child"]["pgid"])
-    assert probe.complete and probe.members, "grandchild must still be in the recorded group"
+    hold = tmp_path / "hold.fifo"
+    pidfile = tmp_path / "grandchild.pid"
+    os.mkfifo(hold)
+    payload = [
+        sys.executable,
+        "-c",
+        "import os, sys, time\n"
+        "from pathlib import Path\n"
+        "pidfile, fifo = sys.argv[1], sys.argv[2]\n"
+        "grandchild = os.fork()\n"
+        "if grandchild == 0:\n"
+        "    fd = os.open(pidfile, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)\n"
+        "    os.write(fd, f'{os.getpid()}\\n'.encode())\n"
+        "    os.fsync(fd)\n"
+        "    os.close(fd)\n"
+        "    held = os.open(fifo, os.O_RDONLY)\n"
+        "    os.read(held, 1)\n"
+        "    os._exit(0)\n"
+        "deadline = time.monotonic() + 10\n"
+        "while time.monotonic() < deadline:\n"
+        "    path = Path(pidfile)\n"
+        "    if path.is_file() and path.read_text(encoding='utf-8').strip() == str(grandchild):\n"
+        "        os._exit(0)\n"
+        "    time.sleep(0.01)\n"
+        "os._exit(1)\n",
+        str(pidfile),
+        str(hold),
+    ]
+    proc = _spawn_cli(root, "grandchild", payload)
+    pgid = None
+    released = False
+    try:
 
-    report = _recover(root, apply=True)
-    assert _entry(report, name)["reason"] == "group_members_alive"
-    assert (_namespace(root) / name).is_dir()
+        def published_pid() -> int | None:
+            if not pidfile.is_file():
+                return None
+            text = pidfile.read_text(encoding="utf-8").strip()
+            return int(text) if text.isdigit() else None
 
-    os.killpg(lease["child"]["pgid"], signal.SIGKILL)
-    _wait_for(lambda: not ts.probe_process_group(lease["child"]["pgid"]).members, what="group to drain")
-    report = _recover(root, apply=True)
-    assert _entry(report, name)["action"] == "reaped"
+        grandchild = _wait_for(published_pid, what="grandchild pid file")
+        name, lease = _wait_running_lease(root)
+        leader = lease["child"]["pid"]
+        pgid = lease["child"]["pgid"]
+        proc.kill()
+        proc.wait(timeout=15)
+        _wait_for(lambda: not _pid_alive(leader), what="leader to exit")
+        probe = ts.probe_process_group(pgid)
+        assert probe.complete and grandchild in probe.members, "grandchild must still be in the recorded group"
+
+        report = _recover(root, apply=True)
+        assert _entry(report, name)["reason"] == "group_members_alive"
+        assert (_namespace(root) / name).is_dir()
+
+        os.killpg(pgid, signal.SIGKILL)
+        _wait_for(lambda: not ts.probe_process_group(pgid).members, what="group to drain")
+        report = _recover(root, apply=True)
+        assert _entry(report, name)["action"] == "reaped"
+        released = True
+    finally:
+        if not released:
+            if proc.poll() is None:
+                proc.kill()
+                proc.wait(timeout=15)
+            if pgid is None:
+                for lease in _leases(root).values():
+                    child = lease.get("child") or {}
+                    if child.get("pgid"):
+                        pgid = child["pgid"]
+                        break
+            if pgid is not None:
+                with contextlib.suppress(ProcessLookupError):
+                    os.killpg(pgid, signal.SIGKILL)
 
 
 def test_recovery_never_signals_processes(tmp_path: Path, monkeypatch) -> None:
