@@ -838,11 +838,18 @@ def check_assets(
 
     # Practice Hub Quality Gate (Issue #7944) — gated to preserve unit-test isolation
     if run_qa_gate:
-        from practice_quality_gate import (
-            DEFAULT_ERROR_CORRECTIONS,
-            DEFAULT_TEACHER_CLOZE,
-            run_all_practice_audits,
-        )
+        if __package__:
+            from .practice_quality_gate import (
+                DEFAULT_ERROR_CORRECTIONS,
+                DEFAULT_TEACHER_CLOZE,
+                run_all_practice_audits,
+            )
+        else:
+            from practice_quality_gate import (
+                DEFAULT_ERROR_CORRECTIONS,
+                DEFAULT_TEACHER_CLOZE,
+                run_all_practice_audits,
+            )
 
         qa_results = run_all_practice_audits(
             teacher_cloze=teacher_cloze or DEFAULT_TEACHER_CLOZE,

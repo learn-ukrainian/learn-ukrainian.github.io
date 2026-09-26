@@ -211,6 +211,8 @@ def _index_and_absent_inventories(
     indexed_inventory_paths = {record.inventory_path for record in index.values()}
     read_paths: list[Path] = []
     absent: set[str] = set()
+    # A ledger names a handful of inventories across thousands of rows: resolve and stat each once per call.
+    resolutions: dict[str, tuple[Path, bool]] = {}
     decisions = payload.get("decisions")
     if isinstance(decisions, list):
         for row in decisions:
@@ -222,12 +224,15 @@ def _index_and_absent_inventories(
             raw_path = source_inventory.get("path")
             if not isinstance(raw_path, str) or not raw_path.strip():
                 continue
-            resolved = resolve_staged_inventory_path(raw_path)
-            if raw_path not in indexed_inventory_paths and resolved.exists():
+            resolution = resolutions.get(raw_path)
+            if resolution is None:
+                resolved = resolve_staged_inventory_path(raw_path)
+                resolution = resolutions[raw_path] = (resolved, resolved.exists())
+            resolved, exists = resolution
+            if raw_path not in indexed_inventory_paths and exists:
                 read_paths.append(resolved)
-            else:
-                if not resolved.exists():
-                    absent.add(raw_path.strip())
+            elif not exists:
+                absent.add(raw_path.strip())
     if read_paths:
         records = read_source_inventories(
             tuple(dict.fromkeys(read_paths)),

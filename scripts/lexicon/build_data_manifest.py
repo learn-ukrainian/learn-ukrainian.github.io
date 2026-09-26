@@ -34,6 +34,9 @@ from pathlib import Path
 
 import yaml
 
+# C parser, same safe-load guarantees; parsing ~350 vocabulary files dominated the build.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -198,7 +201,7 @@ VESUM_INFLECTION_ALIASES_BY_KEY = _load_vesum_inflection_aliases()
 
 def _course_module_numbers() -> dict[tuple[str, str], int]:
     """Return curriculum-indexed module numbers keyed by ``(track, slug)``."""
-    manifest = yaml.safe_load(CURRICULUM_MANIFEST.read_text(encoding="utf-8")) or {}
+    manifest = yaml.load(CURRICULUM_MANIFEST.read_text(encoding="utf-8"), Loader=_YAML_LOADER) or {}
     levels = manifest.get("levels") or {}
     module_numbers: dict[tuple[str, str], int] = {}
     if not isinstance(levels, dict):
@@ -252,7 +255,7 @@ def _load_built_vocab(module: dict[str, str | int]) -> list[dict]:
     path = CURRICULUM_ROOT / str(module["track"]) / str(module["slug"]) / "vocabulary.yaml"
     if not path.exists():
         return []
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or []
+    raw = yaml.load(path.read_text(encoding="utf-8"), Loader=_YAML_LOADER) or []
     out: list[dict] = []
     for entry in raw:
         if not isinstance(entry, dict):

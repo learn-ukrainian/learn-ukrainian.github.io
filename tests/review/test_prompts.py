@@ -14,6 +14,7 @@ Cyrillic scan, re-review and custom-template extensibility, and the read discipl
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import re
@@ -44,6 +45,7 @@ from scripts.review.prompts.render import (
     render_prompt,
 )
 from scripts.review.receipts import REVIEW_TOOLS
+from tests.build import test_fresh_runner as fresh_runner_tests
 from tests.build.test_fresh_e3b2 import _fake_state, _rereview_setup, _write
 from tests.build.test_fresh_e3b2 import _fixture as lesson_fixture
 from tests.build.test_fresh_plan_review import fake_verify
@@ -57,6 +59,23 @@ EXPECTED_RULE_SNIPPET = (
     "not the seat's memory of the source; never paraphrase, normalise, re-stress, translate or summarise it; "
     "an unsupported_by_source finding carries no expected."
 )
+
+
+@pytest.fixture(scope="module")
+def _runner_fixture_inputs():
+    """The engine's real ``_fixture()`` (pack, words, plan and draft, each schema-validated) built once per module."""
+    return fresh_runner_tests._fixture()
+
+
+@pytest.fixture(autouse=True)
+def _fresh_copy_of_runner_fixture(monkeypatch: pytest.MonkeyPatch, _runner_fixture_inputs) -> None:
+    """Hand every test its own deep copy of the once-built engine fixture instead of rebuilding and re-validating it."""
+    build = fresh_runner_tests._fixture
+
+    def fixture(*args, **kwargs):
+        return build(*args, **kwargs) if args or kwargs else copy.deepcopy(_runner_fixture_inputs)
+
+    monkeypatch.setattr(fresh_runner_tests, "_fixture", fixture)
 
 
 LEARNER_STATE = {"level": "a1", "core_ids": {"W-1": {"position": 1, "lesson": 1}}}
@@ -1496,7 +1515,16 @@ def test_the_template_prose_exemption_is_exactly_the_real_collisions_of_the_ship
         re.sub(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", "", path.read_text(encoding="utf-8"), flags=re.S)
         for path in eligibility_templates()
     )
-    collisions = {slug for slug in slugs if re.search(rf"(?<![A-Za-z0-9_-]){re.escape(slug)}(?![A-Za-z0-9_-])", text)}
+    # A match bounded by non-token characters is exactly one whole ``[A-Za-z0-9_-]+`` token, so a slug made of those
+    # characters collides iff it is in the token set; any other slug keeps the bounded search.
+    tokens = set(re.findall(r"[A-Za-z0-9_-]+", text))
+
+    def collides(slug: str) -> bool:
+        if re.fullmatch(r"[A-Za-z0-9_-]+", slug):
+            return slug in tokens
+        return re.search(rf"(?<![A-Za-z0-9_-]){re.escape(slug)}(?![A-Za-z0-9_-])", text) is not None
+
+    collisions = {slug for slug in slugs if collides(slug)}
     assert collisions == set(TEMPLATE_PROSE_SLUGS), sorted(collisions ^ set(TEMPLATE_PROSE_SLUGS))
     assert not [slug for slug in collisions if "-" in slug]
 

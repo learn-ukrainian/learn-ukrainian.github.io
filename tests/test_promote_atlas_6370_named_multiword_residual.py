@@ -10,7 +10,9 @@ import requests  # noqa: F401  # Declares promote_grow_candidates's transitive e
 
 from scripts.audit import apply_source_inventory_promotion as apply
 from scripts.audit import plan_source_inventory_promotion as planner
+from scripts.audit.source_inventory_intake import read_source_inventory
 from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
+    PROJECT_ROOT,
     TARGET_ENTRY_TYPES,
     ZABOJATYSJA_LEMMA,
     _build_candidate,
@@ -21,19 +23,47 @@ from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
 MULTIWORD_LEMMAS = sorted(TARGET_ENTRY_TYPES)
 
 
+@pytest.fixture(scope="module")
+def committed_inventory_records():
+    """Parse immutable source records once; keep candidate construction per test."""
+    from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
+        BIG_INVENTORY,
+        LEG_INVENTORY,
+        SPACE_COLLAPSE_INVENTORY,
+    )
+
+    return {
+        path: tuple(read_source_inventory(path, project_root=PROJECT_ROOT))
+        for path in (BIG_INVENTORY, LEG_INVENTORY, SPACE_COLLAPSE_INVENTORY)
+    }
+
+
+def _use_committed_inventory_records(monkeypatch, committed_inventory_records) -> None:
+    from scripts.lexicon import promote_atlas_6370_named_multiword_residual as promote
+
+    monkeypatch.setattr(
+        promote,
+        "read_source_inventory",
+        lambda path, *, project_root=None: list(committed_inventory_records[path]),
+    )
+
+
 def test_target_entry_types_cover_exactly_the_named_eight() -> None:
-    assert sorted(
-        [
-            "виходити заміж",
-            "день тижня",
-            "картопля фрі",
-            "перед тим як",
-            "сільське господарство",
-            "так само",
-            "такий самий",
-            "час від часу",
-        ]
-    ) == MULTIWORD_LEMMAS
+    assert (
+        sorted(
+            [
+                "виходити заміж",
+                "день тижня",
+                "картопля фрі",
+                "перед тим як",
+                "сільське господарство",
+                "так само",
+                "такий самий",
+                "час від часу",
+            ]
+        )
+        == MULTIWORD_LEMMAS
+    )
 
 
 def test_multiword_entry_types_are_valid_atlas_types() -> None:
@@ -52,13 +82,14 @@ def test_chas_vid_chasu_is_phraseologism_and_vyhodyty_zamizh_is_expression() -> 
 
 
 @pytest.mark.parametrize("lemma", MULTIWORD_LEMMAS)
-def test_build_candidate_from_committed_inventory(lemma: str) -> None:
+def test_build_candidate_from_committed_inventory(lemma: str, monkeypatch, committed_inventory_records) -> None:
     from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
         BIG_INVENTORY,
         LEG_INVENTORY,
     )
 
     inventory_path = LEG_INVENTORY if lemma == "виходити заміж" else BIG_INVENTORY
+    _use_committed_inventory_records(monkeypatch, committed_inventory_records)
     candidate = _build_candidate(lemma, inventory_path, entry_type=TARGET_ENTRY_TYPES[lemma])
     assert candidate["lemma"] == lemma
     assert candidate["entry_type"] == TARGET_ENTRY_TYPES[lemma]
@@ -107,8 +138,11 @@ def test_scratch_decision_subset_keeps_only_requested_rows(tmp_path: Path) -> No
     assert all(row.get("surface_admission") == {"practice": True} for row in doc["decisions"])
 
 
-def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(tmp_path: Path) -> None:
+def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(
+    tmp_path: Path, monkeypatch, committed_inventory_records
+) -> None:
     """Build the full plan against an empty manifest fixture: 9/9 match, 0 missing."""
+    _use_committed_inventory_records(monkeypatch, committed_inventory_records)
     candidates_path, decision_files = build_candidates_and_decisions(tmp_path)
     empty_manifest = tmp_path / "manifest.json"
     empty_manifest.write_text(json.dumps({"entries": []}), encoding="utf-8")
@@ -151,13 +185,16 @@ def test_end_to_end_promotion_plan_matches_all_nine_with_no_missing(tmp_path: Pa
         assert heritage.get("classification") != "standard_modern"
 
 
-def test_all_nine_candidates_have_standard_classification_and_not_standard_modern() -> None:
+def test_all_nine_candidates_have_standard_classification_and_not_standard_modern(
+    monkeypatch, committed_inventory_records
+) -> None:
     from scripts.lexicon.promote_atlas_6370_named_multiword_residual import (
         BIG_INVENTORY,
         LEG_INVENTORY,
         SPACE_COLLAPSE_INVENTORY,
     )
 
+    _use_committed_inventory_records(monkeypatch, committed_inventory_records)
     for lemma in MULTIWORD_LEMMAS:
         inv = LEG_INVENTORY if lemma == "виходити заміж" else BIG_INVENTORY
         candidate = _build_candidate(lemma, inv, entry_type=TARGET_ENTRY_TYPES[lemma])
@@ -167,4 +204,3 @@ def test_all_nine_candidates_have_standard_classification_and_not_standard_moder
     zabojatysja = _build_candidate(ZABOJATYSJA_LEMMA, SPACE_COLLAPSE_INVENTORY, entry_type=None)
     assert zabojatysja["heritage_status"]["classification"] == "standard"
     assert zabojatysja["heritage_status"]["classification"] != "standard_modern"
-

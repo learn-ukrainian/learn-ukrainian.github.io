@@ -2086,6 +2086,144 @@ def _terminal_dispatch_reason(
     return f"settled dispatch task-id={task_id} status={task_status}"
 
 
+# Tool-regenerated caches a worker leaves behind. They are the only paths a
+# clean detached checkout may hold and still be reaped; everything else,
+# ``.venv/`` and ``node_modules/`` included, may hold an only copy of work.
+_PYCACHE_DIR = "__pycache__"
+_TOPLEVEL_CACHE_PREFIXES = (".pytest_cache/", ".ruff_cache/", ".mypy_cache/")
+_ENV_DIRS = frozenset({".venv", "node_modules"})
+
+_DETACHED_CLEAN_CONTAINED_PREFIX = "detached clean contained"
+
+
+def _is_regenerable_cache_path(path: str) -> bool:
+    """True for a path inside a ``__pycache__/`` or a top-level tool cache.
+
+    Any ``.venv`` or ``node_modules`` segment disqualifies the path, and a loose
+    ``*.pyc`` outside ``__pycache__/`` is not a cache. A hand-made file placed
+    inside an ignored cache directory is treated as disposable (documented
+    residual in the worktree-cleanup runbook).
+    """
+    segments = path.split("/")
+    if _ENV_DIRS.intersection(segments):
+        return False
+    return _PYCACHE_DIR in segments[:-1] or path.startswith(_TOPLEVEL_CACHE_PREFIXES)
+
+
+def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:
+    """True only when every entry git lists in ``path`` is an ignored regenerable cache.
+
+    Deliberately stricter than :func:`_worktree_clean`: only status ``!!``
+    (ignored) is tolerated, so any staged, modified, renamed or untracked entry
+    preserves the tree, and the cache allowlist is fixed rather than read from
+    ``.gitignore`` or ``info/exclude``. A git failure is not proof, so it reads
+    as "not disposable".
+    """
+    status = _run(
+        ["git", "status", "--porcelain=v1", "-z", "--ignored", "--untracked-files=all"],
+        cwd=path,
+        timeout=timeout,
+    )
+    if status.returncode != 0:
+        return False
+    for entry in (status.stdout or "").split("\0"):
+        if not entry:
+            continue
+        # ``XY <path>``; rename/copy entries carry a status other than ``!!``.
+        if not entry.startswith("!! ") or not _is_regenerable_cache_path(entry[3:]):
+            return False
+    return True
+
+
+def _detached_clean_contained_reason(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    active_ids: set[str] | None,
+    timeout: float | None = None,
+    attention: list[str] | None = None,
+) -> str | None:
+    """Provably-safe class: a clean detached dispatch checkout whose HEAD is pushed.
+
+    A worker's baseline or scratch checkout (``git worktree add --detach``)
+    holds nothing unique once its HEAD is an ancestor of ``origin/main`` or
+    contained in some ``origin/*`` ref and the tree has no tracked, untracked,
+    or non-cache ignored changes. It is a Class B superset that needs neither
+    a settled task record nor a 24h age, and it never consults PR state:
+    nothing is lost even if a PR names the commit. A locked checkout, an
+    active or non-terminal task bound to the path, and live cwds (checked by
+    :func:`_activity_reason` before this runs, and again at removal) all keep
+    it preserved. An unavailable active-task probe fails closed, like the
+    terminal-dispatch path, and is reported through ``attention``.
+    """
+    if not info.detached or info.branch is not None or not info.head:
+        return None
+    if info.locked_reason is not None:
+        return None
+    if _is_acp_runtime_path(repo_root, info.path):
+        return None
+    task_id = _dispatch_task_id(repo_root, info)
+    if task_id is None:
+        return None
+    if active_ids is None:
+        if attention is not None:
+            attention.append(
+                "active-task probe unavailable; detached clean contained checkout preserved"
+            )
+        return None
+    if task_id in active_ids:
+        return None
+    task_status = _task_record_status(repo_root, task_id)
+    if task_status is not None and task_status not in _TERMINAL_DISPATCH_STATUSES:
+        return None
+    if not _tree_holds_only_disposable_residue(info.path, timeout=timeout):
+        return None
+    if _is_ancestor_of_origin_main(info.path):
+        contained = "an ancestor of origin/main"
+    elif _is_head_reachable_from_remote(info.path, info.head):
+        contained = "contained in an origin/* ref"
+    else:
+        return None
+    return f"{_DETACHED_CLEAN_CONTAINED_PREFIX}: HEAD {info.head[:12]} is {contained}"
+
+
+def _detached_clean_contained_recheck(repo_root: Path, info: WorktreeInfo) -> str | None:
+    """Re-prove the class immediately before deletion, under delegate's lock.
+
+    Returns a skip reason, or ``None`` when every precondition still holds.
+    """
+    try:
+        worktrees = list_git_worktrees(repo_root)
+    except RuntimeError as exc:
+        return f"detached worktree list unavailable during cleanup ({exc})"
+    fresh = next((wt for wt in worktrees if wt.path.resolve() == info.path.resolve()), None)
+    if fresh is None:
+        return "detached worktree unregistered during cleanup"
+    current_active_ids = _active_task_ids()
+    if current_active_ids is None:
+        return "active-task probe unavailable during cleanup"
+    current_live_cwds = _live_cwd_paths(repo_root)
+    if current_live_cwds is None:
+        return "process-CWD activity probe unavailable during cleanup"
+    activity = _activity_reason(
+        repo_root=repo_root,
+        info=fresh,
+        active_ids=current_active_ids,
+        live_cwds=current_live_cwds,
+        check_pending=False,
+    )
+    if activity is not None:
+        return activity
+    if _detached_clean_contained_reason(
+        repo_root=repo_root,
+        info=fresh,
+        active_ids=current_active_ids,
+        timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
+    ) is None:
+        return "detached clean contained proof changed during cleanup"
+    return None
+
+
 def _qualifying_reason(
     *,
     repo_root: Path,
@@ -2692,6 +2830,17 @@ def _reap_qualified_worktree(
                         pr=_pr_dict(pr_state),
                         error=f"worktree unlock failed: {_format_failure(unlock)}",
                     )
+            elif reason.startswith(_DETACHED_CLEAN_CONTAINED_PREFIX):
+                recheck = _detached_clean_contained_recheck(repo_root, info)
+                if recheck is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=f"{recheck}; originally qualified because {reason}",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
             else:
                 current_clean = _worktree_clean(info.path, timeout=_LOCKED_GIT_STATUS_TIMEOUT_S)
                 if current_clean is not True:
@@ -3224,6 +3373,21 @@ def reap_worktrees(
                 pr_unknown=pr_unknown,
                 attention=attention,
             )
+            # Provably-safe class: a clean, pushed, detached dispatch checkout.
+            # It never reads PR state for its own proof, but an open PR named
+            # by the path still keeps the checkout mounted, like every other
+            # class; the legacy classes above get first refusal.
+            if (
+                reason is None
+                and not attention
+                and not (pr_state is not None and pr_state.state == "OPEN")
+            ):
+                reason = _detached_clean_contained_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    active_ids=active_ids,
+                    attention=attention,
+                )
             if attention:
                 results.append(
                     ReapResult(
@@ -3630,7 +3794,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--safe-only",
         action="store_true",
-        help="Restrict reaping to provably-safe classes (merged PRs + settled dispatches + detached-HEAD ancestors).",
+        help="Restrict reaping to provably-safe classes (merged PRs + settled dispatches + detached-HEAD ancestors + clean pushed detached dispatch checkouts).",
     )
     parser.add_argument(
         "--merged",

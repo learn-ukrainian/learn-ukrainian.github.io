@@ -7,16 +7,10 @@ This deliberately makes no actual-unit, provider or private JWT integration clai
 
 from __future__ import annotations
 
-import fcntl
 import json
-import os
-import subprocess
-import sys
 import time
 from dataclasses import replace
-from pathlib import Path
 
-import _v4_a7_real_slot_fixture as fx
 import pytest
 from _v4_linguistic_context_fixture import constraints as linguistic_constraints
 from _v4_linguistic_context_fixture import stored_preparation
@@ -31,65 +25,6 @@ from learn_ukrainian_v4_runtime.operation_store import OperationStore
 from test_v4_operation_lifecycle import principal, role_connection
 
 from scripts.fleet_comms.request_executor import RequestExecutor
-
-pytest_plugins = ("test_v4_operation_lifecycle",)
-
-
-@pytest.fixture(scope="module")
-def built_wheel(tmp_path_factory):
-    output = tmp_path_factory.mktemp("owned-wheel")
-    # xdist workers share setuptools in-place build paths in this checkout.
-    # Serialize wheel creation, while the behavioral tests remain parallel.
-    lock_path = Path(__file__).resolve().parents[3] / "batch_state/v4-runtime-build.lock"
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
-    env = dict(os.environ)
-    from learn_ukrainian_v4_runtime.provenance import verify_current_identity
-
-    identity = verify_current_identity()
-    env["LEARN_UKRAINIAN_V4_RUNTIME_COMMIT"] = identity["public_commit"]
-    with lock_path.open("a") as build_lock:
-        fcntl.flock(build_lock, fcntl.LOCK_EX)
-        subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "pip",
-                "wheel",
-                "--no-deps",
-                "--no-build-isolation",
-                "packages/v4-runtime",
-                "--wheel-dir",
-                str(output),
-            ],
-            check=True,
-            capture_output=True,
-            timeout=120,
-            env=env,
-        )
-    return next(output.glob("*.whl"))
-
-
-@pytest.fixture
-def signing_resources(tmp_path, monkeypatch):
-    raw = json.dumps(fx.TRUST_POLICY, sort_keys=True).encode()
-    path = tmp_path / "policy.json"
-    path.write_bytes(raw)
-    monkeypatch.setattr(trust, "DEFAULT_TRUST_POLICY_PATH", path)
-    monkeypatch.setattr(trust, "PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST", frozenset({digest(raw)}))
-    # The unit's credential namespace with systemd's flattened directory
-    # credential names (v4-signing-keys_<role>.key[_id]), owner-private.
-    namespace = tmp_path / "credentials"
-    namespace.mkdir(mode=0o700)
-    for role, private, key_id in [
-        ("fleet_execution", fx.FLEET_SIGNING_KEY_HEX, fx.FLEET_KEY_ID),
-        ("sources", fx.SOURCES_SIGNING_KEY_HEX, fx.SOURCES_KEY_ID),
-        ("a3", fx.A3_SIGNING_KEY_HEX, fx.A3_KEY_ID),
-    ]:
-        for suffix, value in [(".key", private), (".key_id", key_id)]:
-            key = namespace / (trust.SIGNING_KEY_CREDENTIAL + "_" + role + suffix)
-            key.write_text(value)
-            key.chmod(0o400)
-    monkeypatch.setattr(trust, "HRAMATKA_CREDENTIAL_NAMESPACE", namespace)
 
 
 def _run_real_pair(pg_cluster, tmp_path, monkeypatch, built_wheel, signing_resources, defect, review_transform=None,

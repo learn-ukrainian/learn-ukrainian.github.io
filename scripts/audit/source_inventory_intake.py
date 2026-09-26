@@ -19,6 +19,9 @@ from scripts.lexicon.lemma_normalization import strip_acute_stress
 INVENTORY_KIND = "atlas_source_inventory"
 INVENTORY_VERSION = 1
 _TEXT_ENCODING = "utf-8-sig"
+# libyaml's C parser with SafeLoader's guarantees; the pure-Python loader took ~10 s on one staged inventory
+# (same reason as source_inventory_review_decisions._SafeLoader, #5768).
+_SAFE_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 
 _SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9_.:-]*$")
 
@@ -170,7 +173,7 @@ def read_source_inventory(
         return _read_jsonl_inventory(path, inventory_path=inventory_path)
     if suffix in {".yaml", ".yml"}:
         return _records_from_structured_inventory(
-            yaml.safe_load(path.read_text(encoding=_TEXT_ENCODING)),
+            yaml.load(path.read_text(encoding=_TEXT_ENCODING), Loader=_SAFE_LOADER),
             inventory_path=inventory_path,
         )
     if suffix == ".json":

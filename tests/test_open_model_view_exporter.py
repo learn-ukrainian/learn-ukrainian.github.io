@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 from collections import defaultdict
+from collections.abc import Sequence
 from itertools import product
 from pathlib import Path
 from typing import Any
@@ -29,6 +30,82 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+
+
+def _input_token(path: Path) -> tuple[str, int, int]:
+    resolved = Path(path).resolve()
+    stat = resolved.stat()
+    return (str(resolved), stat.st_mtime_ns, stat.st_size)
+
+
+def _copy_exclusion_registry(
+    registry: exporter.EvaluationExclusionRegistry,
+) -> exporter.EvaluationExclusionRegistry:
+    # Container-level copy of a fully built registry. Every leaf is immutable
+    # (str, int, frozenset), so this isolates the cached object exactly like
+    # copy.deepcopy would, at a fraction of the cost.
+    return exporter.EvaluationExclusionRegistry(
+        exact_hashes=set(registry.exact_hashes),
+        near_texts=list(registry.near_texts),
+        near_shingles=list(registry.near_shingles),
+        shingle_index=defaultdict(set, {key: set(value) for key, value in registry.shingle_index.items()}),
+        character_index=defaultdict(set, {key: set(value) for key, value in registry.character_index.items()}),
+        artifacts=copy.deepcopy(registry.artifacts),
+    )
+
+
+_EXCLUSION_REGISTRY_CACHE: dict[tuple, exporter.EvaluationExclusionRegistry] = {}
+_SCHEMA_BUNDLE_CACHE: dict[tuple, tuple[dict[Path, dict[str, Any]], Any]] = {}
+
+
+@pytest.fixture(autouse=True)
+def _cache_parsed_evaluation_inputs(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Share parsed evaluation inputs that are identical across tests.
+
+    Every export rebuilds the exclusion registry (~1-2s) and the schema
+    bundle from the same immutable repo artifacts. Cache them keyed on the
+    exact input paths plus each file's (mtime_ns, size), and hand each
+    caller an isolated copy. A miss (e.g. a test-written artifact with a
+    unique tmp_path) always calls through to the real function.
+    """
+    real_build_exclusion_registry = exporter.build_exclusion_registry
+    real_schema_bundle = exporter.schema_bundle
+
+    def cached_build_exclusion_registry(
+        *,
+        v011_manifest: Path,
+        v02_packet: Path,
+        extra_artifacts: Sequence[Path] = (),
+    ) -> exporter.EvaluationExclusionRegistry:
+        try:
+            key = (
+                _input_token(v011_manifest),
+                _input_token(v02_packet),
+                tuple(_input_token(path) for path in extra_artifacts),
+                tuple(_input_token(path) for path in exporter.DEFAULT_EVALUATION_ARTIFACTS),
+            )
+        except OSError:
+            return real_build_exclusion_registry(
+                v011_manifest=v011_manifest,
+                v02_packet=v02_packet,
+                extra_artifacts=extra_artifacts,
+            )
+        if key not in _EXCLUSION_REGISTRY_CACHE:
+            _EXCLUSION_REGISTRY_CACHE[key] = real_build_exclusion_registry(
+                v011_manifest=v011_manifest,
+                v02_packet=v02_packet,
+                extra_artifacts=extra_artifacts,
+            )
+        return _copy_exclusion_registry(_EXCLUSION_REGISTRY_CACHE[key])
+
+    def cached_schema_bundle() -> tuple[dict[Path, dict[str, Any]], Any]:
+        key = tuple(_input_token(path) for path in exporter.ALL_SCHEMA_PATHS)
+        if key not in _SCHEMA_BUNDLE_CACHE:
+            _SCHEMA_BUNDLE_CACHE[key] = real_schema_bundle()
+        return copy.deepcopy(_SCHEMA_BUNDLE_CACHE[key])
+
+    monkeypatch.setattr(exporter, "build_exclusion_registry", cached_build_exclusion_registry)
+    monkeypatch.setattr(exporter, "schema_bundle", cached_schema_bundle)
 
 
 def source_record(

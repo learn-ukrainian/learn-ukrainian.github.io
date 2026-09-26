@@ -4923,3 +4923,494 @@ def test_initializing_lock_without_a_reservation_is_not_reported_or_removed(
     assert result.needs_attention is None
     assert (worktree / "uncommitted-human-work.txt").read_text(encoding="utf-8") == "keep me\n"
     _assert_untouched(repo, worktree)
+
+
+# --- detached clean contained class ----------------------------------------
+
+
+def _detached_dispatch_worktree(repo: Path, task_id: str = "baseline-run") -> Path:
+    worktree = repo / ".worktrees" / "dispatch" / "claude" / task_id
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    return worktree
+
+
+def _reap_contained(
+    repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    apply: bool = True,
+    live_cwds: set[Path] | None = None,
+) -> list[rw.ReapResult]:
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(monkeypatch, {})
+    return rw.reap_worktrees(
+        repo_root=repo,
+        apply=apply,
+        safe_only=True,
+        merged_pr_only=True,
+        live_cwds=set() if live_cwds is None else live_cwds,
+    )
+
+
+def test_detached_clean_contained_on_origin_main_is_reaped_when_fresh(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A fresh baseline checkout with no task record needs neither age nor a settled task."""
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    head = git(worktree, "rev-parse", "HEAD")
+
+    dry = result_for(_reap_contained(repo, monkeypatch, apply=False), worktree)
+    assert dry.action == "would_remove"
+    assert dry.reason == f"detached clean contained: HEAD {head[:12]} is an ancestor of origin/main"
+    assert worktree.exists()
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+    assert result.action == "removed"
+    assert result.reason == dry.reason
+    assert result.recovery_ref
+    assert not worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_detached_clean_contained_in_remote_branch_only_is_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    git(worktree, "commit", "--allow-empty", "-m", "pushed side commit")
+    git(worktree, "push", "origin", "HEAD:refs/heads/side")
+    git(repo, "fetch", "origin")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "removed"
+    assert result.reason.endswith("is contained in an origin/* ref")
+    assert not worktree.exists()
+
+
+def test_detached_clean_contained_tolerates_cache_only_ignored_residue(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(
+        ".worktrees/\nbatch_state/\n__pycache__/\n*.pyc\n.pytest_cache/\n.ruff_cache/\n", encoding="utf-8"
+    )
+    git(repo, "commit", "-am", "ignore caches")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "pkg" / "__pycache__").mkdir(parents=True)
+    (worktree / "pkg" / "__pycache__" / "m.pyc").write_bytes(b"\0")
+    (worktree / ".pytest_cache" / "v" / "cache").mkdir(parents=True)
+    (worktree / ".pytest_cache" / "v" / "cache" / "lastfailed").write_text("{}", encoding="utf-8")
+    (worktree / ".ruff_cache").mkdir()
+    (worktree / ".ruff_cache" / "CACHEDIR.TAG").write_text("x", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+    assert result.action == "removed", result.reason
+    assert not worktree.exists()
+
+
+def test_detached_clean_contained_preserves_non_cache_ignored_files(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\ndata/\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore data")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "data").mkdir()
+    (worktree / "data" / "unique.db").write_text("only copy", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "data" / "unique.db").exists()
+
+
+def test_detached_clean_contained_preserves_dirty_tracked_change(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "README.md").write_text("edited\n", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_detached_clean_contained_preserves_untracked_non_ignored_file(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "notes.md").write_text("scratch\n", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "notes.md").exists()
+
+
+def test_detached_clean_contained_preserves_head_missing_from_every_remote_ref(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    git(worktree, "commit", "--allow-empty", "-m", "local only")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_detached_clean_contained_preserves_locked_worktree(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    git(repo, "worktree", "lock", "--reason", "held by a worker", str(worktree))
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_detached_clean_contained_preserves_live_process_cwd(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+
+    result = result_for(
+        _reap_contained(repo, monkeypatch, live_cwds={worktree.resolve() / "sub"}),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("live process cwd=")
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("status", ["running", "starting", "queued"])
+def test_detached_clean_contained_preserves_worktree_bound_to_non_terminal_task(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    status: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo, "bound-task")
+    # No live pid: the generic activity probe passes, so the class itself must refuse.
+    _write_task_record(repo, "bound-task", status=status, worktree_path=str(worktree), pid=None)
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_detached_clean_contained_preserves_worktree_named_by_another_running_task(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    _write_task_record(repo, "other-run", status="running", worktree_path=str(worktree), pid=None)
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert "originally qualified because detached clean contained" in result.reason
+    assert worktree.exists()
+
+
+def test_detached_clean_contained_reaps_when_bound_task_is_terminal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo, "done-task")
+    _write_task_record(repo, "done-task", status="done", worktree_path=str(worktree), pid=None)
+
+    assert result_for(_reap_contained(repo, monkeypatch), worktree).action == "removed"
+
+
+def test_detached_clean_contained_ignores_non_dispatch_and_branch_checkouts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    outside_dispatch = repo / ".worktrees" / "detached-wt"
+    git(repo, "worktree", "add", "--detach", str(outside_dispatch), "main")
+    on_branch = add_worktree(repo, "codex/live", path=repo / ".worktrees" / "dispatch" / "codex" / "live")
+
+    results = _reap_contained(repo, monkeypatch)
+
+    assert result_for(results, outside_dispatch).action == "skipped"
+    assert result_for(results, on_branch).action == "skipped"
+    assert outside_dispatch.exists()
+    assert on_branch.exists()
+
+
+@pytest.mark.parametrize("ignore_in_gitignore", [False, True])
+@pytest.mark.parametrize("rel", [".venv/notes.txt", ".venv/lib/x", "node_modules/x", "web/node_modules/pkg/index.js"])
+def test_detached_clean_contained_preserves_files_under_venv_and_node_modules(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    ignore_in_gitignore: bool,
+    rel: str,
+) -> None:
+    """No directory is tolerated wholesale, whether or not ``.gitignore`` ignores it."""
+    repo = init_repo(tmp_path)
+    if ignore_in_gitignore:
+        (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n.venv/\nnode_modules/\n", encoding="utf-8")
+        git(repo, "commit", "-am", "ignore envs")
+        git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    target = worktree / rel
+    target.parent.mkdir(parents=True)
+    target.write_text("only copy", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert target.read_text(encoding="utf-8") == "only copy"
+
+
+def test_detached_clean_contained_preserves_cache_dir_next_to_unlisted_work(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """One non-cache path preserves the tree even when caches are present."""
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "__pycache__").mkdir()
+    (worktree / "__pycache__" / "m.pyc").write_bytes(b"\0")
+    (worktree / "notes.pyc.txt").write_text("only copy", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "notes.pyc.txt").exists()
+
+
+def test_detached_clean_contained_preserves_staged_new_pyc(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Only status ``!!`` is tolerated: a staged ``A `` entry is the only copy of work."""
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "only-copy.pyc").write_bytes(b"only copy")
+    git(worktree, "add", "-f", "only-copy.pyc")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "only-copy.pyc").read_bytes() == b"only copy"
+
+
+def test_detached_clean_contained_preserves_untracked_file_in_venv_pycache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    target = worktree / ".venv" / "__pycache__" / "notes.txt"
+    target.parent.mkdir(parents=True)
+    target.write_text("only copy", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert target.read_text(encoding="utf-8") == "only copy"
+
+
+def test_detached_clean_contained_preserves_ignored_pyc_under_node_modules(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\nnode_modules/\n__pycache__/\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore node_modules")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    target = worktree / "node_modules" / "__pycache__" / "x.pyc"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"\0")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert target.exists()
+
+
+def test_detached_clean_contained_preserves_loose_ignored_pyc_outside_pycache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n*.pyc\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore pyc")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "x.pyc").write_bytes(b"\0")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "x.pyc").exists()
+
+
+def test_detached_clean_contained_preserves_ignored_regular_file_named_pycache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n__pycache__\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore pycache name")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "__pycache__").write_text("only copy", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "__pycache__").read_text(encoding="utf-8") == "only copy"
+
+
+def test_detached_clean_contained_reaps_ignored_pycache_pyc(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n__pycache__/\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore pycache")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "__pycache__").mkdir()
+    (worktree / "__pycache__" / "m.cpython-313.pyc").write_bytes(b"\0")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "removed", result.reason
+    assert not worktree.exists()
+
+
+def test_detached_clean_contained_reaps_ignored_toplevel_pytest_cache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n.pytest_cache/\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore pytest cache")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / ".pytest_cache" / "v").mkdir(parents=True)
+    (worktree / ".pytest_cache" / "v" / "x").write_text("{}", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "removed", result.reason
+    assert not worktree.exists()
+
+
+def test_detached_clean_contained_preserves_when_git_status_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    real_run = rw._run
+
+    def failing_status(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[:2] == ["git", "status"] and "--ignored" in args:
+            return subprocess.CompletedProcess(args, 128, stdout="", stderr="fatal: boom")
+        return real_run(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", failing_status)
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_detached_clean_contained_preserves_tracked_change_to_a_cache_named_file(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The allowlist covers untracked/ignored residue; a tracked change is never tolerated."""
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "README.md").write_text("edited\n", encoding="utf-8")
+    (worktree / "__pycache__").mkdir()
+    (worktree / "__pycache__" / "m.pyc").write_bytes(b"\0")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "README.md").read_text(encoding="utf-8") == "edited\n"
+
+
+def test_detached_clean_contained_preserves_when_active_task_probe_unavailable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: None)
+    patch_gh(monkeypatch, {})
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        safe_only=True,
+        merged_pr_only=True,
+        live_cwds=set(),
+    )
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert "active-task probe unavailable" in result.reason
+    assert worktree.exists()
+
+
+def test_detached_clean_contained_preserves_when_probe_fails_between_qualify_and_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    calls = iter([set()])
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: next(calls, None))
+    patch_gh(monkeypatch, {})
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            safe_only=True,
+            merged_pr_only=True,
+            live_cwds=set(),
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert "active-task probe unavailable during cleanup" in result.reason
+    assert worktree.exists()

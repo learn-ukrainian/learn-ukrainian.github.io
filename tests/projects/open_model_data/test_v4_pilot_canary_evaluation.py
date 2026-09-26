@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 from pathlib import Path
+from typing import Any
 
 import jsonschema
+import jsonschema.exceptions
+import jsonschema.validators
 import numpy as np
 import pytest
 import safetensors.numpy
@@ -36,6 +40,51 @@ from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
     verify_pilot_canary,
     verify_pilot_canary_partition_firewall,
 )
+
+_COMPILED_VALIDATOR_CACHE: dict[str, Any] = {}
+
+
+def _schema_cache_key(schema: Any) -> str | None:
+    """Content-hash key for an immutable JSON schema dict; None if not hashable."""
+    try:
+        blob = json.dumps(schema, sort_keys=True, ensure_ascii=True).encode("utf-8")
+    except (TypeError, ValueError):
+        return None
+    return hashlib.sha256(blob).hexdigest()
+
+
+@pytest.fixture(autouse=True)
+def _cache_compiled_jsonschema_validators(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Share compiled jsonschema validators whose schema inputs are identical across tests.
+
+    verify_pilot_canary calls jsonschema.validate once per dataset record (200x)
+    plus once per receipt, and every call re-runs check_schema on the same
+    immutable on-disk schemas (~5s per verification). Only the compile/check
+    phase of the provably unchanged schema is shared (keyed on the schema
+    content hash); every instance -- including every tampered variant -- is
+    still fully validated through the real iter_errors path on each call.
+    """
+    real_validate = jsonschema.validate
+
+    def cached_validate(instance: Any, schema: Any, cls: Any = None, *args: Any, **kwargs: Any) -> None:
+        if cls is not None or args or kwargs:
+            real_validate(instance, schema, cls, *args, **kwargs)
+            return
+        key = _schema_cache_key(schema)
+        if key is None:
+            real_validate(instance=instance, schema=schema)
+            return
+        validator = _COMPILED_VALIDATOR_CACHE.get(key)
+        if validator is None:
+            validator_cls = jsonschema.validators.validator_for(schema)
+            validator_cls.check_schema(schema)
+            validator = validator_cls(schema)
+            _COMPILED_VALIDATOR_CACHE[key] = validator
+        error = jsonschema.exceptions.best_match(validator.iter_errors(instance))
+        if error is not None:
+            raise error
+
+    monkeypatch.setattr(jsonschema, "validate", cached_validate)
 
 
 def test_pilot_canary_artifacts_exist() -> None:

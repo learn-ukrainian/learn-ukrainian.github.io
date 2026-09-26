@@ -13,73 +13,10 @@ from dataclasses import replace
 
 import psycopg
 import pytest
-from _v4_linguistic_context_fixture import stored_preparation
-from learn_ukrainian_v4_runtime import semantic_inputs
-from learn_ukrainian_v4_runtime import v4_trust_authority as trust
-from learn_ukrainian_v4_runtime.operation_auth import ActionsPrincipal, OperationRefused, canonical_bytes, digest
+from _v4_shared_runtime_fixtures import principal as principal
+from _v4_shared_runtime_fixtures import role_connection
+from learn_ukrainian_v4_runtime.operation_auth import OperationRefused, canonical_bytes, digest
 from learn_ukrainian_v4_runtime.operation_store import OperationStore
-from psycopg.rows import dict_row
-
-from scripts.fleet_comms.request_executor import RequestExecutor
-
-pytest_plugins = ("test_v4_packaged_operation_boundary",)
-
-
-def principal(jti):
-    return ActionsPrincipal(
-        repository_id=1,
-        workflow_ref="fixture/workflow@refs/heads/main",
-        ref="refs/heads/main",
-        subject="repo:fixture:ref:refs/heads/main",
-        workflow_sha256="a" * 64,
-        run_id=1,
-        run_attempt=1,
-        check_run_id=1,
-        runner_id=1,
-        runner_group_id=1,
-        runner_label="fixture-runner",
-        authz_policy_sha256="b" * 64,
-        jti=jti,
-    )
-
-
-def role_connection(pg, role):
-    connection = psycopg.connect(pg.info.dsn, autocommit=True, row_factory=dict_row)
-    assert role in ("hramatka_v4_control_writer", "hramatka_v4_sources_writer")
-    connection.execute("SET ROLE " + role)
-    return connection
-
-
-@pytest.fixture
-def prepared(pg_cluster, monkeypatch, tmp_path):
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_PG_DSN", pg_cluster.info.dsn)
-    monkeypatch.setenv("LEARN_UKRAINIAN_CP_AUTHORITY_FLEET_COMMS", "pg")
-    with RequestExecutor(root=tmp_path) as executor:
-        request = executor.create_request(recipient="claude", body="source-free operation fixture")
-        binding = executor.authorize_author_execution(
-            request_id=request.request_id, slot_id="v4p-standard-correct-001", expected_seat="claude-sonnet-5"
-        )
-    with role_connection(pg_cluster, "hramatka_v4_control_writer") as conn:
-        semantic_inputs.freeze_semantic_input(
-            conn,
-            request_id=request.request_id,
-            snapshot=stored_preparation(conn, request.request_id),
-        )
-        store = OperationStore(conn)
-        policy = trust.load_production_trust_policy()[1]
-        auth_principal = principal("authorize-" + request.request_id)
-        raw = canonical_bytes({"schema": "hramatka-v4-operation-authorize.v1"})
-        identifier = store.authorize(principal=auth_principal, raw=raw, policy_digest=policy)
-        assert identifier
-    execution = canonical_bytes({"authorization_id": identifier, "schema": "hramatka-v4-operation-execute.v1"})
-    return {
-        "request_id": request.request_id,
-        "binding": binding,
-        "identifier": identifier,
-        "raw": execution,
-        "policy": policy,
-        "principal": replace(auth_principal, jti="execute-" + request.request_id),
-    }
 
 
 def claim(conn, prepared, **overrides):
