@@ -1418,8 +1418,6 @@
   "tests/test_typesafe_cyrillic_gate.py": 0.656,
   "tests/test_typesafe_distractor_validator.py": 1.232,
   "tests/test_typesafe_entity_aligner.py": 0.281,
-  "tests/test_typesafe_passage_gate.py": 0.396,
-  "tests/test_typesafe_reranker.py": 0.456,
   "tests/test_typesafe_sense_gate.py": 0.149,
   "tests/test_typesafe_valency_verifier.py": 0.111,
   "tests/test_ua_eval_codex_runtime_guard.py": 0.058,

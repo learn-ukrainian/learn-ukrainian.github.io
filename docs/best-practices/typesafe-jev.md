@@ -97,7 +97,7 @@ candidate diff plus a bounded local test log before spawning a seat and exits 3 
 
 ### 3.5 RAG / review / skills
 
-Passage keep/drop; citation supported?; pick at most one skill from a closed catalog.
+Citation supported?; pick at most one skill from a closed catalog. (Note: earlier experimental passage gate and reranker modules were removed in #8525 due to unsafe failure modes and policy forbidding Jev from evaluating Ukrainian language phenomena.)
 
 Skill suggestion pipeline (#8201, parent #6943):
 - CLI: `.venv/bin/python -m scripts.typesafe.skill_suggestion --turn '...'`
