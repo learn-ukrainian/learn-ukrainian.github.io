@@ -705,9 +705,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--write", action="store_true", help="Write local deltas, report, and the separate staged manifest"
     )
     args = parser.parse_args(argv)
-    if args.kaikki_lookup == DEFAULT_KAIKKI:
-        args.kaikki_lookup = artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")
-
     if args.write and args.manifest_out is None:
         parser.error("--write requires --manifest-out; the input manifest is never a write target")
     if args.manifest_out and args.manifest_out.resolve() == args.manifest_in.resolve():
@@ -717,6 +714,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             parser.error(f"required input is missing: {required}")
     if args.queue and not args.queue.is_file():
         parser.error(f"queue is missing: {args.queue}")
+    if args.kaikki_lookup == DEFAULT_KAIKKI:
+        args.kaikki_lookup = artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")
 
     staged, artifacts, report = run(
         extract_path=args.extract,

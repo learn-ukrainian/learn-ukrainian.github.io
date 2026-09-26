@@ -142,7 +142,7 @@ if [[ -z "$RUNNER_PYTHON" ]]; then
   fi
 fi
 if [[ -z "$RUNNER_PYTHON" || ! -x "$RUNNER_PYTHON" ]]; then
-  echo "runner venv python not found (tried $REPO/.venv/bin/python and $CODE_ROOT/.venv/bin/python)" >&2
+  echo "runner venv interpreter not found (tried $REPO/.venv/bin/python and $CODE_ROOT/.venv/bin/python)" >&2
   exit 1
 fi
 if ! "$RUNNER_PYTHON" -c 'import yaml, jsonschema' >/dev/null 2>&1; then
@@ -184,7 +184,7 @@ if [[ ! -f "$KAIKKI_JSON" ]]; then
   exit 1
 fi
 if [[ "$KAIKKI_JSON" == "$REPO/data/lexicon/kaikki_uk_lookup.json" ]]; then
-  "$REPO/.venv/bin/python" -m scripts.storage.artifacts verify --group lexicon_kaikki
+  "$RUNNER_PYTHON" -c 'from scripts.storage.paths import artifact_path; artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")'
 fi
 COMMON_ARGS+=(--kaikki-lookup "$KAIKKI_JSON")
 

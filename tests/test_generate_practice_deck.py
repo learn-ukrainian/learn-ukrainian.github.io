@@ -2446,6 +2446,13 @@ def test_size_budget_skips_final_recompute_when_no_trim_occurs(monkeypatch: pyte
 
 
 def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
+    end_dictionary = tmp_path / "end-dictionary-inventory.json"
+    end_dictionary.write_text(
+        json.dumps(
+            {"schema": "atlas-end-dictionary-inventory", "entries": [], "counts": {"sections": 0, "entries": 0}}
+        ),
+        encoding="utf-8",
+    )
     exit_code = main(
         [
             "--manifest",
@@ -2456,6 +2463,8 @@ def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
             str(CLOZE_SOURCES),
             "--vesum-fixture",
             str(VESUM),
+            "--end-dictionary-inventory",
+            str(end_dictionary),
             "--out-dir",
             str(tmp_path),
             "--fixture-note",
