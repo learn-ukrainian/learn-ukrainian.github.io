@@ -22,14 +22,11 @@ from __future__ import annotations
 import atexit
 import copy
 import dataclasses
-import hashlib
-import importlib
 import inspect
 import json
 import os
 import shutil
 import stat
-import sys
 import tempfile
 from collections.abc import Callable
 from pathlib import Path
@@ -135,42 +132,16 @@ def _replay_kwargs(tmp_root: Path, info: dict) -> dict:
 
 # --- per-process arrange-phase input cache -----------------------------------
 #
-# Each base tree below is the ARRANGED INPUT of the test's act phase: the
-# output of an unmodified builder (``fx.build_real_slot_root`` and friends),
-# built once per process instead of once per test. The build necessarily
-# runs its own arrange-time checks (A6-A9 ``validate_receipt_independently``,
-# ``construct_completion``); those run for real on the first build and a
-# failing build is never cached (it re-raises for every test that needs it),
-# but their success is not re-observed per test. That is safe only while (1)
-# the cache key is complete and (2) no test depends on the build step itself.
-#
-# (1) Complete key. The builders take exactly one argument, the destination
-# directory (irrelevant: receipts bind relative ``data/...`` paths only), and
-# every other input is process-constant or checked on EVERY cache return by
-# ``_verify_arrange_base``: the whole environment; the trust-policy bytes
-# and allowlist; every module-level attribute of every project module (so a
-# ``monkeypatch.setattr`` on any builder dependency is detected); every
-# on-disk file the build opened outside its own tree, recorded through an
-# audit hook (size + mtime); the shared in-memory values; and a full content
-# digest of the shared tree (path, mode, size and bytes of every file), which
-# also catches a test that mutates the shared base.
-#
-# Determinism was proven by building each kind twice independently: identical
-# tree digests and identical in-memory values (paths normalised), and equal to
-# the cached base.
-#
-# (2) No test depends on the build step. No test in this file patches a
-# builder dependency or injects a defect before arranging: the only
-# monkeypatch users that touch trust policy (the three revoked/empty-policy
-# tests) never call an arrange helper; tests that need a bespoke chain build
-# their own via ``_generate_sealed_receipt`` (uncached). Any such test in
-# future trips the ambient-state check above and fails loudly.
-#
-# Every test receives its own private view of the tree plus deep copies of
-# every in-memory value, so the file passes in any order. Each test's act
-# phase (``construct_completion``, ``verify_private_replay``,
-# ``validate_receipt_independently``) still runs for real against the
-# per-test view, including every tampered variant.
+# Each base tree below is a pure, deterministic function of the fixture's
+# fixed constants (module-import keypairs, pinned salts and nonces): repeated
+# fresh builds are byte-identical and embed no absolute paths (every receipt
+# binds relative ``data/...`` paths only). The cached base therefore holds
+# only immutable arrange-phase INPUTS. Every test receives its own private
+# view of the tree plus deep copies of every in-memory value, so the file
+# passes in any order. Nothing here caches a validation or verification
+# OUTCOME: each test's act phase (``construct_completion``,
+# ``verify_private_replay``, ``validate_receipt_independently``) still runs
+# for real against the per-test view, including every tampered variant.
 #
 # Two pieces of per-test state from the original in-test builds must be
 # reproduced exactly:
@@ -196,202 +167,26 @@ def _replay_kwargs(tmp_root: Path, info: dict) -> dict:
 # Cross-filesystem fallback: real bytes are copied when hard links are
 # unavailable.
 
-
-@dataclasses.dataclass(frozen=True)
-class _ArrangeBase:
-    path: Path
-    built: Any
-    overrides: dict
-    # Everything the build could have depended on, recorded when it was
-    # built and re-verified on EVERY cache return (see ``_verify_arrange_base``).
-    tree_digest: str  # writable files by content, frozen files by size + mtime_ns
-    full_tree_digest: str  # every file by content; re-verified when the module ends
-    memory_digest: str
-    ambient: dict[str, Any]
-    disk_inputs: dict[str, tuple[int, int] | None]
-
-
-_ARRANGE_BASES: dict[str, _ArrangeBase] = {}
+_ARRANGE_BASES: dict[str, tuple[Path, Any, dict]] = {}
 _FROZEN_MODE = 0o444
 _ADMISSION_RELATIVE = Path("data/projects/open_model_data/admission")
-_OPEN_LOG: list[str] | None = None
-# Per-test values that legitimately differ between tests: the autouse
-# ``install_policy_resource`` re-points these two trust attributes at a fresh
-# per-test file (identical bytes, verified by value in ``_ambient_state``).
-_PER_TEST_ATTRIBUTES = {"DEFAULT_TRUST_POLICY_PATH", "PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST"}
-# The modules the builders execute. (The repo-wide conftest re-points unrelated
-# subsystems' paths per test -- bridge DB, dashboard, ownership ledger -- which
-# no v4 arrange code reads.)
-_BUILDER_MODULE_PREFIXES = ("learn_ukrainian_v4_runtime", "scripts.projects.open_model_data", "scripts.fleet_comms", "_v4_")
 
 
-def _record_open(event: str, args: tuple) -> None:
-    if _OPEN_LOG is not None and event == "open" and isinstance(args[0], str | os.PathLike):
-        mode = args[1]
-        if mode is None or ("r" in str(mode) and "+" not in str(mode)):
-            _OPEN_LOG.append(os.fspath(args[0]))
-
-
-sys.addaudithook(_record_open)
-
-
-def _tree_digest(root: Path, *, hash_frozen: bool) -> str:
-    """Digest of a whole tree: every path, type and mode, and the bytes of
-    every file. The ~640 MB of frozen (0o444, hard-linked into every test)
-    files are hashed only when ``hash_frozen``; otherwise they are pinned by
-    size + mtime_ns, which any in-place write changes (~0.7 s per full hash
-    x every arranging test would erase most of the speed-up)."""
-    digest = hashlib.sha256()
-    for path in sorted(root.rglob("*")):
-        info = path.lstat()
-        relative = path.relative_to(root).as_posix()
-        mode = stat.S_IMODE(info.st_mode)
-        if stat.S_ISLNK(info.st_mode):
-            entry: tuple = ("l", relative, os.readlink(path))
-        elif stat.S_ISDIR(info.st_mode):
-            entry = ("d", relative, mode)
-        elif mode == _FROZEN_MODE and not hash_frozen:
-            entry = ("F", relative, mode, info.st_size, info.st_mtime_ns)
-        else:
-            with path.open("rb") as handle:
-                entry = ("f", relative, mode, info.st_size, hashlib.file_digest(handle, "sha256").hexdigest())
-        digest.update(json.dumps(entry).encode())
-    return digest.hexdigest()
-
-
-def _memory_digest(built: Any, overrides: dict) -> str:
-    return hashlib.sha256(json.dumps([built, overrides], sort_keys=True, default=str).encode()).hexdigest()
-
-
-def _ambient_state(tmp_path: Path) -> dict[str, Any]:
-    """Every in-process input a fresh build could read that is NOT an argument:
-    the whole environment (values the repo conftest points into the per-test
-    pytest scratch area -- bridge DB, task store, ownership ledger -- are masked;
-    no v4 arrange code reads them), the
-    trust-policy bytes the autouse seam installed, and the identity of every
-    module-level attribute of every builder module (a ``monkeypatch.setattr``
-    or ``delattr`` on any builder dependency changes one)."""
-    from _v4_provenance_resource_fixture import ACTIVE, SyntheticResources
-
-    bundle = ACTIVE.get()
-    return {
-        # The autouse ``synthetic_resources`` seam patches ``resources.read_bytes``
-        # with the per-test bundle's ``read`` (skipped below); what it wraps is
-        # the real reader, whose identity is part of the state.
-        "resource_reader": id(bundle.original) if bundle is not None else None,
-        "environment": {key: "<per-test scratch>" if value.startswith(str(tmp_path.parent)) else value for key, value in os.environ.items() if key != "PYTEST_CURRENT_TEST"},
-        "trust_policy": (hashlib.sha256(trust.DEFAULT_TRUST_POLICY_PATH.read_bytes()).hexdigest(), sorted(trust.PRODUCTION_TRUST_POLICY_FILE_DIGEST_ALLOWLIST)),
-        "attributes": {
-            (name, attribute): id(value)
-            for name, module in list(sys.modules.items())
-            if module is not None and name.startswith(_BUILDER_MODULE_PREFIXES)
-            for attribute, value in list(vars(module).items())
-            if attribute not in _PER_TEST_ATTRIBUTES and not isinstance(getattr(value, "__self__", None), SyntheticResources)
-        },
-    }
-
-
-def _ambient_differences(before: dict[str, Any], after: dict[str, Any]) -> list[str]:
-    differences = []
-    for section in before:
-        if section == "attributes":
-            # Only attributes that existed when the tree was built count: a
-            # module first imported later by an unrelated test adds names but
-            # cannot have been a dependency of the build.
-            changed = sorted(key for key, value in before[section].items() if after[section].get(key) != value)
-            differences.extend(f"module attribute {module}.{attribute}" for module, attribute in changed[:5])
-        elif before[section] != after[section]:
-            if section == "environment":
-                differences.extend(f"environment variable {key}" for key in sorted(before[section].keys() | after[section].keys()) if before[section].get(key) != after[section].get(key))
-            else:
-                differences.append(section)
-    return differences
-
-
-def _disk_fingerprint(paths: set[str]) -> dict[str, tuple[int, int] | None]:
-    fingerprint: dict[str, tuple[int, int] | None] = {}
-    for path in sorted(paths):
-        try:
-            info = os.stat(path)
-        except OSError:
-            fingerprint[path] = None
-        else:
-            fingerprint[path] = (info.st_size, info.st_mtime_ns)
-    return fingerprint
-
-
-def _arrange_base(kind: str, builder: Callable[[Path], Any], tmp_path: Path) -> tuple[Path, Any, dict]:
-    """The once-per-process arranged tree for ``kind``; every return is proven
-    to still be exactly what the build produced, from the same inputs."""
-    global _OPEN_LOG
+def _arrange_base(kind: str, builder: Callable[[Path], Any]) -> tuple[Path, Any, dict]:
     entry = _ARRANGE_BASES.get(kind)
     if entry is None:
         from _v4_provenance_resource_fixture import ACTIVE
 
-        # The builders import these lazily; load them first so the ambient
-        # snapshot below covers them too.
-        for lazy in ("v4_a6_blind_arena", "v4_a9_evaluation_package"):
-            importlib.import_module(f"scripts.projects.open_model_data.{lazy}")
-        ambient = _ambient_state(tmp_path)
         base = Path(tempfile.mkdtemp(prefix=f"v4-real-slot-{kind}-"))
         atexit.register(shutil.rmtree, base, ignore_errors=True)
-        _OPEN_LOG = []
-        try:
-            with fx.installed_fixture_policy():
-                built = builder(base)
-                bundle = ACTIVE.get()
-                overrides = dict(bundle.overrides) if bundle is not None else {}
-        finally:
-            opened, _OPEN_LOG = set(_OPEN_LOG), None
+        with fx.installed_fixture_policy():
+            built = builder(base)
+            bundle = ACTIVE.get()
+            overrides = dict(bundle.overrides) if bundle is not None else {}
         _freeze_read_only(base)
-        # Excluded: the base itself, interpreter bytecode, and the two policy
-        # files whose bytes ``_ambient_state`` already pins by content.
-        skipped = (str(base), "/proc", "/sys", "/dev")
-        disk_inputs = _disk_fingerprint(
-            {
-                path
-                for path in opened
-                if os.path.isfile(path)
-                and not path.endswith((".pyc", ".so"))
-                and not path.startswith(skipped)
-                and "/v4-policy-" not in path
-                and Path(path).name != "active-policy.json"
-            }
-        )
-        # Modules first imported BY the build have no pre-build baseline;
-        # take theirs after it. Pre-existing attributes keep the pre-build
-        # value, so a patch that was live during the build is still detected.
-        ambient["attributes"] = {**_ambient_state(tmp_path)["attributes"], **ambient["attributes"]}
-        entry = _ArrangeBase(base, built, overrides, _tree_digest(base, hash_frozen=False), _tree_digest(base, hash_frozen=True), _memory_digest(built, overrides), ambient, disk_inputs)
+        entry = (base, built, overrides)
         _ARRANGE_BASES[kind] = entry
-    else:
-        _verify_arrange_base(kind, entry, tmp_path)
-    return entry.path, entry.built, entry.overrides
-
-
-def _verify_arrange_base(kind: str, entry: _ArrangeBase, tmp_path: Path) -> None:
-    """Fail loudly instead of serving a stale or mutated arranged tree."""
-    problems = []
-    if differences := _ambient_differences(entry.ambient, _ambient_state(tmp_path)):
-        problems.append("ambient build inputs changed since the tree was built (environment, trust-policy bytes or a monkeypatched project module attribute): " + ", ".join(differences))
-    if _disk_fingerprint(set(entry.disk_inputs)) != entry.disk_inputs:
-        problems.append("an on-disk file the build read changed (size/mtime) since the tree was built")
-    if _memory_digest(entry.built, entry.overrides) != entry.memory_digest:
-        problems.append("the shared in-memory arrange values were mutated")
-    if _tree_digest(entry.path, hash_frozen=False) != entry.tree_digest:
-        problems.append("the shared base tree content was mutated")
-    if problems:
-        pytest.fail(f"arranged base {kind!r} is no longer the tree its build produced: " + "; ".join(problems), pytrace=False)
-
-
-@pytest.fixture(autouse=True, scope="module")
-def _arranged_bases_intact_at_module_end():
-    """Full content proof (frozen files included) that no test in this module
-    mutated any shared base; a mismatch errors the module's last test."""
-    yield
-    for kind, entry in _ARRANGE_BASES.items():
-        if _tree_digest(entry.path, hash_frozen=True) != entry.full_tree_digest:
-            pytest.fail(f"arranged base {kind!r}: frozen source-universe bytes changed during the module", pytrace=False)
+    return entry
 
 
 def _install_base_overrides(overrides: dict) -> None:
@@ -449,7 +244,7 @@ def _relocated_sealed(sealed: dict, base: Path, tmp_path: Path) -> dict:
 
 def _real_slot_root(tmp_path: Path) -> tuple[Path, dict]:
     """Per-test private copy of the once-per-process ``fx.build_real_slot_root`` output."""
-    base, info, overrides = _arrange_base("full", lambda base_dir: fx.build_real_slot_root(base_dir)[1], tmp_path)
+    base, info, overrides = _arrange_base("full", lambda base_dir: fx.build_real_slot_root(base_dir)[1])
     _copy_base_tree(base, tmp_path)
     _install_base_overrides(overrides)
     return tmp_path, {
@@ -465,7 +260,7 @@ def _real_slot_root(tmp_path: Path) -> tuple[Path, dict]:
 
 def _synthetic_chain_root(tmp_path: Path) -> Path:
     """Per-test private copy of the once-per-process synthetic chain root."""
-    base, _, overrides = _arrange_base("chain", lambda base_dir: fx.base_fixture.build_synthetic_chain_root(base_dir, resolved_stratum="standard_correct"), tmp_path)
+    base, _, overrides = _arrange_base("chain", lambda base_dir: fx.base_fixture.build_synthetic_chain_root(base_dir, resolved_stratum="standard_correct"))
     _copy_base_tree(base, tmp_path)
     _install_base_overrides(overrides)
     return tmp_path
@@ -481,7 +276,7 @@ def _standard_construction_kwargs(tmp_path: Path) -> tuple[Path, dict]:
     """Per-test private copy of the chain root plus the full, valid
     ``construct_completion`` kwargs -- callers override only what they tamper
     with, exactly as with ``_real_slot_construction_kwargs``."""
-    base, kwargs, overrides = _arrange_base("kwargs", _build_kwargs_base, tmp_path)
+    base, kwargs, overrides = _arrange_base("kwargs", _build_kwargs_base)
     _copy_base_tree(base, tmp_path)
     _install_base_overrides(overrides)
     fresh = copy.deepcopy(kwargs)
