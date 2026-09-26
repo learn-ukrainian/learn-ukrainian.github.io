@@ -12,6 +12,8 @@ import argparse
 import json
 import sys
 from collections import Counter
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -42,6 +44,25 @@ from practice_linguistic import (
 )
 
 from scripts.practice_deck.io import PracticeDeckHydrationError, ensure_practice_deck_hydrated
+
+
+@contextmanager
+def _audit_dir_off_sys_path() -> Iterator[None]:
+    """Import ``scripts.audit`` without this directory shadowing ``scripts/config.py``.
+
+    ``python scripts/audit/check_static_practice_assets.py`` puts ``scripts/audit``
+    on ``sys.path``. ``scripts.audit.config`` then satisfies ``import config`` and
+    loops. The sibling imports above still need that entry; the package imports
+    inside ``check_assets`` must not see it.
+    """
+    audit_dir = AUDIT_DIR.resolve()
+    saved = sys.path[:]
+    sys.path[:] = [entry for entry in saved if not entry or Path(entry).resolve() != audit_dir]
+    try:
+        yield
+    finally:
+        sys.path[:] = saved
+
 
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_PRACTICE_DIR = Path("site/public/lexicon")
@@ -700,7 +721,12 @@ def _run_linguistic_pack(
     if not vesum_db.exists():
         errors.append(f"linguistic gate v{LINGUISTIC_GATE_VERSION}: VESUM database missing at {vesum_db}")
         return
-    from generate_practice_deck import RealVesumVerifier, read_cloze_sources, read_sentence_inventory
+    with _audit_dir_off_sys_path():
+        from scripts.audit.generate_practice_deck import (
+            RealVesumVerifier,
+            read_cloze_sources,
+            read_sentence_inventory,
+        )
 
     verifier = RealVesumVerifier(vesum_db)
     source_rows: list[dict[str, Any]] = []
@@ -838,11 +864,12 @@ def check_assets(
 
     # Practice Hub Quality Gate (Issue #7944) — gated to preserve unit-test isolation
     if run_qa_gate:
-        from practice_quality_gate import (
-            DEFAULT_ERROR_CORRECTIONS,
-            DEFAULT_TEACHER_CLOZE,
-            run_all_practice_audits,
-        )
+        with _audit_dir_off_sys_path():
+            from scripts.audit.practice_quality_gate import (
+                DEFAULT_ERROR_CORRECTIONS,
+                DEFAULT_TEACHER_CLOZE,
+                run_all_practice_audits,
+            )
 
         qa_results = run_all_practice_audits(
             teacher_cloze=teacher_cloze or DEFAULT_TEACHER_CLOZE,

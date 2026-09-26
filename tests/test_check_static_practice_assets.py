@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
+import scripts.audit.check_static_practice_assets as check_static_practice_assets
 from scripts.audit.check_static_practice_assets import check_assets
 from scripts.audit.daily_cefr import CEFR_LEVELS
 from scripts.audit.generate_daily_pool import CEFR_LEVELS as GENERATOR_CEFR_LEVELS
@@ -62,11 +64,7 @@ def _write_daily_pool(path: Path) -> None:
 
 
 def _write_reviewed_sources(path: Path, *, reviewed: bool = False) -> None:
-    rows = (
-        [{"status": "reviewed", "path": "curriculum/l2-uk-en/a1/vocabulary/home.yaml"}]
-        if reviewed
-        else []
-    )
+    rows = [{"status": "reviewed", "path": "curriculum/l2-uk-en/a1/vocabulary/home.yaml"}] if reviewed else []
     _write_json(path, {"reviewed": rows})
 
 
@@ -704,8 +702,12 @@ def test_thin_deck_warnings(tmp_path: Path) -> None:
         min_practice_lexemes_per_level=1,
     )
     assert summary["ok"] is True
-    assert any("A1 synonym coverage 0.0000 is below thin-deck threshold 0.05" in warning for warning in summary["warnings"])
-    assert any("A1 paronym coverage 0.0000 is below thin-deck threshold 0.01" in warning for warning in summary["warnings"])
+    assert any(
+        "A1 synonym coverage 0.0000 is below thin-deck threshold 0.05" in warning for warning in summary["warnings"]
+    )
+    assert any(
+        "A1 paronym coverage 0.0000 is below thin-deck threshold 0.01" in warning for warning in summary["warnings"]
+    )
 
 
 def test_check_assets_summary_includes_coverage_structure(tmp_path: Path) -> None:
@@ -821,10 +823,67 @@ def test_check_assets_runs_qa_gate_with_fixtures(tmp_path: Path) -> None:
         run_qa_gate=True,
     )
     assert summary["ok"] is False
-    assert any(
-        "practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in err
-        for err in summary["errors"]
+    assert any("practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in err for err in summary["errors"])
+
+
+def test_check_assets_runs_qa_gate_after_audit_dir_removed_from_sys_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """QA gate still runs after scripts/audit is removed from sys.path.
+
+    tests/test_curated_ohoiko_ulp_repromote.py imports
+    apply_source_inventory_provenance, which removes that directory at import
+    time. The checker module stays cached, so a later bare import of
+    practice_quality_gate fails.
+    """
+    audit_dir = check_static_practice_assets.AUDIT_DIR.resolve()
+    monkeypatch.setattr(
+        sys,
+        "path",
+        [entry for entry in sys.path if not entry or Path(entry).resolve() != audit_dir],
     )
+    assert not any(entry and Path(entry).resolve() == audit_dir for entry in sys.path)
+
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+    cloze_path = tmp_path / "bad_cloze.json"
+    cloze_path.write_text(
+        json.dumps(
+            {
+                "cloze": [
+                    {
+                        "clozeId": "c_bad",
+                        "sentence": "НЕПРАВИЛЬНО ПРАВИЛЬНО _____ речення",
+                        "form": "гарне",
+                        "options": [
+                            {"label": "гарне", "kind": "answer"},
+                            {"label": "погане", "kind": "distractor"},
+                        ],
+                    }
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    ec_path = tmp_path / "valid_ec.json"
+    ec_path.write_text(json.dumps({"drills": []}), encoding="utf-8")
+    si_path = tmp_path / "valid_si.json"
+    si_path.write_text(json.dumps({"sentences": []}), encoding="utf-8")
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1",),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+        teacher_cloze=cloze_path,
+        error_corrections=ec_path,
+        sentence_inventory=si_path,
+        run_qa_gate=True,
+    )
+    assert summary["ok"] is False
+    assert any("practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in err for err in summary["errors"])
 
 
 def test_cli_runs_qa_gate_with_fixtures(tmp_path: Path) -> None:
