@@ -398,13 +398,19 @@ class RecoveryError(ValueError):
 def _recovery_remediation(journal: Path) -> str:
     command = "/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts"
     return (
-        f"remediation: inspect {journal} (fields repo, group, rel, old_sha256, new_sha256, new_manifest_digest, "
-        "manifest) against registry/artifacts/<group>.manifest.json and data/<rel> in that repo. To let recovery "
-        "finish, restore either the prior state (manifest = the journal's 'manifest' field, target sha256 = "
-        "old_sha256) or the completed publish (manifest digest = new_manifest_digest, target sha256 = new_sha256), "
-        f"then run `{command} status`, which rolls back or clears the journal. If the journal is stale instead "
-        f"(for example the manifest changed through a later commit) and `{command} verify --group <group>` passes, "
-        f"retire it with `mv {journal} {journal}.resolved`."
+        f"remediation: every `{command}` command (status and verify included) runs recovery first and stops "
+        "on this journal, so start with plain shell tools:\n"
+        f"  1. inspect the journal: `cat {journal}` (fields repo, group, rel, old_sha256, new_sha256, "
+        "new_manifest_digest, manifest).\n"
+        "  2. in that repo compare by hash: `sha256sum data/<rel>` and "
+        "`sha256sum registry/artifacts/<group>.manifest.json` against old_sha256 / new_sha256 and "
+        "new_manifest_digest, and against the sha256 the manifest lists for data/<rel>.\n"
+        "  3a. interrupted publish (target is old_sha256 or new_sha256, manifest is the journal's 'manifest' "
+        "field or new_manifest_digest): restore the prior or the completed state, then "
+        f"`{command} status` rolls back or clears the journal.\n"
+        f"  3b. stale journal (manifest changed through a later commit and the target matches the manifest): "
+        f"retire it with `mv {journal} {journal}.resolved`.\n"
+        f"  4. confirm with `{command} verify --group <group>`."
     )
 
 
@@ -422,6 +428,40 @@ def _recover_locked(repo: Path) -> int:
     return count
 
 
+def _checkout_gone_reason(repo: Path, owner: Path) -> str | None:
+    """Return None when ``owner`` is provably a deleted checkout, "" when it is alive, else why we cannot tell.
+
+    ``Path.exists()`` is also False on an unmounted filesystem or an unsearchable parent, so a journal is
+    only pruned when the parent is readable, the checkout itself is definitively absent, and the primary's
+    ``git worktree list`` does not still register it (an unmounted worktree stays registered).
+    """
+    parent = owner.parent
+    if not parent.is_dir() or not os.access(parent, os.R_OK | os.X_OK):
+        return f"parent {parent} is missing or unreadable, so the checkout may only be unreachable"
+    try:
+        os.lstat(owner)
+    except FileNotFoundError:
+        pass
+    except OSError as exc:
+        return f"cannot stat the checkout ({exc})"
+    else:
+        return ""
+    try:
+        listing = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=repo,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=True,
+        ).stdout
+    except (OSError, subprocess.SubprocessError) as exc:
+        return f"cannot list git worktrees ({exc})"
+    if any(line == f"worktree {owner}" for line in listing.splitlines()):
+        return "still registered in `git worktree list` (run `git worktree prune` once it is truly gone)"
+    return None
+
+
 def _recover_journal(repo: Path, store: Path, journal: Path) -> int:
     """Roll one journal back or clear it; return 1 when handled, 0 when it belongs to another checkout."""
     record = json.loads(journal.read_text(encoding="utf-8"))
@@ -429,10 +469,12 @@ def _recover_journal(repo: Path, store: Path, journal: Path) -> int:
     if not isinstance(owner, str) or not owner:
         raise ValueError(f"invalid publish recovery record: {journal}")
     if owner != str(repo.resolve()):
-        if not Path(owner).exists():
-            # The checkout that wrote it was deleted (a removed worktree); nothing is left to roll back.
+        reason = _checkout_gone_reason(repo, Path(owner))
+        if reason is None:
             journal.unlink()
             print(f"artifacts: pruned publish journal {journal} of deleted checkout {owner}", file=sys.stderr)
+        elif reason:
+            print(f"artifacts: kept publish journal {journal} of checkout {owner}: {reason}", file=sys.stderr)
         return 0
     group = paths.checked_group(record["group"])
     rel = str(paths.checked_rel(record["rel"]))
