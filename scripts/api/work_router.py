@@ -157,8 +157,6 @@ _WORKER_LOOP_LOCK = threading.Lock()
 _WORKER_FUTURES: set[concurrent.futures.Future[Any]] = set()
 
 
-
-
 def _in_flight_builds(
     ctx: MonitorContext | None = None,
 ) -> dict[str, concurrent.futures.Future[dict[str, Any]]]:
@@ -210,6 +208,7 @@ def shutdown_worker_loop(*, join_timeout_s: float = 1.0) -> bool:
         return False
 
     if loop.is_running():
+
         async def stop_loop() -> None:
             await loop.shutdown_default_executor()
             loop.stop()
@@ -393,9 +392,7 @@ def _get_or_create_build_task(
     return _ensure_in_flight(key, filters, ctx)
 
 
-def wait_for_in_flight_build(
-    key: str, timeout: float = 10.0, ctx: MonitorContext | None = None
-) -> None:
+def wait_for_in_flight_build(key: str, timeout: float = 10.0, ctx: MonitorContext | None = None) -> None:
     """Block until the single-flight build for ``key`` settles.
 
     Sync TestClient does not pump request-loop ``create_task`` work between
@@ -412,9 +409,7 @@ def wait_for_in_flight_build(
         fut.result(timeout=timeout)
     except Exception:
         if not fut.done():
-            raise TimeoutError(
-                f"in-flight work projection build for {key!r} did not settle in {timeout}s"
-            ) from None
+            raise TimeoutError(f"in-flight work projection build for {key!r} did not settle in {timeout}s") from None
         return
 
 
@@ -532,7 +527,7 @@ def _item_streams(item: dict[str, Any]) -> list[str]:
     return [s for s in streams if isinstance(s, str) and s]
 
 
-def _resolve_stream_alias(stream: str, known: list[str]) -> str | None:
+def _resolve_stream_alias(stream: str, known: list[str]) -> tuple[str | None, str | None]:
     """Resolve launcher selectors first, then unambiguous taxonomy aliases.
 
     The launcher compatibility map takes precedence because taxonomy areas
@@ -541,20 +536,21 @@ def _resolve_stream_alias(stream: str, known: list[str]) -> str | None:
     """
     try:
         launcher_alias = load_launcher_aliases().get(stream)
-    except (OSError, ValueError):
-        return None
+    except (OSError, ValueError) as exc:
+        log.warning("Could not load launcher_stream_aliases.tsv: %s", exc)
+        return None, f"launcher_stream_aliases.tsv load failed ({type(exc).__name__})"
     if launcher_alias is not None:
-        return launcher_alias if launcher_alias in known else None
+        return (launcher_alias if launcher_alias in known else None), None
     if stream.startswith("infra."):
         # The launcher's generic infra.* arm resolves registry keys directly.
         key = stream.removeprefix("infra.")
-        return key if key in known else None
+        return (key if key in known else None), None
     try:
         area = resolve_area(stream)
     except FleetTaxonomyError:
-        return None
+        return None, None
     candidates = [name for name in (area.id, *area.aliases) if name in known]
-    return candidates[0] if len(candidates) == 1 else None
+    return (candidates[0] if len(candidates) == 1 else None), None
 
 
 def _next_rank_key(item: dict[str, Any]) -> tuple[int, str]:
@@ -598,19 +594,20 @@ async def work_next(
             headers={"Retry-After": str(int(NEXT_RETRY_AFTER_S))},
         )
     requested_stream = stream
+    alias_diagnostic = None
     if stream not in known:
-        aliased = _resolve_stream_alias(stream, known)
+        aliased, alias_diagnostic = _resolve_stream_alias(stream, known)
         if aliased is not None:
             stream = aliased
     if stream not in known:
-        return _next_error(
-            400,
-            {
-                "error": "unknown_stream",
-                "message": f"unknown stream {requested_stream!r}",
-                "valid_streams": known,
-            },
-        )
+        body = {
+            "error": "unknown_stream",
+            "message": f"unknown stream {requested_stream!r}",
+            "valid_streams": known,
+        }
+        if alias_diagnostic is not None:
+            body["diagnostic"] = alias_diagnostic
+        return _next_error(400, body)
 
     key = projection_cache_key({}, ctx)
     cached = cache_get_with_age(key, float("inf"))
@@ -716,10 +713,7 @@ async def work_next(
         "cache_age_s": float(age),
         "limit": limit,
         "queue": queue,
-        "sources": [
-            source for source in payload.get("sources", [])
-            if source.get("source_id") == "public-monitor"
-        ],
+        "sources": [source for source in payload.get("sources", []) if source.get("source_id") == "public-monitor"],
         "denominator": payload.get("denominator", {}),
         "digest": {
             "other_streams": {
