@@ -4,9 +4,13 @@ On 2026-09-24 a dispatch fan-out OOM-killed the driver because every worker
 shared the driver's cgroup (``docs/bug-autopsies/2026-09-24-dispatch-fanout-oom.md``).
 ``systemd-run --user --scope`` execs the worker in place, so the ``Popen`` pid,
 pipes, return code, and ``cancel`` signal stay the worker's. When the user
-manager, cgroup2 memory delegation, the slice limits, or linger is missing —
-or ``systemd-run`` fails before that exec — dispatch uses plain ``Popen`` and
-records ``popen-fallback``. Isolation is never required for a dispatch to start.
+manager, cgroup2 memory delegation, the slice limits, or linger is missing,
+or ``systemd-run`` exits or is still that program when the startup window
+ends, dispatch stops it and uses plain ``Popen``, recording ``popen-fallback``.
+If the process image is already the worker, that process is kept. If ``/proc``
+cannot show which image it is, or the start marker arrives only as the process
+is stopped, the dispatch fails instead of starting a second worker. Isolation
+is never required for a dispatch to start.
 
 The byte values below match ``MemoryMax=11G`` and ``MemorySwapMax=1G`` in
 ``packaging/systemd/lu-dispatch.slice``. systemd parses the ``G`` suffix in
@@ -15,6 +19,7 @@ base 1024 (``systemd.resource-control(5)``).
 
 from __future__ import annotations
 
+import contextlib
 import os
 import pwd
 import re
@@ -23,6 +28,7 @@ import select
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
@@ -40,6 +46,10 @@ LAUNCH_FALLBACK = "popen-fallback"
 # One bound for the readiness probe and for systemd-run's own start.
 PROBE_TIMEOUT_S = 2.0
 
+# After a probe is killed, wait at most this long for it to exit. stdout and
+# stderr are files, so a grandchild holding those fds cannot stretch the wait.
+_REAP_TIMEOUT_S = 0.5
+
 # systemd.unit(5): the unit name including its type suffix must not exceed 255
 # characters. ``--scope`` appends ``.scope`` when the name does not end with it.
 _UNIT_NAME_MAX = 255
@@ -51,7 +61,6 @@ _UNIT_TOKEN_BYTES = 4
 _STDERR_EXCERPT_BYTES = 4096
 
 ENV_ISOLATION = "LU_DISPATCH_ISOLATION"
-_FORCE_FALLBACK = frozenset({"fallback", "popen", "off", "0"})
 
 _Popen = subprocess.Popen
 _UNIT_UNSAFE = re.compile(r"[^A-Za-z0-9:_.-]+")
@@ -72,8 +81,9 @@ class DispatchIsolationError(RuntimeError):
     """A second worker must not be started.
 
     Raised when fallback was refused, and when a scoped start did not prove
-    that the worker never ran (late start marker, or the scope was still alive
-    at the startup timeout). The dispatch is failed instead of relaunched.
+    that the worker never ran: the start marker arrived as the process was
+    stopped, ``/proc`` could not be read, or a proven pre-exec ``systemd-run``
+    did not exit after it was stopped. The dispatch is failed instead of relaunched.
     """
 
 
@@ -83,13 +93,6 @@ class ProbeResult:
 
     ready: bool
     reason: str | None = None
-
-    @property
-    def check(self) -> str | None:
-        if self.reason is None:
-            return None
-        name, _sep, _rest = self.reason.partition(":")
-        return name or None
 
 
 @dataclass(frozen=True)
@@ -192,12 +195,13 @@ def spawn_detached_worker(
 
     ``popen`` is the caller's ``subprocess.Popen`` (so ``delegate`` tests that
     patch ``delegate.subprocess.Popen`` still see the fallback spawn). The
-    scope attempt uses a one-byte start marker. Plain ``Popen`` is used only
-    when that marker is absent and ``systemd-run`` has already exited on its
-    own. A marker that arrives as the scope is stopped, or a scope that is
-    still running when the startup window ends, raises
-    :class:`DispatchIsolationError` instead of starting a second worker.
-    ``start_new_session=True`` matches the historical spawn.
+    scope attempt uses a one-byte start marker. Plain ``Popen`` is used when
+    that marker is absent and ``systemd-run`` has already exited, and when the
+    process is still ``systemd-run`` at the startup timeout (it is stopped
+    first). A marker that arrives as that process is stopped, or a ``/proc``
+    image that cannot be read, raises :class:`DispatchIsolationError` instead
+    of starting a second worker. A process that is already the worker is
+    returned as-is. ``start_new_session=True`` matches the historical spawn.
     """
     if not cmd:
         raise ValueError("worker command is empty")
@@ -270,8 +274,6 @@ def slice_usage_clause(*, timeout_s: float = PROBE_TIMEOUT_S) -> str | None:
 def format_slice_show(text: str) -> str | None:
     """Turn ``systemctl show`` text into ``lu-dispatch.slice 0.4/11.0 GiB``, or ``None``."""
     props = _properties(text)
-    if props.get("LoadState") == "not-found":
-        return None
     if props.get("ActiveState") != "active":
         return None
     current = _parse_bytes(props.get("MemoryCurrent"))
@@ -333,8 +335,19 @@ def _try_scope(
             return proc, None
         # The marker can arrive after select returns. An already-exited
         # process with no marker is systemd-run's own failure: the worker
-        # never started. A process that is still alive is not that proof.
+        # never started. A process that is still alive is identified from
+        # /proc before it is stopped.
         if proc.poll() is not None:
+            if _consume_marker(read_fd):
+                return proc, None
+            return None, _scope_failure_reason(proc, stderr_log, start)
+        image = _resolve_running_image(proc, read_fd)
+        if image == "worker":
+            # systemd-run --scope execs the worker in place, so this Popen is
+            # that worker. Keep it. Killing it would drop a started task, and
+            # failing the dispatch would orphan it for a second launch.
+            return proc, None
+        if image == "exited":
             if _consume_marker(read_fd):
                 return proc, None
             return None, _scope_failure_reason(proc, stderr_log, start)
@@ -344,6 +357,20 @@ def _try_scope(
                 "systemd-run: worker start marker arrived after the startup "
                 f"timeout ({timeout_s:g}s) for unit {unit}; the scope was stopped "
                 "and will not be relaunched"
+            )
+        if image in {"systemd-run", "marker"}:
+            if proc.poll() is None:
+                raise DispatchIsolationError(
+                    "systemd-run: still alive after stop "
+                    f"for unit {unit}; startup is ambiguous and the worker "
+                    "will not be relaunched"
+                )
+            if image == "marker":
+                return None, (
+                    f"systemd-run: start wrapper did not exec the worker within {timeout_s:g}s for unit {unit}"
+                )
+            return None, (
+                f"systemd-run: still systemd-run after {timeout_s:g}s for unit {unit}; the worker never started"
             )
         raise DispatchIsolationError(
             "systemd-run: did not exec the worker within "
@@ -429,6 +456,69 @@ def _file_size(path: Path | None) -> int:
         return 0
 
 
+def _resolve_running_image(proc: subprocess.Popen[Any], read_fd: int) -> str:
+    """Classify a scope that is still running after the startup timeout.
+
+    ``worker`` means the worker image is already in place, so the caller keeps
+    that process. ``systemd-run`` means the worker never exec'd. ``marker`` means
+    the start wrapper never reached the worker. Both of those are stopped and
+    then replaced with plain ``Popen``. ``exited`` means the process quit during
+    the wrapper wait. ``unknown`` means ``/proc`` could not be read.
+    """
+    image = _launch_image(proc.pid)
+    if image != "marker":
+        return image
+    if _marker_seen(proc, read_fd, _REAP_TIMEOUT_S):
+        return "worker"
+    if proc.poll() is not None:
+        return "exited"
+    return _launch_image(proc.pid)
+
+
+def _launch_image(pid: int) -> str:
+    """Read ``/proc/<pid>``: ``systemd-run``, ``marker``, ``worker``, or ``unknown``.
+
+    ``unknown`` is only a failed or empty read (the process exited, or permission
+    denied). A readable image is one of the other three. A shebang ``systemd-run``
+    has the interpreter as ``exe`` and the script path as argv 1.
+    """
+    exe_name: str | None
+    try:
+        exe_name = Path(os.readlink(f"/proc/{pid}/exe")).name
+    except OSError:
+        exe_name = None
+    args = _cmdline_args(pid)
+    if exe_name == "systemd-run":
+        return "systemd-run"
+    if not args:
+        return "unknown"
+    names = [Path(args[0]).name]
+    if len(args) > 1:
+        names.append(Path(args[1]).name)
+    if "systemd-run" in names:
+        return "systemd-run"
+    if len(args) > 2 and args[1] == "-c" and "os.execv(sys.argv[2]" in args[2]:
+        return "marker"
+    return "worker"
+
+
+def _cmdline_args(pid: int) -> list[str] | None:
+    try:
+        fd = os.open(f"/proc/{pid}/cmdline", os.O_RDONLY | os.O_CLOEXEC)
+    except OSError:
+        return None
+    try:
+        raw = os.read(fd, 8192)
+    except OSError:
+        return None
+    finally:
+        os.close(fd)
+    if not raw:
+        return None
+    parts = [part.decode("utf-8", "surrogateescape") for part in raw.split(b"\0") if part]
+    return parts or None
+
+
 def _kill_if_alive(proc: subprocess.Popen[Any]) -> None:
     if proc.poll() is not None:
         return
@@ -454,8 +544,8 @@ def _warn(reason: str) -> None:
 
 def _forced_fallback(env: Mapping[str, str]) -> ProbeResult | None:
     raw = env.get(ENV_ISOLATION, "").strip().lower()
-    if raw in _FORCE_FALLBACK:
-        return ProbeResult(ready=False, reason=f"forced: {ENV_ISOLATION}={raw}")
+    if raw == "fallback":
+        return ProbeResult(ready=False, reason=f"forced: {ENV_ISOLATION}=fallback")
     return None
 
 
@@ -593,20 +683,28 @@ def _run(argv: Sequence[str], env: Mapping[str, str], timeout_s: float) -> subpr
 
     ``subprocess.run`` enters ``Popen`` as a context manager. Dispatch tests
     replace ``subprocess.Popen`` with a fake that is not one, so the probe
-    keeps the ``Popen`` class captured at import.
+    keeps the ``Popen`` class captured at import. stdout and stderr are files
+    so a grandchild cannot inherit a pipe and hold ``communicate`` open.
     """
-    proc = _Popen(
-        list(argv),
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        env=dict(env),
-    )
-    try:
-        stdout, stderr = proc.communicate(timeout=timeout_s)
-    except subprocess.TimeoutExpired:
-        proc.kill()
-        stdout, stderr = proc.communicate()
-        raise subprocess.TimeoutExpired(list(argv), timeout_s, output=stdout, stderr=stderr) from None
-    return subprocess.CompletedProcess(list(argv), int(proc.returncode or 0), stdout, stderr)
+    command = list(argv)
+    with tempfile.TemporaryFile() as stdout_file, tempfile.TemporaryFile() as stderr_file:
+        proc = _Popen(
+            command,
+            stdin=subprocess.DEVNULL,
+            stdout=stdout_file,
+            stderr=stderr_file,
+            env=dict(env),
+        )
+        try:
+            proc.wait(timeout=timeout_s)
+        except subprocess.TimeoutExpired:
+            with contextlib.suppress(OSError):
+                proc.kill()
+            with contextlib.suppress(subprocess.TimeoutExpired):
+                proc.wait(timeout=_REAP_TIMEOUT_S)
+            raise subprocess.TimeoutExpired(command, timeout_s) from None
+        stdout_file.seek(0)
+        stderr_file.seek(0)
+        stdout = stdout_file.read().decode("utf-8", errors="replace")
+        stderr = stderr_file.read().decode("utf-8", errors="replace")
+    return subprocess.CompletedProcess(command, int(proc.returncode or 0), stdout, stderr)

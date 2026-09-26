@@ -9547,8 +9547,9 @@ def _dispatch(
             # pid=None and no zombie detection could rescue it
             # (because zombie detection is gated on `pid and not alive`).
             # Codex 2026-04-10 audit finding.
-            # DispatchIsolationError is the scoped-start race: the worker may
-            # already have run, so the task is failed and not relaunched.
+            # DispatchIsolationError means the scope may already have started
+            # the worker (late marker, or /proc could not prove it never
+            # exec'd). The task is failed and not relaunched.
             if isinstance(exc, dispatch_isolation.DispatchIsolationError):
                 spawn_error = f"dispatch isolation: {exc}"[:500]
                 returncode_reason = "scoped worker startup was ambiguous; not relaunched"

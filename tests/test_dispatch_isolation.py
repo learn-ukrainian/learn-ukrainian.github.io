@@ -41,6 +41,14 @@ def _install_fakes(tmp_path: Path) -> Path:
         mode = os.environ.get("FAKE_SYSTEMCTL", "ok")
         if mode == "timeout":
             time.sleep(30)
+        if mode == "hold-pipes":
+            pid = os.fork()
+            if pid == 0:
+                time.sleep(30)
+                os._exit(0)
+            with open(os.environ["FAKE_GRANDCHILD_PID"], "w", encoding="ascii") as handle:
+                handle.write(str(pid))
+            time.sleep(30)
         if mode == "down":
             sys.stderr.write("Failed to connect to bus: No such file or directory\\n")
             sys.exit(1)
@@ -190,7 +198,6 @@ def test_probe_names_the_first_failed_check(tmp_path: Path, overrides: dict[str,
     result = _probe(_env(bindir, **overrides), _subtree(tmp_path, subtree_text))
 
     assert not result.ready
-    assert result.check == check
     assert result.reason is not None
     assert result.reason.startswith(f"{check}:")
 
@@ -199,8 +206,8 @@ def test_probe_timeout_on_systemctl_is_the_user_manager_check(tmp_path: Path):
     bindir = _install_fakes(tmp_path)
     result = _probe(_env(bindir, FAKE_SYSTEMCTL="timeout"), _subtree(tmp_path), timeout_s=0.2)
 
-    assert result.check == "user-manager"
     assert result.reason is not None
+    assert result.reason.startswith("user-manager:")
     assert "timed out" in result.reason
 
 
@@ -208,8 +215,8 @@ def test_probe_timeout_on_loginctl_is_the_linger_check(tmp_path: Path):
     bindir = _install_fakes(tmp_path)
     result = _probe(_env(bindir, FAKE_LOGINCTL="timeout"), _subtree(tmp_path), timeout_s=0.2)
 
-    assert result.check == "linger"
     assert result.reason is not None
+    assert result.reason.startswith("linger:")
     assert "timed out" in result.reason
 
 
@@ -238,6 +245,63 @@ def test_forced_fallback_skips_the_probe(tmp_path: Path, capsys: pytest.CaptureF
     assert launch.fallback_reason == "forced: LU_DISPATCH_ISOLATION=fallback"
     assert calls == [[_PY, "-c", "print(1)"]]
     assert "launching the worker with plain Popen" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("value", ["popen", "off", "0"])
+def test_only_fallback_skips_the_probe(tmp_path: Path, value: str):
+    bindir = _install_fakes(tmp_path)
+    result = _probe(_env(bindir, LU_DISPATCH_ISOLATION=value), _subtree(tmp_path))
+
+    assert result.ready
+    assert result.reason is None
+
+
+def test_probe_grandchild_holding_stdout_cannot_stall_fallback(tmp_path: Path):
+    """A grandchild that inherits the probe's stdout must not keep dispatch waiting."""
+    pidfile = tmp_path / "grandchild.pid"
+    bindir = _install_fakes(tmp_path)
+    env = _env(bindir, FAKE_SYSTEMCTL="hold-pipes", FAKE_GRANDCHILD_PID=str(pidfile))
+    timeout_s = 0.2
+    fallback: list[list[str]] = []
+    grandchild: int | None = None
+
+    def popen(argv, **_kwargs):
+        fallback.append(list(argv))
+
+        class _Proc:
+            pid = 4
+            stdin = None
+
+        return _Proc()
+
+    started = time.monotonic()
+    try:
+        _proc, launch = iso.spawn_detached_worker(
+            [_PY, "-c", "print('fallback')"],
+            task_id="hold-pipes",
+            run_nonce="nonce-hold",
+            popen=popen,
+            env=env,
+            probe_env=env,
+            subtree_path=_subtree(tmp_path),
+            timeout_s=timeout_s,
+        )
+        elapsed = time.monotonic() - started
+        assert launch.mode == iso.LAUNCH_FALLBACK
+        assert launch.fallback_reason is not None
+        assert "timed out" in launch.fallback_reason
+        assert fallback == [[_PY, "-c", "print('fallback')"]]
+        assert pidfile.is_file()
+        grandchild = int(pidfile.read_text(encoding="ascii"))
+        os.kill(grandchild, 0)
+        assert elapsed < timeout_s + iso._REAP_TIMEOUT_S + 2.0
+    finally:
+        if grandchild is None and pidfile.is_file():
+            with suppress(ValueError):
+                grandchild = int(pidfile.read_text(encoding="ascii"))
+        if grandchild is not None:
+            with suppress(ProcessLookupError):
+                os.kill(grandchild, signal.SIGKILL)
 
 
 def test_systemd_run_failure_relaunches_once_with_popen(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
@@ -284,13 +348,14 @@ def test_systemd_run_failure_relaunches_once_with_popen(tmp_path: Path, capsys: 
     assert "launching the worker with plain Popen" in capsys.readouterr().err
 
 
-def test_systemd_run_timeout_does_not_relaunch(tmp_path: Path):
-    """A scope still alive at the timeout is not proof the worker never started."""
+def test_pre_exec_bus_stall_falls_back_to_popen(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
+    """A systemd-run that is still that program at the timeout never started the worker."""
     bindir = _install_fakes(tmp_path)
     env = _env(bindir, FAKE_SYSTEMD_RUN="timeout")
     fallback: list[list[str]] = []
     held: list[subprocess.Popen[bytes]] = []
     real_popen = subprocess.Popen
+    timeout_s = 0.3
 
     def popen(argv, **kwargs):
         if argv[0] == "systemd-run":
@@ -305,12 +370,67 @@ def test_systemd_run_timeout_does_not_relaunch(tmp_path: Path):
 
         return _Proc()
 
+    started = time.monotonic()
     try:
-        with pytest.raises(iso.DispatchIsolationError, match="startup is ambiguous") as raised:
+        _proc, launch = iso.spawn_detached_worker(
+            [_PY, "-c", "print('fallback')"],
+            task_id="slow-start",
+            run_nonce="nonce-slow",
+            popen=popen,
+            env=env,
+            probe_env=env,
+            stderr=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stdin=subprocess.DEVNULL,
+            subtree_path=_subtree(tmp_path),
+            timeout_s=timeout_s,
+        )
+        elapsed = time.monotonic() - started
+    finally:
+        for proc in held:
+            if proc.poll() is None:
+                with suppress(ProcessLookupError):
+                    os.killpg(proc.pid, signal.SIGKILL)
+                proc.wait(timeout=5)
+
+    assert launch.mode == iso.LAUNCH_FALLBACK
+    assert launch.fallback_reason is not None
+    assert "still systemd-run" in launch.fallback_reason
+    assert "never started" in launch.fallback_reason
+    assert fallback == [[_PY, "-c", "print('fallback')"]]
+    assert held
+    assert held[0].poll() is not None
+    assert elapsed < timeout_s + 2.0
+    assert "launching the worker with plain Popen" in capsys.readouterr().err
+
+
+def test_pre_exec_scope_that_survives_stop_is_not_relaunched(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    bindir = _install_fakes(tmp_path)
+    env = _env(bindir, FAKE_SYSTEMD_RUN="timeout")
+    monkeypatch.setattr(iso, "_kill_if_alive", lambda _proc: None)
+    fallback: list[list[str]] = []
+    held: list[subprocess.Popen[bytes]] = []
+    real_popen = subprocess.Popen
+
+    def popen(argv, **kwargs):
+        if argv[0] == "systemd-run":
+            proc = real_popen(argv, **kwargs)
+            held.append(proc)
+            return proc
+        fallback.append(list(argv))
+
+        class _Proc:
+            pid = 12
+            stdin = None
+
+        return _Proc()
+
+    try:
+        with pytest.raises(iso.DispatchIsolationError, match="still alive after stop") as raised:
             iso.spawn_detached_worker(
                 [_PY, "-c", "print('fallback')"],
-                task_id="slow-start",
-                run_nonce="nonce-slow",
+                task_id="unkillable",
+                run_nonce="nonce-unkillable",
                 popen=popen,
                 env=env,
                 probe_env=env,
@@ -330,7 +450,174 @@ def test_systemd_run_timeout_does_not_relaunch(tmp_path: Path):
     assert "will not be relaunched" in str(raised.value)
     assert fallback == []
     assert held
-    assert held[0].poll() is not None
+
+
+def test_worker_image_at_timeout_is_kept(tmp_path: Path):
+    """A process that is already the worker is not killed and not relaunched."""
+    worker = subprocess.Popen(
+        [_PY, "-c", "import time; time.sleep(30)"],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    fallback: list[list[str]] = []
+
+    class _Scope:
+        def __init__(self) -> None:
+            self.pid = worker.pid
+            self.returncode: int | None = None
+
+        def poll(self) -> int | None:
+            return self.returncode
+
+        def kill(self) -> None:
+            raise AssertionError("must not kill a worker that already started")
+
+        def wait(self, timeout: float | None = None) -> int:
+            raise AssertionError("must not wait on a worker that already started")
+
+    def popen(argv, **_kwargs):
+        if argv[0] == "systemd-run":
+            return _Scope()
+        fallback.append(list(argv))
+
+        class _Unused:
+            pid = 3
+            stdin = None
+
+        return _Unused()
+
+    try:
+        deadline = time.monotonic() + 2
+        while not Path(f"/proc/{worker.pid}/cmdline").exists():
+            if time.monotonic() > deadline:
+                raise AssertionError("worker cmdline did not appear")
+            time.sleep(0.01)
+        proc, launch = iso.spawn_detached_worker(
+            [_PY, "-c", "import time; time.sleep(30)"],
+            task_id="already-worker",
+            run_nonce="nonce-worker",
+            popen=popen,
+            check_probe=False,
+            timeout_s=0,
+        )
+        assert launch.mode == iso.LAUNCH_SCOPE
+        assert launch.unit is not None
+        assert isinstance(proc, _Scope)
+        assert worker.poll() is None
+        assert fallback == []
+        cmdline = Path(f"/proc/{worker.pid}/cmdline").read_bytes()
+        assert b"systemd-run" not in cmdline
+    finally:
+        if worker.poll() is None:
+            with suppress(ProcessLookupError):
+                os.killpg(worker.pid, signal.SIGKILL)
+            worker.wait(timeout=5)
+
+
+def test_unreadable_proc_image_does_not_relaunch():
+    """A missing /proc image is the exit race: fail the dispatch, do not relaunch."""
+    fallback: list[list[str]] = []
+    pid_max = int(Path("/proc/sys/kernel/pid_max").read_text(encoding="ascii"))
+
+    class _Scope:
+        def __init__(self) -> None:
+            self.pid = pid_max + 1000
+            self.returncode: int | None = None
+
+        def poll(self) -> int | None:
+            return self.returncode
+
+        def kill(self) -> None:
+            self.returncode = -signal.SIGKILL
+
+        def wait(self, timeout: float | None = None) -> int:
+            self.returncode = -signal.SIGKILL
+            return self.returncode
+
+    def popen(argv, **_kwargs):
+        if argv[0] == "systemd-run":
+            return _Scope()
+        fallback.append(list(argv))
+
+        class _Unused:
+            pid = 5
+            stdin = None
+
+        return _Unused()
+
+    with pytest.raises(iso.DispatchIsolationError, match="startup is ambiguous") as raised:
+        iso.spawn_detached_worker(
+            [_PY, "-c", "print('fallback')"],
+            task_id="unreadable",
+            run_nonce="nonce-unreadable",
+            popen=popen,
+            check_probe=False,
+            timeout_s=0,
+        )
+
+    assert "will not be relaunched" in str(raised.value)
+    assert fallback == []
+
+
+def test_permission_denied_proc_image_does_not_relaunch(monkeypatch: pytest.MonkeyPatch):
+    fallback: list[list[str]] = []
+    pid_max = int(Path("/proc/sys/kernel/pid_max").read_text(encoding="ascii"))
+    real_open = os.open
+    real_readlink = os.readlink
+
+    def open_blocked(path: str | os.PathLike[str], *args: object, **kwargs: object):
+        if str(path).startswith("/proc/"):
+            raise PermissionError(13, "Permission denied", str(path))
+        return real_open(path, *args, **kwargs)
+
+    def readlink_blocked(path: str | os.PathLike[str], *args: object, **kwargs: object):
+        if "/proc/" in str(path):
+            raise PermissionError(13, "Permission denied", str(path))
+        return real_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "open", open_blocked)
+    monkeypatch.setattr(os, "readlink", readlink_blocked)
+
+    class _Scope:
+        def __init__(self) -> None:
+            self.pid = pid_max + 1001
+            self.returncode: int | None = None
+
+        def poll(self) -> int | None:
+            return self.returncode
+
+        def kill(self) -> None:
+            self.returncode = -signal.SIGKILL
+
+        def wait(self, timeout: float | None = None) -> int:
+            self.returncode = -signal.SIGKILL
+            return self.returncode
+
+    def popen(argv, **_kwargs):
+        if argv[0] == "systemd-run":
+            return _Scope()
+        fallback.append(list(argv))
+
+        class _Unused:
+            pid = 6
+            stdin = None
+
+        return _Unused()
+
+    with pytest.raises(iso.DispatchIsolationError, match="startup is ambiguous") as raised:
+        iso.spawn_detached_worker(
+            [_PY, "-c", "print('fallback')"],
+            task_id="denied",
+            run_nonce="nonce-denied",
+            popen=popen,
+            check_probe=False,
+            timeout_s=0,
+        )
+
+    assert "will not be relaunched" in str(raised.value)
+    assert fallback == []
 
 
 def test_late_start_marker_runs_exactly_one_worker(tmp_path: Path):

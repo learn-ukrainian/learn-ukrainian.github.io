@@ -79,12 +79,14 @@ seats. Three PRs, in this order:
    worker's. The 8 hex characters are new on every launch, so a reused nonce
    cannot collide with a unit systemd still has registered. If the user
    manager, cgroup2 memory delegation, the slice limits, or linger is missing,
-   or if `systemd-run` exits before the worker writes its start marker,
-   dispatch falls back to plain Popen, prints one warning, and records
-   `launch_mode` (`scope` or `popen-fallback`) on the task record. A marker
-   that arrives only as that scope is stopped, or a scope still running when
-   the startup window ends, fails the dispatch instead of relaunching. Running
-   without the slice installed is supported. Per-worker limits stay out
+   or if `systemd-run` exits before the worker writes its start marker, or
+   is still `systemd-run` when the startup window ends, dispatch stops that
+   process, falls back to plain Popen, prints one warning, and records
+   `launch_mode` (`scope` or `popen-fallback`) on the task record. If the
+   process image is already the worker, that process is kept. A marker that
+   arrives only as that process is stopped, or a `/proc` image that cannot be
+   read, fails the dispatch instead of relaunching. Running without the slice
+   installed is supported. Per-worker limits stay out
    until sibling starvation shows up.
 
 Parts A and B have landed (admission, liveness, the pytest fan-out cap).
