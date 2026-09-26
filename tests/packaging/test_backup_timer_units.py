@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts.orchestration import install_backup_timer
+
 PACKAGING = Path(__file__).resolve().parents[2] / "packaging" / "systemd"
 UNITS = (
     "learn-ukrainian-backup.service",
@@ -48,12 +50,29 @@ def test_backup_timer_contract() -> None:
 def test_retention_units_run_weekly_tag_scoped_forget() -> None:
     service = _render("learn-ukrainian-backup-retention.service")
     assert "Type=oneshot" in service
-    assert "backup-data.sh retention --execute" in service
+    assert "run_scheduled_backup.sh retention" in service
     assert "EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env" in service
     timer = _render("learn-ukrainian-backup-retention.timer")
     assert timer.count("OnCalendar=") == 1
     assert "OnCalendar=Sun" in timer
     assert "Persistent=true" in timer
+
+
+def test_installer_accepts_primary_checkout_and_rejects_linked_worktree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    (primary / ".git").mkdir()
+    linked = tmp_path / "linked"
+    linked.mkdir()
+    (linked / ".git").write_text("gitdir: ../primary/.git/worktrees/linked\n", encoding="utf-8")
+    monkeypatch.setattr(install_backup_timer, "verify_units", lambda *_args, **_kwargs: "verified")
+    monkeypatch.setattr(install_backup_timer, "preview", lambda *_args: 0)
+
+    assert install_backup_timer.main(["--repo-root", str(primary), "--unit-dir", str(tmp_path / "units")]) == 0
+    with pytest.raises(install_backup_timer.InstallError, match="must be the primary checkout"):
+        install_backup_timer.main(["--repo-root", str(linked), "--unit-dir", str(tmp_path / "units")])
 
 
 @pytest.mark.skipif(shutil.which("systemd-analyze") is None, reason="systemd-analyze unavailable")

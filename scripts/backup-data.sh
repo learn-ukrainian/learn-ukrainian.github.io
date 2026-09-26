@@ -47,7 +47,15 @@ readonly BACKUP_HOST="${LU_BACKUP_HOST:-learn-ukrainian}"
 readonly MIN_RESTIC_VERSION="0.19.0"
 readonly CLOUD_ROOT="${HOME}/Library/CloudStorage"
 readonly TMP_ROOT="${LU_BACKUP_TMPDIR:-${TMPDIR:-/tmp}}"
-readonly LOCK_DIR="$TMP_ROOT/learn-ukrainian-backup.${UID}.lock"
+if [[ -n "${XDG_RUNTIME_DIR:-}" ]]; then
+  readonly LOCK_ROOT="$XDG_RUNTIME_DIR"
+elif [[ -d "/run/user/$UID" ]]; then
+  readonly LOCK_ROOT="/run/user/$UID"
+else
+  readonly LOCK_ROOT="/tmp"
+fi
+readonly LOCK_FILE="$LOCK_ROOT/learn-ukrainian-backup.${UID}.lock"
+readonly LOCK_WAIT_SECONDS="${LU_BACKUP_LOCK_WAIT_SECONDS:-3600}"
 readonly STAGE_PATH="$TMP_ROOT/learn-ukrainian-backup.${UID}.stage"
 # Operator-approved retention policy (2026-09-26), applied weekly by
 # `retention --execute` to completed backup runs (never to individual
@@ -58,7 +66,7 @@ readonly KEEP_MONTHLY=6
 
 STAGE_DIR=""
 STAGED_ROOT=""
-LOCK_HELD=0
+LOCK_FD=""
 LEGACY_DIR=""
 RESTIC_EXCLUDES=()
 LEGACY_EXCLUDES=()
@@ -222,7 +230,7 @@ info() {
 }
 
 restic_repository_command() {
-  restic "$@" --option rclone.connections=1
+  restic "$@" --option rclone.connections=1 --retry-lock 5m
 }
 
 cleanup() {
@@ -239,8 +247,8 @@ cleanup() {
     esac
   fi
 
-  if [[ "$LOCK_HELD" -eq 1 && -d "$LOCK_DIR" ]]; then
-    rmdir "$LOCK_DIR" 2>/dev/null || true
+  if [[ -n "$LOCK_FD" ]]; then
+    exec {LOCK_FD}>&-
   fi
 
   return "$status"
@@ -432,6 +440,7 @@ validate_environment() {
   require_command jq "brew install jq"
   require_command realpath
   require_command touch
+  require_command flock
   check_restic_version
   validate_password_file
   validate_repository_config
@@ -640,10 +649,20 @@ validate_source() {
 }
 
 acquire_lock() {
-  if ! mkdir "$LOCK_DIR" 2>/dev/null; then
-    die "Another backup operation holds the local lock: $LOCK_DIR"
+  [[ "$LOCK_WAIT_SECONDS" =~ ^[0-9]+$ ]] || die "LU_BACKUP_LOCK_WAIT_SECONDS must be whole seconds."
+  [[ -d "$LOCK_ROOT" ]] || die "Backup lock directory does not exist: $LOCK_ROOT"
+  [[ ! -L "$LOCK_FILE" ]] || die "Refusing symlink at backup lock path: $LOCK_FILE"
+  exec {LOCK_FD}>>"$LOCK_FILE" || die "Could not open backup lock file: $LOCK_FILE"
+  if ! flock -w "$LOCK_WAIT_SECONDS" "$LOCK_FD"; then
+    die "Timed out after ${LOCK_WAIT_SECONDS}s waiting for backup lock: $LOCK_FILE"
   fi
-  LOCK_HELD=1
+  # A killed backup can leave private staging; only the lock holder may clear it.
+  [[ ! -L "$STAGE_PATH" ]] || die "Refusing symlink at the private staging path: $STAGE_PATH"
+  if [[ -d "$STAGE_PATH" ]]; then
+    find "$STAGE_PATH" -depth -delete || die "Could not clear stale private staging: $STAGE_PATH"
+  elif [[ -e "$STAGE_PATH" ]]; then
+    die "Private staging path is not a directory: $STAGE_PATH"
+  fi
 }
 
 list_sqlite_sources() {
@@ -1251,6 +1270,7 @@ run_backup() {
   local backup_root backup_output snapshot_id
 
   validate_environment
+  if [[ "$execute" -eq 1 ]]; then acquire_lock; fi
   validate_source
   print_backup_selection
 
@@ -1280,7 +1300,6 @@ run_backup() {
   fi
 
   require_initialized_repository
-  acquire_lock
   if [[ "$(uname -s)" == Linux ]]; then
     run_linux_backup
     return
@@ -1447,6 +1466,7 @@ run_restore() {
   local -a whole_ids=() step_ids=() step_includes=() step_db_paths=() step_db_modes=()
 
   validate_environment
+  if [[ "$execute" -eq 1 ]]; then acquire_lock; fi
   require_initialized_repository
   [[ -n "$snapshot" && "$snapshot" != -* ]] || die "Invalid snapshot ID."
   restore_margin_percent >/dev/null
@@ -1576,7 +1596,6 @@ run_restore() {
     return
   fi
 
-  acquire_lock
   for index in "${!step_ids[@]}"; do
     restic_repository_command restore "${step_ids[$index]}" --target "$target_real" --overwrite never \
       ${step_includes[$index]:+--include "${step_includes[$index]}"}
@@ -1606,6 +1625,7 @@ run_init() {
   local execute=$1
 
   validate_environment
+  if [[ "$execute" -eq 1 ]]; then acquire_lock; fi
   validate_source
   if repository_is_initialized; then
     die "Restic repository is already initialized."
@@ -1616,7 +1636,6 @@ run_init() {
     echo "Re-run with --execute after confirming the remote and password recovery plan."
     return
   fi
-  acquire_lock
   restic_repository_command init
   restic_repository_command check
   info "Repository initialized and checked."
@@ -1639,7 +1658,8 @@ readonly RETENTION_PLAN_JQ='
 def run_key:
   ([.tags[]? | select(startswith("lu-run-"))][0]) // ("snapshot:" + .id);
 def epoch_seconds:
-  capture("^(?<base>[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2})(?:\\.(?<fraction>[0-9]+))?(?<zone>Z|[+-][0-9]{2}:[0-9]{2})$") as $timestamp
+  ([capture("^(?<base>[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2})(?:\\.(?<fraction>[0-9]+))?(?<zone>Z|[+-][0-9]{2}:[0-9]{2})$")]
+   | if length == 1 then .[0] else error("unparsable snapshot time") end) as $timestamp
   | (($timestamp.base + "Z" | strptime("%Y-%m-%dT%H:%M:%SZ") | mktime)
      + ("0." + ($timestamp.fraction // "0") | tonumber)
      - (if $timestamp.zone == "Z" then 0 else
@@ -1697,6 +1717,7 @@ run_retention() {
   local forget_ids=()
 
   validate_environment
+  acquire_lock
   require_initialized_repository
   snapshots_json="$(retention_snapshot_list)" ||
     die "Could not list snapshots of tag $BACKUP_TAG; refusing to plan retention."
@@ -1725,7 +1746,6 @@ run_retention() {
     return
   fi
 
-  acquire_lock
   if [[ "$forget_count" -gt 0 ]]; then
     while IFS= read -r id; do
       forget_ids+=("$id")
@@ -1749,7 +1769,7 @@ run_doctor() {
   echo "Repository: ${REPOSITORY:-<unset>}"
   echo "Legacy Drive directory: read-only discovery"
 
-  for command in restic rclone sqlite3 find git jq realpath touch; do
+  for command in restic rclone sqlite3 find git jq realpath touch flock; do
     if command -v "$command" >/dev/null 2>&1; then
       echo "OK: $command"
     else

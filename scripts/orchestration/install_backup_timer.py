@@ -158,8 +158,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.enable and not args.apply:
         raise InstallError("--enable only makes sense together with --apply")
     repo_root = args.repo_root.expanduser().resolve()
-    if not (repo_root / ".git").exists():
-        raise InstallError(f"repository root is not a checkout: {repo_root}")
+    if not (repo_root / ".git").is_dir():
+        raise InstallError(f"repository root must be the primary checkout: {repo_root}")
     rendered = render_units(repo_root)
     with tempfile.TemporaryDirectory(prefix="learn-ukrainian-backup-units.") as work_dir:
         print(verify_units(rendered, work_dir=Path(work_dir)))

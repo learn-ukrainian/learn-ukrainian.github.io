@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
 import os
@@ -34,6 +35,7 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
     legacy = tmp_path / "legacy"
     password_file = tmp_path / "restic-password"
     log = tmp_path / "restic.log"
+    runtime = tmp_path / "runtime"
 
     for directory in (
         fake_bin,
@@ -44,6 +46,7 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
         staging,
         legacy,
         tmp_path / "home",
+        runtime,
     ):
         directory.mkdir(parents=True)
     (project / "README.md").write_text("fixture\n", encoding="utf-8")
@@ -112,6 +115,10 @@ fi
   printf ' arg=<%s>' "$@"
   printf '\n'
 } >> "$FAKE_RESTIC_LOG"
+if [[ "${1:-}" == "backup" && -n "${FAKE_BACKUP_HOLD_FILE:-}" ]]; then
+  touch "$FAKE_BACKUP_HOLD_FILE"
+  while [[ ! -e "$FAKE_BACKUP_HOLD_FILE.release" ]]; do sleep 0.05; done
+fi
 if [[ "${1:-}" == "cat" && "${FAKE_REPOSITORY_STATE:-initialized}" != "initialized" ]]; then
   exit 1
 fi
@@ -246,6 +253,7 @@ exit 0
         "FAKE_RESTIC_LOG": str(log),
         "FAKE_SNAPSHOT_DIR": str(tmp_path / "snapshot"),
         "FAKE_REPOSITORY_STATE": "initialized",
+        "XDG_RUNTIME_DIR": str(runtime),
     }
     return environment, source, staging, legacy
 
@@ -2018,6 +2026,117 @@ def test_retention_unparsable_snapshot_list_forgets_nothing_and_fails(
     log = _log(environment)
     assert "arg=<forget>" not in log
     assert "arg=<prune>" not in log
+
+
+def test_retention_unparsable_snapshot_time_forgets_nothing(
+    backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots = _snapshot("a" * 64, "complete", ["complete"], "2026-09-26T03:30:00Z")
+    snapshots += _snapshot("b" * 64, "partial", ["base"], "unparsable")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode != 0
+    assert "forgetting nothing" in result.stderr
+    assert _forget_ids(environment) == []
+    assert "arg=<prune>" not in _log(environment)
+
+
+def test_backup_and_retention_share_lock_before_listing(
+    backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
+) -> None:
+    environment, _source, staging, _legacy = backup_environment
+    hold = tmp_path / "backup-held"
+    environment["FAKE_BACKUP_HOLD_FILE"] = str(hold)
+    _write_snapshots(environment, tmp_path, _run_snapshots("run", "2026-09-26", id_byte="a"))
+    backup = subprocess.Popen(
+        ["/bin/bash", str(SCRIPT), "backup", "--execute"],
+        env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    retention = None
+    try:
+        deadline = time.monotonic() + 10
+        while not hold.exists() and time.monotonic() < deadline:
+            time.sleep(0.05)
+        assert hold.exists(), backup.communicate(timeout=10)
+        retention_environment = {key: value for key, value in environment.items() if key != "LU_BACKUP_TMPDIR"}
+        retention = subprocess.Popen(
+            ["/bin/bash", str(SCRIPT), "retention", "--execute"],
+            env=retention_environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        time.sleep(0.2)
+        assert "arg=<snapshots>" not in _log(environment)
+        assert retention.poll() is None
+        hold.with_name(hold.name + ".release").touch()
+        backup_output, backup_error = backup.communicate(timeout=30)
+        assert backup.returncode == 0, backup_output + backup_error
+        retention_output, retention_error = retention.communicate(timeout=30)
+        assert retention.returncode == 0, retention_output + retention_error
+        assert "arg=<snapshots>" in _log(environment)
+        assert not (staging / f"learn-ukrainian-backup.{os.getuid()}.stage").exists()
+    finally:
+        hold.with_name(hold.name + ".release").touch()
+        if backup.poll() is None:
+            backup.kill()
+            backup.communicate(timeout=10)
+        if retention is not None and retention.poll() is None:
+            retention.kill()
+            retention.communicate(timeout=10)
+
+
+def test_retention_plans_after_lock_and_closed_fd_releases_it(
+    backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
+) -> None:
+    environment, _source, staging, _legacy = backup_environment
+    _write_snapshots(environment, tmp_path, "[]\n")
+    lock_path = Path(environment["XDG_RUNTIME_DIR"]) / f"learn-ukrainian-backup.{os.getuid()}.lock"
+    lock_fd = lock_path.open("a+")
+    fcntl.flock(lock_fd, fcntl.LOCK_EX)
+    stale = staging / f"learn-ukrainian-backup.{os.getuid()}.stage"
+    stale.mkdir()
+    (stale / "partial").write_text("interrupted", encoding="utf-8")
+    process = subprocess.Popen(
+        ["/bin/bash", str(SCRIPT), "retention", "--execute"],
+        env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        time.sleep(0.2)
+        assert "arg=<snapshots>" not in _log(environment)
+        _write_snapshots(environment, tmp_path, _run_snapshots("run", "2026-09-26", id_byte="a"))
+        lock_fd.close()  # Simulates holder death: the kernel releases the descriptor lock.
+        stdout, stderr = process.communicate(timeout=20)
+        assert process.returncode == 0, stdout + stderr
+        assert "Runs kept: 1" in stdout
+        assert not stale.exists()
+    finally:
+        if not lock_fd.closed:
+            lock_fd.close()
+        if process.poll() is None:
+            process.kill()
+            process.communicate(timeout=10)
+
+
+def test_backup_lock_wait_is_bounded_and_loud(backup_environment: tuple[dict[str, str], Path, Path, Path]) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    environment["LU_BACKUP_LOCK_WAIT_SECONDS"] = "0"
+    lock_path = Path(environment["XDG_RUNTIME_DIR"]) / f"learn-ukrainian-backup.{os.getuid()}.lock"
+    with lock_path.open("a+") as lock_fd:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        result = _run(environment, "retention", "--execute")
+    assert result.returncode != 0
+    assert "Timed out after 0s waiting for backup lock" in result.stderr
+    assert "arg=<snapshots>" not in _log(environment)
 
 
 def test_password_file_validation_names_variable_not_its_value(

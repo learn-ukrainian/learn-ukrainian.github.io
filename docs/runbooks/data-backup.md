@@ -174,9 +174,11 @@ the backup:
 ```
 
 The execute path checks repository metadata after the snapshots. It does not
-prune old versions. Normal exits and handled interruptions clean the private
-staging directory and local operation lock. After a power loss, inspect any
-stale path reported by the next run before removing it.
+prune old versions. A per-user `flock` under `XDG_RUNTIME_DIR` (or `/run/user/$UID`,
+then `/tmp`) serializes backup, retention, init, and restore execution. It waits
+up to one hour; a timeout fails visibly. The kernel releases the lock after a
+crash, and the next lock holder clears stale private staging before running.
+The `flock` command is required on the backup host.
 
 Each successful run contains `BACKUP-RECEIPT.json` with:
 
@@ -322,16 +324,17 @@ checkout (preview by default; writes only with `--apply`):
 
 The units read `~/.secrets/learn-ukrainian-backup.env` via `EnvironmentFile=`.
 Validation errors name the variable and condition without its value. The
-scheduled backup wrapper replaces the configured repository value and password-file
-path in backup output before sending it to the journal or captured log. The
-retention service calls `backup-data.sh` directly, so restic error output there
-does not have that wrapper redaction. `scripts/orchestration/run_scheduled_backup.sh`
+scheduled wrapper replaces the configured repository value (with or without
+the `rclone:` prefix) and password-file path in backup and retention output
+before sending it to the journal. `scripts/orchestration/run_scheduled_backup.sh`
 writes `batch_state/backups/last-run.json` on success and on failure (UTC
 start/end, exit status, restic run id, snapshot count, bytes added). A failed
 run exits non-zero, and so does a failed log capture or a failed
 `last-run.json` write, so `systemctl --user list-timers` and
 `journalctl --user -u learn-ukrainian-backup.service` show it; there is no
 separate alerting system.
+If systemd times out or kills the wrapper, `last-run.json` may still show the
+previous run; use its timestamp together with the unit status.
 
 Elsewhere, the script remains suitable for launchd or cron after the one-time
 environment is available to that process. `backup --execute` returns nonzero

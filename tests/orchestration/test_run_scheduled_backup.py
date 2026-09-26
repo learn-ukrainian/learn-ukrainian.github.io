@@ -70,11 +70,17 @@ def _fake_restic(fake_bin: Path, body: str) -> None:
 
 def test_record_writes_success_receipt(writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path) -> None:
     environment, project, fake_bin = writer_environment
+    environment["LU_BACKUP_REPOSITORY"] = "rclone:testdrive:Projects/test-restic"
+    environment["LU_BACKUP_HOST"] = "test-host"
     log = tmp_path / "backup.log"
     log.write_text(SUCCESS_LOG, encoding="utf-8")
     _fake_restic(
         fake_bin,
-        '#!/bin/bash\nprintf \'%s\\n\' \'[{"id":"one"},{"id":"two"}]\'\n',
+        "#!/bin/bash\n"
+        '[[ "$RESTIC_REPOSITORY" == "rclone:testdrive:Projects/test-restic" ]] || exit 1\n'
+        '[[ " $* " == *" --host test-host "* ]] || exit 1\n'
+        '[[ " $* " == *" --tag learn-ukrainian-data "* ]] || exit 1\n'
+        'printf \'%s\\n\' \'[{"id":"one"},{"id":"two"}]\'\n',
     )
 
     result = _run_wrapper(
@@ -268,6 +274,13 @@ def test_run_redacts_repository_and_password_path_before_journal_and_receipt(
         "exit 3\n",
     )
     _fake_restic(fake_bin, "#!/bin/bash\nexit 1\n")
+    environment["REAL_JQ"] = shutil.which("jq") or ""
+    assert environment["REAL_JQ"]
+    environment["JQ_ARGV_LOG"] = str(tmp_path / "jq-argv.log")
+    _write_executable(
+        fake_bin / "jq",
+        '#!/bin/bash\nprintf "<%s>" "$@" >> "$JQ_ARGV_LOG"\nprintf "\\n" >> "$JQ_ARGV_LOG"\nexec "$REAL_JQ" "$@"\n',
+    )
     environment.update(
         {
             "LU_BACKUP_SCRIPT": str(fake_backup),
@@ -282,6 +295,7 @@ def test_run_redacts_repository_and_password_path_before_journal_and_receipt(
     assert result.returncode == 3
     journal_stream = result.stdout + result.stderr
     assert repository not in journal_stream
+    assert repository.removeprefix("rclone:") not in journal_stream
     assert password_file not in journal_stream
     assert "<repository>" in journal_stream
     assert "<password-file>" in journal_stream
@@ -289,3 +303,35 @@ def test_run_redacts_repository_and_password_path_before_journal_and_receipt(
     assert repository not in receipt_text
     assert password_file not in receipt_text
     assert json.loads(receipt_text)["exit_status"] == 3
+    argv_text = Path(environment["JQ_ARGV_LOG"]).read_text(encoding="utf-8")
+    assert repository not in argv_text
+    assert password_file not in argv_text
+
+
+def test_retention_mode_redacts_output_and_preserves_failure_status(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, _project, _fake_bin = writer_environment
+    repository = "rclone:testdrive:Projects/private"
+    password_file = str(tmp_path / "private-password")
+    fake_backup = tmp_path / "fake-backup-data.sh"
+    _write_executable(
+        fake_backup,
+        '#!/bin/bash\nprintf "%s\\n" "$LU_BACKUP_REPOSITORY" "${LU_BACKUP_REPOSITORY#rclone:}" "$RESTIC_PASSWORD_FILE"\nexit 7\n',
+    )
+    environment.update(
+        {
+            "LU_BACKUP_SCRIPT": str(fake_backup),
+            "LU_BACKUP_REPOSITORY": repository,
+            "RESTIC_PASSWORD_FILE": password_file,
+        }
+    )
+
+    result = _run_wrapper(environment, "retention")
+
+    assert result.returncode == 7
+    assert repository not in result.stdout + result.stderr
+    assert repository.removeprefix("rclone:") not in result.stdout + result.stderr
+    assert password_file not in result.stdout + result.stderr
+    assert "<repository>" in result.stdout
+    assert "<password-file>" in result.stdout

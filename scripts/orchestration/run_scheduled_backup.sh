@@ -7,6 +7,7 @@
 #
 # Modes:
 #   run_scheduled_backup.sh                 Run the backup and record last-run.json.
+#   run_scheduled_backup.sh retention       Run retention with journal redaction.
 #   run_scheduled_backup.sh record ...      Write last-run.json from a captured log
 #                                           (the writer, callable on its own).
 #
@@ -33,6 +34,7 @@ readonly REPO_ROOT
 readonly PROJECT_ROOT="${LU_BACKUP_PROJECT_ROOT:-$REPO_ROOT}"
 readonly BACKUP_SCRIPT="${LU_BACKUP_SCRIPT:-$REPO_ROOT/scripts/backup-data.sh}"
 readonly BACKUP_TAG="${LU_BACKUP_TAG:-learn-ukrainian-data}"
+readonly BACKUP_HOST="${LU_BACKUP_HOST:-learn-ukrainian}"
 
 utc_now() {
   date -u '+%Y-%m-%dT%H:%M:%SZ'
@@ -62,8 +64,9 @@ parse_bytes_added() {
 # receipt must still be written when the repository is unreachable.
 query_snapshot_count() {
   command -v restic >/dev/null 2>&1 || return 0
-  timeout 120 restic snapshots --option rclone.connections=1 --json \
-    --tag "$BACKUP_TAG" 2>/dev/null | jq -er 'length' 2>/dev/null || true
+  RESTIC_REPOSITORY="${LU_BACKUP_REPOSITORY:-${RESTIC_REPOSITORY:-}}" \
+    timeout 120 restic snapshots --option rclone.connections=1 --retry-lock 5m --json \
+    --host "$BACKUP_HOST" --tag "$BACKUP_TAG" 2>/dev/null | jq -er 'length' 2>/dev/null || true
 }
 
 write_last_run() {
@@ -100,15 +103,34 @@ write_last_run() {
 # captured log used to build last-run.json. Split/join replaces literal values,
 # including regex metacharacters in rclone paths, without treating them as code.
 redact_backup_output() {
-  jq -Rr --unbuffered \
-    --arg repository "${LU_BACKUP_REPOSITORY:-${RESTIC_REPOSITORY:-}}" \
-    --arg password_file "${RESTIC_PASSWORD_FILE:-}" '
+  jq -Rr --unbuffered '
+      ($ENV.LU_BACKUP_REPOSITORY // $ENV.RESTIC_REPOSITORY // "") as $repository
+      | ($ENV.RESTIC_PASSWORD_FILE // "") as $password_file
+      | (
       reduce ([
         {value: $repository, replacement: "<repository>"},
+        {value: ($repository | sub("^rclone:"; "")), replacement: "<repository>"},
         {value: $password_file, replacement: "<password-file>"}
       ] | map(select(.value != "")) | sort_by(.value | length) | reverse)[] as $item
         (. ; split($item.value) | join($item.replacement))
+      )
     '
+}
+
+run_redacted_retention() {
+  local -a pipe_status
+  command -v jq >/dev/null 2>&1 ||
+    { echo "scheduled-retention: jq is required" >&2; exit 78; }
+  [[ -f "$BACKUP_SCRIPT" ]] ||
+    { echo "scheduled-retention: backup script is missing: $BACKUP_SCRIPT" >&2; exit 78; }
+  "$BACKUP_SCRIPT" retention --execute 2>&1 | redact_backup_output || {
+    pipe_status=("${PIPESTATUS[@]}")
+    if [[ "${pipe_status[1]}" -ne 0 ]]; then
+      echo "ERROR: could not redact the retention log (filter exited ${pipe_status[1]})." >&2
+    fi
+    [[ "${pipe_status[0]}" -ne 0 ]] && exit "${pipe_status[0]}"
+    exit 1
+  }
 }
 
 run_record() {
@@ -217,14 +239,18 @@ main() {
   [[ $# -eq 0 ]] || shift
   case "$command" in
     run)
-      [[ $# -eq 0 ]] || { echo "usage: run_scheduled_backup.sh [record ...]" >&2; exit 2; }
+      [[ $# -eq 0 ]] || { echo "usage: run_scheduled_backup.sh [retention | record ...]" >&2; exit 2; }
       run_backup_and_record
       ;;
     record)
       run_record "$@"
       ;;
+    retention)
+      [[ $# -eq 0 ]] || { echo "usage: run_scheduled_backup.sh retention" >&2; exit 2; }
+      run_redacted_retention
+      ;;
     *)
-      echo "usage: run_scheduled_backup.sh [record ...]" >&2
+      echo "usage: run_scheduled_backup.sh [retention | record ...]" >&2
       exit 2
       ;;
   esac

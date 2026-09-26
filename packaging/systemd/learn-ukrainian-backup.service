@@ -16,8 +16,9 @@ EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env
 # filesystem. Peak extra disk is the largest single database, never the sum.
 Environment=LU_BACKUP_TMPDIR=@REPO_ROOT@/data/.backup-staging
 # Full first run measured 2026-09-25: 23.5 min end to end; daily incrementals
-# are smaller. 2h bounds a wedged upload without masking a real failure.
-TimeoutStartSec=7200
+# are smaller. The execution allowance bounds a wedged upload.
+# Allow up to one hour waiting for retention, then two hours to run.
+TimeoutStartSec=10800
 Nice=15
 IOSchedulingClass=idle
 ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh
