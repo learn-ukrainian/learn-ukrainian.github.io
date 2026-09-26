@@ -776,9 +776,11 @@ def resolve_github_issue(
     """Resolve one exact issue number against the fresh local stream-audit cache.
 
     Reads ``batch_state/issue_stream_audit.json`` read-only. A stale, missing,
-    or malformed cache, or a closed/missing/orphaned/multi-homed issue fails
-    closed. Projects issue number and unique stream/epic membership only;
-    cache freshness is verification evidence, never identity.
+    malformed, or incomplete cache, or a closed/missing/orphaned/multi-homed
+    issue fails closed. An audit that does not set ``membership_complete`` to
+    boolean true with a list-typed ``incomplete_nodes`` is unverified.
+    Projects issue number and unique stream/epic membership only; cache
+    freshness is verification evidence, never identity.
     """
     if not isinstance(issue_number, int) or issue_number <= 0:
         raise ResolutionError(REASON_RESOLUTION_ERROR, "issue number must be a positive integer")
@@ -806,6 +808,14 @@ def resolve_github_issue(
         raise ResolutionError(REASON_RESOLUTION_ERROR, "issue cache future-skewed")
     if now_epoch - generated_at > MAX_ISSUE_CACHE_AGE_SECONDS:
         raise ResolutionError(REASON_PARTIAL_TERMINAL, "issue cache stale")
+
+    # Same completeness predicate as the membership validator (#8661). An
+    # incomplete traversal, a missing flag, or a non-list incomplete_nodes
+    # must not certify the index that was partially read.
+    from scripts.orchestration.issue_stream_audit import membership_report_is_complete
+
+    if not membership_report_is_complete(report):
+        raise ResolutionError(REASON_RESOLUTION_ERROR, "issue cache membership incomplete")
 
     open_numbers = report.get("open_issue_numbers")
     if not isinstance(open_numbers, list) or not all(
