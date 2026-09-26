@@ -33,7 +33,6 @@ ISSUE_STREAMS = REPO / "scripts" / "config" / "issue_streams.yaml"
 UNREGISTERED_SELECTORS = (
     "atlas-practice",
     "core-quality",
-    "curriculum-upgrade",
     "docs-knowledge",
     "infra-harness",
     "seminars-cross",
@@ -255,7 +254,7 @@ def test_real_launch_of_unregistered_selector_never_execs_the_provider(tmp_path:
     stub.write_text(f"#!/usr/bin/env bash\ntouch {marker}\n", encoding="utf-8")
     stub.chmod(0o755)
     result = _launcher(
-        "--epic", "curriculum-upgrade", dry_run=False, env={"PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}"}
+        "--epic", "docs-knowledge", dry_run=False, env={"PATH": f"{tmp_path}{os.pathsep}{os.environ['PATH']}"}
     )
     assert result.returncode == 2, result.stdout + result.stderr
     assert "not registered" in result.stderr
@@ -275,6 +274,54 @@ def test_gate_fails_closed_when_the_registry_cannot_be_read(tmp_path: Path) -> N
     assert registry.main(["--slot", "claude-infra", "--assignments", str(empty)]) == 2
     assert registry.main(["--slot", "claude-infra"]) == 0
     assert registry.main(["--slot", "claude-not-a-lane"]) == 3
+
+
+@pytest.mark.parametrize("provider", PROVIDERS)
+def test_curriculum_upgrade_is_accepted_on_the_core_slot(provider: str) -> None:
+    """curriculum-upgrade mints <provider>-core and stream epic:7994, and keeps its handoff directory."""
+    lanes, gate = _gate_matrix()
+    assert lanes["curriculum-upgrade"] == "core"
+    assert gate[provider]["core"] == 0
+    gate_result = _gate(provider, "curriculum-upgrade")
+    assert gate_result.returncode == 0, gate_result.stderr
+
+    stream = _bash(
+        'source "$1"; launcher_selector_stream "$2"',
+        str(HANDOFF_IDENTITY),
+        "curriculum-upgrade",
+    )
+    assert stream.returncode == 0, stream.stderr
+    assert stream.stdout.strip() == "epic:7994"
+
+    session = _bash(
+        'source "$1"; printf "%s|%s|%s" "$(launcher_session_epic curriculum-upgrade)" "$(launcher_session_epic harness)" "$(launcher_session_epic seminars-folk)"',
+        str(HANDOFF_IDENTITY),
+    )
+    assert session.returncode == 0, session.stderr
+    assert session.stdout.strip() == "curriculum-upgrade|infra|folk"
+
+    result = subprocess.run(
+        [str(REPO / f"start-{provider}-driver.sh"), "--epic", "curriculum-upgrade"],
+        cwd=REPO,
+        env={**os.environ, "LAUNCHER_DRY_RUN": "1"},
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "would claim lease stream=epic:7994" in result.stdout
+    handoff = ".claude/curriculum-upgrade-epic/CLAUDE-DRIVER-HANDOFF.md"
+    assert f"session epic=curriculum-upgrade slot={provider}-core handoff={handoff}" in result.stdout
+    assert "core-epic" not in result.stdout
+    assert "not registered" not in result.stderr
+
+
+def test_selector_help_lists_curriculum_upgrade_and_not_core_quality() -> None:
+    result = _bash('source "$1"; launcher_selector_help', str(HANDOFF_IDENTITY))
+    assert result.returncode == 0, result.stderr
+    assert "curriculum-upgrade" in result.stdout
+    assert "core-quality" not in result.stdout
 
 
 def test_gate_refuses_when_no_interpreter_can_verify_the_slot(tmp_path: Path) -> None:
