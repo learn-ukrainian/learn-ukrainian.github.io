@@ -467,21 +467,23 @@ def test_leader_exit_with_surviving_grandchild_preserves_until_group_dead(tmp_pa
         assert _entry(report, name)["action"] == "reaped"
         released = True
     finally:
-        if not released:
-            if proc.poll() is None:
-                proc.kill()
-                proc.wait(timeout=15)
-            if pgid is None:
-                for lease in _leases(root).values():
-                    child = lease.get("child") or {}
-                    if child.get("pgid"):
-                        pgid = child["pgid"]
-                        break
-            if pgid is not None:
-                with contextlib.suppress(ProcessLookupError):
-                    os.killpg(pgid, signal.SIGKILL)
-                _wait_for(lambda: not ts.probe_process_group(pgid).members, what="group to drain")
-        hold.unlink(missing_ok=True)
+        try:
+            if not released:
+                if proc.poll() is None:
+                    proc.kill()
+                    proc.wait(timeout=15)
+                if pgid is None:
+                    for lease in _leases(root).values():
+                        child = lease.get("child") or {}
+                        if child.get("pgid"):
+                            pgid = child["pgid"]
+                            break
+                if pgid is not None:
+                    with contextlib.suppress(ProcessLookupError):
+                        os.killpg(pgid, signal.SIGKILL)
+                    _wait_for(lambda: not ts.probe_process_group(pgid).members, what="group to drain")
+        finally:
+            hold.unlink(missing_ok=True)
 
 
 def test_recovery_never_signals_processes(tmp_path: Path, monkeypatch) -> None:
