@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.schema_check import check_schema
 from scripts.projects.open_model_data.inventory_existing_assets import WORD_RE
 from scripts.projects.open_model_data.model_view_exporter import build_exclusion_registry, registry_receipt
 
@@ -67,7 +68,7 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 def _validator(path: Path) -> Draft202012Validator:
     schema = _read_json(path)
-    Draft202012Validator.check_schema(schema)
+    check_schema(schema)
     return Draft202012Validator(schema)
 
 
