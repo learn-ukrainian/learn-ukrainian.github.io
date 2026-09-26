@@ -388,7 +388,9 @@ def test_cached_slovnyk_only_skips_uncached_slovnyk_lookup(tmp_path: Path, monke
     assert "translation" not in entry["enrichment"]
 
 
-def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_cached_slovnyk_only_does_not_live_fetch_missing_ukreng(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     entry = {"lemma": "бризки", "gloss": "splashes", "enrichment": {}}
 
     def fail_fetch(*args, **kwargs):
@@ -488,6 +490,8 @@ def test_reenrich_pointer_write_blocks_richness_regression_before_gzip(tmp_path,
 def test_reenrich_no_pointer_skips_pointer_write(tmp_path, monkeypatch) -> None:
     manifest_path = tmp_path / "lexicon-manifest.json"
     manifest_path.write_text('{"entries": [{"lemma": "тест", "url_slug": "тест"}]}\n', encoding="utf-8")
+    kaikki_path = tmp_path / "kaikki.json"
+    kaikki_path.write_text("{}\n", encoding="utf-8")
     pointer_called = []
 
     monkeypatch.setattr(
@@ -509,6 +513,8 @@ def test_reenrich_no_pointer_skips_pointer_write(tmp_path, monkeypatch) -> None:
             "--manifest",
             str(manifest_path),
             "--local",
+            "--kaikki-lookup",
+            str(kaikki_path),
             "--write",
             "--no-pointer",
         ],
@@ -516,7 +522,6 @@ def test_reenrich_no_pointer_skips_pointer_write(tmp_path, monkeypatch) -> None:
     res = reenrich.main()
     assert res == 0
     assert pointer_called == []
-
 
 
 def test_canary_check_passes_when_all_layers_filled(monkeypatch) -> None:
@@ -1230,6 +1235,8 @@ def test_poc_thin_target_selection_and_full_entry(monkeypatch: pytest.MonkeyPatc
 def test_poc_thin_target_cli_skips_canary(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps({"entries": []}), encoding="utf-8")
+    kaikki_path = tmp_path / "kaikki.json"
+    kaikki_path.write_text("{}\n", encoding="utf-8")
 
     canary_called = False
 
@@ -1247,6 +1254,8 @@ def test_poc_thin_target_cli_skips_canary(tmp_path: Path, monkeypatch: pytest.Mo
             "--local",
             "--manifest",
             str(manifest_path),
+            "--kaikki-lookup",
+            str(kaikki_path),
             "--target",
             "poc-thin",
         ],
@@ -1255,4 +1264,3 @@ def test_poc_thin_target_cli_skips_canary(tmp_path: Path, monkeypatch: pytest.Mo
     exit_code = reenrich.main()
     assert exit_code == 0
     assert not canary_called
-

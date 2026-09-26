@@ -179,13 +179,10 @@ def _load_vesum_inflection_aliases() -> dict[str, str]:
     """Load the committed VESUM inflection→lemma alias map: ``form_key -> target lemma``.
 
     Generated offline by ``scripts.lexicon.generate_vesum_aliases`` and committed, so the
-    build stays deterministic and needs no ``vesum.db`` (CI-safe). A missing/garbled file
-    yields no aliases — the build degrades to curated-only normalization.
+    build stays deterministic and needs no ``vesum.db`` (CI-safe). A missing or garbled
+    registry file must fail the build instead of silently dropping aliases.
     """
-    try:
-        payload = json.loads(VESUM_ALIAS_MAP_PATH.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
+    payload = json.loads(VESUM_ALIAS_MAP_PATH.read_text(encoding="utf-8"))
     aliases = payload.get("aliases") if isinstance(payload, dict) else None
     if not isinstance(aliases, dict):
         return {}

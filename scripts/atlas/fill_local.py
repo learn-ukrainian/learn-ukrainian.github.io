@@ -42,7 +42,7 @@ from scripts.lexicon import enrich_manifest
 
 DEFAULT_DB = atlas_db.DEFAULT_DB
 DEFAULT_SOURCES_DB = enrich_manifest.SOURCES_DB
-DEFAULT_KAIKKI_LOOKUP = enrich_manifest.KAIKKI_LOOKUP
+DEFAULT_KAIKKI_LOOKUP = None
 
 PHASE = "local"
 UNCOVERED_PHASE = "uncovered"
@@ -345,7 +345,7 @@ def _phase1_offline_env() -> Iterator[None]:
 def fill_local(
     db_path: Path = DEFAULT_DB,
     sources_db_path: Path = DEFAULT_SOURCES_DB,
-    kaikki_lookup_path: Path = DEFAULT_KAIKKI_LOOKUP,
+    kaikki_lookup_path: Path | None = DEFAULT_KAIKKI_LOOKUP,
     *,
     slug: str | None = None,
     refresh: bool = False,
@@ -397,7 +397,7 @@ def _pointer_relation_maps(
 def _fill_local(
     db_path: Path = DEFAULT_DB,
     sources_db_path: Path = DEFAULT_SOURCES_DB,
-    kaikki_lookup_path: Path = DEFAULT_KAIKKI_LOOKUP,
+    kaikki_lookup_path: Path | None = DEFAULT_KAIKKI_LOOKUP,
     *,
     slug: str | None = None,
     refresh: bool = False,

@@ -52,6 +52,7 @@ from scripts.rag.source_query import (
     _wiki_title_candidates,
     _wiki_title_matches_candidates,
 )
+from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_word
 
 
@@ -157,12 +158,12 @@ def write_target_snapshot(targets: list[dict[str, Any]], snapshot_file: Path) ->
     return snapshot
 
 
-def _load_kaikki_lookup(path: Path) -> dict[str, dict[str, Any]]:
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
-    return data if isinstance(data, dict) else {}
+def _load_kaikki_lookup(path: Path | None) -> dict[str, dict[str, Any]]:
+    source = path if path is not None else artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")
+    data = json.loads(source.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"Kaikki lookup must be a JSON object: {source}")
+    return data
 
 
 def _write_manifest(path: Path, manifest: dict[str, Any]) -> None:
@@ -657,13 +658,9 @@ def reenrich_thin_entries(
         enrich_manifest._wiki_reference = lambda *args, **kwargs: None
     if cached_slovnyk_only:
         enrich_manifest._fetch_slovnyk_entry = lambda *args, **kwargs: None
-        enrich_manifest._slovnyk_cache = (
-            lambda lemma: enrich_manifest._load_current_slovnyk_cache_file(
-                enrich_manifest._slovnyk_cache_path(lemma)
-            )
-            or enrich_manifest._new_slovnyk_cache(
-                lemma, enrich_manifest._slovnyk_lookup_word(lemma)
-            )
+        enrich_manifest._slovnyk_cache = lambda lemma: (
+            enrich_manifest._load_current_slovnyk_cache_file(enrich_manifest._slovnyk_cache_path(lemma))
+            or enrich_manifest._new_slovnyk_cache(lemma, enrich_manifest._slovnyk_lookup_word(lemma))
         )
 
     manifest_index = manifest_lemma_index(manifest)
@@ -782,7 +779,7 @@ def main() -> int:
         help="Read manifest path directly instead of hydrating the canonical release asset.",
     )
     parser.add_argument("--sources-db", type=Path, default=enrich_manifest.SOURCES_DB)
-    parser.add_argument("--kaikki-lookup", type=Path, default=enrich_manifest.KAIKKI_LOOKUP)
+    parser.add_argument("--kaikki-lookup", type=Path)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument(
         "--full-entry",
@@ -872,7 +869,11 @@ def main() -> int:
 
     manifest_path = args.manifest if args.manifest.is_absolute() else ROOT / args.manifest
     sources_db = args.sources_db if args.sources_db.is_absolute() else ROOT / args.sources_db
-    kaikki_path = args.kaikki_lookup if args.kaikki_lookup.is_absolute() else ROOT / args.kaikki_lookup
+    kaikki_path = (
+        (args.kaikki_lookup if args.kaikki_lookup.is_absolute() else ROOT / args.kaikki_lookup)
+        if args.kaikki_lookup is not None
+        else None
+    )
     work_dir = (args.work_dir if args.work_dir.is_absolute() else ROOT / args.work_dir) if args.work_dir else None
 
     manifest = _read_local_manifest(manifest_path) if args.local else load_manifest(manifest_path)
@@ -966,7 +967,9 @@ def main() -> int:
                 allow_richness_regression_reason=args.allow_richness_regression,
             )
             if pointer:
-                print(f"Updated local atlas-manifest pointer {pointer['manifest_fingerprint']} {pointer['json_sha256']}")
+                print(
+                    f"Updated local atlas-manifest pointer {pointer['manifest_fingerprint']} {pointer['json_sha256']}"
+                )
     else:
         print("Dry run only; pass --write to update the manifest.")
     return 0

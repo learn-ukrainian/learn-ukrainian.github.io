@@ -43,10 +43,7 @@ def lookup_key(value: str) -> str:
 @lru_cache(maxsize=1)
 def load_garbled_esum_entries() -> dict[str, dict[str, Any]]:
     """Load curated garbled ЕСУМ entries keyed by normalized lemma."""
-    try:
-        payload = json.loads(CURATED_GARBLED_ESUM_PATH.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
+    payload = json.loads(CURATED_GARBLED_ESUM_PATH.read_text(encoding="utf-8"))
     entries = payload.get("entries", [])
     if not isinstance(entries, list):
         return {}

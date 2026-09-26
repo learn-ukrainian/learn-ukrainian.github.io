@@ -46,7 +46,7 @@ from scripts.verification.vesum import verify_word
 
 SOURCE_ID = "textbook-jsonl-curated-2026-07-19-bulk"
 INV_REL = f"data/lexicon/source-inventory/oneshot/{SOURCE_ID}.yaml"
-DEFAULT_INVENTORY = PROJECT_ROOT / INV_REL
+DEFAULT_INVENTORY = PROJECT_ROOT / f"registry/lexicon/source-inventory/oneshot/{SOURCE_ID}.yaml"
 DEFAULT_DECISIONS = (
     PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-19-textbook-jsonl-curated-bulk-approve.yaml"
