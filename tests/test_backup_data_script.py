@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
 import os
+import re
 import shutil
 import sqlite3
 import subprocess
@@ -33,6 +35,7 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
     legacy = tmp_path / "legacy"
     password_file = tmp_path / "restic-password"
     log = tmp_path / "restic.log"
+    runtime = tmp_path / "runtime"
 
     for directory in (
         fake_bin,
@@ -43,6 +46,7 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
         staging,
         legacy,
         tmp_path / "home",
+        runtime,
     ):
         directory.mkdir(parents=True)
     (project / "README.md").write_text("fixture\n", encoding="utf-8")
@@ -65,7 +69,8 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
     subprocess.run(["git", "init", "-q", str(project)], check=True, timeout=30)
     subprocess.run(
         ["git", "-C", str(project), "add", "README.md", ".gitignore"],
-        check=True, timeout=30,
+        check=True,
+        timeout=30,
     )
     subprocess.run(
         [
@@ -80,7 +85,8 @@ def backup_environment(tmp_path: Path) -> tuple[dict[str, str], Path, Path, Path
             "-qm",
             "test fixture",
         ],
-        check=True, timeout=30,
+        check=True,
+        timeout=30,
     )
     password_file.write_text("test-only-password\n", encoding="utf-8")
     password_file.chmod(0o600)
@@ -109,6 +115,10 @@ fi
   printf ' arg=<%s>' "$@"
   printf '\n'
 } >> "$FAKE_RESTIC_LOG"
+if [[ "${1:-}" == "backup" && -n "${FAKE_BACKUP_HOLD_FILE:-}" ]]; then
+  touch "$FAKE_BACKUP_HOLD_FILE"
+  while [[ ! -e "$FAKE_BACKUP_HOLD_FILE.release" ]]; do sleep 0.05; done
+fi
 if [[ "${1:-}" == "cat" && "${FAKE_REPOSITORY_STATE:-initialized}" != "initialized" ]]; then
   exit 1
 fi
@@ -181,6 +191,12 @@ if [[ "${1:-}" == "stats" ]]; then
   printf '{"total_size":%s,"total_file_count":1,"snapshots_count":1}\n' "${FAKE_STATS_TOTAL_SIZE:-1000}"
   exit 0
 fi
+if [[ "${1:-}" == "snapshots" ]]; then
+  if [[ -n "${FAKE_SNAPSHOTS_JSON:-}" ]]; then
+    cat "$FAKE_SNAPSHOTS_JSON"
+  fi
+  exit 0
+fi
 if [[ "${1:-}" == "restore" && -n "${FAKE_SNAPSHOT_DIR:-}" ]]; then
   dry_run=0
   restore_target=""
@@ -237,6 +253,7 @@ exit 0
         "FAKE_RESTIC_LOG": str(log),
         "FAKE_SNAPSHOT_DIR": str(tmp_path / "snapshot"),
         "FAKE_REPOSITORY_STATE": "initialized",
+        "XDG_RUNTIME_DIR": str(runtime),
     }
     return environment, source, staging, legacy
 
@@ -250,7 +267,8 @@ def _run(
         check=False,
         capture_output=True,
         env=environment,
-        text=True, timeout=30,
+        text=True,
+        timeout=30,
     )
 
 
@@ -271,7 +289,10 @@ def _use_local_restic(
     subprocess.run(
         [real_restic, "-r", str(repository), "init"],
         env={**os.environ, "RESTIC_PASSWORD_FILE": environment["RESTIC_PASSWORD_FILE"]},
-        check=True, capture_output=True, text=True, timeout=30,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
     )
     environment["TEST_LOCAL_RESTIC_REPOSITORY"] = str(repository)
     environment["TEST_REAL_RESTIC"] = real_restic
@@ -310,10 +331,7 @@ def test_review_homes_are_excluded_but_other_absolute_links_still_fail(
     tmp_path: Path,
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
-    home = (
-        source.parent / "batch_state" / "review-receipts"
-        / "attempt-1" / "a1.agy-home"
-    )
+    home = source.parent / "batch_state" / "review-receipts" / "attempt-1" / "a1.agy-home"
     home.mkdir(parents=True)
     credential = tmp_path / "dummy-credential"
     credential.write_text("fixture only\n", encoding="utf-8")
@@ -327,8 +345,9 @@ def test_review_homes_are_excluded_but_other_absolute_links_still_fail(
     assert str(home) in _log(environment)
     executed = _run(environment, "backup", "--execute")
     assert executed.returncode == 0, executed.stderr
-    assert not (Path(environment["FAKE_SNAPSHOT_DIR"]) / "batch_state"
-                / "review-receipts" / "attempt-1" / "a1.agy-home").exists()
+    assert not (
+        Path(environment["FAKE_SNAPSHOT_DIR"]) / "batch_state" / "review-receipts" / "attempt-1" / "a1.agy-home"
+    ).exists()
 
     other = source.parent / "batch_state" / "unsafe-link"
     other.symlink_to(credential)
@@ -838,9 +857,7 @@ def test_receipt_counts_match_post_exclusion_snapshot_contents(
     (source / "keep-wal").write_bytes(b"keep\n")
     environment.update(
         {
-            "FAKE_FORBIDDEN_RELATIVES": (
-                "data/qdrant data/__pycache__ data/sidecar.db-wal data/.DS_Store"
-            ),
+            "FAKE_FORBIDDEN_RELATIVES": ("data/qdrant data/__pycache__ data/sidecar.db-wal data/.DS_Store"),
             "FAKE_REQUIRED_RELATIVE": "data/keep-wal",
         }
     )
@@ -908,9 +925,7 @@ def test_execute_snapshots_sqlite3_database_from_batch_state(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
 ) -> None:
     environment, source, staging, _legacy = backup_environment
-    database = (
-        source.parent / "batch_state" / "fleet-comms" / "v1" / "comms.sqlite3"
-    )
+    database = source.parent / "batch_state" / "fleet-comms" / "v1" / "comms.sqlite3"
     database.parent.mkdir(parents=True)
     connection = sqlite3.connect(database)
     connection.execute("CREATE TABLE recovery_probe (value TEXT NOT NULL)")
@@ -922,10 +937,7 @@ def test_execute_snapshots_sqlite3_database_from_batch_state(
     result = _run(environment, "backup", "--execute")
 
     assert result.returncode == 0, result.stderr
-    assert (
-        "consistent SQLite snapshot: batch_state/fleet-comms/v1/comms.sqlite3"
-        in result.stdout
-    )
+    assert "consistent SQLite snapshot: batch_state/fleet-comms/v1/comms.sqlite3" in result.stdout
     assert "db_rows=<1>" in _log(environment)
     assert list(staging.iterdir()) == []
 
@@ -935,13 +947,7 @@ def test_execute_restores_agent_wal_database_without_sidecars(
     tmp_path: Path,
 ) -> None:
     environment, source, staging, _legacy = backup_environment
-    database = (
-        source.parent
-        / ".agent"
-        / "session-streams"
-        / "v1"
-        / "session-streams.sqlite3"
-    )
+    database = source.parent / ".agent" / "session-streams" / "v1" / "session-streams.sqlite3"
     database.parent.mkdir(parents=True)
     connection = sqlite3.connect(database)
     try:
@@ -986,15 +992,11 @@ def test_execute_restores_agent_wal_database_without_sidecars(
     )
 
     assert restored.returncode == 0, restored.stderr
-    restored_database = (
-        restore_target / ".agent" / "session-streams" / "v1" / database.name
-    )
+    restored_database = restore_target / ".agent" / "session-streams" / "v1" / database.name
     assert not restored_database.with_name(f"{database.name}-wal").exists()
     assert not restored_database.with_name(f"{database.name}-shm").exists()
     with sqlite3.connect(f"file:{restored_database}?mode=ro", uri=True) as restored_connection:
-        rows = restored_connection.execute(
-            "SELECT value FROM recovery_probe ORDER BY rowid"
-        ).fetchall()
+        rows = restored_connection.execute("SELECT value FROM recovery_probe ORDER BY rowid").fetchall()
     assert rows == [("first",), ("latest",)]
     assert (restore_target / ".agent").is_dir()
     assert restore_target != source.parent
@@ -1366,8 +1368,7 @@ def _write_fake_run(environment: dict[str, str]) -> Path:
             "run_id": "run-1",
             "base_snapshot_id": BASE_ID,
             "databases": [
-                {"path": path, "snapshot_id": snapshot_id, "mode": "600"}
-                for path, snapshot_id in databases.items()
+                {"path": path, "snapshot_id": snapshot_id, "mode": "600"} for path, snapshot_id in databases.items()
             ],
         },
     }
@@ -1491,15 +1492,27 @@ def test_restore_path_restores_one_database_snapshot(
     target = tmp_path / "one-database"
 
     preview = _run(
-        environment, "restore", MANIFEST_ID, "--to", str(target), "--path", "data/atlas.db",
+        environment,
+        "restore",
+        MANIFEST_ID,
+        "--to",
+        str(target),
+        "--path",
+        "data/atlas.db",
     )
     assert preview.returncode == 0, preview.stderr
     assert "Restore preview only" in preview.stdout
     assert not target.exists()
 
     result = _run(
-        environment, "restore", MANIFEST_ID, "--to", str(target),
-        "--path", "data/atlas.db", "--execute",
+        environment,
+        "restore",
+        MANIFEST_ID,
+        "--to",
+        str(target),
+        "--path",
+        "data/atlas.db",
+        "--execute",
     )
 
     assert result.returncode == 0, result.stderr
@@ -1525,8 +1538,14 @@ def test_restore_path_gets_the_same_space_preflight_and_guards(
     target = tmp_path / "small-one-database"
 
     result = _run(
-        environment, "restore", MANIFEST_ID, "--to", str(target),
-        "--path", "data/atlas.db", "--execute",
+        environment,
+        "restore",
+        MANIFEST_ID,
+        "--to",
+        str(target),
+        "--path",
+        "data/atlas.db",
+        "--execute",
     )
     assert result.returncode != 0
     assert "Insufficient free space" in result.stderr
@@ -1538,7 +1557,14 @@ def test_restore_path_gets_the_same_space_preflight_and_guards(
     for unsafe in ("/etc/passwd", "../data/atlas.db", "data/../x", "data/*.db", "", " ", "/"):
         for mode in ((), ("--execute",)):
             rejected = _run(
-                environment, "restore", MANIFEST_ID, "--to", str(target), "--path", unsafe, *mode,
+                environment,
+                "restore",
+                MANIFEST_ID,
+                "--to",
+                str(target),
+                "--path",
+                unsafe,
+                *mode,
             )
             assert rejected.returncode != 0, (unsafe, mode)
             assert "--path" in rejected.stderr, (unsafe, mode)
@@ -1546,8 +1572,16 @@ def test_restore_path_gets_the_same_space_preflight_and_guards(
             assert _restore_ids(environment) == [], (unsafe, mode)
             assert not target.exists(), (unsafe, mode)
     twice = _run(
-        environment, "restore", MANIFEST_ID, "--to", str(target),
-        "--path", "", "--path", "data/atlas.db", "--execute",
+        environment,
+        "restore",
+        MANIFEST_ID,
+        "--to",
+        str(target),
+        "--path",
+        "",
+        "--path",
+        "data/atlas.db",
+        "--execute",
     )
     assert twice.returncode != 0
     assert "exactly one --path" in twice.stderr
@@ -1575,26 +1609,46 @@ def test_restore_path_real_restic_restores_only_the_named_file(
 
     database_target = tmp_path / "restored-database"
     database = _run(
-        environment, "restore", "latest", "--to", str(database_target),
-        "--path", "data/first.db", "--execute",
+        environment,
+        "restore",
+        "latest",
+        "--to",
+        str(database_target),
+        "--path",
+        "data/first.db",
+        "--execute",
     )
     assert database.returncode == 0, database.stderr
-    assert sorted(path.relative_to(database_target).as_posix()
-                  for path in database_target.rglob("*") if path.is_file()) == ["data/first.db"]
+    assert sorted(
+        path.relative_to(database_target).as_posix() for path in database_target.rglob("*") if path.is_file()
+    ) == ["data/first.db"]
 
     file_target = tmp_path / "restored-file"
     plain = _run(
-        environment, "restore", "latest", "--to", str(file_target),
-        "--path", "data/ordinary.txt", "--execute",
+        environment,
+        "restore",
+        "latest",
+        "--to",
+        str(file_target),
+        "--path",
+        "data/ordinary.txt",
+        "--execute",
     )
     assert plain.returncode == 0, plain.stderr
-    assert sorted(path.relative_to(file_target).as_posix()
-                  for path in file_target.rglob("*") if path.is_file()) == ["data/ordinary.txt"]
+    assert sorted(path.relative_to(file_target).as_posix() for path in file_target.rglob("*") if path.is_file()) == [
+        "data/ordinary.txt"
+    ]
 
     absent_target = tmp_path / "restored-absent"
     absent = _run(
-        environment, "restore", "latest", "--to", str(absent_target),
-        "--path", "data/no-such-file.txt", "--execute",
+        environment,
+        "restore",
+        "latest",
+        "--to",
+        str(absent_target),
+        "--path",
+        "data/no-such-file.txt",
+        "--execute",
     )
     assert absent.returncode != 0
     assert "Nothing at --path" in absent.stderr
@@ -1690,6 +1744,471 @@ def test_refuses_staging_inside_selected_project_checkout(
 ) -> None:
     environment, source, _staging, _legacy = backup_environment
     environment["LU_BACKUP_TMPDIR"] = str(source.parent / "batch_state")
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Staging directory must be outside the selected project checkout" in result.stderr
+
+
+def _snapshot(
+    snapshot_id: str,
+    run_id: str | None,
+    parts: list[str],
+    time: str,
+) -> list[dict[str, object]]:
+    tags = ["learn-ukrainian-data"]
+    if run_id is not None:
+        tags.append(f"lu-run-{run_id}")
+    return [
+        {
+            "id": snapshot_id,
+            "time": time,
+            "hostname": "learn-ukrainian",
+            "tags": [*tags, f"lu-part-{part}"],
+            "paths": ["/home/ops/learn-ukrainian"],
+        }
+        for part in parts
+    ]
+
+
+def _run_snapshots(
+    run_id: str,
+    day: str,
+    parts: list[str] | None = None,
+    id_byte: str = "a",
+) -> list[dict[str, object]]:
+    parts = parts or ["base", "complete"]
+    snapshots: list[dict[str, object]] = []
+    for index, part in enumerate(parts):
+        snapshot_id = f"{id_byte}{index:063x}"[-64:]
+        snapshots.extend(_snapshot(snapshot_id, run_id, [part], f"{day}T03:30:0{index}Z"))
+    return snapshots
+
+
+def _write_snapshots(
+    environment: dict[str, str],
+    tmp_path: Path,
+    snapshots: list[dict[str, object]] | str,
+) -> None:
+    fixture = tmp_path / "snapshots.json"
+    if isinstance(snapshots, str):
+        fixture.write_text(snapshots, encoding="utf-8")
+    else:
+        fixture.write_text(json.dumps(snapshots), encoding="utf-8")
+    environment["FAKE_SNAPSHOTS_JSON"] = str(fixture)
+
+
+def _forget_ids(environment: dict[str, str]) -> list[str]:
+    ids: list[str] = []
+    for line in _log(environment).splitlines():
+        if "arg=<forget>" not in line:
+            continue
+        ids.extend(argument[5:-1] for argument in line.split(" ") if re.fullmatch(r"arg=<[0-9a-f]{64}>", argument))
+    return ids
+
+
+def test_retention_previews_run_aware_plan_by_default(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots = _run_snapshots("20260910T033000Z-00000001", "2026-09-10", id_byte="1")
+    snapshots += _run_snapshots("20260911T033000Z-00000002", "2026-09-11", id_byte="2")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention")
+
+    assert result.returncode == 0, result.stderr
+    assert "Retention preview only" in result.stdout
+    assert "Runs kept: 2" in result.stdout
+    assert "Runs dropped: 0" in result.stdout
+    assert "Snapshots to forget: 0" in result.stdout
+    log = _log(environment)
+    assert "arg=<snapshots>" in log
+    assert "arg=<forget>" not in log
+    assert "arg=<prune>" not in log
+    assert "arg=<check>" not in log
+
+
+def test_retention_execute_forgets_by_snapshot_id_then_prunes_and_checks(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 10):
+        snapshots += _run_snapshots(f"202609{day:02d}T033000Z-0000000{day}", f"2026-09-{day:02d}", id_byte=str(day))
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "Retention plan for tag learn-ukrainian-data" in result.stdout
+    assert "Runs kept: 7" in result.stdout
+    assert "Runs dropped: 2" in result.stdout
+    log_lines = _log(environment).splitlines()
+    forget_lines = [line for line in log_lines if "arg=<forget>" in line]
+    assert len(forget_lines) == 1
+    assert "arg=<--tag>" not in forget_lines[0]
+    assert "arg=<--keep-daily>" not in forget_lines[0]
+    assert "arg=<--prune>" not in forget_lines[0]
+    assert _forget_ids(environment) == sorted(
+        snapshot["id"] for snapshot in snapshots if snapshot["id"].startswith(("1", "2"))
+    )
+    forget_index = next(i for i, line in enumerate(log_lines) if "arg=<forget>" in line)
+    prune_index = next(i for i, line in enumerate(log_lines) if "arg=<prune>" in line)
+    check_index = next(i for i, line in enumerate(log_lines) if "arg=<check>" in line)
+    assert forget_index < prune_index < check_index
+
+
+def test_retention_partial_newer_run_never_displaces_a_retained_run(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 10):
+        snapshots += _run_snapshots(
+            f"202609{day:02d}T033000Z-0000000{day}",
+            f"2026-09-{day:02d}",
+            parts=["base", "db", "complete"],
+            id_byte=str(day),
+        )
+    # A newer run that started but never wrote its receipt snapshot.
+    snapshots += _run_snapshots("20260910T033000Z-00000010", "2026-09-10", parts=["base"], id_byte="f")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    forgotten = _forget_ids(environment)
+    dropped = {snapshot["id"] for snapshot in snapshots if snapshot["id"][0] in "12"}
+    retained = {snapshot["id"] for snapshot in snapshots} - dropped
+    assert set(forgotten) == dropped
+    assert retained.isdisjoint(forgotten)
+    partial_id = next(snapshot["id"] for snapshot in snapshots if snapshot["id"][0] == "f")
+    assert partial_id not in forgotten
+
+
+def test_retention_preserves_reviewers_newer_offset_partial_run(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    complete_id = "a" * 64
+    partial_id = "b" * 64
+    snapshots = _snapshot(complete_id, "20260926T033000Z-complete", ["complete"], "2026-09-26T03:30:00Z")
+    snapshots += _snapshot(partial_id, "20260926T034500Z-partial", ["base"], "2026-09-26T02:45:00-01:00")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert _forget_ids(environment) == []
+    assert "Runs kept: 2" in result.stdout
+    assert "Runs dropped: 0" in result.stdout
+
+
+def test_retention_orders_fractional_and_mixed_offset_instants(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    complete_id = "a" * 64
+    newer_partial_id = "b" * 64
+    older_partial_id = "c" * 64
+    snapshots = _snapshot(complete_id, "complete", ["complete"], "2026-09-26T03:30:00.100Z")
+    snapshots += _snapshot(newer_partial_id, "newer", ["base"], "2026-09-26T04:30:00.200+01:00")
+    snapshots += _snapshot(older_partial_id, "older", ["base"], "2026-09-26T02:30:00.050-01:00")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert _forget_ids(environment) == [older_partial_id]
+    assert newer_partial_id not in _forget_ids(environment)
+
+
+def test_retention_uses_utc_day_for_mixed_offset_policy_buckets(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    older_id = "a" * 64
+    newer_id = "b" * 64
+    snapshots = _snapshot(older_id, "older", ["complete"], "2026-09-02T00:15:00+01:00")
+    snapshots += _snapshot(newer_id, "newer", ["complete"], "2026-09-01T23:50:00Z")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert _forget_ids(environment) == [older_id]
+    assert "Runs kept: 1" in result.stdout
+
+
+def test_retention_policy_counts_runs_not_snapshots(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 9):
+        snapshots += _run_snapshots(
+            f"202609{day:02d}T033000Z-0000000{day}",
+            f"2026-09-{day:02d}",
+            parts=["base", "db-one", "db-two", "db-three", "complete"],
+            id_byte=str(day),
+        )
+    # A second, older completed run on the newest day: only the day's newest
+    # run survives the daily bucket, however many snapshots each run holds.
+    snapshots += _run_snapshots("20260908T013000Z-00000088", "2026-09-08", parts=["base", "complete"], id_byte="e")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "Runs kept: 7" in result.stdout
+    assert "Runs dropped: 2" in result.stdout
+    forgotten = _forget_ids(environment)
+    dropped = {snapshot["id"] for snapshot in snapshots if snapshot["id"][0] in "1e"}
+    assert set(forgotten) == dropped
+
+
+def test_retention_forgets_orphan_snapshots_of_dropped_runs(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 9):
+        snapshots += _run_snapshots(f"202609{day:02d}T033000Z-0000000{day}", f"2026-09-{day:02d}", id_byte=str(day))
+    # A failed run older than the newest completed run leaves orphan snapshots.
+    snapshots += _run_snapshots("20260905T053000Z-00000099", "2026-09-05", parts=["base", "db"], id_byte="d")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    forgotten = _forget_ids(environment)
+    dropped = {snapshot["id"] for snapshot in snapshots if snapshot["id"][0] in "1d"}
+    assert set(forgotten) == dropped
+
+
+def test_retention_empty_snapshot_list_forgets_nothing_and_fails(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_snapshots(environment, tmp_path, "[]\n")
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode != 0
+    assert "forgetting nothing" in result.stderr
+    log = _log(environment)
+    assert "arg=<forget>" not in log
+    assert "arg=<prune>" not in log
+
+
+def test_retention_unparsable_snapshot_list_forgets_nothing_and_fails(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_snapshots(environment, tmp_path, "this is not json\n")
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode != 0
+    assert "forgetting nothing" in result.stderr
+    log = _log(environment)
+    assert "arg=<forget>" not in log
+    assert "arg=<prune>" not in log
+
+
+def test_retention_unparsable_snapshot_time_forgets_nothing(
+    backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots = _snapshot("a" * 64, "complete", ["complete"], "2026-09-26T03:30:00Z")
+    snapshots += _snapshot("b" * 64, "partial", ["base"], "unparsable")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode != 0
+    assert "forgetting nothing" in result.stderr
+    assert _forget_ids(environment) == []
+    assert "arg=<prune>" not in _log(environment)
+
+
+def test_backup_and_retention_share_lock_before_listing(
+    backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
+) -> None:
+    environment, _source, staging, _legacy = backup_environment
+    hold = tmp_path / "backup-held"
+    environment["FAKE_BACKUP_HOLD_FILE"] = str(hold)
+    _write_snapshots(environment, tmp_path, _run_snapshots("run", "2026-09-26", id_byte="a"))
+    backup = subprocess.Popen(
+        ["/bin/bash", str(SCRIPT), "backup", "--execute"],
+        env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    retention = None
+    try:
+        deadline = time.monotonic() + 10
+        while not hold.exists() and time.monotonic() < deadline:
+            time.sleep(0.05)
+        assert hold.exists(), backup.communicate(timeout=10)
+        retention_environment = {key: value for key, value in environment.items() if key != "LU_BACKUP_TMPDIR"}
+        retention = subprocess.Popen(
+            ["/bin/bash", str(SCRIPT), "retention", "--execute"],
+            env=retention_environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        time.sleep(0.2)
+        assert "arg=<snapshots>" not in _log(environment)
+        assert retention.poll() is None
+        hold.with_name(hold.name + ".release").touch()
+        backup_output, backup_error = backup.communicate(timeout=30)
+        assert backup.returncode == 0, backup_output + backup_error
+        retention_output, retention_error = retention.communicate(timeout=30)
+        assert retention.returncode == 0, retention_output + retention_error
+        assert "arg=<snapshots>" in _log(environment)
+        assert not (staging / f"learn-ukrainian-backup.{os.getuid()}.stage").exists()
+    finally:
+        hold.with_name(hold.name + ".release").touch()
+        if backup.poll() is None:
+            backup.kill()
+            backup.communicate(timeout=10)
+        if retention is not None and retention.poll() is None:
+            retention.kill()
+            retention.communicate(timeout=10)
+
+
+def test_retention_plans_after_lock_and_closed_fd_releases_it(
+    backup_environment: tuple[dict[str, str], Path, Path, Path], tmp_path: Path
+) -> None:
+    environment, _source, staging, _legacy = backup_environment
+    _write_snapshots(environment, tmp_path, "[]\n")
+    lock_path = Path(environment["XDG_RUNTIME_DIR"]) / f"learn-ukrainian-backup.{os.getuid()}.lock"
+    lock_fd = lock_path.open("a+")
+    fcntl.flock(lock_fd, fcntl.LOCK_EX)
+    stale = staging / f"learn-ukrainian-backup.{os.getuid()}.stage"
+    stale.mkdir()
+    (stale / "partial").write_text("interrupted", encoding="utf-8")
+    process = subprocess.Popen(
+        ["/bin/bash", str(SCRIPT), "retention", "--execute"],
+        env=environment,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        time.sleep(0.2)
+        assert "arg=<snapshots>" not in _log(environment)
+        _write_snapshots(environment, tmp_path, _run_snapshots("run", "2026-09-26", id_byte="a"))
+        lock_fd.close()  # Simulates holder death: the kernel releases the descriptor lock.
+        stdout, stderr = process.communicate(timeout=20)
+        assert process.returncode == 0, stdout + stderr
+        assert "Runs kept: 1" in stdout
+        assert not stale.exists()
+    finally:
+        if not lock_fd.closed:
+            lock_fd.close()
+        if process.poll() is None:
+            process.kill()
+            process.communicate(timeout=10)
+
+
+def test_backup_lock_wait_is_bounded_and_loud(backup_environment: tuple[dict[str, str], Path, Path, Path]) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    environment["LU_BACKUP_LOCK_WAIT_SECONDS"] = "0"
+    lock_path = Path(environment["XDG_RUNTIME_DIR"]) / f"learn-ukrainian-backup.{os.getuid()}.lock"
+    with lock_path.open("a+") as lock_fd:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        result = _run(environment, "retention", "--execute")
+    assert result.returncode != 0
+    assert "Timed out after 0s waiting for backup lock" in result.stderr
+    assert "arg=<snapshots>" not in _log(environment)
+
+
+def test_password_file_validation_names_variable_not_its_value(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    missing = tmp_path / "fake-secret-password-location"
+    environment["RESTIC_PASSWORD_FILE"] = str(missing)
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    output = result.stdout + result.stderr
+    assert str(missing) not in output
+    assert "RESTIC_PASSWORD_FILE is set but the file does not exist" in output
+
+
+def test_remote_validation_names_variable_not_the_remote_name(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    environment["LU_BACKUP_REPOSITORY"] = "rclone:fakesecretremote:Projects/test-restic"
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    output = result.stdout + result.stderr
+    assert "fakesecretremote" not in output
+    assert "LU_BACKUP_REPOSITORY" in output
+
+
+def test_linux_allows_designated_staging_on_the_data_volume(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    data_staging = source / ".backup-staging"
+    data_staging.mkdir()
+    environment["LU_BACKUP_TMPDIR"] = str(data_staging)
+    with sqlite3.connect(source / "live.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert f"arg=<--exclude> arg=<{data_staging}>" in _log(environment)
+    assert list(data_staging.iterdir()) == []
+
+
+def test_data_volume_staging_location_requires_linux(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    data_staging = source / ".backup-staging"
+    data_staging.mkdir()
+    environment["LU_BACKUP_TMPDIR"] = str(data_staging)
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(fake_bin / "uname", "#!/bin/bash\nprintf '%s\\n' Darwin\n")
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Staging directory and backup source overlap" in result.stderr
+
+
+def test_refuses_non_designated_staging_inside_selected_checkout(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    other_staging = source.parent / "scratch-staging"
+    other_staging.mkdir()
+    environment["LU_BACKUP_TMPDIR"] = str(other_staging)
 
     result = _run(environment, "backup")
 
