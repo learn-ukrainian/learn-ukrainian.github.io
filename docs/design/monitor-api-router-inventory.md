@@ -97,7 +97,6 @@ ROUTER_MAP = {
     'git_hygiene_router': 'scripts/api/git_hygiene_router.py',
     'gold_router': 'scripts/api/gold_router.py',
     'governance_router': 'scripts/api/governance_router.py',
-    'hermes_cron_router': 'scripts/api/hermes_cron_router.py',
     'images_router': 'scripts/api/images_router.py',
     'issues_router': 'scripts/api/issues_router.py',
     'knowledge_router': 'scripts/api/knowledge_router.py',
@@ -237,7 +236,7 @@ routers (§4.2 core-router-last ordering).
 | **11** | `contracts_router` (`route_contracts.py`) | 1,356 | Large; route-contract registry (1 handler, heavy logic) |
 | **12a** | `atlas_jobs_router`, `blue_router`, `build_events_router`, `coordination_router`, `cost_router` | 1,119 | Small curriculum/batch-state cluster |
 | **12b** | `consultation_router`, `decisions_router`, `delegate_router`, `discussions_router`, `gold_router` | 1,690 | Consultation queue dirs + delegate tasks + `MESSAGE_DB` discussions |
-| **12c** | `governance_router`, `hermes_cron_router`, `issues_router`, `knowledge_router`, `reviewer_ghosts_router` | 812 | Governance/decisions-adjacent reads + issues/gh seam |
+| **12c** | `governance_router`, `issues_router`, `knowledge_router`, `reviewer_ghosts_router` | 768 | Governance/decisions-adjacent reads + issues/gh seam |
 | **12d** | `site_router`, `wiki_router`, `worktrees_router`, `telemetry_router` | 1,470 | Site build + wiki `SOURCES_DB_PATH` + worktrees git + telemetry DBs |
 | **12e** | `work_router`, `epics_router` | 1,487 | Work projection cache + epics `SessionStreamStore` (both ≥600 lines) |
 | **13** | `core_router` (`main.py` inline) | 1,949 | **Last** — health/orient/batch inline routes + catch-all static + websocket; reads broad config roots but no dedicated store of its own |
@@ -451,7 +450,6 @@ Single route (`/routes`) but ~1.3k lines of contract registry logic — own step
 | Module | Mount prefix(es) | Routes | Lines | Config imports | Module globals | Seams | Step |
 | --- | --- | ---: | ---: | --- | --- | ---: | --- |
 | `governance_router.py` | `/api/state/governance` | 1 | 162 | — | — | 0 | 12c |
-| `hermes_cron_router.py` | `/api/hermes-cron` | 1 | 44 | — | — | 0 | 12c |
 | `issues_router.py` | `/api/issues` | 2 | 251 | — | — | 1 | 12c |
 | `knowledge_router.py` | `/api/knowledge` | 4 | 172 | — | — | 0 | 12c |
 | `reviewer_ghosts_router.py` | `/api/state/reviewer-ghosts` | 1 | 183 | `LEVELS` | — | 0 | 12c |

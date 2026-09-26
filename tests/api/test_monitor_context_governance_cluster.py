@@ -1,6 +1,6 @@
 """Fixture isolation for the #7269 step 12c MonitorContext cluster.
 
-These routers must read decisions / hermes cron / ghost bundles / the
+These routers must read decisions / ghost bundles / the
 research registry through the request's MonitorContext, never through
 deleted module-level Path globals.
 """
@@ -16,7 +16,6 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from scripts.api.governance_router import router as governance_router
-from scripts.api.hermes_cron_router import router as hermes_cron_router
 from scripts.api.issues_router import router as issues_router
 from scripts.api.knowledge_router import router as knowledge_router
 from scripts.api.monitor_context import fixture_context
@@ -30,7 +29,6 @@ def _cluster_client(tmp_path: Path) -> TestClient:
     app = FastAPI()
     app.state.ctx = fixture_context(tmp_path)
     app.include_router(governance_router, prefix="/api/state/governance")
-    app.include_router(hermes_cron_router, prefix="/api/hermes-cron")
     app.include_router(issues_router, prefix="/api/issues")
     app.include_router(knowledge_router, prefix="/api/knowledge")
     app.include_router(reviewer_ghosts_router, prefix="/api/state/reviewer-ghosts")
@@ -62,9 +60,7 @@ def test_fixture_governance_reads_only_context_decisions(tmp_path: Path) -> None
     response = client.get("/api/state/governance")
     assert response.status_code == 200
     body = response.json()
-    assert [decision["id"] for decision in body["decisions"]["stale"]] == [
-        "dec-fixture-only"
-    ]
+    assert [decision["id"] for decision in body["decisions"]["stale"]] == ["dec-fixture-only"]
     assert body["decisions"]["total"] == 1
     # Production check_adrs still sees the live tree; the fixture must not.
     assert check_adrs.ADR_DIR.is_dir()
@@ -78,21 +74,6 @@ def test_fixture_governance_reads_only_context_decisions(tmp_path: Path) -> None
         "promotion_candidates": [],
         "index": [],
     }
-
-
-def test_fixture_hermes_cron_reads_batch_state_root(tmp_path: Path) -> None:
-    cron_dir = tmp_path / "batch_state" / "hermes_cron"
-    cron_dir.mkdir(parents=True)
-    payload = {"summary": {"findings_total": 0}, "source": "fixture"}
-    (cron_dir / "latest.json").write_text(
-        '{"summary": {"findings_total": 0}, "source": "fixture"}',
-        encoding="utf-8",
-    )
-
-    client = _cluster_client(tmp_path)
-    response = client.get("/api/hermes-cron/latest")
-    assert response.status_code == 200
-    assert response.json() == payload
 
 
 def test_fixture_reviewer_ghosts_reads_curriculum_root(tmp_path: Path) -> None:
@@ -127,13 +108,12 @@ def test_fixture_reviewer_ghosts_reads_curriculum_root(tmp_path: Path) -> None:
     assert body["recent"][0]["anchor"] == "fixture-anchor"
 
 
-def test_fixture_issues_map_runs_gh_from_context_root(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_fixture_issues_map_runs_gh_from_context_root(tmp_path: Path, monkeypatch) -> None:
     captured: dict[str, Path] = {}
 
     def _fake_run(args, cwd=None, **_kwargs):
         captured["cwd"] = Path(cwd)
+
         class _Proc:
             returncode = 127
             stdout = ""
