@@ -11,7 +11,7 @@ Kimi is not a sealed formal CF reviewer; substitute seats remain the product pat
 | Ambient MCP suppress | **Unproven** for sealed review transport | Fail-closed |
 | Hooks / nested reviewers | **Unproven** | Fail-closed |
 | Sealed snapshot cwd only | Not wired through `prepare_isolated_review_launch` for engine `kimi` | Absent → refuse |
-| `review-pr --reviewer kimi` | **Not implemented** (reviewers: auto\|codex\|glm\|claude only) | Use substitute seats |
+| `review-pr --reviewer kimi` | Retired (#8520) | Replaced by direct `ask-* --type review` substitute seats |
 | Registry `formal_review_eligible` | `false` | **v1 complete residual** |
 | Wire #5618 / enable #5619 | Residual closeout | Reopen only with Option A/B proof |
 
@@ -34,7 +34,7 @@ Kimi is not a sealed formal CF reviewer; substitute seats remain the product pat
 
 1. Isolation capability matrix with proven CLI flags or sandbox profile.
 2. `prepare_isolated_review_launch` positive path + ambient-instruction negative test.
-3. `review-pr --reviewer kimi` or sealed transport registration.
+3. Direct `ask-kimi --type review` or sealed transport registration.
 4. Real smoke formal CF on a PR.
 5. Then flip `formal_review_eligible: true`.
 

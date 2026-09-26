@@ -86,14 +86,10 @@ def split_repository(repository: str) -> tuple[str, str]:
     """Parse ``owner/repo``; refuse other shapes."""
     text = _single_line(repository, label="repository")
     if text.count("/") != 1:
-        raise ReviewPublisherError(
-            f"invalid_repository: expected owner/repo, got {repository!r}"
-        )
+        raise ReviewPublisherError(f"invalid_repository: expected owner/repo, got {repository!r}")
     owner, repo = text.split("/", 1)
     if not owner or not repo:
-        raise ReviewPublisherError(
-            f"invalid_repository: expected owner/repo, got {repository!r}"
-        )
+        raise ReviewPublisherError(f"invalid_repository: expected owner/repo, got {repository!r}")
     return owner, repo
 
 
@@ -128,8 +124,7 @@ def fetch_pr_head_sha(
         stderr = (completed.stderr or "").strip()
         raise ReviewPublisherError(
             f"gh_pr_head_lookup_failed: pr={pr_number} repo={owner}/{repo} "
-            f"exit={completed.returncode}"
-            + (f" stderr={stderr[:200]}" if stderr else "")
+            f"exit={completed.returncode}" + (f" stderr={stderr[:200]}" if stderr else "")
         )
     head = _single_line(completed.stdout or "", label="head_sha")
     if not _SHA_RE.match(head):
@@ -203,8 +198,7 @@ def post_commit_status(
         stderr = (completed.stderr or "").strip()
         raise ReviewPublisherError(
             f"gh_commit_status_failed: sha={head_sha} state={state} "
-            f"exit={completed.returncode}"
-            + (f" stderr={stderr[:200]}" if stderr else "")
+            f"exit={completed.returncode}" + (f" stderr={stderr[:200]}" if stderr else "")
         )
 
 
@@ -260,9 +254,7 @@ def record_publication_receipt(
         raced = lookup_publication_receipt(conn, review_id=rid, status_context=ctx)
         if raced is not None:
             return str(raced["publication_id"])
-        raise ReviewPublisherError(
-            f"failed to record publication receipt for {rid}: {exc}"
-        ) from exc
+        raise ReviewPublisherError(f"failed to record publication receipt for {rid}: {exc}") from exc
     return pid
 
 
@@ -273,9 +265,7 @@ def already_published_key_for_job(
     status_context: str = DEFAULT_STATUS_CONTEXT,
 ) -> str | None:
     """If a receipt exists for this review, return the pure-module idempotency key."""
-    receipt = lookup_publication_receipt(
-        conn, review_id=sealed.review_id, status_context=status_context
-    )
+    receipt = lookup_publication_receipt(conn, review_id=sealed.review_id, status_context=status_context)
     if receipt is None:
         return None
     # Receipt proves one effective post for this review_id+context.
@@ -294,7 +284,7 @@ def _summary_for(
     publication_id: str | None,
 ) -> str:
     parts = [
-        f"publish-review-verdict: action={plan.action}",
+        f"publish-review: action={plan.action}",
         f"review_id={plan.review_id}",
         f"pr={plan.pr_number}",
         f"verdict={plan.verdict}",
@@ -355,9 +345,7 @@ def execute_publication(
         raise ReviewPublisherError("publish_plan_incomplete: missing comment or status")
 
     if require_receipt and conn is None:
-        raise ReviewPublisherError(
-            "receipt_required: refuse live publish without plane DB connection"
-        )
+        raise ReviewPublisherError("receipt_required: refuse live publish without plane DB connection")
 
     comment_url = post_pr_comment(
         repository=plan.repository,
@@ -422,8 +410,7 @@ def ensure_job_row_for_receipt(
     if existing is not None:
         if existing.review_id != sealed.review_id:
             raise ReviewPublisherError(
-                "formal_job_review_id_mismatch: "
-                f"job={existing.review_id!r} sealed={sealed.review_id!r}"
+                f"formal_job_review_id_mismatch: job={existing.review_id!r} sealed={sealed.review_id!r}"
             )
         return
     by_id = None
@@ -491,9 +478,7 @@ def publish_sealed_verdict(
     already_key: str | None = None
     if store is not None:
         conn = store.connection
-        already_key = already_published_key_for_job(
-            conn, sealed, status_context=status_context
-        )
+        already_key = already_published_key_for_job(conn, sealed, status_context=status_context)
 
     plan = plan_publication(
         sealed,
@@ -503,11 +488,7 @@ def publish_sealed_verdict(
         status_context=status_context,
     )
     # Materialize FK parent only when we are about to post (not on stale/skip/dry-run).
-    if (
-        store is not None
-        and plan.action == "publish"
-        and plan.mutate
-    ):
+    if store is not None and plan.action == "publish" and plan.mutate:
         ensure_job_row_for_receipt(store, sealed)
     return execute_publication(
         plan,
@@ -540,25 +521,15 @@ def sealed_matches_job(
 ) -> None:
     """Fail closed when sealed payload does not match the durable job row."""
     if sealed.review_id != review_id:
-        raise ReviewPublisherError(
-            f"sealed_job_mismatch: review_id sealed={sealed.review_id!r} job={review_id!r}"
-        )
+        raise ReviewPublisherError(f"sealed_job_mismatch: review_id sealed={sealed.review_id!r} job={review_id!r}")
     if sealed.repository != repository:
-        raise ReviewPublisherError(
-            f"sealed_job_mismatch: repository sealed={sealed.repository!r} job={repository!r}"
-        )
+        raise ReviewPublisherError(f"sealed_job_mismatch: repository sealed={sealed.repository!r} job={repository!r}")
     if sealed.pr_number != pr_number:
-        raise ReviewPublisherError(
-            f"sealed_job_mismatch: pr sealed={sealed.pr_number} job={pr_number}"
-        )
+        raise ReviewPublisherError(f"sealed_job_mismatch: pr sealed={sealed.pr_number} job={pr_number}")
     if sealed.head_sha.lower() != head_sha.lower():
-        raise ReviewPublisherError(
-            f"sealed_job_mismatch: head_sha sealed={sealed.head_sha!r} job={head_sha!r}"
-        )
+        raise ReviewPublisherError(f"sealed_job_mismatch: head_sha sealed={sealed.head_sha!r} job={head_sha!r}")
     if sealed.gate_kind != gate_kind:
-        raise ReviewPublisherError(
-            f"sealed_job_mismatch: gate_kind sealed={sealed.gate_kind!r} job={gate_kind!r}"
-        )
+        raise ReviewPublisherError(f"sealed_job_mismatch: gate_kind sealed={sealed.gate_kind!r} job={gate_kind!r}")
 
 
 def dump_plan_json(result: PublicationResult) -> str:

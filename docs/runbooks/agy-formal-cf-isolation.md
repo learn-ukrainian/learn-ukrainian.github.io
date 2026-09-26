@@ -11,7 +11,7 @@ future isolation engineering). For **fleet-comms v1 (#5512)**, AGY remains a liv
 | Project instructions suppress | **Unproven** for sealed review | Fail-closed |
 | Ambient MCP / hooks / nested reviewers | **Unproven** | Fail-closed |
 | Sealed snapshot cwd only | Hard raise in `prepare_isolated_review_launch` | Refuse |
-| `review-pr --reviewer agy` | **Not implemented** | Use substitute seats |
+| `review-pr --reviewer agy` | Retired (#8520) | Replaced by direct `ask-* --type review` substitute seats |
 | Registry `formal_review_eligible` | `false` for `agy` | **v1 complete residual** |
 | Wire #5615 / enable #5616 | Residual closeout | Reopen only with Option A/B proof |
 
@@ -56,7 +56,7 @@ When AGY orchestrates, it **requests** CF via direct `ask-<lane> --type review`
 
 1. Isolation matrix: project-instruction / MCP / hooks / nested-reviewer suppression proven.
 2. `prepare_isolated_review_launch(engine="agy")` positive + negative tests.
-3. Sealed transport registration (`review-pr --reviewer agy` or equivalent) with receipts.
+3. Sealed transport registration (`ask-agy --type review` or equivalent) with receipts.
 4. Smoke formal CF on a non-Google-family-authored PR.
 5. Flip `formal_review_eligible: true` via CF'd enablement PR.
 

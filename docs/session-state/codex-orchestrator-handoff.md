@@ -6,7 +6,7 @@ Latest-Brief: docs/session-state/2026-07-22-fleet-comms-cutover-handoff.md
 
 Orchestrator seat (Codex / Grok / Claude-infra as assigned): drive the product and
 infra queue, keep main clean, open PRs from worktrees only, require cross-family
-`review-pr` before merge, arm auto-merge after the gate, clean worktrees after merge.
+review (`ask-<lane> --type review`) before merge, arm auto-merge after the gate, clean worktrees after merge.
 Do not babysit idle green PRs; do not leave draft limbo.
 
 Do not use `docs/session-state/current.md` as scratch space. Durable state lives in
@@ -64,7 +64,7 @@ Fleet-comms code/pins largely landed on main (`#5602`, `#5611`, `#5613`, PR-M/L)
 - Use `.venv/bin/python`, never `sys.executable`
 - Never touch `.python-version`, `.yamllint`, `.markdownlint.json`
 - No status/audit/review artifact dumps in code PRs
-- CF review gate = independent cross-family `review-pr` (discuss ≠ review)
+- CF review gate = independent cross-family review (`ask-<lane> --type review`; discuss ≠ review)
 
 ## Startup Checks
 

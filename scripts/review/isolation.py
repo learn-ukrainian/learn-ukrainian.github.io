@@ -69,9 +69,7 @@ REVIEW_TEMP_ROOT_MANIFEST_NAME = ".lu-review-root.json"
 LU_REVIEW_TEMP_MIN_FREE_GB = 10.0
 REVIEW_TEMP_GRACE_WINDOW_S = 60.0
 REVIEW_TEMP_ORPHAN_UNMANIFESTED_DISK_PRESSURE_MAX_AGE_S = 3600.0
-_REVIEW_TEMP_ROOT_MARKER_RE = re.compile(
-    rb"^lu-review-root-v1:[0-9a-f]{64}\n$"
-)
+_REVIEW_TEMP_ROOT_MARKER_RE = re.compile(rb"^lu-review-root-v1:[0-9a-f]{64}\n$")
 _REVIEW_TEMP_ROOT_MARKER_MAX_BYTES = 96
 
 
@@ -129,17 +127,9 @@ def _write_review_temp_root_marker(
         try:
             pid = os.getpid()
             now_epoch = time.time()
-            created_at_iso = (
-                datetime.fromtimestamp(now_epoch, tz=UTC)
-                .isoformat()
-                .replace("+00:00", "Z")
-            )
+            created_at_iso = datetime.fromtimestamp(now_epoch, tz=UTC).isoformat().replace("+00:00", "Z")
             snapshot = _default_process_snapshot(pid)
-            started_at = (
-                snapshot.started_at
-                if snapshot and snapshot.started_at is not None
-                else now_epoch
-            )
+            started_at = snapshot.started_at if snapshot and snapshot.started_at is not None else now_epoch
             machine_id = _default_machine_id() or ""
 
             manifest_data = {
@@ -172,7 +162,16 @@ def create_review_temp_root(
     dir: str | os.PathLike[str] | None = None,
     context: dict[str, Any] | None = None,
 ) -> Path:
-    """Create a private review root whose cleanup identity is its sentinel."""
+    """Create a private review root whose cleanup identity is its sentinel.
+
+    The sealed snapshot flow was retired on 2026-08-07; creating any
+    ``lu-review-*`` root is permanently refused. Review runs through
+    ``ask-<lane> --type review``.
+    """
+    if prefix.startswith("lu-review-") or prefix.startswith(REVIEW_TEMP_ROOT_PREFIXES):
+        raise OSError(
+            "the sealed snapshot flow was retired on 2026-08-07 and review runs through ask-<lane> --type review"
+        )
     if dir is None:
         # #7164: sizeable review extractions go to the disk-backed fleet
         # scratch root, not tmpfs /tmp (per-user quota exhaustion there
@@ -488,6 +487,7 @@ def _load_hygiene_yaml_min_free_gb() -> float | None:
         if config_path.is_file():
             try:
                 import yaml
+
                 with open(config_path, encoding="utf-8") as f:
                     data = yaml.safe_load(f)
                 if isinstance(data, dict) and "review_temp_min_free_gb" in data:
@@ -512,7 +512,7 @@ def _is_disk_pressure_active(tmp_dir: Path, min_free_gb: float = LU_REVIEW_TEMP_
         free_bytes = shutil.disk_usage(tmp_dir).free
     except OSError:
         return False
-    return (free_bytes / (1024 ** 3)) < min_free_gb
+    return (free_bytes / (1024**3)) < min_free_gb
 
 
 def sweep_review_temp_orphans(
@@ -542,9 +542,7 @@ def sweep_review_temp_orphans(
     for base in bases:
         disk_pressure = _is_disk_pressure_active(base, min_free_gb=min_free_gb)
         result["disk_pressure"] = result["disk_pressure"] or disk_pressure
-        pressure_unmanifested_cutoff = (
-            current_time - REVIEW_TEMP_ORPHAN_UNMANIFESTED_DISK_PRESSURE_MAX_AGE_S
-        )
+        pressure_unmanifested_cutoff = current_time - REVIEW_TEMP_ORPHAN_UNMANIFESTED_DISK_PRESSURE_MAX_AGE_S
 
         for root in _review_temp_orphan_candidates(base):
             try:
@@ -570,9 +568,7 @@ def sweep_review_temp_orphans(
                     should_reap = False
                 elif liveness == "dead":
                     should_reap = (
-                        (reason == "ESRCH")
-                        if age < REVIEW_TEMP_GRACE_WINDOW_S and not disk_pressure
-                        else True
+                        (reason == "ESRCH") if age < REVIEW_TEMP_GRACE_WINDOW_S and not disk_pressure else True
                     )
                 else:  # uncheckable
                     cutoff = pressure_unmanifested_cutoff if disk_pressure else normal_unmanifested_cutoff
@@ -600,6 +596,7 @@ def sweep_review_temp_orphans(
             result["bytes_freed"] += bytes_freed
 
     return result
+
 
 # Process-injection / Git-override variables stripped for every reviewer.
 _PROCESS_INJECTION_ENV_KEYS = frozenset(
@@ -1106,9 +1103,7 @@ def validated_review_write_root(tool_config: Mapping[str, Any]) -> Path:
     raw_rejects = tool_config.get("review_reject_roots") or ()
     if not snapshot_raw or not write_raw or not reject_raw:
         raise ReviewIsolationError("review_parent_owned_roots_missing")
-    if not isinstance(raw_rejects, (list, tuple)) or not all(
-        isinstance(item, str) and item for item in raw_rejects
-    ):
+    if not isinstance(raw_rejects, (list, tuple)) or not all(isinstance(item, str) and item for item in raw_rejects):
         raise ReviewIsolationError("review_reject_roots_malformed")
     _snap, write = validate_private_review_roots(
         snapshot_root=Path(str(snapshot_raw)),
@@ -1266,7 +1261,7 @@ def _freeze_exec_root(exec_root: Path, *, staged_binary: Path) -> None:
 SEALED_READ_CHUNK_BYTES = 64 * 1024
 
 
-_SEALED_READ_MCP_SOURCE = r'''#!/usr/bin/python3
+_SEALED_READ_MCP_SOURCE = r"""#!/usr/bin/python3
 import hashlib
 import json
 import os
@@ -1633,7 +1628,7 @@ for raw in sys.stdin:
         response = {"jsonrpc":"2.0","id":locals().get("request_id"),"error":{"code":-32602,"message":type(exc).__name__ + ":" + str(exc)}}
     sys.stdout.write(json.dumps(response, ensure_ascii=False, separators=(",", ":")) + "\n")
     sys.stdout.flush()
-'''
+"""
 
 
 def _stage_sealed_read_mcp(exec_root: Path) -> Path:
@@ -1719,8 +1714,7 @@ def _sealed_reader_python_runtime(
         raise ReviewIsolationError("sealed_reader_python_runtime_probe_failed") from exc
     if completed.returncode != 0:
         raise ReviewIsolationError(
-            "sealed_reader_python_runtime_probe_failed:"
-            f"rc={completed.returncode}:{(completed.stderr or '')[:160]}"
+            f"sealed_reader_python_runtime_probe_failed:rc={completed.returncode}:{(completed.stderr or '')[:160]}"
         )
     try:
         payload = json.loads(completed.stdout)
@@ -2352,9 +2346,7 @@ def detect_engine_capabilities(
             # Empty-tools + bare is the nested-reviewer denial mechanism.
             found.add("no_nested_reviewers")
     elif engine_key == "codex":
-        sandbox_flag = bool(
-            re.search(r"(?<!\S)(?:-s(?:,|\s|$)|--sandbox(?:[=,\s]|$))", text)
-        )
+        sandbox_flag = bool(re.search(r"(?<!\S)(?:-s(?:,|\s|$)|--sandbox(?:[=,\s]|$))", text))
         if "--ignore-user-config" in text:
             found.add("ignore_user_config")
         if "--ignore-rules" in text:
@@ -2438,9 +2430,7 @@ def require_supported_engine_version(engine: str, version_text: str) -> None:
     if version < CLAUDE_MIN_SUPPORTED_CLI_VERSION:
         rendered = ".".join(str(part) for part in version)
         minimum = ".".join(str(part) for part in CLAUDE_MIN_SUPPORTED_CLI_VERSION)
-        raise ReviewIsolationError(
-            f"engine_version_unsupported:claude:{rendered}:minimum={minimum}"
-        )
+        raise ReviewIsolationError(f"engine_version_unsupported:claude:{rendered}:minimum={minimum}")
 
 
 def probe_engine_capabilities(
@@ -3274,9 +3264,7 @@ def prepare_host_sandbox(
                 read_roots=read_roots,
                 metadata_roots=metadata_roots,
             )
-            return SandboxCapability(
-                **{**capability.__dict__, "network_allowed": network_allowed}
-            )
+            return SandboxCapability(**{**capability.__dict__, "network_allowed": network_allowed})
         finally:
             with contextlib.suppress(OSError):
                 denied.unlink()

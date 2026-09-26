@@ -11,7 +11,7 @@ through the hash-pinned ACP profile. The model catalog remains the authority.
 | Authentication | Cached native selector; ambient API-key selectors scrubbed | Auth material is not staged into the sealed snapshot |
 | Sealed evidence | Parent-owned MCP plus hash-pinned `acpx-grok-sealed-review.md` | Only the sealed review tools are exposed |
 | Sealed snapshot cwd + OS sandbox | Active through ACPX confinement | No primary-checkout or general filesystem access |
-| `review-pr --reviewer grok` | Implemented | Same reservation, authority, and publication path |
+| `review-pr --reviewer grok` | Retired (#8520) | Replaced by direct `ask-* --type review` (sealed `review-pr` removed in #8520) |
 | Registry `formal_review_eligible` | `true` for native `grok-4.6` | Catalog endpoint is authoritative |
 | Cursor explicit `grok-4.6` | Live for **orchestrator / implement / advisory** when native dark | Still **not** sealed formal CF |
 
