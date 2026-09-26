@@ -480,6 +480,8 @@ def test_leader_exit_with_surviving_grandchild_preserves_until_group_dead(tmp_pa
             if pgid is not None:
                 with contextlib.suppress(ProcessLookupError):
                     os.killpg(pgid, signal.SIGKILL)
+                _wait_for(lambda: not ts.probe_process_group(pgid).members, what="group to drain")
+        hold.unlink(missing_ok=True)
 
 
 def test_recovery_never_signals_processes(tmp_path: Path, monkeypatch) -> None:
