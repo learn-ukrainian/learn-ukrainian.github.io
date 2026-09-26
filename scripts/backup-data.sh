@@ -26,7 +26,9 @@
 #
 # Mutating commands are previews unless --execute is present. The only
 # prune/delete command is `retention`, which applies the operator-approved
-# weekly keep policy to this backup family's tag only. See
+# weekly keep policy run-aware: it selects the completed runs to keep, then
+# forgets by explicit snapshot ID only the snapshots of runs outside the keep
+# set, so a retained receipt never loses a snapshot it references. See
 # docs/runbooks/data-backup.md.
 
 set -Eeuo pipefail
@@ -48,7 +50,8 @@ readonly TMP_ROOT="${LU_BACKUP_TMPDIR:-${TMPDIR:-/tmp}}"
 readonly LOCK_DIR="$TMP_ROOT/learn-ukrainian-backup.${UID}.lock"
 readonly STAGE_PATH="$TMP_ROOT/learn-ukrainian-backup.${UID}.stage"
 # Operator-approved retention policy (2026-09-26), applied weekly by
-# `retention --execute`, scoped to this backup family's tag only.
+# `retention --execute` to completed backup runs (never to individual
+# snapshots) of this backup family's tag only.
 readonly KEEP_DAILY=7
 readonly KEEP_WEEKLY=4
 readonly KEEP_MONTHLY=6
@@ -172,9 +175,11 @@ Safety:
   - restore --path RELATIVE_PATH restores only that file or directory of the run
     (for example data/atlas.db, read from its database snapshot via the receipt;
     other paths come from the file-phase snapshot). Same guards and preflight.
-  - retention forgets and prunes old snapshots of this backup family's tag with
-    --keep-daily 7 --keep-weekly 4 --keep-monthly 6; other tags are untouched.
-    Run it weekly, not on every backup.
+  - retention applies --keep-daily 7 --keep-weekly 4 --keep-monthly 6 to the
+    completed runs of this backup family's tag, then forgets by explicit
+    snapshot ID only the snapshots of runs outside the keep set; other tags
+    are untouched. Runs newer than the newest completed run are always kept.
+    Prune is a separate explicit step. Run it weekly, not on every backup.
 
 Required environment:
   LU_BACKUP_REPOSITORY  Restic rclone backend, for example:
@@ -384,7 +389,8 @@ validate_password_file() {
     die "RESTIC_PASSWORD_FILE must point to a mode-600 password file."
   [[ "$PASSWORD_FILE" == /* ]] ||
     die "RESTIC_PASSWORD_FILE must be an absolute path."
-  [[ -f "$PASSWORD_FILE" ]] || die "Password file does not exist: $PASSWORD_FILE"
+  [[ -f "$PASSWORD_FILE" ]] ||
+    die "RESTIC_PASSWORD_FILE is set but the file does not exist."
   mode="$(file_mode "$PASSWORD_FILE")"
   (( (8#$mode & 077) == 0 )) ||
     die "Password file must not be accessible by group/others (mode is $mode)."
@@ -412,7 +418,7 @@ validate_repository_config() {
   esac
 
   if ! rclone listremotes | grep -Fqx "$remote_name:"; then
-    die "rclone remote '$remote_name:' is not configured. Run 'rclone config' first."
+    die "The rclone remote named in LU_BACKUP_REPOSITORY is not configured. Run 'rclone config' first."
   fi
   export RESTIC_REPOSITORY="$REPOSITORY"
 }
@@ -1616,30 +1622,115 @@ run_init() {
   info "Repository initialized and checked."
 }
 
+# Run-aware retention planner (jq). Input: the `restic snapshots --json` array
+# for this backup family. Snapshots are grouped into runs by the lu-run-<id>
+# tag the backup command writes; a snapshot without it is a self-contained
+# legacy snapshot and forms its own complete run. A run is complete when its
+# lu-part-complete receipt snapshot exists. The daily/weekly/monthly keep
+# policy applies to completed runs only — counting runs, not snapshots — and
+# every run newer than the newest completed run is protected (it may be in
+# progress, or a failed run worth inspecting). Whole runs are dropped, so a
+# retained receipt never loses a snapshot it references. An empty list or a
+# list with no completed run errors out so the caller forgets nothing.
+# Snapshot times may carry fractional seconds and a numeric offset; the offset
+# is stripped and wall time is bucketed as UTC, which only shifts bucket
+# boundaries by the offset, never which runs are complete or protected.
+# shellcheck disable=SC2016  # $daily/$run/... are jq variables, not shell.
+readonly RETENTION_PLAN_JQ='
+def run_key:
+  ([.tags[]? | select(startswith("lu-run-"))][0]) // ("snapshot:" + .id);
+def epoch_seconds:
+  sub("\\.[0-9]+(Z|[+-][0-9]{2}:[0-9]{2})$"; "Z") | strptime("%Y-%m-%dT%H:%M:%SZ") | mktime;
+def week_bucket:
+  (((.time | epoch_seconds) + 259200) / 604800 | floor);
+def newest_per_bucket(bucket; limit):
+  reduce .[] as $run ({seen: [], keep: []};
+    ($run | bucket) as $value
+    | if (.seen | any(. == $value)) then .
+      elif (.seen | length) < limit then
+        {seen: (.seen + [$value]), keep: (.keep + [$run.run])}
+      else . end)
+  | .keep;
+([.[] | . as $snapshot | $snapshot + {run: ($snapshot | run_key)}]
+ | group_by(.run)
+ | map({
+     run: .[0].run,
+     time: ([.[].time] | max),
+     complete: (any(.[]; (.tags // []) | any(. == "lu-part-complete"))
+                or (.[0].run | startswith("snapshot:"))),
+     snapshots: [.[].id]
+   })
+ | sort_by(.time)) as $runs
+| if ($runs | length) == 0 then error("snapshot list is empty") else . end
+| ([$runs[] | select(.complete)]) as $completed
+| if ($completed | length) == 0 then error("no completed backup runs in snapshot list") else . end
+| ($completed | last | .time) as $newest_completed
+| ([$runs[] | select(.time >= $newest_completed) | .run] | unique) as $protected
+| ($completed | reverse) as $newest_first
+| ($newest_first | newest_per_bucket(.time[0:10]; $daily)) as $daily_keep
+| ($newest_first | newest_per_bucket(week_bucket; $weekly)) as $weekly_keep
+| ($newest_first | newest_per_bucket(.time[0:7]; $monthly)) as $monthly_keep
+| (($daily_keep + $weekly_keep + $monthly_keep + $protected) | unique) as $keep_runs
+| {
+    keep: [$runs[] | select(.run as $r | ($keep_runs | any(. == $r)))
+           | {run, time, complete, snapshots}],
+    drop: [$runs[] | select(.run as $r | (($keep_runs | any(. == $r)) | not))
+           | {run, time, complete, snapshots}],
+    forget_ids: [$runs[] | select(.run as $r | (($keep_runs | any(. == $r)) | not))
+                 | .snapshots[]]
+  }
+'
+
+retention_snapshot_list() {
+  restic_repository_command snapshots --json --host "$BACKUP_HOST" --tag "$BACKUP_TAG"
+}
+
 run_retention() {
   local execute=$1
+  local snapshots_json plan forget_count
+  local forget_ids=()
 
   validate_environment
   require_initialized_repository
+  snapshots_json="$(retention_snapshot_list)" ||
+    die "Could not list snapshots of tag $BACKUP_TAG; refusing to plan retention."
+  plan="$(jq -e \
+    --argjson daily "$KEEP_DAILY" \
+    --argjson weekly "$KEEP_WEEKLY" \
+    --argjson monthly "$KEEP_MONTHLY" \
+    "$RETENTION_PLAN_JQ" <<< "$snapshots_json")" ||
+    die "Retention planning failed (empty or unparsable snapshot list, or no completed run); forgetting nothing."
+  forget_count="$(jq -er '.forget_ids | length' <<< "$plan")" ||
+    die "Retention plan is malformed; forgetting nothing."
+
+  info "Retention plan for tag $BACKUP_TAG: keep-daily=$KEEP_DAILY keep-weekly=$KEEP_WEEKLY keep-monthly=$KEEP_MONTHLY applied to completed runs."
+  jq -er '
+    "Runs kept: \(.keep | length)",
+    (.keep[] | "  keep \(.run) time=\(.time) snapshots=\(.snapshots | length)"),
+    "Runs dropped: \(.drop | length)",
+    (.drop[] | "  drop \(.run) time=\(.time) snapshots=\(.snapshots | length)"),
+    "Snapshots to forget: \(.forget_ids | length)",
+    (.forget_ids[] | "  forget \(.)")
+  ' <<< "$plan"
+
   if [[ "$execute" -eq 0 ]]; then
     info "Retention preview only; no snapshots will be forgotten."
-    restic_repository_command forget --dry-run \
-      --tag "$BACKUP_TAG" \
-      --keep-daily "$KEEP_DAILY" \
-      --keep-weekly "$KEEP_WEEKLY" \
-      --keep-monthly "$KEEP_MONTHLY" \
-      --prune
     echo "Preview complete. Re-run with --execute to apply the retention policy."
     return
   fi
+
   acquire_lock
-  info "Applying retention policy to tag $BACKUP_TAG: keep-daily=$KEEP_DAILY keep-weekly=$KEEP_WEEKLY keep-monthly=$KEEP_MONTHLY."
-  restic_repository_command forget \
-    --tag "$BACKUP_TAG" \
-    --keep-daily "$KEEP_DAILY" \
-    --keep-weekly "$KEEP_WEEKLY" \
-    --keep-monthly "$KEEP_MONTHLY" \
-    --prune
+  if [[ "$forget_count" -gt 0 ]]; then
+    while IFS= read -r id; do
+      forget_ids+=("$id")
+    done < <(jq -er '.forget_ids[]' <<< "$plan")
+    info "Forgetting ${#forget_ids[@]} snapshot(s) of dropped runs by explicit snapshot ID."
+    restic_repository_command forget "${forget_ids[@]}"
+  else
+    info "Every run is inside the keep set; nothing to forget."
+  fi
+  info "Pruning unreferenced repository data."
+  restic_repository_command prune
   info "Checking repository metadata after retention."
   restic_repository_command check
   info "Retention complete."

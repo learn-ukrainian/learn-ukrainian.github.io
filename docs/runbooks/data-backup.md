@@ -63,11 +63,17 @@ restic rclone path with that final directory name.
   below it, and unsupported special files, stop the backup before restic runs.
 - Restore accepts only an absolute empty or nonexistent directory outside the
   project, cloud mounts, and the legacy backup.
-- The only snapshot deletion is `retention [--execute]`, which runs
-  `restic forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6`
-  scoped to this backup family's tag (`--tag "$BACKUP_TAG"`). Other snapshot
-  families in the same repository are never selected. It is a preview unless
-  `--execute` is supplied and is scheduled weekly, not on every backup.
+- The only snapshot deletion is `retention [--execute]`. It lists this backup
+  family's snapshots (`--tag "$BACKUP_TAG"`), groups them into runs by the
+  `lu-run-<id>` tag each snapshot carries, applies
+  `--keep-daily 7 --keep-weekly 4 --keep-monthly 6` to completed runs (those
+  whose receipt snapshot exists), and forgets by explicit snapshot ID only the
+  snapshots of runs outside the keep set. A retained receipt therefore never
+  loses a snapshot it references, and a partial newer run can never displace
+  one: runs newer than the newest completed run are always kept. `prune` runs
+  as a separate explicit step. Other snapshot families in the same repository
+  are never selected. It is a preview unless `--execute` is supplied and is
+  scheduled weekly, not on every backup.
 - Restic commits snapshots atomically. A failed upload does not replace an
   earlier recovery point. On Linux, a final receipt snapshot marks the run
   complete; `restore latest` selects only completed runs.
@@ -315,10 +321,12 @@ checkout (preview by default; writes only with `--apply`):
 ```
 
 The units read `~/.secrets/learn-ukrainian-backup.env` via `EnvironmentFile=`
-and never log secret values. `scripts/orchestration/run_scheduled_backup.sh`
+and never log secret values: validation failures name the variable and the
+condition, not the configured value. `scripts/orchestration/run_scheduled_backup.sh`
 writes `batch_state/backups/last-run.json` on success and on failure (UTC
 start/end, exit status, restic run id, snapshot count, bytes added). A failed
-run exits non-zero, so `systemctl --user list-timers` and
+run exits non-zero, and so does a failed log capture or a failed
+`last-run.json` write, so `systemctl --user list-timers` and
 `journalctl --user -u learn-ukrainian-backup.service` show it; there is no
 separate alerting system.
 

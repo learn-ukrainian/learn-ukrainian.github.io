@@ -18,8 +18,10 @@
 #   --last-run PATH  Output path (default: $LU_BACKUP_LAST_RUN or
 #                    <project>/batch_state/backups/last-run.json).
 #
-# The record mode exits 0 when the receipt was written; the caller propagates
-# the backup's own exit status.
+# The record mode exits 0 when the receipt was written. The run mode exits
+# with the backup's own status, and exits non-zero when the log capture (tee)
+# or the receipt write fails even if the backup itself succeeded: a run whose
+# status record is not valid is a failed run.
 
 set -Eeuo pipefail
 umask 077
@@ -144,7 +146,8 @@ run_record() {
 }
 
 run_backup_and_record() {
-  local started finished log status output
+  local started finished log status tee_status exit_status output
+  local -a pipe_status
 
   command -v jq >/dev/null 2>&1 ||
     { echo "scheduled-backup: jq is required" >&2; exit 78; }
@@ -161,14 +164,31 @@ run_backup_and_record() {
 
   started="$(utc_now)"
   status=0
-  "$BACKUP_SCRIPT" backup --execute 2>&1 | tee "$log" || status=${PIPESTATUS[0]}
+  tee_status=0
+  # pipefail makes the pipeline fail when either side fails; capture PIPESTATUS
+  # in one assignment (any simple command resets it) so the receipt keeps the
+  # backup's own exit status even when tee also failed.
+  "$BACKUP_SCRIPT" backup --execute 2>&1 | tee "$log" || {
+    pipe_status=("${PIPESTATUS[@]}")
+    status=${pipe_status[0]}
+    tee_status=${pipe_status[1]}
+  }
   finished="$(utc_now)"
+
+  # The receipt records the backup command's own status; the service exit
+  # additionally fails when the log capture or the receipt write failed.
+  exit_status=$status
+  if [[ "$tee_status" -ne 0 ]]; then
+    echo "ERROR: could not capture the backup log (tee exited $tee_status)." >&2
+    [[ "$exit_status" -ne 0 ]] || exit_status=1
+  fi
 
   output="$(last_run_path)"
   if ! write_last_run "$status" "$started" "$finished" "$log" "$output"; then
-    echo "WARNING: could not write the last-run receipt: $output" >&2
+    echo "ERROR: could not write the last-run receipt: $output" >&2
+    [[ "$exit_status" -ne 0 ]] || exit_status=1
   fi
-  exit "$status"
+  exit "$exit_status"
 }
 
 main() {

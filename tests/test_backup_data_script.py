@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import sqlite3
 import subprocess
@@ -179,6 +180,12 @@ if [[ "${1:-}" == "dump" ]]; then
 fi
 if [[ "${1:-}" == "stats" ]]; then
   printf '{"total_size":%s,"total_file_count":1,"snapshots_count":1}\n' "${FAKE_STATS_TOTAL_SIZE:-1000}"
+  exit 0
+fi
+if [[ "${1:-}" == "snapshots" ]]; then
+  if [[ -n "${FAKE_SNAPSHOTS_JSON:-}" ]]; then
+    cat "$FAKE_SNAPSHOTS_JSON"
+  fi
   exit 0
 fi
 if [[ "${1:-}" == "restore" && -n "${FAKE_SNAPSHOT_DIR:-}" ]]; then
@@ -1697,43 +1704,254 @@ def test_refuses_staging_inside_selected_project_checkout(
     assert "Staging directory must be outside the selected project checkout" in result.stderr
 
 
-def test_retention_previews_tag_scoped_forget_by_default(
+def _snapshot(
+    snapshot_id: str,
+    run_id: str | None,
+    parts: list[str],
+    time: str,
+) -> list[dict[str, object]]:
+    tags = ["learn-ukrainian-data"]
+    if run_id is not None:
+        tags.append(f"lu-run-{run_id}")
+    return [
+        {
+            "id": snapshot_id,
+            "time": time,
+            "hostname": "learn-ukrainian",
+            "tags": [*tags, f"lu-part-{part}"],
+            "paths": ["/home/ops/learn-ukrainian"],
+        }
+        for part in parts
+    ]
+
+
+def _run_snapshots(
+    run_id: str,
+    day: str,
+    parts: list[str] | None = None,
+    id_byte: str = "a",
+) -> list[dict[str, object]]:
+    parts = parts or ["base", "complete"]
+    snapshots: list[dict[str, object]] = []
+    for index, part in enumerate(parts):
+        snapshot_id = f"{id_byte}{index:063x}"[-64:]
+        snapshots.extend(_snapshot(snapshot_id, run_id, [part], f"{day}T03:30:0{index}Z"))
+    return snapshots
+
+
+def _write_snapshots(
+    environment: dict[str, str],
+    tmp_path: Path,
+    snapshots: list[dict[str, object]] | str,
+) -> None:
+    fixture = tmp_path / "snapshots.json"
+    if isinstance(snapshots, str):
+        fixture.write_text(snapshots, encoding="utf-8")
+    else:
+        fixture.write_text(json.dumps(snapshots), encoding="utf-8")
+    environment["FAKE_SNAPSHOTS_JSON"] = str(fixture)
+
+
+def _forget_ids(environment: dict[str, str]) -> list[str]:
+    ids: list[str] = []
+    for line in _log(environment).splitlines():
+        if "arg=<forget>" not in line:
+            continue
+        ids.extend(argument[5:-1] for argument in line.split(" ") if re.fullmatch(r"arg=<[0-9a-f]{64}>", argument))
+    return ids
+
+
+def test_retention_previews_run_aware_plan_by_default(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
 ) -> None:
     environment, _source, _staging, _legacy = backup_environment
+    snapshots = _run_snapshots("20260910T033000Z-00000001", "2026-09-10", id_byte="1")
+    snapshots += _run_snapshots("20260911T033000Z-00000002", "2026-09-11", id_byte="2")
+    _write_snapshots(environment, tmp_path, snapshots)
 
     result = _run(environment, "retention")
 
     assert result.returncode == 0, result.stderr
     assert "Retention preview only" in result.stdout
+    assert "Runs kept: 2" in result.stdout
+    assert "Runs dropped: 0" in result.stdout
+    assert "Snapshots to forget: 0" in result.stdout
     log = _log(environment)
-    assert "arg=<forget> arg=<--dry-run>" in log
-    assert "arg=<--tag> arg=<learn-ukrainian-data>" in log
-    assert "arg=<--keep-daily> arg=<7>" in log
-    assert "arg=<--keep-weekly> arg=<4>" in log
-    assert "arg=<--keep-monthly> arg=<6>" in log
-    assert "arg=<--prune>" in log
+    assert "arg=<snapshots>" in log
+    assert "arg=<forget>" not in log
+    assert "arg=<prune>" not in log
     assert "arg=<check>" not in log
 
 
-def test_retention_execute_forgets_prunes_and_checks(
+def test_retention_execute_forgets_by_snapshot_id_then_prunes_and_checks(
     backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
 ) -> None:
     environment, _source, _staging, _legacy = backup_environment
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 10):
+        snapshots += _run_snapshots(f"202609{day:02d}T033000Z-0000000{day}", f"2026-09-{day:02d}", id_byte=str(day))
+    _write_snapshots(environment, tmp_path, snapshots)
 
     result = _run(environment, "retention", "--execute")
 
     assert result.returncode == 0, result.stderr
-    assert "Applying retention policy to tag learn-ukrainian-data" in result.stdout
-    lines = [line for line in _log(environment).splitlines() if "arg=<forget>" in line]
-    assert len(lines) == 1
-    assert "arg=<--dry-run>" not in lines[0]
-    assert "arg=<--tag> arg=<learn-ukrainian-data>" in lines[0]
-    assert "arg=<--keep-daily> arg=<7>" in lines[0]
-    assert "arg=<--prune>" in lines[0]
+    assert "Retention plan for tag learn-ukrainian-data" in result.stdout
+    assert "Runs kept: 7" in result.stdout
+    assert "Runs dropped: 2" in result.stdout
     log_lines = _log(environment).splitlines()
+    forget_lines = [line for line in log_lines if "arg=<forget>" in line]
+    assert len(forget_lines) == 1
+    assert "arg=<--tag>" not in forget_lines[0]
+    assert "arg=<--keep-daily>" not in forget_lines[0]
+    assert "arg=<--prune>" not in forget_lines[0]
+    assert _forget_ids(environment) == sorted(
+        snapshot["id"] for snapshot in snapshots if snapshot["id"].startswith(("1", "2"))
+    )
     forget_index = next(i for i, line in enumerate(log_lines) if "arg=<forget>" in line)
-    assert any("arg=<check>" in line for line in log_lines[forget_index:])
+    prune_index = next(i for i, line in enumerate(log_lines) if "arg=<prune>" in line)
+    check_index = next(i for i, line in enumerate(log_lines) if "arg=<check>" in line)
+    assert forget_index < prune_index < check_index
+
+
+def test_retention_partial_newer_run_never_displaces_a_retained_run(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 10):
+        snapshots += _run_snapshots(
+            f"202609{day:02d}T033000Z-0000000{day}",
+            f"2026-09-{day:02d}",
+            parts=["base", "db", "complete"],
+            id_byte=str(day),
+        )
+    # A newer run that started but never wrote its receipt snapshot.
+    snapshots += _run_snapshots("20260910T033000Z-00000010", "2026-09-10", parts=["base"], id_byte="f")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    forgotten = _forget_ids(environment)
+    dropped = {snapshot["id"] for snapshot in snapshots if snapshot["id"][0] in "12"}
+    retained = {snapshot["id"] for snapshot in snapshots} - dropped
+    assert set(forgotten) == dropped
+    assert retained.isdisjoint(forgotten)
+    partial_id = next(snapshot["id"] for snapshot in snapshots if snapshot["id"][0] == "f")
+    assert partial_id not in forgotten
+
+
+def test_retention_policy_counts_runs_not_snapshots(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 9):
+        snapshots += _run_snapshots(
+            f"202609{day:02d}T033000Z-0000000{day}",
+            f"2026-09-{day:02d}",
+            parts=["base", "db-one", "db-two", "db-three", "complete"],
+            id_byte=str(day),
+        )
+    # A second, older completed run on the newest day: only the day's newest
+    # run survives the daily bucket, however many snapshots each run holds.
+    snapshots += _run_snapshots("20260908T013000Z-00000088", "2026-09-08", parts=["base", "complete"], id_byte="e")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "Runs kept: 7" in result.stdout
+    assert "Runs dropped: 2" in result.stdout
+    forgotten = _forget_ids(environment)
+    dropped = {snapshot["id"] for snapshot in snapshots if snapshot["id"][0] in "1e"}
+    assert set(forgotten) == dropped
+
+
+def test_retention_forgets_orphan_snapshots_of_dropped_runs(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    snapshots: list[dict[str, object]] = []
+    for day in range(1, 9):
+        snapshots += _run_snapshots(f"202609{day:02d}T033000Z-0000000{day}", f"2026-09-{day:02d}", id_byte=str(day))
+    # A failed run older than the newest completed run leaves orphan snapshots.
+    snapshots += _run_snapshots("20260905T053000Z-00000099", "2026-09-05", parts=["base", "db"], id_byte="d")
+    _write_snapshots(environment, tmp_path, snapshots)
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    forgotten = _forget_ids(environment)
+    dropped = {snapshot["id"] for snapshot in snapshots if snapshot["id"][0] in "1d"}
+    assert set(forgotten) == dropped
+
+
+def test_retention_empty_snapshot_list_forgets_nothing_and_fails(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_snapshots(environment, tmp_path, "[]\n")
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode != 0
+    assert "forgetting nothing" in result.stderr
+    log = _log(environment)
+    assert "arg=<forget>" not in log
+    assert "arg=<prune>" not in log
+
+
+def test_retention_unparsable_snapshot_list_forgets_nothing_and_fails(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    _write_snapshots(environment, tmp_path, "this is not json\n")
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode != 0
+    assert "forgetting nothing" in result.stderr
+    log = _log(environment)
+    assert "arg=<forget>" not in log
+    assert "arg=<prune>" not in log
+
+
+def test_password_file_validation_names_variable_not_its_value(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+    tmp_path: Path,
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    missing = tmp_path / "fake-secret-password-location"
+    environment["RESTIC_PASSWORD_FILE"] = str(missing)
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    output = result.stdout + result.stderr
+    assert str(missing) not in output
+    assert "RESTIC_PASSWORD_FILE is set but the file does not exist" in output
+
+
+def test_remote_validation_names_variable_not_the_remote_name(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+    environment["LU_BACKUP_REPOSITORY"] = "rclone:fakesecretremote:Projects/test-restic"
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    output = result.stdout + result.stderr
+    assert "fakesecretremote" not in output
+    assert "LU_BACKUP_REPOSITORY" in output
 
 
 def test_linux_allows_designated_staging_on_the_data_volume(

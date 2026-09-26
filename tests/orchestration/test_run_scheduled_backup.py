@@ -172,3 +172,58 @@ exit 3
     assert receipt["run_id"] == "20260926T033000Z-ab12cd34"
     assert receipt["bytes_added"] == 512
     assert receipt["snapshot_count"] is None
+
+
+def test_run_fails_when_tee_fails_even_if_backup_succeeds(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, _project, fake_bin = writer_environment
+    last_run = tmp_path / "last-run.json"
+    fake_backup = tmp_path / "fake-backup-data.sh"
+    _write_executable(
+        fake_backup,
+        """#!/bin/bash
+printf '%s\n' '==> Linux backup run 20260926T033000Z-ab12cd34 complete; receipt snapshot cc.'
+exit 0
+""",
+    )
+    _fake_restic(fake_bin, "#!/bin/bash\nexit 1\n")
+    _write_executable(
+        fake_bin / "tee",
+        "#!/bin/bash\ncat >/dev/null || true\nexit 1\n",
+    )
+    environment["LU_BACKUP_SCRIPT"] = str(fake_backup)
+    environment["LU_BACKUP_LAST_RUN"] = str(last_run)
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode != 0
+    assert "could not capture the backup log" in result.stderr
+    # The receipt is still written and carries the backup's own zero status.
+    receipt = json.loads(last_run.read_text(encoding="utf-8"))
+    assert receipt["exit_status"] == 0
+
+
+def test_run_fails_when_last_run_receipt_cannot_be_written(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, _project, fake_bin = writer_environment
+    blocker = tmp_path / "blocker"
+    blocker.write_text("not a directory\n", encoding="utf-8")
+    fake_backup = tmp_path / "fake-backup-data.sh"
+    _write_executable(
+        fake_backup,
+        """#!/bin/bash
+printf '%s\n' '==> Linux backup run 20260926T033000Z-ab12cd34 complete; receipt snapshot cc.'
+exit 0
+""",
+    )
+    _fake_restic(fake_bin, "#!/bin/bash\nexit 1\n")
+    environment["LU_BACKUP_SCRIPT"] = str(fake_backup)
+    # mkdir -p cannot create a directory below a regular file.
+    environment["LU_BACKUP_LAST_RUN"] = str(blocker / "last-run.json")
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode != 0
+    assert "could not write the last-run receipt" in result.stderr
