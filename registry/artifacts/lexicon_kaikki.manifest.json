@@ -1,0 +1,20 @@
+{
+  "entries": [
+    {
+      "git_blob": "c9d9c465a3cb2a4772352a5ad30db90c4c987fad",
+      "migrated_at": "2026-09-26T12:57:32.078711+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790427353240007982,
+      "path": "data/lexicon/kaikki_uk_lookup.json",
+      "pre_untrack_sha256": "5bf7a7fd4b50cf6203b1f91150c7408fb3cc20b1c63fbb68e86efa025c7e5055",
+      "producer": "build_kaikki_lookup.py",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "5bf7a7fd4b50cf6203b1f91150c7408fb3cc20b1c63fbb68e86efa025c7e5055",
+      "size": 9587014,
+      "store": "5bf7a7fd4b50cf6203b1f91150c7408fb3cc20b1c63fbb68e86efa025c7e5055"
+    }
+  ],
+  "group": "lexicon_kaikki",
+  "schema": 1
+}

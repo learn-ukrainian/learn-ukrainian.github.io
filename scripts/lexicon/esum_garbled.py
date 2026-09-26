@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
-CURATED_GARBLED_ESUM_PATH = ROOT / "data" / "lexicon" / "esum_garbled_etymologies.json"
+CURATED_GARBLED_ESUM_PATH = ROOT / "registry" / "lexicon" / "esum_garbled_etymologies.json"
 
 MOJIBAKE_MARKERS = (
     "Зпоц",

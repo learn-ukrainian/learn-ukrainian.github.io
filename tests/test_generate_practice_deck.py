@@ -120,16 +120,8 @@ def test_curated_v5_seed_admits_existing_atlas_entries_with_provenance() -> None
         paronym_pairs=[],
         synonym_verdicts={"approved": [], "rejected": []},
     )
-    indexed = {
-        item["lemmaId"]: item
-        for level in shards.values()
-        for item in level["index"]["items"]
-    }
-    lexemes = {
-        item["lemmaId"]: item
-        for level in shards.values()
-        for item in level["lexemes"]["lexemes"]
-    }
+    indexed = {item["lemmaId"]: item for level in shards.values() for item in level["index"]["items"]}
+    lexemes = {item["lemmaId"]: item for level in shards.values() for item in level["lexemes"]["lexemes"]}
     for row in seed_rows:
         item = indexed[row["slug"]]
         assert item["hasCloze"] is False
@@ -424,8 +416,22 @@ def test_practice_seed_validates_duplicate_attestations_but_emits_one_route_exam
             {
                 "schema": "curated-v5-practice-seed-v1",
                 "entries": [
-                    {"lemma": "слово", "slug": "слово", "cefr": "A1", "example": "Перший.", "provenance": provenance, "sentenceStatus": "ok"},
-                    {"lemma": "слово", "slug": "слово", "cefr": "A1", "example": "Другий.", "provenance": provenance, "sentenceStatus": "ok"},
+                    {
+                        "lemma": "слово",
+                        "slug": "слово",
+                        "cefr": "A1",
+                        "example": "Перший.",
+                        "provenance": provenance,
+                        "sentenceStatus": "ok",
+                    },
+                    {
+                        "lemma": "слово",
+                        "slug": "слово",
+                        "cefr": "A1",
+                        "example": "Другий.",
+                        "provenance": provenance,
+                        "sentenceStatus": "ok",
+                    },
                 ],
             },
             ensure_ascii=False,
@@ -446,7 +452,9 @@ def _build(config: BuildConfig | None = None, cloze_sources_path: Path | None = 
     allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
     verifier = JsonVesumVerifier.from_path(VESUM)
     cloze_sources = read_cloze_sources(cloze_sources_path) if cloze_sources_path else []
-    return build_practice_shards(entries, allowlist, verifier, cloze_sources, config or BuildConfig(), heritage_pairs=[], paronym_pairs=[])
+    return build_practice_shards(
+        entries, allowlist, verifier, cloze_sources, config or BuildConfig(), heritage_pairs=[], paronym_pairs=[]
+    )
 
 
 def _fixture_lexemes() -> list[dict[str, object]]:
@@ -460,11 +468,7 @@ def _fixture_heritage_pair() -> dict[str, object]:
 
 
 def _single_deck_version(shards: dict[str, dict[str, dict[str, object]]]) -> str:
-    versions = {
-        payload["deckVersion"]
-        for level_shards in shards.values()
-        for payload in level_shards.values()
-    }
+    versions = {payload["deckVersion"] for level_shards in shards.values() for payload in level_shards.values()}
     assert len(versions) == 1
     return versions.pop()
 
@@ -751,16 +755,8 @@ def test_heritage_items_wire_mode_counts_and_index_modes() -> None:
 
     indexed_lemma_ids = {item["lemmaId"] for item in a2["index"]["items"]}
     for mode in DRILL_MODES:
-        emitted_ids = {
-            item["lemmaId"]
-            for item in a2[mode][mode]
-            if item["lemmaId"] in indexed_lemma_ids
-        }
-        advertised_ids = {
-            item["lemmaId"]
-            for item in a2["index"]["items"]
-            if mode in item["modes"]
-        }
+        emitted_ids = {item["lemmaId"] for item in a2[mode][mode] if item["lemmaId"] in indexed_lemma_ids}
+        advertised_ids = {item["lemmaId"] for item in a2["index"]["items"] if mode in item["modes"]}
         assert advertised_ids == emitted_ids
 
 
@@ -919,16 +915,14 @@ def test_neuter_a_ya_nouns_can_reach_fourth_declension() -> None:
         ("написати", ["verb:perf:futr"], "perfective"),
     ],
 )
-def test_aspect_category_reads_explicit_vesum_tags(
-    lemma: str, labels: list[str], expected: str
-) -> None:
+def test_aspect_category_reads_explicit_vesum_tags(lemma: str, labels: list[str], expected: str) -> None:
     assert _aspect_category(labels) == expected, lemma
-
 
 
 def test_aspect_category_reads_ukrainian_abbreviated_labels() -> None:
     assert _aspect_category(["недок."]) == "imperfective"
     assert _aspect_category(["док."]) == "perfective"
+
 
 def test_aspect_category_explicit_tag_wins_over_tense_proxy() -> None:
     assert _aspect_category(["доконаний", "теперішній"]) == "perfective"
@@ -998,14 +992,10 @@ def test_write_aspect_residual_report_is_named_and_deterministic(tmp_path: Path)
     }
 
 
-
-
 def test_vesum_aspect_lookup_drops_biaspectual_combined_tag() -> None:
     verifier = JsonVesumVerifier(
         {
-            "атакувати": [
-                {"lemma": "атакувати", "pos": "verb", "tags": "verb:imperf:perf:inf"}
-            ],
+            "атакувати": [{"lemma": "атакувати", "pos": "verb", "tags": "verb:imperf:perf:inf"}],
         }
     )
     assert _vesum_aspect_by_lemma(["атакувати"], verifier) == {}
@@ -1024,11 +1014,10 @@ def test_conflicting_explicit_labels_not_overridden_by_vesum_aspect() -> None:
     }
     lexeme = {"lemmaId": "omonym", "lemma": "омонім", "cefr": "A2"}
     residuals: list[dict[str, str]] = []
-    classify = _build_classify_items(
-        entry, lexeme, vesum_aspect="imperfective", aspect_residuals=residuals
-    )
+    classify = _build_classify_items(entry, lexeme, vesum_aspect="imperfective", aspect_residuals=residuals)
     assert not any(s.get("setId") == "aspect" for item in classify for s in item.get("sets", []))
     assert residuals and residuals[0]["reason"] == "conflicting_explicit_aspect"
+
 
 def test_build_classify_items_records_missing_morphology_aspect_residual() -> None:
     entry = {"lemma": "знати", "pos": "verb"}
@@ -1134,9 +1123,7 @@ def test_classify_emits_all_context_free_pos_answers_for_multi_pos_lemma() -> No
                 "forms": [{"label": "присл."}],
             },
             "translation": {"en": ["however"], "pos": "adverb"},
-            "definition_cards": [
-                {"definitions": ["1. спол. для протиставлення; 2. присл., у знач. вставн. сл."]}
-            ],
+            "definition_cards": [{"definitions": ["1. спол. для протиставлення; 2. присл., у знач. вставн. сл."]}],
         },
     }
     lexeme = {"lemmaId": "prote", "lemma": "проте", "cefr": "B1"}
@@ -1206,18 +1193,17 @@ def test_classify_keeps_pos_set_for_unambiguous_noun() -> None:
         ("intj", "interjection"),
     ],
 )
-def test_classify_pos_aliases_normalize_to_distinct_closed_buckets(
-    raw_pos: str, expected_bucket: str
-) -> None:
+def test_classify_pos_aliases_normalize_to_distinct_closed_buckets(raw_pos: str, expected_bucket: str) -> None:
     assert generate_practice_deck._normalize_pos_buckets(raw_pos) == [expected_bucket]
 
 
 def test_classify_pos_generic_part_does_not_match_prose() -> None:
     assert generate_practice_deck._normalize_pos_buckets("part of speech") == []
     assert generate_practice_deck._normalize_pos_buckets("participle") == []
-    assert generate_practice_deck._definition_card_pos_buckets(
-        {"definition_cards": [{"definitions": ["part of speech"]}]}
-    ) == []
+    assert (
+        generate_practice_deck._definition_card_pos_buckets({"definition_cards": [{"definitions": ["part of speech"]}]})
+        == []
+    )
 
 
 def test_classify_pos_closed_set_uses_school_taxonomy() -> None:
@@ -1233,9 +1219,7 @@ def test_classify_pos_closed_set_uses_school_taxonomy() -> None:
         "particle",
         "interjection",
     ]
-    assert [
-        labels[0] for labels in generate_practice_deck.CLASSIFY_LABELS["pos"].values()
-    ] == [
+    assert [labels[0] for labels in generate_practice_deck.CLASSIFY_LABELS["pos"].values()] == [
         "іменник",
         "прикметник",
         "числівник",
@@ -1357,26 +1341,15 @@ def test_paradigm_eliminates_nominative_singular_base_case_bias() -> None:
     assert items
 
     # Must NOT contain nominative singular
-    assert not any(
-        item["slot"]["case"] == "називний" and item["slot"]["number"] == "singular"
-        for item in items
-    )
+    assert not any(item["slot"]["case"] == "називний" and item["slot"]["number"] == "singular" for item in items)
 
     # Must contain nominative plural
-    nom_pl = [
-        item for item in items
-        if item["slot"]["case"] == "називний" and item["slot"]["number"] == "plural"
-    ]
+    nom_pl = [item for item in items if item["slot"]["case"] == "називний" and item["slot"]["number"] == "plural"]
     assert len(nom_pl) == 1
     assert nom_pl[0]["form"] == "столи"
 
     # Base form (nom:s "стіл") can still be used as a distractor for oblique cases
-    all_distractors = {
-        opt["label"]
-        for item in items
-        for opt in item["options"]
-        if opt["kind"] == "same-paradigm"
-    }
+    all_distractors = {opt["label"] for item in items for opt in item["options"] if opt["kind"] == "same-paradigm"}
     assert "стіл" in all_distractors
 
     # Validator must reject nominative singular target
@@ -1483,11 +1456,101 @@ def test_paradigm_zero_collision_guarantee_across_nouns() -> None:
     else:
         # Source-backed fallback templates with verified VESUM forms (including correct 'книг' gen_pl)
         stems = [
-            ("книга", ("книга", "книги", "книги", "книг", "книзі", "книгам", "книгу", "книги", "книгою", "книгами", "книзі", "книгах", "книго", "книги")),
-            ("стіл", ("стіл", "столи", "стола", "столів", "столу", "столам", "стіл", "столи", "столом", "столами", "столі", "столах", "столе", "столи")),
-            ("ніч", ("ніч", "ночі", "ночі", "ночей", "ночі", "ночам", "ніч", "ночі", "ніччю", "ночами", "ночі", "ночах", "ноче", "ночі")),
-            ("море", ("море", "моря", "моря", "морів", "морю", "морям", "море", "моря", "морем", "морями", "морі", "морях", "море", "моря")),
-            ("хлопець", ("хлопець", "хлопці", "хлопця", "хлопців", "хлопцеві", "хлопцям", "хлопця", "хлопців", "хлопцем", "хлопцями", "хлопцеві", "хлопцях", "хлопче", "хлопці")),
+            (
+                "книга",
+                (
+                    "книга",
+                    "книги",
+                    "книги",
+                    "книг",
+                    "книзі",
+                    "книгам",
+                    "книгу",
+                    "книги",
+                    "книгою",
+                    "книгами",
+                    "книзі",
+                    "книгах",
+                    "книго",
+                    "книги",
+                ),
+            ),
+            (
+                "стіл",
+                (
+                    "стіл",
+                    "столи",
+                    "стола",
+                    "столів",
+                    "столу",
+                    "столам",
+                    "стіл",
+                    "столи",
+                    "столом",
+                    "столами",
+                    "столі",
+                    "столах",
+                    "столе",
+                    "столи",
+                ),
+            ),
+            (
+                "ніч",
+                (
+                    "ніч",
+                    "ночі",
+                    "ночі",
+                    "ночей",
+                    "ночі",
+                    "ночам",
+                    "ніч",
+                    "ночі",
+                    "ніччю",
+                    "ночами",
+                    "ночі",
+                    "ночах",
+                    "ноче",
+                    "ночі",
+                ),
+            ),
+            (
+                "море",
+                (
+                    "море",
+                    "моря",
+                    "моря",
+                    "морів",
+                    "морю",
+                    "морям",
+                    "море",
+                    "моря",
+                    "морем",
+                    "морями",
+                    "морі",
+                    "морях",
+                    "море",
+                    "моря",
+                ),
+            ),
+            (
+                "хлопець",
+                (
+                    "хлопець",
+                    "хлопці",
+                    "хлопця",
+                    "хлопців",
+                    "хлопцеві",
+                    "хлопцям",
+                    "хлопця",
+                    "хлопців",
+                    "хлопцем",
+                    "хлопцями",
+                    "хлопцеві",
+                    "хлопцях",
+                    "хлопче",
+                    "хлопці",
+                ),
+            ),
         ]
         cases_list = ["називний", "родовий", "давальний", "знахідний", "орудний", "місцевий", "кличний"]
         lexemes = []
@@ -1498,12 +1561,14 @@ def test_paradigm_zero_collision_guarantee_across_nouns() -> None:
                 sg_form = base_forms[c_idx * 2]
                 pl_form = base_forms[c_idx * 2 + 1]
                 paradigm_cases[c_name] = {"singular": sg_form, "plural": pl_form}
-            lexemes.append({
-                "lemmaId": f"noun_{idx}_{base_stem}",
-                "lemma": base_stem,
-                "cefr": "A1" if idx % 2 == 0 else "B1",
-                "paradigm": {"cases": paradigm_cases},
-            })
+            lexemes.append(
+                {
+                    "lemmaId": f"noun_{idx}_{base_stem}",
+                    "lemma": base_stem,
+                    "cefr": "A1" if idx % 2 == 0 else "B1",
+                    "paradigm": {"cases": paradigm_cases},
+                }
+            )
 
     assert len(lexemes) >= 1000, f"Expected at least 1,000 noun lexemes, got {len(lexemes)}"
     unique_lemmas = {lex["lemma"] for lex in lexemes}
@@ -1592,7 +1657,9 @@ def test_paradigm_zero_collision_guarantee_across_nouns() -> None:
 
     # Coverage verification across all 13 non-base cells
     assert total_items >= 10000, f"Expected at least 10,000 items across 1,000 nouns, got {total_items}"
-    assert len(slot_counts) == 13, f"Expected coverage across all 13 cells, got {len(slot_counts)}: {slot_counts.keys()}"
+    assert len(slot_counts) == 13, (
+        f"Expected coverage across all 13 cells, got {len(slot_counts)}: {slot_counts.keys()}"
+    )
 
 
 def test_paradigm_vesum_failure_skips_or_prevents_collisions(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1622,7 +1689,9 @@ def test_paradigm_vesum_failure_skips_or_prevents_collisions(monkeypatch: pytest
 
     monkeypatch.setattr(vesum_mod, "verify_lemma", _failing_verify_lemma)
     items_err = _build_paradigm_items(lexeme, require_vesum=True)
-    assert items_err == [], "Expected generator to skip affected cards when strict VESUM is required and lookup raises an exception"
+    assert items_err == [], (
+        "Expected generator to skip affected cards when strict VESUM is required and lookup raises an exception"
+    )
 
     # 2. When strict VESUM is required and lookup returns [] (Codex Round 3 Finding 1 reproduction): skip cards
     def _empty_verify_lemma(lemma: str) -> list[dict[str, Any]]:
@@ -1630,7 +1699,9 @@ def test_paradigm_vesum_failure_skips_or_prevents_collisions(monkeypatch: pytest
 
     monkeypatch.setattr(vesum_mod, "verify_lemma", _empty_verify_lemma)
     items_empty = _build_paradigm_items(lexeme, require_vesum=True)
-    assert items_empty == [], "Expected generator to skip affected cards when strict VESUM is required and lookup returns empty []"
+    assert items_empty == [], (
+        "Expected generator to skip affected cards when strict VESUM is required and lookup returns empty []"
+    )
 
     # 3. Default non-strict mode (used by build pipeline and offline CI) generates cards using paradigm + alternations
     items_default = _build_paradigm_items(lexeme, require_vesum=False)
@@ -1693,7 +1764,6 @@ def test_a2_replaces_ukrainian_dictionary_gloss_with_english_translation() -> No
     dated_lexeme = _build_lexeme(dated, verifier)
     assert dated_lexeme is not None
     assert dated_lexeme["glossClean"] == "fairy tale"
-
 
 
 def test_build_lexeme_emits_sense_id_and_prefers_sense_learner_en() -> None:
@@ -1831,9 +1901,7 @@ def test_meaning_mc_eligibility_requires_a_latin_majority_gloss() -> None:
             "cefr": "A1",
         },
     ]
-    shards = build_practice_shards(
-        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({})
-    )
+    shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}))
     lexeme = shards["A1"]["lexemes"]["lexemes"][0]
     index_item = shards["A1"]["index"]["items"][0]
 
@@ -1940,9 +2008,7 @@ def test_multi_sense_gloss_first_sense_is_meaning_mc_eligible() -> None:
             "cefr": "A1",
         },
     ]
-    shards = build_practice_shards(
-        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({})
-    )
+    shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}))
     lexeme = shards["A1"]["lexemes"]["lexemes"][0]
     assert lexeme["glossClean"] == "forest"
     assert lexeme["meaningMcEligible"] is True
@@ -2084,10 +2150,7 @@ def test_cloze_emit_compacts_builder_diagnostics_without_dropping_runtime_fields
         assert all(field not in item for field in ("number", "cefr", "lemma"))
         for option in item["options"]:
             assert "strategy" not in option
-            assert all(
-                key in option
-                for key in ("optionId", "label", "lemmaId", "kind", "case", "pos")
-            )
+            assert all(key in option for key in ("optionId", "label", "lemmaId", "kind", "case", "pos"))
 
 
 def test_size_budget_cloze_trim_prioritizes_unique_lemmas(capsys: pytest.CaptureFixture[str]) -> None:
@@ -2187,9 +2250,7 @@ def test_size_budget_uses_dedicated_cloze_limits() -> None:
     )
 
     assert len(shards["A1"]["cloze"]["cloze"]) == 1
-    assert shards["A1"]["cloze"]["sizeBudget"]["rawLimitBytes"] == int(
-        dedicated_budget["rawBytes"]
-    ) + 1
+    assert shards["A1"]["cloze"]["sizeBudget"]["rawLimitBytes"] == int(dedicated_budget["rawBytes"]) + 1
 
 
 def test_size_budget_surface_trim_prioritizes_cloze_coverage(capsys: pytest.CaptureFixture[str]) -> None:
@@ -2220,16 +2281,12 @@ def test_size_budget_surface_trim_prioritizes_cloze_coverage(capsys: pytest.Capt
     }
     lexemes = {
         "schema": "atlas-practice-lexemes",
-        "lexemes": [
-            {"lemmaId": lemma_id, "lemma": lemma_id, "padding": "x" * 1_500}
-            for lemma_id in lemma_ids
-        ],
+        "lexemes": [{"lemmaId": lemma_id, "lemma": lemma_id, "padding": "x" * 1_500} for lemma_id in lemma_ids],
     }
     cloze = {
         "schema": "atlas-practice-cloze",
         "cloze": [
-            {"clozeId": f"{lemma_id}:cloze:1", "lemmaId": lemma_id, "form": lemma_id}
-            for lemma_id in cloze_lemma_ids
+            {"clozeId": f"{lemma_id}:cloze:1", "lemmaId": lemma_id, "form": lemma_id} for lemma_id in cloze_lemma_ids
         ],
     }
     shards = {"A1": {"index": index, "lexemes": lexemes, "cloze": cloze}}
@@ -2285,10 +2342,7 @@ def test_size_budget_surface_trim_prioritizes_drill_modes_and_preserves_cross_le
     }
     lexemes = {
         "schema": "atlas-practice-lexemes",
-        "lexemes": [
-            {"lemmaId": lemma_id, "lemma": lemma_id, "padding": "x" * 1_500}
-            for lemma_id in lemma_ids
-        ],
+        "lexemes": [{"lemmaId": lemma_id, "lemma": lemma_id, "padding": "x" * 1_500} for lemma_id in lemma_ids],
     }
     synonym = {
         "schema": "atlas-practice-synonym",
@@ -2351,14 +2405,12 @@ def test_size_budget_trims_oversized_mode_without_cutting_cloze_surface(
     classify = {
         "schema": "atlas-practice-classify",
         "classify": [
-            {"classifyId": f"one:classify:{index}", "lemmaId": "one", "evidence": "x" * 500}
-            for index in range(12)
+            {"classifyId": f"one:classify:{index}", "lemmaId": "one", "evidence": "x" * 500} for index in range(12)
         ],
     }
     shards = {"A1": {"index": index, "lexemes": lexemes, "cloze": cloze, "classify": classify}}
     stable_budgets = [
-        generate_practice_deck._size_budget(payload, 1_000_000, 1_000_000)
-        for payload in (index, lexemes, cloze)
+        generate_practice_deck._size_budget(payload, 1_000_000, 1_000_000) for payload in (index, lexemes, cloze)
     ]
     raw_limit = max(int(budget["rawBytes"]) for budget in stable_budgets) + 500
     gzip_limit = max(int(budget["gzipBytes"]) for budget in stable_budgets) + 500
@@ -2373,10 +2425,7 @@ def test_size_budget_trims_oversized_mode_without_cutting_cloze_surface(
     assert len(shards["A1"]["classify"]["classify"]) < 12
     assert shards["A1"]["index"]["counts"]["cloze"] == 1
     assert shards["A1"]["index"]["counts"]["modeCounts"]["classify"] < 12
-    assert all(
-        payload["sizeBudget"]["ok"]
-        for payload in shards["A1"].values()
-    )
+    assert all(payload["sizeBudget"]["ok"] for payload in shards["A1"].values())
 
 
 def test_size_budget_skips_final_recompute_when_no_trim_occurs(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -2457,7 +2506,6 @@ def test_unverified_paradigm_is_blanked_not_dropped() -> None:
     lexeme = _build_lexeme(entry, verifier)
     assert lexeme is not None  # word kept
     assert lexeme["paradigm"] == {"cases": {}}  # unverified paradigm blanked
-
 
 
 def test_source_inventory_rows_stay_out_of_practice_by_default() -> None:
@@ -2621,11 +2669,7 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
         },
     ]
     shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig())
-    cloze_ids = {
-        item["lemmaId"]
-        for level in shards.values()
-        for item in level["cloze"]["cloze"]
-    }
+    cloze_ids = {item["lemmaId"] for level in shards.values() for item in level["cloze"]["cloze"]}
     assert "knyha" not in cloze_ids
 
     for entry in entries:
@@ -2634,11 +2678,7 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
             break
 
     shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig())
-    cloze_ids = {
-        item["lemmaId"]
-        for level in shards.values()
-        for item in level["cloze"]["cloze"]
-    }
+    cloze_ids = {item["lemmaId"] for level in shards.values() for item in level["cloze"]["cloze"]}
     assert "knyha" in cloze_ids
 
 
@@ -2691,9 +2731,7 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
 
     shards = build_practice_shards(
         read_manifest(MANIFEST),
-        ReviewedSourceAllowlist.from_payload(
-            [{"status": "sentence_inventory", "path": str(inventory_path)}]
-        ),
+        ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
         JsonVesumVerifier.from_path(VESUM),
         candidates,
         BuildConfig(),
@@ -2728,13 +2766,12 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
 
 
 def test_sentence_inventory_verifies_source_capitalization_against_normalized_vesum() -> None:
-    verifier = JsonVesumVerifier(
-        {"книга": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_naz"}]}
-    )
+    verifier = JsonVesumVerifier({"книга": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_naz"}]})
 
-    assert generate_practice_deck._inventory_form_details(
-        "книга", "noun", "Книга", verifier
-    ) == ("nominative", "singular")
+    assert generate_practice_deck._inventory_form_details("книга", "noun", "Книга", verifier) == (
+        "nominative",
+        "singular",
+    )
 
 
 def _agreement_verifier() -> JsonVesumVerifier:
@@ -2825,9 +2862,7 @@ def test_sentence_inventory_drops_function_identity_unless_curated(tmp_path: Pat
         JsonVesumVerifier({"та": [{"lemma": "та", "pos": "conj", "tags": "conj"}]}),
     )
     assert lexeme is not None
-    allowlist = ReviewedSourceAllowlist.from_payload(
-        [{"status": "sentence_inventory", "path": str(inventory_path)}]
-    )
+    allowlist = ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}])
     verifier = JsonVesumVerifier({"та": [{"lemma": "та", "pos": "conj", "tags": "conj"}]})
 
     assert _build_cloze_items(lexeme, candidates, allowlist, verifier, "deck-v6") == []
@@ -2909,12 +2944,8 @@ def test_inventory_identity_decoys_are_seeded_and_length_matched() -> None:
         "caseRule": {"ruleId": "nominative_identification"},
     }
 
-    first = generate_practice_deck._make_no_pair_options(
-        cloze, answer, lexemes, random.Random(0)
-    )
-    second = generate_practice_deck._make_no_pair_options(
-        cloze, answer, lexemes, random.Random(1)
-    )
+    first = generate_practice_deck._make_no_pair_options(cloze, answer, lexemes, random.Random(0))
+    second = generate_practice_deck._make_no_pair_options(cloze, answer, lexemes, random.Random(1))
     first_decoys = [option["label"] for option in first if option["kind"] != "answer"]
     second_decoys = [option["label"] for option in second if option["kind"] != "answer"]
 
@@ -3009,15 +3040,10 @@ def test_inventory_identity_decoys_render_normalized_lemmas_at_source_case() -> 
         "caseRule": {"ruleId": "nominative_identification"},
     }
 
-    options = generate_practice_deck._make_no_pair_options(
-        cloze, answer, lexemes, random.Random(0)
-    )
+    options = generate_practice_deck._make_no_pair_options(cloze, answer, lexemes, random.Random(0))
 
     assert len(options) == 4
-    assert all(
-        generate_practice_deck._initial_capitalization(option["label"])
-        for option in options
-    )
+    assert all(generate_practice_deck._initial_capitalization(option["label"]) for option in options)
     assert validate_option_set({**cloze, "options": options}) == []
 
 
@@ -3038,9 +3064,7 @@ def test_inventory_identity_decoys_render_normalized_lemmas_at_source_case() -> 
         ("intj", "interjection"),
     ],
 )
-def test_option_pos_bucket_normalizes_unambiguous_manifest_aliases(
-    manifest_pos: str, expected_bucket: str
-) -> None:
+def test_option_pos_bucket_normalizes_unambiguous_manifest_aliases(manifest_pos: str, expected_bucket: str) -> None:
     assert generate_practice_deck._option_pos_bucket(manifest_pos) == expected_bucket
 
 
@@ -3175,9 +3199,7 @@ def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
     candidates = read_sentence_inventory(inventory_path)
     shards = build_practice_shards(
         entries,
-        ReviewedSourceAllowlist.from_payload(
-            [{"status": "sentence_inventory", "path": str(inventory_path)}]
-        ),
+        ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
         JsonVesumVerifier.from_path(vesum_path),
         candidates,
         BuildConfig(target=len(entries), source_label="fixture"),
@@ -3187,9 +3209,7 @@ def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
         ("A1", "apostrof", "noun"),
         ("A2", "analogichno", "adverb"),
     ):
-        cloze = next(
-            item for item in shards[level]["cloze"]["cloze"] if item["lemmaId"] == lemma_id
-        )
+        cloze = next(item for item in shards[level]["cloze"]["cloze"] if item["lemmaId"] == lemma_id)
         assert cloze["provenance"]["status"] == "sentence_inventory"
         assert cloze["attribution"] == {
             "source": "fixture-textbook",
@@ -3242,19 +3262,13 @@ def test_sentence_inventory_rejects_nominative_plural_for_dictionary_form(tmp_pa
     candidates = read_sentence_inventory(inventory_path)
     shards = build_practice_shards(
         read_manifest(MANIFEST),
-        ReviewedSourceAllowlist.from_payload(
-            [{"status": "sentence_inventory", "path": str(inventory_path)}]
-        ),
+        ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
         JsonVesumVerifier.from_path(VESUM),
         candidates,
         BuildConfig(),
     )
 
-    assert all(
-        item["clozeId"] != "knyha:inventory:1"
-        for level in shards.values()
-        for item in level["cloze"]["cloze"]
-    )
+    assert all(item["clozeId"] != "knyha:inventory:1" for level in shards.values() for item in level["cloze"]["cloze"])
 
 
 @pytest.mark.parametrize("license_status", ["not_openly_licensed", "copyrighted_source"])
@@ -3290,19 +3304,13 @@ def test_sentence_inventory_rejects_restricted_cloze_without_displayable_attribu
 
     shards = build_practice_shards(
         read_manifest(MANIFEST),
-        ReviewedSourceAllowlist.from_payload(
-            [{"status": "sentence_inventory", "path": str(inventory_path)}]
-        ),
+        ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
         JsonVesumVerifier.from_path(VESUM),
         read_sentence_inventory(inventory_path),
         BuildConfig(),
     )
 
-    assert all(
-        item["clozeId"] != "knyha:inventory:1"
-        for level in shards.values()
-        for item in level["cloze"]["cloze"]
-    )
+    assert all(item["clozeId"] != "knyha:inventory:1" for level in shards.values() for item in level["cloze"]["cloze"])
 
 
 def test_sentence_inventory_rejects_ambiguous_or_repeated_target_forms(tmp_path: Path) -> None:
@@ -3420,9 +3428,7 @@ def test_cloze_decoys_do_not_exceed_answer_cefr() -> None:
         },
     ]
 
-    assert _eligible_decoys(answer, lexemes, "accusative", "singular") == [
-        (lexemes[1], "школу")
-    ]
+    assert _eligible_decoys(answer, lexemes, "accusative", "singular") == [(lexemes[1], "школу")]
 
 
 def _tatoeba_cloze_source() -> dict[str, object]:
@@ -3565,7 +3571,9 @@ def test_heritage_curated_distractors_win() -> None:
     filtered_lexemes = [l for l in lexemes if l["lemmaId"] != "yabluko"]
 
     verifier = JsonVesumVerifier.from_path(VESUM)
-    items = _build_heritage_items(pair, lexemes[0], filtered_lexemes, "deck-v1", verifier=verifier, public_options=False)
+    items = _build_heritage_items(
+        pair, lexemes[0], filtered_lexemes, "deck-v1", verifier=verifier, public_options=False
+    )
 
     assert len(items) == 1
     options = items[0]["options"]
@@ -3612,10 +3620,12 @@ def test_heritage_curated_distractors_allow_items_without_peers() -> None:
     }
 
     all_lexemes = [lexeme]
-    verifier = JsonVesumVerifier({
-        "можна": [{"lemma": "можна", "pos": "noninfl"}],
-        "варто": [{"lemma": "варто", "pos": "noninfl"}],
-    })
+    verifier = JsonVesumVerifier(
+        {
+            "можна": [{"lemma": "можна", "pos": "noninfl"}],
+            "варто": [{"lemma": "варто", "pos": "noninfl"}],
+        }
+    )
 
     items = _build_heritage_items(pair, lexeme, all_lexemes, "deck-v1", verifier=verifier, public_options=False)
 
@@ -3628,8 +3638,26 @@ def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
     # Use real fixture with valid slugs that exist in manifest subset for this test
     # Fallback to synthetic entries + pairs when direct lexeme match needed.
     entries = [
-        {"lemmaId": "адресант", "lemma": "адресант", "gloss": "sender", "pos": "noun", "cefr": "B2", "url_slug": "адресант", "primary_source": "course_vocab", "course_usage": [{"track": "b2"}]},
-        {"lemmaId": "адресат", "lemma": "адресат", "gloss": "addressee", "pos": "noun", "cefr": "B1", "url_slug": "адресат", "primary_source": "course_vocab", "course_usage": [{"track": "b2"}]},
+        {
+            "lemmaId": "адресант",
+            "lemma": "адресант",
+            "gloss": "sender",
+            "pos": "noun",
+            "cefr": "B2",
+            "url_slug": "адресант",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "b2"}],
+        },
+        {
+            "lemmaId": "адресат",
+            "lemma": "адресат",
+            "gloss": "addressee",
+            "pos": "noun",
+            "cefr": "B1",
+            "url_slug": "адресат",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "b2"}],
+        },
     ]
     pair = {
         "slugA": "адресант",
@@ -3637,8 +3665,18 @@ def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
         "distinction_gloss_uk": "Адресант надсилає; адресат отримує.",
         "citations": ["fixture-test"],
         "frames": [
-            {"sentence_with_slot": "___ надіслав лист.", "answer_form": "Адресант", "confusable_form": "Адресат", "origin": "t"},
-            {"sentence_with_slot": "Лист для ___.", "answer_form": "адресата", "confusable_form": "адресанта", "origin": "t2"},
+            {
+                "sentence_with_slot": "___ надіслав лист.",
+                "answer_form": "Адресант",
+                "confusable_form": "Адресат",
+                "origin": "t",
+            },
+            {
+                "sentence_with_slot": "Лист для ___.",
+                "answer_form": "адресата",
+                "confusable_form": "адресанта",
+                "origin": "t2",
+            },
         ],
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
@@ -3660,8 +3698,26 @@ def test_paronym_apostrophe_slug_resolves_via_plain_lemma_fallback(capsys: pytes
     # real url_slug, e.g. "пам-ятка"), so slugA/slugB carrying the apostrophe
     # spelling must resolve through by_plain_lemma, not slug_to_lex/lexemes_by_id.
     entries = [
-        {"lemmaId": "пам-ятка", "lemma": "пам'ятка", "gloss": "landmark", "pos": "noun", "cefr": "A2", "url_slug": "пам-ятка", "primary_source": "course_vocab", "course_usage": [{"track": "a2"}]},
-        {"lemmaId": "пам-ятник", "lemma": "пам'ятник", "gloss": "monument", "pos": "noun", "cefr": "A1", "url_slug": "пам-ятник", "primary_source": "course_vocab", "course_usage": [{"track": "a1"}]},
+        {
+            "lemmaId": "пам-ятка",
+            "lemma": "пам'ятка",
+            "gloss": "landmark",
+            "pos": "noun",
+            "cefr": "A2",
+            "url_slug": "пам-ятка",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "a2"}],
+        },
+        {
+            "lemmaId": "пам-ятник",
+            "lemma": "пам'ятник",
+            "gloss": "monument",
+            "pos": "noun",
+            "cefr": "A1",
+            "url_slug": "пам-ятник",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "a1"}],
+        },
     ]
     pair = {
         "slugA": "пам'ятка",
@@ -3669,8 +3725,18 @@ def test_paronym_apostrophe_slug_resolves_via_plain_lemma_fallback(capsys: pytes
         "distinction_gloss_uk": "Пам'ятка — предмет давнини; пам'ятник — споруда на честь особи.",
         "citations": ["fixture-test"],
         "frames": [
-            {"sentence_with_slot": "Це видатна архітектурна ___.", "answer_form": "пам'ятка", "confusable_form": "пам'ятник", "origin": "t"},
-            {"sentence_with_slot": "На площі встановили ___.", "answer_form": "пам'ятник", "confusable_form": "пам'ятку", "origin": "t2"},
+            {
+                "sentence_with_slot": "Це видатна архітектурна ___.",
+                "answer_form": "пам'ятка",
+                "confusable_form": "пам'ятник",
+                "origin": "t",
+            },
+            {
+                "sentence_with_slot": "На площі встановили ___.",
+                "answer_form": "пам'ятник",
+                "confusable_form": "пам'ятку",
+                "origin": "t2",
+            },
         ],
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
@@ -3691,13 +3757,15 @@ def test_paronym_builder_copies_optional_curated_prompt_en() -> None:
         "slugB": "бігти",
         "distinction_gloss_uk": "Бігати регулярно, бігти конкретно зараз.",
         "citations": ["fixture-test"],
-        "frames": [{
-            "sentence_with_slot": "Він ___ вранці.",
-            "prompt_en": "He ___ in the morning.",
-            "answer_form": "бігає",
-            "confusable_form": "біжить",
-            "origin": "fixture",
-        }],
+        "frames": [
+            {
+                "sentence_with_slot": "Він ___ вранці.",
+                "prompt_en": "He ___ in the morning.",
+                "answer_form": "бігає",
+                "confusable_form": "біжить",
+                "origin": "fixture",
+            }
+        ],
     }
 
     item = _build_paronym_items(pair, lex_a, lex_b, "deck-v1")[0]
@@ -3713,8 +3781,25 @@ def test_paronym_builder_copies_optional_curated_prompt_en() -> None:
 
 
 def test_paronym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
-    entries = [{"lemmaId": "foo", "lemma": "foo", "gloss": "x", "pos": "noun", "cefr": "B1", "url_slug": "foo", "primary_source": "course_vocab", "course_usage": [{"track": "b1"}]}]
-    pair = {"slugA": "missingA", "slugB": "missingB", "distinction_gloss_uk": "x", "citations": ["t"], "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}]}
+    entries = [
+        {
+            "lemmaId": "foo",
+            "lemma": "foo",
+            "gloss": "x",
+            "pos": "noun",
+            "cefr": "B1",
+            "url_slug": "foo",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "b1"}],
+        }
+    ]
+    pair = {
+        "slugA": "missingA",
+        "slugB": "missingB",
+        "distinction_gloss_uk": "x",
+        "citations": ["t"],
+        "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}],
+    }
     allowlist = ReviewedSourceAllowlist.from_payload([])
     verifier = JsonVesumVerifier({})
     shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(), paronym_pairs=[pair])
@@ -3731,13 +3816,26 @@ def test_paronym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pyte
     err = capsys.readouterr().err
     assert "curated paronym pairs empty" in err
     # build with [] yields no paronym items (fail-closed)
-    entries = [{"lemmaId": "a", "lemma": "a", "gloss": "g", "pos": "n", "cefr": "B1", "url_slug": "a", "primary_source": "c", "course_usage": [{}]}]
-    shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), paronym_pairs=[])
+    entries = [
+        {
+            "lemmaId": "a",
+            "lemma": "a",
+            "gloss": "g",
+            "pos": "n",
+            "cefr": "B1",
+            "url_slug": "a",
+            "primary_source": "c",
+            "course_usage": [{}],
+        }
+    ]
+    shards = build_practice_shards(
+        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), paronym_pairs=[]
+    )
     assert shards["B1"]["paronym"]["paronym"] == []
 
 
 def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
-    live_path = Path("data/lexicon/paronym_pairs.yaml")
+    live_path = Path("registry/lexicon/paronym_pairs.yaml")
     assert live_path.exists()
     pairs = read_paronym_pairs(live_path)
     # 102 base pairs (#6338) + 95 densified pairs (#8276) = 197 total pairs.
@@ -3747,15 +3845,36 @@ def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
         errors = validate_paronym_pair(pair)
         assert not errors, f"Pair {index} ({pair.get('slugA')}/{pair.get('slugB')}) invalid: {errors}"
         import unicodedata
+
         a = unicodedata.normalize("NFC", pair["slugA"].strip().lower())
         b = unicodedata.normalize("NFC", pair["slugB"].strip().lower())
         key = tuple(sorted([a, b]))
         assert key not in seen_pairs, f"Duplicate paronym pair key {key}"
         seen_pairs.add(key)
+
+
 def test_antonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.CaptureFixture[str]) -> None:
     entries = [
-        {"lemmaId": "день", "lemma": "день", "gloss": "day", "pos": "noun", "cefr": "A1", "url_slug": "день", "primary_source": "course_vocab", "course_usage": [{"track": "a1"}]},
-        {"lemmaId": "ніч", "lemma": "ніч", "gloss": "night", "pos": "noun", "cefr": "A1", "url_slug": "ніч", "primary_source": "course_vocab", "course_usage": [{"track": "a1"}]},
+        {
+            "lemmaId": "день",
+            "lemma": "день",
+            "gloss": "day",
+            "pos": "noun",
+            "cefr": "A1",
+            "url_slug": "день",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "a1"}],
+        },
+        {
+            "lemmaId": "ніч",
+            "lemma": "ніч",
+            "gloss": "night",
+            "pos": "noun",
+            "cefr": "A1",
+            "url_slug": "ніч",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "a1"}],
+        },
     ]
     pair = {
         "slugA": "день",
@@ -3785,13 +3904,15 @@ def test_antonym_builder_copies_optional_curated_prompt_en() -> None:
         "slugB": "малий",
         "distinction_gloss_uk": "Великий проти малий.",
         "citations": ["fixture-test"],
-        "frames": [{
-            "sentence_with_slot": "Це ___ будинок.",
-            "prompt_en": "This is a ___ house.",
-            "answer_form": "великий",
-            "confusable_form": "малий",
-            "origin": "fixture",
-        }],
+        "frames": [
+            {
+                "sentence_with_slot": "Це ___ будинок.",
+                "prompt_en": "This is a ___ house.",
+                "answer_form": "великий",
+                "confusable_form": "малий",
+                "origin": "fixture",
+            }
+        ],
     }
 
     item = _build_antonym_items(pair, lex_a, lex_b, "deck-v1")[0]
@@ -3803,8 +3924,25 @@ def test_antonym_builder_copies_optional_curated_prompt_en() -> None:
 
 
 def test_antonym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
-    entries = [{"lemmaId": "foo", "lemma": "foo", "gloss": "x", "pos": "noun", "cefr": "B1", "url_slug": "foo", "primary_source": "course_vocab", "course_usage": [{"track": "b1"}]}]
-    pair = {"slugA": "missingA", "slugB": "missingB", "distinction_gloss_uk": "x", "citations": ["t"], "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}]}
+    entries = [
+        {
+            "lemmaId": "foo",
+            "lemma": "foo",
+            "gloss": "x",
+            "pos": "noun",
+            "cefr": "B1",
+            "url_slug": "foo",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "b1"}],
+        }
+    ]
+    pair = {
+        "slugA": "missingA",
+        "slugB": "missingB",
+        "distinction_gloss_uk": "x",
+        "citations": ["t"],
+        "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}],
+    }
     allowlist = ReviewedSourceAllowlist.from_payload([])
     verifier = JsonVesumVerifier({})
     shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(), antonym_pairs=[pair])
@@ -3820,13 +3958,26 @@ def test_antonym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pyte
     assert rows == []
     err = capsys.readouterr().err
     assert "curated antonym pairs empty" in err
-    entries = [{"lemmaId": "a", "lemma": "a", "gloss": "g", "pos": "n", "cefr": "B1", "url_slug": "a", "primary_source": "c", "course_usage": [{}]}]
-    shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), antonym_pairs=[])
+    entries = [
+        {
+            "lemmaId": "a",
+            "lemma": "a",
+            "gloss": "g",
+            "pos": "n",
+            "cefr": "B1",
+            "url_slug": "a",
+            "primary_source": "c",
+            "course_usage": [{}],
+        }
+    ]
+    shards = build_practice_shards(
+        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), antonym_pairs=[]
+    )
     assert shards["B1"]["antonym"]["antonym"] == []
 
 
 def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
-    live_path = Path("data/lexicon/antonym_pairs.yaml")
+    live_path = Path("registry/lexicon/antonym_pairs.yaml")
     assert live_path.exists()
     pairs = read_antonym_pairs(live_path)
     assert len(pairs) == 1126, f"Expected 1126 reviewed antonym pairs, got {len(pairs)}"
@@ -3835,6 +3986,7 @@ def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
         errors = validate_antonym_pair(pair)
         assert not errors, f"Pair {index} ({pair.get('slugA')}/{pair.get('slugB')}) invalid: {errors}"
         import unicodedata
+
         a = unicodedata.normalize("NFC", pair["slugA"].strip().lower())
         b = unicodedata.normalize("NFC", pair["slugB"].strip().lower())
         key = tuple(sorted([a, b]))
@@ -3844,7 +3996,16 @@ def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
 
 def test_homonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.CaptureFixture[str]) -> None:
     entries = [
-        {"lemmaId": "байка", "lemma": "байка", "gloss": "fable/fabric", "pos": "noun", "cefr": "A1", "url_slug": "байка", "primary_source": "course_vocab", "course_usage": [{"track": "a1"}]},
+        {
+            "lemmaId": "байка",
+            "lemma": "байка",
+            "gloss": "fable/fabric",
+            "pos": "noun",
+            "cefr": "A1",
+            "url_slug": "байка",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "a1"}],
+        },
     ]
     pair = {
         "slugA": "байка",
@@ -3852,8 +4013,18 @@ def test_homonym_pairs_emit_items_both_directions_and_validate(capsys: pytest.Ca
         "distinction_gloss_uk": "Байка — алегоричний твір чи м'яка тканина.",
         "citations": ["fixture-test"],
         "frames": [
-            {"sentence_with_slot": "Езоп написав ___.", "answer_form": "байку", "confusable_form": "байку", "origin": "t"},
-            {"sentence_with_slot": "Сорочка з м'якої ___.", "answer_form": "байки", "confusable_form": "байки", "origin": "t2"},
+            {
+                "sentence_with_slot": "Езоп написав ___.",
+                "answer_form": "байку",
+                "confusable_form": "байку",
+                "origin": "t",
+            },
+            {
+                "sentence_with_slot": "Сорочка з м'якої ___.",
+                "answer_form": "байки",
+                "confusable_form": "байки",
+                "origin": "t2",
+            },
         ],
     }
     allowlist = ReviewedSourceAllowlist.from_payload([])
@@ -3874,13 +4045,15 @@ def test_homonym_builder_copies_optional_curated_prompt_en() -> None:
         "slugB": "байка",
         "distinction_gloss_uk": "Байка розрізнення.",
         "citations": ["fixture-test"],
-        "frames": [{
-            "sentence_with_slot": "Езоп написав ___.",
-            "prompt_en": "Aesop wrote a ___.",
-            "answer_form": "байку",
-            "confusable_form": "байку",
-            "origin": "fixture",
-        }],
+        "frames": [
+            {
+                "sentence_with_slot": "Езоп написав ___.",
+                "prompt_en": "Aesop wrote a ___.",
+                "answer_form": "байку",
+                "confusable_form": "байку",
+                "origin": "fixture",
+            }
+        ],
     }
 
     item = _build_homonym_items(pair, lex_a, lex_b, "deck-v1")[0]
@@ -3892,8 +4065,25 @@ def test_homonym_builder_copies_optional_curated_prompt_en() -> None:
 
 
 def test_homonym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
-    entries = [{"lemmaId": "foo", "lemma": "foo", "gloss": "x", "pos": "noun", "cefr": "B1", "url_slug": "foo", "primary_source": "course_vocab", "course_usage": [{"track": "b1"}]}]
-    pair = {"slugA": "missingA", "slugB": "missingB", "distinction_gloss_uk": "x", "citations": ["t"], "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}]}
+    entries = [
+        {
+            "lemmaId": "foo",
+            "lemma": "foo",
+            "gloss": "x",
+            "pos": "noun",
+            "cefr": "B1",
+            "url_slug": "foo",
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": "b1"}],
+        }
+    ]
+    pair = {
+        "slugA": "missingA",
+        "slugB": "missingB",
+        "distinction_gloss_uk": "x",
+        "citations": ["t"],
+        "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}],
+    }
     allowlist = ReviewedSourceAllowlist.from_payload([])
     verifier = JsonVesumVerifier({})
     shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(), homonym_pairs=[pair])
@@ -3909,13 +4099,26 @@ def test_homonym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pyte
     assert rows == []
     err = capsys.readouterr().err
     assert "curated homonym pairs empty" in err
-    entries = [{"lemmaId": "a", "lemma": "a", "gloss": "g", "pos": "n", "cefr": "B1", "url_slug": "a", "primary_source": "c", "course_usage": [{}]}]
-    shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), homonym_pairs=[])
+    entries = [
+        {
+            "lemmaId": "a",
+            "lemma": "a",
+            "gloss": "g",
+            "pos": "n",
+            "cefr": "B1",
+            "url_slug": "a",
+            "primary_source": "c",
+            "course_usage": [{}],
+        }
+    ]
+    shards = build_practice_shards(
+        entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), homonym_pairs=[]
+    )
     assert shards["B1"]["homonym"]["homonym"] == []
 
 
 def test_live_homonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
-    live_path = Path("data/lexicon/homonym_pairs.yaml")
+    live_path = Path("registry/lexicon/homonym_pairs.yaml")
     assert live_path.exists()
     pairs = read_homonym_pairs(live_path)
     # 75 base pairs + 22 densified pairs (#8276) = 97 total pairs.
@@ -3942,17 +4145,13 @@ def test_vesum_number_key_and_lemma_search_paradigm():
             "стара": [{"lemma": "старий", "pos": "adj", "tags": "adj:v_naz:s"}],
         }
     )
-    paradigm = generate_practice_deck._paradigm_from_vesum_lemma_search(
-        "новий", "adj", verifier
-    )
+    paradigm = generate_practice_deck._paradigm_from_vesum_lemma_search("новий", "adj", verifier)
     cases = paradigm.get("cases") or {}
     assert cases.get("genitive", {}).get("singular") == "нового"
     assert cases.get("dative", {}).get("singular") == "новому"
     assert cases.get("instrumental", {}).get("singular") == "новим"
     # Casefold lemma match for fixture search.
-    paradigm2 = generate_practice_deck._paradigm_from_vesum_lemma_search(
-        "Новий", "adj", verifier
-    )
+    paradigm2 = generate_practice_deck._paradigm_from_vesum_lemma_search("Новий", "adj", verifier)
     assert (paradigm2.get("cases") or {}).get("genitive", {}).get("singular") == "нового"
 
 
@@ -3964,31 +4163,72 @@ def imperative_conn():
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, tags TEXT, pos TEXT)")
     paradigms = {
-        "робити": ("imperf", {"impr:s:2": ["роби"], "impr:p:1": ["робімо", "робім"],
-                              "impr:p:2": ["робіть", "робіте"], "pres:s:2": ["робиш"],
-                              "pres:p:1": ["робимо"], "pres:p:2": ["робите"],
-                              "futr:s:2": ["робитимеш"], "futr:p:1": ["робитимемо"],
-                              "futr:p:2": ["робитимете"]}),
-        "робитися": ("imperf", {"impr:s:2": ["робися", "робись"],
-                                "impr:p:1": ["робімося", "робімось", "робімся"],
-                                "impr:p:2": ["робіться"]}),
-        "поставити": ("perf", {"impr:s:2": ["постав"], "impr:p:1": ["поставмо"],
-                               "impr:p:2": ["поставте"],
-                               "futr:s:2": ["поставиш"], "futr:p:1": ["поставимо"],
-                               "futr:p:2": ["поставите"]}),
-        "провітрити": ("perf", {"impr:s:2": ["провітри"], "impr:p:1": ["провітрімо", "провітрім"],
-                                "impr:p:2": ["провітріть"],
-                                "futr:s:2": ["провітриш"], "futr:p:1": ["провітримо"],
-                                "futr:p:2": ["провітрите"]}),
-        "ходити": ("imperf", {"impr:s:2": ["ходи"], "impr:p:1": ["ходімо", "ходім"],
-                              "impr:p:2": ["ходіть", "ходіте"], "impr:p:1:subst": ["ходімте"],
-                              "pres:s:2": ["ходиш"], "pres:p:1": ["ходимо"], "pres:p:2": ["ходите"]}),
+        "робити": (
+            "imperf",
+            {
+                "impr:s:2": ["роби"],
+                "impr:p:1": ["робімо", "робім"],
+                "impr:p:2": ["робіть", "робіте"],
+                "pres:s:2": ["робиш"],
+                "pres:p:1": ["робимо"],
+                "pres:p:2": ["робите"],
+                "futr:s:2": ["робитимеш"],
+                "futr:p:1": ["робитимемо"],
+                "futr:p:2": ["робитимете"],
+            },
+        ),
+        "робитися": (
+            "imperf",
+            {
+                "impr:s:2": ["робися", "робись"],
+                "impr:p:1": ["робімося", "робімось", "робімся"],
+                "impr:p:2": ["робіться"],
+            },
+        ),
+        "поставити": (
+            "perf",
+            {
+                "impr:s:2": ["постав"],
+                "impr:p:1": ["поставмо"],
+                "impr:p:2": ["поставте"],
+                "futr:s:2": ["поставиш"],
+                "futr:p:1": ["поставимо"],
+                "futr:p:2": ["поставите"],
+            },
+        ),
+        "провітрити": (
+            "perf",
+            {
+                "impr:s:2": ["провітри"],
+                "impr:p:1": ["провітрімо", "провітрім"],
+                "impr:p:2": ["провітріть"],
+                "futr:s:2": ["провітриш"],
+                "futr:p:1": ["провітримо"],
+                "futr:p:2": ["провітрите"],
+            },
+        ),
+        "ходити": (
+            "imperf",
+            {
+                "impr:s:2": ["ходи"],
+                "impr:p:1": ["ходімо", "ходім"],
+                "impr:p:2": ["ходіть", "ходіте"],
+                "impr:p:1:subst": ["ходімте"],
+                "pres:s:2": ["ходиш"],
+                "pres:p:1": ["ходимо"],
+                "pres:p:2": ["ходите"],
+            },
+        ),
     }
-    conn.executemany("INSERT INTO forms VALUES (?, ?, ?, 'verb')", [
-        (form, lemma, f"verb:{aspect}:{tags}")
-        for lemma, (aspect, slots) in paradigms.items()
-        for tags, forms in slots.items() for form in forms
-    ])
+    conn.executemany(
+        "INSERT INTO forms VALUES (?, ?, ?, 'verb')",
+        [
+            (form, lemma, f"verb:{aspect}:{tags}")
+            for lemma, (aspect, slots) in paradigms.items()
+            for tags, forms in slots.items()
+            for form in forms
+        ],
+    )
     yield conn
     conn.close()
 
@@ -4004,7 +4244,9 @@ def imperative_plain_stress(monkeypatch):
 
 def _imperative_test_items(conn, lemma="робити", cefr="A1"):
     return generate_practice_deck._build_imperative_items(
-        {"lemmaId": lemma, "lemma": lemma, "lemmaPlain": lemma, "pos": "verb"}, conn, cefr,
+        {"lemmaId": lemma, "lemma": lemma, "lemmaPlain": lemma, "pos": "verb"},
+        conn,
+        cefr,
     )
 
 
@@ -4018,8 +4260,9 @@ def test_imperative_three_slots_variants_and_contract(imperative_conn, imperativ
         assert generate_practice_deck.validate_imperative_item(item) == []
         assert item["srsKey"] == f"робити::imperative::{item['slot']}"
         assert len(item["options"]) == 4
-        assert all(option["text"] not in item["acceptedAnswers"]
-                   for option in item["options"] if not option["isCorrect"])
+        assert all(
+            option["text"] not in item["acceptedAnswers"] for option in item["options"] if not option["isCorrect"]
+        )
         assert all(option.get("explanationEn") for option in item["options"] if not option["isCorrect"])
     assert items == _imperative_test_items(imperative_conn)
 
@@ -4045,9 +4288,12 @@ def test_imperative_taxonomy_uses_attested_slots_and_present(imperative_conn, im
                 codes.add(code)
                 if code in {"WRONG_PERSON", "WRONG_MOOD"}:
                     tags = imperative_conn.execute(
-                        "SELECT tags FROM forms WHERE word_form=? AND lemma=?", (option["text"], lemma),
+                        "SELECT tags FROM forms WHERE word_form=? AND lemma=?",
+                        (option["text"], lemma),
                     ).fetchone()[0]
-                    assert (":impr:" if code == "WRONG_PERSON" else (":pres:" if ":pres:" in tags else ":futr:")) in tags
+                    assert (
+                        ":impr:" if code == "WRONG_PERSON" else (":pres:" if ":pres:" in tags else ":futr:")
+                    ) in tags
                     if code == "WRONG_MOOD":
                         assert "теперішній" not in option["explanationUk"]
                         assert "present" not in option.get("explanationEn", "").lower()
@@ -4092,14 +4338,18 @@ def test_imperative_stress_and_ambiguous_readings(imperative_conn, monkeypatch):
 
 
 def test_imperative_excludes_marked_forms_and_exact_tag_mismatches(imperative_conn, imperative_plain_stress):
-    imperative_conn.executemany("INSERT INTO forms VALUES (?, 'робити', ?, 'verb')", [
-        ("marked", "verb:imperf:impr:p:1:arch"),
-        ("wrong-person", "verb:imperf:impr:p:12"),
-        ("future", "verb:imperf:futr:p:1"),
-    ])
+    imperative_conn.executemany(
+        "INSERT INTO forms VALUES (?, 'робити', ?, 'verb')",
+        [
+            ("marked", "verb:imperf:impr:p:1:arch"),
+            ("wrong-person", "verb:imperf:impr:p:12"),
+            ("future", "verb:imperf:futr:p:1"),
+        ],
+    )
     items = _imperative_test_items(imperative_conn)
-    assert all(answer not in {"marked", "wrong-person", "future"}
-               for item in items for answer in item["acceptedAnswers"])
+    assert all(
+        answer not in {"marked", "wrong-person", "future"} for item in items for answer in item["acceptedAnswers"]
+    )
 
 
 def test_imperative_validator_rejects_stress_normalized_collisions(imperative_conn, imperative_plain_stress):
@@ -4115,11 +4365,20 @@ def test_imperative_fixture_integration_includes_index_and_counts(imperative_con
     for form, lemma, tags, pos in imperative_conn.execute("SELECT * FROM forms"):
         payload.setdefault(form, []).append({"lemma": lemma, "tags": tags, "pos": pos})
     payload["робити"] = [{"lemma": "робити", "tags": "verb:imperf:inf", "pos": "verb"}]
-    entries = [{"lemma": "робити", "url_slug": "робити", "pos": "verb",
-                "enrichment": {"cefr": {"level": "A1"}}, "gloss": "do",
-                "course_usage": [{"module": "fixture"}]}]
+    entries = [
+        {
+            "lemma": "робити",
+            "url_slug": "робити",
+            "pos": "verb",
+            "enrichment": {"cefr": {"level": "A1"}},
+            "gloss": "do",
+            "course_usage": [{"module": "fixture"}],
+        }
+    ]
     shards = build_practice_shards(
-        entries, ReviewedSourceAllowlist(frozenset()), JsonVesumVerifier(payload),
+        entries,
+        ReviewedSourceAllowlist(frozenset()),
+        JsonVesumVerifier(payload),
         config=BuildConfig(target=1, source_label="fixture"),
     )
     assert len(shards["A1"]["imperative"]["imperative"]) == 3
@@ -4130,13 +4389,22 @@ def test_imperative_fixture_integration_includes_index_and_counts(imperative_con
 def test_imperative_preserves_monosyllables(imperative_conn, monkeypatch):
     from scripts.verification import stress
 
-    imperative_conn.executemany("INSERT INTO forms VALUES (?, 'бути', ?, 'verb')", [
-        ("будь", "verb:imperf:impr:s:2"), ("будьмо", "verb:imperf:impr:p:1"),
-        ("будьте", "verb:imperf:impr:p:2"),
-    ])
-    monkeypatch.setattr(stress, "verify_stress", lambda word, **kw: {
-        "status": "invalid_input" if word == "будь" else "not_found", "matches": [],
-    })
+    imperative_conn.executemany(
+        "INSERT INTO forms VALUES (?, 'бути', ?, 'verb')",
+        [
+            ("будь", "verb:imperf:impr:s:2"),
+            ("будьмо", "verb:imperf:impr:p:1"),
+            ("будьте", "verb:imperf:impr:p:2"),
+        ],
+    )
+    monkeypatch.setattr(
+        stress,
+        "verify_stress",
+        lambda word, **kw: {
+            "status": "invalid_input" if word == "будь" else "not_found",
+            "matches": [],
+        },
+    )
     items = _imperative_test_items(imperative_conn, "бути")
     assert [item["target"] for item in items] == ["будь", "будьмо", "будьте"]
 
@@ -4144,9 +4412,18 @@ def test_imperative_preserves_monosyllables(imperative_conn, monkeypatch):
 def test_imperative_rejects_multiple_accents_in_one_oracle_reading(imperative_conn, monkeypatch):
     from scripts.verification import stress
 
-    monkeypatch.setattr(stress, "verify_stress", lambda word, **kw: {
-        "status": "ok", "matches": [{"stressed_form": "ро́бі́мо", "vowel_indices": [1, 3]}],
-    } if word == "робімо" else {"status": "not_found", "matches": []})
+    monkeypatch.setattr(
+        stress,
+        "verify_stress",
+        lambda word, **kw: (
+            {
+                "status": "ok",
+                "matches": [{"stressed_form": "ро́бі́мо", "vowel_indices": [1, 3]}],
+            }
+            if word == "робімо"
+            else {"status": "not_found", "matches": []}
+        ),
+    )
     assert "1pl" not in {item["slot"] for item in _imperative_test_items(imperative_conn)}
 
 
@@ -4165,20 +4442,23 @@ def test_pos_parse_cache_preserves_input_handling_and_result_isolation():
 def test_budget_raw_rejection_keeps_later_small_cards_and_measures_final_bytes(kind):
     import gzip
 
-    original = {"A1": {kind: {
-        "schema": f"atlas-practice-{kind}",
-        kind: [
-            {"lemmaId": "one", "id": "first", "evidence": "x" * 500},
-            {"lemmaId": "one", "id": "too-large", "evidence": "x" * 1800},
-            {"lemmaId": "one", "id": "later-small", "evidence": "x" * 60},
-            {"lemmaId": "one", "id": "last", "evidence": "x" * 300},
-        ],
-    }}}
+    original = {
+        "A1": {
+            kind: {
+                "schema": f"atlas-practice-{kind}",
+                kind: [
+                    {"lemmaId": "one", "id": "first", "evidence": "x" * 500},
+                    {"lemmaId": "one", "id": "too-large", "evidence": "x" * 1800},
+                    {"lemmaId": "one", "id": "later-small", "evidence": "x" * 60},
+                    {"lemmaId": "one", "id": "last", "evidence": "x" * 300},
+                ],
+            }
+        }
+    }
     results = []
     for _ in range(2):
         shards = json.loads(json.dumps(original))
-        apply_size_budgets(shards, raw_limit=1000, gzip_limit=10000,
-                           cloze_raw_limit=1500, cloze_gzip_limit=10000)
+        apply_size_budgets(shards, raw_limit=1000, gzip_limit=10000, cloze_raw_limit=1500, cloze_gzip_limit=10000)
         payload = shards["A1"][kind]
         retained = {item["id"] for item in payload[kind]}
         assert "too-large" not in retained
@@ -4319,9 +4599,7 @@ def test_imperative_coverage_threshold_and_zero_collision():
                             f"Normalized distractor collision in {it['id']}: {opt['text']}"
                         )
 
-    assert len(lemmas_with_imperative) == 1050, (
-        f"Expected 1,050 unique lemmas, got {len(lemmas_with_imperative)}"
-    )
+    assert len(lemmas_with_imperative) == 1050, f"Expected 1,050 unique lemmas, got {len(lemmas_with_imperative)}"
     assert total_items == 3137, f"Expected 3,137 items, got {total_items}"
     assert by_level == {"A1": 279, "A2": 655, "B1": 1089, "B2": 721, "C1": 393}, (
         f"Level distribution mismatch: {by_level}"
@@ -4368,9 +4646,7 @@ def test_imperative_held_out_stratified_audit_200_items():
         accepted_plain = {_plain(a) for a in it["acceptedAnswers"]}
         for opt in it["options"]:
             if not opt["isCorrect"]:
-                assert opt["text"] not in it["acceptedAnswers"], (
-                    f"Distractor collision in {it['id']}: {opt['text']}"
-                )
+                assert opt["text"] not in it["acceptedAnswers"], f"Distractor collision in {it['id']}: {opt['text']}"
                 assert _plain(opt["text"]) not in accepted_plain, (
                     f"Normalized distractor collision in {it['id']}: {opt['text']}"
                 )

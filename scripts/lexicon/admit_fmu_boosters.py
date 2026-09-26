@@ -50,9 +50,9 @@ POINTER_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.pointer.json"
 FINGERPRINT_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json"
 ATLAS_DB_PATH = PROJECT_ROOT / "data/atlas.db"
 SOURCES_DB_PATH = PROJECT_ROOT / "data/sources.db"
-INV_PATH = PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml"
+INV_PATH = PROJECT_ROOT / "registry/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml"
 DECISIONS_PATH = (
-    PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions/2026-09-13-ohoiko-fmu-booster-approve.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/2026-09-13-ohoiko-fmu-booster-approve.yaml"
 )
 INV_REL = "data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml"
 DECISIONS_REL = "data/lexicon/source-inventory-review-decisions/2026-09-13-ohoiko-fmu-booster-approve.yaml"

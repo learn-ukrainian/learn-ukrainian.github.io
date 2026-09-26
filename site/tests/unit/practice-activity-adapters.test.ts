@@ -32,7 +32,7 @@ function heritage(overrides: Partial<PracticeHeritageItem> = {}): PracticeHerita
 }
 
 describe('heritage practice activity adapters', () => {
-  // Exact source frames from data/lexicon/heritage_pairs.yaml at issue #7769.
+  // Exact source frames from registry/lexicon/heritage_pairs.yaml at issue #7769.
   test.each([
     ["Ти вже хочби пильнував вилову, а ___ розтрусив на подвір'ї найліпшу рибу.", 'тим', 'то'],
     ['___ ви хочете і звідки ви? — Наша батьківщина Рука так далеко звідси, що навряд чи вістка про неї дійшла сюди.', 'Чим', 'Що'],
@@ -92,7 +92,7 @@ describe('heritage practice activity adapters', () => {
     expect(heritageToMatchUp(item, [item, companion], 42)).toBeNull();
   });
 
-  // Authored span frames from data/lexicon/heritage_pairs.yaml for «чим … тим» -> «що … то».
+  // Authored span frames from registry/lexicon/heritage_pairs.yaml for «чим … тим» -> «що … то».
   test.each([
     ['___ більше деформоване тіло, тим більшими є сили пружності.', 'Чим', 'Що'],
     ['Чим більше деформоване тіло, ___ більшими є сили пружності.', 'тим', 'то'],

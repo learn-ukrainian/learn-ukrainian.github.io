@@ -1,5 +1,6 @@
 # One exact JUnit ID (classname::name) per expected needs_artifact skip.
 # Update alongside the test baseline when an artifact-dependent test is added.
+tests.test_miyklas_relation_miner::test_cleaned_artifact_has_no_known_label_or_chopped_headwords
 tests.test_navsi200_asr_bakeoff.TestAsrBakeoffLedgerAndPrivacy::test_calibration_benchmark_metrics_present
 tests.test_navsi200_asr_bakeoff.TestAsrBakeoffLedgerAndPrivacy::test_honest_accounting_in_ledger
 tests.test_navsi200_asr_bakeoff.TestAsrBakeoffLedgerAndPrivacy::test_privacy_no_teacher_names_in_ledger

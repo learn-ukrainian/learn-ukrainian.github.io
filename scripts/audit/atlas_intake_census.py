@@ -34,9 +34,10 @@ from scripts.audit.source_inventory_intake import (
     read_source_inventories,
     source_inventory_candidates,
 )
+from scripts.storage.paths import REGISTRY_ROOT
 
 SUPPORTED_INVENTORY_SUFFIXES = {".csv", ".tsv", ".jsonl", ".json", ".yaml", ".yml"}
-DEFAULT_INVENTORY_DIR = PROJECT_ROOT / "data/lexicon/source-inventory"
+DEFAULT_INVENTORY_DIR = REGISTRY_ROOT / "lexicon/source-inventory"
 WORKFLOW_ID = "atlas_intake_census.v1"
 OMITTED_RAW_FIELDS = ("lemma", "headword", "word", "context", "gloss", "notes", "raw_text")
 
@@ -82,9 +83,7 @@ def build_census(
             "source_units": _source_unit_count(records),
             "source_rows": len(records),
             "deduped_candidates": len(candidates),
-            "registered_source_rows": sum(
-                1 for record in records if is_registered_source_family(record.source_family)
-            ),
+            "registered_source_rows": sum(1 for record in records if is_registered_source_family(record.source_family)),
             "unknown_source_rows": sum(
                 1 for record in records if not is_registered_source_family(record.source_family)
             ),
@@ -94,8 +93,7 @@ def build_census(
             "classification_counts": classification_counts(gate_results),
         },
         "by_family": {
-            family: _family_payload(rows, registered=family in registered)
-            for family, rows in sorted(by_family.items())
+            family: _family_payload(rows, registered=family in registered) for family, rows in sorted(by_family.items())
         },
         "inventory_files": inventory_rows,
         "safety": {
@@ -205,7 +203,10 @@ def _inventory_rows(
     rows: list[dict[str, Any]] = []
     for path in inventory_paths:
         display_path = _display_path(path, project_root)
-        path_records = by_path.get(display_path, [])
+        logical_path = display_path
+        if display_path.startswith("registry/lexicon/"):
+            logical_path = "data/lexicon/" + display_path.removeprefix("registry/lexicon/")
+        path_records = by_path.get(logical_path, [])
         rows.append(
             {
                 "path": display_path,

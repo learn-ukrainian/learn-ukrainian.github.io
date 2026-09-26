@@ -389,12 +389,8 @@ def _pointer_relation_maps(
         "antonym": enrich_manifest._definition_antonym_relations_by_headword(
             sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags
         ),
-        "homonym": enrich_manifest._homonym_relations_by_headword(
-            sources_conn, cohort_manifest
-        ),
-        "paronym": enrich_manifest._paronym_relations_by_headword(
-            sources_conn, cohort_manifest
-        ),
+        "homonym": enrich_manifest._homonym_relations_by_headword(sources_conn, cohort_manifest),
+        "paronym": enrich_manifest._paronym_relations_by_headword(sources_conn, cohort_manifest),
     }
 
 
@@ -422,9 +418,7 @@ def _fill_local(
         # cohort-wide reciprocity. Sealed full-cohort maps remain the #5230 path.
         cohort_manifest = _cohort_manifest(articles)
         enrich_manifest._prepare_cefr_estimates(sources_conn, cohort_manifest)
-        pointer_maps = _pointer_relation_maps(
-            sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags
-        )
+        pointer_maps = _pointer_relation_maps(sources_conn, cohort_manifest, has_sum11_flags=has_sum11_flags)
 
         filled_at = _iso_now()
         inserted = 0
@@ -506,7 +500,7 @@ def parse_args() -> argparse.Namespace:
         "--kaikki-lookup",
         type=Path,
         default=DEFAULT_KAIKKI_LOOKUP,
-        help="Path to data/lexicon/kaikki_uk_lookup.json.",
+        help="Hydrated Kaikki artifact path (data/lexicon/kaikki_uk_lookup.json).",
     )
     parser.add_argument("--slug", help="Fill one atlas article slug.")
     parser.add_argument("--refresh", action="store_true", help="Replace existing rows for sections produced now.")

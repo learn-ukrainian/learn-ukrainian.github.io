@@ -35,6 +35,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import verify_words
 
 SOURCE_ID = "ohoiko-oho-a1-book-headwords"
@@ -51,9 +52,7 @@ _SECTION_HEADER_RE = re.compile(
 )
 _PAGE_NUMBER_RE = re.compile(r"^\s*(?:p(?:age)?\.?\s*)?\d{1,4}\s*$", re.IGNORECASE)
 _CYRILLIC_LETTER = r"\u0400-\u052f"
-_UKRAINIAN_TOKEN_RE = re.compile(
-    rf"[{_CYRILLIC_LETTER}]+(?:['-][{_CYRILLIC_LETTER}]+)*", re.IGNORECASE
-)
+_UKRAINIAN_TOKEN_RE = re.compile(rf"[{_CYRILLIC_LETTER}]+(?:['-][{_CYRILLIC_LETTER}]+)*", re.IGNORECASE)
 _APOSTROPHE_TRANSLATION = str.maketrans({"ʼ": "'", "’": "'", "`": "'", "′": "'"})
 _HYPHEN_TRANSLATION = str.maketrans({"‐": "-", "‑": "-", "‒": "-", "–": "-"})
 _RUNNING_FOOTERS = frozenset(
@@ -189,9 +188,7 @@ def _is_capitalized_word(token: str) -> bool:
     return bool(token) and token[0].isupper() and token != token.upper()
 
 
-def extract_occurrences(
-    pages: Sequence[PageText], page_modules: Mapping[int, ModuleValue]
-) -> list[FormOccurrence]:
+def extract_occurrences(pages: Sequence[PageText], page_modules: Mapping[int, ModuleValue]) -> list[FormOccurrence]:
     """Tokenize all cleaned pages while retaining only word-level provenance."""
 
     occurrences: list[FormOccurrence] = []
@@ -336,9 +333,7 @@ def extract_headword_inventory(
         },
         key=str.casefold,
     )
-    matches_by_lookup_form = _lookup_in_batches(
-        lookup_forms, vesum_lookup=vesum_lookup, batch_size=batch_size
-    )
+    matches_by_lookup_form = _lookup_in_batches(lookup_forms, vesum_lookup=vesum_lookup, batch_size=batch_size)
 
     headword_occurrences: dict[tuple[str, str], list[FormOccurrence]] = defaultdict(list)
     headword_ambiguous: dict[tuple[str, str], bool] = defaultdict(bool)
@@ -364,9 +359,7 @@ def extract_headword_inventory(
         for candidate in candidates:
             headword_occurrences[candidate].extend(form_occurrences)
             headword_ambiguous[candidate] = headword_ambiguous[candidate] or ambiguous
-            headword_proper_candidate[candidate] = (
-                headword_proper_candidate[candidate] or capitalized_only
-            )
+            headword_proper_candidate[candidate] = headword_proper_candidate[candidate] or capitalized_only
 
     coverage: dict[ModuleValue, dict[str, int]] = {}
     for module in sorted(set(page_modules.values()), key=_module_sort_key):
@@ -430,9 +423,7 @@ def extract_headword_inventory(
             )
         )
         unknown_forms.append(item)
-    unknown_forms.sort(
-        key=lambda item: (_module_sort_key(item["first_module"]), str(item["form"]).casefold())
-    )
+    unknown_forms.sort(key=lambda item: (_module_sort_key(item["first_module"]), str(item["form"]).casefold()))
 
     for (_lemma, _), lemma_occurrences in headword_occurrences.items():
         for module in {item.module for item in lemma_occurrences}:
@@ -485,10 +476,7 @@ def validate_result(result: ExtractionResult) -> None:
     if not headwords:
         raise ExtractionError("empty headword output")
     if result.stats.unknown_rate > MAX_UNKNOWN_FORM_RATE:
-        raise ExtractionError(
-            "unknown forms exceed 20% "
-            f"({result.stats.unknown_forms}/{result.stats.unique_forms})"
-        )
+        raise ExtractionError(f"unknown forms exceed 20% ({result.stats.unknown_forms}/{result.stats.unique_forms})")
 
 
 def _resolve_binary(name: str) -> str:
@@ -569,9 +557,7 @@ def _atomic_write_yaml(payload: Mapping[str, Any], output_path: Path) -> None:
         default_flow_style=False,
         width=1000,
     )
-    with tempfile.NamedTemporaryFile(
-        mode="w", encoding="utf-8", dir=output_path.parent, delete=False
-    ) as handle:
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=output_path.parent, delete=False) as handle:
         temporary_path = Path(handle.name)
         handle.write(text)
     try:
@@ -585,11 +571,7 @@ def format_report(result: ExtractionResult) -> str:
 
     stats = result.stats
     lines = [
-        (
-            "BEFORE "
-            f"pages_read={stats.pages_read} tokens_seen={stats.tokens_seen} "
-            f"unique_forms={stats.unique_forms}"
-        ),
+        (f"BEFORE pages_read={stats.pages_read} tokens_seen={stats.tokens_seen} unique_forms={stats.unique_forms}"),
         (
             "AFTER "
             f"lemmas_found={stats.lemmas_found} "
@@ -612,14 +594,10 @@ def format_report(result: ExtractionResult) -> str:
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Extract a words-only VESUM headword inventory from a text-layer PDF."
-    )
+    parser = argparse.ArgumentParser(description="Extract a words-only VESUM headword inventory from a text-layer PDF.")
     parser.add_argument("--pdf", type=Path, required=True, help="Text-layer PDF to process")
     parser.add_argument("--out", type=Path, required=True, help="Inventory YAML destination")
-    parser.add_argument(
-        "--modules-map-out", type=Path, help="Optional page-to-module YAML destination"
-    )
+    parser.add_argument("--modules-map-out", type=Path, help="Optional page-to-module YAML destination")
     parser.add_argument("--dry-run", action="store_true", help="Validate but do not write YAML")
     parser.add_argument("--report", action="store_true", help="Print per-module coverage")
     return parser
@@ -649,9 +627,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         print("DRY RUN: no output written")
         return 0
 
-    _atomic_write_yaml(result.inventory, args.out)
+    write_artifact(
+        args.out,
+        "lexicon_headword_candidates",
+        "scripts.lexicon.extract_book_headword_inventory",
+        lambda staged: _atomic_write_yaml(result.inventory, staged),
+    )
     if args.modules_map_out:
-        _atomic_write_yaml(result.modules_map, args.modules_map_out)
+        write_artifact(
+            args.modules_map_out,
+            "lexicon_headword_candidates",
+            "scripts.lexicon.extract_book_headword_inventory",
+            lambda staged: _atomic_write_yaml(result.modules_map, staged),
+        )
     if args.report:
         print(f"WROTE inventory={args.out}")
         if args.modules_map_out:

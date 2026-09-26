@@ -401,7 +401,7 @@ def test_existing_ledger_keys_ignores_unreviewed_inventory(tmp_path: Path) -> No
     inventory_dir = tmp_path / "data" / "lexicon" / "source-inventory"
     inventory_dir.mkdir(parents=True)
     (inventory_dir / "prior-intake.json").write_text("[]\n", encoding="utf-8")
-    decisions_dir = tmp_path / "data" / "lexicon" / "source-inventory-review-decisions"
+    decisions_dir = tmp_path / "registry" / "lexicon" / "source-inventory-review-decisions"
     decisions_dir.mkdir(parents=True)
     (decisions_dir / "prior-decisions.yaml").write_text(
         "version: 1\n"

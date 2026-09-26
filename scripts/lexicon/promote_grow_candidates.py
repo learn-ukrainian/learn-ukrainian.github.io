@@ -197,12 +197,10 @@ def promote_grow_candidates(
     needs_review_approved = 0
     needs_review_deferred = 0
     if needs_review_ledger_path is not None:
-        approved_entries, held_rows, needs_review_approved, needs_review_deferred = (
-            _approved_needs_review_entries(
-                held_rows,
-                candidates_path=candidates_path,
-                needs_review_ledger_path=needs_review_ledger_path,
-            )
+        approved_entries, held_rows, needs_review_approved, needs_review_deferred = _approved_needs_review_entries(
+            held_rows,
+            candidates_path=candidates_path,
+            needs_review_ledger_path=needs_review_ledger_path,
         )
         needs_review_to_promote = approved_entries
     held = tuple(HeldLemma(lemma=row.lemma, reason=row.reason) for row in held_rows)
@@ -373,11 +371,9 @@ def verify_promoted_entries(manifest_path: Path, entries: Sequence[Mapping[str, 
         for violation in violations:
             by_gate[violation.gate] = by_gate.get(violation.gate, 0) + 1
         for gate, count in sorted(by_gate.items()):
-            examples = [
-                f"{violation.lemma}: {violation.detail}"
-                for violation in violations
-                if violation.gate == gate
-            ][:5]
+            examples = [f"{violation.lemma}: {violation.detail}" for violation in violations if violation.gate == gate][
+                :5
+            ]
             print(f"  {gate}: {count} — {examples}", file=sys.stderr)
     if identity_violations:
         for violation in identity_violations:
@@ -385,9 +381,7 @@ def verify_promoted_entries(manifest_path: Path, entries: Sequence[Mapping[str, 
     return 2
 
 
-def _promoted_entry_identity_violations(
-    manifest_path: Path, entries: Sequence[Mapping[str, Any]]
-) -> list[str]:
+def _promoted_entry_identity_violations(manifest_path: Path, entries: Sequence[Mapping[str, Any]]) -> list[str]:
     """Return route collisions introduced by a newly promoted entry.
 
     The grow queue is already de-duplicated by normalized lemma, but routes are
@@ -487,7 +481,7 @@ def build_parser() -> argparse.ArgumentParser:
             "\n"
             "  # Re-enter needs_review via a sha-bound decisions ledger (#5230)\n"
             "  .venv/bin/python scripts/lexicon/promote_grow_candidates.py --write \\\n"
-            "    --needs-review-ledger data/lexicon/source-inventory-review-decisions/"
+            "    --needs-review-ledger registry/lexicon/source-inventory-review-decisions/"
             "…-grow-needs-review-batch-01.yaml\n"
             "\n"
             "Outputs (only with --write):\n"
@@ -673,9 +667,7 @@ def _approved_needs_review_entries(
         candidates_path,
         provenance.get("candidates_sha256"),
         label="needs-review ledger candidates_sha256",
-        mismatch_message=(
-            "needs-review ledger candidates_sha256 does not match the supplied candidates file"
-        ),
+        mismatch_message=("needs-review ledger candidates_sha256 does not match the supplied candidates file"),
     )
     triage_sha = str(provenance.get("triage_sha256") or "").strip()
     if not triage_sha:
@@ -883,9 +875,7 @@ def approved_gloss_refusal_reason(
     if approved_lemma and _lemma_key(strip_acute_stress(approved_lemma)) != _lemma_key(candidate_lemma):
         return "lemma_mismatch"
 
-    approved_slug = str(
-        approved_gloss.get("slug") or approved_gloss.get("url_slug") or ""
-    ).strip()
+    approved_slug = str(approved_gloss.get("slug") or approved_gloss.get("url_slug") or "").strip()
     if approved_slug and _slug_for_url(approved_slug) != _slug_for_url(candidate_slug):
         return "lemma_mismatch"
 
@@ -902,19 +892,13 @@ def require_injectable_approved_gloss(
         raise ValueError("approved_gloss.text must be non-empty")
     reason = approved_gloss_refusal_reason(candidate, approved_gloss)
     if reason == "non_english_gloss":
-        raise ValueError(
-            "approved_gloss.text must be learner English (Latin letters; "
-            "not overwhelmingly Cyrillic)"
-        )
+        raise ValueError("approved_gloss.text must be learner English (Latin letters; not overwhelmingly Cyrillic)")
     if reason == "sum11_stub_gloss":
         raise ValueError(
-            "approved_gloss.text looks like a СУМ-11 stub "
-            "(дієпр / див. / те саме, що) and is not learner English"
+            "approved_gloss.text looks like a СУМ-11 stub (дієпр / див. / те саме, що) and is not learner English"
         )
     if reason == "lemma_mismatch":
-        raise ValueError(
-            "approved_gloss lemma/slug does not match candidate lemma/slug"
-        )
+        raise ValueError("approved_gloss lemma/slug does not match candidate lemma/slug")
     if reason == "empty_gloss":
         raise ValueError("approved_gloss.text must be non-empty")
     if reason is not None:

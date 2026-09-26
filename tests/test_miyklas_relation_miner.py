@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+
+import pytest
 
 from scripts.lexicon.miyklas_relation_miner import clean_candidate_records, parse_relation_term
-
-_CANDIDATES_PATH = Path("data/lexicon/relation_candidates_miyklas.json")
+from scripts.storage.paths import artifact_path
 
 
 def test_strips_only_complete_dotted_qualifier_tokens() -> None:
@@ -47,8 +47,11 @@ def test_clean_candidate_records_removes_labels_without_losing_valid_terms() -> 
     ]
 
 
+@pytest.mark.needs_artifact("lexicon_candidates", "lexicon/relation_candidates_miyklas.json")
 def test_cleaned_artifact_has_no_known_label_or_chopped_headwords() -> None:
-    candidates = json.loads(_CANDIDATES_PATH.read_text(encoding="utf-8"))
+    candidates = json.loads(
+        artifact_path("lexicon_candidates", "lexicon/relation_candidates_miyklas.json").read_text(encoding="utf-8")
+    )
     forbidden = {
         "мат",
         "поб",
@@ -61,14 +64,6 @@ def test_cleaned_artifact_has_no_known_label_or_chopped_headwords() -> None:
         "ьний",
     }
 
-    assert not any(
-        {candidate["word_a"], candidate["word_b"]} & forbidden for candidate in candidates
-    )
-    assert any(
-        {candidate["word_a"], candidate["word_b"]} == {"віла", "вілла"}
-        for candidate in candidates
-    )
-    assert any(
-        {candidate["word_a"], candidate["word_b"]} == {"зять", "взять"}
-        for candidate in candidates
-    )
+    assert not any({candidate["word_a"], candidate["word_b"]} & forbidden for candidate in candidates)
+    assert any({candidate["word_a"], candidate["word_b"]} == {"віла", "вілла"} for candidate in candidates)
+    assert any({candidate["word_a"], candidate["word_b"]} == {"зять", "взять"} for candidate in candidates)

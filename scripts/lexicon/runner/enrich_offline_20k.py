@@ -147,7 +147,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--kaikki-json",
         type=Path,
         default=None,
-        help="kaikki_uk_lookup.json (default: <repo>/data/lexicon/kaikki_uk_lookup.json)",
+        help="kaikki_uk_lookup.json (default: verified lexicon_kaikki artifact)",
     )
     parser.add_argument(
         "--output",
@@ -223,11 +223,7 @@ def dry_run_plan(args: argparse.Namespace) -> int:
     repo = args.repo.resolve()
     input_path = _resolve_input(args)
     work_dir = args.work_dir.resolve() if args.work_dir is not None else None
-    sources = (
-        Path(args.sources_db).resolve()
-        if args.sources_db is not None
-        else (repo / "data" / "sources.db")
-    )
+    sources = Path(args.sources_db).resolve() if args.sources_db is not None else (repo / "data" / "sources.db")
     kaikki = (
         Path(args.kaikki_json).resolve()
         if args.kaikki_json is not None
@@ -263,9 +259,7 @@ def dry_run_plan(args: argparse.Namespace) -> int:
     if entry_count is not None and args.max_lemmas is not None:
         effective_count = min(entry_count, max(0, int(args.max_lemmas)))
     chunk_size = max(1, int(args.chunk_size))
-    planned_chunks = (
-        (effective_count + chunk_size - 1) // chunk_size if effective_count is not None else None
-    )
+    planned_chunks = (effective_count + chunk_size - 1) // chunk_size if effective_count is not None else None
 
     plan = {
         "kind": "atlas-offline-enrich-dry-run",
@@ -313,16 +307,13 @@ def _run(args: argparse.Namespace) -> int:
         _event("offline_enrich_failed", error="input_missing", path=str(input_path))
         return 2
 
-    sources = (
-        Path(args.sources_db).resolve()
-        if args.sources_db is not None
-        else (repo / "data" / "sources.db")
-    )
-    kaikki = (
-        Path(args.kaikki_json).resolve()
-        if args.kaikki_json is not None
-        else (repo / "data" / "lexicon" / "kaikki_uk_lookup.json")
-    )
+    sources = Path(args.sources_db).resolve() if args.sources_db is not None else (repo / "data" / "sources.db")
+    if args.kaikki_json is not None:
+        kaikki = Path(args.kaikki_json).resolve()
+    else:
+        from scripts.storage.paths import artifact_path
+
+        kaikki = artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json", repo=repo)
     if not sources.is_file():
         _event("offline_enrich_failed", error="sources_db_missing", path=str(sources))
         return 2
@@ -349,11 +340,7 @@ def _run(args: argparse.Namespace) -> int:
         _event("offline_enrich_slice", **slice_meta)
         manifest_for_engine = slice_path
 
-    output = (
-        Path(args.output).resolve()
-        if args.output is not None
-        else (work_dir / "candidate-enriched.json")
-    )
+    output = Path(args.output).resolve() if args.output is not None else (work_dir / "candidate-enriched.json")
     ledger_path = Path(args.ledger).resolve() if args.ledger is not None else None
     grac_cache = _load_grac_cache(Path(args.grac_cache) if args.grac_cache else None)
 

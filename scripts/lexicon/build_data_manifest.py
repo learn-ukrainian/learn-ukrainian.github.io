@@ -44,7 +44,7 @@ from scripts.lexicon.manifest_io import _write_atomic
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_MANIFEST = CURRICULUM_ROOT / "curriculum.yaml"
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-VESUM_ALIAS_MAP_PATH = PROJECT_ROOT / "data" / "lexicon" / "vesum_inflection_aliases.json"
+VESUM_ALIAS_MAP_PATH = PROJECT_ROOT / "registry" / "lexicon" / "vesum_inflection_aliases.json"
 _STRESS_MARK_RE = re.compile("[\u0300\u0301]")
 
 

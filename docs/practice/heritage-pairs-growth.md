@@ -2,7 +2,7 @@
 
 **Scope:** #6140 · parent #6132 · umbrella #4387
 
-`data/lexicon/heritage_pairs.yaml` is the reviewed source of truth for the
+`registry/lexicon/heritage_pairs.yaml` is the reviewed source of truth for the
 Heritage practice mode. A pair is a practice item only when its native slug
 resolves to a public practice lexeme and it has a source, an authored frame,
 and an explicit severity. This prevents raw corpus suggestions from becoming

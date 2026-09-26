@@ -61,9 +61,9 @@ from scripts.verification.vesum import verify_word
 
 DEFAULT_MANIFEST = _resolve_repo_path(PROJECT_ROOT / "site/src/data/lexicon-manifest.json")
 DEFAULT_CURATED_INVENTORY = _resolve_repo_path(
-    PROJECT_ROOT / "data/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/ohoiko-ulp-curated-2026-07-19-bulk.yaml"
 )
-DEFAULT_INTAKE_DECISIONS_DIR = _resolve_repo_path(PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions")
+DEFAULT_INTAKE_DECISIONS_DIR = _resolve_repo_path(PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions")
 DEFAULT_SOURCES_DB = _resolve_repo_path(PROJECT_ROOT / "data" / "sources.db")
 
 SEPARATORS = ("—", "–", "―", " - ", " = ", ": ")

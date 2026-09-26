@@ -30,6 +30,8 @@ from scripts.lexicon.backfill_course_usage import (
     _refresh_manifest_fingerprint,
 )
 from scripts.lexicon.manifest_io import DEFAULT_MANIFEST, load_manifest, write_manifest
+from scripts.storage.artifacts import write_artifact
+from scripts.storage.paths import artifact_path
 
 DEFAULT_PARKED_DIR = PROJECT_ROOT / "data" / "lexicon" / "parked"
 DEFAULT_PARKED_OUT = DEFAULT_PARKED_DIR / f"parked-thin-entries-{datetime.now(UTC).date().isoformat()}.json"
@@ -135,7 +137,12 @@ def park_thin_entries(
     )
     # The artifact is the recovery point.  It must be durable before the live
     # manifest can shrink, even if a later manifest write fails.
-    write_manifest(parked_out, parked_payload)
+    write_artifact(
+        parked_out,
+        "lexicon_parked",
+        "scripts.lexicon.park_thin_entries",
+        lambda staged: write_manifest(staged, parked_payload),
+    )
     fingerprint_path = _fingerprint_path_for(manifest_path)
     _refresh_manifest_fingerprint(prospective_manifest, fingerprint_path)
     write_manifest(manifest_path, prospective_manifest)
@@ -158,6 +165,8 @@ def restore_parked_entries(
     """Restore verbatim entries from a parked artifact at their original indices."""
     manifest_path = _resolve_path(manifest_path)
     parked_file = _resolve_path(parked_file)
+    if parked_file == PROJECT_ROOT / "data/lexicon/parked/parked-thin-entries-2026-07-10.json":
+        parked_file = artifact_path("lexicon_parked", "lexicon/parked/parked-thin-entries-2026-07-10.json")
     manifest = load_manifest(manifest_path)
     entries = _manifest_entries(manifest, manifest_path)
     artifact = _load_parked_artifact(parked_file)

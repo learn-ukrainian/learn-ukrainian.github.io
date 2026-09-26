@@ -2,7 +2,7 @@
 
 Run date: 2026-08-04
 
-Scope: `data/lexicon/paronym_pairs.yaml` against a locally hydrated
+Scope: `registry/lexicon/paronym_pairs.yaml` against a locally hydrated
 `data/atlas.db` (built from the `atlas-manifest` release, 17,387 approved
 public articles) and a locally built VESUM shadow (`scripts/rag/build_vesum_shadow.py`,
 brown-uk/dict_uk v6.8.0, ~7M forms — same source pinned by `scripts/config/vesum_source.lock.json`).

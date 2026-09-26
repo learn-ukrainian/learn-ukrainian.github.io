@@ -1,0 +1,48 @@
+{
+  "entries": [
+    {
+      "git_blob": "d9d0404e5c2409acbc0a99d870647edc6438f987",
+      "migrated_at": "2026-09-26T12:57:32.425084+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790427353247712188,
+      "path": "data/lexicon/recovery-audit/2026-08-14-ocr-space-collapse.jsonl",
+      "pre_untrack_sha256": "5823ec8397a18e53f83d67076b84fda34ff777e316655b9823482096aa995ddd",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "5823ec8397a18e53f83d67076b84fda34ff777e316655b9823482096aa995ddd",
+      "size": 23444,
+      "store": "5823ec8397a18e53f83d67076b84fda34ff777e316655b9823482096aa995ddd"
+    },
+    {
+      "git_blob": "7c55256ad29c16e1079f64334a3c7b32b85f7f6b",
+      "migrated_at": "2026-09-26T12:57:32.475389+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790427353248007956,
+      "path": "data/lexicon/recovery-audit/2026-09-06-anna-taught-residual-census.json",
+      "pre_untrack_sha256": "5e046a5d73bbbe516bbde5be503d1f6e3a940b7b05a2ab8ff3929ba9e5baa8bd",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "5e046a5d73bbbe516bbde5be503d1f6e3a940b7b05a2ab8ff3929ba9e5baa8bd",
+      "size": 199507,
+      "store": "5e046a5d73bbbe516bbde5be503d1f6e3a940b7b05a2ab8ff3929ba9e5baa8bd"
+    },
+    {
+      "git_blob": "5a7e0767b3ff885fafac86f8ebb02a32cbd6ca55",
+      "migrated_at": "2026-09-26T12:57:32.530287+00:00",
+      "mode": "100644",
+      "mtime_ns": 1790427353248007956,
+      "path": "data/lexicon/recovery-audit/2026-09-06-anna-unit-a-leftovers-census.json",
+      "pre_untrack_sha256": "a828275abe0948b85d9b1cd26adfa329c8d210d871ce402d4046d5fb55acc2cf",
+      "producer": "external",
+      "published_at": null,
+      "rights": "uncleared",
+      "sha256": "a828275abe0948b85d9b1cd26adfa329c8d210d871ce402d4046d5fb55acc2cf",
+      "size": 128190,
+      "store": "a828275abe0948b85d9b1cd26adfa329c8d210d871ce402d4046d5fb55acc2cf"
+    }
+  ],
+  "group": "lexicon_recovery_snapshots",
+  "schema": 1
+}

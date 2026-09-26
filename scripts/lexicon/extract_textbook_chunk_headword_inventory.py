@@ -40,6 +40,7 @@ from scripts.lexicon.extract_book_headword_inventory import (
     _lookup_in_batches,
     normalize_text,
 )
+from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import verify_words
 
 DEFAULT_BATCH_SIZE = 500
@@ -186,9 +187,7 @@ def extract_headword_inventory_from_chunks(
             for _, locator, _ in entries:
                 bucket[locator] = bucket.get(locator, 0) + 1
             headword_ambiguous[candidate] = headword_ambiguous.get(candidate, False) or ambiguous
-            headword_proper_candidate[candidate] = (
-                headword_proper_candidate.get(candidate, False) or capitalized_only
-            )
+            headword_proper_candidate[candidate] = headword_proper_candidate.get(candidate, False) or capitalized_only
 
     headwords: list[dict[str, Any]] = []
     for (lemma, pos), locator_counts in headword_locators.items():
@@ -258,8 +257,7 @@ def validate_result(payload: dict[str, Any], *, max_unknown_rate: float = MAX_UN
         raise ExtractionError("empty headword output")
     if stats["unknown_rate"] > max_unknown_rate:
         raise ExtractionError(
-            f"unknown forms exceed {max_unknown_rate:.0%} "
-            f"({stats['unknown_forms']}/{stats['unique_forms']})"
+            f"unknown forms exceed {max_unknown_rate:.0%} ({stats['unknown_forms']}/{stats['unique_forms']})"
         )
 
 
@@ -288,9 +286,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Extract a words-only VESUM headword inventory from local textbook JSONL chunks."
     )
-    parser.add_argument(
-        "--jsonl", type=Path, action="append", required=True, help="Chunk JSONL path (repeatable)"
-    )
+    parser.add_argument("--jsonl", type=Path, action="append", required=True, help="Chunk JSONL path (repeatable)")
     parser.add_argument("--source-id", required=True, help="Atlas source-inventory id for this book")
     parser.add_argument("--title", required=True, help="Human-readable book title")
     parser.add_argument("--subject", help="Optional subject label (e.g. bukvar, matematyka)")
@@ -347,7 +343,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     stats = payload.pop("stats")
-    _atomic_write_yaml(payload, args.out)
+    write_artifact(
+        args.out,
+        "lexicon_headword_candidates",
+        "scripts.lexicon.extract_textbook_chunk_headword_inventory",
+        lambda staged: _atomic_write_yaml(payload, staged),
+    )
     if args.report:
         print(f"WROTE inventory={args.out}")
         print(f"stats: {stats}")

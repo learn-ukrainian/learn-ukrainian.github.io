@@ -40,14 +40,10 @@ DEFAULT_REPORT_OUT = Path("/tmp/atlas-ohoiko-corpus-intake.json")
 DEFAULT_INVENTORY_PATH = "data/lexicon/source-inventory/ohoiko-corpus-intake.json"
 WORKFLOW_ID = "ohoiko_corpus_atlas_intake.v1"
 SOURCE_FAMILY = "ohoiko"
-OHOKO_LEDGER_SENSE_NOTE = (
-    "Generated from Ohoiko corpus intake; Atlas publication is a later phase."
-)
+OHOKO_LEDGER_SENSE_NOTE = "Generated from Ohoiko corpus intake; Atlas publication is a later phase."
 
 TEXT_SUFFIXES = frozenset({".md", ".txt"})
-_VERB_HEADWORD_RE = re.compile(
-    r"^([А-ЯҐЄІЇа-яґєії][А-ЯҐЄІЇа-яґєії'ʼ’`′\- ]*?)\s*(?:\||\s{2,})"
-)
+_VERB_HEADWORD_RE = re.compile(r"^([А-ЯҐЄІЇа-яґєії][А-ЯҐЄІЇа-яґєії'ʼ’`′\- ]*?)\s*(?:\||\s{2,})")
 
 
 class OhoikoIntakeError(ValueError):
@@ -118,7 +114,7 @@ ULP_NOTE_CATALOG: tuple[tuple[str, str, str], ...] = (
 
 
 def committed_ohoiko_inventory_paths(*, project_root: Path = PROJECT_ROOT) -> list[Path]:
-    inventory_dir = project_root / "data" / "lexicon" / "source-inventory"
+    inventory_dir = project_root / "registry" / "lexicon" / "source-inventory"
     return sorted(inventory_dir.glob("ohoiko-*.yaml"))
 
 
@@ -156,9 +152,7 @@ def discover_source_units(
         )
     if june_notes_root.is_dir():
         note_files = sorted(
-            path
-            for path in june_notes_root.glob("**/*")
-            if path.is_file() and path.suffix.lower() in TEXT_SUFFIXES
+            path for path in june_notes_root.glob("**/*") if path.is_file() and path.suffix.lower() in TEXT_SUFFIXES
         )
         for index, _path in enumerate(note_files, start=1):
             units.append(
@@ -210,9 +204,7 @@ def collect_ohoiko_occurrences(
     june_units = [unit for unit in units if unit.unit_kind == "june_a1_note"]
     if june_units and june_notes_root.is_dir():
         note_files = sorted(
-            path
-            for path in june_notes_root.glob("**/*")
-            if path.is_file() and path.suffix.lower() in TEXT_SUFFIXES
+            path for path in june_notes_root.glob("**/*") if path.is_file() and path.suffix.lower() in TEXT_SUFFIXES
         )
         for unit, path in zip(june_units, note_files, strict=False):
             text = strip_mdx_to_prose(path.read_text(encoding="utf-8"))

@@ -48,8 +48,7 @@ SOURCE_ID = "textbook-jsonl-curated-2026-07-19-bulk"
 INV_REL = f"data/lexicon/source-inventory/oneshot/{SOURCE_ID}.yaml"
 DEFAULT_INVENTORY = PROJECT_ROOT / INV_REL
 DEFAULT_DECISIONS = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/"
     "2026-07-19-textbook-jsonl-curated-bulk-approve.yaml"
 )
 DEFAULT_CANDIDATES = Path("/tmp/atlas-textbook-jsonl-curated-candidates.json")
@@ -91,9 +90,7 @@ def resolve_chunks_root() -> Path | None:
     if env:
         roots.append(Path(env) / "textbook_chunks")
     roots.extend(
-        Path.home().glob(
-            "Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data/textbook_chunks"
-        )
+        Path.home().glob("Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data/textbook_chunks")
     )
     roots.append(PROJECT_ROOT / "data" / "textbook_chunks")
     for root in roots:
@@ -165,9 +162,7 @@ def iter_jsonl_texts(chunks_root: Path) -> Iterable[tuple[str, str, str]]:
 def iter_db_texts(db_path: Path) -> Iterable[tuple[str, str, str]]:
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     try:
-        rows = conn.execute(
-            "SELECT source_file, chunk_id, text FROM textbooks WHERE text IS NOT NULL"
-        ).fetchall()
+        rows = conn.execute("SELECT source_file, chunk_id, text FROM textbooks WHERE text IS NOT NULL").fetchall()
     finally:
         conn.close()
     for source_file, chunk_id, text in rows:
@@ -254,8 +249,7 @@ def write_inventory(rows: Sequence[Mapping[str, Any]], path: Path) -> Path:
             "gloss": r["gloss"],
             "locator": r["locator"],
             "context": (
-                "Curated school-textbook inventory (JSONL/token mine); "
-                "auto-approve policy — no AI linguistic review."
+                "Curated school-textbook inventory (JSONL/token mine); auto-approve policy — no AI linguistic review."
             ),
         }
         for r in rows
@@ -348,9 +342,9 @@ def build_candidates(inventory_path: Path, out: Path) -> Path:
             ip = str(pp.get("inventory_path") or "")
             if not ip.startswith("data/"):
                 if "data/lexicon/source-inventory/" in ip:
-                    pp["inventory_path"] = "data/lexicon/source-inventory/" + ip.split(
-                        "data/lexicon/source-inventory/"
-                    )[-1]
+                    pp["inventory_path"] = (
+                        "data/lexicon/source-inventory/" + ip.split("data/lexicon/source-inventory/")[-1]
+                    )
                 else:
                     pp["inventory_path"] = INV_REL
             prov.append(pp)
@@ -402,9 +396,7 @@ def apply_plan(
 
     def delta_self_check(path: Path) -> int:
         data = json.loads(path.read_text(encoding="utf-8"))
-        entries = {
-            _lemma_key(str(e.get("lemma") or "")): e for e in data["entries"] if isinstance(e, dict)
-        }
+        entries = {_lemma_key(str(e.get("lemma") or "")): e for e in data["entries"] if isinstance(e, dict)}
         failures: list[str] = []
         for lemma in promoted:
             entry = entries.get(_lemma_key(lemma))
