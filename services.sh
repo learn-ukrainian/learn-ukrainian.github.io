@@ -58,6 +58,7 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SVC_LSOF_BIN="${SVC_LSOF_BIN:-lsof}"
 SVC_SYSTEMCTL_BIN="${SVC_SYSTEMCTL_BIN:-systemctl}"
+SVC_PROC_ROOT="${SVC_PROC_ROOT:-/proc}"
 LOGS_DIR="$PROJECT_ROOT/logs"
 PIDS_DIR="$PROJECT_ROOT/.pids"
 VENV="$PROJECT_ROOT/.venv/bin"
@@ -786,11 +787,49 @@ _systemd_property() {
     "$SVC_SYSTEMCTL_BIN" --user show -p "$2" --value "learn-ukrainian-$1.service"
 }
 
+_systemd_pid_in_unit() {
+    local name="$1" pid="$2" prior_group="${3:-}" main="${4:-0}" control_group line path found_v2=0
+    control_group="$(_systemd_property "$name" ControlGroup)" || return 2
+    # Inactive units can expose an empty ControlGroup after stop. Preserve the
+    # pre-stop group so a lingering unit child is still protected during cleanup.
+    [[ -n "$control_group" ]] || control_group="$prior_group"
+    if [[ -z "$control_group" ]]; then
+        if [[ "$main" != 0 ]]; then
+            echo "  ERROR: cannot verify $name systemd cgroup membership for PID $pid." >&2
+            return 2
+        fi
+        return 1
+    fi
+    if [[ "$control_group" != /* || "$control_group" == / || ! -r "$SVC_PROC_ROOT/$pid/cgroup" ]]; then
+        echo "  ERROR: cannot verify $name systemd cgroup membership for PID $pid." >&2
+        return 2
+    fi
+    while IFS= read -r line; do
+        [[ "$line" == 0::* ]] || continue
+        found_v2=1
+        path="${line#0::}"
+        [[ "$path" == "$control_group" || "$path" == "$control_group/"* ]] && return 0
+    done < "$SVC_PROC_ROOT/$pid/cgroup"
+    if [[ "$found_v2" -eq 0 ]]; then
+        echo "  ERROR: cannot verify $name systemd cgroup membership for PID $pid." >&2
+        return 2
+    fi
+    return 1
+}
+
 _systemd_listener_kind() {
-    local name="$1" pid="$2" main uid
+    local name="$1" pid="$2" prior_group="${3:-}" main uid membership
     main="$(_systemd_property "$name" MainPID)" || return 1
-    if [[ "$pid" == "$main" && "$main" != 0 ]]; then
+    if _systemd_pid_in_unit "$name" "$pid" "$prior_group" "$main"; then
         echo unit
+        return 0
+    else
+        membership=$?
+        [[ "$membership" -eq 1 ]] || return 1
+    fi
+    if [[ "$pid" == "$main" && "$main" != 0 ]]; then
+        echo "  ERROR: $name MainPID $pid is outside its reported cgroup." >&2
+        return 1
     elif _is_ssh_tunnel_pid "$pid"; then
         echo foreign
     else
@@ -804,7 +843,7 @@ _systemd_listener_kind() {
 }
 
 _systemd_clear_port() {
-    local name="$1" pid kind current attempt
+    local name="$1" prior_group="${2:-}" pid kind attempt
     if ! command -v "$SVC_LSOF_BIN" >/dev/null 2>&1; then
         echo "  ERROR: lsof is required to verify $name's systemd port." >&2
         return 1
@@ -815,22 +854,22 @@ _systemd_clear_port() {
         [[ -z "$listeners" ]] && return 0
         for pid in $listeners; do
             [[ "$pid" =~ ^[0-9]+$ ]] || return 1
-            kind="$(_systemd_listener_kind "$name" "$pid")" || return 1
+            kind="$(_systemd_listener_kind "$name" "$pid" "$prior_group")" || return 1
             case "$kind" in
                 foreign)
                     echo "  $name port $(_port_owner_label "$name") is bound by foreign PID $pid; not spawning (free the port and retry)" >&2
                     return 1 ;;
                 unit) continue ;;
                 stray)
-                    # Recheck ownership and argv, then read MainPID immediately
-                    # before each signal so a newly adopted unit PID is spared.
-                    kind="$(_systemd_listener_kind "$name" "$pid")" || return 1
+                    # Recheck ownership, argv, and cgroup immediately before
+                    # each signal so a unit descendant is never treated as stray.
+                    kind="$(_systemd_listener_kind "$name" "$pid" "$prior_group")" || return 1
                     if [[ "$kind" == stray ]] \
                         && [[ " $(_pid_on_port "$name" | tr '\n' ' ') " == *" $pid "* ]] \
                         && { _pid_matches_service "$name" "$pid" || _pid_matches_owned_service "$name" "$pid"; }; then
+                        kind="$(_systemd_listener_kind "$name" "$pid" "$prior_group")" || return 1
+                        [[ "$kind" == stray ]] || continue
                         echo "  Stopping project-owned $name stray (PID $pid)..."
-                        current="$(_systemd_property "$name" MainPID)" || return 1
-                        [[ "$pid" != "$current" ]] || continue
                         if (( attempt >= 20 )); then
                             kill -9 "$pid" 2>/dev/null || true
                         else
@@ -846,23 +885,46 @@ _systemd_clear_port() {
 }
 
 _systemd_action() {
-    local action="$1" name="$2" unit="learn-ukrainian-$2.service" main listeners attempt
-    if [[ "$action" == start && "$name" == api && "$API_LIVE_MODE" -eq 1 ]]; then
+    local action="$1" name="$2" unit="learn-ukrainian-$2.service" main listeners kind attempt timeout timeout_var prior_group
+    if [[ "$action" != stop && "$name" == api && "$API_LIVE_MODE" -eq 1 ]]; then
         echo "  ERROR: api --live applies only to launchd; systemd api will not start a second process." >&2
         return 1
     fi
+    if [[ "$action" != stop ]]; then
+        timeout_var="SVC_START_TIMEOUT_${name}"
+        if [[ "$name" == astro ]]; then
+            timeout="${!timeout_var:-60}"
+        else
+            timeout="${!timeout_var:-20}"
+        fi
+        if [[ ! "$timeout" =~ ^[1-9][0-9]*$ ]]; then
+            echo "  ERROR: $timeout_var must be a positive integer number of seconds." >&2
+            return 1
+        fi
+    fi
+    prior_group="$(_systemd_property "$name" ControlGroup)" || return 1
     "$SVC_SYSTEMCTL_BIN" --user stop "$unit" || return 1
-    _systemd_clear_port "$name" || return 1
+    _systemd_clear_port "$name" "$prior_group" || return 1
     rm -f "$(_pid_file "$name")"
     if [[ "$action" == stop ]]; then
         echo "  $name stopped (systemd)"
         return 0
     fi
     "$SVC_SYSTEMCTL_BIN" --user start "$unit" || return 1
-    for attempt in $(seq 1 40); do
-        main="$(_systemd_property "$name" MainPID)" || return 1
+    for ((attempt = 0; attempt < timeout * 4; attempt++)); do
+        main="$(_systemd_property "$name" MainPID)" || {
+            "$SVC_SYSTEMCTL_BIN" --user stop "$unit" || true
+            return 1
+        }
         listeners="$(_pid_on_port "$name")"
-        if [[ "$main" =~ ^[1-9][0-9]*$ && "$listeners" == "$main" ]] && _health_check "$name"; then
+        kind=""
+        if [[ "$main" =~ ^[1-9][0-9]*$ && "$listeners" =~ ^[1-9][0-9]*$ ]]; then
+            kind="$(_systemd_listener_kind "$name" "$listeners")" || {
+                "$SVC_SYSTEMCTL_BIN" --user stop "$unit" || true
+                return 1
+            }
+        fi
+        if [[ "$kind" == unit ]] && _health_check "$name"; then
             _sync_pidfile "$name" "$main"
             echo "  $name started (systemd MainPID $main, port $(_port_owner_label "$name"))"
             return 0
@@ -870,7 +932,7 @@ _systemd_action() {
         sleep 0.25
     done
     "$SVC_SYSTEMCTL_BIN" --user stop "$unit" || true
-    echo "  ERROR: $name did not become healthy with exactly its systemd MainPID listening." >&2
+    echo "  ERROR: $name did not become healthy with exactly one listener in its systemd cgroup within ${timeout}s." >&2
     return 1
 }
 
@@ -1261,7 +1323,7 @@ _status() {
                     state=blocked
                 fi
             done
-            if [[ "$state" == active && "$listeners" == "$main" ]] && ! _health_check "$name"; then
+            if [[ "$state" == active && -n "$listeners" && "$detail" != *"_listener="* ]] && ! _health_check "$name"; then
                 state=degraded
             fi
             printf "%-12s %-11s %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "$detail"
