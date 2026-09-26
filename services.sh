@@ -26,7 +26,8 @@
 #   launcher ($WORK_PRIVATE_ROOT/ops/writer-notebook.sh) with the original
 #   args; no local uvicorn/launchd is ever spawned in this role. If the
 #   launcher is absent, the script fails closed.
-#   local — default on Linux. Spawns local processes as before.
+#   local — default on Linux. Uses loaded systemd user units; otherwise
+#   retains the direct process or launchd path.
 #
 # SSH LocalForward (Mac notebook):
 #   start/stop/restart auto-delegate to the writer host when any requested
@@ -56,6 +57,7 @@ set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SVC_LSOF_BIN="${SVC_LSOF_BIN:-lsof}"
+SVC_SYSTEMCTL_BIN="${SVC_SYSTEMCTL_BIN:-systemctl}"
 LOGS_DIR="$PROJECT_ROOT/logs"
 PIDS_DIR="$PROJECT_ROOT/.pids"
 VENV="$PROJECT_ROOT/.venv/bin"
@@ -139,7 +141,7 @@ _ab_monitor_env_defaults() {
 _ab_monitor_env_defaults
 
 # Service definitions: name -> command, port, log file, health checks, process match
-declare -A SVC_CMD SVC_PORT SVC_HOST SVC_LOG SVC_DESC SVC_HEALTH SVC_HEALTH_ALT SVC_MATCH
+declare -A SVC_CMD SVC_PORT SVC_HOST SVC_LOG SVC_DESC SVC_HEALTH SVC_HEALTH_ALT SVC_MATCH SVC_OWNED_MATCH
 
 SVC_CMD[sources]="$VENV/python .mcp/servers/sources/server.py --standalone --host 127.0.0.1 --port 8766"
 SVC_PORT[sources]=8766
@@ -177,6 +179,10 @@ SVC_HEALTH_ALT[astro]="http://localhost:4321/"
 # Live ``npm run dev`` resolves to ``node …/.bin/astro dev``; older
 # installs still expose ``astro.mjs dev``. Match either argv form.
 SVC_MATCH[astro]=".bin/astro dev|astro.mjs dev"
+for name in sources api work; do
+    SVC_OWNED_MATCH[$name]="${SVC_MATCH[$name]}"
+done
+SVC_OWNED_MATCH[astro]="$PROJECT_ROOT/site/node_modules/astro/"
 
 ALL_SERVICES="sources api astro work"
 
@@ -314,6 +320,18 @@ _pid_matches_service() {
     [[ -z "$cmdline" ]] && return 1
 
     # SVC_MATCH may list '|' alternatives (astro: .bin/astro vs astro.mjs).
+    for needle in $match; do
+        [[ -n "$needle" && "$cmdline" == *"$needle"* ]] && return 0
+    done
+    return 1
+}
+
+_pid_matches_owned_service() {
+    local name="$1" pid="$2" match="${SVC_OWNED_MATCH[$1]-}"
+    local cmdline needle
+    cmdline="$(_cmdline_for_pid "$pid")"
+    [[ -n "$cmdline" ]] || return 1
+    local IFS='|'
     for needle in $match; do
         [[ -n "$needle" && "$cmdline" == *"$needle"* ]] && return 0
     done
@@ -706,8 +724,164 @@ _disable_api_supervisor() {
     fi
 }
 
+_systemd_bus_environment() {
+    local runtime
+    runtime="/run/user/$(id -u)"
+    if [[ -d "$runtime" ]]; then
+        if [[ -z "${XDG_RUNTIME_DIR:-}" ]]; then
+            export XDG_RUNTIME_DIR="$runtime"
+        fi
+        if [[ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+            export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+        fi
+    fi
+}
+
+_systemd_unit_file_exists() {
+    local unit="$1" dir data_root
+    local dirs=("${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
+        "${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user.control"
+        "${XDG_DATA_HOME:-$HOME/.local/share}/systemd/user"
+        "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/systemd/user"
+        /etc/systemd/user /run/systemd/user /usr/local/lib/systemd/user /usr/lib/systemd/user /lib/systemd/user)
+    local data_roots=()
+    IFS=: read -r -a data_roots <<< "${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+    for data_root in "${data_roots[@]}"; do
+        [[ -n "$data_root" ]] && dirs+=("$data_root/systemd/user")
+    done
+    for dir in "${dirs[@]}"; do
+        [[ -e "$dir/$unit" || -L "$dir/$unit" ]] && return 0
+    done
+    return 1
+}
+
+# Print managed or fallback. Any uncertain installed-unit state is an error.
+_systemd_route() {
+    local name="$1" unit="learn-ukrainian-$1.service" load_state
+    if [[ "$(uname -s)" != "Linux" ]]; then
+        echo fallback
+        return 0
+    fi
+    _systemd_bus_environment
+    if ! command -v "$SVC_SYSTEMCTL_BIN" >/dev/null 2>&1; then
+        if _systemd_unit_file_exists "$unit"; then
+            echo "  ERROR: $unit exists but $SVC_SYSTEMCTL_BIN is unavailable; cannot safely manage it." >&2
+            return 1
+        fi
+        echo fallback
+        return 0
+    fi
+    if ! load_state="$("$SVC_SYSTEMCTL_BIN" --user show -p LoadState --value "$unit" 2>/dev/null)"; then
+        echo "  ERROR: cannot query $unit on the systemd user bus; check the user manager and XDG_RUNTIME_DIR." >&2
+        return 1
+    fi
+    case "$load_state" in
+        loaded) echo managed ;;
+        not-found) echo fallback ;;
+        *) echo "  ERROR: $unit has LoadState=${load_state:-unknown}; refusing unsupervised fallback." >&2; return 1 ;;
+    esac
+}
+
+_systemd_property() {
+    "$SVC_SYSTEMCTL_BIN" --user show -p "$2" --value "learn-ukrainian-$1.service"
+}
+
+_systemd_listener_kind() {
+    local name="$1" pid="$2" main uid
+    main="$(_systemd_property "$name" MainPID)" || return 1
+    if [[ "$pid" == "$main" && "$main" != 0 ]]; then
+        echo unit
+    elif _is_ssh_tunnel_pid "$pid"; then
+        echo foreign
+    else
+        uid="$(command ps -p "$pid" -o uid= 2>/dev/null | tr -d '[:space:]')"
+        if [[ "$uid" == "$(id -u)" ]] && { _pid_matches_service "$name" "$pid" || _pid_matches_owned_service "$name" "$pid"; }; then
+            echo stray
+        else
+            echo foreign
+        fi
+    fi
+}
+
+_systemd_clear_port() {
+    local name="$1" pid kind current attempt
+    if ! command -v "$SVC_LSOF_BIN" >/dev/null 2>&1; then
+        echo "  ERROR: lsof is required to verify $name's systemd port." >&2
+        return 1
+    fi
+    for ((attempt = 0; attempt < 40; attempt++)); do
+        local listeners=""
+        listeners="$(_pid_on_port "$name")"
+        [[ -z "$listeners" ]] && return 0
+        for pid in $listeners; do
+            [[ "$pid" =~ ^[0-9]+$ ]] || return 1
+            kind="$(_systemd_listener_kind "$name" "$pid")" || return 1
+            case "$kind" in
+                foreign)
+                    echo "  $name port $(_port_owner_label "$name") is bound by foreign PID $pid; not spawning (free the port and retry)" >&2
+                    return 1 ;;
+                unit) continue ;;
+                stray)
+                    # Recheck ownership and argv, then read MainPID immediately
+                    # before each signal so a newly adopted unit PID is spared.
+                    kind="$(_systemd_listener_kind "$name" "$pid")" || return 1
+                    if [[ "$kind" == stray ]] \
+                        && [[ " $(_pid_on_port "$name" | tr '\n' ' ') " == *" $pid "* ]] \
+                        && { _pid_matches_service "$name" "$pid" || _pid_matches_owned_service "$name" "$pid"; }; then
+                        echo "  Stopping project-owned $name stray (PID $pid)..."
+                        current="$(_systemd_property "$name" MainPID)" || return 1
+                        [[ "$pid" != "$current" ]] || continue
+                        if (( attempt >= 20 )); then
+                            kill -9 "$pid" 2>/dev/null || true
+                        else
+                            kill "$pid" 2>/dev/null || true
+                        fi
+                    fi ;;
+            esac
+        done
+        sleep 0.25
+    done
+    echo "  ERROR: $name port $(_port_owner_label "$name") did not become free after systemd stop." >&2
+    return 1
+}
+
+_systemd_action() {
+    local action="$1" name="$2" unit="learn-ukrainian-$2.service" main listeners attempt
+    if [[ "$action" == start && "$name" == api && "$API_LIVE_MODE" -eq 1 ]]; then
+        echo "  ERROR: api --live applies only to launchd; systemd api will not start a second process." >&2
+        return 1
+    fi
+    "$SVC_SYSTEMCTL_BIN" --user stop "$unit" || return 1
+    _systemd_clear_port "$name" || return 1
+    rm -f "$(_pid_file "$name")"
+    if [[ "$action" == stop ]]; then
+        echo "  $name stopped (systemd)"
+        return 0
+    fi
+    "$SVC_SYSTEMCTL_BIN" --user start "$unit" || return 1
+    for attempt in $(seq 1 40); do
+        main="$(_systemd_property "$name" MainPID)" || return 1
+        listeners="$(_pid_on_port "$name")"
+        if [[ "$main" =~ ^[1-9][0-9]*$ && "$listeners" == "$main" ]] && _health_check "$name"; then
+            _sync_pidfile "$name" "$main"
+            echo "  $name started (systemd MainPID $main, port $(_port_owner_label "$name"))"
+            return 0
+        fi
+        sleep 0.25
+    done
+    "$SVC_SYSTEMCTL_BIN" --user stop "$unit" || true
+    echo "  ERROR: $name did not become healthy with exactly its systemd MainPID listening." >&2
+    return 1
+}
+
 _start_service() {
     local name="$1"
+    local route
+    route="$(_systemd_route "$name")" || return 1
+    if [[ "$route" == managed ]]; then
+        _systemd_action start "$name"
+        return
+    fi
     local state
     state="$(_service_state "$name")"
     if [[ "$state" == "running" ]]; then
@@ -826,6 +1000,12 @@ _start_service() {
 
 _stop_service() {
     local name="$1"
+    local route
+    route="$(_systemd_route "$name")" || return 1
+    if [[ "$route" == managed ]]; then
+        _systemd_action stop "$name"
+        return
+    fi
     local pidfile
     pidfile="$(_pid_file "$name")"
 
@@ -975,13 +1155,6 @@ _ensure_astro_deps() {
 _fix_service() {
     local name="$1"
 
-    if _health_check "$name"; then
-        echo "  $name ok"
-        return 0
-    fi
-
-    echo "  $name unhealthy"
-
     if [[ -n "${LU_SERVICES_SSH_HOST:-}" ]] || _ssh_tunnel_port_pid "$name" >/dev/null; then
         echo "  $name is ssh-forwarded (or LU_SERVICES_SSH_HOST is set); restarting remotely."
         if ! _delegate_remote restart "$name"; then
@@ -995,6 +1168,21 @@ _fix_service() {
         echo "  ERROR: $name still unhealthy after remote restart." >&2
         return 1
     fi
+
+    # A healthy stray must never satisfy fix for a loaded unit.
+    local route
+    route="$(_systemd_route "$name")" || return 1
+    if [[ "$route" == managed ]]; then
+        _systemd_action fix "$name"
+        return
+    fi
+
+    if _health_check "$name"; then
+        echo "  $name ok"
+        return 0
+    fi
+
+    echo "  $name unhealthy"
 
     echo "  Restarting $name locally..."
     if [[ "$name" == "api" ]]; then
@@ -1047,6 +1235,7 @@ _rebuild_astro() {
 
 _status() {
     local selected="${*:-$ALL_SERVICES}"
+    local failed=0 route active sub main restarts listeners pid kind detail state pid_in_port
     printf "%-12s %-11s %-8s %-15s %s\n" "SERVICE" "STATUS" "PID" "PORT" "DETAIL"
     printf "%-12s %-11s %-8s %-15s %s\n" "-------" "------" "---" "----" "------"
     for name in $selected; do
@@ -1055,7 +1244,30 @@ _status() {
             continue
         fi
 
-        local state pid detail="-"
+        route="$(_systemd_route "$name")" || { failed=1; continue; }
+        if [[ "$route" == managed ]]; then
+            active="$(_systemd_property "$name" ActiveState)" || { failed=1; continue; }
+            sub="$(_systemd_property "$name" SubState)" || { failed=1; continue; }
+            main="$(_systemd_property "$name" MainPID)" || { failed=1; continue; }
+            restarts="$(_systemd_property "$name" NRestarts)" || { failed=1; continue; }
+            detail="systemd $active/$sub restarts=$restarts"
+            listeners="$(_pid_on_port "$name")"
+            state="$active"
+            pid="$main"
+            for pid_in_port in $listeners; do
+                kind="$(_systemd_listener_kind "$name" "$pid_in_port")" || { failed=1; continue; }
+                if [[ "$kind" != unit ]]; then
+                    detail+=" ${kind}_listener=$pid_in_port"
+                    state=blocked
+                fi
+            done
+            if [[ "$state" == active && "$listeners" == "$main" ]] && ! _health_check "$name"; then
+                state=degraded
+            fi
+            printf "%-12s %-11s %-8s %-15s %s\n" "$name" "$state" "$pid" "$(_port_owner_label "$name")" "$detail"
+            continue
+        fi
+        detail="-"
         state="$(_service_state "$name")"
         pid="$(_known_service_pid "$name" || true)"
         if [[ -z "$pid" ]]; then
@@ -1087,10 +1299,17 @@ _status() {
                 ;;
         esac
     done
+    return "$failed"
 }
 
 _logs() {
     local name="$1"
+    local route
+    route="$(_systemd_route "$name")" || return 1
+    if [[ "$route" == managed ]]; then
+        "${SVC_JOURNALCTL_BIN:-journalctl}" --user -u "learn-ukrainian-$name.service" --no-pager -n 80
+        return
+    fi
     local logfile="${SVC_LOG[$name]}"
     echo "Log: $logfile"
     if [[ ! -f "$logfile" ]]; then
@@ -1099,6 +1318,12 @@ _logs() {
     fi
     tail -n 80 "$logfile"
 }
+
+# Persist the user-bus environment in this shell. _systemd_route is captured
+# through command substitution, whose exports otherwise die in its subshell.
+if [[ "$(uname -s)" == "Linux" ]]; then
+    _systemd_bus_environment
+fi
 
 # Parse arguments
 action="${1:-help}"
@@ -1150,18 +1375,23 @@ case "$action" in
         # shellcheck disable=SC2086
         _maybe_delegate_and_exit stop $services
         echo "Stopping services..."
+        stop_failed=0
         for svc in $services; do
             if [[ -z "${SVC_CMD[$svc]+x}" ]]; then
                 echo "  Unknown service: $svc"
                 continue
             fi
-            if [[ "$svc" == "api" ]]; then
+            route="$(_systemd_route "$svc")" || { stop_failed=1; continue; }
+            if [[ "$svc" == "api" && "$route" == fallback ]]; then
                 _reconcile_api_pid
             fi
-            _stop_service "$svc"
+            if ! _stop_service "$svc"; then
+                stop_failed=1
+            fi
         done
         echo ""
-        _status
+        _status || stop_failed=1
+        [[ "$stop_failed" -eq 0 ]] || exit 1
         ;;
     restart)
         # shellcheck disable=SC2086
@@ -1179,10 +1409,20 @@ case "$action" in
                 echo "  Unknown service: $svc"
                 continue
             fi
+            route="$(_systemd_route "$svc")" || { restart_failed=1; continue; }
+            if [[ "$route" == managed ]]; then
+                if ! _systemd_action restart "$svc"; then
+                    restart_failed=1
+                fi
+                continue
+            fi
             if [[ "$svc" == "api" ]]; then
                 _reconcile_api_pid
             fi
-            _stop_service "$svc"
+            if ! _stop_service "$svc"; then
+                restart_failed=1
+                continue
+            fi
             if ! _start_service "$svc"; then
                 restart_failed=1
             fi
@@ -1303,7 +1543,7 @@ case "$action" in
         # fully buffered and stderr is not, so printing the warning first
         # dropped it into the middle of the table.
         status_reconcile_msg=""
-        if [[ " $services " == *" api "* ]]; then
+        if [[ " $services " == *" api "* ]] && [[ "$(_systemd_route api)" == fallback ]]; then
             status_reconcile_msg="$(_reconcile_api_pid 2>&1)" || true
         fi
         _status "$services"

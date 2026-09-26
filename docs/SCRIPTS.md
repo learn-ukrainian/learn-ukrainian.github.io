@@ -561,10 +561,14 @@ Checks short articles, leaked reasoning, fence wrapping, missing headings, and t
 
 ### Services (`./services.sh`)
 
-Canonical process manager for the three long-running local services. It owns
-PID/lock/port bookkeeping — **always use it instead of ad-hoc `npm run dev`,
-`astro preview`, or `nohup`**, which create port drift (4322/4323…) and orphan
-servers.
+On Linux, `services.sh` controls the loaded systemd user units for `sources`,
+`api`, `work`, and `astro`, clears project-owned stray listeners, and reads logs
+from the journal. The existing `monitor-pull` timer restarts the api unit every
+five minutes after a pull. Never restart `learn-ukrainian-loopback.target`:
+its dependencies start all four services. On systems without these units,
+`services.sh` retains its direct or launchd process management. Always use it
+instead of ad-hoc `npm run dev`, `astro preview`, or `nohup`, which create port
+drift and orphan servers.
 
 | Service | Port | What it is |
 | --- | --- | --- |
