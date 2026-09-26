@@ -199,33 +199,20 @@ def resolve_membership(
             "digest": None,
             "reason": ("issue has a native parent epic that differs from the identity's exact registered stream epic"),
         }
-    if isinstance(membership_report, dict):
-        incomplete_nodes = set()
-        if isinstance(membership_report.get("incomplete_nodes"), list):
-            incomplete_nodes.update(
-                n
-                for n in membership_report["incomplete_nodes"]
-                if isinstance(n, int) and not isinstance(n, bool) and n > 0
-            )
-        for w in membership_report.get("warnings") or []:
-            if (
-                isinstance(w, dict)
-                and w.get("code") == "traversal_incomplete"
-                and isinstance(w.get("issue"), int)
-                and not isinstance(w.get("issue"), bool)
-                and w["issue"] > 0
-            ):
-                incomplete_nodes.add(w["issue"])
-        if membership_report.get("membership_complete") is False or incomplete_nodes:
-            nodes_desc = ", ".join(f"#{n}" for n in sorted(incomplete_nodes)) if incomplete_nodes else "unknown"
-            return {
-                "valid": False,
-                "method": None,
-                "epic": None,
-                "generated_at": None,
-                "digest": None,
-                "reason": (f"fresh issue-stream membership audit traversal is incomplete (unread nodes: {nodes_desc})"),
-            }
+    if isinstance(membership_report, dict) and not issue_stream_audit.membership_report_is_complete(membership_report):
+        # Same predicate as validate_membership_report (#8661): the flag must
+        # be boolean True and incomplete_nodes must be a list. A missing flag
+        # or the string "false" is unverified, not a finished traversal.
+        unread = issue_stream_audit.unread_membership_nodes(membership_report)
+        nodes_desc = ", ".join(f"#{n}" for n in sorted(unread)) if unread else "unknown"
+        return {
+            "valid": False,
+            "method": None,
+            "epic": None,
+            "generated_at": None,
+            "digest": None,
+            "reason": (f"fresh issue-stream membership audit traversal is incomplete (unread nodes: {nodes_desc})"),
+        }
     validated_report = issue_stream_audit.validate_membership_report(membership_report, max_age_s)
     if validated_report is None:
         return {

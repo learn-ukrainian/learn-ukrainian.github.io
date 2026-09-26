@@ -672,6 +672,8 @@ def test_read_membership_index_freshness(tmp_path, registry):
 def _valid_report(now: float) -> dict:
     return {
         "generated_at": now,
+        "membership_complete": True,
+        "incomplete_nodes": [],
         "effective_membership": {
             "42": {"epics": [100], "streams": ["product"], "via": "native", "unique_stream": True}
         },
@@ -1842,6 +1844,135 @@ def test_validate_membership_report_and_read_membership_index_reject_incomplete_
     assert validate_membership_report(complete_report, 3600) == complete_report
     cache_file.write_text(json.dumps(complete_report), encoding="utf-8")
     assert read_membership_index(3600, cache_path=cache_file) is not None
+
+
+def test_absent_or_mistyped_completeness_flag_is_unverified(tmp_path):
+    """A missing flag, the string "false", or a non-list incomplete_nodes is unverified."""
+    import time
+
+    now = time.time()
+    cache = tmp_path / "cache.json"
+
+    absent = _valid_report(now)
+    del absent["membership_complete"]
+    assert validate_membership_report(absent, 3600) is None
+    cache.write_text(json.dumps(absent), encoding="utf-8")
+    assert read_membership_index(3600, cache_path=cache) is None
+
+    string_false = _valid_report(now)
+    string_false["membership_complete"] = "false"
+    assert validate_membership_report(string_false, 3600) is None
+
+    non_list = _valid_report(now)
+    non_list["incomplete_nodes"] = "false"
+    assert validate_membership_report(non_list, 3600) is None
+
+
+def test_resolvers_refuse_incomplete_report_that_looks_uniquely_owned():
+    """Defence in depth: builders must not trust a raw incomplete classify-shaped report."""
+    import time
+
+    report = {
+        "generated_at": time.time(),
+        "membership_complete": False,
+        "incomplete_nodes": [20],
+        "warnings": [{"code": "traversal_incomplete", "issue": 20}],
+        "effective_membership": {"500": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
+        "open_issue_numbers": [10, 20, 500],
+    }
+    assert make_membership_resolver(report)(500, 10) is False
+    assert make_issue_resolver(report)("500") is False
+
+
+def test_resolve_github_issue_refuses_incomplete_cache_for_traced_case(tmp_path):
+    """#500 is referenced by roots #10 and #20, but #20 was never read.
+
+    The partial index makes #500 look uniquely owned by #10. entire_context
+    must still refuse.
+    """
+    import time
+
+    from scripts.entire_context.resolvers import REASON_RESOLUTION_ERROR, ResolutionError, resolve_github_issue
+
+    report = {
+        "generated_at": time.time(),
+        "membership_complete": False,
+        "incomplete_nodes": [20],
+        "warnings": [{"code": "traversal_incomplete", "issue": 20}],
+        "open_issue_numbers": [10, 20, 500],
+        "effective_membership": {"500": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
+    }
+    cache = tmp_path / "issue_stream_audit.json"
+    cache.write_text(json.dumps(report), encoding="utf-8")
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_github_issue(500, cache_path=cache, repo=tmp_path, namespace="github:acme/repo")
+    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
+    assert "incomplete" in str(excinfo.value)
+
+
+def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_path, monkeypatch):
+    """End to end through the real ``_tree_membership``: two roots, one unread.
+
+    Roots #10 and #20 both reference #500. #20's fetch fails, so the nodes
+    that were read make #500 look uniquely owned by #10. ``resolve_membership``
+    and ``entire_context`` must both refuse.
+    """
+    from scripts.entire_context.resolvers import REASON_RESOLUTION_ERROR, ResolutionError, resolve_github_issue
+    from scripts.orchestration import task_lifecycle
+
+    monkeypatch.setattr(issue_stream_audit, "_REPO_CACHE", {})
+    root = tmp_path / "repo"
+    _make_repo(root, epics=[10, 20])
+    bodies = {10: "Tracked in #500", 20: "Also #500"}
+
+    def _run(args, capture_output, text, timeout, cwd):
+        assert args[0] == "gh"
+        if args[1:3] == ["issue", "list"]:
+            return _FakeCompletedProcess(json.dumps(_issues(10, 20, 500)))
+        if args[1:3] == ["repo", "view"]:
+            return _FakeCompletedProcess(json.dumps({"owner": {"login": "acme"}, "name": "repo"}))
+        if args[1:3] == ["issue", "view"]:
+            return _FakeCompletedProcess(json.dumps({"number": int(args[3]), "state": "OPEN"}))
+        if args[1] == "api" and args[2] == "graphql":
+            numbers = [int(n) for n in re.findall(r"i(\d+):issue\(number:", args[-1])]
+            if 20 in numbers:
+                return _FakeCompletedProcess("", returncode=1, stderr="connection refused")
+            repo = {}
+            for number in numbers:
+                repo[f"i{number}"] = {
+                    "body": bodies.get(number, ""),
+                    "subIssues": {"nodes": [], "pageInfo": {"hasNextPage": False, "endCursor": None}},
+                }
+            return _FakeCompletedProcess(json.dumps({"data": {"repository": repo}}))
+        raise AssertionError(f"unexpected invocation: {args}")
+
+    monkeypatch.setattr(issue_stream_audit.subprocess, "run", _run)
+    report = run_audit(root)
+
+    assert report["ok"] is False
+    assert report["membership_complete"] is False
+    assert 20 in report["incomplete_nodes"]
+    assert {"code": "traversal_incomplete", "issue": 20} in report["warnings"]
+    # The trap: the subtree we did read looks like a unique owner.
+    assert report["effective_membership"]["500"]["epics"] == [10]
+    assert report["effective_membership"]["500"]["unique_stream"] is True
+
+    result = task_lifecycle.resolve_membership(
+        issue_number=500,
+        stream_epic=10,
+        native_parent_epic=None,
+        registered_epics=[10, 20],
+        membership_report=report,
+    )
+    assert result["valid"] is False
+    assert "#20" in result["reason"]
+    assert "incomplete" in result["reason"]
+
+    cache = root / "batch_state" / "issue_stream_audit.json"
+    with pytest.raises(ResolutionError) as excinfo:
+        resolve_github_issue(500, cache_path=cache, repo=root, namespace="github:acme/repo")
+    assert excinfo.value.reason == REASON_RESOLUTION_ERROR
+    assert "incomplete" in str(excinfo.value)
 
 
 def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_path, monkeypatch):

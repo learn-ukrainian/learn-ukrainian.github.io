@@ -144,7 +144,11 @@ def _write_cache(
     cache = root_or_path if is_file else root_or_path / "issue_stream_audit.json"
     # Freshness is judged against real wall-clock (read_membership_index uses
     # time.time()), so stamp from now, not the fixed NOW used for telemetry.
-    report: dict[str, Any] = {"generated_at": int(time.time()) - age_s}
+    report: dict[str, Any] = {
+        "generated_at": int(time.time()) - age_s,
+        "membership_complete": True,
+        "incomplete_nodes": [],
+    }
     if membership is not None:
         report["effective_membership"] = membership
     if open_numbers is not None:

@@ -636,6 +636,8 @@ def test_every_lifecycle_boundary_survives_durable_resume(tmp_path: Path, state:
 def _fresh_report(now: float, index: dict) -> dict:
     return {
         "generated_at": now,
+        "membership_complete": True,
+        "incomplete_nodes": [],
         "effective_membership": index,
         "open_issue_numbers": [42, 10],
     }
@@ -845,6 +847,29 @@ def test_resolve_membership_reviewer_case_fails_closed_on_incomplete_traversal()
     assert result["valid"] is False
     assert "#20" in result["reason"]
     assert "incomplete" in result["reason"]
+
+
+def test_resolve_membership_rejects_unflagged_or_mistyped_completeness() -> None:
+    """A pre-flag cache, the string "false", or a non-list incomplete_nodes is unverified."""
+    import time
+
+    index = {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}}
+    absent = _fresh_report(time.time(), index)
+    del absent["membership_complete"]
+    string_false = _fresh_report(time.time(), index)
+    string_false["membership_complete"] = "false"
+    non_list = _fresh_report(time.time(), index)
+    non_list["incomplete_nodes"] = "false"
+    for report in (absent, string_false, non_list):
+        result = task_lifecycle.resolve_membership(
+            issue_number=42,
+            stream_epic=10,
+            native_parent_epic=None,
+            registered_epics=[10],
+            membership_report=report,
+        )
+        assert result["valid"] is False
+        assert "incomplete" in result["reason"]
 
 
 def test_resolve_membership_accepts_complete_traversal_report() -> None:

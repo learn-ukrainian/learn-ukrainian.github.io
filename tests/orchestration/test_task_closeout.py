@@ -688,6 +688,8 @@ def test_cmd_init_accepts_unique_body_membership(tmp_path: Path, monkeypatch: py
         "membership_audit_report",
         lambda self: {
             "generated_at": time.time(),
+            "membership_complete": True,
+            "incomplete_nodes": [],
             "effective_membership": {"42": {"epics": [10], "streams": ["infra"], "via": "body", "unique_stream": True}},
             "open_issue_numbers": [42, 10],
         },
@@ -707,6 +709,8 @@ def test_cmd_init_rejects_orphaned_issue(tmp_path: Path, monkeypatch: pytest.Mon
         "membership_audit_report",
         lambda self: {
             "generated_at": time.time(),
+            "membership_complete": True,
+            "incomplete_nodes": [],
             "effective_membership": {},
             "open_issue_numbers": [42, 10],
         },

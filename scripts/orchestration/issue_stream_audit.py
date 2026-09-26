@@ -1484,6 +1484,49 @@ def _valid_open_numbers(value: object) -> bool:
     return isinstance(value, list) and all(_is_positive_int(n) for n in value)
 
 
+def unread_membership_nodes(report: dict) -> set[int]:
+    """Issue numbers the audit recorded as never read.
+
+    A non-list ``incomplete_nodes`` or ``warnings`` contributes nothing here;
+    :func:`membership_report_is_complete` rejects those shapes on its own.
+    """
+    nodes: set[int] = set()
+    raw = report.get("incomplete_nodes")
+    if isinstance(raw, list):
+        nodes.update(n for n in raw if _is_positive_int(n))
+    warnings = report.get("warnings")
+    if isinstance(warnings, list):
+        for warning in warnings:
+            if (
+                isinstance(warning, dict)
+                and warning.get("code") == "traversal_incomplete"
+                and _is_positive_int(warning.get("issue"))
+            ):
+                nodes.add(warning["issue"])
+    return nodes
+
+
+def membership_report_is_complete(report: object) -> bool:
+    """True only when the audit explicitly certifies a finished traversal.
+
+    ``membership_complete`` must be the boolean ``True``. A missing flag, the
+    string ``"false"``, or any other value is unverified — a pre-flag cache
+    must be refreshed, not trusted. ``incomplete_nodes`` must be a list, and
+    neither that list nor a ``traversal_incomplete`` warning may name an
+    unread issue.
+    """
+    if not isinstance(report, dict):
+        return False
+    if report.get("membership_complete") is not True:
+        return False
+    if not isinstance(report.get("incomplete_nodes"), list):
+        return False
+    warnings = report.get("warnings")
+    if warnings is not None and not isinstance(warnings, list):
+        return False
+    return not unread_membership_nodes(report)
+
+
 def validate_membership_report(report: object, max_age_s: int) -> dict | None:
     """Validate an already-fetched (in-memory) audit report and return it, or
     ``None`` if it fails closed.
@@ -1506,15 +1549,12 @@ def validate_membership_report(report: object, max_age_s: int) -> dict | None:
     if age > max_age_s or age < -CACHE_FUTURE_SKEW_S:
         return None
 
-    # Completeness gate (#8661): an incomplete traversal must never certify
-    # membership proof. Reject an incomplete report for membership decisions.
-    incomplete_nodes = set()
-    if isinstance(report.get("incomplete_nodes"), list):
-        incomplete_nodes.update(n for n in report["incomplete_nodes"] if _is_positive_int(n))
-    for w in report.get("warnings") or []:
-        if isinstance(w, dict) and w.get("code") == "traversal_incomplete" and _is_positive_int(w.get("issue")):
-            incomplete_nodes.add(w["issue"])
-    if report.get("membership_complete") is False or incomplete_nodes:
+    # Completeness gate (#8661): trust membership only when the audit
+    # explicitly certifies a finished traversal. A missing flag, the string
+    # "false", a non-list incomplete_nodes, an unread node, or a
+    # traversal_incomplete warning all fail closed. A pre-flag cache therefore
+    # reads as unverified (None) and the caller must refresh it.
+    if not membership_report_is_complete(report):
         return None
 
     index = report.get("effective_membership")
@@ -1533,10 +1573,12 @@ def read_membership_index(max_age_s: int, *, cache_path: Path | None = None) -> 
     value — when the cache is missing, unreadable, not a mapping, stale (older
     than ``max_age_s``), materially future-skewed (``generated_at`` more than
     ``CACHE_FUTURE_SKEW_S`` ahead of wall-clock, or non-finite/non-numeric/bool),
-    was written by a pre-P4 auditor that lacks the index, or carries a
-    structurally/semantically malformed ``effective_membership`` or
-    ``open_issue_numbers`` (non-positive-int keys/values, unknown ``via``, a
-    ``unique_stream`` bool inconsistent with its epic count, etc.). This never
+    was written by a pre-P4 auditor that lacks the index, does not explicitly
+    certify ``membership_complete is True`` with a list-typed
+    ``incomplete_nodes`` (a pre-flag or incomplete traversal is unverified),
+    or carries a structurally/semantically malformed ``effective_membership``
+    or ``open_issue_numbers`` (non-positive-int keys/values, unknown ``via``,
+    a ``unique_stream`` bool inconsistent with its epic count, etc.). This never
     reaches GitHub: the strict adoption gate consumes a cache produced by a
     separate live auditor run, so discovery/gate paths stay offline and
     non-mutating.
@@ -1558,9 +1600,18 @@ def make_membership_resolver(report: dict) -> MembershipResolver:
     exact membership, not merely one stream name), and the requested ``epic`` is
     one of its effective epics. Rejects absent/orphan, wrong-epic, and ambiguous
     (more than one effective epic, even within a single stream) ownership —
-    every failure mode fails closed. Issue *consumer* liveness (which DOES
-    require the issue to be open) is a separate proof — see ``make_issue_resolver``.
+    every failure mode fails closed. An incomplete or unflagged report refuses
+    every lookup, even when the index that was read looks unique. Issue
+    *consumer* liveness (which DOES require the issue to be open) is a
+    separate proof — see ``make_issue_resolver``.
     """
+    if not membership_report_is_complete(report):
+
+        def _refuse_incomplete(_issue: int, _epic: int) -> bool:
+            return False
+
+        return _refuse_incomplete
+
     index = report.get("effective_membership") or {}
 
     def _resolve(issue: int, epic: int) -> bool:
@@ -1581,8 +1632,15 @@ def make_issue_resolver(report: dict) -> Callable[[str], bool]:
     ambiguously multi-homed open issue is not trustworthy "adopted" evidence
     (codex/gemini review on PR #4998: adopted issue consumers must be open *and*
     uniquely owned, the same proof the ownership gate itself uses). Non-digit
-    refs fail closed.
+    refs fail closed. An incomplete or unflagged report refuses every ref.
     """
+    if not membership_report_is_complete(report):
+
+        def _refuse_incomplete(_ref: str) -> bool:
+            return False
+
+        return _refuse_incomplete
+
     open_set = {int(n) for n in (report.get("open_issue_numbers") or [])}
     index = report.get("effective_membership") or {}
 
