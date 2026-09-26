@@ -18,6 +18,7 @@ different timeout-less call cannot rotate into a vacated qualname slot (#7213).
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import textwrap
 from pathlib import Path
@@ -29,11 +30,13 @@ from scripts.ci.subprocess_timeout_guard import (
     SHAPE_HASH_HEX_LEN,
     SORT_ADVICE,
     STALE_PREAMBLE,
+    TESTS_TIMEOUT_PREAMBLE,
     UNALLOWLISTED_PREAMBLE,
     compare_allowlist,
     format_stale_line,
     format_unallowlisted_line,
     load_allowlist,
+    main,
     parse_allowlist_key,
     scan_scripts,
     sort_allowlist_entries,
@@ -287,3 +290,133 @@ def test_deliberately_hanging_test_is_named_by_pytest_timeout(tmp_path: Path) ->
     )
     # Either Failed: Timeout / +++ Timeout / Failed: Timeout >… depending on version.
     assert "timeout" in combined.lower(), "expected a timeout failure signal in child pytest output:\n" + combined
+
+
+def test_cli_fails_on_timeout_less_test_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """CLI fails on a temp tests/ file with a timeout-less subprocess.run (#8750)."""
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir(parents=True)
+    test_file = tests_dir / "test_unbounded.py"
+    test_file.write_text(
+        textwrap.dedent(
+            """\
+            import subprocess
+
+            def test_unbounded():
+                subprocess.run(["echo", "hi"])
+            """
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = main([str(test_file), "--root", str(tmp_path)])
+    assert exit_code == 1
+    err = capsys.readouterr().err
+    assert TESTS_TIMEOUT_PREAMBLE.strip() in err
+    assert "tests/test_unbounded.py:4 subprocess.run" in err
+
+
+def test_cli_passes_on_bounded_test_file(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """CLI passes on a temp tests/ file when timeout= is specified (#8750)."""
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir(parents=True)
+    test_file = tests_dir / "test_bounded.py"
+    test_file.write_text(
+        textwrap.dedent(
+            """\
+            import subprocess
+
+            def test_bounded():
+                subprocess.run(["echo", "hi"], timeout=30)
+            """
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = main([str(test_file), "--root", str(tmp_path)])
+    assert exit_code == 0
+    err = capsys.readouterr().err
+    assert err == ""
+
+
+def test_cli_fails_on_unallowlisted_scripts_call_and_passes_when_allowlisted(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """CLI fails on unallowlisted scripts/ call and passes on allowlisted one (#8750)."""
+    scripts_dir = tmp_path / "scripts"
+    scripts_dir.mkdir(parents=True)
+    script_file = scripts_dir / "tool.py"
+    script_file.write_text(
+        textwrap.dedent(
+            """\
+            import subprocess
+
+            def do_work():
+                subprocess.run(["echo", "hi"])
+            """
+        ),
+        encoding="utf-8",
+    )
+
+    # 1. Unallowlisted call fails with exit code 1 and paste-ready key
+    exit_code = main([str(script_file), "--root", str(tmp_path)])
+    assert exit_code == 1
+    err = capsys.readouterr().err
+    assert UNALLOWLISTED_PREAMBLE.strip() in err
+    assert "scripts/tool.py::do_work::subprocess.run::" in err
+
+    # Extract the paste-ready key printed in stderr
+    match = re.search(r"(scripts/tool\.py::do_work::subprocess\.run::[0-9a-f]{16})", err)
+    assert match is not None, f"Expected paste-ready key in stderr: {err}"
+    allowlist_key = match.group(1)
+
+    # 2. Allowlisted call passes with exit code 0
+    allowlist_file = tmp_path / "scripts" / "ci" / "subprocess_timeout_allowlist.txt"
+    allowlist_file.parent.mkdir(parents=True, exist_ok=True)
+    allowlist_file.write_text(f"{allowlist_key}\n", encoding="utf-8")
+
+    exit_code = main([str(script_file), "--root", str(tmp_path)])
+    assert exit_code == 0
+    assert capsys.readouterr().err == ""
+
+
+def test_cli_without_paths_agrees_with_repo_tests_on_main(capsys: pytest.CaptureFixture[str]) -> None:
+    """CLI without paths agrees with repo tests on current main (both clean) (#8750)."""
+    exit_code = main([])
+    assert exit_code == 0
+    assert capsys.readouterr().err == ""
+
+
+def test_cli_help_standard(capsys: pytest.CaptureFixture[str]) -> None:
+    """CLI meets the --help standard (cli-help-standard.md) (#8750)."""
+    with pytest.raises(SystemExit) as exc_info:
+        main(["--help"])
+    assert exc_info.value.code == 0
+    out = capsys.readouterr().out
+    assert "Check Python files under tests/ and scripts/ for timeout-less subprocess calls." in out
+    assert "Examples:" in out
+    assert "Outputs:" in out
+    assert "Exit codes:" in out
+    assert "Related:" in out
+
+
+def test_cli_syntax_error_exits_2(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """CLI exits 2 on Python syntax errors in checked files (#8750)."""
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir(parents=True)
+    bad_file = tests_dir / "test_syntax.py"
+    bad_file.write_text("def broken(: pass\n", encoding="utf-8")
+
+    exit_code = main([str(bad_file), "--root", str(tmp_path)])
+    assert exit_code == 2
+    err = capsys.readouterr().err
+    assert "syntax error while scanning" in err
+
+
+def test_cli_missing_path_exits_2(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """CLI exits 2 on non-existent file paths (#8750)."""
+    missing = tmp_path / "tests" / "missing.py"
+    exit_code = main([str(missing), "--root", str(tmp_path)])
+    assert exit_code == 2
+    err = capsys.readouterr().err
+    assert "path does not exist" in err
