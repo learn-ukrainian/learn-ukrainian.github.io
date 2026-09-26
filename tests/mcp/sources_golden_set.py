@@ -1,9 +1,23 @@
 """Frozen outputs for deterministic Sources handlers (#8524).
 
-Calls the handlers in process against the local ``data/sources.db`` opened
-read-only. ``query_pravopys`` is not in this set: ``pravopys_lookup`` fetches
-live HTML from pravopys.online. The nearest offline dictionary handler is
-``search_style_guide``.
+Calls the handlers in process against the local ``data/sources.db`` and
+``data/vesum.db`` opened read-only.
+
+Determinism & Crawl Isolation:
+The ULIF crawler (`fetch_ulif_homonyms` / `import_ulif_dump`) writes
+continuously to ``spellings``, ``responses``, ``meta``, ``register_pages``,
+``register_rows``, and ``ulif_dictua_*`` tables.
+To remain deterministic while the crawl runs, this golden set is restricted
+strictly to tools and inputs whose source tables are never written by the crawl:
+- `verify_word`, `verify_words`, `verify_lemma`, `inspect_word`, `inspect_words`:
+  read-only from static `data/vesum.db` (`forms_all`, `form_markers`).
+- `query_cefr_level`: read-only from static `data/sources.db` table `puls_cefr`.
+- `search_definitions`: read-only from static `data/sources.db` table `sum11`.
+- `search_style_guide`: read-only from static `data/sources.db` table `style_guide`.
+
+Tools backed by tables modified by the crawl (e.g. `query_ulif*`) or external
+network fetches (e.g. `query_pravopys` which scrapes pravopys.online) are
+deliberately excluded.
 """
 
 from __future__ import annotations
@@ -67,8 +81,12 @@ def _present(result: Any) -> dict[str, Any]:
 async def _capture(server: Any) -> dict[str, Any]:
     from wiki.sources_db import SOURCES_DB_PATH, using_connection
 
+    from scripts.rag.config import VESUM_DB_PATH
+
     if not SOURCES_DB_PATH.is_file():
         raise FileNotFoundError(SOURCES_DB_PATH)
+    if not Path(VESUM_DB_PATH).is_file():
+        raise FileNotFoundError(VESUM_DB_PATH)
     uri = f"file:{SOURCES_DB_PATH}?mode=ro"
     conn = sqlite3.connect(uri, uri=True, check_same_thread=False)
     conn.row_factory = sqlite3.Row

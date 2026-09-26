@@ -19,6 +19,8 @@ _SPEC.loader.exec_module(_GOLDEN)
 def test_sources_golden_set_matches_frozen_handlers() -> None:
     from wiki.sources_db import SOURCES_DB_PATH
 
-    if not SOURCES_DB_PATH.is_file():
-        pytest.skip("local data/sources.db is not in this checkout")
+    from scripts.rag.config import VESUM_DB_PATH
+
+    if not SOURCES_DB_PATH.is_file() or not Path(VESUM_DB_PATH).is_file():
+        pytest.skip("local data/sources.db or data/vesum.db is not in this checkout")
     assert _GOLDEN.canonical_bytes(_GOLDEN.capture()) == _GOLDEN.EXPECTED_PATH.read_bytes()

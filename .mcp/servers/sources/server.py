@@ -48,6 +48,8 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
 
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
 
+from scripts.verification.check_ru_morph import is_russian_pattern
+
 try:
     from mcp.server import Server
     from mcp.server.stdio import stdio_server
@@ -63,17 +65,6 @@ except ImportError:
     print("MCP package not installed. Run: pip install mcp", file=sys.stderr)
     sys.exit(1)
 
-from learn_ukrainian_v4_runtime.sources_transport import (
-    ACTIVE_ATTEMPT as _V4_ACTIVE_ATTEMPT,
-)
-from learn_ukrainian_v4_runtime.sources_transport import (
-    AttemptAuthMiddleware as _V4AttemptAuthMiddleware,
-)
-from learn_ukrainian_v4_runtime.sources_transport import (
-    record_typed_invocation as _record_v4_typed_invocation,
-)
-
-from scripts.verification.check_ru_morph import is_russian_pattern
 
 # Server ID published to MCP clients. Matches the key in .mcp.json
 # ("sources"). Agent tool prefixes become mcp__sources__*.
@@ -88,7 +79,6 @@ _READ_ONLY_TOOL = ToolAnnotations(readOnlyHint=True, destructiveHint=False)
 def _tool(**kwargs: Any) -> Tool:
     kwargs.setdefault("annotations", _READ_ONLY_TOOL)
     return Tool(**kwargs)
-
 
 VERIFY_SOURCE_ATTRIBUTION_SOURCES = (
     "grinchenko_1907",
@@ -107,7 +97,8 @@ COMPLETENESS_NOTES = {
         "if discusses=false here, Tier 2 escalation may still find it."
     ),
     "sum11": (
-        "СУМ-11: 127K entries; Soviet-era political/ideological coverage flagged via sovietization_risk metadata."
+        "СУМ-11: 127K entries; Soviet-era political/ideological coverage "
+        "flagged via sovietization_risk metadata."
     ),
     "grinchenko_1907": "Грінченко 1907: 67K entries; lexicographic snapshot circa 1907, NOT etymology.",
     "esum": "ЕСУМ: etymological dictionary; coverage skewed toward inherited vocabulary.",
@@ -137,19 +128,19 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": "Search query in Ukrainian (e.g., 'голосні звуки', 'як утворюється минулий час')",
+                        "description": "Search query in Ukrainian (e.g., 'голосні звуки', 'як утворюється минулий час')"
                     },
                     "track": {
                         "type": "string",
-                        "description": "Optional curriculum track for retrieval prep and reranking (e.g., 'a1'). Defaults to empty string.",
+                        "description": "Optional curriculum track for retrieval prep and reranking (e.g., 'a1'). Defaults to empty string."
                     },
                     "limit": {
                         "type": "integer",
                         "description": "Max results to return (default 10, max 20)",
-                        "default": 10,
-                    },
+                        "default": 10
+                    }
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -163,7 +154,7 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": "Search query in Ukrainian (e.g., 'як утворюється минулий час')",
+                        "description": "Search query in Ukrainian (e.g., 'як утворюється минулий час')"
                     },
                     "subject": {
                         "type": "string",
@@ -180,10 +171,10 @@ async def list_tools() -> list[Tool]:
                     "limit": {
                         "type": "integer",
                         "description": "Max results to return (default 5, max 20)",
-                        "default": 5,
-                    },
+                        "default": 5
+                    }
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -197,15 +188,15 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": "Search query in Ukrainian (e.g., 'хрещення Русі', 'повстання козаків')",
+                        "description": "Search query in Ukrainian (e.g., 'хрещення Русі', 'повстання козаків')"
                     },
                     "limit": {
                         "type": "integer",
                         "description": "Max results to return (default 5, max 20)",
-                        "default": 5,
-                    },
+                        "default": 5
+                    }
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -219,12 +210,18 @@ async def list_tools() -> list[Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "query": {"type": "string", "description": "FTS5 search query in Ukrainian or English"},
+                    "query": {
+                        "type": "string",
+                        "description": "FTS5 search query in Ukrainian or English"
+                    },
                     "track": {
                         "type": "string",
-                        "description": "Optional curriculum track for channel-affinity reranking",
+                        "description": "Optional curriculum track for channel-affinity reranking"
                     },
-                    "channel": {"type": "string", "description": "Optional channel filter (e.g. 'realna_istoria')"},
+                    "channel": {
+                        "type": "string",
+                        "description": "Optional channel filter (e.g. 'realna_istoria')"
+                    },
                     "register": {
                         "type": "string",
                         "enum": ["spoken", "scripted", "interview", "mixed"],
@@ -259,26 +256,31 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "work": {
                         "type": "string",
-                        "description": "Work title (e.g., 'Слово о полку Ігоревім', 'Літопис Самовидця')",
+                        "description": "Work title (e.g., 'Слово о полку Ігоревім', 'Літопис Самовидця')"
                     },
                     "max_chars": {
                         "type": "integer",
                         "description": "Max characters to return (default 50000)",
-                        "default": 50000,
-                    },
+                        "default": 50000
+                    }
                 },
-                "required": ["work"],
+                "required": ["work"]
             },
         ),
         _tool(
             name="get_chunk_context",
-            description=("Get text chunk by chunk_id from textbooks or literary_texts collections."),
+            description=(
+                "Get text chunk by chunk_id from textbooks or literary_texts collections."
+            ),
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "chunk_id": {"type": "string", "description": "Chunk ID from search results"},
+                    "chunk_id": {
+                        "type": "string",
+                        "description": "Chunk ID from search results"
+                    },
                 },
-                "required": ["chunk_id"],
+                "required": ["chunk_id"]
             },
         ),
         _tool(
@@ -313,9 +315,12 @@ async def list_tools() -> list[Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "word": {"type": "string", "description": "Ukrainian word form to check (e.g., 'звір', 'Сибір')"},
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word form to check (e.g., 'звір', 'Сибір')"
+                    },
                 },
-                "required": ["word"],
+                "required": ["word"]
             },
         ),
         _tool(
@@ -331,15 +336,15 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "word": {
                         "type": "string",
-                        "description": "Ukrainian word form to verify (e.g., 'берізонька', 'горонька')",
+                        "description": "Ukrainian word form to verify (e.g., 'берізонька', 'горонька')"
                     },
                     "pos_filter": {
                         "type": "string",
                         "description": "Optional POS filter (e.g., 'noun', 'verb', 'adj', 'adv'). "
-                        "Only returns matches with this POS.",
+                                       "Only returns matches with this POS."
                     },
                 },
-                "required": ["word"],
+                "required": ["word"]
             },
         ),
         _tool(
@@ -387,7 +392,8 @@ async def list_tools() -> list[Tool]:
                     "claim": {
                         "type": "string",
                         "description": (
-                            "The headword, claim, or topic in Ukrainian (e.g., 'Сибір', 'давноминулий час')."
+                            "The headword, claim, or topic in Ukrainian "
+                            "(e.g., 'Сибір', 'давноминулий час')."
                         ),
                     },
                     "limit": {
@@ -412,14 +418,14 @@ async def list_tools() -> list[Tool]:
                     "words": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": "List of Ukrainian word forms to verify (e.g., ['кращий', 'гірший', 'більший'])",
+                        "description": "List of Ukrainian word forms to verify (e.g., ['кращий', 'гірший', 'більший'])"
                     },
                     "pos_filter": {
                         "type": "string",
-                        "description": "Optional POS filter applied to all words (e.g., 'adj', 'noun').",
+                        "description": "Optional POS filter applied to all words (e.g., 'adj', 'noun')."
                     },
                 },
-                "required": ["words"],
+                "required": ["words"]
             },
         ),
         _tool(
@@ -459,10 +465,10 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "lemma": {
                         "type": "string",
-                        "description": "Ukrainian lemma (dictionary form) to look up (e.g., 'коза', 'писати')",
+                        "description": "Ukrainian lemma (dictionary form) to look up (e.g., 'коза', 'писати')"
                     },
                 },
-                "required": ["lemma"],
+                "required": ["lemma"]
             },
         ),
         _tool(
@@ -492,9 +498,7 @@ async def list_tools() -> list[Tool]:
             name="inspect_words",
             description=(
                 "Batch-inspect multiple Ukrainian word forms with full marker awareness against VESUM. "
-                "Returns per-word InspectionStatus, clean_analyses, marked_analyses, and effective markers. "
-                "Hard cap: 500 words. A longer list is truncated to the first 500; the response then "
-                "includes submitted and checked counts."
+                "Returns per-word InspectionStatus, clean_analyses, marked_analyses, and effective markers."
             ),
             inputSchema={
                 "type": "object",
@@ -502,10 +506,7 @@ async def list_tools() -> list[Tool]:
                     "words": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": (
-                            "Ukrainian word forms to inspect. At most 500 are processed; "
-                            "extra words are dropped and the response reports submitted and checked counts."
-                        ),
+                        "description": "List of Ukrainian word forms to inspect",
                     },
                     "pos_filter": {
                         "type": "string",
@@ -550,18 +551,18 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "word": {
                         "type": "string",
-                        "description": "Ukrainian word to check: bare lemma, inflected form, or U+0301/U+0300-marked form (e.g., 'замок', 'любов'ю', 'за́мок')",
+                        "description": "Ukrainian word to check: bare lemma, inflected form, or U+0301/U+0300-marked form (e.g., 'замок', 'любов'ю', 'за́мок')"
                     },
                     "pos": {
                         "type": "string",
-                        "description": "Optional POS to help disambiguate a heteronym (e.g. 'NOUN' or 'upos=NOUN').",
+                        "description": "Optional POS to help disambiguate a heteronym (e.g. 'NOUN' or 'upos=NOUN')."
                     },
                     "tags": {
                         "type": "string",
-                        "description": "Optional additional dictionary tags to help disambiguate, comma-separated (e.g. 'Case=Nom,Gender=Masc') — same vocabulary as each match's required_tags.",
+                        "description": "Optional additional dictionary tags to help disambiguate, comma-separated (e.g. 'Case=Nom,Gender=Masc') — same vocabulary as each match's required_tags."
                     },
                 },
-                "required": ["word"],
+                "required": ["word"]
             },
         ),
         _tool(
@@ -646,7 +647,7 @@ async def list_tools() -> list[Tool]:
             description=(
                 "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: "
                 "'summary' — article intro paragraph; "
-                "'extract' — article plaintext capped at 3,000 characters, with an explicit truncated flag; "
+                "'extract' — full article plaintext (up to 50K chars); "
                 "'sections' — list section headings with indices; "
                 "'section' — read a specific section (requires section parameter); "
                 "'search' — keyword search returning titles and snippets. "
@@ -657,30 +658,30 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "query": {
                         "type": "string",
-                        "description": "Article title (for summary/extract/sections/section) or search query (for search)",
+                        "description": "Article title (for summary/extract/sections/section) or search query (for search)"
                     },
                     "mode": {
                         "type": "string",
                         "description": "Query mode",
                         "enum": ["summary", "extract", "sections", "section", "search"],
-                        "default": "summary",
+                        "default": "summary"
                     },
                     "section": {
                         "type": "integer",
-                        "description": "Section index (required for mode='section', get indices from mode='sections')",
+                        "description": "Section index (required for mode='section', get indices from mode='sections')"
                     },
                     "limit": {
                         "type": "integer",
                         "description": "Max search results (default 5, only for search mode)",
-                        "default": 5,
+                        "default": 5
                     },
                     "force_refresh": {
                         "type": "boolean",
                         "description": "Bypass cache and fetch fresh data from Wikipedia",
-                        "default": False,
-                    },
+                        "default": False
+                    }
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -694,7 +695,10 @@ async def list_tools() -> list[Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "query": {"type": "string", "description": "Ukrainian word or lemma to look up"},
+                    "query": {
+                        "type": "string",
+                        "description": "Ukrainian word or lemma to look up"
+                    },
                     "mode": {
                         "type": "string",
                         "description": (
@@ -704,9 +708,13 @@ async def list_tools() -> list[Tool]:
                             "'collocations' (common word combinations)"
                         ),
                         "enum": ["frequency", "lemma_forms", "concordance", "collocations"],
-                        "default": "frequency",
+                        "default": "frequency"
                     },
-                    "limit": {"type": "integer", "description": "Max results (default 10)", "default": 10},
+                    "limit": {
+                        "type": "integer",
+                        "description": "Max results (default 10)",
+                        "default": 10
+                    },
                     "cache_only": {
                         "type": "boolean",
                         "default": False,
@@ -718,7 +726,7 @@ async def list_tools() -> list[Tool]:
                         ),
                     },
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -730,7 +738,10 @@ async def list_tools() -> list[Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "word": {"type": "string", "description": "Ukrainian word to look up (e.g., 'стіл', 'писати')"},
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word to look up (e.g., 'стіл', 'писати')"
+                    },
                     "sections": {
                         "type": "array",
                         "items": {
@@ -753,7 +764,7 @@ async def list_tools() -> list[Tool]:
                         ),
                     },
                 },
-                "required": ["word"],
+                "required": ["word"]
             },
         ),
         _tool(
@@ -794,10 +805,10 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "word": {
                         "type": "string",
-                        "description": "Russian word to find Ukrainian equivalent for (e.g., 'хорошо', 'кот')",
+                        "description": "Russian word to find Ukrainian equivalent for (e.g., 'хорошо', 'кот')"
                     },
                 },
-                "required": ["word"],
+                "required": ["word"]
             },
         ),
         _tool(
@@ -815,10 +826,10 @@ async def list_tools() -> list[Tool]:
                         "description": (
                             "Topic keyword (e.g., 'апостроф', 'м-який-знак', 'у-в', 'подвоєння', "
                             "'велика-літера', 'префікси') or section number as string (e.g., '7')"
-                        ),
+                        )
                     },
                 },
-                "required": ["topic"],
+                "required": ["topic"]
             },
         ),
         # ── Dictionary / reference collections (#1022) ──
@@ -835,19 +846,11 @@ async def list_tools() -> list[Tool]:
                 "type": "object",
                 "properties": {
                     "query": {"type": "string", "description": "FTS search query (e.g. 'повістка дня')"},
-                    "tag_filter": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "Optional list of tags to filter by (e.g. ['F/Calque'])",
-                    },
+                    "tag_filter": {"type": "array", "items": {"type": "string"}, "description": "Optional list of tags to filter by (e.g. ['F/Calque'])"},
                     "limit": {"type": "integer", "description": "Max results (default 10)", "default": 10},
-                    "require_native_author": {
-                        "type": "boolean",
-                        "description": "If true, only return errors from native speakers",
-                        "default": False,
-                    },
+                    "require_native_author": {"type": "boolean", "description": "If true, only return errors from native speakers", "default": False},
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -866,13 +869,10 @@ async def list_tools() -> list[Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "query": {
-                        "type": "string",
-                        "description": "Ukrainian phrase or word to check for calques/Russianisms",
-                    },
+                    "query": {"type": "string", "description": "Ukrainian phrase or word to check for calques/Russianisms"},
                     "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -891,7 +891,7 @@ async def list_tools() -> list[Tool]:
                     "query": {"type": "string", "description": "Ukrainian word to check CEFR level"},
                     "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -918,7 +918,7 @@ async def list_tools() -> list[Tool]:
                     "query": {"type": "string", "description": "Ukrainian word or phrase to look up"},
                     "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -941,7 +941,7 @@ async def list_tools() -> list[Tool]:
                     "query": {"type": "string", "description": "Ukrainian word to look up historical form/usage"},
                     "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -961,7 +961,7 @@ async def list_tools() -> list[Tool]:
                     },
                     "limit": {"type": "integer", "description": "Max results (default 5)", "default": 5},
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -980,7 +980,7 @@ async def list_tools() -> list[Tool]:
                     "query": {"type": "string", "description": "Topic or word to find related Ukrainian idioms"},
                     "limit": {"type": "integer", "description": "Max results (default 5)", "default": 5},
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -1003,7 +1003,7 @@ async def list_tools() -> list[Tool]:
                     "query": {"type": "string", "description": "Ukrainian word to find synonyms/antonyms for"},
                     "limit": {"type": "integer", "description": "Max results (default 5)", "default": 5},
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -1022,7 +1022,7 @@ async def list_tools() -> list[Tool]:
                     "query": {"type": "string", "description": "English word or phrase to translate to Ukrainian"},
                     "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
                 },
-                "required": ["query"],
+                "required": ["query"]
             },
         ),
         _tool(
@@ -1037,7 +1037,7 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "word": {"type": "string", "description": "English word to translate to Ukrainian"},
                 },
-                "required": ["word"],
+                "required": ["word"]
             },
         ),
         _tool(
@@ -1053,12 +1053,9 @@ async def list_tools() -> list[Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "word": {
-                        "type": "string",
-                        "description": "Ukrainian headword to look up in СУМ-20 (must be in А–Р range)",
-                    },
+                    "word": {"type": "string", "description": "Ukrainian headword to look up in СУМ-20 (must be in А–Р range)"},
                 },
-                "required": ["word"],
+                "required": ["word"]
             },
         ),
         _tool(
@@ -1097,7 +1094,7 @@ async def list_tools() -> list[Tool]:
                         "default": "vts",
                     },
                 },
-                "required": ["word"],
+                "required": ["word"]
             },
         ),
         _tool(
@@ -1170,30 +1167,23 @@ async def list_tools() -> list[Tool]:
                 "properties": {
                     "word": {
                         "type": "string",
-                        "description": "The Ukrainian word to check for Russian morphological patterns.",
+                        "description": "The Ukrainian word to check for Russian morphological patterns."
                     },
                     "threshold": {
                         "type": "number",
                         "description": "Confidence threshold (0.0 to 1.0). Default is 0.7.",
-                        "default": 0.7,
-                    },
+                        "default": 0.7
+                    }
                 },
-                "required": ["word"],
+                "required": ["word"]
             },
         ),
     ]
 
 
-def _log_tool_call(
-    name: str,
-    arguments: dict[str, Any],
-    response_chars: int = 0,
-    duration_s: float = 0.0,
-    error: str = "",
-    *,
-    response_text: str = "",
-    privacy_mode: bool = False,
-) -> None:
+def _log_tool_call(name: str, arguments: dict[str, Any], response_chars: int = 0,
+                   duration_s: float = 0.0, error: str = "", *,
+                   response_text: str = "", privacy_mode: bool = False) -> None:
     """Log MCP tool call to JSONL for build analytics (#1095).
 
     ``privacy_mode`` (Cycle 007 amendment, "internal hash-only privacy
@@ -1249,7 +1239,10 @@ async def handle_check_russian_shadow(args: dict):
 
 
 def _normalize_quote_text(value: str) -> str:
-    text = "".join(ch for ch in unicodedata.normalize("NFKD", str(value).lower()) if not "\u0300" <= ch <= "\u036f")
+    text = "".join(
+        ch for ch in unicodedata.normalize("NFKD", str(value).lower())
+        if not "\u0300" <= ch <= "\u036f"
+    )
     text = text.translate(str.maketrans({ch: " " for ch in "«»“”„\"'`"}))
     return re.sub(r"\s+", " ", text).strip()
 
@@ -1266,7 +1259,7 @@ def _best_quote_excerpt(text_query: str, chunk_text: str) -> str:
     from rapidfuzz import fuzz
 
     lines = [line.strip() for line in str(chunk_text).splitlines() if line.strip()]
-    windows = [" ".join(lines[i : i + width]) for i in range(len(lines)) for width in range(1, 5)]
+    windows = [" ".join(lines[i:i + width]) for i in range(len(lines)) for width in range(1, 5)]
     if not windows:
         windows = [str(chunk_text)]
     return max(windows, key=lambda line: fuzz.partial_ratio(text_query, _normalize_quote_text(line)))
@@ -1295,15 +1288,13 @@ async def handle_verify_quote(args: dict) -> list[TextContent]:
         chunk_text = hit.get("text", "")
         line = _best_quote_excerpt(text_query, chunk_text)
         confidence = fuzz.partial_ratio(text_query, _normalize_quote_text(chunk_text)) / 100
-        candidates.append(
-            {
-                "line": line,
-                "work": hit.get("title") or hit.get("source_file") or "",
-                "year": hit.get("year"),
-                "confidence": round(confidence, 4),
-                "context_chunk_id": hit.get("chunk_id"),
-            }
-        )
+        candidates.append({
+            "line": line,
+            "work": hit.get("title") or hit.get("source_file") or "",
+            "year": hit.get("year"),
+            "confidence": round(confidence, 4),
+            "context_chunk_id": hit.get("chunk_id"),
+        })
 
     candidates.sort(key=lambda item: item["confidence"], reverse=True)
     matched = bool(candidates and candidates[0]["confidence"] >= min_confidence)
@@ -1311,8 +1302,7 @@ async def handle_verify_quote(args: dict) -> list[TextContent]:
         "matched": matched,
         "best_confidence": candidates[0]["confidence"] if candidates else 0.0,
         "matched_lines": [item for item in candidates if item["confidence"] >= min_confidence][:3]
-        if matched
-        else candidates[:3],
+        if matched else candidates[:3],
         "search_normalized": {
             "author_query": author_query,
             "text_query": text_query,
@@ -1357,7 +1347,8 @@ def _attribution_confidence(claim: str, hit: dict[str, Any]) -> float:
     candidates = tokens[:]
     if claim_token_count > 1:
         candidates.extend(
-            " ".join(tokens[i : i + claim_token_count]) for i in range(0, max(0, len(tokens) - claim_token_count + 1))
+            " ".join(tokens[i:i + claim_token_count])
+            for i in range(0, max(0, len(tokens) - claim_token_count + 1))
         )
     return max((SequenceMatcher(None, claim_norm, candidate).ratio() for candidate in candidates), default=0.0)
 
@@ -1387,14 +1378,12 @@ def _parse_wikipedia_search_hits(text: str) -> list[dict[str, Any]]:
         match = re.match(r"\d+\.\s+\*\*(.*?)\*\*\s+—\s+(.*)", line)
         if match:
             title, snippet = match.groups()
-            hits.append(
-                {
-                    "title": title,
-                    "snippet": snippet,
-                    "text": f"{title} — {snippet}",
-                    "source": "uk.wikipedia.org",
-                }
-            )
+            hits.append({
+                "title": title,
+                "snippet": snippet,
+                "text": f"{title} — {snippet}",
+                "source": "uk.wikipedia.org",
+            })
     return hits
 
 
@@ -1448,9 +1437,15 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
     else:
         hits = await asyncio.to_thread(sdb.search_style_guide, claim, limit)
 
-    scored = [(hit, _attribution_confidence(claim, hit)) for hit in hits]
+    scored = [
+        (hit, _attribution_confidence(claim, hit))
+        for hit in hits
+    ]
     scored.sort(key=lambda item: item[1], reverse=True)
-    evidence = [_attribution_evidence(hit, confidence) for hit, confidence in scored[:limit]]
+    evidence = [
+        _attribution_evidence(hit, confidence)
+        for hit, confidence in scored[:limit]
+    ]
     payload: dict[str, Any] = {
         "discusses": any(confidence >= 0.85 for _, confidence in scored),
         "source": source,
@@ -1472,6 +1467,15 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
 # never record. Caller ``_v4_evidence_*`` correlation arguments are ignored
 # and discarded so they cannot mint authority.
 
+from learn_ukrainian_v4_runtime.sources_transport import (
+    ACTIVE_ATTEMPT as _V4_ACTIVE_ATTEMPT,
+)
+from learn_ukrainian_v4_runtime.sources_transport import (
+    AttemptAuthMiddleware as _V4AttemptAuthMiddleware,
+)
+from learn_ukrainian_v4_runtime.sources_transport import (
+    record_typed_invocation as _record_v4_typed_invocation,
+)
 from learn_ukrainian_v4_runtime.tool_result_envelope import (
     build_search_envelope,
     dropped_tokens_diagnostics,
@@ -1508,6 +1512,8 @@ def _discard_retired_v4_evidence_args(arguments: dict[str, Any]) -> None:
         "_v4_evidence_identifier",
     ):
         arguments.pop(key, None)
+
+
 
 
 def _typed_identifier(namespace: str, typed_result: dict[str, Any]) -> str:
@@ -1646,9 +1652,7 @@ def _outcome_with_receipt(typed_outcome: dict[str, Any] | None, receipt_id: str 
     return {**typed_outcome, "receipt": receipt_id}
 
 
-def _review_before_handler(
-    recorder: Any, name: str, arguments: dict[str, Any]
-) -> tuple[list[TextContent], bool] | None:
+def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool] | None:
     """Refuse a call that must not run. None means the handler may run."""
     if recorder is None:
         return None
@@ -1666,9 +1670,8 @@ def _review_before_handler(
     return None
 
 
-async def _dispatch_tool_call(
-    name: str, arguments: dict[str, Any]
-) -> tuple[list[TextContent], bool, dict[str, Any] | None]:
+
+async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool, dict[str, Any] | None]:
     """Core tool-call dispatch. Returns ``(content, is_error, typed_outcome)``; never raises.
 
     This is the one place that turns a handler exception or an unknown tool
@@ -1678,20 +1681,10 @@ async def _dispatch_tool_call(
     can never silently disagree about whether a given call failed.
     """
     import time as _time
-
     _t0 = _time.monotonic()
     privacy_mode = bool(arguments.pop("_privacy_mode", False)) if isinstance(arguments, dict) else False
     _discard_retired_v4_evidence_args(arguments)
-    if _V4_ACTIVE_ATTEMPT.get() is not None and name not in {
-        "verify_word",
-        "verify_words",
-        "verify_lemma",
-        "verify_stress",
-        "check_modern_form",
-        "inspect_word",
-        "inspect_words",
-        "inspect_lemma",
-    }:
+    if _V4_ACTIVE_ATTEMPT.get() is not None and name not in {"verify_word", "verify_words", "verify_lemma", "verify_stress", "check_modern_form", "inspect_word", "inspect_words", "inspect_lemma"}:
         return [TextContent(type="text", text="V4 tool capability refused")], True, None
     recorder = _review_recorder()
     review_arguments = arguments if isinstance(arguments, dict) else {}
@@ -1762,12 +1755,8 @@ async def _dispatch_tool_call(
         _elapsed = _time.monotonic() - _t0
         _resp_text = "\n".join(t.text for t in result) if result else ""
         _log_tool_call(
-            name,
-            arguments,
-            response_chars=len(_resp_text),
-            duration_s=_elapsed,
-            response_text=_resp_text,
-            privacy_mode=privacy_mode,
+            name, arguments, response_chars=len(_resp_text), duration_s=_elapsed,
+            response_text=_resp_text, privacy_mode=privacy_mode,
         )
         if typed_outcome is not None and isinstance(typed_outcome, dict) and "disposition" in typed_outcome:
             _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
@@ -1779,13 +1768,12 @@ async def _dispatch_tool_call(
         return result, False, typed_outcome
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
-        _log_tool_call(
-            name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode
-        )
+        _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
         content = [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
         if recorder is not None and recorder.mode == "on":
             content, _rec_err, _receipt = _review_record(recorder, name, review_arguments, content, status="error")
         return content, True, None
+
 
 
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
@@ -1844,7 +1832,6 @@ async def handle_search_text(args: dict):
     query_obj = {"query": query, "limit": limit, "subject": subject, "source_file": source_file}
 
     from wiki.sources_db import search_textbooks
-
     keywords, dropped = split_fts_keywords(query)
     hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject, source_file=source_file)
 
@@ -1859,7 +1846,7 @@ async def handle_search_text(args: dict):
         )
         return [TextContent(type="text", text=prose)], envelope
 
-    lines = [f'Found {len(hits)} results for: "{query}"\n']
+    lines = [f"Found {len(hits)} results for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
         lines.append(f"- **Section**: {hit.get('section_title', hit.get('title', ''))}")
@@ -1871,7 +1858,9 @@ async def handle_search_text(args: dict):
         lines.append("")
 
     prose = "\n".join(lines)
-    envelope = build_search_envelope(tool="search_text", query=query_obj, hits=list(hits), summary_prose=prose)
+    envelope = build_search_envelope(
+        tool="search_text", query=query_obj, hits=list(hits), summary_prose=prose
+    )
     return [TextContent(type="text", text=prose)], envelope
 
 
@@ -1889,11 +1878,15 @@ async def handle_search_sources(args: dict):
 
     if not hits:
         prose = "No results found."
-        envelope = build_search_envelope(tool="search_sources", query=query_obj, hits=[], summary_prose=prose)
+        envelope = build_search_envelope(
+            tool="search_sources", query=query_obj, hits=[], summary_prose=prose
+        )
         return [TextContent(type="text", text=prose)], envelope
 
     prose = json.dumps(hits, ensure_ascii=False, indent=2)
-    envelope = build_search_envelope(tool="search_sources", query=query_obj, hits=list(hits), summary_prose=prose)
+    envelope = build_search_envelope(
+        tool="search_sources", query=query_obj, hits=list(hits), summary_prose=prose
+    )
     return [TextContent(type="text", text=prose)], envelope
 
 
@@ -1903,7 +1896,6 @@ async def handle_search_literary(args: dict):
     query_obj = {"query": query, "limit": limit}
 
     from wiki.sources_db import search_literary
-
     keywords, dropped = split_fts_keywords(query)
     hits = await asyncio.to_thread(search_literary, keywords, limit)
 
@@ -1918,7 +1910,7 @@ async def handle_search_literary(args: dict):
         )
         return [TextContent(type="text", text=prose)], envelope
 
-    lines = [f'Found {len(hits)} results for: "{query}"\n']
+    lines = [f"Found {len(hits)} results for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
         lines.append(f"- **Author**: {hit.get('author', '?')}")
@@ -1928,8 +1920,11 @@ async def handle_search_literary(args: dict):
         lines.append("")
 
     prose = "\n".join(lines)
-    envelope = build_search_envelope(tool="search_literary", query=query_obj, hits=list(hits), summary_prose=prose)
+    envelope = build_search_envelope(
+        tool="search_literary", query=query_obj, hits=list(hits), summary_prose=prose
+    )
     return [TextContent(type="text", text=prose)], envelope
+
 
 
 async def handle_search_external(args: dict) -> list[TextContent]:
@@ -1986,15 +1981,18 @@ async def handle_search_ua_gec_errors(args: dict) -> list[TextContent]:
     require_native_author = args.get("require_native_author", False)
 
     from wiki.sources_db import search_ua_gec_errors
-
     hits = await asyncio.to_thread(
-        search_ua_gec_errors, query, tag_filter=tag_filter, limit=limit, require_native_author=require_native_author
+        search_ua_gec_errors,
+        query,
+        tag_filter=tag_filter,
+        limit=limit,
+        require_native_author=require_native_author
     )
 
     if not hits:
-        return [TextContent(type="text", text=f'No UA-GEC results found for: "{query}"')]
+        return [TextContent(type="text", text=f"No UA-GEC results found for: \"{query}\"")]
 
-    lines = [f'Found {len(hits)} human-annotated error pairs for: "{query}"\n']
+    lines = [f"Found {len(hits)} human-annotated error pairs for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
         native_flag = " (native author)" if hit.get("is_native") else ""
         lines.append(f"### Result {i}{native_flag}")
@@ -2012,7 +2010,6 @@ async def handle_get_full_text(args: dict) -> list[TextContent]:
     max_chars = args.get("max_chars", 50000)
 
     from wiki.sources_db import search_literary
-
     keywords = {w for w in work.lower().split() if len(w) >= 3}
     hits = await asyncio.to_thread(search_literary, keywords, 100)
 
@@ -2037,7 +2034,6 @@ async def handle_get_chunk_context(args: dict):
     query_obj = {"chunk_id": chunk_id}
 
     from wiki.sources_db import _get_conn
-
     try:
         conn = _get_conn()
     except FileNotFoundError:
@@ -2054,7 +2050,9 @@ async def handle_get_chunk_context(args: dict):
 
     # Search all tables for the chunk_id
     for table in ("textbooks", "literary_texts"):
-        row = conn.execute(f"SELECT * FROM {table} WHERE chunk_id = ?", (chunk_id,)).fetchone()
+        row = conn.execute(
+            f"SELECT * FROM {table} WHERE chunk_id = ?", (chunk_id,)
+        ).fetchone()
         if row:
             row_dict = dict(row)
             prose = f"**[{chunk_id}]** — {row_dict.get('title', '')}\n\n{row_dict.get('text', '')}"
@@ -2067,13 +2065,14 @@ async def handle_get_chunk_context(args: dict):
             return [TextContent(type="text", text=prose)], envelope
 
     prose = f"No context found for chunk: {chunk_id}"
-    envelope = build_search_envelope(tool="get_chunk_context", query=query_obj, hits=[], summary_prose=prose)
+    envelope = build_search_envelope(
+        tool="get_chunk_context", query=query_obj, hits=[], summary_prose=prose
+    )
     return [TextContent(type="text", text=prose)], envelope
 
 
 async def handle_collection_stats(args: dict) -> list[TextContent]:
     from wiki.sources_db import list_tables
-
     stats = await asyncio.to_thread(list_tables)
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
 
@@ -2157,6 +2156,8 @@ def _is_archaic(tags):
     return v4_handlers._is_archaic(tags)
 
 
+
+
 from learn_ukrainian_v4_runtime import sources_handlers as v4_handlers
 
 
@@ -2166,45 +2167,42 @@ class _V4VerificationResources:
 
     def verify_word(self, *args):
         from scripts.verification.vesum import verify_word
-
         return verify_word(*args)
 
     def verify_words(self, *args):
         from scripts.verification.vesum import verify_words
-
         return verify_words(*args)
 
     def verify_lemma(self, *args):
         from scripts.verification.vesum import verify_lemma
-
         return verify_lemma(*args)
 
     def verify_stress(self, *args):
         from scripts.verification.stress import verify_stress
-
         return verify_stress(*args)
-
 
 v4_handlers.configure_backend(_V4VerificationResources())
 
-
 async def handle_check_modern_form(args: dict):
     return await v4_handlers.handle_check_modern_form(args)
+
 
 
 async def handle_verify_word(args: dict):
     return await v4_handlers.handle_verify_word(args)
 
 
+
 async def handle_verify_words(args: dict):
     return await v4_handlers.handle_verify_words(args)
+
 
 
 def _compact_vocabulary_value(value: object, *, max_chars: int | None = None) -> str:
     """Keep a vocabulary-vetting field on one safe, parser-friendly line."""
     text = re.sub(r"\s+", " ", str(value)).strip()
     if max_chars is not None and len(text) > max_chars:
-        text = f"{text[: max_chars - 1].rstrip()}…"
+        text = f"{text[:max_chars - 1].rstrip()}…"
     return text.replace("\\", "\\\\").replace("|", "\\|").replace("`", "\\`")
 
 
@@ -2258,12 +2256,14 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     from scripts.verification.vesum import verify_words
 
     vesum_results = await asyncio.to_thread(verify_words, words)
-    lookup_terms = list(
-        dict.fromkeys(_preferred_vocabulary_lookup(word, vesum_results.get(word, [])) for word in words)
-    )
+    lookup_terms = list(dict.fromkeys(
+        _preferred_vocabulary_lookup(word, vesum_results.get(word, []))
+        for word in words
+    ))
     cefr_results = await asyncio.to_thread(sdb.query_cefr_levels, lookup_terms)
     definition_results = (
-        await asyncio.to_thread(sdb.search_definitions_batch, lookup_terms) if include_definitions else {}
+        await asyncio.to_thread(sdb.search_definitions_batch, lookup_terms)
+        if include_definitions else {}
     )
     verified_words = {word for word in words if vesum_results.get(word)}
     shadow_results = await asyncio.to_thread(
@@ -2274,7 +2274,9 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
 
     lines = []
     if len(submitted_words) > len(words):
-        lines.append(f"Note: received {len(submitted_words)} words; processed the first 500 (hard cap).")
+        lines.append(
+            f"Note: received {len(submitted_words)} words; processed the first 500 (hard cap)."
+        )
 
     for word in words:
         matches = vesum_results.get(word, [])
@@ -2360,9 +2362,7 @@ async def handle_inspect_words(args: dict):
         r = results.get(w)
         if r:
             markers_str = f" [{', '.join(r.effective_markers)}]" if r.effective_markers else ""
-            lines.append(
-                f"- **{w}** — {r.status.value}{markers_str} (clean={len(r.clean_analyses)}, marked={len(r.marked_analyses)})"
-            )
+            lines.append(f"- **{w}** — {r.status.value}{markers_str} (clean={len(r.clean_analyses)}, marked={len(r.marked_analyses)})")
         else:
             lines.append(f"- **{w}** — NOT FOUND")
     payload = _compact_inspect_words_payload(results)
@@ -2448,6 +2448,7 @@ async def handle_check_text(args: dict) -> list[TextContent]:
         ua_gec_tags=args.get("ua_gec_tags"),
     )
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
+
 
 
 def _lookup_wikipedia_in_db(query: str) -> dict | None:
@@ -2616,12 +2617,7 @@ async def handle_query_wikipedia(args: dict) -> list[TextContent]:
 
     elif mode == "section":
         if section_idx is None:
-            return [
-                TextContent(
-                    type="text",
-                    text="Error: 'section' parameter required for mode='section'. Use mode='sections' to get indices.",
-                )
-            ]
+            return [TextContent(type="text", text="Error: 'section' parameter required for mode='section'. Use mode='sections' to get indices.")]
 
         sec_str = str(section_idx)
         if not force_refresh:
@@ -2691,15 +2687,10 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
         result = await asyncio.to_thread(grac_frequency, query)
         if not result:
             return [TextContent(type="text", text=f"GRAC query failed for: '{query}'")]
-        return [
-            TextContent(
-                type="text",
-                text=(
-                    f"**{result['word']}**: frequency = {result['freq']:,}, "
-                    f"relative = {result['rel_freq']:.2f} per million"
-                ),
-            )
-        ]
+        return [TextContent(type="text", text=(
+            f"**{result['word']}**: frequency = {result['freq']:,}, "
+            f"relative = {result['rel_freq']:.2f} per million"
+        ))]
 
     elif mode == "lemma_forms":
         result = await asyncio.to_thread(grac_lemma_frequency, query)
@@ -2782,7 +2773,6 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text="\n".join(lines))]
 
     from rag.source_query import query_ulif
-
     result = await asyncio.to_thread(query_ulif, word, args["sections"])
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
 
@@ -2837,7 +2827,6 @@ async def handle_query_r2u(args: dict) -> list[TextContent]:
     word = args["word"]
 
     from rag.source_query import r2u_translate
-
     results = await asyncio.to_thread(r2u_translate, word)
 
     if not results:
@@ -2853,7 +2842,6 @@ async def handle_query_e2u(args: dict) -> list[TextContent]:
     word = args["word"]
 
     from rag.source_query import e2u_translate
-
     results = await asyncio.to_thread(e2u_translate, word)
 
     if not results:
@@ -2883,15 +2871,13 @@ async def handle_query_sum20(args: dict) -> list[TextContent]:
 
     records = await asyncio.to_thread(sdb.query_sum20, word)
     if not records:
-        return [
-            TextContent(
-                type="text",
-                text=(
-                    f"No official offline СУМ-20 entry is currently ingested for '{word}'. "
-                    "This tool does not make a live request or use a fallback source."
-                ),
-            )
-        ]
+        return [TextContent(
+            type="text",
+            text=(
+                f"No official offline СУМ-20 entry is currently ingested for '{word}'. "
+                "This tool does not make a live request or use a fallback source."
+            ),
+        )]
 
     lines = [f"**Official СУМ-20 entries for '{word}'**"]
     for record in records:
@@ -2937,36 +2923,34 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
         return await handle_query_sum20(args)
     if canonical_slug not in SLOVNYK_ME_DICTS:
         valid = ", ".join(sorted(SLOVNYK_ME_DICTS.keys()))
-        return [
-            TextContent(
-                type="text",
-                text=(f"Unknown dictionary slug '{dict_slug}'. Valid options: {valid}"),
-            )
-        ]
+        return [TextContent(
+            type="text",
+            text=(
+                f"Unknown dictionary slug '{dict_slug}'. "
+                f"Valid options: {valid}"
+            ),
+        )]
 
     result = await asyncio.to_thread(slovnyk_me_lookup, word, canonical_slug)
 
     if not result:
-        return [
-            TextContent(
-                type="text",
-                text=(
-                    f"No entry found for '{word}' in slovnyk.me/{canonical_slug} ({SLOVNYK_ME_DICTS[canonical_slug]})."
-                ),
-            )
-        ]
-
-    return [
-        TextContent(
+        return [TextContent(
             type="text",
             text=(
-                f"**{result['dict_label']} — entry for '{word}'**\n"
-                f"**URL**: {result['url']}\n"
-                f"**Source**: slovnyk.me (per-query live fetch, © Slovnyk.me)\n\n"
-                f"{result['text'][:3000]}"
+                f"No entry found for '{word}' in slovnyk.me/{canonical_slug} "
+                f"({SLOVNYK_ME_DICTS[canonical_slug]})."
             ),
-        )
-    ]
+        )]
+
+    return [TextContent(
+        type="text",
+        text=(
+            f"**{result['dict_label']} — entry for '{word}'**\n"
+            f"**URL**: {result['url']}\n"
+            f"**Source**: slovnyk.me (per-query live fetch, © Slovnyk.me)\n\n"
+            f"{result['text'][:3000]}"
+        ),
+    )]
 
 
 async def handle_query_pravopys(args: dict):
@@ -2995,7 +2979,9 @@ async def handle_query_pravopys(args: dict):
 
     if not result:
         prose = f"No pravopys section found for: '{topic}'"
-        envelope = build_search_envelope(tool="query_pravopys", query=query_obj, hits=[], summary_prose=prose)
+        envelope = build_search_envelope(
+            tool="query_pravopys", query=query_obj, hits=[], summary_prose=prose
+        )
         return [TextContent(type="text", text=prose)], envelope
 
     lines = [
@@ -3005,7 +2991,9 @@ async def handle_query_pravopys(args: dict):
         result["text"][:3000],
     ]
     prose = "\n".join(lines)
-    envelope = build_search_envelope(tool="query_pravopys", query=query_obj, hits=[result], summary_prose=prose)
+    envelope = build_search_envelope(
+        tool="query_pravopys", query=query_obj, hits=[result], summary_prose=prose
+    )
     return [TextContent(type="text", text=prose)], envelope
 
 
@@ -3050,7 +3038,6 @@ async def handle_dict_search(args: dict, collection: str, label: str):
 
     # Map old Qdrant collection names to sources_db functions
     from wiki import sources_db as sdb
-
     _LOOKUP = {
         "style_guide": sdb.search_style_guide,
         "puls_cefr": sdb.query_cefr_level,
@@ -3077,11 +3064,13 @@ async def handle_dict_search(args: dict, collection: str, label: str):
     hits = await asyncio.to_thread(func, query, limit)
 
     if not hits:
-        prose = f'No results in {label} for: "{query}"'
-        envelope = build_search_envelope(tool=tool_name, query=query_obj, hits=[], summary_prose=prose)
+        prose = f"No results in {label} for: \"{query}\""
+        envelope = build_search_envelope(
+            tool=tool_name, query=query_obj, hits=[], summary_prose=prose
+        )
         return [TextContent(type="text", text=prose)], envelope
 
-    lines = [f'Found {len(hits)} results in **{label}** for: "{query}"\n']
+    lines = [f"Found {len(hits)} results in **{label}** for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
         word = hit.get("word", hit.get("words", ""))
@@ -3112,7 +3101,9 @@ async def handle_dict_search(args: dict, collection: str, label: str):
         lines.append("")
 
     prose = "\n".join(lines)
-    envelope = build_search_envelope(tool=tool_name, query=query_obj, hits=list(hits), summary_prose=prose)
+    envelope = build_search_envelope(
+        tool=tool_name, query=query_obj, hits=list(hits), summary_prose=prose
+    )
     return [TextContent(type="text", text=prose)], envelope
 
 
@@ -3135,9 +3126,9 @@ async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
         live=live,
     )
     if not hits:
-        return [TextContent(type="text", text=f'No slovnyk.me results for: "{query}"')]
+        return [TextContent(type="text", text=f"No slovnyk.me results for: \"{query}\"")]
 
-    lines = [f'Found {len(hits)} slovnyk.me result(s) for: "{query}"\n']
+    lines = [f"Found {len(hits)} slovnyk.me result(s) for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
         lines.append(f"- **Headword**: {hit.get('word', '')}")
@@ -3156,7 +3147,8 @@ async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
         risk = int(hit.get("sovietization_risk") or 0)
         if risk > 0:
             lines.append(
-                f"- **Sovietization risk**: {risk} ({hit.get('sovietization_keywords', '') or 'keywords unknown'})"
+                f"- **Sovietization risk**: {risk} "
+                f"({hit.get('sovietization_keywords', '') or 'keywords unknown'})"
             )
         snippet = str(hit.get("snippet") or hit.get("text") or "")
         if snippet:
@@ -3181,9 +3173,9 @@ async def handle_search_heritage(args: dict) -> list[TextContent]:
         include_live_slovnyk=include_live_slovnyk,
     )
     if not hits:
-        return [TextContent(type="text", text=f'No heritage evidence found for: "{query}"')]
+        return [TextContent(type="text", text=f"No heritage evidence found for: \"{query}\"")]
 
-    lines = [f'Found {len(hits)} heritage evidence row(s) for: "{query}"\n']
+    lines = [f"Found {len(hits)} heritage evidence row(s) for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Evidence {i}")
         lines.append(f"- **Source family**: {hit.get('source_family', '')}")
@@ -3200,7 +3192,8 @@ async def handle_search_heritage(args: dict) -> list[TextContent]:
         risk = int(hit.get("sovietization_risk") or 0)
         if risk > 0:
             lines.append(
-                f"- **Sovietization risk**: {risk} ({hit.get('sovietization_keywords', '') or 'keywords unknown'})"
+                f"- **Sovietization risk**: {risk} "
+                f"({hit.get('sovietization_keywords', '') or 'keywords unknown'})"
             )
         text = str(hit.get("text") or "")
         if text:
@@ -3221,10 +3214,13 @@ async def handle_search_esum(args: dict) -> list[TextContent]:
     hits = await asyncio.to_thread(sdb.search_esum, query, volume, limit)
     if not hits:
         # Placeholder / hint for unimplemented volumes or missing entries (#1658)
-        hint = {"status": "not_implemented", "hint": f"Tier 2 WebFetch goroh.pp.ua/Етимологія/{query}"}
+        hint = {
+            "status": "not_implemented",
+            "hint": f"Tier 2 WebFetch goroh.pp.ua/Етимологія/{query}"
+        }
         return [TextContent(type="text", text=json.dumps(hint, ensure_ascii=False))]
 
-    lines = [f'Found {len(hits)} results in **ЕСУМ** for: "{query}"\n']
+    lines = [f"Found {len(hits)} results in **ЕСУМ** for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Result {i}")
         lines.append(f"- **Lemma**: {hit.get('lemma', '')}")
@@ -3269,7 +3265,9 @@ class _RejectUnsupportedStatelessMcpMethods:
         ):
             from starlette.responses import Response
 
-            await Response(status_code=405, headers={"Allow": "POST"})(scope, receive, send)
+            await Response(status_code=405, headers={"Allow": "POST"})(
+                scope, receive, send
+            )
             return
         await self.app(scope, receive, send)
 
@@ -3291,7 +3289,6 @@ def create_http_app():
 
     async def handle_health(request):
         from wiki.sources_db import SOURCES_DB_PATH
-
         payload = {
             "status": "ok",
             "commit_sha": _SERVER_GIT_COMMIT,
@@ -3312,6 +3309,8 @@ def create_http_app():
     return _V4AttemptAuthMiddleware(_RejectUnsupportedStatelessMcpMethods(app))
 
 
+
+
 async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     """Run the MCP sources server as a standalone Streamable HTTP daemon."""
     _set_http_mode(True)
@@ -3319,7 +3318,6 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
 
     # Verify SQLite sources database exists
     from wiki.sources_db import source_count
-
     try:
         total = source_count()
         print(f"SQLite sources database: {total:,} entries ✅")
