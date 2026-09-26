@@ -83,7 +83,6 @@ from .git_hygiene_router import router as git_hygiene_router
 from .gold_router import router as gold_router
 from .governance_router import collect_governance_summary
 from .governance_router import router as governance_router
-from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .knowledge_router import router as knowledge_router
@@ -1864,7 +1863,6 @@ def create_app(context: MonitorContext, *, lifespan: Any = None) -> FastAPI:
     factory_app.include_router(ops_router, prefix="/api/ops", tags=["ops"])
     factory_app.include_router(gold_router, prefix="/api/gold")
     factory_app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
-    factory_app.include_router(hermes_cron_router, prefix="/api/hermes-cron", tags=["hermes-cron"])
     factory_app.include_router(build_events_router, prefix="/api/build/events")
     factory_app.include_router(images_router, prefix="/api/images")
     factory_app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
