@@ -238,7 +238,7 @@ def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, ca
     assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-live")) == 0
 
     assert len(spawned) == 1
-    assert "🚦 dispatch admission: admitted — live write workers 0/5" in capsys.readouterr().err
+    assert "🚦 dispatch admission: admitted — live write workers 0/6" in capsys.readouterr().err
     state = delegate._read_state(delegate._state_path("adm-live"))
     assert state is not None
     assert state["admission"]["admitted"] is True
@@ -509,7 +509,7 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
 
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1] == (
-        "admission (write dispatch): would admit now | live write workers 1/5, "
+        "admission (write dispatch): would admit now | live write workers 1/6, "
         "MemAvailable 64.0 GiB (floor 3.5 GiB), load 0.00 per CPU (limit 1.50); "
         "1 record(s) dead pid, not counted: gone"
     )
