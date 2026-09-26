@@ -88,7 +88,6 @@
   "tests/api/test_fleet_workers_sanitize.py": 0.53,
   "tests/api/test_fleet_workers_unmocked.py": 1.031,
   "tests/api/test_github_budget_endpoint.py": 0.571,
-  "tests/api/test_hermes_cron_router.py": 0.109,
   "tests/api/test_hramatka_cache.py": 0.384,
   "tests/api/test_hramatka_generator.py": 0.84,
   "tests/api/test_hramatka_router.py": 0.725,
