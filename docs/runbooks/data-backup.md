@@ -3,7 +3,8 @@
 `scripts/backup-data.sh` creates encrypted, versioned restic snapshots of the
 project's recovery-critical local state through an rclone remote. It does not
 write through the Google Drive Desktop mount, overwrite the previous backup,
-prune snapshots, or restore directly over live project data.
+or restore directly over live project data. Snapshot pruning exists only as
+the operator-approved weekly `retention` command described below.
 
 Every completed backup run contains these roots, in priority order:
 
@@ -25,7 +26,8 @@ restic rclone path with that final directory name.
 
 ## Safety model
 
-- `init`, `backup`, and `restore` are previews unless `--execute` is explicit.
+- `init`, `backup`, `retention`, and `restore` are previews unless `--execute`
+  is explicit.
 - On macOS, a backup executes from a private copy-on-write staging tree outside
   the checkout. The staging capacity check covers selected recovery trees,
   SQLite overhead, and a 2 GiB reserve.
@@ -36,9 +38,17 @@ restic rclone path with that final directory name.
   `.backup` command, checked with `PRAGMA integrity_check`, uploaded, and
   removed from private staging before the next database. Before each database,
   the script checks staging free space against its DB plus WAL size and a 2 GiB
-  reserve. No reflink or full-tree copy is required. Non-database files can
+  reserve. No reflink or full-tree copy is required, so peak extra disk is
+  about the largest single database, never the sum. Non-database files can
   change while restic reads them; coordinate writers for application-level
   consistency and inspect recovery-critical manifests during a restore drill.
+- On Linux, `LU_BACKUP_TMPDIR` may point at the designated staging parent
+  `<project>/data/.backup-staging` (the value the backup systemd unit sets).
+  That keeps staging on the same filesystem as `data/`, so staging follows
+  `data/` onto a future dedicated volume and the free-space preflight measures
+  the data filesystem. The directory is gitignored and excluded from every
+  scan and restic phase; any other staging location inside the checkout still
+  fails closed.
 - Every `*.db` and `*.sqlite*` under selected roots (including `.agent/`)
   is rebuilt with SQLite's online backup command.
 - SQLite WAL/SHM/journal sidecars for selected databases,
@@ -53,7 +63,11 @@ restic rclone path with that final directory name.
   below it, and unsupported special files, stop the backup before restic runs.
 - Restore accepts only an absolute empty or nonexistent directory outside the
   project, cloud mounts, and the legacy backup.
-- There is intentionally no `forget`, `prune`, or snapshot-delete command.
+- The only snapshot deletion is `retention [--execute]`, which runs
+  `restic forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6`
+  scoped to this backup family's tag (`--tag "$BACKUP_TAG"`). Other snapshot
+  families in the same repository are never selected. It is a preview unless
+  `--execute` is supplied and is scheduled weekly, not on every backup.
 - Restic commits snapshots atomically. A failed upload does not replace an
   earlier recovery point. On Linux, a final receipt snapshot marks the run
   complete; `restore latest` selects only completed runs.
@@ -288,12 +302,32 @@ symlink is a hard failure rather than a silent omission or recursive copy.
 
 ## Scheduling
 
-The script is suitable for launchd or cron after the one-time environment is
-available to that process. `backup --execute` returns nonzero for missing
-critical roots, unsafe symlinks, uncovered untracked files, corrupt SQLite
-databases, failed uploads, or failed repository checks. Send stdout and stderr
-to an operator-controlled log outside the repository and alert on every
-nonzero exit.
+On the data host, the systemd **user** units in `packaging/systemd/`
+(`learn-ukrainian-backup.service` + `.timer`, and
+`learn-ukrainian-backup-retention.service` + `.timer`) run the backup daily at
+03:30 UTC (`Persistent=true`, 15-minute randomized delay) and the
+operator-approved retention policy weekly. Install them from the primary
+checkout (preview by default; writes only with `--apply`):
 
-Do not schedule retention or pruning until an operator approves a policy and
-multiple restore drills have succeeded.
+```bash
+.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD"
+.venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD" --apply --enable
+```
+
+The units read `~/.secrets/learn-ukrainian-backup.env` via `EnvironmentFile=`
+and never log secret values. `scripts/orchestration/run_scheduled_backup.sh`
+writes `batch_state/backups/last-run.json` on success and on failure (UTC
+start/end, exit status, restic run id, snapshot count, bytes added). A failed
+run exits non-zero, so `systemctl --user list-timers` and
+`journalctl --user -u learn-ukrainian-backup.service` show it; there is no
+separate alerting system.
+
+Elsewhere, the script remains suitable for launchd or cron after the one-time
+environment is available to that process. `backup --execute` returns nonzero
+for missing critical roots, unsafe symlinks, uncovered untracked files,
+corrupt SQLite databases, failed uploads, or failed repository checks. Send
+stdout and stderr to an operator-controlled log outside the repository and
+alert on every nonzero exit.
+
+Schedule retention only through the weekly `retention` command above; do not
+add ad-hoc `restic forget` or prune invocations.

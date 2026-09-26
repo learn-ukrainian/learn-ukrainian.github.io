@@ -1,0 +1,19 @@
+[Unit]
+Description=Learn Ukrainian backup retention (weekly restic forget --prune)
+After=network.target
+# TODO(#8804): same data-volume guard drop-in as learn-ukrainian-backup.service
+# once the guarded-start mechanism merges to main.
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env
+# Prune rewrites repository packs locally before upload; keep it off the fast
+# path and bounded. A weekly forget over ~30 daily-run snapshots is minutes.
+TimeoutStartSec=7200
+Nice=15
+IOSchedulingClass=idle
+ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/backup-data.sh retention --execute
+
+[Install]
+WantedBy=default.target

@@ -1695,3 +1695,89 @@ def test_refuses_staging_inside_selected_project_checkout(
 
     assert result.returncode != 0
     assert "Staging directory must be outside the selected project checkout" in result.stderr
+
+
+def test_retention_previews_tag_scoped_forget_by_default(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+
+    result = _run(environment, "retention")
+
+    assert result.returncode == 0, result.stderr
+    assert "Retention preview only" in result.stdout
+    log = _log(environment)
+    assert "arg=<forget> arg=<--dry-run>" in log
+    assert "arg=<--tag> arg=<learn-ukrainian-data>" in log
+    assert "arg=<--keep-daily> arg=<7>" in log
+    assert "arg=<--keep-weekly> arg=<4>" in log
+    assert "arg=<--keep-monthly> arg=<6>" in log
+    assert "arg=<--prune>" in log
+    assert "arg=<check>" not in log
+
+
+def test_retention_execute_forgets_prunes_and_checks(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, _source, _staging, _legacy = backup_environment
+
+    result = _run(environment, "retention", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert "Applying retention policy to tag learn-ukrainian-data" in result.stdout
+    lines = [line for line in _log(environment).splitlines() if "arg=<forget>" in line]
+    assert len(lines) == 1
+    assert "arg=<--dry-run>" not in lines[0]
+    assert "arg=<--tag> arg=<learn-ukrainian-data>" in lines[0]
+    assert "arg=<--keep-daily> arg=<7>" in lines[0]
+    assert "arg=<--prune>" in lines[0]
+    log_lines = _log(environment).splitlines()
+    forget_index = next(i for i, line in enumerate(log_lines) if "arg=<forget>" in line)
+    assert any("arg=<check>" in line for line in log_lines[forget_index:])
+
+
+def test_linux_allows_designated_staging_on_the_data_volume(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    data_staging = source / ".backup-staging"
+    data_staging.mkdir()
+    environment["LU_BACKUP_TMPDIR"] = str(data_staging)
+    with sqlite3.connect(source / "live.db") as connection:
+        connection.execute("CREATE TABLE recovery_probe(value TEXT)")
+
+    result = _run(environment, "backup", "--execute")
+
+    assert result.returncode == 0, result.stderr
+    assert f"arg=<--exclude> arg=<{data_staging}>" in _log(environment)
+    assert list(data_staging.iterdir()) == []
+
+
+def test_data_volume_staging_location_requires_linux(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    data_staging = source / ".backup-staging"
+    data_staging.mkdir()
+    environment["LU_BACKUP_TMPDIR"] = str(data_staging)
+    fake_bin = Path(environment["PATH"].split(":", maxsplit=1)[0])
+    _write_executable(fake_bin / "uname", "#!/bin/bash\nprintf '%s\\n' Darwin\n")
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Staging directory and backup source overlap" in result.stderr
+
+
+def test_refuses_non_designated_staging_inside_selected_checkout(
+    backup_environment: tuple[dict[str, str], Path, Path, Path],
+) -> None:
+    environment, source, _staging, _legacy = backup_environment
+    other_staging = source.parent / "scratch-staging"
+    other_staging.mkdir()
+    environment["LU_BACKUP_TMPDIR"] = str(other_staging)
+
+    result = _run(environment, "backup")
+
+    assert result.returncode != 0
+    assert "Staging directory must be outside the selected project checkout" in result.stderr

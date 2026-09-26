@@ -1,0 +1,26 @@
+[Unit]
+Description=Learn Ukrainian data backup (restic via rclone remote)
+After=network.target
+# TODO(#8804): when the guarded-start data-volume drop-in mechanism
+# (branch codex/impl-8804-guarded-start) merges to main, wire
+# scripts/storage/data_volume_guard.sh here the same way the loopback
+# service drop-ins do, so the backup refuses to run when data/ is not on
+# its configured volume.
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env
+# Stage SQLite snapshots next to data/ so staging follows data/ onto its
+# volume and the per-database free-space preflight measures the data
+# filesystem. Peak extra disk is the largest single database, never the sum.
+Environment=LU_BACKUP_TMPDIR=@REPO_ROOT@/data/.backup-staging
+# Full first run measured 2026-09-25: 23.5 min end to end; daily incrementals
+# are smaller. 2h bounds a wedged upload without masking a real failure.
+TimeoutStartSec=7200
+Nice=15
+IOSchedulingClass=idle
+ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh
+
+[Install]
+WantedBy=default.target

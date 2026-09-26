@@ -24,8 +24,10 @@
 #   ./scripts/backup-data.sh backup
 #   ./scripts/backup-data.sh backup --execute
 #
-# Mutating commands are previews unless --execute is present. There is no
-# prune/delete command. See docs/runbooks/data-backup.md.
+# Mutating commands are previews unless --execute is present. The only
+# prune/delete command is `retention`, which applies the operator-approved
+# weekly keep policy to this backup family's tag only. See
+# docs/runbooks/data-backup.md.
 
 set -Eeuo pipefail
 umask 077
@@ -45,6 +47,11 @@ readonly CLOUD_ROOT="${HOME}/Library/CloudStorage"
 readonly TMP_ROOT="${LU_BACKUP_TMPDIR:-${TMPDIR:-/tmp}}"
 readonly LOCK_DIR="$TMP_ROOT/learn-ukrainian-backup.${UID}.lock"
 readonly STAGE_PATH="$TMP_ROOT/learn-ukrainian-backup.${UID}.stage"
+# Operator-approved retention policy (2026-09-26), applied weekly by
+# `retention --execute`, scoped to this backup family's tag only.
+readonly KEEP_DAILY=7
+readonly KEEP_WEEKLY=4
+readonly KEEP_MONTHLY=6
 
 STAGE_DIR=""
 STAGED_ROOT=""
@@ -149,12 +156,13 @@ Usage:
   ./scripts/backup-data.sh doctor
   ./scripts/backup-data.sh init [--execute]
   ./scripts/backup-data.sh backup [--execute]
+  ./scripts/backup-data.sh retention [--execute]
   ./scripts/backup-data.sh snapshots
   ./scripts/backup-data.sh verify [--read-data]
   ./scripts/backup-data.sh restore SNAPSHOT --to ABSOLUTE_EMPTY_DIR [--path RELATIVE_PATH] [--execute]
 
 Safety:
-  - init, backup, and restore are previews unless --execute is supplied.
+  - init, backup, retention, and restore are previews unless --execute is supplied.
   - backup requires epic state, .agent/, batch_state/, data/, and full source coverage.
   - successful snapshots contain BACKUP-RECEIPT.json and a restore command.
   - restore refuses non-empty, project, cloud, and legacy-backup targets.
@@ -164,7 +172,9 @@ Safety:
   - restore --path RELATIVE_PATH restores only that file or directory of the run
     (for example data/atlas.db, read from its database snapshot via the receipt;
     other paths come from the file-phase snapshot). Same guards and preflight.
-  - no command prunes or deletes snapshots.
+  - retention forgets and prunes old snapshots of this backup family's tag with
+    --keep-daily 7 --keep-weekly 4 --keep-monthly 6; other tags are untouched.
+    Run it weekly, not on every backup.
 
 Required environment:
   LU_BACKUP_REPOSITORY  Restic rclone backend, for example:
@@ -177,7 +187,10 @@ Optional environment:
   LU_BACKUP_PROJECT_ROOT
                         Project checkout (default: script's repository).
   LU_BACKUP_LEGACY_DIR Read-only legacy Drive directory used for symlink checks.
-  LU_BACKUP_TMPDIR      Private staging parent (default: $TMPDIR or /tmp).
+  LU_BACKUP_TMPDIR      Private staging parent (default: $TMPDIR or /tmp). On
+                        Linux it may also be the designated data-volume staging
+                        directory <project>/data/.backup-staging, which keeps
+                        staging on the same filesystem as data/.
   LU_BACKUP_TAG         Restic tag (default: learn-ukrainian-data).
   LU_BACKUP_HOST        Stable restic host label (default: learn-ukrainian).
 
@@ -333,6 +346,19 @@ paths_overlap() {
   path_is_within "$first" "$second" || path_is_within "$second" "$first"
 }
 
+# The one staging location allowed inside the backup source: an explicit
+# LU_BACKUP_TMPDIR at data/.backup-staging, on Linux only, so SQLite staging
+# follows data/ onto its (future) dedicated volume and the per-database free
+# space preflight measures the data filesystem. Every scan and restic phase
+# excludes this directory; the scheduled unit creates it and it is gitignored.
+staging_on_data_volume_allowed() {
+  local tmp_real=$1
+  local source_real=$2
+  [[ "$(uname -s)" == Linux ]] || return 1
+  [[ -n "${LU_BACKUP_TMPDIR:-}" ]] || return 1
+  [[ "$tmp_real" == "$source_real/.backup-staging" ]]
+}
+
 resolve_legacy_dir() {
   local mount candidate
 
@@ -455,7 +481,7 @@ validate_source_symlinks() {
       die "Symlink escapes the backup source: $relative -> $target"
   done < <(
     find "$SOURCE" \
-      -path "$SOURCE/qdrant" -prune -o \
+      \( -path "$SOURCE/qdrant" -o -path "$TMP_ROOT" \) -prune -o \
       -type l -print0
   )
 }
@@ -585,12 +611,14 @@ validate_source() {
   [[ "$git_root" == "$project_real" ]] ||
     die "LU_BACKUP_PROJECT_ROOT must be the Git checkout root."
 
-  paths_overlap "$source_real" "$tmp_real" &&
-    die "Staging directory and backup source overlap."
-  paths_overlap "$repo_real" "$tmp_real" &&
-    die "Staging directory must be outside the project checkout."
-  paths_overlap "$project_real" "$tmp_real" &&
-    die "Staging directory must be outside the selected project checkout."
+  if ! staging_on_data_volume_allowed "$tmp_real" "$source_real"; then
+    paths_overlap "$source_real" "$tmp_real" &&
+      die "Staging directory and backup source overlap."
+    paths_overlap "$repo_real" "$tmp_real" &&
+      die "Staging directory must be outside the project checkout."
+    paths_overlap "$project_real" "$tmp_real" &&
+      die "Staging directory must be outside the selected project checkout."
+  fi
   [[ "$source_real" != "$project_real" ]] ||
     die "Refusing to back up the entire repository as data/."
   resolve_legacy_dir
@@ -618,7 +646,7 @@ list_sqlite_sources() {
   while IFS= read -r -d '' database; do
     is_sqlite_database "$database" && printf '%s\0' "$database"
   done < <(find "$SOURCE" \
-    \( -path "$SOURCE/qdrant" -o -type d -name __pycache__ \) -prune -o \
+    \( -path "$SOURCE/qdrant" -o -path "$TMP_ROOT" -o -type d -name __pycache__ \) -prune -o \
     -type f \( -name '*.db' -o -name '*.sqlite*' \) \
     ! -name '*-wal' ! -name '*-shm' ! -name '*-journal' \
     -print0)
@@ -870,6 +898,11 @@ build_restic_excludes() {
   for relative in "${EPHEMERAL_HOME_EXCLUDES[@]}"; do
     RESTIC_EXCLUDES+=(--exclude "$relative")
   done
+  # Never upload the private staging tree when it lives inside data/
+  # (the data-volume staging location).
+  if path_is_within "$TMP_ROOT" "$SOURCE"; then
+    RESTIC_EXCLUDES+=(--exclude "$TMP_ROOT")
+  fi
 }
 
 source_for_backup_path() {
@@ -913,7 +946,7 @@ source_tree_stats() {
     esac
     total=$((total + size))
     count=$((count + 1))
-  done < <(find "$tree" -type f -printf '%p\0%s\0')
+  done < <(find "$tree" \( -path "$TMP_ROOT" -prune \) -o -type f -printf '%p\0%s\0')
   printf '%s %s\n' "$total" "$count"
 }
 
@@ -1583,6 +1616,35 @@ run_init() {
   info "Repository initialized and checked."
 }
 
+run_retention() {
+  local execute=$1
+
+  validate_environment
+  require_initialized_repository
+  if [[ "$execute" -eq 0 ]]; then
+    info "Retention preview only; no snapshots will be forgotten."
+    restic_repository_command forget --dry-run \
+      --tag "$BACKUP_TAG" \
+      --keep-daily "$KEEP_DAILY" \
+      --keep-weekly "$KEEP_WEEKLY" \
+      --keep-monthly "$KEEP_MONTHLY" \
+      --prune
+    echo "Preview complete. Re-run with --execute to apply the retention policy."
+    return
+  fi
+  acquire_lock
+  info "Applying retention policy to tag $BACKUP_TAG: keep-daily=$KEEP_DAILY keep-weekly=$KEEP_WEEKLY keep-monthly=$KEEP_MONTHLY."
+  restic_repository_command forget \
+    --tag "$BACKUP_TAG" \
+    --keep-daily "$KEEP_DAILY" \
+    --keep-weekly "$KEEP_WEEKLY" \
+    --keep-monthly "$KEEP_MONTHLY" \
+    --prune
+  info "Checking repository metadata after retention."
+  restic_repository_command check
+  info "Retention complete."
+}
+
 run_doctor() {
   local failures=0 validation_output unreadable unreadable_count
 
@@ -1668,6 +1730,10 @@ main() {
     backup)
       execute="$(parse_execute_only "$@")"
       run_backup "$execute"
+      ;;
+    retention)
+      execute="$(parse_execute_only "$@")"
+      run_retention "$execute"
       ;;
     snapshots)
       [[ $# -eq 0 ]] || die "snapshots does not accept arguments."

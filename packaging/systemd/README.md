@@ -74,3 +74,16 @@ runner, and orchestrator hosts).
   ```bash
   systemctl --user enable --now learn-ukrainian-project-state-reporter.timer
   ```
+
+### 4. Data Backup (`learn-ukrainian-backup.service` + `.timer`) and Retention (`learn-ukrainian-backup-retention.service` + `.timer`)
+
+- **Frequency**: backup daily at 03:30 UTC (`OnCalendar=*-*-* 03:30:00 UTC`, `Persistent=true`, `RandomizedDelaySec=15min`); retention weekly on Sunday at 05:15 UTC, after that day's backup. Target host: the data host whose checkout holds the live `data/` tree.
+- **What it does**: the backup service runs `scripts/orchestration/run_scheduled_backup.sh`, which executes `scripts/backup-data.sh backup --execute` (restic via the rclone remote) and records the outcome in `batch_state/backups/last-run.json`. The retention service runs `scripts/backup-data.sh retention --execute`, applying the operator-approved `--keep-daily 7 --keep-weekly 4 --keep-monthly 6` policy to the `learn-ukrainian-data` tag only — other snapshot families in the repository are untouched.
+- **Secrets**: both services read `EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env` (repository + password-file path). Never print or log its values. The unit fails visibly when the file is missing.
+- **Disk safety**: `LU_BACKUP_TMPDIR=@REPO_ROOT@/data/.backup-staging` keeps SQLite staging on the same filesystem as `data/` (gitignored; see `scripts/backup-data.sh` — databases are staged sequentially and each staged copy is deleted before the next). `Nice=15` + `IOSchedulingClass=idle` keep the run off the fast path; `TimeoutStartSec=7200` bounds a wedged upload (~5× the measured 23.5-minute full run of 2026-09-25).
+- **Failure visibility**: a failed run exits non-zero, so `systemctl --user list-timers` and `journalctl --user -u learn-ukrainian-backup.service` show it; `last-run.json` carries start/end, exit status, run id, snapshot count, and bytes added.
+- **Install** (preview by default; writes only with `--apply`):
+  ```bash
+  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary
+  .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary --apply --enable
+  ```
