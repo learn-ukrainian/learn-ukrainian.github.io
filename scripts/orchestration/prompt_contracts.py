@@ -20,6 +20,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.schema_check import check_schema as check_schema_memoised
+
 CONTRACT_ROOT = Path("agents_extensions/shared/prompt-contracts")
 REGISTRY_PATH = CONTRACT_ROOT / "registry.v1.yaml"
 REGISTRY_SCHEMA_PATH = CONTRACT_ROOT / "schema/prompt-registry.v1.schema.json"
@@ -276,7 +278,7 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 def _check_schema(schema: Mapping[str, Any], label: str) -> None:
     try:
-        Draft202012Validator.check_schema(schema)
+        check_schema_memoised(schema)
     except Exception as exc:  # jsonschema exposes several schema error subclasses
         raise PromptContractError(f"invalid JSON schema for {label}: {exc}") from exc
 

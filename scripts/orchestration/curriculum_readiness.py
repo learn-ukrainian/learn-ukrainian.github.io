@@ -23,6 +23,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.audit import lint_bio_dossier_xref
 from scripts.audit.wiki_completeness_gate import check_wiki_completeness
 from scripts.build import linear_pipeline
+from scripts.common.schema_check import check_schema as check_schema_memoised
 from scripts.level_config import base_level, resolve_manifest_module_track
 from scripts.orchestration import prompt_contracts
 from scripts.orchestration.preparation_evidence import (
@@ -203,7 +204,7 @@ def _compile_validator(
     label: str,
 ) -> Draft202012Validator:
     try:
-        Draft202012Validator.check_schema(schema)
+        check_schema_memoised(schema)
     except Exception as exc:  # jsonschema exposes multiple schema exception subclasses
         raise ReadinessError(f"invalid JSON schema for {label}: {exc}") from exc
     return Draft202012Validator(schema)
