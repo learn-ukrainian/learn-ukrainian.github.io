@@ -202,6 +202,26 @@ launcher_selector_stream() {
   printf '%s' "${resolved#*$'\t'}"
 }
 
+# launcher_session_epic "<selector>"
+# Print the SESSION_EPIC a driver launch exports. SessionStart uses that value
+# as the file-handoff directory (.claude/<SESSION_EPIC>-epic/). It is the
+# resolved lane when that lane is itself a selector for the same stream
+# (harness → infra, seminars-folk → folk). It stays the original selector when
+# the lane cannot re-resolve that stream, so an area-lane alias does not move
+# the stream's handoff directory: curriculum-upgrade stays
+# curriculum-upgrade-epic while its slot still uses the core lane.
+launcher_session_epic() {
+  local selector="${1:-}"
+  local lane='' stream='' lane_stream=''
+  lane="$(launcher_selector_lane "$selector")" || return 1
+  stream="$(launcher_selector_stream "$selector")" || return 1
+  if lane_stream="$(launcher_selector_stream "$lane" 2>/dev/null)" && [ "$lane_stream" = "$stream" ]; then
+    printf '%s' "$lane"
+    return 0
+  fi
+  printf '%s' "$selector"
+}
+
 # _handoff_slot_registry "<args for handoff_slot_registry.py>"
 # Run the slot-registry helper with the durable interpreter.  The registry is
 # scripts/config/area_assignments.yaml, read only through the bridge helpers
@@ -244,6 +264,8 @@ launcher_require_registered_slot() {
 # Keep launcher diagnostics in one place so every entry point documents the
 # exact same public selector surface.  Registry keys are listed only when the
 # launcher would accept them, i.e. when the slot they mint is registered.
+# A key aliased onto another lane (minted slot is not claude-<key>) is listed
+# with the compatibility aliases instead of as infra.<key>.
 launcher_selector_help() {
   local key=""
   cat <<'EOF'
@@ -267,6 +289,7 @@ EOF
     folk | seminars-folk
     bio | seminars-bio
     corpus | corpus-channels
+    curriculum-upgrade
 EOF
 }
 
