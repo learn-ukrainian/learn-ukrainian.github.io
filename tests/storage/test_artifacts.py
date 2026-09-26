@@ -175,6 +175,59 @@ def test_write_artifact_rejects_a_target_published_under_another_group(repo: Pat
     assert (repo / "data/other/map.json").read_bytes() == b"clobbered"
 
 
+def test_write_artifact_refuses_unregistered_migrated_tree_but_keeps_host_state(repo: Path, tmp_path: Path) -> None:
+    (repo / "data/lexicon/parked").mkdir(parents=True)
+    (repo / "data/lexicon/parked/original.json").write_bytes(b"{}")
+    with (repo / "registry/artifacts/classification-v1.tsv").open("a", newline="") as stream:
+        csv.writer(stream, delimiter="\t").writerow(
+            ("data/lexicon/parked/original.json", "100644", "", "2", "A", "lexicon_parked", "test", "rule")
+        )
+    (repo / ".gitignore").write_text(
+        "data/lexicon/intake/*_journal.json\ndata/lexicon/intake/*.lock\ndata/lexicon/cache/\n/data/lexicon/\n"
+    )
+    git(repo, "add", "-f", "data/lexicon/parked/original.json", "registry", ".gitignore")
+    git(repo, "commit", "-qm", "P2 fixture")
+    assert artifacts.manifest_build(repo, "lexicon_parked", "HEAD") == 1
+
+    unregistered = repo / "data/lexicon/parked/new.json"
+    with pytest.raises(ValueError, match="no manifest entry; register"):
+        artifacts.write_artifact(
+            unregistered, "lexicon_parked", "test", lambda dest: dest.write_bytes(b"new"), repo=repo
+        )
+    assert not unregistered.exists()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (repo / "data/lexicon/parked/linked").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="no manifest entry; register"):
+        artifacts.write_artifact(
+            repo / "data/lexicon/parked/linked/new.json",
+            "lexicon_parked",
+            "test",
+            lambda dest: dest.write_bytes(b"escaped"),
+            repo=repo,
+        )
+    assert not (outside / "new.json").exists()
+
+    published = repo / "data/lexicon/parked/original.json"
+    artifacts.write_artifact(published, "lexicon_parked", "test", lambda dest: dest.write_bytes(b"new"), repo=repo)
+    assert published.read_bytes() == b"new"
+    with pytest.raises(ValueError, match="published artifact of group lexicon_parked"):
+        artifacts.write_artifact(published, "raw_source", "test", lambda dest: dest.write_bytes(b"bad"), repo=repo)
+    assert published.read_bytes() == b"new"
+
+    host_state = repo / "data/lexicon/cache/cache.json"
+    host_state.parent.mkdir()
+    artifacts.write_artifact(host_state, "lexicon_parked", "test", lambda dest: dest.write_bytes(b"cache"), repo=repo)
+    assert host_state.read_bytes() == b"cache"
+    journal = repo / "data/lexicon/intake/recovery_journal.json"
+    journal.parent.mkdir()
+    artifacts.write_artifact(journal, "lexicon_parked", "test", lambda dest: dest.write_bytes(b"journal"), repo=repo)
+    assert journal.read_bytes() == b"journal"
+    scratch = tmp_path / "scratch.json"
+    artifacts.write_artifact(scratch, "lexicon_parked", "test", lambda dest: dest.write_bytes(b"scratch"), repo=repo)
+    assert scratch.read_bytes() == b"scratch"
+
+
 def test_write_artifact_fails_closed_when_published_target_diverged(repo: Path) -> None:
     (repo / "data/raw/source.txt").write_bytes(b"edited in place")
     with pytest.raises(paths.MissingArtifactError, match=r"size|sha256"):

@@ -14,10 +14,12 @@ from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
+from scripts.storage.paths import REGISTRY_ROOT
+
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.pointer.json"
-DEFAULT_ANTONYM_PAIRS = ROOT / "data" / "lexicon" / "antonym_pairs.yaml"
+DEFAULT_ANTONYM_PAIRS = REGISTRY_ROOT / "lexicon" / "antonym_pairs.yaml"
 RECOVERY_COMMAND = ".venv/bin/python -m scripts.practice_deck.io"
 
 REQUIRED_POINTER_KEYS = (
@@ -198,9 +200,7 @@ def _download_url(pointer: dict[str, Any], attempt: int) -> str:
             ("atlas_practice_deck_attempt", str(attempt)),
         ]
     )
-    return _assert_allowed_download_url(
-        urllib.parse.urlunsplit(split._replace(query=urllib.parse.urlencode(query)))
-    )
+    return _assert_allowed_download_url(urllib.parse.urlunsplit(split._replace(query=urllib.parse.urlencode(query))))
 
 
 def _download(pointer: dict[str, Any], *, attempt: int = 0) -> bytes:
@@ -331,14 +331,11 @@ def _package_files(package: dict[str, Any], pointer: dict[str, Any]) -> list[tup
 
 def _decode_package(data: bytes, pointer: dict[str, Any]) -> list[tuple[str, bytes]]:
     if len(data) != pointer["package_bytes"]:
-        raise PracticeDeckHydrationError(
-            f"package size mismatch: expected {pointer['package_bytes']}, got {len(data)}"
-        )
+        raise PracticeDeckHydrationError(f"package size mismatch: expected {pointer['package_bytes']}, got {len(data)}")
     actual_sha = _sha256(data)
     if actual_sha != pointer["package_sha256"]:
         raise PracticeDeckHydrationError(
-            f"package sha mismatch: expected {pointer['package_sha256']}, got {actual_sha}. "
-            f"{STALE_POINTER_HINT}"
+            f"package sha mismatch: expected {pointer['package_sha256']}, got {actual_sha}. {STALE_POINTER_HINT}"
         )
     package = json.loads(data.decode("utf-8"))
     if not isinstance(package, dict):

@@ -202,7 +202,7 @@ Optional append-format ledger output (requires ``--batch-id``,
 ```bash
 .venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake \
   --inventory-out data/lexicon/source-inventory/ohoiko-corpus-intake.json \
-  --ledger-out data/lexicon/source-inventory-review-decisions/YYYY-MM-DD-ohoiko-corpus-intake.yaml \
+  --ledger-out registry/lexicon/source-inventory-review-decisions/YYYY-MM-DD-ohoiko-corpus-intake.yaml \
   --batch-id ohoiko-corpus-intake-2026-07-14 \
   --batch-label "Ohoiko corpus Phase 1 intake" \
   --reviewed-at 2026-07-14
@@ -214,11 +214,11 @@ boundary.
 
 The full ``ohoiko-corpus-intake.json`` inventory (~31 MB) is **gitignored,
 regenerable output** — not committed (#4223). Its committed stand-in is
-``data/lexicon/source-inventory/ohoiko-corpus-intake.summary.md`` (counts +
+``registry/lexicon/source-inventory/ohoiko-corpus-intake.summary.md`` (counts +
 content hash + regeneration command). ``--ledger-out`` writes one monolithic
 YAML; the committed durable record is that ledger re-split into bounded
 per-batch files (``…-batch-NN.yaml``, ~1,000 rows each) under
-``data/lexicon/source-inventory-review-decisions/``. The committed-ledger
+``registry/lexicon/source-inventory-review-decisions/``. The committed-ledger
 validator fails open on the absent regenerable inventory (structural
 key-hash check only); regenerate the JSON to restore the full row cross-check.
 

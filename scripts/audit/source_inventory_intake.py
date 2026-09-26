@@ -205,9 +205,7 @@ def source_inventory_candidates(
         )
         existing_pos = group["pos"]
         if record.pos and existing_pos and record.pos != existing_pos:
-            raise SourceInventoryError(
-                f"conflicting pos for {record.lemma!r}: {existing_pos!r} vs {record.pos!r}"
-            )
+            raise SourceInventoryError(f"conflicting pos for {record.lemma!r}: {existing_pos!r} vs {record.pos!r}")
         if record.pos and not existing_pos:
             group["pos"] = record.pos
         existing_gloss = group["gloss"]
@@ -221,14 +219,14 @@ def source_inventory_candidates(
         group["frequency"] += record.count
 
     candidates = [
-            SourceInventoryCandidate(
-                lemma=str(group["lemma"]),
-                pos=group["pos"],
-                gloss=group["gloss"],
-                source_provenance=tuple(group["source_provenance"]),
-                source_count=len(group["source_provenance"]),
-                frequency=int(group["frequency"]),
-            )
+        SourceInventoryCandidate(
+            lemma=str(group["lemma"]),
+            pos=group["pos"],
+            gloss=group["gloss"],
+            source_provenance=tuple(group["source_provenance"]),
+            source_count=len(group["source_provenance"]),
+            frequency=int(group["frequency"]),
+        )
         for group in grouped.values()
     ]
     return sorted(candidates, key=lambda item: _lemma_key(item.lemma))
@@ -261,9 +259,7 @@ def _read_jsonl_inventory(path: Path, *, inventory_path: str) -> list[SourceInve
             raise SourceInventoryError(f"{inventory_path}: row {line_number}: invalid JSON") from exc
         if not isinstance(row, Mapping):
             raise SourceInventoryError(f"{inventory_path}: row {line_number}: expected JSON object")
-        records.append(
-            _record_from_flat_row(row, inventory_path=inventory_path, locator=f"row {line_number}")
-        )
+        records.append(_record_from_flat_row(row, inventory_path=inventory_path, locator=f"row {line_number}"))
     return records
 
 
@@ -472,13 +468,9 @@ def _positive_int(value: object, field: str, inventory_path: str, locator: str) 
     try:
         count = int(str(value).strip())
     except (TypeError, ValueError) as exc:
-        raise SourceInventoryError(
-            f"{inventory_path}: {locator}: {field} must be a positive integer"
-        ) from exc
+        raise SourceInventoryError(f"{inventory_path}: {locator}: {field} must be a positive integer") from exc
     if count < 1:
-        raise SourceInventoryError(
-            f"{inventory_path}: {locator}: {field} must be a positive integer"
-        )
+        raise SourceInventoryError(f"{inventory_path}: {locator}: {field} must be a positive integer")
     return count
 
 
@@ -496,7 +488,12 @@ def _normalize_key(value: object) -> str:
 def _display_path(path: Path, project_root: Path | None) -> str:
     if project_root is not None:
         try:
-            return str(path.resolve().relative_to(project_root.resolve()))
+            relative = path.resolve().relative_to(project_root.resolve())
+            if relative.parts[:2] == ("registry", "lexicon"):
+                # The committed decision ledgers key source rows by this stable
+                # logical identifier; only the file's physical location moved.
+                return str(Path("data", "lexicon", *relative.parts[2:]))
+            return str(relative)
         except ValueError:
             pass
     return str(path)

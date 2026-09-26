@@ -707,10 +707,10 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
   --triage-report-out /tmp/atlas-private-teacher-lesson-bulk-triage.md
 
 # 3) Set-diff the triage lemmas against every lemma already approved in
-#    data/lexicon/source-inventory-review-decisions/*teacher-lesson*.yaml (cumulative,
+#    registry/lexicon/source-inventory-review-decisions/*teacher-lesson*.yaml (cumulative,
 #    not just the last batch) to get the new delta only, then hand-review and write:
-#      - data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml
-#      - data/lexicon/source-inventory-review-decisions/<date>-teacher-lesson-delta-approve.yaml
+#      - registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml
+#      - registry/lexicon/source-inventory-review-decisions/<date>-teacher-lesson-delta-approve.yaml
 #    Both commit the source-shape SHA-256 from step 1 in their notes for traceability.
 
 # 4) Record the checksum in the intake journal's audit trail (append-only; never
@@ -721,7 +721,7 @@ SOURCE=/path/to/local/teacher-lesson-vocabulary.docx   # never committed; local-
 
 # 5) Promote for real (needs a VESUM shadow db; see scripts/rag/build_vesum_shadow.py):
 .venv/bin/python -m scripts.lexicon.promote_teacher_lesson_intake \
-  --curated-inventory data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml \
+  --curated-inventory registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-<date>-delta.yaml \
   --vesum-db /tmp/vesum-shadow.db --apply --write --report
 
 # 6) Fold every approved lemma that already has an Atlas route (not just the newly

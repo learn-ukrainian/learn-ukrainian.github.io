@@ -55,6 +55,7 @@ from scripts.practice_deck.end_dictionaries import (
     read_end_dictionary_stress_overlay,
 )
 from scripts.practice_deck.io import compute_deck_inputs_fingerprint, compute_deck_version
+from scripts.storage.paths import REGISTRY_ROOT, artifact_path
 
 
 def _load_morphological_validator() -> Any:
@@ -100,12 +101,12 @@ DEFAULT_OUT_DIR = Path("site/public/lexicon")
 DEFAULT_ALLOWLIST = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
 DEFAULT_SENTENCE_INVENTORY = Path("site/src/data/lexicon-sentence-inventory.json")
-DEFAULT_END_DICTIONARY_INVENTORY = Path("data/lexicon/textbook-end-dictionaries/inventory.json")
-DEFAULT_HERITAGE_PAIRS = Path("data/lexicon/heritage_pairs.yaml")
-DEFAULT_PARONYM_PAIRS = Path("data/lexicon/paronym_pairs.yaml")
-DEFAULT_ANTONYM_PAIRS = Path("data/lexicon/antonym_pairs.yaml")
-DEFAULT_HOMONYM_PAIRS = Path("data/lexicon/homonym_pairs.yaml")
-DEFAULT_SYNONYM_VERDICTS = Path("data/lexicon/synonym_pair_verdicts.yaml")
+DEFAULT_END_DICTIONARY_INVENTORY = PROJECT_ROOT / "data/lexicon/textbook-end-dictionaries/inventory.json"
+DEFAULT_HERITAGE_PAIRS = REGISTRY_ROOT / "lexicon/heritage_pairs.yaml"
+DEFAULT_PARONYM_PAIRS = REGISTRY_ROOT / "lexicon/paronym_pairs.yaml"
+DEFAULT_ANTONYM_PAIRS = REGISTRY_ROOT / "lexicon/antonym_pairs.yaml"
+DEFAULT_HOMONYM_PAIRS = REGISTRY_ROOT / "lexicon/homonym_pairs.yaml"
+DEFAULT_SYNONYM_VERDICTS = REGISTRY_ROOT / "lexicon/synonym_pair_verdicts.yaml"
 # Keep the default above the current all-eligible deck size. A lower default
 # silently contracts the committed practice surface during routine cloze regen.
 DEFAULT_TARGET = 8500
@@ -6353,11 +6354,7 @@ def apply_size_budgets(
 
         def surface_fits(selected: list[Any]) -> bool:
             apply_selection(selected)
-            return all(
-                set_budget(level_shards[kind], kind)["ok"]
-                for kind in oversized_surface
-                if kind in level_shards
-            )
+            return all(set_budget(level_shards[kind], kind)["ok"] for kind in oversized_surface if kind in level_shards)
 
         low = 0
         high = len(candidates)
@@ -6619,31 +6616,31 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         "--heritage-pairs",
         type=Path,
         default=DEFAULT_HERITAGE_PAIRS,
-        help="Curated heritage YAML (default: data/lexicon/heritage_pairs.yaml).",
+        help="Curated heritage YAML (default: registry/lexicon/heritage_pairs.yaml).",
     )
     parser.add_argument(
         "--paronym-pairs",
         type=Path,
         default=DEFAULT_PARONYM_PAIRS,
-        help="Curated paronym YAML (default: data/lexicon/paronym_pairs.yaml).",
+        help="Curated paronym YAML (default: registry/lexicon/paronym_pairs.yaml).",
     )
     parser.add_argument(
         "--antonym-pairs",
         type=Path,
         default=DEFAULT_ANTONYM_PAIRS,
-        help="Curated antonym YAML (default: data/lexicon/antonym_pairs.yaml).",
+        help="Curated antonym YAML (default: registry/lexicon/antonym_pairs.yaml).",
     )
     parser.add_argument(
         "--homonym-pairs",
         type=Path,
         default=DEFAULT_HOMONYM_PAIRS,
-        help="Curated homonym YAML (default: data/lexicon/homonym_pairs.yaml).",
+        help="Curated homonym YAML (default: registry/lexicon/homonym_pairs.yaml).",
     )
     parser.add_argument(
         "--synonym-verdicts",
         type=Path,
         default=DEFAULT_SYNONYM_VERDICTS,
-        help="Reviewed synonym verdict YAML (default: data/lexicon/synonym_pair_verdicts.yaml).",
+        help="Reviewed synonym verdict YAML (default: registry/lexicon/synonym_pair_verdicts.yaml).",
     )
     parser.add_argument(
         "--curated-membership",
@@ -6754,6 +6751,10 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     antonym_pairs = read_antonym_pairs(args.antonym_pairs)
     homonym_pairs = read_homonym_pairs(args.homonym_pairs)
     synonym_verdicts = read_synonym_verdicts(args.synonym_verdicts)
+    if args.end_dictionary_inventory == DEFAULT_END_DICTIONARY_INVENTORY:
+        args.end_dictionary_inventory = artifact_path(
+            "lexicon_end_dictionaries", "lexicon/textbook-end-dictionaries/inventory.json"
+        )
     end_dictionary_stress = read_end_dictionary_stress_overlay(args.end_dictionary_inventory)
     end_payload: dict[str, Any] | None = None
     if args.end_dictionary_inventory and args.end_dictionary_inventory.exists():

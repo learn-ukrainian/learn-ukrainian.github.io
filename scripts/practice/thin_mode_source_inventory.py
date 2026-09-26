@@ -22,6 +22,8 @@ from typing import Any
 
 import yaml
 
+from scripts.storage.paths import REGISTRY_ROOT
+
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -31,10 +33,10 @@ UNIQUE_LEMMA_BAR = 1000
 THIN_MODES = ("synonym", "antonym", "paronym", "homonym")
 
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
-DEFAULT_SYNONYM_VERDICTS = ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
-DEFAULT_ANTONYM_PAIRS = ROOT / "data" / "lexicon" / "antonym_pairs.yaml"
-DEFAULT_PARONYM_PAIRS = ROOT / "data" / "lexicon" / "paronym_pairs.yaml"
-DEFAULT_HOMONYM_PAIRS = ROOT / "data" / "lexicon" / "homonym_pairs.yaml"
+DEFAULT_SYNONYM_VERDICTS = REGISTRY_ROOT / "lexicon/synonym_pair_verdicts.yaml"
+DEFAULT_ANTONYM_PAIRS = REGISTRY_ROOT / "lexicon/antonym_pairs.yaml"
+DEFAULT_PARONYM_PAIRS = REGISTRY_ROOT / "lexicon/paronym_pairs.yaml"
+DEFAULT_HOMONYM_PAIRS = REGISTRY_ROOT / "lexicon/homonym_pairs.yaml"
 
 MODE_SHARD_RE = {
     "synonym": "practice-synonym.*.json",
@@ -47,14 +49,7 @@ INDEX_GLOB = "practice-index.*.json"
 
 def _plain(value: Any) -> str:
     text = str(value or "")
-    return (
-        text.casefold()
-        .replace("\u0301", "")
-        .replace("́", "")
-        .replace("’", "'")
-        .replace("ʼ", "'")
-        .strip()
-    )
+    return text.casefold().replace("\u0301", "").replace("́", "").replace("’", "'").replace("ʼ", "'").strip()
 
 
 def _load_yaml(path: Path) -> Any:

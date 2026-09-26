@@ -36,6 +36,7 @@ from typing import Any
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_words
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -237,7 +238,11 @@ def _queue_alignment(queue_path: Path | None, before: Mapping[str, Sequence[Tabl
         items = payload.get(name)
         if not isinstance(items, list):
             raise ValueError(f"{queue_path}: {name} must be a list")
-        return {_lemma_key(_clean_lemma(item.get("uk"))) for item in items if isinstance(item, Mapping) and _clean_lemma(item.get("uk"))}
+        return {
+            _lemma_key(_clean_lemma(item.get("uk")))
+            for item in items
+            if isinstance(item, Mapping) and _clean_lemma(item.get("uk"))
+        }
 
     queued_missing = keys("missing_atlas")
     queued_thin = keys("needs_en_enrichment")
@@ -304,9 +309,7 @@ def _apply_translation(entry: dict[str, Any], translation: Mapping[str, Any]) ->
         enrichment["sources"] = sorted(sources)
 
 
-def _new_entry(
-    row: TableRow, *, atlas_lemma: str, pos: str, translation: Mapping[str, Any]
-) -> dict[str, Any]:
+def _new_entry(row: TableRow, *, atlas_lemma: str, pos: str, translation: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "lemma": atlas_lemma,
         "url_slug": _slug_for_url(atlas_lemma),
@@ -373,7 +376,7 @@ def _build_dictionary_lookup(
 ) -> tuple[DictionaryLookup | None, dict[str, Any], sqlite3.Connection | None]:
     if sources_db is None or not sources_db.is_file():
         return None, {"enabled": False, "reason": "sources_db_unavailable"}, None
-    kaikki = enrich_manifest._load_kaikki_lookup(kaikki_path) if kaikki_path and kaikki_path.is_file() else {}
+    kaikki = enrich_manifest._load_kaikki_lookup(kaikki_path) if kaikki_path is not None else {}
     connection = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
 
     def lookup(lemma: str, pos: str, english: str) -> dict[str, Any] | None:
@@ -698,9 +701,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--kaikki-lookup", type=Path, default=DEFAULT_KAIKKI)
     parser.add_argument("--report-dir", type=Path, default=DEFAULT_REPORT_DIR)
     parser.add_argument("--manifest-out", type=Path, help="Separate local staged manifest written only with --write")
-    parser.add_argument("--write", action="store_true", help="Write local deltas, report, and the separate staged manifest")
+    parser.add_argument(
+        "--write", action="store_true", help="Write local deltas, report, and the separate staged manifest"
+    )
     args = parser.parse_args(argv)
-
     if args.write and args.manifest_out is None:
         parser.error("--write requires --manifest-out; the input manifest is never a write target")
     if args.manifest_out and args.manifest_out.resolve() == args.manifest_in.resolve():
@@ -710,6 +714,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             parser.error(f"required input is missing: {required}")
     if args.queue and not args.queue.is_file():
         parser.error(f"queue is missing: {args.queue}")
+    if args.kaikki_lookup == DEFAULT_KAIKKI:
+        args.kaikki_lookup = artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")
 
     staged, artifacts, report = run(
         extract_path=args.extract,
@@ -717,7 +723,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         queue_path=args.queue,
         vesum_db=args.vesum_db,
         sources_db=args.sources_db if args.sources_db.is_file() else None,
-        kaikki_path=args.kaikki_lookup if args.kaikki_lookup.is_file() else None,
+        kaikki_path=args.kaikki_lookup,
     )
     if args.write:
         assert args.manifest_out is not None

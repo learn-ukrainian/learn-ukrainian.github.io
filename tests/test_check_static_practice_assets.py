@@ -782,8 +782,12 @@ def test_cli_prints_coverage_table(tmp_path: Path) -> None:
     assert "* below thin-deck warning threshold" in result.stdout
 
 
-def test_check_assets_runs_qa_gate_with_fixtures(tmp_path: Path) -> None:
+def test_check_assets_runs_qa_gate_with_fixtures(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify check_assets forwards and catches QA violations when run_qa_gate=True."""
+    # This import must work without the audit directory on sys.path.
+    audit_dir = Path(__file__).resolve().parents[1] / "scripts" / "audit"
+    monkeypatch.delitem(sys.modules, "practice_quality_gate", raising=False)
+    monkeypatch.setattr(sys, "path", [entry for entry in sys.path if Path(entry).resolve() != audit_dir])
     daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
     cloze_path = tmp_path / "bad_cloze.json"
     cloze_path.write_text(
@@ -975,4 +979,4 @@ def test_cli_runs_qa_gate_with_fixtures(tmp_path: Path) -> None:
         timeout=60,
     )
     assert result.returncode == 1
-    assert "practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in result.stdout
+    assert "practice_quality_gate [teacher_cloze] INTENTIONAL_ERROR_LEAK" in result.stdout, result.stderr

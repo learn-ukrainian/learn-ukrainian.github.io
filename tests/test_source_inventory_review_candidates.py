@@ -45,8 +45,9 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
         project_root=PROJECT_ROOT,
     )
     expected_candidates = source_inventory_candidates(records)
-    expected_inventory_paths = [
-        str(path.relative_to(PROJECT_ROOT)) for path in review.COMMITTED_SOURCE_INVENTORIES
+    expected_inventory_paths = [str(path.relative_to(PROJECT_ROOT)) for path in review.COMMITTED_SOURCE_INVENTORIES]
+    expected_inventory_ids = [
+        path.replace("registry/lexicon/", "data/lexicon/", 1) for path in expected_inventory_paths
     ]
     expected_lemmas = {candidate.lemma for candidate in expected_candidates}
     expected_pos = {candidate.pos for candidate in expected_candidates if candidate.pos}
@@ -76,9 +77,7 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
             "is_russianism": False,
             "russian_shadow": False,
         }
-        entry["enrichment"] = {
-            "meaning": {"definitions": [f"{entry['lemma']} fixture definition"]}
-        }
+        entry["enrichment"] = {"meaning": {"definitions": [f"{entry['lemma']} fixture definition"]}}
         return True
 
     monkeypatch.setattr(review.grow.enrich_manifest, "enrich_entry", fake_enrich_entry)
@@ -101,9 +100,7 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     assert payload["review_triage"]["counts"]["total_candidates"] == len(expected_candidates)
     assert payload["review_triage"]["counts"]["grow_auto_merge"] == len(expected_candidates)
     assert "publish_review_queue" not in payload
-    assert not Path(payload["review_only"]["candidate_output"]).is_relative_to(
-        review.LIVE_ATLAS_OUTPUT_DIR
-    )
+    assert not Path(payload["review_only"]["candidate_output"]).is_relative_to(review.LIVE_ATLAS_OUTPUT_DIR)
 
     entries = payload["auto_merge"]
     assert {entry["lemma"] for entry in entries} == expected_lemmas
@@ -117,15 +114,13 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     for entry in entries:
         assert entry["source_provenance"]
         for provenance in entry["source_provenance"]:
-            assert provenance["inventory_path"].startswith(
-                "data/lexicon/source-inventory/"
-            )
+            assert provenance["inventory_path"].startswith("data/lexicon/source-inventory/")
             assert provenance["source_id"]
             assert provenance["source_title"]
             provenance_families.add(provenance["source_family"])
             provenance_inventory_paths.add(provenance["inventory_path"])
     assert provenance_families >= REQUIRED_REVIEW_SOURCE_FAMILIES
-    assert provenance_inventory_paths >= set(expected_inventory_paths)
+    assert provenance_inventory_paths >= set(expected_inventory_ids)
 
 
 def test_review_workflow_validates_source_provenance_in_needs_review() -> None:
@@ -286,13 +281,9 @@ def test_publish_review_queue_includes_auto_merge_and_grow_review_rows() -> None
     assert "кіт" not in rows_by_lemma
     assert rows_by_lemma["жабка"]["bucket"] == "auto_merge"
     assert rows_by_lemma["жабка"]["reasons"] == ["missing_english_anchor"]
-    assert rows_by_lemma["жабка"]["source_references"] == [
-        "fixture / source-a / row 2"
-    ]
+    assert rows_by_lemma["жабка"]["source_references"] == ["fixture / source-a / row 2"]
     assert rows_by_lemma["сумнів"]["bucket"] == "needs_review"
-    assert rows_by_lemma["сумнів"]["reasons"] == [
-        "grow_needs_review:missing dictionary definition"
-    ]
+    assert rows_by_lemma["сумнів"]["reasons"] == ["grow_needs_review:missing dictionary definition"]
 
 
 def test_publish_review_queue_ids_are_stable_for_duplicate_headwords() -> None:
@@ -326,10 +317,7 @@ def test_publish_review_queue_ids_are_stable_for_duplicate_headwords() -> None:
 
     queue = review.build_publish_review_queue(payload)
 
-    assert [
-        (row["queue_id"], row["source_references"])
-        for row in queue["queue"]
-    ] == [
+    assert [(row["queue_id"], row["source_references"]) for row in queue["queue"]] == [
         (
             "source-inventory-publish-review-0001",
             ["fixture / source-a / row 1"],
@@ -415,18 +403,11 @@ def test_publish_review_queue_report_writes_only_ephemeral_paths(
 
 def test_publish_review_queue_report_rejects_repository_paths() -> None:
     with pytest.raises(SourceInventoryError, match="outside the repository"):
-        review.resolve_ephemeral_review_output_path(
-            PROJECT_ROOT / "docs/reports/source-inventory-review-queue.md"
-        )
+        review.resolve_ephemeral_review_output_path(PROJECT_ROOT / "docs/reports/source-inventory-review-queue.md")
 
 
 def test_publish_review_queue_report_rejects_traversal_into_repository() -> None:
-    traversal_path = (
-        PROJECT_ROOT
-        / ".."
-        / PROJECT_ROOT.name
-        / "docs/reports/source-inventory-review-queue.md"
-    )
+    traversal_path = PROJECT_ROOT / ".." / PROJECT_ROOT.name / "docs/reports/source-inventory-review-queue.md"
 
     with pytest.raises(SourceInventoryError, match="outside the repository"):
         review.resolve_ephemeral_review_output_path(traversal_path)
@@ -489,9 +470,7 @@ def test_review_workflow_rejects_live_atlas_outputs(production_output: Path) -> 
 
 def test_review_workflow_rejects_live_atlas_output_directory() -> None:
     with pytest.raises(SourceInventoryError, match="site/src/data"):
-        review.resolve_review_output_path(
-            PROJECT_ROOT / "site/src/data/source-inventory-review-candidates.json"
-        )
+        review.resolve_review_output_path(PROJECT_ROOT / "site/src/data/source-inventory-review-candidates.json")
 
 
 @pytest.mark.parametrize(
@@ -531,9 +510,7 @@ def test_lemma_validity_screen_demotes_vesum_absent_auto_merge() -> None:
         ],
         "needs_review": [],
     }
-    demoted = review.screen_auto_merge_lemma_validity(
-        payload, vesum=_FakeVesumLookup({"добробут"}), heritage=None
-    )
+    demoted = review.screen_auto_merge_lemma_validity(payload, vesum=_FakeVesumLookup({"добробут"}), heritage=None)
     assert demoted == ["благополуччя"]
     assert [e["lemma"] for e in payload["auto_merge"]] == ["добробут"]
     assert len(payload["needs_review"]) == 1
@@ -564,7 +541,5 @@ def test_lemma_validity_screen_exempts_genuine_multiword() -> None:
         ],
         "needs_review": [],
     }
-    review.screen_auto_merge_lemma_validity(
-        payload, vesum=_FakeVesumLookup({"мікрохвильова", "піч"}), heritage=None
-    )
+    review.screen_auto_merge_lemma_validity(payload, vesum=_FakeVesumLookup({"мікрохвильова", "піч"}), heritage=None)
     assert [e["lemma"] for e in payload["auto_merge"]] == ["мікрохвильова піч"]

@@ -18,9 +18,10 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.lexicon.relation_pairs import normalize_relation_word
 from scripts.practice.extract_textbook_error_corrections import is_intentional_error_context
+from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_lemma
 
-INTAKE_JSON = REPO_ROOT / "data/lexicon/intake/private_teacher_lesson_intake_candidates.json"
+INTAKE_JSON: Path | None = None
 SOURCES_DB = REPO_ROOT / "data/sources.db"
 OUTPUT_PUBLIC_JSON = REPO_ROOT / "site/public/lexicon/practice-cloze.teacher.json"
 OUTPUT_SRC_JSON = REPO_ROOT / "site/src/data/lexicon-teacher-cloze.json"
@@ -64,8 +65,7 @@ def exclude_private_cloze_cards(cards: list[dict[str, object]]) -> list[dict[str
     return [
         card
         for card in cards
-        if card.get("clozeId") not in EXCLUDED_TEACHER_CLOZE_IDS
-        and not contains_private_teacher_name(card)
+        if card.get("clozeId") not in EXCLUDED_TEACHER_CLOZE_IDS and not contains_private_teacher_name(card)
     ]
 
 
@@ -81,7 +81,7 @@ def find_cloze_sentence(texts: list[str], forms: set[str]) -> tuple[str, str] | 
             for token in re.finditer(r"[а-щьюяєіїґА-ЩЬЮЯЄІЇҐ'’ʼ\u0300\u0301\-]+", sentence):
                 if normalize_relation_word(token.group()) in forms:
                     return (
-                        sentence[:token.start()] + "_____" + sentence[token.end():],
+                        sentence[: token.start()] + "_____" + sentence[token.end() :],
                         token.group(),
                     )
     return None
@@ -99,15 +99,23 @@ def main():
         "Related: scripts/audit/check_teacher_cloze_content.py",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--sources-db", type=Path, default=SOURCES_DB,
-                        help="Textbook SQLite source (default: data/sources.db).")
-    parser.add_argument("--vesum-db", type=Path, default=REPO_ROOT / "data/vesum.db",
-                        help="VESUM SQLite dictionary (default: data/vesum.db).")
+    parser.add_argument(
+        "--sources-db", type=Path, default=SOURCES_DB, help="Textbook SQLite source (default: data/sources.db)."
+    )
+    parser.add_argument(
+        "--vesum-db",
+        type=Path,
+        default=REPO_ROOT / "data/vesum.db",
+        help="VESUM SQLite dictionary (default: data/vesum.db).",
+    )
     args = parser.parse_args()
-    if not INTAKE_JSON.exists() or not args.sources_db.exists() or not args.vesum_db.exists():
-        parser.error("Missing teacher intake, sources database, or VESUM database")
+    intake_json = INTAKE_JSON or artifact_path(
+        "lexicon_candidates", "lexicon/intake/private_teacher_lesson_intake_candidates.json"
+    )
+    if not args.sources_db.exists() or not args.vesum_db.exists():
+        parser.error("Missing sources database or VESUM database")
 
-    with open(INTAKE_JSON, encoding="utf-8") as f:
+    with open(intake_json, encoding="utf-8") as f:
         teacher_cand = json.load(f)
 
     teacher_entries = teacher_cand.get("auto_merge", [])
@@ -141,8 +149,7 @@ def main():
         # Filtering must not renumber later candidates from the same intake.
         cloze_count += 1
         forms = {
-            normalize_relation_word(row["word_form"])
-            for row in verify_lemma(target_word, db_path=args.vesum_db)
+            normalize_relation_word(row["word_form"]) for row in verify_lemma(target_word, db_path=args.vesum_db)
         } - {None}
         if not forms:
             continue
@@ -163,9 +170,7 @@ def main():
         random.seed(cloze_count)
         distractor_samples = random.sample(distractor_pool, min(3, len(distractor_pool)))
 
-        options = [
-            {"optionId": "opt_ans", "lemmaId": lemma, "label": matched_word, "kind": "answer"}
-        ] + [
+        options = [{"optionId": "opt_ans", "lemmaId": lemma, "label": matched_word, "kind": "answer"}] + [
             {"optionId": f"opt_dec_{idx}", "lemmaId": d.lower(), "label": d, "kind": "distractor"}
             for idx, d in enumerate(distractor_samples)
         ]

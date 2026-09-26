@@ -54,7 +54,7 @@ AUDIT_COMMAND = (
 SOURCES_DB = ROOT / "data" / "sources.db"
 UKRAINIAN_LETTERS = "А-Яа-яЄєІіЇїҐґ"
 MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-WORKSHEET = ROOT / "data" / "lexicon" / "anchor_curation_worksheet.yaml"
+WORKSHEET = ROOT / "registry" / "lexicon" / "anchor_curation_worksheet.yaml"
 DEFAULT_AUDIT_COMMAND_TIMEOUT_SECONDS: float = 300.0
 
 
@@ -90,20 +90,50 @@ class Proposal:
 # a suggestion is never selected automatically from a Балла headword. Entries
 # absent here and from СУМ-11 are explicit low-confidence abstentions.
 PROPOSALS: dict[str, Proposal] = {
-    "бажане": Proposal("desired thing", "Something wanted or wished for.", "medium", "Substantivized neuter adjective; Балла hint `wish` sense-checked."),
-    "вітамінізація": Proposal("vitamin fortification", "Adding vitamins to food or a diet.", "medium", "No exact СУМ-11 headword; Балла hint `fortification` sense-checked."),
+    "бажане": Proposal(
+        "desired thing",
+        "Something wanted or wished for.",
+        "medium",
+        "Substantivized neuter adjective; Балла hint `wish` sense-checked.",
+    ),
+    "вітамінізація": Proposal(
+        "vitamin fortification",
+        "Adding vitamins to food or a diet.",
+        "medium",
+        "No exact СУМ-11 headword; Балла hint `fortification` sense-checked.",
+    ),
     "гейби": Proposal("as if", "A dialectal conjunction meaning as if or like.", "high"),
-    "генрі": Proposal("henry", "The SI unit of electrical inductance.", "medium", "No exact СУМ-11 headword; Балла headword `henry` is the unit, not the name."),
+    "генрі": Proposal(
+        "henry",
+        "The SI unit of electrical inductance.",
+        "medium",
+        "No exact СУМ-11 headword; Балла headword `henry` is the unit, not the name.",
+    ),
     "гіповітаміноз": Proposal("vitamin deficiency", "An illness caused by insufficient vitamins.", "high"),
     "денно": Proposal("daily", "Every day; also, for a working day.", "high"),
-    "дитяча": Proposal("nursery", "A room for children.", "medium", "Substantivized feminine adjective; `bathinette` is a noisy Балла match."),
-    "домашні": Proposal("household", "People or things belonging to the home.", "medium", "Substantivized plural adjective; Балла home/household hints sense-checked."),
+    "дитяча": Proposal(
+        "nursery",
+        "A room for children.",
+        "medium",
+        "Substantivized feminine adjective; `bathinette` is a noisy Балла match.",
+    ),
+    "домашні": Proposal(
+        "household",
+        "People or things belonging to the home.",
+        "medium",
+        "Substantivized plural adjective; Балла home/household hints sense-checked.",
+    ),
     "достоту": Proposal("exactly", "Exactly; truly or really.", "high"),
     "дурненький": Proposal("silly", "Somewhat foolish; also an affectionate form of foolish.", "high"),
     "емоційно": Proposal("emotionally", "In an emotional manner.", "high"),
     "жертовність": Proposal("self-sacrifice", "Readiness to make a sacrifice for someone or something.", "high"),
     "зазвучати": Proposal("begin to sound", "To begin making or filling with sound.", "high"),
-    "зайве": Proposal("the unnecessary", "Something extra or not needed.", "medium", "Substantivized neuter adjective; Балла `redundancy` hint sense-checked."),
+    "зайве": Proposal(
+        "the unnecessary",
+        "Something extra or not needed.",
+        "medium",
+        "Substantivized neuter adjective; Балла `redundancy` hint sense-checked.",
+    ),
     "замкнуто": Proposal("reservedly", "In a withdrawn or closed-off manner.", "high"),
     "замішування": Proposal("kneading", "The act of kneading dough; also mixing in.", "high"),
     "заповнений": Proposal("filled", "Filled or occupied with something.", "high"),
@@ -113,16 +143,41 @@ PROPOSALS: dict[str, Proposal] = {
     "захопливо": Proposal("engagingly", "In an exciting or captivating way.", "high"),
     "звикання": Proposal("getting used to", "The process of becoming accustomed to something.", "high"),
     "здирати": Proposal("strip off", "To remove or tear off an outer layer.", "high"),
-    "зернові": Proposal("cereals", "Grain crops used for food.", "medium", "Substantivized plural adjective; Балла `cereal` hint sense-checked."),
-    "знайома": Proposal("female acquaintance", "A woman whom one knows.", "medium", "Substantivized feminine adjective; Балла `acquaintance` hint sense-checked."),
+    "зернові": Proposal(
+        "cereals",
+        "Grain crops used for food.",
+        "medium",
+        "Substantivized plural adjective; Балла `cereal` hint sense-checked.",
+    ),
+    "знайома": Proposal(
+        "female acquaintance",
+        "A woman whom one knows.",
+        "medium",
+        "Substantivized feminine adjective; Балла `acquaintance` hint sense-checked.",
+    ),
     "зумовленість": Proposal("causal dependence", "Dependence on particular causes.", "high"),
     "книжно": Proposal("bookishly", "In a bookish or overly formal manner.", "high"),
-    "комендантська": Proposal("curfew", "A restriction requiring people to stay indoors at set hours.", "medium", "Substantivized adjective in the fixed phrase комендантська година; Балла `curfew` hint sense-checked."),
+    "комендантська": Proposal(
+        "curfew",
+        "A restriction requiring people to stay indoors at set hours.",
+        "medium",
+        "Substantivized adjective in the fixed phrase комендантська година; Балла `curfew` hint sense-checked.",
+    ),
     "компартія": Proposal("Communist Party", "An abbreviation for the Communist Party.", "high"),
     "компромісний": Proposal("compromise", "Formed by or involving a compromise.", "high"),
     "консервований": Proposal("canned", "Preserved for storage, especially as food.", "high"),
-    "коротший": Proposal("shorter", "Having less length or duration.", "medium", "Comparative adjective; Балла `shorter` hint sense-checked."),
-    "косуля": Proposal("wooden plough", "An archaic type of plough.", "high", "Primary СУМ-11 sense is the farming tool, not the roe deer cross-reference."),
+    "коротший": Proposal(
+        "shorter",
+        "Having less length or duration.",
+        "medium",
+        "Comparative adjective; Балла `shorter` hint sense-checked.",
+    ),
+    "косуля": Proposal(
+        "wooden plough",
+        "An archaic type of plough.",
+        "high",
+        "Primary СУМ-11 sense is the farming tool, not the roe deer cross-reference.",
+    ),
     "коцик": Proposal("small rug", "A small rug or blanket.", "high"),
     "кровити": Proposal("bleed", "To bleed from a wound.", "high"),
     "ледве-ледве": Proposal("barely", "Only just; with difficulty.", "high"),
@@ -130,19 +185,49 @@ PROPOSALS: dict[str, Proposal] = {
     "літа": Proposal("years", "A period measured in years; years of life.", "high"),
     "мовби": Proposal("as if", "As if; as though.", "high"),
     "мовбито": Proposal("as if", "As if; as though.", "high"),
-    "можливе": Proposal("the possible", "Something that is possible.", "medium", "Substantivized neuter adjective; Балла `possible` hint sense-checked."),
-    "найважливіше": Proposal("the most important", "The thing that matters most.", "medium", "Substantivized superlative; reviewed against the raw Балла hints rather than auto-copied."),
+    "можливе": Proposal(
+        "the possible",
+        "Something that is possible.",
+        "medium",
+        "Substantivized neuter adjective; Балла `possible` hint sense-checked.",
+    ),
+    "найважливіше": Proposal(
+        "the most important",
+        "The thing that matters most.",
+        "medium",
+        "Substantivized superlative; reviewed against the raw Балла hints rather than auto-copied.",
+    ),
     "найраніше": Proposal("earliest", "Earlier than all others; at the earliest time.", "high"),
-    "наслідковий": Proposal("result clause", "Relating to a result clause in grammar.", "high", "Primary СУМ-11 sense is the grammatical term."),
-    "наші": Proposal("our people", "People regarded as one's own group.", "medium", "Substantivized plural possessive; Балла `ours` hint sense-checked."),
+    "наслідковий": Proposal(
+        "result clause",
+        "Relating to a result clause in grammar.",
+        "high",
+        "Primary СУМ-11 sense is the grammatical term.",
+    ),
+    "наші": Proposal(
+        "our people",
+        "People regarded as one's own group.",
+        "medium",
+        "Substantivized plural possessive; Балла `ours` hint sense-checked.",
+    ),
     "недосипання": Proposal("lack of sleep", "The state or result of not getting enough sleep.", "high"),
     "незвично": Proposal("unusually", "In an unfamiliar or strange way.", "high"),
     "ненадійно": Proposal("unreliably", "In an unreliable or insecure way.", "high"),
     "неперевершено": Proposal("superbly", "In an unsurpassed way.", "high"),
     "неповторно": Proposal("uniquely", "In a unique, unrepeatable way.", "high"),
     "нестямно": Proposal("frantically", "In an uncontrollably excited or distraught way.", "high"),
-    "нехарактерний": Proposal("uncharacteristic", "Not typical or characteristic.", "medium", "No exact СУМ-11 headword; Балла `uncharacteristic` hint sense-checked."),
-    "обгризання": Proposal("nibbling", "The act of gnawing or nibbling away.", "medium", "No exact СУМ-11 headword; Балла `nibble` hint sense-checked."),
+    "нехарактерний": Proposal(
+        "uncharacteristic",
+        "Not typical or characteristic.",
+        "medium",
+        "No exact СУМ-11 headword; Балла `uncharacteristic` hint sense-checked.",
+    ),
+    "обгризання": Proposal(
+        "nibbling",
+        "The act of gnawing or nibbling away.",
+        "medium",
+        "No exact СУМ-11 headword; Балла `nibble` hint sense-checked.",
+    ),
     "обприскування": Proposal("spraying", "The act of spraying something with liquid.", "high"),
     "образливо": Proposal("offensively", "In an insulting or hurtful way.", "high"),
     "оброблений": Proposal("processed", "Treated, worked, or processed.", "high"),
@@ -175,7 +260,12 @@ PROPOSALS: dict[str, Proposal] = {
     "святково": Proposal("festively", "In a festive or celebratory way.", "high"),
     "свіжо": Proposal("freshly", "In a fresh or cool way; just recently.", "high"),
     "сигаретний": Proposal("cigarette", "Relating to cigarettes or their manufacture.", "high"),
-    "синтезуватися": Proposal("become unified", "To become a unified whole; also, to form by synthesis.", "medium", "Primary СУМ-11 sense precedes the chemical sense."),
+    "синтезуватися": Proposal(
+        "become unified",
+        "To become a unified whole; also, to form by synthesis.",
+        "medium",
+        "Primary СУМ-11 sense precedes the chemical sense.",
+    ),
     "скрипт": Proposal("manuscript", "An archaic word for a manuscript.", "high"),
     "споживаний": Proposal("consumed", "Used up or consumed.", "high"),
     "спохмурніти": Proposal("become gloomy", "To become gloomy or dark; of a face, to frown.", "high"),
@@ -185,7 +275,12 @@ PROPOSALS: dict[str, Proposal] = {
     "стиглий": Proposal("ripe", "Fully ripe or mature.", "high"),
     "стильно": Proposal("stylishly", "In a stylish manner.", "high"),
     "супроводжуватися": Proposal("be accompanied", "To occur together with another action or event.", "high"),
-    "сфокусуватися": Proposal("come into focus", "To bring oneself into focus.", "medium", "СУМ-11 points to the primary sense of фокусуватися."),
+    "сфокусуватися": Proposal(
+        "come into focus",
+        "To bring oneself into focus.",
+        "medium",
+        "СУМ-11 points to the primary sense of фокусуватися.",
+    ),
     "так-так": Proposal("yes indeed", "An emphatic affirmation; also an imitative ticking sound.", "high"),
     "теплоізоляція": Proposal("insulation", "Protection against heat loss or heat effects.", "high"),
     "тирозин": Proposal("tyrosine", "An amino acid found in almost all proteins.", "high"),
@@ -199,8 +294,18 @@ PROPOSALS: dict[str, Proposal] = {
     "ять": Proposal("yat letter", "The name of a historical letter in the old alphabet.", "high"),
     "ідеально": Proposal("ideally", "In an ideal manner.", "high"),
     "інформування": Proposal("informing", "The act of giving information.", "high"),
-    "інше": Proposal("the other thing", "Something else or different.", "medium", "Substantivized neuter adjective; Балла `other` hint sense-checked."),
-    "інші": Proposal("others", "Other people or things.", "medium", "Substantivized plural adjective; Балла `other` hint sense-checked."),
+    "інше": Proposal(
+        "the other thing",
+        "Something else or different.",
+        "medium",
+        "Substantivized neuter adjective; Балла `other` hint sense-checked.",
+    ),
+    "інші": Proposal(
+        "others",
+        "Other people or things.",
+        "medium",
+        "Substantivized plural adjective; Балла `other` hint sense-checked.",
+    ),
 }
 
 
@@ -224,9 +329,7 @@ def audit_entries() -> list[AtlasEntry]:
             timeout=DEFAULT_AUDIT_COMMAND_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(
-            f"Atlas richness audit timed out after {DEFAULT_AUDIT_COMMAND_TIMEOUT_SECONDS}s"
-        ) from exc
+        raise RuntimeError(f"Atlas richness audit timed out after {DEFAULT_AUDIT_COMMAND_TIMEOUT_SECONDS}s") from exc
     if result.returncode not in {0, 1}:
         raise RuntimeError(result.stderr.strip() or "Atlas richness audit did not run")
     rows = csv.DictReader(result.stdout.splitlines(), delimiter="\t")
@@ -242,10 +345,7 @@ def audit_entries() -> list[AtlasEntry]:
     if len(prefill_entries) == 158:
         return prefill_entries
     if len(prefill_entries) != 196:
-        raise RuntimeError(
-            "Issue audit produced an unexpected search_no_visible_gloss count: "
-            f"{len(prefill_entries)}"
-        )
+        raise RuntimeError(f"Issue audit produced an unexpected search_no_visible_gloss count: {len(prefill_entries)}")
 
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     working_manifest = copy.deepcopy(manifest)
@@ -475,7 +575,7 @@ def main() -> int:
     parser.add_argument(
         "--write-worksheet",
         action="store_true",
-        help="Write the verified Stage 1 worksheet to data/lexicon/.",
+        help="Write the verified Stage 1 worksheet to registry/lexicon/.",
     )
     args = parser.parse_args()
     if args.write_worksheet:

@@ -44,6 +44,17 @@ for the lemma (sentence inventory / reviewed sources).
 
 ## Regenerate
 
+The default output directory below is the `lexicon_end_dictionaries` artifact
+group. The command publishes both declared files through the artifact registry.
+On a checkout where they are absent, hydrate the group before reading them:
+
+```bash
+.venv/bin/python -m scripts.storage.artifacts hydrate --group lexicon_end_dictionaries
+```
+
+Custom `--out-dir` values are for local scratch output and do not publish to the
+artifact registry.
+
 ```bash
 .venv/bin/python scripts/practice_deck/end_dictionaries.py \
   --sources-db data/sources.db \

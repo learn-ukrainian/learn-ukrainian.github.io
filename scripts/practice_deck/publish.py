@@ -22,6 +22,8 @@ ROOT = Path(__file__).resolve().parents[2]
 # scripts/audit/generate_practice_deck.py (and the #4529 lazy-absolute-self-import lesson).
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+from scripts.storage.paths import REGISTRY_ROOT
+
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.pointer.json"
 DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.json.gz"
@@ -29,11 +31,11 @@ DEFAULT_ATLAS_DB = ROOT / "data" / "atlas.db"
 DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
 DEFAULT_CLOZE_SOURCES = ROOT / "site" / "src" / "data" / "lexicon-practice-cloze-sources.json"
 DEFAULT_SENTENCE_INVENTORY = ROOT / "site" / "src" / "data" / "lexicon-sentence-inventory.json"
-DEFAULT_HERITAGE_PAIRS = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
-DEFAULT_PARONYM_PAIRS = ROOT / "data" / "lexicon" / "paronym_pairs.yaml"
-DEFAULT_ANTONYM_PAIRS = ROOT / "data" / "lexicon" / "antonym_pairs.yaml"
-DEFAULT_HOMONYM_PAIRS = ROOT / "data" / "lexicon" / "homonym_pairs.yaml"
-DEFAULT_SYNONYM_VERDICTS = ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
+DEFAULT_HERITAGE_PAIRS = REGISTRY_ROOT / "lexicon" / "heritage_pairs.yaml"
+DEFAULT_PARONYM_PAIRS = REGISTRY_ROOT / "lexicon" / "paronym_pairs.yaml"
+DEFAULT_ANTONYM_PAIRS = REGISTRY_ROOT / "lexicon" / "antonym_pairs.yaml"
+DEFAULT_HOMONYM_PAIRS = REGISTRY_ROOT / "lexicon" / "homonym_pairs.yaml"
+DEFAULT_SYNONYM_VERDICTS = REGISTRY_ROOT / "lexicon" / "synonym_pair_verdicts.yaml"
 DEFAULT_CURATED_MEMBERSHIP = ROOT / "site" / "src" / "data" / "lexicon-teacher-curated-membership.json"
 DEFAULT_RELEASE_TAG = "atlas-practice-deck"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
@@ -261,9 +263,7 @@ def ensure_release(release_tag: str, repo: str) -> None:
             timeout=GH_RELEASE_VIEW_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired as exc:
-        raise PracticeDeckPublishError(
-            f"Timed out checking whether GitHub release {release_tag!r} exists"
-        ) from exc
+        raise PracticeDeckPublishError(f"Timed out checking whether GitHub release {release_tag!r} exists") from exc
     if existing.returncode == 0:
         return
     try:
@@ -485,8 +485,7 @@ def run_linguistic_gate(
     )
     if findings:
         raise PracticeDeckPublishError(
-            f"Practice linguistic gate v{LINGUISTIC_GATE_VERSION} failed "
-            f"({len(findings)}): {format_findings(findings)}"
+            f"Practice linguistic gate v{LINGUISTIC_GATE_VERSION} failed ({len(findings)}): {format_findings(findings)}"
         )
 
 
@@ -570,21 +569,70 @@ def main() -> int:
             "Related: practice-deck generation and timeout guard for issue #7213."
         ),
     )
-    parser.add_argument("--practice-dir", type=Path, default=DEFAULT_PRACTICE_DIR, help="Shard directory (default: %(default)s).")
-    parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP, help="Output gzip package path (default: %(default)s).")
-    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER, help="Output pointer JSON path (default: %(default)s).")
-    parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB, help="Public Atlas DB input (default: %(default)s).")
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="VESUM DB for linguistic gate (default: %(default)s).")
-    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES, help="Cloze-source JSON input (default: %(default)s).")
-    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY, help="Sentence-inventory JSON input (default: %(default)s).")
-    parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS, help="Heritage-pair YAML input (default: %(default)s).")
-    parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS, help="Paronym-pair YAML input (default: %(default)s).")
-    parser.add_argument("--antonym-pairs", type=Path, default=DEFAULT_ANTONYM_PAIRS, help="Antonym-pair YAML input (default: %(default)s).")
-    parser.add_argument("--homonym-pairs", type=Path, default=DEFAULT_HOMONYM_PAIRS, help="Homonym-pair YAML input (default: %(default)s).")
-    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS, help="Synonym-verdict YAML input (default: %(default)s).")
-    parser.add_argument("--curated-membership", type=Path, help="Optional curated-membership JSON input (default: none).")
+    parser.add_argument(
+        "--practice-dir", type=Path, default=DEFAULT_PRACTICE_DIR, help="Shard directory (default: %(default)s)."
+    )
+    parser.add_argument(
+        "--gzip", type=Path, default=DEFAULT_GZIP, help="Output gzip package path (default: %(default)s)."
+    )
+    parser.add_argument(
+        "--pointer", type=Path, default=DEFAULT_POINTER, help="Output pointer JSON path (default: %(default)s)."
+    )
+    parser.add_argument(
+        "--atlas-db", type=Path, default=DEFAULT_ATLAS_DB, help="Public Atlas DB input (default: %(default)s)."
+    )
+    parser.add_argument(
+        "--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="VESUM DB for linguistic gate (default: %(default)s)."
+    )
+    parser.add_argument(
+        "--cloze-sources",
+        type=Path,
+        default=DEFAULT_CLOZE_SOURCES,
+        help="Cloze-source JSON input (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--sentence-inventory",
+        type=Path,
+        default=DEFAULT_SENTENCE_INVENTORY,
+        help="Sentence-inventory JSON input (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--heritage-pairs",
+        type=Path,
+        default=DEFAULT_HERITAGE_PAIRS,
+        help="Heritage-pair YAML input (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--paronym-pairs",
+        type=Path,
+        default=DEFAULT_PARONYM_PAIRS,
+        help="Paronym-pair YAML input (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--antonym-pairs",
+        type=Path,
+        default=DEFAULT_ANTONYM_PAIRS,
+        help="Antonym-pair YAML input (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--homonym-pairs",
+        type=Path,
+        default=DEFAULT_HOMONYM_PAIRS,
+        help="Homonym-pair YAML input (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--synonym-verdicts",
+        type=Path,
+        default=DEFAULT_SYNONYM_VERDICTS,
+        help="Synonym-verdict YAML input (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--curated-membership", type=Path, help="Optional curated-membership JSON input (default: none)."
+    )
     parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG, help="GitHub Release tag (default: %(default)s).")
-    parser.add_argument("--repo", default=DEFAULT_REPO, help="GitHub repository in OWNER/REPO form (default: %(default)s).")
+    parser.add_argument(
+        "--repo", default=DEFAULT_REPO, help="GitHub repository in OWNER/REPO form (default: %(default)s)."
+    )
     parser.add_argument("--dry-run", action="store_true", help="Build metadata without uploading/writing pointer")
     args = parser.parse_args()
     pointer = publish_practice_deck(

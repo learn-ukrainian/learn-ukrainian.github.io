@@ -1,6 +1,6 @@
 # Practice Hub creation review
 
-The factory loads `data/lexicon/practice-creation-review.json` offline. It never
+The factory loads `registry/lexicon/practice-creation-review.json` offline. It never
 requests a model review. Missing/malformed ledgers and missing, failed, malformed,
 or stale receipts suppress new heritage/cloze output and warn with its identity.
 Other validation (provenance, morphology, levels, distractors) still applies.

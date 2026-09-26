@@ -6,7 +6,7 @@ and mutual synonyms across the Word Atlas with ZERO LLM usage.
 
 Sources:
 - registry/lt_replacements.json (LanguageTool / curated replacement map)
-- data/lexicon/heritage_pairs.yaml & heritage_pairs.wave1-calque.yaml (UA-GEC & curated pairs)
+- registry/lexicon/heritage_pairs.yaml & heritage_pairs.wave1-calque.yaml (UA-GEC & curated pairs)
 - scripts/lexicon/calque_corrections.py (active participle / calque authority)
 - data/sources.db (textbooks_fts, style_guide, ua_gec_errors, sum11, grinchenko)
 - data/vesum.db (VESUM morphological validation)
@@ -36,6 +36,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.guardrails.worktree_containment import resolve_main_root
 from scripts.lexicon.manifest_fingerprint import build_fingerprint, write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic
+from scripts.storage.artifacts import write_artifact
 from scripts.verification.vesum import get_vesum_conn, verify_lemma
 
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
@@ -61,8 +62,10 @@ DEFAULT_SOURCES_DB = _resolve_repo_path(PROJECT_ROOT / "data" / "sources.db")
 DEFAULT_ATLAS_DB = _resolve_repo_path(PROJECT_ROOT / "data" / "atlas.db")
 DEFAULT_VESUM_DB = _resolve_repo_path(PROJECT_ROOT / "data" / "vesum.db")
 DEFAULT_LT_REPLACEMENTS = _resolve_repo_path(PROJECT_ROOT / "registry" / "lt_replacements.json")
-DEFAULT_HERITAGE_PAIRS = _resolve_repo_path(PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.yaml")
-DEFAULT_HERITAGE_OVERLAY = _resolve_repo_path(PROJECT_ROOT / "data" / "lexicon" / "heritage_pairs.wave1-calque.yaml")
+DEFAULT_HERITAGE_PAIRS = _resolve_repo_path(PROJECT_ROOT / "registry" / "lexicon" / "heritage_pairs.yaml")
+DEFAULT_HERITAGE_OVERLAY = _resolve_repo_path(
+    PROJECT_ROOT / "registry" / "lexicon" / "heritage_pairs.wave1-calque.yaml"
+)
 DEFAULT_INFLOW_QUEUE = PROJECT_ROOT / "data" / "lexicon" / "calque_inflow_queue.json"
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_FINGERPRINT = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.fingerprint.json"
@@ -648,7 +651,8 @@ class CalqueReconciliationEngine:
             if is_rus:
                 heritage_status["russian_shadow"] = True
             attestations = [
-                att for att in heritage_status.get("attestations", [])
+                att
+                for att in heritage_status.get("attestations", [])
                 if not (isinstance(att, dict) and att.get("source") == "standard_alternative")
             ]
             for alt in sorted_alts:
@@ -772,9 +776,14 @@ def main() -> None:
             )
 
         if args.apply:
-            args.queue_out.parent.mkdir(parents=True, exist_ok=True)
-            with open(args.queue_out, "w", encoding="utf-8") as f:
-                json.dump(results["inflow_queue"], f, ensure_ascii=False, indent=2)
+
+            def write_queue(staged: Path) -> None:
+                staged.parent.mkdir(parents=True, exist_ok=True)
+                staged.write_text(json.dumps(results["inflow_queue"], ensure_ascii=False, indent=2), encoding="utf-8")
+
+            write_artifact(
+                args.queue_out, "lexicon_candidates", "scripts.lexicon.reconcile_calque_clusters", write_queue
+            )
             print(f"\nSaved {len(results['inflow_queue'])} queue items to {args.queue_out}")
 
 

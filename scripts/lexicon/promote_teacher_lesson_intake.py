@@ -118,9 +118,7 @@ def _assert_no_new_conformance_violations(*, staged: Path, baseline: Path) -> di
         "baseline_violations": len(base_keys),
         "staged_violations": len(staged_keys),
         "new_violations": len(new_keys),
-        "new_samples": [
-            {"gate": g, "lemma": lemma} for g, lemma in new_keys[:20]
-        ],
+        "new_samples": [{"gate": g, "lemma": lemma} for g, lemma in new_keys[:20]],
     }
     if new_keys:
         sample = ", ".join(f"{g}:{lemma}" for g, lemma in new_keys[:8])
@@ -129,6 +127,7 @@ def _assert_no_new_conformance_violations(*, staged: Path, baseline: Path) -> di
             f"violation(s) vs production baseline (samples: {sample})"
         )
     return report
+
 
 from scripts.audit.source_inventory_intake import read_source_inventory, source_inventory_candidates
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
@@ -151,15 +150,11 @@ from scripts.verification.vesum import verify_words
 
 # Keep this committed ledger path until #5995 ships its coordinated ledger scrub and rename.
 DEFAULT_FULL_DECISIONS = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions/2026-07-23-alona-full-document-intake.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/2026-07-23-alona-full-document-intake.yaml"
 )
-DEFAULT_PRIVATE_EN_DECISIONS = (
-    PROJECT_ROOT / "data/lexicon/intake/private_teacher_lesson_intake_decisions.yaml"
-)
+DEFAULT_PRIVATE_EN_DECISIONS = PROJECT_ROOT / "registry/lexicon/intake/private_teacher_lesson_intake_decisions.yaml"
 DEFAULT_CURATED_INVENTORY = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-2026-07-18-bulk.yaml"
 )
 DEFAULT_MANIFEST = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
 DEFAULT_FINGERPRINT = PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json"
@@ -357,9 +352,7 @@ def _dmklinger_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple[
         for start in range(0, len(wanted_words), 500):
             batch = wanted_words[start : start + 500]
             placeholders = ",".join("?" for _ in batch)
-            for (word,) in conn.execute(
-                f"SELECT word FROM sum11 WHERE word IN ({placeholders}) COLLATE NOCASE", batch
-            ):
+            for (word,) in conn.execute(f"SELECT word FROM sum11 WHERE word IN ({placeholders}) COLLATE NOCASE", batch):
                 sum11_attested.add(_lemma_key(str(word)))
     return anchors, sum11_attested
 
@@ -450,15 +443,13 @@ def _build_rows(
         source_rows_collapsed += len(rows) - 1
         first = rows[0]
         analyses_for_lemma = canonical_analyses.get(lemma, [])
-        pos = "phrase" if _is_expression(lemma) else (_vesum_pos(analyses_for_lemma) or _fallback_pos(lemma, first.gloss))
+        pos = (
+            "phrase" if _is_expression(lemma) else (_vesum_pos(analyses_for_lemma) or _fallback_pos(lemma, first.gloss))
+        )
         gloss = next((row.gloss for row in rows if _is_english(row.gloss)), None)
         if not gloss:
             key = _lemma_key(lemma)
-            gloss = (
-                private_en.get(key)
-                or manifest_glosses.get(key)
-                or dictionary_glosses.get(key)
-            )
+            gloss = private_en.get(key) or manifest_glosses.get(key) or dictionary_glosses.get(key)
             gloss_fallbacks += bool(gloss)
         if not gloss:
             continue
@@ -620,9 +611,7 @@ def promote(
     allow_held: bool = False,
     resume_staged: bool = False,
 ) -> dict[str, Any]:
-    candidates, decisions, report = _build_rows(
-        full_decisions, curated_inventory, manifest, vesum_db, sources_db
-    )
+    candidates, decisions, report = _build_rows(full_decisions, curated_inventory, manifest, vesum_db, sources_db)
     payload = build_payload(
         total_delta=len(candidates),
         processed=len(candidates),
@@ -692,11 +681,13 @@ def promote(
                 applied = apply.apply_promotion_plan(manifest_payload, plan, source_family="teacher_lesson")
                 _atomic_write_json(STAGED_MANIFEST, manifest_payload)
                 staged_sha256 = _sha256_file(STAGED_MANIFEST)
-                journal_record.update({
-                    "phase": "MANIFEST_STAGED",
-                    "staged_sha256": staged_sha256,
-                    "promoted": applied["counts"]["promoted"],
-                })
+                journal_record.update(
+                    {
+                        "phase": "MANIFEST_STAGED",
+                        "staged_sha256": staged_sha256,
+                        "promoted": applied["counts"]["promoted"],
+                    }
+                )
                 _atomic_write_json(DEFAULT_JOURNAL, journal_record)
                 promoted_keys = {_lemma_key(row["lemma"]) for row in applied["promoted_entries"]}
                 promoted_count = applied["counts"]["promoted"]
@@ -715,11 +706,13 @@ def promote(
             if promoted_keys:
                 write_fingerprint(STAGED_FINGERPRINT, root=PROJECT_ROOT)
             enriched_sha256 = _sha256_file(STAGED_MANIFEST)
-            journal_record.update({
-                "phase": "ENRICHED",
-                "enriched_sha256": enriched_sha256,
-                "promoted": promoted_count,
-            })
+            journal_record.update(
+                {
+                    "phase": "ENRICHED",
+                    "enriched_sha256": enriched_sha256,
+                    "promoted": promoted_count,
+                }
+            )
             _atomic_write_json(DEFAULT_JOURNAL, journal_record)
 
             # PHASE 3: VERIFY STAGED MANIFEST
@@ -733,9 +726,7 @@ def promote(
             )
             if verify_code != 0:
                 raise RuntimeError(f"staged manifest failed verification with exit code {verify_code}")
-            conf_delta = _assert_no_new_conformance_violations(
-                staged=STAGED_MANIFEST, baseline=manifest
-            )
+            conf_delta = _assert_no_new_conformance_violations(staged=STAGED_MANIFEST, baseline=manifest)
             print(
                 "§8 new-vs-baseline: "
                 f"baseline={conf_delta['baseline_violations']} "
@@ -743,10 +734,12 @@ def promote(
                 f"new={conf_delta['new_violations']}",
                 flush=True,
             )
-            journal_record.update({
-                "phase": "VERIFIED",
-                "conformance_delta": conf_delta,
-            })
+            journal_record.update(
+                {
+                    "phase": "VERIFIED",
+                    "conformance_delta": conf_delta,
+                }
+            )
             _atomic_write_json(DEFAULT_JOURNAL, journal_record)
 
             # PHASE 4: PUBLISH (Compare-And-Swap + Atomic Replace)
@@ -758,18 +751,22 @@ def promote(
                 os.replace(STAGED_FINGERPRINT, fingerprint)
 
             # PHASE 5: PUBLISHED
-            journal_record.update({
-                "phase": "PUBLISHED",
-                "final_sha256": _sha256_file(manifest),
-            })
+            journal_record.update(
+                {
+                    "phase": "PUBLISHED",
+                    "final_sha256": _sha256_file(manifest),
+                }
+            )
             _atomic_write_json(DEFAULT_JOURNAL, journal_record)
 
-            result.update({
-                "applied": {"promoted": promoted_count},
-                "resumed": resumed_journal is not None,
-                "wrote": bool(promoted_count),
-                "journal": journal_record,
-            })
+            result.update(
+                {
+                    "applied": {"promoted": promoted_count},
+                    "resumed": resumed_journal is not None,
+                    "wrote": bool(promoted_count),
+                    "journal": journal_record,
+                }
+            )
             return result
         finally:
             fcntl.flock(lock_fd, fcntl.LOCK_UN)
@@ -922,7 +919,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--decisions-out", type=Path, default=DEFAULT_DECISIONS)
     parser.add_argument("--apply", action="store_true", help="Build the promotion plan")
     parser.add_argument("--write", action="store_true", help="Apply the plan to the manifest")
-    parser.add_argument("--allow-held", action="store_true", help="Allow promoting ready candidates while holding anchorless rows")
+    parser.add_argument(
+        "--allow-held", action="store_true", help="Allow promoting ready candidates while holding anchorless rows"
+    )
     parser.add_argument(
         "--resume-staged",
         action="store_true",

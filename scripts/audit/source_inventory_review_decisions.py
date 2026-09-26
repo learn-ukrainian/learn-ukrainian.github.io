@@ -8,6 +8,7 @@ import hashlib
 import sys
 from collections import Counter
 from collections.abc import Mapping, Sequence
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -22,11 +23,12 @@ from scripts.audit.source_inventory_intake import (
     read_source_inventories,
 )
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
+from scripts.storage.paths import DATA_ROOT, REGISTRY_ROOT, artifact_path, load_manifest
 
 DECISION_KIND = "atlas_source_inventory_review_decisions"
 DECISION_VERSION = 1
-DEFAULT_DECISION_DIR = PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions"
-SOURCE_INVENTORY_DIR = PROJECT_ROOT / "data/lexicon/source-inventory"
+DEFAULT_DECISION_DIR = REGISTRY_ROOT / "lexicon/source-inventory-review-decisions"
+SOURCE_INVENTORY_DIR = REGISTRY_ROOT / "lexicon/source-inventory"
 QUEUE_WORKFLOW = "source_inventory_publish_review_queue.v1"
 ALLOWED_DECISIONS = {
     "approve_for_publish",
@@ -122,7 +124,7 @@ def validate_decision_file(
     # triage ledgers, #4888/#4889) should fail with "this is the wrong kind
     # of file for this directory", not a wall of unknown-field noise.
     # Non-decision documents belong elsewhere (see
-    # data/lexicon/grow-triage-ledgers/README.md).
+    # registry/lexicon/grow-triage-ledgers/README.md).
     _require_equal(path, payload.get("kind"), DECISION_KIND, "kind")
     _reject_unknown_fields(path, payload, allowed=TOP_LEVEL_FIELDS, scope="top level")
     _require_equal(path, payload.get("version"), DECISION_VERSION, "version")
@@ -137,14 +139,10 @@ def validate_decision_file(
     _reject_unknown_fields(path, source_queue, allowed=SOURCE_QUEUE_FIELDS, scope="source_queue")
     _require_equal(path, source_queue.get("workflow"), QUEUE_WORKFLOW, "source_queue.workflow")
     batch_size_fields = [
-        field
-        for field in ("first_promotion_batch_size", "promotion_batch_size")
-        if field in source_queue
+        field for field in ("first_promotion_batch_size", "promotion_batch_size") if field in source_queue
     ]
     if len(batch_size_fields) != 1:
-        raise SourceInventoryError(
-            f"{path}: source_queue must define exactly one promotion batch size field"
-        )
+        raise SourceInventoryError(f"{path}: source_queue must define exactly one promotion batch size field")
     _require_positive_int(
         path,
         source_queue[batch_size_fields[0]],
@@ -206,9 +204,7 @@ def _index_and_absent_inventories(
     # Keep standalone `validate_decision_file` fully self-contained by loading
     # that corpus when no index was supplied.
     if source_index is None:
-        index = _source_record_index(
-            read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT)
-        )
+        index = _source_record_index(read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT))
     else:
         index = dict(source_index)
 
@@ -303,9 +299,7 @@ def _validate_decision_row(
     )
     expected_key = source_inventory_key(lemma=lemma, inventory_path=inventory_path, locator=locator)
     if source_key != expected_key:
-        raise SourceInventoryError(
-            f"{prefix} source_inventory.key {source_key!r} does not match {expected_key!r}"
-        )
+        raise SourceInventoryError(f"{prefix} source_inventory.key {source_key!r} does not match {expected_key!r}")
     if source_key in seen_source_keys:
         raise SourceInventoryError(f"{prefix} duplicate source_inventory.key {source_key!r}")
     seen_source_keys.add(source_key)
@@ -328,24 +322,43 @@ def _validate_decision_row(
 def _source_record_index(
     records: Sequence[SourceInventoryRecord],
 ) -> dict[tuple[str, str, str], SourceInventoryRecord]:
-    return {
-        (record.lemma, record.inventory_path, record.source_locator): record
-        for record in records
-    }
+    return {(record.lemma, record.inventory_path, record.source_locator): record for record in records}
 
 
 def resolve_staged_inventory_path(inventory_path: str) -> Path:
     """Resolve one ledger-referenced inventory, restricted to the inventory directory."""
-
-    candidate = (PROJECT_ROOT / inventory_path).resolve()
+    prefix = "data/lexicon/source-inventory/"
+    if not inventory_path.startswith(prefix):
+        raise SourceInventoryError(
+            f"source_inventory.path must be inside data/lexicon/source-inventory: {inventory_path}"
+        )
+    relative = inventory_path.removeprefix(prefix)
+    data_candidate = (PROJECT_ROOT / inventory_path).resolve()
+    registry_candidate = (PROJECT_ROOT / "registry/lexicon/source-inventory" / relative).resolve()
+    if registry_candidate.is_file():
+        candidate = registry_candidate
+    elif PROJECT_ROOT.resolve() == REGISTRY_ROOT.parent.resolve() and inventory_path in _p2_headword_paths():
+        candidate = artifact_path("lexicon_headword_candidates", f"lexicon/source-inventory/{relative}")
+    else:
+        candidate = data_candidate
+    if candidate == registry_candidate:
+        inventory_root = (PROJECT_ROOT / "registry/lexicon/source-inventory").resolve()
+    elif PROJECT_ROOT.resolve() == REGISTRY_ROOT.parent.resolve():
+        inventory_root = (DATA_ROOT / "lexicon/source-inventory").resolve()
+    else:
+        inventory_root = SOURCE_INVENTORY_DIR.resolve()
     try:
-        candidate.relative_to(SOURCE_INVENTORY_DIR.resolve())
+        candidate.relative_to(inventory_root)
     except ValueError as exc:
         raise SourceInventoryError(
-            "source_inventory.path must be inside data/lexicon/source-inventory: "
-            f"{inventory_path}"
+            f"source_inventory.path must be inside data/lexicon/source-inventory: {inventory_path}"
         ) from exc
     return candidate
+
+
+@lru_cache(maxsize=1)
+def _p2_headword_paths() -> frozenset[str]:
+    return frozenset(entry["path"] for entry in load_manifest("lexicon_headword_candidates")["entries"])
 
 
 # libyaml's C parser, when available. `yaml.safe_load` does NOT auto-select it,
@@ -421,9 +434,7 @@ def _validate_text_list(path: Path, value: object, field: str) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Validate tracked Word Atlas source-inventory review decisions."
-    )
+    parser = argparse.ArgumentParser(description="Validate tracked Word Atlas source-inventory review decisions.")
     parser.add_argument(
         "paths",
         nargs="*",

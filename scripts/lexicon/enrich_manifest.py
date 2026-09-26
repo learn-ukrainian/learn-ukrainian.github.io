@@ -115,6 +115,7 @@ from scripts.lexicon.source_attribution import (
     remap_url_list,
 )
 from scripts.mphdict import mphdict_etymology, mphdict_synonyms, mphdict_synonyms_available
+from scripts.storage.paths import artifact_path
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
 
@@ -153,10 +154,6 @@ if not _SOURCES_DB_CANDIDATE.is_file() or _SOURCES_DB_CANDIDATE.stat().st_size <
         _SOURCES_DB_CANDIDATE = _primary / "data" / "sources.db"
 SOURCES_DB = Path(os.environ.get("SOURCES_DB_PATH", str(_SOURCES_DB_CANDIDATE)))
 KAIKKI_LOOKUP = ROOT / "data" / "lexicon" / "kaikki_uk_lookup.json"
-if not KAIKKI_LOOKUP.is_file():
-    _primary = _resolve_primary_checkout()
-    if _primary is not None and (_primary / "data" / "lexicon" / "kaikki_uk_lookup.json").is_file():
-        KAIKKI_LOOKUP = _primary / "data" / "lexicon" / "kaikki_uk_lookup.json"
 WIKI_REFERENCE_CACHE = ROOT / "data" / "lexicon" / "cache" / "wiki_reference.json"
 GRAC_FREQUENCY_CACHE = ROOT / "data" / "lexicon" / "cache" / "grac_frequency.json"
 
@@ -227,9 +224,7 @@ _GRAC_BATCH_SIZE = 25
 _SLOVNYK_DICT_LABELS: dict[str, str] = dict(SLUG_ACADEMIC_LABELS)
 # Fetch the academic synonym dictionary (sense-split on slovnyk.me). Karavansky
 # remains optional/secondary; primary is ``synonyms`` (СУМ synonym dictionary).
-_SLOVNYK_LOOKUP_SLUGS = tuple(
-    slug for slug in _SLOVNYK_DICT_LABELS if slug not in {"synonyms_karavansky"}
-)
+_SLOVNYK_LOOKUP_SLUGS = tuple(slug for slug in _SLOVNYK_DICT_LABELS if slug not in {"synonyms_karavansky"})
 _SLOVNYK_IDIOM_SLUGS = ("phraseology",)
 _SLOVNYK_PROVERB_SLUGS = ("proverbs",)
 # Full essays as sections.usage_notes. #6463 wired davydov; #6460 adds the
@@ -527,17 +522,19 @@ _BLOCKED_SYNONYMS = {
 _WRONG_SENSE_SYNONYMS: dict[str, frozenset[str]] = {
     "шлях": frozenset({"кам'яниця"}),
     "річка": frozenset({"звір"}),
-    "берегиня": frozenset({
-        "русалка",
-        "німфа",
-        "наяда",
-        "мавка",
-        "лісна",
-        "лісниця",
-        "віла",
-        "ундина",
-        "сирена",
-    }),
+    "берегиня": frozenset(
+        {
+            "русалка",
+            "німфа",
+            "наяда",
+            "мавка",
+            "лісна",
+            "лісниця",
+            "віла",
+            "ундина",
+            "сирена",
+        }
+    ),
 }
 
 # #3197 — Вікісловник's explicit antonym column carries pedagogical noise the POS
@@ -1000,9 +997,7 @@ def _participle_parent_from_hints(hints: Sequence[object]) -> str | None:
         except Exception:
             continue
         if any(
-            str(row.get("pos") or "") == "verb"
-            and "inf" in str(row.get("tags") or "").split(":")
-            for row in analyses
+            str(row.get("pos") or "") == "verb" and "inf" in str(row.get("tags") or "").split(":") for row in analyses
         ):
             return parent
     return None
@@ -2024,9 +2019,7 @@ def _base_word(term: str) -> str:
 def _ulif_has_tables(conn: sqlite3.Connection) -> bool:
     try:
         return bool(
-            conn.execute(
-                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='ulif_dictua_entries'"
-            ).fetchone()
+            conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ulif_dictua_entries'").fetchone()
         )
     except sqlite3.OperationalError:
         return False
@@ -2425,8 +2418,12 @@ def _antonyms_ulif(
             r_kind = r.get("kind")
             candidates: list[str] = []
             if r_kind == "paired_sense":
-                l_terms = [t.get("text", "") if isinstance(t, dict) else str(t) for t in r.get("left", {}).get("terms", [])]
-                r_terms = [t.get("text", "") if isinstance(t, dict) else str(t) for t in r.get("right", {}).get("terms", [])]
+                l_terms = [
+                    t.get("text", "") if isinstance(t, dict) else str(t) for t in r.get("left", {}).get("terms", [])
+                ]
+                r_terms = [
+                    t.get("text", "") if isinstance(t, dict) else str(t) for t in r.get("right", {}).get("terms", [])
+                ]
                 l_cleans = [_strip_stress(t).casefold() for t in l_terms if t]
                 r_cleans = [_strip_stress(t).casefold() for t in r_terms if t]
 
@@ -2806,9 +2803,7 @@ def _split_usage_note_title(body: str) -> tuple[str | None, str]:
     return title, rest
 
 
-def _usage_note_item_from_row(
-    row: dict[str, Any], lemma: str, *, corrective: bool = False
-) -> dict[str, Any] | None:
+def _usage_note_item_from_row(row: dict[str, Any], lemma: str, *, corrective: bool = False) -> dict[str, Any] | None:
     """Build one usage-note item from a davydov-family slovnyk cache row.
 
     Family slugs: davydov, linguistic_norm, khreshchatyk (P0 essays); the P1
@@ -2835,11 +2830,7 @@ def _usage_note_item_from_row(
             # Title split left a stub — keep the unsplit body.
             title, essay = None, body
     slug = str(row.get("dictionary_slug") or "davydov")
-    source = str(
-        row.get("dictionary_label")
-        or SLUG_ACADEMIC_LABELS.get(slug)
-        or DAVYDOV_LABEL
-    )
+    source = str(row.get("dictionary_label") or SLUG_ACADEMIC_LABELS.get(slug) or DAVYDOV_LABEL)
     item: dict[str, Any] = {
         "text": essay,
         "source": source,
@@ -3069,6 +3060,7 @@ def _is_connection_readonly(conn: sqlite3.Connection) -> bool:
     except sqlite3.Error:
         return True
 
+
 def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
     global _FRAZEOLOHICHNYI_FTS_WARN_LOGGED
     key = _db_cache_key(conn)
@@ -3101,7 +3093,10 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
             if row and row[0] == 0:
                 if _is_connection_readonly(conn):
                     if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
-                        print("Warning: frazeolohichnyi_fts table is missing and connection is read-only. Falling back to LIKE.", file=sys.stderr)
+                        print(
+                            "Warning: frazeolohichnyi_fts table is missing and connection is read-only. Falling back to LIKE.",
+                            file=sys.stderr,
+                        )
                         _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = True
                     return False
 
@@ -3112,13 +3107,19 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
             return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, True)
         except sqlite3.Error as e:
             if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
-                print(f"Warning: Failed to verify/populate frazeolohichnyi_fts ({e}). Falling back to LIKE.", file=sys.stderr)
+                print(
+                    f"Warning: Failed to verify/populate frazeolohichnyi_fts ({e}). Falling back to LIKE.",
+                    file=sys.stderr,
+                )
                 _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = True
             return False
 
     if _is_connection_readonly(conn):
         if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
-            print("Warning: frazeolohichnyi_fts table is missing and connection is read-only. Falling back to LIKE.", file=sys.stderr)
+            print(
+                "Warning: frazeolohichnyi_fts table is missing and connection is read-only. Falling back to LIKE.",
+                file=sys.stderr,
+            )
             _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = True
         return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
 
@@ -3129,13 +3130,14 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
             ")"
         )
         conn.execute(
-            "INSERT INTO frazeolohichnyi_fts(rowid, word, definition) "
-            "SELECT id, word, definition FROM frazeolohichnyi"
+            "INSERT INTO frazeolohichnyi_fts(rowid, word, definition) SELECT id, word, definition FROM frazeolohichnyi"
         )
         return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, True)
     except sqlite3.Error as e:
         if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
-            print(f"Warning: Failed to create/populate frazeolohichnyi_fts ({e}). Falling back to LIKE.", file=sys.stderr)
+            print(
+                f"Warning: Failed to create/populate frazeolohichnyi_fts ({e}). Falling back to LIKE.", file=sys.stderr
+            )
             _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = True
         return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
 
@@ -3302,13 +3304,15 @@ def _idioms_ulif(conn: sqlite3.Connection, lemma: str) -> dict[str, Any] | None:
         if len(definition) > 4000:
             definition = _truncate_text(definition, 4000)
 
-        items.append({
-            "text": phrase,
-            "phrase": phrase,
-            "definition": definition,
-            "source": ULIF_DICTUA_LABEL,
-            "source_url": ULIF_DICTUA_URL,
-        })
+        items.append(
+            {
+                "text": phrase,
+                "phrase": phrase,
+                "definition": definition,
+                "source": ULIF_DICTUA_LABEL,
+                "source_url": ULIF_DICTUA_URL,
+            }
+        )
 
     if not items:
         return None
@@ -3486,7 +3490,8 @@ def _get_heritage_pairs_data() -> tuple[dict[str, dict[str, Any]], dict[str, lis
         return _HERITAGE_PAIRS_DATA_CACHE
 
     import yaml
-    path = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
+
+    path = ROOT / "registry" / "lexicon" / "heritage_pairs.yaml"
     by_calque: dict[str, dict[str, Any]] = {}
     by_native: dict[str, list[dict[str, Any]]] = {}
     rationale_uk: dict[str, str] = {}
@@ -5226,12 +5231,8 @@ def _paronym_relations(
     relations: list[dict[str, Any]] = []
 
     try:
-        zno_columns = {
-            str(row[1]) for row in conn.execute("PRAGMA table_info(zno_tasks)").fetchall()
-        }
-        document_columns = {
-            str(row[1]) for row in conn.execute("PRAGMA table_info(zno_documents)").fetchall()
-        }
+        zno_columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(zno_tasks)").fetchall()}
+        document_columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(zno_documents)").fetchall()}
         if {"year", "task_no", "task_subtype", "paronym_pair"} <= zno_columns:
             if {"document_id"} <= zno_columns and "url" in document_columns:
                 rows = conn.execute(
@@ -5272,9 +5273,7 @@ def _paronym_relations(
         pass
 
     try:
-        cache_columns = {
-            str(row[1]) for row in conn.execute("PRAGMA table_info(paronyms_cache)").fetchall()
-        }
+        cache_columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(paronyms_cache)").fetchall()}
         if {"word_a", "word_b", "definition"} <= cache_columns:
             for first_raw, second_raw, definition in conn.execute(
                 "SELECT word_a, word_b, definition FROM paronyms_cache"
@@ -5451,11 +5450,7 @@ def _merge_synonym_relations(
     """Merge the two precision-ordered synonym veins into the rendered schema."""
     merged = dict(existing or {})
     items = [str(item) for item in merged.get("items", []) if str(item).strip()]
-    seen = {
-        key
-        for item in items
-        if (key := _canonical_synonym_term(_base_word(item))) is not None
-    }
+    seen = {key for item in items if (key := _canonical_synonym_term(_base_word(item))) is not None}
     source_urls = [str(url) for url in merged.get("source_urls", []) if str(url).strip()]
     source_labels: list[str] = []
     additions = 0
@@ -5499,11 +5494,7 @@ def _merge_antonym_relations(
     """Merge VESUM-gated antonym pointers into the rendered section schema."""
     merged = dict(existing or {})
     items = [str(item) for item in merged.get("items", []) if str(item).strip()]
-    seen = {
-        key
-        for item in items
-        if (key := _canonical_synonym_term(_base_word(item))) is not None
-    }
+    seen = {key for item in items if (key := _canonical_synonym_term(_base_word(item))) is not None}
     source_urls = [str(url) for url in merged.get("source_urls", []) if str(url).strip()]
     source_labels: list[str] = []
     additions = 0
@@ -5542,6 +5533,7 @@ def _merge_antonym_relations(
 
 def _are_glosses_similar(g1: str, g2: str) -> bool:
     """Compare two glosses using case-insensitive SequenceMatcher ratio on normalized text and content token Jaccard similarity."""
+
     def clean(s: str) -> str:
         s = _strip_stress(s).lower()
         # Keep only alphanumeric characters and spaces
@@ -5557,6 +5549,7 @@ def _are_glosses_similar(g1: str, g2: str) -> bool:
 
     # Check SequenceMatcher ratio
     from difflib import SequenceMatcher
+
     ratio = SequenceMatcher(None, c1, c2).ratio()
     if ratio < 0.85:
         return False
@@ -5565,9 +5558,36 @@ def _are_glosses_similar(g1: str, g2: str) -> bool:
     # A small UA stopword set to be subtracted (grammatical particles, prepositions, conjunctions)
     # Structural words like 'сімейства', 'частина' stay (are NOT in this stopword set).
     ua_stopwords = {
-        "і", "та", "й", "у", "в", "на", "за", "з", "із", "зі", "до",
-        "для", "про", "без", "від", "через", "під", "над", "перед",
-        "по", "при", "як", "що", "це", "о", "об", "а", "але", "чи", "бо"
+        "і",
+        "та",
+        "й",
+        "у",
+        "в",
+        "на",
+        "за",
+        "з",
+        "із",
+        "зі",
+        "до",
+        "для",
+        "про",
+        "без",
+        "від",
+        "через",
+        "під",
+        "над",
+        "перед",
+        "по",
+        "при",
+        "як",
+        "що",
+        "це",
+        "о",
+        "об",
+        "а",
+        "але",
+        "чи",
+        "бо",
     }
 
     t1 = set(c1.split()) - ua_stopwords
@@ -5590,6 +5610,7 @@ def _merge_homonym_relations(
     source_urls = [str(url) for url in merged.get("source_urls", []) if str(url).strip()]
     source_labels: list[str] = []
     additions = 0
+
     def relation_order(item: dict[str, Any]) -> tuple[int, int, str, str]:
         try:
             number = int(item.get("homonym_no"))
@@ -5835,8 +5856,8 @@ def _missing_table(exc: sqlite3.OperationalError) -> bool:
     return "no such table" in str(exc).casefold()
 
 
-def _load_kaikki_lookup(path: Path = KAIKKI_LOOKUP) -> dict[str, dict[str, Any]]:
-    """Load the compact Kaikki lookup if it has been preprocessed.
+def _load_kaikki_lookup(path: Path | None = None) -> dict[str, dict[str, Any]]:
+    """Load the compact Kaikki lookup, requiring the published artifact by default.
 
     Prefer the immutable kaikki side DB when ``LEXICON_KAIKKI_SIDE_DB`` is set
     (runner PR1) — workers never reparse the global JSON file.
@@ -5846,11 +5867,11 @@ def _load_kaikki_lookup(path: Path = KAIKKI_LOOKUP) -> dict[str, dict[str, Any]]
         from scripts.lexicon.runner.side_db import KaikkiSideDb
 
         return KaikkiSideDb(Path(side)).as_mapping_proxy()  # type: ignore[return-value]
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {}
-    return data if isinstance(data, dict) else {}
+    source = path if path is not None else artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json")
+    data = json.loads(source.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"Kaikki lookup must be a JSON object: {source}")
+    return data
 
 
 def _kaikki_row(lookup: dict[str, dict[str, Any]], lemma: str) -> dict[str, Any] | None:
@@ -6718,9 +6739,9 @@ def _clean_ukreng_gloss(candidate: str) -> str | None:
     cleaned = clean_html_entities(candidate)
     cleaned = re.sub(r"\b(?:also|fig|figurative|literally|lit)\.?\b", " ", cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r"\(\s*(?:pl|sg|plural|singular)\.?\s*\)", " ", cleaned, flags=re.IGNORECASE)
-    cleaned = re.sub(r"\s+", " ", cleaned).strip(" \t\r\n.,;:!?()[]{}«»\"“”▪•–—·*~")
+    cleaned = re.sub(r"\s+", " ", cleaned).strip(' \t\r\n.,;:!?()[]{}«»"“”▪•–—·*~')
     cleaned = re.sub(r"^(?:to|a|an|the)\s+", "", cleaned, flags=re.IGNORECASE)
-    cleaned = cleaned.strip(" \t\r\n.,;:!?()[]{}«»\"“”▪•–—·*~")
+    cleaned = cleaned.strip(' \t\r\n.,;:!?()[]{}«»"“”▪•–—·*~')
     # A sense boundary the chunker cannot split on (no preceding ")" before the
     # next "2)") leaves the next sense's number glued to the gloss tail
     # («амброзія міф. ambrosia 2) бот. ragweed» -> "ambrosia 2"). Strip a
@@ -7128,9 +7149,8 @@ def _e2u_translation(lemma: str, *, entry_pos: object = None) -> dict[str, objec
             return block
 
     # Step 4: EN reverse match only if UK-headword exact produced nothing
-    target_pos = (
-        _E2U_REVERSE_POS_MAP.get(_lookup_key(str(entry_pos or "")))
-        or _MANIFEST_POS_TO_VESUM_POS.get(_lookup_key(str(entry_pos or "")))
+    target_pos = _E2U_REVERSE_POS_MAP.get(_lookup_key(str(entry_pos or ""))) or _MANIFEST_POS_TO_VESUM_POS.get(
+        _lookup_key(str(entry_pos or ""))
     )
     for variant in _split_lemma_variants(lemma):
         rows = query_e2u_uk_en(variant)
@@ -7277,33 +7297,35 @@ def _is_wikidata_scientific_binomial(en_label: str, entity: dict[str, Any]) -> b
     )
 
 
-_WIKIDATA_NOISE_P31 = frozenset({
-    "Q4167410",   # disambiguation page
-    "Q13406463",  # list article
-    "Q11266439",  # template
-    "Q11424",     # film
-    "Q202866",    # animated film
-    "Q24856",     # film series
-    "Q5398426",   # television series
-    "Q526877",    # television program
-    "Q21191270",  # TV episode
-    "Q7725634",   # literary work
-    "Q571",       # book
-    "Q8261",      # novel
-    "Q47461344",  # written work
-    "Q7366",      # song
-    "Q482994",    # album
-    "Q134556",    # single
-    "Q2188189",   # musical work
-    "Q523",       # star
-    "Q67206785",  # Bayer object
-    "Q3863",      # asteroid
-    "Q318",       # galaxy
-    "Q16521",     # taxon
-    "Q95074",     # fictional character
-    "Q15632617",  # fictional entity
-    "Q21070568",  # character in work
-})
+_WIKIDATA_NOISE_P31 = frozenset(
+    {
+        "Q4167410",  # disambiguation page
+        "Q13406463",  # list article
+        "Q11266439",  # template
+        "Q11424",  # film
+        "Q202866",  # animated film
+        "Q24856",  # film series
+        "Q5398426",  # television series
+        "Q526877",  # television program
+        "Q21191270",  # TV episode
+        "Q7725634",  # literary work
+        "Q571",  # book
+        "Q8261",  # novel
+        "Q47461344",  # written work
+        "Q7366",  # song
+        "Q482994",  # album
+        "Q134556",  # single
+        "Q2188189",  # musical work
+        "Q523",  # star
+        "Q67206785",  # Bayer object
+        "Q3863",  # asteroid
+        "Q318",  # galaxy
+        "Q16521",  # taxon
+        "Q95074",  # fictional character
+        "Q15632617",  # fictional entity
+        "Q21070568",  # character in work
+    }
+)
 
 _WIKIDATA_TITLE_QUALIFIER_RE = re.compile(
     r"\((?:фільм|кінофільм|телесеріал|серіал|пісня|альбом|сингл|зоря|зірка|сузір['ʼ’]?я|астероїд|значення|film|tv series|television series|song|album|single|star|constellation|asteroid|disambiguation)\b",
@@ -7374,19 +7396,21 @@ _WIKIDATA_EN_NOISE_PATTERNS = (
 )
 
 
-_WIKIDATA_THEONYM_P31 = frozenset({
-    "Q55138169",  # Slavic water spirit / Slavic mythological character
-    "Q178885",    # deity / divinity / god / goddess
-    "Q205985",    # goddess
-    "Q2239243",   # Slavic deity
-    "Q13002305",  # mythological figure
-    "Q22906782",  # mythological character
-    "Q188554",    # mythological entity / mythological being
-    "Q4271324",   # spirit
-    "Q3774780",   # mythical character
-    "Q13410712",  # mythical entity
-    "Q1006509",   # Slavic mythological character
-})
+_WIKIDATA_THEONYM_P31 = frozenset(
+    {
+        "Q55138169",  # Slavic water spirit / Slavic mythological character
+        "Q178885",  # deity / divinity / god / goddess
+        "Q205985",  # goddess
+        "Q2239243",  # Slavic deity
+        "Q13002305",  # mythological figure
+        "Q22906782",  # mythological character
+        "Q188554",  # mythological entity / mythological being
+        "Q4271324",  # spirit
+        "Q3774780",  # mythical character
+        "Q13410712",  # mythical entity
+        "Q1006509",  # Slavic mythological character
+    }
+)
 
 
 def _is_wikidata_theonym_entity(entity: dict[str, Any]) -> bool:
@@ -8026,11 +8050,7 @@ def _carry_over_pointer_annotations(
     if gate_ran or not new_section or not isinstance(baseline_section, dict):
         return new_section, None
     new_keys = _section_item_keys(new_section)
-    existing_segments = {
-        seg.strip()
-        for seg in str(new_section.get("source") or "").split(" + ")
-        if seg.strip()
-    }
+    existing_segments = {seg.strip() for seg in str(new_section.get("source") or "").split(" + ") if seg.strip()}
     carried_segments: list[str] = []
     for raw in str(baseline_section.get("source") or "").split(" + "):
         seg = raw.strip()
@@ -8058,9 +8078,7 @@ def _carry_over_pointer_annotations(
     return resolved, GATE_ANNOTATIONS_CARRIED
 
 
-def _ordered_sections(
-    sections: dict[str, object], baseline: dict[str, Any]
-) -> dict[str, object]:
+def _ordered_sections(sections: dict[str, object], baseline: dict[str, Any]) -> dict[str, object]:
     """Emit sections in the baseline manifest's key order so a pure-preserve run
     serializes byte-identical to its baseline (#5077 review finding 3).
 
@@ -8188,9 +8206,7 @@ def enrich_entry(
     gate_provenance: dict[str, str] = {}
 
     def _apply_section(name: str, new_section: dict[str, Any] | None, *, gate_ran: bool) -> None:
-        resolved, outcome = _resolve_gated_section(
-            new_section, baseline_sections.get(name), gate_ran=gate_ran
-        )
+        resolved, outcome = _resolve_gated_section(new_section, baseline_sections.get(name), gate_ran=gate_ran)
         if resolved:
             sections[name] = resolved
         if outcome:
@@ -8246,9 +8262,7 @@ def enrich_entry(
     # cache could not be consulted (offline + no newsum/vts slug), carry the published
     # pointer annotations forward per-item rather than silently dropping them; online or
     # cache-present the fresh recompute wins and nothing is carried.
-    antonym_annotation_gate_ran = _slovnyk_gate_ran(
-        slovnyk_cache, _SLOVNYK_ANTONYM_ANNOTATION_SLUGS
-    )
+    antonym_annotation_gate_ran = _slovnyk_gate_ran(slovnyk_cache, _SLOVNYK_ANTONYM_ANNOTATION_SLUGS)
     antonyms, antonym_annotation_outcome = _carry_over_pointer_annotations(
         antonyms, baseline_sections.get("antonyms"), gate_ran=antonym_annotation_gate_ran
     )
@@ -8273,9 +8287,7 @@ def enrich_entry(
     # gate always runs, so an offline run updates from local data (finding 2).
     _apply_section("homonyms", homonyms, gate_ran=True)
     paronym_relations = (
-        pointer_paronym_relations
-        if pointer_paronym_relations is not None
-        else _paronym_relations(conn, lemma)
+        pointer_paronym_relations if pointer_paronym_relations is not None else _paronym_relations(conn, lemma)
     )
     paronyms = _merge_paronym_relations(None, paronym_relations)
     # Paronyms come from local ZNO/cache pairs only (no slovnyk.me), so their gate runs
@@ -8427,9 +8439,7 @@ def enrich(
     for #5331) with optional side DBs under ``data/lexicon/side/``.
     """
     target_manifest = Path(manifest_path) if manifest_path is not None else MANIFEST
-    target_fingerprint = (
-        Path(fingerprint_path) if fingerprint_path is not None else DEFAULT_FINGERPRINT
-    )
+    target_fingerprint = Path(fingerprint_path) if fingerprint_path is not None else DEFAULT_FINGERPRINT
     if os.environ.get("LEXICON_USE_RUNNER", "").strip() in {"1", "true", "yes", "on"}:
         from scripts.lexicon.runner.memory import MemoryPolicy
         from scripts.lexicon.runner.offline_engine import enrich_offline_slice
@@ -8439,7 +8449,7 @@ def enrich(
         result = enrich_offline_slice(
             manifest_path=target_manifest,
             sources_db=SOURCES_DB,
-            kaikki_json=KAIKKI_LOOKUP,
+            kaikki_json=artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json"),
             work_dir=work,
             output_path=target_manifest,
             grac_cache=_load_grac_frequency_cache(),
@@ -8498,7 +8508,9 @@ def enrich(
             side_dir / "dmklinger.sqlite",
             key_fn=_dmklinger_key,
         )
-        kaikki_art = build_kaikki_side_db(KAIKKI_LOOKUP, side_dir / "kaikki.sqlite")
+        kaikki_art = build_kaikki_side_db(
+            artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json"), side_dir / "kaikki.sqlite"
+        )
         _install_balla_side_db(BallaReverseSideDb(Path(balla_art.path)))
         _install_dmklinger_side_db(DmklingerSideDb(Path(dmk_art.path)))
         kaikki_lookup = KaikkiSideDb(Path(kaikki_art.path)).as_mapping_proxy()
@@ -8506,9 +8518,7 @@ def enrich(
         entries = list(stream_manifest_entries_sqlite(Path(staged["path"])))
         _normalize_manifest_entries({"entries": entries})
         available_lemmas = {
-            _lemma_key(str(entry.get("lemma") or ""))
-            for entry in entries
-            if str(entry.get("lemma") or "").strip()
+            _lemma_key(str(entry.get("lemma") or "")) for entry in entries if str(entry.get("lemma") or "").strip()
         }
 
         cefr_path = work_dir / "seals" / "cefr.sqlite"
@@ -8718,19 +8728,22 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
-        "--usage-notes-cache-only", action="store_true",
+        "--usage-notes-cache-only",
+        action="store_true",
         help="Fill only empty usage notes from local v4 caches, without network access (default: full enrichment).",
     )
     for section in ("proverbs", "synsets", "hub"):
         parser.add_argument(
-            f"--{section}-cache-only", action="store_true",
+            f"--{section}-cache-only",
+            action="store_true",
             help=(
                 f"Fill empty {section} layers from local current caches without network access "
                 "(hub applies usage notes, proverbs and synsets; default: full enrichment)."
             ),
         )
     parser.add_argument(
-        "--output", type=Path,
+        "--output",
+        type=Path,
         help="Candidate JSON path for cache-only modes (default: lexicon-manifest.usage-notes.json for usage notes alone, otherwise lexicon-manifest.hub.json beside the baseline).",
     )
     return parser
@@ -8745,8 +8758,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     cache_only = (
-        args.usage_notes_cache_only or args.proverbs_cache_only
-        or args.synsets_cache_only or args.hub_cache_only
+        args.usage_notes_cache_only or args.proverbs_cache_only or args.synsets_cache_only or args.hub_cache_only
     )
     if args.output and not cache_only:
         parser.error("--output requires a cache-only flag")

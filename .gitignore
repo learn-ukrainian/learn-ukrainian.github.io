@@ -481,6 +481,8 @@ data/lexicon/curated-v5-atlas-admission-report.json
 # plus the committed SUMMARY (counts + content hash) beside this path.
 data/lexicon/source-inventory/ohoiko-corpus-intake.json
 data/lexicon/source-inventory/curriculum-full-text-intake.json
+# P2 migration: published lexicon artifacts and local lexicon state stay untracked.
+/data/lexicon/
 data/eval-archive/
 data/projects/ua_eval_harness/results_*.json
 

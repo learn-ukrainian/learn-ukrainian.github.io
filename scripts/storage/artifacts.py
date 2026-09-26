@@ -7,6 +7,7 @@ import contextlib
 import csv
 import datetime as dt
 import fcntl
+import fnmatch
 import hashlib
 import io
 import json
@@ -136,6 +137,41 @@ def _all_manifests(repo: Path) -> list[tuple[str, dict]]:
         for entry in paths.load_manifest(group, repo)["entries"]:
             result.append((group, entry))
     return result
+
+
+def _migrated_a_trees(repo: Path) -> set[Path]:
+    """Find phase A roots with installed manifests, using the frozen classification."""
+    trees = set()
+    rows = _rows(repo)
+    for phase in {_phase(row) for row in rows if row["class"] == "A"}:
+        phase_rows = [row for row in rows if row["class"] == "A" and _phase(row) == phase]
+        if not any(paths.manifest_path(group, repo).is_file() for group in {row["group"] for row in phase_rows}):
+            continue
+        common = Path(os.path.commonpath([str(Path(row["path"]).parent) for row in phase_rows]))
+        if len(common.parts) > 1:  # A phase spanning all of data/ has no single safe output tree.
+            trees.add((repo / common).absolute())
+    return trees
+
+
+def _lexicon_host_state(repo: Path, target: Path) -> bool:
+    """Keep the specific host-state ignore rules that predate the broad P2 ignore."""
+    ignore = repo / ".gitignore"
+    if not ignore.is_file():
+        return False
+    relative = target.relative_to(repo.absolute()).as_posix()
+    for line in ignore.read_text(encoding="utf-8").splitlines():
+        rule = line.strip()
+        if rule == "/data/lexicon/":
+            break
+        if not rule.startswith("data/lexicon/"):
+            continue
+        if rule.endswith("/") and relative.startswith(rule):
+            return True
+        if "*" in rule and relative.count("/") == rule.count("/") and fnmatch.fnmatchcase(relative, rule):
+            return True
+        if relative == rule:
+            return True
+    return False
 
 
 def _sha_blob(repo: Path, blob: str) -> str:
@@ -598,13 +634,14 @@ def write_artifact(
 
     A producer's default output may be a published A path (spec section 3: only ``publish`` writes it).
     The target is resolved against every A manifest: a path owned by ``group`` is published, a path owned by
-    any other group raises ``ValueError`` and nothing is written. Any other output path, such as a scratch or
-    test path, is written directly.
+    any other group raises ``ValueError`` and nothing is written. An unregistered output under a
+    migrated A tree is refused; specific pre-existing host-state paths and scratch paths remain direct.
     """
-    data_root = (repo / "data").resolve()
+    data_root = (repo / "data").absolute()
+    lexical_target = Path(os.path.abspath(target))
     resolved = Path(target).resolve()
-    if resolved.is_relative_to(data_root):
-        rel = resolved.relative_to(data_root).as_posix()
+    if lexical_target.is_relative_to(data_root):
+        rel = lexical_target.relative_to(data_root).as_posix()
         owners = sorted({owner for owner, entry in _all_manifests(repo) if entry["path"] == f"data/{rel}"})
         if owners and group not in owners:
             raise ValueError(f"data/{rel} is a published artifact of group {', '.join(owners)}, not {group}")
@@ -614,6 +651,13 @@ def write_artifact(
                 write(staged)
                 publish(repo, group, rel, staged, producer)
             return resolved
+        if any(lexical_target.is_relative_to(tree) for tree in _migrated_a_trees(repo)) and not _lexicon_host_state(
+            repo, lexical_target
+        ):
+            raise ValueError(
+                f"data/{rel} is under a migrated artifact tree but has no manifest entry; "
+                "register the output in its artifact group before writing"
+            )
     write(Path(target))
     return Path(target)
 

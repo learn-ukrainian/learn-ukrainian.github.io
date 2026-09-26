@@ -453,9 +453,9 @@ EPISODES_DATA = [
     },
 ]
 
-INV_PATH = PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml"
+INV_PATH = PROJECT_ROOT / "registry/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml"
 DECISIONS_PATH = (
-    PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions/2026-09-13-ohoiko-fmu-booster-approve.yaml"
+    PROJECT_ROOT / "registry/lexicon/source-inventory-review-decisions/2026-09-13-ohoiko-fmu-booster-approve.yaml"
 )
 INV_REL = "data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml"
 DECISIONS_REL = "data/lexicon/source-inventory-review-decisions/2026-09-13-ohoiko-fmu-booster-approve.yaml"

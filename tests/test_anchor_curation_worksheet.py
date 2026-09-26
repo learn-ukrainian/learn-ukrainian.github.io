@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-WORKSHEET = Path("data/lexicon/anchor_curation_worksheet.yaml")
+WORKSHEET = Path("registry/lexicon/anchor_curation_worksheet.yaml")
 REQUIRED_FIELDS = {
     "lemma",
     "cefr",

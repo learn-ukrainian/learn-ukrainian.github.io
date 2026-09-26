@@ -33,18 +33,16 @@ from scripts.audit.source_inventory_review_decisions import (
     _validate_decision_row,
     source_inventory_key,
 )
-from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
+from scripts.storage.paths import REGISTRY_ROOT
 
 _SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 
 _LATIN_STEM = _SCRUBBED_PERSONAL_IDENTIFIER_TOKENS[0]
 
 DEFAULT_SOURCE_LEDGER = (
-    PROJECT_ROOT
-    / "data/lexicon/source-inventory-review-decisions"
-    / f"2026-07-23-{_LATIN_STEM}-full-document-intake.yaml"
+    REGISTRY_ROOT / "lexicon/source-inventory-review-decisions" / f"2026-07-23-{_LATIN_STEM}-full-document-intake.yaml"
 )
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data/lexicon/source-inventory-review-decisions"
+DEFAULT_OUTPUT_DIR = REGISTRY_ROOT / "lexicon/source-inventory-review-decisions"
 DEFAULT_SCRUBBED_PATH = "data/lexicon/source-inventory/oneshot/private-teacher-lesson-vocabulary-full.yaml"
 DEFAULT_NUM_SHARDS = 10
 

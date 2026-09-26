@@ -354,7 +354,7 @@ seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
   `heritage_pair` schema — `{nativeSlug, calqueLabel, corrections[], citations[] (≥1), sourceFamily}` —
   schema-validated at build; any pair failing validation is dropped and reported, never emitted.
 - ⟦v5.1 — #4505 curation lane, agy-reviewed 2026-07-06⟧ **Schema extension + frames.** The curated
-  store is `data/lexicon/heritage_pairs.yaml`. On top of the v4 five-field minimum each record adds:
+  store is `registry/lexicon/heritage_pairs.yaml`. On top of the v4 five-field minimum each record adds:
   **`kind: lexical | sense_restricted`** — sense-restricted pairs (the неділя/задача class: the word
   is standard Ukrainian, ONE sense is the calque) additionally REQUIRE `calqueSense` +
   `authenticSense`; a bare lexical pair may not model them.  **`frames[]` (optional per record, mirroring §9.9)** — `{sentence_with_slot, answer_form, calque_form, origin, disambiguated, distractors: [..] (optional list of curated distractor lemmas to override pool mining)}`.

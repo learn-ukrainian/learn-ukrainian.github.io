@@ -43,6 +43,7 @@ from scripts.audit.generate_practice_deck import (
     validate_homonym_pair,
 )
 from scripts.audit.lexeme_filter import is_lexeme_entry, practice_ineligibility_reason
+from scripts.storage.paths import REGISTRY_ROOT
 
 RelationBuilder = Callable[..., list[dict[str, Any]]]
 RelationValidator = Callable[[dict[str, Any]], list[str]]
@@ -51,7 +52,14 @@ FrameSelector = Callable[[dict[str, Any]], list[dict[str, Any]]]
 
 def _relation_parts(
     relation: str,
-) -> tuple[Callable[[Path], list[dict[str, Any]]], RelationValidator, FrameSelector, RelationBuilder, Callable[[dict[str, Any]], dict[str, Any]], Callable[[dict[str, Any], bool], list[str]]]:
+) -> tuple[
+    Callable[[Path], list[dict[str, Any]]],
+    RelationValidator,
+    FrameSelector,
+    RelationBuilder,
+    Callable[[dict[str, Any]], dict[str, Any]],
+    Callable[[dict[str, Any], bool], list[str]],
+]:
     if relation == "antonym":
         return (
             read_antonym_pairs,
@@ -204,12 +212,16 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     reader, *_rest = _relation_parts(args.relation)
-    pairs_path = args.pairs or Path(f"data/lexicon/{args.relation}_pairs.yaml")
-    results = classify_pairs(args.relation, reader(pairs_path), read_atlas_db(args.atlas_db), RealVesumVerifier(args.vesum_db))
+    pairs_path = args.pairs or REGISTRY_ROOT / "lexicon" / f"{args.relation}_pairs.yaml"
+    results = classify_pairs(
+        args.relation, reader(pairs_path), read_atlas_db(args.atlas_db), RealVesumVerifier(args.vesum_db)
+    )
     summary = summarize(results)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     if args.out:
-        args.out.write_text(json.dumps({"summary": summary, "pairs": results}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        args.out.write_text(
+            json.dumps({"summary": summary, "pairs": results}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
     return 0
 
 
