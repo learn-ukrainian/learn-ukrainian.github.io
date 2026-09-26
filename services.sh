@@ -56,6 +56,13 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Check before local/remote routing, pid-directory creation, or stopping an
+# existing process. The UUID file is absent on notebooks and pre-migration hosts.
+case "${1:-}" in
+    start|restart|fix)
+        /usr/bin/env bash "$PROJECT_ROOT/scripts/storage/data_volume_guard.sh"
+        ;;
+esac
 SVC_LSOF_BIN="${SVC_LSOF_BIN:-lsof}"
 SVC_SYSTEMCTL_BIN="${SVC_SYSTEMCTL_BIN:-systemctl}"
 SVC_PROC_ROOT="${SVC_PROC_ROOT:-/proc}"
@@ -1298,6 +1305,7 @@ _rebuild_astro() {
 _status() {
     local selected="${*:-$ALL_SERVICES}"
     local failed=0 route active sub main restarts listeners pid kind detail state pid_in_port
+    /usr/bin/env bash "$PROJECT_ROOT/scripts/storage/data_volume_guard.sh" --status
     printf "%-12s %-11s %-8s %-15s %s\n" "SERVICE" "STATUS" "PID" "PORT" "DETAIL"
     printf "%-12s %-11s %-8s %-15s %s\n" "-------" "------" "---" "----" "------"
     for name in $selected; do

@@ -18,6 +18,9 @@ def harness(tmp_path: Path):
     script = tmp_path / "services.sh"
     script.write_bytes((ROOT / "services.sh").read_bytes())
     script.chmod(0o755)
+    guard = tmp_path / "scripts/storage/data_volume_guard.sh"
+    guard.parent.mkdir(parents=True)
+    guard.write_bytes((ROOT / "scripts/storage/data_volume_guard.sh").read_bytes())
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     ps = bin_dir / "ps"

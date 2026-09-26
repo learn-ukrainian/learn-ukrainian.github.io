@@ -205,6 +205,13 @@ def _patch_script_pids_dir(script_path: Path, pids_dir: Path) -> None:
     script_path.write_text(content, encoding="utf-8")
 
 
+def _copy_data_volume_guard(script_path: Path) -> None:
+    """A copied services.sh needs the adjacent guard used by its early preflight."""
+    guard = script_path.parent / "scripts/storage/data_volume_guard.sh"
+    guard.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(PROJECT_ROOT / "scripts/storage/data_volume_guard.sh", guard)
+
+
 def test_pid_reconciliation(temp_services_sh, mock_lsof_env, tmp_path):
     """Test stale pid file / listener interactions hermetically."""
     script_path, port = temp_services_sh
@@ -644,6 +651,8 @@ def test_work_status_reports_ssh_tunnel_when_health_ok(tmp_path, mock_lsof_env) 
     )
     script_path.chmod(0o755)
 
+    _copy_data_volume_guard(script_path)
+
     health = subprocess.Popen(
         [
             str(VENV_PYTHON),
@@ -708,6 +717,8 @@ def test_work_lifecycle_uses_sibling_checkout_and_fixed_loopback(tmp_path) -> No
         encoding="utf-8",
     )
     script_path.chmod(0o755)
+
+    _copy_data_volume_guard(script_path)
 
     private_root = tmp_path / "private"
     (private_root / ".git").mkdir(parents=True)

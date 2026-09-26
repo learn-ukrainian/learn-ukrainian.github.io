@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import subprocess
+import sys
 from pathlib import Path
+
+import pytest
 
 PACKAGING = Path(__file__).resolve().parents[2] / "packaging" / "systemd"
 UNITS = (
@@ -11,6 +15,7 @@ UNITS = (
     "learn-ukrainian-work.service",
     "learn-ukrainian-astro.service",
 )
+DROPINS = PACKAGING / "dropins"
 
 
 def test_systemd_templates_are_type_simple() -> None:
@@ -42,3 +47,36 @@ def test_systemd_templates_have_no_host_facts() -> None:
         text = path.read_text(encoding="utf-8")
         for token in forbidden:
             assert token not in text, f"{path.name} leaked {token!r}"
+
+
+@pytest.mark.repo_wide
+def test_data_volume_dropins_cover_all_services_and_preserve_commands() -> None:
+    timers = {path.stem + ".service" for path in PACKAGING.glob("*.timer")}
+    expected = set(UNITS) | timers
+    actual = {path.parent.name.removesuffix(".d") for path in DROPINS.glob("*.service.d/data-volume.conf")}
+    assert actual == expected
+    for unit in expected:
+        original = (PACKAGING / unit).read_text(encoding="utf-8")
+        command = next(line.removeprefix("ExecStart=") for line in original.splitlines() if line.startswith("ExecStart="))
+        dropin = (DROPINS / f"{unit}.d/data-volume.conf").read_text(encoding="utf-8")
+        assert "ExecStart=\n" in dropin
+        assert f"/data_volume_guard.sh -- {command}" in dropin
+        assert "RestartPreventExitStatus=78" in dropin
+
+
+def test_data_volume_dropin_installer_previews_then_applies(tmp_path: Path) -> None:
+    destination = tmp_path / "user"
+    command = [
+        sys.executable,
+        str(PACKAGING.parents[1] / "scripts/storage/install_data_volume_dropins.py"),
+        "--destination",
+        str(destination),
+    ]
+    preview = subprocess.run(command, text=True, capture_output=True, check=True)
+    assert "data_volume_guard.sh" in preview.stdout
+    assert not destination.exists()
+    applied = subprocess.run([*command, "--apply"], text=True, capture_output=True, check=True)
+    assert applied.stdout == preview.stdout
+    files = list(destination.glob("*.service.d/data-volume.conf"))
+    assert len(files) == 8
+    assert all("@REPO_ROOT@" not in file.read_text(encoding="utf-8") for file in files)
