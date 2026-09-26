@@ -18,13 +18,13 @@
       "deletions": 0,
       "files": 0
     },
-    "cost": 0.021383771999999995,
+    "cost": 0.023196863999999994,
     "tokens": {
-      "input": 79490,
-      "output": 4254,
-      "reasoning": 5908,
+      "input": 82136,
+      "output": 4913,
+      "reasoning": 6241,
       "cache": {
-        "read": 1121024,
+        "read": 1394688,
         "write": 0
       }
     },
@@ -47,7 +47,7 @@
     ],
     "time": {
       "created": 1790455473485,
-      "updated": 1790455624187
+      "updated": 1790455641161
     }
   },
   "messages": [
@@ -2298,21 +2298,24 @@
           "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-launcher-slot-r2",
           "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-launcher-slot-r2"
         },
-        "cost": 0,
+        "cost": 0.0007989,
         "tokens": {
-          "input": 0,
-          "output": 0,
-          "reasoning": 0,
+          "total": 91850,
+          "input": 1822,
+          "output": 149,
+          "reasoning": 279,
           "cache": {
-            "read": 0,
-            "write": 0
+            "write": 0,
+            "read": 89600
           }
         },
         "modelID": "deepseek-flash",
         "providerID": "deepseek",
         "time": {
-          "created": 1790455624185
+          "created": 1790455624185,
+          "completed": 1790455638901
         },
+        "finish": "tool-calls",
         "id": "msg_0df78b1f9001Ddykx5kuwS6uBf",
         "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4"
       },
@@ -2340,21 +2343,215 @@
           "tool": "bash",
           "callID": "call_00_QoQOd0Y1R76KWXPG0CPa4372",
           "state": {
-            "metadata": {
-              "output": "ruff (lint)..............................................................Passed\ngitleaks (secret scan)...................................................Passed\ncheck yaml syntax....................................(no files to check)Skipped\nblock accidentally large files...........................................Passed\ncheck for merge conflicts................................................Passed\nfix end of files.........................................................Passed\ntrim trailing whitespace.................................................Passed\nblock .yaml.bak / .yaml.orig files.......................................Passed\nblock bare python/python3 in new scripts.................................Passed\nblock local-only private-source review exports...........................Passed\ncheck MDX source parity..............................(no files to check)Skipped\ncheck public UA-eval English document language.......(no files to check)Skipped\ncheck forward MDX parity.............................(no files to check)Skipped\ncheck no internal IDs/register in learner surfaces...(no files to check)Skipped\ncheck locked modules are not published...............(no files to check)Skipped\nlesson schema drift gate.............................(no files to check)Skipped\nAtlas lexicon fingerprint freshness gate.............(no files to check)Skipped\nAtlas manifest enrichment-depth gate.................(no files to check)Skipped\ndispatch brief .venv worktree guardrail..............(no files to check)Skipped\nlint session-state env references....................(no files to check)Skipped\nbio dossier §7 cross-track path validator............(no files to check)Skipped\ncheck staged and committed files for OPSEC leaks.........................Passed\n"
-            },
-            "status": "running",
+            "status": "completed",
             "input": {
               "command": "git add tests/test_handoff_slot_registry.py && git commit -m \"test(launcher): derive the curriculum-upgrade stream; alias-table invariant (#8863)\" -m \"$LU_X_AGENT_TRAILER\" && git push -u origin HEAD && git log --oneline -1 && git status --porcelain",
               "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-launcher-slot-r2"
             },
+            "output": "ruff (lint)..............................................................Passed\ngitleaks (secret scan)...................................................Passed\ncheck yaml syntax....................................(no files to check)Skipped\nblock accidentally large files...........................................Passed\ncheck for merge conflicts................................................Passed\nfix end of files.........................................................Passed\ntrim trailing whitespace.................................................Passed\nblock .yaml.bak / .yaml.orig files.......................................Passed\nblock bare python/python3 in new scripts.................................Passed\nblock local-only private-source review exports...........................Passed\ncheck MDX source parity..............................(no files to check)Skipped\ncheck public UA-eval English document language.......(no files to check)Skipped\ncheck forward MDX parity.............................(no files to check)Skipped\ncheck no internal IDs/register in learner surfaces...(no files to check)Skipped\ncheck locked modules are not published...............(no files to check)Skipped\nlesson schema drift gate.............................(no files to check)Skipped\nAtlas lexicon fingerprint freshness gate.............(no files to check)Skipped\nAtlas manifest enrichment-depth gate.................(no files to check)Skipped\ndispatch brief .venv worktree guardrail..............(no files to check)Skipped\nlint session-state env references....................(no files to check)Skipped\nbio dossier §7 cross-track path validator............(no files to check)Skipped\ncheck staged and committed files for OPSEC leaks.........................Passed\n[cursor/impl-launcher-curriculum-upgrade-slot db7747da65] test(launcher): derive the curriculum-upgrade stream; alias-table invariant (#8863)\n 1 file changed, 43 insertions(+), 3 deletions(-)\n[entire] Pushing entire/checkpoints/v1 to checkpoint remote.... done\nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n   53e0c5c4bc..db7747da65  HEAD -> cursor/impl-launcher-curriculum-upgrade-slot\nbranch 'cursor/impl-launcher-curriculum-upgrade-slot' set up to track 'origin/cursor/impl-launcher-curriculum-upgrade-slot'.\ndb7747da65 test(launcher): derive the curriculum-upgrade stream; alias-table invariant (#8863)\n",
+            "metadata": {
+              "output": "ruff (lint)..............................................................Passed\ngitleaks (secret scan)...................................................Passed\ncheck yaml syntax....................................(no files to check)Skipped\nblock accidentally large files...........................................Passed\ncheck for merge conflicts................................................Passed\nfix end of files.........................................................Passed\ntrim trailing whitespace.................................................Passed\nblock .yaml.bak / .yaml.orig files.......................................Passed\nblock bare python/python3 in new scripts.................................Passed\nblock local-only private-source review exports...........................Passed\ncheck MDX source parity..............................(no files to check)Skipped\ncheck public UA-eval English document language.......(no files to check)Skipped\ncheck forward MDX parity.............................(no files to check)Skipped\ncheck no internal IDs/register in learner surfaces...(no files to check)Skipped\ncheck locked modules are not published...............(no files to check)Skipped\nlesson schema drift gate.............................(no files to check)Skipped\nAtlas lexicon fingerprint freshness gate.............(no files to check)Skipped\nAtlas manifest enrichment-depth gate.................(no files to check)Skipped\ndispatch brief .venv worktree guardrail..............(no files to check)Skipped\nlint session-state env references....................(no files to check)Skipped\nbio dossier §7 cross-track path validator............(no files to check)Skipped\ncheck staged and committed files for OPSEC leaks.........................Passed\n[cursor/impl-launcher-curriculum-upgrade-slot db7747da65] test(launcher): derive the curriculum-upgrade stream; alias-table invariant (#8863)\n 1 file changed, 43 insertions(+), 3 deletions(-)\n[entire] Pushing entire/checkpoints/v1 to checkpoint remote.... done\nTo https://github.com/learn-ukrainian/learn-ukrainian.github.io.git\n   53e0c5c4bc..db7747da65  HEAD -> cursor/impl-launcher-curriculum-upgrade-slot\nbranch 'cursor/impl-launcher-curriculum-upgrade-slot' set up to track 'origin/cursor/impl-launcher-curriculum-upgrade-slot'.\ndb7747da65 test(launcher): derive the curriculum-upgrade stream; alias-table invariant (#8863)\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git add tests/test_handoff_slot_registry.py && git commit -m \"test(launcher): derive the curriculum-upgrade stream; alias-table invariant (#8863)\" -m \"$LU_X_AGENT_TRAILER\" && git push -u origin HEAD && git log --oneline -1 && git status --porcelain",
             "time": {
-              "start": 1790455626875
+              "start": 1790455626875,
+              "end": 1790455638706
             }
           },
           "id": "prt_0df78bb18001K1Q4kiF9sAsYRF",
           "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4",
           "messageID": "msg_0df78b1f9001Ddykx5kuwS6uBf"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "0ba09f1f67f15a891000f730c2ca4fc4c6bf3379",
+          "type": "step-finish",
+          "tokens": {
+            "total": 91850,
+            "input": 1822,
+            "output": 149,
+            "reasoning": 279,
+            "cache": {
+              "write": 0,
+              "read": 89600
+            }
+          },
+          "cost": 0.0007989,
+          "id": "prt_0df78eb08001XKJhASDOywZ77R",
+          "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4",
+          "messageID": "msg_0df78b1f9001Ddykx5kuwS6uBf"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0df7665da0010Lvj1LchRIg0Io",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-launcher-slot-r2",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-launcher-slot-r2"
+        },
+        "cost": 0.000451278,
+        "tokens": {
+          "total": 92499,
+          "input": 573,
+          "output": 96,
+          "reasoning": 54,
+          "cache": {
+            "write": 0,
+            "read": 91776
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790455638908,
+          "completed": 1790455641151
+        },
+        "finish": "tool-calls",
+        "id": "msg_0df78eb7c001CWBfdgkD1ROk0Z",
+        "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4"
+      },
+      "parts": [
+        {
+          "snapshot": "0ba09f1f67f15a891000f730c2ca4fc4c6bf3379",
+          "type": "step-start",
+          "id": "prt_0df78ef61001wFYuJEbqTSvpvS",
+          "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4",
+          "messageID": "msg_0df78eb7c001CWBfdgkD1ROk0Z"
+        },
+        {
+          "type": "reasoning",
+          "text": "Committed and pushed. Working tree clean (git status --porcelain output empty after log). Let me confirm status is empty explicitly. The command ended with `git status --porcelain` and no output after log line — likely empty. Let me verify once more.",
+          "time": {
+            "start": 1790455640482,
+            "end": 1790455640747
+          },
+          "id": "prt_0df78f1a2001Pcw28ORsm4CR5d",
+          "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4",
+          "messageID": "msg_0df78eb7c001CWBfdgkD1ROk0Z"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_00_1C83nxxhBCHnlGjI007a8380",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git status --porcelain; echo \"---clean=$?\"; git rev-parse HEAD",
+              "workdir": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-launcher-slot-r2"
+            },
+            "output": "---clean=0\ndb7747da65b77afea6f890d175594cff17d1bef7\n",
+            "metadata": {
+              "output": "---clean=0\ndb7747da65b77afea6f890d175594cff17d1bef7\n",
+              "exit": 0,
+              "truncated": false
+            },
+            "title": "git status --porcelain; echo \"---clean=$?\"; git rev-parse HEAD",
+            "time": {
+              "start": 1790455640929,
+              "end": 1790455641000
+            }
+          },
+          "id": "prt_0df78f2ad001UdeO7oa53fqG8L",
+          "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4",
+          "messageID": "msg_0df78eb7c001CWBfdgkD1ROk0Z"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "0ba09f1f67f15a891000f730c2ca4fc4c6bf3379",
+          "type": "step-finish",
+          "tokens": {
+            "total": 92499,
+            "input": 573,
+            "output": 96,
+            "reasoning": 54,
+            "cache": {
+              "write": 0,
+              "read": 91776
+            }
+          },
+          "cost": 0.000451278,
+          "id": "prt_0df78f3f9001mdbLuWfiUeHP49",
+          "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4",
+          "messageID": "msg_0df78eb7c001CWBfdgkD1ROk0Z"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_0df7665da0010Lvj1LchRIg0Io",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "variant": "high",
+        "path": {
+          "cwd": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-launcher-slot-r2",
+          "root": "/home/ops/learn-ukrainian/.worktrees/dispatch/deepseek/impl-launcher-slot-r2"
+        },
+        "cost": 0.000562914,
+        "tokens": {
+          "total": 92953,
+          "input": 251,
+          "output": 414,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 92288
+          }
+        },
+        "modelID": "deepseek-flash",
+        "providerID": "deepseek",
+        "time": {
+          "created": 1790455641159,
+          "completed": 1790455644001
+        },
+        "finish": "stop",
+        "id": "msg_0df78f447001iCuvkVHde1RARl",
+        "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4"
+      },
+      "parts": [
+        {
+          "snapshot": "0ba09f1f67f15a891000f730c2ca4fc4c6bf3379",
+          "type": "step-start",
+          "id": "prt_0df78f7e6001H9iCy5laW7EXH5",
+          "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4",
+          "messageID": "msg_0df78f447001iCuvkVHde1RARl"
+        },
+        {
+          "type": "text",
+          "text": "Done. Pushed head `db7747da65b77afea6f890d175594cff17d1bef7` on `cursor/impl-launcher-curriculum-upgrade-slot`; `git status --porcelain` empty.\n\nChanges in `tests/test_handoff_slot_registry.py`:\n- Derive the curriculum-upgrade stream via the existing loader `inventory.stream_anchor_id(\"curriculum-upgrade\", REPO)` (registry `curriculum-upgrade` → anchor epic), replacing both hard-coded `epic:7994` assertions (`tests/test_handoff_slot_registry.py:331`, `:353`). No `noqa`/allow marker added.\n- New table-wide invariant test `test_alias_table_session_epic_matches_lane_except_curriculum_upgrade` (`:189`) reading every `launcher_stream_aliases.tsv` row through the real launcher: `launcher_session_epic == launcher_selector_lane` except `curriculum-upgrade` (`curriculum-upgrade`/`core`).\n- Added `infra.curriculum-upgrade` to `UNREGISTERED_SELECTORS`.\n\nVerification:\n- `.venv`-python `-m scripts.lint.lint_test_assertions tests/test_handoff_slot_registry.py` → `OK`, exit 0.\n- `pytest tests/test_handoff_slot_registry.py tests/test_lint_test_assertions.py tests/test_fleet_taxonomy_aliases.py tests/test_work_api.py -p no:randomly -n 2` → `131 passed in 69.41s`.\n- `ruff check` → all checks passed; `ruff format --check` → already formatted.\n- Pytest basetemp `.pytest-tmp-slot-r2` removed after the run.\n\nResidual: none. PR #8863 left untouched (not merged).",
+          "time": {
+            "start": 1790455642434,
+            "end": 1790455643654
+          },
+          "id": "prt_0df78f942001TcG2a8vnbW7615",
+          "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4",
+          "messageID": "msg_0df78f447001iCuvkVHde1RARl"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "0ba09f1f67f15a891000f730c2ca4fc4c6bf3379",
+          "type": "step-finish",
+          "tokens": {
+            "total": 92953,
+            "input": 251,
+            "output": 414,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 92288
+            }
+          },
+          "cost": 0.000562914,
+          "id": "prt_0df78fe740010PtqBBlJi2ad5c",
+          "sessionID": "ses_f20899ab2ffewJN16vPq8zu8S4",
+          "messageID": "msg_0df78f447001iCuvkVHde1RARl"
         }
       ]
     }
