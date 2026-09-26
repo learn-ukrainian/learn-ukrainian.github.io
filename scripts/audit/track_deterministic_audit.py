@@ -20,6 +20,9 @@ from urllib.parse import urlparse
 
 import yaml
 
+# C parser, same safe-load guarantees: the pure-Python loader dominated slug selection over hundreds of plan files.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS_ROOT = PROJECT_ROOT / "scripts"
 if str(SCRIPTS_ROOT) not in sys.path:
@@ -152,7 +155,7 @@ def display_path(path: Path | None) -> str | None:
 
 
 def read_yaml(path: Path) -> dict[str, Any]:
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_YAML_LOADER)
     return data if isinstance(data, dict) else {}
 
 
@@ -346,7 +349,7 @@ def check_vocabulary_yaml(paths: ModulePaths) -> list[Finding]:
         return []
     findings: list[Finding] = []
     try:
-        data = yaml.safe_load(paths.vocabulary.read_text(encoding="utf-8"))
+        data = yaml.load(paths.vocabulary.read_text(encoding="utf-8"), Loader=_YAML_LOADER)
     except yaml.YAMLError as exc:
         return [
             finding(
@@ -524,7 +527,7 @@ def check_resources_yaml(paths: ModulePaths) -> list[Finding]:
         return []
     findings: list[Finding] = []
     try:
-        data = yaml.safe_load(paths.resources.read_text(encoding="utf-8"))
+        data = yaml.load(paths.resources.read_text(encoding="utf-8"), Loader=_YAML_LOADER)
     except yaml.YAMLError as exc:
         return [
             finding(

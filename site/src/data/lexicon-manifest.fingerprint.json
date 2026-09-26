@@ -47,7 +47,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "332e74ddd9e822c35c2de351e1866718f780c380e9155430ad44b4b226484190"
+        "sha256": "fc488660048fc7241bea0c1a4bef54e1bf9e6dbbec9127d89090933d2a0002bf"
       },
       {
         "path": "scripts/lexicon/build_fmu_booster_inventory.py",

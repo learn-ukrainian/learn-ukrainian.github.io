@@ -14,6 +14,7 @@ import json
 import re
 from collections.abc import Mapping
 from copy import deepcopy
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -70,9 +71,17 @@ def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+@lru_cache(maxsize=32)
+def _check_schema_text(schema_text: str) -> None:
+    Draft202012Validator.check_schema(json.loads(schema_text))
+
+
 def _validate(value: object, schema_path: Path, label: str) -> None:
-    schema = read_json(schema_path)
-    Draft202012Validator.check_schema(schema)
+    schema_text = schema_path.read_text(encoding="utf-8")
+    schema = json.loads(schema_text)
+    # The metaschema check depends only on the schema text, so it runs once per distinct text (a raised
+    # check is never memoised; an edited file is a new key). This helper stays free of repository imports.
+    _check_schema_text(schema_text)
     errors = sorted(
         Draft202012Validator(schema).iter_errors(value),
         key=lambda error: [str(part) for part in error.absolute_path],

@@ -31,6 +31,9 @@ from pathlib import Path
 
 import yaml
 
+# C parser, same safe-load guarantees; the pure-Python loader dominated slug selection (hundreds of plan/meta files).
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 # Paths
 PROJECT_ROOT = Path(__file__).parent.parent
 MANIFEST_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml"
@@ -105,7 +108,7 @@ def load_manifest() -> dict:
         raise FileNotFoundError(f"Manifest not found: {MANIFEST_PATH}")
 
     with open(MANIFEST_PATH) as f:
-        return yaml.safe_load(f)
+        return yaml.load(f, Loader=_YAML_LOADER)
 
 
 def clear_manifest_cache():
@@ -128,13 +131,13 @@ def _load_meta_file(level: str, slug: str) -> dict:
 
     if meta_path.exists():
         with open(meta_path) as f:
-            result = yaml.safe_load(f) or {}
+            result = yaml.load(f, Loader=_YAML_LOADER) or {}
     else:
         # Search for matching meta file by slug field inside or filename match
         if meta_dir.exists():
             for meta_file in meta_dir.glob('*.yaml'):
                 try:
-                    content = yaml.safe_load(meta_file.read_text()) or {}
+                    content = yaml.load(meta_file.read_text(), Loader=_YAML_LOADER) or {}
                     # Match by slug field or filename
                     if content.get('slug') == slug or meta_file.stem == slug:
                         result = content
@@ -155,7 +158,7 @@ def _load_meta_file(level: str, slug: str) -> dict:
         if plan_path.exists():
             try:
                 with open(plan_path) as f:
-                    plan_data = yaml.safe_load(f) or {}
+                    plan_data = yaml.load(f, Loader=_YAML_LOADER) or {}
                     if plan_data.get('title'):
                         result['title'] = plan_data['title']
             except Exception:
