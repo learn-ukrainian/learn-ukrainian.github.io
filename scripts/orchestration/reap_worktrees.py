@@ -2107,7 +2107,7 @@ def _is_regenerable_cache_path(path: str) -> bool:
     segments = path.split("/")
     if _ENV_DIRS.intersection(segments):
         return False
-    return _PYCACHE_DIR in segments or path.startswith(_TOPLEVEL_CACHE_PREFIXES)
+    return _PYCACHE_DIR in segments[:-1] or path.startswith(_TOPLEVEL_CACHE_PREFIXES)
 
 
 def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:

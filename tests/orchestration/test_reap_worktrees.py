@@ -5276,6 +5276,23 @@ def test_detached_clean_contained_preserves_loose_ignored_pyc_outside_pycache(
     assert (worktree / "x.pyc").exists()
 
 
+def test_detached_clean_contained_preserves_ignored_regular_file_named_pycache(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".gitignore").write_text(".worktrees/\nbatch_state/\n__pycache__\n", encoding="utf-8")
+    git(repo, "commit", "-am", "ignore pycache name")
+    git(repo, "push", "origin", "main")
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / "__pycache__").write_text("only copy", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "__pycache__").read_text(encoding="utf-8") == "only copy"
+
+
 def test_detached_clean_contained_reaps_ignored_pycache_pyc(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
