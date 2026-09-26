@@ -4,6 +4,12 @@ The fake ACP participant is a monkeypatched ``invoke_inter_agent``; no real
 provider is ever called. The substitution map comes from a tmp-path YAML via
 the shared loader, so these tests exercise the same ``dispatch_fallbacks``
 table delegate.py reads.
+
+The substitution decision is a pure function of typed signals (the runner's
+RateLimitedError, the result's rate_limited flag, a rate_limited transport
+outcome, or a typed capacity failure code) — never of message text. It is
+computed once at the live failure and persisted in the job result receipt;
+replay and retry read the stored field and never recompute.
 """
 
 from __future__ import annotations
@@ -22,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.errors import RateLimitedError
 from agent_runtime.result import Result
+from agent_runtime.runner import _SAFE_ACP_FAILURE_CODES
 
 from scripts.ai_agent_bridge import _acp_compat, _cli
 
@@ -50,8 +57,32 @@ def _ok_result(participant: str, response: str = "answer") -> Result:
     )
 
 
-def _quota_result(participant: str) -> Result:
-    """The post-#8655 shape: parsed provider quota wording, outcome=error."""
+def _capacity_result(participant: str) -> Result:
+    """A typed provider-capacity failure: every typed rate-limit signal set."""
+    return Result(
+        ok=False,
+        agent=participant,
+        model=f"{participant}-model",
+        mode="read-only",
+        response="",
+        stderr_excerpt="acpx RUNTIME: provider quota exhausted",
+        duration_s=0.5,
+        session_id=None,
+        rate_limited=True,
+        stalled=False,
+        returncode=1,
+        effort="high",
+        usage_record={"failure_code": "rate_limited"},
+        transport_outcome="rate_limited",
+    )
+
+
+def _text_only_quota_result(participant: str) -> Result:
+    """The post-#8655 shape: quota wording only in text, generic typed code.
+
+    With the text fallback deleted (#8499) this is an adapter parsing gap,
+    not a capacity signal: it must fail without substitution.
+    """
     return Result(
         ok=False,
         agent=participant,
@@ -105,6 +136,30 @@ def _typed_failure_result(participant: str, *, failure_code: str, excerpt: str) 
         returncode=1,
         effort="high",
         usage_record={"failure_code": failure_code},
+        transport_outcome="error",
+    )
+
+
+def _coded_failure_result(participant: str, failure_code: str | None) -> Result:
+    """A parser-typed failure whose excerpt is saturated with capacity wording.
+
+    The decision must come from the typed code alone (#8499): only the
+    capacity code substitutes, however loudly the text mentions quota.
+    """
+    return Result(
+        ok=False,
+        agent=participant,
+        model=f"{participant}-model",
+        mode="read-only",
+        response="",
+        stderr_excerpt="acpx RUNTIME: provider quota exhausted\n[acpx stderr]\nrate limit 429",
+        duration_s=0.5,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=1,
+        effort="high",
+        usage_record={} if failure_code is None else {"failure_code": failure_code},
         transport_outcome="error",
     )
 
@@ -170,14 +225,14 @@ def _wire(
     return invoke
 
 
-def test_quota_error_substitutes_once_to_mapped_seat_and_records_it(
+def test_typed_capacity_failure_substitutes_once_to_mapped_seat_and_records_it(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     authority = _FakeAuthority()
     invoke = _wire(
         monkeypatch,
         authority,
-        {"codex": _quota_result("codex"), "cursor": _ok_result("cursor", "cursor answer")},
+        {"codex": _capacity_result("codex"), "cursor": _ok_result("cursor", "cursor answer")},
         tmp_path=tmp_path,
     )
 
@@ -185,11 +240,11 @@ def test_quota_error_substitutes_once_to_mapped_seat_and_records_it(
 
     assert result.ok is True
     assert result.response == "cursor answer"
-    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "provider_quota"}
+    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
     # One invocation per seat; the substitute gets no per-seat overrides.
     assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
     err = capsys.readouterr().err
-    assert "ACP substitution: codex -> cursor (reason: provider_quota)" in err
+    assert "ACP substitution: codex -> cursor (reason: rate_limited)" in err
     # Task record: the failed seat's job terminalizes as a capacity failure
     # before the substitute runs; the substitute's job carries the record.
     assert authority.enqueued[0]["recipient"] == "codex"
@@ -198,7 +253,7 @@ def test_quota_error_substitutes_once_to_mapped_seat_and_records_it(
     assert authority.enqueued[1]["metadata"]["substitution"] == {
         "from": "codex",
         "to": "cursor",
-        "reason": "provider_quota",
+        "reason": "rate_limited",
     }
     assert authority.finished[0]["state"] == "failed"
     assert authority.finished[0]["failure"] == {
@@ -208,8 +263,12 @@ def test_quota_error_substitutes_once_to_mapped_seat_and_records_it(
     }
     assert authority.finished[1]["state"] == "complete"
     receipt = json.loads(authority.finished[1]["result"])
-    assert receipt["substitution"] == {"from": "codex", "to": "cursor", "reason": "provider_quota"}
+    assert receipt["substitution"] == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
     assert receipt["ok"] is True
+    # The failed seat's receipt stores the typed code and the decision itself.
+    failed_receipt = json.loads(authority.finished[0]["result"])
+    assert failed_receipt["failure_code"] == "rate_limited"
+    assert failed_receipt["substitution_decision"] == {"substitute": True, "reason": "rate_limited"}
 
 
 def test_quota_substitution_drops_explicit_model_and_effort_overrides(
@@ -219,7 +278,7 @@ def test_quota_substitution_drops_explicit_model_and_effort_overrides(
     invoke = _wire(
         monkeypatch,
         authority,
-        {"codex": _quota_result("codex"), "cursor": _ok_result("cursor")},
+        {"codex": _capacity_result("codex"), "cursor": _ok_result("cursor")},
         tmp_path=tmp_path,
     )
 
@@ -260,6 +319,11 @@ def test_rate_limited_exception_substitutes(
         "retryable": True,
     }
     assert "ACP substitution: codex -> cursor (reason: rate_limited)" in capsys.readouterr().err
+    # The exception-path receipt also stores the typed code and the decision.
+    receipt = json.loads(authority.finished[0]["result"])
+    assert receipt["failure_code"] == "rate_limited"
+    assert receipt["substitution_decision"] == {"substitute": True, "reason": "rate_limited"}
+    assert receipt["transport_outcome"] == "rate_limited"
 
 
 def test_substitute_also_over_quota_fails_loudly_without_second_hop(
@@ -269,7 +333,7 @@ def test_substitute_also_over_quota_fails_loudly_without_second_hop(
     invoke = _wire(
         monkeypatch,
         authority,
-        {"codex": _quota_result("codex"), "cursor": _quota_result("cursor")},
+        {"codex": _capacity_result("codex"), "cursor": _capacity_result("cursor")},
         tmp_path=tmp_path,
     )
 
@@ -280,10 +344,10 @@ def test_substitute_also_over_quota_fails_loudly_without_second_hop(
     assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
     assert len(authority.enqueued) == 2
     err = capsys.readouterr().err
-    assert "ACP substitution: codex -> cursor (reason: provider_quota)" in err
+    assert "ACP substitution: codex -> cursor (reason: rate_limited)" in err
     assert "ACP substitution exhausted: substitute seat 'cursor' is also over quota" in err
     assert "refusing a second substitution and any bridge/provider fallback" in err
-    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "provider_quota"}
+    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
 
 
 def test_substitute_rate_limited_exception_fails_loudly_without_second_hop(
@@ -294,7 +358,7 @@ def test_substitute_rate_limited_exception_fails_loudly_without_second_hop(
         monkeypatch,
         authority,
         {
-            "codex": _quota_result("codex"),
+            "codex": _capacity_result("codex"),
             "cursor": RateLimitedError("cursor", "auto", "429"),
         },
         tmp_path=tmp_path,
@@ -329,6 +393,37 @@ def test_non_quota_error_is_unchanged(
     assert "outcome=error" in err
 
 
+def test_text_only_quota_wording_is_an_adapter_gap_not_a_capacity_signal(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The post-#8655 shape — provider quota wording only in the excerpt,
+    typed code transport_error — is an adapter parsing gap, not a capacity
+    signal: with the text fallback deleted it fails without substitution and
+    its durable failure metadata keeps the generic transport class (#8499)."""
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {"codex": _text_only_quota_result("codex"), "cursor": _ok_result("cursor")},
+        tmp_path=tmp_path,
+    )
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-text-only")
+
+    assert result.ok is False
+    assert [call.args[0] for call in invoke.call_args_list] == ["codex"]
+    assert result.substitution is None
+    assert "ACP substitution" not in capsys.readouterr().err
+    assert authority.finished[0]["failure"] == {
+        "phase": "transport",
+        "code": "transport_error",
+        "retryable": False,
+    }
+    receipt = json.loads(authority.finished[0]["result"])
+    assert receipt["failure_code"] == "transport_error"
+    assert receipt["substitution_decision"] == {"substitute": False, "reason": None}
+
+
 def test_seat_without_mapping_fails_unchanged_with_clear_message(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -336,7 +431,7 @@ def test_seat_without_mapping_fails_unchanged_with_clear_message(
     invoke = _wire(
         monkeypatch,
         authority,
-        {"kimi": _quota_result("kimi")},
+        {"kimi": _capacity_result("kimi")},
         tmp_path=tmp_path,
     )
 
@@ -348,7 +443,7 @@ def test_seat_without_mapping_fails_unchanged_with_clear_message(
     err = capsys.readouterr().err
     assert "ACP substitution:" not in err
     assert (
-        "ACP seat 'kimi' is over quota/rate-limited (reason: provider_quota) and "
+        "ACP seat 'kimi' is over quota/rate-limited (reason: rate_limited) and "
         "agent_fallback_substitutions.yaml dispatch_fallbacks has no substitute for it"
     ) in err
     assert "failing without bridge/provider fallback" in err
@@ -361,7 +456,7 @@ def test_mapping_to_a_non_acp_seat_fails_unchanged_with_clear_message(
     invoke = _wire(
         monkeypatch,
         authority,
-        {"codex": _quota_result("codex")},
+        {"codex": _capacity_result("codex")},
         fallbacks_yaml="dispatch_fallbacks:\n  codex: not-an-acp-seat\n",
         tmp_path=tmp_path,
     )
@@ -390,14 +485,16 @@ def test_cli_turns_unmapped_rate_limit_into_a_clean_error(
 
 def test_substitution_record_survives_receipt_replay() -> None:
     result = _ok_result("cursor")
-    substitution = {"from": "codex", "to": "cursor", "reason": "provider_quota"}
+    substitution = {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    decision = {"substitute": False, "reason": None}
 
-    receipt = _acp_compat._result_receipt(result, substitution=substitution)
+    receipt = _acp_compat._result_receipt(result, substitution=substitution, substitution_decision=decision)
     replay = _acp_compat._replay_result(receipt)
 
     assert replay.ok is True
     assert replay.substitution == substitution
     assert replay.usage_record["substitution"] == substitution
+    assert replay.substitution_decision == decision
 
 
 @pytest.mark.parametrize(
@@ -421,8 +518,16 @@ def test_substitution_record_survives_receipt_replay() -> None:
             "transport_error",
             "acpx exec exited rc=1 despite stopReason='end_turn'\n[acpx stderr]\nsee quota docs",
         ),
+        (
+            # The post-#8655 quota shape: the parser's untyped catch-all whose
+            # excerpt keeps the provider's exact capacity wording. With the
+            # text fallback deleted this is an adapter parsing gap, not a
+            # capacity signal.
+            "transport_error",
+            "acpx RUNTIME: provider quota exhausted",
+        ),
     ],
-    ids=["auth", "schema", "network", "generic-with-bare-quota-word"],
+    ids=["auth", "schema", "network", "generic-with-bare-quota-word", "generic-with-exact-quota-phrasing"],
 )
 def test_typed_non_capacity_failure_mentioning_quota_is_not_substituted(
     monkeypatch: pytest.MonkeyPatch,
@@ -472,6 +577,9 @@ def test_typed_capacity_failure_code_substitutes(
         "retryable": True,
     }
     assert "reason: rate_limited" in capsys.readouterr().err
+    receipt = json.loads(authority.finished[0]["result"])
+    assert receipt["failure_code"] == "rate_limited"
+    assert receipt["substitution_decision"] == {"substitute": True, "reason": "rate_limited"}
 
 
 @pytest.mark.parametrize(
@@ -504,6 +612,80 @@ def test_runner_typed_rate_limit_signals_substitute(
     assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
     assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
     assert "reason: rate_limited" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("failure_code", [*sorted(_SAFE_ACP_FAILURE_CODES), None])
+def test_live_and_replay_decisions_match_for_every_parser_code(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, failure_code: str | None
+) -> None:
+    """Live and replayed asks route identically for every typed code (#8499).
+
+    The excerpt is saturated with provider capacity wording on every row: the
+    decision is a pure function of the typed code (only the capacity code
+    substitutes), is persisted on the receipt together with the code, and
+    replay reads the stored field verbatim instead of recomputing.
+    """
+    expected = {
+        "substitute": failure_code == "rate_limited",
+        "reason": "rate_limited" if failure_code == "rate_limited" else None,
+    }
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {"codex": _coded_failure_result("codex", failure_code), "cursor": _ok_result("cursor")},
+        tmp_path=tmp_path,
+    )
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id=f"typed-code-{failure_code}")
+
+    seats = [call.args[0] for call in invoke.call_args_list]
+    if expected["substitute"]:
+        assert seats == ["codex", "cursor"]
+        assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    else:
+        assert seats == ["codex"]
+        assert result.substitution is None
+    receipt = json.loads(authority.finished[0]["result"])
+    assert receipt["failure_code"] == failure_code
+    assert receipt["substitution_decision"] == expected
+    replayed = _acp_compat._replay_result(authority.finished[0]["result"])
+    assert _acp_compat._substitution_decision(result=replayed) == expected
+
+
+def test_old_receipt_without_stored_decision_replays_as_no_substitution() -> None:
+    """Receipts written before the decision field existed replay as no
+    substitution (#8499): even with quota wording in the excerpt and a
+    rate_limited transport outcome, the durable failure stands — replay never
+    recomputes a decision from text or outcome."""
+    old_receipt = json.dumps(
+        {
+            "ok": False,
+            "agent": "codex",
+            "model": "codex-model",
+            "response": "",
+            "stderr_excerpt": "acpx RUNTIME: provider quota exhausted",
+            "duration_s": 0.5,
+            "returncode": 1,
+            "effort": "high",
+            "from_model": "codex-model",
+            "model_requested": "codex-model",
+            "effort_requested": None,
+            "effort_applied": None,
+            "harness": "acp",
+            "transport_metadata": None,
+            "transport_outcome": "rate_limited",
+        }
+    ).encode("utf-8")
+
+    replayed = _acp_compat._replay_result(old_receipt)
+
+    assert replayed.ok is False
+    assert replayed.substitution_decision == {"substitute": False, "reason": None}
+    assert _acp_compat._substitution_decision(result=replayed) == {
+        "substitute": False,
+        "reason": None,
+    }
 
 
 class _DurableAuthority:
@@ -561,9 +743,9 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """Live run classifies RateLimitedError as rate_limited, enqueues the
-    substitute, then crashes. The retry replays the stored receipt and must
-    derive the same reason, or the substitute's re-enqueue under the same
-    idempotency key carries different substitution metadata and is rejected.
+    substitute, then crashes. The retry replays the stored receipt and reads
+    the persisted decision verbatim, so the substitute's re-enqueue under the
+    same idempotency key carries identical substitution metadata.
     """
     store: dict[str, object] = {"jobs": {}, "by_key": {}, "crash_job_ids": {"job-2"}}
     invoke = _wire(
@@ -579,8 +761,8 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
     with pytest.raises(KeyboardInterrupt):
         _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-crash")
 
-    # The substitute was enqueued under the live reason before the crash, and
-    # the failed seat's receipt persisted the canonical reason for replay.
+    # The substitute was enqueued under the live decision before the crash,
+    # and the failed seat's receipt persisted the decision for replay.
     jobs = store["jobs"]
     assert jobs["job-2"]["payload"]["metadata"]["substitution"] == {
         "from": "codex",
@@ -589,6 +771,8 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
     }
     receipt = json.loads(jobs["job-1"]["result"])
     assert receipt["transport_outcome"] == "rate_limited"
+    assert receipt["failure_code"] == "rate_limited"
+    assert receipt["substitution_decision"] == {"substitute": True, "reason": "rate_limited"}
     # codex's invocation raised; the crash hit before cursor was invoked.
     assert [call.args[0] for call in invoke.call_args_list] == ["codex"]
     assert "reason: rate_limited" in capsys.readouterr().err
@@ -598,8 +782,9 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
 
     result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-crash")
 
-    # No idempotency rejection: the replayed reason matched the live reason,
-    # so the substitute's payload was identical and the queued job resumed.
+    # No idempotency rejection: the replayed stored decision matched the live
+    # decision, so the substitute's payload was identical and the queued job
+    # resumed.
     assert result.ok is True
     assert result.response == "cursor answer"
     assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}

@@ -39,9 +39,7 @@ def require_compat_target(command_target: str) -> str:
     try:
         return _TARGETS[command_target]
     except KeyError as exc:
-        raise ValueError(
-            f"legacy ask target {command_target!r} has no enabled ACP route"
-        ) from exc
+        raise ValueError(f"legacy ask target {command_target!r} has no enabled ACP route") from exc
 
 
 def registered_participant_model(participant: str) -> str | None:
@@ -86,9 +84,7 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
                     f"`{accepted_model or AgyAdapter.default_model}`."
                 )
             if AgyAdapter.model_ids_match(model, pin) or (
-                accepted_model
-                and "flash" in accepted_model
-                and AgyAdapter.is_legacy_model_alias(model)
+                accepted_model and "flash" in accepted_model and AgyAdapter.is_legacy_model_alias(model)
             ):
                 return pin
             if accepted_model is None:
@@ -126,66 +122,82 @@ def ask_hard_timeout(command_target: str) -> int:
 
 _FALLBACK_SUBS_PATH = REPO_ROOT / "scripts" / "config" / "agent_fallback_substitutions.yaml"
 
-# Post-#8655 a provider quota/rate-limit refusal arrives as a parsed ACP error
-# whose bounded diagnostic keeps the provider's own words (e.g. "acpx RUNTIME:
-# provider quota exhausted"); the acpx parser deliberately stays schema-only,
-# so its typed failure code for such a refusal is the generic transport
-# bucket. The capacity decision here is therefore typed-first (#8499): a
-# specific parser code (auth, schema, network, permission, ...) decides the
-# class on its own and never falls back to message text — the parser may
-# append acpx stderr to the excerpt, and stderr can mention "quota" for
-# unrelated reasons. Only when there is no typed code at all, or the code is
-# the parser's untyped catch-all, does the provider's own capacity wording
-# decide, matched on the exact phrasings the adapter rate-limit regexes and
-# the runner failover classifier emit — never a bare "quota" substring.
-_PROVIDER_CAPACITY_RE = re.compile(
-    r"rate[ _-]?limit|usage limit|quota (?:exceeded|exhausted)|too many requests|"
-    r"resource[_ ]?exhausted|\b429\b",
-    re.IGNORECASE,
-)
-
-# Closed failure-code vocabulary (runner._SAFE_ACP_FAILURE_CODES). Only
-# "rate_limited" is a provider-capacity class; the generic buckets carry no
-# class information, so only they may fall back to the provider's wording.
+# Quota substitution (#8499) is decided from typed signals only — the parser's
+# typed failure code, the runner's rate_limited result flag, a rate_limited
+# transport outcome, or the runner's RateLimitedError — never from message
+# text: the acpx parser appends acpx stderr to the bounded excerpt, and stderr
+# can mention quota for unrelated reasons. An adapter that reports a capacity
+# failure only as text (e.g. a transport_error whose excerpt keeps the
+# provider's quota wording, the post-#8655 shape) has a parser gap; it fails
+# without substitution here. The decision is computed once at the live
+# failure and persisted in the job result receipt; replay and retry read the
+# stored field and never recompute, so a post-crash retry routes exactly like
+# the live run.
 _CAPACITY_FAILURE_CODES = frozenset({"rate_limited"})
-_GENERIC_FAILURE_CODES = frozenset({"transport_error", "unknown"})
+
+_NO_SUBSTITUTION_DECISION: dict[str, object] = {"substitute": False, "reason": None}
 
 
 def _result_failure_code(result: object) -> str | None:
+    code = getattr(result, "failure_code", None)
+    if code:
+        return str(code)
     usage_record = getattr(result, "usage_record", None)
     code = usage_record.get("failure_code") if isinstance(usage_record, dict) else None
-    return str(code) if code else None
-
-
-def _quota_failure_reason(*, error: BaseException | None = None, result: object | None = None) -> str | None:
-    """Return the quota/rate-limit class of one failed ask, or None.
-
-    Only provider-capacity failures count, decided typed-first: the runner's
-    rate-limit classification (exception, result flag, transport outcome) or
-    a typed capacity failure code from the parser. A specific non-capacity
-    code (auth, schema, network, ...) is authoritative — such failures keep
-    their original behavior even when the bounded excerpt mentions quota.
-    Only with no typed code at all, or the parser's untyped catch-all bucket,
-    does the provider's own capacity wording in the excerpt decide. Timeouts,
-    admission refusals, and parse failures never substitute.
-    """
-    if error is not None:
-        if type(error).__name__ == "RateLimitedError":
-            return "rate_limited"
-        return None
-    if result is None:
-        return None
+    if code:
+        return str(code)
     if bool(getattr(result, "rate_limited", False)):
         return "rate_limited"
     outcome = str(getattr(result, "transport_outcome", "") or "").casefold()
     if outcome == "rate_limited":
         return "rate_limited"
-    code = _result_failure_code(result)
-    if code is not None and code not in _GENERIC_FAILURE_CODES:
-        return "rate_limited" if code in _CAPACITY_FAILURE_CODES else None
-    if _PROVIDER_CAPACITY_RE.search(str(getattr(result, "stderr_excerpt", "") or "")):
-        return "provider_quota"
     return None
+
+
+def _stored_substitution_decision(result: object) -> dict[str, object] | None:
+    """Read the decision a result receipt persisted, carried on a replayed result."""
+    decision = getattr(result, "substitution_decision", None)
+    if isinstance(decision, dict) and "substitute" in decision:
+        reason = decision.get("reason")
+        return {"substitute": bool(decision["substitute"]), "reason": str(reason) if reason else None}
+    usage_record = getattr(result, "usage_record", None)
+    if isinstance(usage_record, dict):
+        decision = usage_record.get("substitution_decision")
+        if isinstance(decision, dict) and "substitute" in decision:
+            reason = decision.get("reason")
+            return {"substitute": bool(decision["substitute"]), "reason": str(reason) if reason else None}
+    return None
+
+
+def _substitution_decision(*, error: BaseException | None = None, result: object | None = None) -> dict[str, object]:
+    """Decide, from typed signals only, whether one failed ask substitutes.
+
+    Returns ``{"substitute": bool, "reason": <typed code or None>}``. A stored
+    decision (a replayed receipt) always wins so a retry routes exactly like
+    the live run. Live typed capacity signals: the runner's RateLimitedError,
+    the result's rate_limited flag, a rate_limited transport outcome, or a
+    typed capacity failure code. Every other failure — including a
+    transport_error whose excerpt mentions quota — never substitutes.
+    Timeouts, admission refusals, and parse failures never substitute.
+    """
+    if error is not None:
+        if type(error).__name__ == "RateLimitedError":
+            return {"substitute": True, "reason": "rate_limited"}
+        return dict(_NO_SUBSTITUTION_DECISION)
+    if result is None:
+        return dict(_NO_SUBSTITUTION_DECISION)
+    stored = _stored_substitution_decision(result)
+    if stored is not None:
+        return stored
+    if bool(getattr(result, "rate_limited", False)):
+        return {"substitute": True, "reason": "rate_limited"}
+    outcome = str(getattr(result, "transport_outcome", "") or "").casefold()
+    if outcome == "rate_limited":
+        return {"substitute": True, "reason": "rate_limited"}
+    code = _result_failure_code(result)
+    if code in _CAPACITY_FAILURE_CODES:
+        return {"substitute": True, "reason": str(code)}
+    return dict(_NO_SUBSTITUTION_DECISION)
 
 
 def _resolve_quota_substitution(seat: str, reason: str, *, already_substituted: bool) -> str | None:
@@ -225,6 +237,13 @@ def _resolve_quota_substitution(seat: str, reason: str, *, already_substituted: 
     return substitute
 
 
+def _substitute_seat_for_decision(seat: str, decision: dict[str, object], *, already_substituted: bool) -> str | None:
+    """Map one stored/computed substitution decision to a seat hop, or None."""
+    if not decision["substitute"]:
+        return None
+    return _resolve_quota_substitution(seat, str(decision["reason"]), already_substituted=already_substituted)
+
+
 def _announce_substitution(
     from_seat: str,
     to_seat: str,
@@ -246,7 +265,12 @@ def _with_substitution_record(result: object, substitution: dict[str, str]) -> o
     from dataclasses import replace
 
     try:
-        return replace(result, substitution=substitution)
+        new_result = replace(result, substitution=substitution)
+        if hasattr(result, "substitution_decision"):
+            object.__setattr__(new_result, "substitution_decision", result.substitution_decision)
+        if hasattr(result, "failure_code"):
+            object.__setattr__(new_result, "failure_code", result.failure_code)
+        return new_result
     except TypeError:
         return result
 
@@ -257,6 +281,7 @@ def _result_receipt(
     model_requested: str | None = None,
     effort_requested: str | None = None,
     substitution: dict[str, str] | None = None,
+    substitution_decision: dict[str, object] | None = None,
 ) -> bytes:
     actual_model = str(getattr(result, "model", ""))
     raw_effort = getattr(result, "effort", None)
@@ -280,11 +305,14 @@ def _result_receipt(
         "effort_requested": effort_requested,
         "effort_applied": effort_applied,
         "harness": "acp",
+        "failure_code": _result_failure_code(result),
         "transport_metadata": getattr(result, "transport_metadata", None),
         "transport_outcome": getattr(result, "transport_outcome", None),
     }
     if substitution is not None:
         payload["substitution"] = substitution
+    if substitution_decision is not None:
+        payload["substitution_decision"] = substitution_decision
     return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
@@ -323,13 +351,28 @@ def _replay_result(raw: bytes) -> object:
         "harness": payload.get("harness") or "acp",
     }
     provenance.update({"replayed": True, "transport": "acp"})
+    decision = payload.get("substitution_decision")
+    if isinstance(decision, dict) and "substitute" in decision:
+        stored_reason = decision.get("reason")
+        decision = {
+            "substitute": bool(decision["substitute"]),
+            "reason": str(stored_reason) if stored_reason else None,
+        }
+    else:
+        # Receipts written before the decision was persisted replay as no
+        # substitution (#8499): the durable failure stands, no rerouting —
+        # even when the old receipt's text or transport outcome looks like a
+        # capacity failure.
+        decision = dict(_NO_SUBSTITUTION_DECISION)
+    receipt_failure_code = payload.get("failure_code")
     substitution = payload.get("substitution")
     if not isinstance(substitution, dict):
         substitution = None
     if substitution is not None:
         provenance["substitution"] = substitution
+    res: Result
     if not payload["ok"]:
-        return Result(
+        res = Result(
             ok=False,
             agent=str(payload["agent"]),
             model=str(payload["model"]),
@@ -347,29 +390,32 @@ def _replay_result(raw: bytes) -> object:
             transport_metadata=payload.get("transport_metadata"),
             transport_outcome=payload.get("transport_outcome"),
         )
-    return Result(
-        ok=True,
-        agent=str(payload["agent"]),
-        model=str(payload["model"]),
-        mode="read-only",
-        response=str(payload["response"]),
-        stderr_excerpt=payload.get("stderr_excerpt"),
-        duration_s=float(payload["duration_s"]),
-        session_id=None,
-        rate_limited=payload.get("transport_outcome") == "rate_limited",
-        stalled=False,
-        returncode=payload.get("returncode"),
-        effort=str(payload["effort"]),
-        usage_record=provenance,
-        substitution=substitution,
-        transport_metadata=payload.get("transport_metadata"),
-        transport_outcome=payload.get("transport_outcome"),
-    )
+    else:
+        res = Result(
+            ok=True,
+            agent=str(payload["agent"]),
+            model=str(payload["model"]),
+            mode="read-only",
+            response=str(payload["response"]),
+            stderr_excerpt=payload.get("stderr_excerpt"),
+            duration_s=float(payload["duration_s"]),
+            session_id=None,
+            rate_limited=payload.get("transport_outcome") == "rate_limited",
+            stalled=False,
+            returncode=payload.get("returncode"),
+            effort=str(payload["effort"]),
+            usage_record=provenance,
+            substitution=substitution,
+            transport_metadata=payload.get("transport_metadata"),
+            transport_outcome=payload.get("transport_outcome"),
+        )
+    object.__setattr__(res, "substitution_decision", decision)
+    if receipt_failure_code is not None:
+        object.__setattr__(res, "failure_code", str(receipt_failure_code))
+    return res
 
 
-def _failure_metadata(
-    *, error: BaseException | None = None, result: object | None = None
-) -> dict[str, object]:
+def _failure_metadata(*, error: BaseException | None = None, result: object | None = None) -> dict[str, object]:
     """Classify a terminal ACP failure without persisting free text."""
     if error is not None:
         error_name = type(error).__name__
@@ -434,16 +480,6 @@ def _failure_metadata(
     code = _result_failure_code(result)
     if code in _CAPACITY_FAILURE_CODES:
         return {"phase": "provider", "code": "rate_limited", "retryable": True}
-    # Post-#8655 a provider quota refusal parses into the parser's untyped
-    # catch-all whose excerpt keeps the provider's words; record the durable
-    # failure under the capacity class the substitution decision used. A
-    # specific typed code below is authoritative on its own — acpx stderr
-    # appended to the excerpt mentioning quota never reclassifies an
-    # auth/schema/network failure.
-    if (code is None or code in _GENERIC_FAILURE_CODES) and _PROVIDER_CAPACITY_RE.search(
-        str(getattr(result, "stderr_excerpt", "") or "")
-    ):
-        return {"phase": "provider", "code": "rate_limited", "retryable": True}
     if code == "protocol_output_limit":
         return {"phase": "transport", "code": code, "retryable": False}
     if code == "timeout":
@@ -498,8 +534,7 @@ def review_outcome_failure(response: str) -> str | None:
     """Return the failure reason when a review-type reply is non-evidentiary."""
     if not _REVIEW_VERDICT_RE.search(response):
         return (
-            "non-evidentiary review reply: no VERDICT token; transport-ok does "
-            "not count as a completed review (#6805)"
+            "non-evidentiary review reply: no VERDICT token; transport-ok does not count as a completed review (#6805)"
         )
     if not _REVIEW_EVIDENCE_RE.search(response):
         return (
@@ -526,9 +561,7 @@ def _non_evidentiary_result(result: object, reason: str) -> object:
     )
 
 
-def _idempotency_key(
-    *, participant: str, task_id: str, content: str, model: str | None, effort: str | None
-) -> str:
+def _idempotency_key(*, participant: str, task_id: str, content: str, model: str | None, effort: str | None) -> str:
     payload = json.dumps(
         {
             "participant": participant,
@@ -619,10 +652,13 @@ def _run_compat_ask_impl(
     On a notebook whose local plane is retired (#7172), ordinary asks forward
     over SSH to the job-host plane instead of opening local sqlite.
 
-    Quota substitution (#8499): when the targeted ACP seat fails with a
-    quota/rate-limit class, the ask retries once on the seat mapped by
-    ``agent_fallback_substitutions.yaml`` ``dispatch_fallbacks`` — ACP to ACP
-    only, never the bridge or provider execution. The failed seat's job is
+    Quota substitution (#8499): when the targeted ACP seat fails with a typed
+    capacity signal (rate-limit class), the ask retries once on the seat
+    mapped by ``agent_fallback_substitutions.yaml`` ``dispatch_fallbacks`` —
+    ACP to ACP only, never the bridge or provider execution. The decision is
+    computed once from typed signals only (never message text) and persisted
+    in the failed seat's result receipt; a replayed or retried ask reads the
+    stored decision and routes identically. The failed seat's job is
     terminalized durably before the substitute runs; a substitute that is
     itself out of quota fails loudly with no second hop. Every other failure
     class is unchanged.
@@ -667,7 +703,7 @@ def _run_compat_ask_impl(
     substitution: dict[str, str] | None = None
     while True:
         try:
-            result, terminalization_error = _run_single_acp_job(
+            result, terminalization_error, decision = _run_single_acp_job(
                 seat,
                 prompt,
                 task_id=task_id,
@@ -679,30 +715,23 @@ def _run_compat_ask_impl(
                 substitution=substitution,
             )
         except BaseException as exc:
-            reason = _quota_failure_reason(error=exc)
-            substitute = (
-                None
-                if reason is None
-                else _resolve_quota_substitution(seat, reason, already_substituted=substitution is not None)
-            )
+            decision = _substitution_decision(error=exc)
+            substitute = _substitute_seat_for_decision(seat, decision, already_substituted=substitution is not None)
             if substitute is None:
                 raise
-            substitution = _announce_substitution(seat, substitute, reason, model=seat_model, effort=seat_effort)
+            substitution = _announce_substitution(
+                seat, substitute, str(decision["reason"]), model=seat_model, effort=seat_effort
+            )
             seat, seat_model, seat_effort = substitute, None, None
             continue
-        reason = (
-            None
-            if terminalization_error is not None or bool(getattr(result, "ok", False))
-            else _quota_failure_reason(result=result)
-        )
-        substitute = (
-            None
-            if reason is None
-            else _resolve_quota_substitution(seat, reason, already_substituted=substitution is not None)
-        )
+        if terminalization_error is not None or bool(getattr(result, "ok", False)):
+            break
+        substitute = _substitute_seat_for_decision(seat, decision, already_substituted=substitution is not None)
         if substitute is None:
             break
-        substitution = _announce_substitution(seat, substitute, reason, model=seat_model, effort=seat_effort)
+        substitution = _announce_substitution(
+            seat, substitute, str(decision["reason"]), model=seat_model, effort=seat_effort
+        )
         seat, seat_model, seat_effort = substitute, None, None
 
     if substitution is not None:
@@ -718,10 +747,7 @@ def _run_compat_ask_impl(
         file=sys.stderr,
     )
     if terminalization_error is not None:
-        message = (
-            "ACP terminal bookkeeping failed after provider response: "
-            f"{terminalization_error}"
-        )
+        message = f"ACP terminal bookkeeping failed after provider response: {terminalization_error}"
         print(message, file=sys.stderr)
         raise RuntimeError(message) from terminalization_error
     return result
@@ -738,14 +764,18 @@ def _run_single_acp_job(
     review: bool,
     hard_timeout: int,
     substitution: dict[str, str] | None = None,
-) -> tuple[object, Exception | None]:
+) -> tuple[object, Exception | None, dict[str, object]]:
     """Run one authority-job ACP attempt against ``participant``.
 
-    Returns ``(result, terminalization_error)``. The job is terminalized
-    durably before this returns or raises, so a quota failure is recorded
-    against the seat that actually failed before any substitution is
-    attempted (#8499). When ``substitution`` is set this attempt is the
-    substitute seat: its job metadata and result receipt carry the record.
+    Returns ``(result, terminalization_error, substitution_decision)``. The
+    job is terminalized durably before this returns or raises, so a quota
+    failure is recorded against the seat that actually failed before any
+    substitution is attempted (#8499). The substitution decision is computed
+    once here — from the live typed signals, or read back from the stored
+    receipt field on a replay — and persisted on the result receipt, so a
+    retry always routes exactly like the live run. When ``substitution`` is
+    set this attempt is the substitute seat: its job metadata and result
+    receipt carry the record.
     """
     from agent_runtime.runner import invoke_inter_agent
 
@@ -779,9 +809,7 @@ def _run_single_acp_job(
         terminal_states = {"complete", "failed", "expired", "dead_lettered"}
         if job.state not in terminal_states:
             try:
-                lease = authority.claim_job(
-                    job.job_id, worker_id, lease_seconds=hard_timeout + 30
-                )
+                lease = authority.claim_job(job.job_id, worker_id, lease_seconds=hard_timeout + 30)
             except AuthorityServiceError:
                 # A concurrent terminalizer may win after enqueue_request() returns.
                 # Re-read before invoking a provider so an already-durable result is
@@ -794,6 +822,9 @@ def _run_single_acp_job(
             if replay is None:
                 raise RuntimeError(f"terminal ACP job {job.job_id} has no result receipt")
             result = _replay_result(replay)
+            # Replay never recomputes: the receipt's stored decision field
+            # (carried on the replayed result) is authoritative (#8499).
+            decision = _substitution_decision(result=result)
         else:
             previous_transport = os.environ.get("LU_ACPX_TRANSPORT")
             os.environ["LU_ACPX_TRANSPORT"] = "active"
@@ -828,13 +859,15 @@ def _run_single_acp_job(
                         hard_timeout=hard_timeout,
                     )
             except BaseException as exc:
-                # Persist the canonical capacity reason on the receipt (#8499):
-                # a post-crash retry replays this receipt instead of seeing the
-                # live exception, and the replayed reason must classify
-                # identically — otherwise the substitute's re-enqueue under the
-                # same idempotency key carries different substitution metadata
-                # and the authority rejects it, stranding the job.
-                capacity_reason = _quota_failure_reason(error=exc)
+                # Persist the substitution decision and the typed failure code
+                # on the receipt (#8499): a post-crash retry replays this
+                # receipt instead of seeing the live exception, and the stored
+                # decision must route the retry identically — otherwise the
+                # substitute's re-enqueue under the same idempotency key
+                # carries different substitution metadata and the authority
+                # rejects it, stranding the job.
+                decision = _substitution_decision(error=exc)
+                failure = _failure_metadata(error=exc)
                 failure_receipt: dict[str, object] = {
                     "ok": False,
                     "agent": participant,
@@ -849,8 +882,10 @@ def _run_single_acp_job(
                     "effort_requested": effort,
                     "effort_applied": None,
                     "harness": "acp",
+                    "failure_code": failure["code"],
+                    "substitution_decision": decision,
                     "transport_metadata": None,
-                    "transport_outcome": "rate_limited" if capacity_reason is not None else "error",
+                    "transport_outcome": "rate_limited" if decision["substitute"] else "error",
                 }
                 if substitution is not None:
                     failure_receipt["substitution"] = substitution
@@ -860,7 +895,7 @@ def _run_single_acp_job(
                     fence_token=lease.fence_token,
                     state="failed",
                     result=json.dumps(failure_receipt, sort_keys=True).encode("utf-8"),
-                    failure=_failure_metadata(error=exc),
+                    failure=failure,
                 )
                 raise
             finally:
@@ -872,11 +907,10 @@ def _run_single_acp_job(
                 # Outcome validation for review asks (#6805): a transport-ok
                 # reply without a verdict grounded in evidence terminalizes as
                 # failed:non_evidentiary — never a silent "replied".
-                review_failure = review_outcome_failure(
-                    str(getattr(result, "response", ""))
-                )
+                review_failure = review_outcome_failure(str(getattr(result, "response", "")))
                 if review_failure is not None:
                     result = _non_evidentiary_result(result, review_failure)
+            decision = _substitution_decision(result=result)
             try:
                 authority.finish_job(
                     job.job_id,
@@ -888,16 +922,13 @@ def _run_single_acp_job(
                         model_requested=model,
                         effort_requested=effort,
                         substitution=substitution,
+                        substitution_decision=decision,
                     ),
-                    failure=(
-                        None
-                        if bool(getattr(result, "ok", False))
-                        else _failure_metadata(result=result)
-                    ),
+                    failure=(None if bool(getattr(result, "ok", False)) else _failure_metadata(result=result)),
                 )
             except Exception as exc:
                 # Provider output is the user-visible result.  Do not lose it when
                 # a concurrent terminalizer or another authority failure rejects
                 # bookkeeping after a completed invocation.
                 terminalization_error = exc
-    return result, terminalization_error
+    return result, terminalization_error, decision
