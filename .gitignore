@@ -372,6 +372,8 @@ data/youtube_discovery/ulp_grammar_guide_backfill.jsonl
 # SQLite WAL/SHM sidecars — same exclusion as the .db files themselves.
 data/*.db-shm
 data/*.db-wal
+# Rollback copies left by offline DB migrations (e.g. sources.db.pre-8800, #8800).
+data/*.db.pre-*
 # Test-only SQLite WAL/SHM sidecars (e.g. test_wal.db-* from pytest fixtures)
 test_*.db-shm
 test_*.db-wal
