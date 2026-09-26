@@ -5159,3 +5159,88 @@ def test_detached_clean_contained_ignores_non_dispatch_and_branch_checkouts(
     assert result_for(results, on_branch).action == "skipped"
     assert outside_dispatch.exists()
     assert on_branch.exists()
+
+
+def test_detached_clean_contained_preserves_unignored_file_under_venv(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """``.venv/`` is only disposable when ignored; an unignored file there is work."""
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    (worktree / ".venv").mkdir()
+    (worktree / ".venv" / "notes.txt").write_text("only copy", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / ".venv" / "notes.txt").read_text(encoding="utf-8") == "only copy"
+
+
+def test_detached_clean_contained_preserves_cache_dir_ignored_only_by_local_exclude(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Cache residue counts only when the repo's ``.gitignore`` ignores it."""
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    exclude = Path(git(worktree, "rev-parse", "--git-path", "info/exclude"))
+    exclude = exclude if exclude.is_absolute() else worktree / exclude
+    exclude.parent.mkdir(parents=True, exist_ok=True)
+    exclude.write_text(".venv/\n", encoding="utf-8")
+    (worktree / ".venv").mkdir()
+    (worktree / ".venv" / "notes.txt").write_text("only copy", encoding="utf-8")
+
+    result = result_for(_reap_contained(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / ".venv" / "notes.txt").exists()
+
+
+def test_detached_clean_contained_preserves_when_active_task_probe_unavailable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: None)
+    patch_gh(monkeypatch, {})
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        safe_only=True,
+        merged_pr_only=True,
+        live_cwds=set(),
+    )
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert "active-task probe unavailable" in result.reason
+    assert worktree.exists()
+
+
+def test_detached_clean_contained_preserves_when_probe_fails_between_qualify_and_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _detached_dispatch_worktree(repo)
+    calls = iter([set()])
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: next(calls, None))
+    patch_gh(monkeypatch, {})
+
+    result = result_for(
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            safe_only=True,
+            merged_pr_only=True,
+            live_cwds=set(),
+        ),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert "active-task probe unavailable during cleanup" in result.reason
+    assert worktree.exists()

@@ -2096,28 +2096,41 @@ _DISPOSABLE_IGNORED_NAMES = frozenset(
 _DETACHED_CLEAN_CONTAINED_PREFIX = "detached clean contained"
 
 
-def _ignored_residue_is_cache(path: Path, *, timeout: float | None = None) -> bool:
-    """True only when every git-ignored path in ``path`` is a known cache.
+def _tree_holds_only_disposable_residue(path: Path, *, timeout: float | None = None) -> bool:
+    """True only when ``path`` holds no work a reap could destroy.
 
-    A git failure is not proof, so it reads as "not all cache".
+    Stricter than :func:`_worktree_clean`, which skips untracked files under
+    ``.venv/`` and ``node_modules/``: here *any* tracked change or untracked
+    non-ignored path, anywhere, preserves the tree. The only tolerated
+    residue is files the repo's own ``.gitignore`` ignores AND that sit under
+    a known cache directory (or are ``.pyc``). A git failure is not proof, so
+    it reads as "not disposable".
     """
-    proc = _run(
-        [
-            "git",
-            "ls-files",
-            "--others",
-            "--ignored",
-            "--exclude-standard",
-            "-z",
-        ],
+    status = _run(
+        ["git", "status", "--porcelain", "--untracked-files=all"],
         cwd=path,
         timeout=timeout,
     )
-    if proc.returncode != 0:
+    if status.returncode != 0 or (status.stdout or "").strip():
         return False
-    for entry in (proc.stdout or "").split("\0"):
-        if not entry:
-            continue
+    # Everything git ignores must be ignored by the repo's ``.gitignore``
+    # itself: ``--exclude-standard`` also honours ``info/exclude`` and a
+    # user-global excludes file, which are not part of the repo's contract.
+    def ignored_paths(*exclude_args: str) -> set[str] | None:
+        proc = _run(
+            ["git", "ls-files", "--others", "--ignored", *exclude_args, "-z"],
+            cwd=path,
+            timeout=timeout,
+        )
+        if proc.returncode != 0:
+            return None
+        return {entry for entry in (proc.stdout or "").split("\0") if entry}
+
+    everything = ignored_paths("--exclude-standard")
+    by_gitignore = ignored_paths("--exclude-per-directory=.gitignore")
+    if everything is None or by_gitignore is None or not everything <= by_gitignore:
+        return False
+    for entry in everything:
         if entry.endswith(".pyc"):
             continue
         if not _DISPOSABLE_IGNORED_NAMES.intersection(entry.split("/")):
@@ -2131,6 +2144,7 @@ def _detached_clean_contained_reason(
     info: WorktreeInfo,
     active_ids: set[str] | None,
     timeout: float | None = None,
+    attention: list[str] | None = None,
 ) -> str | None:
     """Provably-safe class: a clean detached dispatch checkout whose HEAD is pushed.
 
@@ -2142,7 +2156,8 @@ def _detached_clean_contained_reason(
     nothing is lost even if a PR names the commit. A locked checkout, an
     active or non-terminal task bound to the path, and live cwds (checked by
     :func:`_activity_reason` before this runs, and again at removal) all keep
-    it preserved.
+    it preserved. An unavailable active-task probe fails closed, like the
+    terminal-dispatch path, and is reported through ``attention``.
     """
     if not info.detached or info.branch is not None or not info.head:
         return None
@@ -2153,14 +2168,18 @@ def _detached_clean_contained_reason(
     task_id = _dispatch_task_id(repo_root, info)
     if task_id is None:
         return None
-    if active_ids is not None and task_id in active_ids:
+    if active_ids is None:
+        if attention is not None:
+            attention.append(
+                "active-task probe unavailable; detached clean contained checkout preserved"
+            )
+        return None
+    if task_id in active_ids:
         return None
     task_status = _task_record_status(repo_root, task_id)
     if task_status is not None and task_status not in _TERMINAL_DISPATCH_STATUSES:
         return None
-    if _worktree_clean(info.path, timeout=timeout) is not True:
-        return None
-    if not _ignored_residue_is_cache(info.path, timeout=timeout):
+    if not _tree_holds_only_disposable_residue(info.path, timeout=timeout):
         return None
     if _is_ancestor_of_origin_main(info.path):
         contained = "an ancestor of origin/main"
@@ -2184,6 +2203,8 @@ def _detached_clean_contained_recheck(repo_root: Path, info: WorktreeInfo) -> st
     if fresh is None:
         return "detached worktree unregistered during cleanup"
     current_active_ids = _active_task_ids()
+    if current_active_ids is None:
+        return "active-task probe unavailable during cleanup"
     current_live_cwds = _live_cwd_paths(repo_root)
     if current_live_cwds is None:
         return "process-CWD activity probe unavailable during cleanup"
@@ -3355,6 +3376,21 @@ def reap_worktrees(
                 pr_unknown=pr_unknown,
                 attention=attention,
             )
+            # Provably-safe class: a clean, pushed, detached dispatch checkout.
+            # It never reads PR state for its own proof, but an open PR named
+            # by the path still keeps the checkout mounted, like every other
+            # class; the legacy classes above get first refusal.
+            if (
+                reason is None
+                and not attention
+                and not (pr_state is not None and pr_state.state == "OPEN")
+            ):
+                reason = _detached_clean_contained_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    active_ids=active_ids,
+                    attention=attention,
+                )
             if attention:
                 results.append(
                     ReapResult(
@@ -3368,16 +3404,6 @@ def reap_worktrees(
                     )
                 )
                 continue
-            # Provably-safe class: a clean, pushed, detached dispatch checkout.
-            # It never reads PR state for its own proof, but an open PR named
-            # by the path still keeps the checkout mounted, like every other
-            # class; the legacy classes above get first refusal.
-            if reason is None and not (pr_state is not None and pr_state.state == "OPEN"):
-                reason = _detached_clean_contained_reason(
-                    repo_root=repo_root,
-                    info=info,
-                    active_ids=active_ids,
-                )
             if reason is None:
                 if pr_state is not None and pr_state.state == "OPEN":
                     pr_label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"

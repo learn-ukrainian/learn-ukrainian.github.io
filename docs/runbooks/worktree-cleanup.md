@@ -208,12 +208,17 @@ disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
   and is not an ACP runtime worktree;
 - `git status --porcelain --untracked-files=all` is empty, and every
   git-ignored path is a regenerable cache (`.venv`, `node_modules`,
-  `__pycache__`, `.pytest_cache`, `.ruff_cache`, `.mypy_cache`, `*.pyc`); any
-  other ignored file (for example under `data/`) preserves it;
+  `__pycache__`, `.pytest_cache`, `.ruff_cache`, `.mypy_cache`, `*.pyc`) that the
+  repo's own `.gitignore` ignores. Any untracked non-ignored path anywhere
+  (including under `.venv/` or `node_modules/`), any other ignored file (for
+  example under `data/`), and any cache ignored only by a local exclude
+  preserves it;
 - HEAD is an ancestor of `origin/main` or contained in some
   `refs/remotes/origin/*` ref (no age threshold, no task record needed);
 - it is not locked, no live process has its working directory inside it, and
   no non-terminal task (`queued`, `starting`, `running`, ...) is bound to it;
+  an unavailable active-task probe fails closed (preserved, reported as
+  `active-task probe unavailable`), at qualification and again before removal;
 - its PR state is not `OPEN`, consulted only as the same guard every class
   honours; the class's own proof never depends on PR state.
 
