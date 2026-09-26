@@ -26,6 +26,9 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator, ValidationError
 
+# C parser, same safe-load guarantees; the pure-Python parser dominated policy and packet loading.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -137,7 +140,7 @@ def resolve_repo_path(value: str, *, repo_root: Path = PROJECT_ROOT) -> Path:
 
 
 def read_yaml(path: Path) -> dict[str, Any]:
-    value = yaml.safe_load(path.read_text(encoding="utf-8"))
+    value = yaml.load(path.read_text(encoding="utf-8"), Loader=_YAML_LOADER)
     if not isinstance(value, dict):
         raise ReviewProtocolError(f"Expected YAML mapping: {display_path(path)}")
     return value
@@ -908,7 +911,7 @@ def build_resource_inventory(
     material = target_materials.get("resources")
     if not isinstance(material, Mapping):
         return {"inventory_sha256": sha256_text(_stable_json({"resources": []})), "resources": []}
-    raw = yaml.safe_load(target_material_text(material))
+    raw = yaml.load(target_material_text(material), Loader=_YAML_LOADER)
     if raw is None:
         rows: list[object] = []
     elif isinstance(raw, list):
@@ -2065,7 +2068,7 @@ def _contains_exact_token_sequence(value: str, phrase: str) -> bool:
 def _vocabulary_lemmas_from_material(
     vocabulary_material: Mapping[str, Any],
 ) -> list[str]:
-    vocabulary = yaml.safe_load(target_material_text(vocabulary_material))
+    vocabulary = yaml.load(target_material_text(vocabulary_material), Loader=_YAML_LOADER)
     if not isinstance(vocabulary, list):
         raise ReviewProtocolError("Vocabulary target material must be a list")
     lemmas: list[str] = []

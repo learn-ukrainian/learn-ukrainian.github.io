@@ -50,7 +50,11 @@ class LifecycleConfigError(ValueError):
     """Raised when manifest authority and lifecycle selectors disagree."""
 
 
-class _StrictLoader(yaml.SafeLoader):
+# The C parser keeps ``SafeLoader``'s constructor guarantees; the pure-Python parser cost ~0.35 s per manifest load.
+_SafeLoaderBase = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+class _StrictLoader(_SafeLoaderBase):
     """YAML loader that fails instead of silently overwriting duplicate keys."""
 
 
