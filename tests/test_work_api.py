@@ -1274,13 +1274,9 @@ def test_periodic_refresh_keeps_idle_next_warm(monkeypatch, tmp_path, hung_first
     monkeypatch.setattr(work_router, "NEXT_BUILD_TIMEOUT_S", 0.2)
     monkeypatch.setattr(work_router, "NEXT_MAX_STALE_S", 1.0)
     for name in (
-        "preload_all",
-        "install_signal_logging",
-        "ensure_broker_db_ready",
-        "seed_manifest_inventory",
-        "warm_projection_cache",
-        "start_periodic_refresh",
-        "stop_periodic_refresh",
+        "preload_all", "install_signal_logging", "ensure_broker_db_ready",
+        "seed_manifest_inventory", "warm_projection_cache",
+        "start_periodic_refresh", "stop_periodic_refresh",
     ):
         monkeypatch.setattr(api_main, name, Mock())
     monkeypatch.setattr(api_main.isa, "schedule_refresh", Mock())

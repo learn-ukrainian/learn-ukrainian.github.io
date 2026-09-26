@@ -157,6 +157,8 @@ _WORKER_LOOP_LOCK = threading.Lock()
 _WORKER_FUTURES: set[concurrent.futures.Future[Any]] = set()
 
 
+
+
 def _in_flight_builds(
     ctx: MonitorContext | None = None,
 ) -> dict[str, concurrent.futures.Future[dict[str, Any]]]:
@@ -208,7 +210,6 @@ def shutdown_worker_loop(*, join_timeout_s: float = 1.0) -> bool:
         return False
 
     if loop.is_running():
-
         async def stop_loop() -> None:
             await loop.shutdown_default_executor()
             loop.stop()
@@ -392,7 +393,9 @@ def _get_or_create_build_task(
     return _ensure_in_flight(key, filters, ctx)
 
 
-def wait_for_in_flight_build(key: str, timeout: float = 10.0, ctx: MonitorContext | None = None) -> None:
+def wait_for_in_flight_build(
+    key: str, timeout: float = 10.0, ctx: MonitorContext | None = None
+) -> None:
     """Block until the single-flight build for ``key`` settles.
 
     Sync TestClient does not pump request-loop ``create_task`` work between
@@ -409,7 +412,9 @@ def wait_for_in_flight_build(key: str, timeout: float = 10.0, ctx: MonitorContex
         fut.result(timeout=timeout)
     except Exception:
         if not fut.done():
-            raise TimeoutError(f"in-flight work projection build for {key!r} did not settle in {timeout}s") from None
+            raise TimeoutError(
+                f"in-flight work projection build for {key!r} did not settle in {timeout}s"
+            ) from None
         return
 
 
@@ -713,7 +718,10 @@ async def work_next(
         "cache_age_s": float(age),
         "limit": limit,
         "queue": queue,
-        "sources": [source for source in payload.get("sources", []) if source.get("source_id") == "public-monitor"],
+        "sources": [
+            source for source in payload.get("sources", [])
+            if source.get("source_id") == "public-monitor"
+        ],
         "denominator": payload.get("denominator", {}),
         "digest": {
             "other_streams": {

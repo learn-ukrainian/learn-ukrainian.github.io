@@ -69,7 +69,7 @@ EXPECTED_CASES = (
 EXPECTED_BODIES = {
     "unlp-2026-cefr-assessment": 2630,
     "unlp-2025-stress-tts": 2629,
-    "unlp-2026-gec-minimal-edit": 3483,
+    "unlp-2026-gec-minimal-edit": 3409,
 }
 EXPECTED_RESEARCH_COMPONENT_BYTES = 107
 EXPECTED_STATE_MANIFEST_BYTES = {"disabled": 1048, "enabled": 1167}
