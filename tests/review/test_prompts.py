@@ -1515,7 +1515,16 @@ def test_the_template_prose_exemption_is_exactly_the_real_collisions_of_the_ship
         re.sub(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", "", path.read_text(encoding="utf-8"), flags=re.S)
         for path in eligibility_templates()
     )
-    collisions = {slug for slug in slugs if re.search(rf"(?<![A-Za-z0-9_-]){re.escape(slug)}(?![A-Za-z0-9_-])", text)}
+    # A match bounded by non-token characters is exactly one whole ``[A-Za-z0-9_-]+`` token, so a slug made of those
+    # characters collides iff it is in the token set; any other slug keeps the bounded search.
+    tokens = set(re.findall(r"[A-Za-z0-9_-]+", text))
+
+    def collides(slug: str) -> bool:
+        if re.fullmatch(r"[A-Za-z0-9_-]+", slug):
+            return slug in tokens
+        return re.search(rf"(?<![A-Za-z0-9_-]){re.escape(slug)}(?![A-Za-z0-9_-])", text) is not None
+
+    collisions = {slug for slug in slugs if collides(slug)}
     assert collisions == set(TEMPLATE_PROSE_SLUGS), sorted(collisions ^ set(TEMPLATE_PROSE_SLUGS))
     assert not [slug for slug in collisions if "-" in slug]
 
