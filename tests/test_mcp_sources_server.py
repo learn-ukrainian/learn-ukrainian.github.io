@@ -1135,6 +1135,55 @@ class TestWikipediaExtractCap:
         assert article == "А" * 3000
         assert len(article) == server_module._WIKIPEDIA_EXTRACT_CHAR_CAP
 
+    def test_legacy_cache_caps_the_body_and_flags_truncation_in_the_header(self, server_module):
+        body = "Б" * 4500
+        legacy = "\n".join(
+            ["# Стаття", "**URL**: https://uk.wikipedia.org/wiki/Стаття", "", body]
+        )
+        text = server_module._bound_cached_wikipedia_extract(legacy)
+        lines = text.split("\n")
+        assert lines[0] == "# Стаття"
+        assert lines[1] == "**URL**: https://uk.wikipedia.org/wiki/Стаття"
+        assert lines[2] == "**Truncated**: true"
+        assert lines[3] == ""
+        assert text.split("\n\n", 1)[1] == "Б" * 3000
+        assert not text.rstrip().endswith("**Truncated**: true")
+
+    def test_legacy_short_cache_matches_a_fresh_extract(self, server_module):
+        body = "Короткий абзац."
+        url = "https://uk.wikipedia.org/wiki/Стаття"
+        legacy = "\n".join(["# Стаття", f"**URL**: {url}", "", body])
+        assert server_module._bound_cached_wikipedia_extract(legacy) == (
+            server_module._wikipedia_extract_text("Стаття", url, body)
+        )
+
+    def test_current_cache_round_trips(self, server_module):
+        fresh = server_module._wikipedia_extract_text(
+            "Стаття",
+            "https://uk.wikipedia.org/wiki/Стаття",
+            "А" * 4500,
+        )
+        assert server_module._bound_cached_wikipedia_extract(fresh) == fresh
+
+    def test_cached_legacy_extract_does_not_call_the_network(self, server_module):
+        body = "В" * 4500
+        legacy = "\n".join(
+            ["# Стаття", "**URL**: https://uk.wikipedia.org/wiki/Стаття", "", body]
+        )
+        with (
+            patch("rag.wiki_cache.WikiCache") as cache_cls,
+            patch("rag.source_query.wikipedia_extract") as extract,
+        ):
+            cache_cls.return_value.get.return_value = legacy
+            cache_cls.return_value.is_negative.return_value = False
+            content = _run(
+                server_module.handle_query_wikipedia({"query": "Стаття", "mode": "extract"})
+            )
+        extract.assert_not_called()
+        text = content[0].text
+        assert text.split("\n")[2] == "**Truncated**: true"
+        assert text.split("\n\n", 1)[1] == "В" * 3000
+
 
 class TestHealthEndpoint:
     """Test health endpoint contract (#7026)."""
@@ -1173,6 +1222,13 @@ class TestHealthEndpoint:
         second_body = json.loads(second.body)
         assert first_body["commit_sha"] == second_body["commit_sha"] == server_module._SERVER_GIT_COMMIT
         assert first_body["commit_sha"]
+
+    def test_git_commit_failure_is_empty(self, server_module, monkeypatch):
+        def boom(*args, **kwargs):
+            raise OSError("git missing")
+
+        monkeypatch.setattr("subprocess.run", boom)
+        assert server_module._detect_git_commit() == ""
 
 
 class TestCollectionStatsHandler:

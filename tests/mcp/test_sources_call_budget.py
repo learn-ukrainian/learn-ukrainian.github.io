@@ -166,7 +166,10 @@ def test_inspect_words_caps_at_500_and_reports_counts(server_module):
     payload = json.loads(content[0].text.split("Raw payload:\n", 1)[1])
     assert payload["submitted"] == 501
     assert payload["checked"] == 500
-    assert content[0].text.startswith("Batch inspection: 500 words")
+    assert content[0].text.startswith(
+        "Note: received 501 words; processed the first 500 (hard cap)."
+    )
+    assert "Batch inspection: 500 words" in content[0].text
 
 
 def test_query_pravopys_empty_topic_is_a_structured_error(server_module):

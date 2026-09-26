@@ -25,7 +25,7 @@ You have access to Ukrainian language tools via MCP. **Use them during research.
 
 | Tool | When to use | Example |
 |------|-------------|---------|
-| `query_wikipedia` mode=`extract` | Get full article text (50K chars) for deep research | `query_wikipedia("Богдан Хмельницький", mode="extract")` |
+| `query_wikipedia` mode=`extract` | Get article plaintext (up to 3,000 characters) for deep research | `query_wikipedia("Богдан Хмельницький", mode="extract")` |
 | `query_wikipedia` mode=`sections` | See article structure before diving in | `query_wikipedia("Запорізька Січ", mode="sections")` |
 | `query_wikipedia` mode=`section` | Read a specific section by index | `query_wikipedia("Запорізька Січ", mode="section", section=3)` |
 | `query_wikipedia` mode=`search` | Find the right article title | `query_wikipedia("Переяславська рада", mode="search")` |

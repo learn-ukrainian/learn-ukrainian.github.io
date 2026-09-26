@@ -61,7 +61,9 @@ async def search_text(
     try:
         return _run_sources_query(
             ctx,
-            lambda: _search_text(q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit),
+            lambda: _search_text(
+                q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit
+            ),
         )
     except FileNotFoundError:
         return []

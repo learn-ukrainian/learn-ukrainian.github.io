@@ -647,7 +647,7 @@ async def list_tools() -> list[Tool]:
             description=(
                 "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: "
                 "'summary' — article intro paragraph; "
-                "'extract' — full article plaintext (up to 50K chars); "
+                "'extract' — article plaintext (up to 3,000 characters, with a truncated flag); "
                 "'sections' — list section headings with indices; "
                 "'section' — read a specific section (requires section parameter); "
                 "'search' — keyword search returning titles and snippets. "
@@ -1558,9 +1558,13 @@ def _detect_git_commit() -> str:
             return res.stdout.strip()
     except Exception:
         pass
-    return "unknown"
+    return ""
 
 
+# Cached once at import. /health reports this process-start commit and does
+# not re-run git, so a checkout that moves later stays invisible until the
+# process restarts. Failure is "" — nothing in-repo reads commit_sha except
+# the health body, and that body does not need another sentinel.
 _SERVER_GIT_COMMIT: str = _detect_git_commit()
 
 
@@ -2357,7 +2361,12 @@ async def handle_inspect_words(args: dict):
     submitted = len(words)
     checked_words = words[:_INSPECT_WORDS_CAP]
     results = await asyncio.to_thread(inspect_words, checked_words, pos_filter=pos_filter)
-    lines = [f"Batch inspection: {len(checked_words)} words\n"]
+    lines = []
+    if submitted > len(checked_words):
+        lines.append(
+            f"Note: received {submitted} words; processed the first {_INSPECT_WORDS_CAP} (hard cap)."
+        )
+    lines.append(f"Batch inspection: {len(checked_words)} words\n")
     for w in checked_words:
         r = results.get(w)
         if r:
@@ -2485,7 +2494,7 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
                FROM wikipedia w
                JOIN wikipedia_fts fts ON fts.rowid = w.id
                WHERE wikipedia_fts MATCH ?
-               ORDER BY rank LIMIT 1""",
+               ORDER BY rank, w.id LIMIT 1""",
             (f'title:"{query}"',),
         ).fetchone()
         if row:
@@ -2519,14 +2528,60 @@ def _wikipedia_extract_text(title: str, url: str, body: str) -> str:
     )
 
 
+def _split_cached_wikipedia_extract(text: str) -> tuple[str, str, str, bool | None]:
+    """Split a cached extract into title, URL, body, and any declared flag.
+
+    Legacy caches are ``# title``, ``**URL**: ...``, a blank line, then the
+    whole article. Current caches insert ``**Truncated**: true|false`` on
+    its own line before that blank line. The body is everything after the
+    header, so the character cap applies to the article and not the header.
+    """
+    if not isinstance(text, str):
+        text = ""
+    lines = text.split("\n")
+    index = 0
+    title = ""
+    url = ""
+    declared: bool | None = None
+    if index < len(lines) and lines[index].startswith("# "):
+        title = lines[index][2:]
+        index += 1
+    if index < len(lines) and lines[index].startswith("**URL**: "):
+        url = lines[index][len("**URL**: "):]
+        index += 1
+    if index < len(lines) and lines[index].startswith("**Truncated**: "):
+        flag = lines[index][len("**Truncated**: "):].strip().lower()
+        if flag == "true":
+            declared = True
+        elif flag == "false":
+            declared = False
+        index += 1
+    if index < len(lines) and lines[index] == "":
+        index += 1
+    return title, url, "\n".join(lines[index:]), declared
+
+
 def _bound_cached_wikipedia_extract(text: str) -> str:
-    """Keep a cached extract inside the same cap, including legacy cache entries."""
-    if "**Truncated**:" in text:
-        return text
-    truncated = len(text) > _WIKIPEDIA_EXTRACT_CHAR_CAP
-    shown = text[:_WIKIPEDIA_EXTRACT_CHAR_CAP]
-    flag = "true" if truncated else "false"
-    return f"{shown}\n**Truncated**: {flag}"
+    """Re-emit a cached extract in the same shape as a fresh capped extract.
+
+    Old cache rows have no ``Truncated`` flag and may hold the full article.
+    Parse the header off, then run the body through ``_wikipedia_extract_text``
+    so the flag sits in the header and only the article counts toward the cap.
+    A row that is already capped keeps ``Truncated: true``: the stored body
+    is the 3,000-character prefix, so its length alone no longer shows the cut.
+    """
+    title, url, body, declared = _split_cached_wikipedia_extract(text)
+    if declared is True and len(body) <= _WIKIPEDIA_EXTRACT_CHAR_CAP:
+        return "\n".join(
+            (
+                f"# {title}",
+                f"**URL**: {url}",
+                "**Truncated**: true",
+                "",
+                body,
+            )
+        )
+    return _wikipedia_extract_text(title, url, body)
 
 
 async def handle_query_wikipedia(args: dict) -> list[TextContent]:

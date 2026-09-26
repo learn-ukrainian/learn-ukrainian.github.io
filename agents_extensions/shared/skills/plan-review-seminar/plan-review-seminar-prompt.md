@@ -10,7 +10,7 @@ You have THREE authority sources. Use ALL of them:
 
 1. **Wikipedia (Ukrainian)** — Use `mcp__sources__query_wikipedia` to verify people, events, dates, places. Wikipedia is the primary factual authority for Ukrainian history, biography, and culture. Search in Ukrainian. Available modes:
    - `mode='summary'` — quick intro paragraph (default)
-   - `mode='extract'` — full article text (up to 50K chars) for deep verification
+   - `mode='extract'` — article plaintext (up to 3,000 characters) for deep verification
    - `mode='sections'` — list section headings with indices
    - `mode='section'` + `section=N` — read a specific section (get indices from mode='sections')
    - `mode='search'` — keyword search when you don't know the exact title

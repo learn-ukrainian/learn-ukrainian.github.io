@@ -1379,6 +1379,8 @@ PAGE_CONTRACTS: tuple[PageContract, ...] = (
 router = APIRouter(tags=["contracts"])
 
 
+
+
 def contracts_for_route(path: str, kind: ContractKind = "http") -> list[RouteContract]:
     """Return matching contracts, most specific first."""
     return sorted(

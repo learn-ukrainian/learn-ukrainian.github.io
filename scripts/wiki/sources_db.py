@@ -1041,7 +1041,7 @@ def _search_sections_fts5(
         JOIN textbooks s ON s.id = textbooks_fts.rowid
         WHERE textbooks_fts MATCH ?
           AND {' AND '.join(extra_where)}
-        ORDER BY rank
+        ORDER BY rank, s.id
         LIMIT ?
         """,
         (fts_query, *extra_params, max_chunk_candidates),
@@ -1228,7 +1228,7 @@ def _search_literary_candidates(
         JOIN literary_texts s ON s.id = literary_fts.rowid
         WHERE literary_fts MATCH ?
           AND s.language_period IN ({placeholders})
-        ORDER BY rank
+        ORDER BY rank, s.id
         LIMIT ?
         """,
         (fts_query, *periods, candidate_k),
@@ -1286,7 +1286,7 @@ def _search_external_candidates(
         FROM external_fts
         JOIN external_articles s ON s.id = external_fts.rowid
         WHERE external_fts MATCH ?
-        ORDER BY rank
+        ORDER BY rank, s.id
         LIMIT ?
         """,
         (fts_query, candidate_k),
@@ -1350,7 +1350,7 @@ def _search_wikipedia_candidates(
         FROM wikipedia_fts
         JOIN wikipedia s ON s.id = wikipedia_fts.rowid
         WHERE wikipedia_fts MATCH ?
-        ORDER BY rank
+        ORDER BY rank, s.id
         LIMIT ?
         """,
         (fts_query, candidate_k),
@@ -1438,7 +1438,7 @@ def _search_ukrainian_wiki_candidates(
             FROM ukrainian_wiki_fts
             JOIN ukrainian_wiki s ON s.id = ukrainian_wiki_fts.rowid
             WHERE ukrainian_wiki_fts MATCH ?
-            ORDER BY rank
+            ORDER BY rank, s.id
             LIMIT ?
             """,
             (fts_query, candidate_k),
@@ -1925,7 +1925,7 @@ def _fts_search(fts_table: str, data_table: str,
             WHERE {fts_table} MATCH ?
             {length_filter}
             {extra_where}
-            ORDER BY rank
+            ORDER BY rank, s.id
             LIMIT ?"""
     params = (fts_query, *extra_params, max_total)
 
@@ -2078,7 +2078,7 @@ def search_external(
             FROM external_fts
             JOIN external_articles s ON s.id = external_fts.rowid
             WHERE {' AND '.join(where)}
-            ORDER BY rank
+            ORDER BY rank, s.id
             LIMIT ?""",
         (*params, max_total * 15),
     ).fetchall()
@@ -2221,7 +2221,7 @@ def _dict_lookup_contains(
         return []
 
     try:
-        rows = conn.execute(f"SELECT * FROM {table}").fetchall()
+        rows = conn.execute(f"SELECT * FROM {table} ORDER BY rowid").fetchall()
     except sqlite3.OperationalError:
         return []
 
@@ -2282,12 +2282,14 @@ def _dict_lookup(
         try:
             placeholders = ",".join("?" for _ in query_variants)
             rows = conn.execute(
-                f"SELECT * FROM {table} WHERE word IN ({placeholders}) OR word = ? COLLATE NOCASE LIMIT ?",
+                f"SELECT * FROM {table} WHERE word IN ({placeholders}) OR word = ? COLLATE NOCASE "
+                "ORDER BY word COLLATE NOCASE, rowid LIMIT ?",
                 (*query_variants, word, limit),
             ).fetchall()
             if not rows and cleaned_word:
                 rows = conn.execute(
-                    f"SELECT * FROM {table} WHERE word LIKE ? OR word LIKE ? COLLATE NOCASE LIMIT ?",
+                    f"SELECT * FROM {table} WHERE word LIKE ? OR word LIKE ? COLLATE NOCASE "
+                    "ORDER BY word COLLATE NOCASE, rowid LIMIT ?",
                     (f"{cleaned_word}%", f"{word}%", limit),
                 ).fetchall()
         except sqlite3.OperationalError:
@@ -2867,7 +2869,7 @@ def search_esum(
                 SELECT rowid, lemma, etymology_text, cognates, vol, page
                 FROM esum_etymology
                 WHERE esum_etymology MATCH ?{fts_vol_filter}
-                ORDER BY rank
+                ORDER BY rank, rowid
                 LIMIT ?
                 """,
                 tuple(fts_params),

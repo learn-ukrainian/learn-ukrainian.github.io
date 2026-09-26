@@ -38,7 +38,7 @@ You have access to Ukrainian language tools via MCP. **Use them during research.
 
 | Tool | When to use | Args |
 |------|-------------|------|
-| `query_wikipedia` | Get full article text (50K chars) for deep research | `query`, `mode="extract"` |
+| `query_wikipedia` | Get article plaintext (up to 3,000 characters) for deep research | `query`, `mode="extract"` |
 | `query_wikipedia` | See article structure before diving in | `query`, `mode="sections"` |
 | `query_wikipedia` | Read a specific section by index | `query`, `mode="section"`, `section=N` |
 | `query_wikipedia` | Find the right article title | `query`, `mode="search"` |
