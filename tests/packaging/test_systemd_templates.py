@@ -32,9 +32,7 @@ def test_systemd_templates_are_type_simple() -> None:
 
 
 def test_api_supervisor_is_gated_for_linux() -> None:
-    text = Path(__file__).resolve().parents[2].joinpath("services.sh").read_text(
-        encoding="utf-8"
-    )
+    text = Path(__file__).resolve().parents[2].joinpath("services.sh").read_text(encoding="utf-8")
     assert "_api_supervisor_available" in text
     assert "SVC_API_SUPERVISOR_BIN" in text
     assert "command -v launchctl >/dev/null 2>&1" in text
@@ -59,7 +57,9 @@ def test_data_volume_dropins_cover_all_services_and_preserve_commands() -> None:
     assert actual == expected
     for unit in expected:
         original = (PACKAGING / unit).read_text(encoding="utf-8")
-        command = next(line.removeprefix("ExecStart=") for line in original.splitlines() if line.startswith("ExecStart="))
+        command = next(
+            line.removeprefix("ExecStart=") for line in original.splitlines() if line.startswith("ExecStart=")
+        )
         dropin = (DROPINS / f"{unit}.d/data-volume.conf").read_text(encoding="utf-8")
         assert "ExecStart=\n" in dropin
         if unit == "learn-ukrainian-project-state-reporter.service":
@@ -69,7 +69,7 @@ def test_data_volume_dropins_cover_all_services_and_preserve_commands() -> None:
         assert "RestartPreventExitStatus=78" in dropin
 
 
-def test_data_volume_dropin_installer_previews_and_refuses_worktree_apply(tmp_path: Path) -> None:
+def test_data_volume_dropin_installer_previews(tmp_path: Path) -> None:
     destination = tmp_path / "user"
     command = [
         sys.executable,
@@ -77,13 +77,30 @@ def test_data_volume_dropin_installer_previews_and_refuses_worktree_apply(tmp_pa
         "--destination",
         str(destination),
     ]
-    preview = subprocess.run(command, text=True, capture_output=True, check=True)
+    preview = subprocess.run(command, text=True, capture_output=True, check=True, timeout=30)
     assert "data_volume_guard.sh" in preview.stdout
     assert not destination.exists()
     assert "@REPO_ROOT@" not in preview.stdout
-    applied = subprocess.run([*command, "--apply"], text=True, capture_output=True)
-    assert applied.returncode == 2
-    assert "--apply must run from the primary checkout" in applied.stderr
+
+
+def test_data_volume_dropin_installer_refuses_dispatch_worktree_apply(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    destination = tmp_path / "user"
+    worktree_root = Path(".worktrees") / "dispatch" / "codex" / "task" / "repo"
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(installer, "REPO_ROOT", worktree_root)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["install_data_volume_dropins.py", "--destination", str(destination), "--apply"],
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        installer.main()
+
+    assert exc_info.value.code == 2
+    assert "--apply must run from the primary checkout" in capsys.readouterr().err
     assert not destination.exists()
 
 
@@ -91,7 +108,10 @@ def test_data_volume_dropin_installer_applies_from_primary_checkout(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     destination = tmp_path / "user"
-    monkeypatch.setattr(installer, "_is_primary_checkout", lambda: True)
+    monkeypatch.chdir(tmp_path)
+    primary_root = Path("primary")
+    (primary_root / ".git").mkdir(parents=True)
+    monkeypatch.setattr(installer, "REPO_ROOT", primary_root)
     monkeypatch.setattr(
         sys,
         "argv",

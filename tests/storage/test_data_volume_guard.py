@@ -40,8 +40,8 @@ def guarded_repo(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, str]]:
         '[[ "${FAKE_FINDMNT_EXIT:-0}" == 0 ]] || exit 1\n'
         'if [[ "${*: -1}" == / ]]; then\n'
         '  printf "%s %s\\n" "${FAKE_ROOT_UUID:-}" "${FAKE_ROOT_SOURCE:-/dev/root}"\n'
-        '  exit 0\n'
-        'fi\n'
+        "  exit 0\n"
+        "fi\n"
         'printf "%s %s\\n" "${FAKE_FINDMNT_UUID:-}" "${FAKE_FINDMNT_SOURCE:-/dev/fake}"\n',
         encoding="utf-8",
     )
@@ -59,7 +59,7 @@ def guarded_repo(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, str]]:
 
 
 def run_guard(guard: Path, env: dict[str, str], *args: str) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(["bash", str(guard), *args], env=env, text=True, capture_output=True)
+    return subprocess.run(["bash", str(guard), *args], env=env, text=True, capture_output=True, timeout=30)
 
 
 def test_absent_uuid_file_is_noop(guarded_repo: tuple[Path, Path, Path, dict[str, str]]) -> None:
@@ -104,9 +104,7 @@ def test_unreadable_uuid_file_refuses_start(
         marker.chmod(0o644)
 
 
-def test_dangling_uuid_symlink_refuses_start(
-    guarded_repo: tuple[Path, Path, Path, dict[str, str]]
-) -> None:
+def test_dangling_uuid_symlink_refuses_start(guarded_repo: tuple[Path, Path, Path, dict[str, str]]) -> None:
     guard, _, marker, env = guarded_repo
     marker.symlink_to(marker.parent / "missing")
     result = run_guard(guard, env)
@@ -115,31 +113,23 @@ def test_dangling_uuid_symlink_refuses_start(
     assert not Path(env["FAKE_FINDMNT_CALLS"]).exists()
 
 
-def test_status_identifies_unexpected_volume(
-    guarded_repo: tuple[Path, Path, Path, dict[str, str]]
-) -> None:
+def test_status_identifies_unexpected_volume(guarded_repo: tuple[Path, Path, Path, dict[str, str]]) -> None:
     guard, _, marker, env = guarded_repo
     marker.write_text(UUID + "\n", encoding="utf-8")
     env.update(
         FAKE_FINDMNT_UUID=OTHER_UUID,
         FAKE_ROOT_UUID="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
     )
-    assert run_guard(guard, env, "--status").stdout == (
-        f"data: volume {OTHER_UUID} (expected {UUID})\n"
-    )
+    assert run_guard(guard, env, "--status").stdout == (f"data: volume {OTHER_UUID} (expected {UUID})\n")
 
 
-def test_matching_uuid_executes_command(
-    guarded_repo: tuple[Path, Path, Path, dict[str, str]], tmp_path: Path
-) -> None:
+def test_matching_uuid_executes_command(guarded_repo: tuple[Path, Path, Path, dict[str, str]], tmp_path: Path) -> None:
     guard, _, marker, env = guarded_repo
     marker.write_text(UUID + "\n", encoding="utf-8")
     result = run_guard(guard, env, "--", sys.executable, "-c", "print('started')")
     assert result.returncode == 0, result.stderr
     assert result.stdout == "started\n"
-    assert Path(env["FAKE_FINDMNT_CALLS"]).read_text().strip() == (
-        f"-no UUID,SOURCE -T {guard.parents[2] / 'data'}"
-    )
+    assert Path(env["FAKE_FINDMNT_CALLS"]).read_text().strip() == (f"-no UUID,SOURCE -T {guard.parents[2] / 'data'}")
     assert run_guard(guard, env, "--status").stdout == f"data: volume {UUID}\n"
 
 
@@ -171,6 +161,7 @@ def test_services_refuses_mismatch_before_side_effects(
         env=env,
         text=True,
         capture_output=True,
+        timeout=30,
     )
     assert result.returncode == 78
     assert "not mounted from configured UUID" in result.stderr
