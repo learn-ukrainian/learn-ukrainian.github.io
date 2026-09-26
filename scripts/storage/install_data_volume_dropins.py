@@ -30,7 +30,7 @@ def main() -> int:
             "  .venv/bin/python "
             "scripts/storage/install_data_volume_dropins.py --apply\n"
             "Outputs: prints each target and complete rendered content; --apply writes "
-            "eight data-volume.conf files under the destination.\n"
+            "ten data-volume.conf files under the destination.\n"
             "Exit codes: 0 on success; 1 for an unsafe or failed write; 2 for "
             "invalid arguments.\n"
             "Related: packaging/systemd/dropins/, "
@@ -59,13 +59,11 @@ def main() -> int:
         parser.error("repository paths cannot contain whitespace or systemd percent specifiers")
 
     templates = sorted(TEMPLATE_ROOT.glob("*.service.d/data-volume.conf"))
-    if len(templates) != 8:
-        parser.error(f"expected eight drop-in templates, found {len(templates)}")
+    if len(templates) != 10:
+        parser.error(f"expected ten drop-in templates, found {len(templates)}")
     for template in templates:
         content = (
-            template.read_text(encoding="utf-8")
-            .replace("@REPO_ROOT@", root)
-            .replace("@PRIVATE_ROOT@", private_root)
+            template.read_text(encoding="utf-8").replace("@REPO_ROOT@", root).replace("@PRIVATE_ROOT@", private_root)
         )
         target = args.destination / template.parent.name / template.name
         print(f"{target}\n{content}", end="")

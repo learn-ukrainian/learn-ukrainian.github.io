@@ -233,7 +233,7 @@ def test_thresholds_default_to_config_and_honour_env_overrides():
         min_mem_available_gib=config.DISPATCH_MIN_MEM_AVAILABLE_GIB,
         max_load_per_cpu=config.DISPATCH_MAX_LOAD_PER_CPU,
     )
-    assert (defaults.max_live_write_workers, defaults.min_mem_available_gib, defaults.max_load_per_cpu) == (5, 3.5, 1.5)
+    assert (defaults.max_live_write_workers, defaults.min_mem_available_gib, defaults.max_load_per_cpu) == (6, 3.5, 1.5)
 
     overridden = adm.load_thresholds(
         {

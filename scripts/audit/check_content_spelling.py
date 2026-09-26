@@ -20,11 +20,12 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
-if str(SCRIPT_DIR) in sys.path:
-    sys.path.remove(str(SCRIPT_DIR))
-for import_root in (SCRIPTS_DIR, PROJECT_ROOT):
-    if str(import_root) not in sys.path:
-        sys.path.insert(0, str(import_root))
+if __name__ == "__main__":
+    if str(SCRIPT_DIR) in sys.path:
+        sys.path.remove(str(SCRIPT_DIR))
+    for import_root in (SCRIPTS_DIR, PROJECT_ROOT):
+        if str(import_root) not in sys.path:
+            sys.path.insert(0, str(import_root))
 
 from scripts.lexicon import content_lexicon_reconciler as reconciler
 
@@ -121,8 +122,7 @@ def result_to_json_payload(
         ],
         "limit": limit,
         "truncated": {
-            "unrecognized_forms": limit is not None
-            and len(result.unrecognized_forms) > len(unrecognized),
+            "unrecognized_forms": limit is not None and len(result.unrecognized_forms) > len(unrecognized),
         },
     }
 
@@ -171,9 +171,7 @@ def format_human_summary(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Report Ukrainian content forms not recognized by local VESUM."
-    )
+    parser = argparse.ArgumentParser(description="Report Ukrainian content forms not recognized by local VESUM.")
     parser.add_argument("--json", action="store_true", help="Print machine-readable JSON output")
     parser.add_argument("--limit", type=int, help="Limit listed unrecognized examples")
     parser.add_argument(

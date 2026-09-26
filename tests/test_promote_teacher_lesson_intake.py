@@ -4,10 +4,13 @@ import json
 import re
 import sqlite3
 from pathlib import Path
+from types import MappingProxyType
 
+import pytest
 import yaml
 
-from scripts.audit.source_inventory_intake import read_source_inventory
+from scripts.audit.generate_source_inventory_review_candidates import COMMITTED_SOURCE_INVENTORIES
+from scripts.audit.source_inventory_intake import read_source_inventories, read_source_inventory
 from scripts.audit.source_inventory_review_decisions import (
     source_inventory_key,
     validate_decision_file,
@@ -38,6 +41,20 @@ _SAFE_LOCATOR = re.compile(
 )
 
 
+@pytest.fixture(scope="module")
+def source_records():
+    """Share parsed, frozen source rows while each validation runs afresh."""
+    delta = tuple(read_source_inventory(DELTA_INVENTORY, project_root=PROJECT_ROOT))
+    committed = read_source_inventories(COMMITTED_SOURCE_INVENTORIES, project_root=PROJECT_ROOT)
+    index = MappingProxyType(
+        {
+            (record.lemma, record.inventory_path, record.source_locator): record
+            for record in (*committed, *delta)
+        }
+    )
+    return delta, index
+
+
 def test_default_full_decisions_is_a_committed_repository_file() -> None:
     relative_path = DEFAULT_FULL_DECISIONS.relative_to(PROJECT_ROOT)
 
@@ -50,8 +67,8 @@ def test_default_full_decisions_is_a_committed_repository_file() -> None:
     assert DEFAULT_FULL_DECISIONS.is_file()
 
 
-def test_private_teacher_lesson_delta_inventory_is_privacy_safe() -> None:
-    records = read_source_inventory(DELTA_INVENTORY, project_root=PROJECT_ROOT)
+def test_private_teacher_lesson_delta_inventory_is_privacy_safe(source_records) -> None:
+    records, _ = source_records
 
     assert len(records) == DELTA_HEADWORD_COUNT
     assert {record.source_family for record in records} == {"teacher_lesson"}
@@ -65,9 +82,13 @@ def test_private_teacher_lesson_delta_inventory_is_privacy_safe() -> None:
     assert "alona" not in inventory_text.lower()
 
 
-def test_private_teacher_lesson_delta_decisions_validate_as_practice_only() -> None:
-    summary = validate_decision_file(DELTA_DECISIONS)
-    payload = yaml.safe_load(DELTA_DECISIONS.read_text(encoding="utf-8"))
+def test_private_teacher_lesson_delta_decisions_validate_as_practice_only(source_records) -> None:
+    _, source_index = source_records
+    summary = validate_decision_file(DELTA_DECISIONS, source_index=source_index)
+    # Match the validator's safe C loader for this 8.6 MB ledger. The full
+    # validation above still runs independently on every test invocation.
+    safe_loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+    payload = yaml.load(DELTA_DECISIONS.read_text(encoding="utf-8"), Loader=safe_loader)
 
     assert summary["rows"] == DELTA_HEADWORD_COUNT
     assert summary["decision_counts"] == {"approve_for_publish": DELTA_HEADWORD_COUNT}

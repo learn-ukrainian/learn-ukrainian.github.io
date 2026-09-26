@@ -13,13 +13,14 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# Ensure project root is in sys.path when executed directly
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 _SCRIPT_DIR = str(Path(__file__).resolve().parent)
-if _SCRIPT_DIR in sys.path:
-    sys.path.remove(_SCRIPT_DIR)
-if str(_PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_ROOT))
+if __name__ == "__main__":
+    # Ensure project root is in sys.path when executed directly
+    if _SCRIPT_DIR in sys.path:
+        sys.path.remove(_SCRIPT_DIR)
+    if str(_PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(_PROJECT_ROOT))
 
 import yaml
 

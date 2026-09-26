@@ -19,13 +19,14 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-# Direct execution otherwise places scripts/audit ahead of the repository root,
-# causing ``scripts.audit`` to mistake its local config.py for scripts/config.py.
 SCRIPT_DIR = Path(__file__).resolve().parent
-if str(SCRIPT_DIR) in sys.path:
-    sys.path.remove(str(SCRIPT_DIR))
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __name__ == "__main__":
+    # Direct execution otherwise places scripts/audit ahead of the repository root,
+    # causing ``scripts.audit`` to mistake its local config.py for scripts/config.py.
+    if str(SCRIPT_DIR) in sys.path:
+        sys.path.remove(str(SCRIPT_DIR))
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit import lint_bio_dossier_xref
 from scripts.audit.llm_qg_store import content_sha_for_module
