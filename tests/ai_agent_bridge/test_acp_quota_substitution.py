@@ -15,6 +15,7 @@ replay and retry read the stored field and never recompute.
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from contextlib import contextmanager
 from dataclasses import replace
@@ -188,6 +189,15 @@ class _FakeAuthority:
         self.finished.append({"job_id": job_id, **kwargs})
 
 
+def _forbidden_acp_bypass(channel: str):
+    """Fail the test if an ordinary ask leaves the ACP seat path."""
+
+    def _refuse(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError(f"ACP-only ask must not call {channel}")
+
+    return _refuse
+
+
 def _wire(
     monkeypatch: pytest.MonkeyPatch,
     authority: _FakeAuthority,
@@ -196,7 +206,13 @@ def _wire(
     fallbacks_yaml: str | None = _FALLBACKS_YAML,
     tmp_path: Path | None = None,
 ) -> Mock:
-    """Fake the ACP participant, the reachability probe, and the subs table."""
+    """Fake the ACP participant, the reachability probe, and the subs table.
+
+    Ordinary asks stay on ACP. ``runner.invoke``, a provider subprocess, the
+    headless review dispatcher, and ``delegate.py`` dispatch all fail the
+    test if the ask reaches them. The local-plane probe is pinned off so the
+    subprocess guard is not tripped by the git check that decides forwarding.
+    """
 
     def fake_invoke(participant: str, *_args, **_kwargs) -> Result:
         outcome = behavior[participant]
@@ -217,6 +233,20 @@ def _wire(
         "scripts.agent_runtime.adapters.acpx.probe_participant_reachability",
         Mock(return_value=None),
     )
+    monkeypatch.setattr(
+        "scripts.ai_agent_bridge._job_host_forward.local_plane_is_retired",
+        lambda *_args, **_kwargs: False,
+    )
+    # Import delegate before the subprocess guard: module import may probe git.
+    monkeypatch.setattr("delegate.cmd_dispatch", _forbidden_acp_bypass("delegate.cmd_dispatch"))
+    monkeypatch.setattr(
+        _cli,
+        "_dispatch_headless_review",
+        _forbidden_acp_bypass("_cli._dispatch_headless_review"),
+    )
+    monkeypatch.setattr("agent_runtime.runner.invoke", _forbidden_acp_bypass("runner.invoke"))
+    monkeypatch.setattr(subprocess, "run", _forbidden_acp_bypass("subprocess.run"))
+    monkeypatch.setattr(subprocess, "Popen", _forbidden_acp_bypass("subprocess.Popen"))
     if fallbacks_yaml is not None:
         assert tmp_path is not None
         config = tmp_path / "agent_fallback_substitutions.yaml"
@@ -240,7 +270,8 @@ def test_typed_capacity_failure_substitutes_once_to_mapped_seat_and_records_it(
 
     assert result.ok is True
     assert result.response == "cursor answer"
-    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.substitution is None
     # One invocation per seat; the substitute gets no per-seat overrides.
     assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
     err = capsys.readouterr().err
@@ -248,13 +279,15 @@ def test_typed_capacity_failure_substitutes_once_to_mapped_seat_and_records_it(
     # Task record: the failed seat's job terminalizes as a capacity failure
     # before the substitute runs; the substitute's job carries the record.
     assert authority.enqueued[0]["recipient"] == "codex"
+    assert "seat_substitution" not in authority.enqueued[0]["metadata"]
     assert "substitution" not in authority.enqueued[0]["metadata"]
     assert authority.enqueued[1]["recipient"] == "cursor"
-    assert authority.enqueued[1]["metadata"]["substitution"] == {
+    assert authority.enqueued[1]["metadata"]["seat_substitution"] == {
         "from": "codex",
         "to": "cursor",
         "reason": "rate_limited",
     }
+    assert "substitution" not in authority.enqueued[1]["metadata"]
     assert authority.finished[0]["state"] == "failed"
     assert authority.finished[0]["failure"] == {
         "phase": "provider",
@@ -263,7 +296,8 @@ def test_typed_capacity_failure_substitutes_once_to_mapped_seat_and_records_it(
     }
     assert authority.finished[1]["state"] == "complete"
     receipt = json.loads(authority.finished[1]["result"])
-    assert receipt["substitution"] == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert receipt["seat_substitution"] == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert "substitution" not in receipt
     assert receipt["ok"] is True
     # The failed seat's receipt stores the typed code and the decision itself.
     failed_receipt = json.loads(authority.finished[0]["result"])
@@ -347,7 +381,8 @@ def test_substitute_also_over_quota_fails_loudly_without_second_hop(
     assert "ACP substitution: codex -> cursor (reason: rate_limited)" in err
     assert "ACP substitution exhausted: substitute seat 'cursor' is also over quota" in err
     assert "refusing a second substitution and any bridge/provider fallback" in err
-    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.substitution is None
 
 
 def test_substitute_rate_limited_exception_fails_loudly_without_second_hop(
@@ -388,6 +423,7 @@ def test_non_quota_error_is_unchanged(
     assert result.ok is False
     assert invoke.call_count == 1
     assert result.substitution is None
+    assert getattr(result, "seat_substitution", None) is None
     err = capsys.readouterr().err
     assert "ACP substitution" not in err
     assert "outcome=error" in err
@@ -413,6 +449,7 @@ def test_text_only_quota_wording_is_an_adapter_gap_not_a_capacity_signal(
     assert result.ok is False
     assert [call.args[0] for call in invoke.call_args_list] == ["codex"]
     assert result.substitution is None
+    assert getattr(result, "seat_substitution", None) is None
     assert "ACP substitution" not in capsys.readouterr().err
     assert authority.finished[0]["failure"] == {
         "phase": "transport",
@@ -440,6 +477,7 @@ def test_seat_without_mapping_fails_unchanged_with_clear_message(
     assert result.ok is False
     assert invoke.call_count == 1
     assert result.substitution is None
+    assert getattr(result, "seat_substitution", None) is None
     err = capsys.readouterr().err
     assert "ACP substitution:" not in err
     assert (
@@ -488,12 +526,14 @@ def test_substitution_record_survives_receipt_replay() -> None:
     substitution = {"from": "codex", "to": "cursor", "reason": "rate_limited"}
     decision = {"substitute": False, "reason": None}
 
-    receipt = _acp_compat._result_receipt(result, substitution=substitution, substitution_decision=decision)
+    receipt = _acp_compat._result_receipt(result, seat_substitution=substitution, substitution_decision=decision)
     replay = _acp_compat._replay_result(receipt)
 
     assert replay.ok is True
-    assert replay.substitution == substitution
-    assert replay.usage_record["substitution"] == substitution
+    assert replay.seat_substitution == substitution
+    assert replay.substitution is None
+    assert replay.usage_record["seat_substitution"] == substitution
+    assert "substitution" not in replay.usage_record
     assert replay.substitution_decision == decision
 
 
@@ -549,6 +589,7 @@ def test_typed_non_capacity_failure_mentioning_quota_is_not_substituted(
     assert result.ok is False
     assert invoke.call_count == 1
     assert result.substitution is None
+    assert getattr(result, "seat_substitution", None) is None
     assert "ACP substitution" not in capsys.readouterr().err
 
 
@@ -570,7 +611,8 @@ def test_typed_capacity_failure_code_substitutes(
 
     assert result.ok is True
     assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
-    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.substitution is None
     assert authority.finished[0]["failure"] == {
         "phase": "provider",
         "code": "rate_limited",
@@ -610,7 +652,8 @@ def test_runner_typed_rate_limit_signals_substitute(
 
     assert result.ok is True
     assert [call.args[0] for call in invoke.call_args_list] == ["codex", "cursor"]
-    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.substitution is None
     assert "reason: rate_limited" in capsys.readouterr().err
 
 
@@ -642,10 +685,12 @@ def test_live_and_replay_decisions_match_for_every_parser_code(
     seats = [call.args[0] for call in invoke.call_args_list]
     if expected["substitute"]:
         assert seats == ["codex", "cursor"]
-        assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+        assert result.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+        assert result.substitution is None
     else:
         assert seats == ["codex"]
         assert result.substitution is None
+        assert getattr(result, "seat_substitution", None) is None
     receipt = json.loads(authority.finished[0]["result"])
     assert receipt["failure_code"] == failure_code
     assert receipt["substitution_decision"] == expected
@@ -681,11 +726,121 @@ def test_old_receipt_without_stored_decision_replays_as_no_substitution() -> Non
     replayed = _acp_compat._replay_result(old_receipt)
 
     assert replayed.ok is False
+    assert replayed.substitution is None
+    assert getattr(replayed, "seat_substitution", None) is None
     assert replayed.substitution_decision == {"substitute": False, "reason": None}
     assert _acp_compat._substitution_decision(result=replayed) == {
         "substitute": False,
         "reason": None,
     }
+
+
+def test_old_receipt_substitution_key_is_not_a_seat_hop() -> None:
+    """The provider-route field name is not a seat hop. Receipts that stored
+    the hop under ``substitution``, or omit ``seat_substitution``, replay as
+    no seat substitution (#8499)."""
+    old_receipt = json.dumps(
+        {
+            "ok": True,
+            "agent": "cursor",
+            "model": "cursor-model",
+            "response": "cursor answer",
+            "stderr_excerpt": None,
+            "duration_s": 1.0,
+            "returncode": 0,
+            "effort": "high",
+            "from_model": "cursor-model",
+            "model_requested": "cursor-model",
+            "effort_requested": None,
+            "effort_applied": "high",
+            "harness": "acp",
+            "substitution": {"from": "codex", "to": "cursor", "reason": "rate_limited"},
+            "substitution_decision": {"substitute": False, "reason": None},
+            "transport_metadata": None,
+            "transport_outcome": "ok",
+        }
+    ).encode("utf-8")
+
+    replayed = _acp_compat._replay_result(old_receipt)
+
+    assert getattr(replayed, "seat_substitution", None) is None
+    assert replayed.substitution is None
+    assert "substitution" not in replayed.usage_record
+    assert "seat_substitution" not in replayed.usage_record
+
+
+def test_seat_hop_preserves_provider_route_substitution(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    provider_route = {
+        "substituted": True,
+        "requested_provider": "openai",
+        "actual_provider": "openai",
+        "requested_model": "gpt-6-astra",
+        "actual_model": "composer-2.5",
+    }
+    authority = _FakeAuthority()
+    _wire(
+        monkeypatch,
+        authority,
+        {
+            "codex": _capacity_result("codex"),
+            "cursor": replace(_ok_result("cursor", "cursor answer"), substitution=provider_route),
+        },
+        tmp_path=tmp_path,
+    )
+
+    result = _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-provider-route")
+
+    assert result.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.substitution == provider_route
+
+
+def test_unrelated_error_named_rate_limited_does_not_substitute(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    class RateLimitedError(Exception):
+        pass
+
+    authority = _FakeAuthority()
+    invoke = _wire(
+        monkeypatch,
+        authority,
+        {"codex": RateLimitedError("usage limit reached"), "cursor": _ok_result("cursor")},
+        tmp_path=tmp_path,
+    )
+
+    with pytest.raises(RateLimitedError):
+        _acp_compat._run_compat_ask_impl("codex", "question", task_id="quota-impostor")
+
+    assert [call.args[0] for call in invoke.call_args_list] == ["codex"]
+    assert authority.finished[0]["failure"]["code"] != "rate_limited"
+
+
+def test_acp_only_wiring_refuses_bridge_and_provider_execution(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    import delegate
+    from agent_runtime import runner
+
+    _wire(monkeypatch, _FakeAuthority(), {"codex": _ok_result("codex")}, tmp_path=tmp_path)
+
+    with pytest.raises(AssertionError, match=r"runner\.invoke"):
+        runner.invoke("codex", "prompt")
+    with pytest.raises(AssertionError, match=r"subprocess\.run"):
+        subprocess.run(["false"])
+    with pytest.raises(AssertionError, match=r"subprocess\.Popen"):
+        subprocess.Popen(["false"])
+    with pytest.raises(AssertionError, match=r"_cli\._dispatch_headless_review"):
+        _cli._dispatch_headless_review(
+            "codex",
+            "prompt",
+            data=None,
+            task_id="t",
+            model=None,
+            effort=None,
+            output_path=None,
+            stdout_only=False,
+            hard_timeout=None,
+        )
+    with pytest.raises(AssertionError, match=r"delegate\.cmd_dispatch"):
+        delegate.cmd_dispatch(SimpleNamespace())
 
 
 class _DurableAuthority:
@@ -764,11 +919,12 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
     # The substitute was enqueued under the live decision before the crash,
     # and the failed seat's receipt persisted the decision for replay.
     jobs = store["jobs"]
-    assert jobs["job-2"]["payload"]["metadata"]["substitution"] == {
+    assert jobs["job-2"]["payload"]["metadata"]["seat_substitution"] == {
         "from": "codex",
         "to": "cursor",
         "reason": "rate_limited",
     }
+    assert "substitution" not in jobs["job-2"]["payload"]["metadata"]
     receipt = json.loads(jobs["job-1"]["result"])
     assert receipt["transport_outcome"] == "rate_limited"
     assert receipt["failure_code"] == "rate_limited"
@@ -787,7 +943,8 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
     # resumed.
     assert result.ok is True
     assert result.response == "cursor answer"
-    assert result.substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.seat_substitution == {"from": "codex", "to": "cursor", "reason": "rate_limited"}
+    assert result.substitution is None
     assert [call.args[0] for call in invoke.call_args_list] == ["cursor"]
     assert jobs["job-2"]["state"] == "complete"
 

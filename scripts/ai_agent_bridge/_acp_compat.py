@@ -169,6 +169,36 @@ def _stored_substitution_decision(result: object) -> dict[str, object] | None:
     return None
 
 
+def _is_rate_limited_error(error: BaseException) -> bool:
+    """True only for the runner's RateLimitedError, including subclasses."""
+    from agent_runtime.errors import RateLimitedError
+
+    return isinstance(error, RateLimitedError)
+
+
+def _coerce_seat_substitution(value: object) -> dict[str, str] | None:
+    """Return a seat-hop record, or None when the receipt did not store one.
+
+    The provider/model route record lives on ``Result.substitution`` (a
+    ``substituted`` key). The ACP seat hop is a different record —
+    ``seat_substitution`` with ``from`` / ``to`` / ``reason``. Receipts that
+    predate that field, including ones that stuffed the hop under
+    ``substitution``, replay as no seat substitution.
+    """
+    if not isinstance(value, dict):
+        return None
+    source = value.get("from")
+    target = value.get("to")
+    reason = value.get("reason")
+    if not isinstance(source, str) or not source.strip():
+        return None
+    if not isinstance(target, str) or not target.strip():
+        return None
+    if not isinstance(reason, str) or not reason.strip():
+        return None
+    return {"from": source.strip(), "to": target.strip(), "reason": reason.strip()}
+
+
 def _substitution_decision(*, error: BaseException | None = None, result: object | None = None) -> dict[str, object]:
     """Decide, from typed signals only, whether one failed ask substitutes.
 
@@ -181,7 +211,7 @@ def _substitution_decision(*, error: BaseException | None = None, result: object
     Timeouts, admission refusals, and parse failures never substitute.
     """
     if error is not None:
-        if type(error).__name__ == "RateLimitedError":
+        if _is_rate_limited_error(error):
             return {"substitute": True, "reason": "rate_limited"}
         return dict(_NO_SUBSTITUTION_DECISION)
     if result is None:
@@ -261,18 +291,17 @@ def _announce_substitution(
 
 
 def _with_substitution_record(result: object, substitution: dict[str, str]) -> object:
-    """Stamp the seat substitution on a returned Result; other shapes pass through."""
-    from dataclasses import replace
+    """Stamp the ACP seat hop without touching ``Result.substitution``.
 
+    ``Result.substitution`` is the provider/model route record. The seat hop
+    is stored on ``seat_substitution``. Objects that refuse the attribute
+    pass through unchanged.
+    """
     try:
-        new_result = replace(result, substitution=substitution)
-        if hasattr(result, "substitution_decision"):
-            object.__setattr__(new_result, "substitution_decision", result.substitution_decision)
-        if hasattr(result, "failure_code"):
-            object.__setattr__(new_result, "failure_code", result.failure_code)
-        return new_result
-    except TypeError:
+        object.__setattr__(result, "seat_substitution", substitution)
+    except (AttributeError, TypeError):
         return result
+    return result
 
 
 def _result_receipt(
@@ -280,7 +309,7 @@ def _result_receipt(
     *,
     model_requested: str | None = None,
     effort_requested: str | None = None,
-    substitution: dict[str, str] | None = None,
+    seat_substitution: dict[str, str] | None = None,
     substitution_decision: dict[str, object] | None = None,
 ) -> bytes:
     actual_model = str(getattr(result, "model", ""))
@@ -309,8 +338,8 @@ def _result_receipt(
         "transport_metadata": getattr(result, "transport_metadata", None),
         "transport_outcome": getattr(result, "transport_outcome", None),
     }
-    if substitution is not None:
-        payload["substitution"] = substitution
+    if seat_substitution is not None:
+        payload["seat_substitution"] = seat_substitution
     if substitution_decision is not None:
         payload["substitution_decision"] = substitution_decision
     return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -365,50 +394,31 @@ def _replay_result(raw: bytes) -> object:
         # capacity failure.
         decision = dict(_NO_SUBSTITUTION_DECISION)
     receipt_failure_code = payload.get("failure_code")
-    substitution = payload.get("substitution")
-    if not isinstance(substitution, dict):
-        substitution = None
-    if substitution is not None:
-        provenance["substitution"] = substitution
-    res: Result
-    if not payload["ok"]:
-        res = Result(
-            ok=False,
-            agent=str(payload["agent"]),
-            model=str(payload["model"]),
-            mode="read-only",
-            response=str(payload["response"]),
-            stderr_excerpt=payload.get("stderr_excerpt"),
-            duration_s=float(payload["duration_s"]),
-            session_id=None,
-            rate_limited=payload.get("transport_outcome") == "rate_limited",
-            stalled=False,
-            returncode=payload.get("returncode"),
-            effort=str(payload["effort"]),
-            usage_record=provenance,
-            substitution=substitution,
-            transport_metadata=payload.get("transport_metadata"),
-            transport_outcome=payload.get("transport_outcome"),
-        )
-    else:
-        res = Result(
-            ok=True,
-            agent=str(payload["agent"]),
-            model=str(payload["model"]),
-            mode="read-only",
-            response=str(payload["response"]),
-            stderr_excerpt=payload.get("stderr_excerpt"),
-            duration_s=float(payload["duration_s"]),
-            session_id=None,
-            rate_limited=payload.get("transport_outcome") == "rate_limited",
-            stalled=False,
-            returncode=payload.get("returncode"),
-            effort=str(payload["effort"]),
-            usage_record=provenance,
-            substitution=substitution,
-            transport_metadata=payload.get("transport_metadata"),
-            transport_outcome=payload.get("transport_outcome"),
-        )
+    # ``substitution`` on a receipt is the provider/model route record elsewhere.
+    # Only the distinct ``seat_substitution`` field is a seat hop; receipts
+    # that lack it replay as no seat substitution (#8499).
+    seat_substitution = _coerce_seat_substitution(payload.get("seat_substitution"))
+    if seat_substitution is not None:
+        provenance["seat_substitution"] = seat_substitution
+    res = Result(
+        ok=bool(payload["ok"]),
+        agent=str(payload["agent"]),
+        model=str(payload["model"]),
+        mode="read-only",
+        response=str(payload["response"]),
+        stderr_excerpt=payload.get("stderr_excerpt"),
+        duration_s=float(payload["duration_s"]),
+        session_id=None,
+        rate_limited=payload.get("transport_outcome") == "rate_limited",
+        stalled=False,
+        returncode=payload.get("returncode"),
+        effort=str(payload["effort"]),
+        usage_record=provenance,
+        transport_metadata=payload.get("transport_metadata"),
+        transport_outcome=payload.get("transport_outcome"),
+    )
+    if seat_substitution is not None:
+        object.__setattr__(res, "seat_substitution", seat_substitution)
     object.__setattr__(res, "substitution_decision", decision)
     if receipt_failure_code is not None:
         object.__setattr__(res, "failure_code", str(receipt_failure_code))
@@ -422,7 +432,7 @@ def _failure_metadata(*, error: BaseException | None = None, result: object | No
         error_text = str(error).casefold()
         if error_name in {"AgentTimeoutError", "AgentStalledError"}:
             return {"phase": "transport", "code": "timeout", "retryable": True}
-        if error_name == "RateLimitedError":
+        if _is_rate_limited_error(error):
             return {"phase": "provider", "code": "rate_limited", "retryable": True}
         if error_name == "AgentUnavailableError":
             return {
@@ -797,7 +807,7 @@ def _run_single_acp_job(
         "transport": "acp",
     }
     if substitution is not None:
-        metadata["substitution"] = substitution
+        metadata["seat_substitution"] = substitution
     with AuthorityService() as authority:
         job = authority.enqueue_request(
             recipient=participant,
@@ -888,7 +898,7 @@ def _run_single_acp_job(
                     "transport_outcome": "rate_limited" if decision["substitute"] else "error",
                 }
                 if substitution is not None:
-                    failure_receipt["substitution"] = substitution
+                    failure_receipt["seat_substitution"] = substitution
                 authority.finish_job(
                     job.job_id,
                     worker_id=worker_id,
@@ -921,7 +931,7 @@ def _run_single_acp_job(
                         result,
                         model_requested=model,
                         effort_requested=effort,
-                        substitution=substitution,
+                        seat_substitution=substitution,
                         substitution_decision=decision,
                     ),
                     failure=(None if bool(getattr(result, "ok", False)) else _failure_metadata(result=result)),

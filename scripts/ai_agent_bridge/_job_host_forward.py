@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import base64
 import os
+import re
 import shlex
 import subprocess
 import sys
@@ -45,6 +46,11 @@ ENV_SERVICES_REPO = "LU_SERVICES_REMOTE_ROOT"
 REMOTE_PATH_EXPORT = 'export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$PATH"'
 # Generous wall clock: seat profiles go up to 1800s (kimi); transport grace on top.
 DEFAULT_SSH_TIMEOUT_SECONDS = 2100.0
+
+# Remote asks print this on stderr even when the substitute succeeds (rc=0).
+# The seat hop is not ``Result.substitution`` (that field is the provider/model
+# route record); the forward stamps ``seat_substitution`` from this line.
+_SEAT_SUBSTITUTION_NOTE = re.compile(r"^ACP substitution: (?P<from>\S+) -> (?P<to>\S+) \(reason: (?P<reason>[^)]+)\)")
 
 
 class AskForwardError(RuntimeError):
@@ -218,11 +224,32 @@ def _build_remote_ask_script(
         exports.append(f"export LU_ASK_FORWARD_HARD_TIMEOUT={int(hard_timeout)}")
 
     prefix = " && ".join(exports)
-    lines.append(
-        f"{prefix} && cd {shlex.quote(remote_repo)} && "
-        f"{remote_cmd} < \"$LU_ASK_PROMPT\""
-    )
+    lines.append(f'{prefix} && cd {shlex.quote(remote_repo)} && {remote_cmd} < "$LU_ASK_PROMPT"')
     return ("\n".join(lines) + "\n").encode("utf-8")
+
+
+def _visible_forward_stderr(stderr: str, target: AskForwardTarget) -> str:
+    """Drop lines that would leak the SSH host alias or remote checkout."""
+    cleaned = stderr.strip()
+    if not cleaned:
+        return ""
+    lines = [line for line in cleaned.splitlines() if target.host not in line and target.remote_repo not in line]
+    return "\n".join(lines)
+
+
+def _seat_substitution_from_forward_stderr(stderr: str) -> tuple[dict[str, str] | None, str | None]:
+    """Parse the remote seat-hop note. Returns ``(record, full note line)``."""
+    for line in stderr.splitlines():
+        match = _SEAT_SUBSTITUTION_NOTE.match(line.strip())
+        if match is None:
+            continue
+        record = {
+            "from": match.group("from"),
+            "to": match.group("to"),
+            "reason": match.group("reason"),
+        }
+        return record, line.strip()
+    return None, None
 
 
 def _build_ssh_argv(host: str) -> list[str]:
@@ -319,49 +346,32 @@ def forward_compat_ask(
             check=False,
             input=script,
             capture_output=True,
-            timeout=(
-                float(hard_timeout) + 60.0
-                if hard_timeout is not None
-                else DEFAULT_SSH_TIMEOUT_SECONDS
-            ),
+            timeout=(float(hard_timeout) + 60.0 if hard_timeout is not None else DEFAULT_SSH_TIMEOUT_SECONDS),
         )
     except FileNotFoundError as exc:
-        raise AskForwardError(
-            format_ask_forward_refusal(configured=True)
-            + " (ssh client missing)"
-        ) from exc
+        raise AskForwardError(format_ask_forward_refusal(configured=True) + " (ssh client missing)") from exc
     except PermissionError as exc:
-        raise AskForwardError(
-            format_ask_forward_refusal(configured=True)
-            + " (ssh not executable)"
-        ) from exc
+        raise AskForwardError(format_ask_forward_refusal(configured=True) + " (ssh not executable)") from exc
     except subprocess.TimeoutExpired as exc:
-        raise AskForwardError(
-            format_ask_forward_refusal(configured=True)
-            + " (SSH transport timed out)"
-        ) from exc
+        raise AskForwardError(format_ask_forward_refusal(configured=True) + " (SSH transport timed out)") from exc
 
     duration_s = time.monotonic() - started
     stdout = completed.stdout.decode("utf-8", errors="replace")
     stderr = completed.stderr.decode("utf-8", errors="replace")
     rc = int(completed.returncode)
 
-    # OPSEC: never echo host aliases; strip common ssh banners if present.
+    # OPSEC: never echo host aliases. Keep the substitution note on success
+    # too — a substituted ask exits 0, and dropping stderr hid both the note
+    # and the seat that actually answered (#8499).
+    visible_stderr = _visible_forward_stderr(stderr, target)
+    seat_substitution, substitution_note = _seat_substitution_from_forward_stderr(visible_stderr)
     stderr_excerpt = None
     if rc != 0:
-        cleaned = stderr.strip()
-        if cleaned:
-            # Bound and scrub anything that looks like a path or Host alias.
-            lines = [
-                line
-                for line in cleaned.splitlines()
-                if target.host not in line and target.remote_repo not in line
-            ]
-            stderr_excerpt = ("\n".join(lines) or "ask forward failed")[:500]
-        else:
-            stderr_excerpt = "ask forward failed"
+        stderr_excerpt = (visible_stderr or "ask forward failed")[:500]
 
     agent = participant or command_target
+    if seat_substitution is not None:
+        agent = seat_substitution["to"]
     result = _result_from_forward(
         participant=agent,
         response=stdout,
@@ -371,6 +381,8 @@ def forward_compat_ask(
         effort=effort,
         duration_s=duration_s,
     )
+    if seat_substitution is not None:
+        object.__setattr__(result, "seat_substitution", seat_substitution)
 
     response = str(getattr(result, "response", ""))
     if output_path:
@@ -384,9 +396,12 @@ def forward_compat_ask(
         f"outcome={getattr(result, 'transport_outcome', None) or 'error'}",
         file=sys.stderr,
     )
-    # Surface remote stderr diagnostics without host leakage.
+    # Surface remote stderr diagnostics without host leakage. A successful
+    # substitute has no failure excerpt; still print the substitution note.
     if stderr_excerpt:
         print(stderr_excerpt, file=sys.stderr)
+    elif substitution_note:
+        print(substitution_note, file=sys.stderr)
     return result
 
 

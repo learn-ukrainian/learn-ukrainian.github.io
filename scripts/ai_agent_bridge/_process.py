@@ -34,9 +34,7 @@ def recipient_has_acp_route(recipient: str) -> bool:
 def _message_acknowledged(message_id: int) -> bool:
     conn = get_db()
     try:
-        row = conn.execute(
-            "SELECT acknowledged FROM messages WHERE id = ?", (message_id,)
-        ).fetchone()
+        row = conn.execute("SELECT acknowledged FROM messages WHERE id = ?", (message_id,)).fetchone()
         return bool(row and row[0])
     finally:
         conn.close()
@@ -61,9 +59,7 @@ def _build_routed_prompt(msg: dict) -> str:
     return prompt
 
 
-def _notify_processing_failure(
-    msg: dict, message_id: int, participant: str, reason: str
-) -> None:
+def _notify_processing_failure(msg: dict, message_id: int, participant: str, reason: str) -> None:
     """Notify the sender of a failed processing attempt WITHOUT consuming.
 
     The honest typed-error reply is preserved, but the original message is
@@ -138,23 +134,28 @@ def process_message_for_recipient(
 
     response = str(getattr(result, "response", "") or "").strip()
     if not getattr(result, "ok", False) or not response:
-        reason = str(
-            getattr(result, "stderr_excerpt", None)
-            or "empty response from routed seat"
-        )
+        reason = str(getattr(result, "stderr_excerpt", None) or "empty response from routed seat")
         print(f"❌ Processing failed: {reason}")
         _notify_processing_failure(msg, message_id, participant, reason)
         return None
 
+    requested_seat = str(msg["to"])
+    seat_substitution = getattr(result, "seat_substitution", None)
+    from_llm = requested_seat
+    if isinstance(seat_substitution, dict):
+        substitute = seat_substitution.get("to")
+        if isinstance(substitute, str) and substitute.strip():
+            from_llm = substitute.strip()
     reply_id = send_message(
         content=response,
         task_id=msg.get("task_id"),
         msg_type="response",
-        from_llm=msg["to"],
+        from_llm=from_llm,
         to_llm=msg["from"],
         from_model=getattr(result, "model", None),
     )
     acknowledge(message_id)
     record_ask_reply(message_id, reply_id)
-    print(f"✅ Message {message_id} processed by {participant} and acknowledged")
+    answered_by = participant if from_llm == requested_seat else from_llm
+    print(f"✅ Message {message_id} processed by {answered_by} and acknowledged")
     return response
