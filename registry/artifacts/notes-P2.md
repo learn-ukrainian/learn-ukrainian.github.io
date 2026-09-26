@@ -57,6 +57,23 @@ defaults outside the repository and rejects repository output paths; it does
 not write its historical A row. The two generic grow-candidate writers target
 unclassified ignored host state, outside the 173 P2 A rows.
 
+## CI test-ID reference
+
+Main changed test IDs after the P1 baseline, so the pre-phase reference is the
+full-tier base CI capture in `test-baseline.p2.pre.json` (run 36243687964,
+source commit `526a1055ea3c01193f9cd19d0cda260c1867255a`). The final P2
+capture in `test-baseline.p2.json` is from full-tier branch CI run 36248549299
+on code commit `2b7d00a0a50ccc6efb2cd8a267f6d916cbce280f`.
+Comparing pre-phase to P2 passes with two sparse-test renames and two
+`needs_artifact` dispositions, both proven by `host-run-p2.junit.xml`.
+
+A direct P1-to-P2 comparison still reports three test IDs renamed on main
+between P1 and the base commit, plus a new restore test that CI skips when its
+external tool is unavailable. The comparison tool has no valid disposition
+for an unrelated `absent -> skipped` addition. This is why the base CI capture
+is the phase's before reference under the locked spec's changed-ID rule; no
+P2 lost test ID is left without a disposition.
+
 ## Merge-time host operation
 
 The driver runs `artifacts snapshot --phase P2 --manifests-ref origin/<branch>`

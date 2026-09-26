@@ -1,0 +1,31 @@
+{
+  "renamed": [
+    {
+      "old": "tests.test_sparse_worktree_skip::test_sparse_on_skips_lexicon_readers_when_lexicon_absent",
+      "new": "tests.test_sparse_worktree_skip::test_sparse_on_keeps_moved_lexicon_readers_when_old_tree_absent",
+      "reason": "tracked K reader now resolves registry/lexicon and runs in sparse worktrees"
+    },
+    {
+      "old": "tests.test_sparse_worktree_skip::test_sparse_on_skips_source_inventory_readers",
+      "new": "tests.test_sparse_worktree_skip::test_sparse_on_keeps_moved_source_inventory_readers",
+      "reason": "tracked K reader now resolves registry/lexicon and runs in sparse worktrees"
+    }
+  ],
+  "fixture": [],
+  "needs_artifact": [
+    {
+      "id": "tests.test_miyklas_relation_miner::test_cleaned_artifact_has_no_known_label_or_chopped_headwords",
+      "host_run": {
+        "junit": "registry/artifacts/host-run-p2.junit.xml"
+      },
+      "reason": "P2 lexicon_candidates artifact removed from Git and verified on the host"
+    },
+    {
+      "id": "tests.test_ohoiko_paired_headword_split::test_taught_residual_census_artifact_file_integrity",
+      "host_run": {
+        "junit": "registry/artifacts/host-run-p2.junit.xml"
+      },
+      "reason": "P2 lexicon_recovery_snapshots artifact removed from Git and verified on the host"
+    }
+  ]
+}
