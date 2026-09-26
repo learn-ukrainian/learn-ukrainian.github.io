@@ -4,6 +4,7 @@ import json
 import os
 import signal
 import subprocess
+import tempfile
 import time
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -21,12 +22,18 @@ from scripts.review.isolation import (
 )
 
 
+def _make_review_temp_root(dir: Path, prefix: str = "lu-review-snap-", context: dict | None = None) -> Path:
+    root = Path(tempfile.mkdtemp(prefix=prefix, dir=dir))
+    isolation._write_review_temp_root_marker(root, prefix=prefix, context=context)
+    return root
+
+
 def test_sweep_reaps_dead_owner_root_immediately(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Guard 1 (Live Owner Fencing / ESRCH): Dead PID root reaped immediately within 60s grace."""
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
     now = 1000.0
 
-    root = create_review_temp_root(prefix="lu-review-snap-", dir=tmp_path)
+    root = _make_review_temp_root(dir=tmp_path, prefix="lu-review-snap-")
     manifest_path = root / REVIEW_TEMP_ROOT_MANIFEST_NAME
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["owner_pid"] = 999999
@@ -44,7 +51,7 @@ def test_sweep_preserves_live_owner_root(tmp_path: Path, monkeypatch: pytest.Mon
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
     now = 1000000.0
 
-    root = create_review_temp_root(prefix="lu-review-snap-", dir=tmp_path)
+    root = _make_review_temp_root(dir=tmp_path, prefix="lu-review-snap-")
     manifest_path = root / REVIEW_TEMP_ROOT_MANIFEST_NAME
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["created_at_epoch"] = now - (100 * 3600)  # 100 hours old
@@ -61,7 +68,7 @@ def test_sweep_reaps_recycled_pid_root(tmp_path: Path, monkeypatch: pytest.Monke
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
     now = 1000.0
 
-    root = create_review_temp_root(prefix="lu-review-snap-", dir=tmp_path)
+    root = _make_review_temp_root(dir=tmp_path, prefix="lu-review-snap-")
     manifest_path = root / REVIEW_TEMP_ROOT_MANIFEST_NAME
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["owner_pid"] = os.getpid()
@@ -253,7 +260,7 @@ def test_sweep_preserves_non_esrch_dead_owner_during_grace_window(
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
     now = 1000.0
 
-    root = create_review_temp_root(prefix="lu-review-snap-", dir=tmp_path)
+    root = _make_review_temp_root(dir=tmp_path, prefix="lu-review-snap-")
     manifest_path = root / REVIEW_TEMP_ROOT_MANIFEST_NAME
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["owner_pid"] = os.getpid()
@@ -280,7 +287,7 @@ def test_sweep_toctou_recheck_skips_on_uncheckable(tmp_path: Path, monkeypatch: 
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
     now = 1000.0
 
-    root = create_review_temp_root(prefix="lu-review-snap-", dir=tmp_path)
+    root = _make_review_temp_root(dir=tmp_path, prefix="lu-review-snap-")
     manifest_path = root / REVIEW_TEMP_ROOT_MANIFEST_NAME
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["owner_pid"] = 999999
@@ -321,7 +328,7 @@ def test_disk_pressure_threshold_reads_yaml_config(tmp_path: Path, monkeypatch: 
 
 def test_review_resource_cleanup_is_idempotent(tmp_path: Path) -> None:
     """Guard / F4 (Cleanup Idempotency): Double cleanup invocation raises no error."""
-    state_root = create_review_temp_root(prefix="lu-review-snap-", dir=tmp_path)
+    state_root = _make_review_temp_root(dir=tmp_path, prefix="lu-review-snap-")
     state_mock = MagicMock()
     state_mock.root = state_root
     state_mock.cleaned = False
@@ -332,7 +339,7 @@ def test_review_resource_cleanup_is_idempotent(tmp_path: Path) -> None:
                 isolation.remove_review_temp_tree(s.root)
             s.cleaned = True
 
-    root_mock = create_review_temp_root(prefix="lu-review-exec-", dir=tmp_path)
+    root_mock = _make_review_temp_root(dir=tmp_path, prefix="lu-review-exec-")
 
     with patch("scripts.ai_agent_bridge._review_worktree.cleanup_snapshot_state", side_effect=fake_cleanup_state):
         from scripts.ai_agent_bridge._review_worktree import _cleanup_review_resources
@@ -391,7 +398,14 @@ def test_create_review_temp_root_defaults_to_scratch_root(tmp_path: Path, monkey
     scratch_root.mkdir()
     monkeypatch.setenv("LU_SCRATCH_ROOT", str(scratch_root))
 
-    root = create_review_temp_root(prefix="lu-review-snap-")
+    # lu-review-* root creation is unconditionally refused (#8520)
+    with pytest.raises(
+        OSError,
+        match=r"sealed snapshot flow was retired on 2026-08-07 and review runs through ask-<lane> --type review",
+    ):
+        create_review_temp_root(prefix="lu-review-snap-")
+
+    root = create_review_temp_root(prefix="test-snap-")
     try:
         assert root.is_dir()
         assert root.parent.resolve() == scratch_root.resolve()
