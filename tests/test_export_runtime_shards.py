@@ -7,24 +7,50 @@ opt-in via ``skipif`` when the full atlas is present locally.
 
 from __future__ import annotations
 
+import ctypes
+import dataclasses
+import errno
+import gc
 import gzip
 import hashlib
+import io
 import json
+import math
+import mmap
+import os
+import random
+import re
 import shutil
+import signal
 import sqlite3
+import stat
 import subprocess
 import sys
+import threading
+import tracemalloc
+import unicodedata
+import zlib
+from collections import defaultdict
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 
+from scripts.atlas import export_runtime_shards as exporter
 from scripts.atlas.export_runtime_shards import (
+    EntryReplay,
     ExportError,
+    SearchFamilyIndex,
+    StagedVersion,
+    compress_stream_bounded,
+    compute_data_version,
     export_runtime_shards,
     find_component_tokens,
+    gzip_bytes,
     load_component_tokenization_vectors,
     load_entry_records,
     load_practice_levels_by_slug,
+    load_search_rows,
     logical_tree_fingerprint,
     open_readonly_db,
     tree_fingerprint,
@@ -497,3 +523,2266 @@ def test_atlas_release_gate_real_db_counts_and_export(tmp_path: Path) -> None:
         "entryShards=",
         report["counts"]["entryShards"],
     )
+
+
+# ---------------------------------------------------------------------------
+# Bounded-memory exporter (#8672): differential tests against the historical
+# whole-corpus implementation, kept below as an in-memory reference oracle.
+# ---------------------------------------------------------------------------
+
+_SOURCE_DDL = """
+CREATE TABLE articles (
+    slug TEXT PRIMARY KEY, display_head TEXT NOT NULL, lemma TEXT NOT NULL,
+    entry_type TEXT NOT NULL CHECK (entry_type IN ('expression', 'lemma', 'multiword_term', 'phraseologism', 'proper_name', 'proverb')),
+    pos TEXT, gloss TEXT,
+    review_state TEXT NOT NULL CHECK (review_state IN ('approved', 'needs_review', 'rejected')),
+    visibility TEXT NOT NULL CHECK (visibility IN ('private', 'public')),
+    cefr TEXT, heritage_classification TEXT, created_at TEXT, updated_at TEXT
+);
+CREATE TABLE manifest_metadata (key TEXT PRIMARY KEY, value_json TEXT NOT NULL);
+CREATE TABLE article_payloads (
+    slug TEXT PRIMARY KEY, route_order INTEGER NOT NULL, payload_json TEXT NOT NULL,
+    is_public_route INTEGER NOT NULL CHECK (is_public_route IN (0, 1))
+);
+CREATE TABLE article_provenance (
+    slug TEXT NOT NULL, source_family TEXT, source_locator TEXT, extraction_mode TEXT,
+    FOREIGN KEY (slug) REFERENCES articles(slug)
+);
+CREATE TABLE aliases (
+    alias TEXT NOT NULL,
+    kind TEXT NOT NULL CHECK (kind IN ('canonical', 'component_head', 'inflected_form', 'spelling_variant', 'translation_hint', 'transliteration', 'unstressed')),
+    source TEXT, target_slug TEXT NOT NULL,
+    visibility TEXT NOT NULL DEFAULT 'public' CHECK (visibility IN ('private', 'public')),
+    UNIQUE (alias, kind, target_slug)
+);
+CREATE TABLE related_entries (
+    slug TEXT NOT NULL, related_slug TEXT NOT NULL, entry_type TEXT, relation TEXT NOT NULL,
+    component_role TEXT, provenance TEXT NOT NULL CHECK (provenance IN ('unverified', 'verified')),
+    CHECK (slug != related_slug), UNIQUE (slug, related_slug, relation, provenance)
+);
+CREATE INDEX idx_aliases_target ON aliases(target_slug);
+CREATE INDEX idx_prov_slug ON article_provenance(slug);
+CREATE INDEX idx_related_entries_slug_relation ON related_entries(slug, relation);
+CREATE INDEX idx_article_payloads_route ON article_payloads(is_public_route, route_order);
+"""
+
+# Code-point order differs from UTF-16 order for U+FB00 vs an astral emoji.
+_UNICODE_STRESS_HEADS = [
+    "Київ", "київ", "за́мок", "п'ять", "п’ять", "й", "й", "ﬀ", "\U0001f600",
+    "Я", "я", "ї", "abc", "Abc", "123", "a", "i",
+]
+_GLOSS_WORDS = [
+    "the", "them", "then", "there", "a", "an", "and", "i", "in", "is", "of", "off", "often",
+    "flag", "house", "go", "Water", "river", "sky", "ще",
+]
+
+
+def _make_source_db(
+    path: Path,
+    *,
+    records: int = 90,
+    filler_chars: int = 600,
+    seed: int = 8672,
+    gloss_chars: int | None = None,
+) -> Path:
+    """Synthetic source DB covering sort/dedup/terminal/form-route/private edge cases."""
+    rng = random.Random(seed)
+    conn = sqlite3.connect(path)
+    conn.executescript(_SOURCE_DDL)
+    conn.execute(
+        "INSERT INTO manifest_metadata VALUES ('generated_at', ?)", (json.dumps("2026-01-02T03:04:05+00:00"),)
+    )
+    heads = list(_UNICODE_STRESS_HEADS) + [f"слово{index:03d}" for index in range(records)]
+    articles: list[tuple[str, str, str]] = []
+    for index, head in enumerate(heads):
+        slug = unicodedata.normalize("NFC", head.lower().replace("'", "-").replace("’", "-")) + f"-{index}"
+        entry_type = "lemma" if index % 5 else ("phraseologism", "multiword_term", "proper_name")[index % 3]
+        articles.append((slug, head, entry_type))
+    lemma_heads = [head for _, head, kind in articles if kind == "lemma"]
+    rows: list[tuple[str, int, str, int]] = []
+    for index, (slug, head, entry_type) in enumerate(articles):
+        private = index % 17 == 16
+        gloss = None if index % 7 == 6 else " ".join(rng.sample(_GLOSS_WORDS, rng.randint(1, 4)))
+        if gloss_chars is not None:  # long glosses over one fixed vocabulary (body size, not key count, varies)
+            gloss = (" ".join(_GLOSS_WORDS) + " ") * (gloss_chars // 60 + 1)
+        cefr = ("A1", "B2", None)[index % 3]
+        lemma = head if entry_type == "lemma" else " ".join(rng.sample(lemma_heads, 2))
+        conn.execute(
+            "INSERT INTO articles VALUES (?,?,?,?,?,?,?,?,?,?,NULL,NULL)",
+            (slug, head, lemma, entry_type, "noun", gloss, "approved", "private" if private else "public", cefr, None),
+        )
+        payload = {
+            "url_slug": slug,
+            "lemma": lemma,
+            "notes": "".join(rng.choice("abcdef0123456789 ") for _ in range(filler_chars)),
+            "enrichment": {"cefr": {"level": cefr.lower()}} if cefr else {},
+        }
+        rows.append((slug, index // 3, json.dumps(payload, ensure_ascii=False), 0 if private else 1))
+        if private:
+            continue
+        for alias, kind, source in (
+            (head.lower(), "canonical", "wiki"),
+            (head.capitalize(), "spelling_variant", None),
+            (unicodedata.normalize("NFD", head.lower()) + "́", "unstressed", "sum"),
+            (f"x{index % 4}", "translation_hint", "en"),
+        ):
+            conn.execute(
+                "INSERT OR IGNORE INTO aliases VALUES (?,?,?,?,'public')", (alias, kind, source, slug)
+            )
+        conn.execute("INSERT INTO aliases VALUES (?,?,?,?,'private')", (f"hidden-{index}", "canonical", None, slug))
+        for other in (articles[(index + 1) % len(articles)][0], articles[(index + 3) % len(articles)][0]):
+            if other != slug:
+                conn.execute(
+                    "INSERT OR IGNORE INTO related_entries VALUES (?,?,?,?,?,?)",
+                    (slug, other, "lemma", "see_also", None, "verified"),
+                )
+        for family in ("sum", "wiki"):
+            conn.execute(
+                "INSERT INTO article_provenance VALUES (?,?,?,?)", (slug, family, f"loc-{index}", "auto")
+            )
+    for index in range(6):  # form routes: public payload, no article row
+        slug = f"форма-{index}"
+        payload = {"url_slug": slug, "lemma": "слово001", "form_of": {"url_slug": articles[-1][0]}}
+        rows.append((slug, 1000 + index, json.dumps(payload, ensure_ascii=False), 1))
+    conn.executemany("INSERT INTO article_payloads VALUES (?,?,?,?)", rows)
+    conn.commit()
+    conn.close()
+    return path
+
+
+@pytest.fixture(scope="module")
+def edge_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    return _make_source_db(tmp_path_factory.mktemp("edge") / "edge.db")
+
+
+def _snapshot(root: Path) -> dict[str, bytes]:
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
+
+
+def _entry_bits(slug: str) -> str:
+    digest = hashlib.sha256(exporter.normalize_slug_for_hash(slug).encode("utf-8")).digest()
+    return "".join(f"{byte:08b}" for byte in digest)
+
+
+def _ref_load_entry_records(conn: sqlite3.Connection, practice: dict) -> list[dict]:
+    """Historical whole-corpus loader (pre-#8672)."""
+    def unique_targets(rows):
+        targets = defaultdict(set)
+        for lookup_text, target_slug in rows:
+            key = normalize_atlas_text(lookup_text)
+            if key:
+                targets[key].add(target_slug)
+        return targets
+
+    article_rows = conn.execute(
+        """SELECT display_head, slug FROM articles
+           WHERE review_state = 'approved' AND visibility = 'public' AND entry_type = 'lemma'
+           ORDER BY display_head COLLATE NOCASE, slug"""
+    ).fetchall()
+    alias_rows = conn.execute(
+        """SELECT al.alias, al.target_slug FROM aliases al JOIN articles a ON a.slug = al.target_slug
+           WHERE al.visibility = 'public' AND a.review_state = 'approved'
+             AND a.visibility = 'public' AND a.entry_type = 'lemma'
+           ORDER BY al.alias COLLATE NOCASE, al.target_slug, al.kind"""
+    ).fetchall()
+    article_targets = unique_targets((r[0], r[1]) for r in article_rows)
+    alias_targets = unique_targets((r[0], r[1]) for r in alias_rows)
+    component_targets = {k: next(iter(v)) for k, v in article_targets.items() if len(v) == 1}
+    for lookup, matched in alias_targets.items():
+        if lookup not in article_targets and len(matched) == 1:
+            component_targets[lookup] = next(iter(matched))
+    lemma_slugs = {
+        r[0]
+        for r in conn.execute(
+            "SELECT slug FROM articles WHERE review_state = 'approved' AND visibility = 'public' AND entry_type = 'lemma'"
+        )
+    }
+    aliases_by_slug, relations_by_slug, provenance_by_slug = defaultdict(list), defaultdict(list), defaultdict(list)
+    for row in conn.execute(
+        "SELECT alias, kind, source, target_slug FROM aliases WHERE visibility = 'public' ORDER BY target_slug, kind, alias, source"
+    ):
+        aliases_by_slug[row["target_slug"]].append(row)
+    for row in conn.execute(
+        """SELECT slug, related_slug, entry_type, relation, component_role, provenance
+           FROM related_entries ORDER BY slug, relation, related_slug, provenance, component_role"""
+    ):
+        relations_by_slug[row["slug"]].append(row)
+    for row in conn.execute(
+        "SELECT slug, source_family, source_locator, extraction_mode, rowid FROM article_provenance ORDER BY slug, rowid"
+    ):
+        provenance_by_slug[row["slug"]].append(row)
+    payload_rows = conn.execute(
+        """SELECT ap.slug AS slug, ap.payload_json AS payload_json, a.entry_type AS entry_type, a.cefr AS cefr
+           FROM article_payloads ap LEFT JOIN articles a ON a.slug = ap.slug
+           WHERE ap.is_public_route = 1 ORDER BY ap.route_order, ap.slug"""
+    ).fetchall()
+    records = []
+    for row in payload_rows:
+        entry = json.loads(row["payload_json"])
+        entry["entry_type"] = row["entry_type"]
+        exporter._assert_cefr_consistent(row["slug"], row["cefr"], entry)
+        slug = str(row["slug"])
+        records.append(
+            {
+                "slug": slug,
+                "kind": "article" if row["entry_type"] is not None else "form_route",
+                "entry": entry,
+                "aliases": exporter._sorted_alias_rows(aliases_by_slug.get(slug, [])),
+                "relations": exporter._sorted_relation_rows(relations_by_slug.get(slug, [])),
+                "provenance": exporter._sorted_provenance_rows(provenance_by_slug.get(slug, [])),
+                "renderContext": {
+                    "componentLinks": exporter.component_links_for_entry(
+                        entry, component_targets=component_targets, lemma_slugs=lemma_slugs
+                    ),
+                    "practiceLevels": list(
+                        practice.get(slug) or practice.get(str(entry.get("lemma") or "")) or []
+                    ),
+                },
+            }
+        )
+    return records
+
+
+def _ref_load_search_rows(conn: sqlite3.Connection):
+    """Historical whole-corpus search-row loader (pre-#8672)."""
+    articles = []
+    for slug, display_head, gloss, entry_type, cefr in conn.execute(
+        """SELECT slug, display_head, gloss, entry_type, cefr FROM articles
+           WHERE review_state = 'approved' AND visibility = 'public'
+           ORDER BY display_head COLLATE NOCASE, slug"""
+    ).fetchall():
+        row = {
+            "l": display_head, "s": slug, "g": exporter._clean_text(gloss),
+            "r": exporter.transliterate(display_head), "t": entry_type,
+        }
+        level = exporter._clean_text(cefr)
+        if level:
+            row["c"] = level
+        articles.append(row)
+    articles.sort(key=lambda row: (normalize_atlas_text(row["l"]), row["s"]))
+    aliases, seen = [], set()
+    for alias, kind, target_slug, target_head in conn.execute(
+        """SELECT alias.alias, alias.kind, alias.target_slug, article.display_head
+           FROM aliases AS alias JOIN articles AS article ON article.slug = alias.target_slug
+           WHERE alias.visibility = 'public' AND article.review_state = 'approved' AND article.visibility = 'public'
+           ORDER BY alias.alias COLLATE NOCASE, alias.target_slug, alias.kind"""
+    ).fetchall():
+        key = (normalize_atlas_text(alias), target_slug)
+        if not key[0] or key in seen:
+            continue
+        seen.add(key)
+        aliases.append({"a": alias, "k": kind, "s": target_slug, "h": target_head})
+    aliases.sort(key=lambda row: (normalize_atlas_text(row["a"]), row["s"], row["k"]))
+    return articles, aliases
+
+
+def _ref_data_version(*, generated_at, entry_records, article_rows, alias_rows, deck_index) -> str:
+    identity = {
+        "schemaVersion": 1,
+        "generatedAt": generated_at,
+        "entries": [
+            {
+                "slug": record["slug"],
+                "kind": record["kind"],
+                "entrySha256": exporter.sha256_hex(exporter.canonical_json_bytes(record["entry"])),
+                "aliasesSha256": exporter.sha256_hex(exporter.canonical_json_bytes(record["aliases"])),
+                "relationsSha256": exporter.sha256_hex(exporter.canonical_json_bytes(record["relations"])),
+                "provenanceSha256": exporter.sha256_hex(exporter.canonical_json_bytes(record["provenance"])),
+                "renderContextSha256": exporter.sha256_hex(exporter.canonical_json_bytes(record["renderContext"])),
+            }
+            for record in entry_records
+        ],
+        "searchArticles": article_rows,
+        "searchAliases": alias_rows,
+        "decks": {
+            level: info.get("deckVersion") for level, info in sorted((deck_index.get("levels") or {}).items())
+        },
+    }
+    return f"atlas-v1-{exporter.sha256_hex(exporter.canonical_json_bytes(identity))[:16]}"
+
+
+def _ref_build_entry_shards(records, *, data_version, max_gzip_bytes, compression_level):
+    """Historical recursive trie: serialises and gzips whole candidate sets."""
+    prepared = sorted(((_entry_bits(r["slug"]), dict(r)) for r in records), key=lambda i: (i[0], i[1]["slug"]))
+    blobs: dict[str, bytes] = {}
+    descriptors: dict[str, dict] = {}
+
+    def materialize(bit_length, prefix_value, items):
+        shard_id = exporter.entry_shard_id(bit_length, prefix_value)
+        ordered = [item[1] for item in sorted(items, key=lambda pair: pair[1]["slug"])]
+        payload = {
+            "schema": exporter.ENTRY_SHARD_SCHEMA, "schemaVersion": 1,
+            "dataVersion": data_version, "records": ordered,
+        }
+        raw = exporter.canonical_json_bytes(payload)
+        compressed = gzip_bytes(raw, compression_level=compression_level)
+        if len(compressed) > max_gzip_bytes:
+            if len(items) <= 1:
+                raise ExportError(
+                    f"single entry record exceeds entry-max-gzip-bytes "
+                    f"({len(compressed)} > {max_gzip_bytes}) slug={items[0][1]['slug']!r}"
+                )
+            zeros = [i for i in items if i[0][bit_length] == "0"]
+            ones = [i for i in items if i[0][bit_length] != "0"]
+            if not zeros:
+                return materialize(bit_length + 1, (prefix_value << 1) | 1, ones)
+            if not ones:
+                return materialize(bit_length + 1, prefix_value << 1, zeros)
+            materialize(bit_length + 1, prefix_value << 1, zeros)
+            return materialize(bit_length + 1, (prefix_value << 1) | 1, ones)
+        blobs[shard_id] = compressed
+        descriptors[shard_id] = exporter.object_descriptor(
+            object_id=shard_id, relative_url=f"entries/{shard_id}.json.gz",
+            count=len(ordered), raw=raw, compressed=compressed,
+        )
+        return None
+
+    materialize(0, 0, prepared)
+    return blobs, descriptors
+
+
+def _ref_build_search_shards(rows, *, family, data_version, max_gzip_bytes, compression_level, key_fn, row_id_fn, schema):
+    """Historical recursive prefix trie over dict-copied rows."""
+    depth1: dict[str, dict[str, dict]] = defaultdict(dict)
+    for row in rows:
+        for key in key_fn(row):
+            depth1[key[0]][row_id_fn(row)] = dict(row)
+    blobs: dict[str, bytes] = {}
+    descriptors: dict[str, dict] = {}
+
+    def write_shard(prefix, row_map, *, terminal=False):
+        shard_id = exporter.search_shard_id(prefix) + (".term" if terminal else "")
+        ordered = sorted(row_map.values(), key=lambda item: (row_id_fn(item), json.dumps(item, sort_keys=True)))
+        if family == "articles":
+            ordered.sort(key=lambda item: (normalize_atlas_text(str(item["l"])), item["s"]))
+        else:
+            ordered.sort(key=lambda item: (normalize_atlas_text(str(item["a"])), item["s"], item["k"]))
+        raw = exporter.canonical_json_bytes(
+            {"schema": schema, "schemaVersion": 1, "dataVersion": data_version,
+             "prefix": prefix, "terminal": terminal, "records": ordered}
+        )
+        compressed = gzip_bytes(raw, compression_level=compression_level)
+        blobs[shard_id] = compressed
+        descriptors[shard_id] = exporter.object_descriptor(
+            object_id=shard_id, relative_url=f"search/{family}/{shard_id}.json.gz",
+            count=len(ordered), raw=raw, compressed=compressed,
+        )
+        return shard_id
+
+    def split_or_write(prefix, row_map):
+        ordered = list(row_map.values())
+        probe = gzip_bytes(
+            exporter.canonical_json_bytes(
+                {"schema": schema, "schemaVersion": 1, "dataVersion": data_version,
+                 "prefix": prefix, "terminal": False, "records": ordered}
+            ),
+            compression_level=compression_level,
+        )
+        node = {"prefix": prefix}
+        if len(probe) <= max_gzip_bytes:
+            node["shardId"] = write_shard(prefix, row_map)
+            return node
+        children, terminals = defaultdict(dict), {}
+        for row in ordered:
+            for key in key_fn(row):
+                if not key.startswith(prefix):
+                    continue
+                if key == prefix:
+                    terminals[row_id_fn(row)] = row
+                else:
+                    children[prefix + key[len(prefix)]][row_id_fn(row)] = row
+        if not children:
+            raise ExportError(
+                f"search {family} shard for prefix={prefix!r} exceeds max "
+                f"({len(probe)} > {max_gzip_bytes}) and cannot split"
+            )
+        if terminals:
+            node["terminalShardId"] = write_shard(prefix, terminals, terminal=True)
+        node["children"] = {c[len(prefix)]: split_or_write(c, children[c]) for c in sorted(children)}
+        return node
+
+    root_children = {prefix: split_or_write(prefix, depth1[prefix]) for prefix in sorted(depth1)}
+    index = {
+        "strategy": "unicode-prefix-trie", "family": family, "maxGzipBytes": max_gzip_bytes,
+        "tree": {"prefix": "", "children": root_children},
+        "shards": {key: descriptors[key] for key in sorted(descriptors)},
+    }
+    return index, blobs
+
+
+def _reference_export(db_path: Path, *, compression_level: int, entry_max: int, search_max: int):
+    """Objects + index sections the historical exporter would emit for ``db_path``."""
+    conn = open_readonly_db(db_path)
+    try:
+        generated_at = json.loads(
+            conn.execute("SELECT value_json FROM manifest_metadata WHERE key = 'generated_at'").fetchone()[0]
+        )
+        records = _ref_load_entry_records(conn, {})
+        article_rows, alias_rows = _ref_load_search_rows(conn)
+    finally:
+        conn.close()
+    data_version = _ref_data_version(
+        generated_at=generated_at, entry_records=records,
+        article_rows=article_rows, alias_rows=alias_rows, deck_index={"levels": {}},
+    )
+    entry_blobs, entry_descriptors = _ref_build_entry_shards(
+        records, data_version=data_version, max_gzip_bytes=entry_max, compression_level=compression_level
+    )
+    article_index, article_blobs = _ref_build_search_shards(
+        article_rows, family="articles", data_version=data_version, max_gzip_bytes=search_max,
+        compression_level=compression_level, key_fn=exporter._article_index_keys,
+        row_id_fn=lambda row: str(row["s"]), schema=exporter.SEARCH_ARTICLE_SCHEMA,
+    )
+    alias_index, alias_blobs = _ref_build_search_shards(
+        alias_rows, family="aliases", data_version=data_version, max_gzip_bytes=search_max,
+        compression_level=compression_level, key_fn=exporter._alias_index_keys,
+        row_id_fn=lambda row: f"{row['a']}\0{row['s']}\0{row['k']}", schema=exporter.SEARCH_ALIAS_SCHEMA,
+    )
+    files = {f"entries/{k}.json.gz": v for k, v in entry_blobs.items()}
+    files |= {f"search/articles/{k}.json.gz": v for k, v in article_blobs.items()}
+    files |= {f"search/aliases/{k}.json.gz": v for k, v in alias_blobs.items()}
+    return data_version, files, {
+        "entries": {"shards": entry_descriptors},
+        "articles": article_index,
+        "aliases": alias_index,
+    }
+
+
+def _export(db: Path, out: Path, **kwargs):
+    return export_runtime_shards(
+        db_path=db, out_dir=out, include_decks=False, deck_dir=None, verify=True, **kwargs
+    )
+
+
+# (entry cap, search cap): default, and small caps that force deep entry/search splits.
+_CAPS = [(1_048_576, 524_288), (9_000, 800), (6_000, 700)]
+
+
+@pytest.mark.parametrize("level", [0, 1, 6, 9])
+@pytest.mark.parametrize(("entry_max", "search_max"), _CAPS)
+def test_streamed_export_is_byte_identical_to_reference(
+    edge_db: Path, tmp_path: Path, level: int, entry_max: int, search_max: int
+) -> None:
+    forced = (entry_max, search_max) != _CAPS[0]
+    if level == 0:  # stored blocks do not shrink: same split pressure needs bigger caps
+        search_max *= 3
+    data_version, files, indexes = _reference_export(
+        edge_db, compression_level=level, entry_max=entry_max, search_max=search_max
+    )
+    out = tmp_path / "out"
+    report = _export(
+        edge_db, out, compression_level=level,
+        entry_max_gzip_bytes=entry_max, search_max_gzip_bytes=search_max,
+    )
+    version_root = out / "atlas" / "versions" / data_version
+    assert report["dataVersion"] == data_version
+    tree = _snapshot(version_root)
+    assert {name: blob for name, blob in tree.items() if name != "manifest.json"} == files
+    manifest = json.loads(tree["manifest.json"])
+    assert manifest["entries"]["shards"] == indexes["entries"]["shards"]
+    assert manifest["search"]["articles"] == indexes["articles"]
+    assert manifest["search"]["aliases"] == indexes["aliases"]
+    if forced:
+        assert manifest["counts"]["entryShards"] > 1
+        assert manifest["counts"]["searchArticleShards"] > 20
+        if level:  # level-0 caps are scaled up and may leave no exact-prefix bucket to split off
+            assert any(name.endswith(".term.json.gz") for name in tree), "terminal shards exercised"
+
+
+def test_fixture_export_is_byte_identical_to_reference(fixture_db: Path, tmp_path: Path) -> None:
+    data_version, files, _ = _reference_export(
+        fixture_db, compression_level=9, entry_max=8_000, search_max=1_000
+    )
+    out = tmp_path / "out"
+    _export(fixture_db, out, entry_max_gzip_bytes=8_000, search_max_gzip_bytes=1_000)
+    tree = _snapshot(out / "atlas" / "versions" / data_version)
+    assert {name: blob for name, blob in tree.items() if name != "manifest.json"} == files
+
+
+def test_replay_records_and_search_rows_match_reference_loaders(edge_db: Path, fixture_db: Path) -> None:
+    for db in (edge_db, fixture_db):
+        conn = open_readonly_db(db)
+        try:
+            expected = _ref_load_entry_records(conn, {"слово001": ["A1", "B1"]})
+            replay = EntryReplay(conn, practice_levels_by_slug={"слово001": ["A1", "B1"]})
+            assert list(replay.iter_records()) == expected
+            assert [replay.record_for_slug(r["slug"]) for r in expected] == expected
+            assert load_entry_records(conn, practice_levels_by_slug={"слово001": ["A1", "B1"]}) == expected
+            assert load_search_rows(conn) == _ref_load_search_rows(conn)
+        finally:
+            conn.close()
+
+
+def test_search_alias_dedup_keeps_reference_survivors(edge_db: Path) -> None:
+    conn = open_readonly_db(edge_db)
+    try:
+        _, aliases = load_search_rows(conn)
+        raw = conn.execute("SELECT COUNT(*) FROM aliases WHERE visibility = 'public'").fetchone()[0]
+        assert len(aliases) < raw, "fixture must actually contain normalization duplicates"
+        assert aliases == _ref_load_search_rows(conn)[1]
+        assert len({(normalize_atlas_text(a["a"]), a["s"]) for a in aliases}) == len(aliases)
+    finally:
+        conn.close()
+
+
+def test_unicode_search_order_follows_code_points(edge_db: Path) -> None:
+    conn = open_readonly_db(edge_db)
+    try:
+        articles, _ = load_search_rows(conn)
+    finally:
+        conn.close()
+    heads = [normalize_atlas_text(row["l"]) for row in articles]
+    assert heads == sorted(heads)
+    assert heads.index("ﬀ") < heads.index("\U0001f600"), "UTF-16 order would invert these"
+
+
+def test_data_version_hasher_matches_reference_identity(edge_db: Path) -> None:
+    conn = open_readonly_db(edge_db)
+    try:
+        records = _ref_load_entry_records(conn, {})
+        articles, aliases = _ref_load_search_rows(conn)
+    finally:
+        conn.close()
+    deck_index = {"levels": {"B1": {"deckVersion": "d2"}, "A1": {"deckVersion": "d1"}}}
+    kwargs = {
+        "generated_at": "2026-01-02T03:04:05+00:00", "article_rows": articles,
+        "alias_rows": aliases, "deck_index": deck_index,
+    }
+    assert compute_data_version(entry_records=records, **kwargs) == _ref_data_version(
+        entry_records=records, **kwargs
+    )
+    empty = {"generated_at": "g", "article_rows": [], "alias_rows": [], "deck_index": {"levels": {}}}
+    assert compute_data_version(entry_records=[], **empty) == _ref_data_version(entry_records=[], **empty)
+
+
+@pytest.mark.parametrize("level", [0, 1, 2, 5, 6, 9])
+def test_stream_compression_matches_one_shot_gzip(level: int) -> None:
+    rng = random.Random(level)
+    text = "".join(rng.choice("абвгдеж abc012,.\n") for _ in range(400_000)).encode("utf-8")
+    for size in (0, 1, 300, 70_000, len(text)):
+        raw = text[:size]
+        expected = gzip_bytes(raw, compression_level=level)
+        for chunk in (1, 7, 4_096, 65_536 + 3):
+            chunks = [raw[i : i + chunk] for i in range(0, len(raw), chunk)]
+            result = compress_stream_bounded(lambda chunks=chunks: chunks, compression_level=level, max_bytes=None)
+            assert result is not None
+            assert result.compressed == expected
+            assert result.uncompressed_bytes == len(raw)
+            assert result.json_sha256 == hashlib.sha256(raw).hexdigest()
+            assert gzip.decompress(result.compressed) == raw
+        # Exact cap boundary: fits at len, aborts at len - 1.
+        chunks = [raw[i : i + 999] for i in range(0, len(raw), 999)]
+        source = lambda chunks=chunks: chunks  # noqa: E731
+        assert compress_stream_bounded(source, compression_level=level, max_bytes=len(expected)) is not None
+        assert compress_stream_bounded(source, compression_level=level, max_bytes=len(expected) - 1) is None
+
+
+def test_stream_compression_aborts_before_consuming_source() -> None:
+    pulled = 0
+
+    def source():
+        nonlocal pulled
+        rng = random.Random(1)
+        while True:
+            pulled += 1
+            yield bytes(rng.getrandbits(8) for _ in range(4_096))
+
+    for level in (0, 1, 9):
+        pulled = 0
+        assert compress_stream_bounded(source, compression_level=level, max_bytes=20_000) is None
+        assert pulled < 20, "an oversized candidate must stop the replay early"
+
+
+def test_oversized_entry_leaf_matches_reference_error(edge_db: Path, tmp_path: Path) -> None:
+    with pytest.raises(ExportError) as expected:
+        _reference_export(edge_db, compression_level=9, entry_max=300, search_max=524_288)
+    with pytest.raises(ExportError) as actual:
+        _export(edge_db, tmp_path / "out", entry_max_gzip_bytes=300)
+    assert str(actual.value) == str(expected.value)
+    assert "single entry record exceeds" in str(actual.value)
+    assert not (tmp_path / "out" / "atlas" / "current.json").exists()
+
+
+def test_unsplittable_search_shard_matches_reference_error(edge_db: Path, tmp_path: Path) -> None:
+    with pytest.raises(ExportError) as expected:
+        _reference_export(edge_db, compression_level=9, entry_max=1_048_576, search_max=150)
+    with pytest.raises(ExportError) as actual:
+        _export(edge_db, tmp_path / "out", search_max_gzip_bytes=150)
+    assert str(actual.value) == str(expected.value)
+    assert "cannot split" in str(actual.value)
+
+
+def test_failed_first_export_publishes_nothing(edge_db: Path, tmp_path: Path, monkeypatch) -> None:
+    def boom(*_args, **_kwargs):
+        raise RuntimeError("injected")
+
+    monkeypatch.setattr(exporter, "verify_tree", boom)
+    out = tmp_path / "out"
+    with pytest.raises(RuntimeError, match="injected"):
+        _export(edge_db, out)
+    assert not (out / "atlas" / "current.json").exists()
+    assert _snapshot(out) == {}, "no staged objects may remain"
+
+
+class _Injected(RuntimeError):
+    pass
+
+
+def _fail_after_writes(monkeypatch, count: int) -> None:
+    """Fail the staged object write after ``count`` (``open`` backs every staged object)."""
+    real_open = exporter.StagedVersion.open
+    seen = {"writes": 0}
+
+    def open_object(self, relative: str):
+        seen["writes"] += 1
+        if seen["writes"] > count:
+            raise _Injected(f"write #{seen['writes']} {relative}")
+        return real_open(self, relative)
+
+    monkeypatch.setattr(exporter.StagedVersion, "open", open_object)
+
+
+# Stages that fail before/around installing: an identical re-export reuses the installed
+# tree (no rename), a changed-limits re-export must install an alternate tree.
+_REEXPORT_STAGES = [
+    "first-leaf", "mid-export", "manifest", "verify", "pointer",
+    "swap-transport", "pointer-transport",
+]
+
+
+@pytest.mark.parametrize("stage", _REEXPORT_STAGES)
+def test_failed_reexport_keeps_current_pointer_and_referenced_tree_byte_identical(
+    edge_db: Path, tmp_path: Path, monkeypatch, stage: str
+) -> None:
+    out = tmp_path / "out"
+    kwargs = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
+    report = _export(edge_db, out, **kwargs)
+    before = _snapshot(out)
+    current = json.loads(before["atlas/current.json"])
+    assert current["dataVersion"] == report["dataVersion"]  # re-export targets the referenced version
+    total_objects = sum(1 for name in before if name.startswith(f"atlas/versions/{report['dataVersion']}/"))
+    transport = stage.endswith("-transport")
+    reexport = {**kwargs, "compression_level": 6} if transport else kwargs
+
+    real_rename, real_replace = os.rename, os.replace
+    if stage == "first-leaf":
+        _fail_after_writes(monkeypatch, 0)
+    elif stage == "mid-export":
+        _fail_after_writes(monkeypatch, total_objects // 2)
+    elif stage == "manifest":
+        _fail_after_writes(monkeypatch, total_objects - 1)
+    elif stage == "verify":
+        monkeypatch.setattr(exporter, "verify_tree", lambda *a, **k: (_ for _ in ()).throw(_Injected("verify")))
+    elif stage == "swap-transport":
+        def rename(src, dst, *a, **k):
+            if Path(src).name.startswith(".export-"):
+                raise _Injected("swap")
+            return real_rename(src, dst, *a, **k)
+
+        monkeypatch.setattr(exporter.os, "rename", rename)
+    else:
+        def replace(src, dst, *a, **k):
+            if Path(dst).name == "current.json":
+                raise _Injected("pointer")
+            return real_replace(src, dst, *a, **k)
+
+        monkeypatch.setattr(exporter.os, "replace", replace)
+
+    with pytest.raises(_Injected):
+        _export(edge_db, out, **reexport)
+    monkeypatch.undo()
+    after = _snapshot(out)
+    # The pointer and every previously installed object are byte-identical; the only
+    # thing a failure may leave is a complete, unreferenced alternate tree.
+    assert {name: blob for name, blob in after.items() if name in before} == before
+    assert all(
+        name.startswith(f"atlas/versions/{report['dataVersion']}-transport-") for name in after.keys() - before.keys()
+    )
+    if stage != "pointer-transport":
+        assert after.keys() == before.keys()
+    assert verify_tree(out, "atlas")["dataVersion"] == report["dataVersion"]
+    assert _snapshot(out) == after
+
+    # And a subsequent healthy re-export still succeeds and the referenced tree is intact.
+    _export(edge_db, out, **reexport)
+    healed = _snapshot(out)
+    assert {name: blob for name, blob in healed.items() if name in before and name != "atlas/current.json"} == {
+        name: blob for name, blob in before.items() if name != "atlas/current.json"
+    }
+    assert verify_tree(out, "atlas")["dataVersion"] == report["dataVersion"]
+    if not transport:
+        assert healed == before
+
+
+def test_stale_staging_from_killed_export_is_reclaimed(edge_db: Path, tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    versions = out / "atlas" / "versions"
+    dead = versions / ".export-999999999-deadbeef"
+    dead.mkdir(parents=True)
+    (dead / "orphan.bin").write_bytes(b"x")
+    alive = versions / f".export-{os.getpid()}-cafebabe"
+    alive.mkdir()
+    _export(edge_db, out)
+    assert not dead.exists()
+    assert alive.exists(), "another live exporter's staging tree must not be touched"
+
+
+def test_export_memory_is_bounded_by_leaf_not_corpus(tmp_path: Path) -> None:
+    """Peak Python heap stays a small fraction of the payload volume being exported."""
+    db = _make_source_db(tmp_path / "big.db", records=240, filler_chars=60_000, seed=5)
+    payload_bytes = sum(
+        len(row[0]) for row in sqlite3.connect(db).execute("SELECT payload_json FROM article_payloads")
+    )
+    assert payload_bytes > 14_000_000
+    tracemalloc.start()
+    try:
+        _export(db, tmp_path / "out", compression_level=1, entry_max_gzip_bytes=150_000)
+        _, peak = tracemalloc.get_traced_memory()
+    finally:
+        tracemalloc.stop()
+    assert peak < payload_bytes * 0.25, f"peak {peak} vs payload {payload_bytes}"
+
+
+# ---------------------------------------------------------------------------
+# Published trees are immutable; the pointer is switched last (review of #8672).
+# ---------------------------------------------------------------------------
+
+
+def _pointer(out: Path) -> dict:
+    return json.loads((out / "atlas" / "current.json").read_text(encoding="utf-8"))
+
+
+def _pointed_manifest(out: Path) -> Path:
+    return out / "atlas" / _pointer(out)["manifestUrl"]
+
+
+def _version_dirs(out: Path) -> list[str]:
+    return sorted(p.name for p in (out / "atlas" / "versions").iterdir() if not p.name.startswith("."))
+
+
+def test_identical_reexport_reuses_installed_tree_untouched(edge_db: Path, tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    report = _export(edge_db, out)
+    tree = out / "atlas" / "versions" / report["dataVersion"]
+    before, stat = _snapshot(out), tree.stat()
+    again = _export(edge_db, out)
+    assert _snapshot(out) == before
+    assert tree.stat().st_ino == stat.st_ino and tree.stat().st_mtime_ns == stat.st_mtime_ns
+    assert _version_dirs(out) == [report["dataVersion"]]
+    assert report["manifestUrl"] == again["manifestUrl"] == f"versions/{report['dataVersion']}/manifest.json"
+
+
+_CHANGED_LIMITS = [
+    {"compression_level": 6},
+    {"entry_max_gzip_bytes": 6_000},
+    {"search_max_gzip_bytes": 700},
+    {"entry_target_min_gzip_bytes": 1_000},
+]
+
+
+@pytest.mark.parametrize("changed", _CHANGED_LIMITS, ids=lambda item: next(iter(item)))
+def test_changed_limits_keep_every_old_url_and_publish_alternate_tree(
+    edge_db: Path, tmp_path: Path, changed: dict
+) -> None:
+    out = tmp_path / "out"
+    base = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
+    first = _export(edge_db, out, **base)
+    old_manifest = _pointed_manifest(out)
+    before = _snapshot(out)
+
+    second = _export(edge_db, out, **{**base, **changed})
+
+    assert second["dataVersion"] == first["dataVersion"]  # same data, different transport bytes
+    after = _snapshot(out)
+    assert {name: blob for name, blob in after.items() if name in before and name != "atlas/current.json"} == {
+        name: blob for name, blob in before.items() if name != "atlas/current.json"
+    }, "no previously published URL may change or disappear"
+    new_root = _pointed_manifest(out).parent
+    assert new_root.name == f"{first['dataVersion']}-transport-{exporter._tree_digest(new_root)}"
+    assert second["manifestUrl"] == _pointer(out)["manifestUrl"] == f"versions/{new_root.name}/manifest.json"
+    assert verify_tree(out, "atlas")["dataVersion"] == first["dataVersion"]
+    # An old-manifest reader stays valid after the pointer switched.
+    assert old_manifest.is_file()
+    assert verify_tree(out, "atlas", manifest_path=old_manifest)["dataVersion"] == first["dataVersion"]
+
+    # Repeating the changed export reuses the alternate tree; the original limits point back home.
+    settled = _snapshot(out)
+    _export(edge_db, out, **{**base, **changed})
+    assert _snapshot(out) == settled
+    _export(edge_db, out, **base)
+    assert _pointer(out)["manifestUrl"] == first["manifestUrl"]
+    assert len(_version_dirs(out)) == 2
+
+
+_KILL_SCRIPT = """
+import json, os, signal, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from scripts.atlas import export_runtime_shards as ex
+point, db, out, kwargs = sys.argv[2], Path(sys.argv[3]), Path(sys.argv[4]), json.loads(sys.argv[5])
+real_rename, real_replace = os.rename, os.replace
+def die():
+    os.kill(os.getpid(), signal.SIGKILL)
+def rename(src, dst, *a, **k):
+    if not Path(src).name.startswith(".export-"):
+        return real_rename(src, dst, *a, **k)
+    if point == "before-install":
+        die()
+    real_rename(src, dst, *a, **k)
+    if point == "after-install":
+        die()
+def replace(src, dst, *a, **k):
+    if Path(dst).name != "current.json":
+        return real_replace(src, dst, *a, **k)
+    if point == "before-pointer":
+        die()
+    real_replace(src, dst, *a, **k)
+    if point == "after-pointer":
+        die()
+os.rename, os.replace = rename, replace
+ex.export_runtime_shards(db_path=db, out_dir=out, include_decks=False, deck_dir=None, verify=True, **kwargs)
+"""
+
+_KILL_POINTS = ["before-install", "after-install", "before-pointer", "after-pointer"]
+
+
+def _run_killed(edge_db: Path, out: Path, point: str, **kwargs) -> None:
+    result = subprocess.run(
+        [sys.executable, "-c", _KILL_SCRIPT, str(ROOT), point, str(edge_db), str(out), json.dumps(kwargs)],
+        cwd=ROOT, capture_output=True, text=True, check=False, timeout=120,
+    )
+    assert result.returncode == -signal.SIGKILL, (point, result.returncode, result.stderr)
+
+
+@pytest.mark.parametrize(
+    ("point", "changed"),
+    # An identical re-export installs nothing (it reuses the tree), so only its pointer switch can be killed.
+    [(point, True) for point in _KILL_POINTS] + [("before-pointer", False), ("after-pointer", False)],
+)
+def test_sigkill_during_publication_always_leaves_pointer_to_complete_tree(
+    edge_db: Path, tmp_path: Path, point: str, changed: bool
+) -> None:
+    out = tmp_path / "out"
+    base = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
+    first = _export(edge_db, out, **base)
+    old_pointer = (out / "atlas" / "current.json").read_bytes()
+    old_manifest = _pointed_manifest(out)
+    old_tree = _snapshot(old_manifest.parent)
+
+    _run_killed(edge_db, out, point, **({**base, "compression_level": 6} if changed else base))
+
+    assert _snapshot(old_manifest.parent) == old_tree, "the published tree is never touched"
+    result = verify_tree(out, "atlas")  # pointer resolves to a complete, verifying tree
+    assert result["dataVersion"] == first["dataVersion"]
+    if point != "after-pointer" or not changed:
+        assert (out / "atlas" / "current.json").read_bytes() == old_pointer
+    else:
+        assert _pointed_manifest(out).parent.name.startswith(f"{first['dataVersion']}-transport-")
+    assert verify_tree(out, "atlas", manifest_path=old_manifest)["dataVersion"] == first["dataVersion"]
+
+    # The next healthy run cleans the dead staging tree and converges.
+    _export(edge_db, out, **({**base, "compression_level": 6} if changed else base))
+    assert not [name for name in os.listdir(out / "atlas" / "versions") if name.startswith(".export-")]
+    assert not list((out / "atlas").glob(".current-*"))
+    assert verify_tree(out, "atlas")["dataVersion"] == first["dataVersion"]
+
+
+@pytest.mark.parametrize("point", _KILL_POINTS)
+def test_sigkill_during_first_export_never_publishes_a_dangling_pointer(
+    edge_db: Path, tmp_path: Path, point: str
+) -> None:
+    out = tmp_path / "out"
+    _run_killed(edge_db, out, point)
+    pointer = out / "atlas" / "current.json"
+    if point == "after-pointer":
+        assert verify_tree(out, "atlas")["publicRoutes"] > 0
+    else:
+        assert not pointer.exists()
+    report = _export(edge_db, out)
+    assert verify_tree(out, "atlas")["dataVersion"] == report["dataVersion"]
+
+
+def _synthetic_stage(base: Path, data_version: str, files: dict[str, bytes]) -> StagedVersion:
+    stage = StagedVersion(base, data_version)
+    for relative, data in files.items():
+        stage.write(relative, data)
+    return stage
+
+
+def _publish_synthetic(base: Path, data_version: str, files: dict[str, bytes]) -> str:
+    stage = _synthetic_stage(base, data_version, files)
+    try:
+        return stage.install()
+    finally:
+        stage.discard()
+
+
+_TREE_A = {"manifest.json": b"{}\n", "entries/p0.json.gz": b"a" * 100}
+_TREE_B = {"manifest.json": b"{}\n", "entries/p0.json.gz": b"b" * 100}
+
+
+def test_install_reuses_identical_and_never_overwrites_different(tmp_path: Path) -> None:
+    base = tmp_path / "atlas"
+    assert _publish_synthetic(base, "atlas-v1-x", _TREE_A) == "atlas-v1-x"
+    canonical = base / "versions" / "atlas-v1-x"
+    inode = canonical.stat().st_ino
+    assert _publish_synthetic(base, "atlas-v1-x", _TREE_A) == "atlas-v1-x"
+    assert canonical.stat().st_ino == inode
+
+    digest = exporter._tree_digest(_synthetic_stage(base, "atlas-v1-x", _TREE_B).root)
+    name = _publish_synthetic(base, "atlas-v1-x", _TREE_B)
+    assert name == f"atlas-v1-x-transport-{digest}"
+    assert _snapshot(canonical) == _TREE_A
+    assert _publish_synthetic(base, "atlas-v1-x", _TREE_B) == name  # identical suffix is reused
+    assert _version_dirs(tmp_path) == sorted(["atlas-v1-x", name])
+
+
+def test_transport_collision_with_different_bytes_fails_closed(tmp_path: Path) -> None:
+    base = tmp_path / "atlas"
+    _publish_synthetic(base, "atlas-v1-x", _TREE_A)
+    probe = _synthetic_stage(base, "atlas-v1-x", _TREE_B)
+    squatter = base / "versions" / f"atlas-v1-x-transport-{exporter._tree_digest(probe.root)}"
+    probe.discard()
+    squatter.mkdir()
+    (squatter / "manifest.json").write_bytes(b"squatter")
+    with pytest.raises(ExportError, match="refusing to overwrite"):
+        _publish_synthetic(base, "atlas-v1-x", _TREE_B)
+    assert _snapshot(squatter) == {"manifest.json": b"squatter"}
+    assert _snapshot(base / "versions" / "atlas-v1-x") == _TREE_A
+
+
+@pytest.mark.parametrize("winner", ["identical", "different"])
+def test_concurrent_destination_creation_never_overwrites_the_winner(
+    tmp_path: Path, monkeypatch, winner: str
+) -> None:
+    base = tmp_path / "atlas"
+    loser = _synthetic_stage(base, "atlas-v1-x", _TREE_A)
+    rival = _synthetic_stage(base, "atlas-v1-x", _TREE_A if winner == "identical" else _TREE_B)
+    real_rename = os.rename
+    state = {"raced": False}
+
+    def rename(src, dst, *a, **k):
+        if Path(src) == loser.root and not state["raced"]:
+            state["raced"] = True  # the rival lands on the canonical destination first
+            real_rename(rival.root, Path(dst))
+        return real_rename(src, dst, *a, **k)
+
+    monkeypatch.setattr(exporter.os, "rename", rename)
+    name = loser.install()
+    loser.discard()
+    monkeypatch.undo()
+    canonical = base / "versions" / "atlas-v1-x"
+    assert _snapshot(canonical) == (_TREE_A if winner == "identical" else _TREE_B)
+    if winner == "identical":
+        assert name == "atlas-v1-x"
+        assert _version_dirs(tmp_path) == ["atlas-v1-x"]
+    else:
+        assert name.startswith("atlas-v1-x-transport-")
+        assert _snapshot(base / "versions" / name) == _TREE_A
+
+
+def test_concurrent_publishers_do_not_overwrite_each_other(tmp_path: Path) -> None:
+    base = tmp_path / "atlas"
+    trees = [_TREE_A, _TREE_B] * 3
+    barrier = threading.Barrier(len(trees))
+    outcomes: list[tuple[dict[str, bytes], str]] = []
+    errors: list[BaseException] = []
+
+    def worker(files: dict[str, bytes]) -> None:
+        try:
+            stage = _synthetic_stage(base, "atlas-v1-x", files)
+            barrier.wait(timeout=30)
+            try:
+                publication = stage.publish(lambda url: json.dumps({"manifestUrl": url}).encode())
+                assert publication.durable
+                outcomes.append((files, publication.manifest_url))
+            finally:
+                stage.discard()
+        except BaseException as exc:
+            errors.append(exc)
+
+    threads = [threading.Thread(target=worker, args=(files,)) for files in trees]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=60)
+    assert not errors, errors
+    assert len(outcomes) == len(trees)
+    for files, manifest_url in outcomes:
+        assert _snapshot((base / manifest_url).parent) == files
+    installed = _version_dirs(tmp_path)
+    assert len(installed) == 2 and "atlas-v1-x" in installed
+    assert (base / json.loads((base / "current.json").read_text())["manifestUrl"]).is_file()
+
+
+def _fsync_target(fd: int, base: Path) -> str:
+    """Which publication step an ``os.fsync`` belongs to: the only file synced is the pending pointer."""
+    status = os.fstat(fd)
+    if not stat.S_ISDIR(status.st_mode):
+        return "pointer-file"
+    if os.path.samestat(status, (base / "versions").stat()):
+        return "versions-dir"
+    return "base-dir" if os.path.samestat(status, base.stat()) else "other"
+
+
+_FSYNC_STEPS = ["versions-dir", "pointer-file", "base-dir"]  # install, pending pointer, then (after the rename) its dir
+
+
+@pytest.mark.parametrize("point", _FSYNC_STEPS)
+def test_fsync_failure_fails_export_only_before_the_pointer_replacement(
+    edge_db: Path, tmp_path: Path, monkeypatch, point: str
+) -> None:
+    """Before ``os.replace(pending, current.json)`` a failed fsync is a failed export (pointer untouched).
+
+    After it the export is published: readers already resolve the new pointer, so
+    reporting failure would misclassify it, and restoring the old pointer could
+    clobber a concurrent publisher. The export succeeds and its report says the
+    pointer's durability is unconfirmed.
+    """
+    out = tmp_path / "out"
+    atlas = out / "atlas"
+    kwargs = {"entry_max_gzip_bytes": 9_000, "search_max_gzip_bytes": 1_200}
+    first = _export(edge_db, out, **kwargs)
+    assert "publication" not in first, "a durable publication reports exactly as before"
+    before = _snapshot(out)
+    synced: list[str] = []
+    real_fsync = os.fsync
+
+    def fsync(fd: int) -> None:
+        synced.append(_fsync_target(fd, atlas))
+        if synced[-1] == point:
+            raise OSError(errno.EIO, f"injected {point}")
+        real_fsync(fd)
+
+    monkeypatch.setattr(exporter.os, "fsync", fsync)
+    if point == "base-dir":
+        report = _export(edge_db, out, **kwargs, compression_level=6)
+    else:
+        with pytest.raises(OSError, match=f"injected {point}"):
+            _export(edge_db, out, **kwargs, compression_level=6)
+    monkeypatch.undo()
+    assert synced == _FSYNC_STEPS[: _FSYNC_STEPS.index(point) + 1]
+
+    after = _snapshot(out)
+    unchanged = {name: blob for name, blob in before.items() if name != "atlas/current.json"}
+    assert {name: blob for name, blob in after.items() if name in unchanged} == unchanged, "every old URL stays"
+    assert all(
+        name.startswith(f"atlas/versions/{first['dataVersion']}-transport-")
+        for name in after.keys() - before.keys()
+    )
+    assert not list(atlas.glob(".current-*")) and not list((atlas / "versions").glob(".export-*"))
+    if point == "base-dir":
+        assert report["publication"] == {
+            "committed": True, "durable": False, "error": f"fsync of {atlas} failed: [Errno 5] injected base-dir",
+        }
+        assert _pointer(out)["manifestUrl"] == report["manifestUrl"] != json.loads(before["atlas/current.json"])[
+            "manifestUrl"
+        ]
+    else:
+        assert after["atlas/current.json"] == before["atlas/current.json"]
+    assert verify_tree(out, "atlas")["dataVersion"] == first["dataVersion"]
+
+
+@pytest.mark.parametrize("point", ["pointer-file", "base-dir"])
+def test_failure_around_the_commit_never_moves_a_concurrent_publishers_pointer(
+    tmp_path: Path, monkeypatch, point: str
+) -> None:
+    """A rival publishes completely inside the failing fsync; the failing publisher never touches its pointer."""
+    base = tmp_path / "atlas"
+    publisher = _synthetic_stage(base, "atlas-v1-x", _TREE_A)
+    rival = _synthetic_stage(base, "atlas-v1-y", _TREE_B)
+    real_fsync = os.fsync
+    raced: list[exporter.Publication] = []
+
+    def build_current(url: str) -> bytes:
+        return json.dumps({"manifestUrl": url}).encode()
+
+    def fsync(fd: int) -> None:
+        if not raced and _fsync_target(fd, base) == point:
+            raced.append(None)  # type: ignore[arg-type]  # the rival's own fsyncs pass through
+            raced[0] = rival.publish(build_current)
+            raise OSError(errno.EIO, "injected")
+        real_fsync(fd)
+
+    monkeypatch.setattr(exporter.os, "fsync", fsync)
+    try:
+        if point == "pointer-file":
+            with pytest.raises(OSError, match="injected"):
+                publisher.publish(build_current)
+        else:
+            publication = publisher.publish(build_current)
+            assert publication.manifest_url == "versions/atlas-v1-x/manifest.json"
+            assert not publication.durable and "injected" in str(publication.durability_error)
+    finally:
+        monkeypatch.undo()
+        publisher.discard()
+        rival.discard()
+    assert raced[0].durable and raced[0].manifest_url == "versions/atlas-v1-y/manifest.json"
+    assert json.loads((base / "current.json").read_text()) == {"manifestUrl": raced[0].manifest_url}
+    assert _snapshot(base / "versions" / "atlas-v1-x") == _TREE_A
+    assert _snapshot(base / "versions" / "atlas-v1-y") == _TREE_B
+    assert not list(base.glob(".current-*"))
+
+
+def test_cli_reports_unconfirmed_pointer_durability_without_failing(
+    edge_db: Path, tmp_path: Path, monkeypatch, capsys
+) -> None:
+    out = tmp_path / "out"
+    real_fsync_dir = exporter._fsync_dir
+
+    def fsync_dir(path: Path) -> None:
+        if path == out / "atlas":
+            raise OSError(errno.EIO, "injected")
+        real_fsync_dir(path)
+
+    monkeypatch.setattr(exporter, "_fsync_dir", fsync_dir)
+    argv = ["--db", str(edge_db), "--out-dir", str(out), "--no-decks", "--verify"]
+    assert exporter.main(argv) == 0
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
+    assert report["publication"]["committed"] is True and report["publication"]["durable"] is False
+    assert captured.err.startswith(f"warning: published {report['manifestUrl']}, but its durability is unconfirmed")
+    assert _pointer(out)["manifestUrl"] == report["manifestUrl"]
+
+
+def test_concurrent_full_exports_with_different_limits_all_stay_valid(edge_db: Path, tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    variants = [{"compression_level": 9}, {"compression_level": 6}] * 2
+    errors: list[BaseException] = []
+
+    def worker(kwargs: dict) -> None:
+        try:
+            _export(edge_db, out, **kwargs)
+        except BaseException as exc:
+            errors.append(exc)
+
+    threads = [threading.Thread(target=worker, args=(kwargs,)) for kwargs in variants]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=110)
+    assert not errors, errors
+    dirs = _version_dirs(out)
+    assert len(dirs) == 2
+    for name in dirs:
+        assert verify_tree(out, "atlas", manifest_path=out / "atlas" / "versions" / name / "manifest.json")
+    assert verify_tree(out, "atlas")["dataVersion"]
+
+
+def test_stale_pending_pointer_from_killed_export_is_reclaimed(edge_db: Path, tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    base = out / "atlas"
+    base.mkdir(parents=True)
+    dead = base / ".current-999999999-deadbeef.json"
+    dead.write_bytes(b"{}")
+    alive = base / f".current-{os.getpid()}-cafebabe.json"
+    alive.write_bytes(b"{}")
+    _export(edge_db, out)
+    assert not dead.exists()
+    assert alive.exists()
+
+
+# ---------------------------------------------------------------------------
+# Search rows are replayed from the read snapshot, never retained as bodies.
+# ---------------------------------------------------------------------------
+
+
+def _build_indexes(conn: sqlite3.Connection) -> tuple[SearchFamilyIndex, SearchFamilyIndex]:
+    articles = SearchFamilyIndex.build(
+        ((row["s"], row) for row in exporter._iter_article_search_rows(conn)),
+        sort_key=exporter._article_sort_key,
+        key_fn=exporter._article_index_keys,
+        replay=lambda slug: exporter._replay_article_search_row(conn, slug),
+    )
+    aliases = SearchFamilyIndex.build(
+        exporter._iter_located_alias_search_rows(conn),
+        sort_key=exporter._alias_sort_key,
+        key_fn=exporter._alias_index_keys,
+        replay=lambda rowid: exporter._replay_alias_search_row(conn, rowid),
+    )
+    return articles, aliases
+
+
+def test_replayed_search_fragments_match_reference_rows_and_order(edge_db: Path, fixture_db: Path) -> None:
+    for db in (edge_db, fixture_db):
+        conn = open_readonly_db(db)
+        try:
+            conn.execute("BEGIN")
+            articles, aliases = _build_indexes(conn)
+            ref_articles, ref_aliases = _ref_load_search_rows(conn)
+            assert list(articles.iter_fragments()) == [exporter._fragment_bytes(row) for row in ref_articles]
+            assert list(aliases.iter_fragments()) == [exporter._fragment_bytes(row) for row in ref_aliases]
+            assert not hasattr(articles, "fragments") and not hasattr(aliases, "fragments")
+        finally:
+            conn.close()
+
+
+def test_search_index_memory_follows_key_metadata_not_gloss_bodies(tmp_path: Path) -> None:
+    retained: dict[int, int] = {}
+    bodies: dict[int, int] = {}
+    for gloss_chars in (60, 20_000):
+        db = _make_source_db(tmp_path / f"g{gloss_chars}.db", records=700, filler_chars=1, gloss_chars=gloss_chars)
+        conn = open_readonly_db(db)
+        try:
+            conn.execute("BEGIN")
+            bodies[gloss_chars] = sum(len(r[0] or "") for r in conn.execute("SELECT gloss FROM articles"))
+            gc.collect()
+            tracemalloc.start()
+            try:
+                before = tracemalloc.get_traced_memory()[0]
+                articles, aliases = _build_indexes(conn)
+                gc.collect()
+                retained[gloss_chars] = tracemalloc.get_traced_memory()[0] - before
+                assert len(articles) > 600 and len(aliases) > 600
+            finally:
+                tracemalloc.stop()
+            del articles, aliases
+        finally:
+            conn.close()
+    assert bodies[20_000] > 10_000_000
+    assert retained[20_000] < retained[60] * 1.25, retained
+    assert retained[20_000] < bodies[20_000] * 0.25, (retained, bodies)
+
+
+def test_export_memory_does_not_grow_with_gloss_bodies(tmp_path: Path) -> None:
+    db = _make_source_db(tmp_path / "gloss.db", records=700, filler_chars=1, gloss_chars=20_000)
+    glosses = sum(len(r[0] or "") for r in sqlite3.connect(db).execute("SELECT gloss FROM articles"))
+    assert glosses > 10_000_000
+    tracemalloc.start()
+    try:
+        export_runtime_shards(
+            db_path=db, out_dir=tmp_path / "out", include_decks=False, deck_dir=None, compression_level=1,
+            verify=True,
+        )
+        _, peak = tracemalloc.get_traced_memory()
+    finally:
+        tracemalloc.stop()
+    assert peak < glosses * 0.25, f"peak {peak} vs gloss bodies {glosses}"
+
+
+# ---------------------------------------------------------------------------
+# Uncapped work streams: an oversized unsplittable bucket is only *counted* and a
+# terminal shard (historically exempt from the cap) is gzip-streamed to its file;
+# neither is serialized or compressed into memory (review of #8672, P1).
+# ---------------------------------------------------------------------------
+
+_SHARED_KEY_CAP = 16_384
+_KEYLESS_GLOSS_CHARS = "!#$%&()*+,-./:;<=>?@[]^{|}~"  # no TOKEN_RE word chars: adds no index key
+
+
+def _shared_key_alias_index(rows: int, *, terminal: bool) -> tuple[SearchFamilyIndex, list[dict]]:
+    """``rows`` long alias rows all keyed ``a`` (plus one ``ab`` row when ``terminal``)."""
+
+    def row(position: int) -> dict:
+        rng = random.Random(position)
+        return {
+            "a": "ab" if position == rows else "a", "k": "canonical", "s": f"s{position:05d}",
+            "h": "".join(rng.choice("абвгдежзийклмнопрстуфхцчшщьюя") for _ in range(2_000)),
+        }
+
+    index = SearchFamilyIndex.build(
+        ((position, row(position)) for position in range(rows + terminal)),
+        sort_key=exporter._alias_sort_key, key_fn=exporter._alias_index_keys, replay=row,
+    )
+    return index, sorted((row(position) for position in range(rows)), key=exporter._alias_sort_key)
+
+
+def _search_shard_raw(schema: str, prefix: str, records: list[dict], *, terminal: bool) -> bytes:
+    return exporter.canonical_json_bytes(
+        {"schema": schema, "schemaVersion": 1, "dataVersion": "v-test",
+         "prefix": prefix, "terminal": terminal, "records": records}
+    )
+
+
+def _build_aliases_traced(index: SearchFamilyIndex, out: Path, *, level: int) -> tuple[str | None, int]:
+    """(ExportError text or None, traced heap peak) of one search-family build into ``out``."""
+
+    def open_object(relative: str):
+        path = out / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        return path.open("wb")
+
+    exporter.check_stored_gzip_runtime()  # one-time, corpus-independent canary: not the bucket's memory
+    gc.collect()
+    tracemalloc.start()
+    try:
+        try:
+            exporter.build_search_family_shards(
+                index, family="aliases", data_version="v-test", max_gzip_bytes=_SHARED_KEY_CAP,
+                compression_level=level, schema=exporter.SEARCH_ALIAS_SCHEMA, open_object=open_object,
+            )
+            error = None
+        except ExportError as exc:
+            error = str(exc)
+        return error, tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+
+
+@pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
+@pytest.mark.parametrize("level", [0, 1, 6, 9])
+def test_uncapped_search_bucket_is_exact_and_heap_does_not_grow_with_it(
+    tmp_path: Path, level: int, terminal: bool
+) -> None:
+    peaks: dict[int, int] = {}
+    bodies: dict[int, int] = {}
+    for rows in (250, 1_000):
+        index, records = _shared_key_alias_index(rows, terminal=terminal)
+        raw = _search_shard_raw(exporter.SEARCH_ALIAS_SCHEMA, "a", records, terminal=terminal)
+        expected = gzip_bytes(raw, compression_level=level)
+        assert len(expected) > 20 * _SHARED_KEY_CAP
+        out = tmp_path / f"rows{rows}"
+        error, peaks[rows] = _build_aliases_traced(index, out, level=level)
+        bodies[rows] = len(raw)
+        if terminal:
+            assert error is None
+            shard = f"search/aliases/{exporter.search_shard_id('a')}.term.json.gz"
+            assert (out / shard).read_bytes() == expected
+        else:
+            assert error == (
+                f"search aliases shard for prefix='a' exceeds max "
+                f"({len(expected)} > {_SHARED_KEY_CAP}) and cannot split"
+            )
+            assert not out.exists(), "a failing bucket writes nothing"
+    assert bodies[1_000] > 4 * bodies[250] * 0.95
+    assert peaks[1_000] < peaks[250] * 1.25, peaks
+    assert peaks[1_000] < bodies[1_000] * 0.2, (peaks, bodies)
+
+
+def _make_shared_key_db(path: Path, *, rows: int, terminal: bool, gloss_chars: int = 8_000) -> Path:
+    """Reviewer shape: ``rows`` public articles headed ``a`` with long keyless glosses."""
+    conn = sqlite3.connect(path)
+    conn.executescript(_SOURCE_DDL)
+    conn.execute(
+        "INSERT INTO manifest_metadata VALUES ('generated_at', ?)", (json.dumps("2026-01-02T03:04:05+00:00"),)
+    )
+    for position in range(rows + terminal):
+        rng = random.Random(position)
+        slug, head = f"k{position:05d}", "ab" if position == rows else "a"
+        gloss = "".join(rng.choice(_KEYLESS_GLOSS_CHARS) for _ in range(gloss_chars))
+        conn.execute(
+            "INSERT INTO articles VALUES (?,?,?,?,?,?,?,?,?,?,NULL,NULL)",
+            (slug, head, head, "lemma", "noun", gloss, "approved", "public", None, None),
+        )
+        payload = {"url_slug": slug, "lemma": head, "gloss": gloss}
+        conn.execute(
+            "INSERT INTO article_payloads VALUES (?,?,?,?)",
+            (slug, position, json.dumps(payload, ensure_ascii=False), 1),
+        )
+    conn.commit()
+    conn.close()
+    return path
+
+
+def _export_traced(db: Path, out: Path, *, level: int) -> tuple[str | None, int]:
+    """(ExportError text or None, traced heap peak) of one full export *with* ``--verify``."""
+    exporter.check_stored_gzip_runtime()  # one-time, corpus-independent canary
+    gc.collect()
+    tracemalloc.start()
+    try:
+        try:
+            export_runtime_shards(
+                db_path=db, out_dir=out, include_decks=False, deck_dir=None, compression_level=level,
+                entry_max_gzip_bytes=65_536, search_max_gzip_bytes=_SHARED_KEY_CAP, verify=True,
+            )
+            error = None
+        except ExportError as exc:
+            error = str(exc)
+        return error, tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+
+
+def _verify_traced(out: Path) -> int:
+    gc.collect()
+    tracemalloc.start()
+    try:
+        verify_tree(out, "atlas")
+        return tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+
+
+@pytest.mark.parametrize("terminal", [False, True], ids=["unsplittable", "terminal"])
+@pytest.mark.parametrize("level", [0, 9])
+def test_reviewer_long_article_rows_export_matches_reference_in_bounded_heap(
+    tmp_path: Path, level: int, terminal: bool
+) -> None:
+    """Reviewer shape (fixed 8000-char gloss, 250 -> 1000 shared-key rows), export *with* --verify."""
+    peaks: dict[int, int] = {}
+    verify_peaks: dict[int, int] = {}
+    glosses: dict[int, int] = {}
+    for rows in (250, 1_000):
+        db = _make_shared_key_db(tmp_path / f"shared{rows}.db", rows=rows, terminal=terminal)
+        glosses[rows] = sum(len(r[0]) for r in sqlite3.connect(db).execute("SELECT gloss FROM articles"))
+        out = tmp_path / f"out{rows}"
+        error, peaks[rows] = _export_traced(db, out, level=level)
+        if terminal:
+            assert error is None
+            data_version, files, indexes = _reference_export(
+                db, compression_level=level, entry_max=65_536, search_max=_SHARED_KEY_CAP
+            )
+            tree = _snapshot(out / "atlas" / "versions" / data_version)
+            assert {name: blob for name, blob in tree.items() if name != "manifest.json"} == files
+            manifest = json.loads(tree["manifest.json"])
+            assert manifest["search"]["articles"] == indexes["articles"]
+            term = indexes["articles"]["shards"][f"{exporter.search_shard_id('a')}.term"]
+            assert term["count"] == rows and term["bytes"] > 20 * _SHARED_KEY_CAP
+            verify_peaks[rows] = _verify_traced(out)
+        else:
+            with pytest.raises(ExportError) as expected:
+                _reference_export(db, compression_level=level, entry_max=65_536, search_max=_SHARED_KEY_CAP)
+            assert error == str(expected.value)
+            assert "prefix='a'" in error and "cannot split" in error
+            assert not (out / "atlas" / "current.json").exists()
+    assert glosses[1_000] > 7_900_000
+    # Per-row index metadata (locators, sort keys, route digests) may grow; shard
+    # bodies may not: the old exporter's heap grew by the whole bucket, and the old
+    # --verify by the whole inflated terminal shard (twice for entries).
+    assert peaks[1_000] - peaks[250] < (glosses[1_000] - glosses[250]) * 0.25, (peaks, glosses)
+    assert peaks[1_000] < glosses[1_000] * 0.25, (peaks, glosses)
+    if terminal:
+        assert verify_peaks[1_000] < verify_peaks[250] * 1.25 + 1_000_000, verify_peaks
+        assert verify_peaks[1_000] < glosses[1_000] * 0.2, (verify_peaks, glosses)
+
+
+@pytest.mark.parametrize("level", [0, 1, 6, 9])
+def test_gzip_size_and_streamed_sink_match_one_shot_without_retention(level: int) -> None:
+    rng = random.Random(level + 100)
+    raw = "".join(rng.choice("абвгдеж abc012,.\n") for _ in range(300_000)).encode("utf-8")
+    chunks = [raw[i : i + 5_000] for i in range(0, len(raw), 5_000)]
+    expected = gzip_bytes(raw, compression_level=level)
+    assert exporter.gzip_size(lambda: iter(chunks), compression_level=level) == len(expected)
+    pieces: list[bytes] = []
+    result = exporter.stream_gzip(lambda: iter(chunks), compression_level=level, sink=pieces.append)
+    assert b"".join(pieces) == expected
+    assert result == exporter.GzipResult(
+        len(expected), hashlib.sha256(expected).hexdigest(), len(raw), hashlib.sha256(raw).hexdigest()
+    )
+    if level:
+        assert len(pieces) > 2, "levels 1-9 hand compressed pieces over as they are produced"
+
+
+# ---------------------------------------------------------------------------
+# Level 0 is framed from a length-only model of zlib's stored blocks and streamed
+# (review of #8672, P1): byte parity with the one-shot gzip, nothing buffered.
+# ---------------------------------------------------------------------------
+
+_STORED_PATTERN = bytes(range(256)) * (14 * 1024 * 1024 // 256)
+
+
+def _framed(data: bytes) -> bytes:
+    pieces: list[bytes] = []
+    exporter._frame_stored_gzip(lambda: (data,), exporter.stored_block_plan(len(data)), pieces.append)
+    return b"".join(pieces)
+
+
+def test_stored_block_plan_reproduces_observed_one_shot_block_lengths() -> None:
+    """Python 3.12.8 / zlib 1.3.1 one-shot framing observed by the reviewer."""
+    observed = {
+        65_531: [65_531], 65_532: [65_531, 1], 98_304: [65_531, 32_773], 100_000: [65_531, 32_773, 1_696],
+    }
+    for length, blocks in observed.items():
+        assert [size for size, _last in exporter.stored_block_plan(length)] == blocks
+        assert _framed(_STORED_PATTERN[:length]) == gzip_bytes(_STORED_PATTERN[:length], compression_level=0)
+
+
+def _stored_sweep_lengths() -> list[int]:
+    lengths = set(range(0, 64)) | set(range(32_740, 32_790)) | set(range(65_500, 65_560))
+    lengths |= set(range(98_280, 98_330)) | {131_072, 196_608, 262_144}
+    total = 0
+    for block in exporter._OUTPUT_BLOCK_SIZES[:6]:  # framed output crossing each output-buffer growth
+        total += block
+        lengths |= set(range(total - 80, total + 80, 7)) | set(range(total - 40_000, total, 4_999))
+    rng = random.Random(8672)
+    lengths |= {rng.randrange(0, 3_000_000) for _ in range(150)}
+    return sorted(length for length in lengths if 0 <= length <= len(_STORED_PATTERN))
+
+
+def test_level0_framing_matches_one_shot_gzip_at_boundaries_random_and_buffer_growths() -> None:
+    for length in _stored_sweep_lengths():
+        data = _STORED_PATTERN[:length]
+        assert _framed(data) == gzip_bytes(data, compression_level=0), length
+
+
+@pytest.mark.parametrize("chunking", ["bytes", "odd", "block+3", "random"])
+def test_level0_stream_is_chunking_independent_and_exact(chunking: str) -> None:
+    rng = random.Random(chunking)
+    for length in (0, 1, 32_753, 65_532, 100_000, 400_000, 1_500_000):
+        data = _STORED_PATTERN[:length]
+        if chunking == "bytes":
+            data = data[:3_000]
+            sizes = [1] * len(data)
+        elif chunking == "odd":
+            sizes = [7] * (len(data) // 7 + 1)
+        elif chunking == "block+3":
+            sizes = [65_538] * (len(data) // 65_538 + 1)
+        else:
+            sizes = [rng.randrange(0, 90_000) for _ in range(len(data) // 20_000 + 4)] + [len(data)]
+        chunks, position = [], 0
+        for size in sizes:
+            chunks.append(data[position : position + size])
+            position += size
+        expected = gzip_bytes(data, compression_level=0)
+        pieces: list[bytes] = []
+        result = exporter.stream_gzip(lambda chunks=chunks: iter(chunks), compression_level=0, sink=pieces.append)
+        assert b"".join(pieces) == expected
+        assert result == exporter.GzipResult(
+            len(expected), hashlib.sha256(expected).hexdigest(), len(data), hashlib.sha256(data).hexdigest()
+        )
+        assert exporter.gzip_size(lambda chunks=chunks: iter(chunks), compression_level=0) == len(expected)
+        assert max(len(piece) for piece in pieces) <= max(65_535, max(sizes, default=0)), "streamed, not joined"
+
+
+def _model_compressobj_blocks(lengths: list[int]) -> list[tuple[int, int]]:
+    """Drive the model like CPython 3.12.8 ``Compress.compress`` per call, then ``flush()``."""
+    blocks: list[tuple[int, int]] = []
+    model = exporter.StoredDeflateModel(lambda length, last: blocks.append((length, last)))
+    for flush, pieces in ((exporter._Z_NO_FLUSH, lengths), (exporter._Z_FINISH, [0])):
+        for length in pieces:
+            output = exporter.OutputBlocks()
+            model.avail_out, model.avail_in = output.next_block(), length
+            while True:
+                if model.avail_out == 0:
+                    model.avail_out = output.next_block()
+                model.deflate(flush)
+                if model.avail_out != 0:
+                    break
+            assert model.avail_in == 0
+    return blocks
+
+
+def test_stored_model_no_flush_path_matches_real_zlib_streams() -> None:
+    """``Z_NO_FLUSH`` (the path of every UINT_MAX input slice but the last) against live zlib."""
+    rng = random.Random(3)
+    for _ in range(120):
+        total = rng.choice((rng.randrange(0, 200_000), rng.randrange(0, 2_500_000)))
+        cuts = sorted(rng.randrange(0, total + 1) for _ in range(rng.randrange(0, 10)))
+        lengths = [end - start for start, end in zip([0, *cuts], [*cuts, total], strict=True)]
+        compressor = zlib.compressobj(0, zlib.DEFLATED, 31)
+        real, position = b"", 0
+        for length in lengths:
+            real += compressor.compress(_STORED_PATTERN[position : position + length])
+            position += length
+        real += compressor.flush()
+        pieces: list[bytes] = []
+        exporter._frame_stored_gzip(
+            lambda total=total: (_STORED_PATTERN[:total],), _model_compressobj_blocks(lengths), pieces.append
+        )
+        assert b"".join(pieces) == real, lengths
+
+
+def test_stored_block_plan_beyond_uint_max_without_allocating() -> None:
+    """``zlib_compress_impl`` hands zlib ``UINT_MAX`` slices: ``Z_NO_FLUSH`` then ``Z_FINISH``.
+
+    Source-derived: the ``Z_NO_FLUSH`` slice never writes a block shorter than
+    ``min_block`` (32 KiB), so its tail stays in the window and the ``Z_FINISH``
+    slice emits it together with the rest — the >4 GiB plan is the UINT_MAX plan
+    with its final block extended (and split at 65535) by the extra bytes.
+    """
+    uint_max = exporter._UINT_MAX
+    tracemalloc.start()
+    try:
+        base = exporter.stored_block_plan(uint_max)
+        for extra in (1, 12_345, 70_000):
+            plan = exporter.stored_block_plan(uint_max + extra)
+            tail = base[-1][0] + extra
+            expected_tail = [(65_535, 0)] * ((tail - 1) // 65_535) + [((tail - 1) % 65_535 + 1, 1)]
+            assert plan == base[:-1] + expected_tail, extra
+            assert sum(length for length, _last in plan) == uint_max + extra
+        peak = tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+    assert base[:2] == [(65_531, 0), (32_773, 0)] and base[-1][1] == 1
+    assert peak < 64 * 1024 * 1024, "a length-only plan, never the bytes"
+
+
+class _StoredFrameReader:
+    """Stored-block framing of a level-0 gzip stream read incrementally; data bytes are skipped, not kept."""
+
+    def __init__(self) -> None:
+        self.blocks: list[tuple[int, int]] = []
+        self._skip = 10  # gzip header
+        self._header = b""
+
+    def feed(self, data: memoryview) -> None:
+        position = 0
+        while position < len(data) and not (self.blocks and self.blocks[-1][1]):
+            if self._skip:
+                taken = min(self._skip, len(data) - position)
+                self._skip -= taken
+                position += taken
+                continue
+            piece = bytes(data[position : position + 5 - len(self._header)])
+            self._header += piece
+            position += len(piece)
+            if len(self._header) == 5:
+                header = self._header
+                length = header[1] | header[2] << 8
+                assert header[0] >> 1 == 0 and length ^ 0xFFFF == header[3] | header[4] << 8, header
+                self.blocks.append((length, header[0] & 1))
+                self._skip, self._header = length, b""
+
+
+def _system_libz_version() -> str | None:
+    try:
+        libz = ctypes.CDLL("libz.so.1")
+    except OSError:
+        return None
+    libz.zlibVersion.restype = ctypes.c_char_p
+    return libz.zlibVersion().decode()
+
+
+def _resident_memory_bytes() -> int:
+    """Anonymous plus shmem-backed resident memory of this process (``/proc/self/status``)."""
+    fields = dict(line.split(":", 1) for line in Path("/proc/self/status").read_text().splitlines() if ":" in line)
+    return sum(int(fields[name].split()[0]) * 1024 for name in ("RssAnon", "RssShmem"))
+
+
+def _live_zlib_one_shot_blocks(total: int) -> list[tuple[int, int]]:
+    """Stored blocks of the C library driven exactly like CPython 3.12 ``zlib_compress_impl`` (level 0, wbits 31).
+
+    The input is a private anonymous mapping that is only read, so every page
+    stays the shared zero page and is never resident (a shared anonymous mapping,
+    ``mmap``'s default, would be backed by shmem pages as zlib reads it: checked
+    below). One output buffer is reused at every growth, so a >4 GiB input costs
+    256 MiB.
+    """
+    resident_before = _resident_memory_bytes()
+
+    class ZStream(ctypes.Structure):
+        _fields_: ClassVar[list[tuple[str, type]]] = [
+            ("next_in", ctypes.c_void_p), ("avail_in", ctypes.c_uint), ("total_in", ctypes.c_ulong),
+            ("next_out", ctypes.c_void_p), ("avail_out", ctypes.c_uint), ("total_out", ctypes.c_ulong),
+            ("msg", ctypes.c_char_p), ("state", ctypes.c_void_p), ("zalloc", ctypes.c_void_p),
+            ("zfree", ctypes.c_void_p), ("opaque", ctypes.c_void_p), ("data_type", ctypes.c_int),
+            ("adler", ctypes.c_ulong), ("reserved", ctypes.c_ulong),
+        ]
+
+    libz = ctypes.CDLL("libz.so.1")
+    libz.zlibVersion.restype = ctypes.c_char_p
+    libz.deflate.argtypes = [ctypes.POINTER(ZStream), ctypes.c_int]
+    libz.deflateEnd.argtypes = [ctypes.POINTER(ZStream)]
+    stream = ZStream()
+    init = libz.deflateInit2_(ctypes.byref(stream), 0, 8, 31, 8, 0, libz.zlibVersion(), ctypes.sizeof(ZStream))
+    assert init == exporter._Z_OK
+    private = mmap.MAP_PRIVATE | mmap.MAP_ANONYMOUS
+    source = mmap.mmap(-1, max(total, 1), flags=private)
+    output = mmap.mmap(-1, exporter._OUTPUT_BLOCK_SIZES[-1], flags=private)
+    source_start = ctypes.addressof(ctypes.c_char.from_buffer(source))
+    output_start = ctypes.addressof(ctypes.c_char.from_buffer(output))
+    view = memoryview(output)
+    reader = _StoredFrameReader()
+    schedule = exporter.OutputBlocks()
+    try:
+        stream.next_in = source_start
+        stream.next_out, stream.avail_out = output_start, schedule.next_block()
+        produced, remaining = output_start, total
+        while True:
+            stream.avail_in = min(remaining, exporter._UINT_MAX)
+            remaining -= stream.avail_in
+            flush = zlib.Z_FINISH if remaining == 0 else zlib.Z_NO_FLUSH
+            while True:
+                if stream.avail_out == 0:
+                    stream.next_out, stream.avail_out = output_start, schedule.next_block()
+                    produced = output_start
+                status = libz.deflate(ctypes.byref(stream), flush)
+                reader.feed(view[produced - output_start : stream.next_out - output_start])
+                produced = stream.next_out
+                if stream.avail_out != 0:
+                    break
+            assert stream.avail_in == 0
+            if flush == zlib.Z_FINISH:
+                break
+        assert status == exporter._Z_STREAM_END
+        grown = _resident_memory_bytes() - resident_before
+        # Only the (written) output buffer may become resident, never the input.
+        assert grown < exporter._OUTPUT_BLOCK_SIZES[-1] + (32 << 20), f"resident memory grew {grown} bytes"
+    finally:
+        libz.deflateEnd(ctypes.byref(stream))
+        del view
+        source.close()
+        output.close()
+    return reader.blocks
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(
+    _system_libz_version() != zlib.ZLIB_RUNTIME_VERSION, reason="system libz.so.1 is not this runtime's zlib"
+)
+def test_stored_block_plan_matches_live_zlib_beyond_uint_max() -> None:
+    """The length-only plan against the live library past ``UINT_MAX`` (two input slices)."""
+    one_shot = _StoredFrameReader()
+    one_shot.feed(memoryview(gzip_bytes(bytes(3_000_000), compression_level=0)))
+    assert _live_zlib_one_shot_blocks(3_000_000) == one_shot.blocks  # the driver is CPython's one-shot path
+    for total in (exporter._UINT_MAX + 1, exporter._UINT_MAX + 70_000):
+        assert _live_zlib_one_shot_blocks(total) == exporter.stored_block_plan(total), total
+
+
+def test_stored_planner_canary_fails_closed_on_runtime_disagreement(
+    edge_db: Path, tmp_path: Path, monkeypatch
+) -> None:
+    exporter.check_stored_gzip_runtime()
+    monkeypatch.setattr(exporter, "_stored_canary_passed", False)
+    # A runtime whose output buffer grows differently frames stored blocks differently.
+    monkeypatch.setattr(exporter, "_OUTPUT_BLOCK_SIZES", (16 * 1024, *exporter._OUTPUT_BLOCK_SIZES[1:]))
+    with pytest.raises(ExportError, match="planner disagrees with this runtime"):
+        exporter.check_stored_gzip_runtime()
+    with pytest.raises(ExportError, match="planner disagrees"):
+        exporter.stream_gzip(lambda: (b"x",), compression_level=0, sink=lambda _piece: None)
+    with pytest.raises(ExportError, match="planner disagrees"):
+        _export(edge_db, tmp_path / "out", compression_level=0)
+    assert not (tmp_path / "out" / "atlas" / "current.json").exists()
+    assert exporter._stored_canary_passed is False
+
+
+def test_level0_replay_that_drifts_between_passes_fails_closed() -> None:
+    calls = {"n": 0}
+
+    def drifting():
+        calls["n"] += 1
+        return (b"a" * 70_000,) if calls["n"] == 1 else (b"b" * 70_000,)
+
+    with pytest.raises(ExportError, match="replay differs"):
+        exporter.stream_gzip(drifting, compression_level=0, sink=lambda _piece: None)
+    calls["n"] = 0
+
+    def growing():
+        calls["n"] += 1
+        return (b"a" * (70_000 + calls["n"]),)
+
+    with pytest.raises(ExportError, match="more bytes than planned"):
+        exporter.stream_gzip(growing, compression_level=0, sink=lambda _piece: None)
+
+
+@pytest.mark.parametrize("level", [0, 1, 6, 9])
+def test_oversized_entry_leaf_error_matches_reference_at_every_level(
+    edge_db: Path, tmp_path: Path, level: int
+) -> None:
+    with pytest.raises(ExportError) as expected:
+        _reference_export(edge_db, compression_level=level, entry_max=300, search_max=524_288)
+    with pytest.raises(ExportError) as actual:
+        _export(edge_db, tmp_path / "out", compression_level=level, entry_max_gzip_bytes=300)
+    assert str(actual.value) == str(expected.value)
+    assert "single entry record exceeds" in str(actual.value)
+
+
+@pytest.mark.parametrize("level", [0, 1, 6, 9])
+def test_unsplittable_search_error_matches_reference_at_every_level(
+    edge_db: Path, tmp_path: Path, level: int
+) -> None:
+    with pytest.raises(ExportError) as expected:
+        _reference_export(edge_db, compression_level=level, entry_max=1_048_576, search_max=150)
+    with pytest.raises(ExportError) as actual:
+        _export(edge_db, tmp_path / "out", compression_level=level, search_max_gzip_bytes=150)
+    assert str(actual.value) == str(expected.value)
+    assert "cannot split" in str(actual.value)
+
+
+# ---------------------------------------------------------------------------
+# --verify streams (review of #8672, P1): same checks and error categories as
+# the historical whole-shard verify, json.loads-exact values, bounded memory.
+# ---------------------------------------------------------------------------
+
+
+def _ref_verify_tree(out_dir: Path, base_path: str, *, manifest_path: Path) -> dict:
+    """Historical whole-shard ``verify_tree`` (pre-streaming #8672), the parity oracle."""
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    version_root = manifest_path.parent
+    errors: list[str] = []
+
+    def check_descriptor(descriptor, *, family):
+        rel = descriptor["url"]
+        path = version_root / rel
+        if not path.is_file():
+            errors.append(f"missing {family} object {rel}")
+            return
+        compressed = path.read_bytes()
+        if len(compressed) != descriptor["bytes"]:
+            errors.append(
+                f"{family} {descriptor['id']}: bytes mismatch file={len(compressed)} desc={descriptor['bytes']}"
+            )
+        if exporter.sha256_hex(compressed) != descriptor["sha256"]:
+            errors.append(f"{family} {descriptor['id']}: sha256 mismatch")
+        try:
+            raw = gzip.decompress(compressed)
+        except OSError as exc:
+            errors.append(f"{family} {descriptor['id']}: gzip decode failed: {exc}")
+            return
+        if exporter.sha256_hex(raw) != descriptor["jsonSha256"]:
+            errors.append(f"{family} {descriptor['id']}: jsonSha256 mismatch")
+        if len(raw) != descriptor["uncompressedBytes"]:
+            errors.append(f"{family} {descriptor['id']}: uncompressedBytes mismatch")
+        payload = json.loads(raw.decode("utf-8"))
+        if family.startswith("deck"):
+            if not isinstance(payload, dict):
+                errors.append(f"{family} {descriptor['id']}: deck payload must be an object")
+            return
+        if payload.get("schemaVersion") != exporter.SCHEMA_VERSION:
+            errors.append(f"{family} {descriptor['id']}: unsupported schemaVersion")
+        if payload.get("dataVersion") != manifest.get("dataVersion"):
+            errors.append(f"{family} {descriptor['id']}: dataVersion mismatch vs manifest")
+        records = payload.get("records")
+        if isinstance(records, list) and len(records) != descriptor["count"]:
+            errors.append(
+                f"{family} {descriptor['id']}: count mismatch records={len(records)} desc={descriptor['count']}"
+            )
+
+    entry_shards = manifest["entries"]["shards"]
+    for descriptor in entry_shards.values():
+        check_descriptor(descriptor, family="entries")
+        if descriptor["bytes"] > exporter.DEFAULT_ENTRY_MAX:
+            errors.append(f"entries {descriptor['id']}: gzip exceeds 1 MiB")
+    for family in ("articles", "aliases"):
+        for descriptor in manifest["search"][family]["shards"].values():
+            check_descriptor(descriptor, family=f"search.{family}")
+    for level, info in (manifest.get("decks", {}).get("levels") or {}).items():
+        for part, descriptor in (info.get("parts") or {}).items():
+            check_descriptor(descriptor, family=f"decks.{level}.{part}")
+    if errors:
+        raise ExportError("verify failed:\n- " + "\n- ".join(errors))
+    seen_slugs: dict[str, str] = {}
+    article_count = form_count = 0
+    for shard_id, descriptor in entry_shards.items():
+        payload = json.loads(gzip.decompress((version_root / descriptor["url"]).read_bytes()).decode("utf-8"))
+        for record in payload["records"]:
+            slug = record["slug"]
+            if slug in seen_slugs:
+                errors.append(f"duplicate slug {slug!r} in {seen_slugs[slug]} and {shard_id}")
+            seen_slugs[slug] = shard_id
+            if record["kind"] == "article":
+                article_count += 1
+            elif record["kind"] == "form_route":
+                form_count += 1
+            for alias in record.get("aliases") or []:
+                if alias.get("target_slug") != slug:
+                    errors.append(f"alias target mismatch on {slug!r}")
+    expected = manifest["counts"]
+    if article_count != expected["articles"]:
+        errors.append(f"article count {article_count} != {expected['articles']}")
+    if form_count != expected["formRoutes"]:
+        errors.append(f"form_of count {form_count} != {expected['formRoutes']}")
+    if len(seen_slugs) != expected["publicRoutes"]:
+        errors.append(f"route count {len(seen_slugs)} != {expected['publicRoutes']}")
+    if errors:
+        raise ExportError("verify failed:\n- " + "\n- ".join(errors))
+    return {
+        "dataVersion": manifest["dataVersion"], "articles": article_count, "formRoutes": form_count,
+        "publicRoutes": len(seen_slugs), "entryShards": len(entry_shards),
+    }
+
+
+def _outcome(verify, out: Path, manifest_path: Path) -> tuple[str, str]:
+    try:
+        return "ok", json.dumps(verify(out, "atlas", manifest_path=manifest_path), sort_keys=True)
+    except ExportError as exc:
+        # Only the zlib/gzip library wording after this category differs between readers.
+        return "ExportError", re.sub(r"gzip decode failed: [^\n]*", "gzip decode failed", str(exc))
+    except Exception as exc:
+        return type(exc).__name__, ""
+
+
+def _descriptors(manifest: dict) -> list[dict]:
+    found = list(manifest["entries"]["shards"].values())
+    for family in ("articles", "aliases"):
+        found += list(manifest["search"][family]["shards"].values())
+    for info in (manifest.get("decks", {}).get("levels") or {}).values():
+        found += list((info.get("parts") or {}).values())
+    return found
+
+
+def _rewrite(root: Path, manifest: dict, descriptor: dict, raw: bytes, *, consistent: bool = True) -> None:
+    compressed = gzip_bytes(raw, compression_level=9)
+    (root / descriptor["url"]).write_bytes(compressed)
+    if consistent:
+        descriptor.update(
+            bytes=len(compressed), sha256=hashlib.sha256(compressed).hexdigest(),
+            uncompressedBytes=len(raw), jsonSha256=hashlib.sha256(raw).hexdigest(),
+        )
+    (root / "manifest.json").write_bytes(exporter.canonical_json_bytes(manifest))
+
+
+def _entry_shard(root: Path, manifest: dict, index: int = 0) -> tuple[dict, dict]:
+    descriptor = manifest["entries"]["shards"][sorted(manifest["entries"]["shards"])[index]]
+    return descriptor, json.loads(gzip.decompress((root / descriptor["url"]).read_bytes()))
+
+
+def _json_text(payload: dict) -> bytes:
+    return exporter.canonical_json_bytes(payload)
+
+
+def _mutate(case: str, root: Path, manifest: dict) -> None:
+    descriptor, payload = _entry_shard(root, manifest)
+    path = root / descriptor["url"]
+    blob = path.read_bytes()
+    search = next(iter(manifest["search"]["articles"]["shards"].values()))
+    if case == "flip-byte":
+        path.write_bytes(blob[:40] + bytes([blob[40] ^ 0xFF]) + blob[41:])
+    elif case == "flip-crc":
+        path.write_bytes(blob[:-8] + bytes([blob[-8] ^ 1]) + blob[-7:])
+    elif case == "truncate":
+        path.write_bytes(blob[: len(blob) // 2])
+    elif case == "trailing-zero-padding":
+        path.write_bytes(blob + b"\0\0\0")
+    elif case == "trailing-garbage-member":
+        path.write_bytes(blob + b"garbage")
+    elif case == "second-gzip-member":
+        path.write_bytes(blob + gzip_bytes(b" ", compression_level=9))
+    elif case == "missing-object":
+        path.unlink()
+    elif case == "descriptor-bytes":
+        descriptor["bytes"] += 1
+    elif case == "descriptor-count":
+        search["count"] += 1
+    elif case == "descriptor-json-sha":
+        search["jsonSha256"] = "0" * 64
+    elif case == "stale-raw-descriptor":
+        _rewrite(root, manifest, descriptor, _json_text({**payload, "dataVersion": "other"}), consistent=False)
+    elif case in ("schema-version", "schema-version-float", "schema-version-near-one", "data-version"):
+        value = {"schema-version": 2, "schema-version-float": 1.0, "schema-version-near-one": 1.0000000000000000001}
+        if case == "data-version":
+            raw = _json_text({**payload, "dataVersion": "atlas-v1-other"})
+        else:
+            raw = _json_text(payload).replace(b'"schemaVersion":1', b'"schemaVersion":' + repr(value[case]).encode())
+        _rewrite(root, manifest, descriptor, raw)
+    elif case == "duplicate-members-last-wins":
+        text = _json_text(payload).decode()
+        text = text.replace('"schemaVersion":1', '"schemaVersion":2,"records":[{"slug":"ghost"}],"schemaVersion":1', 1)
+        _rewrite(root, manifest, descriptor, text.encode())
+    elif case == "duplicate-records-first-wins-is-wrong":
+        text = _json_text(payload).decode().rstrip("\n")
+        _rewrite(root, manifest, descriptor, (text[:-1] + ',"records":[]}\n').encode())
+    elif case == "duplicate-slug":
+        _, other = _entry_shard(root, manifest, 1)
+        payload["records"].append(other["records"][0])
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+        descriptor["count"] += 1
+        (root / "manifest.json").write_bytes(exporter.canonical_json_bytes(manifest))
+    elif case == "alias-target":
+        record = next(r for r in payload["records"] if r["aliases"])
+        record["aliases"][0]["target_slug"] = "elsewhere"
+        record["aliases"].append({**record["aliases"][0]})
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+    elif case == "kind-count":
+        payload["records"][0]["kind"] = "something-else"
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+    elif case == "record-not-object":
+        payload["records"][0] = ["not", "an", "object"]
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+    elif case == "records-missing":
+        payload.pop("records")
+        _rewrite(root, manifest, descriptor, _json_text(payload))
+    elif case == "bigint-overflow-surrogate-in-record":
+        text = _json_text(payload).decode()
+        text = text.replace(
+            '"kind":', '"n":123456789012345678901234567890,"big":-1e400,"u":"\\ud800","w":"\\udc00\\ud800\\u0041","kind":', 1
+        )
+        _rewrite(root, manifest, descriptor, text.encode())
+    elif case == "extreme-numbers-in-record":
+        # json.loads: 0.0, inf, 0.0, -0.0 and two exact 4300-digit integers (the default int limit).
+        numbers = (
+            '"u":1e-99999999999999999999,"o":1e99999999999999999999,"z":0e99999999999999999999,'
+            f'"nz":-0e-99999999999999999999,"big":{"9" * 4300},"nbig":-{"9" * 4300},'
+        )
+        text = _json_text(payload).decode().replace('"kind":', numbers + '"kind":', 1)
+        _rewrite(root, manifest, descriptor, text.encode())
+    elif case == "int-past-digit-limit-in-record":
+        raw = _json_text(payload).replace(b'"kind":', b'"n":' + b"9" * 4301 + b',"kind":', 1)
+        _rewrite(root, manifest, descriptor, raw)
+    elif case in ("extreme-exponent-duplicate-member", "extreme-exponent-last-member-wins"):
+        extreme = b'"schemaVersion":1e99999999999999999999'
+        if case == "extreme-exponent-duplicate-member":  # the extreme member is overridden: schemaVersion 1
+            members = extreme + b',"schemaVersion":1'
+        else:  # the extreme member wins: schemaVersion 0.0
+            members = b'"schemaVersion":1,' + extreme.replace(b"1e", b"1e-")
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b'"schemaVersion":1', members, 1))
+    elif case == "extreme-exponent-deck":
+        # A correctly hashed deck the historical json.loads verify accepts (``unused`` is 0.0).
+        deck = {"id": "a1/practice-index", "url": "decks/a1/practice-index.json.gz"}
+        (root / "decks" / "a1").mkdir(parents=True)
+        manifest["decks"] = {"levels": {"a1": {"parts": {"practice-index": deck}}}}
+        _rewrite(root, manifest, deck, b'{"deckVersion":"d","unused":1e-99999999999999999999}\n')
+    elif case == "nan-infinity-in-record":
+        text = _json_text(payload).decode().replace('"kind":', '"f":NaN,"z":-Infinity,"kind":', 1)
+        _rewrite(root, manifest, descriptor, text.encode())
+    elif case == "surrogate-alias-target":
+        # yajl alone decodes both unpaired escapes as "x?": only an exact decode sees the mismatch.
+        record = next(r for r in payload["records"] if r["aliases"])
+        record["slug"] = "@slug@"
+        for alias in record["aliases"]:
+            alias["target_slug"] = "@slug@"
+        record["aliases"][0]["target_slug"] = "@target@"
+        text = _json_text(payload).replace(b"@slug@", b"x\\ud800").replace(b"@target@", b"x\\udbff")
+        _rewrite(root, manifest, descriptor, text)
+    elif case == "trailing-unterminated-string":
+        _rewrite(root, manifest, descriptor, _json_text(payload) + b'"x')
+    elif case == "vertical-tab-whitespace":
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b'{"', b'{\x0b"', 1))
+    elif case == "invalid-json-trailing":
+        _rewrite(root, manifest, descriptor, _json_text(payload) + b"{}")
+    elif case == "invalid-json-truncated":
+        _rewrite(root, manifest, descriptor, _json_text(payload)[:-40])
+    elif case == "invalid-json-trailing-comma":
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b"]}\n", b",]}\n"))
+    elif case == "invalid-utf8":
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b'"slug":"', b'"slug":"\xff', 1))
+    elif case == "control-char":
+        _rewrite(root, manifest, descriptor, _json_text(payload).replace(b'"slug":"', b'"slug":"\x01', 1))
+    elif case == "top-level-array":
+        _rewrite(root, manifest, descriptor, b"[1,2]\n")
+    else:
+        raise AssertionError(case)
+    (root / "manifest.json").write_bytes(exporter.canonical_json_bytes(manifest))
+
+
+# Cases the historical verify let escape as a raw exception now fail as ExportError.
+_HISTORICAL_CRASH = {
+    "flip-byte": "gzip decode failed", "truncate": "gzip decode failed",
+    "invalid-json-trailing": "invalid JSON", "invalid-json-truncated": "invalid JSON",
+    "invalid-json-trailing-comma": "invalid JSON", "invalid-utf8": "invalid JSON",
+    "control-char": "invalid JSON", "top-level-array": "payload must be an object",
+    "trailing-unterminated-string": "invalid JSON", "vertical-tab-whitespace": "invalid JSON",
+    "int-past-digit-limit-in-record": "invalid JSON",
+}
+# NaN/Infinity are json.loads extensions the runtime's JSON.parse rejects: they fail closed.
+_FAIL_CLOSED = {"nan-infinity-in-record": "invalid JSON"}
+_VERIFY_CASES = [
+    "flip-byte", "flip-crc", "truncate", "trailing-zero-padding", "trailing-garbage-member", "second-gzip-member",
+    "missing-object", "descriptor-bytes", "descriptor-count", "descriptor-json-sha", "stale-raw-descriptor",
+    "schema-version", "schema-version-float", "schema-version-near-one", "data-version",
+    "duplicate-members-last-wins", "duplicate-records-first-wins-is-wrong", "duplicate-slug", "alias-target",
+    "kind-count", "record-not-object", "records-missing", "bigint-overflow-surrogate-in-record",
+    "nan-infinity-in-record", "surrogate-alias-target", "invalid-json-trailing", "invalid-json-truncated",
+    "invalid-json-trailing-comma", "invalid-utf8", "control-char", "top-level-array",
+    "trailing-unterminated-string", "vertical-tab-whitespace", "extreme-numbers-in-record",
+    "int-past-digit-limit-in-record", "extreme-exponent-duplicate-member", "extreme-exponent-last-member-wins",
+    "extreme-exponent-deck",
+]
+
+
+@pytest.fixture(scope="module")
+def verified_tree(edge_db: Path, tmp_path_factory: pytest.TempPathFactory) -> Path:
+    out = tmp_path_factory.mktemp("verify") / "out"
+    _export(edge_db, out, entry_max_gzip_bytes=9_000, search_max_gzip_bytes=1_200)
+    return out
+
+
+@pytest.mark.parametrize("case", _VERIFY_CASES)
+def test_streaming_verify_matches_historical_verify(verified_tree: Path, tmp_path: Path, case: str) -> None:
+    out = tmp_path / "out"
+    shutil.copytree(verified_tree, out)
+    manifest_path = out / "atlas" / json.loads((out / "atlas" / "current.json").read_text())["manifestUrl"]
+    manifest = json.loads(manifest_path.read_text())
+    assert _outcome(verify_tree, out, manifest_path) == _outcome(_ref_verify_tree, out, manifest_path)
+    _mutate(case, manifest_path.parent, manifest)
+    expected = _outcome(_ref_verify_tree, out, manifest_path)
+    actual = _outcome(verify_tree, out, manifest_path)
+    if case in _HISTORICAL_CRASH:
+        assert expected[0] not in ("ok", "ExportError"), expected
+        assert actual[0] == "ExportError" and _HISTORICAL_CRASH[case] in actual[1], actual
+    elif case in _FAIL_CLOSED:
+        assert expected[0] == "ok", expected
+        assert actual[0] == "ExportError" and _FAIL_CLOSED[case] in actual[1], actual
+    else:
+        assert actual == expected
+    assert case in ("trailing-zero-padding", "second-gzip-member", "schema-version-float",
+                    "schema-version-near-one", "duplicate-members-last-wins",
+                    "bigint-overflow-surrogate-in-record", "extreme-numbers-in-record",
+                    "extreme-exponent-duplicate-member", "extreme-exponent-deck") or actual[0] != "ok", actual
+
+
+_JSON_DOCS = [
+    b'{"a":1}', b' \n{ "a" : [ 1 , 2.5 , -0.0 , 1e2 , "x" ] , "b" : {} }\t\r\n', b"{}", b"[]", b'"s"', b"-12", b'""',
+    b'{"records":[{"k":1},{"k":[1,{"x":"\\u00e9\\ud83d\\ude00"}]},{}],"schemaVersion":1,"dataVersion":"v"}',
+    b'{"n":123456789012345678901234567890,"big":1e400,"tiny":1e-400,"s":"\\ud800","t":"\\udc00\\ud800\\u0041",'
+    b'"records":["\\ud800x","\\ud83d\\ude00","\\\\ud800",-9223372036854775809,1E+5,-0],"dataVersion":"\\udbff"}',
+    '{"укр":"слово ґанок їжак","emoji":"😀","esc":"\\"\\\\\\/\\b\\f\\n\\r\\t"}'.encode(),
+    b'{"a":1,"a":2,"records":[1],"records":[2,3],"schemaVersion":7,"schemaVersion":1}',
+    b'{"records":[1.5,-1.25e-3,1E+5,0,true,false,null,"1.5"]}', b'{"records":{"not":"a list"}}',
+    b'[{"a":1},[2,[3]],"x",4]', b'{"deep":' + b"[" * 200 + b"]" * 200 + b"}",
+    # Exponents no Decimal holds, read as json.loads reads them (review of #8672).
+    b'{"deckVersion":"d","unused":1e-99999999999999999999}',
+    b'{"records":[1e99999999999999999999,-1e99999999999999999999,0e99999999999999999999,-0e-99999999999999999999,'
+    b'1e-99999999999999999999,-0E+99999999999999999999,0.0e-99999999999999999999,1E+000000000000000000000000001,'
+    b"1e999999999999999999,1e-999999999999999999,-0.0,-0]}",
+    b'{"schemaVersion":1e99999999999999999999,"records":[],"schemaVersion":1,"dataVersion":-0e99999999999999999999}',
+    b'{"records":[1],"schemaVersion":1,"schemaVersion":1e-99999999999999999999,"records":[2e99999999999999999999]}',
+    # Integers up to the int limit stay exact; digit runs past it outside integers are fine.
+    b'{"records":[' + b"9" * 4300 + b",-" + b"9" * 4300 + b"," + b"1" * 5000 + b".5," + b"2" * 5000 + b"e-400]}",
+    b'[0.' + b"0" * 5000 + b"1,1e" + b"0" * 5000 + b"1,-0e" + b"9" * 5000 + b"]",
+    # Digit runs and extreme exponents inside strings are only text, also where a run starts inside an escape.
+    b'["\\ud9' + b"9" * 5000 + b'","\\u12' + b"3" * 5000 + b'","\\u0' + b"0" * 5000 + b'"]',
+    b'{"s":"' + b"7" * 5000 + b'","records":["1e99999999999999999999","' + b"0" * 4301 + b'"],"dataVersion":"\\ud800"}',
+]
+_BAD_JSON_DOCS = [
+    b"", b"   ", b'{"a":1} x', b'{"a":1}{}', b'{"a":1,}', b'{"a" 1}', b'{a:1}', b"[1,]", b"[1 2]", b'{"a":01}',
+    b'{"a":tru}', b'{"a":"x\x01"}', b'{"a":"\xff"}', b'\xef\xbb\xbf{"a":1}', b'{"a":"unterminated}',
+    b'{"records":[1,2', b'{"a":1', b'{"a":"\\x"}', b'{"a":"\\u12"}', b'{"a":1.}', b'{"a":-}', b'{"a":[1,2]]}',
+    b'{"a":"\xed\xa0\x80"}', b"nul", b'{"a":1}\x00', b'{"a":+1}', b'{"a":1} 1', b'{"a":1}  "abc"', b'"" ""',
+    # yajl alone accepts these: an unterminated string after the value, \v/\f as whitespace.
+    b'{"a":1}"', b'{"a":1}\n"x', b'{"a":1}"}', b'[1]"', b'false "', b'\x0b{"a":1}', b'{"a":\x0c1}', b'{"a":1}\x0b',
+    b'{"a":"\\ud800"}"', b'{"a":"\\ud800\\u12"}', b'{"a":"\\udc00" "b"}',
+    # Numbers: past the int limit (json.loads raises ValueError), or not JSON numbers at all.
+    b"[" + b"9" * 4301 + b"]", b'{"a":-' + b"9" * 4301 + b"}", b"[0" + b"0" * 5000 + b"]", b"[-0" + b"1" * 5000 + b"]",
+    b'{"a":1e99999999999999999999x}', b"[1e]", b"[1e+]", b"[.5e99999999999999999999]", b"[1.e99999999999999999999]",
+    b'{"a":1e99999999999999999999,}', b"[1e99999999999999999999 1]",
+]
+# json.loads extensions that fail closed: not JSON (the runtime's JSON.parse rejects NaN/Infinity).
+_FAIL_CLOSED_JSON_DOCS = [b'{"f":NaN}', b'{"i":Infinity}', b"[-Infinity]", b'{"f":1,"records":[NaN]}']
+
+
+def _scan(doc: bytes, read_bytes: int, summarize=json.dumps) -> exporter.ScannedPayload:
+    """``scan_json_payload`` as ``verify_tree`` uses it: exact re-decode when the fast pass asks."""
+    scanned = exporter.scan_json_payload(io.BytesIO(doc), summarize=summarize, read_bytes=read_bytes)
+    if not scanned.values_exact:
+        scanned = exporter.scan_json_payload(io.BytesIO(doc), summarize=summarize, read_bytes=read_bytes, exact=True)
+        assert scanned.values_exact
+    return scanned
+
+
+def _reject_constant(name: str):
+    raise ValueError(f"{name} fails closed")
+
+
+def _expected_scan(doc: bytes) -> exporter.ScannedPayload:
+    """``json.loads`` + ``dict.get`` view of ``doc``, minus the literals verification fails closed on."""
+    value = json.loads(doc.decode("utf-8"), parse_constant=_reject_constant)
+    if not isinstance(value, dict):
+        return exporter.ScannedPayload(is_object=False)
+    records = value.get("records")
+    return exporter.ScannedPayload(
+        is_object=True, schema_version=value.get("schemaVersion"), data_version=value.get("dataVersion"),
+        has_records="records" in value, records_is_list=isinstance(records, list),
+        record_count=len(records) if isinstance(records, list) else 0,
+        rows=[json.dumps(item) for item in records] if isinstance(records, list) else None,
+    )
+
+
+def _scan_outcome(doc: bytes, read_bytes: int, *, exact_only: bool = False) -> tuple:
+    """Everything verification reads from ``doc`` (or that it is invalid), for exact comparison.
+
+    ``exact_only`` runs the exact decoder alone, without yajl's syntax verdict first.
+    """
+    try:
+        if exact_only:
+            scanned = exporter.scan_json_payload(
+                io.BytesIO(doc), summarize=json.dumps, read_bytes=read_bytes, exact=True
+            )
+        else:
+            scanned = _scan(doc, read_bytes)
+    except ValueError:
+        return ("invalid",)
+    scanned.values_exact = True
+    return ("ok", json.dumps(dataclasses.asdict(scanned), sort_keys=True))
+
+
+def _json_loads_outcome(doc: bytes) -> tuple:
+    try:
+        expected = _expected_scan(doc)
+    except (ValueError, ArithmeticError, RecursionError):
+        return ("invalid",)
+    return ("ok", json.dumps(dataclasses.asdict(expected), sort_keys=True))
+
+
+def test_verify_fast_pass_is_yajl() -> None:
+    assert exporter._json_backend().backend_name == "yajl2_c"
+
+
+@pytest.mark.parametrize("read_bytes", [1, 2, 3, 5, 6, 7, 13, 64, 1 << 16])
+def test_json_stream_decodes_exactly_like_json_loads_at_every_read_size(read_bytes: int) -> None:
+    for doc in _JSON_DOCS:
+        assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), doc
+        assert _scan_outcome(doc, read_bytes, exact_only=True) == _json_loads_outcome(doc), doc
+        fast = exporter.scan_json_payload(io.BytesIO(doc), read_bytes=read_bytes)
+        if re.search(rb"\\u[dD][89a-fA-F]", doc):
+            assert not fast.values_exact, doc
+        elif not re.search(rb"[0-9]{19}", doc):  # no exponent Decimal refuses, no integer int() refuses
+            assert fast.values_exact, doc
+    for doc in _BAD_JSON_DOCS:
+        with pytest.raises(ValueError):
+            json.loads(doc.decode("utf-8"))
+        with pytest.raises(ValueError):
+            _scan(doc, read_bytes)
+        assert _scan_outcome(doc, read_bytes, exact_only=True) == ("invalid",), doc
+    for doc in _FAIL_CLOSED_JSON_DOCS:
+        json.loads(doc.decode("utf-8"))
+        with pytest.raises(ValueError):
+            _scan(doc, read_bytes)
+        assert _scan_outcome(doc, read_bytes, exact_only=True) == ("invalid",), doc
+
+
+def test_extreme_numbers_read_like_json_loads() -> None:
+    """The reviewer's deck, and each class of number literal no ``Decimal`` or yajl conversion holds."""
+    deck = exporter.scan_json_payload(io.BytesIO(b'{"deckVersion":"d","unused":1e-99999999999999999999}'))
+    assert deck.is_object and not deck.values_exact  # yajl judged the syntax; values come from the exact pass
+    cases = {
+        b"1e-99999999999999999999": 0.0, b"-1e-99999999999999999999": -0.0, b"1e99999999999999999999": math.inf,
+        b"-1e99999999999999999999": -math.inf, b"0e99999999999999999999": 0.0, b"-0e99999999999999999999": -0.0,
+        b"0.000e-99999999999999999999": 0.0, b"1E+000000000000000000000000001": 10.0, b"-0": 0, b"-0.0": -0.0,
+        b"9" * 4300: int("9" * 4300), b"-" + b"9" * 4300: -int("9" * 4300),
+    }
+    for literal, expected in cases.items():
+        doc = b'{"schemaVersion":' + literal + b',"records":[' + literal + b"]}"
+        scanned = _scan(doc, 64, summarize=lambda value: value)
+        assert json.loads(doc)["schemaVersion"] == expected
+        for value in (scanned.schema_version, scanned.rows[0]):
+            assert type(value) is type(expected) and repr(value) == repr(expected), literal[:30]
+    with pytest.raises(ValueError, match="integer string conversion"):
+        json.loads(b"[" + b"9" * 4301 + b"]")
+    with pytest.raises(ValueError, match="integer string conversion"):
+        _scan(b"[" + b"9" * 4301 + b"]", 64)
+
+
+@pytest.mark.parametrize("limit", [0, 640])
+def test_integer_digit_limit_matches_json_loads_at_every_read_size(limit: int) -> None:
+    """The yajl guard follows ``sys.get_int_max_str_digits()`` (0: no limit, 640: the smallest allowed)."""
+    previous = sys.get_int_max_str_digits()
+    sys.set_int_max_str_digits(limit)
+    try:
+        for digits in (639, 640, 641, 5000):
+            doc = b'{"records":[-' + b"7" * digits + b',"' + b"7" * digits + b'",0.' + b"7" * digits + b"]}"
+            for read_bytes in (1, 5, 64, 1 << 16):
+                assert _scan_outcome(doc, read_bytes) == _json_loads_outcome(doc), (limit, digits, read_bytes)
+    finally:
+        sys.set_int_max_str_digits(previous)
+
+
+def test_json_stream_matches_json_loads_on_mutated_documents() -> None:
+    """Seeded differential: random documents and byte-level corruptions of them."""
+    rng = random.Random(8672)
+    tokens = [
+        b"{", b"}", b"[", b"]", b",", b":", b'"', b"\\", b"u", b"d", b"8", b"0", b"1", b"-", b"+", b".", b"e",
+        b" ", b"\t", b"\n", b"\x0b", b"\x0c", b"\x00", b"\x01", b"\xff", b"\xed", b"t", b"n", b"x",
+        "я".encode(), b"\\ud800", b"\\udc00", b"\\ud83d\\ude00", b'"records"', b'"schemaVersion"',
+        b"e99999999999999999999", b"e-99999999999999999999", b"1e99999999999999999999", b"9" * 4301, b"0" * 4301,
+    ]
+
+    def value(depth: int):
+        choice = rng.randrange(9 if depth < 4 else 6)
+        if choice == 0:
+            return rng.randrange(-10**30, 10**30)
+        if choice == 1:
+            return rng.uniform(-1e6, 1e6)
+        if choice == 2:
+            return "".join(rng.choice('aя"\\/\n\t😀é 𐀀') for _ in range(rng.randrange(0, 12)))
+        if choice in (3, 4, 5):
+            return (True, False, None)[choice - 3]
+        if choice in (6, 7):
+            return [value(depth + 1) for _ in range(rng.randrange(0, 5))]
+        return {str(value(depth + 1))[:6]: value(depth + 1) for _ in range(rng.randrange(0, 5))}
+
+    for _ in range(3000):
+        document = {"schemaVersion": 1, "records": [value(0) for _ in range(rng.randrange(0, 6))], "x": value(0)}
+        raw = bytearray(json.dumps(document, ensure_ascii=True, indent=rng.choice([None, 1])).encode())
+        for _ in range(rng.randrange(0, 4)):
+            position = rng.randrange(len(raw) + 1)
+            raw[position : position + rng.randrange(2)] = rng.choice(tokens)
+        doc = bytes(raw[: rng.randrange(len(raw) + 1)] if rng.random() < 0.2 else raw)
+        read_bytes = rng.choice([1, 3, 5, 8, 50])
+        expected = _json_loads_outcome(doc)
+        assert _scan_outcome(doc, read_bytes) == expected, doc
+        assert _scan_outcome(doc, read_bytes, exact_only=True) == expected, doc

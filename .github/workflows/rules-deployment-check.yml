@@ -60,7 +60,7 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install pytest pyyaml
+          .venv/bin/python -m pip install pytest pyyaml "jsonschema==4.26.0" "psutil==7.2.2"
 
       - name: Verify committed mirrors before deploy
         run: bash scripts/check_rules_deployment.sh --tracked-mirrors-only
@@ -70,5 +70,11 @@ jobs:
           bash scripts/deploy_prompts.sh
           bash scripts/check_rules_deployment.sh
 
+      # tests/conftest.py imports learn_ukrainian_v4_runtime, and the agent
+      # runtime adapters import jsonschema and psutil; this slim venv installs
+      # only those runtime deps, so expose the src layout via PYTHONPATH
+      # (same approach as hygiene.yml's focused agent config tests).
       - name: Regression tests for deploy drift check
+        env:
+          PYTHONPATH: packages/v4-runtime/src
         run: .venv/bin/python -m pytest tests/test_deploy_script_idempotency.py -v
