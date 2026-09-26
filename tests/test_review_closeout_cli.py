@@ -4,9 +4,11 @@ together for the local-code-review skill."""
 
 from __future__ import annotations
 
+import io
 import json
 import subprocess
 import sys
+from contextlib import chdir, redirect_stderr, redirect_stdout
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -37,15 +39,23 @@ def _init_repo(tmp_path: Path) -> Path:
     return repo
 
 
-def _run_cli(state_file: Path, *args: str) -> subprocess.CompletedProcess[str]:
+def _run_cli(state_file: Path, *args: str, real_process: bool = False) -> subprocess.CompletedProcess[str]:
     project_root = Path(__file__).resolve().parent.parent
-    return subprocess.run(
-        [str(project_python()), "-m", "scripts.review.closeout_cli", "--state-file", str(state_file), *args],
-        cwd=str(project_root),
-        capture_output=True,
-        text=True,
-        timeout=30
-    )
+    command = [str(project_python()), "-m", "scripts.review.closeout_cli", "--state-file", str(state_file), *args]
+    if real_process:
+        return subprocess.run(command, cwd=str(project_root), capture_output=True, text=True, timeout=30)
+
+    # Every command still enters the CLI parser and checks its own result and
+    # state file. Keep a real process case below for the launch boundary.
+    from scripts.review import closeout_cli
+
+    stdout, stderr = io.StringIO(), io.StringIO()
+    with chdir(project_root), redirect_stdout(stdout), redirect_stderr(stderr):
+        try:
+            returncode = closeout_cli.main(["--state-file", str(state_file), *args])
+        except SystemExit as exc:
+            returncode = exc.code if isinstance(exc.code, int) else (0 if exc.code is None else 1)
+    return subprocess.CompletedProcess(command, returncode, stdout.getvalue(), stderr.getvalue())
 
 
 def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
@@ -143,7 +153,7 @@ def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
     state_file = tmp_path / "state.json"
     assert not state_file.exists()
 
-    proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude")
+    proc = _run_cli(state_file, "resolve-reviewer", "--author-model", "claude", real_process=True)
     assert proc.returncode == 0, proc.stderr
 
     assert state_file.exists()
@@ -471,7 +481,7 @@ def test_behavior_proof_na_is_versioned_and_preserves_explicit_blind_enforcement
 def test_closeout_cli_invalid_json_state_is_structured(tmp_path):
     state_file = tmp_path / "state.json"
     state_file.write_text("{not-json", encoding="utf-8")
-    proc = _run_cli(state_file, "target", "--mode", "local")
+    proc = _run_cli(state_file, "target", "--mode", "local", real_process=True)
     assert proc.returncode != 0
     assert "state_invalid_json" in json.loads(proc.stderr)["error"]
 
