@@ -305,6 +305,7 @@ def validate_receipt_bindings(receipt, root, repository_validator, require):
 # One immutable installed release is verified once per nested validation call
 # tree. The context ends before the next operation; policy is never cached.
 # This avoids re-hashing the entire release for every node of A13's upstream DAG.
+import inspect
 from contextvars import ContextVar
 from functools import wraps
 
@@ -345,7 +346,17 @@ def validation_session(function):
     node of the upstream DAG is skipped only after it already succeeded once
     in this same call tree. Failures are never memoized: a refused receipt
     re-derives and re-raises at every node, exactly as an unscoped run.
+
+    A memoized hit returns ``None``, which is only faithful for a validator
+    that itself returns ``None``; a function not annotated ``-> None`` is
+    rejected at decoration time so a value-returning validator can never be
+    silently broken by a hit.
     """
+
+    if inspect.signature(function).return_annotation not in (None, "None"):
+        raise TypeError(
+            f"validation_session memoizes hits as None: {function.__module__}.{function.__qualname__} must be annotated '-> None'"
+        )
 
     @wraps(function)
     def validate(*args, **kwargs):
