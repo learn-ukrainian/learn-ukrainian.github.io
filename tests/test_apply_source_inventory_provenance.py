@@ -183,6 +183,7 @@ def test_apply_source_inventory_provenance_cli_help() -> None:
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert result.returncode == 0
     assert "Attach approved source-inventory provenance" in result.stdout
