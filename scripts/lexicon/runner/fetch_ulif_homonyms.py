@@ -1333,7 +1333,8 @@ def _ledger_data_mode(ledger: SpellingLedger) -> str | None:
     )
     has_run = declared == "run" or bool(
         ledger.conn.execute(
-            "SELECT 1 FROM responses WHERE role IN ('seed', 'tsearch', 'page:back', 'page:next') LIMIT 1"
+            "SELECT 1 FROM responses WHERE spelling <> '' "
+            "AND role IN ('seed', 'tsearch', 'page:back', 'page:next') LIMIT 1"
         ).fetchone()
     )
     if not has_walk and ledger.conn.execute("SELECT 1 FROM spellings LIMIT 1").fetchone():

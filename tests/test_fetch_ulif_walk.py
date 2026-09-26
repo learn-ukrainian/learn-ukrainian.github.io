@@ -678,6 +678,7 @@ def test_parse_refuses_mixed_targeted_and_walk_ledger(tmp_path: Path, capsys):
     cache.close()
     ledger = SpellingLedger(state_dir / "ledger.sqlite")
     try:
+        ledger.set_meta("mode", "walk")
         ledger.ensure_row(1, 0, select_arg="Select$0", stressed_headword="Іши́м", normalized_spelling="ішим")
         ledger.record_response(spelling="ішим", role="seed", response_sha256="seed", request_sha256="request")
         cache = prepare_database(db_path)
@@ -690,6 +691,50 @@ def test_parse_refuses_mixed_targeted_and_walk_ledger(tmp_path: Path, capsys):
         ledger.close()
     assert ulif_walk.main(["parse", "--state-dir", str(state_dir), "--db", str(db_path)]) == EXIT_USAGE
     assert "mixed targeted run and walk data" in capsys.readouterr().err
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=db_path,
+            transport=lambda *_: pytest.fail("mixed-mode walk made a request"),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_USAGE
+    )
+    assert "mixed targeted run and walk data" in capsys.readouterr().err
+
+
+def test_legacy_walk_seed_does_not_block_resume(tmp_path: Path, capsys):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import _ledger_data_mode, prepare_database
+
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+    prepare_database(db_path).close()
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.set_meta("mode", "walk")
+        ledger.ensure_page(1, start_headword="Іши́м", end_headword="Іши́м", row_count=1, state="completed")
+        ledger.ensure_row(1, 0, select_arg="Select$0", stressed_headword="Іши́м", normalized_spelling="ішим")
+        ledger.ensure("ішим")
+        ledger.record_response(spelling="", role="seed", response_sha256="seed", request_sha256="request")
+        assert _ledger_data_mode(ledger) == "walk"
+    finally:
+        ledger.close()
+
+    server = MockULIFServer(fail_with_403=True)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=db_path,
+            transport=server,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_FORBIDDEN
+    )
+    assert server.requests_log
+    output = capsys.readouterr().err
+    assert "refusing to start" not in output
 
 
 def test_fetch_modes_refuse_reusing_the_opposite_state_dir(tmp_path: Path, capsys):
