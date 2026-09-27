@@ -327,8 +327,9 @@ applicable. Each `image-to-letter` choice item counts as one response opportunit
 
 A1 group-sort names an A1 `grouping_feature` (`Gender`, `Number`, `Case`, `Person`, or
 `VerbForm`), gives every group a `value`, and binds each entry to its word record and `why`.
-An entry that can fit two values needs a recorded resolution judgement or replacement; the
-engine may not choose the analysis that matches the key. Match-up names `left_role` and
+An entry that can fit two values needs a resolution receipt from a language-lane seat of
+another family than the writer, or the entry must be replaced. The engine may not choose
+the analysis that matches the key. Match-up names `left_role` and
 `right_role` (`form`, `gloss`, `question`, `answer`); any side with role `form` has its word
 record, and each pair has a `why`. These are draft item fields, while the plan states the
 activity type, focus, placement, model, and evidence it will need.

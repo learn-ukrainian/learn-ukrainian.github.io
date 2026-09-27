@@ -89,8 +89,9 @@ from another family confirms this complete demand and records a requirement rece
 the resolution receipts. The post-resolution check admits an option only if one analysis
 of its bound record's form carries the whole demand; it reads every analysis. An A1 noun
 without a plural atom can satisfy `Number: Sing`. An unbound option or a bound record
-lacking a required group fails. The key alone must be admitted and each distractor differs
-from it in `tests_feature`. Tense, aspect, mood and sense are not A1 distractor groups. The
+lacking a required group fails. The key alone must be admitted. Each distractor differs
+from it in `tests_feature`; the gate checks this where decidable, and the reviewer judges
+it otherwise. Tense, aspect, mood and sense are not A1 distractor groups. The
 A1 analytic future uses a single store form from the auxiliary record in the auxiliary slot
 or a single store form from the main verb record in the infinitive slot, never a composite
 option string.
@@ -102,7 +103,8 @@ the key completes to its learner form and each wrong completion is no VESUM word
 dialogue or quote `host`; semantic uniqueness stays with the reviewer. A1 translate rejects
 `alternatives` and a second `correct: true`. Group-sort has one A1 `grouping_feature`, group
 `value`s, bound `{text, record, why}` entries, and abstains on an entry that can fit two
-values until a language-lane resolution receipt or replacement. Match-up declares
+values until it has a resolution receipt from a language-lane seat of another family than
+the writer, or the entry is replaced. Match-up declares
 `left_role` and `right_role` from `form | gloss | question | answer`, binds every form side
 to a word record, and gives each pair a `why`. Order and unjumble explain the sequence;
 pick-syllables has an activity explanation. The A1 checks also reject conflicting answer
