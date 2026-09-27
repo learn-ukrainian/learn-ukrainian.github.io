@@ -93,7 +93,7 @@ def _database_pages(opencode: str) -> tuple[int, int, int]:
     return values[0], values[1], values[2]
 
 
-def _old_session_ids(raw: str, cutoff_ms: int) -> tuple[list[str], list[str], set[str]]:
+def _old_session_ids(raw: str, cutoff_ms: int) -> tuple[list[str], list[tuple[str, int]], set[str]]:
     # The CLI db query covers every project and child session in the database.
     if not raw:
         raise RetentionError("opencode db returned no JSON")
@@ -124,8 +124,8 @@ def _old_session_ids(raw: str, cutoff_ms: int) -> tuple[list[str], list[str], se
         if parent is not None and (not isinstance(parent, str) or not parent.startswith("ses_")):
             raise RetentionError(f"session {session_id} has an invalid parent id")
         records[session_id] = updated, parent
-    selected = {session_id for session_id, (updated, _) in records.items() if updated < cutoff_ms}
     depth_cache: dict[str, int] = {}
+    root_cache: dict[str, str] = {}
 
     def depth(session_id: str, visiting: set[str]) -> int:
         if session_id in depth_cache:
@@ -133,27 +133,41 @@ def _old_session_ids(raw: str, cutoff_ms: int) -> tuple[list[str], list[str], se
         if session_id in visiting:
             raise RetentionError("session parent graph contains a cycle")
         parent = records[session_id][1]
-        result = 0 if parent not in records else 1 + depth(parent, visiting | {session_id})
+        if parent not in records:
+            result = 0
+            root_cache[session_id] = session_id
+        else:
+            result = 1 + depth(parent, visiting | {session_id})
+            root_cache[session_id] = root_cache[parent]
         depth_cache[session_id] = result
         return result
 
     for session_id in records:
         depth(session_id, set())
-    blocked: set[str] = set()
-    for session_id in records.keys() - selected:
-        parent = records[session_id][1]
-        while parent in records:
-            if parent in selected:
-                blocked.add(parent)
-            parent = records[parent][1]
+    newest_by_root: dict[str, int] = {}
+    roots_with_old_sessions: set[str] = set()
+    for session_id, (updated, _) in records.items():
+        root = root_cache[session_id]
+        newest_by_root[root] = max(updated, newest_by_root.get(root, updated))
+        if updated < cutoff_ms:
+            roots_with_old_sessions.add(root)
+    selected = {
+        session_id for session_id in records if newest_by_root[root_cache[session_id]] < cutoff_ms
+    }
+    blocked = sorted(
+        (root, newest_by_root[root])
+        for root in roots_with_old_sessions
+        if newest_by_root[root] >= cutoff_ms
+    )
     ordered = sorted(selected, key=lambda session_id: (-depth_cache[session_id], records[session_id][0], session_id))
-    return ordered, sorted(blocked), set(records)
+    return ordered, blocked, set(records)
 
 
 def retain(*, days: int, dry_run: bool, opencode: str = "opencode", now_ms: int | None = None) -> int:
     if days < 1:
         raise RetentionError("--days must be at least 1")
-    cutoff_ms = (int(time.time() * 1000) if now_ms is None else now_ms) - days * 86_400_000
+    now = int(time.time() * 1000) if now_ms is None else now_ms
+    cutoff_ms = now - days * 86_400_000
     _require_idle()
     db_path = _database_path(opencode)
     before = _database_bytes(db_path)
@@ -170,10 +184,8 @@ def retain(*, days: int, dry_run: bool, opencode: str = "opencode", now_ms: int 
         f"before_freelist_pages={before_pages[0]} before_page_count={before_pages[1]} "
         f"before_page_size={before_pages[2]}"
     )
-    for session_id in blocked:
-        print(f"blocked_old_parent={session_id}")
-    if blocked and not dry_run:
-        raise RetentionError("old parent has a recent descendant; deleting it would remove a recent session")
+    for root, newest_updated in blocked:
+        print(f"skipped_family_root={root} newest_age_days={(now - newest_updated) / 86_400_000:.2f}")
     deleted_count = 0
 
     def idle_or_fail() -> None:
@@ -196,17 +208,15 @@ def retain(*, days: int, dry_run: bool, opencode: str = "opencode", now_ms: int 
         print(f"deleted={session_id}", flush=True)
     if dry_run:
         print("dry-run: no deletion or WAL checkpoint")
-        if blocked:
-            raise RetentionError("old parent has a recent descendant; apply would be unsafe")
     if selected and not dry_run:
         idle_or_fail()
         after_raw = _run([opencode, "db", SESSION_QUERY, "--format", "json", "--pure"])
         _, _, remaining_ids = _old_session_ids(after_raw, cutoff_ms)
         lingering = set(selected) & remaining_ids
-        missing_recent = (all_ids - set(selected)) - remaining_ids
-        if lingering or missing_recent:
+        missing_preserved = (all_ids - set(selected)) - remaining_ids
+        if lingering or missing_preserved:
             raise RetentionError(
-                f"deletion verification failed: old_remaining={len(lingering)} recent_missing={len(missing_recent)}"
+                f"deletion verification failed: old_remaining={len(lingering)} preserved_missing={len(missing_preserved)}"
             )
         idle_or_fail()
         checkpoint = _run([opencode, "db", "PRAGMA wal_checkpoint(TRUNCATE)", "--format", "json", "--pure"])
@@ -231,13 +241,13 @@ def retain(*, days: int, dry_run: bool, opencode: str = "opencode", now_ms: int 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Delete OpenCode sessions last updated more than N days ago using the OpenCode CLI.\nUse on an idle host to limit session database growth; use --dry-run to inspect first.",
+        description="Delete OpenCode session families whose every session is older than N days using the OpenCode CLI.\nFamilies with recent sessions are skipped; use on an idle host and inspect with --dry-run first.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --dry-run\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --days 14\nOutputs: read-only OpenCode CLI queries for sessions and SQLite page statistics; stdout/journal IDs, DB/WAL bytes and freelist pages before/after. Apply deletes via CLI and checkpoints the WAL. Freed pages are reused by later inserts; the main DB need not shrink. VACUUM is intentionally not run.\nExit codes: 0 successful deletion/checkpoint, dry run, or idle skip; 1 CLI, process-check, verification, or checkpoint failure.\nRelated: packaging/systemd/README.md; issue #8920.",
     )
     parser.add_argument("--days", type=int, default=7, help="retention age in whole days (default: 7; example: 14)")
     parser.add_argument(
-        "--dry-run", action="store_true", help="list old session IDs without deleting or checkpointing (default: apply)"
+        "--dry-run", action="store_true", help="list eligible session IDs and skipped families without deleting or checkpointing (default: apply)"
     )
     return parser
 

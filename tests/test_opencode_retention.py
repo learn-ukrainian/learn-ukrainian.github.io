@@ -172,22 +172,39 @@ def test_opencode_retention_wal_only_reclaim_succeeds(tmp_path: Path) -> None:
     assert "after_freelist_pages=1" in result.stdout
 
 
-def test_opencode_retention_never_deletes_recent_descendant(tmp_path: Path) -> None:
+def test_opencode_retention_skips_blocked_family_but_deletes_unrelated_old_family(tmp_path: Path) -> None:
     now = int(time.time() * 1000)
     env, log = _environment(
         tmp_path,
         [
             {"id": "ses_parent", "updated": 1, "parent": None},
-            {"id": "ses_recent_child", "updated": now, "parent": "ses_parent"},
+            {"id": "ses_old_child", "updated": 2, "parent": "ses_parent"},
+            {"id": "ses_recent_grandchild", "updated": now, "parent": "ses_old_child"},
+            {"id": "ses_unrelated_parent", "updated": 3, "parent": None},
+            {"id": "ses_unrelated_child", "updated": 4, "parent": "ses_unrelated_parent"},
         ],
     )
     dry = _invoke(env, "--dry-run")
-    assert dry.returncode == 1
-    assert "would_delete=ses_parent" in dry.stdout
-    assert "blocked_old_parent=ses_parent" in dry.stdout
-    applied = _invoke(env)
-    assert applied.returncode == 1
+    assert dry.returncode == 0, dry.stderr
+    assert "skipped_family_root=ses_parent newest_age_days=0.00" in dry.stdout
+    assert "would_delete=ses_unrelated_child" in dry.stdout
+    assert "would_delete=ses_unrelated_parent" in dry.stdout
+    assert "would_delete=ses_parent" not in dry.stdout
+    assert "would_delete=ses_old_child" not in dry.stdout
     assert "session delete" not in log.read_text()
+    applied = _invoke(env)
+    assert applied.returncode == 0, applied.stderr
+    assert "skipped_family_root=ses_parent newest_age_days=0.00" in applied.stdout
+    assert [row["id"] for row in json.loads((tmp_path / "sessions.json").read_text())] == [
+        "ses_parent",
+        "ses_old_child",
+        "ses_recent_grandchild",
+    ]
+    calls = log.read_text().splitlines()
+    assert calls.index("session delete ses_unrelated_child --pure") < calls.index(
+        "session delete ses_unrelated_parent --pure"
+    )
+    assert not any("session delete ses_parent" in call or "session delete ses_old_child" in call for call in calls)
 
 
 def test_opencode_retention_deletes_children_before_parent(tmp_path: Path) -> None:
