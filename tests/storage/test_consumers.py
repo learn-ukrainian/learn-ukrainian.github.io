@@ -3,6 +3,8 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from scripts.storage.consumers import KNOWN_BASES, scan_inventory, write_inventory
 
 
@@ -48,6 +50,7 @@ def test_scan_includes_literal_artifacts_and_known_dynamic_bases(tmp_path: Path)
     assert "DATA_ROOT" in KNOWN_BASES
 
 
+@pytest.mark.slow
 def test_p3_scan_finds_reviewed_dynamic_consumers() -> None:
     root = Path(__file__).resolve().parents[2]
     names = {row["consumer"] for row in scan_inventory(root, phase="P3")}
