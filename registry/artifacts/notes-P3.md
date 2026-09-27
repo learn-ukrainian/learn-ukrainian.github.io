@@ -2,8 +2,8 @@
 
 ## Status
 
-P3a — migration complete (1,125 rows), producer routing partial and consumer
-checks failing; P3b
+P3a — migration complete (1,125 rows), producer routing and consumer
+dispositions still partial; P3b
 residuals: `v5_mine_kyivan_rus_epigraphy.py`, `v5_mine_middle_ukrainian.py`,
 and `v4_production_shards_assembly.py` native archive regeneration (owner:
 claude-infra). P3 completion: NO (P3a).
@@ -143,26 +143,68 @@ and mode `100644` remain unchanged; the hook passed on it and a normal
 applicable Python file. Ruff formatted the changed Python files without
 changing frozen K bytes.
 
+## Round-4 consumer checkpoint
+
+The driver completed the P3 store snapshot for the existing manifests. In this
+worktree, `artifacts verify --group` exited 0 for all six groups: archive 80,
+component 17, evidence 10, other 49, release 233, study 23. The repeated
+table/index/disk/manifest audit printed
+`rows=1125 K=713 K_bytes=12942226 A=412 A_bytes=637987720 errors=0`.
+No A file or P3 manifest was changed by this round.
+
+The committed consumer checkpoint `f11b10134b61a7bd241af27598b64506f2ce11c6`
+routed portable package assets, language contact, adoption and foundry inputs,
+correction-protection mixed release consumption, and several top-level and
+project tests. Its full top-level selection printed
+`694 failed, 1401 passed, 66 skipped, 6 errors` across 2,167 tests. The
+project selection reached 94 percent and printed
+`171 failed, 2034 passed, 12 skipped, 17 errors` before its
+`v6_mine_general_assistant_textbooks` content-filter test exceeded the
+configured timeout; the exact pytest process was interrupted. These are
+diagnostic checkpoint results, not passing final-head proofs.
+
+Subsequent routing uses `REGISTRY_OPEN_MODEL_DATA_DIR` for K inputs while
+keeping frozen logical `data/` locators in contracts. P1's mixed source
+universe reads its eight A ledgers from one verified
+`open_model_evidence_indexes` snapshot. The P1, P2, and modern-contact
+builders reconstruct their frozen outputs byte for byte (`True` for all
+three); their changed bound K publication uses the existing companion-only
+set transaction. Focused tests after Ruff formatting printed `182 passed`
+for P1/P2/modern-contact, `246 passed, 7 skipped` for ten source-intake
+suites, and `8 passed` for companion-only publication fixtures.
+
+Historical source identities were independently compared with
+`git show 55d0ed1515:<source> | sha256sum` before adding each pinned
+provenance constant. Frozen receipt self-hashes gate the historical identity
+for Babych, DonNU, LNU, Pliush, UzhNU, VSPU, ZhDU, Minchak, and Wave-L
+intakes; new receipts bind their current implementation. P1, P2, and
+modern-contact retain their original generator hashes as frozen provenance
+while checking the actual migrated input bytes. A scan of changed source
+hashes in K contracts found 36 source bindings from the earlier checkpoint,
+and 21 more candidate K-only modules affected by this round. The remaining
+bindings need entry-point checks; this inventory is not yet complete.
+
+The two local decolonization component failures involving missing source
+records were reproduced with the same messages against an archive of base
+`55d0ed1515` using the same shared databases. Their CI baseline status was
+`skipped`, so the local base replay is the evidence for those two tests.
+
 ## Unresolved P3a gates at this checkpoint
 
-- The complete top-level `tests/test_open_model_*.py` consumer run failed:
-  `1103 failed, 774 passed, 67 skipped, 73 errors` on the final code head.
+- The round-3 top-level `tests/test_open_model_*.py` consumer run failed:
+  `1103 failed, 774 passed, 67 skipped, 73 errors` on its checkpoint head.
   The first errors show live readers and tests still opening K inputs at old `data/` locations
   (for example `phase3_p1_universe_freeze_v1.json` and
   `examples/portable-corpus-v1.jsonl`). All executable consumer dispositions
   and the source-identity inventory must be completed by the P3a
   implementer before exact-head review.
-- The full `tests/projects/open_model_data` run also failed:
+- The round-3 `tests/projects/open_model_data` run also failed:
   `704 failed, 1543 passed, 17 skipped, 101 errors`. Its first failures are
   the same moved-K path class, including old `data/` references to contract
   schemas and admission receipts. The P3a implementer owns those reader and
   test routes; these are failed required proofs, not P3b deferrals.
-- All six `artifacts verify --group <P3 group>` commands currently report
-  missing store objects for migrated rows (80 archive, 17 component, 10
-  evidence, 49 other, 233 release, 23 study). The 412 public A files passed the
-  disk/table/manifest hash audit, but this checkout has no P3 store copies yet.
-  The driver owns the pre-merge snapshot; verification remains open.
-- The current `consumers-P3.tsv` has unchecked entries, and the wider K-only
+- The store snapshot and six-group verification are complete. The current
+  `consumers-P3.tsv` still has unchecked entries, and the wider K-only
   entry-point census remains unfinished. The after-CI baseline is intentionally
   deferred until exact-head cross-family review under Decision J. P3a producer
   and consumer completion and the driver-owned held-out checks remain open.

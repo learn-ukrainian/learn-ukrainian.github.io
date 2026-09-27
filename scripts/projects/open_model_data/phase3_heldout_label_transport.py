@@ -29,7 +29,9 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_functional_roles as roles
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 DEFAULT_SCHEMA = DATA / "contracts/phase3_heldout_label_transport_bundle_v1.schema.json"
 DEFAULT_LABEL_PROMPT = DATA / "contracts/phase3_heldout_clean_modern_label_prompt_v1.md"
 DEFAULT_ROLE_CONTRACT = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
@@ -902,14 +904,21 @@ def _cycle002_partition(path: Path) -> list[dict[str, Any]]:
     require(sha256_file(path) == CYCLE002_PARTITION_SHA256, "cycle002 partition hash drift")
     rows = _jsonl(path, "cycle002 canonical partition")
     required = {
-        "family_id", "unit_id", "unit_sha256", "reason", "candidate_lane",
-        "source_text_sha256", "frozen_locator_sha256",
+        "family_id",
+        "unit_id",
+        "unit_sha256",
+        "reason",
+        "candidate_lane",
+        "source_text_sha256",
+        "frozen_locator_sha256",
     }
     require(
         len(rows) == CYCLE002_ROW_COUNT and len({row.get("unit_id") for row in rows}) == CYCLE002_ROW_COUNT,
         "cycle002 partition denominator drift",
     )
-    require(all(set(row) == required and row["reason"] == "evaluation_only" for row in rows), "cycle002 partition row drift")
+    require(
+        all(set(row) == required and row["reason"] == "evaluation_only" for row in rows), "cycle002 partition row drift"
+    )
     lanes = {lane: sum(row["candidate_lane"] == lane for row in rows) for lane in ("clean_modern", "phenomenon_strata")}
     require(lanes == {"clean_modern": 2000, "phenomenon_strata": 7392}, "cycle002 partition lane drift")
     return rows
@@ -919,8 +928,15 @@ def _cycle002_materialization(path: Path) -> dict[tuple[str, str], dict[str, Any
     require(sha256_file(path) == CYCLE002_MATERIALIZATION_SHA256, "cycle002 materialization hash drift")
     rows = _jsonl(path, "cycle002 canonical materialization")
     required = {
-        "family_id", "unit_id", "unit_sha256", "frozen_locator", "frozen_locator_sha256",
-        "document_or_edition_identity", "source_text", "source_record", "source_text_sha256",
+        "family_id",
+        "unit_id",
+        "unit_sha256",
+        "frozen_locator",
+        "frozen_locator_sha256",
+        "document_or_edition_identity",
+        "source_text",
+        "source_record",
+        "source_text_sha256",
     }
     require(len(rows) == MATERIALIZATION_COUNT, "cycle002 materialization denominator drift")
     result: dict[tuple[str, str], dict[str, Any]] = {}
@@ -959,7 +975,9 @@ def freeze_cycle002(
     It never copies corpus bodies; packet preparation reads bodies only from the
     already-private canonical materialization after rechecking its hash.
     """
-    _assert_output_not_in_inputs((private_dir, public_receipt_path), (partition_path, materialization_jsonl, schema_path))
+    _assert_output_not_in_inputs(
+        (private_dir, public_receipt_path), (partition_path, materialization_jsonl, schema_path)
+    )
     partition = _cycle002_partition(partition_path)
     materialized = _cycle002_materialization(materialization_jsonl)
     index: list[dict[str, Any]] = []
@@ -986,7 +1004,9 @@ def freeze_cycle002(
     identities = [_identity(row) for row in partition]
     root = _private_root(private_dir, create=True)
     _assert_private_tree(root)
-    index_hash = _write_private(root / "cycle002-freeze-index.jsonl", b"".join(canonical_json(row).encode("utf-8") + b"\n" for row in index))
+    index_hash = _write_private(
+        root / "cycle002-freeze-index.jsonl", b"".join(canonical_json(row).encode("utf-8") + b"\n" for row in index)
+    )
     manifest = {
         "schema_version": "phase3_cycle002_heldout_freeze_manifest_v1",
         "text_free": True,
@@ -1025,7 +1045,10 @@ def _cycle002_execution(role_contract_path: Path, evaluation_contract_path: Path
     role_contract = _read_json(role_contract_path, "cycle002 role contract")
     evaluation_contract = _read_json(evaluation_contract_path, "cycle002 evaluation contract")
     require(role_contract.get("cycle002", {}).get("evaluation_cycle_id") == CYCLE002_ID, "cycle002 role cycle drift")
-    require(evaluation_contract.get("cycle002", {}).get("evaluation_cycle_id") == CYCLE002_ID, "cycle002 evaluation cycle drift")
+    require(
+        evaluation_contract.get("cycle002", {}).get("evaluation_cycle_id") == CYCLE002_ID,
+        "cycle002 evaluation cycle drift",
+    )
     execution = role_contract.get("cycle002_labeling_protocol")
     require(isinstance(execution, Mapping), "cycle002 role contract lacks two-pass heldout execution binding")
     expected_passes = [
@@ -1036,8 +1059,7 @@ def _cycle002_execution(role_contract_path: Path, evaluation_contract_path: Path
         for pass_id in ("a", "b")
     ]
     require(
-        execution.get("reviewer_role_id") == "heldout_label_reviewer"
-        and execution.get("passes") == expected_passes,
+        execution.get("reviewer_role_id") == "heldout_label_reviewer" and execution.get("passes") == expected_passes,
         "cycle002 role contract heldout pass binding drift",
     )
     require(
@@ -1128,15 +1150,27 @@ def prepare_cycle002(
     require(isinstance(byte_limit, int) and byte_limit > 0, "cycle002 byte limit drift")
     _assert_output_not_in_inputs(
         (private_dir,),
-        (partition_path, materialization_jsonl, role_contract_path, evaluation_contract_path, label_prompt_path, schema_path),
+        (
+            partition_path,
+            materialization_jsonl,
+            role_contract_path,
+            evaluation_contract_path,
+            label_prompt_path,
+            schema_path,
+        ),
     )
     require(
         _absolute(freeze_manifest_path) == _absolute(private_dir) / "cycle002-freeze-manifest.json",
         "cycle002 freeze manifest must be the immutable private-root freeze output",
     )
     freeze = _cycle002_freeze_manifest(freeze_manifest_path, schema_path)
-    require(freeze["partition_manifest_sha256"] == sha256_file(partition_path), "cycle002 packet partition binding drift")
-    require(freeze["materialization_jsonl_sha256"] == sha256_file(materialization_jsonl), "cycle002 packet materialization binding drift")
+    require(
+        freeze["partition_manifest_sha256"] == sha256_file(partition_path), "cycle002 packet partition binding drift"
+    )
+    require(
+        freeze["materialization_jsonl_sha256"] == sha256_file(materialization_jsonl),
+        "cycle002 packet materialization binding drift",
+    )
     _execution, role_hash, evaluation_hash = _cycle002_execution(role_contract_path, evaluation_contract_path)
     prompt_hash = _cycle002_prompt(label_prompt_path)
     partition = _cycle002_partition(partition_path)
@@ -1157,7 +1191,10 @@ def prepare_cycle002(
                 "reference_evidence": _cycle002_reference_evidence(source),
             }
         )
-    require(sha256_value([_identity(row) for row in rows]) == freeze["selection_set_sha256"], "cycle002 packet identity drift")
+    require(
+        sha256_value([_identity(row) for row in rows]) == freeze["selection_set_sha256"],
+        "cycle002 packet identity drift",
+    )
     root = _private_root(private_dir, create=True)
     _assert_private_tree(root)
     chunks: list[tuple[list[dict[str, Any]], bool]] = []
@@ -1175,7 +1212,10 @@ def prepare_cycle002(
     if current:
         chunks.append((current, False))
     require(
-        all(len(chunk) <= packet_limit and (oversize or len(canonical_json(chunk).encode("utf-8")) <= byte_limit) for chunk, oversize in chunks),
+        all(
+            len(chunk) <= packet_limit and (oversize or len(canonical_json(chunk).encode("utf-8")) <= byte_limit)
+            for chunk, oversize in chunks
+        ),
         "cycle002 packet bounds drift",
     )
     require(sum(len(chunk) for chunk, _oversize in chunks) == CYCLE002_ROW_COUNT, "cycle002 packet denominator drift")
@@ -1241,9 +1281,7 @@ def _cycle002_manifest(path: Path, schema_path: Path) -> tuple[dict[str, Any], P
     return value, root
 
 
-def _cycle002_packet_load(
-    manifest: Mapping[str, Any], root: Path, pass_id: str, packet_index: int
-) -> dict[str, Any]:
+def _cycle002_packet_load(manifest: Mapping[str, Any], root: Path, pass_id: str, packet_index: int) -> dict[str, Any]:
     require(pass_id in CYCLE002_ACTORS, "cycle002 pass id drift")
     require(1 <= packet_index <= manifest["packet_count"], "cycle002 packet index out of range")
     binding = manifest["passes"][pass_id][packet_index - 1]
@@ -1276,7 +1314,13 @@ def _cycle002_packet_load(
 
 def _cycle002_label(label: Mapping[str, Any], source: Mapping[str, Any]) -> dict[str, Any]:
     required = {
-        "row_index", "label_state", "phenomenon", "benchmark_role", "clean_modern_eligible", "modern_genre_id", "gold",
+        "row_index",
+        "label_state",
+        "phenomenon",
+        "benchmark_role",
+        "clean_modern_eligible",
+        "modern_genre_id",
+        "gold",
     }
     require(set(label) == required, "cycle002 reviewer label shape drift")
     require(label["row_index"] == source["row_index"], "cycle002 reviewer row index drift")
@@ -1331,7 +1375,11 @@ def _cycle002_label(label: Mapping[str, Any], source: Mapping[str, Any]) -> dict
         return sealed
     else:
         require(
-            gold == {"kind": "abstain", "reason": "acceptable_control" if label["benchmark_role"] == "acceptable_control" else "protected"},
+            gold
+            == {
+                "kind": "abstain",
+                "reason": "acceptable_control" if label["benchmark_role"] == "acceptable_control" else "protected",
+            },
             "cycle002 nonpositive gold must be explicit abstention",
         )
     return sealed_label
@@ -1339,7 +1387,9 @@ def _cycle002_label(label: Mapping[str, Any], source: Mapping[str, Any]) -> dict
 
 def _cycle002_parse(raw: bytes, packet: Mapping[str, Any]) -> list[dict[str, Any]]:
     response = _strict_json_bytes(raw, "cycle002 reviewer response")
-    require(set(response) == {"labels"} and isinstance(response["labels"], list), "cycle002 reviewer response shape drift")
+    require(
+        set(response) == {"labels"} and isinstance(response["labels"], list), "cycle002 reviewer response shape drift"
+    )
     labels = response["labels"]
     require(len(labels) == len(packet["rows"]), "cycle002 reviewer response denominator drift")
     parsed = [_cycle002_label(label, source) for label, source in zip(labels, packet["rows"], strict=True)]
@@ -1369,7 +1419,9 @@ def _cycle002_ingest_bytes(
     attempt_hash = _write_private(attempt_path, raw)
     labels = _cycle002_parse(raw, packet)
     raw_hash = _write_private(root / "cycle002" / "raw" / pass_id / f"{packet_index:04d}.raw", raw)
-    response_hash = _write_private_json(root / "cycle002" / "responses" / pass_id / f"{packet_index:04d}.json", {"labels": labels})
+    response_hash = _write_private_json(
+        root / "cycle002" / "responses" / pass_id / f"{packet_index:04d}.json", {"labels": labels}
+    )
     sealed = [
         {**label, "reviewer": dict(CYCLE002_ACTORS[pass_id]), "bindings_sha256": sha256_value(manifest["bindings"])}
         for label in labels
@@ -1435,7 +1487,10 @@ def run_cycle002(
     receipt_path = root / "cycle002" / "transports" / pass_id / f"{packet_index:04d}.json"
     require(not receipt_path.exists(), "cycle002 packet already has a completed transport receipt")
     prompt_path = ROOT / manifest["bindings"]["label_prompt_logical_path"]
-    require(sha256_file(prompt_path) == manifest["bindings"]["label_prompt_sha256"], "cycle002 manifest prompt binding drift")
+    require(
+        sha256_file(prompt_path) == manifest["bindings"]["label_prompt_sha256"],
+        "cycle002 manifest prompt binding drift",
+    )
     prompt = prompt_path.read_bytes()
     command = [
         str(ROOT / ".venv/bin/python"),
@@ -1494,7 +1549,8 @@ def _cycle002_sealed_packet(
     require(
         receipt["pass_id"] == pass_id
         and receipt["packet_id"] == packet["packet_id"]
-        and receipt["packet_sha256"] == sha256_file(root / "cycle002" / "packets" / pass_id / f"{packet_index:04d}.json")
+        and receipt["packet_sha256"]
+        == sha256_file(root / "cycle002" / "packets" / pass_id / f"{packet_index:04d}.json")
         and receipt["bindings"] == manifest["bindings"]
         and receipt["actor"] == CYCLE002_ACTORS[pass_id]
         and receipt["raw_attempt_index"] >= 1
@@ -1503,12 +1559,7 @@ def _cycle002_sealed_packet(
         "cycle002 transport receipt custody drift",
     )
     attempt_path = (
-        root
-        / "cycle002"
-        / "raw-attempts"
-        / pass_id
-        / f"{packet_index:04d}"
-        / f"{receipt['raw_attempt_index']:03d}.raw"
+        root / "cycle002" / "raw-attempts" / pass_id / f"{packet_index:04d}" / f"{receipt['raw_attempt_index']:03d}.raw"
     )
     _regular(attempt_path, "cycle002 raw attempt")
     require(
@@ -1527,7 +1578,10 @@ def _cycle002_sealed_packet(
         {**label, "reviewer": dict(CYCLE002_ACTORS[pass_id]), "bindings_sha256": sha256_value(manifest["bindings"])}
         for label in labels
     ]
-    require(sealed == expected and receipt["sealed_rows_sha256"] == sha256_file(sealed_path), "cycle002 sealed custody drift")
+    require(
+        sealed == expected and receipt["sealed_rows_sha256"] == sha256_file(sealed_path),
+        "cycle002 sealed custody drift",
+    )
     return sealed
 
 
@@ -1605,15 +1659,21 @@ def _cycle002_floor_report(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         strata[phenomenon] = {}
         for benchmark_role in sorted(CYCLE002_ROLES):
             current = [
-                row for row in accepted
+                row
+                for row in accepted
                 if row["gold"]["phenomenon"] == phenomenon and row["gold"]["benchmark_role"] == benchmark_role
             ]
             documents = {row["document_or_edition_identity"] for row in current}
-            item = {"count": len(current), "document_count": len(documents), "passed": len(current) >= 30 and len(documents) >= 3}
+            item = {
+                "count": len(current),
+                "document_count": len(documents),
+                "passed": len(current) >= 30 and len(documents) >= 3,
+            }
             strata[phenomenon][benchmark_role] = item
             passed = passed and item["passed"]
     clean = [
-        row for row in accepted
+        row
+        for row in accepted
         if row["gold"]["benchmark_role"] == "acceptable_control" and row["gold"]["clean_modern_eligible"] is True
     ]
     clean_documents = {row["document_or_edition_identity"] for row in clean}
@@ -1671,7 +1731,9 @@ def assemble_cycle002(
         )
     floors = _cycle002_floor_report(comprehensive)
     complete = floors["passed"]
-    sealed_hash = _write_private_json(root / "cycle002" / "assembled" / "comprehensive-sealed-labels.json", comprehensive)
+    sealed_hash = _write_private_json(
+        root / "cycle002" / "assembled" / "comprehensive-sealed-labels.json", comprehensive
+    )
     bundle = {
         "schema_version": "phase3_cycle002_comprehensive_sealed_label_bundle_v1",
         "text_free": True,
@@ -1739,7 +1801,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                 materialization_jsonl=Path(config["materialization_jsonl"]),
                 private_dir=Path(config["private_dir"]),
                 role_contract_path=Path(config.get("role_contract_path", DEFAULT_CYCLE002_ROLE_CONTRACT)),
-                evaluation_contract_path=Path(config.get("evaluation_contract_path", DEFAULT_CYCLE002_EVALUATION_CONTRACT)),
+                evaluation_contract_path=Path(
+                    config.get("evaluation_contract_path", DEFAULT_CYCLE002_EVALUATION_CONTRACT)
+                ),
                 label_prompt_path=Path(config.get("label_prompt_path", DEFAULT_CYCLE002_LABEL_PROMPT)),
                 schema_path=Path(config.get("schema_path", DEFAULT_SCHEMA)),
                 packet_limit=config.get("packet_limit", CYCLE002_PACKET_LIMIT),

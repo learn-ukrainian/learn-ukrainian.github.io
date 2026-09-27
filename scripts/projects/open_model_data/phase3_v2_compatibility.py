@@ -25,7 +25,9 @@ from scripts.projects.open_model_data import phase3_cycle_void_receipt as cycle_
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 SCHEMA_PATH = DATA / "contracts/phase3_v2_compatibility_matrix_v1.schema.json"
 MATRIX_PATH = DATA / "evidence/phase3_v2_compatibility_matrix_v1.json"

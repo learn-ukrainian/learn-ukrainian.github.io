@@ -34,7 +34,9 @@ from scripts.projects.open_model_data import phase3_historical_materialization a
 from scripts.projects.open_model_data import phase3_historical_periodization as periodization
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 RECORD_SCHEMA_PATH = DATA / "contracts/phase3_historical_document_chronology_record_v1.schema.json"
 RECEIPT_SCHEMA_PATH = DATA / "contracts/phase3_historical_document_chronology_receipt_v1.schema.json"
 PERIODIZATION_FREEZE_PATH = DATA / "admission/phase3_historical_periodization_freeze_v1.json"

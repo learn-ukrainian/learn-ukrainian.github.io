@@ -37,7 +37,9 @@ from scripts.projects.open_model_data import phase3_vspu_post_ingest_audit as vs
 from scripts.projects.open_model_data import university_source_policy
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
 SCHEMA_PATH = DATA / "contracts/phase3_v3_prefreeze_readiness_v2.schema.json"
 V2_COMPATIBILITY_MATRIX_PATH = DATA / "evidence/phase3_v2_compatibility_matrix_v1.json"

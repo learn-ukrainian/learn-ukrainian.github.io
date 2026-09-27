@@ -21,6 +21,7 @@ from scripts.projects.open_model_data import (
 from scripts.projects.open_model_data import (
     v4_reproduce_deliverables as delivery,
 )
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
 from scripts.storage import artifacts, paths
 
 K_PATHS = (
@@ -31,6 +32,7 @@ K_PATHS = (
     "registry/projects/open_model_data/decolonization/seeds/human_gold_seeds_150_dpo.jsonl",
     "registry/projects/open_model_data/decolonization/seeds/human_gold_seeds_manifest.json",
 )
+BOUND_RECEIPT = "registry/projects/open_model_data/admission/phase3_modern_contact_channels_v1.json"
 
 
 def _git(repo: Path, *args: str) -> None:
@@ -63,7 +65,7 @@ def repo(tmp_path: Path) -> Path:
                 "test",
             )
         )
-    for relative in K_PATHS:
+    for relative in (*K_PATHS, BOUND_RECEIPT):
         target = root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(b"old")
@@ -74,7 +76,7 @@ def repo(tmp_path: Path) -> Path:
     staged_a.write_bytes(b"A-bound")
     old_a = paths.hash_file(artifact)
     companions = []
-    for index, relative in enumerate(K_PATHS):
+    for index, relative in enumerate((*K_PATHS, BOUND_RECEIPT)):
         source = tmp_path / f"bind-k-{index}"
         source.write_bytes(b"old")
         companions.append(artifacts.CompanionChange(relative, source, hashlib.sha256(b"old").hexdigest()))
@@ -87,6 +89,18 @@ def repo(tmp_path: Path) -> Path:
         expected_members={"projects/open_model_data/a.json"},
     )
     return root
+
+
+def test_shared_bound_companion_publication_is_idempotent_and_refuses_dirty_replacement(repo: Path) -> None:
+    target = repo / BOUND_RECEIPT
+    before_a = (repo / "data/projects/open_model_data/a.json").read_bytes()
+    assert publish_bound_companion(repo, "open_model_other_indexes", "fixture", target, b"new") is True
+    assert paths.artifact_set("open_model_other_indexes", repo=repo).companions[BOUND_RECEIPT] == b"new"
+    assert publish_bound_companion(repo, "open_model_other_indexes", "fixture", target, b"new") is False
+    with pytest.raises(ValueError, match="dirty K companion"):
+        publish_bound_companion(repo, "open_model_other_indexes", "fixture", target, b"newer")
+    assert target.read_bytes() == b"new"
+    assert (repo / "data/projects/open_model_data/a.json").read_bytes() == before_a
 
 
 @pytest.mark.parametrize("route", ["quality", "delivery", "seeds", "historical"])

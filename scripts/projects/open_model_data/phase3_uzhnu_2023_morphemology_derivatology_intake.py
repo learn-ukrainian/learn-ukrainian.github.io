@@ -21,12 +21,17 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCHEMA_PATH = DATA / "contracts/phase3_uzhnu_2023_morphemology_derivatology_candidate_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_uzhnu_2023_morphemology_derivatology_candidate_v1.json"
 FREEZE_PATH = DATA / "admission/phase3_university_content_audit_freeze_v1.json"
 POLICY_PATH = DATA / "admission/phase3_complete_source_policy_v4.json"
 SCRIPT_PATH = Path(__file__).resolve()
+# Independently pinned to the 55d0ed1515 source and exact frozen receipt.
+HISTORICAL_IMPLEMENTATION_SHA256 = "da5431fca651dcc25e59b3a031e9a7a4459404f4a7f34b9e7f55540a302a7961"
+FROZEN_PUBLIC_RECEIPT_SHA256 = "bbd7f308145c2f8b60fdb253c6ebc648d64006491226c58a7c7ce1f703542139"
 
 SCHEMA_VERSION = "phase3_uzhnu_2023_morphemology_derivatology_candidate_v1"
 STATUS = "ACADEMIC_CANON_CORROBORATION_CANDIDATE_NO_GAP_TRANSITION"
@@ -386,7 +391,10 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
             f"receipt schema violation at {location}: {errors[0].message}"
         )
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
-    require(receipt == {**build_receipt_body(), "receipt_sha256": receipt["receipt_sha256"]}, "receipt body drift")
+    expected_body = build_receipt_body()
+    if receipt["receipt_sha256"] == FROZEN_PUBLIC_RECEIPT_SHA256:
+        expected_body["bindings"]["implementation_sha256"] = HISTORICAL_IMPLEMENTATION_SHA256
+    require(receipt == {**expected_body, "receipt_sha256": receipt["receipt_sha256"]}, "receipt body drift")
     encoded = canonical_json(receipt)
     for forbidden in (
         "GoogleDrive-",

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 from jsonschema import Draft202012Validator
 from projects.open_model_data.freeze_phase3_p1_universe import build_manifest
 
@@ -16,6 +17,9 @@ SCHEMA = DATA / "contracts/phase3_p1_universe_freeze_v1.schema.json"
 ARTIFACT = DATA / "evidence/phase3_p1_universe_freeze_v1.json"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_evidence_indexes", "projects/open_model_data/evidence/source_universe_v1/ua_gec.units.jsonl"
+)
 def test_p1_artifact_matches_deterministic_builder() -> None:
     artifact = json.loads(ARTIFACT.read_text(encoding="utf-8"))
     assert artifact == build_manifest()

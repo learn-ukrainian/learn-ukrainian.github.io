@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -18,8 +19,13 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-FREEZE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_periodization_freeze_v1.json"
-SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_historical_periodization_freeze_v1.schema.json"
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+FREEZE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_historical_periodization_freeze_v1.json"
+SCHEMA_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_historical_periodization_freeze_v1.schema.json"
 SCHEMA_VERSION = "phase3_historical_periodization_freeze_v1"
 ASSIGNMENT_SCHEMA_VERSION = "phase3_historical_periodization_assignment_v1"
 EXPECTED_FREEZE_SHA256 = "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198"

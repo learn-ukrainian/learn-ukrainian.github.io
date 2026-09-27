@@ -31,8 +31,12 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
+HISTORICAL_IMPLEMENTATION_SHA256 = "142e84bafc53fb6bffea6151ed25444dbeaa9d09f437230e9490247a5c2ada6d"
+FROZEN_PUBLIC_RECEIPT_SHA256 = "6fa02003dc5ae8416be64db8c8ee18509b4fb25e65e87f876d5b6d84211f4c43"
 SCHEMA_PATH = DATA / "contracts/phase3_donnu_2023_morphemics_word_formation_candidate_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT_PATH = DATA / "admission/phase3_donnu_2023_morphemics_word_formation_candidate_v1.json"
 UNIVERSITY_FREEZE_PATH = DATA / "admission/phase3_university_content_audit_freeze_v1.json"
@@ -656,7 +660,14 @@ def validate_receipt(value: Mapping[str, Any]) -> dict[str, Any]:
         )
     require(receipt["receipt_sha256"] == receipt_sha256(receipt), "receipt self-hash drift")
     authoritative = validate_authoritative_university_state()
-    require(receipt["bindings"]["implementation_sha256"] == sha256_file(SCRIPT_PATH), "implementation binding drift")
+    # The exact frozen receipt binds the independently pinned 55d0ed1515
+    # implementation; newly minted receipts bind this implementation.
+    implementation_sha256 = (
+        HISTORICAL_IMPLEMENTATION_SHA256
+        if receipt["receipt_sha256"] == FROZEN_PUBLIC_RECEIPT_SHA256
+        else sha256_file(SCRIPT_PATH)
+    )
+    require(receipt["bindings"]["implementation_sha256"] == implementation_sha256, "implementation binding drift")
     require(receipt["bindings"]["schema_sha256"] == sha256_file(SCHEMA_PATH), "schema binding drift")
     require(
         receipt["bindings"]["university_content_audit_freeze_v1_sha256"]
