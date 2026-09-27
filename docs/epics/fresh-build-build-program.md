@@ -76,7 +76,7 @@ In this order; each step's artifact is checked by the tool named before the next
 1. **Base layer and word store** (once for the level, before any plan): WP 10's request file → `build-words a1 --request …` → `words-verify a1` green; count the `pending` forms and the `unresolved` records; the operator's expectation is that ULIF-sourced stress is absent today (`homonym_checked = 0` everywhere) and the trie covers most A1 forms — quote the numbers.
 2. **Plan stage, positions 1 to 8 in order.** For each position:
    a. **Evidence pack** from the arc row (its job, skills and scope in `_arc.yaml`) → `pack-verify` green → **provisional lock** (review contract, Contract 1 timing).
-   b. **Module plan** in the v2 format — as many lessons as its content needs (R-02); the arc's estimate is not a target; the last lesson is the recap — written by a language lane from the pack and the arc, with the operator's decisions record; `plan-validate --write-scope` (writes the generated scope sidecar) → `plan-validate --provisional-pack --write-report` green.
+   b. **Module plan** in the v2 format — as many lessons as its content needs (R-02); the arc's estimate is not a target; the last lesson is the recap — written by a language lane from the pack and the arc, with the operator's decisions record; `plan-validate --provisional-pack --write-scope` (writes the generated scope sidecar) → `plan-validate --provisional-pack --write-report` green.
    c. **Plan review** (Contract 1) by a cross-family language seat with the full manifest; on APPROVE the pack lock is promoted into `evidence_ref` (`plan-promote`).
    d. `plan-validate --strict` green on the promoted plan.
    Positions 1–7 stop here. Position 8 (`things-have-gender`) continues with step 5.
