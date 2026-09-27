@@ -100,7 +100,13 @@ handlers; `runner/side_db.py` was the additional Kaikki reader it exposed.
 - Other A paths: `source_inventory_review_decisions.py` and
   `load_relation_candidates.py` resolve dynamic candidate paths through
   `artifact_path()`. Declared writers above use `write_artifact()`;
-  unregistered new outputs under the migrated tree now raise before writing.
+  new outputs under the migrated tree require a group-declared, narrow
+  `registration_patterns` match. The parked dated JSON and per-book headword
+  YAML patterns are declared in their group manifests; every unmatched path
+  still raises before writing. `write_artifact()` stages registered additions
+  and publishes them with the same durable transaction engine used for
+  existing members. A local store copy still needs a successful `snapshot`
+  for off-host recovery.
   The specific `.gitignore` rules preserve host state in `cache/`,
   `slovnyk_cache/`, `runner-mirror/`, intake journals and locks, and named
   local grow, triage, and private-intake outputs. Remaining `data/lexicon`
