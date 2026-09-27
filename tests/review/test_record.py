@@ -1076,6 +1076,67 @@ def test_a_second_seat_needs_the_lesson_to_be_sampled_and_a_first_review_on_that
         world.record(world.make_return(n), task_id="review-google", second=True)
 
 
+# --- #8892: eligibility and pairing are decided inside the write transaction, not before it -----------------------------
+
+
+def _race_a_newer_first_attempt(
+    world: World, monkeypatch: pytest.MonkeyPatch, *, task_id: str, agent: str, model: str
+) -> dict[str, Any]:
+    """Commit a newer first-seat attempt (``task_id``/``agent``/``model``) between the second seat's early,
+    pre-transaction eligibility read and the write transaction that records it — a hook at that seam, not a
+    sleep, exactly like ``test_a_decision_committed_before_the_write_transaction_is_honoured`` above.
+    """
+    real_rejection_codes = record._rejection_codes
+    triggered = False
+    committed: dict[str, Any] = {}
+
+    def raced(*args: Any, **kwargs: Any) -> list[str]:
+        nonlocal triggered
+        result = real_rejection_codes(*args, **kwargs)
+        if not triggered:
+            triggered = True
+            world.task(task_id, agent, model)
+            committed["second_first_attempt"] = world.record(world.make_return(2), task_id=task_id)
+        return result
+
+    monkeypatch.setattr(record, "_rejection_codes", raced)
+    return committed
+
+
+def test_a_first_attempt_of_the_second_seats_own_family_committed_mid_race_refuses_it(
+    world: World, monkeypatch: pytest.MonkeyPatch, sampled: None
+) -> None:
+    world.record(world.make_return(2))  # A1: family claude; the second seat's early check passes against it
+    world.task("review-google", "agy", "gemini-3.8-flash-high")
+    committed = _race_a_newer_first_attempt(
+        world, monkeypatch, task_id="review-google-first", agent="agy", model="gemini-3.8-flash-high"
+    )  # A2: same family as the second seat -- eligible against A1, not against A2
+    before_budgets = world.db_rows("budgets")
+    with pytest.raises(record.RecordError, match="third family"):
+        world.record(world.make_return(2), task_id="review-google", second=True)
+    assert committed["second_first_attempt"].accepted  # A2 itself landed fine: this is a third-family refusal only
+    assert world.db_rows("budgets") == before_budgets
+    assert world.db_rows("attempts", "role = 'second'") == []
+    assert world.db_rows("agreement") == []
+    assert len(world.db_rows("attempts", "role = 'first'")) == 2  # A1 and A2 only; no attempt row for the refusal
+
+
+def test_a_differently_familied_first_attempt_committed_mid_race_is_paired_over_the_stale_one(
+    world: World, monkeypatch: pytest.MonkeyPatch, sampled: None
+) -> None:
+    a1 = world.record(world.make_return(2))  # A1: family claude
+    world.task("review-google", "agy", "gemini-3.8-flash-high")
+    committed = _race_a_newer_first_attempt(
+        world, monkeypatch, task_id="review-grok-first", agent="grok", model="grok-4.7"
+    )  # A2: family xai -- a third family against the second seat too, so eligibility still holds
+    outcome = world.record(world.make_return(2), task_id="review-google", second=True)
+    assert outcome.accepted and outcome.agreement is not None
+    [row] = world.db_rows("agreement")
+    a2 = committed["second_first_attempt"]
+    assert row["attempt_a"] == a2.attempt_id
+    assert row["attempt_a"] != a1.attempt_id
+
+
 # --- the CLI ---------------------------------------------------------------------------------------------------------------------------
 
 
