@@ -67,8 +67,10 @@ describe('PickSyllables', () => {
     const fb = feedback(container);
     expect(fb).toBeInTheDocument();
     expect(fb).toHaveAttribute('data-correct', 'true');
-    expect(fb).toHaveAttribute('role', 'status');
-    expect(fb).toHaveAttribute('aria-live', 'polite');
+    // `explanation` is pre-existing (not new in #8889 A1-P3): no live-region
+    // announcement is added here, matching main exactly (finding 5).
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
     expect(container.querySelector('[data-activity="pick-syllables-explanation"]')?.textContent).toBe(
       'Закритий склад закінчується на приголосний.',
     );

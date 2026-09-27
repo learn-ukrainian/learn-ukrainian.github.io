@@ -135,8 +135,6 @@ export default function PickSyllables({
 
       {showResult && (
         <div
-          role="status"
-          aria-live="polite"
           data-activity="pick-syllables-feedback"
           data-correct={isFullyCorrect ? 'true' : 'false'}
           style={{

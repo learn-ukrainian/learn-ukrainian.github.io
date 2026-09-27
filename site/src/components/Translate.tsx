@@ -129,8 +129,7 @@ export function TranslateItem({
             className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
             data-activity="translate-feedback"
             data-correct={isCorrect ? 'true' : 'false'}
-            role="status"
-            aria-live="polite"
+            {...(optionWhy ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
           >
             {isCorrect ? (
               correctLabel

@@ -521,5 +521,23 @@ describe('FillInQuestion optionWhy (form-choice / orthography)', () => {
     const note = container.querySelector('[data-activity="fillin-explanation"]');
     expect(note).toHaveTextContent('The sentence names it.');
     expect(container.querySelector('[data-activity="fillin-option-why"]')).not.toBeInTheDocument();
+    // #8889 A1-P3 finding 5: matches main exactly — no live region without optionWhy.
+    const fb = container.querySelector('[data-activity="fillin-feedback"]');
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
+  });
+
+  test('legacy free-typed mode (no mode prop) never gains a live region (matches main)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FillInQuestion sentence="Я ___ книгу." answer="читаю" explanation="1st person." />,
+    );
+    const input = container.querySelector('input')!;
+    await user.type(input, 'читаю{Enter}');
+
+    const fb = container.querySelector('[data-activity="fillin-feedback"]');
+    expect(fb).toHaveTextContent('1st person.');
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
   });
 });

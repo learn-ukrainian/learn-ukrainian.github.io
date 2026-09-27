@@ -371,8 +371,7 @@ export default function MatchUp({
           className={`${styles.feedback} ${styles.feedbackCorrect}`}
           data-activity="match-feedback"
           data-correct="true"
-          role="status"
-          aria-live="polite"
+          {...(pairs.some((p) => p.why) ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
         >
           {successLabel}
         </div>

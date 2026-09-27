@@ -136,6 +136,8 @@ export default function OddOneOut({ instruction, items: sourceItems }: OddOneOut
     );
   }
 
+  const hasOptionWhy = Boolean(current.optionWhy);
+
   return (
     <div className={styles.activityContainer} data-activity="odd-one-out">
       <div className={styles.activityHeader}>
@@ -201,10 +203,9 @@ export default function OddOneOut({ instruction, items: sourceItems }: OddOneOut
 
       {showResult && (
         <div
-          role="status"
-          aria-live="polite"
           data-activity="odd-one-out-feedback"
           data-correct={isCorrect ? 'true' : 'false'}
+          {...(hasOptionWhy ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
           style={{
             padding: '0.75rem 1rem',
             background: isCorrect ? 'var(--co-success-bg)' : 'var(--co-error-bg)',

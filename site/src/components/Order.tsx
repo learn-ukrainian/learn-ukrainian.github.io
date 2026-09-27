@@ -76,6 +76,8 @@ export default function Order({ items, correct_order, explanation, instruction, 
   const correctMsg = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
   const incorrectMsg = isUkrainian ? '✗ Правильний порядок:' : '✗ Correct order:';
 
+  const hasExplanation = Boolean(explanation);
+
   return (
     <div className={styles.activityContainer} data-activity="order">
       <div className={styles.activityHeader}>
@@ -148,8 +150,7 @@ export default function Order({ items, correct_order, explanation, instruction, 
             className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
             data-activity="order-feedback"
             data-correct={isCorrect ? 'true' : 'false'}
-            role="status"
-            aria-live="polite"
+            {...(hasExplanation ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
           >
             {isCorrect ? correctMsg : (
               <div>

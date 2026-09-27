@@ -228,6 +228,10 @@ describe('TranslateItem optionWhy', () => {
 
     expect(container.textContent).toContain('A basic greeting.');
     expect(container.querySelector('[data-activity="translate-option-why"]')).not.toBeInTheDocument();
+    // #8889 A1-P3 finding 5: matches main exactly — no live region without optionWhy.
+    const fb = container.querySelector('[data-activity="translate-feedback"]');
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
   });
 });
 

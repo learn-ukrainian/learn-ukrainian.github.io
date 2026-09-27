@@ -213,6 +213,10 @@ describe('TrueFalseQuestion optionWhy', () => {
 
     expect(container.textContent).toContain("It's due to Rayleigh scattering.");
     expect(container.querySelector('[data-activity="tf-option-why"]')).not.toBeInTheDocument();
+    // #8889 A1-P3 finding 5: matches main exactly — no live region without optionWhy.
+    const fb = container.querySelector('[data-activity="tf-feedback"]');
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
   });
 });
 
@@ -273,6 +277,9 @@ describe('TrueFalse wrapper', () => {
     expect(feedbacks[0].textContent).toContain('✗ Incorrect');
     expect(within(rows[1]).getByText(/It flows into the Black Sea/)).toBeInTheDocument();
     expect(feedbacks[0].getAttribute('data-correct')).toBe('false');
+    // #8889 A1-P3 finding 5: matches main exactly — no live region without optionWhy.
+    expect(feedbacks[0]).not.toHaveAttribute('role');
+    expect(feedbacks[0]).not.toHaveAttribute('aria-live');
     for (const btn of within(rows[1]).getAllByRole('button')) {
       expectQuizOptionShell(btn);
     }

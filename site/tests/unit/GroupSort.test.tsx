@@ -1,5 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
 import { render, screen, within, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import GroupSort from '@site/src/components/GroupSort';
 
 // GroupSort is DRAG-ONLY — there is no click interaction path for
@@ -269,5 +270,126 @@ describe('GroupSort entry why (object entries {text, record, why})', () => {
     const { container } = render(<GroupSort groups={legacyGroups} />);
     const texts = wordTiles(pool(container)).map((b) => b.textContent?.trim());
     expect(new Set(texts)).toEqual(new Set(['apple', 'carrot']));
+  });
+
+  // #8889 A1-P3 finding 5: plain string entries never gain a live region or
+  // an extra wrapper element around the tile — matches main exactly.
+  test('plain string entries: checking shows feedback with no live region and no entry-why wrapper', () => {
+    const legacyGroups = { Fruits: ['apple'], Vegetables: ['carrot'] };
+    const { container } = render(<GroupSort groups={legacyGroups} />);
+
+    const appleTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'apple')!;
+    drag(appleTile, bucketByName(container, 'Fruits'));
+    const carrotTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'carrot')!;
+    drag(carrotTile, bucketByName(container, 'Vegetables'));
+
+    const checkBtn = [...container.querySelectorAll<HTMLButtonElement>('button')].find(
+      (b) => b.textContent?.trim() === 'Check Answers',
+    )!;
+    fireEvent.click(checkBtn);
+
+    const fb = container.querySelector('[data-activity="group-sort-feedback"]');
+    expect(fb).toBeInTheDocument();
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
+    expect(container.querySelector('[data-activity="group-sort-entry-why"]')).not.toBeInTheDocument();
+    // The tile is not wrapped in an extra flex-column element when the
+    // entry has no `why` (that wrapper only appears for {text, why} entries).
+    const fruitsTile = wordTiles(bucketByName(container, 'Fruits'))[0];
+    expect(fruitsTile.parentElement?.style.display).not.toBe('flex');
+  });
+});
+
+// ── keyboard-only placement path (#8889 A1-P3 finding 3) ────────────────────
+//
+// HTML5 drag-and-drop has no native keyboard equivalent, so GroupSort also
+// offers: focus + activate an entry (select it), then focus + activate one
+// of the group-choice buttons that appear. Both are plain <button>s, so Tab
+// reaches them and Enter/Space activates them like any other button —
+// verified here with real keyboard events (focus + `user.keyboard`), no
+// mouse/click/drag events at all.
+
+describe('GroupSort keyboard-only placement', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  const groups = {
+    Fruits: [{ text: 'apple', why: 'apple is a fruit.' }],
+    Vegetables: [{ text: 'carrot', why: 'carrot is a vegetable.' }],
+  };
+
+  test('a keyboard-only learner can place entries into groups and reach a wrong-placement why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<GroupSort groups={groups} />);
+
+    // Select "apple" (focus + Enter — a real keyboard activation, not a click).
+    const appleTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'apple')!;
+    appleTile.focus();
+    await user.keyboard('{Enter}');
+    expect(appleTile).toHaveAttribute('aria-pressed', 'true');
+
+    // The group chooser appears; place apple into Vegetables (wrong).
+    let chooser = container.querySelector('[data-activity="group-sort-chooser"]')!;
+    expect(chooser).toBeInTheDocument();
+    let vegChoice = [...chooser.querySelectorAll<HTMLButtonElement>('button')].find(
+      (b) => b.getAttribute('data-target') === 'Vegetables',
+    )!;
+    vegChoice.focus();
+    await user.keyboard('{Enter}');
+
+    expect(wordTiles(bucketByName(container, 'Vegetables')).map((t) => t.textContent?.trim())).toContain('apple');
+
+    // Select "carrot" and place it into Vegetables (correct) via keyboard too.
+    const carrotTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'carrot')!;
+    carrotTile.focus();
+    await user.keyboard('{Enter}');
+    chooser = container.querySelector('[data-activity="group-sort-chooser"]')!;
+    vegChoice = [...chooser.querySelectorAll<HTMLButtonElement>('button')].find(
+      (b) => b.getAttribute('data-target') === 'Vegetables',
+    )!;
+    vegChoice.focus();
+    await user.keyboard('{Enter}');
+
+    // Check answers — also reached by keyboard (focus + Enter).
+    const checkBtn = [...container.querySelectorAll<HTMLButtonElement>('button')].find(
+      (b) => b.textContent?.trim() === 'Check Answers',
+    )!;
+    checkBtn.focus();
+    await user.keyboard('{Enter}');
+
+    const why = container.querySelector('[data-activity="group-sort-entry-why"]');
+    expect(why).toBeInTheDocument();
+    expect(why).toHaveTextContent('apple is a fruit.');
+  });
+
+  test('selecting a placed entry and choosing "return to pool" moves it back, by keyboard', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<GroupSort groups={groups} />);
+
+    const appleTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'apple')!;
+    appleTile.focus();
+    await user.keyboard('{Enter}');
+    let chooser = container.querySelector('[data-activity="group-sort-chooser"]')!;
+    let fruitsChoice = [...chooser.querySelectorAll<HTMLButtonElement>('button')].find(
+      (b) => b.getAttribute('data-target') === 'Fruits',
+    )!;
+    fruitsChoice.focus();
+    await user.keyboard('{Enter}');
+    expect(wordTiles(bucketByName(container, 'Fruits')).map((t) => t.textContent?.trim())).toContain('apple');
+
+    // Re-select the now-placed tile and send it back to the pool.
+    const placedApple = wordTiles(bucketByName(container, 'Fruits'))[0];
+    placedApple.focus();
+    await user.keyboard('{Enter}');
+    chooser = container.querySelector('[data-activity="group-sort-chooser"]')!;
+    const poolChoice = [...chooser.querySelectorAll<HTMLButtonElement>('button')].find(
+      (b) => b.getAttribute('data-target') === '__pool__',
+    )!;
+    poolChoice.focus();
+    await user.keyboard('{Enter}');
+
+    expect(wordTiles(bucketByName(container, 'Fruits'))).toHaveLength(0);
+    expect(wordTiles(pool(container)).map((t) => t.textContent?.trim())).toContain('apple');
   });
 });

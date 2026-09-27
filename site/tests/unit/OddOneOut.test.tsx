@@ -159,5 +159,9 @@ describe('OddOneOut optionWhy', () => {
 
     expect(screen.getByText('Стіл — не час доби.')).toBeInTheDocument();
     expect(container.querySelector('[data-activity="odd-one-out-option-why"]')).not.toBeInTheDocument();
+    // #8889 A1-P3 finding 5: matches main exactly — no live region without optionWhy.
+    const fb = container.querySelector('[data-activity="odd-one-out-feedback"]');
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
   });
 });

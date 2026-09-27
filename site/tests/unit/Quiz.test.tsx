@@ -228,6 +228,11 @@ describe('QuizQuestion optionWhy', () => {
 
     expect(container.textContent).toContain('Basic arithmetic.');
     expect(container.querySelector('[data-activity="quiz-option-why"]')).not.toBeInTheDocument();
+    // #8889 A1-P3 finding 5: no optionWhy means no new live region either —
+    // the feedback div must match main's markup exactly (no role/aria-live).
+    const fb = container.querySelector('[data-activity="quiz-feedback"]');
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
   });
 });
 

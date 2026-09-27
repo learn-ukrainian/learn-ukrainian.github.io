@@ -117,6 +117,10 @@ describe('Order', () => {
     await user.click(checkButton(container)!);
 
     expect(container.querySelector('[data-activity="order-explanation"]')).not.toBeInTheDocument();
+    // #8889 A1-P3 finding 5: matches main exactly — no live region without explanation.
+    const fb = feedback(container);
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
   });
 
   test('renders instruction text when provided', () => {

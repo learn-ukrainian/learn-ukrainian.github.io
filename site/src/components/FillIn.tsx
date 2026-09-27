@@ -218,8 +218,7 @@ export function FillInQuestion({
             className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
             data-activity="fillin-feedback"
             data-correct={isCorrect ? 'true' : 'false'}
-            role="status"
-            aria-live="polite"
+            {...(optionWhy ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
           >
             {isCorrect ? correctLabel : `${answerLabel} ${answer || emptyAnswerLabel}`}
             {optionWhy ? (
@@ -328,8 +327,6 @@ export function FillInQuestion({
           className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
           data-activity="fillin-feedback"
           data-correct={isCorrect ? 'true' : 'false'}
-          role="status"
-          aria-live="polite"
         >
           {isCorrect ? correctLabel : `${answerLabel} ${answer || emptyAnswerLabel}`}
           {explanation && <p>{parseMarkdown(explanation)}</p>}

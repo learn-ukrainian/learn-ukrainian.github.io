@@ -85,8 +85,7 @@ export function TrueFalseQuestion({ statement, isTrue, explanation, optionWhy, i
           className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
           data-activity="tf-feedback"
           data-correct={isCorrect ? 'true' : 'false'}
-          role="status"
-          aria-live="polite"
+          {...(optionWhy ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
         >
           {isCorrect ? correctLabel : wrongLabel}
           {optionWhy ? (
@@ -219,8 +218,7 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
                   className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
                   data-activity="tf-row-feedback"
                   data-correct={isCorrect ? 'true' : 'false'}
-                  role="status"
-                  aria-live="polite"
+                  {...(item.optionWhy ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
                 >
                   {isCorrect ? correctLabel : wrongLabel}
                   {item.optionWhy ? (

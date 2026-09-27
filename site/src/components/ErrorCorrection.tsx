@@ -322,8 +322,9 @@ export function ErrorCorrectionItem({
             className={`${styles.feedback} ${(isFixCorrect || isNoErrorCorrect || isCorrectionShown) ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
             data-activity="error-correction-feedback"
             data-correct={(isFixCorrect || isNoErrorCorrect || isCorrectionShown) ? 'true' : 'false'}
-            role="status"
-            aria-live="polite"
+            {...(optionWhy && !isNoErrorCorrect && !isCorrectionShown
+              ? { role: 'status' as const, 'aria-live': 'polite' as const }
+              : {})}
           >
             {isNoErrorCorrect ? (
               isUkrainian ? '✓ Правильно! У цьому реченні не було помилок.' : '✓ Correct! There was no error in this sentence.'

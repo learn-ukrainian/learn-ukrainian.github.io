@@ -97,8 +97,7 @@ export function QuizQuestion({ question, options, correctIndex, explanation, opt
           className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
           data-activity="quiz-feedback"
           data-correct={isCorrect ? 'true' : 'false'}
-          role="status"
-          aria-live="polite"
+          {...(optionWhy ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
         >
           {isCorrect ? correctLabel : `${incorrectLabel} ${options[correctIndex]}`}
           {optionWhy ? (

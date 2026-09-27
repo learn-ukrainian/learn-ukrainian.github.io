@@ -760,6 +760,10 @@ describe('ErrorCorrectionItem optionWhy (#8889 A1-P3)', () => {
 
     expect(container.textContent).toContain('Past tense of');
     expect(container.querySelector('[data-activity="error-correction-option-why"]')).not.toBeInTheDocument();
+    // #8889 A1-P3 finding 5: matches main exactly — no live region without optionWhy.
+    const fb = container.querySelector('[data-activity="error-correction-feedback"]');
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
   });
 });
 

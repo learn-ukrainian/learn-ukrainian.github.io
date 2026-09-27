@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 85d010600bc0cb51845d78e13f908854436b75e3571c7e3a234c639be3b3a267
+  components_sha256: 751d4a2067d2286ac59ae6fa8f8610dcefb9a8b48243f6a550c0181629d88b22
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -1161,7 +1161,7 @@ components:
       - name: optionWhy
         type: string[]
         description: Feedback for each option, aligned by original index.
-        ukrainian_text: 'false'
+        ukrainian_text: 'true'
     example:
       items:
       - <ImageToLetterItem>

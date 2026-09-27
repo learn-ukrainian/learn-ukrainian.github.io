@@ -34,7 +34,7 @@ interface ImageToLetterItem {
    * (before shuffling). Absent on every existing module, which keeps
    * today's rendering (only the note/explanation, shown on a correct pick).
    * @schemaDescription Feedback for each option, aligned by original index.
-   * @ukrainianText false
+   * @ukrainianText true
    */
   optionWhy?: string[];
 }

@@ -258,6 +258,9 @@ describe('MatchUp', () => {
     const fb = feedback(container);
     expect(fb).toBeInTheDocument();
     expect(fb!.textContent).toContain('All matched correctly');
+    // #8889 A1-P3 finding 5: matches main exactly — no live region when no pair has `why`.
+    expect(fb).not.toHaveAttribute('role');
+    expect(fb).not.toHaveAttribute('aria-live');
   });
 
   test('shows Ukrainian success message when isUkrainian=true', async () => {
