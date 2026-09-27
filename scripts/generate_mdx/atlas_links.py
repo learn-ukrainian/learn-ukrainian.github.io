@@ -10,7 +10,9 @@ integrity-safe by construction (design §7/§8 ``cross_link_integrity``; warn at
 v1 per §11 Q4 — there is nothing to warn about because broken links cannot be
 produced).
 
-Matching is conservative — exact lemma key only, after:
+Matching is conservative. A surface form links only when normalisation
+finds one published article:
+
   * stripping stress marks (combining acute U+0301 / grave U+0300) — dmklinger
     and some vocab YAMLs carry stressed headwords (``робо́та``) while Atlas
     lemmas are unstressed (``робота``);
@@ -21,12 +23,25 @@ Crucially it does NOT strip *all* combining marks: Ukrainian ``й``/``ї``
 decompose (NFD) to base vowel + combining breve/diaeresis, which must survive
 so ``їжак`` does not collapse to ``іжак``.
 
+The manifest is not the publication oracle. It still supplies the historical
+lemma → ``url_slug`` map, but the word-page client shell shows "Word not
+found" unless ``slug`` is a ``s`` key in ``lexicon-search-index.json``
+(``preflightAtlasSlugInSearchIndex``). Inflected lemmas such as
+``студентові`` are manifest entries and are absent from that index; they
+exist only as rows in ``lexicon-search-aliases.json``. When the exact
+normalised form is not one published entry, a unique alias to one published
+entry is rewritten to that entry. An ambiguous alias, or a word with
+neither, emits no link — this function does not guess between lemmas.
+
 The vocabulary YAML is never modified — slugs are derived here at render time.
 """
 
 from __future__ import annotations
 
+import json
+import re
 import unicodedata
+import urllib.parse
 from functools import lru_cache
 from pathlib import Path
 
@@ -36,9 +51,14 @@ except ModuleNotFoundError:  # pragma: no cover - package import path in tests
     from scripts.lexicon.manifest_io import load_manifest
 
 # scripts/generate_mdx/atlas_links.py -> parents[2] == repo root (worktree-aware).
-_DEFAULT_MANIFEST = (
-    Path(__file__).resolve().parents[2] / "site" / "src" / "data" / "lexicon-manifest.json"
-)
+_DATA_DIR = Path(__file__).resolve().parents[2] / "site" / "src" / "data"
+_DEFAULT_MANIFEST = _DATA_DIR / "lexicon-manifest.json"
+# Client-shell publication oracle: WordAtlasClientShell preflight compares
+# the decoded NFC slug to search-index row ``s`` and never opens an alias URL.
+_DEFAULT_SEARCH_INDEX = _DATA_DIR / "lexicon-search-index.json"
+_DEFAULT_ALIASES = _DATA_DIR / "lexicon-search-aliases.json"
+_LEXICON_HREF_RE = re.compile(r"^/lexicon/([^/]+)/?$")
+_BAD_PERCENT_ESCAPE = re.compile(r"%(?![0-9A-Fa-f]{2})")
 
 # Stress accents to strip. Deliberately NOT the full "Mn" category — that would
 # also drop the breve/diaeresis that make й/ї, destroying valid lemmas.
@@ -96,17 +116,185 @@ def _load_index(manifest_path: str) -> dict[str, str]:
     return index
 
 
-def atlas_href_for(word: str, manifest_path: str | Path | None = None) -> str | None:
-    """Return the Atlas page href for ``word`` iff a page exists, else ``None``.
+def _href(slug: str) -> str:
+    return f"/lexicon/{slug}/"
+
+
+def _unique_target(targets: frozenset[str], allowed: set[str]) -> str | None:
+    """Return the only target that is a published entry; refuse to guess."""
+    published = targets & allowed
+    if len(published) != 1:
+        return None
+    return next(iter(published))
+
+
+@lru_cache(maxsize=4)
+def _load_alias_index(path: str) -> dict[str, frozenset[str]]:
+    """Map ``normalize_lemma(alias)`` to the set of alias target slugs."""
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return {}
+    if not isinstance(data, list):
+        return {}
+    grouped: dict[str, set[str]] = {}
+    for row in data:
+        if not isinstance(row, dict):
+            continue
+        alias = row.get("a")
+        target = row.get("s")
+        if not isinstance(alias, str) or not isinstance(target, str):
+            continue
+        key = normalize_lemma(alias)
+        if not key or not target:
+            continue
+        grouped.setdefault(key, set()).add(target)
+    return {key: frozenset(values) for key, values in grouped.items()}
+
+
+@lru_cache(maxsize=2)
+def _load_search_publication(path: str) -> tuple[frozenset[str], dict[str, frozenset[str]]]:
+    """Load ``(exact published slugs, normalized surface → slugs)``.
+
+    Surfaces are the search-index article slug ``s`` and display head ``l`` —
+    the same rows ``preflightAtlasSlugInSearchIndex`` treats as real pages.
+    """
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return frozenset(), {}
+    if not isinstance(data, list):
+        return frozenset(), {}
+    exact: set[str] = set()
+    by_norm: dict[str, set[str]] = {}
+    for row in data:
+        if not isinstance(row, dict):
+            continue
+        slug = row.get("s")
+        if not isinstance(slug, str) or not slug:
+            continue
+        exact.add(slug)
+        surfaces = [slug]
+        lemma = row.get("l")
+        if isinstance(lemma, str) and lemma:
+            surfaces.append(lemma)
+        for surface in surfaces:
+            key = normalize_lemma(surface)
+            if key:
+                by_norm.setdefault(key, set()).add(slug)
+    return frozenset(exact), {key: frozenset(values) for key, values in by_norm.items()}
+
+
+def _resolve_fixture(
+    key: str,
+    manifest_path: str,
+    aliases_path: str | None,
+    published_slugs: frozenset[str] | set[str] | None,
+) -> str | None:
+    """Resolve against an explicit manifest fixture (unit tests).
+
+    ``published_slugs`` narrows which fixture slugs count as real pages.
+    Aliases are consulted only when ``aliases_path`` is passed, so existing
+    manifest-only tests stay isolated from the committed alias file.
+    """
+    index = _load_index(manifest_path)
+    allowed = set(index.values()) if published_slugs is None else set(published_slugs)
+    slug = index.get(key)
+    if slug and slug in allowed:
+        return _href(slug)
+    if aliases_path is None:
+        return None
+    chosen = _unique_target(_load_alias_index(aliases_path).get(key, frozenset()), allowed)
+    return _href(chosen) if chosen else None
+
+
+def _resolve_published(key: str) -> str | None:
+    """Resolve against the committed manifest, search index, and alias file."""
+    manifest_slug = _load_index(str(_DEFAULT_MANIFEST)).get(key)
+    exact, by_norm = _load_search_publication(str(_DEFAULT_SEARCH_INDEX))
+    if manifest_slug and manifest_slug in exact:
+        return _href(manifest_slug)
+    direct = by_norm.get(key, frozenset())
+    if len(direct) == 1:
+        return _href(next(iter(direct)))
+    if len(direct) > 1:
+        return None
+    chosen = _unique_target(_load_alias_index(str(_DEFAULT_ALIASES)).get(key, frozenset()), set(exact))
+    return _href(chosen) if chosen else None
+
+
+def atlas_href_for(
+    word: str,
+    manifest_path: str | Path | None = None,
+    *,
+    aliases_path: str | Path | None = None,
+    published_slugs: frozenset[str] | set[str] | None = None,
+) -> str | None:
+    """Return the Atlas page href for ``word`` iff one published page exists.
 
     Args:
         word: the vocab surface form / lemma (may carry stress marks).
         manifest_path: override the lexicon manifest (tests). Defaults to the
-            committed ``site/src/data/lexicon-manifest.json``.
+            committed ``site/src/data/lexicon-manifest.json``. Passing this,
+            ``aliases_path``, or ``published_slugs`` selects fixture mode and
+            does not read the live search index.
+        aliases_path: alias rows (``a`` → ``s``) used in fixture mode.
+        published_slugs: fixture-mode page set. When omitted, every fixture
+            manifest slug counts as published.
     """
     key = normalize_lemma(word)
     if not key:
         return None
+    if manifest_path is None and aliases_path is None and published_slugs is None:
+        return _resolve_published(key)
     path = str(manifest_path) if manifest_path is not None else str(_DEFAULT_MANIFEST)
-    slug = _load_index(path).get(key)
-    return f"/lexicon/{slug}/" if slug else None
+    alias_path = str(aliases_path) if aliases_path is not None else None
+    return _resolve_fixture(key, path, alias_path, published_slugs)
+
+
+def slug_from_atlas_href(value: str) -> str | None:
+    """Return the decoded NFC slug of a ``/lexicon/<slug>/`` href, else None.
+
+    Percent-decoding matches ``parseLexiconArticleSlug``: a dangling ``%``
+    is rejected rather than kept as literal text.
+    """
+    match = _LEXICON_HREF_RE.match(value.strip())
+    if not match:
+        return None
+    raw = match.group(1)
+    if _BAD_PERCENT_ESCAPE.search(raw):
+        return None
+    try:
+        decoded = urllib.parse.unquote(raw, errors="strict")
+    except UnicodeDecodeError:
+        return None
+    slug = unicodedata.normalize("NFC", decoded)
+    if not slug or slug != slug.strip() or "\\" in slug or "\0" in slug:
+        return None
+    return slug
+
+
+def validated_atlas_href(
+    value: object,
+    manifest_path: str | Path | None = None,
+    *,
+    aliases_path: str | Path | None = None,
+    published_slugs: frozenset[str] | set[str] | None = None,
+) -> str | None:
+    """Resolve a pre-set ``atlas_href`` the same way as :func:`atlas_href_for`.
+
+    A unique alias is rewritten to its canonical entry. Anything that is not
+    one published entry — including an ambiguous alias — becomes ``None``
+    instead of being copied into the lesson.
+    """
+    if not isinstance(value, str):
+        return None
+    slug = slug_from_atlas_href(value)
+    if slug is None:
+        return None
+    return atlas_href_for(
+        slug,
+        manifest_path,
+        aliases_path=aliases_path,
+        published_slugs=published_slugs,
+    )
