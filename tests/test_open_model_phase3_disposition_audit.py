@@ -692,6 +692,7 @@ def test_lexical_bundle_rejects_stale_cross_receipt_bindings(monkeypatch: pytest
         lexical.validate_lexical_bundle(bundle, structural_audit=structural, population_freeze=population, census=census, role_contract=roles, coverage_contract=coverage, sources_db=Path("unused"), vesum_db=Path("unused"), r2u_cache=Path("unused"))
 
 
+@pytest.mark.slow
 def test_structural_summary_streams_large_synthetic_family() -> None:
     def units() -> Any:
         for index in range(150_000):
@@ -703,3 +704,27 @@ def test_structural_summary_streams_large_synthetic_family() -> None:
     tracemalloc.stop()
     assert summary["unit_count"] == summary["duplicate_group_observation_total"] == 150_000
     assert peak < 5 * 1024 * 1024
+
+
+def test_structural_summary_streams_bounded_synthetic_family() -> None:
+    """PR-tier twin: same summary assertions on 4_000 units (2_000–5_000 band)."""
+
+    def units() -> Any:
+        for index in range(4_000):
+            yield {
+                "unit_id": f"unit.fixture.{index}",
+                "unit_sha256": _token("a"),
+                "duplicate_group_id": f"duplicate.fixture.{index % 3}",
+                "parse_status": "parsed",
+                "provenance": {"input_sha256": _token("b"), "unit_grain": "fixture"},
+            }
+
+    tracemalloc.start()
+    summary = lexical._structural_summary("fixture", units())
+    _, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    assert summary["unit_count"] == summary["duplicate_group_observation_total"] == 4_000
+    # Host peaks (7/7 identical): streaming 19_002 bytes; list() materialisation
+    # 2_833_778 bytes. Ceiling is 3× streaming, between the two.
+    _BOUNDED_TWIN_PEAK_CEILING_BYTES = 3 * 19_002
+    assert peak < _BOUNDED_TWIN_PEAK_CEILING_BYTES

@@ -289,12 +289,15 @@ def _build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1\n"
             "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1 --question-seat codex:gpt-6-sol\n\n"
             "Outputs:\n"
-            "  Prints a JSON gate report; writes lesson-<n>.gates.yaml and other lesson state files under evidence/<level>/_state/<slug>/.\n\n"
+            "  Prints a JSON gate report; writes lesson-<n>.gates.yaml and other lesson state files under evidence/<level>/_state/<slug>/.\n"
+            "  --module also refuses completion (exit 1, stderr) when module-verdict.yaml already exists and\n"
+            "  disagrees with a fresh recomputation (scripts.review.fixloop.module_verdict_problems): the gate\n"
+            "  that keeps a stale APPROVE from reaching the content PR (#8774 r5).\n\n"
             "Exit codes:\n"
             "  0: All checks passed\n"
-            "  1: A check failed or an input could not be loaded\n\n"
+            "  1: A check failed, an input could not be loaded, or (--module) the module verdict on disk is stale\n\n"
             "Related:\n"
-            "  scripts/build/fresh/runner.py, fresh lesson build issue #8397"
+            "  scripts/build/fresh/runner.py, fresh lesson build issue #8397; scripts/review/fixloop.py verdict --check"
         ),
     )
     p_build.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
@@ -613,6 +616,27 @@ def _load_recap_built_lessons(
     return built
 
 
+def _stale_module_verdict_problems(level: str, slug: str, *, repo_root: Path) -> list[str]:
+    """Problems from ``scripts.review.fixloop.module_verdict_problems``, when a module verdict already exists.
+
+    A module that has never been reviewed has no ``module-verdict.yaml`` yet; that is not staleness,
+    so this reports nothing for it. Once the file exists, this is the gate a module build re-runs
+    before it lands: a later database write (a review failure, a settle outcome, an operator decision)
+    that superseded the state the file was computed from must fail here, before a stale ``APPROVE``
+    can reach the content PR that ``build_arc_landing.py`` reads it from directly (#8774 r5).
+    """
+    from scripts.review import findings_db, fixloop
+
+    directory = fixloop.state_dir(repo_root, level, slug)
+    if not (directory / fixloop.MODULE_VERDICT_NAME).is_file():
+        return []
+    conn = findings_db.connect(findings_db.db_path(level, repo_root))
+    try:
+        return fixloop.module_verdict_problems(conn, level, slug, root=repo_root, params=findings_db.load_parameters())
+    finally:
+        conn.close()
+
+
 def _run_plan_review_command(args: argparse.Namespace, repo_root: Path) -> int:
     """plan-manifest, plan-promote and plan-review-status: JSON on stdout, refusals as JSON on stderr."""
     from scripts.build.fresh import plan_manifest, plan_promote
@@ -689,6 +713,12 @@ def main(argv: list[str] | None = None) -> int:
                                  ensure_ascii=False, sort_keys=True))
             else:
                 print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+            if args.module and report["complete"]:
+                stale = _stale_module_verdict_problems(args.level, args.slug, repo_root=repo_root)
+                for problem in stale:
+                    print(f"module-verdict.yaml is stale: {problem}", file=sys.stderr)
+                if stale:
+                    return 1
             return 0 if report["complete"] else 1
         except (OSError, ValueError, KeyError) as err:
             print(json.dumps({"check": 1, "reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)

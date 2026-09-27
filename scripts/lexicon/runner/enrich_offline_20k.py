@@ -221,13 +221,16 @@ def _refuse_bare(parser: argparse.ArgumentParser) -> int:
 def dry_run_plan(args: argparse.Namespace) -> int:
     """Emit a dry-run plan event without starting enrichment."""
     repo = args.repo.resolve()
+    _load_repo(repo)
+    from scripts.storage.paths import artifact_path
+
     input_path = _resolve_input(args)
     work_dir = args.work_dir.resolve() if args.work_dir is not None else None
     sources = Path(args.sources_db).resolve() if args.sources_db is not None else (repo / "data" / "sources.db")
     kaikki = (
         Path(args.kaikki_json).resolve()
         if args.kaikki_json is not None
-        else (repo / "data" / "lexicon" / "kaikki_uk_lookup.json")
+        else artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json", repo=repo)
     )
     output = (
         Path(args.output).resolve()

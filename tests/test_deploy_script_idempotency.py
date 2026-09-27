@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ast
+import inspect
 import os
 import py_compile
 import shlex
@@ -171,10 +173,97 @@ CLAUDE_RULE_FILES = (
 )
 
 
-def _copy_repo_subset(target: Path) -> None:
-    for directory in ("agents_extensions/shared", "agents_extensions/codex", "gemini_extensions"):
-        shutil.copytree(REPO_ROOT / directory, target / directory, symlinks=True)
+# Content paths each synthetic checkout copies. An empty tuple means the test
+# needs the deploy scripts and empty source directories, not a repo content file.
+# test_fresh_deploy_produces_synced_output copies the real production tree and
+# is intentionally absent here.
+_SYNTHETIC_SOURCE_DIRS = (
+    "agents_extensions/shared/skills",
+    "agents_extensions/shared/rules",
+    "agents_extensions/shared/hooks",
+    "agents_extensions/codex",
+    "gemini_extensions",
+    # Shared skills land in .gemini/skills. The orphan preflight treats that
+    # directory as source-owned only when gemini_extensions/skills exists;
+    # skills/* does not match the directory itself.
+    "gemini_extensions/skills",
+)
+_NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
+    "test_tracked_mirror_drift_is_detected_before_deploy": ("gemini_extensions/hooks/check-claude-inbox.sh",),
+    "test_tracked_mirror_resolves_each_deploy_source": (
+        "agents_extensions/shared/hooks/auto-audit.sh",
+        "agents_extensions/shared/skills/post-build-review/SKILL.md",
+        "agents_extensions/shared/hooks/session-setup.sh",
+        "agents_extensions/codex/hooks.json",
+        "agents_extensions/shared/rules/fleet-comms-coordination.md",
+        "gemini_extensions/skills/full-rebuild-bio/SKILL.md",
+    ),
+    "test_tracked_agents_skill_declared_orphan_is_skipped": (),
+    "test_tracked_claude_glob_orphan_is_skipped": (),
+    "test_agent_manifest_reaps_retired_hook_without_touching_agent_state": (
+        "agents_extensions/shared/hooks/auto-audit.sh",
+    ),
+    "test_agent_manifest_rejects_symlinked_intermediate_component": (),
+    "test_agent_overlay_write_stays_in_held_directory_after_root_swap": ("agents_extensions/shared/settings.json",),
+    "test_agent_manifest_unlinks_symlink_leaf_without_following_target": (),
+    "test_agent_manifest_keeps_lexically_unsafe_entries_rejected": (),
+    "test_agent_manifest_reaps_legitimate_nested_file": (),
+    "test_agent_manifest_migration_defers_reaping_verified_legacy_artifact": (
+        "agents_extensions/shared/hooks/auto-audit.sh",
+    ),
+    "test_second_deploy_is_noop_for_codex_target": (),
+    "test_missing_codex_hooks_json_is_drift": ("agents_extensions/codex/hooks.json",),
+    "test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills": (
+        "agents_extensions/shared/skills/post-build-review/SKILL.md",
+        "gemini_extensions/skills/final-review/SKILL.md",
+    ),
+    "test_gemini_shared_skill_exclusion_does_not_mask_root_drift": ("gemini_extensions/settings.json",),
+    "test_gemini_shared_skill_name_collision_fails_closed": (
+        "agents_extensions/shared/skills/post-build-review/SKILL.md",
+    ),
+    "test_codex_orphan_is_caught": (),
+    "test_agent_transient_briefs_are_preserved": (),
+    "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime": (),
+    "test_claude_epic_dirs_are_preserved": (),
+    "test_drift_is_caught": ("agents_extensions/shared/rules/pipeline.md",),
+    # The real skills tree, not two SKILL.md files. The test walks every
+    # top-level skill and skips Claude mirrors whose names end in ``-epic``;
+    # that branch only runs for drive-epic and drive-ukrainian-dataset-epic.
+    "test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy": (
+        "agents_extensions/shared/skills",
+    ),
+    "test_codex_legacy_migration_preserves_modified_content": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+    ),
+    "test_codex_legacy_python_cache_does_not_block_driver_deployment": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+        "agents_extensions/shared/skills/track-completion/scripts/bounded_completion.py",
+    ),
+    "test_codex_legacy_migration_recognizes_committed_source_before_edits": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+    ),
+    "test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content": (),
+    "test_codex_legacy_migration_works_after_updated_sources_are_committed": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+    ),
+    "test_codex_retained_capture_survives_full_redeploy_with_late_writes": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+    ),
+    "test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content": (),
+    "test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees": (),
+}
 
+
+def _calling_test_name() -> str:
+    frame = inspect.currentframe()
+    while frame is not None:
+        frame = frame.f_back
+        if frame is not None and frame.f_code.co_name.startswith("test_"):
+            return frame.f_code.co_name
+    raise RuntimeError("_init_checkout must be called directly from a test")
+
+
+def _copy_deploy_harness(target: Path) -> None:
     for relative_path in (
         DEPLOY_SCRIPT,
         CHECK_SCRIPT,
@@ -206,12 +295,85 @@ def _copy_repo_subset(target: Path) -> None:
     python_wrapper.chmod(0o755)
 
 
-def _init_checkout(tmp_path: Path) -> Path:
+def _copy_declared_paths(target: Path, paths: tuple[str, ...]) -> None:
+    for relative in _SYNTHETIC_SOURCE_DIRS:
+        (target / relative).mkdir(parents=True, exist_ok=True)
+    for relative in paths:
+        source = REPO_ROOT / relative
+        destination = target / relative
+        if source.is_dir():
+            if destination.exists():
+                shutil.rmtree(destination)
+            shutil.copytree(source, destination, symlinks=True)
+        else:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
+    _copy_deploy_harness(target)
+
+
+def _copy_full_tree(target: Path) -> None:
+    for directory in ("agents_extensions/shared", "agents_extensions/codex", "gemini_extensions"):
+        shutil.copytree(REPO_ROOT / directory, target / directory, symlinks=True)
+    _copy_deploy_harness(target)
+
+
+def _init_checkout(tmp_path: Path, *, full_tree: bool = False, only: tuple[str, ...] | None = None) -> Path:
+    """Copy this test's declared paths. ``only`` must be a subset of that declaration."""
     assert PROJECT_PYTHON.exists(), f"Expected interpreter missing: {PROJECT_PYTHON}"
     repo = tmp_path / "repo"
     repo.mkdir()
-    _copy_repo_subset(repo)
+    if full_tree:
+        _copy_full_tree(repo)
+        return repo
+    name = _calling_test_name()
+    declared = _NAMED_DEPLOY_PATHS[name]
+    selected = declared if only is None else only
+    extra = [path for path in selected if path not in declared]
+    assert not extra, f"{name} copied undeclared paths: {extra}"
+    _copy_declared_paths(repo, selected)
     return repo
+
+
+def _synthetic_checkout_callers() -> dict[str, bool]:
+    tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+    found: dict[str, bool] = {}
+    for node in tree.body:
+        if not isinstance(node, ast.FunctionDef) or not node.name.startswith("test_"):
+            continue
+        for child in ast.walk(node):
+            if not isinstance(child, ast.Call):
+                continue
+            func = child.func
+            if not isinstance(func, ast.Name) or func.id != "_init_checkout":
+                continue
+            full_tree = any(
+                keyword.arg == "full_tree" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True
+                for keyword in child.keywords
+            )
+            found[node.name] = full_tree
+    return found
+
+
+def test_named_deploy_paths_exist_in_the_repo() -> None:
+    """A synthetic test's declared paths must exist, and every checkout names its own."""
+    callers = _synthetic_checkout_callers()
+    missing_declaration = sorted(
+        name for name, full_tree in callers.items() if not full_tree and name not in _NAMED_DEPLOY_PATHS
+    )
+    assert not missing_declaration, missing_declaration
+    full_tree_also_named = sorted(
+        name for name, full_tree in callers.items() if full_tree and name in _NAMED_DEPLOY_PATHS
+    )
+    assert not full_tree_also_named, full_tree_also_named
+    stale = sorted(set(_NAMED_DEPLOY_PATHS) - set(callers))
+    assert not stale, stale
+    missing_paths = [
+        f"{name}: {relative}"
+        for name, paths in _NAMED_DEPLOY_PATHS.items()
+        for relative in paths
+        if not (REPO_ROOT / relative).exists()
+    ]
+    assert not missing_paths, missing_paths
 
 
 def _run(repo: Path, script: Path) -> subprocess.CompletedProcess[str]:
@@ -276,7 +438,7 @@ def _delete_source_file(repo: Path, relative: Path) -> bytes:
 
 def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     """A clean checkout should deploy successfully and pass drift checks."""
-    repo = _init_checkout(tmp_path)
+    repo = _init_checkout(tmp_path, full_tree=True)
 
     deploy_result = _run(repo, DEPLOY_SCRIPT)
     assert deploy_result.returncode == 0, (
@@ -385,7 +547,7 @@ def test_tracked_mirror_resolves_each_deploy_source(
     source_relative: str,
 ) -> None:
     """Shared and overlay mirrors must resolve to their actual canonical source."""
-    repo = _init_checkout(tmp_path)
+    repo = _init_checkout(tmp_path, only=(source_relative,))
     source = repo / source_relative
     mirror = repo / mirror_relative
     mirror.parent.mkdir(parents=True, exist_ok=True)
@@ -539,7 +701,7 @@ def test_agent_overlay_write_stays_in_held_directory_after_root_swap(tmp_path: P
         '    : > "$SYNC_AGENT_RACE_READY"\n'
         '    while [[ ! -e "$SYNC_AGENT_RACE_RELEASE" ]]; do sleep 0.01; done\n'
         "fi\n"
-        f"exec {shlex.quote(real_rsync)} \"$@\"\n",
+        f'exec {shlex.quote(real_rsync)} "$@"\n',
         encoding="utf-8",
     )
     (fake_bin / "rsync").chmod(0o755)
@@ -571,9 +733,7 @@ def test_agent_overlay_write_stays_in_held_directory_after_root_swap(tmp_path: P
 
     output = f"{stdout}\n{stderr}"
     assert process.returncode == 0, output
-    assert not (outside / "settings.json").exists(), (
-        "shared content was written through the swapped .agent symlink"
-    )
+    assert not (outside / "settings.json").exists(), "shared content was written through the swapped .agent symlink"
     assert (repo / ".agent-held" / "settings.json").is_file(), (
         "rsync did not write into the directory held before the pathname swap"
     )
@@ -1057,6 +1217,13 @@ def test_drift_is_caught(tmp_path: Path) -> None:
 
 
 def test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy(tmp_path: Path) -> None:
+    """Walk the real skills tree, including nested files and ``*-epic`` names.
+
+    Two flat SKILL.md files never reach the Claude ``*-epic`` skip or the nested
+    script files rsync and the legacy inventory both walk. This test therefore
+    copies ``agents_extensions/shared/skills`` (the discovery shape) rather than
+    the rest of the shared tree, which this assertion does not read.
+    """
     repo = _init_checkout(tmp_path)
     _init_git_history(repo)
     source = repo / "agents_extensions/shared/skills"
@@ -1138,7 +1305,8 @@ def test_codex_legacy_migration_recognizes_committed_source_before_edits(tmp_pat
 
 @pytest.mark.parametrize("unsafe_kind", ["untracked-source", "symlink", "unknown-directory"])
 def test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content(
-    tmp_path: Path, unsafe_kind: str,
+    tmp_path: Path,
+    unsafe_kind: str,
 ) -> None:
     repo = _init_checkout(tmp_path)
     _init_git_history(repo)
@@ -1211,10 +1379,19 @@ def test_codex_retained_capture_survives_full_redeploy_with_late_writes(tmp_path
     assert backup_file.read_bytes() == b"Preserve late user writes"
 
 
-
-@pytest.mark.parametrize("sibling", ["skills-custom", "retired-skills-user-notes", "skills retired-skills", "skills\nretired-skills", "skills: retired-skills"])
+@pytest.mark.parametrize(
+    "sibling",
+    [
+        "skills-custom",
+        "retired-skills-user-notes",
+        "skills retired-skills",
+        "skills\nretired-skills",
+        "skills: retired-skills",
+    ],
+)
 def test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content(
-    tmp_path: Path, sibling: str,
+    tmp_path: Path,
+    sibling: str,
 ) -> None:
     repo = _init_checkout(tmp_path)
     initial = _run(repo, DEPLOY_SCRIPT)

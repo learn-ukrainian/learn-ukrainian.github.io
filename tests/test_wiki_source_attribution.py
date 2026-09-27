@@ -331,3 +331,36 @@ def test_effective_db_path_prefers_local_populated_db(tmp_path, monkeypatch) -> 
     monkeypatch.setattr(source_attribution, "DEFAULT_DB_PATH", local_db)
 
     assert source_attribution._effective_db_path() == local_db
+
+
+def test_effective_db_path_honors_env_override(tmp_path, monkeypatch) -> None:
+    """``LU_SOURCES_DB`` wins over both the local DB and the worktree fallback."""
+    from wiki import source_attribution
+
+    local_db = tmp_path / "data" / "sources.db"
+    local_db.parent.mkdir(parents=True)
+    local_db.write_bytes(b"sqlite")
+    override_db = tmp_path / "scratch" / "sources.db"
+    override_db.parent.mkdir(parents=True)
+    override_db.write_bytes(b"scratch-sqlite")
+
+    monkeypatch.setattr(source_attribution, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(source_attribution, "DEFAULT_DB_PATH", local_db)
+    monkeypatch.setenv("LU_SOURCES_DB", str(override_db))
+
+    assert source_attribution._effective_db_path() == override_db
+
+
+def test_effective_db_path_env_override_refuses_network_path(tmp_path, monkeypatch) -> None:
+    from wiki import source_attribution
+
+    monkeypatch.setattr(source_attribution, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(
+        source_attribution,
+        "_import_is_network_filesystem_path",
+        lambda: (lambda _path: True),
+    )
+    monkeypatch.setenv("LU_SOURCES_DB", str(tmp_path / "network" / "sources.db"))
+
+    with pytest.raises(ValueError, match="network storage"):
+        source_attribution._effective_db_path()

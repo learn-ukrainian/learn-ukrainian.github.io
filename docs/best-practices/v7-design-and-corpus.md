@@ -1,5 +1,8 @@
 # V7 Design + Corpus Reference — load before any module work
 
+> **Scope:** V7 module builds. The core A1–B2 rebuild uses
+> [`docs/epics/fresh-build-build-program.md`](../epics/fresh-build-build-program.md).
+
 > **READ ME FIRST** before designing writer/reviewer prompts, before firing builds, before promoting modules. This doc consolidates the V7 design intent, the corpus available, and the writer/reviewer prompt requirements. Authoritative siblings: [`docs/north-star.md`](../north-star.md) (escalator + audience + voice), [`docs/lesson-contract.md`](../lesson-contract.md) (artifact + tab shape), [`docs/decisions/2026-05-13-ulp-derived-student-aware-immersion.md`](../decisions/2026-05-13-ulp-derived-student-aware-immersion.md) (immersion model).
 >
 > **Why this doc exists**: 2026-05-23 m20 (a1/my-morning) was promoted then reverted because the orchestrator declared "first complete V7 module shipped" while the rendered MDX had an empty Activities tab, stale Resources tab, all 10 activities placed inline (vs ACTIVITY_CONFIGS INLINE 4-6 / WORKBOOK 6-9), and a writer prompt that didn't surface most of the corpus. The deterministic gates (python_qg + wiki_coverage + LLM 9.5/10) all passed on broken content because they check artifact correctness against narrow contracts, not "does the writer actually use the corpus the design assumes." This doc closes that loop.

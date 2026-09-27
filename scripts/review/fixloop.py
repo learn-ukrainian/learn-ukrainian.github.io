@@ -19,7 +19,21 @@ report for the driver. It performs no repair and takes no automatic branch:
 * **Closure** — regenerating lesson k makes lessons k+1..N (the recap included) stale.
 * **Module verdict** — ``module-verdict.yaml``, computed from the lesson verdicts of record,
   the open settle items and the plan's promotion state. A module with an open settle item
-  is never APPROVE.
+  is never APPROVE. ``compute_and_write_module_verdict`` computes and publishes it inside one
+  ``BEGIN IMMEDIATE`` transaction, so a writer that would land between the two (a review failure,
+  a settle outcome, an operator decision) is held off until the transaction commits, landing after
+  it instead: the transaction guarantees the file is written from one consistent, complete read of
+  that state, not that the file stays fresh forever after (it is a tracked file, read outside the
+  transaction, on its own schedule). ``input_fingerprint`` records the sha256 of every column of
+  every database row and file the computation read, canonical and independent of ordering or
+  ``computed_at`` (#8774 r6: no column is hand-picked, so a row field the verdict logic starts
+  reading later is covered without a matching edit to the fingerprint);
+  ``fixloop verdict --check`` (``module_verdict_problems``) recomputes it and refuses a file whose
+  verdict, holds or fingerprint disagree with a fresh recomputation — the gate a module build wires
+  in before it lands, so a stale ``APPROVE`` a later failure superseded is never trusted (#8774 r5).
+  ``scripts.build.build_arc_landing`` runs this same check before trusting a module's ``APPROVE``
+  toward the ``reviewed`` landing state, when a findings database is present to check against
+  (#8774 r6; see that module's docstring).
 * **Projections** — the database is the source of truth. ``lesson-<n>.verdict.yaml`` and
   ``plan-review.yaml`` are projections of the latest accepted first-seat attempt of their target
   (highest ``attempts.seq``). A missing or disagreeing file is stale: the module is HOLD
@@ -47,6 +61,7 @@ report for the driver. It performs no repair and takes no automatic branch:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sqlite3
@@ -113,6 +128,7 @@ MODULE_VERDICT_SCHEMA: dict[str, Any] = {
         "slug",
         "verdict",
         "computed_at",
+        "input_fingerprint",
         "plan",
         "lessons",
         "settle_items",
@@ -125,6 +141,7 @@ MODULE_VERDICT_SCHEMA: dict[str, Any] = {
         "slug": {"type": "string", "minLength": 1},
         "verdict": {"enum": ["APPROVE", "REVISE", "HOLD"]},
         "computed_at": {"type": "string", "minLength": 1},
+        "input_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "plan": {"type": "object", "required": ["state"], "properties": {"state": {"type": "string"}}},
         "lessons": {
             "type": "array",
@@ -727,16 +744,15 @@ def regenerate(
     """
     if n not in lesson_ns:
         raise FixLoopError(f"lesson {n} is not a lesson of {level}/{slug}")
-    budgets = findings_db.module_budgets(conn, level, slug)
-    if findings_db.revise_budget_terminal(conn, level, slug, n, params):
-        raise TerminalTransition(
-            REASON_REVISE, f"lesson {n} has had more than {params['max_revise_rounds']} REVISE rounds"
-        )
     limit = params["regeneration_factor"] * len(lesson_ns)
-    spent = sum(row["regenerations"] for row in budgets.values())
-    if findings_db.regeneration_budget_terminal(conn, level, slug, len(lesson_ns), params):
-        raise TerminalTransition(REASON_REGENERATIONS, f"{spent} of {limit} regenerations are spent")
-    with findings_db.transaction(conn):
+    with findings_db.transaction(conn):  # the check and the increment are one write: no concurrent call overspends
+        if findings_db.revise_budget_terminal(conn, level, slug, n, params):
+            raise TerminalTransition(
+                REASON_REVISE, f"lesson {n} has had more than {params['max_revise_rounds']} REVISE rounds"
+            )
+        spent = sum(row["regenerations"] for row in findings_db.module_budgets(conn, level, slug).values())
+        if findings_db.regeneration_budget_terminal(conn, level, slug, len(lesson_ns), params):
+            raise TerminalTransition(REASON_REGENERATIONS, f"{spent} of {limit} regenerations are spent")
         findings_db.bump_budget(conn, level, slug, n, "regenerations")
     stale = dependents(closure, n) if closure is not None else [m for m in lesson_ns if m > n]
     return {"lesson": n, "regenerations": spent + 1, "limit": limit, "stale_until_re_reviewed": stale}
@@ -753,6 +769,111 @@ def _item_view(item: sqlite3.Row) -> dict[str, Any]:
         "lesson_n": item["lesson_n"],
         "outcome": item["outcome"],
     }
+
+
+def _canonical_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+def _row_dict(row: sqlite3.Row | None) -> dict[str, Any] | None:
+    """Every column of a database row, for fingerprinting; ``None`` unchanged."""
+    return dict(row) if row is not None else None
+
+
+def _target_fingerprint(
+    conn: sqlite3.Connection, directory: Path, level: str, slug: str, kind: str, n: int | None
+) -> dict[str, Any]:
+    """A projection target's raw inputs: the database's latest accepted attempt and the file's agreement with it."""
+    latest = findings_db.latest_accepted(conn, level, slug, kind, n)
+    return {
+        "latest_accepted": _row_dict(latest),
+        "projection_problem": projection_problem(directory, kind, n, latest),
+    }
+
+
+def module_verdict_fingerprint_inputs(
+    conn: sqlite3.Connection,
+    root: Path,
+    level: str,
+    slug: str,
+    lessons: list[dict[str, Any]],
+    closure: dict[str, Any] | None,
+    plan_status: dict[str, Any],
+    *,
+    params: dict[str, Any],
+) -> dict[str, Any]:
+    """Exactly the database rows and files ``compute_module_verdict`` reads, canonical and order-independent.
+
+    Every database row is hashed by its full set of columns (``_row_dict``), not a hand-picked
+    subset: a column added to a read row later is covered without a matching edit here, and no
+    column already read (e.g. ``reviewer_model``) can change without moving the fingerprint (#8774
+    r6). Nothing is excluded: every column of every row this function reads is a stored, static
+    value for a given database state, so including it cannot make the fingerprint depend on
+    anything but that state. ``plan_status`` is the one exception, and it is not a database row: it
+    keeps its existing ``state``/``attempt_id``/``manifest_sha256`` filter because ``compute_module_verdict``
+    gates only on ``plan_status["state"]`` (the free-text ``reason``/``stale`` detail is diagnostic,
+    not a verdict input).
+
+    Feeds :func:`module_verdict_fingerprint` only; it decides nothing about the module itself. ``lessons``,
+    ``closure`` and ``plan_status`` are the caller's own reads, passed in so this never re-derives them
+    differently from the verdict it is fingerprinting.
+    """
+    directory = state_dir(root, level, slug)
+    lesson_inputs: dict[str, Any] = {}
+    for item in lessons:
+        n = item["n"]
+        current = establish_current_manifest(root, directory, "lesson", n, closure)
+        lesson_inputs[str(n)] = {
+            **_target_fingerprint(conn, directory, level, slug, "lesson", n),
+            "review_state": lesson_review_state(root, directory, n, item["kind"], closure),
+            "current_manifest": {"digest": current.digest, "hold": current.hold, "detail": current.detail},
+            "second_seat_selected": second_seat.selected(level, slug, n, params["second_seat_divisor"]),
+            "has_agreement": (
+                findings_db.has_agreement_on(conn, level, slug, n, current.digest) if current.digest else False
+            ),
+        }
+    settle_items = [_row_dict(item) for item in findings_db.module_settle_items(conn, level, slug)]
+    budget_rows = conn.execute(
+        "SELECT * FROM budgets WHERE level = ? AND slug = ? ORDER BY lesson_n", (level, slug)
+    ).fetchall()
+    budgets = {str(row["lesson_n"]): _row_dict(row) for row in budget_rows}
+    decisions = [
+        _row_dict(row)
+        for row in conn.execute(
+            "SELECT * FROM budget_decisions WHERE level = ? AND slug = ? ORDER BY seq", (level, slug)
+        ).fetchall()
+    ]
+    return {
+        "closure": closure,
+        "plan_status": {
+            key: value for key, value in plan_status.items() if key in ("state", "attempt_id", "manifest_sha256")
+        },
+        "plan_target": _target_fingerprint(conn, directory, level, slug, "plan", None),
+        "lessons": lesson_inputs,
+        "settle_items": settle_items,
+        "budgets": budgets,
+        "budget_decisions": decisions,
+    }
+
+
+def module_verdict_fingerprint(
+    conn: sqlite3.Connection,
+    root: Path,
+    level: str,
+    slug: str,
+    lessons: list[dict[str, Any]],
+    closure: dict[str, Any] | None,
+    plan_status: dict[str, Any],
+    *,
+    params: dict[str, Any],
+) -> str:
+    """The sha256 of the canonical serialisation of every input ``compute_module_verdict`` read.
+
+    Changes when any read row or file changes, and only then: it does not depend on ``computed_at``,
+    on dict or row ordering, or on whether a change happened to move a hold or the verdict.
+    """
+    inputs = module_verdict_fingerprint_inputs(conn, root, level, slug, lessons, closure, plan_status, params=params)
+    return hashlib.sha256(_canonical_json(inputs).encode("utf-8")).hexdigest()
 
 
 def compute_module_verdict(
@@ -887,6 +1008,7 @@ def compute_module_verdict(
         "slug": slug,
         "verdict": verdict,
         "computed_at": now or findings_db.now_iso(),
+        "input_fingerprint": module_verdict_fingerprint(conn, root, level, slug, lessons, closure, plan, params=params),
         "plan": {key: value for key, value in plan.items() if key in ("state", "attempt_id", "manifest_sha256")},
         "lessons": rows,
         "settle_items": {"open": open_items, "waiting_for_operator": waiting, "supported_defect_pending": pending_fix},
@@ -902,6 +1024,68 @@ def write_module_verdict(root: Path, document: dict[str, Any]) -> Path:
     path = checked_existing_path(Path(root).resolve(), directory / MODULE_VERDICT_NAME, f"{TREE}/evidence")
     lock.atomic_write(path, lock.yaml_bytes(document))
     return path
+
+
+def compute_and_write_module_verdict(
+    conn: sqlite3.Connection, level: str, slug: str, *, root: Path, params: dict[str, Any], now: str | None = None
+) -> tuple[dict[str, Any], Path]:
+    """Compute the module verdict and publish it inside the one transaction that read it.
+
+    ``BEGIN IMMEDIATE`` (``findings_db.transaction``) holds off every other writer for the whole
+    window between deciding the verdict and publishing it, so a writer that would otherwise land in
+    that gap (a review failure, a settle outcome, an operator decision) is blocked until this
+    transaction commits and lands after it instead: the file is written from one consistent,
+    complete read of the database, never a half-updated one. That is what the transaction
+    guarantees, not that the file stays fresh forever after: ``module-verdict.yaml`` is a tracked
+    file, read outside this transaction (by ``build_arc_landing.py``, on its own schedule), so a
+    later writer can still supersede the state this file was computed from at any point after this
+    call returns. ``write_module_verdict`` writes by temp file and rename, so an exception before
+    the rename leaves no new or partial file; a process kill between the rename landing and this
+    transaction's own commit is a different case the rename itself cannot be rolled back from, since
+    it is not part of the database transaction. Neither case is what keeps the file trustworthy at
+    the moment something reads it: :func:`module_verdict_problems` (``fixloop verdict --check``) is,
+    because it recomputes from the database whenever it is run and refuses a file whose verdict,
+    holds or ``input_fingerprint`` disagree with that fresh recomputation.
+    """
+    with findings_db.transaction(conn):
+        document = compute_module_verdict(conn, level, slug, root=root, params=params, now=now)
+        path = write_module_verdict(root, document)
+    return document, path
+
+
+def module_verdict_problems(
+    conn: sqlite3.Connection, level: str, slug: str, *, root: Path, params: dict[str, Any]
+) -> list[str]:
+    """Why ``module-verdict.yaml`` disagrees with a fresh recomputation; empty when it does not.
+
+    Read-only: it never writes (not the verdict file, not a projection). This is what ``fixloop
+    verdict --check`` runs, and what a module build wires in before it lands the module: a stale
+    ``APPROVE`` a later database write superseded fails here instead of reaching
+    ``build_arc_landing.py``, which calls this function itself (when a local findings database
+    exists) rather than trusting the file directly.
+    """
+    root = Path(root).resolve()
+    path = state_dir(root, level, slug) / MODULE_VERDICT_NAME
+    fresh = compute_module_verdict(conn, level, slug, root=root, params=params)
+    if not path.is_file():
+        return [f"{MODULE_VERDICT_NAME} is missing; a fresh recomputation is {fresh['verdict']}"]
+    try:
+        stored = yaml.safe_load(path.read_bytes())
+    except yaml.YAMLError as error:
+        return [f"{MODULE_VERDICT_NAME} is not valid YAML: {error}"]
+    if not isinstance(stored, dict):
+        return [f"{MODULE_VERDICT_NAME} does not hold a mapping"]
+    problems = []
+    if stored.get("verdict") != fresh["verdict"]:
+        problems.append(f"verdict is {stored.get('verdict')!r} on file; a fresh recomputation is {fresh['verdict']!r}")
+    if stored.get("holds") != fresh["holds"]:
+        problems.append("holds on file disagree with a fresh recomputation")
+    if stored.get("input_fingerprint") != fresh["input_fingerprint"]:
+        problems.append(
+            "input_fingerprint disagrees with a fresh recomputation: the file was computed from a"
+            " database state a later write has since superseded"
+        )
+    return problems
 
 
 # --- the report -------------------------------------------------------------------------------
@@ -1027,6 +1211,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.review.fixloop report a1 my-module\n"
             "  .venv/bin/python -m scripts.review.fixloop verdict a1 my-module\n"
             "  .venv/bin/python -m scripts.review.fixloop verdict a1 my-module --repair-projections\n"
+            "  .venv/bin/python -m scripts.review.fixloop verdict a1 my-module --check\n"
             "  .venv/bin/python -m scripts.review.fixloop regenerate a1 my-module 2\n"
             "  .venv/bin/python -m scripts.review.fixloop dispute a1 my-module 2 --reason 'writer lane disputes'\n"
             "  .venv/bin/python -m scripts.review.fixloop operator-decision a1 7 --decision 'keep: attested'\n"
@@ -1036,7 +1221,9 @@ def build_parser() -> argparse.ArgumentParser:
             "curriculum/l2-uk-en/evidence/<level>/_state/<slug>/module-verdict.yaml; regenerate, dispute,\n"
             "operator-decision and budget-decision update batch_state/review-findings/<level>.sqlite. With --repair-projections,\n"
             "report and verdict first rewrite lesson-<n>.verdict.yaml and plan-review.yaml from the database.\n"
-            "Exit codes: 0 done; 3 a terminal transition (the module goes to the operator); 2 usage or data error."
+            "verdict --check never writes: it recomputes and compares against module-verdict.yaml on disk.\n"
+            "Exit codes: 0 done; 3 a terminal transition (the module goes to the operator); 2 usage or data error;\n"
+            "1 (verdict --check only) the file on disk disagrees with a fresh recomputation."
         ),
     )
     parser.add_argument("--repo-root", type=Path, default=None, help="repository root (default: this repository)")
@@ -1057,6 +1244,16 @@ def build_parser() -> argparse.ArgumentParser:
             action="store_true",
             help="first rewrite every missing or disagreeing verdict file from the database's latest accepted attempt",
         )
+        if name == "verdict":
+            item.add_argument(
+                "--check",
+                action="store_true",
+                help=(
+                    "read-only: recompute the verdict and refuse (exit 1) if module-verdict.yaml is missing or its"
+                    " verdict, holds or input_fingerprint disagree with the recomputation; never writes"
+                    " (incompatible with --repair-projections)"
+                ),
+            )
     regen = sub.add_parser("regenerate", help="spend one regeneration of a lesson (refused past the budget)")
     regen.add_argument("level")
     regen.add_argument("slug")
@@ -1088,6 +1285,17 @@ def main(argv: list[str] | None = None) -> int:
     params = findings_db.load_parameters()
     conn = findings_db.connect(args.db or findings_db.db_path(args.level, root))
     try:
+        if args.command == "verdict" and getattr(args, "check", False):
+            if args.repair_projections:
+                print("error: --check is read-only; it cannot be combined with --repair-projections", file=sys.stderr)
+                return 2
+            problems = module_verdict_problems(conn, args.level, args.slug, root=root, params=params)
+            for problem in problems:
+                print(f"error: {problem}", file=sys.stderr)
+            if problems:
+                return 1
+            print(json.dumps({"check": "ok", "level": args.level, "slug": args.slug}, sort_keys=True))
+            return 0
         repair: dict[str, list[str]] | None = None
         if args.command in ("report", "verdict") and args.repair_projections:
             repair = repair_projections(conn, root, args.level, args.slug)
@@ -1103,8 +1311,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 0
         if args.command == "verdict":
-            document = compute_module_verdict(conn, args.level, args.slug, root=root, params=params)
-            path = write_module_verdict(root, document)
+            document, path = compute_and_write_module_verdict(conn, args.level, args.slug, root=root, params=params)
             print(
                 json.dumps(
                     {
