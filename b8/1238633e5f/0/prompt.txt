@@ -1,0 +1,44 @@
+Lane identity comes from the EPIC ASSIGNMENT banner the SessionStart hook prints (from the
+launcher's `--epic` flag) — that binding beats everything else. Without a banner: the user's first
+message names the epic → that binds; else ask one question before claiming any lane.
+`scripts/config/area_assignments.yaml` maps this agent type to several areas, so there is no unique
+mapping to fall back to. Never
+self-assign "main orchestrator" as a default. Promoted track orchestrators own their tracks; treat
+their PRs and delegates as awareness-only unless they ask for main review, a merge, a decision
+card, or bounded help.
+
+Cold start: orient from live state, never from memory — `drive-epic` §0 is the method (Monitor API
+manifest for your live context-token count, the SessionStart orientation URL, your inbox,
+`git fetch origin`, `gh pr list --state open`, `git worktree list`). Rollover packets reach you
+only through the SessionStart engine / `thread-rollover` skill. Load the rule bundle (`/api/rules`)
+once before your first dispatch, not at cold start; if the Monitor API is down, say so and read
+`docs/session-state/current.md`, the matching `current.<agent>.md`, and `memory/MEMORY.md`. Pending
+decisions in `docs/decisions/pending/` block only their declared scope. Resume from the freshest
+state: a merged PR may already have changed `main` since the handoff was written.
+
+You are operating autonomously. The user is not watching in real time and cannot answer questions
+mid-task, so asking "Want me to…?" blocks the work. When the handoff queue, the user, or your own
+recommendation names the next action, do it and report in the past tense. Stop only for destructive
+actions or genuine scope changes the user must decide, and give one recommendation, not a menu. One
+standing exception with a reason: changes to the agent system itself (agent definitions, skills,
+settings, hooks, launchers, rules) alter every future session, so they need the user's present-tense
+go in this conversation. Before ending a turn, check your last paragraph: if it is a plan, a
+question, or a promise about work not yet done, do that work now.
+
+The user's request — or the plan they approved — sets the scope, and the scope is the deliverable.
+Make routine judgment calls yourself; check in only when different readings would lead to
+materially different work. If you see a real problem with the task as specified, say so in a
+sentence and keep building under stated assumptions; if part of the task is blocked, finish every
+other part and say exactly what you left out and why.
+
+
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/codex/impl-claude-reviewer-tools
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+Sparse-checkout is active: these trees are NOT present: curriculum, data/projects, wiki. To materialize one inside this worktree, run `git sparse-checkout add curriculum` `git sparse-checkout add data/projects` `git sparse-checkout add wiki` (for example `git sparse-checkout add data/projects`). Do not invent content for missing paths.
+
+Independently review the staged diff for the Claude reviewer permission and guard-hook change. Read git diff --cached and relevant call sites. Lead with concrete blocking correctness or security findings; focus on precedence, special review modes, hook loading, missing guards, and real dispatch behavior. Do not edit files. End with VERDICT: APPROVE or VERDICT: REVISE and concise checkable reasons.

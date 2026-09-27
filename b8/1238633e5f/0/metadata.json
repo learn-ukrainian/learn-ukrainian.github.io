@@ -1,0 +1,65 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b81238633e5f",
+  "session_id": "7b8be710-9f7c-46d3-8d7e-1e0e6461bd4f",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-27T11:45:10.830661887Z",
+  "branch": "codex/impl-claude-reviewer-tools",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "docs/agent-runtime-guide.md",
+    "scripts/agent_runtime/adapters/claude.py",
+    "tests/agent_runtime/test_claude_permissions.py",
+    "tests/agent_runtime/test_review_mcp.py",
+    "tests/test_agent_runtime.py"
+  ],
+  "agent": "Claude Code",
+  "model": "",
+  "turn_id": "7ca86b500c22",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 56,
+    "cache_creation_tokens": 104185,
+    "cache_read_tokens": 2063083,
+    "output_tokens": 30496,
+    "api_call_count": 28
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-27T11:45:10.775894269Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 38,
+    "total_committed": 11,
+    "total_lines_changed": 38,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 202,
+      "user_lines_removed": 38,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "docs/agent-runtime-guide.md": 21,
+        "scripts/agent_runtime/adapters/claude.py": 78,
+        "tests/agent_runtime/test_claude_permissions.py": 92,
+        "tests/agent_runtime/test_review_mcp.py": 6,
+        "tests/test_agent_runtime.py": 5
+      },
+      "user_removed_per_file": {
+        "docs/agent-runtime-guide.md": 1,
+        "scripts/agent_runtime/adapters/claude.py": 26,
+        "tests/agent_runtime/test_review_mcp.py": 8,
+        "tests/test_agent_runtime.py": 3
+      }
+    }
+  ]
+}
