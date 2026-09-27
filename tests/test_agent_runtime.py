@@ -3966,8 +3966,9 @@ def test_claude_adapter_mcp_tool_config(tmp_path):
     assert "--mcp-config" in plan.cmd
     assert "/path/.mcp.json" in plan.cmd
     assert "--allowedTools" in plan.cmd
-    allowed = plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
-    assert {"Read", "Grep", "mcp__rag__verify_word", "mcp__sources__*", "Bash"} <= set(allowed)
+    assert plan.cmd.count("--allowedTools") == 1
+    assert plan.cmd[plan.cmd.index("--allowedTools") + 1] == "Read,Grep,mcp__rag__verify_word"
+    assert "--permission-mode" not in plan.cmd
 
 
 def test_claude_adapter_danger_mode(tmp_path):

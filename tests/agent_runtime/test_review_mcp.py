@@ -309,9 +309,10 @@ def test_claude_adapter_command_line_contains_review_grant(manifest_file: Path, 
 
     idx = plan.cmd.index("--strict-mcp-config")
     assert plan.cmd[idx : idx + 3] == ["--strict-mcp-config", "--mcp-config", str(review_plan.config_path)]
+    assert plan.cmd.count("--allowedTools") == 1
     allowed = set(plan.cmd[plan.cmd.index("--allowedTools") + 1].split(","))
-    assert {f"mcp__sources__{name}" for name in REVIEW_TOOLS} <= allowed
-    assert "Bash" in allowed
+    assert allowed == {f"mcp__sources__{name}" for name in REVIEW_TOOLS}
+    assert "--permission-mode" not in plan.cmd
 
 
 def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path) -> None:

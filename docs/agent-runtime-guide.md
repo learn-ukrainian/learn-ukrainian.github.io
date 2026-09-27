@@ -355,15 +355,26 @@ to be running" bugs.
 
 ### Claude headless permissions
 
-Ordinary Claude `read-only` dispatches use `dontAsk` with read/search tools,
-Bash, and web lookup allowed. When an MCP config is supplied, sources tools
-are allowed too. This includes strict MCP reviewers. Reviewers can run Python,
-pytest, and read-only `git`/`gh` commands without an interactive approval.
+Ordinary Claude `read-only` dispatches without an explicit `allowed_tools` use
+`dontAsk` with read/search tools, Bash, and web lookup allowed. When an MCP
+config is supplied, sources tools are allowed too. This includes strict MCP
+reviewers that leave `allowed_tools` unset. Reviewers can run Python, pytest,
+and read-only `git`/`gh` commands without an interactive approval.
 Edit/Write/NotebookEdit and common
 Git/GitHub mutation commands are denied. `discussion_readonly` and
 `review_isolation` retain their separate tool profiles. `workspace-write`
 keeps the existing default permission behavior; `danger` uses
 `--dangerously-skip-permissions`.
+
+Outside sealed `review_isolation`, an explicit `allowed_tools` value is passed
+unchanged as the sole `--allowedTools` argument, including an empty string. The
+adapter does not add reviewer tools or `dontAsk`, the reviewer deny list,
+publish hook, or push rewrite in that case. Shared worker guards still load.
+This keeps the V7 curriculum writer's `mcp__sources__*` allowlist restricted
+to sources tools.
+Read-only content generators without a tool list set `reviewer_profile=False`
+to preserve their prior CLI permissions; the wiki compiler and legacy build
+dispatcher use this marker.
 
 Every headless Claude invocation receives `--settings` with PreToolUse guards
 generated from `agents_extensions/shared/settings.json`. Hook commands resolve

@@ -172,3 +172,39 @@ def test_sources_allowance_only_when_mcp_config_is_passed(tmp_path: Path) -> Non
     assert "mcp__sources__*" not in ordinary[ordinary.index("--allowedTools") + 1]
     assert "mcp__sources__*" in with_mcp[with_mcp.index("--allowedTools") + 1]
     assert with_mcp.count("--allowedTools") == 1
+
+
+@pytest.mark.parametrize("allowed_tools", ["mcp__sources__*", "Read,Bash(git push *)", ""])
+@pytest.mark.parametrize("strict_mcp_config", [False, True])
+def test_explicit_allowed_tools_are_not_widened_or_narrowed(
+    tmp_path: Path, allowed_tools: str, strict_mcp_config: bool,
+) -> None:
+    plan = ClaudeAdapter().build_invocation(
+        prompt="inspect", mode="read-only", cwd=tmp_path, model=None,
+        task_id=None, session_id=None,
+        tool_config={
+            "allowed_tools": allowed_tools,
+            "mcp_config_path": str(tmp_path / "sources.json"),
+            "strict_mcp_config": strict_mcp_config,
+        },
+    )
+    assert plan.cmd.count("--allowedTools") == 1
+    assert plan.cmd[plan.cmd.index("--allowedTools") + 1] == allowed_tools
+    assert "--permission-mode" not in plan.cmd
+    assert "--disallowedTools" not in plan.cmd
+    assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides
+    settings = json.loads(plan.cmd[plan.cmd.index("--settings") + 1])
+    commands = [hook["command"] for group in settings["hooks"]["PreToolUse"] for hook in group["hooks"]]
+    assert not any(command.endswith("guard-reviewer-publish.py") for command in commands)
+
+
+def test_readonly_content_writer_keeps_legacy_cli_permissions(tmp_path: Path) -> None:
+    plan = ClaudeAdapter().build_invocation(
+        prompt="write content", mode="read-only", cwd=tmp_path, model=None,
+        task_id=None, session_id=None,
+        tool_config={"reviewer_profile": False},
+    )
+    assert "--allowedTools" not in plan.cmd
+    assert "--permission-mode" not in plan.cmd
+    assert "--disallowedTools" not in plan.cmd
+    assert "LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK" not in plan.env_overrides

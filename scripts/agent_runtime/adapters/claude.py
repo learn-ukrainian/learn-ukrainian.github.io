@@ -25,8 +25,10 @@ to land because it has the most special-case logic:
   tool calls can be captured from the CLI trace.
 
 Mode handling:
-- ``read-only``: ``dontAsk`` permits read/search and shell execution (including
-  tests and Python) while denying edits and common Git/GitHub mutations.
+- ``read-only`` reviewer without explicit ``allowed_tools``: ``dontAsk`` permits
+  read/search and shell execution (including tests and Python) while denying
+  edits and common Git/GitHub mutations. Explicit caller tool lists pass
+  through unchanged and do not receive reviewer-only restrictions.
   Prefix Bash denies are advisory; the repository PreToolUse guards are the
   primary-checkout write backstop. Claude's bubblewrap sandbox did not stop
   a primary-checkout write in a live probe, so it is not that backstop.
@@ -254,7 +256,10 @@ class ClaudeAdapter:
               named session); if False or absent, use ``--resume`` (resume
               existing). Only meaningful when ``session_id`` is provided.
             - ``mcp_config_path: str`` — path to .mcp.json for tool restrictions
-            - ``allowed_tools: str`` — comma-separated list passed to --allowedTools
+            - ``allowed_tools: str`` — explicit comma-separated --allowedTools
+              value; suppresses the ordinary read-only reviewer profile.
+            - ``reviewer_profile: False`` — preserve legacy CLI permissions
+              for a read-only call that produces writer content.
             - ``output_format: str`` — defaults to "stream-json" so tool
               calls can be captured from the CLI trace.
             - ``use_bare: bool`` — legacy option ignored for guarded workers;
@@ -272,6 +277,15 @@ class ClaudeAdapter:
         tc: dict[str, Any] = tool_config or {}
         discussion_readonly = _discussion_readonly_requested(tool_config)
         review_isolation = bool(tc.get("review_isolation"))
+        explicit_allowed_tools = tc.get("allowed_tools") is not None
+        reviewer_guard = (
+            mode == "read-only" and not explicit_allowed_tools
+            and tc.get("reviewer_profile") is not False
+        )
+        # Caller tool restrictions take precedence. Reviewer-only protections
+        # are scoped to the default profile so an explicit Bash grant is not
+        # silently narrowed by the publish hook or push rewrite.
+        ordinary_reviewer = reviewer_guard and not discussion_readonly and not review_isolation
         review_write_root: Path | None = None
         if review_isolation:
             from scripts.review.isolation import validated_review_write_root
@@ -342,7 +356,7 @@ class ClaudeAdapter:
         # review isolation receives the settings flag too, but its existing
         # --safe-mode suppresses hooks and shell/write tools; the isolated OS
         # sandbox does not mount the checkout's tracked hook paths.
-        cmd.extend(["--settings", _worker_guard_settings(publish_guard=mode == "read-only" and not review_isolation)])
+        cmd.extend(["--settings", _worker_guard_settings(publish_guard=reviewer_guard and not review_isolation)])
         if review_isolation:
             # Exact read/search tools + empty setting sources: no write/shell
             # tools and no project CLAUDE.md/hooks/skills when flags are honored.
@@ -448,30 +462,23 @@ class ClaudeAdapter:
         # Mode-specific flags
         if mode == "danger":
             cmd.append("--dangerously-skip-permissions")
-        elif mode == "read-only" and not discussion_readonly and not review_isolation:
+        elif ordinary_reviewer:
             profile = REVIEWER_PERMISSION_PROFILE
             cmd.extend(["--permission-mode", profile["mode"]])
             granted = [*profile["allow"]]
             if tc.get("mcp_config_path"):
                 granted.extend(profile["mcp_allow"])
-            if tc.get("allowed_tools"):
-                granted.extend(str(tc["allowed_tools"]).split(","))
             cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
             cmd.extend(["--disallowedTools", ",".join(profile["deny"])])
 
         # MCP tool restrictions (pipeline reviewers)
         mcp_config_path = tc.get("mcp_config_path")
-        allowed_tools = tc.get("allowed_tools")
         if tc.get("strict_mcp_config") and mcp_config_path and not review_isolation:
             cmd.extend(["--strict-mcp-config", "--mcp-config", str(mcp_config_path)])
-            if allowed_tools and not (mode == "read-only" and not discussion_readonly):
-                cmd.extend(["--allowedTools", allowed_tools])
-        elif mcp_config_path and allowed_tools and not review_isolation:
-            cmd.extend(["--mcp-config", str(mcp_config_path)])
-            if mode != "read-only" or discussion_readonly:
-                cmd.extend(["--allowedTools", allowed_tools])
         elif mcp_config_path and not review_isolation:
             cmd.extend(["--mcp-config", str(mcp_config_path)])
+        if explicit_allowed_tools and not review_isolation:
+            cmd.extend(["--allowedTools", str(tc["allowed_tools"])])
 
         # Cache-warmth optimization (CC 2.1.98+)
         if cli_version and cli_version >= _EFFORT_MIN_VERSION:
@@ -494,7 +501,7 @@ class ClaudeAdapter:
             output_file=None,
             env_overrides={
                 **({"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {}),
-                **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if mode == "read-only" else {}),
+                **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_guard else {}),
             },
             liveness_paths=self._resolve_liveness_paths(cwd),
             metadata={

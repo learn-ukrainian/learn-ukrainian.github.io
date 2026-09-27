@@ -528,13 +528,20 @@ def _dispatch_claude_via_runtime(
     )
     from agent_runtime.runner import invoke as runtime_invoke
 
-    if mcp_tools and allowed_tools:
-        tool_config, _diagnostics = build_mcp_tool_config(
-            "claude",
-            allowed_tools=allowed_tools,
-        )
+    if allowed_tools is not None:
+        if mcp_tools:
+            tool_config, _diagnostics = build_mcp_tool_config(
+                "claude", allowed_tools=allowed_tools,
+            )
+            if tool_config is None:
+                _log("  ❌ Claude MCP tool configuration unavailable; refusing unscoped dispatch")
+                return False, ""
+        else:
+            tool_config = {"allowed_tools": allowed_tools}
     else:
-        tool_config = None
+        # This legacy dispatcher uses read-only mode for content writers too.
+        # A writer without a tool list must retain main's CLI permissions.
+        tool_config = {"reviewer_profile": False} if phase != "review" else None
 
     claude_effort = "xhigh"
     t0 = time.monotonic()

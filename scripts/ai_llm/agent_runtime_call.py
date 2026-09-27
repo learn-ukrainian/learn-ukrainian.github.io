@@ -179,7 +179,7 @@ def _invoke_once(
                 cwd=workdir,
                 model=model,
                 task_id=task_name,
-                tool_config=None,
+                tool_config={"reviewer_profile": False} if agent_name == "claude" else None,
                 entrypoint="runtime",
                 hard_timeout=hard_timeout or 24 * 60 * 60,
                 effort=effort,
