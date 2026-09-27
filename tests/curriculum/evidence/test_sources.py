@@ -107,16 +107,18 @@ def test_gloss_exact_spelling_pos_and_order(synthetic_sources):
 
 
 def test_gloss_pronoun_and_function_word_rows_ignore_alphabet_letters(synthetic_sources):
+    # Source-derived first-translation fixtures: sources.db dmklinger_uk_en ids
+    # 15 (я pronoun), 19149 (я letter-name noun), 19148 (ж), and 2582 (і).
     with sqlite3.connect(synthetic_sources) as conn:
         conn.executemany(
             "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
             [
-                (10, "я", "pronoun", '["I (personal pronoun)"]', "", "synthetic"),
-                (11, "я", "noun", '["ya (a letter of the Cyrillic alphabet)"]', "", "synthetic"),
-                (12, "ж", "particle", '["The ninth letter of the Ukrainian alphabet"]', "", "synthetic"),
+                (15, "я", "pronoun", '["I (personal pronoun)"]', "", "synthetic"),
+                (19149, "я", "noun", '["ya (a letter of the Cyrillic alphabet)"]', "", "synthetic"),
+                (19148, "ж", "particle", '["The ninth letter of the Ukrainian alphabet"]', "", "synthetic"),
                 (13, "у", "particle", '["in (preposition)"]', "", "synthetic"),
-                (14, "і", "particle", '["and (conjunction)"]', "", "synthetic"),
-                (15, "цей", "pronoun", '["this (pronoun)"]', "", "synthetic"),
+                (2582, "і", "particle", '["and (conjunction)"]', "", "synthetic"),
+                (25, "цей", "pronoun", '["this (pronoun)"]', "", "synthetic"),
                 (16, "ні", "particle", '["no (preposition)"]', "", "synthetic"),
             ],
         )
@@ -131,12 +133,86 @@ def test_gloss_pronoun_and_function_word_rows_ignore_alphabet_letters(synthetic_
                 ("ні", "part"),
             ]
         )
-    assert [r["id"] for r in result.raw["я", "noun"]] == [10]
+    assert [r["id"] for r in result.raw["я", "noun"]] == [15, 19149]
+    assert [r["id"] for r in sources.filter_pronominal_gloss_rows(result.raw["я", "noun"], "я", "noun", True)] == [15]
+    assert [r["id"] for r in sources.filter_pronominal_gloss_rows(result.raw["я", "noun"], "я", "noun", False)] == [
+        19149
+    ]
     assert result.raw["ж", "part"] == []
     assert [r["id"] for r in result.raw["у", "prep"]] == [13]
-    assert [r["id"] for r in result.raw["і", "conj"]] == [14]
-    assert [r["id"] for r in result.raw["цей", "adj"]] == [15]
+    assert [r["id"] for r in result.raw["і", "conj"]] == [2582]
+    assert [r["id"] for r in result.raw["цей", "adj"]] == [25]
     assert result.raw["ні", "part"] == []
+
+
+def test_function_gloss_prefers_labelled_row_over_particle(synthetic_sources):
+    # The particle translation is copied from sources.db dmklinger_uk_en id 2582 (і).
+    # The labelled row is a deliberate collision: this DB currently has no conjunction-labelled rows.
+    translation = '["and (used to connect two similar words, phrases, et cetera) (conjunction)"]'
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.executemany(
+            "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
+            [
+                (2582, "і", "particle", translation, "", "sources.db:2582"),
+                (2583, "і", "conjunction", translation, "", "test collision from sources.db:2582"),
+            ],
+        )
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        assert [row["id"] for row in api.gloss_rows([("і", "conj")]).raw["і", "conj"]] == [2583]
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("DELETE FROM dmklinger_uk_en WHERE id = 2583")
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        assert [row["id"] for row in api.gloss_rows([("і", "conj")]).raw["і", "conj"]] == [2582]
+
+
+def test_kaikki_exact_readonly_and_alignment(tmp_path):
+    side = tmp_path / "kaikki.sqlite"
+    # POS and gloss arrays copied from local side-db-v1 content_sha256 251974b6...:
+    # lemma_key вона has pron; після has adv+prep.
+    with sqlite3.connect(side) as conn:
+        conn.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)")
+        conn.execute("CREATE TABLE kaikki (lemma_key TEXT PRIMARY KEY, payload TEXT NOT NULL)")
+        conn.executemany(
+            "INSERT INTO meta VALUES (?, ?)",
+            [
+                ("schema_version", "side-db-v1"),
+                ("kind", "kaikki"),
+                ("content_sha256", "a" * 64),
+                ("row_count", "2"),
+            ],
+        )
+        conn.executemany(
+            "INSERT INTO kaikki VALUES (?, ?)",
+            [
+                ("вона", json.dumps({"pos": ["pron"], "glosses": ["she (person)", "it (feminine gender)"]})),
+                ("після", json.dumps({"pos": ["adv", "prep"], "glosses": ["after (in time)", "later, afterwards"]})),
+            ],
+        )
+    with sources.Sources(kaikki_db=side) as api:
+        result = api.kaikki_rows(["вона", "після", "synthetic-absent"])
+        assert result.content_hash == "a" * 64
+        assert result.raw["synthetic-absent"] is None
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            api._kaikki_conn.execute("DELETE FROM kaikki")
+    assert sources.aligned_kaikki_gloss(result.raw["вона"], "noun", True) == (
+        "she (person); it (feminine gender)",
+        None,
+    )
+    assert sources.aligned_kaikki_gloss(result.raw["після"], "prep", False) == (None, "kaikki_multi_pos")
+    assert sources.aligned_kaikki_gloss(result.raw["вона"], "verb", False) == (None, "kaikki_pos_mismatch")
+    assert sources.aligned_kaikki_gloss(result.raw["synthetic-absent"], "noun", True) == (None, "kaikki_absent")
+
+
+def test_missing_kaikki_fails_closed_with_named_code(tmp_path):
+    with sources.Sources(kaikki_db=tmp_path / "missing.sqlite") as api:
+        with pytest.raises(FileNotFoundError, match=codes.SOURCE_UNAVAILABLE):
+            api.kaikki_rows(["вона"])
+
+
+def test_kaikki_env_path_override(monkeypatch, tmp_path):
+    side = tmp_path / "kaikki.sqlite"
+    monkeypatch.setenv("LEXICON_KAIKKI_SIDE_DB", str(side))
+    assert sources.Sources().kaikki_db == side
 
 
 def test_pronoun_tags_reach_conditioned_stress_oracle(monkeypatch):

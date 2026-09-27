@@ -13,7 +13,7 @@ from scripts.verification import stress
 
 @pytest.mark.parametrize(
     ("form", "expected"),
-    [("його", "його́"), ("Його", "Його́"), ("переді", "пе́реді"), ("межи", "межи́"), ("піді", "пі́ді")],
+    [("його", "його́"), ("Його", "Його́"), ("Йому", "Йому́"), ("переді", "пе́реді"), ("межи", "межи́"), ("піді", "пі́ді")],
 )
 def test_cited_stress_overrides_are_exact_and_single_accent(form, expected):
     stress._load_overrides.cache_clear()
@@ -118,7 +118,8 @@ def test_pronominal_adjective_prefers_attributive_gloss(synthetic_vesum, synthet
         result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
     word = result["store"]["words"][0]
     assert word["gloss_en"] == "my (determiner)"
-    assert word["gloss_source"]["id"] == 11
+    assert word["gloss_source"] == "dmklinger_uk_en"
+    assert word["gloss_ref"]["id"] == 11
 
 
 def test_reflexive_possessive_uses_broad_sourced_sense(synthetic_vesum, synthetic_sources, tmp_path):
@@ -145,7 +146,7 @@ def test_reflexive_possessive_uses_broad_sourced_sense(synthetic_vesum, syntheti
     )
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
         result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
-    assert result["store"]["words"][0]["gloss_source"]["id"] == 10
+    assert result["store"]["words"][0]["gloss_ref"]["id"] == 10
 
 
 def test_monosyllable_never_calls_oracle(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
@@ -729,12 +730,12 @@ def test_gloss_absent_when_no_row_and_present_when_matching(synthetic_vesum, syn
     w_none = next(w for w in res["store"]["words"] if w["lemma"] == "synthetic-no-gloss")
 
     assert w_verb["gloss_en"] == "wrong POS"
-    assert w_verb["gloss_source"]["table"] == "dmklinger_uk_en"
-    assert w_verb["gloss_source"]["id"] == 3
+    assert w_verb["gloss_source"] == "dmklinger_uk_en"
+    assert w_verb["gloss_ref"]["id"] == 3
     with sqlite3.connect(synthetic_sources) as conn:
         conn.row_factory = sqlite3.Row
         row = dict(conn.execute("SELECT * FROM dmklinger_uk_en WHERE id = 3").fetchone())
-    assert w_verb["gloss_source"]["row_sha256"] == sources.row_digest(row)
+    assert w_verb["gloss_ref"]["row_sha256"] == sources.row_digest(row)
 
     assert "gloss_en" not in w_none
     assert "gloss_source" not in w_none
@@ -986,14 +987,15 @@ def test_store_records_rows_v2_identities_and_aggregate(synthetic_vesum, synthet
         conn.row_factory = sqlite3.Row
         gloss_row = dict(conn.execute("SELECT * FROM dmklinger_uk_en WHERE id = 1").fetchone())
         cefr_row = dict(conn.execute("SELECT * FROM puls_cefr WHERE id = 1").fetchone())
-    assert word["gloss_source"] == {"table": "dmklinger_uk_en", "id": 1, "row_sha256": sources.row_digest(gloss_row)}
+    assert word["gloss_source"] == "dmklinger_uk_en"
+    assert word["gloss_ref"] == {"table": "dmklinger_uk_en", "id": 1, "row_sha256": sources.row_digest(gloss_row)}
     assert word["cefr"] == {"level": "A1", "source": "puls", "row_id": 1, "row_sha256": sources.row_digest(cefr_row)}
     assert store["built_with"]["sources_db_scheme"] == "rows-v2"
     cited = words.cited_rows(word)
     # The morphology check may flag the synthetic lemma as a shadow and add heritage pairs; the
     # gloss and CEFR rows are always cited.
     assert {pair for pair in cited if not pair[0].startswith("heritage:")} == {
-        ("dmklinger_uk_en:1", word["gloss_source"]["row_sha256"]),
+        ("dmklinger_uk_en:1", word["gloss_ref"]["row_sha256"]),
         ("puls_cefr:1", word["cefr"]["row_sha256"]),
     }
     assert store["built_with"]["sources_db"] == sources.aggregate_digest(cited)
@@ -1037,7 +1039,7 @@ def test_legacy_store_migrates_only_when_the_request_covers_all_active_ids(
     doc = yaml.safe_load(store_path.read_text(encoding="utf-8"))
     doc["built_with"].pop("sources_db_scheme")
     doc["built_with"]["sources_db"] = "b" * 64
-    doc["words"][0]["gloss_source"].pop("row_sha256")
+    doc["words"][0]["gloss_ref"].pop("row_sha256")
     doc["words"][0]["cefr"] = {"level": "A1", "source": "puls"}
     lock.write(store_path, lock.yaml_bytes(doc))
     assert words.store_scheme(doc) == "file-v1"
@@ -1058,7 +1060,7 @@ def test_legacy_store_migrates_only_when_the_request_covers_all_active_ids(
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
         res = words.build_words("a1", full, evidence_dir=tmp_path, sources_instance=api)
     assert res["store"]["built_with"]["sources_db_scheme"] == "rows-v2"
-    assert all("row_sha256" in w["gloss_source"] for w in res["store"]["words"] if "gloss_source" in w)
+    assert all("row_sha256" in w["gloss_ref"] for w in res["store"]["words"] if "gloss_ref" in w)
 
 
 def _shadow_everything(monkeypatch):
@@ -1086,3 +1088,38 @@ def test_heritage_hits_carry_the_identity_of_the_rows_they_were_read_from(
     assert all(sources.heritage_hit_digest(hit) == hit["row_sha256"] for hit in hits)
     assert ("heritage:synthetic:0", hits[0]["row_sha256"]) in words.cited_rows(word)
     words.validate_store_data(res["store"])
+
+
+def test_kaikki_fallback_never_overrides_dmklinger(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
+    _oracle(monkeypatch)
+    side = tmp_path / "kaikki.sqlite"
+    with sqlite3.connect(side) as conn:
+        conn.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)")
+        conn.execute("CREATE TABLE kaikki (lemma_key TEXT PRIMARY KEY, payload TEXT NOT NULL)")
+        conn.executemany(
+            "INSERT INTO meta VALUES (?, ?)",
+            [
+                ("schema_version", "side-db-v1"),
+                ("kind", "kaikki"),
+                ("content_sha256", "f" * 64),
+                ("row_count", "1"),
+            ],
+        )
+        conn.execute(
+            "INSERT INTO kaikki VALUES (?, ?)",
+            ("synthetic", json.dumps({"pos": ["noun"], "glosses": ["first copied sense", "second copied sense"]})),
+        )
+    request = _request(tmp_path, [SYNTHETIC_NOUN])
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum, kaikki_db=side) as api:
+        first = words.build_words("a1", request, evidence_dir=tmp_path / "first", sources_instance=api)
+    assert first["store"]["words"][0]["gloss_en"] == "first translation"
+    assert first["store"]["words"][0]["gloss_source"] == "dmklinger_uk_en"
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("DELETE FROM dmklinger_uk_en WHERE word = 'synthetic'")
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum, kaikki_db=side) as api:
+        second = words.build_words("a1", request, evidence_dir=tmp_path / "second", sources_instance=api)
+    assert second["store"]["words"][0]["gloss_en"] == "first copied sense; second copied sense"
+    assert second["store"]["words"][0]["gloss_source"] == "kaikki_wiktionary"
+    assert "gloss_ref" not in second["store"]["words"][0]
+    assert second["store"]["built_with"]["kaikki_content_sha256"] == "f" * 64
+    assert second["store"]["built_with"]["kaikki_attribution"] == sources.KAIKKI_ATTRIBUTION

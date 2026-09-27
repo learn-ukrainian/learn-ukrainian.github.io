@@ -31,6 +31,7 @@
 # sources MCP search_definitions: СУМ-11 "він" id 13932 includes "йому́";
 # verify_stresses returned not_found for the VESUM dative form.
 йому: "йому́"
+Йому: "Йому́"
 # sources MCP search_definitions: СУМ-11 "він" id 13932 and "воно"
 # id 15081 explicitly give prepositional "ньо́го"; trie: not_found.
 нього: "ньо́го"

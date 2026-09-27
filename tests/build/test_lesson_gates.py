@@ -1475,7 +1475,7 @@ def test_alphabet_gate_passes_marked_form_and_attested_inflections(gold, monkeyp
     assert not any("ньо́го" in w for w in report["warnings"])
 
 
-# sources verify_stresses: ними is not_found; sources verify_words: VESUM attests it.
+# The unaccented ними is VESUM-attested but still triggers a missing-stress warning.
 _NONCE_LESSON = "\n\nЦе фундамета́льні пра́вила. Дере́в'яний стіл стоїть перед ними.\n"
 
 

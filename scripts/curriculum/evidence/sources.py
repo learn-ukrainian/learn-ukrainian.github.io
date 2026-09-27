@@ -12,6 +12,7 @@ VESUM is a static file and keeps its metadata/file identity.
 
 import hashlib
 import json
+import os
 import re
 import shutil
 import sqlite3
@@ -50,6 +51,30 @@ GLOSS_POS = {
     "conj": ("conjunction", "particle"),
     "intj": ("interjection",),
 }
+KAIKKI_ATTRIBUTION = "Wiktionary via Kaikki.org, CC BY-SA 3.0"
+KAIKKI_POS = {
+    "pron": "PRON",
+    "det": "DET",
+    "prep": "ADP",
+    "conj": "CCONJ",
+    "particle": "PART",
+    "adv": "ADV",
+    "adj": "ADJ",
+    "noun": "NOUN",
+    "verb": "VERB",
+    "num": "NUM",
+}
+STORE_POS = {
+    "noun": {"NOUN"},
+    "verb": {"VERB"},
+    "adj": {"ADJ"},
+    "adv": {"ADV"},
+    "numr": {"NUM"},
+    "part": {"PART"},
+    "prep": {"ADP"},
+    "conj": {"CCONJ", "SCONJ"},
+}
+ALPHABET_GUARD_POS = {"prep", "conj", "part"}
 
 
 def is_alphabet_letter_gloss(row: dict) -> bool:
@@ -114,6 +139,55 @@ def _sources_path() -> Path:
     from scripts.guardrails.worktree_containment import resolve_main_root
 
     return resolve_main_root(REPO_ROOT) / "data/sources.db"
+
+
+def _kaikki_path() -> Path:
+    if override := os.environ.get("LEXICON_KAIKKI_SIDE_DB"):
+        return Path(override)
+    path = REPO_ROOT / "data/lexicon/side/kaikki.sqlite"
+    if path.is_file():
+        return path
+    from scripts.guardrails.worktree_containment import resolve_main_root
+
+    return resolve_main_root(REPO_ROOT) / "data/lexicon/side/kaikki.sqlite"
+
+
+def aligned_kaikki_gloss(payload: dict | None, pos: str, pronoun_entry: bool) -> tuple[str | None, str | None]:
+    """Only a single source POS can align with a VESUM store record."""
+    if payload is None:
+        return None, "kaikki_absent"
+    source_pos = payload.get("pos")
+    if not isinstance(source_pos, list) or len(source_pos) != 1:
+        return None, "kaikki_multi_pos"
+    expected = STORE_POS.get(pos, set()).copy()
+    if pos == "noun" and pronoun_entry:
+        expected = {"PRON"}
+    elif pos == "adj" and pronoun_entry:
+        expected = {"PRON", "DET"}
+    if KAIKKI_POS.get(source_pos[0]) not in expected:
+        return None, "kaikki_pos_mismatch"
+    glosses = payload.get("glosses")
+    if not isinstance(glosses, list) or not glosses or not all(isinstance(g, str) and g for g in glosses):
+        return None, "kaikki_no_gloss"
+    return "; ".join(glosses), None
+
+
+def filter_pronominal_gloss_rows(rows: list[dict], lemma: str, pos: str, pronoun_entry: bool) -> list[dict]:
+    """Keep the existing VESUM pronoun and determiner sense preference."""
+    if pos not in {"noun", "adj"}:
+        return rows
+    if pronoun_entry:
+        allowed = {"pronoun"} if pos == "noun" else {"pronoun", "particle"}
+    else:
+        allowed = {"noun"} if pos == "noun" else {"adjective", "adj"}
+    selected = [row for row in rows if row["pos"] in allowed]
+    if pronoun_entry:
+        selected = [row for row in selected if not is_alphabet_letter_gloss(row)]
+    if pronoun_entry and pos == "adj":
+        # The reflexive possessive pronoun takes its broad pronoun row first.
+        preferred = "pronoun" if lemma == "свій" else "particle"
+        selected.sort(key=lambda row: row["pos"] != preferred)
+    return selected
 
 
 def _canonical(value: Any) -> bytes:
@@ -192,6 +266,7 @@ class Sources:
         self,
         *,
         sources_db: Path | None = None,
+        kaikki_db: Path | None = None,
         vesum_db: Path | None = None,
         standard_path: Path | None = None,
         report: Callable[[str], None] | None = None,
@@ -199,6 +274,9 @@ class Sources:
         free_disk_floor_bytes: int | None = None,
     ):
         self.sources_db = Path(sources_db) if sources_db is not None else _sources_path()
+        self.kaikki_db = Path(kaikki_db) if kaikki_db is not None else _kaikki_path()
+        self._kaikki_conn: sqlite3.Connection | None = None
+        self._kaikki_content_sha256: str | None = None
         self.vesum_db = Path(vesum_db) if vesum_db is not None else VESUM_DB_PATH
         self.standard_path = (
             Path(standard_path)
@@ -226,6 +304,10 @@ class Sources:
 
     def close(self) -> None:
         """Release the pinned snapshot (rollback, never commit) and report its lifetime."""
+        if self._kaikki_conn is not None:
+            side, self._kaikki_conn = self._kaikki_conn, None
+            with closing(side), suppress(sqlite3.Error):
+                side.execute("ROLLBACK")
         if self._conn is None:
             return
         conn, self._conn = self._conn, None
@@ -410,8 +492,6 @@ class Sources:
     def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
         """Return the oracle envelope unchanged. Builder handles monosyllables first."""
         mapped_tags = self.mapper(vesum_tags)
-        if "pron" in vesum_tags.split(":") and "upos=ADJ" in mapped_tags:
-            mapped_tags = sorted((set(mapped_tags) - {"upos=ADJ"}) | {"upos=PRON"})
         raw = stress.verify_stress(normalize_spelling(form), tags=mapped_tags)
         # The trie alone does not identify exact-form override changes.
         override_digest = _file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
@@ -472,16 +552,56 @@ class Sources:
             slots = ",".join("?" for _ in words)
             rows = conn.execute(f"SELECT * FROM dmklinger_uk_en WHERE word IN ({slots}) ORDER BY id", words).fetchall()
             for key in batch:
+                labelled = [
+                    row
+                    for row in rows
+                    if row["word"] == key[0]
+                    and row["pos"] == {"prep": "preposition", "conj": "conjunction"}.get(key[1])
+                ]
                 result[key] = [
                     dict(row)
                     for row in rows
                     if row["word"] == key[0]
                     and row["pos"] in GLOSS_POS.get(key[1], (key[1],))
-                    and not is_alphabet_letter_gloss(dict(row))
+                    and not (key[1] in ALPHABET_GUARD_POS and is_alphabet_letter_gloss(dict(row)))
                     and not has_incompatible_function_label(dict(row), key[1])
+                    and not (key[1] in {"prep", "conj"} and labelled and row["pos"] == "particle")
                 ]
             self._progress("glosses", min(start + BATCH_SIZE, len(requested)), len(requested))
         return self._db_result(result)
+
+    def kaikki_rows(self, lemmas: Iterable[str]) -> SourceResult[dict[str, dict | None]]:
+        """Read exact lemma keys from the immutable, locally built Kaikki side DB."""
+        if self._kaikki_conn is None:
+            if not self.kaikki_db.is_file():
+                raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: kaikki side DB missing: {self.kaikki_db}")
+            conn = open_snapshot(self.kaikki_db)
+            try:
+                meta = dict(conn.execute("SELECT key, value FROM meta"))
+                digest = meta.get("content_sha256", "")
+                if (
+                    (meta.get("schema_version"), meta.get("kind")) != ("side-db-v1", "kaikki")
+                    or not re.fullmatch(r"[0-9a-f]{64}", digest)
+                    or int(meta.get("row_count", "-1")) != conn.execute("SELECT COUNT(*) FROM kaikki").fetchone()[0]
+                ):
+                    raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: invalid kaikki side DB metadata")
+            except BaseException:
+                conn.close()
+                raise
+            self._kaikki_conn = conn
+            self._kaikki_content_sha256 = digest
+        requested = list(dict.fromkeys(lemmas))
+        result: dict[str, dict | None] = {lemma: None for lemma in requested}
+        for start in range(0, len(requested), BATCH_SIZE):
+            batch = requested[start : start + BATCH_SIZE]
+            if not batch:
+                continue
+            slots = ",".join("?" for _ in batch)
+            for row in self._kaikki_conn.execute(
+                f"SELECT lemma_key, payload FROM kaikki WHERE lemma_key IN ({slots})", batch
+            ):
+                result[row["lemma_key"]] = json.loads(row["payload"])
+        return SourceResult(result, self._kaikki_content_sha256, {"attribution": KAIKKI_ATTRIBUTION})
 
     def cefr_levels(self, lemmas: Iterable[str]) -> SourceResult[dict]:
         """Raw PULS hits; consumers must reject the upstream helper's prefix fallback."""

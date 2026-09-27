@@ -62,7 +62,7 @@ def strip_combining_stress(text: str) -> str:
 def cited_rows(word: dict[str, Any]) -> list[tuple[str, str]]:
     """The (locator, row_sha256) pairs a word record cites; built_with.sources_db aggregates them (rows-v2)."""
     pairs: list[tuple[str, str]] = []
-    gloss = word.get("gloss_source")
+    gloss = word.get("gloss_ref", word.get("gloss_source"))
     if isinstance(gloss, dict) and gloss.get("row_sha256"):
         pairs.append((f"{gloss.get('table')}:{gloss.get('id')}", gloss["row_sha256"]))
     cefr = word.get("cefr")
@@ -270,25 +270,28 @@ def build_words(
         ulif_result = sources_instance.ulif_entries(lemmas_requested)
         cefr_result = sources_instance.cefr_levels(lemmas_requested)
         gloss_result = sources_instance.gloss_rows(lemma_pos_pairs)
+        kaikki_result = sources_instance.kaikki_rows(lemmas_requested)
         ulif_batch = ulif_result.raw
         cefr_batch = cefr_result.raw
         gloss_batch = gloss_result.raw
+        kaikki_batch = kaikki_result.raw
         ru_batch = sources_instance.russian_patterns(lemmas_requested)
         ru_patterns_raw = ru_batch.raw
 
         # allocated_at_build is the request's read set, known before any id is
         # allocated: deterministic for the same request and sources. It also
-        # changes when an uncited candidate row in one of the three batches
+        # changes when an uncited candidate row in one of the four batches
         # changes (a second gloss row, an unchecked ULIF homonym); the ledger is
         # append-only, so existing allocations are never rewritten by that.
         built_fingerprint = hashlib.sha256(
             f"{ulif_result.content_hash}:{cefr_result.content_hash}:{gloss_result.content_hash}:"
-            f"{vesum_hash}:{trie_hash}:{commit_sha}".encode()
+            f"{kaikki_result.content_hash}:{vesum_hash}:{trie_hash}:{commit_sha}".encode()
         ).hexdigest()
 
         words_out: dict[str, dict[str, Any]] = dict(existing_words)
         changed_ids: list[str] = []
         pending_reasons: list[dict[str, str]] = []
+        unglossed: list[dict[str, str]] = []
 
         for rw in requested_words:
             lemma = sources.normalize_spelling(rw["lemma"])
@@ -523,20 +526,9 @@ def build_words(
                 word_doc["cefr"] = cefr_field(exact_cefr)
 
             # Gloss: first translation of matching row
-            gloss_rows = gloss_batch.get((lemma, pos), [])
-            if pos in {"noun", "adj"}:
-                if pronoun_entry:
-                    allowed_gloss_pos = {"pronoun"} if pos == "noun" else {"pronoun", "particle"}
-                else:
-                    allowed_gloss_pos = {"noun"} if pos == "noun" else {"adjective", "adj"}
-                gloss_rows = [row for row in gloss_rows if row["pos"] in allowed_gloss_pos]
-                if pronoun_entry and pos == "adj":
-                    # VESUM's adj:pron is attributive; dmklinger's particle
-                    # rows are determiner senses, ahead of standalone pronouns.
-                    # Exception: its first particle row narrows reflexive свій
-                    # to "its" (id 19455); pronoun row 18763 covers all persons.
-                    preferred = "pronoun" if lemma == "свій" else "particle"
-                    gloss_rows.sort(key=lambda row: row["pos"] != preferred)
+            gloss_rows = sources.filter_pronominal_gloss_rows(
+                gloss_batch.get((lemma, pos), []), lemma, pos, pronoun_entry
+            )
             if gloss_rows:
                 first_row = gloss_rows[0]
                 raw_trans = first_row.get("translations", "")
@@ -551,11 +543,19 @@ def build_words(
                     first_str = str(parsed_trans[0])
                     if first_str:
                         word_doc["gloss_en"] = first_str
-                        word_doc["gloss_source"] = {
+                        word_doc["gloss_source"] = "dmklinger_uk_en"
+                        word_doc["gloss_ref"] = {
                             "table": "dmklinger_uk_en",
                             "id": first_row["id"],
                             "row_sha256": sources.row_digest(first_row),
                         }
+            if "gloss_en" not in word_doc:
+                kaikki_gloss, reason = sources.aligned_kaikki_gloss(kaikki_batch.get(lemma), pos, pronoun_entry)
+                if kaikki_gloss is not None:
+                    word_doc["gloss_en"] = kaikki_gloss
+                    word_doc["gloss_source"] = "kaikki_wiktionary"
+                else:
+                    unglossed.append({"lemma": lemma, "pos": pos, "reason": reason})
 
             # Russian shadow & heritage
             pat = ru_patterns_raw.get(lemma, {})
@@ -595,6 +595,8 @@ def build_words(
 
         built_with: dict[str, Any] = {
             "mcp_commit": commit_sha,
+            "kaikki_content_sha256": kaikki_result.content_hash,
+            "kaikki_attribution": sources.KAIKKI_ATTRIBUTION,
             "sources_db": sources.aggregate_digest(cited),
             "sources_db_scheme": sources.SOURCES_DB_SCHEME,
             "vesum": vesum_hash,
@@ -652,6 +654,7 @@ def build_words(
             "forms_count": total_forms,
             "stress_sources": stress_counts,
             "pending_reasons": pending_reasons,
+            "unglossed": unglossed,
             "overrides_count": override_count,
             "changed_ids": changed_ids,
             "affected_plans": changed_plans_map,

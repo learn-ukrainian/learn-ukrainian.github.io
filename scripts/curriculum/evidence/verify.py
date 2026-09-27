@@ -24,6 +24,7 @@ from .words import (
     cited_rows,
     extract_ulif_paradigm_forms,
     find_plans_citing,
+    is_learner_form,
     load_schema,
     needs_no_stress,
     packed_stress_reason,
@@ -166,6 +167,17 @@ def verify_words_store(
         total_forms = 0
 
         words_list = store_doc.get("words", [])
+        kaikki_result = sources_instance.kaikki_rows(word["lemma"] for word in words_list)
+        if any(isinstance(word.get("gloss_source"), str) for word in words_list) and (
+            "kaikki_content_sha256" not in built_with or "kaikki_attribution" not in built_with
+        ):
+            errors.append(
+                f"{codes.GLOSS_MISMATCH}: new gloss provenance requires Kaikki header identity and attribution"
+            )
+        if "kaikki_content_sha256" in built_with and built_with["kaikki_content_sha256"] != kaikki_result.content_hash:
+            _drift(strict, errors, warnings, "Kaikki side DB content identity changed")
+        if "kaikki_attribution" in built_with and built_with["kaikki_attribution"] != sources.KAIKKI_ATTRIBUTION:
+            errors.append(f"{codes.GLOSS_MISMATCH}: Kaikki attribution changed")
 
         # Check numeric ID ordering
         prev_num = 0
@@ -228,17 +240,10 @@ def verify_words_store(
             # Check Gloss against source
             gloss_rows = sources_instance.gloss_rows([(lemma, pos)]).raw.get((lemma, pos), [])
             pronoun_entry = any("pron" in str(form.get("tags", "")).split(":") for form in word.get("forms", []))
-            if pos in {"noun", "adj"}:
-                if pronoun_entry:
-                    allowed_gloss_pos = {"pronoun"} if pos == "noun" else {"pronoun", "particle"}
-                else:
-                    allowed_gloss_pos = {"noun"} if pos == "noun" else {"adjective", "adj"}
-                gloss_rows = [row for row in gloss_rows if row["pos"] in allowed_gloss_pos]
-                if pronoun_entry and pos == "adj":
-                    preferred = "pronoun" if lemma == "свій" else "particle"
-                    gloss_rows.sort(key=lambda row: row["pos"] != preferred)
+            gloss_rows = sources.filter_pronominal_gloss_rows(gloss_rows, lemma, pos, pronoun_entry)
             expected_gloss = None
             expected_gloss_source = None
+            expected_gloss_ref = None
             if gloss_rows:
                 first_row = gloss_rows[0]
                 raw_trans = first_row.get("translations", "")
@@ -253,24 +258,40 @@ def verify_words_store(
                     first_str = str(parsed_trans[0])
                     if first_str:
                         expected_gloss = first_str
-                        expected_gloss_source = {
+                        expected_gloss_source = "dmklinger_uk_en"
+                        expected_gloss_ref = {
                             "table": "dmklinger_uk_en",
                             "id": first_row["id"],
                             "row_sha256": sources.row_digest(first_row),
                         }
 
+            if expected_gloss is None:
+                expected_gloss, _ = sources.aligned_kaikki_gloss(kaikki_result.raw.get(lemma), pos, pronoun_entry)
+                if expected_gloss is not None:
+                    expected_gloss_source = "kaikki_wiktionary"
+
             stored_gloss = word.get("gloss_en")
             stored_gloss_source = word.get("gloss_source")
-            if stored_gloss != expected_gloss or _without_identity(stored_gloss_source, legacy=legacy) != (
-                _without_identity(expected_gloss_source, legacy=legacy)
+            stored_gloss_ref = word.get(
+                "gloss_ref", stored_gloss_source if isinstance(stored_gloss_source, dict) else None
+            )
+            expected_source_for_shape = (
+                expected_gloss_ref if isinstance(stored_gloss_source, dict) else expected_gloss_source
+            )
+            if (
+                stored_gloss != expected_gloss
+                or _without_identity(stored_gloss_source, legacy=legacy)
+                != _without_identity(expected_source_for_shape, legacy=legacy)
+                or _without_identity(stored_gloss_ref, legacy=legacy)
+                != _without_identity(expected_gloss_ref, legacy=legacy)
             ):
                 errors.append(
                     f"{codes.GLOSS_MISMATCH}: stored gloss ({stored_gloss!r}, "
                     f"{_without_identity(stored_gloss_source, legacy=legacy)}) differs from source "
-                    f"({expected_gloss!r}, {_without_identity(expected_gloss_source, legacy=legacy)}) "
+                    f"({expected_gloss!r}, {_without_identity(expected_source_for_shape, legacy=legacy)}) "
                     f"for {word_id} ({lemma})"
                 )
-            cited_row_check("gloss_source", stored_gloss_source, expected_gloss_source)
+            cited_row_check("gloss_source", stored_gloss_ref, expected_gloss_ref)
 
             # Heritage hits are copied by value; each carries the identity of the rows it was read from.
             stored_heritage = word.get("heritage")
@@ -392,12 +413,9 @@ def verify_words_store(
 
                 # Excluding marker check
                 vf_markers = vf.get("markers", [])
-                has_excluding = any(
-                    (m["marker"] if isinstance(m, dict) else m) in codes.EXCLUDING_MARKERS for m in vf_markers
-                )
-                if sf.get("learner") is True and has_excluding:
+                if sf.get("learner") is True and not is_learner_form(vf_tags, vf_markers):
                     errors.append(
-                        f"{codes.LEARNER_MARKER}: form {form_str!r} of {word_id} is marked learner: true but carries excluding marker: {vf_markers}"
+                        f"{codes.LEARNER_MARKER}: form {form_str!r} of {word_id} is marked learner: true but carries excluded tags or markers: {vf_tags}, {vf_markers}"
                     )
 
                 # ULIF check

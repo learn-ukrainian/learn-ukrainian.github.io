@@ -141,6 +141,9 @@ class TagMapper:
         if "noun" in atoms and "pron" in atoms:
             mapped.discard("upos=NOUN")
             mapped.add("upos=PRON")
+        elif "adj" in atoms and "pron" in atoms:
+            mapped.discard("upos=ADJ")
+            mapped.add("upos=PRON")
         elif "noun" in atoms and "prop" in atoms:
             mapped.discard("upos=NOUN")
             mapped.add("upos=PROPN")
