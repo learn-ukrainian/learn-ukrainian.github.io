@@ -224,11 +224,6 @@ NOT_REPO_WIDE = {
         "Scans the writer engine under scripts/build/fresh; scripts/build/ is on the "
         "shared-root denylist, so any change already forces the full tier."
     ),
-    "tests/test_ci_attribution.py::test_run_nodeids_kills_a_wedged_test_and_names_it_on_stderr": (
-        "Uses a repository-rooted scratch path only to create and then delete a "
-        "self-created temp dir (the `rglob` is cleanup); it scans no repository "
-        "invariant tree, so no marker is needed."
-    ),
     "tests/test_dispatch_xdist_cap.py::test_ci_workflows_do_not_set_the_dispatch_marker": (
         "Scans .github/workflows; .github/ is on the shared-root denylist, so any change "
         "already forces the full tier."
