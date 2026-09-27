@@ -14,6 +14,7 @@ from agents_extensions.shared.session_streams.inventory import (
     inventory_snapshot,
     load_stream_epic_inventory,
     sorted_epic_numbers,
+    stream_anchor_id,
     stream_map,
 )
 from agents_extensions.shared.session_streams.receipts import (
@@ -52,7 +53,7 @@ def test_sorted_epics_and_stream_map_from_multi_stream_fixture(tmp_path: Path) -
     mapping = stream_map(repo)
     assert mapping == {
         "alpha": [1001, 1002],
-        "beta": [1002, 2001],
+        "beta": [2001, 1002],
         "gamma": [3001],
     }
     records = load_stream_epic_inventory(repo)
@@ -70,6 +71,15 @@ def test_sorted_epics_and_stream_map_from_multi_stream_fixture(tmp_path: Path) -
     assert snap["hard_coded_subset_authoritative"] is False
     assert snap["authority"] == "scripts/config/issue_streams.yaml"
     assert len(snap["source_sha256"]) == 64
+
+
+def test_stream_anchor_follows_listed_order_not_numeric_order(tmp_path: Path) -> None:
+    """A descending epic list keeps its first entry as the anchor."""
+    repo = _fixture_repo(tmp_path)
+    assert stream_map(repo)["beta"] == [2001, 1002]
+    assert stream_anchor_id("beta", repo) == "epic:2001"
+    assert stream_anchor_id("alpha", repo) == "epic:1001"
+    assert stream_anchor_id("gamma", repo) == "epic:3001"
 
 
 def test_inventory_does_not_use_hard_coded_exclusive_list(tmp_path: Path) -> None:
