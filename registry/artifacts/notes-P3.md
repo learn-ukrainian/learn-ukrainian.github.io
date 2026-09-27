@@ -213,7 +213,7 @@ older-than-base identities have all been found.
 
 ## Round-5 diagnostic checkpoint
 
-The full top-level `tests/test_open_model_*.py` run on the inherited round-4
+The first top-level `tests/test_open_model_*.py` run on the inherited round-4
 tree reported `196 failed, 1959 passed, 13 skipped` across 2,168 tests.
 The `tests/projects/open_model_data` run reached 94 percent and reported
 `124 failed, 2086 passed, 12 skipped, 17 errors` before an exact-process
@@ -221,22 +221,36 @@ interrupt. Two consecutive 110-second timeout stacks identified
 `test_v6_mine_general_assistant_textbooks.py::test_held_out_firewall_zero_leakage`
 and `::test_dynamic_verification_functions_pass`. Both runs used an in-checkout
 pytest base; many private-source and private-output tests explicitly reject
-that fixture location. Their failure totals therefore do not establish the
-remaining product-failure count. Full external-temp replay and any required
-base comparisons remain open. The ignored local logs are
-`.pytest-tmp/r5-top.log` and `.pytest-tmp/r5-project.log`.
+that fixture location. The external-temp full top-level replay on code head
+`2cfecf5fe2` passed `2155 passed, 13 skipped`. The external-temp project
+selection excluding the timed-out 33-test textbook module reported
+`124 failed, 2184 passed, 14 skipped, 11 errors` across 2,333 tests.
+The 135 exact failing/error IDs are in ignored local
+`.pytest-tmp/r5-project-failing-ids.txt`; the 33 omitted IDs are in
+`.pytest-tmp/r5-omitted-nodeids.txt`. The first project errors still open
+K schemas and receipts at old `data/` paths. Full project-suite replay and
+test-by-test base comparisons remain open. The ignored local logs are
+`.pytest-tmp/r5-top.log`, `.pytest-tmp/r5-project.log`,
+`.pytest-tmp/r5-top-external.log`, and `.pytest-tmp/r5-project-external.log`.
+
+On the same code head, the six P3 A-group `artifacts verify --group` runs
+passed with counts `80, 17, 10, 49, 233, 23`. The table/blob/disk/manifest
+audit reported
+`rows=1125 K=713 K_bytes=12942226 A=412 A_bytes=637987720 errors=0`.
+The storage/classification/sparse-guard selection passed `219 passed,
+4 skipped`, and `git ls-files data` equalled the tracked-data allowlist.
 
 An independent replay of the candidate source-pin table compared all 65
 sources against base `55d0ed1515` and current disk bytes:
 `rows=65 contracts=72 drift=63 hash_report_errors=0`. Two source bytes remain
-unchanged. Eleven of the 63 drifting sources are in this checkpoint's working
-diff. This validates the recorded byte identities only; semantic equivalence,
+unchanged. Eleven of the 63 drifting sources changed in the checkpoint commit.
+This validates the recorded byte identities only; semantic equivalence,
 entry-point checks, and a search for older-than-base identities remain open
 under Decision H. The ignored candidate table is
 `.pytest-tmp/source-pin-report.tsv`.
 
-The generated `consumers-P3.tsv` currently has 2,916 rows and 2,916 blank
-checks (731 distinct consumers). Each executable row still needs an exercised
+The final-tree scanner regenerated `consumers-P3.tsv` with 3,166 rows and
+3,166 blank checks (737 distinct consumers). Each executable row still needs an exercised
 disposition; doc and logical-id rows need reasons. This is a stop gate for P3a.
 
 ## Unresolved P3a gates at this checkpoint
