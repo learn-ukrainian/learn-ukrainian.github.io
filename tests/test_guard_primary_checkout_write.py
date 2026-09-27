@@ -928,6 +928,19 @@ def test_bash_comments_preserve_real_primary_writes(repo: Path, command: str):
     assert "primary_checkout" in result.stderr
 
 
+@pytest.mark.parametrize("blank", ["\r", "\v", "\f", "\u00a0", "\u2003", "\u2028"])
+def test_leading_non_bash_blank_does_not_hide_primary_write(repo: Path, blank: str):
+    result = _bash(repo, f"{blank}#; tee AGENTS.md")
+    assert result.returncode == 2, result.stderr
+    assert "primary_checkout" in result.stderr
+
+
+@pytest.mark.parametrize("blank", [" ", "\t"])
+def test_leading_bash_blank_keeps_primary_comment_inert(repo: Path, blank: str):
+    result = _bash(repo, f"{blank}#; tee AGENTS.md")
+    assert result.returncode == 0, result.stderr
+
+
 @pytest.mark.parametrize("operator", [";", "&", "|", "(", ")"])
 def test_bash_comment_starts_after_control_operator_in_primary_hook(operator):
     assert hook._strip_shell_comments(f"echo hi{operator}# hidden\ntee AGENTS.md") == (

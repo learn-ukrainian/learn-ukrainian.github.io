@@ -59,7 +59,7 @@ def _read_payload() -> dict:
 
 
 def _command(payload: dict) -> str:
-    return ((payload.get("tool_input") or {}).get("command") or "").strip()
+    return (payload.get("tool_input") or {}).get("command") or ""
 
 
 def _strip_shell_comments(command: str) -> str:
@@ -130,6 +130,7 @@ def _tokenize(command: str) -> list[str]:
             punctuation_chars=";&|",
         )
         lexer.whitespace_split = True
+        lexer.whitespace = " \t\n"
         lexer.commenters = ""
         return list(lexer)
     except ValueError:
@@ -154,6 +155,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     try:
         lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
         lexer.whitespace_split = True
+        lexer.whitespace = " \t\n"
         lexer.commenters = ""
         tokens = list(lexer)
     except ValueError:
@@ -184,7 +186,7 @@ def _strip_heredoc_bodies(command: str) -> str:
 
     kept: list[str] = []
     pending: list[tuple[str, bool]] = []
-    for line in command.splitlines():
+    for line in command.split("\n"):
         if pending:
             delimiter, strip_tabs = pending[0]
             candidate = line.lstrip("\t") if strip_tabs else line

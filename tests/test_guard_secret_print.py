@@ -88,6 +88,27 @@ def test_non_bash_blank_before_hash_keeps_secret_checks_active(monkeypatch, caps
 @pytest.mark.parametrize(
     "command",
     [
+        "\r#; echo $GH_TOKEN",
+        "\v#; cat .env",
+        "\u00a0#; cat .env",
+        "\u2003#; echo $GH_TOKEN",
+        "\f#; cat .env",
+        "\u2028#; echo $GH_TOKEN",
+    ],
+)
+def test_leading_non_bash_blank_does_not_hide_secret_command(monkeypatch, capsys, command):
+    assert _run(monkeypatch, command) == 2
+    assert "BLOCKED by guard-secret-print (#M-5)" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("blank", [" ", "\t"])
+def test_leading_bash_blank_keeps_comment_inert(monkeypatch, blank):
+    assert _run(monkeypatch, f"{blank}#; echo $GH_TOKEN") == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
         "git status # echo x > AGENTS.md",
         "echo hi # $GH_TOKEN",
         "echo hi\t# $GH_TOKEN",

@@ -305,6 +305,7 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool, bool]]:
     try:
         lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
         lexer.whitespace_split = True
+        lexer.whitespace = " \t\n"
         lexer.commenters = ""
         tokens = list(lexer)
     except ValueError:
@@ -355,7 +356,7 @@ def _strip_heredoc_bodies(command: str) -> str:
     if "<<" not in command:
         return command
 
-    lines = command.splitlines()
+    lines = command.split("\n")
     kept: list[str] = []
     i = 0
     n = len(lines)
@@ -618,7 +619,7 @@ def _tokenize(command: str) -> list[str]:
         # operator. Otherwise adjacent lines collapse into one segment: a later
         # command's option (for example `find -print`) can be mistaken for an
         # earlier `sed` invocation's `-i` flag and produce bogus write targets.
-        lexer.whitespace = " \t\r"
+        lexer.whitespace = " \t"
         lexer.commenters = ""
         return [part for token in lexer for part in _split_operator_run(token)]
     except ValueError:
@@ -635,10 +636,10 @@ _VAR_REF_RE = re.compile(r"\$(?:([A-Za-z_][A-Za-z0-9_]*)|\{([A-Za-z_][A-Za-z0-9_
 # ``NAME=``, ``NAME+=`` and ``NAME[i]=`` (group 2 subscript, group 3 ``+``).
 _ASSIGN_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(\[[^\]]*\])?(\+?)=", re.DOTALL)
 # The identifier a token starts with when an operator or the end follows it.
-_LEADING_NAME_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(?=$|[\s=+\[\-*/%<>^|&!,:])")
+_LEADING_NAME_RE = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)(?=$|[ \t\n=+\[\-*/%<>^|&!,:])")
 # ``${NAME=x}`` / ``${NAME:=x}`` assign as a side effect of expanding.
 _ASSIGNING_EXPANSION_RE = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*):?=")
-_WHITESPACE_RE = re.compile(r"\s")
+_WHITESPACE_RE = re.compile(r"[ \t\n]")
 
 # Builtins whose ``NAME=value`` operands assign in the current shell.
 _DECLARATION_BUILTINS = frozenset({"export", "declare", "typeset", "local", "readonly"})
@@ -1245,12 +1246,16 @@ def _long_tail_targets(args: list[str], command: str) -> list[str]:
             words.append(arg)
         # Absolute embedded values and SQLite dot commands.
         for word in tuple(words):
-            for match in re.finditer(r"(?:^|\s|=|-[A-Za-z]+)(/[^\s]+)", word):
+            for match in re.finditer(r"(?:^|[ \t\n]|=|-[A-Za-z]+)(/[^ \t\n]+)", word):
                 words.append(
                     ShellWord(match.group(1), getattr(word, "unresolved_at", None), getattr(word, "raw", word))
                 )
-            if any(char.isspace() for char in word):
-                words.extend(ShellWord(part, getattr(word, "unresolved_at", None)) for part in str(word).split())
+            if any(char in " \t\n" for char in word):
+                words.extend(
+                    ShellWord(part, getattr(word, "unresolved_at", None))
+                    for part in re.split(r"[ \t\n]+", str(word))
+                    if part
+                )
         targets.extend(word for word in words if word and not str(word).startswith("-") and "://" not in word)
     return list(dict.fromkeys(targets))
 
@@ -2380,7 +2385,7 @@ def main() -> int:
 
     if tool_name == "Bash":
         command = str(tool_input.get("command") or "")
-        if not command.strip():
+        if not command.strip(" \t\n"):
             return 0
         raw_targets = []
     else:
