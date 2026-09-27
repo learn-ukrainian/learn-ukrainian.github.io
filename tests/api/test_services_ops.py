@@ -18,8 +18,6 @@ from scripts.common.repo_root import main_checkout_root
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SERVICES_SH = PROJECT_ROOT / "services.sh"
-PIDS_DIR = PROJECT_ROOT / ".pids"
-LOGS_DIR = PROJECT_ROOT / "logs"
 # Service commands use the repository virtual environment in normal CI.  The
 # explicit override lets a dispatch worktree use the shared project interpreter
 # without creating a worktree-local virtual environment. Default to the primary
@@ -75,10 +73,10 @@ def reap_process_on_exit(process: subprocess.Popen[object]) -> None:
     threading.Thread(target=process.wait, daemon=True).start()
 
 @pytest.fixture
-def temp_services_sh_real():
+def temp_services_sh_real(tmp_path: Path):
     """Create a copy of services.sh configured with a dynamic free port and the real API command."""
     port = find_free_port()
-    temp_script = PROJECT_ROOT / f"services_test_real_{port}.sh"
+    temp_script = tmp_path / f"services_test_real_{port}.sh"
 
     # Read and patch services.sh content
     content = SERVICES_SH.read_text(encoding="utf-8")
@@ -86,18 +84,15 @@ def temp_services_sh_real():
 
     temp_script.write_text(content, encoding="utf-8")
     temp_script.chmod(0o755)
+    _copy_data_volume_guard(temp_script)
 
     yield temp_script, port
 
-    # Cleanup temp script
-    if temp_script.exists():
-        temp_script.unlink()
-
 @pytest.fixture
-def temp_services_sh():
+def temp_services_sh(tmp_path: Path):
     """Create a copy of services.sh configured with a dynamic free port and a hermetic sleep API command."""
     port = find_free_port()
-    temp_script = PROJECT_ROOT / f"services_test_{port}.sh"
+    temp_script = tmp_path / f"services_test_{port}.sh"
 
     # Read and patch services.sh content
     content = SERVICES_SH.read_text(encoding="utf-8")
@@ -123,12 +118,9 @@ def temp_services_sh():
 
     temp_script.write_text(content, encoding="utf-8")
     temp_script.chmod(0o755)
+    _copy_data_volume_guard(temp_script)
 
     yield temp_script, port
-
-    # Cleanup temp script
-    if temp_script.exists():
-        temp_script.unlink()
 
 @pytest.fixture
 def mock_lsof_env(tmp_path):
@@ -178,37 +170,6 @@ def mock_lsof_env(tmp_path):
 
     return _set_pids, _clear_pids, env
 
-@pytest.fixture(autouse=True)
-def cleanup_pids_and_logs():
-    """Ensure a clean state for pid files and last start timestamps."""
-    PIDS_DIR.mkdir(parents=True, exist_ok=True)
-    LOGS_DIR.mkdir(parents=True, exist_ok=True)
-
-    api_pid_file = PIDS_DIR / "api.pid"
-    api_start_file = PIDS_DIR / "api.last_start"
-
-    # Save original values if they exist
-    orig_pid = api_pid_file.read_text(encoding="utf-8") if api_pid_file.exists() else None
-    orig_start = api_start_file.read_text(encoding="utf-8") if api_start_file.exists() else None
-
-    if api_pid_file.exists():
-        api_pid_file.unlink()
-    if api_start_file.exists():
-        api_start_file.unlink()
-
-    yield
-
-    # Restore original values
-    if orig_pid is not None:
-        api_pid_file.write_text(orig_pid, encoding="utf-8")
-    elif api_pid_file.exists():
-        api_pid_file.unlink()
-
-    if orig_start is not None:
-        api_start_file.write_text(orig_start, encoding="utf-8")
-    elif api_start_file.exists():
-        api_start_file.unlink()
-
 def _patch_script_pids_dir(script_path: Path, pids_dir: Path) -> None:
     """Point a patched services.sh copy at an isolated pid directory."""
     content = script_path.read_text(encoding="utf-8")
@@ -224,6 +185,16 @@ def _copy_data_volume_guard(script_path: Path) -> None:
     guard = script_path.parent / "scripts/storage/data_volume_guard.sh"
     guard.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(PROJECT_ROOT / "scripts/storage/data_volume_guard.sh", guard)
+
+
+def _copy_services_sh(root: Path) -> Path:
+    """Run services.sh from ``root`` so its self-derived PROJECT_ROOT (and the
+    .pids/logs dirs it creates) stay off the real checkout."""
+    script_path = root / "services.sh"
+    script_path.write_text(SERVICES_SH.read_text(encoding="utf-8"), encoding="utf-8")
+    script_path.chmod(0o755)
+    _copy_data_volume_guard(script_path)
+    return script_path
 
 
 def test_pid_reconciliation(temp_services_sh, mock_lsof_env, tmp_path):
@@ -315,7 +286,7 @@ def test_api_start_delegates_recovery_to_launchd(temp_services_sh, mock_lsof_env
     assert res.returncode == 0, res.stderr
     assert "launchd supervised" in res.stdout
     calls = Path(env["SVC_API_SUPERVISOR_CAPTURE"]).read_text(encoding="utf-8").splitlines()
-    assert calls[:3] == ["start", "--repo-root", str(PROJECT_ROOT)]
+    assert calls[:3] == ["start", "--repo-root", str(script_path.parent)]
 
 
 @pytest.mark.skipif(
@@ -336,13 +307,15 @@ def test_live_fallback_is_passed_to_launchd_with_a_loud_warning(temp_services_sh
     assert result.returncode == 0, result.stderr
     assert "WARNING: API live mode enabled" in result.stderr
     calls = Path(env["SVC_API_SUPERVISOR_CAPTURE"]).read_text(encoding="utf-8").splitlines()
-    assert calls == ["start", "--repo-root", str(PROJECT_ROOT), "--live"]
+    assert calls == ["start", "--repo-root", str(script_path.parent), "--live"]
 
 def test_stop_disables_supervision_before_killing_api_listener(temp_services_sh, mock_lsof_env):
     """A deliberate stop asks launchd to disable before touching the listener."""
     script_path, port = temp_services_sh
     set_pids, _, env = mock_lsof_env
-    api_pid_file = PIDS_DIR / "api.pid"
+    pids_dir = script_path.parent / ".pids"
+    pids_dir.mkdir(parents=True, exist_ok=True)
+    api_pid_file = pids_dir / "api.pid"
 
     # Start a dummy sleep process
     proc = subprocess.Popen([
@@ -531,7 +504,9 @@ def test_status_does_not_print_proc_on_missing_procfs(temp_services_sh, mock_lso
     """``status`` must stay quiet about /proc even when resolving a live PID."""
     script_path, port = temp_services_sh
     set_pids, _, env = mock_lsof_env
-    api_pid_file = PIDS_DIR / "api.pid"
+    pids_dir = script_path.parent / ".pids"
+    pids_dir.mkdir(parents=True, exist_ok=True)
+    api_pid_file = pids_dir / "api.pid"
 
     proc = subprocess.Popen([
         str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
@@ -566,11 +541,12 @@ def test_work_status_reports_typed_missing_checkout(tmp_path, mock_lsof_env) -> 
     """A missing private sibling is explicit and does not crash public status."""
     _, _, env = mock_lsof_env
     env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(tmp_path / "missing-private")
+    script_path = _copy_services_sh(tmp_path)
     result = subprocess.run(
-        [str(SERVICES_SH), "status", "work"],
+        [str(script_path), "status", "work"],
         capture_output=True,
         text=True,
-        cwd=str(PROJECT_ROOT),
+        cwd=str(tmp_path),
         env=env,
         timeout=30,
     )
@@ -602,11 +578,14 @@ def test_work_status_reports_other_typed_prerequisite_failures(
         (private_root / "work_projection").mkdir()
     env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(private_root)
 
+    checkout_root = tmp_path / "checkout"
+    checkout_root.mkdir()
+    script_path = _copy_services_sh(checkout_root)
     result = subprocess.run(
-        [str(SERVICES_SH), "status", "work"],
+        [str(script_path), "status", "work"],
         capture_output=True,
         text=True,
-        cwd=str(PROJECT_ROOT),
+        cwd=str(checkout_root),
         env=env,
         timeout=30,
     )
@@ -625,15 +604,19 @@ def test_work_status_rejects_foreign_health_listener(tmp_path, mock_lsof_env) ->
     (private_root / ".venv" / "bin" / "python").symlink_to(VENV_PYTHON)
     env["LEARN_UKRAINIAN_INFRA_PRIVATE_ROOT"] = str(private_root)
 
+    checkout_root = tmp_path / "checkout"
+    checkout_root.mkdir()
+    script_path = _copy_services_sh(checkout_root)
+
     proc = subprocess.Popen([str(VENV_PYTHON), "-c", "import time; time.sleep(30)"])
     reap_process_on_exit(proc)
     set_pids([proc.pid])
     try:
         result = subprocess.run(
-            [str(SERVICES_SH), "status", "work"],
+            [str(script_path), "status", "work"],
             capture_output=True,
             text=True,
-            cwd=str(PROJECT_ROOT),
+            cwd=str(checkout_root),
             env=env,
             timeout=30,
         )
@@ -1011,7 +994,7 @@ def test_abort_if_ssh_owned_port_refuses_spawn() -> None:
     assert "restart api" in result.stderr
 
 
-def test_usage_documents_fix_and_ssh_env() -> None:
+def test_usage_documents_fix_and_ssh_env(tmp_path: Path) -> None:
     """Header comments and help list fix plus the SSH Host / remote-root overrides."""
     source = SERVICES_SH.read_text(encoding="utf-8")
     assert "./services.sh fix" in source
@@ -1020,13 +1003,14 @@ def test_usage_documents_fix_and_ssh_env() -> None:
     assert "LU_SERVICES_REMOTE_ROOT" in source
     assert "auto-delegate" in source
 
+    script_path = _copy_services_sh(tmp_path)
     env = os.environ.copy()
     env.pop("LU_SERVICES_SSH_HOST", None)
     result = subprocess.run(
-        ["bash", str(SERVICES_SH), "help"],
+        ["bash", str(script_path), "help"],
         capture_output=True,
         text=True,
-        cwd=str(PROJECT_ROOT),
+        cwd=str(tmp_path),
         env=env,
         timeout=30,
     )
@@ -1327,11 +1311,14 @@ def test_local_role_skips_notebook_handoff(tmp_path, mock_lsof_env) -> None:
     env, private_root, capture = _notebook_env(tmp_path, mock_lsof_env, "local")
     _write_fake_launcher(private_root, capture)
 
+    checkout_root = tmp_path / "checkout"
+    checkout_root.mkdir()
+    script_path = _copy_services_sh(checkout_root)
     result = subprocess.run(
-        [str(SERVICES_SH), "help"],
+        [str(script_path), "help"],
         capture_output=True,
         text=True,
-        cwd=str(PROJECT_ROOT),
+        cwd=str(checkout_root),
         env=env,
         timeout=30,
     )
