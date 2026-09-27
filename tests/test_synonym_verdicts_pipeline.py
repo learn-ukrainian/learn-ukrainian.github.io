@@ -93,7 +93,7 @@ def _a2_synonym_fixture_verifier() -> JsonVesumVerifier:
 def _a2_synonym_fixture_manifest() -> list[dict[str, Any]]:
     return [
         make_a2_mock_manifest_entry("друг", "druh", "friend", ["товариш"]),
-        make_a2_mock_manifest_entry("товариш", "tovarysh", "comrade", ["друг"]),
+        make_a2_mock_manifest_entry("товариш", "tovarysh", "comrade, friend", ["друг"]),
         make_a2_mock_manifest_entry("книга", "knyha", "book"),
         make_a2_mock_manifest_entry("том", "tom", "volume"),
         make_a2_mock_manifest_entry("зошит", "zoshyt", "notebook"),
@@ -175,7 +175,7 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
     # (Since synonyms are B1+ only and distractors must be >= 3)
     mock_manifest = [
         make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
-        make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
+        make_mock_manifest_entry("термін", "termin", "term, word", ["слово"]),
         make_mock_manifest_entry("мова", "mova", "language"),
         make_mock_manifest_entry("книга", "knyha", "book"),
         make_mock_manifest_entry("звук", "zvuk", "sound"),
@@ -259,7 +259,7 @@ def test_verify_script_new_pair_detection(tmp_path: Path) -> None:
     mock_manifest = {
         "entries": [
             make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
-            make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
+            make_mock_manifest_entry("термін", "termin", "term, word", ["слово"]),
             make_mock_manifest_entry("мова", "mova", "language"),
             make_mock_manifest_entry("книга", "knyha", "book"),
             make_mock_manifest_entry("звук", "zvuk", "sound"),
@@ -360,7 +360,7 @@ def test_unflagged_both_leg_a2_synonym_pair_stays_at_default_b1_floor() -> None:
 def test_approved_verdict_emits_without_manifest_relation_links() -> None:
     words = [
         ("слово", "word"),
-        ("термін", "term"),
+        ("термін", "term, word"),
         ("мова", "language"),
         ("книга", "book"),
         ("звук", "sound"),
@@ -369,7 +369,7 @@ def test_approved_verdict_emits_without_manifest_relation_links() -> None:
     manifest = [make_mock_manifest_entry(lemma, lemma, gloss) for lemma, gloss in words]
     verifier = JsonVesumVerifier({lemma: [{"lemma": lemma, "pos": "noun"}] for lemma, _gloss in words})
     verdicts = {
-        "approved": [{"a": "слово", "b": "термін", "polarity": "synonym"}],
+        "approved": [{"a": "слово", "b": "термін", "polarity": "synonym", "sources": ["synonyms"]}],
         "rejected": [],
     }
 
@@ -392,7 +392,7 @@ def test_approved_verdict_emits_without_manifest_relation_links() -> None:
 def test_rejected_verdict_without_manifest_relation_never_emits() -> None:
     words = [
         ("слово", "word"),
-        ("термін", "term"),
+        ("термін", "term, word"),
         ("мова", "language"),
         ("книга", "book"),
         ("звук", "sound"),
@@ -420,7 +420,7 @@ def test_rejected_verdict_without_manifest_relation_never_emits() -> None:
 def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> None:
     manifest = [
         make_a1_mock_manifest_entry("кіт", "kit", "cat"),
-        make_a1_mock_manifest_entry("кицька", "kytska", "kitty"),
+        make_a1_mock_manifest_entry("кицька", "kytska", "kitty, cat"),
         make_a1_mock_manifest_entry("пес", "pes", "dog"),
         make_a1_mock_manifest_entry("миша", "mysha", "mouse"),
         make_a1_mock_manifest_entry("риба", "ryba", "fish"),
@@ -436,7 +436,7 @@ def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> No
         cloze_sources=None,
         config=BuildConfig(target=20),
         synonym_verdicts={
-            "approved": [{"a": "кіт", "b": "кицька", "polarity": "synonym"}],
+            "approved": [{"a": "кіт", "b": "кицька", "polarity": "synonym", "sources": ["synonyms"]}],
             "rejected": [],
         },
     )
@@ -456,7 +456,7 @@ def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> No
 def test_b1_synonym_behavior_unchanged_with_a2_exception_mechanism() -> None:
     mock_manifest = [
         make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
-        make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
+        make_mock_manifest_entry("термін", "termin", "term, word", ["слово"]),
         make_mock_manifest_entry("мова", "mova", "language"),
         make_mock_manifest_entry("книга", "knyha", "book"),
         make_mock_manifest_entry("звук", "zvuk", "sound"),
@@ -530,7 +530,7 @@ def test_flagged_a1_leg_synonym_pair_never_emits_at_a1(
     # A flagged pair whose legs are A1 must NOT be lowered to A1 (strict guard).
     manifest = [
         make_a1_mock_manifest_entry("кіт", "kit", "cat", ["кицька"]),
-        make_a1_mock_manifest_entry("кицька", "kytska", "kitty", ["кіт"]),
+        make_a1_mock_manifest_entry("кицька", "kytska", "kitty, cat", ["кіт"]),
         make_a1_mock_manifest_entry("пес", "pes", "dog"),
         make_a1_mock_manifest_entry("миша", "mysha", "mouse"),
         make_a1_mock_manifest_entry("риба", "ryba", "fish"),
@@ -582,8 +582,8 @@ def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
 ) -> None:
     # One leg B1, one leg A2, flagged: flag must be ignored (loudly) and pair stays B1+.
     manifest = [
-        make_mock_manifest_entry("слово", "slovo", "word", ["друг"]),
-        make_a2_mock_manifest_entry("друг", "druh", "friend", ["слово"]),
+        make_mock_manifest_entry("приятель", "pryiatel", "friend, pal", ["друг"]),
+        make_a2_mock_manifest_entry("друг", "druh", "friend", ["приятель"]),
         make_a2_mock_manifest_entry("товариш", "tovarysh", "comrade"),
         make_a2_mock_manifest_entry("книга", "knyha", "book"),
         make_a2_mock_manifest_entry("зошит", "zoshyt", "notebook"),
@@ -591,7 +591,7 @@ def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
     ]
     verifier = JsonVesumVerifier(
         {
-            "слово": [{"lemma": "слово", "pos": "noun"}],
+            "приятель": [{"lemma": "приятель", "pos": "noun"}],
             "друг": [{"lemma": "друг", "pos": "noun"}],
             "товариш": [{"lemma": "товариш", "pos": "noun"}],
             "книга": [{"lemma": "книга", "pos": "noun"}],
@@ -602,7 +602,7 @@ def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
     verdicts = {
         "approved": [
             {
-                "a": "слово",
+                "a": "приятель",
                 "b": "друг",
                 "polarity": "synonym",
                 "sources": ["synonyms"],
@@ -622,7 +622,7 @@ def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
     )
     # Flag ignored → stays at B1+ floor (B1 prompt with its A2 target), never at A2.
     b1_synonyms = shards["B1"]["synonym"]["synonym"]
-    assert any(item["prompt"] == "слово" and item["answer"] == "друг" for item in b1_synonyms)
+    assert any(item["prompt"] == "приятель" and item["answer"] == "друг" for item in b1_synonyms)
     assert shards.get("A2", {}).get("synonym", {}).get("synonym", []) == []
     captured = capsys.readouterr()
     assert "a2Exception ignored" in captured.err
@@ -635,7 +635,7 @@ def test_invalid_exception_flag_drops_bit_but_keeps_pair_at_b1(
     # approved pair survives at the B1+ default rather than being suppressed.
     manifest = [
         make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
-        make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
+        make_mock_manifest_entry("термін", "termin", "term, word", ["слово"]),
         make_mock_manifest_entry("мова", "mova", "language"),
         make_mock_manifest_entry("книга", "knyha", "book"),
         make_mock_manifest_entry("звук", "zvuk", "sound"),

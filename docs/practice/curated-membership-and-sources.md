@@ -40,7 +40,7 @@ Practice is multi-mode. **Cloze is only one surface.** Coverage work must unlock
 | Stress | No | stress form (atlas / VESUM / stress dict) |
 | Classify | No | POS / semantic buckets from atlas |
 | Paradigm | No | morphology paradigm + VESUM verification |
-| Synonym | No | reviewed pairs (`registry/lexicon/synonym_pair_verdicts.yaml`) |
+| Synonym | No | reviewed pairs (`registry/lexicon/synonym_pair_verdicts.yaml`); an approved pair ships only when it passes the #8714 gates: a synonym-dictionary source, same POS, same verb aspect (VESUM), not a reflexive or spelling variant, and the target is a recorded English equivalent of the prompt's displayed gloss (per direction); distractors never share a recorded synonym link or English sense with the prompt or answer. Withheld pairs are listed on stderr as `WITHHELD synonym pair …` |
 | Heritage | No | `registry/lexicon/heritage_pairs.yaml` |
 | Paronym | No | reviewed paronym sets in deck |
 | **Cloze** | **Yes** | Public / rights-clear sentences only (§4) |

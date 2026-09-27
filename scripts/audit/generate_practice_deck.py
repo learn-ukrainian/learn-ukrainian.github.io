@@ -3381,12 +3381,240 @@ def _synonym_option(
     return {"label": label, "lemmaId": lemma_id, "kind": kind}
 
 
+# Synonym-pair emission gates (#8714).  An approved verdict records that a
+# synonym dictionary co-lists two words somewhere; it does not prove that they
+# are synonyms in the sense the card displays, share a part of speech, or are
+# not merely the two aspects (or the reflexive/euphonic variant) of one verb.
+# These rules decide that deterministically from source data already attached
+# to each Atlas entry; anything a source cannot decide is withheld and listed.
+_SYNONYM_DICTIONARY_SOURCES = frozenset({"synonyms", "synonyms_karavansky", "wiktionary", "sum20", "vts"})
+_SYNONYM_SENSE_SPLIT = re.compile(r"[;,/]")
+_SYNONYM_SENSE_PREFIX = re.compile(r"^(?:\d+[).]\s*)?(?:(?:to|a|an|the)\s+)?")
+_SYNONYM_CYRILLIC = re.compile(r"[\u0400-\u04ff]")
+_SYNONYM_LATIN = re.compile(r"[a-z]")
+_SYNONYM_EUPHONIC_Z = frozenset({"з", "із", "зі", "зо"})
+
+
+def _english_sense_phrases(text: Any) -> list[str]:
+    """Split an English gloss into comparable sense phrases, in source order.
+
+    ``"depression (psychology: state of mind)"`` → ``["depression"]``;
+    ``"to throw; to abandon [to rush]"`` → ``["throw", "abandon"]``.
+    A Ukrainian dictionary definition yields nothing: it is not an English sense.
+    """
+    raw = _clean_text(text)
+    if not raw:
+        return []
+    stripped = re.sub(r"\([^)]*\)|\[[^\]]*\]", " ", raw)
+    phrases: dict[str, None] = {}
+    for part in _SYNONYM_SENSE_SPLIT.split(stripped):
+        phrase = re.sub(r"\s+", " ", part).strip().casefold()
+        phrase = _SYNONYM_SENSE_PREFIX.sub("", phrase).strip(" .!?")
+        if phrase and _SYNONYM_LATIN.search(phrase) and not _SYNONYM_CYRILLIC.search(phrase):
+            phrases[phrase] = None
+    return list(phrases)
+
+
+def _synonym_english_equivalents(entry: dict[str, Any]) -> set[str]:
+    """Every English equivalent a source dictionary records for one Atlas entry."""
+    phrases = set(_english_sense_phrases(entry.get("gloss")))
+    enrichment = entry.get("enrichment")
+    enrichment = enrichment if isinstance(enrichment, dict) else {}
+    translation = enrichment.get("translation")
+    if isinstance(translation, dict):
+        en = translation.get("en")
+        for raw in [en] if isinstance(en, str) else (en if isinstance(en, list) else []):
+            phrases.update(_english_sense_phrases(raw))
+    meaning = enrichment.get("meaning")
+    if isinstance(meaning, dict) and "wiktionary" in str(meaning.get("source") or "").casefold():
+        definitions = meaning.get("definitions")
+        for raw in definitions if isinstance(definitions, list) else []:
+            phrases.update(_english_sense_phrases(raw))
+    senses = entry.get("senses")
+    for sense in senses if isinstance(senses, list) else []:
+        if isinstance(sense, dict):
+            phrases.update(_english_sense_phrases(sense.get("learner_en")))
+    return phrases
+
+
+def _synonym_display_senses(lexeme: dict[str, Any], entry: dict[str, Any]) -> set[str]:
+    """Senses the learner sees on the card.
+
+    The displayed gloss decides.  When that gloss is a Ukrainian dictionary
+    definition (B1+ cards may show one), the entry's recorded English
+    equivalents stand in for it, because they describe the same entry.
+    """
+    return set(_english_sense_phrases(lexeme.get("gloss"))) or _synonym_english_equivalents(entry)
+
+
+def _synonym_gloss_head(gloss: Any) -> str:
+    """First English sense word of a gloss (``"to read"`` → ``"read"``), else the legacy head."""
+    phrases = _english_sense_phrases(gloss)
+    if phrases:
+        return phrases[0].split()[0]
+    return _headword(str(gloss or ""))
+
+
+def _synonym_aspect_partner(entry: dict[str, Any]) -> str | None:
+    """Plain lemma of the entry's recorded aspect partner (Atlas verb pedagogy), if any."""
+    enrichment = entry.get("enrichment")
+    pedagogy = enrichment.get("verb_pedagogy") if isinstance(enrichment, dict) else None
+    partner = pedagogy.get("aspect_partner") if isinstance(pedagogy, dict) else None
+    lemma = _clean_text(partner.get("lemma")) if isinstance(partner, dict) else None
+    return _plain(lemma) if lemma else None
+
+
+def _synonym_verb_aspect(
+    lexeme: dict[str, Any],
+    entry: dict[str, Any],
+    vesum_aspects: dict[str, str] | None,
+) -> str | None:
+    """Aspect of a verb lexeme: VESUM ``perf``/``imperf`` first, then explicit Atlas labels."""
+    aspect = (vesum_aspects or {}).get(lexeme["lemmaPlain"])
+    if aspect:
+        return aspect
+    labels: list[str] = []
+    enrichment = entry.get("enrichment")
+    cefr = enrichment.get("cefr") if isinstance(enrichment, dict) else None
+    if isinstance(cefr, dict):
+        labels.append(str(cefr.get("pos") or ""))
+    morphology = _morphology(entry)
+    if morphology:
+        labels.extend(_morph_labels(morphology))
+    return _explicit_aspect_category(labels)
+
+
+def _synonym_reflexive_pair(a_plain: str, b_plain: str) -> bool:
+    """вітати / вітатися: the same verb with and without the reflexive postfix."""
+
+    def stem(word: str) -> str:
+        return word[:-2] if word.endswith(("ся", "сь")) else word
+
+    return a_plain != b_plain and stem(a_plain) == stem(b_plain)
+
+
+def _euphonic_variants(word: str) -> set[str]:
+    """Spellings of one word under the у/в, і/й and з/із/зі euphonic alternations."""
+    variants = {word}
+    head, tail = word[:1], word[1:]
+    if head == "у":
+        variants.add("в" + tail)
+    elif head == "в":
+        variants.add("у" + tail)
+    elif head == "і":
+        variants.update({"й" + tail, tail})
+    elif head == "й":
+        variants.add("і" + tail)
+    if word in _SYNONYM_EUPHONIC_Z:
+        variants.update(_SYNONYM_EUPHONIC_Z)
+    variants.discard("")
+    return variants
+
+
+def _synonym_spelling_variant(a_plain: str, b_plain: str) -> bool:
+    """учитель / вчитель, вже / уже, з / із: one word, two spellings, not two synonyms."""
+    return a_plain != b_plain and not _euphonic_variants(a_plain).isdisjoint(_euphonic_variants(b_plain))
+
+
+def _synonym_pair_withhold_reason(
+    prompt: dict[str, Any],
+    target: dict[str, Any],
+    prompt_entry: dict[str, Any],
+    target_entry: dict[str, Any],
+    sources: set[str],
+    vesum_aspects: dict[str, str] | None,
+) -> str | None:
+    """Pair-level reason an approved pair may not ship at all, else ``None``."""
+    if not sources & _SYNONYM_DICTIONARY_SOURCES:
+        return "no_dictionary_source"
+    prompt_pos = _option_pos_bucket(prompt.get("pos"))
+    target_pos = _option_pos_bucket(target.get("pos"))
+    if not prompt_pos or not target_pos:
+        return "pos_unknown"
+    if prompt_pos != target_pos:
+        return "pos_mismatch"
+    prompt_plain = prompt["lemmaPlain"]
+    target_plain = target["lemmaPlain"]
+    if _synonym_reflexive_pair(prompt_plain, target_plain):
+        return "reflexive_pair"
+    if _synonym_spelling_variant(prompt_plain, target_plain):
+        return "spelling_variant"
+    if prompt_pos == "verb":
+        recorded_partner = target_plain == _synonym_aspect_partner(prompt_entry)
+        if recorded_partner or prompt_plain == _synonym_aspect_partner(target_entry):
+            return "aspect_pair"
+        prompt_aspect = _synonym_verb_aspect(prompt, prompt_entry, vesum_aspects)
+        target_aspect = _synonym_verb_aspect(target, target_entry, vesum_aspects)
+        if not prompt_aspect or not target_aspect:
+            return "aspect_unknown"
+        if prompt_aspect != target_aspect:
+            return "aspect_pair"
+    return None
+
+
+def _synonym_direction_supported(
+    prompt: dict[str, Any],
+    target: dict[str, Any],
+    prompt_entry: dict[str, Any],
+    target_entry: dict[str, Any],
+    polarity: str,
+) -> bool:
+    """True when the target is recorded as an equivalent of the prompt's displayed sense.
+
+    Emission is directional: але (displayed "but") → однак ships when однак
+    translates to "but", while однак (displayed "however") → але does not,
+    because no source gives але the sense "however".  Antonym pairs share no
+    English sense by definition, so only the pair-level rules apply to them.
+    """
+    if polarity != "synonym":
+        return True
+    return not _synonym_display_senses(prompt, prompt_entry).isdisjoint(_synonym_english_equivalents(target_entry))
+
+
+def _synonym_distractor_context(
+    lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]],
+    approved_set: set[tuple[str, str, str]],
+) -> dict[str, Any]:
+    """Index every recorded synonym link and English sense so no distractor is also correct."""
+    partners: dict[str, set[str]] = {}
+
+    def link(a_plain: str, b_plain: str) -> None:
+        partners.setdefault(a_plain, set()).add(b_plain)
+        partners.setdefault(b_plain, set()).add(a_plain)
+
+    for a_plain, b_plain, polarity in approved_set:
+        if polarity == "synonym":
+            link(a_plain, b_plain)
+    english: dict[str, set[str]] = {}
+    for entry, lexeme in lexemes_by_entry:
+        english[lexeme["lemmaId"]] = _synonym_english_equivalents(entry)
+        for label in _section_items(entry, "synonyms"):
+            link(lexeme["lemmaPlain"], _plain(label))
+        partner = _synonym_aspect_partner(entry)
+        if partner:
+            link(lexeme["lemmaPlain"], partner)
+    return {"partners": partners, "english": english}
+
+
 def _valid_synonym_distractors(
     answer: dict[str, Any],
     prompt: dict[str, Any],
     lexemes: list[dict[str, Any]],
+    context: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
-    blocked_heads = {_headword(prompt["gloss"]), _headword(answer["gloss"])}
+    """Same-POS candidates that no source records as a synonym of the prompt or answer.
+
+    ``context`` (see ``_synonym_distractor_context``) excludes every recorded
+    synonym partner and every lexeme sharing an English sense with the prompt
+    or the answer; without it only the legacy gloss-head rule applies.
+    """
+    blocked_heads = {_synonym_gloss_head(prompt["gloss"]), _synonym_gloss_head(answer["gloss"])}
+    ans_plain = _plain(answer["lemma"])
+    prompt_plain = _plain(prompt["lemma"])
+    partners: dict[str, set[str]] = context["partners"] if context else {}
+    english: dict[str, set[str]] = context["english"] if context else {}
+    blocked_plain = partners.get(prompt_plain, set()) | partners.get(ans_plain, set())
+    blocked_english = english.get(prompt["lemmaId"], set()) | english.get(answer["lemmaId"], set())
     candidates = []
     for lexeme in lexemes:
         if lexeme["lemmaId"] in {prompt["lemmaId"], answer["lemmaId"]}:
@@ -3395,11 +3623,9 @@ def _valid_synonym_distractors(
             continue
         if lexeme.get("pos") != answer.get("pos"):
             continue
-        if _headword(lexeme["gloss"]) in blocked_heads:
+        if _synonym_gloss_head(lexeme["gloss"]) in blocked_heads:
             continue
         cand_plain = _plain(lexeme["lemma"])
-        ans_plain = _plain(answer["lemma"])
-        prompt_plain = _plain(prompt["lemma"])
         if (
             cand_plain in {prompt_plain, ans_plain}
             or ans_plain in cand_plain
@@ -3407,6 +3633,10 @@ def _valid_synonym_distractors(
             or prompt_plain in cand_plain
             or cand_plain in prompt_plain
         ):
+            continue
+        if cand_plain in blocked_plain or not {prompt_plain, ans_plain}.isdisjoint(partners.get(cand_plain, set())):
+            continue
+        if not english.get(lexeme["lemmaId"], set()).isdisjoint(blocked_english):
             continue
         candidates.append(lexeme)
     answer_len = len(answer["lemma"])
@@ -3530,6 +3760,9 @@ def _build_synonym_items(
     a2_exception_set: set[tuple[str, str, str]],
     synonym_verdicts_loaded: bool,
     encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]],
+    *,
+    synonym_verdicts: dict[str, Any] | None = None,
+    vesum_aspects: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
     """Build cards from the approved verdict set, not relation-link discovery.
 
@@ -3537,6 +3770,12 @@ def _build_synonym_items(
     rejected candidates, but an approved verdict is the source of truth for
     emission.  This also covers approved pairs whose two Atlas entries do not
     link back to one another through the current relation sections.
+
+    An approved pair still ships only when the #8714 gates pass: a synonym
+    dictionary attests it, both legs share a part of speech, verbs share an
+    aspect and are not a reflexive pair, the two spellings are not one word,
+    and (per direction) the target is a recorded equivalent of the prompt's
+    displayed sense.  Withheld pairs are reported on stderr with their reason.
     """
     for entry, lexeme in lexemes_by_entry:
         if not lexeme.get("cefr"):
@@ -3566,12 +3805,31 @@ def _build_synonym_items(
     if not synonym_verdicts_loaded:
         return []
 
+    entry_by_lemma_id = {lexeme["lemmaId"]: entry for entry, lexeme in lexemes_by_entry}
+    sources_by_pair: dict[tuple[str, str, str], set[str]] = {}
+    for record in (synonym_verdicts or {}).get("approved", []):
+        if isinstance(record, dict) and not _synonym_core_errors(record):
+            key = _synonym_pair_key(str(record["a"]), str(record["b"]), str(record["polarity"]))
+            sources_by_pair.setdefault(key, set()).update(str(source) for source in record.get("sources") or [])
+    distractor_context = _synonym_distractor_context(lexemes_by_entry, approved_set)
+    withheld: list[tuple[str, str, str, str, str]] = []
+
+    def withhold(level: str, prompt: dict[str, Any], target: dict[str, Any], polarity: str, reason: str) -> None:
+        withheld.append((level, prompt["lemma"], target["lemma"], polarity, reason))
+        encountered_pairs[level].setdefault("withheld", set()).add(
+            _synonym_pair_key(prompt["lemma"], target["lemma"], polarity)
+        )
+
     items: list[dict[str, Any]] = []
     warned_a2_flags: set[tuple[str, str, str]] = set()
     for pair_key in sorted(approved_set):
         prompt_a = by_plain_lemma.get(pair_key[0])
         prompt_b = by_plain_lemma.get(pair_key[1])
         if not prompt_a or not prompt_b or not prompt_a.get("cefr") or not prompt_b.get("cefr"):
+            continue
+        entry_a = entry_by_lemma_id.get(prompt_a["lemmaId"])
+        entry_b = entry_by_lemma_id.get(prompt_b["lemmaId"])
+        if entry_a is None or entry_b is None:
             continue
 
         both_legs_a2 = prompt_a["cefr"] == "A2" and prompt_b["cefr"] == "A2"
@@ -3583,13 +3841,24 @@ def _build_synonym_items(
             warned_a2_flags.add(pair_key)
         level = _synonym_availability_level(prompt_a, prompt_b, pair_key, a2_exception_set)
         encountered_pairs[level]["approved"].add(pair_key)
+        polarity = pair_key[2]
+        pair_reason = _synonym_pair_withhold_reason(
+            prompt_a, prompt_b, entry_a, entry_b, sources_by_pair.get(pair_key, set()), vesum_aspects
+        )
+        if pair_reason:
+            withhold(level, prompt_a, prompt_b, polarity, pair_reason)
+            continue
 
         for prompt, target in ((prompt_a, prompt_b), (prompt_b, prompt_a)):
-            distractors = _valid_synonym_distractors(target, prompt, all_lexemes)
+            prompt_entry = entry_by_lemma_id[prompt["lemmaId"]]
+            target_entry = entry_by_lemma_id[target["lemmaId"]]
+            if not _synonym_direction_supported(prompt, target, prompt_entry, target_entry, polarity):
+                withhold(level, prompt, target, polarity, "no_shared_sense")
+                continue
+            distractors = _valid_synonym_distractors(target, prompt, all_lexemes, distractor_context)
             if len(distractors) < 3:
                 continue
 
-            polarity = pair_key[2]
             key = "\x1f".join((deck_version, prompt["lemmaId"], target["lemmaId"], polarity))
             synonym_id = "syn_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
             options = [
@@ -3617,7 +3886,21 @@ def _build_synonym_items(
             if prompt.get("senseId"):
                 synonym_item["senseId"] = prompt["senseId"]
             items.append(synonym_item)
+    _report_withheld_synonym_pairs(withheld)
     return items
+
+
+def _report_withheld_synonym_pairs(withheld: list[tuple[str, str, str, str, str]]) -> None:
+    """Print every withheld synonym pair with its reason so curators can act on the list."""
+    if not withheld:
+        return
+    by_reason: dict[str, int] = {}
+    for _level, _prompt, _target, _polarity, reason in withheld:
+        by_reason[reason] = by_reason.get(reason, 0) + 1
+    summary = " ".join(f"{reason}={count}" for reason, count in sorted(by_reason.items()))
+    print(f"synonym pairs withheld (#8714): total={len(withheld)} {summary}", file=sys.stderr)
+    for level, prompt, target, polarity, reason in withheld:
+        print(f"WITHHELD synonym pair [{level}] {prompt} → {target} ({polarity}): {reason}", file=sys.stderr)
 
 
 def _clean_text_list(value: Any) -> list[str]:
@@ -4096,6 +4379,40 @@ def validate_synonym_item(item: dict[str, Any]) -> list[str]:
         if label and label != answer and (label in {answer, prompt} or answer in label or label in answer):
             errors.append("synonym distractor must not be a near-duplicate of prompt or answer")
             break
+    return errors
+
+
+def validate_synonym_option_sets(items: list[dict[str, Any]]) -> list[str]:
+    """Reject a distractor that the same deck accepts as an answer for the same prompt.
+
+    A learner choosing проте for але must not be marked wrong because the deck
+    happened to draw одначе for that card while another card accepts проте.
+    Answers are keyed by prompt and polarity: an antonym answer is not a
+    synonym answer.
+    """
+    answers_by_prompt: dict[tuple[str, str], set[str]] = {}
+    for item in items:
+        prompt = _plain(str(item.get("prompt") or ""))
+        polarity = str(item.get("polarity") or "synonym")
+        answer = _plain(str(item.get("answer") or ""))
+        if prompt and answer:
+            answers_by_prompt.setdefault((prompt, polarity), set()).add(answer)
+    errors: list[str] = []
+    for index, item in enumerate(items):
+        prompt = _plain(str(item.get("prompt") or ""))
+        polarity = str(item.get("polarity") or "synonym")
+        answer = _plain(str(item.get("answer") or ""))
+        accepted = answers_by_prompt.get((prompt, polarity), set()) - {answer}
+        options = item.get("options")
+        for option in options if isinstance(options, list) else []:
+            if not isinstance(option, dict) or option.get("kind") == "answer":
+                continue
+            label = _plain(str(option.get("label") or ""))
+            if label in accepted:
+                errors.append(
+                    f"synonym[{index}]: distractor {label!r} is an accepted {polarity} answer for prompt "
+                    f"{prompt!r} elsewhere in the deck (this card's answer: {answer!r})"
+                )
     return errors
 
 
@@ -4647,6 +4964,7 @@ def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     elif mode == "synonym":
         for index, item in enumerate(items):
             errors.extend(f"synonym[{index}]: {error}" for error in validate_synonym_item(item))
+        errors.extend(validate_synonym_option_sets(items))
     elif mode == "heritage":
         for index, item in enumerate(items):
             errors.extend(f"heritage[{index}]: {error}" for error in validate_heritage_item(item))
@@ -5129,6 +5447,8 @@ def build_practice_shards(
         a2_exception_set,
         synonym_verdicts_loaded,
         encountered_pairs,
+        synonym_verdicts=synonym_verdicts,
+        vesum_aspects=vesum_aspects,
     )
     for item in synonym_items:
         level = str(item.pop("level"))
@@ -5146,6 +5466,7 @@ def build_practice_shards(
         f"resolved={len(resolved_approved_pairs)} "
         f"emitted_pairs={len(emitted_synonym_pairs)} emitted_items={len(emitted_synonym_items)} "
         f"unresolved={len(effective_approved_set - resolved_approved_pairs)} "
+        f"withheld={len(set().union(*(encountered_pairs[level].get('withheld', set()) for level in CEFR_ORDER)))} "
         f"resolved_without_distractors={len(resolved_approved_pairs - emitted_synonym_pairs)}",
         file=sys.stderr,
     )
@@ -5502,7 +5823,7 @@ def build_practice_shards(
                 f"({index_payload['counts']['modeCoverage'][mode]:.2%})"
                 for mode in ("cloze", *DRILL_MODES)
             )
-            + f" synonym_pairs:approved={len(encountered_pairs[level]['approved'])},rejected={len(encountered_pairs[level]['rejected'])},awaiting={len(encountered_pairs[level]['awaiting'])}"
+            + f" synonym_pairs:approved={len(encountered_pairs[level]['approved'])},rejected={len(encountered_pairs[level]['rejected'])},awaiting={len(encountered_pairs[level]['awaiting'])},withheld={len(encountered_pairs[level].get('withheld', set()))}"
         )
         lexeme_payload = _level_payload(
             "atlas-practice-lexemes",

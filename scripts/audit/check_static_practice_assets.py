@@ -34,6 +34,7 @@ from generate_practice_deck import (
     validate_imperative_item,
     validate_paradigm_item,
     validate_synonym_item,
+    validate_synonym_option_sets,
 )
 from practice_linguistic import (
     LINGUISTIC_GATE_VERSION,
@@ -518,8 +519,10 @@ def _check_level(
             for index, item in enumerate(item for item in rows if isinstance(item, dict)):
                 errors.extend(f"{paths[kind]}: imperative[{index}] {error}" for error in validate_imperative_item(item))
         elif kind == "synonym":
-            for index, item in enumerate(item for item in rows if isinstance(item, dict)):
+            synonym_rows = [item for item in rows if isinstance(item, dict)]
+            for index, item in enumerate(synonym_rows):
                 errors.extend(f"{paths[kind]}: synonym[{index}] {error}" for error in validate_synonym_item(item))
+            errors.extend(f"{paths[kind]}: {error}" for error in validate_synonym_option_sets(synonym_rows))
         elif kind == "heritage":
             for index, item in enumerate(item for item in rows if isinstance(item, dict)):
                 errors.extend(f"{paths[kind]}: heritage[{index}] {error}" for error in validate_heritage_item(item))
