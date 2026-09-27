@@ -33,7 +33,6 @@ import sys
 import threading
 import unicodedata
 from difflib import SequenceMatcher
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -48,6 +47,8 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
         sys.path.insert(0, str(_path))
 
 from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
+
+from scripts.verification.check_ru_morph import is_russian_pattern
 
 try:
     from mcp.server import Server
@@ -646,7 +647,9 @@ async def list_tools() -> list[Tool]:
             description=(
                 "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: "
                 "'summary' — article intro paragraph; "
-                "'extract' — full article plaintext (up to 50K chars); "
+                "'extract' — full article plaintext; long articles are returned in pages; "
+                "request the next page with offset=<Next offset>. "
+                "offset (default 0) and max_chars (default 6000, clamped to 1000–20000) select the page; "
                 "'sections' — list section headings with indices; "
                 "'section' — read a specific section (requires section parameter); "
                 "'search' — keyword search returning titles and snippets. "
@@ -678,7 +681,25 @@ async def list_tools() -> list[Tool]:
                         "type": "boolean",
                         "description": "Bypass cache and fetch fresh data from Wikipedia",
                         "default": False
-                    }
+                    },
+                    "offset": {
+                        "type": "integer",
+                        "description": (
+                            "Character offset into the full extract (default 0, must be ≥ 0). "
+                            "Used by mode='extract'. Long articles are returned in pages; "
+                            "request the next page with offset=<Next offset>."
+                        ),
+                        "default": 0,
+                        "minimum": 0,
+                    },
+                    "max_chars": {
+                        "type": "integer",
+                        "description": (
+                            "Maximum characters of article text on one extract page "
+                            "(default 6000, clamped to 1000–20000). Used by mode='extract'."
+                        ),
+                        "default": 6000,
+                    },
                 },
                 "required": ["query"]
             },
@@ -1233,21 +1254,7 @@ def _log_tool_call(name: str, arguments: dict[str, Any], response_chars: int = 0
 async def handle_check_russian_shadow(args: dict):
     word = args.get("word", "")
     threshold = args.get("threshold", 0.7)
-
-    import asyncio
-    import json
-    import os
-    import sys
-
-    # ensure scripts is in path
-    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-    if project_root not in sys.path:
-        sys.path.insert(0, project_root)
-
-    from scripts.verification.check_ru_morph import is_russian_pattern
-
     result = await asyncio.to_thread(is_russian_pattern, word, threshold)
-    from mcp.types import TextContent
     return [TextContent(type="text", text=json.dumps(result, indent=2, ensure_ascii=False))]
 
 
@@ -1496,14 +1503,6 @@ from learn_ukrainian_v4_runtime.tool_result_envelope import (
 )
 
 
-@lru_cache(maxsize=1)
-def _v4_server_code_digest() -> str:
-    """The running server file's own sha256 -- the tool version recorded for
-    every V4 invocation. A caller cannot assert it, and a changed server
-    yields a different version (and therefore a different invocation id)."""
-    return _sha256_of_file(Path(__file__).resolve())
-
-
 def _vesum_source_version() -> str:
     """SHA-256 of vesum.db. Cached by ``_sha256_of_file``.
 
@@ -1582,6 +1581,10 @@ def _detect_git_commit() -> str:
     return "unknown"
 
 
+# Cached once at import. /health reports this process-start commit and does
+# not re-run git, so a checkout that moves later stays invisible until the
+# process restarts. Failure is "unknown". Two readers: /health commit_sha
+# and the server identity in _review_server_version.
 _SERVER_GIT_COMMIT: str = _detect_git_commit()
 
 
@@ -2365,6 +2368,9 @@ def _compact_inspect_words_payload(results: dict) -> dict[str, Any]:
     return payload
 
 
+_INSPECT_WORDS_CAP = 500
+
+
 async def handle_inspect_words(args: dict):
     from scripts.verification.vesum import inspect_words
 
@@ -2372,9 +2378,16 @@ async def handle_inspect_words(args: dict):
     pos_filter = args.get("pos_filter") if isinstance(args, dict) else None
     if not isinstance(words, list) or not words or not all(isinstance(w, str) and w.strip() for w in words):
         return [TextContent(type="text", text="invalid_input: words must be a nonempty list")]
-    results = await asyncio.to_thread(inspect_words, words, pos_filter=pos_filter)
-    lines = [f"Batch inspection: {len(words)} words\n"]
-    for w in words:
+    submitted = len(words)
+    checked_words = words[:_INSPECT_WORDS_CAP]
+    results = await asyncio.to_thread(inspect_words, checked_words, pos_filter=pos_filter)
+    lines = []
+    if submitted > len(checked_words):
+        lines.append(
+            f"Note: received {submitted} words; processed the first {_INSPECT_WORDS_CAP} (hard cap)."
+        )
+    lines.append(f"Batch inspection: {len(checked_words)} words\n")
+    for w in checked_words:
         r = results.get(w)
         if r:
             markers_str = f" [{', '.join(r.effective_markers)}]" if r.effective_markers else ""
@@ -2382,6 +2395,9 @@ async def handle_inspect_words(args: dict):
         else:
             lines.append(f"- **{w}** — NOT FOUND")
     payload = _compact_inspect_words_payload(results)
+    if submitted > len(checked_words):
+        payload["submitted"] = submitted
+        payload["checked"] = len(checked_words)
     lines.append(f"\nRaw payload:\n{json.dumps(payload, ensure_ascii=False, indent=2)}")
     return [TextContent(type="text", text="\n".join(lines))]
 
@@ -2498,7 +2514,7 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
                FROM wikipedia w
                JOIN wikipedia_fts fts ON fts.rowid = w.id
                WHERE wikipedia_fts MATCH ?
-               ORDER BY rank LIMIT 1""",
+               ORDER BY rank, w.id LIMIT 1""",
             (f'title:"{query}"',),
         ).fetchone()
         if row:
@@ -2510,6 +2526,159 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
             with contextlib.suppress(Exception):
                 conn.close()
     return None
+
+
+_WIKIPEDIA_EXTRACT_PAGE_DEFAULT = 6000
+_WIKIPEDIA_EXTRACT_PAGE_MIN = 1000
+_WIKIPEDIA_EXTRACT_PAGE_MAX = 20000
+_WIKIPEDIA_SENTENCE_ENDINGS = frozenset(".!?…")
+_WIKIPEDIA_CLOSING_QUOTES = frozenset("»\"'”")
+
+
+def _wikipedia_extract_offset(value: object) -> int | None:
+    """Return a character offset ≥ 0, or None when the argument is not one."""
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+        return None
+    return value
+
+
+def _clamp_wikipedia_extract_max_chars(value: object) -> int:
+    """Clamp a page size to 1000–20000. Missing or non-integer values use 6000."""
+    number = (
+        _WIKIPEDIA_EXTRACT_PAGE_DEFAULT
+        if isinstance(value, bool) or not isinstance(value, int)
+        else value
+    )
+    if number < _WIKIPEDIA_EXTRACT_PAGE_MIN:
+        return _WIKIPEDIA_EXTRACT_PAGE_MIN
+    if number > _WIKIPEDIA_EXTRACT_PAGE_MAX:
+        return _WIKIPEDIA_EXTRACT_PAGE_MAX
+    return number
+
+
+def _wikipedia_full_extract_text(title: str, url: str, body: str) -> str:
+    """Cache the whole article. Paging is applied when the cache is read."""
+    article = body if isinstance(body, str) else ""
+    return "\n".join((f"# {title}", f"**URL**: {url}", "", article))
+
+
+def _split_cached_wikipedia_extract(text: str) -> tuple[str, str, str]:
+    """Split a cached extract into title, URL, and the full article body.
+
+    Entries written before paging are ``# title``, ``**URL**: ...``, a blank
+    line, then the whole article. The body is everything after that header.
+    """
+    if not isinstance(text, str):
+        text = ""
+    lines = text.split("\n")
+    index = 0
+    title = ""
+    url = ""
+    if index < len(lines) and lines[index].startswith("# "):
+        title = lines[index][2:]
+        index += 1
+    if index < len(lines) and lines[index].startswith("**URL**: "):
+        url = lines[index][len("**URL**: "):]
+        index += 1
+    if index < len(lines) and lines[index] == "":
+        index += 1
+    return title, url, "\n".join(lines[index:])
+
+
+def _wikipedia_extract_is_break(article: str, cut: int) -> bool:
+    """True when ``cut`` ends a paragraph or a sentence (exclusive end index)."""
+    if cut <= 0 or cut > len(article):
+        return False
+    previous = article[cut - 1]
+    if previous == "\n":
+        return True
+    if not previous.isspace():
+        return False
+    if cut >= 2 and article[cut - 2] in _WIKIPEDIA_SENTENCE_ENDINGS:
+        return True
+    return (
+        cut >= 3
+        and article[cut - 2] in _WIKIPEDIA_CLOSING_QUOTES
+        and article[cut - 3] in _WIKIPEDIA_SENTENCE_ENDINGS
+    )
+
+
+def _wikipedia_extract_structural_cut(article: str, offset: int, hard_end: int) -> int | None:
+    """Latest paragraph or sentence cut in the last 20% of the nominal page."""
+    span = hard_end - offset
+    tail = max(1, (span * 20) // 100)
+    window_start = hard_end - tail
+    for cut in range(hard_end, window_start, -1):
+        if _wikipedia_extract_is_break(article, cut):
+            return cut
+    return None
+
+
+def _wikipedia_extract_word_cut(article: str, offset: int, hard_end: int) -> int:
+    """Move a mid-word page end back to the start of that word.
+
+    A word longer than the whole page has no earlier boundary. The page then
+    ends at ``hard_end`` so the next offset still advances.
+    """
+    if hard_end >= len(article) or hard_end <= offset:
+        return hard_end
+    if article[hard_end - 1].isspace() or article[hard_end].isspace():
+        return hard_end
+    cut = hard_end
+    while cut > offset and not article[cut - 1].isspace():
+        cut -= 1
+    if cut == offset:
+        return hard_end
+    return cut
+
+
+def _wikipedia_extract_page_end(article: str, offset: int, max_chars: int) -> int:
+    """Exclusive end index of the page that starts at ``offset``.
+
+    The next page starts at this index, so concatenating every page reproduces
+    the article. A paragraph or sentence boundary in the last 20% of the
+    nominal page wins; otherwise the cut stays on a word boundary.
+    """
+    total = len(article)
+    hard_end = min(offset + max_chars, total)
+    if hard_end >= total:
+        return total
+    structural = _wikipedia_extract_structural_cut(article, offset, hard_end)
+    if structural is not None and structural > offset:
+        return structural
+    return _wikipedia_extract_word_cut(article, offset, hard_end)
+
+
+def _format_wikipedia_extract_page(
+    title: str,
+    url: str,
+    article: str,
+    offset: int,
+    max_chars: int,
+) -> str:
+    """Render one page of an extract. ``article`` is the full plaintext."""
+    total = len(article)
+    if offset >= total and not (offset == 0 and total == 0):
+        header = "\n".join((
+            f"# {title}",
+            f"**URL**: {url}",
+            f"**Chars**: {total}–{total} of {total}",
+            "**Next offset**: end",
+        ))
+        message = (
+            f"This page is empty: offset {offset} is past the end of the article "
+            f"({total} characters)."
+        )
+        return f"{header}\n\n{message}"
+    end = _wikipedia_extract_page_end(article, offset, max_chars)
+    next_offset = "end" if end >= total else str(end)
+    header = "\n".join((
+        f"# {title}",
+        f"**URL**: {url}",
+        f"**Chars**: {offset}–{end} of {total}",
+        f"**Next offset**: {next_offset}",
+    ))
+    return f"{header}\n\n{article[offset:end]}"
 
 
 async def handle_query_wikipedia(args: dict) -> list[TextContent]:
@@ -2552,12 +2721,26 @@ async def handle_query_wikipedia(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text=text)]
 
     elif mode == "extract":
+        offset = _wikipedia_extract_offset(args.get("offset", 0))
+        if offset is None:
+            return [TextContent(type="text", text="offset must be an integer ≥ 0.")]
+        max_chars = _clamp_wikipedia_extract_max_chars(
+            args.get("max_chars", _WIKIPEDIA_EXTRACT_PAGE_DEFAULT)
+        )
+
+        def _page(title: str, url: str, article: str) -> list[TextContent]:
+            return [TextContent(
+                type="text",
+                text=_format_wikipedia_extract_page(title, url, article, offset, max_chars),
+            )]
+
         if not force_refresh:
             cached = cache.get("extract", query)
             if cached is not None:
                 if cache.is_negative(cached):
                     return [TextContent(type="text", text=f"Wikipedia article not found: '{query}' (cached)")]
-                return [TextContent(type="text", text=cached)]
+                title, url, article = _split_cached_wikipedia_extract(cached)
+                return _page(title, url, article)
 
             # Persistent DB cache hit (#1170): pre-ingested wikipedia table in
             # sources.db serves as a long-lived, curated cache. If the query
@@ -2566,29 +2749,25 @@ async def handle_query_wikipedia(args: dict) -> list[TextContent]:
             # source of truth for batch-ingested entries.
             db_hit = _lookup_wikipedia_in_db(query)
             if db_hit is not None:
-                lines = [
-                    f"# {db_hit['title']}",
-                    f"**URL**: {db_hit['url']}",
-                    "",
-                    db_hit["text"],
-                ]
-                text = "\n".join(lines)
-                cache.put("extract", query, text)
-                return [TextContent(type="text", text=text)]
+                article = db_hit["text"] if isinstance(db_hit["text"], str) else ""
+                cache.put(
+                    "extract",
+                    query,
+                    _wikipedia_full_extract_text(db_hit["title"], db_hit["url"], article),
+                )
+                return _page(db_hit["title"], db_hit["url"], article)
 
         result = await asyncio.to_thread(wikipedia_extract, query)
         if not result:
             cache.put_negative("extract", query)
             return [TextContent(type="text", text=f"Wikipedia article not found: '{query}'")]
-        lines = [
-            f"# {result['title']}",
-            f"**URL**: {result['url']}",
-            "",
-            result["extract"],
-        ]
-        text = "\n".join(lines)
-        cache.put("extract", query, text)
-        return [TextContent(type="text", text=text)]
+        article = result["extract"] if isinstance(result["extract"], str) else ""
+        cache.put(
+            "extract",
+            query,
+            _wikipedia_full_extract_text(result["title"], result["url"], article),
+        )
+        return _page(result["title"], result["url"], article)
 
     elif mode == "sections":
         if not force_refresh:
@@ -3282,27 +3461,11 @@ def create_http_app():
     from starlette.responses import Response
     from starlette.routing import Route
 
-    def _get_git_commit() -> str:
-        try:
-            import subprocess
-            res = subprocess.run(
-                ["git", "rev-parse", "HEAD"],
-                capture_output=True,
-                text=True,
-                cwd=str(PROJECT_ROOT),
-                timeout=2,
-            )
-            if res.returncode == 0:
-                return res.stdout.strip()
-        except Exception:
-            pass
-        return ""
-
     async def handle_health(request):
         from wiki.sources_db import SOURCES_DB_PATH
         payload = {
             "status": "ok",
-            "commit_sha": _get_git_commit(),
+            "commit_sha": _SERVER_GIT_COMMIT,
             "db_path": str(SOURCES_DB_PATH),
         }
         return Response(json.dumps(payload), media_type="application/json")

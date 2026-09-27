@@ -1094,6 +1094,268 @@ class TestDictSearchQuoteBalance:
         assert '"terms"' in text
 
 
+def _wikipedia_page_body(text: str) -> str:
+    """Article slice after the extract page header."""
+    header, _, body = text.partition("\n\n")
+    assert "**Next offset**:" in header
+    return body
+
+
+def _wikipedia_header_value(text: str, label: str) -> str:
+    prefix = f"**{label}**: "
+    for line in text.splitlines():
+        if line.startswith(prefix):
+            return line[len(prefix):]
+    raise AssertionError(f"missing {label} in {text!r}")
+
+
+def _multi_page_cyrillic_article() -> tuple[str, int, int]:
+    """Article whose first nominal page-end falls inside «Київщина».
+
+    Returns the article, the word-boundary cut, and the later paragraph cut.
+    The first page's last 20% has no paragraph or sentence boundary. The next
+    page has a paragraph break inside its last 20%, and that break is the
+    rightmost one in the window.
+    """
+    page = 1000
+    word = "Київщина"
+    word_at = 995
+    prefix = "мова " * (word_at // len("мова "))
+    assert len(prefix) == word_at and prefix.endswith(" ")
+    head = prefix + word
+    assert head[page - 1].isalpha() and head[page].isalpha()
+    assert head[word_at:word_at + len(word)] == word
+
+    # Page 2 starts at word_at. Its nominal end is word_at + page, so the last
+    # 20% begins 200 characters earlier. The paragraph cut sits inside that tail.
+    paragraph_cut = 1902
+    target = paragraph_cut - 2
+    sentence = "Речення про мову. "
+    span = target - len(head)
+    filler = sentence * (span // len(sentence))
+    gap_fill = "б" * (span - len(filler))
+    middle = filler + gap_fill + "\n\n"
+    assert len(head) + len(middle) == paragraph_cut
+    hard_end = word_at + page
+    quiet = ("абвгд " * 40)[: hard_end - paragraph_cut]
+    assert "." not in quiet and "\n" not in quiet and "!" not in quiet and "?" not in quiet
+    rest = "Ще одне речення про історію мови. " * 120
+    article = head + middle + quiet + rest
+    assert paragraph_cut < hard_end < len(article)
+    return article, word_at, paragraph_cut
+
+
+class TestWikipediaExtractPaging:
+    """mode=extract returns the article in lossless pages (#8524)."""
+
+    def _memory_cache(self):
+        store: dict[tuple[str, str], str] = {}
+
+        def get(mode, title, section=""):
+            return store.get((mode, title))
+
+        def put(mode, title, response, section=""):
+            store[(mode, title)] = response
+
+        cache = MagicMock()
+        cache.get.side_effect = get
+        cache.put.side_effect = put
+        cache.is_negative.return_value = False
+        return cache, store
+
+    def _fetch(self, server_module, body: str, args: dict, *, cache):
+        article = {
+            "title": "Стаття",
+            "url": "https://uk.wikipedia.org/wiki/Стаття",
+            "extract": body,
+        }
+        with (
+            patch("rag.wiki_cache.WikiCache", return_value=cache),
+            patch("rag.source_query.wikipedia_extract", return_value=article) as extract,
+        ):
+            content = _run(server_module.handle_query_wikipedia({"query": "Стаття", "mode": "extract", **args}))
+        return content[0].text, extract
+
+    def test_tool_schema_documents_paging(self, server_module):
+        tools = _run(server_module.list_tools())
+        tool = next(item for item in tools if item.name == "query_wikipedia")
+        assert (
+            "long articles are returned in pages; request the next page with offset=<Next offset>"
+            in tool.description
+        )
+        assert "offset" in tool.input_schema["properties"]
+        assert "max_chars" in tool.input_schema["properties"]
+        assert tool.input_schema["properties"]["offset"]["default"] == 0
+        assert tool.input_schema["properties"]["max_chars"]["default"] == 6000
+
+    def test_pages_concatenate_and_do_not_split_the_cyrillic_word(self, server_module):
+        article, word_at, paragraph_cut = _multi_page_cyrillic_article()
+        page = server_module._WIKIPEDIA_EXTRACT_PAGE_MIN
+        assert article[page - 1].isalpha() and article[page].isalpha()
+        assert not article[:page].endswith("Київщина")
+
+        cache, store = self._memory_cache()
+        payload = {
+            "title": "Стаття",
+            "url": "https://uk.wikipedia.org/wiki/Стаття",
+            "extract": article,
+        }
+        offset = 0
+        parts: list[str] = []
+        cuts: list[int] = []
+        with (
+            patch("rag.wiki_cache.WikiCache", return_value=cache),
+            patch("rag.source_query.wikipedia_extract", return_value=payload) as extract,
+        ):
+            for _ in range(12):
+                content = _run(
+                    server_module.handle_query_wikipedia(
+                        {
+                            "query": "Стаття",
+                            "mode": "extract",
+                            "offset": offset,
+                            "max_chars": page,
+                        }
+                    )
+                )
+                text = content[0].text
+                assert text.startswith("# Стаття\n**URL**: https://uk.wikipedia.org/wiki/Стаття\n")
+                start_s, end_s = _wikipedia_header_value(text, "Chars").split(" of ")[0].split("–")
+                assert int(start_s) == offset
+                body = _wikipedia_page_body(text)
+                parts.append(body)
+                nxt = _wikipedia_header_value(text, "Next offset")
+                if nxt == "end":
+                    assert body == article[offset:]
+                    break
+                end = int(nxt)
+                assert end == int(end_s)
+                assert offset < end <= offset + page
+                assert body == article[offset:end]
+                joined = "".join(parts)
+                boundary = len(joined)
+                assert article[boundary - 1].isspace() or article[boundary].isspace()
+                cuts.append(end)
+                offset = end
+            else:
+                raise AssertionError("paging did not reach the end")
+            extract.assert_called_once()
+
+        assert "".join(parts) == article
+        assert cuts[0] == word_at
+        assert "Київщина" in parts[1]
+        assert "Київщина" not in parts[0]
+        assert paragraph_cut in cuts
+        assert len(parts) >= 3
+        cached = store[("extract", "Стаття")]
+        assert "**Chars**" not in cached
+        assert "**Next offset**" not in cached
+        assert "**Truncated**" not in cached
+        assert server_module._split_cached_wikipedia_extract(cached)[2] == article
+
+    def test_last_page_reports_end_and_past_the_end_is_empty(self, server_module):
+        article, _, _ = _multi_page_cyrillic_article()
+        cache, _store = self._memory_cache()
+        text, _extract = self._fetch(
+            server_module,
+            article,
+            {"offset": 0, "max_chars": 1000},
+            cache=cache,
+        )
+        assert _wikipedia_header_value(text, "Next offset") != "end"
+
+        past = len(article) + 40
+        empty, extract = self._fetch(
+            server_module,
+            article,
+            {"offset": past, "max_chars": 1000},
+            cache=cache,
+        )
+        extract.assert_not_called()
+        assert _wikipedia_header_value(empty, "Next offset") == "end"
+        assert (
+            f"This page is empty: offset {past} is past the end of the article "
+            f"({len(article)} characters)."
+        ) in empty
+        assert "Київщина" not in _wikipedia_page_body(empty)
+
+    def test_sentence_boundary_in_the_last_fifth_ends_the_page(self, server_module):
+        prefix = "мова " * 160
+        ending = "кінець речення. "
+        article = prefix + ending + ("б" * 400)
+        cut = server_module._wikipedia_extract_page_end(article, 0, 1000)
+        assert cut == len(prefix) + len(ending)
+        assert article[cut - 2:cut] == ". "
+
+    def test_max_chars_is_clamped(self, server_module):
+        body = "слово " * 5000
+        cache, _store = self._memory_cache()
+        low, _extract = self._fetch(server_module, body, {"max_chars": 10}, cache=cache)
+        default, _extract = self._fetch(server_module, body, {}, cache=cache)
+        high, _extract = self._fetch(server_module, body, {"max_chars": 999999}, cache=cache)
+        spans = []
+        for text in (low, default, high):
+            start_s, end_s = _wikipedia_header_value(text, "Chars").split(" of ")[0].split("–")
+            spans.append(int(end_s) - int(start_s))
+        low_span, default_span, high_span = spans
+        assert server_module._WIKIPEDIA_EXTRACT_PAGE_MIN - len("слово ") < low_span <= 1000
+        assert low_span > 10
+        assert 6000 - len("слово ") < default_span <= 6000
+        assert 20000 - len("слово ") < high_span <= 20000
+        assert high_span > 6000
+
+    def test_cache_stores_the_full_article_and_serves_any_page(self, server_module):
+        article, word_at, _paragraph_cut = _multi_page_cyrillic_article()
+        cache, store = self._memory_cache()
+        first, extract = self._fetch(
+            server_module,
+            article,
+            {"offset": 0, "max_chars": 1000},
+            cache=cache,
+        )
+        extract.assert_called_once()
+        stored = store[("extract", "Стаття")]
+        assert stored == server_module._wikipedia_full_extract_text(
+            "Стаття",
+            "https://uk.wikipedia.org/wiki/Стаття",
+            article,
+        )
+        assert _wikipedia_page_body(first) == article[:word_at]
+
+        later, extract_again = self._fetch(
+            server_module,
+            article,
+            {"offset": word_at, "max_chars": 1000},
+            cache=cache,
+        )
+        extract_again.assert_not_called()
+        assert f"**Chars**: {word_at}–" in later
+        assert _wikipedia_page_body(later).startswith("Київщина")
+        assert store[("extract", "Стаття")] == stored
+
+    def test_legacy_full_article_cache_is_paged_without_a_network_call(self, server_module):
+        article, word_at, _paragraph_cut = _multi_page_cyrillic_article()
+        legacy = "\n".join(
+            ["# Стаття", "**URL**: https://uk.wikipedia.org/wiki/Стаття", "", article]
+        )
+        with (
+            patch("rag.wiki_cache.WikiCache") as cache_cls,
+            patch("rag.source_query.wikipedia_extract") as extract,
+        ):
+            cache_cls.return_value.get.return_value = legacy
+            cache_cls.return_value.is_negative.return_value = False
+            content = _run(
+                server_module.handle_query_wikipedia(
+                    {"query": "Стаття", "mode": "extract", "offset": word_at, "max_chars": 1000}
+                )
+            )
+        extract.assert_not_called()
+        text = content[0].text
+        assert text.split("\n")[2].startswith("**Chars**: ")
+        assert "**Truncated**" not in text
+        assert _wikipedia_page_body(text).startswith("Київщина")
+
+
 class TestHealthEndpoint:
     """Test health endpoint contract (#7026)."""
 
@@ -1117,6 +1379,27 @@ class TestHealthEndpoint:
         assert "commit_sha" in data
         assert "db_path" in data
         assert "sources.db" in data["db_path"]
+
+    def test_repeated_health_calls_do_not_spawn_git(self, server_module):
+        app = server_module.create_http_app()
+        while not hasattr(app, "routes"):
+            app = app.app
+        endpoint = next(route.endpoint for route in app.routes if getattr(route, "path", None) == "/health")
+        with patch("subprocess.run") as spawned:
+            first = _run(endpoint(None))
+            second = _run(endpoint(None))
+        assert spawned.call_count == 0
+        first_body = json.loads(first.body)
+        second_body = json.loads(second.body)
+        assert first_body["commit_sha"] == second_body["commit_sha"] == server_module._SERVER_GIT_COMMIT
+        assert first_body["commit_sha"]
+
+    def test_git_commit_failure_is_unknown(self, server_module, monkeypatch):
+        def boom(*args, **kwargs):
+            raise OSError("git missing")
+
+        monkeypatch.setattr("subprocess.run", boom)
+        assert server_module._detect_git_commit() == "unknown"
 
 
 class TestCollectionStatsHandler:
