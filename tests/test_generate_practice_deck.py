@@ -3225,7 +3225,11 @@ def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
             "label": "Fixture textbook",
             "locator": "a1-1" if level == "A1" else "a2-1",
         }
-        assert cloze["blankCase"] == "nominative"
+        # A nominative/accusative-syncretic noun and a caseless adverb cannot
+        # prove a case from their dictionary spelling (#8726).
+        assert "blankCase" not in cloze
+        assert cloze["caseRule"] == {"ruleId": "lexical_insertion", "trigger": "lexical insertion"}
+        assert all("case" not in option for option in cloze["options"])
         assert len(cloze["options"]) == 4
         assert {option["pos"] for option in cloze["options"]} == {pos}
         assert validate_option_set(cloze) == []
@@ -4737,3 +4741,128 @@ def test_imperative_held_out_stratified_audit_200_items():
     # (1 in B2: пасися; 7 in C1: пилососьте, затікай, переповіжмо, переповіж, перезавантажуйте, зазвучімо, облаштуйтеся).
     stressed_count = sum(1 for it in sample_200 if it.get("audit", {}).get("target_stress_verified"))
     assert stressed_count == 192, f"Expected 192 stressed targets, got {stressed_count}"
+
+
+def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Replay the live inventory rows quoted in #8724 and #8726.
+
+    VESUM analyses are copied from data/vesum.db.  «до узбіччя» is a genitive
+    slot whose surface equals the nominative, so the card must be a case-free
+    insertion; the list, UI-chrome, stub and definition rows are withheld.
+    """
+
+    def entry(lemma: str, gloss: str, pos: str, level: str) -> dict[str, object]:
+        return {
+            "lemma": lemma,
+            "url_slug": lemma,
+            "gloss": gloss,
+            "pos": pos,
+            "primary_source": "course_vocab",
+            "course_usage": [{"track": level.lower(), "slug": lemma}],
+            "enrichment": {"cefr": {"level": level}},
+        }
+
+    entries = [
+        entry("узбіччя", "roadside", "noun", "A2"),
+        entry("книга", "book", "noun", "A2"),
+        entry("місто", "city", "noun", "A2"),
+        entry("школа", "school", "noun", "A2"),
+        entry("відповісти", "to answer", "verb", "A2"),
+        entry("вразити", "to impress", "verb", "B2"),
+        entry("геймер", "gamer", "noun", "C1"),
+        entry("медіаграмотність", "media literacy", "noun", "C1"),
+    ]
+
+    def row(lemma: str, sentence: str, target: str, level: str, locator: str) -> dict[str, object]:
+        return {
+            "lemma": lemma,
+            "lemmaId": lemma,
+            "sentence": sentence,
+            "targetForm": target,
+            "cefr": level,
+            "uses": ["example"],
+            "provenance": {"source": "textbook", "label": "Ukrainian school textbook", "locator": locator},
+            "license": {"status": "fixture"},
+        }
+
+    inventory_path = tmp_path / "sentence-inventory.json"
+    inventory_path.write_text(
+        json.dumps(
+            {
+                "schema": "atlas-sentence-inventory",
+                "schemaVersion": 1,
+                "rows": [
+                    row("узбіччя", "Налітає автомашина, звірятко прилягло до узбіччя.", "узбіччя", "A2", "7-klas-ukrlit-zabolotnyi-2024_s0318"),
+                    row("відповісти", "Подобається Відповісти 2 д.", "Відповісти", "A2", "8-klas-ukrmova-avramenko-2025_s0177"),
+                    row("вразити", "Дієслова: зобразити, звести, вразити.", "вразити", "B2", "8-klas-ukrmova-avramenko-2025_s0096"),
+                    row("геймер", "Геймер — важко хвора людина, вилікувати яку майже неможливо.", "Геймер", "C1", "10-klas-ukrmova-karaman-2018_s0057"),
+                    row("медіаграмотність", "Ним є медіаграмотність.", "медіаграмотність", "C1", "8-klas-hromadianska-osvita-vasylkiv-2025_s0137"),
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    noun_n = [
+        {"lemma": "узбіччя", "pos": "noun", "tags": f"noun:inanim:n:{case}"}
+        for case in ("v_naz", "v_rod", "v_zna", "v_kly")
+    ] + [{"lemma": "узбіччя", "pos": "noun", "tags": f"noun:inanim:p:{case}"} for case in ("v_naz", "v_zna", "v_kly")]
+    vesum = JsonVesumVerifier(
+        {
+            "узбіччя": noun_n,
+            "до": [
+                {"lemma": "до", "pos": "noun", "tags": "noun:inanim:n:v_naz:nv"},
+                {"lemma": "до", "pos": "prep", "tags": "prep"},
+            ],
+            "відповісти": [{"lemma": "відповісти", "pos": "verb", "tags": "verb:perf:inf"}],
+            "подобається": [{"lemma": "подобатися", "pos": "verb", "tags": "verb:rev:imperf:pres:s:3"}],
+            "вразити": [{"lemma": "вразити", "pos": "verb", "tags": "verb:perf:inf:xp1"}],
+            "зобразити": [{"lemma": "зобразити", "pos": "verb", "tags": "verb:perf:inf"}],
+            "звести": [{"lemma": "звести", "pos": "verb", "tags": "verb:perf:inf"}],
+            "геймер": [{"lemma": "геймер", "pos": "noun", "tags": "noun:anim:m:v_naz"}],
+            "медіаграмотність": [
+                {"lemma": "медіаграмотність", "pos": "noun", "tags": "noun:inanim:f:v_naz:up19"},
+                {"lemma": "медіаграмотність", "pos": "noun", "tags": "noun:inanim:f:v_zna:up19"},
+            ],
+            "ним": [{"lemma": "він", "pos": "noun", "tags": "noun:unanim:m:v_oru:pron:pers:3"}],
+            "є": [{"lemma": "бути", "pos": "verb", "tags": "verb:imperf:pres:s:3"}],
+        }
+    )
+    from scripts.practice.creation_review import CreationReview, frame_identity
+
+    monkeypatch.setattr(generate_practice_deck, "_option_strategy_for_level", lambda _level, _rng: "no-pair")
+    candidates = read_sentence_inventory(inventory_path)
+    # The live frames are grandfathered in the creation-review ledger.
+    creation_review = CreationReview(
+        frozenset(
+            frame_identity("cloze", row["sentence"], row["form"], _plain(row["lemma"])) for row in candidates
+        )
+    )
+    withheld: list[dict[str, str]] = []
+    shards = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_payload([{"status": "sentence_inventory", "path": str(inventory_path)}]),
+        vesum,
+        candidates,
+        BuildConfig(target=len(entries), source_label="fixture"),
+        creation_review=creation_review,
+        cloze_withheld=withheld,
+    )
+
+    emitted = {item["clozeId"]: item for level in shards.values() for item in level["cloze"]["cloze"]}
+    uzbichchya = emitted["узбіччя:inventory:1"]
+    assert "blankCase" not in uzbichchya
+    assert uzbichchya["caseRule"] == {"ruleId": "lexical_insertion", "trigger": "lexical insertion"}
+    assert "словникова форма" not in json.dumps(uzbichchya, ensure_ascii=False)
+    assert all("case" not in option for option in uzbichchya["options"])
+    assert validate_option_set(uzbichchya) == []
+
+    assert set(emitted) == {"узбіччя:inventory:1"}
+    assert {(row["clozeId"], row["reason"]) for row in withheld} == {
+        ("відповісти:inventory:2", "capitalized_mid_sentence"),
+        ("вразити:inventory:3", "list_fragment"),
+        ("геймер:inventory:4", "definition_prompt"),
+        ("медіаграмотність:inventory:5", "context_free_stub"),
+    }

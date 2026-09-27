@@ -58,6 +58,41 @@ RULE_GOLD_LEMMA = "gold_lemma_match"
 RULE_INTENTIONAL_ERROR_QUARANTINE = "intentional_error_quarantine"
 RULE_BLANK_COUNT = "cloze_blank_count"
 RULE_DISTRACTOR_DISTINCT = "distractor_uniqueness"
+RULE_CASE_LABEL = "case_label_determinate"
+RULE_PROMPT_CONTEXT = "inventory_prompt_context"
+
+# Identity clozes blank the dictionary form itself.  Only the first rule names
+# a case (nominative, when context proves it); the second is a case-free word
+# insertion used when an identical surface form could be another case (#8726).
+NOMINATIVE_IDENTIFICATION_RULE_ID = "nominative_identification"
+LEXICAL_INSERTION_RULE_ID = "lexical_insertion"
+IDENTITY_RULE_IDS = frozenset({NOMINATIVE_IDENTIFICATION_RULE_ID, LEXICAL_INSERTION_RULE_ID})
+
+# Grammar terms whose next word is mentioned, not used («слово ___», #8724).
+# Every lemma is VESUM-verified as a noun.
+METALINGUISTIC_LEMMAS = frozenset(
+    {
+        "слово",
+        "поняття",
+        "термін",
+        "вислів",
+        "іменник",
+        "дієслово",
+        "прикметник",
+        "прислівник",
+        "займенник",
+        "числівник",
+    }
+)
+_CONTENT_POS = frozenset({"noun", "verb", "adj", "adv", "numr"})
+_QUOTED_BLANK_RE = re.compile(r"[«\"“„]\s*___\s*[»\"”“]")
+_DEFINITION_BLANK_RE = re.compile(r"^\s*___\s*[—–-]\s")
+# Gap dots inside a word («р..місник») or an operator in a grammar/maths
+# formula («числівник + іменник», «70 + 25»); a signed number («+15 °С») stays.
+_DRILL_NOTATION_RE = re.compile(r"[^\W\d_]\.\.[^\W\d_]|\+\s*[^\W\d_]|\s\+\s|=")
+_SENTENCE_BOUNDARY_BEFORE_RE = re.compile(r"(?:^|[.!?…:;—–\-«\"“„(])\s*$")
+_LIST_ITEM_MAX_WORDS = 2
+_LIST_MIN_ITEMS = 3
 
 
 class VesumVerifier(Protocol):
@@ -640,23 +675,31 @@ def check_identity_rule_consistency(
     blank_case = normalize_case_name(_clean(item.get("blankCase")))
     rule_case = normalize_case_name(_clean(case_rule.get("case")))
     findings: list[Finding] = []
-    if identity and rule_id != "nominative_identification":
+    if identity and rule_id not in IDENTITY_RULE_IDS:
         findings.append(
             Finding(
                 RULE_IDENTITY_LABEL,
                 item_id,
-                f"normalized identity form requires nominative_identification, got {rule_id!r}",
+                f"normalized identity form requires an identity rule {sorted(IDENTITY_RULE_IDS)}, got {rule_id!r}",
             )
         )
-    if rule_id == "nominative_identification" and not identity:
+    if rule_id in IDENTITY_RULE_IDS and not identity:
         findings.append(
             Finding(
                 RULE_IDENTITY_LABEL,
                 item_id,
-                "nominative_identification requires normalized identity form==lemma",
+                f"{rule_id} requires normalized identity form==lemma",
             )
         )
-    if identity or rule_id == "nominative_identification":
+    if rule_id == LEXICAL_INSERTION_RULE_ID and (blank_case or rule_case):
+        findings.append(
+            Finding(
+                RULE_IDENTITY_LABEL,
+                item_id,
+                "lexical_insertion must not assert a case",
+            )
+        )
+    if identity or rule_id == NOMINATIVE_IDENTIFICATION_RULE_ID:
         if blank_case not in (None, "nominative"):
             findings.append(
                 Finding(
@@ -683,6 +726,188 @@ def check_identity_rule_consistency(
                 )
             )
     return findings
+
+
+def _gender_case_pairs(matches: list[dict[str, Any]]) -> set[tuple[str, str]]:
+    pairs: set[tuple[str, str]] = set()
+    for match in matches:
+        tokens = set(str(match.get("tags") or "").split(":"))
+        genders = tokens & {"m", "f", "n", "p"}
+        for case_name in match_cases(match):
+            pairs.update((gender, case_name) for gender in genders)
+    return pairs
+
+
+def _adjacent_adjective_matches(sentence: str, verifier: VesumVerifier) -> list[dict[str, Any]]:
+    """VESUM analyses of an adjective written immediately before the blank."""
+    before = sentence.split("___", 1)[0]
+    match = re.search(r"([^\W_]+(?:[-'’ʼ][^\W_]+)*)\s+$", before)
+    if not match:
+        return []
+    analyses = verified_surface_matches(match.group(1), verifier)
+    if not analyses or any(str(item.get("pos") or "").casefold() != "adj" for item in analyses):
+        return []
+    return analyses
+
+
+def identity_blank_case(
+    sentence: str,
+    form: str,
+    lemma_plain: str,
+    verifier: VesumVerifier,
+) -> str | None:
+    """Return the case an identity blank provably takes, else ``None``.
+
+    Surface equality with the lemma does not make a slot nominative:
+    «до ___» keeps «узбіччя» as a genitive, and VESUM lists the same written
+    form for nominative, genitive and accusative.  The attested sentence
+    proves nominative only when (a) every same-lemma VESUM analysis of the form
+    is nominative, or (b) an adjective written directly before the blank agrees
+    with the form in nominative only (``Різдвяна ___``); and in both cases no
+    preposition governs the slot.  Anything else (syncretic nouns without an
+    agreeing modifier, verbs, adverbs, preposition-governed slots) is not
+    decidable, so the card must not name a case (#8726).
+    """
+    target = plain(lemma_plain)
+    matches = [
+        match
+        for match in verified_surface_matches(form, verifier)
+        if plain(str(match.get("lemma") or "")) == target
+    ]
+    cases: set[str] = set()
+    for match in matches:
+        cases |= match_cases(match)
+    if cases != {"nominative"}:
+        adjective = _adjacent_adjective_matches(sentence, verifier)
+        if not adjective:
+            return None
+        agreeing = _gender_case_pairs(matches) & _gender_case_pairs(adjective)
+        if {case_name for _gender, case_name in agreeing} != {"nominative"}:
+            return None
+    previous = _previous_token(sentence)
+    if previous and _is_vesum_prep(previous, verifier):
+        return None
+    return "nominative"
+
+
+def check_case_label_determinate(
+    item: dict[str, Any],
+    verifier: VesumVerifier,
+    *,
+    item_id: str,
+    lemma_plain: str | None = None,
+) -> list[Finding]:
+    """Reject identity cards that name a case their context cannot prove."""
+    form = _clean(item.get("form")) or ""
+    sentence = _clean(item.get("sentence")) or ""
+    target = _target_lemma_plain(item, lemma_plain)
+    if not form or not sentence or not target or not is_identity_form(form, target):
+        return []
+    case_rule = item.get("caseRule") if isinstance(item.get("caseRule"), dict) else {}
+    asserted = normalize_case_name(_clean(item.get("blankCase"))) or normalize_case_name(
+        _clean(case_rule.get("case"))
+    )
+    if not asserted:
+        return []
+    derived = identity_blank_case(sentence, form, target, verifier)
+    if derived == asserted:
+        return []
+    return [
+        Finding(
+            RULE_CASE_LABEL,
+            item_id,
+            f"identity blank labelled {asserted!r} but context/VESUM decide {derived!r}",
+        )
+    ]
+
+
+def _is_list_fragment(sentence: str) -> bool:
+    clause = next((part for part in re.split(r"[:;]", sentence) if "___" in part), "")
+    items = [item for item in clause.split(",") if _WORD_RE.findall(item.replace("___", "X"))]
+    return len(items) >= _LIST_MIN_ITEMS and all(
+        len(_WORD_RE.findall(item.replace("___", "X"))) <= _LIST_ITEM_MAX_WORDS for item in items
+    )
+
+
+def _is_content_token(token: str, verifier: VesumVerifier) -> bool:
+    if token.isdigit():
+        return False
+    matches = verified_surface_matches(token, verifier)
+    if not matches:
+        # Unknown to VESUM (names, rare words): not proof of an empty frame.
+        return True
+    for match in matches:
+        pos = str(match.get("pos") or "").casefold()
+        tags = set(str(match.get("tags") or "").split(":"))
+        if pos in _CONTENT_POS and "pron" not in tags and plain(str(match.get("lemma") or "")) != "бути":
+            return True
+    return False
+
+
+def inventory_prompt_defect(
+    sentence: str,
+    form: str,
+    lemma_plain: str,
+    verifier: VesumVerifier,
+) -> str | None:
+    """Name why an inventory sentence is not a usable learner cloze prompt.
+
+    Inventory rows are scraped textbook sentences.  Deterministic signals mark
+    the ones that are exercise scaffolding rather than language in use (#8724):
+    drill notation, a blank that is the defined term of a «___ — …» definition,
+    a quoted or grammar-term mention of the word, a list where many words fit,
+    a mid-sentence capital on a common noun (UI chrome, titles, proper-name
+    homographs) and a frame with no content word to decide the answer.
+    """
+    if _DRILL_NOTATION_RE.search(sentence):
+        return "drill_notation"
+    if _DEFINITION_BLANK_RE.search(sentence):
+        return "definition_prompt"
+    if _QUOTED_BLANK_RE.search(sentence):
+        return "metalinguistic_mention"
+    previous = _previous_token(sentence)
+    if previous and any(
+        plain(str(match.get("lemma") or "")) in METALINGUISTIC_LEMMAS
+        for match in verified_surface_matches(previous, verifier)
+    ):
+        return "metalinguistic_mention"
+    if _is_list_fragment(sentence):
+        return "list_fragment"
+    before = sentence.split("___", 1)[0]
+    if form[:1].isupper() and not _SENTENCE_BOUNDARY_BEFORE_RE.search(before):
+        target = plain(lemma_plain)
+        target_lemmas = [
+            str(match.get("lemma") or "")
+            for match in verified_surface_matches(form, verifier)
+            if plain(str(match.get("lemma") or "")) == target
+        ]
+        if not any(lemma[:1].isupper() for lemma in target_lemmas):
+            return "capitalized_mid_sentence"
+    context_tokens = _WORD_RE.findall(sentence.replace("___", " "))
+    if not any(_is_content_token(token, verifier) for token in context_tokens):
+        return "context_free_stub"
+    return None
+
+
+def check_inventory_prompt_context(
+    item: dict[str, Any],
+    verifier: VesumVerifier,
+    *,
+    item_id: str,
+    lemma_plain: str | None = None,
+) -> list[Finding]:
+    provenance = item.get("provenance")
+    if not isinstance(provenance, dict) or provenance.get("status") != "sentence_inventory":
+        return []
+    sentence = _clean(item.get("sentence")) or ""
+    form = _clean(item.get("form")) or ""
+    target = _target_lemma_plain(item, lemma_plain)
+    if not sentence or not form or not target:
+        return []
+    reason = inventory_prompt_defect(sentence, form, target, verifier)
+    if reason is None:
+        return []
+    return [Finding(RULE_PROMPT_CONTEXT, item_id, reason)]
 
 
 def check_homograph_oblique(
@@ -827,6 +1052,12 @@ def check_cloze_item(
     )
     findings.extend(
         check_gold_lemma(item, verifier, item_id=item_id, lemma_plain=lemma_plain)
+    )
+    findings.extend(
+        check_case_label_determinate(item, verifier, item_id=item_id, lemma_plain=lemma_plain)
+    )
+    findings.extend(
+        check_inventory_prompt_context(item, verifier, item_id=item_id, lemma_plain=lemma_plain)
     )
     if check_agreement:
         sentence = _clean(item.get("sentence")) or ""

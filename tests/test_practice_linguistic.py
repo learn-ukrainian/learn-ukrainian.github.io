@@ -7,12 +7,14 @@ from pathlib import Path
 from scripts.audit.generate_practice_deck import JsonVesumVerifier
 from scripts.audit.practice_linguistic import (
     RULE_BLANK_COUNT,
+    RULE_CASE_LABEL,
     RULE_DISTRACTOR_DISTINCT,
     RULE_HOMOGRAPH,
     RULE_IDENTITY_LABEL,
     RULE_INTENTIONAL_ERROR_QUARANTINE,
     RULE_LEADING_QUIZ,
     RULE_PREP_NOM,
+    RULE_PROMPT_CONTEXT,
     RULE_STRESS,
     check_cloze_blank_count,
     check_cloze_item,
@@ -23,7 +25,9 @@ from scripts.audit.practice_linguistic import (
     check_nominative_only_after_prep,
     check_options_uniqueness,
     check_stress_item,
+    identity_blank_case,
     index_from_generator_candidates,
+    inventory_prompt_defect,
     is_identity_form,
     plain,
 )
@@ -347,3 +351,166 @@ def test_options_uniqueness_detects_duplicates() -> None:
     dup_opts = [{"label": "книга"}, {"label": "зошит"}, {"label": "книга"}]
     findings = check_options_uniqueness("item", dup_opts)
     assert any(f.rule_id == RULE_DISTRACTOR_DISTINCT for f in findings)
+
+
+# Analyses copied from data/vesum.db (scripts.verification.vesum.verify_words).
+_ISSUE_VESUM = {
+    "узбіччя": [
+        {"lemma": "узбіччя", "pos": "noun", "tags": "noun:inanim:n:v_naz"},
+        {"lemma": "узбіччя", "pos": "noun", "tags": "noun:inanim:n:v_rod"},
+        {"lemma": "узбіччя", "pos": "noun", "tags": "noun:inanim:n:v_zna"},
+        {"lemma": "узбіччя", "pos": "noun", "tags": "noun:inanim:n:v_kly"},
+        {"lemma": "узбіччя", "pos": "noun", "tags": "noun:inanim:p:v_naz"},
+        {"lemma": "узбіччя", "pos": "noun", "tags": "noun:inanim:p:v_zna"},
+        {"lemma": "узбіччя", "pos": "noun", "tags": "noun:inanim:p:v_kly"},
+    ],
+    "відновлення": [
+        {"lemma": "відновлення", "pos": "noun", "tags": "noun:inanim:n:v_naz"},
+        {"lemma": "відновлення", "pos": "noun", "tags": "noun:inanim:n:v_rod"},
+        {"lemma": "відновлення", "pos": "noun", "tags": "noun:inanim:n:v_zna"},
+        {"lemma": "відновлення", "pos": "noun", "tags": "noun:inanim:n:v_kly"},
+        {"lemma": "відновлення", "pos": "noun", "tags": "noun:inanim:p:v_naz"},
+        {"lemma": "відновлення", "pos": "noun", "tags": "noun:inanim:p:v_zna"},
+        {"lemma": "відновлення", "pos": "noun", "tags": "noun:inanim:p:v_kly"},
+    ],
+    "укриття": [
+        {"lemma": "укриття", "pos": "noun", "tags": "noun:inanim:n:v_naz"},
+        {"lemma": "укриття", "pos": "noun", "tags": "noun:inanim:n:v_rod"},
+        {"lemma": "укриття", "pos": "noun", "tags": "noun:inanim:n:v_zna"},
+        {"lemma": "укриття", "pos": "noun", "tags": "noun:inanim:n:v_kly"},
+        {"lemma": "укриття", "pos": "noun", "tags": "noun:inanim:p:v_naz"},
+        {"lemma": "укриття", "pos": "noun", "tags": "noun:inanim:p:v_zna"},
+        {"lemma": "укриття", "pos": "noun", "tags": "noun:inanim:p:v_kly"},
+    ],
+    "автомашина": [{"lemma": "автомашина", "pos": "noun", "tags": "noun:inanim:f:v_naz"}],
+    "до": [
+        {"lemma": "до", "pos": "noun", "tags": "noun:inanim:n:v_naz:nv"},
+        {"lemma": "до", "pos": "prep", "tags": "prep"},
+    ],
+    "для": [{"lemma": "для", "pos": "prep", "tags": "prep"}],
+    "ним": [
+        {"lemma": "він", "pos": "noun", "tags": "noun:unanim:m:v_oru:pron:pers:3"},
+        {"lemma": "воно", "pos": "noun", "tags": "noun:unanim:n:v_oru:pron:pers:3"},
+    ],
+    "є": [{"lemma": "бути", "pos": "verb", "tags": "verb:imperf:pres:s:3"}],
+    "медіаграмотність": [
+        {"lemma": "медіаграмотність", "pos": "noun", "tags": "noun:inanim:f:v_naz:up19"},
+        {"lemma": "медіаграмотність", "pos": "noun", "tags": "noun:inanim:f:v_zna:up19"},
+    ],
+    "геймер": [{"lemma": "геймер", "pos": "noun", "tags": "noun:anim:m:v_naz"}],
+    "відповісти": [{"lemma": "відповісти", "pos": "verb", "tags": "verb:perf:inf"}],
+    "подобається": [{"lemma": "подобатися", "pos": "verb", "tags": "verb:rev:imperf:pres:s:3"}],
+    "дієслова": [{"lemma": "дієслово", "pos": "noun", "tags": "noun:inanim:p:v_naz"}],
+    "зобразити": [{"lemma": "зобразити", "pos": "verb", "tags": "verb:perf:inf"}],
+    "звести": [{"lemma": "звести", "pos": "verb", "tags": "verb:perf:inf"}],
+    "вразити": [{"lemma": "вразити", "pos": "verb", "tags": "verb:perf:inf:xp1"}],
+    "налітає": [{"lemma": "налітати", "pos": "verb", "tags": "verb:imperf:pres:s:3"}],
+    "звірятко": [{"lemma": "звірятко", "pos": "noun", "tags": "noun:anim:n:v_naz"}],
+    "прилягло": [{"lemma": "прилягти", "pos": "verb", "tags": "verb:perf:past:n"}],
+}
+
+# The live #8726 card (practice-cloze.A2.json, deck atlas-practice-v1-c0c3f3242b5134b6).
+_PUBLISHED_UZBICHCHYA = {
+    "clozeId": "узбіччя:inventory:4638",
+    "lemmaId": "узбіччя",
+    "sentence": "Налітає автомашина, звірятко прилягло до ___.",
+    "blankCase": "nominative",
+    "form": "узбіччя",
+    "caseRule": {
+        "case": "nominative",
+        "caseLabel": "називний",
+        "feedback": "словникова форма: узбіччя",
+        "ruleId": "nominative_identification",
+        "trigger": "dictionary form",
+        "triggerLabel": "словникова форма",
+    },
+    "provenance": {
+        "status": "sentence_inventory",
+        "path": "site/src/data/lexicon-sentence-inventory.json",
+        "locator": "7-klas-ukrlit-zabolotnyi-2024_s0318",
+    },
+}
+
+
+def test_identity_blank_case_withholds_case_for_same_form_after_preposition() -> None:
+    verifier = JsonVesumVerifier(_ISSUE_VESUM)
+    # Issue examples: nominative-identical surfaces in genitive slots.
+    assert identity_blank_case(_PUBLISHED_UZBICHCHYA["sentence"], "узбіччя", "узбіччя", verifier) is None
+    assert (
+        identity_blank_case(
+            "Для ___ можна також використати відповідну команду з контекстного меню об’єктів.",
+            "відновлення",
+            "відновлення",
+            verifier,
+        )
+        is None
+    )
+    assert identity_blank_case("Перед тим як іти до ___, по змозі перекриваємо вдома газ.", "укриття", "укриття", verifier) is None
+    # A nominative-only surface still proves the subject slot.
+    assert (
+        identity_blank_case("Налітає ___, звірятко прилягло до узбіччя.", "автомашина", "автомашина", verifier)
+        == "nominative"
+    )
+
+
+def test_case_label_gate_rejects_published_nominative_label_after_do() -> None:
+    verifier = JsonVesumVerifier(_ISSUE_VESUM)
+    findings = check_cloze_item(_PUBLISHED_UZBICHCHYA, verifier, lemma_plain="узбіччя", check_agreement=False)
+    assert [finding.rule_id for finding in findings] == [RULE_CASE_LABEL]
+
+    repaired = {
+        key: value for key, value in _PUBLISHED_UZBICHCHYA.items() if key != "blankCase"
+    } | {"caseRule": {"ruleId": "lexical_insertion", "trigger": "lexical insertion"}}
+    assert check_cloze_item(repaired, verifier, lemma_plain="узбіччя", check_agreement=False) == []
+
+    mislabelled_insertion = {**repaired, "blankCase": "genitive"}
+    assert any(
+        finding.rule_id == RULE_IDENTITY_LABEL
+        for finding in check_identity_rule_consistency(mislabelled_insertion, item_id="x", lemma_plain="узбіччя")
+    )
+
+
+def test_inventory_prompt_defect_rejects_issue_8724_examples() -> None:
+    verifier = JsonVesumVerifier(_ISSUE_VESUM)
+    # C1 геймер:inventory:808 — an ironic quotation presented as a definition.
+    assert (
+        inventory_prompt_defect("___ — важко хвора людина, вилікувати яку майже неможливо.", "Геймер", "геймер", verifier)
+        == "definition_prompt"
+    )
+    # A2 відповісти:inventory:718 — social-media UI chrome.
+    assert inventory_prompt_defect("Подобається ___ 2 д.", "Відповісти", "відповісти", verifier) == (
+        "capitalized_mid_sentence"
+    )
+    # C1 медіаграмотність:inventory:2229 — no content word decides the blank.
+    assert inventory_prompt_defect("Ним є ___.", "медіаграмотність", "медіаграмотність", verifier) == (
+        "context_free_stub"
+    )
+    # B2 вразити:inventory:608 — a list where many verbs fit.
+    assert inventory_prompt_defect("Дієслова: зобразити, звести, ___.", "вразити", "вразити", verifier) == (
+        "list_fragment"
+    )
+    # Mentions and drill notation.
+    assert inventory_prompt_defect("Яке значення має слово «___»?", "узбіччя", "узбіччя", verifier) == (
+        "metalinguistic_mention"
+    )
+    assert inventory_prompt_defect("___ — р..місник, який виробляє ложки.", "ложкар", "ложкар", verifier) == (
+        "drill_notation"
+    )
+    # A complete sentence in use stays.
+    assert inventory_prompt_defect(_PUBLISHED_UZBICHCHYA["sentence"], "узбіччя", "узбіччя", verifier) is None
+
+
+def test_prompt_context_gate_applies_only_to_inventory_sentences() -> None:
+    verifier = JsonVesumVerifier(_ISSUE_VESUM)
+    stub = {
+        "clozeId": "медіаграмотність:inventory:2229",
+        "lemmaId": "медіаграмотність",
+        "sentence": "Ним є ___.",
+        "form": "медіаграмотність",
+        "caseRule": {"ruleId": "lexical_insertion", "trigger": "lexical insertion"},
+        "provenance": {"status": "sentence_inventory", "path": "inventory.json", "locator": "x"},
+    }
+    findings = check_cloze_item(stub, verifier, lemma_plain="медіаграмотність", check_agreement=False)
+    assert [(finding.rule_id, finding.message) for finding in findings] == [(RULE_PROMPT_CONTEXT, "context_free_stub")]
+    reviewed = {**stub, "provenance": {"status": "reviewed", "path": "curated.json"}}
+    assert check_cloze_item(reviewed, verifier, lemma_plain="медіаграмотність", check_agreement=False) == []
