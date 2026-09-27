@@ -12,12 +12,14 @@ import hashlib
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import tarfile
 import tempfile
 import time
+import uuid
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -236,7 +238,7 @@ def manifest_build(repo: Path, group: str, pre: str) -> int:
         if row["class"] != "A" or row["group"] != group:
             continue
         rel = row["path"]
-        disk = repo / rel
+        disk = _safe_destination(repo, rel, "data")
         if not disk.is_file() or disk.is_symlink():
             raise ValueError(f"missing regular A file {rel}")
         blob = _git(repo, "rev-parse", f"{pre}:{rel}").decode().strip()
@@ -314,7 +316,7 @@ def _snapshot_locked(repo: Path, phase: str, *, manifests_commit: str | None = N
     store = paths.artifact_store_root(repo)
     for group, entry in entries:
         rel = _entry_rel(entry)
-        source = repo / entry["path"]
+        source = _safe_destination(repo, entry["path"], "data")
         paths.verify_file(source, entry, group=group, rel=rel)
         blob = entry.get("git_blob")
         if blob and (not _blob_present(repo, blob) or _sha_blob(repo, blob) != entry.get("pre_untrack_sha256")):
@@ -389,7 +391,7 @@ def _hydrate_locked(repo: Path, entries: list[tuple[str, dict]], *, force_preser
 
 def _hydrate_one(repo: Path, group: str, entry: dict, store: Path, *, force_preserve: bool) -> None:
     rel = _entry_rel(entry)
-    target = repo / entry["path"]
+    target = _safe_destination(repo, entry["path"], "data")
     sha = entry["sha256"]
     obj = store / sha
     valid_obj = (
@@ -443,7 +445,7 @@ def verify(repo: Path, entries: list[tuple[str, dict]], *, groups: set[str] | No
     failures = []
     for group, entry in entries:
         try:
-            paths.verify_file(repo / entry["path"], entry, group=group, rel=_entry_rel(entry))
+            paths.verify_file(_safe_destination(repo, entry["path"], "data"), entry, group=group, rel=_entry_rel(entry))
             obj = store / entry["sha256"]
             if not obj.is_file() or obj.stat().st_size != entry["size"] or paths.hash_file(obj) != entry["sha256"]:
                 raise ValueError(f"missing or corrupt store object: {entry['sha256']}")
@@ -461,7 +463,7 @@ def verify(repo: Path, entries: list[tuple[str, dict]], *, groups: set[str] | No
                 paths.artifact_set(group, repo=repo)
                 active = {entry["path"] for entry in manifest["entries"]}
                 for item in manifest.get("retired", []):
-                    if item["path"] not in active and (repo / item["path"]).exists():
+                    if item["path"] not in active and _safe_destination(repo, item["path"], "data").exists():
                         raise ValueError(f"retired path remains: {item['path']}")
             except (OSError, ValueError) as exc:
                 failures.append(f"{group} set: {exc}")
@@ -591,7 +593,7 @@ def _recover_journal(repo: Path, store: Path, journal: Path) -> int:
     new_digest = record.get("new_manifest_digest")
     if current_digest not in {old_digest, new_digest} or not isinstance(new_digest, str):
         raise ValueError(f"publish recovery REFUSED: manifest changed after journal {journal}")
-    target = repo / "data" / rel
+    target = _safe_destination(repo, f"data/{rel}", "data")
     target_sha = paths.hash_file(target) if target.is_file() and not target.is_symlink() else None
     if current_digest == new_digest and target_sha == record.get("new_sha256"):
         journal.unlink()
@@ -637,14 +639,7 @@ class CompanionChange:
 
 
 def _safe_destination(repo: Path, relative: str, root: str) -> Path:
-    path = paths.checked_rel(relative)
-    if path.parts[0] != root:
-        raise ValueError(f"destination must be under {root}/: {relative}")
-    target = repo / path
-    root_path = (repo / root).resolve()
-    if target.is_symlink() or not target.parent.resolve().is_relative_to(root_path):
-        raise ValueError(f"symlink escape or symlink target: {relative}")
-    return target
+    return paths.checked_destination(repo, relative, root)
 
 
 def _source_info(source: Path, destinations: set[Path], repo: Path) -> tuple[str, int, str]:
@@ -692,15 +687,15 @@ def _git_mode(mode: str) -> str:
     return "100755" if int(mode, 8) & 0o111 else "100644"
 
 
-def _make_temp(target: Path, source: Path, sha: str, mode: str) -> Path:
+def _make_temp(target: Path, source: Path, sha: str, mode: str, temp: Path, mtime_ns: int) -> Path:
     _mkdir_durable(target.parent)
-    with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as stream:
-        temp = Path(stream.name)
+    with os.fdopen(os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600), "wb") as stream:
         try:
             with source.open("rb") as reader:
                 shutil.copyfileobj(reader, stream)
             os.fchmod(stream.fileno(), int(mode, 8) & 0o777)
             stream.flush()
+            os.utime(stream.fileno(), ns=(mtime_ns, mtime_ns))
             os.fsync(stream.fileno())
         except BaseException:
             temp.unlink(missing_ok=True)
@@ -709,6 +704,37 @@ def _make_temp(target: Path, source: Path, sha: str, mode: str) -> Path:
         temp.unlink(missing_ok=True)
         raise ValueError(f"staging file changed during publish: {source}")
     return temp
+
+
+_SET_TEMP_NAME = re.compile(r"\.lu-artifact-[0-9a-f]{32}-[0-9]+\.tmp\Z")
+
+
+def _set_temp_paths(repo: Path, record: dict) -> list[Path]:
+    """Validate journal-owned temp names before removing any of them."""
+    rows = record["rows"] + record["companions"]
+    temps = []
+    for row in rows:
+        name = row.get("temp")
+        if name is None:
+            continue  # Journals written before named temps remain recoverable.
+        if not isinstance(name, str) or not _SET_TEMP_NAME.fullmatch(name) or row.get("new_sha256") is None:
+            raise ValueError(f"invalid publish recovery temp: {row['path']}")
+        target = _safe_destination(repo, row["path"], "data" if row["kind"] == "artifact" else "registry")
+        temp = target.with_name(name)
+        if temp.is_symlink() or (temp.exists() and not temp.is_file()):
+            raise ValueError(f"publish recovery REFUSED non-regular temp: {temp}")
+        temps.append(temp)
+    if len(set(temps)) != len(temps):
+        raise ValueError("duplicate publish recovery temps")
+    return temps
+
+
+def _cleanup_set_temps(repo: Path, record: dict) -> None:
+    for temp in _set_temp_paths(repo, record):
+        if not temp.exists():
+            continue
+        temp.unlink(missing_ok=True)
+        _fsync_dir(temp.parent)
 
 
 def _install(temp: Path | None, target: Path) -> None:
@@ -740,7 +766,7 @@ def _finish_journal(journal: Path, record: dict) -> None:
 def _verify_set_state(repo: Path, group: str, manifest: dict) -> None:
     active = {entry["path"] for entry in manifest["entries"]}
     for entry in manifest["entries"]:
-        target = repo / entry["path"]
+        target = _safe_destination(repo, entry["path"], "data")
         paths.verify_file(target, entry, group=group, rel=entry["path"][5:])
         if entry.get("mode") and _git_mode(_actual_mode(target)) != entry["mode"]:
             raise ValueError(f"set member mode differs: {entry['path']}")
@@ -769,6 +795,7 @@ def _recover_set_journal(repo: Path, store: Path, journal: Path, record: dict) -
     rows = record["rows"] + record["companions"]
     if len({row["path"] for row in rows}) != len(rows):
         raise ValueError(f"duplicate publish recovery rows: {journal}")
+    _set_temp_paths(repo, record)
     old_entries = {entry["path"]: entry for entry in old_manifest["entries"]}
     new_entries = {entry["path"]: entry for entry in new_manifest["entries"]}
     for row in record["rows"]:
@@ -812,6 +839,7 @@ def _recover_set_journal(repo: Path, store: Path, journal: Path, record: dict) -
         _json_write(manifest_path, old_manifest)
         if record.get("strict_set", True):
             _verify_set_state(repo, group, old_manifest)
+    _cleanup_set_temps(repo, record)
     _finish_journal(journal, record)
     return 1
 
@@ -855,11 +883,11 @@ def _publish_set_locked(
         raise ValueError("duplicate companion rows")
     destinations: set[Path] = set()
     for change in artifacts:
-        destinations.add(_safe_destination(repo, f"data/{change.rel}", "data").resolve())
+        destinations.add(_safe_destination(repo, f"data/{change.rel}", "data").absolute())
     for change in companions:
         if not change.path.startswith("registry/"):
             raise ValueError("companion must be under registry/")
-        destinations.add(_safe_destination(repo, change.path, "registry").resolve())
+        destinations.add(_safe_destination(repo, change.path, "registry").absolute())
     if len(destinations) != len(artifacts) + len(companions):
         raise ValueError("duplicate destinations")
     other_owners = {item["path"]: owner for owner, item in _all_manifests(repo) if owner != group}
@@ -973,16 +1001,16 @@ def _publish_set_locked(
             changed = {change.rel for change in artifacts}
             for rel, entry in before.items():
                 if rel not in changed:
-                    _store_copy(repo / entry["path"], entry["sha256"], store)
+                    _store_copy(_safe_destination(repo, entry["path"], "data"), entry["sha256"], store)
         for row, change in zip(row_records, artifacts, strict=True):
-            target = repo / row["path"]
+            target = _safe_destination(repo, row["path"], "data")
             if row["old_sha256"] is not None:
                 _store_copy(target, row["old_sha256"], store)
             if row["new_sha256"] is not None:
                 assert change.source is not None
                 _store_copy(change.source, row["new_sha256"], store)
         for row, change in zip(companion_records, companions, strict=True):
-            target = repo / row["path"]
+            target = _safe_destination(repo, row["path"], "registry")
             if row["old_sha256"] is not None:
                 _store_copy(target, row["old_sha256"], store)
             _store_copy(change.source, row["new_sha256"], store)
@@ -991,15 +1019,23 @@ def _publish_set_locked(
                 _checked_store_object(store, row["old_sha256"], row["old_size"])
             if row["new_sha256"] is not None:
                 _checked_store_object(store, row["new_sha256"], row["new_size"])
-        for row in row_records + companion_records:
-            target = repo / row["path"]
+        transaction = uuid.uuid4().hex
+        for index, row in enumerate(row_records + companion_records):
             if row["new_sha256"] is None:
-                prepared.append((None, target))
+                row["temp"] = None
                 continue
-            temp = _make_temp(target, store / row["new_sha256"], row["new_sha256"], row["new_mode"])
-            prepared.append((temp, target))
+            row["temp"] = f".lu-artifact-{transaction}-{index}.tmp"
+            target = _safe_destination(repo, row["path"], "data" if row["kind"] == "artifact" else "registry")
+            planned_temp = target.with_name(row["temp"])
+            try:
+                planned_temp.lstat()
+            except FileNotFoundError:
+                pass
+            else:
+                raise ValueError(f"engine temp name collision: {planned_temp}")
+            row["temp_mtime_ns"] = time.time_ns()
             if row["kind"] == "artifact":
-                new_entries[row["path"][5:]]["mtime_ns"] = temp.stat().st_mtime_ns
+                new_entries[row["path"][5:]]["mtime_ns"] = row["temp_mtime_ns"]
         previous_companions = manifest.get("set_descriptor", {}).get("companions", {})
         for relative, sha in previous_companions.items():
             if relative not in {row["path"] for row in companion_records}:
@@ -1043,10 +1079,25 @@ def _publish_set_locked(
             "new_manifest_digest": _manifest_digest(new_manifest),
         }
         _json_write(journal, record)
+        for row in row_records + companion_records:
+            target = _safe_destination(repo, row["path"], "data" if row["kind"] == "artifact" else "registry")
+            if row["new_sha256"] is None:
+                prepared.append((None, target))
+                continue
+            temp = _make_temp(
+                target,
+                store / row["new_sha256"],
+                row["new_sha256"],
+                row["new_mode"],
+                target.with_name(row["temp"]),
+                row["temp_mtime_ns"],
+            )
+            prepared.append((temp, target))
         for temp, target in prepared:
             _install(temp, target)
         for row in row_records + companion_records:
-            if _actual_sha(repo / row["path"]) != row["new_sha256"]:
+            target = _safe_destination(repo, row["path"], "data" if row["kind"] == "artifact" else "registry")
+            if _actual_sha(target) != row["new_sha256"]:
                 raise ValueError(f"installed set differs: {row['path']}")
         if strict_set:
             _verify_set_state(repo, group, new_manifest)

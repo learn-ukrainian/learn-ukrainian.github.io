@@ -91,6 +91,10 @@ NEW = (b"A2", None, b"N1", b"K0-new", {"data/raw/a.txt", "data/raw/new-one.txt"}
     "point",
     [
         *(f"store:{index}" for index in range(1, 7)),
+        "prejournal",
+        "journal",
+        "temp_open",
+        *(f"temp:{index}" for index in range(1, 4)),
         *(f"install:{index}" for index in range(1, 5)),
         "companion",
         "descriptor",
@@ -121,6 +125,21 @@ def hooked_copy(*args):
     copies += 1
     if point == f'store:{copies}': kill()
 artifacts._store_copy = hooked_copy
+open_file = artifacts.os.open
+def hooked_open(path, flags, *args, **kwargs):
+    fd = open_file(path, flags, *args, **kwargs)
+    if point == 'temp_open' and '.lu-artifact-' in str(path): kill()
+    return fd
+artifacts.os.open = hooked_open
+make_temp = artifacts._make_temp
+temps = 0
+def hooked_temp(*args):
+    global temps
+    temp = make_temp(*args)
+    temps += 1
+    if point == f'temp:{temps}': kill()
+    return temp
+artifacts._make_temp = hooked_temp
 install = artifacts._install
 installs = 0
 def hooked_install(temp, target):
@@ -132,7 +151,9 @@ def hooked_install(temp, target):
 artifacts._install = hooked_install
 write = artifacts._json_write
 def hooked_write(path, value):
+    if point == 'prejournal' and path == artifacts._journal_path(repo, 'raw_source', '@set'): kill()
     write(path, value)
+    if point == 'journal' and path == artifacts._journal_path(repo, 'raw_source', '@set'): kill()
     if point == 'descriptor' and path == artifacts.paths.manifest_path('raw_source', repo): kill()
 artifacts._json_write = hooked_write
 unlink = Path.unlink
@@ -143,6 +164,8 @@ Path.unlink = hooked_unlink
 artifacts.publish_set(repo, 'raw_source', changes, 'fixture', companions=companions,
                       expected_members={'raw/a.txt', 'raw/b.txt'})
 """
+    unrelated = repo / "data/raw" / (".lu-artifact-" + "0" * 32 + "-999.tmp")
+    unrelated.write_bytes(b"unrelated")
     result = subprocess.run(
         [sys.executable, "-c", script, str(repo), str(tmp_path / "staged"), point],
         cwd=Path(__file__).resolve().parents[2],
@@ -152,8 +175,12 @@ artifacts.publish_set(repo, 'raw_source', changes, 'fixture', companions=compani
     assert result.returncode == -signal.SIGKILL
     first = artifacts.recover_incomplete(repo)
     assert artifacts.recover_incomplete(repo) == 0
+    assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
     assert _state(repo) == (NEW if point in {"descriptor", "cleanup"} else OLD)
-    assert first == (0 if point.startswith("store:") else 1)
+    assert first == (0 if point.startswith("store:") or point == "prejournal" else 1)
+    assert unrelated.read_bytes() == b"unrelated"
+    assert list((repo / "data").rglob(".lu-artifact-*.tmp")) == [unrelated]
+    assert list((repo / "registry").rglob(".lu-artifact-*.tmp")) == []
 
 
 def test_set_read_pins_a_and_k_and_creates_no_store(tmp_path: Path) -> None:
@@ -331,6 +358,136 @@ def test_invalid_plan_refused_before_live_change(tmp_path: Path, invalid: str) -
     assert _state(repo) == before
     assert paths.manifest_path("raw_source", repo).read_bytes() == manifest_before
     assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
+
+
+@pytest.mark.parametrize("shape", ["root_parent", "inner_parent", "grandparent"])
+def test_in_root_symlinked_parent_refused_before_live_change(tmp_path: Path, shape: str) -> None:
+    repo = _repo(tmp_path)
+    changes, companions = _plan(repo, tmp_path)
+    if shape == "root_parent":
+        (repo / "data/raw").rename(repo / "data/raw.real")
+        (repo / "data/raw").symlink_to("raw.real", target_is_directory=True)
+        destination = repo / "data/raw.real"
+    else:
+        destination = repo / "data/other"
+        destination.mkdir()
+        (destination / "sentinel").write_bytes(b"other group")
+        linked = repo / "data/raw/nest"
+        linked.symlink_to("../other", target_is_directory=True)
+        if shape == "inner_parent":
+            new_rel = "raw/nest/new-one.txt"
+        else:
+            (destination / "deep").mkdir()
+            (destination / "deep/sentinel").write_bytes(b"grandparent")
+            new_rel = "raw/nest/deep/new-one.txt"
+        manifest_path = paths.manifest_path("raw_source", repo)
+        manifest = paths.load_manifest("raw_source", repo)
+        manifest["registration_patterns"] = [f"data/{new_rel.rpartition('/')[0]}/new-*.txt"]
+        artifacts._json_write(manifest_path, manifest)
+        changes[1] = artifacts.ArtifactChange("add", new_rel, changes[1].source, None)
+    before = {path.relative_to(destination): path.read_bytes() for path in destination.rglob("*") if path.is_file()}
+    old_state = _state(repo)
+    manifest_before = paths.manifest_path("raw_source", repo).read_bytes()
+    with pytest.raises(ValueError, match="symlink component in artifact path"):
+        artifacts.publish_set(
+            repo,
+            "raw_source",
+            changes,
+            "fixture",
+            companions=companions,
+            expected_members={"raw/a.txt", "raw/b.txt"},
+        )
+    assert _state(repo) == old_state
+    assert paths.manifest_path("raw_source", repo).read_bytes() == manifest_before
+    assert {
+        path.relative_to(destination): path.read_bytes() for path in destination.rglob("*") if path.is_file()
+    } == before
+    assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
+
+
+def test_read_hydrate_and_publish_refuse_in_root_symlinked_parent(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    source = tmp_path / "new"
+    source.write_bytes(b"A2")
+    (repo / "data/raw").rename(repo / "data/raw.real")
+    (repo / "data/raw").symlink_to("raw.real", target_is_directory=True)
+    entry = paths.find_entry("raw_source", "raw/a.txt", repo)
+    before = (repo / "data/raw.real/a.txt").read_bytes()
+    with pytest.raises(ValueError, match="symlink component"):
+        paths.artifact_set("raw_source", repo=repo)
+    with pytest.raises(ValueError, match="symlink component"):
+        artifacts.publish(repo, "raw_source", "raw/a.txt", source, "fixture")
+    with pytest.raises(ValueError, match="symlink component"):
+        artifacts.hydrate(repo, [("raw_source", entry)])
+    assert (repo / "data/raw.real/a.txt").read_bytes() == before
+    assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
+
+
+def test_engine_temp_collision_preserves_unrelated_file_before_journal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    changes, companions = _plan(repo, tmp_path)
+    collision = repo / "data/raw" / (".lu-artifact-" + "0" * 32 + "-0.tmp")
+    collision.write_bytes(b"unrelated")
+    monkeypatch.setattr(artifacts.uuid, "uuid4", lambda: artifacts.uuid.UUID(int=0))
+    with pytest.raises(ValueError, match="engine temp name collision"):
+        artifacts.publish_set(
+            repo,
+            "raw_source",
+            changes,
+            "fixture",
+            companions=companions,
+            expected_members={"raw/a.txt", "raw/b.txt"},
+        )
+    assert collision.read_bytes() == b"unrelated"
+    assert _state(repo) == OLD
+    assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
+
+
+def test_retirement_and_recovery_refuse_in_root_symlinked_parent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo(tmp_path)
+    old_b = paths.find_entry("raw_source", "raw/b.txt", repo)["sha256"]
+    artifacts.publish_set(
+        repo,
+        "raw_source",
+        [artifacts.ArtifactChange("remove", "raw/b.txt", None, old_b)],
+        "fixture",
+        expected_members={"raw/a.txt", "raw/b.txt"},
+    )
+    (repo / "data/raw/b.txt").write_bytes(b"B1")
+    (repo / "data/raw").rename(repo / "data/raw.real")
+    (repo / "data/raw").symlink_to("raw.real", target_is_directory=True)
+    with pytest.raises(ValueError, match="symlink component"):
+        artifacts.hydrate(repo, [], groups={"raw_source"})
+    assert (repo / "data/raw.real/b.txt").read_bytes() == b"B1"
+    (repo / "data/raw").unlink()
+    (repo / "data/raw.real").rename(repo / "data/raw")
+    (repo / "data/raw/b.txt").unlink()
+
+    source = tmp_path / "new-a"
+    source.write_bytes(b"A2")
+    change = artifacts.ArtifactChange(
+        "replace", "raw/a.txt", source, paths.find_entry("raw_source", "raw/a.txt", repo)["sha256"]
+    )
+    # Keep a committed journal to exercise recovery's path guard directly.
+    with monkeypatch.context() as patch:
+        patch.setattr(artifacts, "_finish_journal", lambda _journal, _record: None)
+        artifacts.publish_set(repo, "raw_source", [change], "fixture", expected_members={"raw/a.txt"})
+    journal = artifacts._journal_path(repo, "raw_source", "@set")
+    assert journal.exists()
+    (repo / "data/raw").rename(repo / "data/raw.real")
+    (repo / "data/raw").symlink_to("raw.real", target_is_directory=True)
+    before = (repo / "data/raw.real/a.txt").read_bytes()
+    with pytest.raises(artifacts.RecoveryError, match="symlink component"):
+        artifacts.recover_incomplete(repo)
+    assert journal.exists()
+    assert (repo / "data/raw.real/a.txt").read_bytes() == before
+    (repo / "data/raw").unlink()
+    (repo / "data/raw.real").rename(repo / "data/raw")
+    assert artifacts.recover_incomplete(repo) == 1
 
 
 def test_add_replace_remove_snapshot_clone_hydrate_and_retirement(

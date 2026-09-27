@@ -45,6 +45,23 @@ def checked_rel(rel: str) -> Path:
     return path
 
 
+def checked_destination(repo: Path, relative: str, root: str) -> Path:
+    """Reject symlinks in every existing component beneath the checkout root."""
+    path = checked_rel(relative)
+    if path.parts[0] != root:
+        raise ValueError(f"destination must be under {root}/: {relative}")
+    current = repo
+    for part in path.parts:
+        current = current / part
+        try:
+            mode = current.lstat().st_mode
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(mode):
+            raise ValueError(f"symlink component in artifact path: {relative} ({current})")
+    return current
+
+
 def artifact_store_root(repo: Path = ROOT) -> Path:
     """Return the host store, shared by all worktrees of this checkout."""
     return _cached_store_root(repo.resolve(), os.environ.get("LU_ARTIFACT_STORE"))
@@ -67,7 +84,7 @@ def _cached_store_root(repo: Path, override: str | None) -> Path:
 
 
 def manifest_path(group: str, repo: Path = ROOT) -> Path:
-    return repo / "registry" / "artifacts" / f"{checked_group(group)}.manifest.json"
+    return checked_destination(repo, f"registry/artifacts/{checked_group(group)}.manifest.json", "registry")
 
 
 def load_manifest(group: str, repo: Path = ROOT) -> dict:
@@ -143,8 +160,7 @@ class ArtifactSet:
 
 
 def _read_regular(path: Path, base: Path) -> bytes:
-    if path.is_symlink() or not path.parent.resolve().is_relative_to(base.resolve()):
-        raise ValueError(f"symlink escape: {path}")
+    path = checked_destination(base.parent, path.relative_to(base.parent).as_posix(), base.name)
     with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), "rb") as source:
         if not stat.S_ISREG(os.fstat(source.fileno()).st_mode):
             raise ValueError(f"non-regular artifact: {path}")
@@ -240,6 +256,9 @@ def hash_file(path: Path) -> str:
 
 def verify_file(path: Path, entry: dict, *, group: str, rel: str) -> None:
     command = f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+    expected = checked_destination(path.parents[len(checked_rel(rel).parts)], f"data/{rel}", "data")
+    if path != expected:
+        raise ValueError(f"artifact path differs from {expected}: {path}")
     if not path.is_file() or path.is_symlink():
         raise MissingArtifactError(group, rel, command)
     size = path.stat().st_size
@@ -260,7 +279,7 @@ def artifact_path(group: str, rel: str, *, repo: Path = ROOT) -> Path:
     if len(matches) != 1:
         raise MissingArtifactError(group, rel, "hydrate the artifact group", "no unique manifest entry")
     entry = matches[0]
-    path = repo / "data" / checked_rel(rel)
+    path = checked_destination(repo, f"data/{rel}", "data")
     command = f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
     if not path.is_file() or path.is_symlink():
         raise MissingArtifactError(group, rel, command)

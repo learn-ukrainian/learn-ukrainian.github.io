@@ -181,7 +181,9 @@ old `expected_members` (paths relative to `data/`), and `artifacts` rows with
 `expected_sha256` (`null` only for an addition). `companions` rows name a
 `registry/` path, staged `source`, and expected old hash. Removal has no source.
 An addition must match a narrow `registration_patterns` declaration in that
-group's tracked manifest. Unmatched and cross-group paths are refused.
+group's tracked manifest. Unmatched and cross-group paths are refused. Every
+existing component of a published or retired path beneath the checkout root
+must be a real directory or file, never a symlink.
 
 The writer preserves old and new objects in the host store, installs all rows,
 and atomically replaces one group manifest as the commit descriptor. That
@@ -189,7 +191,9 @@ manifest binds exact A membership and K hashes. A reader of the whole set uses
 `paths.artifact_set(group)`, which returns verified bytes and raises if a
 publication is unfinished or a member differs. It does not create a store.
 After a crash, run `artifacts status` to recover the transaction before retrying
-publication. Do not discard a journal whose recovery refuses drift. Explicitly
+publication. The journal names each planned target temp before it is created;
+recovery removes those named temps under the publication lock. Do not discard
+a journal whose recovery refuses drift. Explicitly
 retired paths keep their store objects and are removed during `hydrate` only
 when their bytes match a recorded retired version. Run `snapshot` after a local
 publication to verify the active objects in that host store, then transfer
