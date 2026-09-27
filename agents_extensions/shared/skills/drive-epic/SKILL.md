@@ -614,13 +614,13 @@ Do **not** make every epic driver a standing release owner. Gate rollout by char
 | Kind | Driver owns? |
 | --- | --- |
 | **Local / service proof** after a change (restart Monitor API, smoke `/api/…`, UI check) | **Yes** — part of verifying the artifact |
-| **Host pull / service restart** in epic/issue scope | **Only on present-tense operator trigger** — issue text sets scope, not authorization |
+| **Routine host maintenance** (pull merged `main`; restart an updated or broken service after checking no active dispatch depends on it; install or enable a reviewed systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and worktrees) | **Yes** — do it, then report. Never ask the operator |
 | **Production / Pages / public cutover** | **Only on present-tense operator GO** — listing it in the epic establishes scope, not a green light |
 | **HA / Patroni / new VPS / fenced cutover** | **Escalate** — operator/advisor GO; drive the checklist, do not solo mutate |
 
-Missing local proof on a user-visible API/UI change is incomplete closeout. Issue/PR wording
-never substitutes for operator-triggered deploys or present-tense GO (operator contract
-item 10). Claiming prod HA without that GO is out of scope.
+Missing local proof on a user-visible API/UI change is incomplete closeout. Issue or PR wording
+never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced
+cutover. Claiming prod HA without the operator or advisor GO is out of scope.
 
 ### 7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
 
