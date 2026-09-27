@@ -8670,9 +8670,13 @@ def _dispatch(
     if review_attempt:
         # A prompt whose own attempt block (#8996) names different ids than this dispatch was told to use
         # would let the seat's return validate against the wrong receipt ledger; refuse before any side effect.
-        from scripts.review.prompts.check import parse_attempt_ids
+        from scripts.review.prompts.check import AttemptIdsUnreadableError, parse_attempt_ids
 
-        prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
+        try:
+            prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
+        except AttemptIdsUnreadableError as err:
+            print(f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", file=sys.stderr)
+            return 2
         id_mismatches = [
             f"{name} prompt={found!r} dispatch={expected!r}"
             for name, found, expected in (

@@ -27,7 +27,14 @@ from scripts.build.fresh import manifest, plan_manifest
 from scripts.build.fresh.cli import _load_cited_records
 from scripts.curriculum.evidence import lock
 from scripts.review.prompts import eligibility
-from scripts.review.prompts.check import MODULE_MANIFEST, TEMPLATE_PROSE_SLUGS, check_prompt, parse_attempt_ids
+from scripts.review.prompts.check import (
+    ATTEMPT_ENTRY,
+    MODULE_MANIFEST,
+    TEMPLATE_PROSE_SLUGS,
+    AttemptIdsUnreadableError,
+    check_prompt,
+    parse_attempt_ids,
+)
 from scripts.review.prompts.check import main as check_main
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.prompts.render import (
@@ -1811,21 +1818,35 @@ def test_check_refuses_a_prompt_whose_attempt_ids_differ_from_those_given(tmp_pa
     assert matching.passed, matching.errors
 
 
-def test_a_return_copied_from_the_rendered_template_validates_against_its_ledger(tmp_path, monkeypatch):
-    """Round trip (#8996): the ids render.py bakes into a real lesson review prompt are the ids the receipt
-    ledger is keyed by (``<review_id>/<attempt_id>.jsonl``), so a return copied from the rendered schema
-    template validates with no ``receipt_not_in_ledger`` — the exact failure #8996 reports before this fix."""
+def _copy_rendered_attempt_block(rendered: str, return_path: Path) -> dict:
+    """Overwrite a return's ``attempt`` mapping with the one the rendered prompt prints — what a seat copies."""
+    copied = yaml.safe_load(ATTEMPT_ENTRY.search(rendered).group(0))["attempt"]
+    document = yaml.safe_load(return_path.read_text(encoding="utf-8"))
+    document["attempt"] = copied
+    return_path.write_text(yaml.safe_dump(document, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    return copied
+
+
+@pytest.mark.parametrize("rendered_ids_match_dispatch", [True, False])
+def test_a_return_copied_from_the_rendered_template_validates_against_its_ledger(
+    tmp_path, monkeypatch, rendered_ids_match_dispatch
+):
+    """Round trip (#8996): the dispatch's ids key the receipt ledger (``<review_id>/<attempt_id>.jsonl``); the
+    seat's return carries the ``attempt`` block it copied from the rendered prompt, verbatim. With the ids
+    render.py baked in, that copy validates with no ``receipt_not_in_ledger`` — the exact failure #8996 reports;
+    a prompt rendered with other ids yields a copy the validator rejects by that code."""
     world = World(tmp_path, monkeypatch)
     review_id, attempt_id = "r2b-roundtrip-review", "r2b-roundtrip-attempt-1"
     manifest_path = world.manifest(2)
+    render_ids = (review_id, attempt_id) if rendered_ids_match_dispatch else ("r2b-other-review", "r2b-other-1")
 
     rendered, _prompt_sha, _files = render_prompt(
-        manifest_path, repo_root=world.root, review_id=review_id, attempt_id=attempt_id
+        manifest_path, repo_root=world.root, review_id=render_ids[0], attempt_id=render_ids[1]
     )
-    assert parse_attempt_ids(rendered) == (review_id, attempt_id)
-
     made = world.make_return(2, [record_finding(evidence="auto")], ids=(review_id, attempt_id))
     assert made["ledger"] == world.ledgers / review_id / f"{attempt_id}.jsonl"
+    copied = _copy_rendered_attempt_block(rendered, made["review"])
+    assert (copied["review_id"], copied["attempt_id"]) == render_ids
 
     result = validate_review(
         made["review"],
@@ -1835,5 +1856,38 @@ def test_a_return_copied_from_the_rendered_template_validates_against_its_ledger
         repo_root=world.root,
     )
     rejection_codes = {item.code for item in result.rejections}
-    assert result.ok, result.rejections
-    assert codes.RECEIPT_NOT_IN_LEDGER not in rejection_codes
+    if rendered_ids_match_dispatch:
+        assert result.ok, result.rejections
+        assert codes.RECEIPT_NOT_IN_LEDGER not in rejection_codes
+    else:
+        assert not result.ok
+        assert codes.RECEIPT_NOT_IN_LEDGER in rejection_codes, result.rejections
+
+
+@pytest.mark.parametrize(
+    "block, expected",
+    [
+        ('attempt:\n  review_id: "rev-a"\n  attempt_id: "att-1"\nnext: 1\n', ("rev-a", "att-1")),
+        ("attempt:\n  review_id: 'rev-a'\n  attempt_id: 'att-1'\n", ("rev-a", "att-1")),
+        ("attempt:\n  review_id: rev-other\n  attempt_id: att-other\n", ("rev-other", "att-other")),
+        ("attempt: {review_id: rev-f, attempt_id: att-f}\n", ("rev-f", "att-f")),
+        ("no attempt entry here\n", (None, None)),
+    ],
+)
+def test_parse_attempt_ids_reads_every_yaml_spelling(block, expected):
+    assert parse_attempt_ids("## 4. Return Schema Instructions\n" + block) == expected
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "attempt:\n  review_id: rev-a\n",  # attempt_id missing
+        "attempt: 5\n",  # not a mapping
+        "attempt:\n  review_id: [a]\n  attempt_id: b\n",  # not a scalar
+        'attempt:\n  review_id: ""\n  attempt_id: b\n',  # empty
+        'attempt:\n  review_id: "unterminated\n  attempt_id: b\n',  # not YAML
+    ],
+)
+def test_parse_attempt_ids_refuses_an_entry_whose_ids_cannot_be_read(block):
+    with pytest.raises(AttemptIdsUnreadableError):
+        parse_attempt_ids(block)

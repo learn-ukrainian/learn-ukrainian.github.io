@@ -133,26 +133,45 @@ MODULE_MANIFEST = "curriculum/l2-uk-en/curriculum.yaml"
 FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,})[^`]*$")
 JINJA_TAG = re.compile(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", re.DOTALL)
 
-#: A plan/lesson/re-review return template's ``attempt:`` block (#8996): its indented body, read only up to
-#: the next unindented line, so a pinned datum that later happens to contain its own "attempt:" prose (a
-#: quoted lesson, a previous review's findings) can never be mistaken for it — the schema template's own
-#: block always renders first, in "## 4. Return Schema Instructions", well before any fenced pinned data.
-ATTEMPT_BLOCK = re.compile(r"(?m)^attempt:\n((?:^[ \t]+\S.*\n?)+)")
-ATTEMPT_FIELD = re.compile(r'(?m)^[ \t]+(review_id|attempt_id):\s*"([^"]*)"\s*$')
+#: A plan/lesson/re-review return template's ``attempt`` entry (#8996): the top-level ``attempt`` key line
+#: and its indented continuation, read only up to the next unindented line, so a pinned datum that later
+#: happens to contain its own "attempt:" prose (a quoted lesson, a previous review's findings) can never be
+#: mistaken for it — the schema template's own block always renders first, in "## 4. Return Schema
+#: Instructions", well before any fenced pinned data. Any YAML spelling of the entry is accepted (block or
+#: flow style, double-, single- or un-quoted scalars): the entry is parsed with a YAML parser, not a regex.
+ATTEMPT_ENTRY = re.compile(r"""(?m)^["']?attempt["']?[ \t]*:[^\n]*\n?(?:^[ \t]+\S[^\n]*\n?)*""")
+
+
+class AttemptIdsUnreadableError(ValueError):
+    """A prompt has an ``attempt`` entry whose ``review_id``/``attempt_id`` cannot be read (#8996)."""
 
 
 def parse_attempt_ids(prompt_text: str) -> tuple[str | None, str | None]:
-    """The ``review_id``/``attempt_id`` a rendered prompt's own ``attempt:`` block names, or ``(None, None)``.
+    """The ``review_id``/``attempt_id`` a rendered prompt's own ``attempt`` entry names, or ``(None, None)``.
 
     Only a template with the return schema's ``attempt`` block carries these (plan review, lesson review,
-    lesson re-review); a template without one (settle, a custom template) parses to ``(None, None)`` and
-    dispatching it does not require them.
+    lesson re-review); a prompt without an ``attempt`` entry (settle, a custom template) parses to
+    ``(None, None)`` and dispatching it does not require them. A prompt that has the entry but whose ids
+    cannot be read — not YAML, not a mapping, an id missing, empty or not a scalar — raises
+    ``AttemptIdsUnreadableError``: an unreadable id must never be treated as "no id to compare".
     """
-    block = ATTEMPT_BLOCK.search(prompt_text)
-    if block is None:
+    entry = ATTEMPT_ENTRY.search(prompt_text)
+    if entry is None:
         return None, None
-    found = dict(ATTEMPT_FIELD.findall(block.group(1)))
-    return found.get("review_id"), found.get("attempt_id")
+    try:
+        loaded = yaml.safe_load(entry.group(0))
+    except yaml.YAMLError as err:
+        raise AttemptIdsUnreadableError(f"the prompt's attempt entry is not valid YAML: {err}") from err
+    attempt = loaded.get("attempt") if isinstance(loaded, dict) else None
+    if not isinstance(attempt, dict):
+        raise AttemptIdsUnreadableError("the prompt's attempt entry is not a mapping")
+    ids: list[str] = []
+    for key in ("review_id", "attempt_id"):
+        value = attempt.get(key)
+        if value is None or isinstance(value, (dict, list)) or not str(value).strip():
+            raise AttemptIdsUnreadableError(f"the prompt's attempt entry has no readable {key}")
+        ids.append(str(value))
+    return ids[0], ids[1]
 
 
 @dataclass(frozen=True)
@@ -411,7 +430,11 @@ def check_prompt(
 
     # 2b. The prompt's own attempt block (#8996), if it prints one, must agree with the ids this attempt
     # is expected to carry; a mismatch is refused by name rather than surfacing as an opaque render diff.
-    prompt_review_id, prompt_attempt_id = parse_attempt_ids(rendered_prompt)
+    try:
+        prompt_review_id, prompt_attempt_id = parse_attempt_ids(rendered_prompt)
+    except AttemptIdsUnreadableError as err:
+        errors.append(f"attempt_ids_unreadable: {err}")
+        prompt_review_id = prompt_attempt_id = None
     if review_id is not None and prompt_review_id is not None and review_id != prompt_review_id:
         errors.append(
             f"review_id_mismatch: the prompt's attempt.review_id is {prompt_review_id!r}, expected {review_id!r}"
