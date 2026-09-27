@@ -1,0 +1,228 @@
+#!/usr/bin/env python3
+"""Remove old OpenCode sessions using its CLI, only while OpenCode is idle."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+SESSION_QUERY = "SELECT id, parent_id AS parent, time_updated AS updated FROM session ORDER BY time_updated ASC"
+
+
+class RetentionError(RuntimeError):
+    """An unsafe or unsuccessful retention run."""
+
+
+class OpenCodeRunning(RetentionError):
+    """Another OpenCode process is active."""
+
+
+def _run(command: list[str], *, timeout: int = 600) -> str:
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, timeout=timeout, check=False)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RetentionError(f"command failed: {command[:3]}: {exc}") from exc
+    if result.returncode:
+        raise RetentionError(f"command failed ({result.returncode}): {command[:3]}: {result.stderr.strip()}")
+    return result.stdout.strip()
+
+
+def _require_idle() -> None:
+    if shutil.which("pgrep") is None:
+        raise RetentionError("pgrep is required to verify OpenCode is idle")
+    try:
+        result = subprocess.run(["pgrep", "-x", "opencode"], capture_output=True, text=True, timeout=10, check=False)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RetentionError(f"could not check OpenCode processes: {exc}") from exc
+    if result.returncode == 0:
+        raise OpenCodeRunning("OpenCode is running; skipping the whole run")
+    if result.returncode != 1:
+        raise RetentionError(f"pgrep failed ({result.returncode}): {result.stderr.strip()}")
+
+
+def _database_path(opencode: str) -> Path:
+    _require_idle()
+    raw = _run([opencode, "db", "path", "--pure"])
+    if not raw or "\n" in raw:
+        raise RetentionError("OpenCode returned an invalid database path")
+    path = Path(raw).expanduser()
+    if not path.is_absolute() or path.name != "opencode.db":
+        raise RetentionError("OpenCode returned an unexpected database path")
+    return path
+
+
+def _database_bytes(path: Path) -> tuple[int, int]:
+    def size(part: Path) -> int:
+        return part.stat().st_size if part.is_file() else 0
+
+    try:
+        return size(path), size(Path(f"{path}-wal"))
+    except OSError as exc:
+        raise RetentionError(f"could not measure OpenCode database: {exc}") from exc
+
+
+def _old_session_ids(raw: str, cutoff_ms: int) -> tuple[list[str], list[str], set[str]]:
+    # The CLI db query covers every project and child session in the database.
+    if not raw:
+        raise RetentionError("opencode db returned no JSON")
+    try:
+        rows = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise RetentionError(f"invalid JSON from opencode db: {exc}") from exc
+    if not isinstance(rows, list):
+        raise RetentionError("opencode db did not return a JSON array")
+    records: dict[str, tuple[int, str | None]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            raise RetentionError("session list contains a non-object")
+        session_id = row.get("id")
+        updated = row.get("updated")
+        parent = row.get("parent")
+        if (
+            not isinstance(session_id, str)
+            or not session_id.startswith("ses_")
+            or not session_id.isascii()
+            or not session_id.replace("_", "").isalnum()
+        ):
+            raise RetentionError("session list contains an invalid session id")
+        if session_id in records:
+            raise RetentionError("session list contains duplicate session ids")
+        if type(updated) is not int or updated < 0:
+            raise RetentionError(f"session {session_id} has no valid updated timestamp")
+        if parent is not None and (not isinstance(parent, str) or not parent.startswith("ses_")):
+            raise RetentionError(f"session {session_id} has an invalid parent id")
+        records[session_id] = updated, parent
+    selected = {session_id for session_id, (updated, _) in records.items() if updated < cutoff_ms}
+    depth_cache: dict[str, int] = {}
+
+    def depth(session_id: str, visiting: set[str]) -> int:
+        if session_id in depth_cache:
+            return depth_cache[session_id]
+        if session_id in visiting:
+            raise RetentionError("session parent graph contains a cycle")
+        parent = records[session_id][1]
+        result = 0 if parent not in records else 1 + depth(parent, visiting | {session_id})
+        depth_cache[session_id] = result
+        return result
+
+    for session_id in records:
+        depth(session_id, set())
+    blocked: set[str] = set()
+    for session_id in records.keys() - selected:
+        parent = records[session_id][1]
+        while parent in records:
+            if parent in selected:
+                blocked.add(parent)
+            parent = records[parent][1]
+    ordered = sorted(selected, key=lambda session_id: (-depth_cache[session_id], records[session_id][0], session_id))
+    return ordered, sorted(blocked), set(records)
+
+
+def retain(*, days: int, dry_run: bool, opencode: str = "opencode", now_ms: int | None = None) -> int:
+    if days < 1:
+        raise RetentionError("--days must be at least 1")
+    cutoff_ms = (int(time.time() * 1000) if now_ms is None else now_ms) - days * 86_400_000
+    _require_idle()
+    db_path = _database_path(opencode)
+    before = _database_bytes(db_path)
+    _require_idle()
+    # `session list` is scoped to the current project and defaults to 100 roots.
+    # A read-only CLI query is needed for the issue's all-sessions denominator.
+    raw = _run([opencode, "db", SESSION_QUERY, "--format", "json", "--pure"])
+    selected, blocked, all_ids = _old_session_ids(raw, cutoff_ms)
+    print(f"mode={'dry-run' if dry_run else 'apply'} days={days} cutoff_ms={cutoff_ms} selected={len(selected)}")
+    print(f"before_db_bytes={before[0]} before_wal_bytes={before[1]} before_total_bytes={sum(before)}")
+    for session_id in blocked:
+        print(f"blocked_old_parent={session_id}")
+    if blocked and not dry_run:
+        raise RetentionError("old parent has a recent descendant; deleting it would remove a recent session")
+    deleted_count = 0
+
+    def idle_or_fail() -> None:
+        try:
+            _require_idle()
+        except OpenCodeRunning as exc:
+            if deleted_count:
+                raise RetentionError(
+                    f"OpenCode started after {deleted_count} deletions; retention run is incomplete"
+                ) from exc
+            raise
+
+    for session_id in selected:
+        if dry_run:
+            print(f"would_delete={session_id}")
+            continue
+        idle_or_fail()
+        _run([opencode, "session", "delete", session_id, "--pure"])
+        deleted_count += 1
+        print(f"deleted={session_id}", flush=True)
+    if dry_run:
+        print("dry-run: no deletion or WAL checkpoint")
+        if blocked:
+            raise RetentionError("old parent has a recent descendant; apply would be unsafe")
+        return 0
+    if selected:
+        idle_or_fail()
+        after_raw = _run([opencode, "db", SESSION_QUERY, "--format", "json", "--pure"])
+        _, _, remaining_ids = _old_session_ids(after_raw, cutoff_ms)
+        lingering = set(selected) & remaining_ids
+        missing_recent = (all_ids - set(selected)) - remaining_ids
+        if lingering or missing_recent:
+            raise RetentionError(
+                f"deletion verification failed: old_remaining={len(lingering)} recent_missing={len(missing_recent)}"
+            )
+        idle_or_fail()
+        checkpoint = _run([opencode, "db", "PRAGMA wal_checkpoint(TRUNCATE)", "--format", "json", "--pure"])
+        try:
+            rows = json.loads(checkpoint)
+        except json.JSONDecodeError as exc:
+            raise RetentionError(f"invalid WAL checkpoint response: {exc}") from exc
+        if not isinstance(rows, list) or len(rows) != 1 or not isinstance(rows[0], dict) or rows[0].get("busy") != 0:
+            raise RetentionError(f"WAL checkpoint did not complete: {checkpoint}")
+        print(f"wal_checkpoint={checkpoint}")
+    after = _database_bytes(db_path)
+    reclaimed = sum(before) - sum(after)
+    print(
+        f"after_db_bytes={after[0]} after_wal_bytes={after[1]} after_total_bytes={sum(after)} reclaimed_bytes={reclaimed}"
+    )
+    if selected and after[0] >= before[0]:
+        raise RetentionError(
+            "main DB did not shrink after deletion; VACUUM needs operator approval (issue #8920 stop policy)"
+        )
+    if selected and reclaimed <= 0:
+        raise RetentionError("total DB and WAL size did not fall after deletion; issue #8920 stop policy")
+    return 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Delete OpenCode sessions last updated more than N days ago using the OpenCode CLI.\nUse on an idle host to limit session database growth; use --dry-run to inspect first.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --dry-run\n  .venv/bin/python scripts/orchestration/opencode_session_retention.py --days 14\nOutputs: read-only OpenCode CLI query for all sessions; stdout/journal IDs and DB/WAL sizes. Apply deletes via CLI and checkpoints the WAL.\nExit codes: 0 success or idle skip; 1 CLI, process-check, checkpoint, or main DB shrink failure.\nRelated: packaging/systemd/README.md; issue #8920.",
+    )
+    parser.add_argument("--days", type=int, default=7, help="retention age in whole days (default: 7; example: 14)")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="list old session IDs without deleting or checkpointing (default: apply)"
+    )
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    try:
+        return retain(days=args.days, dry_run=args.dry_run)
+    except OpenCodeRunning as exc:
+        print(f"SKIP: {exc}")
+        return 0
+    except RetentionError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

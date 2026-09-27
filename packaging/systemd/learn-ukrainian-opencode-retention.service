@@ -1,0 +1,14 @@
+[Unit]
+Description=Learn Ukrainian OpenCode session retention
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=@PYTHON@ @REPO_ROOT@/scripts/orchestration/opencode_session_retention.py
+TimeoutStartSec=7200
+Nice=15
+IOSchedulingClass=idle
+
+[Install]
+WantedBy=default.target

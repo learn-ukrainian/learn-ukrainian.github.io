@@ -138,3 +138,23 @@ runner, and orchestrator hosts).
   .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary
   .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root /path/to/primary --apply --enable
   ```
+
+### 5. OpenCode Session Retention (`learn-ukrainian-opencode-retention.service` + `.timer`)
+
+- **Frequency**: daily at 04:15 UTC, with up to 15 minutes of jitter and a persistent catch-up run. Target host: the user account that owns the OpenCode session database.
+- **What it does**: deletes sessions whose last update is strictly more than seven days old. `opencode session list --format json` is project-scoped and excludes child sessions, so the job uses a read-only `opencode db` query to list all session IDs, parent IDs, and timestamps in the database, then `opencode session delete` for each selected ID. Children are deleted before parents; an old parent with a recent descendant blocks the run because OpenCode cascades parent deletion. It checks that every selected ID is gone and every recent ID remains. It skips the run when any `opencode` process is active. It logs every deleted ID, checkpoints the WAL through `opencode db`, and logs the main DB, WAL, and combined byte sizes before and after. It does not issue SQL writes to session tables. If the main DB does not shrink, the service fails visibly; issue #8920 requires an operator decision before any `VACUUM`. WAL truncation alone does not meet the disk outcome.
+- **Preview**: from the primary checkout on the target host, run `"$(pwd -P)/.venv/bin/python" scripts/orchestration/opencode_session_retention.py --dry-run`. Use `--days N` to change the retention window. This preview reads the database through OpenCode's CLI; development tests must use an isolated scratch data directory.
+- **Install, only after operator approval**: from the primary checkout on the target host, render the two templates into the user unit directory, replacing `@REPO_ROOT@` with the absolute checkout path and `@PYTHON@` with that checkout's absolute project interpreter. Verify the rendered units before enabling:
+  ```bash
+  repo_root=$(pwd -P)
+  unit_dir="$HOME/.config/systemd/user"
+  mkdir -p "$unit_dir"
+  sed -e "s|@REPO_ROOT@|$repo_root|g" -e "s|@PYTHON@|$repo_root/.venv/bin/python|g" \
+    packaging/systemd/learn-ukrainian-opencode-retention.service > "$unit_dir/learn-ukrainian-opencode-retention.service"
+  cp packaging/systemd/learn-ukrainian-opencode-retention.timer "$unit_dir/"
+  systemd-analyze verify "$unit_dir/learn-ukrainian-opencode-retention.service" "$unit_dir/learn-ukrainian-opencode-retention.timer"
+  systemctl --user daemon-reload
+  systemctl --user enable --now learn-ukrainian-opencode-retention.timer
+  journalctl --user -u learn-ukrainian-opencode-retention.service -n 30
+  ```
+  The templates do not install or enable themselves.
