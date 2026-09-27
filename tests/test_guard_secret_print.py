@@ -101,6 +101,15 @@ def test_single_quoted_secret_var_literal_allowed(monkeypatch):
     assert _run(monkeypatch, "echo '$GH_TOKEN'") == 0
 
 
+def test_unrelated_echo_after_secret_export_allowed(monkeypatch):
+    assert _run(monkeypatch, 'export HCLOUD_TOKEN=placeholder; echo "server=$s"') == 0
+    assert _run(monkeypatch, 'HCLOUD_TOKEN=placeholder echo "server=$s"') == 0
+
+
+def test_echo_of_exported_secret_still_blocked(monkeypatch):
+    assert _run(monkeypatch, 'export HCLOUD_TOKEN=placeholder; echo "$HCLOUD_TOKEN"') == 2
+
+
 @pytest.mark.parametrize(
     "cmd",
     [

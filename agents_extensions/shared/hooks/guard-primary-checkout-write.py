@@ -910,6 +910,9 @@ def _redirect_targets(tokens: list[str]) -> list[str]:
                 continue
             if tok != ">&" and dest.startswith("&"):
                 continue
+            # The null device discards output; it cannot dirty a checkout.
+            if dest == "/dev/null":
+                continue
             targets.append(dest)
     return targets
 
@@ -1490,6 +1493,18 @@ def _writer_targets(
             target.base = redirect_cwd
             if redirect_cwd is None and not Path(target).is_absolute():
                 target.decision_reason = "undecidable_write_target_after_cd"
+    # A shell redirect is not an argv operand of tee/cp/etc. The redirected
+    # file was already classified above; leaving `>` in argv makes a harmless
+    # `tee /tmp/file >/dev/null` look like a write to a file named `>`.
+    without_redirects: list[str] = []
+    index = 0
+    while index < len(segment):
+        if segment[index] in _FILE_REDIRECTS | {"<", "<<", "<<-", "<<<", "<&"}:
+            index += 2
+        else:
+            without_redirects.append(segment[index])
+            index += 1
+    segment = without_redirects
     cmd, idx = _command_word(segment)
     if cmd in _LONG_TAIL_WRITERS:
         targets.extend(_long_tail_targets(segment[idx + 1 :], cmd))
@@ -2261,7 +2276,9 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
         directory_glob = first < len(parts) - 1 or "**" in word
         may_reach_primary = prefix == main_root
         if prefix in main_root.parents:
-            may_reach_primary = directory_glob or _final_component_matches(parts[-1], main_root.relative_to(prefix).parts[0])
+            may_reach_primary = directory_glob or _final_component_matches(
+                parts[-1], main_root.relative_to(prefix).parts[0]
+            )
         if main_root in prefix.parents:
             may_reach_primary = not wc.evaluate_write(prefix / "__guard_glob_probe__", cwd=base).allowed
         if may_reach_primary:

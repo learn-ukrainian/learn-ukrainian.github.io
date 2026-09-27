@@ -83,7 +83,7 @@ hook = _load_hook()
         ("printf x >> a.log", ["a.log"]),
         ("echo x &> both.txt", ["both.txt"]),
         ("echo x 2>err.txt", ["err.txt"]),
-        ("build > /dev/null", ["/dev/null"]),
+        ("build > /dev/null", []),
         # tee (with wrapper + append flag).
         ("cat a | tee out.txt", ["out.txt"]),
         ("cat a | tee -a log.txt", ["log.txt"]),
@@ -110,6 +110,8 @@ def test_bash_write_targets(command, expected):
         "echo 'a > b'",
         # fd duplication is not a file write.
         "echo x 2>&1",
+        "echo x >&2",
+        "echo x 2>/dev/null",
         # sed without an in-place flag does not write a file.
         'sed "s/x/y/" real.py',
     ],
@@ -231,9 +233,7 @@ def _run(repo: Path, payload: dict, env_extra: dict[str, str] | None = None) -> 
         redirect_stderr(stderr),
     ):
         returncode = hook.main()
-    return subprocess.CompletedProcess(
-        [_python(), str(HOOK_PATH)], returncode, stdout.getvalue(), stderr.getvalue()
-    )
+    return subprocess.CompletedProcess([_python(), str(HOOK_PATH)], returncode, stdout.getvalue(), stderr.getvalue())
 
 
 def _write_payload(repo: Path, tool: str, rel: str) -> dict:
@@ -868,6 +868,11 @@ def test_bash_expanded_variable_write_outside_primary_allowed(repo: Path, comman
     assert result.returncode == 0, result.stderr
 
 
+def test_external_tee_with_null_redirect_allowed(repo: Path):
+    result = _bash(repo, "S=/tmp/claude-1000; tee $S/orig-1.md >/dev/null")
+    assert result.returncode == 0, result.stderr
+
+
 def test_bash_expanded_variable_git_dash_c_worktree_allowed(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _bash(repo, f"W={worktree}; git -C $W add f")
@@ -1067,7 +1072,9 @@ def test_issue_8785_final_component_can_match_primary(repo: Path, template: str)
     assert "undecidable_glob_write_target" in result.stderr
 
 
-@pytest.mark.parametrize("pattern", ["*", "m*", "mai?", "{main,other}", "{other,ma*}", "{main,{other}}", "{other,{main,sibling}}"])
+@pytest.mark.parametrize(
+    "pattern", ["*", "m*", "mai?", "{main,other}", "{other,ma*}", "{main,{other}}", "{other,{main,sibling}}"]
+)
 def test_issue_8785_parent_pattern_matching_primary_blocks(repo: Path, pattern: str):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _bash(repo, f"rm -rf {repo.parent}/{pattern}", cwd=worktree)

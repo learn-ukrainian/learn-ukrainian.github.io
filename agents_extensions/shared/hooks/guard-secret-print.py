@@ -64,7 +64,9 @@ def _command(payload: dict) -> str:
 
 def _tokenize(command: str) -> list[str]:
     try:
-        return shlex.split(_strip_heredoc_bodies(command), posix=False)
+        lexer = shlex.shlex(_strip_heredoc_bodies(command), posix=False, punctuation_chars=";&|")
+        lexer.whitespace_split = True
+        return list(lexer)
     except ValueError:
         return []
 
