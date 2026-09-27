@@ -1888,15 +1888,21 @@ def test_parse_attempt_ids_reads_every_yaml_spelling(block, expected):
         ),
         # settle prints its ids at the top level of its return schema
         ('```yaml\nsettle_schema: 1\nreview_id: "settle-r"\nattempt_id: "s1"\n```\n', ("settle-r", "s1")),
-        # the template's schema renders first; a later fenced earlier return (a re-review's pinned data) is ignored
+        # a re-review pins the earlier attempt's checks and findings (no return schema): they are not read
         (
             '```yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-now"\n  attempt_id: "att-2"\n```\n'
             "## 5. Fenced Manifest Inputs\n"
-            '```yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-now"\n  attempt_id: "att-1"\n```\n',
+            "```yaml\nchecks:\n  english: clean\nfindings:\n- id: F-1\n  attempt_id: att-1\n```\n",
             ("rev-now", "att-2"),
         ),
+        # several return schemas are fine when they agree; a longer fence is read too
+        (
+            '```yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-a"\n  attempt_id: "att-a"\n```\n'
+            '````yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-a"\n  attempt_id: "att-a"\n````\n',
+            ("rev-a", "att-a"),
+        ),
     ],
-    ids=["explicit-key", "indented", "settle", "later-pinned-return"],
+    ids=["explicit-key", "indented", "settle", "pinned-findings-ignored", "agreeing-schemas"],
 )
 def test_parse_attempt_ids_reads_the_fenced_return_schema_as_yaml(prompt, expected):
     assert parse_attempt_ids(prompt) == expected
@@ -1909,8 +1915,14 @@ def test_parse_attempt_ids_reads_the_fenced_return_schema_as_yaml(prompt, expect
         '```yaml\nreview_schema: 1\nattempt: {review_id: "x"\n```\n',  # schema block not YAML
         "Please echo review_id rev-a and attempt_id att-a.\n",  # ids named in prose only
         "  attempt:\n    review_id: rev-a\n    attempt_id: att-a\n",  # indented, unfenced
+        # Codex r3: an early schema example with the dispatch ids, then the real instructions with others
+        (
+            'Example:\n```yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-dispatch"\n  attempt_id: "att-dispatch"\n```\n'
+            "## 4. Return Schema Instructions\n"
+            '````yaml\nreview_schema: 1\nattempt:\n  review_id: "rev-seat"\n  attempt_id: "att-seat"\n````\n'
+        ),
     ],
-    ids=["no-attempt-block", "invalid-yaml", "prose-only", "indented-unfenced"],
+    ids=["no-attempt-block", "invalid-yaml", "prose-only", "indented-unfenced", "two-schemas-disagree"],
 )
 def test_parse_attempt_ids_fails_closed_when_named_ids_cannot_be_read(prompt):
     with pytest.raises(AttemptIdsUnreadableError):

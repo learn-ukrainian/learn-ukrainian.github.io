@@ -134,7 +134,8 @@ FENCE_OPEN = re.compile(r"^ {0,3}(?P<fence>`{3,})[^`]*$")
 JINJA_TAG = re.compile(r"\{\{.*?\}\}|\{%.*?%\}|\{#.*?#\}", re.DOTALL)
 
 #: A fenced YAML block (```yaml … ```), where every return template prints its schema (#8996).
-YAML_FENCE = re.compile(r"(?ms)^ {0,3}```ya?ml[ \t]*\n(.*?)^ {0,3}```[ \t]*$")
+#: Any fence length: pinned data is wrapped in a fence longer than its longest backtick run (``data_fence``).
+YAML_FENCE = re.compile(r"(?ms)^ {0,3}(?P<fence>`{3,})ya?ml[ \t]*\n(?P<body>.*?)^ {0,3}(?P=fence)[ \t]*$")
 #: Top-level keys that mark a fenced block as a return schema: a review (plan, lesson, re-review) names its
 #: ids under ``attempt``; a settle names them at the top level.
 RETURN_SCHEMA_KEYS = ("review_schema", "settle_schema")
@@ -162,41 +163,54 @@ def _ids_from(mapping: object, where: str) -> tuple[str, str]:
     return ids[0], ids[1]
 
 
-def _return_schema(prompt_text: str) -> dict[str, Any] | None:
-    """The first fenced YAML block that is a return schema, parsed as a whole YAML document.
+def _return_schemas(prompt_text: str) -> list[dict[str, Any]]:
+    """Every fenced YAML block that is a return schema, each parsed as a whole YAML document.
 
-    The template's own schema always renders before any fenced pinned data (a re-review's earlier return,
-    a quoted lesson), so the first match is the template's. Parsing the whole block — not a line pattern —
-    reads every YAML spelling (explicit ``? key`` entries, flow or block style, any quoting, uniform
-    indentation). A block that names a schema key but is not valid YAML is refused, never skipped.
+    Parsing the whole block — not a line pattern — reads every YAML spelling (explicit ``? key`` entries,
+    flow or block style, any quoting, uniform indentation). A block that names a schema key but is not valid
+    YAML is refused, never skipped. A rendered prompt has exactly one (a re-review pins only the earlier
+    attempt's checks and findings, not its return schema); a prompt with several is judged in
+    ``parse_attempt_ids``.
     """
+    schemas: list[dict[str, Any]] = []
     for fence in YAML_FENCE.finditer(prompt_text):
-        body = fence.group(1)
+        body = fence.group("body")
         try:
             loaded = yaml.safe_load(body)
         except yaml.YAMLError as err:
             if any(key in body for key in RETURN_SCHEMA_KEYS):
-                raise AttemptIdsUnreadableError(f"the fenced return schema is not valid YAML: {err}") from err
+                raise AttemptIdsUnreadableError(f"a fenced return schema is not valid YAML: {err}") from err
             continue
         if isinstance(loaded, dict) and any(key in loaded for key in RETURN_SCHEMA_KEYS):
-            return loaded
-    return None
+            schemas.append(loaded)
+    return schemas
+
+
+def _schema_ids(schema: dict[str, Any]) -> tuple[str, str]:
+    if "review_schema" in schema:
+        return _ids_from(schema.get("attempt"), "the return schema's attempt block")
+    return _ids_from(schema, "the settle return schema")
 
 
 def parse_attempt_ids(prompt_text: str) -> tuple[str | None, str | None]:
     """The ``review_id``/``attempt_id`` a rendered prompt tells its seat to echo, or ``(None, None)``.
 
     The ids come from the prompt's fenced return schema: under ``attempt`` for a review return (plan, lesson,
-    re-review), at the top level for a settle return. A prompt with no fenced return schema falls back to a
+    re-review), at the top level for a settle return. Several return schemas must all name the same ids. A prompt with no fenced return schema falls back to a
     plain ``attempt`` entry. ``(None, None)`` means the prompt mentions neither id key anywhere. In every
     other case the ids must be read, or ``AttemptIdsUnreadableError`` is raised: an id the guard cannot read
     must never count as "no id to compare".
     """
-    schema = _return_schema(prompt_text)
-    if schema is not None:
-        if "review_schema" in schema:
-            return _ids_from(schema.get("attempt"), "the return schema's attempt block")
-        return _ids_from(schema, "the settle return schema")
+    schemas = _return_schemas(prompt_text)
+    if schemas:
+        found = {_schema_ids(schema) for schema in schemas}
+        if len(found) > 1:
+            # Two return schemas naming different ids: the guard cannot know which one the seat will echo.
+            raise AttemptIdsUnreadableError(
+                "the prompt has several return schemas naming different ids: "
+                + "; ".join(f"{r}/{a}" for r, a in sorted(found))
+            )
+        return found.pop()
     entry = ATTEMPT_ENTRY.search(prompt_text)
     if entry is not None:
         try:
