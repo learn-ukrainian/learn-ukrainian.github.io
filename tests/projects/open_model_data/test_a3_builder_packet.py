@@ -20,10 +20,11 @@ import pytest
 
 from scripts.projects.open_model_data import v4_a3_builder_packet as packet
 from scripts.projects.open_model_data import v4_a3_heldout_family_assignment as heldout
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
 REAL_SEAL_RECEIPT_PATH = (
-    ROOT / "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
+    REGISTRY_OPEN_MODEL_DATA_DIR / "admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
 )
 
 
@@ -76,12 +77,14 @@ def _sealed_receipt(salt: bytes, family_ids: list[str]) -> tuple[dict, dict]:
 @pytest.fixture(autouse=True)
 def _fixed_synthetic_provenance_resources():
     from _v4_provenance_resource_fixture import synthetic_resources
+
     with synthetic_resources():
         yield
 
 
 def _write_seal_receipt(tmp_path: Path, receipt: dict, name: str = "seal_receipt.json") -> Path:
     from _v4_provenance_resource_fixture import ACTIVE
+
     ACTIVE.get().install_seal(receipt, tmp_path)
     path = tmp_path / name
     path.write_text(json.dumps(receipt))
@@ -232,7 +235,9 @@ def test_verify_packet_detects_tampered_source_unit_ids(tmp_path: Path) -> None:
     packet.issue_packet(seal_receipt_path, membership_dir, packet_dir)
 
     packet_path = packet_dir / packet.PACKET_FILENAME
-    _tamper_packet(packet_path, lambda payload: payload.__setitem__("builder_eligible_source_unit_ids", ["synthetic.tampered"]))
+    _tamper_packet(
+        packet_path, lambda payload: payload.__setitem__("builder_eligible_source_unit_ids", ["synthetic.tampered"])
+    )
 
     with pytest.raises(packet.BuilderPacketError, match="does not reproduce"):
         packet.verify_packet(seal_receipt_path, packet_dir, membership_dir)
@@ -327,7 +332,9 @@ def test_validate_public_receipt_independently_accepts_freshly_issued_packet(tmp
     summary = packet.issue_packet(seal_receipt_path, membership_dir, packet_dir)
     public_receipt = packet.build_public_receipt(summary, seal_receipt_path)
 
-    verified = packet.validate_public_receipt_independently(public_receipt, seal_receipt_path, membership_dir, packet_dir)
+    verified = packet.validate_public_receipt_independently(
+        public_receipt, seal_receipt_path, membership_dir, packet_dir
+    )
     assert verified == summary
 
 
@@ -400,10 +407,14 @@ def test_cli_issue_write_receipt_then_default_verify_roundtrip(tmp_path: Path, c
 
     packet.main(
         [
-            "--seal-receipt", str(seal_receipt_path),
-            "--membership-dir", str(membership_dir),
-            "--packet-dir", str(packet_dir),
-            "--packet-receipt", str(packet_receipt_path),
+            "--seal-receipt",
+            str(seal_receipt_path),
+            "--membership-dir",
+            str(membership_dir),
+            "--packet-dir",
+            str(packet_dir),
+            "--packet-receipt",
+            str(packet_receipt_path),
             "--issue",
             "--write-receipt",
         ]
@@ -416,10 +427,14 @@ def test_cli_issue_write_receipt_then_default_verify_roundtrip(tmp_path: Path, c
 
     packet.main(
         [
-            "--seal-receipt", str(seal_receipt_path),
-            "--membership-dir", str(membership_dir),
-            "--packet-dir", str(packet_dir),
-            "--packet-receipt", str(packet_receipt_path),
+            "--seal-receipt",
+            str(seal_receipt_path),
+            "--membership-dir",
+            str(membership_dir),
+            "--packet-dir",
+            str(packet_dir),
+            "--packet-receipt",
+            str(packet_receipt_path),
         ]
     )
     printed = json.loads(capsys.readouterr().out)
@@ -434,9 +449,12 @@ def test_cli_issue_refuses_to_overwrite_existing_packet(tmp_path: Path, capsys: 
     membership_dir = _seed_membership(tmp_path, salt, result, receipt)
     packet_dir = tmp_path / "packet"
     argv = [
-        "--seal-receipt", str(seal_receipt_path),
-        "--membership-dir", str(membership_dir),
-        "--packet-dir", str(packet_dir),
+        "--seal-receipt",
+        str(seal_receipt_path),
+        "--membership-dir",
+        str(membership_dir),
+        "--packet-dir",
+        str(packet_dir),
         "--issue",
     ]
 

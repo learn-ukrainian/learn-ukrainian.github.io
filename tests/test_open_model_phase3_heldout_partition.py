@@ -12,11 +12,12 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_heldout_partition as heldout
 from scripts.projects.open_model_data import phase3_near_duplicate as near
 from scripts.projects.open_model_data import phase3_source_universe as freeze_mod
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_heldout_partition_bundle_v1.schema.json"
-POLICY = ROOT / "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
-ROLE = ROOT / "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
+SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_heldout_partition_bundle_v1.schema.json"
+POLICY = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_near_duplicate_policy_v1.json"
+ROLE = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_functional_role_contract_v2_1.json"
 EXECUTION_METADATA = {
     "provider": "local",
     "started_at": "2026-08-09T00:00:00Z",
@@ -374,7 +375,17 @@ def test_reconstruction_preserves_empty_source_lang_and_rejects_non_strings(tmp_
             )
             connection.execute(
                 "INSERT INTO ua_gec_errors VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (1, "synthetic error", "synthetic correction", "G/Case", "doc", "annotator", "gec/train", 1, source_lang),
+                (
+                    1,
+                    "synthetic error",
+                    "synthetic correction",
+                    "G/Case",
+                    "doc",
+                    "annotator",
+                    "gec/train",
+                    1,
+                    source_lang,
+                ),
             )
         payload = {
             "id": 1,
@@ -486,7 +497,10 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
     heldout._assert_no_forbidden_public_fields(public_receipt)
     assert public_receipt["capability"]["state"] == "NOT_YET_LABELLED_OR_ACTIVATED"
     assert public_receipt["zero_overlap"]["test_excluded_from_author_clearance"] is True
-    assert public_receipt["role_binding"] == {"role_id": "heldout_steward", "task_id": "phase3-v2-1-heldout-stewardship"}
+    assert public_receipt["role_binding"] == {
+        "role_id": "heldout_steward",
+        "task_id": "phase3-v2-1-heldout-stewardship",
+    }
     assert public_receipt["action_receipt"]["combined_contract_sha256"] == heldout.PHASE3_V2_1_COMBINED_CONTRACT_SHA256
     body = public / "public_receipt_v1.json"
     assert "alpha beta" not in body.read_text(encoding="utf-8")
@@ -676,7 +690,7 @@ def test_public_only_verification_recomputes_action_identity(tmp_path: Path) -> 
 
 def test_v1_role_contract_and_v2_1_binding_drift_fail_closed() -> None:
     role_contract = heldout.read_json(ROLE)
-    legacy = heldout.read_json(ROOT / "data/projects/open_model_data/evidence/correction_protection_role_contract_v1.json")
+    legacy = heldout.read_json(REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_role_contract_v1.json")
     with pytest.raises(heldout.PartitionError, match="functional-role"):
         heldout.verify_role_binding(legacy)
 

@@ -12,17 +12,22 @@ from jsonschema import Draft202012Validator
 from learn_ukrainian_v4_runtime import provenance, resources
 from learn_ukrainian_v4_runtime import v4_stage_evidence as ev
 
-SCHEMA = "registry/projects/open_model_data/contracts/dataset_v4_a2_source_operation_admission_receipt_v1.schema.json"
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
+SCHEMA = "data/projects/open_model_data/contracts/dataset_v4_a2_source_operation_admission_receipt_v1.schema.json"
+CHECKOUT_SCHEMA = (
+    REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/dataset_v4_a2_source_operation_admission_receipt_v1.schema.json"
+)
 
 
 def validator() -> Draft202012Validator:
-    schema = json.loads((chain.ROOT / SCHEMA).read_bytes())
+    schema = json.loads(CHECKOUT_SCHEMA.read_bytes())
     Draft202012Validator.check_schema(schema)
     return Draft202012Validator(schema)
 
 
 def test_packaged_schema_matches_current_asset_without_resealing_history() -> None:
-    assert resources.read_bytes(SCHEMA) == (chain.ROOT / SCHEMA).read_bytes()
+    assert resources.read_bytes(SCHEMA) == CHECKOUT_SCHEMA.read_bytes()
     spec = json.loads(resources.read_bytes(provenance.SPEC))
     assert all(binding["path"] != SCHEMA for receipt in spec["receipts"] for binding in receipt["bindings"].values())
     provenance.verify_current_identity()

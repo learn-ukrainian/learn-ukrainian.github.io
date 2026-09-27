@@ -30,9 +30,10 @@ from scripts.projects.open_model_data import v4_a8_admission_assembly as a8
 from scripts.projects.open_model_data import v4_a9_evaluation_package as a9
 from scripts.projects.open_model_data import v4_per_slot_private_factory as factory
 from scripts.projects.open_model_data import v4_stage_evidence as ev
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"

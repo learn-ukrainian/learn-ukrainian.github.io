@@ -33,9 +33,10 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import v4_a3_builder_packet as packet
 from scripts.projects.open_model_data import v4_a3_heldout_family_assignment as heldout
 from scripts.projects.open_model_data import v4_a4_deterministic_extraction as extraction
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a4_deterministic_extraction_receipt_v1.schema.json"
@@ -1020,8 +1021,12 @@ def test_a4_extraction_bindings_match_exact_inputs() -> None:
             logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
         assert hashlib.sha256(resources.read_bytes(logical)).hexdigest() == binding["sha256"]
 
-    assert receipt["bindings"]["a3_heldout_source_family_seal"]["path"] == str(REAL_SEAL_RECEIPT_PATH.relative_to(ROOT))
-    assert receipt["bindings"]["a3_builder_packet_receipt"]["path"] == str(REAL_PACKET_RECEIPT_PATH.relative_to(ROOT))
+    assert receipt["bindings"]["a3_heldout_source_family_seal"]["path"] == (
+        "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
+    )
+    assert receipt["bindings"]["a3_builder_packet_receipt"]["path"] == (
+        "data/projects/open_model_data/admission/dataset_v4_a3_builder_packet_receipt_v1.json"
+    )
     assert receipt["bindings"]["v4_source_byte_ingestion_admission"]["path"] == (
         "data/projects/open_model_data/admission/dataset_v4_source_byte_ingestion_admission_receipt_v1.json"
     )

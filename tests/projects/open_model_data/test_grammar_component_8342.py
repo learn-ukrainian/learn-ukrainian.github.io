@@ -399,12 +399,13 @@ def test_approved_linguistic_authorities(grammar_data):
 @pytest.mark.needs_artifact(
     "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
 )
-def test_acceptance_audit_gate_end_to_end(requires_vesum_db):
+def test_acceptance_audit_gate_end_to_end(requires_vesum_db, tmp_path):
     """Verify that audit_dataset_acceptance.py passes with exit code 0 and verified signoff."""
     signoff_path = GRAMMAR_DIR / "acceptance_review_sample.signoff.json"
     report, exit_code = run_acceptance_audit(
         dataset_dir=GRAMMAR_DIR,
         profile_name="grammar_8342",
+        sample_out=tmp_path / "acceptance_review_sample.md",
         verify_signoff=signoff_path if signoff_path.is_file() else None,
         require_human_signoff=signoff_path.is_file(),
     )

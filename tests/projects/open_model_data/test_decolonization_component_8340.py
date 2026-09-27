@@ -211,13 +211,15 @@ def test_zero_train_eval_leakage(decolonization_data, require_vesum_db):
 @pytest.mark.needs_artifact(
     "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
 )
-def test_dataset_acceptance_audit_passes(require_local_databases):
+def test_dataset_acceptance_audit_passes(require_local_databases, tmp_path):
     """Verify that audit_dataset_acceptance.py runs and passes with exit code 0."""
     audit_script = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "audit_dataset_acceptance.py"
     cmd = [
         sys.executable,
         str(audit_script),
         str(REGISTRY_DECOLONIZATION_DIR),
+        "--sample-out",
+        str(tmp_path / "acceptance_review_sample.md"),
     ]
     proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=60)
     assert proc.returncode == 0, f"Acceptance audit failed (exit {proc.returncode}):\n{proc.stdout}\n{proc.stderr}"
@@ -608,7 +610,7 @@ def test_supporting_passages_and_no_manufactured_statements(decolonization_data)
 @pytest.mark.needs_artifact(
     "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
 )
-def test_dataset_acceptance_with_verified_signoff(require_local_databases):
+def test_dataset_acceptance_with_verified_signoff(require_local_databases, tmp_path):
     """Verify that audit_dataset_acceptance.py passes with verified human signoff and ACCEPTED status (Finding 3)."""
     audit_script = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "audit_dataset_acceptance.py"
     signoff_file = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
@@ -617,6 +619,8 @@ def test_dataset_acceptance_with_verified_signoff(require_local_databases):
     cmd = [
         sys.executable,
         str(audit_script),
+        "--sample-out",
+        str(tmp_path / "acceptance_review_sample.md"),
         "--verify-human-signoff",
         str(signoff_file),
         str(REGISTRY_DECOLONIZATION_DIR),

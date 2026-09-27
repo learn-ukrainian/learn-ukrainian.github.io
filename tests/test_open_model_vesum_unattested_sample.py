@@ -11,6 +11,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import document_signal_manifest as phase1
 from scripts.projects.open_model_data import vesum_unattested_sample as samples
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
 FAMILIES = ("literary", "public_textbooks", "external_articles", "wikipedia")
@@ -141,7 +142,11 @@ def _fixture(tmp_path: Path) -> dict[str, Path]:
     )
     _write(
         tmp_path / "profile-receipt.json",
-        {"coverage": {"complete": True, "processed_rows": 8}, "vesum": {"tokens_unknown": 8}, "schema_version": "fixture-profile-receipt"},
+        {
+            "coverage": {"complete": True, "processed_rows": 8},
+            "vesum": {"tokens_unknown": 8},
+            "schema_version": "fixture-profile-receipt",
+        },
     )
     _write(
         tmp_path / "config.json",
@@ -160,7 +165,7 @@ def _fixture(tmp_path: Path) -> dict[str, Path]:
         "phase1_receipt_path": phase1_receipt,
         "source_database": source_db,
         "vesum_database": vesum_db,
-        "detector_config_path": ROOT / "data/projects/open_model_data/detector/language_contact_config_v1.json",
+        "detector_config_path": REGISTRY_OPEN_MODEL_DATA_DIR / "detector/language_contact_config_v1.json",
     }
 
 
@@ -205,7 +210,12 @@ def test_build_is_text_free_schema_valid_and_byte_identical(tmp_path: Path, monk
     assert not list(receipt_validator.iter_errors(first))
     assert first["two_build_identity"]["first_output"]["logical_path"] == "first.jsonl"
     assert first["two_build_identity"]["second_output"]["logical_path"] == "second.jsonl"
-    assert samples.verify_sample(**paths, output_path=tmp_path / "second.jsonl", receipt_path=tmp_path / "second-receipt.json") == first
+    assert (
+        samples.verify_sample(
+            **paths, output_path=tmp_path / "second.jsonl", receipt_path=tmp_path / "second-receipt.json"
+        )
+        == first
+    )
 
 
 def test_compared_build_rejects_nonidentical_candidate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

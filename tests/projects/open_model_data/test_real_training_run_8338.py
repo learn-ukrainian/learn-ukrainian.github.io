@@ -8,12 +8,14 @@ from pathlib import Path
 import jsonschema
 from safetensors import safe_open
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DATA_DIR = REPO_ROOT / "data" / "projects" / "open_model_data"
 DOCS_DIR = REPO_ROOT / "docs" / "projects" / "open-model-data"
 STUDY_DIR = DATA_DIR / "study"
-CANARY_DIR = DATA_DIR / "canary"
-CONTRACTS_DIR = DATA_DIR / "contracts"
+CANARY_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "canary"
+CONTRACTS_DIR = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
 
 
 def test_adapter_safetensors_layer_count() -> None:
@@ -30,16 +32,14 @@ def test_adapter_safetensors_layer_count() -> None:
     with safe_open(str(adapter_path), framework=framework) as f:
         keys = list(f.keys())
         assert len(keys) == 336, f"Expected 336 tensors for 24-layer LoRA, got {len(keys)}"
-        layers = {
-            int(k.split("layers.")[1].split(".")[0])
-            for k in keys
-            if "layers." in k
-        }
+        layers = {int(k.split("layers.")[1].split(".")[0]) for k in keys if "layers." in k}
         assert layers == set(range(24)), f"Expected layers 0..23, got {sorted(layers)}"
 
         # Verify down_proj, gate_proj, up_proj, q_proj, k_proj, v_proj, o_proj
         for mod in ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]:
-            sample_key = f"base_model.model.model.layers.0.mlp.{mod}.lora_A.weight" if "proj" in mod and "mlp" in mod else None
+            sample_key = (
+                f"base_model.model.model.layers.0.mlp.{mod}.lora_A.weight" if "proj" in mod and "mlp" in mod else None
+            )
             # At least verify q_proj exists in layer 0
             assert "base_model.model.model.layers.0.self_attn.q_proj.lora_A.weight" in keys
 

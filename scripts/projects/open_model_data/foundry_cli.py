@@ -27,12 +27,13 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.projects.open_model_data import model_view_exporter as exporter
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
+CONTRACTS = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
 INPUT_SCHEMA = CONTRACTS / "portable_corpus_record_v1.schema.json"
 RECEIPT_SCHEMA = CONTRACTS / "foundry_run_receipt_v1.schema.json"
-DETECTOR_CONFIG = ROOT / "data/projects/open_model_data/detector/language_contact_config_v1.json"
+DETECTOR_CONFIG = REGISTRY_OPEN_MODEL_DATA_DIR / "detector/language_contact_config_v1.json"
 DEFAULT_V011_MANIFEST = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
 DEFAULT_V02_PACKET = ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl"
 TOOL_VERSION = "1.0.0"

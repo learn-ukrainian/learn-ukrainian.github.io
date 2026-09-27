@@ -21,7 +21,7 @@ from scripts.projects.open_model_data import phase3_source_universe as universe
 from scripts.projects.open_model_data import verify_phase3_source_universe_freeze as freeze
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = ROOT / "registry/projects/open_model_data"
 DEFAULT_SOURCE_UNIVERSE = DATA / "evidence/source_universe_v1"
 DEFAULT_ROLE_CONTRACT = DATA / "evidence/correction_protection_functional_role_contract_v2_1.json"
 ASSIGNED_DISPOSITION_AUDITOR_TASK = functional_roles.ROLE_TASKS["disposition_auditor"]

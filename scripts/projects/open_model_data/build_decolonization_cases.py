@@ -45,7 +45,7 @@ from scripts.projects.open_model_data.decolonization_language_reviews import (
     INDEPENDENT_LANGUAGE_REVIEWS,
     compute_case_content_sha256,
 )
-from scripts.projects.open_model_data.paths import ARTIFACT_DECOLONIZATION_DIR
+from scripts.projects.open_model_data.paths import ARTIFACT_DECOLONIZATION_DIR, REGISTRY_DECOLONIZATION_DIR
 from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
 from scripts.storage import paths as storage_paths
 from scripts.storage.artifacts import write_artifact_set
@@ -874,7 +874,15 @@ def make_reviewer_confirmation(
         raise ValueError(f"Case '{case_id}' missing review_dossier_locator in language review record")
 
     # Resolve dossier file on disk
-    dossier_path = PROJECT_ROOT / locator
+    logical_prefix = Path("data/projects/open_model_data/components/decolonization")
+    logical_locator = Path(locator)
+    if (
+        logical_locator.is_absolute()
+        or ".." in logical_locator.parts
+        or not logical_locator.is_relative_to(logical_prefix)
+    ):
+        raise ValueError(f"Invalid review dossier locator for case '{case_id}': {locator}")
+    dossier_path = REGISTRY_DECOLONIZATION_DIR / logical_locator.relative_to(logical_prefix)
     if not dossier_path.is_file():
         raise ValueError(
             f"Review dossier file not found at '{dossier_path}' for case '{case_id}'. Unverified review receipt."
@@ -907,9 +915,7 @@ def make_reviewer_confirmation(
         raise ValueError(f"Reviewer family '{reviewer_family}' mismatch for accredited reviewer '{reviewer_id}'")
 
     # Validate against signed human acceptance review signoff (Fail closed on unapproved / defective / incomplete signoff)
-    signoff_path = (
-        PROJECT_ROOT / "data/projects/open_model_data/components/decolonization/acceptance_review_sample.signoff.json"
-    )
+    signoff_path = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
     if not signoff_path.is_file():
         raise ValueError(f"Missing acceptance review signoff file at '{signoff_path}'")
     try:

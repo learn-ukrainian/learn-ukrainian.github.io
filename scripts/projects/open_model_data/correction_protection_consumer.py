@@ -22,13 +22,18 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import correction_factory as evaluation
 from scripts.projects.open_model_data.correction_protection_rules import iter_rule_matches
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.artifacts import write_artifact_set
+from scripts.storage.paths import artifact_set, manifest_path
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
-EVIDENCE = ROOT / "data/projects/open_model_data/evidence"
+CONTRACTS = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
+EVIDENCE = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence"
 DEFAULT_FACTORY_MANIFEST = EVIDENCE / "correction_protection_bundle_manifest_v1.json"
 DEFAULT_FACTORY_RECEIPT = EVIDENCE / "correction_protection_release_receipt_v1.json"
 DEFAULT_RELEASE = ROOT / "data/projects/open_model_data/release/correction_protection_v1"
+REGISTRY_RELEASE = REGISTRY_OPEN_MODEL_DATA_DIR / "release/correction_protection_v1"
+RELEASE_REL = "projects/open_model_data/release/correction_protection_v1/"
 VIEW_SCHEMA = CONTRACTS / "correction_protection_consumer_view_v1.schema.json"
 PUBLIC_FILES = ("sources", "evidence", "cases", "disagreements")
 VIEW_TYPES = ("correction", "filtering", "preference", "protection", "abstention")
@@ -85,6 +90,31 @@ def iter_jsonl(path: Path) -> Iterator[dict[str, Any]]:
                 yield value
     except OSError as exc:
         raise ConsumerError(f"cannot read JSONL {path}: {exc}") from exc
+
+
+def _managed_release(release_dir: Path) -> bool:
+    lexical = release_dir.absolute()
+    if release_dir.resolve() == DEFAULT_RELEASE.resolve() and lexical != DEFAULT_RELEASE:
+        raise ConsumerError(f"managed release reached through an alias: {release_dir}")
+    return lexical == DEFAULT_RELEASE
+
+
+def _release_bytes(release_dir: Path, name: str, snapshot=None) -> bytes:
+    if not _managed_release(release_dir):
+        return (release_dir / name).read_bytes()
+    if name.endswith(".jsonl"):
+        current = snapshot or artifact_set("open_model_release_payload", repo=ROOT)
+        return current.artifacts[RELEASE_REL + name]
+    return (REGISTRY_RELEASE / name).read_bytes()
+
+
+def _release_bundle(release_dir: Path) -> dict[str, list[dict[str, Any]]]:
+    snapshot = artifact_set("open_model_release_payload", repo=ROOT) if _managed_release(release_dir) else None
+    bundle = {}
+    for name in PUBLIC_FILES:
+        raw = _release_bytes(release_dir, f"{name}.jsonl", snapshot)
+        bundle[name] = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+    return bundle
 
 
 def artifact(path: Path, *, logical_path: str | None = None) -> dict[str, Any]:
@@ -156,16 +186,21 @@ def validate_view(value: Mapping[str, Any], validator: Draft202012Validator) -> 
 def public_bundle(factory_public_dir: Path) -> tuple[dict[str, list[dict[str, Any]]], dict[str, Any]]:
     manifest = read_json(DEFAULT_FACTORY_MANIFEST)
     bundle: dict[str, list[dict[str, Any]]] = {}
+    snapshot = artifact_set("open_model_release_payload", repo=ROOT) if _managed_release(factory_public_dir) else None
     for name in PUBLIC_FILES:
-        path = factory_public_dir / f"{name}.jsonl"
         expected = manifest["outputs"][f"public_{name}"]
-        actual = artifact(path, logical_path=f"public/{name}.jsonl")
+        raw = _release_bytes(factory_public_dir, f"{name}.jsonl", snapshot)
+        actual = {
+            "records": len(raw.splitlines()),
+            "bytes": len(raw),
+            "sha256": sha256_bytes(raw),
+        }
         require(
             {key: actual[key] for key in ("records", "bytes", "sha256")}
             == {key: expected[key] for key in ("records", "bytes", "sha256")},
             f"factory public artifact drift: {name}",
         )
-        bundle[name] = list(iter_jsonl(path))
+        bundle[name] = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
     return bundle, manifest
 
 
@@ -611,13 +646,55 @@ def coverage_report(
 
 
 def build_release(*, factory_public_dir: Path, output_dir: Path) -> dict[str, Any]:
+    if _managed_release(output_dir):
+        with tempfile.TemporaryDirectory(prefix="correction-protection-release-") as temporary:
+            staged = Path(temporary)
+            receipt = build_release(factory_public_dir=factory_public_dir, output_dir=staged)
+            verify_release(staged)
+            snapshot = artifact_set("open_model_release_payload", repo=ROOT)
+            prior = {entry["path"][5:]: entry["sha256"] for entry in snapshot.manifest["entries"]}
+            writes = {}
+            expected_hashes = {}
+            for name in (*PUBLIC_FILES, "model_neutral_views"):
+                relative = RELEASE_REL + f"{name}.jsonl"
+                content = (staged / f"{name}.jsonl").read_bytes()
+                if content != snapshot.artifacts[relative]:
+                    writes[relative] = lambda target, data=content: target.write_bytes(data)
+                    expected_hashes[relative] = prior[relative]
+            companions = {}
+            for name in ("coverage.json", "receipt.json"):
+                relative = f"registry/{RELEASE_REL}{name}"
+                content = (staged / name).read_bytes()
+                if content != snapshot.companions[relative]:
+                    companions[relative] = (
+                        snapshot.manifest["set_descriptor"]["companions"][relative],
+                        lambda target, data=content: target.write_bytes(data),
+                    )
+            if not writes and not companions:
+                return receipt
+            write_artifact_set(
+                ROOT,
+                "open_model_release_payload",
+                "correction_protection_consumer.py",
+                writes,
+                expected_hashes=expected_hashes,
+                expected_members=set(prior),
+                companions=companions,
+                expected_manifest=sha256_file(manifest_path("open_model_release_payload", ROOT)),
+            )
+            return receipt
+    resolved = output_dir.resolve()
+    if resolved.is_relative_to(ROOT / "data/projects/open_model_data") or resolved.is_relative_to(
+        REGISTRY_OPEN_MODEL_DATA_DIR
+    ):
+        raise ConsumerError(f"unsupported managed release output: {output_dir}")
     bundle, manifest = public_bundle(factory_public_dir)
     views = public_views(bundle)
     output_dir.mkdir(parents=True, exist_ok=True)
     for name in PUBLIC_FILES:
         source = factory_public_dir / f"{name}.jsonl"
         target = output_dir / f"{name}.jsonl"
-        atomic_write(target, source.read_bytes())
+        atomic_write(target, _release_bytes(factory_public_dir, source.name))
     atomic_write(output_dir / "model_neutral_views.jsonl", jsonl_bytes(views))
     coverage = coverage_report(bundle, manifest, views)
     require(coverage["benchmark"]["passed"], "public non-erasure benchmark failed")
@@ -634,10 +711,12 @@ def build_release(*, factory_public_dir: Path, output_dir: Path) -> dict[str, An
         "bundle_id": manifest["bundle_id"],
         "inputs": {
             "factory_manifest": artifact(
-                DEFAULT_FACTORY_MANIFEST, logical_path=DEFAULT_FACTORY_MANIFEST.relative_to(ROOT).as_posix()
+                DEFAULT_FACTORY_MANIFEST,
+                logical_path="data/projects/open_model_data/evidence/correction_protection_bundle_manifest_v1.json",
             ),
             "factory_receipt": artifact(
-                DEFAULT_FACTORY_RECEIPT, logical_path=DEFAULT_FACTORY_RECEIPT.relative_to(ROOT).as_posix()
+                DEFAULT_FACTORY_RECEIPT,
+                logical_path="data/projects/open_model_data/evidence/correction_protection_release_receipt_v1.json",
             ),
             "view_schema": artifact(VIEW_SCHEMA, logical_path=VIEW_SCHEMA.relative_to(ROOT).as_posix()),
             "consumer": artifact(Path(__file__), logical_path=Path(__file__).relative_to(ROOT).as_posix()),
@@ -673,7 +752,7 @@ def build_release(*, factory_public_dir: Path, output_dir: Path) -> dict[str, An
 
 
 def apply_corpus(*, input_path: Path, release_dir: Path, output_dir: Path, authorized: bool) -> dict[str, Any]:
-    bundle = {name: list(iter_jsonl(release_dir / f"{name}.jsonl")) for name in PUBLIC_FILES}
+    bundle = _release_bundle(release_dir)
     rules = correction_rules(bundle)
     firewall_version, registry = evaluation_version()
     validator = view_validator()
@@ -697,7 +776,10 @@ def apply_corpus(*, input_path: Path, release_dir: Path, output_dir: Path, autho
     receipt = {
         "schema_version": "correction_protection_consumer_run_receipt_v1",
         "input": artifact(input_path),
-        "release_receipt": artifact(release_dir / "receipt.json"),
+        "release_receipt": artifact(
+            REGISTRY_RELEASE / "receipt.json" if _managed_release(release_dir) else release_dir / "receipt.json",
+            logical_path=f"data/{RELEASE_REL}receipt.json" if _managed_release(release_dir) else None,
+        ),
         "records": records,
         "view_counts": {name: len(rows) for name, rows in outputs.items()},
         "consumer_authorized_local_learning": authorized,
@@ -714,7 +796,7 @@ def apply_corpus(*, input_path: Path, release_dir: Path, output_dir: Path, autho
 def benchmark_release(
     *, release_dir: Path, output: Path, heldback: Path | None, heldback_sha256: str | None
 ) -> dict[str, Any]:
-    bundle = {name: list(iter_jsonl(release_dir / f"{name}.jsonl")) for name in PUBLIC_FILES}
+    bundle = _release_bundle(release_dir)
     report = public_benchmark(bundle)
     if heldback is not None:
         require(heldback_sha256 is not None, "--heldback-sha256 is required with --heldback")
@@ -733,12 +815,20 @@ def benchmark_release(
 
 
 def verify_release(release_dir: Path) -> dict[str, Any]:
-    receipt = read_json(release_dir / "receipt.json")
+    managed = _managed_release(release_dir)
+    receipt = read_json(REGISTRY_RELEASE / "receipt.json" if managed else release_dir / "receipt.json")
     require(receipt["schema_version"] == "correction_protection_consumer_release_receipt_v1", "wrong receipt version")
+    snapshot = artifact_set("open_model_release_payload", repo=ROOT) if managed else None
     for name, expected in receipt["outputs"].items():
-        actual = artifact(release_dir / name, logical_path=expected["logical_path"])
+        raw = _release_bytes(release_dir, name, snapshot)
+        actual = {
+            "logical_path": expected["logical_path"],
+            "records": len(raw.splitlines()) if name.endswith(".jsonl") else 1,
+            "bytes": len(raw),
+            "sha256": sha256_bytes(raw),
+        }
         require(actual == expected, f"release artifact drift: {name}")
-    bundle = {name: list(iter_jsonl(release_dir / f"{name}.jsonl")) for name in PUBLIC_FILES}
+    bundle = _release_bundle(release_dir)
     report = public_benchmark(bundle)
     require(report["passed"], "release benchmark failed")
     return {"verified": True, "receipt_id": receipt["receipt_id"], "benchmark": report}

@@ -11,6 +11,7 @@ import pytest
 from jsonschema import Draft202012Validator
 
 import scripts.projects.open_model_data.language_contact_detector as detector
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUT_ROOT = ROOT
@@ -149,7 +150,7 @@ def test_schema_and_config_conformance(config: dict) -> None:
 
 
 def test_frozen_denominator_and_source_adapters_match_profiler(config: dict) -> None:
-    profile = _json(ROOT / "data/projects/open_model_data/profiles/public_external_full_corpus_v1.json")
+    profile = _json(REGISTRY_OPEN_MODEL_DATA_DIR / "profiles/public_external_full_corpus_v1.json")
     expected_rows = sum(source["expected"]["rows"] for source in config["sources"])
     expected_words = sum(source["expected"]["lexical_words"] for source in config["sources"])
     assert (expected_rows, expected_words) == (189150, 50298925)
@@ -309,9 +310,7 @@ def test_short_russian_morphology_hits_with_heritage_evidence_are_protected(
     runtime,
 ) -> None:
     candidates = _detect(text, config=config, runtime=runtime)
-    assert [item["classification"]["category"] for item in candidates] == [
-        "protected_authentic_ukrainian"
-    ]
+    assert [item["classification"]["category"] for item in candidates] == ["protected_authentic_ukrainian"]
     heritage = candidates[0]["evidence"]["heritage"]
     assert any(
         hit["dictionary_identity"] == dictionary_identity
@@ -529,9 +528,7 @@ def test_dimension_reads_aliased_sqlite_columns_instead_of_row_values() -> None:
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
     try:
-        row = connection.execute(
-            "SELECT 'middle_ukrainian' AS __period, 'dialectal' AS __register"
-        ).fetchone()
+        row = connection.execute("SELECT 'middle_ukrainian' AS __period, 'dialectal' AS __register").fetchone()
     finally:
         connection.close()
     assert row is not None
@@ -651,20 +648,23 @@ def test_missing_evidence_adapters_fail_closed(tmp_path: Path, config: dict) -> 
     try:
         tokens = detector.tokenize_with_offsets("Перед уроком відбулася перекличка.")
         vesum = active.vesum.lookup(token.normalized for token in tokens)
-        assert detector.run_detector_on_text(
-            text="Перед уроком відбулася перекличка.",
-            record_id="missing",
-            locator="sqlite:fixture.db#records/missing",
-            source_family="fixture",
-            source_record_id="fixture:missing",
-            period="modern",
-            register="literary",
-            origin="project_authored_fixture",
-            vesum_matches=vesum,
-            config=no_heritage,
-            runtime=active,
-            input_root=tmp_path,
-        ) == []
+        assert (
+            detector.run_detector_on_text(
+                text="Перед уроком відбулася перекличка.",
+                record_id="missing",
+                locator="sqlite:fixture.db#records/missing",
+                source_family="fixture",
+                source_record_id="fixture:missing",
+                period="modern",
+                register="literary",
+                origin="project_authored_fixture",
+                vesum_matches=vesum,
+                config=no_heritage,
+                runtime=active,
+                input_root=tmp_path,
+            )
+            == []
+        )
     finally:
         active.close()
 

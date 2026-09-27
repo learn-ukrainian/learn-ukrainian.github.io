@@ -11,8 +11,10 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[3]
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a3_heldout_source_family_seal_receipt_v1.schema.json"
@@ -21,7 +23,7 @@ A2_RECEIPT = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.js
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 V3_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
 
-NEAR_DUP_POLICY = ROOT / "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json"
+NEAR_DUP_POLICY = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_near_duplicate_policy_v1.json"
 
 # Exact (kind, value) pairs the denial must contain -- checked as pairs, not
 # just as a value set, so a kind/value mismatch (or a masked duplicate) fails.

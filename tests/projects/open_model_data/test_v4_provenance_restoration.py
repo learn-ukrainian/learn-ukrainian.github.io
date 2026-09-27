@@ -12,9 +12,10 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import source_work_locator_index as locators
 from scripts.projects.open_model_data import v4_provenance_restoration as restoration
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-EVIDENCE = ROOT / "data/projects/open_model_data/evidence"
+EVIDENCE = REGISTRY_OPEN_MODEL_DATA_DIR / "evidence"
 PROVENANCE = ROOT / "data/projects/open_model_data/provenance"
 CONTRACT = ROOT / "registry/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
 CONFIG = PROVENANCE / "v4_provenance_restoration_config_v1.json"

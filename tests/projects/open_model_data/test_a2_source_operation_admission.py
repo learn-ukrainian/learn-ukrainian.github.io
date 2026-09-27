@@ -10,8 +10,11 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_path
+
 ROOT = Path(__file__).resolve().parents[3]
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a2_source_operation_admission_receipt_v1.schema.json"
@@ -93,7 +96,11 @@ def test_a2_source_operation_bindings_match_the_exact_inventory_inputs() -> None
     receipt = _receipt()
 
     for binding in receipt["bindings"].values():
-        bound_path = ROOT / binding["path"]
+        logical = binding["path"]
+        if logical.startswith("data/projects/open_model_data/inventory/"):
+            bound_path = artifact_path("open_model_other_indexes", logical.removeprefix("data/"), repo=ROOT)
+        else:
+            bound_path = REGISTRY_OPEN_MODEL_DATA_DIR / logical.removeprefix("data/projects/open_model_data/")
         assert bound_path.is_file()
         assert hashlib.sha256(bound_path.read_bytes()).hexdigest() == binding["sha256"]
 

@@ -39,9 +39,10 @@ from scripts.projects.open_model_data import v4_a6_blind_arena as a6
 from scripts.projects.open_model_data import v4_a7_original_row_factory as a7
 from scripts.projects.open_model_data import v4_a8_admission_assembly as a8
 from scripts.projects.open_model_data import v4_a9_evaluation_package as a9
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
-ADMISSION = ROOT / "data/projects/open_model_data/admission"
+ADMISSION = REGISTRY_OPEN_MODEL_DATA_DIR / "admission"
 
 
 def _load(name: str) -> dict[str, Any]:
@@ -127,7 +128,9 @@ def resolved_a2_receipt(resolved_stratum: str) -> dict[str, Any]:
             resolved_ids.update(coverage["residual_ids"])
             coverage["residual_ids"] = []
             coverage["coverage_state"] = "resolved"
-            coverage["supporting_existing_source_unit_ids"] = _top_up_supporting_units_for_candidate_family_floor(coverage["supporting_existing_source_unit_ids"])
+            coverage["supporting_existing_source_unit_ids"] = _top_up_supporting_units_for_candidate_family_floor(
+                coverage["supporting_existing_source_unit_ids"]
+            )
     receipt["residuals"] = [r for r in receipt["residuals"] if r["residual_id"] not in resolved_ids]
     return receipt
 
@@ -158,15 +161,25 @@ def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path
     synthetic_a5["bindings"]["a4_deterministic_extraction"]["sha256"] = a4.sha256_text(json.dumps(synthetic_a4))
 
     shutil.copytree(ROOT / "data/projects/open_model_data", tmp_path / "data/projects/open_model_data")
+    # This isolated root emulates the package's frozen logical resource names.
+    # The live checkout keeps its K files solely under registry/.
+    shutil.copytree(
+        REGISTRY_OPEN_MODEL_DATA_DIR,
+        tmp_path / "data/projects/open_model_data",
+        dirs_exist_ok=True,
+    )
     admission_dir = tmp_path / "data/projects/open_model_data/admission"
     (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(resolved_a2))
     (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(json.dumps(synthetic_a4))
     (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(json.dumps(synthetic_a5))
     (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest))
-    shutil.copytree(ROOT / "scripts/projects/open_model_data", tmp_path / "scripts/projects/open_model_data", dirs_exist_ok=True)
+    shutil.copytree(
+        ROOT / "scripts/projects/open_model_data", tmp_path / "scripts/projects/open_model_data", dirs_exist_ok=True
+    )
     # Hash original implementation bytes in this synthetic legacy repository.
     # Test imports execute the package; these mode-0600 fixture files are not loaded.
     from learn_ukrainian_v4_runtime import resources
+
     spec = json.loads(resources.read_bytes("provenance/v1/bindings.json"))
     for receipt in spec["receipts"]:
         for binding in receipt["bindings"].values():

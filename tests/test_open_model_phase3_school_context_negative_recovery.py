@@ -10,12 +10,11 @@ import pytest
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_school_context_negative_recovery as negrec
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_school_context_negative_recovery_receipt_v1.schema.json"
-PUBLIC_RECEIPT = (
-    ROOT / "data/projects/open_model_data/inventory/phase3_school_context_negative_recovery_receipt_v1.json"
-)
+SCHEMA = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_school_context_negative_recovery_receipt_v1.schema.json"
+PUBLIC_RECEIPT = REGISTRY_OPEN_MODEL_DATA_DIR / "inventory/phase3_school_context_negative_recovery_receipt_v1.json"
 DRIVE_ROOT = (
     Path.home() / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
 )

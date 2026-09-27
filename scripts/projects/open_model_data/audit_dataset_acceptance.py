@@ -26,8 +26,10 @@ import json
 import math
 import os
 import re
+import shutil
 import sqlite3
 import sys
+import tempfile
 import unicodedata
 from collections import Counter
 from dataclasses import dataclass, field
@@ -38,7 +40,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.projects.open_model_data.paths import (
+    ARTIFACT_DECOLONIZATION_DIR,
+    ARTIFACT_GRAMMAR_DIR,
+    REGISTRY_DECOLONIZATION_DIR,
+    REGISTRY_GRAMMAR_DIR,
+)
 from scripts.rag.config import VESUM_DB_PATH
+from scripts.storage.paths import artifact_set
 
 # ── Paths and Authorities ──────────────────────────────────────────────────
 
@@ -1084,6 +1093,7 @@ def audit_check_7_sample_drawer(
     profile_sha256: str,
     sample_out_path: Path,
     verify_signoff_path: Path | None = None,
+    review_receipt_path: Path | None = None,
 ) -> tuple[CheckResult, Path | None, str]:
     """Check 7: Deterministic random sample drawer & human review lifecycle (M2, M3)."""
     total = len(records)
@@ -1313,7 +1323,9 @@ def audit_check_7_sample_drawer(
                         failures.append("Signoff missing valid reviewer_family")
 
                     # Check for verified itemized receipt if configured or present
-                    receipt_path = sample_out_path.parent / "acceptance_review_sample.receipt.json"
+                    receipt_path = (
+                        review_receipt_path or sample_out_path.parent / "acceptance_review_sample.receipt.json"
+                    )
                     require_receipt = thresholds.get("require_review_receipt", False)
                     if require_receipt and not receipt_path.is_file():
                         failures.append(f"Missing itemized review receipt: {receipt_path}")
@@ -1392,7 +1404,11 @@ def audit_check_7_sample_drawer(
                                     sm = (
                                         r.source_metadata
                                         if isinstance(r.source_metadata, dict)
-                                        else (r.raw.get("source_metadata") if isinstance(r.raw.get("source_metadata"), dict) else {})
+                                        else (
+                                            r.raw.get("source_metadata")
+                                            if isinstance(r.raw.get("source_metadata"), dict)
+                                            else {}
+                                        )
                                     )
                                     expected_err = sm.get("error_span") or ""
                                     expected_repl = sm.get("replacement_span") or ""
@@ -1447,26 +1463,18 @@ def audit_check_7_sample_drawer(
                                 it_verdict = r_it.get("verdict")
                                 it_status = r_it.get("status")
                                 if not isinstance(it_verdict, str) or it_verdict not in allowed_receipt_verdicts:
-                                    failures.append(
-                                        f"Receipt item {s_idx} missing or invalid verdict: {it_verdict!r}"
-                                    )
+                                    failures.append(f"Receipt item {s_idx} missing or invalid verdict: {it_verdict!r}")
                                     break
                                 if not isinstance(it_status, str) or it_status not in allowed_receipt_statuses:
-                                    failures.append(
-                                        f"Receipt item {s_idx} missing or invalid status: {it_status!r}"
-                                    )
+                                    failures.append(f"Receipt item {s_idx} missing or invalid status: {it_status!r}")
                                     break
                                 it_defects = r_it.get("defects", [])
                                 crit = r_it.get("criteria")
                                 if not isinstance(crit, dict) or not required_criteria_keys.issubset(crit.keys()):
-                                    failures.append(
-                                        f"Receipt item {s_idx} missing required 5 criteria keys"
-                                    )
+                                    failures.append(f"Receipt item {s_idx} missing required 5 criteria keys")
                                     break
                                 if any(not isinstance(crit[k], bool) for k in required_criteria_keys):
-                                    failures.append(
-                                        f"Receipt item {s_idx} has non-boolean criteria value"
-                                    )
+                                    failures.append(f"Receipt item {s_idx} has non-boolean criteria value")
                                     break
                                 has_failed_criteria = any(crit[k] is False for k in required_criteria_keys)
                                 is_defective = (
@@ -1513,7 +1521,11 @@ def audit_check_7_sample_drawer(
                                 if not ass or not isinstance(ass, str) or not ass.strip():
                                     continue
                                 is_err = r.is_erroneous if r.is_erroneous is not None else r_it.get("is_erroneous")
-                                orig_text = r.original_text if r.original_text is not None else (r_it.get("original_text") or "")
+                                orig_text = (
+                                    r.original_text
+                                    if r.original_text is not None
+                                    else (r_it.get("original_text") or "")
+                                )
                                 if is_err is False and orig_text.strip():
                                     ctrl_assessments.append(ass)
                                     orig_tokens = " ".join(re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text.lower()))
@@ -1527,7 +1539,11 @@ def audit_check_7_sample_drawer(
                                     sm = (
                                         r.source_metadata
                                         if isinstance(r.source_metadata, dict)
-                                        else (r.raw.get("source_metadata") if isinstance(r.raw.get("source_metadata"), dict) else {})
+                                        else (
+                                            r.raw.get("source_metadata")
+                                            if isinstance(r.raw.get("source_metadata"), dict)
+                                            else {}
+                                        )
                                     )
                                     err_span = sm.get("error_span") or r_it.get("error_span") or ""
                                     repl_span = sm.get("replacement_span") or r_it.get("replacement_span") or ""
@@ -1612,7 +1628,7 @@ def compute_dataset_sha256(jsonl_files: list[Path], dataset_dir: Path) -> str:
     return hasher.hexdigest()
 
 
-def run_acceptance_audit(
+def _run_acceptance_audit_directory(
     dataset_dir: Path,
     profile_name: str = "default",
     sample_out: Path | None = None,
@@ -1620,6 +1636,7 @@ def run_acceptance_audit(
     vesum_db: Path | None = None,
     sources_db: Path | None = None,
     verify_signoff: Path | None = None,
+    review_receipt: Path | None = None,
     require_human_signoff: bool = False,
     fail_fast: bool = False,
 ) -> tuple[AcceptanceReport, int]:
@@ -1844,7 +1861,7 @@ def run_acceptance_audit(
 
         if not (fail_fast and has_failure):
             res7, written_sample, seed_hash = audit_check_7_sample_drawer(
-                records, thresholds, dataset_sha256, profile_sha256, actual_sample_out, verify_signoff
+                records, thresholds, dataset_sha256, profile_sha256, actual_sample_out, verify_signoff, review_receipt
             )
             report.checks["check_7_sample_drawer"] = res7
             report.sample_file_path = str(written_sample) if written_sample else None
@@ -1878,6 +1895,60 @@ def run_acceptance_audit(
         exit_code = 0
 
     return report, exit_code
+
+
+def run_acceptance_audit(
+    dataset_dir: Path,
+    profile_name: str = "default",
+    sample_out: Path | None = None,
+    sample_size: int | None = None,
+    vesum_db: Path | None = None,
+    sources_db: Path | None = None,
+    verify_signoff: Path | None = None,
+    require_human_signoff: bool = False,
+    fail_fast: bool = False,
+) -> tuple[AcceptanceReport, int]:
+    """Audit migrated components from one verified group snapshot."""
+    managed = {
+        REGISTRY_DECOLONIZATION_DIR: "decolonization",
+        ARTIFACT_DECOLONIZATION_DIR: "decolonization",
+        REGISTRY_GRAMMAR_DIR: "grammar",
+        ARTIFACT_GRAMMAR_DIR: "grammar",
+    }
+    component = managed.get(dataset_dir.resolve())
+    kwargs = dict(
+        profile_name=profile_name,
+        sample_out=sample_out,
+        sample_size=sample_size,
+        vesum_db=vesum_db,
+        sources_db=sources_db,
+        verify_signoff=verify_signoff,
+        require_human_signoff=require_human_signoff,
+        fail_fast=fail_fast,
+    )
+    if component is None:
+        return _run_acceptance_audit_directory(dataset_dir, **kwargs)
+    if sample_out is None:
+        raise ValueError("managed component audit requires --sample-out outside migrated artifact storage")
+    resolved_output = sample_out.resolve()
+    for base in (REGISTRY_DECOLONIZATION_DIR, ARTIFACT_DECOLONIZATION_DIR, REGISTRY_GRAMMAR_DIR, ARTIFACT_GRAMMAR_DIR):
+        if resolved_output.is_relative_to(base.resolve()):
+            raise ValueError("managed component audit sample output must be outside migrated artifact storage")
+    snapshot = artifact_set("open_model_component_payload", repo=PROJECT_ROOT)
+    registry_dir = REGISTRY_DECOLONIZATION_DIR if component == "decolonization" else REGISTRY_GRAMMAR_DIR
+    kwargs["review_receipt"] = registry_dir / "acceptance_review_sample.receipt.json"
+    prefix = f"projects/open_model_data/components/{component}/"
+    with tempfile.TemporaryDirectory(prefix=f"open-model-{component}-audit-") as temporary:
+        staged = Path(temporary) / component
+        shutil.copytree(registry_dir, staged)
+        for relative, content in snapshot.artifacts.items():
+            if relative.startswith(prefix):
+                destination = staged / relative.removeprefix(prefix)
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(content)
+        report, code = _run_acceptance_audit_directory(staged, **kwargs)
+    report.dataset_dir = str(dataset_dir)
+    return report, code
 
 
 def print_report_summary(report: AcceptanceReport, exit_code: int):
