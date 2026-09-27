@@ -434,7 +434,11 @@ def verify_words_store(
                     )
 
                 # Re-derive rule 4 stress
-                if needs_no_stress(form_str):
+                pending_reason = stress.pending_stress_reason(form_str)
+                if pending_reason:
+                    expected_source = "pending"
+                    expected_stressed = None
+                elif needs_no_stress(form_str):
                     expected_source = "none"
                     expected_stressed = form_str
                 elif ulif_checked and matching_entry and form_str in ulif_forms:
@@ -465,7 +469,7 @@ def verify_words_store(
                         f"form {form_str!r} ({word_id}): stored ({stored_stress_source}, {stored_stressed}) "
                         f"!= current ({expected_source}, {expected_stressed})"
                     )
-                    if word_source_changed:
+                    if word_source_changed and not pending_reason:
                         _drift(strict, errors, warnings, msg)
                     else:
                         errors.append(f"{codes.STRESS_MISMATCH}: {msg}")
