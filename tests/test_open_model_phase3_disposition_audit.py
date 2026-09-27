@@ -724,4 +724,7 @@ def test_structural_summary_streams_bounded_synthetic_family() -> None:
     _, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
     assert summary["unit_count"] == summary["duplicate_group_observation_total"] == 4_000
-    assert peak < 5 * 1024 * 1024
+    # Host peaks (7/7 identical): streaming 19_002 bytes; list() materialisation
+    # 2_833_778 bytes. Ceiling is 3× streaming, between the two.
+    _BOUNDED_TWIN_PEAK_CEILING_BYTES = 3 * 19_002
+    assert peak < _BOUNDED_TWIN_PEAK_CEILING_BYTES

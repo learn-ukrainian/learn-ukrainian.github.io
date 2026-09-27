@@ -162,7 +162,6 @@ def collect_with_absent_trees(
     )
 
 
-@pytest.mark.slow
 def test_tree_referencing_modules_collect_when_sparse_trees_are_absent() -> None:
     completed = collect_with_absent_trees(_collection_targets())
     output = completed.stdout + completed.stderr
