@@ -3,8 +3,10 @@
 
 This script deliberately re-implements every rule it checks (table extraction,
 key normalisation, entry ids, the source-derived verb aspect from VESUM and
-checked ULIF entries, the learner-facing English, the overlapping-English rule)
-with the standard library only.  It must never import the generator
+checked ULIF entries, the learner-facing English, the overlapping-English rule,
+the Atlas join with its mechanical sense rule and identity conflicts, the
+same-slot cloze distractor rule, the lesson-sentence fragment rules and the
+review ledger) with the standard library only.  It must never import the generator
 (``scripts/lexicon/teacher_deck_shard.py``), the table sync, or the CEFR
 exporter: a shared bug would otherwise pass its own check.
 """
@@ -52,6 +54,153 @@ ULIF_VERB_LABELS = {
 }
 EN_ASPECT_LABEL = {"imperf": "impf.", "perf": "pf.", "dual": "impf./pf."}
 CLASSIFY_ANSWER = {"imperf": "imperfective", "perf": "perfective"}
+# Words that never decide an Atlas sense match (function words, aspect markers).
+SENSE_STOPWORDS = frozenset(
+    [
+        "a",
+        "an",
+        "the",
+        "to",
+        "of",
+        "in",
+        "on",
+        "at",
+        "for",
+        "with",
+        "by",
+        "from",
+        "into",
+        "onto",
+        "up",
+        "down",
+        "out",
+        "off",
+        "over",
+        "about",
+        "as",
+        "and",
+        "or",
+        "not",
+        "no",
+        "be",
+        "is",
+        "are",
+        "was",
+        "were",
+        "been",
+        "being",
+        "do",
+        "does",
+        "did",
+        "have",
+        "has",
+        "had",
+        "get",
+        "it",
+        "its",
+        "one",
+        "oneself",
+        "someone",
+        "somebody",
+        "something",
+        "sb",
+        "sth",
+        "smb",
+        "smth",
+        "self",
+        "impf",
+        "perf",
+        "pf",
+        "ipf",
+        "imperf",
+        "etc",
+    ]
+)
+# School part-of-speech words for an Atlas ``pos`` label; a label naming exactly one is that part of speech.
+POS_WORDS = {
+    "noun": ("іменник", "noun", "abbreviation", "proper noun", "plural noun", "propn"),
+    "adjective": ("прикметник", "adj", "adjective"),
+    "numeral": ("числівник", "num", "numr", "numeral", "number"),
+    "pronoun": ("займенник", "pronoun", "pron", "negative pronoun"),
+    "verb": ("дієслово", "verb", "infinitive", "imperative"),
+    "adverb": ("прислівник", "присл", "adv", "adverb"),
+    "preposition": ("прийменник", "приймен.", "preposition", "prep"),
+    "conjunction": ("сполучник", "спол.", "conjunction", "conj"),
+    "particle": ("частка", "particle", "part"),
+    "interjection": ("вигук", "interjection", "interj", "intj"),
+}
+# VESUM tag parts that fix a form's grammatical slot (case, number, gender, person, tense, …).
+SLOT_TAG_PARTS = frozenset(
+    [
+        "m",
+        "f",
+        "n",
+        "p",
+        "s",
+        "v_naz",
+        "v_rod",
+        "v_dav",
+        "v_zna",
+        "v_oru",
+        "v_mis",
+        "v_kly",
+        "inf",
+        "pres",
+        "futr",
+        "past",
+        "impr",
+        "1",
+        "2",
+        "3",
+        "ranim",
+        "rinanim",
+        "compb",
+        "compc",
+        "comps",
+    ]
+)
+LEDGER_SCHEMA = ("atlas-practice-teacher-withheld", 1)
+LEDGER_CODES = frozenset({"ERR", "AMBIG", "FRAG", "PRIV"})
+TASK_VERBS = [
+    "Визначте",
+    "Поясніть",
+    "Запишіть",
+    "Використайте",
+    "Випишіть",
+    "Перепишіть",
+    "Складіть",
+    "Вставте",
+    "Заповніть",
+    "Доповніть",
+    "Підкресліть",
+    "Утворіть",
+    "Розставте",
+    "Виправте",
+    "Замініть",
+    "Перекладіть",
+    "Доберіть",
+    "Позначте",
+    "Продовжте",
+    "Перекажіть",
+    "Відредагуйте",
+    "Розкрийте",
+    "Об'єднайте",
+    "Об’єднайте",
+]
+CUT_ABBREVIATIONS = ["ім", "див", "напр", "вул", "просп", "пров", "проф", "акад", "св", "м", "с", "т", "чол", "жін"]
+LETTER = r"[^\W\d_]"
+FRAGMENT_SHAPES = (
+    ("outline arrow", re.compile("→")),
+    ("slash alternative", re.compile(LETTER + r" ?/ ?" + LETTER)),
+    (
+        "parenthesised number or gloss",
+        re.compile(r"\([^()]*\d[^()]*\)|\( *[a-zа-щьюяєіїґ][a-zа-щьюяєіїґ'’ʼ -]*\)|\((?![^()]*\))"),
+    ),
+    ("copied citation marker", re.compile(r"\[\d+\]")),
+    ("leading section label", re.compile("^" + LETTER + r"[\w'’ʼ-]*(?: +[\w'’ʼ-]+){0,2}:(?: |$)")),
+    ("worksheet task", re.compile(r"^(?:\d+[.)] *)?(?:" + "|".join(TASK_VERBS) + r")(?![\w'’ʼ-])")),
+    ("truncated abbreviation", re.compile(r"(?:^|[ (])(?:" + "|".join(CUT_ABBREVIATIONS) + r")\.$", re.IGNORECASE)),
+)
 
 
 # ----------------------------------------------------------------------------- own rules
@@ -232,6 +381,98 @@ def own_display(teacher_en: str, value: str | None) -> str:
     return f"{text} ({EN_ASPECT_LABEL[value]})" if value in EN_ASPECT_LABEL else text
 
 
+def sentence_digest(sentence: str) -> str:
+    return hashlib.sha256(" ".join(unicodedata.normalize("NFC", sentence).split()).encode("utf-8")).hexdigest()
+
+
+def fragment_shape(sentence: str) -> str | None:
+    return next((name for name, pattern in FRAGMENT_SHAPES if pattern.search(sentence)), None)
+
+
+def content_words(english: str) -> set[str]:
+    return {token for part in meaning_parts(english) for token in part if token != "/" and token not in SENSE_STOPWORDS}
+
+
+def own_sense(english: str, senses: list[str]) -> tuple[str, int | None]:
+    """Single sense usable; several senses need exactly one sharing a content word."""
+
+    if not senses:
+        return "no-sense", None
+    if len(senses) == 1:
+        return "single-sense", 0
+    words = content_words(english)
+    hits = [index for index, sense in enumerate(senses) if words & content_words(sense)]
+    if len(hits) == 1:
+        return "unique-match", hits[0]
+    return ("ambiguous" if hits else "no-match"), None
+
+
+def pos_word(pos: Any) -> str:
+    text = pos.strip().casefold() if isinstance(pos, str) else ""
+    found: list[str] = []
+    for part in re.split(r"\s*[,;/|+]\s*", text):
+        for name, words in POS_WORDS.items():
+            hit = any(
+                part == w or part.startswith((f"{w}:", f"{w}.")) or (w != "part" and part.startswith(f"{w} "))
+                for w in words
+            )
+            if hit and name not in found:
+                found.append(name)
+    if len(found) == 1:
+        return found[0]
+    return "phrase" if text == "phrase" else ""
+
+
+def slot(tags: str) -> tuple[str, ...]:
+    parts = tags.split(":")
+    return (parts[0], *sorted(part for part in parts[1:] if part in SLOT_TAG_PARTS))
+
+
+def atlas_articles(atlas: sqlite3.Connection) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for (raw,) in atlas.execute(
+        "SELECT payload_json FROM article_payloads WHERE is_public_route = 1 ORDER BY route_order"
+    ):
+        payload = json.loads(raw)
+        if isinstance(payload, dict) and isinstance(payload.get("lemma"), str):
+            grouped.setdefault(norm_key(payload["lemma"]), []).append(payload)
+    return grouped
+
+
+def article_senses(article: dict[str, Any]) -> list[str]:
+    english = ((article.get("enrichment") or {}).get("translation") or {}).get("en")
+    if isinstance(english, str):
+        english = [english]
+    if not isinstance(english, list):
+        return []
+    return [" ".join(item.split()) for item in english if isinstance(item, str) and item.strip()]
+
+
+def load_ledger(path: Path, report: Report) -> dict[str, str]:
+    """Withheld sentence digests -> code; the ledger must carry hashes, never sentence text."""
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if (payload.get("schema"), payload.get("schemaVersion")) != LEDGER_SCHEMA:
+        report.fail("review ledger schema/version mismatch")
+    withheld: dict[str, str] = {}
+    for row in payload.get("withheld", []):
+        if set(row) != {"sentenceSha256", "code", "reviewer", "reviewedAt"} or row.get("code") not in LEDGER_CODES:
+            report.fail(f"review ledger: malformed withheld record {sorted(row)}")
+            continue
+        withheld[str(row["sentenceSha256"])] = str(row["code"])
+    kept = set()
+    for row in payload.get("kept", []):
+        if set(row) != {"sentenceSha256", "reviewer", "reviewedAt"}:
+            report.fail(f"review ledger: malformed kept record {sorted(row)}")
+            continue
+        kept.add(str(row["sentenceSha256"]))
+    if any(not re.fullmatch(r"[0-9a-f]{64}", digest) for digest in (*withheld, *kept)):
+        report.fail("review ledger: a record is not a SHA-256 digest")
+    if kept & set(withheld):
+        report.fail("review ledger: a sentence is both kept and withheld")
+    return withheld
+
+
 def extract_table(docx: Path, heading: str) -> tuple[str, list[tuple[int, str, str]]]:
     """Own extraction: (row number, Ukrainian, English) for every data row after *heading*."""
 
@@ -381,6 +622,67 @@ def check_aspects(
     return aspects
 
 
+def check_atlas(
+    deck: dict[str, Any],
+    coverage: dict[str, Any] | None,
+    articles: dict[str, list[dict[str, Any]]],
+    aspects: dict[str, dict[str, Any] | None],
+    report: Report,
+) -> dict[str, tuple[str, int | None]]:
+    """Own Atlas join: article per key, identity conflicts, and the mechanical sense rule.
+    Returns entry id -> (sense rule, sense index) for entries joined to an article."""
+
+    senses: dict[str, tuple[str, int | None]] = {}
+    conflicts: dict[str, str] = {}
+    for entry in deck["entries"]:
+        entry_id = entry["entryId"]
+        found = articles.get(entry["key"], [])
+        declared = entry.get("atlas")
+        if len(found) > 1:
+            conflicts[entry_id] = "homograph:"
+        elif found and not entry["multiword"]:
+            aspect = aspects.get(entry_id)
+            bucket = pos_word(found[0].get("pos"))
+            if aspect is not None and aspect.get("lemma") and bucket and bucket != "verb":
+                conflicts[entry_id] = "part of speech: VESUM/ULIF"
+        if not found or len(found) > 1:
+            if declared is not None:
+                report.fail(
+                    f"{entry_id}: joined to Atlas {declared.get('slug')!r} but the key names {len(found)} articles"
+                )
+            continue
+        article = found[0]
+        rule, index = own_sense(str(entry.get("en") or ""), article_senses(article))
+        senses[entry_id] = (rule, index)
+        if declared is None:
+            report.fail(f"{entry_id}: not joined although the Atlas has one article {article.get('url_slug')!r}")
+            continue
+        if declared.get("slug") != article.get("url_slug") or declared.get("pos") != article.get("pos"):
+            report.fail(f"{entry_id}: Atlas join {declared.get('slug')!r} is not the key's article")
+        if (declared.get("senseRule"), declared.get("senseIndex")) != (rule, index):
+            report.fail(
+                f"{entry_id}: Atlas sense {declared.get('senseRule')}/{declared.get('senseIndex')} "
+                f"!= mechanical rule {rule}/{index}"
+            )
+        if bool(declared.get("identityConflict")) != (entry_id in conflicts):
+            report.fail(
+                f"{entry_id}: identityConflict {declared.get('identityConflict')} differs from the Atlas/sources"
+            )
+    listed = {
+        row.get("entryId"): str(row.get("reason", ""))
+        for row in ((coverage or {}).get("residuals") or {}).get("identityConflicts", [])
+    }
+    if set(listed) != set(conflicts):
+        report.fail(
+            f"identity conflicts differ from the Atlas/sources (listed only {sorted(set(listed) - set(conflicts))[:3]}, "
+            f"missing {sorted(set(conflicts) - set(listed))[:3]})"
+        )
+    for entry_id, prefix in conflicts.items():
+        if entry_id in listed and not listed[entry_id].startswith(prefix):
+            report.fail(f"{entry_id}: identity conflict reason {listed[entry_id]!r} is not {prefix!r}")
+    return senses
+
+
 def check_entries(
     deck: dict[str, Any],
     frozen: dict[str, Any],
@@ -479,11 +781,14 @@ def check_cloze(
     report: Report,
     vesum: sqlite3.Connection | None,
     sources: sqlite3.Connection | None,
-) -> None:
+    senses: dict[str, tuple[str, int | None]] | None = None,
+    withheld: dict[str, str] | None = None,
+) -> dict[str, Any]:
     by_id = {entry["entryId"]: entry for entry in deck["entries"]}
     per_entry: dict[str, list[dict[str, Any]]] = {}
     seen_ids: set[str] = set()
     lesson_texts = _lesson_texts(sources) if sources is not None else {}
+    lesson_digests: set[str] = set()
     for item in cloze.get("cloze", []):
         cloze_id = item.get("clozeId")
         entry = by_id.get(item.get("entryId"))
@@ -518,27 +823,44 @@ def check_cloze(
             if other_id not in by_id:
                 report.fail(f"{cloze_id}: distractor is not a deck entry")
         form = str(item.get("form", ""))
+        restored = sentence.replace("___", form, 1)
+        digest = sentence_digest(restored)
+        if withheld is not None and digest in withheld:
+            report.fail(f"{cloze_id}: serves a sentence the language review withheld ({withheld[digest]})")
+        if item.get("source") == "teacher-lesson":
+            lesson_digests.add(digest)
+            shape = fragment_shape(restored)
+            if shape:
+                report.fail(f"{cloze_id}: teacher-lesson sentence is worksheet debris ({shape})")
+        distractor_entries = [by_id.get(o.get("entryId")) for o in options if o.get("kind") != "answer"]
         if entry["multiword"]:
             key_tokens = [norm_key(t) for t in UK_TOKEN.findall(entry["key"])]
             if " ".join(key_tokens) != entry["key"] or [norm_key(t) for t in UK_TOKEN.findall(form)] != key_tokens:
                 report.fail(f"{cloze_id}: multiword cloze without the whole phrase verbatim")
+            if any(other is not None and not other["multiword"] for other in distractor_entries):
+                report.fail(f"{cloze_id}: a single-word distractor in a phrase cloze")
         elif vesum is not None:
-            lemmas = {
-                norm_key(row[0])
+            rows = [
+                (norm_key(lemma), tags)
                 for variant in {
                     form,
                     form.casefold(),
                     form.translate(APOSTROPHES),
                     form.translate(APOSTROPHES).casefold(),
                 }
-                for row in vesum.execute("SELECT lemma FROM forms WHERE word_form = ?", (variant,))
-            }
-            if lemmas != {entry["key"]}:
+                for lemma, tags in vesum.execute("SELECT lemma, tags FROM forms WHERE word_form = ?", (variant,))
+            ]
+            if {lemma for lemma, _tags in rows} != {entry["key"]}:
                 report.fail(f"{cloze_id}: blank form {form!r} is not an unambiguous VESUM form of {entry['key']!r}")
-        if sources is not None:
-            restored = sentence.replace("___", form, 1)
-            if not _sentence_in_source(sources, item, restored, lesson_texts):
-                report.fail(f"{cloze_id}: restored sentence not found verbatim in its source")
+            check_slots(item, {slot(tags) for _lemma, tags in rows}, by_id, vesum, report)
+        if senses is not None and entry.get("atlas"):
+            rule, index = senses.get(entry["entryId"], ("", None))
+            if item.get("source") == "textbook" and index is None:
+                report.fail(f"{cloze_id}: textbook sentence although the Atlas sense rule is {rule or 'unresolved'}")
+            if (item.get("atlasSense") or {}).get("senseIndex") != index:
+                report.fail(f"{cloze_id}: atlasSense index differs from the mechanical sense rule ({index})")
+        if sources is not None and not _sentence_in_source(sources, item, restored, lesson_texts):
+            report.fail(f"{cloze_id}: restored sentence not found verbatim in its source")
     for entry_id, items in per_entry.items():
         if len(items) > MAX_CLOZE:
             report.fail(f"{entry_id}: more than {MAX_CLOZE} cloze sentences")
@@ -551,6 +873,47 @@ def check_cloze(
     for entry_id, entry in by_id.items():
         if entry["cards"].get("cloze") and entry_id not in per_entry:
             report.fail(f"{entry_id}: cloze card without cloze items")
+    lesson_items = [item for item in cloze.get("cloze", []) if item.get("source") == "teacher-lesson"]
+    return {"lessonItems": len(lesson_items), "lessonSentences": len(lesson_digests)}
+
+
+def check_slots(
+    item: dict[str, Any],
+    wanted: set[tuple[str, ...]],
+    by_id: dict[str, dict[str, Any]],
+    vesum: sqlite3.Connection,
+    report: Report,
+) -> None:
+    """Same-slot rule: a single-word distractor is a form of its own single-word entry that
+    fills every grammatical slot the blank's form fills, and is not a form of the answer."""
+
+    answer_key = by_id[item["entryId"]]["key"]
+    answer_forms = {answer_key} | {
+        norm_key(row[0]) for row in vesum.execute("SELECT word_form FROM forms WHERE lemma = ?", (answer_key,))
+    }
+    for option in item.get("options", []):
+        if option.get("kind") == "answer":
+            continue
+        other = by_id.get(option.get("entryId"))
+        if other is None:
+            continue
+        label = str(option.get("label", ""))
+        if other["multiword"]:
+            report.fail(f"{item.get('clozeId')}: phrase distractor {label!r} in a single-word cloze")
+            continue
+        surfaces = {label, label[:1].lower() + label[1:]}
+        slots = {
+            slot(tags)
+            for word_form, tags in vesum.execute("SELECT word_form, tags FROM forms WHERE lemma = ?", (other["key"],))
+            if word_form in surfaces
+        }
+        if not slots or not wanted <= slots:
+            report.fail(
+                f"{item.get('clozeId')}: distractor {label!r} does not fill the blank's grammatical slot "
+                f"as a form of {other['key']!r}"
+            )
+        if norm_key(label) in answer_forms:
+            report.fail(f"{item.get('clozeId')}: distractor {label!r} is a form of the answer's lemma")
 
 
 def _lesson_texts(sources: sqlite3.Connection) -> dict[str, list[str]]:
@@ -717,6 +1080,14 @@ def residuals(
     return out
 
 
+def _read_only(path: Path | None) -> sqlite3.Connection | None:
+    if path is None:
+        return None
+    if not path.exists():
+        raise FileNotFoundError(path)
+    return sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+
+
 def run(args: argparse.Namespace) -> tuple[Report, dict[str, Any]]:
     report = Report()
     deck_dir: Path = args.deck_dir
@@ -739,19 +1110,24 @@ def run(args: argparse.Namespace) -> tuple[Report, dict[str, Any]]:
         report.fail(f"frozen key list has {len(frozen.get('keys', []))} keys, expected {args.expect_keys}")
     if args.docx:
         summary["table"] = check_source_table(deck, frozen, extract_table(args.docx, args.heading), report)
-    vesum = sqlite3.connect(f"file:{args.vesum_db.resolve()}?mode=ro", uri=True) if args.vesum_db else None
-    sources = sqlite3.connect(f"file:{args.sources_db.resolve()}?mode=ro", uri=True) if args.sources_db else None
+    withheld = load_ledger(args.withheld, report) if getattr(args, "withheld", None) else None
+    vesum = _read_only(args.vesum_db)
+    sources = _read_only(args.sources_db)
+    atlas = _read_only(getattr(args, "atlas_db", None))
     try:
         lookup = AspectLookup(vesum, sources) if vesum is not None and sources is not None else None
         aspects = check_aspects(deck, lookup, report)
         values = {entry_id: (aspect or {}).get("value") for entry_id, aspect in aspects.items()}
         overlaps, partners = own_overlaps(deck["entries"], values)
         check_entries(deck, frozen, overlaps, partners, report)
-        check_cloze(deck, cloze, overlaps, partners, report, vesum, sources)
+        senses = check_atlas(deck, coverage, atlas_articles(atlas), aspects, report) if atlas is not None else None
+        summary["lesson"] = check_cloze(deck, cloze, overlaps, partners, report, vesum, sources, senses, withheld)
     finally:
-        for conn in (vesum, sources):
+        for conn in (vesum, sources, atlas):
             if conn is not None:
                 conn.close()
+    summary["atlasVerified"] = atlas is not None
+    summary["withheldVerified"] = withheld is not None
     check_grammar(deck, aspects, coverage, report)
     summary["entries"] = len(deck["entries"])
     summary["frozenKeys"] = len(frozen.get("keys", []))
@@ -784,6 +1160,12 @@ def render(report: Report, summary: dict[str, Any], limit: int | None) -> str:
         )
     lines.append(
         f"entries: {summary['entries']} (frozen source keys: {summary['frozenKeys']}); cloze items: {summary['cloze']}"
+    )
+    lines.append(
+        f"teacher-lesson cloze: {summary['lesson']['lessonItems']} items, {summary['lesson']['lessonSentences']} "
+        f"distinct sentences; fragment rules re-checked; withheld ledger "
+        f"{'re-checked' if summary['withheldVerified'] else 'not given'}; Atlas join, sense rule and identity "
+        f"conflicts {'re-derived' if summary['atlasVerified'] else 'not re-derived (no --atlas-db)'}"
     )
     for shape, cells in summary["aspect"].items():
         lines.append(
@@ -820,7 +1202,8 @@ def main(argv: list[str] | None = None) -> int:
         epilog="""Examples:
   .venv/bin/python scripts/audit/check_teacher_deck.py --deck-dir data/lexicon/teacher-deck
   .venv/bin/python scripts/audit/check_teacher_deck.py --deck-dir /tmp/deck --docx /private/master.docx \\
-      --expect-keys 1134 --vesum-db data/vesum.db --sources-db data/sources.db
+      --expect-keys 1134 --vesum-db data/vesum.db --sources-db data/sources.db --atlas-db data/atlas.db \\
+      --withheld site/src/data/lexicon-teacher-deck-withheld.json
 Outputs: PASS/FAIL, errors, the eligibility matrix and residual lists on stdout;
   --json writes the same as JSON. Read-only: databases open with mode=ro.
 Exit codes: 0 PASS; 1 structural errors; 2 unreadable inputs.
@@ -838,6 +1221,16 @@ Related: docs/practice/teacher-deck-artifacts.md; scripts/lexicon/teacher_deck.p
     parser.add_argument("--vesum-db", type=Path, help="VESUM DB to verify single-word cloze forms (default: skip).")
     parser.add_argument(
         "--sources-db", type=Path, help="sources.db to verify cloze sentences verbatim (default: skip)."
+    )
+    parser.add_argument(
+        "--atlas-db",
+        type=Path,
+        help="Word Atlas DB to re-derive the Atlas join, sense rule and identity conflicts (default: skip).",
+    )
+    parser.add_argument(
+        "--withheld",
+        type=Path,
+        help="Language-review ledger; fails when a withheld sentence is served (default: skip).",
     )
     parser.add_argument(
         "--limit", type=int, default=0, help="Max listed errors/residual rows per list; 0 = all (default 0)."

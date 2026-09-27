@@ -122,7 +122,10 @@ def _get_or_create_conn_locked(
         or current_stat is None
         or _vesum_conn_stat != current_stat
     ):
-        new_conn = sqlite3.connect(str(resolved_path), check_same_thread=False)
+        # VESUM is a reference dictionary: every reader opens it read-only.
+        new_conn = sqlite3.connect(
+            f"{resolved_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False
+        )
         new_conn.row_factory = sqlite3.Row
 
         old_conn = _vesum_conn

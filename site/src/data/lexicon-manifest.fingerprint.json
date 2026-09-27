@@ -359,15 +359,15 @@
       },
       {
         "path": "scripts/lexicon/sync_teacher_table_deck.py",
-        "sha256": "d5522d909f63aa961eaf1177f9fafd1af3c485de899d377c22d3940db9a08656"
+        "sha256": "2734b018dccc3c07dded52f973ee5c2b5073d9525c01ad3a7c6c79057d3ef6f1"
       },
       {
         "path": "scripts/lexicon/teacher_deck.py",
-        "sha256": "30d5eb413a97de56ab5d0a2ecaee3c6f916dc92a2b21bc1f8b515c3515786e1e"
+        "sha256": "bc2ea9c696797ca708bb71e46eea471dddb6ab0c78078693bdf8750418fbf98e"
       },
       {
         "path": "scripts/lexicon/teacher_deck_shard.py",
-        "sha256": "e97da20f1225421fac9ebdfa97f442e259713f5d55d35891731c5974c5c2960f"
+        "sha256": "082c3b922a8fc6b3c3551998870c7529994da9d321c14a44d25050aa22a4ed3b"
       },
       {
         "path": "scripts/lexicon/thin_page_report.py",

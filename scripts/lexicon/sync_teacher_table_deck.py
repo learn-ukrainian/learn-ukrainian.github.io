@@ -346,6 +346,13 @@ def write_site_data(
             f"(first: {dropped[:3]}); pass --allow-shrink to confirm",
         )
 
+    site_data_path.parent.mkdir(parents=True, exist_ok=True)
+    site_data_path.write_bytes(site_data_bytes(lemma_keys))
+
+
+def site_data_bytes(lemma_keys: list[str]) -> bytes:
+    """The public, lemma-only special-set payload exactly as it is committed."""
+
     payload = {
         "schema": SCHEMA,
         "id": DECK_ID,
@@ -354,11 +361,7 @@ def write_site_data(
         "description": DESCRIPTION,
         "lemma_keys": lemma_keys,
     }
-    site_data_path.parent.mkdir(parents=True, exist_ok=True)
-    site_data_path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
 def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:

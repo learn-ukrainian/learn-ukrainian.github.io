@@ -296,8 +296,8 @@ def _p(text: str, style: str = "") -> str:
     return f"<w:p>{prop}<w:r><w:t>{text}</w:t></w:r></w:p>"
 
 
-def _write_docx(path: Path, table: list[tuple[str, str]]) -> None:
-    body = "".join(_p(date) + "".join(_p(line) for line in lines) for date, lines in LESSONS)
+def _write_docx(path: Path, table: list[tuple[str, str]], lessons: list[tuple[str, list[str]]] | None = None) -> None:
+    body = "".join(_p(date) + "".join(_p(line) for line in lines) for date, lines in (lessons or LESSONS))
     header = "<w:tr>" + "".join(f"<w:tc>{_p(c)}</w:tc>" for c in ("Current", "Ukrainian", "English")) + "</w:tr>"
     data = "".join(
         f"<w:tr><w:tc>{_p(str(n))}</w:tc><w:tc>{_p(uk)}</w:tc><w:tc>{_p(en)}</w:tc></w:tr>"
@@ -363,6 +363,8 @@ def world(tmp_path: Path) -> dict[str, Path]:
             )
     verdicts = tmp_path / "verdicts.yaml"
     verdicts.write_text("approved: []\n", encoding="utf-8")
+    withheld = tmp_path / "withheld.json"
+    _write_ledger(withheld, {})
     return {
         "docx": docx,
         "sources": sources,
@@ -373,7 +375,23 @@ def world(tmp_path: Path) -> dict[str, Path]:
         "table": tmp_path / "table-deck.json",
         "frozen": tmp_path / "frozen-keys.json",
         "pointer": tmp_path / "pointer.json",
+        "withheld": withheld,
     }
+
+
+def _write_ledger(path: Path, withheld: dict[str, str], kept: tuple[str, ...] = ()) -> None:
+    """Ledger fixture from sentences (hashed here, as the committed file never holds text)."""
+
+    stamp = {"reviewer": "fixture", "reviewedAt": "2026-09-27"}
+    payload = {
+        "schema": shard.WITHHELD_SCHEMA,
+        "schemaVersion": 1,
+        "withheld": [
+            {"sentenceSha256": shard.sentence_sha256(text), "code": code, **stamp} for text, code in withheld.items()
+        ],
+        "kept": [{"sentenceSha256": shard.sentence_sha256(text), **stamp} for text in kept],
+    }
+    path.write_text(json.dumps(payload), encoding="utf-8")
 
 
 def _refresh(world: dict[str, Path], *extra: str) -> int:
@@ -398,6 +416,8 @@ def _refresh(world: dict[str, Path], *extra: str) -> int:
             str(world["frozen"]),
             "--pointer",
             str(world["pointer"]),
+            "--withheld",
+            str(world["withheld"]),
             *extra,
         ]
     )
@@ -407,6 +427,7 @@ def _check(deck_dir: Path, world: dict[str, Path] | None = None) -> tuple[int, s
     args = ["--deck-dir", str(deck_dir)]
     if world:
         args += ["--docx", str(world["docx"]), "--vesum-db", str(world["vesum"]), "--sources-db", str(world["sources"])]
+        args += ["--atlas-db", str(world["atlas"]), "--withheld", str(world["withheld"])]
     result = subprocess.run(
         [sys.executable, str(ROOT / "scripts/audit/check_teacher_deck.py"), *args],
         capture_output=True,
@@ -486,10 +507,14 @@ def test_refresh_builds_a_checked_deck_and_reruns_byte_identically(
 
     review = json.loads((world["out"] / shard.REVIEW_FILE).read_text(encoding="utf-8"))
     assert shard.REVIEW_FILE not in teacher_deck.PACKAGE_FILES
-    # One row per teacher-lesson cloze item (Кіт спить на столі. serves кіт and стіл);
-    # the fixture VESUM lacks most function words, so every sentence has unknown tokens.
+    # The empty ledger reviewed nothing: every served lesson cloze item is queued, one row
+    # per item (Кіт спить на столі. serves кіт and стіл); the fixture VESUM lacks most
+    # function words, so every sentence has unknown tokens.
     assert review["counts"] == {
+        "servedLessonItems": 4,
+        "servedLessonSentences": 3,
         "sentences": 4,
+        "distinctSentences": 3,
         "flaggedSentences": {"proper_noun_tokens": 1, "vesum_unknown_tokens": 4, "digits_or_contact": 1},
     }
     olena = next(row for row in review["sentences"] if row["sentence"].startswith("Олена"))
@@ -499,7 +524,9 @@ def test_refresh_builds_a_checked_deck_and_reruns_byte_identically(
         "vesum_unknown_tokens": ["купила", "травня"],
         "digits_or_contact": [{"kind": "digits", "text": "12"}],
     }
-    assert "sentences flagged: proper_noun_tokens 1, vesum_unknown_tokens 4, digits_or_contact 1" in first_output
+    assert olena["sentenceSha256"] == shard.sentence_sha256(olena["sentence"])
+    assert "queued items flagged: proper_noun_tokens 1, vesum_unknown_tokens 4, digits_or_contact 1" in first_output
+    assert "lesson-sentence review queue: 4 of 4 served lesson cloze items (3 of 3 distinct sentences)" in first_output
 
     before = _hashes(world)
     assert _refresh(world) == 0
@@ -662,33 +689,52 @@ def test_checker_matrix_and_residual_lists(world: dict[str, Path]) -> None:
     assert residuals["refusedGroups"] == []
 
 
-class FakeRelease:
-    """In-memory stand-in for the GitHub release used by --publish (no network)."""
+class FakeGh:
+    """The `gh release` CLI in memory (no network); every other command runs for real."""
 
-    def __init__(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        self.assets: dict[str, bytes] = {}
-        self.uploads = 0
-        release = teacher_deck.release
-        monkeypatch.setattr(release, "_release_asset_names", lambda **_kw: set(self.assets))
-        monkeypatch.setattr(release, "upload_release_asset", self.upload)
-        monkeypatch.setattr(release, "verify_existing_release_asset", self.verify)
-        monkeypatch.setattr(release, "_download_release_asset", lambda name, **_kw: self.assets[name])
+    def __init__(self, monkeypatch: pytest.MonkeyPatch, *, release_exists: bool = False, fail_upload: bool = False):
+        self.assets: dict[str, bytes] | None = {} if release_exists else None
+        self.fail_upload = fail_upload
+        self.calls: list[str] = []
+        self.titles: list[str] = []
+        self._run = subprocess.run
+        monkeypatch.setattr(subprocess, "run", self.run)
 
-    def upload(self, path: Path, *, asset_name: str, release_tag: str, repo: str, clobber: bool) -> None:
-        assert release_tag == teacher_deck.RELEASE_TAG and clobber is False
-        self.assets[asset_name] = path.read_bytes()
-        self.uploads += 1
+    def run(self, command, *args, **kwargs):
+        if command[:2] != ["gh", "release"]:
+            return self._run(command, *args, **kwargs)
+        verb = command[2]
+        assert command[3] == teacher_deck.RELEASE_TAG
+        self.calls.append(verb + (" --json" if "--json" in command else ""))
+        missing = self.assets is None
+        if verb == "view" and "--json" not in command:
+            return subprocess.CompletedProcess(command, 1 if missing else 0)
+        if verb == "create":
+            self.titles.append(command[command.index("--title") + 1])
+            self.assets = {}
+            return subprocess.CompletedProcess(command, 0)
+        if missing or (verb == "upload" and self.fail_upload):
+            raise subprocess.CalledProcessError(1, command)
+        if verb == "view":
+            names = [{"name": name} for name in self.assets]
+            return subprocess.CompletedProcess(command, 0, stdout=json.dumps({"assets": names}))
+        if verb == "upload":
+            path = Path(command[4])
+            self.assets[path.name] = path.read_bytes()
+            return subprocess.CompletedProcess(command, 0)
+        if verb == "download":
+            return subprocess.CompletedProcess(command, 0, stdout=self.assets[command[command.index("-p") + 1]])
+        raise AssertionError(command)
 
-    def verify(self, name: str, *, expected_gz_bytes: bytes, release_tag: str, repo: str) -> None:
-        assert self.assets[name] == expected_gz_bytes
 
-
-def test_publish_uploads_once_pins_the_pointer_and_carries_order_keys_from_the_asset(
+def test_first_publish_creates_the_release_then_uploads_then_pins_the_pointer(
     world: dict[str, Path], monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    fake = FakeRelease(monkeypatch)
+    fake = FakeGh(monkeypatch)
     assert _refresh(world, "--publish") == 0
     assert "publish: uploaded lexicon-teacher-deck-teacher-v1-" in capsys.readouterr().out
+    assert fake.titles == [teacher_deck.RELEASE_TITLE]
+    assert fake.calls.index("create") < fake.calls.index("view --json") < fake.calls.index("upload")
     pointer = json.loads(world["pointer"].read_text(encoding="utf-8"))
     gz_bytes = fake.assets[teacher_deck.asset_name(pointer["deck_version"])]
     assert hashlib.sha256(gz_bytes).hexdigest() == pointer["gz_sha256"]
@@ -704,5 +750,269 @@ def test_publish_uploads_once_pins_the_pointer_and_carries_order_keys_from_the_a
     output = capsys.readouterr().out
     assert f"previous deck: published asset {pointer['deck_version']}" in output
     assert "already published (verified identical)" in output
-    assert fake.uploads == 1
+    assert fake.calls.count("upload") == 1 and fake.calls.count("create") == 1
     assert json.loads(world["pointer"].read_text(encoding="utf-8")) == pointer
+
+
+def _committed(world: dict[str, Path]) -> dict[str, bytes | None]:
+    paths = [world["table"], world["frozen"], world["pointer"], *sorted(world["out"].iterdir())]
+    return {path.name: path.read_bytes() if path.exists() else None for path in paths}
+
+
+def test_a_failed_publish_changes_nothing_committed_facing(
+    world: dict[str, Path], monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert _refresh(world) == 0
+    before = _committed(world)
+    _write_docx(world["docx"], [*TABLE, ("Лампа", "Lamp")])
+    FakeGh(monkeypatch, release_exists=True, fail_upload=True)
+    assert _refresh(world, "--publish", "--skip-ingest") == 2
+    assert "cannot read inputs or reach the release" in capsys.readouterr().err
+    assert _committed(world) == before and before["pointer.json"] is None
+    leftovers = [path.name for path in world["out"].parent.iterdir() if path.name.startswith(".")]
+    assert leftovers == []
+
+
+def test_replace_published_set_restores_the_old_set_when_the_swap_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    out = tmp_path / "deck"
+    teacher_deck.replace_published_set({"a.json": b"old"}, out)
+    real_rename = Path.rename
+
+    def rename(self: Path, target: Path) -> Path:
+        if self.name == ".deck.next":
+            raise OSError("disk full")
+        return real_rename(self, target)
+
+    monkeypatch.setattr(Path, "rename", rename)
+    with pytest.raises(OSError, match="disk full"):
+        teacher_deck.replace_published_set({"a.json": b"new"}, out)
+    assert (out / "a.json").read_bytes() == b"old"
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["deck"]
+
+    # An interrupted run that left only `.previous` behind is recovered first.
+    monkeypatch.setattr(Path, "rename", real_rename)
+    out.rename(tmp_path / ".deck.previous")
+    assert teacher_deck.replace_published_set({"a.json": b"old"}, out) is False
+    assert (out / "a.json").read_bytes() == b"old" and not (tmp_path / ".deck.previous").exists()
+
+
+def test_commit_outputs_leaves_committed_files_untouched_when_the_swap_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target = tmp_path / "frozen.json"
+    target.write_bytes(b"committed")
+
+    def fail(*_args: object) -> bool:
+        raise OSError("swap failed")
+
+    monkeypatch.setattr(teacher_deck, "replace_published_set", fail)
+    with pytest.raises(OSError):
+        teacher_deck.commit_outputs({"a": b"x"}, tmp_path / "deck", {target: b"new"})
+    assert target.read_bytes() == b"committed"
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["frozen.json"]
+
+
+# ----------------------------------------------------------------------------- reviewed lesson sentences
+
+
+@pytest.mark.parametrize(
+    ("sentence", "rule"),
+    [
+        ("Україна → держава в Європі.", "outline-arrow"),
+        ("Я люблю каву/чай щоранку.", "slash-alternative"),
+        ("Він купив (11) нових книжок.", "parenthetical-number-or-gloss"),
+        ("У році (365) триста днів.", "parenthetical-number-or-gloss"),
+        ("Вона (ходити) до школи щодня.", "parenthetical-number-or-gloss"),
+        ("Пацієнт скаржиться на хронічну втому (хронічна втома).", "parenthetical-number-or-gloss"),
+        ("Не маючи досвіду управлінця (обставина, дієприслів.", "parenthetical-number-or-gloss"),
+        ("Петро Дорошенко народився в Чигирині (нині Черкаська область).", None),
+        ("Він помер у тюремній лікарні [7].", "citation-marker"),
+        ("Версія СБУ: це була диверсія.", "section-label"),
+        ("Визначте рід іменників у реченні.", "worksheet-task"),
+        ("2. Поясніть значення цих слів.", "worksheet-task"),
+        ("Вулиця названа на честь ім.", "truncated-abbreviation"),
+        ("Вживаються з: назвами істот чол.", "section-label"),
+        ("Вживаються з назвами істот чол.", "truncated-abbreviation"),
+        ("Мій брат живе у Львові.", None),
+        ("Він сказав, що прийде (на жаль, пізно).", None),
+        ("Ми бачили 2 фільми вчора.", None),
+        ("Визначений день настав нарешті.", None),
+    ],
+)
+def test_fragment_rules_match_in_generator_and_checker(sentence: str, rule: str | None) -> None:
+    assert shard.lesson_fragment_reason(sentence) == rule
+    assert (checker.fragment_shape(sentence) is None) is (rule is None)
+
+
+def test_sentence_hash_is_nfc_and_whitespace_insensitive() -> None:
+    import unicodedata
+
+    text = "Кіт  спить\tна столі."
+    nfd = unicodedata.normalize("NFD", "Їжак їсть яблуко.")
+    assert shard.sentence_sha256(text) == shard.sentence_sha256("Кіт спить на столі.")
+    assert shard.sentence_sha256(nfd) == shard.sentence_sha256("Їжак їсть яблуко.")
+    assert checker.sentence_digest(text) == shard.sentence_sha256(text)
+    assert checker.sentence_digest(nfd) == shard.sentence_sha256(nfd)
+
+
+EXTRA_LESSON = (
+    "22.09.2025",
+    [
+        "Визначте, де спить кіт.",
+        "Кіт (11) спить на дивані.",
+        "Наш кіт спить на дивані.",
+        "Кіт лежить біля вікна.",
+        "Мій кіт любить молоко.",
+    ],
+)
+
+
+def test_withheld_and_fragment_sentences_are_never_selected_and_a_replacement_is(
+    world: dict[str, Path], capsys: pytest.CaptureFixture[str]
+) -> None:
+    _write_docx(world["docx"], TABLE, [*LESSONS, EXTRA_LESSON])
+    _write_ledger(
+        world["withheld"],
+        {"Наш кіт спить на дивані.": "ERR", "Кіт спить на столі.": "FRAG"},
+        kept=("Кіт лежить біля вікна.",),
+    )
+    assert _refresh(world) == 0
+    output = capsys.readouterr().out
+    assert "fragment rule parenthetical-number-or-gloss 1, worksheet-task 1" in output
+    assert "withheld by review ERR 1, FRAG 1 (ledger: 2 withheld, 1 kept)" in output
+    cloze = json.loads((world["out"] / shard.CLOZE_FILE).read_text(encoding="utf-8"))
+    served = {item["sentence"].replace(shard.BLANK, item["form"], 1): item for item in cloze["cloze"]}
+    cat = entries_by_key(world)["кіт"]
+    cat_sentences = [s for s, item in served.items() if item["entryId"] == cat["entryId"]]
+    # The withheld newest sentence is skipped before selection: the third slot goes to the
+    # next candidate (Олена …), which the 3-sentence cap excluded before.
+    assert cat_sentences == ["Кіт лежить біля вікна.", "Мій кіт любить молоко.", "Олена купила кота 12 травня."]
+    assert "Кіт спить на столі." not in served and "Наш кіт спить на дивані." not in served
+    review = json.loads((world["out"] / shard.REVIEW_FILE).read_text(encoding="utf-8"))
+    # "Кіт лежить біля вікна." is already kept: only unreviewed served sentences are queued.
+    assert sorted(row["sentence"] for row in review["sentences"]) == [
+        "Мій кіт любить молоко.",
+        "Олена купила кота 12 травня.",
+        "Я п'ю зелений чай щоранку.",
+    ]
+    assert review["counts"]["servedLessonItems"] == 4
+    code, report = _check(world["out"], world)
+    assert code == 0, report
+
+
+def entries_by_key(world: dict[str, Path]) -> dict[str, dict]:
+    deck = json.loads((world["out"] / shard.DECK_FILE).read_text(encoding="utf-8"))
+    return {entry["key"]: entry for entry in deck["entries"]}
+
+
+def test_checker_fails_when_a_withheld_sentence_is_served(world: dict[str, Path]) -> None:
+    assert _refresh(world) == 0
+    _write_ledger(world["withheld"], {"Я п'ю зелений чай щоранку.": "ERR"})
+    code, report = _check(world["out"], world)
+    assert code == 1 and "serves a sentence the language review withheld (ERR)" in report
+
+
+def test_checker_rejects_a_ledger_that_carries_sentence_text(world: dict[str, Path]) -> None:
+    assert _refresh(world) == 0
+    ledger = json.loads(world["withheld"].read_text(encoding="utf-8"))
+    ledger["withheld"] = [{"sentenceSha256": "0" * 64, "code": "ERR", "reviewer": "x", "reviewedAt": "d", "text": "…"}]
+    world["withheld"].write_text(json.dumps(ledger), encoding="utf-8")
+    code, report = _check(world["out"], world)
+    assert code == 1 and "malformed withheld record" in report
+    with pytest.raises(shard.TeacherDeckBuildError, match="malformed withheld record"):
+        shard.read_sentence_reviews(world["withheld"])
+
+
+def test_checker_fails_on_served_worksheet_debris(world: dict[str, Path], tmp_path: Path) -> None:
+    assert _refresh(world) == 0
+
+    def outline(cloze: dict) -> None:
+        item = next(item for item in cloze["cloze"] if item["source"] == "teacher-lesson")
+        item["sentence"] = item["sentence"].rstrip(".") + " → далі."
+
+    code, report = _plant(world, tmp_path, shard.CLOZE_FILE, outline)
+    assert code == 1 and "worksheet debris (outline arrow)" in report
+
+
+def test_checker_rederives_the_atlas_sense_rule(world: dict[str, Path], tmp_path: Path) -> None:
+    assert _refresh(world) == 0
+
+    def other_sense(deck: dict) -> None:
+        entry = next(entry for entry in deck["entries"] if entry["key"] == "собака")
+        assert (entry["atlas"]["senseRule"], entry["atlas"]["senseIndex"]) == ("unique-match", 0)
+        entry["atlas"]["senseIndex"] = 1
+
+    code, report = _plant(world, tmp_path, shard.DECK_FILE, other_sense, with_sources=True)
+    assert code == 1 and "Atlas sense unique-match/1 != mechanical rule unique-match/0" in report
+
+
+def test_checker_rederives_identity_conflicts(world: dict[str, Path], tmp_path: Path) -> None:
+    assert _refresh(world) == 0
+
+    def invent_conflict(deck: dict) -> None:
+        next(entry for entry in deck["entries"] if entry["key"] == "кіт")["atlas"]["identityConflict"] = True
+
+    code, report = _plant(world, tmp_path, shard.DECK_FILE, invent_conflict, with_sources=True)
+    assert code == 1 and "identityConflict True differs from the Atlas/sources" in report
+
+    # The Atlas article turns into a noun for a source-known verb: the deck (built before) misses the conflict.
+    with sqlite3.connect(world["atlas"]) as conn:
+        payload = json.loads(
+            conn.execute("SELECT payload_json FROM article_payloads WHERE slug = 'писати'").fetchone()[0]
+        )
+        payload["pos"] = "noun"
+        conn.execute("UPDATE article_payloads SET payload_json = ? WHERE slug = 'писати'", (json.dumps(payload),))
+    code, report = _check(world["out"], world)
+    assert code == 1 and "identity conflicts differ from the Atlas/sources" in report
+
+
+def test_checker_enforces_the_same_slot_distractor_rule(world: dict[str, Path], tmp_path: Path) -> None:
+    assert _refresh(world) == 0
+    table_id = entries_by_key(world)["стіл"]["entryId"]
+
+    def wrong_case(cloze: dict) -> None:
+        item = next(item for item in cloze["cloze"] if item["entryId"] == table_id)
+        option = next(option for option in item["options"] if option["label"] == "будинку")
+        option["label"] = "будинок"  # nominative in a locative slot
+
+    code, report = _plant(world, tmp_path, shard.CLOZE_FILE, wrong_case, with_sources=True)
+    assert code == 1 and "distractor 'будинок' does not fill the blank's grammatical slot" in report
+
+
+def _review_queue(tmp_path: Path) -> tuple[Path, Path]:
+    sentences = ["Кіт спить на столі.", "Кіт спить на столі.", "Я п'ю зелений чай щоранку.", "Мій кіт спить."]
+    forms = ["кіт", "столі", "чай", "кіт"]
+    items = [
+        {"clozeId": f"c{i}", "sentence": text.replace(form, shard.BLANK, 1), "form": form}
+        for i, (text, form) in enumerate(zip(sentences, forms, strict=True))
+    ]
+    queue = {"sentences": [{"clozeId": f"c{i}", "sentence": text} for i, text in enumerate(sentences)]}
+    (tmp_path / "queue.json").write_text(json.dumps(queue), encoding="utf-8")
+    (tmp_path / "cloze.json").write_text(json.dumps({"cloze": items}), encoding="utf-8")
+    return tmp_path / "queue.json", tmp_path / "cloze.json"
+
+
+def test_record_review_folds_results_into_a_text_free_ledger(tmp_path: Path) -> None:
+    queue, cloze = _review_queue(tmp_path)
+    (tmp_path / "part1.tsv").write_text("c0\tFRAG\nc1\tERR\n", encoding="utf-8")
+    ledger = tmp_path / "ledger.json"
+    common = ["--queue", str(queue), "--cloze", str(cloze), "--ledger", str(ledger), "--reviewed-at", "2026-09-27"]
+    assert teacher_deck.main(["record-review", *common, "--results", str(tmp_path / "part1.tsv"),
+                              "--positions", "0-2", "--reviewer", "r1"]) == 0  # fmt: skip
+    payload = json.loads(ledger.read_text(encoding="utf-8"))
+    assert "Кіт" not in ledger.read_text(encoding="utf-8")
+    # One sentence reviewed through two cloze ids keeps the gravest code; c2 was reviewed and kept.
+    assert [(row["sentenceSha256"], row["code"]) for row in payload["withheld"]] == [
+        (shard.sentence_sha256("Кіт спить на столі."), "ERR")
+    ]
+    assert [row["sentenceSha256"] for row in payload["kept"]] == [shard.sentence_sha256("Я п'ю зелений чай щоранку.")]
+    reviews = shard.read_sentence_reviews(ledger)
+    assert not reviews.reviewed(shard.sentence_sha256("Мій кіт спить."))  # position 3 was not reviewed
+
+    (tmp_path / "part2.tsv").write_text("c1\tERR\n", encoding="utf-8")
+    assert teacher_deck.main(["record-review", *common, "--results", str(tmp_path / "part2.tsv"),
+                              "--positions", "3-3", "--reviewer", "r2"]) == 1  # fmt: skip
+    assert teacher_deck.main(["record-review", *common, "--results", str(tmp_path / "part2.tsv"),
+                              "--positions", "0-9", "--reviewer", "r2"]) == 1  # fmt: skip

@@ -34,7 +34,7 @@ from scripts.lexicon.sync_teacher_table_deck import (
     extract_teacher_rows,
     frozen_keys_payload,
     normalize_uk_key,
-    write_site_data,
+    site_data_bytes,
 )
 from scripts.practice_deck import publish as release
 
@@ -44,6 +44,8 @@ DEFAULT_POINTER = PROJECT_ROOT / "site/src/data/lexicon-teacher-deck.pointer.jso
 DEFAULT_FROZEN_KEYS = PROJECT_ROOT / "site/src/data/lexicon-teacher-deck-frozen-keys.json"
 CHECKER = PROJECT_ROOT / "scripts/audit/check_teacher_deck.py"
 RELEASE_TAG = "atlas-teacher-deck"
+RELEASE_TITLE = "Teacher-table practice deck"
+RELEASE_NOTES = "Versioned release assets for the teacher-table practice deck (#8843); pinned by the site pointer."
 PACKAGE_SCHEMA = "atlas-practice-teacher-package"
 PACKAGE_FILES = (
     shard.MANIFEST_FILE,
@@ -148,13 +150,15 @@ def download_published(pointer: dict[str, Any], repo: str) -> dict[str, bytes]:
     return unpack(data, pointer)
 
 
-def publish(files: dict[str, bytes], pointer_path: Path, repo: str) -> tuple[dict[str, Any], str]:
-    """Upload the versioned asset (verify instead when it already exists) and rewrite the pointer."""
+def publish(files: dict[str, bytes], repo: str) -> tuple[dict[str, Any], str]:
+    """Create the release when missing, upload the versioned asset (verify instead when it
+    already exists) and return the pointer to commit; the caller writes it."""
 
     manifest = json.loads(files[shard.MANIFEST_FILE])
     package_bytes, gzip_bytes = build_package(files, str(manifest["deckVersion"]))
     pointer = build_pointer(files, package_bytes, gzip_bytes, repo)
     name = asset_name(pointer["deck_version"])
+    release.ensure_release(RELEASE_TAG, repo, title=RELEASE_TITLE, notes=RELEASE_NOTES)
     if name in release._release_asset_names(release_tag=RELEASE_TAG, repo=repo):
         release.verify_existing_release_asset(name, expected_gz_bytes=gzip_bytes, release_tag=RELEASE_TAG, repo=repo)
         action = f"asset {name} already published (verified identical)"
@@ -164,7 +168,6 @@ def publish(files: dict[str, bytes], pointer_path: Path, repo: str) -> tuple[dic
             gzip_path.write_bytes(gzip_bytes)
             release.upload_release_asset(gzip_path, asset_name=name, release_tag=RELEASE_TAG, repo=repo, clobber=False)
         action = f"uploaded {name} ({len(gzip_bytes)} B) to release {RELEASE_TAG}"
-    release.write_pointer(pointer_path, pointer)
     return pointer, action
 
 
@@ -286,6 +289,10 @@ def run_checker(staging: Path, args: argparse.Namespace, expected_keys: int) -> 
         str(args.vesum_db),
         "--sources-db",
         str(args.sources_db),
+        "--atlas-db",
+        str(args.atlas_db),
+        "--withheld",
+        str(args.withheld),
         "--limit",
         "20",
     ]
@@ -299,25 +306,70 @@ def run_checker(staging: Path, args: argparse.Namespace, expected_keys: int) -> 
 
 
 def replace_published_set(files: dict[str, bytes], out_dir: Path) -> bool:
-    """Swap the whole directory at once; return False when nothing changed."""
+    """Swap the whole directory at once; return False when nothing changed.
 
+    The old set moves to ``.<name>.previous`` and the staged set takes its place; if
+    that second rename fails the old set is moved back, so *out_dir* is never lost.
+    A ``.previous`` left behind by an interrupted run is restored before anything else.
+    """
+
+    staging = out_dir.with_name(f".{out_dir.name}.next")
+    backup = out_dir.with_name(f".{out_dir.name}.previous")
+    if backup.exists():
+        if out_dir.exists():
+            shutil.rmtree(backup)
+        else:
+            backup.rename(out_dir)
     unchanged = out_dir.exists() and {path.name for path in out_dir.iterdir()} == set(files)
     if unchanged and all((out_dir / name).read_bytes() == data for name, data in files.items()):
         return False
-    staging = out_dir.with_name(f".{out_dir.name}.next")
-    backup = out_dir.with_name(f".{out_dir.name}.previous")
-    for path in (staging, backup):
-        if path.exists():
-            shutil.rmtree(path)
+    if staging.exists():
+        shutil.rmtree(staging)
     staging.mkdir(parents=True)
     for name, data in files.items():
         (staging / name).write_bytes(data)
-    if out_dir.exists():
+    had_previous = out_dir.exists()
+    if had_previous:
         out_dir.rename(backup)
-    staging.rename(out_dir)
-    if backup.exists():
+    try:
+        staging.rename(out_dir)
+    except OSError:
+        if had_previous:
+            backup.rename(out_dir)
+        shutil.rmtree(staging, ignore_errors=True)
+        raise
+    if had_previous:
         shutil.rmtree(backup)
     return True
+
+
+def _json_bytes(payload: dict[str, Any]) -> bytes:
+    return (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def commit_outputs(local_files: dict[str, bytes], out_dir: Path, committed: dict[Path, bytes]) -> bool:
+    """Write the run's outputs only after every step (checker, publish) succeeded.
+
+    Committed files are staged next to their targets first; the local set is swapped;
+    then each staged file replaces its target (``os.replace``, atomic per file). Any
+    failure before the swap leaves every target untouched.
+    """
+
+    staged: list[tuple[Path, Path]] = []
+    try:
+        for target, data in committed.items():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            temp = target.with_name(f".{target.name}.next")
+            temp.write_bytes(data)
+            staged.append((temp, target))
+        replaced = replace_published_set(local_files, out_dir)
+    except BaseException:
+        for temp, _target in staged:
+            temp.unlink(missing_ok=True)
+        raise
+    for temp, target in staged:
+        temp.replace(target)
+    return replaced
 
 
 def refresh(args: argparse.Namespace) -> int:
@@ -342,7 +394,9 @@ def refresh(args: argparse.Namespace) -> int:
                 f"refusing to drop {len(dropped)} published keys (first: {dropped[:3]}); pass --allow-shrink"
             )
 
-    inputs = shard.TeacherDeckInputs(args.atlas_db, args.sources_db, args.vesum_db, args.synonym_verdicts)
+    inputs = shard.TeacherDeckInputs(
+        args.atlas_db, args.sources_db, args.vesum_db, args.synonym_verdicts, args.withheld
+    )
     deck_build = shard.build_teacher_deck(build.entries, inputs)
     errors = shard.validate_teacher_deck(deck_build.deck, deck_build.cloze)
     if errors:
@@ -365,10 +419,18 @@ def refresh(args: argparse.Namespace) -> int:
         shutil.rmtree(check_dir, ignore_errors=True)
 
     previous_public = _public_lesson_sentences(previous_files.get(shard.CLOZE_FILE))
-    replaced = replace_published_set(local_files, out_dir)
-    write_site_data(lemma_keys, site_data_path=args.table_deck, allow_shrink=True)
-    args.frozen_keys.parent.mkdir(parents=True, exist_ok=True)
-    args.frozen_keys.write_bytes(files[shard.FROZEN_KEYS_FILE])
+    committed = {args.table_deck: site_data_bytes(lemma_keys), args.frozen_keys: files[shard.FROZEN_KEYS_FILE]}
+    if args.publish:
+        # Upload first (a versioned, content-addressed asset); the pointer is written
+        # with the other committed files only once the whole run has succeeded.
+        pointer, action = publish(files, args.repo)
+        committed[args.pointer] = _json_bytes(pointer)
+        publish_line = f"publish: {action}; pointer {args.pointer} -> {pointer['deck_version']}"
+    else:
+        current_pointer = _read_json(args.pointer) or {}
+        state = "up to date" if current_pointer.get("deck_version") == deck_build.deck["deckVersion"] else "NOT updated"
+        publish_line = f"publish: skipped (pointer {state}); rerun with --publish after the review queue is empty"
+    replaced = commit_outputs(local_files, out_dir, committed)
 
     if previous_entries:
         delta = entry_delta(previous_entries, deck_build.deck["entries"])
@@ -402,21 +464,25 @@ def refresh(args: argparse.Namespace) -> int:
         "(scan for names/private details before --publish; NEW marks sentences not built before)"
     )
     lines.extend(f"  {'NEW ' if row in new_public else ''}[{row['lesson']}] {row['sentence']}" for row in public)
-    flagged = review["counts"]["flaggedSentences"]
+    review_counts = review["counts"]
+    flagged = review_counts["flaggedSentences"]
+    screen = deck_build.coverage["lessonSentenceScreen"]
     lines.append(
-        f"lesson-sentence review: {review['counts']['sentences']} sentences -> {out_dir / shard.REVIEW_FILE} "
-        "(local only, never published); sentences flagged: "
-        + ", ".join(f"{flag} {flagged[flag]}" for flag in shard.REVIEW_FLAGS)
+        "lesson sentences screened out before selection: fragment rule "
+        + (", ".join(f"{rule} {n}" for rule, n in screen["fragmentRule"].items()) or "none")
+        + "; withheld by review "
+        + (", ".join(f"{code} {n}" for code, n in screen["withheldCode"].items()) or "none")
+        + f" (ledger: {len(deck_build.reviews.withheld)} withheld, {len(deck_build.reviews.kept)} kept)"
+    )
+    lines.append(
+        f"lesson-sentence review queue: {review_counts['sentences']} of {review_counts['servedLessonItems']} served "
+        f"lesson cloze items ({review_counts['distinctSentences']} of {review_counts['servedLessonSentences']} "
+        f"distinct sentences) have no review record -> {out_dir / shard.REVIEW_FILE} (local only, never "
+        "published); queued items flagged: " + ", ".join(f"{flag} {flagged[flag]}" for flag in shard.REVIEW_FLAGS)
     )
     lines.extend(aspect_summary(deck_build.deck["entries"], counts))
     lines.append(checker_output.rstrip())
-    if args.publish:
-        pointer, action = publish(files, args.pointer, args.repo)
-        lines.append(f"publish: {action}; pointer {args.pointer} -> {pointer['deck_version']}")
-    else:
-        current_pointer = _read_json(args.pointer) or {}
-        state = "up to date" if current_pointer.get("deck_version") == deck_build.deck["deckVersion"] else "NOT updated"
-        lines.append(f"publish: skipped (pointer {state}); rerun with --publish after scanning the sentences above")
+    lines.append(publish_line)
     print("\n".join(lines))
     if args.report:
         args.report.write_text(
@@ -433,6 +499,100 @@ def refresh(args: argparse.Namespace) -> int:
             + "\n",
             encoding="utf-8",
         )
+    return 0
+
+
+# ----------------------------------------------------------------------------- review ledger
+
+CODE_PRIORITY = ("PRIV", "ERR", "AMBIG", "FRAG")  # one sentence reviewed twice keeps the gravest code
+
+
+def _restored_sentences(cloze_path: Path) -> dict[str, str]:
+    return {
+        str(item["clozeId"]): str(item["sentence"]).replace(shard.BLANK, str(item["form"]), 1)
+        for item in json.loads(cloze_path.read_text(encoding="utf-8"))["cloze"]
+    }
+
+
+def _position_range(text: str | None, size: int) -> range:
+    if not text:
+        return range(size)
+    start, _, end = text.partition("-")
+    return range(int(start), int(end or start) + 1)
+
+
+def record_review(args: argparse.Namespace) -> int:
+    """Fold one language-review result into the committed ledger (hashes only, never text).
+
+    Every queue item at --positions is recorded: withheld with its code when the results
+    TSV lists its cloze id, otherwise kept. Existing records stay; withheld beats kept.
+    """
+
+    queue = json.loads(args.queue.read_text(encoding="utf-8"))["sentences"]
+    positions = _position_range(args.positions, len(queue))
+    if positions.start < 0 or positions.stop > len(queue) or not positions:
+        raise RefreshError(f"--positions {args.positions} outside the queue (0-{len(queue) - 1})")
+    restored = _restored_sentences(args.cloze)
+    reviewed_ids: dict[str, str] = {}
+    for index in positions:
+        item = queue[index]
+        cloze_id = str(item["clozeId"])
+        if restored.get(cloze_id) != item["sentence"]:
+            raise RefreshError(f"{cloze_id}: the queue sentence is not the cloze file's sentence")
+        reviewed_ids[cloze_id] = item["sentence"]
+    verdicts: dict[str, str] = {}
+    for line_number, line in enumerate(args.results.read_text(encoding="utf-8").splitlines(), start=1):
+        if not line.strip():
+            continue
+        cloze_id, _, code = (part.strip() for part in line.partition("\t"))
+        if code not in shard.WITHHELD_CODES:
+            raise RefreshError(f"{args.results}:{line_number}: unknown code {code!r}")
+        if cloze_id not in reviewed_ids:
+            raise RefreshError(f"{args.results}:{line_number}: {cloze_id} is not a queue item at --positions")
+        digest = shard.sentence_sha256(reviewed_ids[cloze_id])
+        verdicts[digest] = min(verdicts.get(digest, code), code, key=CODE_PRIORITY.index)
+
+    ledger = _read_json(args.ledger) or {}
+    withheld = {row["sentenceSha256"]: row for row in ledger.get("withheld", [])}
+    kept = {row["sentenceSha256"]: row for row in ledger.get("kept", [])}
+    stamp = {"reviewer": args.reviewer, "reviewedAt": args.reviewed_at}
+    added = {"withheld": 0, "kept": 0}
+    for sentence in dict.fromkeys(reviewed_ids.values()):
+        digest = shard.sentence_sha256(sentence)
+        code = verdicts.get(digest)
+        if code:
+            previous = withheld.get(digest)
+            if previous is None or CODE_PRIORITY.index(code) < CODE_PRIORITY.index(previous["code"]):
+                withheld[digest] = {"sentenceSha256": digest, "code": code, **stamp}
+                added["withheld"] += previous is None
+            kept.pop(digest, None)
+        elif digest not in withheld and digest not in kept:
+            kept[digest] = {"sentenceSha256": digest, **stamp}
+            added["kept"] += 1
+    payload = {
+        "schema": shard.WITHHELD_SCHEMA,
+        "schemaVersion": shard.SCHEMA_VERSION,
+        "note": (
+            "Language-review ledger for teacher-lesson cloze sentences (#8843), keyed by sentenceSha256 = "
+            "SHA-256 of the NFC-normalised sentence with whitespace collapsed; no sentence text. Withheld "
+            "sentences are never served (ERR incorrect Ukrainian, AMBIG more than one option fits, FRAG not a "
+            "usable sentence, PRIV private detail); kept sentences need no further review. Update with "
+            "`teacher-deck record-review`."
+        ),
+        "withheld": [withheld[key] for key in sorted(withheld)],
+        "kept": [kept[key] for key in sorted(kept)],
+    }
+    args.ledger.parent.mkdir(parents=True, exist_ok=True)
+    temp = args.ledger.with_name(f".{args.ledger.name}.next")
+    temp.write_bytes(shard.render_json(payload, list_keys=("withheld", "kept")))
+    temp.replace(args.ledger)
+    by_code = {code: sum(1 for row in withheld.values() if row["code"] == code) for code in shard.WITHHELD_CODES}
+    print(
+        f"record-review: {len(reviewed_ids)} queue items at positions {positions.start}-{positions.stop - 1} "
+        f"({len(set(reviewed_ids.values()))} distinct sentences), {len(verdicts)} withheld in this result; "
+        f"ledger now {len(withheld)} withheld ({', '.join(f'{c} {n}' for c, n in by_code.items())}), "
+        f"{len(kept)} kept; new records: {added['withheld']} withheld, {added['kept']} kept -> {args.ledger}"
+    )
     return 0
 
 
@@ -495,6 +655,15 @@ Related: docs/practice/teacher-deck-artifacts.md; scripts/audit/check_teacher_de
     )
     add("--vesum-db", type=Path, default=PROJECT_ROOT / "data/vesum.db", help="VESUM DB (default: data/vesum.db).")
     add(
+        "--withheld",
+        type=Path,
+        default=shard.DEFAULT_SENTENCE_REVIEWS,
+        help=(
+            "Language-review ledger of lesson sentences by SHA-256 (withheld with a code, or kept); "
+            "withheld sentences are never served (default: site/src/data/lexicon-teacher-deck-withheld.json)."
+        ),
+    )
+    add(
         "--synonym-verdicts",
         type=Path,
         default=PROJECT_ROOT / "registry/lexicon/synonym_pair_verdicts.yaml",
@@ -536,13 +705,45 @@ Related: docs/practice/teacher-deck-artifacts.md; scripts/audit/check_teacher_de
     )
     add("--allow-shrink", action="store_true", help="Allow dropping previously published keys (default: refuse).")
     add("--report", type=Path, help="Optional JSON report path (default: none).")
+
+    record = sub.add_parser(
+        "record-review",
+        help="Record a language review of lesson sentences in the committed ledger (hashes only).",
+        description=(
+            "Fold one language-review result into the sentence ledger: queue items at --positions are kept\n"
+            "unless the results TSV withholds them. Use after reviewing lesson-sentence-review.json; then refresh."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python -m scripts.lexicon.teacher_deck record-review --queue /tmp/deck/lesson-sentence-review.json \\
+      --cloze /tmp/deck/practice-cloze.teacher.json --results /tmp/withheld-part1.tsv --positions 0-774 \\
+      --reviewer "gemini-3.8-flash-high (review-8843-lang-1)" --reviewed-at 2026-09-27
+Inputs: --results is `clozeId<TAB>code` per withheld item (code ERR/AMBIG/FRAG/PRIV).
+Outputs: rewrites --ledger (sorted, sentence hashes only) and prints the counts.
+Exit codes: 0 recorded; 1 a result or queue item does not match the cloze file; 2 unreadable inputs.
+Related: docs/practice/teacher-deck-artifacts.md; #8843.
+""",
+    )
+    add = record.add_argument
+    add("--queue", type=Path, required=True, help="Reviewed queue file (lesson-sentence-review.json).")
+    add("--cloze", type=Path, required=True, help="The cloze file the queue was built with (resolves cloze ids).")
+    add("--results", type=Path, required=True, help="Review result TSV: clozeId<TAB>code per withheld item.")
+    add("--positions", help="0-based inclusive queue range the reviewer covered, e.g. 0-774 (default: all).")
+    add("--reviewer", required=True, help="Reviewer model and task id, e.g. 'gemini-3.8-flash-high (review-...)'.")
+    add("--reviewed-at", required=True, help="Review date, YYYY-MM-DD.")
+    add(
+        "--ledger",
+        type=Path,
+        default=shard.DEFAULT_SENTENCE_REVIEWS,
+        help="Ledger to update (default: site/src/data/lexicon-teacher-deck-withheld.json).",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
-        return refresh(args)
+        return record_review(args) if args.command == "record-review" else refresh(args)
     except (RefreshError, shard.TeacherDeckBuildError, TeacherTableSyncError, release.PracticeDeckPublishError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1

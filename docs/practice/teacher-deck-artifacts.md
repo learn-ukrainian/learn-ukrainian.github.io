@@ -13,19 +13,22 @@ textbook in `data/sources.db`; items are selected and assembled by rule, never w
 
 ```bash
 .venv/bin/python -m scripts.lexicon.teacher_deck refresh --docx "/path/to/master.docx"            # build + check locally
-.venv/bin/python -m scripts.lexicon.teacher_deck refresh --docx "/path/to/master.docx" --publish  # after the scan
+.venv/bin/python -m scripts.lexicon.teacher_deck refresh --docx "/path/to/master.docx" --publish  # after the review queue is empty
 # or: make teacher-deck-refresh DOCX="/path/to/master.docx"   (runs with --publish)
 ```
 
 The command ingests the dated lessons into `sources.db` (`private_teacher_lessons_ingest`,
 source `private-teacher-lessons-a`; unchanged lessons are skipped, a changed source is replaced
 as one unit), syncs the table, builds the deck and cloze, runs the generator gate and the
-independent checker, and only then swaps the local published set directory
-(`data/lexicon/teacher-deck/`, untracked) in one step and rewrites the committed
-`site/src/data/lexicon-teacher-table-deck.json` and `site/src/data/lexicon-teacher-deck-frozen-keys.json`.
-With `--publish` it packages the set as `lexicon-teacher-deck-<deckVersion>.json.gz` on the GitHub release
-`atlas-teacher-deck` (an existing identical version is verified, not re-uploaded) and rewrites the committed
-pointer `site/src/data/lexicon-teacher-deck.pointer.json`. The generated shard and cloze are never
+independent checker. With `--publish` it then creates the GitHub release `atlas-teacher-deck` if it
+does not exist yet and uploads the set as `lexicon-teacher-deck-<deckVersion>.json.gz` (an existing
+identical version is verified, not re-uploaded). Only when every step succeeded does it write its
+outputs: the local published set directory (`data/lexicon/teacher-deck/`, untracked) is swapped in
+one step (the old set is restored if the swap fails), and the committed
+`site/src/data/lexicon-teacher-table-deck.json`, `site/src/data/lexicon-teacher-deck-frozen-keys.json`
+and, with `--publish`, the pointer `site/src/data/lexicon-teacher-deck.pointer.json` are replaced
+from staged copies. A failed checker, build or upload leaves every one of them untouched (a versioned
+asset uploaded before a later failure is harmless: nothing points to it). The generated shard and cloze are never
 committed: they exceed the repository's 2,000 KB file limit, and the lesson sentences must be scanned
 by a person before anything is published. It prints the document and input versions,
 added/removed/changed entries (including meaning changes), merges, every teacher-lesson sentence
@@ -44,20 +47,59 @@ Unchanged inputs give byte-identical files (`no-op: artifacts unchanged`).
 | `coverage.json` | `atlas-practice-teacher-coverage` | no | eligibility counts and residual lists with reasons |
 
 The refresh also writes `lesson-sentence-review.json` (`teacher-lesson-sentence-review`) next to these
-files. It is a local review artifact only — never in the manifest, the package or the release: one row
-per teacher-lesson cloze item (cloze id, entry, sentence, lesson date) with deterministic flags —
+files: the **language-review queue**. It is a local artifact only — never in the manifest, the package
+or the release. It lists every *served* teacher-lesson cloze item whose sentence has no record in the
+review ledger yet (below), one row per item (cloze id, entry, sentence, `sentenceSha256`, lesson date),
+with its counts against all served lesson items and deterministic flags —
 `proper_noun_tokens` (capitalised tokens not at the sentence start, and tokens VESUM tags
 `prop`/`fname`/`lname`/`pname`), `vesum_unknown_tokens` (tokens unknown to VESUM's normative `forms`
 view, so forms marked `bad`/`obsc`/`subst` count as unknown) and `digits_or_contact` (digits, emails,
 phone- or URL-like strings). Lesson logs can hold the learner's own attempts; the language review and
-the privacy scan decide, nothing is removed automatically. The refresh prints the counts per flag.
+the privacy scan decide. Publish only when the queue is empty.
+
+### Lesson-sentence screening and the review ledger
+
+Lesson sentences pass two gates **before** up to three are selected per entry, so a screened-out
+sentence can be replaced by the next candidate:
+
+1. **Fragment rules** (deterministic, re-implemented by the checker) reject worksheet debris: the
+   outline arrow `→`; slash alternatives between words (`слово/слово`); a parenthesis holding a
+   number or an all-lowercase gloss/hint, or left unclosed (`(11)`, `(365) триста`, `(ходити)`,
+   `(хронічна втома)`; capitalised or punctuated asides stay); a copied citation marker (`[5]`); a leading section label of up to three
+   words ending in `:` (`Версія СБУ:`); a worksheet task verb at the start (`Визначте`, `Поясніть`,
+   `Запишіть`, `Використайте`, …); a truncated abbreviation at the end (`ім.`, `м.`, `чол.`, …).
+   The rules are deliberately conservative: a few natural `X: …` sentences are dropped too.
+2. **Review ledger** `site/src/data/lexicon-teacher-deck-withheld.json`
+   (`atlas-practice-teacher-withheld`, committed): `withheld[]` records
+   `{sentenceSha256, code, reviewer, reviewedAt}` with `code` `ERR` (incorrect Ukrainian), `AMBIG`
+   (more than one option fits), `FRAG` (not a usable sentence) or `PRIV` (private detail), and
+   `kept[]` records `{sentenceSha256, reviewer, reviewedAt}` for sentences reviewed and accepted.
+   `sentenceSha256` is the SHA-256 of the NFC-normalised sentence with whitespace collapsed; the file
+   never holds sentence text. Withheld sentences are never served (from lessons or textbooks); kept
+   ones leave the review queue. Record a review result with:
+
+```bash
+.venv/bin/python -m scripts.lexicon.teacher_deck record-review --queue data/lexicon/teacher-deck/lesson-sentence-review.json \
+  --cloze data/lexicon/teacher-deck/practice-cloze.teacher.json --results /tmp/withheld.tsv \
+  --reviewer "<model> (<task id>)" --reviewed-at YYYY-MM-DD [--positions 0-774]
+```
+
+`--results` is `clozeId<TAB>code` per withheld item; every queue item in `--positions` that is not
+listed is recorded as kept. One sentence withheld under several codes keeps the gravest
+(`PRIV` > `ERR` > `AMBIG` > `FRAG`); a withheld record is never downgraded to kept. The refresh prints
+how many lesson sentences each fragment rule and each withheld code screened out.
 
 The first sync assigns `firstSeen`; later refreshes read the previous deck from the local set or,
 on a fresh machine, from the published asset. `npm run hydrate` runs
 `site/scripts/hydrate-teacher-deck.mjs`, which downloads the pinned package, verifies the gzip and
 package hashes and every served file (present, SHA-256, schema and version, `deckVersion`,
-compressed-size budget), then writes it to `site/public/lexicon/`. A missing pointer, asset or file
-fails the build.
+compressed-size budget), then writes it to `site/public/lexicon/`. **Before the first publish** there
+is no pointer: `npm run hydrate` and `npm run verify:artifacts` log
+`teacher deck: skipped — no pointer at …` and continue (hydrate also removes stale served copies).
+Once a pointer is committed they fail closed: `verify:artifacts` checks the pointer itself (asset URL
+= the pinned release asset for its `deck_version`, SHA-256 digests, served-file schemas and versions,
+the cloze file record, recorded gzip size within budget) and hydrate additionally re-verifies the
+downloaded package and every served file.
 Budgets (gzip, level 9): deck 600,000 B, cloze 560,000 B — `TEACHER_*_GZIP_LIMIT` next to the
 CEFR budgets in `generate_practice_deck.py`, mirrored in the hydrate script (a test keeps them
 equal). The files are fetched only when this deck is selected.
@@ -151,12 +193,18 @@ Cloze items are `PracticeClozeItem`-compatible (`sentence` with one `___`, `form
 
 ```bash
 .venv/bin/python scripts/audit/check_teacher_deck.py --deck-dir data/lexicon/teacher-deck \
-  --docx "/path/to/master.docx" --expect-keys 1134 --vesum-db data/vesum.db --sources-db data/sources.db
+  --docx "/path/to/master.docx" --expect-keys 1134 --vesum-db data/vesum.db --sources-db data/sources.db \
+  --atlas-db data/atlas.db --withheld site/src/data/lexicon-teacher-deck-withheld.json
 ```
 
 It re-extracts the table and re-implements normalisation, ids, the VESUM/ULIF aspect lookup (with
 `--vesum-db` and `--sources-db`; otherwise the declared aspect is used and the output says so), the
-learner-facing English and the overlap rule, then enforces the rules above and prints the aspect
+learner-facing English and the overlap rule; with `--atlas-db` (read-only) the Atlas join, the
+mechanical sense rule (including "textbook sentences only with a usable sense") and the identity
+conflicts; with `--vesum-db` the same-slot distractor rule (every single-word distractor is a VESUM
+form of its own entry filling every slot of the blank's form, never a form of the answer); the
+lesson-sentence fragment rules; and with `--withheld` that no withheld sentence is served and that the
+ledger carries hashes only. It then enforces the rules above and prints the aspect
 counts, the number of entries without an EN→UK card, the eligibility matrix and the residual lists
 (no Atlas entry, identity conflicts, overlap-omitted EN→UK prompts, refused groups, no-cloze
 entries, unknown aspects, teacher markers that disagree with the sources).

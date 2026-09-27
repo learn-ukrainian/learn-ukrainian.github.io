@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { assertPointerFresh } from './hydrate-manifest.mjs';
+import { verifyTeacherDeckPointer } from './hydrate-teacher-deck.mjs';
 
 const scriptDir = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const repoRoot = resolve(scriptDir, '../..');
@@ -19,7 +20,6 @@ const REQUIRED_ARTIFACTS = [
   'site/src/data/lexicon-daily-pool.json',
   'site/src/data/lexicon-practice-cloze-sources.json',
   'site/src/data/lexicon-practice-reviewed-sources.json',
-  'site/src/data/lexicon-teacher-deck.pointer.json',
 ];
 
 function requireArtifact(relativePath, missing) {
@@ -80,6 +80,13 @@ function main() {
   const pointer = parseJson('site/src/data/lexicon-manifest.pointer.json');
   const fingerprint = parseJson('site/src/data/lexicon-manifest.fingerprint.json');
   assertPointerFresh(pointer, fingerprint);
+  // Optional until the first publish (skips with a log line); fail-closed once pinned.
+  try {
+    verifyTeacherDeckPointer({ pointerPath: resolve(repoRoot, 'site/src/data/lexicon-teacher-deck.pointer.json') });
+  } catch (error) {
+    console.error(`Invalid teacher deck pointer: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  }
   console.log('✓ committed Atlas artifacts verified (no regeneration performed)');
 }
 

@@ -20,7 +20,8 @@ import json
 import random
 import re
 import sqlite3
-from collections.abc import Callable, Iterable, Sequence
+import unicodedata
+from collections.abc import Callable, Collection, Iterable, Sequence
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
@@ -633,6 +634,109 @@ def teacher_lesson_sentences(conn: sqlite3.Connection) -> list[SourceSentence]:
     return sentences
 
 
+# Lesson logs also hold worksheet debris (outlines, gap-fill numbering, task lines).
+# Each rule names one mechanical shape; the independent checker re-implements them.
+LESSON_TASK_VERBS = (
+    "Визначте", "Поясніть", "Запишіть", "Використайте", "Випишіть", "Перепишіть", "Складіть", "Вставте",
+    "Заповніть", "Доповніть", "Підкресліть", "Утворіть", "Розставте", "Виправте", "Замініть", "Перекладіть",
+    "Доберіть", "Позначте", "Продовжте", "Перекажіть", "Відредагуйте", "Розкрийте", "Об'єднайте", "Об’єднайте",
+)  # fmt: skip
+LESSON_TRUNCATED_ABBREVIATIONS = (
+    "ім", "див", "напр", "вул", "просп", "пров", "проф", "акад", "св", "м", "с", "т", "чол", "жін",
+)  # fmt: skip
+LESSON_FRAGMENT_RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
+    ("outline-arrow", re.compile(r"→")),
+    ("slash-alternative", re.compile(r"[^\W\d_]\s?/\s?[^\W\d_]")),
+    # a number, an all-lowercase gloss/hint, or an unclosed bracket; capitalised or punctuated asides stay
+    (
+        "parenthetical-number-or-gloss",
+        re.compile(r"\([^()]*\d[^()]*\)|\(\s*[a-zа-щьюяєіїґ][a-zа-щьюяєіїґ'’ʼ\s-]*\)|\((?![^()]*\))"),
+    ),
+    ("citation-marker", re.compile(r"\[\d+\]")),
+    ("section-label", re.compile(r"^[^\W\d_][\w'’ʼ-]*(?:\s+[\w'’ʼ-]+){0,2}:(?:\s|$)")),
+    ("worksheet-task", re.compile(r"^(?:\d+[.)]\s*)?(?:" + "|".join(LESSON_TASK_VERBS) + r")(?![\w'’ʼ-])")),
+    (
+        "truncated-abbreviation",
+        re.compile(r"(?:^|[\s(])(?:" + "|".join(LESSON_TRUNCATED_ABBREVIATIONS) + r")\.$", re.IGNORECASE),
+    ),
+)
+
+
+def lesson_fragment_reason(sentence: str) -> str | None:
+    """Name of the first worksheet-fragment rule a lesson sentence matches, else None."""
+
+    return next((name for name, pattern in LESSON_FRAGMENT_RULES if pattern.search(sentence)), None)
+
+
+def sentence_sha256(sentence: str) -> str:
+    """Review key of a sentence: SHA-256 of its NFC form with whitespace collapsed."""
+
+    return hashlib.sha256(" ".join(unicodedata.normalize("NFC", sentence).split()).encode("utf-8")).hexdigest()
+
+
+WITHHELD_SCHEMA = "atlas-practice-teacher-withheld"
+WITHHELD_CODES = ("ERR", "AMBIG", "FRAG", "PRIV")
+_SHA256_RE = re.compile(r"[0-9a-f]{64}")
+
+
+@dataclass(frozen=True)
+class SentenceReviews:
+    """Committed language-review ledger: sentence hashes withheld (with a code) or kept."""
+
+    withheld: dict[str, str]
+    kept: frozenset[str]
+    sha256: str
+
+    def reviewed(self, digest: str) -> bool:
+        return digest in self.withheld or digest in self.kept
+
+
+def read_sentence_reviews(path: Path) -> SentenceReviews:
+    """Load and validate the ledger; it must never carry sentence text."""
+
+    if not path.exists():
+        raise TeacherDeckBuildError(f"missing sentence review ledger: {path}")
+    data = path.read_bytes()
+    payload = json.loads(data)
+    if payload.get("schema") != WITHHELD_SCHEMA or payload.get("schemaVersion") != SCHEMA_VERSION:
+        raise TeacherDeckBuildError(f"{path}: expected schema {WITHHELD_SCHEMA} v{SCHEMA_VERSION}")
+    withheld: dict[str, str] = {}
+    for row in payload.get("withheld", []):
+        if set(row) != {"sentenceSha256", "code", "reviewer", "reviewedAt"} or row["code"] not in WITHHELD_CODES:
+            raise TeacherDeckBuildError(f"{path}: malformed withheld record {row!r}")
+        withheld[str(row["sentenceSha256"])] = str(row["code"])
+    kept: set[str] = set()
+    for row in payload.get("kept", []):
+        if set(row) != {"sentenceSha256", "reviewer", "reviewedAt"}:
+            raise TeacherDeckBuildError(f"{path}: malformed kept record {row!r}")
+        kept.add(str(row["sentenceSha256"]))
+    bad = sorted(digest for digest in (*withheld, *kept) if not _SHA256_RE.fullmatch(digest))
+    if bad or kept & withheld.keys():
+        raise TeacherDeckBuildError(
+            f"{path}: invalid or doubly-recorded sentence hashes {(bad or sorted(kept & withheld.keys()))[:3]}"
+        )
+    return SentenceReviews(withheld, frozenset(kept), hashlib.sha256(data).hexdigest())
+
+
+def screen_lesson_sentences(
+    sentences: list[SourceSentence], reviews: SentenceReviews
+) -> tuple[list[SourceSentence], dict[str, dict[str, int]]]:
+    """Drop worksheet fragments and review-withheld sentences before any selection."""
+
+    kept: list[SourceSentence] = []
+    counts: dict[str, dict[str, int]] = {"fragmentRule": {}, "withheldCode": {}}
+    for sentence in sentences:
+        rule = lesson_fragment_reason(sentence.text)
+        code = reviews.withheld.get(sentence_sha256(sentence.text))
+        if rule:
+            counts["fragmentRule"][rule] = counts["fragmentRule"].get(rule, 0) + 1
+        if code:
+            counts["withheldCode"][code] = counts["withheldCode"].get(code, 0) + 1
+        if not rule and not code:
+            kept.append(sentence)
+    return kept, {name: dict(sorted(table.items())) for name, table in counts.items()}
+
+
 def _textbook_rows(conn: sqlite3.Connection, match_query: str) -> list[sqlite3.Row]:
     columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(textbooks)")}
     where = " ".join("AND lower(coalesce(source.source_file, '')) NOT LIKE ?" for _ in TEXTBOOK_EXCLUDED_PREFIXES)
@@ -914,6 +1018,7 @@ def build_cloze(
     lesson_sentences: list[SourceSentence],
     sources_conn: sqlite3.Connection,
     analyzer: FormAnalyzer,
+    withheld: Collection[str] = frozenset(),
 ) -> tuple[list[dict[str, Any]], dict[str, str], list[dict[str, Any]], list[str]]:
     """Return cloze items, per-entry no-cloze reasons, public lesson sentences, textbook sentences used."""
 
@@ -962,7 +1067,7 @@ def build_cloze(
                 if found >= MAX_CLOZE_PER_ENTRY:
                     break
                 folded = sentence.text.casefold()
-                if folded in seen_sentences:
+                if folded in seen_sentences or (withheld and sentence_sha256(sentence.text) in withheld):
                     continue
                 if target.phrase:
                     span = _phrase_match(sentence.text, target)
@@ -995,6 +1100,7 @@ def build_cloze(
                             "clozeId": item["clozeId"],
                             "lesson": sentence.locator,
                             "sentence": sentence.text,
+                            "sentenceSha256": sentence_sha256(sentence.text),
                         }
                     )
                 else:
@@ -1204,6 +1310,7 @@ class TeacherDeckInputs:
     sources_db: Path
     vesum_db: Path
     synonym_verdicts: Path
+    sentence_reviews: Path
 
 
 @dataclass
@@ -1213,6 +1320,7 @@ class TeacherDeckBuild:
     coverage: dict[str, Any]
     input_versions: dict[str, Any]
     public_lesson_sentences: list[dict[str, Any]]
+    reviews: SentenceReviews
 
 
 def _deck_version(*payloads: dict[str, Any]) -> str:
@@ -1236,6 +1344,7 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
     atlas_by_key, atlas_metadata = read_atlas_articles(inputs.atlas_db)
     verifier = RealVesumVerifier(inputs.vesum_db)
     analyzer = FormAnalyzer(inputs.vesum_db)
+    reviews = read_sentence_reviews(inputs.sentence_reviews)
     verdict_payload = read_synonym_verdicts(inputs.synonym_verdicts)
     approved, rejected, _a2 = build_synonym_verdict_sets(verdict_payload)
     verdicts = (approved - rejected, rejected)
@@ -1341,9 +1450,9 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
 
     sources_conn = _ro_connect(inputs.sources_db)
     try:
-        lesson_sentences = teacher_lesson_sentences(sources_conn)
+        lesson_sentences, lesson_screen = screen_lesson_sentences(teacher_lesson_sentences(sources_conn), reviews)
         cloze_items, no_cloze, public_lessons, textbook_used = build_cloze(
-            ctx, senses, lesson_sentences, sources_conn, analyzer
+            ctx, senses, lesson_sentences, sources_conn, analyzer, frozenset(reviews.withheld)
         )
         textbook_rows = sources_conn.execute(
             "SELECT count(*) FROM textbooks WHERE source_file != ?", (TEACHER_LESSON_SOURCE,)
@@ -1464,6 +1573,7 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
         "schemaVersion": SCHEMA_VERSION,
         "deckVersion": version,
         "counts": counts,
+        "lessonSentenceScreen": lesson_screen,
         "residuals": {
             "noAtlas": residual_no_atlas,
             "identityConflicts": [
@@ -1511,8 +1621,13 @@ def build_teacher_deck(entries: list[dict[str, Any]], inputs: TeacherDeckInputs)
             "checkedVerbRowsSha256": _sha256_lines("\x1f".join(map(str, row)) for row in ulif_aspect_rows),
         },
         "synonymVerdictsSha256": hashlib.sha256(inputs.synonym_verdicts.read_bytes()).hexdigest(),
+        "sentenceReviews": {
+            "withheld": len(reviews.withheld),
+            "kept": len(reviews.kept),
+            "sha256": reviews.sha256,
+        },
     }
-    return TeacherDeckBuild(deck, cloze, coverage, input_versions, public_lessons)
+    return TeacherDeckBuild(deck, cloze, coverage, input_versions, public_lessons, reviews)
 
 
 def _vesum_metadata(vesum_db: Path) -> dict[str, str]:
@@ -1716,6 +1831,7 @@ def render_published_set(
 # --------------------------------------------------------------------------- lesson-sentence risk report
 
 REVIEW_FILE = "lesson-sentence-review.json"
+DEFAULT_SENTENCE_REVIEWS = PROJECT_ROOT / "site/src/data/lexicon-teacher-deck-withheld.json"
 REVIEW_SCHEMA = "teacher-lesson-sentence-review"
 REVIEW_FLAGS = ("proper_noun_tokens", "vesum_unknown_tokens", "digits_or_contact")
 PROPER_NAME_TAGS = frozenset({"prop", "fname", "lname", "pname"})  # VESUM: pname = patronymic
@@ -1760,13 +1876,17 @@ def lesson_sentence_flags(sentence: str, analyzer: FormAnalyzer) -> dict[str, li
 
 
 def lesson_sentence_review(build: TeacherDeckBuild, vesum_db: Path) -> dict[str, Any]:
-    """Every teacher-lesson cloze sentence with its flags (local review artifact, never published)."""
+    """The language-review queue (local artifact, never published): every served
+    teacher-lesson cloze item whose sentence has no record in the review ledger yet,
+    with its deterministic flags."""
 
+    served = build.public_lesson_sentences
+    pending = [row for row in served if not build.reviews.reviewed(row["sentenceSha256"])]
     analyzer = FormAnalyzer(vesum_db)
-    analyzer.prefetch(token for row in build.public_lesson_sentences for token in _tokens(row["sentence"]))
+    analyzer.prefetch(token for row in pending for token in _tokens(row["sentence"]))
     by_id = {str(entry["entryId"]): entry for entry in build.deck["entries"]}
     sentences = []
-    for row in build.public_lesson_sentences:
+    for row in pending:
         flags = lesson_sentence_flags(row["sentence"], analyzer)
         sentences.append(
             {
@@ -1775,6 +1895,7 @@ def lesson_sentence_review(build: TeacherDeckBuild, vesum_db: Path) -> dict[str,
                 "entry": by_id[row["entryId"]]["uk"],
                 "lessonDate": row["lesson"],
                 "sentence": row["sentence"],
+                "sentenceSha256": row["sentenceSha256"],
                 "flags": flags,
             }
         )
@@ -1784,10 +1905,18 @@ def lesson_sentence_review(build: TeacherDeckBuild, vesum_db: Path) -> dict[str,
         "schemaVersion": SCHEMA_VERSION,
         "deckVersion": build.deck["deckVersion"],
         "note": (
-            "Local review artifact, never published. Lesson logs may hold the learner's own attempts: "
-            "flags are deterministic hints for the language review and the privacy scan, nothing is removed."
+            "Local review queue, never published: served teacher-lesson cloze items whose sentence has no "
+            "record in the review ledger. Lesson logs may hold the learner's own attempts; flags are "
+            "deterministic hints for the language review and the privacy scan. Record each verdict by "
+            "sentenceSha256 in the ledger (withheld with a code, or kept) and refresh again."
         ),
-        "counts": {"sentences": len(sentences), "flaggedSentences": counts},
+        "counts": {
+            "servedLessonItems": len(served),
+            "servedLessonSentences": len({row["sentenceSha256"] for row in served}),
+            "sentences": len(sentences),
+            "distinctSentences": len({row["sentenceSha256"] for row in sentences}),
+            "flaggedSentences": counts,
+        },
         "sentences": sentences,
     }
 
@@ -1798,4 +1927,5 @@ def default_inputs() -> TeacherDeckInputs:
         sources_db=PROJECT_ROOT / "data/sources.db",
         vesum_db=PROJECT_ROOT / "data/vesum.db",
         synonym_verdicts=PROJECT_ROOT / "registry/lexicon/synonym_pair_verdicts.yaml",
+        sentence_reviews=DEFAULT_SENTENCE_REVIEWS,
     )
