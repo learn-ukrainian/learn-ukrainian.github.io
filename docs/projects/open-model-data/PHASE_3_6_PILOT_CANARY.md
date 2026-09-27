@@ -1,6 +1,9 @@
 # Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B
 
 > [!WARNING]
+> **Withdrawn 2026-09-25: this Hugging Face model repository is private. The pilot data failed the dataset acceptance check and must not be used (epic #6321).**
+
+> [!WARNING]
 > **RELIABILITY STATUS: NOT RELIABLE (Audited under Issue #8338)**
 > The historical Phase 3.6 pilot canary receipt (`data/projects/open_model_data/canary/pilot_canary_receipt.json`) and its saved adapter (`pilot_canary_adapter.safetensors`) were evaluated under Issue #8338 and determined to be **not reliable**. The saved adapter contains only 4 layers and hidden dimension 256, rather than Google Gemma 3 4B's authentic architecture (34 layers, 2560 hidden dimension). The artifact was generated via a synthetic in-tree script (`v4_pilot_canary_evaluation.py`) rather than actual training on real weights.
 >
@@ -17,7 +20,7 @@ This component delivers the **offline contract verification harness, determinist
 ### In-Repository Synthetic Contract Harness vs. Downstream GPU Execution
 In accordance with the repository's permanent boundary invariant ([`docs/projects/open-model-data/decolonization-training-guide.md` §1](decolonization-training-guide.md#1-project-invariants--scope-boundary)), no heavy model weights, GPU training clusters, or live model inference are hosted or executed inside this GitHub repository or its CI environment.
 - **In-Repository Contract Harness (Option b)**: The in-tree script `v4_pilot_canary_evaluation.py` and committed receipt `pilot_canary_receipt.json` serve as a deterministic synthetic contract and schema verification demonstration. They prove the integrity of the 200-item dataset, 30-item replay buffer, partition firewall, schema contracts, cryptographic digests, and adversarial scoring logic in <2s without PyTorch or GPU dependencies in CI. The loss curve and gate percentages recorded in `pilot_canary_receipt.json` represent the deterministic baseline metrics of this synthetic harness.
-- **Downstream GPU Training & Evaluation Scaffold**: For researchers wishing to execute live GPU fine-tuning on authentic `google/gemma-3-4b-it` weights, a complete 1-click Google Colab notebook (`scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb`) is provided alongside public dataset hosting on Hugging Face (`https://huggingface.co/krisztiankoos/uldr-canary-artifacts`). No live GPU run has yet occurred inside this repository or CI.
+- **Downstream GPU Training & Evaluation Scaffold**: For researchers wishing to execute live GPU fine-tuning on authentic `google/gemma-3-4b-it` weights, a complete 1-click Google Colab notebook (`scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb`) is provided alongside dataset hosting on Hugging Face (withdrawn 2026-09-25; now private: `https://huggingface.co/krisztiankoos/uldr-canary-artifacts`). No live GPU run has yet occurred inside this repository or CI.
 
 ---
 
@@ -186,8 +189,8 @@ In accordance with the repository's permanent boundary invariant ([`docs/project
 
 For downstream researchers wishing to execute live GPU fine-tuning of `google/gemma-3-4b-it` on GPU:
 
-1. **Public Hugging Face Datasets & Artifacts Repository**:
-   - Model Repository: [`https://huggingface.co/krisztiankoos/uldr-canary-artifacts`](https://huggingface.co/krisztiankoos/uldr-canary-artifacts) (Public access — no authentication required to download datasets).
+1. **Hugging Face Datasets & Artifacts Repository (withdrawn 2026-09-25; private)**:
+   - Model Repository: [`https://huggingface.co/krisztiankoos/uldr-canary-artifacts`](https://huggingface.co/krisztiankoos/uldr-canary-artifacts) (Private since 2026-09-25 — not downloadable anonymously).
    - Hosted files: `pilot_canary_train_200.jsonl` (200 training items), `pilot_canary_replay_buffer_30.jsonl` (30 replay items), `pilot_canary_eval_cases.jsonl` (900 evaluation cases), `heldout_evaluation_suite_1000.jsonl`, and `v1_pilot_canary_receipt.schema.json`.
 
 2. **Google Colab GPU Training & Evaluation Scaffold**:

@@ -1,0 +1,13 @@
+# User slice for every detached delegate worker (#8645).
+# The driver stays outside this slice. Install steps and the supported
+# plain-Popen fallback are in packaging/systemd/README.md.
+[Unit]
+Description=Learn Ukrainian dispatch workers
+
+[Slice]
+# systemd.resource-control(5): MemoryHigh= is the throttling control;
+# MemoryMax= is the last line of defense. 10G sits just under 11G.
+# MemoryMax= does not cap swap (the 2026-09-24 scope used 6.3G of it).
+MemoryHigh=10G
+MemoryMax=11G
+MemorySwapMax=1G

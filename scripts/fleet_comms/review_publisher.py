@@ -13,8 +13,8 @@ live ``publish``, this module may **materialize the FK-parent**
 ``formal_review_jobs`` row from sealed-payload identity fields only (so
 ``github_publications.review_id`` can satisfy the schema FK). That is *not* a
 PR-F seal cutover: PR-F still owns attempts, snapshot sealing, reviewer
-resolution, lifecycle transitions, and ``review-pr`` wiring. This module does
-not seal snapshots and does not cut over ``review-pr``.
+resolution, and lifecycle transitions (sealed review-pr was removed in #8520). This module does
+not seal snapshots.
 """
 
 from __future__ import annotations

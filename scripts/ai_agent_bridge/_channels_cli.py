@@ -445,6 +445,18 @@ def register_channel_commands(subparsers: Any) -> None:
         "--review", action="store_true",
         help="Prepend docs/review-protocol.md for channel deliveries",
     )
+    post_parser.add_argument(
+        "--review-profile",
+        dest="review_profile",
+        choices=("code", "ukrainian"),
+        default=None,
+        help=(
+            "Required when a review is addressed to agy/gemini "
+            "(channel reviews, or --review). code is refused "
+            "(Gemini reviews Ukrainian only, never code). "
+            "Ukrainian content review must pass ukrainian."
+        ),
+    )
 
     # ── top-level: p (shortcut) ───────────────────────────────────
     p_parser = subparsers.add_parser(
@@ -466,6 +478,16 @@ def register_channel_commands(subparsers: Any) -> None:
     p_parser.add_argument(
         "--review", action="store_true",
         help="Prepend docs/review-protocol.md for channel deliveries",
+    )
+    p_parser.add_argument(
+        "--review-profile",
+        dest="review_profile",
+        choices=("code", "ukrainian"),
+        default=None,
+        help=(
+            "Required when a review is addressed to agy/gemini. "
+            "code is refused; Ukrainian content review must pass ukrainian."
+        ),
     )
 
     reconcile_parser = subparsers.add_parser(
@@ -610,6 +632,18 @@ def register_channel_commands(subparsers: Any) -> None:
     discuss_parser.add_argument(
         "--review", action="store_true",
         help="Prepend docs/review-protocol.md before channel context",
+    )
+    discuss_parser.add_argument(
+        "--review-profile",
+        dest="review_profile",
+        choices=("code", "ukrainian"),
+        default=None,
+        help=(
+            "Required when a review discussion includes agy/gemini "
+            "(--review, or channel reviews). code is refused "
+            "(Gemini reviews Ukrainian only, never code). "
+            "Ukrainian content review must pass ukrainian."
+        ),
     )
     discuss_parser.add_argument(
         "--models",
@@ -1188,6 +1222,29 @@ def _handle_channel_watch(args) -> int:
         return 1
 
 
+def _gemini_review_request_error(
+    *,
+    channel: str,
+    agents: list[str],
+    review: bool,
+    profile: str | None,
+    force: bool = False,
+) -> str | None:
+    """Refuse a Gemini code review that arrives without an explicit profile.
+
+    ``post reviews --to agy`` and ``--review`` are review requests. ``discuss
+    --with agy`` is always checked: a missing profile names the flag, ``code``
+    cites the operator rule, and ``ukrainian`` is allowed.
+    """
+    from ._agy import GEMINI_REVIEW_AGENTS, gemini_review_profile_error
+
+    if not GEMINI_REVIEW_AGENTS.intersection({agent.strip().lower() for agent in agents}):
+        return None
+    if not force and not review and channel != "reviews":
+        return None
+    return gemini_review_profile_error(profile)
+
+
 def _normalize_priority(raw: str | None, *, review: bool) -> str:
     """Resolve the CLI-facing priority flag to the internal DB value.
 
@@ -1227,6 +1284,15 @@ def _handle_post(args) -> int:
     # Default recipients = channel subscribers; --broadcast overrides with
     # all live seats (subscribers or every valid agent, minus dead lanes).
     to_agents = _broadcast_recipients(ch) if broadcast else (_parse_csv(args.to) if args.to else ch["subscribers"])
+    review_error = _gemini_review_request_error(
+        channel=args.channel,
+        agents=to_agents,
+        review=bool(args.review),
+        profile=getattr(args, "review_profile", None),
+    )
+    if review_error is not None:
+        print(f"❌ {review_error}", file=sys.stderr)
+        return 2
     priority = _normalize_priority(getattr(args, "priority", None), review=args.review)
 
     model = getattr(args, "model", None)
@@ -1302,6 +1368,7 @@ def _handle_p(args) -> int:
         model = None
         deadline = None
         review = args.review
+        review_profile = getattr(args, "review_profile", None)
         priority = None
 
     return _handle_post(_Args())
@@ -1557,6 +1624,16 @@ def _handle_discuss(args) -> int:
         ACPX_SUPPORTED_PARTICIPANTS if acp_routine else {}
     )
     with_agents = _parse_csv(args.with_agents)
+    review_error = _gemini_review_request_error(
+        channel=args.channel,
+        agents=with_agents,
+        review=bool(getattr(args, "review", False)),
+        profile=getattr(args, "review_profile", None),
+        force=True,
+    )
+    if review_error is not None:
+        print(f"❌ {review_error}", file=sys.stderr)
+        return 2
     if not with_agents:
         print(
             f"❌ --with requires {MIN_PARTICIPANTS} to {MAX_PARTICIPANTS} "

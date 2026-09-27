@@ -113,7 +113,8 @@ cold-prompts; silent plane flips; “for now” cutovers.
 printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: verdict + findings." | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - --task-id review-<N> --type review
 # SHIELDED formal path (review-pr / lu-review snaps / shielded-reviews) is RETIRED —
-# do not run it. CLI fails closed unless LU_FORMAL_SHIELDED_CF=1 (unit tests only).
+# do not run it. Its commands were removed in #8520, and the snapshot flow is
+# refused with no bypass.
 ```
 
 ### Routing observability contract

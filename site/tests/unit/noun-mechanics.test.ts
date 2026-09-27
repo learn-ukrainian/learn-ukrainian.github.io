@@ -140,9 +140,9 @@ describe('noun-mechanics', () => {
 
   it('validates committed noun mechanics deck parity and type adherence', () => {
     const candidates = [
-      resolve(__dirname, '../../../data/practice/noun_mechanics_deck.json'),
-      resolve(process.cwd(), '../data/practice/noun_mechanics_deck.json'),
-      resolve(process.cwd(), 'data/practice/noun_mechanics_deck.json'),
+      resolve(__dirname, '../../../registry/practice/noun_mechanics_deck.json'),
+      resolve(process.cwd(), '../registry/practice/noun_mechanics_deck.json'),
+      resolve(process.cwd(), 'registry/practice/noun_mechanics_deck.json'),
     ];
     const deckPath = candidates.find((p) => existsSync(p));
     expect(deckPath).toBeDefined();

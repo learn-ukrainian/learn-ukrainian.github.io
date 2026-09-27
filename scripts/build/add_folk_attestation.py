@@ -17,7 +17,7 @@ from typing import Any
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-ATTESTATIONS_PATH = PROJECT_ROOT / "data" / "folk_heritage_attestations.yaml"
+ATTESTATIONS_PATH = PROJECT_ROOT / "registry" / "folk_heritage_attestations.yaml"
 
 
 def _parse_citation(value: str) -> dict[str, str]:

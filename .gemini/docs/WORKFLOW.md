@@ -45,10 +45,10 @@ If you're about to shell-out to read files under `curriculum/` /
 Full docs: `docs/MONITOR-API.md`.
 
 ## Roles
-- **Gemini (Yellow Team)**: The content builder. You research, write content, and create activities. Excellent at advanced immersed Ukrainian, native code/content review, creative ideas, and seminar content.
-- **Claude (Blue Team)**: Architecture, code, infrastructure, and A1 content writing. Cross-agent review of Gemini's content.
+- **Gemini (Yellow Team)**: The content builder. You research, write content, and create activities. Excellent at advanced immersed Ukrainian, Ukrainian-language content review, creative ideas, and seminar content. Gemini reviews Ukrainian-language content only.
+- **Claude (Blue Team)**: Architecture, code, infrastructure, and A1 content writing. Cross-agent review of Gemini's Ukrainian-language content.
 
-**CRITICAL: An LLM must NEVER review its own work.** If Gemini writes it, Claude reviews it. If Claude writes it, Gemini reviews it.
+**CRITICAL: An LLM must NEVER review its own work.** Gemini reviews Ukrainian-language content only. Code review goes to the non-Gemini seats in `agents_extensions/shared/rules/model-assignment.md`'s Code review row.
 
 ## Quality Framework
 ### What "shippable" means

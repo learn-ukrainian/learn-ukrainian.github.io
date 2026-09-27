@@ -663,6 +663,8 @@ def test_monitor_search_reverifies_typed_issue_from_shared_local_cache(
     issue_cache.parent.mkdir(parents=True)
     report = {
         "generated_at": datetime.now(UTC).timestamp(),
+        "membership_complete": True,
+        "incomplete_nodes": [],
         "open_issue_numbers": [6183],
         "effective_membership": {
             "6183": {"epics": [4707], "streams": ["infra"], "via": "native", "unique_stream": True}

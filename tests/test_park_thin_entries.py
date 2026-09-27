@@ -184,6 +184,21 @@ def test_artifact_is_written_before_manifest_shrinks_on_write_failure(
     assert manifest_path.read_bytes() == before
 
 
+def test_unregistered_parked_artifact_refusal_keeps_manifest(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    manifest_path = _write_fixture_manifest(tmp_path)
+    before = manifest_path.read_bytes()
+    parked_path = tmp_path / "parked.json"
+
+    def refuse_unregistered(*args, **kwargs):
+        raise ValueError("migrated artifact tree but has no manifest entry")
+
+    monkeypatch.setattr(park, "write_artifact", refuse_unregistered)
+    with pytest.raises(ValueError, match="no manifest entry"):
+        park.park_thin_entries(manifest_path=manifest_path, parked_out=parked_path, write=True)
+    assert manifest_path.read_bytes() == before
+    assert not parked_path.exists()
+
+
 def _write_fixture_manifest(tmp_path: Path) -> Path:
     entries = [
         _thin_entry("ціль-адреса"),

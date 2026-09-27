@@ -8,7 +8,7 @@
 
 <meta name="report-class" content="documentation" />
 
-<meta name="report-date" content="2026-05-09" />
+<meta name="report-date" content="2026-04-23" />
 
 <meta name="report-status" content="migrated" />
 
@@ -93,11 +93,11 @@
 
   h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
   h3 { font-size: 18px; margin-top: 32px; }
-  
+
   table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
   th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
   td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
-  
+
   .callout {
     padding: 16px;
     border-radius: 4px;
@@ -116,10 +116,10 @@
   <header class="hero">
     <div class="title-block">
       <h1>ADR-007: Kill the rewrite strategies — enforce reviewer-as-fixer parity</h1>
-      <div class="sub">Migrated from Markdown on 2026-05-09 09:27</div>
+      <div class="sub">Migrated from Markdown on 2026-04-23</div>
     </div>
     <div class="meta">
-      <div>Source: 2026-04-23-rewrite-strategies-kill-or-revert.html</div>
+      <div>Source: docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md</div>
       <div>Author: Gemini (Yellow Team)</div>
     </div>
   </header>
@@ -156,15 +156,84 @@
 <hr />
 <h2>Rewrite-mechanism inventory</h2>
 <p>Brief framed this as &quot;four overlapping strategies.&quot; The actual footprint is larger — <strong>seven call sites across two loops and four supporting helper layers</strong> — but they all reduce to the same class: <em>LLM regeneration triggered by a review verdict or contract violation.</em> The verdict for the whole class is the same: <strong>KILL</strong>.</p>
-<p>| # | Name | Location | What it does | Why it contradicts dec-001 | Verdict | Closes |
-|---|---|---|---|---|---|---|
-| M1 | <code>section_rewrite</code> tier | <code>scripts/build/convergence_loop.py:233-234, 597-600</code>; directive builder <code>scripts/build/v6_build.py:9000-9013</code>; dispatch <code>scripts/build/v6_build.py:9115-9144</code> | Tier-2 escalation: groups findings by <code>scope.section_title</code> and regenerates each section via <code>_rewrite_block_section</code>. | LLM regenerates content on REVISE. | <strong>KILL</strong> | #1288 (partial) |
-| M2 | <code>full_rewrite</code> tier | <code>scripts/build/convergence_loop.py:239-242, 601-605</code>; directive <code>scripts/build/v6_build.py:9016-9027</code>; dispatch <code>scripts/build/v6_build.py:9146-9170</code> | Tier-3 escalation: full <code>step_write</code> re-run with a <code>correction_directive</code> listing top-3 persistent findings. | Exactly the FROM-SCRATCH rewrite that <code>dec-001</code> rejected on empirical evidence. Re-demonstrated on <code>a1/colors</code> (2026-04-23). | <strong>KILL</strong> | #1322 |
-| M3 | <code>writer_swap</code> tier | <code>scripts/build/convergence_loop.py:243-246, 606-641</code>; dispatch <code>scripts/build/v6_build.py:9172-9189</code> | Tier-4 escalation: rotates writer family (gemini → claude → codex) and invokes <code>_full_rewrite_round</code> under the new writer. Guarded by reviewer-matrix feature flag. | Uses M2 under the hood; inherits the same degradation class. Writer-swap by itself doesn't violate <code>dec-001</code>, but the only way it currently exercises is through a full rewrite. | <strong>KILL</strong> (see Open Question 1 on operational knob) | #1322 (partial) |
-| M4 | Reviewer-emitted <code>&lt;rewrite-block&gt;</code> directive | Prompt contract <code>scripts/build/phases/v6-review.md:160, 169-173, 205-208</code>; parser <code>scripts/build/v6_build.py:8146-8173</code>; applier <code>scripts/build/v6_build.py:8682-8706</code>; invoker <code>scripts/build/v6_build.py:9302-9313</code> | Review prompt tells the reviewer: <em>&quot;if a problem cannot be fixed safely with surface edits, emit one or more <code>&lt;rewrite-block section=&quot;...&quot;&gt;</code> directives so the pipeline can regenerate that section.&quot;</em> Runs inside the deprecated <code>_run_review_heal_loop</code>. | Gives the reviewer a second lever beyond <code>&lt;fixes&gt;</code> — specifically the lever <code>dec-001</code> forbids. | <strong>KILL</strong> | #1277 |
-| M5 | <code>WORD_BUDGET</code> auto-heal rewrite | <code>scripts/build/v6_build.py:8825-8902</code>; invoker <code>scripts/build/v6_build.py:9328-9346</code> | When contract compliance flags ERROR-severity <code>WORD_BUDGET</code> violations, loops each offending section and triggers <code>_rewrite_block_section</code> to expand it. | LLM regeneration driven by a contract-violation signal. Exactly the heal-loop pattern #1322 set out to eliminate. | <strong>KILL</strong> | #1288 |
-| M6 | Rewrite-block infrastructure (shared by M1, M4, M5) | <code>scripts/build/v6_build.py:8383-8464</code> (<code>_dispatch_rewrite_prompt</code>, <code>_rewrite_block_guardrails</code>, <code>_extract_rewrite_block_auxiliary_forbidden_literals</code>); <code>:8466-8542</code> (<code>_rewrite_block_prompt_manifest</code>, <code>_audit_rewrite_block_prompt</code>); <code>:8544-8679</code> (<code>_rewrite_block_section</code>) | Shared machinery: prompt assembly, deterministic prompt audit, dispatch, post-rewrite validation (word-ratio floor, H2 preservation, activity-type contract check). | Sole purpose is to serve M1/M4/M5. Zero legitimate consumers after those are removed. | <strong>KILL</strong> (removed with M1/M4/M5) | #1268 (per-call Gemini budget cap becomes moot), #1277 (prompt-audit guards become moot) |
-| M7 | Style-review heal loop | <code>scripts/build/v6_build.py:9596-9642</code> | Historical rewrite loop. <strong>Already reverted to advisory-only</strong> (2026-04-23; comment at <code>:9608-9609</code>: <em>&quot;Instead of looping (churn), we save advice to the contract for next time&quot;</em>). Current behavior: run style review once, persist blocking issues as contract advice, continue. | Was a rewrite loop; is now compliant. | <strong>KEEP AS-IS</strong> (no change) | — |</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Name</th>
+<th>Location</th>
+<th>What it does</th>
+<th>Why it contradicts dec-001</th>
+<th>Verdict</th>
+<th>Closes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1</td>
+<td><code>section_rewrite</code> tier</td>
+<td><code>scripts/build/convergence_loop.py:233-234, 597-600</code>; directive builder <code>scripts/build/v6_build.py:9000-9013</code>; dispatch <code>scripts/build/v6_build.py:9115-9144</code></td>
+<td>Tier-2 escalation: groups findings by <code>scope.section_title</code> and regenerates each section via <code>_rewrite_block_section</code>.</td>
+<td>LLM regenerates content on REVISE.</td>
+<td><strong>KILL</strong></td>
+<td>#1288 (partial)</td>
+</tr>
+<tr>
+<td>M2</td>
+<td><code>full_rewrite</code> tier</td>
+<td><code>scripts/build/convergence_loop.py:239-242, 601-605</code>; directive <code>scripts/build/v6_build.py:9016-9027</code>; dispatch <code>scripts/build/v6_build.py:9146-9170</code></td>
+<td>Tier-3 escalation: full <code>step_write</code> re-run with a <code>correction_directive</code> listing top-3 persistent findings.</td>
+<td>Exactly the FROM-SCRATCH rewrite that <code>dec-001</code> rejected on empirical evidence. Re-demonstrated on <code>a1/colors</code> (2026-04-23).</td>
+<td><strong>KILL</strong></td>
+<td>#1322</td>
+</tr>
+<tr>
+<td>M3</td>
+<td><code>writer_swap</code> tier</td>
+<td><code>scripts/build/convergence_loop.py:243-246, 606-641</code>; dispatch <code>scripts/build/v6_build.py:9172-9189</code></td>
+<td>Tier-4 escalation: rotates writer family (gemini → claude → codex) and invokes <code>_full_rewrite_round</code> under the new writer. Guarded by reviewer-matrix feature flag.</td>
+<td>Uses M2 under the hood; inherits the same degradation class. Writer-swap by itself doesn't violate <code>dec-001</code>, but the only way it currently exercises is through a full rewrite.</td>
+<td><strong>KILL</strong> (see Open Question 1 on operational knob)</td>
+<td>#1322 (partial)</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>Reviewer-emitted <code>&lt;rewrite-block&gt;</code> directive</td>
+<td>Prompt contract <code>scripts/build/phases/v6-review.md:160, 169-173, 205-208</code>; parser <code>scripts/build/v6_build.py:8146-8173</code>; applier <code>scripts/build/v6_build.py:8682-8706</code>; invoker <code>scripts/build/v6_build.py:9302-9313</code></td>
+<td>Review prompt tells the reviewer: <em>&quot;if a problem cannot be fixed safely with surface edits, emit one or more <code>&lt;rewrite-block section=&quot;...&quot;&gt;</code> directives so the pipeline can regenerate that section.&quot;</em> Runs inside the deprecated <code>_run_review_heal_loop</code>.</td>
+<td>Gives the reviewer a second lever beyond <code>&lt;fixes&gt;</code> — specifically the lever <code>dec-001</code> forbids.</td>
+<td><strong>KILL</strong></td>
+<td>#1277</td>
+</tr>
+<tr>
+<td>M5</td>
+<td><code>WORD_BUDGET</code> auto-heal rewrite</td>
+<td><code>scripts/build/v6_build.py:8825-8902</code>; invoker <code>scripts/build/v6_build.py:9328-9346</code></td>
+<td>When contract compliance flags ERROR-severity <code>WORD_BUDGET</code> violations, loops each offending section and triggers <code>_rewrite_block_section</code> to expand it.</td>
+<td>LLM regeneration driven by a contract-violation signal. Exactly the heal-loop pattern #1322 set out to eliminate.</td>
+<td><strong>KILL</strong></td>
+<td>#1288</td>
+</tr>
+<tr>
+<td>M6</td>
+<td>Rewrite-block infrastructure (shared by M1, M4, M5)</td>
+<td><code>scripts/build/v6_build.py:8383-8464</code> (<code>_dispatch_rewrite_prompt</code>, <code>_rewrite_block_guardrails</code>, <code>_extract_rewrite_block_auxiliary_forbidden_literals</code>); <code>:8466-8542</code> (<code>_rewrite_block_prompt_manifest</code>, <code>_audit_rewrite_block_prompt</code>); <code>:8544-8679</code> (<code>_rewrite_block_section</code>)</td>
+<td>Shared machinery: prompt assembly, deterministic prompt audit, dispatch, post-rewrite validation (word-ratio floor, H2 preservation, activity-type contract check).</td>
+<td>Sole purpose is to serve M1/M4/M5. Zero legitimate consumers after those are removed.</td>
+<td><strong>KILL</strong> (removed with M1/M4/M5)</td>
+<td>#1268 (per-call Gemini budget cap becomes moot), #1277 (prompt-audit guards become moot)</td>
+</tr>
+<tr>
+<td>M7</td>
+<td>Style-review heal loop</td>
+<td><code>scripts/build/v6_build.py:9596-9642</code></td>
+<td>Historical rewrite loop. <strong>Already reverted to advisory-only</strong> (2026-04-23; comment at <code>:9608-9609</code>: <em>&quot;Instead of looping (churn), we save advice to the contract for next time&quot;</em>). Current behavior: run style review once, persist blocking issues as contract advice, continue.</td>
+<td>Was a rewrite loop; is now compliant.</td>
+<td><strong>KEEP AS-IS</strong> (no change)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
 <h3>Cross-cutting observations</h3>
 <ul>
 <li><strong><code>_run_review_heal_loop</code> (<code>v6_build.py:9244-9594</code>) appears to be dead code.</strong> <!-- VERIFY --> The main build path at <code>v6_build.py:11349</code> calls <code>_run_convergence_loop</code>, not <code>_run_review_heal_loop</code>. <code>_run_review_heal_loop</code> is where M4 and M5 are invoked. If it is truly unreachable in the production code path, M4 and M5 are already quiescent and the KILL is a removal of dead code rather than a behavioural change. Resolution: grep the repo for any remaining callers of <code>_run_review_heal_loop</code> and confirm. If genuinely dead, Phase 2-C gains a freebie — remove the loop and its rewrite callers in one commit with no runtime consequence. If a caller exists (resume path, test harness, CLI flag), the KILL has real blast radius and must be sequenced after users of that path are migrated.</li>

@@ -24,6 +24,7 @@ import yaml
 from bs4 import BeautifulSoup
 
 try:
+    from scripts.storage.topology import resolve_bulk_root
     from scripts.wiki.textbook_subjects import (
         AUTHOR_UK_BY_TRANSLIT,
         normalize_subject_slug,
@@ -32,6 +33,7 @@ try:
 except ModuleNotFoundError:
     # Preserve the documented direct-script entry point as well as ``-m``.
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from scripts.storage.topology import resolve_bulk_root
     from scripts.wiki.textbook_subjects import (
         AUTHOR_UK_BY_TRANSLIT,
         normalize_subject_slug,
@@ -40,7 +42,6 @@ except ModuleNotFoundError:
 
 BASE_URL = "https://pidruchnyk.com.ua"
 SELECTION_FILE = Path("docs/l2-uk-direct/textbook-selection.yaml")
-OUTPUT_DIR = Path("data/textbooks")
 PDF_SIGNATURE = b"%PDF-"
 DOWNLOAD_CHUNK_SIZE = 1024 * 1024
 
@@ -538,12 +539,26 @@ def _existing_pdf_hashes(
     return hashes
 
 
+def default_retained_store() -> Path | None:
+    """Return ``textbooks/`` under the resolved Drive bulk root, if any.
+
+    SMB candidates are skipped on purpose: the ``UkrainianData`` mirror is
+    written only by the Windows copy scripts, so acquisitions land in the Drive
+    store that it mirrors. ``LU_BULK_ROOT`` / ``LU_GDRIVE_DATA`` still apply.
+    Returns ``None`` when no marker-valid root resolves.
+    """
+    resolution = resolve_bulk_root(smb_candidates=())
+    if not resolution.available or resolution.path is None:
+        return None
+    return resolution.path / "textbooks"
+
+
 def resolve_retained_store(path: Path) -> Path:
     """Resolve the configured retained store, including a Drive symlink.
 
     The downloader never creates a repository-local fallback store.  The
-    caller must provide the existing retained location (the legacy default is
-    still accepted for CLI compatibility and is resolved before use).
+    caller must provide the existing retained location (by default the bulk
+    root's ``textbooks/``, see :func:`default_retained_store`).
     """
     candidate = Path(path).expanduser()
     if not candidate.exists() or not candidate.is_dir():
@@ -811,8 +826,8 @@ def main():
         "--output-dir",
         dest="retained_store",
         type=Path,
-        default=OUTPUT_DIR,
-        help="Existing retained PDF store; symlinks (including Google Drive) are resolved before use",
+        default=None,
+        help="Existing retained PDF store (default: textbooks/ under the resolved Drive bulk root)",
     )
     parser.add_argument(
         "--max-size-bytes",
@@ -826,6 +841,13 @@ def main():
         help="Download ALL editions (not just the target year)",
     )
     args = parser.parse_args()
+    if args.retained_store is None:
+        args.retained_store = default_retained_store()
+        if args.retained_store is None:
+            parser.error(
+                "no marker-valid bulk root resolved; set LU_GDRIVE_DATA or pass --retained-store "
+                "(see docs/runbooks/storage-topology.md)"
+            )
 
     books = load_selection()
     if args.only:

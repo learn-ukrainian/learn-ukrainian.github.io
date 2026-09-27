@@ -76,7 +76,7 @@ def primary_repo(tmp_path, monkeypatch):
     repo = _init_repo(tmp_path / "primary")
     tasks_dir = tmp_path / "tasks"
     monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     return repo
 
 
@@ -122,8 +122,8 @@ def test_gate_never_repairs_safe_drift_implicitly(primary_repo):
 
 def test_gate_defers_while_dispatch_running(primary_repo):
     _git(primary_repo, "checkout", "-q", "--detach", "HEAD")
-    delegate._TASKS_DIR.mkdir(parents=True)
-    (delegate._TASKS_DIR / "codex-live.json").write_text(
+    delegate.tasks_dir().mkdir(parents=True)
+    (delegate.tasks_dir() / "codex-live.json").write_text(
         f'{{"task_id": "codex/live", "status": "running", "pid": {os.getpid()}}}'
     )
 
@@ -554,7 +554,7 @@ def test_worktree_base_pins_canonical_github_sha_when_origin_mirror_lags(tmp_pat
 @pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
-    monkeypatch.setattr(delegate, "_TASKS_DIR", tasks_dir)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks_dir))
     return tasks_dir
 
 

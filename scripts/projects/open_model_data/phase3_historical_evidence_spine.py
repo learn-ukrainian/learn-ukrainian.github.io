@@ -26,7 +26,7 @@ from scripts.projects.open_model_data import phase3_historical_periodization as 
 ROOT = Path(__file__).resolve().parents[3]
 SPINE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_evidence_spine_v1.json"
 SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_historical_evidence_spine_v1.schema.json"
-DENOMINATOR_PATH = ROOT / "data/historical_language_corpus_denominator.yaml"
+DENOMINATOR_PATH = ROOT / "registry/historical_language_corpus_denominator.yaml"
 FULL_GATE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_full_materialization_gate_v1.json"
 
 SCHEMA_VERSION = "phase3_historical_evidence_spine_v1"

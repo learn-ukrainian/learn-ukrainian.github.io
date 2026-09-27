@@ -3174,7 +3174,7 @@ def _require_acp_transport(transport: str | None) -> None:
     active = os.environ.get(ACPX_TRANSPORT_ENV, "off").strip().lower()
     if active != "active":
         raise InterAgentTransportError(
-            f"ACP transport is unavailable ({ACPX_TRANSPORT_ENV}={active!r}); refusing before spawn"
+            f"ACP transport is unavailable ({ACPX_TRANSPORT_ENV} is not active); refusing before spawn"
         )
 
 

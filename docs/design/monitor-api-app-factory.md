@@ -374,10 +374,10 @@ the source of truth that confirms or corrects this, not this doc**):
 | 9 | `dashboard_router.py` (own step; inventory decides if it splits) | large, own step |
 | 10 | `rag_router.py` (mounted as `/api/sources` + deprecated `/api/rag`) | small — folds the #7284 connect-deny guard into the context per §4.1 |
 | 11 | `route_contracts.py` (own step; inventory decides if it splits) | large, own step |
-| 12 | Everything else the inventory has not yet placed: `atlas_jobs_router.py`, `blue_router.py`, `build_events_router.py`, `epics_router.py`, `coordination_router.py`, `consultation_router.py`, `cost_router.py`, `decisions_router.py`, `delegate_router.py`, `discussions_router.py`, `gold_router.py`, `governance_router.py`, `hermes_cron_router.py`, `issues_router.py`, `knowledge_router.py`, `reviewer_ghosts_router.py`, `site_router.py`, `telemetry_router.py`, `wiki_router.py`, `worktrees_router.py`, `work_router.py` (21 modules) — the inventory step batches these by shared store/root, capped at roughly 5 files or 1,500 lines per resulting step, and files that many sub-issues (12a, 12b, …) rather than one. | batched by inventory |
+| 12 | Everything else the inventory had not yet placed: `atlas_jobs_router.py`, `blue_router.py`, `build_events_router.py`, `epics_router.py`, `coordination_router.py`, `consultation_router.py`, `cost_router.py`, `decisions_router.py`, `delegate_router.py`, `discussions_router.py`, `gold_router.py`, `governance_router.py`, `issues_router.py`, `knowledge_router.py`, `reviewer_ghosts_router.py`, `site_router.py`, `telemetry_router.py`, `wiki_router.py`, `worktrees_router.py`, `work_router.py` (20 modules; the Hermes cron router has since been removed) — the inventory step batches these by shared store/root, capped at roughly 5 files or 1,500 lines per resulting step, and files that many sub-issues (12a, 12b, …) rather than one. | batched by inventory |
 
 Full accounting: step 1 (4) + step 2 (1) + step 3 (6) + step 4 (1) + step 5 (1) + step 6 (1) +
-step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1) + step 12 (21) = **44 modules**,
+step 7 (3) + step 8 (3) + step 9 (1) + step 10 (1) + step 11 (1) + step 12 (20) = **43 modules**,
 matching the live count above with none dropped.
 
 Sub-issues under #7269 are filed **from the inventory's actual output**, not from the provisional

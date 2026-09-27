@@ -19,10 +19,11 @@ from xml.etree import ElementTree as ET
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = Path(__file__).resolve().parent
-if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
-    sys.path.pop(0)
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __name__ == "__main__":
+    if sys.path and Path(sys.path[0]).resolve() == SCRIPT_DIR:
+        sys.path.pop(0)
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit.atlas_intake_gate import (
     AtlasIntakeGateResult,
@@ -106,9 +107,7 @@ LOW_SIGNAL_LEMMAS = frozenset(
         "як",
     }
 )
-UKRAINIAN_TOKEN_RE = re.compile(
-    r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’`-][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*"
-)
+UKRAINIAN_TOKEN_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’`-][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*")
 SOURCE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_.:-]*$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 ROW_LOCATOR_RE = re.compile(r"\brow\s+(\d+)\b")
@@ -597,10 +596,7 @@ def format_markdown_census(
     lines.extend(f"- `{key}`: {gate_counts[key]}" for key in sorted(gate_counts))
     lines.extend(["", "## Source Units", ""])
     for kind, row in census["by_unit_kind"].items():
-        lines.append(
-            f"- `{kind}`: units={row['units']} blocks={row['text_blocks']} "
-            f"tokens={row['token_occurrences']}"
-        )
+        lines.append(f"- `{kind}`: units={row['units']} blocks={row['text_blocks']} tokens={row['token_occurrences']}")
     if bulk_triage:
         counts = bulk_triage["counts"]
         lines.extend(["", "## Bulk Triage Counts", ""])
@@ -712,11 +708,7 @@ def _committed_teacher_inventory_keys(paths: Sequence[Path] | None) -> frozenset
     from scripts.audit.source_inventory_intake import read_source_inventories
 
     records = read_source_inventories(paths, project_root=PROJECT_ROOT)
-    return frozenset(
-        _lemma_key(record.lemma)
-        for record in records
-        if record.source_family == SOURCE_FAMILY
-    )
+    return frozenset(_lemma_key(record.lemma) for record in records if record.source_family == SOURCE_FAMILY)
 
 
 def _markdown_inline(value: object) -> str:
@@ -1137,10 +1129,7 @@ def _append_xlsx_sheet_blocks(
     block_index = 0
     for row in root.findall(f"{SHEET_NS}sheetData/{SHEET_NS}row"):
         row_index = _positive_row_index(row.attrib.get("r"), fallback=block_index + 1)
-        values = [
-            _xlsx_cell_text(cell, shared_strings=shared_strings)
-            for cell in row.findall(f"{SHEET_NS}c")
-        ]
+        values = [_xlsx_cell_text(cell, shared_strings=shared_strings) for cell in row.findall(f"{SHEET_NS}c")]
         text = _clean_block_text(" ".join(value for value in values if value))
         if not text:
             continue
@@ -1196,9 +1185,7 @@ def _clean_block_text(text: str) -> str:
 
 
 def _shape_signature(payload: Mapping[str, Any]) -> str:
-    return hashlib.sha256(
-        json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
-    ).hexdigest()
+    return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
 
 
 def _text_shape_signature(path: Path) -> str:
@@ -1242,10 +1229,7 @@ def _docx_unit_shape_signature(element: ET.Element) -> str:
             "text_node_count": len(text_nodes),
             "text_char_count": sum(len(text) for text in text_nodes),
             "row_count": len(rows),
-            "cells_per_row": [
-                len(row.findall(f"{WORD_NS}tc"))
-                for row in rows
-            ],
+            "cells_per_row": [len(row.findall(f"{WORD_NS}tc")) for row in rows],
         }
     )
 
@@ -1565,7 +1549,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.format == "markdown":
         print(format_markdown_census(result.census, bulk_triage=bulk_triage_public_summary(triage) if triage else None))
     else:
-        print(json.dumps(public_census_payload(result, bulk_triage=triage), ensure_ascii=False, indent=2, sort_keys=True))
+        print(
+            json.dumps(public_census_payload(result, bulk_triage=triage), ensure_ascii=False, indent=2, sort_keys=True)
+        )
     return 0
 
 

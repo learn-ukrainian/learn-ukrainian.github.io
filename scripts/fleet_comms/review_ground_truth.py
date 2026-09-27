@@ -31,7 +31,7 @@ _KNOWN_CHANGE_TYPES = frozenset(
     {"ADDED", "DELETED", "MODIFIED", "RENAMED", "COPIED", "CHANGED"}
 )
 # Path lines are optional and only appended when they fit the prompt budget.
-# Default sample is tiny — review_pr prompts have ~0.5 KiB headroom after the
+# Default sample is tiny — review prompts have ~0.5 KiB headroom after the
 # checklist + read-only contract (#5802).
 _MAX_BRIEF_FILES = 12
 

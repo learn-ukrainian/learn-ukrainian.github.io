@@ -236,12 +236,18 @@ def create_recovery_ref(
     *,
     branch: str | None,
     head: str,
+    timeout: float | None = None,
 ) -> tuple[str | None, str | None]:
-    """Pin the exact pre-reap commit under a private local rescue ref."""
+    """Pin the exact pre-reap commit under a private local rescue ref.
+
+    ``timeout`` overrides :data:`DEFAULT_GIT_TIMEOUT_SECONDS`. The reaper
+    passes the time left on its locked-region deadline.
+    """
     label = re.sub(r"[^A-Za-z0-9._/-]+", "-", branch or "detached").strip("./-")
     label = label or "detached"
     stamp = utc_now().strftime("%Y%m%dT%H%M%SZ")
     ref = f"refs/reaper-rescue/{stamp}/{label}-{head[:12]}"
+    bound = DEFAULT_GIT_TIMEOUT_SECONDS if timeout is None else timeout
     try:
         proc = subprocess.run(
             ["git", "update-ref", ref, head],
@@ -249,10 +255,10 @@ def create_recovery_ref(
             capture_output=True,
             text=True,
             check=False,
-            timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
+            timeout=bound,
         )
     except subprocess.TimeoutExpired as exc:
-        return None, f"git update-ref timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s: {exc}"
+        return None, f"git update-ref timed out after {bound:g}s: {exc}"
     if proc.returncode != 0:
         return None, (proc.stderr or proc.stdout or "git update-ref failed").strip()
     return ref, None
@@ -301,7 +307,7 @@ def restore_worktree(
             timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired:
-        return False, f"git rev-parse branch timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s"
+        return False, f"git rev-parse branch timed out after {DEFAULT_GIT_TIMEOUT_SECONDS:g}s"
     if branch_ref.returncode == 0 and (branch_ref.stdout or "").strip() != sha:
         return False, "branch no longer matches recovery ref"
     command = ["git", "worktree", "add"]
@@ -319,8 +325,7 @@ def restore_worktree(
             timeout=DEFAULT_GIT_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired as exc:
-        return False, f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_SECONDS}s: {exc}"
+        return False, f"git worktree add timed out after {DEFAULT_GIT_TIMEOUT_SECONDS:g}s: {exc}"
     if proc.returncode != 0:
         return False, (proc.stderr or proc.stdout or "git worktree add failed").strip()
     return True, None
-

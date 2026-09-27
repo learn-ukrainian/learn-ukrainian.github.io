@@ -532,11 +532,11 @@ def import_to_sources(dump_db_path: Path, sources_db_path: Path) -> int:
         return 1
 
     dump_conn = sqlite3.connect(str(dump_db_path))
+    total_rows = dump_conn.execute("SELECT COUNT(*) FROM ulif_entries").fetchone()[0]
     cursor = dump_conn.execute(
-        "SELECT lemma, canonical_headword, status, retrieved_at, paradigm_json, synonyms_json, phraseology_json, antonyms_json FROM ulif_entries;"
+        "SELECT lemma, canonical_headword, status, retrieved_at, paradigm_json, synonyms_json, phraseology_json, antonyms_json, raw_html_json FROM ulif_entries;"
     )
-    rows = cursor.fetchall()
-    print(f"Importing {len(rows):,} entries from {dump_db_path} to {sources_db_path}...")
+    print(f"Importing {total_rows:,} entries from {dump_db_path} to {sources_db_path}...")
     imported = 0
     now_ts = datetime.datetime.now(datetime.UTC).isoformat()
     for (
@@ -548,7 +548,8 @@ def import_to_sources(dump_db_path: Path, sources_db_path: Path) -> int:
         synonyms_json,
         phraseology_json,
         antonyms_json,
-    ) in rows:
+        raw_html_json,
+    ) in cursor:
         sections: dict[str, Any] = {}
         if paradigm_json:
             sections["paradigm"] = json.loads(paradigm_json)
@@ -563,22 +564,31 @@ def import_to_sources(dump_db_path: Path, sources_db_path: Path) -> int:
             word=lemma,
             canonical_headword=canonical_headword or lemma,
             sections=sections,
-            raw_responses={},
+            raw_responses=json.loads(raw_html_json) if raw_html_json else {},
             retrieved_at=retrieved_at or now_ts,
             parser_version="ulif-dictua-v2",
             status=status if status in {"ok", "not_found", "parse_error"} else "parse_error",
             db_path=sources_db_path,
         )
         imported += 1
-        if imported % 1000 == 0 or imported == len(rows):
-            print(f"Imported {imported:,}/{len(rows):,} entries...", flush=True)
+        if imported % 1000 == 0 or imported == total_rows:
+            print(f"Imported {imported:,}/{total_rows:,} entries...", flush=True)
     dump_conn.close()
     print(f"Done! {imported:,} entries imported into {sources_db_path}.")
     return 0
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description="Crawl ULIF DictUA into a resumable dump SQLite database.\nUse for bounded collection or import an existing dump into sources.db and the raw cache.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  .venv/bin/python scripts/lexicon/tools/dump_ulif.py --word замок --db data/ulif_dump.db
+  .venv/bin/python scripts/lexicon/tools/dump_ulif.py --db data/ulif_dump.db --import-to-sources data/sources.db
+Outputs: crawler dump DB; with --import-to-sources, parsed rows in sources.db and raw bodies in the ULIF cache.
+Exit codes: 0 success; nonzero fetch, parse, or import failure.
+Related: issue #8800 Plan v3; scripts/lexicon/tools/import_ulif_dump.py.""",
+    )
     parser.add_argument(
         "--db",
         type=str,
@@ -594,17 +604,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--wordlist",
         type=str,
-        help="Path to text file with words (one per line)",
+        help="Path to text file with words, one per line (default: manifest cohort)",
     )
     parser.add_argument(
         "--from-vesum",
         type=str,
-        help="Path to vesum.db to dump all VESUM lemmas",
+        help="Path to vesum.db for all VESUM lemmas (default: manifest cohort)",
     )
     parser.add_argument(
         "--word",
         type=str,
-        help="Single word to test",
+        help="Single word to fetch, e.g. замок (default: manifest cohort)",
     )
     parser.add_argument(
         "--delay",
@@ -621,18 +631,18 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--limit",
         type=int,
-        help="Limit number of pending words to fetch in this session",
+        help="Limit pending words in this session, e.g. 100 (default: all)",
     )
     parser.add_argument(
         "--save-html",
         action="store_true",
-        help="Also store raw HTML responses in database (increases DB size)",
+        help="Also store raw HTML in the dump DB for later import (default: off)",
     )
     parser.add_argument(
         "--import-to-sources",
         type=str,
         metavar="SOURCES_DB_PATH",
-        help="Import an existing ulif_dump.db directly into sources.db",
+        help="Import an existing dump into this sources.db path and the raw cache (default: off)",
     )
     args = parser.parse_args(argv)
     if args.import_to_sources:

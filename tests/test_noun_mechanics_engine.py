@@ -178,7 +178,7 @@ def test_deck_export_and_file_parity(tmp_path: Path):
     assert len(data["cards"]) == data["card_count"]
 
     # Verify committed deck parity
-    repo_deck_path = Path(__file__).resolve().parents[1] / "data" / "practice" / "noun_mechanics_deck.json"
+    repo_deck_path = Path(__file__).resolve().parents[1] / "registry" / "practice" / "noun_mechanics_deck.json"
     assert repo_deck_path.exists(), "Committed deck file does not exist"
 
     with open(repo_deck_path, encoding="utf-8") as f:

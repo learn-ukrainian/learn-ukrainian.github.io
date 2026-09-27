@@ -77,7 +77,7 @@ running builds or local-only state:
 + `wiki/**` — wiki builder runs in parallel and emits new/modified
   files constantly. Snapshot-commit periodically (`feat(wiki): snapshot
   built wikis — batch YYYY-MM-DD`), don't restore.
-+ `data/corpus_audit/draft_tickets/*.md` — local-only audit drafts
++ `registry/corpus_audit/draft_tickets/*.md` — local-only audit drafts
   (already unignored/allowed per existing `.gitignore` rule)
 + `.venv/`, `node_modules/`, `starlight/dist/`, etc. — gitignored build
   artifacts. If any of these show up in `git status`, something is
@@ -147,7 +147,7 @@ Before closing a session:
 git status --short | awk '{print $1}' | sort | uniq -c
 
 # 2. Classify
-git status --short | grep -vE '^(.M|.D|.\?) (wiki/|data/corpus_audit/draft_tickets/)'
+git status --short | grep -vE '^(.M|.D|.\?) (wiki/|registry/corpus_audit/draft_tickets/)'
 
 # 3. Resolve all non-exempt entries per the decision flow above.
 # 4. Confirm clean:

@@ -23,6 +23,31 @@
 
 _HANDOFF_IDENTITY_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
+# Read the same compatibility map used by /api/work/v1/next. Print
+# "<stream-key><TAB><lane>" and return 0 on a hit; return 1 for a selector that
+# is not in the map (callers fall through to registry-key resolution); return 2
+# when the map is missing or malformed so callers fail closed instead of
+# silently resolving a compatibility alias like `atlas` as a raw registry key.
+_launcher_compat_alias() {
+  local selector="${1:-}"
+  local aliases="$_HANDOFF_IDENTITY_DIR/../config/launcher_stream_aliases.tsv"
+  [ -f "$aliases" ] || return 2
+  awk -F '\t' -v wanted="$selector" '
+    /^#/ || NF == 0 { next }
+    NF != 3 { invalid = 1; next }
+    $1 == wanted {
+      if (found++) invalid = 1
+      key = $2
+      lane = $3
+    }
+    END {
+      if (invalid) exit 2
+      if (!found) exit 1
+      printf "%s\t%s\n", key, lane
+    }
+  ' "$aliases"
+}
+
 # _launcher_stream_anchor_epic "<stream-key>"
 # Print the first epic number listed for that key in issue_streams.yaml.
 # Fail closed (print nothing, return 1) when the registry is missing or the
@@ -117,57 +142,39 @@ _launcher_infra_stream_id() {
 # launcher_selector_resolve "<lane-or-lane.topic>"
 # Print the canonical lane and stream id, separated by a tab.  This is the
 # single selector table shared by handoff identities and session supervision.
-# Unknown selectors return 1 and print nothing, so callers can fail closed.
+# Unknown selectors return 1 and print nothing on stdout, so callers can fail closed.
+# Retired selectors also explain the rejection on stderr.
 launcher_selector_resolve() {
   local selector="${1:-}"
   local key=""
   local lane=""
   local epic=""
+  local mapped=""
+  local alias_rc=0
 
-  # Compatibility aliases preserve the pre-registry lane identity while their
-  # stream anchor still comes from the registry.  Generic selectors below are
-  # intentionally not added here: a new registry row must work without a
-  # launcher edit.
+  # Retired selectors fail before alias and generic registry resolution.
   case "$selector" in
-    infra|harness|infra.fleet-comms)
-      key="infra-harness"
-      lane="infra"
+    eval-harness|a1-upgrade|infra.eval-harness|infra.a1-upgrade)
+      printf 'retired lane selector: %s\n' "$selector" >&2
+      return 1
       ;;
-    devops|infra.devops)
-      key="devops"
-      lane="devops"
-      ;;
-    monitor|infra.monitor|ops-api|ops.api|operator-api)
-      key="monitor"
-      lane="monitor"
-      ;;
-    atlas|practice|practice-hub|atlas.practice)
-      key="atlas-practice"
-      lane="atlas"
-      ;;
-    hramatka|hramatka.lessons)
-      key="hramatka"
-      lane="hramatka"
-      ;;
-    folk|seminars-folk)
-      key="seminars-folk"
-      lane="folk"
-      ;;
-    bio|seminars-bio)
-      key="seminars-bio"
-      lane="bio"
-      ;;
-    corpus|corpus-channels)
-      key="corpus-channels"
-      lane="corpus"
-      ;;
-    infra.*)
-      key="${selector#infra.}"
+  esac
+
+  mapped="$(_launcher_compat_alias "$selector")" && alias_rc=0 || alias_rc=$?
+  case "$alias_rc" in
+    0) IFS=$'\t' read -r key lane <<< "$mapped" ;;
+    1)
+      # Generic selectors are intentionally absent from the compatibility map:
+      # a new registry row must work without a launcher edit.
+      case "$selector" in
+        infra.*) key="${selector#infra.}" ;;
+        *) key="$selector" ;;
+      esac
       lane="$key"
       ;;
     *)
-      key="$selector"
-      lane="$key"
+      printf 'launcher alias map missing or malformed: scripts/config/launcher_stream_aliases.tsv\n' >&2
+      return 1
       ;;
   esac
 
@@ -195,9 +202,70 @@ launcher_selector_stream() {
   printf '%s' "${resolved#*$'\t'}"
 }
 
+# launcher_session_epic "<selector>"
+# Print the SESSION_EPIC a driver launch exports. SessionStart uses that value
+# as the file-handoff directory (.claude/<SESSION_EPIC>-epic/). It is the
+# resolved lane when that lane is itself a selector for the same stream
+# (harness → infra, seminars-folk → folk). It stays the original selector when
+# the lane cannot re-resolve that stream, so an area-lane alias does not move
+# the stream's handoff directory: curriculum-upgrade stays
+# curriculum-upgrade-epic while its slot still uses the core lane.
+launcher_session_epic() {
+  local selector="${1:-}"
+  local lane='' stream='' lane_stream=''
+  lane="$(launcher_selector_lane "$selector")" || return 1
+  stream="$(launcher_selector_stream "$selector")" || return 1
+  if lane_stream="$(launcher_selector_stream "$lane" 2>/dev/null)" && [ "$lane_stream" = "$stream" ]; then
+    printf '%s' "$lane"
+    return 0
+  fi
+  printf '%s' "$selector"
+}
+
+# _handoff_slot_registry "<args for handoff_slot_registry.py>"
+# Run the slot-registry helper with the durable interpreter.  The registry is
+# scripts/config/area_assignments.yaml, read only through the bridge helpers
+# that build the inbox `--for` choices (no second parser here).  Returns the
+# helper's exit code (0 registered, 3 not registered, anything else means the
+# check could not run); returns 2 when no interpreter is available so callers
+# fail closed.
+_handoff_slot_registry() {
+  local repo_root="$_HANDOFF_IDENTITY_DIR/../.."
+  local py="${LC_DURABLE_HELPER_ROOT:-$repo_root}/.venv/bin/python"
+  [ -x "$py" ] || return 2
+  (cd "$repo_root" && "$py" -m scripts.orchestration.handoff_slot_registry "$@")
+}
+
+# launcher_require_registered_slot "<provider>" "<selector>"
+# Fail closed when "<provider>-<lane>" is not a registered handoff slot: an
+# unregistered SESSION_HANDOFF_AGENT cannot receive inbox mail, fails the
+# dispatch-lane self-test and lets rollover fall back to another lane's packet
+# pool (#8303).  Prints one error naming the selector, the slot and the
+# registered options; returns 1 (unresolvable/unregistered) or 2 (the check
+# could not run).
+launcher_require_registered_slot() {
+  local provider="${1:-}" selector="${2:-}"
+  local lane="" slot="" rc=0 options=""
+  lane="$(launcher_selector_lane "$selector")" || return 1
+  slot="$provider-$lane"
+  _handoff_slot_registry --slot "$slot" 2>/dev/null && return 0 || rc=$?
+  if [ "$rc" -eq 3 ]; then
+    options="$(_handoff_slot_registry --list "$provider" 2>/dev/null | paste -sd ' ' - || true)"
+    printf "selector '%s' resolves to handoff slot '%s', which is not registered in scripts/config/area_assignments.yaml; a session under it cannot receive inbox mail. Registered %s slots: %s\n" \
+      "$selector" "$slot" "$provider" "${options:-none}" >&2
+    return 1
+  fi
+  printf "cannot verify handoff slot '%s' for selector '%s': scripts/config/area_assignments.yaml is unreadable or the durable Python interpreter is missing; refusing to launch an unverified identity.\n" \
+    "$slot" "$selector" >&2
+  return 2
+}
+
 # launcher_selector_help
 # Keep launcher diagnostics in one place so every entry point documents the
-# exact same public selector surface.
+# exact same public selector surface.  Registry keys are listed only when the
+# launcher would accept them, i.e. when the slot they mint is registered.
+# A key aliased onto another lane (minted slot is not claude-<key>) is listed
+# with the compatibility aliases instead of as infra.<key>.
 launcher_selector_help() {
   local key=""
   cat <<'EOF'
@@ -206,6 +274,9 @@ Valid lane selectors:
 EOF
   while IFS= read -r key; do
     [ -n "$key" ] || continue
+    # rc 3 = minted slot unregistered (launcher would refuse it); anything else =
+    # cannot tell, so keep the key listed rather than hide a selector on a broken host.
+    _handoff_slot_registry --slot "claude-$key" >/dev/null 2>&1 || [ "$?" -ne 3 ] || continue
     printf '    %s | infra.%s\n' "$key" "$key"
   done < <(_launcher_registry_stream_keys 2>/dev/null || true)
   cat <<'EOF'
@@ -218,6 +289,7 @@ EOF
     folk | seminars-folk
     bio | seminars-bio
     corpus | corpus-channels
+    curriculum-upgrade
 EOF
 }
 

@@ -51,6 +51,8 @@ non-skippable:
     non-goals, role map, independent held-out evaluation, stop/residual policy,
     and completion terms. Prompt review never replaces exact-head
     implementation or cross-family PR review.
+15. **Simplest adequate solution** (adjust code to data; proportionate review;
+    stopping rule after two rounds).
 
 ## Non-skippable offline execution guardrails
 

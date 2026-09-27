@@ -37,7 +37,7 @@ from .monitor_context import MonitorContext, get_ctx, resolve_context
 router = APIRouter(tags=["git"])
 FALLBACK_EXEMPTION_PATTERNS = (
     "wiki/**",
-    "data/corpus_audit/draft_tickets/*.md",
+    "registry/corpus_audit/draft_tickets/*.md",
 )
 
 BUCKET_NAMES = (
@@ -499,7 +499,7 @@ def _exemption_key(path: str, patterns: list[str], ignored: set[str]) -> str | N
         if _matches_pattern(path, pattern):
             if path == "wiki" or path.startswith("wiki/"):
                 return "wiki"
-            if path.startswith("data/corpus_audit/draft_tickets/"):
+            if path.startswith("registry/corpus_audit/draft_tickets/"):
                 return "draft_tickets"
             return "other"
     return None

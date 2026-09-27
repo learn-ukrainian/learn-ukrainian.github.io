@@ -32,7 +32,8 @@ Cleanup is fail-closed. A worktree is preserved when any of these is true:
   or an active task lease, rollover lease, write-ownership claim, or reap reservation exists (`active_dispatch`);
 - it is the repository's primary checkout (`primary`);
 - it has uncommitted changes or untracked files (`dirty`), which are retained as exceptions and never force-deleted;
-- it is in a detached HEAD or unresolvable state (`detached_unknown`);
+- it is in a detached HEAD or unresolvable state and does not meet the
+  `detached_clean_contained` proof below (`detached_unknown`);
 - it encountered filesystem permission errors during evaluation or removal (`permission_error`), which are retained as exceptions;
 - it is outside the repository's `.worktrees/` directory or not a registered worktree (`foreign`).
 
@@ -81,7 +82,8 @@ The dual-repo reaper and scheduler categorize all worktrees into strict canonica
 | `active_dispatch` | Live process CWD, active task, active worker/rollover lease, write claim, or reap reservation | Preserved |
 | `open_pr` | Worktree branch has an OPEN pull request | Preserved |
 | `dirty` | Uncommitted modifications or untracked changes | Preserved as exception |
-| `detached_unknown` | Detached HEAD or unverifiable branch state | Preserved |
+| `detached_unknown` | Detached HEAD or unverifiable branch state, and not `detached_clean_contained` | Preserved |
+| `detached_clean_contained` | Clean, unlocked, detached `.worktrees/dispatch/<agent>/<task>/` checkout whose HEAD is already on origin (see below) | **Reaped** by `--safe-only` |
 | `permission_error` | Filesystem permission denied during inspection or removal | Retained as exception |
 | `foreign` | Outside repository `.worktrees/` subtree | Preserved |
 | `unmerged` | Unpushed commits or lacking exact merged-PR / origin-main ancestry proof | Preserved |
@@ -194,6 +196,40 @@ the same dead-owner sweep on entry, before creating its own workspace, so a
 killed ask's stub is gone by the next ACP call at the latest. As defence in
 depth, the ask entry path converts SIGTERM into an orderly unwind
 (`SystemExit(143)`) so the context `finally` cleans up when it can.
+
+### Clean detached dispatch checkouts (`detached_clean_contained`)
+
+A worker's baseline or scratch checkout (`git worktree add --detach`) holds
+nothing unique once its commit is pushed, so it must not pile up on a
+disk-limited host. `reap_worktrees` reaps it under `--apply` and `--safe-only`
+(and in the default merged mode) when **all** of these hold:
+
+- it is exactly `.worktrees/dispatch/<agent>/<task>/` with a detached HEAD,
+  and is not an ACP runtime worktree;
+- `git status --porcelain=v1 -z --ignored --untracked-files=all` succeeds and
+  every entry is an **ignored** (`!!`) regenerable cache: a path with a
+  `__pycache__/` directory segment, or one under a top-level `.pytest_cache/`,
+  `.ruff_cache/` or `.mypy_cache/`. Any staged, modified, renamed or untracked
+  entry preserves the checkout, as does any path with a `.venv` or
+  `node_modules` segment (even inside a `__pycache__/`) and a loose `*.pyc`
+  outside `__pycache__/`. The allowlist is fixed and never consults
+  `.gitignore` or `info/exclude`; a git failure preserves. Documented residual:
+  a hand-made file placed inside an ignored `__pycache__/` or top-level cache
+  directory is treated as disposable;
+- HEAD is an ancestor of `origin/main` or contained in some
+  `refs/remotes/origin/*` ref (no age threshold, no task record needed);
+- it is not locked, no live process has its working directory inside it, and
+  no non-terminal task (`queued`, `starting`, `running`, ...) is bound to it;
+  an unavailable active-task probe fails closed (preserved, reported as
+  `active-task probe unavailable`), at qualification and again before removal;
+- its PR state is not `OPEN`, consulted only as the same guard every class
+  honours; the class's own proof never depends on PR state.
+
+It goes through the same qualified-reap path as the other safe classes
+(reap reservation, per-worktree lock, recovery ref, journal, daily cap) and
+re-proves the conditions under the lock before removal. Everything else stays
+in `detached_unknown` / `dirty` / `unmerged` and is preserved. Reason string:
+`detached clean contained: HEAD <sha12> is <an ancestor of origin/main | contained in an origin/* ref>`.
 
 ### Interrupted `git worktree add` (#8663)
 

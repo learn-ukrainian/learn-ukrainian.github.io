@@ -37,12 +37,8 @@ _DEFAULT_AGENT_TIER = {
 # All model-id hints match delimiter-bounded segments (or multi-segment
 # compounds like gpt-5.6-sol / claude-fable). Bare substring matching mis-tiers
 # e.g. gemini-3.6-flash-high (flash) and gemini-* (mini inside gemini).
-_AUTHORITY_TOKEN_RE = re.compile(
-    r"(?:^|[-_.])(?:fable|sol|opus|claude-fable|claude-opus|gpt-5\.6-sol)(?:$|[-_.])"
-)
-_HEAP_TOKEN_RE = re.compile(
-    r"(?:^|[-_.])(?:luna|haiku|flash|mini|laguna|k2\.5)(?:$|[-_.])"
-)
+_AUTHORITY_TOKEN_RE = re.compile(r"(?:^|[-_.])(?:fable|sol|opus|claude-fable|claude-opus|gpt-5\.6-sol)(?:$|[-_.])")
+_HEAP_TOKEN_RE = re.compile(r"(?:^|[-_.])(?:luna|haiku|flash|mini|laguna|k2\.5)(?:$|[-_.])")
 _PRACTICAL_OVERRIDE_RE = re.compile(
     r"flash-high|gemini-3\.[0-9]+-flash-high|gpt-5\.6-terra|claude-sonnet",
 )
@@ -107,12 +103,7 @@ def load_tasks(
             continue
         # Fully before the lookback window only. Unfinished work that started
         # earlier stays in-scope so single-seat marathons remain visible.
-        if (
-            started is not None
-            and started < since
-            and finished is not None
-            and finished < since
-        ):
+        if started is not None and started < since and finished is not None and finished < since:
             continue
         if finished is not None and finished < since and started is None:
             continue
@@ -141,8 +132,7 @@ def build_report(tasks: list[dict[str, Any]]) -> dict[str, Any]:
     implement = [
         t
         for t in tasks
-        if not str(t.get("task_id") or "").startswith("review-")
-        and str(t.get("agent") or "") not in ("",)
+        if not str(t.get("task_id") or "").startswith("review-") and str(t.get("agent") or "") not in ("",)
     ]
     # Floor diversity MUST use the same population as floor_applies — otherwise
     # a review-* (or other non-implement) task can launder single-seat marathons.
@@ -180,12 +170,27 @@ def build_report(tasks: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Report epic-driver fleet breadth and windowed idle-settle dispositions.\n"
+            "Use for session handoff and enforcement; it never gates raw idle seconds."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator claude-infra --since-hours 24 --enforce\n"
+            "  .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --json\n"
+            "Outputs: report on stdout; no files written.\n"
+            "Exit codes: 0 success; 2 failed breadth or idle disposition enforcement, or invalid arguments\n"
+            "  (including a non-positive --since-hours).\n"
+            "Related: agents_extensions/shared/rules/fleet-driver-routing.md; issue #8819."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument(
         "--tasks-dir",
         type=Path,
         default=ROOT / "batch_state" / "tasks",
-        help="batch_state/tasks directory",
+        help="Task records directory (default: batch_state/tasks; e.g. /path/to/tasks)",
     )
     parser.add_argument(
         "--initiator",
@@ -194,9 +199,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--since-hours",
-        type=float,
+        type=idle_settle.positive_hours,
         default=24.0,
-        help="Lookback window in hours (default 24)",
+        help="Lookback window in hours (must be > 0) for tasks and idle events (default: 24; e.g. 48). Missing or invalid idle timestamps stay included",
     )
     parser.add_argument(
         "--enforce",
@@ -210,20 +215,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--note-file",
         type=Path,
-        help="Path to a written NOTE: fleet_breadth justification (waives breadth-floor --enforce fail only)",
+        help="NOTE: fleet_breadth justification path (default: none; e.g. note.md; waives breadth-floor fail only)",
     )
-    parser.add_argument("--json", action="store_true", help="Machine-readable JSON only")
+    parser.add_argument("--json", action="store_true", help="Print JSON instead of text (default: text)")
     parser.add_argument(
         "--idle-store",
         type=Path,
         default=None,
-        help="Optional idle-settle events JSONL to embed; --enforce fails MISSING/DISHONEST in this store",
+        help="Idle events JSONL (default: shared store; e.g. events.jsonl); --enforce fails in-window MISSING/DISHONEST",
     )
     parser.add_argument(
         "--idle-snapshot-json",
         type=Path,
         default=None,
-        help="Optional eligibility snapshot; embeds first-class admission WIP state (not a dashboard)",
+        help="Eligibility snapshot JSON (default: none; e.g. snapshot.json); embeds admission WIP state",
     )
     args = parser.parse_args(argv)
 
@@ -236,7 +241,7 @@ def main(argv: list[str] | None = None) -> int:
     idle_path = args.idle_store if args.idle_store is not None else idle_settle.default_store_path()
     if idle_path.is_file():
         report["idle_settle"] = idle_settle.build_report(
-            idle_settle.load_events(idle_path),
+            idle_settle.events_since(idle_settle.load_events(idle_path), since),
             enforce=bool(args.enforce),
         )
     else:
@@ -291,8 +296,7 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 if not args.json:
                     print(
-                        "  enforce: FAIL — --note-file must contain "
-                        "'NOTE: fleet_breadth' and a short justification",
+                        "  enforce: FAIL — --note-file must contain 'NOTE: fleet_breadth' and a short justification",
                         file=sys.stderr,
                     )
                 fail = 2
@@ -306,9 +310,7 @@ def main(argv: list[str] | None = None) -> int:
             fail = 2
 
     idle_report = report.get("idle_settle")
-    disposition_fails = idle_settle.enforce_fail_codes(
-        idle_report if isinstance(idle_report, dict) else None
-    )
+    disposition_fails = idle_settle.enforce_fail_codes(idle_report if isinstance(idle_report, dict) else None)
     if args.enforce and disposition_fails:
         if not args.json:
             print(

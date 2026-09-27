@@ -118,6 +118,35 @@ def test_process_routes_by_recipient_seat(bridge_db, monkeypatch, capsys):
     assert replies[0][3] == "routed analysis"
 
 
+def test_process_attributes_substituted_reply_to_the_substitute(bridge_db, monkeypatch):
+    """A seat hop answers as the substitute, not the requested recipient (#8499)."""
+    message_id = _send("codex")
+    monkeypatch.setattr(
+        _process,
+        "run_compat_ask",
+        lambda *a, **k: SimpleNamespace(
+            ok=True,
+            response="cursor answer",
+            model="cursor-model",
+            stderr_excerpt=None,
+            transport_outcome="ok",
+            seat_substitution={"from": "codex", "to": "cursor", "reason": "rate_limited"},
+        ),
+    )
+
+    response = _process.process_message_for_recipient(message_id)
+
+    assert response == "cursor answer"
+    replies = _replies(message_id)
+    assert len(replies) == 1
+    assert (replies[0][0], replies[0][1], replies[0][2]) == (
+        "cursor",
+        "qa-engineer",
+        "response",
+    )
+    assert replies[0][3] == "cursor answer"
+
+
 def test_process_gemini_recipient_resolves_to_agy_participant(bridge_db, monkeypatch):
     """Legacy gemini-addressed mail routes to the agy participant (#6915)."""
     message_id = _send("gemini")
@@ -323,6 +352,7 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
     assert captured["model"] == "gemini-9.9-flash-high"
 
     import pytest
+
     with pytest.raises(ValueError, match=r"delegate\.py dispatch --agent agy"):
         converse_gemini("hello", "t-1", model="gemini-3.1-pro-preview")
 
@@ -590,9 +620,12 @@ def forbid_legacy_processors(monkeypatch):
     from unittest.mock import Mock
 
     for module, name in [
-        ("_claude", "process_for_claude"), ("_codex", "process_for_codex"),
-        ("_agy", "process_for_agy"), ("_grok_build", "process_for_grok_build"),
-        ("_kimi", "process_for_kimi"), ("_hermes", "process_for_hermes"),
+        ("_claude", "process_for_claude"),
+        ("_codex", "process_for_codex"),
+        ("_agy", "process_for_agy"),
+        ("_grok_build", "process_for_grok_build"),
+        ("_kimi", "process_for_kimi"),
+        ("_hermes", "process_for_hermes"),
         ("_opencode", "process_for_opencode"),
     ]:
         monkeypatch.setattr(
@@ -601,9 +634,16 @@ def forbid_legacy_processors(monkeypatch):
         )
 
 
-@pytest.mark.parametrize("command", [
-    "process-claude", "process-codex", "process-grok", "process-grok-build", "process-kimi",
-])
+@pytest.mark.parametrize(
+    "command",
+    [
+        "process-claude",
+        "process-codex",
+        "process-grok",
+        "process-grok-build",
+        "process-kimi",
+    ],
+)
 def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command, forbid_legacy_processors):
     from unittest.mock import Mock
 
@@ -622,7 +662,9 @@ def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command,
 
 
 @pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "kimi", "pool", "glm", "hermes"])
-def test_detached_ordinary_worker_uses_acp_without_provider_fallback(bridge_db, monkeypatch, target, forbid_legacy_processors):
+def test_detached_ordinary_worker_uses_acp_without_provider_fallback(
+    bridge_db, monkeypatch, target, forbid_legacy_processors
+):
     from unittest.mock import Mock
 
     from scripts.ai_agent_bridge import _ask_lifecycle
@@ -647,8 +689,11 @@ def test_queued_review_keeps_toolful_processor(bridge_db, monkeypatch, review_in
     from scripts.ai_agent_bridge import _ask_lifecycle, _claude
 
     message_id = send_message(
-        "Review the exact branch head.", task_id="review-6106",
-        from_llm="codex", to_llm="claude", quiet=True,
+        "Review the exact branch head.",
+        task_id="review-6106",
+        from_llm="codex",
+        to_llm="claude",
+        quiet=True,
         msg_type="review" if review_intent == "type" else "query",
         review_target={"pr": 6106} if review_intent == "target" else None,
     )
@@ -666,8 +711,13 @@ def test_queued_ask_preserves_effort_and_model(bridge_db, monkeypatch):
     from unittest.mock import Mock
 
     message_id = send_message(
-        "State transfer.", task_id="task-6106", from_llm="claude", to_llm="codex",
-        to_model="registry-model", effort="high", quiet=True,
+        "State transfer.",
+        task_id="task-6106",
+        from_llm="claude",
+        to_llm="codex",
+        to_model="registry-model",
+        effort="high",
+        quiet=True,
     )
     acp = Mock(return_value=_ok_result())
     monkeypatch.setattr(_process, "run_compat_ask", acp)
@@ -677,7 +727,9 @@ def test_queued_ask_preserves_effort_and_model(bridge_db, monkeypatch):
 
 
 @pytest.mark.parametrize("target", ["claude", "codex"])
-def test_batch_ordinary_drains_use_acp_and_report_failures(bridge_db, monkeypatch, capsys, target, forbid_legacy_processors):
+def test_batch_ordinary_drains_use_acp_and_report_failures(
+    bridge_db, monkeypatch, capsys, target, forbid_legacy_processors
+):
     from unittest.mock import Mock
 
     from scripts.ai_agent_bridge import _cli, _codex

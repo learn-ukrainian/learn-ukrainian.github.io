@@ -1,0 +1,22 @@
+[Unit]
+Description=Learn Ukrainian data backup (restic via rclone remote)
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env
+# Stage SQLite snapshots next to data/ so staging follows data/ onto its
+# volume and the per-database free-space preflight measures the data
+# filesystem. Peak extra disk is the largest single database, never the sum.
+Environment=LU_BACKUP_TMPDIR=@REPO_ROOT@/data/.backup-staging
+# Full first run measured 2026-09-25: 23.5 min end to end; daily incrementals
+# are smaller. The execution allowance bounds a wedged upload.
+# Allow up to one hour waiting for retention, then two hours to run.
+TimeoutStartSec=10800
+Nice=15
+IOSchedulingClass=idle
+ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh
+
+[Install]
+WantedBy=default.target

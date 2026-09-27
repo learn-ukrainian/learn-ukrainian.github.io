@@ -48,7 +48,7 @@ def assert_glm_egress_allowed(verb: str = "glm adapter") -> None:
     for var in _CI_ENV_VARS:
         if var in os.environ:
             raise GlmEgressForbiddenError(
-                f"{verb}: refusing to run under {var}={os.environ[var]!r}. GLM is "
+                f"{verb}: refusing to run under {var}. GLM is "
                 "China-hosted (Zhipu/z.ai) → prompt data egresses to China; it "
                 "is LOCAL-ONLY and must never run in CI / automated pipelines."
             )

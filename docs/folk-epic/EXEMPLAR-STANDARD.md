@@ -115,7 +115,7 @@ it is attributed to.** Concretely:
 ## 4. Resources (`resources.yaml`)
 
 - ≥1 `role: reading` entry with a one-line learner task in `notes`, whose `url:` is a **public
-  allowlisted URL** (`data/primary_text_sources.yaml`) — the topic's `uk.wikipedia.org` article is the
+  allowlisted URL** (`registry/primary_text_sources.yaml`) — the topic's `uk.wikipedia.org` article is the
   floor; a specific `uk.wikisource.org` / `litopys.org.ua` / `ukrlib.com.ua` work page when one resolves.
 - On-site primary text is surfaced via `:::primary-reading`, NOT via an internal `wiki/...` path
   (those are AI-facing and are rejected).

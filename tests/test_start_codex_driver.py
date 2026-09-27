@@ -40,6 +40,7 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
         "scripts/lib/deploy_extensions.sh",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/handoff_identity.sh",
+        "scripts/config/launcher_stream_aliases.tsv",
         "scripts/lib/profile_resolver.sh",
         "scripts/lib/thread_rollover_link.sh",
         "scripts/launchers/codex.sh",

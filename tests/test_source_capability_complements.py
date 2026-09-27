@@ -28,6 +28,32 @@ def _write(path: Path, value: object) -> None:
     path.write_text(signals.canonical_json(value) + "\n", encoding="utf-8")
 
 
+@pytest.fixture(scope="module")
+def _registry_builds() -> dict[tuple, object]:
+    return {}
+
+
+@pytest.fixture(autouse=True)
+def _build_the_evaluation_registry_once(monkeypatch: pytest.MonkeyPatch, _registry_builds: dict[tuple, object]) -> None:
+    """Build the real evaluation exclusion registry once per module instead of once per phase 1 build.
+
+    ``build_manifest`` builds it from the frozen evaluation artifacts in the repository, never from the
+    fixture inputs, and only reads it (``match`` and ``registry_receipt``). This file never edits those
+    artifacts, so the registry for a given set of paths is the same object for every test.
+    """
+    build = signals.build_exclusion_registry
+
+    def shared(*, v011_manifest: Path, v02_packet: Path, extra_artifacts: tuple[Path, ...] = ()):
+        key = (v011_manifest, v02_packet, tuple(extra_artifacts))
+        if key not in _registry_builds:
+            _registry_builds[key] = build(
+                v011_manifest=v011_manifest, v02_packet=v02_packet, extra_artifacts=extra_artifacts
+            )
+        return _registry_builds[key]
+
+    monkeypatch.setattr(signals, "build_exclusion_registry", shared)
+
+
 def _phase1(tmp_path: Path, families: tuple[str, ...] = ("wikipedia",)) -> tuple[Path, Path, list[dict]]:
     sources, admissions, receipt_families = [], [], []
     for _number, family in enumerate(families):

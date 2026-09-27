@@ -41,9 +41,7 @@ def test_local_plane_is_retired_detects_marker(tmp_path: Path, monkeypatch: pyte
     assert local_plane_is_retired() is True
 
 
-def test_local_plane_is_retired_honors_shadow_allow(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_local_plane_is_retired_honors_shadow_allow(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     plane = tmp_path / "fleet-comms" / "v1"
     _plant_retire_marker(plane)
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(plane))
@@ -110,15 +108,11 @@ def test_resolve_ask_forward_target_host_without_repo_fails_closed(
 
 def test_forward_module_and_publish_help_have_no_baked_run_root() -> None:
     """OPSEC: production sources must not embed a concrete run-root."""
-    forward_source = (
-        _REPO_ROOT / "scripts" / "ai_agent_bridge" / "_job_host_forward.py"
-    ).read_text(encoding="utf-8")
+    forward_source = (_REPO_ROOT / "scripts" / "ai_agent_bridge" / "_job_host_forward.py").read_text(encoding="utf-8")
     assert "/home/ops" not in forward_source
     assert not hasattr(_job_host_forward, "DEFAULT_SERVICES_REPO")
 
-    publish_source = (
-        _REPO_ROOT / "scripts" / "practice_deck" / "publish.py"
-    ).read_text(encoding="utf-8")
+    publish_source = (_REPO_ROOT / "scripts" / "practice_deck" / "publish.py").read_text(encoding="utf-8")
     assert "/home/ops" not in publish_source
 
 
@@ -146,9 +140,7 @@ def test_maybe_forward_refuses_cleanly_when_retired_without_config(
     assert "Traceback" not in message
 
 
-def test_run_compat_ask_forwards_instead_of_plane_root_error(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_run_compat_ask_forwards_instead_of_plane_root_error(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Regression: notebook ask must not raise PlaneRootAnchorError when configured."""
     plane = tmp_path / "batch_state" / "fleet-comms" / "v1"
     _plant_retire_marker(plane)
@@ -221,8 +213,57 @@ def test_forward_compat_ask_invokes_ssh_without_leaking_host(
         stdout_only=True,
     )
     assert result.ok is True
+    assert result.agent == "agy"
     assert result.response == "remote answer\n"
+    assert getattr(result, "seat_substitution", None) is None
     captured = capsys.readouterr()
+    assert "secret-alias-must-not-leak" not in captured.out
+    assert "secret-alias-must-not-leak" not in captured.err
+    assert "/srv/writer/secret-repo-must-not-leak" not in captured.err
+
+
+def test_forward_success_surfaces_seat_substitution(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A substituted remote ask exits 0; the note and the answering seat still show."""
+    monkeypatch.setenv("LU_JOB_DISPATCH_HOST", "secret-alias-must-not-leak")
+    monkeypatch.setenv("LU_JOB_REPO", "/srv/writer/secret-repo-must-not-leak")
+    monkeypatch.delenv(_job_host_forward.ENV_FORWARD_DONE, raising=False)
+    note = (
+        "ACP substitution: codex -> cursor (reason: rate_limited); "
+        "explicit model/effort overrides dropped — the substitute's registered pins apply"
+    )
+    completed = SimpleNamespace(
+        returncode=0,
+        stdout=b"cursor answer\n",
+        stderr=(
+            f"{note}\ndeprecated ask-codex: ACP transport; outcome=ok\nsecret-alias-must-not-leak banner\n"
+        ).encode(),
+    )
+    monkeypatch.setattr(_job_host_forward.subprocess, "run", lambda *_args, **_kwargs: completed)
+
+    result = _job_host_forward.forward_compat_ask(
+        "codex",
+        "notebook critic",
+        task_id="8499-forward-sub",
+        source="claude",
+        model="gpt-6-astra",
+        effort="high",
+        stdout_only=True,
+    )
+
+    assert result.ok is True
+    assert result.agent == "cursor"
+    assert result.response == "cursor answer\n"
+    assert result.stderr_excerpt is None
+    assert result.seat_substitution == {
+        "from": "codex",
+        "to": "cursor",
+        "reason": "rate_limited",
+    }
+    assert result.substitution is None
+    captured = capsys.readouterr()
+    assert note in captured.err
     assert "secret-alias-must-not-leak" not in captured.out
     assert "secret-alias-must-not-leak" not in captured.err
     assert "/srv/writer/secret-repo-must-not-leak" not in captured.err

@@ -19,6 +19,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.common.schema_check import check_schema
 from scripts.projects.open_model_data import document_signal_manifest as phase1_signals
 from scripts.projects.open_model_data import source_work_locator_index as locator_index_builder
 
@@ -74,7 +75,7 @@ def _read(path: Path) -> dict[str, Any]:
 
 def _validator(name: str) -> Draft202012Validator:
     schema = _read(CONTRACTS / name)
-    Draft202012Validator.check_schema(schema)
+    check_schema(schema)
     return Draft202012Validator(schema)
 
 

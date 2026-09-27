@@ -1,0 +1,18 @@
+[Unit]
+Description=Learn Ukrainian backup retention (weekly restic forget --prune)
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=@REPO_ROOT@
+EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env
+# Prune rewrites repository packs locally before upload; keep it off the fast
+# path and bounded. A weekly forget over ~30 daily-run snapshots is minutes.
+# Allow up to one hour waiting for the shared backup lock, then two hours to run.
+TimeoutStartSec=10800
+Nice=15
+IOSchedulingClass=idle
+ExecStart=/usr/bin/env bash @REPO_ROOT@/scripts/orchestration/run_scheduled_backup.sh retention
+
+[Install]
+WantedBy=default.target

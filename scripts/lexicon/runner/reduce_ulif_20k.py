@@ -192,7 +192,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--cohort",
         type=Path,
-        default=Path("data/lexicon/cohort-20k-20260717.txt"),
+        default=Path("registry/lexicon/cohort-20k-20260717.txt"),
     )
     parser.add_argument(
         "--slice-file",
@@ -247,7 +247,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.sources_db is None:
             args.sources_db = args.repo / "data" / "sources.db"
         if args.kaikki_json is None:
-            args.kaikki_json = args.repo / "data" / "lexicon" / "kaikki_uk_lookup.json"
+            from scripts.storage.paths import artifact_path
+
+            args.kaikki_json = artifact_path("lexicon_kaikki", "lexicon/kaikki_uk_lookup.json", repo=args.repo)
     return _run(args)
 
 

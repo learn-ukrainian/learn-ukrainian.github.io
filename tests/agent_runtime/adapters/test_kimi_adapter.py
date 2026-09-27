@@ -10,6 +10,7 @@ from unittest.mock import patch
 
 import pytest
 
+from scripts.agent_runtime.adapters import kimicc as kimicc_adapter
 from scripts.agent_runtime.adapters.kimi import (
     _MODE_FLAGS,
     _READ_ONLY_REFUSAL,
@@ -275,8 +276,9 @@ def _kimicc_ready(tmp_path, monkeypatch):
 
 def test_kimicc_accepts_delegate_read_only_and_review_keys(tmp_path, monkeypatch):
     _kimicc_ready(tmp_path, monkeypatch)
-    lease = tmp_path / "lease"
-    lease.mkdir()
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
+    lease = tmp_path / "learn-ukrainian" / "lease"
+    lease.mkdir(parents=True)
     checkout = tmp_path / "checkout"
     checkout.mkdir()
     plan = KimiccHarness().build_invocation(
@@ -307,8 +309,222 @@ def test_kimicc_accepts_delegate_read_only_and_review_keys(tmp_path, monkeypatch
     assert "agy_home_override" not in plan.cmd
 
 
+def test_kimicc_sources_grant_argv_is_read_only_only(tmp_path, monkeypatch):
+    """mcp_config_path + allowed_tools reach the wrapper only in read-only mode."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    tool_config = {
+        "mcp_config_path": str(tmp_path / ".mcp.json"),
+        "allowed_tools": "mcp__sources__verify_word",
+    }
+    read_only = KimiccHarness().build_invocation(
+        prompt="critique",
+        mode="read-only",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimicc-sources-ro",
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert read_only.cmd[read_only.cmd.index("--mcp-config") + 1] == str(tmp_path / ".mcp.json")
+    assert read_only.cmd[read_only.cmd.index("--allowedTools") + 1] == "mcp__sources__verify_word"
+    # No review marker, no strict config: the grant stays in plan mode (#8652).
+    assert "--read-only-review" not in read_only.cmd
+
+    write = KimiccHarness().build_invocation(
+        prompt="critique",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="k3",
+        task_id="kimicc-sources-write",
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert "--mcp-config" not in write.cmd
+    assert "--allowedTools" not in write.cmd
+    assert "--read-only-review" not in write.cmd
+
+
+def _trusted_review_grant(tmp_path, monkeypatch) -> dict:
+    """The delegate ask-kimi --review grant, with the trusted config under tmp_path."""
+    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+
+    trusted = tmp_path / "primary" / ".mcp.json"
+    trusted.parent.mkdir(exist_ok=True)
+    trusted.write_text('{"mcpServers": {}}', encoding="utf-8")
+    monkeypatch.setattr(kimicc_adapter, "trusted_mcp_config_path", lambda: trusted)
+    return {
+        "harness": "kimicc",
+        "allowed_tools": review_tools_allowed_csv("claude"),
+        "mcp_config_path": str(trusted),
+        "strict_mcp_config": True,
+        kimicc_adapter.REVIEW_VERDICT_MARKER_KEY: True,
+    }
+
+
+def _kimicc_review_cmd(tmp_path, tool_config, *, mode="read-only") -> list[str]:
+    return (
+        KimiccHarness()
+        .build_invocation(
+            prompt="critique",
+            mode=mode,
+            cwd=tmp_path,
+            model="k3",
+            task_id=f"kimicc-review-profile-{mode}",
+            session_id=None,
+            tool_config=tool_config,
+        )
+        .cmd
+    )
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write", "danger"])
+def test_kimicc_review_profile_needs_read_only_mode(tmp_path, monkeypatch, mode):
+    """The full review grant leaves plan mode only in read-only mode (#8652)."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    grant = _trusted_review_grant(tmp_path, monkeypatch)
+    assert ("--read-only-review" in _kimicc_review_cmd(tmp_path, grant, mode=mode)) is (mode == "read-only")
+
+
+def test_kimicc_review_profile_forwards_a_list_allowlist_as_comma_joined_names(tmp_path, monkeypatch):
+    """A list is forwarded as names, never as its Python repr (``claude --help``: comma or space separated)."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    grant = _trusted_review_grant(tmp_path, monkeypatch)
+    grant["allowed_tools"] = ["mcp__sources__verify_words", "Read"]
+    assert kimicc_adapter.read_only_review_refusal("read-only", grant, trail_isolation=False) is None
+    cmd = _kimicc_review_cmd(tmp_path, grant)
+    assert "--read-only-review" in cmd
+    assert cmd.count("--allowedTools") == 1
+    assert cmd[cmd.index("--allowedTools") + 1] == "mcp__sources__verify_words,Read"
+    assert "[" not in " ".join(cmd)
+
+
+def test_kimicc_review_profile_forwards_a_space_separated_string_as_comma_joined_names(tmp_path, monkeypatch):
+    _kimicc_ready(tmp_path, monkeypatch)
+    grant = _trusted_review_grant(tmp_path, monkeypatch)
+    grant["allowed_tools"] = "mcp__sources__verify_words Read,Grep"
+    cmd = _kimicc_review_cmd(tmp_path, grant)
+    assert "--read-only-review" in cmd
+    assert cmd[cmd.index("--allowedTools") + 1] == "mcp__sources__verify_words,Read,Grep"
+
+
+@pytest.mark.parametrize("element", ["Read Grep", "Read,Grep", " Read", ""])
+def test_kimicc_review_profile_rejects_a_list_element_that_holds_several_names(tmp_path, monkeypatch, element):
+    """One list element is one tool name; an element with a comma or space is ambiguous once joined."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    grant = _trusted_review_grant(tmp_path, monkeypatch)
+    grant["allowed_tools"] = ["mcp__sources__verify_words", element]
+    assert kimicc_adapter.read_only_review_refusal("read-only", grant, trail_isolation=False) is (
+        kimicc_adapter.ReviewRefusal.ALLOWED_TOOLS_MALFORMED
+    )
+    with pytest.raises(ValueError, match="allowed_tools must be tool names"):
+        _kimicc_review_cmd(tmp_path, grant)
+
+
+def _drop(key):
+    return lambda grant, _tmp: {k: v for k, v in grant.items() if k != key}
+
+
+def _set(key, value):
+    return lambda grant, tmp: {**grant, key: value(tmp) if callable(value) else value}
+
+
+def _untrusted_config(tmp):
+    other = tmp / "worktree" / ".mcp.json"
+    other.parent.mkdir(exist_ok=True)
+    other.write_text('{"mcpServers": {}}', encoding="utf-8")
+    return str(other)
+
+
+_R = kimicc_adapter.ReviewRefusal
+
+
+@pytest.mark.parametrize(
+    ("change", "reason"),
+    [
+        (_drop(kimicc_adapter.REVIEW_VERDICT_MARKER_KEY), _R.MISSING_REVIEW_MARKER),
+        (_set(kimicc_adapter.REVIEW_VERDICT_MARKER_KEY, "yes"), _R.MISSING_REVIEW_MARKER),
+        (_drop("strict_mcp_config"), _R.STRICT_MCP_CONFIG_OFF),
+        (_set("strict_mcp_config", False), _R.STRICT_MCP_CONFIG_OFF),
+        (_drop("mcp_config_path"), _R.MISSING_MCP_CONFIG),
+        (_set("mcp_config_path", _untrusted_config), _R.UNTRUSTED_MCP_CONFIG),
+        (_set("mcp_config_path", lambda tmp: str(tmp / "missing.mcp.json")), _R.UNTRUSTED_MCP_CONFIG),
+        (_drop("allowed_tools"), _R.ALLOWED_TOOLS_MALFORMED),
+        (_set("allowed_tools", ""), _R.ALLOWED_TOOLS_MALFORMED),
+        (_set("allowed_tools", "mcp__sources__verify_words,mcp__github__create_pull_request"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources__verify_words mcp__sources__write_note"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources__verify_words,Bash"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources__verify_words,Bash(git:*)"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "mcp__sources__*"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("allowed_tools", "Write"), _R.TOOL_NOT_ALLOWLISTED),
+        (_set("agent", "reviewer"), _R.AGENT_PROFILE),
+    ],
+)
+def test_kimicc_review_profile_missing_condition_keeps_plan_mode(tmp_path, monkeypatch, caplog, change, reason):
+    """Any missing or widened condition keeps plan mode and logs only a fixed code (#8652)."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    tool_config = change(_trusted_review_grant(tmp_path, monkeypatch), tmp_path)
+    assert kimicc_adapter.read_only_review_refusal("read-only", tool_config, trail_isolation=False) is reason
+
+    with caplog.at_level(logging.WARNING, logger=kimicc_adapter.__name__):
+        cmd = _kimicc_review_cmd(tmp_path, tool_config)
+
+    assert "--read-only-review" not in cmd
+    messages = [record.getMessage() for record in caplog.records if record.name == kimicc_adapter.__name__]
+    assert messages == [f"KimiccHarness: read-only dispatch stays in plan mode: {reason.value}"]
+    # No tool_config value reaches the log: not a path, tool name or agent name (CodeQL).
+    logged = "\n".join(messages)
+    for value in tool_config.values():
+        for item in value if isinstance(value, list) else [value]:
+            if isinstance(item, str) and item:
+                assert item not in logged
+    assert str(tmp_path) not in logged
+
+
+def test_kimicc_review_profile_refuses_trail_isolation_directly():
+    grant = {kimicc_adapter.REVIEW_VERDICT_MARKER_KEY: True, "strict_mcp_config": True}
+    assert kimicc_adapter.read_only_review_refusal("read-only", grant, trail_isolation=True) is _R.TRAIL_ISOLATION
+    assert kimicc_adapter.read_only_review_refusal("workspace-write", grant, trail_isolation=False) is _R.NOT_READ_ONLY
+
+
+def test_kimicc_review_refusal_codes_are_fixed_identifiers():
+    """Refusal codes are constant snake_case tokens, safe to log verbatim."""
+    assert {code.value for code in _R} == {
+        "not_read_only",
+        "trail_isolation",
+        "missing_review_marker",
+        "strict_mcp_config_off",
+        "agent_profile",
+        "missing_mcp_config",
+        "untrusted_mcp_config",
+        "allowed_tools_malformed",
+        "tool_not_allowlisted",
+    }
+
+
+def test_kimicc_review_allowlist_is_the_read_only_review_tool_set():
+    """A change to the receipt ledger's REVIEW_TOOLS must be a conscious adapter change."""
+    from scripts.review.receipts.ledger import REVIEW_TOOLS
+
+    assert (
+        {f"mcp__sources__{name}" for name in REVIEW_TOOLS} | {"Read", "Grep", "Glob", "LS"}
+    ) == kimicc_adapter.READ_ONLY_REVIEW_ALLOWED_TOOLS
+
+
+def test_kimicc_trusted_mcp_config_is_the_primary_checkout():
+    from scripts.common.repo_root import main_checkout_root
+
+    repo = Path(kimicc_adapter.__file__).resolve().parents[3]
+    assert kimicc_adapter.trusted_mcp_config_path() == main_checkout_root(repo) / ".mcp.json"
+
+
 def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
     _kimicc_ready(tmp_path, monkeypatch)
+    probed: list[str] = []
+    monkeypatch.setattr(
+        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
+        lambda _: probed.append("probed"),
+    )
     with pytest.raises(ValueError, match="read_only_tmp_root"):
         KimiccHarness().build_invocation(
             prompt="critique",
@@ -319,6 +535,57 @@ def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
             session_id=None,
             tool_config={"read_only_tmp_root": str(tmp_path)},
         )
+    assert probed == []
+
+
+def _kimicc_lease_invocation(tmp_path, monkeypatch, lease: Path, checkout: Path):
+    _kimicc_ready(tmp_path, monkeypatch)
+    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
+    return KimiccHarness().build_invocation(
+        prompt="critique",
+        mode="read-only",
+        cwd=checkout,
+        model="k3",
+        task_id="kimicc-lease",
+        session_id=None,
+        tool_config={"read_only_tmp_root": str(lease)},
+    )
+
+
+def test_kimicc_rejects_nested_read_only_lease(tmp_path, monkeypatch):
+    checkout = tmp_path / "learn-ukrainian"
+    checkout.mkdir()
+    lease = checkout / "nested"
+    lease.mkdir()
+    with pytest.raises(ValueError, match="read_only_tmp_root"):
+        _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
+
+
+def test_kimicc_rejects_ancestor_read_only_lease(tmp_path, monkeypatch):
+    lease = tmp_path / "learn-ukrainian" / "lease"
+    lease.mkdir(parents=True)
+    checkout = lease / "checkout"
+    checkout.mkdir()
+    with pytest.raises(ValueError, match="read_only_tmp_root"):
+        _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
+
+
+def test_kimicc_rejects_glob_read_only_lease(tmp_path, monkeypatch):
+    lease = tmp_path / "learn-ukrainian" / "rev*iew"
+    lease.mkdir(parents=True)
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    with pytest.raises(ValueError, match="read_only_tmp_root"):
+        _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
+
+
+def test_kimicc_accepts_isolated_read_only_lease(tmp_path, monkeypatch):
+    lease = tmp_path / "learn-ukrainian" / "lease"
+    lease.mkdir(parents=True)
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    plan = _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
+    assert plan.env_overrides["TMPDIR"] == str(lease.resolve())
 
 
 def test_kimicc_still_rejects_unknown_tool_config_keys(tmp_path, monkeypatch):

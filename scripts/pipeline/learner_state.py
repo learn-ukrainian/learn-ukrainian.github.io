@@ -21,6 +21,10 @@ except ModuleNotFoundError as exc:
 
 CURRICULUM_ROOT = Path(__file__).resolve().parent.parent.parent / "curriculum" / "l2-uk-en"
 
+# Same guarantees as ``safe_load`` on the C parser; the pure-Python loader cost ~2 s per
+# ``build_learner_state`` call over the ~130 plan/vocabulary files it reads.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
 
 def _load_curriculum() -> dict:
     """Load curriculum.yaml."""
@@ -28,7 +32,7 @@ def _load_curriculum() -> dict:
     if not path.exists():
         return {}
     with open(path) as f:
-        return yaml.safe_load(f) or {}
+        return yaml.load(f, Loader=_YAML_LOADER) or {}
 
 
 def _parse_vocab_hint_lemma(entry: str) -> str | None:
@@ -49,7 +53,7 @@ def _load_planned_vocab(track: str, slug: str) -> list[str]:
 
     try:
         with open(path, encoding="utf-8") as f:
-            plan = yaml.safe_load(f)
+            plan = yaml.load(f, Loader=_YAML_LOADER)
     except Exception:
         return []
 
@@ -110,7 +114,7 @@ def _load_vocab(track: str, slug: str) -> list[str]:
         built_vocab: list[str] = []
         try:
             with open(path, encoding="utf-8") as f:
-                data = yaml.safe_load(f)
+                data = yaml.load(f, Loader=_YAML_LOADER)
             if data:
                 items = data.get("items", data) if isinstance(data, dict) else data
                 if isinstance(items, list):
@@ -142,7 +146,7 @@ def _load_grammar(track: str, slug: str) -> list[str]:
         return []
     try:
         with open(path) as f:
-            plan = yaml.safe_load(f)
+            plan = yaml.load(f, Loader=_YAML_LOADER)
         if not plan or not isinstance(plan, dict):
             return []
         raw = plan.get("grammar", []) or []
@@ -167,7 +171,7 @@ def _load_plan_title(track: str, slug: str) -> str | None:
         return None
     try:
         with open(path) as f:
-            plan = yaml.safe_load(f)
+            plan = yaml.load(f, Loader=_YAML_LOADER)
         return plan.get("title") if isinstance(plan, dict) else None
     except Exception:
         return None

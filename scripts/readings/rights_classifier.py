@@ -14,7 +14,7 @@ from typing import Literal, TypedDict
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_RIGHTS_PATH = PROJECT_ROOT / "data" / "authors_rights.yaml"
+DEFAULT_RIGHTS_PATH = PROJECT_ROOT / "registry" / "authors_rights.yaml"
 LOGGER = logging.getLogger(__name__)
 LOGGER.addHandler(logging.NullHandler())
 

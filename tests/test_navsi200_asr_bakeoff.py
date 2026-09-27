@@ -25,6 +25,9 @@ from navsi200_asr_bakeoff import (
 )
 from navsi200_catalog import load_catalog
 
+# The bake-off ledger is an untracked artifact (#8809 P1); these tests validate the real produced file.
+BAKEOFF_LEDGER = pytest.mark.needs_artifact("corpus_audit_snapshots", "corpus_audit/navsi200-asr-bakeoff-ledger.json")
+
 
 class TestScoringAndCompareHelpers:
     """Verification of ASR scoring, distance, overlap, and linguistic sanitization."""
@@ -161,12 +164,14 @@ class TestAsrBakeoffLedgerAndPrivacy:
     def catalog_data(self) -> dict:
         return load_catalog()
 
+    @BAKEOFF_LEDGER
     def test_privacy_no_teacher_names_in_ledger(self) -> None:
         raw = DEFAULT_BAKEOFF_LEDGER_PATH.read_text(encoding="utf-8").lower()
         forbidden = ["огойко", "охойко", "ohoiko", "анни огойко", "анна огойко"]
         for name in forbidden:
             assert name not in raw, f"Privacy violation: found '{name}' in committed bake-off ledger"
 
+    @BAKEOFF_LEDGER
     def test_privacy_no_verbatim_transcripts_in_ledger(self, ledger_data: dict) -> None:
         for entry in ledger_data["lessons"]:
             assert "transcript" not in entry
@@ -199,6 +204,7 @@ class TestAsrBakeoffLedgerAndPrivacy:
         assert "--wav2vec2-model" in res.stdout
         assert "/home/" not in res.stdout + res.stderr
 
+    @BAKEOFF_LEDGER
     def test_honest_accounting_in_ledger(self, ledger_data: dict, catalog_data: dict) -> None:
         summary = ledger_data["summary"]
         lessons = ledger_data["lessons"]
@@ -219,6 +225,7 @@ class TestAsrBakeoffLedgerAndPrivacy:
         ledger_ids = {l["video_id"] for l in lessons}
         assert catalog_ids == ledger_ids
 
+    @BAKEOFF_LEDGER
     def test_calibration_benchmark_metrics_present(self, ledger_data: dict) -> None:
         bench = ledger_data.get("calibration_benchmark")
         assert bench is not None, "Calibration benchmark must be recorded in ledger"

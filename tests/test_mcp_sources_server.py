@@ -28,6 +28,7 @@ import pymorphy3_dicts_uk  # noqa: F401  # Declares the Ukrainian morphology dic
 import pytest
 import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime dependency.
 import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
+from mcp.types import TextContent
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 VESUM_FIXTURE_VERSION = "a" * 64
@@ -57,18 +58,49 @@ class TestListTools:
         tool_names = {t.name for t in tools}
 
         expected = {
-            "search_sources", "search_text", "search_literary", "search_external",
-            "get_full_text", "get_chunk_context", "collection_stats", "mcp_server_identity",
-            "verify_word", "verify_source_attribution", "verify_words", "vet_vocabulary", "verify_lemma", "verify_quote", "check_modern_form",
-            "inspect_word", "inspect_words", "inspect_lemma",
-            "verify_stress", "verify_stresses", "check_text",
-            "query_wikipedia", "query_grac", "query_ulif", "query_ulif_synonyms",
-            "query_ulif_antonyms", "query_ulif_phraseology",
-            "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",
-            "query_pravopys", "query_cefr_level",
-            "search_style_guide", "search_definitions", "search_grinchenko_1907",
-            "search_idioms", "search_synonyms", "translate_en_uk",
-            "search_esum", "search_slovnyk_me", "search_heritage", "check_russian_shadow",
+            "search_sources",
+            "search_text",
+            "search_literary",
+            "search_external",
+            "get_full_text",
+            "get_chunk_context",
+            "collection_stats",
+            "mcp_server_identity",
+            "verify_word",
+            "verify_source_attribution",
+            "verify_words",
+            "vet_vocabulary",
+            "verify_lemma",
+            "verify_quote",
+            "check_modern_form",
+            "inspect_word",
+            "inspect_words",
+            "inspect_lemma",
+            "verify_stress",
+            "verify_stresses",
+            "check_text",
+            "query_wikipedia",
+            "query_grac",
+            "query_ulif",
+            "query_ulif_synonyms",
+            "query_ulif_antonyms",
+            "query_ulif_phraseology",
+            "query_r2u",
+            "query_e2u",
+            "query_sum20",
+            "query_slovnyk_me",
+            "query_pravopys",
+            "query_cefr_level",
+            "search_style_guide",
+            "search_definitions",
+            "search_grinchenko_1907",
+            "search_idioms",
+            "search_synonyms",
+            "translate_en_uk",
+            "search_esum",
+            "search_slovnyk_me",
+            "search_heritage",
+            "check_russian_shadow",
             "search_ua_gec_errors",
         }
         missing = expected - tool_names
@@ -97,7 +129,10 @@ class TestListTools:
         sections = ulif.input_schema["properties"]["sections"]
         assert "default" not in sections
         assert sections["items"]["enum"] == [
-            "paradigm", "synonyms", "antonyms", "phraseology",
+            "paradigm",
+            "synonyms",
+            "antonyms",
+            "phraseology",
         ]
         assert "When supplied" in sections["description"]
 
@@ -130,9 +165,14 @@ class TestUlifHandlers:
             "sections": {"paradigm": {"rows": [["Називний", "великий"]]}},
         }
         with patch("rag.source_query.query_ulif", return_value=expected) as query:
-            result = _run(server_module.handle_query_ulif({
-                "word": "великий", "sections": ["paradigm"],
-            }))
+            result = _run(
+                server_module.handle_query_ulif(
+                    {
+                        "word": "великий",
+                        "sections": ["paradigm"],
+                    }
+                )
+            )
 
         query.assert_called_once_with("великий", ["paradigm"])
         assert json.loads(result[0].text) == expected
@@ -298,9 +338,7 @@ class TestCallToolDispatch:
         }
         with patch("wiki.sources_db.search_textbooks", return_value=[hit]) as mock:
             content, _envelope = _run(
-                server_module.handle_search_text(
-                    {"query": "родовий відмінок", "subject": "ukrmova", "limit": 3}
-                )
+                server_module.handle_search_text({"query": "родовий відмінок", "subject": "ukrmova", "limit": 3})
             )
 
         assert "Subject**: ukrmova" in content[0].text
@@ -333,7 +371,6 @@ class TestCallToolDispatch:
             mock.return_value = [MagicMock(text="ok")]
             _run(server_module.call_tool("check_modern_form", {"word": "звір"}))
             mock.assert_called_once_with({"word": "звір"})
-
 
     def test_verify_stress_dispatches(self, server_module):
         with patch.object(server_module, "handle_verify_stress", new_callable=AsyncMock) as mock:
@@ -411,11 +448,11 @@ class TestVerifyWordHandler:
             assert outcome["disposition"] == "supported"
             assert outcome["success"] is True
             assert outcome["result"] == {
-                "word": "читай", "pos_filter": None, "matches": mock_matches,
+                "word": "читай",
+                "pos_filter": None,
+                "matches": mock_matches,
             }
-            assert outcome["evidence_identifiers"] == [
-                server_module._typed_identifier("vesum", outcome["result"])
-            ]
+            assert outcome["evidence_identifiers"] == [server_module._typed_identifier("vesum", outcome["result"])]
 
     def test_found_refuses_unversioned_source(self, server_module, monkeypatch):
         monkeypatch.setattr(server_module, "_vesum_source_version", lambda: "vesum-source-unversioned")
@@ -450,6 +487,82 @@ class TestVerifyWordsHandler:
             assert "**взяйте** — NOT FOUND" in text
             assert outcome["disposition"] == "partial"
             assert outcome["success"] is False
+
+
+class TestCheckModernFormHandler:
+    """CI-visible shape guard for handle_check_modern_form (#8402)."""
+
+    def test_found_word_shape(self, server_module, monkeypatch):
+        monkeypatch.setattr(server_module, "_vesum_source_version", lambda: VESUM_FIXTURE_VERSION)
+        mock_matches = [
+            {"lemma": "сонце", "pos": "noun", "tags": "noun:inanim:n:v_naz"},
+        ]
+        with patch("scripts.verification.vesum.verify_word", return_value=mock_matches):
+            result = _run(server_module.handle_check_modern_form({"word": "сонце"}))
+        assert isinstance(result, tuple) and len(result) == 2
+        content, outcome = result
+        assert isinstance(content, list)
+        assert len(content) == 1
+        assert isinstance(content[0], TextContent)
+        data = json.loads(content[0].text)
+        assert data["is_modern_codified"] is True
+        assert data["has_archaic_form"] is False
+        assert data["has_only_archaic_form"] is False
+        assert isinstance(outcome, dict)
+        assert outcome["tool"] == "check_modern_form"
+        assert outcome["disposition"] == "supported"
+        assert outcome["success"] is True
+
+    def test_not_found_word_shape(self, server_module):
+        with patch("scripts.verification.vesum.verify_word", return_value=[]):
+            result = _run(server_module.handle_check_modern_form({"word": "невідоме"}))
+        assert isinstance(result, tuple) and len(result) == 2
+        content, outcome = result
+        assert isinstance(content, list)
+        assert len(content) == 1
+        assert isinstance(content[0], TextContent)
+        data = json.loads(content[0].text)
+        assert data["is_modern_codified"] is False
+        assert data["has_archaic_form"] is False
+        assert data["has_only_archaic_form"] is False
+        assert data["error"] == "Word not found in VESUM."
+        assert isinstance(outcome, dict)
+        assert outcome["tool"] == "check_modern_form"
+        assert outcome["disposition"] == "not_found"
+        assert outcome["success"] is False
+
+    @pytest.mark.parametrize("invalid_args", [{"word": ""}, {"word": None}, {}, {"word": "   "}])
+    def test_invalid_input_shape(self, server_module, invalid_args):
+        result = _run(server_module.handle_check_modern_form(invalid_args))
+        assert isinstance(result, tuple) and len(result) == 2
+        content, outcome = result
+        assert isinstance(content, list)
+        assert len(content) == 1
+        assert isinstance(content[0], TextContent)
+        assert isinstance(outcome, dict)
+        assert outcome["tool"] == "check_modern_form"
+        assert outcome["disposition"] == "invalid_input"
+        assert outcome["success"] is False
+
+    def test_archaic_only_shape(self, server_module):
+        mock_matches = [
+            {"lemma": "старий", "pos": "adj", "tags": "adj:m:v_naz:arch"},
+        ]
+        with patch("scripts.verification.vesum.verify_word", return_value=mock_matches):
+            result = _run(server_module.handle_check_modern_form({"word": "старий"}))
+        assert isinstance(result, tuple) and len(result) == 2
+        content, outcome = result
+        assert isinstance(content, list)
+        assert len(content) == 1
+        assert isinstance(content[0], TextContent)
+        data = json.loads(content[0].text)
+        assert data["is_modern_codified"] is False
+        assert data["has_archaic_form"] is True
+        assert data["has_only_archaic_form"] is True
+        assert isinstance(outcome, dict)
+        assert outcome["tool"] == "check_modern_form"
+        assert outcome["disposition"] == "negative"
+        assert outcome["success"] is False
 
 
 class TestVerifyStressHandler:
@@ -533,9 +646,7 @@ class TestVetVocabularyHandler:
             ) as search_definitions,
         ):
             result = _run(
-                server_module.handle_vet_vocabulary(
-                    {"words": ["кіт", "вигадане"], "include_definitions": True}
-                )
+                server_module.handle_vet_vocabulary({"words": ["кіт", "вигадане"], "include_definitions": True})
             )
 
         text = result[0].text
@@ -551,9 +662,7 @@ class TestVetVocabularyHandler:
         verify_words.assert_called_once_with(["кіт", "вигадане"])
         query_cefr.assert_called_once_with(["кіт", "вигадане"])
         search_definitions.assert_called_once_with(["кіт", "вигадане"])
-        check_shadow.assert_called_once_with(
-            ["кіт", "вигадане"], verified_words={"кіт"}
-        )
+        check_shadow.assert_called_once_with(["кіт", "вигадане"], verified_words={"кіт"})
 
     def test_omits_gloss_without_definitions_toggle(self, server_module, vocabulary_vet_fixtures):
         fixtures = vocabulary_vet_fixtures
@@ -576,7 +685,9 @@ class TestVetVocabularyHandler:
         words = [f"слово-{index}" for index in range(501)]
         first_500 = words[:500]
         with (
-            patch("scripts.verification.vesum.verify_words", return_value={word: [] for word in first_500}) as verify_words,
+            patch(
+                "scripts.verification.vesum.verify_words", return_value={word: [] for word in first_500}
+            ) as verify_words,
             patch("wiki.sources_db.query_cefr_levels", return_value={}),
             patch(
                 "scripts.verification.check_ru_morph.check_russian_patterns_batch",
@@ -603,10 +714,7 @@ def _shevchenko_quote_hits():
             "year": 1814,
             "source_file": "ukrlib-shevchenko",
             "text": (
-                "Що розлили з річку крові\n\n"
-                "Та в Сибір загнали\n\n"
-                "Свою шляхту, то вже й годі,\n\n"
-                "Уже й запишались."
+                "Що розлили з річку крові\n\nТа в Сибір загнали\n\nСвою шляхту, то вже й годі,\n\nУже й запишались."
             ),
         },
         {
@@ -634,9 +742,7 @@ class TestVerifyQuoteHandler:
     def test_known_good_shevchenko_line_matches(self, server_module):
         with patch("wiki.sources_db.search_literary", return_value=_shevchenko_quote_hits()):
             result = _run(
-                server_module.handle_verify_quote(
-                    {"author": "Шевченко", "text": "Та в Сибір загнали Свою шляхту"}
-                )
+                server_module.handle_verify_quote({"author": "Шевченко", "text": "Та в Сибір загнали Свою шляхту"})
             )
         data = json.loads(result[0].text)
         assert data["matched"] is True
@@ -646,9 +752,7 @@ class TestVerifyQuoteHandler:
     def test_fabricated_fused_quote_returns_near_misses(self, server_module):
         with patch("wiki.sources_db.search_literary", return_value=_shevchenko_quote_hits()):
             result = _run(
-                server_module.handle_verify_quote(
-                    {"author": "Шевченко", "text": "Загнали в Сибір неісходиму"}
-                )
+                server_module.handle_verify_quote({"author": "Шевченко", "text": "Загнали в Сибір неісходиму"})
             )
         data = json.loads(result[0].text)
         assert data["matched"] is False
@@ -660,9 +764,7 @@ class TestVerifyQuoteHandler:
         for author in ["Шевченко", "Т. Г. Шевченко", "Тарас Шевченко"]:
             with patch("wiki.sources_db.search_literary", return_value=_shevchenko_quote_hits()):
                 result = _run(
-                    server_module.handle_verify_quote(
-                        {"author": author, "text": "Та в Сибір загнали Свою шляхту"}
-                    )
+                    server_module.handle_verify_quote({"author": author, "text": "Та в Сибір загнали Свою шляхту"})
                 )
             data = json.loads(result[0].text)
             assert data["matched"] is True
@@ -684,9 +786,7 @@ class TestVerifySourceAttributionHandler:
             return_value=[{"headword": "коза", "definition": "коза — свійська тварина"}],
         ) as mock:
             result = _run(
-                server_module.handle_verify_source_attribution(
-                    {"source": "grinchenko_1907", "claim": "коза"}
-                )
+                server_module.handle_verify_source_attribution({"source": "grinchenko_1907", "claim": "коза"})
             )
 
         mock.assert_called_once_with("коза", 5)
@@ -712,11 +812,7 @@ class TestVerifySourceAttributionHandler:
             "wiki.sources_db.search_definitions",
             return_value=[{"headword": "ленінізм", "definition": "ленінізм — політичне вчення"}],
         ) as mock:
-            result = _run(
-                server_module.handle_verify_source_attribution(
-                    {"source": "sum11", "claim": "ленінізм"}
-                )
-            )
+            result = _run(server_module.handle_verify_source_attribution({"source": "sum11", "claim": "ленінізм"}))
 
         mock.assert_called_once_with("ленінізм", 5)
         data = json.loads(result[0].text)
@@ -752,9 +848,7 @@ class TestVerifySourceAttributionHandler:
         with patch.object(server_module, "handle_query_wikipedia", new_callable=AsyncMock) as mock:
             mock.return_value = [MagicMock(text=text)]
             result = _run(
-                server_module.handle_verify_source_attribution(
-                    {"source": "wikipedia", "claim": "тест", "limit": 2}
-                )
+                server_module.handle_verify_source_attribution({"source": "wikipedia", "claim": "тест", "limit": 2})
             )
 
         mock.assert_called_once_with({"query": "тест", "mode": "search", "limit": 2})
@@ -764,9 +858,7 @@ class TestVerifySourceAttributionHandler:
         with patch.object(server_module, "handle_query_wikipedia", new_callable=AsyncMock) as mock:
             mock.side_effect = RuntimeError("network down")
             result = _run(
-                server_module.handle_verify_source_attribution(
-                    {"source": "wikipedia", "claim": "тест", "limit": 2}
-                )
+                server_module.handle_verify_source_attribution({"source": "wikipedia", "claim": "тест", "limit": 2})
             )
 
         data = json.loads(result[0].text)
@@ -803,9 +895,7 @@ class TestSearchSourcesHandler:
         ]
         with patch("wiki.sources_db.search_sources", return_value=mock_hits) as mock:
             content, envelope = _run(
-                server_module.handle_search_sources(
-                    {"query": "голосні звуки", "track": "a1", "limit": 5}
-                )
+                server_module.handle_search_sources({"query": "голосні звуки", "track": "a1", "limit": 5})
             )
             mock.assert_called_once_with("голосні звуки", track="a1", limit=5)
             assert '"corpus": "ukrainian_wiki"' in content[0].text
@@ -814,13 +904,16 @@ class TestSearchSourcesHandler:
             assert envelope["match_count"] == 1
             assert envelope["hits"][0]["chunk_id"] == "ukwiki:test-1"
 
+
 class TestCheckRussianShadowHandler:
     def test_handle_check_russian_shadow(self, server_module):
         with patch("scripts.verification.vesum.verify_word") as mock_verify_word:
+
             def mock_vesum(w):
                 if w in ["получити", "здача"]:
                     return []
                 return [{"lemma": w, "pos": "noun", "tags": ""}]
+
             mock_verify_word.side_effect = mock_vesum
 
             args = {"word": "получити", "threshold": 0.7}
@@ -865,27 +958,36 @@ class TestIntegrationSmoke:
 
     def test_smoke_check_modern_form_mixed(self, server_module):
         """Test check_modern_form with a word that has both modern and archaic tags."""
-        result = _run(server_module.handle_check_modern_form({"word": "звір"}))
-        data = json.loads(result[0].text)
+        content, outcome = _run(server_module.handle_check_modern_form({"word": "звір"}))
+        data = json.loads(content[0].text)
         assert data["is_modern_codified"] is True
         assert data["has_archaic_form"] is True
         assert data["has_only_archaic_form"] is False
+        assert outcome["tool"] == "check_modern_form"
+        assert outcome["disposition"] == "supported"
+        assert outcome["success"] is True
 
     def test_smoke_check_modern_form_modern_only(self, server_module):
         """Test check_modern_form with a modern-only word."""
-        result = _run(server_module.handle_check_modern_form({"word": "Сибір"}))
-        data = json.loads(result[0].text)
+        content, outcome = _run(server_module.handle_check_modern_form({"word": "Сибір"}))
+        data = json.loads(content[0].text)
         assert data["is_modern_codified"] is True
         assert data["has_archaic_form"] is False
         assert data["has_only_archaic_form"] is False
+        assert outcome["tool"] == "check_modern_form"
+        assert outcome["disposition"] == "supported"
+        assert outcome["success"] is True
 
     def test_smoke_check_modern_form_archaic_only(self, server_module):
         """Test check_modern_form with an archaic-only word."""
-        result = _run(server_module.handle_check_modern_form({"word": "аби-де"}))
-        data = json.loads(result[0].text)
+        content, outcome = _run(server_module.handle_check_modern_form({"word": "аби-де"}))
+        data = json.loads(content[0].text)
         assert data["is_modern_codified"] is False
         assert data["has_archaic_form"] is True
         assert data["has_only_archaic_form"] is True
+        assert outcome["tool"] == "check_modern_form"
+        assert outcome["disposition"] == "negative"
+        assert outcome["success"] is False
 
 
 class TestDictSearchQuoteBalance:

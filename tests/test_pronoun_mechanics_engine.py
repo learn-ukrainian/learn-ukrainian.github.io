@@ -174,7 +174,7 @@ def test_balanced_option_shuffling():
 def test_committed_deck_parity(tmp_path: Path):
     """Verify exported JSON deck matches committed file byte-for-byte."""
     cards = build_canonical_pronoun_cards()
-    deck_path = Path(__file__).resolve().parents[1] / "data" / "practice" / "pronoun_mechanics_deck.json"
+    deck_path = Path(__file__).resolve().parents[1] / "registry" / "practice" / "pronoun_mechanics_deck.json"
     assert deck_path.exists(), f"Committed deck {deck_path} does not exist"
 
     with open(deck_path, encoding="utf-8") as f:
