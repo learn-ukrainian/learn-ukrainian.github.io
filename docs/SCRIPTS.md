@@ -798,7 +798,11 @@ is a follow-up; compatibility keys remain unchanged. For code pick order, run
 `.venv/bin/python -m scripts.fleet.capacity_pick` and pass `--check-budget` (or set
 `LU_DISPATCH_CHECK_BUDGET=1` in seat launchers). The guard hard-subs hot/near_cap/deficit
 lanes when `scripts/config/agent_fallback_substitutions.yaml` `dispatch_fallbacks` has a
-row (e.g. `codex → cursor`); otherwise it refuses unless `--force-agent`. Flag stays
+row (e.g. `codex → cursor`); otherwise it refuses unless `--force-agent`. A hard
+substitution rewrites an explicit `--model` through `model_catalog.yaml`
+`budget_substitution_models`, or drops it for that lane's registry default
+(cursor's dispatch pin is `grok-4.7`). If neither the mapped model nor that
+default is valid for the substitute, dispatch refuses before spawn. Flag stays
 opt-in for hermetic tests; launchers should enable the env.
 
 For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.

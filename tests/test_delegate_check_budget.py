@@ -10,6 +10,7 @@ import types
 import urllib.error
 from datetime import UTC, datetime
 from pathlib import Path
+from unittest.mock import patch
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder
@@ -1144,3 +1145,236 @@ def test_check_budget_empty_prepaid_refuses_before_spawn(monkeypatch, tmp_path, 
     assert f"ROUTING REFUSED: prepaid {prepaid} status=near_cap" in message
     print(f"check-budget fixture {prepaid}: exit={result}, worker_spawns={len(spawned)}")
     print(message.strip())
+
+
+def _codex_cursor_budget(*, codex_status: str) -> dict:
+    hot = codex_status == "hot"
+    return {
+        "recommendation": {
+            "primary_agent_for_code": "cursor" if hot else "codex",
+            "rationale": "fixture",
+            "warnings": [],
+        },
+        "agents": {
+            "codex": {"status": codex_status, "burn_pct_7d": 95.0 if hot else 10.0},
+            "cursor": {"status": "cool", "burn_pct_7d": 5.0},
+            "claude": {"status": "cool", "burn_pct_7d": 10.0},
+        },
+        "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
+    }
+
+
+def _capture_worker_commands(monkeypatch, tmp_path) -> list[list[str]]:
+    commands: list[list[str]] = []
+
+    def fake_popen(cmd, *_args, **_kwargs):
+        commands.append([str(part) for part in cmd])
+        return _FakeProc()
+
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setenv("LU_DISPATCH_ISOLATION", "fallback")
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _codex_cursor_budget(codex_status="hot"))
+    return commands
+
+
+def _codex_dispatch(*extra: str):
+    return delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "probe-8855",
+            "--prompt",
+            "noop",
+            "--mode",
+            "read-only",
+            "--check-budget",
+            *extra,
+        ]
+    )
+
+
+def _worker_argv(commands: list[list[str]]) -> list[str]:
+    worker = [command for command in commands if "_worker" in command]
+    assert worker, commands
+    return worker[-1]
+
+
+def test_budget_sub_codex_gpt6_sol_spawns_cursor_default(monkeypatch, tmp_path, capsys):
+    """AC-01: codex → cursor with gpt-6-sol uses the cursor dispatch pin, on the line and in the task JSON."""
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6-sol"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE: --agent codex → cursor" in err
+    assert "--model grok-4.7 (catalog default; gpt-6-sol has no mapping)" in err
+    argv = _worker_argv(commands)
+    assert "--agent" in argv and argv[argv.index("--agent") + 1] == "cursor"
+    assert "--model" in argv and argv[argv.index("--model") + 1] == "grok-4.7"
+    assert "gpt-6-sol" not in argv
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["agent"] == "cursor"
+    assert state["substitution"] == {
+        "kind": "agent-substitution",
+        "substituted": True,
+        "source": "budget-guard",
+        "requested_agent": "codex",
+        "actual_agent": "cursor",
+        "requested_model": "gpt-6-sol",
+        "actual_model": "grok-4.7",
+        "actual_model_known": True,
+        "model_resolution": "catalog-default",
+    }
+
+
+def test_budget_sub_without_explicit_model_uses_catalog_default(monkeypatch, tmp_path, capsys):
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+
+    rc = delegate.cmd_dispatch(_codex_dispatch())
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "--model grok-4.7 (catalog default)" in err
+    assert "has no mapping" not in err
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--model") + 1] == "grok-4.7"
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["substitution"]["requested_model"] is None
+    assert state["substitution"]["actual_model"] == "grok-4.7"
+    assert state["substitution"]["model_resolution"] == "catalog-default"
+
+
+def test_budget_sub_unmapped_model_falls_back_to_catalog_default(monkeypatch, tmp_path, capsys):
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "not-a-fleet-model"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "--model grok-4.7 (catalog default; not-a-fleet-model has no mapping)" in err
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--model") + 1] == "grok-4.7"
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["substitution"]["requested_model"] == "not-a-fleet-model"
+    assert state["substitution"]["actual_model"] == "grok-4.7"
+    assert state["substitution"]["model_resolution"] == "catalog-default"
+
+
+def test_budget_sub_maps_opus_to_cursor_invocation_slug(monkeypatch, tmp_path, capsys):
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "claude-opus-5-5"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "--model claude-opus-5-5-high (mapped from claude-opus-5-5)" in err
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--model") + 1] == "claude-opus-5-5-high"
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["substitution"]["model_resolution"] == "mapped"
+    assert state["substitution"]["actual_model"] == "claude-opus-5-5-high"
+
+
+def test_budget_sub_refuses_before_spawn_when_no_model_is_valid(monkeypatch, tmp_path, capsys):
+    """AC-02: neither the mapped model nor the catalog default is valid → no task, no worker."""
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate, "_lane_default_model", lambda _agent: "not-a-fleet-model")
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6-sol"))
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "ROUTING REFUSED: no valid model for substitute --agent cursor" in err
+    assert "Refusing before spawn." in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    assert not any("_worker" in command for command in commands)
+    assert not (tmp_path / "tasks" / "probe-8855.json").exists()
+
+
+def test_dispatch_without_substitution_keeps_explicit_model(monkeypatch, tmp_path, capsys):
+    """AC-03: a cool lane keeps the caller's --model and writes no substitution."""
+    commands = _capture_worker_commands(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _codex_cursor_budget(codex_status="cool"))
+
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6-sol"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+    argv = _worker_argv(commands)
+    assert argv[argv.index("--agent") + 1] == "codex"
+    assert argv[argv.index("--model") + 1] == "gpt-6-sol"
+    state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
+    assert state["agent"] == "codex"
+    assert state["substitution"] is None
+
+
+def test_worker_keeps_budget_substitution_beside_runtime_attribution(monkeypatch, tmp_path):
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
+    task_id = "budget-sub-survives"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "agent": "cursor",
+            "model": "grok-4.7",
+            "substitution": {
+                "kind": "agent-substitution",
+                "substituted": True,
+                "source": "budget-guard",
+                "requested_agent": "codex",
+                "actual_agent": "cursor",
+                "requested_model": "gpt-6-sol",
+                "actual_model": "grok-4.7",
+                "actual_model_known": True,
+                "model_resolution": "catalog-default",
+            },
+        },
+    )
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "grok-4.7",
+            "effort": "unknown",
+            "cli_version": "test",
+            "substitution": {
+                "requested_model": "grok-4.7",
+                "actual_model": "grok-4.7",
+                "actual_model_known": True,
+                "source": "cursor-stream-json",
+                "substituted": False,
+            },
+        },
+    )()
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="cursor",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model="grok-4.7",
+            hard_timeout=60,
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["substitution"]["kind"] == "agent-substitution"
+    assert state["substitution"]["requested_model"] == "gpt-6-sol"
+    assert state["substitution"]["actual_model"] == "grok-4.7"
+    assert state["substitution"]["runtime_attribution"]["source"] == "cursor-stream-json"
+    assert state["resolved_model"] == "grok-4.7"
+    assert state["resolved_model_source"] == "cursor-stream-json"

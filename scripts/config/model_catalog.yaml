@@ -1249,3 +1249,20 @@ review_ladders:
     - [pool-xs]
   medium: *practical_first_code_review
   low: *practical_first_code_review
+
+# Explicit --model rewrite when a hard substitution changes the agent (#8855).
+# Keyed by the substitute lane. A source model with no row is dropped and
+# dispatch uses that lane's registry default — the dispatch pin named on
+# orchestrator_seats (cursor: grok-4.7). That pin is not the cursor seat
+# identity `auto`, and not the interactive driver's grok-4.7-high slug.
+# GPT-6 has no Cursor row: native Codex only, until Cursor has a verified slug.
+budget_substitution_models:
+  codex:
+    gpt-6-sol: gpt-6-sol
+    gpt-6-luna: gpt-6-luna
+    gpt-6-astra: gpt-6-astra
+  cursor:
+    claude-opus-5-5: claude-opus-5-5-high
+    claude-fable-5: claude-fable-5
+    grok-4.7: grok-4.7
+    composer-2.5: composer-2.5

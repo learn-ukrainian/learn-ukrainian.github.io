@@ -862,6 +862,19 @@ def test_catalog_rejects_malformed_sol_advised_route(
         validate_catalog(broken)
 
 
+def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():
+    """#8855: GPT-6 stays native Codex; the Opus cursor slug is the review-candidate invocation."""
+    catalog = load_model_catalog()
+    table = catalog["budget_substitution_models"]
+    assert "gpt-6-sol" not in table["cursor"]
+    assert table["cursor"]["claude-opus-5-5"] == "claude-opus-5-5-high"
+    assert table["codex"]["gpt-6-sol"] == "gpt-6-sol"
+    broken = deepcopy(catalog)
+    broken["budget_substitution_models"]["cursor"]["gpt-6-sol"] = "gpt-6-sol"
+    with pytest.raises(ModelCatalogError, match="gpt-6-sol"):
+        validate_catalog(broken)
+
+
 def test_astra_advisor_and_sol_runtime_review_pins():
     catalog = load_model_catalog()
     astra = catalog["models"]["gpt-6-astra"]
