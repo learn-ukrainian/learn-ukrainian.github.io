@@ -364,17 +364,22 @@ Edit/Write/NotebookEdit and common
 Git/GitHub mutation commands are denied. `discussion_readonly` and
 `review_isolation` retain their separate tool profiles. `workspace-write`
 passes `--permission-mode dontAsk` and allows Bash, Read, Edit, Write,
-NotebookEdit, Grep, Glob, LS, WebFetch, and WebSearch, plus one
-`mcp__<server>` rule for each server in the checkout `.mcp.json`. An
-explicit `mcp_config_path` is read instead of that file. An explicit
-`allowed_tools` value stays the only allow list. Headless `claude -p`
-otherwise starts in manual mode and denies every tool that would prompt.
-`dontAsk` is the documented non-interactive mode (`claude --help` on the
-installed Claude Code): pre-approved tools run, and anything that would
-prompt is denied, so the session does not wait. `acceptEdits` still prompts
-for shell and network. `auto` can refuse a legitimate worker action.
-`bypassPermissions` is not used for this mode; it is the same skip as
-`danger`'s `--dangerously-skip-permissions`, which stays on the danger argv
+Grep, Glob, LS, WebFetch, and WebSearch. NotebookEdit is omitted because
+the primary-checkout PreToolUse matcher covers Bash and
+`Write|Edit|MultiEdit`. Each server in the worker checkout's `.mcp.json`
+(the dispatch cwd) adds one `mcp__<server>__*` allow rule. An explicit
+`mcp_config_path` is read instead of that file. A missing file grants no
+MCP tools. A present file that cannot be read or parsed, or a server name
+that cannot be written into `--allowedTools`, fails the dispatch. An
+explicit `allowed_tools` value stays the only allow list. Headless
+`claude -p` otherwise starts in manual mode and denies every tool that
+would prompt. `dontAsk` is the documented non-interactive mode
+(`claude --help` on the installed Claude Code): pre-approved tools run,
+and anything that would prompt is denied, so the session does not wait.
+`acceptEdits` still prompts for shell and network. `auto` can refuse a
+legitimate worker action. `bypassPermissions` is not used for this mode.
+It still runs hooks, but it approves every tool with no allow list.
+`danger`'s `--dangerously-skip-permissions` stays on the danger argv
 alone. An allow glob of `mcp__*` does not grant MCP tools, so each
 configured server is named. The tracked PreToolUse guards still load via
 `--settings`, including under `dontAsk`; a hook that exits 2 blocks the
