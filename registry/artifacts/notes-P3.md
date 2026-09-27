@@ -146,8 +146,8 @@ changing frozen K bytes.
 ## Unresolved P3a gates at this checkpoint
 
 - The complete top-level `tests/test_open_model_*.py` consumer run failed:
-  `1103 failed, 773 passed, 67 skipped, 73 errors`. The first errors show
-  live readers and tests still opening K inputs at old `data/` locations
+  `1103 failed, 774 passed, 67 skipped, 73 errors` on the final code head.
+  The first errors show live readers and tests still opening K inputs at old `data/` locations
   (for example `phase3_p1_universe_freeze_v1.json` and
   `examples/portable-corpus-v1.jsonl`). All executable consumer dispositions
   and the source-identity inventory must be completed by the P3a
