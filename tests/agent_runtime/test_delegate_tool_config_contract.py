@@ -91,6 +91,7 @@ def test_parsed_delegate_keys_cover_read_only_and_review_attempts() -> None:
     keys = delegate_read_only_and_review_tool_config_keys()
     assert "read_only_tmp_root" in keys
     assert {"mcp_server_names", "review_id", "attempt_id", "strict_mcp_config", "mcp_config_path"} <= keys
+    assert "reviewer_tools" in keys
 
 
 # Placeholder per key delegate.py assigns. An unmapped key still gets a
@@ -105,6 +106,7 @@ _KEY_PLACEHOLDERS: dict[str, object] = {
     "allowed_tools": "mcp__sources__verify_word",
     "codex_home_override": "CODEX_HOME",
     "agy_home_override": "AGY_HOME",
+    "reviewer_tools": True,
 }
 
 # Failures that are fixture preconditions, not key rejection. Any other
@@ -197,6 +199,9 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
 
     parsed = delegate_read_only_and_review_tool_config_keys()
     tool_config = _tool_config_from_parsed_keys(parsed, tmp_path, lease)
+    # Delegate sets this opt-in only for Claude, so other adapters never see it.
+    if adapter_cls.__name__ != "ClaudeAdapter":
+        tool_config.pop("reviewer_tools")
     if adapter_cls.__name__ == "KimiAdapter":
         tool_config["harness"] = "kimicc"
 

@@ -89,4 +89,5 @@ def test_claude_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp
     assert captured["cwd"] == checkout.path
     assert str(captured["prompt"]).endswith("SEALED_DOSSIER")
     assert captured["session_id"] is None
+    assert "reviewer_tools" not in captured["tool_config"]
     assert persisted_sessions == []

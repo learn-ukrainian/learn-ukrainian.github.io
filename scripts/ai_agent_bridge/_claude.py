@@ -236,6 +236,8 @@ def _run_claude_sync_via_runtime(
         "cmd_prefix": CLAUDE_CMD,
         "is_new_session": is_new_session_flag,
     }
+    if not review:
+        tool_config["reviewer_tools"] = True
 
     _response_sent = False
     try:

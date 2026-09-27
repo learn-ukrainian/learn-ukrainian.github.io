@@ -7187,6 +7187,8 @@ def _run_worker(
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
+            elif agent == "claude" and mode == "read-only":
+                tool_config["reviewer_tools"] = True
             # ask-kimi --review is dispatch --agent kimi --harness kimicc
             # --mode read-only --require-review-verdict, not --review-attempt.
             # A sealed review attempt already set strict_mcp_config and its
