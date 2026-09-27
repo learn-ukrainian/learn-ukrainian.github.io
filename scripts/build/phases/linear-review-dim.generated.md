@@ -133,9 +133,11 @@ Unverified items become FLAG strings in your evidence and weigh the score down.
 - **B. Quote verification (all dims).** For every literary quote, call
   `mcp__sources__verify_quote(author, text)`; require `matched=true` AND
   `best_confidence ≥ 0.85`. Else FLAG `fabricated quote` / `fused quote`.
-- **C. Sovietization (decolonization, naturalness).** For politically loaded
-  СУМ-11 headwords, apply heightened scrutiny; Soviet framing reproduced without
-  correction → FLAG `soviet-framed definition unsupervised`.
+- **C. Sovietization (decolonization, naturalness).** СУМ-11 is contrast-only:
+  any verification citation to it in generated content → FLAG
+  `sovietized_source_not_authority`, regardless of `sovietization_risk`. Soviet
+  framing reproduced without correction → FLAG `soviet-framed definition
+  unsupervised`.
 - **D. Heritage-defense (naturalness, decolonization).** Flag pre-2019 / Old
   East Slavic / Russian-shadow forms presented as modern, AND authentic
   archaisms/dialectisms mislabeled as Russianism. Verify a heritage flag with

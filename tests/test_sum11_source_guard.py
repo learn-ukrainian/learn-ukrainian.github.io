@@ -26,7 +26,7 @@ SCOPES = (
 )
 CONTRAST_ONLY_LINES = {
     "scripts/build/phases/linear-review-dim.md": "СУМ-11 is contrast-only",
-    "scripts/build/phases/linear-review-dim.generated.md": "СУМ-11 headwords, apply heightened scrutiny",
+    "scripts/build/phases/linear-review-dim.generated.md": "СУМ-11 is contrast-only",
 }
 # Exact approved lines: edits or new references require renewed review.
 RULE_CONTEXT_LINES = {

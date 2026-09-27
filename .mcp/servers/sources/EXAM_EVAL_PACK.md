@@ -28,7 +28,7 @@ Parent issues: #7957 / epic #7953.
 | `get_chunk_context` | Fetch one chunk by id | `chunk_id` | same | `error_code=sources_db_missing` / empty |
 | `query_pravopys` | Orthography rules | `topic` (text or section number) | same | Empty topic |
 | `search_style_guide` | Style guidance (Антоненко-Давидович) | `query` / limit | same | Empty |
-| `search_definitions` | СУМ-11 definitions | `query` / limit | same | Empty |
+| `search_definitions` | СУМ-11 definitions — Soviet-occupation contrast only, never a verification source for modern Ukrainian (use `query_sum20` / ВТС) | `query` / limit | same | Empty |
 | `search_idioms` | Phraseology | `query` / limit | same | Empty |
 | `search_synonyms` | Synonym net | `query` / limit | same | Empty |
 | `search_sources` | Unified multi-corpus retrieval | `query`, optional track/limit | same | Empty (never bare `[]`) |
