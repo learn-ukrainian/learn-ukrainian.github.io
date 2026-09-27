@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import sqlite3
 from pathlib import Path
@@ -10,6 +11,8 @@ from .config import PROJECT_ROOT
 from .sources_schema import _infer_source_type, normalize_source_filename
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+
+ENV_SOURCES_DB = "LU_SOURCES_DB"
 
 _CHUNK_SUFFIX_RE = re.compile(r"(_[cs]\d+)$", re.IGNORECASE)
 _TRAILING_DIGITS_RE = re.compile(r"(\d+)$")
@@ -361,7 +364,24 @@ def _maybe_text(value: object) -> str | None:
     return text or None
 
 
+def _import_is_network_filesystem_path():
+    try:
+        from scripts.storage.topology import is_network_filesystem_path
+    except ImportError:  # pragma: no cover - legacy ``scripts/``-on-path imports
+        from storage.topology import is_network_filesystem_path  # type: ignore
+    return is_network_filesystem_path
+
+
 def _effective_db_path() -> Path:
+    override = os.environ.get(ENV_SOURCES_DB)
+    if override:
+        candidate = Path(override).expanduser()
+        if _import_is_network_filesystem_path()(candidate):
+            raise ValueError(
+                f"{ENV_SOURCES_DB} must not point at network storage; refused {candidate}"
+            )
+        return candidate
+
     db_path = DEFAULT_DB_PATH
     if db_path.exists() and db_path.stat().st_size > 0:
         return db_path
@@ -384,7 +404,12 @@ def _effective_db_path() -> Path:
 
 
 def connect_sources_db() -> sqlite3.Connection:
-    """Open a sources DB connection, preferring the populated main-checkout DB in worktrees."""
+    """Open a sources DB connection, preferring the populated main-checkout DB in worktrees.
+
+    ``LU_SOURCES_DB`` overrides the resolved path (network locations refused);
+    this is the only supported way to redirect a test at a scratch database
+    without writing into the repository tree.
+    """
     conn = sqlite3.connect(str(_effective_db_path()))
     conn.row_factory = sqlite3.Row
     return conn
