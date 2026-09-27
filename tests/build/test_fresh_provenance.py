@@ -15,6 +15,7 @@ from scripts.build.fresh.assemble import PROVENANCE_SCHEMA_PATH, get_provenance_
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import ResolverError
+from scripts.verification import vesum
 from tests.build.test_fresh_assemble import (
     make_word_record,
     validate_fixture_draft,
@@ -566,6 +567,20 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
     validate_fixture_pack(pack)
     validate_fixture_plan(plan)
     validate_fixture_draft(draft)
+
+    analyses: dict[str, list[dict[str, str]]] = {}
+    for record in words["words"]:
+        for form in record["forms"]:
+            analyses.setdefault(form["form"], []).append(
+                {"lemma": record["lemma"], "pos": record["pos"], "tags": form["tags"]}
+            )
+
+    def fixture_verify_words(spellings: list[str], **_kwargs: object) -> dict[str, list[dict[str, str]]]:
+        return {spelling: analyses.get(spelling, []) for spelling in spellings}
+
+    monkeypatch.setattr(runner, "verify_words", fixture_verify_words, raising=False)
+    # The runner's default lookup imports verify_words locally from this module.
+    monkeypatch.setattr(vesum, "verify_words", runner.verify_words)
 
     report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is True, report
