@@ -8149,6 +8149,63 @@ def _run_preflight_triage(args: argparse.Namespace, *, worktree_arg: str | None)
     return pt.FAST_FAIL_EXIT_CODE
 
 
+_DOR_ISSUE_RE = re.compile(r"(?<![\w/=])#(\d+)\b|https://github\.com/[^\s/]+/[^\s/]+/issues/(\d+)\b")
+
+
+def _run_dor_preflight(prompt: str, allow_reason: str | None) -> tuple[str | None, dict[str, Any] | None]:
+    """Check each issue named by an implementation brief before dispatch side effects."""
+    candidates = sorted(
+        {int(match.group(1) or match.group(2)) for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt))}
+    )
+    if not candidates:
+        return None, None
+    warnings: dict[str, str] = {}
+    issue_numbers: list[int] = []
+    checker = _REPO_ROOT / "scripts" / "ci" / "check_issue_task_quality.py"
+    for number in candidates:
+        try:
+            issue = subprocess.run(
+                ["gh", "api", f"repos/{_CANONICAL_GITHUB_REPO}/issues/{number}"],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                check=False,
+            )
+            if issue.returncode:
+                raise ValueError("issue lookup failed")
+            issue_payload = json.loads(issue.stdout)
+            if not isinstance(issue_payload, dict) or issue_payload.get("number") != number:
+                raise ValueError("issue lookup must identify the requested number")
+            if "pull_request" in issue_payload:
+                continue
+            issue_numbers.append(number)
+            result = subprocess.run(
+                [sys.executable, str(checker), "--issue", str(number), "--strict", "--json"],
+                capture_output=True,
+                text=True,
+                timeout=75,
+                check=False,
+            )
+            payload = json.loads(result.stdout)
+            if not isinstance(payload, dict):
+                raise ValueError("checker result must be an object")
+            if result.returncode or payload.get("verdict") != "PASS":
+                warnings[str(number)] = ",".join(payload.get("missing") or ["checker_error"])
+        except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
+            if number not in issue_numbers:
+                issue_numbers.append(number)
+            warnings[str(number)] = "checker_error"
+    if not issue_numbers:
+        return None, None
+    record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    if allow_reason is not None:
+        record["allow_warn_reason"] = allow_reason
+    if warnings and allow_reason is None:
+        details = "; ".join(f"#{number}: {missing}" for number, missing in warnings.items())
+        return f"❌ DoR issue card WARN ({details}); fix the issue or pass --allow-dor-warn REASON", record
+    return None, record
+
+
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
     # The stack owns the worktree lock taken before create-or-attach. Dispatch
@@ -8201,6 +8258,19 @@ def _dispatch(
             early_prompt = Path(args.prompt_file).read_text(encoding="utf-8")
         except OSError:
             early_prompt = None
+
+    dor_reason = getattr(args, "allow_dor_warn", None)
+    if dor_reason is not None:
+        dor_reason = str(dor_reason).strip()
+        if not dor_reason:
+            print("❌ --allow-dor-warn requires a non-empty reason", file=sys.stderr)
+            return 2
+    dor_record: dict[str, Any] | None = None
+    if early_prompt is not None and args.mode in {"workspace-write", "danger"}:
+        dor_error, dor_record = _run_dor_preflight(early_prompt, dor_reason)
+        if dor_error:
+            print(dor_error, file=sys.stderr)
+            return 2
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.agent_identity import resolve_retired_agent_alias
@@ -8548,6 +8618,12 @@ def _dispatch(
     else:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
+
+    if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
+        dor_error, dor_record = _run_dor_preflight(prompt, dor_reason)
+        if dor_error:
+            print(dor_error, file=sys.stderr)
+            return 2
 
     # stdin prompts were unavailable to the earlier side-effect-free check.
     write_intent_error = _read_only_write_intent_error(mode=args.mode, prompt=prompt)
@@ -9385,6 +9461,7 @@ def _dispatch(
             "exit_code": None,
             "substitution": None,
             "agent_alias_note": agent_alias_note,
+            "dor_preflight": dor_record,
         }
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
@@ -10892,6 +10969,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")
     d.add_argument("--prompt-file", help="Read the prompt body from this file path.")
+    d.add_argument(
+        "--allow-dor-warn",
+        metavar="REASON",
+        help="Allow an implementation dispatch with a WARN issue card; record the required reason in task JSON.",
+    )
     d.add_argument(
         "--lifecycle-file",
         help=(

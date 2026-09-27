@@ -347,7 +347,13 @@ Before **every** implement `delegate.py dispatch`:
    ≥2 `alternatives_considered` · `parallel_free_seats` · quoted
    `routing_budget_primary` + `capacity_pick_order` (tool evidence).
 2. **No card = no dispatch.** Skipping the card is a process defect; do not launch the
-   worker and "write the card later."
+   worker and "write the card later." The runtime runs the issue-card checker
+   `--strict` for implementation briefs naming GitHub issues. A WARN refuses
+   dispatch unless urgent in-flight work uses `--allow-dor-warn <reason>`;
+   the task JSON records that reason. GitHub/API lookup and checker failures
+   also refuse dispatch unless that override is supplied. PR references are
+   skipped after API resolution. Briefs without issue references are not gated.
+   Opening or editing an issue updates one advisory checker comment.
 3. **Default bounded work:** Fable or Astra **brief** → heap/practical **worker(s)** —
    not a Sonnet/Terra fixation solo. Heap without advisor packet is a process defect.
 4. **Fable path:** native `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on

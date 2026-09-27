@@ -1126,6 +1126,133 @@ def test_dispatch_rejects_write_shaped_prompt_file_in_read_only_mode(tmp_tasks_d
     assert "write-shaped prompt" in capsys.readouterr().err
 
 
+def test_dor_preflight_blocks_warn_issue_and_records_override(monkeypatch):
+    from subprocess import CompletedProcess
+
+    calls = []
+
+    def checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return CompletedProcess(command, 0, '{"number":8886}', "")
+        return CompletedProcess(command, 1, '{"verdict":"WARN","missing":["verify"]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", checker)
+    error, record = delegate._run_dor_preflight("Implement issue #8886", None)
+    assert "#8886: verify" in error
+    assert record == {"issues": [8886], "warnings": {"8886": "verify"}}
+    assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"]
+    assert calls[1][-4:] == ["--issue", "8886", "--strict", "--json"]
+
+    error, record = delegate._run_dor_preflight("Implement issue #8886", "urgent repair")
+    assert error is None
+    assert record["allow_warn_reason"] == "urgent repair"
+    assert delegate._run_dor_preflight("Implement without a linked issue", None) == (None, None)
+
+
+def test_dor_preflight_skips_pr_numbers_and_query_values(monkeypatch):
+    from subprocess import CompletedProcess
+
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            number = int(command[-1].rsplit("/", 1)[-1])
+            payload = {"number": number, **({"pull_request": {"url": "pr"}} if number == 8750 else {})}
+            return CompletedProcess(command, 0, json.dumps(payload), "")
+        return CompletedProcess(command, 0, '{"verdict":"PASS","missing":[]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    prompt = "PR #8750, feat: gate dor (#8750), ?q=#8750, x=#8750; Fixes #8886 and #8886"
+    error, record = delegate._run_dor_preflight(prompt, None)
+    assert error is None
+    assert record == {"issues": [8886], "warnings": {}}
+    assert [call for call in calls if call[:2] == ["gh", "api"]] == [
+        ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8750"],
+        ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"],
+    ]
+    assert len([call for call in calls if "--issue" in call]) == 1
+    assert delegate._run_dor_preflight("PR #8750", None) == (None, None)
+
+
+def test_dor_preflight_lookup_failure_fails_closed_with_override(monkeypatch):
+    from subprocess import CompletedProcess
+
+    def failed_gh(command, **kwargs):
+        assert command[:2] == ["gh", "api"]
+        return CompletedProcess(command, 1, "", "lookup unavailable")
+
+    monkeypatch.setattr(delegate.subprocess, "run", failed_gh)
+    error, record = delegate._run_dor_preflight("Fixes #8886", None)
+    assert "#8886: checker_error" in error
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+    error, record = delegate._run_dor_preflight("Fixes #8886", "urgent repair")
+    assert error is None
+    assert record["allow_warn_reason"] == "urgent repair"
+
+
+def test_dor_preflight_rejects_mismatched_issue_lookup(monkeypatch):
+    from subprocess import CompletedProcess
+
+    def wrong_issue(command, **kwargs):
+        assert command[:2] == ["gh", "api"]
+        return CompletedProcess(command, 0, '{"number":8750}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", wrong_issue)
+    error, record = delegate._run_dor_preflight("Fixes #8886", None)
+    assert "#8886: checker_error" in error
+    assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
+
+
+def test_dor_dispatch_refuses_warn_before_worker_spawn(tmp_tasks_dir, monkeypatch, capsys):
+    monkeypatch.setattr(
+        delegate,
+        "_run_dor_preflight",
+        lambda _prompt, _reason: ("❌ DoR issue card WARN (#8886: verify)", None),
+    )
+    monkeypatch.setattr(
+        delegate.subprocess,
+        "Popen",
+        lambda *_args, **_kwargs: pytest.fail("WARN issue must not spawn a worker"),
+    )
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "dor-blocked",
+            "--mode",
+            "danger",
+            "--worktree",
+            "--prompt",
+            "Implement issue #8886",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert not (tmp_tasks_dir / "dor-blocked.json").exists()
+    assert "DoR issue card WARN" in capsys.readouterr().err
+
+
+def test_dor_override_cli_requires_reason():
+    parser = delegate.build_parser()
+    args = parser.parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "dor-override",
+            "--prompt",
+            "Implement issue #8886",
+            "--allow-dor-warn",
+            "urgent repair",
+        ]
+    )
+    assert args.allow_dor_warn == "urgent repair"
+
+
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 def test_write_shaped_prompt_is_admitted_by_write_capable_modes(mode):
     assert (
@@ -6210,12 +6337,21 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
+    monkeypatch.setattr(
+        delegate,
+        "_run_dor_preflight",
+        lambda prompt, reason: (
+            None,
+            {"issues": [1383], "warnings": {"1383": "verify"}, "allow_warn_reason": reason},
+        ),
+    )
 
     args = argparse.Namespace(
         agent="codex",
         task_id="issue-1383-smoke",
-        prompt="Implement the fix",
+        prompt="Implement the fix for issue #1383",
         prompt_file=None,
+        allow_dor_warn="urgent repair",
         mode="danger",
         model=None,
         cwd=None,
@@ -6236,6 +6372,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert state["pid"] == 24680
     assert state["worktree_base_sha"] == "deadbeef"
     assert state["worktree_reused"] is False
+    assert state["dor_preflight"]["allow_warn_reason"] == "urgent repair"
     assert state["worktree_local_venv"] == {"present": False, "kind": None, "path": None}
     assert "delegate worktree" in recorded_prompt["text"]
     assert ".worktrees/codex-1383" in recorded_prompt["text"]
