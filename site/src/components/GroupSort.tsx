@@ -280,7 +280,7 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
   const renderChooser = (itemId: string, currentGroup?: string) => (
     <div
       role="group"
-      aria-label={isUkrainian ? 'Виберіть дію' : 'Choose a group'}
+      aria-label={isUkrainian ? 'Виберіть дію' : 'Choose an action'}
       data-activity="group-sort-chooser"
       style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', margin: '0.5rem 0', flexBasis: '100%' }}
     >
@@ -292,7 +292,7 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
           data-target="__pool__"
           onClick={() => handlePlaceSelected('__pool__')}
         >
-          {isUkrainian ? '↩ Повернути до нерозподілених слів' : '↩ Return to pool'}
+          {isUkrainian ? '↩ Повернути до нерозподілених слів' : '↩ Return to unsorted words'}
         </button>
       )}
       {groupNames.filter((name) => name !== currentGroup).map((name) => (
@@ -304,7 +304,7 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
           data-target={name}
           onClick={() => handlePlaceSelected(name)}
         >
-          {isUkrainian ? `Перемістити до групи «${name}»` : `Place in "${name}"`}
+          {isUkrainian ? `Перемістити до групи «${name}»` : `Move to group "${name}"`}
         </button>
       ))}
     </div>
