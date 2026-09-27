@@ -68,6 +68,56 @@ def test_secret_dump_shapes_blocked(monkeypatch, capsys, cmd):
 
 
 @pytest.mark.parametrize(
+    "command",
+    [
+        "echo hi\ncat .env",
+        "cat < .env",
+        "cat<.env",
+        'cat <<< "$GH_TOKEN"',
+        "echo $(cat .env)",
+        "echo $(echo ok; cat .env)",
+        "echo `cat .env`",
+        'echo "$(cat .env)"',
+        'echo "`cat .env`"',
+        "eval 'cat .env'",
+        "eval 'echo $GH_TOKEN'",
+        'export X=$GH_TOKEN; printf %s "$X"',
+        'export X=$GH_TOKEN; Y=$X; printf %s "$Y"',
+        'export X=$GH_TOKEN; echo $(printf %s "$X")',
+    ],
+)
+def test_issue_8896_secret_bypasses_block(monkeypatch, capsys, command):
+    assert _run(monkeypatch, command) == 2
+    assert "BLOCKED by guard-secret-print" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status",
+        "ls -la",
+        "echo ok > /tmp/x",
+        "cat <<EOF\ncat .env\nEOF",
+        "cat <<-EOF\n\tcat .env\n\tEOF",
+        "echo '$GH_TOKEN'",
+        "git commit -m 'echo `cat .env`'",
+        "echo \\`cat .env\\`",
+        "cat <<< hello",
+        "echo hi \\\ncat .env",
+        'X=$GH_TOKEN echo ok; printf %s "$X"',
+        'export X=$GH_TOKEN; X=plain; printf %s "$X"',
+        'export X=$GH_TOKEN; unset X; printf %s "$X"',
+    ],
+)
+def test_issue_8896_ordinary_commands_allow(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+def test_issue_8896_continued_secret_file_operand_blocks(monkeypatch):
+    assert _run(monkeypatch, "cat \\\n.env") == 2
+
+
+@pytest.mark.parametrize(
     "cmd",
     [
         "git commit -m fix#123 && cat .env",
@@ -118,7 +168,6 @@ def test_leading_bash_blank_keeps_comment_inert(monkeypatch, blank):
         "echo '#' ; echo safe",
         "echo $(printf '# hidden') # $GH_TOKEN",
         "echo `printf '# hidden'` # cat .env",
-        "echo hi # <<EOF\ncat .env",
     ],
 )
 def test_bash_comments_do_not_trigger_secret_guard(monkeypatch, command):
@@ -131,6 +180,7 @@ def test_bash_comments_do_not_trigger_secret_guard(monkeypatch, command):
         "git commit -m fix#123 && cat .env",
         "echo hi#$GH_TOKEN",
         "echo '#' ; cat .env",
+        "echo hi # <<EOF\ncat .env",
     ],
 )
 def test_bash_comments_keep_executable_secret_words(monkeypatch, command):

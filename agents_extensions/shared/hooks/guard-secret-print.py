@@ -29,7 +29,7 @@ import re
 import shlex
 import sys
 
-SEPARATORS = {"&&", "||", ";"}
+SEPARATORS = {"&&", "||", ";", "\n"}
 DISPLAY_FILE_COMMANDS = {"cat", "bat", "less", "head", "tail"}
 ENV_DUMP_COMMANDS = {"env", "printenv", "set"}
 GREP_COMMANDS = {"grep", "rg", "ugrep"}
@@ -122,15 +122,38 @@ def _strip_shell_comments(command: str) -> str:
     return "".join(out)
 
 
+def _collapse_shell_line_continuations(command: str) -> str:
+    """Remove Bash's escaped newlines before splitting command statements."""
+    out: list[str] = []
+    single = False
+    double = False
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if char == "\\" and not single and index + 1 < len(command):
+            following = command[index + 1]
+            if following != "\n":
+                out.extend((char, following))
+            index += 2
+            continue
+        if char == "'" and not double:
+            single = not single
+        elif char == '"' and not single:
+            double = not double
+        out.append(char)
+        index += 1
+    return "".join(out)
+
+
 def _tokenize(command: str) -> list[str]:
     try:
         lexer = shlex.shlex(
-            _strip_shell_comments(_strip_heredoc_bodies(command)),
+            _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command))),
             posix=False,
-            punctuation_chars=";&|",
+            punctuation_chars=";&|<>\n",
         )
         lexer.whitespace_split = True
-        lexer.whitespace = " \t\n"
+        lexer.whitespace = " \t"
         lexer.commenters = ""
         return list(lexer)
     except ValueError:
@@ -298,12 +321,12 @@ def _is_secret_var_name(name: str) -> bool:
     )
 
 
-def _expanded_secret_var(arg: str) -> str | None:
+def _expanded_secret_var(arg: str, copied: set[str] | None = None) -> str | None:
     if _is_single_quoted(arg):
         return None
     for match in _VAR_REF_RE.finditer(arg):
         name = match.group("braced") or match.group("plain") or ""
-        if _is_secret_var_name(name):
+        if _is_secret_var_name(name) or name in (copied or ()):
             return name
     return None
 
@@ -457,13 +480,22 @@ def _worker_env_reason(seg: list[str]) -> str | None:
     return None
 
 
-def _display_file_reason(pipeline: list[list[str]], seg_index: int) -> str | None:
+def _display_file_reason(pipeline: list[list[str]], seg_index: int, copied: set[str]) -> str | None:
     command = _command_at(pipeline[seg_index])
     if command is None:
         return None
     cmd, args, _idx = command
     if cmd not in DISPLAY_FILE_COMMANDS:
         return None
+    for index, arg in enumerate(args[:-1]):
+        operator = _strip_quotes(arg)
+        source = args[index + 1]
+        if operator == "<" and _is_known_secret_file(source) and not _has_safe_downstream(pipeline, seg_index):
+            return f"`{cmd}` would print known secret file `{_strip_quotes(source)}`"
+        if operator == "<<<":
+            name = _expanded_secret_var(source, copied)
+            if name and not _has_safe_downstream(pipeline, seg_index):
+                return f"`{cmd}` would print ${name} from a here-string"
     for arg in _file_args(cmd, args):
         if _is_known_secret_file(arg):
             if _has_safe_downstream(pipeline, seg_index):
@@ -584,7 +616,7 @@ def _grep_reason(pipeline: list[list[str]], seg_index: int) -> str | None:
     return None
 
 
-def _echo_secret_reason(seg: list[str]) -> str | None:
+def _echo_secret_reason(seg: list[str], copied: set[str]) -> str | None:
     command = _command_at(seg)
     if command is None:
         return None
@@ -592,13 +624,36 @@ def _echo_secret_reason(seg: list[str]) -> str | None:
     if cmd not in {"echo", "printf"}:
         return None
     for arg in args:
-        secret_name = _expanded_secret_var(arg)
+        secret_name = _expanded_secret_var(arg, copied)
         if secret_name:
             return f"`{cmd}` would print ${secret_name}"
     return None
 
 
-def _danger_reason(pipeline: list[list[str]]) -> str | None:
+def _track_secret_copies(seg: list[str], copied: set[str]) -> None:
+    """Remember simple assignments to secret values within this shell command."""
+    command = _command_at(seg)
+    if command is None:
+        assignments = seg
+    else:
+        cmd, args, _ = command
+        if cmd in {"unset", "read"}:
+            copied.difference_update(_strip_quotes(arg) for arg in args if not arg.startswith("-"))
+        # A prefix assignment belongs to this invocation only. Declarations
+        # and assignment-only statements can affect later commands.
+        assignments = args if cmd in {"export", "declare", "typeset", "readonly"} else []
+    for token in assignments:
+        clean = _strip_quotes(token)
+        if not _is_assignment(clean):
+            continue
+        name, value = clean.split("=", 1)
+        if _expanded_secret_var(value, copied):
+            copied.add(name)
+        else:
+            copied.discard(name)
+
+
+def _danger_reason(pipeline: list[list[str]], copied: set[str]) -> str | None:
     if not pipeline or _has_override(pipeline[0]):
         return None
 
@@ -610,15 +665,95 @@ def _danger_reason(pipeline: list[list[str]]) -> str | None:
         reason = _worker_env_reason(segment)
         if reason:
             return reason
-        reason = _display_file_reason(pipeline, i)
+        reason = _display_file_reason(pipeline, i, copied)
         if reason:
             return reason
         reason = _grep_reason(pipeline, i)
         if reason:
             return reason
-        reason = _echo_secret_reason(segment)
+        reason = _echo_secret_reason(segment, copied)
         if reason:
             return reason
+        _track_secret_copies(segment, copied)
+    return None
+
+
+def _substitution_bodies(command: str) -> list[str]:
+    """Extract executable command substitutions, respecting shell quotes."""
+    bodies: list[str] = []
+    quote = ""
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if char == "\\" and quote != "'":
+            index += 2
+            continue
+        if char == "'" and quote != '"':
+            quote = "" if quote else "'"
+        elif char == '"' and quote != "'":
+            quote = "" if quote else '"'
+        elif quote != "'" and char == "`":
+            end = index + 1
+            while end < len(command) and command[end] != "`":
+                end += 2 if command[end] == "\\" else 1
+            if end < len(command):
+                bodies.append(command[index + 1 : end])
+                index = end
+        elif quote != "'" and command.startswith("$(", index) and not command.startswith("$((", index):
+            start = index + 2
+            depth = 1
+            inner_quote = ""
+            end = start
+            while end < len(command) and depth:
+                current = command[end]
+                if current == "\\" and inner_quote != "'":
+                    end += 2
+                    continue
+                if current == "'" and inner_quote != '"':
+                    inner_quote = "" if inner_quote else "'"
+                elif current == '"' and inner_quote != "'":
+                    inner_quote = "" if inner_quote else '"'
+                elif not inner_quote:
+                    if current == "(":
+                        depth += 1
+                    elif current == ")":
+                        depth -= 1
+                end += 1
+            if not depth:
+                bodies.append(command[start : end - 1])
+                index = end - 1
+        index += 1
+    return bodies
+
+
+def _scan_command(command: str, copied: set[str], *, depth: int = 0) -> str | None:
+    if depth >= 8:
+        return None
+    executable = _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command)))
+    # Scan the complete text first: shlex may expose a separator inside a
+    # substitution as a top-level token, but Bash executes its whole body.
+    for body in _substitution_bodies(executable):
+        reason = _scan_command(body, set(copied), depth=depth + 1)
+        if reason:
+            return reason
+    for pipeline in _pipelines(executable):
+        for segment in pipeline:
+            for body in _substitution_bodies(" ".join(segment)):
+                reason = _scan_command(body, set(copied), depth=depth + 1)
+                if reason:
+                    return reason
+        reason = _danger_reason(pipeline, copied)
+        if reason:
+            return reason
+        for segment in pipeline:
+            found = _command_at(segment)
+            if found is None or found[0] != "eval":
+                continue
+            args = found[1]
+            if args:
+                reason = _scan_command(" ".join(_strip_quotes(arg) for arg in args), set(copied), depth=depth + 1)
+                if reason:
+                    return reason
     return None
 
 
@@ -643,11 +778,10 @@ def main() -> int:
     if not command:
         return 0
 
-    for pipeline in _pipelines(command):
-        reason = _danger_reason(pipeline)
-        if reason:
-            sys.stderr.write(_block_msg(reason))
-            return 2
+    reason = _scan_command(command, set())
+    if reason:
+        sys.stderr.write(_block_msg(reason))
+        return 2
     return 0
 
 

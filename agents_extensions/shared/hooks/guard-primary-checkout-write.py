@@ -582,6 +582,43 @@ def _mask_quoted_literals(command: str) -> str:
     return "".join(out)
 
 
+def _normalize_backtick_substitutions(command: str) -> str:
+    """Expose executable backtick bodies to the existing ``$(...)`` parser.
+
+    Backticks in single quotes or escaped with a backslash are literal. A
+    substitution inside double quotes still executes, so temporarily close
+    the quote around its body to let shlex return its command operators.
+    """
+    out: list[str] = []
+    quote = ""
+    index = 0
+    while index < len(command):
+        char = command[index]
+        if char == "\\" and quote != "'" and index + 1 < len(command):
+            out.append(command[index : index + 2])
+            index += 2
+            continue
+        if char == "'" and quote != '"':
+            quote = "" if quote else "'"
+        elif char == '"' and quote != "'":
+            quote = "" if quote else '"'
+        elif char == "`" and quote != "'":
+            end = index + 1
+            while end < len(command) and command[end] != "`":
+                end += 2 if command[end] == "\\" else 1
+            if end < len(command):
+                if quote == '"':
+                    out.append('"')
+                out.extend(("$(", command[index + 1 : end], ")"))
+                if quote == '"':
+                    out.append('"')
+                index = end + 1
+                continue
+        out.append(char)
+        index += 1
+    return "".join(out)
+
+
 def _split_operator_run(token: str) -> list[str]:
     """Split a pure-punctuation token into shell operators (``);`` → ``)``, ``;``)."""
     if token in _SHELL_OPERATORS or not token or not set(token) <= _PUNCTUATION:
@@ -609,7 +646,9 @@ def _tokenize(command: str) -> list[str]:
     try:
         lexer = shlex.shlex(
             _mask_quoted_literals(
-                _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command)))
+                _normalize_backtick_substitutions(
+                    _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command)))
+                )
             ),
             posix=True,
             punctuation_chars="();<>|&\n",

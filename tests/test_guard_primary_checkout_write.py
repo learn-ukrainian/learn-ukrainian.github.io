@@ -282,6 +282,37 @@ def test_read_only_bash_allowed(repo: Path):
         assert result.returncode == 0, f"{command!r}: {result.stderr}"
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "`tee AGENTS.md`",
+        'echo "`tee AGENTS.md`"',
+        "echo `echo ok; tee AGENTS.md`",
+    ],
+)
+def test_issue_8896_executable_backtick_write_blocked(repo: Path, command: str):
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+    assert "AGENTS.md" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status",
+        "ls -la",
+        "echo ok > /tmp/x",
+        "cat <<EOF\nordinary text\nEOF",
+        "cat <<-EOF\n\t# tee AGENTS.md\n\tEOF",
+        "echo '`tee AGENTS.md`'",
+        "echo \\`tee AGENTS.md\\`",
+    ],
+)
+def test_issue_8896_ordinary_commands_allow_primary(repo: Path, command: str):
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
 def test_read_only_bash_redirect_is_allowed_when_jsonschema_is_masked(repo: Path, tmp_path: Path) -> None:
     """Read-only commands do not depend on optional Python packages."""
     poison = tmp_path / "poison"
