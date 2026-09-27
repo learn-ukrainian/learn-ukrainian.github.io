@@ -5844,6 +5844,19 @@ describe('LexiconPractice', () => {
       expect(screen.queryByTestId('practice-choice-feedback')).not.toBeInTheDocument();
     });
 
+    test('synonym mode: shows the ULIF sense the pair is admitted in (#8714)', () => {
+      const deck = synonymDeck();
+      deck.synonym = (deck.synonym ?? []).map((item) => ({
+        ...item,
+        source: 'ulif-synonyms',
+        sense: 'будівля, призначена для житла',
+      }));
+      render(<LexiconPractice initialDeck={deck} autoStart initialMode="synonym" />);
+      expect(screen.getByTestId('practice-synonym')).toHaveTextContent(
+        'Оберіть синонім до «будинок» — у значенні «будівля, призначена для житла»',
+      );
+    });
+
     test('synonym mode: correct pick affirms the prompt ↔ answer pair (#6816)', async () => {
       const user = userEvent.setup();
       render(<LexiconPractice initialDeck={synonymDeck()} autoStart initialMode="synonym" />);

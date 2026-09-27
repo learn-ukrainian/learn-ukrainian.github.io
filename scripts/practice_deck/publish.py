@@ -29,6 +29,7 @@ DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.pointe
 DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.json.gz"
 DEFAULT_ATLAS_DB = ROOT / "data" / "atlas.db"
 DEFAULT_VESUM_DB = ROOT / "data" / "vesum.db"
+DEFAULT_ULIF_DB = ROOT / "data" / "sources.db"
 DEFAULT_CLOZE_SOURCES = ROOT / "site" / "src" / "data" / "lexicon-practice-cloze-sources.json"
 DEFAULT_SENTENCE_INVENTORY = ROOT / "site" / "src" / "data" / "lexicon-sentence-inventory.json"
 DEFAULT_HERITAGE_PAIRS = REGISTRY_ROOT / "lexicon" / "heritage_pairs.yaml"
@@ -96,6 +97,7 @@ def expected_deck_version(
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
     sentence_inventory_path: Path | None = DEFAULT_SENTENCE_INVENTORY,
     curated_membership_path: Path | None = None,
+    ulif_db_path: Path | None = DEFAULT_ULIF_DB,
 ) -> str:
     if not atlas_db_path.exists():
         raise PracticeDeckPublishError(
@@ -113,6 +115,8 @@ def expected_deck_version(
             read_paronym_pairs,
             read_sentence_inventory,
             read_synonym_verdicts,
+            read_ulif_synonym_groups,
+            ulif_synonym_evidence_payload,
         )
         from scripts.lexicon.curated_membership import apply_membership, read_membership
         from scripts.practice_deck.io import compute_deck_version
@@ -138,6 +142,7 @@ def expected_deck_version(
             SCHEMA_VERSION,
             antonym_pairs=antonym_pairs,
             homonym_pairs=homonym_pairs,
+            synonym_evidence=ulif_synonym_evidence_payload(read_ulif_synonym_groups(ulif_db_path, synonym_verdicts)),
         )
     except Exception as exc:
         raise PracticeDeckPublishError(
@@ -504,6 +509,7 @@ def publish_practice_deck(
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
     sentence_inventory_path: Path | None = DEFAULT_SENTENCE_INVENTORY,
     curated_membership_path: Path | None = None,
+    ulif_db_path: Path | None = DEFAULT_ULIF_DB,
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
     dry_run: bool = False,
@@ -526,6 +532,7 @@ def publish_practice_deck(
         cloze_sources_path=cloze_sources_path,
         sentence_inventory_path=sentence_inventory_path,
         curated_membership_path=curated_membership_path,
+        ulif_db_path=ulif_db_path,
     )
     if deck_version != expected_version:
         raise PracticeDeckPublishError(
@@ -633,6 +640,12 @@ def main() -> int:
     parser.add_argument(
         "--repo", default=DEFAULT_REPO, help="GitHub repository in OWNER/REPO form (default: %(default)s)."
     )
+    parser.add_argument(
+        "--ulif-db",
+        type=Path,
+        default=DEFAULT_ULIF_DB,
+        help="sources.db with the ULIF synonym groups the deck was built from (default: %(default)s).",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Build metadata without uploading/writing pointer")
     args = parser.parse_args()
     pointer = publish_practice_deck(
@@ -649,6 +662,7 @@ def main() -> int:
         curated_membership_path=args.curated_membership,
         cloze_sources_path=args.cloze_sources,
         sentence_inventory_path=args.sentence_inventory,
+        ulif_db_path=args.ulif_db,
         release_tag=args.release_tag,
         repo=args.repo,
         dry_run=args.dry_run,

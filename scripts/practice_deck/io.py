@@ -37,7 +37,7 @@ REQUIRED_POINTER_KEYS = (
 DOWNLOAD_ATTEMPTS = 3
 FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
-PRACTICE_DECK_BUILDER_VERSION = 26  # 25→26: VESUM imperative extraction and variant-aware distractors (#8158)
+PRACTICE_DECK_BUILDER_VERSION = 27  # 26→27: synonym cards admitted by ULIF synonym groups only (#8714)
 STALE_POINTER_HINT = (
     "If your branch predates the latest practice deck publish, its committed pointer is stale — "
     "update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). "
@@ -94,6 +94,7 @@ def compute_deck_version(
     antonym_pairs: list[dict[str, Any]] | None = None,
     homonym_pairs: list[dict[str, Any]] | None = None,
     creation_review: dict[str, Any] | None = None,
+    synonym_evidence: dict[str, Any] | None = None,
 ) -> str:
     if creation_review is None:
         from scripts.practice.creation_review import CreationReview
@@ -109,6 +110,7 @@ def compute_deck_version(
         "antonym_pairs": antonym_pairs or [],
         "homonym_pairs": homonym_pairs or [],
         "synonym_verdicts": synonym_verdicts or {},
+        "synonym_evidence": synonym_evidence or {},
         "cloze_sources": cloze_sources or [],
     }
     canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))

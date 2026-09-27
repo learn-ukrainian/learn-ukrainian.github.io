@@ -1628,6 +1628,8 @@ function drillChoicePrompt(
   }
   if (selection.synonym) {
     const isAntonym = selection.synonym.polarity === 'antonym';
+    // #8714: a ULIF-admitted pair is a synonym in one dictionary sense; show it.
+    const sense = selection.synonym.sense;
     return {
       promptUk: isAntonym
         ? `Оберіть антонім до «${selection.synonym.prompt}»`
@@ -1635,8 +1637,8 @@ function drillChoicePrompt(
       promptEn: isAntonym
         ? `Choose an antonym for «${selection.synonym.prompt}»`
         : `Choose a synonym for «${selection.synonym.prompt}»`,
-      subtitleUk: 'Оберіть правильну відповідь',
-      subtitleEn: 'Select the correct answer',
+      subtitleUk: sense ? `у значенні «${sense}»` : 'Оберіть правильну відповідь',
+      subtitleEn: sense ? `in the sense «${sense}»` : 'Select the correct answer',
     };
   }
   return null;

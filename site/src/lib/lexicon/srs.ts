@@ -253,7 +253,11 @@ export interface PracticeSynonymItem {
   prompt: string;
   answer: string;
   options: { label: string; lemmaId: string; kind: 'answer' | 'distractor' | string }[];
+  /** Evidence that admitted the pair: 'ulif-synonyms' or the antonym verdict's dictionary (#8714). */
   source: string;
+  /** ULIF sense note of the group's dominant: the sense in which the two words are synonyms. */
+  sense?: string;
+  evidence?: { source: string; groupId: string; dominant: string; url: string };
 }
 
 export interface PracticeHeritageOption {

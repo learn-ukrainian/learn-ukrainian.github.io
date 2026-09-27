@@ -1986,11 +1986,6 @@ approved:
   polarity: synonym
   sources:
   - synonyms
-- a: вибирати
-  b: рити
-  polarity: synonym
-  sources:
-  - synonyms
 - a: вибрати
   b: висипати
   polarity: synonym
@@ -2178,12 +2173,6 @@ approved:
   b: категорія
   polarity: synonym
   sources:
-  - synonyms_karavansky
-- a: вид
-  b: обличчя
-  polarity: synonym
-  sources:
-  - synonyms
   - synonyms_karavansky
 - a: вид
   b: пейзаж
@@ -2974,11 +2963,6 @@ approved:
   - synonyms
 - a: вкусити
   b: прасувати
-  polarity: synonym
-  sources:
-  - synonyms
-- a: вкусити
-  b: рубати
   polarity: synonym
   sources:
   - synonyms
@@ -3790,11 +3774,6 @@ approved:
   polarity: synonym
   sources:
   - synonyms
-- a: відновлюватися
-  b: повертати
-  polarity: synonym
-  sources:
-  - synonyms
 - a: відносини
   b: ставлення
   polarity: synonym
@@ -4420,11 +4399,6 @@ approved:
   - synonyms
 - a: глагол
   b: мовлення
-  polarity: synonym
-  sources:
-  - synonyms
-- a: глагол
-  b: річ
   polarity: synonym
   sources:
   - synonyms
@@ -5062,12 +5036,6 @@ approved:
   polarity: synonym
   sources:
   - miyklas.com.ua
-- a: далеко
-  b: набагато
-  polarity: synonym
-  sources:
-  - synonyms
-  - synonyms_karavansky
 - a: далекоглядний
   b: передбачливий
   polarity: synonym
@@ -5249,11 +5217,6 @@ approved:
   - wiktionary
 - a: депресія
   b: занепад
-  polarity: synonym
-  sources:
-  - synonyms
-- a: депресія
-  b: розклад
   polarity: synonym
   sources:
   - synonyms
@@ -5922,11 +5885,6 @@ approved:
   polarity: synonym
   sources:
   - miyklas.com.ua
-- a: дощити
-  b: падати
-  polarity: synonym
-  sources:
-  - synonyms
 - a: дощити
   b: сипати
   polarity: synonym
@@ -8618,11 +8576,6 @@ approved:
   polarity: synonym
   sources:
   - miyklas.com.ua
-- a: квартал
-  b: чверть
-  polarity: synonym
-  sources:
-  - synonyms_karavansky
 - a: квартира
   b: помешкання
   polarity: synonym
@@ -8945,11 +8898,6 @@ approved:
   sources:
   - synonyms_karavansky
 - a: копнути
-  b: сунути
-  polarity: synonym
-  sources:
-  - synonyms
-- a: копнути
   b: штовхнути
   polarity: synonym
   sources:
@@ -9044,11 +8992,6 @@ approved:
   polarity: synonym
   sources:
   - miyklas.com.ua
-- a: кравець
-  b: кравчиня
-  polarity: synonym
-  sources:
-  - synonyms_karavansky
 - a: крадькома
   b: тайкома
   polarity: synonym
@@ -9411,16 +9354,6 @@ approved:
   a2Exception: true
   curator: gemini/8144-densify-practice-pairs
   a2Rationale: Core grammatical tense antonyms (future tense / past tense); fundamental A2 grammar terminology.
-- a: майстер
-  b: митець
-  polarity: synonym
-  sources:
-  - synonyms
-  - synonyms_karavansky
-  - wiktionary
-  a2Exception: true
-  curator: gemini/8144-densify-practice-pairs
-  a2Rationale: Creative profession nouns (master, craftsman / artist); both A2 in PULS; common cultural vocabulary.
 - a: майстер
   b: фахівець
   polarity: synonym
@@ -10265,15 +10198,6 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
-- a: нести
-  b: носити
-  polarity: synonym
-  sources:
-  - synonyms
-  - synonyms_karavansky
-  a2Exception: true
-  curator: gemini/8144-densify-practice-pairs
-  a2Rationale: Core motion verbs of carrying (carry / bear, wear); both A2 in PULS; fundamental everyday verbs.
 - a: нестися
   b: їхати
   polarity: synonym
@@ -10923,14 +10847,6 @@ approved:
   polarity: synonym
   sources:
   - miyklas.com.ua
-- a: переказ
-  b: розповідь
-  polarity: synonym
-  sources:
-  - synonyms_karavansky
-  a2Exception: true
-  curator: gemini/8144-densify-practice-pairs
-  a2Rationale: Core educational/storytelling nouns (retelling / story, tale); both A2 in PULS; staple of A2 reading comprehension lessons.
 - a: перелік
   b: список
   polarity: synonym
@@ -11892,15 +11808,6 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
-- a: список
-  b: індекс
-  polarity: synonym
-  sources:
-  - synonyms
-  - synonyms_karavansky
-  a2Exception: true
-  curator: gemini/8144-densify-practice-pairs
-  a2Rationale: Organizational reference nouns (list / index, directory); both A2 in PULS; standard textual vocabulary.
 - a: сповидний
   b: фіктивний
   polarity: synonym
@@ -12155,11 +12062,6 @@ approved:
   - miyklas.com.ua
 - a: тривати
   b: тягтися
-  polarity: synonym
-  sources:
-  - miyklas.com.ua
-- a: трохи
-  b: тільки
   polarity: synonym
   sources:
   - miyklas.com.ua
@@ -13127,6 +13029,11 @@ rejected:
   b: забувати
   polarity: synonym
   reason: вибачати = forgive; забувати = forget — тематично суміжні, але не синонімічні
+- a: вибирати
+  b: рити
+  polarity: synonym
+  reason: 'Quoted in #8714 as a wrong synonym card: not interchangeable for learners in the
+    sense a card displays.'
 - a: вибігати
   b: вилітати
   polarity: synonym
@@ -13142,6 +13049,11 @@ rejected:
   polarity: synonym
   reason: вид¹ — обличчя (основне значення); краєвид — пейзаж/ландшафт; хоча вид може
     означати «те, що видно», основне значення не
+- a: вид
+  b: обличчя
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: видовище
   b: вистава
   polarity: synonym
@@ -13277,6 +13189,11 @@ rejected:
   polarity: synonym
   reason: 'вкрай (СУМ-11: «Дуже, надзвичайно; до краю» / «Повно, вщерть») — абсолютна
     крайність; набагато — порівняльний ступінь. Р'
+- a: вкусити
+  b: рубати
+  polarity: synonym
+  reason: 'Quoted in #8714 as a wrong synonym card: not interchangeable for learners in the
+    sense a card displays.'
 - a: вночі
   b: опівночі
   polarity: synonym
@@ -13435,6 +13352,11 @@ rejected:
   polarity: synonym
   reason: Відмова — негативна відповідь; сватання — обряд сватання. Жодного спільного
     значення.
+- a: відновлюватися
+  b: повертати
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: відповідальність
   b: відповідь
   polarity: synonym
@@ -13516,6 +13438,11 @@ rejected:
   polarity: synonym
   reason: гарний = вродливий/добрий; ладен = готовий/згоден/добрий (діалектне); різні
     основні значення
+- a: глагол
+  b: річ
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: гніздо
   b: кут
   polarity: synonym
@@ -13628,6 +13555,11 @@ rejected:
   polarity: synonym
   reason: далеко — просторовий прислівник; значно — прислівник міри/ступеня; різні
     семантичні розряди
+- a: далеко
+  b: набагато
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: дата
   b: день
   polarity: synonym
@@ -13647,6 +13579,11 @@ rejected:
   polarity: synonym
   reason: Деколи = іноді/часом (нейтральна частота), зрідка = дуже рідко (нижча частота);
     різна частотність.
+- a: депресія
+  b: розклад
+  polarity: synonym
+  reason: 'Quoted in #8714 as a wrong synonym card: not interchangeable for learners in the
+    sense a card displays.'
 - a: дерун
   b: млинець
   polarity: synonym
@@ -13795,6 +13732,11 @@ rejected:
   b: злива
   polarity: synonym
   reason: Злива — «дуже сильний дощ»; гіперо-гіпонімічні відносини, не синоніми.
+- a: дощити
+  b: падати
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: друг
   b: людина
   polarity: synonym
@@ -14284,6 +14226,11 @@ rejected:
   polarity: synonym
   reason: кутя = обрядова каша (різдвяна страва); каша = загальна назва страви з круп;
     гіперо-гіпонімічні відношення
+- a: квартал
+  b: чверть
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: квашений
   b: кислий
   polarity: synonym
@@ -14380,6 +14327,11 @@ rejected:
   polarity: synonym
   reason: концепція — система поглядів на конкретне явище; світогляд — загальна система
     поглядів на світ; різний рівень узагальнен
+- a: копнути
+  b: сунути
+  polarity: synonym
+  reason: 'Quoted in #8714 as a wrong synonym card: not interchangeable for learners in the
+    sense a card displays.'
 - a: корабель
   b: човен
   polarity: synonym
@@ -14410,6 +14362,11 @@ rejected:
   polarity: synonym
   reason: коровай — весільний обрядовий хліб (специфічний тип); хліб — загальний харчовий
     продукт; гіпонімія
+- a: кравець
+  b: кравчиня
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: крапка
   b: крапля
   polarity: synonym
@@ -14581,6 +14538,11 @@ rejected:
   polarity: synonym
   reason: Майже — 'близько до повноти'; трохи — 'небагато, до деякої міри'. Різні
     значення.
+- a: майстер
+  b: митець
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: майстер
   b: перукар
   polarity: synonym
@@ -14815,6 +14777,11 @@ rejected:
   polarity: synonym
   reason: 'неприємність = прикра подія/ситуація; причина = те, що породжує інше явище.
     Різні категорії: результат vs. причина.'
+- a: нести
+  b: носити
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: новий
   b: інший
   polarity: synonym
@@ -14961,6 +14928,11 @@ rejected:
   polarity: synonym
   reason: Передній = попереду; центральний = в центрі, основний — різні просторові
     та функціональні характеристики
+- a: переказ
+  b: розповідь
+  polarity: synonym
+  reason: 'Rejected by the #8714 Gemini language review (review-8714-lang, 2026-09-27): not
+    interchangeable for learners in the sense a card displays.'
 - a: переказ
   b: чутка
   polarity: synonym
@@ -15453,6 +15425,11 @@ rejected:
   polarity: synonym
   reason: 'Не синоніми: спина — частина тіла (зовнішня), хребет — кісткова структура
     всередині. Анатомічно пов''язані, але не взаємо'
+- a: список
+  b: індекс
+  polarity: synonym
+  reason: 'Quoted in #8714 as a wrong synonym card: not interchangeable for learners in the
+    sense a card displays.'
 - a: справедливий
   b: чесний
   polarity: synonym
@@ -15555,6 +15532,11 @@ rejected:
   b: іспит
   polarity: synonym
   reason: тренування (training/practice) і іспит (exam) — різні етапи навчання
+- a: трохи
+  b: тільки
+  polarity: synonym
+  reason: 'Quoted in #8714 as a wrong synonym card: not interchangeable for learners in the
+    sense a card displays.'
 - a: узвар
   b: юшка
   polarity: synonym
