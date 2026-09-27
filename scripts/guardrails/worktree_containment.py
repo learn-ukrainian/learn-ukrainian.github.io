@@ -93,6 +93,7 @@ PROTECTED_BRANCHES: frozenset[str] = frozenset({"main", "master"})
 # canonical list and the production sanitizer both live in ``git_context``.
 _GIT_ENV_DENYLIST = frozenset(GIT_REDIRECT_ENV_KEYS)
 
+
 @dataclass(frozen=True)
 class WriteDecision:
     """Outcome of a write-guard evaluation.
@@ -160,6 +161,7 @@ def _git_dir_for(path: Path) -> Path:
 # ---------------------------------------------------------------------------
 # canonicalization + root resolution
 # ---------------------------------------------------------------------------
+
 
 def canonicalize(path: Path | str) -> Path:
     """Resolve ``path`` to a real absolute path.
@@ -254,7 +256,7 @@ def _fs_main_root(start_dir: Path) -> Path | None:
             prefix = "gitdir:"
             if not first.startswith(prefix):
                 continue
-            git_dir = Path(first[len(prefix):].strip())
+            git_dir = Path(first[len(prefix) :].strip())
             if not git_dir.is_absolute():
                 git_dir = candidate / git_dir
             git_dir = canonicalize(git_dir)
@@ -276,7 +278,7 @@ def registered_worktrees(main_root: Path) -> list[Path]:
     roots: list[Path] = []
     for line in proc.stdout.splitlines():
         if line.startswith("worktree "):
-            roots.append(canonicalize(Path(line[len("worktree "):].strip())))
+            roots.append(canonicalize(Path(line[len("worktree ") :].strip())))
     return roots
 
 
@@ -284,9 +286,45 @@ def registered_worktrees(main_root: Path) -> list[Path]:
 # containment classification
 # ---------------------------------------------------------------------------
 
+
 def _is_within(path: Path, base: Path) -> bool:
     """True if ``path`` is ``base`` or nested under it (both pre-canonicalized)."""
     return path == base or path.is_relative_to(base)
+
+
+def _classify_resolved_path(target: Path, anchor: Path) -> tuple[PathClass, Path | None]:
+    """Classify a resolved target and retain the root for this decision only."""
+    main_root = _resolve_main_root_or_none(anchor)
+    if main_root is None:
+        # The anchor is not in any repo (e.g. classifying a bare tmp path with
+        # a non-repo cwd). Fall back to resolving from the target itself.
+        main_root = _resolve_main_root_or_none(target)
+        if main_root is None:
+            return "outside_repo", None
+    worktrees_dir = main_root / ".worktrees"
+
+    # The ``.worktrees/**`` subtree is classified structurally so a dispatch
+    # directory an agent is about to create (not yet a registered worktree)
+    # still reads as an allowed dispatch location.
+    if _is_within(target, worktrees_dir):
+        rel = target.relative_to(worktrees_dir)
+        if rel.parts and rel.parts[0] == "dispatch":
+            return "dispatch_worktree", main_root
+        return "other_worktree", main_root
+
+    # Any other registered worktree sharing this .git store — e.g. an
+    # externally-located worktree under ~/.codex/worktrees/... — is isolated
+    # from the primary checkout and therefore an allowed write location.
+    for worktree in registered_worktrees(main_root):
+        if worktree == main_root:
+            continue
+        if _is_within(target, worktree):
+            return "other_worktree", main_root
+
+    if _is_within(target, main_root):
+        return "primary_checkout", main_root
+
+    return "outside_repo", main_root
 
 
 def classify_repo_path(path: Path | str, cwd: Path | str | None = None) -> PathClass:
@@ -298,37 +336,8 @@ def classify_repo_path(path: Path | str, cwd: Path | str | None = None) -> PathC
     """
     target = absolute_path(path, cwd=cwd)
     anchor = canonicalize(cwd) if cwd is not None else Path.cwd().resolve()
-    main_root = _resolve_main_root_or_none(anchor)
-    if main_root is None:
-        # The anchor is not in any repo (e.g. classifying a bare tmp path with
-        # a non-repo cwd). Fall back to resolving from the target itself.
-        main_root = _resolve_main_root_or_none(target)
-        if main_root is None:
-            return "outside_repo"
-    worktrees_dir = main_root / ".worktrees"
-
-    # The ``.worktrees/**`` subtree is classified structurally so a dispatch
-    # directory an agent is about to create (not yet a registered worktree)
-    # still reads as an allowed dispatch location.
-    if _is_within(target, worktrees_dir):
-        rel = target.relative_to(worktrees_dir)
-        if rel.parts and rel.parts[0] == "dispatch":
-            return "dispatch_worktree"
-        return "other_worktree"
-
-    # Any other registered worktree sharing this .git store — e.g. an
-    # externally-located worktree under ~/.codex/worktrees/... — is isolated
-    # from the primary checkout and therefore an allowed write location.
-    for worktree in registered_worktrees(main_root):
-        if worktree == main_root:
-            continue
-        if _is_within(target, worktree):
-            return "other_worktree"
-
-    if _is_within(target, main_root):
-        return "primary_checkout"
-
-    return "outside_repo"
+    path_class, _main_root = _classify_resolved_path(target, anchor)
+    return path_class
 
 
 def is_primary_checkout(path_or_cwd: Path | str | None = None) -> bool:
@@ -346,6 +355,7 @@ def is_dispatch_worktree(path_or_cwd: Path | str | None = None) -> bool:
 # ---------------------------------------------------------------------------
 # tracked / ignored plumbing
 # ---------------------------------------------------------------------------
+
 
 def _relpath_in_root(path: Path, main_root: Path) -> str | None:
     """``path`` expressed relative to ``main_root``, or None if not contained.
@@ -418,11 +428,13 @@ def _parse_status_porcelain_z(stdout: str) -> list[dict[str, str]]:
             continue
         xy = raw[:2]
         path = raw[3:] if len(raw) > 3 else ""
-        entries.append({
-            "xy": xy,
-            "path": path,
-            "kind": "untracked" if xy == "??" else "tracked",
-        })
+        entries.append(
+            {
+                "xy": xy,
+                "path": path,
+                "kind": "untracked" if xy == "??" else "tracked",
+            }
+        )
         if xy[:1] in {"R", "C"} or xy[1:2] in {"R", "C"}:
             index += 1
     return entries
@@ -489,8 +501,7 @@ def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
     if proc.returncode != 0:
         detail = proc.stderr.strip() or proc.stdout.strip() or "git status failed"
         raise RuntimeError(
-            f"could not inspect primary checkout dirty state "
-            f"(cwd={main_root}, command={' '.join(command)}): {detail}"
+            f"could not inspect primary checkout dirty state (cwd={main_root}, command={' '.join(command)}): {detail}"
         )
 
     entries = _parse_status_porcelain_z(proc.stdout or "")
@@ -530,7 +541,9 @@ def evaluate_write(path: Path | str, cwd: Path | str | None = None) -> WriteDeci
     files inside the primary checkout — both would dirty the protected tree.
     Gitignored local/runtime state inside the primary checkout is allowed.
     """
-    path_class = classify_repo_path(path, cwd=cwd)
+    target = absolute_path(path, cwd=cwd)
+    anchor = canonicalize(cwd) if cwd is not None else Path.cwd().resolve()
+    path_class, main_root = _classify_resolved_path(target, anchor)
 
     if path_class != "primary_checkout":
         # Worktrees (dispatch or otherwise) and out-of-repo paths are isolated
@@ -539,9 +552,8 @@ def evaluate_write(path: Path | str, cwd: Path | str | None = None) -> WriteDeci
 
     # class == primary_checkout guarantees the target resolved under a real
     # primary root; resolve the write target once against cwd (#5404).
-    target = absolute_path(path, cwd=cwd)
-    anchor = canonicalize(cwd) if cwd is not None else target
-    main_root = _resolve_main_root_or_none(anchor) or _resolve_main_root_or_none(target)
+    # The classification already resolved the root during this decision. Do
+    # not cache it across calls: worktree registration can change at any time.
     if is_tracked(target, main_root):
         return WriteDecision(
             allowed=False,

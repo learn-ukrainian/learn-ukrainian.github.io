@@ -19,7 +19,7 @@ from scripts.review import fixloop, second_seat
 from scripts.review import record as record_module
 from tests.review.test_record import ITEM, LEVEL, PROSE, SLUG, World, _run_together, finding, unsupported
 
-pytestmark = pytest.mark.reads_content
+pytestmark = [pytest.mark.reads_content, pytest.mark.usefixtures("without_disk_sync")]
 
 REAL_PARAMS = db.load_parameters()
 PARAMS = {**REAL_PARAMS, "second_seat_divisor": 10**12}  # no lesson of the fixture module is sampled
@@ -27,9 +27,9 @@ SAMPLED = {**REAL_PARAMS, "second_seat_divisor": 10}  # the real rule: lesson 3 
 
 
 @pytest.fixture
-def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> World:
+def world(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, review_world_template: Path) -> World:
     monkeypatch.setattr(db, "load_parameters", lambda *a, **kw: PARAMS)
-    return World(tmp_path, monkeypatch)
+    return World(tmp_path, monkeypatch, seed=review_world_template)
 
 
 # --- layer assignment from provenance ---------------------------------------------------------

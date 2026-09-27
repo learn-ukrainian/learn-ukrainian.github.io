@@ -75,7 +75,20 @@ def write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def init_repo(tmp_path: Path, *, bootstrap_sources: bool = False) -> tuple[Path, Path]:
+def init_repo(
+    tmp_path: Path, *, bootstrap_sources: bool = False, template: tuple[Path, Path] | None = None
+) -> tuple[Path, Path]:
+    if template is not None:
+        assert not bootstrap_sources
+        primary = tmp_path / "canonical"
+        replacement = tmp_path / "replacement"
+        shutil.copytree(template[0], primary)
+        shutil.copytree(template[1], replacement)
+        gitdir = primary / ".git/worktrees/replacement"
+        (replacement / ".git").write_text(f"gitdir: {gitdir}\n", encoding="utf-8")
+        (gitdir / "gitdir").write_text(f"{replacement / '.git'}\n", encoding="utf-8")
+        return primary, replacement
+
     primary = tmp_path / "canonical"
     replacement = tmp_path / "replacement"
     primary.mkdir(parents=True)
@@ -206,6 +219,11 @@ exec {sys.executable!r} "$@"
     shim.chmod(0o755)
     git(primary, "worktree", "add", "-b", "replacement", str(replacement), "HEAD")
     return primary, replacement
+
+
+@pytest.fixture(scope="module")
+def repo_template(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Path]:
+    return init_repo(tmp_path_factory.mktemp("restart-repo-template"))
 
 
 def handoff_command(primary: Path, *args: str) -> list[str | Path]:
@@ -652,8 +670,10 @@ def confirm_command(
     )
 
 
-def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(tmp_path: Path) -> None:
-    primary, _ = init_repo(tmp_path)
+def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(
+    tmp_path: Path, repo_template: tuple[Path, Path]
+) -> None:
+    primary, _ = init_repo(tmp_path, template=repo_template)
     packet = prepare(primary)
     assert_cleanup_locked(primary, packet)
     lease = load_lease(primary, packet)
@@ -771,8 +791,10 @@ def test_native_lifecycle_answers_exactly_ten_questions_and_unlocks_cleanup(tmp_
 
 
 @pytest.mark.parametrize("case", ["second-prepare", "wrong-rollover", "missing-thread-id", "stale", "corrupt"])
-def test_pre_confirmation_failures_leave_cleanup_locked(tmp_path: Path, case: str) -> None:
-    primary, _ = init_repo(tmp_path)
+def test_pre_confirmation_failures_leave_cleanup_locked(
+    tmp_path: Path, case: str, repo_template: tuple[Path, Path]
+) -> None:
+    primary, _ = init_repo(tmp_path, template=repo_template)
     packet = prepare(primary)
     state_path = primary / packet["state_file"]
 
@@ -850,8 +872,10 @@ def test_pre_confirmation_failures_leave_cleanup_locked(tmp_path: Path, case: st
 
 
 @pytest.mark.parametrize("case", ["nine-of-ten", "failed-canary"])
-def test_failed_replacement_proofs_leave_cleanup_locked(tmp_path: Path, case: str) -> None:
-    primary, _ = init_repo(tmp_path)
+def test_failed_replacement_proofs_leave_cleanup_locked(
+    tmp_path: Path, case: str, repo_template: tuple[Path, Path]
+) -> None:
+    primary, _ = init_repo(tmp_path, template=repo_template)
     packet = prepare(primary)
     resume(primary, packet)
     probe, verdict, _ = strict_evidence(primary, packet, wrong_answer=case == "nine-of-ten")
@@ -864,8 +888,10 @@ def test_failed_replacement_proofs_leave_cleanup_locked(tmp_path: Path, case: st
     assert_cleanup_locked(primary, packet)
 
 
-def test_parallel_lineages_have_distinct_paths_and_reject_cross_claims(tmp_path: Path) -> None:
-    primary, _ = init_repo(tmp_path)
+def test_parallel_lineages_have_distinct_paths_and_reject_cross_claims(
+    tmp_path: Path, repo_template: tuple[Path, Path]
+) -> None:
+    primary, _ = init_repo(tmp_path, template=repo_template)
     first = prepare(primary, active_thread_id=SOURCE_THREAD_ID)
     second = prepare(primary, active_thread_id=SECOND_SOURCE_THREAD_ID)
     assert first["lineage_id"] != second["lineage_id"]
@@ -893,8 +919,10 @@ def test_parallel_lineages_have_distinct_paths_and_reject_cross_claims(tmp_path:
     assert_cleanup_locked(primary, second)
 
 
-def test_monitor_outage_and_dirty_replacement_never_unlock_cleanup(tmp_path: Path) -> None:
-    primary, replacement = init_repo(tmp_path)
+def test_monitor_outage_and_dirty_replacement_never_unlock_cleanup(
+    tmp_path: Path, repo_template: tuple[Path, Path]
+) -> None:
+    primary, replacement = init_repo(tmp_path, template=repo_template)
     (replacement / ".venv").symlink_to(primary / ".venv", target_is_directory=True)
     prepared = run(
         checkout_handoff_command(
@@ -1467,7 +1495,8 @@ def test_provider_refusal_or_startup_failure_releases_only_its_exact_lease(tmp_p
         provider.write_text(
             '#!/bin/bash\n[ "$#" = 3 ] && [ "$1" = --approval-mode ] && [ "$2" = required ] || exit 99\n'
             'case "$3" in "Load agents_extensions/"*) ;; *) exit 99 ;; esac\n'
-            'echo approval-required >&2\nexit 23\n', encoding="utf-8",
+            "echo approval-required >&2\nexit 23\n",
+            encoding="utf-8",
         )
         command += ["--", "--approval-mode", "required"]
     else:
