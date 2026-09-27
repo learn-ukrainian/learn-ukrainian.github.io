@@ -4500,9 +4500,10 @@ def _sum11_definition_card(
             "id": "sum11-flagged" if risk > 0 else "sum11",
             "source": "СУМ-11",
             "source_pill": "СУМ-11",
-            "note": f"радянське видання · risk={risk}" if risk > 0 else "радянське видання · перевірено: чисто",
+            "note": f"радянське видання · лише контраст · risk={risk}",
             "definitions": [text],
             "sovietization_risk": risk,
+            "verification_authority": False,
         }
         if keywords:
             card["sovietization_keywords"] = keywords
@@ -4722,29 +4723,6 @@ def _dictionary_definition_rows(
                 )
             rows.append(row_payload)
 
-    sum11_fields = "definition, text"
-    if has_sum11_flags:
-        sum11_fields += ", sovietization_risk, sovietization_keywords"
-    try:
-        for variant in _split_lemma_variants(lemma):
-            for row in conn.execute(
-                f"SELECT {sum11_fields} FROM sum11 WHERE word = ? AND definition != ''",
-                (variant,),
-            ).fetchall():
-                risk, _keywords = _sum11_row_flags(row, has_flag_columns=has_sum11_flags)
-                text = _definition_body(row[0])
-                if text:
-                    rows.append(
-                        {
-                            "source": "СУМ-11",
-                            "text": text,
-                            "source_url": "",
-                            "sovietization_risk": risk,
-                        }
-                    )
-    except sqlite3.Error:
-        pass
-
     if include_grinchenko:
         try:
             for variant in _split_lemma_variants(lemma):
@@ -4955,9 +4933,8 @@ def _definition_antonym_relations_by_headword(
     return by_headword
 
 
-# СУМ-11 encodes lexical homonyms as consecutive, explicitly numbered heads in
-# one ``definition`` value (for example ``КОСА́¹ … КОСА́² …``), rather than as
-# separate database rows. The source data uses Unicode superscript digits.
+# Numbered dictionary headwords encode lexical homonyms consecutively in one
+# definition (for example ``КОСА́¹ … КОСА́² …``). They use superscript digits.
 # Keep this separate from ordinary sense numbers (``1.``, ``2.``): only a
 # superscript immediately following an all-capital headword is a homonym marker.
 _HOMONYM_SUPERSCRIPT_TO_INT = {
@@ -5090,7 +5067,7 @@ def _homonym_dictionary_rows(
     *,
     cache: dict[str, Any] | None = None,
 ) -> list[dict[str, str]]:
-    """Return full local СУМ rows; never fetch or mutate a slovnyk cache.
+    """Return full official СУМ-20 rows; never fetch or mutate a slovnyk cache.
 
     Unlike ordinary definition cards, a homonym set cannot be truncated at the
     first 900 characters: later numbered heads are part of the same evidence.
@@ -5110,17 +5087,6 @@ def _homonym_dictionary_rows(
             word=str(sum20.get("word") or lemma),
         )
         rows.append(payload)
-    try:
-        for variant in _split_lemma_variants(lemma):
-            for definition, text in conn.execute(
-                "SELECT definition, text FROM sum11 WHERE word = ? AND definition != ''",
-                (variant,),
-            ).fetchall():
-                raw = str(definition or text or "")
-                if raw:
-                    rows.append({"source": "СУМ-11", "text": raw, "source_url": ""})
-    except sqlite3.Error:
-        pass
     return rows
 
 
@@ -5132,7 +5098,7 @@ def _homonym_relations(
 ) -> list[dict[str, Any]]:
     """Emit numbered lexical-homonym siblings, gated by dictionary and VESUM.
 
-    СУМ numbering establishes the semantic set. VESUM does not encode those
+    СУМ-20 numbering establishes the semantic set. VESUM does not encode those
     homonym indices, so it can honestly gate only the shared surface as a valid
     lemma; an invented ``two VESUM lemmas`` threshold would reject the recorded
     sets for ``ключ``, ``лист``, and ``стан``.
@@ -5153,9 +5119,8 @@ def _homonym_relations(
         return []
 
     # An unnumbered Atlas entry names the lead (lowest-numbered) dictionary
-    # head. The relation lists only the other numbered lexical headwords. Use
-    # the source with the most complete numbered run: a stale СУМ-20 cache can
-    # contain only the first two heads where local СУМ-11 records all of them.
+    # head. The relation lists only the other numbered lexical headwords from
+    # the official СУМ-20 source when its numbered run is available.
     lead_number = min(int(member["homonym_no"]) for member in best_members)
     relations: list[dict[str, Any]] = []
     for member in best_members:
