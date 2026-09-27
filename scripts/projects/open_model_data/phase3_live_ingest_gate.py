@@ -39,30 +39,16 @@ REQUESTED_SOURCES = tuple(sorted(policy_v4.STAGED_IDS))
 EXPECTED_INPUT_HASHES = {
     "phase3_reboot_prompt_v3_sha256": "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebfe196e67dbd11d",
     "complete_source_policy_v4_sha256": policy_v4.EXPECTED_POLICY_SHA256,
-    "copied_database_rehearsal_receipt_sha256": (
-        "a50310fbb526bb68ebe93f6046af56778c860c7b7731a46488dd188465215183"
-    ),
-    "pr6631_drive_backup_receipt_sha256": (
-        "8792d76bca226c603ebc45c8315dcf197231c955aace7c2a78768943ce7f177b"
-    ),
-    "pr6631_drive_provider_verification_sha256": (
-        "10aa43b2c2722fc74c05f471363fe99f0f187a3c692d5f0367cd33b0dd5d4129"
-    ),
-    "pre_ingest_backup_receipt_sha256": (
-        "f97faa4273a1079b76e6f47ddaf188a383aa516f91df768d1909c6e38409023a"
-    ),
+    "copied_database_rehearsal_receipt_sha256": ("a50310fbb526bb68ebe93f6046af56778c860c7b7731a46488dd188465215183"),
+    "pr6631_drive_backup_receipt_sha256": ("8792d76bca226c603ebc45c8315dcf197231c955aace7c2a78768943ce7f177b"),
+    "pr6631_drive_provider_verification_sha256": ("10aa43b2c2722fc74c05f471363fe99f0f187a3c692d5f0367cd33b0dd5d4129"),
+    "pre_ingest_backup_receipt_sha256": ("f97faa4273a1079b76e6f47ddaf188a383aa516f91df768d1909c6e38409023a"),
     "pre_ingest_backup_provider_verification_sha256": (
         "4cf978220e05aaaf4b999422db48d1239a35fd2245a17e1f8fc4bb5b293621ef"
     ),
-    "compressed_pre_ingest_database_sha256": (
-        "c89d8d2898b7aa7470e8f3888245fb0d85fe74c075d27a9483da262ad3147a5f"
-    ),
-    "independent_cross_family_review_sha256": (
-        "e85a5d5a2681362765cdee879dc19bc7299ff329aa001d69f7ae5616bed55137"
-    ),
-    "pr6631_package_manifest_sha256": (
-        "1c818a2a54ac1dbf57f9ab21d4bb114b365d9ef5205499504f59b5a5967046a5"
-    ),
+    "compressed_pre_ingest_database_sha256": ("c89d8d2898b7aa7470e8f3888245fb0d85fe74c075d27a9483da262ad3147a5f"),
+    "independent_cross_family_review_sha256": ("e85a5d5a2681362765cdee879dc19bc7299ff329aa001d69f7ae5616bed55137"),
+    "pr6631_package_manifest_sha256": ("1c818a2a54ac1dbf57f9ab21d4bb114b365d9ef5205499504f59b5a5967046a5"),
 }
 
 COUNTS_BEFORE = {
@@ -223,17 +209,19 @@ def _validate_pr_provider_verification(receipt: Mapping[str, Any]) -> None:
     require(receipt.get("readback_sha256_verified") is True, "provider read-back hash was not verified")
 
 
-def _validate_pre_ingest_backup(
-    backup_receipt: Mapping[str, Any], provider_receipt: Mapping[str, Any]
-) -> None:
+def _validate_pre_ingest_backup(backup_receipt: Mapping[str, Any], provider_receipt: Mapping[str, Any]) -> None:
     artifact = backup_receipt.get("artifacts", {}).get("sources-c7068a4e4b9e.db.gz", {})
-    require(artifact.get("sha256") == EXPECTED_INPUT_HASHES["compressed_pre_ingest_database_sha256"], "backup gzip drift")
+    require(
+        artifact.get("sha256") == EXPECTED_INPUT_HASHES["compressed_pre_ingest_database_sha256"], "backup gzip drift"
+    )
     require(artifact.get("restored_database_sha256") == EXPECTED_LIVE_DB_SHA256, "backup restore hash drift")
     require(
         artifact.get("integrity") == "gzip_passed_and_restored_hash_matched",
         "backup gzip or restored hash was not verified",
     )
-    require(provider_receipt.get("status") == "preimage_recoverable_and_provider_uploaded", "preimage backup unverified")
+    require(
+        provider_receipt.get("status") == "preimage_recoverable_and_provider_uploaded", "preimage backup unverified"
+    )
     live = provider_receipt.get("live_database", {})
     require(live.get("sha256") == EXPECTED_LIVE_DB_SHA256, "pre-backup live database identity drift")
     require(
@@ -309,9 +297,7 @@ def build_gate(
             "per_source_fts_and_linkage_passed": True,
         },
         "pre_ingest_backup": {
-            "google_drive_relative_path": (
-                "Projects/learn-ukrainian-data/backups/phase3-6375/20260811T090325Z"
-            ),
+            "google_drive_relative_path": ("Projects/learn-ukrainian-data/backups/phase3-6375/20260811T090325Z"),
             "compressed_database_filename": "sources-c7068a4e4b9e.db.gz",
             "compressed_database_sha256": EXPECTED_INPUT_HASHES["compressed_pre_ingest_database_sha256"],
             "restored_database_sha256": EXPECTED_LIVE_DB_SHA256,
@@ -382,9 +368,7 @@ def load_gate(path: Path = DEFAULT_GATE_PATH) -> tuple[dict[str, Any], str]:
 
 def _foreign_key_evidence(conn: sqlite3.Connection) -> tuple[int, str]:
     failures = sorted(tuple(row) for row in conn.execute("PRAGMA foreign_key_check").fetchall())
-    digest = hashlib.sha256(
-        json.dumps(failures, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-    ).hexdigest()
+    digest = hashlib.sha256(json.dumps(failures, separators=(",", ":"), ensure_ascii=False).encode("utf-8")).hexdigest()
     return len(failures), digest
 
 

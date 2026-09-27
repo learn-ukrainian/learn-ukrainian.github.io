@@ -13,9 +13,13 @@ import argparse
 import hashlib
 import json
 import re
+import sys
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.storage.artifacts import write_artifact_set
 from scripts.storage.paths import artifact_set
@@ -51,6 +55,9 @@ SCHEMA_VERSION = "phase3_historical_protection_channels_v1"
 RECORD_SCHEMA_VERSION = "phase3_historical_protection_disposition_v1"
 SCHEMA_BINDING_NAME = "historical_protection_channels_schema"
 SCHEMA_SHA256 = "7dbf2a92fff8f78860ae5fd71768742bbd037ee7b86263c6f397afa3342e4d9d"
+# Provenance of the frozen contract, independently pinned to the source at
+# 55d0ed1515835e5f7b7d1d12b933ad4c46706e1f.  This is not the live source hash.
+FROZEN_GENERATOR_SHA256 = "9aab109f9dd676f28c5b834d4979fef4a3aff017381ec2b2bd2363bc00717632"
 UNKNOWN_DIMENSIONS = (
     "period_id",
     "region_id",
@@ -697,7 +704,10 @@ def build_contract() -> dict[str, Any]:
             "provider_calls": False,
             "training_performed": False,
         },
-        "generator": artifact(Path(__file__)),
+        "generator": {
+            "path": "scripts/projects/open_model_data/phase3_historical_protection_channels.py",
+            "sha256": FROZEN_GENERATOR_SHA256,
+        },
     }
     body["receipt_sha256"] = _receipt_sha256(body)
     return body

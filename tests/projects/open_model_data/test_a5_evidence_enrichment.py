@@ -116,7 +116,9 @@ def _all_keys(value: Any) -> set[str]:
 # --- synthetic fixtures ------------------------------------------------------
 
 
-def _synthetic_a4_receipt(commitments: list[str], *, row_count: int, root_sha256: str, packet_consumed: bool = True) -> dict:
+def _synthetic_a4_receipt(
+    commitments: list[str], *, row_count: int, root_sha256: str, packet_consumed: bool = True
+) -> dict:
     return {
         "controlling_outcome_sha256": V4_SHA256,
         "builder_packet_consumption": {
@@ -164,7 +166,9 @@ def _row(commitment: str, span_index: int, span_byte_length: int) -> dict[str, A
         "span_index": span_index,
         "span_byte_length": span_byte_length,
         "input_sha256": input_sha256,
-        "output_sha256": extraction.extraction_record_output_hash(commitment, span_index, span_byte_length, input_sha256),
+        "output_sha256": extraction.extraction_record_output_hash(
+            commitment, span_index, span_byte_length, input_sha256
+        ),
     }
 
 
@@ -336,7 +340,9 @@ def test_gate_closed_when_a4_receipt_is_invalid(tmp_path: Path) -> None:
 
 
 def test_compute_evidence_enrichment_returns_empty_when_packet_not_consumed() -> None:
-    a4_receipt = _synthetic_a4_receipt([], row_count=0, root_sha256=extraction.EMPTY_LEDGER_ROOT_SHA256, packet_consumed=False)
+    a4_receipt = _synthetic_a4_receipt(
+        [], row_count=0, root_sha256=extraction.EMPTY_LEDGER_ROOT_SHA256, packet_consumed=False
+    )
     result = enrichment.compute_evidence_enrichment(a4_receipt, Path("/nonexistent"))
     assert result == {
         "ledger_consumed": False,
@@ -403,7 +409,9 @@ def test_compute_evidence_enrichment_handles_a_zero_row_ledger(tmp_path: Path) -
 
     assert result["ledger_consumed"] is True
     assert result["spans_covered"] == 0
-    assert result["per_unit_evidence"] == [enrichment.new_unit_accumulator() | {"source_unit_commitment_sha256": commitment}]
+    assert result["per_unit_evidence"] == [
+        enrichment.new_unit_accumulator() | {"source_unit_commitment_sha256": commitment}
+    ]
 
 
 def test_compute_evidence_enrichment_refuses_when_private_manifest_missing(tmp_path: Path) -> None:
@@ -470,10 +478,20 @@ def test_derive_a5_unit_evidence_residuals_is_pure_reproducible_and_id_free() ->
         [commitment_evidence, commitment_pending], row_count=1, root_sha256=extraction.EMPTY_LEDGER_ROOT_SHA256
     )
     per_unit_evidence = [
-        {"source_unit_commitment_sha256": commitment_evidence, "span_count": 5, "total_span_bytes": 50,
-         "min_span_byte_length": 5, "max_span_byte_length": 15},
-        {"source_unit_commitment_sha256": commitment_pending, "span_count": 0, "total_span_bytes": 0,
-         "min_span_byte_length": None, "max_span_byte_length": None},
+        {
+            "source_unit_commitment_sha256": commitment_evidence,
+            "span_count": 5,
+            "total_span_bytes": 50,
+            "min_span_byte_length": 5,
+            "max_span_byte_length": 15,
+        },
+        {
+            "source_unit_commitment_sha256": commitment_pending,
+            "span_count": 0,
+            "total_span_bytes": 0,
+            "min_span_byte_length": None,
+            "max_span_byte_length": None,
+        },
     ]
 
     first = enrichment.derive_a5_unit_evidence_residuals(a4_receipt, per_unit_evidence)
@@ -529,6 +547,7 @@ def test_a5_receipt_bindings_match_exact_inputs() -> None:
     receipt = _receipt()
     for binding in receipt["bindings"].values():
         from learn_ukrainian_v4_runtime import resources
+
         logical = binding["path"]
         if logical.startswith("scripts/"):
             logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
@@ -594,9 +613,10 @@ def test_a5_evidence_enrichment_is_bound_to_a4_commitments_and_spans_covered() -
         per_unit_evidence
     )
     assert receipt["evidence_enrichment"]["spans_covered"] == sum(e["span_count"] for e in per_unit_evidence)
-    assert receipt["evidence_enrichment"]["spans_covered"] == a4_receipt["builder_packet_consumption"][
-        "extraction_ledger_commitment"
-    ]["row_count"]
+    assert (
+        receipt["evidence_enrichment"]["spans_covered"]
+        == a4_receipt["builder_packet_consumption"]["extraction_ledger_commitment"]["row_count"]
+    )
 
 
 def test_a5_script_verifies_the_checked_in_receipt() -> None:

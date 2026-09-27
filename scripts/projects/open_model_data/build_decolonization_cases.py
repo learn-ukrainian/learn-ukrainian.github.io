@@ -84,7 +84,8 @@ def _publish_decolonization_outputs(payloads: dict[str, bytes], companions: dict
         companions={
             f"registry/{prefix}{name}": (
                 storage_paths.hash_file(REPO_ROOT / f"registry/{prefix}{name}")
-                if (REPO_ROOT / f"registry/{prefix}{name}").exists() else None,
+                if (REPO_ROOT / f"registry/{prefix}{name}").exists()
+                else None,
                 lambda target, data=data: target.write_bytes(data),
             )
             for name, data in companions.items()
@@ -109,10 +110,34 @@ class DecolonizationCase:
 
 UA_GEC_RECORD_MAP: dict[str, dict[str, Any]] = {
     "decol_lex_012": {"id": 5921, "error": "гусь", "correct": "гусак", "error_type": "F/Calque", "doc_id": "1068"},
-    "decol_lex_014": {"id": 6593, "error": "буфетчик", "correct": "буфетник", "error_type": "F/Calque", "doc_id": "1315"},
-    "decol_lex_017": {"id": 6687, "error": "відправитися", "correct": "вирушити", "error_type": "F/Calque", "doc_id": "1345"},
-    "decol_lex_028": {"id": 5134, "error": "бормотати", "correct": "бурмотіти", "error_type": "F/Calque", "doc_id": "0736"},
-    "decol_syn_029": {"id": 3127, "error": "дозволяє", "correct": "дає змогу", "error_type": "F/Calque", "doc_id": "0029"},
+    "decol_lex_014": {
+        "id": 6593,
+        "error": "буфетчик",
+        "correct": "буфетник",
+        "error_type": "F/Calque",
+        "doc_id": "1315",
+    },
+    "decol_lex_017": {
+        "id": 6687,
+        "error": "відправитися",
+        "correct": "вирушити",
+        "error_type": "F/Calque",
+        "doc_id": "1345",
+    },
+    "decol_lex_028": {
+        "id": 5134,
+        "error": "бормотати",
+        "correct": "бурмотіти",
+        "error_type": "F/Calque",
+        "doc_id": "0736",
+    },
+    "decol_syn_029": {
+        "id": 3127,
+        "error": "дозволяє",
+        "correct": "дає змогу",
+        "error_type": "F/Calque",
+        "doc_id": "0029",
+    },
 }
 
 ACCREDITED_INDEPENDENT_REVIEWERS: dict[str, dict[str, Any]] = {
@@ -141,9 +166,38 @@ ACCREDITED_INDEPENDENT_REVIEWERS: dict[str, dict[str, Any]] = {
 
 
 STOP_WORDS = {
-    "в", "у", "на", "по", "до", "за", "з", "із", "зі", "та", "і", "й", "чи",
-    "що", "як", "не", "б", "би", "ж", "же", "про", "від", "од", "при", "під",
-    "над", "перед", "для", "без", "через", "після", "біля",
+    "в",
+    "у",
+    "на",
+    "по",
+    "до",
+    "за",
+    "з",
+    "із",
+    "зі",
+    "та",
+    "і",
+    "й",
+    "чи",
+    "що",
+    "як",
+    "не",
+    "б",
+    "би",
+    "ж",
+    "же",
+    "про",
+    "від",
+    "од",
+    "при",
+    "під",
+    "над",
+    "перед",
+    "для",
+    "без",
+    "через",
+    "після",
+    "біля",
 }
 
 
@@ -159,9 +213,7 @@ def get_vesum_lemmas(word: str, v_cur: sqlite3.Cursor) -> set[str]:
     return {r[0] for r in rows}
 
 
-def query_vesum_evidence(
-    term: str, proper_list: list[str], v_cur: sqlite3.Cursor
-) -> dict[str, Any]:
+def query_vesum_evidence(term: str, proper_list: list[str], v_cur: sqlite3.Cursor) -> dict[str, Any]:
     """Query authentic morphological and lemma facts directly from VESUM.
 
     Fails closed: requires EVERY constituent token of at least one candidate
@@ -182,21 +234,25 @@ def query_vesum_evidence(
                 (t, t),
             ).fetchone()
             if row:
-                attested_details.append({
-                    "token": t,
-                    "lemma": row[0],
-                    "pos": row[1],
-                    "tags": row[2],
-                    "entry_id": row[3],
-                })
+                attested_details.append(
+                    {
+                        "token": t,
+                        "lemma": row[0],
+                        "pos": row[1],
+                        "tags": row[2],
+                        "entry_id": row[3],
+                    }
+                )
             elif t in STOP_WORDS:
-                attested_details.append({
-                    "token": t,
-                    "lemma": t,
-                    "pos": "functional",
-                    "tags": "functional_word",
-                    "entry_id": "functional_lexicon",
-                })
+                attested_details.append(
+                    {
+                        "token": t,
+                        "lemma": t,
+                        "pos": "functional",
+                        "tags": "functional_word",
+                        "entry_id": "functional_lexicon",
+                    }
+                )
             else:
                 all_attested = False
                 break
@@ -525,7 +581,9 @@ def query_source_evidence(
 
         # 2. Modern normative fallback: ULIF (data/ulif_dump_all.db or sources.db:ulif_dictua_entries), NEVER Soviet СУМ-11
         if not source_record:
-            dictua_keys = list(dict.fromkeys([art.lower(), art_head.lower()] + ([term.lower()] if not is_phrase else [])))
+            dictua_keys = list(
+                dict.fromkeys([art.lower(), art_head.lower()] + ([term.lower()] if not is_phrase else []))
+            )
             for k in dictua_keys:
                 try:
                     s_cur.execute(
@@ -601,11 +659,7 @@ def query_source_evidence(
 
         # For multi-word phrase cases, the record MUST substantiate the phrase itself
         if is_phrase:
-            phrase_attested = (
-                t_clean in text_low
-                or t_clean in text_clean
-                or t_clean in head_low
-            )
+            phrase_attested = t_clean in text_low or t_clean in text_clean or t_clean in head_low
             if not phrase_attested:
                 raise ValueError(
                     f"Retrieved lexical record {rec_id_val} ('{rec_head}') does not substantiate claimed phrase '{term}' (matching headword lacks the phrase)"
@@ -850,12 +904,12 @@ def make_reviewer_confirmation(
 
     accredited_info = ACCREDITED_INDEPENDENT_REVIEWERS[reviewer_id]
     if reviewer_family != accredited_info["reviewer_family"]:
-        raise ValueError(
-            f"Reviewer family '{reviewer_family}' mismatch for accredited reviewer '{reviewer_id}'"
-        )
+        raise ValueError(f"Reviewer family '{reviewer_family}' mismatch for accredited reviewer '{reviewer_id}'")
 
     # Validate against signed human acceptance review signoff (Fail closed on unapproved / defective / incomplete signoff)
-    signoff_path = PROJECT_ROOT / "data/projects/open_model_data/components/decolonization/acceptance_review_sample.signoff.json"
+    signoff_path = (
+        PROJECT_ROOT / "data/projects/open_model_data/components/decolonization/acceptance_review_sample.signoff.json"
+    )
     if not signoff_path.is_file():
         raise ValueError(f"Missing acceptance review signoff file at '{signoff_path}'")
     try:
@@ -893,54 +947,38 @@ def make_reviewer_confirmation(
     # Zero BLOCKER defects tolerated
     blockers = signoff_data.get("blocker_defect_count")
     if type(blockers) is not int or isinstance(blockers, bool) or blockers != 0:
-        raise ValueError(
-            f"Signoff contains {blockers!r} unresolved BLOCKER defect(s). Approval requires 0 blockers."
-        )
+        raise ValueError(f"Signoff contains {blockers!r} unresolved BLOCKER defect(s). Approval requires 0 blockers.")
 
     # Minor defect cap
     minors = signoff_data.get("minor_defect_count")
     if type(minors) is not int or isinstance(minors, bool) or minors < 0 or minors > 5:
-        raise ValueError(
-            f"Signoff minor_defect_count ({minors!r}) exceeds allowable tolerance limit (<= 5)."
-        )
+        raise ValueError(f"Signoff minor_defect_count ({minors!r}) exceeds allowable tolerance limit (<= 5).")
 
     # Digest and date binding
     d_sha = str(signoff_data.get("dataset_sha256") or "").strip()
     if len(d_sha) != 64 or not all(c in "0123456789abcdefABCDEF" for c in d_sha):
-        raise ValueError(
-            f"Signoff dataset_sha256 '{d_sha}' is missing or not a valid 64-character hex digest"
-        )
+        raise ValueError(f"Signoff dataset_sha256 '{d_sha}' is missing or not a valid 64-character hex digest")
 
     p_sha = str(signoff_data.get("profile_sha256") or "").strip()
     if len(p_sha) != 64 or not all(c in "0123456789abcdefABCDEF" for c in p_sha):
-        raise ValueError(
-            f"Signoff profile_sha256 '{p_sha}' is missing or not a valid 64-character hex digest"
-        )
+        raise ValueError(f"Signoff profile_sha256 '{p_sha}' is missing or not a valid 64-character hex digest")
 
     s_date = str(signoff_data.get("signoff_date") or "").strip()
     if not s_date or not re.match(r"^\d{4}-\d{2}-\d{2}$", s_date):
-        raise ValueError(
-            f"Signoff signoff_date '{s_date}' is missing or invalid date format (expected YYYY-MM-DD)"
-        )
+        raise ValueError(f"Signoff signoff_date '{s_date}' is missing or invalid date format (expected YYYY-MM-DD)")
     try:
         datetime.date.fromisoformat(s_date)
     except ValueError as exc:
-        raise ValueError(
-            f"Signoff signoff_date '{s_date}' is not a valid calendar date: {exc}"
-        ) from exc
+        raise ValueError(f"Signoff signoff_date '{s_date}' is not a valid calendar date: {exc}") from exc
 
     if dossier.get("review_receipt_id") != receipt_id:
         raise ValueError(
             f"Dossier receipt ID '{dossier.get('review_receipt_id')}' mismatch with registry receipt ID '{receipt_id}'"
         )
     if dossier.get("reviewer_id") != reviewer_id or dossier.get("reviewer_id") not in ACCREDITED_INDEPENDENT_REVIEWERS:
-        raise ValueError(
-            f"Dossier reviewer_id '{dossier.get('reviewer_id')}' mismatch or not accredited"
-        )
+        raise ValueError(f"Dossier reviewer_id '{dossier.get('reviewer_id')}' mismatch or not accredited")
     if dossier.get("reviewer_family") != reviewer_family:
-        raise ValueError(
-            f"Dossier reviewer_family '{dossier.get('reviewer_family')}' is not '{reviewer_family}'"
-        )
+        raise ValueError(f"Dossier reviewer_family '{dossier.get('reviewer_family')}' is not '{reviewer_family}'")
     if dossier.get("verdict") != "APPROVED" or dossier.get("status") != "confirmed":
         raise ValueError(
             f"Dossier status/verdict ({dossier.get('status')}/{dossier.get('verdict')}) is not confirmed/APPROVED"
@@ -1060,9 +1098,7 @@ def build_all_cases() -> list[DecolonizationCase]:
     if ulif_path.is_file():
         s_cur.execute(f"ATTACH DATABASE 'file:{ulif_path}?mode=ro' AS ulif_all")
 
-    style_guide_cache = s_cur.execute(
-        "SELECT id, word, section, page, text, excerpt_full FROM style_guide"
-    ).fetchall()
+    style_guide_cache = s_cur.execute("SELECT id, word, section, page, text, excerpt_full FROM style_guide").fetchall()
 
     cases: list[DecolonizationCase] = []
 
@@ -1162,8 +1198,19 @@ def main(argv: list[str] | None = None) -> int:
             "Related: issues #8340 and #8809."
         ),
     )
-    parser.add_argument("--output-dir", type=Path, default=ARTIFACT_DECOLONIZATION_DIR, help="Target component directory (default: managed decolonization component).")
-    parser.add_argument("--check", "--dry-run", dest="check", action="store_true", help="Validate dataset generation in memory without writing to disk")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=ARTIFACT_DECOLONIZATION_DIR,
+        help="Target component directory (default: managed decolonization component).",
+    )
+    parser.add_argument(
+        "--check",
+        "--dry-run",
+        dest="check",
+        action="store_true",
+        help="Validate dataset generation in memory without writing to disk",
+    )
     args = parser.parse_args(argv)
 
     out_dir = args.output_dir

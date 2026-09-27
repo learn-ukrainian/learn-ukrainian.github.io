@@ -202,17 +202,14 @@ def _check_private_sources_absent(config: Mapping[str, Any], rows: list[dict[str
         {
             row["source_locator"].get("source_file")
             for row in rows
-            if row["source_family"] == "public_textbooks"
-            and row["source_locator"].get("source_file") in private
+            if row["source_family"] == "public_textbooks" and row["source_locator"].get("source_file") in private
         }
     )
     if leaked:
         raise RestorationError(f"private teaching sources present in snapshot: {', '.join(leaked)}")
 
 
-def _acquisition_plan(
-    cohort: Mapping[str, Any], ledger: Mapping[str, dict[str, Any]]
-) -> tuple[str, set[str]]:
+def _acquisition_plan(cohort: Mapping[str, Any], ledger: Mapping[str, dict[str, Any]]) -> tuple[str, set[str]]:
     binding = cohort["acquisition"]
     asset_id = binding["inventory_asset_id"]
     record = ledger.get(asset_id)
@@ -223,9 +220,7 @@ def _acquisition_plan(
         raise RestorationError(f"inventory reconciliation {asset_id} missing or non-dict details object")
     for key in binding["require_empty_diffs"]:
         if key not in details:
-            raise RestorationError(
-                f"inventory reconciliation {asset_id} details missing required diff key: {key}"
-            )
+            raise RestorationError(f"inventory reconciliation {asset_id} details missing required diff key: {key}")
         diff_val = details[key]
         if not isinstance(diff_val, list) or len(diff_val) != 0:
             raise RestorationError(
@@ -247,7 +242,6 @@ def _acquisition_plan(
     else:
         unresolved = set()
     return binding["ref_template"], unresolved
-
 
 
 def _column_classification(
@@ -549,9 +543,7 @@ def build(*, config_path: Path, input_root: Path, output_root: Path | None = Non
                     for row in snapshot_rows
                     if row["source_family"] == cohort["source_family"]
                 }
-                classification_by_group = _column_classification(
-                    connection, cohort, column_bindings, snapshot_groups
-                )
+                classification_by_group = _column_classification(connection, cohort, column_bindings, snapshot_groups)
                 for group_key, values in sorted(classification_by_group.items()):
                     group_id = f"{cohort_id}:{group_key[0]}#{group_key[1]}"
                     column_evidence[group_id] = values
@@ -704,9 +696,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
     selected_by_cohort, expected_cohorts, expected_exclusions = _select_eligible_rows(config, snapshot_rows)
     expected_locators = {row["locator_id"] for rows in selected_by_cohort.values() for row in rows}
     expected_cohort_by_locator = {
-        row["locator_id"]: cohort_id
-        for cohort_id, rows in selected_by_cohort.items()
-        for row in rows
+        row["locator_id"]: cohort_id for cohort_id, rows in selected_by_cohort.items() for row in rows
     }
     cohort_by_id = {cohort["cohort_id"]: cohort for cohort in config["cohorts"]}
 
@@ -770,10 +760,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                 f"diverge from expected {expected_cohort_summaries[cid]['selected_records']}"
             )
 
-    acquisition_plans = {
-        cohort["cohort_id"]: _acquisition_plan(cohort, ledger)
-        for cohort in config["cohorts"]
-    }
+    acquisition_plans = {cohort["cohort_id"]: _acquisition_plan(cohort, ledger) for cohort in config["cohorts"]}
 
     report_path = output_root / config["outputs"]["unresolved_report"]
     report = _read_json(report_path)
@@ -834,9 +821,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                     for group_key, values in live_db.items():
                         group_id = f"{cohort['cohort_id']}:{group_key[0]}#{group_key[1]}"
                         if group_id not in column_evidence or column_evidence[group_id] != values:
-                            raise RestorationError(
-                                f"receipt column evidence diverges from database for {group_id}"
-                            )
+                            raise RestorationError(f"receipt column evidence diverges from database for {group_id}")
         finally:
             connection.close()
 
@@ -856,9 +841,7 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
             )
 
         if record["links"]["canonical_url"] != source["canonical_url"]:
-            raise RestorationError(
-                f"restored record {record['restoration_id']} canonical_url diverges from snapshot"
-            )
+            raise RestorationError(f"restored record {record['restoration_id']} canonical_url diverges from snapshot")
 
         if record["links"]["edition"] != dict(source["metadata"]):
             raise RestorationError(
@@ -902,7 +885,11 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
             elif kind == "snapshot_metadata":
                 raw_val = _normalized(source["metadata"].get(binding["field"]))
                 if raw_val is None:
-                    if entry["status"] != "unresolved" or entry["value"] != "unknown" or entry["source_ref"] != binding["source_ref"]:
+                    if (
+                        entry["status"] != "unresolved"
+                        or entry["value"] != "unknown"
+                        or entry["source_ref"] != binding["source_ref"]
+                    ):
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} invalid missing metadata classification: {entry!r}"
                         )
@@ -912,7 +899,11 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} value {raw_val!r} outside vocabulary"
                         )
-                    if entry["status"] != "restored" or entry["value"] != raw_val or entry["source_ref"] != binding["source_ref"]:
+                    if (
+                        entry["status"] != "restored"
+                        or entry["value"] != raw_val
+                        or entry["source_ref"] != binding["source_ref"]
+                    ):
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} invalid restored metadata classification: {entry!r}"
                         )
@@ -928,7 +919,11 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                     )
                 expected_val = column_evidence[group_id].get(field)
                 if expected_val is None:
-                    if entry["status"] != "unresolved" or entry["value"] != "unknown" or entry["source_ref"] != binding["source_ref"]:
+                    if (
+                        entry["status"] != "unresolved"
+                        or entry["value"] != "unknown"
+                        or entry["source_ref"] != binding["source_ref"]
+                    ):
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} invalid missing column classification: {entry!r}"
                         )
@@ -938,7 +933,11 @@ def verify(*, config_path: Path, input_root: Path, output_root: Path | None = No
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} value {expected_val!r} outside vocabulary"
                         )
-                    if entry["status"] != "restored" or entry["value"] != expected_val or entry["source_ref"] != binding["source_ref"]:
+                    if (
+                        entry["status"] != "restored"
+                        or entry["value"] != expected_val
+                        or entry["source_ref"] != binding["source_ref"]
+                    ):
                         raise RestorationError(
                             f"restored record {record['restoration_id']} field {field} invalid restored column classification: {entry!r}"
                         )

@@ -641,9 +641,7 @@ def _project_masks_to_tokens(
             index += 1
         if overlap:
             counters["tokens_overlapping_masks"] += 1
-            counters[
-                "tokens_fully_masked" if overlap >= token_end - token_start else "tokens_partially_masked"
-            ] += 1
+            counters["tokens_fully_masked" if overlap >= token_end - token_start else "tokens_partially_masked"] += 1
     counters["zero_loss_tokens"] = counters["tokens_overlapping_masks"]
     return counters
 
@@ -775,9 +773,7 @@ def tokenizer_diagnostics(
         group["occurrences"] += occurrences
         group["assigned_tokens"] += pieces
     paradigm_groups = [group for group in primary_groups.values() if len(group["forms"]) >= 2]
-    paradigm_token_values = array.array(
-        "I", (int(group["assigned_tokens"]) for group in primary_groups.values())
-    )
+    paradigm_token_values = array.array("I", (int(group["assigned_tokens"]) for group in primary_groups.values()))
     diagnostic_hash = policy_hash(
         "tokenizer-diagnostics-v1",
         {
@@ -958,8 +954,7 @@ def assemble_production_receipt(
     require(modern_receipt["view_kind"] == "continued_pretraining", "wrong modern view kind")
     require(heldout_receipt["view_kind"] == "heldout_evaluation", "wrong heldout view kind")
     require(
-        faithful_receipt["counts"].get("exported_records")
-        == modern_receipt["counts"].get("exported_records"),
+        faithful_receipt["counts"].get("exported_records") == modern_receipt["counts"].get("exported_records"),
         "continued-pretraining arm cardinalities differ",
     )
     faithful_records = int(faithful_receipt["output"]["records"])
@@ -977,9 +972,7 @@ def assemble_production_receipt(
         if code.startswith("excluded_evaluation_contamination_")
     )
     duplicate_blocked = sum(
-        count
-        for code, count in faithful_receipt["counts"].items()
-        if code.startswith("excluded_intra_view_duplicate_")
+        count for code, count in faithful_receipt["counts"].items() if code.startswith("excluded_intra_view_duplicate_")
     )
     evidence_grade = silver_receipt["counts"]["by_evidence_grade"]
     payload_evidence_grade = payload_receipt["counts"]["evidence_grade_counts"]
@@ -1067,13 +1060,20 @@ def assemble_production_receipt(
             "blocked_records": duplicate_blocked,
         },
         "stratified_counts": {
-            "source": [{"category": "wikipedia", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}],
-            "period": [{"category": "modern", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}],
-            "genre": [{"category": "encyclopedia", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}],
-            "register": [{"category": "reference", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}],
+            "source": [
+                {"category": "wikipedia", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}
+            ],
+            "period": [
+                {"category": "modern", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}
+            ],
+            "genre": [
+                {"category": "encyclopedia", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}
+            ],
+            "register": [
+                {"category": "reference", "records": faithful_records, "bytes": faithful_receipt["output"]["bytes"]}
+            ],
             "evidence_grade": [
-                {"category": code, "records": int(count), "bytes": 0}
-                for code, count in sorted(evidence_grade.items())
+                {"category": code, "records": int(count), "bytes": 0} for code, count in sorted(evidence_grade.items())
             ],
             "protected_unresolved": [
                 {
@@ -1089,7 +1089,11 @@ def assemble_production_receipt(
             "prerequisites": [
                 {"code": "real_cpt_input", "state": "satisfied", "evidence_sha256": identity["faithful"]},
                 {"code": "evaluation_firewall", "state": "satisfied", "evidence_sha256": identity["heldout"]},
-                {"code": "tokenizer_loss_mask_diagnostics", "state": "satisfied", "evidence_sha256": identity["tokenizer"]},
+                {
+                    "code": "tokenizer_loss_mask_diagnostics",
+                    "state": "satisfied",
+                    "evidence_sha256": identity["tokenizer"],
+                },
                 {"code": "protected_no_change_inventory", "state": "satisfied", "evidence_sha256": identity["silver"]},
                 {"code": "operator_compute_ceiling", "state": "pending", "evidence_sha256": None},
                 {"code": "exact_treatment_preregistration", "state": "pending", "evidence_sha256": None},

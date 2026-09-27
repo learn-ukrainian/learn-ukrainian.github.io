@@ -149,7 +149,10 @@ def _unit_identity(row: Mapping[str, Any]) -> dict[str, Any]:
 def _load_source_units(path: Path) -> tuple[list[dict[str, Any]], str]:
     rows = _read_jsonl(path)
     units = [_unit_identity(row) for row in rows]
-    require(len(units) == EXPECTED_UNIT_TOTAL, f"school textbook denominator must be {EXPECTED_UNIT_TOTAL}, got {len(units)}")
+    require(
+        len(units) == EXPECTED_UNIT_TOTAL,
+        f"school textbook denominator must be {EXPECTED_UNIT_TOTAL}, got {len(units)}",
+    )
     unit_ids = [unit["unit_id"] for unit in units]
     require(len(set(unit_ids)) == len(unit_ids), "duplicate frozen textbook unit_id")
     identities = sorted(units, key=lambda item: str(item["unit_id"]))
@@ -159,16 +162,23 @@ def _load_source_units(path: Path) -> tuple[list[dict[str, Any]], str]:
 def _school_family(receipt: Mapping[str, Any]) -> Mapping[str, Any]:
     families = receipt.get("families")
     require(isinstance(families, list), "source freeze lacks family receipts")
-    matches = [family for family in families if isinstance(family, Mapping) and family.get("family_id") == "school_textbooks"]
+    matches = [
+        family for family in families if isinstance(family, Mapping) and family.get("family_id") == "school_textbooks"
+    ]
     require(len(matches) == 1, "source freeze lacks one school_textbooks receipt")
     family = matches[0]
     require(family.get("unit_count") == EXPECTED_UNIT_TOTAL, "source freeze textbook denominator changed")
-    require(isinstance(family.get("ledger_sha256"), str) and SHA256.fullmatch(str(family["ledger_sha256"])) is not None, "source freeze lacks textbook ledger hash")
+    require(
+        isinstance(family.get("ledger_sha256"), str) and SHA256.fullmatch(str(family["ledger_sha256"])) is not None,
+        "source freeze lacks textbook ledger hash",
+    )
     return family
 
 
 def _functional_bindings(
-    roles: Mapping[str, Any], *, role_contract_path: Path,
+    roles: Mapping[str, Any],
+    *,
+    role_contract_path: Path,
 ) -> dict[str, str]:
     """Resolve the one functional task allowed to attest textbook non-hits."""
     try:
@@ -224,8 +234,7 @@ def _validate_functional_action_receipt(
 ) -> None:
     require(set(receipt) == set(functional_roles.ACTION_RECEIPT_FIELDS), f"{label} action receipt fields drift")
     require(
-        receipt.get("role_id") == role_binding["role_id"]
-        and receipt.get("task_id") == role_binding["task_id"],
+        receipt.get("role_id") == role_binding["role_id"] and receipt.get("task_id") == role_binding["task_id"],
         f"{label} action receipt task binding drift",
     )
     require(receipt.get("action_kind") == action_kind, f"{label} action kind drift")
@@ -235,21 +244,29 @@ def _validate_functional_action_receipt(
     )
     require(isinstance(receipt.get("provider"), str) and receipt["provider"], f"{label} action provider missing")
     require(
-        receipt.get("input_manifest_sha256") == input_manifest_sha256
-        and receipt.get("output_sha256") == output_sha256,
+        receipt.get("input_manifest_sha256") == input_manifest_sha256 and receipt.get("output_sha256") == output_sha256,
         f"{label} action input/output binding drift",
     )
     require(
         receipt.get("evaluation_cycle_id") == bindings["evaluation_cycle_id"]
-        and all(receipt.get(name) == bindings[name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256",
-        )),
+        and all(
+            receipt.get(name) == bindings[name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+            )
+        ),
         f"{label} action functional-role binding drift",
     )
     require(receipt.get("status") == "completed", f"{label} action is not complete")
     require(
-        all(isinstance(receipt.get(name), str) and receipt[name] for name in ("receipt_id", "started_at", "completed_at")),
+        all(
+            isinstance(receipt.get(name), str) and receipt[name]
+            for name in ("receipt_id", "started_at", "completed_at")
+        ),
         f"{label} action metadata incomplete",
     )
     identity = {
@@ -271,9 +288,14 @@ def _validate_auditor_action_receipt(
 ) -> None:
     """Require an actual closed action receipt; local mechanics are not an audit."""
     _validate_functional_action_receipt(
-        receipt, role_binding=bindings["auditor_role_binding"], execution=bindings["auditor_execution"],
-        bindings=bindings, action_kind="textbook_nonhit_audit_results",
-        input_manifest_sha256=input_manifest_sha256, output_sha256=output_sha256, label="auditor",
+        receipt,
+        role_binding=bindings["auditor_role_binding"],
+        execution=bindings["auditor_execution"],
+        bindings=bindings,
+        action_kind="textbook_nonhit_audit_results",
+        input_manifest_sha256=input_manifest_sha256,
+        output_sha256=output_sha256,
+        label="auditor",
     )
 
 
@@ -292,14 +314,32 @@ def _metadata_index(
     connection.execute("PRAGMA query_only=ON")
     try:
         textbook_columns = {row[1] for row in connection.execute('PRAGMA table_info("textbooks")')}
-        required = {"id", "chunk_id", "source_file", "grade", "author", "char_count", "parent_section_id", "author_uk", "subject"}
+        required = {
+            "id",
+            "chunk_id",
+            "source_file",
+            "grade",
+            "author",
+            "char_count",
+            "parent_section_id",
+            "author_uk",
+            "subject",
+        }
         require(required <= textbook_columns, "textbooks lacks required non-text identity metadata")
         rows = connection.execute(
             'SELECT "id", "chunk_id", "source_file", "grade", "author", "char_count", '
             '"parent_section_id", "author_uk", "subject" FROM "textbooks" ORDER BY "id"'
         ).fetchall()
         section_columns = {row[1] for row in connection.execute('PRAGMA table_info("textbook_sections")')}
-        section_required = {"section_id", "source_file", "grade", "section_number", "page_start", "page_end", "chunk_count"}
+        section_required = {
+            "section_id",
+            "source_file",
+            "grade",
+            "section_number",
+            "page_start",
+            "page_end",
+            "chunk_count",
+        }
         require(section_required <= section_columns, "textbook_sections lacks required non-text metadata")
         sections = connection.execute(
             'SELECT "section_id", "source_file", "grade", "section_number", "page_start", '
@@ -339,17 +379,25 @@ def _metadata_index(
             "section_metadata_sha256": section_hash_by_file.get(source_file),
         }
         metadata_basis = _normal(dict(row))
-        index_rows.append({
-            "unit_id": unit_id,
-            "tracked_file": source_file,
-            "source_identity": f"source.school_textbooks.{_hash(_normal(source_basis))}",
-            "metadata_sha256": _hash(metadata_basis),
-        })
+        index_rows.append(
+            {
+                "unit_id": unit_id,
+                "tracked_file": source_file,
+                "source_identity": f"source.school_textbooks.{_hash(_normal(source_basis))}",
+                "metadata_sha256": _hash(metadata_basis),
+            }
+        )
     index_rows.sort(key=lambda item: item["unit_id"])
     index_ids = {row["unit_id"] for row in index_rows}
-    require(len(index_ids) == EXPECTED_UNIT_TOTAL and index_ids == set(frozen_by_id), "metadata index is not a bijection with frozen units")
+    require(
+        len(index_ids) == EXPECTED_UNIT_TOTAL and index_ids == set(frozen_by_id),
+        "metadata index is not a bijection with frozen units",
+    )
     tracked_files = {row["tracked_file"] for row in index_rows}
-    require(len(tracked_files) == EXPECTED_TRACKED_FILE_TOTAL, f"tracked textbook file total must be {EXPECTED_TRACKED_FILE_TOTAL}")
+    require(
+        len(tracked_files) == EXPECTED_TRACKED_FILE_TOTAL,
+        f"tracked textbook file total must be {EXPECTED_TRACKED_FILE_TOTAL}",
+    )
     return {
         "sources_db_sha256": db_sha256,
         "metadata_index_sha256": _hash(index_rows),
@@ -376,11 +424,20 @@ def validate_bindings(
     _validate_schema(coverage, COVERAGE_SCHEMA, "coverage contract")
     _validate_schema(roles, ROLE_SCHEMA, "role contract")
     _validate_schema(receipt, SOURCE_FREEZE_SCHEMA, "source-universe freeze receipt")
-    require(coverage.get("text_free") is True and receipt.get("text_free") is True, "text-free contract binding missing")
+    require(
+        coverage.get("text_free") is True and receipt.get("text_free") is True, "text-free contract binding missing"
+    )
     functional = _functional_bindings(roles, role_contract_path=role_contract)
     families = coverage.get("mandatory_families")
     require(isinstance(families, list), "coverage contract lacks mandatory families")
-    school = next((family for family in families if isinstance(family, Mapping) and family.get("family_id") == "school_textbooks"), None)
+    school = next(
+        (
+            family
+            for family in families
+            if isinstance(family, Mapping) and family.get("family_id") == "school_textbooks"
+        ),
+        None,
+    )
     require(isinstance(school, Mapping), "coverage contract lacks school_textbooks")
     scanner = school.get("scanner_nonhit_audit")
     require(isinstance(scanner, Mapping), "coverage contract lacks scanner non-hit audit")
@@ -388,7 +445,10 @@ def validate_bindings(
     require(scanner.get("seed_owner_role_id") == AUDITOR_ROLE_ID, "wrong non-hit seed owner")
     require(scanner.get("sample_formula") == "min(1000,nonhit_total)", "weakened non-hit sample formula")
     require(scanner.get("stratification") == ["tracked_file", "source_identity"], "wrong non-hit stratification")
-    require(scanner.get("rubric_frozen_before_sampling") is True and scanner.get("zero_misses_required") is True, "weakened non-hit acceptance contract")
+    require(
+        scanner.get("rubric_frozen_before_sampling") is True and scanner.get("zero_misses_required") is True,
+        "weakened non-hit acceptance contract",
+    )
     source_school = _school_family(receipt)
     units, ledger_file_sha256 = _load_source_units(school_units)
     require(source_school["ledger_sha256"] == ledger_file_sha256, "school unit ledger does not match frozen receipt")
@@ -417,17 +477,20 @@ def neutral_classifications(units: Iterable[Mapping[str, Any]]) -> list[dict[str
     for unit in units:
         unit_id = unit.get("unit_id")
         require(isinstance(unit_id, str), "neutral stub lacks frozen unit identity")
-        rows.append({
-            "unit_id": unit_id,
-            "unit_sha256": unit.get("unit_sha256"),
-            "locator": unit.get("locator"),
-            "candidate_classes": [],
-        })
+        rows.append(
+            {
+                "unit_id": unit_id,
+                "unit_sha256": unit.get("unit_sha256"),
+                "locator": unit.get("locator"),
+                "candidate_classes": [],
+            }
+        )
     return rows
 
 
 def _validated_classifications(
-    units: Sequence[Mapping[str, Any]], metadata_rows: Sequence[Mapping[str, Any]],
+    units: Sequence[Mapping[str, Any]],
+    metadata_rows: Sequence[Mapping[str, Any]],
     classifications: Sequence[Mapping[str, Any]],
 ) -> list[dict[str, Any]]:
     by_id = {str(unit["unit_id"]): unit for unit in units}
@@ -436,7 +499,10 @@ def _validated_classifications(
     seen: set[str] = set()
     for source in classifications:
         require(isinstance(source, Mapping), "invalid scanner classification row")
-        require(set(source) == {"unit_id", "unit_sha256", "locator", "candidate_classes"}, "classification fields must be closed and source-free")
+        require(
+            set(source) == {"unit_id", "unit_sha256", "locator", "candidate_classes"},
+            "classification fields must be closed and source-free",
+        )
         unit_id = source.get("unit_id")
         require(isinstance(unit_id, str) and unit_id in by_id, "classification references a non-frozen textbook unit")
         require(unit_id not in seen, "duplicate scanner classification unit")
@@ -445,22 +511,32 @@ def _validated_classifications(
         require(source.get("unit_sha256") == expected["unit_sha256"], "classification unit hash differs from freeze")
         require(source.get("locator") == expected["locator"], "classification locator differs from freeze")
         classes = source.get("candidate_classes")
-        require(isinstance(classes, list) and all(isinstance(item, str) for item in classes), "invalid candidate classes")
+        require(
+            isinstance(classes, list) and all(isinstance(item, str) for item in classes), "invalid candidate classes"
+        )
         require(set(classes) <= set(CANDIDATE_CLASSES), "unknown candidate class")
         require(len(classes) == len(set(classes)), "duplicate candidate class")
-        rows.append({
-            **expected,
-            "candidate_classes": sorted(classes),
-        })
+        rows.append(
+            {
+                **expected,
+                "candidate_classes": sorted(classes),
+            }
+        )
     require(seen == set(by_id), "classification universe is incomplete")
     metadata = {str(row["unit_id"]): row for row in metadata_rows}
     require(set(metadata) == set(by_id), "metadata strata are not a frozen-unit bijection")
-    return sorted(({
-        **row,
-        "tracked_file": metadata[str(row["unit_id"])]["tracked_file"],
-        "source_identity": metadata[str(row["unit_id"])]["source_identity"],
-        "metadata_sha256": metadata[str(row["unit_id"])]["metadata_sha256"],
-    } for row in rows), key=lambda item: str(item["unit_id"]))
+    return sorted(
+        (
+            {
+                **row,
+                "tracked_file": metadata[str(row["unit_id"])]["tracked_file"],
+                "source_identity": metadata[str(row["unit_id"])]["source_identity"],
+                "metadata_sha256": metadata[str(row["unit_id"])]["metadata_sha256"],
+            }
+            for row in rows
+        ),
+        key=lambda item: str(item["unit_id"]),
+    )
 
 
 def _validate_rubric(rubric: Mapping[str, Any]) -> dict[str, Any]:
@@ -469,12 +545,26 @@ def _validate_rubric(rubric: Mapping[str, Any]) -> dict[str, Any]:
     require(isinstance(rubric["rubric_id"], str) and rubric["rubric_id"], "rubric lacks identity")
     require(rubric["candidate_classes"] == list(CANDIDATE_CLASSES), "rubric candidate classes changed")
     positive, negative = rubric["positive_fixture_ids"], rubric["negative_fixture_ids"]
-    require(isinstance(positive, list) and isinstance(negative, list) and positive and negative, "rubric needs positive and negative fixtures")
+    require(
+        isinstance(positive, list) and isinstance(negative, list) and positive and negative,
+        "rubric needs positive and negative fixtures",
+    )
     require(all(isinstance(item, str) and item for item in positive + negative), "invalid rubric fixture identity")
-    require(len(set(positive)) == len(positive) and len(set(negative)) == len(negative) and not (set(positive) & set(negative)), "rubric fixture identities overlap")
+    require(
+        len(set(positive)) == len(positive)
+        and len(set(negative)) == len(negative)
+        and not (set(positive) & set(negative)),
+        "rubric fixture identities overlap",
+    )
     expected = rubric["expected_decisions"]
-    require(isinstance(expected, Mapping) and set(expected) == set(positive + negative), "rubric expected decisions do not bind every fixture")
-    require(all(expected[item] is True for item in positive) and all(expected[item] is False for item in negative), "rubric fixture decisions do not match polarity")
+    require(
+        isinstance(expected, Mapping) and set(expected) == set(positive + negative),
+        "rubric expected decisions do not bind every fixture",
+    )
+    require(
+        all(expected[item] is True for item in positive) and all(expected[item] is False for item in negative),
+        "rubric fixture decisions do not match polarity",
+    )
     return dict(rubric)
 
 
@@ -490,59 +580,98 @@ def _validate_review_receipt(
 ) -> dict[str, Any]:
     receipt = _read_json(receipt_path)
     required = {
-        "schema_version", "text_free", "producer_task_id", "scanner", "metadata_index_sha256",
-        "classification_universe_sha256", "rubric_sha256", "input_manifest_sha256",
-        "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-        "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id",
-        "rubric_author_action_receipt", "scope_critic_action_receipt",
+        "schema_version",
+        "text_free",
+        "producer_task_id",
+        "scanner",
+        "metadata_index_sha256",
+        "classification_universe_sha256",
+        "rubric_sha256",
+        "input_manifest_sha256",
+        "base_contract_sha256",
+        "amendment_sha256",
+        "combined_contract_sha256",
+        "functional_role_contract_sha256",
+        "conflict_graph_sha256",
+        "evaluation_cycle_id",
+        "rubric_author_action_receipt",
+        "scope_critic_action_receipt",
     }
     require(set(receipt) == required, "scanner input receipt fields must be closed")
-    require(receipt.get("schema_version") == "phase3_textbook_scanner_inputs_v2_1", "wrong scanner input receipt schema")
+    require(
+        receipt.get("schema_version") == "phase3_textbook_scanner_inputs_v2_1", "wrong scanner input receipt schema"
+    )
     require(receipt.get("text_free") is True, "scanner input receipt is not text-free")
     require(receipt.get("producer_task_id") == SCANNER_IMPLEMENTATION_TASK_ID, "scanner producer task drift")
     scanner = receipt.get("scanner")
-    require(scanner == {
-        "implementation_version": SCANNER_IMPLEMENTATION_VERSION,
-        "script_path": SCANNER_SCRIPT_PATH,
-        "script_sha256": scanner_sha256,
-    }, "review receipt scanner identity changed")
-    require(receipt.get("metadata_index_sha256") == bindings["metadata_index_sha256"], "review receipt metadata index hash changed")
-    require(receipt.get("classification_universe_sha256") == classification_sha256, "review receipt classification hash changed")
+    require(
+        scanner
+        == {
+            "implementation_version": SCANNER_IMPLEMENTATION_VERSION,
+            "script_path": SCANNER_SCRIPT_PATH,
+            "script_sha256": scanner_sha256,
+        },
+        "review receipt scanner identity changed",
+    )
+    require(
+        receipt.get("metadata_index_sha256") == bindings["metadata_index_sha256"],
+        "review receipt metadata index hash changed",
+    )
+    require(
+        receipt.get("classification_universe_sha256") == classification_sha256,
+        "review receipt classification hash changed",
+    )
     require(receipt.get("rubric_sha256") == rubric_sha256, "review receipt rubric hash changed")
     require(receipt.get("input_manifest_sha256") == scanner_input_sha256, "scanner/rubric input manifest drift")
-    author_input_sha256 = _hash({
-        "producer_task_id": SCANNER_IMPLEMENTATION_TASK_ID,
-        "scanner_sha256": scanner_sha256,
-        "candidate_classes": list(CANDIDATE_CLASSES),
-        "rubric_id": rubric["rubric_id"],
-    })
+    author_input_sha256 = _hash(
+        {
+            "producer_task_id": SCANNER_IMPLEMENTATION_TASK_ID,
+            "scanner_sha256": scanner_sha256,
+            "candidate_classes": list(CANDIDATE_CLASSES),
+            "rubric_id": rubric["rubric_id"],
+        }
+    )
     _validate_functional_action_receipt(
-        receipt["rubric_author_action_receipt"], role_binding=bindings["rubric_author"],
-        execution=bindings["rubric_author_execution"], bindings=bindings,
+        receipt["rubric_author_action_receipt"],
+        role_binding=bindings["rubric_author"],
+        execution=bindings["rubric_author_execution"],
+        bindings=bindings,
         action_kind="textbook_eligibility_rubric_fixture_freeze",
-        input_manifest_sha256=author_input_sha256, output_sha256=rubric_sha256,
+        input_manifest_sha256=author_input_sha256,
+        output_sha256=rubric_sha256,
         label="rubric author",
     )
-    critic_input_sha256 = _hash({
-        "rubric_author_action_receipt_sha256": _hash(receipt["rubric_author_action_receipt"]),
-        "rubric_sha256": rubric_sha256,
-        "positive_fixture_ids": rubric["positive_fixture_ids"],
-        "negative_fixture_ids": rubric["negative_fixture_ids"],
-        "expected_decisions": rubric["expected_decisions"],
-    })
+    critic_input_sha256 = _hash(
+        {
+            "rubric_author_action_receipt_sha256": _hash(receipt["rubric_author_action_receipt"]),
+            "rubric_sha256": rubric_sha256,
+            "positive_fixture_ids": rubric["positive_fixture_ids"],
+            "negative_fixture_ids": rubric["negative_fixture_ids"],
+            "expected_decisions": rubric["expected_decisions"],
+        }
+    )
     _validate_functional_action_receipt(
-        receipt["scope_critic_action_receipt"], role_binding=bindings["scope_critic"],
-        execution=bindings["scope_critic_execution"], bindings=bindings,
+        receipt["scope_critic_action_receipt"],
+        role_binding=bindings["scope_critic"],
+        execution=bindings["scope_critic_execution"],
+        bindings=bindings,
         action_kind="textbook_eligibility_rubric_zero_miss_review",
         input_manifest_sha256=critic_input_sha256,
         output_sha256=_hash({"rubric_sha256": rubric_sha256, "zero_miss": True}),
         label="scope critic",
     )
     require(
-        all(receipt.get(name) == bindings[name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id",
-        )),
+        all(
+            receipt.get(name) == bindings[name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+                "evaluation_cycle_id",
+            )
+        ),
         "scanner input functional-role binding drift",
     )
     return {"receipt": receipt, "receipt_sha256": sha256_file(receipt_path)}
@@ -556,23 +685,46 @@ def _validate_bundle_integrity(bundle: Mapping[str, Any]) -> None:
     candidates = population["candidate_units"]
     nonhits = population["nonhit_units"]
     require(len(all_units) == EXPECTED_UNIT_TOTAL, "bundle does not retain every frozen textbook unit")
-    require(len({row["unit_id"] for row in all_units}) == EXPECTED_UNIT_TOTAL, "bundle has duplicate frozen textbook unit")
+    require(
+        len({row["unit_id"] for row in all_units}) == EXPECTED_UNIT_TOTAL, "bundle has duplicate frozen textbook unit"
+    )
     require(all(row["candidate_classes"] for row in candidates), "candidate universe includes non-candidate")
     require(all(not row["candidate_classes"] for row in nonhits), "non-hit universe includes candidate")
     all_ids = {row["unit_id"] for row in all_units}
     candidate_ids = {row["unit_id"] for row in candidates}
     nonhit_ids = {row["unit_id"] for row in nonhits}
-    require(candidate_ids.isdisjoint(nonhit_ids) and candidate_ids | nonhit_ids == all_ids, "candidate/non-hit universes are not a complete complement")
-    require(population["candidate_total"] == len(candidates) and population["nonhit_total"] == len(nonhits), "population totals drifted")
+    require(
+        candidate_ids.isdisjoint(nonhit_ids) and candidate_ids | nonhit_ids == all_ids,
+        "candidate/non-hit universes are not a complete complement",
+    )
+    require(
+        population["candidate_total"] == len(candidates) and population["nonhit_total"] == len(nonhits),
+        "population totals drifted",
+    )
     require(population["all_units_sha256"] == _hash(all_units), "all-unit population hash drifted")
     require(population["candidate_universe_sha256"] == _hash(candidates), "candidate universe hash drifted")
     require(population["nonhit_universe_sha256"] == _hash(nonhits), "non-hit universe hash drifted")
-    require(bundle["scanner"]["classification_universe_sha256"] == population["all_units_sha256"], "scanner classification hash drifted")
+    require(
+        bundle["scanner"]["classification_universe_sha256"] == population["all_units_sha256"],
+        "scanner classification hash drifted",
+    )
     frozen_projection = [{key: row[key] for key in ("unit_id", "unit_sha256", "locator")} for row in all_units]
-    require(bundle["source_bindings"]["frozen_unit_identity_sha256"] == _hash(frozen_projection), "frozen unit identity binding drifted")
-    metadata_projection = [{key: row[key] for key in ("unit_id", "tracked_file", "source_identity", "metadata_sha256")} for row in all_units]
-    require(bundle["source_bindings"]["metadata_index_sha256"] == _hash(metadata_projection), "metadata index binding drifted")
-    require(len({row["tracked_file"] for row in all_units}) == EXPECTED_TRACKED_FILE_TOTAL, "tracked file population drifted")
+    require(
+        bundle["source_bindings"]["frozen_unit_identity_sha256"] == _hash(frozen_projection),
+        "frozen unit identity binding drifted",
+    )
+    metadata_projection = [
+        {key: row[key] for key in ("unit_id", "tracked_file", "source_identity", "metadata_sha256")}
+        for row in all_units
+    ]
+    require(
+        bundle["source_bindings"]["metadata_index_sha256"] == _hash(metadata_projection),
+        "metadata index binding drifted",
+    )
+    require(
+        len({row["tracked_file"] for row in all_units}) == EXPECTED_TRACKED_FILE_TOTAL,
+        "tracked file population drifted",
+    )
     rubric = dict(bundle["rubric"])
     rubric_hash = rubric.pop("rubric_sha256")
     _validate_rubric(rubric)
@@ -581,61 +733,110 @@ def _validate_bundle_integrity(bundle: Mapping[str, Any]) -> None:
     require(bundle["scanner_review"]["receipt_sha256"] == _hash(receipt), "embedded scanner input receipt hash drifted")
     require(receipt["text_free"] is True, "embedded scanner input receipt is not text-free")
     require(receipt["producer_task_id"] == SCANNER_IMPLEMENTATION_TASK_ID, "scanner input producer task drifted")
-    require(receipt["classification_universe_sha256"] == population["all_units_sha256"], "scanner review receipt classification hash drifted")
-    require(receipt["classification_universe_sha256"] == bundle["scanner"]["classification_universe_sha256"], "scanner review/scanner classification binding drifted")
-    require(receipt["metadata_index_sha256"] == bundle["source_bindings"]["metadata_index_sha256"], "scanner review receipt metadata hash drifted")
-    require(receipt["rubric_sha256"] == rubric_hash, "scanner review receipt rubric hash drifted")
-    require(receipt["scanner"] == {
-        "implementation_version": bundle["scanner"]["implementation_version"],
-        "script_path": bundle["scanner"]["script_path"],
-        "script_sha256": bundle["scanner"]["script_sha256"],
-    }, "scanner input receipt implementation identity drifted")
-    require(receipt["input_manifest_sha256"] == bundle["scanner"]["input_manifest_sha256"], "scanner input manifest binding drifted")
-    require(receipt["classification_universe_sha256"] == bundle["scanner"]["classification_universe_sha256"], "scanner input classification binding drifted")
-    expected_input_manifest = _hash({
-        "producer_task_id": SCANNER_IMPLEMENTATION_TASK_ID,
-        "scanner_sha256": bundle["scanner"]["script_sha256"],
-        "metadata_index_sha256": bundle["source_bindings"]["metadata_index_sha256"],
-        "classification_universe_sha256": bundle["scanner"]["classification_universe_sha256"],
-        "rubric_sha256": rubric_hash,
-    })
-    require(bundle["scanner"]["input_manifest_sha256"] == expected_input_manifest, "scanner/rubric input manifest is stale")
-    author_input_sha256 = _hash({
-        "producer_task_id": SCANNER_IMPLEMENTATION_TASK_ID,
-        "scanner_sha256": bundle["scanner"]["script_sha256"],
-        "candidate_classes": list(CANDIDATE_CLASSES),
-        "rubric_id": rubric["rubric_id"],
-    })
-    _validate_functional_action_receipt(
-        receipt["rubric_author_action_receipt"], role_binding=bundle["scanner"]["rubric_author_role_binding"],
-        execution=bundle["scanner"]["rubric_author_execution"], bindings=bundle["scanner"],
-        action_kind="textbook_eligibility_rubric_fixture_freeze", input_manifest_sha256=author_input_sha256,
-        output_sha256=rubric_hash, label="rubric author",
-    )
-    critic_input_sha256 = _hash({
-        "rubric_author_action_receipt_sha256": _hash(receipt["rubric_author_action_receipt"]),
-        "rubric_sha256": rubric_hash,
-        "positive_fixture_ids": rubric["positive_fixture_ids"],
-        "negative_fixture_ids": rubric["negative_fixture_ids"],
-        "expected_decisions": rubric["expected_decisions"],
-    })
-    _validate_functional_action_receipt(
-        receipt["scope_critic_action_receipt"], role_binding=bundle["scanner"]["scope_critic_role_binding"],
-        execution=bundle["scanner"]["scope_critic_execution"], bindings=bundle["scanner"],
-        action_kind="textbook_eligibility_rubric_zero_miss_review", input_manifest_sha256=critic_input_sha256,
-        output_sha256=_hash({"rubric_sha256": rubric_hash, "zero_miss": True}), label="scope critic",
+    require(
+        receipt["classification_universe_sha256"] == population["all_units_sha256"],
+        "scanner review receipt classification hash drifted",
     )
     require(
-        all(bundle["source_bindings"][name] == bundle["scanner"][name] == bundle["audit_contract"][name] == receipt[name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id",
-        )),
+        receipt["classification_universe_sha256"] == bundle["scanner"]["classification_universe_sha256"],
+        "scanner review/scanner classification binding drifted",
+    )
+    require(
+        receipt["metadata_index_sha256"] == bundle["source_bindings"]["metadata_index_sha256"],
+        "scanner review receipt metadata hash drifted",
+    )
+    require(receipt["rubric_sha256"] == rubric_hash, "scanner review receipt rubric hash drifted")
+    require(
+        receipt["scanner"]
+        == {
+            "implementation_version": bundle["scanner"]["implementation_version"],
+            "script_path": bundle["scanner"]["script_path"],
+            "script_sha256": bundle["scanner"]["script_sha256"],
+        },
+        "scanner input receipt implementation identity drifted",
+    )
+    require(
+        receipt["input_manifest_sha256"] == bundle["scanner"]["input_manifest_sha256"],
+        "scanner input manifest binding drifted",
+    )
+    require(
+        receipt["classification_universe_sha256"] == bundle["scanner"]["classification_universe_sha256"],
+        "scanner input classification binding drifted",
+    )
+    expected_input_manifest = _hash(
+        {
+            "producer_task_id": SCANNER_IMPLEMENTATION_TASK_ID,
+            "scanner_sha256": bundle["scanner"]["script_sha256"],
+            "metadata_index_sha256": bundle["source_bindings"]["metadata_index_sha256"],
+            "classification_universe_sha256": bundle["scanner"]["classification_universe_sha256"],
+            "rubric_sha256": rubric_hash,
+        }
+    )
+    require(
+        bundle["scanner"]["input_manifest_sha256"] == expected_input_manifest, "scanner/rubric input manifest is stale"
+    )
+    author_input_sha256 = _hash(
+        {
+            "producer_task_id": SCANNER_IMPLEMENTATION_TASK_ID,
+            "scanner_sha256": bundle["scanner"]["script_sha256"],
+            "candidate_classes": list(CANDIDATE_CLASSES),
+            "rubric_id": rubric["rubric_id"],
+        }
+    )
+    _validate_functional_action_receipt(
+        receipt["rubric_author_action_receipt"],
+        role_binding=bundle["scanner"]["rubric_author_role_binding"],
+        execution=bundle["scanner"]["rubric_author_execution"],
+        bindings=bundle["scanner"],
+        action_kind="textbook_eligibility_rubric_fixture_freeze",
+        input_manifest_sha256=author_input_sha256,
+        output_sha256=rubric_hash,
+        label="rubric author",
+    )
+    critic_input_sha256 = _hash(
+        {
+            "rubric_author_action_receipt_sha256": _hash(receipt["rubric_author_action_receipt"]),
+            "rubric_sha256": rubric_hash,
+            "positive_fixture_ids": rubric["positive_fixture_ids"],
+            "negative_fixture_ids": rubric["negative_fixture_ids"],
+            "expected_decisions": rubric["expected_decisions"],
+        }
+    )
+    _validate_functional_action_receipt(
+        receipt["scope_critic_action_receipt"],
+        role_binding=bundle["scanner"]["scope_critic_role_binding"],
+        execution=bundle["scanner"]["scope_critic_execution"],
+        bindings=bundle["scanner"],
+        action_kind="textbook_eligibility_rubric_zero_miss_review",
+        input_manifest_sha256=critic_input_sha256,
+        output_sha256=_hash({"rubric_sha256": rubric_hash, "zero_miss": True}),
+        label="scope critic",
+    )
+    require(
+        all(
+            bundle["source_bindings"][name]
+            == bundle["scanner"][name]
+            == bundle["audit_contract"][name]
+            == receipt[name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+                "evaluation_cycle_id",
+            )
+        ),
         "functional-role binding drifted across scanner bundle",
     )
-    require(bundle["audit_contract"]["auditor_role_binding"] == {
-        "role_id": AUDITOR_ROLE_ID,
-        "task_id": bundle["audit_contract"]["auditor_task_id"],
-    }, "auditor role binding drifted")
+    require(
+        bundle["audit_contract"]["auditor_role_binding"]
+        == {
+            "role_id": AUDITOR_ROLE_ID,
+            "task_id": bundle["audit_contract"]["auditor_task_id"],
+        },
+        "auditor role binding drifted",
+    )
 
 
 def build_bundle(
@@ -651,8 +852,10 @@ def build_bundle(
 ) -> dict[str, Any]:
     """Compile a complete, immutable text-free candidate/non-hit universe."""
     bindings = validate_bindings(
-        coverage_contract=coverage_contract, role_contract=role_contract,
-        source_freeze_receipt=source_freeze_receipt, school_units=school_units,
+        coverage_contract=coverage_contract,
+        role_contract=role_contract,
+        source_freeze_receipt=source_freeze_receipt,
+        school_units=school_units,
         sources_db=sources_db,
     )
     classified = _validated_classifications(bindings["units"], bindings["metadata_rows"], classifications)
@@ -660,13 +863,15 @@ def build_bundle(
     scanner_sha256 = sha256_file(ROOT / SCANNER_SCRIPT_PATH)
     classification_sha256 = _hash(classified)
     rubric_sha256 = _hash(frozen_rubric)
-    scanner_input_sha256 = _hash({
-        "producer_task_id": SCANNER_IMPLEMENTATION_TASK_ID,
-        "scanner_sha256": scanner_sha256,
-        "metadata_index_sha256": bindings["metadata_index_sha256"],
-        "classification_universe_sha256": classification_sha256,
-        "rubric_sha256": rubric_sha256,
-    })
+    scanner_input_sha256 = _hash(
+        {
+            "producer_task_id": SCANNER_IMPLEMENTATION_TASK_ID,
+            "scanner_sha256": scanner_sha256,
+            "metadata_index_sha256": bindings["metadata_index_sha256"],
+            "classification_universe_sha256": classification_sha256,
+            "rubric_sha256": rubric_sha256,
+        }
+    )
     review = _validate_review_receipt(
         scanner_review_receipt,
         bindings=bindings,
@@ -678,19 +883,34 @@ def build_bundle(
     )
     candidates = [row for row in classified if row["candidate_classes"]]
     nonhits = [row for row in classified if not row["candidate_classes"]]
-    require(len(candidates) + len(nonhits) == EXPECTED_UNIT_TOTAL, "candidate/non-hit complement does not equal frozen denominator")
+    require(
+        len(candidates) + len(nonhits) == EXPECTED_UNIT_TOTAL,
+        "candidate/non-hit complement does not equal frozen denominator",
+    )
     bundle = {
         "schema_version": "phase3_textbook_nonhit_bundle_v1",
         "text_free": True,
-        "source_bindings": {key: bindings[key] for key in (
-            "coverage_contract_sha256", "source_freeze_receipt_sha256",
-            "school_ledger_sha256", "frozen_unit_identity_sha256",
-            "sources_db_sha256", "metadata_index_sha256", "tracked_file_total",
-            "section_total", "section_tracked_file_total",
-            "section_metadata_sha256",
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id",
-        )},
+        "source_bindings": {
+            key: bindings[key]
+            for key in (
+                "coverage_contract_sha256",
+                "source_freeze_receipt_sha256",
+                "school_ledger_sha256",
+                "frozen_unit_identity_sha256",
+                "sources_db_sha256",
+                "metadata_index_sha256",
+                "tracked_file_total",
+                "section_total",
+                "section_tracked_file_total",
+                "section_metadata_sha256",
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+                "evaluation_cycle_id",
+            )
+        },
         "scanner": {
             "implementation_version": SCANNER_IMPLEMENTATION_VERSION,
             "script_path": SCANNER_SCRIPT_PATH,
@@ -703,10 +923,17 @@ def build_bundle(
             "rubric_author_execution": bindings["rubric_author_execution"],
             "scope_critic_role_binding": bindings["scope_critic"],
             "scope_critic_execution": bindings["scope_critic_execution"],
-            **{name: bindings[name] for name in (
-                "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-                "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id",
-            )},
+            **{
+                name: bindings[name]
+                for name in (
+                    "base_contract_sha256",
+                    "amendment_sha256",
+                    "combined_contract_sha256",
+                    "functional_role_contract_sha256",
+                    "conflict_graph_sha256",
+                    "evaluation_cycle_id",
+                )
+            },
         },
         "rubric": {**frozen_rubric, "rubric_sha256": rubric_sha256},
         "scanner_review": {
@@ -732,10 +959,17 @@ def build_bundle(
             },
             "auditor_task_id": bindings["auditor_task_id"],
             "auditor_execution": bindings["auditor_execution"],
-            **{name: bindings[name] for name in (
-                "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-                "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id",
-            )},
+            **{
+                name: bindings[name]
+                for name in (
+                    "base_contract_sha256",
+                    "amendment_sha256",
+                    "combined_contract_sha256",
+                    "functional_role_contract_sha256",
+                    "conflict_graph_sha256",
+                    "evaluation_cycle_id",
+                )
+            },
             "sample_formula": "min(1000,nonhit_total)",
             "sampler_version": SAMPLER_VERSION,
             "stratification": ["tracked_file", "source_identity"],
@@ -757,7 +991,10 @@ def build_bundle(
 
 def hamilton_quotas(counts: Mapping[str, int], sample_n: int) -> dict[str, int]:
     """Allocate without replacement using proportional Hamilton largest remainder."""
-    require(sample_n >= 0 and all(isinstance(value, int) and value > 0 for value in counts.values()), "invalid stratum counts")
+    require(
+        sample_n >= 0 and all(isinstance(value, int) and value > 0 for value in counts.values()),
+        "invalid stratum counts",
+    )
     total = sum(counts.values())
     require(sample_n <= total, "sample exceeds stratum population")
     keys = sorted(counts)
@@ -781,10 +1018,15 @@ def hamilton_quotas(counts: Mapping[str, int], sample_n: int) -> dict[str, int]:
 
 
 def _select(rows: Sequence[Mapping[str, Any]], count: int, seed: str, namespace: str) -> list[dict[str, Any]]:
-    ranked = sorted(rows, key=lambda row: (
-        _hash({"sampler_version": SAMPLER_VERSION, "seed": seed, "namespace": namespace, "unit_id": row["unit_id"]}),
-        str(row["unit_id"]),
-    ))
+    ranked = sorted(
+        rows,
+        key=lambda row: (
+            _hash(
+                {"sampler_version": SAMPLER_VERSION, "seed": seed, "namespace": namespace, "unit_id": row["unit_id"]}
+            ),
+            str(row["unit_id"]),
+        ),
+    )
     return [dict(row) for row in ranked[:count]]
 
 
@@ -810,10 +1052,16 @@ def _verify_approved_entropy(bundle: Mapping[str, Any], entropy_receipt: Mapping
     require(isinstance(result, Mapping), "approved entropy verifier returned an invalid result")
     required = {"derived_seed", "entropy_receipt_sha256", "first_containing_merge_sha", "canonical_tuple_sha256"}
     require(set(result) == required, "approved entropy verifier result shape changed")
-    require(all(isinstance(result[key], str) and result[key] for key in required), "approved entropy verifier returned empty identity")
+    require(
+        all(isinstance(result[key], str) and result[key] for key in required),
+        "approved entropy verifier returned empty identity",
+    )
     require(SHA256.fullmatch(str(result["entropy_receipt_sha256"])) is not None, "invalid entropy receipt hash")
     require(SHA256.fullmatch(str(result["canonical_tuple_sha256"])) is not None, "invalid entropy tuple hash")
-    require(re.fullmatch(r"[a-f0-9]{40}", str(result["first_containing_merge_sha"])) is not None, "invalid entropy merge SHA")
+    require(
+        re.fullmatch(r"[a-f0-9]{40}", str(result["first_containing_merge_sha"])) is not None,
+        "invalid entropy merge SHA",
+    )
     return {key: str(result[key]) for key in required}
 
 
@@ -839,8 +1087,15 @@ def draw_audit_sample(bundle: Mapping[str, Any], *, entropy_receipt: Mapping[str
         local_quotas = hamilton_quotas({key: len(value) for key, value in by_source.items()}, file_quotas[tracked_file])
         source_quotas[tracked_file] = local_quotas
         for source_identity in sorted(by_source):
-            selected.extend(_select(by_source[source_identity], local_quotas[source_identity], seed, f"{tracked_file}:{source_identity}"))
-    require(len(selected) == sample_n and len({row["unit_id"] for row in selected}) == sample_n, "sample is not without replacement")
+            selected.extend(
+                _select(
+                    by_source[source_identity], local_quotas[source_identity], seed, f"{tracked_file}:{source_identity}"
+                )
+            )
+    require(
+        len(selected) == sample_n and len({row["unit_id"] for row in selected}) == sample_n,
+        "sample is not without replacement",
+    )
     selected.sort(key=lambda row: str(row["unit_id"]))
     return {
         "schema_version": "phase3_textbook_nonhit_audit_sample_v1",
@@ -849,10 +1104,17 @@ def draw_audit_sample(bundle: Mapping[str, Any], *, entropy_receipt: Mapping[str
         "nonhit_universe_sha256": bundle["population"]["nonhit_universe_sha256"],
         "auditor_role_binding": bundle["audit_contract"]["auditor_role_binding"],
         "auditor_task_id": bundle["audit_contract"]["auditor_task_id"],
-        **{name: bundle["audit_contract"][name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id",
-        )},
+        **{
+            name: bundle["audit_contract"][name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+                "evaluation_cycle_id",
+            )
+        },
         "entropy_receipt_sha256": entropy["entropy_receipt_sha256"],
         "first_containing_merge_sha": entropy["first_containing_merge_sha"],
         "canonical_tuple_sha256": entropy["canonical_tuple_sha256"],
@@ -881,16 +1143,32 @@ def validate_audit_results(
     require(sample == recomputed, "sample differs from deterministic bundle/entropy recomputation")
     decision_receipt = _read_json(decision_receipt_path)
     required = {
-        "schema_version", "text_free", "auditor_role_binding", "bundle_sha256", "sample_sha256",
-        "entropy_receipt_sha256", "decisions", "decisions_sha256", "action_receipt",
+        "schema_version",
+        "text_free",
+        "auditor_role_binding",
+        "bundle_sha256",
+        "sample_sha256",
+        "entropy_receipt_sha256",
+        "decisions",
+        "decisions_sha256",
+        "action_receipt",
     }
     require(set(decision_receipt) == required, "audit decision receipt fields must be closed")
-    require(decision_receipt.get("schema_version") == "phase3_textbook_nonhit_decision_receipt_v1", "wrong audit decision receipt schema")
+    require(
+        decision_receipt.get("schema_version") == "phase3_textbook_nonhit_decision_receipt_v1",
+        "wrong audit decision receipt schema",
+    )
     require(decision_receipt.get("text_free") is True, "audit decision receipt is not text-free")
-    require(decision_receipt.get("auditor_role_binding") == bundle["audit_contract"]["auditor_role_binding"], "audit decision task binding is not the assigned auditor")
+    require(
+        decision_receipt.get("auditor_role_binding") == bundle["audit_contract"]["auditor_role_binding"],
+        "audit decision task binding is not the assigned auditor",
+    )
     require(decision_receipt.get("bundle_sha256") == _hash(bundle), "decision receipt bundle hash changed")
     require(decision_receipt.get("sample_sha256") == sample["sample_sha256"], "decision receipt sample hash changed")
-    require(decision_receipt.get("entropy_receipt_sha256") == sample["entropy_receipt_sha256"], "decision receipt entropy hash changed")
+    require(
+        decision_receipt.get("entropy_receipt_sha256") == sample["entropy_receipt_sha256"],
+        "decision receipt entropy hash changed",
+    )
     decisions = decision_receipt.get("decisions")
     require(isinstance(decisions, list), "decision receipt lacks decisions")
     require(decision_receipt.get("decisions_sha256") == _hash(decisions), "audit decision rows hash changed")
@@ -903,17 +1181,24 @@ def validate_audit_results(
         require(isinstance(row, Mapping), "invalid audit decision")
         require(set(row) == {"unit_id", "decision"}, "audit decision fields must be closed and source-free")
         unit_id, decision = row.get("unit_id"), row.get("decision")
-        require(isinstance(unit_id, str) and unit_id in sample_ids and unit_id not in seen, "audit decision does not bind exactly one sample unit")
+        require(
+            isinstance(unit_id, str) and unit_id in sample_ids and unit_id not in seen,
+            "audit decision does not bind exactly one sample unit",
+        )
         require(decision in AUDIT_DECISIONS, "unknown audit decision")
         seen.add(unit_id)
         normalized.append({"unit_id": unit_id, "decision": decision})
     require(seen == sample_ids, "audit decisions omit a sample unit")
     _validate_auditor_action_receipt(
-        decision_receipt["action_receipt"], bindings=bundle["audit_contract"],
-        input_manifest_sha256=_hash({
-            "bundle_sha256": _hash(bundle), "sample_sha256": sample["sample_sha256"],
-            "entropy_receipt_sha256": sample["entropy_receipt_sha256"],
-        }),
+        decision_receipt["action_receipt"],
+        bindings=bundle["audit_contract"],
+        input_manifest_sha256=_hash(
+            {
+                "bundle_sha256": _hash(bundle),
+                "sample_sha256": sample["sample_sha256"],
+                "entropy_receipt_sha256": sample["entropy_receipt_sha256"],
+            }
+        ),
         output_sha256=decision_receipt["decisions_sha256"],
     )
     misses = sorted(row["unit_id"] for row in normalized if row["decision"] != "agree")
@@ -925,10 +1210,17 @@ def validate_audit_results(
         "entropy_receipt_sha256": recomputed["entropy_receipt_sha256"],
         "auditor_role_binding": bundle["audit_contract"]["auditor_role_binding"],
         "auditor_task_id": bundle["audit_contract"]["auditor_task_id"],
-        **{name: bundle["audit_contract"][name] for name in (
-            "base_contract_sha256", "amendment_sha256", "combined_contract_sha256",
-            "functional_role_contract_sha256", "conflict_graph_sha256", "evaluation_cycle_id",
-        )},
+        **{
+            name: bundle["audit_contract"][name]
+            for name in (
+                "base_contract_sha256",
+                "amendment_sha256",
+                "combined_contract_sha256",
+                "functional_role_contract_sha256",
+                "conflict_graph_sha256",
+                "evaluation_cycle_id",
+            )
+        },
         "decision_receipt_file_sha256": sha256_file(decision_receipt_path),
         "decisions_sha256": decision_receipt["decisions_sha256"],
         "decision_total": len(normalized),
@@ -945,7 +1237,9 @@ def write_bundle(bundle: Mapping[str, Any], output: Path) -> None:
     """Atomically write a schema-validated text-free bundle."""
     _validate_bundle_integrity(bundle)
     output.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n", dir=output.parent, delete=False) as handle:
+    with tempfile.NamedTemporaryFile(
+        mode="w", encoding="utf-8", newline="\n", dir=output.parent, delete=False
+    ) as handle:
         temporary = Path(handle.name)
         handle.write(canonical_json(bundle) + "\n")
         handle.flush()
@@ -966,10 +1260,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     bundle = build_bundle(
-        coverage_contract=args.coverage_contract, role_contract=args.role_contract,
-        source_freeze_receipt=args.source_freeze_receipt, school_units=args.school_units,
-        sources_db=args.sources_db, classifications=_read_jsonl(args.classifications),
-        rubric=_read_json(args.rubric), scanner_review_receipt=args.scanner_review_receipt,
+        coverage_contract=args.coverage_contract,
+        role_contract=args.role_contract,
+        source_freeze_receipt=args.source_freeze_receipt,
+        school_units=args.school_units,
+        sources_db=args.sources_db,
+        classifications=_read_jsonl(args.classifications),
+        rubric=_read_json(args.rubric),
+        scanner_review_receipt=args.scanner_review_receipt,
     )
     write_bundle(bundle, args.output)
     return 0

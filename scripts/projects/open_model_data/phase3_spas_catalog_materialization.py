@@ -438,7 +438,10 @@ def validate_existing_materialization(*, pdf_path: Path, private_output_dir: Pat
         catalog_pdf_page_start=inputs["catalog_pdf_page_start"],
         catalog_pdf_page_end=inputs["catalog_pdf_page_end"],
     )
-    require(sum(len(text) for text in pages.values()) == receipt["denominator"]["native_text_characters"], "native text denominator drift")
+    require(
+        sum(len(text) for text in pages.values()) == receipt["denominator"]["native_text_characters"],
+        "native text denominator drift",
+    )
     pua_counts: Counter[str] = Counter()
     private_use_pages = 0
     for text in pages.values():
@@ -551,9 +554,7 @@ def materialize_spas_catalog(
         for record in records
     ]
 
-    staging_dir = Path(
-        tempfile.mkdtemp(prefix=f".{private_output_dir.name}.staging-", dir=private_output_dir.parent)
-    )
+    staging_dir = Path(tempfile.mkdtemp(prefix=f".{private_output_dir.name}.staging-", dir=private_output_dir.parent))
     try:
         output_path = staging_dir / OUTPUT_FILENAME
         record_count, output_bytes, output_sha256 = _write_jsonl_gzip(output_path, records)

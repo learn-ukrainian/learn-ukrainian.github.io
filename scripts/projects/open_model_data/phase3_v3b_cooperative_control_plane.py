@@ -15,20 +15,32 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.projects.open_model_data.frozen_k_outputs import publish_frozen_k_bundle
+
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = ROOT / "registry/projects/open_model_data"
 SCHEMA_PATH = DATA / "contracts/phase3_v3b_cooperative_control_plane_v1.schema.json"
 ARTIFACT_PATH = DATA / "contracts/phase3_v3b_cooperative_control_plane_v1.json"
 SCRIPT_PATH = Path(__file__).resolve()
 
 V3_SCHEMA_PATH = DATA / "contracts/phase3_v3_cooperative_control_plane_v1.schema.json"
 V3_ARTIFACT_PATH = DATA / "evidence/phase3_v3_cooperative_control_plane_v1.json"
-V3_VALIDATOR_PATH = DATA.parent.parent.parent / "scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py"
+V3_VALIDATOR_PATH = ROOT / "scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py"
 P2_PATH = DATA / "evidence/phase3_p2_canonical_contracts_v1.json"
 V3A_SCHEMA_PATH = DATA / "contracts/phase3_v3a_taxonomy_denominator_compatibility_v1.schema.json"
 V3A_ARTIFACT_PATH = DATA / "contracts/phase3_v3a_taxonomy_denominator_compatibility_v1.json"
 V3A_MATRIX_PATH = DATA / "contracts/phase3_v3a_compatibility_matrix_v1.json"
-V3A_VALIDATOR_PATH = DATA.parent.parent.parent / "scripts/projects/open_model_data/freeze_phase3_v3a_taxonomy_denominator_compatibility.py"
+V3A_VALIDATOR_PATH = ROOT / "scripts/projects/open_model_data/freeze_phase3_v3a_taxonomy_denominator_compatibility.py"
+
+# Historical validator provenance from the frozen pre-migration source tree.
+FROZEN_VALIDATOR_HASHES = {
+    SCRIPT_PATH: "b0638a47a737f4fcb4a073cef045b0ad7362669353cc03b62094f859f7dda926",
+    V3_VALIDATOR_PATH: "50a6ef3de21ee999325a07478e9c3570f9b7d353a622fc28ab50a3f75e9055b3",
+    V3A_VALIDATOR_PATH: "9526e76ddc65c4b4876f7fa74b39b185eba855acee8b8b0cd77282a51038853a",
+}
 
 V2_OUTCOME_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
 V3_CONSENSUS_SHA256 = "d3444c126deb91d05129d51c5344aa204b1db9ca0927c246698e0389466d0b1a"
@@ -213,11 +225,14 @@ def sha256_file(path: Path) -> str:
 
 
 def logical(path: Path) -> str:
-    return path.relative_to(ROOT).as_posix()
+    relative = path.relative_to(ROOT).as_posix()
+    if relative.startswith("registry/projects/open_model_data/"):
+        return relative.replace("registry/projects/open_model_data/", "data/projects/open_model_data/", 1)
+    return relative
 
 
 def binding(path: Path) -> dict[str, str]:
-    return {"path": logical(path), "sha256": sha256_file(path)}
+    return {"path": logical(path), "sha256": FROZEN_VALIDATOR_HASHES.get(path) or sha256_file(path)}
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -249,7 +264,13 @@ def _walk_forbidden(value: Any, path: str = "artifact") -> None:
 
 def verify_predecessors() -> None:
     for path, expected in EXPECTED_HASHES.items():
-        require(sha256_file(path) == expected, f"predecessor byte drift: {logical(path)}")
+        if path in FROZEN_VALIDATOR_HASHES:
+            require(
+                path.is_file() and FROZEN_VALIDATOR_HASHES[path] == expected,
+                f"validator provenance drift: {logical(path)}",
+            )
+        else:
+            require(sha256_file(path) == expected, f"predecessor byte drift: {logical(path)}")
 
 
 def _hash_schema() -> dict[str, Any]:
@@ -327,13 +348,34 @@ def _output_definitions() -> dict[str, Any]:
                 "uniqueItems": True,
             },
             "diachronic_status": {"enum": ["modern", "archaic_bookish_modern", "historical_stage", "undetermined"]},
-            "variety_status": {"enum": ["standard", "dialectal", "regional", "source_attested_identity", "literary_eye_dialect", "unspecified"]},
+            "variety_status": {
+                "enum": [
+                    "standard",
+                    "dialectal",
+                    "regional",
+                    "source_attested_identity",
+                    "literary_eye_dialect",
+                    "unspecified",
+                ]
+            },
             "variety_id": {"type": "string", "minLength": 1},
             "period_id": {"type": "string", "minLength": 1},
             "region_id": {"type": "string", "minLength": 1},
             "register_id": {"type": "string", "minLength": 1},
-            "contact_composition": {"enum": ["none", "surzhyk_contact_mixing", "quotation", "transliteration", "unresolved_contact"]},
-            "context_role": {"enum": ["production", "correction", "protected_context", "quotation", "metalinguistic", "named_entity", "unresolved"]},
+            "contact_composition": {
+                "enum": ["none", "surzhyk_contact_mixing", "quotation", "transliteration", "unresolved_contact"]
+            },
+            "context_role": {
+                "enum": [
+                    "production",
+                    "correction",
+                    "protected_context",
+                    "quotation",
+                    "metalinguistic",
+                    "named_entity",
+                    "unresolved",
+                ]
+            },
             "recension_editorial_layer_id": {"type": "string", "minLength": 1},
             "primary_case_state": {"type": "string", "minLength": 1},
             "modern_correction_eligible": {"type": "boolean"},
@@ -385,9 +427,7 @@ def _output_definitions() -> dict[str, Any]:
     )
     return {
         "identity_output": _strict_object(identity, (*common_required, "decision")),
-        "critic_output": _strict_object(
-            critic, (*common_required, "disagreement_sha256", "recommendation")
-        ),
+        "critic_output": _strict_object(critic, (*common_required, "disagreement_sha256", "recommendation")),
         "candidate_output": _strict_object(
             candidate, (*common_required, "identity_join_sha256", "proposed_case_state", "proposal_sha256")
         ),
@@ -801,7 +841,9 @@ def validate_output(contract_id: str, payload: Mapping[str, Any], schema: Mappin
     require(contract_id in artifact["output_contracts"], "unknown output contract")
     ref = artifact["output_contracts"][contract_id]["schema_ref"]
     require(ref.startswith("#/$defs/"), "output contract requires procedural validator")
-    errors = sorted(Draft202012Validator(_schema_for_ref(schema, ref)).iter_errors(payload), key=lambda item: list(item.path))
+    errors = sorted(
+        Draft202012Validator(_schema_for_ref(schema, ref)).iter_errors(payload), key=lambda item: list(item.path)
+    )
     require(not errors, f"output schema violation: {errors[0].message}" if errors else "output schema violation")
     _walk_forbidden(payload, "output")
     if contract_id == "v3b.transition.receipt":
@@ -895,7 +937,10 @@ def validate_human_adjudication(value: Mapping[str, Any], artifact: Mapping[str,
     require(key["registry_sha256"] == registry["registry_sha256"], "atomic registry binding mismatch")
     require(value["directly_inspected"] is True, "promotion requires direct human inspection")
     require(value["decision_state"] in {"adjudicated", "abstained", "evidence_insufficient"}, "decision state invalid")
-    require(value["adjudication_record_sha256"] == receipt_sha(value, "adjudication_record_sha256"), "adjudication self-hash mismatch")
+    require(
+        value["adjudication_record_sha256"] == receipt_sha(value, "adjudication_record_sha256"),
+        "adjudication self-hash mismatch",
+    )
     _walk_forbidden(value, "human_adjudication")
 
 
@@ -906,9 +951,7 @@ def validate_transition_receipts(
     schema = read_json(SCHEMA_PATH)
     validator = Draft202012Validator(schema["$defs"]["transition_receipt"])
     transition_roles = {
-        (item["from_state"], item["to_state"], item["condition_code"]): set(
-            item["authorized_role_ids"]
-        )
+        (item["from_state"], item["to_state"], item["condition_code"]): set(item["authorized_role_ids"])
         for item in artifact["state_machine"]["transitions"]
     }
     seen_ids: dict[tuple[str, str], bytes] = {}
@@ -932,7 +975,9 @@ def validate_transition_receipts(
     role_contracts = {str(role["role_id"]): role for role in artifact["role_contracts"]}
     for item in receipts:
         errors = sorted(validator.iter_errors(item), key=lambda error: list(error.path))
-        require(not errors, f"transition receipt schema violation: {errors[0].message}" if errors else "receipt invalid")
+        require(
+            not errors, f"transition receipt schema violation: {errors[0].message}" if errors else "receipt invalid"
+        )
         encoded = canonical_bytes(item)
         row_id = str(item["row_id"])
         receipt_id = str(item["receipt_id"])
@@ -945,9 +990,7 @@ def validate_transition_receipts(
         previous_hash = previous_hash_by_row.get(row_id)
         previous_to = previous_to_by_row.get(row_id)
         if row_id not in genesis_valid_by_row:
-            genesis_valid_by_row[row_id] = (
-                item["from_state"] == artifact["state_machine"]["row_genesis_state"]
-            )
+            genesis_valid_by_row[row_id] = item["from_state"] == artifact["state_machine"]["row_genesis_state"]
         require(item["sequence"] == expected_sequence, "transition receipt sequence gap")
         require(item["previous_receipt_sha256"] == previous_hash, "transition receipt previous hash mismatch")
         if previous_to is not None:
@@ -962,7 +1005,10 @@ def validate_transition_receipts(
             "condition_code": item["condition_code"],
         }
         require(item["receipt_id"] == sha256_bytes(canonical_bytes(identity)), "transition receipt identity drift")
-        require(item["denominator_sha256"] == artifact["incidence_manifest"]["denominator_sha256"], "receipt denominator drift")
+        require(
+            item["denominator_sha256"] == artifact["incidence_manifest"]["denominator_sha256"],
+            "receipt denominator drift",
+        )
         require(item["contract_sha256"] == artifact["receipt_sha256"], "receipt contract drift")
         role_id = str(item["role_id"])
         require(role_id in transition_roles[edge], "transition receipt role not authorized")
@@ -1107,14 +1153,23 @@ def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any]) -> None:
         ("MODEL_AGREEMENT_QUARANTINED_NOT_GOLD", "CASE_HUMAN_QUEUE", "complete_human_review_selected") in edges,
         "quarantine lacks human path",
     )
-    require(not any(source == "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD" and target.startswith("GOLD") for source, target, _ in edges), "quarantine direct gold path")
-    require(not any(source == "IDENTITY_ABSTAINED_NON_GOLD" and target == "CASE_CANDIDATE_PENDING" for source, target, _ in edges), "identity abstention reaches candidate")
+    require(
+        not any(
+            source == "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD" and target.startswith("GOLD")
+            for source, target, _ in edges
+        ),
+        "quarantine direct gold path",
+    )
+    require(
+        not any(
+            source == "IDENTITY_ABSTAINED_NON_GOLD" and target == "CASE_CANDIDATE_PENDING"
+            for source, target, _ in edges
+        ),
+        "identity abstention reaches candidate",
+    )
     require(all("TRAINING" not in state for state in machine["states"]), "training state present")
     require(
-        artifact["transition_receipt_contract"][
-            "first_receipt_from_state_must_equal_row_genesis_state"
-        ]
-        is True,
+        artifact["transition_receipt_contract"]["first_receipt_from_state_must_equal_row_genesis_state"] is True,
         "row genesis receipt invariant disabled",
     )
     gates = artifact["execution_gates"]
@@ -1126,8 +1181,10 @@ def validate(artifact: Mapping[str, Any], schema: Mapping[str, Any]) -> None:
 
 
 def write_outputs() -> None:
-    SCHEMA_PATH.write_bytes(canonical_bytes(build_schema()))
-    ARTIFACT_PATH.write_bytes(canonical_bytes(build_artifact()))
+    schema = build_schema()
+    artifact = build_artifact()
+    validate(artifact, schema)
+    publish_frozen_k_bundle(ROOT, {SCHEMA_PATH: canonical_bytes(schema), ARTIFACT_PATH: canonical_bytes(artifact)})
 
 
 def check_outputs() -> None:

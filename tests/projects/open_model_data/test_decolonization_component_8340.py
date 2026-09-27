@@ -56,8 +56,12 @@ def decolonization_data():
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     cases = json.loads(cases_file.read_text(encoding="utf-8"))
 
-    train_records = [json.loads(line) for line in snapshot.artifacts[train_rel].decode("utf-8").splitlines() if line.strip()]
-    eval_records = [json.loads(line) for line in snapshot.artifacts[eval_rel].decode("utf-8").splitlines() if line.strip()]
+    train_records = [
+        json.loads(line) for line in snapshot.artifacts[train_rel].decode("utf-8").splitlines() if line.strip()
+    ]
+    eval_records = [
+        json.loads(line) for line in snapshot.artifacts[eval_rel].decode("utf-8").splitlines() if line.strip()
+    ]
 
     return {
         "manifest": manifest,
@@ -255,9 +259,9 @@ def test_supporting_passages_all_non_null_and_authentic(decolonization_data):
         cid = c["case_id"]
         rev = c.get("reviewer_confirmation", {})
         assert rev.get("status") == "confirmed", f"Case {cid} has status '{rev.get('status')}', expected 'confirmed'"
-        assert (
-            rev.get("reviewer_family") in {"claude", "independent_human", "independent_expert"}
-        ), f"Case {cid} has reviewer_family '{rev.get('reviewer_family')}', expected accredited family"
+        assert rev.get("reviewer_family") in {"claude", "independent_human", "independent_expert"}, (
+            f"Case {cid} has reviewer_family '{rev.get('reviewer_family')}', expected accredited family"
+        )
 
         source_ev = rev.get("source_evidence", {})
         passage = source_ev.get("supporting_passage")
@@ -476,13 +480,16 @@ def test_adversarial_probes_and_fail_closed(require_local_databases):
 
     # 8. make_reviewer_confirmation must fail closed on tampered contexts (CF-R7 Finding 3)
     from scripts.projects.open_model_data.decolonization_cases_data import SYNTACTIC_CALQUES
+
     syn_032 = next(c for c in SYNTACTIC_CALQUES if c["case_id"] == "decol_syn_032")
     tampered_contexts_item = dict(syn_032)
     tampered_contexts_item["contexts"] = [
         {**syn_032["contexts"][0], "query": "Абсолютно сфальсифікований запит"},
         syn_032["contexts"][1],
     ]
-    with pytest.raises(ValueError, match=r"content digest mismatch.*Contexts, case metadata, or source evidence tampered with"):
+    with pytest.raises(
+        ValueError, match=r"content digest mismatch.*Contexts, case metadata, or source evidence tampered with"
+    ):
         make_reviewer_confirmation(tampered_contexts_item, "calque_syntactic", v_cur, s_cur, [])
 
     # 9. make_reviewer_confirmation must fail closed on flipped is_erroneous (CF-R7 Finding 3)
@@ -498,6 +505,7 @@ def test_adversarial_probes_and_fail_closed(require_local_databases):
     # 11. make_reviewer_confirmation must fail closed on tampered supporting passage (CF-R8 Finding 2)
     from scripts.projects.open_model_data.decolonization_cases_data import PREPOSITIONAL_CALQUES
     from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
+
     prep_020 = next(c for c in PREPOSITIONAL_CALQUES if c["case_id"] == "decol_prep_020")
     orig_passage = EXPLICIT_SOURCE_EVIDENCE["decol_prep_020"]["supporting_passage"]
     try:
@@ -512,6 +520,7 @@ def test_adversarial_probes_and_fail_closed(require_local_databases):
 
     # 12. make_reviewer_confirmation must fail closed on nonexistent dossier file (CF-R8 Finding 3)
     from scripts.projects.open_model_data.decolonization_language_reviews import INDEPENDENT_LANGUAGE_REVIEWS
+
     orig_locator = INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_dossier_locator"]
     try:
         INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_dossier_locator"] = (
@@ -563,11 +572,17 @@ def test_supporting_passages_and_no_manufactured_statements(decolonization_data)
     for c in cases:
         ev = c["reviewer_confirmation"]["source_evidence"]
         passage = ev.get("supporting_passage", "")
-        assert "Конструкція 'по' з іменником у знахідному" not in passage, f"Case {c['case_id']} contains manufactured blanket text"
-        assert "помилкова з погляду української граматики" not in passage, f"Case {c['case_id']} contains manufactured blanket text"
+        assert "Конструкція 'по' з іменником у знахідному" not in passage, (
+            f"Case {c['case_id']} contains manufactured blanket text"
+        )
+        assert "помилкова з погляду української граматики" not in passage, (
+            f"Case {c['case_id']} contains manufactured blanket text"
+        )
 
     # 3. Check that prepositional calques have accurate authorities
-    ponomariv_prep_cases = [c for c in cases if c["category"] == "calque_prepositional" and "Пономарів" in c["authority"]]
+    ponomariv_prep_cases = [
+        c for c in cases if c["category"] == "calque_prepositional" and "Пономарів" in c["authority"]
+    ]
     assert len(ponomariv_prep_cases) == 36
     for c in ponomariv_prep_cases:
         ev = c["reviewer_confirmation"]["source_evidence"]
@@ -665,8 +680,10 @@ def test_cf_r9_remediations_regression(decolonization_data, require_local_databa
     class RaisingCursor:
         def execute(self, *args, **kwargs):
             raise RuntimeError("Live SQL query executed: simulated cursor failure")
+
         def fetchone(self):
             raise RuntimeError("Live SQL query executed: simulated cursor failure")
+
         def fetchall(self):
             raise RuntimeError("Live SQL query executed: simulated cursor failure")
 
@@ -845,7 +862,9 @@ def test_cf_r10_remediations_regression(require_local_databases):
         )
 
     # 2d. UA-GEC branch
-    with pytest.raises(ValueError, match=r"UA-GEC evidence missing: record \d+ for case 'decol_lex_012' not found in ua_gec_errors"):
+    with pytest.raises(
+        ValueError, match=r"UA-GEC evidence missing: record \d+ for case 'decol_lex_012' not found in ua_gec_errors"
+    ):
         query_source_evidence(
             case_id="decol_lex_012",
             term="гусак",
@@ -1059,7 +1078,9 @@ def test_cf_r11_remediations_regression(monkeypatch, require_local_databases):
             return [(5921, "гусь", "гусак", "Fluency", "9999")]
 
     doc_mismatch_cur = UAGECDocMismatchCursor()
-    with pytest.raises(ValueError, match=r"UA-GEC doc_id mismatch for case 'decol_lex_012': expected '1068', got '9999'"):
+    with pytest.raises(
+        ValueError, match=r"UA-GEC doc_id mismatch for case 'decol_lex_012': expected '1068', got '9999'"
+    ):
         query_source_evidence(
             case_id="decol_lex_012",
             term="гусак",
@@ -1388,6 +1409,7 @@ def test_cf_r13_remediations_regression(require_local_databases) -> None:
     # 3. make_reviewer_confirmation must fail closed on TractorBookMockCursor
     from scripts.projects.open_model_data.build_decolonization_cases import make_reviewer_confirmation
     from scripts.projects.open_model_data.decolonization_cases_data import LEXICAL_CALQUES
+
     lex_003_item = next(c for c in LEXICAL_CALQUES if c["case_id"] == "decol_lex_003")
     with pytest.raises(
         ValueError,
@@ -1676,7 +1698,11 @@ def test_cf_r15_phrase_attestation_regression(require_all_databases) -> None:
 
         def fetchone(self) -> tuple | None:
             # Returns headword 'ТОЧКА' with 'Точка зору' but lacking claimed phrase 'з точки зору'
-            return (137, "ТОЧКА", "ТОЧКА, -и, ж. Точка зору — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».")
+            return (
+                137,
+                "ТОЧКА",
+                "ТОЧКА, -и, ж. Точка зору — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».",
+            )
 
         def fetchall(self) -> list:
             return []
@@ -1928,7 +1954,7 @@ def test_cf_r22_remediations_regression():
     ev_023 = EXPLICIT_SOURCE_EVIDENCE["decol_syn_023"]
     assert "відчиняти можна двері, вікна, браму" in ev_023["supporting_passage"]
     assert "Відкривати, відчиняти, розгортати" in ev_023["locus"]
-    assert "іменник \"кіл\"" not in ev_023["supporting_passage"]
+    assert 'іменник "кіл"' not in ev_023["supporting_passage"]
 
     case_023 = next(c for c in SYNTACTIC_CALQUES if c["case_id"] == "decol_syn_023")
     assert case_023["target_term"] == "відчинити"

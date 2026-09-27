@@ -340,7 +340,9 @@ def verify(
     manifest_data = json.loads(manifest_resolved.read_text(encoding="utf-8"))
 
     # Validate Manifest Schema
-    m_schema_path = input_root / "registry/projects/open_model_data/contracts/v4_human_source_pilot_manifest_v1.schema.json"
+    m_schema_path = (
+        input_root / "registry/projects/open_model_data/contracts/v4_human_source_pilot_manifest_v1.schema.json"
+    )
     if m_schema_path.is_file():
         schema = json.loads(m_schema_path.read_text(encoding="utf-8"))
         Draft202012Validator(schema).validate(manifest_data)
@@ -398,7 +400,9 @@ def verify(
         raise PilotDatasetError("Proof 1-of-1 invariant violation: must be cleared and verbatim")
 
     # Validate Records lines
-    rec_schema_path = input_root / "registry/projects/open_model_data/contracts/v4_human_source_pilot_record_v1.schema.json"
+    rec_schema_path = (
+        input_root / "registry/projects/open_model_data/contracts/v4_human_source_pilot_record_v1.schema.json"
+    )
     rec_validator = None
     if rec_schema_path.is_file():
         schema = json.loads(rec_schema_path.read_text(encoding="utf-8"))

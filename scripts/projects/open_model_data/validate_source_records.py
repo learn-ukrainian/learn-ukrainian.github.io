@@ -34,10 +34,16 @@ RIGHTS_BY_OPERATION = {
 }
 
 # Explicit source classifications only; do not infer topic/origin from prose.
-EXCLUDED_SOURCE_CATEGORIES = frozenset({
-    "stem", "video_captions", "video_transcripts", "ocr", "ocr_derived",
-    "private_teaching_material",
-})
+EXCLUDED_SOURCE_CATEGORIES = frozenset(
+    {
+        "stem",
+        "video_captions",
+        "video_transcripts",
+        "ocr",
+        "ocr_derived",
+        "private_teaching_material",
+    }
+)
 
 
 def required_rights(operation: str) -> tuple[str, ...]:
@@ -152,8 +158,11 @@ def _semantic_reasons(record: dict[str, Any], schema_hash: str, operation: str) 
 
 
 def validate_record(
-    record: dict[str, Any], validator: Draft202012Validator, schema_hash: str,
-    *, operation: str = "local_learning",
+    record: dict[str, Any],
+    validator: Draft202012Validator,
+    schema_hash: str,
+    *,
+    operation: str = "local_learning",
 ) -> dict[str, Any]:
     """Return a content-blind admission disposition for one contract record."""
     required_rights(operation)
@@ -199,9 +208,7 @@ def validate_path(path: Path, *, operation: str = "local_learning") -> dict[str,
         "rejected_records": len(outcomes) - sum(outcome["admitted"] for outcome in outcomes),
         "rejection_reason_counts": dict(sorted(counts.items())),
         "results": (
-            []
-            if all_legacy
-            else sorted(outcomes, key=lambda item: (str(item["record_id"]), canonical_json(item)))
+            [] if all_legacy else sorted(outcomes, key=lambda item: (str(item["record_id"]), canonical_json(item)))
         ),
         "total_records": len(outcomes),
         "validator_version": "source_record_v1",
@@ -211,17 +218,21 @@ def validate_path(path: Path, *, operation: str = "local_learning") -> dict[str,
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Validate source-record rights and provenance for one operation.\n"
-                    "Use for admission checks; this command never exports source text or grants rights.",
+        "Use for admission checks; this command never exports source text or grants rights.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Example: python -m "
-               "scripts.projects.open_model_data.validate_source_records records.jsonl --operation local_learning\n"
-               "Outputs: content-blind JSON on stdout; no files written.\n"
-               "Exit codes: 0 completed (inspect rejection counts); 2 invalid arguments.\n"
-               "Related: docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md; #7888",
+        "scripts.projects.open_model_data.validate_source_records records.jsonl --operation local_learning\n"
+        "Outputs: content-blind JSON on stdout; no files written.\n"
+        "Exit codes: 0 completed (inspect rejection counts); 2 invalid arguments.\n"
+        "Related: docs/projects/open-model-data/SOURCE_RECORD_CONTRACT.md; #7888",
     )
     parser.add_argument("input", type=Path, help="JSON, JSON-list, or JSONL input")
-    parser.add_argument("--operation", choices=tuple(RIGHTS_BY_OPERATION), default="local_learning",
-                        help="Permission scope to validate (default: local_learning)")
+    parser.add_argument(
+        "--operation",
+        choices=tuple(RIGHTS_BY_OPERATION),
+        default="local_learning",
+        help="Permission scope to validate (default: local_learning)",
+    )
     args = parser.parse_args()
     print(canonical_json(validate_path(args.input, operation=args.operation)))
     return 0

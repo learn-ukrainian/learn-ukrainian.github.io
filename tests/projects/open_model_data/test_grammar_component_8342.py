@@ -561,7 +561,9 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requir
     sample_file = tmp_path / "acceptance_review_sample.json"
     sample_file.write_bytes(_artifact_bytes("acceptance_review_sample.json"))
     monkeypatch.setattr(grammar_signoff, "SAMPLE_JSON", sample_file)
-    monkeypatch.setattr(grammar_signoff, "SIGNOFF_TEMPLATE", GRAMMAR_DIR / "acceptance_review_sample.signoff_template.json")
+    monkeypatch.setattr(
+        grammar_signoff, "SIGNOFF_TEMPLATE", GRAMMAR_DIR / "acceptance_review_sample.signoff_template.json"
+    )
     monkeypatch.setattr(grammar_signoff, "RECEIPT_FILE", tmp_path / "acceptance_review_sample.receipt.json")
     monkeypatch.setattr(grammar_signoff, "SIGNOFF_FILE", tmp_path / "acceptance_review_sample.signoff.json")
     monkeypatch.setattr(grammar_signoff, "VESUM_DB", requires_vesum_db)
@@ -617,8 +619,10 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requir
     f_path3.write_text(json.dumps(false_crit_findings), encoding="utf-8")
     tmp_receipt = tmp_path / "test.receipt.json"
     tmp_signoff = tmp_path / "test.signoff.json"
-    with mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.RECEIPT_FILE", tmp_receipt), \
-         mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.SIGNOFF_FILE", tmp_signoff):
+    with (
+        mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.RECEIPT_FILE", tmp_receipt),
+        mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.SIGNOFF_FILE", tmp_signoff),
+    ):
         generate_signoff_and_receipt(
             findings_file=f_path3,
             write_signoff=True,
@@ -649,7 +653,10 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requir
 
     # 5. Duplicate JSON key rejected during parsing
     raw_text = findings_file.read_text(encoding="utf-8")
-    dup_text = '{"1": {"sample_index": 1, "verdict": "CHANGES_REQUESTED", "status": "FAIL", "reviewer_assessment": "x", "criteria": {"pedagogical_soundness": true, "morphology_vesum": true, "pravopys_2019": true, "zero_russianisms": true, "zero_soviet_sum11": true}}, ' + raw_text[1:]
+    dup_text = (
+        '{"1": {"sample_index": 1, "verdict": "CHANGES_REQUESTED", "status": "FAIL", "reviewer_assessment": "x", "criteria": {"pedagogical_soundness": true, "morphology_vesum": true, "pravopys_2019": true, "zero_russianisms": true, "zero_soviet_sum11": true}}, '
+        + raw_text[1:]
+    )
     f_path5 = tmp_path / "dup_key.json"
     f_path5.write_text(dup_text, encoding="utf-8")
     with pytest.raises(ValueError, match="duplicate key '1' in JSON object"):
@@ -668,8 +675,10 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requir
     f_path6.write_text(json.dumps(rejected_findings), encoding="utf-8")
     tmp_receipt6 = tmp_path / "test6.receipt.json"
     tmp_signoff6 = tmp_path / "test6.signoff.json"
-    with mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.RECEIPT_FILE", tmp_receipt6), \
-         mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.SIGNOFF_FILE", tmp_signoff6):
+    with (
+        mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.RECEIPT_FILE", tmp_receipt6),
+        mock.patch("scripts.projects.open_model_data.generate_grammar_signoff_8342.SIGNOFF_FILE", tmp_signoff6),
+    ):
         generate_signoff_and_receipt(
             findings_file=f_path6,
             write_signoff=True,

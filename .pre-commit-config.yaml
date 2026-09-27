@@ -76,7 +76,9 @@ repos:
         exclude: ^data/projects/open_model_data/study/run_output/adapter/adapter_model\.safetensors$
       - id: check-merge-conflict
       - id: end-of-file-fixer
-        exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/)
+        # The exact frozen K blob lacks a trailing newline; its classified
+        # bytes must survive the P3 migration unchanged.
+        exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/|registry/projects/open_model_data/admission/phase3_vspu_post_ingest_audit_v1\.json$)
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
         exclude: ^(curriculum/|wiki/|docs/references/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/)

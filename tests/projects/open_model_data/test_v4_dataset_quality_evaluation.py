@@ -123,6 +123,8 @@ def test_eval6_downstream_study_methodology() -> None:
 
 def test_privacy_invariants() -> None:
     repo_root = Path.cwd()
-    assessment_path = repo_root / "registry/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
+    assessment_path = (
+        repo_root / "registry/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
+    )
     data = json.loads(assessment_path.read_text(encoding="utf-8"))
     assert_no_private_host_paths(data)

@@ -24,11 +24,7 @@ def validator() -> Draft202012Validator:
 def test_packaged_schema_matches_current_asset_without_resealing_history() -> None:
     assert resources.read_bytes(SCHEMA) == (chain.ROOT / SCHEMA).read_bytes()
     spec = json.loads(resources.read_bytes(provenance.SPEC))
-    assert all(
-        binding["path"] != SCHEMA
-        for receipt in spec["receipts"]
-        for binding in receipt["bindings"].values()
-    )
+    assert all(binding["path"] != SCHEMA for receipt in spec["receipts"] for binding in receipt["bindings"].values())
     provenance.verify_current_identity()
 
 
@@ -72,7 +68,9 @@ def test_schema_valid_resolved_stratum_only_changes_prerequisites(tmp_path: Path
             assert receipt["execution_counters"]["dataset_rows_emitted"] == 0
 
 
-@pytest.mark.parametrize("state", ["candidate_support_identified", "support_identified_with_residual", "source_incomplete"])
+@pytest.mark.parametrize(
+    "state", ["candidate_support_identified", "support_identified_with_residual", "source_incomplete"]
+)
 def test_unresolved_coverage_cannot_silently_drop_residuals(state: str) -> None:
     receipt = chain.resolved_a2_receipt("standard_correct")
     receipt["stratum_coverage_map"][0]["coverage_state"] = state

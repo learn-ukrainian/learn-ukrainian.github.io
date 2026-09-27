@@ -134,7 +134,8 @@ EXPECTED_PRIVATE_RECEIPTS = {
 
 EXPECTED_RECEIPT_SCHEMAS = {
     "historical-document-chronology-source-dates-v2": (
-        ROOT / "registry/projects/open_model_data/contracts/phase3_historical_document_chronology_receipt_v2.schema.json"
+        ROOT
+        / "registry/projects/open_model_data/contracts/phase3_historical_document_chronology_receipt_v2.schema.json"
     ),
     "lavra-near-caves-intake-v1": (
         ROOT / "registry/projects/open_model_data/contracts/phase3_lavra_near_caves_intake_receipt_v1.schema.json"

@@ -73,7 +73,7 @@ PROTECTED_PERIODS = frozenset(
     }
 )
 PROTECTED_REGISTER_FRAGMENTS = ("dialect", "folk", "heritage", "histor", "regional", "archa")
-QUOTE_PAIRS = {"«": "»", "“": "”", "„": "“", "\"": "\""}
+QUOTE_PAIRS = {"«": "»", "“": "”", "„": "“", '"': '"'}
 SENTENCE_BOUNDARY_RE = re.compile(r"[.!?…;\n]")
 
 
@@ -215,8 +215,7 @@ def _promote_staged_artifacts(artifacts: Sequence[tuple[Path, Path]]) -> None:
             temporary.unlink(missing_ok=True)
         if rollback_errors:
             raise ValueError(
-                "artifact promotion failed and rollback was incomplete: "
-                + "; ".join(rollback_errors)
+                "artifact promotion failed and rollback was incomplete: " + "; ".join(rollback_errors)
             ) from exc
         raise
     else:
@@ -341,9 +340,7 @@ def segment_structure(text: str) -> list[DetectionSpan]:
             closer, content_start = stack.pop()
             if index > content_start:
                 role = "quotation"
-                spans.append(
-                    DetectionSpan(content_start, index, text[content_start:index], role, True, "paired_quote")
-                )
+                spans.append(DetectionSpan(content_start, index, text[content_start:index], role, True, "paired_quote"))
             continue
         if char in QUOTE_PAIRS:
             closer = QUOTE_PAIRS[char]
@@ -369,13 +366,9 @@ def segment_structure(text: str) -> list[DetectionSpan]:
         attribution = re.search(r"\s+[—–-]\s+(?=[а-яіїєґА-ЯІЇЄҐ])", content)
         end = content_start + (attribution.start() if attribution else len(content.rstrip()))
         if end > content_start:
-            spans.append(
-                DetectionSpan(content_start, end, text[content_start:end], "dialogue", True, "dash_dialogue")
-            )
+            spans.append(DetectionSpan(content_start, end, text[content_start:end], "dialogue", True, "dash_dialogue"))
 
-    meta_pattern = re.compile(
-        r"(?iu)(?:слово|форма|вираз|пишуть|кажуть|називається)\s*[:—-]\s*([^.!?\n]{1,240})"
-    )
+    meta_pattern = re.compile(r"(?iu)(?:слово|форма|вираз|пишуть|кажуть|називається)\s*[:—-]\s*([^.!?\n]{1,240})")
     for match in meta_pattern.finditer(text):
         start, end = match.span(1)
         spans.append(
@@ -603,12 +596,9 @@ class HeritageEvidenceAdapter(RelationHeritageLookup):
                 if headword:
                     identities.setdefault(headword, set()).add(identity)
                     if len(identities) > self.max_headwords:
-                        raise ValueError(
-                            f"heritage headword index exceeds configured maximum {self.max_headwords}"
-                        )
+                        raise ValueError(f"heritage headword index exceeds configured maximum {self.max_headwords}")
         self.headwords = {
-            headword: tuple(sorted(dictionary_identities))
-            for headword, dictionary_identities in identities.items()
+            headword: tuple(sorted(dictionary_identities)) for headword, dictionary_identities in identities.items()
         }
 
     def lemma_candidates(self, surface: str) -> list[str]:
@@ -616,9 +606,7 @@ class HeritageEvidenceAdapter(RelationHeritageLookup):
         cached = self.lemma_cache.get(normalized)
         if cached is not None:
             return cached
-        lemmas = sorted(
-            {normalize_form(parse.normal_form) for parse in self.uk_morph.parse(normalized)[:4]}
-        )
+        lemmas = sorted({normalize_form(parse.normal_form) for parse in self.uk_morph.parse(normalized)[:4]})
         self.lemma_cache.put(normalized, lemmas)
         return lemmas
 
@@ -710,7 +698,9 @@ def _find_vetted_routes(
     lowered = _offset_safe_casefold(text)
     phrases: list[tuple[str, str, str]] = []
     for phrase in sorted(PHRASAL_CALQUES, key=lambda item: (-len(item), item)):
-        phrases.append((_offset_safe_casefold(phrase), "vetted_phrasal_calque_or_collocation", f"PHRASAL_CALQUES:{phrase}"))
+        phrases.append(
+            (_offset_safe_casefold(phrase), "vetted_phrasal_calque_or_collocation", f"PHRASAL_CALQUES:{phrase}")
+        )
     for route in config["valid_word_routes"]:
         phrases.append((_offset_safe_casefold(route["pattern"]), str(route["route_kind"]), str(route["source_key"])))
     occupied: list[tuple[int, int]] = []
@@ -808,7 +798,9 @@ def _seed_record(
     seeds = _find_vetted_routes(text, tokens, config)
     seeds.extend(_latin_and_ocr_seeds(text, tokens, int(config["prefilter"]["min_latin_run_words"])))
     anchors = {normalize_form(value) for value in config["prefilter"]["russian_anchors"]}
-    phonetic_map = {normalize_form(key): normalize_form(value) for key, value in config["reconstruction"]["mappings"].items()}
+    phonetic_map = {
+        normalize_form(key): normalize_form(value) for key, value in config["reconstruction"]["mappings"].items()
+    }
     adjacent_unknown = _adjacent_unknown_members(
         text,
         tokens,
@@ -860,10 +852,7 @@ def _seed_record(
                     seeds.append(Seed(token.index, token.index, "russian_anchor", token.normalized))
                 if r2u.get("status") == "hit" and not known_ukrainian:
                     seeds.append(Seed(token.index, token.index, "r2u_ru_morph", token.normalized))
-                if (
-                    heritage_by_token.get(token.index, {}).get("status") == "hit"
-                    and not token.surface[:1].isupper()
-                ):
+                if heritage_by_token.get(token.index, {}).get("status") == "hit" and not token.surface[:1].isupper():
                     seeds.append(Seed(token.index, token.index, "heritage_rescue", token.normalized))
                 if token.index in adjacent_unknown:
                     seeds.append(Seed(token.index, token.index, "adjacent_unknown_ru_morph", token.normalized))
@@ -874,7 +863,14 @@ def _seed_record(
         ):
             seeds.append(Seed(token.index, token.index, "proper_name_orthography", token.normalized))
         if is_phonetic:
-            seeds.append(Seed(token.index, token.index, "phonetic_mapping", f"{token.normalized}->{phonetic_map[token.normalized]}"))
+            seeds.append(
+                Seed(
+                    token.index,
+                    token.index,
+                    "phonetic_mapping",
+                    f"{token.normalized}->{phonetic_map[token.normalized]}",
+                )
+            )
     return seeds, ru_by_token, r2u_by_token, heritage_by_token
 
 
@@ -965,7 +961,9 @@ def _reconstruct_phonetic(
     config: Mapping[str, Any],
     runtime: EvidenceRuntime,
 ) -> list[dict[str, Any]]:
-    mappings = {normalize_form(key): normalize_form(value) for key, value in config["reconstruction"]["mappings"].items()}
+    mappings = {
+        normalize_form(key): normalize_form(value) for key, value in config["reconstruction"]["mappings"].items()
+    }
     mapped_indices = sorted(
         {
             index
@@ -1016,19 +1014,41 @@ def _classify_cluster(
 ) -> dict[str, str] | None:
     kinds = {seed.kind for seed in cluster}
     if "ocr_or_encoding" in kinds:
-        return _classification("ocr_or_encoding_candidate", "uncertain", "ocr_or_encoding_candidate", role, "human_review_required", "high", "technical_review")
+        return _classification(
+            "ocr_or_encoding_candidate",
+            "uncertain",
+            "ocr_or_encoding_candidate",
+            role,
+            "human_review_required",
+            "high",
+            "technical_review",
+        )
     if "other_language_run" in kinds:
-        return _classification("other_language", "other_language", "standard_orthography", role, "retain_with_language_metadata", "high", "retain_other_language")
+        return _classification(
+            "other_language",
+            "other_language",
+            "standard_orthography",
+            role,
+            "retain_with_language_metadata",
+            "high",
+            "retain_other_language",
+        )
     valid = [seed for seed in cluster if seed.kind.startswith("vetted_")]
     if valid:
-        return _classification("valid_word_contact_candidate", "ukrainian", "standard_orthography", role, "correction_candidate", "medium", "valid_word_review")
+        return _classification(
+            "valid_word_contact_candidate",
+            "ukrainian",
+            "standard_orthography",
+            role,
+            "correction_candidate",
+            "medium",
+            "valid_word_review",
+        )
 
     suspicious_indices = sorted({index for seed in cluster for index in range(seed.start_token, seed.end_token + 1)})
     heritage_hits = [index for index in suspicious_indices if heritage_by_token.get(index, {}).get("status") == "hit"]
     high_ru = [
-        index
-        for index in suspicious_indices
-        if float(ru_by_token.get(index, {}).get("confidence", 0.0)) >= threshold
+        index for index in suspicious_indices if float(ru_by_token.get(index, {}).get("confidence", 0.0)) >= threshold
     ]
     r2u_hits = [index for index in suspicious_indices if r2u_by_token.get(index, {}).get("status") == "hit"]
     anchors = [seed for seed in cluster if seed.kind == "russian_anchor"]
@@ -1036,11 +1056,37 @@ def _classify_cluster(
     valid_reconstructions = [item for item in reconstructions if item.get("validated") is True]
 
     if heritage_hits and high_ru:
-        return _classification("protected_authentic_ukrainian", "ukrainian", "standard_orthography", role, "protected_historical_or_register_variation", "high", "protected_rescue")
-    if (period in PROTECTED_PERIODS or any(item in register.casefold() for item in PROTECTED_REGISTER_FRAGMENTS)) and (high_ru or anchors or valid_reconstructions):
-        return _classification("historical_unresolved", "historical_east_slavic_unresolved", "historical_orthography", role, "protected_historical_or_register_variation", "medium", "historical_review")
+        return _classification(
+            "protected_authentic_ukrainian",
+            "ukrainian",
+            "standard_orthography",
+            role,
+            "protected_historical_or_register_variation",
+            "high",
+            "protected_rescue",
+        )
+    if (period in PROTECTED_PERIODS or any(item in register.casefold() for item in PROTECTED_REGISTER_FRAGMENTS)) and (
+        high_ru or anchors or valid_reconstructions
+    ):
+        return _classification(
+            "historical_unresolved",
+            "historical_east_slavic_unresolved",
+            "historical_orthography",
+            role,
+            "protected_historical_or_register_variation",
+            "medium",
+            "historical_review",
+        )
     if valid_reconstructions:
-        return _classification("ukrainian_phonetic_russian", "russian", "ukrainian_phonetic_rendering_of_russian", role, "retain_with_language_metadata", "high", "unresolved_review")
+        return _classification(
+            "ukrainian_phonetic_russian",
+            "russian",
+            "ukrainian_phonetic_rendering_of_russian",
+            role,
+            "retain_with_language_metadata",
+            "high",
+            "unresolved_review",
+        )
 
     capitalized_specific = [
         index
@@ -1063,19 +1109,55 @@ def _classify_cluster(
     # not: creative, dialectal, and historical Ukrainian frequently produces
     # that pattern and must stay explicitly uncertain.
     if capitalized_specific and not lower_high_ru and quoted_role:
-        return _classification("uncertain", "uncertain", "standard_orthography", role, "human_review_required", "low", "unresolved_review")
+        return _classification(
+            "uncertain", "uncertain", "standard_orthography", role, "human_review_required", "low", "unresolved_review"
+        )
     if quoted_role and corroborated:
-        return _classification("russian_quotation", "russian", "standard_orthography", role, "mask_from_modern_ukrainian_loss", "high", "quoted_russian")
+        return _classification(
+            "russian_quotation",
+            "russian",
+            "standard_orthography",
+            role,
+            "mask_from_modern_ukrainian_loss",
+            "high",
+            "quoted_russian",
+        )
     if capitalized_specific and not lower_high_ru:
-        return _classification("proper_name", "uncertain", "standard_orthography", role, "retain_faithful", "medium", "proper_name_review")
+        return _classification(
+            "proper_name", "uncertain", "standard_orthography", role, "retain_faithful", "medium", "proper_name_review"
+        )
     if not corroborated and not adjacent_corroborated:
         return None
     if adjacent_corroborated and not corroborated:
-        return _classification("uncertain", "uncertain", "standard_orthography", role, "human_review_required", "medium", "unresolved_review")
+        return _classification(
+            "uncertain",
+            "uncertain",
+            "standard_orthography",
+            role,
+            "human_review_required",
+            "medium",
+            "unresolved_review",
+        )
     known_ukrainian = sum(bool(vesum_matches.get(tokens[index].normalized)) for index in suspicious_indices)
     if len(set(high_ru)) >= 2 and known_ukrainian:
-        return _classification("mixed_surzhyk_candidate", "mixed_ukrainian_russian", "standard_orthography", role, "human_review_required", "medium", "unresolved_review")
-    return _classification("modern_narration_interference", "russian", "standard_orthography", role, "correction_candidate", "high", "modern_interference_review")
+        return _classification(
+            "mixed_surzhyk_candidate",
+            "mixed_ukrainian_russian",
+            "standard_orthography",
+            role,
+            "human_review_required",
+            "medium",
+            "unresolved_review",
+        )
+    return _classification(
+        "modern_narration_interference",
+        "russian",
+        "standard_orthography",
+        role,
+        "correction_candidate",
+        "high",
+        "modern_interference_review",
+    )
 
 
 def _classification(
@@ -1110,11 +1192,7 @@ def _candidate_evidence(
     runtime: EvidenceRuntime,
     config: Mapping[str, Any],
 ) -> dict[str, Any]:
-    core_indices = {
-        index
-        for seed in cluster
-        for index in range(seed.start_token, seed.end_token + 1)
-    }
+    core_indices = {index for seed in cluster for index in range(seed.start_token, seed.end_token + 1)}
     evidence_tokens = [token for token in tokens if token.index in core_indices]
     queried_ru = [dict(ru_by_token[token.index]) for token in evidence_tokens if token.index in ru_by_token]
     queried_r2u = [
@@ -1126,9 +1204,7 @@ def _candidate_evidence(
         dict(heritage_by_token[token.index]) for token in evidence_tokens if token.index in heritage_by_token
     ]
     valid_routes = [
-        {"route_type": seed.kind, "evidence_key": seed.detail}
-        for seed in cluster
-        if seed.kind.startswith("vetted_")
+        {"route_type": seed.kind, "evidence_key": seed.detail} for seed in cluster if seed.kind.startswith("vetted_")
     ]
     return {
         "vesum": {
@@ -1159,11 +1235,7 @@ def _candidate_evidence(
             "adapter_id": "scripts.lexicon.load_relation_candidates.RelationHeritageLookup",
             "database": str(config["heritage"]["database"]),
             "status": (
-                "used"
-                if queried_heritage
-                else "not_queried"
-                if runtime.heritage_available
-                else "adapter_unavailable"
+                "used" if queried_heritage else "not_queried" if runtime.heritage_available else "adapter_unavailable"
             ),
             "lookups": queried_heritage,
         },
@@ -1426,7 +1498,9 @@ def stream_detector(
                 except (FileNotFoundError, sqlite3.Error, ValueError) as exc:
                     if connection is not None:
                         connection.close()
-                    inaccessible_sources.append({"source_family": source["source_family"], "reason": type(exc).__name__})
+                    inaccessible_sources.append(
+                        {"source_family": source["source_family"], "reason": type(exc).__name__}
+                    )
                     continue
                 with closing(connection):
                     cursor = connection.execute(query, parameters)
@@ -1447,7 +1521,9 @@ def stream_detector(
                             counts["processed_lexical_words"] += word_count
                             record_id = str(row["__record_id"])
                             locator_value = str(row["__locator"])
-                            locator = f"sqlite:{source['adapter']['database']}#{source['adapter']['table']}/{locator_value}"
+                            locator = (
+                                f"sqlite:{source['adapter']['database']}#{source['adapter']['table']}/{locator_value}"
+                            )
                             period = _dimension(row, source, "period")
                             register = _dimension(row, source, "register")
                             origin = _dimension(row, source, "origin")
@@ -1478,14 +1554,17 @@ def stream_detector(
                                 key = (source["source_family"], category, period, register)
                                 if key not in samples:
                                     span = candidate["span"]
-                                    samples[key] = f"{locator}@{span['start_char']}:{span['end_char']}#{span['span_hash']}"
+                                    samples[key] = (
+                                        f"{locator}@{span['start_char']}:{span['end_char']}#{span['span_hash']}"
+                                    )
                 expected = source["expected"]
                 source_results.append(
                     {
                         "actual": {"rows": source_rows, "lexical_words": source_words},
                         "expected": expected,
                         "inventory_asset_id": source["inventory_asset_id"],
-                        "matches_expected": source_rows == expected["rows"] and source_words == expected["lexical_words"],
+                        "matches_expected": source_rows == expected["rows"]
+                        and source_words == expected["lexical_words"],
                         "source_family": source["source_family"],
                     }
                 )
@@ -1504,7 +1583,8 @@ def stream_detector(
     unresolved_routes = {
         key: value
         for key, value in sorted(queue_counts.items())
-        if key in {"unresolved_review", "historical_review", "valid_word_review", "technical_review", "proper_name_review"}
+        if key
+        in {"unresolved_review", "historical_review", "valid_word_review", "technical_review", "proper_name_review"}
     }
     receipt = {
         "schema_version": SCHEMA_VERSION,
@@ -1518,7 +1598,9 @@ def stream_detector(
             "processed_lexical_words": processed_words,
             "dropped_rows": max(0, expected_rows - processed_rows),
             "dropped_lexical_words": max(0, expected_words - processed_words),
-            "inaccessible_sources": sorted(inaccessible_sources, key=lambda item: (item["source_family"], item["reason"])),
+            "inaccessible_sources": sorted(
+                inaccessible_sources, key=lambda item: (item["source_family"], item["reason"])
+            ),
             "source_results": sorted(source_results, key=lambda item: item["source_family"]),
         },
         "candidate_arithmetic": {
@@ -1573,9 +1655,7 @@ def stream_detector(
             raise AssertionError("queue-route arithmetic does not match candidates")
         for dimension_name, dimension_counts in dimensions.items():
             if sum(dimension_counts.values()) != total_candidates:
-                raise AssertionError(
-                    f"{dimension_name} arithmetic does not match candidates"
-                )
+                raise AssertionError(f"{dimension_name} arithmetic does not match candidates")
         partition_total = (
             receipt["candidate_arithmetic"]["unresolved_review_queue"]
             + receipt["candidate_arithmetic"]["protected_rescues"]
@@ -1585,11 +1665,7 @@ def stream_detector(
         )
         if partition_total != total_candidates:
             raise AssertionError("candidate partition does not match total candidates")
-        if (
-            receipt["prefilter"]["rows_with_signal"]
-            + receipt["prefilter"]["rows_without_signal"]
-            != processed_rows
-        ):
+        if receipt["prefilter"]["rows_with_signal"] + receipt["prefilter"]["rows_without_signal"] != processed_rows:
             raise AssertionError("prefilter row arithmetic does not match processed rows")
         validator = Draft202012Validator(_load_json(RECEIPT_SCHEMA_PATH))
         errors = sorted(validator.iter_errors(receipt), key=lambda item: list(item.path))

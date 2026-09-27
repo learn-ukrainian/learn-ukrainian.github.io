@@ -55,18 +55,38 @@ def _all_keys(value: object) -> set[str]:
     return set()
 
 
-def _write_receipt_tree(tmp_path: Path, *, a2=None, a4=None, a5=None, a6=None, a7=None, a8=None, a9=None, a10=None, manifest=None) -> Path:
+def _write_receipt_tree(
+    tmp_path: Path, *, a2=None, a4=None, a5=None, a6=None, a7=None, a8=None, a9=None, a10=None, manifest=None
+) -> Path:
     admission_dir = tmp_path / "data/projects/open_model_data/admission"
     admission_dir.mkdir(parents=True)
-    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(a2 if a2 is not None else _cached_json(A2_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(json.dumps(a4 if a4 is not None else _cached_json(A4_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(json.dumps(a5 if a5 is not None else _cached_json(A5_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a6_blind_arena_receipt_v1.json").write_text(json.dumps(a6 if a6 is not None else _cached_json(A6_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a7_original_row_factory_receipt_v1.json").write_text(json.dumps(a7 if a7 is not None else _cached_json(A7_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a8_admission_assembly_receipt_v1.json").write_text(json.dumps(a8 if a8 is not None else _cached_json(A8_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a9_evaluation_package_receipt_v1.json").write_text(json.dumps(a9 if a9 is not None else _cached_json(A9_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a10_pilot_review_gate_receipt_v1.json").write_text(json.dumps(a10 if a10 is not None else _cached_json(A10_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest if manifest is not None else _cached_json(MANIFEST_PATH)))
+    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(
+        json.dumps(a2 if a2 is not None else _cached_json(A2_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(
+        json.dumps(a4 if a4 is not None else _cached_json(A4_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(
+        json.dumps(a5 if a5 is not None else _cached_json(A5_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a6_blind_arena_receipt_v1.json").write_text(
+        json.dumps(a6 if a6 is not None else _cached_json(A6_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a7_original_row_factory_receipt_v1.json").write_text(
+        json.dumps(a7 if a7 is not None else _cached_json(A7_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a8_admission_assembly_receipt_v1.json").write_text(
+        json.dumps(a8 if a8 is not None else _cached_json(A8_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a9_evaluation_package_receipt_v1.json").write_text(
+        json.dumps(a9 if a9 is not None else _cached_json(A9_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a10_pilot_review_gate_receipt_v1.json").write_text(
+        json.dumps(a10 if a10 is not None else _cached_json(A10_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(
+        json.dumps(manifest if manifest is not None else _cached_json(MANIFEST_PATH))
+    )
     return tmp_path
 
 
@@ -102,7 +122,9 @@ def test_a11_gate_closed_when_a10_receipt_is_invalid(tmp_path: Path) -> None:
     assert gate["blocked_reason_code"] == "a10_receipt_invalid"
 
 
-def test_a11_gate_closed_when_the_live_engines_model_only_bases_drifts_from_the_frozen_expectation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_a11_gate_closed_when_the_live_engines_model_only_bases_drifts_from_the_frozen_expectation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     _write_receipt_tree(tmp_path)
     monkeypatch.setattr(a11.a10.a9.a8.admission, "MODEL_ONLY_BASES", frozenset({"model_agreement"}))
     gate = a11.check_silver_release_gate(tmp_path)
@@ -110,7 +132,9 @@ def test_a11_gate_closed_when_the_live_engines_model_only_bases_drifts_from_the_
     assert gate["blocked_reason_code"] == "model_agreement_exclusion_engine_drifted"
 
 
-def test_a11_gate_carries_the_upstream_a10_blocked_reason_once_rights_and_slots_clear(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_a11_gate_carries_the_upstream_a10_blocked_reason_once_rights_and_slots_clear(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     resolved_a2 = copy.deepcopy(_cached_json(A2_RECEIPT_PATH))
     resolved_a2["residuals"] = []
     assigned_manifest = copy.deepcopy(_cached_json(MANIFEST_PATH))
@@ -128,7 +152,9 @@ def test_a11_gate_carries_the_upstream_a10_blocked_reason_once_rights_and_slots_
     assert gate["blocked_reason_code"] == "upstream_a10_blocked:rights_unresolved_and_slots_unassigned"
 
 
-def test_a11_gate_stays_closed_even_once_upstream_a10_gate_reports_ready(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_a11_gate_stays_closed_even_once_upstream_a10_gate_reports_ready(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Proves the gate can never open by accident: even if every upstream
     flag flips true, ``silver_release_executed`` has no execution mechanism
     and stays a hardcoded False."""
@@ -138,7 +164,11 @@ def test_a11_gate_stays_closed_even_once_upstream_a10_gate_reports_ready(tmp_pat
     for series in assigned_manifest["slot_series"]:
         series["assignment_state"] = "ASSIGNED"
     ready_a10 = copy.deepcopy(_cached_json(A10_RECEIPT_PATH))
-    ready_a10["review_gate"] = {**ready_a10["review_gate"], "pilot_review_slice_ready": True, "blocked_reason_code": None}
+    ready_a10["review_gate"] = {
+        **ready_a10["review_gate"],
+        "pilot_review_slice_ready": True,
+        "blocked_reason_code": None,
+    }
     _write_receipt_tree(tmp_path, a2=resolved_a2, a10=ready_a10, manifest=assigned_manifest)
     monkeypatch.setattr(a11.a10, "validate_receipt_independently", lambda *a, **k: None)
     gate = a11.check_silver_release_gate(tmp_path)
@@ -150,7 +180,9 @@ def test_a11_gate_stays_closed_even_once_upstream_a10_gate_reports_ready(tmp_pat
 
 def test_a11_gate_refuses_when_manifest_drops_a_required_gate_id(tmp_path: Path) -> None:
     stripped_manifest = copy.deepcopy(_cached_json(MANIFEST_PATH))
-    stripped_manifest["required_gate_ids"] = [g for g in stripped_manifest["required_gate_ids"] if g != "SILVER_FIRST_STABLE_IDS"]
+    stripped_manifest["required_gate_ids"] = [
+        g for g in stripped_manifest["required_gate_ids"] if g != "SILVER_FIRST_STABLE_IDS"
+    ]
     _write_receipt_tree(tmp_path, manifest=stripped_manifest)
     with pytest.raises(a11.SilverReleaseGateError):
         a11.check_silver_release_gate(tmp_path)
@@ -164,7 +196,9 @@ def test_a11_residuals_are_one_typed_entry_per_frozen_slot_never_a_silent_drop()
     residuals = a11.derive_a11_slot_residuals(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH), gate)
     assert len(residuals) == 100
     assert len({r["residual_id"] for r in residuals}) == 100
-    assert {r["subject_id"] for r in residuals} == set(a11.a10.a9.a8.a7.a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH)))
+    assert {r["subject_id"] for r in residuals} == set(
+        a11.a10.a9.a8.a7.a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH))
+    )
     assert all(r["stage"] == "A11" for r in residuals)
     assert {r["reason_code"] for r in residuals} == {"rights_unknown", "source_incomplete", "independence_unavailable"}
     # Never a fabricated release verdict standing in for the missing reviewed row.
@@ -176,7 +210,9 @@ def test_a11_silver_release_view_is_unreleased_plus_residuals_never_a_fabricated
     residuals = a11.derive_a11_slot_residuals(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH), gate)
     view = a11.build_silver_release_view(_cached_json(MANIFEST_PATH), _cached_json(A10_RECEIPT_PATH), residuals)
     assert len(view) == 100
-    assert {entry["slot_id"] for entry in view} == set(a11.a10.a9.a8.a7.a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH)))
+    assert {entry["slot_id"] for entry in view} == set(
+        a11.a10.a9.a8.a7.a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH))
+    )
     assert all(entry["row_admitted"] is False and entry["pilot_review_passed"] is False for entry in view)
     assert all(entry["release_required"] is True and entry["release_executed"] is False for entry in view)
     assert all(entry["label_tier"] is None for entry in view)
@@ -195,7 +231,11 @@ def test_a11_silver_release_view_fails_closed_on_a_dropped_slot() -> None:
 
 def test_a11_silver_release_view_fails_closed_on_a_passed_review_without_an_admitted_row() -> None:
     forged_a10 = copy.deepcopy(_cached_json(A10_RECEIPT_PATH))
-    forged_a10["review_readiness_view"][0] = {**forged_a10["review_readiness_view"][0], "cf_review_of_record_passed": True, "row_admitted": False}
+    forged_a10["review_readiness_view"][0] = {
+        **forged_a10["review_readiness_view"][0],
+        "cf_review_of_record_passed": True,
+        "row_admitted": False,
+    }
     gate = a11.check_silver_release_gate()
     residuals = a11.derive_a11_slot_residuals(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH), gate)
     with pytest.raises(a11.SilverReleaseGateError):
@@ -295,14 +335,30 @@ def test_a11_receipt_binds_the_merged_a10_receipt_by_its_known_public_sha() -> N
 
 
 def test_a11_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_residual_unresolved() -> None:
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A5_RECEIPT_PATH)["a5_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a6_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A6_RECEIPT_PATH)["a6_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a7_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A7_RECEIPT_PATH)["a7_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a8_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A8_RECEIPT_PATH)["a8_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a9_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A9_RECEIPT_PATH)["a9_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a10_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A10_RECEIPT_PATH)["a10_residuals"]}
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A5_RECEIPT_PATH)["a5_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a6_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A6_RECEIPT_PATH)["a6_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a7_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A7_RECEIPT_PATH)["a7_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a8_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A8_RECEIPT_PATH)["a8_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a9_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A9_RECEIPT_PATH)["a9_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a10_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A10_RECEIPT_PATH)["a10_residuals"]
+    }
     for key in (
         "a2_residuals_carried_forward",
         "a4_residuals_carried_forward",
@@ -352,7 +408,13 @@ def test_a11_receipt_never_claims_a_release_was_executed_or_admitted_by_model_ag
 
 
 def test_a11_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {"gold": False, "training": False, "evaluation": False, "teaching": False, "coverage": False}
+    assert _cached_json(RECEIPT)["eligibility"] == {
+        "gold": False,
+        "training": False,
+        "evaluation": False,
+        "teaching": False,
+        "coverage": False,
+    }
     assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
     assert _cached_json(RECEIPT)["execution_counters"]["rows_released_as_silver"] == 0
     assert _cached_json(RECEIPT)["execution_counters"]["rows_admitted_and_eligible_for_release"] == 0
@@ -380,7 +442,8 @@ def test_a11_bindings_hash_to_disk_for_every_bound_artifact() -> None:
     for name, binding in _cached_json(RECEIPT)["bindings"].items():
         path = resource_root() / (
             "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
-            if binding["path"].startswith("scripts/") else binding["path"]
+            if binding["path"].startswith("scripts/")
+            else binding["path"]
         )
         assert path.is_file(), name
         assert a11.sha256_file(path) == binding["sha256"], name
@@ -399,7 +462,11 @@ def test_a11_refuses_a_tampered_binding_hash() -> None:
 def test_a11_refuses_a_forged_training_ready_silver_claim() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["status"] = "TRAINING_READY_SILVER"
-    receipt["release_gate"] = {**receipt["release_gate"], "silver_release_slice_ready": True, "blocked_reason_code": None}
+    receipt["release_gate"] = {
+        **receipt["release_gate"],
+        "silver_release_slice_ready": True,
+        "blocked_reason_code": None,
+    }
     with pytest.raises(a11.SilverReleaseGateError):
         a11.validate_receipt_independently(receipt)
 
@@ -434,7 +501,11 @@ def test_a11_refuses_a_dropped_silver_release_view_entry() -> None:
 
 def test_a11_refuses_a_forged_executed_release_in_the_silver_view() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["silver_release_view"][0] = {**receipt["silver_release_view"][0], "release_executed": True, "label_tier": "silver"}
+    receipt["silver_release_view"][0] = {
+        **receipt["silver_release_view"][0],
+        "release_executed": True,
+        "label_tier": "silver",
+    }
     with pytest.raises(a11.SilverReleaseGateError):
         a11.validate_receipt_independently(receipt)
 

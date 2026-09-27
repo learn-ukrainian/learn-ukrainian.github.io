@@ -39,17 +39,11 @@ SCHEMA_PATHS = (
     RECORD_SCHEMA_PATH,
     RECEIPT_SCHEMA_PATH,
 )
-DEFAULT_EVALUATION_MANIFEST = (
-    ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
-)
-DEFAULT_V02_PACKET = (
-    ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl"
-)
+DEFAULT_EVALUATION_MANIFEST = ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json"
+DEFAULT_V02_PACKET = ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl"
 
 SHA256_RE = re.compile(r"^[a-f0-9]{64}$")
-SLOVNYK_DICTIONARY_LOCATOR_RE = re.compile(
-    r"^https://slovnyk\.me/dict/(?P<dictionary_slug>[A-Za-z0-9_-]+)/.+$"
-)
+SLOVNYK_DICTIONARY_LOCATOR_RE = re.compile(r"^https://slovnyk\.me/dict/(?P<dictionary_slug>[A-Za-z0-9_-]+)/.+$")
 NEAR_DUPLICATE_THRESHOLD = 0.90
 MIN_CONTAINMENT_CHARACTERS = 32
 PROTECTED_PERIOD_MARKERS = (
@@ -68,9 +62,7 @@ PROTECTED_REGISTER_MARKERS = (
     "slang",
     "marked",
 )
-UKRAINIAN_ESCALATION_SOURCES = frozenset(
-    {"ulif_dictua", "heritage_dictionary", "slovnyk_me", "ukrainian_corpus"}
-)
+UKRAINIAN_ESCALATION_SOURCES = frozenset({"ulif_dictua", "heritage_dictionary", "slovnyk_me", "ukrainian_corpus"})
 
 
 class FactoryError(ValueError):
@@ -159,9 +151,7 @@ def _schema_bundle() -> tuple[dict[Path, dict[str, Any]], Registry]:
     registry = Registry()
     for schema in schemas.values():
         Draft202012Validator.check_schema(schema)
-        registry = registry.with_resource(
-            str(schema["$id"]), Resource.from_contents(schema)
-        )
+        registry = registry.with_resource(str(schema["$id"]), Resource.from_contents(schema))
     return schemas, registry
 
 
@@ -298,12 +288,12 @@ def _is_protected(candidate: Mapping[str, Any]) -> bool:
         any(marker in period for marker in PROTECTED_PERIOD_MARKERS)
         or any(marker in register for marker in PROTECTED_REGISTER_MARKERS)
         or "protected_variation" in candidate["candidate_layers"]
-        or span["language_identity"] in {
+        or span["language_identity"]
+        in {
             "historical_east_slavic_unresolved",
             "church_slavonic_candidate",
         }
-        or span["downstream_disposition"]
-        == "protected_historical_or_register_variation"
+        or span["downstream_disposition"] == "protected_historical_or_register_variation"
     )
 
 
@@ -313,10 +303,7 @@ def _validate_evidence(candidate: Mapping[str, Any]) -> None:
     identities = {(item["source"], item["source_identity"], item["locator"]) for item in evidence}
     _require(len(identities) == len(evidence), "duplicate source-specific evidence")
 
-    vesum_miss = any(
-        item["source"] == "vesum" and item["status"] == "not_found"
-        for item in evidence
-    )
+    vesum_miss = any(item["source"] == "vesum" and item["status"] == "not_found" for item in evidence)
     if vesum_miss:
         missing = sorted(UKRAINIAN_ESCALATION_SOURCES - sources)
         _require(not missing, f"VESUM miss lacks Ukrainian escalation sources: {', '.join(missing)}")
@@ -329,8 +316,7 @@ def _validate_evidence(candidate: Mapping[str, Any]) -> None:
                 "slovnyk.me evidence requires a per-dictionary /dict/<slug>/ locator",
             )
             _require(
-                item["source_identity"].casefold()
-                == locator_match.group("dictionary_slug").casefold(),
+                item["source_identity"].casefold() == locator_match.group("dictionary_slug").casefold(),
                 "slovnyk.me source identity must equal the underlying dictionary slug",
             )
             _require(not item["raw_payload_export_allowed"], "slovnyk.me raw payload cannot enter the packet")
@@ -352,7 +338,10 @@ def _validate_evidence(candidate: Mapping[str, Any]) -> None:
         )
 
     if "russian_interference" in candidate["candidate_layers"]:
-        _require("r2u" in sources and "russian_morphology" in sources, "Russian-interference candidate lacks r2u or morphology evidence")
+        _require(
+            "r2u" in sources and "russian_morphology" in sources,
+            "Russian-interference candidate lacks r2u or morphology evidence",
+        )
 
     shared_form_only = (
         any(item["source"] == "vesum" and item["status"] == "attested" for item in evidence)
@@ -389,10 +378,16 @@ def validate_candidate(
     role = span["discourse_role"]
     if span["language_identity"] == "russian" and role in {"quotation", "dialogue"}:
         _require(views["faithful_literary"] == "retain_original", "Russian speech must remain source-faithful")
-        _require(views["modern_literary_ukrainian"] in {"mask_span_from_loss", "exclude_span_or_record"}, "Russian speech must be masked or excluded from modern loss")
+        _require(
+            views["modern_literary_ukrainian"] in {"mask_span_from_loss", "exclude_span_or_record"},
+            "Russian speech must be masked or excluded from modern loss",
+        )
         _require(views["correction"] in {"not_applicable", "protected"}, "Russian speech is not correction gold")
     if _is_protected(candidate):
-        _require(views["correction"] in {"protected", "not_applicable", "unresolved"}, "protected variation cannot be a correction candidate")
+        _require(
+            views["correction"] in {"protected", "not_applicable", "unresolved"},
+            "protected variation cannot be a correction candidate",
+        )
 
     contamination = candidate["safety"]["contamination"]
     expected_states = contamination_states(
@@ -514,7 +509,9 @@ def validate_decision(
         _require(isinstance(third, Mapping), "third-human adjudication lacks a review")
         reviewer = third["reviewer"]
         _require(reviewer["reviewer_id"] not in first_ids, "third reviewer must be distinct")
-        _require(allow_test_fixtures or not reviewer["test_fixture"], "fixture third reviewer cannot be a real adjudicator")
+        _require(
+            allow_test_fixtures or not reviewer["test_fixture"], "fixture third reviewer cannot be a real adjudicator"
+        )
         _require(_projection(third)["decision"] != "unresolved", "unresolved third review cannot adjudicate")
         _require(final == _projection(third), "final projection must equal third-human adjudication")
 
@@ -529,9 +526,15 @@ def validate_decision(
     if _is_protected(candidate):
         _require(final["decision"] != "correction", "protected variation cannot be adjudicated as correction")
     if span["language_identity"] == "russian" and span["discourse_role"] in {"quotation", "dialogue"}:
-        _require(final["decision"] in {"quoted_or_multilingual", "protected_variation", "exclude", "unresolved"}, "source-faithful Russian speech cannot become a correction")
+        _require(
+            final["decision"] in {"quoted_or_multilingual", "protected_variation", "exclude", "unresolved"},
+            "source-faithful Russian speech cannot become a correction",
+        )
         _require(final["views"]["faithful_literary"] == "retain_original", "final review must preserve quotation bytes")
-        _require(final["views"]["modern_literary_ukrainian"] in {"mask_span_from_loss", "exclude_span_or_record"}, "final review must mask or exclude Russian speech")
+        _require(
+            final["views"]["modern_literary_ukrainian"] in {"mask_span_from_loss", "exclude_span_or_record"},
+            "final review must mask or exclude Russian speech",
+        )
 
 
 def _evidence_incomplete(candidate: Mapping[str, Any]) -> bool:
@@ -580,7 +583,9 @@ def _handoff(candidate: Mapping[str, Any], decision: Mapping[str, Any], blockers
     final_decision = decision["final"]["decision"]
     if not blockers:
         return "correction_intake_ready"
-    if final_decision in {"acceptable_as_is", "protected_variation", "quoted_or_multilingual"} or _is_protected(candidate):
+    if final_decision in {"acceptable_as_is", "protected_variation", "quoted_or_multilingual"} or _is_protected(
+        candidate
+    ):
         return "faithful_or_protected_only"
     if final_decision == "exclude" or any(
         blocker.startswith("contamination_") or blocker in {"rights_not_granted", "private_data_not_clear"}
@@ -590,9 +595,7 @@ def _handoff(candidate: Mapping[str, Any], decision: Mapping[str, Any], blockers
     return "unresolved"
 
 
-def build_correction_record(
-    candidate: dict[str, Any], decision: dict[str, Any]
-) -> dict[str, Any]:
+def build_correction_record(candidate: dict[str, Any], decision: dict[str, Any]) -> dict[str, Any]:
     """Build the canonical non-exportable #6121 handoff record.
 
     Issue #6122 imports this function to recompute the handoff rather than
@@ -707,12 +710,8 @@ def prepare_review_packet(
     rows = read_jsonl(candidates_path)
     _require(rows, "empty correction candidate input")
     schemas, schema_registry = _schema_bundle()
-    candidate_validator = _validator(
-        CANDIDATE_SCHEMA_PATH, schemas=schemas, registry=schema_registry
-    )
-    receipt_validator = _validator(
-        RECEIPT_SCHEMA_PATH, schemas=schemas, registry=schema_registry
-    )
+    candidate_validator = _validator(CANDIDATE_SCHEMA_PATH, schemas=schemas, registry=schema_registry)
+    receipt_validator = _validator(RECEIPT_SCHEMA_PATH, schemas=schemas, registry=schema_registry)
     seen: set[str] = set()
     counts: Counter[str] = Counter()
     for line_number, candidate in enumerate(rows, 1):
@@ -761,16 +760,10 @@ def adjudicate(
     _require(candidates, "empty correction review packet")
     _require(len(candidates) == len(decisions), "missing or extra reviewer decisions")
     schemas, schema_registry = _schema_bundle()
-    candidate_validator = _validator(
-        CANDIDATE_SCHEMA_PATH, schemas=schemas, registry=schema_registry
-    )
-    decision_validator = _validator(
-        DECISION_SCHEMA_PATH, schemas=schemas, registry=schema_registry
-    )
+    candidate_validator = _validator(CANDIDATE_SCHEMA_PATH, schemas=schemas, registry=schema_registry)
+    decision_validator = _validator(DECISION_SCHEMA_PATH, schemas=schemas, registry=schema_registry)
     record_validator = _validator(RECORD_SCHEMA_PATH, schemas=schemas, registry=schema_registry)
-    receipt_validator = _validator(
-        RECEIPT_SCHEMA_PATH, schemas=schemas, registry=schema_registry
-    )
+    receipt_validator = _validator(RECEIPT_SCHEMA_PATH, schemas=schemas, registry=schema_registry)
 
     records: list[dict[str, Any]] = []
     counts: Counter[str] = Counter()

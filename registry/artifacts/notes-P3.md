@@ -2,7 +2,8 @@
 
 ## Status
 
-P3a — migration complete (1,125 rows), producer routing blocked; P3b
+P3a — migration complete (1,125 rows), producer routing partial and consumer
+checks failing; P3b
 residuals: `v5_mine_kyivan_rus_epigraphy.py`, `v5_mine_middle_ukrainian.py`,
 and `v4_production_shards_assembly.py` native archive regeneration (owner:
 claude-infra). P3 completion: NO (P3a).
@@ -83,43 +84,95 @@ report missing A rows with hydrate guidance. Storage publication is distinct
 from a study's semantic validity: a changed recipe can invalidate old study
 results, which verification must report.
 
+## Round-3 source identity and standalone K writers
+
+The frozen historical-protection generator SHA-256
+`9aab109f9dd676f28c5b834d4979fef4a3aff017381ec2b2bd2363bc00717632`
+equals the source blob at selected base `55d0ed1515`, independently of the
+contract's own field. It is now named `FROZEN_GENERATOR_SHA256` and remains
+the contract's provenance, not the live implementation hash. The generator
+still verifies every pinned input byte and reconstructs the exact frozen
+contract; `--check` remains byte-exact. Its bound
+`open_model_other_indexes` companion remains on the approved K-only set route.
+
+The V3-A, V3-B, and V3-C contracts likewise bind pre-migration validator
+source hashes `9526e76ddc65`, `b0638a47a737`, and `0f9453193ceb` (full
+hashes in the source and frozen contracts). V3-B also binds predecessor
+validator hashes `50a6ef3de21e` and `9526e76ddc65`. Each was confirmed
+against `git show 55d0ed1515:<source> | sha256sum`; these exact source
+identities are retained as historical provenance. Actual predecessor K
+artifact bytes are still checked against their independent pinned hashes.
+The V3 foundation validator's frozen identity is `50a6ef3de21e` and its
+bound K inputs are read from the registry while retaining frozen logical
+names. The five focused top-level suites and isolated writer fixtures passed
+`157 passed, 1 skipped`.
+
+V3-A/B/C `write_outputs()` now construct and validate their complete bundles
+before direct registry publication. The narrow publisher checks that every
+destination is tracked and clean against HEAD, preserves file modes, and
+does not touch A paths or manifests; three isolated writer fixtures passed.
+The classification rows 1105–1111 name seven K files, but these functions
+write six: V3-A reads its schema and writes only its artifact and matrix;
+V3-B and V3-C each write a schema and artifact. They have no A owner and
+require no new companion binding.
+
+The source-identity inventory found 28 checkpoint-changed Python sources whose original
+hash occurs in a frozen K contract. Besides the V3/historical-protection
+sources above, the affected contracts refer to `admit_existing_corpus`,
+`correction_protection_consumer`, `gemma_hardware_probe`,
+`language_contact_detector`, `model_view_exporter`,
+`phase3_audit_entropy`, `phase3_cycle_void_receipt`,
+`phase3_functional_roles`, `phase3_historical_materialization`,
+`phase3_historical_representation`, `phase3_lavra_near_caves_intake`,
+`phase3_linguistic_representation`, `phase3_pravopys_delta`,
+`phase3_recovery_contracts`, `phase3_rule_author_packets`,
+`phase3_rule_author_runner`, `phase3_source_dispositions`,
+`phase3_source_production_transport`,
+`phase3_spas_catalog_materialization`, `phase3_spas_glyph_adapter`,
+`phase3_spas_layout_candidates`, `phase3_spas_source_attribution`,
+`phase3_textbook_nonhit`, `phase3_v2_compatibility`,
+`phase3_v3_cooperative_control_plane`, `phase3_vspu_db_cutover`, and
+`silver_evidence_factory`. The remaining references need entry-point
+validation before landing; a frozen hash is never treated as the current
+implementation hash.
+
+The `end-of-file-fixer` hook now excludes only the exact frozen
+`registry/projects/open_model_data/admission/phase3_vspu_post_ingest_audit_v1.json`
+path. Its classified Git blob `9c1ab66a89d54c2303cec5d4714abdf3a2c29e88`
+and mode `100644` remain unchanged; the hook passed on it and a normal
+applicable Python file. Ruff formatted the changed Python files without
+changing frozen K bytes.
+
 ## Unresolved P3a gates at this checkpoint
 
-- The classified K contract writers
-  `freeze_phase3_v3a_taxonomy_denominator_compatibility.py`,
-  `phase3_v3b_cooperative_control_plane.py`, and
-  `phase3_v3c_heldout_extension_solo_custody.py` expose callable
-  `write_outputs()` and CLI `--write` routes. Their seven contract outputs are
-  classified `open_model_contracts` K in table rows 1105–1111, but no current
-  P3 A manifest binds them as companions. They still use direct writes and an
-  old `data/` base. The approved companion-only operation requires an owning A
-  group and a prior binding; assigning a new owner is an unresolved output
-  policy decision, not an implementer assumption. These live producers cannot
-  be placed on the fixed historical P3b list.
-- `phase3_historical_protection_channels.py` can now build from registry
-  inputs while retaining historical logical path identifiers, but its source
-  hash changed with the producer edit, so the generated contract differs from
-  the frozen K contract. The existing `--check` cannot pass without changing
-  that frozen output. No production regeneration was run or authorized.
-- The six `artifacts verify --group <P3 group>` commands currently report
-  missing store objects for migrated rows. The 412 public A files passed the
+- The complete top-level `tests/test_open_model_*.py` consumer run failed:
+  `1103 failed, 773 passed, 67 skipped, 73 errors`. The first errors show
+  live readers and tests still opening K inputs at old `data/` locations
+  (for example `phase3_p1_universe_freeze_v1.json` and
+  `examples/portable-corpus-v1.jsonl`). All executable consumer dispositions
+  and the source-identity inventory must be completed by the P3a
+  implementer before exact-head review.
+- The full `tests/projects/open_model_data` run also failed:
+  `704 failed, 1543 passed, 17 skipped, 101 errors`. Its first failures are
+  the same moved-K path class, including old `data/` references to contract
+  schemas and admission receipts. The P3a implementer owns those reader and
+  test routes; these are failed required proofs, not P3b deferrals.
+- All six `artifacts verify --group <P3 group>` commands currently report
+  missing store objects for migrated rows (80 archive, 17 component, 10
+  evidence, 49 other, 233 release, 23 study). The 412 public A files passed the
   disk/table/manifest hash audit, but this checkout has no P3 store copies yet.
   The driver owns the pre-merge snapshot; verification remains open.
-- The current `consumers-P3.tsv` has unchecked entries and the wider K-only
-  writer census found more bound companions to route. P3a consumer and producer
-  completion, the after CI baseline, and held-out checks remain open. No PR
-  should be opened from this checkpoint.
-- The selected focused producer/package suite passed 63 tests, and staged
-  Python files passed Ruff lint. Ruff format check reported 68 staged Python
-  files needing formatting. This checkpoint has not run the full P3a acceptance
-  suite; these are not green landing gates.
+- The current `consumers-P3.tsv` has unchecked entries, and the wider K-only
+  entry-point census remains unfinished. The after-CI baseline is intentionally
+  deferred until exact-head cross-family review under Decision J. P3a producer
+  and consumer completion and the driver-owned held-out checks remain open.
+  No PR should be opened from this checkpoint.
 
-The generic `end-of-file-fixer` hook attempts to append a newline to the
-frozen K file `registry/projects/open_model_data/admission/phase3_vspu_post_ingest_audit_v1.json`.
-That would change a table-frozen blob for formatting alone. Its attempted
-worktree edit was restored from the staged index; the checkpoint commit skips
-only this conflicting hook while retaining the frozen K blob and running the
-other commit checks.
+No production generator or contract regeneration ran in round 3.
+The storage/classification/sparse-guard selection passed `219 passed, 4
+skipped`; the focused frozen-contract and standalone-K selection passed
+`157 passed, 1 skipped`. These passing selections do not override the failed
+consumer suites above.
 
 ## Live registration patterns already declared
 

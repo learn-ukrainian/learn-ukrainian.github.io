@@ -197,9 +197,15 @@ def test_a6_receipt_binds_v4_sha_and_control_surfaces() -> None:
 
 
 def test_a6_receipt_carries_forward_every_a2_a4_a5_residual_unresolved() -> None:
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A5_RECEIPT_PATH)["a5_residuals"]}
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A5_RECEIPT_PATH)["a5_residuals"]
+    }
     assert all(e["status"] == "unresolved_carried_to_a6" for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"])
     assert all(e["status"] == "unresolved_carried_to_a6" for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"])
     assert all(e["status"] == "unresolved_carried_to_a6" for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"])
@@ -214,7 +220,13 @@ def test_a6_receipt_does_not_claim_arena_slice_ready_while_the_gate_is_closed() 
 
 
 def test_a6_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {"gold": False, "training": False, "evaluation": False, "teaching": False, "coverage": False}
+    assert _cached_json(RECEIPT)["eligibility"] == {
+        "gold": False,
+        "training": False,
+        "evaluation": False,
+        "teaching": False,
+        "coverage": False,
+    }
     assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
     assert _cached_json(RECEIPT)["execution_counters"]["live_proposals_run"] == 0
     assert _cached_json(RECEIPT)["execution_counters"]["candidates_voted"] == 0
@@ -249,7 +261,8 @@ def test_a6_bindings_hash_to_disk_for_every_bound_artifact() -> None:
     for name, binding in _cached_json(RECEIPT)["bindings"].items():
         path = resource_root() / (
             "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
-            if binding["path"].startswith("scripts/") else binding["path"]
+            if binding["path"].startswith("scripts/")
+            else binding["path"]
         )
         assert path.is_file(), name
         assert a6.sha256_file(path) == binding["sha256"], name
@@ -323,21 +336,33 @@ def _engine_self_test_fixture() -> dict[str, object]:
     packet = _cached_json(RECEIPT)["packet"]
     cases = ["engine-self-test-case-01", "engine-self-test-case-02"]
     candidates = {
-        "engine-self-test-candidate-1": {"provider_id": "engine-self-test-provider-1", "route_id": "engine-self-test-route-1"},
-        "engine-self-test-candidate-2": {"provider_id": "engine-self-test-provider-2", "route_id": "engine-self-test-route-2"},
+        "engine-self-test-candidate-1": {
+            "provider_id": "engine-self-test-provider-1",
+            "route_id": "engine-self-test-route-1",
+        },
+        "engine-self-test-candidate-2": {
+            "provider_id": "engine-self-test-provider-2",
+            "route_id": "engine-self-test-route-2",
+        },
     }
 
     def proposal(candidate_id: str, provider_id: str, labels: list[str]) -> str:
-        return f"{packet['begin_marker']}\n" + json.dumps(
-            {
-                "schema_version": packet["proposal_schema_version"],
-                "candidate_id": candidate_id,
-                "provider_id": provider_id,
-                "cases": [{"case_id": cid, "label": label, "tags": []} for cid, label in zip(cases, labels, strict=True)],
-            },
-            sort_keys=True,
-            separators=(",", ":"),
-        ) + f"\n{packet['end_marker']}"
+        return (
+            f"{packet['begin_marker']}\n"
+            + json.dumps(
+                {
+                    "schema_version": packet["proposal_schema_version"],
+                    "candidate_id": candidate_id,
+                    "provider_id": provider_id,
+                    "cases": [
+                        {"case_id": cid, "label": label, "tags": []} for cid, label in zip(cases, labels, strict=True)
+                    ],
+                },
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            + f"\n{packet['end_marker']}"
+        )
 
     return {
         "outcome_sha256": V4_SHA256,
@@ -346,18 +371,39 @@ def _engine_self_test_fixture() -> dict[str, object]:
         "route_denominator": ["engine-self-test-route-1", "engine-self-test-route-2"],
         "candidate_map": candidates,
         "provider_outputs": {
-            "engine-self-test-candidate-1": proposal("engine-self-test-candidate-1", "engine-self-test-provider-1", ["agree", "agree"]),
-            "engine-self-test-candidate-2": proposal("engine-self-test-candidate-2", "engine-self-test-provider-2", ["agree", "disagree"]),
+            "engine-self-test-candidate-1": proposal(
+                "engine-self-test-candidate-1", "engine-self-test-provider-1", ["agree", "agree"]
+            ),
+            "engine-self-test-candidate-2": proposal(
+                "engine-self-test-candidate-2", "engine-self-test-provider-2", ["agree", "disagree"]
+            ),
         },
         "ballots": [
-            {"voter_candidate_id": "engine-self-test-candidate-1", "candidate_id": "engine-self-test-candidate-2", "case_id": cid, "label": "agree"}
+            {
+                "voter_candidate_id": "engine-self-test-candidate-1",
+                "candidate_id": "engine-self-test-candidate-2",
+                "case_id": cid,
+                "label": "agree",
+            }
             for cid in cases
-        ] + [
-            {"voter_candidate_id": "engine-self-test-candidate-2", "candidate_id": "engine-self-test-candidate-1", "case_id": cid, "label": "agree"}
+        ]
+        + [
+            {
+                "voter_candidate_id": "engine-self-test-candidate-2",
+                "candidate_id": "engine-self-test-candidate-1",
+                "case_id": cid,
+                "label": "agree",
+            }
             for cid in cases
-        ] + [
+        ]
+        + [
             # A self-vote must never be counted -- this one must surface as a residual.
-            {"voter_candidate_id": "engine-self-test-candidate-1", "candidate_id": "engine-self-test-candidate-1", "case_id": cases[0], "label": "agree"}
+            {
+                "voter_candidate_id": "engine-self-test-candidate-1",
+                "candidate_id": "engine-self-test-candidate-1",
+                "case_id": cases[0],
+                "label": "agree",
+            }
         ],
         "allowed_labels": ["agree", "disagree"],
         "allowed_tags": ["synthetic"],
@@ -370,7 +416,13 @@ def test_a6_engine_self_vote_is_forbidden_and_quarantine_holds() -> None:
     public = receipts["public"]
     assert "SELF_VOTE" in {r["code"] for r in public["residuals"]}
     assert all(case["disposition"] == arena.QUARANTINE for case in public["cases"])
-    assert public["eligibility"] == {"gold": False, "training": False, "evaluation": False, "teaching": False, "coverage": False}
+    assert public["eligibility"] == {
+        "gold": False,
+        "training": False,
+        "evaluation": False,
+        "teaching": False,
+        "coverage": False,
+    }
 
 
 def test_a6_engine_leave_one_out_never_mixes_in_a_candidates_own_self_report() -> None:
@@ -383,5 +435,7 @@ def test_a6_engine_leave_one_out_never_mixes_in_a_candidates_own_self_report() -
     # peer's (candidate-1) leave-one-out ballot is "agree" -- the two must not
     # be conflated.
     assert loo["engine-self-test-candidate-2"]["label_counts"] == {"agree": 1}
-    own_report = next(o for o in second_case["candidate_outputs"] if o["candidate_id"] == "engine-self-test-candidate-2")
+    own_report = next(
+        o for o in second_case["candidate_outputs"] if o["candidate_id"] == "engine-self-test-candidate-2"
+    )
     assert own_report["label"] == "disagree"

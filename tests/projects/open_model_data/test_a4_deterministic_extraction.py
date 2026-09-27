@@ -401,9 +401,7 @@ def test_run_deterministic_extraction_emits_sorted_hash_only_rows_for_units_with
         for span in extraction.segment_sentence_spans(raw):
             assert span not in serialized
 
-    expected_commitments = {
-        extraction.unit_commitment_sha256(salt, unit_id) for unit_id in bytes_by_unit
-    }
+    expected_commitments = {extraction.unit_commitment_sha256(salt, unit_id) for unit_id in bytes_by_unit}
     assert {row["source_unit_commitment_sha256"] for row in ledger} == expected_commitments
 
 
@@ -487,10 +485,7 @@ def test_current_rss_bytes_is_positive_on_this_platform() -> None:
 def test_fresh_process_isolation_resets_inherited_rss_high_water_mark() -> None:
     """Keep deliberate RSS contamination in an owned transient process."""
     result = _run_fresh_python(
-        "import runpy\n"
-        "import sys\n"
-        "probe = runpy.run_path(sys.argv[1])\n"
-        "probe['_assert_inherited_rss_isolation']()\n",
+        "import runpy\nimport sys\nprobe = runpy.run_path(sys.argv[1])\nprobe['_assert_inherited_rss_isolation']()\n",
         str(Path(__file__).resolve()),
     )
     assert result.returncode == 0, result.stderr
@@ -572,11 +567,7 @@ def test_stream_ledger_rows_for_units_fails_closed_against_a_near_zero_memory_ca
     ordered = [(extraction.unit_commitment_sha256(salt, "synthetic.unit-a"), "synthetic.unit-a")]
     provider = _rows_by_row_texts({"synthetic.unit-a": ["One. Two. Three. Four."]})
     with pytest.raises(extraction.MemoryBudgetExceeded):
-        list(
-            extraction.stream_ledger_rows_for_units(
-                ordered, provider, memory_cap_bytes=1, memory_check_interval=1
-            )
-        )
+        list(extraction.stream_ledger_rows_for_units(ordered, provider, memory_cap_bytes=1, memory_check_interval=1))
 
 
 def test_fresh_process_over_cap_aborts_before_partial_ledger(tmp_path: Path) -> None:
@@ -848,7 +839,10 @@ def test_consume_builder_packet_computes_real_reproducible_id_free_commitments(
     assert salt_path.is_file()
     assert stat.S_IMODE(salt_path.stat().st_mode) == heldout.PRIVATE_FILE_MODE
 
-    assert summary["extraction_ledger_commitment"] == {"row_count": 0, "root_sha256": extraction.EMPTY_LEDGER_ROOT_SHA256}
+    assert summary["extraction_ledger_commitment"] == {
+        "row_count": 0,
+        "root_sha256": extraction.EMPTY_LEDGER_ROOT_SHA256,
+    }
     manifest_path = a4_private_dir / extraction.A4_LEDGER_MANIFEST_FILENAME
     ledger_path = a4_private_dir / extraction.A4_LEDGER_FILENAME
     assert manifest_path.is_file()
@@ -895,7 +889,11 @@ def test_consume_builder_packet_streams_real_rows_to_a_private_ledger_and_reruns
     for line in lines:
         row = json.loads(line)
         assert set(row) == {
-            "source_unit_commitment_sha256", "span_index", "span_byte_length", "input_sha256", "output_sha256",
+            "source_unit_commitment_sha256",
+            "span_index",
+            "span_byte_length",
+            "input_sha256",
+            "output_sha256",
         }
     assert not any(f"Sentence for {i}" in ledger_path.read_text(encoding="utf-8") for i in range(9))
 
@@ -1016,6 +1014,7 @@ def test_a4_extraction_bindings_match_exact_inputs() -> None:
 
     for binding in receipt["bindings"].values():
         from learn_ukrainian_v4_runtime import resources
+
         logical = binding["path"]
         if logical.startswith("scripts/"):
             logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
@@ -1048,9 +1047,10 @@ def test_a4_extraction_algorithm_still_frozen_with_a_real_id_free_ledger_commitm
     if ledger_commitment["row_count"] == 0:
         assert ledger_commitment["root_sha256"] == extraction.EMPTY_LEDGER_ROOT_SHA256
     assert receipt["execution_counters"]["spans_extracted"] == ledger_commitment["row_count"]
-    assert receipt["execution_counters"]["source_units_extracted"] <= receipt["builder_packet_consumption"][
-        "consumed_source_unit_count"
-    ]
+    assert (
+        receipt["execution_counters"]["source_units_extracted"]
+        <= receipt["builder_packet_consumption"]["consumed_source_unit_count"]
+    )
     assert receipt["execution_counters"]["dataset_rows_emitted"] == 0
     # The private ledger itself is never in this (public) receipt at any size.
     assert "extraction_ledger" not in receipt
@@ -1352,9 +1352,9 @@ def test_validate_ledger_consistency_with_gate_refuses_counter_drift() -> None:
 def test_validate_ledger_consistency_with_gate_refuses_source_units_extracted_exceeding_consumed_count() -> None:
     receipt = _receipt()
     forged = copy.deepcopy(receipt)
-    forged["execution_counters"]["source_units_extracted"] = forged["builder_packet_consumption"][
-        "consumed_source_unit_count"
-    ] + 1
+    forged["execution_counters"]["source_units_extracted"] = (
+        forged["builder_packet_consumption"]["consumed_source_unit_count"] + 1
+    )
     open_gate = {"gate_open": True}
 
     with pytest.raises(extraction.ExtractionError, match="source_units_extracted"):
@@ -1373,7 +1373,9 @@ def test_a4_script_refuses_consumption_count_drift_against_public_packet_receipt
 def test_a4_script_refuses_duplicate_unit_commitments() -> None:
     receipt = _receipt()
     forged = copy.deepcopy(receipt)
-    forged["builder_packet_consumption"]["unit_commitments"][1] = forged["builder_packet_consumption"]["unit_commitments"][0]
+    forged["builder_packet_consumption"]["unit_commitments"][1] = forged["builder_packet_consumption"][
+        "unit_commitments"
+    ][0]
 
     with pytest.raises(extraction.ExtractionError):
         extraction.validate_receipt_independently(forged)
@@ -1410,9 +1412,12 @@ def test_cli_consume_wired_to_path_overrides(
     extraction.main(
         [
             "--consume",
-            "--seal-receipt", str(seal_receipt_path),
-            "--packet-dir", str(packet_dir),
-            "--a4-private-dir", str(a4_private_dir),
+            "--seal-receipt",
+            str(seal_receipt_path),
+            "--packet-dir",
+            str(packet_dir),
+            "--a4-private-dir",
+            str(a4_private_dir),
         ]
     )
     printed = json.loads(capsys.readouterr().out)
@@ -1429,13 +1434,27 @@ def test_cli_consume_defaults_to_the_real_row_provider(
     seen: list[object] = []
     real_consume = extraction.consume_builder_packet
 
-    def spy(seal_path, pkt_dir, priv_dir, row_provider=extraction.admitted_local_row_provider, memory_cap_bytes=extraction.DEFAULT_A4_MEMORY_CAP_BYTES):
+    def spy(
+        seal_path,
+        pkt_dir,
+        priv_dir,
+        row_provider=extraction.admitted_local_row_provider,
+        memory_cap_bytes=extraction.DEFAULT_A4_MEMORY_CAP_BYTES,
+    ):
         seen.append(row_provider)
         return real_consume(seal_path, pkt_dir, priv_dir, row_provider, memory_cap_bytes)
 
     monkeypatch.setattr(extraction, "consume_builder_packet", spy)
     extraction.main(
-        ["--consume", "--seal-receipt", str(seal_receipt_path), "--packet-dir", str(packet_dir), "--a4-private-dir", str(a4_private_dir)]
+        [
+            "--consume",
+            "--seal-receipt",
+            str(seal_receipt_path),
+            "--packet-dir",
+            str(packet_dir),
+            "--a4-private-dir",
+            str(a4_private_dir),
+        ]
     )
     capsys.readouterr()
     assert seen == [extraction.admitted_local_row_provider]
@@ -1450,7 +1469,13 @@ def test_cli_consume_no_real_bytes_forces_the_no_op_provider(
     seen: list[object] = []
     real_consume = extraction.consume_builder_packet
 
-    def spy(seal_path, pkt_dir, priv_dir, row_provider=extraction.admitted_local_row_provider, memory_cap_bytes=extraction.DEFAULT_A4_MEMORY_CAP_BYTES):
+    def spy(
+        seal_path,
+        pkt_dir,
+        priv_dir,
+        row_provider=extraction.admitted_local_row_provider,
+        memory_cap_bytes=extraction.DEFAULT_A4_MEMORY_CAP_BYTES,
+    ):
         seen.append(row_provider)
         return real_consume(seal_path, pkt_dir, priv_dir, row_provider, memory_cap_bytes)
 
@@ -1459,9 +1484,12 @@ def test_cli_consume_no_real_bytes_forces_the_no_op_provider(
         [
             "--consume",
             "--no-real-bytes",
-            "--seal-receipt", str(seal_receipt_path),
-            "--packet-dir", str(packet_dir),
-            "--a4-private-dir", str(a4_private_dir),
+            "--seal-receipt",
+            str(seal_receipt_path),
+            "--packet-dir",
+            str(packet_dir),
+            "--a4-private-dir",
+            str(a4_private_dir),
         ]
     )
     capsys.readouterr()
@@ -1477,7 +1505,13 @@ def test_cli_consume_memory_cap_bytes_is_wired_through(
     seen: list[int] = []
     real_consume = extraction.consume_builder_packet
 
-    def spy(seal_path, pkt_dir, priv_dir, row_provider=extraction.admitted_local_row_provider, memory_cap_bytes=extraction.DEFAULT_A4_MEMORY_CAP_BYTES):
+    def spy(
+        seal_path,
+        pkt_dir,
+        priv_dir,
+        row_provider=extraction.admitted_local_row_provider,
+        memory_cap_bytes=extraction.DEFAULT_A4_MEMORY_CAP_BYTES,
+    ):
         seen.append(memory_cap_bytes)
         return real_consume(seal_path, pkt_dir, priv_dir, row_provider, memory_cap_bytes)
 
@@ -1486,10 +1520,14 @@ def test_cli_consume_memory_cap_bytes_is_wired_through(
         [
             "--consume",
             "--no-real-bytes",
-            "--seal-receipt", str(seal_receipt_path),
-            "--packet-dir", str(packet_dir),
-            "--a4-private-dir", str(a4_private_dir),
-            "--memory-cap-bytes", "2000000000",
+            "--seal-receipt",
+            str(seal_receipt_path),
+            "--packet-dir",
+            str(packet_dir),
+            "--a4-private-dir",
+            str(a4_private_dir),
+            "--memory-cap-bytes",
+            "2000000000",
         ]
     )
     capsys.readouterr()

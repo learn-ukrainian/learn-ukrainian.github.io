@@ -261,9 +261,7 @@ def test_primary_repo_root_fails_closed_on_invalid_env(tmp_path: Path, monkeypat
         lang_sep._primary_repo_root()
 
 
-def test_primary_repo_root_returns_none_when_cwd_has_no_git(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_primary_repo_root_returns_none_when_cwd_has_no_git(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv(lang_sep.PRIMARY_REPO_ROOT_ENV, raising=False)
     monkeypatch.chdir(tmp_path)
     assert lang_sep._primary_repo_root() is None

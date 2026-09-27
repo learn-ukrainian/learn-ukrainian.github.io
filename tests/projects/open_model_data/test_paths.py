@@ -70,7 +70,9 @@ def test_tombstone_exists_in_archived_uldr_v1() -> None:
 def test_active_correction_protection_intact() -> None:
     """Verify that correction_protection_v1 is intact in release/."""
     assert REGISTRY_CORRECTION_PROTECTION_DIR.is_dir()
-    assert artifact_path("open_model_release_payload", "projects/open_model_data/release/correction_protection_v1/cases.jsonl").is_file()
+    assert artifact_path(
+        "open_model_release_payload", "projects/open_model_data/release/correction_protection_v1/cases.jsonl"
+    ).is_file()
     assert (REGISTRY_CORRECTION_PROTECTION_DIR / "receipt.json").is_file()
 
 
@@ -252,10 +254,7 @@ def test_execute_mining_and_release_receipt_generation_derived_counts(
 
     # Case 1: Default execution (replay_quota = 0 -> 500 dialect, 0 replay)
     out_dir_1 = tmp_path / "out1"
-    mock_sft_1 = [
-        {"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False}
-        for i in range(500)
-    ]
+    mock_sft_1 = [{"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False} for i in range(500)]
     monkeypatch.setattr(mdc, "build_sft_dialect_dataset", lambda *args, **kwargs: mock_sft_1)
 
     receipt_1 = mdc.execute_mining_and_release(
@@ -281,12 +280,8 @@ def test_execute_mining_and_release_receipt_generation_derived_counts(
 
     # Case 2: Mixed execution with replay (e.g. 450 dialect, 50 replay)
     out_dir_2 = tmp_path / "out2"
-    mock_sft_2 = [
-        {"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False}
-        for i in range(450)
-    ] + [
-        {"trajectory_id": f"traj.replay.{i}", "is_calque_or_russianism": True}
-        for i in range(50)
+    mock_sft_2 = [{"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False} for i in range(450)] + [
+        {"trajectory_id": f"traj.replay.{i}", "is_calque_or_russianism": True} for i in range(50)
     ]
     monkeypatch.setattr(mdc, "build_sft_dialect_dataset", lambda *args, **kwargs: mock_sft_2)
 

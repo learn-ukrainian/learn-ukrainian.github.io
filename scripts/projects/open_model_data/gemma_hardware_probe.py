@@ -275,9 +275,7 @@ def safe_job_command(
     script_placeholder: str,
 ) -> list[str]:
     return [
-        "<HF_CLI>"
-        if index == 0
-        else script_placeholder if value == str(script_path) else value
+        "<HF_CLI>" if index == 0 else script_placeholder if value == str(script_path) else value
         for index, value in enumerate(command)
     ]
 
@@ -383,11 +381,7 @@ def claim_paid_attempt(path: Path, claim: Mapping[str, Any]) -> None:
 def host_global_attempt_claim_path(authorization_sha256: str) -> Path:
     if not re.fullmatch(r"[a-f0-9]{64}", authorization_sha256):
         raise HardwareProbeError("cannot derive a host-global claim for an invalid authorization hash")
-    return (
-        Path(tempfile.gettempdir())
-        / "learn-ukrainian-hf-probe-claims"
-        / f"{authorization_sha256}.json"
-    )
+    return Path(tempfile.gettempdir()) / "learn-ukrainian-hf-probe-claims" / f"{authorization_sha256}.json"
 
 
 def create_authorized_runner_snapshot(
@@ -913,11 +907,7 @@ def run_phase_process(
             process_started=True,
         ) from exc
     if process.exitcode != 0 or "error" in result:
-        phase_evidence = (
-            read_json(progress_marker)
-            if progress_marker.is_file()
-            else result.get("phase_evidence")
-        )
+        phase_evidence = read_json(progress_marker) if progress_marker.is_file() else result.get("phase_evidence")
         raise PhaseExecutionError(
             str(result.get("error", f"probe child exited {process.exitcode}")),
             phase_evidence=phase_evidence,
@@ -1138,12 +1128,8 @@ def aborted_worker_receipt(
     partial = dict(partial_evidence or {})
     first = partial.get("first") if isinstance(partial.get("first"), dict) else None
     second = partial.get("second") if isinstance(partial.get("second"), dict) else None
-    first_progress = (
-        partial.get("first_progress") if isinstance(partial.get("first_progress"), dict) else None
-    )
-    second_progress = (
-        partial.get("second_progress") if isinstance(partial.get("second_progress"), dict) else None
-    )
+    first_progress = partial.get("first_progress") if isinstance(partial.get("first_progress"), dict) else None
+    second_progress = partial.get("second_progress") if isinstance(partial.get("second_progress"), dict) else None
     first_step_completed = bool(first and first.get("global_step") == 1)
     second_step_completed = bool(second and second.get("global_step") == 2)
     first_step_performed = first_step_completed or bool(
@@ -1164,11 +1150,14 @@ def aborted_worker_receipt(
         elapsed_seconds = float(first["elapsed_seconds"]) + (
             float(second["elapsed_seconds"]) if second_step_completed else 0.0
         )
-    tokens_processed = sum(
-        int(observation["tokens"])
-        for observation in (first_observation, second_observation)
-        if observation and observation.get("optimizer_step_performed", True) is True
-    ) or None
+    tokens_processed = (
+        sum(
+            int(observation["tokens"])
+            for observation in (first_observation, second_observation)
+            if observation and observation.get("optimizer_step_performed", True) is True
+        )
+        or None
+    )
     job_id = os.environ.get("JOB_ID", "unavailable")
     valid_authorization_sha256 = (
         authorization_sha256 if re.fullmatch(r"[a-f0-9]{64}", authorization_sha256) else "0" * 64
@@ -1209,12 +1198,16 @@ def aborted_worker_receipt(
             "peak_allocated_bytes": (
                 max(first["peak_allocated_bytes"], second["peak_allocated_bytes"])
                 if second_step_completed
-                else first.get("peak_allocated_bytes") if first_step_completed else None
+                else first.get("peak_allocated_bytes")
+                if first_step_completed
+                else None
             ),
             "peak_reserved_bytes": (
                 max(first["peak_reserved_bytes"], second["peak_reserved_bytes"])
                 if second_step_completed
-                else first.get("peak_reserved_bytes") if first_step_completed else None
+                else first.get("peak_reserved_bytes")
+                if first_step_completed
+                else None
             ),
             "total_memory_bytes": gpu.get("total_memory_bytes"),
         },

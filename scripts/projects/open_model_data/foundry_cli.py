@@ -386,12 +386,7 @@ def _learning_allowed(record: Mapping[str, Any], contaminated: bool) -> bool:
 
 def _mask_spans(evidence: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
     maskable = [item for item in evidence if item["route"] in {"candidate_error", "unresolved"}]
-    spans = sorted(
-        {
-            (int(item["start_char"]), int(item["end_char"]), str(item["track"]))
-            for item in maskable
-        }
-    )
+    spans = sorted({(int(item["start_char"]), int(item["end_char"]), str(item["track"])) for item in maskable})
     return [{"start_char": start, "end_char": end, "reason": track} for start, end, track in spans]
 
 
@@ -892,7 +887,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ukrainian-data-foundry", description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
     prepare_parser = subparsers.add_parser("prepare", help="prepare deterministic model-ready views")
-    prepare_parser.add_argument("--input", type=Path, required=True, help="consumer-owned portable_corpus_record_v1 JSONL")
+    prepare_parser.add_argument(
+        "--input", type=Path, required=True, help="consumer-owned portable_corpus_record_v1 JSONL"
+    )
     prepare_parser.add_argument("--output-dir", type=Path, required=True)
     prepare_parser.add_argument("--max-records", type=int, default=10_000)
     prepare_parser.add_argument("--evaluation-artifact", type=Path, action="append", default=[])

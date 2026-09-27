@@ -44,10 +44,16 @@ ROLE_PROVIDERS = {
     "rule_author_extractor": "google",
     "ukrainian_source_reviewer": "xai",
 }
-DISPOSITION_CODES = frozenset({
-    "converted", "not_rule_bearing", "duplicate_representation", "evaluation_only",
-    "superseded_or_historical", "blocked_with_reason",
-})
+DISPOSITION_CODES = frozenset(
+    {
+        "converted",
+        "not_rule_bearing",
+        "duplicate_representation",
+        "evaluation_only",
+        "superseded_or_historical",
+        "blocked_with_reason",
+    }
+)
 FAMILY_TOTALS = {
     "antonenko_style_guide": 342,
     "ua_gec": 8_937,
@@ -133,8 +139,7 @@ def _validate_action_receipt(
 ) -> None:
     require(set(action) == set(functional_roles.ACTION_RECEIPT_FIELDS), "functional action receipt fields drift")
     require(
-        action.get("role_id") == actor["role_id"]
-        and action.get("task_id") == actor["task_id"],
+        action.get("role_id") == actor["role_id"] and action.get("task_id") == actor["task_id"],
         "functional action receipt task binding mismatch",
     )
     role = next(item for item in role_contract["functional_roles"] if item["role_id"] == actor["role_id"])
@@ -174,16 +179,20 @@ def _validate_action_receipt(
         for key in ("role_id", "task_id", "input_manifest_sha256", "evaluation_cycle_id", "output_sha256", "status")
     }
     require(
-        action["receipt_id"]
-        == "phase3_functional_action:" + sha256_bytes(canonical_json(identity).encode("utf-8")),
+        action["receipt_id"] == "phase3_functional_action:" + sha256_bytes(canonical_json(identity).encode("utf-8")),
         "functional action receipt ID mismatch",
     )
 
 
 def _validate_provenance_bindings(
-    reviewed: Mapping[str, Any], role_contract_path: Path, source_review_receipt_path: Path,
+    reviewed: Mapping[str, Any],
+    role_contract_path: Path,
+    source_review_receipt_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    require(source_review_receipt_path.is_file() and not source_review_receipt_path.is_symlink(), "source review receipt is missing")
+    require(
+        source_review_receipt_path.is_file() and not source_review_receipt_path.is_symlink(),
+        "source review receipt is missing",
+    )
     role_contract, bindings = _load_role_bindings(role_contract_path)
     author = reviewed["author_binding"]
     reviewer = reviewed["source_review_binding"]
@@ -192,10 +201,13 @@ def _validate_provenance_bindings(
         expected = bindings[role_id]
         require(supplied["role_id"] == role_id, f"{role_id} role binding mismatch")
         require(supplied["task_id"] == expected["task_id"], f"{role_id} task binding mismatch")
-    require(reviewer["receipt_sha256"] == sha256_file(source_review_receipt_path), "source review receipt binding mismatch")
+    require(
+        reviewer["receipt_sha256"] == sha256_file(source_review_receipt_path), "source review receipt binding mismatch"
+    )
     receipt = _read_json(source_review_receipt_path, "source review receipt")
     require(
-        set(receipt) == {
+        set(receipt)
+        == {
             "schema_version",
             "text_free",
             "reviewer_role_id",
@@ -219,8 +231,7 @@ def _validate_provenance_bindings(
         "source review receipt freeze binding mismatch",
     )
     require(
-        receipt["disposition_families_sha256"]
-        == sha256_bytes(canonical_json(reviewed["families"]).encode("utf-8")),
+        receipt["disposition_families_sha256"] == sha256_bytes(canonical_json(reviewed["families"]).encode("utf-8")),
         "source review receipt disposition binding mismatch",
     )
     require(
@@ -238,9 +249,7 @@ def _validate_provenance_bindings(
         actor=author,
         action_kind="source_disposition_proposal",
         input_manifest_sha256=sha256_bytes(
-            canonical_json(
-                {"source_freeze_receipt_sha256": receipt["source_freeze_receipt_sha256"]}
-            ).encode("utf-8")
+            canonical_json({"source_freeze_receipt_sha256": receipt["source_freeze_receipt_sha256"]}).encode("utf-8")
         ),
         output_sha256=families_sha256,
     )
@@ -282,7 +291,10 @@ def _ledger_records(path: Path, family_id: str) -> list[dict[str, str]]:
         require(isinstance(record, Mapping), f"frozen ledger record is not an object: {path.name}:{ordinal}")
         require(record.get("family_id") == family_id, f"frozen ledger family mismatch: {path.name}:{ordinal}")
         unit_id, unit_hash, locator = record.get("unit_id"), record.get("unit_sha256"), record.get("locator")
-        require(isinstance(unit_id, str) and isinstance(unit_hash, str) and isinstance(locator, Mapping), f"invalid frozen binding: {path.name}:{ordinal}")
+        require(
+            isinstance(unit_id, str) and isinstance(unit_hash, str) and isinstance(locator, Mapping),
+            f"invalid frozen binding: {path.name}:{ordinal}",
+        )
         binding = (unit_id, unit_hash, sha256_bytes(canonical_json(dict(locator)).encode("utf-8")))
         require(binding not in seen, f"duplicate frozen unit binding: {family_id}:{ordinal}")
         seen.add(binding)
@@ -292,7 +304,10 @@ def _ledger_records(path: Path, family_id: str) -> list[dict[str, str]]:
 
 def _load_frozen_universe(source_freeze_dir: Path) -> tuple[dict[str, list[dict[str, str]]], str, dict[str, Any]]:
     receipt_path = source_freeze_dir / FREEZE_RECEIPT_FILE
-    require(source_freeze_dir.is_dir() and not source_freeze_dir.is_symlink(), "source freeze directory is not a real directory")
+    require(
+        source_freeze_dir.is_dir() and not source_freeze_dir.is_symlink(),
+        "source freeze directory is not a real directory",
+    )
     receipt = _read_json(receipt_path, "source freeze receipt")
     require(receipt.get("schema_version") == "phase3_source_universe_freeze_v1", "unsupported source freeze receipt")
     require(receipt.get("text_free") is True, "source freeze receipt is not text-free")
@@ -306,8 +321,14 @@ def _load_frozen_universe(source_freeze_dir: Path) -> tuple[dict[str, list[dict[
         ledger_file = descriptor.get("ledger_file")
         unit_count = descriptor.get("unit_count")
         ledger_hash = descriptor.get("ledger_sha256")
-        require(isinstance(ledger_file, str) and ledger_file == f"{family_id}.units.jsonl", f"wrong frozen ledger file: {family_id}")
-        require(isinstance(unit_count, int) and unit_count == FAMILY_TOTALS[family_id], f"wrong frozen family total: {family_id}")
+        require(
+            isinstance(ledger_file, str) and ledger_file == f"{family_id}.units.jsonl",
+            f"wrong frozen ledger file: {family_id}",
+        )
+        require(
+            isinstance(unit_count, int) and unit_count == FAMILY_TOTALS[family_id],
+            f"wrong frozen family total: {family_id}",
+        )
         require(isinstance(ledger_hash, str), f"frozen ledger lacks hash: {family_id}")
         ledger_path = source_freeze_dir / ledger_file
         require(ledger_path.is_file() and not ledger_path.is_symlink(), f"missing frozen ledger: {family_id}")
@@ -436,9 +457,7 @@ def _audit_shape_ledger(
     for family_id in sorted(FAMILY_IDS):
         rows = family_rows[family_id]
         reason_counts = Counter(
-            f"reason.{row['nonconversion']['reason_code']}"
-            for row in rows
-            if row["disposition_code"] != "converted"
+            f"reason.{row['nonconversion']['reason_code']}" for row in rows if row["disposition_code"] != "converted"
         )
         translated = [
             _audit_shape_row(
@@ -518,7 +537,9 @@ def compile_dispositions(
     require(reviewed["role_contract_sha256"] == sha256_file(role_contract_path), "role contract binding mismatch")
     families = reviewed["families"]
     family_map = {item["family_id"]: item for item in families}
-    require(len(family_map) == len(families) and set(family_map) == FAMILY_IDS, "reviewed input family set is not exact")
+    require(
+        len(family_map) == len(families) and set(family_map) == FAMILY_IDS, "reviewed input family set is not exact"
+    )
     all_rows: list[dict[str, Any]] = []
     rows_by_family: dict[str, list[dict[str, Any]]] = {}
     family_receipts: list[dict[str, Any]] = []
@@ -529,28 +550,35 @@ def compile_dispositions(
         rows = _validate_family_rows(family, frozen[family_id])
         all_rows.extend(rows)
         rows_by_family[family_id] = rows
-        audit_bindings = [
-            {"unit_id": row["unit_id"], "unit_sha256": row["unit_sha256"]}
-            for row in frozen[family_id]
-        ]
+        audit_bindings = [{"unit_id": row["unit_id"], "unit_sha256": row["unit_sha256"]} for row in frozen[family_id]]
         audit_universe_sha256 = disposition_audit.source_family_universe_sha256(audit_bindings)
-        family_receipts.append({
-            "family_id": family_id,
-            "frozen_input_identity_total": len(frozen[family_id]),
-            "family_unit_total": FAMILY_TOTALS[family_id],
-            "ledger_input_total": len(rows),
-            "disposition_row_sum": len(rows),
-            "ledger_universe_sha256": audit_universe_sha256,
-            "audit_universe_sha256": audit_universe_sha256,
-        })
+        family_receipts.append(
+            {
+                "family_id": family_id,
+                "frozen_input_identity_total": len(frozen[family_id]),
+                "family_unit_total": FAMILY_TOTALS[family_id],
+                "ledger_input_total": len(rows),
+                "disposition_row_sum": len(rows),
+                "ledger_universe_sha256": audit_universe_sha256,
+                "audit_universe_sha256": audit_universe_sha256,
+            }
+        )
     for receipt in family_receipts:
         require(
-            receipt["frozen_input_identity_total"] == receipt["family_unit_total"] == receipt["ledger_input_total"] == receipt["disposition_row_sum"],
+            receipt["frozen_input_identity_total"]
+            == receipt["family_unit_total"]
+            == receipt["ledger_input_total"]
+            == receipt["disposition_row_sum"],
             f"disposition receipt equality failure: {receipt['family_id']}",
         )
-        require(receipt["ledger_universe_sha256"] == receipt["audit_universe_sha256"], f"universe hash mismatch: {receipt['family_id']}")
+        require(
+            receipt["ledger_universe_sha256"] == receipt["audit_universe_sha256"],
+            f"universe hash mismatch: {receipt['family_id']}",
+        )
     author_binding, source_review_binding = _validate_provenance_bindings(
-        reviewed, role_contract_path, source_review_receipt_path,
+        reviewed,
+        role_contract_path,
+        source_review_receipt_path,
     )
     all_rows.sort(key=lambda row: (str(row["family_id"]), str(row["unit_id"])))
     ledger_bytes = b"".join((canonical_json(row) + "\n").encode("utf-8") for row in all_rows)
@@ -587,7 +615,11 @@ def compile_dispositions(
         "source_review_binding": source_review_binding,
         "families": family_receipts,
         "zero_family_receipt": zero_receipt,
-        "disposition_ledger": {"path": OUTPUT_LEDGER_FILE, "sha256": sha256_bytes(ledger_bytes), "row_count": len(all_rows)},
+        "disposition_ledger": {
+            "path": OUTPUT_LEDGER_FILE,
+            "sha256": sha256_bytes(ledger_bytes),
+            "row_count": len(all_rows),
+        },
         "audit_disposition_ledger": {
             "path": OUTPUT_AUDIT_LEDGER_FILE,
             "sha256": sha256_bytes(audit_ledger_bytes),
@@ -634,7 +666,9 @@ def main(argv: list[str] | None = None) -> int:
     except DispositionError as exc:
         print(canonical_json({"ok": False, "error": str(exc)}))
         return 2
-    print(canonical_json({"ok": True, "receipt": OUTPUT_RECEIPT_FILE, "rows": receipt["disposition_ledger"]["row_count"]}))
+    print(
+        canonical_json({"ok": True, "receipt": OUTPUT_RECEIPT_FILE, "rows": receipt["disposition_ledger"]["row_count"]})
+    )
     return 0
 
 

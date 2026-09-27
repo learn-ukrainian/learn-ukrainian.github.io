@@ -56,6 +56,7 @@ ASSIGNMENT_ALGORITHM_DESCRIPTOR = {
 def _canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
+
 FORBIDDEN_KEYS = {
     "content",
     "text",
@@ -135,6 +136,7 @@ def test_a3_heldout_seal_bindings_match_exact_inputs() -> None:
 
     for binding in receipt["bindings"].values():
         from learn_ukrainian_v4_runtime import resources
+
         logical = binding["path"]
         if logical.startswith("scripts/"):
             logical = "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
@@ -183,9 +185,10 @@ def test_a3_heldout_seal_receipt_is_payload_and_membership_free() -> None:
     # The descriptor hash is recomputed from a formula frozen in this test file
     # (independent of the receipt), so a different private implementation that
     # silently changed the formula cannot keep this hash and still pass.
-    assert algorithm["algorithm_descriptor_sha256"] == hashlib.sha256(
-        _canonical_json(ASSIGNMENT_ALGORITHM_DESCRIPTOR).encode("utf-8")
-    ).hexdigest()
+    assert (
+        algorithm["algorithm_descriptor_sha256"]
+        == hashlib.sha256(_canonical_json(ASSIGNMENT_ALGORITHM_DESCRIPTOR).encode("utf-8")).hexdigest()
+    )
     assert re.fullmatch(r"[a-f0-9]{64}", algorithm["salt_commitment_sha256"])
     assert re.fullmatch(r"[a-f0-9]{64}", algorithm["assignment_commitment_sha256"])
     # The private salt itself, and the family->pool membership, never appear here.
@@ -266,9 +269,7 @@ def test_a3_heldout_seal_carries_forward_every_a2_residual() -> None:
     # heldout-assignment test below), so a3_residuals may legitimately be
     # empty; it must not carry a stale "still pending" placeholder.
     assert isinstance(receipt["a3_residuals"], list)
-    assert not any(
-        entry.get("reason_code") == "membership_not_yet_assigned" for entry in receipt["a3_residuals"]
-    )
+    assert not any(entry.get("reason_code") == "membership_not_yet_assigned" for entry in receipt["a3_residuals"])
     for entry in receipt["a3_residuals"]:
         assert entry["stage"] == "A3"
         assert entry["owner_role"]

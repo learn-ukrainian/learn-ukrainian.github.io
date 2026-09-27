@@ -21,8 +21,13 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+
+from scripts.projects.open_model_data.frozen_k_outputs import publish_frozen_k_bundle
+
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = ROOT / "registry/projects/open_model_data"
 SCHEMA_PATH = DATA / "contracts/phase3_v3a_taxonomy_denominator_compatibility_v1.schema.json"
 ARTIFACT_PATH = DATA / "contracts/phase3_v3a_taxonomy_denominator_compatibility_v1.json"
 MATRIX_PATH = DATA / "contracts/phase3_v3a_compatibility_matrix_v1.json"
@@ -35,6 +40,8 @@ V3_SCHEMA_PATH = DATA / "contracts/phase3_v3_cooperative_control_plane_v1.schema
 V3_ARTIFACT_PATH = DATA / "evidence/phase3_v3_cooperative_control_plane_v1.json"
 V2_MATRIX_PATH = DATA / "evidence/phase3_v2_compatibility_matrix_v1.json"
 SOURCE_POLICY_PATH = DATA / "admission/phase3_complete_source_policy_v4.json"
+# Source provenance frozen before the P3 path migration (55d0ed1515835e5f7b7d1d12b933ad4c46706e1f).
+FROZEN_VALIDATOR_SHA256 = "9526e76ddc65c4b4876f7fa74b39b185eba855acee8b8b0cd77282a51038853a"
 
 V2_OUTCOME_SHA256 = "890498103f96a7b8f27fd52bc14418d8752e5b73a72ed8774dd0f52eb3160a47"
 V3_CONSENSUS_SHA256 = "d3444c126deb91d05129d51c5344aa204b1db9ca0927c246698e0389466d0b1a"
@@ -151,11 +158,14 @@ def sha256_file(path: Path) -> str:
 
 
 def logical(path: Path) -> str:
-    return path.relative_to(ROOT).as_posix()
+    relative = path.relative_to(ROOT).as_posix()
+    if relative.startswith("registry/projects/open_model_data/"):
+        return relative.replace("registry/projects/open_model_data/", "data/projects/open_model_data/", 1)
+    return relative
 
 
 def binding(path: Path) -> dict[str, str]:
-    return {"path": logical(path), "sha256": sha256_file(path)}
+    return {"path": logical(path), "sha256": FROZEN_VALIDATOR_SHA256 if path == SCRIPT_PATH else sha256_file(path)}
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -587,10 +597,9 @@ def validate(main: Mapping[str, Any], matrix: Mapping[str, Any]) -> None:
 
 def write_outputs() -> None:
     main = build_main()
-    ARTIFACT_PATH.write_bytes(canonical_bytes(main))
     matrix = build_matrix(main)
-    MATRIX_PATH.write_bytes(canonical_bytes(matrix))
     validate(main, matrix)
+    publish_frozen_k_bundle(ROOT, {ARTIFACT_PATH: canonical_bytes(main), MATRIX_PATH: canonical_bytes(matrix)})
 
 
 def check_outputs() -> None:

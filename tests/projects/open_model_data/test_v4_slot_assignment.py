@@ -57,9 +57,15 @@ def _all_keys(value: object) -> set[str]:
 def _write_receipt_tree(tmp_path: Path, *, a2=None, a4_receipt=None, manifest=None) -> Path:
     admission_dir = tmp_path / "data/projects/open_model_data/admission"
     admission_dir.mkdir(parents=True)
-    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(a2 if a2 is not None else _cached_json(A2_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(json.dumps(a4_receipt if a4_receipt is not None else _cached_json(A4_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest if manifest is not None else _cached_json(MANIFEST_PATH)))
+    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(
+        json.dumps(a2 if a2 is not None else _cached_json(A2_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(
+        json.dumps(a4_receipt if a4_receipt is not None else _cached_json(A4_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(
+        json.dumps(manifest if manifest is not None else _cached_json(MANIFEST_PATH))
+    )
     return tmp_path
 
 
@@ -73,6 +79,7 @@ def test_heldout_membership_file_is_never_opened_by_this_module_or_suite() -> No
     # (the only paths its functions ever open) resolves under batch_state/,
     # and it never imports the A3 held-out-membership module.
     from learn_ukrainian_v4_runtime.resources import PackageResource
+
     path_constants = [value for value in vars(assignment).values() if isinstance(value, (Path, PackageResource))]
     assert path_constants  # sanity: the module does define path constants
     assert not any("batch_state" in str(path) for path in path_constants)
@@ -110,7 +117,9 @@ def test_commitment_pool_republishes_a4s_own_content_blind_commitments_verbatim(
     pool = assignment.build_commitment_pool(_cached_json(A4_RECEIPT_PATH))
     assert pool["content_blind"] is True
     assert pool["total_builder_eligible_commitments"] == 8
-    assert set(pool["commitments"]) == set(_cached_json(A4_RECEIPT_PATH)["builder_packet_consumption"]["unit_commitments"])
+    assert set(pool["commitments"]) == set(
+        _cached_json(A4_RECEIPT_PATH)["builder_packet_consumption"]["unit_commitments"]
+    )
     assert pool["commitments"] == sorted(pool["commitments"])
 
 
@@ -138,7 +147,9 @@ def test_gate_against_real_production_artifacts_is_structurally_closed_today() -
 
 def test_gate_closed_when_a_required_public_artifact_is_missing(tmp_path: Path) -> None:
     _write_receipt_tree(tmp_path)
-    (tmp_path / "data/projects/open_model_data/admission/dataset_v4_a4_deterministic_extraction_receipt_v1.json").unlink()
+    (
+        tmp_path / "data/projects/open_model_data/admission/dataset_v4_a4_deterministic_extraction_receipt_v1.json"
+    ).unlink()
     gate = assignment.check_assignment_gate(tmp_path)
     assert gate["assignment_ready"] is False
     assert gate["blocked_reason_code"] == "required_public_artifact_missing:a4_receipt"
@@ -154,7 +165,9 @@ def test_gate_closed_when_a4_receipt_is_invalid(tmp_path: Path) -> None:
     assert gate["builder_eligible_commitments_available"] == 0
 
 
-def test_gate_stays_structurally_closed_even_once_a2_rights_are_fully_resolved(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_gate_stays_structurally_closed_even_once_a2_rights_are_fully_resolved(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """The one invariant this whole module exists to prove: resolving A2's
     rights residuals does NOT unlock per-stratum commitment binding -- the
     block is architectural (content-blind commitments), not a rights gate."""
@@ -184,7 +197,9 @@ def test_assignment_records_are_one_typed_entry_per_frozen_slot_never_a_silent_d
 
 
 def test_assignment_records_never_carry_a_row_id_or_content_field() -> None:
-    assert not any("content" in r or "text" in r or "source_unit_id" in r for r in _cached_json(RECEIPT)["assignment_records"])
+    assert not any(
+        "content" in r or "text" in r or "source_unit_id" in r for r in _cached_json(RECEIPT)["assignment_records"]
+    )
 
 
 def test_residual_status_is_uniform_across_every_stratum_no_singleton_shape() -> None:
@@ -196,14 +211,18 @@ def test_residual_status_is_uniform_across_every_stratum_no_singleton_shape() ->
     assignment.validate_residual_status_uniform_across_strata(_cached_json(RECEIPT)["assignment_records"], strata)
     by_stratum: dict[str, int] = {}
     for record in _cached_json(RECEIPT)["assignment_records"]:
-        by_stratum[record["stratum"]] = by_stratum.get(record["stratum"], 0) + (1 if record["assignment_status"] == "assigned" else 0)
+        by_stratum[record["stratum"]] = by_stratum.get(record["stratum"], 0) + (
+            1 if record["assignment_status"] == "assigned" else 0
+        )
     assert set(by_stratum.values()) == {0}
 
 
 def test_residual_status_uniform_check_refuses_a_forged_single_assigned_stratum() -> None:
     tampered = copy.deepcopy(_cached_json(RECEIPT)["assignment_records"])
     tampered[0]["assignment_status"] = "assigned"
-    tampered[0]["commitment_sha256"] = _cached_json(A4_RECEIPT_PATH)["builder_packet_consumption"]["unit_commitments"][0]
+    tampered[0]["commitment_sha256"] = _cached_json(A4_RECEIPT_PATH)["builder_packet_consumption"]["unit_commitments"][
+        0
+    ]
     strata = assignment.a7.a6.frozen_slot_strata(_cached_json(MANIFEST_PATH))
     with pytest.raises(assignment.SlotAssignmentError):
         assignment.validate_residual_status_uniform_across_strata(tampered, strata)
@@ -230,22 +249,34 @@ def test_receipt_binds_v4_sha_and_control_surfaces() -> None:
         "pilot_child_issue": 7430,
         "private_operational_board": 622,
     }
-    assert _cached_json(RECEIPT)["bindings"]["a4_deterministic_extraction"]["sha256"] == assignment.sha256_file(A4_RECEIPT_PATH)
+    assert _cached_json(RECEIPT)["bindings"]["a4_deterministic_extraction"]["sha256"] == assignment.sha256_file(
+        A4_RECEIPT_PATH
+    )
     assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == assignment.sha256_file(MANIFEST_PATH)
 
 
 def test_receipt_carries_forward_every_a2_and_a4_residual_unresolved() -> None:
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]}
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]
+    }
     for key in ("a2_residuals_carried_forward", "a4_residuals_carried_forward"):
-        assert all(e["status"] == "unresolved_carried_to_public_slot_commitment_assignment" for e in _cached_json(RECEIPT)[key])
+        assert all(
+            e["status"] == "unresolved_carried_to_public_slot_commitment_assignment" for e in _cached_json(RECEIPT)[key]
+        )
 
 
 def test_receipt_denominator_stays_100_slots_never_dropped() -> None:
     assert _cached_json(RECEIPT)["frozen_slot_denominator"]["total_slots"] == 100
     assert len(_cached_json(RECEIPT)["assignment_records"]) == 100
     assert _cached_json(RECEIPT)["execution_counters"]["frozen_slot_count"] == 100
-    assert _cached_json(RECEIPT)["execution_counters"]["assigned_slot_count"] + _cached_json(RECEIPT)["execution_counters"]["residual_slot_count"] == 100
+    assert (
+        _cached_json(RECEIPT)["execution_counters"]["assigned_slot_count"]
+        + _cached_json(RECEIPT)["execution_counters"]["residual_slot_count"]
+        == 100
+    )
 
 
 def test_receipt_never_claims_dataset_rows_or_stronger_release_state() -> None:
@@ -258,7 +289,13 @@ def test_receipt_never_claims_dataset_rows_or_stronger_release_state() -> None:
 
 
 def test_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {"gold": False, "training": False, "evaluation": False, "teaching": False, "coverage": False}
+    assert _cached_json(RECEIPT)["eligibility"] == {
+        "gold": False,
+        "training": False,
+        "evaluation": False,
+        "teaching": False,
+        "coverage": False,
+    }
     assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
     assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
     assert all(v is False for k, v in _cached_json(RECEIPT)["safety_assertions"].items() if k != "rows_not_admitted")
@@ -285,7 +322,8 @@ def test_bindings_hash_to_disk_for_every_bound_artifact() -> None:
     for name, binding in _cached_json(RECEIPT)["bindings"].items():
         path = resource_root() / (
             "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
-            if binding["path"].startswith("scripts/") else binding["path"]
+            if binding["path"].startswith("scripts/")
+            else binding["path"]
         )
         assert path.is_file(), name
         assert assignment.sha256_file(path) == binding["sha256"], name
@@ -317,7 +355,11 @@ def test_refuses_a_tampered_binding_hash() -> None:
 
 def test_refuses_a_forged_assignment_ready_claim() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["assignment_gate"] = {**receipt["assignment_gate"], "assignment_ready": True, "stratum_commitment_binding_available": True}
+    receipt["assignment_gate"] = {
+        **receipt["assignment_gate"],
+        "assignment_ready": True,
+        "stratum_commitment_binding_available": True,
+    }
     with pytest.raises(assignment.SlotAssignmentError):
         assignment.validate_receipt_independently(receipt)
 
@@ -325,7 +367,9 @@ def test_refuses_a_forged_assignment_ready_claim() -> None:
 def test_refuses_a_forged_assigned_slot_with_a_bound_commitment() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["assignment_records"][0]["assignment_status"] = "assigned"
-    receipt["assignment_records"][0]["commitment_sha256"] = _cached_json(A4_RECEIPT_PATH)["builder_packet_consumption"]["unit_commitments"][0]
+    receipt["assignment_records"][0]["commitment_sha256"] = _cached_json(A4_RECEIPT_PATH)["builder_packet_consumption"][
+        "unit_commitments"
+    ][0]
     with pytest.raises(assignment.SlotAssignmentError):
         assignment.validate_receipt_independently(receipt)
 

@@ -569,10 +569,7 @@ def _prior_wave_exclusions(
             expected_receipt_chain = {("calibration", 1)} | {
                 ("production", number) for number in range(1, receipt["wave_number"])
             }
-        actual_receipt_chain = {
-            (item["stage"], item["wave_number"])
-            for item in receipt["prior_waves"]
-        }
+        actual_receipt_chain = {(item["stage"], item["wave_number"]) for item in receipt["prior_waves"]}
         require(
             actual_receipt_chain == expected_receipt_chain,
             "prior wave receipt does not bind its complete earlier chain",
@@ -1444,11 +1441,7 @@ def _rate(numerator: int, denominator: int, confidence_level: float) -> dict[str
     z2 = z * z
     denominator_term = 1 + z2 / denominator
     center = (value + z2 / (2 * denominator)) / denominator_term
-    margin = (
-        z
-        * ((value * (1 - value) / denominator + z2 / (4 * denominator * denominator)) ** 0.5)
-        / denominator_term
-    )
+    margin = z * ((value * (1 - value) / denominator + z2 / (4 * denominator * denominator)) ** 0.5) / denominator_term
     return {
         "denominator": denominator,
         "interval": {
@@ -1530,14 +1523,16 @@ def assemble_first_pass_decisions(
     require(wave_receipt["wave_number"] == wave_number, "wave receipt number mismatch")
     require(wave_receipt["plan_sha256"] == sha256_file(plan_path), "wave receipt plan mismatch")
     require(
-        wave_receipt["selected_manifest"] == _artifact(
+        wave_receipt["selected_manifest"]
+        == _artifact(
             selected_manifest_path,
             sum(1 for _ in iter_jsonl(selected_manifest_path)),
         ),
         "selected manifest does not match wave receipt",
     )
     require(
-        wave_receipt["adapted_correction_packet"] == _artifact(
+        wave_receipt["adapted_correction_packet"]
+        == _artifact(
             correction_packet_path,
             sum(1 for _ in iter_jsonl(correction_packet_path)),
         ),
@@ -1700,9 +1695,7 @@ def prepare_resolver_packet(
         key="candidate_id",
     )
     conflicts = [
-        decision
-        for decision in decisions.values()
-        if decision["final_resolution"]["kind"] == "unresolved_conflict"
+        decision for decision in decisions.values() if decision["final_resolution"]["kind"] == "unresolved_conflict"
     ]
     require(all(item["candidate_id"] in blind for item in conflicts), "conflict absent from blind packet")
     packet_id = f"{plan['plan_id']}.{stage}.{wave_number}.resolver"
@@ -1740,7 +1733,7 @@ def prepare_resolver_packet(
             resolver_mode=True,
         )
         if rows
-        else "<!doctype html><html lang=\"uk\"><meta charset=\"utf-8\"><title>Розбіжностей немає</title><p>У цій хвилі немає розбіжностей для вирішення.</p></html>".encode()
+        else '<!doctype html><html lang="uk"><meta charset="utf-8"><title>Розбіжностей немає</title><p>У цій хвилі немає розбіжностей для вирішення.</p></html>'.encode()
     )
     temporary_packet = _temporary_path(packet_output)
     temporary_workspace = _temporary_path(workspace_output)
@@ -1895,9 +1888,7 @@ def resolve_conflicts(
     temporary_decisions = _temporary_path(decisions_output)
     temporary_summary = _temporary_path(summary_output)
     try:
-        temporary_decisions.write_bytes(
-            b"".join((canonical_json(row) + "\n").encode("utf-8") for row in final_rows)
-        )
+        temporary_decisions.write_bytes(b"".join((canonical_json(row) + "\n").encode("utf-8") for row in final_rows))
         summary = {
             "counts": dict(sorted(counts.items())),
             "decisions": _artifact(temporary_decisions, len(final_rows)),
@@ -1909,9 +1900,7 @@ def resolve_conflicts(
             "schema_version": "language_contact_resolution_summary_v1",
         }
         temporary_summary.write_text(canonical_json(summary) + "\n", encoding="utf-8")
-        _promote_outputs(
-            ((temporary_decisions, decisions_output), (temporary_summary, summary_output))
-        )
+        _promote_outputs(((temporary_decisions, decisions_output), (temporary_summary, summary_output)))
     finally:
         temporary_decisions.unlink(missing_ok=True)
         temporary_summary.unlink(missing_ok=True)
@@ -1953,8 +1942,7 @@ def summarize_campaign(
             "summary does not bind its wave receipt",
         )
         require(
-            (summary["stage"], summary["wave_number"])
-            == (wave_receipt["stage"], wave_receipt["wave_number"]),
+            (summary["stage"], summary["wave_number"]) == (wave_receipt["stage"], wave_receipt["wave_number"]),
             "summary and wave receipt identity differ",
         )
         summaries.append(summary)
@@ -1967,9 +1955,7 @@ def summarize_campaign(
             }
         )
     keys = [(row["stage"], row["wave_number"]) for row in wave_rows]
-    expected_keys = [("calibration", 1)] + [
-        ("production", number) for number in range(1, len(keys))
-    ]
+    expected_keys = [("calibration", 1)] + [("production", number) for number in range(1, len(keys))]
     require(keys == expected_keys, "campaign inputs must be calibration wave 1 then contiguous production waves")
     frame_sha256 = summaries[0]["frame_sha256"]
     require(all(row["frame_sha256"] == frame_sha256 for row in summaries), "campaign frame hash drifts")
@@ -2041,8 +2027,7 @@ def summarize_campaign(
     )
     if len(recent) == required:
         learning_curve_met = learning_curve_met and all(
-            summary["overall"]["correction_yield_rate"]["value"] is not None
-            for summary in recent
+            summary["overall"]["correction_yield_rate"]["value"] is not None for summary in recent
         )
     calibration_only = not production
     stop_eligible = all(
@@ -2062,9 +2047,7 @@ def summarize_campaign(
         (not learning_curve_met, "learning_curve_not_met"),
     )
     reasons = [reason for failed, reason in checks if failed]
-    unresolved_conflicts = sum(
-        int(summary["decision_counts"].get("unresolved_conflict", 0)) for summary in summaries
-    )
+    unresolved_conflicts = sum(int(summary["decision_counts"].get("unresolved_conflict", 0)) for summary in summaries)
     receipt = {
         "accumulated_per_stratum": accumulated_payload,
         "claims": {
@@ -2166,22 +2149,32 @@ def freeze_gold(
         )
         require(
             summary["inputs"]["responses_a"]
-            == _artifact(responses_a_paths[index], len(_unique_rows(
+            == _artifact(
                 responses_a_paths[index],
-                active_validator=validator(BLIND_RESPONSE_SCHEMA),
-                label="freeze response A",
-                key="candidate_id",
-            ))),
+                len(
+                    _unique_rows(
+                        responses_a_paths[index],
+                        active_validator=validator(BLIND_RESPONSE_SCHEMA),
+                        label="freeze response A",
+                        key="candidate_id",
+                    )
+                ),
+            ),
             "response A artifact mismatch",
         )
         require(
             summary["inputs"]["responses_b"]
-            == _artifact(responses_b_paths[index], len(_unique_rows(
+            == _artifact(
                 responses_b_paths[index],
-                active_validator=validator(BLIND_RESPONSE_SCHEMA),
-                label="freeze response B",
-                key="candidate_id",
-            ))),
+                len(
+                    _unique_rows(
+                        responses_b_paths[index],
+                        active_validator=validator(BLIND_RESPONSE_SCHEMA),
+                        label="freeze response B",
+                        key="candidate_id",
+                    )
+                ),
+            ),
             "response B artifact mismatch",
         )
         resolution_summary = read_json(resolution_summary_paths[index])
@@ -2238,9 +2231,7 @@ def freeze_gold(
         combined_candidates.write_bytes(
             b"".join((canonical_json(row) + "\n").encode("utf-8") for row in candidate_rows)
         )
-        combined_decisions.write_bytes(
-            b"".join((canonical_json(row) + "\n").encode("utf-8") for row in decision_rows)
-        )
+        combined_decisions.write_bytes(b"".join((canonical_json(row) + "\n").encode("utf-8") for row in decision_rows))
         evaluation_registry = correction_factory.load_evaluation_registry()
         factory_receipt = correction_factory.adjudicate(
             packet_path=combined_candidates,
@@ -2255,9 +2246,7 @@ def freeze_gold(
         for record in records:
             totals[record["decision"]["review_state"]] += 1
             totals[f"decision_{record['decision']['final']['decision']}"] += 1
-            totals["qualified_correction_intake"] += int(
-                record["export_control"]["qualified_correction_intake"]
-            )
+            totals["qualified_correction_intake"] += int(record["export_control"]["qualified_correction_intake"])
         totals["records"] = len(records)
         totals.update(campaign_counts)
         totals["headline_gold"] = campaign_counts["production_adjudicated"]

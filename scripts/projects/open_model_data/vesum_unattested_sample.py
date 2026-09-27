@@ -101,7 +101,9 @@ def _stage(path: Path, data: bytes) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary: Path | None = None
     try:
-        with tempfile.NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False) as handle:
+        with tempfile.NamedTemporaryFile(
+            dir=path.parent, prefix=f".{path.name}.", suffix=".tmp", delete=False
+        ) as handle:
             temporary = Path(handle.name)
             handle.write(data)
             handle.flush()
@@ -203,19 +205,30 @@ def _detector_bucket(category: str) -> str:
 
 
 def _classification_for_record(
-    *, text: str, source: Mapping[str, Any], phase1_row: Mapping[str, Any], locator: str,
-    vesum_matches: Mapping[str, Sequence[Mapping[str, Any]]], detector_config: Mapping[str, Any], input_root: Path,
+    *,
+    text: str,
+    source: Mapping[str, Any],
+    phase1_row: Mapping[str, Any],
+    locator: str,
+    vesum_matches: Mapping[str, Sequence[Mapping[str, Any]]],
+    detector_config: Mapping[str, Any],
+    input_root: Path,
     selected: list[dict[str, Any]],
 ) -> dict[str, str]:
     """Run the incumbent detector once and route selected offsets only from its output."""
     try:
         candidates = detector.run_detector_on_text(
             text=text,
-            record_id=str(phase1_row["record_id"]), locator=locator,
-            source_family=str(source["source_family"]), source_record_id=str(phase1_row["record_id"]),
-            period=str(phase1_row["dimensions"]["period"]), register=str(phase1_row["dimensions"]["register"]),
-            origin=str(phase1_row["dimensions"]["origin"]), vesum_matches=vesum_matches,
-            config=detector_config, input_root=input_root,
+            record_id=str(phase1_row["record_id"]),
+            locator=locator,
+            source_family=str(source["source_family"]),
+            source_record_id=str(phase1_row["record_id"]),
+            period=str(phase1_row["dimensions"]["period"]),
+            register=str(phase1_row["dimensions"]["register"]),
+            origin=str(phase1_row["dimensions"]["origin"]),
+            vesum_matches=vesum_matches,
+            config=detector_config,
+            input_root=input_root,
         )
     except (OSError, ValueError, sqlite3.Error):
         # A detector evidence-runtime failure cannot be promoted into a label.
@@ -226,7 +239,11 @@ def _classification_for_record(
         classification = candidate.get("classification", {})
         if isinstance(span, Mapping) and isinstance(classification, Mapping):
             detector_spans.append(
-                (int(span.get("core_start_char", -1)), int(span.get("core_end_char", -1)), str(classification.get("category", "")))
+                (
+                    int(span.get("core_start_char", -1)),
+                    int(span.get("core_end_char", -1)),
+                    str(classification.get("category", "")),
+                )
             )
     routed: dict[str, str] = {}
     for item in selected:
@@ -236,15 +253,22 @@ def _classification_for_record(
         buckets = {_detector_bucket(category) for category in categories}
         routed[item["sample_id"]] = (
             min(buckets, key=lambda bucket: (CLASSIFICATION_SAFETY_PRIORITY[bucket], bucket))
-            if buckets else "unresolved"
+            if buckets
+            else "unresolved"
         )
     return routed
 
 
 def _scan(
-    *, profile_config: Mapping[str, Any], source_database: Path, vesum_database: Path,
-    phase1_rows: Mapping[str, Mapping[str, Any]], quotas: Mapping[str, int],
-) -> tuple[dict[tuple[str, str, str, str], int], dict[tuple[str, str, str, str], list[tuple[int, str, dict[str, Any]]]], int]:
+    *,
+    profile_config: Mapping[str, Any],
+    source_database: Path,
+    vesum_database: Path,
+    phase1_rows: Mapping[str, Mapping[str, Any]],
+    quotas: Mapping[str, int],
+) -> tuple[
+    dict[tuple[str, str, str, str], int], dict[tuple[str, str, str, str], list[tuple[int, str, dict[str, Any]]]], int
+]:
     if not source_database.is_file() or not vesum_database.is_file():
         raise SampleError("source and VESUM databases must be readable files")
     stratum_counts: Counter[tuple[str, str, str, str]] = Counter()
@@ -256,7 +280,9 @@ def _scan(
         if family not in quotas:
             raise SampleError(f"profile contains unconfigured family: {family}")
         with profile._connect_read_only(source_database) as connection:
-            query, parameters = profile._source_query(source, profile._table_columns(connection, source["adapter"]["table"]))
+            query, parameters = profile._source_query(
+                source, profile._table_columns(connection, source["adapter"]["table"])
+            )
             cursor = connection.execute(query, parameters)
             for rows in profile._iter_batches(cursor, int(profile_config["record_batch_size"])):
                 prepared: list[tuple[sqlite3.Row, str, list[Any]]] = []
@@ -266,7 +292,9 @@ def _scan(
                     tokens = detector.tokenize_with_offsets(text)
                     prepared.append((row, text, tokens))
                     forms.update(token.normalized for token in tokens)
-                matches = profile._lookup_vesum(forms, database=vesum_database, batch_size=int(profile_config["vesum"]["batch_size"]))
+                matches = profile._lookup_vesum(
+                    forms, database=vesum_database, batch_size=int(profile_config["vesum"]["batch_size"])
+                )
                 for row, text, tokens in prepared:
                     scanned_rows += 1
                     raw_id = str(row["__record_id"])
@@ -291,14 +319,24 @@ def _scan(
                         stratum_counts[stratum] += 1
                         surface_hash = _sha256_text(token.surface)
                         sample_id = _sample_identity(
-                            family=family, record=phase1_row, locator=locator, start=token.start_char,
-                            end=token.end_char, surface_hash=surface_hash,
+                            family=family,
+                            record=phase1_row,
+                            locator=locator,
+                            start=token.start_char,
+                            end=token.end_char,
+                            surface_hash=surface_hash,
                         )
                         item = {
-                            "sample_id": sample_id, "family": family, "record_id": record_id,
-                            "locator": locator, "start": token.start_char, "end": token.end_char,
-                            "surface_hash": surface_hash, "content_sha256": content_hash,
-                            "phase1": phase1_row, "axes": {name: str(axes[name]) for name in ("period", "genre", "register")},
+                            "sample_id": sample_id,
+                            "family": family,
+                            "record_id": record_id,
+                            "locator": locator,
+                            "start": token.start_char,
+                            "end": token.end_char,
+                            "surface_hash": surface_hash,
+                            "content_sha256": content_hash,
+                            "phase1": phase1_row,
+                            "axes": {name: str(axes[name]) for name in ("period", "genre", "register")},
                         }
                         heap = heaps[stratum]
                         candidate = (-_rank(sample_id), sample_id, item)
@@ -314,16 +352,25 @@ def _scan(
 
 
 def _selected_records(
-    *, counts: Mapping[tuple[str, str, str, str], int], heaps: Mapping[tuple[str, str, str, str], list[tuple[int, str, dict[str, Any]]]], quotas: Mapping[str, int],
+    *,
+    counts: Mapping[tuple[str, str, str, str], int],
+    heaps: Mapping[tuple[str, str, str, str], list[tuple[int, str, dict[str, Any]]]],
+    quotas: Mapping[str, int],
 ) -> list[dict[str, Any]]:
     allocations: dict[tuple[str, str, str, str], int] = {}
     for family in FAMILIES:
-        family_counts = {(period, genre, register): count for (name, period, genre, register), count in counts.items() if name == family}
+        family_counts = {
+            (period, genre, register): count
+            for (name, period, genre, register), count in counts.items()
+            if name == family
+        }
         for key, allocated in _largest_remainder(family_counts, int(quotas[family])).items():
             allocations[(family, *key)] = allocated
     selected: list[dict[str, Any]] = []
     for stratum, allocated in sorted(allocations.items()):
-        ranked = sorted((entry[2] for entry in heaps[stratum]), key=lambda item: (_rank(item["sample_id"]), item["sample_id"]))
+        ranked = sorted(
+            (entry[2] for entry in heaps[stratum]), key=lambda item: (_rank(item["sample_id"]), item["sample_id"])
+        )
         if len(ranked) < allocated:
             raise SampleError("bounded selection heap is incomplete")
         selected.extend(ranked[:allocated])
@@ -333,8 +380,13 @@ def _selected_records(
 
 
 def _classify_selected(
-    *, selected: list[dict[str, Any]], profile_config: Mapping[str, Any], source_database: Path,
-    vesum_database: Path, detector_config: Mapping[str, Any], detector_input_root: Path,
+    *,
+    selected: list[dict[str, Any]],
+    profile_config: Mapping[str, Any],
+    source_database: Path,
+    vesum_database: Path,
+    detector_config: Mapping[str, Any],
+    detector_input_root: Path,
 ) -> dict[str, str]:
     targets: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for item in selected:
@@ -343,7 +395,9 @@ def _classify_selected(
     for source in profile_config["sources"]:
         family = str(source["source_family"])
         with profile._connect_read_only(source_database) as connection:
-            query, parameters = profile._source_query(source, profile._table_columns(connection, source["adapter"]["table"]))
+            query, parameters = profile._source_query(
+                source, profile._table_columns(connection, source["adapter"]["table"])
+            )
             for row in connection.execute(query, parameters):
                 record_id = phase1._opaque_id(f"record.{family}", str(row["__record_id"]))
                 relevant = targets.get(record_id)
@@ -351,12 +405,24 @@ def _classify_selected(
                     continue
                 text = str(row["__text"] or "")
                 tokens = detector.tokenize_with_offsets(text)
-                matches = profile._lookup_vesum((token.normalized for token in tokens), database=vesum_database, batch_size=int(profile_config["vesum"]["batch_size"]))
+                matches = profile._lookup_vesum(
+                    (token.normalized for token in tokens),
+                    database=vesum_database,
+                    batch_size=int(profile_config["vesum"]["batch_size"]),
+                )
                 locator = relevant[0]["locator"]
-                routed.update(_classification_for_record(
-                    text=text, source=source, phase1_row=relevant[0]["phase1"], locator=locator,
-                    vesum_matches=matches, detector_config=detector_config, input_root=detector_input_root, selected=relevant,
-                ))
+                routed.update(
+                    _classification_for_record(
+                        text=text,
+                        source=source,
+                        phase1_row=relevant[0]["phase1"],
+                        locator=locator,
+                        vesum_matches=matches,
+                        detector_config=detector_config,
+                        input_root=detector_input_root,
+                        selected=relevant,
+                    )
+                )
     if set(routed) != {item["sample_id"] for item in selected}:
         raise SampleError("selected record could not be re-read for deterministic detector routing")
     return routed
@@ -367,24 +433,44 @@ def _record(item: Mapping[str, Any], classification: str, phase1_manifest_hash: 
     return {
         "schema_version": "vesum_unattested_sample_record_v1",
         "sample_id": f"vesum_sample:{item['sample_id']}",
-        "assurance_tier": "evidence_graded_non_gold", "authoritative": False,
+        "assurance_tier": "evidence_graded_non_gold",
+        "authoritative": False,
         "source": {
-            "record_id": phase1_row["record_id"], "work_id": phase1_row["work_id"], "source_id": phase1_row["source_id"],
-            "revision_pin": f"phase1_manifest:{phase1_manifest_hash}", "locator": item["locator"],
+            "record_id": phase1_row["record_id"],
+            "work_id": phase1_row["work_id"],
+            "source_id": phase1_row["source_id"],
+            "revision_pin": f"phase1_manifest:{phase1_manifest_hash}",
+            "locator": item["locator"],
             "content_sha256": item["content_sha256"],
             "source_axes": {"source_family": item["family"], **item["axes"]},
         },
         "span": {"start_offset": item["start"], "end_offset": item["end"], "surface_sha256": item["surface_hash"]},
         "classification": classification,
-        "evidence_refs": [f"cp_evidence:{_sha256_text(canonical_json([EVIDENCE_DOMAIN, item['sample_id'], classification]))}"],
-        "claim_boundary": {"human_gold": False, "human_reviewed": False, "text_published": False, "training_eligible": False},
+        "evidence_refs": [
+            f"cp_evidence:{_sha256_text(canonical_json([EVIDENCE_DOMAIN, item['sample_id'], classification]))}"
+        ],
+        "claim_boundary": {
+            "human_gold": False,
+            "human_reviewed": False,
+            "text_published": False,
+            "training_eligible": False,
+        },
     }
 
 
 def build_sample(
-    *, config_path: Path, profile_path: Path, profile_receipt_path: Path, phase1_manifest_path: Path,
-    phase1_receipt_path: Path, source_database: Path, vesum_database: Path, detector_config_path: Path,
-    output_path: Path, receipt_path: Path | None, comparison_output_path: Path | None,
+    *,
+    config_path: Path,
+    profile_path: Path,
+    profile_receipt_path: Path,
+    phase1_manifest_path: Path,
+    phase1_receipt_path: Path,
+    source_database: Path,
+    vesum_database: Path,
+    detector_config_path: Path,
+    output_path: Path,
+    receipt_path: Path | None,
+    comparison_output_path: Path | None,
     detector_input_root: Path = ROOT,
 ) -> dict[str, Any]:
     """Build and publish a sample only after matching an independent candidate."""
@@ -404,17 +490,26 @@ def build_sample(
         raise SampleError("profile receipt row count differs from Phase 1 manifest")
     detector_config = detector._load_and_validate_config(detector_config_path)
     counts, heaps, denominator = _scan(
-        profile_config=profile_config, source_database=source_database, vesum_database=vesum_database,
-        phase1_rows=phase1_rows, quotas=config["family_quotas"],
+        profile_config=profile_config,
+        source_database=source_database,
+        vesum_database=vesum_database,
+        phase1_rows=phase1_rows,
+        quotas=config["family_quotas"],
     )
     if denominator != config["expected_denominator"]:
-        raise SampleError(f"unattested denominator mismatch: expected {config['expected_denominator']}, observed {denominator}")
+        raise SampleError(
+            f"unattested denominator mismatch: expected {config['expected_denominator']}, observed {denominator}"
+        )
     if int(config.get("production_expected_denominator", PRODUCTION_DENOMINATOR)) != PRODUCTION_DENOMINATOR:
         raise SampleError("production denominator pin must remain 9292022")
     selected = _selected_records(counts=counts, heaps=heaps, quotas=config["family_quotas"])
     classifications = _classify_selected(
-        selected=selected, profile_config=profile_config, source_database=source_database, vesum_database=vesum_database,
-        detector_config=detector_config, detector_input_root=detector_input_root,
+        selected=selected,
+        profile_config=profile_config,
+        source_database=source_database,
+        vesum_database=vesum_database,
+        detector_config=detector_config,
+        detector_input_root=detector_input_root,
     )
     manifest_hash = sha256_file(phase1_manifest_path)
     record_validator = _validator(RECORD_SCHEMA)
@@ -436,15 +531,16 @@ def build_sample(
         raise SampleError(f"cannot read independent comparison output: {exc}") from exc
     comparison_hash = hashlib.sha256(comparison_bytes).hexdigest()
     if comparison_bytes != encoded:
-        raise SampleError(
-            "independent build mismatch: candidate and current output are not byte-identical"
-        )
+        raise SampleError("independent build mismatch: candidate and current output are not byte-identical")
     family_counts = Counter(record["source"]["source_axes"]["source_family"] for record in records)
     category_counts = Counter(record["classification"] for record in records)
     pins = {
-        "config_sha256": sha256_file(config_path), "database_sha256": sha256_file(source_database),
-        "vesum_sha256": sha256_file(vesum_database), "profile_sha256": sha256_file(profile_path),
-        "profile_receipt_sha256": sha256_file(profile_receipt_path), "phase1_manifest_sha256": manifest_hash,
+        "config_sha256": sha256_file(config_path),
+        "database_sha256": sha256_file(source_database),
+        "vesum_sha256": sha256_file(vesum_database),
+        "profile_sha256": sha256_file(profile_path),
+        "profile_receipt_sha256": sha256_file(profile_receipt_path),
+        "phase1_manifest_sha256": manifest_hash,
         "phase1_receipt_sha256": sha256_file(phase1_receipt_path),
         "sampler_sha256": sha256_file(GENERATOR_PATH),
         "detector_config_sha256": sha256_file(detector_config_path),
@@ -453,14 +549,32 @@ def build_sample(
         "receipt_schema_sha256": sha256_file(RECEIPT_SCHEMA),
     }
     receipt = {
-        "schema_version": "vesum_unattested_sample_receipt_v1", "denominator": denominator,
-        "production_expected_denominator": PRODUCTION_DENOMINATOR, "pins": pins,
-        "stratification": {"algorithm": ALGORITHM, "algorithm_sha256": _sha256_text(ALGORITHM), "quotas": dict(sorted(config["family_quotas"].items()))},
+        "schema_version": "vesum_unattested_sample_receipt_v1",
+        "denominator": denominator,
+        "production_expected_denominator": PRODUCTION_DENOMINATOR,
+        "pins": pins,
+        "stratification": {
+            "algorithm": ALGORITHM,
+            "algorithm_sha256": _sha256_text(ALGORITHM),
+            "quotas": dict(sorted(config["family_quotas"].items())),
+        },
         "output": {"logical_path": output_path.name, "records": len(records), "sha256": output_hash},
-        "sample_counts": dict(sorted({"total": len(records), **{f"family:{key}": value for key, value in family_counts.items()}, **{f"classification:{key}": value for key, value in category_counts.items()}}.items())),
+        "sample_counts": dict(
+            sorted(
+                {
+                    "total": len(records),
+                    **{f"family:{key}": value for key, value in family_counts.items()},
+                    **{f"classification:{key}": value for key, value in category_counts.items()},
+                }.items()
+            )
+        ),
         "sample_hashes": [record["sample_id"].split(":", 1)[1] for record in records],
         "coverage": dict(sorted({f"stratum:{'|'.join(key)}": value for key, value in counts.items()}.items())),
-        "limitations": ["VESUM non-attestation is not an error label", "detector no-hit and unavailable evidence route to unresolved", "sample records contain no source text or raw external evidence"],
+        "limitations": [
+            "VESUM non-attestation is not an error label",
+            "detector no-hit and unavailable evidence route to unresolved",
+            "sample records contain no source text or raw external evidence",
+        ],
         "two_build_identity": {
             "comparison_algorithm": COMPARISON_ALGORITHM,
             "first_output": {"logical_path": comparison_output_path.name, "sha256": comparison_hash},
@@ -487,34 +601,59 @@ def build_sample(
 
 
 def build_candidate(
-    *, config_path: Path, profile_path: Path, profile_receipt_path: Path, phase1_manifest_path: Path,
-    phase1_receipt_path: Path, source_database: Path, vesum_database: Path, detector_config_path: Path,
-    output_path: Path, detector_input_root: Path = ROOT,
+    *,
+    config_path: Path,
+    profile_path: Path,
+    profile_receipt_path: Path,
+    phase1_manifest_path: Path,
+    phase1_receipt_path: Path,
+    source_database: Path,
+    vesum_database: Path,
+    detector_config_path: Path,
+    output_path: Path,
+    detector_input_root: Path = ROOT,
 ) -> dict[str, Any]:
     """Perform the first complete build without manufacturing a release receipt."""
     return build_sample(
-        config_path=config_path, profile_path=profile_path,
-        profile_receipt_path=profile_receipt_path, phase1_manifest_path=phase1_manifest_path,
-        phase1_receipt_path=phase1_receipt_path, source_database=source_database,
-        vesum_database=vesum_database, detector_config_path=detector_config_path,
-        output_path=output_path, receipt_path=None, comparison_output_path=None,
+        config_path=config_path,
+        profile_path=profile_path,
+        profile_receipt_path=profile_receipt_path,
+        phase1_manifest_path=phase1_manifest_path,
+        phase1_receipt_path=phase1_receipt_path,
+        source_database=source_database,
+        vesum_database=vesum_database,
+        detector_config_path=detector_config_path,
+        output_path=output_path,
+        receipt_path=None,
+        comparison_output_path=None,
         detector_input_root=detector_input_root,
     )
 
 
 def verify_sample(
-    *, config_path: Path, profile_path: Path, profile_receipt_path: Path, phase1_manifest_path: Path,
-    phase1_receipt_path: Path, source_database: Path, vesum_database: Path, detector_config_path: Path,
-    output_path: Path, receipt_path: Path,
+    *,
+    config_path: Path,
+    profile_path: Path,
+    profile_receipt_path: Path,
+    phase1_manifest_path: Path,
+    phase1_receipt_path: Path,
+    source_database: Path,
+    vesum_database: Path,
+    detector_config_path: Path,
+    output_path: Path,
+    receipt_path: Path,
 ) -> dict[str, Any]:
     """Validate all receipt pins and the complete text-free public artifact."""
     config = _load_config(config_path)
     receipt = _read_json(receipt_path)
     _validate(receipt, _validator(RECEIPT_SCHEMA), "sample receipt")
     expected_pins = {
-        "config_sha256": sha256_file(config_path), "database_sha256": sha256_file(source_database),
-        "vesum_sha256": sha256_file(vesum_database), "profile_sha256": sha256_file(profile_path),
-        "profile_receipt_sha256": sha256_file(profile_receipt_path), "phase1_manifest_sha256": sha256_file(phase1_manifest_path),
+        "config_sha256": sha256_file(config_path),
+        "database_sha256": sha256_file(source_database),
+        "vesum_sha256": sha256_file(vesum_database),
+        "profile_sha256": sha256_file(profile_path),
+        "profile_receipt_sha256": sha256_file(profile_receipt_path),
+        "phase1_manifest_sha256": sha256_file(phase1_manifest_path),
         "phase1_receipt_sha256": sha256_file(phase1_receipt_path),
         "sampler_sha256": sha256_file(GENERATOR_PATH),
         "detector_config_sha256": sha256_file(detector_config_path),
@@ -540,6 +679,7 @@ def verify_sample(
         if isinstance(value, list):
             return any(contains_forbidden_key(nested) for nested in value)
         return False
+
     with output_path.open("rb") as handle:
         for line in handle:
             if not line.endswith(b"\n") or b"\r" in line:
@@ -560,11 +700,15 @@ def verify_sample(
         raise SampleError("sample identity list drift")
     family_counts = Counter(record["source"]["source_axes"]["source_family"] for record in records)
     category_counts = Counter(record["classification"] for record in records)
-    expected_counts = dict(sorted({
-        "total": len(records),
-        **{f"family:{key}": value for key, value in family_counts.items()},
-        **{f"classification:{key}": value for key, value in category_counts.items()},
-    }.items()))
+    expected_counts = dict(
+        sorted(
+            {
+                "total": len(records),
+                **{f"family:{key}": value for key, value in family_counts.items()},
+                **{f"classification:{key}": value for key, value in category_counts.items()},
+            }.items()
+        )
+    )
     if receipt["sample_counts"] != expected_counts:
         raise SampleError("sample count drift")
     quotas = receipt["stratification"]["quotas"]
@@ -586,17 +730,32 @@ def verify_sample(
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("mode", choices=("candidate", "build", "verify"))
-    for name in ("config", "profile", "profile-receipt", "phase1-manifest", "phase1-receipt", "source-database", "vesum-database", "detector-config", "output"):
+    for name in (
+        "config",
+        "profile",
+        "profile-receipt",
+        "phase1-manifest",
+        "phase1-receipt",
+        "source-database",
+        "vesum-database",
+        "detector-config",
+        "output",
+    ):
         parser.add_argument(f"--{name}", required=True, type=Path)
     parser.add_argument("--receipt", type=Path)
     parser.add_argument("--comparison-output", type=Path)
     parser.add_argument("--detector-input-root", type=Path, default=ROOT)
     args = parser.parse_args(argv)
     values = {
-        "config_path": args.config, "profile_path": args.profile, "profile_receipt_path": args.profile_receipt,
-        "phase1_manifest_path": args.phase1_manifest, "phase1_receipt_path": args.phase1_receipt,
-        "source_database": args.source_database, "vesum_database": args.vesum_database,
-        "detector_config_path": args.detector_config, "output_path": args.output,
+        "config_path": args.config,
+        "profile_path": args.profile,
+        "profile_receipt_path": args.profile_receipt,
+        "phase1_manifest_path": args.phase1_manifest,
+        "phase1_receipt_path": args.phase1_receipt,
+        "source_database": args.source_database,
+        "vesum_database": args.vesum_database,
+        "detector_config_path": args.detector_config,
+        "output_path": args.output,
     }
     try:
         if args.mode == "candidate":
@@ -607,7 +766,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             if args.receipt is None or args.comparison_output is None:
                 raise SampleError("build mode requires --receipt and --comparison-output")
             result = build_sample(
-                **values, receipt_path=args.receipt, comparison_output_path=args.comparison_output,
+                **values,
+                receipt_path=args.receipt,
+                comparison_output_path=args.comparison_output,
                 detector_input_root=args.detector_input_root,
             )
         else:

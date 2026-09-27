@@ -91,24 +91,34 @@ def _publish_grammar_outputs(stage: Path) -> None:
     if declared != actual:
         raise ValueError("staged grammar manifest payload hashes disagree")
     prefix = f"{_GRAMMAR_REL}/"
-    writes = {prefix + name: (lambda target, source=files[name]: target.write_bytes(source.read_bytes())) for name in expected}
+    writes = {
+        prefix + name: (lambda target, source=files[name]: target.write_bytes(source.read_bytes())) for name in expected
+    }
     old_shards = {
-        rel: sha for rel, sha in prior.items()
-        if rel.startswith(prefix + "grammar_") and re.fullmatch(r"grammar_(?:train|eval)_shard_\d+_of_\d+\.jsonl", rel.removeprefix(prefix))
+        rel: sha
+        for rel, sha in prior.items()
+        if rel.startswith(prefix + "grammar_")
+        and re.fullmatch(r"grammar_(?:train|eval)_shard_\d+_of_\d+\.jsonl", rel.removeprefix(prefix))
     }
     removals = {rel: sha for rel, sha in old_shards.items() if rel not in writes}
     companions = {
         f"registry/{prefix}{name}": (
             storage_paths.hash_file(PROJECT_ROOT / f"registry/{prefix}{name}")
-            if (PROJECT_ROOT / f"registry/{prefix}{name}").exists() else None,
+            if (PROJECT_ROOT / f"registry/{prefix}{name}").exists()
+            else None,
             lambda target, source=files[name]: target.write_bytes(source.read_bytes()),
         )
         for name in ("cases.json", "manifest.json")
     }
     write_artifact_set(
-        PROJECT_ROOT, _COMPONENT_GROUP, "build_grammar_component_8342.py", writes,
+        PROJECT_ROOT,
+        _COMPONENT_GROUP,
+        "build_grammar_component_8342.py",
+        writes,
         expected_hashes={rel: prior.get(rel) for rel in writes},
-        expected_members=set(prior), removals=removals, companions=companions,
+        expected_members=set(prior),
+        removals=removals,
+        companions=companions,
     )
 
 
@@ -141,8 +151,7 @@ DEFAULT_FIREWALL_MANIFEST = (
     / "grammar_held_out_firewall_manifest.json"
 )
 DEFAULT_BROWN_UK_EVAL = (
-    PROJECT_ROOT
-    / "data/projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl"
+    PROJECT_ROOT / "data/projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl"
 )
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "components" / "grammar"
 
@@ -3919,7 +3928,6 @@ def validate_candidate_rejection(
     return None
 
 
-
 def is_valid_candidate(
     orig_text: str,
     corr_text: str,
@@ -3928,7 +3936,10 @@ def is_valid_candidate(
     orig_tokens: list[str] | None = None,
 ) -> bool:
     """Validate candidate correction against annotator typos, comma-parens, and wholesale rewrites."""
-    return validate_candidate_rejection(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens) is None
+    return (
+        validate_candidate_rejection(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens)
+        is None
+    )
 
 
 def diagnose_is_valid_failure(
@@ -3941,6 +3952,8 @@ def diagnose_is_valid_failure(
     """Diagnose the specific policy gate or quality filter that caused is_valid_candidate to fail."""
     reason = validate_candidate_rejection(orig_text, corr_text, in_scope, vesum_cur=vesum_cur, orig_tokens=orig_tokens)
     return reason if reason is not None else "valid"
+
+
 def load_held_out_firewall(
     manifest_path: Path = DEFAULT_FIREWALL_MANIFEST,
     test_m2_path: Path | None = None,
@@ -4177,9 +4190,7 @@ def build_grammar_dataset(
             )
             _publish_grammar_outputs(stage)
             return result
-    return _build_grammar_dataset_direct(
-        train_m2_path, test_m2_path, firewall_manifest_path, brown_path, output_dir
-    )
+    return _build_grammar_dataset_direct(train_m2_path, test_m2_path, firewall_manifest_path, brown_path, output_dir)
 
 
 def _build_grammar_dataset_direct(
@@ -4271,7 +4282,9 @@ def _build_grammar_dataset_direct(
 
     assert total_candidates_precount == 5252, f"Expected 5252 candidate edit sets, got {total_candidates_precount}"
     assert eval_candidates_precount == 450, f"Expected 450 eval candidate edit sets, got {eval_candidates_precount}"
-    assert train_candidates_precount == 4802, f"Expected 4802 train candidate edit sets, got {train_candidates_precount}"
+    assert train_candidates_precount == 4802, (
+        f"Expected 4802 train candidate edit sets, got {train_candidates_precount}"
+    )
     print(
         f"🔒 Independent pre-count of candidate edit sets verified: {total_candidates_precount} total "
         f"({train_candidates_precount} train, {eval_candidates_precount} eval)."
@@ -4291,7 +4304,12 @@ def _build_grammar_dataset_direct(
 
         all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
         if not all_edits:
-            if not orig_text or orig_text in test_sources or orig_text in test_targets or is_test_near_duplicate(orig_text):
+            if (
+                not orig_text
+                or orig_text in test_sources
+                or orig_text in test_targets
+                or is_test_near_duplicate(orig_text)
+            ):
                 continue
             if (
                 is_clean_control(orig_text, vesum_cur=vesum_cur)
@@ -4326,7 +4344,12 @@ def _build_grammar_dataset_direct(
 
             cand_primary_tag = in_scope[0][2]
 
-            if not orig_text or orig_text in test_sources or orig_text in test_targets or is_test_near_duplicate(orig_text):
+            if (
+                not orig_text
+                or orig_text in test_sources
+                or orig_text in test_targets
+                or is_test_near_duplicate(orig_text)
+            ):
                 measured_exclusions_eval["test_firewall_source"] += 1
                 candidate_exclusions.append(
                     {
@@ -4883,9 +4906,7 @@ def _build_grammar_dataset_direct(
 
     sorted_expl = sorted(train_explainable, key=expl_priority)
     selected_expl = sorted_expl[:target_train_expl]
-    selected_expl_keys = {
-        (c["doc_id"], c["original_text"], c["corrected_text"]) for c in selected_expl
-    }
+    selected_expl_keys = {(c["doc_id"], c["original_text"], c["corrected_text"]) for c in selected_expl}
 
     # All train corrections are preserved (zero discarded human corrections)
     train_corrections.sort(
@@ -4976,9 +4997,7 @@ def _build_grammar_dataset_direct(
             explained_keys = selected_expl_keys
         else:
             explained_keys = {
-                (c["doc_id"], c["original_text"], c["corrected_text"])
-                for c in corrections
-                if can_explain_candidate(c)
+                (c["doc_id"], c["original_text"], c["corrected_text"]) for c in corrections if can_explain_candidate(c)
             }
 
         # Assign task mix: calibrated to land ~50% explained corrections post citation drop
@@ -5251,9 +5270,7 @@ def _build_grammar_dataset_direct(
     for k, v in measured_exclusions_train.items():
         measured_exclusions_total[k] += v
 
-    total_candidates_examined = (
-        len(eval_corrections) + len(train_corrections) + sum(measured_exclusions_total.values())
-    )
+    total_candidates_examined = len(eval_corrections) + len(train_corrections) + sum(measured_exclusions_total.values())
 
     exclusion_accounting_file = output_dir / "candidate_exclusion_accounting.json"
     accounting_data = {
@@ -5388,11 +5405,36 @@ def main(argv: list[str] | None = None) -> int:
             "Related: issues #8342 and #8809."
         ),
     )
-    parser.add_argument("--train-m2", type=Path, default=DEFAULT_UA_GEC_TRAIN_M2, help="UA-GEC training M2 (default: resolved corpus path).")
-    parser.add_argument("--test-m2", type=Path, default=DEFAULT_UA_GEC_TEST_M2, help="Held-out UA-GEC test M2 (default: resolved corpus path).")
-    parser.add_argument("--firewall-manifest", type=Path, default=DEFAULT_FIREWALL_MANIFEST, help="Committed held-out firewall manifest (default: registry component).")
-    parser.add_argument("--brown", type=Path, default=DEFAULT_BROWN_UK_EVAL, help="Verified Brown-UK control JSONL (default: release artifact).")
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Output directory (default: managed grammar component).")
+    parser.add_argument(
+        "--train-m2",
+        type=Path,
+        default=DEFAULT_UA_GEC_TRAIN_M2,
+        help="UA-GEC training M2 (default: resolved corpus path).",
+    )
+    parser.add_argument(
+        "--test-m2",
+        type=Path,
+        default=DEFAULT_UA_GEC_TEST_M2,
+        help="Held-out UA-GEC test M2 (default: resolved corpus path).",
+    )
+    parser.add_argument(
+        "--firewall-manifest",
+        type=Path,
+        default=DEFAULT_FIREWALL_MANIFEST,
+        help="Committed held-out firewall manifest (default: registry component).",
+    )
+    parser.add_argument(
+        "--brown",
+        type=Path,
+        default=DEFAULT_BROWN_UK_EVAL,
+        help="Verified Brown-UK control JSONL (default: release artifact).",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=DEFAULT_OUTPUT_DIR,
+        help="Output directory (default: managed grammar component).",
+    )
     args = parser.parse_args(argv)
 
     build_grammar_dataset(

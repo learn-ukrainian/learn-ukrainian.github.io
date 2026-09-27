@@ -234,8 +234,7 @@ def _promote_staged_artifacts(artifacts: Sequence[tuple[Path, Path]]) -> None:
             temporary.unlink(missing_ok=True)
         if rollback_errors:
             raise AdmissionError(
-                "artifact promotion failed and rollback was incomplete: "
-                + "; ".join(rollback_errors)
+                "artifact promotion failed and rollback was incomplete: " + "; ".join(rollback_errors)
             ) from exc
         raise
     else:
@@ -258,8 +257,13 @@ class AtomicJsonl:
     def open(cls, output: Path) -> AtomicJsonl:
         output.parent.mkdir(parents=True, exist_ok=True)
         handle = tempfile.NamedTemporaryFile(  # noqa: SIM115 - closed by finish/abort
-            mode="w", encoding="utf-8", newline="", dir=output.parent,
-            prefix=output.name, suffix=".tmp.jsonl", delete=False,
+            mode="w",
+            encoding="utf-8",
+            newline="",
+            dir=output.parent,
+            prefix=output.name,
+            suffix=".tmp.jsonl",
+            delete=False,
         )
         return cls(output, handle, Path(handle.name), hashlib.sha256())
 
@@ -362,9 +366,7 @@ def _operator_decision(
     if not decided_families.issubset(configured_families):
         raise AdmissionError("operator decision references an unconfigured source family")
     packet_terminal_families = frozenset(
-        name
-        for name, item in packet_families.items()
-        if item["current_disposition"] in {"admitted", "excluded"}
+        name for name, item in packet_families.items() if item["current_disposition"] in {"admitted", "excluded"}
     )
     if packet_terminal_families != decided_families:
         raise AdmissionError("operator decision family set does not match terminal packet families")
@@ -542,7 +544,9 @@ def _source_record(
         },
         "content": {"sha256": content_sha256, "hash_scope": evidence_source["snapshot"]["content_hash_scope"]},
         "derivation": {"kind": "source", "parent_content_sha256": None, "transform_receipt_id": None},
-        "rights": {name: dict(rights_statement) for name in ("copyright", "license", "redistribution", "model_training")},
+        "rights": {
+            name: dict(rights_statement) for name in ("copyright", "license", "redistribution", "model_training")
+        },
         "evidence": evidence,
         "review": dict(evidence_source["review"]),
         "usage": {"role": usage_role, "contamination_exclusion_ids": ["eval.foundry_eval_exclusion_v1"]},
@@ -559,15 +563,31 @@ def _empty_receipt(
     configured_names = [str(family["source_family"]) for family in config["families"]]
     expected_rows = sum(int(profile_sources[name]["expected"]["rows"]) for name in configured_names)
     expected_words = sum(int(profile_sources[name]["expected"]["lexical_words"]) for name in configured_names)
-    zero = {name: {"rows": 0, "lexical_words": 0} for name in ("admitted", "excluded", "investigation_only", "proposed_admission", "unresolved")}
+    zero = {
+        name: {"rows": 0, "lexical_words": 0}
+        for name in ("admitted", "excluded", "investigation_only", "proposed_admission", "unresolved")
+    }
     return {
-        "schema_version": "corpus_admission_receipt_v1", "admission_id": config["admission_id"],
-        "coverage": {"complete": False, "expected_rows": expected_rows, "expected_lexical_words": expected_words,
-                     "processed_rows": 0, "processed_lexical_words": 0, "inaccessible_families": inaccessible},
-        "dispositions": zero, "families": [], "operator_decision": operator_decision.receipt(),
+        "schema_version": "corpus_admission_receipt_v1",
+        "admission_id": config["admission_id"],
+        "coverage": {
+            "complete": False,
+            "expected_rows": expected_rows,
+            "expected_lexical_words": expected_words,
+            "processed_rows": 0,
+            "processed_lexical_words": 0,
+            "inaccessible_families": inaccessible,
+        },
+        "dispositions": zero,
+        "families": [],
+        "operator_decision": operator_decision.receipt(),
         "evaluation_exclusion": {"applied": False, "reason": "source_database_inaccessible"},
         "outputs": {"manifest": _empty_artifact(), "source_records": _empty_artifact()},
-        "determinism": {"manifest_order": "source family, SQLite record id", "serialization": "UTF-8 canonical JSON with sorted keys and LF", "timestamps_omitted": True},
+        "determinism": {
+            "manifest_order": "source family, SQLite record id",
+            "serialization": "UTF-8 canonical JSON with sorted keys and LF",
+            "timestamps_omitted": True,
+        },
         "training_eligible_emitted": False,
     }
 
@@ -612,11 +632,21 @@ def admit_corpus(
         database = input_root / source["adapter"]["database"]
         try:
             with closing(_connect_read_only(database)) as connection:
-                columns = {str(row[1]) for row in connection.execute(f"PRAGMA table_info({_identifier(source['adapter']['table'])})")}
-                needed = {source["adapter"]["id_column"], source["adapter"]["text_column"], family["source_group_column"], family["work_group_column"]}
+                columns = {
+                    str(row[1])
+                    for row in connection.execute(f"PRAGMA table_info({_identifier(source['adapter']['table'])})")
+                }
+                needed = {
+                    source["adapter"]["id_column"],
+                    source["adapter"]["text_column"],
+                    family["source_group_column"],
+                    family["work_group_column"],
+                }
                 needed.update(spec["column"] for spec in family["attributes"].values() if "column" in spec)
                 if family["source_record"] is not None:
-                    needed.update(family["source_record"][f"{name}_column"] for name in ("title", "url", "retrieved_at"))
+                    needed.update(
+                        family["source_record"][f"{name}_column"] for name in ("title", "url", "retrieved_at")
+                    )
                 missing = sorted(needed - columns)
                 if missing:
                     raise AdmissionError("missing columns: " + ", ".join(missing))
@@ -656,7 +686,9 @@ def admit_corpus(
         v011_manifest=ROOT / "data/projects/ua_eval_harness/heldout_manifest_v1.json",
         v02_packet=ROOT / "data/projects/ua_eval_harness/v0.2/review_packet_priority_v1.jsonl",
     )
-    disposition_counts: dict[str, Counter[str]] = {name: Counter() for name in ("admitted", "excluded", "investigation_only", "proposed_admission", "unresolved")}
+    disposition_counts: dict[str, Counter[str]] = {
+        name: Counter() for name in ("admitted", "excluded", "investigation_only", "proposed_admission", "unresolved")
+    }
     family_results: list[dict[str, Any]] = []
     processed_rows = processed_words = 0
     seen_record_ids: set[str] = set()
@@ -691,16 +723,21 @@ def admit_corpus(
                         contamination=match.method if match.matched else None,
                         operator_status=operator_decision.family_status(family["source_family"]),
                     )
-                    attributes = {
-                        name: _value(row, name, spec)
-                        for name, spec in sorted(family["attributes"].items())
-                    }
+                    attributes = {name: _value(row, name, spec) for name, spec in sorted(family["attributes"].items())}
                     manifest_row = {
-                        "attributes": attributes, "disposition": disposition,
-                        "evidence_state": dict(sorted(family["evidence"].items())), "reasons": reasons,
-                        "record_id": record_id, "source_family": family["source_family"],
-                        "source_group_id": _opaque_id(f"source.{family['source_family']}", str(row["source_group"] or "unknown")),
-                        "word_count": word_count, "work_group_id": _opaque_id(f"work.{family['source_family']}", str(row["work_group"] or "unknown")),
+                        "attributes": attributes,
+                        "disposition": disposition,
+                        "evidence_state": dict(sorted(family["evidence"].items())),
+                        "reasons": reasons,
+                        "record_id": record_id,
+                        "source_family": family["source_family"],
+                        "source_group_id": _opaque_id(
+                            f"source.{family['source_family']}", str(row["source_group"] or "unknown")
+                        ),
+                        "word_count": word_count,
+                        "work_group_id": _opaque_id(
+                            f"work.{family['source_family']}", str(row["work_group"] or "unknown")
+                        ),
                     }
                     source_record_config = family["source_record"]
                     if source_record_config is not None:
@@ -744,12 +781,17 @@ def admit_corpus(
                 "actual": {"rows": rows, "lexical_words": words},
                 "expected": expected,
                 "matches_expected": rows == expected["rows"] and words == expected["lexical_words"],
-                "dispositions": {name: {"rows": by_disposition[name]["rows"], "lexical_words": by_disposition[name]["lexical_words"]} for name in sorted(by_disposition)},
+                "dispositions": {
+                    name: {"rows": by_disposition[name]["rows"], "lexical_words": by_disposition[name]["lexical_words"]}
+                    for name in sorted(by_disposition)
+                },
             }
             if family["source_record"] is not None:
                 evidence_source = evidence_sources[family["source_record"]["evidence_source_id"]]
                 snapshot = evidence_source["snapshot"]
-                expected_cohorts = {cohort["evidence_id"]: cohort["rows"] for cohort in evidence_source["acquisition"]["code_cohorts"]}
+                expected_cohorts = {
+                    cohort["evidence_id"]: cohort["rows"] for cohort in evidence_source["acquisition"]["code_cohorts"]
+                }
                 source_evidence_matches = (
                     source_record_rows == snapshot["rows"] == rows
                     and snapshot["lexical_words"] == words
@@ -785,19 +827,40 @@ def admit_corpus(
                 raise AdmissionError("source-record manifest failed the frozen admission contract")
         expected_rows = sum(int(profile_sources[name]["expected"]["rows"]) for name in family_names)
         expected_words = sum(int(profile_sources[name]["expected"]["lexical_words"]) for name in family_names)
-        complete = processed_rows == expected_rows and processed_words == expected_words and all(
-            item["matches_expected"] for item in family_results
+        complete = (
+            processed_rows == expected_rows
+            and processed_words == expected_words
+            and all(item["matches_expected"] for item in family_results)
         )
         receipt = {
-            "schema_version": "corpus_admission_receipt_v1", "admission_id": config["admission_id"],
-            "coverage": {"complete": complete, "expected_rows": expected_rows, "expected_lexical_words": expected_words,
-                         "processed_rows": processed_rows, "processed_lexical_words": processed_words, "inaccessible_families": []},
-            "dispositions": {name: {"rows": disposition_counts[name]["rows"], "lexical_words": disposition_counts[name]["lexical_words"]} for name in sorted(disposition_counts)},
+            "schema_version": "corpus_admission_receipt_v1",
+            "admission_id": config["admission_id"],
+            "coverage": {
+                "complete": complete,
+                "expected_rows": expected_rows,
+                "expected_lexical_words": expected_words,
+                "processed_rows": processed_rows,
+                "processed_lexical_words": processed_words,
+                "inaccessible_families": [],
+            },
+            "dispositions": {
+                name: {
+                    "rows": disposition_counts[name]["rows"],
+                    "lexical_words": disposition_counts[name]["lexical_words"],
+                }
+                for name in sorted(disposition_counts)
+            },
             "families": sorted(family_results, key=lambda item: item["source_family"]),
             "operator_decision": operator_decision.receipt(),
             "evaluation_exclusion": {"applied": True, **registry_receipt(registry)},
             "outputs": {"manifest": artifact, "source_records": source_record_artifact},
-            "determinism": {"manifest_order": "configuration source-family order, SQLite record id", "source_record_order": "configuration source-family order, SQLite record id", "source_record_contract_sha256": source_record_schema_sha256, "serialization": "UTF-8 canonical JSON with sorted keys and LF", "run_timestamps_omitted": True},
+            "determinism": {
+                "manifest_order": "configuration source-family order, SQLite record id",
+                "source_record_order": "configuration source-family order, SQLite record id",
+                "source_record_contract_sha256": source_record_schema_sha256,
+                "serialization": "UTF-8 canonical JSON with sorted keys and LF",
+                "run_timestamps_omitted": True,
+            },
             "training_eligible_emitted": False,
         }
         # The receipt is the commit marker for downstream consumers.  Validate
@@ -832,7 +895,11 @@ def admit_corpus(
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Fail-closed admission pass for the existing Ukrainian corpus")
-    parser.add_argument("--config", type=Path, default=ROOT / "data/projects/open_model_data/admission/public_external_full_corpus_admission_v1.json")
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=ROOT / "data/projects/open_model_data/admission/public_external_full_corpus_admission_v1.json",
+    )
     parser.add_argument("--input-root", type=Path, default=ROOT)
     parser.add_argument("--manifest-output", type=Path, required=True)
     parser.add_argument("--source-record-output", type=Path)
@@ -840,7 +907,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--runtime-output", type=Path)
     args = parser.parse_args(argv)
     try:
-        result = admit_corpus(config_path=args.config, input_root=args.input_root, manifest_output=args.manifest_output, receipt_output=args.receipt_output, source_record_output=args.source_record_output, runtime_output=args.runtime_output)
+        result = admit_corpus(
+            config_path=args.config,
+            input_root=args.input_root,
+            manifest_output=args.manifest_output,
+            receipt_output=args.receipt_output,
+            source_record_output=args.source_record_output,
+            runtime_output=args.runtime_output,
+        )
     except AdmissionError as exc:
         parser.error(str(exc))
     print(canonical_json(result.receipt))

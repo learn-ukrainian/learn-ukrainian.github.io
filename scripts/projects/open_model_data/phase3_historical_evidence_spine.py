@@ -359,10 +359,15 @@ def validate_spine(value: Mapping[str, Any]) -> dict[str, Any]:
     authority = spine["authority_policy"]
     require(authority["ranked_layers"] == EXPECTED_AUTHORITY_ORDER, "evidence authority order drift")
     require(authority["scalar_language_age_claim_allowed"] is False, "scalar language-age claims are forbidden")
-    require(authority["proto_reconstruction_is_direct_attestation"] is False, "reconstruction cannot become corpus fact")
+    require(
+        authority["proto_reconstruction_is_direct_attestation"] is False, "reconstruction cannot become corpus fact"
+    )
     learner = authority["learner_exposition"]
     require(learner["historical_authority_eligible"] is False, "learner material cannot become historical authority")
-    require(learner["preserve_for_instructional_evaluation"] is True, "learner material must remain available for evaluation")
+    require(
+        learner["preserve_for_instructional_evaluation"] is True,
+        "learner material must remain available for evaluation",
+    )
 
     sequence = spine["instructional_sequence"]
     require([item["sequence_id"] for item in sequence] == EXPECTED_INSTRUCTIONAL_ORDER, "instructional sequence drift")
@@ -384,7 +389,10 @@ def validate_spine(value: Mapping[str, Any]) -> dict[str, Any]:
     sophia = collections["saint-sophia-inscriptions"]
     require(sophia["custody_state"] == "materialized", "Saint Sophia must remain materialized")
     require(sophia["record_count"] == 4157, "Saint Sophia record denominator drift")
-    require(sophia["source_sha256"] == "6199f2a92bd948dfe63d12e9da68637b02a4d16ff58b0ddba3d5e252bb3ec4fe", "Saint Sophia source hash drift")
+    require(
+        sophia["source_sha256"] == "6199f2a92bd948dfe63d12e9da68637b02a4d16ff58b0ddba3d5e252bb3ec4fe",
+        "Saint Sophia source hash drift",
+    )
     require(sophia["facts"] == EXPECTED_SOPHIA_FACTS, "Saint Sophia audited facts drift")
     require(sophia["modern_correction_eligible"] is False, "Saint Sophia cannot become modern correction gold")
     require(
@@ -464,7 +472,9 @@ def validate_spine(value: Mapping[str, Any]) -> dict[str, Any]:
     ):
         require(gates[key] is False, f"{key} cannot be asserted")
     require(gates["phase4_blocked"] is True, "Phase 4 must remain blocked")
-    require(spine["provider_calls"] is False and spine["text_free"] is True, "spine must be deterministic and text-free")
+    require(
+        spine["provider_calls"] is False and spine["text_free"] is True, "spine must be deterministic and text-free"
+    )
     return spine
 
 
@@ -472,9 +482,18 @@ def load_spine(path: Path = SPINE_PATH) -> dict[str, Any]:
     """Load the exact tracked spine and reject byte drift at canonical paths."""
     path = Path(path)
     spine = validate_spine(_read_json(path, "historical evidence spine"))
-    require(sha256_file(periodization.FREEZE_PATH) == EXPECTED_BINDINGS["historical_periodization_freeze_sha256"], "periodization freeze byte drift")
-    require(sha256_file(DENOMINATOR_PATH) == EXPECTED_BINDINGS["historical_denominator_sha256"], "historical denominator byte drift")
-    require(sha256_file(FULL_GATE_PATH) == EXPECTED_BINDINGS["historical_full_materialization_gate_sha256"], "historical full gate byte drift")
+    require(
+        sha256_file(periodization.FREEZE_PATH) == EXPECTED_BINDINGS["historical_periodization_freeze_sha256"],
+        "periodization freeze byte drift",
+    )
+    require(
+        sha256_file(DENOMINATOR_PATH) == EXPECTED_BINDINGS["historical_denominator_sha256"],
+        "historical denominator byte drift",
+    )
+    require(
+        sha256_file(FULL_GATE_PATH) == EXPECTED_BINDINGS["historical_full_materialization_gate_sha256"],
+        "historical full gate byte drift",
+    )
     if path.resolve() == SPINE_PATH.resolve():
         require(sha256_file(path) == EXPECTED_SPINE_SHA256, "tracked historical evidence spine byte drift")
     return spine
@@ -679,47 +698,73 @@ def audit_full_materialization_receipt(
     receipt = _read_json(path, "historical full materialization receipt")
     body = {key: item for key, item in receipt.items() if key != "receipt_sha256"}
     actual_receipt_sha256 = hashlib.sha256(canonical_json(body).encode()).hexdigest()
-    require(receipt.get("receipt_sha256") == expected_receipt_sha256, "historical full materialization receipt identity drift")
+    require(
+        receipt.get("receipt_sha256") == expected_receipt_sha256,
+        "historical full materialization receipt identity drift",
+    )
     require(actual_receipt_sha256 == expected_receipt_sha256, "historical full materialization receipt seal mismatch")
-    require(receipt.get("schema_version") == "phase3_historical_full_materialization_receipt_v1", "historical full materialization receipt version drift")
+    require(
+        receipt.get("schema_version") == "phase3_historical_full_materialization_receipt_v1",
+        "historical full materialization receipt version drift",
+    )
     require(receipt.get("text_free") is True, "historical full materialization receipt must be text-free")
-    require(receipt.get("coverage") == {
-        "full_materialization_complete": True,
-        "non_eligible_inputs_excluded": True,
-        "periodization_assignment_state": "unresolved_pending_qualified_historical_review",
-        "plug2_eligible_set_equal": True,
-        "ud_eligible_set_equal": True,
-    }, "historical full materialization coverage drift")
-    require(receipt.get("denominators") == {
-        "plug2": {
-            "documents": 56245,
-            "non_uk_or_unknown_documents": 165,
-            "token_sum": 74497787,
-            "uk_documents": 56080,
+    require(
+        receipt.get("coverage")
+        == {
+            "full_materialization_complete": True,
+            "non_eligible_inputs_excluded": True,
+            "periodization_assignment_state": "unresolved_pending_qualified_historical_review",
+            "plug2_eligible_set_equal": True,
+            "ud_eligible_set_equal": True,
         },
-        "plug2_candidate_uk_token_sum": 71802066,
-        "ud_explicit_orv_uk": {"documents": 82, "sentences": 1311, "token_rows": 35081},
-        "ud_other_or_unresolved_sentences": 4054,
-    }, "historical full materialization denominator drift")
-    require(receipt.get("outputs", {}).get("plug2") == {
-        "bytes": 2075643781,
-        "filename": "plug2-uk-full.jsonl.gz",
-        "records": 1910748,
-        "sha256": "7cf7efd0ff48827f84c503ecb84c578cb540b0d08e6fc5c857bf72ad20f96b94",
-    }, "PluG2 full materialization output drift")
-    require(receipt.get("outputs", {}).get("ud") == {
-        "bytes": 2150133,
-        "filename": "ud-orv-uk-full.jsonl.gz",
-        "records": 1311,
-        "sha256": "e883abd511121a2d01b3b1bc7559c4672c9dae3d0e0af3a8df1f7a6a05865cb0",
-    }, "UD full materialization output drift")
-    require(receipt.get("safeguards") == {
-        "historical_forms_protected": True,
-        "modern_correction_eligible": False,
-        "phase4_authorized": False,
-        "provider_calls": False,
-        "source_bytes_preserved": True,
-    }, "historical full materialization safeguards drift")
+        "historical full materialization coverage drift",
+    )
+    require(
+        receipt.get("denominators")
+        == {
+            "plug2": {
+                "documents": 56245,
+                "non_uk_or_unknown_documents": 165,
+                "token_sum": 74497787,
+                "uk_documents": 56080,
+            },
+            "plug2_candidate_uk_token_sum": 71802066,
+            "ud_explicit_orv_uk": {"documents": 82, "sentences": 1311, "token_rows": 35081},
+            "ud_other_or_unresolved_sentences": 4054,
+        },
+        "historical full materialization denominator drift",
+    )
+    require(
+        receipt.get("outputs", {}).get("plug2")
+        == {
+            "bytes": 2075643781,
+            "filename": "plug2-uk-full.jsonl.gz",
+            "records": 1910748,
+            "sha256": "7cf7efd0ff48827f84c503ecb84c578cb540b0d08e6fc5c857bf72ad20f96b94",
+        },
+        "PluG2 full materialization output drift",
+    )
+    require(
+        receipt.get("outputs", {}).get("ud")
+        == {
+            "bytes": 2150133,
+            "filename": "ud-orv-uk-full.jsonl.gz",
+            "records": 1311,
+            "sha256": "e883abd511121a2d01b3b1bc7559c4672c9dae3d0e0af3a8df1f7a6a05865cb0",
+        },
+        "UD full materialization output drift",
+    )
+    require(
+        receipt.get("safeguards")
+        == {
+            "historical_forms_protected": True,
+            "modern_correction_eligible": False,
+            "phase4_authorized": False,
+            "provider_calls": False,
+            "source_bytes_preserved": True,
+        },
+        "historical full materialization safeguards drift",
+    )
     return {
         "file_sha256": expected_file_sha256,
         "receipt_sha256": expected_receipt_sha256,
@@ -750,24 +795,32 @@ def audit_private_inputs(
     )
     ud = audit_ud(ud_root)
     require(sophia == EXPECTED_SOPHIA_PRIVATE_AUDIT, "Saint Sophia private audit denominator drift")
-    require(plug2 == {
-        "all_documents": 56245,
-        "uk_documents": 56080,
-        "uk_token_sum": 71802066,
-        "date_min": 1816,
-        "date_max": 1954,
-        "pre_1800_documents": 0,
-        "exact_dated_documents": 56080,
-    }, "PluG2 private audit denominator drift")
-    require(ud == {
-        "documents": 82,
-        "sentences": 1311,
-        "token_rows": 35081,
-        "exact_dated_documents": 4,
-        "exact_years": [1413, 1436, 1456, 1473],
-        "undated_documents": 78,
-        "nonexact_dated_documents": 0,
-    }, "UD private audit denominator drift")
+    require(
+        plug2
+        == {
+            "all_documents": 56245,
+            "uk_documents": 56080,
+            "uk_token_sum": 71802066,
+            "date_min": 1816,
+            "date_max": 1954,
+            "pre_1800_documents": 0,
+            "exact_dated_documents": 56080,
+        },
+        "PluG2 private audit denominator drift",
+    )
+    require(
+        ud
+        == {
+            "documents": 82,
+            "sentences": 1311,
+            "token_rows": 35081,
+            "exact_dated_documents": 4,
+            "exact_years": [1413, 1436, 1456, 1473],
+            "undated_documents": 78,
+            "nonexact_dated_documents": 0,
+        },
+        "UD private audit denominator drift",
+    )
     full_receipt = audit_full_materialization_receipt(
         full_materialization_receipt,
         expected_file_sha256=checked_spine["bindings"]["historical_full_materialization_receipt_file_sha256"],
@@ -803,15 +856,16 @@ def main() -> int:
         args.ud_root,
         args.full_materialization_receipt,
     ]
-    require(all(item is None for item in supplied) or all(item is not None for item in supplied), "private audit paths must be supplied together")
+    require(
+        all(item is None for item in supplied) or all(item is not None for item in supplied),
+        "private audit paths must be supplied together",
+    )
     result: dict[str, Any] = {
         "schema_version": spine["schema_version"],
         "status": spine["status"],
         "receipt_sha256": spine["receipt_sha256"],
         "open_gap_count": sum(item["state"] == "open" for item in spine["gaps"]),
-        "accepted_operational_risk_count": sum(
-            item["state"] == "accepted_operational_risk" for item in spine["gaps"]
-        ),
+        "accepted_operational_risk_count": sum(item["state"] == "accepted_operational_risk" for item in spine["gaps"]),
         "phase3_complete": spine["gates"]["phase3_complete"],
         "phase4_blocked": spine["gates"]["phase4_blocked"],
         "provider_calls": False,

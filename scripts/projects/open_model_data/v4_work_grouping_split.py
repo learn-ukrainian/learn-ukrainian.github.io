@@ -472,7 +472,9 @@ def verify(
         raise WorkGroupingSplitError(f"Receipt verdict is not confirmed: {receipt['verdict']}")
 
     # Validate Index items and firewall invariants
-    item_schema_path = input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_item_v1.schema.json"
+    item_schema_path = (
+        input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_item_v1.schema.json"
+    )
     item_validator = None
     if item_schema_path.is_file():
         schema = json.loads(item_schema_path.read_text(encoding="utf-8"))

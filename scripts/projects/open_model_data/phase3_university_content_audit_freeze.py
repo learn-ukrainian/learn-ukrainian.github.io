@@ -32,7 +32,9 @@ SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_univers
 DEFAULT_OUTPUT_PATH = ROOT / "data/projects/open_model_data/admission/phase3_university_content_audit_freeze_v1.json"
 DEFAULT_POLICY_PATH = ROOT / "data/projects/open_model_data/admission/phase3_complete_source_policy_v4.json"
 DEFAULT_LIVE_GATE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_live_ingest_gate_v1.json"
-DEFAULT_HISTORICAL_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_periodization_freeze_v1.json"
+DEFAULT_HISTORICAL_PATH = (
+    ROOT / "data/projects/open_model_data/admission/phase3_historical_periodization_freeze_v1.json"
+)
 EXPECTED_OUTPUT_SHA256 = "d48db94a4576ffa13285d7678a774247ef6db484f85f866aa4a02f6fb33f5c0b"
 
 EXPECTED_BINDINGS = {
@@ -221,7 +223,10 @@ def validate_document(
     require(document.get("bindings") == EXPECTED_BINDINGS, "freeze bindings drift")
 
     policy = read_json(policy_path)
-    require(sha256_file(policy_path) == EXPECTED_BINDINGS["complete_source_policy_v4_sha256"], "complete source policy byte drift")
+    require(
+        sha256_file(policy_path) == EXPECTED_BINDINGS["complete_source_policy_v4_sha256"],
+        "complete source policy byte drift",
+    )
     policy_sets = _policy_sets(policy)
     source_universe = document["source_universe"]
     expected_lists = {
@@ -238,14 +243,15 @@ def validate_document(
     require(source_universe["reference_only_source_count"] == 6, "reference-only source count drift")
     require(source_universe["quarantine_source_count"] == 4, "quarantine source count drift")
     require(source_universe["mandatory_conversion_source_count"] == 11, "mandatory conversion source count drift")
-    require(source_universe["disposition_counts"] == policy.get("disposition_counts"), "source disposition counts drift")
+    require(
+        source_universe["disposition_counts"] == policy.get("disposition_counts"), "source disposition counts drift"
+    )
 
     database = document["database"]
     require(database == EXPECTED_DATABASE, "frozen database facts drift")
     topic_coverage = document["topic_coverage"]
     require(
-        topic_coverage["counts"]
-        == {"areas_required": 26, "missing": 0, "partial": 21, "sufficient": 5},
+        topic_coverage["counts"] == {"areas_required": 26, "missing": 0, "partial": 21, "sufficient": 5},
         "topic coverage summary drift",
     )
     _validate_topics(
@@ -284,7 +290,10 @@ def validate_document(
     require(gates["university_database_reconciled"] is True, "university database is not reconciled")
     require(gates["university_source_freeze_ready"] is True, "university source freeze is not ready")
     require(gates["source_coverage_ready"] is False, "partial topic coverage cannot claim SOURCE_COVERAGE_READY")
-    require(gates["overall_phase3_source_freeze_ready"] is False, "historical residual cannot close the overall source freeze")
+    require(
+        gates["overall_phase3_source_freeze_ready"] is False,
+        "historical residual cannot close the overall source freeze",
+    )
     require(gates["phase3_complete"] is False and gates["phase4_blocked"] is True, "phase boundary drift")
     return dict(document)
 
@@ -299,7 +308,9 @@ def _database_evidence(path: Path) -> tuple[dict[str, Any], list[str]]:
             "fts_rows": connection.execute("SELECT COUNT(*) FROM textbooks_fts").fetchone()[0],
             "section_rows": connection.execute("SELECT COUNT(*) FROM textbook_sections").fetchone()[0],
             "total_sources": connection.execute("SELECT COUNT(DISTINCT source_file) FROM textbooks").fetchone()[0],
-            "university_rows": connection.execute("SELECT COUNT(*) FROM textbooks WHERE grade='university'").fetchone()[0],
+            "university_rows": connection.execute("SELECT COUNT(*) FROM textbooks WHERE grade='university'").fetchone()[
+                0
+            ],
             "university_sources": connection.execute(
                 "SELECT COUNT(DISTINCT source_file) FROM textbooks WHERE grade='university'"
             ).fetchone()[0],
@@ -328,10 +339,15 @@ def _validate_drive_backup(post_backup: Mapping[str, Any]) -> None:
     require(isinstance(backup, Mapping), "post-live backup receipt has no backup object")
     require(backup.get("google_drive_upload_verified") is True, "post-live database backup is not provider-verified")
     require(backup.get("google_drive_uploading") is False, "post-live database backup is still uploading")
-    require(isinstance(backup.get("google_drive_item_id"), str) and backup["google_drive_item_id"], "Drive item id is absent")
+    require(
+        isinstance(backup.get("google_drive_item_id"), str) and backup["google_drive_item_id"],
+        "Drive item id is absent",
+    )
     backup_path = Path(str(backup.get("path", "")))
     require(backup_path.is_file(), "post-live compressed database backup is absent")
-    require(sha256_file(backup_path) == backup.get("compressed_sha256"), "post-live compressed database backup hash drift")
+    require(
+        sha256_file(backup_path) == backup.get("compressed_sha256"), "post-live compressed database backup hash drift"
+    )
     try:
         provider_probe = subprocess.run(
             ["xattr", "-p", "com.google.drivefs.item-id#S", str(backup_path)],
@@ -348,7 +364,10 @@ def _validate_drive_backup(post_backup: Mapping[str, Any]) -> None:
         restored_hash = hashlib.sha256()
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             restored_hash.update(chunk)
-    require(restored_hash.hexdigest() == backup.get("decompressed_sha256"), "post-live backup does not restore exact database bytes")
+    require(
+        restored_hash.hexdigest() == backup.get("decompressed_sha256"),
+        "post-live backup does not restore exact database bytes",
+    )
 
 
 def build_document(
@@ -385,11 +404,30 @@ def build_document(
     policy_sets = _policy_sets(policy)
     database, university_ids = _database_evidence(database_path)
     require(database == EXPECTED_DATABASE, "live database facts do not match the frozen post-ingest state")
-    require(university_ids == sorted(policy_sets["corpus"]), "live university source set does not equal policy corpus-ingest set")
+    require(
+        university_ids == sorted(policy_sets["corpus"]),
+        "live university source set does not equal policy corpus-ingest set",
+    )
 
     post_backup = read_json(post_backup_path)
     _validate_drive_backup(post_backup)
-    require(post_backup.get("database") == {key: EXPECTED_DATABASE[key] for key in ("fts_rows", "integrity_check", "section_rows", "sha256", "textbook_rows", "total_sources", "university_rows", "university_sources")}, "post-live backup database facts drift")
+    require(
+        post_backup.get("database")
+        == {
+            key: EXPECTED_DATABASE[key]
+            for key in (
+                "fts_rows",
+                "integrity_check",
+                "section_rows",
+                "sha256",
+                "textbook_rows",
+                "total_sources",
+                "university_rows",
+                "university_sources",
+            )
+        },
+        "post-live backup database facts drift",
+    )
     live_receipt = read_json(live_ingest_receipt_path)
     require(live_receipt.get("status") == "committed", "live ingest did not commit")
     require(
@@ -403,7 +441,10 @@ def build_document(
     require(live_receipt.get("requested_quarantine_sources") == [], "live ingest unexpectedly quarantined sources")
     historical = read_json(historical_path)
     require(historical.get("periodization_layer_ready") is True, "historical periodization layer is not ready")
-    require(historical.get("overall_phase3_source_freeze_ready") is False, "historical artifact unexpectedly closes overall source freeze")
+    require(
+        historical.get("overall_phase3_source_freeze_ready") is False,
+        "historical artifact unexpectedly closes overall source freeze",
+    )
 
     matrix_topics = matrix.get("topic_gap_matrix")
     _validate_topics(
@@ -560,7 +601,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         write_json_atomic(args.write, document)
     else:
         if args.check.resolve() == DEFAULT_OUTPUT_PATH.resolve():
-            require(sha256_file(args.check) == EXPECTED_OUTPUT_SHA256, "tracked university content-audit freeze byte drift")
+            require(
+                sha256_file(args.check) == EXPECTED_OUTPUT_SHA256, "tracked university content-audit freeze byte drift"
+            )
         validate_document(read_json(args.check), policy_path=args.policy)
     return 0
 

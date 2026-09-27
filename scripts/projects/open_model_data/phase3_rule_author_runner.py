@@ -148,7 +148,9 @@ def _write_private(path: Path, value: bytes) -> None:
 
 def _assert_private_file(root: Path, relative: str) -> Path:
     path = root / relative
-    require(path.exists() and not path.is_symlink() and path.resolve() == path.absolute(), f"missing or aliased {relative}")
+    require(
+        path.exists() and not path.is_symlink() and path.resolve() == path.absolute(), f"missing or aliased {relative}"
+    )
     require(path.is_file() and stat.S_IMODE(path.stat().st_mode) == FILE_MODE, f"private file must be 0600: {relative}")
     return path
 
@@ -173,7 +175,16 @@ def _validate_receipt(receipt: Mapping[str, Any]) -> None:
 
 
 def _receipt_has_no_leakage(receipt: Mapping[str, Any]) -> bool:
-    forbidden = {"packet_id", "source_item_id", "locator", "fingerprint", "source_text", "corrected_text", "raw_response", "response"}
+    forbidden = {
+        "packet_id",
+        "source_item_id",
+        "locator",
+        "fingerprint",
+        "source_text",
+        "corrected_text",
+        "raw_response",
+        "response",
+    }
 
     def walk(value: Any) -> bool:
         if isinstance(value, Mapping):
@@ -182,8 +193,7 @@ def _receipt_has_no_leakage(receipt: Mapping[str, Any]) -> bool:
                 if any(word in key_text.lower() for word in forbidden):
                     return False
                 if isinstance(child, str) and (
-                    key_text not in PUBLIC_RECEIPT_STRING_FIELDS
-                    or PUBLIC_RECEIPT_SAFE_TOKEN.fullmatch(child) is None
+                    key_text not in PUBLIC_RECEIPT_STRING_FIELDS or PUBLIC_RECEIPT_SAFE_TOKEN.fullmatch(child) is None
                 ):
                     return False
                 if not walk(child):
@@ -209,7 +219,13 @@ def _author(role_path: Path, exact_model: str) -> dict[str, str]:
         == {"exact_model": exact_model, "model_family": "gemini", "harness": "agy"},
         "functional-role rule-author execution lane drift",
     )
-    return {**actor, "provider": "google", "model_family": entry["model_family"], "harness": entry["harness"], "exact_model": exact_model}
+    return {
+        **actor,
+        "provider": "google",
+        "model_family": entry["model_family"],
+        "harness": entry["harness"],
+        "exact_model": exact_model,
+    }
 
 
 def _validate_bundle(path: Path) -> dict[str, Any]:
@@ -217,7 +233,10 @@ def _validate_bundle(path: Path) -> dict[str, Any]:
     schema = packets._local_schema(packets.read_json(packets.SCHEMA_PATH))
     errors = sorted(Draft202012Validator(schema).iter_errors(bundle), key=lambda error: list(error.path))
     require(not errors, f"packet bundle schema violation: {errors[0].message if errors else ''}")
-    require(bundle.get("compiler", {}).get("implementation_version") == packets.IMPLEMENTATION_VERSION, "packet compiler binding drift")
+    require(
+        bundle.get("compiler", {}).get("implementation_version") == packets.IMPLEMENTATION_VERSION,
+        "packet compiler binding drift",
+    )
     require(
         bundle["compiler"].get("script_sha256") == sha256_file(ROOT / packets.SCRIPT_PATH),
         "packet compiler script binding drift",
@@ -235,29 +254,34 @@ def _validate_bundle(path: Path) -> dict[str, Any]:
         bundle.get("phase3_v2_1_amendment_sha256") == packets.PHASE3_V2_1_AMENDMENT_SHA256
         and bundle.get("phase3_v2_1_combined_contract_sha256") == packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256
         and bundle["compiler"].get("phase3_v2_1_amendment_sha256") == packets.PHASE3_V2_1_AMENDMENT_SHA256
-        and bundle["compiler"].get("phase3_v2_1_combined_contract_sha256") == packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
+        and bundle["compiler"].get("phase3_v2_1_combined_contract_sha256")
+        == packets.PHASE3_V2_1_COMBINED_CONTRACT_SHA256,
         "packet bundle Phase 3 v2.1 contract binding drift",
     )
     return bundle
 
 
-def _prompt(author: Mapping[str, str], packet_sha: str, prompt_sha_placeholder: str = "computed after serialization") -> str:
+def _prompt(
+    author: Mapping[str, str], packet_sha: str, prompt_sha_placeholder: str = "computed after serialization"
+) -> str:
     # No output self-hash is requested: the runner adds only mechanical capture
     # fields after preserving the model's exact raw bytes.
-    return "\n".join((
-        "You are the assigned Phase 3 rule-author extractor, not a reviewer or scorer.",
-        f"Binding: role={author['role_id']}; task={author['task_id']}.",
-        "The attached private packet is the complete and only evidence. Do not use model memory as authority.",
-        "Do not access, infer, mention, or reconstruct heldout, UA-Eval, or public-canary material.",
-        "Propose only source-supported candidates from attached source_item_id values; abstain when the source is insufficient.",
-        "Return one JSON object only with keys proposals, abstentions, limitations, parse_state.",
-        "Each proposal must satisfy the Phase 3 typed matcher/output schema; matcher.kind must equal the proposal's mechanism value (for example, both literal).",
-        "Every proposal source_item_id and evidence_refs must reference attached source_item_id values, and source_span must match that item.",
-        "This is a non-authoritative proposal; do not claim Ukrainian review, acceptance, publication, or completion.",
-        f"Mechanical packet SHA-256: {packet_sha}.",
-        f"Prompt hash note: {prompt_sha_placeholder}.",
-        "",
-    ))
+    return "\n".join(
+        (
+            "You are the assigned Phase 3 rule-author extractor, not a reviewer or scorer.",
+            f"Binding: role={author['role_id']}; task={author['task_id']}.",
+            "The attached private packet is the complete and only evidence. Do not use model memory as authority.",
+            "Do not access, infer, mention, or reconstruct heldout, UA-Eval, or public-canary material.",
+            "Propose only source-supported candidates from attached source_item_id values; abstain when the source is insufficient.",
+            "Return one JSON object only with keys proposals, abstentions, limitations, parse_state.",
+            "Each proposal must satisfy the Phase 3 typed matcher/output schema; matcher.kind must equal the proposal's mechanism value (for example, both literal).",
+            "Every proposal source_item_id and evidence_refs must reference attached source_item_id values, and source_span must match that item.",
+            "This is a non-authoritative proposal; do not claim Ukrainian review, acceptance, publication, or completion.",
+            f"Mechanical packet SHA-256: {packet_sha}.",
+            f"Prompt hash note: {prompt_sha_placeholder}.",
+            "",
+        )
+    )
 
 
 def _action_receipt(
@@ -322,7 +346,13 @@ def _assert_tree(root: Path, manifest: Mapping[str, Any], *, permit_empty_result
             require(stat.S_IMODE(path.stat().st_mode) == FILE_MODE, f"private file must be 0600: {relative}")
             actual.add(relative)
     require(actual <= expected, "unexpected private run file")
-    require({"manifest.json"} | {entry["attachment"] for entry in manifest["packets"]} | {entry["prompt"] for entry in manifest["packets"]} <= actual, "prepared private files are incomplete")
+    require(
+        {"manifest.json"}
+        | {entry["attachment"] for entry in manifest["packets"]}
+        | {entry["prompt"] for entry in manifest["packets"]}
+        <= actual,
+        "prepared private files are incomplete",
+    )
     require(actual <= expected and (permit_empty_results or actual == expected), "private run tree is incomplete")
     for entry in manifest["packets"]:
         raw, record = root / entry["raw"], root / entry["record"]
@@ -345,14 +375,22 @@ def prepare(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_mode
         attachment = canonical_json(packet).encode("utf-8") + b"\n"
         packet_sha = packets.packet_sha256(packet)
         prompt = _prompt(author, packet_sha).encode("utf-8")
-        entries.append({
-            "ordinal": ordinal, "packet_id": packet["packet_id"], "packet_sha256": packet_sha,
-            "attachment": f"attachments/{ordinal}.json", "attachment_sha256": sha256_bytes(attachment),
-            "prompt": f"prompts/{ordinal}.txt", "prompt_sha256": sha256_bytes(prompt),
-            "raw": f"raw/{ordinal}.raw", "record": f"records/{ordinal}.json",
-        })
+        entries.append(
+            {
+                "ordinal": ordinal,
+                "packet_id": packet["packet_id"],
+                "packet_sha256": packet_sha,
+                "attachment": f"attachments/{ordinal}.json",
+                "attachment_sha256": sha256_bytes(attachment),
+                "prompt": f"prompts/{ordinal}.txt",
+                "prompt_sha256": sha256_bytes(prompt),
+                "raw": f"raw/{ordinal}.raw",
+                "record": f"records/{ordinal}.json",
+            }
+        )
     manifest = {
-        "schema_version": "phase3_rule_author_run_manifest_v1", "bundle_sha256": sha256_file(bundle_path),
+        "schema_version": "phase3_rule_author_run_manifest_v1",
+        "bundle_sha256": sha256_file(bundle_path),
         "functional_role_contract_sha256": sha256_file(role_path),
         "bindings": {
             "evaluation_contract_sha256": bundle["evaluation_contract_sha256"],
@@ -365,7 +403,11 @@ def prepare(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_mode
             "packet_schema_sha256": sha256_file(packets.SCHEMA_PATH),
             "compiler": bundle["compiler"],
         },
-        "runner": {"implementation_version": VERSION, "script_sha256": sha256_file(ROOT / SCRIPT_PATH), "schema_sha256": sha256_file(SCHEMA_PATH)},
+        "runner": {
+            "implementation_version": VERSION,
+            "script_sha256": sha256_file(ROOT / SCRIPT_PATH),
+            "schema_sha256": sha256_file(SCHEMA_PATH),
+        },
         "author": author,
         "action_receipt": _action_receipt(
             author=author,
@@ -386,16 +428,20 @@ def prepare(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_mode
         old = _read_json(_assert_private_file(root, "manifest.json"))
         _validate_manifest(old)
         require(
-            old["action_receipt"]["status"] == "prepared"
-            and old["action_receipt"]["completed_at"] is None,
+            old["action_receipt"]["status"] == "prepared" and old["action_receipt"]["completed_at"] is None,
             "stored prepared action receipt state drift",
         )
         manifest["action_receipt"] = old["action_receipt"]
         require(old == manifest, "resume binding or hash drift")
         _assert_tree(root, old, permit_empty_results=True)
         for entry in entries:
-            require(sha256_file(_assert_private_file(root, entry["attachment"])) == entry["attachment_sha256"], "attachment hash drift")
-            require(sha256_file(_assert_private_file(root, entry["prompt"])) == entry["prompt_sha256"], "prompt hash drift")
+            require(
+                sha256_file(_assert_private_file(root, entry["attachment"])) == entry["attachment_sha256"],
+                "attachment hash drift",
+            )
+            require(
+                sha256_file(_assert_private_file(root, entry["prompt"])) == entry["prompt_sha256"], "prompt hash drift"
+            )
             if (root / entry["record"]).exists():
                 _validate_record(entry, old, root)
         return old
@@ -410,30 +456,69 @@ def prepare(*, bundle_path: Path, role_path: Path, private_dir: Path, exact_mode
 
 def command_for(entry: Mapping[str, Any], manifest: Mapping[str, Any], root: Path) -> list[str]:
     """Return the fixed subscription bridge command; prompt bytes go on stdin."""
-    return [str(ROOT / ".venv/bin/python"), str(ROOT / "scripts/ai_agent_bridge/__main__.py"), "ask-agy", "-", "--task-id", manifest["author"]["task_id"], "--to-model", manifest["author"]["exact_model"], "--data", str(root / entry["attachment"]), "--output-path", str(root / entry["raw"])]
+    return [
+        str(ROOT / ".venv/bin/python"),
+        str(ROOT / "scripts/ai_agent_bridge/__main__.py"),
+        "ask-agy",
+        "-",
+        "--task-id",
+        manifest["author"]["task_id"],
+        "--to-model",
+        manifest["author"]["exact_model"],
+        "--data",
+        str(root / entry["attachment"]),
+        "--output-path",
+        str(root / entry["raw"]),
+    ]
 
 
-def _record(entry: Mapping[str, Any], manifest: Mapping[str, Any], root: Path, *, execution_error: str | None = None) -> dict[str, Any]:
+def _record(
+    entry: Mapping[str, Any], manifest: Mapping[str, Any], root: Path, *, execution_error: str | None = None
+) -> dict[str, Any]:
     raw = _assert_private_file(root, entry["raw"]).read_bytes()
     attachment_path = _assert_private_file(root, entry["attachment"])
     require(sha256_file(attachment_path) == entry["attachment_sha256"], "attachment hash drift")
     packet = _read_json(attachment_path)
     packets.validate(packet, "packet", "attached packet")
-    base: dict[str, Any] = {"packet_sha256": entry["packet_sha256"], "prompt_sha256": entry["prompt_sha256"], "raw_response_sha256": sha256_bytes(raw), "author": manifest["author"]}
+    base: dict[str, Any] = {
+        "packet_sha256": entry["packet_sha256"],
+        "prompt_sha256": entry["prompt_sha256"],
+        "raw_response_sha256": sha256_bytes(raw),
+        "author": manifest["author"],
+    }
     try:
         untrusted = json.loads(raw.decode("utf-8"))
         require(isinstance(untrusted, dict), "raw response JSON is not an object")
         allowed = {"proposals", "abstentions", "limitations", "parse_state"}
         require(set(untrusted) == allowed, "raw response has forbidden or missing fields")
-        response = {"schema_version": "phase3_rule_author_response_v1", "authority_state": "non_authoritative_model_proposal", **base, **untrusted}
+        response = {
+            "schema_version": "phase3_rule_author_response_v1",
+            "authority_state": "non_authoritative_model_proposal",
+            **base,
+            **untrusted,
+        }
         packets.validate(response, "ruleAuthorResponse", "rule-author response")
         item_spans = {item["source_item_id"]: item["source_span"] for item in packet["items"]}
         for proposal in response["proposals"]:
-            require(proposal["source_item_id"] in item_spans and proposal["source_span"] == item_spans[proposal["source_item_id"]], "proposal source binding drift")
-            require(proposal["evidence_refs"] and set(proposal["evidence_refs"]) <= {proposal["source_item_id"]}, "proposal evidence is not source-only")
+            require(
+                proposal["source_item_id"] in item_spans
+                and proposal["source_span"] == item_spans[proposal["source_item_id"]],
+                "proposal source binding drift",
+            )
+            require(
+                proposal["evidence_refs"] and set(proposal["evidence_refs"]) <= {proposal["source_item_id"]},
+                "proposal evidence is not source-only",
+            )
         record = {"state": "parsed", "response": response, "execution_error": execution_error}
     except (UnicodeDecodeError, json.JSONDecodeError, RuleAuthorRunnerError, packets.PacketCompilerError) as exc:
-        record = {"state": "unparsed", "packet_sha256": entry["packet_sha256"], "prompt_sha256": entry["prompt_sha256"], "raw_response_sha256": sha256_bytes(raw), "technical_error": str(exc), "execution_error": execution_error}
+        record = {
+            "state": "unparsed",
+            "packet_sha256": entry["packet_sha256"],
+            "prompt_sha256": entry["prompt_sha256"],
+            "raw_response_sha256": sha256_bytes(raw),
+            "technical_error": str(exc),
+            "execution_error": execution_error,
+        }
     return {**record, "record_sha256": sha256_bytes(canonical_json(record).encode("utf-8"))}
 
 
@@ -477,8 +562,39 @@ def _receipt(manifest: Mapping[str, Any], root: Path) -> dict[str, Any]:
         started_at=manifest["action_receipt"]["started_at"],
         completed_at=_utc_now(),
     )
-    prompt_set_sha = sha256_bytes(canonical_json([entry["prompt_sha256"] for entry in manifest["packets"]]).encode("utf-8"))
-    receipt = {"schema_version": "phase3_rule_author_public_receipt_v1", "text_free": True, "execution_mode": "sequential", "planned_count": len(manifest["packets"]), "attempted_count": len(records), "parsed_count": len(parsed), "unparsed_count": sum(record["state"] == "unparsed" for record in records), "failed_count": failed_count, "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed), "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed), "bundle_sha256": manifest["bundle_sha256"], "phase3_v2_contract_sha256": manifest["bindings"]["phase3_v2_contract_sha256"], "phase3_v2_1_amendment_sha256": manifest["bindings"]["phase3_v2_1_amendment_sha256"], "phase3_v2_1_combined_contract_sha256": manifest["bindings"]["phase3_v2_1_combined_contract_sha256"], "functional_role_contract_sha256": manifest["functional_role_contract_sha256"], "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"], "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"], "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"], "query_plan_sha256": manifest["bindings"]["query_plan_sha256"], "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"], "compiler": manifest["bindings"]["compiler"], "runner": manifest["runner"], "action_receipt": action_receipt, "prompt_set_sha256": prompt_set_sha, "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")}, "complete": complete, "canary": not fully_attempted, "canary_succeeded": canary_succeeded}
+    prompt_set_sha = sha256_bytes(
+        canonical_json([entry["prompt_sha256"] for entry in manifest["packets"]]).encode("utf-8")
+    )
+    receipt = {
+        "schema_version": "phase3_rule_author_public_receipt_v1",
+        "text_free": True,
+        "execution_mode": "sequential",
+        "planned_count": len(manifest["packets"]),
+        "attempted_count": len(records),
+        "parsed_count": len(parsed),
+        "unparsed_count": sum(record["state"] == "unparsed" for record in records),
+        "failed_count": failed_count,
+        "proposal_count": sum(len(record.get("response", {}).get("proposals", [])) for record in parsed),
+        "abstention_count": sum(len(record.get("response", {}).get("abstentions", [])) for record in parsed),
+        "bundle_sha256": manifest["bundle_sha256"],
+        "phase3_v2_contract_sha256": manifest["bindings"]["phase3_v2_contract_sha256"],
+        "phase3_v2_1_amendment_sha256": manifest["bindings"]["phase3_v2_1_amendment_sha256"],
+        "phase3_v2_1_combined_contract_sha256": manifest["bindings"]["phase3_v2_1_combined_contract_sha256"],
+        "functional_role_contract_sha256": manifest["functional_role_contract_sha256"],
+        "evaluation_contract_sha256": manifest["bindings"]["evaluation_contract_sha256"],
+        "coverage_contract_sha256": manifest["bindings"]["coverage_contract_sha256"],
+        "near_duplicate_policy_sha256": manifest["bindings"]["near_duplicate_policy_sha256"],
+        "query_plan_sha256": manifest["bindings"]["query_plan_sha256"],
+        "packet_schema_sha256": manifest["bindings"]["packet_schema_sha256"],
+        "compiler": manifest["bindings"]["compiler"],
+        "runner": manifest["runner"],
+        "action_receipt": action_receipt,
+        "prompt_set_sha256": prompt_set_sha,
+        "model": {key: manifest["author"][key] for key in ("provider", "model_family", "harness", "exact_model")},
+        "complete": complete,
+        "canary": not fully_attempted,
+        "canary_succeeded": canary_succeeded,
+    }
     receipt["no_leakage"] = _receipt_has_no_leakage(receipt)
     _validate_receipt(receipt)
     return receipt
@@ -530,9 +646,14 @@ def run(
             _write_private(raw_path, b"")
             execution_error = execution_error or "bridge_did_not_write_output"
         else:
-            require(not raw_path.is_symlink() and raw_path.resolve() == raw_path.absolute(), "bridge output path is aliased")
+            require(
+                not raw_path.is_symlink() and raw_path.resolve() == raw_path.absolute(), "bridge output path is aliased"
+            )
             os.chmod(raw_path, FILE_MODE)
-        _write_private(record_path, (canonical_json(_record(entry, manifest, root, execution_error=execution_error)) + "\n").encode("utf-8"))
+        _write_private(
+            record_path,
+            (canonical_json(_record(entry, manifest, root, execution_error=execution_error)) + "\n").encode("utf-8"),
+        )
     if max_packets is None:
         _assert_tree(root, manifest, permit_empty_results=False)
     receipt = _receipt(manifest, root)
@@ -561,7 +682,9 @@ def _safe_receipt_path(
     protected.extend(private_dir / relative for relative in _expected_paths(manifest))
     for target in protected:
         target = target.absolute()
-        if candidate.absolute() == target or (candidate.exists() and target.exists() and os.path.samefile(candidate, target)):
+        if candidate.absolute() == target or (
+            candidate.exists() and target.exists() and os.path.samefile(candidate, target)
+        ):
             raise RuleAuthorRunnerError("receipt destination aliases a protected input or private file")
     return candidate
 

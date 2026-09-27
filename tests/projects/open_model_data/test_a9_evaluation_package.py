@@ -59,13 +59,27 @@ def _all_keys(value: object) -> set[str]:
 def _write_receipt_tree(tmp_path: Path, *, a2=None, a4=None, a5=None, a6=None, a7=None, a8=None, manifest=None) -> Path:
     admission_dir = tmp_path / "data/projects/open_model_data/admission"
     admission_dir.mkdir(parents=True)
-    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(a2 if a2 is not None else _cached_json(A2_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(json.dumps(a4 if a4 is not None else _cached_json(A4_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(json.dumps(a5 if a5 is not None else _cached_json(A5_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a6_blind_arena_receipt_v1.json").write_text(json.dumps(a6 if a6 is not None else _cached_json(A6_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a7_original_row_factory_receipt_v1.json").write_text(json.dumps(a7 if a7 is not None else _cached_json(A7_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_a8_admission_assembly_receipt_v1.json").write_text(json.dumps(a8 if a8 is not None else _cached_json(A8_RECEIPT_PATH)))
-    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest if manifest is not None else _cached_json(MANIFEST_PATH)))
+    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(
+        json.dumps(a2 if a2 is not None else _cached_json(A2_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(
+        json.dumps(a4 if a4 is not None else _cached_json(A4_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a5_evidence_enrichment_receipt_v1.json").write_text(
+        json.dumps(a5 if a5 is not None else _cached_json(A5_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a6_blind_arena_receipt_v1.json").write_text(
+        json.dumps(a6 if a6 is not None else _cached_json(A6_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a7_original_row_factory_receipt_v1.json").write_text(
+        json.dumps(a7 if a7 is not None else _cached_json(A7_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_a8_admission_assembly_receipt_v1.json").write_text(
+        json.dumps(a8 if a8 is not None else _cached_json(A8_RECEIPT_PATH))
+    )
+    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(
+        json.dumps(manifest if manifest is not None else _cached_json(MANIFEST_PATH))
+    )
     return tmp_path
 
 
@@ -152,7 +166,11 @@ def test_a9_consumer_reproduction_view_is_empty_plus_residuals_never_a_fabricate
 
 def test_a9_consumer_reproduction_fails_closed_when_a8_claims_a_row_without_a_matching_engine_admission() -> None:
     forged_a8 = copy.deepcopy(_cached_json(A8_RECEIPT_PATH))
-    forged_a8["admitted_slice_view"][0] = {**forged_a8["admitted_slice_view"][0], "row_admitted": True, "row_id": "forged-row"}
+    forged_a8["admitted_slice_view"][0] = {
+        **forged_a8["admitted_slice_view"][0],
+        "row_admitted": True,
+        "row_id": "forged-row",
+    }
     gate = a9.check_evaluation_gate()
     residuals = a9.derive_a9_slot_residuals(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH), gate)
     with pytest.raises(a9.EvaluationPackageError):
@@ -200,12 +218,24 @@ def test_a9_receipt_binds_the_merged_a8_receipt_by_its_known_public_sha() -> Non
 
 
 def test_a9_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_residual_unresolved() -> None:
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A5_RECEIPT_PATH)["a5_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a6_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A6_RECEIPT_PATH)["a6_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a7_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A7_RECEIPT_PATH)["a7_residuals"]}
-    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a8_residuals_carried_forward"]} == {e["residual_id"] for e in _cached_json(A8_RECEIPT_PATH)["a8_residuals"]}
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a2_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A2_RECEIPT_PATH)["residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a4_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A4_RECEIPT_PATH)["a4_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a5_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A5_RECEIPT_PATH)["a5_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a6_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A6_RECEIPT_PATH)["a6_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a7_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A7_RECEIPT_PATH)["a7_residuals"]
+    }
+    assert {e["residual_id"] for e in _cached_json(RECEIPT)["a8_residuals_carried_forward"]} == {
+        e["residual_id"] for e in _cached_json(A8_RECEIPT_PATH)["a8_residuals"]
+    }
     for key in (
         "a2_residuals_carried_forward",
         "a4_residuals_carried_forward",
@@ -237,7 +267,13 @@ def test_a9_receipt_never_claims_training_ready_silver_arena_slice_ready_or_admi
 
 
 def test_a9_receipt_eligibility_all_false_and_zero_rows_emitted() -> None:
-    assert _cached_json(RECEIPT)["eligibility"] == {"gold": False, "training": False, "evaluation": False, "teaching": False, "coverage": False}
+    assert _cached_json(RECEIPT)["eligibility"] == {
+        "gold": False,
+        "training": False,
+        "evaluation": False,
+        "teaching": False,
+        "coverage": False,
+    }
     assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
     assert _cached_json(RECEIPT)["execution_counters"]["candidate_rows_scored"] == 0
     assert _cached_json(RECEIPT)["execution_counters"]["rows_considered_for_scoring"] == 0
@@ -265,7 +301,8 @@ def test_a9_bindings_hash_to_disk_for_every_bound_artifact() -> None:
     for name, binding in _cached_json(RECEIPT)["bindings"].items():
         path = resource_root() / (
             "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
-            if binding["path"].startswith("scripts/") else binding["path"]
+            if binding["path"].startswith("scripts/")
+            else binding["path"]
         )
         assert path.is_file(), name
         assert a9.sha256_file(path) == binding["sha256"], name
@@ -309,7 +346,11 @@ def test_a9_refuses_a_tampered_binding_hash() -> None:
 def test_a9_refuses_a_forged_eval_artifact_ready_claim() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["status"] = "EVAL_ARTIFACT_READY"
-    receipt["evaluation_gate"] = {**receipt["evaluation_gate"], "evaluation_slice_ready": True, "blocked_reason_code": None}
+    receipt["evaluation_gate"] = {
+        **receipt["evaluation_gate"],
+        "evaluation_slice_ready": True,
+        "blocked_reason_code": None,
+    }
     with pytest.raises(a9.EvaluationPackageError):
         a9.validate_receipt_independently(receipt)
 
@@ -337,7 +378,11 @@ def test_a9_refuses_a_dropped_consumer_reproduction_view_entry() -> None:
 
 def test_a9_refuses_a_forged_admitted_or_scored_row_in_the_consumer_view() -> None:
     receipt = copy.deepcopy(_cached_json(RECEIPT))
-    receipt["consumer_reproduction_view"][0] = {**receipt["consumer_reproduction_view"][0], "row_admitted": True, "row_id": "forged-row"}
+    receipt["consumer_reproduction_view"][0] = {
+        **receipt["consumer_reproduction_view"][0],
+        "row_admitted": True,
+        "row_id": "forged-row",
+    }
     with pytest.raises(a9.EvaluationPackageError):
         a9.validate_receipt_independently(receipt)
 

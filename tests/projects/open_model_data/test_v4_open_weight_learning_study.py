@@ -255,7 +255,9 @@ def test_managed_prepare_changed_repeated_and_run_verify(tmp_path: Path) -> None
     before_runs = runs.read_bytes()
     study.build_recipe(repo, recipe)
     assert recipe.read_bytes() != (
-        subprocess.run(["git", "show", f"HEAD:{study._RECIPE}"], cwd=repo, check=True, capture_output=True, timeout=30).stdout
+        subprocess.run(
+            ["git", "show", f"HEAD:{study._RECIPE}"], cwd=repo, check=True, capture_output=True, timeout=30
+        ).stdout
     )
     assert runs.read_bytes() == before_runs
     assert paths.artifact_set(study._GROUP, repo=repo).companions[study._RECIPE] == recipe.read_bytes()

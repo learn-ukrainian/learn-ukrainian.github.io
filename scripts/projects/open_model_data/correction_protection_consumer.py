@@ -623,7 +623,9 @@ def build_release(*, factory_public_dir: Path, output_dir: Path) -> dict[str, An
     require(coverage["benchmark"]["passed"], "public non-erasure benchmark failed")
     atomic_write(output_dir / "coverage.json", (canonical_json(coverage) + "\n").encode("utf-8"))
     output_artifacts = {
-        path.name: artifact(path, logical_path=f"data/projects/open_model_data/release/correction_protection_v1/{path.name}")
+        path.name: artifact(
+            path, logical_path=f"data/projects/open_model_data/release/correction_protection_v1/{path.name}"
+        )
         for path in sorted(output_dir.iterdir())
         if path.is_file() and path.name != "receipt.json"
     }
@@ -631,8 +633,12 @@ def build_release(*, factory_public_dir: Path, output_dir: Path) -> dict[str, An
         "schema_version": "correction_protection_consumer_release_receipt_v1",
         "bundle_id": manifest["bundle_id"],
         "inputs": {
-            "factory_manifest": artifact(DEFAULT_FACTORY_MANIFEST, logical_path=DEFAULT_FACTORY_MANIFEST.relative_to(ROOT).as_posix()),
-            "factory_receipt": artifact(DEFAULT_FACTORY_RECEIPT, logical_path=DEFAULT_FACTORY_RECEIPT.relative_to(ROOT).as_posix()),
+            "factory_manifest": artifact(
+                DEFAULT_FACTORY_MANIFEST, logical_path=DEFAULT_FACTORY_MANIFEST.relative_to(ROOT).as_posix()
+            ),
+            "factory_receipt": artifact(
+                DEFAULT_FACTORY_RECEIPT, logical_path=DEFAULT_FACTORY_RECEIPT.relative_to(ROOT).as_posix()
+            ),
             "view_schema": artifact(VIEW_SCHEMA, logical_path=VIEW_SCHEMA.relative_to(ROOT).as_posix()),
             "consumer": artifact(Path(__file__), logical_path=Path(__file__).relative_to(ROOT).as_posix()),
         },
@@ -705,7 +711,9 @@ def apply_corpus(*, input_path: Path, release_dir: Path, output_dir: Path, autho
     return receipt
 
 
-def benchmark_release(*, release_dir: Path, output: Path, heldback: Path | None, heldback_sha256: str | None) -> dict[str, Any]:
+def benchmark_release(
+    *, release_dir: Path, output: Path, heldback: Path | None, heldback_sha256: str | None
+) -> dict[str, Any]:
     bundle = {name: list(iter_jsonl(release_dir / f"{name}.jsonl")) for name in PUBLIC_FILES}
     report = public_benchmark(bundle)
     if heldback is not None:

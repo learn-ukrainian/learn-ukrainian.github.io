@@ -21,10 +21,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = (
-    ROOT
-    / "registry/projects/open_model_data/contracts/corpus_training_usability_decision_v1.schema.json"
-)
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/corpus_training_usability_decision_v1.schema.json"
 PROFILE_PATH = ROOT / "data/projects/open_model_data/profiles/full_corpus_profile_v1.json"
 DETECTOR_PATH = ROOT / "data/projects/open_model_data/detector/language_contact_receipt_v1.json"
 URL_MAP_PATH = ROOT / "registry/pidruchnyk_urls.yaml"

@@ -71,8 +71,7 @@ EVALUATION_TOTALS = {
     "ua_gec": 909,
 }
 QUARANTINE_TOTALS = {
-    family: FAMILY_TOTALS[family] - AUTHOR_TOTALS[family] - EVALUATION_TOTALS[family]
-    for family in FAMILY_TOTALS
+    family: FAMILY_TOTALS[family] - AUTHOR_TOTALS[family] - EVALUATION_TOTALS[family] for family in FAMILY_TOTALS
 }
 EXPECTED_TOTAL = 67_041
 EXPECTED_AUTHOR = 43_812
@@ -317,7 +316,9 @@ def _role_bindings(path: Path) -> tuple[dict[str, Any], str, str]:
     for expected in (AUTHOR, REVIEWER):
         actual = by_role[expected["role_id"]]
         require(
-            all(actual[key] == expected[key] for key in ("role_id", "task_id", "exact_model", "model_family", "harness")),
+            all(
+                actual[key] == expected[key] for key in ("role_id", "task_id", "exact_model", "model_family", "harness")
+            ),
             f"{expected['role_id']} execution lane drift",
         )
     require(
@@ -342,8 +343,15 @@ def _expected(overrides: Mapping[str, Any] | None) -> dict[str, Any]:
         }
     result = dict(overrides)
     required = {
-        "family_totals", "author_totals", "evaluation_totals", "quarantine_totals",
-        "total", "author", "evaluation", "quarantine", "heldout_labels",
+        "family_totals",
+        "author_totals",
+        "evaluation_totals",
+        "quarantine_totals",
+        "total",
+        "author",
+        "evaluation",
+        "quarantine",
+        "heldout_labels",
     }
     require(set(result) == required, "expected-total override fields drift")
     return result
@@ -356,11 +364,9 @@ def _reject_voided_production_cycle(manifest: Mapping[str, Any]) -> None:
     real production manifest is distinguished by the complete, frozen denominator;
     that exact cycle may never resume after its evaluation freeze changed.
     """
-    is_voided_production = (
-        manifest.get("bindings", {}).get("evaluation_cycle_id")
-        == VOIDED_EVALUATION_CYCLE_ID
-        and manifest.get("denominator") == _expected(None)
-    )
+    is_voided_production = manifest.get("bindings", {}).get(
+        "evaluation_cycle_id"
+    ) == VOIDED_EVALUATION_CYCLE_ID and manifest.get("denominator") == _expected(None)
     require(
         not is_voided_production,
         "voided evaluation cycle phase3-v2-1-evaluation-cycle-001 may not resume; "
@@ -385,9 +391,15 @@ def _load_inputs(
     expected: Mapping[str, Any],
 ) -> dict[str, Any]:
     materialization_receipt = _read_json(materialization_receipt_path, "materialization receipt")
-    require(materialization_receipt.get("text_free") is True and materialization_receipt.get("no_leakage") is True, "unsafe materialization receipt")
+    require(
+        materialization_receipt.get("text_free") is True and materialization_receipt.get("no_leakage") is True,
+        "unsafe materialization receipt",
+    )
     require(materialization_receipt.get("private_record_count") == expected["total"], "materialization total drift")
-    require(materialization_receipt.get("private_jsonl_sha256") == sha256_file(materialization_jsonl), "materialization hash drift")
+    require(
+        materialization_receipt.get("private_jsonl_sha256") == sha256_file(materialization_jsonl),
+        "materialization hash drift",
+    )
     require(
         materialization_receipt.get("receipt_sha256") == _newline_body_hash(materialization_receipt),
         "materialization self-hash drift",
@@ -398,9 +410,7 @@ def _load_inputs(
         materialization_receipt.get("source_universe_receipt_sha256") == sha256_file(source_freeze_receipt_path),
         "materialization/source-freeze binding drift",
     )
-    freeze_families = {
-        row["family_id"]: row for row in source_freeze.get("families", []) if isinstance(row, Mapping)
-    }
+    freeze_families = {row["family_id"]: row for row in source_freeze.get("families", []) if isinstance(row, Mapping)}
     require(set(freeze_families) >= set(expected["family_totals"]), "source freeze lacks a mandatory family")
 
     partition_receipt = _read_json(evaluation_partition_receipt_path, "evaluation partition receipt")
@@ -438,23 +448,49 @@ def _load_inputs(
     evaluation = _read_jsonl(partition_manifest_path, "evaluation partition")
     quarantine = _read_jsonl(quarantine_path, "quarantine")
     require(len(materialized) == expected["total"], "materialization row total drift")
-    require(len(author) == expected["author"] and len(evaluation) == expected["evaluation"] and len(quarantine) == expected["quarantine"], "partition row totals drift")
-    require(_counts(materialized) == {key: value for key, value in expected["family_totals"].items() if value}, "materialization family counts drift")
-    require(_counts(author) == {key: value for key, value in expected["author_totals"].items() if value}, "author family counts drift")
-    require(_counts(evaluation) == {key: value for key, value in expected["evaluation_totals"].items() if value}, "evaluation family counts drift")
-    require(_counts(quarantine) == {key: value for key, value in expected["quarantine_totals"].items() if value}, "quarantine family counts drift")
+    require(
+        len(author) == expected["author"]
+        and len(evaluation) == expected["evaluation"]
+        and len(quarantine) == expected["quarantine"],
+        "partition row totals drift",
+    )
+    require(
+        _counts(materialized) == {key: value for key, value in expected["family_totals"].items() if value},
+        "materialization family counts drift",
+    )
+    require(
+        _counts(author) == {key: value for key, value in expected["author_totals"].items() if value},
+        "author family counts drift",
+    )
+    require(
+        _counts(evaluation) == {key: value for key, value in expected["evaluation_totals"].items() if value},
+        "evaluation family counts drift",
+    )
+    require(
+        _counts(quarantine) == {key: value for key, value in expected["quarantine_totals"].items() if value},
+        "quarantine family counts drift",
+    )
 
     by_id: dict[str, dict[str, Any]] = {}
     for row in materialized:
         required = {
-            "family_id", "unit_id", "unit_sha256", "frozen_locator", "frozen_locator_sha256",
-            "document_or_edition_identity", "source_text", "source_text_sha256", "source_record",
+            "family_id",
+            "unit_id",
+            "unit_sha256",
+            "frozen_locator",
+            "frozen_locator_sha256",
+            "document_or_edition_identity",
+            "source_text",
+            "source_text_sha256",
+            "source_record",
         }
         require(set(row) == required, "materialization row fields drift")
         unit_id = row["unit_id"]
         require(isinstance(unit_id, str) and unit_id not in by_id, "duplicate or invalid materialized unit")
         require(row["family_id"] in expected["family_totals"], "unknown materialized family")
-        require(row["source_text_sha256"] == sha256_bytes(str(row["source_text"]).encode("utf-8")), "source text hash drift")
+        require(
+            row["source_text_sha256"] == sha256_bytes(str(row["source_text"]).encode("utf-8")), "source text hash drift"
+        )
         require(row["frozen_locator_sha256"] == sha256_value(row["frozen_locator"]), "frozen locator hash drift")
         by_id[unit_id] = row
     sets: dict[str, set[str]] = {}
@@ -462,17 +498,33 @@ def _load_inputs(
         seen: set[str] = set()
         for row in rows:
             unit_id = row.get("unit_id")
-            require(isinstance(unit_id, str) and unit_id in by_id and unit_id not in seen, f"invalid {name} unit binding")
+            require(
+                isinstance(unit_id, str) and unit_id in by_id and unit_id not in seen, f"invalid {name} unit binding"
+            )
             source = by_id[unit_id]
-            require(row.get("family_id") == source["family_id"] and row.get("unit_sha256") == source["unit_sha256"], f"{name} unit hash drift")
+            require(
+                row.get("family_id") == source["family_id"] and row.get("unit_sha256") == source["unit_sha256"],
+                f"{name} unit hash drift",
+            )
             if name == "evaluation":
                 require(row.get("reason") == "evaluation_only", "evaluation reason drift")
-                require(row.get("frozen_locator_sha256") == source["frozen_locator_sha256"], "evaluation locator hash drift")
+                require(
+                    row.get("frozen_locator_sha256") == source["frozen_locator_sha256"], "evaluation locator hash drift"
+                )
                 require(row.get("source_text_sha256") == source["source_text_sha256"], "evaluation text hash drift")
             seen.add(unit_id)
         sets[name] = seen
-    require(not (sets["author"] & sets["evaluation"] or sets["author"] & sets["quarantine"] or sets["evaluation"] & sets["quarantine"]), "partition overlap")
-    require(sets["author"] | sets["evaluation"] | sets["quarantine"] == set(by_id), "partition is not a full complement")
+    require(
+        not (
+            sets["author"] & sets["evaluation"]
+            or sets["author"] & sets["quarantine"]
+            or sets["evaluation"] & sets["quarantine"]
+        ),
+        "partition overlap",
+    )
+    require(
+        sets["author"] | sets["evaluation"] | sets["quarantine"] == set(by_id), "partition is not a full complement"
+    )
     return {
         "materialized": materialized,
         "by_id": by_id,
@@ -518,7 +570,9 @@ def _author_item(row: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def _pack_items(items: Sequence[Mapping[str, Any]], *, item_limit: int, byte_limit: int, lane: str) -> list[dict[str, Any]]:
+def _pack_items(
+    items: Sequence[Mapping[str, Any]], *, item_limit: int, byte_limit: int, lane: str
+) -> list[dict[str, Any]]:
     require(item_limit > 0 and byte_limit > 0, "invalid packet bounds")
     packets: list[dict[str, Any]] = []
     current: list[dict[str, Any]] = []
@@ -572,10 +626,18 @@ def prepare(
 ) -> dict[str, Any]:
     """Prepare the immutable author packet set and deterministic complements."""
     inputs = (
-        materialization_jsonl, materialization_receipt_path, source_freeze_receipt_path,
-        evaluation_partition_receipt_path, partition_manifest_path, author_clearance_path,
-        quarantine_path, heldout_label_receipt_path, role_contract_path, author_prompt_path,
-        review_prompt_path, schema_path,
+        materialization_jsonl,
+        materialization_receipt_path,
+        source_freeze_receipt_path,
+        evaluation_partition_receipt_path,
+        partition_manifest_path,
+        author_clearance_path,
+        quarantine_path,
+        heldout_label_receipt_path,
+        role_contract_path,
+        author_prompt_path,
+        review_prompt_path,
+        schema_path,
     )
     for path in inputs:
         _regular(path, "prepare input")
@@ -705,14 +767,36 @@ def _validate_provider_invocation(
     receipt: Mapping[str, Any], actor: Mapping[str, str], packet_id: str, raw_sha256: str
 ) -> None:
     required = {
-        "schema_version", "actor", "packet_id", "raw_sha256", "command_sha256",
-        "stdout_sha256", "stderr_sha256", "exit_code", "started_at", "completed_at",
+        "schema_version",
+        "actor",
+        "packet_id",
+        "raw_sha256",
+        "command_sha256",
+        "stdout_sha256",
+        "stderr_sha256",
+        "exit_code",
+        "started_at",
+        "completed_at",
     }
     require(set(receipt) == required, "provider invocation receipt fields drift")
-    require(receipt["schema_version"] == "phase3_source_production_provider_invocation_v1", "provider invocation schema drift")
-    require(receipt["actor"] == dict(actor) and receipt["packet_id"] == packet_id, "provider invocation actor/packet drift")
-    require(receipt["raw_sha256"] == raw_sha256 and receipt["exit_code"] == 0, "provider invocation did not produce the preserved raw response")
-    require(all(SHA256.fullmatch(str(receipt[name])) for name in ("raw_sha256", "command_sha256", "stdout_sha256", "stderr_sha256")), "provider invocation hash missing")
+    require(
+        receipt["schema_version"] == "phase3_source_production_provider_invocation_v1",
+        "provider invocation schema drift",
+    )
+    require(
+        receipt["actor"] == dict(actor) and receipt["packet_id"] == packet_id, "provider invocation actor/packet drift"
+    )
+    require(
+        receipt["raw_sha256"] == raw_sha256 and receipt["exit_code"] == 0,
+        "provider invocation did not produce the preserved raw response",
+    )
+    require(
+        all(
+            SHA256.fullmatch(str(receipt[name]))
+            for name in ("raw_sha256", "command_sha256", "stdout_sha256", "stderr_sha256")
+        ),
+        "provider invocation hash missing",
+    )
 
 
 def _subprocess_invoke(command: list[str], prompt: bytes) -> tuple[int, bytes, bytes]:
@@ -730,29 +814,28 @@ def _trailing_json_response(stdout: bytes, label: str) -> bytes:
     candidates: list[tuple[int, int, dict[str, Any]]] = []
     for match in re.finditer(r"\{", text):
         try:
-            value, end = decoder.raw_decode(text[match.start():])
+            value, end = decoder.raw_decode(text[match.start() :])
         except json.JSONDecodeError:
             continue
-        if isinstance(value, dict) and not text[match.start() + end:].strip():
+        if isinstance(value, dict) and not text[match.start() + end :].strip():
             candidates.append((match.start(), match.start() + end, value))
     require(len(candidates) == 1, f"{label} provider output lacks one unambiguous trailing JSON object")
     start, end, _ = candidates[0]
     return text[start:end].encode("utf-8")
 
 
-def _prompt_with_response_contract(
-    prompt: bytes, schema_path: Path, lane: str, packet: Mapping[str, Any]
-) -> bytes:
+def _prompt_with_response_contract(prompt: bytes, schema_path: Path, lane: str, packet: Mapping[str, Any]) -> bytes:
     """Append the exact machine-enforced response contract seen by the parser."""
     schema = _read_json(schema_path, "source-production transport schema")
     definitions = schema.get("$defs")
     require(isinstance(definitions, Mapping), "transport schema definitions missing")
     response_name = "reviewResponse" if lane == "review" else "authorResponse"
     required_names = ("identity", "artifact", "decision", response_name)
-    require(all(isinstance(definitions.get(name), Mapping) for name in required_names), "response contract definitions missing")
-    response_contract = {
-        name: json.loads(canonical_json(definitions[name])) for name in required_names
-    }
+    require(
+        all(isinstance(definitions.get(name), Mapping) for name in required_names),
+        "response contract definitions missing",
+    )
+    response_contract = {name: json.loads(canonical_json(definitions[name])) for name in required_names}
     response = response_contract[response_name]
     response["properties"]["packet_id"] = {"const": packet["packet_id"]}
     response["properties"]["identity_order"] = {"const": packet["identity_order"]}
@@ -766,13 +849,13 @@ def _prompt_with_response_contract(
         if identity["family_id"] == "pravopys_2026_complete":
             decision["properties"]["disposition_code"] = {
                 "enum": [
-                    "converted", "not_rule_bearing", "duplicate_representation",
+                    "converted",
+                    "not_rule_bearing",
+                    "duplicate_representation",
                     "blocked_with_reason",
                 ]
             }
-        converted_views = json.loads(
-            canonical_json(definitions["decision"]["properties"]["consumer_views"])
-        )
+        converted_views = json.loads(canonical_json(definitions["decision"]["properties"]["consumer_views"]))
         converted_views["minItems"] = 1
         decision["allOf"] = [
             {
@@ -799,8 +882,11 @@ def _prompt_with_response_contract(
     identities = packet["identity_order"]
     if lane == "author":
         response["properties"]["decisions"] = {
-            "type": "array", "minItems": len(identities), "maxItems": len(identities),
-            "prefixItems": [exact_decision(identity) for identity in identities], "items": False,
+            "type": "array",
+            "minItems": len(identities),
+            "maxItems": len(identities),
+            "prefixItems": [exact_decision(identity) for identity in identities],
+            "items": False,
         }
     else:
         review_item = json.loads(canonical_json(response["properties"]["reviews"]["items"]))
@@ -812,14 +898,15 @@ def _prompt_with_response_contract(
             exact_review["properties"]["decision"] = exact_decision(identity)
             review_items.append(exact_review)
         response["properties"]["reviews"] = {
-            "type": "array", "minItems": len(identities), "maxItems": len(identities),
-            "prefixItems": review_items, "items": False,
+            "type": "array",
+            "minItems": len(identities),
+            "maxItems": len(identities),
+            "prefixItems": review_items,
+            "items": False,
         }
     root_contract = json.loads(canonical_json(response))
     root_contract["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-    root_contract["$defs"] = {
-        name: response_contract[name] for name in ("identity", "artifact", "decision")
-    }
+    root_contract["$defs"] = {name: response_contract[name] for name in ("identity", "artifact", "decision")}
     suffix = (
         f"\n\n# Exact machine-enforced {response_name} root contract\n\n"
         "The JSON Schema below is authoritative for output shape. Your returned JSON "
@@ -846,12 +933,17 @@ def _run_packets(
 ) -> dict[str, Any]:
     manifest, root = _manifest(manifest_path, schema_path)
     if lane == "review":
-        require(manifest["schema_version"] == "phase3_source_production_review_manifest_v1", "review run requires review manifest")
+        require(
+            manifest["schema_version"] == "phase3_source_production_review_manifest_v1",
+            "review run requires review manifest",
+        )
         packet_count = manifest["review_packet_count"]
         actor, command_name = REVIEWER, "opencode"
         expected_prompt_hash = manifest["bindings"]["review_prompt_sha256"]
     else:
-        require(manifest["schema_version"] == "phase3_source_production_manifest_v1", "author run requires source manifest")
+        require(
+            manifest["schema_version"] == "phase3_source_production_manifest_v1", "author run requires source manifest"
+        )
         _reject_voided_production_cycle(manifest)
         packet_count = manifest["author_packet_count"]
         actor, command_name = AUTHOR, "ask-agy"
@@ -878,9 +970,18 @@ def _run_packets(
             prompt_path = root / "review" / "prompts" / f"{index:05d}.md"
             prompt_sha256 = _write_private(prompt_path, prompt)
             command = [
-                command_name, "run", "--model", OPENCODE_REVIEW_MODEL,
-                "--variant", "high", "--file", str(prompt_path),
-                "--file", str(packet_path), "--format", "default",
+                command_name,
+                "run",
+                "--model",
+                OPENCODE_REVIEW_MODEL,
+                "--variant",
+                "high",
+                "--file",
+                str(prompt_path),
+                "--file",
+                str(packet_path),
+                "--format",
+                "default",
                 (
                     "Follow the attached Phase 3 source-review prompt exactly. Treat the "
                     "attached packet as the only source evidence. Return only the strict JSON "
@@ -890,9 +991,18 @@ def _run_packets(
             ]
         else:
             command = [
-                ".venv/bin/python", "scripts/ai_agent_bridge/__main__.py", command_name, "-",
-                "--task-id", actor["task_id"], "--to-model", actor["exact_model"],
-                "--data", str(packet_path), "--no-timeout", "--stdout-only",
+                ".venv/bin/python",
+                "scripts/ai_agent_bridge/__main__.py",
+                command_name,
+                "-",
+                "--task-id",
+                actor["task_id"],
+                "--to-model",
+                actor["exact_model"],
+                "--data",
+                str(packet_path),
+                "--no-timeout",
+                "--stdout-only",
             ]
         started_at = _now()
         exit_code, stdout, stderr = runner(command, prompt)
@@ -920,39 +1030,63 @@ def _run_packets(
         require(exit_code == 0, f"{lane} provider invocation failed for packet {index}")
         if lane == "author":
             ingest_author(
-                manifest_path=manifest_path, packet_index=index, raw_response_path=raw_path,
-                provider_invocation_receipt_path=invocation_path, schema_path=schema_path,
+                manifest_path=manifest_path,
+                packet_index=index,
+                raw_response_path=raw_path,
+                provider_invocation_receipt_path=invocation_path,
+                schema_path=schema_path,
             )
         else:
             ingest_review(
-                review_manifest_path=manifest_path, packet_index=index, raw_response_path=raw_path,
-                provider_invocation_receipt_path=invocation_path, schema_path=schema_path,
+                review_manifest_path=manifest_path,
+                packet_index=index,
+                raw_response_path=raw_path,
+                provider_invocation_receipt_path=invocation_path,
+                schema_path=schema_path,
             )
         completed += 1
     return {"lane": lane, "packet_count": packet_count, "completed": completed, "skipped": skipped}
 
 
 def run_author(
-    *, manifest_path: Path, prompt_path: Path = DEFAULT_AUTHOR_PROMPT,
-    schema_path: Path = DEFAULT_SCHEMA, start: int = 1, end: int | None = None,
+    *,
+    manifest_path: Path,
+    prompt_path: Path = DEFAULT_AUTHOR_PROMPT,
+    schema_path: Path = DEFAULT_SCHEMA,
+    start: int = 1,
+    end: int | None = None,
     invoke: Callable[[list[str], bytes], tuple[int, bytes, bytes]] | None = None,
 ) -> dict[str, Any]:
     """Run a resumable range of exact Gemini author packets."""
     return _run_packets(
-        manifest_path=manifest_path, lane="author", prompt_path=prompt_path,
-        schema_path=schema_path, start=start, end=end, invoke=invoke,
+        manifest_path=manifest_path,
+        lane="author",
+        prompt_path=prompt_path,
+        schema_path=schema_path,
+        start=start,
+        end=end,
+        invoke=invoke,
     )
 
 
 def run_review(
-    *, review_manifest_path: Path, prompt_path: Path = DEFAULT_REVIEW_PROMPT,
-    schema_path: Path = DEFAULT_SCHEMA, start: int = 1, end: int | None = None,
+    *,
+    review_manifest_path: Path,
+    prompt_path: Path = DEFAULT_REVIEW_PROMPT,
+    schema_path: Path = DEFAULT_SCHEMA,
+    start: int = 1,
+    end: int | None = None,
     invoke: Callable[[list[str], bytes], tuple[int, bytes, bytes]] | None = None,
 ) -> dict[str, Any]:
     """Run a resumable range of exact Grok source-review packets."""
     return _run_packets(
-        manifest_path=review_manifest_path, lane="review", prompt_path=prompt_path,
-        schema_path=schema_path, start=start, end=end, invoke=invoke,
+        manifest_path=review_manifest_path,
+        lane="review",
+        prompt_path=prompt_path,
+        schema_path=schema_path,
+        start=start,
+        end=end,
+        invoke=invoke,
     )
 
 
@@ -963,41 +1097,90 @@ def _packet_for(manifest: Mapping[str, Any], root: Path, index: int, lane: str) 
     require(entry["packet_index"] == index, f"{lane} packet order drift")
     path = root / entry["relative_path"]
     packet = _read_json(path, f"{lane} packet")
-    require(sha256_file(path) == entry["packet_sha256"] and packet["packet_id"] == entry["packet_id"], f"{lane} packet hash drift")
+    require(
+        sha256_file(path) == entry["packet_sha256"] and packet["packet_id"] == entry["packet_id"],
+        f"{lane} packet hash drift",
+    )
     return packet
 
 
 def _validate_artifact(artifact: Mapping[str, Any]) -> None:
     required = {
-        "phenomenon", "mechanism", "matcher", "incorrect_pattern", "replacements", "scope",
-        "exceptions", "controls", "protections", "abstentions", "evidence_refs", "dissent_or_alternatives",
+        "phenomenon",
+        "mechanism",
+        "matcher",
+        "incorrect_pattern",
+        "replacements",
+        "scope",
+        "exceptions",
+        "controls",
+        "protections",
+        "abstentions",
+        "evidence_refs",
+        "dissent_or_alternatives",
     }
     require(set(artifact) == required, "converted artifact fields drift")
     require(isinstance(artifact["phenomenon"], str) and artifact["phenomenon"], "artifact phenomenon missing")
     require(artifact["mechanism"] in MECHANISMS, "artifact mechanism drift")
     require(isinstance(artifact["matcher"], Mapping) and artifact["matcher"], "artifact matcher missing")
-    for name in ("replacements", "exceptions", "controls", "protections", "abstentions", "evidence_refs", "dissent_or_alternatives"):
-        require(isinstance(artifact[name], list) and all(isinstance(item, str) for item in artifact[name]), f"artifact {name} malformed")
-    require(isinstance(artifact["incorrect_pattern"], str) and isinstance(artifact["scope"], str), "artifact text fields malformed")
+    for name in (
+        "replacements",
+        "exceptions",
+        "controls",
+        "protections",
+        "abstentions",
+        "evidence_refs",
+        "dissent_or_alternatives",
+    ):
+        require(
+            isinstance(artifact[name], list) and all(isinstance(item, str) for item in artifact[name]),
+            f"artifact {name} malformed",
+        )
+    require(
+        isinstance(artifact["incorrect_pattern"], str) and isinstance(artifact["scope"], str),
+        "artifact text fields malformed",
+    )
 
 
 def _validate_decision(decision: Mapping[str, Any], identity: Mapping[str, Any]) -> dict[str, Any]:
     required = {
-        "unit_id", "unit_sha256", "disposition_code", "primary_source_role", "secondary_source_roles",
-        "claim_type", "candidate_classes", "artifact", "consumer_views", "rationale",
+        "unit_id",
+        "unit_sha256",
+        "disposition_code",
+        "primary_source_role",
+        "secondary_source_roles",
+        "claim_type",
+        "candidate_classes",
+        "artifact",
+        "consumer_views",
+        "rationale",
     }
     require(set(decision) == required, "author decision fields drift")
-    require(decision["unit_id"] == identity["unit_id"] and decision["unit_sha256"] == identity["unit_sha256"], "author decision retargeted a unit")
+    require(
+        decision["unit_id"] == identity["unit_id"] and decision["unit_sha256"] == identity["unit_sha256"],
+        "author decision retargeted a unit",
+    )
     require(decision["disposition_code"] in DISPOSITION_CODES, "author disposition code drift")
     require(decision["primary_source_role"] in SOURCE_ROLES, "source role drift")
     secondary = decision["secondary_source_roles"]
-    require(isinstance(secondary, list) and len(secondary) == len(set(secondary)) and set(secondary) <= SOURCE_ROLES, "secondary roles drift")
+    require(
+        isinstance(secondary, list) and len(secondary) == len(set(secondary)) and set(secondary) <= SOURCE_ROLES,
+        "secondary roles drift",
+    )
     require(decision["claim_type"] in CLAIM_TYPES, "claim type drift")
     candidates = decision["candidate_classes"]
-    require(isinstance(candidates, list) and len(candidates) == len(set(candidates)) and set(candidates) <= CANDIDATE_CLASSES, "candidate classes drift")
+    require(
+        isinstance(candidates, list)
+        and len(candidates) == len(set(candidates))
+        and set(candidates) <= CANDIDATE_CLASSES,
+        "candidate classes drift",
+    )
     require(identity["family_id"] == "school_textbooks" or candidates == [], "candidate classes are textbook-only")
     views = decision["consumer_views"]
-    require(isinstance(views, list) and len(views) == len(set(views)) and set(views) <= CONSUMER_VIEWS, "consumer views drift")
+    require(
+        isinstance(views, list) and len(views) == len(set(views)) and set(views) <= CONSUMER_VIEWS,
+        "consumer views drift",
+    )
     require(isinstance(decision["rationale"], str) and decision["rationale"], "unit-specific rationale missing")
     if decision["disposition_code"] == "converted":
         require(isinstance(decision["artifact"], Mapping) and views, "converted decision lacks artifact or view")
@@ -1010,8 +1193,12 @@ def _validate_decision(decision: Mapping[str, Any], identity: Mapping[str, Any])
 
 
 def ingest_author(
-    *, manifest_path: Path, packet_index: int, raw_response_path: Path,
-    provider_invocation_receipt_path: Path, schema_path: Path = DEFAULT_SCHEMA,
+    *,
+    manifest_path: Path,
+    packet_index: int,
+    raw_response_path: Path,
+    provider_invocation_receipt_path: Path,
+    schema_path: Path = DEFAULT_SCHEMA,
 ) -> dict[str, Any]:
     """Preserve and validate one immutable Gemini response."""
     manifest, root = _manifest(manifest_path, schema_path)
@@ -1025,9 +1212,15 @@ def ingest_author(
     _validate_provider_invocation(invocation, AUTHOR, packet["packet_id"], raw_hash)
     response = _strict_response(raw, "author")
     _validate(response, schema_path, "authorResponse")
-    require(response["packet_id"] == packet["packet_id"] and response["identity_order"] == packet["identity_order"], "author response packet/order drift")
+    require(
+        response["packet_id"] == packet["packet_id"] and response["identity_order"] == packet["identity_order"],
+        "author response packet/order drift",
+    )
     require(len(response["decisions"]) == len(packet["identity_order"]), "author response decision count drift")
-    decisions = [_validate_decision(row, identity) for row, identity in zip(response["decisions"], packet["identity_order"], strict=True)]
+    decisions = [
+        _validate_decision(row, identity)
+        for row, identity in zip(response["decisions"], packet["identity_order"], strict=True)
+    ]
     normalized = {**response, "decisions": decisions}
     response_hash = _write_private_json(root / "author" / "responses" / f"{packet_index:05d}.json", normalized)
     record = {
@@ -1045,7 +1238,9 @@ def ingest_author(
     return record
 
 
-def _all_author_decisions(manifest: Mapping[str, Any], root: Path, schema_path: Path) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
+def _all_author_decisions(
+    manifest: Mapping[str, Any], root: Path, schema_path: Path
+) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
     decisions: list[dict[str, Any]] = []
     items: dict[str, dict[str, Any]] = {}
     for index in range(1, manifest["author_packet_count"] + 1):
@@ -1057,7 +1252,9 @@ def _all_author_decisions(manifest: Mapping[str, Any], root: Path, schema_path: 
         _validate(response, schema_path, "authorResponse")
         require(record["response_sha256"] == sha256_file(response_path), "author response custody drift")
         require(isinstance(record.get("invocation_receipt_sha256"), str), "author provider invocation proof missing")
-        for item, decision, identity in zip(packet["items"], response["decisions"], packet["identity_order"], strict=True):
+        for item, decision, identity in zip(
+            packet["items"], response["decisions"], packet["identity_order"], strict=True
+        ):
             validated = _validate_decision(decision, identity)
             decisions.append({"identity": identity, "decision": validated})
             items[identity["unit_id"]] = item
@@ -1084,7 +1281,9 @@ def _review_selection(decisions: Sequence[Mapping[str, Any]], escalated_families
         ranked = sorted(
             rows,
             key=lambda row: (
-                sha256_value({"purpose": "source-review-nonhit", "family": family, "unit_id": row["identity"]["unit_id"]}),
+                sha256_value(
+                    {"purpose": "source-review-nonhit", "family": family, "unit_id": row["identity"]["unit_id"]}
+                ),
                 row["identity"]["unit_id"],
             ),
         )
@@ -1151,8 +1350,12 @@ def prepare_review(
 
 
 def ingest_review(
-    *, review_manifest_path: Path, packet_index: int, raw_response_path: Path,
-    provider_invocation_receipt_path: Path, schema_path: Path = DEFAULT_SCHEMA,
+    *,
+    review_manifest_path: Path,
+    packet_index: int,
+    raw_response_path: Path,
+    provider_invocation_receipt_path: Path,
+    schema_path: Path = DEFAULT_SCHEMA,
 ) -> dict[str, Any]:
     """Preserve and validate one immutable Grok source-review response."""
     manifest, root = _manifest(review_manifest_path, schema_path)
@@ -1165,11 +1368,17 @@ def ingest_review(
     _validate_provider_invocation(invocation, REVIEWER, packet["packet_id"], raw_hash)
     response = _strict_response(raw, "review")
     _validate(response, schema_path, "reviewResponse")
-    require(response["packet_id"] == packet["packet_id"] and response["identity_order"] == packet["identity_order"], "review response packet/order drift")
+    require(
+        response["packet_id"] == packet["packet_id"] and response["identity_order"] == packet["identity_order"],
+        "review response packet/order drift",
+    )
     require(len(response["reviews"]) == len(packet["identity_order"]), "review decision count drift")
     normalized_reviews: list[dict[str, Any]] = []
     for review, item, identity in zip(response["reviews"], packet["items"], packet["identity_order"], strict=True):
-        require(review["unit_id"] == identity["unit_id"] and review["unit_sha256"] == identity["unit_sha256"], "review retargeted a unit")
+        require(
+            review["unit_id"] == identity["unit_id"] and review["unit_sha256"] == identity["unit_sha256"],
+            "review retargeted a unit",
+        )
         require(review["outcome"] in {"confirmed", "revised"}, "review outcome drift")
         decision = _validate_decision(review["decision"], identity)
         if review["outcome"] == "confirmed":
@@ -1213,14 +1422,24 @@ def _all_reviews(manifest: Mapping[str, Any], root: Path, schema_path: Path) -> 
 
 
 def _action_receipt(
-    *, actor: Mapping[str, str], role_contract: Mapping[str, Any], role_contract_sha256: str,
-    conflict_graph_sha256: str, action_kind: str, input_sha256: str, output_sha256: str,
-    started_at: str, completed_at: str,
+    *,
+    actor: Mapping[str, str],
+    role_contract: Mapping[str, Any],
+    role_contract_sha256: str,
+    conflict_graph_sha256: str,
+    action_kind: str,
+    input_sha256: str,
+    output_sha256: str,
+    started_at: str,
+    completed_at: str,
 ) -> dict[str, Any]:
     identity = {
-        "role_id": actor["role_id"], "task_id": actor["task_id"], "input_manifest_sha256": input_sha256,
+        "role_id": actor["role_id"],
+        "task_id": actor["task_id"],
+        "input_manifest_sha256": input_sha256,
         "evaluation_cycle_id": role_contract["evaluation_cycle"]["evaluation_cycle_id"],
-        "output_sha256": output_sha256, "status": "completed",
+        "output_sha256": output_sha256,
+        "status": "completed",
     }
     return {
         "receipt_id": "phase3_functional_action:" + sha256_value(identity),
@@ -1241,7 +1460,9 @@ def _action_receipt(
 
 
 def _disposition(
-    identity: Mapping[str, str], decision: Mapping[str, Any], document_or_edition_identity: str,
+    identity: Mapping[str, str],
+    decision: Mapping[str, Any],
+    document_or_edition_identity: str,
 ) -> dict[str, Any]:
     base = {
         "unit_id": identity["unit_id"],
@@ -1260,7 +1481,10 @@ def _disposition(
             "source_role": decision["primary_source_role"],
             "claim_type": decision["claim_type"],
             "evidence_locator_sha256s": [identity["locator_sha256"]],
-            "consumer_view": {"view_id": f"view.{view}", "view_sha256": sha256_value({"rule": artifact_hash, "view": view})},
+            "consumer_view": {
+                "view_id": f"view.{view}",
+                "view_sha256": sha256_value({"rule": artifact_hash, "view": view}),
+            },
             "predicate_sha256": sha256_value(decision["artifact"]["matcher"]),
             "artifact_sha256": artifact_hash,
         }
@@ -1272,7 +1496,10 @@ def _disposition(
             "unit_specific_rationale_sha256": sha256_bytes(decision["rationale"].encode("utf-8")),
         },
     }
-    if identity["family_id"] == "antonenko_textbook_representation" and decision["disposition_code"] == "duplicate_representation":
+    if (
+        identity["family_id"] == "antonenko_textbook_representation"
+        and decision["disposition_code"] == "duplicate_representation"
+    ):
         row["representation_source_identity"] = "source_identity.antonenko_davydovych_yak_my_hovorymo_v1"
     return row
 
@@ -1324,16 +1551,21 @@ def assemble(
         else:
             reviewed_decisions[unit_id] = author_decision
     already_escalated = set(manifest["review_policy"]["escalated_families"])
-    require(not (escalation_required - already_escalated), "source-review miss requires full large-family nonhit review")
+    require(
+        not (escalation_required - already_escalated), "source-review miss requires full large-family nonhit review"
+    )
     for family in already_escalated:
         expected_ids = {
-            row["identity"]["unit_id"] for row in decisions
+            row["identity"]["unit_id"]
+            for row in decisions
             if row["identity"]["family_id"] == family and row["decision"]["disposition_code"] != "converted"
         }
         require(expected_ids <= selected, "escalated family review is incomplete")
 
     deterministic = _read_jsonl(root / "deterministic-partition-dispositions.jsonl", "deterministic dispositions")
-    dispositions_by_family: dict[str, list[dict[str, Any]]] = {family: [] for family in manifest["denominator"]["family_totals"]}
+    dispositions_by_family: dict[str, list[dict[str, Any]]] = {
+        family: [] for family in manifest["denominator"]["family_totals"]
+    }
     artifacts: list[dict[str, Any]] = []
     textbook: list[dict[str, Any]] = []
     for row in decisions:
@@ -1398,17 +1630,28 @@ def assemble(
                 "dispositions": rows,
             }
         )
-    require(sum(len(family["dispositions"]) for family in families) == manifest["denominator"]["total"], "final disposition denominator drift")
+    require(
+        sum(len(family["dispositions"]) for family in families) == manifest["denominator"]["total"],
+        "final disposition denominator drift",
+    )
     reviewed_rule_artifacts_sha256 = _write_private_jsonl(reviewed_rule_artifacts_path, artifacts)
     role_contract, role_sha, graph_sha = _role_bindings(role_contract_path)
     family_sha = sha256_value(families)
     started_at = manifest["created_at"]
     completed_at = _now()
-    author_input_sha = sha256_value({"source_freeze_receipt_sha256": manifest["bindings"]["source_freeze_receipt_sha256"]})
+    author_input_sha = sha256_value(
+        {"source_freeze_receipt_sha256": manifest["bindings"]["source_freeze_receipt_sha256"]}
+    )
     author_action = _action_receipt(
-        actor=AUTHOR, role_contract=role_contract, role_contract_sha256=role_sha,
-        conflict_graph_sha256=graph_sha, action_kind="source_disposition_proposal",
-        input_sha256=author_input_sha, output_sha256=family_sha, started_at=started_at, completed_at=completed_at,
+        actor=AUTHOR,
+        role_contract=role_contract,
+        role_contract_sha256=role_sha,
+        conflict_graph_sha256=graph_sha,
+        action_kind="source_disposition_proposal",
+        input_sha256=author_input_sha,
+        output_sha256=family_sha,
+        started_at=started_at,
+        completed_at=completed_at,
     )
     review_input_sha = sha256_value(
         {
@@ -1418,10 +1661,15 @@ def assemble(
         }
     )
     review_action = _action_receipt(
-        actor=REVIEWER, role_contract=role_contract, role_contract_sha256=role_sha,
-        conflict_graph_sha256=graph_sha, action_kind="source_disposition_review",
-        input_sha256=review_input_sha, output_sha256=sha256_value({"verdict": "APPROVE"}),
-        started_at=started_at, completed_at=completed_at,
+        actor=REVIEWER,
+        role_contract=role_contract,
+        role_contract_sha256=role_sha,
+        conflict_graph_sha256=graph_sha,
+        action_kind="source_disposition_review",
+        input_sha256=review_input_sha,
+        output_sha256=sha256_value({"verdict": "APPROVE"}),
+        started_at=started_at,
+        completed_at=completed_at,
     )
     source_review_receipt = {
         "schema_version": "phase3_source_disposition_review_receipt_v2_1",
@@ -1448,7 +1696,8 @@ def assemble(
         "reviewed_rule_artifacts_sha256": reviewed_rule_artifacts_sha256,
         "author_binding": {"role_id": AUTHOR["role_id"], "task_id": AUTHOR["task_id"], "action_receipt": author_action},
         "source_review_binding": {
-            "role_id": REVIEWER["role_id"], "task_id": REVIEWER["task_id"],
+            "role_id": REVIEWER["role_id"],
+            "task_id": REVIEWER["task_id"],
             "receipt_sha256": sha256_file(source_review_receipt_path),
         },
         "families": families,
@@ -1457,7 +1706,10 @@ def assemble(
         _validate_document(reviewed_input, disposition_schema_path, "reviewed disposition input")
     _write_private_json(reviewed_input_path, reviewed_input)
     textbook.sort(key=lambda row: row["unit_id"])
-    require(len(textbook) == manifest["denominator"]["family_totals"].get("school_textbooks", 0), "textbook classification denominator drift")
+    require(
+        len(textbook) == manifest["denominator"]["family_totals"].get("school_textbooks", 0),
+        "textbook classification denominator drift",
+    )
     _write_private_jsonl(textbook_classifications_path, textbook)
     public = {
         "schema_version": "phase3_source_production_public_receipt_v1",
@@ -1470,9 +1722,7 @@ def assemble(
             "input_total": manifest["denominator"]["total"],
             "author_produced_total": manifest["denominator"]["author"],
             "source_review_selected_total": len(reviews),
-            "source_review_revised_total": sum(
-                review["outcome"] == "revised" for review in reviews.values()
-            ),
+            "source_review_revised_total": sum(review["outcome"] == "revised" for review in reviews.values()),
             "evaluation_only_total": manifest["denominator"]["evaluation"],
             "quarantined_total": manifest["denominator"]["quarantine"],
             "converted_total": sum(
@@ -1491,8 +1741,16 @@ def assemble(
 
 def _public_safe(value: Any) -> None:
     forbidden = {
-        "unit_id", "unit_sha256", "source_text", "source_record", "frozen_locator",
-        "identity_order", "packet_id", "artifact", "rationale", "labels",
+        "unit_id",
+        "unit_sha256",
+        "source_text",
+        "source_record",
+        "frozen_locator",
+        "identity_order",
+        "packet_id",
+        "artifact",
+        "rationale",
+        "labels",
     }
     if isinstance(value, Mapping):
         require(not (set(value) & forbidden), "public receipt leaks private data")
@@ -1518,17 +1776,34 @@ def main(argv: Sequence[str] | None = None) -> int:
     config = _config(args.input)
     try:
         if args.command == "prepare":
-            result = prepare(**{key: Path(value) if key.endswith("_path") or key.endswith("_jsonl") or key == "private_dir" else value for key, value in config.items()})
+            result = prepare(
+                **{
+                    key: Path(value)
+                    if key.endswith("_path") or key.endswith("_jsonl") or key == "private_dir"
+                    else value
+                    for key, value in config.items()
+                }
+            )
         elif args.command == "run-author":
-            result = run_author(**{key: Path(value) if key.endswith("_path") else value for key, value in config.items()})
+            result = run_author(
+                **{key: Path(value) if key.endswith("_path") else value for key, value in config.items()}
+            )
         elif args.command == "ingest-author":
-            result = ingest_author(**{key: Path(value) if key.endswith("_path") else value for key, value in config.items()})
+            result = ingest_author(
+                **{key: Path(value) if key.endswith("_path") else value for key, value in config.items()}
+            )
         elif args.command == "prepare-review":
-            result = prepare_review(**{key: Path(value) if key.endswith("_path") else value for key, value in config.items()})
+            result = prepare_review(
+                **{key: Path(value) if key.endswith("_path") else value for key, value in config.items()}
+            )
         elif args.command == "run-review":
-            result = run_review(**{key: Path(value) if key.endswith("_path") else value for key, value in config.items()})
+            result = run_review(
+                **{key: Path(value) if key.endswith("_path") else value for key, value in config.items()}
+            )
         elif args.command == "ingest-review":
-            result = ingest_review(**{key: Path(value) if key.endswith("_path") else value for key, value in config.items()})
+            result = ingest_review(
+                **{key: Path(value) if key.endswith("_path") else value for key, value in config.items()}
+            )
         else:
             result = assemble(**{key: Path(value) if key.endswith("_path") else value for key, value in config.items()})
     except (KeyError, TypeError, SourceProductionError) as exc:

@@ -46,7 +46,9 @@ from scripts.projects.open_model_data.phase3_spas_catalog_materialization import
 )
 
 ROOT = Path(__file__).resolve().parents[3]
-RECEIPT_SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_spas_glyph_adapter_receipt_v1.schema.json"
+RECEIPT_SCHEMA_PATH = (
+    ROOT / "registry/projects/open_model_data/contracts/phase3_spas_glyph_adapter_receipt_v1.schema.json"
+)
 
 SCHEMA_VERSION = "phase3_spas_glyph_adapter_receipt_v1"
 IMPLEMENTATION_VERSION = "phase3_spas_glyph_adapter_v1"

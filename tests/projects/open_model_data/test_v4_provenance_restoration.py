@@ -34,9 +34,39 @@ def _database(root: Path) -> Path:
         connection.executemany(
             "INSERT INTO literary_texts (source_file, work_id, source_url, title, author, year, genre, language_period, text) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             [
-                ("lit-a", "work-a", "https://example.test/a.pdf#page=1", "Title A", "Author A", 1900, "poetry", "modern", "LITERARY SECRET"),
-                ("lit-a", "work-a", "https://example.test/a.pdf#page=2", "Title A", "Author A", 1900, "poetry", "modern", "LITERARY SECRET"),
-                ("lit-b", "work-b", None, "Title B", "Author B", 1700, "chronicle", "middle_ukrainian", "LITERARY SECRET"),
+                (
+                    "lit-a",
+                    "work-a",
+                    "https://example.test/a.pdf#page=1",
+                    "Title A",
+                    "Author A",
+                    1900,
+                    "poetry",
+                    "modern",
+                    "LITERARY SECRET",
+                ),
+                (
+                    "lit-a",
+                    "work-a",
+                    "https://example.test/a.pdf#page=2",
+                    "Title A",
+                    "Author A",
+                    1900,
+                    "poetry",
+                    "modern",
+                    "LITERARY SECRET",
+                ),
+                (
+                    "lit-b",
+                    "work-b",
+                    None,
+                    "Title B",
+                    "Author B",
+                    1700,
+                    "chronicle",
+                    "middle_ukrainian",
+                    "LITERARY SECRET",
+                ),
             ],
         )
         connection.execute(
@@ -56,7 +86,17 @@ def _database(root: Path) -> Path:
         )
         connection.execute(
             "INSERT INTO external_articles VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            ("ext", "https://example.test/a", "https://example.test/a", "Article", "Speaker", "example.test", "2026-01-01", "channel", "EXTERNAL SECRET"),
+            (
+                "ext",
+                "https://example.test/a",
+                "https://example.test/a",
+                "Article",
+                "Speaker",
+                "example.test",
+                "2026-01-01",
+                "channel",
+                "EXTERNAL SECRET",
+            ),
         )
         connection.execute("CREATE TABLE wikipedia (fetched_at TEXT, title TEXT, url TEXT, text TEXT)")
         connection.execute(
@@ -108,9 +148,11 @@ def _build(root: Path) -> dict:
 
 
 def _index_rows(root: Path) -> tuple[dict, list[dict]]:
-    lines = (root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl").read_text(
-        encoding="utf-8"
-    ).splitlines()
+    lines = (
+        (root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
     return json.loads(lines[0]), [json.loads(line) for line in lines[1:]]
 
 
@@ -199,7 +241,12 @@ def test_build_excludes_stem_private_caption_and_non_view_families(tmp_path: Pat
     exclusions = {(entry["basis"], entry["scope"]): entry for entry in receipt["selection"]["exclusions"]}
     stem = exclusions[("stem_operator_exclusion_2026-09-10", "public_textbooks")]
     assert stem["rows"] == 1 and stem["subjects"] == {"algebra": 1}
-    assert exclusions[("video_captions_and_transcripts_excluded_by_operator_decision_2026-09-10", "external_articles")]["rows"] == 1
+    assert (
+        exclusions[("video_captions_and_transcripts_excluded_by_operator_decision_2026-09-10", "external_articles")][
+            "rows"
+        ]
+        == 1
+    )
     assert exclusions[("not_a_selected_consumer_view_for_the_first_eligible_cohort", "wikipedia")]["rows"] == 1
     private = exclusions[("private_teaching_material_operator_exclusion_2026-09-10", "db.textbooks.private")]
     assert len(private["sources"]) == 8
@@ -370,9 +417,7 @@ def test_verify_detects_tampered_index_and_reordered_rows(tmp_path: Path) -> Non
         restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
 
 
-def test_atomic_publication_failure_preserves_prior_outputs(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_atomic_publication_failure_preserves_prior_outputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     root = _environment(tmp_path)
     _build(root)
     index = root / "data/projects/open_model_data/provenance/v4_provenance_restoration_index_v1.jsonl"
@@ -459,7 +504,10 @@ def test_verify_rejects_fabricated_textbook_domain(tmp_path: Path) -> None:
     found = False
     for i in range(1, len(lines)):
         row = json.loads(lines[i])
-        if row["cohort_id"] == "public-textbooks-non-stem-non-ocr" and row["classification"]["domain"]["status"] == "restored":
+        if (
+            row["cohort_id"] == "public-textbooks-non-stem-non-ocr"
+            and row["classification"]["domain"]["status"] == "restored"
+        ):
             current_val = row["classification"]["domain"]["value"]
             row["classification"]["domain"]["value"] = "ekonomika" if current_val != "ekonomika" else "pravoznavstvo"
             lines[i] = restoration.canonical_json(row)
@@ -516,7 +564,10 @@ def test_verify_rejects_partial_selection(tmp_path: Path) -> None:
     lines = [lines[0], lines[1], lines[2]]
     index.write_text("\n".join(lines) + "\n", encoding="utf-8")
     _reseal_tampered_artifacts(root)
-    with pytest.raises(restoration.RestorationError, match=r"disagrees with expected selection|does not match complete eligible selection"):
+    with pytest.raises(
+        restoration.RestorationError,
+        match=r"disagrees with expected selection|does not match complete eligible selection",
+    ):
         restoration.verify(config_path=CONFIG, input_root=root, output_root=root)
 
 
@@ -589,11 +640,16 @@ def test_acquisition_plan_rejects_missing_or_invalid_reconciliation_details() ->
     }
     # Missing unresolved key
     with pytest.raises(restoration.RestorationError, match="missing unresolved detail key"):
-        restoration._acquisition_plan(cohort_with_unresolved, {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": []}}})
+        restoration._acquisition_plan(
+            cohort_with_unresolved, {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": []}}}
+        )
 
     # Non-list unresolved key
     with pytest.raises(restoration.RestorationError, match="is not a list"):
-        restoration._acquisition_plan(cohort_with_unresolved, {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": [], "unresolved_list": "bad"}}})
+        restoration._acquisition_plan(
+            cohort_with_unresolved,
+            {"asset-2": {"asset_id": "asset-2", "details": {"diff_a": [], "unresolved_list": "bad"}}},
+        )
 
 
 def test_verify_rejects_reassigned_cohort(tmp_path: Path) -> None:

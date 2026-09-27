@@ -34,7 +34,9 @@ V2_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 V2_1_AMENDMENT_SHA256 = "ae36a961318b2a0a494837314929efd9849b4e6a6fa299b3d8dde17261777f5b"
 V2_1_COMBINED_SHA256 = "2f3ef840325d917b9f2763188627ad69d1b4e45b804860499a134586b112a907"
 MATRIX_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json"
-FUNCTIONAL_ROLE_LOGICAL_PATH = "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
+FUNCTIONAL_ROLE_LOGICAL_PATH = (
+    "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
+)
 CURRENT_EVALUATION_LOGICAL_PATH = (
     "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json"
 )
@@ -47,12 +49,8 @@ CYCLE002_ROLE_LOGICAL_PATH = (
 CYCLE002_EVALUATION_LOGICAL_PATH = (
     "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v2_2.json"
 )
-CYCLE001_VOID_LOGICAL_PATH = (
-    "data/projects/open_model_data/evidence/phase3_cycle001_void_receipt_v1.json"
-)
-UNIVERSITY_SOURCE_POLICY_LOGICAL_PATH = (
-    "data/projects/open_model_data/evidence/phase3_university_source_policy_v1.json"
-)
+CYCLE001_VOID_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_cycle001_void_receipt_v1.json"
+UNIVERSITY_SOURCE_POLICY_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_university_source_policy_v1.json"
 # The compatibility matrix predates the current Phase 3 P1/V3 freezes.  Keep
 # the post-v2 boundary explicit so a later metadata artifact cannot silently
 # change the legacy/pre-v2 denominator or weaken its exact-coverage check.  A
@@ -95,55 +93,57 @@ INVALIDATION_REASONS = {
     "role_contract_status": "pre_v2_role_contract_invalidated",
     "phase2_artifact": "phase2_rows_not_phase3_evidence",
 }
-ENGINE_PATHS = frozenset({
-    # v2.1 packet compilation and execution.
-    "scripts/projects/open_model_data/phase3_rule_author_packets.py",
-    "scripts/projects/open_model_data/phase3_rule_author_runner.py",
-    # v2.1 source population, release, and audit mechanics.
-    "scripts/projects/open_model_data/phase3_heldout_partition.py",
-    "scripts/projects/open_model_data/phase3_rule_author_source_rows.py",
-    "scripts/projects/open_model_data/phase3_source_dispositions.py",
-    "scripts/projects/open_model_data/phase3_disposition_audit.py",
-    "scripts/projects/open_model_data/phase3_audit_entropy.py",
-    "scripts/projects/open_model_data/phase3_lexical_coverage.py",
-    "scripts/projects/open_model_data/phase3_textbook_nonhit.py",
-    "scripts/projects/open_model_data/phase3_pravopys_delta.py",
-    "scripts/projects/open_model_data/phase3_evaluation_reproduction.py",
-    "scripts/projects/open_model_data/phase3_fixed_release.py",
-    # Direct, load-bearing deterministic validators imported by the live paths.
-    "scripts/projects/open_model_data/phase3_near_duplicate.py",
-    "scripts/projects/open_model_data/phase3_source_universe.py",
-    "scripts/projects/open_model_data/verify_phase3_source_universe_freeze.py",
-    "scripts/projects/open_model_data/phase3_recovery_contracts.py",
-    "scripts/projects/open_model_data/phase3_source_unit_materialization.py",
-    "scripts/projects/open_model_data/phase3_prior_exposure_manifest.py",
-    "scripts/projects/open_model_data/phase3_evaluation_freeze.py",
-    "scripts/projects/open_model_data/phase3_heldout_label_transport.py",
-    "scripts/projects/open_model_data/phase3_source_production_transport.py",
-    # Every closed Phase 3 schema consumed by the current runtime closure.
-    "registry/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_heldout_partition_bundle_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_rule_author_source_rows_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_source_disposition_input_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_disposition_audit_bundle_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_textbook_nonhit_bundle_v1.schema.json",
-    "registry/projects/open_model_data/contracts/correction_protection_coverage_contract_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_pravopys_delta_bundle_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_evaluation_reproduction_bundle_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_fixed_release_manifest_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_source_universe_freeze_v1.schema.json",
-    "registry/projects/open_model_data/contracts/correction_protection_evaluation_contract_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_source_unit_materialization_receipt_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_evaluation_freeze_bundle_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_heldout_label_transport_bundle_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md",
-    "registry/projects/open_model_data/contracts/phase3_heldout_semantic_gold_label_prompt_v1.md",
-    "registry/projects/open_model_data/contracts/phase3_source_production_transport_v1.schema.json",
-    "registry/projects/open_model_data/contracts/phase3_source_author_prompt_v1.md",
-    "registry/projects/open_model_data/contracts/phase3_source_review_prompt_v1.md",
-})
+ENGINE_PATHS = frozenset(
+    {
+        # v2.1 packet compilation and execution.
+        "scripts/projects/open_model_data/phase3_rule_author_packets.py",
+        "scripts/projects/open_model_data/phase3_rule_author_runner.py",
+        # v2.1 source population, release, and audit mechanics.
+        "scripts/projects/open_model_data/phase3_heldout_partition.py",
+        "scripts/projects/open_model_data/phase3_rule_author_source_rows.py",
+        "scripts/projects/open_model_data/phase3_source_dispositions.py",
+        "scripts/projects/open_model_data/phase3_disposition_audit.py",
+        "scripts/projects/open_model_data/phase3_audit_entropy.py",
+        "scripts/projects/open_model_data/phase3_lexical_coverage.py",
+        "scripts/projects/open_model_data/phase3_textbook_nonhit.py",
+        "scripts/projects/open_model_data/phase3_pravopys_delta.py",
+        "scripts/projects/open_model_data/phase3_evaluation_reproduction.py",
+        "scripts/projects/open_model_data/phase3_fixed_release.py",
+        # Direct, load-bearing deterministic validators imported by the live paths.
+        "scripts/projects/open_model_data/phase3_near_duplicate.py",
+        "scripts/projects/open_model_data/phase3_source_universe.py",
+        "scripts/projects/open_model_data/verify_phase3_source_universe_freeze.py",
+        "scripts/projects/open_model_data/phase3_recovery_contracts.py",
+        "scripts/projects/open_model_data/phase3_source_unit_materialization.py",
+        "scripts/projects/open_model_data/phase3_prior_exposure_manifest.py",
+        "scripts/projects/open_model_data/phase3_evaluation_freeze.py",
+        "scripts/projects/open_model_data/phase3_heldout_label_transport.py",
+        "scripts/projects/open_model_data/phase3_source_production_transport.py",
+        # Every closed Phase 3 schema consumed by the current runtime closure.
+        "registry/projects/open_model_data/contracts/phase3_rule_author_packet_bundle_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_heldout_partition_bundle_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_rule_author_source_rows_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_source_disposition_input_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_disposition_audit_bundle_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_textbook_nonhit_bundle_v1.schema.json",
+        "registry/projects/open_model_data/contracts/correction_protection_coverage_contract_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_pravopys_delta_bundle_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_evaluation_reproduction_bundle_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_fixed_release_manifest_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_source_universe_freeze_v1.schema.json",
+        "registry/projects/open_model_data/contracts/correction_protection_evaluation_contract_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_source_unit_materialization_receipt_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_evaluation_freeze_bundle_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_heldout_label_transport_bundle_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md",
+        "registry/projects/open_model_data/contracts/phase3_heldout_semantic_gold_label_prompt_v1.md",
+        "registry/projects/open_model_data/contracts/phase3_source_production_transport_v1.schema.json",
+        "registry/projects/open_model_data/contracts/phase3_source_author_prompt_v1.md",
+        "registry/projects/open_model_data/contracts/phase3_source_review_prompt_v1.md",
+    }
+)
 
 
 class CompatibilityError(ValueError):
@@ -216,8 +216,7 @@ def _verify_heldout_label_receipt() -> dict[str, Any]:
     )
     body = {key: value for key, value in receipt.items() if key != "receipt_sha256"}
     require(
-        receipt.get("receipt_sha256")
-        == hashlib.sha256((canonical_json(body) + "\n").encode("utf-8")).hexdigest(),
+        receipt.get("receipt_sha256") == hashlib.sha256((canonical_json(body) + "\n").encode("utf-8")).hexdigest(),
         "heldout label freeze receipt body hash drift",
     )
     bindings = receipt.get("bindings", {})
@@ -227,7 +226,9 @@ def _verify_heldout_label_receipt() -> dict[str, Any]:
         and bindings.get("combined_contract_sha256") == V2_1_COMBINED_SHA256
         and bindings.get("functional_role_contract_sha256") == sha256_file(ROOT / FUNCTIONAL_ROLE_LOGICAL_PATH)
         and bindings.get("label_prompt_sha256")
-        == sha256_file(ROOT / "registry/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md"),
+        == sha256_file(
+            ROOT / "registry/projects/open_model_data/contracts/phase3_heldout_clean_modern_label_prompt_v1.md"
+        ),
         "heldout label freeze receipt contract binding drift",
     )
     return receipt
@@ -303,7 +304,9 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
     require(set(paths) == _tracked_evidence_paths(), "matrix does not exactly cover tracked pre-v2 evidence")
     for entry in entries:
         path = ROOT / entry["logical_path"]
-        require(path.is_file() and not path.is_symlink(), f"matrix artifact missing or aliased: {entry['logical_path']}")
+        require(
+            path.is_file() and not path.is_symlink(), f"matrix artifact missing or aliased: {entry['logical_path']}"
+        )
         require(sha256_file(path) == entry["artifact_sha256"], f"matrix artifact hash drift: {entry['logical_path']}")
         require(entry["phase3_v2_contract_sha256"] == V2_SHA256, "entry v2 pin drift")
         if entry["logical_path"] == CURRENT_EVALUATION_LOGICAL_PATH:
@@ -361,13 +364,18 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
                 "v2.1 functional-role ledger is not rebound",
             )
         elif entry["artifact_class"] in SEMANTIC_CLASSES:
-            require(entry["disposition"] == "invalidated", "pre-v2 semantic/source/consumer/completion artifact not invalidated")
+            require(
+                entry["disposition"] == "invalidated",
+                "pre-v2 semantic/source/consumer/completion artifact not invalidated",
+            )
             require(
                 entry["machine_reason"] == INVALIDATION_REASONS[entry["artifact_class"]],
                 "invalidated artifact machine reason drift",
             )
         else:
-            require(entry["disposition"] in {"valid", "rebound"}, "deterministic engine lacks valid/rebound disposition")
+            require(
+                entry["disposition"] in {"valid", "rebound"}, "deterministic engine lacks valid/rebound disposition"
+            )
             expected_reason = (
                 "deterministic_nonsemantic_engine_valid_under_v2"
                 if entry["disposition"] == "valid"
@@ -383,11 +391,13 @@ def verify(matrix_path: Path = MATRIX_PATH) -> dict[str, Any]:
             f"legacy claim is not correctly invalidated: {claim_id}",
         )
     require(
-        matrix["source_authoring"]
-        == {"blocked": True, "reason": "cycle002_closure_not_established"},
+        matrix["source_authoring"] == {"blocked": True, "reason": "cycle002_closure_not_established"},
         "source-authoring block drift",
     )
-    require(matrix["phase4"] == {"blocked": True, "reason": "phase3_v2_rebuild_review_and_completion_not_established"}, "Phase 4 block drift")
+    require(
+        matrix["phase4"] == {"blocked": True, "reason": "phase3_v2_rebuild_review_and_completion_not_established"},
+        "Phase 4 block drift",
+    )
     return {
         "ok": True,
         "schema_version": matrix["schema_version"],

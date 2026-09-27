@@ -104,14 +104,8 @@ def test_a2_source_operation_bindings_match_the_exact_inventory_inputs() -> None
 
 def test_a2_source_operation_preserves_all_eight_frozen_strata_with_residuals() -> None:
     receipt = _receipt()
-    denominator = {
-        entry["stratum"]: entry["frozen_slots"]
-        for entry in receipt["frozen_denominator"]["strata"]
-    }
-    coverage = {
-        entry["stratum"]: entry
-        for entry in receipt["stratum_coverage_map"]
-    }
+    denominator = {entry["stratum"]: entry["frozen_slots"] for entry in receipt["frozen_denominator"]["strata"]}
+    coverage = {entry["stratum"]: entry for entry in receipt["stratum_coverage_map"]}
     residuals = {entry["residual_id"]: entry for entry in receipt["residuals"]}
 
     assert receipt["frozen_denominator"]["total_slots"] == 100
@@ -119,11 +113,7 @@ def test_a2_source_operation_preserves_all_eight_frozen_strata_with_residuals() 
     assert set(coverage) == set(EXPECTED_QUOTAS)
     assert sum(entry["frozen_slots"] for entry in coverage.values()) == 100
 
-    empty_support = {
-        stratum
-        for stratum, entry in coverage.items()
-        if not entry["supporting_existing_source_unit_ids"]
-    }
+    empty_support = {stratum for stratum, entry in coverage.items() if not entry["supporting_existing_source_unit_ids"]}
     assert empty_support == {"dialect_regional", "mixing", "abstention"}
 
     for stratum, entry in coverage.items():
@@ -171,8 +161,7 @@ def test_a2_source_operation_ledger_is_per_unit_and_per_operation() -> None:
     assert receipt["safety_assertions"]["unknown_operations_global_block"] is False
     for source_unit, _operation, _decision in unknown_or_denied:
         assert any(
-            decision["value"] in {"allowed", "scope_bound"}
-            for decision in source_unit["operation_rights"].values()
+            decision["value"] in {"allowed", "scope_bound"} for decision in source_unit["operation_rights"].values()
         )
 
 

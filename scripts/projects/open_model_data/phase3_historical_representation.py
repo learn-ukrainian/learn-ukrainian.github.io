@@ -337,8 +337,7 @@ def build_historical_representation(
             "consumer_views": list(consumer_views),
             "derived_bundles": list(derived_bundles),
             "derived_bundle_rights": [
-                {"bundle_id": item["bundle_id"], "rights": dict(item["rights"])}
-                for item in derived_bundle_rights
+                {"bundle_id": item["bundle_id"], "rights": dict(item["rights"])} for item in derived_bundle_rights
             ],
             "evidence_grade": evidence_grade,
         },
@@ -533,9 +532,7 @@ def validate_historical_representation(value: Mapping[str, Any]) -> dict[str, An
 
     if provenance["status"] == "present" and provenance["tokenization_alignment"] == "exact":
         token_references = [
-            (analysis["layer_id"], token_id)
-            for analysis in analyses
-            for token_id in analysis["token_ids"]
+            (analysis["layer_id"], token_id) for analysis in analyses for token_id in analysis["token_ids"]
         ]
         analysis_layer_ids = {analysis["layer_id"] for analysis in analyses}
         exact_layer_tokens = {
@@ -555,7 +552,9 @@ def validate_historical_representation(value: Mapping[str, Any]) -> dict[str, An
 
     classification = packet["classification"]
     _require(classification["primary_role_id"] in HISTORICAL_PRIMARY_ROLES, "non-historical primary role is forbidden")
-    _require(classification["claim_type"] in HISTORICAL_CLAIM_TYPES, "correction claim is forbidden for historical data")
+    _require(
+        classification["claim_type"] in HISTORICAL_CLAIM_TYPES, "correction claim is forbidden for historical data"
+    )
     _require(set(classification["consumer_views"]) <= CONSUMER_VIEWS, "invalid frozen consumer view")
     _require("protection" in classification["consumer_views"], "historical data requires the protection view")
     _require(set(classification["derived_bundles"]) <= DERIVED_BUNDLES, "unknown derived historical bundle")
@@ -576,11 +575,7 @@ def validate_historical_representation(value: Mapping[str, Any]) -> dict[str, An
         _validate_rights(bundle_policy, "derived bundle")
         if packet["rights"]["reuse_scope"] != "public_training":
             _require(bundle_policy["reuse_scope"] != "public_training", "derived bundle exceeds source rights")
-        referenced = {
-            evidence_id
-            for item in bundle_sources[bundle_id]
-            for evidence_id in item["evidence_ids"]
-        }
+        referenced = {evidence_id for item in bundle_sources[bundle_id] for evidence_id in item["evidence_ids"]}
         if any(evidence_by_id[evidence_id]["rights"]["reuse_scope"] != "public_training" for evidence_id in referenced):
             _require(bundle_policy["reuse_scope"] != "public_training", "derived bundle exceeds evidence rights")
     rights = packet["rights"]
@@ -608,6 +603,11 @@ def validate_historical_representation(value: Mapping[str, Any]) -> dict[str, An
 
 
 __all__ = [
-    "SCHEMA_PATH", "SCHEMA_VERSION", "HistoricalRepresentationError",
-    "build_historical_representation", "build_packet", "canonical_json", "validate_historical_representation",
+    "SCHEMA_PATH",
+    "SCHEMA_VERSION",
+    "HistoricalRepresentationError",
+    "build_historical_representation",
+    "build_packet",
+    "canonical_json",
+    "validate_historical_representation",
 ]
