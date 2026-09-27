@@ -76,6 +76,7 @@ from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, Reso
 from scripts.curriculum.resolver.narrow import learner_usable
 from scripts.curriculum.resolver.stream import resolve
 from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
+from scripts.curriculum.validate.activity_report import draft_report
 from scripts.review.digest.error import DigestError
 
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-lesson-gates-v1.schema.json"
@@ -1004,15 +1005,7 @@ def run_lesson(
     if row["status"] == "failed":
         return finish(row)
     if level == "a1":
-        # A1-P2 owns this module. A function-level import permits its separate branch
-        # to land first; local P1 tests can inject the frozen interface.
-        try:
-            from scripts.curriculum.validate.activity_report import draft_report
-        except ModuleNotFoundError as err:
-            if err.name != "scripts.curriculum.validate.activity_report":
-                raise
-        else:
-            row["details"] = {"draft_report": draft_report(plan, [draft])}
+        row["details"] = {"draft_report": draft_report(plan, [draft])}
     rows.append(row)
     assembled = check_5_assembly(draft, plan, pack, words, level, slug, n, output_dir=state_dir)
     if not assembled.passed:

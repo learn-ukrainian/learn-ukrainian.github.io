@@ -7,7 +7,6 @@ import json
 import os
 import subprocess
 import sys
-import types
 from pathlib import Path
 
 import pytest
@@ -71,18 +70,70 @@ def _fixture(*, text: str = "слово " * 11, two_senses: bool = False):
 def test_runner_calls_frozen_draft_report_interface(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     called = []
-    module = types.ModuleType("scripts.curriculum.validate.activity_report")
 
-    def draft_report(received_plan, received_drafts):
+    def controlled_report(received_plan, received_drafts):
         called.append((received_plan, received_drafts))
         return {"lessons": {"1": {"workbook": 0}}}
 
-    module.draft_report = draft_report
-    monkeypatch.setitem(sys.modules, module.__name__, module)
+    # Control only the return value here to verify the runner's exact call contract.
+    monkeypatch.setattr(runner, "draft_report", controlled_report)
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is True
     assert called == [(plan, [draft])]
     assert report["checks"][3]["details"]["draft_report"] == {"lessons": {"1": {"workbook": 0}}}
+
+
+def test_runner_real_draft_report_has_numeric_single_lesson_totals(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    pack["errors"] = [
+        {
+            "id": "E-001",
+            "source": {"table": "ua_gec_errors", "id": 1},
+            "incorrect": "слове",
+            "correct": "слово",
+            "error_type": "form",
+            "pattern": "fixture",
+        }
+    ]
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [
+        {"id": "a1", "type": "error-correction", "placement": "inline", "focus": "Correct", "error_refs": ["E-001"]}
+    ]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [
+        {
+            "id": "a1",
+            "instruction": "Correct",
+            "items": [
+                {
+                    "sentence": "слове",
+                    "error": "слове",
+                    "correction": "слово",
+                    "explanation": "Correct",
+                    "error_ref": "E-001",
+                }
+            ],
+        }
+    ]
+    validate_fixture_pack(pack)
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    activity = report["checks"][3]["details"]["draft_report"]
+    assert activity["stage"] == "draft"
+    assert activity["lessons"] == [
+        {
+            "n": 1,
+            "response_opportunities": {"total": 1, "by_type": {"error-correction": 1}},
+            "explanation_coverage": {"explained": 1, "total": 1},
+            "planned_workbook": 0,
+            "rendered_and_playable": "not_available_at_this_stage",
+        }
+    ]
+    assert activity["module"]["response_opportunities_total"] == 1
+    assert activity["module"]["inline_response_opportunities_total"] == 1
 
 
 def test_runner_missing_vesum_orthography_fails_closed(tmp_path, monkeypatch):

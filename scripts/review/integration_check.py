@@ -191,7 +191,19 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
         {
             "id": "a2",
             "instruction": "Quiz instruction",
-            "items": [{"question": word, "options": [word, plural], "correct": 0, "explanation": "Explanation"}],
+            "items": [
+                {
+                    "question": word,
+                    "options": [word, plural],
+                    "correct": 0,
+                    "explanation": "Explanation",
+                    "kind": "form",
+                    "tests_feature": "Case",
+                    "requires": {"Case": "Nom", "Number": "Sing"},
+                    "option_records": ["W-1", "W-1"],
+                    "option_why": ["This is nominative singular.", "This is genitive singular."],
+                }
+            ],
         },
     ]
     validate_fixture_pack(pack)
