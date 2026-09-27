@@ -10,6 +10,7 @@ task's own manifest, and the outcome is written through ``findings_db.record_set
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import os
@@ -20,7 +21,11 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from jsonschema import Draft202012Validator
 
+from scripts.build.fresh.assemble import component_props_from_jsx
+from scripts.build.fresh.manifest import pinned_entries
+from scripts.build.fresh.path_guard import SLUG_RE
 from scripts.curriculum.evidence.lock import atomic_write
 from scripts.review import findings_db as db
 from scripts.review.prompts.eligibility import pin_refusals
@@ -261,13 +266,109 @@ def _activity_blocks(body: str) -> list[tuple[str | None, str | None, str]]:
     return blocks
 
 
-def _lesson_unit(document: str, scope: dict[str, Any]) -> str:
+def _string_values(node: Any) -> set[str]:
+    """Every string the page's component props hold, after the JSX escapes are decoded."""
+    if isinstance(node, str):
+        return {node}
+    if isinstance(node, dict):
+        return {text for value in node.values() for text in _string_values(value)}
+    if isinstance(node, list):
+        return {text for value in node for text in _string_values(value)}
+    return set()
+
+
+def _block_contains_units(block: str, units: list[str]) -> bool:
+    """Whether this rendered activity block carries every provenance unit of the activity.
+
+    A unit's text is the field the page component receives (check 9). It is compared with
+    the decoded props, and with the block source for prose the component does not wrap.
+    The heading is only the block boundary; it is never matched against the activity id.
+    """
+    decoded = _string_values(component_props_from_jsx(block))
+    for unit in units:
+        if unit in decoded or unit in block:
+            continue
+        escaped = json.dumps(unit, ensure_ascii=False)[1:-1]
+        if escaped != unit and escaped in block:
+            continue
+        return False
+    return True
+
+
+def _activity_unit_texts(provenance: dict[str, Any], tab: str, activity: str) -> list[str]:
+    """Rendered text of each provenance unit of this activity, spans concatenated in order.
+
+    One activity id on more than one step is two units. That is the ambiguous-unit refusal,
+    raised before any block is chosen.
+    """
+    spans = provenance.get("spans")
+    if not isinstance(spans, list):
+        raise SettleError("provenance file is not usable")
+    owned = [
+        span for span in spans if isinstance(span, dict) and span.get("tab") == tab and span.get("activity") == activity
+    ]
+    if not owned:
+        raise SettleError(_ABSENT_UNIT)
+    if len({span.get("step") for span in owned}) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    groups: dict[tuple[Any, Any], list[dict[str, Any]]] = {}
+    for span in owned:
+        groups.setdefault((span.get("item"), span.get("block")), []).append(span)
+    texts: list[str] = []
+    for group in groups.values():
+        group.sort(key=lambda span: span.get("span") if isinstance(span.get("span"), int) else 0)
+        piece = "".join(str(span.get("text") or "") for span in group)
+        if piece:
+            texts.append(piece)
+    if not texts:
+        raise SettleError(_ABSENT_UNIT)
+    return texts
+
+
+def _lesson_unit(document: str, scope: dict[str, Any], provenance: dict[str, Any] | None) -> str:
+    """One tab, or the one activity block inside it.
+
+    An activity is the block whose rendered text carries that activity's provenance units.
+    A ``<span id>`` equal to the activity id is the same block when the page has one; a
+    heading whose text happens to equal the id is not an activity. Duplicate span ids,
+    duplicate provenance steps, or two blocks that both carry the units are ambiguous.
+    """
     body = _require_one(_tab_bodies(document).get(scope["tab"], []))
     activity = scope.get("activity")
     if not isinstance(activity, str):
         return body
-    matched = [text for span_id, heading, text in _activity_blocks(body) if span_id == activity or heading == activity]
-    return _require_one(matched)
+    blocks = [text for span_id, _heading, text in _activity_blocks(body) if span_id == activity]
+    if len(blocks) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    if provenance is None:
+        return _require_one(blocks)
+    units = _activity_unit_texts(provenance, scope["tab"], activity)
+    located = [text for _span_id, _heading, text in _activity_blocks(body) if _block_contains_units(text, units)]
+    if len(located) > 1 or (len(located) == 1 and blocks and blocks[0] != located[0]):
+        raise SettleError(_AMBIGUOUS_UNIT)
+    if len(located) == 1:
+        return located[0]
+    raise SettleError(_ABSENT_UNIT)
+
+
+def _plan_matches(items: Any, key: str, value: Any) -> list[Any]:
+    if not isinstance(items, list):
+        return []
+    return [item for item in items if isinstance(item, dict) and item.get(key) == value]
+
+
+def _refuse_duplicate_plan_ids(plan: dict[str, Any], scope: dict[str, Any]) -> None:
+    """Duplicate lesson, step or activity ids are ambiguous before the first match is used."""
+    lessons = _plan_matches(plan.get("lessons"), "n", scope["lesson"])
+    if len(lessons) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    if len(lessons) != 1:
+        return
+    lesson = lessons[0]
+    if "step" in scope and len(_plan_matches(lesson.get("steps"), "id", scope["step"])) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
+    if "activity" in scope and len(_plan_matches(lesson.get("activities"), "id", scope["activity"])) > 1:
+        raise SettleError(_AMBIGUOUS_UNIT)
 
 
 def _plan_unit_text(document: str, scope: dict[str, Any]) -> str:
@@ -278,30 +379,147 @@ def _plan_unit_text(document: str, scope: dict[str, Any]) -> str:
         raise SettleError(_ABSENT_UNIT) from exc
     if not isinstance(plan, dict):
         raise SettleError(_ABSENT_UNIT)
+    _refuse_duplicate_plan_ids(plan, scope)
     unit = _plan_unit(plan, scope)
     if unit is _MISSING:
         raise SettleError(_ABSENT_UNIT)
     return "\n".join(_leaf_texts(unit))
 
 
-def _context(document: str, finding: dict[str, Any]) -> list[dict[str, Any]]:
+def _context(document: str, finding: dict[str, Any], provenance: dict[str, Any] | None = None) -> list[dict[str, Any]]:
     """Quoted windows, or one absence context for a scope the document actually contains.
 
     A quoted location keeps the window around each occurrence. An absence finding has no
     quote: a lesson scope is one tab (or one activity block inside it), and a plan scope
-    is one lesson, step or activity of the plan. Anything else fails closed.
+    is one lesson, step or activity of the plan. Anything else fails closed. ``provenance``
+    is the lesson's provenance document when the scope names an activity; plan scopes ignore it.
     """
     quoted = _quoted_spans(document, finding)
     if quoted:
         return quoted
     scope = finding.get("scope")
     if _is_lesson_scope(scope):
-        text = _lesson_unit(document, scope)
+        text = _lesson_unit(document, scope, provenance)
     elif _is_plan_scope(scope):
         text = _plan_unit_text(document, scope)
     else:
         raise SettleError(_NO_SCOPE)
     return [{"absence": True, "locator": dict(scope), "context": text}]
+
+
+@functools.cache
+def _provenance_validator() -> Draft202012Validator:
+    schema = json.loads((REPO_ROOT / "schemas" / "lesson-provenance-v1.schema.json").read_text(encoding="utf-8"))
+    return Draft202012Validator(schema)
+
+
+def _parse_provenance(data: bytes) -> dict[str, Any]:
+    try:
+        document = yaml.safe_load(data)
+    except yaml.YAMLError as exc:
+        raise SettleError("provenance file is not usable") from exc
+    if not isinstance(document, dict):
+        raise SettleError("provenance file is not usable")
+    if any(_provenance_validator().iter_errors(document)):
+        raise SettleError("provenance file does not conform to lesson-provenance-v1")
+    return document
+
+
+def _pin_file(root: Path, pin: dict[str, Any]) -> bytes:
+    """Bytes of one manifest pin, refused unless the path stays in the repository and the sha256 matches."""
+    path_text, recorded = pin.get("path"), pin.get("sha256")
+    if not isinstance(path_text, str) or not isinstance(recorded, str):
+        raise SettleError("lesson manifest pin is malformed")
+    relative = Path(path_text)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise SettleError("lesson manifest pin escapes the repository")
+    full = (root / relative).resolve()
+    if not full.is_file() or not full.is_relative_to(root.resolve()):
+        raise SettleError("lesson manifest pin is not a file in the repository")
+    data = full.read_bytes()
+    if _sha(data) != recorded:
+        raise SettleError("lesson manifest pin does not match the file")
+    return data
+
+
+def _lesson_manifest_bytes(root: Path, level: str, slug: str, lesson_n: int, digest: str) -> bytes | None:
+    """The original lesson manifest, found by the hash the settle item recorded, or None when it is not on disk."""
+    if not isinstance(digest, str) or not SLUG_RE.fullmatch(level) or not SLUG_RE.fullmatch(slug):
+        return None
+    state = root / TREE / "evidence" / level / "_state" / slug
+    candidates = (
+        state / "manifests" / f"lesson-{lesson_n}" / f"{digest}.yaml",
+        state / f"lesson-{lesson_n}.manifest.yaml",
+    )
+    for path in candidates:
+        try:
+            data = path.read_bytes()
+        except OSError:
+            continue
+        if _sha(data) == digest:
+            return data
+    return None
+
+
+def _provenance_document(root: Path, level: str, slug: str, lesson_n: int, manifest_sha: str) -> dict[str, Any] | None:
+    """The lesson's provenance document, from the lesson manifest's pins.
+
+    Settle's own inputs name only the disputed page. The provenance file is read from the
+    original lesson manifest: a pin whose path is ``lesson-<n>.provenance.yaml`` when the
+    manifest lists that file, otherwise the engine path
+    ``curriculum/l2-uk-en/evidence/<level>/_state/<slug>/lesson-<n>.provenance.yaml`` whose
+    sha256 is ``sources[].provenance_sha256`` in the pinned module digest. A real lesson
+    manifest pins the digest, not the provenance path. None when that manifest is not on disk.
+    """
+    raw = _lesson_manifest_bytes(root, level, slug, lesson_n, manifest_sha)
+    if raw is None:
+        return None
+    try:
+        manifest = yaml.safe_load(raw)
+    except yaml.YAMLError as exc:
+        raise SettleError("lesson manifest is not usable") from exc
+    if not isinstance(manifest, dict):
+        raise SettleError("lesson manifest is not usable")
+    name = f"lesson-{lesson_n}.provenance.yaml"
+    direct = [pin for _location, pin in pinned_entries(manifest) if Path(str(pin.get("path", ""))).name == name]
+    if len(direct) > 1:
+        raise SettleError("lesson manifest pins more than one provenance file for this lesson")
+    if direct:
+        return _provenance_for_lesson(_parse_provenance(_pin_file(root, direct[0])), level, slug, lesson_n)
+    digest_pin = manifest.get("module_digest")
+    if not isinstance(digest_pin, dict):
+        return None
+    try:
+        digest = yaml.safe_load(_pin_file(root, digest_pin))
+    except yaml.YAMLError as exc:
+        raise SettleError("lesson manifest digest is not usable") from exc
+    sources = digest.get("sources") if isinstance(digest, dict) else None
+    if not isinstance(sources, list):
+        return None
+    attested = [
+        item.get("provenance_sha256")
+        for item in sources
+        if isinstance(item, dict) and item.get("lesson") == lesson_n and isinstance(item.get("provenance_sha256"), str)
+    ]
+    if not attested:
+        return None
+    if len(attested) > 1:
+        raise SettleError("lesson manifest names this lesson's provenance more than once")
+    relative = f"{TREE}/evidence/{level}/_state/{slug}/{name}"
+    parsed = _parse_provenance(_pin_file(root, {"path": relative, "sha256": attested[0]}))
+    return _provenance_for_lesson(parsed, level, slug, lesson_n)
+
+
+def _provenance_for_lesson(document: dict[str, Any], level: str, slug: str, lesson_n: int) -> dict[str, Any]:
+    described = document.get("lesson")
+    if (
+        not isinstance(described, dict)
+        or described.get("level") != level
+        or described.get("slug") != slug
+        or described.get("n") != lesson_n
+    ):
+        raise SettleError("provenance file is not this lesson's")
+    return document
 
 
 def _prior_searches(
@@ -361,7 +579,13 @@ def prepare(
         if actual != expected:
             raise SettleError(f"document path is {actual}; expected {expected}")
         document_bytes = document_path.read_bytes()
-        spans = _context(document_bytes.decode("utf-8"), finding)
+        scope = finding.get("scope")
+        provenance = None
+        if item["lesson_n"] is not None and _is_lesson_scope(scope) and isinstance(scope.get("activity"), str):
+            provenance = _provenance_document(
+                root, item["level"], item["slug"], item["lesson_n"], item["manifest_sha256"]
+            )
+        spans = _context(document_bytes.decode("utf-8"), finding, provenance)
         source_review, source_attempt, _ = item["finding_ref"].split("/", 2)
         searches = _prior_searches(finding, prior_ledger, source_review, source_attempt, item["manifest_sha256"])
         manifest = {

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -10,6 +11,8 @@ from typing import Any
 
 import pytest
 import yaml
+from jsonschema import Draft202012Validator
+from yaml_activities import ActivityParser
 
 from scripts.review import findings_db as db
 from scripts.review import settle
@@ -92,6 +95,7 @@ def _world(
     scope: dict[str, Any] | None = None,
     lesson_n: int | None = 2,
     kind: str | None = None,
+    prepare: bool = True,
 ) -> World:
     database = root / "findings.sqlite"
     prior = root / "prior.jsonl"
@@ -161,18 +165,19 @@ def _world(
         root / "settle.jsonl",
         item_id,
     )
-    settle.prepare(
-        item_id,
-        db_path=database,
-        document_path=document,
-        prior_ledger=prior,
-        review_id="settle-R",
-        attempt_id="settle-A",
-        manifest_path=world.manifest,
-        prompt_path=world.prompt,
-        repo_root=root,
-    )
-    ledger.create_empty_ledger(world.own_ledger)
+    if prepare:
+        settle.prepare(
+            item_id,
+            db_path=database,
+            document_path=document,
+            prior_ledger=prior,
+            review_id="settle-R",
+            attempt_id="settle-A",
+            manifest_path=world.manifest,
+            prompt_path=world.prompt,
+            repo_root=root,
+        )
+        ledger.create_empty_ledger(world.own_ledger)
     return world
 
 
@@ -683,7 +688,34 @@ _QUOTED_STEP = (
     "If the same quote occurs more than once, compare every numbered context with the finding's location; "
     "if that still leaves the sense ambiguous, return `unresolved`."
 )
-_ABSENCE_STEP = "Read the scoped unit below. The dispute is about something missing from that unit, not about a quoted construction."
+_QUOTED_PROCEDURE = (
+    _QUOTED_STEP,
+    "2. Broaden the search to the lemma and the construction. Search style-guide prose through `search_text` with "
+    "`source_file` set. Search UA-GEC and fetch the sentence context of a relevant result. Query live GRAC where "
+    "available and Pravopys. Record unavailable results as unavailable, never as an empty search.",
+    "3. Search for counterevidence as hard as for support. A corpus or error pair about a different construction does "
+    "not establish this finding. A matching, unmarked VESUM analysis in this sense cannot be flagged on preference "
+    "alone unless Pravopys or the style guide marks it. No unfamiliar word is called a Russianism without the "
+    "heritage check.",
+    "4. State your judgment in the reply. For `refuted`, explain why a cited source attests this construction "
+    "**in this sense**. For `supported_defect`, identify positive evidence of the norm that the construction departs "
+    "from. For `source_conflict`, cite two different authorities and send it to the operator. For `unresolved`, cite "
+    "the complete broadened search record and send it to the operator. Do not change learner content yourself.",
+    "Include `reason` explaining the sense and what the quoted results establish.",
+    'reason: "Explain the source judgment in this sense, with no invented facts."',
+)
+_ABSENCE_STEP = (
+    "Read the scoped unit below. The dispute is about something missing from that unit. "
+    "Name what the scoped unit lacks."
+)
+_ABSENCE_PROCEDURE = (
+    _ABSENCE_STEP,
+    "2. Find which source says it should be in the unit.",
+    "which source says it should be there, and what you found in the unit.",
+    "Include `reason` naming what the scoped unit lacks, which source says it should be there, and what you found "
+    "in the unit.",
+    'reason: "Name what the scoped unit lacks, which source says it should be there, and what you found in the unit."',
+)
 _ABSENCE_LINE = "The dispute is about something missing from this unit."
 
 
@@ -736,9 +768,8 @@ def test_a_lesson_absence_scoped_to_an_activity_is_that_block_alone() -> None:
     assert "ONLY THE LESSON TAB" not in spans[0]["context"]
 
     headed = '<TabItem label="vpravy">\n### a1\n\nONLY HEADING A1\n\n### a2\n\nONLY HEADING A2\n</TabItem>\n'
-    by_heading = settle._context(headed, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}})
-    assert by_heading[0]["context"] == "### a1\n\nONLY HEADING A1\n\n"
-    assert "ONLY HEADING A2" not in by_heading[0]["context"]
+    with pytest.raises(settle.SettleError, match="scope names a unit absent from the document"):
+        settle._context(headed, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}})
 
 
 def test_a_plan_absence_is_that_plan_unit_alone() -> None:
@@ -805,16 +836,16 @@ def test_rendered_settle_prompt_for_an_absence_item_shows_the_scoped_unit(tmp_pa
         {"absence": True, "locator": {"tab": "vpravy", "activity": "a1"}, "context": _ACTIVITY_A1}
     ]
     prompt = world.prompt.read_text(encoding="utf-8")
-    assert _ABSENCE_STEP in prompt
+    instructions = prompt.split("## Original Finding (Data)", 1)[0]
+    assert all(line in instructions for line in _ABSENCE_PROCEDURE)
+    assert all(line not in instructions for line in _QUOTED_PROCEDURE)
     assert _ABSENCE_LINE in prompt
     assert "## Scoped Unit (Data)" in prompt
     assert "ONLY ACTIVITY A1" in prompt
     assert "ONLY ACTIVITY A2" not in prompt
     assert "ONLY THE LESSON TAB" not in prompt
     assert "ONLY THE VOCABULARY TAB" not in prompt
-    assert _QUOTED_STEP not in prompt
     assert "## Disputed Span In Context (Data)" not in prompt
-    assert "\n2. Broaden the search to the lemma and the construction." in prompt
     sidecar = world.prompt.with_name(world.prompt.name + ".sha256")
     checked = check_prompt(prompt, world.manifest, repo_root=tmp_path, recorded_sha256=sidecar.read_text().strip())
     assert checked.passed, checked.errors
@@ -843,12 +874,12 @@ def test_the_quoted_span_and_its_prompt_stay_unchanged(world: World) -> None:
     prepared = _prepared_spans(world)
     assert prepared[0]["quote"] == "construction" and "absence" not in prepared[0]
     prompt = world.prompt.read_text(encoding="utf-8")
-    assert _QUOTED_STEP in prompt
+    instructions = prompt.split("## Original Finding (Data)", 1)[0]
+    assert all(line in instructions for line in _QUOTED_PROCEDURE)
+    assert all(line not in instructions for line in _ABSENCE_PROCEDURE)
     assert "## Disputed Span In Context (Data)" in prompt
-    assert _ABSENCE_STEP not in prompt
     assert _ABSENCE_LINE not in prompt
     assert "## Scoped Unit (Data)" not in prompt
-    assert "\n2. Broaden the search to the lemma and the construction." in prompt
 
 
 def test_search_text_source_label_names_the_file(world: World) -> None:
@@ -887,3 +918,282 @@ def test_search_text_source_label_names_the_file(world: World) -> None:
     ]
     with pytest.raises(settle.SettleError, match="two different sources"):
         settle.validate_reply(world.reply("source_conflict", same_file), world.manifest.read_bytes(), world.own_ledger)
+
+
+def _span(**overrides: Any) -> dict[str, Any]:
+    text = str(overrides.get("text", ""))
+    span: dict[str, Any] = {
+        "tab": "vpravy",
+        "step": "s1",
+        "activity": "a1",
+        "item": None,
+        "block": "instruction",
+        "span": 0,
+        "start": 0,
+        "end": len(text),
+        "source": "writer_prose",
+        "ref": None,
+        "role": "instruction",
+        "text": text,
+        "record_kind": None,
+        "record_side": None,
+        "option_origin": None,
+        "is_key": None,
+    }
+    span.update(overrides)
+    span["end"] = int(span["start"]) + len(str(span["text"]))
+    return span
+
+
+def _provenance(spans: list[dict[str, Any]], *, n: int = 2) -> dict[str, Any]:
+    document = {
+        "provenance_schema": 1,
+        "lesson": {"level": "a1", "slug": "fixture-module", "n": n},
+        "spans": spans,
+    }
+    schema = Path(__file__).resolve().parents[2] / "schemas" / "lesson-provenance-v1.schema.json"
+    Draft202012Validator(json.loads(schema.read_text(encoding="utf-8"))).validate(document)
+    return document
+
+
+def _engine_activities_page(activities: list[dict[str, Any]]) -> str:
+    """One A1 workbook tab, rendered by the same activity writer the engine calls."""
+    parser = ActivityParser()
+    parts = [parser._activity_to_mdx(parser._parse_activity(activity), False) for activity in activities]
+    label = "\u0412\u043f\u0440\u0430\u0432\u0438 \u2014 Activities"
+    body = "\n\n".join(parts).strip()
+    return (
+        '\n<Tabs syncKey="module-tab">\n'
+        f'<TabItem label="{label}">\n\n{body}\n\n</TabItem>\n'
+        "</Tabs>\n\n<HashTabSync />\n"
+    )
+
+
+_ENGINE_ACTIVITIES = [
+    {
+        "id": "a1",
+        "type": "quiz",
+        "title": "Choose the right answer",
+        "instruction": "Pick the first",
+        "items": [
+            {
+                "question": "ONLY ACTIVITY A1",
+                "options": [{"text": "yes", "correct": True}, {"text": "no", "correct": False}],
+            }
+        ],
+    },
+    {
+        "id": "a2",
+        "type": "quiz",
+        "title": "Name the picture",
+        "instruction": "Pick the second",
+        "items": [
+            {
+                "question": "ONLY ACTIVITY A2",
+                "options": [{"text": "cat", "correct": True}, {"text": "dog", "correct": False}],
+            }
+        ],
+    },
+]
+
+
+def _engine_provenance() -> dict[str, Any]:
+    spans = [
+        _span(text="Pick the first", role="instruction", block="instruction"),
+        _span(text="ONLY ACTIVITY A1", role="item_prompt", block="prompt", item=0),
+        _span(text="yes", role="item_option", block="opt_0", item=0, option_origin="writer_typed", is_key=True),
+        _span(text="no", role="item_option", block="opt_1", item=0, option_origin="writer_typed", is_key=False),
+        _span(activity="a2", text="Pick the second", role="instruction", block="instruction"),
+        _span(activity="a2", text="ONLY ACTIVITY A2", role="item_prompt", block="prompt", item=0),
+        _span(
+            activity="a2",
+            text="cat",
+            role="item_option",
+            block="opt_0",
+            item=0,
+            option_origin="writer_typed",
+            is_key=True,
+        ),
+        _span(
+            activity="a2",
+            text="dog",
+            role="item_option",
+            block="opt_1",
+            item=0,
+            option_origin="writer_typed",
+            is_key=False,
+        ),
+    ]
+    return _provenance(spans)
+
+
+def _sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _pin_provenance(root: Path, provenance: dict[str, Any], *, direct: bool) -> str:
+    """Write the provenance file and a lesson manifest that pins it. Return the manifest sha256."""
+    state = root / "curriculum/l2-uk-en/evidence/a1/_state/fixture-module"
+    state.mkdir(parents=True)
+    provenance_path = state / "lesson-2.provenance.yaml"
+    provenance_bytes = yaml.safe_dump(provenance, allow_unicode=True, sort_keys=False).encode()
+    provenance_path.write_bytes(provenance_bytes)
+    provenance_pin = {
+        "path": "curriculum/l2-uk-en/evidence/a1/_state/fixture-module/lesson-2.provenance.yaml",
+        "sha256": _sha256(provenance_bytes),
+    }
+    if direct:
+        manifest: dict[str, Any] = {"kind": "lesson", "level": "a1", "slug": "fixture-module", "lesson": 2}
+        manifest["inputs"] = {"provenance": provenance_pin}
+    else:
+        digest = {"digest_schema": 1, "sources": [{"lesson": 2, "provenance_sha256": provenance_pin["sha256"]}]}
+        digest_bytes = yaml.safe_dump(digest, sort_keys=False).encode()
+        digest_path = state / "digest-upto-2.yaml"
+        digest_path.write_bytes(digest_bytes)
+        manifest = {
+            "kind": "lesson",
+            "level": "a1",
+            "slug": "fixture-module",
+            "lesson": 2,
+            "module_digest": {
+                "path": "curriculum/l2-uk-en/evidence/a1/_state/fixture-module/digest-upto-2.yaml",
+                "sha256": _sha256(digest_bytes),
+            },
+        }
+    manifest_bytes = yaml.safe_dump(manifest, sort_keys=False).encode()
+    digest_hex = _sha256(manifest_bytes)
+    history = state / "manifests" / "lesson-2" / f"{digest_hex}.yaml"
+    history.parent.mkdir(parents=True)
+    history.write_bytes(manifest_bytes)
+    return digest_hex
+
+
+def _module_list(root: Path) -> None:
+    path = root / "curriculum/l2-uk-en/curriculum.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        yaml.safe_dump({"levels": {"a1": {"type": "core", "modules": ["fixture-module"]}}}), encoding="utf-8"
+    )
+
+
+@pytest.mark.parametrize("direct", [False, True])
+def test_an_engine_rendered_activity_absence_resolves_through_provenance(tmp_path: Path, direct: bool) -> None:
+    page = _engine_activities_page(_ENGINE_ACTIVITIES)
+    assert "### Choose the right answer" in page
+    assert "### Name the picture" in page
+    assert "<span id=" not in page
+    assert "a1" not in page and "a2" not in page
+    document = tmp_path / "site/src/content/docs/a1/fixture-module/2.mdx"
+    document.parent.mkdir(parents=True)
+    document.write_text(page, encoding="utf-8")
+    _module_list(tmp_path)
+    manifest_hash = _pin_provenance(tmp_path, _engine_provenance(), direct=direct)
+    world = _world(tmp_path, document, manifest_hash, scope={"tab": "vpravy", "activity": "a1"})
+    context = _prepared_spans(world)[0]["context"]
+    assert "### Choose the right answer" in context
+    assert "ONLY ACTIVITY A1" in context
+    assert "Pick the first" in context
+    assert "ONLY ACTIVITY A2" not in context
+    assert "### Name the picture" not in context
+    assert "Pick the second" not in context
+    instructions = world.prompt.read_text(encoding="utf-8").split("## Original Finding (Data)", 1)[0]
+    assert all(line in instructions for line in _ABSENCE_PROCEDURE)
+    assert all(line not in instructions for line in _QUOTED_PROCEDURE)
+
+
+def test_an_engine_rendered_activity_without_provenance_is_absent(tmp_path: Path) -> None:
+    document = tmp_path / "site/src/content/docs/a1/fixture-module/2.mdx"
+    document.parent.mkdir(parents=True)
+    document.write_text(_engine_activities_page(_ENGINE_ACTIVITIES), encoding="utf-8")
+    _module_list(tmp_path)
+    with pytest.raises(settle.SettleError, match="scope names a unit absent from the document"):
+        _world(tmp_path, document, "d" * 64, scope={"tab": "vpravy", "activity": "a1"})
+
+
+def test_a_provenance_pin_that_does_not_match_is_refused(tmp_path: Path) -> None:
+    document = tmp_path / "site/src/content/docs/a1/fixture-module/2.mdx"
+    document.parent.mkdir(parents=True)
+    document.write_text(_engine_activities_page(_ENGINE_ACTIVITIES), encoding="utf-8")
+    _module_list(tmp_path)
+    manifest_hash = _pin_provenance(tmp_path, _engine_provenance(), direct=False)
+    provenance_path = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/fixture-module/lesson-2.provenance.yaml"
+    provenance_path.write_text(provenance_path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+    with pytest.raises(settle.SettleError, match="lesson manifest pin does not match the file"):
+        _world(tmp_path, document, manifest_hash, scope={"tab": "vpravy", "activity": "a1"})
+
+
+@pytest.mark.parametrize(
+    "document,scope",
+    [
+        (
+            _PLAN
+            + "  - n: 1\n    title: Also lesson one\n    steps:\n      - id: s9\n        teach: duplicate lesson\n",
+            {"lesson": 1},
+        ),
+        (
+            "lessons:\n  - n: 1\n    title: Lesson one\n    steps:\n      - id: s1\n        teach: first copy\n"
+            "      - id: s1\n        teach: second copy\n",
+            {"lesson": 1, "step": "s1"},
+        ),
+        (
+            "lessons:\n  - n: 1\n    title: Lesson one\n    activities:\n      - id: a1\n        focus: first copy\n"
+            "      - id: a1\n        focus: second copy\n",
+            {"lesson": 1, "activity": "a1"},
+        ),
+    ],
+)
+def test_duplicate_plan_ids_are_refused(document: str, scope: dict[str, Any]) -> None:
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(document, {"locations": [], "scope": scope})
+
+
+def test_prepare_refuses_a_duplicate_plan_lesson_before_writing(tmp_path: Path) -> None:
+    document = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/fixture-module.yaml"
+    document.parent.mkdir(parents=True)
+    document.write_text(
+        _PLAN + "  - n: 1\n    title: Also lesson one\n    steps:\n      - id: s9\n        teach: duplicate lesson\n",
+        encoding="utf-8",
+    )
+    world = _world(tmp_path, document, "e" * 64, scope={"lesson": 1, "step": "s1"}, lesson_n=None, prepare=False)
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle.prepare(
+            world.item_id,
+            db_path=world.db_path,
+            document_path=document,
+            prior_ledger=world.prior_ledger,
+            review_id="settle-R",
+            attempt_id="settle-A",
+            manifest_path=world.manifest,
+            prompt_path=world.prompt,
+            repo_root=world.root,
+        )
+    assert not world.manifest.exists()
+    assert not world.prompt.exists()
+
+
+def test_a_duplicate_activity_id_in_the_lesson_is_refused() -> None:
+    document = (
+        '<TabItem label="vpravy">\n<span id="a1"></span>\n### First\nONE\n'
+        '<span id="a1"></span>\n### Second\nTWO\n</TabItem>\n'
+    )
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(document, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}})
+
+    page = _engine_activities_page(_ENGINE_ACTIVITIES[:1] + _ENGINE_ACTIVITIES[:1])
+    provenance = _provenance(
+        [
+            _span(text="Pick the first", role="instruction", block="instruction"),
+            _span(text="ONLY ACTIVITY A1", role="item_prompt", block="prompt", item=0),
+        ]
+    )
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(page, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}}, provenance)
+
+    two_steps = _provenance(
+        [
+            _span(text="ONLY ACTIVITY A1", role="item_prompt", block="prompt", item=0, step="s1"),
+            _span(text="OTHER STEP", role="item_prompt", block="prompt", item=0, step="s2"),
+        ]
+    )
+    with pytest.raises(settle.SettleError, match="scope names more than one unit in the document"):
+        settle._context(page, {"locations": [], "scope": {"tab": "vpravy", "activity": "a1"}}, two_steps)
