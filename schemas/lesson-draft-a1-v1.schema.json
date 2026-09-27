@@ -664,7 +664,17 @@
         "explanation": {
           "anyOf": [
             {
+              "$ref": "activities-a1.schema.json#/definitions/order-a1/properties/explanation"
+            },
+            {
               "$ref": "activities-a1.schema.json#/definitions/pick-syllables-a1/properties/explanation"
+            }
+          ]
+        },
+        "grouping_feature": {
+          "anyOf": [
+            {
+              "$ref": "activities-a1.schema.json#/definitions/group-sort-a1/properties/grouping_feature"
             }
           ]
         },
@@ -728,6 +738,13 @@
             }
           ]
         },
+        "left_role": {
+          "anyOf": [
+            {
+              "$ref": "activities-a1.schema.json#/definitions/match-up-a1/properties/left_role"
+            }
+          ]
+        },
         "letters": {
           "anyOf": [
             {
@@ -760,6 +777,13 @@
           "anyOf": [
             {
               "$ref": "activities-a1.schema.json#/definitions/observe-a1/properties/prompt"
+            }
+          ]
+        },
+        "right_role": {
+          "anyOf": [
+            {
+              "$ref": "activities-a1.schema.json#/definitions/match-up-a1/properties/right_role"
             }
           ]
         },

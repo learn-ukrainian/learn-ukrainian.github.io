@@ -434,7 +434,7 @@ def _activity_fresh_constraint_errors(
                     )
             sentence = item.get("sentence")
             blank_count = len(blank_re.findall(sentence)) if isinstance(sentence, str) else 0
-            if blank_count != rule["sentence_blanks"]:
+            if "sentence_blanks" in rule and blank_count != rule["sentence_blanks"]:
                 errors.append(
                     DraftError(
                         "activity_fresh_constraints",

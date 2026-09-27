@@ -122,6 +122,7 @@
       }
     },
     "true-false-a1": {
+      "items_max": 4,
       "required_item_fields": [
         "kind",
         "option_why",

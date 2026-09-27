@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+import types
 from pathlib import Path
 
 import pytest
@@ -22,6 +23,7 @@ from tests.build.test_fresh_assemble import (
     make_pack,
     make_plan,
     make_plan_lesson,
+    make_text_record,
     make_word_record,
     make_words_store,
     validate_fixture_draft,
@@ -66,6 +68,67 @@ def _fixture(*, text: str = "слово " * 11, two_senses: bool = False):
     return draft, plan, pack, words
 
 
+def test_runner_calls_frozen_draft_report_interface(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    called = []
+    module = types.ModuleType("scripts.curriculum.validate.activity_report")
+
+    def draft_report(received_plan, received_drafts):
+        called.append((received_plan, received_drafts))
+        return {"lessons": {"1": {"workbook": 0}}}
+
+    module.draft_report = draft_report
+    monkeypatch.setitem(sys.modules, module.__name__, module)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True
+    assert called == [(plan, [draft])]
+    assert report["checks"][3]["details"]["draft_report"] == {"lessons": {"1": {"workbook": 0}}}
+
+
+def test_runner_missing_vesum_orthography_fails_closed(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    # VESUM слово/слова: source location 5682038-5682052.
+    words["words"][0]["forms"].append(
+        {
+            **words["words"][0]["forms"][0],
+            "form": "слова",
+            "stressed": "слова\u0301",
+            "tags": "noun:inanim:n:v_rod",
+        }
+    )
+    words["words"].extend(
+        [
+            make_word_record(2, "а", pos="conj", gloss_en="and"),
+            make_word_record(3, "я", pos="pron", gloss_en="I"),
+        ]
+    )
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Spelling"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [
+        {
+            "id": "a1",
+            "instruction": "Choose",
+            "items": [
+                {
+                    "sentence": "слов___",
+                    "options": ["а", "я"],
+                    "answer": "а",
+                    "mode": "orthography",
+                    "target_record": "W-1",
+                    "kind": "orthography",
+                    "option_why": ["This spelling fits.", "This spelling does not fit."],
+                    "explanation": "Choose the spelling.",
+                }
+            ],
+        }
+    ]
+    monkeypatch.setenv("VESUM_DB_PATH", str(tmp_path / "missing-vesum.db"))
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["code"], bad["layer"]) == (7, "a1_choice_source_unavailable", "pack")
+
+
 def test_true_false_before_text_and_schema_valid_fixture():
     draft, plan, _pack, _words = _fixture()
     plan["lessons"][0]["activities"] = [{"id": "a1", "type": "true-false", "placement": "inline", "focus": "Read"}]
@@ -104,6 +167,10 @@ def test_form_choice_store_options_valid_invented_duplicate_and_tags():
         "mode": "form-choice",
         "record": "W-1",
         "answer_tags": record["forms"][0]["tags"],
+        "kind": "form",
+        "tests_feature": "Case",
+        "requires": {"Case": "Nom", "Number": "Sing"},
+        "option_why": ["This is the nominative form.", "This is the genitive form."],
     }
     draft["activities"] = [{"id": "a1", "instruction": "Choose", "items": [item]}]
     row, found = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
@@ -256,6 +323,89 @@ class _FixtureSources:
         return type("Result", (), {"raw": {word: [] for word in words}})()
 
 
+def _complete_a1_choice_fixture(draft, plan, pack, words):
+    """Give older integration fixtures the A1 metadata required by fresh drafts."""
+    lesson = plan["lessons"][0]
+    types = {activity["id"]: activity["type"] for activity in lesson.get("activities") or []}
+    needs_host = False
+    for activity in draft.get("activities") or []:
+        typ = types.get(activity["id"])
+        if typ == "match-up":
+            activity.setdefault("left_role", "question")
+            activity.setdefault("right_role", "answer")
+            for pair in activity.get("pairs") or []:
+                pair.setdefault("why", "These sides correspond.")
+        for item in activity.get("items") or []:
+            options = [True, False] if typ == "true-false" else item.get("words" if typ == "odd-one-out" else "options")
+            option_texts = [option.get("text") if isinstance(option, dict) else option for option in options or []]
+            if typ == "fill-in" and item.get("mode") == "form-choice":
+                item.setdefault("kind", "form")
+                item.setdefault("tests_feature", "Case")
+                item.setdefault("requires", {"Case": "Nom", "Number": "Sing"})
+            elif typ == "fill-in" and item.get("mode") == "orthography":
+                item.setdefault("kind", "orthography")
+                item.setdefault("target_record", "W-1")
+            elif (
+                len(option_texts) == 2
+                and set(option_texts) == {"слово", "слова"}
+                and words["words"][0]["lemma"] == "слово"
+            ):
+                record = words["words"][0]
+                if not any(form["form"] == "слова" for form in record["forms"]):
+                    record["forms"].append(
+                        {
+                            **record["forms"][0],
+                            "form": "слова",
+                            "stressed": "слова\u0301",
+                            "tags": "noun:inanim:n:v_rod",
+                        }
+                    )
+                key_text = item.get("answer") or item.get("correction") or item.get("letter")
+                if key_text is None and type(item.get("correct")) is int:
+                    key_text = option_texts[item["correct"]]
+                if key_text is None:
+                    key_text = next(
+                        (
+                            option["text"]
+                            for option in options
+                            if isinstance(option, dict) and option.get("correct") is True
+                        ),
+                        None,
+                    )
+                item.setdefault("kind", "form")
+                item.setdefault("tests_feature", "Case")
+                item.setdefault("requires", {"Case": "Gen" if key_text == "слова" else "Nom", "Number": "Sing"})
+                item.setdefault("option_records", ["W-1", "W-1"])
+            elif typ in {
+                "quiz",
+                "multiple-choice",
+                "odd-one-out",
+                "error-correction",
+                "translate",
+                "image-to-letter",
+                "true-false",
+            } and (typ != "error-correction" or item.get("options")):
+                item.setdefault("kind", "comprehension")
+                item.setdefault("host", {"kind": "quote", "ref": "T-1"})
+                needs_host = True
+            if isinstance(options, list) and options:
+                item.setdefault("option_why", ["This choice is checked against the prompt."] * len(options))
+    if needs_host:
+        if not any(text.get("id") == "T-1" for text in pack.get("texts") or []):
+            pack.setdefault("texts", []).append(make_text_record(1, "слово"))
+        for step in draft.get("steps") or []:
+            if any(block.get("kind") == "activity" for block in step.get("blocks") or []):
+                blocks = step["blocks"]
+                first_activity = next(i for i, block in enumerate(blocks) if block.get("kind") == "activity")
+                if first_activity == 0:
+                    continue
+                if not any(block.get("kind") == "quote" and block.get("ref") == "T-1" for block in blocks):
+                    blocks.insert(first_activity, {"kind": "quote", "ref": "T-1"})
+                planned_step = next(candidate for candidate in lesson["steps"] if candidate["id"] == step["id"])
+                if "T-1" not in planned_step.get("evidence", []):
+                    planned_step.setdefault("evidence", []).append("T-1")
+
+
 def _run_contract(
     tmp_path,
     monkeypatch,
@@ -274,6 +424,8 @@ def _run_contract(
     gloss_ids=frozenset(),
 ):
     lvl = level or plan.get("level") or "a1"
+    if lvl == "a1":
+        _complete_a1_choice_fixture(draft, plan, pack, words)
     allowlist = Allowlist.from_records(words["words"], gloss_ids=gloss_ids, words_lock="f" * 64)
     monkeypatch.setattr(
         assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})()
@@ -630,6 +782,9 @@ def test_form_choice_prints_store_spelling_and_state_is_byte_stable(tmp_path, mo
     validate_fixture_draft(draft)
     first, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert first["passed"] is True, first
+    assert first["checks"][6]["details"]["requirement_receipts"] == [
+        {"activity": "a1", "item": 0, "requirement": "not_checked"}
+    ]
     mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
     assert "сло\u0301во" in mdx and "слова\u0301" in mdx
     before = {

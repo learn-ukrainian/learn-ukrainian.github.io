@@ -434,17 +434,11 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
         "stressed": "слова\u0301",
         "tags": "noun:inanim:n:v_rod",
     }
-    form_e = {
-        **words["words"][0]["forms"][0],
-        "form": "слове",
-        "stressed": "сло́ве",
-        "tags": "noun:inanim:n:v_kly",
-    }
-    words["words"][0]["forms"].extend([form_a, form_e])
-    plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["forms"].extend([form_a["tags"], form_e["tags"]])
+    words["words"][0]["forms"].append(form_a)
+    plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["forms"].append(form_a["tags"])
     # Every taught form has a teaching position in the urok text: a string `answer` key is no
     # longer a resolved unit (it is a key like the integer `correct`), so `слова` is taught here.
-    draft["steps"][0]["blocks"][0]["text"] = ("слово " * 9) + "слова слове "
+    draft["steps"][0]["blocks"][0]["text"] = ("слово " * 9) + "слова а я "
 
     w_a = make_word_record(2, "а", pos="conj", gloss_en="and")
     w_ya = make_word_record(3, "я", pos="pron", gloss_en="I")
@@ -466,15 +460,24 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
             "explanation": "E",
         },
     ]
+    for index, item in enumerate(quiz_items):
+        item.update(
+            kind="form",
+            tests_feature="Case",
+            requires={"Case": "Gen", "Number": "Sing"} if index == 1 else {"Case": "Nom", "Number": "Sing"},
+            option_records=["W-1", "W-1"],
+        )
 
     # 2. fill-in - orthography
     fill_orth = [
         {
-            "sentence": "я слово ___",
+            "sentence": "слов___",
             "answer": "а",
             "options": ["а", "я"],
             "explanation": "E",
             "mode": "orthography",
+            "kind": "orthography",
+            "target_record": "W-1",
         }
     ]
 
@@ -499,6 +502,12 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
             "error_ref": "E-001",
         }
     ]
+    err_items[0].update(
+        kind="form",
+        tests_feature="Case",
+        requires={"Case": "Nom", "Number": "Sing"},
+        option_records=["W-1", "W-1"],
+    )
 
     # 4. image-to-letter: covered by test_live_runner_image_to_letter_locates_spans_on_the_page.
 
@@ -510,6 +519,12 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
             "explanation": "E",
         }
     ]
+    trans_items[0].update(
+        kind="form",
+        tests_feature="Case",
+        requires={"Case": "Nom", "Number": "Sing"},
+        option_records=["W-1", "W-1"],
+    )
 
     # 6. odd-one-out
     odd_items = [{"words": ["слово", "слова", "слове"], "correct": 1, "explanation": "E"}]
@@ -635,6 +650,8 @@ def test_a1_choice_types_provenance_and_key_assignment(tmp_path: Path, monkeypat
         "opt_0",
         "opt_1",
         "explanation",
+        "option_why_0",
+        "option_why_1",
     ]
     assert not any(s.get("activity") == "a6" and s.get("block") == "answer" for s in spans)
     mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")

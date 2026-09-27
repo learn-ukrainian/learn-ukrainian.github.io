@@ -46,6 +46,23 @@ def _present_fields(data: dict, *names: str) -> dict[str, Any]:
     return {name: data[name] for name in names if name in data}
 
 
+_CHOICE_PAYLOAD_FIELDS = (
+    "kind",
+    "option_why",
+    "tests_feature",
+    "requires",
+    "option_records",
+    "record",
+    "target_record",
+    "host",
+)
+
+
+def _choice_payload(item: Any) -> dict[str, Any]:
+    """Retain authored choice metadata in the component's original option order."""
+    return {name: value for name in _CHOICE_PAYLOAD_FIELDS if (value := getattr(item, name, None)) is not None}
+
+
 def _indexed_fields(data: dict, prefix: str) -> tuple[list[Any] | None, dict[str, Any]]:
     """Read an indexed feedback array, accepting the assembler's flat form too."""
     if "option_why" in data:
@@ -621,6 +638,8 @@ class ImageToLetterItem:
     explanation: str = ""
     kind: str | None = None
     option_why: list[str] | None = None
+    tests_feature: str | None = None
+    requires: dict[str, Any] | None = None
     option_records: list[str] | None = None
     target_record: str | None = None
     host: dict[str, Any] | None = None
@@ -897,49 +916,52 @@ class ActivityParser:
         if not isinstance(data, dict):
             raise TypeError(f"activity must be a dict, got {type(data).__name__}")
         activity_type = data.get("type")
+        # Keep literal keys visible to the authoring-field drift guard.
+        # fmt: off
         parsers = {
-            "quiz": self._parse_quiz,
-            "select": self._parse_select,
-            "true-false": self._parse_true_false,
-            "fill-in": self._parse_fill_in,
-            "cloze": self._parse_cloze,
-            "match-up": self._parse_match_up,
-            "group-sort": self._parse_group_sort,
-            "unjumble": self._parse_unjumble,
-            "error-correction": self._parse_error_correction,
-            "mark-the-words": self._parse_mark_the_words,
-            "translate": self._parse_translate,
-            "anagram": self._parse_anagram,
-            "reading": self._parse_reading,
-            "essay-response": self._parse_essay_response,
-            "critical-analysis": self._parse_critical_analysis,
-            "comparative-study": self._parse_comparative_study,
-            "ritual-sequencing": self._parse_ritual_sequencing,
-            "variant-comparison": self._parse_variant_comparison,
-            "motif-formula": self._parse_motif_formula,
-            "performance": self._parse_performance,
-            "authorial-intent": self._parse_authorial_intent,
-            "source-evaluation": self._parse_source_evaluation,
-            "debate": self._parse_debate,
-            "etymology-trace": self._parse_etymology_trace,
-            "grammar-identify": self._parse_grammar_identify,
-            "transcription": self._parse_transcription,
-            "paleography-analysis": self._parse_paleography_analysis,
-            "dialect-comparison": self._parse_dialect_comparison,
-            "translation-critique": self._parse_translation_critique,
-            "classify": self._parse_classify,
-            "image-to-letter": self._parse_image_to_letter,
-            "watch-and-repeat": self._parse_watch_and_repeat,
-            "observe": self._parse_observe,
-            "order": self._parse_order,
-            "count-syllables": self._parse_count_syllables,
-            "divide-words": self._parse_divide_words,
-            "highlight-morphemes": self._parse_highlight_morphemes,
-            "letter-grid": self._parse_letter_grid,
-            "phrase-table": self._parse_phrase_table,
-            "odd-one-out": self._parse_odd_one_out,
-            "pick-syllables": self._parse_pick_syllables,
+            'quiz': self._parse_quiz,
+            'select': self._parse_select,
+            'true-false': self._parse_true_false,
+            'fill-in': self._parse_fill_in,
+            'cloze': self._parse_cloze,
+            'match-up': self._parse_match_up,
+            'group-sort': self._parse_group_sort,
+            'unjumble': self._parse_unjumble,
+            'error-correction': self._parse_error_correction,
+            'mark-the-words': self._parse_mark_the_words,
+            'translate': self._parse_translate,
+            'anagram': self._parse_anagram,
+            'reading': self._parse_reading,
+            'essay-response': self._parse_essay_response,
+            'critical-analysis': self._parse_critical_analysis,
+            'comparative-study': self._parse_comparative_study,
+            'ritual-sequencing': self._parse_ritual_sequencing,
+            'variant-comparison': self._parse_variant_comparison,
+            'motif-formula': self._parse_motif_formula,
+            'performance': self._parse_performance,
+            'authorial-intent': self._parse_authorial_intent,
+            'source-evaluation': self._parse_source_evaluation,
+            'debate': self._parse_debate,
+            'etymology-trace': self._parse_etymology_trace,
+            'grammar-identify': self._parse_grammar_identify,
+            'transcription': self._parse_transcription,
+            'paleography-analysis': self._parse_paleography_analysis,
+            'dialect-comparison': self._parse_dialect_comparison,
+            'translation-critique': self._parse_translation_critique,
+            'classify': self._parse_classify,
+            'image-to-letter': self._parse_image_to_letter,
+            'watch-and-repeat': self._parse_watch_and_repeat,
+            'observe': self._parse_observe,
+            'order': self._parse_order,
+            'count-syllables': self._parse_count_syllables,
+            'divide-words': self._parse_divide_words,
+            'highlight-morphemes': self._parse_highlight_morphemes,
+            'letter-grid': self._parse_letter_grid,
+            'phrase-table': self._parse_phrase_table,
+            'odd-one-out': self._parse_odd_one_out,
+            'pick-syllables': self._parse_pick_syllables,
         }
+        # fmt: on
         parser = parsers.get(activity_type)
         if not parser:
             raise ValueError(f"unknown activity type {activity_type!r}")
@@ -1697,6 +1719,19 @@ class ActivityParser:
         items = []
         for index, raw in enumerate(data.get("items", [])):
             values = image_to_letter_render_values(raw, index)
+            choice_fields = {
+                **_present_fields(raw, "kind", "tests_feature", "requires", "option_records", "target_record", "host"),
+                **_feedback_fields(raw),
+            }
+            # The page offers [answer, *distractors], while schema items author
+            # feedback and record bindings in their original options order.
+            options = raw.get("options")
+            if isinstance(options, list):
+                page_indices = [options.index(option) for option in (values["answer"], *values["distractors"])]
+                for field_name in ("option_why", "option_records"):
+                    aligned = choice_fields.get(field_name)
+                    if isinstance(aligned, list) and len(aligned) == len(options):
+                        choice_fields[field_name] = [aligned[position] for position in page_indices]
             items.append(
                 ImageToLetterItem(
                     emoji=values["emoji"],
@@ -1704,8 +1739,7 @@ class ActivityParser:
                     distractors=values["distractors"],
                     note=values.get("note", ""),
                     explanation=values.get("explanation", ""),
-                    **_present_fields(raw, "kind", "option_records", "target_record", "host"),
-                    **_feedback_fields(raw),
+                    **choice_fields,
                 )
             )
         return ImageToLetterActivity(
@@ -2219,6 +2253,7 @@ class ActivityParser:
                 "question": str(i.question),
                 "options": [{"text": str(o.text), "correct": o.correct} for o in i.options],
                 "explanation": str(i.explanation) if i.explanation else "",
+                **_choice_payload(i),
             }
             for i in activity.items
         ]
@@ -2243,6 +2278,7 @@ class ActivityParser:
                 "statement": str(i.statement),
                 "isTrue": i.correct,
                 "explanation": str(i.explanation) if i.explanation else "",
+                **_choice_payload(i),
             }
             for i in activity.items
         ]
@@ -2257,6 +2293,7 @@ class ActivityParser:
                 "options": [str(opt) for opt in i.options],
                 **({"explanation": str(i.explanation)} if i.explanation else {}),
                 **({"mode": str(i.mode)} if getattr(i, "mode", None) else {}),
+                **_choice_payload(i),
             }
             for i in activity.items
         ]
@@ -2289,13 +2326,32 @@ class ActivityParser:
 
     def _match_up_to_mdx(self, activity: MatchUpActivity, is_ukrainian_forced: bool = False) -> str:
         heading = activity.title or "Match Up"
-        pairs = [{"left": str(p.left), "right": str(p.right)} for p in activity.pairs]
-        return f"### {self._escape_jsx(heading)}\n\n<MatchUp client:only='react' pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        pairs = [
+            {
+                "left": str(p.left),
+                "right": str(p.right),
+                **{
+                    name: value
+                    for name in ("left_record", "right_record", "why")
+                    if (value := getattr(p, name, None)) is not None
+                },
+            }
+            for p in activity.pairs
+        ]
+        roles = "".join(
+            f" {name}={{{json.dumps(value)}}}"
+            for name in ("left_role", "right_role")
+            if (value := getattr(activity, name)) is not None
+        )
+        return f"### {self._escape_jsx(heading)}\n\n<MatchUp client:only='react' pairs={{JSON.parse(`{self._dump_safe_json(pairs)}`)}}{roles}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _group_sort_to_mdx(self, activity: GroupSortActivity, is_ukrainian_forced: bool = False) -> str:
         heading = activity.title or "Group Sort"
         groups = {g.name: g.items for g in activity.groups}
-        return f"### {self._escape_jsx(heading)}\n\n<GroupSort client:only='react' groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
+        values = {g.name: g.value for g in activity.groups if g.value is not None}
+        grouping = f" grouping_feature={{{json.dumps(activity.grouping_feature)}}}" if activity.grouping_feature else ""
+        value_prop = f" group_values={{JSON.parse(`{self._dump_safe_json(values)}`)}}" if values else ""
+        return f"### {self._escape_jsx(heading)}\n\n<GroupSort client:only='react' groups={{JSON.parse(`{self._dump_safe_json(groups)}`)}}{grouping}{value_prop}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _unjumble_to_mdx(self, activity: UnjumbleActivity) -> str:
         heading = activity.title or "Unjumble"
@@ -2330,6 +2386,7 @@ class ActivityParser:
                     "correctForm": correct_form,
                     "options": unique_error_correction_options(options),
                     "explanation": str(i.explanation),
+                    **_choice_payload(i),
                 }
             )
         instruction_prop = (
@@ -2359,6 +2416,7 @@ class ActivityParser:
             }
             if item.explanation:
                 rendered_item["explanation"] = str(item.explanation)
+            rendered_item.update(_choice_payload(item))
             items.append(rendered_item)
         return f"### {self._escape_jsx(heading)}\n\n<Translate client:only='react' questions={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
@@ -2678,6 +2736,7 @@ class ActivityParser:
                 entry["note"] = i.note
             if i.explanation:
                 entry["explanation"] = i.explanation
+            entry.update(_choice_payload(i))
             items.append(entry)
         props = f"items={{JSON.parse(`{self._dump_safe_json(items)}`)}}"
         if activity.title:
@@ -2724,11 +2783,14 @@ class ActivityParser:
             f" instruction={{{json.dumps(activity.instruction, ensure_ascii=False)}}}" if activity.instruction else ""
         )
         is_ukrainian = is_ukrainian_forced or activity.is_ukrainian
+        explanation_prop = (
+            f" explanation={{{json.dumps(activity.explanation, ensure_ascii=False)}}}" if activity.explanation else ""
+        )
         return (
             f"### {self._escape_jsx(heading)}\n\n"
             f"<Order client:only='react' items={{JSON.parse(`{self._dump_safe_json(activity.items)}`)}} "
             f"correct_order={{JSON.parse(`{self._dump_safe_json(activity.correct_order)}`)}}"
-            f"{instruction_prop} isUkrainian={{{'true' if is_ukrainian else 'false'}}} />"
+            f"{instruction_prop}{explanation_prop} isUkrainian={{{'true' if is_ukrainian else 'false'}}} />"
         )
 
     def _count_syllables_to_mdx(self, activity: CountSyllablesActivity) -> str:
@@ -2818,6 +2880,7 @@ class ActivityParser:
                 "correct": item.correct,
                 "explanation": item.explanation,
                 **({"prompt": item.prompt} if item.prompt else {}),
+                **_choice_payload(item),
             }
             for item in activity.items
         ]

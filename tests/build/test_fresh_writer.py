@@ -19,18 +19,16 @@ from scripts.build.fresh.writer import (
     parse_and_validate_reply,
     strip_markdown_fence,
 )
+from tests.build.test_fresh_draft_schema import load_fixture
 
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-FIXTURES = Path(__file__).parent / "fixtures" / "fresh"
 
 
 @pytest.fixture
 def a1_valid_fixture():
-    draft = yaml.safe_load((FIXTURES / "lesson-draft-a1-valid.yaml").read_text(encoding="utf-8"))
-    types = json.loads((FIXTURES / "lesson-draft-a1-types.json").read_text(encoding="utf-8"))
-    return draft, types
+    return load_fixture("a1")
 
 
 @pytest.fixture
@@ -481,7 +479,9 @@ def test_r11_forbidden_paths_grep():
     ]
 
     all_files = list(fresh_dir.glob("*.py")) + list(fresh_dir.glob("prompts/*.j2")) + list(fresh_dir.glob("*.yaml"))
-    assert {"runner.py", "regeneration.py", "manifest.py", "closure.py", "module.py"} <= {path.name for path in all_files}
+    assert {"runner.py", "regeneration.py", "manifest.py", "closure.py", "module.py"} <= {
+        path.name for path in all_files
+    }
 
     for fpath in all_files:
         text = fpath.read_text(encoding="utf-8")
@@ -508,7 +508,9 @@ def test_nothing_typed_no_cyrillic_in_engine_code():
     cyrillic_pattern = re.compile(r"[\u0400-\u04FF]")
 
     all_files = list(fresh_dir.glob("*.py")) + list(fresh_dir.glob("prompts/*.j2"))
-    assert {"runner.py", "regeneration.py", "manifest.py", "closure.py", "module.py"} <= {path.name for path in all_files}
+    assert {"runner.py", "regeneration.py", "manifest.py", "closure.py", "module.py"} <= {
+        path.name for path in all_files
+    }
 
     for fpath in all_files:
         text = fpath.read_text(encoding="utf-8")
