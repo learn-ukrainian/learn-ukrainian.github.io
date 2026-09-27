@@ -99,6 +99,52 @@ def test_grok_hook_bridge_denies_unreadable_event() -> None:
     assert result.returncode == 2
 
 
+def test_write_mode_push_is_outside_reviewer_guards_and_reviewer_push_stays_refused(tmp_path: Path) -> None:
+    """A write session must not inherit the read-only push block (#8965).
+
+    Grok 1.0.41 leaves yolo off when ``--permission-mode auto`` is set, and the
+    auto classifier then refuses ``git push`` before execution. Write mode uses
+    ``bypassPermissions`` and does not install the reviewer publish guard or the
+    push rewrite. The reviewer hook still refuses ``git push``.
+    """
+    with patch("scripts.agent_runtime.adapters.grok_build.shutil.which", return_value="/usr/bin/grok"):
+        write_plan = GrokBuildAdapter().build_invocation(
+            prompt="push the dispatch branch",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id="impl-8965",
+            session_id=None,
+            tool_config={"reviewer_tools": True},
+            effort="low",
+        )
+    assert write_plan.cmd[write_plan.cmd.index("--permission-mode") + 1] == "bypassPermissions"
+    assert "--always-approve" in write_plan.cmd
+    assert "--agent" not in write_plan.cmd
+    assert "--deny" not in write_plan.cmd
+    assert write_plan.env_overrides == {}
+    env = build_agent_env(provider="grok", overrides=write_plan.env_overrides)
+    assert not any(
+        value == "url.file:///dev/null/claude-read-only/.pushInsteadOf"
+        for key, value in env.items()
+        if key.startswith("GIT_CONFIG_KEY_")
+    )
+
+    event = {
+        "hook_event_name": "PreToolUse",
+        "toolName": "run_terminal_command",
+        "toolInput": {"command": "git push -u origin HEAD"},
+        "cwd": str(ROOT),
+    }
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/agent_runtime/grok_hook_bridge.py"),
+         str(ROOT / "agents_extensions/shared/hooks/guard-reviewer-publish.py")],
+        input=json.dumps(event), capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 2
+    assert "git push" in result.stderr
+
+
 def test_grok_hook_bridge_runs_fleet_venv_guard() -> None:
     event = {
         "hook_event_name": "PreToolUse",

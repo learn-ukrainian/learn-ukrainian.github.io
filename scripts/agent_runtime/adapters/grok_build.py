@@ -18,17 +18,23 @@ Mode → ``--permission-mode``:
 - ``read-only``       → ``auto`` + ``--deny`` on write tools and ``Bash`` by
   default. Ordinary reviewer opt-ins replace the Bash deny with fleet and
   publish PreToolUse guards.
-- ``workspace-write`` → ``auto`` + ``--always-approve``
+- ``workspace-write`` → ``bypassPermissions`` + ``--always-approve``
   (unattended tool execution and file edits within the dispatch worktree)
 - ``danger``          → ``bypassPermissions`` + ``--always-approve``
   (unattended full autonomy within the dispatch worktree)
 
 Issue #7583: On native Grok 1.0.x CLI, ``acceptEdits --always-approve`` still prompts
 for approval on shell commands and terminates headless turns (``stopReason=cancelled``),
-while ``plan`` blocks all tool calls outright. Write dispatches map to execution-capable
-``auto``/``bypassPermissions`` with ``--always-approve``. Ordinary ``read-only``
+while ``plan`` blocks all tool calls outright. Write dispatches map to
+``bypassPermissions`` with ``--always-approve``. Ordinary ``read-only``
 maps to ``auto`` so non-shell read tools can run; only opted-in reviewers get
 guarded Bash. Other read-only calls retain their Bash deny.
+
+Issue #8965: Grok 1.0.41 treats an explicit ``--permission-mode auto`` as winning
+over ``--always-approve``, so ``yolo_mode`` stays false and the auto classifier
+refuses ``git push`` before the command runs. ``workspace-write`` therefore uses
+``bypassPermissions``, the same mode ``danger`` already uses successfully.
+Read-only reviewer guards are unchanged.
 
 Trail and review isolation use their own explicit tool/deny policies; they do
 not inherit the ordinary write-dispatch approval grant.
@@ -70,11 +76,14 @@ _RATE_LIMIT_RE = re.compile(
 
 # Runtime mode → grok CLI --permission-mode value.
 # Issue #7583: on grok 1.0.x, acceptEdits does not cover shell headlessly (turn
-# cancels), while plan blocks all tool calls. We map workspace-write to auto
-# (with --always-approve) and read-only to auto with Bash/write denies by default.
+# cancels), while plan blocks all tool calls. Read-only stays on auto with
+# Bash/write denies by default.
+# Issue #8965: explicit --permission-mode auto defeats --always-approve
+# (yolo_mode stays false) and the auto classifier blocks git push. Write modes
+# use bypassPermissions so always-approve stays on.
 _MODE_PERMISSION: dict[str, str] = {
     "read-only": "auto",
-    "workspace-write": "auto",
+    "workspace-write": "bypassPermissions",
     "danger": "bypassPermissions",
 }
 

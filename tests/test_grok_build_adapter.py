@@ -70,7 +70,7 @@ def test_basic_headless_invocation(tmp_path):
 def test_mode_permission_mapping(tmp_path):
     for mode, perm in [
         ("read-only", "auto"),
-        ("workspace-write", "auto"),
+        ("workspace-write", "bypassPermissions"),
         ("danger", "bypassPermissions"),
     ]:
         plan = _build("do x", tmp_path, mode=mode)
@@ -152,7 +152,8 @@ def test_exact_argv_per_mode(tmp_path):
         "search_replace",
     ]
 
-    # workspace-write: auto, always-approve, no default deny rules
+    # workspace-write: bypassPermissions, always-approve, no default deny rules.
+    # auto would leave yolo off and the classifier would refuse git push (#8965).
     ww_plan = _build("edit code", tmp_path, mode="workspace-write", model="grok-4.7", effort="high")
     assert ww_plan.cmd == [
         FAKE_GROK,
@@ -162,7 +163,7 @@ def test_exact_argv_per_mode(tmp_path):
         "json",
         "--no-alt-screen",
         "--permission-mode",
-        "auto",
+        "bypassPermissions",
         "--cwd",
         str(tmp_path),
         "--always-approve",

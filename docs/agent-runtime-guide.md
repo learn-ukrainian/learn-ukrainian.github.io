@@ -396,8 +396,8 @@ on as the guard.
 
 On native Grok 1.0.x CLI, `acceptEdits --always-approve` still prompts for shell
 execution and fails unattended turns (`stopReason=cancelled`), while `plan`
-blocks all tool calls outright. The adapter maps `workspace-write` to
-`auto --always-approve`, `danger` to `bypassPermissions --always-approve`, and
+blocks all tool calls outright. The adapter maps `workspace-write` and `danger`
+to `bypassPermissions --always-approve`, and
 ordinary `read-only` to `auto` with `--deny` on the native write
 permission prefixes (`Write`, `Edit`) and `Bash` unless reviewer tools are
 opted in. The built-in ID
@@ -418,6 +418,13 @@ ordinary Git push rewrite used by Claude. Code the reviewer runs (Python,
 scripts, HTTP) can still publish using host credentials: it can override its
 Git config to push or call GitHub APIs directly. The deny rules, publish hook,
 and push rewrite stop ordinary command forms only.
+
+On Grok 1.0.41 an explicit `--permission-mode auto` wins over `--always-approve`
+and leaves `yolo_mode` false. The auto classifier then refuses `git push`
+before the command runs, including a write worker's push of its own branch
+(#8965). `workspace-write` uses `bypassPermissions` so that classifier is not
+the session mode. The read-only reviewer opt-in, its publish hook, and the
+push rewrite stay on `auto` and do not apply to write mode.
 
 ## Weak-driver trail isolation (P5)
 
