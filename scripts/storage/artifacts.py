@@ -1,4 +1,11 @@
-"""Manage migration manifests and the host-local content-addressed artifact store."""
+"""Manage migration manifests and the host-local content-addressed artifact store.
+
+Path components are checked with ``lstat`` before publication, but a second
+process can replace a component with a symlink after the check while the
+publisher holds its lock. Cooperating writers honor the lock; hostile path
+replacement is outside this threat model. If that changes, open each component
+with ``os.open(..., dir_fd=)`` and ``O_NOFOLLOW`` instead of using path names.
+"""
 
 from __future__ import annotations
 
@@ -28,6 +35,7 @@ from scripts.storage import paths
 
 ROOT = paths.ROOT
 TABLE = "registry/artifacts/classification-v1.tsv"
+_JOURNAL_SCRATCH = re.compile(r"\.lu-journal-[0-9a-f]{32}-[A-Za-z0-9_]{8}\.tmp\Z")
 
 
 def _now() -> str:
@@ -42,7 +50,16 @@ def _git(repo: Path, *args: str, input_bytes: bytes | None = None) -> bytes:
 
 def _json_write(path: Path, value: object) -> None:
     _mkdir_durable(path.parent)
-    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as stream:
+    journal = path.parent.name == ".transactions"
+    prefix = f".lu-journal-{uuid.uuid4().hex}-" if journal else "tmp"
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        dir=path.parent,
+        prefix=prefix,
+        suffix=".tmp" if journal else "",
+        delete=False,
+    ) as stream:
         temp = Path(stream.name)
         try:
             json.dump(value, stream, indent=2, sort_keys=True)
@@ -475,6 +492,8 @@ def verify(repo: Path, entries: list[tuple[str, dict]], *, groups: set[str] | No
 @contextlib.contextmanager
 def _lock(repo: Path):
     store = paths.artifact_store_root(repo)
+    for path in (store, store / ".publish.lock", store / ".transactions"):
+        _checked_store_path(path)
     _mkdir_durable(store)
     with (store / ".publish.lock").open("a+b") as stream:
         fcntl.flock(stream, fcntl.LOCK_EX)
@@ -485,6 +504,12 @@ def _lock(repo: Path):
             yield
         finally:
             fcntl.flock(stream, fcntl.LOCK_UN)
+
+
+def _checked_store_path(path: Path) -> Path:
+    """Apply the artifact path component walk to an absolute host-store path."""
+    relative = path.relative_to(path.anchor)
+    return paths.checked_destination(Path(path.anchor), str(relative), relative.parts[0])
 
 
 def _journal_path(repo: Path, group: str, rel: str) -> Path:
@@ -518,6 +543,15 @@ def _recovery_remediation(journal: Path) -> str:
 def _recover_locked(repo: Path) -> int:
     store = paths.artifact_store_root(repo)
     journal_dir = store / ".transactions"
+    _checked_store_path(journal_dir)
+    if journal_dir.is_dir():
+        removed_scratch = False
+        for scratch in journal_dir.iterdir():
+            if _JOURNAL_SCRATCH.fullmatch(scratch.name) and scratch.is_file() and not scratch.is_symlink():
+                scratch.unlink()
+                removed_scratch = True
+        if removed_scratch:
+            _fsync_dir(journal_dir)
     count = 0
     for journal in sorted(journal_dir.glob("*.json")):
         try:
@@ -854,9 +888,25 @@ def publish_set(
     expected_members: set[str],
 ) -> dict[str, str | None]:
     """Publish one group's complete intended change set under one durable descriptor."""
+    _preflight_publish_paths(repo, group, artifacts, companions or [])
     with _lock(repo):
         _recover_locked(repo)
         return _publish_set_locked(repo, group, artifacts, producer, companions or [], expected_members)
+
+
+def _preflight_publish_paths(
+    repo: Path, group: str, artifacts: list[ArtifactChange], companions: list[CompanionChange]
+) -> None:
+    """Refuse static symlink paths before acquiring a lock or creating store state."""
+    manifest = paths.load_manifest(group, repo)
+    for entry in manifest["entries"] + manifest.get("retired", []):
+        _safe_destination(repo, entry["path"], "data")
+    for relative in manifest.get("set_descriptor", {}).get("companions", {}):
+        _safe_destination(repo, relative, "registry")
+    for change in artifacts:
+        _safe_destination(repo, f"data/{change.rel}", "data")
+    for change in companions:
+        _safe_destination(repo, change.path, "registry")
 
 
 def _publish_set_locked(
@@ -1119,6 +1169,7 @@ def _publish_set_locked(
 def publish(repo: Path, group: str, rel: str, source: Path, producer: str) -> str:
     """Publish one existing member through the set engine (legacy caller contract)."""
     paths.checked_rel(rel)
+    _preflight_publish_paths(repo, group, [ArtifactChange("replace", rel, source, None)], [])
     with _lock(repo):
         _recover_locked(repo)
         manifest = paths.load_manifest(group, repo)

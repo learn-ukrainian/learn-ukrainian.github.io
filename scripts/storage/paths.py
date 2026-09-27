@@ -73,11 +73,14 @@ def _cached_store_root(repo: Path, override: str | None) -> Path:
         ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"], cwd=repo, text=True, timeout=30
     ).strip()
     primary = Path(common).resolve().parent
-    store = Path(override).expanduser().resolve() if override else primary / "data/.artifact-store"
+    # Keep the spelling of an override so the publisher can reject symlinked
+    # components before writing; resolving here would hide them from lstat.
+    store = Path(os.path.abspath(Path(override).expanduser())) if override else primary / "data/.artifact-store"
+    resolved_store = store.resolve()
     # A dispatch checkout can be short-lived. Never make it the only owner of bytes.
     resolved_repo = repo.resolve()
-    if store.is_relative_to(primary / ".worktrees/dispatch") or (
-        resolved_repo != primary and store.is_relative_to(resolved_repo)
+    if resolved_store.is_relative_to(primary / ".worktrees/dispatch") or (
+        resolved_repo != primary and resolved_store.is_relative_to(resolved_repo)
     ):
         raise ValueError("artifact store must not live under a dispatch worktree")
     return store

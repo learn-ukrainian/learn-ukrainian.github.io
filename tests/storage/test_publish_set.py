@@ -92,6 +92,7 @@ NEW = (b"A2", None, b"N1", b"K0-new", {"data/raw/a.txt", "data/raw/new-one.txt"}
     [
         *(f"store:{index}" for index in range(1, 7)),
         "prejournal",
+        "journal_scratch",
         "journal",
         "temp_open",
         *(f"temp:{index}" for index in range(1, 4)),
@@ -128,6 +129,7 @@ artifacts._store_copy = hooked_copy
 open_file = artifacts.os.open
 def hooked_open(path, flags, *args, **kwargs):
     fd = open_file(path, flags, *args, **kwargs)
+    if point == 'journal_scratch' and '.lu-journal-' in str(path): kill()
     if point == 'temp_open' and '.lu-artifact-' in str(path): kill()
     return fd
 artifacts.os.open = hooked_open
@@ -166,6 +168,12 @@ artifacts.publish_set(repo, 'raw_source', changes, 'fixture', companions=compani
 """
     unrelated = repo / "data/raw" / (".lu-artifact-" + "0" * 32 + "-999.tmp")
     unrelated.write_bytes(b"unrelated")
+    journal_dir = paths.artifact_store_root(repo) / ".transactions"
+    journal_dir.mkdir(parents=True)
+    unrelated_journal = journal_dir / "tmp-unrelated-keep"
+    unrelated_journal.write_bytes(b"unrelated journal scratch")
+    unrelated_named = journal_dir / (".lu-journal-" + "0" * 32 + "-unrelated.tmp")
+    unrelated_named.write_bytes(b"unrelated named file")
     result = subprocess.run(
         [sys.executable, "-c", script, str(repo), str(tmp_path / "staged"), point],
         cwd=Path(__file__).resolve().parents[2],
@@ -177,8 +185,11 @@ artifacts.publish_set(repo, 'raw_source', changes, 'fixture', companions=compani
     assert artifacts.recover_incomplete(repo) == 0
     assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
     assert _state(repo) == (NEW if point in {"descriptor", "cleanup"} else OLD)
-    assert first == (0 if point.startswith("store:") or point == "prejournal" else 1)
+    assert first == (0 if point.startswith("store:") or point in {"prejournal", "journal_scratch"} else 1)
     assert unrelated.read_bytes() == b"unrelated"
+    assert unrelated_journal.read_bytes() == b"unrelated journal scratch"
+    assert unrelated_named.read_bytes() == b"unrelated named file"
+    assert not any(artifacts._JOURNAL_SCRATCH.fullmatch(path.name) for path in journal_dir.iterdir())
     assert list((repo / "data").rglob(".lu-artifact-*.tmp")) == [unrelated]
     assert list((repo / "registry").rglob(".lu-artifact-*.tmp")) == []
 
@@ -421,6 +432,69 @@ def test_read_hydrate_and_publish_refuse_in_root_symlinked_parent(tmp_path: Path
         artifacts.hydrate(repo, [("raw_source", entry)])
     assert (repo / "data/raw.real/a.txt").read_bytes() == before
     assert not artifacts._journal_path(repo, "raw_source", "@set").exists()
+
+
+@pytest.mark.parametrize("entry_point", ["publish", "publish_set"])
+def test_symlinked_data_refuses_before_store_creation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, entry_point: str
+) -> None:
+    monkeypatch.delenv("LU_ARTIFACT_STORE", raising=False)
+    repo = _repo(tmp_path)
+    changes, companions = _plan(repo, tmp_path)
+    (repo / "data").rename(repo / "data.real")
+    foreign = tmp_path / "foreign"
+    foreign.mkdir()
+    (foreign / "sentinel").write_bytes(b"untouched")
+    (repo / "data").symlink_to(foreign, target_is_directory=True)
+    before = sorted((path.relative_to(foreign), path.read_bytes()) for path in foreign.rglob("*") if path.is_file())
+    source = changes[0].source
+    assert source is not None
+
+    with pytest.raises(ValueError, match="symlink component in artifact path"):
+        if entry_point == "publish":
+            artifacts.publish(repo, "raw_source", "raw/a.txt", source, "fixture")
+        else:
+            artifacts.publish_set(
+                repo,
+                "raw_source",
+                changes,
+                "fixture",
+                companions=companions,
+                expected_members={"raw/a.txt", "raw/b.txt"},
+            )
+
+    assert (
+        sorted((path.relative_to(foreign), path.read_bytes()) for path in foreign.rglob("*") if path.is_file())
+        == before
+    )
+    assert sorted(path.relative_to(foreign) for path in foreign.rglob("*")) == [Path("sentinel")]
+    assert (repo / "data").is_symlink()
+    assert (repo / "data.real/raw/a.txt").read_bytes() == b"A1"
+    assert (repo / "data.real/raw/b.txt").read_bytes() == b"B1"
+
+
+def test_symlinked_store_refuses_before_lock_creation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("LU_ARTIFACT_STORE", raising=False)
+    repo = _repo(tmp_path)
+    changes, companions = _plan(repo, tmp_path)
+    foreign = tmp_path / "foreign"
+    foreign.mkdir()
+    (foreign / "sentinel").write_bytes(b"untouched")
+    (repo / "data/.artifact-store").symlink_to(foreign, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="symlink component in artifact path"):
+        artifacts.publish_set(
+            repo,
+            "raw_source",
+            changes,
+            "fixture",
+            companions=companions,
+            expected_members={"raw/a.txt", "raw/b.txt"},
+        )
+
+    assert sorted(path.name for path in foreign.iterdir()) == ["sentinel"]
+    assert (foreign / "sentinel").read_bytes() == b"untouched"
+    assert _state(repo) == OLD
 
 
 def test_engine_temp_collision_preserves_unrelated_file_before_journal(

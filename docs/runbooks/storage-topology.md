@@ -199,6 +199,14 @@ when their bytes match a recorded retired version. Run `snapshot` after a local
 publication to verify the active objects in that host store, then transfer
 them to each required host. Local publication alone proves no off-host backup.
 
+Path validation refuses a static symlink in a published path or the store path
+before publication creates store or lock state. A second process can still swap
+a path component for a symlink after validation while the publisher holds its
+lock; cooperating writers are expected to honor that lock. If the threat model
+includes hostile concurrent path changes, open every component through directory
+file descriptors with per-component `O_NOFOLLOW` and
+`os.open(..., dir_fd=)` before treating publication as safe against that race.
+
 ## Safety boundaries
 
 - Do not move live SQLite onto SMB or open it across a network filesystem.
