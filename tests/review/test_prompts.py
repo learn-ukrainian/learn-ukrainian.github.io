@@ -1701,3 +1701,13 @@ def test_the_renderer_serves_only_the_fixed_template_set_and_records_each_templa
     )
     assert any(err.startswith("template_sha256_mismatch") for err in wrong.errors)
     assert check_main([str(prompt_out), "--manifest", str(manifest_path), "--repo-root", str(tmp_path)]) == 0
+
+
+@pytest.mark.parametrize(
+    "template", ["lesson-review.md.j2", "lesson-rereview.md.j2", "plan-review.md.j2"]
+)
+def test_review_prompts_check_one_sentence_one_language(template: str) -> None:
+    """Operator direction 2026-09-27: reviewers flag a sentence that mixes Ukrainian and English."""
+    text = (Path(__file__).resolve().parents[2] / "scripts/review/prompts" / template).read_text(encoding="utf-8")
+    assert "one language, Ukrainian or English, never a mix" in text
+    assert "about that item" in text
