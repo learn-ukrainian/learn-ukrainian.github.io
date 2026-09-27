@@ -4,6 +4,7 @@ import inspect
 import json
 import os
 import stat
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -70,7 +71,14 @@ def test_schema_and_committed_receipt_validate() -> None:
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     Draft202012Validator(schema).validate(receipt)
     assert negrec.receipt_sha256(receipt) == receipt["receipt_sha256"]
-    assert stat.S_IMODE(PUBLIC_RECEIPT.stat().st_mode) == negrec.TRACKED_PUBLIC_FILE_MODE
+    tracked = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-files", "--stage", "--", str(PUBLIC_RECEIPT.relative_to(ROOT))],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    ).stdout
+    assert tracked.startswith("100644 ")
     assert negrec.validate_receipt(receipt)["receipt_sha256"] == receipt["receipt_sha256"]
     assert receipt["disposition"] == "school_complete_parent_or_sentence_context_not_recoverable"
     assert receipt["gates"]["phase4_blocked"] is True
@@ -257,17 +265,26 @@ def test_public_receipt_accepts_existing_tracked_checkout_mode(tmp_path: Path) -
 def test_validate_receipt_rebinds_live_public_artifacts(monkeypatch: pytest.MonkeyPatch) -> None:
     receipt = json.loads(PUBLIC_RECEIPT.read_text(encoding="utf-8"))
     opened: list[Path] = []
+    verified_groups: list[str] = []
     real_sha256_file = negrec.sha256_file
+    real_artifact_set = negrec.artifact_set
 
     def _tracking(path: Path) -> str:
         opened.append(path.resolve())
         return real_sha256_file(path)
 
     monkeypatch.setattr(negrec, "sha256_file", _tracking)
+
+    def _tracking_set(group: str, *, repo: Path):
+        verified_groups.append(group)
+        return real_artifact_set(group, repo=repo)
+
+    monkeypatch.setattr(negrec, "artifact_set", _tracking_set)
     assert negrec.validate_receipt(receipt)["receipt_sha256"] == receipt["receipt_sha256"]
     resolved = set(opened)
     assert negrec.EVAL_CONTEXT_RECEIPT.resolve() in resolved
-    assert negrec.SCHOOL_LEDGER.resolve() in resolved
+    assert negrec.SCHOOL_LEDGER.resolve() not in resolved
+    assert verified_groups == ["open_model_evidence_indexes"]
     assert negrec.SOURCE_UNIVERSE_RECEIPT.resolve() in resolved
 
 

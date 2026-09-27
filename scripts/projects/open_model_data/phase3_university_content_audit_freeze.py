@@ -24,17 +24,18 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
+
 ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_VERSION = "phase3_university_content_audit_freeze_v1"
 STATUS = "UNIVERSITY_CONTENT_AUDIT_FROZEN_PARTIAL_COVERAGE"
 DEFAULT_XATTR_TIMEOUT_SECONDS: float = 30.0
-SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_university_content_audit_freeze_v1.schema.json"
-DEFAULT_OUTPUT_PATH = ROOT / "data/projects/open_model_data/admission/phase3_university_content_audit_freeze_v1.json"
-DEFAULT_POLICY_PATH = ROOT / "data/projects/open_model_data/admission/phase3_complete_source_policy_v4.json"
-DEFAULT_LIVE_GATE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_live_ingest_gate_v1.json"
-DEFAULT_HISTORICAL_PATH = (
-    ROOT / "data/projects/open_model_data/admission/phase3_historical_periodization_freeze_v1.json"
-)
+SCHEMA_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "contracts/phase3_university_content_audit_freeze_v1.schema.json"
+DEFAULT_OUTPUT_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_university_content_audit_freeze_v1.json"
+DEFAULT_POLICY_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_complete_source_policy_v4.json"
+DEFAULT_LIVE_GATE_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_live_ingest_gate_v1.json"
+DEFAULT_HISTORICAL_PATH = REGISTRY_OPEN_MODEL_DATA_DIR / "admission/phase3_historical_periodization_freeze_v1.json"
 EXPECTED_OUTPUT_SHA256 = "d48db94a4576ffa13285d7678a774247ef6db484f85f866aa4a02f6fb33f5c0b"
 
 EXPECTED_BINDINGS = {
@@ -540,9 +541,15 @@ def build_document(
 
 
 def write_json_atomic(path: Path, document: Mapping[str, Any]) -> None:
+    payload = json.dumps(document, ensure_ascii=False, indent=2, sort_keys=False) + "\n"
+    if path == DEFAULT_OUTPUT_PATH:
+        validate_document(document)
+        publish_bound_companion(
+            ROOT, "open_model_other_indexes", "phase3_university_content_audit_freeze", path, payload.encode("utf-8")
+        )
+        return
     path.parent.mkdir(parents=True, exist_ok=True)
     require(not path.is_symlink(), f"refusing symlink output: {path}")
-    payload = json.dumps(document, ensure_ascii=False, indent=2, sort_keys=False) + "\n"
     temporary: Path | None = None
     try:
         with tempfile.NamedTemporaryFile(

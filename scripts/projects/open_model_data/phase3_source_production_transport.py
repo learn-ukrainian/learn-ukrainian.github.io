@@ -25,6 +25,7 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
+from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
@@ -33,7 +34,7 @@ DEFAULT_DISPOSITION_SCHEMA = CONTRACTS / "phase3_source_disposition_input_v1.sch
 DEFAULT_AUTHOR_PROMPT = CONTRACTS / "phase3_source_author_prompt_v1.md"
 DEFAULT_REVIEW_PROMPT = CONTRACTS / "phase3_source_review_prompt_v1.md"
 DEFAULT_ROLE_CONTRACT = (
-    ROOT / "data/projects/open_model_data/evidence/correction_protection_functional_role_contract_v2_1.json"
+    REGISTRY_OPEN_MODEL_DATA_DIR / "evidence/correction_protection_functional_role_contract_v2_1.json"
 )
 
 BASE_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"

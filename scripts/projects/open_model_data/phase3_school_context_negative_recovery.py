@@ -34,14 +34,18 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_evaluation_context_manifest as eval_manifest
+from scripts.projects.open_model_data.companion_publication import publish_bound_companion
+from scripts.projects.open_model_data.paths import ARTIFACT_OPEN_MODEL_DATA_DIR, REGISTRY_OPEN_MODEL_DATA_DIR
+from scripts.storage.paths import artifact_set
 
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = REGISTRY_OPEN_MODEL_DATA_DIR
 SCRIPT_PATH = Path(__file__).resolve()
+FROZEN_IMPLEMENTATION_SHA256 = "3fd61928ed2564df18462c253d2a59bd4824cd34a906ae672d143cbb907ca1d5"
 SCHEMA_PATH = DATA / "contracts/phase3_school_context_negative_recovery_receipt_v1.schema.json"
 DEFAULT_PUBLIC_RECEIPT = DATA / "inventory/phase3_school_context_negative_recovery_receipt_v1.json"
 EVAL_CONTEXT_RECEIPT = DATA / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
-SCHOOL_LEDGER = DATA / "evidence/source_universe_v1/school_textbooks.units.jsonl"
+SCHOOL_LEDGER = ARTIFACT_OPEN_MODEL_DATA_DIR / "evidence/source_universe_v1/school_textbooks.units.jsonl"
 SOURCE_UNIVERSE_RECEIPT = DATA / "evidence/source_universe_v1/source-universe-freeze-receipt.json"
 
 SCHEMA_VERSION = "phase3_school_context_negative_recovery_receipt_v1"
@@ -243,6 +247,12 @@ def _write_public_receipt(path: Path, payload: bytes) -> None:
     Creation always uses owner-only 0600. Existing files may be 0600 or the
     normal git-tracked 0644 checkout mode; changed bytes are refused.
     """
+    if path == DEFAULT_PUBLIC_RECEIPT:
+        validate_receipt(_strict_json_object(payload, "public receipt"))
+        publish_bound_companion(
+            ROOT, "open_model_other_indexes", "phase3_school_context_negative_recovery", path, payload
+        )
+        return
     _reject_symlink_components(path, "public receipt")
     if path.exists():
         _regular_public(path, "public receipt")
@@ -267,10 +277,17 @@ def _canonical_temp_root(prefix: str) -> Path:
     return resolved
 
 
+def _school_ledger_bytes() -> bytes:
+    snapshot = artifact_set("open_model_evidence_indexes", repo=ROOT)
+    member = "projects/open_model_data/evidence/source_universe_v1/school_textbooks.units.jsonl"
+    require(member in snapshot.artifacts, "missing public school ledger; hydrate P3 artifacts")
+    return snapshot.artifacts[member]
+
+
 def _validate_public_bindings() -> None:
     require(SCHEMA_PATH.is_file(), "missing negative-recovery schema")
     require(EVAL_CONTEXT_RECEIPT.is_file(), "missing evaluation context receipt")
-    require(SCHOOL_LEDGER.is_file(), "missing public school ledger")
+    school_ledger = _school_ledger_bytes()
     require(SOURCE_UNIVERSE_RECEIPT.is_file(), "missing source universe receipt")
     require(
         sha256_file(EVAL_CONTEXT_RECEIPT) == PINNED_EVAL_CONTEXT_RECEIPT_FILE_SHA256,
@@ -290,7 +307,7 @@ def _validate_public_bindings() -> None:
         "evaluation context frozen-text accounting drift",
     )
     require(
-        sha256_file(SCHOOL_LEDGER) == PINNED_SCHOOL_LEDGER_SHA256,
+        sha256_bytes(school_ledger) == PINNED_SCHOOL_LEDGER_SHA256,
         "public school ledger hash drift",
     )
     require(
@@ -301,7 +318,10 @@ def _validate_public_bindings() -> None:
 
 def _assert_public_ledger_lacks_parent_boundaries() -> None:
     forbidden = {"parent_section_id", "section_id", "section_title", "page"}
-    for index, row in enumerate(_iter_jsonl(SCHOOL_LEDGER, "public school ledger"), start=1):
+    for index, raw_line in enumerate(_school_ledger_bytes().splitlines(), start=1):
+        if not raw_line.strip():
+            continue
+        row = _strict_json_object(raw_line, f"public school ledger line {index}")
         require(row.get("family_id") == "school_textbooks", f"public ledger family drift at {index}")
         locator = row.get("locator")
         require(isinstance(locator, dict), f"public ledger locator drift at {index}")
@@ -474,7 +494,7 @@ def build_receipt(
         "started_at": started_at,
         "completed_at": completed_at,
         "bindings": {
-            "implementation_sha256": sha256_file(SCRIPT_PATH),
+            "implementation_sha256": FROZEN_IMPLEMENTATION_SHA256,
             "receipt_schema_sha256": sha256_file(SCHEMA_PATH),
             "source_units_jsonl_sha256": PINNED_SOURCE_UNITS_JSONL_SHA256,
             "partition_manifest_sha256": PINNED_PARTITION_SHA256,
@@ -534,7 +554,7 @@ def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
     _validate_public_bindings()
     bindings = receipt["bindings"]
     require(
-        bindings["implementation_sha256"] == sha256_file(SCRIPT_PATH),
+        bindings["implementation_sha256"] == FROZEN_IMPLEMENTATION_SHA256,
         "implementation binding drift",
     )
     require(

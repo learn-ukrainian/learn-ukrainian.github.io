@@ -202,6 +202,43 @@ consumers printed `332 passed` with no failures or errors. The full top-level
 and project selections must be rerun on the final head; this checkpoint is
 not consumer acceptance.
 
+A round-4 frozen-source scan independently hashed every Python source at
+`55d0ed1515` and searched all tracked migrated K bytes for the hash. It found
+65 source identities referenced by 72 K contracts; 63 of those sources have
+different current bytes. The ignored diagnostic table is
+`.pytest-tmp/source-pin-report.tsv`. These old hashes are historical contract
+provenance. This scan is a candidate inventory, not evidence that every
+producer's self/predecessor validation route has been exercised or that
+older-than-base identities have all been found.
+
+## Round-5 diagnostic checkpoint
+
+The full top-level `tests/test_open_model_*.py` run on the inherited round-4
+tree reported `196 failed, 1959 passed, 13 skipped` across 2,168 tests.
+The `tests/projects/open_model_data` run reached 94 percent and reported
+`124 failed, 2086 passed, 12 skipped, 17 errors` before an exact-process
+interrupt. Two consecutive 110-second timeout stacks identified
+`test_v6_mine_general_assistant_textbooks.py::test_held_out_firewall_zero_leakage`
+and `::test_dynamic_verification_functions_pass`. Both runs used an in-checkout
+pytest base; many private-source and private-output tests explicitly reject
+that fixture location. Their failure totals therefore do not establish the
+remaining product-failure count. Full external-temp replay and any required
+base comparisons remain open. The ignored local logs are
+`.pytest-tmp/r5-top.log` and `.pytest-tmp/r5-project.log`.
+
+An independent replay of the candidate source-pin table compared all 65
+sources against base `55d0ed1515` and current disk bytes:
+`rows=65 contracts=72 drift=63 hash_report_errors=0`. Two source bytes remain
+unchanged. Eleven of the 63 drifting sources are in this checkpoint's working
+diff. This validates the recorded byte identities only; semantic equivalence,
+entry-point checks, and a search for older-than-base identities remain open
+under Decision H. The ignored candidate table is
+`.pytest-tmp/source-pin-report.tsv`.
+
+The generated `consumers-P3.tsv` currently has 2,916 rows and 2,916 blank
+checks (731 distinct consumers). Each executable row still needs an exercised
+disposition; doc and logical-id rows need reasons. This is a stop gate for P3a.
+
 ## Unresolved P3a gates at this checkpoint
 
 - The round-3 top-level `tests/test_open_model_*.py` consumer run failed:

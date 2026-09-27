@@ -165,8 +165,8 @@ def _build_fixture_root(tmp_path: Path) -> Path:
         "data/projects/open_model_data/evidence/correction_protection_near_duplicate_policy_v1.json",
         "data/projects/open_model_data/contracts/phase3_heldout_partition_bundle_v1.schema.json",
     ):
-        source = ROOT / relative
-        target = root / relative
+        source = REGISTRY_OPEN_MODEL_DATA_DIR / Path(relative).relative_to("data/projects/open_model_data")
+        target = root / "registry" / Path(relative).relative_to("data")
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(source.read_bytes())
 
@@ -313,9 +313,9 @@ def _build_fixture_artifacts(root: Path) -> tuple[Path, Path]:
         public_dir=public,
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         schema_path=root / SCHEMA.relative_to(ROOT),
         skip_source_freeze_git_binding=True,
@@ -331,9 +331,9 @@ def _verify_fixture_artifacts(root: Path, private: Path, public: Path, *, requir
         schema_path=root / SCHEMA.relative_to(ROOT),
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         sources_db=root / "data/sources.db",
         source_universe=root / "data/projects/open_model_data/evidence/source_universe_v1",
@@ -427,9 +427,9 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
         public_dir=public,
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         schema_path=root / SCHEMA.relative_to(ROOT),
         skip_source_freeze_git_binding=True,
@@ -444,9 +444,9 @@ def test_deterministic_partition_and_public_receipt_constraints(tmp_path: Path) 
         public_dir=public,
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         schema_path=root / SCHEMA.relative_to(ROOT),
         skip_source_freeze_git_binding=True,
@@ -533,9 +533,9 @@ def test_private_seal_tamper_byte_locator_fingerprint_fail(tmp_path: Path) -> No
         public_dir=public,
         role_contract_path=root / ROLE.relative_to(ROOT),
         eval_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
         coverage_contract_path=root
-        / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+        / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
         near_dup_policy_path=root / POLICY.relative_to(ROOT),
         schema_path=root / SCHEMA.relative_to(ROOT),
         skip_source_freeze_git_binding=True,
@@ -813,7 +813,9 @@ def test_verify_recomputes_author_clearance_and_live_contract_bindings(tmp_path:
         _verify_fixture_artifacts(root, private, public)
 
     _build_fixture_artifacts(root)
-    eval_contract = root / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json"
+    eval_contract = (
+        root / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json"
+    )
     eval_contract.write_text(eval_contract.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     with pytest.raises(heldout.PartitionError, match="evaluation-contract hash drift"):
         _verify_fixture_artifacts(root, private, public)
@@ -855,9 +857,9 @@ def test_malformed_comparison_fail_closed_and_source_drift(tmp_path: Path) -> No
             public_dir=root / "data/projects/open_model_data/evidence/phase3_heldout_partition_v1",
             role_contract_path=root / ROLE.relative_to(ROOT),
             eval_contract_path=root
-            / "data/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
+            / "registry/projects/open_model_data/evidence/correction_protection_evaluation_contract_v1.json",
             coverage_contract_path=root
-            / "data/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
+            / "registry/projects/open_model_data/evidence/correction_protection_coverage_contract_v1.json",
             near_dup_policy_path=root / POLICY.relative_to(ROOT),
             schema_path=root / SCHEMA.relative_to(ROOT),
             skip_source_freeze_git_binding=True,

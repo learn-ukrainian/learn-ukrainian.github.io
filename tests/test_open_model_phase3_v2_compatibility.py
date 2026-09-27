@@ -13,7 +13,9 @@ from scripts.projects.open_model_data import phase3_v2_compatibility as compatib
 
 
 def _write(path: Path, value: object) -> None:
-    path.write_text(json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def _matrix() -> dict[str, object]:
@@ -50,10 +52,8 @@ def test_matrix_rejects_missing_or_unexpected_pre_v2_evidence(
     if delta == "missing":
         tracked_paths = matrix_paths - {legacy_path}
     else:
-        tracked_paths = matrix_paths | {
-            "data/projects/open_model_data/evidence/unexpected_pre_v2_receipt.json"
-        }
-    monkeypatch.setattr(compatibility, "_tracked_evidence_paths", lambda: tracked_paths)
+        tracked_paths = matrix_paths | {"data/projects/open_model_data/evidence/unexpected_pre_v2_receipt.json"}
+    monkeypatch.setattr(compatibility, "_tracked_evidence_paths", lambda _snapshot: tracked_paths)
 
     path = tmp_path / "matrix.json"
     _write(path, baseline)
@@ -64,7 +64,8 @@ def test_matrix_rejects_missing_or_unexpected_pre_v2_evidence(
 def test_tracked_matrix_is_complete_hash_bound_and_blocks_phase4() -> None:
     result = compatibility.verify()
     matrix = _matrix()
-    assert matrix["bindings"]["validator_sha256"] == compatibility.sha256_file(compatibility.SCRIPT_PATH)  # type: ignore[index]
+    assert matrix["bindings"]["validator_sha256"] == compatibility.FROZEN_VALIDATOR_SHA256  # type: ignore[index]
+    assert compatibility.sha256_file(compatibility.SCRIPT_PATH) != compatibility.FROZEN_VALIDATOR_SHA256
     assert result == {
         "ok": True,
         "schema_version": "phase3_v2_compatibility_matrix_v1",
@@ -212,7 +213,9 @@ def test_functional_role_ledger_rejects_task_lane_graph_and_cycle_drift() -> Non
     duplicate_task["functional_roles"][1]["task_id"] = duplicate_task["functional_roles"][0]["task_id"]  # type: ignore[index]
     cases.append((duplicate_task, "schema violation|task IDs"))
     self_edge = copy.deepcopy(baseline)
-    self_edge["task_conflict_graph"]["edges"][0]["consumer_task_id"] = self_edge["task_conflict_graph"]["edges"][0]["producer_task_id"]  # type: ignore[index]
+    self_edge["task_conflict_graph"]["edges"][0]["consumer_task_id"] = self_edge["task_conflict_graph"]["edges"][0][
+        "producer_task_id"
+    ]  # type: ignore[index]
     cases.append((self_edge, "schema violation|graph edge drift|self-review"))
     lane_drift = copy.deepcopy(baseline)
     lane_drift["functional_roles"][1]["model_family"] = "gemini"  # type: ignore[index]
