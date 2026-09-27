@@ -19,7 +19,10 @@ report for the driver. It performs no repair and takes no automatic branch:
 * **Closure** — regenerating lesson k makes lessons k+1..N (the recap included) stale.
 * **Module verdict** — ``module-verdict.yaml``, computed from the lesson verdicts of record,
   the open settle items and the plan's promotion state. A module with an open settle item
-  is never APPROVE.
+  is never APPROVE. ``compute_and_write_module_verdict`` computes and publishes it inside one
+  ``BEGIN IMMEDIATE`` transaction, so a writer that would land between the two (a review failure,
+  a settle outcome, an operator decision) is held off until the transaction commits, landing after
+  it instead: the published file can never disagree with the database state it was computed from.
 * **Projections** — the database is the source of truth. ``lesson-<n>.verdict.yaml`` and
   ``plan-review.yaml`` are projections of the latest accepted first-seat attempt of their target
   (highest ``attempts.seq``). A missing or disagreeing file is stale: the module is HOLD
@@ -903,6 +906,24 @@ def write_module_verdict(root: Path, document: dict[str, Any]) -> Path:
     return path
 
 
+def compute_and_write_module_verdict(
+    conn: sqlite3.Connection, level: str, slug: str, *, root: Path, params: dict[str, Any], now: str | None = None
+) -> tuple[dict[str, Any], Path]:
+    """Compute the module verdict and publish it inside the one transaction that read it.
+
+    ``BEGIN IMMEDIATE`` (``findings_db.transaction``) holds off every other writer for the whole
+    window between deciding the verdict and publishing it, so a writer that would otherwise land in
+    that gap (a review failure, a settle outcome, an operator decision) is blocked until this
+    transaction commits and lands after it instead: ``module-verdict.yaml`` can never disagree with
+    the database state it was computed from. ``write_module_verdict`` writes by temp file and rename,
+    so an exception here rolls the transaction back and leaves no new or partial file.
+    """
+    with findings_db.transaction(conn):
+        document = compute_module_verdict(conn, level, slug, root=root, params=params, now=now)
+        path = write_module_verdict(root, document)
+    return document, path
+
+
 # --- the report -------------------------------------------------------------------------------
 
 
@@ -1102,8 +1123,7 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 0
         if args.command == "verdict":
-            document = compute_module_verdict(conn, args.level, args.slug, root=root, params=params)
-            path = write_module_verdict(root, document)
+            document, path = compute_and_write_module_verdict(conn, args.level, args.slug, root=root, params=params)
             print(
                 json.dumps(
                     {

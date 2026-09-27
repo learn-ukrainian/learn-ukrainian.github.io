@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -12,9 +13,11 @@ import yaml
 from jsonschema import ValidationError
 
 from scripts.build.fresh import plan_manifest as pm
+from scripts.curriculum.evidence import lock as lock_module
 from scripts.review import findings_db as db
 from scripts.review import fixloop, second_seat
-from tests.review.test_record import ITEM, LEVEL, PROSE, SLUG, World, finding, unsupported
+from scripts.review import record as record_module
+from tests.review.test_record import ITEM, LEVEL, PROSE, SLUG, World, _run_together, finding, unsupported
 
 pytestmark = pytest.mark.reads_content
 
@@ -1233,3 +1236,103 @@ def test_the_help_states_use_and_exit_codes() -> None:
     text = fixloop.build_parser().format_help()
     for word in ("Use after", "Do NOT use", "Examples:", "Exit codes", "regenerate", "operator-decision"):
         assert word in text
+
+
+# --- the verdict is computed and published in the one transaction that read it (#8774 r3) --------------------------
+
+
+def _record_failure(world: World, review_id: str, attempt_id: str) -> None:
+    record_module.record_return(
+        None,
+        manifest_path=world.manifest(2),
+        task_id="review-claude",
+        repo_root=world.root,
+        db_path=world.db,
+        tasks_dir=world.tasks_dir,
+        review_id=review_id,
+        attempt_id=attempt_id,
+        failure="timeout",
+    )
+
+
+def published_module(world: World) -> dict[str, Any]:
+    return yaml.safe_load((world.state_dir / fixloop.MODULE_VERDICT_NAME).read_bytes())
+
+
+def test_a_writer_cannot_land_between_the_verdict_computation_and_its_publication(
+    world: World, promoted: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A round-3 review failure committed in the compute/write gap published a stale APPROVE."""
+    approve_all(world)
+    assert run(world, "verdict", LEVEL, SLUG) == 0
+    assert published_module(world)["verdict"] == "APPROVE"
+
+    terminal_at = PARAMS["review_failures_terminal_at"]
+    for i in range(terminal_at - 1):  # one short of terminal: the module is still APPROVE-worthy
+        _record_failure(world, f"rf-{i}", f"af-{i}")
+
+    barrier = threading.Barrier(2, timeout=30)
+    committed = threading.Event()
+    observations: list[bool] = []
+    real_compute = fixloop.compute_module_verdict
+
+    def synchronized_compute(conn_: sqlite3.Connection, level_: str, slug_: str, **kwargs: Any) -> dict[str, Any]:
+        result = real_compute(conn_, level_, slug_, **kwargs)
+        barrier.wait()  # the verdict is decided from the pre-failure state; the writer now races for the gap
+        observations.append(committed.wait(timeout=0.5))
+        return result
+
+    monkeypatch.setattr(fixloop, "compute_module_verdict", synchronized_compute)
+
+    def commit_the_terminal_failure() -> None:
+        barrier.wait()
+        _record_failure(world, "rf-terminal", "af-terminal")
+        committed.set()
+
+    def run_verdict() -> int:
+        return run(world, "verdict", LEVEL, SLUG)
+
+    exit_codes = _run_together([run_verdict, commit_the_terminal_failure])
+    assert exit_codes == [0, None], exit_codes
+    assert observations == [False], "a writer committed while the verdict was being computed and published"
+    assert published_module(world)["verdict"] == "APPROVE"  # exactly the state the held transaction read
+
+    conn = db.connect(world.db)
+    try:
+        fresh = real_compute(conn, LEVEL, SLUG, root=world.root, params=PARAMS)  # the writer's failure now counts
+    finally:
+        conn.close()
+    assert fresh["verdict"] == "HOLD"
+    assert fixloop.REASON_REVIEW_FAILURE in {item["reason"] for item in fresh["terminal"]}
+
+
+def test_a_failed_verdict_write_leaves_no_new_or_partial_file(
+    world: World, promoted: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    approve_all(world)
+    path = world.state_dir / fixloop.MODULE_VERDICT_NAME
+    assert not path.exists()
+    real_replace = lock_module.os.replace
+
+    def failing_replace(src: Any, dst: Any) -> None:
+        if Path(dst).name == fixloop.MODULE_VERDICT_NAME:
+            raise OSError("no space left on device")
+        real_replace(src, dst)
+
+    monkeypatch.setattr(lock_module.os, "replace", failing_replace)
+    conn = db.connect(world.db)
+    try:
+        with pytest.raises(OSError, match="no space left"):
+            fixloop.compute_and_write_module_verdict(conn, LEVEL, SLUG, root=world.root, params=PARAMS)
+    finally:
+        conn.close()
+    assert not path.exists()
+    assert not list(world.state_dir.glob(f".{fixloop.MODULE_VERDICT_NAME}.*")), "a partial temp file was left behind"
+
+    monkeypatch.setattr(lock_module.os, "replace", real_replace)  # a clean retry is not blocked by a dangling lock
+    conn = db.connect(world.db)
+    try:
+        document, written = fixloop.compute_and_write_module_verdict(conn, LEVEL, SLUG, root=world.root, params=PARAMS)
+    finally:
+        conn.close()
+    assert document["verdict"] == "APPROVE" and written == path and path.exists()
