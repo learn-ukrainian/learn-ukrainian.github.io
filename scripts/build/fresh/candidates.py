@@ -44,6 +44,16 @@ def _group_values(candidate: dict[str, Any], group: str) -> set[str]:
     }
 
 
+def option_record_bindings(item: dict[str, Any], activity_type: str) -> list[Any]:
+    """Return the word-record binding for each written option."""
+    options = item.get("options") or []
+    if activity_type == "fill-in":
+        return [item.get("record")] * len(options)
+    if activity_type in {"quiz", "multiple-choice"}:
+        return item.get("option_records") or []
+    return []
+
+
 def item_candidates(item: dict[str, Any], words: dict[str, Any], activity_type: str) -> list[dict[str, Any]]:
     """Offer the key and only distractors excluded in the taught feature.
 
@@ -51,17 +61,18 @@ def item_candidates(item: dict[str, Any], words: dict[str, Any], activity_type: 
     This function never infers it from the sentence or an answer tag.
     """
     options = item.get("options") or []
+    bindings = option_record_bindings(item, activity_type)
     if activity_type == "fill-in":
         key_text = item.get("answer")
-        bound_ids = [item.get("record")]
         key_id = item.get("record")
+        bound_ids = bindings or [key_id]
     elif activity_type in {"quiz", "multiple-choice"}:
         index = item.get("_resolved_key_index", item.get("correct"))
         if type(index) is not int or not 0 <= index < len(options):
             return []
         option = options[index]
         key_text = option.get("text") if isinstance(option, dict) else option
-        bound_ids = item.get("option_records") or []
+        bound_ids = bindings
         if len(bound_ids) != len(options):
             return []
         key_id = bound_ids[index]

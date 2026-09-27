@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.build.fresh import candidates as candidate_source
 from scripts.build.fresh.candidates import item_candidates, record_candidates
 from scripts.build.fresh.immersion import compute_immersion_payload
 from scripts.build.fresh.prompt import _render_form_candidates, check_rendered_prompt, render_lesson_prompt
@@ -78,6 +79,20 @@ def _surfaces(candidates: list[dict]) -> list[str]:
     return [candidate["form"] for candidate in candidates]
 
 
+def _assert_no_stress_leak(texts: list[str], records: list[dict]) -> None:
+    pending_stressed = {
+        form["stressed"]
+        for record in records
+        for form in record.get("forms", [])
+        if form.get("stress_source") == "pending"
+        and isinstance(form.get("stressed"), str)
+        and any(mark in form["stressed"] for mark in ("\u0300", "\u0301"))
+    }
+    for text in texts:
+        assert "\u0300" not in text and "\u0301" not in text
+        assert all(stressed not in text for stressed in pending_stressed)
+
+
 def test_noun_case_candidates_keep_all_analyses(words: dict) -> None:
     item = _item("W-101", "книгу", "noun:inanim:f:v_zna", "Case", {"Case": "Acc", "Number": "Sing"}, ["книгу", "книга"])
     offered = item_candidates(item, words, "fill-in")
@@ -89,6 +104,7 @@ def test_noun_case_candidates_keep_all_analyses(words: dict) -> None:
     ambiguous = next(candidate for candidate in record_candidates(words["words"][0]) if candidate["form"] == "книги")
     assert len(ambiguous["analyses"]) == 2
     assert all(candidate["record"] == "W-101" for candidate in offered)
+    _assert_no_stress_leak(_surfaces(offered), words["words"])
 
 
 def test_verb_person_candidates_and_quiz_binding(words: dict) -> None:
@@ -97,6 +113,7 @@ def test_verb_person_candidates_and_quiz_binding(words: dict) -> None:
     )
     offered = item_candidates(item, words, "fill-in")
     assert _surfaces(offered) == ["читаю", "читаєш"]
+    _assert_no_stress_leak(_surfaces(offered), words["words"])
     quiz = {
         "kind": "form",
         "tests_feature": "Person",
@@ -107,6 +124,7 @@ def test_verb_person_candidates_and_quiz_binding(words: dict) -> None:
         "option_why": ["This form does not fit.", "This form fits."],
     }
     assert _surfaces(item_candidates(quiz, words, "quiz")) == _surfaces(offered)
+    _assert_no_stress_leak(_surfaces(item_candidates(quiz, words, "quiz")), words["words"])
     lesson = {"activities": [{"id": "a1", "type": "quiz"}]}
     draft = {"lesson": {"module": "a1/fixture", "n": 1}, "activities": [{"id": "a1", "items": [quiz]}]}
     assert check_4_activities(draft, lesson, words, {}, level="a1")[0]["status"] == "passed"
@@ -122,9 +140,11 @@ def test_analytic_future_uses_single_auxiliary_or_infinitive_forms(words: dict) 
     aux = item_candidates(auxiliary, words, "fill-in")
     assert _surfaces(aux) == ["буде", "будеш", "буду"]
     assert "будемо" not in _surfaces(aux)  # Same taught person as the key.
+    _assert_no_stress_leak(_surfaces(aux), words["words"])
     infinitive = _item("W-102", "читати", "verb:imperf:inf", "VerbForm", {"VerbForm": "Inf"}, ["читати", "читаю"])
-    assert _surfaces(item_candidates(infinitive, words, "fill-in")) == ["читав", "читати", "читаю", "читаєш"]
-    assert all("стressed" not in candidate for candidate in aux)
+    infinitive_candidates = item_candidates(infinitive, words, "fill-in")
+    assert _surfaces(infinitive_candidates) == ["читав", "читати", "читаю", "читаєш"]
+    _assert_no_stress_leak(_surfaces(infinitive_candidates), words["words"])
     words["words"][2]["forms"].append(_form("буду читати", "verb:imperf:futr:s:1"))
     assert "буду читати" not in _surfaces(record_candidates(words["words"][2]))
     assert _surfaces(item_candidates(auxiliary, words, "fill-in")) == _surfaces(aux)
@@ -153,7 +173,17 @@ def test_determinism_and_real_a1_store_candidate() -> None:
     first = record_candidates(record)
     assert first == record_candidates(record)
     assert all(candidate["record"] == "W-001" for candidate in first)
-    assert all("stressed" not in candidate for candidate in first)
+    _assert_no_stress_leak(_surfaces(first), [record])
+
+
+def test_pending_stress_guard_catches_stressed_candidate(monkeypatch: pytest.MonkeyPatch) -> None:
+    store = yaml.safe_load((ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml").read_text(encoding="utf-8"))
+    record = next(record for record in store["words"] if record["id"] == "W-001")
+    form = next(form for form in record["forms"] if form.get("stressed") == "мені\u0301")
+    form["stress_source"] = "pending"
+    monkeypatch.setattr(candidate_source, "record_candidates", lambda _: [{"form": form["stressed"]}])
+    with pytest.raises(AssertionError):
+        _assert_no_stress_leak(_surfaces(candidate_source.record_candidates(record)), [record])
 
 
 def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
@@ -203,7 +233,8 @@ def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
     bank = prompt.split("## Form-choice candidate bank", 1)[1]
     assert "`W-001`: `я`" in bank
     assert "Case=Nom" in bank
-    assert "стressed" not in bank
+    _assert_no_stress_leak([bank], [record])
     assert check_rendered_prompt(prompt, plan, ROOT / "docs/style-cards/a1.md").passed
     pending_bank = _render_form_candidates(plan, {"W-102": words["words"][1]})
-    assert "`W-102`: `читати`" in pending_bank and "stressed" not in pending_bank
+    assert "`W-102`: `читати`" in pending_bank
+    _assert_no_stress_leak([pending_bank], [words["words"][1]])

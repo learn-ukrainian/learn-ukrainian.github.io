@@ -61,7 +61,7 @@ from scripts.build.fresh.assemble import (
     check_9_stress_and_render,
     check_11_render,
 )
-from scripts.build.fresh.candidates import item_candidates
+from scripts.build.fresh.candidates import item_candidates, option_record_bindings
 from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
 from scripts.build.fresh.path_guard import checked_existing_path
@@ -652,7 +652,7 @@ def check_4_activities(
                 generated = item_candidates(item, words, typ)
                 offered = {(candidate["record"], candidate["form"]) for candidate in generated}
                 options = item.get("options") or []
-                bindings = [item.get("record")] * len(options) if typ == "fill-in" else item.get("option_records") or []
+                bindings = option_record_bindings(item, typ)
                 if len(bindings) != len(options) or any(
                     (record_id, _choice_text(option)) not in offered
                     for record_id, option in zip(bindings, options, strict=True)
