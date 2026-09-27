@@ -122,3 +122,43 @@ describe('ImageToLetter', () => {
     expect(screen.getByText(/Exercise complete!/)).toBeInTheDocument();
   });
 });
+
+// ── per-option feedback (optionWhy, aligned to [answer, ...distractors]) ───
+
+describe('ImageToLetter optionWhy (fresh-build per-option feedback)', () => {
+  const withWhy = {
+    ...apple,
+    // Aligned to [answer, ...distractors] = ['Я', 'А', 'О']
+    optionWhy: ['Я for яблуко.', 'А is a different letter.', 'О is a different letter.'],
+  };
+
+  test('a correct pick shows only the chosen (= correct) option why, in a status region', () => {
+    const { container } = render(<ImageToLetter items={[withWhy]} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Я' }));
+
+    const panel = container.querySelector('[data-activity="itl-option-why-panel"]');
+    expect(panel).toBeInTheDocument();
+    expect(panel).toHaveAttribute('role', 'status');
+    expect(panel).toHaveAttribute('aria-live', 'polite');
+    expect(container.querySelector('[data-activity="itl-option-why"]')?.textContent).toBe('Я for яблуко.');
+    expect(container.querySelector('[data-activity="itl-correct-why"]')).not.toBeInTheDocument();
+  });
+
+  test('a wrong pick shows the chosen option why, then the correct option why', () => {
+    const { container } = render(<ImageToLetter items={[withWhy]} />);
+    fireEvent.click(screen.getByRole('button', { name: 'А' }));
+
+    expect(container.querySelector('[data-activity="itl-option-why"]')?.textContent).toBe(
+      'А is a different letter.',
+    );
+    expect(container.querySelector('[data-activity="itl-correct-why"]')?.textContent).toBe('Я for яблуко.');
+  });
+
+  test('without optionWhy, no why-panel renders and legacy explanation/note keep working (V7 fallback)', () => {
+    const { container } = render(<ImageToLetter items={[apple]} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Я' }));
+
+    expect(container.querySelector('[data-activity="itl-option-why-panel"]')).not.toBeInTheDocument();
+    expect(screen.getByText(apple.explanation)).toBeInTheDocument();
+  });
+});

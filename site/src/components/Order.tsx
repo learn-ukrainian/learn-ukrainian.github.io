@@ -15,6 +15,13 @@ interface OrderProps {
    */
   correct_order: number[];
   /**
+   * Feedback shown after checking, correct or not. Absent on every existing
+   * module, which keeps today's rendering (no explanation shown).
+   * @schemaDescription Feedback explanation shown after the learner checks the order.
+   * @ukrainianText true
+   */
+  explanation?: string;
+  /**
    * @schemaDescription Instruction shown to the learner above the activity.
    * @ukrainianText true
    */
@@ -26,7 +33,7 @@ interface OrderProps {
   isUkrainian?: boolean;
 }
 
-export default function Order({ items, correct_order, instruction, isUkrainian }: OrderProps) {
+export default function Order({ items, correct_order, explanation, instruction, isUkrainian }: OrderProps) {
   const correctSequence = useMemo(() => correct_order.map(i => items[i]), [items, correct_order]);
 
   const shuffled = useMemo(() => {
@@ -70,7 +77,7 @@ export default function Order({ items, correct_order, instruction, isUkrainian }
   const incorrectMsg = isUkrainian ? '✗ Правильний порядок:' : '✗ Correct order:';
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="order">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>📋</span>
         <span>{headerLabel}</span>
@@ -82,6 +89,7 @@ export default function Order({ items, correct_order, instruction, isUkrainian }
       <div className={styles.activityContent}>
         {/* Selected (answer) zone */}
         <div
+          data-activity="order-selected"
           className={`${styles.sentenceBuilder} ${showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''}`}
           style={{ minHeight: '80px', flexDirection: 'column', gap: '0.4rem' }}
         >
@@ -105,7 +113,7 @@ export default function Order({ items, correct_order, instruction, isUkrainian }
         </div>
 
         {/* Available lines */}
-        <div className={styles.wordBank} style={{ flexDirection: 'column', gap: '0.4rem' }}>
+        <div data-activity="order-available" className={styles.wordBank} style={{ flexDirection: 'column', gap: '0.4rem' }}>
           {available.map((item) => (
             <button
               key={item.id}
@@ -138,6 +146,10 @@ export default function Order({ items, correct_order, instruction, isUkrainian }
         {showResult && (
           <div
             className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+            data-activity="order-feedback"
+            data-correct={isCorrect ? 'true' : 'false'}
+            role="status"
+            aria-live="polite"
           >
             {isCorrect ? correctMsg : (
               <div>
@@ -146,6 +158,9 @@ export default function Order({ items, correct_order, instruction, isUkrainian }
                   <p key={i}>{i + 1}. {line}</p>
                 ))}
               </div>
+            )}
+            {explanation && (
+              <p className={styles.explanation} data-activity="order-explanation">{explanation}</p>
             )}
           </div>
         )}

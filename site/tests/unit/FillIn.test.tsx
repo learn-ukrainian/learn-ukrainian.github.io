@@ -440,3 +440,86 @@ describe('FillIn mode', () => {
     expect(chipsIn(container)[0]).not.toHaveAttribute('draggable');
   });
 });
+
+// ── per-option feedback (optionWhy, #8889 A1-P3) ────────────────────────────
+
+describe('FillInQuestion optionWhy (form-choice / orthography)', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  const baseProps = {
+    sentence: 'Pick ___ one.',
+    answer: 'the',
+    options: ['the', 'a', 'an'],
+    mode: 'form-choice' as const,
+    optionWhy: ['the is definite.', 'a is indefinite (wrong here).', 'an is for vowels.'],
+  };
+
+  test('feedback region is announced (role=status, aria-live=polite)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<FillInQuestion {...baseProps} />);
+    await user.click(chipByText(container, 'the'));
+
+    const fb = feedback(container);
+    expect(fb).toHaveAttribute('role', 'status');
+    expect(fb).toHaveAttribute('aria-live', 'polite');
+  });
+
+  test('a correct pick shows only that option\'s why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<FillInQuestion {...baseProps} />);
+    await user.click(chipByText(container, 'the'));
+
+    expect(container.querySelector('[data-activity="fillin-option-why"]')?.textContent).toBe('the is definite.');
+    expect(container.querySelector('[data-activity="fillin-correct-why"]')).not.toBeInTheDocument();
+  });
+
+  test('a wrong pick shows the chosen option why, then the correct option why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<FillInQuestion {...baseProps} />);
+    await user.click(chipByText(container, 'a'));
+
+    expect(container.querySelector('[data-activity="fillin-option-why"]')?.textContent).toBe(
+      'a is indefinite (wrong here).',
+    );
+    expect(container.querySelector('[data-activity="fillin-correct-why"]')?.textContent).toBe('the is definite.');
+  });
+
+  test('works the same in orthography mode', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FillInQuestion
+        mode="orthography"
+        sentence="пре___пони"
+        answer="ʼ"
+        options={['ʼ', '']}
+        optionWhy={['Apostrophe after a labial before я/ю/є/ї.', 'No apostrophe here.']}
+      />,
+    );
+    await user.click(chipByText(container, ''));
+
+    expect(container.querySelector('[data-activity="fillin-option-why"]')?.textContent).toBe('No apostrophe here.');
+    expect(container.querySelector('[data-activity="fillin-correct-why"]')?.textContent).toBe(
+      'Apostrophe after a labial before я/ю/є/ї.',
+    );
+  });
+
+  test('without optionWhy, falls back to the single explanation (V7 content)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FillInQuestion
+        sentence="Pick ___ one."
+        answer="the"
+        options={['the', 'a']}
+        mode="form-choice"
+        explanation="The sentence names it."
+      />,
+    );
+    await user.click(chipByText(container, 'the'));
+
+    const note = container.querySelector('[data-activity="fillin-explanation"]');
+    expect(note).toHaveTextContent('The sentence names it.');
+    expect(container.querySelector('[data-activity="fillin-option-why"]')).not.toBeInTheDocument();
+  });
+});

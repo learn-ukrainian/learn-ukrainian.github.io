@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import GroupSort from '@site/src/components/GroupSort';
 
 // GroupSort is DRAG-ONLY — there is no click interaction path for
@@ -198,5 +198,76 @@ describe('GroupSort draggability', () => {
     for (const t of tiles) {
       expect(t.getAttribute('draggable')).toBe('true');
     }
+  });
+});
+
+// ── per-entry feedback on a wrong placement (optionWhy, #8889 A1-P3) ────────
+//
+// The component doesn't read HTML5 DataTransfer payloads (it tracks the
+// dragged item in local React state), so a plain object stands in for
+// DataTransfer across dragStart/dragOver/drop — enough to drive the same
+// handlers a real drag would.
+
+function drag(tile: HTMLElement, target: HTMLElement) {
+  const dataTransfer = {};
+  fireEvent.dragStart(tile, { dataTransfer });
+  fireEvent.dragOver(target, { dataTransfer });
+  fireEvent.drop(target, { dataTransfer });
+}
+
+describe('GroupSort entry why (object entries {text, record, why})', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  const groups = {
+    Fruits: [{ text: 'apple', why: 'apple is a fruit.' }],
+    Vegetables: [{ text: 'carrot', why: 'carrot is a vegetable.' }],
+  };
+
+  test('dropping a word in the wrong bucket then checking shows that entry\'s why', () => {
+    const { container } = render(<GroupSort groups={groups} />);
+
+    // Drag "apple" into the Vegetables bucket (wrong).
+    const appleTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'apple')!;
+    drag(appleTile, bucketByName(container, 'Vegetables'));
+    // Drag "carrot" into the Vegetables bucket (correct), emptying the pool.
+    const carrotTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'carrot')!;
+    drag(carrotTile, bucketByName(container, 'Vegetables'));
+
+    const checkBtn = [...container.querySelectorAll<HTMLButtonElement>('button')].find(
+      (b) => b.textContent?.trim() === 'Check Answers',
+    )!;
+    fireEvent.click(checkBtn);
+
+    const why = container.querySelector('[data-activity="group-sort-entry-why"]');
+    expect(why).toBeInTheDocument();
+    expect(why).toHaveTextContent('apple is a fruit.');
+    expect(why).toHaveAttribute('role', 'status');
+    expect(why).toHaveAttribute('aria-live', 'polite');
+    // The correctly-placed entry gets no why (it isn't wrong).
+    expect(bucketByName(container, 'Vegetables').textContent).not.toContain('carrot is a vegetable.');
+  });
+
+  test('a correctly-placed entry never shows a why, even when one is authored', () => {
+    const { container } = render(<GroupSort groups={groups} />);
+    const appleTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'apple')!;
+    drag(appleTile, bucketByName(container, 'Fruits'));
+    const carrotTile = wordTiles(pool(container)).find((t) => t.textContent?.trim() === 'carrot')!;
+    drag(carrotTile, bucketByName(container, 'Vegetables'));
+
+    const checkBtn = [...container.querySelectorAll<HTMLButtonElement>('button')].find(
+      (b) => b.textContent?.trim() === 'Check Answers',
+    )!;
+    fireEvent.click(checkBtn);
+
+    expect(container.querySelector('[data-activity="group-sort-entry-why"]')).not.toBeInTheDocument();
+  });
+
+  test('plain string entries (V7 content) keep working exactly as before', () => {
+    const legacyGroups = { Fruits: ['apple'], Vegetables: ['carrot'] };
+    const { container } = render(<GroupSort groups={legacyGroups} />);
+    const texts = wordTiles(pool(container)).map((b) => b.textContent?.trim());
+    expect(new Set(texts)).toEqual(new Set(['apple', 'carrot']));
   });
 });

@@ -30,13 +30,21 @@ interface QuizQuestionProps {
    */
   explanation?: string;
   /**
+   * Per-option feedback aligned by index to `options` (before shuffling).
+   * Absent on every existing module, which keeps today's single-explanation
+   * rendering (V7 content has no per-option `why`).
+   * @schemaDescription Feedback for each option, aligned by original index.
+   * @ukrainianText true
+   */
+  optionWhy?: string[];
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
   isUkrainian?: boolean;
 }
 
-export function QuizQuestion({ question, options, correctIndex, explanation, isUkrainian }: QuizQuestionProps) {
+export function QuizQuestion({ question, options, correctIndex, explanation, optionWhy, isUkrainian }: QuizQuestionProps) {
   // Shuffle options on mount, tracking original indices
   const shuffledOptions = useMemo(() => {
     const indexed = options.map((opt, i) => ({ opt, originalIndex: i }));
@@ -55,6 +63,9 @@ export function QuizQuestion({ question, options, correctIndex, explanation, isU
   // Find the shuffled index of the correct answer
   const correctShuffledIndex = shuffledOptions.findIndex(o => o.originalIndex === correctIndex);
   const isCorrect = selected === correctShuffledIndex;
+  const selectedOriginalIndex = selected !== null ? shuffledOptions[selected].originalIndex : null;
+  const chosenWhy = selectedOriginalIndex !== null ? optionWhy?.[selectedOriginalIndex] : undefined;
+  const correctWhy = optionWhy?.[correctIndex];
 
   const correctLabel = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
   const incorrectLabel = isUkrainian ? '✗ Неправильно. Відповідь:' : '✗ Incorrect. The answer is:';
@@ -86,9 +97,22 @@ export function QuizQuestion({ question, options, correctIndex, explanation, isU
           className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
           data-activity="quiz-feedback"
           data-correct={isCorrect ? 'true' : 'false'}
+          role="status"
+          aria-live="polite"
         >
           {isCorrect ? correctLabel : `${incorrectLabel} ${options[correctIndex]}`}
-          {explanation && <p className={styles.explanation}>{explanation}</p>}
+          {optionWhy ? (
+            <>
+              {chosenWhy && (
+                <p className={styles.explanation} data-activity="quiz-option-why">{chosenWhy}</p>
+              )}
+              {!isCorrect && correctWhy && (
+                <p className={styles.explanation} data-activity="quiz-correct-why">{correctWhy}</p>
+              )}
+            </>
+          ) : (
+            explanation && <p className={styles.explanation}>{explanation}</p>
+          )}
         </div>
       )}
     </div>
@@ -111,6 +135,12 @@ interface QuizQuestionItem {
    * @ukrainianText true
    */
   explanation?: string;
+  /**
+   * Per-option feedback aligned by index to `options`. Absent on V7 content.
+   * @schemaDescription Feedback for each option, aligned by original index.
+   * @ukrainianText true
+   */
+  optionWhy?: string[];
 }
 
 interface QuizProps {
@@ -176,6 +206,7 @@ export default function Quiz({ questions, instruction, children, isUkrainian: ba
               options={optionTexts}
               correctIndex={correctIndex >= 0 ? correctIndex : 0}
               explanation={item.explanation}
+              optionWhy={item.optionWhy}
               isUkrainian={isUkrainian}
             />
           );

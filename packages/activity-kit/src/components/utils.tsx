@@ -63,15 +63,28 @@ export function parseMarkdown(text: string): React.ReactNode {
  * Step-2 chips must not replay the token the learner just flagged: offering
  * `ден` again after they clicked `ден` is not a choice. The correction is never
  * dropped, even if an author's option list is malformed.
+ *
+ * Returns the surviving entries' original indices (into `options`), so
+ * per-option feedback (`option_why`, aligned by original index) can still be
+ * looked up after filtering.
  */
+export function optionIndicesWithoutSpottedError(
+  options: string[],
+  errorWord: string | null,
+  correctForm: string,
+): number[] {
+  const indices = options.map((_, i) => i);
+  if (!errorWord) return indices;
+  const key = (value: string) => value.normalize('NFC').trim().toLowerCase();
+  const error = key(errorWord);
+  const correction = key(correctForm);
+  return indices.filter((i) => key(options[i]) === correction || key(options[i]) !== error);
+}
+
 export function optionsWithoutSpottedError(
   options: string[],
   errorWord: string | null,
   correctForm: string,
 ): string[] {
-  if (!errorWord) return options;
-  const key = (value: string) => value.normalize('NFC').trim().toLowerCase();
-  const error = key(errorWord);
-  const correction = key(correctForm);
-  return options.filter((option) => key(option) === correction || key(option) !== error);
+  return optionIndicesWithoutSpottedError(options, errorWord, correctForm).map((i) => options[i]);
 }

@@ -20,12 +20,27 @@ function getWordColor(word: string, index: number): string {
   return WORD_COLORS[(charSum + index) % WORD_COLORS.length];
 }
 
+/**
+ * A group entry is a plain string on every existing module, or a
+ * `{text, record, why}` object in fresh drafts — `why` explains a wrong
+ * placement of this entry.
+ */
+type GroupSortEntry = string | { text: string; record?: string; why?: string };
+
+function entryText(entry: GroupSortEntry): string {
+  return typeof entry === 'string' ? entry : entry.text;
+}
+
+function entryWhy(entry: GroupSortEntry): string | undefined {
+  return typeof entry === 'string' ? undefined : entry.why;
+}
+
 interface GroupSortProps {
   /**
    * @schemaDescription Groups value consumed by this component.
    * @ukrainianText true
    */
-  groups: { [key: string]: string[] };
+  groups: { [key: string]: GroupSortEntry[] };
   /**
    * @schemaDescription Instruction shown to the learner above the activity.
    * @ukrainianText true
@@ -45,13 +60,15 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
 
   // Flatten and shuffle all items with colors
   const allItems = useMemo(() => {
-    const items: { id: string; word: string; correctGroup: string; color: string }[] = [];
+    const items: { id: string; word: string; why?: string; correctGroup: string; color: string }[] = [];
     let idx = 0;
-    for (const [group, words] of Object.entries(groups)) {
-      for (const word of words) {
+    for (const [group, entries] of Object.entries(groups)) {
+      for (const entry of entries) {
+        const word = entryText(entry);
         items.push({
           id: `item-${idx}`,
           word,
+          why: entryWhy(entry),
           correctGroup: group,
           color: getWordColor(word, idx)
         });
@@ -247,22 +264,33 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
                 {sorted[groupName].map((item) => {
                   const isCorrect = item.correctGroup === groupName;
                   return (
-                    <button
-                      key={item.id}
-                      className={`${styles.wordTile} ${
-                        showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''
-                      }`}
-                      style={{
-                        backgroundColor: showResult ? undefined : item.color,
-                        color: showResult ? undefined : 'white',
-                        cursor: showResult ? 'default' : 'grab'
-                      }}
-                      draggable={!showResult}
-                      onDragStart={(e) => handleDragStart(e, item.id)}
-                      onDragEnd={handleDragEnd}
-                    >
-                      {item.word}
-                    </button>
+                    <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                      <button
+                        className={`${styles.wordTile} ${
+                          showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''
+                        }`}
+                        style={{
+                          backgroundColor: showResult ? undefined : item.color,
+                          color: showResult ? undefined : 'white',
+                          cursor: showResult ? 'default' : 'grab'
+                        }}
+                        draggable={!showResult}
+                        onDragStart={(e) => handleDragStart(e, item.id)}
+                        onDragEnd={handleDragEnd}
+                      >
+                        {item.word}
+                      </button>
+                      {showResult && !isCorrect && item.why && (
+                        <p
+                          className={styles.explanation}
+                          data-activity="group-sort-entry-why"
+                          role="status"
+                          aria-live="polite"
+                        >
+                          {item.why}
+                        </p>
+                      )}
+                    </div>
                   );
                 })}
                 {sorted[groupName].length === 0 && !showResult && (
@@ -292,6 +320,8 @@ export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkr
           className={`${styles.feedback} ${isAllCorrect() ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
           data-activity="group-sort-feedback"
           data-correct={isAllCorrect() ? 'true' : 'false'}
+          role="status"
+          aria-live="polite"
         >
           {isAllCorrect() ? successLabel : errorLabel}
         </div>

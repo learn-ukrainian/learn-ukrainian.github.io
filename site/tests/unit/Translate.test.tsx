@@ -170,6 +170,67 @@ describe('TranslateItem (options-based)', () => {
   });
 });
 
+// ── per-option feedback (optionWhy, #8889 A1-P3) ────────────────────────────
+
+describe('TranslateItem optionWhy', () => {
+  const baseProps = {
+    source: 'Hello, how are you?',
+    answer: 'Привіт, як справи?',
+    options: ['Привіт, як справи?', 'До побачення', 'Дякую'],
+    optionWhy: ['This is the greeting.', 'This means goodbye.', 'This means thanks.'],
+  };
+
+  test('feedback region is announced (role=status, aria-live=polite)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<TranslateItem {...baseProps} />);
+    await user.click(findOption(container, 'Привіт, як справи?'));
+
+    const fb = feedbackBox(container);
+    expect(fb).toHaveAttribute('role', 'status');
+    expect(fb).toHaveAttribute('aria-live', 'polite');
+  });
+
+  test('a correct pick shows only that option\'s why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<TranslateItem {...baseProps} />);
+    await user.click(findOption(container, 'Привіт, як справи?'));
+
+    expect(container.querySelector('[data-activity="translate-option-why"]')?.textContent).toBe(
+      'This is the greeting.',
+    );
+    expect(container.querySelector('[data-activity="translate-correct-why"]')).not.toBeInTheDocument();
+  });
+
+  test('a wrong pick shows the chosen option why, then the correct option why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<TranslateItem {...baseProps} />);
+    await user.click(findOption(container, 'До побачення'));
+
+    expect(container.querySelector('[data-activity="translate-option-why"]')?.textContent).toBe(
+      'This means goodbye.',
+    );
+    expect(container.querySelector('[data-activity="translate-correct-why"]')?.textContent).toBe(
+      'This is the greeting.',
+    );
+  });
+
+  test('without optionWhy, falls back to the single explanation (V7 content)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <TranslateItem
+        source="Hello"
+        answer="Привіт"
+        options={['Привіт', 'Бувай']}
+        explanation="A basic greeting."
+      />,
+    );
+    await user.click(findOption(container, 'Привіт'));
+
+    expect(container.textContent).toContain('A basic greeting.');
+    expect(container.querySelector('[data-activity="translate-option-why"]')).not.toBeInTheDocument();
+  });
+});
+
 // ── Translate wrapper ─────────────────────────────────────────────────────────
 
 describe('Translate wrapper', () => {

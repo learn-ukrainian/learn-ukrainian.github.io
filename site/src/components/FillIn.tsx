@@ -59,6 +59,14 @@ export interface FillInQuestionProps {
   /** Feedback shown after the learner submits an answer. */
   explanation?: string;
   /**
+   * Per-option feedback aligned by index to `options` (before shuffling).
+   * Only consumed in `form-choice` / `orthography` mode; absent on every
+   * existing module, which keeps today's single-explanation rendering.
+   * @schemaDescription Feedback for each option, aligned by original index.
+   * @ukrainianText true
+   */
+  optionWhy?: string[];
+  /**
    * Fresh-build item mode. Absent on every existing module, which keeps today's rendering.
    * @ukrainianText false
    */
@@ -79,6 +87,7 @@ export function FillInQuestion({
   answer,
   options = [],
   explanation,
+  optionWhy,
   mode,
   isUkrainian,
   onComplete,
@@ -90,12 +99,16 @@ export function FillInQuestion({
   const [typedAnswer, setTypedAnswer] = useState('');
   const completionReportedRef = useRef(false);
 
-  // Shuffle and create colored option chips
+  // Shuffle and create colored option chips, keeping each option's original
+  // (pre-shuffle) index so per-option feedback can be looked up after the
+  // learner answers.
   const coloredOptions = useMemo(() => {
-    const shuffled = shuffle([...options]);
-    return shuffled.map((opt, idx) => ({
-      text: opt,
-      color: getChipColor(opt, idx),
+    const indexed = options.map((opt, origIndex) => ({ text: opt, origIndex }));
+    const shuffled = shuffle(indexed);
+    return shuffled.map((entry, idx) => ({
+      text: entry.text,
+      origIndex: entry.origIndex,
+      color: getChipColor(entry.text, idx),
     }));
   }, [options]);
 
@@ -142,6 +155,10 @@ export function FillInQuestion({
   };
 
   const isCorrect = selected === answer;
+  const selectedOrigIndex = selected !== null ? coloredOptions.find((o) => o.text === selected)?.origIndex : undefined;
+  const correctOrigIndex = options.indexOf(answer);
+  const chosenWhy = selectedOrigIndex !== undefined ? optionWhy?.[selectedOrigIndex] : undefined;
+  const correctWhy = correctOrigIndex >= 0 ? optionWhy?.[correctOrigIndex] : undefined;
 
   // Parse sentence - look for ___ or [blank]
   const parts = sentence.split(/___|\\[blank\\]/);
@@ -201,12 +218,25 @@ export function FillInQuestion({
             className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
             data-activity="fillin-feedback"
             data-correct={isCorrect ? 'true' : 'false'}
+            role="status"
+            aria-live="polite"
           >
             {isCorrect ? correctLabel : `${answerLabel} ${answer || emptyAnswerLabel}`}
-            {explanation && (
-              <p className={styles.explanation} data-activity="fillin-explanation">
-                {explanation}
-              </p>
+            {optionWhy ? (
+              <>
+                {chosenWhy && (
+                  <p className={styles.explanation} data-activity="fillin-option-why">{chosenWhy}</p>
+                )}
+                {!isCorrect && correctWhy && (
+                  <p className={styles.explanation} data-activity="fillin-correct-why">{correctWhy}</p>
+                )}
+              </>
+            ) : (
+              explanation && (
+                <p className={styles.explanation} data-activity="fillin-explanation">
+                  {explanation}
+                </p>
+              )
             )}
           </div>
         )}
@@ -298,6 +328,8 @@ export function FillInQuestion({
           className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
           data-activity="fillin-feedback"
           data-correct={isCorrect ? 'true' : 'false'}
+          role="status"
+          aria-live="polite"
         >
           {isCorrect ? correctLabel : `${answerLabel} ${answer || emptyAnswerLabel}`}
           {explanation && <p>{parseMarkdown(explanation)}</p>}
@@ -325,6 +357,13 @@ interface FillInItem {
   options?: string[];
   /** Feedback shown after the learner submits an answer. */
   explanation?: string;
+  /**
+   * Per-option feedback aligned by index to `options`. Only used in
+   * `form-choice` / `orthography` mode; absent on V7 content.
+   * @schemaDescription Feedback for each option, aligned by original index.
+   * @ukrainianText true
+   */
+  optionWhy?: string[];
   /**
    * @schemaDescription Fresh-build mode. Items without it keep the select renderer.
    * @ukrainianText false
@@ -391,6 +430,7 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
                 answer={item.answer}
                 options={item.options}
                 explanation={item.explanation}
+                optionWhy={item.optionWhy}
                 isUkrainian={isUkrainian}
                 mode={item.mode}
               />

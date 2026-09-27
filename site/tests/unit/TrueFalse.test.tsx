@@ -157,6 +157,65 @@ describe('TrueFalseQuestion', () => {
   });
 });
 
+// ── per-option feedback (optionWhy: [why_if_true, why_if_false]) ────────────
+
+describe('TrueFalseQuestion optionWhy', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  const baseProps = {
+    statement: 'The sky is blue.',
+    isTrue: true,
+    optionWhy: ['Correct: the sky is blue.', 'Wrong: the sky is blue, not another color.'] as [string, string],
+  };
+
+  test('feedback region is announced (role=status, aria-live=polite)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<TrueFalseQuestion {...baseProps} />);
+    await user.click(findTfButton(container, 'True'));
+
+    const fb = singleFeedback(container);
+    expect(fb).toHaveAttribute('role', 'status');
+    expect(fb).toHaveAttribute('aria-live', 'polite');
+  });
+
+  test('picking True (correct) shows only the why_if_true entry', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<TrueFalseQuestion {...baseProps} />);
+    await user.click(findTfButton(container, 'True'));
+
+    expect(container.querySelector('[data-activity="tf-option-why"]')?.textContent).toBe(
+      'Correct: the sky is blue.',
+    );
+    expect(container.querySelector('[data-activity="tf-correct-why"]')).not.toBeInTheDocument();
+  });
+
+  test('picking False (wrong) shows why_if_false, then why_if_true', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<TrueFalseQuestion {...baseProps} />);
+    await user.click(findTfButton(container, 'False'));
+
+    expect(container.querySelector('[data-activity="tf-option-why"]')?.textContent).toBe(
+      'Wrong: the sky is blue, not another color.',
+    );
+    expect(container.querySelector('[data-activity="tf-correct-why"]')?.textContent).toBe(
+      'Correct: the sky is blue.',
+    );
+  });
+
+  test('without optionWhy, falls back to the single explanation (V7 content)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <TrueFalseQuestion statement="The sky is blue." isTrue explanation="It's due to Rayleigh scattering." />,
+    );
+    await user.click(findTfButton(container, 'True'));
+
+    expect(container.textContent).toContain("It's due to Rayleigh scattering.");
+    expect(container.querySelector('[data-activity="tf-option-why"]')).not.toBeInTheDocument();
+  });
+});
+
 // ── TrueFalse wrapper (multi-item, per-row result on click) ─────────────────
 
 describe('TrueFalse wrapper', () => {
@@ -281,6 +340,30 @@ describe('TrueFalse wrapper', () => {
     const labels = firstRowBtns.map(b => b.textContent?.trim());
     expect(labels).toContain('Правда');
     expect(labels).toContain('Неправда');
+  });
+
+  test('row-level optionWhy: wrong pick shows why_if_false then why_if_true', async () => {
+    const user = userEvent.setup();
+    const itemsWithWhy = [
+      {
+        statement: 'The Dnipro flows into the Baltic Sea.',
+        isTrue: false,
+        optionWhy: ['Wrong: it flows into the Black Sea.', 'Correct: it flows into the Black Sea.'] as [
+          string,
+          string,
+        ],
+      },
+    ];
+    const { container } = render(<TrueFalse items={itemsWithWhy} />);
+    const row = container.querySelector<HTMLElement>('[data-activity="tf-row"]')!;
+    await user.click(within(row).getByRole('button', { name: 'True' })); // wrong
+
+    expect(row.querySelector('[data-activity="tf-row-option-why"]')?.textContent).toBe(
+      'Wrong: it flows into the Black Sea.',
+    );
+    expect(row.querySelector('[data-activity="tf-row-correct-why"]')?.textContent).toBe(
+      'Correct: it flows into the Black Sea.',
+    );
   });
 
   test('Try Again uses the Ukrainian label when isUkrainian=true', async () => {

@@ -289,6 +289,73 @@ describe('MatchUp', () => {
     expect(leftTiles(container)[0]).toBeDisabled();
   });
 
+  test('a wrong pairing attempt shows that pair\'s why (persists past the shake reset)', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const user = userEvent.setup({ delay: null });
+      const pairsWithWhy = [
+        { left: 'Cat', right: 'Meow', why: 'Cats say Meow.' },
+        { left: 'Dog', right: 'Bark' },
+      ];
+      const { container } = render(<MatchUp pairs={pairsWithWhy} />);
+
+      await user.click(leftTiles(container)[0]); // Cat
+      await user.click(findRightByText(container, 'Bark')); // wrong
+
+      const why = container.querySelector('[data-activity="match-wrong-why"]');
+      expect(why).toBeInTheDocument();
+      expect(why).toHaveTextContent('Cats say Meow.');
+      expect(why).toHaveAttribute('role', 'status');
+      expect(why).toHaveAttribute('aria-live', 'polite');
+
+      // The shake class clears after MISSHAKE_TIMEOUT_MS, but the why stays
+      // until the next attempt.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(MISSHAKE_TIMEOUT_MS);
+      });
+      expect(container.querySelector('[data-activity="match-wrong-why"]')).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  test('starting a new left selection clears the previous wrong-pair why', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const user = userEvent.setup({ delay: null });
+      const pairsWithWhy = [
+        { left: 'Cat', right: 'Meow', why: 'Cats say Meow.' },
+        { left: 'Dog', right: 'Bark' },
+      ];
+      const { container } = render(<MatchUp pairs={pairsWithWhy} />);
+
+      await user.click(leftTiles(container)[0]);
+      await user.click(findRightByText(container, 'Bark')); // wrong
+      expect(container.querySelector('[data-activity="match-wrong-why"]')).toBeInTheDocument();
+
+      // The board is locked until the shake clears — wait it out before the
+      // next selection, same as the wrong-match completion test above.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(MISSHAKE_TIMEOUT_MS);
+      });
+
+      await user.click(leftTiles(container)[1]); // new selection
+      expect(container.querySelector('[data-activity="match-wrong-why"]')).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  test('without why, no wrong-pair feedback renders (V7 fallback)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<MatchUp pairs={pairs} />);
+
+    await user.click(leftTiles(container)[0]);
+    await user.click(findRightByText(container, 'Bark')); // wrong
+
+    expect(container.querySelector('[data-activity="match-wrong-why"]')).not.toBeInTheDocument();
+  });
+
   test('renders correctly in a lesson context (Cyrillic/English pairs and custom instructions)', () => {
     const lessonPairs = [
       { left: 'стіл', right: 'table' },

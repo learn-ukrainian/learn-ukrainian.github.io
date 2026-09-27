@@ -7,7 +7,7 @@ import {
   useChromeLocale,
 } from '../lib/i18n/useChromeLocale';
 import { shuffle } from './utils';
-import { optionsWithoutSpottedError } from '../../../packages/activity-kit/src/components/utils';
+import { optionIndicesWithoutSpottedError } from '../../../packages/activity-kit/src/components/utils';
 
 export interface ErrorCorrectionItemProps {
   /**
@@ -35,6 +35,14 @@ export interface ErrorCorrectionItemProps {
    * @ukrainianText true
    */
   explanation: string;
+  /**
+   * Per-option feedback aligned by index to `options` (before the spotted
+   * error is filtered out and the rest are shuffled). Absent on every
+   * existing module, which keeps the single `explanation`.
+   * @schemaDescription Feedback for each fix option, aligned by original index.
+   * @ukrainianText true
+   */
+  optionWhy?: string[];
   /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
@@ -76,15 +84,18 @@ export function ErrorCorrectionItem({
   correctForm,
   options,
   explanation,
+  optionWhy,
   isUkrainian,
   onComplete,
   disabled = false,
 }: ErrorCorrectionItemProps) {
   // Shuffle options on mount, minus the error the learner already spotted.
-  const shuffledOptions = useMemo(
-    () => shuffle(optionsWithoutSpottedError(options, errorWord, correctForm)),
-    [options, errorWord, correctForm],
-  );
+  // Original (pre-filter, pre-shuffle) indices are kept alongside each entry
+  // so per-option feedback (aligned by original index) survives both steps.
+  const shuffledOptions = useMemo(() => {
+    const survivingIndices = optionIndicesWithoutSpottedError(options, errorWord, correctForm);
+    return shuffle(survivingIndices.map((origIndex) => ({ text: options[origIndex], origIndex })));
+  }, [options, errorWord, correctForm]);
 
   const [step, setStep] = useState<Step>('identify');
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
@@ -177,6 +188,12 @@ export function ErrorCorrectionItem({
   const isFixCorrect = selectedFix === correctForm;
   const isNoErrorCorrect = errorWord === null && step === 'complete';
   const isCorrectionShown = revealedCorrection && step === 'complete';
+  const selectedFixOrigIndex = selectedFix !== null
+    ? shuffledOptions.find((o) => o.text === selectedFix)?.origIndex
+    : undefined;
+  const correctFixOrigIndex = options.indexOf(correctForm);
+  const chosenFixWhy = selectedFixOrigIndex !== undefined ? optionWhy?.[selectedFixOrigIndex] : undefined;
+  const correctFixWhy = correctFixOrigIndex >= 0 ? optionWhy?.[correctFixOrigIndex] : undefined;
 
   const step1Label = isUkrainian ? 'Крок 1: Знайдіть помилку' : 'Step 1: Find the error';
   const step2Label = isUkrainian ? 'Крок 2: Оберіть правильну форму' : 'Step 2: Choose the correct form';
@@ -271,10 +288,10 @@ export function ErrorCorrectionItem({
                 key={idx}
                 className={styles.chip}
                 data-activity="error-correction-fix-chip"
-                onClick={() => handleFixSelect(option)}
+                onClick={() => handleFixSelect(option.text)}
                 disabled={disabled}
               >
-                {option}
+                {option.text}
               </button>
             ))}
           </div>
@@ -305,6 +322,8 @@ export function ErrorCorrectionItem({
             className={`${styles.feedback} ${(isFixCorrect || isNoErrorCorrect || isCorrectionShown) ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
             data-activity="error-correction-feedback"
             data-correct={(isFixCorrect || isNoErrorCorrect || isCorrectionShown) ? 'true' : 'false'}
+            role="status"
+            aria-live="polite"
           >
             {isNoErrorCorrect ? (
               isUkrainian ? '✓ Правильно! У цьому реченні не було помилок.' : '✓ Correct! There was no error in this sentence.'
@@ -315,8 +334,19 @@ export function ErrorCorrectionItem({
             ) : (
               `${isUkrainian ? '✗ Правильна відповідь:' : '✗ The correct answer is:'} "${errorWord}" → "${correctForm}"`
             )}
-            {explanation && (
-              <div className={styles.explanation}>{explanation}</div>
+            {optionWhy && !isNoErrorCorrect && !isCorrectionShown ? (
+              <>
+                {chosenFixWhy && (
+                  <div className={styles.explanation} data-activity="error-correction-option-why">{chosenFixWhy}</div>
+                )}
+                {!isFixCorrect && correctFixWhy && (
+                  <div className={styles.explanation} data-activity="error-correction-correct-why">{correctFixWhy}</div>
+                )}
+              </>
+            ) : (
+              explanation && (
+                <div className={styles.explanation}>{explanation}</div>
+              )
             )}
           </div>
           <div className={styles.buttonRow}>
@@ -356,6 +386,12 @@ interface ErrorCorrectionItemData {
    * @ukrainianText true
    */
   explanation: string;
+  /**
+   * Per-option feedback aligned by index to `options`. Absent on V7 content.
+   * @schemaDescription Feedback for each fix option, aligned by original index.
+   * @ukrainianText true
+   */
+  optionWhy?: string[];
 }
 
 interface ErrorCorrectionProps {
@@ -406,6 +442,7 @@ export default function ErrorCorrection({ items, children, instruction, isUkrain
             correctForm={item.correctForm}
             options={item.options}
             explanation={item.explanation}
+            optionWhy={item.optionWhy}
             isUkrainian={isUkrainian}
           />
         )) : React.Children.map(children, (child) => {

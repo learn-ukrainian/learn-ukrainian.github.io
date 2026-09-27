@@ -75,3 +75,89 @@ describe('OddOneOut component', () => {
     expect(screen.getByText('❌ Неправильно')).toBeInTheDocument();
   });
 });
+
+// ── shuffleOddOneOut optionWhy permutation ───────────────────────────────────
+
+describe('shuffleOddOneOut with optionWhy', () => {
+  const words = ['а', 'б', 'в', 'г'];
+  const why = ['why-а', 'why-б', 'why-в', 'why-г'];
+
+  test('optionWhy is permuted the same way as words', () => {
+    const result = shuffleOddOneOut(words, 3, stubRng([0, 0, 0]), why);
+    expect(result.words).toEqual(['б', 'в', 'г', 'а']);
+    expect(result.optionWhy).toEqual(['why-б', 'why-в', 'why-г', 'why-а']);
+    // Each word still lines up with its own why after the shuffle.
+    result.words.forEach((word, i) => {
+      const origIndex = words.indexOf(word);
+      expect(result.optionWhy![i]).toBe(why[origIndex]);
+    });
+  });
+
+  test('optionWhy is undefined when not provided (unchanged signature)', () => {
+    const result = shuffleOddOneOut(words, 3, stubRng([0]));
+    expect(result.optionWhy).toBeUndefined();
+  });
+});
+
+// ── per-option feedback on the page (#8889 A1-P3) ────────────────────────────
+
+describe('OddOneOut optionWhy', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  const itemsWithWhy = [
+    {
+      words: ['день', 'ніч', 'вечір', 'стіл'],
+      correct: 3,
+      explanation: 'Стіл — не час доби.',
+      optionWhy: ['день is a time of day.', 'ніч is a time of day.', 'вечір is a time of day.', 'стіл is furniture.'],
+    },
+  ];
+
+  test('feedback region is announced (role=status, aria-live=polite)', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<OddOneOut items={itemsWithWhy} />);
+    await user.click(screen.getByRole('button', { name: 'стіл' }));
+
+    const fb = container.querySelector('[data-activity="odd-one-out-feedback"]');
+    expect(fb).toHaveAttribute('role', 'status');
+    expect(fb).toHaveAttribute('aria-live', 'polite');
+  });
+
+  test('a correct pick shows only that word\'s why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<OddOneOut items={itemsWithWhy} />);
+    await user.click(screen.getByRole('button', { name: 'стіл' }));
+
+    expect(container.querySelector('[data-activity="odd-one-out-option-why"]')?.textContent).toBe(
+      'стіл is furniture.',
+    );
+    expect(container.querySelector('[data-activity="odd-one-out-correct-why"]')).not.toBeInTheDocument();
+  });
+
+  test('a wrong pick shows the chosen word why, then the correct word why', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<OddOneOut items={itemsWithWhy} />);
+    await user.click(screen.getByRole('button', { name: 'день' }));
+
+    expect(container.querySelector('[data-activity="odd-one-out-option-why"]')?.textContent).toBe(
+      'день is a time of day.',
+    );
+    expect(container.querySelector('[data-activity="odd-one-out-correct-why"]')?.textContent).toBe(
+      'стіл is furniture.',
+    );
+  });
+
+  test('without optionWhy, falls back to the single explanation (V7 content)', async () => {
+    const user = userEvent.setup();
+    const legacyItems = [
+      { words: ['день', 'ніч', 'вечір', 'стіл'], correct: 3, explanation: 'Стіл — не час доби.' },
+    ];
+    const { container } = render(<OddOneOut items={legacyItems} />);
+    await user.click(screen.getByRole('button', { name: 'стіл' }));
+
+    expect(screen.getByText('Стіл — не час доби.')).toBeInTheDocument();
+    expect(container.querySelector('[data-activity="odd-one-out-option-why"]')).not.toBeInTheDocument();
+  });
+});

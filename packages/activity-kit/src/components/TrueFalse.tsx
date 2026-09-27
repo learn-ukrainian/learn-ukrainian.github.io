@@ -20,13 +20,21 @@ export interface TrueFalseQuestionProps {
    */
   explanation?: string;
   /**
+   * Feedback for the learner's pick: `[why_if_true, why_if_false]`. The
+   * entry for the correct value doubles as the explanation. Absent on every
+   * existing module, which keeps the single `explanation`.
+   * @schemaDescription Feedback for each true/false pick.
+   * @ukrainianText true
+   */
+  optionWhy?: [string, string];
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
   isUkrainian?: boolean;
 }
 
-export function TrueFalseQuestion({ statement, isTrue, explanation, isUkrainian }: TrueFalseQuestionProps) {
+export function TrueFalseQuestion({ statement, isTrue, explanation, optionWhy, isUkrainian }: TrueFalseQuestionProps) {
   const [answer, setAnswer] = useState<boolean | null>(null);
   const [showResult, setShowResult] = useState(false);
 
@@ -37,6 +45,8 @@ export function TrueFalseQuestion({ statement, isTrue, explanation, isUkrainian 
   };
 
   const isCorrect = answer === isTrue;
+  const chosenWhy = answer !== null ? optionWhy?.[answer ? 0 : 1] : undefined;
+  const correctWhy = optionWhy?.[isTrue ? 0 : 1];
 
   // Labels mirror the wrapper below — previously this single-statement
   // variant hardcoded English, which broke immersion when used inside
@@ -75,9 +85,20 @@ export function TrueFalseQuestion({ statement, isTrue, explanation, isUkrainian 
           className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
           data-activity="tf-feedback"
           data-correct={isCorrect ? 'true' : 'false'}
+          role="status"
+          aria-live="polite"
         >
           {isCorrect ? correctLabel : wrongLabel}
-          {explanation && <p className={styles.explanation}>{explanation}</p>}
+          {optionWhy ? (
+            <>
+              {chosenWhy && <p className={styles.explanation} data-activity="tf-option-why">{chosenWhy}</p>}
+              {!isCorrect && correctWhy && (
+                <p className={styles.explanation} data-activity="tf-correct-why">{correctWhy}</p>
+              )}
+            </>
+          ) : (
+            explanation && <p className={styles.explanation}>{explanation}</p>
+          )}
         </div>
       )}
     </div>
@@ -100,6 +121,13 @@ export interface TrueFalseItem {
    * @ukrainianText true
    */
   explanation?: string;
+  /**
+   * Feedback for the learner's pick: `[why_if_true, why_if_false]`. Absent
+   * on every existing module, which keeps the single `explanation`.
+   * @schemaDescription Feedback for each true/false pick.
+   * @ukrainianText true
+   */
+  optionWhy?: [string, string];
 }
 
 export interface TrueFalseProps {
@@ -159,6 +187,9 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
         {items.map((item, index) => {
           const answered = index in selections;
           const isCorrect = selections[index] === item.isTrue;
+          const pick = selections[index];
+          const chosenWhy = answered ? item.optionWhy?.[pick ? 0 : 1] : undefined;
+          const correctWhy = item.optionWhy?.[item.isTrue ? 0 : 1];
 
           return (
             <div key={index} className={styles.quizQuestion} data-activity="tf-row">
@@ -188,10 +219,23 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
                   className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
                   data-activity="tf-row-feedback"
                   data-correct={isCorrect ? 'true' : 'false'}
+                  role="status"
+                  aria-live="polite"
                 >
                   {isCorrect ? correctLabel : wrongLabel}
-                  {item.explanation && (
-                    <p className={styles.explanation}>{item.explanation}</p>
+                  {item.optionWhy ? (
+                    <>
+                      {chosenWhy && (
+                        <p className={styles.explanation} data-activity="tf-row-option-why">{chosenWhy}</p>
+                      )}
+                      {!isCorrect && correctWhy && (
+                        <p className={styles.explanation} data-activity="tf-row-correct-why">{correctWhy}</p>
+                      )}
+                    </>
+                  ) : (
+                    item.explanation && (
+                      <p className={styles.explanation}>{item.explanation}</p>
+                    )
                   )}
                 </div>
               )}
