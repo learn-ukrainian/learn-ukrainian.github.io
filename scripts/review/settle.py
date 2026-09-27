@@ -388,12 +388,14 @@ def record(
         outcome, receipts = validate_reply(reply_bytes, manifest_bytes, ledger_path)
         state = repo_root / TREE / "evidence" / item["level"] / "_state" / item["slug"]
         saved = state / f"settle-{item['item_id']}.reply.yaml"
+        created = True
         try:
             _save_exclusive(saved, reply_bytes)
         except FileExistsError as exc:
-            # A prior run may have saved this exact reply and been terminated before it recorded the
-            # outcome (the item's outcome is still NULL, per the ``_item`` check above): that retry is
+            # A prior run, or a competing recorder racing this one, may have saved this exact reply
+            # already (the item's outcome is still NULL, per the ``_item`` check above): that retry is
             # the same reply arriving again, not a second attempt, and must be let through to record().
+            created = False
             if saved.read_bytes() != reply_bytes:
                 raise SettleError(
                     f"settle item {item['item_id']}: a different reply is already saved; no second attempt"
@@ -401,7 +403,12 @@ def record(
         try:
             db.record_settle_outcome(conn, item["item_id"], outcome, receipts, decided_by)
         except BaseException:
-            saved.unlink()
+            # Only the call that created ``saved`` cleans it up. A competing call that found it
+            # already saved (identical bytes, ``created`` False above) and then lost the database
+            # race (e.g. ``SettleAlreadyDecided``) must not delete the winner's saved reply out from
+            # under it (#8774 r6).
+            if created:
+                saved.unlink()
             raise
         return outcome
 

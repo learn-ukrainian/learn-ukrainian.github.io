@@ -24,11 +24,16 @@ report for the driver. It performs no repair and takes no automatic branch:
   a settle outcome, an operator decision) is held off until the transaction commits, landing after
   it instead: the transaction guarantees the file is written from one consistent, complete read of
   that state, not that the file stays fresh forever after (it is a tracked file, read outside the
-  transaction, on its own schedule). ``input_fingerprint`` records the sha256 of every database row
-  and file the computation read, canonical and independent of ordering or ``computed_at``;
+  transaction, on its own schedule). ``input_fingerprint`` records the sha256 of every column of
+  every database row and file the computation read, canonical and independent of ordering or
+  ``computed_at`` (#8774 r6: no column is hand-picked, so a row field the verdict logic starts
+  reading later is covered without a matching edit to the fingerprint);
   ``fixloop verdict --check`` (``module_verdict_problems``) recomputes it and refuses a file whose
   verdict, holds or fingerprint disagree with a fresh recomputation — the gate a module build wires
   in before it lands, so a stale ``APPROVE`` a later failure superseded is never trusted (#8774 r5).
+  ``scripts.build.build_arc_landing`` runs this same check before trusting a module's ``APPROVE``
+  toward the ``reviewed`` landing state, when a findings database is present to check against
+  (#8774 r6; see that module's docstring).
 * **Projections** — the database is the source of truth. ``lesson-<n>.verdict.yaml`` and
   ``plan-review.yaml`` are projections of the latest accepted first-seat attempt of their target
   (highest ``attempts.seq``). A missing or disagreeing file is stale: the module is HOLD
@@ -770,13 +775,18 @@ def _canonical_json(value: Any) -> str:
     return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
 
 
+def _row_dict(row: sqlite3.Row | None) -> dict[str, Any] | None:
+    """Every column of a database row, for fingerprinting; ``None`` unchanged."""
+    return dict(row) if row is not None else None
+
+
 def _target_fingerprint(
     conn: sqlite3.Connection, directory: Path, level: str, slug: str, kind: str, n: int | None
 ) -> dict[str, Any]:
     """A projection target's raw inputs: the database's latest accepted attempt and the file's agreement with it."""
     latest = findings_db.latest_accepted(conn, level, slug, kind, n)
     return {
-        "latest_accepted": projection_document(latest) if latest is not None else None,
+        "latest_accepted": _row_dict(latest),
         "projection_problem": projection_problem(directory, kind, n, latest),
     }
 
@@ -793,6 +803,16 @@ def module_verdict_fingerprint_inputs(
     params: dict[str, Any],
 ) -> dict[str, Any]:
     """Exactly the database rows and files ``compute_module_verdict`` reads, canonical and order-independent.
+
+    Every database row is hashed by its full set of columns (``_row_dict``), not a hand-picked
+    subset: a column added to a read row later is covered without a matching edit here, and no
+    column already read (e.g. ``reviewer_model``) can change without moving the fingerprint (#8774
+    r6). Nothing is excluded: every column of every row this function reads is a stored, static
+    value for a given database state, so including it cannot make the fingerprint depend on
+    anything but that state. ``plan_status`` is the one exception, and it is not a database row: it
+    keeps its existing ``state``/``attempt_id``/``manifest_sha256`` filter because ``compute_module_verdict``
+    gates only on ``plan_status["state"]`` (the free-text ``reason``/``stale`` detail is diagnostic,
+    not a verdict input).
 
     Feeds :func:`module_verdict_fingerprint` only; it decides nothing about the module itself. ``lessons``,
     ``closure`` and ``plan_status`` are the caller's own reads, passed in so this never re-derives them
@@ -812,31 +832,15 @@ def module_verdict_fingerprint_inputs(
                 findings_db.has_agreement_on(conn, level, slug, n, current.digest) if current.digest else False
             ),
         }
-    settle_items = [
-        {
-            key: item[key]
-            for key in (
-                "item_id",
-                "finding_ref",
-                "kind",
-                "lesson_n",
-                "manifest_sha256",
-                "outcome",
-                "decided_by",
-                "needs_operator",
-                "operator_decision",
-                "superseded_by",
-            )
-        }
-        for item in findings_db.module_settle_items(conn, level, slug)
-    ]
-    budgets = {str(n): row for n, row in sorted(findings_db.module_budgets(conn, level, slug).items())}
+    settle_items = [_row_dict(item) for item in findings_db.module_settle_items(conn, level, slug)]
+    budget_rows = conn.execute(
+        "SELECT * FROM budgets WHERE level = ? AND slug = ? ORDER BY lesson_n", (level, slug)
+    ).fetchall()
+    budgets = {str(row["lesson_n"]): _row_dict(row) for row in budget_rows}
     decisions = [
-        {key: row[key] for key in ("lesson_n", "budget", "counted", "decision", "decided_by")}
+        _row_dict(row)
         for row in conn.execute(
-            "SELECT lesson_n, budget, counted, decision, decided_by FROM budget_decisions"
-            " WHERE level = ? AND slug = ? ORDER BY seq",
-            (level, slug),
+            "SELECT * FROM budget_decisions WHERE level = ? AND slug = ? ORDER BY seq", (level, slug)
         ).fetchall()
     ]
     return {

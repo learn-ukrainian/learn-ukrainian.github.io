@@ -1422,6 +1422,28 @@ def test_the_fingerprint_changes_when_a_budget_decision_is_recorded(world: World
     assert _fingerprint(world) != before
 
 
+def test_the_fingerprint_changes_when_an_unwatched_column_of_a_read_row_changes(world: World, promoted: None) -> None:
+    """A column ``compute_module_verdict`` never branches on (#8774 r6: was ``reviewer_model``).
+
+    The fingerprint hashes every column of every row it reads, not a hand-picked subset: changing
+    a column the verdict logic itself never looks at must still move the fingerprint, because the
+    fingerprint's job is to notice *any* change to the rows the recomputation is of, not only the
+    ones that happen to flip today's verdict.
+    """
+    approve_all(world)
+    before = _fingerprint(world)
+    conn = db.connect(world.db)
+    try:
+        with db.transaction(conn):
+            conn.execute(
+                "UPDATE attempts SET reviewer_model = 'a-different-model' WHERE level = ? AND slug = ? AND lesson_n = 1",
+                (LEVEL, SLUG),
+            )
+    finally:
+        conn.close()
+    assert _fingerprint(world) != before
+
+
 def test_the_fingerprint_changes_when_a_settle_item_opens_and_not_otherwise(world: World, promoted: None) -> None:
     approve_all(world)
     before = _fingerprint(world)
