@@ -11,6 +11,7 @@ import re
 import subprocess
 import sys
 import time
+import uuid
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -531,10 +532,15 @@ def _provision_data_symlinks(worktree_path: Path, main_checkout_root: Path) -> N
         target.symlink_to(source.resolve())
 
 
-def _setup_worktree(level: str, slug: str, raw_path: str | None) -> BuildWorktree:
+def _setup_worktree(level: str, slug: str, raw_path: str | None, *, dry_run: bool = False) -> BuildWorktree:
     repo_root = _repo_root_from_cwd()
     timestamp = _utc_timestamp()
     explicit_path = raw_path not in (None, WORKTREE_AUTO)
+    if dry_run and not explicit_path:
+        # Dry runs create and immediately discard their worktree/branch
+        # (#8890) — a bare second-resolution timestamp collides when two
+        # dry runs for the same module start in the same second.
+        timestamp = f"{timestamp}-{uuid.uuid4().hex[:8]}"
     if explicit_path:
         path = Path(str(raw_path)).expanduser()
         if not path.is_absolute():
@@ -596,6 +602,48 @@ def _strip_worktree_args(argv: list[str]) -> list[str]:
     return stripped
 
 
+def _discard_worktree(worktree: BuildWorktree) -> reap_worktrees.ReapResult:
+    """Force-remove a dry-run build worktree and its branch, best-effort.
+
+    A dry run writes nothing to disk (#8679), so unlike a real build there is
+    nothing worth keeping for recovery: it must leave the repository's branch
+    set and worktree list exactly as it found them (#8890).
+    """
+    remove = _run_git(
+        ["worktree", "remove", "--force", str(worktree.path)],
+        cwd=worktree.repo_root,
+        timeout=GIT_ARTIFACT_TIMEOUT_S,
+    )
+    if remove.returncode != 0 and worktree.path.exists():
+        error = (remove.stderr or remove.stdout or "git worktree remove failed").strip()
+        return reap_worktrees.ReapResult(
+            path=str(worktree.path),
+            branch=worktree.branch,
+            action="skipped",
+            reason="dry run worktree remove failed",
+            dirty=None,
+            error=error,
+        )
+    branch_delete = _run_git(
+        ["branch", "-D", worktree.branch],
+        cwd=worktree.repo_root,
+        timeout=GIT_ARTIFACT_TIMEOUT_S,
+    )
+    branch_pruned = branch_delete.returncode == 0
+    error = None
+    if not branch_pruned:
+        error = (branch_delete.stderr or branch_delete.stdout or "git branch -D failed").strip()
+    return reap_worktrees.ReapResult(
+        path=str(worktree.path),
+        branch=worktree.branch,
+        action="discarded",
+        reason="dry run leaves no artifacts to persist (#8890)",
+        dirty=False,
+        branch_pruned=branch_pruned,
+        error=error,
+    )
+
+
 def _print_worktree_summary(
     worktree: BuildWorktree,
     *,
@@ -612,6 +660,9 @@ def _print_worktree_summary(
         print(f"BUILD_WORKTREE_CLEANUP={cleanup_result.action}: {cleanup_result.reason}")
         if cleanup_result.error:
             print(f"BUILD_WORKTREE_CLEANUP_ERROR={cleanup_result.error}")
+    if cleanup_result is not None and cleanup_result.action == "discarded":
+        print("Dry run — worktree and branch discarded; nothing was written.")
+        return
     if cleanup_result is not None and cleanup_result.action == "removed":
         print("Build worktree removed after artifact commit; branch retained for recovery.")
         return
@@ -727,8 +778,9 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
     level = args.level.lower()
     slug = args.slug
     writer = _normalize_writer(args.writer)
+    dry_run = bool(getattr(args, "dry_run", False))
     try:
-        worktree = _setup_worktree(level, slug, args.worktree)
+        worktree = _setup_worktree(level, slug, args.worktree, dry_run=dry_run)
     except WorktreeSetupError as exc:
         print(str(exc), file=sys.stderr)
         return exc.exit_code
@@ -800,31 +852,40 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
             extra_paths=[mdx_path],
         )
         archive.write_commit_diff_summary(worktree_path=worktree.path)
-        # Persist artifacts BEFORE printing the summary so the summary
-        # can include the commit-status line. Even if the build crashed,
-        # the writer_prompt + partial writer_output remain queryable via
-        # the build branch SHA. Without this, `git worktree remove`
-        # silently destroys forensic evidence.
-        try:
-            persisted = _persist_build_artifacts(
-                worktree,
-                level=level,
-                slug=slug,
-                result=result,
-                module_dir=module_dir,
-                mdx_path=mdx_path,
-            )
-        except PrimaryCheckoutSafetyError as exc:
-            print(f"v7_build: error — {exc}", file=sys.stderr)
-            return exc.exit_code
-        cleanup_result = None
-        if result == "success" and persisted and not args.keep_worktree:
-            cleanup_result = reap_worktrees.reap_success_worktree(
-                repo_root=worktree.repo_root,
-                worktree_path=worktree.path,
-                reason="build success after artifact commit",
-                apply=True,
-            )
+        cleanup_result: reap_worktrees.ReapResult | None = None
+        if dry_run:
+            # A dry run writes nothing to disk (#8679) — there is nothing to
+            # persist, and (unlike a real build) nothing worth keeping for
+            # recovery. Discard the worktree and its branch regardless of
+            # whether the child succeeded, so the repository's branch set and
+            # worktree list end up exactly as they started (#8890).
+            if not args.keep_worktree:
+                cleanup_result = _discard_worktree(worktree)
+        else:
+            # Persist artifacts BEFORE printing the summary so the summary
+            # can include the commit-status line. Even if the build crashed,
+            # the writer_prompt + partial writer_output remain queryable via
+            # the build branch SHA. Without this, `git worktree remove`
+            # silently destroys forensic evidence.
+            try:
+                persisted = _persist_build_artifacts(
+                    worktree,
+                    level=level,
+                    slug=slug,
+                    result=result,
+                    module_dir=module_dir,
+                    mdx_path=mdx_path,
+                )
+            except PrimaryCheckoutSafetyError as exc:
+                print(f"v7_build: error — {exc}", file=sys.stderr)
+                return exc.exit_code
+            if result == "success" and persisted and not args.keep_worktree:
+                cleanup_result = reap_worktrees.reap_success_worktree(
+                    repo_root=worktree.repo_root,
+                    worktree_path=worktree.path,
+                    reason="build success after artifact commit",
+                    apply=True,
+                )
         _print_worktree_summary(
             worktree,
             level=level,

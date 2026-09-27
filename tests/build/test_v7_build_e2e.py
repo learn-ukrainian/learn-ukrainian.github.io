@@ -69,3 +69,52 @@ def test_v7_build_dry_run_accepts_writer_alias() -> None:
 
     assert events[-1]["event"] == "module_done"
     assert events[-1]["dry_run"] is True
+
+
+def _repo_state() -> tuple[str, str]:
+    """This module's ``build/a1/my-morning-*`` branches + worktree entries.
+
+    Scoped to this one glob — not the full ``refs/heads``/``worktree list`` —
+    because ``INVOCATION_ROOT`` is the shared primary checkout, where other
+    concurrent dispatch agents create and remove unrelated branches and
+    worktrees throughout this test's run. A ``--worktree`` dry run must not
+    touch *this* glob (#8890); it makes no claim about the rest of the repo.
+    """
+    refs = subprocess.run(
+        ["git", "for-each-ref", "refs/heads/build/a1/my-morning-*"],
+        cwd=INVOCATION_ROOT,
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    ).stdout
+    worktrees = subprocess.run(
+        ["git", "worktree", "list", "--porcelain"],
+        cwd=INVOCATION_ROOT,
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    ).stdout
+    build_worktrees = "\n".join(line for line in worktrees.splitlines() if "/.worktrees/builds/a1-my-morning-" in line)
+    return refs, build_worktrees
+
+
+def test_v7_build_dry_run_leaves_branches_and_worktrees_unchanged() -> None:
+    before = _repo_state()
+
+    result = _run_dry_run()
+
+    assert result.returncode == 0, result.stderr
+    assert _repo_state() == before
+
+
+def test_v7_build_two_dry_runs_leave_branches_and_worktrees_unchanged() -> None:
+    before = _repo_state()
+
+    first = _run_dry_run()
+    second = _run_dry_run()
+
+    assert first.returncode == 0, first.stderr
+    assert second.returncode == 0, second.stderr
+    assert _repo_state() == before
