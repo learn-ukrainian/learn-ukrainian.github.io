@@ -143,16 +143,18 @@ Public #4542 is charter + bare pointer — never generate or mirror a public che
 from the private board (leak + dual-write). GitHub issue/PR state in either repo
 remains the factual SSOT for open/closed; #349 is the priority queue, not a duplicate
 status feed. Host actions on the Hramatka host follow item 10's split: routine
-maintenance (pull merged main, restart an updated/broken service, install a
-reviewed systemd unit/timer, clean agent caches/logs/worktrees) is driver work;
-a production release rollover on the live-serving host (private #360 class —
-rebuilding/swapping the read-only release checkout) is a **production cutover**
-and stays **ESCALATE** on missing GO. Host access/security config (sudo,
-root-login, SSH hardening — private #212 class) is not named by any item 10
-category on current evidence: **ESCALATE** and ask once, do not guess. If #349
-and any other queue view disagree, **#349 wins** —
-correct the other view the same session. Full contract:
-`docs/runbooks/hramatka-driver-queue.md`.
+maintenance (pull merged `main`, restart an updated or broken service only after
+checking no active dispatch depends on it, install or enable only a reviewed
+systemd user unit or timer that lives in the repo, clean agent-generated
+caches, logs, and worktrees) is driver work; a production release rollover on the
+live-serving host (private #360 class — rebuilding/swapping the read-only
+release checkout) is a **production cutover** and stays **ESCALATE** on missing
+GO. Anything needing sudo on the Hramatka host falls under the #212 ask-once
+class (along with host access/security config such as root-login and SSH
+hardening — not named by any item 10 category on current evidence):
+**ESCALATE** and ask once, do not guess. If #349 and any other queue view
+disagree, **#349 wins** — correct the other view the same session. Full
+contract: `docs/runbooks/hramatka-driver-queue.md`.
 
 Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
 as specified in that runbook; only `ALLOW` permits the new action.

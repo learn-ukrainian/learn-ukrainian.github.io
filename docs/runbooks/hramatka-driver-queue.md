@@ -111,18 +111,22 @@ reports.
 
 ## Production cutover and unclear host actions — track/escalate, never action solo
 
-A production release rollover on the live-serving Hramatka host (rebuilding
-or swapping the read-only release checkout — private #360 class) is a
-production cutover under operator-expectations item 10 and must **ESCALATE**
-without an explicit operator GO — track and surface, do not freestyle host
-changes outside the documented deploy path. Routine host maintenance (pull
-merged main, restart an updated/broken service, install a reviewed systemd
-unit/timer, clean agent caches/logs/worktrees) is driver work per item 10.
-Host access/security config (sudo, root-login, SSH hardening — private #212
-class) does not match a named item 10 category on current evidence:
-**ESCALATE** and ask the operator once rather than guess. Drivers with SSH
-access still follow the private deploy runbook and record evidence on the
-private issue.
+A production release rollover on the live-serving Hramatka host (running
+`hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`,
+including rebuilding or swapping the read-only release checkout — private #360
+class) is a production cutover under operator-expectations item 10 and needs a
+present-tense operator GO; it must **ESCALATE** without that explicit GO. Only
+after a present-tense operator GO is granted may drivers with SSH access follow
+the private deploy runbook and record evidence on the private issue (never
+freestyling host changes outside that documented deploy path). Routine host
+maintenance (pull merged `main`, restart an updated or broken service only after
+checking no active dispatch depends on it, install or enable only a reviewed
+systemd user unit or timer that lives in the repo, clean agent-generated
+caches, logs, and worktrees) is driver work per item 10. Anything needing sudo on
+the Hramatka host falls under the #212 ask-once class (along with host
+access/security config such as root-login and SSH hardening — private #212
+class, not matching a named item 10 category on current evidence): **ESCALATE**
+and ask the operator once rather than guess.
 
 ## Same-session correction rule
 
