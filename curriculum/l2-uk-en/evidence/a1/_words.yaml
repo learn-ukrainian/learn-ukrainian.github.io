@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: ca2c3a50e13f1a700c3627eb57d1866424467c95
+  mcp_commit: 014163ecb5ab9725f499c1c398ac69a80fd72e38
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 2c9a196510252ffe04aaf787c475a9b2a91567bfcbb8164a268d04057a98297e
+  sources_db: 2f6d3aebf6806eb01bd3c4d639253eaab0d50137a970e80eaa53bb49c4219d04
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: pending
@@ -24,13 +24,13 @@ words:
   - form: мені
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: мені́
     tags: noun:anim:s:v_dav:pron:pers:1
   - form: мені
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: мені́
     tags: noun:anim:s:v_mis:pron:pers:1
   - form: я
@@ -42,13 +42,13 @@ words:
   - form: мною
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: мно́ю
     tags: noun:anim:s:v_oru:pron:pers:1
   - form: мене
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: мене́
     tags: noun:anim:s:v_rod:pron:pers:1
   - form: мя
@@ -63,7 +63,7 @@ words:
   - form: мене
     learner: true
     markers: []
-    stress_source: trie
+    stress_source: ulif
     stressed: мене́
     tags: noun:anim:s:v_zna:pron:pers:1
   - form: мя
@@ -88,7 +88,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - я
+    - 1
+    row_sha256: cc167d6b7126af9c621233f97445641a9004facb2580d3dc78991030f0d84192
+    source: ulif
 - cefr:
     level: A1
     row_id: 671
@@ -3998,7 +4003,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - якщо́
+    - 1
+    row_sha256: f6753bb948110a2b89ab62bca34ce5a07d077d3edeef31fd298d63999fa1903e
+    source: ulif
 - cefr:
     level: A2
     row_id: 77
@@ -4256,7 +4266,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - ще
+    - 1
+    row_sha256: f356b22544d58d93a5b606c6a3c4299f02a474a861ffbf2677c6fc2e9dac91a6
+    source: ulif
 - cefr:
     level: A2
     row_id: 3940

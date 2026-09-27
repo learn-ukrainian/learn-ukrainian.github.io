@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: ca2c3a50e13f1a700c3627eb57d1866424467c95
+  mcp_commit: 014163ecb5ab9725f499c1c398ac69a80fd72e38
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: ab7f522b625c7f4d039cf11b4ae1770dd61a92ebb728ad19badbbc120c9ebb7c
+  sources_db: 111d53b7127a9a13850a2b8b3dfece69587bbadf9e607bf60d4e7033ff1f8862
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
@@ -245,18 +245,18 @@ texts:
   supports: Adult L2 informal greeting chunk and its familiar-peer use; learned by ear without parsing; ULP Season 1 lesson
     1.
 - id: T-003
-  quote: 'Добрий день! — Hello!
-
-    This time we are having a closer look at a formal                In Ukrainian, formal greetings depend on the time'
-  sha256: 113bc7a826bc082b7036d9b7478d646cb23a64bb9de3c94dd4c3f988a928cbb2
+  quote: "The most typical greeting that you can use at any\n                                                            \
+    \     time of the day is:\n\n                                                                                      До́брий\
+    \ день!"
+  sha256: 9f4fd61b1d95242a3edb1bab7facee26ca0d999b8a8dc729e8e375018a186e1f
   source:
     author: Ukrainian Lessons Podcast
-    chunk_id: ulp-1-00-lesson-notes_l0002_w001
+    chunk_id: ulp-1-00-lesson-notes_l0002_w002
     file: ulp-1-00-lesson-notes
     grade: ''
     kind: textbook
     page: null
-    row_sha256: 11ce1c1713a5d69c5a60504d3830c97b76c7b0ad1608bbc816e3d5c66a3a7702
+    row_sha256: 512edd684d21769cbe302f5cf25cdac7bf1aae69f2c5dd60c05b45332d0a7b34
     section_id: null
   supports: Adult L2 formal greeting chunk for any time of day, not adjective or case analysis; ULP Season 1 lesson 2.
 - id: T-004
@@ -491,3 +491,120 @@ videos:
   id: V-003
   url: https://www.youtube.com/watch?v=5J9ZaM3-rrI
   use: Pronunciation trainer for И in lesson 3.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    http_status: 200
+  id: V-004
+  url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  use: Pronunciation model for letter А.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    http_status: 200
+  id: V-005
+  url: https://www.youtube.com/watch?v=gJFxRIPRZbI
+  use: Pronunciation model for letter О.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    http_status: 200
+  id: V-006
+  url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  use: Pronunciation model for letter У.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=W-1rCu0indE
+    http_status: 200
+  id: V-007
+  url: https://www.youtube.com/watch?v=W-1rCu0indE
+  use: Pronunciation model for letter И.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    http_status: 200
+  id: V-008
+  url: https://www.youtube.com/watch?v=Ez95H4ibuJo
+  use: Pronunciation model for consonant М.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    http_status: 200
+  id: V-009
+  url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  use: Pronunciation model for vowel І.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    http_status: 200
+  id: V-010
+  url: https://www.youtube.com/watch?v=vNUfiKHPYaU
+  use: Pronunciation model for consonant Н.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    http_status: 200
+  id: V-011
+  url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+  use: Pronunciation model for consonant В.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    http_status: 200
+  id: V-012
+  url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+  use: Pronunciation model for consonant Л.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
+    http_status: 200
+  id: V-013
+  url: https://www.youtube.com/watch?v=7UsFBgSL91E
+  use: Pronunciation model for consonant С.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    http_status: 200
+  id: V-014
+  url: https://www.youtube.com/watch?v=J7sGEI4-xJo
+  use: Pronunciation model for consonant К.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    http_status: 200
+  id: V-015
+  url: https://www.youtube.com/watch?v=JksSjjxyW5Y
+  use: Pronunciation model for consonant П.
+- channel: Ukrainian Lessons
+  checked:
+    content_type: text/html
+    date: '2026-09-27'
+    final_url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    http_status: 200
+  id: V-016
+  url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+  use: Pronunciation model for consonant Р.

@@ -10,8 +10,8 @@ texts:
     span: {first_words: 'The basic informal “Hi!” in Ukrainian is:', last_words: 'close family, and people we work with without any'}
     supports: 'Adult L2 informal greeting chunk and its familiar-peer use; learned by ear without parsing; ULP Season 1 lesson 1.'
   - id: T-003
-    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w001}
-    span: {first_words: 'Добрий день! — Hello!', last_words: 'In Ukrainian, formal greetings depend on the time'}
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w002}
+    span: {first_words: 'The most typical greeting that you can use at any', last_words: 'time of the day is: До́брий день!'}
     supports: 'Adult L2 formal greeting chunk for any time of day, not adjective or case analysis; ULP Season 1 lesson 2.'
   - id: T-004
     source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0005_w003}
@@ -98,6 +98,19 @@ videos:
   - {id: V-001, url: 'https://www.youtube.com/watch?v=FUF9Za-1bzY', channel: 'Ukrainian Lessons Podcast', use: 'Listening model for the informal greeting in lesson 1.'}
   - {id: V-002, url: 'https://www.youtube.com/watch?v=GMcB5rsb3HM', channel: 'Ukrainian Lessons Podcast', use: 'Listening model for the formal greeting in lesson 1.'}
   - {id: V-003, url: 'https://www.youtube.com/watch?v=5J9ZaM3-rrI', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation trainer for И in lesson 3.'}
+  - {id: V-004, url: 'https://www.youtube.com/watch?v=hvB3VpcR3ZE', channel: 'Ukrainian Lessons', use: 'Pronunciation model for letter А.'}
+  - {id: V-005, url: 'https://www.youtube.com/watch?v=gJFxRIPRZbI', channel: 'Ukrainian Lessons', use: 'Pronunciation model for letter О.'}
+  - {id: V-006, url: 'https://www.youtube.com/watch?v=VB1O6PmtYRU', channel: 'Ukrainian Lessons', use: 'Pronunciation model for letter У.'}
+  - {id: V-007, url: 'https://www.youtube.com/watch?v=W-1rCu0indE', channel: 'Ukrainian Lessons', use: 'Pronunciation model for letter И.'}
+  - {id: V-008, url: 'https://www.youtube.com/watch?v=Ez95H4ibuJo', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant М.'}
+  - {id: V-009, url: 'https://www.youtube.com/watch?v=Z9TH0H4ShGo', channel: 'Ukrainian Lessons', use: 'Pronunciation model for vowel І.'}
+  - {id: V-010, url: 'https://www.youtube.com/watch?v=vNUfiKHPYaU', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant Н.'}
+  - {id: V-011, url: 'https://www.youtube.com/watch?v=aFcvYfvQ2X4', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant В.'}
+  - {id: V-012, url: 'https://www.youtube.com/watch?v=v6-3Xg52Buk', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant Л.'}
+  - {id: V-013, url: 'https://www.youtube.com/watch?v=7UsFBgSL91E', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant С.'}
+  - {id: V-014, url: 'https://www.youtube.com/watch?v=J7sGEI4-xJo', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant К.'}
+  - {id: V-015, url: 'https://www.youtube.com/watch?v=JksSjjxyW5Y', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant П.'}
+  - {id: V-016, url: 'https://www.youtube.com/watch?v=fMGsQ5KPQgg', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant Р.'}
 standard:
   - {id: S-001, lines: '351-353'}
   - {id: S-002, lines: '357-359'}
