@@ -299,6 +299,77 @@ def test_issue_8896_executable_backtick_write_blocked(repo: Path, command: str):
 @pytest.mark.parametrize(
     "command",
     [
+        'echo "$(tee AGENTS.md)"',
+        'echo "$(echo $(tee AGENTS.md))"',
+        "cat <<EOF\n$(tee AGENTS.md)\nEOF",
+        "bash -c 'tee AGENTS.md'",
+        "sh -c 'tee AGENTS.md'",
+    ],
+)
+def test_issue_8896_review_round_two_write_bypasses_block(repo: Path, command: str):
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_8896_outside_repo_absolute_primary_target_blocked(repo: Path, tmp_path: Path):
+    # Only the payload cwd is outside Git; the hook never executes the command.
+    outside = Path("/tmp")
+    for command in (
+        f"touch {repo}/AGENTS.md",
+        f"touch {repo}/new-file",
+        f"cd {repo} && touch new-file",
+    ):
+        result = _run(repo, {"tool_name": "Bash", "cwd": str(outside), "tool_input": {"command": command}})
+        assert result.returncode == 2, f"{command}: {result.stderr}"
+    result = _run(
+        repo,
+        {"tool_name": "Write", "cwd": str(outside), "tool_input": {"file_path": str(repo / "new-file")}},
+    )
+    assert result.returncode == 2, result.stderr
+    result = _run(
+        repo,
+        {"tool_name": "Bash", "cwd": str(outside), "tool_input": {"command": f"touch {tmp_path}/harmless"}},
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def test_issue_8896_other_repo_feature_cwd_cannot_write_primary(repo: Path, tmp_path: Path):
+    other = tmp_path / "other"
+    other.mkdir()
+    _git(other, "init", "-q", "-b", "feature")
+    result = _run(
+        repo,
+        {"tool_name": "Bash", "cwd": str(other), "tool_input": {"command": f"touch {repo}/new-file"}},
+    )
+    assert result.returncode == 2, result.stderr
+    result = _run(
+        repo,
+        {"tool_name": "Write", "cwd": str(other), "tool_input": {"file_path": str(repo / "new-file")}},
+    )
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status",
+        "ls -la",
+        "echo ok > /tmp/x",
+        "cat <<EOF\nordinary text\nEOF",
+        "cat <<-EOF\n\tordinary text\n\tEOF",
+        "cat <<'EOF'\n$(tee AGENTS.md)\nEOF",
+        "bash -c 'echo ok'",
+        "while read l; do echo $l; done < notes.txt",
+    ],
+)
+def test_issue_8896_review_round_two_ordinary_write_allow(repo: Path, command: str):
+    result = _run(repo, {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}})
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
         "git status",
         "ls -la",
         "echo ok > /tmp/x",

@@ -94,6 +94,50 @@ def test_issue_8896_secret_bypasses_block(monkeypatch, capsys, command):
 @pytest.mark.parametrize(
     "command",
     [
+        "cat <<EOF\n$(cat .env)\nEOF",
+        "cat <<-EOF\n\t$(cat .env)\n\tEOF",
+        'eval "$(echo cat .env)"',
+        "eval \"$(printf %s 'cat .env')\"",
+        "bash -c 'cat .env'",
+        "sh -c 'cat .env'",
+        "while read l; do echo $l; done < .env",
+        "awk '{print}' < .env",
+        'read X <<< "$GH_TOKEN"; printf %s "$X"',
+        'declare -n X=GH_TOKEN; printf %s "$X"',
+        'f() { local X=$GH_TOKEN; printf %s "$X"; }; f',
+        'name=GH_TOKEN; printf %s "${!name}"',
+        "cat <(cat .env)",
+        'source <(cat .env); printf %s "$FOO"',
+        "echo ok >(cat .env)",
+        'printf -v X %s "$GH_TOKEN"',
+    ],
+)
+def test_issue_8896_review_round_two_secret_bypasses_block(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status",
+        "ls -la",
+        "echo ok > /tmp/x",
+        "cat <<EOF\nordinary text\nEOF",
+        "cat <<-EOF\n\tordinary text\n\tEOF",
+        "cat <<'EOF'\n$(cat .env)\nEOF",
+        "bash -c 'echo ok'",
+        "while read l; do echo $l; done < notes.txt",
+        'eval "$(echo ok)"',
+        "echo '$(cat .env)'",
+    ],
+)
+def test_issue_8896_review_round_two_ordinary_allow(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
         "git status",
         "ls -la",
         "echo ok > /tmp/x",

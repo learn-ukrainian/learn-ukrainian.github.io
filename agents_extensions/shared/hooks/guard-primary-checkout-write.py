@@ -112,7 +112,9 @@ example, ``find -files0-from /tmp/list -delete`` and
 ``cat /tmp/list | xargs -I{} sh -c 'echo x > {}'`` are allowed from a dispatch
 worktree. This is the same rule as ``cat /tmp/list | xargs tee``: fail closed
 only when a command literal names the primary checkout or the effective cwd
-is the primary checkout. Config files such as curl ``-K`` may themselves
+is the primary checkout. Secret-file list consumers such as
+``xargs cat < list`` and copied sources such as ``cp .env x; cat x`` are
+outside this write-target model. Config files such as curl ``-K`` may themselves
 direct writes; their contents are not inspected. Unlisted writers and shell
 features not parsed here remain residuals. This is defense-in-depth, not a
 sandbox; physical worktree isolation and the monitor remain necessary.
@@ -619,6 +621,49 @@ def _normalize_backtick_substitutions(command: str) -> str:
     return "".join(out)
 
 
+def _normalize_quoted_command_substitutions(command: str) -> str:
+    """Expose $(...) bodies inside double quotes to the command tokenizer."""
+    out: list[str] = []
+    quote = ""
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and quote != "'" and i + 1 < len(command):
+            out.append(command[i : i + 2])
+            i += 2
+            continue
+        if char == "'" and quote != '"':
+            quote = "" if quote else "'"
+        elif char == '"' and quote != "'":
+            quote = "" if quote else '"'
+        elif quote == '"' and command.startswith("$(", i) and not command.startswith("$((", i):
+            depth = 1
+            inner_quote = ""
+            end = i + 2
+            while end < len(command) and depth:
+                current = command[end]
+                if current == "\\" and inner_quote != "'":
+                    end += 2
+                    continue
+                if current == "'" and inner_quote != '"':
+                    inner_quote = "" if inner_quote else "'"
+                elif current == '"' and inner_quote != "'":
+                    inner_quote = "" if inner_quote else '"'
+                elif not inner_quote:
+                    if current == "(":
+                        depth += 1
+                    elif current == ")":
+                        depth -= 1
+                end += 1
+            if depth == 0:
+                out.extend(('"', command[i:end], '"'))
+                i = end
+                continue
+        out.append(char)
+        i += 1
+    return "".join(out)
+
+
 def _split_operator_run(token: str) -> list[str]:
     """Split a pure-punctuation token into shell operators (``);`` → ``)``, ``;``)."""
     if token in _SHELL_OPERATORS or not token or not set(token) <= _PUNCTUATION:
@@ -646,8 +691,10 @@ def _tokenize(command: str) -> list[str]:
     try:
         lexer = shlex.shlex(
             _mask_quoted_literals(
-                _normalize_backtick_substitutions(
-                    _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command)))
+                _normalize_quoted_command_substitutions(
+                    _normalize_backtick_substitutions(
+                        _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command)))
+                    )
                 )
             ),
             posix=True,
@@ -2404,7 +2451,10 @@ def _bash_path_decision(word: str, base: str, wc, main_root: Path | None = None)
                 "A glob or brace target may resolve inside the primary checkout. Use a literal path.",
             )
     base = getattr(word, "base", None) or base
-    return wc.evaluate_write(_resolve(word, base, expand_user=False), cwd=base)
+    target = _resolve(word, base, expand_user=False)
+    # When the payload cwd belongs to another repository, containment must
+    # anchor on the target's repository rather than classify it as outside cwd.
+    return wc.evaluate_write(target, cwd=base if main_root is not None else target.parent)
 
 
 def _label(word: str) -> str:
@@ -2444,14 +2494,15 @@ def main() -> int:
     if wc is None:
         return 0
 
-    # Enforce only while the primary checkout sits on a protected branch. If the
-    # human has deliberately checked the primary tree onto a feature branch, git
-    # can't resolve it, or any classification errors, this hook stays out of the
-    # way (fail open) — physical worktree isolation is the real guarantee.
+    # The cwd may be outside Git while an absolute target still names the
+    # protected checkout. In that case classify each resolved target below.
+    main_root = None
     try:
-        main_root = wc.resolve_main_root(cwd)
-        if not wc.is_protected_branch(main_root):
-            return 0
+        cwd_root = wc.resolve_main_root(cwd)
+        if wc.is_protected_branch(cwd_root):
+            main_root = cwd_root
+    except wc.NotAGitRepositoryError:
+        pass
     except Exception:  # pragma: no cover - defensive fail-open
         return 0
 
@@ -2468,15 +2519,27 @@ def main() -> int:
                 summary = str(intent.get("summary") or "git write")
                 c_path = intent.get("c_path")
                 if getattr(c_path, "unresolved_at", None) is not None:
-                    return _block_git_mediated(summary, main_root, reason="unresolved_shell_variable")
+                    if main_root is not None:
+                        return _block_git_mediated(summary, main_root, reason="unresolved_shell_variable")
+                    continue
                 git_cwd = _effective_git_cwd(intent, cwd)
                 if git_cwd is None:
-                    return _block_git_mediated(summary, main_root, reason="undecidable_git_cwd_after_cd")
+                    if main_root is not None:
+                        return _block_git_mediated(summary, main_root, reason="undecidable_git_cwd_after_cd")
+                    continue
+                intent_root = main_root
+                if intent_root is None:
+                    try:
+                        intent_root = wc.resolve_main_root(git_cwd)
+                        if not wc.is_protected_branch(intent_root):
+                            continue
+                    except Exception:
+                        continue
                 if intent.get("kind") == "worktree_remove":
                     for raw in intent.get("paths") or []:
-                        decision = _bash_path_decision(raw, str(git_cwd), wc, main_root)
+                        decision = _bash_path_decision(raw, str(git_cwd), wc, intent_root)
                         if not decision.allowed:
-                            return _block_git_mediated(summary, main_root, reason=decision.reason)
+                            return _block_git_mediated(summary, intent_root, reason=decision.reason)
                     continue
                 # Only care when the effective git worktree *is* the primary.
                 try:
@@ -2487,12 +2550,12 @@ def main() -> int:
                 paths = list(intent.get("paths") or [])
                 if not paths:
                     # Whole-tree mutator (apply / am / stash pop|apply / bare add).
-                    return _block_git_mediated(summary, main_root, reason="git_mediated_primary_worktree")
+                    return _block_git_mediated(summary, intent_root, reason="git_mediated_primary_worktree")
                 # Path-scoped mutators: block if any path is a protected primary write.
                 for raw in paths:
                     decision = _bash_path_decision(raw, str(git_cwd), wc)
                     if not decision.allowed:
-                        return _block_git_mediated(summary, main_root, reason=decision.reason)
+                        return _block_git_mediated(summary, intent_root, reason=decision.reason)
         except Exception:  # pragma: no cover - defensive fail-open
             pass
 
@@ -2507,16 +2570,27 @@ def main() -> int:
                 # #8500); any unknown value blocks (_bash_path_decision).
                 decision = _bash_path_decision(raw, cwd, wc, main_root)
             else:
-                decision = wc.evaluate_write(_resolve(raw, cwd), cwd=cwd)
+                target = _resolve(raw, cwd)
+                decision = wc.evaluate_write(target, cwd=cwd if main_root is not None else target.parent)
             decisions.append((_label(raw), decision))
     except Exception:  # pragma: no cover - defensive fail-open
         return 0
 
     for raw, decision in decisions:
         if not decision.allowed:
+            target_root = main_root
+            if target_root is None:
+                try:
+                    base = getattr(raw, "base", None) or cwd
+                    target_path = _resolve(raw, base, expand_user=False)
+                    target_root = wc.resolve_main_root(target_path.parent)
+                    if not wc.is_protected_branch(target_root):
+                        continue
+                except Exception:
+                    continue
             sys.stderr.write(
                 f"BLOCKED by guard-primary-checkout-write: {tool_name} would write "
-                f"'{raw}' inside the protected primary checkout ({main_root}) "
+                f"'{raw}' inside the protected primary checkout ({target_root}) "
                 f"[{decision.reason}].\n\n"
                 "The primary checkout must stay clean on `main`. Do all write "
                 "work in a dispatch worktree instead:\n\n"
