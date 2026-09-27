@@ -130,6 +130,31 @@ def test_render_lesson_prompt_clean(sample_plan_entry, sample_learner_state, sam
     assert len(check_res.prompt_sha256) == 64
 
 
+def test_render_lesson_prompt_uncited_pending_form(sample_plan_entry, sample_learner_state, sample_cited_records):
+    """A cited word can contain an uncited pending form without leaking a guessed stress."""
+    sample_cited_records["W-001"]["forms"].append(
+        {"form": "mamy", "tags": "tag-gen", "stress_source": "pending"}
+    )
+    rendered = render_lesson_prompt(
+        plan_entry=sample_plan_entry,
+        cited_records=sample_cited_records,
+        learner_state=sample_learner_state,
+        immersion=compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+        style_card_path=CARDS_DIR / "a1.md",
+    )
+
+    assert "form: mama, tags: tag-nom, stressed: mama, stress_source: vesum" in rendered
+    assert (
+        "form: mamy, tags: tag-gen, stressed: (pending — no confirmed stress; do not print this form), "
+        "stress_source: pending"
+    ) in rendered
+    assert "stressed: mamy" not in rendered
+    assert check_rendered_prompt(rendered, sample_plan_entry, CARDS_DIR / "a1.md").passed
+
+
 def test_render_recap_prompt(sample_plan_entry, sample_learner_state, sample_cited_records):
     """Recap prompt variant renders built lessons and passes recap check."""
     imm_payload = compute_immersion_payload("a1", arc_position=1, lesson_n=2, cumulative_core_count=5)

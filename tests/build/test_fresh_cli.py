@@ -407,6 +407,28 @@ def test_cli_write_fails_preflight_writes_gap_report_atomically(tmp_path, capsys
     assert content["status"] == "evidence_gap"
 
 
+def test_cli_write_refuses_cited_pending_form_before_prompt_render(tmp_path, capsys):
+    tree = _build_synthetic_tree(tmp_path)
+    words_path = tree["words"]
+    words_data = yaml.safe_load(words_path.read_text(encoding="utf-8"))
+    cited_form = words_data["words"][0]["forms"][0]
+    del cited_form["stressed"]
+    cited_form["stress_source"] = "pending"
+    lock.write(words_path, lock.yaml_bytes(words_data))
+    lesson_lock.write_lesson_lock("a1", "synthetic-mod", repo_root=tmp_path)
+
+    code = main(
+        ["write", "a1", "synthetic-mod", "--lesson", "1", "--writer", "agy", "--repo-root", str(tmp_path)]
+    )
+
+    assert code == 1
+    assert "cited_form_stress_pending" in capsys.readouterr().err
+    output_dir = tree["state_dir"] / "synthetic-mod"
+    gaps = yaml.safe_load((output_dir / "lesson-1.gaps.yaml").read_text(encoding="utf-8"))["gaps"]
+    assert any(gap["need"] == "cited_form_stress_pending" and "'слово'" in gap["detail"] for gap in gaps)
+    assert not (output_dir / "lesson-1.prompt.md").exists()
+
+
 def test_cli_preflight_passes_on_synthetic_tree(tmp_path, capsys):
     """MAJOR C: CLI preflight passes with exit code 0 on a synthetic tree with injected --repo-root."""
     _build_synthetic_tree(tmp_path)
