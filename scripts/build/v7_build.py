@@ -1647,12 +1647,20 @@ def build_parser() -> argparse.ArgumentParser:
             "--out paths resolve inside the build worktree. --dry-run --worktree "
             "creates no worktree and no branch — a dry run writes nothing, so it "
             "runs in place instead (#8890); --keep-worktree with --dry-run is a "
-            "usage error, since a dry run creates no worktree to keep.\n\n"
+            "usage error, since a dry run creates no worktree to keep. "
+            "--dry-run --worktree --telemetry-out is also a usage error: there "
+            "is no worktree to sink telemetry into, and opening the file in "
+            "place would break the dry run's no-writes contract. --upgrade "
+            "--dry-run --worktree is a usage error too, since an upgrade dry "
+            "run writes lessons.yaml, upgrade_inputs.json and writer_prompt.md "
+            "and cannot run in place like a plain --dry-run --worktree; bare "
+            "--upgrade --dry-run (no --worktree) is unaffected.\n\n"
             "Exit codes:\n"
             "  0 on successful build or dry run.\n"
             "  1 on plan, packet, writer, QG, review, MDX, or filesystem failure.\n"
             "  2 on command-line usage errors from argparse, --worktree outside "
-            "this repo, or --keep-worktree with --dry-run.\n"
+            "this repo, --keep-worktree with --dry-run, --dry-run --worktree "
+            "--telemetry-out, or --upgrade --dry-run --worktree.\n"
             "  3 when the requested --worktree path already exists.\n"
             "  4 when git worktree add fails.\n\n"
             "  5 when a primary-checkout safety guard refuses the run.\n\n"
@@ -1750,7 +1758,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "run writes nothing to disk and reports the wiki completeness "
             "verdict on the phase_done event. With --upgrade, it writes "
             "lessons.yaml, upgrade_inputs.json and writer_prompt.md to the "
-            "upgrade output directory and calls no model."
+            "upgrade output directory and calls no model — because of that "
+            "write, --upgrade --dry-run --worktree is a usage error (exit 2); "
+            "bare --upgrade --dry-run (no --worktree) is unaffected."
         ),
     )
     parser.add_argument(
@@ -1795,7 +1805,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "uses that path and derives the branch from its basename when "
             "possible. Combined with --dry-run, creates no worktree and no "
             "branch — a dry run writes nothing, so it runs in place instead "
-            "(#8890)."
+            "(#8890). --dry-run --worktree --telemetry-out and "
+            "--upgrade --dry-run --worktree are both usage errors (exit 2) "
+            "because each would write something the plain in-place dry run "
+            "does not."
         ),
     )
     parser.add_argument(
@@ -1813,7 +1826,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=None,
         help=(
             "Append JSONL monitor events to PATH instead of stdout. Relative "
-            "paths resolve from the repository root; default: stdout."
+            "paths resolve from the repository root; default: stdout. "
+            "Incompatible with --dry-run --worktree (usage error, exit 2): "
+            "that combination runs in place with no writes, so there is no "
+            "sink to open (#8890)."
         ),
     )
     parser.add_argument(
@@ -1851,6 +1867,25 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 2
     worktree_requested = args.worktree is not None
+    if dry_run and worktree_requested and args.telemetry_out is not None:
+        print(
+            "v7_build: error — --dry-run --worktree --telemetry-out has nothing "
+            "to redirect: a dry run writes nothing, so --worktree runs it in "
+            "place with no telemetry sink to open (#8890). Drop --telemetry-out, "
+            "--dry-run, or --worktree.",
+            file=sys.stderr,
+        )
+        return 2
+    if dry_run and worktree_requested and getattr(args, "upgrade", False):
+        print(
+            "v7_build: error — --upgrade --dry-run --worktree has writes to "
+            "avoid: an upgrade dry run saves lessons.yaml, upgrade_inputs.json "
+            "and writer_prompt.md, so it cannot run in place the way a plain "
+            "--dry-run --worktree does (#8890). Drop --worktree, --dry-run, or "
+            "--upgrade.",
+            file=sys.stderr,
+        )
+        return 2
     if worktree_requested and not dry_run:
         return _run_in_worktree(args, raw_argv)
     if worktree_requested and dry_run:
