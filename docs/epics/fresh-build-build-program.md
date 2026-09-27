@@ -71,14 +71,15 @@ The frozen prompt of the previous session (part 1 merged as PR #8450, `a33c5abb1
 ## 5. Position 8 pilot — the runbook (WP 22, issue #8425)
 In this order; each step's artifact is checked by the tool named before the next starts.
 
-**Before the pilot:** plans (plans only, no builds) for positions 1–7 are written and pass
-`plan-validate --strict`, so the cumulative learner state entering position 8 is real; the
-`--allow-missing-prior` waiver is not used for any of them.
+**Order of the plan stage.** R-24's "plan → evidence pack" is realised in two parts: the arc row fixes the module plan's job and scope first; the pack is built for that scope; then the plan's lessons are written citing the pack's record ids (a plan cannot cite evidence that does not exist yet); plan review promotes the pack lock into the plan. Positions 1–7 go through this whole plan stage, in order, **without building any lesson**, so that the cumulative learner state entering position 8 comes from reviewed plans; the `--allow-missing-prior` waiver is not used.
 
-1. **Base layer and word store**: WP 10's request file → `build-words a1 --request …` → `words-verify a1` green; count the `pending` forms and the `unresolved` records; the operator's expectation is that ULIF-sourced stress is absent today (`homonym_checked = 0` everywhere) and the trie covers most A1 forms — quote the numbers.
-2. **Evidence pack** for `things-have-gender`: request from the arc row for position 8 (its job, skills and scope in `_arc.yaml`) → `pack-verify` green → **provisional lock** (review contract, Contract 1 timing).
-3. **Module plan** in the v2 format (as many lessons as its content needs (R-02); the arc's estimate is not a target, the last lesson is the recap), written by a language lane from the pack and the arc, with the operator's decisions record; `plan-validate --strict` green (positions 1–7 are already plan-validated, so `--allow-missing-prior` is not used).
-4. **Plan review** (Contract 1) by a cross-family language seat with the full manifest; on APPROVE the pack lock is promoted into `evidence_ref`.
+1. **Base layer and word store** (once for the level, before any plan): WP 10's request file → `build-words a1 --request …` → `words-verify a1` green; count the `pending` forms and the `unresolved` records; the operator's expectation is that ULIF-sourced stress is absent today (`homonym_checked = 0` everywhere) and the trie covers most A1 forms — quote the numbers.
+2. **Plan stage, positions 1 to 8 in order.** For each position:
+   a. **Evidence pack** from the arc row (its job, skills and scope in `_arc.yaml`) → `pack-verify` green → **provisional lock** (review contract, Contract 1 timing).
+   b. **Module plan** in the v2 format — as many lessons as its content needs (R-02); the arc's estimate is not a target; the last lesson is the recap — written by a language lane from the pack and the arc, with the operator's decisions record; `plan-validate --provisional-pack --write-report` green.
+   c. **Plan review** (Contract 1) by a cross-family language seat with the full manifest; on APPROVE the pack lock is promoted into `evidence_ref` (`plan-promote`).
+   d. `plan-validate --strict` green on the promoted plan.
+   Positions 1–7 stop here. Position 8 (`things-have-gender`) continues with step 5.
 5. **Reviewer measurement** (WP 16): the first seeded set for the lesson reviewer seat — from *built* lessons, so this step interleaves with 7: the canary lesson and the contract fixtures are the first seed material; the operator sets the threshold after the first report; the held-out confirmation set is frozen before that.
 6. **Canary and writer selection**: the same frozen canary prompt goes to GPT-6 Sol @ high and Gemini 3.8 Flash, lessons 1 and 2, two drafts each, scored by checks 0–11 and a blind Claude Fable review under Contract 2; the writer is decided by the rule fixed before results — Sol is the default unless Gemini is clearly better on the judged A1 voice and no worse on the deterministic scores. The chosen writer's lesson 1 draft (#8431 §8.3) passes checks 0–11 with at most one regeneration, reviewed under Contract 2 by a seat that has passed the measurement; on a second failure of the same check, stop and fix the layer.
 7. **Lessons 2…N−1**, then the **recap** from the built lessons; module digest per lesson; reviews per lesson; the fix loop with its budgets; settle items counted and reported per module (the operator expects near zero).

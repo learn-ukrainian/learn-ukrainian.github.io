@@ -161,7 +161,7 @@ Read first: [`docs/epics/fresh-build-build-program.md`](../../../../docs/epics/f
 contracts as the phase needs. Seats live in `model-assignment.md` (Ukrainian
 content authoring row) — do not freeze a roster here.
 
-**Done** is the learner URL on `/a1/<slug>/` (the level's track), with Pages only
+**Done** is the learner URL on the level's track (`/<level>/<slug>/`, e.g. `/a1/<slug>/`), with Pages only
 on present-tense operator GO (§7-rollout), and the LU QA sweep triaged (build
 program §5 step 10). Engine-on-`main` and gates green in a worktree are **not**
 done.
