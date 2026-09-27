@@ -281,11 +281,12 @@ def preflight_lesson(
                                     )
                                 )
                             elif store_form_tags[p_tag].get("stress_source") == "pending":
+                                pending_form = store_form_tags[p_tag]
                                 gaps.append(
                                     Gap(
                                         step=step_id,
-                                        need="word_form",
-                                        detail=f"paradigm form {p_tag} in {wid} has pending stress",
+                                        need="cited_form_stress_pending",
+                                        detail=f"word_store: cited paradigm form {pending_form.get('form')!r} ({p_tag}) in {wid} has pending stress",
                                     )
                                 )
 
@@ -306,8 +307,8 @@ def preflight_lesson(
                             gaps.append(
                                 Gap(
                                     step=first_step_id,
-                                    need="word_form",
-                                    detail=f"cited form {ftag} of word {wid} ({w_rec.get('lemma')}) has pending stress",
+                                    need="cited_form_stress_pending",
+                                    detail=f"word_store: cited form {f_spec.get('form')!r} ({ftag}) of word {wid} ({w_rec.get('lemma')}) has pending stress",
                                 )
                             )
 

@@ -22,6 +22,11 @@ Grok native + Cursor-explicit ``grok-4.7`` fallback, …).
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
+
+Optional subject seats, subject families, and owned paths exclude the seat a
+change governs (for example every Grok candidate when the diff edits
+``scripts/agent_runtime/adapters/grok_build.py``). Omitting all three leaves
+selection unchanged. Ambiguous path inference fails closed instead of guessing.
 """
 
 from __future__ import annotations
@@ -35,6 +40,7 @@ from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.audit import model_families
 from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS, load_model_catalog
 from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
+from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
 
 CandidateStatus = Literal["eligible", "selected", "advisory_only", "excluded"]
 _SEALED_REVIEW_EXECUTABLE = "agent_runtime.runner:invoke_inter_agent"
@@ -338,6 +344,13 @@ class ResolverInputs:
     # gate; a missing reason fails closed.
     pinned_candidate: str | None = None
     pressure_override_reason: str | None = None
+    # Seats whose own boundary this change governs. Empty means "no subject
+    # information" and must leave selection byte-identical.
+    subject_seats: frozenset[str] = field(default_factory=frozenset)
+    subject_families: frozenset[str] = field(default_factory=frozenset)
+    owned_paths: tuple[str, ...] = ()
+    # Normalized paths that inferred a subject seat. Trace text only.
+    subject_evidence: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -562,6 +575,28 @@ def evaluate_candidate(
     )
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
+
+    if inputs.subject_seats or inputs.subject_families:
+        subject_reason = subject_exclusion_reason(
+            candidate,
+            seats=inputs.subject_seats,
+            families=inputs.subject_families,
+            evidence=inputs.subject_evidence,
+        )
+        if subject_reason:
+            return CandidateResult(
+                name=candidate.name,
+                concrete_model=candidate.concrete_model,
+                family=candidate.family,
+                route=candidate.route,
+                transport=candidate.transport,
+                invocation=candidate.invocation,
+                quality_tier=candidate.quality_tier,
+                requires_silence_timeout=candidate.requires_silence_timeout,
+                status="excluded",
+                reason=subject_reason,
+                health=health,
+            )
 
     # Operator 2026-09-25: Gemini reviews Ukrainian only, never code. Keep this
     # hard gate even for injected ladders and explicitly pinned candidates.
@@ -901,6 +936,30 @@ def resolve_reviewer(
             catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
             resolved_risk=risk,
             fail_closed_reason=f"invalid routing snapshot: {exc}",
+        )
+
+    if inputs.owned_paths or inputs.subject_seats or inputs.subject_families:
+        prepared = prepare_subject_exclusion(
+            subject_seats=inputs.subject_seats,
+            subject_families=inputs.subject_families,
+            owned_paths=inputs.owned_paths,
+        )
+        if prepared.fail_closed_reason:
+            return ReviewerResolution(
+                selected=None,
+                advisory=(),
+                trace=(),
+                substitution_note=None,
+                policy_version=_SCHEDULER_POLICY_VERSION,
+                catalog_reviewed_on=_MODEL_CATALOG["reviewed_on"],
+                resolved_risk=risk,
+                fail_closed_reason=prepared.fail_closed_reason,
+            )
+        inputs = replace(
+            inputs,
+            subject_seats=prepared.seats,
+            subject_families=prepared.families,
+            subject_evidence=prepared.evidence,
         )
 
     author_family = resolve_author_family(inputs.author_model, inputs.author_family)

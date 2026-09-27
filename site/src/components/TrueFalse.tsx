@@ -24,6 +24,13 @@ export interface TrueFalseQuestionProps {
    */
   explanation?: string;
   /**
+   * Feedback for the learner's pick: `[why_if_true, why_if_false]`. Absent
+   * on every existing module, which keeps the single `explanation`.
+   * @schemaDescription Feedback for each true/false pick.
+   * @ukrainianText true
+   */
+  optionWhy?: [string, string];
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
@@ -46,6 +53,13 @@ export interface TrueFalseItem {
    * @ukrainianText true
    */
   explanation?: string;
+  /**
+   * Feedback for the learner's pick: `[why_if_true, why_if_false]`. Absent
+   * on every existing module, which keeps the single `explanation`.
+   * @schemaDescription Feedback for each true/false pick.
+   * @ukrainianText true
+   */
+  optionWhy?: [string, string];
 }
 
 export interface TrueFalseProps {

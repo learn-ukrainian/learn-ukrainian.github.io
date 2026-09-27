@@ -30,6 +30,13 @@ interface TranslateItemProps {
    */
   options?: string[];  // For selection-based (no free typing)
   /**
+   * Per-option feedback aligned by index to `options` (before shuffling).
+   * Only used when `options` is explicitly provided; absent on V7 content.
+   * @schemaDescription Feedback for each option, aligned by original index.
+   * @ukrainianText true
+   */
+  optionWhy?: string[];
+  /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
@@ -42,16 +49,19 @@ export function TranslateItem({
   alternatives = [],
   explanation,
   options = [],
+  optionWhy,
   isUkrainian,
 }: TranslateItemProps) {
   const [selected, setSelected] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   // Generate options if not provided: correct answer + alternatives + distractors
-  // Then shuffle so correct answer isn't always first
+  // Then shuffle so correct answer isn't always first. Original indices are
+  // kept so per-option feedback can be looked up after the shuffle.
   const displayOptions = useMemo(() => {
     const opts = options.length > 0 ? options : [answer, ...alternatives];
-    return shuffle([...opts]);
+    const indexed = opts.map((text, origIndex) => ({ text, origIndex }));
+    return shuffle(indexed);
   }, [options, answer, alternatives]);
 
   const handleSelect = (option: string) => {
@@ -69,6 +79,10 @@ export function TranslateItem({
   const isCorrect = selected && allCorrectAnswers.some(
     a => a.toLowerCase().trim() === selected.toLowerCase().trim()
   );
+  const selectedOrigIndex = selected !== null
+    ? displayOptions.find((o) => o.text === selected)?.origIndex
+    : undefined;
+  const correctOrigIndex = options.indexOf(answer);
 
   const getOptionClass = (option: string) => {
     if (!submitted) return '';
@@ -99,12 +113,12 @@ export function TranslateItem({
         {displayOptions.map((option, idx) => (
           <button
             key={idx}
-            className={`${styles.translateOption} ${getOptionClass(option)}`}
+            className={`${styles.translateOption} ${getOptionClass(option.text)}`}
             data-activity="translate-option"
-            onClick={() => handleSelect(option)}
+            onClick={() => handleSelect(option.text)}
             disabled={submitted}
           >
-            {option}
+            {option.text}
           </button>
         ))}
       </div>
@@ -115,6 +129,7 @@ export function TranslateItem({
             className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
             data-activity="translate-feedback"
             data-correct={isCorrect ? 'true' : 'false'}
+            {...(optionWhy ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
           >
             {isCorrect ? (
               correctLabel
@@ -126,8 +141,19 @@ export function TranslateItem({
                 )}
               </>
             )}
-            {explanation && (
-              <div className={styles.explanation}>{explanation}</div>
+            {optionWhy ? (
+              <>
+                {selectedOrigIndex !== undefined && optionWhy[selectedOrigIndex] && (
+                  <div className={styles.explanation} data-activity="translate-option-why">{optionWhy[selectedOrigIndex]}</div>
+                )}
+                {!isCorrect && correctOrigIndex >= 0 && optionWhy[correctOrigIndex] && (
+                  <div className={styles.explanation} data-activity="translate-correct-why">{optionWhy[correctOrigIndex]}</div>
+                )}
+              </>
+            ) : (
+              explanation && (
+                <div className={styles.explanation}>{explanation}</div>
+              )
             )}
           </div>
           <div className={styles.buttonRow}>
@@ -158,6 +184,12 @@ interface GeneratorTranslateQuestion {
    * @ukrainianText true
    */
   explanation?: string;
+  /**
+   * Per-option feedback aligned by index to `options`. Absent on V7 content.
+   * @schemaDescription Feedback for each option, aligned by original index.
+   * @ukrainianText true
+   */
+  optionWhy?: string[];
 }
 
 interface TranslateProps {
@@ -211,7 +243,8 @@ export default function Translate({ questions, direction = 'to-uk', instruction,
         source: q.source,
         answer,
         options,
-        explanation: q.explanation
+        explanation: q.explanation,
+        optionWhy: q.optionWhy,
       };
     });
   }, [questions]);
@@ -234,6 +267,7 @@ export default function Translate({ questions, direction = 'to-uk', instruction,
             answer={item.answer}
             options={item.options}
             explanation={item.explanation}
+            optionWhy={item.optionWhy}
             isUkrainian={isUkrainian}
           />
         )) : children}

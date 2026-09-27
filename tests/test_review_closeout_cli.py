@@ -235,6 +235,53 @@ def test_resolve_reviewer_cli_selects_single_reviewer_outside_union_for_cursor_a
     assert payload["quorum"] == []
 
 
+def test_resolve_reviewer_cli_excludes_grok_for_grok_adapter_path(tmp_path):
+    state_file = tmp_path / "state.json"
+    proc = _run_cli(
+        state_file,
+        "resolve-reviewer",
+        "--author-model",
+        "codex:gpt-6-sol",
+        "--domain",
+        "infra",
+        "--risk",
+        "high",
+        "--owned-path",
+        "scripts/agent_runtime/adapters/grok_build.py",
+        "--routing-snapshot-file",
+        str(_write_claude_unhealthy_snapshot(tmp_path)),
+    )
+    assert proc.returncode != 0 or json.loads(proc.stdout)["selected"]["family"] != "xai"
+    payload = json.loads(proc.stdout)
+    grok = next(entry for entry in payload["trace"] if entry["name"] == "grok-4.7")
+    assert grok["status"] == "excluded"
+    assert "subject exclusion" in grok["reason"]
+    assert "grok_build.py" in grok["reason"]
+    selected = payload["selected"]
+    assert selected is None or not str(selected["name"]).startswith("grok")
+
+
+def _write_claude_unhealthy_snapshot(tmp_path: Path) -> Path:
+    path = tmp_path / "routing.json"
+    path.write_text(json.dumps({"claude": "unhealthy"}), encoding="utf-8")
+    return path
+
+
+def test_resolve_reviewer_cli_help_documents_subject_seat():
+    proc = _run_cli(Path("/tmp/unused-closeout-state.json"), "resolve-reviewer", "--help")
+    assert proc.returncode == 0, proc.stderr
+    help_text = proc.stdout
+    assert "--subject-seat" in help_text
+    assert "--subject-family" in help_text
+    assert "--owned-path" in help_text
+    assert "Default: none" in help_text
+    assert "grok_build.py" in help_text
+    assert "Outputs:" in help_text
+    assert "Exit codes:" in help_text
+    assert "Related:" in help_text
+    assert "refusing to guess" in help_text or "fails closed" in help_text
+
+
 def test_resolve_reviewer_cli_rejects_learner_semantic_profile_before_dispatch(tmp_path):
     state_file = tmp_path / "state.json"
     unsupported = _run_cli(

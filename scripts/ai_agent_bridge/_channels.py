@@ -1127,8 +1127,8 @@ def post(
     (default) and ``kind in {"post", "reply"}``, the body is run through
     ``_citation_check.check_and_annotate`` before commit. Verbatim
     citations to authoritative sources (Антоненко-Давидович, Грінченко,
-    Правопис 2019, СУМ-11, ЕСУМ) are verified against
-    ``data/sources.db``; unverified citations get an inline
+    Правопис 2019, ЕСУМ) are checked against available authorities;
+    СУМ-11 citations always receive an inline
     ``<!-- CITATION-UNVERIFIED ... -->`` annotation. Annotation-mode,
     not block-mode — the message commits either way. Set
     ``verify_citations=False`` for synthetic test posts or system kinds

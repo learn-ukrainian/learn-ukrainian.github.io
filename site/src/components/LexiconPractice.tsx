@@ -2373,6 +2373,12 @@ function LexiconPracticeIsland({
   const [feedback, setFeedback] = useState<{ uk: string; en?: string } | null>(null);
   const [revision, setRevision] = useState(0);
   const [history, setHistory] = useState<SelectionHistoryItem[]>([]);
+  // #8733: derived synchronously from the session history position, not bumped in a
+  // post-render effect — the first paint of a fresh card already has the final salt,
+  // and an immediate same-lemma requeue (a new history entry, same itemId) still gets
+  // a new value since history.length itself advances, so Paronym's per-presentation
+  // option shuffle never reorders in front of the learner or replays the prior order.
+  const presentationSeq = history.length;
   const [answerLocked, setAnswerLocked] = useState(false);
   // After ANY answer (correct or wrong), park the scored outcome here instead of
   // auto-advancing so the learner explicitly continues via «Далі →» or Enter.
@@ -3263,6 +3269,13 @@ function LexiconPracticeIsland({
   const poolFilter = useCallback(
     (candidate: PracticeSelection) => {
       if (!sessionPoolAllowsCandidate(candidate, sessionPoolConstraints)) return false;
+      // #8713: 'antonym'/'homonym' index modes have no dedicated renderer and fall
+      // through to the same word<->meaning surface as 'choice' (isMeaningChoiceSurface),
+      // but unlike 'choice' their index list is never filtered to MC-eligible lemmas
+      // upstream. Apply the same eligibility rule the Choice tile already applies so
+      // Mixed never lands on a card `orderedChoiceOptions` can't build (the "No cards
+      // available" dead end).
+      if (isMeaningChoiceSurface(candidate) && !isMeaningMcEligible(candidate.lemma)) return false;
       // A weak-area focus session narrows the pool to items matching the tapped
       // weakness on top of the normal §6b session constraints (no parallel path).
       if (focusWeakness && !matchesWeakness(candidate, focusWeakness)) return false;
@@ -3309,12 +3322,23 @@ function LexiconPracticeIsland({
     // and #4740/#4744 flows are unperturbed. Once history advances on complete, fresh pick
     // uses the grown pool.
     const committed = committedSelectionRef.current;
-    if (
+    const committedStillValid =
       committed &&
       committed.historyLen === history.length &&
+      itemIdPresentInDeck(selectionDeck, committed.selection.itemId);
+    // #8732: while an answer dwells (rated, waiting for «Далі →»/Enter), the rating
+    // itself bumps `revision`/`reviewsCompleted`/`sessionNewIntroduced` synchronously —
+    // before the learner ever clicks Next — which can flip `poolFilter` against the very
+    // card just answered (e.g. a session boundary just crossed), or even empty the pool
+    // outright (`fresh` turns null). Neither may ever change what's on screen before an
+    // explicit Next; only an actual filter change on an UNanswered card may reshuffle it.
+    if (pendingOutcome !== null && committedStillValid) {
+      return committed.selection;
+    }
+    if (
+      committedStillValid &&
       fresh &&
       fresh.itemId !== committed.selection.itemId &&
-      itemIdPresentInDeck(selectionDeck, committed.selection.itemId) &&
       (!poolFilter || poolFilter(committed.selection))
     ) {
       return committed.selection;
@@ -3324,6 +3348,7 @@ function LexiconPracticeIsland({
     deckLemmaKeySet,
     history,
     mode,
+    pendingOutcome,
     poolFilter,
     revision,
     selectionDeck,
@@ -3351,7 +3376,12 @@ function LexiconPracticeIsland({
       committedSelectionRef.current = { selection, historyLen: history.length };
       window.setTimeout(() => stageRef.current?.focus({ preventScroll: true }), 0);
     }
-  }, [selection?.itemId, resetItemFeedback]);
+    // #8732/#8733: `history.length` (not just `selection?.itemId`) is a dependency so a
+    // same-lemma requeue — a new history entry that happens to pick the same itemId
+    // again — still re-commits here. Without it, `committedSelectionRef.current.historyLen`
+    // is left stale, `committedStillValid` misfires false on the very next rating, and the
+    // card can swap out from under the learner before they click Next.
+  }, [selection?.itemId, history.length, resetItemFeedback]);
 
   // Rate the selected lemma if matched but never completed (due to session abort/unmount)
   useEffect(() => {
@@ -4464,7 +4494,12 @@ function LexiconPracticeIsland({
       : MODE_META[visibleStageMode].en;
   // #6720: re-served lapsed cards push `sessionCompleted` past the frozen target —
   // clamp the numerator so the badge never overshoots its own denominator.
-  const progressLabel = `${Math.min(sessionCompleted, effectiveSessionTarget())}/${effectiveSessionTarget()}`;
+  // #8732: a deliberate round EXTENSION (`extensionUsed`, distinct from ordinary live
+  // due-count jitter #6720 guards against) genuinely adds cards to the round, so fold it
+  // into the pill's own denominator too — otherwise extension/requeue cards keep showing
+  // the pre-extension total (e.g. stuck at "8/8") with no visible progress at all.
+  const progressTarget = effectiveSessionTarget() + extensionUsed;
+  const progressLabel = `${Math.min(sessionCompleted, progressTarget)}/${progressTarget}`;
   const dailySnapshotIds = useMemo(
     () => new Set(dailySnapshot?.items.map((item) => item.lemmaId) ?? []),
     [dailySnapshot],
@@ -5301,6 +5336,7 @@ function LexiconPracticeIsland({
                     deck={deck}
                     pairs={pairs}
                     sessionSeed={sessionSeed}
+                    presentationSeq={presentationSeq}
                     answerLocked={answerLocked}
                     clozeInput={clozeInput}
                     clozeFeedback={clozeFeedback}
@@ -5397,6 +5433,7 @@ export function PracticeItem({
   deck,
   pairs,
   sessionSeed,
+  presentationSeq,
   answerLocked,
   clozeInput,
   clozeFeedback,
@@ -5426,6 +5463,7 @@ export function PracticeItem({
   deck: PracticeDeckData;
   pairs: ReturnType<typeof matchingPairs>;
   sessionSeed: number;
+  presentationSeq: number;
   answerLocked: boolean;
   clozeInput: string;
   clozeFeedback: ClozeFeedback | null;
@@ -5651,6 +5689,7 @@ export function PracticeItem({
     return (
       <PracticeParonym
         item={selection.paronym}
+        presentationKey={`${sessionSeed}:${presentationSeq}`}
         feedback={paronymFeedback}
         answerLocked={answerLocked}
         selectedLabel={paronymSelectedLabel}
@@ -5897,10 +5936,23 @@ export function PracticeItem({
   );
 }
 
-function paronymOptions(item: PracticeParonymItem): ChoiceOption[] {
-  return item.options.map((option) => ({
+/**
+ * #8733: every published Paronym card had `answer === options[0]`, leaking the
+ * answer by position. `shuffle` derives its seed from array content alone (SSR-safe
+ * determinism), so salt each option with `presentationKey` first — otherwise
+ * reshuffling the same card's unchanged content always reproduces the same order,
+ * including when an SRS requeue re-serves the identical card later in the session.
+ * Exported so a unit test can drive the shuffle directly (see PracticeItem for the
+ * same convention).
+ */
+export function paronymOptions(item: PracticeParonymItem, presentationKey: string): ChoiceOption[] {
+  const base = item.options.map((option) => ({
     label: option.label,
     correct: option.label === item.answer,
+  }));
+  return shuffle(base.map((option) => ({ ...option, presentationKey }))).map((option) => ({
+    label: option.label,
+    correct: option.correct,
   }));
 }
 
@@ -5921,6 +5973,7 @@ function paronymFeedbackFor(item: PracticeParonymItem, option: ChoiceOption): Dr
 
 function PracticeParonym({
   item,
+  presentationKey,
   feedback,
   answerLocked,
   selectedLabel,
@@ -5930,6 +5983,7 @@ function PracticeParonym({
   learnerLevel,
 }: {
   item: PracticeParonymItem;
+  presentationKey: string;
   feedback: DrillFeedback | null;
   answerLocked: boolean;
   selectedLabel: string | null;
@@ -5939,7 +5993,12 @@ function PracticeParonym({
   learnerLevel: CefrLevel;
 }) {
   const [before, after] = slotPromptParts(item.prompt).map((part) => displayPracticeForm(part, learnerLevel));
-  const options = paronymOptions(item);
+  // Stable while this card stays on screen (re-renders don't change `item`/`presentationKey`);
+  // a fresh order is computed whenever a new presentation of this card begins.
+  const options = useMemo(
+    () => paronymOptions(item, presentationKey),
+    [item, presentationKey],
+  );
   const slotText = feedback?.kind === 'correct' ? displayPracticeForm(item.answer, learnerLevel) : '___';
   const sentenceEnglish = postAnswerSentenceEnglish(feedback, item.promptEn);
   return (

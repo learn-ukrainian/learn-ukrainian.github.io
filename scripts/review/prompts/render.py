@@ -46,6 +46,7 @@ REQUIRED_PINS: dict[str, tuple[str, ...]] = {
         "inputs.words_lock",
         "inputs.learner_state",
         "inputs.lesson",
+        "inputs.provenance",
         "inputs.gate_report",
         "inputs.style_card",
         "module_digest",
@@ -354,6 +355,7 @@ def _lesson_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[st
     context.update(_cited_records_context(reader, [entry]))
     context.update(_learner_state_context(reader, manifest))
     context["lesson_content"] = reader.pin_text("inputs.lesson")
+    context["provenance_text"] = reader.pin_text("inputs.provenance")
     context["activity_data_files"] = [
         {"path": item["path"], "content": reader.read_text(item["path"])}
         for item in manifest["inputs"].get("activity_data", [])

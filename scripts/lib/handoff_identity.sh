@@ -251,6 +251,13 @@ launcher_require_registered_slot() {
   _handoff_slot_registry --slot "$slot" 2>/dev/null && return 0 || rc=$?
   if [ "$rc" -eq 3 ]; then
     options="$(_handoff_slot_registry --list "$provider" 2>/dev/null | paste -sd ' ' - || true)"
+    case "$slot" in
+      grok-folk | kimi-folk | cursor-folk | grok-bio | kimi-bio | cursor-bio | grok-hramatka | kimi-hramatka | cursor-hramatka)
+        printf "selector '%s' resolves to handoff slot '%s', refused by operator order 2026-09-27: only claude, gpt and gemini should be involved in ukrainian content; no other models allowed if it is about ukrainian lang. culture, heritage.\n" \
+          "$selector" "$slot" >&2
+        return 1
+        ;;
+    esac
     printf "selector '%s' resolves to handoff slot '%s', which is not registered in scripts/config/area_assignments.yaml; a session under it cannot receive inbox mail. Registered %s slots: %s\n" \
       "$selector" "$slot" "$provider" "${options:-none}" >&2
     return 1

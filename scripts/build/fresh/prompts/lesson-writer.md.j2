@@ -103,7 +103,7 @@ Output must be a single YAML document conforming to `lesson-draft-v1` (optionall
 {% if record.forms is defined and record.forms %}
 - Forms:
 {% for f in record.forms %}
-  - form: {{ f.form }}, tags: {{ f.tags }}, stressed: {{ f.stressed }}, stress_source: {{ f.stress_source }}
+  - form: {{ f.form }}, tags: {{ f.tags }}, stressed: {% if f.stress_source == 'pending' %}(pending — no confirmed stress; do not print this form){% else %}{{ f.stressed }}{% endif %}, stress_source: {{ f.stress_source }}
 {% endfor %}
 {% endif %}
 {% elif record.text is defined and record.text %}

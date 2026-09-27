@@ -14,6 +14,7 @@ from scripts.curriculum.evidence import codes, sources, tags
         ("advp:perf", {"upos=VERB", "Aspect=Perf", "VerbForm=Conv"}),
         ("noun:prop:m:v_naz", {"upos=PROPN", "Gender=Masc", "Number=Sing", "Case=Nom"}),
         ("noun:s:v_naz:pron:pers:1", {"upos=PRON", "Number=Sing", "Case=Nom", "PronType=Prs", "Person=1"}),
+        ("adj:m:v_naz:pron:dem", {"upos=PRON", "Gender=Masc", "Number=Sing", "Case=Nom", "PronType=Dem"}),
         ("adj:m:v_naz:numr", {"upos=ADJ", "Gender=Masc", "Number=Sing", "Case=Nom", "NumType=Ord"}),
         ("adj:p:v_naz:compc", {"upos=ADJ", "Number=Plur", "Case=Nom", "Degree=Cmp"}),
         ("adv:comps", {"upos=ADV", "Degree=Sup"}),

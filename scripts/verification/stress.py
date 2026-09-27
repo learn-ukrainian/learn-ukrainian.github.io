@@ -126,12 +126,23 @@ def _stress_positions_in_marked_string(marked: str) -> tuple[str, list[int]]:
 
 
 @lru_cache(maxsize=1)
-def _load_overrides() -> dict[str, str]:
+def _load_override_data() -> dict[str, Any]:
     if not STRESS_OVERRIDES_PATH.exists():
         return {}
     with open(STRESS_OVERRIDES_PATH, encoding="utf-8") as fh:
         data = yaml.safe_load(fh)
     return data if isinstance(data, dict) else {}
+
+
+@lru_cache(maxsize=1)
+def _load_overrides() -> dict[str, str]:
+    return {key: value for key, value in _load_override_data().items() if key != "stress_pending"}
+
+
+def pending_stress_reason(word: str) -> str | None:
+    """Why an exact surface form must not use an unconfirmed trie reading."""
+    pending = _load_override_data().get("stress_pending", {})
+    return pending.get(word) if isinstance(pending, dict) else None
 
 
 @lru_cache(maxsize=1)

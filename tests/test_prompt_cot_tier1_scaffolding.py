@@ -162,7 +162,7 @@ def test_writer_prompt_has_tier1_discipline(level: str, slug: str) -> None:
         "mcp__sources__verify_words",
         "mcp__sources__check_modern_form",
         "mcp__sources__search_literary",
-        "search_definitions",
+        "query_sum20",
         "search_style_guide",
         "search_grinchenko_1907",
         "query_pravopys",

@@ -60,8 +60,9 @@ The merger is intentionally conservative:
 - Антоненко-Давидович style-guide hits are included as warnings but demoted;
   a warning does not erase stronger historical or etymological evidence.
 - slovnyk.me dictionaries that duplicate canonical local tools are blocked in
-  `search_slovnyk_me`: use `search_definitions`, `search_grinchenko_1907`,
-  `search_style_guide`, `search_idioms`, or `translate_en_uk` instead.
+  `search_slovnyk_me`: use `query_sum20` (or ВТС for modern definitions),
+  `search_grinchenko_1907`, `search_style_guide`, `search_idioms`, or
+  `translate_en_uk` instead.
 
 For writer/reviewer prompts: call `search_heritage` before rejecting an
 unfamiliar Ukrainian-looking word as Russianism. The load-bearing example is

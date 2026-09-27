@@ -184,12 +184,14 @@ def test_verify_antonenko_body_fallback_passes(monkeypatch):
     assert result.unverified == []
 
 
-def test_verify_sum11_real_entry_does_not_flag(monkeypatch):
+def test_sum11_entry_is_not_verification_evidence(monkeypatch):
     _make_fake_db_present(monkeypatch, sum11={"собака": [{"word": "собака"}]})
     body = "СУМ-11 has *собака* as masculine."
     result = cc.check_and_annotate(body)
     flagged_sources = [v.citation.source for v in result.unverified]
-    assert "sum_11" not in flagged_sources
+    assert "sum_11" in flagged_sources
+    assert next(v for v in result.unverified if v.citation.source == "sum_11").detail == "sovietized_source_not_authority"
+    assert "sovietized_source_not_authority" in result.annotated_body
 
 
 def test_verify_sum11_missing_entry_flags(monkeypatch):
@@ -317,9 +319,9 @@ Despite its masculine gender, *собака* belongs to the **First Declension, 
 def test_canonical_fabrication_regression_482884(monkeypatch):
     """Regression: the verbatim Gemini fake reply must flag exactly once on АД.
 
-    The body mentions VESUM (soft-skip — no automated verifier), СУМ-11 +
-    СУМ-20 (real entries — should not flag), and АД (fabricated — must
-    flag). Tail is `[AGREE]` and must remain at the end of the output
+    The body mentions VESUM (soft-skip — no automated verifier), СУМ-11
+    (never verification evidence), and АД (fabricated — must flag).
+    Tail is `[AGREE]` and must remain at the end of the output
     so the deliberation tail-check still recognizes the message.
     """
     # Real-world DB state for собака:
@@ -335,9 +337,9 @@ def test_canonical_fabrication_regression_482884(monkeypatch):
 
     result = cc.check_and_annotate(_GEMINI_FABRICATION_482884)
 
-    # Exactly one flag, on AD.
+    # Both the fabricated AD claim and the disallowed СУМ-11 authority flag.
     flagged_sources = [v.citation.source for v in result.unverified]
-    assert flagged_sources == ["antonenko_davydovych"], flagged_sources
+    assert flagged_sources == ["sum_11", "antonenko_davydovych"], flagged_sources
 
     # AGREE tail is preserved at end.
     assert result.annotated_body.rstrip().endswith("[AGREE]")

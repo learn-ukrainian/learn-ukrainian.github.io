@@ -15,4 +15,4 @@ depends_on: []
 
 **Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys forms. Never classify a word as Russianism/surzhyk/calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. Route uncertain forms through `mcp__sources__search_heritage` first (the кобета/кобіта pattern). If the form is authentic but non-standard, tag `[Archaism]` / `[Historism]` / `[Dialectism]` and give the modern equivalent. Unverified → omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
-Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__check_modern_form`, `search_definitions`, `search_style_guide`, `search_grinchenko_1907`, `query_pravopys`, `search_esum`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`.
+Use the canonical MCP names as applicable for Tier-1 checks: `mcp__sources__check_modern_form`, `query_sum20`, `query_ulif`, `search_style_guide`, `search_grinchenko_1907`, `query_pravopys`, `search_esum`, `mcp__sources__search_heritage`, `mcp__sources__search_slovnyk_me`. Use ВТС for modern meanings when СУМ-20 has no entry.

@@ -479,7 +479,7 @@ def build_agent_env(
     # its git config to push, or call GitHub APIs directly. The deny list,
     # publish hook, and rewrite stop ordinary command forms only.
     if (
-        _normalized_provider(provider) == "claude"
+        _normalized_provider(provider) in {"claude", "grok"}
         and overrides
         and overrides.get("LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK") == "1"
     ):

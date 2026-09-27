@@ -29,6 +29,13 @@ interface OddOneOutProps {
      * @ukrainianText true
      */
     explanation: string;
+    /**
+     * Per-word feedback aligned by index to `words` (before shuffling).
+     * Absent on every existing module, which keeps the single `explanation`.
+     * @schemaDescription Feedback for each word, aligned by original index.
+     * @ukrainianText true
+     */
+    optionWhy?: string[];
   }[];
 }
 
@@ -43,7 +50,8 @@ export function shuffleOddOneOut(
   words: string[],
   correct: number,
   rng: () => number = seededRandom(deriveSeed(words)),
-): { words: string[]; correct: number } {
+  optionWhy?: string[],
+): { words: string[]; correct: number; optionWhy?: string[] } {
   const order = words.map((_, i) => i);
   for (let i = order.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
@@ -52,6 +60,7 @@ export function shuffleOddOneOut(
   return {
     words: order.map((i) => words[i]),
     correct: order.indexOf(correct),
+    optionWhy: optionWhy ? order.map((i) => optionWhy[i]) : undefined,
   };
 }
 
@@ -62,7 +71,10 @@ export function shuffleOddOneOut(
  */
 export default function OddOneOut({ instruction, items: sourceItems }: OddOneOutProps) {
   const items = useMemo(
-    () => (sourceItems || []).map((item) => ({ ...item, ...shuffleOddOneOut(item.words, item.correct) })),
+    () => (sourceItems || []).map((item) => ({
+      ...item,
+      ...shuffleOddOneOut(item.words, item.correct, undefined, item.optionWhy),
+    })),
     [sourceItems],
   );
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -124,8 +136,10 @@ export default function OddOneOut({ instruction, items: sourceItems }: OddOneOut
     );
   }
 
+  const hasOptionWhy = Boolean(current.optionWhy);
+
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="odd-one-out">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🎯</span>
         <span className={styles.activityTitle}>Четверте «зайве»</span>
@@ -147,7 +161,10 @@ export default function OddOneOut({ instruction, items: sourceItems }: OddOneOut
         </p>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '1rem' }}>
+      <div
+        data-activity="odd-one-out-options"
+        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '1rem' }}
+      >
         {current.words.map((word, idx) => {
           let bg = '';
           let border = '2px solid var(--co-gray-200, #E8EAED)';
@@ -185,18 +202,38 @@ export default function OddOneOut({ instruction, items: sourceItems }: OddOneOut
       </div>
 
       {showResult && (
-        <div style={{
-          padding: '0.75rem 1rem',
-          background: isCorrect ? 'var(--co-success-bg)' : 'var(--co-error-bg)',
-          borderRadius: '8px',
-          marginBottom: '1rem',
-        }}>
+        <div
+          data-activity="odd-one-out-feedback"
+          data-correct={isCorrect ? 'true' : 'false'}
+          {...(hasOptionWhy ? { role: 'status' as const, 'aria-live': 'polite' as const } : {})}
+          style={{
+            padding: '0.75rem 1rem',
+            background: isCorrect ? 'var(--co-success-bg)' : 'var(--co-error-bg)',
+            borderRadius: '8px',
+            marginBottom: '1rem',
+          }}
+        >
           <p style={{ margin: 0, fontWeight: 600 }}>
             {isCorrect ? '✅ Правильно!' : '❌ Неправильно'}
           </p>
-          <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem' }}>
-            {current.explanation}
-          </p>
+          {current.optionWhy ? (
+            <>
+              {selected !== null && current.optionWhy[selected] && (
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem' }} data-activity="odd-one-out-option-why">
+                  {current.optionWhy[selected]}
+                </p>
+              )}
+              {!isCorrect && current.optionWhy[current.correct] && (
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem' }} data-activity="odd-one-out-correct-why">
+                  {current.optionWhy[current.correct]}
+                </p>
+              )}
+            </>
+          ) : (
+            <p style={{ margin: '0.25rem 0 0', fontSize: '0.9rem' }}>
+              {current.explanation}
+            </p>
+          )}
         </div>
       )}
 

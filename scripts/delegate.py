@@ -7187,7 +7187,7 @@ def _run_worker(
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
-            elif agent == "claude" and mode == "read-only":
+            elif agent in {"claude", "grok", "grok-build"} and mode == "read-only":
                 tool_config["reviewer_tools"] = True
             # ask-kimi --review is dispatch --agent kimi --harness kimicc
             # --mode read-only --require-review-verdict, not --review-attempt.
@@ -8740,9 +8740,19 @@ def _dispatch(
         )
         requested_agent = retired_target
 
+    language_lane = _dispatch_is_language_lane(args)
+    if language_lane and requested_agent not in _LANGUAGE_LANES:
+        print(
+            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+            f"--agent {requested_agent} cannot author, review, critique, settle, or judge "
+            "Ukrainian language, culture, or heritage content; "
+            "allowed lanes are claude, codex (GPT), and agy (Gemini).",
+            file=sys.stderr,
+        )
+        return 2
+
     if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
         try:
-            language_lane = _dispatch_is_language_lane(args)
             dispatch_agent = (
                 _resolve_agent_with_budget_guard(requested_agent, provider="openrouter", language_lane=language_lane)
                 if getattr(args, "provider", None) == "openrouter"
@@ -8753,6 +8763,14 @@ def _dispatch(
             return 2
     else:
         dispatch_agent = requested_agent
+
+    if language_lane and dispatch_agent not in _LANGUAGE_LANES:
+        print(
+            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+            f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini).",
+            file=sys.stderr,
+        )
+        return 2
 
     if dispatch_agent == "agy" and getattr(args, "model", None):
         from agent_runtime.adapters.agy import AgyAdapter
@@ -9957,17 +9975,19 @@ def _budget_needs_hard_capacity_action(
     return False, ""
 
 
-_LANGUAGE_LANES = frozenset({"claude", "codex", "agy", "grok"})
+_LANGUAGE_LANES = frozenset({"claude", "codex", "agy"})
 
 
 def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
     """True when the dispatch is Ukrainian language work.
 
-    Signals: ``--language-lane``, a ``l2-uk*`` research track, or an owned
-    path under ``curriculum/``. Cursor and other non-language lanes must not
-    receive that work through budget substitution (#8449).
+    Signals: ``--language-lane``, ``--review-profile ukrainian``, a ``l2-uk*``
+    research track, or an owned path under ``curriculum/``. Other lanes must
+    not receive that work directly or through budget substitution (#8449).
     """
     if bool(getattr(args, "language_lane", False)):
+        return True
+    if getattr(args, "review_profile", None) == "ukrainian":
         return True
     track = str(getattr(args, "research_track", "") or "").strip().lower()
     if track.startswith("l2-uk"):
@@ -10056,6 +10076,11 @@ def _resolve_agent_with_budget_guard(
     funding independently of the subscription ledger and never auto-substitutes.
     """
     requested = (agent or "").strip().lower()
+    if language_lane and requested not in _LANGUAGE_LANES:
+        raise BudgetGuardRefuseError(
+            "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+            f"--agent {requested} is outside claude, codex (GPT), and agy (Gemini)."
+        )
     try:
         payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
@@ -10225,7 +10250,7 @@ def _language_lane_substitute(
     records_loaded: int,
     reset_reserve: dict[str, Any] | None = None,
 ) -> str:
-    """Walk fallbacks, staying inside claude/codex/agy/grok (#8449)."""
+    """Walk fallbacks, staying inside claude/codex/agy (#8449)."""
     seat = requested
     seen = {seat}
     while True:
@@ -10253,18 +10278,18 @@ def _language_lane_substitute(
         nxt = fallbacks.get(seat)
         if not nxt or nxt in seen or nxt not in _LANGUAGE_LANES:
             raise BudgetGuardRefuseError(
-                "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-07-17). "
+                "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27). "
                 f"Language work on --agent {requested} cannot move to "
-                f"{nxt or 'no fallback'}; allowed lanes are claude, codex, agy, and grok."
+                f"{nxt or 'no fallback'}; allowed lanes are claude, codex (GPT), and agy (Gemini)."
             )
         print(
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {seat} → {nxt} "
-            f"({why}; language-lane fallback stays inside claude, codex, agy, grok).",
+            f"({why}; language-lane fallback stays inside claude, codex, agy).",
             file=sys.stderr,
         )
         seen.add(nxt)
         seat = nxt
-        if len(seen) > 4:
+        if len(seen) > len(_LANGUAGE_LANES):
             raise BudgetGuardRefuseError("ROUTING REFUSED: language-lane fallback chain did not reach a cool seat.")
 
 
@@ -11252,8 +11277,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--language-lane",
         action="store_true",
         help=(
-            "This dispatch judges or produces Ukrainian. Budget substitution may "
-            "stay only on claude, codex, agy, or grok; otherwise the dispatch is refused."
+            "This dispatch authors, reviews, critiques, settles, or judges Ukrainian language, "
+            "culture, or heritage content. Only claude, codex (GPT), and agy (Gemini) are admitted."
         ),
     )
     d.add_argument(

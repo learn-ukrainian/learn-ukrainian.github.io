@@ -81,6 +81,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset({
     "tests/test_session_state_retired.py",
     "tests/test_sparse_collection_guard.py",
     "tests/test_subprocess_timeout_guard.py",
+    "tests/test_sum11_source_guard.py",
     "tests/test_threshold_source_of_truth.py",
     "tests/test_work_privacy.py",
 })
@@ -88,6 +89,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset({
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
+    "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
     "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",

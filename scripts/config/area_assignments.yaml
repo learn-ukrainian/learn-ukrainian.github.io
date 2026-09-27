@@ -29,7 +29,7 @@ assignments:
       - cursor-devops
   monitor:
     # Human name: Ops API + UI (#7919). Prefer Kimi for UI/design (dispatch --agent kimi);
-    # keep slots empty so *-monitor phantoms alias to bare provider (42-slot roster).
+    # keep slots empty so *-monitor phantoms alias to bare provider.
     driver_agent_type: infra-orchestrator
     slots: []
   harness:
@@ -62,6 +62,9 @@ assignments:
     slots: []
   seminars:
     driver_agent_type: curriculum-orchestrator
+    # Operator order 2026-09-27: "only claude, gpt and gemini should be involved
+    # in ukrainian content. no other models allowed if it is about ukrainian
+    # lang. culture, heritage."
     # NAME vs RESOLUTION (r2 ruling, #5889): these lane-named slots resolve
     # through the AREA's full epic union (see fleet_taxonomy.yaml → seminars:
     # epics 2836 folk + 4431/4215 bio + 3120/3079 cross), NOT a single lane.
@@ -73,21 +76,13 @@ assignments:
       - claude-folk
       - codex-folk
       - gemini-folk
-      - grok-folk
-      - kimi-folk
-      - cursor-folk
       - claude-bio
       - codex-bio
       - gemini-bio
-      - grok-bio
-      - kimi-bio
-      - cursor-bio
   hramatka:
     driver_agent_type: curriculum-orchestrator
+    # Same operator order applies to Ukrainian language content here.
     slots:
       - claude-hramatka
       - codex-hramatka
       - gemini-hramatka
-      - grok-hramatka
-      - kimi-hramatka
-      - cursor-hramatka

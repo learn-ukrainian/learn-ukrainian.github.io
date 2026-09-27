@@ -987,15 +987,17 @@ def test_recipient_choices_cover_registered_cursor_seats():
         "cursor-devops",
         "cursor-corpus",
         "cursor-atlas",
-        "cursor-folk",
-        "cursor-bio",
-        "cursor-hramatka",
     ):
         assert agent in _channels.get_valid_recipient_agents()
         assert parser.parse_args(["inbox", "--for", agent]).for_llm == agent
         assert parser.parse_args(["ack-all", agent]).agent == agent
         assert parser.parse_args(["send", "hi", "--to", agent]).to_llm == agent
         assert parser.parse_args(["inbox", "show", agent]).agent == agent
+
+
+@pytest.mark.parametrize("lane", ("folk", "bio", "hramatka"))
+def test_recipient_choices_reject_removed_cursor_content_seats(lane):
+    assert f"cursor-{lane}" not in _channels.get_valid_recipient_agents()
 
 
 # ── #7597: phantom {provider}-{empty-slots-area} aliases ──────────────

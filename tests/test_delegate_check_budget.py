@@ -336,6 +336,46 @@ def test_language_lane_refuses_to_shed_onto_cursor(monkeypatch):
         delegate._resolve_agent_with_budget_guard("claude", language_lane=True)
 
 
+@pytest.mark.parametrize("marker", ["--language-lane", "--review-profile=ukrainian"])
+@pytest.mark.parametrize("force_agent", [False, True])
+def test_language_dispatch_refuses_grok_before_spawn(monkeypatch, tmp_path, capsys, marker, force_agent):
+    spawned = _track_worker_spawns(monkeypatch)
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    args = _dispatch_args(marker, *(["--force-agent"] if force_agent else []))
+    args.agent = "grok"
+
+    assert delegate.cmd_dispatch(args) == 2
+    assert spawned == []
+    refusal = capsys.readouterr().err
+    assert "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27)" in refusal
+    assert "--agent grok cannot" in refusal
+    assert "allowed lanes are claude, codex (GPT), and agy (Gemini)" in refusal
+
+
+@pytest.mark.parametrize("agent", ["claude", "codex", "agy"])
+def test_language_dispatch_admits_sanctioned_agents(monkeypatch, tmp_path, agent):
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    args = _dispatch_args("--language-lane")
+    args.agent = agent
+
+    assert delegate.cmd_dispatch(args) == 0
+
+
+def test_language_fallback_refuses_grok_even_when_cool(monkeypatch):
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "codex", "codex": "grok"})
+    with pytest.raises(delegate.BudgetGuardRefuseError, match="cannot move to grok"):
+        delegate._resolve_agent_with_budget_guard("claude", language_lane=True)
+
+
+def test_language_budget_guard_refuses_direct_grok_even_when_cool(monkeypatch):
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
+    with pytest.raises(delegate.BudgetGuardRefuseError, match="--agent grok is outside"):
+        delegate._resolve_agent_with_budget_guard("grok", language_lane=True)
+
+
 def _codex_reserve_budget():
     return {
         "recommendation": {"primary_agent_for_code": "cursor", "rationale": "fixture", "warnings": []},

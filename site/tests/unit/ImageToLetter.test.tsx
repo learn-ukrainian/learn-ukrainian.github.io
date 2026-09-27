@@ -122,3 +122,60 @@ describe('ImageToLetter', () => {
     expect(screen.getByText(/Exercise complete!/)).toBeInTheDocument();
   });
 });
+
+// ── per-option feedback (optionWhy, aligned to [answer, ...distractors]) ───
+//
+// Header §3 "Page payload order" (r3.2): image-to-letter is the one choice
+// type whose payload is NOT aligned to the authored option order. If a
+// writer authored `options: ['А', 'Я', 'О']` with key `Я` (the key at
+// authored index 1, not 0) and per-option feedback in that same authored
+// order — `option_why: ['А is a different letter.', 'Я for яблуко.', 'О is
+// a different letter.']` — A1-P1's assembler reorders both the payload
+// (`{answer: 'Я', distractors: ['А', 'О']}`) and `option_why` to
+// `[answer_why, *distractor_whys]` = `['Я for яблуко.', 'А is a different
+// letter.', 'О is a different letter.']` before the component ever sees it.
+// `withWhy` below is exactly that already-reordered payload — the key
+// ('Я') is not the authored option at index 0, but it IS always index 0 of
+// `optionWhy` by the time it reaches this component. The component maps a
+// chosen option to its `why` via `[item.answer, ...item.distractors].indexOf(option)`
+// (ImageToLetter.tsx), which only works if it trusts this reordering rather
+// than re-deriving "index 0 == key" some other way.
+
+describe('ImageToLetter optionWhy (fresh-build per-option feedback)', () => {
+  const withWhy = {
+    ...apple,
+    // Aligned to [answer, ...distractors] = ['Я', 'А', 'О'] (the authored
+    // order was ['А', 'Я', 'О'] — the key was NOT option 0 as authored).
+    optionWhy: ['Я for яблуко.', 'А is a different letter.', 'О is a different letter.'],
+  };
+
+  test('a correct pick shows only the chosen (= correct) option why, in a status region', () => {
+    const { container } = render(<ImageToLetter items={[withWhy]} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Я' }));
+
+    const panel = container.querySelector('[data-activity="itl-option-why-panel"]');
+    expect(panel).toBeInTheDocument();
+    expect(panel).toHaveAttribute('role', 'status');
+    expect(panel).toHaveAttribute('aria-live', 'polite');
+    expect(container.querySelector('[data-activity="itl-option-why"]')?.textContent).toBe('Я for яблуко.');
+    expect(container.querySelector('[data-activity="itl-correct-why"]')).not.toBeInTheDocument();
+  });
+
+  test('a wrong pick shows the chosen option why, then the correct option why', () => {
+    const { container } = render(<ImageToLetter items={[withWhy]} />);
+    fireEvent.click(screen.getByRole('button', { name: 'А' }));
+
+    expect(container.querySelector('[data-activity="itl-option-why"]')?.textContent).toBe(
+      'А is a different letter.',
+    );
+    expect(container.querySelector('[data-activity="itl-correct-why"]')?.textContent).toBe('Я for яблуко.');
+  });
+
+  test('without optionWhy, no why-panel renders and legacy explanation/note keep working (V7 fallback)', () => {
+    const { container } = render(<ImageToLetter items={[apple]} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Я' }));
+
+    expect(container.querySelector('[data-activity="itl-option-why-panel"]')).not.toBeInTheDocument();
+    expect(screen.getByText(apple.explanation)).toBeInTheDocument();
+  });
+});
