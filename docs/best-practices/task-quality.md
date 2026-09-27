@@ -27,6 +27,14 @@ Both gates must pass before substantive worker dispatch. Planning and evidence
 gathering may proceed to close gaps. Operator everyday “ready” still means
 **DoD (delivered)** — not this gate.
 
+On issue open or edit, the advisory issue workflow posts or updates one checker
+comment listing missing card fields; it does not block issue creation. Before an
+implementation `delegate.py dispatch` whose brief names a GitHub issue, the
+runtime checks that issue with `check_issue_task_quality.py --strict` and refuses
+WARN. If urgent in-flight work must proceed, pass `--allow-dor-warn <reason>`;
+the reason is recorded in the task JSON. A brief without an issue reference is
+not gated. The bounded `trivial` exemption below still applies.
+
 **Quality posture (binding intent at DoR; graded at CF):** research established
 best practice first (`docs/best-practices/`, prior art, standards). Prefer the
 **lightest elegant design** that meets the outcome and quality bar — goal- and

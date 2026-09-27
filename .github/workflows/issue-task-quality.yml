@@ -1,0 +1,28 @@
+name: Issue task quality (advisory)
+
+on:
+  issues:
+    types: [opened, edited]
+
+concurrency:
+  group: issue-task-quality-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Update advisory checker comment
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python -m scripts.ci.comment_issue_task_quality

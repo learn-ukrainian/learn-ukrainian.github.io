@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from scripts.ci.check_issue_task_quality import main, score_body
+from scripts.ci.comment_issue_task_quality import MARKER, reconcile_comments, render_comment
 
 COMPLETE = """
 ## User-visible outcome
@@ -139,3 +140,40 @@ def test_cli_help(capsys) -> None:
         assert exc.code == 0
     out = capsys.readouterr().out
     assert "Advisory" in out or "task-quality" in out or "--issue" in out
+
+
+def test_dor_workflow_comment_lists_missing_fields_and_updates_one() -> None:
+    issue = {"title": "Sparse issue", "body": "x", "labels": []}
+    comment = render_comment(issue)
+    assert MARKER in comment
+    assert "DoR card check: WARN. Missing fields:" in comment
+    assert "user-visible outcome / what" in comment
+    calls: list[tuple[str, str, object]] = []
+
+    def api(method: str, path: str, data: object = None) -> None:
+        calls.append((method, path, data))
+
+    comments = [
+        {"id": 1, "body": "old " + MARKER, "user": {"login": "github-actions[bot]"}},
+        {"id": 2, "body": "duplicate " + MARKER, "user": {"login": "github-actions[bot]"}},
+    ]
+    reconcile_comments(issue, comments, api, "/issues/123")
+    assert calls == [
+        ("PATCH", "/issues/123/comments/1", {"body": comment}),
+        ("DELETE", "/issues/123/comments/2", None),
+    ]
+    calls.clear()
+    reconcile_comments(issue, [{**comments[0], "body": comment}], api, "/issues/123")
+    assert calls == []
+
+
+def test_dor_workflow_comment_creates_once_for_empty_comments() -> None:
+    calls: list[tuple[str, str, object]] = []
+
+    def api(method: str, path: str, data: object = None) -> None:
+        calls.append((method, path, data))
+
+    reconcile_comments({"title": "Sparse issue", "body": "x"}, [], api, "/issues/123")
+    assert len(calls) == 1
+    assert calls[0][0:2] == ("POST", "/issues/123/comments")
+    assert "Missing fields:" in calls[0][2]["body"]
