@@ -5,30 +5,13 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
-import time
 from pathlib import Path
 
 import pytest
 
+from tests.wait_helpers import wait_for_pid_line
+
 ROOT = Path(__file__).resolve().parents[1]
-
-
-def _wait_for_pid_file(path: Path, *, timeout: float = 5.0) -> int:
-    """Poll ``path`` until it holds a complete PID line, not merely until it exists.
-
-    A subprocess that does ``echo "$pid" > path`` opens (and truncates) the file
-    before the write lands, so a poll loop that stops on existence alone can read
-    an empty file. Wait for a trailing newline as a proxy for "write finished".
-    """
-    deadline = time.monotonic() + timeout
-    content = ""
-    while time.monotonic() < deadline:
-        if path.exists():
-            content = path.read_text()
-            if content.endswith("\n") and content.strip():
-                return int(content.strip())
-        time.sleep(0.01)
-    raise AssertionError(f"{path} did not contain a complete PID within {timeout}s (last read: {content!r})")
 
 
 @pytest.fixture
@@ -210,7 +193,7 @@ def test_astro_child_listener_in_unit_cgroup_is_preserved(harness) -> None:
         ]
     )
     try:
-        child_pid = _wait_for_pid_file(child_file)
+        child_pid = wait_for_pid_line(child_file)
         for pid in (parent.pid, child_pid):
             pid_dir = Path(env["SVC_PROC_ROOT"]) / str(pid)
             pid_dir.mkdir()
