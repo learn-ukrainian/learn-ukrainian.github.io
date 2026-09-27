@@ -80,6 +80,46 @@ def test_unquoted_midword_hash_keeps_secret_checks_active(monkeypatch, capsys, c
 
 
 @pytest.mark.parametrize(
+    "command",
+    [
+        "git status # echo x > AGENTS.md",
+        "echo hi # $GH_TOKEN",
+        "# tee AGENTS.md",
+        "echo hi # cat .env",
+        "echo '#' ; echo safe",
+        "echo $(printf '# hidden') # $GH_TOKEN",
+        "echo `printf '# hidden'` # cat .env",
+        "echo hi # <<EOF\ncat .env",
+    ],
+)
+def test_bash_comments_do_not_trigger_secret_guard(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git commit -m fix#123 && cat .env",
+        "echo hi#$GH_TOKEN",
+        "echo '#' ; cat .env",
+    ],
+)
+def test_bash_comments_keep_executable_secret_words(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+def test_bash_comment_stripping_keeps_next_line_for_secret_parser():
+    # Parsing newline separators in this hook is tracked separately.
+    assert guard._strip_shell_comments("echo hi # c; cat .env\ncat .env") == "echo hi \ncat .env"
+    assert guard._strip_heredoc_bodies("echo hi # <<EOF\ncat .env") == "echo hi # <<EOF\ncat .env"
+
+
+@pytest.mark.parametrize("operator", [";", "&", "|", "(", ")"])
+def test_bash_comment_starts_after_control_operator_in_secret_hook(operator):
+    assert guard._strip_shell_comments(f"echo hi{operator}# hidden\ncat .env") == (f"echo hi{operator}\ncat .env")
+
+
+@pytest.mark.parametrize(
     "cmd",
     [
         "env | cut -d= -f1",

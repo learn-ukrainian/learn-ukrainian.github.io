@@ -362,7 +362,7 @@ def _strip_heredoc_bodies(command: str) -> str:
     while i < n:
         kept.append(lines[i])
         i += 1
-        pending = _heredoc_delimiters(lines[i - 1])
+        pending = _heredoc_delimiters(_strip_shell_comments(lines[i - 1]))
         if not pending:
             continue
         body_start = i
@@ -489,6 +489,65 @@ _SHELL_OPERATORS = (
 _PUNCTUATION = frozenset("();<>|&\n")
 
 
+def _strip_shell_comments(command: str) -> str:
+    """Remove Bash comments at word boundaries, retaining each newline.
+
+    Keep hashes inside words, quotes, command substitutions, and backticks for
+    the existing tokenizer. Heredoc bodies are removed before this is called
+    on the complete command.
+    """
+    out: list[str] = []
+    quote = ""
+    in_backticks = False
+    substitution_depth = 0
+    substitution_outer_quote = ""
+    word_start = True
+    i = 0
+    while i < len(command):
+        char = command[i]
+        if char == "\\" and quote != "'" and i + 1 < len(command):
+            out.append(command[i : i + 2])
+            if command[i + 1] != "\n":
+                word_start = False
+            i += 2
+            continue
+        if char == "'" and quote != '"' and not in_backticks:
+            quote = "" if quote == "'" else "'"
+            word_start = False
+        elif char == '"' and quote != "'" and not in_backticks:
+            quote = "" if quote == '"' else '"'
+            word_start = False
+        elif char == "`" and quote != "'":
+            in_backticks = not in_backticks
+            word_start = False
+        elif quote != "'" and not in_backticks and command.startswith("$(", i):
+            if not substitution_depth:
+                substitution_outer_quote = quote
+                quote = ""
+            substitution_depth += 1
+            out.append("$(")
+            word_start = False
+            i += 2
+            continue
+        elif substitution_depth and not quote and not in_backticks and char == "(":
+            substitution_depth += 1
+        elif substitution_depth and not quote and not in_backticks and char == ")":
+            substitution_depth -= 1
+            if not substitution_depth:
+                quote = substitution_outer_quote
+        elif not quote and not in_backticks and not substitution_depth:
+            if char == "#" and word_start:
+                end = command.find("\n", i)
+                if end < 0:
+                    break
+                i = end
+                continue
+            word_start = char.isspace() or char in ";&|()"
+        out.append(char)
+        i += 1
+    return "".join(out)
+
+
 def _mask_quoted_literals(command: str) -> str:
     """Preserve quote- or backslash-protected expansion and redirect characters.
 
@@ -547,7 +606,9 @@ def _tokenize(command: str) -> list[str]:
     """
     try:
         lexer = shlex.shlex(
-            _mask_quoted_literals(_collapse_shell_line_continuations(_strip_heredoc_bodies(command))),
+            _mask_quoted_literals(
+                _strip_shell_comments(_collapse_shell_line_continuations(_strip_heredoc_bodies(command)))
+            ),
             posix=True,
             punctuation_chars="();<>|&\n",
         )

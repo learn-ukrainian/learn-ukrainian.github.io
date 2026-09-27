@@ -889,6 +889,45 @@ def test_quoted_redirect_spelling_is_still_a_primary_write(repo: Path, command: 
     assert "primary_checkout" in result.stderr
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status # echo x > AGENTS.md",
+        "echo hi # $GH_TOKEN",
+        "# tee AGENTS.md",
+        "echo hi # cat .env",
+        "echo $(printf '# hidden') # tee AGENTS.md",
+        "echo `printf '# hidden'` # tee AGENTS.md",
+    ],
+)
+def test_bash_comments_do_not_write_primary_checkout(repo: Path, command: str):
+    result = _bash(repo, command)
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git commit -m fix#123 && tee AGENTS.md",
+        "echo x # c\ntee AGENTS.md",
+        "echo '#' ; tee AGENTS.md",
+        "echo x;# c\ntee AGENTS.md",
+        "echo hi # <<EOF\ntee AGENTS.md # still a command",
+    ],
+)
+def test_bash_comments_preserve_real_primary_writes(repo: Path, command: str):
+    result = _bash(repo, command)
+    assert result.returncode == 2, result.stderr
+    assert "primary_checkout" in result.stderr
+
+
+@pytest.mark.parametrize("operator", [";", "&", "|", "(", ")"])
+def test_bash_comment_starts_after_control_operator_in_primary_hook(operator):
+    assert hook._strip_shell_comments(f"echo hi{operator}# hidden\ntee AGENTS.md") == (
+        f"echo hi{operator}\ntee AGENTS.md"
+    )
+
+
 def test_bash_expanded_variable_git_dash_c_worktree_allowed(repo: Path):
     worktree = repo / ".worktrees/dispatch/claude/task-1"
     result = _bash(repo, f"W={worktree}; git -C $W add f")
