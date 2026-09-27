@@ -201,13 +201,21 @@ class ManifestReader:
         return self.pin_text(data)
 
 
+_TEMPLATE_SOURCE_CACHE: dict[Path, dict[str, tuple[str, str]]] = {}
+
+
 def template_sources(prompts_dir: Path) -> dict[str, tuple[str, str]]:
     """The fixed set of templates the renderer may use: every ``*.md.j2`` file directly in ``prompts_dir``.
 
     Maps a template's name to its source and the sha256 of its bytes. Nothing else is ever served, so
     a template cannot ``include``, ``import`` or ``extend`` a file that no manifest pins.
+
+    Shipped templates are read-only for a process, so compilation is cached by resolved directory.
     """
     root = prompts_dir.resolve()
+    cached = _TEMPLATE_SOURCE_CACHE.get(root)
+    if cached is not None:
+        return cached
     sources: dict[str, tuple[str, str]] = {}
     for path in sorted(root.glob("*.md.j2")):
         resolved = path.resolve()
@@ -215,6 +223,7 @@ def template_sources(prompts_dir: Path) -> dict[str, tuple[str, str]]:
             raise TemplateReadError(f"template {path.name} is not a regular file of {root.as_posix()}")
         data = resolved.read_bytes()
         sources[path.name] = (data.decode("utf-8"), compute_sha256(data))
+    _TEMPLATE_SOURCE_CACHE[root] = sources
     return sources
 
 

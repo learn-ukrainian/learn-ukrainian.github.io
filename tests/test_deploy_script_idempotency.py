@@ -171,9 +171,80 @@ CLAUDE_RULE_FILES = (
 )
 
 
-def _copy_repo_subset(target: Path) -> None:
-    for directory in ("agents_extensions/shared", "agents_extensions/codex", "gemini_extensions"):
-        shutil.copytree(REPO_ROOT / directory, target / directory, symlinks=True)
+# Named paths the non-manifest tests assert, one file per deploy code path.
+# test_fresh_deploy_produces_synced_output copies the real production tree.
+_NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
+    "test_tracked_mirror_drift_is_detected_before_deploy": ("gemini_extensions/hooks/check-claude-inbox.sh",),
+    "test_tracked_mirror_resolves_each_deploy_source": (
+        "agents_extensions/shared/hooks/auto-audit.sh",
+        "agents_extensions/shared/skills/post-build-review/SKILL.md",
+        "agents_extensions/shared/hooks/session-setup.sh",
+        "agents_extensions/codex/hooks.json",
+        "agents_extensions/shared/rules/fleet-comms-coordination.md",
+        "gemini_extensions/skills/full-rebuild-bio/SKILL.md",
+    ),
+    "test_agent_manifest_reaps_retired_hook_without_touching_agent_state": (
+        "agents_extensions/shared/hooks/auto-audit.sh",
+    ),
+    "test_agent_overlay_write_stays_in_held_directory_after_root_swap": ("agents_extensions/shared/settings.json",),
+    "test_agent_manifest_migration_defers_reaping_verified_legacy_artifact": (
+        "agents_extensions/shared/hooks/auto-audit.sh",
+    ),
+    "test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills": (
+        "agents_extensions/shared/skills/post-build-review/SKILL.md",
+        "gemini_extensions/skills/final-review/SKILL.md",
+    ),
+    "test_gemini_shared_skill_exclusion_does_not_mask_root_drift": ("gemini_extensions/settings.json",),
+    "test_gemini_shared_skill_name_collision_fails_closed": (
+        "agents_extensions/shared/skills/post-build-review/SKILL.md",
+    ),
+    "test_missing_codex_hooks_json_is_drift": (
+        "agents_extensions/codex/hooks.json",
+        "agents_extensions/codex/config.toml",
+        "agents_extensions/codex/memory/MEMORY.md",
+    ),
+    "test_drift_is_caught": ("agents_extensions/shared/rules/pipeline.md",),
+    "test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy": (
+        "agents_extensions/shared/skills/post-build-review/SKILL.md",
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+    ),
+    "test_codex_legacy_python_cache_does_not_block_driver_deployment": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+        "agents_extensions/shared/skills/track-completion/scripts/bounded_completion.py",
+    ),
+    "test_codex_legacy_migration_preserves_modified_content": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+    ),
+    "test_codex_legacy_migration_recognizes_committed_source_before_edits": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+    ),
+    "test_codex_legacy_migration_works_after_updated_sources_are_committed": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+    ),
+    "test_codex_retained_capture_survives_full_redeploy_with_late_writes": (
+        "agents_extensions/shared/skills/track-completion/SKILL.md",
+    ),
+}
+
+
+def _synthetic_deploy_files() -> tuple[str, ...]:
+    seen: dict[str, None] = {}
+    for paths in _NAMED_DEPLOY_PATHS.values():
+        for path in paths:
+            seen.setdefault(path, None)
+    return tuple(seen)
+
+
+def _copy_repo_subset(target: Path, *, full_tree: bool = False) -> None:
+    if full_tree:
+        for directory in ("agents_extensions/shared", "agents_extensions/codex", "gemini_extensions"):
+            shutil.copytree(REPO_ROOT / directory, target / directory, symlinks=True)
+    else:
+        for relative in _synthetic_deploy_files():
+            source = REPO_ROOT / relative
+            destination = target / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
 
     for relative_path in (
         DEPLOY_SCRIPT,
@@ -206,11 +277,11 @@ def _copy_repo_subset(target: Path) -> None:
     python_wrapper.chmod(0o755)
 
 
-def _init_checkout(tmp_path: Path) -> Path:
+def _init_checkout(tmp_path: Path, *, full_tree: bool = False) -> Path:
     assert PROJECT_PYTHON.exists(), f"Expected interpreter missing: {PROJECT_PYTHON}"
     repo = tmp_path / "repo"
     repo.mkdir()
-    _copy_repo_subset(repo)
+    _copy_repo_subset(repo, full_tree=full_tree)
     return repo
 
 
@@ -276,7 +347,7 @@ def _delete_source_file(repo: Path, relative: Path) -> bytes:
 
 def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
     """A clean checkout should deploy successfully and pass drift checks."""
-    repo = _init_checkout(tmp_path)
+    repo = _init_checkout(tmp_path, full_tree=True)
 
     deploy_result = _run(repo, DEPLOY_SCRIPT)
     assert deploy_result.returncode == 0, (
@@ -539,7 +610,7 @@ def test_agent_overlay_write_stays_in_held_directory_after_root_swap(tmp_path: P
         '    : > "$SYNC_AGENT_RACE_READY"\n'
         '    while [[ ! -e "$SYNC_AGENT_RACE_RELEASE" ]]; do sleep 0.01; done\n'
         "fi\n"
-        f"exec {shlex.quote(real_rsync)} \"$@\"\n",
+        f'exec {shlex.quote(real_rsync)} "$@"\n',
         encoding="utf-8",
     )
     (fake_bin / "rsync").chmod(0o755)
@@ -571,9 +642,7 @@ def test_agent_overlay_write_stays_in_held_directory_after_root_swap(tmp_path: P
 
     output = f"{stdout}\n{stderr}"
     assert process.returncode == 0, output
-    assert not (outside / "settings.json").exists(), (
-        "shared content was written through the swapped .agent symlink"
-    )
+    assert not (outside / "settings.json").exists(), "shared content was written through the swapped .agent symlink"
     assert (repo / ".agent-held" / "settings.json").is_file(), (
         "rsync did not write into the directory held before the pathname swap"
     )
@@ -1138,7 +1207,8 @@ def test_codex_legacy_migration_recognizes_committed_source_before_edits(tmp_pat
 
 @pytest.mark.parametrize("unsafe_kind", ["untracked-source", "symlink", "unknown-directory"])
 def test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content(
-    tmp_path: Path, unsafe_kind: str,
+    tmp_path: Path,
+    unsafe_kind: str,
 ) -> None:
     repo = _init_checkout(tmp_path)
     _init_git_history(repo)
@@ -1211,10 +1281,19 @@ def test_codex_retained_capture_survives_full_redeploy_with_late_writes(tmp_path
     assert backup_file.read_bytes() == b"Preserve late user writes"
 
 
-
-@pytest.mark.parametrize("sibling", ["skills-custom", "retired-skills-user-notes", "skills retired-skills", "skills\nretired-skills", "skills: retired-skills"])
+@pytest.mark.parametrize(
+    "sibling",
+    [
+        "skills-custom",
+        "retired-skills-user-notes",
+        "skills retired-skills",
+        "skills\nretired-skills",
+        "skills: retired-skills",
+    ],
+)
 def test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content(
-    tmp_path: Path, sibling: str,
+    tmp_path: Path,
+    sibling: str,
 ) -> None:
     repo = _init_checkout(tmp_path)
     initial = _run(repo, DEPLOY_SCRIPT)

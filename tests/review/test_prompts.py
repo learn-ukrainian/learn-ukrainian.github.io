@@ -108,6 +108,8 @@ def _setup_lesson_fixture(root: Path, monkeypatch: pytest.MonkeyPatch, lesson_n:
 
 
 def _setup_plan_fixture(root: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, dict, str]:
+    # git_repo stays on: validate_provisional runs check_append_only, which
+    # needs `git merge-base HEAD origin/main`. A gitless tree fails that check.
     env = build_env(root)
     monkeypatch.setattr(plan_manifest, "verify_pack_strict", fake_verify())
     assert validate_provisional(env) == 0
@@ -988,14 +990,17 @@ _LESSON_APPENDS = {
 }
 
 
-@pytest.mark.parametrize("appended", list(_LESSON_APPENDS), ids=list(_LESSON_APPENDS))
-def test_any_appended_text_fails_the_exact_render(tmp_path, monkeypatch, appended):
+def test_any_appended_text_fails_the_exact_render(tmp_path, monkeypatch):
     manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
-    assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
 
-    res = check_prompt(rendered + _LESSON_APPENDS[appended], manifest_path, repo_root=tmp_path, files_read=files_read)
-    assert not res.passed and any(err.startswith("prompt_not_exact_render") for err in res.errors), res.errors
+    for appended, payload in _LESSON_APPENDS.items():
+        assert check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read).passed
+        res = check_prompt(rendered + payload, manifest_path, repo_root=tmp_path, files_read=files_read)
+        assert not res.passed and any(err.startswith("prompt_not_exact_render") for err in res.errors), (
+            appended,
+            res.errors,
+        )
 
 
 def test_altered_truncated_or_prefixed_prompts_fail_the_exact_render(tmp_path, monkeypatch):
@@ -1322,23 +1327,30 @@ def _refusal_codes(doc: dict, root: Path) -> list[str]:
     return [refusal.code for refusal in pin_refusals(doc, root)]
 
 
-@pytest.mark.parametrize(
-    "rel",
-    [
-        "site/src/data/neighbour-unit/answers.json",  # the reviewer's reproduction: a neighbour's data, pinned to match
-        "site/src/data/activity-a.json",
-        "site/src/content/docs/a1/neighbour-unit/activity.json",
-        f"{PAGES}/activity-b.json",
-    ],
+_ACTIVITY_DATA_PINS = (
+    "site/src/data/neighbour-unit/answers.json",  # the reviewer's reproduction: a neighbour's data, pinned to match
+    "site/src/data/activity-a.json",
+    "site/src/content/docs/a1/neighbour-unit/activity.json",
+    f"{PAGES}/activity-b.json",
 )
-def test_any_activity_data_pin_is_refused_as_unsupported(tmp_path, monkeypatch, rel):
-    doc = _activity_manifest(tmp_path, monkeypatch, rel)
-    assert [item["path"] for item in doc["inputs"]["activity_data"]] == [rel]
-    assert _refusal_codes(doc, tmp_path) == ["pin_activity_data_unsupported"]
-    with pytest.raises(PinIneligibleError, match="pin_activity_data_unsupported"):
-        render_prompt(doc, repo_root=tmp_path)
-    result = check_prompt("dummy prompt", doc, repo_root=tmp_path)
-    assert not result.passed and all(err.startswith(("pin_", "manifest_")) for err in result.errors)
+
+
+def test_any_activity_data_pin_is_refused_as_unsupported(tmp_path, monkeypatch):
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
+    _write_module_manifest(tmp_path, slug)
+    for rel in _ACTIVITY_DATA_PINS:
+        target = tmp_path / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("{}\n", encoding="utf-8")
+        (page_dir / "2.mdx").write_text(f'import a from "@site/{rel.removeprefix("site/")}";\n', encoding="utf-8")
+        doc, _ = _write(level, slug, 2, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+        assert [item["path"] for item in doc["inputs"]["activity_data"]] == [rel]
+        assert _refusal_codes(doc, tmp_path) == ["pin_activity_data_unsupported"]
+        with pytest.raises(PinIneligibleError, match="pin_activity_data_unsupported"):
+            render_prompt(doc, repo_root=tmp_path)
+        result = check_prompt("dummy prompt", doc, repo_root=tmp_path)
+        assert not result.passed and all(err.startswith(("pin_", "manifest_")) for err in result.errors)
 
 
 def test_a_lesson_that_imports_data_fails_even_with_the_pin_removed(tmp_path, monkeypatch):
