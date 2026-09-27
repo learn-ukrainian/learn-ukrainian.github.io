@@ -120,9 +120,7 @@ class TestSlovnykMeLookup:
         assert result["status"] == "unavailable"
         assert result["http_status"] == 503
 
-    def test_unparseable_page_is_unavailable_not_not_found(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_unparseable_page_is_unavailable_not_not_found(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(200, "<html><body>no headings here</body></html>"))
         result = slovnyk_me_lookup("хата", "vts")
         assert result["status"] == "unavailable"
@@ -137,9 +135,7 @@ class TestE2uTranslateWithStatus:
         assert status == E2ULookupStatus.FOUND
         assert entries[0]["headword"] == "hello"
 
-    def test_404_is_not_found_within_verified_coverage(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_404_is_not_found_within_verified_coverage(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(404))
         status, entries = e2u_translate_with_status("zzznotaword")
         assert status == E2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE
@@ -151,9 +147,7 @@ class TestE2uTranslateWithStatus:
         assert status == E2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE
         assert entries == []
 
-    def test_network_exception_is_source_unavailable(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_network_exception_is_source_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
         def raise_conn_error(url, **kwargs):
             raise requests.ConnectionError("boom")
 
@@ -170,15 +164,11 @@ class TestE2uTranslateWithStatus:
 
 
 class TestGracConcordanceCollocationsUnavailable:
-    def test_concordance_genuine_empty_returns_empty_list(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_concordance_genuine_empty_returns_empty_list(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(200, data={"Lines": []}))
         assert grac_concordance("zzznotaword") == []
 
-    def test_concordance_network_exception_returns_none(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_concordance_network_exception_returns_none(self, monkeypatch: pytest.MonkeyPatch) -> None:
         def raise_timeout(url, **kwargs):
             raise requests.Timeout("timed out")
 
@@ -189,15 +179,11 @@ class TestGracConcordanceCollocationsUnavailable:
         _patch_get(monkeypatch, DummyResponse(503))
         assert grac_concordance("книга") is None
 
-    def test_collocations_genuine_empty_returns_empty_list(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_collocations_genuine_empty_returns_empty_list(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(200, data={"Items": []}))
         assert grac_collocations("zzznotaword") == []
 
-    def test_collocations_network_exception_returns_none(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_collocations_network_exception_returns_none(self, monkeypatch: pytest.MonkeyPatch) -> None:
         def raise_conn_error(url, **kwargs):
             raise requests.ConnectionError("boom")
 
@@ -250,3 +236,71 @@ def test_search_slovnyk_me_with_status_carries_live_outages(monkeypatch, tmp_pat
     assert rows == [] and outages
     # the list-returning name keeps its contract
     assert sources_db.search_slovnyk_me("тест", 5, ["vts"], live=True) == []
+
+
+# --- Wikipedia and Правопис fetchers (#9005 r3: Grok r1 findings) ------------------------------
+
+
+def _session_get(monkeypatch, response_or_exc):
+    def fake(*_a, **_k):
+        if isinstance(response_or_exc, BaseException):
+            raise response_or_exc
+        return response_or_exc
+
+    monkeypatch.setattr(requests.Session, "get", fake)
+    monkeypatch.setattr(requests, "get", fake)
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda sq, **kw: sq.wikipedia_search("тест", **kw),
+        lambda sq, **kw: sq.wikipedia_sections("тест", **kw),
+        lambda sq, **kw: sq.wikipedia_extract("тест", **kw),
+        lambda sq, **kw: sq.wikipedia_section_text("тест", 1, **kw),
+        lambda sq, **kw: sq.wikipedia_summary("тест", **kw),
+    ],
+    ids=["search", "sections", "extract", "section_text", "summary"],
+)
+@pytest.mark.parametrize("failure", [DummyResponse(403), DummyResponse(503), requests.ConnectionError("down")])
+def test_wikipedia_fetchers_raise_unavailable_only_when_asked(monkeypatch, call, failure):
+    import scripts.rag.source_query as sq
+
+    _session_get(monkeypatch, failure)
+    with pytest.raises(sq.WikipediaUnavailableError):
+        call(sq, raise_unavailable=True)
+    assert call(sq) in (None, [])  # default callers keep today's contract
+
+
+def test_wikipedia_summary_404_is_a_real_miss_even_when_asked(monkeypatch):
+    import scripts.rag.source_query as sq
+
+    _session_get(monkeypatch, DummyResponse(404))
+    assert sq.wikipedia_summary("тест", raise_unavailable=True) is None
+
+
+@pytest.mark.parametrize("failure", [DummyResponse(403), DummyResponse(429), requests.Timeout("slow")])
+def test_pravopys_section_reports_unavailable_only_when_asked(monkeypatch, failure):
+    import scripts.rag.source_query as sq
+
+    _session_get(monkeypatch, failure)
+    result = sq.pravopys_section(1, report_unavailable=True)
+    assert result["status"] == "unavailable" and result["section"] == 1
+    assert sq.pravopys_section(1) is None
+
+
+def test_pravopys_section_404_is_a_real_miss(monkeypatch):
+    import scripts.rag.source_query as sq
+
+    _session_get(monkeypatch, DummyResponse(404))
+    assert sq.pravopys_section(1, report_unavailable=True) is None
+
+
+def test_search_heritage_reports_live_slovnyk_outages(monkeypatch):
+    from wiki import slovnyk_me, sources_db
+
+    monkeypatch.setattr(sources_db, "_search_slovnyk_me_db", lambda *a, **k: [])
+    monkeypatch.setattr(slovnyk_me.requests, "get", lambda *a, **k: DummyResponse(403))
+    outages: list[dict] = []
+    sources_db.search_heritage("тест", 5, include_live_slovnyk=True, outages=outages)
+    assert outages and all(o["error"] == "HTTP 403" for o in outages)

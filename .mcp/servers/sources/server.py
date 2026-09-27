@@ -1449,13 +1449,20 @@ async def handle_verify_source_attribution(args: dict) -> list[TextContent]:
         keywords = {word for word in claim.lower().split() if len(word) >= 3}
         hits = await asyncio.to_thread(sdb.search_literary, keywords, limit)
     elif source == "heritage":
-        hits = await asyncio.to_thread(sdb.search_heritage, claim, limit, include_live_slovnyk=True)
+        heritage_outages: list[dict] = []
+        hits = await asyncio.to_thread(
+            sdb.search_heritage, claim, limit, include_live_slovnyk=True, outages=heritage_outages
+        )
+        if heritage_outages:
+            completeness_note = _slovnyk_outage_note(heritage_outages)
     elif source == "wikipedia":
         try:
             wiki_result = await handle_query_wikipedia({"query": claim, "mode": "search", "limit": limit})
             wiki_text = wiki_result[0].text if wiki_result else ""
             hits = _parse_wikipedia_search_hits(wiki_text)
-            if not hits and not _looks_like_wikipedia_search_response(wiki_text):
+            if wiki_text.startswith(WIKIPEDIA_UNAVAILABLE_PREFIX):
+                completeness_note = f"Wikipedia unavailable; not a negative result: {wiki_text}"
+            elif not hits and not _looks_like_wikipedia_search_response(wiki_text):
                 completeness_note = "Wikipedia returned unexpected response format"
         except requests.RequestException as exc:
             hits = []
@@ -2707,21 +2714,43 @@ def _format_wikipedia_extract_page(
     return f"{header}\n\n{article[offset:end]}"
 
 
+WIKIPEDIA_UNAVAILABLE_PREFIX = "Wikipedia UNAVAILABLE"
+
+
 async def handle_query_wikipedia(args: dict) -> list[TextContent]:
+    """Wikipedia lookup; an outage is reported as unavailable and never cached as a miss (#9005)."""
+    from rag.source_query import WikipediaUnavailableError
+
+    try:
+        return await _query_wikipedia(args)
+    except WikipediaUnavailableError as exc:
+        return [
+            TextContent(
+                type="text",
+                text=f"{WIKIPEDIA_UNAVAILABLE_PREFIX} for: '{args.get('query', '')}' ({exc}) — Wikipedia could "
+                "not be reached; this is not a negative result and was not cached (#9005).",
+            )
+        ]
+
+
+async def _query_wikipedia(args: dict) -> list[TextContent]:
     mode = args.get("mode", "summary")
     query = args["query"]
     limit = args.get("limit", 5)
     section_idx = args.get("section")
     force_refresh = args.get("force_refresh", False)
 
-    from rag.source_query import (
-        wikipedia_extract,
-        wikipedia_search,
-        wikipedia_section_text,
-        wikipedia_sections,
-        wikipedia_summary,
-    )
+    from functools import partial
+
+    from rag import source_query as _sq
     from rag.wiki_cache import WikiCache
+
+    # Every live fetch raises on an outage, so no negative-cache write below can record one (#9005).
+    wikipedia_extract = partial(_sq.wikipedia_extract, raise_unavailable=True)
+    wikipedia_search = partial(_sq.wikipedia_search, raise_unavailable=True)
+    wikipedia_section_text = partial(_sq.wikipedia_section_text, raise_unavailable=True)
+    wikipedia_sections = partial(_sq.wikipedia_sections, raise_unavailable=True)
+    wikipedia_summary = partial(_sq.wikipedia_summary, raise_unavailable=True)
 
     cache = WikiCache()
 
@@ -3244,9 +3273,19 @@ async def handle_query_pravopys(args: dict):
 
     # Check if topic is a number
     if topic.strip().isdigit():
-        result = await asyncio.to_thread(pravopys_section, int(topic.strip()))
+        result = await asyncio.to_thread(pravopys_section, int(topic.strip()), report_unavailable=True)
     else:
-        result = await asyncio.to_thread(pravopys_lookup, topic)
+        result = await asyncio.to_thread(pravopys_lookup, topic, report_unavailable=True)
+
+    if isinstance(result, dict) and result.get("status") == "unavailable":
+        prose = (
+            f"Pravopys UNAVAILABLE for: '{topic}' (section {result.get('section')}, {result.get('reason')}) — "
+            "the site could not be reached; this is not a negative result (#9005)."
+        )
+        envelope = build_search_envelope(
+            tool="query_pravopys", query=query_obj, hits=[], summary_prose=prose
+        )
+        return [TextContent(type="text", text=prose)], envelope
 
     if not result:
         prose = f"No pravopys section found for: '{topic}'"
@@ -3389,6 +3428,15 @@ async def handle_dict_search(args: dict, collection: str, label: str):
     return [TextContent(type="text", text=prose)], envelope
 
 
+def _slovnyk_outage_note(outages: list[dict]) -> str:
+    """One line naming the failed live slovnyk.me lookups (#9005)."""
+    failed = sorted({f"{o.get('dictionary_slug', '?')} ({o.get('error', '?')})" for o in outages})
+    return (
+        f"slovnyk.me unavailable for {len(failed)} live lookup(s): {', '.join(failed)}. "
+        "An unavailable source is not a negative result (#9005)."
+    )
+
+
 async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
     """Search slovnyk.me curated rows plus optional live direct-entry fallback."""
     query = args.get("query", args.get("word", ""))
@@ -3407,13 +3455,7 @@ async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
         dictionaries,
         live=live,
     )
-    outage_note = ""
-    if outages:
-        failed = sorted({f"{o.get('dictionary_slug', '?')} ({o.get('error', '?')})" for o in outages})
-        outage_note = (
-            f"slovnyk.me unavailable for {len(failed)} live lookup(s): {', '.join(failed)}. "
-            "An unavailable source is not a negative result (#9005)."
-        )
+    outage_note = _slovnyk_outage_note(outages) if outages else ""
     if not hits:
         if outages:
             return [
@@ -3465,16 +3507,29 @@ async def handle_search_heritage(args: dict) -> list[TextContent]:
 
     from wiki import sources_db as sdb
 
+    outages: list[dict] = []
     hits = await asyncio.to_thread(
         sdb.search_heritage,
         query,
         limit,
         include_live_slovnyk=include_live_slovnyk,
+        outages=outages,
     )
+    outage_note = _slovnyk_outage_note(outages) if outages else ""
     if not hits:
+        if outages:
+            return [
+                TextContent(
+                    type="text",
+                    text=f"Heritage evidence UNAVAILABLE for: \"{query}\" — no offline row matched and the "
+                    f"live slovnyk.me lookup failed.\n{outage_note}",
+                )
+            ]
         return [TextContent(type="text", text=f"No heritage evidence found for: \"{query}\"")]
 
     lines = [f"Found {len(hits)} heritage evidence row(s) for: \"{query}\"\n"]
+    if outage_note:
+        lines.append(f"Partial results: {outage_note}\n")
     for i, hit in enumerate(hits, 1):
         lines.append(f"### Evidence {i}")
         lines.append(f"- **Source family**: {hit.get('source_family', '')}")

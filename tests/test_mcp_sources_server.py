@@ -1722,3 +1722,63 @@ class TestSlovnykMeSearchOutage:
             result = _run(server_module.handle_search_slovnyk_me({"query": "тест"}))
         assert "Partial results" in result[0].text
         assert "### Result 1" in result[0].text
+
+
+class TestWikipediaPravopysHeritageOutage:
+    """#9005 r3: Wikipedia, Правопис and heritage outages are reported as unavailable, never as a miss."""
+
+    @pytest.mark.parametrize("mode", ["summary", "search", "extract", "sections", "section"])
+    def test_wikipedia_outage_is_unavailable_and_never_negative_cached(self, server_module, mode):
+        from rag.source_query import WikipediaUnavailableError
+
+        cache = MagicMock()
+        cache.get.return_value = None
+        name = {
+            "summary": "wikipedia_summary",
+            "search": "wikipedia_search",
+            "extract": "wikipedia_extract",
+            "sections": "wikipedia_sections",
+            "section": "wikipedia_section_text",
+        }[mode]
+        with (
+            patch("rag.wiki_cache.WikiCache", return_value=cache),
+            patch(f"rag.source_query.{name}", side_effect=WikipediaUnavailableError("HTTP 403")) as fetch,
+            patch.object(server_module, "_lookup_wikipedia_in_db", return_value=None),
+        ):
+            result = _run(server_module.handle_query_wikipedia({"query": "Стаття", "mode": mode, "section": 1}))
+        assert fetch.call_args.kwargs.get("raise_unavailable") is True
+        assert result[0].text.startswith(server_module.WIKIPEDIA_UNAVAILABLE_PREFIX)
+        assert "HTTP 403" in result[0].text
+        cache.put_negative.assert_not_called()
+        cache.put.assert_not_called()
+
+    def test_pravopys_outage_is_unavailable(self, server_module):
+        unavailable = {"status": "unavailable", "section": 3, "url": "u", "reason": "HTTP 403"}
+        with patch("rag.source_query.pravopys_section", return_value=unavailable) as fetch:
+            result = _run(server_module.handle_query_pravopys({"topic": "3"}))
+        content = result[0] if isinstance(result, tuple) else result
+        assert fetch.call_args.kwargs.get("report_unavailable") is True
+        assert "UNAVAILABLE" in content[0].text
+        assert "No pravopys section found" not in content[0].text
+
+    def _heritage(self, server_module, hits, outages):
+        def fake(query, limit, *, include_live_slovnyk, outages=None):
+            if outages is not None:
+                outages.extend(outage_rows)
+            return hits
+
+        outage_rows = outages
+        with patch("wiki.sources_db.search_heritage", side_effect=fake):
+            return _run(server_module.handle_search_heritage({"query": "тест"}))[0].text
+
+    def test_heritage_outage_with_no_hits_is_unavailable(self, server_module):
+        text = self._heritage(server_module, [], [{"dictionary_slug": "vts", "error": "HTTP 403"}])
+        assert "UNAVAILABLE" in text and "No heritage evidence found" not in text
+
+    def test_heritage_hits_with_an_outage_are_partial(self, server_module):
+        hit = {"source_family": "slovnyk_me", "source": "x", "word": "тест", "score": 1.0}
+        text = self._heritage(server_module, [hit], [{"dictionary_slug": "vts", "error": "HTTP 403"}])
+        assert "Partial results" in text and "### Evidence 1" in text
+
+    def test_heritage_real_miss_is_unchanged(self, server_module):
+        assert self._heritage(server_module, [], []).startswith("No heritage evidence found")

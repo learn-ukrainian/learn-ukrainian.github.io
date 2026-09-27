@@ -128,21 +128,29 @@ def _wiki_title_matches_candidates(article_title: str, candidates: list[str]) ->
     )
 
 
-def wikipedia_summary(title: str) -> dict[str, Any] | None:
+class WikipediaUnavailableError(RuntimeError):
+    """Wikipedia could not be reached or answered with an error (#9005): not a negative result."""
+
+
+def wikipedia_summary(title: str, *, raise_unavailable: bool = False) -> dict[str, Any] | None:
     """Fetch a Wikipedia article summary via REST API.
 
     Returns dict with keys: title, description, extract, url, type
-    or None if article not found or is a disambiguation page.
+    or None if article not found or is a disambiguation page. With
+    ``raise_unavailable``, a lookup that found nothing because a request failed
+    (network error, timeout, HTTP 403/429/5xx, a non-JSON body) raises
+    ``WikipediaUnavailableError`` instead of returning None (#9005).
     """
     candidates = _wiki_title_candidates(title)
     if not candidates:
         return None
 
+    outage: str | None = None
     for cand in candidates:
         url = f"{WIKI_REST}/page/summary/{quote(cand)}"
         try:
             r = requests.get(url, headers=WIKI_REST_HEADERS, timeout=REQUEST_TIMEOUT)
-            if r.status_code in (403, 404):
+            if r.status_code == 404:
                 continue
             r.raise_for_status()
             data = r.json()
@@ -159,13 +167,25 @@ def wikipedia_summary(title: str) -> dict[str, Any] | None:
                 "url": data.get("content_urls", {}).get("desktop", {}).get("page", ""),
                 "type": data.get("type", "standard"),
             }
-        except (requests.RequestException, ValueError):
+        except (requests.RequestException, ValueError) as exc:
+            outage = _wiki_outage_reason(exc)
             continue
+    if outage and raise_unavailable:
+        raise WikipediaUnavailableError(outage)
     return None
 
 
-def wikipedia_search(query: str, limit: int = 5) -> list[dict[str, str]]:
-    """Search Ukrainian Wikipedia. Returns list of {title, snippet}."""
+def _wiki_outage_reason(exc: BaseException) -> str:
+    status = getattr(getattr(exc, "response", None), "status_code", None)
+    return f"HTTP {status}" if status else type(exc).__name__
+
+
+def wikipedia_search(query: str, limit: int = 5, *, raise_unavailable: bool = False) -> list[dict[str, str]]:
+    """Search Ukrainian Wikipedia. Returns list of {title, snippet}.
+
+    With ``raise_unavailable``, a failed request raises ``WikipediaUnavailableError``
+    instead of returning an empty list (#9005).
+    """
     params = {
         "action": "query",
         "list": "search",
@@ -185,11 +205,13 @@ def wikipedia_search(query: str, limit: int = 5) -> list[dict[str, str]]:
             }
             for item in results
         ]
-    except requests.RequestException:
+    except (requests.RequestException, ValueError) as exc:
+        if raise_unavailable:
+            raise WikipediaUnavailableError(_wiki_outage_reason(exc)) from exc
         return []
 
 
-def wikipedia_sections(title: str) -> list[dict[str, Any]] | None:
+def wikipedia_sections(title: str, *, raise_unavailable: bool = False) -> list[dict[str, Any]] | None:
     """Get section structure of a Wikipedia article.
 
     Returns list of {toclevel, number, line, index} or None.
@@ -208,11 +230,15 @@ def wikipedia_sections(title: str) -> list[dict[str, Any]] | None:
         if "error" in data:
             return None
         return data.get("parse", {}).get("sections", [])
-    except requests.RequestException:
+    except (requests.RequestException, ValueError) as exc:
+        if raise_unavailable:
+            raise WikipediaUnavailableError(_wiki_outage_reason(exc)) from exc
         return None
 
 
-def wikipedia_extract(title: str, max_chars: int = 50000) -> dict[str, Any] | None:
+def wikipedia_extract(
+    title: str, max_chars: int = 50000, *, raise_unavailable: bool = False
+) -> dict[str, Any] | None:
     """Fetch full plaintext of a Wikipedia article.
 
     Uses the MediaWiki API with prop=extracts&explaintext=1 for clean text.
@@ -247,11 +273,15 @@ def wikipedia_extract(title: str, max_chars: int = 50000) -> dict[str, Any] | No
                 "url": page.get("fullurl", f"https://uk.wikipedia.org/wiki/{quote(title)}"),
             }
         return None
-    except requests.RequestException:
+    except (requests.RequestException, ValueError) as exc:
+        if raise_unavailable:
+            raise WikipediaUnavailableError(_wiki_outage_reason(exc)) from exc
         return None
 
 
-def wikipedia_section_text(title: str, section_index: int) -> dict[str, Any] | None:
+def wikipedia_section_text(
+    title: str, section_index: int, *, raise_unavailable: bool = False
+) -> dict[str, Any] | None:
     """Fetch text of a specific section of a Wikipedia article.
 
     Uses action=parse with section parameter. Returns wikitext converted
@@ -280,7 +310,9 @@ def wikipedia_section_text(title: str, section_index: int) -> dict[str, Any] | N
             "section": section_index,
             "text": text,
         }
-    except requests.RequestException:
+    except (requests.RequestException, ValueError) as exc:
+        if raise_unavailable:
+            raise WikipediaUnavailableError(_wiki_outage_reason(exc)) from exc
         return None
 
 
@@ -1386,18 +1418,21 @@ def _extract_pravopys_text(html: str) -> str:
     return text.strip()
 
 
-def pravopys_section(section_num: int) -> dict[str, Any] | None:
+def pravopys_section(section_num: int, *, report_unavailable: bool = False) -> dict[str, Any] | None:
     """Fetch an orthography rule section by number (1-61).
 
     Returns dict with keys: section, url, text
-    or None on failure.
+    or None on failure. With ``report_unavailable``, a request that failed
+    (network error, timeout, HTTP 403/429/5xx) returns
+    ``{"status": "unavailable", "section", "url", "reason"}`` instead of None,
+    so a caller never reads an outage as "no section" (#9005).
     """
     if not 1 <= section_num <= 61:
         return None
     url = f"{PRAVOPYS_BASE}/sections/{section_num}/"
     try:
         r = _get(url)
-        if r.status_code in (403, 404):
+        if r.status_code == 404:
             return None
         r.raise_for_status()
         r.encoding = "utf-8"  # Site returns ISO-8859-1 header but content is UTF-8
@@ -1405,11 +1440,20 @@ def pravopys_section(section_num: int) -> dict[str, Any] | None:
         if not text:
             return None
         return {"section": section_num, "url": url, "text": text}
-    except requests.RequestException:
-        return None
+    except requests.RequestException as exc:
+        if not report_unavailable:
+            return None
+        # #9005: an unreachable site (network error, timeout, HTTP 403/429/5xx) is not "no section".
+        status = getattr(getattr(exc, "response", None), "status_code", None)
+        return {
+            "status": "unavailable",
+            "section": section_num,
+            "url": url,
+            "reason": f"HTTP {status}" if status else type(exc).__name__,
+        }
 
 
-def pravopys_lookup(topic: str) -> dict[str, Any] | None:
+def pravopys_lookup(topic: str, *, report_unavailable: bool = False) -> dict[str, Any] | None:
     """Look up an orthography rule by topic keyword.
 
     Uses the static topic→section mapping. Tries exact match first,
@@ -1418,11 +1462,11 @@ def pravopys_lookup(topic: str) -> dict[str, Any] | None:
     topic_lower = topic.lower().strip()
     # Exact match
     if topic_lower in PRAVOPYS_SECTIONS:
-        return pravopys_section(PRAVOPYS_SECTIONS[topic_lower])
+        return pravopys_section(PRAVOPYS_SECTIONS[topic_lower], report_unavailable=report_unavailable)
     # Substring match
     for key, num in PRAVOPYS_SECTIONS.items():
         if topic_lower in key or key in topic_lower:
-            return pravopys_section(num)
+            return pravopys_section(num, report_unavailable=report_unavailable)
     return None
 
 

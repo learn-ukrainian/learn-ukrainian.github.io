@@ -3347,6 +3347,7 @@ def search_heritage(
     *,
     include_live_slovnyk: bool = False,
     db_path: str | Path | None = None,
+    outages: list[dict] | None = None,
 ) -> list[dict]:
     """Merge heritage-defense evidence for a Ukrainian headword.
 
@@ -3399,13 +3400,17 @@ def search_heritage(
             "score": score,
         })
 
-    for hit in search_slovnyk_me(
+    slovnyk_rows, slovnyk_outages = search_slovnyk_me_with_status(
         query,
         limit=limit,
         dictionaries=slovnyk_me.HERITAGE_SLOVNYK_ME_DICTS,
         live=include_live_slovnyk,
         db_path=db_path,
-    ):
+    )
+    if outages is not None:
+        # #9005: a live slovnyk.me failure is reported to the caller, never read as "no heritage evidence".
+        outages.extend(slovnyk_outages)
+    for hit in slovnyk_rows:
         is_russianism = bool(hit.get("is_russianism"))
         is_dialect = bool(hit.get("is_dialect"))
         is_modern = bool(hit.get("is_modern"))
