@@ -175,6 +175,89 @@ def test_audit_error_correction_vesum_attestation(tmp_path: Path, monkeypatch):
     )
 
 
+def _error_correction_deck(tmp_path: Path, drills: list[dict]) -> Path:
+    deck_path = tmp_path / "ec.json"
+    deck_path.write_text(json.dumps({"drills": drills}, ensure_ascii=False), encoding="utf-8")
+    return deck_path
+
+
+def _drill(item_id: str, error: str, correct: str, options: list[str] | None = None) -> dict:
+    return {
+        "id": item_id,
+        "sentence": f"Уважно прочитайте: «{error}» — тут допущено помилку.",
+        "errorWord": error,
+        "correctForm": correct,
+        "options": options or sorted([correct, error]),
+        "explanation": f"Правильно вживати «{correct}» замість помилкового «{error}».",
+    }
+
+
+def test_audit_error_correction_flags_register_label_distractors(tmp_path: Path):
+    """#8723: the old builder padded every drill with "(розм.)"/"(застаріле)" copies."""
+    planted = _drill(
+        "err_labelled",
+        "природній",
+        "природний",
+        ["природний", "природний (застаріле)", "природній", "природній (розм.)"],
+    )
+    violations = audit_error_correction_deck(
+        _error_correction_deck(tmp_path, [planted, _drill("err_clean", "природній", "природний")]), vesum_db=None
+    )
+    assert [(v["type"], v["item"]) for v in violations] == [("REGISTER_LABEL_DISTRACTOR", "err_labelled")]
+
+
+def test_audit_error_correction_flags_unevidenced_pairs(tmp_path: Path):
+    """#8723 err_0013/0021/0203/0001: pairs the source does not support fail the gate."""
+    import sqlite3
+
+    vesum_path = tmp_path / "vesum.db"
+    conn = sqlite3.connect(vesum_path)
+    conn.execute(
+        "CREATE TABLE forms_all (id INTEGER PRIMARY KEY, entry_id INTEGER, word_form TEXT, lemma TEXT,"
+        " pos TEXT, tags TEXT, source_comment TEXT, source_location TEXT)"
+    )
+    conn.execute("CREATE TABLE form_markers (form_id INTEGER, marker TEXT, origin TEXT, marker_class TEXT)")
+    conn.execute("CREATE VIEW forms AS SELECT word_form, lemma, tags, pos FROM forms_all")
+    forms = [
+        ("побудували", "verb"),
+        ("цегляний", "adj"),
+        ("україномовний", "adj"),
+        ("українськомовний", "adj"),
+        ("влучний", "adj"),
+        ("вираз", "noun"),
+        ("вислів", "noun"),
+    ]
+    conn.executemany(
+        "INSERT INTO forms_all (entry_id, word_form, lemma, pos, tags, source_location) VALUES (1, ?, ?, ?, ?, '')",
+        [(form, form, pos, pos) for form, pos in forms],
+    )
+    conn.commit()
+    conn.close()
+
+    drills = [
+        _drill("err_initial", "О.", "Теліга"),
+        _drill("err_names", "Петро Чайковський", "Марія Заньковецька"),
+        _drill("err_fragment", "побудували", "цегляний"),
+        _drill("err_contested", "україномовний", "українськомовний"),
+        _drill("err_good", "влучний вираз", "влучний вислів"),
+    ]
+    violations = audit_error_correction_deck(_error_correction_deck(tmp_path, drills), vesum_db=vesum_path)
+    flagged = {v["item"] for v in violations if v["type"] == "UNEVIDENCED_ERROR_CORRECTION_PAIR"}
+    assert flagged == {"err_initial", "err_names", "err_fragment", "err_contested"}
+    assert not any(v["item"] == "err_good" for v in violations)
+
+
+def test_production_culture_deck_passes_error_correction_gate():
+    """The bundled Culture-of-Speech deck is what learners play; audit it directly."""
+    from scripts.audit.practice_quality_gate import DEFAULT_VESUM_DB, PROJECT_ROOT
+
+    vesum_db = DEFAULT_VESUM_DB if Path(DEFAULT_VESUM_DB).exists() else None
+    violations = audit_error_correction_deck(
+        PROJECT_ROOT / "site/src/data/practice-error-corrections.json", vesum_db=vesum_db
+    )
+    assert violations == []
+
+
 def test_audit_practice_shards_volume_thresholds(tmp_path: Path):
     """Verify that thin-mode volume thresholds (paronym>=250, homonym>=150, heritage>=250) are enforced."""
     # Under-threshold paronym shard (only 2 items)

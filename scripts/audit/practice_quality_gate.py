@@ -14,6 +14,9 @@ Enforces:
 - Required pedagogical metadata (distinction gloss, rationale, case rule, grammatical notes)
 - Intentional error quarantine (no leaked contrastive tables/headers in positive cloze)
 - Error-correction drill integrity (substring containment, option validity, explanation)
+- Error-correction evidence (#8723): no generated register-label distractors, and every
+  error/correction pair is related by a shared stem, a parallel phrase, or (with VESUM)
+  a VESUM-corroborated single-word error
 - 100% morphological attestation against VESUM (with fail-closed validation on missing DB)
 - Thin-mode densification thresholds: paronym >= 250, homonym >= 150, heritage >= 250
 - TypeSafe System One (Jev 1.13) target exclusivity and distractor plausibility validation
@@ -51,6 +54,11 @@ try:
     from scripts.audit.practice_linguistic import INTENTIONAL_ERROR_PATTERNS
 except ImportError:
     from practice_linguistic import INTENTIONAL_ERROR_PATTERNS
+
+try:
+    from scripts.practice.extract_textbook_error_corrections import REGISTER_LABEL_RE, VesumLookup, assess_pair
+except ImportError:
+    from practice.extract_textbook_error_corrections import REGISTER_LABEL_RE, VesumLookup, assess_pair
 
 DEFAULT_TEACHER_CLOZE = PROJECT_ROOT / "site/src/data/lexicon-teacher-cloze.json"
 DEFAULT_ERROR_CORRECTIONS = PROJECT_ROOT / "registry/practice/textbook-error-corrections.json"
@@ -227,6 +235,20 @@ def audit_teacher_cloze_deck(path: Path | str, vesum_db: Path | str | None = DEF
     return violations
 
 
+def _error_correction_vesum(vesum_db: Path | str | None) -> VesumLookup | None:
+    """VESUM view for pair evidence, or None when the DB lacks the VESUM form table."""
+    if not vesum_db or not Path(vesum_db).exists():
+        return None
+    import sqlite3
+
+    try:
+        lookup = VesumLookup(vesum_db)
+        lookup.status("тест")
+    except sqlite3.Error:
+        return None
+    return lookup
+
+
 def audit_error_correction_deck(
     path: Path | str, vesum_db: Path | str | None = DEFAULT_VESUM_DB
 ) -> list[dict[str, Any]]:
@@ -249,6 +271,7 @@ def audit_error_correction_deck(
         data = json.load(f)
 
     items = data.get("drills") or data.get("items") or data.get("corrections") or [] if isinstance(data, dict) else data
+    pair_vesum = _error_correction_vesum(vesum_db)
 
     seen_ids: set[str] = set()
     for idx, item in enumerate(items, 1):
@@ -291,7 +314,27 @@ def audit_error_correction_deck(
                 }
             )
 
+        if error_target and correct_target:
+            _evidence, reason = assess_pair(error_target, correct_target, pair_vesum)
+            if reason:
+                violations.append(
+                    {
+                        "type": "UNEVIDENCED_ERROR_CORRECTION_PAIR",
+                        "item": item_id,
+                        "message": f"{error_target!r} → {correct_target!r} is not a source-evidenced correction ({reason})",
+                    }
+                )
+
         options = item.get("options", [])
+        labelled = [o for o in options if isinstance(o, str) and REGISTER_LABEL_RE.search(o)]
+        if labelled:
+            violations.append(
+                {
+                    "type": "REGISTER_LABEL_DISTRACTOR",
+                    "item": item_id,
+                    "message": f"options carry generated register labels, not evidenced alternatives: {labelled}",
+                }
+            )
         if not options or len(options) < 2:
             violations.append(
                 {

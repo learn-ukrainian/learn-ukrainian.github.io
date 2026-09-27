@@ -10,6 +10,7 @@ import {
   useErrorCorrectionPracticeOverlay,
 } from '@site/src/components/useErrorCorrectionPracticeOverlay';
 import { SRS_STORAGE_KEY, cardKey, loadState, rateCard } from '@site/src/lib/lexicon/srs';
+import cultureDeck from '@site/src/data/practice-error-corrections.json';
 
 const mockDrills: ErrorCorrectionDrill[] = [
   {
@@ -52,7 +53,8 @@ describe('ErrorCorrectionPractice', () => {
 
   test('loads production error-correction dataset with valid schema and non-empty drills', async () => {
     const drills = await loadErrorCorrectionDeck();
-    expect(drills.length).toBe(278);
+    expect(drills.length).toBe(cultureDeck.totalDrills);
+    expect(drills.length).toBeGreaterThan(0);
     for (const drill of drills) {
       expect(drill.id).toMatch(/^err_\d{4}$/);
       expect(drill.sentence.length).toBeGreaterThan(0);
@@ -61,6 +63,9 @@ describe('ErrorCorrectionPractice', () => {
       expect(drill.options.length).toBeGreaterThanOrEqual(2);
       expect(drill.options).toContain(drill.correctForm);
       expect(drill.sentence).toContain(drill.errorWord);
+      // #8723: options are the two forms the source contrasts, never generated
+      // "(розм.)" / "(застаріле)" register-label copies.
+      expect([...drill.options].sort()).toEqual([drill.correctForm, drill.errorWord].sort());
     }
   });
 
@@ -111,7 +116,7 @@ describe('ErrorCorrectionPractice', () => {
     });
 
     await waitFor(() => expect(result.current.cultureDrills).not.toBeNull());
-    expect(result.current.cultureDrills?.length).toBe(278);
+    expect(result.current.cultureDrills?.length).toBe(cultureDeck.totalDrills);
     expect(result.current.cultureLoading).toBe(false);
 
     act(() => {
