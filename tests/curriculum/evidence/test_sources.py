@@ -106,6 +106,53 @@ def test_gloss_exact_spelling_pos_and_order(synthetic_sources):
     assert result.raw["synthetic-adj", "adj"][0]["id"] == 4
 
 
+def test_gloss_pronoun_and_function_word_rows_ignore_alphabet_letters(synthetic_sources):
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.executemany(
+            "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
+            [
+                (10, "я", "pronoun", '["I (personal pronoun)"]', "", "synthetic"),
+                (11, "я", "noun", '["ya (a letter of the Cyrillic alphabet)"]', "", "synthetic"),
+                (12, "ж", "particle", '["The ninth letter of the Ukrainian alphabet"]', "", "synthetic"),
+                (13, "у", "particle", '["in (preposition)"]', "", "synthetic"),
+                (14, "і", "particle", '["and (conjunction)"]', "", "synthetic"),
+                (15, "цей", "pronoun", '["this (pronoun)"]', "", "synthetic"),
+                (16, "ні", "particle", '["no (preposition)"]', "", "synthetic"),
+            ],
+        )
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        result = api.gloss_rows(
+            [
+                ("я", "noun"),
+                ("ж", "part"),
+                ("у", "prep"),
+                ("і", "conj"),
+                ("цей", "adj"),
+                ("ні", "part"),
+            ]
+        )
+    assert [r["id"] for r in result.raw["я", "noun"]] == [10]
+    assert result.raw["ж", "part"] == []
+    assert [r["id"] for r in result.raw["у", "prep"]] == [13]
+    assert [r["id"] for r in result.raw["і", "conj"]] == [14]
+    assert [r["id"] for r in result.raw["цей", "adj"]] == [15]
+    assert result.raw["ні", "part"] == []
+
+
+def test_pronoun_tags_reach_conditioned_stress_oracle(monkeypatch):
+    calls = []
+
+    def oracle(word, *, tags):
+        calls.append((word, tags))
+        return {"status": "not_found", "matches": [], "source": {"digest": "a" * 64}}
+
+    monkeypatch.setattr(sources.stress, "verify_stress", oracle)
+    sources.stress_for_form("цьому", "adj:m:v_dav:pron:dem")
+    sources.stress_for_form("цьому", "adj:m:v_mis:pron:dem")
+    assert calls[0][1] == ["Case=Dat", "Gender=Masc", "Number=Sing", "PronType=Dem", "upos=PRON"]
+    assert calls[1][1] == ["Case=Loc", "Gender=Masc", "Number=Sing", "PronType=Dem", "upos=PRON"]
+
+
 def test_cefr_and_heritage_use_readonly_connection(monkeypatch, synthetic_sources):
     from scripts.wiki import sources_db
 

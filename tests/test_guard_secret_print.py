@@ -17,6 +17,7 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
+import shlex
 from pathlib import Path
 
 import pytest
@@ -65,6 +66,199 @@ def test_secret_dump_shapes_blocked(monkeypatch, capsys, cmd):
     assert "jq keys" in err
     assert '[ -n "${X:-}" ]' in err
     assert "LEARN_UK_SECRETS_OK=1" in err
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo hi\ncat .env",
+        "cat < .env",
+        "cat<.env",
+        'cat <<< "$GH_TOKEN"',
+        "echo $(cat .env)",
+        "echo $(echo ok; cat .env)",
+        "echo `cat .env`",
+        'echo "$(cat .env)"',
+        'echo "`cat .env`"',
+        "eval 'cat .env'",
+        "eval 'echo $GH_TOKEN'",
+        'export X=$GH_TOKEN; printf %s "$X"',
+        'export X=$GH_TOKEN; Y=$X; printf %s "$Y"',
+        'export X=$GH_TOKEN; echo $(printf %s "$X")',
+    ],
+)
+def test_issue_8896_secret_bypasses_block(monkeypatch, capsys, command):
+    assert _run(monkeypatch, command) == 2
+    assert "BLOCKED by guard-secret-print" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cat <<EOF\n$(cat .env)\nEOF",
+        "cat <<-EOF\n\t$(cat .env)\n\tEOF",
+        'eval "$(echo cat .env)"',
+        "eval \"$(printf %s 'cat .env')\"",
+        "bash -c 'cat .env'",
+        "sh -c 'cat .env'",
+        "while read l; do echo $l; done < .env",
+        "awk '{print}' < .env",
+        'read X <<< "$GH_TOKEN"; printf %s "$X"',
+        'declare -n X=GH_TOKEN; printf %s "$X"',
+        'f() { local X=$GH_TOKEN; printf %s "$X"; }; f',
+        'name=GH_TOKEN; printf %s "${!name}"',
+        "cat <(cat .env)",
+        'source <(cat .env); printf %s "$FOO"',
+        "echo ok >(cat .env)",
+        'printf -v X %s "$GH_TOKEN"',
+    ],
+)
+def test_issue_8896_review_round_two_secret_bypasses_block(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "{ cat .env; }",
+        "( cat .env )",
+        "if true; then cat .env; elif false; then echo ok; else echo ok; fi",
+        'while read l; do echo "$l"; done < .env',
+        "until false; do cat .env; done",
+        "for x in one; do cat .env; done",
+        "case x in x) cat .env;; esac",
+        "! cat .env",
+        "exec cat .env",
+        'builtin printf %s "$GH_TOKEN"',
+        "command -p cat .env",
+        "env -i cat .env",
+        "nice cat .env",
+        "timeout 3 cat .env",
+        "stdbuf -o0 cat .env",
+        "cat $'.env'",
+        "eval $'cat .env'",
+        "bash -c $'cat .env'",
+        "bash --posix -c 'cat .env'",
+        "bash -e -x -c 'cat .env'",
+        "bash -o posix -c 'cat .env'",
+        "dash -c 'cat .env'",
+        "zsh -c 'cat .env'",
+        "ksh -c 'cat .env'",
+        "busybox sh -c 'cat .env'",
+        "cat <<EOF\n$(cat \\\n.env)\nEOF",
+    ],
+)
+def test_issue_8896_review_round_three_secret_shapes_block(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo ${GH_TOKEN}",
+        "printf %s ${GH_TOKEN}",
+        "echo ${x#y}; cat .env",
+        "echo a & { cat .env; }",
+        "echo ${GH_TOKEN:-x}",
+        "name=GH_TOKEN; echo ${!name}",
+        "echo ${x:-${GH_TOKEN}}",
+        'echo ${x:-$(printf %s "$GH_TOKEN")}',
+    ],
+)
+def test_issue_8896_unquoted_parameter_expansions_block(monkeypatch, command):
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo a{b,c}",
+        "find . -name '*.py' -exec wc -l {} \\;",
+        "echo }",
+        "echo {}",
+        "{ echo a; echo b; } > /tmp/x",
+        "f() { echo ok; }; f",
+        "echo a & { echo b; }",
+    ],
+)
+def test_issue_8896_literal_and_command_braces_allow(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+def test_issue_8896_parameter_expansion_stays_one_word():
+    assert guard._tokenize('echo ${x:-$(printf %s "${GH_TOKEN:-x}")}') == [
+        "echo",
+        '${x:-$(printf %s "${GH_TOKEN:-x}")}',
+    ]
+    assert guard._tokenize("echo ${x#y}; cat .env") == ["echo", "${x#y}", ";", "cat", ".env"]
+
+
+def test_issue_8896_secret_recursion_limit_blocks(monkeypatch):
+    command = "cat .env"
+    for _ in range(12):
+        command = f"echo $({command})"
+    assert _run(monkeypatch, command) == 2
+
+
+def test_issue_8896_nested_shell_quote_concatenation_blocks(monkeypatch):
+    command = "cat .env"
+    for _ in range(4):
+        command = f"bash -c {shlex.quote(command)}"
+    assert _run(monkeypatch, command) == 2
+
+
+@pytest.mark.parametrize("command", ['source .env; printf %s "$FOO"', '. .env; printf %s "$FOO"'])
+def test_issue_8896_source_data_flow_named_residual(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status",
+        "ls -la",
+        "echo ok > /tmp/x",
+        "cat <<EOF\nordinary text\nEOF",
+        "cat <<-EOF\n\tordinary text\n\tEOF",
+        "cat <<'EOF'\n$(cat .env)\nEOF",
+        "bash -c 'echo ok'",
+        "while read l; do echo $l; done < notes.txt",
+        "if [ -f x ]; then echo ok; fi",
+        "( cd /tmp && ls )",
+        "{ echo a; echo b; } > /tmp/x",
+        "gh pr view 8896",
+        'eval "$(echo ok)"',
+        "echo '$(cat .env)'",
+    ],
+)
+def test_issue_8896_review_round_two_ordinary_allow(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status",
+        "ls -la",
+        "echo ok > /tmp/x",
+        "cat <<EOF\ncat .env\nEOF",
+        "cat <<-EOF\n\tcat .env\n\tEOF",
+        "echo '$GH_TOKEN'",
+        "git commit -m 'echo `cat .env`'",
+        "echo \\`cat .env\\`",
+        "cat <<< hello",
+        "echo hi \\\ncat .env",
+        'X=$GH_TOKEN echo ok; printf %s "$X"',
+        'export X=$GH_TOKEN; X=plain; printf %s "$X"',
+        'export X=$GH_TOKEN; unset X; printf %s "$X"',
+    ],
+)
+def test_issue_8896_ordinary_commands_allow(monkeypatch, command):
+    assert _run(monkeypatch, command) == 0
+
+
+def test_issue_8896_continued_secret_file_operand_blocks(monkeypatch):
+    assert _run(monkeypatch, "cat \\\n.env") == 2
 
 
 @pytest.mark.parametrize(
@@ -118,7 +312,6 @@ def test_leading_bash_blank_keeps_comment_inert(monkeypatch, blank):
         "echo '#' ; echo safe",
         "echo $(printf '# hidden') # $GH_TOKEN",
         "echo `printf '# hidden'` # cat .env",
-        "echo hi # <<EOF\ncat .env",
     ],
 )
 def test_bash_comments_do_not_trigger_secret_guard(monkeypatch, command):
@@ -131,6 +324,7 @@ def test_bash_comments_do_not_trigger_secret_guard(monkeypatch, command):
         "git commit -m fix#123 && cat .env",
         "echo hi#$GH_TOKEN",
         "echo '#' ; cat .env",
+        "echo hi # <<EOF\ncat .env",
     ],
 )
 def test_bash_comments_keep_executable_secret_words(monkeypatch, command):

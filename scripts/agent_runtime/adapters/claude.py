@@ -3,9 +3,8 @@
 Third production adapter. Phase 5 of #1184. Claude is the LAST adapter
 to land because it has the most special-case logic:
 
-- **``--bare`` flag**: Skips hooks, LSP, plugin sync, skill walks. Faster
-  for scripted calls. Only usable for stateless calls (no session) AND
-  when ``ANTHROPIC_API_KEY`` is set (``--bare`` disables OAuth/keychain).
+- **``--bare`` flag**: Skips hooks, so guarded headless workers never use it,
+  even when an API key is available.
 
 - **``--resume`` vs ``--session-id``**: Two distinct flags with different
   semantics. ``--resume <uuid>`` resumes an existing session (reuses warm
@@ -26,13 +25,21 @@ to land because it has the most special-case logic:
   tool calls can be captured from the CLI trace.
 
 Mode handling:
-- ``read-only``: No sandbox flag (Claude Code has no explicit sandbox
-  for print mode — permissions come from the parent process context).
-- ``workspace-write``: Same as read-only for Claude. The distinction
-  is enforced by the CALLER deciding whether to pass write-capable
-  ``tool_config``, not by a CLI flag.
+- ``read-only`` with ``reviewer_tools=True`` and no explicit ``allowed_tools``:
+  ``dontAsk`` permits
+  read/search and shell execution (including tests and Python) while denying
+  edits and common Git/GitHub mutations. Explicit caller tool lists pass
+  through unchanged and do not receive reviewer-only restrictions.
+  Prefix Bash denies are advisory; the repository PreToolUse guards are the
+  primary-checkout write backstop. Claude's bubblewrap sandbox did not stop
+  a primary-checkout write in a live probe, so it is not that backstop.
+- ``workspace-write``: Retains Claude's default permission behavior; the
+  reviewer profile does not apply.
 - ``danger``: Appends ``--dangerously-skip-permissions``. Reserved for
   cases where the caller explicitly needs sandbox bypass.
+Every headless invocation receives shared PreToolUse guard settings from the
+tracked checkout. Sealed ``review_isolation`` retains ``--safe-mode`` and its
+OS sandbox; safe mode suppresses hooks and shell/write tools there.
 
 Liveness paths:
 - Returns the project-scoped Claude session JSONL file
@@ -85,6 +92,61 @@ _EFFORT_MIN_VERSION = (2, 1, 98)
 _POSTMORTEM_URL = "https://www.anthropic.com/engineering/april-23-postmortem"
 _DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
 _AGENT_FLAG_MIN_VERSION = (2, 1, 119)
+
+# Ordinary Claude reviewers need a non-interactive shell. Claude Bash deny
+# patterns match prefixes only: git -C, wrappers, and interpreters can bypass
+# them. The shared PreToolUse guards below provide the checkout backstop.
+REVIEWER_PERMISSION_PROFILE = {
+    "mode": "dontAsk",
+    "allow": ("Read", "Grep", "Glob", "LS", "Bash", "WebFetch", "WebSearch"),
+    "mcp_allow": ("mcp__sources__*",),
+    "deny": (
+        "Edit", "Write", "NotebookEdit",
+        "Bash(git push *)", "Bash(git commit *)", "Bash(git merge *)",
+        "Bash(git rebase *)", "Bash(git reset *)", "Bash(git tag *)",
+        "Bash(git branch -D *)", "Bash(gh pr merge *)",
+        "Bash(gh pr create *)", "Bash(gh pr comment *)",
+        "Bash(gh pr review *)", "Bash(gh pr edit *)",
+        "Bash(gh pr close *)", "Bash(gh pr reopen *)",
+        "Bash(gh issue create *)",
+        "Bash(gh issue comment *)", "Bash(gh issue edit *)",
+        "Bash(gh issue close *)", "Bash(gh issue reopen *)",
+        "Bash(gh api -X *)",
+        "Bash(gh api --method *)", "Bash(gh release *)",
+        "Bash(gh api -f *)", "Bash(gh api -F *)",
+        "Bash(gh api --field *)", "Bash(gh api --raw-field *)",
+        "Bash(gh api --input *)",
+        "Bash(gh workflow run *)",
+    ),
+}
+
+
+def _worker_guard_settings(*, publish_guard: bool = False) -> str:
+    """Build hook settings from tracked sources in this checkout."""
+    source_root = Path(__file__).resolve().parents[3]
+    source = json.loads((source_root / "agents_extensions/shared/settings.json").read_text(encoding="utf-8"))
+    groups = []
+    prefix = "$CLAUDE_PROJECT_DIR/.claude/hooks/"
+    for group in source["hooks"]["PreToolUse"]:
+        hooks = []
+        for hook in group["hooks"]:
+            command = hook.get("command", "")
+            if not command.startswith(prefix):
+                continue
+            tracked = source_root / "agents_extensions/shared/hooks" / command.removeprefix(prefix)
+            if not tracked.is_file():
+                raise RuntimeError(f"Claude worker guard unavailable: {tracked}")
+            hooks.append({**hook, "command": str(tracked)})
+        if hooks:
+            groups.append({"matcher": group["matcher"], "hooks": hooks})
+    if publish_guard:
+        guard = source_root / "agents_extensions/shared/hooks/guard-reviewer-publish.py"
+        if not guard.is_file():
+            raise RuntimeError(f"Claude reviewer publish guard unavailable: {guard}")
+        groups.append({"matcher": "Bash", "hooks": [{"type": "command", "command": str(guard), "timeout": 5}]})
+    if not groups:
+        raise RuntimeError("Claude worker PreToolUse guards unavailable")
+    return json.dumps({"hooks": {"PreToolUse": groups}}, separators=(",", ":"))
 
 
 def _isolated_review_response_schema(tool_config: dict[str, Any]) -> str:
@@ -195,11 +257,14 @@ class ClaudeAdapter:
               named session); if False or absent, use ``--resume`` (resume
               existing). Only meaningful when ``session_id`` is provided.
             - ``mcp_config_path: str`` — path to .mcp.json for tool restrictions
-            - ``allowed_tools: str`` — comma-separated list passed to --allowedTools
+            - ``allowed_tools: str`` — explicit comma-separated --allowedTools
+              value; takes precedence over the opt-in reviewer profile.
+            - ``reviewer_tools: True`` — enable the ordinary read-only reviewer
+              profile only when no explicit tool list is supplied.
             - ``output_format: str`` — defaults to "stream-json" so tool
               calls can be captured from the CLI trace.
-            - ``use_bare: bool`` — explicit opt-out of --bare (default: auto-enable
-              when no session + ANTHROPIC_API_KEY is set)
+            - ``use_bare: bool`` — legacy option ignored for guarded workers;
+              --bare would disable the mandatory PreToolUse hooks.
             - ``max_budget_usd: float`` — optional Claude Code print-mode
               API spend cap, emitted as ``--max-budget-usd <amount>``
 
@@ -213,6 +278,15 @@ class ClaudeAdapter:
         tc: dict[str, Any] = tool_config or {}
         discussion_readonly = _discussion_readonly_requested(tool_config)
         review_isolation = bool(tc.get("review_isolation"))
+        explicit_allowed_tools = tc.get("allowed_tools") is not None
+        reviewer_guard = (
+            mode == "read-only" and not explicit_allowed_tools
+            and tc.get("reviewer_tools") is True
+        )
+        # Caller tool restrictions take precedence. Reviewer-only protections
+        # are scoped to the default profile so an explicit Bash grant is not
+        # silently narrowed by the publish hook or push rewrite.
+        ordinary_reviewer = reviewer_guard and not discussion_readonly and not review_isolation
         review_write_root: Path | None = None
         if review_isolation:
             from scripts.review.isolation import validated_review_write_root
@@ -277,18 +351,13 @@ class ClaudeAdapter:
         # separator makes the parser stop interpreting flags. (Bug surfaced
         # 2026-05-05 during the Claude+Gemini deliberation pilot.)
 
-        # --bare: fast path when stateless and API key is set.
-        # Disabled if we're resuming/starting a named session (those need
-        # full session plumbing).
         has_session = session_id is not None
-        use_bare = tc.get("use_bare")
-        if use_bare is None:
-            # Auto-decide: enable if no session and API key is set
-            use_bare = not has_session and bool(os.environ.get("ANTHROPIC_API_KEY"))
-        if tc.get("use_bare"):
-            use_bare = True
-        if use_bare and not has_session:
-            cmd.append("--bare")
+        # --bare skips hooks, including the primary-checkout guard. Never use
+        # it for a headless worker, even when an API key is available. Sealed
+        # review isolation receives the settings flag too, but its existing
+        # --safe-mode suppresses hooks and shell/write tools; the isolated OS
+        # sandbox does not mount the checkout's tracked hook paths.
+        cmd.extend(["--settings", _worker_guard_settings(publish_guard=reviewer_guard and not review_isolation)])
         if review_isolation:
             # Exact read/search tools + empty setting sources: no write/shell
             # tools and no project CLAUDE.md/hooks/skills when flags are honored.
@@ -394,19 +463,23 @@ class ClaudeAdapter:
         # Mode-specific flags
         if mode == "danger":
             cmd.append("--dangerously-skip-permissions")
-        # read-only and workspace-write use the same Claude invocation;
-        # write permission is governed by the caller's tool_config, not
-        # a distinct CLI mode flag.
+        elif ordinary_reviewer:
+            profile = REVIEWER_PERMISSION_PROFILE
+            cmd.extend(["--permission-mode", profile["mode"]])
+            granted = [*profile["allow"]]
+            if tc.get("mcp_config_path"):
+                granted.extend(profile["mcp_allow"])
+            cmd.extend(["--allowedTools", ",".join(dict.fromkeys(granted))])
+            cmd.extend(["--disallowedTools", ",".join(profile["deny"])])
 
         # MCP tool restrictions (pipeline reviewers)
         mcp_config_path = tc.get("mcp_config_path")
-        allowed_tools = tc.get("allowed_tools")
         if tc.get("strict_mcp_config") and mcp_config_path and not review_isolation:
             cmd.extend(["--strict-mcp-config", "--mcp-config", str(mcp_config_path)])
-            if allowed_tools:
-                cmd.extend(["--allowedTools", allowed_tools])
-        elif mcp_config_path and allowed_tools and not review_isolation:
-            cmd.extend(["--mcp-config", str(mcp_config_path), "--allowedTools", allowed_tools])
+        elif mcp_config_path and not review_isolation:
+            cmd.extend(["--mcp-config", str(mcp_config_path)])
+        if explicit_allowed_tools and not review_isolation:
+            cmd.extend(["--allowedTools", str(tc["allowed_tools"])])
 
         # Cache-warmth optimization (CC 2.1.98+)
         if cli_version and cli_version >= _EFFORT_MIN_VERSION:
@@ -427,7 +500,10 @@ class ClaudeAdapter:
             cwd=cwd,
             stdin_payload=prompt if use_stdin else "",
             output_file=None,
-            env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
+            env_overrides={
+                **({"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {}),
+                **({"LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK": "1"} if reviewer_guard else {}),
+            },
             liveness_paths=self._resolve_liveness_paths(cwd),
             metadata={
                 **schema_metadata(output_schema),

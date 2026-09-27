@@ -430,11 +430,13 @@ def test_ask_reply_remains_unacked_for_requester(bridge_db, monkeypatch):
         model="claude-sonnet-5",
         effort=None,
     )
-    monkeypatch.setattr("scripts.ai_agent_bridge._claude.runtime_invoke", Mock(return_value=mock_result))
+    mock_invoke = Mock(return_value=mock_result)
+    monkeypatch.setattr("scripts.ai_agent_bridge._claude.runtime_invoke", mock_invoke)
 
     from scripts.ai_agent_bridge._claude import process_for_claude
 
     process_for_claude(ask_id)
+    assert mock_invoke.call_args.kwargs["tool_config"]["reviewer_tools"] is True
 
     conn = get_db()
     try:

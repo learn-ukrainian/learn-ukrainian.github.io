@@ -90,6 +90,105 @@ def test_verify_clean_store_passes(clean_store, synthetic_vesum, synthetic_sourc
     assert res["warnings"] == []
 
 
+def test_verify_rejects_pending_vowel_free_form(clean_store, synthetic_vesum, synthetic_sources, tmp_path):
+    # Build from a VESUM fixture containing a vowel-free Cyrillic function form.
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("UPDATE forms_all SET word_form = 'в' WHERE id = 1")
+
+    evidence_dir = tmp_path / "vowel-free"
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        built = words.build_words(
+            "a1", clean_store / "req.yaml", evidence_dir=evidence_dir,
+            sources_instance=api, mcp_commit="a" * 40,
+        )
+        form = next(f for f in built["store"]["words"][0]["forms"] if f["form"] == "в")
+        assert form["stress_source"] == "none"
+        assert form["stressed"] == "в"
+        assert verify.verify_words_store("a1", evidence_dir=evidence_dir, sources_instance=api)["status"] == "ok"
+
+        store_path = evidence_dir / "_words.yaml"
+        store = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+        form = next(f for f in store["words"][0]["forms"] if f["form"] == "в")
+        form["stress_source"] = "pending"
+        form.pop("stressed")
+        lock.write(store_path, lock.yaml_bytes(store))
+
+        result = verify.verify_words_store("a1", evidence_dir=evidence_dir, sources_instance=api)
+
+    assert result["status"] == "failed"
+    assert any(codes.STRESS_MISMATCH in error and "'в'" in error for error in result["errors"])
+
+
+def test_verify_rejects_packed_two_accent_form(clean_store, synthetic_vesum, synthetic_sources, monkeypatch):
+    packed = "synthétíc-a"
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda word, **kw: {
+            "status": "ok",
+            "matches": [{
+                "stressed_form": packed,
+                "vowel_indices": [1, 3],
+                "override_applied": False,
+            }],
+            "source": {"digest": "t" * 64},
+        },
+    )
+    store_path = clean_store / "_words.yaml"
+    store = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+    form = store["words"][0]["forms"][0]
+    form["stress_source"] = "trie"
+    form["stressed"] = packed
+    lock.write(store_path, lock.yaml_bytes(store))
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = verify.verify_words_store("a1", evidence_dir=clean_store, sources_instance=api)
+
+    assert result["status"] == "failed"
+    assert any(codes.STRESS_MISMATCH in error and "synthetic-a" in error for error in result["errors"])
+
+
+@pytest.mark.parametrize(
+    ("lemma", "preferred_pos"),
+    [("synthetic-pos", "particle"), ("свій", "pronoun")],
+)
+def test_verify_uses_builder_pronominal_gloss_choice(
+    synthetic_vesum, synthetic_sources, tmp_path, lemma, preferred_pos,
+):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute(
+            "INSERT INTO forms_all VALUES (5, 50, ?, ?, 'adj', 'adj:m:v_naz:pron:pos', '', '')",
+            (lemma, lemma),
+        )
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.executemany(
+            "INSERT INTO dmklinger_uk_en VALUES (?,?,?,?,?,?)",
+            [
+                (10, lemma, "pronoun", '["independent"]', "", "synthetic"),
+                (11, lemma, "particle", '["determiner"]', "", "synthetic"),
+            ],
+        )
+    request = tmp_path / "req.yaml"
+    request.write_text(
+        yaml.safe_dump({
+            "request_schema": 1, "level": "a1",
+            "words": [{"lemma": lemma, "pos": "adj", "want": "new"}],
+        }),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        built = words.build_words(
+            "a1", request, evidence_dir=tmp_path, sources_instance=api, mcp_commit="a" * 40,
+        )
+        verified = verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api)
+
+    assert built["store"]["words"][0]["gloss_source"]["id"] == (
+        10 if preferred_pos == "pronoun" else 11
+    )
+    assert verified["status"] == "ok"
+    assert verified["errors"] == []
+
+
 def test_verify_fails_on_lock_mismatch(clean_store, synthetic_vesum, synthetic_sources):
     store_file = clean_store / "_words.yaml"
     store_file.write_text("corrupted content", encoding="utf-8")

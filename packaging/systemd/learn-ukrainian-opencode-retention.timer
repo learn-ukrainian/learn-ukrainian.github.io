@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian daily OpenCode session retention timer
+
+[Timer]
+OnCalendar=*-*-* 04:15:00 UTC
+Persistent=true
+RandomizedDelaySec=15min
+Unit=learn-ukrainian-opencode-retention.service
+
+[Install]
+WantedBy=timers.target

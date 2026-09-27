@@ -22,10 +22,11 @@ from . import codes, lock, pack, registry, sources
 from .words import (
     cefr_field,
     cited_rows,
-    count_vowels,
     extract_ulif_paradigm_forms,
     find_plans_citing,
     load_schema,
+    needs_no_stress,
+    packed_stress_reason,
     store_scheme,
 )
 
@@ -226,6 +227,16 @@ def verify_words_store(
 
             # Check Gloss against source
             gloss_rows = sources_instance.gloss_rows([(lemma, pos)]).raw.get((lemma, pos), [])
+            pronoun_entry = any("pron" in str(form.get("tags", "")).split(":") for form in word.get("forms", []))
+            if pos in {"noun", "adj"}:
+                if pronoun_entry:
+                    allowed_gloss_pos = {"pronoun"} if pos == "noun" else {"pronoun", "particle"}
+                else:
+                    allowed_gloss_pos = {"noun"} if pos == "noun" else {"adjective", "adj"}
+                gloss_rows = [row for row in gloss_rows if row["pos"] in allowed_gloss_pos]
+                if pronoun_entry and pos == "adj":
+                    preferred = "pronoun" if lemma == "свій" else "particle"
+                    gloss_rows.sort(key=lambda row: row["pos"] != preferred)
             expected_gloss = None
             expected_gloss_source = None
             if gloss_rows:
@@ -405,7 +416,7 @@ def verify_words_store(
                     )
 
                 # Re-derive rule 4 stress
-                if count_vowels(form_str) == 1:
+                if needs_no_stress(form_str):
                     expected_source = "none"
                     expected_stressed = form_str
                 elif ulif_checked and matching_entry and form_str in ulif_forms:
@@ -416,7 +427,7 @@ def verify_words_store(
                     raw_st = stress_res.raw
                     st_status = raw_st.get("status")
                     matches = raw_st.get("matches", [])
-                    if st_status == "ok" and len(matches) == 1:
+                    if st_status == "ok" and len(matches) == 1 and not packed_stress_reason(matches[0]):
                         expected_source = "trie"
                         expected_stressed = matches[0]["stressed_form"]
                     else:

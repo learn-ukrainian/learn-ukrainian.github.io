@@ -2214,5 +2214,29 @@
     }
   ],
   "group": "lexicon_headword_candidates",
+  "registration_patterns": [
+    "data/lexicon/source-inventory/grade-01/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-01/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-02/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-02/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-03/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-03/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-04/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-04/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-05/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-05/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-06/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-06/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-07/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-07/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-08/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-08/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-09/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-09/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-10/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-10/*-headwords-*.yaml",
+    "data/lexicon/source-inventory/grade-11/*-headwords.yaml",
+    "data/lexicon/source-inventory/grade-11/*-headwords-*.yaml"
+  ],
   "schema": 1
 }
