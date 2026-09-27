@@ -165,32 +165,10 @@ def test_function_gloss_prefers_labelled_row_over_particle(synthetic_sources):
         assert [row["id"] for row in api.gloss_rows([("і", "conj")]).raw["і", "conj"]] == [2582]
 
 
-def test_kaikki_exact_readonly_and_alignment(tmp_path):
-    side = tmp_path / "kaikki.sqlite"
-    # POS and gloss arrays copied from local side-db-v1 content_sha256 251974b6...:
-    # lemma_key вона has pron; після has adv+prep.
-    with sqlite3.connect(side) as conn:
-        conn.execute("CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT)")
-        conn.execute("CREATE TABLE kaikki (lemma_key TEXT PRIMARY KEY, payload TEXT NOT NULL)")
-        conn.executemany(
-            "INSERT INTO meta VALUES (?, ?)",
-            [
-                ("schema_version", "side-db-v1"),
-                ("kind", "kaikki"),
-                ("content_sha256", "a" * 64),
-                ("row_count", "2"),
-            ],
-        )
-        conn.executemany(
-            "INSERT INTO kaikki VALUES (?, ?)",
-            [
-                ("вона", json.dumps({"pos": ["pron"], "glosses": ["she (person)", "it (feminine gender)"]})),
-                ("після", json.dumps({"pos": ["adv", "prep"], "glosses": ["after (in time)", "later, afterwards"]})),
-            ],
-        )
-    with sources.Sources(kaikki_db=side) as api:
+def test_kaikki_exact_readonly_and_alignment(synthetic_kaikki_side_db):
+    with sources.Sources(kaikki_db=synthetic_kaikki_side_db) as api:
         result = api.kaikki_rows(["вона", "після", "synthetic-absent"])
-        assert result.content_hash == "a" * 64
+        assert result.content_hash == hashlib.sha256(b"synthetic-kaikki").hexdigest()
         assert result.raw["synthetic-absent"] is None
         with pytest.raises(sqlite3.OperationalError, match="readonly"):
             api._kaikki_conn.execute("DELETE FROM kaikki")

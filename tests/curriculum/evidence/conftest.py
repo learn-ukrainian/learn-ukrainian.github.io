@@ -7,6 +7,38 @@ import sqlite3
 import pytest
 
 
+@pytest.fixture(autouse=True)
+def synthetic_kaikki_side_db(tmp_path_factory, monkeypatch):
+    """Give evidence tests a valid side-db-v1 snapshot without host data."""
+    path = tmp_path_factory.mktemp("kaikki-side-db") / "synthetic-kaikki.sqlite"
+    # POS and gloss arrays copied from Kaikki side-db-v1 content_sha256
+    # 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5.
+    rows = {
+        "вона": {"pos": ["pron"], "glosses": ["she (person)", "it (feminine gender)"]},
+        "після": {"pos": ["adv", "prep"], "glosses": ["after (in time)", "later, afterwards"]},
+    }
+    with sqlite3.connect(path) as conn:
+        conn.executescript("""
+            CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+            CREATE TABLE kaikki (lemma_key TEXT PRIMARY KEY, payload TEXT NOT NULL);
+        """)
+        conn.executemany(
+            "INSERT INTO meta VALUES (?, ?)",
+            [
+                ("schema_version", "side-db-v1"),
+                ("kind", "kaikki"),
+                ("content_sha256", hashlib.sha256(b"synthetic-kaikki").hexdigest()),
+                ("row_count", str(len(rows))),
+            ],
+        )
+        conn.executemany(
+            "INSERT INTO kaikki VALUES (?, ?)",
+            [(lemma, json.dumps(payload, ensure_ascii=False, sort_keys=True)) for lemma, payload in rows.items()],
+        )
+    monkeypatch.setenv("LEXICON_KAIKKI_SIDE_DB", str(path))
+    return path
+
+
 @pytest.fixture
 def synthetic_vesum(tmp_path):
     path = tmp_path / "synthetic-vesum.db"
