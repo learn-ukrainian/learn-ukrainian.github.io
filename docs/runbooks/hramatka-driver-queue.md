@@ -64,8 +64,13 @@ Hramatka and any 50%/majority heuristic are not membership evidence. A private
 API failure is `UNKNOWN` and therefore `HOLD` for every new-scope action; it
 never becomes an implicit allow. The gate has no environment-variable bypass.
 
-Host-mutation work without an explicit operator GO remains `ESCALATE` (see
-private #212 residual; private #360 crypto redeploy was completed on-host).
+Host actions on the Hramatka host follow operator-expectations item 10's split
+(production cutover stays operator-only; routine maintenance is driver work).
+A production release rollover on the live-serving host (private #360 class)
+remains `ESCALATE` without an explicit operator GO. Host access/security
+config such as sudo or root-login changes (private #212 class) is not named
+by any item 10 category on current evidence — `ESCALATE` and ask once rather
+than guess.
 
 ## Closeout hygiene check
 
@@ -104,12 +109,20 @@ The gate does not reap orphan worktrees or gate new scope itself — that is
 `post_task_reap` (PR-3) and `hramatka_scope_gate` (PR-2) respectively. It only
 reports.
 
-## Operator-only items — track/escalate, never action solo
+## Production cutover and unclear host actions — track/escalate, never action solo
 
-Host mutation without an explicit operator GO must **ESCALATE** — track and
-surface, do not freestyle host changes outside the documented deploy path.
-Drivers with SSH access still follow the private deploy runbook and record
-evidence on the private issue.
+A production release rollover on the live-serving Hramatka host (rebuilding
+or swapping the read-only release checkout — private #360 class) is a
+production cutover under operator-expectations item 10 and must **ESCALATE**
+without an explicit operator GO — track and surface, do not freestyle host
+changes outside the documented deploy path. Routine host maintenance (pull
+merged main, restart an updated/broken service, install a reviewed systemd
+unit/timer, clean agent caches/logs/worktrees) is driver work per item 10.
+Host access/security config (sudo, root-login, SSH hardening — private #212
+class) does not match a named item 10 category on current evidence:
+**ESCALATE** and ask the operator once rather than guess. Drivers with SSH
+access still follow the private deploy runbook and record evidence on the
+private issue.
 
 ## Same-session correction rule
 
