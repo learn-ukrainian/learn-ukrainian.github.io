@@ -14,7 +14,7 @@
     {"name": "get_chunk_context", "purpose": "Fetch chunk by id", "in_pack": true},
     {"name": "query_pravopys", "purpose": "Orthography rules", "in_pack": true},
     {"name": "search_style_guide", "purpose": "Style guide lookup", "in_pack": true},
-    {"name": "search_definitions", "purpose": "СУМ-11 definitions", "in_pack": true},
+    {"name": "search_definitions", "purpose": "СУМ-11 definitions — Soviet-occupation contrast only, never a verification source for modern Ukrainian (use query_sum20 / ВТС)", "in_pack": true},
     {"name": "search_idioms", "purpose": "Idiom / phraseology search", "in_pack": true},
     {"name": "search_synonyms", "purpose": "Synonym search", "in_pack": true},
     {"name": "search_sources", "purpose": "Unified multi-corpus retrieval", "in_pack": true, "rationale": "Included for general retrieval when corpus is unknown; prefer scoped tools when known."}
