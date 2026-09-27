@@ -1336,3 +1336,109 @@ def test_a_failed_verdict_write_leaves_no_new_or_partial_file(
     finally:
         conn.close()
     assert document["verdict"] == "APPROVE" and written == path and path.exists()
+
+
+# --- module-verdict.yaml is a projection that must match a fresh recomputation at landing (#8774 r5) ----------------
+
+
+def test_check_passes_right_after_verdict_is_written(world: World, promoted: None) -> None:
+    approve_all(world)
+    assert run(world, "verdict", LEVEL, SLUG) == 0
+    assert run(world, "verdict", LEVEL, SLUG, "--check") == 0
+
+
+def test_check_fails_after_a_later_failure_commits(
+    world: World, promoted: None, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The reviewer's scenario: a stale APPROVE on disk after a later review failure commits."""
+    approve_all(world)
+    assert run(world, "verdict", LEVEL, SLUG) == 0
+    capsys.readouterr()
+    _record_failure(world, "rf-1", "af-1")
+    assert run(world, "verdict", LEVEL, SLUG, "--check") == 1
+    error = capsys.readouterr().err
+    assert "verdict" in error or "holds" in error or "input_fingerprint" in error
+
+
+def test_check_fails_on_a_hand_edited_verdict(world: World, promoted: None, capsys: pytest.CaptureFixture[str]) -> None:
+    approve_all(world)
+    assert run(world, "verdict", LEVEL, SLUG) == 0
+    document = published_module(world)
+    document["verdict"] = "REVISE"
+    (world.state_dir / fixloop.MODULE_VERDICT_NAME).write_bytes(yaml.safe_dump(document).encode())
+    capsys.readouterr()
+    assert run(world, "verdict", LEVEL, SLUG, "--check") == 1
+    assert "verdict" in capsys.readouterr().err
+
+
+def test_check_fails_on_a_missing_file(world: World, promoted: None, capsys: pytest.CaptureFixture[str]) -> None:
+    approve_all(world)
+    assert run(world, "verdict", LEVEL, SLUG, "--check") == 1
+    assert "missing" in capsys.readouterr().err
+
+
+def test_check_and_repair_projections_are_refused_together(world: World, capsys: pytest.CaptureFixture[str]) -> None:
+    assert run(world, "verdict", LEVEL, SLUG, "--check", "--repair-projections") == 2
+    assert "read-only" in capsys.readouterr().err
+
+
+def _fingerprint(world: World, params: dict[str, Any] | None = None) -> str:
+    conn = db.connect(world.db)
+    try:
+        return fixloop.compute_module_verdict(conn, LEVEL, SLUG, root=world.root, params=params or PARAMS)[
+            "input_fingerprint"
+        ]
+    finally:
+        conn.close()
+
+
+def test_the_fingerprint_is_stable_across_calls_that_change_nothing(world: World, promoted: None) -> None:
+    approve_all(world)
+    assert _fingerprint(world) == _fingerprint(world)
+
+
+def test_the_fingerprint_changes_when_a_budget_row_changes_even_below_its_terminal_threshold(
+    world: World, promoted: None
+) -> None:
+    approve_all(world)
+    before = _fingerprint(world)
+    conn = db.connect(world.db)
+    try:
+        with db.transaction(conn):
+            db.bump_budget(conn, LEVEL, SLUG, 1, "review_failures")  # one failure: nowhere near terminal
+    finally:
+        conn.close()
+    assert _fingerprint(world) != before
+
+
+def test_the_fingerprint_changes_when_a_budget_decision_is_recorded(world: World, promoted: None) -> None:
+    approve_all(world)
+    before = _fingerprint(world)
+    conn = db.connect(world.db)
+    try:
+        db.record_budget_operator_decision(conn, LEVEL, SLUG, 1, "one more round", "operator")
+    finally:
+        conn.close()
+    assert _fingerprint(world) != before
+
+
+def test_the_fingerprint_changes_when_a_settle_item_opens_and_not_otherwise(world: World, promoted: None) -> None:
+    approve_all(world)
+    before = _fingerprint(world)
+    assert _fingerprint(world) == before  # reading the fingerprint twice changes nothing
+    conn = db.connect(world.db)
+    try:
+        with db.transaction(conn):
+            db.open_settle_item(
+                conn,
+                ref="R/A/F-1",
+                kind="unsupported_by_source",
+                level=LEVEL,
+                slug=SLUG,
+                lesson_n=1,
+                manifest_sha256=world.digest(1),
+                opened_at="t",
+            )
+    finally:
+        conn.close()
+    assert _fingerprint(world) != before

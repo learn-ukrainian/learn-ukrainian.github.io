@@ -377,6 +377,56 @@ def test_record_closes_item_or_marks_operator_and_refuses_second_attempt(
         )
 
 
+def test_record_retries_after_an_interruption_between_the_save_and_the_outcome(world: World) -> None:
+    reply = world.reply("refuted", _evidence(world))
+    reply_path = world.root / "seat-reply.yaml"
+    reply_path.write_bytes(reply)
+    saved = world.root / "curriculum/l2-uk-en/evidence/a1/_state/fixture-module" / f"settle-{world.item_id}.reply.yaml"
+    saved.parent.mkdir(parents=True, exist_ok=True)
+    settle._save_exclusive(saved, reply)  # the earlier run saved the reply, then was terminated before recording
+    with db.connect(world.db_path) as conn:
+        row = conn.execute("SELECT outcome FROM settle_items WHERE item_id = ?", (world.item_id,)).fetchone()
+        assert row["outcome"] is None
+    assert (
+        settle.record(
+            reply_path,
+            manifest_path=world.manifest,
+            ledger_path=world.own_ledger,
+            db_path=world.db_path,
+            decided_by="language-seat",
+            repo_root=world.root,
+        )
+        == "refuted"
+    )
+    with db.connect(world.db_path) as conn:
+        row = conn.execute("SELECT * FROM settle_items WHERE item_id = ?", (world.item_id,)).fetchone()
+        assert row["outcome"] == "refuted" and row["decided_by"] == "language-seat"
+    assert saved.read_bytes() == reply
+
+
+def test_record_refuses_a_retry_whose_reply_bytes_differ_from_the_one_already_saved(world: World) -> None:
+    reply = world.reply("refuted", _evidence(world))
+    other_reply = world.reply("supported_defect", _evidence(world, "query_pravopys"))
+    reply_path = world.root / "seat-reply.yaml"
+    reply_path.write_bytes(reply)
+    saved = world.root / "curriculum/l2-uk-en/evidence/a1/_state/fixture-module" / f"settle-{world.item_id}.reply.yaml"
+    saved.parent.mkdir(parents=True, exist_ok=True)
+    settle._save_exclusive(saved, other_reply)  # a different reply is already on disk for this item
+    with pytest.raises(settle.SettleError, match="a different reply is already saved"):
+        settle.record(
+            reply_path,
+            manifest_path=world.manifest,
+            ledger_path=world.own_ledger,
+            db_path=world.db_path,
+            decided_by="language-seat",
+            repo_root=world.root,
+        )
+    with db.connect(world.db_path) as conn:
+        row = conn.execute("SELECT outcome FROM settle_items WHERE item_id = ?", (world.item_id,)).fetchone()
+        assert row["outcome"] is None
+    assert saved.read_bytes() == other_reply  # untouched: the retry was refused, not allowed to overwrite it
+
+
 def test_prepare_refuses_missing_span_and_foreign_document(world: World) -> None:
     foreign = world.root / "site/src/content/docs/a1/other-module/2.mdx"
     foreign.parent.mkdir(parents=True)

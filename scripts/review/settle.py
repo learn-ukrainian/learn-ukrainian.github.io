@@ -391,7 +391,13 @@ def record(
         try:
             _save_exclusive(saved, reply_bytes)
         except FileExistsError as exc:
-            raise SettleError("settle reply already saved; no second attempt") from exc
+            # A prior run may have saved this exact reply and been terminated before it recorded the
+            # outcome (the item's outcome is still NULL, per the ``_item`` check above): that retry is
+            # the same reply arriving again, not a second attempt, and must be let through to record().
+            if saved.read_bytes() != reply_bytes:
+                raise SettleError(
+                    f"settle item {item['item_id']}: a different reply is already saved; no second attempt"
+                ) from exc
         try:
             db.record_settle_outcome(conn, item["item_id"], outcome, receipts, decided_by)
         except BaseException:
