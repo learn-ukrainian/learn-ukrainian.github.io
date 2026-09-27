@@ -1,7 +1,7 @@
 placement_table_schema: 1
 source_doc:
   path: docs/best-practices/activity-pedagogy.md
-  sha256: 9d897132343d72e38b4ed78c5c13c095dcd023c8a67330bd9d2dc2836bd6e087
+  sha256: 02a82136a768dcba1bfb36ccdd0eddc75add3d409fa8cf58d42a643f1e456d12
 schema_paths:
   a1: schemas/activities-a1.schema.json
   a2: schemas/activities-a2.schema.json
