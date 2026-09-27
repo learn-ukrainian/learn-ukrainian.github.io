@@ -31,7 +31,7 @@ from scripts.ingest import incremental_historical_source_ingest as ingest
 from scripts.wiki import historical_sources
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_saint_sophia_db_reconciliation_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_saint_sophia_db_reconciliation_v1.schema.json"
 DENOMINATOR_PATH = ROOT / "registry/historical_language_corpus_denominator.yaml"
 COLLECTION_ID = "saint-sophia-inscriptions"
 EXPECTED_ROWS = 4_157

@@ -21,7 +21,7 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_audit_entropy_receipt_v1.schema.json"
 SCHEMA_VERSION = "phase3_audit_entropy_receipt_v1"
 COMMITMENT_SCHEMA_VERSION = "phase3_audit_entropy_commitment_v1"
 COMMITMENT_DIRECTORY = "data/projects/open_model_data/audit_entropy_commitments"

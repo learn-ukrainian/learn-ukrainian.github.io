@@ -31,13 +31,13 @@ def _resolve_root(script_path: Path) -> Path:
     """Resolve the repository root locally and a harmless base remotely."""
     resolved = script_path.resolve()
     for candidate in resolved.parents:
-        if (candidate / "data/projects/open_model_data/contracts").is_dir():
+        if (candidate / "registry/projects/open_model_data/contracts").is_dir():
             return candidate
     return resolved.parent
 
 
 ROOT = _resolve_root(Path(__file__))
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 PLAN_SCHEMA = CONTRACTS / "gemma_hardware_probe_plan_v1.schema.json"
 AUTH_SCHEMA = CONTRACTS / "gemma_hardware_probe_authorization_v1.schema.json"
 RECEIPT_SCHEMA = CONTRACTS / "gemma_hardware_probe_receipt_v1.schema.json"

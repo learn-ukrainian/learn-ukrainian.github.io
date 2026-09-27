@@ -27,7 +27,7 @@ from scripts.projects.open_model_data import phase3_historical_periodization as 
 
 ROOT = Path(__file__).resolve().parents[3]
 SPINE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_evidence_spine_v2.json"
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_historical_evidence_spine_v2.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_historical_evidence_spine_v2.schema.json"
 SCHEMA_VERSION = "phase3_historical_evidence_spine_v2"
 
 EXPECTED_SPINE_SHA256 = "4a7a8f8648a7f5f8bbf05c9a9e60b348a646f054e4e5e69ebf1585447b573891"
@@ -38,22 +38,22 @@ EXPECTED_PROMPT_V3_SHA256 = "5f22c7fc84ce6ca6d497fcf0437d72274a0bdb3aa1cf48cfebf
 EXPECTED_PROMPT_V2_SHA256 = "298591094d1281629ea444707909b679d1a5368f3ad8afddf39120bc0c34532b"
 
 EXPECTED_CODE_BINDINGS = {
-    "data/projects/open_model_data/contracts/phase3_historical_document_chronology_receipt_v2.schema.json": (
+    "registry/projects/open_model_data/contracts/phase3_historical_document_chronology_receipt_v2.schema.json": (
         "b0e19c906b1c487b8ad390987c1c3ba6afc6171afe584170e45ec0497d03e9f6"
     ),
-    "data/projects/open_model_data/contracts/phase3_lavra_near_caves_intake_receipt_v1.schema.json": (
+    "registry/projects/open_model_data/contracts/phase3_lavra_near_caves_intake_receipt_v1.schema.json": (
         "b516cf879c07ea7267f1c1a481f454bc7c4765c5b8e5b94042632436166b25be"
     ),
-    "data/projects/open_model_data/contracts/phase3_spas_catalog_materialization_receipt_v1.schema.json": (
+    "registry/projects/open_model_data/contracts/phase3_spas_catalog_materialization_receipt_v1.schema.json": (
         "63605b8825627701dd696f97a9e29b9ed6a67ad6b4dea0613af7b7af2b99daae"
     ),
-    "data/projects/open_model_data/contracts/phase3_spas_glyph_adapter_receipt_v1.schema.json": (
+    "registry/projects/open_model_data/contracts/phase3_spas_glyph_adapter_receipt_v1.schema.json": (
         "50931ae2ecb7eecad58fa88a902b54838e22ec64f9b23f43832d610f1832f081"
     ),
-    "data/projects/open_model_data/contracts/phase3_spas_layout_candidate_receipt_v1.schema.json": (
+    "registry/projects/open_model_data/contracts/phase3_spas_layout_candidate_receipt_v1.schema.json": (
         "26ad006a4e654f94e18779f8ae21900630660611490ef638ff76f8e490cfc140"
     ),
-    "data/projects/open_model_data/contracts/phase3_spas_source_attribution_receipt_v1.schema.json": (
+    "registry/projects/open_model_data/contracts/phase3_spas_source_attribution_receipt_v1.schema.json": (
         "d8be596ce5ce0cf17e2d133f7b1a863388cdcb1e54f8aefd156d831e94a161a6"
     ),
     "scripts/projects/open_model_data/phase3_historical_document_chronology_source_dates.py": (
@@ -134,22 +134,22 @@ EXPECTED_PRIVATE_RECEIPTS = {
 
 EXPECTED_RECEIPT_SCHEMAS = {
     "historical-document-chronology-source-dates-v2": (
-        ROOT / "data/projects/open_model_data/contracts/phase3_historical_document_chronology_receipt_v2.schema.json"
+        ROOT / "registry/projects/open_model_data/contracts/phase3_historical_document_chronology_receipt_v2.schema.json"
     ),
     "lavra-near-caves-intake-v1": (
-        ROOT / "data/projects/open_model_data/contracts/phase3_lavra_near_caves_intake_receipt_v1.schema.json"
+        ROOT / "registry/projects/open_model_data/contracts/phase3_lavra_near_caves_intake_receipt_v1.schema.json"
     ),
     "spas-catalog-materialization-v1": (
-        ROOT / "data/projects/open_model_data/contracts/phase3_spas_catalog_materialization_receipt_v1.schema.json"
+        ROOT / "registry/projects/open_model_data/contracts/phase3_spas_catalog_materialization_receipt_v1.schema.json"
     ),
     "spas-glyph-adapter-v1": (
-        ROOT / "data/projects/open_model_data/contracts/phase3_spas_glyph_adapter_receipt_v1.schema.json"
+        ROOT / "registry/projects/open_model_data/contracts/phase3_spas_glyph_adapter_receipt_v1.schema.json"
     ),
     "spas-layout-candidates-v1": (
-        ROOT / "data/projects/open_model_data/contracts/phase3_spas_layout_candidate_receipt_v1.schema.json"
+        ROOT / "registry/projects/open_model_data/contracts/phase3_spas_layout_candidate_receipt_v1.schema.json"
     ),
     "spas-source-attribution-v1": (
-        ROOT / "data/projects/open_model_data/contracts/phase3_spas_source_attribution_receipt_v1.schema.json"
+        ROOT / "registry/projects/open_model_data/contracts/phase3_spas_source_attribution_receipt_v1.schema.json"
     ),
 }
 

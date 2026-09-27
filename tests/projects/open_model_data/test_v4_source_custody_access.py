@@ -21,10 +21,10 @@ from scripts.storage.topology import ENV_BULK_ROOT, REQUIRED_BULK_MARKERS
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG_PATH = Path("data/projects/open_model_data/custody/v4_source_custody_access_config_v1.json")
-CONFIG_SCHEMA = Path("data/projects/open_model_data/contracts/v4_source_custody_access_config_v1.schema.json")
-ITEM_SCHEMA = Path("data/projects/open_model_data/contracts/v4_source_custody_access_item_v1.schema.json")
-MISSING_SCHEMA = Path("data/projects/open_model_data/contracts/v4_source_custody_missing_report_v1.schema.json")
-RECEIPT_SCHEMA = Path("data/projects/open_model_data/contracts/v4_source_custody_access_receipt_v1.schema.json")
+CONFIG_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_config_v1.schema.json")
+ITEM_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_item_v1.schema.json")
+MISSING_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_missing_report_v1.schema.json")
+RECEIPT_SCHEMA = Path("registry/projects/open_model_data/contracts/v4_source_custody_access_receipt_v1.schema.json")
 
 
 @pytest.fixture

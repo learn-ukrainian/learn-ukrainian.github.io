@@ -33,7 +33,7 @@ from scripts.projects.open_model_data import v4_stage_evidence as ev
 
 ROOT = Path(__file__).resolve().parents[3]
 ADMISSION = ROOT / "data/projects/open_model_data/admission"
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 A6_RECEIPT_PATH = ADMISSION / "dataset_v4_a6_blind_arena_receipt_v1.json"

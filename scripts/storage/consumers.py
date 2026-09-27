@@ -29,8 +29,34 @@ KNOWN_BASES_BY_PHASE = {
         "DATA_DIR",
         "DATA_ROOT",
         "artifact_path",
+        # Keep pre-split names so the census continues to catch consumers
+        # that have not yet moved off the old shared base.
         "OPEN_MODEL_DATA_DIR",
         "OPEN_MODEL_DATA_ROOT",
+        "REGISTRY_OPEN_MODEL_DATA_DIR",
+        "ARTIFACT_OPEN_MODEL_DATA_DIR",
+        "REGISTRY_COMPONENTS_DIR",
+        "ARTIFACT_COMPONENTS_DIR",
+        "REGISTRY_DECOLONIZATION_DIR",
+        "ARTIFACT_DECOLONIZATION_DIR",
+        "REGISTRY_IDIOMS_DIR",
+        "ARTIFACT_IDIOMS_DIR",
+        "REGISTRY_GRAMMAR_DIR",
+        "ARTIFACT_GRAMMAR_DIR",
+        "REGISTRY_TEXTBOOKS_DIR",
+        "ARTIFACT_TEXTBOOKS_DIR",
+        "REGISTRY_DIALECTS_DIR",
+        "ARTIFACT_DIALECTS_DIR",
+        "REGISTRY_RELEASE_DIR",
+        "ARTIFACT_RELEASE_DIR",
+        "REGISTRY_CORRECTION_PROTECTION_DIR",
+        "ARTIFACT_CORRECTION_PROTECTION_DIR",
+        "REGISTRY_ARCHIVE_DIR",
+        "ARTIFACT_ARCHIVE_DIR",
+        "REGISTRY_ARCHIVED_ULDR_V1_DIR",
+        "ARTIFACT_ARCHIVED_ULDR_V1_DIR",
+        "REGISTRY_QUARANTINED_HISTORICAL_DIR",
+        "ARTIFACT_QUARANTINED_HISTORICAL_DIR",
         "CONTRACTS_DIR",
         "RELEASE_DIR",
         "DEFAULT_CONTRACTS_DIR",
@@ -119,7 +145,26 @@ def _tracked_files(repo_root: Path) -> list[Path]:
     return [repo_root / name.decode("utf-8") for name in result.stdout.split(b"\0") if name]
 
 
-_SCANNED_SUFFIXES = {".py", ".sh", ".ts", ".tsx", ".js", ".mjs", ".yaml", ".yml", ".toml", ".md"}
+_SCANNED_SUFFIXES = {
+    ".py",
+    ".sh",
+    ".ts",
+    ".tsx",
+    ".js",
+    ".mjs",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".md",
+    ".json",
+    ".ipynb",
+    ".txt",
+    ".cfg",
+    ".ini",
+    ".astro",
+    ".mdx",
+}
+_SCANNED_FILENAMES = {"Dockerfile", "Makefile"}
 _SKIPPED_PREFIXES = ("registry/artifacts/", "data/", "curriculum/", "wiki/")
 
 
@@ -241,7 +286,9 @@ def scan_inventory(repo_root: Path, *, phase: str, table: Path | None = None) ->
         if not file_path.is_file() or file_path == table_path:
             continue
         relative = file_path.relative_to(repo_root).as_posix()
-        if relative.startswith(_SKIPPED_PREFIXES) or file_path.suffix not in _SCANNED_SUFFIXES:
+        if relative.startswith(_SKIPPED_PREFIXES) or (
+            file_path.suffix not in _SCANNED_SUFFIXES and file_path.name not in _SCANNED_FILENAMES
+        ):
             continue
         try:
             sources[relative] = file_path.read_text(encoding="utf-8")

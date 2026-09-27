@@ -28,7 +28,7 @@ from jsonschema import Draft202012Validator
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 BUNDLE_SCHEMA = CONTRACTS / "phase3_textbook_nonhit_bundle_v1.schema.json"
 COVERAGE_SCHEMA = CONTRACTS / "correction_protection_coverage_contract_v1.schema.json"
 ROLE_SCHEMA = CONTRACTS / "correction_protection_functional_role_contract_v2_1.schema.json"

@@ -24,7 +24,7 @@ from scripts.projects.open_model_data.v4_human_source_dataset import (
     verify_dataset,
 )
 
-CONTRACTS_DIR = Path("data/projects/open_model_data/contracts")
+CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 DATASET_DIR = Path("data/projects/open_model_data/dataset")
 MANIFEST_PATH = DATASET_DIR / "v4_human_source_dataset_manifest_v1.json"
 RECEIPT_PATH = DATASET_DIR / "v4_human_source_dataset_receipt_v1.json"
@@ -186,7 +186,7 @@ def test_build_dataset_atomic_prewrite_validation_on_denominator_mismatch(tmp_pa
     fake_repo.mkdir(parents=True)
 
     # Recreate input paths in fake_repo
-    contracts_target = fake_repo / "data/projects/open_model_data/contracts"
+    contracts_target = fake_repo / "registry/projects/open_model_data/contracts"
     contracts_target.parent.mkdir(parents=True, exist_ok=True)
     contracts_target.symlink_to((repo_root / CONTRACTS_DIR).resolve())
 
@@ -510,7 +510,7 @@ def test_retains_backups_when_rollback_cannot_restore(tmp_path: Path, monkeypatc
     fake_repo.mkdir(parents=True)
 
     # Recreate input paths in fake_repo
-    contracts_target = fake_repo / "data/projects/open_model_data/contracts"
+    contracts_target = fake_repo / "registry/projects/open_model_data/contracts"
     contracts_target.parent.mkdir(parents=True, exist_ok=True)
     contracts_target.symlink_to((repo_root / CONTRACTS_DIR).resolve())
 

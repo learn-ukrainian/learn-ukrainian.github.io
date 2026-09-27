@@ -45,9 +45,9 @@ from scripts.projects.open_model_data.inventory_existing_assets import WORD_RE
 from scripts.verification.check_ru_morph import get_ru_confidence
 from scripts.verification.vesum import verify_words
 
-CONFIG_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/language_contact_config_v1.schema.json"
-CANDIDATE_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/language_contact_candidate_v1.schema.json"
-RECEIPT_SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/language_contact_receipt_v1.schema.json"
+CONFIG_SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/language_contact_config_v1.schema.json"
+CANDIDATE_SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/language_contact_candidate_v1.schema.json"
+RECEIPT_SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/language_contact_receipt_v1.schema.json"
 DEFAULT_CONFIG_PATH = ROOT / "data/projects/open_model_data/detector/language_contact_config_v1.json"
 DEFAULT_REGRESSION_FIXTURE = ROOT / "data/projects/open_model_data/detector/regression_fixture_v1.json"
 

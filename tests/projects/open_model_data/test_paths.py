@@ -9,47 +9,58 @@ from pathlib import Path
 import pytest
 
 from scripts.projects.open_model_data.paths import (
-    ARCHIVE_DIR,
-    ARCHIVED_ULDR_V1_DIR,
-    COMPONENTS_DIR,
+    ARTIFACT_ARCHIVE_DIR,
+    ARTIFACT_ARCHIVED_ULDR_V1_DIR,
+    ARTIFACT_COMPONENTS_DIR,
+    ARTIFACT_CORRECTION_PROTECTION_DIR,
+    ARTIFACT_OPEN_MODEL_DATA_DIR,
+    ARTIFACT_RELEASE_DIR,
     CONTRACTS_DIR,
-    CORRECTION_PROTECTION_DIR,
-    DECOLONIZATION_DIR,
-    DIALECTS_DIR,
-    GRAMMAR_DIR,
-    IDIOMS_DIR,
-    OPEN_MODEL_DATA_DIR,
-    QUARANTINED_HISTORICAL_DIR,
-    RELEASE_DIR,
+    REGISTRY_ARCHIVE_DIR,
+    REGISTRY_ARCHIVED_ULDR_V1_DIR,
+    REGISTRY_COMPONENTS_DIR,
+    REGISTRY_CORRECTION_PROTECTION_DIR,
+    REGISTRY_DECOLONIZATION_DIR,
+    REGISTRY_DIALECTS_DIR,
+    REGISTRY_GRAMMAR_DIR,
+    REGISTRY_IDIOMS_DIR,
+    REGISTRY_OPEN_MODEL_DATA_DIR,
+    REGISTRY_QUARANTINED_HISTORICAL_DIR,
+    REGISTRY_RELEASE_DIR,
+    REGISTRY_TEXTBOOKS_DIR,
     REPO_ROOT,
-    TEXTBOOKS_DIR,
     ensure_component_directories,
 )
+from scripts.storage.paths import artifact_path
 
 
 def test_paths_relative_hierarchy() -> None:
     """Verify that all paths have the expected parent-child relationships."""
-    assert OPEN_MODEL_DATA_DIR == REPO_ROOT / "data" / "projects" / "open_model_data"
-    assert COMPONENTS_DIR == OPEN_MODEL_DATA_DIR / "components"
-    assert DECOLONIZATION_DIR == COMPONENTS_DIR / "decolonization"
-    assert IDIOMS_DIR == COMPONENTS_DIR / "idioms"
-    assert GRAMMAR_DIR == COMPONENTS_DIR / "grammar"
-    assert TEXTBOOKS_DIR == COMPONENTS_DIR / "textbooks"
-    assert DIALECTS_DIR == COMPONENTS_DIR / "dialects"
-
-    assert RELEASE_DIR == OPEN_MODEL_DATA_DIR / "release"
-    assert CORRECTION_PROTECTION_DIR == RELEASE_DIR / "correction_protection_v1"
-
-    assert ARCHIVE_DIR == OPEN_MODEL_DATA_DIR / "archive"
-    assert ARCHIVED_ULDR_V1_DIR == ARCHIVE_DIR / "uldr_v1_production"
-    assert QUARANTINED_HISTORICAL_DIR == ARCHIVE_DIR / "quarantined_historical"
-
-    assert CONTRACTS_DIR == OPEN_MODEL_DATA_DIR / "contracts"
+    assert REGISTRY_OPEN_MODEL_DATA_DIR == REPO_ROOT / "registry" / "projects" / "open_model_data"
+    assert ARTIFACT_OPEN_MODEL_DATA_DIR == REPO_ROOT / "data" / "projects" / "open_model_data"
+    for registry, artifact in (
+        (REGISTRY_COMPONENTS_DIR, ARTIFACT_COMPONENTS_DIR),
+        (REGISTRY_RELEASE_DIR, ARTIFACT_RELEASE_DIR),
+        (REGISTRY_ARCHIVE_DIR, ARTIFACT_ARCHIVE_DIR),
+    ):
+        assert registry.parent == REGISTRY_OPEN_MODEL_DATA_DIR
+        assert artifact.parent == ARTIFACT_OPEN_MODEL_DATA_DIR
+    assert REGISTRY_DECOLONIZATION_DIR == REGISTRY_COMPONENTS_DIR / "decolonization"
+    assert REGISTRY_IDIOMS_DIR == REGISTRY_COMPONENTS_DIR / "idioms"
+    assert REGISTRY_GRAMMAR_DIR == REGISTRY_COMPONENTS_DIR / "grammar"
+    assert REGISTRY_TEXTBOOKS_DIR == REGISTRY_COMPONENTS_DIR / "textbooks"
+    assert REGISTRY_DIALECTS_DIR == REGISTRY_COMPONENTS_DIR / "dialects"
+    assert REGISTRY_CORRECTION_PROTECTION_DIR == REGISTRY_RELEASE_DIR / "correction_protection_v1"
+    assert ARTIFACT_CORRECTION_PROTECTION_DIR == ARTIFACT_RELEASE_DIR / "correction_protection_v1"
+    assert REGISTRY_ARCHIVED_ULDR_V1_DIR == REGISTRY_ARCHIVE_DIR / "uldr_v1_production"
+    assert ARTIFACT_ARCHIVED_ULDR_V1_DIR == ARTIFACT_ARCHIVE_DIR / "uldr_v1_production"
+    assert REGISTRY_QUARANTINED_HISTORICAL_DIR == REGISTRY_ARCHIVE_DIR / "quarantined_historical"
+    assert CONTRACTS_DIR == REGISTRY_OPEN_MODEL_DATA_DIR / "contracts"
 
 
 def test_tombstone_exists_in_archived_uldr_v1() -> None:
     """Verify that uldr_v1_production carries its tombstone."""
-    tombstone = ARCHIVED_ULDR_V1_DIR / "TOMBSTONE.md"
+    tombstone = REGISTRY_ARCHIVED_ULDR_V1_DIR / "TOMBSTONE.md"
     assert tombstone.is_file()
     content = tombstone.read_text(encoding="utf-8")
     assert "TOMBSTONE" in content
@@ -58,9 +69,9 @@ def test_tombstone_exists_in_archived_uldr_v1() -> None:
 
 def test_active_correction_protection_intact() -> None:
     """Verify that correction_protection_v1 is intact in release/."""
-    assert CORRECTION_PROTECTION_DIR.is_dir()
-    assert (CORRECTION_PROTECTION_DIR / "cases.jsonl").is_file()
-    assert (CORRECTION_PROTECTION_DIR / "receipt.json").is_file()
+    assert REGISTRY_CORRECTION_PROTECTION_DIR.is_dir()
+    assert artifact_path("open_model_release_payload", "projects/open_model_data/release/correction_protection_v1/cases.jsonl").is_file()
+    assert (REGISTRY_CORRECTION_PROTECTION_DIR / "receipt.json").is_file()
 
 
 def test_ensure_component_directories(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -68,12 +79,11 @@ def test_ensure_component_directories(tmp_path: Path, monkeypatch: pytest.Monkey
     import scripts.projects.open_model_data.paths as paths_mod
 
     test_components = tmp_path / "components"
-    monkeypatch.setattr(paths_mod, "COMPONENTS_DIR", test_components)
-    monkeypatch.setattr(paths_mod, "DECOLONIZATION_DIR", test_components / "decolonization")
-    monkeypatch.setattr(paths_mod, "IDIOMS_DIR", test_components / "idioms")
-    monkeypatch.setattr(paths_mod, "GRAMMAR_DIR", test_components / "grammar")
-    monkeypatch.setattr(paths_mod, "TEXTBOOKS_DIR", test_components / "textbooks")
-    monkeypatch.setattr(paths_mod, "DIALECTS_DIR", test_components / "dialects")
+    monkeypatch.setattr(paths_mod, "REGISTRY_DECOLONIZATION_DIR", test_components / "decolonization")
+    monkeypatch.setattr(paths_mod, "REGISTRY_IDIOMS_DIR", test_components / "idioms")
+    monkeypatch.setattr(paths_mod, "REGISTRY_GRAMMAR_DIR", test_components / "grammar")
+    monkeypatch.setattr(paths_mod, "REGISTRY_TEXTBOOKS_DIR", test_components / "textbooks")
+    monkeypatch.setattr(paths_mod, "REGISTRY_DIALECTS_DIR", test_components / "dialects")
 
     ensure_component_directories()
 
@@ -91,22 +101,22 @@ def test_is_archived_or_quarantined_path() -> None:
         is_archived_or_quarantined_path,
     )
 
-    assert is_archived_or_quarantined_path(ARCHIVE_DIR) is True
-    assert is_archived_or_quarantined_path(ARCHIVED_ULDR_V1_DIR) is True
-    assert is_archived_or_quarantined_path(ARCHIVED_ULDR_V1_DIR / "sft") is True
-    assert is_archived_or_quarantined_path(ARCHIVED_ULDR_V1_DIR / "sft" / "shard_1.jsonl") is True
-    assert is_archived_or_quarantined_path(QUARANTINED_HISTORICAL_DIR) is True
+    for archive in (REGISTRY_ARCHIVE_DIR, ARTIFACT_ARCHIVE_DIR):
+        assert is_archived_or_quarantined_path(archive) is True
+    assert is_archived_or_quarantined_path(REGISTRY_ARCHIVED_ULDR_V1_DIR) is True
+    assert is_archived_or_quarantined_path(ARTIFACT_ARCHIVED_ULDR_V1_DIR / "sft" / "shard_1.jsonl") is True
+    assert is_archived_or_quarantined_path(REGISTRY_QUARANTINED_HISTORICAL_DIR) is True
 
-    assert is_archived_or_quarantined_path(RELEASE_DIR) is False
-    assert is_archived_or_quarantined_path(CORRECTION_PROTECTION_DIR) is False
-    assert is_archived_or_quarantined_path(COMPONENTS_DIR) is False
+    assert is_archived_or_quarantined_path(REGISTRY_RELEASE_DIR) is False
+    assert is_archived_or_quarantined_path(REGISTRY_CORRECTION_PROTECTION_DIR) is False
+    assert is_archived_or_quarantined_path(REGISTRY_COMPONENTS_DIR) is False
     assert is_archived_or_quarantined_path(None) is False
 
     with pytest.raises(ValueError, match="Prohibited"):
-        assert_not_archived_path(ARCHIVED_ULDR_V1_DIR / "sft", context="test")
+        assert_not_archived_path(ARTIFACT_ARCHIVED_ULDR_V1_DIR / "sft", context="test")
 
     # Should not raise
-    assert_not_archived_path(CORRECTION_PROTECTION_DIR, context="test")
+    assert_not_archived_path(REGISTRY_CORRECTION_PROTECTION_DIR, context="test")
     assert_not_archived_path(None, context="test")
 
 
@@ -131,7 +141,7 @@ def test_dialect_builder_refuses_archive_replay(isolated_vesum_db: Path) -> None
             vesum_db=isolated_vesum_db,
             sft_dialect_quota=0,
             replay_quota=10,
-            replay_shards_dir=ARCHIVED_ULDR_V1_DIR / "sft",
+            replay_shards_dir=ARTIFACT_ARCHIVED_ULDR_V1_DIR / "sft",
         )
 
 

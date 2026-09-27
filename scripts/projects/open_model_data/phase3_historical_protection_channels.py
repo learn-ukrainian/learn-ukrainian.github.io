@@ -17,8 +17,11 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from scripts.storage.artifacts import write_artifact_set
+from scripts.storage.paths import artifact_set
+
 ROOT = Path(__file__).resolve().parents[3]
-DATA = ROOT / "data/projects/open_model_data"
+DATA = ROOT / "registry/projects/open_model_data"
 ADMISSION = DATA / "admission"
 CONTRACTS = DATA / "contracts"
 EVIDENCE = DATA / "evidence"
@@ -115,6 +118,7 @@ def _bound_artifact_paths() -> dict[str, Path]:
     paths[SCHEMA_BINDING_NAME] = SCHEMA_PATH
     return paths
 
+
 HISTORICAL_CLASSES = (
     "old_east_slavic_kyivan_rus",
     "middle_ukrainian",
@@ -184,7 +188,12 @@ def sha256_file(path: Path) -> str:
 
 
 def artifact(path: Path) -> dict[str, str]:
-    return {"path": path.relative_to(ROOT).as_posix(), "sha256": sha256_file(path)}
+    relative = path.relative_to(ROOT).as_posix()
+    # Frozen upstream K bindings retain their logical path spelling while the
+    # source bytes are read from the registry location after P3 migration.
+    if relative.startswith("registry/projects/open_model_data/"):
+        relative = relative.replace("registry/projects/open_model_data/", "data/projects/open_model_data/", 1)
+    return {"path": relative, "sha256": sha256_file(path)}
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -265,7 +274,10 @@ def _pinned_inputs() -> dict[str, dict[str, Any]]:
     ):
         raise ValueError("p1_amendment_binding_drift")
     amendment_body = amendment.get("amendment", {})
-    if amendment_body.get("composite_required_cell_count") != 16 or amendment_body.get("base_required_cell_count") != 15:
+    if (
+        amendment_body.get("composite_required_cell_count") != 16
+        or amendment_body.get("base_required_cell_count") != 15
+    ):
         raise ValueError("p1_amendment_denominator_drift")
 
     p2_binding = p2.get("p1_binding", {})
@@ -408,7 +420,10 @@ def _channels() -> list[dict[str, Any]]:
         {
             "channel_id": "old_east_slavic_kyivan_rus",
             "protected_identity": "old_east_slavic_kyivan_rus",
-            "source_unit_ids": [_source_ref("saint-sophia-inscriptions"), _source_ref("ud-old-east-slavic-ruthenian-05a029e00ccf")],
+            "source_unit_ids": [
+                _source_ref("saint-sophia-inscriptions"),
+                _source_ref("ud-old-east-slavic-ruthenian-05a029e00ccf"),
+            ],
             "status": "coverage_blocked",
             "blocker_codes": [
                 "qualified_historical_review_pending",
@@ -693,7 +708,9 @@ def validate_contract_integrity(contract: Mapping[str, Any]) -> bool:
         return False
     try:
         expected = build_contract()
-        return canonical_json(dict(contract)) == canonical_json(expected) and contract.get("receipt_sha256") == _receipt_sha256(contract)
+        return canonical_json(dict(contract)) == canonical_json(expected) and contract.get(
+            "receipt_sha256"
+        ) == _receipt_sha256(contract)
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
         return False
 
@@ -764,7 +781,12 @@ def _validate_invariants(record: Mapping[str, Any]) -> bool:
 
 def _validate_layers(record: Mapping[str, Any]) -> bool:
     layers = record.get("language_layer_ids")
-    if not isinstance(layers, list) or not layers or len(set(layers)) != len(layers) or not all(_is_identifier(item) for item in layers):
+    if (
+        not isinstance(layers, list)
+        or not layers
+        or len(set(layers)) != len(layers)
+        or not all(_is_identifier(item) for item in layers)
+    ):
         return False
     return record.get("mixed_layers_allowed") is True and record.get("single_label_forced") is False
 
@@ -796,7 +818,10 @@ def _validate_evidence_refs(record: Mapping[str, Any], contract: Mapping[str, An
     record_source_units = record.get("source_unit_ids")
     if not isinstance(record_source_units, list) or not record_source_units:
         return False
-    if len(set(record_source_units)) != len(record_source_units) or not set(record_source_units) <= allowed_source_units:
+    if (
+        len(set(record_source_units)) != len(record_source_units)
+        or not set(record_source_units) <= allowed_source_units
+    ):
         return False
     seen: set[str] = set()
     referenced_source_units: set[str] = set()
@@ -817,14 +842,24 @@ def _validate_evidence_refs(record: Mapping[str, Any], contract: Mapping[str, An
         evidence_id = ref.get("evidence_ref_id")
         source_unit_id = ref.get("source_unit_id")
         role = ref.get("claim_role")
-        if not _is_identifier(evidence_id) or evidence_id in seen or role not in CLAIM_ROLES or source_unit_id not in allowed_source_units:
+        if (
+            not _is_identifier(evidence_id)
+            or evidence_id in seen
+            or role not in CLAIM_ROLES
+            or source_unit_id not in allowed_source_units
+        ):
             return False
         unit = units.get(source_unit_id)
         if unit is None or ref.get("source_unit_identity_sha256") != unit.get("source_identity_sha256"):
             return False
-        if ref.get("source_artifact_sha256") != unit.get("source_artifact_sha256") or ref.get("provenance_sha256") != unit.get("provenance_sha256"):
+        if ref.get("source_artifact_sha256") != unit.get("source_artifact_sha256") or ref.get(
+            "provenance_sha256"
+        ) != unit.get("provenance_sha256"):
             return False
-        if not all(_is_sha256(ref.get(key)) for key in ("source_unit_identity_sha256", "source_artifact_sha256", "provenance_sha256")):
+        if not all(
+            _is_sha256(ref.get(key))
+            for key in ("source_unit_identity_sha256", "source_artifact_sha256", "provenance_sha256")
+        ):
             return False
         seen.add(evidence_id)
         referenced_source_units.add(source_unit_id)
@@ -1006,7 +1041,9 @@ def validate_historical_disposition(record: Mapping[str, Any], contract: Mapping
     return validate_disposition_record(record, contract)
 
 
-def build_coverage_blocked_record(channel_id: str, blocker_code: str = "qualified_historical_review_pending") -> dict[str, Any]:
+def build_coverage_blocked_record(
+    channel_id: str, blocker_code: str = "qualified_historical_review_pending"
+) -> dict[str, Any]:
     """Create a deterministic safe fixture/receipt record without source text."""
 
     return {
@@ -1055,7 +1092,29 @@ def build_unresolved_record(channel_id: str, *, abstention: bool = False) -> dic
 
 def write_contract(path: Path = OUTPUT) -> dict[str, Any]:
     contract = build_contract()
-    path.write_bytes(canonical_json(contract))
+    content = canonical_json(contract)
+    registry = ROOT / "registry/projects/open_model_data"
+    resolved = path.resolve()
+    if resolved == OUTPUT:
+        relative = path.relative_to(ROOT).as_posix()
+        snapshot = artifact_set("open_model_other_indexes", repo=ROOT)
+        expected = snapshot.manifest["set_descriptor"]["companions"][relative]
+        digest = hashlib.sha256((json.dumps(snapshot.manifest, indent=2, sort_keys=True) + "\n").encode()).hexdigest()
+        write_artifact_set(
+            ROOT,
+            "open_model_other_indexes",
+            "phase3_historical_protection_channels",
+            {},
+            expected_hashes={},
+            expected_members={entry["path"][5:] for entry in snapshot.manifest["entries"]},
+            companions={relative: (expected, lambda staged: staged.write_bytes(content))},
+            expected_manifest=digest,
+        )
+    else:
+        if path.absolute().is_relative_to(registry) or resolved.is_relative_to(registry):
+            raise ValueError(f"unbound managed protection output: {path}")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
     return contract
 
 

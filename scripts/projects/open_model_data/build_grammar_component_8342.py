@@ -25,6 +25,7 @@ import math
 import re
 import sqlite3
 import sys
+import tempfile
 import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -50,6 +51,65 @@ from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     format_query_template,
     resolve_specific_linguistic_citation,
 )
+from scripts.storage import paths as storage_paths
+from scripts.storage.artifacts import write_artifact_set
+
+_COMPONENT_GROUP = "open_model_component_payload"
+_GRAMMAR_REL = "projects/open_model_data/components/grammar"
+
+
+def _managed_grammar_destination(output_dir: Path) -> bool:
+    """Recognize only the two canonical halves of the migrated grammar directory."""
+    data = PROJECT_ROOT / "data" / _GRAMMAR_REL
+    registry = PROJECT_ROOT / "registry" / _GRAMMAR_REL
+    lexical = output_dir.absolute()
+    resolved = output_dir.resolve()
+    if lexical != resolved and (lexical in {data, registry} or resolved in {data, registry}):
+        raise ValueError(f"managed grammar output reached through a symlink: {output_dir}")
+    if lexical in {data, registry}:
+        return True
+    if lexical.is_relative_to(PROJECT_ROOT / "data/projects/open_model_data") or lexical.is_relative_to(
+        PROJECT_ROOT / "registry/projects/open_model_data"
+    ):
+        raise ValueError(f"unsupported managed grammar output directory: {output_dir}")
+    return False
+
+
+def _publish_grammar_outputs(stage: Path) -> None:
+    manifest = storage_paths.load_manifest(_COMPONENT_GROUP, PROJECT_ROOT)
+    prior = {entry["path"][5:]: entry["sha256"] for entry in manifest["entries"]}
+    files = {path.name: path for path in stage.iterdir() if path.is_file()}
+    shards = {name for name in files if re.fullmatch(r"grammar_(?:train|eval)_shard_\d+_of_\d+\.jsonl", name)}
+    expected = shards | {"candidate_exclusion_accounting.json"}
+    if set(files) != expected | {"cases.json", "manifest.json"} or not shards:
+        raise ValueError("incomplete staged grammar component output")
+    for name in shards:
+        if not files[name].read_bytes().strip():
+            raise ValueError(f"empty staged grammar shard: {name}")
+    declared = json.loads(files["manifest.json"].read_text(encoding="utf-8"))["payload_sha256"]
+    actual = {name: hashlib.sha256(files[name].read_bytes()).hexdigest() for name in expected}
+    if declared != actual:
+        raise ValueError("staged grammar manifest payload hashes disagree")
+    prefix = f"{_GRAMMAR_REL}/"
+    writes = {prefix + name: (lambda target, source=files[name]: target.write_bytes(source.read_bytes())) for name in expected}
+    old_shards = {
+        rel: sha for rel, sha in prior.items()
+        if rel.startswith(prefix + "grammar_") and re.fullmatch(r"grammar_(?:train|eval)_shard_\d+_of_\d+\.jsonl", rel.removeprefix(prefix))
+    }
+    removals = {rel: sha for rel, sha in old_shards.items() if rel not in writes}
+    companions = {
+        f"registry/{prefix}{name}": (
+            storage_paths.hash_file(PROJECT_ROOT / f"registry/{prefix}{name}")
+            if (PROJECT_ROOT / f"registry/{prefix}{name}").exists() else None,
+            lambda target, source=files[name]: target.write_bytes(source.read_bytes()),
+        )
+        for name in ("cases.json", "manifest.json")
+    }
+    write_artifact_set(
+        PROJECT_ROOT, _COMPONENT_GROUP, "build_grammar_component_8342.py", writes,
+        expected_hashes={rel: prior.get(rel) for rel in writes},
+        expected_members=set(prior), removals=removals, companions=companions,
+    )
 
 
 def resolve_data_path(rel_path: str) -> Path:
@@ -73,15 +133,16 @@ DEFAULT_UA_GEC_TRAIN_M2 = resolve_data_path("data/ua-gec/data/gec-fluency/train/
 DEFAULT_UA_GEC_TEST_M2 = resolve_data_path("data/ua-gec/data/gec-fluency/test/gec-fluency.test.m2")
 DEFAULT_FIREWALL_MANIFEST = (
     PROJECT_ROOT
-    / "data"
+    / "registry"
     / "projects"
     / "open_model_data"
     / "components"
     / "grammar"
     / "grammar_held_out_firewall_manifest.json"
 )
-DEFAULT_BROWN_UK_EVAL = resolve_data_path(
-    "data/projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl"
+DEFAULT_BROWN_UK_EVAL = (
+    PROJECT_ROOT
+    / "data/projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl"
 )
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "components" / "grammar"
 
@@ -3964,8 +4025,15 @@ def load_brown_uk_controls(
     vesum_cur: sqlite3.Cursor | None = None,
 ) -> list[dict[str, Any]]:
     """Load pristine control sentences with authentic attribution from Brown-UK corpus."""
+    managed = PROJECT_ROOT / "data/projects/open_model_data"
+    if brown_path.absolute().is_relative_to(managed):
+        rel = brown_path.absolute().relative_to(PROJECT_ROOT / "data").as_posix()
+        brown_path = storage_paths.artifact_path("open_model_release_payload", rel, repo=PROJECT_ROOT)
     if not brown_path.is_file():
-        raise RuntimeError(f"Required Brown-UK control file missing at {brown_path}")
+        raise RuntimeError(
+            f"Required Brown-UK control file missing at {brown_path}; "
+            "hydrate the required artifact group before building"
+        )
     controls = []
     brown_doc_counters: Counter[str] = Counter()
     with brown_path.open("r", encoding="utf-8") as f:
@@ -4099,6 +4167,27 @@ def build_grammar_dataset(
     firewall_manifest_path: Path = DEFAULT_FIREWALL_MANIFEST,
     brown_path: Path = DEFAULT_BROWN_UK_EVAL,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
+) -> dict[str, Any]:
+    """Build externally or stage and publish the complete managed component set."""
+    if _managed_grammar_destination(output_dir):
+        with tempfile.TemporaryDirectory(prefix="grammar-component-stage-") as temporary:
+            stage = Path(temporary)
+            result = _build_grammar_dataset_direct(
+                train_m2_path, test_m2_path, firewall_manifest_path, brown_path, stage
+            )
+            _publish_grammar_outputs(stage)
+            return result
+    return _build_grammar_dataset_direct(
+        train_m2_path, test_m2_path, firewall_manifest_path, brown_path, output_dir
+    )
+
+
+def _build_grammar_dataset_direct(
+    train_m2_path: Path,
+    test_m2_path: Path,
+    firewall_manifest_path: Path,
+    brown_path: Path,
+    output_dir: Path,
 ) -> dict[str, Any]:
     """Execute complete dataset build pipeline."""
     print("🚀 Initializing Grammar Component Build (#8342)...")
@@ -5205,6 +5294,10 @@ def build_grammar_dataset(
 
     manifest = {
         "dataset_name": "grammar_v1",
+        "payload_sha256": {
+            name: hashlib.sha256((output_dir / name).read_bytes()).hexdigest()
+            for name in sorted(manifest_splits | {"candidate_exclusion_accounting.json": "accounting"})
+        },
         "version": "1.0.0",
         "task_type": "correction",
         "has_evaluation_split": True,
@@ -5282,14 +5375,25 @@ def build_grammar_dataset(
     return manifest
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Build Grammar Component Dataset (#8342)")
-    parser.add_argument("--train-m2", type=Path, default=DEFAULT_UA_GEC_TRAIN_M2)
-    parser.add_argument("--test-m2", type=Path, default=DEFAULT_UA_GEC_TEST_M2)
-    parser.add_argument("--firewall-manifest", type=Path, default=DEFAULT_FIREWALL_MANIFEST)
-    parser.add_argument("--brown", type=Path, default=DEFAULT_BROWN_UK_EVAL)
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    args = parser.parse_args()
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Build the verified grammar component. Use managed output after hydrating its artifact groups.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_grammar_component_8342 --output-dir /tmp/grammar-export\n"
+            "Outputs: managed A shards and K companions as one transaction, or an explicit external directory.\n"
+            "Exit codes: 0 = success; nonzero = input, validation, or publication failure.\n"
+            "Related: issues #8342 and #8809."
+        ),
+    )
+    parser.add_argument("--train-m2", type=Path, default=DEFAULT_UA_GEC_TRAIN_M2, help="UA-GEC training M2 (default: resolved corpus path).")
+    parser.add_argument("--test-m2", type=Path, default=DEFAULT_UA_GEC_TEST_M2, help="Held-out UA-GEC test M2 (default: resolved corpus path).")
+    parser.add_argument("--firewall-manifest", type=Path, default=DEFAULT_FIREWALL_MANIFEST, help="Committed held-out firewall manifest (default: registry component).")
+    parser.add_argument("--brown", type=Path, default=DEFAULT_BROWN_UK_EVAL, help="Verified Brown-UK control JSONL (default: release artifact).")
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Output directory (default: managed grammar component).")
+    args = parser.parse_args(argv)
 
     build_grammar_dataset(
         train_m2_path=args.train_m2,
@@ -5298,3 +5402,8 @@ if __name__ == "__main__":
         brown_path=args.brown,
         output_dir=args.output_dir,
     )
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

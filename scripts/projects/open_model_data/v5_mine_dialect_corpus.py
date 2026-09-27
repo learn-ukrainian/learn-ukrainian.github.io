@@ -28,6 +28,7 @@ import os
 import re
 import sqlite3
 import sys
+import tempfile
 import unicodedata
 from collections import defaultdict
 from dataclasses import asdict, dataclass
@@ -44,6 +45,8 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 
 from scripts.projects.open_model_data.paths import assert_not_archived_path
+from scripts.storage import paths as storage_paths
+from scripts.storage.artifacts import write_artifact_set
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
@@ -80,13 +83,74 @@ def resolve_data_path(rel_path: str) -> Path:
     return REPO_ROOT / rel_path
 
 
-DEFAULT_CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
-DEFAULT_RELEASE_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v03_dialect"
+DEFAULT_CONTRACTS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "contracts"
+_RELEASE_GROUP = "open_model_release_payload"
+_DIALECT_RELEASE_REL = "projects/open_model_data/release/uldr_v03_dialect"
+_DIALECT_PAYLOADS = (
+    "dialect_corpus_expanded_1500.jsonl",
+    "sft_dialect_protection_500.jsonl",
+)
+_DIALECT_COMPANIONS = (
+    "dialect_corpus_expanded_1500.sha256",
+    "sft_dialect_protection_500.sha256",
+    "release_receipt.json",
+    "release_receipt.json.sha256",
+)
 DEFAULT_SOURCES_DB = REPO_ROOT / "data" / "sources.db"
 DEFAULT_VESUM_DB = REPO_ROOT / "data" / "vesum.db"
 EVAL_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_multizone_evaluation_record.schema.json"
 RECEIPT_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_multizone_release_receipt.schema.json"
 TRAJECTORY_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
+
+
+def _default_release_dir(repo: Path = REPO_ROOT) -> Path:
+    return storage_paths.artifact_path(
+        _RELEASE_GROUP,
+        f"{_DIALECT_RELEASE_REL}/{_DIALECT_PAYLOADS[0]}",
+        repo=repo,
+    ).parent
+
+
+def _managed_release_dir(output_dir: Path, repo: Path = REPO_ROOT) -> Path | None:
+    lexical = Path(os.path.abspath(output_dir))
+    resolved = output_dir.resolve()
+    managed_roots = (repo / "data/projects/open_model_data", repo / "registry/projects/open_model_data")
+    if not any(lexical.is_relative_to(root) or resolved.is_relative_to(root) for root in managed_roots):
+        return None
+    canonical = _default_release_dir(repo)
+    if lexical != resolved and (lexical == canonical or resolved == canonical):
+        raise ValueError(f"managed dialect output reached through a symlink: {output_dir}")
+    if lexical == canonical:
+        return canonical
+    raise ValueError(f"unsupported managed dialect output directory: {output_dir}")
+
+
+def _publish_dialect_stage(stage: Path, repo: Path = REPO_ROOT) -> None:
+    snapshot = storage_paths.artifact_set(_RELEASE_GROUP, repo=repo)
+    prior = {entry["path"][5:]: entry["sha256"] for entry in snapshot.manifest["entries"]}
+    prefix = f"{_DIALECT_RELEASE_REL}/"
+    writes = {
+        prefix + name: (lambda target, source=stage / name: target.write_bytes(source.read_bytes()))
+        for name in _DIALECT_PAYLOADS
+    }
+    companions = {
+        f"registry/{prefix}{name}": (
+            storage_paths.hash_file(repo / f"registry/{prefix}{name}")
+            if (repo / f"registry/{prefix}{name}").is_file()
+            else None,
+            lambda target, source=stage / name: target.write_bytes(source.read_bytes()),
+        )
+        for name in _DIALECT_COMPANIONS
+    }
+    write_artifact_set(
+        repo,
+        _RELEASE_GROUP,
+        "v5_mine_dialect_corpus.py",
+        writes,
+        expected_hashes={rel: prior.get(rel) for rel in writes},
+        expected_members=set(prior),
+        companions=companions,
+    )
 
 V02_BASELINE_SUITE_PATH = (
     REPO_ROOT
@@ -1230,11 +1294,33 @@ def verify_modern_literary_regression(
 def execute_mining_and_release(
     db_path: Path = DEFAULT_SOURCES_DB,
     vesum_db: Path = DEFAULT_VESUM_DB,
-    output_dir: Path = DEFAULT_RELEASE_DIR,
+    output_dir: Path | None = None,
     replay_quota: int = 0,
     replay_shards_dir: Path | None = None,
+    *,
+    _managed_logical_dir: Path | None = None,
+    _repo: Path = REPO_ROOT,
 ) -> dict[str, Any]:
     """Execute full mining pipeline, lemma partitioning, schema validation, and artifact delivery."""
+    if output_dir is None:
+        output_dir = _default_release_dir(_repo)
+    if _managed_logical_dir is None:
+        managed = _managed_release_dir(output_dir, _repo)
+        if managed is not None:
+            with tempfile.TemporaryDirectory(prefix="dialect-release-stage-") as temporary:
+                stage = Path(temporary)
+                receipt = execute_mining_and_release(
+                    db_path=db_path,
+                    vesum_db=vesum_db,
+                    output_dir=stage,
+                    replay_quota=replay_quota,
+                    replay_shards_dir=replay_shards_dir,
+                    _managed_logical_dir=managed,
+                    _repo=_repo,
+                )
+                _publish_dialect_stage(stage, _repo)
+            return receipt
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"Mining authentic dialect candidates from {db_path}...")
@@ -1308,12 +1394,12 @@ def execute_mining_and_release(
             mixed_count += 1
 
     try:
-        eval_file_rel = str(eval_file.relative_to(REPO_ROOT))
+        eval_file_rel = str(((_managed_logical_dir or output_dir) / eval_file.name).relative_to(_repo))
     except ValueError:
         eval_file_rel = str(eval_file)
 
     try:
-        sft_file_rel = str(sft_file.relative_to(REPO_ROOT))
+        sft_file_rel = str(((_managed_logical_dir or output_dir) / sft_file.name).relative_to(_repo))
     except ValueError:
         sft_file_rel = str(sft_file)
 
@@ -1370,21 +1456,25 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Phase 5.6: Dialect Corpus Mining, SFT Defense Trajectories & Multi-Zone Evaluation")
     parser.add_argument("--db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_RELEASE_DIR, help="Output directory for release artifacts")
+    parser.add_argument("--output-dir", type=Path, default=None, help="Output directory for release artifacts")
     parser.add_argument("--replay-quota", type=int, default=0, help="Quota for verified anti-calque replay trajectories (default: 0)")
     parser.add_argument("--replay-shards-dir", type=Path, default=None, help="Directory containing non-archived verified replay JSONL shards")
     parser.add_argument("--evaluate", action="store_true", help="Run multi-zone benchmark evaluation")
     parser.add_argument("--predictions", type=Path, default=None, help="Path to JSONL file containing model predictions to evaluate")
     args = parser.parse_args()
 
+    if args.evaluate and args.predictions is not None and not args.predictions.exists():
+        raise FileNotFoundError(f"Predictions file not found: {args.predictions}")
+    output_dir = args.output_dir if args.output_dir is not None else _default_release_dir()
+
     if args.evaluate:
-        eval_path = args.output_dir / "dialect_corpus_expanded_1500.jsonl"
+        eval_path = output_dir / "dialect_corpus_expanded_1500.jsonl"
         if not eval_path.exists():
             print(f"Evaluation benchmark not found at {eval_path}. Running mining first...")
             execute_mining_and_release(
                 args.db,
                 args.vesum_db,
-                args.output_dir,
+                output_dir,
                 replay_quota=args.replay_quota,
                 replay_shards_dir=args.replay_shards_dir,
             )
@@ -1393,8 +1483,6 @@ def main() -> None:
 
         preds = None
         if args.predictions is not None:
-            if not args.predictions.exists():
-                raise FileNotFoundError(f"Predictions file not found: {args.predictions}")
             preds = {}
             for line in args.predictions.read_text(encoding="utf-8").splitlines():
                 if line.strip():
@@ -1422,7 +1510,7 @@ def main() -> None:
         execute_mining_and_release(
             args.db,
             args.vesum_db,
-            args.output_dir,
+            output_dir,
             replay_quota=args.replay_quota,
             replay_shards_dir=args.replay_shards_dir,
         )

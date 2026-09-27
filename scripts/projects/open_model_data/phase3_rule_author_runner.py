@@ -31,7 +31,7 @@ from scripts.projects.open_model_data import phase3_rule_author_packets as packe
 
 ROOT = Path(__file__).resolve().parents[3]
 SCRIPT_PATH = "scripts/projects/open_model_data/phase3_rule_author_runner.py"
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_rule_author_run_manifest_v1.schema.json"
 VERSION = "phase3_rule_author_runner_v1"
 PRIVATE_MODE = 0o700
 FILE_MODE = 0o600

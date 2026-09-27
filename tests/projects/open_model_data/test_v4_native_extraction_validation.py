@@ -313,7 +313,7 @@ def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, re
     ci_root = tmp_path / "ci_runner"
     # Copy only schemas, config, and extraction artifacts (no sources.db)
     for sub in [
-        "data/projects/open_model_data/contracts",
+        "registry/projects/open_model_data/contracts",
         "data/projects/open_model_data/extraction",
     ]:
         dest = ci_root / sub

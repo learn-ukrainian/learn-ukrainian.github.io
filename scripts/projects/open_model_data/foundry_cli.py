@@ -29,7 +29,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from scripts.projects.open_model_data import model_view_exporter as exporter
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 INPUT_SCHEMA = CONTRACTS / "portable_corpus_record_v1.schema.json"
 RECEIPT_SCHEMA = CONTRACTS / "foundry_run_receipt_v1.schema.json"
 DETECTOR_CONFIG = ROOT / "data/projects/open_model_data/detector/language_contact_config_v1.json"

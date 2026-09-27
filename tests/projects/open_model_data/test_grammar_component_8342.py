@@ -23,6 +23,7 @@ from unittest import mock
 
 import pytest
 
+from scripts.projects.open_model_data import generate_grammar_signoff_8342 as grammar_signoff
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
     APPROVED_AUTHORITY_PATTERNS,
     SOVIET_SUM11_ALIASES,
@@ -42,11 +43,19 @@ from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     clean_sentence_for_query,
     is_finite_active_verb,
 )
+from scripts.projects.open_model_data.paths import REGISTRY_GRAMMAR_DIR, REGISTRY_RELEASE_DIR
+from scripts.storage.paths import artifact_set
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-GRAMMAR_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "components" / "grammar"
-OLD_RELEASE_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v05_grammar_valency"
+GRAMMAR_DIR = REGISTRY_GRAMMAR_DIR
+OLD_RELEASE_DIR = REGISTRY_RELEASE_DIR / "uldr_v05_grammar_valency"
 TEST_M2_PATH = PROJECT_ROOT / "data" / "ua-gec" / "data" / "gec-fluency" / "test" / "gec-fluency.test.m2"
+_GRAMMAR_REL = "projects/open_model_data/components/grammar"
+
+
+def _artifact_bytes(name: str) -> bytes:
+    """Select a committed grammar payload from the verified complete group snapshot."""
+    return artifact_set("open_model_component_payload", repo=PROJECT_ROOT).artifacts[f"{_GRAMMAR_REL}/{name}"]
 
 
 @pytest.fixture(scope="module")
@@ -54,14 +63,13 @@ def grammar_data():
     """Load grammar component records and manifest."""
     manifest_file = GRAMMAR_DIR / "manifest.json"
     cases_file = GRAMMAR_DIR / "cases.json"
-    sample_md_file = GRAMMAR_DIR / "acceptance_review_sample.md"
-    sample_json_file = GRAMMAR_DIR / "acceptance_review_sample.json"
     template_file = GRAMMAR_DIR / "acceptance_review_sample.signoff_template.json"
+    snapshot = artifact_set("open_model_component_payload", repo=PROJECT_ROOT)
 
     assert manifest_file.is_file(), f"Missing manifest.json at {manifest_file}"
     assert cases_file.is_file(), f"Missing cases.json at {cases_file}"
-    assert sample_md_file.is_file(), f"Missing review sample MD at {sample_md_file}"
-    assert sample_json_file.is_file(), f"Missing review sample JSON at {sample_json_file}"
+    assert f"{_GRAMMAR_REL}/acceptance_review_sample.md" in snapshot.artifacts
+    assert f"{_GRAMMAR_REL}/acceptance_review_sample.json" in snapshot.artifacts
     assert template_file.is_file(), f"Missing signoff template at {template_file}"
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
@@ -71,10 +79,9 @@ def grammar_data():
     eval_records = []
 
     for fname, split in manifest["splits"].items():
-        fpath = GRAMMAR_DIR / fname
-        assert fpath.is_file(), f"Missing shard file {fname} declared in manifest"
-        assert fpath.stat().st_size < 2_000_000, f"Shard file {fname} exceeds 2,000,000 byte pre-commit limit"
-        records = [json.loads(line) for line in fpath.read_text(encoding="utf-8").splitlines() if line.strip()]
+        content = snapshot.artifacts[f"{_GRAMMAR_REL}/{fname}"]
+        assert len(content) < 2_000_000, f"Shard file {fname} exceeds 2,000,000 byte pre-commit limit"
+        records = [json.loads(line) for line in content.decode("utf-8").splitlines() if line.strip()]
         if split == "train":
             train_records.extend(records)
         elif split == "eval":
@@ -101,6 +108,9 @@ def test_tombstone_quarantine_exists():
     assert "8143" in content
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_manifest_integrity(grammar_data):
     """Verify manifest.json structure, split declarations, and statistics."""
     manifest = grammar_data["manifest"]
@@ -125,6 +135,9 @@ def test_manifest_integrity(grammar_data):
     assert (GRAMMAR_DIR / "BROWN_UK_ATTRIBUTION.md").is_file()
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_control_correction_ratio(grammar_data):
     """Verify strict 20.0% to 30.0% clean controls and 70.0% to 80.0% corrections."""
     all_records = grammar_data["all"]
@@ -140,6 +153,9 @@ def test_control_correction_ratio(grammar_data):
     assert 0.70 <= correction_share <= 0.80, f"Correction share {correction_share:.2%} out of range [70%, 80%]"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_category_balancing(grammar_data):
     """Verify category balance (min 50 per category, max 40% single category share)."""
     all_records = grammar_data["all"]
@@ -153,6 +169,9 @@ def test_category_balancing(grammar_data):
         assert share <= 0.40, f"Category {cat} dominates with {share:.2%} (> 40%)"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_in_scope_tag_conformance(grammar_data):
     """Verify that all error tags strictly belong to the in-scope set (G/* + F/Calque)."""
     for r in grammar_data["all"]:
@@ -164,6 +183,9 @@ def test_in_scope_tag_conformance(grammar_data):
             assert r["category"] == "protective_authentic_control"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_split_integrity_and_sha256_partition(grammar_data):
     """Verify 90:10 document-level split by doc_id SHA-256 hash and 0 shared doc_ids."""
     train_docs = {r["doc_id"] for r in grammar_data["train"]}
@@ -181,17 +203,12 @@ def test_split_integrity_and_sha256_partition(grammar_data):
         assert h % 10 != 0, f"Doc {d} in train split satisfies h % 10 == 0"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_held_out_test_set_firewall(grammar_data):
     """Verify zero overlap against the official held-out test partition via committed firewall manifest."""
-    manifest_path = (
-        PROJECT_ROOT
-        / "data"
-        / "projects"
-        / "open_model_data"
-        / "components"
-        / "grammar"
-        / "grammar_held_out_firewall_manifest.json"
-    )
+    manifest_path = GRAMMAR_DIR / "grammar_held_out_firewall_manifest.json"
     assert manifest_path.is_file(), f"Missing firewall manifest at {manifest_path}"
     with manifest_path.open("r", encoding="utf-8") as f:
         manifest_data = json.load(f)
@@ -213,6 +230,9 @@ def test_held_out_test_set_firewall(grammar_data):
             assert r["corrected_text"] not in test_targets, f"Test target leaked as correction: {r['corrected_text']}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_brown_uk_attribution(grammar_data):
     """Verify Brown-UK controls preserve authentic doc_id, doc_name, license, and corpus."""
     brown_records = [r for r in grammar_data["all"] if r["source_corpus"] == "brown_uk"]
@@ -236,6 +256,9 @@ def test_brown_uk_attribution(grammar_data):
         assert r["doc_id"] in attr_content
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_parallel_annotator_retention(grammar_data):
     """Verify parallel annotator corrections under same doc_id are retained per SPEC §2.2."""
     corrections = [r for r in grammar_data["all"] if r["is_erroneous"]]
@@ -253,6 +276,9 @@ def test_parallel_annotator_retention(grammar_data):
     )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_explanation_relevance_and_target_cleanliness(grammar_data):
     """Verify citations are specific and verified, silent rows are clean, and target texts have full edits."""
     for r in grammar_data["all"]:
@@ -300,6 +326,9 @@ def test_explanation_relevance_and_target_cleanliness(grammar_data):
                 assert meta.get("linguistic_rule") == ""
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_global_sentence_deduplication(grammar_data):
     """Verify zero duplicate (query, final_response) pairs and zero duplicate sentences."""
     all_records = grammar_data["all"]
@@ -311,6 +340,9 @@ def test_global_sentence_deduplication(grammar_data):
         assert r["query"] not in train_queries, f"Eval query leaked to train: {r['query']}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_task_mix_partition(grammar_data):
     """Verify 45% silent rewrites and 55% explained corrections (within [40%, 60%])."""
     corrections = [r for r in grammar_data["all"] if r["is_erroneous"]]
@@ -323,6 +355,9 @@ def test_task_mix_partition(grammar_data):
     assert 0.40 <= explained_share <= 0.60, f"Explained share {explained_share:.2%} outside [40%, 60%]"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_self_contradiction_invariants(grammar_data):
     """Verify label vs text differences and non-contradiction."""
     for r in grammar_data["all"]:
@@ -340,6 +375,9 @@ def test_self_contradiction_invariants(grammar_data):
             assert r["rejected"] is None
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_approved_linguistic_authorities(grammar_data):
     """Verify that all cited authorities match approved patterns and zero Soviet SUM-11."""
     for r in grammar_data["all"]:
@@ -358,6 +396,9 @@ def test_approved_linguistic_authorities(grammar_data):
             assert trans_id not in auth, f"Translation dictionary in authority: {r['record_id']}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_acceptance_audit_gate_end_to_end(requires_vesum_db):
     """Verify that audit_dataset_acceptance.py passes with exit code 0 and verified signoff."""
     signoff_path = GRAMMAR_DIR / "acceptance_review_sample.signoff.json"
@@ -377,17 +418,12 @@ def test_acceptance_audit_gate_end_to_end(requires_vesum_db):
         assert check_res.status == "PASS", f"Check {check_id} failed: {check_res.failures}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_held_out_token_jaccard_firewall(grammar_data):
     """Verify zero near-duplicate records with token Jaccard >= 0.80 against held-out test."""
-    manifest_path = (
-        PROJECT_ROOT
-        / "data"
-        / "projects"
-        / "open_model_data"
-        / "components"
-        / "grammar"
-        / "grammar_held_out_firewall_manifest.json"
-    )
+    manifest_path = GRAMMAR_DIR / "grammar_held_out_firewall_manifest.json"
     assert manifest_path.is_file(), f"Missing firewall manifest at {manifest_path}"
     with manifest_path.open("r", encoding="utf-8") as f:
         manifest_data = json.load(f)
@@ -405,6 +441,9 @@ def test_held_out_token_jaccard_firewall(grammar_data):
             )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_linguistic_catalog_vocative_and_voice_precision(grammar_data, requires_vesum_db):
     """Verify linguistic precision: vocatives cite Pravopys § 87, reflexive verbs don't falsely claim active voice."""
     # Direct unit checks on is_finite_active_verb
@@ -514,11 +553,21 @@ def test_acceptance_review_sample_receipt_and_signoff():
     assert signoff["reviewer_family"] == "claude"
 
 
-def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requires_vesum_db):
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
+def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requires_vesum_db, monkeypatch):
     """Verify generate_grammar_signoff_8342 rejects extra keys, index mismatch, and flags false criteria."""
+    sample_file = tmp_path / "acceptance_review_sample.json"
+    sample_file.write_bytes(_artifact_bytes("acceptance_review_sample.json"))
+    monkeypatch.setattr(grammar_signoff, "SAMPLE_JSON", sample_file)
+    monkeypatch.setattr(grammar_signoff, "SIGNOFF_TEMPLATE", GRAMMAR_DIR / "acceptance_review_sample.signoff_template.json")
+    monkeypatch.setattr(grammar_signoff, "RECEIPT_FILE", tmp_path / "acceptance_review_sample.receipt.json")
+    monkeypatch.setattr(grammar_signoff, "SIGNOFF_FILE", tmp_path / "acceptance_review_sample.signoff.json")
+    monkeypatch.setattr(grammar_signoff, "VESUM_DB", requires_vesum_db)
     findings_file = GRAMMAR_DIR / "claude_review_findings.json"
     raw_findings = json.loads(findings_file.read_text(encoding="utf-8"))
-    samples = json.loads((GRAMMAR_DIR / "acceptance_review_sample.json").read_text(encoding="utf-8"))
+    samples = json.loads(_artifact_bytes("acceptance_review_sample.json"))
     corr_idx = next(str(s["sample_index"]) for s in samples if s["is_erroneous"])
     ctrl_idx = next(str(s["sample_index"]) for s in samples if not s["is_erroneous"])
 
@@ -852,6 +901,9 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path, requir
         )
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_no_duplicated_query_punctuation(grammar_data):
     """Verify that 0 records have nested guillemets or duplicated punctuation in query."""
     double_punct_pattern = re.compile(
@@ -873,6 +925,9 @@ def test_no_duplicated_query_punctuation(grammar_data):
             assert "?" in q, f"Carrier question lost its question mark: {q}"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/grammar/grammar_train_shard_01_of_08.jsonl"
+)
 def test_source_denominator_reconciliation(grammar_data):
     """Verify that manifest and README contain documented source denominator reconciliation (#8342)."""
     manifest = grammar_data["manifest"]
@@ -899,9 +954,7 @@ def test_source_denominator_reconciliation(grammar_data):
     assert "reserve_disposition" in recon
     assert recon["measured_categories_count"] == len(recon["exclusions_by_policy"])
 
-    accounting_path = GRAMMAR_DIR / "candidate_exclusion_accounting.json"
-    assert accounting_path.is_file(), f"Missing candidate_exclusion_accounting.json at {accounting_path}"
-    accounting_data = json.loads(accounting_path.read_text(encoding="utf-8"))
+    accounting_data = json.loads(_artifact_bytes("candidate_exclusion_accounting.json"))
     assert accounting_data["total_candidate_annotator_edit_sets"] == 5252
     assert accounting_data["delivered_substantive_corrections"] == 995
     assert accounting_data["total_excluded_candidate_edit_sets"] == 4257

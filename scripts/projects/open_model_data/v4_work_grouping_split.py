@@ -175,7 +175,7 @@ def build(
 
     config_data = json.loads(config_resolved.read_text(encoding="utf-8"))
     config_schema_path = (
-        input_root / "data/projects/open_model_data/contracts/v4_work_grouping_split_config_v1.schema.json"
+        input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_config_v1.schema.json"
     )
     if config_schema_path.is_file():
         schema = json.loads(config_schema_path.read_text(encoding="utf-8"))
@@ -422,7 +422,7 @@ def verify(
 
     # Validate Config Schema
     cfg_schema_path = (
-        input_root / "data/projects/open_model_data/contracts/v4_work_grouping_split_config_v1.schema.json"
+        input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_config_v1.schema.json"
     )
     if cfg_schema_path.is_file():
         schema = json.loads(cfg_schema_path.read_text(encoding="utf-8"))
@@ -443,7 +443,7 @@ def verify(
 
     # Validate Receipt Schema
     rcpt_schema_path = (
-        input_root / "data/projects/open_model_data/contracts/v4_work_grouping_split_receipt_v1.schema.json"
+        input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_receipt_v1.schema.json"
     )
     if rcpt_schema_path.is_file():
         schema = json.loads(rcpt_schema_path.read_text(encoding="utf-8"))
@@ -472,7 +472,7 @@ def verify(
         raise WorkGroupingSplitError(f"Receipt verdict is not confirmed: {receipt['verdict']}")
 
     # Validate Index items and firewall invariants
-    item_schema_path = input_root / "data/projects/open_model_data/contracts/v4_work_grouping_split_item_v1.schema.json"
+    item_schema_path = input_root / "registry/projects/open_model_data/contracts/v4_work_grouping_split_item_v1.schema.json"
     item_validator = None
     if item_schema_path.is_file():
         schema = json.loads(item_schema_path.read_text(encoding="utf-8"))

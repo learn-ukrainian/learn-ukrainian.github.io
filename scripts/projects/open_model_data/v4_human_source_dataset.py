@@ -242,7 +242,7 @@ def build_dataset(
 
     assert_no_private_host_paths(manifest_data)
     manifest_schema_path = (
-        repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_manifest_v1.schema.json"
+        repo_root / "registry/projects/open_model_data/contracts/v4_human_source_dataset_manifest_v1.schema.json"
     )
     manifest_schema = json.loads(manifest_schema_path.read_text(encoding="utf-8"))
     jsonschema.validate(instance=manifest_data, schema=manifest_schema)
@@ -259,7 +259,7 @@ def build_dataset(
     quarantine_spans = 0
 
     record_schema_path = (
-        repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+        repo_root / "registry/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
     )
     record_schema = json.loads(record_schema_path.read_text(encoding="utf-8"))
 
@@ -495,7 +495,7 @@ def build_dataset(
 
         assert_no_private_host_paths(receipt_data)
         receipt_schema_path = (
-            repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_receipt_v1.schema.json"
+            repo_root / "registry/projects/open_model_data/contracts/v4_human_source_dataset_receipt_v1.schema.json"
         )
         receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
         jsonschema.validate(instance=receipt_data, schema=receipt_schema)
@@ -579,7 +579,7 @@ def verify_dataset(
     assert_no_private_host_paths(receipt_data)
 
     receipt_schema_path = (
-        repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_receipt_v1.schema.json"
+        repo_root / "registry/projects/open_model_data/contracts/v4_human_source_dataset_receipt_v1.schema.json"
     )
     receipt_schema = json.loads(receipt_schema_path.read_text(encoding="utf-8"))
     jsonschema.validate(instance=receipt_data, schema=receipt_schema)
@@ -793,12 +793,12 @@ def _get_language_usage_masks(repo_root: Path) -> dict[str, list[dict[str, Any]]
 
 
 def _get_record_validator(repo_root: Path) -> jsonschema.Draft202012Validator:
-    schema_path = repo_root / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+    schema_path = repo_root / "registry/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
     if not schema_path.is_file():
         script_root = Path(__file__).resolve().parents[3]
         for p in [repo_root, Path.cwd(), script_root]:
             for parent in [p, *p.parents]:
-                cand = parent / "data/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
+                cand = parent / "registry/projects/open_model_data/contracts/v4_human_source_dataset_record_v1.schema.json"
                 if cand.is_file():
                     schema_path = cand
                     break

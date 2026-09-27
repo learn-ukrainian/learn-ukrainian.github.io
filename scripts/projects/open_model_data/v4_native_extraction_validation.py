@@ -29,12 +29,12 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.rag.extract_text import detect_native_text_anomalies
 
-CONFIG_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_native_extraction_config_v1.schema.json")
-ITEM_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_native_extraction_item_v1.schema.json")
+CONFIG_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_native_extraction_config_v1.schema.json")
+ITEM_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_native_extraction_item_v1.schema.json")
 QUARANTINE_SCHEMA_PATH = Path(
-    "data/projects/open_model_data/contracts/v4_native_extraction_quarantine_report_v1.schema.json"
+    "registry/projects/open_model_data/contracts/v4_native_extraction_quarantine_report_v1.schema.json"
 )
-RECEIPT_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_native_extraction_receipt_v1.schema.json")
+RECEIPT_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_native_extraction_receipt_v1.schema.json")
 
 DEFAULT_CONFIG_PATH = Path("data/projects/open_model_data/extraction/v4_native_extraction_config_v1.json")
 

@@ -30,7 +30,7 @@ from scripts.projects.open_model_data.phase3_linguistic_representation import (
 )
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_historical_representation_v3.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_historical_representation_v3.schema.json"
 SCHEMA_VERSION = "phase3_historical_representation_v3"
 
 TEXT_LAYER_IDS = frozenset({"original_diplomatic", "restored_reading", "modern_ukrainian_translation"})

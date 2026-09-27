@@ -28,7 +28,7 @@ from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 CANDIDATE_SCHEMA_PATH = CONTRACTS / "correction_candidate_v1.schema.json"
 DECISION_SCHEMA_PATH = CONTRACTS / "correction_reviewer_decision_v1.schema.json"
 RECORD_SCHEMA_PATH = CONTRACTS / "correction_record_v1.schema.json"

@@ -39,7 +39,7 @@ from scripts.projects.open_model_data import university_source_policy
 ROOT = Path(__file__).resolve().parents[3]
 PRIMARY_ROOT = resolve_main_root(ROOT) or ROOT
 SCHEMA_VERSION = "phase3_vspu_db_cutover_v1"
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_vspu_db_cutover_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_vspu_db_cutover_v1.schema.json"
 MATERIALIZATION_PATH = ROOT / "data/projects/open_model_data/admission/phase3_vspu_source_materialization_v1.json"
 ADDITIVE_POLICY_PATH = (
     ROOT / "data/projects/open_model_data/admission/phase3_vspu_additive_university_source_policy_v3.json"

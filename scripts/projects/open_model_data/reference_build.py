@@ -33,7 +33,7 @@ from scripts.projects.open_model_data import model_view_exporter as exporter
 from scripts.projects.open_model_data import validate_source_records as source_contract
 from scripts.projects.ua_eval_harness import evaluate_model
 
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 DEFAULT_CONFIG = ROOT / "data/projects/open_model_data/reference/reference_build_config_v1.json"
 CONFIG_SCHEMA = CONTRACTS / "reference_build_config_v1.schema.json"
 MANIFEST_SCHEMA = CONTRACTS / "reference_build_manifest_v1.schema.json"

@@ -30,7 +30,7 @@ from scripts.projects.open_model_data import (
 )
 
 SCHEMA_VERSION = "phase3_complete_source_policy_v4"
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_complete_source_policy_v4.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_complete_source_policy_v4.schema.json"
 DEFAULT_POLICY_PATH = ROOT / "data/projects/open_model_data/admission/phase3_complete_source_policy_v4.json"
 DEFAULT_V3_POLICY_PATH = ROOT / "data/projects/open_model_data/admission/phase3_university_source_policy_v3.json"
 EXPECTED_POLICY_SHA256 = "98e7a80f8fdc1274a190cda793699aceaa79741ebf2145669d73e4c8a2236559"

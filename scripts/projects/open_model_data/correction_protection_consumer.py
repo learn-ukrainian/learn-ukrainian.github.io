@@ -24,7 +24,7 @@ from scripts.projects.open_model_data import correction_factory as evaluation
 from scripts.projects.open_model_data.correction_protection_rules import iter_rule_matches
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 EVIDENCE = ROOT / "data/projects/open_model_data/evidence"
 DEFAULT_FACTORY_MANIFEST = EVIDENCE / "correction_protection_bundle_manifest_v1.json"
 DEFAULT_FACTORY_RECEIPT = EVIDENCE / "correction_protection_release_receipt_v1.json"

@@ -12,7 +12,7 @@ from jsonschema import Draft202012Validator
 from learn_ukrainian_v4_runtime import provenance, resources
 from learn_ukrainian_v4_runtime import v4_stage_evidence as ev
 
-SCHEMA = "data/projects/open_model_data/contracts/dataset_v4_a2_source_operation_admission_receipt_v1.schema.json"
+SCHEMA = "registry/projects/open_model_data/contracts/dataset_v4_a2_source_operation_admission_receipt_v1.schema.json"
 
 
 def validator() -> Draft202012Validator:

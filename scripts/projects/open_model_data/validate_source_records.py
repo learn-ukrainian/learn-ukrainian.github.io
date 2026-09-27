@@ -13,7 +13,7 @@ from urllib.parse import urlsplit
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACT_DIR = ROOT / "data/projects/open_model_data/contracts"
+CONTRACT_DIR = ROOT / "registry/projects/open_model_data/contracts"
 SCHEMA_PATH = CONTRACT_DIR / "source_record_v1.schema.json"
 LEGACY_MISSING_FIELDS = (
     "acquisition_source",

@@ -24,7 +24,7 @@ from jsonschema import Draft202012Validator, ValidationError
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_pravopys_delta_bundle_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_pravopys_delta_bundle_v1.schema.json"
 SCHEMA_VERSION = "phase3_pravopys_delta_bundle_v1"
 CURRENT_SOURCE_FREEZE_STATUS = "SOURCE_UNIVERSE_CURRENT_V2_1"
 SOURCE_FREEZE_WRAPPER_SCHEMA_VERSION = "phase3_pravopys_source_freeze_wrapper_v2_1"

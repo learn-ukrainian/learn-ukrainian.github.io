@@ -16,7 +16,7 @@ from scripts.projects.open_model_data.v4_dataset_quality_evaluation import (
 
 def test_quality_evaluation_schema_valid() -> None:
     repo_root = Path.cwd()
-    schema_path = repo_root / "data/projects/open_model_data/contracts/v4_dataset_quality_evaluation_v1.schema.json"
+    schema_path = repo_root / "registry/projects/open_model_data/contracts/v4_dataset_quality_evaluation_v1.schema.json"
     assert schema_path.exists(), "Missing schema contract"
 
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
@@ -95,7 +95,7 @@ def test_eval4_heldout_evaluation_protocol_and_sealed_custody() -> None:
 
 def test_eval5_independent_reproduction() -> None:
     repo_root = Path.cwd()
-    assessment_rel = "data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
+    assessment_rel = "registry/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
     verified = verify_assessment(repo_root, assessment_rel=assessment_rel)
     assert verified is True
 
@@ -123,6 +123,6 @@ def test_eval6_downstream_study_methodology() -> None:
 
 def test_privacy_invariants() -> None:
     repo_root = Path.cwd()
-    assessment_path = repo_root / "data/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
+    assessment_path = repo_root / "registry/projects/open_model_data/pilot/v4_human_source_pilot_quality_assessment_v1.json"
     data = json.loads(assessment_path.read_text(encoding="utf-8"))
     assert_no_private_host_paths(data)

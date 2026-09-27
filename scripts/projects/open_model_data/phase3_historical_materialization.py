@@ -41,7 +41,7 @@ from scripts.projects.open_model_data.phase3_linguistic_representation import (
 
 ROOT = Path(__file__).resolve().parents[3]
 RECEIPT_SCHEMA_PATH = (
-    ROOT / "data/projects/open_model_data/contracts/phase3_historical_materialization_receipt_v1.schema.json"
+    ROOT / "registry/projects/open_model_data/contracts/phase3_historical_materialization_receipt_v1.schema.json"
 )
 
 UD_COLLECTION_ID = "ud-old-east-slavic-ruthenian-05a029e00ccf"

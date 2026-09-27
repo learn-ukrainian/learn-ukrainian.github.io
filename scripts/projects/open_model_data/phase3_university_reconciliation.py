@@ -20,7 +20,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_university_reconciliation_v3.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_university_reconciliation_v3.schema.json"
 SCHEMA_VERSION = "phase3_university_reconciliation_v3"
 
 

@@ -31,7 +31,7 @@ DATA = ROOT / "data/projects/open_model_data"
 SCHEMA_PATH = DATA / "contracts/phase3_v3_cooperative_control_plane_v1.schema.json"
 ARTIFACT_PATH = DATA / "evidence/phase3_v3_cooperative_control_plane_v1.json"
 SCRIPT_PATH = Path(__file__).resolve()
-SCHEMA_LOGICAL_PATH = "data/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json"
+SCHEMA_LOGICAL_PATH = "registry/projects/open_model_data/contracts/phase3_v3_cooperative_control_plane_v1.schema.json"
 SCRIPT_LOGICAL_PATH = "scripts/projects/open_model_data/phase3_v3_cooperative_control_plane.py"
 ARTIFACT_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_v3_cooperative_control_plane_v1.json"
 
@@ -44,7 +44,7 @@ P4_SCHEMA_SHA256 = "0af9e421a0a734718ff884a2b08286533c8f6f6af24c1be4b9023044719f
 P4_ADMISSION_FILE_SHA256 = "d12ed8d0827263cf5c31f049c518cf90befb4fdf4ca5cb5b413d51b17a1ec4dd"
 P4_ADMISSION_RECEIPT_SHA256 = "9d070d83ab9978d71c0f09249adca4738beb3395215fc603c33e8aeae61e8881"
 
-P4_SCHEMA_LOGICAL_PATH = "data/projects/open_model_data/contracts/phase3_p4_pilot_construction_v1.schema.json"
+P4_SCHEMA_LOGICAL_PATH = "registry/projects/open_model_data/contracts/phase3_p4_pilot_construction_v1.schema.json"
 P4_ADMISSION_LOGICAL_PATH = "data/projects/open_model_data/admission/phase3_p4_pilot_construction_v1.json"
 V2_COMPATIBILITY_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_v2_compatibility_matrix_v1.json"
 P2_LOGICAL_PATH = "data/projects/open_model_data/evidence/phase3_p2_canonical_contracts_v1.json"

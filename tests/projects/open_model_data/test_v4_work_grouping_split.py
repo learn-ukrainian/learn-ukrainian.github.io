@@ -12,7 +12,7 @@ import pytest
 import scripts.projects.open_model_data.v4_work_grouping_split as split_mod
 
 CONFIG_PATH = Path("data/projects/open_model_data/splits/v4_work_grouping_split_config_v1.json")
-CONTRACTS_DIR = Path("data/projects/open_model_data/contracts")
+CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 
 
 def test_schema_contracts_valid() -> None:

@@ -32,8 +32,8 @@ from typing import Any
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.paths import ARTIFACT_RELEASE_DIR, REGISTRY_RELEASE_DIR
 from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
-    DEFAULT_RELEASE_DIR,
     DEFAULT_VESUM_DB,
     EVAL_SCHEMA_FILE,
     RECEIPT_SCHEMA_FILE,
@@ -56,12 +56,12 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     verify_modern_literary_regression,
 )
 
-EVAL_BENCHMARK_PATH = DEFAULT_RELEASE_DIR / "dialect_corpus_expanded_1500.jsonl"
-EVAL_SHA_PATH = DEFAULT_RELEASE_DIR / "dialect_corpus_expanded_1500.sha256"
-SFT_DATASET_PATH = DEFAULT_RELEASE_DIR / "sft_dialect_protection_500.jsonl"
-SFT_SHA_PATH = DEFAULT_RELEASE_DIR / "sft_dialect_protection_500.sha256"
-RECEIPT_PATH = DEFAULT_RELEASE_DIR / "release_receipt.json"
-RECEIPT_SHA_PATH = DEFAULT_RELEASE_DIR / "release_receipt.json.sha256"
+EVAL_BENCHMARK_PATH = ARTIFACT_RELEASE_DIR / "uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl"
+EVAL_SHA_PATH = REGISTRY_RELEASE_DIR / "uldr_v03_dialect/dialect_corpus_expanded_1500.sha256"
+SFT_DATASET_PATH = ARTIFACT_RELEASE_DIR / "uldr_v03_dialect/sft_dialect_protection_500.jsonl"
+SFT_SHA_PATH = REGISTRY_RELEASE_DIR / "uldr_v03_dialect/sft_dialect_protection_500.sha256"
+RECEIPT_PATH = REGISTRY_RELEASE_DIR / "uldr_v03_dialect/release_receipt.json"
+RECEIPT_SHA_PATH = REGISTRY_RELEASE_DIR / "uldr_v03_dialect/release_receipt.json.sha256"
 
 
 @pytest.fixture(scope="module")

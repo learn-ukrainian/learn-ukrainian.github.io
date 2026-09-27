@@ -37,7 +37,7 @@ from scripts.projects.open_model_data.model_view_exporter import (
 )
 from scripts.projects.open_model_data.validate_source_records import validate_path as validate_source_record_path
 
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 CONFIG_SCHEMA = CONTRACTS / "corpus_admission_config_v1.schema.json"
 EVIDENCE_SCHEMA = CONTRACTS / "corpus_admission_evidence_v1.schema.json"
 OPERATOR_PACKET_SCHEMA = CONTRACTS / "corpus_admission_operator_packet_v1.schema.json"

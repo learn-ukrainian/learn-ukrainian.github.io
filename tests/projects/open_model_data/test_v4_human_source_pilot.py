@@ -12,7 +12,7 @@ import pytest
 import scripts.projects.open_model_data.v4_human_source_pilot as pilot_mod
 
 MANIFEST_PATH = Path("data/projects/open_model_data/pilot/v4_human_source_pilot_manifest_v1.json")
-CONTRACTS_DIR = Path("data/projects/open_model_data/contracts")
+CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 
 
 def test_schema_contracts_valid() -> None:

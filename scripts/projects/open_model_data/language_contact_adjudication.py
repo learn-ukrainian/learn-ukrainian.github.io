@@ -37,7 +37,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 correction_factory = importlib.import_module("scripts.projects.open_model_data.correction_factory")
 
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 DETECTOR_CONFIG = ROOT / "data/projects/open_model_data/detector/language_contact_config_v1.json"
 DETECTOR_CANDIDATE_SCHEMA = CONTRACTS / "language_contact_candidate_v1.schema.json"
 DETECTOR_RECEIPT_SCHEMA = CONTRACTS / "language_contact_receipt_v1.schema.json"

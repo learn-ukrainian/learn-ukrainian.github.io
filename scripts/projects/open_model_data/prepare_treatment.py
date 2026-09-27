@@ -16,7 +16,7 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 PREREG_SCHEMA = CONTRACTS / "treatment_preregistration_v1.schema.json"
 AUTH_SCHEMA = CONTRACTS / "treatment_authorization_v1.schema.json"
 PRODUCTION_SCHEMA = CONTRACTS / "model_ready_view_production_v1.schema.json"

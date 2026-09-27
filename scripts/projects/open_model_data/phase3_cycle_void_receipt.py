@@ -23,7 +23,7 @@ if __package__ in {None, ""}:
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_cycle_void_receipt_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_cycle_void_receipt_v1.schema.json"
 CYCLE_ID = "phase3-v2-1-evaluation-cycle-001"
 EXPECTED_INDICES = tuple((*range(1, 21), 24, 45, 776))
 EXPECTED_AUTHOR_PACKET_COUNT = 918

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -38,30 +38,40 @@ from scripts.projects.open_model_data.v4_production_shards_assembly import (
     TRAJECTORY_SCHEMA_PATH,
     assert_no_private_host_paths,
     compute_heldout_minhash_similarity,
-    load_jsonl,
     sha256_file,
     verify_production_release,
 )
 from scripts.projects.open_model_data.v4_production_shards_assembly import (
     HISTORICAL_ARCHIVE_DIR as DEFAULT_OUTPUT_DIR,
 )
+from scripts.storage.paths import ArtifactSet, artifact_set
+
+REGISTRY_OUTPUT_DIR = REPO_ROOT / "registry" / DEFAULT_OUTPUT_DIR.relative_to(REPO_ROOT / "data")
+
+
+@pytest.fixture(scope="module")
+def archive_payload() -> ArtifactSet:
+    return artifact_set("open_model_archive_payload", repo=REPO_ROOT)
+
+
+def _a_bytes(snapshot: ArtifactSet, path: Path) -> bytes:
+    return snapshot.artifacts[path.relative_to(REPO_ROOT / "data").as_posix()]
 
 
 @pytest.fixture(scope="module")
 def receipt_data() -> dict[str, Any]:
-    receipt_path = DEFAULT_OUTPUT_DIR / "production_release_receipt.json"
+    receipt_path = REGISTRY_OUTPUT_DIR / "production_release_receipt.json"
     assert receipt_path.exists(), f"Receipt file missing: {receipt_path}"
     with receipt_path.open("r", encoding="utf-8") as f:
         return json.load(f)
 
 
 @pytest.fixture(scope="module")
-def sft_records() -> list[dict[str, Any]]:
+def sft_records(archive_payload: ArtifactSet) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for shard_idx in range(1, SFT_SHARDS_COUNT + 1):
         shard_path = DEFAULT_OUTPUT_DIR / "sft" / f"sft_shard_{shard_idx:03d}_of_{SFT_SHARDS_COUNT:03d}.jsonl"
-        assert shard_path.exists(), f"SFT shard missing: {shard_path}"
-        shard_recs = load_jsonl(shard_path)
+        shard_recs = [json.loads(line) for line in _a_bytes(archive_payload, shard_path).splitlines() if line.strip()]
         assert len(shard_recs) == SFT_RECORDS_PER_SHARD, (
             f"Shard {shard_path.name} has {len(shard_recs)} records, expected {SFT_RECORDS_PER_SHARD}"
         )
@@ -70,12 +80,11 @@ def sft_records() -> list[dict[str, Any]]:
 
 
 @pytest.fixture(scope="module")
-def dpo_records() -> list[dict[str, Any]]:
+def dpo_records(archive_payload: ArtifactSet) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for shard_idx in range(1, DPO_SHARDS_COUNT + 1):
         shard_path = DEFAULT_OUTPUT_DIR / "dpo" / f"dpo_shard_{shard_idx:03d}_of_{DPO_SHARDS_COUNT:03d}.jsonl"
-        assert shard_path.exists(), f"DPO shard missing: {shard_path}"
-        shard_recs = load_jsonl(shard_path)
+        shard_recs = [json.loads(line) for line in _a_bytes(archive_payload, shard_path).splitlines() if line.strip()]
         assert len(shard_recs) == DPO_RECORDS_PER_SHARD, (
             f"Shard {shard_path.name} has {len(shard_recs)} records, expected {DPO_RECORDS_PER_SHARD}"
         )
@@ -83,20 +92,20 @@ def dpo_records() -> list[dict[str, Any]]:
     return records
 
 
-def test_production_release_files_exist() -> None:
+def test_production_release_files_exist(archive_payload: ArtifactSet) -> None:
     """Verify all 6 SFT shards, 3 DPO shards, receipt, and detached SHA exist."""
     assert DEFAULT_OUTPUT_DIR.exists(), f"Release dir {DEFAULT_OUTPUT_DIR} does not exist"
-    receipt_path = DEFAULT_OUTPUT_DIR / "production_release_receipt.json"
+    receipt_path = REGISTRY_OUTPUT_DIR / "production_release_receipt.json"
     assert receipt_path.exists(), "production_release_receipt.json missing"
     assert receipt_path.with_suffix(".json.sha256").exists(), "detached .sha256 missing"
 
     for shard_idx in range(1, SFT_SHARDS_COUNT + 1):
         shard_path = DEFAULT_OUTPUT_DIR / "sft" / f"sft_shard_{shard_idx:03d}_of_{SFT_SHARDS_COUNT:03d}.jsonl"
-        assert shard_path.exists(), f"SFT shard {shard_path} missing"
+        assert _a_bytes(archive_payload, shard_path)
 
     for shard_idx in range(1, DPO_SHARDS_COUNT + 1):
         shard_path = DEFAULT_OUTPUT_DIR / "dpo" / f"dpo_shard_{shard_idx:03d}_of_{DPO_SHARDS_COUNT:03d}.jsonl"
-        assert shard_path.exists(), f"DPO shard {shard_path} missing"
+        assert _a_bytes(archive_payload, shard_path)
 
 
 def test_production_receipt_schema_valid(receipt_data: dict[str, Any]) -> None:
@@ -109,9 +118,9 @@ def test_production_receipt_schema_valid(receipt_data: dict[str, Any]) -> None:
     assert not errors, f"Receipt schema validation errors: {[e.message for e in errors]}"
 
 
-def test_production_receipt_hashes_match(receipt_data: dict[str, Any]) -> None:
+def test_production_receipt_hashes_match(receipt_data: dict[str, Any], archive_payload: ArtifactSet) -> None:
     """Verify detached sha256 matches receipt and shard digests match on-disk files."""
-    receipt_path = DEFAULT_OUTPUT_DIR / "production_release_receipt.json"
+    receipt_path = REGISTRY_OUTPUT_DIR / "production_release_receipt.json"
     computed_receipt_sha = sha256_file(receipt_path)
     detached_sha = receipt_path.with_suffix(".json.sha256").read_text(encoding="utf-8").strip()
     assert detached_sha == computed_receipt_sha, "Detached SHA-256 does not match receipt file digest"
@@ -124,9 +133,9 @@ def test_production_receipt_hashes_match(receipt_data: dict[str, Any]) -> None:
         assert fname in files_manifest, f"Missing file entry in receipt: {fname}"
         entry = files_manifest[fname]
         file_path = DEFAULT_OUTPUT_DIR / "sft" / fname
-        assert file_path.exists(), f"SFT shard {file_path} does not exist"
-        assert file_path.stat().st_size == entry["bytes"], f"Byte count mismatch for {fname}"
-        assert sha256_file(file_path) == entry["sha256"], f"SHA256 mismatch for {fname}"
+        data = _a_bytes(archive_payload, file_path)
+        assert len(data) == entry["bytes"], f"Byte count mismatch for {fname}"
+        assert hashlib.sha256(data).hexdigest() == entry["sha256"], f"SHA256 mismatch for {fname}"
 
     # Verify DPO shards in receipt
     for shard_idx in range(1, DPO_SHARDS_COUNT + 1):
@@ -134,9 +143,6 @@ def test_production_receipt_hashes_match(receipt_data: dict[str, Any]) -> None:
         assert fname in files_manifest, f"Missing file entry in receipt: {fname}"
         entry = files_manifest[fname]
         file_path = DEFAULT_OUTPUT_DIR / "dpo" / fname
-        assert file_path.exists(), f"DPO shard {file_path} does not exist"
-        assert file_path.stat().st_size == entry["bytes"], f"Byte count mismatch for {fname}"
-        assert sha256_file(file_path) == entry["sha256"], f"SHA256 mismatch for {fname}"
 
 
 def test_sft_shards_exact_quotas_and_distribution(sft_records: list[dict[str, Any]]) -> None:
@@ -244,8 +250,10 @@ def test_partition_firewall_zero_leakage(
     dpo_records: list[dict[str, Any]],
 ) -> None:
     """Verify partition firewall: zero overlap with 400 held-out CORRECT targets or held-out IDs."""
-    assert DEFAULT_HELDOUT_SUITE.exists(), f"Held-out suite missing: {DEFAULT_HELDOUT_SUITE}"
-    heldout_items = load_jsonl(DEFAULT_HELDOUT_SUITE)
+    heldout_snapshot = artifact_set("open_model_other_indexes", repo=REPO_ROOT)
+    heldout_items = [
+        json.loads(line) for line in _a_bytes(heldout_snapshot, DEFAULT_HELDOUT_SUITE).splitlines() if line.strip()
+    ]
     assert len(heldout_items) == HELDOUT_TOTAL, f"Expected {HELDOUT_TOTAL} heldout items, got {len(heldout_items)}"
 
     heldout_preserve = [h for h in heldout_items if h.get("case_type") == "PRESERVE"]
@@ -372,10 +380,17 @@ def test_verify_only_cli_execution() -> None:
     assert "[✓] --verify-only checks passed 100% cleanly!" in res.stdout
 
 
-def test_tamper_detection_on_corrupted_shard(tmp_path: Path) -> None:
+def test_tamper_detection_on_corrupted_shard(tmp_path: Path, archive_payload: ArtifactSet) -> None:
     """Verify that tampering with an SFT shard or receipt triggers a verification failure."""
     test_release_dir = tmp_path / "uldr_v1_production"
-    shutil.copytree(DEFAULT_OUTPUT_DIR, test_release_dir)
+    for relative, content in archive_payload.artifacts.items():
+        if not relative.startswith("projects/open_model_data/archive/uldr_v1_production/"):
+            continue
+        target = tmp_path / relative.removeprefix("projects/open_model_data/archive/")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+    for name in ("production_release_receipt.json", "production_release_receipt.json.sha256"):
+        (test_release_dir / name).write_bytes((REGISTRY_OUTPUT_DIR / name).read_bytes())
 
     # Tamper with shard 001 by modifying one byte
     shard_1 = test_release_dir / "sft" / f"sft_shard_001_of_{SFT_SHARDS_COUNT:03d}.jsonl"

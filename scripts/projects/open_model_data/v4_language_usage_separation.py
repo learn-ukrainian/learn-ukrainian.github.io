@@ -23,9 +23,9 @@ from typing import Any
 import jsonschema
 
 DEFAULT_CONFIG_PATH = Path("data/projects/open_model_data/language/v4_language_usage_config_v1.json")
-CONFIG_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_config_v1.schema.json")
-ITEM_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_item_v1.schema.json")
-RECEIPT_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_receipt_v1.schema.json")
+CONFIG_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_config_v1.schema.json")
+ITEM_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_item_v1.schema.json")
+RECEIPT_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_receipt_v1.schema.json")
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 

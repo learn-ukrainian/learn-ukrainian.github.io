@@ -12,9 +12,9 @@ import pytest
 import scripts.projects.open_model_data.v4_language_usage_separation as lang_sep
 
 CONFIG_PATH = Path("data/projects/open_model_data/language/v4_language_usage_config_v1.json")
-CONFIG_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_config_v1.schema.json")
-ITEM_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_item_v1.schema.json")
-RECEIPT_SCHEMA_PATH = Path("data/projects/open_model_data/contracts/v4_language_usage_receipt_v1.schema.json")
+CONFIG_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_config_v1.schema.json")
+ITEM_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_item_v1.schema.json")
+RECEIPT_SCHEMA_PATH = Path("registry/projects/open_model_data/contracts/v4_language_usage_receipt_v1.schema.json")
 
 
 @pytest.fixture
@@ -237,7 +237,7 @@ def test_verify_passes_in_unprovisioned_ci_without_sources_db(tmp_path: Path, re
     """verify() succeeds in CI environments where data/sources.db is not provisioned."""
     ci_root = tmp_path / "ci_runner"
     for sub in [
-        "data/projects/open_model_data/contracts",
+        "registry/projects/open_model_data/contracts",
         "data/projects/open_model_data/language",
     ]:
         dest = ci_root / sub

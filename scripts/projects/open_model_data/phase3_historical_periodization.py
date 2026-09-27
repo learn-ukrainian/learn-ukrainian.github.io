@@ -19,7 +19,7 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
 FREEZE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_historical_periodization_freeze_v1.json"
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_historical_periodization_freeze_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_historical_periodization_freeze_v1.schema.json"
 SCHEMA_VERSION = "phase3_historical_periodization_freeze_v1"
 ASSIGNMENT_SCHEMA_VERSION = "phase3_historical_periodization_assignment_v1"
 EXPECTED_FREEZE_SHA256 = "94d07a2e4e2fe453334a494007bc823cf4be7ce07f0a21779c73163ac821a198"

@@ -16,7 +16,7 @@ from scripts.projects.open_model_data import v4_provenance_restoration as restor
 ROOT = Path(__file__).resolve().parents[3]
 EVIDENCE = ROOT / "data/projects/open_model_data/evidence"
 PROVENANCE = ROOT / "data/projects/open_model_data/provenance"
-CONTRACT = ROOT / "data/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
+CONTRACT = ROOT / "registry/projects/open_model_data/contracts/v4_provenance_restoration_v1.schema.json"
 CONFIG = PROVENANCE / "v4_provenance_restoration_config_v1.json"
 LOCATOR_CONFIG = EVIDENCE / "source_work_locator_config_v1.json"
 INDEX = PROVENANCE / "v4_provenance_restoration_index_v1.jsonl"

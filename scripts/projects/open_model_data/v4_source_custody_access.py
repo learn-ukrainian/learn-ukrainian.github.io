@@ -37,7 +37,7 @@ MISSING_REPORT_SCHEMA_VERSION = "v4_source_custody_missing_report_v1"
 RECEIPT_SCHEMA_VERSION = "v4_source_custody_access_receipt_v1"
 
 DEFAULT_CONFIG = Path("data/projects/open_model_data/custody/v4_source_custody_access_config_v1.json")
-CONTRACTS_DIR = Path("data/projects/open_model_data/contracts")
+CONTRACTS_DIR = Path("registry/projects/open_model_data/contracts")
 CONFIG_SCHEMA_PATH = CONTRACTS_DIR / "v4_source_custody_access_config_v1.schema.json"
 ITEM_SCHEMA_PATH = CONTRACTS_DIR / "v4_source_custody_access_item_v1.schema.json"
 MISSING_REPORT_SCHEMA_PATH = CONTRACTS_DIR / "v4_source_custody_missing_report_v1.schema.json"

@@ -28,7 +28,7 @@ sys.path.insert(0, str(ROOT))
 from scripts.projects.open_model_data import phase3_source_policy_v4 as policy_v4
 
 SCHEMA_VERSION = "phase3_live_ingest_gate_v1"
-SCHEMA_PATH = ROOT / "data/projects/open_model_data/contracts/phase3_live_ingest_gate_v1.schema.json"
+SCHEMA_PATH = ROOT / "registry/projects/open_model_data/contracts/phase3_live_ingest_gate_v1.schema.json"
 DEFAULT_GATE_PATH = ROOT / "data/projects/open_model_data/admission/phase3_live_ingest_gate_v1.json"
 EXPECTED_GATE_SHA256 = "594b2de8ae357b4c33594a8d933d683284f4824c0c833624b20dffe75c6f6a63"
 PR6631_MERGE_COMMIT = "c88928cf6deaeb84d7487681885314d7b2bb729c"

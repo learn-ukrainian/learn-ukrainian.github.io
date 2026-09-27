@@ -32,7 +32,7 @@ from scripts.projects.open_model_data.phase3_linguistic_representation import ca
 
 ROOT = Path(__file__).resolve().parents[3]
 RECEIPT_SCHEMA_PATH = (
-    ROOT / "data/projects/open_model_data/contracts/phase3_spas_catalog_materialization_receipt_v1.schema.json"
+    ROOT / "registry/projects/open_model_data/contracts/phase3_spas_catalog_materialization_receipt_v1.schema.json"
 )
 
 SCHEMA_VERSION = "phase3_spas_catalog_materialization_receipt_v1"

@@ -18,8 +18,8 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.projects.open_model_data.gold_seeds_types import CATEGORY_QUOTAS
 from scripts.projects.open_model_data.v4_mine_gold_seeds import check_quote_quality
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
-SEEDS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "seeds"
+CONTRACTS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "contracts"
+SEEDS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "decolonization" / "seeds"
 
 TRAJ_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
 DPO_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"

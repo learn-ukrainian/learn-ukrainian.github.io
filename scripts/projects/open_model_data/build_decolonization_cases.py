@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import hashlib
 import json
 import re
 import sqlite3
@@ -44,8 +45,51 @@ from scripts.projects.open_model_data.decolonization_language_reviews import (
     INDEPENDENT_LANGUAGE_REVIEWS,
     compute_case_content_sha256,
 )
-from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+from scripts.projects.open_model_data.paths import ARTIFACT_DECOLONIZATION_DIR
 from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
+from scripts.storage import paths as storage_paths
+from scripts.storage.artifacts import write_artifact_set
+
+_COMPONENT_GROUP = "open_model_component_payload"
+_DECOLONIZATION_REL = "projects/open_model_data/components/decolonization"
+
+
+def _managed_decolonization_destination(output_dir: Path) -> bool:
+    data = REPO_ROOT / "data" / _DECOLONIZATION_REL
+    registry = REPO_ROOT / "registry" / _DECOLONIZATION_REL
+    lexical = output_dir.absolute()
+    resolved = output_dir.resolve()
+    if lexical != resolved and (lexical in {data, registry} or resolved in {data, registry}):
+        raise ValueError(f"managed decolonization output reached through a symlink: {output_dir}")
+    if lexical in {data, registry}:
+        return True
+    if lexical.is_relative_to(REPO_ROOT / "data/projects/open_model_data") or lexical.is_relative_to(
+        REPO_ROOT / "registry/projects/open_model_data"
+    ):
+        raise ValueError(f"unsupported managed decolonization output directory: {output_dir}")
+    return False
+
+
+def _publish_decolonization_outputs(payloads: dict[str, bytes], companions: dict[str, bytes]) -> None:
+    manifest = storage_paths.load_manifest(_COMPONENT_GROUP, REPO_ROOT)
+    prior = {entry["path"][5:]: entry["sha256"] for entry in manifest["entries"]}
+    prefix = f"{_DECOLONIZATION_REL}/"
+    write_artifact_set(
+        REPO_ROOT,
+        _COMPONENT_GROUP,
+        "build_decolonization_cases.py",
+        {prefix + name: (lambda target, data=data: target.write_bytes(data)) for name, data in payloads.items()},
+        expected_hashes={prefix + name: prior.get(prefix + name) for name in payloads},
+        expected_members=set(prior),
+        companions={
+            f"registry/{prefix}{name}": (
+                storage_paths.hash_file(REPO_ROOT / f"registry/{prefix}{name}")
+                if (REPO_ROOT / f"registry/{prefix}{name}").exists() else None,
+                lambda target, data=data: target.write_bytes(data),
+            )
+            for name, data in companions.items()
+        },
+    )
 
 
 @dataclass
@@ -1105,15 +1149,25 @@ def generate_dataset_records(cases: list[DecolonizationCase]) -> tuple[list[dict
     return train_records, eval_records
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Build Decolonization Dataset (#8340)")
-    parser.add_argument("--output-dir", type=Path, default=DECOLONIZATION_DIR, help="Target component directory")
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Build and validate the decolonization dataset. Use --check to validate without publication.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --check\n"
+            "  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.projects.open_model_data.build_decolonization_cases --output-dir /tmp/decolonization-export\n"
+            "Outputs: managed A payloads and K companions as one transaction, or an explicit external directory.\n"
+            "Exit codes: 0 = success; nonzero = validation or publication failed.\n"
+            "Related: issues #8340 and #8809."
+        ),
+    )
+    parser.add_argument("--output-dir", type=Path, default=ARTIFACT_DECOLONIZATION_DIR, help="Target component directory (default: managed decolonization component).")
     parser.add_argument("--check", "--dry-run", dest="check", action="store_true", help="Validate dataset generation in memory without writing to disk")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     out_dir = args.output_dir
-    if not args.check:
-        out_dir.mkdir(parents=True, exist_ok=True)
+    managed = _managed_decolonization_destination(out_dir) if not args.check else False
 
     print(f"Building decolonization dataset at {out_dir}...")
     cases = build_all_cases()
@@ -1127,30 +1181,22 @@ def main() -> int:
         print("Dry-run/check validation passed: all 250 cases and 500 records verified successfully in memory.")
         return 0
 
-    # 1. Write cases.json catalog
+    # Prepare all outputs before any managed pathname can change.
     cases_file = out_dir / "cases.json"
-    with cases_file.open("w", encoding="utf-8") as f:
-        json.dump([asdict(c) for c in cases], f, ensure_ascii=False, indent=2)
-        f.write("\n")
-    print(f"Wrote cases catalog: {cases_file}")
+    cases_bytes = (json.dumps([asdict(c) for c in cases], ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
-    # 2. Write train JSONL
     train_file = out_dir / "decolonization_train.jsonl"
-    with train_file.open("w", encoding="utf-8") as f:
-        for r in train_recs:
-            f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    print(f"Wrote train set: {train_file} ({len(train_recs)} records)")
+    train_bytes = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in train_recs).encode("utf-8")
 
-    # 3. Write eval JSONL
     eval_file = out_dir / "decolonization_eval.jsonl"
-    with eval_file.open("w", encoding="utf-8") as f:
-        for r in eval_recs:
-            f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    print(f"Wrote eval set: {eval_file} ({len(eval_recs)} records)")
+    eval_bytes = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in eval_recs).encode("utf-8")
 
-    # 4. Write manifest.json
     manifest = {
         "dataset_name": "decolonization_v1",
+        "payload_sha256": {
+            "decolonization_train.jsonl": hashlib.sha256(train_bytes).hexdigest(),
+            "decolonization_eval.jsonl": hashlib.sha256(eval_bytes).hexdigest(),
+        },
         "version": "1.0.0",
         "task_type": "correction",
         "has_evaluation_split": True,
@@ -1170,7 +1216,21 @@ def main() -> int:
         },
     }
     manifest_file = out_dir / "manifest.json"
-    manifest_file.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    manifest_bytes = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+    if managed:
+        _publish_decolonization_outputs(
+            {"decolonization_train.jsonl": train_bytes, "decolonization_eval.jsonl": eval_bytes},
+            {"cases.json": cases_bytes, "manifest.json": manifest_bytes},
+        )
+    else:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        cases_file.write_bytes(cases_bytes)
+        train_file.write_bytes(train_bytes)
+        eval_file.write_bytes(eval_bytes)
+        manifest_file.write_bytes(manifest_bytes)
+    print(f"Wrote cases catalog: {cases_file}")
+    print(f"Wrote train set: {train_file} ({len(train_recs)} records)")
+    print(f"Wrote eval set: {eval_file} ({len(eval_recs)} records)")
     print(f"Wrote manifest: {manifest_file}")
 
     return 0

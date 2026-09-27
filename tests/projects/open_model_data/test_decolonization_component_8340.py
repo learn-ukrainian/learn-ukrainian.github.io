@@ -31,28 +31,33 @@ from scripts.projects.open_model_data.audit_dataset_acceptance import (
     LinguisticNormalizer,
     _resolve_db_path,
 )
-from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+from scripts.projects.open_model_data.paths import REGISTRY_DECOLONIZATION_DIR
 from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
+from scripts.storage.paths import artifact_set
+
+_COMPONENT_GROUP = "open_model_component_payload"
+_DECOL_REL = "projects/open_model_data/components/decolonization"
 
 
 @pytest.fixture(scope="module")
 def decolonization_data():
     """Load all records and manifest for component testing."""
-    manifest_file = DECOLONIZATION_DIR / "manifest.json"
-    cases_file = DECOLONIZATION_DIR / "cases.json"
-    train_file = DECOLONIZATION_DIR / "decolonization_train.jsonl"
-    eval_file = DECOLONIZATION_DIR / "decolonization_eval.jsonl"
+    manifest_file = REGISTRY_DECOLONIZATION_DIR / "manifest.json"
+    cases_file = REGISTRY_DECOLONIZATION_DIR / "cases.json"
+    snapshot = artifact_set(_COMPONENT_GROUP, repo=REPO_ROOT)
+    train_rel = f"{_DECOL_REL}/decolonization_train.jsonl"
+    eval_rel = f"{_DECOL_REL}/decolonization_eval.jsonl"
 
     assert manifest_file.is_file(), f"Missing manifest.json at {manifest_file}"
     assert cases_file.is_file(), f"Missing cases.json at {cases_file}"
-    assert train_file.is_file(), f"Missing decolonization_train.jsonl at {train_file}"
-    assert eval_file.is_file(), f"Missing decolonization_eval.jsonl at {eval_file}"
+    assert train_rel in snapshot.artifacts
+    assert eval_rel in snapshot.artifacts
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     cases = json.loads(cases_file.read_text(encoding="utf-8"))
 
-    train_records = [json.loads(line) for line in train_file.read_text(encoding="utf-8").splitlines() if line.strip()]
-    eval_records = [json.loads(line) for line in eval_file.read_text(encoding="utf-8").splitlines() if line.strip()]
+    train_records = [json.loads(line) for line in snapshot.artifacts[train_rel].decode("utf-8").splitlines() if line.strip()]
+    eval_records = [json.loads(line) for line in snapshot.artifacts[eval_rel].decode("utf-8").splitlines() if line.strip()]
 
     return {
         "manifest": manifest,
@@ -99,6 +104,9 @@ def require_all_databases():
     return sources_db
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_manifest_and_catalog_integrity(decolonization_data):
     """Verify manifest metadata and cases catalog alignment."""
     manifest = decolonization_data["manifest"]
@@ -125,6 +133,9 @@ def test_manifest_and_catalog_integrity(decolonization_data):
     assert stats["protective_controls"] == 150
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_real_content_share_and_category_balance(decolonization_data):
     """Verify 70/30 substantive/protective split and 4 balanced categories."""
     records = decolonization_data["all"]
@@ -150,6 +161,9 @@ def test_real_content_share_and_category_balance(decolonization_data):
     assert cat_counts == expected_categories
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_zero_contradictions(decolonization_data):
     """Verify that erroneous rows have diffs and protective controls are unchanged."""
     records = decolonization_data["all"]
@@ -166,6 +180,9 @@ def test_zero_contradictions(decolonization_data):
             assert r["chosen"] == orig
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_zero_train_eval_leakage(decolonization_data, require_vesum_db):
     """Verify 100% disjoint train and eval partitions under aspect normalization."""
     normalizer = LinguisticNormalizer(require_vesum_db)
@@ -187,19 +204,25 @@ def test_zero_train_eval_leakage(decolonization_data, require_vesum_db):
             assert nt not in train_targets, f"Target leakage in {r['record_id']}: {r['target_term']} ({nt})"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_dataset_acceptance_audit_passes(require_local_databases):
     """Verify that audit_dataset_acceptance.py runs and passes with exit code 0."""
     audit_script = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "audit_dataset_acceptance.py"
     cmd = [
         sys.executable,
         str(audit_script),
-        str(DECOLONIZATION_DIR),
+        str(REGISTRY_DECOLONIZATION_DIR),
     ]
     proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=60)
     assert proc.returncode == 0, f"Acceptance audit failed (exit {proc.returncode}):\n{proc.stdout}\n{proc.stderr}"
     assert "OVERALL STATUS: PASSED_AUTOMATED_CHECKS" in proc.stdout
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_decol_syn_014_antonenko_davydovych_norm(decolonization_data):
     """Verify that decol_syn_014 follows Antonenko-Davydovych §77: targets таким способом, corrects таким шляхом."""
     cases = decolonization_data["cases"]
@@ -220,6 +243,9 @@ def test_decol_syn_014_antonenko_davydovych_norm(decolonization_data):
         assert "таким чином" not in r["rejected"]  # таким чином is valid standard Ukrainian, never condemned
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_supporting_passages_all_non_null_and_authentic(decolonization_data):
     """Verify that 100% of cases (250/250) have non-null, non-empty authentic supporting passages."""
     cases = decolonization_data["cases"]
@@ -489,7 +515,7 @@ def test_adversarial_probes_and_fail_closed(require_local_databases):
     orig_locator = INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_dossier_locator"]
     try:
         INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_dossier_locator"] = (
-            "data/projects/open_model_data/components/decolonization/reviews/nonexistent_dossier_999.json"
+            "registry/projects/open_model_data/components/decolonization/reviews/nonexistent_dossier_999.json"
         )
         with pytest.raises(ValueError, match=r"Review dossier file not found at .*nonexistent_dossier_999.json"):
             make_reviewer_confirmation(syn_032, "calque_syntactic", v_cur, s_cur, [])
@@ -518,6 +544,9 @@ def test_adversarial_probes_and_fail_closed(require_local_databases):
         INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["reviewer_family"] = orig_rev_fam
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_supporting_passages_and_no_manufactured_statements(decolonization_data):
     """Verify authentic citations, no manufactured blanket statements, and correct loci (CF-R6 Finding 2)."""
     cases = decolonization_data["cases"]
@@ -561,10 +590,13 @@ def test_supporting_passages_and_no_manufactured_statements(decolonization_data)
     assert "у вихідний (день)" in ev_020["supporting_passage"]
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_dataset_acceptance_with_verified_signoff(require_local_databases):
     """Verify that audit_dataset_acceptance.py passes with verified human signoff and ACCEPTED status (Finding 3)."""
     audit_script = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "audit_dataset_acceptance.py"
-    signoff_file = DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
+    signoff_file = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
     assert signoff_file.is_file(), f"Missing signoff file at {signoff_file}"
 
     cmd = [
@@ -572,7 +604,7 @@ def test_dataset_acceptance_with_verified_signoff(require_local_databases):
         str(audit_script),
         "--verify-human-signoff",
         str(signoff_file),
-        str(DECOLONIZATION_DIR),
+        str(REGISTRY_DECOLONIZATION_DIR),
     ]
     proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=60)
     assert proc.returncode == 0, f"Acceptance audit failed (exit {proc.returncode}):\n{proc.stdout}\n{proc.stderr}"
@@ -580,6 +612,9 @@ def test_dataset_acceptance_with_verified_signoff(require_local_databases):
     assert "signoff_verified: True" in proc.stdout
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_cf_r9_remediations_regression(decolonization_data, require_local_databases):
     """Verify remediation of all 3 CF-R9 blockers.
 
@@ -1037,10 +1072,10 @@ def test_cf_r11_remediations_regression(monkeypatch, require_local_databases):
         )
 
     # ── 3. Blocker 3: make_reviewer_confirmation signoff contract ──
-    signoff_path = REPO_ROOT / "data/projects/open_model_data/components/decolonization/acceptance_review_sample.signoff.json"
+    signoff_path = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
     valid_signoff = json.loads(signoff_path.read_text(encoding="utf-8"))
 
-    cases_file = DECOLONIZATION_DIR / "cases.json"
+    cases_file = REGISTRY_DECOLONIZATION_DIR / "cases.json"
     valid_cases = json.loads(cases_file.read_text(encoding="utf-8"))
     lex_001_item = next(c for c in valid_cases if c["case_id"] == "decol_lex_001")
 
@@ -1157,10 +1192,10 @@ def test_cf_r12_remediations_regression(monkeypatch, require_local_databases):
             )
 
     # ── 2. Sample size equality and type enforcement ──
-    signoff_path = REPO_ROOT / "data/projects/open_model_data/components/decolonization/acceptance_review_sample.signoff.json"
+    signoff_path = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
     valid_signoff = json.loads(signoff_path.read_text(encoding="utf-8"))
 
-    cases_file = DECOLONIZATION_DIR / "cases.json"
+    cases_file = REGISTRY_DECOLONIZATION_DIR / "cases.json"
     valid_cases = json.loads(cases_file.read_text(encoding="utf-8"))
     lex_001_item = next(c for c in valid_cases if c["case_id"] == "decol_lex_001")
 
@@ -1730,6 +1765,9 @@ def test_cf_r15_phrase_attestation_regression(require_all_databases) -> None:
     assert res_053["status"] == "source_attested"
 
 
+@pytest.mark.needs_artifact(
+    "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
+)
 def test_cf_r20_remediations_regression(decolonization_data, require_local_databases):
     """Verify CF-R20 findings remediations: ПЛИН, ЗАГАЛ, ЧАС, and sample review audit."""
     import sqlite3
@@ -1816,7 +1854,7 @@ def test_cf_r20_remediations_regression(decolonization_data, require_local_datab
     assert res_074["status"] == "source_attested"
 
     # 6. Sample review receipt verification
-    receipt_file = DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"
+    receipt_file = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"
     assert receipt_file.is_file(), f"Missing receipt file at {receipt_file}"
     receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
     assert receipt["verdict"] == "APPROVED"
@@ -1836,7 +1874,7 @@ def test_cf_r21_remediations_regression():
 
     from scripts.projects.open_model_data.decolonization_cases_data import PROTECTIVE_CONTROLS
     from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
-    from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+    from scripts.projects.open_model_data.paths import REGISTRY_DECOLONIZATION_DIR
 
     # 1. decol_prot_072 verifies the noun загал in ВТС without phrase-level extrapolation
     ev_072 = EXPLICIT_SOURCE_EVIDENCE["decol_prot_072"]
@@ -1853,13 +1891,13 @@ def test_cf_r21_remediations_regression():
         assert "загал" in ctx["original_text"]
 
     # 2. Receipt substantiation: all 300 items have item-level authority and reviewer reasoning
-    receipt_file = DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"
+    receipt_file = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"
     assert receipt_file.is_file()
     receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
     items = receipt["reviewed_sample_items"]
     assert len(items) == 300
 
-    signoff_file = DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
+    signoff_file = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
     signoff = json.loads(signoff_file.read_text(encoding="utf-8"))
     assert receipt["dataset_sha256"] == signoff["dataset_sha256"]
     assert receipt["sample_seed"] == signoff["sample_seed"]
@@ -1884,7 +1922,7 @@ def test_cf_r22_remediations_regression():
 
     from scripts.projects.open_model_data.decolonization_cases_data import SYNTACTIC_CALQUES
     from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
-    from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+    from scripts.projects.open_model_data.paths import REGISTRY_DECOLONIZATION_DIR
 
     # 1. decol_syn_023 source locus and supporting passage
     ev_023 = EXPLICIT_SOURCE_EVIDENCE["decol_syn_023"]
@@ -1896,7 +1934,7 @@ def test_cf_r22_remediations_regression():
     assert case_023["target_term"] == "відчинити"
 
     # 2. Receipt item rationales
-    receipt_file = DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"
+    receipt_file = REGISTRY_DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"
     receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
     for it in receipt["reviewed_sample_items"]:
         rat = it["reviewer_rationale"]
@@ -1920,7 +1958,7 @@ def test_cf_r23_remediations_regression():
 
     from scripts.projects.open_model_data.decolonization_cases_data import SYNTACTIC_CALQUES
     from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
-    from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+    from scripts.projects.open_model_data.paths import REGISTRY_DECOLONIZATION_DIR
 
     # 1. decol_syn_011 in catalog and cases data
     ev_011 = EXPLICIT_SOURCE_EVIDENCE["decol_syn_011"]
@@ -1934,7 +1972,7 @@ def test_cf_r23_remediations_regression():
     assert case_011["russian_copy"] == "прийняти пропозицію"
 
     # 2. Check cases.json
-    cases_file = DECOLONIZATION_DIR / "cases.json"
+    cases_file = REGISTRY_DECOLONIZATION_DIR / "cases.json"
     cases = json.loads(cases_file.read_text(encoding="utf-8"))
     c_011 = next(c for c in cases if c["case_id"] == "decol_syn_011")
     assert c_011["target_term"] == "ухвалити пропозицію"

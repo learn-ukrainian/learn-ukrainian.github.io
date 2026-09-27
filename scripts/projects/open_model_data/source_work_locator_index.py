@@ -17,7 +17,7 @@ from urllib.parse import urlsplit, urlunsplit
 from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACT = ROOT / "data/projects/open_model_data/contracts/source_work_locator_v1.schema.json"
+CONTRACT = ROOT / "registry/projects/open_model_data/contracts/source_work_locator_v1.schema.json"
 IDENTIFIER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 COMPACT_SCHEMA_VERSION = "source_work_locator_compact_v1"
 COMPACT_OUTPUT_SUFFIX = ".compact.jsonl"

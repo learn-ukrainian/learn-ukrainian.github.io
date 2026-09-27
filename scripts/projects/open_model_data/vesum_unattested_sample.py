@@ -29,7 +29,7 @@ from scripts.projects.open_model_data import document_signal_manifest as phase1
 from scripts.projects.open_model_data import language_contact_detector as detector
 from scripts.projects.open_model_data import profile_corpus as profile
 
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECORD_SCHEMA = CONTRACTS / "vesum_unattested_sample_record_v1.schema.json"
 RECEIPT_SCHEMA = CONTRACTS / "vesum_unattested_sample_receipt_v1.schema.json"
 GENERATOR_PATH = Path(__file__).resolve()

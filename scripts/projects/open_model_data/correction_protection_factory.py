@@ -26,7 +26,7 @@ from referencing import Registry, Resource
 from scripts.projects.open_model_data.correction_protection_rules import iter_rule_matches
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 SOURCE_SCHEMA = CONTRACTS / "correction_protection_source_v1.schema.json"
 EVIDENCE_SCHEMA = CONTRACTS / "correction_protection_evidence_v1.schema.json"
 CASE_SCHEMA = CONTRACTS / "correction_protection_case_v1.schema.json"

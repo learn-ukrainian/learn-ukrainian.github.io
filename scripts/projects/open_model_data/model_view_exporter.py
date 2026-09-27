@@ -32,7 +32,7 @@ from scripts.projects.open_model_data import correction_factory
 from scripts.projects.open_model_data import validate_source_records as source_contract
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 
 SOURCE_PAYLOAD_SCHEMA = CONTRACTS / "foundry_source_payload_v1.schema.json"
 PRETRAIN_SCHEMA = CONTRACTS / "continued_pretraining_view_v1.schema.json"

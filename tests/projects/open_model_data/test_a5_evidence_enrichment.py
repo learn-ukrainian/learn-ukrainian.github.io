@@ -27,7 +27,7 @@ from scripts.projects.open_model_data import v4_a5_evidence_enrichment as enrich
 
 ROOT = Path(__file__).resolve().parents[3]
 ADMISSION = ROOT / "data/projects/open_model_data/admission"
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 RECEIPT = ADMISSION / "dataset_v4_a5_evidence_enrichment_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a5_evidence_enrichment_receipt_v1.schema.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"

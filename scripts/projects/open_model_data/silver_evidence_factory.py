@@ -35,7 +35,7 @@ if str(ROOT) not in sys.path:
 from scripts.projects.open_model_data import language_contact_detector as detector
 from scripts.projects.open_model_data import model_view_exporter
 
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 CANDIDATE_SCHEMA = CONTRACTS / "language_contact_candidate_v1.schema.json"
 DETECTOR_RECEIPT_SCHEMA = CONTRACTS / "language_contact_receipt_v1.schema.json"
 OBSERVATION_SCHEMA = CONTRACTS / "language_contact_silver_observation_v1.schema.json"

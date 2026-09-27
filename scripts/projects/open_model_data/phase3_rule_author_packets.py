@@ -34,7 +34,7 @@ from scripts.projects.open_model_data import phase3_near_duplicate as near_dupli
 from scripts.projects.open_model_data import phase3_source_universe as source_universe
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 SCHEMA_PATH = CONTRACTS / "phase3_rule_author_packet_bundle_v1.schema.json"
 CLEARANCE_SCHEMA_PATH = CONTRACTS / "phase3_heldout_partition_bundle_v1.schema.json"
 SCRIPT_PATH = "scripts/projects/open_model_data/phase3_rule_author_packets.py"

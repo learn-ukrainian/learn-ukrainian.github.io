@@ -15,7 +15,7 @@ from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 EVIDENCE = ROOT / "data/projects/open_model_data/evidence"
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 SCHEMA_NAMES = (
@@ -572,7 +572,7 @@ def _validate_roles(roles: dict[str, Any]) -> None:
 
 def validate_contracts(repo_root: Path = ROOT) -> dict[str, Any]:
     repo_root = repo_root.resolve()
-    schema_paths = [repo_root / "data/projects/open_model_data/contracts" / name for name in SCHEMA_NAMES]
+    schema_paths = [repo_root / "registry/projects/open_model_data/contracts" / name for name in SCHEMA_NAMES]
     artifact_paths = [repo_root / "data/projects/open_model_data/evidence" / name for name in ARTIFACT_NAMES]
     artifacts = [_schema_validate(schema_path, artifact_path) for schema_path, artifact_path in zip(schema_paths, artifact_paths, strict=True)]
     local_binding_inputs_verified = _validate_hashes(repo_root, artifacts)

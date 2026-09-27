@@ -35,7 +35,7 @@ from scripts.projects.open_model_data import validate_source_records as source_r
 from scripts.verification.vesum import verify_words
 
 ROOT = Path(__file__).resolve().parents[3]
-CONTRACTS = ROOT / "data/projects/open_model_data/contracts"
+CONTRACTS = ROOT / "registry/projects/open_model_data/contracts"
 PAYLOAD_SCHEMA = CONTRACTS / "foundry_source_payload_v1.schema.json"
 SILVER_SCHEMA = CONTRACTS / "language_contact_silver_record_v1.schema.json"
 PAYLOAD_RECEIPT_SCHEMA = CONTRACTS / "source_payload_preparation_receipt_v1.schema.json"

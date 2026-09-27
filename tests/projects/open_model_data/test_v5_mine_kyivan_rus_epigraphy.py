@@ -40,6 +40,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from pathlib import Path
 from typing import Any
 
 import jsonschema
@@ -58,14 +59,26 @@ from scripts.projects.open_model_data.v5_mine_kyivan_rus_epigraphy import (
     evaluate_epigraphic_suite,
     normalize_historical_snippet,
 )
+from scripts.storage.paths import ArtifactSet, artifact_set
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+REGISTRY_RELEASE_DIR = REPO_ROOT / "registry" / DEFAULT_RELEASE_DIR.relative_to(REPO_ROOT / "data")
 EVAL_BENCHMARK_PATH = DEFAULT_RELEASE_DIR / "kyivan_rus_epigraphic_eval.jsonl"
-EVAL_SHA_PATH = DEFAULT_RELEASE_DIR / "kyivan_rus_epigraphic_eval.sha256"
+EVAL_SHA_PATH = REGISTRY_RELEASE_DIR / "kyivan_rus_epigraphic_eval.sha256"
 SFT_DIR = DEFAULT_RELEASE_DIR / "sft"
-MANIFEST_PATH = SFT_DIR / "manifest.json"
-MANIFEST_SHA_PATH = SFT_DIR / "manifest.json.sha256"
-RECEIPT_PATH = DEFAULT_RELEASE_DIR / "release_receipt.json"
-RECEIPT_SHA_PATH = DEFAULT_RELEASE_DIR / "release_receipt.json.sha256"
+MANIFEST_PATH = REGISTRY_RELEASE_DIR / "sft" / "manifest.json"
+MANIFEST_SHA_PATH = REGISTRY_RELEASE_DIR / "sft" / "manifest.json.sha256"
+RECEIPT_PATH = REGISTRY_RELEASE_DIR / "release_receipt.json"
+RECEIPT_SHA_PATH = REGISTRY_RELEASE_DIR / "release_receipt.json.sha256"
+
+
+@pytest.fixture(scope="module")
+def archive_payload() -> ArtifactSet:
+    return artifact_set("open_model_archive_payload", repo=REPO_ROOT)
+
+
+def _a_bytes(snapshot: ArtifactSet, path: Path) -> bytes:
+    return snapshot.artifacts[path.relative_to(REPO_ROOT / "data").as_posix()]
 
 
 @pytest.fixture(scope="module")
@@ -93,19 +106,19 @@ def trajectory_schema() -> dict[str, Any]:
 
 
 @pytest.fixture(scope="module")
-def eval_cases() -> list[dict[str, Any]]:
-    assert EVAL_BENCHMARK_PATH.is_file(), f"Benchmark file missing: {EVAL_BENCHMARK_PATH}"
-    lines = [json.loads(line) for line in EVAL_BENCHMARK_PATH.read_text(encoding="utf-8").splitlines() if line.strip()]
+def eval_cases(archive_payload: ArtifactSet) -> list[dict[str, Any]]:
+    lines = [json.loads(line) for line in _a_bytes(archive_payload, EVAL_BENCHMARK_PATH).splitlines() if line.strip()]
     return lines
 
 
 @pytest.fixture(scope="module")
-def sft_trajectories() -> list[dict[str, Any]]:
-    assert SFT_DIR.is_dir(), f"SFT directory missing: {SFT_DIR}"
+def sft_trajectories(archive_payload: ArtifactSet) -> list[dict[str, Any]]:
     assert MANIFEST_PATH.is_file(), f"SFT manifest missing: {MANIFEST_PATH}"
     lines: list[dict[str, Any]] = []
-    for shard_path in sorted(SFT_DIR.glob("sft_shard_*.jsonl")):
-        for line in shard_path.read_text(encoding="utf-8").splitlines():
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    for shard_info in manifest["shards"]:
+        shard_path = SFT_DIR / shard_info["filename"]
+        for line in _a_bytes(archive_payload, shard_path).splitlines():
             if line.strip():
                 lines.append(json.loads(line))
     return lines
@@ -117,10 +130,9 @@ def receipt() -> dict[str, Any]:
     return json.loads(RECEIPT_PATH.read_text(encoding="utf-8"))
 
 
-def test_release_files_exist_and_sha_integrity() -> None:
+def test_release_files_exist_and_sha_integrity(archive_payload: ArtifactSet) -> None:
     """Test 1: Release artifacts exist and cryptographic SHA-256 hashes match."""
     for file_path, sha_path in [
-        (EVAL_BENCHMARK_PATH, EVAL_SHA_PATH),
         (MANIFEST_PATH, MANIFEST_SHA_PATH),
         (RECEIPT_PATH, RECEIPT_SHA_PATH),
     ]:
@@ -131,14 +143,18 @@ def test_release_files_exist_and_sha_integrity() -> None:
         actual_sha = hashlib.sha256(file_path.read_bytes()).hexdigest()
         assert actual_sha == expected_sha, f"SHA mismatch for {file_path}: expected {expected_sha}, got {actual_sha}"
 
+    eval_bytes = _a_bytes(archive_payload, EVAL_BENCHMARK_PATH)
+    expected_eval_sha = EVAL_SHA_PATH.read_text(encoding="utf-8").split()[0].strip()
+    assert hashlib.sha256(eval_bytes).hexdigest() == expected_eval_sha
+
     # Verify each shard in manifest
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["shards_count"] == 30
     for shard_info in manifest["shards"]:
         shard_path = SFT_DIR / shard_info["filename"]
-        assert shard_path.is_file(), f"Missing shard: {shard_path}"
-        assert shard_path.stat().st_size <= 2000 * 1024, f"Shard exceeds 2000 KB: {shard_path}"
-        actual_shard_sha = hashlib.sha256(shard_path.read_bytes()).hexdigest()
+        shard_bytes = _a_bytes(archive_payload, shard_path)
+        assert len(shard_bytes) <= 2000 * 1024, f"Shard exceeds 2000 KB: {shard_path}"
+        actual_shard_sha = hashlib.sha256(shard_bytes).hexdigest()
         assert actual_shard_sha == shard_info["sha256"], f"Shard SHA mismatch: {shard_path}"
 
 

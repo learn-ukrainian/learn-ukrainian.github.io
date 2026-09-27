@@ -32,6 +32,7 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.p3b_refusal import refuse_historical_regeneration
 from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     MinHashDedup,
@@ -47,8 +48,9 @@ from scripts.projects.open_model_data.v4_verify_trajectory_claims import (
     clean_word,
     resolve_data_path,
 )
+from scripts.storage.paths import ArtifactSet, artifact_set
 
-CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+CONTRACTS_DIR = REPO_ROOT / "registry" / "projects" / "open_model_data" / "contracts"
 TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
 DPO_PAIR_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_production_release_receipt.schema.json"
@@ -69,14 +71,12 @@ DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_LT_REPLACEMENTS = resolve_data_path("registry/lt_replacements.json")
 DEFAULT_GOLD_SEEDS_TRAJECTORIES = resolve_data_path(
-    "data/projects/open_model_data/decolonization/seeds/human_gold_seeds_150_trajectories.jsonl"
+    "registry/projects/open_model_data/decolonization/seeds/human_gold_seeds_150_trajectories.jsonl"
 )
 DEFAULT_GOLD_SEEDS_DPO = resolve_data_path(
-    "data/projects/open_model_data/decolonization/seeds/human_gold_seeds_150_dpo.jsonl"
+    "registry/projects/open_model_data/decolonization/seeds/human_gold_seeds_150_dpo.jsonl"
 )
-DEFAULT_UAGEC_MINED = resolve_data_path(
-    "data/projects/open_model_data/decolonization/mined/uagec_mined_calques.jsonl"
-)
+DEFAULT_UAGEC_MINED = resolve_data_path("data/projects/open_model_data/decolonization/mined/uagec_mined_calques.jsonl")
 DEFAULT_CORPUS_CONTRAST = resolve_data_path(
     "data/projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
 )
@@ -142,7 +142,38 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
     return records
 
 
+def _verified_artifact_bytes(path: Path, group: str, snapshots: dict[str, ArtifactSet]) -> bytes:
+    """Read a managed A member from one verified group generation."""
+    data_root = REPO_ROOT / "data"
+    managed_root = data_root / "projects" / "open_model_data"
+    lexical = path.absolute()
+    resolved = path.resolve()
+    if not (lexical.is_relative_to(managed_root) or resolved.is_relative_to(managed_root.resolve())):
+        return path.read_bytes()  # Explicit out-of-tree fixture inputs remain usable.
+    rel = (lexical if lexical.is_relative_to(managed_root) else resolved).relative_to(data_root).as_posix()
+    if group not in snapshots:
+        try:
+            snapshots[group] = artifact_set(group, repo=REPO_ROOT)
+        except (FileNotFoundError, ValueError) as exc:
+            raise RuntimeError(
+                f"Managed artifact group {group} is unavailable; hydrate with "
+                f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+            ) from exc
+    try:
+        return snapshots[group].artifacts[rel]
+    except KeyError as exc:
+        raise RuntimeError(
+            f"{path} is not a committed member of {group}; check the requested path or hydrate with "
+            f"/home/ops/learn-ukrainian/.venv/bin/python -m scripts.storage.artifacts hydrate --group {group}"
+        ) from exc
+
+
+def _jsonl_bytes(data: bytes) -> list[dict[str, Any]]:
+    return [json.loads(line) for line in data.decode("utf-8").splitlines() if line.strip()]
+
+
 def write_jsonl(path: Path, records: Sequence[dict[str, Any]]) -> None:
+    refuse_historical_regeneration("v4_production_shards_assembly.py write_jsonl")
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as f:
         for rec in records:
@@ -352,7 +383,9 @@ def format_preserve_trajectory(
 
     if format_type == "quick_tip":
         if sentence:
-            traj["query"] = f"Коротка порада: чи коректно вживати термін «{target_term}» у науковому реченні «{sentence}»?"
+            traj["query"] = (
+                f"Коротка порада: чи коректно вживати термін «{target_term}» у науковому реченні «{sentence}»?"
+            )
             traj["reasoning_steps"] = [
                 f"1. Термінологічний аналіз: термін «{target_term}» вжито у фаховому контексті: «{sentence}».",
                 f"2. Нормативна фіксація: форма «{target_term}» є кодифікованою у сучасній українській науковій мові.",
@@ -398,7 +431,9 @@ def format_preserve_trajectory(
             )
     elif format_type == "contrastive":
         if sentence:
-            traj["query"] = f"Проаналізуйте науковий контекст «{sentence}»: чи є термін «{target_term}» питомим на противагу чужомовним калькам?"
+            traj["query"] = (
+                f"Проаналізуйте науковий контекст «{sentence}»: чи є термін «{target_term}» питомим на противагу чужомовним калькам?"
+            )
             traj["reasoning_steps"] = [
                 f"1. Термінологічне розмежування: «{target_term}» у контексті «{sentence}» є точним і питомим поняттям.",
                 "2. Зіставлення з інтерференцією: форма не має ознак чужомовної кальки чи дериваційної деформації.",
@@ -934,6 +969,7 @@ def compute_heldout_minhash_similarity(
     heldout_suite_path: Path,
     sft_records: list[dict[str, Any]],
     dpo_records: list[dict[str, Any]],
+    heldout_records: list[dict[str, Any]] | None = None,
 ) -> tuple[float, float, int]:
     """Exhaustively verify partition firewall isolation using MinHash and exact token Jaccard.
 
@@ -953,7 +989,8 @@ def compute_heldout_minhash_similarity(
         raise RuntimeError("numpy is strictly required for exhaustive MinHash matrix computation") from e
 
     minhash = MinHashDedup(num_perm=64, bands=16, rows_per_band=4)
-    heldout_records = load_jsonl(heldout_suite_path)
+    if heldout_records is None:
+        heldout_records = _jsonl_bytes(_verified_artifact_bytes(heldout_suite_path, "open_model_other_indexes", {}))
 
     heldout_tokens: list[list[str]] = []
     heldout_sigs: list[tuple[int, ...]] = []
@@ -1048,10 +1085,19 @@ def assemble_production_shards(
     """Execute Phase 3.7 production assembly and verification."""
     if not verify_only:
         assert_not_archived_path(output_dir, context="assembly output generation")
-    output_dir.mkdir(parents=True, exist_ok=True)
+        refuse_historical_regeneration("v4_production_shards_assembly.py assemble_production_shards")
+    snapshots: dict[str, ArtifactSet] = {}
     sft_dir = output_dir / "sft"
     dpo_dir = output_dir / "dpo"
     receipt_path = output_dir / "production_release_receipt.json"
+    managed_root = REPO_ROOT / "data" / "projects" / "open_model_data"
+    lexical_output = output_dir.absolute()
+    resolved_output = output_dir.resolve()
+    if lexical_output.is_relative_to(managed_root) or resolved_output.is_relative_to(managed_root.resolve()):
+        relative_output = (
+            lexical_output if lexical_output.is_relative_to(managed_root) else resolved_output
+        ).relative_to(REPO_ROOT / "data")
+        receipt_path = REPO_ROOT / "registry" / relative_output / receipt_path.name
 
     # 1. Load schemas
     with TRAJECTORY_SCHEMA_PATH.open("r", encoding="utf-8") as f:
@@ -1067,9 +1113,8 @@ def assemble_production_shards(
     receipt_validator = Draft202012Validator(receipt_schema)
 
     # 2. Load and verify Held-Out Evaluation Suite (1000 items)
-    if not heldout_suite_path.is_file():
-        raise FileNotFoundError(f"Held-out evaluation suite not found at {heldout_suite_path}")
-    heldout_records = load_jsonl(heldout_suite_path)
+    heldout_bytes = _verified_artifact_bytes(heldout_suite_path, "open_model_other_indexes", snapshots)
+    heldout_records = _jsonl_bytes(heldout_bytes)
     if len(heldout_records) != HELDOUT_TOTAL:
         raise ValueError(f"Expected {HELDOUT_TOTAL} held-out cases, got {len(heldout_records)}")
 
@@ -1085,7 +1130,7 @@ def assemble_production_shards(
         r["target_term"].strip().lower() for r in heldout_records if r.get("case_type") == "CORRECT"
     )
     heldout_ids = set(r.get("eval_id") for r in heldout_records)
-    heldout_sha = sha256_file(heldout_suite_path)
+    heldout_sha = hashlib.sha256(heldout_bytes).hexdigest()
 
     if verify_only:
         print("[*] Running in --verify-only mode...")
@@ -1108,11 +1153,10 @@ def assemble_production_shards(
         for i in range(1, SFT_SHARDS_COUNT + 1):
             fname = f"sft_shard_{i:03d}_of_{SFT_SHARDS_COUNT:03d}.jsonl"
             fpath = sft_dir / fname
-            if not fpath.is_file():
-                raise FileNotFoundError(f"Missing SFT shard: {fpath}")
-            records = load_jsonl(fpath)
+            shard_bytes = _verified_artifact_bytes(fpath, "open_model_archive_payload", snapshots)
+            records = _jsonl_bytes(shard_bytes)
             all_sft.extend(records)
-            f_sha = sha256_file(fpath)
+            f_sha = hashlib.sha256(shard_bytes).hexdigest()
             meta = receipt["files"].get(fname)
             if not meta or meta["sha256"] != f_sha:
                 raise ValueError(f"SHA-256 mismatch on {fname}")
@@ -1122,11 +1166,10 @@ def assemble_production_shards(
         for i in range(1, DPO_SHARDS_COUNT + 1):
             fname = f"dpo_shard_{i:03d}_of_{DPO_SHARDS_COUNT:03d}.jsonl"
             fpath = dpo_dir / fname
-            if not fpath.is_file():
-                raise FileNotFoundError(f"Missing DPO shard: {fpath}")
-            records = load_jsonl(fpath)
+            shard_bytes = _verified_artifact_bytes(fpath, "open_model_archive_payload", snapshots)
+            records = _jsonl_bytes(shard_bytes)
             all_dpo.extend(records)
-            f_sha = sha256_file(fpath)
+            f_sha = hashlib.sha256(shard_bytes).hexdigest()
             meta = receipt["files"].get(fname)
             if not meta or meta["sha256"] != f_sha:
                 raise ValueError(f"SHA-256 mismatch on {fname}")
@@ -1174,11 +1217,16 @@ def assemble_production_shards(
             heldout_suite_path=heldout_suite_path,
             sft_records=all_sft,
             dpo_records=all_dpo,
+            heldout_records=heldout_records,
         )
         if calc_minhash >= 0.35:
-            raise ValueError(f"Partition firewall violation in verify-only: MinHash similarity {calc_minhash:.4f} >= 0.35")
+            raise ValueError(
+                f"Partition firewall violation in verify-only: MinHash similarity {calc_minhash:.4f} >= 0.35"
+            )
         if calc_jaccard >= 0.35:
-            raise ValueError(f"Partition firewall violation in verify-only: Token Jaccard similarity {calc_jaccard:.4f} >= 0.35")
+            raise ValueError(
+                f"Partition firewall violation in verify-only: Token Jaccard similarity {calc_jaccard:.4f} >= 0.35"
+            )
 
         firewall_meta = receipt["deliverables"]["heldout_evaluation_suite"]["partition_firewall"]
         if firewall_meta.get("target_term_leakage_count", 0) != 0:
@@ -1209,7 +1257,9 @@ def assemble_production_shards(
     abstention_by_fmt: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for t in abstention_trajectories:
         for err in traj_validator.iter_errors(t):
-            raise jsonschema.ValidationError(f"Abstention trajectory schema error for {t['trajectory_id']}: {err.message}")
+            raise jsonschema.ValidationError(
+                f"Abstention trajectory schema error for {t['trajectory_id']}: {err.message}"
+            )
         abstention_by_fmt[t["format_type"]].append(t)
 
     stem_sft_path = stem_controls_dir / "stem_preserve_sft_controls.jsonl"
@@ -1239,7 +1289,9 @@ def assemble_production_shards(
         for base_item in raw_stem_sft[stem_offset : stem_offset + needed_stem]:
             p_traj = format_preserve_trajectory(base_item, fmt)
             for err in traj_validator.iter_errors(p_traj):
-                raise jsonschema.ValidationError(f"STEM preserve schema error for {p_traj['trajectory_id']}: {err.message}")
+                raise jsonschema.ValidationError(
+                    f"STEM preserve schema error for {p_traj['trajectory_id']}: {err.message}"
+                )
             preserve_trajectories.append(p_traj)
         stem_offset += needed_stem
 
@@ -1264,7 +1316,9 @@ def assemble_production_shards(
         for f_idx, fmt in enumerate(["quick_tip", "contrastive", "deep_analysis"]):
             rec = reconcile_gold_seed_trajectory(s, cur_v, cur_s, format_type=fmt, copy_idx=f_idx)
             for err in traj_validator.iter_errors(rec):
-                raise jsonschema.ValidationError(f"Gold trajectory schema error for {rec['trajectory_id']}: {err.message}")
+                raise jsonschema.ValidationError(
+                    f"Gold trajectory schema error for {rec['trajectory_id']}: {err.message}"
+                )
             gold_oversampled[fmt].append(rec)
 
     # 4b. UA-GEC Minimal Edit Trajectories (1,050 authentic student sentence contexts)
@@ -1745,17 +1799,33 @@ def verify_production_release(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="ULDR Phase 3.7: Production Shards Assembly & Release Packaging")
-    parser.add_argument("--output-dir", type=Path, default=None)
-    parser.add_argument("--stem-controls-dir", type=Path, default=DEFAULT_STEM_CONTROLS_DIR)
-    parser.add_argument("--heldout-suite", type=Path, default=DEFAULT_HELDOUT_SUITE)
-    parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
-    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
-    parser.add_argument("--lt-replacements", type=Path, default=DEFAULT_LT_REPLACEMENTS)
-    parser.add_argument("--gold-trajectories", type=Path, default=DEFAULT_GOLD_SEEDS_TRAJECTORIES)
-    parser.add_argument("--gold-dpo", type=Path, default=DEFAULT_GOLD_SEEDS_DPO)
-    parser.add_argument("--uagec-mined", type=Path, default=DEFAULT_UAGEC_MINED)
-    parser.add_argument("--verify-only", action="store_true", default=False)
+    parser = argparse.ArgumentParser(
+        description="Verify the archived ULDR Phase 3.7 release. Regeneration is deferred to P3b (#8809).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "scripts/projects/open_model_data/v4_production_shards_assembly.py --verify-only\n"
+            "Outputs: none in verify mode; generation refuses before writing.\n"
+            "Exit codes: 0 for a valid release, nonzero for invalid inputs or deferred generation.\n"
+            "Related: issue #8809 P3b historical producer support."
+        ),
+    )
+    parser.add_argument("--output-dir", type=Path, default=None, help="Release to verify; default: archived v1 release")
+    parser.add_argument("--stem-controls-dir", type=Path, default=DEFAULT_STEM_CONTROLS_DIR, help="STEM controls input")
+    parser.add_argument("--heldout-suite", type=Path, default=DEFAULT_HELDOUT_SUITE, help="Held-out suite input")
+    parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB, help="Sources SQLite input")
+    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="VESUM SQLite input")
+    parser.add_argument(
+        "--lt-replacements", type=Path, default=DEFAULT_LT_REPLACEMENTS, help="Replacement registry input"
+    )
+    parser.add_argument(
+        "--gold-trajectories", type=Path, default=DEFAULT_GOLD_SEEDS_TRAJECTORIES, help="Reviewed SFT seed input"
+    )
+    parser.add_argument("--gold-dpo", type=Path, default=DEFAULT_GOLD_SEEDS_DPO, help="Reviewed DPO seed input")
+    parser.add_argument("--uagec-mined", type=Path, default=DEFAULT_UAGEC_MINED, help="Mined UAGEC input")
+    parser.add_argument(
+        "--verify-only", action="store_true", default=False, help="Verify existing release without writing"
+    )
 
     args = parser.parse_args()
     target_output_dir = args.output_dir or (HISTORICAL_ARCHIVE_DIR if args.verify_only else DEFAULT_OUTPUT_DIR)
