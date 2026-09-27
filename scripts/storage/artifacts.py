@@ -949,7 +949,7 @@ def _publish_set_locked(
             other_patterns.append((owner, other))
             for item in other.get("retired", []):
                 other_owners[item["path"]] = owner
-    classified = {row["path"] for row in _rows(repo)}
+    classified = {row["path"]: row for row in _rows(repo)}
     new_entries = dict(before)
     retired = list(manifest.get("retired", []))
     store = paths.artifact_store_root(repo)
@@ -970,13 +970,23 @@ def _publish_set_locked(
             if change.operation == "add":
                 if old is not None or change.expected_sha256 is not None or _actual_sha(target) is not None:
                     raise ValueError(f"add requires prior absence: {path}")
-                if path in classified:
+                prior = next((entry for entry in reversed(retired) if entry["path"] == path), None)
+                classification = classified.get(path)
+                if classification is not None and (
+                    classification["class"] != "A" or classification["group"] != group or prior is None
+                ):
                     raise ValueError(f"classified path has no active manifest owner: {path}")
                 if any(_registration_allowed(other, path) for _, other in other_patterns):
                     raise ValueError(f"registration ownership conflict: {path}")
                 if not _registration_allowed(manifest, path):
                     raise ValueError(f"unregistered addition: {path}")
+                if prior is not None:
+                    # Historical versions are lineage, never the old live state of an add.
+                    # Check every retained version before changing any managed pathname.
+                    for entry in retired:
+                        _checked_store_object(store, entry["sha256"], entry["size"])
             else:
+                prior = None
                 if old is None or change.expected_sha256 != old["sha256"]:
                     raise ValueError(f"stale expected hash: {path}")
                 paths.verify_file(target, old, group=group, rel=rel)
@@ -990,9 +1000,19 @@ def _publish_set_locked(
                 if change.source is None:
                     raise ValueError(f"missing source: {path}")
                 sha, size, source_mode = _source_info(change.source, destinations, repo)
-                mode = old["mode"] if old else _git_mode(source_mode)
+                mode = old["mode"] if old else prior["mode"] if prior else _git_mode(source_mode)
+                inherited = old or prior or {}
+                metadata = (
+                    {
+                        key: value
+                        for key, value in prior.items()
+                        if key not in {"retired_at", "migrated_at", "pre_untrack_sha256", "git_blob"}
+                    }
+                    if prior
+                    else inherited
+                )
                 new_entries[rel] = {
-                    **(old or {}),
+                    **metadata,
                     "path": path,
                     "mode": mode,
                     "size": size,
@@ -1001,8 +1021,9 @@ def _publish_set_locked(
                     "producer": producer,
                     "published_at": _now(),
                     "mtime_ns": None,
-                    **({"supersedes": old["sha256"]} if old else {"rights": "uncleared", "git_blob": None}),
+                    **({"supersedes": inherited["sha256"]} if inherited else {"rights": "uncleared", "git_blob": None}),
                 }
+            installed_mode = None if sha is None else _actual_mode(target) if old else mode if prior else source_mode
             row_records.append(
                 {
                     "kind": "artifact",
@@ -1012,7 +1033,7 @@ def _publish_set_locked(
                     "old_mode": _actual_mode(target) if old else None,
                     "new_sha256": sha,
                     "new_size": size,
-                    "new_mode": _actual_mode(target) if old and sha is not None else source_mode if sha else None,
+                    "new_mode": installed_mode,
                 }
             )
         for change in companions:
