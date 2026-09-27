@@ -59,38 +59,39 @@ def test_breadcrumb_logstart_and_logfinish(tmp_path: Path, monkeypatch) -> None:
 def test_breadcrumb_subprocess_pytest_run(tmp_path: Path) -> None:
     repo_root = Path(__file__).parents[1]
     bdir = tmp_path / "breadcrumbs"
-    test_file = repo_root / "tests" / "_temp_breadcrumb_test.py"
-    try:
-        test_file.write_text("def test_one(): pass\ndef test_two(): pass\n", encoding="utf-8")
+    test_file = tmp_path / "tests" / "_temp_breadcrumb_test.py"
+    test_file.parent.mkdir()
+    test_file.write_text("def test_one(): pass\ndef test_two(): pass\n", encoding="utf-8")
 
-        env = os.environ.copy()
-        env["PYTEST_BREADCRUMB_DIR"] = str(bdir)
-        env["PYTEST_XDIST_WORKER"] = "gw1"
+    env = os.environ.copy()
+    env["PYTEST_BREADCRUMB_DIR"] = str(bdir)
+    env["PYTEST_XDIST_WORKER"] = "gw1"
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    env["PYTHONPATH"] = os.pathsep.join(filter(None, (str(repo_root), str(repo_root / "scripts"), env.get("PYTHONPATH"))))
 
-        cmd = [
-            sys.executable,
-            "-m",
-            "pytest",
-            str(test_file),
-            "-o",
-            f"cache_dir={tmp_path / '.pytest_cache'}",
-        ]
-        res = subprocess.run(cmd, env=env, capture_output=True, text=True, check=False, cwd=str(repo_root), timeout=30)
-        assert res.returncode == 0, f"stdout: {res.stdout}\nstderr: {res.stderr}"
+    cmd = [
+        sys.executable,
+        "-m",
+        "pytest",
+        str(test_file),
+        "-p",
+        "tests.conftest",
+        "-o",
+        f"cache_dir={tmp_path / '.pytest_cache'}",
+    ]
+    res = subprocess.run(cmd, env=env, capture_output=True, text=True, check=False, cwd=tmp_path, timeout=30)
+    assert res.returncode == 0, f"stdout: {res.stdout}\nstderr: {res.stderr}"
 
-        breadcrumb_file = bdir / "breadcrumb_gw1.txt"
-        assert breadcrumb_file.exists(), (
-            f"Breadcrumb file missing in {bdir}. Files present: {list(bdir.glob('*')) if bdir.exists() else 'bdir missing'}\n"
-            f"stdout: {res.stdout}\nstderr: {res.stderr}"
-        )
-        lines = breadcrumb_file.read_text(encoding="utf-8").splitlines()
-        assert "START tests/_temp_breadcrumb_test.py::test_one" in lines
-        assert "FINISH tests/_temp_breadcrumb_test.py::test_one" in lines
-        assert "START tests/_temp_breadcrumb_test.py::test_two" in lines
-        assert "FINISH tests/_temp_breadcrumb_test.py::test_two" in lines
-    finally:
-        if test_file.exists():
-            test_file.unlink()
+    breadcrumb_file = bdir / "breadcrumb_gw1.txt"
+    assert breadcrumb_file.exists(), (
+        f"Breadcrumb file missing in {bdir}. Files present: {list(bdir.glob('*')) if bdir.exists() else 'bdir missing'}\n"
+        f"stdout: {res.stdout}\nstderr: {res.stderr}"
+    )
+    lines = breadcrumb_file.read_text(encoding="utf-8").splitlines()
+    assert "START tests/_temp_breadcrumb_test.py::test_one" in lines
+    assert "FINISH tests/_temp_breadcrumb_test.py::test_one" in lines
+    assert "START tests/_temp_breadcrumb_test.py::test_two" in lines
+    assert "FINISH tests/_temp_breadcrumb_test.py::test_two" in lines
 
 
 # --- Controller-side stall watch (#5776 leftover) -------------------------
@@ -265,53 +266,48 @@ def test_stall_watcher_is_a_noop_when_breadcrumbs_are_disabled() -> None:
     assert not terminated
 
 
-def test_run_nodeids_kills_a_wedged_test_and_names_it_on_stderr() -> None:
+def test_run_nodeids_kills_a_wedged_test_and_names_it_on_stderr(tmp_path: Path) -> None:
     """Cursor Cloud still runs pytest_shards.py; stall-watch must name the wedge."""
     repo_root = Path(__file__).parents[1]
-    test_file = repo_root / "tests" / "_temp_stall_hang_test.py"
-    with_tmp = repo_root / ".tmp_stall_watch_test"
-    with_tmp.mkdir(exist_ok=True)
-    bdir = with_tmp / "breadcrumbs"
-    nodeids_file = with_tmp / "nodeids.txt"
-    try:
-        test_file.write_text("import time\n\n\ndef test_wedges():\n    time.sleep(60)\n", encoding="utf-8")
-        nodeids_file.write_text("tests/_temp_stall_hang_test.py::test_wedges\n", encoding="utf-8")
+    test_file = tmp_path / "tests" / "_temp_stall_hang_test.py"
+    test_file.parent.mkdir()
+    bdir = tmp_path / "breadcrumbs"
+    nodeids_file = tmp_path / "nodeids.txt"
+    test_file.write_text("import time\n\n\ndef test_wedges():\n    time.sleep(60)\n", encoding="utf-8")
+    nodeids_file.write_text("tests/_temp_stall_hang_test.py::test_wedges\n", encoding="utf-8")
 
-        env = os.environ.copy()
-        env["PYTEST_BREADCRUMB_DIR"] = str(bdir)
-        env["CI_STALL_WATCH_SECONDS"] = "0.3"
-        env["CI_STALL_WATCH_POLL_SECONDS"] = "0.05"
+    env = os.environ.copy()
+    env["PYTEST_BREADCRUMB_DIR"] = str(bdir)
+    env["CI_STALL_WATCH_SECONDS"] = "0.3"
+    env["CI_STALL_WATCH_POLL_SECONDS"] = "0.05"
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    env["PYTHONPATH"] = os.pathsep.join(filter(None, (str(repo_root), str(repo_root / "scripts"), env.get("PYTHONPATH"))))
 
-        cmd = [
-            sys.executable,
-            str(repo_root / "scripts" / "ci" / "pytest_shards.py"),
-            "run",
-            "--nodeids",
-            str(nodeids_file),
-            "--",
-            "-p",
-            "no:cacheprovider",
-        ]
-        start = time.monotonic()
-        res = subprocess.run(
-            cmd,
-            env=env,
-            capture_output=True,
-            text=True,
-            check=False,
-            cwd=str(repo_root),
-            timeout=30,
-            start_new_session=True,  # isolate the killpg() below from this test's own process group
-        )
-        elapsed = time.monotonic() - start
+    cmd = [
+        sys.executable,
+        str(repo_root / "scripts" / "ci" / "pytest_shards.py"),
+        "run",
+        "--nodeids",
+        str(nodeids_file),
+        "--",
+        "-p",
+        "tests.conftest",
+        "-p",
+        "no:cacheprovider",
+    ]
+    start = time.monotonic()
+    res = subprocess.run(
+        cmd,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=tmp_path,
+        timeout=30,
+        start_new_session=True,  # isolate the killpg() below from this test's own process group
+    )
+    elapsed = time.monotonic() - start
 
-        assert res.returncode != 0, f"stdout: {res.stdout}\nstderr: {res.stderr}"
-        assert elapsed < 15, f"stall watch did not fail fast ({elapsed:.1f}s)\nstderr: {res.stderr}"
-        assert "tests/_temp_stall_hang_test.py::test_wedges" in res.stderr, res.stderr
-    finally:
-        if test_file.exists():
-            test_file.unlink()
-        for path in sorted(with_tmp.rglob("*"), reverse=True):
-            path.unlink() if path.is_file() else path.rmdir()
-        if with_tmp.exists():
-            with_tmp.rmdir()
+    assert res.returncode != 0, f"stdout: {res.stdout}\nstderr: {res.stderr}"
+    assert elapsed < 15, f"stall watch did not fail fast ({elapsed:.1f}s)\nstderr: {res.stderr}"
+    assert "tests/_temp_stall_hang_test.py::test_wedges" in res.stderr, res.stderr
