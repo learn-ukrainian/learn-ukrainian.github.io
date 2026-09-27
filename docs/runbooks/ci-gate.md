@@ -54,12 +54,24 @@ events then differ deliberately:
 
 The content class emits `pytest_mode=content`: one shard running
 `-m 'reads_content and not slow and not atlas_release'` (same filters and
-`--timeout=120` as the full PR tier) plus `tests/test_ci_shard_partition.py`,
+`--timeout=120` as the full PR tier) plus the non-slow tests in
+`tests/test_ci_shard_partition.py`,
 with Ruff, Contracts and the Frontend build still on (`docs_only=false`,
 `frontend=true`). The marker is load-bearing:
 `tests/test_reads_content_marker_invariant.py` fails when a test module
 references those content roots without carrying `reads_content`, so new
 content-reading tests cannot silently fall out of the class.
+
+**Runner-slot budget (#8876).** `scripts.ci.slot_inventory --check` expands
+every PR-path workflow. Its dynamic `ci.yml` pytest matrix uses the full-tier
+default from that workflow's `env.PYTEST_SHARD_COUNT`; an unreadable default
+fails the check. The current inventory is 32 jobs, including 10 pytest shards
+and 17 jobs in `ci.yml`. On the GitHub Team plan, 60 hosted jobs can run
+concurrently. The inventory ceiling is 58 = 60 - 2 reserved slots. Two
+overlapping full `ci.yml` workflows use at most 2 × 17 = 34 slots, leaving
+24 for other PR workflows plus two reserved slots. The 32-job inventory is a
+sum across workflows, not a simultaneous peak: if every job in two copies were
+runnable together, 2 × 32 = 64 would exceed 60 and some jobs would queue.
 
 CI runs on `pull_request` opened/synchronize/reopened; labels and PR-body
 edits do not start it. `full-ci` is read from the PR's current labels
@@ -190,10 +202,11 @@ after 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s
 after the run started; `CI Gate` was red; the shards' repo_wide backstop also
 failed.
 
-Known limit: the preflight competes with the pytest shards for runners. All CI
-jobs are GitHub-hosted and concurrent jobs peak at the account's 20-job cap, so
-queue time can dominate. Phase A.2 (issue #8750) consolidates short checks into
-one `fast-checks` job.
+Known limit at the time of this measurement: the preflight competed with the
+pytest shards for GitHub-hosted runners at the former 20-job Free-plan cap, so
+queue time could dominate. Phase A.2 (issue #8750) consolidated short checks
+into one `fast-checks` job. The organization moved to the 60-job Team plan on
+2026-09-27; the historical queue measurements above predate that change.
 
 **When it runs.** `scripts/ci/classify_changes.py` decides once and emits
 `preflight`. `preflight_for()` returns `true` only for a `pull_request` event

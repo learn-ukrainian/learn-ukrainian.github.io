@@ -483,6 +483,10 @@ def test_ci_yml_plan_files_uses_changes_shard_count() -> None:
     assert "SHARD_COUNT: ${{ env.PYTEST_SHARD_COUNT }}" not in ci_text
 
 
+def test_content_lane_excludes_slow_partition_test() -> None:
+    assert "pytest tests/test_ci_shard_partition.py -m 'not slow' --timeout=120" in _ci_text()
+
+
 def test_selected_plan_files_stdin_is_exact_candidates_no_silent_drop(tmp_path: Path) -> None:
     """Selected mode: plan-files stdin == pytest_candidates; shard_count=1; no drop."""
     candidates = [
