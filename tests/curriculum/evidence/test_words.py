@@ -3,6 +3,7 @@
 import json
 import sqlite3
 import stat
+from pathlib import Path
 
 import pytest
 import yaml
@@ -10,18 +11,63 @@ import yaml
 from scripts.curriculum.evidence import codes, lock, registry, sources, words
 from scripts.verification import stress
 
+PENDING_FORMS = ("його", "Його", "йому", "Йому", "нього", "переді", "піді")
 
-@pytest.mark.parametrize(
-    ("form", "expected"),
-    [("його", "його́"), ("Його", "Його́"), ("Йому", "Йому́"), ("переді", "пе́реді"), ("межи", "межи́"), ("піді", "пі́ді")],
-)
-def test_cited_stress_overrides_are_exact_and_single_accent(form, expected):
-    stress._load_overrides.cache_clear()
-    result = stress.verify_stress(form)
+
+@pytest.mark.parametrize("form", PENDING_FORMS)
+def test_unconfirmed_stress_is_pending_and_not_overridden(form):
+    assert stress.pending_stress_reason(form)
+    assert form not in stress._load_overrides()
+
+
+def test_ulif_cited_mezhy_override_is_single_accent():
+    assert not stress.pending_stress_reason("межи")
+    result = stress.verify_stress("межи")
     assert result["status"] == "ok"
     assert result["matches"][0]["override_applied"] is True
-    assert result["matches"][0]["stressed_form"] == expected
-    assert expected.count("\u0301") == 1
+    assert result["matches"][0]["stressed_form"] == "межи́"
+
+
+def test_no_disallowed_dictionary_citations_in_stress_data_or_evidence():
+    repo = Path(__file__).resolve().parents[3]
+    for tree in (repo / "scripts/data", repo / "scripts/curriculum/evidence"):
+        for path in tree.rglob("*"):
+            if path.is_file() and "__pycache__" not in path.parts:
+                content = path.read_bytes()
+                assert "СУМ-11".encode() not in content, path
+                assert b"search_definitions" not in content, path
+
+
+@pytest.mark.parametrize("form", PENDING_FORMS)
+def test_builder_pending_list_bypasses_trie(form, synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("INSERT INTO forms_all VALUES (5, 50, ?, ?, 'prep', 'prep', '', '')", (form, form))
+
+    def fail_oracle(*args, **kwargs):
+        pytest.fail("pending form was sent to the trie")
+
+    monkeypatch.setattr(sources.stress, "verify_stress", fail_oracle)
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump({"request_schema": 1, "level": "a1", "words": [{"lemma": form, "pos": "prep", "want": "new"}]}),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=True)
+    entry = result["store"]["words"][0]["forms"][0]
+    assert entry["stress_source"] == "pending"
+    assert "stressed" not in entry
+    assert result["pending_reasons"][0]["reason"] == stress.pending_stress_reason(form)
+
+
+@pytest.mark.parametrize("form", PENDING_FORMS)
+def test_site_annotator_leaves_pending_forms_unaccented(form, monkeypatch):
+    from scripts.pipeline import stress_annotator
+
+    monkeypatch.setattr(stress_annotator, "_get_stressifier", lambda: pytest.fail("pending reached Stressifier"))
+    for surface in (form, f"{form[0]}\u0301{form[1:]}"):
+        annotated, _ = stress_annotator.annotate_stress(surface)
+        assert annotated == form
 
 
 def test_zero_vowel_ukrainian_words_need_no_stress():
@@ -42,17 +88,17 @@ def test_packed_stress_requires_pending_with_source_reason():
 
 def test_builder_keeps_unresolved_packed_reading_pending(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
     with sqlite3.connect(synthetic_vesum) as conn:
-        conn.execute("INSERT INTO forms_all VALUES (5, 50, 'переді', 'переді', 'prep', 'prep', '', '')")
+        conn.execute("INSERT INTO forms_all VALUES (5, 50, 'розбір', 'розбір', 'prep', 'prep', '', '')")
 
     def oracle(word, *, tags):
         return {
             "status": "ok",
             "matches": [
                 {
-                    "stressed_form": "пе́ре́ді",
+                    "stressed_form": "ро́збі́р",
                     "unstressed_form": word,
                     "vowel_index": 1,
-                    "vowel_indices": [1, 3],
+                    "vowel_indices": [1, 4],
                     "vesum": None,
                     "required_tags": [],
                     "override_applied": False,
@@ -68,7 +114,7 @@ def test_builder_keeps_unresolved_packed_reading_pending(synthetic_vesum, synthe
             {
                 "request_schema": 1,
                 "level": "a1",
-                "words": [{"lemma": "переді", "pos": "prep", "want": "new"}],
+                "words": [{"lemma": "розбір", "pos": "prep", "want": "new"}],
             }
         ),
         encoding="utf-8",
@@ -78,11 +124,11 @@ def test_builder_keeps_unresolved_packed_reading_pending(synthetic_vesum, synthe
     form = result["store"]["words"][0]["forms"][0]
     assert form["stress_source"] == "pending"
     assert "stressed" not in form
-    assert form["stress_candidates"][0]["vowel_indices"] == [1, 3]
+    assert form["stress_candidates"][0]["vowel_indices"] == [1, 4]
     assert result["pending_reasons"] == [
         {
             "word_id": "W-001",
-            "form": "переді",
+            "form": "розбір",
             "tags": "prep",
             "reason": "multiple_stressed_vowels",
         }

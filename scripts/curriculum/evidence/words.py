@@ -445,7 +445,18 @@ def build_words(
 
                     # Rule 4: stress per form
                     # a. Monosyllables gated before oracle
-                    if needs_no_stress(form_str):
+                    if pending_reason := stress.pending_stress_reason(form_str):
+                        f_entry = {
+                            "form": form_str,
+                            "tags": tags_str,
+                            "stress_source": "pending",
+                            "markers": markers,
+                            "learner": is_learner,
+                        }
+                        pending_reasons.append(
+                            {"word_id": word_id, "form": form_str, "tags": tags_str, "reason": pending_reason}
+                        )
+                    elif needs_no_stress(form_str):
                         stress_source = "none"
                         stressed = form_str
                         f_entry: dict[str, Any] = {
