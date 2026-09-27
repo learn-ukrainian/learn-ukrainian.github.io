@@ -93,6 +93,20 @@ def test_standard_line_refs_parsing() -> None:
     assert records[28]["standard_line_refs"] == []
 
 
+JOB_SOURCE_LINE_REF_RE = re.compile(r"\(`:\d+-\d+`\)")
+
+
+def test_job_text_has_no_leaked_source_line_reference() -> None:
+    """`job` is rendered verbatim on the arc landing (ArcLanding.tsx, ArcModule.tsx); a
+    source citation like ``(`:489-493`)`` leaking into it is learner-facing noise, not a
+    citation — the reference belongs in a non-learner-facing field (skills duty) or prose."""
+    for record in _records():
+        assert not JOB_SOURCE_LINE_REF_RE.search(record["job"]), (
+            f"position {record['position']} ({record['slug']}) job leaks a source line "
+            f"reference: {record['job']!r}"
+        )
+
+
 def test_mutation_one_slug_breaks_check(tmp_path: Path) -> None:
     mutated = _mutated_doc(tmp_path, "`euphony`", "`euphony-x`")
     assert generate_arc.main(["--level", "a1", "--check", "--doc", str(mutated)]) == 1

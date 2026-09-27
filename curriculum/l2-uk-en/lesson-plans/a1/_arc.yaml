@@ -2,13 +2,13 @@ arc_schema: 1
 level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: 319bd259d43fd6f917e2f720285c38d33d59b850561f3dd186ead12f0226df13
+  sha256: 10438fee9aa0a3fae15747b3965e997d448289f67adbadd482a54f3d20a4a061
 est_lessons_total: 162
 positions:
 - position: 1
   slug: sounds-letters-and-hello
   est_lessons: 5
-  job: Hear and say first greetings; grasp звук vs літера, голосні vs приголосні; read and write the first letter group in syllables and short words
+  job: Hear and say your first greetings; learn the difference between a sound and a letter, and between vowels and consonants; read and write the first letter group in syllables and short words
   inventory_text: '**13 letters**, primer part 1 order: А О У И М І Н В Л С К П Р'
   phase: A1.1
   skills_text: Li, W (copying, own name)
@@ -280,10 +280,10 @@ positions:
 - position: 24
   slug: weather
   est_lessons: 3
-  job: 'Talk about the weather and the natural world around you: animals, plants, landscape (`:549-551`)'
+  job: 'Talk about the weather and the natural world around you: animals, plants, landscape'
   inventory_text: null
   phase: A1.4
-  skills_text: Li (forecast)
+  skills_text: Li (forecast; `:549-551`)
   skills:
   - Li
   standard_line_refs:
@@ -380,10 +380,10 @@ positions:
 - position: 34
   slug: where-from
   est_lessons: 3
-  job: Say where you and things are from; compass points; at the border (`:523-525`)
+  job: Say where you and things are from; compass points; at the border
   inventory_text: null
   phase: A1.5
-  skills_text: 'W (form: country, city; address an envelope `:361`)'
+  skills_text: 'W (`:523-525`; form: country, city; address an envelope `:361`)'
   skills:
   - W
   standard_line_refs:
@@ -434,10 +434,10 @@ positions:
 - position: 39
   slug: shopping
   est_lessons: 3
-  job: 'Ask prices and buy things: food, toiletries, stationery; weight and volume (`:531-533`)'
+  job: 'Ask prices and buy things: food, toiletries, stationery; weight and volume'
   inventory_text: null
   phase: A1.6
-  skills_text: R (price tags), Li
+  skills_text: R (price tags; `:531-533`), Li
   skills:
   - R
   - Li
@@ -495,10 +495,10 @@ positions:
 - position: 45
   slug: when-and-where
   est_lessons: 4
-  job: 'Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where (`:489-493`)'
+  job: 'Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where'
   inventory_text: null
   phase: A1.7
-  skills_text: W (describe your room)
+  skills_text: W (describe your room; `:489-493`)
   skills:
   - W
   standard_line_refs:

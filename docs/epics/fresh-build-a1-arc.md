@@ -117,7 +117,7 @@ notes), so neither is used as an authority until one is ingested.
 
 | Pos | Slug | Job | Inventory (letters / signs) | Est. lessons |
 | --- | --- | --- | --- | --- |
-| 1 | `sounds-letters-and-hello` | Hear and say first greetings; grasp звук vs літера, голосні vs приголосні; read and write the first letter group in syllables and short words | **13 letters**, primer part 1 order: А О У И М І Н В Л С К П Р | 5 |
+| 1 | `sounds-letters-and-hello` | Hear and say your first greetings; learn the difference between a sound and a letter, and between vowels and consonants; read and write the first letter group in syllables and short words | **13 letters**, primer part 1 order: А О У И М І Н В Л С К П Р | 5 |
 | 2 | `reading-ukrainian` | Read words, then short sentences aloud, with most of the alphabet | **12 letters**: Т Е Д З Б (end of primer part 1; ь, which the primer places before Б, is held for position 3), then Г Ґ Ч Й Х Ж Ш | 5 |
 | 3 | `special-signs` | Finish the alphabet; read and write words with the two-sound letters, ь, the apostrophe, дж / дз; hear hard vs soft | **8 letters**: Ї Я Ю Є Ц Щ Ф and ь; апостроф, дж, дз; hard / soft contrast. The alphabet in its dictionary order with the letter names; capital and small letters (`:571-572`) | 4 |
 | 4 | `stress-and-melody` | Use stress marks as a reading aid; statement vs question melody; first contact with unstressed е / и; recognise handwritten and italic letter shapes; divide words into syllables for line breaks | наголос, інтонація, склад і перенос (`:588`), писані літери (`:571`); no new letters | 3 |
@@ -157,7 +157,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 21 | `checkpoint-actions` | A1.3 | Self-check: say what you do, want, ask | R | 2 |
 | 22 | `what-time` | A1.4 | Ask and tell the time | Li, R (timetable) | 3 |
 | 23 | `days-and-months` | A1.4 | Use days, months, seasons and dates in set phrases | R (calendar) | 4 |
-| 24 | `weather` | A1.4 | Talk about the weather and the natural world around you: animals, plants, landscape (`:549-551`) | Li (forecast) | 3 |
+| 24 | `weather` | A1.4 | Talk about the weather and the natural world around you: animals, plants, landscape | Li (forecast; `:549-551`) | 3 |
 | 25 | `my-day` | A1.4 | Tell your day in order | W | 3 |
 | 26 | `free-time` | A1.4 | Talk about leisure; invite someone | W (SMS invitation) | 3 |
 | 27 | `checkpoint-time-nature` | A1.4 | Self-check: time, week plan, weather | R | 2 |
@@ -167,18 +167,18 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 31 | `where-to` | A1.5 | Say where you are going: accusative of direction; де vs куди | — | 3 |
 | 32 | `transport` | A1.5 | Get around: transport phrases | R (tickets, stops), Li | 3 |
 | 33 | `around-the-city` | A1.5 | Ask for and follow directions | Li | 3 |
-| 34 | `where-from` | A1.5 | Say where you and things are from; compass points; at the border (`:523-525`) | W (form: country, city; address an envelope `:361`) | 3 |
+| 34 | `where-from` | A1.5 | Say where you and things are from; compass points; at the border | W (`:523-525`; form: country, city; address an envelope `:361`) | 3 |
 | 35 | `checkpoint-places` | A1.5 | Self-check: find your way | R | 2 |
 | 36 | `food-and-drink` | A1.6 | Name food and drink; say what Ukrainians eat | R (menu) | 3 |
 | 37 | `i-eat-i-drink` | A1.6 | Say what you eat and drink: accusative, inanimate, with agreeing adjectives | — | 3 |
 | 38 | `at-the-cafe` | A1.6 | Order and pay in a café | Li, R (menu, bill) | 3 |
-| 39 | `shopping` | A1.6 | Ask prices and buy things: food, toiletries, stationery; weight and volume (`:531-533`) | R (price tags), Li | 3 |
+| 39 | `shopping` | A1.6 | Ask prices and buy things: food, toiletries, stationery; weight and volume | R (price tags; `:531-533`), Li | 3 |
 | 40 | `people-around-me` | A1.6 | Talk about people you see, know and think about: accusative, animate; мене / тебе / нас / вас; `про` + accusative | — | 3 |
 | 41 | `checkpoint-food-shopping` | A1.6 | Self-check: order and buy | R | 2 |
 | 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |
 | 43 | `please-do-this` | A1.7 | Ask someone to do something: imperative, ти and ви | R (signs, prohibitions) | 3 |
 | 44 | `linking-ideas` | A1.7 | Join ideas: і, а, але, бо, тому що | W | 2 |
-| 45 | `when-and-where` | A1.7 | Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where (`:489-493`) | W (describe your room) | 4 |
+| 45 | `when-and-where` | A1.7 | Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where | W (describe your room; `:489-493`) | 4 |
 | 46 | `holidays` | A1.7 | Greet people on holidays; family and state holidays | W (postcard) | 3 |
 | 47 | `checkpoint-communication` | A1.7 | Self-check: address, ask, connect | R, W | 2 |
 | 48 | `what-happened` | A1.8 | Say what happened: past tense and gender | — | 4 |
