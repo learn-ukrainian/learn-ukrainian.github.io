@@ -1416,13 +1416,13 @@ def test_non_alphabet_prose_quoting_an_error_token_still_blocks(gold):
 
 # ── alphabet stress: same-lesson marked forms + VESUM-attested inflections (#7994) ──
 
-def test_dictionary_stressed_forms_cover_unmarked_copies_but_not_rejected_marks():
+def test_dictionary_stressed_forms_cover_verified_copies_but_not_rejected_marks():
     text = "сім'я́ і сім''я, дере́в'яний стіл, до ньо́го"
     wrong = gates.wrong_stress(text, set(), phonetic=True)
     covered = gates.dictionary_stressed_forms(text, wrong, phonetic=True)
     assert "сім'я" in covered
     assert "дерев'яний" not in covered  # contradicts the dictionary
-    assert "нього" not in covered  # unverified stress never vouches for a bare copy
+    assert "нього" in covered  # the sourced ньо́го override vouches for a bare copy
     assert gates.missing_stress("сім''я і дерев'яний", covered, phonetic=True) == ["дерев'яний"]
 
 
@@ -1444,7 +1444,8 @@ def vesum_stub(monkeypatch):
 def test_split_attested_undeclared_keeps_typos_and_contradictions_blocking(vesum_stub):
     wrong = gates.wrong_stress("до ньо́го з Мар'я́ною, вчі́тель, дере́в'яний", set(), {"Мар'яна"})
     blocking, attested = gates.split_attested_undeclared(wrong)
-    assert sorted(e.split(":")[0] for e in attested) == ["Мар'я́ною", "ньо́го"]
+    assert sorted(e.split(":")[0] for e in attested) == ["Мар'я́ною"]
+    assert not any("ньо́го" in e for e in blocking)
     assert any(e.startswith("вчі́тель") for e in blocking)
     assert any(e.startswith("дере́в'яний→") for e in blocking)
 
@@ -1470,9 +1471,11 @@ def test_alphabet_gate_passes_marked_form_and_attested_inflections(gold, monkeyp
     assert not any("invalid lesson artifacts" in d for d in report["blocking"])
     # the appended twins add nothing; the gold's own contradictions keep blocking
     assert _stress_blocks(report) == baseline
-    assert any("ньо́го" in w and "Мар'я́ною" in w for w in report["warnings"])
+    assert any("Мар'я́ною" in w for w in report["warnings"])
+    assert not any("ньо́го" in w for w in report["warnings"])
 
 
+# sources verify_stresses: ними is not_found; sources verify_words: VESUM attests it.
 _NONCE_LESSON = "\n\nЦе фундамета́льні пра́вила. Дере́в'яний стіл стоїть перед ними.\n"
 
 
@@ -1513,7 +1516,8 @@ def test_non_alphabet_gate_still_blocks_unmarked_copy_and_undeclared_inflection(
     path = module / "lesson-1/module.md"
     path.write_text(path.read_text() + _SAME_LESSON)
     blocks = "\n".join(_stress_blocks(gates.run_lesson_gates(module, source, plan)))
-    assert "сім'я" in blocks and "ньо́го: undeclared unverified stress" in blocks
+    assert "сім'я" in blocks and "Мар'я́ною: undeclared unverified stress" in blocks
+    assert "ньо́го: undeclared unverified stress" not in blocks
 
 
 def test_alphabet_wrong_option_words_skip_stress_but_the_answer_still_checks():

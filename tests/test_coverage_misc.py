@@ -13,6 +13,8 @@ import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(SCRIPTS / "pipeline"))
@@ -952,8 +954,8 @@ class TestLoadOverrides:
     def test_file_not_exists(self, tmp_path):
         f = self._import()
         with patch("generate_ipa.DATA_DIR", tmp_path):
-            result = f("nonexistent.yaml")
-        assert result == {}
+            with pytest.raises(FileNotFoundError):
+                f("nonexistent.yaml")
 
     def test_file_with_dict(self, tmp_path):
         f = self._import()
@@ -969,8 +971,8 @@ class TestLoadOverrides:
         f = self._import()
         (tmp_path / "test.yaml").write_text("- item1\n- item2\n")
         with patch("generate_ipa.DATA_DIR", tmp_path):
-            result = f("test.yaml")
-        assert result == {}
+            with pytest.raises(ValueError, match="Expected a YAML mapping"):
+                f("test.yaml")
 
 
 class TestIsIpaContent:
