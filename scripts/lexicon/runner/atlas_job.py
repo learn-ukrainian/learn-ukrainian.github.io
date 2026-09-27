@@ -1115,14 +1115,11 @@ def write_git_receipt(job_id: str, receipt: dict[str, Any]) -> Path:
     return path
 
 
-def _receipt_locator(_path: Path, job_id: str) -> str:
-    """Stable public locator for a git receipt.
-
-    ``git_pr`` names the canonical receipt location. Publishing the written
-    path, including a repo-relative form of it, leaks local directory names
-    when the registry override sits inside the checkout.
-    """
-    return f"batch_state/atlas-jobs/receipts/{job_id}.json"
+def _receipt_locator(path: Path, job_id: str) -> str:
+    try:
+        return str(path.relative_to(repo_root()))
+    except ValueError:
+        return f"batch_state/atlas-jobs/receipts/{job_id}.json"
 
 
 def run_restic_sink(
